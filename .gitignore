@@ -1,0 +1,6 @@
+build/
+obj/
+CMakeLists.txt.user
+nrogue
+*.out
+*.exe
