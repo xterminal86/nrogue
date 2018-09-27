@@ -1,0 +1,39 @@
+# Project: nrogue
+# Makefile created by Dev-C++ 5.11
+
+CPP      = g++.exe
+CC       = gcc.exe
+WINDRES  = 
+RES      = nrogue_private.res
+OBJ      = main.o map.o printer.o $(RES)
+LINKOBJ  = main.o map.o printer.o $(RES)
+LIBS     = -L"C:/Program Files/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/x86_64-w64-mingw32/lib"
+INCS     = -I"C:/Program Files/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/x86_64-w64-mingw32/include" -I"C:/Program Files/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/x86_64-w64-mingw32/include"
+CXXINCS  = -I"C:/Program Files/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/x86_64-w64-mingw32/include" -I"C:/Program Files/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/x86_64-w64-mingw32/include"
+BIN      = nrogue.exe
+CXXFLAGS = $(CXXINCS) -std=c++11
+CFLAGS   = $(INCS) -std=c++11
+RM       = rm.exe -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+main.o: main.cpp
+	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
+
+map.o: map.cpp
+	$(CPP) -c map.cpp -o map.o $(CXXFLAGS)
+
+printer.o: printer.cpp
+	$(CPP) -c printer.cpp -o printer.o $(CXXFLAGS)
+
+nrogue_private.res: nrogue_private.rc 
+	$(WINDRES) -i nrogue_private.rc --input-format=rc -o nrogue_private.res -O coff 
+

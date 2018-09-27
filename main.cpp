@@ -4,68 +4,18 @@
 #include <vector>
 #include <memory>
 
+#include "application.h"
 #include "constants.h"
 #include "printer.h"
-#include "game-object.h"
-#include "map.h"
-#include "colorpair.h"
 #include "util.h"
-
-std::vector<std::unique_ptr<GameObject>> _mapObjects;
-
-bool _gameRunning = true;
-
-std::unique_ptr<GameObject> _player;
-
-void DrawAll()
-{
-  Map::Instance().Draw();
-
-  for (auto& item : _mapObjects)
-  {
-    item.get()->Draw();
-  }
-
-  _player.get()->Draw();
-}
-
-void QueryInput(char ch)
-{
-  switch(ch)
-  {
-    case 'w':
-      _player.get()->Move(0, -1);
-      Map::Instance().MapOffsetY++;
-      break;
-
-    case 's':
-      _player.get()->Move(0, 1);
-      Map::Instance().MapOffsetY--;
-      break;
-
-    case 'a':
-      _player.get()->Move(-1, 0);
-      Map::Instance().MapOffsetX++;
-      break;
-
-    case 'd':
-      _player.get()->Move(1, 0);
-      Map::Instance().MapOffsetX--;
-      break;
-
-    case 'q':
-      _gameRunning = false;
-      break;
-  }
-}
 
 void PrintTestScreen()
 {
   int step = 4;
 
-  for (int x = 0; x < 80; x += step)
+  for (int x = 0; x < Printer::Instance().TerminalWidth; x += step)
   {
-    for (int y = 0; y < 25; y += step)
+    for (int y = 0; y < Printer::Instance().TerminalHeight; y += step)
     {
       Printer::Instance().Print(x, y, "x", Printer::kAlignLeft, "#FFFFFF");
     }
@@ -85,47 +35,28 @@ int main()
 
   start_color();
 
-  Map::Instance().Init();
-  Printer::Instance().Init();
-
-  //auto npc = std::make_unique<GameObject>(18, 12, '@', 2, COLOR_YELLOW);
-
-  //_mapObjects.push_back(std::move(npc));
-
+  Printer::Instance().Init();  
+  Printer::Instance().TerminalWidth = mx;
+  Printer::Instance().TerminalHeight = my;
+  
+  Map::Instance().Init();      
   Map::Instance().CreateMap();
-
-  Map::Instance().MapOffsetX = 40;
-  Map::Instance().MapOffsetY = 12;
-
-  _player = std::make_unique<GameObject>(Map::Instance().PlayerStartX,
-                                         Map::Instance().PlayerStartY, '@', "#00FFFF");
-
+  Map::Instance().MapOffsetX = mx / 2;
+  Map::Instance().MapOffsetY = my / 2;
+  
   PrintTestScreen();
 
-  Printer::Instance().Print(40, 14, "Press any key to start", Printer::kAlignCenter, "#FFFFFF");
-
-  while (_gameRunning)
-  {
-    char ch = getch();
-
-    // Causes flickering due to lack of doublebuffering
-
-    clear();
-
-    //_player.get()->Clear();
-
-    QueryInput(ch);
-
-    DrawAll();
-
-    // player coords
-    auto coords = Util::StringFormat("[%i;%i]", _player.get()->PosX(), _player.get()->PosY());
-    Printer::Instance().Print(0, 30, coords, Printer::kAlignLeft, "#FFFFFF");
-
-    refresh();
-  }
-
+  Printer::Instance().Print(mx / 2, my / 2, "Press any key to start", Printer::kAlignCenter, "#FFFFFF");
+  
+  auto resolution = Util::StringFormat("terminal size: %ix%i", mx, my);
+  Printer::Instance().Print(mx, my - 1, resolution, Printer::kAlignRight, "#FFFFFF");  
+  
+  Application::Instance().Init();  
+  Application::Instance().Run();
+  
   endwin();
 
+  printf("Goodbye!\n");
+  
   return 0;
 }

@@ -4,30 +4,14 @@
 class Tile
 {
 public:
-  Tile() {}
-
+  bool Blocking;
+  bool BlockSight;
+  
   void Init(bool blocking, bool blockSight = false)
   {
-    _blocking = blocking;
-    _blockSight = blocking ? true : blockSight;
-  }
-
-  void Blocking(bool value)
-  {
-    _blocking = value;
-  }
-
-  void BlockSight(bool value)
-  {
-    _blockSight = value;
-  }
-
-  bool IsBlocking() { return _blocking; }
-  bool IsBlockSight() { return _blockSight; }
-
-private:
-  bool _blocking;
-  bool _blockSight;
+    Blocking = blocking;
+    BlockSight = blocking ? true : blockSight;
+  }  
 };
 
 #endif

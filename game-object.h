@@ -15,13 +15,17 @@ public:
     _htmlColor = htmlColor;
   }
 
-  void Move(int dx, int dy)
+  bool Move(int dx, int dy)
   {
-    if (!Map::Instance().MapArray[_posX + dx][_posY + dy].IsBlocking())
+    if (!Map::Instance().MapArray[_posX + dx][_posY + dy].Blocking)
     {
       _posX += dx;
       _posY += dy;
+      
+      return true;
     }
+    
+    return false;
   }
 
   void Draw()

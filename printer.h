@@ -13,7 +13,9 @@
 class Printer : public Singleton<Printer> 
 {
  public:
-
+  int TerminalWidth;
+  int TerminalHeight;
+  
   static const int kAlignLeft = 0;
   static const int kAlignCenter = 1;
   static const int kAlignRight = 2;

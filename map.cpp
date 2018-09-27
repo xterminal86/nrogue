@@ -12,14 +12,14 @@ void Map::CreateMap()
 
   for (int x = 0; x < GlobalConstants::MapX; x++)
   {
-    MapArray[x][0].Blocking(true);
-    MapArray[x][GlobalConstants::MapY - 1].Blocking(true);
+    MapArray[x][0].Blocking = true;
+    MapArray[x][GlobalConstants::MapY - 1].Blocking = true;
   }
 
   for (int y = 0; y < GlobalConstants::MapY; y++)
   {
-    MapArray[0][y].Blocking(true);
-    MapArray[GlobalConstants::MapX - 1][y].Blocking(true);
+    MapArray[0][y].Blocking = true;
+    MapArray[GlobalConstants::MapX - 1][y].Blocking = true;
   }
 
   PlayerStartX = 1;
@@ -108,8 +108,8 @@ void Map::CreateRoom(Rect& r)
   {
     for (int y = r.Y1 + 1; y < r.Y2; y++)
     {
-      MapArray[x][y].Blocking(false);
-      MapArray[x][y].BlockSight(false);
+      MapArray[x][y].Blocking = false;
+      MapArray[x][y].BlockSight = false;
     }
   }
 }
@@ -128,8 +128,8 @@ void Map::CreateTunnelH(int x1, int x2, int y)
 
   for (int x = min; x <= max; x++)
   {
-    MapArray[x][y].Blocking(false);
-    MapArray[x][y].BlockSight(false);
+    MapArray[x][y].Blocking = false;
+    MapArray[x][y].BlockSight = false;
   }
 }
 
@@ -147,8 +147,8 @@ void Map::CreateTunnelV(int y1, int y2, int x)
 
   for (int y = min; y <= max; y++)
   {
-    MapArray[x][y].Blocking(false);
-    MapArray[x][y].BlockSight(false);
+    MapArray[x][y].Blocking = false;
+    MapArray[x][y].BlockSight = false;
   }
 }
 
@@ -158,7 +158,7 @@ void Map::Draw()
   {
     for (int y = 0; y < GlobalConstants::MapY; y++)
     {
-      if (Map::Instance().MapArray[x][y].IsBlocking())
+      if (Map::Instance().MapArray[x][y].Blocking)
       {
         Printer::Instance().Print(x + MapOffsetX, y + MapOffsetY, "#", Printer::kAlignLeft, "#888888");
       }
