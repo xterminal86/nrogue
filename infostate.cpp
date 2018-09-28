@@ -10,7 +10,7 @@ void InfoState::HandleInput()
   switch (ch)
   {
     case 'q':
-      Application::Instance().ChangeState(Application::Instance().kMainStateIndex);      
+      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);      
       break;
   }  
 }
@@ -19,7 +19,7 @@ void InfoState::Update()
 {
   clear();
   
-  Printer::Instance().Print(40, 12, "InfoState::Update()", Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().Print(0, 0, "You check yourself out: you look good! :-)", Printer::kAlignLeft, "#FFFFFF");
   
   refresh();
 }

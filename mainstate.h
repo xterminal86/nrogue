@@ -19,6 +19,8 @@ class MainState : public GameState
   private:
     std::vector<std::unique_ptr<GameObject>> _mapObjects;
     std::unique_ptr<GameObject> _player;      
+
+    char _keyPressed;
 };
 
 #endif

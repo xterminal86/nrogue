@@ -14,9 +14,9 @@ void MainState::Init()
 
 void MainState::HandleInput()
 {
-  char ch = getch();  
+  _keyPressed = getch();  
   
-  switch (ch)
+  switch (_keyPressed)
   {
     case 'w':
       if (_player.get()->Move(0, -1))
@@ -47,11 +47,11 @@ void MainState::HandleInput()
       break;
     
     case '@':
-      Application::Instance().ChangeState(Application::Instance().kInfoStateIndex);
+      Application::Instance().ChangeState(Application::GameStates::INFO_STATE);
       break;
       
     case 'q':
-      Application::Instance().ChangeState(Application::Instance().kExitGameIndex);
+      Application::Instance().ChangeState(Application::GameStates::MENU_STATE);
       break;
       
     default:
@@ -72,9 +72,11 @@ void MainState::Update()
 
   _player.get()->Draw();
   
-  // player coords
-  auto coords = Util::StringFormat("[%i;%i]", _player.get()->PosX(), _player.get()->PosY());
+  // Some debug info
+  auto coords = Util::StringFormat("[%i;%i] %u", _player.get()->PosX(), 
+                                                      _player.get()->PosY(),
+                                                      _keyPressed);
   Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, coords, Printer::kAlignLeft, "#FFFFFF");
-  
+
   refresh();  
 }

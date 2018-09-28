@@ -4,6 +4,8 @@
 #include "singleton.h"
 #include "mainstate.h"
 #include "infostate.h"
+#include "menustate.h"
+#include "logger.h"
 
 #include <typeinfo>
 #include <memory>
@@ -13,21 +15,27 @@
 class Application : public Singleton<Application>
 {
   public:        
-    const int kExitGameIndex = -1;
-    const int kMainStateIndex = 0;
-    const int kInfoStateIndex = 1;
-    
+
+    enum class GameStates
+    {
+      EXIT_GAME = -1,
+      MENU_STATE,
+      MAIN_STATE,
+      INFO_STATE
+    };
+
     void Init() override
     {
-      _gameStates[kMainStateIndex] = std::unique_ptr<GameState>(new MainState());
-      _gameStates[kInfoStateIndex] = std::unique_ptr<GameState>(new InfoState());    
-      
+      _gameStates[(int)GameStates::MAIN_STATE] = std::unique_ptr<GameState>(new MainState());
+      _gameStates[(int)GameStates::INFO_STATE] = std::unique_ptr<GameState>(new InfoState());    
+      _gameStates[(int)GameStates::MENU_STATE] = std::unique_ptr<GameState>(new MenuState());    
+
       for (auto& state : _gameStates)
       {
         state.second.get()->Init();
       }
       
-      _currentState = _gameStates[kMainStateIndex].get();
+      _currentState = _gameStates[(int)GameStates::MENU_STATE].get();
     }
     
     void Run()
@@ -42,15 +50,26 @@ class Application : public Singleton<Application>
         // we might get the same situation in Update().
         
         _currentState->Update();
-        _currentState->HandleInput();        
+        _currentState->HandleInput();                
       }      
     }
     
-    void ChangeState(const int gameStateIndex)
+    void ChangeState(const GameStates& gameStateIndex)
     {
-      //printf("Changing state %s 0x%X => %i ", typeid(*_currentState).name(), _currentState, gameStateIndex);
-      
-      _currentState = (gameStateIndex == kExitGameIndex) ? nullptr : _gameStates[gameStateIndex].get();
+      if (gameStateIndex != GameStates::EXIT_GAME)
+      {
+        auto str = Util::StringFormat("Changing state: %s [0x%X] => %s [0x%X]\n", typeid(*_currentState).name(), _currentState, 
+                                                     typeid(*_gameStates[(int)gameStateIndex].get()).name(), 
+                                                     _gameStates[(int)gameStateIndex].get());
+        Logger::Instance().Print(str);
+      }
+      else
+      {
+        auto str = Util::StringFormat("Changing state: %s [0x%X] => EXIT_GAME\n", typeid(*_currentState).name(), _currentState);
+        Logger::Instance().Print(str);
+      }
+
+      _currentState = (gameStateIndex == GameStates::EXIT_GAME) ? nullptr : _gameStates[(int)gameStateIndex].get();
     }
   
   private:
