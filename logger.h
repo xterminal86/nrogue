@@ -35,7 +35,7 @@ public:
     }
   }
 
-  // IF set to true all printing is ignored
+  // If set to true all printing is ignored
   bool Disabled = false;
 
 private:
