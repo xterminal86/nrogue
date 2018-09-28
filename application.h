@@ -32,22 +32,25 @@ class Application : public Singleton<Application>
     
     void Run()
     {
-      printf("%s 0x%X\n", typeid(*_currentState).name(), _currentState);
-        
       while (_currentState != nullptr)
       {        
-        _currentState->HandleInput();
+        // Since change state happens in HandleInput, if it's called before Update
+        // to exit game (change state to nullptr), we get segfault because
+        // _currentState->Update() gets called on nullptr
+        //
+        // TODO: Probably still bad idea to just change order of methods call, since
+        // we might get the same situation in Update().
+        
         _currentState->Update();
+        _currentState->HandleInput();        
       }      
     }
     
     void ChangeState(const int gameStateIndex)
     {
-      printf("Changing state %s 0x%X => %i ", typeid(*_currentState).name(), _currentState, gameStateIndex);
+      //printf("Changing state %s 0x%X => %i ", typeid(*_currentState).name(), _currentState, gameStateIndex);
       
       _currentState = (gameStateIndex == kExitGameIndex) ? nullptr : _gameStates[gameStateIndex].get();
-      
-      printf("0x%X\n", _currentState);      
     }
   
   private:
