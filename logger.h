@@ -12,7 +12,7 @@ class Logger : public Singleton<Logger>
 public:
   void Init() override
   {
-    _logFile.open("debug-log.txt");
+    _logFile.open("debug-log.txt");    
   }
 
   virtual ~Logger()
@@ -35,6 +35,7 @@ public:
     }
   }
 
+  // IF set to true all printing is ignored
   bool Disabled = false;
 
 private:
