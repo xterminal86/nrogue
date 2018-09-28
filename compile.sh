@@ -1,3 +1,3 @@
 #!/bin/bash
 
-g++ *.cpp -o nrogue -lcurses
+g++ src/*.cpp -I./inc -o nrogue -lcurses

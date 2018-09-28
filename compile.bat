@@ -1,2 +1,2 @@
 echo off
-g++ *.cpp -o nrogue.exe -lpdcurses
+g++ src/*.cpp -I./inc -o nrogue.exe -lpdcurses
