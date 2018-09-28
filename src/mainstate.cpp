@@ -63,20 +63,24 @@ void MainState::Update()
   clear();
   
   Map::Instance().Draw();
-  
+
+  _player.get()->CheckVisibility();
+  _player.get()->Draw();
+    
   for (auto& item : _mapObjects)
   {
     item.get()->Draw();
   }
-
-  _player.get()->CheckVisibility();
-  _player.get()->Draw();
   
-  // Some debug info
-  auto coords = Util::StringFormat("[%i;%i] %u", _player.get()->PosX(), 
-                                                 _player.get()->PosY(),
-                                                 _keyPressed);
-  Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, coords, Printer::kAlignLeft, "#FFFFFF");
-
+  // Some debug info  
+  if ((int)_keyPressed != -1)
+  {    
+    _debugInfo = Util::StringFormat("[%i;%i] %u", _player.get()->PosX(), 
+                                                  _player.get()->PosY(),
+                                                  _keyPressed);    
+  }                                             
+  
+  Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+  
   refresh();  
 }

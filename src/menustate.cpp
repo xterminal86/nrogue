@@ -25,8 +25,13 @@ void MenuState::Update()
   int tw = Printer::Instance().TerminalWidth;
   int th = Printer::Instance().TerminalHeight;
 
-  //Printer::Instance().Print(tw / 2, th / 2 - 4, "NROGUE", Printer::kAlignCenter, "#FFFFFF");
-  Printer::Instance().Print(0, th / 2 - 12, _title, Printer::kAlignLeft, "#FFFFFF");
+  int offset = 0;
+  for (auto& s : _title)
+  {
+    Printer::Instance().Print(tw / 2, th / 2 - 12 + offset, s, Printer::kAlignCenter, "#FFFFFF");
+    offset++;
+  }
+  
   Printer::Instance().Print(tw / 2, th / 2 + 4, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
   Printer::Instance().Print(tw, th - 1, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
 

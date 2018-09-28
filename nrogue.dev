@@ -29,7 +29,7 @@ IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=0000000000000000000000000
-UnitCount=24
+UnitCount=28
 
 [VersionInfo]
 Major=1
@@ -51,47 +51,47 @@ AutoIncBuildNr=0
 SyncProduct=1
 
 [Unit1]
-FileName=colorpair.h
+FileName=.gitignore
 CompileCpp=1
 Folder=
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=constants.h
+FileName=compile.sh
 CompileCpp=1
 Folder=
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=game-object.h
+FileName=CMakeLists.txt
 CompileCpp=1
 Folder=
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=map.h
+FileName=compile.bat
 CompileCpp=1
 Folder=
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=printer.h
+FileName=inc\application.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -101,7 +101,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=rect.h
+FileName=inc\colorpair.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -111,7 +111,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=singleton.h
+FileName=inc\constants.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -121,7 +121,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=tile.h
+FileName=inc\game-object.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -131,7 +131,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=util.h
+FileName=inc\gamestate.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -141,7 +141,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=main.cpp
+FileName=inc\infostate.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -151,7 +151,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=map.cpp
+FileName=inc\logger.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -161,7 +161,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=printer.cpp
+FileName=inc\mainstate.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -171,43 +171,47 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=.gitignore
+FileName=inc\map.h
 Folder=
-Compile=0
-Link=0
+Compile=1
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
 [Unit14]
-FileName=compile.sh
+FileName=inc\menustate.h
 Folder=
-Compile=0
-Link=0
+Compile=1
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
 [Unit15]
-FileName=CMakeLists.txt
+FileName=inc\nrogue_private.h
 Folder=
-Compile=0
-Link=0
+Compile=1
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
 [Unit16]
-FileName=compile.bat
+FileName=inc\printer.h
 Folder=
-Compile=0
-Link=0
+Compile=1
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
 [Unit18]
-FileName=gamestate.cpp
+FileName=inc\singleton.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -217,7 +221,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=application.h
+FileName=inc\tile.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -227,7 +231,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit20]
-FileName=application.cpp
+FileName=inc\util.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -237,7 +241,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit21]
-FileName=mainstate.h
+FileName=src\application.cpp
 CompileCpp=1
 Folder=
 Compile=1
@@ -247,7 +251,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit22]
-FileName=mainstate.cpp
+FileName=src\gamestate.cpp
 CompileCpp=1
 Folder=
 Compile=1
@@ -257,7 +261,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit23]
-FileName=infostate.h
+FileName=src\infostate.cpp
 CompileCpp=1
 Folder=
 Compile=1
@@ -267,7 +271,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit24]
-FileName=infostate.cpp
+FileName=src\main.cpp
 CompileCpp=1
 Folder=
 Compile=1
@@ -277,7 +281,47 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=gamestate.h
+FileName=inc\rect.h
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit25]
+FileName=src\mainstate.cpp
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit26]
+FileName=src\map.cpp
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit27]
+FileName=src\menustate.cpp
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit28]
+FileName=src\printer.cpp
 CompileCpp=1
 Folder=
 Compile=1

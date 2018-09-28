@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <vector>
 #include <utility>
+#include <memory>
 
 #include <math.h>
 
@@ -35,8 +36,13 @@ namespace Util
   }
 
   /// Bresenham line including end point
-  inline std::vector<Position> BresenhamLine(int x1, int y1, int x2, int y2)
+  inline std::vector<Position> BresenhamLine(int sx, int sy, int ex, int ey)
   {
+    int x1 = sx;
+    int y1 = sy;
+    int x2 = ex;
+    int y2 = ey;
+    
     std::vector<Position> result;
 
     // Bresenham's line algorithm
@@ -101,6 +107,16 @@ namespace Util
 
     result.push_back(pos);
 
+    // Ensure that line always goes from source point
+    bool cond = ( (sx > ex && sy == ey) 
+               || (sx == ex && sy > ey)
+               || (sx > ex && sy > ey) );
+    
+    if (cond)
+    {    
+      std::reverse(result.begin(), result.end());   
+    } 
+  
     return result;
   }
 
@@ -112,6 +128,17 @@ namespace Util
   inline int Clamp(int value, int min, int max)
   {
     return std::max(min, std::min(value, max));
+  }
+  
+  inline float LinearDistance(int x1, int y1, int x2, int y2)
+  {
+    float d = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+    return d;
+  }
+  
+  inline float LinearDistance(Position& s, Position& e)
+  {
+    return LinearDistance(s.X, s.Y, e.X, e.Y);
   }
 }
 

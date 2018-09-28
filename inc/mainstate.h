@@ -21,6 +21,8 @@ class MainState : public GameState
     std::unique_ptr<GameObject> _player;      
 
     char _keyPressed;
+    
+    std::string _debugInfo;
 };
 
 #endif
