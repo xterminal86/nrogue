@@ -26,7 +26,7 @@ struct Position
 namespace Util
 {
   template<typename ... Args>
-  std::string StringFormat(const std::string& format, Args ... args )
+  inline std::string StringFormat(const std::string& format, Args ... args )
   {
     size_t size = snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
     std::unique_ptr<char[]> buf( new char[ size ] ); 
@@ -35,7 +35,7 @@ namespace Util
   }
 
   /// Bresenham line including end point
-  static std::vector<Position> BresenhamLine(int x1, int y1, int x2, int y2)
+  inline std::vector<Position> BresenhamLine(int x1, int y1, int x2, int y2)
   {
     std::vector<Position> result;
 
@@ -104,10 +104,10 @@ namespace Util
     return result;
   }
 
-  static std::vector<Position> BresenhamLine(Position& start, Position& end)
+  inline std::vector<Position> BresenhamLine(Position& start, Position& end)
   {
     return BresenhamLine(start.X, start.Y, end.X, end.Y);
-  }
+  }  
 }
 
 #endif
