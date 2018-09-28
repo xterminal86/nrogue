@@ -7,9 +7,8 @@ void MainState::Init()
   _player = std::unique_ptr<GameObject>(new GameObject(Map::Instance().PlayerStartX,
                                                        Map::Instance().PlayerStartY, 
                                                       '@', "#00FFFF"));
-                                                      
-  auto npc = std::make_unique<GameObject>(18, 12, '@', "#FFFF00");
-  _mapObjects.push_back(std::move(npc));  
+
+  _player.get()->VisibilityRadius = 12;
 }
 
 void MainState::HandleInput()
@@ -70,12 +69,13 @@ void MainState::Update()
     item.get()->Draw();
   }
 
+  _player.get()->CheckVisibility();
   _player.get()->Draw();
   
   // Some debug info
   auto coords = Util::StringFormat("[%i;%i] %u", _player.get()->PosX(), 
-                                                      _player.get()->PosY(),
-                                                      _keyPressed);
+                                                 _player.get()->PosY(),
+                                                 _keyPressed);
   Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, coords, Printer::kAlignLeft, "#FFFFFF");
 
   refresh();  

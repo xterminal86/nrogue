@@ -108,6 +108,11 @@ namespace Util
   {
     return BresenhamLine(start.X, start.Y, end.X, end.Y);
   }  
+
+  inline int Clamp(int value, int min, int max)
+  {
+    return std::max(min, std::min(value, max));
+  }
 }
 
 #endif

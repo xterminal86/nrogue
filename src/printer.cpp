@@ -123,3 +123,9 @@ void Printer::Print(const int& x, const int& y, const std::string& text, int ali
   mvprintw(ty, tx, text.data());  
   attroff(COLOR_PAIR(_colorMap[hash].PairIndex));   
 }
+
+void Printer::Print(const int& x, const int& y, const char& text, int align, const std::string& htmlColorFg, const std::string& htmlColorBg)
+{
+  std::string str = { text };
+  Print(x, y, str, align, htmlColorFg, htmlColorBg);
+}

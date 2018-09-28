@@ -7,19 +7,21 @@ void Map::CreateMap()
     for (int y = 0; y < GlobalConstants::MapY; y++)
     {
       MapArray[x][y].Init(false);
+
+      MapArray[x][y].SetFloor();      
     }
   }
 
   for (int x = 0; x < GlobalConstants::MapX; x++)
   {
-    MapArray[x][0].Blocking = true;
-    MapArray[x][GlobalConstants::MapY - 1].Blocking = true;
+    MapArray[x][0].SetWall();
+    MapArray[x][GlobalConstants::MapY - 1].SetWall();    
   }
 
   for (int y = 0; y < GlobalConstants::MapY; y++)
   {
-    MapArray[0][y].Blocking = true;
-    MapArray[GlobalConstants::MapX - 1][y].Blocking = true;
+    MapArray[0][y].SetWall();
+    MapArray[GlobalConstants::MapX - 1][y].SetWall();    
   }
 
   PlayerStartX = 1;
@@ -157,14 +159,22 @@ void Map::Draw()
   for (int x = 0; x < GlobalConstants::MapX; x++)
   {
     for (int y = 0; y < GlobalConstants::MapY; y++)
-    {
-      if (Map::Instance().MapArray[x][y].Blocking)
-      {
-        Printer::Instance().Print(x + MapOffsetX, y + MapOffsetY, "#", Printer::kAlignLeft, "#888888");
+    { 
+      if (MapArray[x][y].Visible)
+      {        
+        Printer::Instance().Print(x + MapOffsetX, y + MapOffsetY, 
+                                  MapArray[x][y].Image, 
+                                  Printer::kAlignLeft, 
+                                  MapArray[x][y].Color);      
       }
       else
       {
-        Printer::Instance().Print(x + MapOffsetX, y + MapOffsetY, ".", Printer::kAlignLeft, "#444444");
+        auto tileColor = MapArray[x][y].Revealed ? "#222222" : "#000000";
+
+        Printer::Instance().Print(x + MapOffsetX, y + MapOffsetY, 
+                                  MapArray[x][y].Image, 
+                                  Printer::kAlignLeft, 
+                                  tileColor);      
       }
     }
   }

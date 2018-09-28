@@ -41,7 +41,9 @@ class Printer : public Singleton<Printer>
   void Print(const int& x, const int& y, const std::string& text, int align,
                                          const std::string& htmlColorFg,
                                          const std::string& htmlColorBg = "#000000");
-
+  void Print(const int& x, const int& y, const char& text, int align, 
+                                         const std::string& htmlColorFg, 
+                                         const std::string& htmlColorBg = "#000000");
  private:
   bool ContainsColorMap(size_t hashToCheck);
   bool ColorIndexExists(size_t hashToCheck);
