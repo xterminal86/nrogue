@@ -21,6 +21,9 @@ void GameObject::CheckVisibility()
   int vrx = VisibilityRadius;
   int vry = VisibilityRadius;
   
+  /*
+  // FIXME: rethink
+  //
   // Compensate for different terminal sizes, 
   // so we get more circle-like visible area around player
   if (tw > th)
@@ -34,6 +37,7 @@ void GameObject::CheckVisibility()
   
   vrx = Util::Clamp(vrx, 1, VisibilityRadius);
   vry = Util::Clamp(vry, 1, VisibilityRadius);
+  */
   
   auto map = Map::Instance().MapArray;
 

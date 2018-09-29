@@ -4,6 +4,7 @@
 #include "map.h"
 #include "printer.h"
 #include "util.h"
+#include "component.h"
 
 class GameObject
 {
@@ -31,6 +32,24 @@ public:
     Printer::Instance().Print(_posX + Map::Instance().MapOffsetX, _posY + Map::Instance().MapOffsetY, eraser, Printer::kAlignLeft, "#000000");
   }
   
+  void AddComponent(Component* c)
+  {    
+    _components[c->Hash()].reset(c);
+  }
+    
+  const Component* GetComponent(size_t hash)
+  {
+    for (auto& c : _components)
+    {
+      if (c.second.get()->Hash() == hash)
+      {
+        return c.second.get();
+      }
+    }
+    
+    return nullptr;
+  }
+  
   int PosX() { return _posX; }
   int PosY() { return _posY; }
 
@@ -41,6 +60,8 @@ private:
   int _posY;
   char _avatar;
   std::string _htmlColor;
+  
+  std::map<size_t, std::unique_ptr<Component>> _components;
 };
 
 #endif

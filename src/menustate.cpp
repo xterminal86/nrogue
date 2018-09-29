@@ -4,9 +4,9 @@
 
 void MenuState::HandleInput()
 {
-  char ch = getch();
+  _keyPressed = getch();
 
-  switch (ch)
+  switch (_keyPressed)
   {
     case 10:
       Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);      
@@ -20,20 +20,23 @@ void MenuState::HandleInput()
 
 void MenuState::Update()
 {
-  clear();
-
-  int tw = Printer::Instance().TerminalWidth;
-  int th = Printer::Instance().TerminalHeight;
-
-  int offset = 0;
-  for (auto& s : _title)
+  if (_keyPressed != -1)
   {
-    Printer::Instance().Print(tw / 2, th / 2 - 12 + offset, s, Printer::kAlignCenter, "#FFFFFF");
-    offset++;
-  }
+    clear();
   
-  Printer::Instance().Print(tw / 2, th / 2 + 4, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
-  Printer::Instance().Print(tw, th - 1, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
-
-  refresh();
+    int tw = Printer::Instance().TerminalWidth;
+    int th = Printer::Instance().TerminalHeight;
+  
+    int offset = 0;
+    for (auto& s : _title)
+    {
+      Printer::Instance().Print(tw / 2, th / 2 - 12 + offset, s, Printer::kAlignCenter, "#FFFFFF");
+      offset++;
+    }
+    
+    Printer::Instance().Print(tw / 2, th / 2 + 4, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().Print(tw, th - 1, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
+  
+    refresh();
+  }
 }

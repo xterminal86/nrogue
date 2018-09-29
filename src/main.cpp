@@ -26,6 +26,7 @@ int main()
 {  
   auto scr = initscr();
   nodelay(scr, true);     // non-blocking getch()
+  keypad(scr, true);      // enable numpad
   noecho();
   curs_set(false);
 

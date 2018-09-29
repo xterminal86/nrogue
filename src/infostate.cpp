@@ -5,9 +5,9 @@
 
 void InfoState::HandleInput()
 {
-  char ch = getch();  
+  _keyPressed = getch();  
   
-  switch (ch)
+  switch (_keyPressed)
   {
     case 'q':
       Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);      

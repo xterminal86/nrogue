@@ -10,7 +10,10 @@ class GameState
 	public:
     virtual void Init() {}
     virtual void HandleInput() = 0;
-    virtual void Update() = 0;    
+    virtual void Update() = 0;
+    
+  protected:
+    int _keyPressed;  
 };
 
 #endif

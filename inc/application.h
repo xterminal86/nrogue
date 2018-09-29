@@ -70,6 +70,11 @@ class Application : public Singleton<Application>
       }
 
       _currentState = (gameStateIndex == GameStates::EXIT_GAME) ? nullptr : _gameStates[(int)gameStateIndex].get();
+      
+      if (_currentState != nullptr)
+      {
+        _currentState->Update();
+      }
     }
   
   private:
