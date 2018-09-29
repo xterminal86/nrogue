@@ -11,8 +11,8 @@ void MainState::Init()
 
   _player.get()->VisibilityRadius = 12;
   
-  _player.get()->AddComponent(new FighterComponent());
-  auto res = _player.get()->GetComponent(typeid(Component).hash_code());
+  auto c = _player.get()->AddComponent<FighterComponent>();  
+  auto res = _player.get()->GetComponent<FighterComponent>();    
 }
 
 void MainState::HandleInput()
@@ -99,16 +99,17 @@ void MainState::Update()
   if (_keyPressed != -1)
   {
     clear();
+        
+    _player.get()->CheckVisibility();
     
     Map::Instance().Draw();
-  
-    _player.get()->CheckVisibility();
-    _player.get()->Draw();
-      
+    
     for (auto& item : _mapObjects)
     {
       item.get()->Draw();
     }
+    
+    _player.get()->Draw();
     
     // Some debug info  
     _debugInfo = Util::StringFormat("[%i;%i] %i", _player.get()->PosX(), 

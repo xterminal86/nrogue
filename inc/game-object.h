@@ -32,16 +32,25 @@ public:
     Printer::Instance().Print(_posX + Map::Instance().MapOffsetX, _posY + Map::Instance().MapOffsetY, eraser, Printer::kAlignLeft, "#000000");
   }
   
-  void AddComponent(Component* c)
-  {    
-    _components[c->Hash()].reset(c);
+  template <typename T>
+  Component* AddComponent()
+  {   
+    // TODO: no check for component already added
+    
+    auto cp = std::make_unique<T>();    
+            
+    // cp is null after std::move
+    _components[typeid(T).hash_code()] = std::move(cp);
+                
+    return _components[typeid(T).hash_code()].get();
   }
     
-  const Component* GetComponent(size_t hash)
+  template <typename T>
+  Component* GetComponent()
   {
     for (auto& c : _components)
     {
-      if (c.second.get()->Hash() == hash)
+      if (c.second.get()->Hash() == typeid(T).hash_code())
       {
         return c.second.get();
       }

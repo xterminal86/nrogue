@@ -4,7 +4,7 @@ Name=nrogue
 Type=1
 Ver=2
 ObjFiles=
-Includes=H:\Sources\C++\nrogue.git
+Includes=H:\Sources\C++\nrogue.git\inc
 Libs=
 PrivateResource=nrogue_private.rc
 ResourceIncludes=
@@ -29,7 +29,7 @@ IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=0000000000000000000000000
-UnitCount=31
+UnitCount=30
 
 [VersionInfo]
 Major=1
@@ -81,16 +81,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=compile.bat
-CompileCpp=1
-Folder=
-Compile=0
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit5]
 FileName=inc\application.h
 CompileCpp=1
 Folder=
@@ -100,7 +90,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit5]
 FileName=inc\colorpair.h
 CompileCpp=1
 Folder=
@@ -110,7 +100,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit6]
 FileName=inc\constants.h
 CompileCpp=1
 Folder=
@@ -120,7 +110,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
+[Unit7]
 FileName=inc\game-object.h
 CompileCpp=1
 Folder=
@@ -130,7 +120,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit8]
 FileName=inc\gamestate.h
 CompileCpp=1
 Folder=
@@ -140,7 +130,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
+[Unit9]
 FileName=inc\infostate.h
 CompileCpp=1
 Folder=
@@ -150,7 +140,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
+[Unit10]
 FileName=inc\logger.h
 CompileCpp=1
 Folder=
@@ -160,7 +150,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
+[Unit11]
 FileName=inc\mainstate.h
 CompileCpp=1
 Folder=
@@ -170,17 +160,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
+[Unit12]
 FileName=inc\map.h
+CompileCpp=1
 Folder=
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
-CompileCpp=1
 
-[Unit14]
+[Unit13]
 FileName=inc\menustate.h
 Folder=
 Compile=1
@@ -190,7 +180,7 @@ OverrideBuildCmd=0
 BuildCmd=
 CompileCpp=1
 
-[Unit15]
+[Unit14]
 FileName=inc\nrogue_private.h
 Folder=
 Compile=1
@@ -200,7 +190,7 @@ OverrideBuildCmd=0
 BuildCmd=
 CompileCpp=1
 
-[Unit16]
+[Unit15]
 FileName=inc\printer.h
 Folder=
 Compile=1
@@ -210,17 +200,17 @@ OverrideBuildCmd=0
 BuildCmd=
 CompileCpp=1
 
-[Unit18]
-FileName=inc\singleton.h
-CompileCpp=1
+[Unit16]
+FileName=inc\rect.h
 Folder=
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
-[Unit19]
+[Unit18]
 FileName=inc\tile.h
 CompileCpp=1
 Folder=
@@ -230,7 +220,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit20]
+[Unit19]
 FileName=inc\util.h
 CompileCpp=1
 Folder=
@@ -240,7 +230,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
+[Unit20]
 FileName=src\application.cpp
 CompileCpp=1
 Folder=
@@ -250,7 +240,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
+[Unit21]
 FileName=src\gamestate.cpp
 CompileCpp=1
 Folder=
@@ -260,7 +250,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit22]
 FileName=src\infostate.cpp
 CompileCpp=1
 Folder=
@@ -270,7 +260,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
+[Unit23]
 FileName=src\main.cpp
 CompileCpp=1
 Folder=
@@ -280,17 +270,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit17]
-FileName=inc\rect.h
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit25]
+[Unit24]
 FileName=src\mainstate.cpp
 CompileCpp=1
 Folder=
@@ -300,7 +280,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit26]
+[Unit17]
+FileName=inc\singleton.h
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit25]
 FileName=src\map.cpp
 CompileCpp=1
 Folder=
@@ -310,7 +300,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit27]
+[Unit26]
 FileName=src\menustate.cpp
 CompileCpp=1
 Folder=
@@ -320,7 +310,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit28]
+[Unit27]
 FileName=src\printer.cpp
 CompileCpp=1
 Folder=
@@ -330,7 +320,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit29]
+[Unit28]
 FileName=src\game-object.cpp
 CompileCpp=1
 Folder=
@@ -340,8 +330,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit30]
+[Unit29]
 FileName=inc\component.h
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit30]
+FileName=inc\fighter-component.h
 CompileCpp=1
 Folder=
 Compile=1
