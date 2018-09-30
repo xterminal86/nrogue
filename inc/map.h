@@ -10,6 +10,7 @@
 #include "tile.h"
 #include "rect.h"
 #include "printer.h"
+#include "util.h"
 
 class Map : public Singleton<Map>
 {
@@ -25,7 +26,7 @@ public:
   void CreateTunnelH(int x1, int x2, int y);
   void CreateTunnelV(int y1, int y2, int x);  
 
-  void Draw();
+  void Draw(int playerX, int playerY);
 
   Tile MapArray[GlobalConstants::MapX][GlobalConstants::MapY];
 

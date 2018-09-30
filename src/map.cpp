@@ -154,13 +154,18 @@ void Map::CreateTunnelV(int y1, int y2, int x)
   }
 }
 
-void Map::Draw()
+void Map::Draw(int playerX, int playerY)
 {
-  for (int x = 0; x < GlobalConstants::MapX; x++)
+  int tw = Printer::Instance().TerminalWidth;
+  int th = Printer::Instance().TerminalHeight;
+    
+  auto mapCells = Util::GetRectAroundPoint(playerX, playerY, tw / 2, th / 2);
+  for (auto& cell : mapCells)
   {
-    for (int y = 0; y < GlobalConstants::MapY; y++)
-    { 
-      if (MapArray[x][y].Visible)
+    int x = cell.X;
+    int y = cell.Y;
+    
+    if (MapArray[x][y].Visible)
       {        
         Printer::Instance().Print(x + MapOffsetX, y + MapOffsetY, 
                                   MapArray[x][y].Image, 
@@ -176,6 +181,5 @@ void Map::Draw()
                                   Printer::kAlignLeft, 
                                   tileColor);      
       }
-    }
   }
 }

@@ -140,6 +140,37 @@ namespace Util
   {
     return LinearDistance(s.X, s.Y, e.X, e.Y);
   }
+  
+  inline std::vector<Position> GetRectAroundPoint(int pointX, int pointY, int rangeX, int rangeY)
+  {    
+    std::vector<Position> result;
+   
+    // FIXME: actualize for different maps' sizes
+     
+    int mw = GlobalConstants::MapX;
+    int mh = GlobalConstants::MapY;
+      
+    int lx = pointX - rangeX;
+    int ly = pointY - rangeY;
+    int hx = pointX + rangeX;
+    int hy = pointY + rangeY;
+    
+    lx = Clamp(lx, 0, mw - 1);
+    ly = Clamp(ly, 0, mh - 1);
+    hx = Clamp(hx, 0, mw - 1);
+    hy = Clamp(hy, 0, mh - 1);
+    
+    for (int x = lx; x <= hx; x++)
+    {
+      for (int y = ly; y <= hy; y++)
+      {
+        Position p(x, y);
+        result.push_back(p);
+      }
+    }
+    
+    return result;
+  }
 }
 
 #endif

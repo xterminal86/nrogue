@@ -36,6 +36,9 @@ void MenuState::Update()
     
     Printer::Instance().Print(tw / 2, th / 2 + 4, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
     Printer::Instance().Print(tw, th - 1, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
+    
+    auto debugInfo = Util::StringFormat("terminal size: %ix%i", tw, th);
+    Printer::Instance().Print(0, th - 1, debugInfo, Printer::kAlignLeft, "#FFFFFF");
   
     refresh();
   }

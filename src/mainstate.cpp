@@ -102,7 +102,7 @@ void MainState::Update()
         
     _player.get()->CheckVisibility();
     
-    Map::Instance().Draw();
+    Map::Instance().Draw(_player.get()->PosX(), _player.get()->PosY());
     
     for (auto& item : _mapObjects)
     {

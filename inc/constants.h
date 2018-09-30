@@ -3,8 +3,8 @@
 
 namespace GlobalConstants
 {
-  static const int MapX = 160;
-  static const int MapY = 45;  
+  static const int MapX = 100; // 160
+  static const int MapY = 100; // 45
 }
 
 #endif

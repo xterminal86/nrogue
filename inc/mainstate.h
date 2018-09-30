@@ -25,7 +25,7 @@ class MainState : public GameState
     void Init() override;
     void HandleInput() override;
     void Update() override;
-    
+        
   private:
     std::vector<std::unique_ptr<GameObject>> _mapObjects;
     std::unique_ptr<GameObject> _player;      

@@ -56,7 +56,7 @@ int main()
   endwin();
 
   printf("Goodbye!\n");
-  
+    
   // Line of sight tests
   
   /*
