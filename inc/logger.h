@@ -17,7 +17,7 @@ public:
 
   virtual ~Logger()
   {
-    _logFile.close();
+    _logFile.close();    
   }
 
   void Print(const std::string& stringToPrint)

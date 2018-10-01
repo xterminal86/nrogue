@@ -8,7 +8,8 @@ namespace Tests
   /// Test Bresenham line return vector in all directions
   inline void TestLoS(int x, int y, int range)
   {
-    printf("Starting Bresenham LoS test from (%i %i) in range %i...\n\n", x, y, range);
+    printf("Starting Bresenham LoS test from (%i %i) in range %i...\n", x, y, range);
+    printf("The path should always start from (%i %i)\n\n", x, y);
 
     int sx = x - range;
     int sy = y - range;
@@ -34,14 +35,18 @@ namespace Tests
           printf("*** FAILED! ***\n");  
         }
         
-        printf("\n\n");
+        printf("\n");
       }
     }    
   }
 
   inline void Run()
   {
+    printf("***** START TESTS *****\n\n");
+
     TestLoS(4, 4, 2);
+
+    printf("\n\n***** o *****\n");
   }  
 }
 

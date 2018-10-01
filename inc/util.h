@@ -42,7 +42,7 @@ namespace Util
     int y1 = sy;
     int x2 = ex;
     int y2 = ey;
-    
+
     std::vector<Position> result;
 
     // Bresenham's line algorithm
@@ -108,15 +108,13 @@ namespace Util
     result.push_back(pos);
 
     // Ensure that line always goes from source point
-    bool cond = ( (sx > ex && sy == ey) 
-               || (sx == ex && sy > ey)
-               || (sx > ex && sy > ey) );
     
-    if (cond)
+    bool cond = (result[0].X == sx && result[0].Y == sy);
+    if (!cond)
     {    
       std::reverse(result.begin(), result.end());   
     } 
-  
+    
     return result;
   }
 

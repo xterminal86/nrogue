@@ -12,7 +12,7 @@ void MenuState::HandleInput()
       Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);      
       break;
 
-    case 'q':
+    case 'q':    
       Application::Instance().ChangeState(Application::GameStates::EXIT_GAME);      
       break;  
   }
@@ -27,14 +27,21 @@ void MenuState::Update()
     int tw = Printer::Instance().TerminalWidth;
     int th = Printer::Instance().TerminalHeight;
   
+    int halfW = tw / 2;
+    int halfH = th / 2;
+    
+    int titleY = 2; //halfH - 12 + offset;
+
     int offset = 0;
     for (auto& s : _title)
-    {
-      Printer::Instance().Print(tw / 2, th / 2 - 12 + offset, s, Printer::kAlignCenter, "#FFFFFF");
+    {       
+      Printer::Instance().Print(halfW, titleY + offset, s, Printer::kAlignCenter, "#FFFFFF");
       offset++;
     }
     
-    Printer::Instance().Print(tw / 2, th / 2 + 4, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
+    titleY += offset;
+
+    Printer::Instance().Print(halfW, titleY + 2, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
     Printer::Instance().Print(tw, th - 1, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
     
     auto debugInfo = Util::StringFormat("terminal size: %ix%i", tw, th);

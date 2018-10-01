@@ -7,20 +7,9 @@
 #include "application.h"
 #include "constants.h"
 #include "util.h"
+#include "tests.h"
 
-void TestLoS(int sx, int sy, int ex, int ey)
-{
-  auto res = Util::BresenhamLine(sx, sy, ex, ey);
-  
-  printf ("[%i;%i] -> [%i;%i]\n", sx, sy, ex, ey);
-  
-  for (auto& i : res)
-  {
-    printf("(%i %i) - ", i.X, i.Y);
-  }
-  
-  printf("\n");
-}
+bool _runTests = true;
 
 int main()
 {  
@@ -38,8 +27,8 @@ int main()
   start_color();
 
   Logger::Instance().Init();
-    
-  Logger::Instance().Disabled = true;
+  
+  //Logger::Instance().Disabled = true;
 
   Printer::Instance().Init();  
   Printer::Instance().TerminalWidth = mx;
@@ -55,20 +44,12 @@ int main()
   
   endwin();
 
+  if (_runTests)
+  {
+    Tests::Run();
+  }
+
   printf("Goodbye!\n");
-    
-  // Line of sight tests
-  
-  /*
-  TestLoS(10, 10, 1, 10);
-  TestLoS(10, 10, 1, 1);
-  TestLoS(10, 10, 10, 1);
-  TestLoS(10, 10, 20, 1);
-  TestLoS(10, 10, 20, 10);
-  TestLoS(10, 10, 20, 20);
-  TestLoS(10, 10, 10, 20);
-  TestLoS(10, 10, 1, 20);  
-  */
-  
+
   return 0;
 }

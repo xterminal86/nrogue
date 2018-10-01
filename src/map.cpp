@@ -27,6 +27,11 @@ void Map::CreateMap()
   PlayerStartX = 1;
   PlayerStartY = 1;
 
+  for (int x = 10; x < 40; x++)
+  {
+    MapArray[x][10].SetWall();
+  }
+
   /*
   std::vector<Rect> rooms;
 

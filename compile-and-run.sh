@@ -1,3 +1,3 @@
 #!/bin/bash
 
-g++ -Wall src/*.cpp -I./inc -o nrogue -lcurses && ./nrogue
+g++ -Wall -mcmodel=medium src/*.cpp -I./inc -o nrogue -lcurses && ./nrogue

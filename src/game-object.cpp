@@ -47,22 +47,28 @@ void GameObject::CheckVisibility()
   }
     
   // Update visibility around player
-  
-  auto around = Util::GetRectAroundPoint(_posX, _posY, vrx, vry);
-  for (auto& cell : mapCells)
-  {
-    float d = Util::LinearDistance(_posX, _posY, cell.X, cell.Y);
-            
-    if (d < (float)VisibilityRadius)
-    {
-      //printf("d: %f (%i;%i)\n", d, x, y);
     
-      map[cell.X][cell.Y].Visible = true; 
+  for (auto& cell : mapCells)
+  {    
+    float d = Util::LinearDistance(_posX, _posY, cell.X, cell.Y);
 
-      if (!map[cell.X][cell.Y].Revealed)
+    if (d > (float)VisibilityRadius)
+    {
+      continue;
+    }
+
+    // Bresenham FoV
+
+    auto line = Util::BresenhamLine(_posX, _posY, cell.X, cell.Y);
+    for (auto& point : line)
+    {       
+      if (map[point.X][point.Y].Blocking)
       {
-        map[cell.X][cell.Y].Revealed = true;
+        DiscoverCell(point.X, point.Y);
+        break;
       }
-    }  
-  }  
+      
+      DiscoverCell(point.X, point.Y);
+    }    
+  }
 }

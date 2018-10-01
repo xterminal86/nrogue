@@ -5,6 +5,7 @@
 #include "printer.h"
 #include "util.h"
 #include "component.h"
+#include "logger.h"
 
 class GameObject
 {
@@ -71,6 +72,18 @@ private:
   std::string _htmlColor;
   
   std::map<size_t, std::unique_ptr<Component>> _components;
+
+  void DiscoverCell(int x, int y)
+  {
+    auto map = Map::Instance().MapArray;
+  
+    map[x][y].Visible = true;
+
+    if (!map[x][y].Revealed)
+    {
+      map[x][y].Revealed = true;
+    }               
+  }
 };
 
 #endif
