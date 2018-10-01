@@ -30,16 +30,45 @@ void MenuState::Update()
     int halfW = tw / 2;
     int halfH = th / 2;
     
+    int titleX = halfW - _title[0].size() / 2;
     int titleY = 2; // halfH - 12 + offset;
 
-    int offset = 0;
+    std::vector<std::vector<chtype>> acs;
+
+    int offsetY = 0;
     for (auto& s : _title)
-    {       
-      Printer::Instance().Print(halfW, titleY + offset, s, Printer::kAlignCenter, "#FFFFFF");
-      offset++;
+    {
+      std::vector<chtype> newStr;
+
+      for (auto& ch : s)
+      {
+        chtype acsCh = ' ';
+
+        if (ch == '#')
+        {
+          acsCh = ACS_BLOCK;
+        }
+
+        newStr.push_back(acsCh);
+      }
+
+      acs.push_back(newStr);
+    }
+
+    int offsetX = 0;
+    for (auto& v : acs)
+    {
+      for (auto& c : v)
+      {
+        Printer::Instance().Print(titleX + offsetX, titleY + offsetY, c, "#FFFFFF");
+        offsetX++;
+      }
+
+      offsetX = 0;
+      offsetY++;
     }
     
-    titleY += offset;
+    titleY += offsetY;
 
     Printer::Instance().Print(halfW, titleY + 2, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
     Printer::Instance().Print(tw, th - 1, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
