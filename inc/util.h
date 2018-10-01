@@ -6,10 +6,12 @@
 #include <vector>
 #include <utility>
 #include <memory>
+#include <algorithm>
 
 #include <math.h>
 
 #include "colorpair.h"
+#include "constants.h"
 
 struct Position
 {

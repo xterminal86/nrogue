@@ -41,14 +41,16 @@ class Printer : public Singleton<Printer>
   void Print(const int& x, const int& y, const std::string& text, int align,
                                          const std::string& htmlColorFg,
                                          const std::string& htmlColorBg = "#000000");
-  void Print(const int& x, const int& y, const char& text, int align, 
-                                         const std::string& htmlColorFg, 
+  void Print(const int& x, const int& y, const chtype& ch,
+                                         const std::string& htmlColorFg,
                                          const std::string& htmlColorBg = "#000000");
  private:
   bool ContainsColorMap(size_t hashToCheck);
   bool ColorIndexExists(size_t hashToCheck);
 
   NColor GetNColor(const std::string& htmlColor);
+  size_t GetOrSetColor(const std::string& htmlColorFg, const std::string& htmlColorBg);
+  std::pair<int, int> AlignText(int x, int y, int align, const std::string& text);
 
   std::map<size_t, ColorPair> _colorMap;
   std::map<size_t, short> _colorIndexMap;

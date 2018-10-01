@@ -2,6 +2,7 @@
 #define TILE_H
 
 #include <string>
+#include <ncurses.h>
 
 class Tile
 {
@@ -11,7 +12,7 @@ public:
   bool Revealed;
   bool Visible = false;
   std::string Color;
-  char Image;
+  chtype Image;
 
   void Init(bool blocking, bool blockSight = false, bool revealed = false, std::string color = "#000000")
   {
@@ -25,7 +26,7 @@ public:
   {
     Blocking = true;
     BlockSight = true;
-    Image = '#';
+    Image = '#'; // ACS_BLOCK;
     Color = "#888888";
   }
 

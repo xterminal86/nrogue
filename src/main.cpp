@@ -9,7 +9,7 @@
 #include "util.h"
 #include "tests.h"
 
-bool _runTests = true;
+bool _runTests = false;
 
 int main()
 {  

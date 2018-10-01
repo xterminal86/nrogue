@@ -10,7 +10,7 @@
 class GameObject
 {
 public:
-  GameObject(int x, int y, char avatar, const std::string& htmlColor)
+  GameObject(int x, int y, chtype avatar, const std::string& htmlColor)
   {
     _posX = x;
     _posY = y;
@@ -22,15 +22,13 @@ public:
   void CheckVisibility();  
 
   void Draw()
-  {    
-    std::string ch = { _avatar };
-    Printer::Instance().Print(_posX + Map::Instance().MapOffsetX, _posY + Map::Instance().MapOffsetY, ch, Printer::kAlignLeft, _htmlColor);
+  {
+    Printer::Instance().Print(_posX + Map::Instance().MapOffsetX, _posY + Map::Instance().MapOffsetY, _avatar, _htmlColor);
   }
 
   void Clear()
-  {
-    std::string eraser = " ";
-    Printer::Instance().Print(_posX + Map::Instance().MapOffsetX, _posY + Map::Instance().MapOffsetY, eraser, Printer::kAlignLeft, "#000000");
+  {    
+    Printer::Instance().Print(_posX + Map::Instance().MapOffsetX, _posY + Map::Instance().MapOffsetY, ' ', "#000000");
   }
   
   template <typename T>
@@ -68,7 +66,7 @@ public:
 private:
   int _posX;
   int _posY;
-  char _avatar;
+  chtype _avatar;
   std::string _htmlColor;
   
   std::map<size_t, std::unique_ptr<Component>> _components;

@@ -11,7 +11,7 @@ void MainState::Init()
                                                        Map::Instance().PlayerStartY, 
                                                       '@', "#00FFFF"));
 
-  _player.get()->VisibilityRadius = 12;
+  _player.get()->VisibilityRadius = 8;
   
   auto c = _player.get()->AddComponent<FighterComponent>();  
   auto res = _player.get()->GetComponent<FighterComponent>();    
@@ -191,8 +191,8 @@ void MainState::DrawLookState()
     _player.get()->Draw();
         
     Printer::Instance().Print(_cursorPosition.X + Map::Instance().MapOffsetX, 
-                              _cursorPosition.Y + Map::Instance().MapOffsetY, 
-                              '?', Printer::kAlignLeft, "#FFFFFF", "#222222");
+                                _cursorPosition.Y + Map::Instance().MapOffsetY,
+                                ACS_LANTERN, "#FFFFFF", "#222222");
 
     std::string lookStatus;
 
@@ -203,7 +203,7 @@ void MainState::DrawLookState()
     }
     else if (!tile.Revealed)
     {
-      lookStatus = "Unknown";
+      lookStatus = "???";
     }
     else if (tile.Blocking)
     {
@@ -215,7 +215,7 @@ void MainState::DrawLookState()
     }
 
     Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, lookStatus, Printer::kAlignLeft, "#FFFFFF");    
-    
+
     refresh();  
   }
 }
@@ -246,7 +246,7 @@ void MainState::DrawMovementState()
                                     _keyPressed);    
     
     Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
-    
+
     refresh();  
   }
 }

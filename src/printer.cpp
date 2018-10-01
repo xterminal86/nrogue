@@ -53,21 +53,18 @@ NColor Printer::GetNColor(const std::string& htmlColor)
   return std::move(ret);
 }
 
-void Printer::Print(const int& x, const int& y, const std::string& text, int align, const std::string& htmlColorFg, const std::string& htmlColorBg)
+size_t Printer::GetOrSetColor(const std::string& htmlColorFg, const std::string& htmlColorBg)
 {
-  int tx = x;
-  int ty = y;
-
   std::string composition = htmlColorFg + htmlColorBg;
   std::hash<std::string> hasher;
-  
+
   size_t hash = hasher(composition);
 
   if (!ContainsColorMap(hash))
-  {    
+  {
     auto fg = GetNColor(htmlColorFg);
     auto bg = GetNColor(htmlColorBg);
-    
+
     short hashFg = hasher(htmlColorFg);
     short hashBg = hasher(htmlColorBg);
 
@@ -80,7 +77,7 @@ void Printer::Print(const int& x, const int& y, const std::string& text, int ali
     else
     {
       fg.ColorIndex = _colorIndexMap[hashFg];
-    }    
+    }
 
     if (!ColorIndexExists(hashBg))
     {
@@ -104,6 +101,16 @@ void Printer::Print(const int& x, const int& y, const std::string& text, int ali
     //mvprintw(11, 10, "%u %u %u", hashFg, hashBg, _colorGlobalIndex);
   }
 
+  return hash;
+}
+
+std::pair<int, int> Printer::AlignText(int x, int y, int align, const std::string& text)
+{
+  std::pair<int, int> res;
+
+  int tx = x;
+  int ty = y;
+
   switch (align)
   {
     case kAlignRight:
@@ -115,17 +122,31 @@ void Printer::Print(const int& x, const int& y, const std::string& text, int ali
       break;
 
     // Defaulting to left alignment
-    default:      
+    default:
       break;
   }
 
+  res.first = ty;
+  res.second = tx;
+
+  return res;
+}
+
+void Printer::Print(const int& x, const int& y, const std::string& text, int align, const std::string& htmlColorFg, const std::string& htmlColorBg)
+{
+  size_t hash = GetOrSetColor(htmlColorFg, htmlColorBg);
+  auto textPos = AlignText(x, y, align, text);
+
   attron(COLOR_PAIR(_colorMap[hash].PairIndex));
-  mvprintw(ty, tx, text.data());  
+  mvprintw(textPos.first, textPos.second, text.data());
   attroff(COLOR_PAIR(_colorMap[hash].PairIndex));   
 }
 
-void Printer::Print(const int& x, const int& y, const char& text, int align, const std::string& htmlColorFg, const std::string& htmlColorBg)
+void Printer::Print(const int& x, const int& y, const chtype& ch, const std::string& htmlColorFg, const std::string& htmlColorBg)
 {
-  std::string str = { text };
-  Print(x, y, str, align, htmlColorFg, htmlColorBg);
+  size_t hash = GetOrSetColor(htmlColorFg, htmlColorBg);
+
+  attron(COLOR_PAIR(_colorMap[hash].PairIndex));
+  mvaddch(y, x, ch);
+  attroff(COLOR_PAIR(_colorMap[hash].PairIndex));
 }
