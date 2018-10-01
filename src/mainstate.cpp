@@ -5,6 +5,8 @@
 
 void MainState::Init()
 {
+  _inputState = "move";
+
   _player = std::unique_ptr<GameObject>(new GameObject(Map::Instance().PlayerStartX,
                                                        Map::Instance().PlayerStartY, 
                                                       '@', "#00FFFF"));
@@ -17,8 +19,79 @@ void MainState::Init()
 
 void MainState::HandleInput()
 {
+  if (_inputState == kInputMoveState)
+  {
+    ProcessMovement();
+  }
+  else if (_inputState == kInputLookState)
+  {
+    ProcessLook();
+  }  
+}
+
+void MainState::Update()
+{
+  if (_inputState == kInputMoveState)
+  {
+    DrawMovementState();
+  }
+  else if (_inputState == kInputLookState)
+  {
+    DrawLookState();
+  }  
+}
+
+void MainState::ProcessLook()
+{
   _keyPressed = getch();  
-  
+
+  switch (_keyPressed)
+  {
+    case NUMPAD_7:
+      MoveCursor(-1, -1);
+      break;
+    
+    case NUMPAD_8:
+      MoveCursor(0, -1);
+      break;
+
+    case NUMPAD_9:
+      MoveCursor(1, -1);
+      break;
+
+    case NUMPAD_4:
+      MoveCursor(-1, 0);
+      break;
+
+    case NUMPAD_6:
+      MoveCursor(1, 0);
+      break;
+
+    case NUMPAD_1:
+      MoveCursor(-1, 1);
+      break;
+
+    case NUMPAD_2:
+      MoveCursor(0, 1);
+      break;
+
+    case NUMPAD_3:
+      MoveCursor(1, 1);
+      break;
+
+    case 'q':
+      _inputState = kInputMoveState;      
+      break;
+
+    default:
+      break;
+  }
+}
+
+void MainState::ProcessMovement()
+{
+  _keyPressed = getch();  
+
   switch (_keyPressed)
   {
     case NUMPAD_7:
@@ -81,6 +154,12 @@ void MainState::HandleInput()
       }
       break;
 
+    case 'l':
+      _cursorPosition.X = _player.get()->PosX();
+      _cursorPosition.Y = _player.get()->PosY();      
+      _inputState = kInputLookState;
+      break;
+
     case '@':
       Application::Instance().ChangeState(Application::GameStates::INFO_STATE);
       break;
@@ -94,7 +173,54 @@ void MainState::HandleInput()
   }  
 }
 
-void MainState::Update()
+void MainState::DrawLookState()
+{
+  if (_keyPressed != -1)
+  {
+    clear();
+        
+    _player.get()->CheckVisibility();
+    
+    Map::Instance().Draw(_player.get()->PosX(), _player.get()->PosY());
+    
+    for (auto& item : _mapObjects)
+    {
+      item.get()->Draw();
+    }
+    
+    _player.get()->Draw();
+        
+    Printer::Instance().Print(_cursorPosition.X + Map::Instance().MapOffsetX, 
+                              _cursorPosition.Y + Map::Instance().MapOffsetY, 
+                              '?', Printer::kAlignLeft, "#FFFFFF", "#222222");
+
+    std::string lookStatus;
+
+    auto tile = Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
+    if (_cursorPosition.X == _player.get()->PosX() && _cursorPosition.Y == _player.get()->PosY())
+    {
+      lookStatus = "You";
+    }
+    else if (!tile.Revealed)
+    {
+      lookStatus = "Unknown";
+    }
+    else if (tile.Blocking)
+    {
+      lookStatus = tile.Visible ? "Wall" : "?Wall?";
+    }
+    else
+    {
+      lookStatus = tile.Visible ? "Floor" : "?Floor?";
+    }
+
+    Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, lookStatus, Printer::kAlignLeft, "#FFFFFF");    
+    
+    refresh();  
+  }
+}
+
+void MainState::DrawMovementState()
 {
   if (_keyPressed != -1)
   {
@@ -112,12 +238,27 @@ void MainState::Update()
     _player.get()->Draw();
     
     // Some debug info  
-    _debugInfo = Util::StringFormat("[%i;%i] %i", _player.get()->PosX(), 
-                                                  _player.get()->PosY(),
-                                                  _keyPressed);    
+    _debugInfo = Util::StringFormat("Ofst: %i %i: Plr: [%i;%i] Key: %i", 
+                                    Map::Instance().MapOffsetX,
+                                    Map::Instance().MapOffsetY,
+                                    _player.get()->PosX(), 
+                                    _player.get()->PosY(),
+                                    _keyPressed);    
     
     Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
     
     refresh();  
   }
+}
+
+void MainState::MoveCursor(int dx, int dy)
+{
+  int nx = _cursorPosition.X + dx;
+  int ny = _cursorPosition.Y + dy;
+
+  nx = Util::Clamp(nx, 0, GlobalConstants::MapX - 1);
+  ny = Util::Clamp(ny, 0, GlobalConstants::MapY - 1);
+
+  _cursorPosition.X = nx;
+  _cursorPosition.Y = ny;
 }

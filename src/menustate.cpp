@@ -30,7 +30,7 @@ void MenuState::Update()
     int halfW = tw / 2;
     int halfH = th / 2;
     
-    int titleY = 2; //halfH - 12 + offset;
+    int titleY = 2; // halfH - 12 + offset;
 
     int offset = 0;
     for (auto& s : _title)

@@ -17,15 +17,16 @@ void GameObject::CheckVisibility()
 {
   int tw = Printer::Instance().TerminalWidth;
   int th = Printer::Instance().TerminalHeight;
-    
-  int vrx = VisibilityRadius;
-  int vry = VisibilityRadius;
   
   // FIXME: rethink
   //
   // Compensate for different terminal sizes, 
   // so we get more circle-like visible area around player
   /*
+  
+  int vrx = VisibilityRadius;
+  int vry = VisibilityRadius;
+  
   if (tw > th)
   {
     vry /= 2;

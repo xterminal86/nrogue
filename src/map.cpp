@@ -169,7 +169,7 @@ void Map::Draw(int playerX, int playerY)
   {
     int x = cell.X;
     int y = cell.Y;
-    
+        
     if (MapArray[x][y].Visible)
       {        
         Printer::Instance().Print(x + MapOffsetX, y + MapOffsetY, 

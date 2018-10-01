@@ -49,6 +49,18 @@ class MainState : public GameState
     std::unique_ptr<GameObject> _player;      
 
     std::string _debugInfo;
+    std::string _inputState;
+
+    const std::string kInputMoveState = "move";
+    const std::string kInputLookState = "look";
+
+    void ProcessMovement();
+    void ProcessLook();
+    void DrawMovementState();
+    void DrawLookState();
+    void MoveCursor(int dx, int dy);
+    
+    Position _cursorPosition;
 };
 
 #endif

@@ -18,11 +18,11 @@ int main()
   keypad(scr, true);      // enable numpad
   noecho();
   curs_set(false);
+  
+  int mx = 0;
+  int my = 0;
 
-  int mx = GlobalConstants::MapX;
-  int my = GlobalConstants::MapY;
-
-  getmaxyx(stdscr, my, mx);
+  getmaxyx(scr, my, mx);
 
   start_color();
 
@@ -48,7 +48,7 @@ int main()
   {
     Tests::Run();
   }
-
+  
   printf("Goodbye!\n");
 
   return 0;
