@@ -173,6 +173,21 @@ void MainState::ProcessMovement()
   }  
 }
 
+void MainState::DrawCursor()
+{
+  Printer::Instance().Print(_cursorPosition.X + Map::Instance().MapOffsetX + 1, 
+                            _cursorPosition.Y + Map::Instance().MapOffsetY,
+                            '<', "#FFFFFF");    
+
+  Printer::Instance().Print(_cursorPosition.X + Map::Instance().MapOffsetX - 1, 
+                            _cursorPosition.Y + Map::Instance().MapOffsetY,
+                            '>', "#FFFFFF");    
+
+  Printer::Instance().Print(_cursorPosition.X + Map::Instance().MapOffsetX, 
+                            _cursorPosition.Y + Map::Instance().MapOffsetY + 1,
+                            '^', "#FFFFFF");
+}
+
 void MainState::DrawLookState()
 {
   if (_keyPressed != -1)
@@ -189,32 +204,33 @@ void MainState::DrawLookState()
     }
     
     _player.get()->Draw();
-        
-    Printer::Instance().Print(_cursorPosition.X + Map::Instance().MapOffsetX, 
-                                _cursorPosition.Y + Map::Instance().MapOffsetY,
-                                ACS_LANTERN, "#FFFFFF", "#222222");
+    
+    DrawCursor();   
+    
+    std::string lookStatus = "???";
 
-    std::string lookStatus;
-
-    auto tile = Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
-    if (_cursorPosition.X == _player.get()->PosX() && _cursorPosition.Y == _player.get()->PosY())
-    {
-      lookStatus = "You";
+    if (Util::CheckLimits(_cursorPosition, Position(GlobalConstants::MapX, GlobalConstants::MapY)))
+    {      
+      auto tile = Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
+      if (_cursorPosition.X == _player.get()->PosX() && _cursorPosition.Y == _player.get()->PosY())
+      {
+        lookStatus = "You";
+      }
+      else if (!tile.Revealed)
+      {
+        lookStatus = "???";
+      }
+      else if (tile.Blocking)
+      {
+        lookStatus = tile.Visible ? "Wall" : "?Wall?";
+      }
+      else
+      {
+        lookStatus = tile.Visible ? "Floor" : "?Floor?";
+      }      
     }
-    else if (!tile.Revealed)
-    {
-      lookStatus = "???";
-    }
-    else if (tile.Blocking)
-    {
-      lookStatus = tile.Visible ? "Wall" : "?Wall?";
-    }
-    else
-    {
-      lookStatus = tile.Visible ? "Floor" : "?Floor?";
-    }
-
-    Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, lookStatus, Printer::kAlignLeft, "#FFFFFF");    
+    
+    Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, lookStatus, Printer::kAlignLeft, "#FFFFFF");        
 
     refresh();  
   }
@@ -256,9 +272,15 @@ void MainState::MoveCursor(int dx, int dy)
   int nx = _cursorPosition.X + dx;
   int ny = _cursorPosition.Y + dy;
 
-  nx = Util::Clamp(nx, 0, GlobalConstants::MapX - 1);
-  ny = Util::Clamp(ny, 0, GlobalConstants::MapY - 1);
+  int hw = Printer::Instance().TerminalWidth / 2;
+  int hh = Printer::Instance().TerminalHeight / 2;
 
+  nx = Util::Clamp(nx, _player.get()->PosX() - hw + 1,
+                       _player.get()->PosX() + hw - 2);
+
+  ny = Util::Clamp(ny, _player.get()->PosY() - hh + 1,
+                       _player.get()->PosY() + hh - 2);
+  
   _cursorPosition.X = nx;
   _cursorPosition.Y = ny;
 }

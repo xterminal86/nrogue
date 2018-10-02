@@ -28,6 +28,17 @@ struct Position
 
 namespace Util
 {
+  inline bool CheckLimits(Position posToCheck, Position limits)
+  {
+    if (posToCheck.X >= 0 && posToCheck.X < limits.X
+     && posToCheck.Y >= 0 && posToCheck.Y < limits.Y)
+    {
+      return true;
+    }
+
+    return false;
+  }
+
   template<typename ... Args>
   inline std::string StringFormat(const std::string& format, Args ... args )
   {
