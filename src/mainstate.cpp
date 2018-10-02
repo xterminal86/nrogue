@@ -177,15 +177,11 @@ void MainState::DrawCursor()
 {
   Printer::Instance().Print(_cursorPosition.X + Map::Instance().MapOffsetX + 1, 
                             _cursorPosition.Y + Map::Instance().MapOffsetY,
-                            '<', "#FFFFFF");    
+                            ']', "#FFFFFF");    
 
   Printer::Instance().Print(_cursorPosition.X + Map::Instance().MapOffsetX - 1, 
                             _cursorPosition.Y + Map::Instance().MapOffsetY,
-                            '>', "#FFFFFF");    
-
-  Printer::Instance().Print(_cursorPosition.X + Map::Instance().MapOffsetX, 
-                            _cursorPosition.Y + Map::Instance().MapOffsetY + 1,
-                            '^', "#FFFFFF");
+                            '[', "#FFFFFF");      
 }
 
 void MainState::DrawLookState()
