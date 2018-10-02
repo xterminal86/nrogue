@@ -30,47 +30,19 @@ void MenuState::Update()
     int halfW = tw / 2;
     int halfH = th / 2;
     
-    int titleX = halfW - _title[0].size() / 2;
+    int titleX = halfW;
     int titleY = 2; // halfH - 12 + offset;
 
-    std::vector<std::vector<chtype>> acs;
+    int offset = 0;
 
-    int offsetY = 0;
     for (auto& s : _title)
     {
-      std::vector<chtype> newStr;
+      Printer::Instance().Print(titleX, titleY + offset, s, Printer::kAlignCenter, "#FFFFFF");
 
-      for (auto& ch : s)
-      {
-        chtype acsCh = ' ';
-
-        if (ch == '#')
-        {
-          acsCh = ACS_BLOCK;
-        }
-
-        newStr.push_back(acsCh);
-      }
-
-      acs.push_back(newStr);
+      offset++;
     }
 
-    int offsetX = 0;
-    for (auto& v : acs)
-    {
-      for (auto& c : v)
-      {
-        Printer::Instance().Print(titleX + offsetX, titleY + offsetY, c, "#FFFFFF");
-        offsetX++;
-      }
-
-      offsetX = 0;
-      offsetY++;
-    }
-    
-    titleY += offsetY;
-
-    Printer::Instance().Print(halfW, titleY + 2, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().Print(halfW, halfH + 2, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
     Printer::Instance().Print(tw, th - 1, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
     
     auto debugInfo = Util::StringFormat("terminal size: %ix%i", tw, th);

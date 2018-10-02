@@ -203,27 +203,31 @@ void MainState::DrawLookState()
     
     DrawCursor();   
     
-    std::string lookStatus = "???";
+    std::string lookStatus = "You see: ";
 
     if (Util::CheckLimits(_cursorPosition, Position(GlobalConstants::MapX, GlobalConstants::MapY)))
     {      
       auto tile = Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
       if (_cursorPosition.X == _player.get()->PosX() && _cursorPosition.Y == _player.get()->PosY())
       {
-        lookStatus = "You";
+        lookStatus += "it's you!";
       }
       else if (!tile.Revealed)
       {
-        lookStatus = "???";
+        lookStatus += "???";
       }
       else if (tile.Blocking)
       {
-        lookStatus = tile.Visible ? "Wall" : "?Wall?";
+        lookStatus += tile.Visible ? "wall" : "?wall?";
       }
       else
       {
-        lookStatus = tile.Visible ? "Floor" : "?Floor?";
+        lookStatus += tile.Visible ? "floor" : "?floor?";
       }      
+    }
+    else
+    {
+      lookStatus += "???";
     }
     
     Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, lookStatus, Printer::kAlignLeft, "#FFFFFF");        
