@@ -9,7 +9,7 @@ void MenuState::HandleInput()
   switch (_keyPressed)
   {
     case 10:
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);      
+      Application::Instance().ChangeState(Application::GameStates::SELECT_CLASS_STATE);
       break;
 
     case 'q':    

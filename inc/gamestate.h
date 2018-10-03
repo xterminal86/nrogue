@@ -11,6 +11,8 @@ class GameState
     virtual ~GameState() {}
 
     virtual void Init() {}
+    virtual void Cleanup() {}
+    virtual void Prepare() {}
     virtual void HandleInput() = 0;
     virtual void Update() = 0;
 

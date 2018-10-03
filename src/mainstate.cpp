@@ -165,7 +165,7 @@ void MainState::ProcessMovement()
       break;
       
     case 'q':
-      Application::Instance().ChangeState(Application::GameStates::MENU_STATE);
+      Application::Instance().ChangeState(Application::GameStates::EXIT_GAME);
       break;
       
     default:
