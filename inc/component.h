@@ -3,6 +3,8 @@
 
 #include <typeinfo>
 
+class GameObject;
+
 class Component
 {
   public:
@@ -10,13 +12,15 @@ class Component
     {
       _hash = typeid(*this).hash_code();
     }
-    
+
+    GameObject* Owner;
+
     virtual void Update() = 0;
     
     size_t Hash() { return _hash; }
     
   protected:
-    size_t _hash;
+    size_t _hash;    
 };
 
 #endif

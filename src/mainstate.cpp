@@ -1,20 +1,12 @@
 #include "mainstate.h"
 #include "infostate.h"
 #include "application.h"
-#include "fighter-component.h"
 
 void MainState::Init()
 {
   _inputState = "move";
 
-  _player = std::unique_ptr<GameObject>(new GameObject(Map::Instance().PlayerStartX,
-                                                       Map::Instance().PlayerStartY, 
-                                                      '@', "#00FFFF"));
-
-  _player.get()->VisibilityRadius = 8;
-  
-  auto c = _player.get()->AddComponent<FighterComponent>();  
-  auto res = _player.get()->GetComponent<FighterComponent>();    
+  _player = &Application::Instance().PlayerInstance;
 }
 
 void MainState::HandleInput()
@@ -95,7 +87,7 @@ void MainState::ProcessMovement()
   switch (_keyPressed)
   {
     case NUMPAD_7:
-      if (_player.get()->Move(-1, -1))
+      if (_player->Move(-1, -1))
       {
         Map::Instance().MapOffsetY++;
         Map::Instance().MapOffsetX++;
@@ -103,14 +95,14 @@ void MainState::ProcessMovement()
       break;
       
     case NUMPAD_8:
-      if (_player.get()->Move(0, -1))
+      if (_player->Move(0, -1))
       {
         Map::Instance().MapOffsetY++;
       }
       break;
 
     case NUMPAD_9:
-      if (_player.get()->Move(1, -1))
+      if (_player->Move(1, -1))
       {
         Map::Instance().MapOffsetY++;
         Map::Instance().MapOffsetX--;
@@ -118,28 +110,28 @@ void MainState::ProcessMovement()
       break;
 
     case NUMPAD_4:
-      if (_player.get()->Move(-1, 0))
+      if (_player->Move(-1, 0))
       {
         Map::Instance().MapOffsetX++;
       }
       break;
     
     case NUMPAD_2:
-      if (_player.get()->Move(0, 1))
+      if (_player->Move(0, 1))
       {
         Map::Instance().MapOffsetY--;
       }
       break;
     
     case NUMPAD_6:
-      if (_player.get()->Move(1, 0))
+      if (_player->Move(1, 0))
       {
         Map::Instance().MapOffsetX--;
       }
       break;
     
     case NUMPAD_1:
-      if (_player.get()->Move(-1, 1))
+      if (_player->Move(-1, 1))
       {
         Map::Instance().MapOffsetY--;
         Map::Instance().MapOffsetX++;
@@ -147,7 +139,7 @@ void MainState::ProcessMovement()
       break;
 
     case NUMPAD_3:
-      if (_player.get()->Move(1, 1))
+      if (_player->Move(1, 1))
       {
         Map::Instance().MapOffsetY--;
         Map::Instance().MapOffsetX--;
@@ -155,8 +147,8 @@ void MainState::ProcessMovement()
       break;
 
     case 'l':
-      _cursorPosition.X = _player.get()->PosX();
-      _cursorPosition.Y = _player.get()->PosY();      
+      _cursorPosition.X = _player->PosX;
+      _cursorPosition.Y = _player->PosY;
       _inputState = kInputLookState;
       break;
 
@@ -190,16 +182,16 @@ void MainState::DrawLookState()
   {
     clear();
         
-    _player.get()->CheckVisibility();
+    _player->CheckVisibility();
     
-    Map::Instance().Draw(_player.get()->PosX(), _player.get()->PosY());
+    Map::Instance().Draw(_player->PosX, _player->PosY);
     
     for (auto& item : _mapObjects)
     {
       item.get()->Draw();
     }
     
-    _player.get()->Draw();
+    _player->Draw();
     
     DrawCursor();   
     
@@ -208,7 +200,7 @@ void MainState::DrawLookState()
     if (Util::CheckLimits(_cursorPosition, Position(GlobalConstants::MapX, GlobalConstants::MapY)))
     {      
       auto tile = Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
-      if (_cursorPosition.X == _player.get()->PosX() && _cursorPosition.Y == _player.get()->PosY())
+      if (_cursorPosition.X == _player->PosX && _cursorPosition.Y == _player->PosY)
       {
         lookStatus += "it's you!";
       }
@@ -242,23 +234,23 @@ void MainState::DrawMovementState()
   {
     clear();
         
-    _player.get()->CheckVisibility();
+    _player->CheckVisibility();
     
-    Map::Instance().Draw(_player.get()->PosX(), _player.get()->PosY());
+    Map::Instance().Draw(_player->PosX, _player->PosY);
     
     for (auto& item : _mapObjects)
     {
       item.get()->Draw();
     }
     
-    _player.get()->Draw();
+    _player->Draw();
     
     // Some debug info  
     _debugInfo = Util::StringFormat("Ofst: %i %i: Plr: [%i;%i] Key: %i", 
                                     Map::Instance().MapOffsetX,
                                     Map::Instance().MapOffsetY,
-                                    _player.get()->PosX(), 
-                                    _player.get()->PosY(),
+                                    _player->PosX,
+                                    _player->PosY,
                                     _keyPressed);    
     
     Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
@@ -275,11 +267,11 @@ void MainState::MoveCursor(int dx, int dy)
   int hw = Printer::Instance().TerminalWidth / 2;
   int hh = Printer::Instance().TerminalHeight / 2;
 
-  nx = Util::Clamp(nx, _player.get()->PosX() - hw + 1,
-                       _player.get()->PosX() + hw - 2);
+  nx = Util::Clamp(nx, _player->PosX - hw + 1,
+                       _player->PosX + hw - 2);
 
-  ny = Util::Clamp(ny, _player.get()->PosY() - hh + 1,
-                       _player.get()->PosY() + hh - 2);
+  ny = Util::Clamp(ny, _player->PosY - hh + 1,
+                       _player->PosY + hh - 2);
   
   _cursorPosition.X = nx;
   _cursorPosition.Y = ny;

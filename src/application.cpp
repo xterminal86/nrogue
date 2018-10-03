@@ -13,7 +13,7 @@ void Application::Init()
     state.second.get()->Init();
   }
 
-  _currentState = _gameStates[(int)GameStates::MENU_STATE].get();
+  _currentState = _gameStates[(int)GameStates::MENU_STATE].get();  
 }
 
 void Application::Run()

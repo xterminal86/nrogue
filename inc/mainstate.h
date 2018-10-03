@@ -8,6 +8,7 @@
 #include "printer.h"
 #include "game-object.h"
 #include "util.h"
+#include "player.h"
 
 // 262, 259, 339, 260, 350, 261, 360, 258, 338
 
@@ -46,7 +47,7 @@ class MainState : public GameState
         
   private:
     std::vector<std::unique_ptr<GameObject>> _mapObjects;
-    std::unique_ptr<GameObject> _player;      
+    Player* _player;
 
     std::string _debugInfo;
     std::string _inputState;

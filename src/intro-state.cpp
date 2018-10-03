@@ -24,19 +24,26 @@ void IntroState::Update()
   {
     _lastTime = std::chrono::high_resolution_clock::now();
 
-    if (_textPositionCursor != _introStrings[0].length())
+    int textIndex = Application::Instance().PlayerInstance.SelectedClass;
+    if (_stringIndex != _introStrings[textIndex].size())
     {
-      Printer::Instance().Print(_textPositionX, _textPositionY, _introStrings[0][_textPositionCursor], "#FFFFFF");
-
-      _textPositionX++;
-
-      if (_textPositionX > Printer::Instance().TerminalWidth)
+      if (_textPositionCursor != _introStrings[textIndex][_stringIndex].length())
       {
+        Printer::Instance().Print(_textPositionX, _textPositionY, _introStrings[textIndex][_stringIndex][_textPositionCursor], "#FFFFFF");
+
+        _textPositionX++;
+
+        _textPositionCursor++;
+      }
+      else
+      {
+        _textPositionCursor = 0;
+
         _textPositionX = 0;
         _textPositionY++;
-      }
 
-      _textPositionCursor++;      
+        _stringIndex++;
+      }
     }
     else
     {

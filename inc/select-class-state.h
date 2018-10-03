@@ -17,10 +17,10 @@ class SelectClassState : public GameState
 
     std::vector<std::string> _menuItems =
     {
-      "Knight",
-      "Rogue",
-      "Arcanist",
-      "No one"
+      " Soldier  ",
+      "  Thief   ",
+      " Arcanist ",
+      "  No one  "
     };
 };
 

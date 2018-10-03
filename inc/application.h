@@ -8,6 +8,7 @@
 #include "select-class-state.h"
 #include "intro-state.h"
 #include "logger.h"
+#include "player.h"
 
 #include <typeinfo>
 #include <memory>
@@ -32,9 +33,11 @@ class Application : public Singleton<Application>
     void Run();
     void ChangeState(const GameStates& gameStateIndex);
   
+    Player PlayerInstance;
+
   private:
     GameState* _currentState = nullptr;          
-    
+        
     std::map<int, std::unique_ptr<GameState>> _gameStates;  
 };
 

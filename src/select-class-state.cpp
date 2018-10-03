@@ -17,6 +17,8 @@ void SelectClassState::HandleInput()
       break;
 
     case 10:
+      Application::Instance().PlayerInstance.Init();
+
       // TODO: enter name, distribute talents if custom class is chosen
       Application::Instance().ChangeState(Application::GameStates::INTRO_STATE);
       break;
@@ -27,6 +29,8 @@ void SelectClassState::HandleInput()
   }
 
   _menuIndex = Util::Clamp(_menuIndex, 0, _menuItems.size() - 1);
+
+  Application::Instance().PlayerInstance.SelectedClass = _menuIndex;
 }
 
 void SelectClassState::Update()
@@ -50,7 +54,7 @@ void SelectClassState::Update()
       Printer::Instance().Print(tw / 2, th / 2 + offset, i, Printer::kAlignCenter, fgColor, bgColor);
 
       index++;
-      offset++;
+      offset++;      
     }
 
     refresh();

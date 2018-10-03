@@ -10,27 +10,15 @@
 class GameObject
 {
 public:
-  GameObject(int x, int y, chtype avatar, const std::string& htmlColor)
-  {
-    _posX = x;
-    _posY = y;
-    _avatar = avatar;
-    _htmlColor = htmlColor;
-  }
+  GameObject(int x, int y, chtype avatar, const std::string& htmlColor);
 
   bool Move(int dx, int dy);  
-  void CheckVisibility();  
 
   void Draw()
   {
     Printer::Instance().Print(_posX + Map::Instance().MapOffsetX, _posY + Map::Instance().MapOffsetY, _avatar, _htmlColor);
   }
 
-  void Clear()
-  {    
-    Printer::Instance().Print(_posX + Map::Instance().MapOffsetX, _posY + Map::Instance().MapOffsetY, ' ', "#000000");
-  }
-  
   template <typename T>
   Component* AddComponent()
   {   
@@ -38,6 +26,8 @@ public:
     
     auto cp = std::make_unique<T>();    
             
+    cp.get()->Owner = this;
+
     // cp is null after std::move
     _components[typeid(T).hash_code()] = std::move(cp);
                 
@@ -59,29 +49,17 @@ public:
   }
   
   int PosX() { return _posX; }
-  int PosY() { return _posY; }
-
-  int VisibilityRadius = 1;
+  int PosY() { return _posY; }  
   
+  void Update();
+
 private:
   int _posX;
   int _posY;
   chtype _avatar;
   std::string _htmlColor;
   
-  std::map<size_t, std::unique_ptr<Component>> _components;
-
-  void DiscoverCell(int x, int y)
-  {
-    auto map = Map::Instance().MapArray;
-  
-    map[x][y].Visible = true;
-
-    if (!map[x][y].Revealed)
-    {
-      map[x][y].Revealed = true;
-    }               
-  }
+  std::map<size_t, std::unique_ptr<Component>> _components;  
 };
 
 #endif
