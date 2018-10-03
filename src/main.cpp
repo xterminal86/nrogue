@@ -6,8 +6,10 @@
 
 #include "application.h"
 #include "constants.h"
-#include "util.h"
+#include "map.h"
 #include "tests.h"
+#include "printer.h"
+#include "util.h"
 
 bool _runTests = false;
 

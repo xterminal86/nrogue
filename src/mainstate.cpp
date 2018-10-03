@@ -1,6 +1,8 @@
 #include "mainstate.h"
-#include "infostate.h"
+
 #include "application.h"
+#include "map.h"
+#include "printer.h"
 
 void MainState::Init()
 {
@@ -84,6 +86,8 @@ void MainState::ProcessMovement()
 {
   _keyPressed = getch();  
 
+  bool turnDone = false;
+
   switch (_keyPressed)
   {
     case NUMPAD_7:
@@ -91,6 +95,8 @@ void MainState::ProcessMovement()
       {
         Map::Instance().MapOffsetY++;
         Map::Instance().MapOffsetX++;
+
+        turnDone = true;
       }
       break;
       
@@ -98,6 +104,8 @@ void MainState::ProcessMovement()
       if (_player->Move(0, -1))
       {
         Map::Instance().MapOffsetY++;
+
+        turnDone = true;
       }
       break;
 
@@ -106,6 +114,8 @@ void MainState::ProcessMovement()
       {
         Map::Instance().MapOffsetY++;
         Map::Instance().MapOffsetX--;
+
+        turnDone = true;
       }
       break;
 
@@ -113,6 +123,8 @@ void MainState::ProcessMovement()
       if (_player->Move(-1, 0))
       {
         Map::Instance().MapOffsetX++;
+
+        turnDone = true;
       }
       break;
     
@@ -120,6 +132,8 @@ void MainState::ProcessMovement()
       if (_player->Move(0, 1))
       {
         Map::Instance().MapOffsetY--;
+
+        turnDone = true;
       }
       break;
     
@@ -127,6 +141,8 @@ void MainState::ProcessMovement()
       if (_player->Move(1, 0))
       {
         Map::Instance().MapOffsetX--;
+
+        turnDone = true;
       }
       break;
     
@@ -135,6 +151,8 @@ void MainState::ProcessMovement()
       {
         Map::Instance().MapOffsetY--;
         Map::Instance().MapOffsetX++;
+
+        turnDone = true;
       }
       break;
 
@@ -143,7 +161,14 @@ void MainState::ProcessMovement()
       {
         Map::Instance().MapOffsetY--;
         Map::Instance().MapOffsetX--;
+
+        turnDone = true;
       }
+      break;
+
+    // wait
+    case NUMPAD_5:
+      turnDone = true;
       break;
 
     case 'l':
@@ -163,6 +188,15 @@ void MainState::ProcessMovement()
     default:
       break;
   }  
+
+  // If player's turn finished, update all game objects' components
+  if (turnDone)
+  {
+    for (auto& go : _gameObjects)
+    {
+      go.get()->Update();
+    }
+  }
 }
 
 void MainState::DrawCursor()
@@ -186,7 +220,7 @@ void MainState::DrawLookState()
     
     Map::Instance().Draw(_player->PosX, _player->PosY);
     
-    for (auto& item : _mapObjects)
+    for (auto& item : _gameObjects)
     {
       item.get()->Draw();
     }
@@ -238,7 +272,7 @@ void MainState::DrawMovementState()
     
     Map::Instance().Draw(_player->PosX, _player->PosY);
     
-    for (auto& item : _mapObjects)
+    for (auto& item : _gameObjects)
     {
       item.get()->Draw();
     }

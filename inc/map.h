@@ -5,12 +5,10 @@
 #include <random>
 #include <chrono>
 
-#include "constants.h"
 #include "singleton.h"
-#include "tile.h"
 #include "rect.h"
-#include "printer.h"
-#include "util.h"
+#include "constants.h"
+#include "tile.h"
 
 class Map : public Singleton<Map>
 {

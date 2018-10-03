@@ -1,11 +1,11 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include "singleton.h"
-
 #include <fstream>
 #include <string>
 #include <ctime>
+
+#include "singleton.h"
 
 class Logger : public Singleton<Logger>
 {

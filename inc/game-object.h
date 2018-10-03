@@ -1,11 +1,13 @@
 #ifndef GAME_OBJECT_H
 #define GAME_OBJECT_H
 
-#include "map.h"
-#include "printer.h"
-#include "util.h"
+#include <string>
+#include <map>
+#include <memory>
+
+#include <ncurses.h>
+
 #include "component.h"
-#include "logger.h"
 
 class GameObject
 {
@@ -14,10 +16,7 @@ public:
 
   bool Move(int dx, int dy);  
 
-  void Draw()
-  {
-    Printer::Instance().Print(_posX + Map::Instance().MapOffsetX, _posY + Map::Instance().MapOffsetY, _avatar, _htmlColor);
-  }
+  void Draw();
 
   template <typename T>
   Component* AddComponent()

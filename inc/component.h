@@ -3,6 +3,8 @@
 
 #include <typeinfo>
 
+#include <stdlib.h>
+
 class GameObject;
 
 class Component

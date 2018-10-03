@@ -1,6 +1,8 @@
 #include "player.h"
 
 #include "map.h"
+#include "printer.h"
+#include "util.h"
 
 void Player::Init()
 {
@@ -123,6 +125,8 @@ void Player::SetAttributes()
       break;
 
     default:
+      // TODO: custom class defaults to knight for now
+      SetKnightAttrs();
       break;
   }
 }

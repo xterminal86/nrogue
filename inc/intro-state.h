@@ -36,33 +36,33 @@ class IntroState : public GameState
         "decide to spend it away from the City you sworn to protect.",
         "Somewhere in the countryside would be fine, so",
         "you pack your things and move out.",
-        "You came across a village called Darwin which seems like a nice place.",
+        "You came across a remote village, which seems like a nice place though.",
         "Maybe this vacation will turn out nice as well..."
       },
       {
        //********************************************************************************80//
         "You lived all your life as an orphan.",
-        "You've been everything: a messenger, a pickpocket...",
+        "You've been everything: a messenger, a peddler, a pickpocket...",
         "And occasionally a killer.",
         "You don't remember how it started, but you're a criminal now.",
-        "And the City Watch wants your head.",
+        "And the City Watch is after you.",
         "You decide to lay low for a while and no better place than a",
         "remote countryside would do better.",
-        "And maybe you could help yourself as well while you're at it...",
+        "And maybe you could help yourself as well, while you're at it...",
       },
       {
        //********************************************************************************80//
         "You left great deserts and pagodas of the East far behind.",
         "A long journey has finally come to an end - you have arrived.",
-        "It was strange at best being sent to some remote village",
+        "It was strange at best, being sent to some remote village",
         "as a final part of your training.",
-        "And with some reconnaissance mission no less.",
+        "And with some reconnaissance mission at that.",
         "Not something you expected to say the least.",
         "All you have to do is investigate this village and report back to the Order.",
         "Do this and you'll be finally ordained and may begin",
         "your service as a guardian of the Arcane.",
-        "With parting words of your master echoing",
-        "inside your head you continue onwards..."
+        "With farewell words of your master still echoing",
+        "inside your head, you continue onward..."
       }
     };
 

@@ -1,10 +1,10 @@
 #ifndef MENUSTATE_H
 #define MENUSTATE_H
 
-#include "gamestate.h"
-
 #include <string>
 #include <vector>
+
+#include "gamestate.h"
 
 class MenuState : public GameState
 {

@@ -1,5 +1,8 @@
 #include "map.h"
 
+#include "printer.h"
+#include "util.h"
+
 void Map::CreateMap()
 {  
   for (int x = 0; x < GlobalConstants::MapX; x++)
