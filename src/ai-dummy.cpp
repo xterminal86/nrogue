@@ -12,8 +12,7 @@ void AIDummy::Update()
 
   dx *= signX;
   dy *= signY;
-
-  // A little bit of a hack probably, but it doesn't compile
-  // otherwise due to cyclic dependency shit.
+  
+  // See component.h  
   ((GameObject*)Owner)->Move(dx, dy);
 }
