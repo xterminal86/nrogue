@@ -5,20 +5,26 @@
 
 GameObject::GameObject(int x, int y, chtype avatar, const std::string& htmlColor)
 {
-  _posX = x;
-  _posY = y;
+  PosX = x;
+  PosY = y;
   _avatar = avatar;
   _htmlColor = htmlColor;
+
+  _currentCell = &Map::Instance().MapArray[PosX][PosY];
 }
 
 
 bool GameObject::Move(int dx, int dy)
 {
-  if (!Map::Instance().MapArray[_posX + dx][_posY + dy].Blocking)
+  if (!Map::Instance().MapArray[PosX + dx][PosY + dy].Blocking)
   {
-    _posX += dx;
-    _posY += dy;
+    _previousCell = &Map::Instance().MapArray[PosX][PosY];
+
+    PosX += dx;
+    PosY += dy;
     
+    _currentCell = &Map::Instance().MapArray[PosX][PosY];
+
     return true;
   }
   
@@ -27,7 +33,7 @@ bool GameObject::Move(int dx, int dy)
 
 void GameObject::Draw()
 {
-  Printer::Instance().Print(_posX + Map::Instance().MapOffsetX, _posY + Map::Instance().MapOffsetY, _avatar, _htmlColor);
+  Printer::Instance().Print(PosX + Map::Instance().MapOffsetX, PosY + Map::Instance().MapOffsetY, _avatar, _htmlColor);
 }
 
 void GameObject::Update()

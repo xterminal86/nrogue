@@ -36,56 +36,6 @@ void Map::CreateMap()
   }
 }
 
-void Map::CreateRoom(Rect& r)
-{
-  for (int x = r.X1 + 1; x < r.X2; x++)
-  {
-    for (int y = r.Y1 + 1; y < r.Y2; y++)
-    {
-      MapArray[x][y].Blocking = false;
-      MapArray[x][y].BlockSight = false;
-    }
-  }
-}
-
-void Map::CreateTunnelH(int x1, int x2, int y)
-{
-  int min = std::min(x1, x2);
-  int max = std::max(x1, x2);
-
-  if (min > max)
-  {
-    int tmp = min;
-    min = max;
-    max = tmp;
-  }
-
-  for (int x = min; x <= max; x++)
-  {
-    MapArray[x][y].Blocking = false;
-    MapArray[x][y].BlockSight = false;
-  }
-}
-
-void Map::CreateTunnelV(int y1, int y2, int x)
-{
-  int min = std::min(y1, y2);
-  int max = std::max(y1, y2);
-
-  if (min > max)
-  {
-    int tmp = min;
-    min = max;
-    max = tmp;
-  }
-
-  for (int y = min; y <= max; y++)
-  {
-    MapArray[x][y].Blocking = false;
-    MapArray[x][y].BlockSight = false;
-  }
-}
-
 void Map::Draw(int playerX, int playerY)
 {
   int tw = Printer::Instance().TerminalWidth;

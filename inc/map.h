@@ -19,11 +19,6 @@ public:
   
   void CreateMap();
 
-  void CreateRoom(Rect& r);
-  
-  void CreateTunnelH(int x1, int x2, int y);
-  void CreateTunnelV(int y1, int y2, int x);  
-
   void Draw(int playerX, int playerY);
 
   Tile MapArray[GlobalConstants::MapX][GlobalConstants::MapY];

@@ -60,7 +60,8 @@ class MainState : public GameState
     void DrawLookState();
     void MoveCursor(int dx, int dy);
     void DrawCursor();
-    
+    void DrawGameObjects();
+
     Position _cursorPosition;
 };
 

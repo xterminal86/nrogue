@@ -7,19 +7,22 @@
 
 #include <ncurses.h>
 
+#include "tile.h"
+
 #include "component.h"
 
 class GameObject
 {
 public:
   GameObject(int x, int y, chtype avatar, const std::string& htmlColor);
+  virtual ~GameObject() = default;
 
   bool Move(int dx, int dy);  
 
   void Draw();
 
   template <typename T>
-  Component* AddComponent()
+  inline Component* AddComponent()
   {   
     // TODO: no check for component already added
     
@@ -34,7 +37,7 @@ public:
   }
     
   template <typename T>
-  Component* GetComponent()
+  inline Component* GetComponent()
   {
     for (auto& c : _components)
     {
@@ -46,19 +49,20 @@ public:
     
     return nullptr;
   }
-  
-  int PosX() { return _posX; }
-  int PosY() { return _posY; }  
-  
+
   void Update();
 
+  int PosX;
+  int PosY;
+
 private:
-  int _posX;
-  int _posY;
   chtype _avatar;
   std::string _htmlColor;
   
-  std::map<size_t, std::unique_ptr<Component>> _components;  
+  std::map<size_t, std::unique_ptr<Component>> _components;
+
+  Tile* _previousCell = nullptr;
+  Tile* _currentCell = nullptr;
 };
 
 #endif

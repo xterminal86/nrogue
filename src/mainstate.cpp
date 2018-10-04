@@ -3,12 +3,21 @@
 #include "application.h"
 #include "map.h"
 #include "printer.h"
+#include "ai-dummy.h"
 
 void MainState::Init()
 {
   _inputState = "move";
 
   _player = &Application::Instance().PlayerInstance;
+
+  GameObject* npc = new GameObject(20, 20, '@', "#FFFF00");
+  npc->AddComponent<AIDummy>();
+
+  auto up = std::unique_ptr<GameObject>();
+  up.reset(npc);
+
+  _gameObjects.push_back(std::move(up));
 }
 
 void MainState::HandleInput()
@@ -215,15 +224,10 @@ void MainState::DrawLookState()
   if (_keyPressed != -1)
   {
     clear();
-        
-    _player->CheckVisibility();
-    
+
     Map::Instance().Draw(_player->PosX, _player->PosY);
     
-    for (auto& item : _gameObjects)
-    {
-      item.get()->Draw();
-    }
+    DrawGameObjects();
     
     _player->Draw();
     
@@ -248,7 +252,25 @@ void MainState::DrawLookState()
       }
       else
       {
-        lookStatus += tile.Visible ? "floor" : "?floor?";
+        bool goFound = false;
+        for (auto& go : _gameObjects)
+        {
+          if (go.get()->PosX == _cursorPosition.X
+           && go.get()->PosY == _cursorPosition.Y)
+          {
+            goFound = true;
+            break;
+          }
+        }
+
+        if (goFound)
+        {
+          lookStatus += "some game object";
+        }
+        else
+        {
+          lookStatus += tile.Visible ? "floor" : "?floor?";
+        }
       }      
     }
     else
@@ -271,12 +293,9 @@ void MainState::DrawMovementState()
     _player->CheckVisibility();
     
     Map::Instance().Draw(_player->PosX, _player->PosY);
-    
-    for (auto& item : _gameObjects)
-    {
-      item.get()->Draw();
-    }
-    
+        
+    DrawGameObjects();
+
     _player->Draw();
     
     // Some debug info  
@@ -286,7 +305,7 @@ void MainState::DrawMovementState()
                                     _player->PosX,
                                     _player->PosY,
                                     _keyPressed);    
-    
+
     Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
     refresh();  
@@ -309,4 +328,18 @@ void MainState::MoveCursor(int dx, int dy)
   
   _cursorPosition.X = nx;
   _cursorPosition.Y = ny;
+}
+
+void MainState::DrawGameObjects()
+{
+  for (auto& item : _gameObjects)
+  {
+    float d = Util::LinearDistance(item.get()->PosX, item.get()->PosY,
+                                   _player->PosX, _player->PosY);
+
+    if (d < _player->VisibilityRadius)
+    {
+      item.get()->Draw();
+    }
+  }
 }

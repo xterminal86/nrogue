@@ -5,24 +5,21 @@
 
 #include <stdlib.h>
 
-class GameObject;
-
 class Component
 {
   public:
-    Component()
-    {
-      _hash = typeid(*this).hash_code();
-    }
+    Component();
 
-    GameObject* Owner;
+    virtual ~Component() = default;
 
     virtual void Update() = 0;
     
-    size_t Hash() { return _hash; }
-    
+    size_t Hash();
+
+    void* Owner;
+
   protected:
-    size_t _hash;    
+    size_t _hash;
 };
 
 #endif

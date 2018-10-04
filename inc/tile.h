@@ -2,12 +2,9 @@
 #define TILE_H
 
 #include <string>
-#include <queue>
 #include <memory>
 
 #include <ncurses.h>
-
-#include "game-object.h"
 
 class Tile
 {
@@ -42,13 +39,6 @@ class Tile
       Image = '.';
       Color = "#444444";
     }
-
-  private:
-    // FIXME: doesn't compile.
-    // Probably due to some issues with move ctor (probably).
-    //
-    // Any objects on this tile
-    //std::queue<std::unique_ptr<GameObject>> _objectsHere;
 };
 
 #endif
