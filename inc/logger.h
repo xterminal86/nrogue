@@ -9,37 +9,37 @@
 
 class Logger : public Singleton<Logger>
 {
-public:
-  void Init() override
-  {
-    _logFile.open("debug-log.txt");    
-  }
-
-  virtual ~Logger()
-  {
-    _logFile.close();    
-  }
-
-  void Print(const std::string& stringToPrint)
-  {
-    if (!Disabled)
+  public:
+    void Init() override
     {
-      time_t now = time(nullptr);
-      tm *ltm = localtime(&now);
-
-      _logFile << ltm->tm_hour << ":";
-      _logFile << ltm->tm_min << ":";
-      _logFile << ltm->tm_sec << " *** ";
-
-      _logFile << stringToPrint;
+      _logFile.open("debug-log.txt");
     }
-  }
 
-  // If set to true all printing is ignored
-  bool Disabled = false;
+    virtual ~Logger()
+    {
+      _logFile.close();
+    }
 
-private:
-  std::ofstream _logFile;
+    void Print(const std::string& stringToPrint)
+    {
+      if (!Disabled)
+      {
+        time_t now = time(nullptr);
+        tm *ltm = localtime(&now);
+
+        _logFile << ltm->tm_hour << ":";
+        _logFile << ltm->tm_min << ":";
+        _logFile << ltm->tm_sec << " *** ";
+
+        _logFile << stringToPrint;
+      }
+    }
+
+    // If set to true all printing is ignored
+    bool Disabled = false;
+
+  private:
+    std::ofstream _logFile;
 };
 
 #endif

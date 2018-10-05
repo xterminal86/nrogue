@@ -8,7 +8,6 @@
 #include "singleton.h"
 #include "rect.h"
 #include "constants.h"
-#include "tile.h"
 #include "game-object.h"
 #include "player.h"
 
@@ -31,7 +30,7 @@ class Map : public Singleton<Map>
 
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
 
-    Tile MapArray[GlobalConstants::MapX][GlobalConstants::MapY];
+    GameObject MapArray[GlobalConstants::MapX][GlobalConstants::MapY];
 
     int PlayerStartX;
     int PlayerStartY;

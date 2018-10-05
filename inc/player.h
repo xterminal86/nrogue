@@ -10,7 +10,7 @@
 
 class Player
 {
-  public:    
+  public:
 
     enum class PlayerClass
     {

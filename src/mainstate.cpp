@@ -223,18 +223,18 @@ void MainState::DrawLookState()
 
     if (Util::CheckLimits(_cursorPosition, Position(GlobalConstants::MapX, GlobalConstants::MapY)))
     {      
-      auto tile = Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
+      auto* tile = &Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
       if (_cursorPosition.X == _playerRef->PosX && _cursorPosition.Y == _playerRef->PosY)
       {
         lookStatus += "it's you!";
       }
-      else if (!tile.Revealed)
+      else if (!tile->Revealed)
       {
         lookStatus += "???";
       }
-      else if (tile.Blocking)
+      else if (tile->Blocking)
       {
-        lookStatus += tile.Visible ? "wall" : "?wall?";
+        lookStatus += tile->Visible ? "wall" : "?wall?";
       }
       else
       {
@@ -246,7 +246,7 @@ void MainState::DrawLookState()
         }
         else
         {
-          lookStatus += tile.Visible ? "floor" : "?floor?";
+          lookStatus += tile->Visible ? "floor" : "?floor?";
         }
       }      
     }

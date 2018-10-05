@@ -53,7 +53,7 @@ void Player::CheckVisibility()
 
   // Update map around player
 
-  auto map = Map::Instance().MapArray;
+  auto& map = Map::Instance().MapArray;
 
   auto mapCells = Util::GetRectAroundPoint(PosX, PosY, tw / 2, th / 2);
   for (auto& cell : mapCells)
@@ -85,7 +85,7 @@ void Player::CheckVisibility()
 
       DiscoverCell(point.X, point.Y);
     }
-  }
+  }    
 }
 
 void Player::Draw()
@@ -97,7 +97,7 @@ void Player::Draw()
 
 void Player::DiscoverCell(int x, int y)
 {
-  auto map = Map::Instance().MapArray;
+  auto& map = Map::Instance().MapArray;
 
   map[x][y].Visible = true;
 

@@ -4,17 +4,17 @@
 template <typename T>
 class Singleton
 {
-public:
-  static T& Instance()
-  {
-    static T instance;
-    return instance;
-  }
+  public:
+    static T& Instance()
+    {
+      static T instance;
+      return instance;
+    }
 
-  virtual void Init() {}
+    virtual void Init() {}
 
-protected:
-  Singleton() {}  
+  protected:
+    Singleton() {}
 };
 
 #endif

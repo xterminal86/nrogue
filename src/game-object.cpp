@@ -3,12 +3,12 @@
 #include "map.h"
 #include "printer.h"
 
-GameObject::GameObject(int x, int y, chtype avatar, const std::string& htmlColor)
+void GameObject::Init(int x, int y, chtype avatar, const std::string& htmlColor)
 {
   PosX = x;
   PosY = y;
-  _avatar = avatar;
-  _htmlColor = htmlColor;
+  Image = avatar;
+  HtmlColor = htmlColor;
 
   _currentCell = &Map::Instance().MapArray[PosX][PosY];
 }
@@ -31,9 +31,12 @@ bool GameObject::Move(int dx, int dy)
   return false;
 }
 
-void GameObject::Draw()
-{
-  Printer::Instance().Print(PosX + Map::Instance().MapOffsetX, PosY + Map::Instance().MapOffsetY, _avatar, _htmlColor);
+void GameObject::Draw(const std::string& overrideColor)
+{  
+  Printer::Instance().Print(PosX + Map::Instance().MapOffsetX,
+                            PosY + Map::Instance().MapOffsetY,
+                            Image,
+                            (overrideColor.length() == 0) ? HtmlColor : overrideColor);
 }
 
 void GameObject::Update()
@@ -42,4 +45,20 @@ void GameObject::Update()
   {
     c.second.get()->Update();
   }
+}
+
+void GameObject::SetFloor()
+{
+  Blocking = false;
+  BlockSight = false;
+  Image = '.';
+  HtmlColor = "#444444";
+}
+
+void GameObject::SetWall()
+{
+  Blocking = true;
+  BlockSight = true;
+  Image = '#'; // ACS_BLOCK;
+  HtmlColor = "#888888";
 }

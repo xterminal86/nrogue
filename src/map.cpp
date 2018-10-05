@@ -9,45 +9,25 @@
 void Map::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
+
+  for (int x = 0; x < GlobalConstants::MapX; x++)
+  {
+    for (int y = 0; y < GlobalConstants::MapY; y++)
+    {
+      MapArray[x][y].PosX = x;
+      MapArray[x][y].PosY = y;
+    }
+  }
 }
 
 void Map::CreateMap(MapType mapType)
-{  
+{
   switch (mapType)
   {
     case MapType::TOWN:
       CreateTown();
       break;
   }
-
-  /*
-  for (int x = 0; x < GlobalConstants::MapX; x++)
-  {
-    for (int y = 0; y < GlobalConstants::MapY; y++)
-    {
-      MapArray[x][y].Init(false);
-
-      MapArray[x][y].SetFloor();      
-    }
-  }
-
-  for (int x = 0; x < GlobalConstants::MapX; x++)
-  {
-    MapArray[x][0].SetWall();
-    MapArray[x][GlobalConstants::MapY - 1].SetWall();    
-  }
-
-  for (int y = 0; y < GlobalConstants::MapY; y++)
-  {
-    MapArray[0][y].SetWall();
-    MapArray[GlobalConstants::MapX - 1][y].SetWall();    
-  }
-
-  for (int x = 10; x < 40; x++)
-  {
-    MapArray[x][10].SetWall();
-  }
-  */
 }
 
 void Map::Draw(int playerX, int playerY)
@@ -64,19 +44,14 @@ void Map::Draw(int playerX, int playerY)
     int y = cell.Y;
         
     if (MapArray[x][y].Visible)
-      {        
-        Printer::Instance().Print(x + MapOffsetX, y + MapOffsetY, 
-                                  MapArray[x][y].Image,                                    
-                                  MapArray[x][y].Color);      
-      }
-      else
-      {
-        auto tileColor = MapArray[x][y].Revealed ? "#222222" : "#000000";
-
-        Printer::Instance().Print(x + MapOffsetX, y + MapOffsetY, 
-                                  MapArray[x][y].Image,
-                                  tileColor);      
-      }
+    {
+      MapArray[x][y].Draw();
+    }
+    else
+    {
+      std::string tileColor = MapArray[x][y].Revealed ? "#222222" : "#000000";
+      MapArray[x][y].Draw(tileColor);
+    }
   }
 
   // Draw game objects
@@ -177,7 +152,6 @@ void Map::ClearArea(int ax, int ay, int aw, int ah)
   {
     for (int y = ay; y <= ah; y++)
     {
-      MapArray[x][y].Init(false);
       MapArray[x][y].SetFloor();
     }
   }
