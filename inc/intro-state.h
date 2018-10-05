@@ -63,6 +63,9 @@ class IntroState : public GameState
         "your service as a guardian of the Arcane.",
         "With farewell words of your master still echoing",
         "inside your head, you continue onward..."
+      },
+      {
+        "Custom class desctiption"
       }
     };
 

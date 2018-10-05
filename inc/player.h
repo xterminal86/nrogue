@@ -25,11 +25,11 @@ class Player
     void CheckVisibility();
     bool Move(int dx, int dy);
 
-  int PosX;
-  int PosY;
-  chtype Avatar;
-  std::string Color;
-  int VisibilityRadius;
+    int PosX;
+    int PosY;
+    chtype Avatar;
+    std::string Color;
+    int VisibilityRadius;
 
     int SelectedClass;
 

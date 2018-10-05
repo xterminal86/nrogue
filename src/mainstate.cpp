@@ -3,21 +3,12 @@
 #include "application.h"
 #include "map.h"
 #include "printer.h"
-#include "ai-dummy.h"
 
 void MainState::Init()
 {
   _inputState = "move";
 
-  _player = &Application::Instance().PlayerInstance;
-
-  GameObject* npc = new GameObject(20, 20, '@', "#FFFF00");
-  npc->AddComponent<AIDummy>();
-
-  auto up = std::unique_ptr<GameObject>();
-  up.reset(npc);
-
-  _gameObjects.push_back(std::move(up));
+  _playerRef = &Application::Instance().PlayerInstance;
 }
 
 void MainState::HandleInput()
@@ -100,7 +91,7 @@ void MainState::ProcessMovement()
   switch (_keyPressed)
   {
     case NUMPAD_7:
-      if (_player->Move(-1, -1))
+      if (_playerRef->Move(-1, -1))
       {
         Map::Instance().MapOffsetY++;
         Map::Instance().MapOffsetX++;
@@ -110,7 +101,7 @@ void MainState::ProcessMovement()
       break;
       
     case NUMPAD_8:
-      if (_player->Move(0, -1))
+      if (_playerRef->Move(0, -1))
       {
         Map::Instance().MapOffsetY++;
 
@@ -119,7 +110,7 @@ void MainState::ProcessMovement()
       break;
 
     case NUMPAD_9:
-      if (_player->Move(1, -1))
+      if (_playerRef->Move(1, -1))
       {
         Map::Instance().MapOffsetY++;
         Map::Instance().MapOffsetX--;
@@ -129,7 +120,7 @@ void MainState::ProcessMovement()
       break;
 
     case NUMPAD_4:
-      if (_player->Move(-1, 0))
+      if (_playerRef->Move(-1, 0))
       {
         Map::Instance().MapOffsetX++;
 
@@ -138,7 +129,7 @@ void MainState::ProcessMovement()
       break;
     
     case NUMPAD_2:
-      if (_player->Move(0, 1))
+      if (_playerRef->Move(0, 1))
       {
         Map::Instance().MapOffsetY--;
 
@@ -147,7 +138,7 @@ void MainState::ProcessMovement()
       break;
     
     case NUMPAD_6:
-      if (_player->Move(1, 0))
+      if (_playerRef->Move(1, 0))
       {
         Map::Instance().MapOffsetX--;
 
@@ -156,7 +147,7 @@ void MainState::ProcessMovement()
       break;
     
     case NUMPAD_1:
-      if (_player->Move(-1, 1))
+      if (_playerRef->Move(-1, 1))
       {
         Map::Instance().MapOffsetY--;
         Map::Instance().MapOffsetX++;
@@ -166,7 +157,7 @@ void MainState::ProcessMovement()
       break;
 
     case NUMPAD_3:
-      if (_player->Move(1, 1))
+      if (_playerRef->Move(1, 1))
       {
         Map::Instance().MapOffsetY--;
         Map::Instance().MapOffsetX--;
@@ -181,8 +172,8 @@ void MainState::ProcessMovement()
       break;
 
     case 'l':
-      _cursorPosition.X = _player->PosX;
-      _cursorPosition.Y = _player->PosY;
+      _cursorPosition.X = _playerRef->PosX;
+      _cursorPosition.Y = _playerRef->PosY;
       _inputState = kInputLookState;
       break;
 
@@ -201,10 +192,7 @@ void MainState::ProcessMovement()
   // If player's turn finished, update all game objects' components
   if (turnDone)
   {
-    for (auto& go : _gameObjects)
-    {
-      go.get()->Update();
-    }
+    Map::Instance().UpdateGameObjects();
   }
 }
 
@@ -225,11 +213,9 @@ void MainState::DrawLookState()
   {
     clear();
 
-    Map::Instance().Draw(_player->PosX, _player->PosY);
-    
-    DrawGameObjects();
-    
-    _player->Draw();
+    Map::Instance().Draw(_playerRef->PosX, _playerRef->PosY);
+
+    _playerRef->Draw();
     
     DrawCursor();   
     
@@ -238,7 +224,7 @@ void MainState::DrawLookState()
     if (Util::CheckLimits(_cursorPosition, Position(GlobalConstants::MapX, GlobalConstants::MapY)))
     {      
       auto tile = Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
-      if (_cursorPosition.X == _player->PosX && _cursorPosition.Y == _player->PosY)
+      if (_cursorPosition.X == _playerRef->PosX && _cursorPosition.Y == _playerRef->PosY)
       {
         lookStatus += "it's you!";
       }
@@ -252,18 +238,9 @@ void MainState::DrawLookState()
       }
       else
       {
-        bool goFound = false;
-        for (auto& go : _gameObjects)
-        {
-          if (go.get()->PosX == _cursorPosition.X
-           && go.get()->PosY == _cursorPosition.Y)
-          {
-            goFound = true;
-            break;
-          }
-        }
+        auto gameObjects = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
 
-        if (goFound)
+        if (gameObjects.size() != 0)
         {
           lookStatus += "some game object";
         }
@@ -290,20 +267,18 @@ void MainState::DrawMovementState()
   {
     clear();
         
-    _player->CheckVisibility();
+    _playerRef->CheckVisibility();
     
-    Map::Instance().Draw(_player->PosX, _player->PosY);
-        
-    DrawGameObjects();
+    Map::Instance().Draw(_playerRef->PosX, _playerRef->PosY);
 
-    _player->Draw();
+    _playerRef->Draw();
     
     // Some debug info  
     _debugInfo = Util::StringFormat("Ofst: %i %i: Plr: [%i;%i] Key: %i", 
                                     Map::Instance().MapOffsetX,
                                     Map::Instance().MapOffsetY,
-                                    _player->PosX,
-                                    _player->PosY,
+                                    _playerRef->PosX,
+                                    _playerRef->PosY,
                                     _keyPressed);    
 
     Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
@@ -320,26 +295,12 @@ void MainState::MoveCursor(int dx, int dy)
   int hw = Printer::Instance().TerminalWidth / 2;
   int hh = Printer::Instance().TerminalHeight / 2;
 
-  nx = Util::Clamp(nx, _player->PosX - hw + 1,
-                       _player->PosX + hw - 2);
+  nx = Util::Clamp(nx, _playerRef->PosX - hw + 1,
+                       _playerRef->PosX + hw - 2);
 
-  ny = Util::Clamp(ny, _player->PosY - hh + 1,
-                       _player->PosY + hh - 2);
+  ny = Util::Clamp(ny, _playerRef->PosY - hh + 1,
+                       _playerRef->PosY + hh - 2);
   
   _cursorPosition.X = nx;
   _cursorPosition.Y = ny;
-}
-
-void MainState::DrawGameObjects()
-{
-  for (auto& item : _gameObjects)
-  {
-    float d = Util::LinearDistance(item.get()->PosX, item.get()->PosY,
-                                   _player->PosX, _player->PosY);
-
-    if (d < _player->VisibilityRadius)
-    {
-      item.get()->Draw();
-    }
-  }
 }

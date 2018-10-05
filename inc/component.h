@@ -21,7 +21,7 @@ class Component
     //
     // This is GameObject*, use C style cast 
     // when you need access to the owner of this component.
-    void* Owner;
+    void* OwnerGameObject;
 
   protected:
     size_t _hash;

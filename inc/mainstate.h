@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "gamestate.h"
-#include "game-object.h"
 #include "util.h"
 #include "player.h"
 
@@ -45,8 +44,7 @@ class MainState : public GameState
     void Update() override;
         
   private:
-    std::vector<std::unique_ptr<GameObject>> _gameObjects;
-    Player* _player;
+    Player* _playerRef;
 
     std::string _debugInfo;
     std::string _inputState;

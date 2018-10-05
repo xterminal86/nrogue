@@ -10,11 +10,17 @@
 #include "tests.h"
 #include "printer.h"
 #include "util.h"
+#include "rng.h"
 
 bool _runTests = false;
 
 int main()
 {  
+  Logger::Instance().Init();
+  //Logger::Instance().Disabled = true;
+
+  RNG::Instance().Init();
+
   auto scr = initscr();
   nodelay(scr, true);     // non-blocking getch()
   keypad(scr, true);      // enable numpad
@@ -28,20 +34,15 @@ int main()
 
   start_color();
 
-  Logger::Instance().Init();
-  
-  //Logger::Instance().Disabled = true;
-
   Printer::Instance().Init();  
   Printer::Instance().TerminalWidth = mx;
   Printer::Instance().TerminalHeight = my;
-  
+
+  Application::Instance().Init();
+
   Map::Instance().Init();      
-  Map::Instance().CreateMap();
-  Map::Instance().MapOffsetX = mx / 2;
-  Map::Instance().MapOffsetY = my / 2;
- 
-  Application::Instance().Init();  
+  Map::Instance().CreateMap(MapType::TOWN);
+
   Application::Instance().Run();
   
   endwin();
@@ -50,7 +51,7 @@ int main()
   {
     Tests::Run();
   }
-  
+    
   printf("Goodbye!\n");
 
   return 0;

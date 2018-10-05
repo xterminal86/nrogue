@@ -28,7 +28,7 @@ public:
     
     auto cp = std::make_unique<T>();    
             
-    cp.get()->Owner = this;
+    cp.get()->OwnerGameObject = this;
 
     // cp is null after std::move
     _components[typeid(T).hash_code()] = std::move(cp);

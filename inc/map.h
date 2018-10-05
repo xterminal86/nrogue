@@ -9,25 +9,45 @@
 #include "rect.h"
 #include "constants.h"
 #include "tile.h"
+#include "game-object.h"
+#include "player.h"
+
+enum class MapType
+{
+  TOWN = 0,
+  MINES
+};
 
 class Map : public Singleton<Map>
 {
-public:  
-  void Init() override
-  {    
-  }
-  
-  void CreateMap();
+  public:
+    void Init() override;
 
-  void Draw(int playerX, int playerY);
+    void CreateMap(MapType mapType);
 
-  Tile MapArray[GlobalConstants::MapX][GlobalConstants::MapY];
+    void Draw(int playerX, int playerY);
 
-  int PlayerStartX;
-  int PlayerStartY;
+    void UpdateGameObjects();
 
-  int MapOffsetX;
-  int MapOffsetY;
+    std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
+
+    Tile MapArray[GlobalConstants::MapX][GlobalConstants::MapY];
+
+    int PlayerStartX;
+    int PlayerStartY;
+
+    int MapOffsetX;
+    int MapOffsetY;
+
+  private:
+    Player* _playerRef;
+
+    void CreateTown();
+    void CreateRoom(int x, int y, int w, int h);
+    void ClearArea(int x, int y, int w, int h);
+    void DrawGameObjects();
+
+    std::vector<std::unique_ptr<GameObject>> _gameObjects;
 };
 
 #endif

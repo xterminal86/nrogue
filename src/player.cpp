@@ -10,7 +10,6 @@ void Player::Init()
   PosY = Map::Instance().PlayerStartY;
   Avatar = '@';
   Color = "#00FFFF";
-  VisibilityRadius = 6;
 
   SetAttributes();
 }
@@ -33,10 +32,10 @@ void Player::CheckVisibility()
   int tw = Printer::Instance().TerminalWidth;
   int th = Printer::Instance().TerminalHeight;
 
-  // FIXME: rethink
+  // FIXME: think
   //
-  // Compensate for different terminal sizes,
-  // so we get more circle-like visible area around player
+  // Should we compensate for different terminal sizes,
+  // so we get more circle-like visible area around player?
   /*
 
   int vrx = VisibilityRadius;

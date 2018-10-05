@@ -12,7 +12,7 @@ class Tile
     bool Blocking;
     bool BlockSight;
     bool Revealed;
-    bool Visible = false;
+    bool Visible = false;    
     std::string Color;
     chtype Image;
 
