@@ -44,6 +44,8 @@ class Map : public Singleton<Map>
     void CreateTown();
     void CreateRoom(int x, int y, int w, int h);
     void ClearArea(int x, int y, int w, int h);
+    void CreateDoor(int x, int y, bool isOpen = false);
+
     void DrawGameObjects();
 
     std::vector<std::unique_ptr<GameObject>> _gameObjects;

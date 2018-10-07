@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <functional>
 
 #include <ncurses.h>
 
@@ -21,6 +22,20 @@ class GameObject
       Init(x, y, avatar, htmlColor);
     }
 
+    void Interact()
+    {
+      // http://www.cplusplus.com/reference/functional/function/target_type/
+      //
+      // Return value
+      // The type_info object that corresponds to the type of the target,
+      // or typeid(void) if the object is an empty function.
+
+      if (InteractionCallback.target_type() != typeid(void))
+      {
+        InteractionCallback();
+      }
+    }
+
     void Init(int x, int y, chtype avatar, const std::string& htmlColor);
 
     bool Move(int dx, int dy);
@@ -30,7 +45,7 @@ class GameObject
     template <typename T>
     inline Component* AddComponent()
     {
-      // TODO: no check for component already added
+      // No check for component already added. Do we need one?
 
       auto cp = std::make_unique<T>();
 
@@ -56,27 +71,30 @@ class GameObject
       return nullptr;
     }
 
-    void SetWall();
-    void SetFloor();
+    void CreateWall();
+    void CreateFloor();
 
     void Update();
 
     int PosX;
     int PosY;
 
-    bool Blocking;
-    bool BlockSight;
-    bool Revealed;
+    bool Blocking = false;
+    bool BlockSight = true;
+    bool Revealed = false;
     bool Visible = false;
 
     chtype Image;
     std::string HtmlColor;
 
+    std::function<void()> InteractionCallback;
+
   private:
+
     std::map<size_t, std::unique_ptr<Component>> _components;
 
     GameObject* _previousCell = nullptr;
-    GameObject* _currentCell = nullptr;
+    GameObject* _currentCell = nullptr;    
 };
 
 #endif

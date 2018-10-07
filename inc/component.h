@@ -12,8 +12,9 @@ class Component
 
     virtual ~Component() = default;
 
-    virtual void Update() = 0;
-    
+    // Called after player finishes his turn
+    virtual void Update() = 0;    
+
     size_t Hash();
 
     // A little bit of a hack probably, but it doesn't compile

@@ -6,30 +6,34 @@
 
 void MainState::Init()
 {
-  _inputState = "move";
+  _inputState = InputStateEnum::MOVE;
 
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
 void MainState::HandleInput()
 {
-  if (_inputState == kInputMoveState)
+  if (_inputState == InputStateEnum::MOVE)
   {
     ProcessMovement();
   }
-  else if (_inputState == kInputLookState)
+  else if (_inputState == InputStateEnum::LOOK)
   {
     ProcessLook();
   }  
+  else if (_inputState == InputStateEnum::INTERACT)
+  {
+    //
+  }
 }
 
 void MainState::Update()
 {
-  if (_inputState == kInputMoveState)
+  if (_inputState == InputStateEnum::MOVE)
   {
     DrawMovementState();
   }
-  else if (_inputState == kInputLookState)
+  else if (_inputState == InputStateEnum::LOOK)
   {
     DrawLookState();
   }  
@@ -74,7 +78,7 @@ void MainState::ProcessLook()
       break;
 
     case 'q':
-      _inputState = kInputMoveState;      
+      _inputState = InputStateEnum::MOVE;
       break;
 
     default:
@@ -174,7 +178,7 @@ void MainState::ProcessMovement()
     case 'l':
       _cursorPosition.X = _playerRef->PosX;
       _cursorPosition.Y = _playerRef->PosY;
-      _inputState = kInputLookState;
+      _inputState = InputStateEnum::LOOK;
       break;
 
     case '@':

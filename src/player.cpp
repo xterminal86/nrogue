@@ -3,6 +3,7 @@
 #include "map.h"
 #include "printer.h"
 #include "util.h"
+#include "door-component.h"
 
 void Player::Init()
 {
@@ -16,12 +17,18 @@ void Player::Init()
 
 bool Player::Move(int dx, int dy)
 {
-  if (!Map::Instance().MapArray[PosX + dx][PosY + dy].Blocking)
+  auto& cell = Map::Instance().MapArray[PosX + dx][PosY + dy];
+
+  if (!cell.Blocking)
   {
     PosX += dx;
     PosY += dy;
 
     return true;
+  }
+  else
+  {
+    cell.Interact();
   }
 
   return false;

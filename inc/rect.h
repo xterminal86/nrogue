@@ -17,16 +17,25 @@ class Rect
       Y2 = y + h;
     }
 
-    std::vector<Position> GetBoundaryElements()
+    inline std::vector<Position> GetBoundaryElements(bool excludeCorners = false)
     {
       std::vector<Position> res;
 
       for (int x = X1; x <= X2; x++)
       {
         for (int y = Y1; y <= Y2; y++)
-        {
-          bool cond = (x == X1 || x == X2 || y == Y1 || y == Y2);
+        {          
+          bool condCorners = (x == X1 && y == Y1)
+                          || (x == X1 && y == Y2)
+                          || (x == X2 && y == Y1)
+                          || (x == X2 && y == Y2);
 
+          if (excludeCorners && condCorners)
+          {
+            continue;
+          }
+
+          bool cond = (x == X1 || x == X2 || y == Y1 || y == Y2);
           if (cond)
           {
             res.push_back(Position(x, y));
@@ -37,7 +46,7 @@ class Rect
       return res;
     }
 
-    std::pair<int, int> Center()
+    inline std::pair<int, int> Center()
     {
       int cx = (X1 + X2) / 2;
       int cy = (Y1 + Y2) / 2;
@@ -45,7 +54,7 @@ class Rect
       return std::pair<int, int>(cx, cy);
     }
 
-    bool Intersects(const Rect& other)
+    inline bool Intersects(const Rect& other)
     {
       return (X1 <= other.X2 && X2 >= other.X1 &&
               Y1 <= other.Y2 && Y2 >= other.Y1);

@@ -44,13 +44,18 @@ class MainState : public GameState
     void Update() override;
         
   private:
+    enum class InputStateEnum
+    {
+      MOVE = 0,
+      LOOK,
+      INTERACT
+    };
+
     Player* _playerRef;
 
     std::string _debugInfo;
-    std::string _inputState;
 
-    const std::string kInputMoveState = "move";
-    const std::string kInputLookState = "look";
+    InputStateEnum _inputState;
 
     void ProcessMovement();
     void ProcessLook();

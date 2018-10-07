@@ -34,9 +34,9 @@ bool GameObject::Move(int dx, int dy)
 void GameObject::Draw(const std::string& overrideColor)
 {  
   Printer::Instance().Print(PosX + Map::Instance().MapOffsetX,
-                            PosY + Map::Instance().MapOffsetY,
-                            Image,
-                            (overrideColor.length() == 0) ? HtmlColor : overrideColor);
+                              PosY + Map::Instance().MapOffsetY,
+                              Image,
+                              (overrideColor.length() == 0) ? HtmlColor : overrideColor);
 }
 
 void GameObject::Update()
@@ -47,7 +47,7 @@ void GameObject::Update()
   }
 }
 
-void GameObject::SetFloor()
+void GameObject::CreateFloor()
 {
   Blocking = false;
   BlockSight = false;
@@ -55,7 +55,7 @@ void GameObject::SetFloor()
   HtmlColor = "#444444";
 }
 
-void GameObject::SetWall()
+void GameObject::CreateWall()
 {
   Blocking = true;
   BlockSight = true;

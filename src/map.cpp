@@ -5,6 +5,7 @@
 #include "util.h"
 #include "rng.h"
 #include "ai-dummy.h"
+#include "door-component.h"
 
 void Map::Init()
 {
@@ -105,8 +106,10 @@ void Map::CreateTown()
   auto bounds = r.GetBoundaryElements();
   for (auto& pos : bounds)
   {
-    MapArray[pos.X][pos.Y].SetWall();
+    MapArray[pos.X][pos.Y].CreateWall();
   }
+
+  CreateRoom(20, 20, 10, 10);
 
   PlayerStartX = 10;
   PlayerStartY = 10;
@@ -117,7 +120,7 @@ void Map::CreateTown()
   MapOffsetX = tw / 2 - PlayerStartX;
   MapOffsetY = th / 2 - PlayerStartY;
 
-  GameObject* npc = new GameObject(20, 20, '@', "#FFFF00");
+  GameObject* npc = new GameObject(1, 1, '@', "#FFFF00");
   npc->AddComponent<AIDummy>();
 
   auto up = std::unique_ptr<GameObject>();
@@ -134,16 +137,18 @@ void Map::CreateRoom(int x, int y, int w, int h)
 
   ClearArea(x, y, w, h);
 
-  int randomIndex = 0;
-
   auto bounds = room.GetBoundaryElements();
   for (auto& pos : bounds)
   {
-     MapArray[pos.X][pos.Y].SetWall();
+     MapArray[pos.X][pos.Y].CreateWall();
   }
 
-  // TODO:
-  randomIndex = RNG::Instance().Random() % bounds.size();
+  bounds = room.GetBoundaryElements(true);
+
+  auto wallIndex = RNG::Instance().Random() % bounds.size();
+  Position wallPos = bounds[wallIndex];
+
+  CreateDoor(wallPos.X, wallPos.Y);
 }
 
 void Map::ClearArea(int ax, int ay, int aw, int ah)
@@ -152,9 +157,23 @@ void Map::ClearArea(int ax, int ay, int aw, int ah)
   {
     for (int y = ay; y <= ah; y++)
     {
-      MapArray[x][y].SetFloor();
+      MapArray[x][y].CreateFloor();
     }
   }
+}
+
+void Map::CreateDoor(int x, int y, bool isOpen)
+{
+  auto c = MapArray[x][y].AddComponent<DoorComponent>();
+  DoorComponent* dc = dynamic_cast<DoorComponent*>(c);
+  dc->IsOpen = isOpen;
+  dc->UpdateDoorState();
+
+  // https://stackoverflow.com/questions/15264003/using-stdbind-with-member-function-use-object-pointer-or-not-for-this-argumen/15264126#15264126
+  //
+  // When using std::bind to bind a member function, the first argument is the object's this pointer.
+
+  MapArray[x][y].InteractionCallback = std::bind(&DoorComponent::Interact, dc);
 }
 
 void Map::DrawGameObjects()
