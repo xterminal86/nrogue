@@ -8,6 +8,7 @@ void Application::Init()
   _gameStates[(int)GameStates::SELECT_CLASS_STATE] = std::unique_ptr<GameState>(new SelectClassState());
   _gameStates[(int)GameStates::INTRO_STATE] = std::unique_ptr<GameState>(new IntroState());
   _gameStates[(int)GameStates::SHOW_MESSAGES_STATE] = std::unique_ptr<GameState>(new MessageLogState());
+  _gameStates[(int)GameStates::SHOW_HELP_STATE] = std::unique_ptr<GameState>(new HelpState());
 
   for (auto& state : _gameStates)
   {

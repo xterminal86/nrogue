@@ -120,16 +120,24 @@ void Map::CreateTown()
   MapOffsetX = tw / 2 - PlayerStartX;
   MapOffsetY = th / 2 - PlayerStartY;
 
-  GameObject* npc = new GameObject(25, 25, '@', "#FFFF00");
-  npc->ObjectName = "some dumb fuck";
-  npc->AddComponent<AIDummy>();
+  // create some npcs
 
-  auto up = std::unique_ptr<GameObject>();
-  up.reset(npc);
+  for (int i = 0 ; i < 20; i++)
+  {
+    int x = 1 + (RNG::Instance().Random() % (GlobalConstants::MapX - 2));
+    int y = 1 + (RNG::Instance().Random() % (GlobalConstants::MapY - 2));
 
-  _gameObjects.push_back(std::move(up));
+    GameObject* npc = new GameObject(x, y, '@', "#FFFF00");
+    npc->ObjectName = "Dummy AI " + std::to_string(i);
+    npc->AddComponent<AIDummy>();
 
-  _playerRef->VisibilityRadius = 16;
+    auto up = std::unique_ptr<GameObject>();
+    up.reset(npc);
+
+    _gameObjects.push_back(std::move(up));
+  }
+
+  _playerRef->VisibilityRadius = 20;
 }
 
 void Map::CreateRoom(int x, int y, int w, int h)

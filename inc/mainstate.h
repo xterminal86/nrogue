@@ -21,7 +21,8 @@ class MainState : public GameState
     {
       MOVE = 0,
       LOOK,
-      INTERACT
+      INTERACT,
+      EXIT_GAME
     };    
 
     Player* _playerRef;
@@ -33,10 +34,12 @@ class MainState : public GameState
     void ProcessMovement();
     void ProcessLook();
     void ProcessInteraction();
+    void ProcessExitGame();
 
     void DrawMovementState();
     void DrawLookState();
     void DrawInteractionState();
+    void DrawExitGameState();
 
     void MoveCursor(int dx, int dy);
     void DrawCursor();

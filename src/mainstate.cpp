@@ -25,6 +25,10 @@ void MainState::HandleInput()
   {
     ProcessInteraction();
   }
+  else if (_inputState == InputStateEnum::EXIT_GAME)
+  {
+    ProcessExitGame();
+  }
 }
 
 void MainState::Update()
@@ -41,6 +45,10 @@ void MainState::Update()
   {
     DrawInteractionState();
   }  
+  else if (_inputState == InputStateEnum::EXIT_GAME)
+  {
+    DrawExitGameState();
+  }
 }
 
 void MainState::ProcessInteraction()
@@ -277,8 +285,12 @@ void MainState::ProcessMovement()
       Application::Instance().ChangeState(Application::GameStates::INFO_STATE);
       break;
       
+    case '?':
+      Application::Instance().ChangeState(Application::GameStates::SHOW_HELP_STATE);
+      break;
+
     case 'q':
-      Application::Instance().ChangeState(Application::GameStates::EXIT_GAME);
+      _inputState = InputStateEnum::EXIT_GAME;
       break;
       
     default:
@@ -445,5 +457,40 @@ void MainState::TryToInteractWithObject(GameObject* go)
   {
     Printer::Instance().AddMessage("Can't interact with " + go->ObjectName);
     _inputState = InputStateEnum::MOVE;
+  }
+}
+
+void MainState::ProcessExitGame()
+{
+  _keyPressed = getch();
+
+  switch (_keyPressed)
+  {
+    case 'y':
+      Application::Instance().ChangeState(Application::GameStates::EXIT_GAME);
+      break;
+
+    case 'q':
+      _inputState = InputStateEnum::MOVE;
+      break;
+  }
+}
+
+void MainState::DrawExitGameState()
+{
+  if (_keyPressed != -1)
+  {
+    clear();
+
+    Map::Instance().Draw(_playerRef->PosX, _playerRef->PosY);
+
+    _playerRef->Draw();
+
+    int tw = Printer::Instance().TerminalWidth;
+    int th = Printer::Instance().TerminalHeight;
+
+    Printer::Instance().Print(tw - 1, th - 1, "Exit game? (y/q)", Printer::kAlignRight, "#FFFFFF");
+
+    refresh();
   }
 }

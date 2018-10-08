@@ -8,6 +8,7 @@
 #include "select-class-state.h"
 #include "intro-state.h"
 #include "message-log-state.h"
+#include "help-state.h"
 #include "logger.h"
 #include "player.h"
 
@@ -28,7 +29,8 @@ class Application : public Singleton<Application>
       SELECT_CLASS_STATE,
       INTRO_STATE,
       INFO_STATE,
-      SHOW_MESSAGES_STATE
+      SHOW_MESSAGES_STATE,
+      SHOW_HELP_STATE
     };
 
     void Init() override;
