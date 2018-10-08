@@ -7,6 +7,7 @@
 #include "gamestate.h"
 #include "util.h"
 #include "player.h"
+#include "game-object.h"
 
 // 262, 259, 339, 260, 350, 261, 360, 258, 338
 
@@ -73,6 +74,8 @@ class MainState : public GameState
 
     void AddMessage(std::string message);
     void DisplayGameLog();
+
+    void TryToInteractWithObject(GameObject* go);
 
     Position _cursorPosition;
 

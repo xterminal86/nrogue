@@ -108,16 +108,15 @@ void MainState::ProcessInteraction()
 
   if (dirSet)
   {
-    auto* cell = &Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
-    if (cell->Interact())
+    auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
+    if (res.size() != 0)
     {
-      _playerTurnDone = true;
-      _inputState = InputStateEnum::MOVE;
+      TryToInteractWithObject(res.back());
     }
     else
     {
-      AddMessage("Can't interact with " + cell->ObjectName);
-      _inputState = InputStateEnum::MOVE;
+      auto* cell = &Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
+      TryToInteractWithObject(cell);
     }
   }
 }
@@ -444,5 +443,19 @@ void MainState::DisplayGameLog()
     {
       break;
     }
+  }
+}
+
+void MainState::TryToInteractWithObject(GameObject* go)
+{
+  if (go->Interact())
+  {
+    _playerTurnDone = true;
+    _inputState = InputStateEnum::MOVE;
+  }
+  else
+  {
+    AddMessage("Can't interact with " + go->ObjectName);
+    _inputState = InputStateEnum::MOVE;
   }
 }
