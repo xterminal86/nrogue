@@ -23,7 +23,7 @@ void MainState::HandleInput()
   }  
   else if (_inputState == InputStateEnum::INTERACT)
   {
-    //
+    ProcessInteraction();
   }
 }
 
@@ -36,7 +36,90 @@ void MainState::Update()
   else if (_inputState == InputStateEnum::LOOK)
   {
     DrawLookState();
-  }  
+  }
+  else if (_inputState == InputStateEnum::INTERACT)
+  {
+    DrawInteractionState();
+  }
+
+  DisplayGameLog();
+}
+
+void MainState::ProcessInteraction()
+{
+  _keyPressed = getch();
+
+  bool dirSet = false;
+
+  switch (_keyPressed)
+  {
+    case NUMPAD_7:
+      dirSet = true;
+      _cursorPosition.X -= 1;
+      _cursorPosition.Y -= 1;
+      break;
+
+    case NUMPAD_8:
+      dirSet = true;
+      _cursorPosition.Y -= 1;
+      break;
+
+    case NUMPAD_9:
+      dirSet = true;
+      _cursorPosition.X += 1;
+      _cursorPosition.Y -= 1;
+      break;
+
+    case NUMPAD_4:
+      dirSet = true;
+      _cursorPosition.X -= 1;
+      break;
+
+    case NUMPAD_6:
+      dirSet = true;
+      _cursorPosition.X += 1;
+      break;
+
+    case NUMPAD_1:
+      dirSet = true;
+      _cursorPosition.X -= 1;
+      _cursorPosition.Y += 1;
+      break;
+
+    case NUMPAD_2:
+      dirSet = true;
+      _cursorPosition.Y += 1;
+      break;
+
+    case NUMPAD_3:
+      dirSet = true;
+      _cursorPosition.X += 1;
+      _cursorPosition.Y += 1;
+      break;
+
+    case 'q':
+      AddMessage("Cancelled");
+      _inputState = InputStateEnum::MOVE;
+      break;
+
+    default:
+      break;
+  }
+
+  if (dirSet)
+  {
+    auto* cell = &Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
+    if (cell->Interact())
+    {
+      _playerTurnDone = true;
+      _inputState = InputStateEnum::MOVE;
+    }
+    else
+    {
+      AddMessage("Can't interact with " + cell->ObjectName);
+      _inputState = InputStateEnum::MOVE;
+    }
+  }
 }
 
 void MainState::ProcessLook()
@@ -90,7 +173,7 @@ void MainState::ProcessMovement()
 {
   _keyPressed = getch();  
 
-  bool turnDone = false;
+  _playerTurnDone = false;
 
   switch (_keyPressed)
   {
@@ -100,7 +183,7 @@ void MainState::ProcessMovement()
         Map::Instance().MapOffsetY++;
         Map::Instance().MapOffsetX++;
 
-        turnDone = true;
+        _playerTurnDone = true;
       }
       break;
       
@@ -109,7 +192,7 @@ void MainState::ProcessMovement()
       {
         Map::Instance().MapOffsetY++;
 
-        turnDone = true;
+        _playerTurnDone = true;
       }
       break;
 
@@ -119,7 +202,7 @@ void MainState::ProcessMovement()
         Map::Instance().MapOffsetY++;
         Map::Instance().MapOffsetX--;
 
-        turnDone = true;
+        _playerTurnDone = true;
       }
       break;
 
@@ -128,7 +211,7 @@ void MainState::ProcessMovement()
       {
         Map::Instance().MapOffsetX++;
 
-        turnDone = true;
+        _playerTurnDone = true;
       }
       break;
     
@@ -137,7 +220,7 @@ void MainState::ProcessMovement()
       {
         Map::Instance().MapOffsetY--;
 
-        turnDone = true;
+        _playerTurnDone = true;
       }
       break;
     
@@ -146,7 +229,7 @@ void MainState::ProcessMovement()
       {
         Map::Instance().MapOffsetX--;
 
-        turnDone = true;
+        _playerTurnDone = true;
       }
       break;
     
@@ -156,7 +239,7 @@ void MainState::ProcessMovement()
         Map::Instance().MapOffsetY--;
         Map::Instance().MapOffsetX++;
 
-        turnDone = true;
+        _playerTurnDone = true;
       }
       break;
 
@@ -166,19 +249,27 @@ void MainState::ProcessMovement()
         Map::Instance().MapOffsetY--;
         Map::Instance().MapOffsetX--;
 
-        turnDone = true;
+        _playerTurnDone = true;
       }
       break;
 
     // wait
     case NUMPAD_5:
-      turnDone = true;
+      AddMessage("Waiting...");
+      _playerTurnDone = true;
       break;
 
     case 'l':
       _cursorPosition.X = _playerRef->PosX;
       _cursorPosition.Y = _playerRef->PosY;
       _inputState = InputStateEnum::LOOK;
+      break;
+
+    case 'i':
+      AddMessage("Interact in which direction?");
+      _cursorPosition.X = _playerRef->PosX;
+      _cursorPosition.Y = _playerRef->PosY;
+      _inputState = InputStateEnum::INTERACT;
       break;
 
     case '@':
@@ -194,7 +285,7 @@ void MainState::ProcessMovement()
   }  
 
   // If player's turn finished, update all game objects' components
-  if (turnDone)
+  if (_playerTurnDone)
   {
     Map::Instance().UpdateGameObjects();
   }
@@ -260,8 +351,8 @@ void MainState::DrawLookState()
     {
       lookStatus += "???";
     }
-    
-    Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, lookStatus, Printer::kAlignLeft, "#FFFFFF");        
+        
+    AddMessage(lookStatus);
 
     refresh();  
   }
@@ -293,6 +384,22 @@ void MainState::DrawMovementState()
   }
 }
 
+void MainState::DrawInteractionState()
+{
+  if (_keyPressed != -1)
+  {
+    clear();
+
+    _playerRef->CheckVisibility();
+
+    Map::Instance().Draw(_playerRef->PosX, _playerRef->PosY);
+
+    _playerRef->Draw();
+
+    refresh();
+  }
+}
+
 void MainState::MoveCursor(int dx, int dy)
 {
   int nx = _cursorPosition.X + dx;
@@ -309,4 +416,33 @@ void MainState::MoveCursor(int dx, int dy)
   
   _cursorPosition.X = nx;
   _cursorPosition.Y = ny;
+}
+
+void MainState::AddMessage(std::string message)
+{
+  if (_gameLog.size() == kMaxGameLogMessages)
+  {
+    _gameLog.pop_back();
+  }
+
+  _gameLog.insert(_gameLog.begin(), message);
+}
+
+void MainState::DisplayGameLog()
+{
+  int x = Printer::Instance().TerminalWidth - 1;
+  int y = Printer::Instance().TerminalHeight - 1;
+
+  int messagesCount = 0;
+  for (auto& msg : _gameLog)
+  {
+    Printer::Instance().Print(x, y - messagesCount, _gameLog[messagesCount], Printer::kAlignRight, "#FFFFFF");
+
+    messagesCount++;
+
+    if (messagesCount > kMessagesToDisplay)
+    {
+      break;
+    }
+  }
 }

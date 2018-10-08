@@ -51,6 +51,8 @@ class MainState : public GameState
       INTERACT
     };
 
+    std::vector<std::string> _gameLog;
+
     Player* _playerRef;
 
     std::string _debugInfo;
@@ -59,13 +61,25 @@ class MainState : public GameState
 
     void ProcessMovement();
     void ProcessLook();
+    void ProcessInteraction();
+
     void DrawMovementState();
     void DrawLookState();
+    void DrawInteractionState();
+
     void MoveCursor(int dx, int dy);
     void DrawCursor();
     void DrawGameObjects();
 
+    void AddMessage(std::string message);
+    void DisplayGameLog();
+
     Position _cursorPosition;
+
+    bool _playerTurnDone;
+
+    const int kMaxGameLogMessages = 10;
+    const int kMessagesToDisplay = 5;
 };
 
 #endif

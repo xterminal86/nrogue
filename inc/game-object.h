@@ -22,7 +22,7 @@ class GameObject
       Init(x, y, avatar, htmlColor);
     }
 
-    void Interact()
+    bool Interact()
     {
       // http://www.cplusplus.com/reference/functional/function/target_type/
       //
@@ -33,7 +33,11 @@ class GameObject
       if (InteractionCallback.target_type() != typeid(void))
       {
         InteractionCallback();
+
+        return true;
       }
+
+      return false;
     }
 
     void Init(int x, int y, chtype avatar, const std::string& htmlColor);
