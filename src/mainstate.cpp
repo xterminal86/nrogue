@@ -40,9 +40,7 @@ void MainState::Update()
   else if (_inputState == InputStateEnum::INTERACT)
   {
     DrawInteractionState();
-  }
-
-  DisplayGameLog();
+  }  
 }
 
 void MainState::ProcessInteraction()
@@ -98,7 +96,7 @@ void MainState::ProcessInteraction()
       break;
 
     case 'q':
-      AddMessage("Cancelled");
+      Printer::Instance().AddMessage("Cancelled");
       _inputState = InputStateEnum::MOVE;
       break;
 
@@ -254,8 +252,12 @@ void MainState::ProcessMovement()
 
     // wait
     case NUMPAD_5:
-      AddMessage("Waiting...");
+      Printer::Instance().AddMessage("Waiting...");
       _playerTurnDone = true;
+      break;
+
+    case 'm':
+      Application::Instance().ChangeState(Application::GameStates::SHOW_MESSAGES_STATE);
       break;
 
     case 'l':
@@ -265,7 +267,7 @@ void MainState::ProcessMovement()
       break;
 
     case 'i':
-      AddMessage("Interact in which direction?");
+      Printer::Instance().AddMessage("Interact in which direction?");
       _cursorPosition.X = _playerRef->PosX;
       _cursorPosition.Y = _playerRef->PosY;
       _inputState = InputStateEnum::INTERACT;
@@ -335,7 +337,7 @@ void MainState::DrawLookState()
       {
         auto gameObjects = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
 
-        if (gameObjects.size() != 0)
+        if (tile->Visible && gameObjects.size() != 0)
         {
           lookStatus += gameObjects.back()->ObjectName;
         }
@@ -350,8 +352,10 @@ void MainState::DrawLookState()
     {
       lookStatus += "???";
     }
-        
-    AddMessage(lookStatus);
+
+    Printer::Instance().Print(Printer::Instance().TerminalWidth - 1,
+                                Printer::Instance().TerminalHeight - 1,
+                                lookStatus, Printer::kAlignRight, "#FFFFFF");
 
     refresh();  
   }
@@ -379,6 +383,8 @@ void MainState::DrawMovementState()
 
     Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
+    DisplayGameLog();
+
     refresh();  
   }
 }
@@ -394,6 +400,8 @@ void MainState::DrawInteractionState()
     Map::Instance().Draw(_playerRef->PosX, _playerRef->PosY);
 
     _playerRef->Draw();
+
+    DisplayGameLog();
 
     refresh();
   }
@@ -417,33 +425,12 @@ void MainState::MoveCursor(int dx, int dy)
   _cursorPosition.Y = ny;
 }
 
-void MainState::AddMessage(std::string message)
-{
-  if (_gameLog.size() == kMaxGameLogMessages)
-  {
-    _gameLog.pop_back();
-  }
-
-  _gameLog.insert(_gameLog.begin(), message);
-}
-
 void MainState::DisplayGameLog()
 {
   int x = Printer::Instance().TerminalWidth - 1;
   int y = Printer::Instance().TerminalHeight - 1;
 
-  int messagesCount = 0;
-  for (auto& msg : _gameLog)
-  {
-    Printer::Instance().Print(x, y - messagesCount, _gameLog[messagesCount], Printer::kAlignRight, "#FFFFFF");
-
-    messagesCount++;
-
-    if (messagesCount > kMessagesToDisplay)
-    {
-      break;
-    }
-  }
+  Printer::Instance().Print(x, y, Printer::Instance().GetLastMessage(), Printer::kAlignRight, "#FFFFFF");
 }
 
 void MainState::TryToInteractWithObject(GameObject* go)
@@ -452,10 +439,11 @@ void MainState::TryToInteractWithObject(GameObject* go)
   {
     _playerTurnDone = true;
     _inputState = InputStateEnum::MOVE;
+    Printer::Instance().AddMessage("You interact with " + go->ObjectName);
   }
   else
   {
-    AddMessage("Can't interact with " + go->ObjectName);
+    Printer::Instance().AddMessage("Can't interact with " + go->ObjectName);
     _inputState = InputStateEnum::MOVE;
   }
 }

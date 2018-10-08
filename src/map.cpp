@@ -64,9 +64,7 @@ void Map::Draw(int playerX, int playerY)
     int x = go.get()->PosX;
     int y = go.get()->PosY;
 
-    float d = Util::LinearDistance(x, y, _playerRef->PosX, _playerRef->PosY);
-
-    if (d < _playerRef->VisibilityRadius)
+    if (MapArray[x][y].Visible)
     {
       go.get()->Draw();
     }
@@ -122,7 +120,7 @@ void Map::CreateTown()
   MapOffsetX = tw / 2 - PlayerStartX;
   MapOffsetY = th / 2 - PlayerStartY;
 
-  GameObject* npc = new GameObject(1, 1, '@', "#FFFF00");
+  GameObject* npc = new GameObject(25, 25, '@', "#FFFF00");
   npc->ObjectName = "some dumb fuck";
   npc->AddComponent<AIDummy>();
 

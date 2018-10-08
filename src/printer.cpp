@@ -150,3 +150,13 @@ void Printer::Print(const int& x, const int& y, const chtype& ch, const std::str
   mvaddch(y, x, ch);
   attroff(COLOR_PAIR(_colorMap[hash].PairIndex));
 }
+
+void Printer::AddMessage(std::string message)
+{
+  if (_inGameMessages.size() > kMaxGameLogMessages)
+  {
+    _inGameMessages.pop_back();
+  }
+
+  _inGameMessages.insert(_inGameMessages.begin(), message);
+}

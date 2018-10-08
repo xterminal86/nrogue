@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 #include <ncurses.h>
 
@@ -44,6 +45,16 @@ class Printer : public Singleton<Printer>
     void Print(const int& x, const int& y, const chtype& ch,
                                            const std::string& htmlColorFg,
                                            const std::string& htmlColorBg = "#000000");
+
+    std::string GetLastMessage()
+    {
+      return (_inGameMessages.size() > 0) ? _inGameMessages.front() : std::string();
+    }
+
+    const std::vector<std::string>& Messages() { return _inGameMessages; }
+
+    void AddMessage(std::string message);
+
   private:
     bool ContainsColorMap(size_t hashToCheck);
     bool ColorIndexExists(size_t hashToCheck);
@@ -54,6 +65,9 @@ class Printer : public Singleton<Printer>
 
     std::map<size_t, ColorPair> _colorMap;
     std::map<size_t, short> _colorIndexMap;
+
+    std::vector<std::string> _inGameMessages;
+    const int kMaxGameLogMessages = 100;
 
     short _colorPairsGlobalIndex = 1;
     short _colorGlobalIndex = 8;
