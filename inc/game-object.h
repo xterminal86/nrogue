@@ -86,6 +86,7 @@ class GameObject
 
     chtype Image;
     std::string HtmlColor;
+    std::string ObjectName;
 
     std::function<void()> InteractionCallback;
 

@@ -52,7 +52,8 @@ void GameObject::CreateFloor()
   Blocking = false;
   BlockSight = false;
   Image = '.';
-  HtmlColor = "#444444";
+  HtmlColor = GlobalConstants::FloorColor;
+  ObjectName = "floor";
 }
 
 void GameObject::CreateWall()
@@ -60,5 +61,6 @@ void GameObject::CreateWall()
   Blocking = true;
   BlockSight = true;
   Image = '#'; // ACS_BLOCK;
-  HtmlColor = "#888888";
+  HtmlColor = GlobalConstants::WallColor;
+  ObjectName = "wall";
 }

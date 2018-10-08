@@ -238,7 +238,8 @@ void MainState::DrawLookState()
       }
       else if (tile->Blocking)
       {
-        lookStatus += tile->Visible ? "wall" : "?wall?";
+        auto nameHidden = "?" + tile->ObjectName + "?";
+        lookStatus += tile->Visible ? tile->ObjectName : nameHidden;
       }
       else
       {
@@ -246,11 +247,12 @@ void MainState::DrawLookState()
 
         if (gameObjects.size() != 0)
         {
-          lookStatus += "some game object";
+          lookStatus += gameObjects.back()->ObjectName;
         }
         else
         {
-          lookStatus += tile->Visible ? "floor" : "?floor?";
+          auto nameHidden = "?" + tile->ObjectName + "?";
+          lookStatus += tile->Visible ? tile->ObjectName : nameHidden;
         }
       }      
     }

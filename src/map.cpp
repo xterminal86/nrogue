@@ -50,7 +50,9 @@ void Map::Draw(int playerX, int playerY)
     }
     else
     {
-      std::string tileColor = MapArray[x][y].Revealed ? "#222222" : "#000000";
+      std::string tileColor = MapArray[x][y].Revealed ?
+                              GlobalConstants::FogOfWarColor :
+                              GlobalConstants::BlackColor;
       MapArray[x][y].Draw(tileColor);
     }
   }
@@ -121,6 +123,7 @@ void Map::CreateTown()
   MapOffsetY = th / 2 - PlayerStartY;
 
   GameObject* npc = new GameObject(1, 1, '@', "#FFFF00");
+  npc->ObjectName = "some dumb fuck";
   npc->AddComponent<AIDummy>();
 
   auto up = std::unique_ptr<GameObject>();
@@ -163,8 +166,8 @@ void Map::ClearArea(int ax, int ay, int aw, int ah)
 }
 
 void Map::CreateDoor(int x, int y, bool isOpen)
-{
-  auto c = MapArray[x][y].AddComponent<DoorComponent>();
+{  
+  auto c = MapArray[x][y].AddComponent<DoorComponent>();  
   DoorComponent* dc = dynamic_cast<DoorComponent*>(c);
   dc->IsOpen = isOpen;
   dc->UpdateDoorState();
@@ -174,6 +177,8 @@ void Map::CreateDoor(int x, int y, bool isOpen)
   // When using std::bind to bind a member function, the first argument is the object's this pointer.
 
   MapArray[x][y].InteractionCallback = std::bind(&DoorComponent::Interact, dc);
+
+  MapArray[x][y].ObjectName = "door";
 }
 
 void Map::DrawGameObjects()
