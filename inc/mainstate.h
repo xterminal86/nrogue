@@ -17,41 +17,15 @@ class MainState : public GameState
     void Update() override;
         
   private:
-    enum class InputStateEnum
-    {
-      MOVE = 0,
-      LOOK,
-      INTERACT,
-      EXIT_GAME
-    };    
-
     Player* _playerRef;
 
     std::string _debugInfo;
 
-    InputStateEnum _inputState;
-
-    void ProcessMovement();
-    void ProcessLook();
-    void ProcessInteraction();
-    void ProcessExitGame();
-
-    void DrawMovementState();
-    void DrawLookState();
-    void DrawInteractionState();
-    void DrawExitGameState();
-
-    void MoveCursor(int dx, int dy);
-    void DrawCursor();
-    void DrawGameObjects();
-
     void DisplayGameLog();
-
-    void TryToInteractWithObject(GameObject* go);
 
     Position _cursorPosition;
 
-    bool _playerTurnDone;    
+    bool _playerTurnDone;
 };
 
 #endif

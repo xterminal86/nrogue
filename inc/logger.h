@@ -11,13 +11,25 @@ class Logger : public Singleton<Logger>
 {
   public:
     void Init() override
+    {      
+    }
+
+    void Prepare(bool disabled)
     {
-      _logFile.open("debug-log.txt");
+      Disabled = disabled;
+
+      if (!Disabled)
+      {
+        _logFile.open("debug-log.txt");
+      }
     }
 
     virtual ~Logger()
     {
-      _logFile.close();
+      if (_logFile.is_open())
+      {
+        _logFile.close();
+      }
     }
 
     void Print(const std::string& stringToPrint)

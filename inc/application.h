@@ -8,7 +8,10 @@
 #include "select-class-state.h"
 #include "intro-state.h"
 #include "message-log-state.h"
+#include "look-input-state.h"
+#include "interact-input-state.h"
 #include "help-state.h"
+#include "exiting-state.h"
 #include "logger.h"
 #include "player.h"
 
@@ -30,7 +33,10 @@ class Application : public Singleton<Application>
       INTRO_STATE,
       INFO_STATE,
       SHOW_MESSAGES_STATE,
-      SHOW_HELP_STATE
+      SHOW_HELP_STATE,
+      LOOK_INPUT_STATE,
+      INTERACT_INPUT_STATE,
+      EXITING_STATE
     };
 
     void Init() override;

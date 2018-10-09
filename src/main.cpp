@@ -16,8 +16,8 @@ bool _runTests = false;
 
 int main()
 {  
-  Logger::Instance().Init();
-  //Logger::Instance().Disabled = true;
+  Logger::Instance().Init();  
+  Logger::Instance().Prepare(true);
 
   RNG::Instance().Init();
 
