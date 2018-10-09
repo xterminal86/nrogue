@@ -13,16 +13,25 @@ void Player::Init()
   Color = "#00FFFF";
 
   SetAttributes();
+
+  _currentCell = &Map::Instance().MapArray[PosX][PosY];
+  _currentCell->Occupied = true;
 }
 
 bool Player::Move(int dx, int dy)
 {
   auto& cell = Map::Instance().MapArray[PosX + dx][PosY + dy];
 
-  if (!cell.Blocking)
+  if (!cell.Occupied && !cell.Blocking)
   {
+    _previousCell = &Map::Instance().MapArray[PosX][PosY];
+    _previousCell->Occupied = false;
+
     PosX += dx;
     PosY += dy;
+
+    _currentCell = &Map::Instance().MapArray[PosX][PosY];
+    _currentCell->Occupied = true;
 
     return true;
   }

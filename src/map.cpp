@@ -184,7 +184,7 @@ void Map::CreateDoor(int x, int y, bool isOpen)
 
   MapArray[x][y].InteractionCallback = std::bind(&DoorComponent::Interact, dc);
 
-  MapArray[x][y].ObjectName = "door";
+  MapArray[x][y].ObjectName = "Door";
 }
 
 void Map::DrawGameObjects()

@@ -10,11 +10,11 @@ void MessageLogState::HandleInput()
   switch (_keyPressed)
   {
     case NUMPAD_2:
-      _scrollPosition--;
+      _scrollPosition++;
       break;
 
     case NUMPAD_8:
-      _scrollPosition++;
+      _scrollPosition--;
       break;
 
     case 'q':
@@ -39,7 +39,12 @@ void MessageLogState::Update()
     auto messages = Printer::Instance().Messages();
     for (int i = _scrollPosition; i < messages.size(); i++)
     {
-      Printer::Instance().Print(0, offsetY, messages[i], Printer::kAlignLeft, "#FFFFFF");
+      if (_scrollPosition == 0)
+      {
+        Printer::Instance().Print(0, 1, '*', "#FFFFFF");
+      }
+
+      Printer::Instance().Print(1, offsetY, messages[i], Printer::kAlignLeft, "#FFFFFF");
       offsetY++;
     }
 

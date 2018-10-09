@@ -75,23 +75,23 @@ void LookInputState::Update()
 
     DrawCursor();
 
-    std::string lookStatus = "You see: ";
+    std::string lookStatus;
 
     if (Util::CheckLimits(_cursorPosition, Position(GlobalConstants::MapX, GlobalConstants::MapY)))
     {
       auto* tile = &Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
       if (_cursorPosition.X == _playerRef->PosX && _cursorPosition.Y == _playerRef->PosY)
       {
-        lookStatus += "it's you!";
+        lookStatus = "It's you!";
       }
       else if (!tile->Revealed)
       {
-        lookStatus += "???";
+        lookStatus = "???";
       }
       else if (tile->Blocking)
-      {
+      {        
         auto nameHidden = "?" + tile->ObjectName + "?";
-        lookStatus += tile->Visible ? tile->ObjectName : nameHidden;
+        lookStatus = tile->Visible ? tile->ObjectName : nameHidden;
       }
       else
       {
@@ -102,15 +102,15 @@ void LookInputState::Update()
           lookStatus += gameObjects.back()->ObjectName;
         }
         else
-        {
+        {          
           auto nameHidden = "?" + tile->ObjectName + "?";
-          lookStatus += tile->Visible ? tile->ObjectName : nameHidden;
+          lookStatus = tile->Visible ? tile->ObjectName : nameHidden;
         }
       }
     }
     else
     {
-      lookStatus += "???";
+      lookStatus = "???";
     }
 
     Printer::Instance().Print(Printer::Instance().TerminalWidth - 1,

@@ -95,7 +95,7 @@ void MainState::HandleInput()
 
     // wait
     case NUMPAD_5:
-      Printer::Instance().AddMessage("Waiting...");
+      Printer::Instance().AddMessage("You waited...");
       _playerTurnDone = true;
       break;
 

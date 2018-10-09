@@ -182,6 +182,40 @@ namespace Util
     
     return result;
   }
+
+  inline std::vector<Position> GetPerimeter(int x, int y, int w, int h, bool includeCorders = true)
+  {
+    std::vector<Position> res;
+
+    int x1 = x;
+    int x2 = x + w;
+    int y1 = y;
+    int y2 = y + h;
+
+    for (int i = x1; i <= x2; i++)
+    {
+      for (int j = y1; j <= y2; j++)
+      {
+        bool condCorners = (i == x1 && j == y1)
+                        || (i == x1 && j == y2)
+                        || (i == x2 && j == y1)
+                        || (i == x2 && j == y2);
+
+        if (!includeCorders && condCorners)
+        {
+          continue;
+        }
+
+        bool cond = (i == x1 || i == x2 || j == y1 || j == y2);
+        if (cond)
+        {
+          res.push_back(Position(i, j));
+        }
+      }
+    }
+
+    return res;
+  }
 }
 
 #endif

@@ -7,6 +7,7 @@
 #include <map>
 
 #include "actor-component.h"
+#include "game-object.h"
 
 class Player
 {
@@ -55,6 +56,9 @@ class Player
       { 2, PlayerClass::ARCANIST },
       { 3, PlayerClass::CUSTOM }
     };
+
+    GameObject* _previousCell = nullptr;
+    GameObject* _currentCell = nullptr;
 };
 
 #endif // PLAYER_H

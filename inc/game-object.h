@@ -87,6 +87,7 @@ class GameObject
     bool BlockSight = true;
     bool Revealed = false;
     bool Visible = false;
+    bool Occupied = false;
 
     chtype Image;
     std::string HtmlColor;

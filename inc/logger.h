@@ -11,14 +11,14 @@ class Logger : public Singleton<Logger>
 {
   public:
     void Init() override
-    {      
+    {
     }
 
     void Prepare(bool disabled)
     {
-      Disabled = disabled;
+      _disabled = disabled;
 
-      if (!Disabled)
+      if (!_disabled)
       {
         _logFile.open("debug-log.txt");
       }
@@ -34,7 +34,7 @@ class Logger : public Singleton<Logger>
 
     void Print(const std::string& stringToPrint)
     {
-      if (!Disabled)
+      if (!_disabled)
       {
         time_t now = time(nullptr);
         tm *ltm = localtime(&now);
@@ -47,11 +47,10 @@ class Logger : public Singleton<Logger>
       }
     }
 
-    // If set to true all printing is ignored
-    bool Disabled = false;
-
   private:
     std::ofstream _logFile;
+
+    bool _disabled = true;
 };
 
 #endif

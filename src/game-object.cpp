@@ -10,20 +10,23 @@ void GameObject::Init(int x, int y, chtype avatar, const std::string& htmlColor)
   Image = avatar;
   HtmlColor = htmlColor;
 
-  _currentCell = &Map::Instance().MapArray[PosX][PosY];
+  _currentCell = &Map::Instance().MapArray[PosX][PosY];  
 }
 
 
 bool GameObject::Move(int dx, int dy)
 {
-  if (!Map::Instance().MapArray[PosX + dx][PosY + dy].Blocking)
+  if (!Map::Instance().MapArray[PosX + dx][PosY + dy].Occupied &&
+      !Map::Instance().MapArray[PosX + dx][PosY + dy].Blocking)
   {
     _previousCell = &Map::Instance().MapArray[PosX][PosY];
+    _previousCell->Occupied = false;
 
     PosX += dx;
     PosY += dy;
     
     _currentCell = &Map::Instance().MapArray[PosX][PosY];
+    _currentCell->Occupied = true;
 
     return true;
   }
@@ -53,7 +56,7 @@ void GameObject::CreateFloor()
   BlockSight = false;
   Image = '.';
   HtmlColor = GlobalConstants::FloorColor;
-  ObjectName = "floor";
+  ObjectName = "Floor";
 }
 
 void GameObject::CreateWall()
@@ -62,5 +65,5 @@ void GameObject::CreateWall()
   BlockSight = true;
   Image = '#'; // ACS_BLOCK;
   HtmlColor = GlobalConstants::WallColor;
-  ObjectName = "wall";
+  ObjectName = "Wall";
 }

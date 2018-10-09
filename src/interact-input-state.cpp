@@ -122,13 +122,13 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
   if (go->Interact())
   {
     _playerTurnDone = true;
-    Printer::Instance().AddMessage("You interact with " + go->ObjectName);
+    Printer::Instance().AddMessage("You interacted with: " + go->ObjectName);
     Map::Instance().UpdateGameObjects();
     Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
   }
   else
   {
-    Printer::Instance().AddMessage("Can't interact with " + go->ObjectName);
+    Printer::Instance().AddMessage("Can't interact with: " + go->ObjectName);
     Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
   }
 }
