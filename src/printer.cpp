@@ -200,8 +200,6 @@ void Printer::PrintFB(const int& x, const int& y,
 
   size_t hash = GetOrSetColor(htmlColorFg, htmlColorBg);
 
-  _frameBuffer[x][y].PosX = x;
-  _frameBuffer[x][y].PosY = y;
   _frameBuffer[x][y].Character = ch;
   _frameBuffer[x][y].ColorPairHash = hash;
 }
@@ -228,14 +226,12 @@ void Printer::PrepareFrameBuffer()
 {
   for (int x = 0; x < TerminalWidth; x++)
   {
-    std::vector<Symbol> row;
+    std::vector<FBPixel> row;
 
     for (int y = 0; y < TerminalHeight; y++)
     {
-      Symbol s;
+      FBPixel s;
 
-      s.PosX = x;
-      s.PosY = y;
       s.ColorPairHash = -1;
       s.Character = ' ';
 

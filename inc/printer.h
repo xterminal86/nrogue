@@ -10,10 +10,8 @@
 #include "singleton.h"
 #include "colorpair.h"
 
-struct Symbol
+struct FBPixel
 {
-  int PosX;
-  int PosY;
   size_t ColorPairHash;
   chtype Character;
 };
@@ -86,7 +84,7 @@ class Printer : public Singleton<Printer>
 
     void PrepareFrameBuffer();
 
-    std::vector<std::vector<Symbol>> _frameBuffer;
+    std::vector<std::vector<FBPixel>> _frameBuffer;
 };
 
 #endif

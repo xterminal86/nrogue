@@ -107,8 +107,8 @@ void Player::CheckVisibility()
 void Player::Draw()
 {
   Printer::Instance().PrintFB(PosX + Map::Instance().MapOffsetX,
-                                         PosY + Map::Instance().MapOffsetY,
-                                         Avatar, Color);
+                              PosY + Map::Instance().MapOffsetY,
+                              Avatar, Color);
 }
 
 void Player::DiscoverCell(int x, int y)
