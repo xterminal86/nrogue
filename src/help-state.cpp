@@ -21,7 +21,9 @@ void HelpState::Update()
   {
     Printer::Instance().Clear();
 
-    int offset = 0;
+    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth / 2, 0, "==== HELP ====", Printer::kAlignCenter, "#FFFFFF");
+
+    int offset = 1;
     for (auto& item : _helpText)
     {
       Printer::Instance().PrintFB(0, offset, item, Printer::kAlignLeft, "#FFFFFF");

@@ -7,14 +7,26 @@ void MessageLogState::HandleInput()
 {
   _keyPressed = getch();
 
+  int msgSize = Printer::Instance().Messages().size();
+  int th = Printer::Instance().TerminalHeight;
+
+  // Since we draw messages from y = 1, compensate with (th - 2)
+  int scrollLimit = (msgSize - 1) - (th - 2);
+
   switch (_keyPressed)
   {
     case NUMPAD_2:
-      _scrollPosition++;
+      if (msgSize > th - 2)
+      {
+        _scrollPosition++;
+      }
       break;
 
     case NUMPAD_8:
-      _scrollPosition--;
+      if (msgSize > th - 2)
+      {
+        _scrollPosition--;
+      }
       break;
 
     case 'q':
@@ -22,7 +34,7 @@ void MessageLogState::HandleInput()
       break;
   }
 
-  _scrollPosition = Util::Clamp(_scrollPosition, 0, Printer::Instance().Messages().size() - 1);
+  _scrollPosition = Util::Clamp(_scrollPosition, 0, scrollLimit);
 }
 
 void MessageLogState::Update()
@@ -32,11 +44,15 @@ void MessageLogState::Update()
     Printer::Instance().Clear();
 
     int tw = Printer::Instance().TerminalWidth;
+    int th = Printer::Instance().TerminalHeight;
 
     Printer::Instance().PrintFB(tw / 2, 0, "==== MESSAGES ====", Printer::kAlignCenter, "#FFFFFF");
 
-    int offsetY = 1;
+    DrawScrollBars();
+
     auto messages = Printer::Instance().Messages();
+
+    int offsetY = 1;
     for (int i = _scrollPosition; i < messages.size(); i++)
     {
       if (_scrollPosition == 0)
@@ -49,5 +65,33 @@ void MessageLogState::Update()
     }
 
     Printer::Instance().Render();
+  }
+}
+
+void MessageLogState::DrawScrollBars()
+{
+  auto messages = Printer::Instance().Messages();
+
+  int tw = Printer::Instance().TerminalWidth;
+  int th = Printer::Instance().TerminalHeight;
+
+  // Since we draw messages from y = 1, compensate y pos with (th - 2)
+  int scrollLimit = (messages.size() - 1) - (th - 2);
+
+  if (messages.size() - 1 > th - 2)
+  {
+    if (_scrollPosition == 0)
+    {
+      Printer::Instance().PrintFB(tw - 1, th - 1, "\\/", Printer::kAlignRight, "#FFFFFF");
+    }
+    else if (_scrollPosition == scrollLimit)
+    {
+      Printer::Instance().PrintFB(tw - 1, 1, "/\\", Printer::kAlignRight, "#FFFFFF");
+    }
+    else if (_scrollPosition > 0 && _scrollPosition != scrollLimit)
+    {
+      Printer::Instance().PrintFB(tw - 1, 1, "/\\", Printer::kAlignRight, "#FFFFFF");
+      Printer::Instance().PrintFB(tw - 1, th - 1, "\\/", Printer::kAlignRight, "#FFFFFF");
+    }
   }
 }

@@ -42,18 +42,7 @@ class Printer : public Singleton<Printer>
                const std::string& htmlColorFg,
                const std::string& htmlColorBg = "#000000");
 
-    std::string GetLastMessage()
-    {
-      return (_inGameMessages.size() > 0) ? _inGameMessages.front() : std::string();
-    }
-
-    const std::vector<std::string>& Messages() { return _inGameMessages; }
-
-    void AddMessage(std::string message);
-
-    void Clear();
-    void Render();
-
+    /// Print to "framebuffer" instead of directly to the screen
     void PrintFB(const int& x, const int& y,
                             const chtype& ch,
                             const std::string& htmlColorFg,
@@ -64,6 +53,23 @@ class Printer : public Singleton<Printer>
                             int align,
                             const std::string& htmlColorFg,
                             const std::string& htmlColorBg = "#000000");
+
+    /// Clears framebuffer (use this before PrintFB calls)
+    void Clear();
+
+    /// Prints framebuffer contents to the screen
+    /// (call this at the end of all printing)
+    void Render();
+
+    /// Add message to the game log
+    void AddMessage(std::string message);
+
+    std::string GetLastMessage()
+    {
+      return (_inGameMessages.size() > 0) ? _inGameMessages.front() : std::string();
+    }
+
+    const std::vector<std::string>& Messages() { return _inGameMessages; }
 
   private:
     bool ContainsColorMap(size_t hashToCheck);

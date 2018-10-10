@@ -56,7 +56,7 @@ void MenuState::Update()
     }
 
     Printer::Instance().PrintFB(halfW, halfH + 2, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
-    Printer::Instance().PrintFB(tw - 1, th - 2, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
+    Printer::Instance().PrintFB(tw - 2, th - 2, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
 
     auto debugInfo = Util::StringFormat("terminal size: %ix%i", tw, th);
     Printer::Instance().PrintFB(1, th - 2, debugInfo, Printer::kAlignLeft, "#FFFFFF");

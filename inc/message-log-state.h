@@ -15,6 +15,8 @@ class MessageLogState : public GameState
     void Update() override;
 
   private:
+    void DrawScrollBars();
+
     const int kMaxGameLogMessages = 100;
 
     int _scrollPosition = 0;

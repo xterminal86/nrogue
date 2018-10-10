@@ -140,6 +140,16 @@ std::pair<int, int> Printer::AlignText(int x, int y, int align, const std::strin
   switch (align)
   {
     case kAlignRight:
+      // We have to compensate for new position after shift.
+      //
+      // E.g., print (80, 10, kAlignRight, "Bees")
+      // will start from 76 position (tx -= text.length())
+      // so it will actually end at 76 (B), 77 (e), 78 (e), 79 (s)
+      // This way we either should not subtract 1 from TerminalWidth
+      // when printing right aligned text at the end of the screen,
+      // or make this hack.
+      tx++;
+
       tx -= text.length();
       break;
 
