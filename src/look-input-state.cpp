@@ -113,11 +113,16 @@ void LookInputState::Update()
       lookStatus = "???";
     }
 
+    Printer::Instance().PrintFB(0, Printer::Instance().TerminalHeight - 1,
+                                  "Press 'q' to exit look mode",
+                                  Printer::kAlignLeft,
+                                  "#FFFFFF");
+
     Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
-                                Printer::Instance().TerminalHeight - 1,
-                                lookStatus,
-                                Printer::kAlignRight,
-                                "#FFFFFF");
+                                  Printer::Instance().TerminalHeight - 1,
+                                  lookStatus,
+                                  Printer::kAlignRight,
+                                  "#FFFFFF");
 
     Printer::Instance().Render();
   }

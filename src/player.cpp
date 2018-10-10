@@ -93,7 +93,7 @@ void Player::CheckVisibility()
     auto line = Util::BresenhamLine(PosX, PosY, cell.X, cell.Y);
     for (auto& point : line)
     {
-      if (map[point.X][point.Y].Blocking)
+      if (map[point.X][point.Y].Blocking || map[point.X][point.Y].BlockSight)
       {
         DiscoverCell(point.X, point.Y);
         break;

@@ -32,33 +32,33 @@ class Printer : public Singleton<Printer>
     /// Print text at (x, y) on the screen, with (0, 0) at upper left corner
     /// and y increases down
     void Print(const int& x, const int& y,
-               const std::string& text,
-               int align,
-               const std::string& htmlColorFg,
-               const std::string& htmlColorBg = "#000000");
+                const std::string& text,
+                int align,
+                const std::string& htmlColorFg,
+                const std::string& htmlColorBg = "#000000");
 
     void Print(const int& x, const int& y,
-               const chtype& ch,
-               const std::string& htmlColorFg,
-               const std::string& htmlColorBg = "#000000");
+                const chtype& ch,
+                const std::string& htmlColorFg,
+                const std::string& htmlColorBg = "#000000");
 
     /// Print to "framebuffer" instead of directly to the screen
     void PrintFB(const int& x, const int& y,
-                            const chtype& ch,
-                            const std::string& htmlColorFg,
-                            const std::string& htmlColorBg = "#000000");
+                  const chtype& ch,
+                  const std::string& htmlColorFg,
+                  const std::string& htmlColorBg = "#000000");
 
     void PrintFB(const int& x, const int& y,
-                            const std::string& text,
-                            int align,
-                            const std::string& htmlColorFg,
-                            const std::string& htmlColorBg = "#000000");
+                  const std::string& text,
+                  int align,
+                  const std::string& htmlColorFg,
+                  const std::string& htmlColorBg = "#000000");
 
     /// Clears framebuffer (use this before PrintFB calls)
     void Clear();
 
     /// Prints framebuffer contents to the screen
-    /// (call this at the end of all printing)
+    /// (call this after all PrintFB calls)
     void Render();
 
     /// Add message to the game log

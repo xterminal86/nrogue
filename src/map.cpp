@@ -15,8 +15,7 @@ void Map::Init()
   {
     for (int y = 0; y < GlobalConstants::MapY; y++)
     {
-      MapArray[x][y].PosX = x;
-      MapArray[x][y].PosY = y;
+      MapArray[x][y].Init(x, y, ' ', "#000000");
     }
   }
 }
@@ -96,6 +95,8 @@ std::vector<GameObject*> Map::GetGameObjectsAtPosition(int x, int y)
 
 void Map::CreateTown()
 {
+  _playerRef->VisibilityRadius = 20;
+
   int mw = GlobalConstants::MapX;
   int mh = GlobalConstants::MapY;
 
@@ -106,7 +107,7 @@ void Map::CreateTown()
   auto bounds = r.GetBoundaryElements();
   for (auto& pos : bounds)
   {
-    MapArray[pos.X][pos.Y].CreateWall();
+    MapArray[pos.X][pos.Y].CreateMountain();
   }
 
   CreateRoom(20, 20, 10, 10);
@@ -127,6 +128,11 @@ void Map::CreateTown()
     int x = 1 + (RNG::Instance().Random() % (GlobalConstants::MapX - 2));
     int y = 1 + (RNG::Instance().Random() % (GlobalConstants::MapY - 2));
 
+    if (MapArray[x][y].Occupied)
+    {
+      continue;
+    }
+
     GameObject* npc = new GameObject(x, y, '@', "#FFFF00");
     npc->ObjectName = "Dummy AI " + std::to_string(i);
     npc->AddComponent<AIDummy>();
@@ -135,9 +141,21 @@ void Map::CreateTown()
     up.reset(npc);
 
     _gameObjects.push_back(std::move(up));
-  }
+  }  
 
-  _playerRef->VisibilityRadius = 20;
+  int numTrees = 50;
+  for (int i = 0; i < numTrees; i++)
+  {
+    int x = 1 + (RNG::Instance().Random() % (GlobalConstants::MapX - 2));
+    int y = 1 + (RNG::Instance().Random() % (GlobalConstants::MapY - 2));
+
+    if (MapArray[x][y].Blocking)
+    {
+      continue;
+    }
+
+    MapArray[x][y].CreateTree();
+  }
 }
 
 void Map::CreateRoom(int x, int y, int w, int h)

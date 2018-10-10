@@ -77,6 +77,8 @@ class GameObject
 
     void CreateWall();
     void CreateFloor();
+    void CreateTree();
+    void CreateMountain();
 
     void Update();
 

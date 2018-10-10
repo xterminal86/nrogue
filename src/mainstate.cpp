@@ -3,6 +3,7 @@
 #include "application.h"
 #include "map.h"
 #include "printer.h"
+#include "rng.h"
 
 void MainState::Init()
 {
@@ -146,7 +147,7 @@ void MainState::Update()
 
     _playerRef->Draw();
 
-    // Some debug info
+    // Some debug info    
     _debugInfo = Util::StringFormat("Ofst: %i %i: Plr: [%i;%i] Key: %i",
                                     Map::Instance().MapOffsetX,
                                     Map::Instance().MapOffsetY,
@@ -155,6 +156,9 @@ void MainState::Update()
                                     _keyPressed);
 
     Printer::Instance().PrintFB(0, Printer::Instance().TerminalHeight - 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+
+    _debugInfo = Util::StringFormat("World seed: %lu", RNG::Instance().Seed);
+    Printer::Instance().PrintFB(0, 0, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
     DisplayGameLog();
 

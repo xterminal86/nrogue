@@ -31,7 +31,7 @@ void MenuState::Update()
     int halfH = th / 2;
 
     int titleX = halfW;
-    int titleY = 2; // halfH - 12 + offset;
+    int titleY = halfH / 2 - _title.size() / 2;
 
     int offset = 0;
 

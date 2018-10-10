@@ -23,13 +23,14 @@ struct Attributes
   Attribute HP;
   Attribute MP;
 
-  Attribute HungerRate;  // turns before Hunger decrements by HungerSpeed
+  // number of turns before Hunger decrements by HungerSpeed
+  Attribute HungerRate;
   Attribute HungerSpeed;
 
   int Exp;
   int Level;
 
-  int Hunger = 100;
+  int Hunger = 1000;
 };
 
 class ActorComponent : public Component

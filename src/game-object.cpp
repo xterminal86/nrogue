@@ -13,7 +13,6 @@ void GameObject::Init(int x, int y, chtype avatar, const std::string& htmlColor)
   _currentCell = &Map::Instance().MapArray[PosX][PosY];  
 }
 
-
 bool GameObject::Move(int dx, int dy)
 {
   if (!Map::Instance().MapArray[PosX + dx][PosY + dy].Occupied &&
@@ -65,5 +64,23 @@ void GameObject::CreateWall()
   BlockSight = true;
   Image = '#'; // ACS_BLOCK;
   HtmlColor = GlobalConstants::WallColor;
-  ObjectName = "Wall";
+  ObjectName = "Wall";  
+}
+
+void GameObject::CreateTree()
+{
+  Blocking = false;
+  BlockSight = true;
+  Image = 'T';
+  HtmlColor = GlobalConstants::TreeColor;
+  ObjectName = "Tree";
+}
+
+void GameObject::CreateMountain()
+{
+  Blocking = true;
+  BlockSight = true;
+  Image = 'M';
+  HtmlColor = GlobalConstants::WallColor;
+  ObjectName = "Mountains";
 }
