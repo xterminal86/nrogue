@@ -1,5 +1,31 @@
 #include "printer.h"
 
+void Printer::Init()
+{
+  int mx = 0;
+  int my = 0;
+
+  getmaxyx(stdscr, my, mx);
+
+  TerminalWidth = mx;
+  TerminalHeight = my;
+
+  // Enforce colors of standard ncurses colors
+  // because some colors aren't actually correspond to their
+  // "names", e.g. COLOR_BLACK isn't actually black, but grey,
+  // so we redefine it
+  init_color(COLOR_BLACK, 0, 0, 0);
+  init_color(COLOR_WHITE, 1000, 1000, 1000);
+  init_color(COLOR_RED, 1000, 0, 0);
+  init_color(COLOR_GREEN, 0, 1000, 0);
+  init_color(COLOR_BLUE, 0, 0, 1000);
+  init_color(COLOR_CYAN, 0, 1000, 1000);
+  init_color(COLOR_MAGENTA, 1000, 0, 1000);
+  init_color(COLOR_YELLOW, 1000, 1000, 0);
+
+  PrepareFrameBuffer();
+}
+
 bool Printer::ContainsColorMap(size_t hashToCheck)
 {
   for (auto& h : _colorMap)
@@ -159,4 +185,89 @@ void Printer::AddMessage(std::string message)
   }
 
   _inGameMessages.insert(_inGameMessages.begin(), message);
+}
+
+void Printer::PrintToFrameBuffer(const int& x, const int& y,
+                                 const chtype& ch,
+                                 const std::string& htmlColorFg,
+                                 const std::string& htmlColorBg)
+{
+  if (x < 0 || x > TerminalWidth - 1
+   || y < 0 || y > TerminalHeight - 1)
+  {
+    return;
+  }
+
+  size_t hash = GetOrSetColor(htmlColorFg, htmlColorBg);
+
+  _frameBuffer[x][y].PosX = x;
+  _frameBuffer[x][y].PosY = y;
+  _frameBuffer[x][y].Character = ch;
+  _frameBuffer[x][y].ColorPairHash = hash;
+}
+
+void Printer::PrintToFrameBuffer(const int& x, const int& y,
+                                 const std::string& text,
+                                 int align,
+                                 const std::string& htmlColorFg,
+                                 const std::string& htmlColorBg)
+{
+  auto textPos = AlignText(x, y, align, text);
+
+  int xOffset = 0;
+  for (auto& c : text)
+  {
+    // Coordinates are swapped because
+    // in framebuffer we don't work in ncurses coordinate system
+    PrintToFrameBuffer(textPos.second + xOffset, textPos.first, c, htmlColorFg, htmlColorBg);
+    xOffset++;
+  }
+}
+
+void Printer::PrepareFrameBuffer()
+{
+  for (int x = 0; x < TerminalWidth; x++)
+  {
+    std::vector<Symbol> row;
+
+    for (int y = 0; y < TerminalHeight; y++)
+    {
+      Symbol s;
+
+      s.PosX = x;
+      s.PosY = y;
+      s.ColorPairHash = -1;
+      s.Character = ' ';
+
+      row.push_back(s);
+    }
+
+    _frameBuffer.push_back(row);
+  }
+}
+
+void Printer::ClearFrameBuffer()
+{
+  for (int x = 0; x < TerminalWidth; x++)
+  {
+    for (int y = 0; y < TerminalHeight; y++)
+    {
+      PrintToFrameBuffer(x, y, ' ', "#000000");
+    }
+  }
+}
+
+void Printer::Render()
+{
+  for (int x = 0; x < TerminalWidth; x++)
+  {
+    for (int y = 0; y < TerminalHeight; y++)
+    {
+      attron(COLOR_PAIR(_colorMap[_frameBuffer[x][y].ColorPairHash].PairIndex));
+      mvaddch(y, x, _frameBuffer[x][y].Character);
+      attroff(COLOR_PAIR(_colorMap[_frameBuffer[x][y].ColorPairHash].PairIndex));
+    }
+  }
+
+  refresh();
 }

@@ -21,22 +21,15 @@ int main()
 
   RNG::Instance().Init();
 
-  auto scr = initscr();
-  nodelay(scr, true);     // non-blocking getch()
-  keypad(scr, true);      // enable numpad
+  initscr();
+  nodelay(stdscr, true);     // non-blocking getch()
+  keypad(stdscr, true);      // enable numpad
   noecho();
   curs_set(false);
-  
-  int mx = 0;
-  int my = 0;
-
-  getmaxyx(scr, my, mx);
-
+    
   start_color();
 
   Printer::Instance().Init();  
-  Printer::Instance().TerminalWidth = mx;
-  Printer::Instance().TerminalHeight = my;
 
   Application::Instance().Init();
 

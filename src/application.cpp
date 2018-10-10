@@ -41,14 +41,14 @@ void Application::ChangeState(const GameStates& gameStateIndex)
 {
   if (gameStateIndex != GameStates::EXIT_GAME)
   {
-    auto str = Util::StringFormat("Changing state: %s [0x%X] => %s [0x%X]\n", typeid(*_currentState).name(), _currentState,
+    auto str = Util::StringFormat("Changing state: %s [0x%X] => %s [0x%X]", typeid(*_currentState).name(), _currentState,
                                                  typeid(*_gameStates[(int)gameStateIndex].get()).name(),
                                                  _gameStates[(int)gameStateIndex].get());
     Logger::Instance().Print(str);
   }
   else
   {
-    auto str = Util::StringFormat("Changing state: %s [0x%X] => EXIT_GAME\n", typeid(*_currentState).name(), _currentState);
+    auto str = Util::StringFormat("Changing state: %s [0x%X] => EXIT_GAME", typeid(*_currentState).name(), _currentState);
     Logger::Instance().Print(str);
   }
 

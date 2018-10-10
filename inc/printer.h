@@ -10,6 +10,14 @@
 #include "singleton.h"
 #include "colorpair.h"
 
+struct Symbol
+{
+  int PosX;
+  int PosY;
+  size_t ColorPairHash;
+  chtype Character;
+};
+
 /// Singleton for ncurses text printing
 class Printer : public Singleton<Printer> 
 {
@@ -21,30 +29,20 @@ class Printer : public Singleton<Printer>
     static const int kAlignCenter = 1;
     static const int kAlignRight = 2;
 
-    void Init() override
-    {
-      // Enforce colors of standard ncurses colors
-      // because some colors aren't actually correspond to their
-      // "names", e.g. COLOR_BLACK isn't actually black, but grey,
-      // so we redefine it
-      init_color(COLOR_BLACK, 0, 0, 0);
-      init_color(COLOR_WHITE, 1000, 1000, 1000);
-      init_color(COLOR_RED, 1000, 0, 0);
-      init_color(COLOR_GREEN, 0, 1000, 0);
-      init_color(COLOR_BLUE, 0, 0, 1000);
-      init_color(COLOR_CYAN, 0, 1000, 1000);
-      init_color(COLOR_MAGENTA, 1000, 0, 1000);
-      init_color(COLOR_YELLOW, 1000, 1000, 0);
-    }
+    void Init() override;
 
     /// Print text at (x, y) on the screen, with (0, 0) at upper left corner
     /// and y increases down
-    void Print(const int& x, const int& y, const std::string& text, int align,
-                                           const std::string& htmlColorFg,
-                                           const std::string& htmlColorBg = "#000000");
-    void Print(const int& x, const int& y, const chtype& ch,
-                                           const std::string& htmlColorFg,
-                                           const std::string& htmlColorBg = "#000000");
+    void Print(const int& x, const int& y,
+               const std::string& text,
+               int align,
+               const std::string& htmlColorFg,
+               const std::string& htmlColorBg = "#000000");
+
+    void Print(const int& x, const int& y,
+               const chtype& ch,
+               const std::string& htmlColorFg,
+               const std::string& htmlColorBg = "#000000");
 
     std::string GetLastMessage()
     {
@@ -54,6 +52,20 @@ class Printer : public Singleton<Printer>
     const std::vector<std::string>& Messages() { return _inGameMessages; }
 
     void AddMessage(std::string message);
+
+    void ClearFrameBuffer();
+    void Render();
+
+    void PrintToFrameBuffer(const int& x, const int& y,
+                            const chtype& ch,
+                            const std::string& htmlColorFg,
+                            const std::string& htmlColorBg = "#000000");
+
+    void PrintToFrameBuffer(const int& x, const int& y,
+                            const std::string& text,
+                            int align,
+                            const std::string& htmlColorFg,
+                            const std::string& htmlColorBg = "#000000");
 
   private:
     bool ContainsColorMap(size_t hashToCheck);
@@ -71,6 +83,10 @@ class Printer : public Singleton<Printer>
 
     short _colorPairsGlobalIndex = 1;
     short _colorGlobalIndex = 8;
+
+    void PrepareFrameBuffer();
+
+    std::vector<std::vector<Symbol>> _frameBuffer;
 };
 
 #endif

@@ -17,7 +17,7 @@ class GameState
     virtual void Update() = 0;
 
   protected:
-    int _keyPressed;  
+    int _keyPressed;
 };
 
 #endif

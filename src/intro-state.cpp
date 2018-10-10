@@ -3,6 +3,17 @@
 
 #include "application.h"
 
+void IntroState::Prepare()
+{
+  Printer::Instance().ClearFrameBuffer();
+
+  _lastTime = std::chrono::high_resolution_clock::now();
+
+  _textPositionCursor = 0;
+  _textPositionX = 0;
+  _textPositionY = 0;
+}
+
 void IntroState::HandleInput()
 {
   _keyPressed = getch();
@@ -29,7 +40,7 @@ void IntroState::Update()
     {
       if (_textPositionCursor != _introStrings[textIndex][_stringIndex].length())
       {
-        Printer::Instance().Print(_textPositionX, _textPositionY, _introStrings[textIndex][_stringIndex][_textPositionCursor], "#FFFFFF");
+        Printer::Instance().PrintToFrameBuffer(_textPositionX, _textPositionY, _introStrings[textIndex][_stringIndex][_textPositionCursor], "#FFFFFF");
 
         _textPositionX++;
 
@@ -47,9 +58,9 @@ void IntroState::Update()
     }
     else
     {
-      Printer::Instance().Print(Printer::Instance().TerminalWidth / 2, Printer::Instance().TerminalHeight - 1, "Press 'Enter' to continue", Printer::kAlignCenter, "#FFFFFF");
+      Printer::Instance().PrintToFrameBuffer(Printer::Instance().TerminalWidth / 2, Printer::Instance().TerminalHeight - 1, "Press 'Enter' to continue", Printer::kAlignCenter, "#FFFFFF");
     }
   }
 
-  refresh();
+  Printer::Instance().Render();
 }

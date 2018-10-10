@@ -22,14 +22,14 @@ void MenuState::Update()
 {
   if (_keyPressed != -1)
   {
-    clear();
-  
+    Printer::Instance().ClearFrameBuffer();
+
     int tw = Printer::Instance().TerminalWidth;
     int th = Printer::Instance().TerminalHeight;
-  
+
     int halfW = tw / 2;
     int halfH = th / 2;
-    
+
     int titleX = halfW;
     int titleY = 2; // halfH - 12 + offset;
 
@@ -45,22 +45,22 @@ void MenuState::Update()
         charToPrint = '|';
       }
 
-      Printer::Instance().Print(i.X, i.Y, charToPrint, "#FFFFFF");
+      Printer::Instance().PrintToFrameBuffer(i.X, i.Y, charToPrint, "#FFFFFF");
     }
 
     for (auto& s : _title)
     {
-      Printer::Instance().Print(titleX, titleY + offset, s, Printer::kAlignCenter, "#FFFFFF");
+      Printer::Instance().PrintToFrameBuffer(titleX, titleY + offset, s, Printer::kAlignCenter, "#FFFFFF");
 
       offset++;
     }
 
-    Printer::Instance().Print(halfW, halfH + 2, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
-    Printer::Instance().Print(tw - 1, th - 2, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
-    
+    Printer::Instance().PrintToFrameBuffer(halfW, halfH + 2, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintToFrameBuffer(tw - 1, th - 2, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
+
     auto debugInfo = Util::StringFormat("terminal size: %ix%i", tw, th);
-    Printer::Instance().Print(1, th - 2, debugInfo, Printer::kAlignLeft, "#FFFFFF");
-  
-    refresh();
-  }
+    Printer::Instance().PrintToFrameBuffer(1, th - 2, debugInfo, Printer::kAlignLeft, "#FFFFFF");
+
+    Printer::Instance().Render();
+  }  
 }

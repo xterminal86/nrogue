@@ -37,12 +37,12 @@ void SelectClassState::Update()
 {
   if (_keyPressed != -1)
   {
-    clear();
+    Printer::Instance().ClearFrameBuffer();
 
     int tw = Printer::Instance().TerminalWidth;
     int th = Printer::Instance().TerminalHeight;
 
-    Printer::Instance().Print(tw / 2, th / 2 - 4, "Who are you?", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintToFrameBuffer(tw / 2, th / 2 - 4, "Who are you?", Printer::kAlignCenter, "#FFFFFF");
 
     int offset = 0;
     int index = 0;
@@ -51,12 +51,12 @@ void SelectClassState::Update()
       std::string fgColor = (index == _menuIndex) ? "#000000" : "#FFFFFF";
       std::string bgColor = (index == _menuIndex) ? "#FFFFFF" : "#000000";
 
-      Printer::Instance().Print(tw / 2, th / 2 + offset, i, Printer::kAlignCenter, fgColor, bgColor);
+      Printer::Instance().PrintToFrameBuffer(tw / 2, th / 2 + offset, i, Printer::kAlignCenter, fgColor, bgColor);
 
       index++;
-      offset++;      
+      offset++;
     }
 
-    refresh();
+    Printer::Instance().Render();
   }
 }

@@ -14,13 +14,14 @@ class Logger : public Singleton<Logger>
     {
     }
 
-    void Prepare(bool disabled)
+    void Prepare(bool enabled)
     {
-      _disabled = disabled;
+      _enabled = enabled;
 
-      if (!_disabled)
+      if (_enabled)
       {
         _logFile.open("debug-log.txt");
+        Print("Log started");
       }
     }
 
@@ -28,13 +29,14 @@ class Logger : public Singleton<Logger>
     {
       if (_logFile.is_open())
       {
+        Print("Log ended");
         _logFile.close();
       }
     }
 
     void Print(const std::string& stringToPrint)
     {
-      if (!_disabled)
+      if (_enabled)
       {
         time_t now = time(nullptr);
         tm *ltm = localtime(&now);
@@ -43,14 +45,14 @@ class Logger : public Singleton<Logger>
         _logFile << ltm->tm_min << ":";
         _logFile << ltm->tm_sec << " *** ";
 
-        _logFile << stringToPrint;
+        _logFile << stringToPrint << "\n";
       }
     }
 
   private:
     std::ofstream _logFile;
 
-    bool _disabled = true;
+    bool _enabled = true;
 };
 
 #endif

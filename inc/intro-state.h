@@ -10,19 +10,7 @@
 class IntroState : public GameState
 {
   public:
-    void Prepare() override
-    {
-      clear();
-
-      _lastTime = std::chrono::high_resolution_clock::now();
-
-      _textPositionCursor = 0;
-      _textPositionX = 0;
-      _textPositionY = 0;
-
-      refresh();
-    }
-
+    void Prepare() override;
     void Update() override;
     void HandleInput() override;
 
