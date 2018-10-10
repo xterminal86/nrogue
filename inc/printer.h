@@ -53,15 +53,15 @@ class Printer : public Singleton<Printer>
 
     void AddMessage(std::string message);
 
-    void ClearFrameBuffer();
+    void Clear();
     void Render();
 
-    void PrintToFrameBuffer(const int& x, const int& y,
+    void PrintFB(const int& x, const int& y,
                             const chtype& ch,
                             const std::string& htmlColorFg,
                             const std::string& htmlColorBg = "#000000");
 
-    void PrintToFrameBuffer(const int& x, const int& y,
+    void PrintFB(const int& x, const int& y,
                             const std::string& text,
                             int align,
                             const std::string& htmlColorFg,

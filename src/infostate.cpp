@@ -19,10 +19,10 @@ void InfoState::Update()
 {
   if (_keyPressed != -1)
   {
-    clear();
+    Printer::Instance().Clear();
     
-    Printer::Instance().Print(0, 0, "You check yourself out: you look good! :-)", Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(0, 0, "You check yourself out: you look good! :-)", Printer::kAlignLeft, "#FFFFFF");
     
-    refresh();
+    Printer::Instance().Render();
   }
 }

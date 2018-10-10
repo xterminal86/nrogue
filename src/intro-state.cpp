@@ -5,7 +5,7 @@
 
 void IntroState::Prepare()
 {
-  Printer::Instance().ClearFrameBuffer();
+  Printer::Instance().Clear();
 
   _lastTime = std::chrono::high_resolution_clock::now();
 
@@ -40,7 +40,7 @@ void IntroState::Update()
     {
       if (_textPositionCursor != _introStrings[textIndex][_stringIndex].length())
       {
-        Printer::Instance().PrintToFrameBuffer(_textPositionX, _textPositionY, _introStrings[textIndex][_stringIndex][_textPositionCursor], "#FFFFFF");
+        Printer::Instance().PrintFB(_textPositionX, _textPositionY, _introStrings[textIndex][_stringIndex][_textPositionCursor], "#FFFFFF");
 
         _textPositionX++;
 
@@ -58,7 +58,7 @@ void IntroState::Update()
     }
     else
     {
-      Printer::Instance().PrintToFrameBuffer(Printer::Instance().TerminalWidth / 2, Printer::Instance().TerminalHeight - 1, "Press 'Enter' to continue", Printer::kAlignCenter, "#FFFFFF");
+      Printer::Instance().PrintFB(Printer::Instance().TerminalWidth / 2, Printer::Instance().TerminalHeight - 1, "Press 'Enter' to continue", Printer::kAlignCenter, "#FFFFFF");
     }
   }
 

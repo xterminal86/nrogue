@@ -100,7 +100,7 @@ void InteractInputState::Update()
 {
   if (_keyPressed != -1)
   {
-    clear();
+    Printer::Instance().Clear();
 
     _playerRef->CheckVisibility();
 
@@ -108,12 +108,13 @@ void InteractInputState::Update()
 
     _playerRef->Draw();
 
-    Printer::Instance().Print(Printer::Instance().TerminalWidth - 1,
-                              Printer::Instance().TerminalHeight - 1,
-                              Printer::Instance().GetLastMessage(),
-                              Printer::kAlignRight,
-                              "#FFFFFF");
-    refresh();
+    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
+                                Printer::Instance().TerminalHeight - 1,
+                                Printer::Instance().GetLastMessage(),
+                                Printer::kAlignRight,
+                                "#FFFFFF");
+
+    Printer::Instance().Render();
   }
 }
 

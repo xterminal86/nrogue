@@ -187,7 +187,7 @@ void Printer::AddMessage(std::string message)
   _inGameMessages.insert(_inGameMessages.begin(), message);
 }
 
-void Printer::PrintToFrameBuffer(const int& x, const int& y,
+void Printer::PrintFB(const int& x, const int& y,
                                  const chtype& ch,
                                  const std::string& htmlColorFg,
                                  const std::string& htmlColorBg)
@@ -206,7 +206,7 @@ void Printer::PrintToFrameBuffer(const int& x, const int& y,
   _frameBuffer[x][y].ColorPairHash = hash;
 }
 
-void Printer::PrintToFrameBuffer(const int& x, const int& y,
+void Printer::PrintFB(const int& x, const int& y,
                                  const std::string& text,
                                  int align,
                                  const std::string& htmlColorFg,
@@ -219,7 +219,7 @@ void Printer::PrintToFrameBuffer(const int& x, const int& y,
   {
     // Coordinates are swapped because
     // in framebuffer we don't work in ncurses coordinate system
-    PrintToFrameBuffer(textPos.second + xOffset, textPos.first, c, htmlColorFg, htmlColorBg);
+    PrintFB(textPos.second + xOffset, textPos.first, c, htmlColorFg, htmlColorBg);
     xOffset++;
   }
 }
@@ -246,13 +246,13 @@ void Printer::PrepareFrameBuffer()
   }
 }
 
-void Printer::ClearFrameBuffer()
+void Printer::Clear()
 {
   for (int x = 0; x < TerminalWidth; x++)
   {
     for (int y = 0; y < TerminalHeight; y++)
     {
-      PrintToFrameBuffer(x, y, ' ', "#000000");
+      PrintFB(x, y, ' ', "#000000");
     }
   }
 }

@@ -19,15 +19,15 @@ void HelpState::Update()
 {
   if (_keyPressed != -1)
   {
-    clear();
+    Printer::Instance().Clear();
 
     int offset = 0;
     for (auto& item : _helpText)
     {
-      Printer::Instance().Print(0, offset, item, Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(0, offset, item, Printer::kAlignLeft, "#FFFFFF");
       offset++;
     }
 
-    refresh();
+    Printer::Instance().Render();
   }
 }

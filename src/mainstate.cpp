@@ -138,7 +138,7 @@ void MainState::Update()
 {
   if (_keyPressed != -1)
   {
-    clear();
+    Printer::Instance().Clear();
 
     _playerRef->CheckVisibility();
 
@@ -154,11 +154,11 @@ void MainState::Update()
                                     _playerRef->PosY,
                                     _keyPressed);
 
-    Printer::Instance().Print(0, Printer::Instance().TerminalHeight - 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(0, Printer::Instance().TerminalHeight - 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
     DisplayGameLog();
 
-    refresh();
+    Printer::Instance().Render();
   }
 }
 
@@ -167,5 +167,5 @@ void MainState::DisplayGameLog()
   int x = Printer::Instance().TerminalWidth - 1;
   int y = Printer::Instance().TerminalHeight - 1;
 
-  Printer::Instance().Print(x, y, Printer::Instance().GetLastMessage(), Printer::kAlignRight, "#FFFFFF");
+  Printer::Instance().PrintFB(x, y, Printer::Instance().GetLastMessage(), Printer::kAlignRight, "#FFFFFF");
 }

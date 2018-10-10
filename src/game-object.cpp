@@ -36,7 +36,7 @@ bool GameObject::Move(int dx, int dy)
 
 void GameObject::Draw(const std::string& overrideColor)
 {  
-  Printer::Instance().Print(PosX + Map::Instance().MapOffsetX,
+  Printer::Instance().PrintFB(PosX + Map::Instance().MapOffsetX,
                               PosY + Map::Instance().MapOffsetY,
                               Image,
                               (overrideColor.length() == 0) ? HtmlColor : overrideColor);

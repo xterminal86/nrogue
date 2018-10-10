@@ -67,7 +67,7 @@ void LookInputState::Update()
 {
   if (_keyPressed != -1)
   {
-    clear();
+    Printer::Instance().Clear();
 
     Map::Instance().Draw(_playerRef->PosX, _playerRef->PosY);
 
@@ -113,13 +113,13 @@ void LookInputState::Update()
       lookStatus = "???";
     }
 
-    Printer::Instance().Print(Printer::Instance().TerminalWidth - 1,
-                              Printer::Instance().TerminalHeight - 1,
-                              lookStatus,
-                              Printer::kAlignRight,
-                              "#FFFFFF");
+    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
+                                Printer::Instance().TerminalHeight - 1,
+                                lookStatus,
+                                Printer::kAlignRight,
+                                "#FFFFFF");
 
-    refresh();
+    Printer::Instance().Render();
   }
 }
 
@@ -143,11 +143,11 @@ void LookInputState::MoveCursor(int dx, int dy)
 
 void LookInputState::DrawCursor()
 {
-  Printer::Instance().Print(_cursorPosition.X + Map::Instance().MapOffsetX + 1,
-                            _cursorPosition.Y + Map::Instance().MapOffsetY,
-                            ']', "#FFFFFF");
+  Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().MapOffsetX + 1,
+                              _cursorPosition.Y + Map::Instance().MapOffsetY,
+                              ']', "#FFFFFF");
 
-  Printer::Instance().Print(_cursorPosition.X + Map::Instance().MapOffsetX - 1,
-                            _cursorPosition.Y + Map::Instance().MapOffsetY,
-                            '[', "#FFFFFF");
+  Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().MapOffsetX - 1,
+                              _cursorPosition.Y + Map::Instance().MapOffsetY,
+                              '[', "#FFFFFF");
 }

@@ -29,11 +29,11 @@ void MessageLogState::Update()
 {
   if (_keyPressed != -1)
   {
-    clear();
+    Printer::Instance().Clear();
 
     int tw = Printer::Instance().TerminalWidth;
 
-    Printer::Instance().Print(tw / 2, 0, "==== MESSAGES ====", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(tw / 2, 0, "==== MESSAGES ====", Printer::kAlignCenter, "#FFFFFF");
 
     int offsetY = 1;
     auto messages = Printer::Instance().Messages();
@@ -41,13 +41,13 @@ void MessageLogState::Update()
     {
       if (_scrollPosition == 0)
       {
-        Printer::Instance().Print(0, 1, '*', "#FFFFFF");
+        Printer::Instance().PrintFB(0, 1, '*', "#FFFFFF");
       }
 
-      Printer::Instance().Print(1, offsetY, messages[i], Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(1, offsetY, messages[i], Printer::kAlignLeft, "#FFFFFF");
       offsetY++;
     }
 
-    refresh();
+    Printer::Instance().Render();
   }
 }
