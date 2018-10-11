@@ -212,7 +212,39 @@ void Printer::PrintFB(const int& x, const int& y,
     return;
   }
 
+  // Black & White mode for Windows due to PDCurses not handling colors correctly
+
+  #if !(defined(__unix__) || defined(__linux__))
+
+  auto tmp = htmlColorFg;
+  std::string tmpFg;
+  if (tmp != GlobalConstants::BlackColor && tmp != GlobalConstants::FogOfWarColor)
+  {
+    tmpFg = "#FFFFFF";
+  }
+  else
+  {
+    tmpFg = tmp;
+  }
+
+  tmp = htmlColorBg;
+  std::string tmpBg;
+  if (tmp != GlobalConstants::BlackColor && tmp != GlobalConstants::FogOfWarColor && tmp != "#FFFFFF")
+  {
+    tmpBg = (htmlColorFg.length() != 0) ? "#000000" : tmpFg;
+  }
+  else
+  {
+    tmpBg = tmp;
+  }
+
+  size_t hash = GetOrSetColor(tmpFg, tmpBg);
+
+  #else
+
   size_t hash = GetOrSetColor(htmlColorFg, htmlColorBg);
+
+  #endif
 
   _frameBuffer[x][y].Character = ch;
   _frameBuffer[x][y].ColorPairHash = hash;
