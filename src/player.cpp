@@ -108,7 +108,9 @@ void Player::Draw()
 {
   Printer::Instance().PrintFB(PosX + Map::Instance().MapOffsetX,
                               PosY + Map::Instance().MapOffsetY,
-                              Avatar, Color);
+                              Avatar,
+                              Color,
+                              Map::Instance().MapArray[PosX][PosY].BgColor);
 }
 
 void Player::DiscoverCell(int x, int y)
