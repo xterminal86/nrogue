@@ -97,7 +97,7 @@ void MainState::HandleInput()
     // wait
     case NUMPAD_5:
       Printer::Instance().AddMessage("You waited...");
-      _playerTurnDone = true;
+      _playerTurnDone = true;      
       break;
 
     case 'm':
@@ -124,7 +124,7 @@ void MainState::HandleInput()
       Application::Instance().ChangeState(Application::GameStates::EXITING_STATE);
       break;
 
-    default:
+    default:      
       break;
   }
 
@@ -132,7 +132,7 @@ void MainState::HandleInput()
   if (_playerTurnDone)
   {
     Map::Instance().UpdateGameObjects();
-  }
+  }  
 }
 
 void MainState::Update()
@@ -160,7 +160,14 @@ void MainState::Update()
     _debugInfo = Util::StringFormat("World seed: %lu", RNG::Instance().Seed);
     Printer::Instance().PrintFB(0, 0, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
-    DisplayGameLog();
+    auto str = Util::StringFormat("Last Message: %i", Printer::Instance().ShowLastMessage);
+    Logger::Instance().Print(str);
+
+    if (Printer::Instance().ShowLastMessage)
+    {
+      DisplayGameLog();
+      Printer::Instance().ShowLastMessage = false;
+    }
 
     Printer::Instance().Render();
   }

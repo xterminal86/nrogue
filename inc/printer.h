@@ -71,6 +71,8 @@ class Printer : public Singleton<Printer>
 
     const std::vector<std::string>& Messages() { return _inGameMessages; }
 
+    bool ShowLastMessage;
+
   private:
     bool ContainsColorMap(size_t hashToCheck);
     bool ColorIndexExists(size_t hashToCheck);

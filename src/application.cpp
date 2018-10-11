@@ -18,7 +18,9 @@ void Application::Init()
     state.second.get()->Init();
   }
 
-  _currentState = _gameStates[(int)GameStates::MENU_STATE].get();  
+  _currentState = _gameStates[(int)GameStates::MENU_STATE].get();
+
+  Printer::Instance().AddMessage("You begin your quest");
 }
 
 void Application::Run()
@@ -41,9 +43,10 @@ void Application::ChangeState(const GameStates& gameStateIndex)
 {
   if (gameStateIndex != GameStates::EXIT_GAME)
   {
-    auto str = Util::StringFormat("Changing state: %s [0x%X] => %s [0x%X]", typeid(*_currentState).name(), _currentState,
-                                                 typeid(*_gameStates[(int)gameStateIndex].get()).name(),
-                                                 _gameStates[(int)gameStateIndex].get());
+    auto str = Util::StringFormat("Changing state: %s [0x%X] => %s [0x%X]",
+                                  typeid(*_currentState).name(), _currentState,
+                                  typeid(*_gameStates[(int)gameStateIndex].get()).name(),
+                                  _gameStates[(int)gameStateIndex].get());
     Logger::Instance().Print(str);
   }
   else
@@ -58,7 +61,6 @@ void Application::ChangeState(const GameStates& gameStateIndex)
 
   if (_currentState != nullptr)
   {
-    _currentState->Prepare();
-    _currentState->Update();
+    _currentState->Prepare();    
   }
 }

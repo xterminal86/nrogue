@@ -46,6 +46,8 @@ class Logger : public Singleton<Logger>
         _logFile << ltm->tm_sec << " *** ";
 
         _logFile << stringToPrint << "\n";
+
+        _logFile.flush();
       }
     }
 

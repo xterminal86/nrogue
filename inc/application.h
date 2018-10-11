@@ -14,6 +14,7 @@
 #include "exiting-state.h"
 #include "logger.h"
 #include "player.h"
+#include "printer.h"
 
 #include <typeinfo>
 #include <memory>
@@ -43,7 +44,7 @@ class Application : public Singleton<Application>
     void Run();
     void ChangeState(const GameStates& gameStateIndex);
   
-    Player PlayerInstance;
+    Player PlayerInstance;    
 
   private:
     GameState* _currentState = nullptr;          

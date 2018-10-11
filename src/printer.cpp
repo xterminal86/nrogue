@@ -1,5 +1,7 @@
 #include "printer.h"
 
+#include "application.h"
+
 void Printer::Init()
 {
   int mx = 0;
@@ -195,6 +197,8 @@ void Printer::AddMessage(std::string message)
   }
 
   _inGameMessages.insert(_inGameMessages.begin(), message);
+
+  ShowLastMessage = true;
 }
 
 void Printer::PrintFB(const int& x, const int& y,
