@@ -75,7 +75,7 @@ void Map::Draw(int playerX, int playerY)
 
     if (MapArray[x][y].Visible)
     {
-      go.get()->Draw();
+      go.get()->Draw(go.get()->FgColor, MapArray[x][y].BgColor);
     }
   }
 }
