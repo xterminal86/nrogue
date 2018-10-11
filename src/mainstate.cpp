@@ -160,9 +160,6 @@ void MainState::Update()
     _debugInfo = Util::StringFormat("World seed: %lu", RNG::Instance().Seed);
     Printer::Instance().PrintFB(0, 0, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
-    auto str = Util::StringFormat("Last Message: %i", Printer::Instance().ShowLastMessage);
-    Logger::Instance().Print(str);
-
     if (Printer::Instance().ShowLastMessage)
     {
       DisplayGameLog();

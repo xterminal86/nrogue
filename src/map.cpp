@@ -15,7 +15,7 @@ void Map::Init()
   {
     for (int y = 0; y < GlobalConstants::MapY; y++)
     {
-      MapArray[x][y].Init(x, y, ' ', "#000000");
+      MapArray[x][y].Init(x, y, ' ', "#000000", "#000000");
     }
   }
 }
@@ -53,13 +53,15 @@ void Map::Draw(int playerX, int playerY)
                               GlobalConstants::FogOfWarColor :
                               GlobalConstants::BlackColor;
 
+      // Because some tiles can be just spaces with bg color,
+      // we have to check them separately
       if (MapArray[x][y].FgColor.length() == 0)
       {
         MapArray[x][y].Draw(GlobalConstants::BlackColor, tileColor);
       }
       else
       {
-        MapArray[x][y].Draw(tileColor);
+        MapArray[x][y].Draw(tileColor, "#000000");
       }
     }
   }
@@ -108,14 +110,19 @@ void Map::CreateTown()
   int mw = GlobalConstants::MapX;
   int mh = GlobalConstants::MapY;
 
+  Tile t;
+  t.Set(false, false, '.', GlobalConstants::GroundColor, "#000000", "Ground");
+
   Rect r(0, 0, mw - 1, mh - 1);
 
-  ClearArea(r.X1, r.Y1, r.X2, r.Y2);
+  FillArea(r.X1, r.Y1, r.X2, r.Y2, t);
+
+  t.Set(true, true, ' ', "", GlobalConstants::MountainsColor, "Mountains");
 
   auto bounds = r.GetBoundaryElements();
   for (auto& pos : bounds)
   {
-    MapArray[pos.X][pos.Y].CreateMountain();
+    MapArray[pos.X][pos.Y].MakeTile(t);
   }
 
   CreateRoom(20, 20, 10, 10);
@@ -151,6 +158,8 @@ void Map::CreateTown()
     _gameObjects.push_back(std::move(up));
   }  
 
+  t.Set(false, true, 'T', "#00FF00", "#000000", "Tree");
+
   int numTrees = 50;
   for (int i = 0; i < numTrees; i++)
   {
@@ -162,7 +171,7 @@ void Map::CreateTown()
       continue;
     }
 
-    MapArray[x][y].CreateTree();
+    MapArray[x][y].MakeTile(t);
   }
 }
 
@@ -170,12 +179,17 @@ void Map::CreateRoom(int x, int y, int w, int h)
 {
   Rect room(x, y, w, h);
 
-  ClearArea(x, y, w, h);
+  Tile t;
+  t.Set(false, false, ' ', "", GlobalConstants::RoomFloorColor, "Room Floor");
+
+  FillArea(x + 1, y + 1, w - 1, h - 1, t);
+
+  t.Set(true, true, '#', GlobalConstants::WallColor, "#000000", "Stone Wall");
 
   auto bounds = room.GetBoundaryElements();
   for (auto& pos : bounds)
   {
-     MapArray[pos.X][pos.Y].CreateWall();
+     MapArray[pos.X][pos.Y].MakeTile(t);
   }
 
   bounds = room.GetBoundaryElements(true);
@@ -186,13 +200,13 @@ void Map::CreateRoom(int x, int y, int w, int h)
   CreateDoor(wallPos.X, wallPos.Y);
 }
 
-void Map::ClearArea(int ax, int ay, int aw, int ah)
+void Map::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)
 {
-  for (int x = ax; x <= aw; x++)
+  for (int x = ax; x <= ax + aw; x++)
   {
-    for (int y = ay; y <= ah; y++)
+    for (int y = ay; y <= ay + ah; y++)
     {
-      MapArray[x][y].CreateFloor();
+      MapArray[x][y].MakeTile(tileToFill);
     }
   }
 }

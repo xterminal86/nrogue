@@ -21,4 +21,5 @@ void DoorComponent::UpdateDoorState()
   ((GameObject*)OwnerGameObject)->Blocking = !IsOpen;
   ((GameObject*)OwnerGameObject)->BlockSight = !IsOpen;
   ((GameObject*)OwnerGameObject)->Image = IsOpen ? '_' : '+';
+  ((GameObject*)OwnerGameObject)->BgColor = IsOpen ? "#000000" : "#444400";
 }

@@ -10,6 +10,34 @@
 
 #include "component.h"
 
+struct Tile
+{
+  void Set(bool isBlocking,
+           bool blocksSight,
+           chtype image,
+           const std::string& fgColor,
+           const std::string& bgColor,
+           const std::string& objectName)
+  {
+    IsBlocking = isBlocking;
+    BlocksSight = blocksSight;
+    Image = image;
+    FgColor = fgColor;
+    BgColor = bgColor;
+    ObjectName = objectName;
+  }
+
+  bool IsBlocking;
+  bool BlocksSight;
+  chtype Image;
+
+  // set this to "" if you want only background color
+  std::string FgColor;
+
+  std::string BgColor;
+  std::string ObjectName;
+};
+
 class GameObject
 {
   public:
@@ -75,10 +103,7 @@ class GameObject
       return nullptr;
     }
 
-    void CreateWall();
-    void CreateFloor();
-    void CreateTree();
-    void CreateMountain();
+    void MakeTile(const Tile& t);
 
     void Update();
 

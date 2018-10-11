@@ -51,40 +51,12 @@ void GameObject::Update()
   }
 }
 
-void GameObject::CreateFloor()
+void GameObject::MakeTile(const Tile& t)
 {
-  Blocking = false;
-  BlockSight = false;
-  Image = '.';
-  FgColor = GlobalConstants::FloorColor;
-  ObjectName = "Floor";
-}
-
-void GameObject::CreateWall()
-{
-  Blocking = true;
-  BlockSight = true;
-  Image = '#'; // ACS_BLOCK;
-  FgColor = GlobalConstants::WallColor;
-  ObjectName = "Wall";  
-}
-
-void GameObject::CreateTree()
-{
-  Blocking = false;
-  BlockSight = true;
-  Image = 'T';
-  FgColor = GlobalConstants::TreeColor;
-  ObjectName = "Tree";
-}
-
-void GameObject::CreateMountain()
-{
-  Blocking = true;
-  BlockSight = true;
-  Image = ' ';
-  FgColor = "";
-  //FgColor = GlobalConstants::WallColor;
-  BgColor = "#444444";
-  ObjectName = "Mountains";
+  Blocking = t.IsBlocking;
+  BlockSight = t.BlocksSight;
+  Image = t.Image;
+  FgColor = t.FgColor;
+  BgColor = t.BgColor;
+  ObjectName = t.ObjectName;
 }
