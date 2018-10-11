@@ -52,7 +52,15 @@ void Map::Draw(int playerX, int playerY)
       std::string tileColor = MapArray[x][y].Revealed ?
                               GlobalConstants::FogOfWarColor :
                               GlobalConstants::BlackColor;
-      MapArray[x][y].Draw(tileColor);
+
+      if (MapArray[x][y].FgColor.length() == 0)
+      {
+        MapArray[x][y].Draw(GlobalConstants::BlackColor, tileColor);
+      }
+      else
+      {
+        MapArray[x][y].Draw(tileColor);
+      }
     }
   }
 

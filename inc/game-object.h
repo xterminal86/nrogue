@@ -17,9 +17,9 @@ class GameObject
     GameObject(GameObject&) = delete;
     virtual ~GameObject() = default;
 
-    GameObject(int x, int y, chtype avatar, const std::string& htmlColor)
+    GameObject(int x, int y, chtype avatar, const std::string& htmlColor, const std::string& bgColor = "#000000")
     {
-      Init(x, y, avatar, htmlColor);
+      Init(x, y, avatar, htmlColor, bgColor);
     }
 
     bool Interact()
@@ -40,11 +40,11 @@ class GameObject
       return false;
     }
 
-    void Init(int x, int y, chtype avatar, const std::string& htmlColor);
+    void Init(int x, int y, chtype avatar, const std::string& fgColor, const std::string& bgColor = "#000000");
 
     bool Move(int dx, int dy);
 
-    void Draw(const std::string& overrideColor = std::string());
+    void Draw(const std::string& overrideFgColor = std::string(), const std::string& overrideBgColor = std::string());
 
     template <typename T>
     inline Component* AddComponent()
@@ -92,7 +92,8 @@ class GameObject
     bool Occupied = false;
 
     chtype Image;
-    std::string HtmlColor;
+    std::string FgColor;
+    std::string BgColor;
     std::string ObjectName;
 
     std::function<void()> InteractionCallback;

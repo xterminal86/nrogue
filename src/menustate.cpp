@@ -33,26 +33,32 @@ void MenuState::Update()
     int titleX = halfW;
     int titleY = halfH / 2 - _title.size() / 2;
 
-    int offset = 0;
-
     auto border = Util::GetPerimeter(0, 0, tw - 1, th - 1);
     for (auto& i : border)
-    {
-      chtype charToPrint = '=';
-
-      if (i.Y > 0 && i.Y < th - 1)
-      {
-        charToPrint = '|';
-      }
-
-      Printer::Instance().PrintFB(i.X, i.Y, charToPrint, "#FFFFFF");
+    {      
+      Printer::Instance().PrintFB(i.X, i.Y, '#', "#FFFFFF", "#FFFFFF");
     }
 
+    int yOffset = 0;
     for (auto& s : _title)
-    {
-      Printer::Instance().PrintFB(titleX, titleY + offset, s, Printer::kAlignCenter, "#FFFFFF");
+    {      
+      int xAlign = s.length() / 2;
+      int xOffset = 0;
+      for (auto& c : s)
+      {
+        if (c == '#')
+        {
+          Printer::Instance().PrintFB(titleX - xAlign + xOffset, titleY + yOffset, ' ', "#FFFFFF", "#FFFFFF");
+        }
+        else
+        {
+          Printer::Instance().PrintFB(titleX - xAlign + xOffset, titleY + yOffset, c, "#FFFFFF");
+        }
 
-      offset++;
+        xOffset++;
+      }
+
+      yOffset++;
     }
 
     Printer::Instance().PrintFB(halfW, halfH + 2, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
