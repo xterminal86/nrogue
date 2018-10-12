@@ -96,9 +96,9 @@ void InteractInputState::HandleInput()
 }
 
 
-void InteractInputState::Update()
+void InteractInputState::Update(bool forceUpdate)
 {
-  if (_keyPressed != -1)
+  if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();
 
@@ -122,10 +122,11 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
 {
   if (go->Interact())
   {
+    _playerRef->SubtractActionMeter();
     _playerTurnDone = true;
     Printer::Instance().AddMessage("You interacted with: " + go->ObjectName);
     Map::Instance().UpdateGameObjects();
-    Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+    Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);    
   }
   else
   {

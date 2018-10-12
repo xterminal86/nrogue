@@ -11,6 +11,7 @@ void Player::Init()
   PosY = Map::Instance().PlayerStartY;
   Avatar = '@';
   Color = "#00FFFF";
+  ActionMeter = 100;
 
   SetAttributes();
 
@@ -130,11 +131,11 @@ void Player::SetAttributes()
   switch (_classesMap[SelectedClass])
   {
     case PlayerClass::SOLDIER:
-      SetKnightAttrs();
+      SetSoldierAttrs();
       break;
 
     case PlayerClass::THIEF:
-      SetRogueAttrs();
+      SetThiefAttrs();
       break;
 
     case PlayerClass::ARCANIST:
@@ -143,36 +144,39 @@ void Player::SetAttributes()
 
     default:
       // TODO: custom class defaults to knight for now
-      SetKnightAttrs();
+      SetSoldierAttrs();
       break;
   }
 }
 
-void Player::SetKnightAttrs()
+void Player::SetSoldierAttrs()
 {
-  _actorComponent.Attrs.Str.IsTalent = true;
-  _actorComponent.Attrs.Def.IsTalent = true;
-  _actorComponent.Attrs.HP.IsTalent = true;
+  Actor.Attrs.Str.IsTalent = true;
+  Actor.Attrs.Def.IsTalent = true;
+  Actor.Attrs.HP.IsTalent = true;
 
-  _actorComponent.Attrs.HungerRate.OriginalValue = 50;
-  _actorComponent.Attrs.HungerSpeed.OriginalValue = 2;
+  Actor.Attrs.Spd.Set(80);
+  Actor.Attrs.HungerRate.Set(50);
+  Actor.Attrs.HungerSpeed.Set(2);
 }
 
-void Player::SetRogueAttrs()
+void Player::SetThiefAttrs()
 {
-  _actorComponent.Attrs.Spd.IsTalent = true;
-  _actorComponent.Attrs.Skl.IsTalent = true;
+  Actor.Attrs.Spd.IsTalent = true;
+  Actor.Attrs.Skl.IsTalent = true;
 
-  _actorComponent.Attrs.HungerRate.OriginalValue = 75;
-  _actorComponent.Attrs.HungerSpeed.OriginalValue = 2;
+  Actor.Attrs.Spd.Set(120);
+  Actor.Attrs.HungerRate.Set(75);
+  Actor.Attrs.HungerSpeed.Set(2);
 }
 
 void Player::SetArcanistAttrs()
 {
-  _actorComponent.Attrs.Mag.IsTalent = true;
-  _actorComponent.Attrs.Res.IsTalent = true;
-  _actorComponent.Attrs.MP.IsTalent = true;
+  Actor.Attrs.Mag.IsTalent = true;
+  Actor.Attrs.Res.IsTalent = true;
+  Actor.Attrs.MP.IsTalent = true;
 
-  _actorComponent.Attrs.HungerRate.OriginalValue = 100;
-  _actorComponent.Attrs.HungerSpeed.OriginalValue = 1;
+  Actor.Attrs.Spd.Set(100);
+  Actor.Attrs.HungerRate.Set(100);
+  Actor.Attrs.HungerSpeed.Set(1);
 }

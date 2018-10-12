@@ -33,9 +33,9 @@ void SelectClassState::HandleInput()
   Application::Instance().PlayerInstance.SelectedClass = _menuIndex;
 }
 
-void SelectClassState::Update()
+void SelectClassState::Update(bool forceUpdate)
 {
-  if (_keyPressed != -1)
+  if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();
 

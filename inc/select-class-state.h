@@ -9,7 +9,7 @@
 class SelectClassState : public GameState
 {
   public:
-    void Update() override;
+    void Update(bool forceUpdate = false) override;
     void HandleInput() override;
 
   private:

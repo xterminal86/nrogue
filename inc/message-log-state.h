@@ -12,7 +12,7 @@ class MessageLogState : public GameState
     }
 
     void HandleInput() override;
-    void Update() override;
+    void Update(bool forceUpdate = false) override;
 
   private:
     void DrawScrollBars();

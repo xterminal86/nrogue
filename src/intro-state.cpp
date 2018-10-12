@@ -26,7 +26,7 @@ void IntroState::HandleInput()
   }
 }
 
-void IntroState::Update()
+void IntroState::Update(bool forceUpdate)
 {
   auto elapsed = std::chrono::high_resolution_clock::now() - _lastTime;
   auto msPassed = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed);

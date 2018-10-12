@@ -15,9 +15,9 @@ void InfoState::HandleInput()
   }  
 }
 
-void InfoState::Update()
+void InfoState::Update(bool forceUpdate)
 {
-  if (_keyPressed != -1)
+  if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();
     

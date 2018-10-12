@@ -37,9 +37,9 @@ void MessageLogState::HandleInput()
   _scrollPosition = Util::Clamp(_scrollPosition, 0, scrollLimit);
 }
 
-void MessageLogState::Update()
+void MessageLogState::Update(bool forceUpdate)
 {
-  if (_keyPressed != -1)
+  if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();
 

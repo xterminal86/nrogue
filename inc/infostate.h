@@ -7,7 +7,7 @@ class InfoState : public GameState
 {
   public:
     void HandleInput() override;
-    void Update() override;
+    void Update(bool forceUpdate = false) override;
 };
 
 #endif

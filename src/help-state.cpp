@@ -15,9 +15,9 @@ void HelpState::HandleInput()
   }
 }
 
-void HelpState::Update()
+void HelpState::Update(bool forceUpdate)
 {
-  if (_keyPressed != -1)
+  if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();
 

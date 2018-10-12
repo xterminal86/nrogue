@@ -18,9 +18,9 @@ void MenuState::HandleInput()
   }
 }
 
-void MenuState::Update()
+void MenuState::Update(bool forceUpdate)
 {
-  if (_keyPressed != -1)
+  if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();
 

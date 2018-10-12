@@ -16,128 +16,144 @@ void MainState::HandleInput()
 
   _playerTurnDone = false;
 
-  switch (_keyPressed)
+  if (_playerRef->ActionMeter >= 100)
   {
-    case NUMPAD_7:
-      if (_playerRef->Move(-1, -1))
-      {
-        Map::Instance().MapOffsetY++;
-        Map::Instance().MapOffsetX++;
+    switch (_keyPressed)
+    {
+      case NUMPAD_7:
+        if (_playerRef->Move(-1, -1))
+        {
+          Map::Instance().MapOffsetY++;
+          Map::Instance().MapOffsetX++;
 
+          _playerTurnDone = true;
+          _playerRef->SubtractActionMeter();
+        }
+        break;
+
+      case NUMPAD_8:
+        if (_playerRef->Move(0, -1))
+        {
+          Map::Instance().MapOffsetY++;
+
+          _playerTurnDone = true;
+          _playerRef->SubtractActionMeter();
+        }
+        break;
+
+      case NUMPAD_9:
+        if (_playerRef->Move(1, -1))
+        {
+          Map::Instance().MapOffsetY++;
+          Map::Instance().MapOffsetX--;
+
+          _playerTurnDone = true;
+          _playerRef->SubtractActionMeter();
+        }
+        break;
+
+      case NUMPAD_4:
+        if (_playerRef->Move(-1, 0))
+        {
+          Map::Instance().MapOffsetX++;
+
+          _playerTurnDone = true;
+          _playerRef->SubtractActionMeter();
+        }
+        break;
+
+      case NUMPAD_2:
+        if (_playerRef->Move(0, 1))
+        {
+          Map::Instance().MapOffsetY--;
+
+          _playerTurnDone = true;
+          _playerRef->SubtractActionMeter();
+        }
+        break;
+
+      case NUMPAD_6:
+        if (_playerRef->Move(1, 0))
+        {
+          Map::Instance().MapOffsetX--;
+
+          _playerTurnDone = true;
+          _playerRef->SubtractActionMeter();
+        }
+        break;
+
+      case NUMPAD_1:
+        if (_playerRef->Move(-1, 1))
+        {
+          Map::Instance().MapOffsetY--;
+          Map::Instance().MapOffsetX++;
+
+          _playerTurnDone = true;
+          _playerRef->SubtractActionMeter();
+        }
+        break;
+
+      case NUMPAD_3:
+        if (_playerRef->Move(1, 1))
+        {
+          Map::Instance().MapOffsetY--;
+          Map::Instance().MapOffsetX--;
+
+          _playerTurnDone = true;
+          _playerRef->SubtractActionMeter();
+        }
+        break;
+
+      // wait
+      case NUMPAD_5:
+        Printer::Instance().AddMessage("You waited...");
         _playerTurnDone = true;
-      }
-      break;
 
-    case NUMPAD_8:
-      if (_playerRef->Move(0, -1))
-      {
-        Map::Instance().MapOffsetY++;
+        // TODO: think
+        _playerRef->SubtractActionMeter();
+        break;
 
-        _playerTurnDone = true;
-      }
-      break;
+      case 'm':
+        Application::Instance().ChangeState(Application::GameStates::SHOW_MESSAGES_STATE);
+        break;
 
-    case NUMPAD_9:
-      if (_playerRef->Move(1, -1))
-      {
-        Map::Instance().MapOffsetY++;
-        Map::Instance().MapOffsetX--;
+      case 'l':
+        Application::Instance().ChangeState(Application::GameStates::LOOK_INPUT_STATE);
+        break;
 
-        _playerTurnDone = true;
-      }
-      break;
+      case 'i':
+        Application::Instance().ChangeState(Application::GameStates::INTERACT_INPUT_STATE);
+        break;
 
-    case NUMPAD_4:
-      if (_playerRef->Move(-1, 0))
-      {
-        Map::Instance().MapOffsetX++;
+      case '@':
+        Application::Instance().ChangeState(Application::GameStates::INFO_STATE);
+        break;
 
-        _playerTurnDone = true;
-      }
-      break;
+      case '?':
+        Application::Instance().ChangeState(Application::GameStates::SHOW_HELP_STATE);
+        break;
 
-    case NUMPAD_2:
-      if (_playerRef->Move(0, 1))
-      {
-        Map::Instance().MapOffsetY--;
+      case 'q':
+        Application::Instance().ChangeState(Application::GameStates::EXITING_STATE);
+        break;
 
-        _playerTurnDone = true;
-      }
-      break;
-
-    case NUMPAD_6:
-      if (_playerRef->Move(1, 0))
-      {
-        Map::Instance().MapOffsetX--;
-
-        _playerTurnDone = true;
-      }
-      break;
-
-    case NUMPAD_1:
-      if (_playerRef->Move(-1, 1))
-      {
-        Map::Instance().MapOffsetY--;
-        Map::Instance().MapOffsetX++;
-
-        _playerTurnDone = true;
-      }
-      break;
-
-    case NUMPAD_3:
-      if (_playerRef->Move(1, 1))
-      {
-        Map::Instance().MapOffsetY--;
-        Map::Instance().MapOffsetX--;
-
-        _playerTurnDone = true;
-      }
-      break;
-
-    // wait
-    case NUMPAD_5:
-      Printer::Instance().AddMessage("You waited...");
-      _playerTurnDone = true;      
-      break;
-
-    case 'm':
-      Application::Instance().ChangeState(Application::GameStates::SHOW_MESSAGES_STATE);
-      break;
-
-    case 'l':
-      Application::Instance().ChangeState(Application::GameStates::LOOK_INPUT_STATE);
-      break;
-
-    case 'i':
-      Application::Instance().ChangeState(Application::GameStates::INTERACT_INPUT_STATE);
-      break;
-
-    case '@':
-      Application::Instance().ChangeState(Application::GameStates::INFO_STATE);
-      break;
-
-    case '?':
-      Application::Instance().ChangeState(Application::GameStates::SHOW_HELP_STATE);
-      break;
-
-    case 'q':
-      Application::Instance().ChangeState(Application::GameStates::EXITING_STATE);
-      break;
-
-    default:      
-      break;
+      default:
+        break;
+    }
   }
 
   // If player's turn finished, update all game objects' components
-  if (_playerTurnDone)
+  if (_playerRef->ActionMeter < 100)
   {
     Map::Instance().UpdateGameObjects();
+    Update(true);
+    _playerRef->ActionMeter += _playerRef->Actor.Attrs.Spd.CurrentValue;
   }  
 }
 
-void MainState::Update()
+void MainState::Update(bool forceUpdate)
 {
-  if (_keyPressed != -1)
+  if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();
 
@@ -148,7 +164,8 @@ void MainState::Update()
     _playerRef->Draw();
 
     // Some debug info    
-    _debugInfo = Util::StringFormat("Ofst: %i %i: Plr: [%i;%i] Key: %i",
+    _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i: Plr: [%i;%i] Key: %i",
+                                    _playerRef->ActionMeter,
                                     Map::Instance().MapOffsetX,
                                     Map::Instance().MapOffsetY,
                                     _playerRef->PosX,

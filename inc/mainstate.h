@@ -14,7 +14,7 @@ class MainState : public GameState
   public:
     void Init() override;
     void HandleInput() override;
-    void Update() override;
+    void Update(bool forceUpdate = false) override;
 
   private:
     Player* _playerRef;

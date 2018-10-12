@@ -39,15 +39,27 @@ class Player
       return _classesMap[SelectedClass];
     }
 
+    void SubtractActionMeter()
+    {
+      ActionMeter -= 100;
+
+      if (ActionMeter < 0)
+      {
+        ActionMeter = 0;
+      }
+    }
+
+    int ActionMeter = 0;
+
+    ActorComponent Actor;
+
   private:
     void DiscoverCell(int x, int y);
     void SetAttributes();
 
-    void SetKnightAttrs();
-    void SetRogueAttrs();
+    void SetSoldierAttrs();
+    void SetThiefAttrs();
     void SetArcanistAttrs();
-
-    ActorComponent _actorComponent;
 
     std::map<int, PlayerClass> _classesMap =
     {

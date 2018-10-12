@@ -11,7 +11,7 @@ class IntroState : public GameState
 {
   public:
     void Prepare() override;
-    void Update() override;
+    void Update(bool forceUpdate = false) override;
     void HandleInput() override;
 
   private:

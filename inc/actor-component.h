@@ -9,6 +9,12 @@ struct Attribute
   int OriginalValue;
   int Modifier;
   bool IsTalent = false;
+
+  void Set(int value)
+  {
+    CurrentValue = value;
+    OriginalValue = value;
+  }
 };
 
 struct Attributes

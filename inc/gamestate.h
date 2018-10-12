@@ -14,7 +14,7 @@ class GameState
     virtual void Cleanup() {}
     virtual void Prepare() {}
     virtual void HandleInput() = 0;
-    virtual void Update() = 0;
+    virtual void Update(bool forceUpdate = false) = 0;
 
   protected:
     int _keyPressed;

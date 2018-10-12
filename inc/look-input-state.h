@@ -11,7 +11,7 @@ class LookInputState : public GameState
   public:
     void Init() override;
     void HandleInput() override;
-    void Update() override;
+    void Update(bool forceUpdate = false) override;
     void Prepare() override;
 
   private:
