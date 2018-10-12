@@ -24,8 +24,6 @@ class MainState : public GameState
     void DisplayGameLog();
 
     Position _cursorPosition;
-
-    bool _playerTurnDone;
 };
 
 #endif

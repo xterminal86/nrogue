@@ -14,8 +14,6 @@ void MainState::HandleInput()
 {
   _keyPressed = getch();
 
-  _playerTurnDone = false;
-
   if (_playerRef->ActionMeter >= 100)
   {
     switch (_keyPressed)
@@ -26,7 +24,6 @@ void MainState::HandleInput()
           Map::Instance().MapOffsetY++;
           Map::Instance().MapOffsetX++;
 
-          _playerTurnDone = true;
           _playerRef->SubtractActionMeter();
         }
         break;
@@ -36,7 +33,6 @@ void MainState::HandleInput()
         {
           Map::Instance().MapOffsetY++;
 
-          _playerTurnDone = true;
           _playerRef->SubtractActionMeter();
         }
         break;
@@ -47,7 +43,6 @@ void MainState::HandleInput()
           Map::Instance().MapOffsetY++;
           Map::Instance().MapOffsetX--;
 
-          _playerTurnDone = true;
           _playerRef->SubtractActionMeter();
         }
         break;
@@ -57,7 +52,6 @@ void MainState::HandleInput()
         {
           Map::Instance().MapOffsetX++;
 
-          _playerTurnDone = true;
           _playerRef->SubtractActionMeter();
         }
         break;
@@ -67,7 +61,6 @@ void MainState::HandleInput()
         {
           Map::Instance().MapOffsetY--;
 
-          _playerTurnDone = true;
           _playerRef->SubtractActionMeter();
         }
         break;
@@ -77,7 +70,6 @@ void MainState::HandleInput()
         {
           Map::Instance().MapOffsetX--;
 
-          _playerTurnDone = true;
           _playerRef->SubtractActionMeter();
         }
         break;
@@ -88,7 +80,6 @@ void MainState::HandleInput()
           Map::Instance().MapOffsetY--;
           Map::Instance().MapOffsetX++;
 
-          _playerTurnDone = true;
           _playerRef->SubtractActionMeter();
         }
         break;
@@ -99,7 +90,6 @@ void MainState::HandleInput()
           Map::Instance().MapOffsetY--;
           Map::Instance().MapOffsetX--;
 
-          _playerTurnDone = true;
           _playerRef->SubtractActionMeter();
         }
         break;
@@ -107,10 +97,10 @@ void MainState::HandleInput()
       // wait
       case NUMPAD_5:
         Printer::Instance().AddMessage("You waited...");
-        _playerTurnDone = true;
 
         // TODO: think
-        _playerRef->SubtractActionMeter();
+        //_playerRef->SubtractActionMeter();
+        Map::Instance().UpdateGameObjects();
         break;
 
       case 'm':
@@ -144,10 +134,10 @@ void MainState::HandleInput()
 
   // If player's turn finished, update all game objects' components
   if (_playerRef->ActionMeter < 100)
-  {
+  {    
     Map::Instance().UpdateGameObjects();
     Update(true);
-    _playerRef->ActionMeter += _playerRef->Actor.Attrs.Spd.CurrentValue;
+    _playerRef->ActionMeter += _playerRef->Actor.Attrs.Spd.CurrentValue;    
   }  
 }
 
