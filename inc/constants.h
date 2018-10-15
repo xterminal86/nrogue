@@ -41,6 +41,19 @@ namespace GlobalConstants
   static const std::string RoomFloorColor = "#333333";
   static const std::string MountainsColor = "#666666";
   static const std::string FogOfWarColor = "#202020";
+
+  static std::vector<std::string> RandomNames =
+  {
+    "Flynn Taggart",
+    "Kornel Kisielewicz",
+    "Darren Grey",
+    "Thomas Biskup",
+    "Glenn Wichman",
+    "Michael Toy",
+    "Ken Arnold",
+    "Jon Lane",
+    "Mike Stephenson"
+  };
 }
 
 #endif

@@ -12,6 +12,7 @@
 
 #include "colorpair.h"
 #include "constants.h"
+#include "rng.h"
 
 struct Position
 {
@@ -215,6 +216,12 @@ namespace Util
     }
 
     return res;
+  }
+
+  inline std::string ChooseRandomName()
+  {
+    int index = RNG::Instance().Random() % GlobalConstants::RandomNames.size();
+    return GlobalConstants::RandomNames[index];
   }
 }
 

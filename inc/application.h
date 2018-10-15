@@ -6,6 +6,7 @@
 #include "infostate.h"
 #include "menustate.h"
 #include "select-class-state.h"
+#include "enter-name-state.h"
 #include "intro-state.h"
 #include "message-log-state.h"
 #include "look-input-state.h"
@@ -31,6 +32,7 @@ class Application : public Singleton<Application>
       MENU_STATE,
       MAIN_STATE,
       SELECT_CLASS_STATE,
+      ENTER_NAME_STATE,
       INTRO_STATE,
       INFO_STATE,
       SHOW_MESSAGES_STATE,
