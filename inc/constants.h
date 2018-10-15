@@ -15,6 +15,10 @@
   #define NUMPAD_2  258
   #define NUMPAD_3  338
 
+  // ********************
+
+  #define BACKSPACE 127
+
 #else
 
   #define NUMPAD_7  KEY_A1
@@ -26,6 +30,8 @@
   #define NUMPAD_1  KEY_C1
   #define NUMPAD_2  KEY_C2
   #define NUMPAD_3  KEY_C3
+
+  #define BACKSPACE 8
 
 #endif
 
@@ -43,8 +49,7 @@ namespace GlobalConstants
   static const std::string FogOfWarColor = "#202020";
 
   static std::vector<std::string> RandomNames =
-  {
-    "Flynn Taggart",
+  {    
     "Kornel Kisielewicz",
     "Darren Grey",
     "Thomas Biskup",
@@ -52,7 +57,8 @@ namespace GlobalConstants
     "Michael Toy",
     "Ken Arnold",
     "Jon Lane",
-    "Mike Stephenson"
+    "Mike Stephenson",
+    "Markus Persson"
   };
 }
 

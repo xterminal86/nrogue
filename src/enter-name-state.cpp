@@ -20,8 +20,7 @@ void EnterNameState::HandleInput()
         Application::Instance().ChangeState(Application::GameStates::INTRO_STATE);
         break;
 
-      // KEY_BACKSPACE doesn't work
-      case 127:
+      case BACKSPACE:
         if (_nameEntered.length() > 0)
         {
           _nameEntered.pop_back();
