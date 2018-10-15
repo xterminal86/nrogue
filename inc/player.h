@@ -39,6 +39,11 @@ class Player
       return _classesMap[SelectedClass];
     }
 
+    std::string& GetClassName()
+    {
+      return _classesName[SelectedClass];
+    }
+
     void SubtractActionMeter()
     {
       ActionMeter -= 100;
@@ -52,6 +57,8 @@ class Player
     int ActionMeter = 0;
 
     ActorComponent Actor;
+
+    std::string Name = "Nameless One";
 
   private:
     void DiscoverCell(int x, int y);
@@ -67,6 +74,14 @@ class Player
       { 1, PlayerClass::THIEF },
       { 2, PlayerClass::ARCANIST },
       { 3, PlayerClass::CUSTOM }
+    };
+
+    std::map<int, std::string> _classesName =
+    {
+      { 0, "Soldier" },
+      { 1, "Thief" },
+      { 2, "Arcanist" },
+      { 3, "Unknown" }
     };
 
     GameObject* _previousCell = nullptr;

@@ -155,7 +155,12 @@ void Player::SetSoldierAttrs()
   Actor.Attrs.Def.IsTalent = true;
   Actor.Attrs.HP.IsTalent = true;
 
+  Actor.Attrs.Str.Set(2);
+  Actor.Attrs.Def.Set(2);
   Actor.Attrs.Spd.Set(80);
+
+  Actor.Attrs.HP.Set(40);
+
   Actor.Attrs.HungerRate.Set(50);
   Actor.Attrs.HungerSpeed.Set(2);
 }
@@ -165,7 +170,13 @@ void Player::SetThiefAttrs()
   Actor.Attrs.Spd.IsTalent = true;
   Actor.Attrs.Skl.IsTalent = true;
 
+  Actor.Attrs.Def.Set(2);
+  Actor.Attrs.Skl.Set(2);
   Actor.Attrs.Spd.Set(120);
+
+  Actor.Attrs.HP.Set(25);
+  Actor.Attrs.MP.Set(10);
+
   Actor.Attrs.HungerRate.Set(75);
   Actor.Attrs.HungerSpeed.Set(2);
 }
@@ -176,7 +187,13 @@ void Player::SetArcanistAttrs()
   Actor.Attrs.Res.IsTalent = true;
   Actor.Attrs.MP.IsTalent = true;
 
+  Actor.Attrs.Mag.Set(2);
+  Actor.Attrs.Res.Set(2);
   Actor.Attrs.Spd.Set(100);
+
+  Actor.Attrs.HP.Set(10);
+  Actor.Attrs.MP.Set(50);
+
   Actor.Attrs.HungerRate.Set(100);
   Actor.Attrs.HungerSpeed.Set(1);
 }

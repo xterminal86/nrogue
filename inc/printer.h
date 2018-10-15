@@ -29,8 +29,8 @@ class Printer : public Singleton<Printer>
 
     void Init() override;
 
-    /// Print text at (x, y) on the screen, with (0, 0) at upper left corner
-    /// and y increases down
+    /// Print text at (x, y) directly to the screen,
+    /// with (0, 0) at upper left corner and y increases down
     void Print(const int& x, const int& y,
                 const std::string& text,
                 int align,

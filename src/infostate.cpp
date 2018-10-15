@@ -21,8 +21,43 @@ void InfoState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
     
-    Printer::Instance().PrintFB(0, 0, "You check yourself out: you look good! :-)", Printer::kAlignLeft, "#FFFFFF");
-    
+    auto& playerRef = Application::Instance().PlayerInstance;
+
+    std::string title = Util::StringFormat("%s the %s", playerRef.Name.data(), playerRef.GetClassName().data());
+    Printer::Instance().PrintFB(0, 0, title, Printer::kAlignLeft, "#FFFFFF");
+
+    std::string border;
+    for (int i = 0; i < title.length(); i++)
+    {
+      border += '=';
+    }
+
+    Printer::Instance().PrintFB(0, 1, border, Printer::kAlignLeft, "#FFFFFF");
+
+    std::string attr = Util::StringFormat("STR: %i", playerRef.Actor.Attrs.Str.Get());
+    Printer::Instance().PrintFB(0, 2, attr, Printer::kAlignLeft, "#FFFFFF");
+
+    attr = Util::StringFormat("DEF: %i", playerRef.Actor.Attrs.Def.Get());
+    Printer::Instance().PrintFB(0, 3, attr, Printer::kAlignLeft, "#FFFFFF");
+
+    attr = Util::StringFormat("MAG: %i", playerRef.Actor.Attrs.Mag.Get());
+    Printer::Instance().PrintFB(0, 4, attr, Printer::kAlignLeft, "#FFFFFF");
+
+    attr = Util::StringFormat("RES: %i", playerRef.Actor.Attrs.Res.Get());
+    Printer::Instance().PrintFB(0, 5, attr, Printer::kAlignLeft, "#FFFFFF");
+
+    attr = Util::StringFormat("SKL: %i", playerRef.Actor.Attrs.Skl.Get());
+    Printer::Instance().PrintFB(0, 6, attr, Printer::kAlignLeft, "#FFFFFF");
+
+    attr = Util::StringFormat("SPD: %i", playerRef.Actor.Attrs.Spd.Get());
+    Printer::Instance().PrintFB(0, 7, attr, Printer::kAlignLeft, "#FFFFFF");
+
+    attr = Util::StringFormat("HP: %i/%i", playerRef.Actor.Attrs.HP.Get(), playerRef.Actor.Attrs.HP.OriginalValue);
+    Printer::Instance().PrintFB(0, 9, attr, Printer::kAlignLeft, "#FFFFFF");
+
+    attr = Util::StringFormat("MP: %i/%i", playerRef.Actor.Attrs.MP.Get(), playerRef.Actor.Attrs.MP.OriginalValue);
+    Printer::Instance().PrintFB(0, 10, attr, Printer::kAlignLeft, "#FFFFFF");
+
     Printer::Instance().Render();
   }
 }

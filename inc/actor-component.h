@@ -5,15 +5,20 @@
 
 struct Attribute
 {
-  int CurrentValue;
-  int OriginalValue;
-  int Modifier;
+  int CurrentValue = 0;
+  int OriginalValue = 0;
+  int Modifier = 0;
   bool IsTalent = false;
 
   void Set(int value)
   {
     CurrentValue = value;
     OriginalValue = value;
+  }
+
+  int Get()
+  {
+    return CurrentValue + Modifier;
   }
 };
 

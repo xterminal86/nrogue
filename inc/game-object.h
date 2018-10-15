@@ -10,6 +10,7 @@
 
 #include "component.h"
 
+/// Helper struct to reduce the writing when creating objects
 struct Tile
 {
   void Set(bool isBlocking,
