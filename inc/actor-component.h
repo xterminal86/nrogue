@@ -38,8 +38,8 @@ struct Attributes
   Attribute HungerRate;
   Attribute HungerSpeed;
 
-  int Exp;
-  int Level;
+  int Exp = 0;
+  int Level = 1;
 
   int Hunger = 1000;
 };
