@@ -37,12 +37,7 @@ void InventoryState::HandleInput()
     case 'u':
     case 'd':
     case 't':
-      //Application::Instance().ShowMessageBox("Information", { "Not implemented yet!" });
-      Application::Instance().ShowMessageBox("Information",
-      {
-        "Not implemented yet!",
-        "Not implemented yet!"
-      });
+      Application::Instance().ShowMessageBox("Information", { "Not implemented yet!" });
       break;
 
     case 'q':

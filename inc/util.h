@@ -185,6 +185,48 @@ namespace Util
     return result;
   }
 
+  inline std::vector<Position> GetScreenRectPerimeter(int x1, int y1, int x2, int y2, bool includeCorners = true)
+  {
+    std::vector<Position> res;
+
+    int tw = Printer::Instance().TerminalWidth;
+    int th = Printer::Instance().TerminalHeight;
+
+    int lx = x1;
+    int ly = y1;
+    int hx = x2;
+    int hy = y2;
+
+    lx = Clamp(lx, 0, tw - 1);
+    ly = Clamp(ly, 0, th - 1);
+    hx = Clamp(hx, 0, tw - 1);
+    hy = Clamp(hy, 0, th - 1);
+
+    for (int x = lx; x <= hx; x++)
+    {
+      for (int y = ly; y <= hy; y++)
+      {
+        bool condCorners = (x == x1 && y == y1)
+                        || (x == x1 && y == y2)
+                        || (x == x2 && y == y1)
+                        || (x == x2 && y == y2);
+
+        if (!includeCorners && condCorners)
+        {
+          continue;
+        }
+
+        bool cond = (x == x1 || x == x2 || y == y1 || y == y2);
+        if (cond)
+        {
+          res.push_back(Position(x, y));
+        }
+      }
+    }
+
+    return res;
+  }
+
   /// Clamps values against terminal size,
   /// useful for drawing GUI related stuff and everything.
   inline std::vector<Position> GetScreenRectAroundPoint(int pointX, int pointY, int rangeX, int rangeY)

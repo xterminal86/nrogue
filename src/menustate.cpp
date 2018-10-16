@@ -15,7 +15,7 @@ void MenuState::HandleInput()
 
     case 'q':    
       Application::Instance().ChangeState(Application::GameStates::EXIT_GAME);      
-      break;  
+      break;      
   }
 }
 
