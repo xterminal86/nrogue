@@ -19,7 +19,8 @@ class HelpState : public GameState
       "'m' - Display message log",
       "'l' - Enter \"look mode\"",
       "'i' - Interact",
-      "'@' - Display character sheet"
+      "'@' - Display character sheet",
+      "'e' - Display inventory"
     };
 };
 

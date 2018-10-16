@@ -14,7 +14,8 @@ class Singleton
     virtual void Init() {}
 
   protected:
-    Singleton() {}
+    Singleton() = default;
+    virtual ~Singleton() = default;
 };
 
 #endif

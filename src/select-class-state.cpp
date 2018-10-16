@@ -1,6 +1,7 @@
 #include "select-class-state.h"
 #include "printer.h"
 #include "application.h"
+#include "util.h"
 
 void SelectClassState::HandleInput()
 {
@@ -16,7 +17,7 @@ void SelectClassState::HandleInput()
       _menuIndex--;
       break;
 
-    case 10:
+    case VK_ENTER:
       Application::Instance().PlayerInstance.Init();
 
       // TODO: enter name, distribute talents if custom class is chosen

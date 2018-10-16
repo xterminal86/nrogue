@@ -2,17 +2,8 @@
 #define APPLICATION_H
 
 #include "singleton.h"
-#include "mainstate.h"
-#include "infostate.h"
-#include "menustate.h"
-#include "select-class-state.h"
-#include "enter-name-state.h"
-#include "intro-state.h"
-#include "message-log-state.h"
-#include "look-input-state.h"
-#include "interact-input-state.h"
-#include "help-state.h"
-#include "exiting-state.h"
+#include "gamestate.h"
+
 #include "logger.h"
 #include "player.h"
 #include "printer.h"
@@ -35,22 +26,27 @@ class Application : public Singleton<Application>
       ENTER_NAME_STATE,
       INTRO_STATE,
       INFO_STATE,
+      INVENTORY_STATE,
       SHOW_MESSAGES_STATE,
       SHOW_HELP_STATE,
       LOOK_INPUT_STATE,
       INTERACT_INPUT_STATE,
-      EXITING_STATE
+      EXITING_STATE,
+      MESSAGE_BOX_STATE
     };
 
     void Init() override;
     void Run();
     void ChangeState(const GameStates& gameStateIndex);
-  
+    void ShowMessageBox(std::string message);
+    void CloseMessageBox();
+
     Player PlayerInstance;    
 
   private:
     GameState* _currentState = nullptr;          
-        
+    GameState* _previousState = nullptr;
+
     std::map<int, std::unique_ptr<GameState>> _gameStates;  
 };
 

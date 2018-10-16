@@ -8,6 +8,9 @@ class InfoState : public GameState
   public:
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;
+
+  private:
+    void ShowInventory();
 };
 
 #endif

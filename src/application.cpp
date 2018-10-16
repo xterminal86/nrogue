@@ -1,5 +1,19 @@
 #include "application.h"
 
+#include "mainstate.h"
+#include "infostate.h"
+#include "menustate.h"
+#include "select-class-state.h"
+#include "enter-name-state.h"
+#include "intro-state.h"
+#include "inventory-state.h"
+#include "message-log-state.h"
+#include "look-input-state.h"
+#include "interact-input-state.h"
+#include "help-state.h"
+#include "exiting-state.h"
+#include "message-box-state.h"
+
 void Application::Init()
 {
   _gameStates[(int)GameStates::MAIN_STATE] = std::unique_ptr<GameState>(new MainState());
@@ -8,11 +22,13 @@ void Application::Init()
   _gameStates[(int)GameStates::SELECT_CLASS_STATE] = std::unique_ptr<GameState>(new SelectClassState());
   _gameStates[(int)GameStates::ENTER_NAME_STATE] = std::unique_ptr<GameState>(new EnterNameState());
   _gameStates[(int)GameStates::INTRO_STATE] = std::unique_ptr<GameState>(new IntroState());
+  _gameStates[(int)GameStates::INVENTORY_STATE] = std::unique_ptr<GameState>(new InventoryState());
   _gameStates[(int)GameStates::SHOW_MESSAGES_STATE] = std::unique_ptr<GameState>(new MessageLogState());
   _gameStates[(int)GameStates::SHOW_HELP_STATE] = std::unique_ptr<GameState>(new HelpState());
   _gameStates[(int)GameStates::LOOK_INPUT_STATE] = std::unique_ptr<GameState>(new LookInputState());
   _gameStates[(int)GameStates::INTERACT_INPUT_STATE] = std::unique_ptr<GameState>(new InteractInputState());
   _gameStates[(int)GameStates::EXITING_STATE] = std::unique_ptr<GameState>(new ExitingState());
+  _gameStates[(int)GameStates::MESSAGE_BOX_STATE] = std::unique_ptr<GameState>(new MessageBoxState());
 
   for (auto& state : _gameStates)
   {
@@ -64,4 +80,19 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   {
     _currentState->Prepare();    
   }
+}
+
+void Application::ShowMessageBox(std::string message)
+{
+  _previousState = _currentState;
+
+  auto ptr = _gameStates[(int)GameStates::MESSAGE_BOX_STATE].get();
+  ((MessageBoxState*)ptr)->SetMessage(message);
+
+  _currentState = ptr;
+}
+
+void Application::CloseMessageBox()
+{
+  _currentState = _previousState;
 }

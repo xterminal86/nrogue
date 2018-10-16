@@ -1,6 +1,7 @@
 #include "menustate.h"
 #include "application.h"
 #include "printer.h"
+#include "util.h"
 
 void MenuState::HandleInput()
 {

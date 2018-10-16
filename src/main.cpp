@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "application.h"
+#include "game-objects-factory.h"
 #include "constants.h"
 #include "map.h"
 #include "tests.h"
@@ -31,6 +32,8 @@ int main()
   start_color();
 
   Printer::Instance().Init();  
+
+  GameObjectsFactory::Instance().Init();
 
   Application::Instance().Init();
 

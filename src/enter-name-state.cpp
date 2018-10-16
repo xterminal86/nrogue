@@ -1,6 +1,7 @@
 #include "enter-name-state.h"
 
 #include "application.h"
+#include "util.h"
 
 void EnterNameState::HandleInput()
 {
@@ -20,7 +21,7 @@ void EnterNameState::HandleInput()
         Application::Instance().ChangeState(Application::GameStates::INTRO_STATE);
         break;
 
-      case BACKSPACE:
+      case VK_BACKSPACE:
         if (_nameEntered.length() > 0)
         {
           _nameEntered.pop_back();

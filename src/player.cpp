@@ -4,6 +4,7 @@
 #include "printer.h"
 #include "util.h"
 #include "door-component.h"
+#include "game-objects-factory.h"
 
 void Player::Init()
 {
@@ -17,6 +18,12 @@ void Player::Init()
 
   _currentCell = &Map::Instance().MapArray[PosX][PosY];
   _currentCell->Occupied = true;
+
+  for (int i = 0; i < 5; i++)
+  {
+    auto go = GameObjectsFactory::Instance().CreateGameObject();
+    Inventory.AddObject(go);
+  }
 }
 
 bool Player::Move(int dx, int dy)
@@ -72,6 +79,8 @@ void Player::CheckVisibility()
 
   auto& map = Map::Instance().MapArray;
 
+  int radius = (map[PosX][PosY].ObjectName == "Tree") ? VisibilityRadius / 4 : VisibilityRadius;
+
   auto mapCells = Util::GetRectAroundPoint(PosX, PosY, tw / 2, th / 2);
   for (auto& cell : mapCells)
   {
@@ -84,7 +93,7 @@ void Player::CheckVisibility()
   {
     float d = Util::LinearDistance(PosX, PosY, cell.X, cell.Y);
 
-    if (d > (float)VisibilityRadius)
+    if (d > (float)radius)
     {
       continue;
     }
@@ -94,6 +103,11 @@ void Player::CheckVisibility()
     auto line = Util::BresenhamLine(PosX, PosY, cell.X, cell.Y);
     for (auto& point : line)
     {
+      if (point.X == PosX && point.Y == PosY)
+      {
+        continue;
+      }
+
       if (map[point.X][point.Y].Blocking || map[point.X][point.Y].BlockSight)
       {
         DiscoverCell(point.X, point.Y);

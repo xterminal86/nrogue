@@ -17,7 +17,8 @@
 
   // ********************
 
-  #define BACKSPACE 127
+  #define VK_BACKSPACE 127
+  #define VK_ENTER     10
 
 #else
 
@@ -31,12 +32,20 @@
   #define NUMPAD_2  KEY_C2
   #define NUMPAD_3  KEY_C3
 
-  #define BACKSPACE 8
+  // ********************
+
+  #define VK_BACKSPACE 8
+  #define VK_ENTER     10
 
 #endif
 
+#include <vector>
+#include <string>
+
 namespace GlobalConstants
 {
+  static std::string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
   static const int MapX = 100; // 160
   static const int MapY = 100; // 45
 

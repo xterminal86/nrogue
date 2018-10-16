@@ -8,6 +8,7 @@
 
 #include "actor-component.h"
 #include "game-object.h"
+#include "container-component.h"
 
 class Player
 {
@@ -57,6 +58,7 @@ class Player
     int ActionMeter = 0;
 
     ActorComponent Actor;
+    ContainerComponent Inventory;
 
     std::string Name = "Nameless One";
 

@@ -2,6 +2,8 @@
 
 #include "application.h"
 #include "printer.h"
+#include "constants.h"
+#include "util.h"
 
 void MessageLogState::HandleInput()
 {

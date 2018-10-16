@@ -103,6 +103,10 @@ void MainState::HandleInput()
         Map::Instance().UpdateGameObjects();
         break;
 
+      case 'e':
+        Application::Instance().ChangeState(Application::GameStates::INVENTORY_STATE);
+        break;
+
       case 'm':
         Application::Instance().ChangeState(Application::GameStates::SHOW_MESSAGES_STATE);
         break;

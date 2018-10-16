@@ -129,6 +129,8 @@ namespace Util
       std::reverse(result.begin(), result.end());   
     } 
     
+    // result.erase(result.begin());
+
     return result;
   }
 
@@ -184,7 +186,7 @@ namespace Util
     return result;
   }
 
-  inline std::vector<Position> GetPerimeter(int x, int y, int w, int h, bool includeCorders = true)
+  inline std::vector<Position> GetPerimeter(int x, int y, int w, int h, bool includeCorners = true)
   {
     std::vector<Position> res;
 
@@ -202,7 +204,7 @@ namespace Util
                         || (i == x2 && j == y1)
                         || (i == x2 && j == y2);
 
-        if (!includeCorders && condCorners)
+        if (!includeCorners && condCorners)
         {
           continue;
         }
@@ -216,6 +218,11 @@ namespace Util
     }
 
     return res;
+  }
+
+  inline std::vector<Position> GetPerimeterAroundPoint(int x, int y, int w, int h, bool includeCorners = true)
+  {
+    return GetPerimeter(x - w, y - h, w * 2, h * 2, includeCorners);
   }
 
   inline std::string ChooseRandomName()
