@@ -26,11 +26,17 @@ class Map : public Singleton<Map>
 
     void Draw(int playerX, int playerY);
 
+    void InsertGameObject(GameObject* goToInsert);
     void UpdateGameObjects();
 
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
+    std::pair<int, GameObject*> GetTopGameObjectAtPosition(int x, int y);
 
+    // Map tiles
     GameObject MapArray[GlobalConstants::MapX][GlobalConstants::MapY];
+
+    // Items, npcs etc.
+    std::vector<std::unique_ptr<GameObject>> GameObjects;
 
     int PlayerStartX;
     int PlayerStartY;
@@ -46,9 +52,7 @@ class Map : public Singleton<Map>
     void FillArea(int x, int y, int w, int h, const Tile& tileToFill);
     void CreateDoor(int x, int y, bool isOpen = false);
 
-    void DrawGameObjects();
-
-    std::vector<std::unique_ptr<GameObject>> _gameObjects;
+    void DrawGameObjects();    
 };
 
 #endif

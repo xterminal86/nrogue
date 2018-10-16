@@ -68,7 +68,7 @@ void Map::Draw(int playerX, int playerY)
 
   // Draw game objects
 
-  for (auto& go : _gameObjects)
+  for (auto& go : GameObjects)
   {
     int x = go.get()->PosX;
     int y = go.get()->PosY;
@@ -82,17 +82,41 @@ void Map::Draw(int playerX, int playerY)
 
 void Map::UpdateGameObjects()
 {
-  for (auto& go : _gameObjects)
+  for (auto& go : GameObjects)
   {
     go.get()->Update();
   }
+}
+
+void Map::InsertGameObject(GameObject* goToInsert)
+{
+  GameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
+}
+
+std::pair<int, GameObject*> Map::GetTopGameObjectAtPosition(int x, int y)
+{
+  std::pair<int, GameObject*> res;
+
+  int index = 0;
+  for (auto& go : GameObjects)
+  {
+    if (go.get()->PosX == x && go.get()->PosY == y)
+    {
+      res.first = index;
+      res.second = go.get();
+    }
+
+    index++;
+  }
+
+  return res;
 }
 
 std::vector<GameObject*> Map::GetGameObjectsAtPosition(int x, int y)
 {
   std::vector<GameObject*> res;
 
-  for (auto& go : _gameObjects)
+  for (auto& go : GameObjects)
   {
     if (go.get()->PosX == x && go.get()->PosY == y)
     {
@@ -155,7 +179,7 @@ void Map::CreateTown()
     auto up = std::unique_ptr<GameObject>();
     up.reset(npc);
 
-    _gameObjects.push_back(std::move(up));
+    GameObjects.push_back(std::move(up));
   }  
 
   t.Set(false, true, 'T', "#00FF00", "#000000", "Tree");
@@ -229,7 +253,7 @@ void Map::CreateDoor(int x, int y, bool isOpen)
 
 void Map::DrawGameObjects()
 {
-  for (auto& item : _gameObjects)
+  for (auto& item : GameObjects)
   {
     float d = Util::LinearDistance(item.get()->PosX, item.get()->PosY,
                                    _playerRef->PosX, _playerRef->PosY);

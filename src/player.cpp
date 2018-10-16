@@ -20,7 +20,7 @@ void Player::Init()
   _currentCell->Occupied = true;
 
   auto go = GameObjectsFactory::Instance().CreateMoney();
-  Inventory.AddObject(go);
+  Inventory.AddToInventory(go);
 }
 
 bool Player::Move(int dx, int dy)

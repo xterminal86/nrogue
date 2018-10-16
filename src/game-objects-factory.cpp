@@ -25,9 +25,14 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
 {
   GameObject* go = new GameObject();
 
-  go->ObjectName = "Some gold coins";
+  go->ObjectName = "Coins";
+  go->Image = '$';
+  go->FgColor = "#FFD700";
+  go->Visible = true;
 
   Component* c = go->AddComponent<ItemComponent>();
+
+  ((ItemComponent*)c)->Description = { "Some gold coins", "You can buy things with these" };
 
   int money = (amount == 0) ? RNG::Instance().Random() % 1000 + 1 : amount;
   ((ItemComponent*)c)->Cost = money;

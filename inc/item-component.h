@@ -2,6 +2,7 @@
 #define ITEMCOMPONENT_H
 
 #include "component.h"
+#include "container-component.h"
 
 #include "constants.h"
 
@@ -13,13 +14,15 @@ class ItemComponent : public Component
     void Update() override;
 
     void Use();
-    void Drop();
+    void Transfer(ContainerComponent* destination = nullptr);
     void Inspect();
     void Equip();
     void Throw();
 
     int Durability;
     int Cost;
+
+    std::vector<std::string> Description;
 
     Attribute Damage;
 };

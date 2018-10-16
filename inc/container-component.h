@@ -14,7 +14,7 @@ class ContainerComponent : public Component
 
     void Update() override;
 
-    void AddObject(GameObject* object);
+    void AddToInventory(GameObject* object);
 
     std::vector<std::unique_ptr<GameObject>> Contents;
 };

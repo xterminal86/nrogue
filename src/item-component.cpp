@@ -1,6 +1,7 @@
 #include "item-component.h"
 
 #include "application.h"
+#include "map.h"
 
 ItemComponent::ItemComponent()
 {
@@ -11,8 +12,15 @@ void ItemComponent::Update()
 {
 }
 
-void ItemComponent::Drop()
+void ItemComponent::Transfer(ContainerComponent* destination)
 {
+  if (destination == nullptr)
+  {
+    ((GameObject*)OwnerGameObject)->PosX = Application::Instance().PlayerInstance.PosX;
+    ((GameObject*)OwnerGameObject)->PosY = Application::Instance().PlayerInstance.PosY;
+
+    Map::Instance().InsertGameObject(((GameObject*)OwnerGameObject));
+  }
 }
 
 void ItemComponent::Equip()
@@ -20,9 +28,8 @@ void ItemComponent::Equip()
 }
 
 void ItemComponent::Inspect()
-{  
-
-  //Application::Instance().ShowMessageBox(((GameObject*)OwnerGameObject)->ObjectName);
+{
+  Application::Instance().ShowMessageBox(((GameObject*)OwnerGameObject)->ObjectName, Description);
 }
 
 void ItemComponent::Throw()

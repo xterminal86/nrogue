@@ -119,6 +119,23 @@ void MainState::HandleInput()
         Application::Instance().ChangeState(Application::GameStates::INTERACT_INPUT_STATE);
         break;
 
+      case 'g':
+      {
+        auto res = Map::Instance().GetTopGameObjectAtPosition(_playerRef->PosX, _playerRef->PosY);
+        if (res.second != nullptr)
+        {
+          auto go = Map::Instance().GameObjects[res.first].release();
+          _playerRef->Inventory.AddToInventory(go);
+          Map::Instance().GameObjects.erase(Map::Instance().GameObjects.begin() + res.first);
+          auto str = Util::StringFormat("Picked up: %s", go->ObjectName.data());
+          Printer::Instance().AddMessage(str);
+        }
+        else
+        {
+          Printer::Instance().AddMessage("There's nothing here");
+        }
+        break;
+      }
       case '@':
         Application::Instance().ChangeState(Application::GameStates::INFO_STATE);
         break;

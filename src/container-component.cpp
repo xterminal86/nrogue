@@ -9,7 +9,7 @@ void ContainerComponent::Update()
 {
 }
 
-void ContainerComponent::AddObject(GameObject* object)
+void ContainerComponent::AddToInventory(GameObject* object)
 {
   Contents.push_back(std::unique_ptr<GameObject>(object));
 }

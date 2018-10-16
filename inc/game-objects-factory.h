@@ -14,7 +14,9 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
       SCROLL
     };
 
-    GameObject* CreateGameObject(ObjectType objType);
+    /// For random generation
+    GameObject* CreateGameObject(ObjectType objType);    
+
     GameObject* CreateMoney(int amount = 0);
 };
 

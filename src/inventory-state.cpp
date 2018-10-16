@@ -28,14 +28,34 @@ void InventoryState::HandleInput()
 
     case 'i':
     {
+      if (playerRef.Inventory.Contents.size() == 0)
+      {
+        break;
+      }
+
       auto c = playerRef.Inventory.Contents[_selectedIndex]->GetComponent<ItemComponent>();
       ((ItemComponent*)c)->Inspect();
       break;
     }
 
+    case 'd':
+    {
+      if (playerRef.Inventory.Contents.size() == 0)
+      {
+        break;
+      }
+
+      auto go = playerRef.Inventory.Contents[_selectedIndex].release();
+      auto c = go->GetComponent<ItemComponent>();
+      ((ItemComponent*)c)->Transfer();
+      playerRef.Inventory.Contents.erase(playerRef.Inventory.Contents.begin() + _selectedIndex);
+      auto str = Util::StringFormat("Dropped: %s", go->ObjectName.data());
+      Printer::Instance().AddMessage(str);
+      break;
+    }
+
     case 'e':
     case 'u':
-    case 'd':
     case 't':
       Application::Instance().ShowMessageBox("Information", { "Not implemented yet!" });
       break;

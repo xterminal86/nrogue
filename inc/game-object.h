@@ -113,7 +113,7 @@ class GameObject
     int PosY;
 
     bool Blocking = false;
-    bool BlockSight = true;
+    bool BlockSight = false;
     bool Revealed = false;
     bool Visible = false;
     bool Occupied = false;
