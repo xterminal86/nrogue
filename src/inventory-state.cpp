@@ -1,5 +1,6 @@
 #include "inventory-state.h"
 
+#include "item-component.h"
 #include "application.h"
 #include "printer.h"
 #include "util.h"
@@ -10,8 +11,10 @@ void InventoryState::Prepare()
 }
 
 void InventoryState::HandleInput()
-{
+{  
   _keyPressed = getch();
+
+  auto& playerRef = Application::Instance().PlayerInstance;
 
   switch(_keyPressed)
   {
@@ -24,11 +27,22 @@ void InventoryState::HandleInput()
       break;
 
     case 'i':
+    {
+      auto c = playerRef.Inventory.Contents[_selectedIndex]->GetComponent<ItemComponent>();
+      ((ItemComponent*)c)->Inspect();
+      break;
+    }
+
     case 'e':
     case 'u':
     case 'd':
     case 't':
-      Application::Instance().ShowMessageBox("Not implemented yet!");
+      //Application::Instance().ShowMessageBox("Information", { "Not implemented yet!" });
+      Application::Instance().ShowMessageBox("Information",
+      {
+        "Not implemented yet!",
+        "Not implemented yet!"
+      });
       break;
 
     case 'q':

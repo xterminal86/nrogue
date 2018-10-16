@@ -7,9 +7,15 @@
 class GameObjectsFactory : public Singleton<GameObjectsFactory>
 {
   public:
-    void Init();
+    enum ObjectType
+    {
+      LOOT = 0,
+      FOOD,
+      SCROLL
+    };
 
-    GameObject* CreateGameObject();
+    GameObject* CreateGameObject(ObjectType objType);
+    GameObject* CreateMoney(int amount = 0);
 };
 
 #endif // GAMEOBJECTSFACTORY_H

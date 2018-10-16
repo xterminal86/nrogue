@@ -20,24 +20,36 @@ void MessageBoxState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    int len = _message.length();
+    int len = 20; //_message[0].length();
+    int rowsNum = _message.size();
+    int rows = rowsNum; //(rowsNum % 2 == 0) ? rowsNum + 2 : rowsNum + 1;
 
     int tw = Printer::Instance().TerminalWidth;
     int th = Printer::Instance().TerminalHeight;
 
-    auto area = Util::GetScreenRectAroundPoint(tw / 2, th / 2, len, 4);
+    auto area = Util::GetScreenRectAroundPoint(tw / 2, th / 2, len, rows);
     for (auto& p : area)
     {
       Printer::Instance().PrintFB(p.X, p.Y, ' ', "#000000", kBackgroundColor);
     }
 
-    auto border = Util::GetPerimeterAroundPoint(tw / 2, th / 2, len, 4);
+    auto border = Util::GetPerimeterAroundPoint(tw / 2, th / 2, len, rows);
     for (auto& b : border)
     {
-      Printer::Instance().PrintFB(b.X, b.Y, ' ', "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(b.X, b.Y, '*', "#FFFFFF");
     }
 
-    Printer::Instance().PrintFB(tw / 2, th / 2, _message, Printer::kAlignCenter, "#FFFFFF", kBackgroundColor);
+    if (_header.length() != 0)
+    {
+      Printer::Instance().PrintFB(tw / 2, th / 2 - rows, _header, Printer::kAlignCenter, "#FFFFFF");
+    }
+
+    int offset = 0;
+    for (auto& s : _message)
+    {
+      Printer::Instance().PrintFB(tw / 2, th / 2 - rows + 1 + offset, s, Printer::kAlignCenter, "#FFFFFF", kBackgroundColor);
+      offset++;
+    }
 
     Printer::Instance().Render();
   }

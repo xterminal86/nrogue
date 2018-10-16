@@ -156,6 +156,35 @@ namespace Util
     return LinearDistance(s.X, s.Y, e.X, e.Y);
   }
   
+  inline std::vector<Position> GetScreenRect(int x1, int y1, int x2, int y2)
+  {
+    std::vector<Position> result;
+
+    int tw = Printer::Instance().TerminalWidth;
+    int th = Printer::Instance().TerminalHeight;
+
+    int lx = x1;
+    int ly = y1;
+    int hx = x2;
+    int hy = y2;
+
+    lx = Clamp(lx, 0, tw - 1);
+    ly = Clamp(ly, 0, th - 1);
+    hx = Clamp(hx, 0, tw - 1);
+    hy = Clamp(hy, 0, th - 1);
+
+    for (int x = lx; x <= hx; x++)
+    {
+      for (int y = ly; y <= hy; y++)
+      {
+        Position p(x, y);
+        result.push_back(p);
+      }
+    }
+
+    return result;
+  }
+
   /// Clamps values against terminal size,
   /// useful for drawing GUI related stuff and everything.
   inline std::vector<Position> GetScreenRectAroundPoint(int pointX, int pointY, int rangeX, int rangeY)

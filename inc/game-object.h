@@ -36,6 +36,7 @@ struct Tile
   std::string FgColor;
 
   std::string BgColor;
+
   std::string ObjectName;
 };
 

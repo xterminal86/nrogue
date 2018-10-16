@@ -82,12 +82,12 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   }
 }
 
-void Application::ShowMessageBox(std::string message)
+void Application::ShowMessageBox(std::string header, std::vector<std::string> message)
 {
   _previousState = _currentState;
 
   auto ptr = _gameStates[(int)GameStates::MESSAGE_BOX_STATE].get();
-  ((MessageBoxState*)ptr)->SetMessage(message);
+  ((MessageBoxState*)ptr)->SetMessage(header, message);
 
   _currentState = ptr;
 }

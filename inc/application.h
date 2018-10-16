@@ -38,7 +38,7 @@ class Application : public Singleton<Application>
     void Init() override;
     void Run();
     void ChangeState(const GameStates& gameStateIndex);
-    void ShowMessageBox(std::string message);
+    void ShowMessageBox(std::string header, std::vector<std::string> message);
     void CloseMessageBox();
 
     Player PlayerInstance;    

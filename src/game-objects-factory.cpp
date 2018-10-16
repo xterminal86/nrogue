@@ -2,26 +2,35 @@
 
 #include "constants.h"
 #include "rng.h"
+#include "item-component.h"
 
-void GameObjectsFactory::Init()
+GameObject* GameObjectsFactory::CreateGameObject(ObjectType objType)
 {
+  GameObject* go = nullptr;
+
+  switch (objType)
+  {
+    case LOOT:
+      go = CreateMoney();
+      break;
+
+    default:
+      break;
+  }
+
+  return go;
 }
 
-GameObject* GameObjectsFactory::CreateGameObject()
+GameObject* GameObjectsFactory::CreateMoney(int amount)
 {
   GameObject* go = new GameObject();
 
-  int length = RNG::Instance().Random() % GlobalConstants::Alphabet.length() + 1;
+  go->ObjectName = "Some gold coins";
 
-  std::string name;
-  for (int i = 0; i < length; i++)
-  {
-    int index = RNG::Instance().Random() % GlobalConstants::Alphabet.length();
-    char ch = GlobalConstants::Alphabet[index];
-    name += ch;
-  }
+  Component* c = go->AddComponent<ItemComponent>();
 
-  go->ObjectName = name;
+  int money = (amount == 0) ? RNG::Instance().Random() % 1000 + 1 : amount;
+  ((ItemComponent*)c)->Cost = money;
 
   return go;
 }

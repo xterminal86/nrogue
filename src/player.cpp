@@ -19,11 +19,8 @@ void Player::Init()
   _currentCell = &Map::Instance().MapArray[PosX][PosY];
   _currentCell->Occupied = true;
 
-  for (int i = 0; i < 5; i++)
-  {
-    auto go = GameObjectsFactory::Instance().CreateGameObject();
-    Inventory.AddObject(go);
-  }
+  auto go = GameObjectsFactory::Instance().CreateMoney();
+  Inventory.AddObject(go);
 }
 
 bool Player::Move(int dx, int dy)
