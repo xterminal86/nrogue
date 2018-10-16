@@ -25,7 +25,7 @@ void MessageBoxState::Update(bool forceUpdate)
     int tw = Printer::Instance().TerminalWidth;
     int th = Printer::Instance().TerminalHeight;
 
-    auto area = Util::GetRectAroundPoint(tw / 2, th / 2, len, 4);
+    auto area = Util::GetScreenRectAroundPoint(tw / 2, th / 2, len, 4);
     for (auto& p : area)
     {
       Printer::Instance().PrintFB(p.X, p.Y, ' ', "#000000", kBackgroundColor);

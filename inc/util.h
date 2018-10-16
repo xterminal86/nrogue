@@ -13,6 +13,7 @@
 #include "colorpair.h"
 #include "constants.h"
 #include "rng.h"
+#include "printer.h"
 
 struct Position
 {
@@ -155,12 +156,41 @@ namespace Util
     return LinearDistance(s.X, s.Y, e.X, e.Y);
   }
   
+  /// Clamps values against terminal size,
+  /// useful for drawing GUI related stuff and everything.
+  inline std::vector<Position> GetScreenRectAroundPoint(int pointX, int pointY, int rangeX, int rangeY)
+  {
+    std::vector<Position> result;
+
+    int tw = Printer::Instance().TerminalWidth;
+    int th = Printer::Instance().TerminalHeight;
+
+    int lx = pointX - rangeX;
+    int ly = pointY - rangeY;
+    int hx = pointX + rangeX;
+    int hy = pointY + rangeY;
+
+    lx = Clamp(lx, 0, tw - 1);
+    ly = Clamp(ly, 0, th - 1);
+    hx = Clamp(hx, 0, tw - 1);
+    hy = Clamp(hy, 0, th - 1);
+
+    for (int x = lx; x <= hx; x++)
+    {
+      for (int y = ly; y <= hy; y++)
+      {
+        Position p(x, y);
+        result.push_back(p);
+      }
+    }
+
+    return result;
+  }
+
   inline std::vector<Position> GetRectAroundPoint(int pointX, int pointY, int rangeX, int rangeY)
   {    
     std::vector<Position> result;
-   
-    // FIXME: actualize for different maps' sizes
-     
+
     int mw = GlobalConstants::MapX;
     int mh = GlobalConstants::MapY;
       
