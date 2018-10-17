@@ -10,8 +10,10 @@ void IntroState::Prepare()
   _lastTime = std::chrono::high_resolution_clock::now();
 
   _textPositionCursor = 0;
-  _textPositionX = 0;
-  _textPositionY = 0;
+  _textPositionX = Printer::Instance().TerminalWidth / 2;
+
+  int textIndex = Application::Instance().PlayerInstance.SelectedClass;
+  _textPositionY = Printer::Instance().TerminalHeight / 2 - _introStrings[textIndex].size() / 2;
 }
 
 void IntroState::HandleInput()
@@ -40,7 +42,9 @@ void IntroState::Update(bool forceUpdate)
     {
       if (_textPositionCursor != _introStrings[textIndex][_stringIndex].length())
       {
-        Printer::Instance().PrintFB(_textPositionX, _textPositionY, _introStrings[textIndex][_stringIndex][_textPositionCursor], "#FFFFFF");
+        int len = _introStrings[textIndex][_stringIndex].length();
+
+        Printer::Instance().PrintFB(_textPositionX - len / 2, _textPositionY, _introStrings[textIndex][_stringIndex][_textPositionCursor], "#FFFFFF");
 
         _textPositionX++;
 
@@ -50,7 +54,7 @@ void IntroState::Update(bool forceUpdate)
       {
         _textPositionCursor = 0;
 
-        _textPositionX = 0;
+        _textPositionX = Printer::Instance().TerminalWidth / 2;
         _textPositionY++;
 
         _stringIndex++;
