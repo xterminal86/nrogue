@@ -4,6 +4,7 @@
 #include "map.h"
 #include "printer.h"
 #include "rng.h"
+#include "item-component.h"
 
 void MainState::Init()
 {
@@ -120,22 +121,9 @@ void MainState::HandleInput()
         break;
 
       case 'g':
-      {
-        auto res = Map::Instance().GetTopGameObjectAtPosition(_playerRef->PosX, _playerRef->PosY);
-        if (res.second != nullptr)
-        {
-          auto go = Map::Instance().GameObjects[res.first].release();
-          _playerRef->Inventory.AddToInventory(go);
-          Map::Instance().GameObjects.erase(Map::Instance().GameObjects.begin() + res.first);
-          auto str = Util::StringFormat("Picked up: %s", go->ObjectName.data());
-          Printer::Instance().AddMessage(str);
-        }
-        else
-        {
-          Printer::Instance().AddMessage("There's nothing here");
-        }
+        TryToPickupItem();
         break;
-      }
+
       case '@':
         Application::Instance().ChangeState(Application::GameStates::INFO_STATE);
         break;
@@ -204,4 +192,56 @@ void MainState::DisplayGameLog()
   int y = Printer::Instance().TerminalHeight - 1;
 
   Printer::Instance().PrintFB(x, y, Printer::Instance().GetLastMessage(), Printer::kAlignRight, "#FFFFFF");
+}
+
+void MainState::TryToPickupItem()
+{
+  auto res = Map::Instance().GetTopGameObjectAtPosition(_playerRef->PosX, _playerRef->PosY);
+  if (res.second != nullptr)
+  {
+    auto go = Map::Instance().GameObjects[res.first].release();
+    auto c = go->GetComponent<ItemComponent>();
+    if (((ItemComponent*)c)->IsStackable)
+    {
+      bool isInInventory = false;
+
+      for (auto& i : _playerRef->Inventory.Contents)
+      {
+        auto ic = i->GetComponent<ItemComponent>();
+        if (((ItemComponent*)ic)->TypeOfObject == ((ItemComponent*)c)->TypeOfObject)
+        {
+          ((ItemComponent*)ic)->Amount += ((ItemComponent*)c)->Amount;
+          isInInventory = true;
+          break;
+        }
+      }
+
+      if (!isInInventory)
+      {
+        _playerRef->Inventory.AddToInventory(go);
+      }
+    }
+    else
+    {
+      _playerRef->Inventory.AddToInventory(go);
+    }
+
+    Map::Instance().GameObjects.erase(Map::Instance().GameObjects.begin() + res.first);
+
+    std::string message;
+    if (((ItemComponent*)c)->IsStackable)
+    {
+      message = Util::StringFormat("Picked up: %i %s", ((ItemComponent*)c)->Amount, go->ObjectName.data());
+    }
+    else
+    {
+      message = Util::StringFormat("Picked up: %s", go->ObjectName.data());
+    }
+
+    Printer::Instance().AddMessage(message);
+  }
+  else
+  {
+    Printer::Instance().AddMessage("There's nothing here");
+  }
 }

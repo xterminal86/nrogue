@@ -49,8 +49,18 @@ void InventoryState::HandleInput()
       auto c = go->GetComponent<ItemComponent>();
       ((ItemComponent*)c)->Transfer();
       playerRef.Inventory.Contents.erase(playerRef.Inventory.Contents.begin() + _selectedIndex);
-      auto str = Util::StringFormat("Dropped: %s", go->ObjectName.data());
-      Printer::Instance().AddMessage(str);
+      std::string message;
+      if (((ItemComponent*)c)->IsStackable)
+      {
+        message = Util::StringFormat("Dropped: %i %s", ((ItemComponent*)c)->Amount, go->ObjectName.data());
+      }
+      else
+      {
+        message = Util::StringFormat("Dropped: %s", go->ObjectName.data());
+      }
+
+      Printer::Instance().AddMessage(message);
+
       break;
     }
 
@@ -86,13 +96,25 @@ void InventoryState::Update(bool forceUpdate)
     int yPos = 0;
     for (auto& item : playerRef.Inventory.Contents)
     {
-      if (yPos == _selectedIndex)
+      std::string nameInInventory;
+
+      auto c = item->GetComponent<ItemComponent>();
+      if (((ItemComponent*)c)->IsStackable)
       {
-        Printer::Instance().PrintFB(0, 2 + yPos, item->ObjectName, Printer::kAlignLeft, "#000000", "#FFFFFF");
+        nameInInventory = Util::StringFormat("%s (%i)", item->ObjectName.data(), ((ItemComponent*)c)->Amount);
       }
       else
       {
-        Printer::Instance().PrintFB(0, 2 + yPos, item->ObjectName, Printer::kAlignLeft, "#FFFFFF");
+        nameInInventory = item->ObjectName;
+      }
+
+      if (yPos == _selectedIndex)
+      {
+        Printer::Instance().PrintFB(0, 2 + yPos, nameInInventory, Printer::kAlignLeft, "#000000", "#FFFFFF");
+      }
+      else
+      {
+        Printer::Instance().PrintFB(0, 2 + yPos, nameInInventory, Printer::kAlignLeft, "#FFFFFF");
       }
 
       yPos++;

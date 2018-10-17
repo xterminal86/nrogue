@@ -3,19 +3,13 @@
 
 #include "singleton.h"
 #include "game-object.h"
+#include "constants.h"
 
 class GameObjectsFactory : public Singleton<GameObjectsFactory>
 {
-  public:
-    enum ObjectType
-    {
-      LOOT = 0,
-      FOOD,
-      SCROLL
-    };
-
+  public:    
     /// For random generation
-    GameObject* CreateGameObject(ObjectType objType);    
+    GameObject* CreateGameObject(ItemType objType);
 
     GameObject* CreateMoney(int amount = 0);
 };

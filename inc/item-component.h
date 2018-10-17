@@ -19,8 +19,12 @@ class ItemComponent : public Component
     void Equip();
     void Throw();
 
-    int Durability;
-    int Cost;
+    int Durability = -1;
+    int Cost = 0;
+    int Amount = 0;
+    bool IsStackable = false;
+
+    ItemType TypeOfObject;
 
     std::vector<std::string> Description;
 

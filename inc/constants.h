@@ -42,6 +42,13 @@
 #include <vector>
 #include <string>
 
+enum class ItemType
+{
+  COINS = 0,
+  FOOD,
+  SCROLL
+};
+
 struct Attribute
 {
   int CurrentValue = 0;

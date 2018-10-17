@@ -21,6 +21,11 @@ void Player::Init()
 
   auto go = GameObjectsFactory::Instance().CreateMoney();
   Inventory.AddToInventory(go);
+
+  go = GameObjectsFactory::Instance().CreateMoney();
+  go->PosX = 30;
+  go->PosY = 40;
+  Map::Instance().InsertGameObject(go);
 }
 
 bool Player::Move(int dx, int dy)

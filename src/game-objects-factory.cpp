@@ -4,13 +4,13 @@
 #include "rng.h"
 #include "item-component.h"
 
-GameObject* GameObjectsFactory::CreateGameObject(ObjectType objType)
+GameObject* GameObjectsFactory::CreateGameObject(ItemType objType)
 {
   GameObject* go = nullptr;
 
   switch (objType)
   {
-    case LOOT:
+    case ItemType::COINS:
       go = CreateMoney();
       break;
 
@@ -36,6 +36,9 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
 
   int money = (amount == 0) ? RNG::Instance().Random() % 1000 + 1 : amount;
   ((ItemComponent*)c)->Cost = money;
+  ((ItemComponent*)c)->Amount = money;
+  ((ItemComponent*)c)->IsStackable = true;
+  ((ItemComponent*)c)->TypeOfObject = ItemType::COINS;
 
   return go;
 }

@@ -22,6 +22,7 @@ class MainState : public GameState
     std::string _debugInfo;
 
     void DisplayGameLog();
+    void TryToPickupItem();
 
     Position _cursorPosition;
 };

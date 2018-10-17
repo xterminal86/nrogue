@@ -12,6 +12,8 @@ void ItemComponent::Update()
 {
 }
 
+/// Transfers GameObject to the destination,
+/// or tile occupied by player if destination = nullptr
 void ItemComponent::Transfer(ContainerComponent* destination)
 {
   if (destination == nullptr)
