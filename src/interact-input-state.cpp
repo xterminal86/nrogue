@@ -23,8 +23,6 @@ void InteractInputState::HandleInput()
 
   bool dirSet = false;
 
-  _playerTurnDone = false;
-
   switch (_keyPressed)
   {
     case NUMPAD_7:
@@ -123,7 +121,6 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
   if (go->Interact())
   {
     _playerRef->SubtractActionMeter();
-    _playerTurnDone = true;
     Printer::Instance().AddMessage("You interacted with: " + go->ObjectName);
     Map::Instance().UpdateGameObjects();
     Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);    

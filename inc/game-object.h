@@ -48,7 +48,7 @@ class GameObject
     virtual ~GameObject() = default;
 
     GameObject(int x, int y, chtype avatar, const std::string& htmlColor, const std::string& bgColor = "#000000")
-    {
+    {      
       Init(x, y, avatar, htmlColor, bgColor);
     }
 

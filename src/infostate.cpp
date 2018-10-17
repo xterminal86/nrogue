@@ -38,35 +38,18 @@ void InfoState::Update(bool forceUpdate)
 
     int yPos = 2;
 
-    attr = Util::StringFormat("LVL: %i", playerRef.Actor.Attrs.Level);
-    Printer::Instance().PrintFB(0, yPos, attr, Printer::kAlignLeft, "#FFFFFF");
+    PrintAttribute(0, yPos, "LVL", playerRef.Actor.Attrs.Lvl);
+    PrintAttribute(0, yPos + 1, "EXP", playerRef.Actor.Attrs.Exp);
 
-    attr = Util::StringFormat("EXP: %i", playerRef.Actor.Attrs.Exp);
-    Printer::Instance().PrintFB(0, yPos + 1, attr, Printer::kAlignLeft, "#FFFFFF");
+    PrintAttribute(0, yPos + 3, "STR", playerRef.Actor.Attrs.Str);
+    PrintAttribute(0, yPos + 4, "DEF", playerRef.Actor.Attrs.Def);
+    PrintAttribute(0, yPos + 5, "MAG", playerRef.Actor.Attrs.Mag);
+    PrintAttribute(0, yPos + 6, "RES", playerRef.Actor.Attrs.Res);
+    PrintAttribute(0, yPos + 7, "SKL", playerRef.Actor.Attrs.Skl);
+    PrintAttribute(0, yPos + 8, "SPD", playerRef.Actor.Attrs.Spd);
 
-    attr = Util::StringFormat("STR: %i", playerRef.Actor.Attrs.Str.Get());
-    Printer::Instance().PrintFB(0, yPos + 3, attr, Printer::kAlignLeft, "#FFFFFF");
-
-    attr = Util::StringFormat("DEF: %i", playerRef.Actor.Attrs.Def.Get());
-    Printer::Instance().PrintFB(0, yPos + 4, attr, Printer::kAlignLeft, "#FFFFFF");
-
-    attr = Util::StringFormat("MAG: %i", playerRef.Actor.Attrs.Mag.Get());
-    Printer::Instance().PrintFB(0, yPos + 5, attr, Printer::kAlignLeft, "#FFFFFF");
-
-    attr = Util::StringFormat("RES: %i", playerRef.Actor.Attrs.Res.Get());
-    Printer::Instance().PrintFB(0, yPos + 6, attr, Printer::kAlignLeft, "#FFFFFF");
-
-    attr = Util::StringFormat("SKL: %i", playerRef.Actor.Attrs.Skl.Get());
-    Printer::Instance().PrintFB(0, yPos + 7, attr, Printer::kAlignLeft, "#FFFFFF");
-
-    attr = Util::StringFormat("SPD: %i", playerRef.Actor.Attrs.Spd.Get());
-    Printer::Instance().PrintFB(0, yPos + 8, attr, Printer::kAlignLeft, "#FFFFFF");
-
-    attr = Util::StringFormat("HP: %i/%i", playerRef.Actor.Attrs.HP.Get(), playerRef.Actor.Attrs.HP.OriginalValue);
-    Printer::Instance().PrintFB(0, yPos + 10, attr, Printer::kAlignLeft, "#FFFFFF");
-
-    attr = Util::StringFormat("MP: %i/%i", playerRef.Actor.Attrs.MP.Get(), playerRef.Actor.Attrs.MP.OriginalValue);
-    Printer::Instance().PrintFB(0, yPos + 11, attr, Printer::kAlignLeft, "#FFFFFF");
+    PrintAttribute(0, yPos + 10, "HP", playerRef.Actor.Attrs.HP);
+    PrintAttribute(0, yPos + 11, "MP", playerRef.Actor.Attrs.MP);
 
     Printer::Instance().Render();
   }
@@ -89,3 +72,18 @@ void InfoState::ShowInventory()
     yPos++;
   }
 }
+
+void InfoState::PrintAttribute(int x, int y, std::string attrName, Attribute& attr)
+{
+  std::string text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
+
+  if (attr.IsTalent)
+  {
+    Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, "#FFFFFF", GlobalConstants::DoorHighlightColor);
+  }
+  else
+  {
+    Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, "#FFFFFF");
+  }
+}
+

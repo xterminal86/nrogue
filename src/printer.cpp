@@ -25,7 +25,7 @@ void Printer::Init()
   init_color(COLOR_MAGENTA, 1000, 0, 1000);
   init_color(COLOR_YELLOW, 1000, 1000, 0);
 
-  PrepareFrameBuffer();
+  PrepareFrameBuffer();  
 }
 
 bool Printer::ContainsColorMap(size_t hashToCheck)
@@ -191,12 +191,12 @@ void Printer::Print(const int& x, const int& y, const chtype& ch, const std::str
 
 void Printer::AddMessage(std::string message)
 {
+  _inGameMessages.insert(_inGameMessages.begin(), message);
+
   if (_inGameMessages.size() > kMaxGameLogMessages)
   {
     _inGameMessages.pop_back();
   }
-
-  _inGameMessages.insert(_inGameMessages.begin(), message);
 
   ShowLastMessage = true;
 }

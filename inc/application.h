@@ -15,7 +15,7 @@
 
 class Application : public Singleton<Application>
 {
-  public:        
+  public:
 
     enum class GameStates
     {
@@ -41,13 +41,13 @@ class Application : public Singleton<Application>
     void ShowMessageBox(std::string header, std::vector<std::string> message);
     void CloseMessageBox();
 
-    Player PlayerInstance;    
+    Player PlayerInstance;
 
   private:
-    GameState* _currentState = nullptr;          
+    GameState* _currentState = nullptr;
     GameState* _previousState = nullptr;
 
-    std::map<int, std::unique_ptr<GameState>> _gameStates;  
+    std::map<int, std::unique_ptr<GameState>> _gameStates;
 };
 
 #endif

@@ -84,8 +84,8 @@ struct Attributes
   Attribute HungerRate;
   Attribute HungerSpeed;
 
-  int Exp = 0;
-  int Level = 1;
+  Attribute Exp;
+  Attribute Lvl;
 
   int Hunger = 1000;
 };
@@ -104,6 +104,8 @@ namespace GlobalConstants
   static const std::string RoomFloorColor = "#333333";
   static const std::string MountainsColor = "#666666";
   static const std::string FogOfWarColor = "#202020";
+  static const std::string CoinsColor = "#FFD700";
+  static const std::string DoorHighlightColor = "#444400";
 
   static std::vector<std::string> RandomNames =
   {    

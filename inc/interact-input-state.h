@@ -20,9 +20,7 @@ class InteractInputState : public GameState
 
     Player* _playerRef;
 
-    Position _cursorPosition;
-
-    bool _playerTurnDone;
+    Position _cursorPosition;    
 };
 
 #endif // INTERACTINPUTSTATE_H

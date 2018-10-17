@@ -185,6 +185,7 @@ void Player::SetThiefAttrs()
 {
   Actor.Attrs.Spd.IsTalent = true;
   Actor.Attrs.Skl.IsTalent = true;
+  Actor.Attrs.Exp.IsTalent = true;
 
   Actor.Attrs.Def.Set(1);
   Actor.Attrs.Skl.Set(2);

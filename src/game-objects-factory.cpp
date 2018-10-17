@@ -27,7 +27,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
 
   go->ObjectName = "Coins";
   go->Image = '$';
-  go->FgColor = "#FFD700";
+  go->FgColor = GlobalConstants::CoinsColor;
   go->Visible = true;
 
   Component* c = go->AddComponent<ItemComponent>();

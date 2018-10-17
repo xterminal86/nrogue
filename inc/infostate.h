@@ -2,6 +2,7 @@
 #define INFOSTATE_H
 
 #include "gamestate.h"
+#include "constants.h"
 
 class InfoState : public GameState
 {
@@ -11,6 +12,7 @@ class InfoState : public GameState
 
   private:
     void ShowInventory();
+    void PrintAttribute(int x, int y, std::string attrName, Attribute& attr);
 };
 
 #endif

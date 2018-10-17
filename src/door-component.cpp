@@ -1,5 +1,6 @@
 #include "door-component.h"
 #include "game-object.h"
+#include "constants.h"
 
 DoorComponent::DoorComponent()
 {
@@ -22,5 +23,5 @@ void DoorComponent::UpdateDoorState()
   ((GameObject*)OwnerGameObject)->BlockSight = !IsOpen;
   ((GameObject*)OwnerGameObject)->Image = IsOpen ? '_' : '+';
   ((GameObject*)OwnerGameObject)->FgColor = "#FFFFFF";
-  ((GameObject*)OwnerGameObject)->BgColor = IsOpen ? "#000000" : "#444400";
+  ((GameObject*)OwnerGameObject)->BgColor = IsOpen ? "#000000" : GlobalConstants::DoorHighlightColor;
 }

@@ -26,6 +26,8 @@ void MainState::HandleInput()
           Map::Instance().MapOffsetX++;
 
           _playerRef->SubtractActionMeter();
+
+          Printer::Instance().ShowLastMessage = false;
         }
         break;
 
@@ -35,6 +37,8 @@ void MainState::HandleInput()
           Map::Instance().MapOffsetY++;
 
           _playerRef->SubtractActionMeter();
+
+          Printer::Instance().ShowLastMessage = false;
         }
         break;
 
@@ -45,6 +49,8 @@ void MainState::HandleInput()
           Map::Instance().MapOffsetX--;
 
           _playerRef->SubtractActionMeter();
+
+          Printer::Instance().ShowLastMessage = false;
         }
         break;
 
@@ -54,6 +60,8 @@ void MainState::HandleInput()
           Map::Instance().MapOffsetX++;
 
           _playerRef->SubtractActionMeter();
+
+          Printer::Instance().ShowLastMessage = false;
         }
         break;
 
@@ -63,6 +71,8 @@ void MainState::HandleInput()
           Map::Instance().MapOffsetY--;
 
           _playerRef->SubtractActionMeter();
+
+          Printer::Instance().ShowLastMessage = false;
         }
         break;
 
@@ -72,6 +82,8 @@ void MainState::HandleInput()
           Map::Instance().MapOffsetX--;
 
           _playerRef->SubtractActionMeter();
+
+          Printer::Instance().ShowLastMessage = false;
         }
         break;
 
@@ -82,6 +94,8 @@ void MainState::HandleInput()
           Map::Instance().MapOffsetX++;
 
           _playerRef->SubtractActionMeter();
+
+          Printer::Instance().ShowLastMessage = false;
         }
         break;
 
@@ -92,6 +106,8 @@ void MainState::HandleInput()
           Map::Instance().MapOffsetX--;
 
           _playerRef->SubtractActionMeter();
+
+          Printer::Instance().ShowLastMessage = false;
         }
         break;
 
@@ -179,7 +195,6 @@ void MainState::Update(bool forceUpdate)
     if (Printer::Instance().ShowLastMessage)
     {
       DisplayGameLog();
-      Printer::Instance().ShowLastMessage = false;
     }
 
     Printer::Instance().Render();
