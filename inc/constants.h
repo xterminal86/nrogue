@@ -107,6 +107,8 @@ namespace GlobalConstants
   static const std::string BlackColor = "#000000";
   static const std::string WallColor = "#888888";
   static const std::string TreeColor = "#00FF00";
+  static const std::string PlayerColor = "#00FFFF";
+  static const std::string NpcColor = "#FFFF00";
   static const std::string GroundColor = "#444444";
   static const std::string RoomFloorColor = "#692E11";
   static const std::string PavingStoneColor = "#333333";
@@ -130,6 +132,7 @@ namespace GlobalConstants
 
   static const std::vector<std::vector<std::string>> RoomLayouts =
   {
+    // Common house
     {
       "##+##",
       "#...#",
@@ -137,12 +140,25 @@ namespace GlobalConstants
       "#...#",
       "#####"
     },
+    // Church
     {
-      "##+##",
-      "#...#",
-      "#...#",
-      "#####"
+      "###-#######-###",
+      "#..h.h.h.h....#",
+      "+..h.h.h.h....|",
+      "#........../..#",
+      "+..h.h.h.h....|",
+      "#..h.h.h.h....#",
+      "###-#######-###"
     },
+    // Trader
+    {
+      "#########",
+      "#.......#",
+      "+.......#",
+      "#.......#",
+      "#########"
+    },
+    // Dungeon rooms
     {
       "##.##",
       "#...#",
@@ -163,6 +179,14 @@ namespace GlobalConstants
       "#.#.#",
       ".....",
       "#.#.#"
+    },
+    // Shrine
+    {
+      "#####",
+      "#...#",
+      "+./.#",
+      "#...#",
+      "#####"
     }
   };
 }

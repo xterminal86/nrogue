@@ -172,7 +172,7 @@ void Map::CreateTown()
       continue;
     }
 
-    GameObject* npc = new GameObject(x, y, '@', "#FFFF00");
+    GameObject* npc = new GameObject(x, y, '@', GlobalConstants::NpcColor);
     npc->ObjectName = "Dummy AI " + std::to_string(i);
     npc->AddComponent<AIDummy>();
 
@@ -182,7 +182,7 @@ void Map::CreateTown()
     GameObjects.push_back(std::move(up));
   }  
 
-  t.Set(false, true, 'T', "#00FF00", "#000000", "Tree");
+  t.Set(false, true, 'T', GlobalConstants::TreeColor, "#000000", "Tree");
 
   int numTrees = 50;
   for (int i = 0; i < numTrees; i++)

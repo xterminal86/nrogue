@@ -11,7 +11,7 @@ void Player::Init()
   PosX = Map::Instance().PlayerStartX;
   PosY = Map::Instance().PlayerStartY;
   Avatar = '@';
-  Color = "#00FFFF";
+  Color = GlobalConstants::PlayerColor;
   ActionMeter = 100;
 
   SetAttributes();
@@ -24,7 +24,7 @@ void Player::Init()
 
   go = GameObjectsFactory::Instance().CreateMoney();
   go->PosX = 30;
-  go->PosY = 40;
+  go->PosY = 50;
   Map::Instance().InsertGameObject(go);
 }
 
