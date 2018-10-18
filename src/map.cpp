@@ -204,7 +204,7 @@ void Map::CreateRoom(int x, int y, int w, int h)
   Rect room(x, y, w, h);
 
   Tile t;
-  t.Set(false, false, ' ', "", GlobalConstants::RoomFloorColor, "Stone Floor");
+  t.Set(false, false, ' ', "", GlobalConstants::RoomFloorColor, "Wooden Floor");
 
   FillArea(x + 1, y + 1, w - 1, h - 1, t);
 

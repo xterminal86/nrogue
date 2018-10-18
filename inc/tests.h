@@ -40,11 +40,52 @@ namespace Tests
     }    
   }
 
+  inline void RoomTests()
+  {
+    printf("\nRoom layouts rotations:\n\n");
+
+    for (auto& room : GlobalConstants::RoomLayouts)
+    {
+      printf("Layout:\n");
+
+      for (auto& row : room)
+      {
+        printf("%s\n", row.data());
+      }
+
+      printf("CCW_90:\n");
+
+      auto res = Util::RotateRoomLayout(room, RoomLayoutRotation::CCW_90);
+      for (auto& s : res)
+      {
+        printf("\t%s\n", s.data());
+      }
+
+      printf("CCW_180:\n");
+
+      res = Util::RotateRoomLayout(room, RoomLayoutRotation::CCW_180);
+      for (auto& s : res)
+      {
+        printf("\t%s\n", s.data());
+      }
+
+      printf("CCW_270:\n");
+
+      res = Util::RotateRoomLayout(room, RoomLayoutRotation::CCW_270);
+      for (auto& s : res)
+      {
+        printf("\t%s\n", s.data());
+      }
+    }
+  }
+
   inline void Run()
   {
     printf("***** START TESTS *****\n\n");
 
     TestLoS(4, 4, 2);
+    printf("\n- o -\n");
+    RoomTests();
 
     printf("\n\n***** o *****\n");
   }  

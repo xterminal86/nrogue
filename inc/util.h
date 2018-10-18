@@ -331,6 +331,66 @@ namespace Util
     int index = RNG::Instance().Random() % GlobalConstants::RandomNames.size();
     return GlobalConstants::RandomNames[index];
   }
+
+  /// Rotates room text layout, provided all lines are of equal length
+  inline std::vector<std::string> RotateRoomLayout(const std::vector<std::string>& layout, RoomLayoutRotation r)
+  {
+    std::vector<std::string> res;
+
+    switch (r)
+    {
+      case RoomLayoutRotation::CCW_90:
+      {
+        // Swap dimensions
+        int lineLen = layout[0].length();
+
+        for (int i = 0; i < lineLen; i++)
+        {
+          res.push_back(std::string(layout.size(), '_'));
+        }
+
+        // Switch rows and cols
+        for (int x = 0; x < layout.size(); x++)
+        {
+          for (int y = 0; y < layout[x].length(); y++)
+          {
+            res[y][x] = layout[x][y];
+          }
+        }
+      }
+      break;
+
+      case RoomLayoutRotation::CCW_180:
+      {
+        res = layout;
+        std::reverse(res.begin(), res.end());
+      }
+      break;
+
+      case RoomLayoutRotation::CCW_270:
+      {
+        int lineLen = layout[0].length();
+
+        for (int i = 0; i < lineLen; i++)
+        {
+          res.push_back(std::string(layout.size(), '_'));
+        }
+
+        for (int x = 0; x < layout.size(); x++)
+        {
+          for (int y = 0; y < layout[x].length(); y++)
+          {
+            int indX = y;
+            int indY = res[0].length() - 1 - x;
+            res[indX][indY] = layout[x][y];
+          }
+        }
+      }
+      break;
+    }
+
+    return res;
+  }
 }
 
 #endif
