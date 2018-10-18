@@ -105,7 +105,7 @@ class GameObject
       return nullptr;
     }
 
-    void MakeTile(const Tile& t);
+    void MakeTile(Tile t);
 
     void Update();
 

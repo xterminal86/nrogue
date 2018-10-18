@@ -6,6 +6,7 @@
 #include "rng.h"
 #include "ai-dummy.h"
 #include "door-component.h"
+#include "game-objects-factory.h"
 
 void Map::Init()
 {
@@ -42,7 +43,7 @@ void Map::Draw(int playerX, int playerY)
   {
     int x = cell.X;
     int y = cell.Y;
-        
+
     if (MapArray[x][y].Visible)
     {
       MapArray[x][y].Draw();
@@ -75,7 +76,10 @@ void Map::Draw(int playerX, int playerY)
 
     if (MapArray[x][y].Visible)
     {
-      go.get()->Draw(go.get()->FgColor, MapArray[x][y].BgColor);
+      // If game object has black bg color,
+      // replace it with current floor color
+      bool cond = (go->BgColor.length() == 0 || go->BgColor == "#000000");
+      go.get()->Draw(go.get()->FgColor, cond ? MapArray[x][y].BgColor : go->BgColor);
     }
   }
 }
@@ -149,6 +153,21 @@ void Map::CreateTown()
     MapArray[pos.X][pos.Y].MakeTile(t);
   }
 
+  SetPlayerStartingPosition(5, 2);
+
+  CreateRoom(3, 3, GlobalConstants::RoomLayouts[0]);
+  CreateRoom(25, 3, GlobalConstants::RoomLayouts[0], true);
+  CreateRoom(55, 3, GlobalConstants::RoomLayouts[0], true);
+  CreateRoom(55, 3, GlobalConstants::RoomLayouts[2], true);
+
+  CreateChurch(50, 15);
+
+  /*
+  t.Set(false, false, ' ', "", GlobalConstants::GroundColor, "Cobblestone");
+  MapArray[5][2].MakeTile(t);
+  */
+
+  /*
   CreateRoom(20, 20, 10, 10);
 
   PlayerStartX = 10;
@@ -197,6 +216,7 @@ void Map::CreateTown()
 
     MapArray[x][y].MakeTile(t);
   }
+  */
 }
 
 void Map::CreateRoom(int x, int y, int w, int h)
@@ -262,5 +282,147 @@ void Map::DrawGameObjects()
     {
       item.get()->Draw();
     }
+  }
+}
+
+void Map::SetPlayerStartingPosition(int x, int y)
+{
+  PlayerStartX = x;
+  PlayerStartY = y;
+
+  int tw = Printer::Instance().TerminalWidth;
+  int th = Printer::Instance().TerminalHeight;
+
+  MapOffsetX = tw / 2 - PlayerStartX;
+  MapOffsetY = th / 2 - PlayerStartY;
+}
+
+void Map::CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation)
+{
+  Tile t;
+
+  int posX = x;
+  int posY = y;
+
+  std::vector<std::string> newLayout = layout;
+
+  std::vector<RoomLayoutRotation> rotations =
+  {
+    RoomLayoutRotation::NONE,
+    RoomLayoutRotation::CCW_90,
+    RoomLayoutRotation::CCW_180,
+    RoomLayoutRotation::CCW_270
+  };
+
+  if (randomizeOrientation)
+  {
+    int index = RNG::Instance().Random() % rotations.size();
+    newLayout = Util::RotateRoomLayout(layout, rotations[index]);
+  }
+
+  for (auto& row : newLayout)
+  {
+    for (auto& c : row)
+    {
+      switch (c)
+      {
+        case '#':
+          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
+          MapArray[posX][posY].MakeTile(t);
+          break;
+
+          // To allow fog of war to cover floor made of
+          // background colored ' ', set FgColor to empty string.
+        case '.':
+          t.Set(false, false, ' ', "", GlobalConstants::RoomFloorColor, "Wooden Floor");
+          MapArray[posX][posY].MakeTile(t);
+          break;
+
+        case '+':
+          CreateDoor(posX, posY);
+          break;
+      }
+
+      posX++;
+    }
+
+    posX = x;
+    posY++;
+  }
+}
+
+void Map::CreateChurch(int x, int y)
+{
+  int posX = x;
+  int posY = y;
+
+  Tile t;
+
+  for (auto& row : GlobalConstants::RoomLayouts[1])
+  {
+    for (auto& c : row)
+    {
+      switch (c)
+      {
+        case '#':
+        {
+          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        case '|':
+        case '-':
+        {
+          t.Set(true, false, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Window");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        // To allow fog of war to cover floor made of
+        // background colored ' ', set FgColor to empty string.
+        case '.':
+        {
+          t.Set(false, false, ' ', "", GlobalConstants::GroundColor, "Stone Tiles");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        case '+':
+          CreateDoor(posX, posY);
+          break;
+
+        case 'h':
+        {
+          t.Set(false, false, c, GlobalConstants::RoomFloorColor, GlobalConstants::BlackColor, "Wooden Bench");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        case '/':
+        {
+          // Game objects are not shown under fog of war by default,
+          // so sometimes we must "adjust" tiles if we want
+          // certain objects to be shown, like in this case.
+          ShrineType shrineType = ShrineType::MIGHT;
+          std::string description = (shrineType == ShrineType::MIGHT) ? "Shrine of Might" : "Shrine of Spirit";
+          t.Set(true, false, '/', GlobalConstants::BlackColor, GlobalConstants::GroundColor, description);
+          MapArray[posX][posY].MakeTile(t);
+
+          // Tiles are updated only around player.
+          // Shrine has some logic (buff and timeout count), thus
+          // we must make it a global game object so it could be updated
+          // every turn no matter where the player is.
+          auto go = GameObjectsFactory::Instance().CreateShrine(posX, posY, shrineType, 100);
+          InsertGameObject(go);
+        }
+        break;
+      }
+
+      posX++;
+    }
+
+    posX = x;
+    posY++;
   }
 }

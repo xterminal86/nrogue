@@ -47,7 +47,9 @@ bool Player::Move(int dx, int dy)
   }
   else
   {
-    if (cell.Interact())
+    auto c = cell.GetComponent<DoorComponent>();
+
+    if (c != nullptr && cell.Interact())
     {
       SubtractActionMeter();
     }
@@ -113,7 +115,7 @@ void Player::CheckVisibility()
         continue;
       }
 
-      if (map[point.X][point.Y].Blocking || map[point.X][point.Y].BlockSight)
+      if (map[point.X][point.Y].BlockSight)
       {
         DiscoverCell(point.X, point.Y);
         break;

@@ -11,6 +11,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     /// For random generation
     GameObject* CreateGameObject(ItemType objType);
 
+    GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);
     GameObject* CreateMoney(int amount = 0);
 };
 

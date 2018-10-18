@@ -44,14 +44,22 @@
 
 enum class ItemType
 {
-  COINS = 0,
+  DUMMY = 0,
+  COINS,
   FOOD,
   SCROLL
 };
 
+enum class ShrineType
+{
+  MIGHT = 0,
+  SPIRIT
+};
+
 enum class RoomLayoutRotation
 {
-  CCW_90 = 0,
+  NONE = 0,
+  CCW_90,
   CCW_180,
   CCW_270
 };
@@ -105,17 +113,19 @@ namespace GlobalConstants
   static const int MapY = 100; // 45
 
   static const std::string BlackColor = "#000000";
+  static const std::string WhiteColor = "#FFFFFF";
   static const std::string WallColor = "#888888";
   static const std::string TreeColor = "#00FF00";
   static const std::string PlayerColor = "#00FFFF";
   static const std::string NpcColor = "#FFFF00";
   static const std::string GroundColor = "#444444";
-  static const std::string RoomFloorColor = "#692E11";
-  static const std::string PavingStoneColor = "#333333";
+  static const std::string RoomFloorColor = "#692E11";  
   static const std::string MountainsColor = "#666666";
   static const std::string FogOfWarColor = "#202020";
   static const std::string CoinsColor = "#FFD700";
   static const std::string DoorHighlightColor = "#444400";
+  static const std::string ShrineMightColor = "#FF0000";
+  static const std::string ShrineSpiritColor = "#0044FF";
 
   static const std::vector<std::string> RandomNames =
   {    

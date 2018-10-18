@@ -387,6 +387,10 @@ namespace Util
         }
       }
       break;
+
+      default:
+        res = layout;
+        break;
     }
 
     return res;

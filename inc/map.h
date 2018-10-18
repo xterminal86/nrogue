@@ -47,8 +47,11 @@ class Map : public Singleton<Map>
   private:
     Player* _playerRef;
 
+    void SetPlayerStartingPosition(int x, int y);
     void CreateTown();
     void CreateRoom(int x, int y, int w, int h);
+    void CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation = false);
+    void CreateChurch(int x, int y);
     void FillArea(int x, int y, int w, int h, const Tile& tileToFill);
     void CreateDoor(int x, int y, bool isOpen = false);
 
