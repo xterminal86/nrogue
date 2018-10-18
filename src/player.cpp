@@ -47,7 +47,10 @@ bool Player::Move(int dx, int dy)
   }
   else
   {
-    cell.Interact();
+    if (cell.Interact())
+    {
+      SubtractActionMeter();
+    }
   }
 
   return false;

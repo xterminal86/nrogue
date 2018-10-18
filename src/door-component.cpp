@@ -1,6 +1,8 @@
 #include "door-component.h"
 #include "game-object.h"
 #include "constants.h"
+#include "printer.h"
+#include "util.h"
 
 DoorComponent::DoorComponent()
 {
@@ -15,6 +17,9 @@ void DoorComponent::Interact()
 {
   IsOpen = !IsOpen;
   UpdateDoorState();
+
+  auto str = Util::StringFormat("You %s: %s", (IsOpen ? "opened" : "closed"), ((GameObject*)OwnerGameObject)->ObjectName.data());
+  Printer::Instance().AddMessage(str);
 }
 
 void DoorComponent::UpdateDoorState()

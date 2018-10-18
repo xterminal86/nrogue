@@ -120,8 +120,7 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
 {
   if (go->Interact())
   {
-    _playerRef->SubtractActionMeter();
-    Printer::Instance().AddMessage("You interacted with: " + go->ObjectName);
+    _playerRef->SubtractActionMeter();    
     Map::Instance().UpdateGameObjects();
     Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);    
   }
