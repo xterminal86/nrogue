@@ -51,9 +51,16 @@ class Map : public Singleton<Map>
 
     void SetPlayerStartingPosition(int x, int y);
     void CreateTown();
+
+    [[deprecated("Old method, creates area with ground tiles and walls")]]
     void CreateRoom(int x, int y, int w, int h);
+
+    /// Creates room starting from (x;y) increasing to the down right
+    /// using \p layout provided
     void CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation = false);
+
     void CreateChurch(int x, int y);
+    void CreateCastle(int x, int y);
     void FillArea(int x, int y, int w, int h, const Tile& tileToFill);
     void CreateDoor(int x, int y, bool isOpen = false);
 

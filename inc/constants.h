@@ -110,13 +110,15 @@ namespace GlobalConstants
   static std::string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   static const int MapX = 100; // 160
-  static const int MapY = 100; // 45
+  static const int MapY = 50; // 45
 
   static const std::string BlackColor = "#000000";
   static const std::string WhiteColor = "#FFFFFF";
   static const std::string WallColor = "#888888";
+  static const std::string GrassColor = "#006600";
   static const std::string TreeColor = "#00FF00";
   static const std::string PlayerColor = "#00FFFF";
+  static const std::string WaterColor = "#3333FF";
   static const std::string NpcColor = "#FFFF00";
   static const std::string GroundColor = "#444444";
   static const std::string RoomFloorColor = "#692E11";  
@@ -142,13 +144,107 @@ namespace GlobalConstants
 
   static const std::vector<std::vector<std::string>> RoomLayouts =
   {
-    // Common house
+    // Common houses
     {
       "##+##",
       "#...#",
-      "#...|",
       "#...#",
-      "#####"
+      "#...#",
+      "##-##"
+    },
+    {
+      "#+#####",
+      "#..#..#",
+      "|..+..|",
+      "#..#..#",
+      "#######"
+    },
+    {
+      "###+###",
+      "#.....#",
+      "#.....#",
+      "|..#+##",
+      "#..#..#",
+      "#..#..#",
+      "#######"
+    },
+    // Rich residents
+    {
+      "####+######-###",
+      "#.......#.....#",
+      "|.......+.....|",
+      "#.......#.....#",
+      "##+###+##.....#",
+      "#...#...#.....#",
+      "#...#...#.....|",
+      "#...#...#.....#",
+      "##-###-####-###"
+    },
+    {
+      "#########-#####",
+      "#......#......#",
+      "|......#......|",
+      "#......#......#",
+      "##+########+###",
+      "#   #ggggggggg#",
+      "#   #g#  #  #g#",
+      "+    g wwwww g#",
+      "#   #g wwwww g#",
+      "+    g wwwww g#",
+      "#   #g#  #  #g#",
+      "#   #ggggggggg#",
+      "##+########+###",
+      "#......#......#",
+      "|......#......|",
+      "#......#......#",
+      "#########-#####"
+    },
+    {
+      "####+##########",
+      "#ggg ggg#.....#",
+      "#gFg gFg#.....|",
+      "#ggg ggg|.....#",
+      "#ggg ggg|.....#",
+      "#gFg gFg#.....|",
+      "#ggg ggg#.....#",
+      "####+######+###",
+      "#.......#.....#",
+      "#.......#.....#",
+      "|.......+.....|",
+      "#.......#.....#",
+      "#.......#.....#",
+      "###############"
+    },
+    // Castle
+    {
+      "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+      "w###-###wwwwwwwwwwwwwww###-###w",
+      "w#     #wwwwwwwwwwwwwww#     #w",
+      "w#     #################     #w",
+      "w|                           |w",
+      "w#     #################     #w",
+      "w#     #.#######.......#     #w",
+      "w### #+#.#hh   S.......#+# ###w",
+      "www# #...+   / S.........# #www",
+      "www# #...#hh   S..######## #www",
+      "www# #...#######..#     ## #www",
+      "www# #............#     ## #www",
+      ".#######..........+     ## #www",
+      ".+.....+...ggg....+     ## #www",
+      ".+.....+...gFg....#     ## #www",
+      ".#######...ggg....#     ## #www",
+      "www# #............######## #www",
+      "www# #...................# #www",
+      "www# #..##+###+###+##....# #www",
+      "www# #..#   #   #   #....# #www",
+      "w### #+##   #   #   #..#+# ###w",
+      "w#     ##############..#     #w",
+      "w#     #################     #w",
+      "w|                           |w",
+      "w#     #################     #w",
+      "w#     #wwwwwwwwwwwwwww#     #w",
+      "w###-###wwwwwwwwwwwwwww###-###w",
+      "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
     },
     // Church
     {
@@ -178,7 +274,7 @@ namespace GlobalConstants
       "#.......#",
       "+.......#",
       "#.......#",
-      "##-###-##"
+      "#########"
     },
     // Dungeon rooms
     {

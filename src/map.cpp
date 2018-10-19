@@ -155,17 +155,33 @@ void Map::CreateTown()
 
   SetPlayerStartingPosition(5, 2);
 
+  // Bydlo (that includes you, btw) ;-)
+
   CreateRoom(3, 3, GlobalConstants::RoomLayouts[0]);
-  CreateRoom(15, 3, GlobalConstants::RoomLayouts[0], true);
-  CreateRoom(25, 3, GlobalConstants::RoomLayouts[0], true);
-  CreateRoom(55, 3, GlobalConstants::RoomLayouts[2], true);
 
-  CreateChurch(50, 15);
+  int numHouses = 5;
 
-  /*
-  t.Set(false, false, ' ', "", GlobalConstants::GroundColor, "Cobblestone");
-  MapArray[5][2].MakeTile(t);
-  */
+  int offset = 15;
+  for (int i = 0; i < numHouses; i++)
+  {
+    CreateRoom(18 + offset * i, 3, GlobalConstants::RoomLayouts[0], true);
+  }
+
+  // Majors
+
+  CreateRoom(5, 20, GlobalConstants::RoomLayouts[3]);
+
+  auto room = Util::RotateRoomLayout(GlobalConstants::RoomLayouts[3], RoomLayoutRotation::CCW_270);
+  CreateRoom(5, 32, room);
+
+  CreateRoom(25, 30, GlobalConstants::RoomLayouts[4]);
+  CreateRoom(45, 33, GlobalConstants::RoomLayouts[5]);
+
+  // Church
+  CreateChurch(63, 15);
+
+  // Castle
+  // CreateCastle(65, 15);
 
   /*
   CreateRoom(20, 20, 10, 10);
@@ -331,12 +347,42 @@ void Map::CreateRoom(int x, int y, const std::vector<std::string>& layout, bool 
           MapArray[posX][posY].MakeTile(t);
           break;
 
-          // To allow fog of war to cover floor made of
-          // background colored ' ', set FgColor to empty string.
+        case 'g':
+        {
+          t.Set(false, false, ' ', "", GlobalConstants::GrassColor, "Grass");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        case 'F':
+        {
+          t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::WaterColor, "Fountain");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        // To allow fog of war to cover floor made of
+        // background colored ' ', set FgColor to empty string.
         case '.':
+        {
           t.Set(false, false, ' ', "", GlobalConstants::RoomFloorColor, "Wooden Floor");
           MapArray[posX][posY].MakeTile(t);
-          break;
+        }
+        break;
+
+        case ' ':
+        {
+          t.Set(false, false, c, "", GlobalConstants::GroundColor, "Stone Tiles");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        case 'w':
+        {
+          t.Set(true, false, ' ', "", GlobalConstants::WaterColor, "Water");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
 
         case '|':
         case '-':
@@ -366,7 +412,7 @@ void Map::CreateChurch(int x, int y)
 
   Tile t;
 
-  for (auto& row : GlobalConstants::RoomLayouts[1])
+  for (auto& row : GlobalConstants::RoomLayouts[7])
   {
     for (auto& c : row)
     {
@@ -412,6 +458,90 @@ void Map::CreateChurch(int x, int y)
           // Game objects are not shown under fog of war by default,
           // so sometimes we must "adjust" tiles if we want
           // certain objects to be shown, like in this case.
+          ShrineType shrineType = ShrineType::SPIRIT;
+          std::string description = (shrineType == ShrineType::MIGHT) ? "Shrine of Might" : "Shrine of Spirit";
+          t.Set(true, false, '/', GlobalConstants::BlackColor, GlobalConstants::GroundColor, description);
+          MapArray[posX][posY].MakeTile(t);
+
+          // Tiles are updated only around player.
+          // Shrine has some logic (buff and timeout count), thus
+          // we must make it a global game object so it could be updated
+          // every turn no matter where the player is.
+          auto go = GameObjectsFactory::Instance().CreateShrine(posX, posY, shrineType, 100);
+          InsertGameObject(go);
+        }
+        break;
+      }
+
+      posX++;
+    }
+
+    posX = x;
+    posY++;
+  }
+}
+
+void Map::CreateCastle(int x, int y)
+{
+  int posX = x;
+  int posY = y;
+
+  Tile t;
+
+  for (auto& row : GlobalConstants::RoomLayouts[6])
+  {
+    for (auto& c : row)
+    {
+      switch (c)
+      {
+        case '#':
+        {
+          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        case '|':
+        case '-':
+        {
+          t.Set(true, false, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Window");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        // Castle only, assuming layout is not rotated.
+        case 'S':
+        {
+          t.Set(true, true, '|', GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stained Glass");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        // To allow fog of war to cover floor made of
+        // background colored ' ', set FgColor to empty string.
+        case ' ':
+        {
+          t.Set(false, false, c, "", GlobalConstants::GroundColor, "Stone Tiles");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        case '+':
+          CreateDoor(posX, posY);
+          break;
+
+        case 'h':
+        {
+          t.Set(false, false, c, GlobalConstants::RoomFloorColor, GlobalConstants::BlackColor, "Wooden Bench");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        case '/':
+        {
+          // Game objects are not shown under fog of war by default,
+          // so sometimes we must "adjust" tiles if we want
+          // certain objects to be shown, like in this case.
           ShrineType shrineType = ShrineType::MIGHT;
           std::string description = (shrineType == ShrineType::MIGHT) ? "Shrine of Might" : "Shrine of Spirit";
           t.Set(true, false, '/', GlobalConstants::BlackColor, GlobalConstants::GroundColor, description);
@@ -423,6 +553,27 @@ void Map::CreateChurch(int x, int y)
           // every turn no matter where the player is.
           auto go = GameObjectsFactory::Instance().CreateShrine(posX, posY, shrineType, 100);
           InsertGameObject(go);
+        }
+        break;
+
+        case 'g':
+        {
+          t.Set(false, false, ' ', "", GlobalConstants::GrassColor, "Grass");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        case 'F':
+        {
+          t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::WaterColor, "Fountain");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
+        case 'w':
+        {
+          t.Set(true, false, ' ', "", GlobalConstants::WaterColor, "Water");
+          MapArray[posX][posY].MakeTile(t);
         }
         break;
       }

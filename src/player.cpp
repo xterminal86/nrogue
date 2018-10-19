@@ -23,8 +23,8 @@ void Player::Init()
   Inventory.AddToInventory(go);
 
   go = GameObjectsFactory::Instance().CreateMoney();
-  go->PosX = 30;
-  go->PosY = 50;
+  go->PosX = 5;
+  go->PosY = 5;
   Map::Instance().InsertGameObject(go);
 }
 
