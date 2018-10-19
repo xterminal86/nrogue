@@ -42,6 +42,14 @@
 #include <vector>
 #include <string>
 
+enum class MonsterType
+{
+  RAT = 0,
+  BAT,
+  SPIDER,
+  SKELETON
+};
+
 enum class ItemType
 {
   DUMMY = 0,
@@ -118,6 +126,7 @@ namespace GlobalConstants
   static const std::string GrassColor = "#006600";
   static const std::string TreeColor = "#00FF00";
   static const std::string PlayerColor = "#00FFFF";
+  static const std::string MonsterColor = "#FF0000";
   static const std::string WaterColor = "#3333FF";
   static const std::string NpcColor = "#FFFF00";
   static const std::string GroundColor = "#444444";

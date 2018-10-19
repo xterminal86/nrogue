@@ -9,8 +9,10 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
 {
   public:    
     /// For random generation
-    GameObject* CreateGameObject(ItemType objType);
+    GameObject* CreateGameObject(int x, int y, ItemType objType);
+    GameObject* CreateMonster(int x, int y, MonsterType monsterType);
 
+    GameObject* CreateRat(int x, int y, bool randomize = true);
     GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);
     GameObject* CreateMoney(int amount = 0);
 };

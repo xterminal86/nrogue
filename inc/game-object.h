@@ -125,6 +125,11 @@ class GameObject
 
     std::function<void()> InteractionCallback;
 
+    size_t ComponentsSize()
+    {
+      return _components.size();
+    }
+
   private:
 
     std::map<size_t, std::unique_ptr<Component>> _components;

@@ -38,18 +38,18 @@ void InfoState::Update(bool forceUpdate)
 
     int yPos = 2;
 
-    PrintAttribute(0, yPos, "LVL", playerRef.Actor.Attrs.Lvl);
-    PrintAttribute(0, yPos + 1, "EXP", playerRef.Actor.Attrs.Exp);
+    PrintAttribute(0, yPos, "LVL", playerRef.Attrs.Lvl);
+    PrintAttribute(0, yPos + 1, "EXP", playerRef.Attrs.Exp);
 
-    PrintAttribute(0, yPos + 3, "STR", playerRef.Actor.Attrs.Str);
-    PrintAttribute(0, yPos + 4, "DEF", playerRef.Actor.Attrs.Def);
-    PrintAttribute(0, yPos + 5, "MAG", playerRef.Actor.Attrs.Mag);
-    PrintAttribute(0, yPos + 6, "RES", playerRef.Actor.Attrs.Res);
-    PrintAttribute(0, yPos + 7, "SKL", playerRef.Actor.Attrs.Skl);
-    PrintAttribute(0, yPos + 8, "SPD", playerRef.Actor.Attrs.Spd);
+    PrintAttribute(0, yPos + 3, "STR", playerRef.Attrs.Str);
+    PrintAttribute(0, yPos + 4, "DEF", playerRef.Attrs.Def);
+    PrintAttribute(0, yPos + 5, "MAG", playerRef.Attrs.Mag);
+    PrintAttribute(0, yPos + 6, "RES", playerRef.Attrs.Res);
+    PrintAttribute(0, yPos + 7, "SKL", playerRef.Attrs.Skl);
+    PrintAttribute(0, yPos + 8, "SPD", playerRef.Attrs.Spd);
 
-    PrintAttribute(0, yPos + 10, "HP", playerRef.Actor.Attrs.HP);
-    PrintAttribute(0, yPos + 11, "MP", playerRef.Actor.Attrs.MP);
+    PrintAttribute(0, yPos + 10, "HP", playerRef.Attrs.HP);
+    PrintAttribute(0, yPos + 11, "MP", playerRef.Attrs.MP);
 
     Printer::Instance().Render();
   }

@@ -6,7 +6,7 @@
 #include <string>
 #include <map>
 
-#include "actor-component.h"
+#include "constants.h"
 #include "game-object.h"
 #include "container-component.h"
 
@@ -57,7 +57,7 @@ class Player
 
     int ActionMeter = 0;
 
-    ActorComponent Actor;
+    Attributes Attrs;
     ContainerComponent Inventory;
 
     std::string Name = "Nameless One";

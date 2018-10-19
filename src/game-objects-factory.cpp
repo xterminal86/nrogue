@@ -6,7 +6,7 @@
 #include "shrine-component.h"
 #include "map.h"
 
-GameObject* GameObjectsFactory::CreateGameObject(ItemType objType)
+GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
 {
   GameObject* go = nullptr;
 
@@ -19,6 +19,26 @@ GameObject* GameObjectsFactory::CreateGameObject(ItemType objType)
     default:
       break;
   }
+
+  go->PosX = x;
+  go->PosY = y;
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateMonster(int x, int y, MonsterType monsterType)
+{
+  GameObject* go = nullptr;
+
+  switch (monsterType)
+  {
+    case MonsterType::RAT:
+      go = CreateRat(x, y);
+      break;
+  }
+
+  go->PosX = x;
+  go->PosY = y;
 
   return go;
 }
@@ -62,6 +82,20 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
 
   go->ObjectName = "Shrine";
   go->InteractionCallback = std::bind(&ShrineComponent::Interact, sc);
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
+{
+  GameObject* go = new GameObject(x, y, 'r', GlobalConstants::MonsterColor);
+
+  if (randomize)
+  {
+  }
+  else
+  {
+  }
 
   return go;
 }

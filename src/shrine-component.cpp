@@ -37,7 +37,7 @@ void ShrineComponent::Interact()
 
     std::string message;
 
-    std::string saint = (Type == ShrineType::MIGHT) ? "St. George" : "Virgin Mary";
+    std::string saint = (Type == ShrineType::MIGHT) ? "Saint George" : "Virgin Mary";
     message = Util::StringFormat("You pray to %s", saint.data());
     Printer::Instance().AddMessage(message);
   }

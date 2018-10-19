@@ -162,7 +162,7 @@ void MainState::HandleInput()
   {    
     Map::Instance().UpdateGameObjects();
     Update(true);
-    _playerRef->ActionMeter += _playerRef->Actor.Attrs.Spd.CurrentValue;    
+    _playerRef->ActionMeter += _playerRef->Attrs.Spd.CurrentValue;
   }  
 }
 

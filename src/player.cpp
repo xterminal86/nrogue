@@ -19,6 +19,8 @@ void Player::Init()
   _currentCell = &Map::Instance().MapArray[PosX][PosY];
   _currentCell->Occupied = true;
 
+  // FIXME: test, remove afterwards
+
   auto go = GameObjectsFactory::Instance().CreateMoney();
   Inventory.AddToInventory(go);
 
@@ -46,12 +48,17 @@ bool Player::Move(int dx, int dy)
     return true;
   }
   else
-  {
-    auto c = cell.GetComponent<DoorComponent>();
+  {    
+    // Search for components only if there are any
 
-    if (c != nullptr && cell.Interact())
+    if (cell.ComponentsSize() != 0)
     {
-      SubtractActionMeter();
+      auto c = cell.GetComponent<DoorComponent>();
+
+      if (c != nullptr && cell.Interact())
+      {
+        SubtractActionMeter();
+      }
     }
   }
 
@@ -164,7 +171,7 @@ void Player::SetAttributes()
       break;
 
     default:
-      // TODO: custom class defaults to knight for now
+      // TODO: custom class defaults to soldier for now
       SetSoldierAttrs();
       break;
   }
@@ -172,50 +179,50 @@ void Player::SetAttributes()
 
 void Player::SetSoldierAttrs()
 {
-  Actor.Attrs.Str.IsTalent = true;
-  Actor.Attrs.Def.IsTalent = true;
-  Actor.Attrs.HP.IsTalent = true;
+  Attrs.Str.IsTalent = true;
+  Attrs.Def.IsTalent = true;
+  Attrs.HP.IsTalent = true;
 
-  Actor.Attrs.Str.Set(2);
-  Actor.Attrs.Def.Set(2);
-  Actor.Attrs.Spd.Set(80);
+  Attrs.Str.Set(2);
+  Attrs.Def.Set(2);
+  Attrs.Spd.Set(80);
 
-  Actor.Attrs.HP.Set(40);
+  Attrs.HP.Set(40);
 
-  Actor.Attrs.HungerRate.Set(50);
-  Actor.Attrs.HungerSpeed.Set(2);
+  Attrs.HungerRate.Set(50);
+  Attrs.HungerSpeed.Set(2);
 }
 
 void Player::SetThiefAttrs()
 {
-  Actor.Attrs.Spd.IsTalent = true;
-  Actor.Attrs.Skl.IsTalent = true;
-  Actor.Attrs.Exp.IsTalent = true;
+  Attrs.Spd.IsTalent = true;
+  Attrs.Skl.IsTalent = true;
+  Attrs.Exp.IsTalent = true;
 
-  Actor.Attrs.Def.Set(1);
-  Actor.Attrs.Skl.Set(2);
-  Actor.Attrs.Spd.Set(120);
+  Attrs.Def.Set(1);
+  Attrs.Skl.Set(2);
+  Attrs.Spd.Set(120);
 
-  Actor.Attrs.HP.Set(25);
-  Actor.Attrs.MP.Set(10);
+  Attrs.HP.Set(25);
+  Attrs.MP.Set(10);
 
-  Actor.Attrs.HungerRate.Set(75);
-  Actor.Attrs.HungerSpeed.Set(2);
+  Attrs.HungerRate.Set(75);
+  Attrs.HungerSpeed.Set(2);
 }
 
 void Player::SetArcanistAttrs()
 {
-  Actor.Attrs.Mag.IsTalent = true;
-  Actor.Attrs.Res.IsTalent = true;
-  Actor.Attrs.MP.IsTalent = true;
+  Attrs.Mag.IsTalent = true;
+  Attrs.Res.IsTalent = true;
+  Attrs.MP.IsTalent = true;
 
-  Actor.Attrs.Mag.Set(2);
-  Actor.Attrs.Res.Set(2);
-  Actor.Attrs.Spd.Set(100);
+  Attrs.Mag.Set(2);
+  Attrs.Res.Set(2);
+  Attrs.Spd.Set(100);
 
-  Actor.Attrs.HP.Set(10);
-  Actor.Attrs.MP.Set(50);
+  Attrs.HP.Set(10);
+  Attrs.MP.Set(50);
 
-  Actor.Attrs.HungerRate.Set(100);
-  Actor.Attrs.HungerSpeed.Set(1);
+  Attrs.HungerRate.Set(100);
+  Attrs.HungerSpeed.Set(1);
 }

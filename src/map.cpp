@@ -183,56 +183,16 @@ void Map::CreateTown()
   // Castle
   // CreateCastle(65, 15);
 
-  /*
-  CreateRoom(20, 20, 10, 10);
+  // NPC creation example
+  //
+  //  GameObject* npc = new GameObject(x, y, '@', GlobalConstants::NpcColor);
+  //  npc->ObjectName = "Dummy AI " + std::to_string(i);
+  //  npc->AddComponent<AIDummy>();
 
-  PlayerStartX = 10;
-  PlayerStartY = 10;
+  //  auto up = std::unique_ptr<GameObject>();
+  //  up.reset(npc);
 
-  int tw = Printer::Instance().TerminalWidth;
-  int th = Printer::Instance().TerminalHeight;
-
-  MapOffsetX = tw / 2 - PlayerStartX;
-  MapOffsetY = th / 2 - PlayerStartY;
-
-  // create some npcs
-
-  for (int i = 0 ; i < 20; i++)
-  {
-    int x = 1 + (RNG::Instance().Random() % (GlobalConstants::MapX - 2));
-    int y = 1 + (RNG::Instance().Random() % (GlobalConstants::MapY - 2));
-
-    if (MapArray[x][y].Occupied)
-    {
-      continue;
-    }
-
-    GameObject* npc = new GameObject(x, y, '@', GlobalConstants::NpcColor);
-    npc->ObjectName = "Dummy AI " + std::to_string(i);
-    npc->AddComponent<AIDummy>();
-
-    auto up = std::unique_ptr<GameObject>();
-    up.reset(npc);
-
-    GameObjects.push_back(std::move(up));
-  }  
-
-  t.Set(false, true, 'T', GlobalConstants::TreeColor, "#000000", "Tree");
-
-  int numTrees = 50;
-  for (int i = 0; i < numTrees; i++)
-  {
-    int x = 1 + (RNG::Instance().Random() % (GlobalConstants::MapX - 2));
-    int y = 1 + (RNG::Instance().Random() % (GlobalConstants::MapY - 2));
-
-    if (MapArray[x][y].Blocking)
-    {
-      continue;
-    }
-
-    MapArray[x][y].MakeTile(t);
-  }
-  */
+  //  GameObjects.push_back(std::move(up));
 }
 
 void Map::CreateRoom(int x, int y, int w, int h)
