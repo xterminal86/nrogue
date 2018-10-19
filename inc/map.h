@@ -32,10 +32,12 @@ class Map : public Singleton<Map>
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
     std::pair<int, GameObject*> GetTopGameObjectAtPosition(int x, int y);
 
-    // Map tiles
+    // Map tiles or objects that don't have to be updated globally.
+    // Updated around player position.
     GameObject MapArray[GlobalConstants::MapX][GlobalConstants::MapY];
 
-    // Items, npcs etc.
+    // Globally updated objects (items, shrines, npcs etc.)
+    // Updated every frame.
     std::vector<std::unique_ptr<GameObject>> GameObjects;
 
     int PlayerStartX;

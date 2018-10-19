@@ -156,8 +156,8 @@ void Map::CreateTown()
   SetPlayerStartingPosition(5, 2);
 
   CreateRoom(3, 3, GlobalConstants::RoomLayouts[0]);
+  CreateRoom(15, 3, GlobalConstants::RoomLayouts[0], true);
   CreateRoom(25, 3, GlobalConstants::RoomLayouts[0], true);
-  CreateRoom(55, 3, GlobalConstants::RoomLayouts[0], true);
   CreateRoom(55, 3, GlobalConstants::RoomLayouts[2], true);
 
   CreateChurch(50, 15);
@@ -338,6 +338,14 @@ void Map::CreateRoom(int x, int y, const std::vector<std::string>& layout, bool 
           MapArray[posX][posY].MakeTile(t);
           break;
 
+        case '|':
+        case '-':
+        {
+          t.Set(true, false, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Window");
+          MapArray[posX][posY].MakeTile(t);
+        }
+        break;
+
         case '+':
           CreateDoor(posX, posY);
           break;
@@ -374,16 +382,16 @@ void Map::CreateChurch(int x, int y)
         case '|':
         case '-':
         {
-          t.Set(true, false, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Window");
+          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stained Glass");
           MapArray[posX][posY].MakeTile(t);
         }
         break;
 
         // To allow fog of war to cover floor made of
         // background colored ' ', set FgColor to empty string.
-        case '.':
+        case ' ':
         {
-          t.Set(false, false, ' ', "", GlobalConstants::GroundColor, "Stone Tiles");
+          t.Set(false, false, c, "", GlobalConstants::GroundColor, "Stone Tiles");
           MapArray[posX][posY].MakeTile(t);
         }
         break;

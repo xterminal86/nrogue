@@ -349,26 +349,66 @@ namespace Util
           res.push_back(std::string(layout.size(), '_'));
         }
 
-        // Switch rows and cols
+        int maxX = res.size() - 1;
+        int maxY = res[0].length() - 1;
+
+        // In case of 3x5 size:
+        //
+        // 0;0 -> 3;0
+        // 0;1 -> 2;0
+        // 0;2 -> 1;0
+        // 0;3 -> 0;0
+        //
+        // 1;0 -> 3;1
+        // 1;1 -> 2;1
+        // ...
+
         for (int x = 0; x < layout.size(); x++)
         {
           for (int y = 0; y < layout[x].length(); y++)
           {
-            res[y][x] = layout[x][y];
+            char c = layout[x][y];
+
+            switch (c)
+            {
+              case '-':
+                c = '|';
+                break;
+
+              case '|':
+                c = '-';
+                break;
+            }
+
+            res[maxX - y][x] = c;
           }
         }
       }
       break;
 
       case RoomLayoutRotation::CCW_180:
-      {
+      {        
         res = layout;
-        std::reverse(res.begin(), res.end());
+
+        int maxX = res.size() - 1;
+        int maxY = res[0].length() - 1;
+
+        // Swap columns then rows
+        for (int x = 0; x < layout.size(); x++)
+        {
+          for (int y = 0; y < layout[x].length(); y++)
+          {
+            res[x][maxY - y] = layout[x][y];
+          }
+        }
+
+        std::reverse(res.begin(), res.end());        
       }
       break;
 
       case RoomLayoutRotation::CCW_270:
       {
+        // Swap dimensions
         int lineLen = layout[0].length();
 
         for (int i = 0; i < lineLen; i++)
@@ -376,13 +416,38 @@ namespace Util
           res.push_back(std::string(layout.size(), '_'));
         }
 
+        int maxX = res.size() - 1;
+        int maxY = res[0].length() - 1;
+
+        // In case of 3x5 size:
+        //
+        // 0;0 -> 0;5
+        // 0;1 -> 1;5
+        // 0;2 -> 2;5
+        // 0;3 -> 3;5
+        //
+        // 1;0 -> 0;4
+        // 1;1 -> 1;4
+        // ...
+
         for (int x = 0; x < layout.size(); x++)
         {
           for (int y = 0; y < layout[x].length(); y++)
           {
-            int indX = y;
-            int indY = res[0].length() - 1 - x;
-            res[indX][indY] = layout[x][y];
+            char c = layout[x][y];
+
+            switch (c)
+            {
+              case '-':
+                c = '|';
+                break;
+
+              case '|':
+                c = '-';
+                break;
+            }
+
+            res[y][maxY - x] = c;
           }
         }
       }
