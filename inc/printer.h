@@ -69,6 +69,26 @@ class Printer : public Singleton<Printer>
       return (_inGameMessages.size() > 0) ? _inGameMessages.front() : std::string();
     }
 
+    std::vector<std::string> GetLastMessages()
+    {
+      std::vector<std::string> res;
+
+      int count = 0;
+      for (auto& m : _inGameMessages)
+      {
+        res.push_back(m);
+
+        count++;
+
+        if (count >= 3)
+        {
+          break;
+        }
+      }
+
+      return res;
+    }
+
     const std::vector<std::string>& Messages() { return _inGameMessages; }
 
     bool ShowLastMessage;

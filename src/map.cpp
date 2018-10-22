@@ -186,22 +186,19 @@ void Map::CreateTown()
   // Castle
   // CreateCastle(65, 15);
 
-  auto rat = GameObjectsFactory::Instance().CreateRat(20, 5, false);
-  auto up = std::unique_ptr<GameObject>();
-  up.reset(rat);
+  // Some rats
 
-  GameObjects.push_back(std::move(up));
+  for (int i = 0; i < 30; i++)
+  {
+    int x = RNG::Instance().Random() % GlobalConstants::MapX;
+    int y = RNG::Instance().Random() % GlobalConstants::MapY;
 
-  // NPC creation example
-  //
-  //  GameObject* npc = new GameObject(x, y, '@', GlobalConstants::NpcColor);
-  //  npc->ObjectName = "Dummy AI " + std::to_string(i);
-  //  npc->AddComponent<AIDummy>();
-
-  //  auto up = std::unique_ptr<GameObject>();
-  //  up.reset(npc);
-
-  //  GameObjects.push_back(std::move(up));
+    if (!MapArray[x][y].Blocking)
+    {
+      auto rat = GameObjectsFactory::Instance().CreateRat(x, y);
+      InsertGameObject(rat);
+    }
+  }
 }
 
 void Map::CreateRoom(int x, int y, int w, int h)
@@ -566,8 +563,8 @@ void Map::RemoveDestroyed()
 
       MapArray[x][y].Occupied = false;
 
-      auto corpse = GameObjectsFactory::Instance().CreateRemains(GameObjects[i].get());
-      InsertGameObject(corpse);
+      //auto corpse = GameObjectsFactory::Instance().CreateRemains(GameObjects[i].get());
+      //InsertGameObject(corpse);
 
       GameObjects.erase(GameObjects.begin() + i);
     }

@@ -12,7 +12,7 @@ class AIMonsterBasic : public Component
 
     void Update() override;
 
-    int AgroRadius;
+    int AgroRadius;    
 
   private:
     void RandomMovement();

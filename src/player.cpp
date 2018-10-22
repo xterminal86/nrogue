@@ -232,13 +232,18 @@ void Player::Attack(GameObject* go)
 {
   if (go->Attrs.Indestructible)
   {
-    auto str = Util::StringFormat("Your attacks seem to have no effect on %s!", go->ObjectName.data());
+    auto str = Util::StringFormat("No effect on %s!", go->ObjectName.data());
     Printer::Instance().AddMessage(str);
   }
   else
   {
     // FIXME: temporary damage
-    int dmg = 1;
+    int dmg = Attrs.Str.CurrentValue - go->Attrs.Def.CurrentValue;
+    if (dmg <= 0)
+    {
+      dmg = 1;
+    }
+
     auto str = Util::StringFormat("You hit %s for %i damage", go->ObjectName.data(), dmg);
     Printer::Instance().AddMessage(str);
     go->ReceiveDamage(dmg);
@@ -256,6 +261,9 @@ void Player::ReceiveDamage(GameObject* from, int amount)
 
   if (Attrs.HP.CurrentValue <= 0)
   {
+    Avatar = '%';
+    Color = "#FF0000";
+
     Printer::Instance().AddMessage("You are dead. Not big surprise.");
     Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
   }

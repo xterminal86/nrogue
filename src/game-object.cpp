@@ -2,6 +2,7 @@
 
 #include "map.h"
 #include "printer.h"
+#include "game-objects-factory.h"
 
 void GameObject::Init(int x, int y, chtype avatar, const std::string& fgColor, const std::string& bgColor)
 {
@@ -93,6 +94,9 @@ void GameObject::ReceiveDamage(int amount)
 
     if (Attrs.HP.CurrentValue <= 0)
     {
+      auto go = GameObjectsFactory::Instance().CreateRemains(this);
+      Map::Instance().InsertGameObject(go);
+
       IsDestroyed = true;
     }
   }

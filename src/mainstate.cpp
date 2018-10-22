@@ -215,7 +215,15 @@ void MainState::DisplayGameLog()
   int x = Printer::Instance().TerminalWidth - 1;
   int y = Printer::Instance().TerminalHeight - 1;
 
-  Printer::Instance().PrintFB(x, y, Printer::Instance().GetLastMessage(), Printer::kAlignRight, "#FFFFFF");
+  //Printer::Instance().PrintFB(x, y, Printer::Instance().GetLastMessage(), Printer::kAlignRight, "#FFFFFF");
+
+  int count = 0;
+  auto msgs = Printer::Instance().GetLastMessages();
+  for (auto& m : msgs)
+  {
+    Printer::Instance().PrintFB(x, y - count, m, Printer::kAlignRight, "#FFFFFF");
+    count++;
+  }
 }
 
 void MainState::TryToPickupItem()

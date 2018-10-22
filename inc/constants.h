@@ -55,7 +55,8 @@ enum class ItemType
   DUMMY = 0,
   COINS,
   FOOD,
-  SCROLL
+  SCROLL,
+  WEAPON
 };
 
 enum class ShrineType
@@ -93,6 +94,11 @@ struct Attribute
 
 struct Attributes
 {
+  Attributes()
+  {
+    Lvl.Set(1);
+  }
+
   Attribute Str;
   Attribute Def;
   Attribute Mag;

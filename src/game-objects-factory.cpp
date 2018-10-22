@@ -5,7 +5,14 @@
 #include "item-component.h"
 #include "shrine-component.h"
 #include "ai-monster-basic.h"
+#include "go-timer-destroyer.h"
 #include "map.h"
+#include "application.h"
+
+void GameObjectsFactory::Init()
+{
+  _playerRef = &Application::Instance().PlayerInstance;
+}
 
 GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
 {
@@ -105,10 +112,22 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   // Set attributes
   if (randomize)
   {
+    int playerLevel = _playerRef->Attrs.Lvl.CurrentValue;
+    int randomStr = RNG::Instance().Random() % playerLevel + 1;
+    int randomDef = RNG::Instance().Random() % playerLevel + 0;
+    int randomHp = RNG::Instance().Random() % playerLevel + 10;
+
+    go->Attrs.Str.Set(randomStr);
+    go->Attrs.Def.Set(randomDef);
+    go->Attrs.HP.Set(randomHp);
   }
   else
   {
-    go->Attrs.HP.Set(1);
+    // For debugging purposes
+    go->Attrs.Str.Set(2 * _playerRef->Attrs.Lvl.CurrentValue);
+    go->Attrs.Def.Set(1 * _playerRef->Attrs.Lvl.CurrentValue);
+
+    go->Attrs.HP.Set(10);
   }
 
   return go;
@@ -117,6 +136,9 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
 GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 {
   GameObject* go = new GameObject(from->PosX, from->PosY, '%', from->FgColor);
+
+  auto td = go->AddComponent<TimerDestroyerComponent>();
+  ((TimerDestroyerComponent*)td)->Time = from->Attrs.HP.OriginalValue;
 
   auto str = Util::StringFormat("Remains of: %s", from->ObjectName.data());
   go->ObjectName = str;

@@ -156,5 +156,11 @@ bool AIMonsterBasic::IsPlayerInRange()
 void AIMonsterBasic::Attack(Player* player)
 {
   // FIXME: temporary damage
-  player->ReceiveDamage(((GameObject*)OwnerGameObject), 10);
+  int dmg = ((GameObject*)OwnerGameObject)->Attrs.Str.CurrentValue - _playerRef->Attrs.Def.CurrentValue;
+  if (dmg <= 0)
+  {
+    dmg = 1;
+  }
+
+  player->ReceiveDamage(((GameObject*)OwnerGameObject), dmg);
 }
