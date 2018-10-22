@@ -120,6 +120,10 @@ void MainState::HandleInput()
         Map::Instance().UpdateGameObjects();
         break;
 
+      case 'a':
+        Application::Instance().ChangeState(Application::GameStates::ATTACK_STATE);
+        break;
+
       case 'e':
         Application::Instance().ChangeState(Application::GameStates::INVENTORY_STATE);
         break;
@@ -178,7 +182,15 @@ void MainState::Update(bool forceUpdate)
 
     _playerRef->Draw();
 
-    // Some debug info    
+    DrawHPMP();
+
+    if (Printer::Instance().ShowLastMessage)
+    {
+      DisplayGameLog();
+    }
+
+    // NOTE: Some debug info
+
     _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i: Plr: [%i;%i] Key: %i",
                                     _playerRef->ActionMeter,
                                     Map::Instance().MapOffsetX,
@@ -187,15 +199,12 @@ void MainState::Update(bool forceUpdate)
                                     _playerRef->PosY,
                                     _keyPressed);
 
-    Printer::Instance().PrintFB(0, Printer::Instance().TerminalHeight - 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1, 0, _debugInfo, Printer::kAlignRight, "#FFFFFF");
 
     _debugInfo = Util::StringFormat("World seed: %lu", RNG::Instance().Seed);
     Printer::Instance().PrintFB(0, 0, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
-    if (Printer::Instance().ShowLastMessage)
-    {
-      DisplayGameLog();
-    }
+    // *****
 
     Printer::Instance().Render();
   }
@@ -211,21 +220,21 @@ void MainState::DisplayGameLog()
 
 void MainState::TryToPickupItem()
 {
-  auto res = Map::Instance().GetTopGameObjectAtPosition(_playerRef->PosX, _playerRef->PosY);
-  if (res.second != nullptr)
+  auto res = Map::Instance().GetTopGameObjectAtPosition(_playerRef->PosX, _playerRef->PosY);  
+  Component* ic = nullptr;
+  if (res.second != nullptr && (ic = res.second->GetComponent<ItemComponent>()) != nullptr)
   {
-    auto go = Map::Instance().GameObjects[res.first].release();
-    auto c = go->GetComponent<ItemComponent>();
-    if (((ItemComponent*)c)->IsStackable)
+    auto go = Map::Instance().GameObjects[res.first].release();    
+    if (((ItemComponent*)ic)->IsStackable)
     {
       bool isInInventory = false;
 
       for (auto& i : _playerRef->Inventory.Contents)
       {
-        auto ic = i->GetComponent<ItemComponent>();
-        if (((ItemComponent*)ic)->TypeOfObject == ((ItemComponent*)c)->TypeOfObject)
+        auto iic = i->GetComponent<ItemComponent>();
+        if (((ItemComponent*)iic)->TypeOfObject == ((ItemComponent*)ic)->TypeOfObject)
         {
-          ((ItemComponent*)ic)->Amount += ((ItemComponent*)c)->Amount;
+          ((ItemComponent*)iic)->Amount += ((ItemComponent*)ic)->Amount;
           isInInventory = true;
           break;
         }
@@ -244,9 +253,9 @@ void MainState::TryToPickupItem()
     Map::Instance().GameObjects.erase(Map::Instance().GameObjects.begin() + res.first);
 
     std::string message;
-    if (((ItemComponent*)c)->IsStackable)
+    if (((ItemComponent*)ic)->IsStackable)
     {
-      message = Util::StringFormat("Picked up: %i %s", ((ItemComponent*)c)->Amount, go->ObjectName.data());
+      message = Util::StringFormat("Picked up: %i %s", ((ItemComponent*)ic)->Amount, go->ObjectName.data());
     }
     else
     {
@@ -257,6 +266,44 @@ void MainState::TryToPickupItem()
   }
   else
   {
-    Printer::Instance().AddMessage("There's nothing here");
+    Printer::Instance().AddMessage("Nothing of interest here");
   }
+}
+
+void MainState::DrawHPMP()
+{
+  int curHp = _playerRef->Attrs.HP.CurrentValue;
+  int maxHp = _playerRef->Attrs.HP.OriginalValue;
+  int curMp = _playerRef->Attrs.MP.CurrentValue;
+  int maxMp = _playerRef->Attrs.MP.OriginalValue;
+
+  int th = Printer::Instance().TerminalHeight;
+
+  auto bar = UpdateBar(0, th - 2, _playerRef->Attrs.HP);
+
+  auto str = Util::StringFormat("%i/%i", curHp, maxHp);
+  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 2, str, Printer::kAlignCenter, "#FFFFFF", "#880000");
+
+  bar = UpdateBar(0, th - 1, _playerRef->Attrs.MP);
+
+  str = Util::StringFormat("%i/%i", curMp, maxMp);
+  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 1, str, Printer::kAlignCenter, "#FFFFFF", "#000088");
+}
+
+std::string MainState::UpdateBar(int x, int y, Attribute attr)
+{
+  float ratio = ((float)attr.CurrentValue / (float)attr.OriginalValue);
+  int len = ratio * GlobalConstants::HPMPBarLength;
+
+  std::string bar = "[";
+  for (int i = 0; i < GlobalConstants::HPMPBarLength; i++)
+  {
+    bar += (i < len) ? "=" : " ";
+  }
+
+  bar += "]";
+
+  Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, "#FFFFFF");
+
+  return bar;
 }

@@ -25,7 +25,7 @@ void DoorComponent::Interact()
 void DoorComponent::UpdateDoorState()
 {  
   ((GameObject*)OwnerGameObject)->Blocking = !IsOpen;
-  ((GameObject*)OwnerGameObject)->BlockSight = !IsOpen;
+  ((GameObject*)OwnerGameObject)->BlocksSight = !IsOpen;
   ((GameObject*)OwnerGameObject)->Image = IsOpen ? '_' : '+';
   ((GameObject*)OwnerGameObject)->FgColor = "#FFFFFF";
   ((GameObject*)OwnerGameObject)->BgColor = IsOpen ? "#000000" : GlobalConstants::DoorHighlightColor;

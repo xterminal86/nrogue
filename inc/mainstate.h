@@ -14,7 +14,7 @@ class MainState : public GameState
   public:
     void Init() override;
     void HandleInput() override;
-    void Update(bool forceUpdate = false) override;
+    void Update(bool forceUpdate = false) override;    
 
   private:
     Player* _playerRef;
@@ -23,8 +23,10 @@ class MainState : public GameState
 
     void DisplayGameLog();
     void TryToPickupItem();
+    void DrawHPMP();
+    std::string UpdateBar(int x, int y, Attribute attr);
 
-    Position _cursorPosition;
+    Position _cursorPosition;    
 };
 
 #endif

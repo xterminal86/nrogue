@@ -5,6 +5,7 @@
 #include "util.h"
 #include "door-component.h"
 #include "game-objects-factory.h"
+#include "application.h"
 
 void Player::Init()
 {
@@ -55,7 +56,8 @@ bool Player::Move(int dx, int dy)
     {
       auto c = cell.GetComponent<DoorComponent>();
 
-      if (c != nullptr && cell.Interact())
+      // Automatically interact with door if it's closed
+      if (c != nullptr && cell.Blocking && cell.Interact())
       {
         SubtractActionMeter();
       }
@@ -122,7 +124,7 @@ void Player::CheckVisibility()
         continue;
       }
 
-      if (map[point.X][point.Y].BlockSight)
+      if (map[point.X][point.Y].BlocksSight)
       {
         DiscoverCell(point.X, point.Y);
         break;
@@ -204,7 +206,6 @@ void Player::SetThiefAttrs()
   Attrs.Spd.Set(120);
 
   Attrs.HP.Set(25);
-  Attrs.MP.Set(10);
 
   Attrs.HungerRate.Set(75);
   Attrs.HungerSpeed.Set(2);
@@ -225,4 +226,37 @@ void Player::SetArcanistAttrs()
 
   Attrs.HungerRate.Set(100);
   Attrs.HungerSpeed.Set(1);
+}
+
+void Player::Attack(GameObject* go)
+{
+  if (go->Attrs.Indestructible)
+  {
+    auto str = Util::StringFormat("Your attacks seem to have no effect on %s!", go->ObjectName.data());
+    Printer::Instance().AddMessage(str);
+  }
+  else
+  {
+    // FIXME: temporary damage
+    int dmg = 1;
+    auto str = Util::StringFormat("You hit %s for %i damage", go->ObjectName.data(), dmg);
+    Printer::Instance().AddMessage(str);
+    go->ReceiveDamage(dmg);
+  }
+
+  SubtractActionMeter();
+}
+
+void Player::ReceiveDamage(GameObject* from, int amount)
+{
+  auto str = Util::StringFormat("%s hits you for %i damage", from->ObjectName.data(), amount);
+  Printer::Instance().AddMessage(str);
+
+  Attrs.HP.CurrentValue -= amount;
+
+  if (Attrs.HP.CurrentValue <= 0)
+  {
+    Printer::Instance().AddMessage("You are dead. Not big surprise.");
+    Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
+  }
 }

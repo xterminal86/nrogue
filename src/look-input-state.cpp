@@ -90,7 +90,9 @@ void LookInputState::Update(bool forceUpdate)
       }
       else if (tile->Blocking)
       {        
-        auto nameHidden = "?" + tile->ObjectName + "?";
+        auto nameHidden = (tile->FogOfWarName.length() == 0) ?
+                          "?" + tile->ObjectName + "?" :
+                          tile->FogOfWarName;
         lookStatus = tile->Visible ? tile->ObjectName : nameHidden;
       }
       else
@@ -103,7 +105,9 @@ void LookInputState::Update(bool forceUpdate)
         }
         else
         {          
-          auto nameHidden = "?" + tile->ObjectName + "?";
+          auto nameHidden = (tile->FogOfWarName.length() == 0) ?
+                            "?" + tile->ObjectName + "?" :
+                            tile->FogOfWarName;
           lookStatus = tile->Visible ? tile->ObjectName : nameHidden;
         }
       }

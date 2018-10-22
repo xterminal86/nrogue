@@ -55,6 +55,9 @@ class Player
       }
     }
 
+    void Attack(GameObject* go);
+    void ReceiveDamage(GameObject* from, int amount);
+
     int ActionMeter = 0;
 
     Attributes Attrs;

@@ -64,7 +64,8 @@ class Map : public Singleton<Map>
     void FillArea(int x, int y, int w, int h, const Tile& tileToFill);
     void CreateDoor(int x, int y, bool isOpen = false);
 
-    void DrawGameObjects();    
+    void DrawGameObjects();
+    void RemoveDestroyed();
 };
 
 #endif

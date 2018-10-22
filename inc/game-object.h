@@ -9,6 +9,7 @@
 #include <ncurses.h>
 
 #include "component.h"
+#include "constants.h"
 
 /// Helper struct to reduce the writing when creating objects
 struct Tile
@@ -18,7 +19,8 @@ struct Tile
            chtype image,
            const std::string& fgColor,
            const std::string& bgColor,
-           const std::string& objectName)
+           const std::string& objectName,
+           const std::string& fowName = "")
   {
     IsBlocking = isBlocking;
     BlocksSight = blocksSight;
@@ -26,6 +28,7 @@ struct Tile
     FgColor = fgColor;
     BgColor = bgColor;
     ObjectName = objectName;
+    FogOfWarName = fowName;
   }
 
   bool IsBlocking;
@@ -38,6 +41,7 @@ struct Tile
   std::string BgColor;
 
   std::string ObjectName;
+  std::string FogOfWarName;
 };
 
 class GameObject
@@ -73,13 +77,15 @@ class GameObject
     void Init(int x, int y, chtype avatar, const std::string& fgColor, const std::string& bgColor = "#000000");
 
     bool Move(int dx, int dy);
+    bool MoveTo(int x, int y);
 
     void Draw(const std::string& overrideFgColor = std::string(), const std::string& overrideBgColor = std::string());
 
     template <typename T>
     inline Component* AddComponent()
     {
-      // No check for component already added. Do we need one?
+      // NOTE: No check for component already added.
+      // Do we need one?
 
       auto cp = std::make_unique<T>();
 
@@ -113,15 +119,21 @@ class GameObject
     int PosY;
 
     bool Blocking = false;
-    bool BlockSight = false;
+    bool BlocksSight = false;
     bool Revealed = false;
     bool Visible = false;
+
+    // NOTE: set manually for NPCs during creation via GameObject::Move(),
+    // because some game objects can be stepped on (e.g. bench, money etc)
     bool Occupied = false;
+
+    bool IsDestroyed = false;
 
     chtype Image;
     std::string FgColor;
     std::string BgColor;
     std::string ObjectName;
+    std::string FogOfWarName;
 
     std::function<void()> InteractionCallback;
 
@@ -130,12 +142,16 @@ class GameObject
       return _components.size();
     }
 
+    void ReceiveDamage(int amount);
+
+    Attributes Attrs;
+
   private:
 
     std::map<size_t, std::unique_ptr<Component>> _components;
 
     GameObject* _previousCell = nullptr;
-    GameObject* _currentCell = nullptr;    
+    GameObject* _currentCell = nullptr;        
 };
 
 #endif

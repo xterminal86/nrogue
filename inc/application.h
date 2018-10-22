@@ -20,6 +20,7 @@ class Application : public Singleton<Application>
     enum class GameStates
     {
       EXIT_GAME = -1,
+      ATTACK_STATE,
       MENU_STATE,
       MAIN_STATE,
       SELECT_CLASS_STATE,
@@ -32,7 +33,8 @@ class Application : public Singleton<Application>
       LOOK_INPUT_STATE,
       INTERACT_INPUT_STATE,
       EXITING_STATE,
-      MESSAGE_BOX_STATE
+      MESSAGE_BOX_STATE,
+      ENDGAME_STATE
     };
 
     void Init() override;

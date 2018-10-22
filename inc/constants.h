@@ -111,6 +111,8 @@ struct Attributes
   Attribute Lvl;
 
   int Hunger = 1000;
+
+  bool Indestructible = true;
 };
 
 namespace GlobalConstants
@@ -119,6 +121,8 @@ namespace GlobalConstants
 
   static const int MapX = 100; // 160
   static const int MapY = 50; // 45
+
+  static const int HPMPBarLength = 20;
 
   static const std::string BlackColor = "#000000";
   static const std::string WhiteColor = "#FFFFFF";

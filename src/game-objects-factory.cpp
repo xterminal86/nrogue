@@ -4,6 +4,7 @@
 #include "rng.h"
 #include "item-component.h"
 #include "shrine-component.h"
+#include "ai-monster-basic.h"
 #include "map.h"
 
 GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
@@ -80,7 +81,8 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
   sc->Counter = timeout;
   sc->Timeout = timeout;
 
-  go->ObjectName = "Shrine";
+  go->ObjectName = (type == ShrineType::MIGHT) ? "Shrine of Might" : "Shrine of Spirit";
+  go->FogOfWarName = "?Shrine?";
   go->InteractionCallback = std::bind(&ShrineComponent::Interact, sc);
 
   return go;
@@ -89,13 +91,35 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
 GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
 {
   GameObject* go = new GameObject(x, y, 'r', GlobalConstants::MonsterColor);
+  go->ObjectName = "Rat";
+  go->Attrs.Indestructible = false;
 
+  // Sets Occupied flag for _currentCell
+  go->Move(0, 0);
+
+  auto c = go->AddComponent<AIMonsterBasic>();
+  AIMonsterBasic* ai = dynamic_cast<AIMonsterBasic*>(c);
+
+  ai->AgroRadius = 5;
+
+  // Set attributes
   if (randomize)
   {
   }
   else
   {
+    go->Attrs.HP.Set(1);
   }
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
+{
+  GameObject* go = new GameObject(from->PosX, from->PosY, '%', from->FgColor);
+
+  auto str = Util::StringFormat("Remains of: %s", from->ObjectName.data());
+  go->ObjectName = str;
 
   return go;
 }

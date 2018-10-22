@@ -13,11 +13,14 @@
 #include "help-state.h"
 #include "exiting-state.h"
 #include "message-box-state.h"
+#include "endgame-state.h"
+#include "attack-state.h"
 
 void Application::Init()
 {
   _gameStates[(int)GameStates::MAIN_STATE] = std::unique_ptr<GameState>(new MainState());
   _gameStates[(int)GameStates::INFO_STATE] = std::unique_ptr<GameState>(new InfoState());
+  _gameStates[(int)GameStates::ATTACK_STATE] = std::unique_ptr<GameState>(new AttackState());
   _gameStates[(int)GameStates::MENU_STATE] = std::unique_ptr<GameState>(new MenuState());
   _gameStates[(int)GameStates::SELECT_CLASS_STATE] = std::unique_ptr<GameState>(new SelectClassState());
   _gameStates[(int)GameStates::ENTER_NAME_STATE] = std::unique_ptr<GameState>(new EnterNameState());
@@ -29,6 +32,7 @@ void Application::Init()
   _gameStates[(int)GameStates::INTERACT_INPUT_STATE] = std::unique_ptr<GameState>(new InteractInputState());
   _gameStates[(int)GameStates::EXITING_STATE] = std::unique_ptr<GameState>(new ExitingState());
   _gameStates[(int)GameStates::MESSAGE_BOX_STATE] = std::unique_ptr<GameState>(new MessageBoxState());
+  _gameStates[(int)GameStates::ENDGAME_STATE] = std::unique_ptr<GameState>(new EndgameState());
 
   for (auto& state : _gameStates)
   {

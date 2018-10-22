@@ -24,6 +24,12 @@ struct Position
     Y = y;
   }
 
+  void Set(int x, int y)
+  {
+    X = x;
+    Y = y;
+  }
+
   int X;
   int Y;
 };
@@ -145,6 +151,16 @@ namespace Util
     return std::max(min, std::min(value, max));
   }
   
+  inline int BlockDistance(int x1, int y1, int x2, int y2)
+  {
+     return abs(y2 - y1) + abs(x2 - x1);
+  }
+
+  inline int BlockDistance(Position from, Position to)
+  {
+     return abs(to.Y - from.Y) + abs(to.X - from.X);
+  }
+
   inline float LinearDistance(int x1, int y1, int x2, int y2)
   {
     float d = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));

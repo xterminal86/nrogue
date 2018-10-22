@@ -7,6 +7,7 @@
 #include "ai-dummy.h"
 #include "door-component.h"
 #include "game-objects-factory.h"
+#include "util.h"
 
 void Map::Init()
 {
@@ -86,6 +87,8 @@ void Map::Draw(int playerX, int playerY)
 
 void Map::UpdateGameObjects()
 {
+  RemoveDestroyed();
+
   for (auto& go : GameObjects)
   {
     go.get()->Update();
@@ -182,6 +185,12 @@ void Map::CreateTown()
 
   // Castle
   // CreateCastle(65, 15);
+
+  auto rat = GameObjectsFactory::Instance().CreateRat(20, 5, false);
+  auto up = std::unique_ptr<GameObject>();
+  up.reset(rat);
+
+  GameObjects.push_back(std::move(up));
 
   // NPC creation example
   //
@@ -408,8 +417,8 @@ void Map::CreateChurch(int x, int y)
 
         case 'h':
         {
-          t.Set(false, false, c, GlobalConstants::RoomFloorColor, GlobalConstants::BlackColor, "Wooden Bench");
-          MapArray[posX][posY].MakeTile(t);
+          t.Set(false, false, c, GlobalConstants::RoomFloorColor, GlobalConstants::BlackColor, "Wooden Bench", "?Bench?");
+          MapArray[posX][posY].MakeTile(t);          
         }
         break;
 
@@ -420,7 +429,7 @@ void Map::CreateChurch(int x, int y)
           // certain objects to be shown, like in this case.
           ShrineType shrineType = ShrineType::SPIRIT;
           std::string description = (shrineType == ShrineType::MIGHT) ? "Shrine of Might" : "Shrine of Spirit";
-          t.Set(true, false, '/', GlobalConstants::BlackColor, GlobalConstants::GroundColor, description);
+          t.Set(true, false, '/', GlobalConstants::BlackColor, GlobalConstants::GroundColor, description, "?Shrine?");
           MapArray[posX][posY].MakeTile(t);
 
           // Tiles are updated only around player.
@@ -543,5 +552,24 @@ void Map::CreateCastle(int x, int y)
 
     posX = x;
     posY++;
+  }
+}
+
+void Map::RemoveDestroyed()
+{  
+  for (int i = 0; i < GameObjects.size(); i++)
+  {
+    if (GameObjects[i]->IsDestroyed)
+    {
+      int x = GameObjects[i]->PosX;
+      int y = GameObjects[i]->PosY;
+
+      MapArray[x][y].Occupied = false;
+
+      auto corpse = GameObjectsFactory::Instance().CreateRemains(GameObjects[i].get());
+      InsertGameObject(corpse);
+
+      GameObjects.erase(GameObjects.begin() + i);
+    }
   }
 }
