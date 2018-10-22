@@ -5,6 +5,7 @@
 #include "util.h"
 #include "door-component.h"
 #include "game-objects-factory.h"
+#include "ai-monster-basic.h"
 #include "application.h"
 
 void Player::Init()
@@ -29,6 +30,23 @@ void Player::Init()
   go->PosX = 5;
   go->PosY = 5;
   Map::Instance().InsertGameObject(go);
+}
+
+bool Player::TryToAttack(int dx, int dy)
+{
+  auto res = Map::Instance().GetGameObjectsAtPosition(PosX + dx, PosY + dy);
+  for (auto& go : res)
+  {
+    // FIXME: redesign
+    auto c = go->GetComponent<AIMonsterBasic>();
+    if (c != nullptr)
+    {
+      Attack(go);
+      return true;
+    }
+  }
+
+  return false;
 }
 
 bool Player::Move(int dx, int dy)

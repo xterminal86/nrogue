@@ -20,7 +20,11 @@ void MainState::HandleInput()
     switch (_keyPressed)
     {
       case NUMPAD_7:
-        if (_playerRef->Move(-1, -1))
+        if (_playerRef->TryToAttack(-1, -1))
+        {
+          _playerRef->SubtractActionMeter();
+        }
+        else if (_playerRef->Move(-1, -1))
         {
           Map::Instance().MapOffsetY++;
           Map::Instance().MapOffsetX++;
@@ -32,7 +36,11 @@ void MainState::HandleInput()
         break;
 
       case NUMPAD_8:
-        if (_playerRef->Move(0, -1))
+        if (_playerRef->TryToAttack(0, -1))
+        {
+          _playerRef->SubtractActionMeter();
+        }
+        else if (_playerRef->Move(0, -1))
         {
           Map::Instance().MapOffsetY++;
 
@@ -43,7 +51,11 @@ void MainState::HandleInput()
         break;
 
       case NUMPAD_9:
-        if (_playerRef->Move(1, -1))
+        if (_playerRef->TryToAttack(1, -1))
+        {
+          _playerRef->SubtractActionMeter();
+        }
+        else if (_playerRef->Move(1, -1))
         {
           Map::Instance().MapOffsetY++;
           Map::Instance().MapOffsetX--;
@@ -55,7 +67,11 @@ void MainState::HandleInput()
         break;
 
       case NUMPAD_4:
-        if (_playerRef->Move(-1, 0))
+        if (_playerRef->TryToAttack(-1, 0))
+        {
+          _playerRef->SubtractActionMeter();
+        }
+        else if (_playerRef->Move(-1, 0))
         {
           Map::Instance().MapOffsetX++;
 
@@ -66,7 +82,11 @@ void MainState::HandleInput()
         break;
 
       case NUMPAD_2:
-        if (_playerRef->Move(0, 1))
+        if (_playerRef->TryToAttack(0, 1))
+        {
+          _playerRef->SubtractActionMeter();
+        }
+        else if (_playerRef->Move(0, 1))
         {
           Map::Instance().MapOffsetY--;
 
@@ -77,7 +97,11 @@ void MainState::HandleInput()
         break;
 
       case NUMPAD_6:
-        if (_playerRef->Move(1, 0))
+        if (_playerRef->TryToAttack(1, 0))
+        {
+          _playerRef->SubtractActionMeter();
+        }
+        else if (_playerRef->Move(1, 0))
         {
           Map::Instance().MapOffsetX--;
 
@@ -88,7 +112,11 @@ void MainState::HandleInput()
         break;
 
       case NUMPAD_1:
-        if (_playerRef->Move(-1, 1))
+        if (_playerRef->TryToAttack(-1, 1))
+        {
+          _playerRef->SubtractActionMeter();
+        }
+        else if (_playerRef->Move(-1, 1))
         {
           Map::Instance().MapOffsetY--;
           Map::Instance().MapOffsetX++;
@@ -100,7 +128,11 @@ void MainState::HandleInput()
         break;
 
       case NUMPAD_3:
-        if (_playerRef->Move(1, 1))
+        if (_playerRef->TryToAttack(1, 1))
+        {
+          _playerRef->SubtractActionMeter();
+        }
+        else if (_playerRef->Move(1, 1))
         {
           Map::Instance().MapOffsetY--;
           Map::Instance().MapOffsetX--;

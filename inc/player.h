@@ -26,6 +26,7 @@ class Player
     void Draw();
     void CheckVisibility();
     bool Move(int dx, int dy);
+    bool TryToAttack(int dx, int dy);
 
     int PosX;
     int PosY;
