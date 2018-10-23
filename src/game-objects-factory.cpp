@@ -58,11 +58,10 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
   go->ObjectName = "Coins";
   go->Image = '$';
   go->FgColor = GlobalConstants::CoinsColor;
-  go->Visible = false;
 
   Component* c = go->AddComponent<ItemComponent>();
 
-  ((ItemComponent*)c)->Description = { "Some gold coins", "You can buy things with these" };
+  ((ItemComponent*)c)->Description = { "You can buy things with these" };
 
   int money = (amount == 0) ? RNG::Instance().Random() % 1000 + 1 : amount;
   ((ItemComponent*)c)->Cost = money;
@@ -140,7 +139,7 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
   auto td = go->AddComponent<TimerDestroyerComponent>();
   ((TimerDestroyerComponent*)td)->Time = from->Attrs.HP.OriginalValue * 2;
 
-  auto str = Util::StringFormat("Remains of: %s", from->ObjectName.data());
+  auto str = Util::StringFormat("%s's remains", from->ObjectName.data());
   go->ObjectName = str;
 
   return go;
@@ -207,7 +206,6 @@ GameObject* GameObjectsFactory::CreateHealingPotion()
   go->BgColor = "#FF0000";
   go->Image = '!';
   go->ObjectName = "Healing Potion";
-  go->Visible = false;
 
   Component* c = go->AddComponent<ItemComponent>();
 
@@ -227,7 +225,6 @@ GameObject* GameObjectsFactory::CreateManaPotion()
   go->BgColor = "#0000FF";
   go->Image = '!';
   go->ObjectName = "Mana Potion";
-  go->Visible = false;
 
   Component* c = go->AddComponent<ItemComponent>();
 
@@ -235,7 +232,7 @@ GameObject* GameObjectsFactory::CreateManaPotion()
   ((ItemComponent*)c)->Amount = 1;
   ((ItemComponent*)c)->IsStackable = true;
 
-  ((ItemComponent*)c)->Description = { "Restores your lost spiritual powers" };
+  ((ItemComponent*)c)->Description = { "Helps you regain spiritual powers" };
 
   return go;
 }

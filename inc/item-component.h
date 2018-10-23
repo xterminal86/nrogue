@@ -24,7 +24,8 @@ class ItemComponent : public Component
     int Amount = 1;
     bool IsStackable = false;
 
-    ItemType TypeOfObject;
+    ItemType TypeOfObject = ItemType::DUMMY;
+    EquipmentCategory EquipmentType = EquipmentCategory::NOT_EQUIPPABLE;
 
     std::vector<std::string> Description;
 

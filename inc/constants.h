@@ -50,6 +50,19 @@ enum class MonsterType
   SKELETON
 };
 
+enum class EquipmentCategory
+{
+  NOT_EQUIPPABLE = 0,
+  HEAD,
+  NECK,
+  TORSO,
+  LEGS,
+  BOOTS,
+  WEAPON,
+  RING1,
+  RING2
+};
+
 enum class ItemType
 {
   DUMMY = 0,

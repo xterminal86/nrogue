@@ -98,6 +98,9 @@ void GameObject::ReceiveDamage(int amount)
       Map::Instance().InsertGameObject(go);
 
       IsDestroyed = true;
+
+      auto msg = Util::StringFormat("%s was killed", ObjectName.data());
+      Printer::Instance().AddMessage(msg);
     }
   }
 }

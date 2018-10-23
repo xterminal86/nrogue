@@ -9,6 +9,7 @@
 #include "constants.h"
 #include "game-object.h"
 #include "container-component.h"
+#include "item-component.h"
 
 class Player
 {
@@ -21,6 +22,8 @@ class Player
       ARCANIST,
       CUSTOM
     };
+
+    const int kInventorySize = 20;
 
     void Init();
     void Draw();
@@ -66,11 +69,12 @@ class Player
 
     std::string Name = "Nameless One";
 
-    const int kInventorySize = 10;
+    std::map<EquipmentCategory, ItemComponent*> EquipmentByCategory;
 
   private:
     void DiscoverCell(int x, int y);
     void SetAttributes();
+    void SetDefaultEquipment();
 
     void SetSoldierAttrs();
     void SetThiefAttrs();

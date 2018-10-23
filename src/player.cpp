@@ -17,17 +17,18 @@ void Player::Init()
   ActionMeter = 100;
 
   SetAttributes();
+  SetDefaultEquipment();
 
   _currentCell = &Map::Instance().MapArray[PosX][PosY];
   _currentCell->Occupied = true;  
 
+  // FIXME: remove afterwards
   for (int i = 0; i < 10; i++)
   {
     auto go = new GameObject(2, 2 + i, 'O', "#FFFFFF");
     go->ObjectName = "Rock";
 
     auto ic = go->AddComponent<ItemComponent>();
-    ((ItemComponent*)ic)->TypeOfObject = ItemType::DUMMY;
     ((ItemComponent*)ic)->Description = { "This is a placeholder test object" };
 
     Map::Instance().InsertGameObject(go);
@@ -118,6 +119,7 @@ void Player::CheckVisibility()
 
   auto& map = Map::Instance().MapArray;
 
+  // FIXME: think
   int radius = (map[PosX][PosY].ObjectName == "Tree") ? VisibilityRadius / 4 : VisibilityRadius;
 
   auto mapCells = Util::GetRectAroundPoint(PosX, PosY, tw / 2, th / 2);
@@ -273,6 +275,22 @@ void Player::SetArcanistAttrs()
   ((ItemComponent*)ic)->Amount = 3;
 
   Inventory.AddToInventory(go);
+}
+
+void Player::SetDefaultEquipment()
+{
+  // Initialize map
+
+  EquipmentByCategory[EquipmentCategory::HEAD] = nullptr;
+  EquipmentByCategory[EquipmentCategory::NECK] = nullptr;
+  EquipmentByCategory[EquipmentCategory::TORSO] = nullptr;
+  EquipmentByCategory[EquipmentCategory::LEGS] = nullptr;
+  EquipmentByCategory[EquipmentCategory::BOOTS] = nullptr;
+  EquipmentByCategory[EquipmentCategory::WEAPON] = nullptr;
+  EquipmentByCategory[EquipmentCategory::RING1] = nullptr;
+  EquipmentByCategory[EquipmentCategory::RING2] = nullptr;
+
+  // TODO: assign default equipment according to selected class
 }
 
 void Player::Attack(GameObject* go)
