@@ -130,6 +130,9 @@ std::pair<int, GameObject*> Map::GetGameObjectToPickup(int x, int y)
 {
   std::pair<int, GameObject*> res;
 
+  res.first = -1;
+  res.second = nullptr;
+
   int index = 0;
   for (auto& go : GameObjects)
   {    

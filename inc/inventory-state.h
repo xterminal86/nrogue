@@ -16,7 +16,7 @@ class InventoryState : public GameState
     Player* _playerRef;
 
     void PrintFooter();
-    void DestroyItem();
+    void DestroyInventoryItem();
     void DropItem();
 
     int _selectedIndex;

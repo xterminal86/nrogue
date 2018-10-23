@@ -1,6 +1,7 @@
 #include "container-component.h"
 #include "application.h"
 #include "item-component.h"
+#include "util.h"
 
 ContainerComponent::ContainerComponent()
 {
@@ -12,25 +13,29 @@ void ContainerComponent::Update()
 }
 
 void ContainerComponent::AddToInventory(GameObject* object)
-{
-  auto& playerRef = Application::Instance().PlayerInstance;
-
-  bool isStackable = false;
+{  
+  bool foundStack = false;
 
   auto ic = object->GetComponent<ItemComponent>();
 
-  for (auto& i : playerRef.Inventory.Contents)
+  if (((ItemComponent*)ic)->IsStackable)
   {
-    auto iic = i->GetComponent<ItemComponent>();
-    if (((ItemComponent*)iic)->TypeOfObject == ((ItemComponent*)ic)->TypeOfObject)
+    for (auto& i : Contents)
     {
-      ((ItemComponent*)iic)->Amount += ((ItemComponent*)ic)->Amount;
-      isStackable = true;
-      break;
+      auto iic = i->GetComponent<ItemComponent>();
+      if (((ItemComponent*)iic)->TypeOfObject == ((ItemComponent*)ic)->TypeOfObject)
+      {
+        ((ItemComponent*)iic)->Amount += ((ItemComponent*)ic)->Amount;
+        foundStack = true;
+        break;
+      }
     }
   }
 
-  if (!isStackable)
+  //auto msg = Util::StringFormat("Picked up 0x%X", object);
+  //Logger::Instance().Print(msg);
+
+  if (!foundStack)
   {
     Contents.push_back(std::unique_ptr<GameObject>(object));
   }

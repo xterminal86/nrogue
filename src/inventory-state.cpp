@@ -51,7 +51,7 @@ void InventoryState::HandleInput()
       }
 
       DropItem();
-      DestroyItem();
+      DestroyInventoryItem();
     }
     break;
 
@@ -73,12 +73,12 @@ void InventoryState::HandleInput()
 
           if (((ItemComponent*)c)->Amount == 0)
           {
-            DestroyItem();
+            DestroyInventoryItem();
           }
         }
         else
         {
-          DestroyItem();
+          DestroyInventoryItem();
         }
 
         _playerRef->SubtractActionMeter();
@@ -170,9 +170,10 @@ void InventoryState::PrintFooter()
   Printer::Instance().PrintFB(tw / 2 + part * 2, th - 1, "'t' - throw", Printer::kAlignCenter, "#FFFFFF");
 }
 
-void InventoryState::DestroyItem()
+void InventoryState::DestroyInventoryItem()
 {
-  _playerRef->Inventory.Contents.erase(_playerRef->Inventory.Contents.begin() + _selectedIndex);
+  auto it = _playerRef->Inventory.Contents.begin();
+  _playerRef->Inventory.Contents.erase(it + _selectedIndex);
 }
 
 void InventoryState::DropItem()
@@ -190,6 +191,8 @@ void InventoryState::DropItem()
   {
     message = Util::StringFormat("Dropped: %s", go->ObjectName.data());
   }
+
+  // !!! Destruction is done in other method !!!
 
   Printer::Instance().AddMessage(message);
 }

@@ -21,7 +21,7 @@ class ItemComponent : public Component
 
     int Durability = -1;
     int Cost = 0;
-    int Amount = 0;
+    int Amount = 1;
     bool IsStackable = false;
 
     ItemType TypeOfObject;

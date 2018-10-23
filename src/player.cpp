@@ -20,6 +20,21 @@ void Player::Init()
 
   _currentCell = &Map::Instance().MapArray[PosX][PosY];
   _currentCell->Occupied = true;  
+
+  for (int i = 0; i < 10; i++)
+  {
+    auto go = new GameObject(2, 2 + i, 'O', "#FFFFFF");
+    go->ObjectName = "Rock";
+
+    auto ic = go->AddComponent<ItemComponent>();
+    ((ItemComponent*)ic)->TypeOfObject = ItemType::DUMMY;
+    ((ItemComponent*)ic)->Description = { "This is a placeholder test object" };
+
+    Map::Instance().InsertGameObject(go);
+
+    //auto msg = Util::StringFormat("Created 0x%X", go);
+    //Logger::Instance().Print(msg);
+  }
 }
 
 bool Player::TryToAttack(int dx, int dy)
