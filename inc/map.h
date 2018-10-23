@@ -26,9 +26,11 @@ class Map : public Singleton<Map>
 
     void Draw(int playerX, int playerY);
 
+    void InsertActor(GameObject* actor);
     void InsertGameObject(GameObject* goToInsert);
     void UpdateGameObjects();
 
+    GameObject* GetActorAtPosition(int x, int y);
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
     std::pair<int, GameObject*> GetTopGameObjectAtPosition(int x, int y);
 
@@ -36,9 +38,13 @@ class Map : public Singleton<Map>
     // Updated around player position.
     GameObject MapArray[GlobalConstants::MapX][GlobalConstants::MapY];
 
-    // Globally updated objects (items, shrines, npcs etc.)
+    // Globally updated objects (traps with timers, shrines, etc.)
+    // or objects that can be removed from the map (e.g. items)
     // Updated every frame.
     std::vector<std::unique_ptr<GameObject>> GameObjects;
+
+    // NPCs, drawn last
+    std::vector<std::unique_ptr<GameObject>> ActorGameObjects;
 
     int PlayerStartX;
     int PlayerStartY;

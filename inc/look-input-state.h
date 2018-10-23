@@ -18,6 +18,10 @@ class LookInputState : public GameState
     void MoveCursor(int dx, int dy);
     void DrawCursor();
 
+    bool CheckPlayer();
+    GameObject* CheckActor();
+    const std::vector<GameObject*> CheckGameObjects();
+
     Player* _playerRef;
 
     Position _cursorPosition;

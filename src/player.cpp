@@ -34,8 +34,8 @@ void Player::Init()
 
 bool Player::TryToAttack(int dx, int dy)
 {
-  auto res = Map::Instance().GetGameObjectsAtPosition(PosX + dx, PosY + dy);
-  for (auto& go : res)
+  auto go = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
+  if (go != nullptr)
   {
     // FIXME: redesign
     auto c = go->GetComponent<AIMonsterBasic>();

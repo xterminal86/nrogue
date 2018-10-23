@@ -138,7 +138,7 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
   GameObject* go = new GameObject(from->PosX, from->PosY, '%', from->FgColor);
 
   auto td = go->AddComponent<TimerDestroyerComponent>();
-  ((TimerDestroyerComponent*)td)->Time = from->Attrs.HP.OriginalValue;
+  ((TimerDestroyerComponent*)td)->Time = from->Attrs.HP.OriginalValue * 2;
 
   auto str = Util::StringFormat("Remains of: %s", from->ObjectName.data());
   go->ObjectName = str;

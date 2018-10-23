@@ -83,6 +83,22 @@ void Map::Draw(int playerX, int playerY)
       go.get()->Draw(go.get()->FgColor, cond ? MapArray[x][y].BgColor : go->BgColor);
     }
   }
+
+  // Draw actors
+
+  for (auto& go : ActorGameObjects)
+  {
+    int x = go.get()->PosX;
+    int y = go.get()->PosY;
+
+    if (MapArray[x][y].Visible)
+    {
+      // If game object has black bg color,
+      // replace it with current floor color
+      bool cond = (go->BgColor.length() == 0 || go->BgColor == "#000000");
+      go.get()->Draw(go.get()->FgColor, cond ? MapArray[x][y].BgColor : go->BgColor);
+    }
+  }
 }
 
 void Map::UpdateGameObjects()
@@ -93,6 +109,16 @@ void Map::UpdateGameObjects()
   {
     go.get()->Update();
   }
+
+  for (auto& go : ActorGameObjects)
+  {
+    go.get()->Update();
+  }
+}
+
+void Map::InsertActor(GameObject* goToInsert)
+{
+  ActorGameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
 }
 
 void Map::InsertGameObject(GameObject* goToInsert)
@@ -117,6 +143,19 @@ std::pair<int, GameObject*> Map::GetTopGameObjectAtPosition(int x, int y)
   }
 
   return res;
+}
+
+GameObject* Map::GetActorAtPosition(int x, int y)
+{
+  for (auto& go : ActorGameObjects)
+  {
+    if (go.get()->PosX == x && go.get()->PosY == y)
+    {
+      return go.get();
+    }
+  }
+
+  return nullptr;
 }
 
 std::vector<GameObject*> Map::GetGameObjectsAtPosition(int x, int y)
@@ -196,7 +235,7 @@ void Map::CreateTown()
     if (!MapArray[x][y].Blocking)
     {
       auto rat = GameObjectsFactory::Instance().CreateRat(x, y);
-      InsertGameObject(rat);
+      InsertActor(rat);
     }
   }
 }
@@ -563,10 +602,20 @@ void Map::RemoveDestroyed()
 
       MapArray[x][y].Occupied = false;
 
-      //auto corpse = GameObjectsFactory::Instance().CreateRemains(GameObjects[i].get());
-      //InsertGameObject(corpse);
-
       GameObjects.erase(GameObjects.begin() + i);
+    }
+  }
+
+  for (int i = 0; i < ActorGameObjects.size(); i++)
+  {
+    if (ActorGameObjects[i]->IsDestroyed)
+    {
+      int x = ActorGameObjects[i]->PosX;
+      int y = ActorGameObjects[i]->PosY;
+
+      MapArray[x][y].Occupied = false;
+
+      ActorGameObjects.erase(ActorGameObjects.begin() + i);
     }
   }
 }

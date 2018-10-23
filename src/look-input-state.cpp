@@ -80,31 +80,48 @@ void LookInputState::Update(bool forceUpdate)
     if (Util::CheckLimits(_cursorPosition, Position(GlobalConstants::MapX, GlobalConstants::MapY)))
     {
       auto* tile = &Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
-      if (_cursorPosition.X == _playerRef->PosX && _cursorPosition.Y == _playerRef->PosY)
-      {
-        lookStatus = "It's you!";
-      }
-      else if (!tile->Revealed)
-      {
-        lookStatus = "???";
-      }
-      else if (tile->Blocking)
-      {        
-        auto nameHidden = (tile->FogOfWarName.length() == 0) ?
-                          "?" + tile->ObjectName + "?" :
-                          tile->FogOfWarName;
-        lookStatus = tile->Visible ? tile->ObjectName : nameHidden;
-      }
-      else
-      {
-        auto gameObjects = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
 
-        if (tile->Visible && gameObjects.size() != 0)
+      bool foundGameObject = false;
+
+      // Check actors and game objects in visible area
+
+      if (tile->Visible)
+      {
+        if (CheckPlayer())
         {
-          lookStatus += gameObjects.back()->ObjectName;
+          lookStatus = "It's you!";
+          foundGameObject = true;
         }
         else
-        {          
+        {
+          auto actor = CheckActor();
+          if (actor != nullptr)
+          {
+            lookStatus = actor->ObjectName;
+            foundGameObject = true;
+          }
+          else
+          {
+            auto gos = CheckGameObjects();
+            if (gos.size() != 0)
+            {
+              lookStatus = gos.back()->ObjectName;
+              foundGameObject = true;
+            }
+          }
+        }
+      }
+
+      // If nothing is found or area is under fog of war,
+      // check map tile instead
+      if (!foundGameObject)
+      {
+        if (!tile->Revealed)
+        {
+          lookStatus = "???";
+        }
+        else if (tile->Revealed)
+        {
           auto nameHidden = (tile->FogOfWarName.length() == 0) ?
                             "?" + tile->ObjectName + "?" :
                             tile->FogOfWarName;
@@ -114,6 +131,7 @@ void LookInputState::Update(bool forceUpdate)
     }
     else
     {
+      // If cursor is outside map boundaries
       lookStatus = "???";
     }
 
@@ -159,4 +177,21 @@ void LookInputState::DrawCursor()
   Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().MapOffsetX - 1,
                               _cursorPosition.Y + Map::Instance().MapOffsetY,
                               '[', "#FFFFFF");
+}
+
+bool LookInputState::CheckPlayer()
+{
+  return (_cursorPosition.X == _playerRef->PosX
+       && _cursorPosition.Y == _playerRef->PosY);
+}
+
+GameObject* LookInputState::CheckActor()
+{
+  auto actor = Map::Instance().GetActorAtPosition(_cursorPosition.X, _cursorPosition.Y);
+  return actor;
+}
+
+const std::vector<GameObject*> LookInputState::CheckGameObjects()
+{
+  return Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
 }
