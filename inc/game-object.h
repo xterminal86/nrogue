@@ -47,7 +47,7 @@ struct Tile
 class GameObject
 {
   public:
-    GameObject() = default;
+    GameObject() {}
     GameObject(GameObject&) = delete;
     virtual ~GameObject() = default;
 

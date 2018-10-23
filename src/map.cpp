@@ -126,14 +126,15 @@ void Map::InsertGameObject(GameObject* goToInsert)
   GameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
 }
 
-std::pair<int, GameObject*> Map::GetTopGameObjectAtPosition(int x, int y)
+std::pair<int, GameObject*> Map::GetGameObjectToPickup(int x, int y)
 {
   std::pair<int, GameObject*> res;
 
   int index = 0;
   for (auto& go : GameObjects)
-  {
-    if (go.get()->PosX == x && go.get()->PosY == y)
+  {    
+    auto c = go->GetComponent<ItemComponent>();
+    if (go.get()->PosX == x && go.get()->PosY == y && c != nullptr)
     {
       res.first = index;
       res.second = go.get();
@@ -472,7 +473,7 @@ void Map::CreateChurch(int x, int y)
           // Shrine has some logic (buff and timeout count), thus
           // we must make it a global game object so it could be updated
           // every turn no matter where the player is.
-          auto go = GameObjectsFactory::Instance().CreateShrine(posX, posY, shrineType, 100);
+          auto go = GameObjectsFactory::Instance().CreateShrine(posX, posY, shrineType, 1000);
           InsertGameObject(go);
         }
         break;
@@ -556,7 +557,7 @@ void Map::CreateCastle(int x, int y)
           // Shrine has some logic (buff and timeout count), thus
           // we must make it a global game object so it could be updated
           // every turn no matter where the player is.
-          auto go = GameObjectsFactory::Instance().CreateShrine(posX, posY, shrineType, 100);
+          auto go = GameObjectsFactory::Instance().CreateShrine(posX, posY, shrineType, 1000);
           InsertGameObject(go);
         }
         break;

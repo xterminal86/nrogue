@@ -19,17 +19,7 @@ void Player::Init()
   SetAttributes();
 
   _currentCell = &Map::Instance().MapArray[PosX][PosY];
-  _currentCell->Occupied = true;
-
-  // FIXME: test, remove afterwards
-
-  auto go = GameObjectsFactory::Instance().CreateMoney();
-  Inventory.AddToInventory(go);
-
-  go = GameObjectsFactory::Instance().CreateMoney();
-  go->PosX = 5;
-  go->PosY = 5;
-  Map::Instance().InsertGameObject(go);
+  _currentCell->Occupied = true;  
 }
 
 bool Player::TryToAttack(int dx, int dy)
@@ -211,6 +201,12 @@ void Player::SetSoldierAttrs()
 
   Attrs.HungerRate.Set(50);
   Attrs.HungerSpeed.Set(2);
+
+  auto go = GameObjectsFactory::Instance().CreateHealingPotion();
+  auto ic = go->GetComponent<ItemComponent>();
+  ((ItemComponent*)ic)->Amount = 3;
+
+  Inventory.AddToInventory(go);
 }
 
 void Player::SetThiefAttrs()
@@ -226,7 +222,19 @@ void Player::SetThiefAttrs()
   Attrs.HP.Set(25);
 
   Attrs.HungerRate.Set(75);
-  Attrs.HungerSpeed.Set(2);
+  Attrs.HungerSpeed.Set(2);  
+
+  auto go = GameObjectsFactory::Instance().CreateHealingPotion();
+  auto ic = go->GetComponent<ItemComponent>();
+  Inventory.AddToInventory(go);
+
+  go = GameObjectsFactory::Instance().CreateManaPotion();
+  ic = go->GetComponent<ItemComponent>();
+  Inventory.AddToInventory(go);
+
+  go = GameObjectsFactory::Instance().CreateMoney(100);
+  ic = go->GetComponent<ItemComponent>();
+  Inventory.AddToInventory(go);
 }
 
 void Player::SetArcanistAttrs()
@@ -244,6 +252,12 @@ void Player::SetArcanistAttrs()
 
   Attrs.HungerRate.Set(100);
   Attrs.HungerSpeed.Set(1);
+
+  auto go = GameObjectsFactory::Instance().CreateManaPotion();
+  auto ic = go->GetComponent<ItemComponent>();
+  ((ItemComponent*)ic)->Amount = 3;
+
+  Inventory.AddToInventory(go);
 }
 
 void Player::Attack(GameObject* go)

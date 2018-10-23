@@ -20,7 +20,8 @@ class ShrineComponent : public Component
     ShrineType Type;
 
   private:
-    void Activate();
+    void Activate();    
+    void ProcessEffect();
 };
 
 #endif // SHRINECOMPONENT_H

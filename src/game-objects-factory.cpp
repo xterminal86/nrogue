@@ -58,7 +58,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
   go->ObjectName = "Coins";
   go->Image = '$';
   go->FgColor = GlobalConstants::CoinsColor;
-  go->Visible = true;
+  go->Visible = false;
 
   Component* c = go->AddComponent<ItemComponent>();
 
@@ -142,6 +142,100 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 
   auto str = Util::StringFormat("Remains of: %s", from->ObjectName.data());
   go->ObjectName = str;
+
+  return go;
+}
+
+bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
+{
+  bool res = false;
+
+  switch (item->TypeOfObject)
+  {
+    case ItemType::HEALING_POTION:
+      if (_playerRef->Attrs.HP.CurrentValue == _playerRef->Attrs.HP.OriginalValue)
+      {
+        Printer::Instance().AddMessage("You are already at full health!");
+      }
+      else
+      {
+        _playerRef->Attrs.HP.Set(_playerRef->Attrs.HP.OriginalValue);
+        Printer::Instance().AddMessage("Your wounds are healed!");
+        res = true;
+      }
+      break;
+
+    case ItemType::MANA_POTION:
+      if (_playerRef->Attrs.MP.OriginalValue == 0)
+      {
+        std::string m1 = "Your spirituality is too low";
+        std::string m2 = "for this to have any effect on you";
+
+        Printer::Instance().AddMessage(m1);
+        Printer::Instance().AddMessage(m2);
+      }
+      else if (_playerRef->Attrs.MP.CurrentValue == _playerRef->Attrs.MP.OriginalValue)
+      {
+        Printer::Instance().AddMessage("You are already in fighting spirit!");
+      }
+      else
+      {
+        _playerRef->Attrs.MP.Set(_playerRef->Attrs.MP.OriginalValue);
+        Printer::Instance().AddMessage("Your spirit is reinforced!");
+        res = true;
+      }
+      break;
+
+    case ItemType::COINS:
+      Printer::Instance().AddMessage("You don't 'use' money like that");
+      break;
+
+    default:
+      auto go = (GameObject*)item->OwnerGameObject;
+      auto msg = Util::StringFormat("You can't use %s!", go->ObjectName.data());
+      Printer::Instance().AddMessage(msg);
+      break;
+  }
+
+  return res;
+}
+
+GameObject* GameObjectsFactory::CreateHealingPotion()
+{
+  GameObject* go = new GameObject();
+  go->FgColor = "#FFFFFF";
+  go->BgColor = "#FF0000";
+  go->Image = '!';
+  go->ObjectName = "Healing Potion";
+  go->Visible = false;
+
+  Component* c = go->AddComponent<ItemComponent>();
+
+  ((ItemComponent*)c)->TypeOfObject = ItemType::HEALING_POTION;
+  ((ItemComponent*)c)->Amount = 1;
+  ((ItemComponent*)c)->IsStackable = true;
+
+  ((ItemComponent*)c)->Description = { "Restores you to full health" };
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateManaPotion()
+{
+  GameObject* go = new GameObject();
+  go->FgColor = "#FFFFFF";
+  go->BgColor = "#0000FF";
+  go->Image = '!';
+  go->ObjectName = "Mana Potion";
+  go->Visible = false;
+
+  Component* c = go->AddComponent<ItemComponent>();
+
+  ((ItemComponent*)c)->TypeOfObject = ItemType::MANA_POTION;
+  ((ItemComponent*)c)->Amount = 1;
+  ((ItemComponent*)c)->IsStackable = true;
+
+  ((ItemComponent*)c)->Description = { "Restores your lost spiritual powers" };
 
   return go;
 }

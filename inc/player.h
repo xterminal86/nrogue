@@ -66,6 +66,8 @@ class Player
 
     std::string Name = "Nameless One";
 
+    const int kInventorySize = 10;
+
   private:
     void DiscoverCell(int x, int y);
     void SetAttributes();

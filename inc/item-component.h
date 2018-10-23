@@ -13,7 +13,7 @@ class ItemComponent : public Component
 
     void Update() override;
 
-    void Use();
+    bool Use();
     void Transfer(ContainerComponent* destination = nullptr);
     void Inspect();
     void Equip();

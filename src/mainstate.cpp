@@ -260,35 +260,18 @@ void MainState::DisplayGameLog()
 
 void MainState::TryToPickupItem()
 {
-  auto res = Map::Instance().GetTopGameObjectAtPosition(_playerRef->PosX, _playerRef->PosY);  
+  auto res = Map::Instance().GetGameObjectToPickup(_playerRef->PosX, _playerRef->PosY);
   Component* ic = nullptr;
   if (res.second != nullptr && (ic = res.second->GetComponent<ItemComponent>()) != nullptr)
   {
-    auto go = Map::Instance().GameObjects[res.first].release();    
-    if (((ItemComponent*)ic)->IsStackable)
+    if (_playerRef->Inventory.Contents.size() == _playerRef->kInventorySize)
     {
-      bool isInInventory = false;
-
-      for (auto& i : _playerRef->Inventory.Contents)
-      {
-        auto iic = i->GetComponent<ItemComponent>();
-        if (((ItemComponent*)iic)->TypeOfObject == ((ItemComponent*)ic)->TypeOfObject)
-        {
-          ((ItemComponent*)iic)->Amount += ((ItemComponent*)ic)->Amount;
-          isInInventory = true;
-          break;
-        }
-      }
-
-      if (!isInInventory)
-      {
-        _playerRef->Inventory.AddToInventory(go);
-      }
+      Printer::Instance().AddMessage("Inventory is full!");
+      return;
     }
-    else
-    {
-      _playerRef->Inventory.AddToInventory(go);
-    }
+
+    auto go = Map::Instance().GameObjects[res.first].release();
+    _playerRef->Inventory.AddToInventory(go);
 
     Map::Instance().GameObjects.erase(Map::Instance().GameObjects.begin() + res.first);
 

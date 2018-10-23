@@ -32,7 +32,7 @@ class Map : public Singleton<Map>
 
     GameObject* GetActorAtPosition(int x, int y);
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
-    std::pair<int, GameObject*> GetTopGameObjectAtPosition(int x, int y);
+    std::pair<int, GameObject*> GetGameObjectToPickup(int x, int y);
 
     // Map tiles or objects that don't have to be updated globally.
     // Updated around player position.

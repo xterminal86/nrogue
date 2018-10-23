@@ -5,6 +5,7 @@
 #include "game-object.h"
 #include "constants.h"
 #include "player.h"
+#include "item-component.h"
 
 class GameObjectsFactory : public Singleton<GameObjectsFactory>
 {
@@ -19,6 +20,10 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);    
     GameObject* CreateMoney(int amount = 0);
     GameObject* CreateRemains(GameObject* from);
+    GameObject* CreateHealingPotion();
+    GameObject* CreateManaPotion();
+
+    bool HandleItemUse(ItemComponent* item);
 
   private:
     Player* _playerRef;

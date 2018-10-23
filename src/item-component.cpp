@@ -2,6 +2,7 @@
 
 #include "application.h"
 #include "map.h"
+#include "game-objects-factory.h"
 
 ItemComponent::ItemComponent()
 {
@@ -16,6 +17,7 @@ void ItemComponent::Update()
 /// or tile occupied by player if destination = nullptr
 void ItemComponent::Transfer(ContainerComponent* destination)
 {
+  // FIXME: add transfer to container
   if (destination == nullptr)
   {
     ((GameObject*)OwnerGameObject)->PosX = Application::Instance().PlayerInstance.PosX;
@@ -38,6 +40,7 @@ void ItemComponent::Throw()
 {
 }
 
-void ItemComponent::Use()
+bool ItemComponent::Use()
 {
+  return GameObjectsFactory::Instance().HandleItemUse(this);
 }

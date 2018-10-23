@@ -54,6 +54,8 @@ enum class ItemType
 {
   DUMMY = 0,
   COINS,
+  HEALING_POTION,
+  MANA_POTION,
   FOOD,
   SCROLL,
   WEAPON
