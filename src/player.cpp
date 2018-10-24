@@ -14,7 +14,7 @@ void Player::Init()
   PosY = Map::Instance().PlayerStartY;
   Image = '@';
   FgColor = GlobalConstants::PlayerColor;
-  ActionMeter = 100;
+  Attrs.ActionMeter = 100;
 
   SetAttributes();
   SetDefaultEquipment();
@@ -36,6 +36,12 @@ void Player::Init()
     //auto msg = Util::StringFormat("Created 0x%X", go);
     //Logger::Instance().Print(msg);
   }
+}
+
+void Player::Draw()
+{
+  bool cond = (BgColor.length() == 0 || BgColor == "#000000");
+  GameObject::Draw(FgColor, cond ? Map::Instance().MapArray[PosX][PosY].BgColor : BgColor);
 }
 
 bool Player::TryToAttack(int dx, int dy)

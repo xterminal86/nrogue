@@ -12,6 +12,8 @@ void GameObject::Init(int x, int y, chtype avatar, const std::string& fgColor, c
   FgColor = fgColor;
   BgColor = bgColor;
 
+  Attrs.ActionMeter = 100;
+
   _currentCell = &Map::Instance().MapArray[PosX][PosY];
 }
 
@@ -102,5 +104,15 @@ void GameObject::ReceiveDamage(GameObject* from, int amount)
       auto msg = Util::StringFormat("%s was killed", ObjectName.data());
       Printer::Instance().AddMessage(msg);
     }
+  }
+}
+
+void GameObject::FinishTurn()
+{
+  Attrs.ActionMeter -= 100;
+
+  if (Attrs.ActionMeter < 0)
+  {
+    Attrs.ActionMeter = 0;
   }
 }

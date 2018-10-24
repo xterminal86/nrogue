@@ -79,6 +79,55 @@ namespace Tests
     }
   }
 
+  inline void RNGTests()
+  {
+    printf("\nRNG tests:\n\n");
+
+    printf("Random.Range(-10, 10):\n");
+
+    int numberOfRolls = 100;
+
+    for (int i = 0; i < numberOfRolls; i++)
+    {
+      printf("%i ", RNG::Instance().RandomRange(-10, 10));
+    }
+
+    printf("\n\nRandom.Range(0, 100):\n");
+
+    for (int i = 0; i < numberOfRolls; i++)
+    {
+      printf("%i ", RNG::Instance().RandomRange(0, 100));
+    }
+
+    printf("\n\nRandom.Range(-20, -10):\n");
+
+    for (int i = 0; i < numberOfRolls; i++)
+    {
+      printf("%i ", RNG::Instance().RandomRange(-20, -10));
+    }
+
+    printf("\n\nRandom.Range(100, 10):\n");
+
+    for (int i = 0; i < numberOfRolls; i++)
+    {
+      printf("%i ", RNG::Instance().RandomRange(100, 10));
+    }
+
+    printf("\n\nRandom.Range(-10, -100):\n");
+
+    for (int i = 0; i < numberOfRolls; i++)
+    {
+      printf("%i ", RNG::Instance().RandomRange(-10, -100));
+    }
+
+    printf("\n\nRandom.Range(10, -10):\n");
+
+    for (int i = 0; i < numberOfRolls; i++)
+    {
+      printf("%i ", RNG::Instance().RandomRange(10, -10));
+    }
+  }
+
   inline void Run()
   {
     printf("***** START TESTS *****\n\n");
@@ -86,6 +135,8 @@ namespace Tests
     TestLoS(4, 4, 2);
     printf("\n- o -\n");
     RoomTests();
+    printf("\n- o -\n");
+    RNGTests();
 
     printf("\n\n***** o *****\n");
   }  

@@ -12,20 +12,29 @@ AIMonsterBasic::AIMonsterBasic()
 
 void AIMonsterBasic::Update()
 {
-  if (IsPlayerInRange())
+  if (((GameObject*)OwnerGameObject)->Attrs.ActionMeter < 100)
   {
-    Attack(_playerRef);
+    ((GameObject*)OwnerGameObject)->Attrs.ActionMeter += ((GameObject*)OwnerGameObject)->Attrs.Spd.CurrentValue;
   }
   else
   {
-    if (IsPlayerVisible())
+    if (IsPlayerInRange())
     {
-      MoveToKill();
+      Attack(_playerRef);
     }
     else
     {
-      RandomMovement();
+      if (IsPlayerVisible())
+      {
+        MoveToKill();
+      }
+      else
+      {
+        RandomMovement();
+      }
     }
+
+    ((GameObject*)OwnerGameObject)->FinishTurn();
   }
 }
 
@@ -162,5 +171,5 @@ void AIMonsterBasic::Attack(Player* player)
     dmg = 1;
   }
 
-  player->ReceiveDamage(((GameObject*)OwnerGameObject), dmg);
+  player->ReceiveDamage(((GameObject*)OwnerGameObject), dmg);  
 }

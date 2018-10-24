@@ -132,6 +132,7 @@ struct Attributes
   Attribute Lvl;
 
   int Hunger = 1000;
+  int ActionMeter = 0;
 
   bool Indestructible = true;
 };

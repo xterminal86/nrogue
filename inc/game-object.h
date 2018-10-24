@@ -143,6 +143,7 @@ class GameObject
     }
 
     void ReceiveDamage(GameObject* from, int amount);
+    void FinishTurn();
 
     Attributes Attrs;
 

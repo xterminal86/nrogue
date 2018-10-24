@@ -54,6 +54,11 @@ void LookInputState::HandleInput()
       MoveCursor(1, 1);
       break;
 
+    case VK_ENTER:
+      // FIXME: remove afterwards or implememnt as skill
+      DisplayMonsterStats();
+      break;
+
     case 'q':
       Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
       break;
@@ -194,4 +199,26 @@ GameObject* LookInputState::CheckActor()
 const std::vector<GameObject*> LookInputState::CheckGameObjects()
 {
   return Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
+}
+
+void LookInputState::DisplayMonsterStats()
+{
+  auto actor = CheckActor();
+  if (actor != nullptr)
+  {
+    std::vector<std::string> msg;
+    msg.push_back(Util::StringFormat("STR: %i", actor->Attrs.Str.CurrentValue));
+    msg.push_back(Util::StringFormat("DEF: %i", actor->Attrs.Def.CurrentValue));
+    msg.push_back(Util::StringFormat("MAG: %i", actor->Attrs.Mag.CurrentValue));
+    msg.push_back(Util::StringFormat("RES: %i", actor->Attrs.Res.CurrentValue));
+    msg.push_back(Util::StringFormat("SKL: %i", actor->Attrs.Skl.CurrentValue));
+    msg.push_back(Util::StringFormat("SPD: %i", actor->Attrs.Spd.CurrentValue));
+    msg.push_back("");
+    msg.push_back(Util::StringFormat("HP: %i/%i", actor->Attrs.HP.CurrentValue, actor->Attrs.HP.OriginalValue));
+    msg.push_back(Util::StringFormat("MP: %i/%i", actor->Attrs.MP.CurrentValue, actor->Attrs.MP.OriginalValue));
+    msg.push_back("");
+    msg.push_back(Util::StringFormat("Action Meter: %i", actor->Attrs.ActionMeter));
+
+    Application::Instance().ShowMessageBox(actor->ObjectName, msg);
+  }
 }

@@ -15,7 +15,7 @@ void MainState::HandleInput()
 {
   _keyPressed = getch();
 
-  if (_playerRef->ActionMeter >= 100)
+  if (_playerRef->Attrs.ActionMeter >= 100)
   {
     switch (_keyPressed)
     {
@@ -194,11 +194,11 @@ void MainState::HandleInput()
   }
 
   // If player's turn finished, update all game objects' components
-  if (_playerRef->ActionMeter < 100)
+  if (_playerRef->Attrs.ActionMeter < 100)
   {    
     Map::Instance().UpdateGameObjects();
     Update(true);
-    _playerRef->ActionMeter += _playerRef->Attrs.Spd.CurrentValue;
+    _playerRef->Attrs.ActionMeter += _playerRef->Attrs.Spd.CurrentValue;
   }  
 }
 
@@ -224,7 +224,7 @@ void MainState::Update(bool forceUpdate)
     // NOTE: Some debug info
 
     _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i: Plr: [%i;%i] Key: %i",
-                                    _playerRef->ActionMeter,
+                                    _playerRef->Attrs.ActionMeter,
                                     Map::Instance().MapOffsetX,
                                     Map::Instance().MapOffsetY,
                                     _playerRef->PosX,

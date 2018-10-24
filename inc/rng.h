@@ -13,6 +13,8 @@ class RNG : public Singleton<RNG>
 
     void SetSeed(unsigned long long seed);
 
+    int RandomRange(int min, int max);
+
     std::mt19937_64 Random;
 
     unsigned long long Seed;

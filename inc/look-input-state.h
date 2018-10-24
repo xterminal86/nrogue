@@ -17,6 +17,7 @@ class LookInputState : public GameState
   private:
     void MoveCursor(int dx, int dy);
     void DrawCursor();
+    void DisplayMonsterStats();
 
     bool CheckPlayer();
     GameObject* CheckActor();

@@ -50,20 +50,18 @@ class Player : public GameObject
 
     void SubtractActionMeter()
     {
-      ActionMeter -= 100;
+      Attrs.ActionMeter -= 100;
 
-      if (ActionMeter < 0)
+      if (Attrs.ActionMeter < 0)
       {
-        ActionMeter = 0;
+        Attrs.ActionMeter = 0;
       }
     }
 
+    void Draw();
     void Attack(GameObject* go);
     void ReceiveDamage(GameObject* from, int amount);
 
-    int ActionMeter = 0;
-
-    Attributes Attrs;
     ContainerComponent Inventory;
 
     std::string Name = "Nameless One";

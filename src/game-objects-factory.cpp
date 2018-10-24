@@ -106,19 +106,24 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   auto c = go->AddComponent<AIMonsterBasic>();
   AIMonsterBasic* ai = dynamic_cast<AIMonsterBasic*>(c);
 
-  ai->AgroRadius = 5;
+  ai->AgroRadius = 8;
 
   // Set attributes
   if (randomize)
   {
-    int playerLevel = _playerRef->Attrs.Lvl.CurrentValue;
-    int randomStr = RNG::Instance().Random() % playerLevel + 1;
-    int randomDef = RNG::Instance().Random() % playerLevel + 0;
-    int randomHp = RNG::Instance().Random() % playerLevel + 10;
+    int pl = _playerRef->Attrs.Lvl.CurrentValue;
+
+    int randomStr = RNG::Instance().RandomRange(1 * pl, 2 * pl);
+    int randomDef = RNG::Instance().RandomRange(0, 1 * pl);
+    int randomSkl = RNG::Instance().RandomRange(0, 1 * pl);
+    int randomHp = RNG::Instance().RandomRange(3 * pl, 10 * pl);
+    int randomSpd = RNG::Instance().RandomRange(30 * pl, 60 * pl);
 
     go->Attrs.Str.Set(randomStr);
     go->Attrs.Def.Set(randomDef);
     go->Attrs.HP.Set(randomHp);
+    go->Attrs.Spd.Set(randomSpd);
+    go->Attrs.Skl.Set(randomSkl);
   }
   else
   {
