@@ -9,7 +9,7 @@ void MenuState::HandleInput()
 
   switch (_keyPressed)
   {
-    case 10:
+    case VK_ENTER:
       Application::Instance().ChangeState(Application::GameStates::SELECT_CLASS_STATE);
       break;
 
@@ -36,8 +36,8 @@ void MenuState::Update(bool forceUpdate)
 
     auto border = Util::GetPerimeter(0, 0, tw - 1, th - 1);
     for (auto& i : border)
-    {      
-      Printer::Instance().PrintFB(i.X, i.Y, '#', "#FFFFFF", "#FFFFFF");
+    {
+      Printer::Instance().PrintFB(i.X, i.Y, ' ', "#000000", "#FFFFFF");
     }
 
     int yOffset = 0;
@@ -49,7 +49,7 @@ void MenuState::Update(bool forceUpdate)
       {
         if (c == '#')
         {
-          Printer::Instance().PrintFB(titleX - xAlign + xOffset, titleY + yOffset, ' ', "#FFFFFF", "#FFFFFF");
+          Printer::Instance().PrintFB(titleX - xAlign + xOffset, titleY + yOffset, ' ', "#000000", "#FFFFFF");
         }
         else
         {

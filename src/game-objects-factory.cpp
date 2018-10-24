@@ -168,20 +168,20 @@ bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
 
   if (category == EquipmentCategory::RING)
   {
-    ProcessRingEquiption(item);
-    res = true;
+    res = ProcessRingEquiption(item);
   }
   else
   {
-    ProcessItemEquiption(item);
-    res = true;
+    res = ProcessItemEquiption(item);
   }
 
   return res;
 }
 
-void GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
+bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
 {
+  bool res = true;
+
   auto itemEquipped = _playerRef->EquipmentByCategory[item->EquipmentType][0];
 
   if (itemEquipped == nullptr)
@@ -191,17 +191,16 @@ void GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
   }
   else if (itemEquipped != item)
   {
-    // FIXME: performed in one action
-    //
-    // If something was equipped, replace with item
-    UnequipItem(itemEquipped);
-    EquipItem(item);
+    Application::Instance().ShowMessageBox("Information", { "Unequip first!" });
+    res = false;
   }
   else
   {
     // If it's the same item, just unequip it
     UnequipItem(itemEquipped);
   }
+
+  return res;
 }
 
 void GameObjectsFactory::EquipItem(ItemComponent* item)
@@ -244,7 +243,7 @@ void GameObjectsFactory::UnequipItem(ItemComponent* item)
   Printer::Instance().AddMessage(message);
 }
 
-void GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
+bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
 {
   bool emptySlotFound = false;
 
@@ -256,7 +255,7 @@ void GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
     if (rings[i] == item)
     {
       UnequipRing(rings[i], i);
-      return;
+      return true;
     }
   }
 
@@ -266,15 +265,15 @@ void GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
     if (rings[i] == nullptr)
     {
       EquipRing(item, i);
-      return;
+      return true;
     }
   }
 
-  // Finally, if no empty slots found, replace first equipped ring
+  // Finally, if no empty slots found, print a warning
   if (!emptySlotFound)
   {
-    UnequipRing(rings[0], 0);
-    EquipRing(item, 0);
+    Application::Instance().ShowMessageBox("Information", { "Unequip first!" });
+    return false;
   }
 }
 
@@ -324,7 +323,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
         Application::Instance().ShowMessageBox("Information", { m1, m2 });
       }
       else if (_playerRef->Attrs.MP.CurrentValue == _playerRef->Attrs.MP.OriginalValue)
-      {        
+      {
         Application::Instance().ShowMessageBox("Information", { "You are already in fighting spirit!" });
       }
       else

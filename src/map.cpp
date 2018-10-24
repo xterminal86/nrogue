@@ -55,15 +55,13 @@ void Map::Draw(int playerX, int playerY)
                               GlobalConstants::FogOfWarColor :
                               GlobalConstants::BlackColor;
 
-      // Because some tiles can be just spaces with bg color,
-      // we have to check them separately
-      if (MapArray[x][y].FgColor.length() == 0)
+      if (MapArray[x][y].FgColor == GlobalConstants::BlackColor)
       {
         MapArray[x][y].Draw(GlobalConstants::BlackColor, tileColor);
       }
       else
       {
-        MapArray[x][y].Draw(tileColor, "#000000");
+        MapArray[x][y].Draw(tileColor, GlobalConstants::BlackColor);
       }
     }
   }
@@ -79,7 +77,7 @@ void Map::Draw(int playerX, int playerY)
     {
       // If game object has black bg color,
       // replace it with current floor color
-      bool cond = (go->BgColor.length() == 0 || go->BgColor == "#000000");
+      bool cond = (go->BgColor == GlobalConstants::BlackColor);
       go.get()->Draw(go.get()->FgColor, cond ? MapArray[x][y].BgColor : go->BgColor);
     }
   }
@@ -95,7 +93,7 @@ void Map::Draw(int playerX, int playerY)
     {
       // If game object has black bg color,
       // replace it with current floor color
-      bool cond = (go->BgColor.length() == 0 || go->BgColor == "#000000");
+      bool cond = (go->BgColor == GlobalConstants::BlackColor);
       go.get()->Draw(go.get()->FgColor, cond ? MapArray[x][y].BgColor : go->BgColor);
     }
   }
@@ -191,7 +189,7 @@ void Map::CreateTown()
 
   FillArea(r.X1, r.Y1, r.X2, r.Y2, t);
 
-  t.Set(true, true, ' ', "", GlobalConstants::MountainsColor, "Mountains");
+  t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Mountains");
 
   auto bounds = r.GetBoundaryElements();
   for (auto& pos : bounds)
@@ -249,7 +247,7 @@ void Map::CreateRoom(int x, int y, int w, int h)
   Rect room(x, y, w, h);
 
   Tile t;
-  t.Set(false, false, ' ', "", GlobalConstants::RoomFloorColor, "Wooden Floor");
+  t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
 
   FillArea(x + 1, y + 1, w - 1, h - 1, t);
 
@@ -358,7 +356,7 @@ void Map::CreateRoom(int x, int y, const std::vector<std::string>& layout, bool 
 
         case 'g':
         {
-          t.Set(false, false, ' ', "", GlobalConstants::GrassColor, "Grass");
+          t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::GrassColor, "Grass");
           MapArray[posX][posY].MakeTile(t);
         }
         break;
@@ -374,21 +372,21 @@ void Map::CreateRoom(int x, int y, const std::vector<std::string>& layout, bool 
         // background colored ' ', set FgColor to empty string.
         case '.':
         {
-          t.Set(false, false, ' ', "", GlobalConstants::RoomFloorColor, "Wooden Floor");
+          t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
           MapArray[posX][posY].MakeTile(t);
         }
         break;
 
         case ' ':
         {
-          t.Set(false, false, c, "", GlobalConstants::GroundColor, "Stone Tiles");
+          t.Set(false, false, c, GlobalConstants::BlackColor, GlobalConstants::GroundColor, "Stone Tiles");
           MapArray[posX][posY].MakeTile(t);
         }
         break;
 
         case 'w':
         {
-          t.Set(true, false, ' ', "", GlobalConstants::WaterColor, "Water");
+          t.Set(true, false, ' ', GlobalConstants::BlackColor, GlobalConstants::WaterColor, "Water");
           MapArray[posX][posY].MakeTile(t);
         }
         break;
@@ -446,7 +444,7 @@ void Map::CreateChurch(int x, int y)
         // background colored ' ', set FgColor to empty string.
         case ' ':
         {
-          t.Set(false, false, c, "", GlobalConstants::GroundColor, "Stone Tiles");
+          t.Set(false, false, c, GlobalConstants::BlackColor, GlobalConstants::GroundColor, "Stone Tiles");
           MapArray[posX][posY].MakeTile(t);
         }
         break;
@@ -530,7 +528,7 @@ void Map::CreateCastle(int x, int y)
         // background colored ' ', set FgColor to empty string.
         case ' ':
         {
-          t.Set(false, false, c, "", GlobalConstants::GroundColor, "Stone Tiles");
+          t.Set(false, false, c, GlobalConstants::BlackColor, GlobalConstants::GroundColor, "Stone Tiles");
           MapArray[posX][posY].MakeTile(t);
         }
         break;
@@ -567,7 +565,7 @@ void Map::CreateCastle(int x, int y)
 
         case 'g':
         {
-          t.Set(false, false, ' ', "", GlobalConstants::GrassColor, "Grass");
+          t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::GrassColor, "Grass");
           MapArray[posX][posY].MakeTile(t);
         }
         break;
@@ -581,7 +579,7 @@ void Map::CreateCastle(int x, int y)
 
         case 'w':
         {
-          t.Set(true, false, ' ', "", GlobalConstants::WaterColor, "Water");
+          t.Set(true, false, ' ', GlobalConstants::BlackColor, GlobalConstants::WaterColor, "Water");
           MapArray[posX][posY].MakeTile(t);
         }
         break;

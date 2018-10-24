@@ -130,8 +130,8 @@ class GameObject
     bool IsDestroyed = false;
 
     chtype Image;
-    std::string FgColor;
-    std::string BgColor;
+    std::string FgColor = GlobalConstants::BlackColor;
+    std::string BgColor = GlobalConstants::BlackColor;
     std::string ObjectName;
     std::string FogOfWarName;
 

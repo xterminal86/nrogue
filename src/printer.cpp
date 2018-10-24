@@ -216,26 +216,25 @@ void Printer::PrintFB(const int& x, const int& y,
 
   #if !(defined(__unix__) || defined(__linux__))
 
-  auto tmp = htmlColorFg;
   std::string tmpFg;
-  if (tmp != GlobalConstants::BlackColor && tmp != GlobalConstants::FogOfWarColor)
-  {
-    tmpFg = "#FFFFFF";
-  }
-  else
-  {
-    tmpFg = tmp;
-  }
-
-  tmp = htmlColorBg;
   std::string tmpBg;
-  if (tmp != GlobalConstants::BlackColor && tmp != GlobalConstants::FogOfWarColor && tmp != "#FFFFFF")
+
+  if (htmlColorFg == "#000000" && htmlColorBg == "#000000")
   {
-    tmpBg = (htmlColorFg.length() != 0) ? "#000000" : tmpFg;
+    // For invisible and not discovered tiles
+
+    tmpFg = "#000000";
+    tmpBg = "#000000";
+  }
+  else if (htmlColorBg != "#000000")
+  {
+    tmpFg = "#000000";
+    tmpBg = (htmlColorBg == GlobalConstants::FogOfWarColor) ? GlobalConstants::FogOfWarColor : "#FFFFFF";
   }
   else
   {
-    tmpBg = tmp;
+    tmpFg = (htmlColorFg == GlobalConstants::FogOfWarColor) ? GlobalConstants::FogOfWarColor : "#FFFFFF";
+    tmpBg = "#000000";
   }
 
   size_t hash = GetOrSetColor(tmpFg, tmpBg);

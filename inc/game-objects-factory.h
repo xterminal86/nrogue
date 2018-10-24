@@ -29,8 +29,8 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
   private:
     Player* _playerRef;
 
-    void ProcessItemEquiption(ItemComponent* item);
-    void ProcessRingEquiption(ItemComponent* item);
+    bool ProcessItemEquiption(ItemComponent* item);
+    bool ProcessRingEquiption(ItemComponent* item);
 
     void EquipItem(ItemComponent* item);
     void UnequipItem(ItemComponent* item);
