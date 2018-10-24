@@ -66,7 +66,7 @@ class Player : public GameObject
 
     std::string Name = "Nameless One";
 
-    std::map<EquipmentCategory, ItemComponent*> EquipmentByCategory;
+    std::map<EquipmentCategory, std::vector<ItemComponent*>> EquipmentByCategory;
 
   private:
     void DiscoverCell(int x, int y);

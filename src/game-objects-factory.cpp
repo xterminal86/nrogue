@@ -152,6 +152,150 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
   return go;
 }
 
+bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
+{
+  bool res = false;
+
+  if (item->EquipmentType == EquipmentCategory::NOT_EQUIPPABLE)
+  {
+    Application::Instance().ShowMessageBox("Information", { "Can't be equipped!" });
+    return res;
+  }
+
+  // TODO: cursed items
+
+  auto category = item->EquipmentType;
+
+  if (category == EquipmentCategory::RING)
+  {
+    ProcessRingEquiption(item);
+    res = true;
+  }
+  else
+  {
+    ProcessItemEquiption(item);
+    res = true;
+  }
+
+  return res;
+}
+
+void GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
+{
+  auto itemEquipped = _playerRef->EquipmentByCategory[item->EquipmentType][0];
+
+  if (itemEquipped == nullptr)
+  {
+    // If nothing was equipped, equip item
+    EquipItem(item);
+  }
+  else if (itemEquipped != item)
+  {
+    // FIXME: performed in one action
+    //
+    // If something was equipped, replace with item
+    UnequipItem(itemEquipped);
+    EquipItem(item);
+  }
+  else
+  {
+    // If it's the same item, just unequip it
+    UnequipItem(itemEquipped);
+  }
+}
+
+void GameObjectsFactory::EquipItem(ItemComponent* item)
+{
+  item->IsEquipped = true;
+  _playerRef->EquipmentByCategory[item->EquipmentType][0] = item;
+
+  std::string verb;
+
+  if (item->EquipmentType == EquipmentCategory::WEAPON)
+  {
+    verb = "arm yourself with";
+  }
+  else
+  {
+    verb = "put on";
+  }
+
+  auto message = Util::StringFormat("You %s %s", verb.data(), ((GameObject*)item->OwnerGameObject)->ObjectName.data());
+  Printer::Instance().AddMessage(message);
+}
+
+void GameObjectsFactory::UnequipItem(ItemComponent* item)
+{
+  item->IsEquipped = false;
+  _playerRef->EquipmentByCategory[item->EquipmentType][0] = nullptr;
+
+  std::string verb;
+
+  if (item->EquipmentType == EquipmentCategory::WEAPON)
+  {
+    verb = "put away";
+  }
+  else
+  {
+    verb = "take off";
+  }
+
+  auto message = Util::StringFormat("You %s %s", verb.data(), ((GameObject*)item->OwnerGameObject)->ObjectName.data());
+  Printer::Instance().AddMessage(message);
+}
+
+void GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
+{
+  bool emptySlotFound = false;
+
+  auto& rings = _playerRef->EquipmentByCategory[item->EquipmentType];
+
+  // First, search if this ring is already equipped
+  for (int i = 0; i < rings.size(); i++)
+  {
+    if (rings[i] == item)
+    {
+      UnequipRing(rings[i], i);
+      return;
+    }
+  }
+
+  // Second, if it's different item, try to find empty slot for it
+  for (int i = 0; i < rings.size(); i++)
+  {
+    if (rings[i] == nullptr)
+    {
+      EquipRing(item, i);
+      return;
+    }
+  }
+
+  // Finally, if no empty slots found, replace first equipped ring
+  if (!emptySlotFound)
+  {
+    UnequipRing(rings[0], 0);
+    EquipRing(item, 0);
+  }
+}
+
+void GameObjectsFactory::EquipRing(ItemComponent* ring, int index)
+{
+  ring->IsEquipped = true;
+  _playerRef->EquipmentByCategory[ring->EquipmentType][index] = ring;
+
+  auto str = Util::StringFormat("You put on %s", ((GameObject*)ring->OwnerGameObject)->ObjectName.data());
+  Printer::Instance().AddMessage(str);
+}
+
+void GameObjectsFactory::UnequipRing(ItemComponent* ring, int index)
+{
+  ring->IsEquipped = false;
+  _playerRef->EquipmentByCategory[ring->EquipmentType][index] = nullptr;
+
+  auto str = Util::StringFormat("You take off %s", ((GameObject*)ring->OwnerGameObject)->ObjectName.data());
+  Printer::Instance().AddMessage(str);
+}
+
 bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 {
   bool res = false;

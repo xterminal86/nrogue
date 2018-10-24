@@ -16,13 +16,14 @@ class ItemComponent : public Component
     bool Use();
     void Transfer(ContainerComponent* destination = nullptr);
     void Inspect();
-    void Equip();
+    bool Equip();
     void Throw();
 
     int Durability = -1;
     int Cost = 0;
     int Amount = 1;
     bool IsStackable = false;
+    bool IsEquipped = false;
 
     ItemType TypeOfObject = ItemType::DUMMY;
     EquipmentCategory EquipmentType = EquipmentCategory::NOT_EQUIPPABLE;

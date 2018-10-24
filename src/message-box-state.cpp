@@ -51,11 +51,14 @@ void MessageBoxState::Update(bool forceUpdate)
     auto border = Util::GetScreenRectPerimeter(x1, y1, x2, y2);
     for (auto& b : border)
     {
-      Printer::Instance().PrintFB(b.X, b.Y, '*', "#FFFFFF");
+      Printer::Instance().PrintFB(b.X, b.Y, ' ', "#FFFFFF", kBorderColor);
     }
 
     if (_header.length() != 0)
     {
+      _header.insert(0, " ");
+      _header.append(" ");
+
       Printer::Instance().PrintFB(tw / 2, y1, _header, Printer::kAlignCenter, "#FFFFFF");
     }
 

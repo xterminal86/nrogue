@@ -19,6 +19,7 @@ class MessageBoxState : public GameState
     }
 
     const std::string kBackgroundColor = "#222222";
+    const std::string kBorderColor = "#666666";
 
   private:
     std::string _header;

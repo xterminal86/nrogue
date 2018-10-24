@@ -94,12 +94,10 @@ void InventoryState::HandleInput()
       auto go = _playerRef->Inventory.Contents[_selectedIndex].get();
       auto c = go->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);
-      if (ic->EquipmentType == EquipmentCategory::NOT_EQUIPPABLE)
+      if (ic->Equip())
       {
-        Application::Instance().ShowMessageBox("Information", { "Can't be equipped!" });
-      }
-      else
-      {
+        _playerRef->SubtractActionMeter();
+        Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
       }
     }
     break;
@@ -126,54 +124,28 @@ void InventoryState::Update(bool forceUpdate)
     int tw = Printer::Instance().TerminalWidth;
     int th = Printer::Instance().TerminalHeight;
 
-    Printer::Instance().PrintFB(tw / 2, 0, "INVENTORY", Printer::kAlignCenter, "#FFFFFF");
-    Printer::Instance().PrintFB(tw / 2, 1, "=========", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(tw / 2, 0, "========== INVENTORY ==========", Printer::kAlignCenter, "#FFFFFF");
 
     int itemsCount = 0;
     int yPos = 0;
     for (auto& item : _playerRef->Inventory.Contents)
     {      
-      std::string nameInInventory = item->ObjectName;
-
-      if (nameInInventory.length() < kInventoryMaxNameLength)
-      {
-        for (int i = nameInInventory.length() - 1; i < kInventoryMaxNameLength; i++)
-        {
-          nameInInventory += ' ';
-        }
-      }
-      else
-      {
-        nameInInventory.resize(kInventoryMaxNameLength);
-      }
+      std::string nameInInventory = item->ObjectName;      
+      nameInInventory.resize(kInventoryMaxNameLength, ' ');
 
       auto c = item->GetComponent<ItemComponent>();
       if (((ItemComponent*)c)->IsStackable)
-      {
+      {        
         auto stackAmount = Util::StringFormat("(%i)", ((ItemComponent*)c)->Amount);
-
-        if (yPos == _selectedIndex)
-        {
-          Printer::Instance().PrintFB(0, 2 + yPos, nameInInventory, Printer::kAlignLeft, "#000000", "#FFFFFF");
-        }
-        else
-        {
-          Printer::Instance().PrintFB(0, 2 + yPos, nameInInventory, Printer::kAlignLeft, "#FFFFFF");
-        }
-
         Printer::Instance().PrintFB(kInventoryMaxNameLength + 1, 2 + yPos, stackAmount, Printer::kAlignLeft, "#FFFFFF");
       }
-      else
+      else if (((ItemComponent*)c)->IsEquipped)
       {
-        if (yPos == _selectedIndex)
-        {
-          Printer::Instance().PrintFB(0, 2 + yPos, nameInInventory, Printer::kAlignLeft, "#000000", "#FFFFFF");
-        }
-        else
-        {
-          Printer::Instance().PrintFB(0, 2 + yPos, nameInInventory, Printer::kAlignLeft, "#FFFFFF");
-        }
+        auto equipStatus = Util::StringFormat("E", ((ItemComponent*)c)->Amount);
+        Printer::Instance().PrintFB(kInventoryMaxNameLength + 1, 2 + yPos, equipStatus, Printer::kAlignLeft, "#FFFFFF");
       }
+
+      DrawSelectionBar(yPos, nameInInventory);
 
       yPos++;
 
@@ -206,29 +178,29 @@ void InventoryState::DisplayEquipment()
 
   ItemComponent* eq = nullptr;
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::HEAD];
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::HEAD][0];
   DrawEquipmentField(tw + 10, yPos, "Head", eq);
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::NECK];
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::NECK][0];
   DrawEquipmentField(tw + 24, yPos, "Neck", eq);
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON];
-  DrawEquipmentField(tw - 4, yPos + 2, "Weapon", eq);
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  DrawEquipmentField(tw - 4, yPos + 3, "Weapon", eq);
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::TORSO];
-  DrawEquipmentField(tw + 10, yPos + 2, "Torso", eq);
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::TORSO][0];
+  DrawEquipmentField(tw + 10, yPos + 3, "Torso", eq);
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::LEGS];
-  DrawEquipmentField(tw + 10, yPos + 4, "Legs", eq);
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::LEGS][0];
+  DrawEquipmentField(tw + 10, yPos + 6, "Legs", eq);
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::BOOTS];
-  DrawEquipmentField(tw + 10, yPos + 6, "Boots", eq);
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::BOOTS][0];
+  DrawEquipmentField(tw + 10, yPos + 9, "Boots", eq);
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::RING1];
-  DrawEquipmentField(tw + 24, yPos + 4, "Ring", eq);
-
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::RING2];
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::RING][0];
   DrawEquipmentField(tw + 24, yPos + 6, "Ring", eq);
+
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::RING][1];
+  DrawEquipmentField(tw + 24, yPos + 9, "Ring", eq);
 }
 
 void InventoryState::DrawEquipmentField(int x, int y, std::string fieldName, ItemComponent* eq)
@@ -240,7 +212,7 @@ void InventoryState::DrawEquipmentField(int x, int y, std::string fieldName, Ite
   if (eq != nullptr)
   {
     stub = ((GameObject*)eq->OwnerGameObject)->ObjectName;
-    stub.resize(kEquipmentMaxNameLength);
+    stub.resize(kEquipmentMaxNameLength, ' ');
   }
 
   Printer::Instance().PrintFB(x, y + 1, stub, Printer::kAlignCenter, "#FFFFFF");
@@ -270,12 +242,18 @@ void InventoryState::DropItem()
 {
   auto go = _playerRef->Inventory.Contents[_selectedIndex].release();
   auto c = go->GetComponent<ItemComponent>();
-  ((ItemComponent*)c)->Transfer();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  if (ic->IsEquipped)
+  {
+    ic->Equip();
+  }
+
+  ic->Transfer();
 
   std::string message;
-  if (((ItemComponent*)c)->IsStackable)
+  if (ic->IsStackable)
   {
-    message = Util::StringFormat("Dropped: %i %s", ((ItemComponent*)c)->Amount, go->ObjectName.data());
+    message = Util::StringFormat("Dropped: %i %s", ic->Amount, go->ObjectName.data());
   }
   else
   {
@@ -285,4 +263,16 @@ void InventoryState::DropItem()
   // !!! Destruction is done in other method !!!
 
   Printer::Instance().AddMessage(message);
+}
+
+void InventoryState::DrawSelectionBar(int yOffset, std::string& text)
+{
+  if (yOffset == _selectedIndex)
+  {
+    Printer::Instance().PrintFB(0, 2 + yOffset, text, Printer::kAlignLeft, "#000000", "#FFFFFF");
+  }
+  else
+  {
+    Printer::Instance().PrintFB(0, 2 + yOffset, text, Printer::kAlignLeft, "#FFFFFF");
+  }
 }

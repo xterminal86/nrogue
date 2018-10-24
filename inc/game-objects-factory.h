@@ -24,9 +24,18 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateManaPotion();
 
     bool HandleItemUse(ItemComponent* item);
+    bool HandleItemEquip(ItemComponent* item);
 
   private:
     Player* _playerRef;
+
+    void ProcessItemEquiption(ItemComponent* item);
+    void ProcessRingEquiption(ItemComponent* item);
+
+    void EquipItem(ItemComponent* item);
+    void UnequipItem(ItemComponent* item);
+    void EquipRing(ItemComponent* ring, int index);
+    void UnequipRing(ItemComponent* ring, int index);
 };
 
 #endif // GAMEOBJECTSFACTORY_H

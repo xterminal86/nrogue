@@ -36,6 +36,29 @@ void Player::Init()
     //auto msg = Util::StringFormat("Created 0x%X", go);
     //Logger::Instance().Print(msg);
   }
+
+  for (int i = 0; i < 3; i++)
+  {
+    auto go = new GameObject(3 + i, 1, 'o', "#FFFFFF");
+
+    auto name = Util::StringFormat("Ring %i", i);
+    go->ObjectName = name;
+
+    auto ic = go->AddComponent<ItemComponent>();
+    ((ItemComponent*)ic)->EquipmentType = EquipmentCategory::RING;
+    ((ItemComponent*)ic)->Description = { "This is a placeholder equippable object" };
+
+    Map::Instance().InsertGameObject(go);
+  }
+
+  auto go = new GameObject(10, 1, 'O', "#FFFFFF");
+  go->ObjectName = "Medallion";
+
+  auto ic = go->AddComponent<ItemComponent>();
+  ((ItemComponent*)ic)->EquipmentType = EquipmentCategory::NECK;
+  ((ItemComponent*)ic)->Description = { "This is a placeholder equippable object" };
+
+  Map::Instance().InsertGameObject(go);
 }
 
 void Player::Draw()
@@ -278,14 +301,13 @@ void Player::SetDefaultEquipment()
 {
   // Initialize map
 
-  EquipmentByCategory[EquipmentCategory::HEAD] = nullptr;
-  EquipmentByCategory[EquipmentCategory::NECK] = nullptr;
-  EquipmentByCategory[EquipmentCategory::TORSO] = nullptr;
-  EquipmentByCategory[EquipmentCategory::LEGS] = nullptr;
-  EquipmentByCategory[EquipmentCategory::BOOTS] = nullptr;
-  EquipmentByCategory[EquipmentCategory::WEAPON] = nullptr;
-  EquipmentByCategory[EquipmentCategory::RING1] = nullptr;
-  EquipmentByCategory[EquipmentCategory::RING2] = nullptr;
+  EquipmentByCategory[EquipmentCategory::HEAD] = { nullptr };
+  EquipmentByCategory[EquipmentCategory::NECK] = { nullptr };
+  EquipmentByCategory[EquipmentCategory::TORSO] = { nullptr };
+  EquipmentByCategory[EquipmentCategory::LEGS] = { nullptr };
+  EquipmentByCategory[EquipmentCategory::BOOTS] = { nullptr };
+  EquipmentByCategory[EquipmentCategory::WEAPON] = { nullptr };
+  EquipmentByCategory[EquipmentCategory::RING] = { nullptr, nullptr };
 
   // TODO: assign default equipment according to selected class
 }

@@ -17,7 +17,8 @@ void ItemComponent::Update()
 /// or tile occupied by player if destination = nullptr
 void ItemComponent::Transfer(ContainerComponent* destination)
 {
-  // FIXME: add transfer to container
+  // OwnerGameObject should be in released state
+
   if (destination == nullptr)
   {
     ((GameObject*)OwnerGameObject)->PosX = Application::Instance().PlayerInstance.PosX;
@@ -25,10 +26,15 @@ void ItemComponent::Transfer(ContainerComponent* destination)
 
     Map::Instance().InsertGameObject(((GameObject*)OwnerGameObject));
   }
+  else
+  {
+    destination->AddToInventory((GameObject*)OwnerGameObject);
+  }
 }
 
-void ItemComponent::Equip()
+bool ItemComponent::Equip()
 {
+  return GameObjectsFactory::Instance().HandleItemEquip(this);
 }
 
 void ItemComponent::Inspect()

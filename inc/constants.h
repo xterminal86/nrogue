@@ -59,8 +59,7 @@ enum class EquipmentCategory
   LEGS,
   BOOTS,
   WEAPON,
-  RING1,
-  RING2
+  RING
 };
 
 enum class ItemType
