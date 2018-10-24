@@ -283,7 +283,7 @@ void Map::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)
 void Map::CreateDoor(int x, int y, bool isOpen)
 {  
   auto c = MapArray[x][y].AddComponent<DoorComponent>();  
-  DoorComponent* dc = dynamic_cast<DoorComponent*>(c);
+  DoorComponent* dc = static_cast<DoorComponent*>(c);
   dc->IsOpen = isOpen;
   dc->UpdateDoorState();
 

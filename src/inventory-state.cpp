@@ -64,14 +64,15 @@ void InventoryState::HandleInput()
 
       auto go = _playerRef->Inventory.Contents[_selectedIndex].get();
       auto c = go->GetComponent<ItemComponent>();
+      ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-      if (((ItemComponent*)c)->Use())
+      if (ic->Use())
       {
-        if (((ItemComponent*)c)->IsStackable)
+        if (ic->IsStackable)
         {
-          ((ItemComponent*)c)->Amount--;
+          ic->Amount--;
 
-          if (((ItemComponent*)c)->Amount == 0)
+          if (ic->Amount == 0)
           {
             DestroyInventoryItem();
           }
@@ -82,13 +83,27 @@ void InventoryState::HandleInput()
         }
 
         _playerRef->SubtractActionMeter();
-      }
 
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+        Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+      }      
     }
     break;
 
     case 'e':
+    {
+      auto go = _playerRef->Inventory.Contents[_selectedIndex].get();
+      auto c = go->GetComponent<ItemComponent>();
+      ItemComponent* ic = static_cast<ItemComponent*>(c);
+      if (ic->EquipmentType == EquipmentCategory::NOT_EQUIPPABLE)
+      {
+        Application::Instance().ShowMessageBox("Information", { "Can't be equipped!" });
+      }
+      else
+      {
+      }
+    }
+    break;
+
     case 't':
       Application::Instance().ShowMessageBox("Information", { "Not implemented yet!" });
       break;
@@ -117,26 +132,47 @@ void InventoryState::Update(bool forceUpdate)
     int itemsCount = 0;
     int yPos = 0;
     for (auto& item : _playerRef->Inventory.Contents)
-    {
-      std::string nameInInventory;
+    {      
+      std::string nameInInventory = item->ObjectName;
+
+      if (nameInInventory.length() < kInventoryMaxNameLength)
+      {
+        for (int i = nameInInventory.length() - 1; i < kInventoryMaxNameLength; i++)
+        {
+          nameInInventory += ' ';
+        }
+      }
+      else
+      {
+        nameInInventory.resize(kInventoryMaxNameLength);
+      }
 
       auto c = item->GetComponent<ItemComponent>();
       if (((ItemComponent*)c)->IsStackable)
       {
-        nameInInventory = Util::StringFormat("%s (%i)", item->ObjectName.data(), ((ItemComponent*)c)->Amount);
-      }
-      else
-      {
-        nameInInventory = item->ObjectName;
-      }
+        auto stackAmount = Util::StringFormat("(%i)", ((ItemComponent*)c)->Amount);
 
-      if (yPos == _selectedIndex)
-      {
-        Printer::Instance().PrintFB(0, 2 + yPos, nameInInventory, Printer::kAlignLeft, "#000000", "#FFFFFF");
+        if (yPos == _selectedIndex)
+        {
+          Printer::Instance().PrintFB(0, 2 + yPos, nameInInventory, Printer::kAlignLeft, "#000000", "#FFFFFF");
+        }
+        else
+        {
+          Printer::Instance().PrintFB(0, 2 + yPos, nameInInventory, Printer::kAlignLeft, "#FFFFFF");
+        }
+
+        Printer::Instance().PrintFB(kInventoryMaxNameLength + 1, 2 + yPos, stackAmount, Printer::kAlignLeft, "#FFFFFF");
       }
       else
       {
-        Printer::Instance().PrintFB(0, 2 + yPos, nameInInventory, Printer::kAlignLeft, "#FFFFFF");
+        if (yPos == _selectedIndex)
+        {
+          Printer::Instance().PrintFB(0, 2 + yPos, nameInInventory, Printer::kAlignLeft, "#000000", "#FFFFFF");
+        }
+        else
+        {
+          Printer::Instance().PrintFB(0, 2 + yPos, nameInInventory, Printer::kAlignLeft, "#FFFFFF");
+        }
       }
 
       yPos++;
@@ -146,14 +182,68 @@ void InventoryState::Update(bool forceUpdate)
 
     for (int i = itemsCount; i < _playerRef->kInventorySize; i++)
     {
-      Printer::Instance().PrintFB(0, 2 + yPos, "----------", Printer::kAlignLeft, "#FFFFFF");
+      std::string stub(kInventoryMaxNameLength, '-');
+      Printer::Instance().PrintFB(0, 2 + yPos, stub, Printer::kAlignLeft, "#FFFFFF");
       yPos++;
     }
+
+    DisplayEquipment();
 
     PrintFooter();
 
     Printer::Instance().Render();
   }
+}
+
+void InventoryState::DisplayEquipment()
+{
+  int tw = Printer::Instance().TerminalWidth;
+  int th = Printer::Instance().TerminalHeight;
+
+  tw /= 2;
+
+  int yPos = 4;
+
+  ItemComponent* eq = nullptr;
+
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::HEAD];
+  DrawEquipmentField(tw + 10, yPos, "Head", eq);
+
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::NECK];
+  DrawEquipmentField(tw + 24, yPos, "Neck", eq);
+
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON];
+  DrawEquipmentField(tw - 4, yPos + 2, "Weapon", eq);
+
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::TORSO];
+  DrawEquipmentField(tw + 10, yPos + 2, "Torso", eq);
+
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::LEGS];
+  DrawEquipmentField(tw + 10, yPos + 4, "Legs", eq);
+
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::BOOTS];
+  DrawEquipmentField(tw + 10, yPos + 6, "Boots", eq);
+
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::RING1];
+  DrawEquipmentField(tw + 24, yPos + 4, "Ring", eq);
+
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::RING2];
+  DrawEquipmentField(tw + 24, yPos + 6, "Ring", eq);
+}
+
+void InventoryState::DrawEquipmentField(int x, int y, std::string fieldName, ItemComponent* eq)
+{
+  std::string stub(kEquipmentMaxNameLength, '-');
+
+  Printer::Instance().PrintFB(x, y, fieldName, Printer::kAlignCenter, "#FFFFFF");
+
+  if (eq != nullptr)
+  {
+    stub = ((GameObject*)eq->OwnerGameObject)->ObjectName;
+    stub.resize(kEquipmentMaxNameLength);
+  }
+
+  Printer::Instance().PrintFB(x, y + 1, stub, Printer::kAlignCenter, "#FFFFFF");
 }
 
 void InventoryState::PrintFooter()

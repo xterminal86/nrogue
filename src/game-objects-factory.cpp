@@ -55,7 +55,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
 {
   GameObject* go = new GameObject();
 
-  go->ObjectName = "Coins";
+  go->ObjectName = "Gold Coins";
   go->Image = '$';
   go->FgColor = GlobalConstants::CoinsColor;
 
@@ -63,7 +63,9 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
 
   ((ItemComponent*)c)->Description = { "You can buy things with these" };
 
-  int money = (amount == 0) ? RNG::Instance().Random() % 1000 + 1 : amount;
+  int pl = _playerRef->Attrs.Lvl.CurrentValue;
+
+  int money = (amount == 0) ? RNG::Instance().RandomRange(1 * pl, 10 * pl) : amount;
   ((ItemComponent*)c)->Cost = money;
   ((ItemComponent*)c)->Amount = money;
   ((ItemComponent*)c)->IsStackable = true;
@@ -81,7 +83,7 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
                                 GlobalConstants::WallColor);
 
   auto c = go->AddComponent<ShrineComponent>();
-  ShrineComponent* sc = dynamic_cast<ShrineComponent*>(c);
+  ShrineComponent* sc = static_cast<ShrineComponent*>(c);
 
   sc->Type = type;
   sc->Counter = timeout;
@@ -104,7 +106,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   go->Move(0, 0);
 
   auto c = go->AddComponent<AIMonsterBasic>();
-  AIMonsterBasic* ai = dynamic_cast<AIMonsterBasic*>(c);
+  AIMonsterBasic* ai = static_cast<AIMonsterBasic*>(c);
 
   ai->AgroRadius = 8;
 
@@ -158,8 +160,8 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
   {
     case ItemType::HEALING_POTION:
       if (_playerRef->Attrs.HP.CurrentValue == _playerRef->Attrs.HP.OriginalValue)
-      {
-        Printer::Instance().AddMessage("You are already at full health!");
+      {        
+        Application::Instance().ShowMessageBox("Information", { "You are already at full health!" });
       }
       else
       {
@@ -175,12 +177,11 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
         std::string m1 = "Your spirituality is too low";
         std::string m2 = "for this to have any effect on you";
 
-        Printer::Instance().AddMessage(m1);
-        Printer::Instance().AddMessage(m2);
+        Application::Instance().ShowMessageBox("Information", { m1, m2 });
       }
       else if (_playerRef->Attrs.MP.CurrentValue == _playerRef->Attrs.MP.OriginalValue)
-      {
-        Printer::Instance().AddMessage("You are already in fighting spirit!");
+      {        
+        Application::Instance().ShowMessageBox("Information", { "You are already in fighting spirit!" });
       }
       else
       {
@@ -190,14 +191,14 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
       }
       break;
 
-    case ItemType::COINS:
-      Printer::Instance().AddMessage("You don't 'use' money like that");
+    case ItemType::COINS:      
+      Application::Instance().ShowMessageBox("Information", { "You don't 'use' money like that" });
       break;
 
     default:
       auto go = (GameObject*)item->OwnerGameObject;
       auto msg = Util::StringFormat("You can't use %s!", go->ObjectName.data());
-      Printer::Instance().AddMessage(msg);
+      Application::Instance().ShowMessageBox("Information", { msg });
       break;
   }
 
