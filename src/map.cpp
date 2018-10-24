@@ -183,7 +183,7 @@ void Map::CreateTown()
   int mh = GlobalConstants::MapY;
 
   Tile t;
-  t.Set(false, false, '.', GlobalConstants::GroundColor, "#000000", "Ground");
+  t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
 
   Rect r(0, 0, mw - 1, mh - 1);
 
@@ -368,8 +368,6 @@ void Map::CreateRoom(int x, int y, const std::vector<std::string>& layout, bool 
         }
         break;
 
-        // To allow fog of war to cover floor made of
-        // background colored ' ', set FgColor to empty string.
         case '.':
         {
           t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
@@ -467,7 +465,7 @@ void Map::CreateChurch(int x, int y)
           // certain objects to be shown, like in this case.
           ShrineType shrineType = ShrineType::SPIRIT;
           std::string description = (shrineType == ShrineType::MIGHT) ? "Shrine of Might" : "Shrine of Spirit";
-          t.Set(true, false, '/', GlobalConstants::BlackColor, GlobalConstants::GroundColor, description, "?Shrine?");
+          t.Set(true, false, '/', GlobalConstants::GroundColor, GlobalConstants::BlackColor, description, "?Shrine?");
           MapArray[posX][posY].MakeTile(t);
 
           // Tiles are updated only around player.
@@ -516,7 +514,7 @@ void Map::CreateCastle(int x, int y)
         }
         break;
 
-        // Castle only, assuming layout is not rotated.
+        // Castle only, layout should not be rotated.
         case 'S':
         {
           t.Set(true, true, '|', GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stained Glass");
@@ -524,8 +522,6 @@ void Map::CreateCastle(int x, int y)
         }
         break;
 
-        // To allow fog of war to cover floor made of
-        // background colored ' ', set FgColor to empty string.
         case ' ':
         {
           t.Set(false, false, c, GlobalConstants::BlackColor, GlobalConstants::GroundColor, "Stone Tiles");
@@ -551,7 +547,7 @@ void Map::CreateCastle(int x, int y)
           // certain objects to be shown, like in this case.
           ShrineType shrineType = ShrineType::MIGHT;
           std::string description = (shrineType == ShrineType::MIGHT) ? "Shrine of Might" : "Shrine of Spirit";
-          t.Set(true, false, '/', GlobalConstants::BlackColor, GlobalConstants::GroundColor, description);
+          t.Set(true, false, '/', GlobalConstants::GroundColor, GlobalConstants::BlackColor, description);
           MapArray[posX][posY].MakeTile(t);
 
           // Tiles are updated only around player.
