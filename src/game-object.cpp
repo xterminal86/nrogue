@@ -86,7 +86,7 @@ void GameObject::MakeTile(Tile t)
   FogOfWarName = t.FogOfWarName;
 }
 
-void GameObject::ReceiveDamage(int amount)
+void GameObject::ReceiveDamage(GameObject* from, int amount)
 {
   if (!Attrs.Indestructible)
   {

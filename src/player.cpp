@@ -12,8 +12,8 @@ void Player::Init()
 {
   PosX = Map::Instance().PlayerStartX;
   PosY = Map::Instance().PlayerStartY;
-  Avatar = '@';
-  Color = GlobalConstants::PlayerColor;
+  Image = '@';
+  FgColor = GlobalConstants::PlayerColor;
   ActionMeter = 100;
 
   SetAttributes();
@@ -160,15 +160,6 @@ void Player::CheckVisibility()
   }    
 }
 
-void Player::Draw()
-{
-  Printer::Instance().PrintFB(PosX + Map::Instance().MapOffsetX,
-                              PosY + Map::Instance().MapOffsetY,
-                              Avatar,
-                              Color,
-                              Map::Instance().MapArray[PosX][PosY].BgColor);
-}
-
 void Player::DiscoverCell(int x, int y)
 {
   auto& map = Map::Instance().MapArray;
@@ -311,14 +302,14 @@ void Player::Attack(GameObject* go)
 
     auto str = Util::StringFormat("You hit %s for %i damage", go->ObjectName.data(), dmg);
     Printer::Instance().AddMessage(str);
-    go->ReceiveDamage(dmg);
+    go->ReceiveDamage(this, dmg);
   }
 
   SubtractActionMeter();
 }
 
 void Player::ReceiveDamage(GameObject* from, int amount)
-{
+{  
   auto str = Util::StringFormat("%s hits you for %i damage", from->ObjectName.data(), amount);
   Printer::Instance().AddMessage(str);
 
@@ -326,10 +317,17 @@ void Player::ReceiveDamage(GameObject* from, int amount)
 
   if (Attrs.HP.CurrentValue <= 0)
   {
-    Avatar = '%';
-    Color = "#FF0000";
+    Image = '%';
+    FgColor = "#FF0000";
 
     Printer::Instance().AddMessage("You are dead. Not big surprise.");
+
+    if (from != nullptr)
+    {
+      auto str = Util::StringFormat("%s was killed by a %s", Name.data(), from->ObjectName.data());
+      Printer::Instance().AddMessage(str);
+    }
+
     Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
   }
 }

@@ -142,7 +142,7 @@ class GameObject
       return _components.size();
     }
 
-    void ReceiveDamage(int amount);
+    void ReceiveDamage(GameObject* from, int amount);
 
     Attributes Attrs;
 

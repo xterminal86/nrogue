@@ -11,7 +11,7 @@
 #include "container-component.h"
 #include "item-component.h"
 
-class Player
+class Player : public GameObject
 {
   public:
 
@@ -25,16 +25,15 @@ class Player
 
     const int kInventorySize = 20;
 
+    Player() {}
+
     void Init();
-    void Draw();
-    void CheckVisibility();
+
     bool Move(int dx, int dy);
+
+    void CheckVisibility();
     bool TryToAttack(int dx, int dy);
 
-    int PosX;
-    int PosY;
-    chtype Avatar;
-    std::string Color;
     int VisibilityRadius;
 
     int SelectedClass;
