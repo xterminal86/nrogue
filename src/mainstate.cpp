@@ -22,14 +22,14 @@ void MainState::HandleInput()
       case NUMPAD_7:
         if (_playerRef->TryToAttack(-1, -1))
         {
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
         }
         else if (_playerRef->Move(-1, -1))
         {
           Map::Instance().MapOffsetY++;
           Map::Instance().MapOffsetX++;
 
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
         }
@@ -38,13 +38,13 @@ void MainState::HandleInput()
       case NUMPAD_8:
         if (_playerRef->TryToAttack(0, -1))
         {
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
         }
         else if (_playerRef->Move(0, -1))
         {
           Map::Instance().MapOffsetY++;
 
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
         }
@@ -53,14 +53,14 @@ void MainState::HandleInput()
       case NUMPAD_9:
         if (_playerRef->TryToAttack(1, -1))
         {
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
         }
         else if (_playerRef->Move(1, -1))
         {
           Map::Instance().MapOffsetY++;
           Map::Instance().MapOffsetX--;
 
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
         }
@@ -69,13 +69,13 @@ void MainState::HandleInput()
       case NUMPAD_4:
         if (_playerRef->TryToAttack(-1, 0))
         {
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
         }
         else if (_playerRef->Move(-1, 0))
         {
           Map::Instance().MapOffsetX++;
 
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
         }
@@ -84,13 +84,13 @@ void MainState::HandleInput()
       case NUMPAD_2:
         if (_playerRef->TryToAttack(0, 1))
         {
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
         }
         else if (_playerRef->Move(0, 1))
         {
           Map::Instance().MapOffsetY--;
 
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
         }
@@ -99,13 +99,13 @@ void MainState::HandleInput()
       case NUMPAD_6:
         if (_playerRef->TryToAttack(1, 0))
         {
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
         }
         else if (_playerRef->Move(1, 0))
         {
           Map::Instance().MapOffsetX--;
 
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
         }
@@ -114,14 +114,14 @@ void MainState::HandleInput()
       case NUMPAD_1:
         if (_playerRef->TryToAttack(-1, 1))
         {
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
         }
         else if (_playerRef->Move(-1, 1))
         {
           Map::Instance().MapOffsetY--;
           Map::Instance().MapOffsetX++;
 
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
         }
@@ -130,14 +130,14 @@ void MainState::HandleInput()
       case NUMPAD_3:
         if (_playerRef->TryToAttack(1, 1))
         {
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
         }
         else if (_playerRef->Move(1, 1))
         {
           Map::Instance().MapOffsetY--;
           Map::Instance().MapOffsetX--;
 
-          _playerRef->SubtractActionMeter();
+          _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
         }
@@ -188,6 +188,10 @@ void MainState::HandleInput()
         Application::Instance().ChangeState(Application::GameStates::EXITING_STATE);
         break;
 
+      case 'z':
+        _playerRef->LevelUp();
+        break;
+
       default:
         break;
     }
@@ -198,7 +202,7 @@ void MainState::HandleInput()
   {    
     Map::Instance().UpdateGameObjects();
     Update(true);
-    _playerRef->Attrs.ActionMeter += _playerRef->Attrs.Spd.CurrentValue;
+    _playerRef->WaitForTurn();
   }  
 }
 

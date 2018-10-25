@@ -12,7 +12,7 @@ class InfoState : public GameState
 
   private:
     void ShowInventory();
-    void PrintAttribute(int x, int y, std::string attrName, Attribute& attr);
+    void PrintAttribute(int x, int y, std::string attrName, Attribute& attr, bool displayMaxValue = false);
 };
 
 #endif

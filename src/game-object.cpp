@@ -106,37 +106,20 @@ void GameObject::ReceiveDamage(GameObject* from, int amount)
 
       auto msg = Util::StringFormat("%s was killed", ObjectName.data());
       Printer::Instance().AddMessage(msg);
-
-      if (from != nullptr && typeid(*from).hash_code() == typeid(Player).hash_code())
-      {
-        Player* p = static_cast<Player*>(from);
-
-        int defaultExp = Attrs.HP.OriginalValue;
-        int exp = defaultExp;
-
-        int d = Attrs.Lvl.CurrentValue - p->Attrs.Lvl.CurrentValue;
-
-        if (d > 0)
-        {
-          // If monster is stronger
-
-          exp += defaultExp * std::abs(d);
-        }
-        else if (d < 0)
-        {
-          // If monster is weaker
-
-          exp -= defaultExp * std::abs(d);
-        }
-
-        exp = Util::Clamp(exp, 1, GlobalConstants::AwardedExpMax);
-
-        p->AwardExperience(exp);
-
-        auto msg = Util::StringFormat("Received %i EXP", exp);
-        Printer::Instance().AddMessage(msg);
-      }
     }
+  }
+}
+
+void GameObject::WaitForTurn()
+{
+  int amount = Attrs.Spd.CurrentValue * 10;
+  if (amount == 0)
+  {
+    Attrs.ActionMeter += 10;
+  }
+  else
+  {
+    Attrs.ActionMeter += amount;
   }
 }
 

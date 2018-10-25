@@ -18,7 +18,7 @@ bool _runTests = false;
 int main()
 {  
   Logger::Instance().Init();  
-  Logger::Instance().Prepare(false);
+  Logger::Instance().Prepare(true);
 
   RNG::Instance().Init();
   RNG::Instance().SetSeed(1);

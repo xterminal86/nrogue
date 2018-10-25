@@ -48,8 +48,8 @@ void InfoState::Update(bool forceUpdate)
     PrintAttribute(0, yPos + 7, "SKL", playerRef.Attrs.Skl);
     PrintAttribute(0, yPos + 8, "SPD", playerRef.Attrs.Spd);
 
-    PrintAttribute(0, yPos + 10, "HP", playerRef.Attrs.HP);
-    PrintAttribute(0, yPos + 11, "MP", playerRef.Attrs.MP);
+    PrintAttribute(0, yPos + 10, "HP", playerRef.Attrs.HP, true);
+    PrintAttribute(0, yPos + 11, "MP", playerRef.Attrs.MP, true);
 
     Printer::Instance().Render();
   }
@@ -73,9 +73,18 @@ void InfoState::ShowInventory()
   }
 }
 
-void InfoState::PrintAttribute(int x, int y, std::string attrName, Attribute& attr)
+void InfoState::PrintAttribute(int x, int y, std::string attrName, Attribute& attr, bool displayMaxValue)
 {
-  std::string text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
-  Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, "#FFFFFF");  
+  std::string text;
+  if (displayMaxValue)
+  {
+    text = Util::StringFormat("%s: %i / %i", attrName.data(), attr.CurrentValue, attr.OriginalValue);
+  }
+  else
+  {
+    text = Util::StringFormat("%s: %i", attrName.data(), attr.CurrentValue);
+  }
+
+  Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, "#FFFFFF");
 }
 

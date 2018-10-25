@@ -119,7 +119,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
     int randomDef = RNG::Instance().RandomRange(0, 1 * pl);
     int randomSkl = RNG::Instance().RandomRange(0, 1 * pl);
     int randomHp = RNG::Instance().RandomRange(3 * pl, 10 * pl);
-    int randomSpd = RNG::Instance().RandomRange(30 * pl, 60 * pl);
+    int randomSpd = RNG::Instance().RandomRange(1 * pl, 2 * pl);
 
     go->Attrs.Str.Set(randomStr);
     go->Attrs.Def.Set(randomDef);
@@ -272,9 +272,10 @@ bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
   // Finally, if no empty slots found, print a warning
   if (!emptySlotFound)
   {
-    Application::Instance().ShowMessageBox("Information", { "Unequip first!" });
-    return false;
+    Application::Instance().ShowMessageBox("Information", { "Unequip first!" });    
   }
+
+  return false;
 }
 
 void GameObjectsFactory::EquipRing(ItemComponent* ring, int index)

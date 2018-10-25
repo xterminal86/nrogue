@@ -14,7 +14,7 @@ void AIMonsterBasic::Update()
 {
   if (((GameObject*)OwnerGameObject)->Attrs.ActionMeter < 100)
   {
-    ((GameObject*)OwnerGameObject)->Attrs.ActionMeter += ((GameObject*)OwnerGameObject)->Attrs.Spd.CurrentValue;
+    ((GameObject*)OwnerGameObject)->WaitForTurn();
   }
   else
   {

@@ -82,7 +82,7 @@ void InventoryState::HandleInput()
           DestroyInventoryItem();
         }
 
-        _playerRef->SubtractActionMeter();
+        _playerRef->FinishTurn();
 
         Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
       }      
@@ -96,7 +96,7 @@ void InventoryState::HandleInput()
       ItemComponent* ic = static_cast<ItemComponent*>(c);
       if (ic->Equip())
       {
-        _playerRef->SubtractActionMeter();
+        _playerRef->FinishTurn();
         Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
       }
     }

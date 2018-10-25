@@ -144,18 +144,9 @@ class GameObject
 
     void ReceiveDamage(GameObject* from, int amount);
     void FinishTurn();
+    void WaitForTurn();
 
-    Attributes Attrs;
-
-    std::vector<Attribute*> MainAttributes =
-    {
-      &Attrs.Str,
-      &Attrs.Def,
-      &Attrs.Mag,
-      &Attrs.Res,
-      &Attrs.Skl,
-      &Attrs.Spd
-    };
+    Attributes Attrs;    
 
   private:
 

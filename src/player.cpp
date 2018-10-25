@@ -112,7 +112,7 @@ bool Player::Move(int dx, int dy)
       // Automatically interact with door if it's closed
       if (c != nullptr && cell.Blocking && cell.Interact())
       {
-        SubtractActionMeter();
+        FinishTurn();
       }
     }
   }
@@ -232,7 +232,7 @@ void Player::SetSoldierAttrs()
 
   Attrs.Str.Set(2);
   Attrs.Def.Set(2);
-  Attrs.Spd.Set(60);
+  Attrs.Spd.Set(0);
 
   Attrs.HP.Set(40);
 
@@ -248,13 +248,13 @@ void Player::SetSoldierAttrs()
 
 void Player::SetThiefAttrs()
 {
-  Attrs.Spd.Talents = 2;
+  Attrs.Spd.Talents = 3;
   Attrs.Skl.Talents = 2;
-  Attrs.Def.Talents = 1;
+  Attrs.HP.Talents = 1;
 
   Attrs.Def.Set(1);
   Attrs.Skl.Set(2);
-  Attrs.Spd.Set(120);
+  Attrs.Spd.Set(3);
 
   Attrs.HP.Set(25);
 
@@ -282,7 +282,7 @@ void Player::SetArcanistAttrs()
 
   Attrs.Mag.Set(2);
   Attrs.Res.Set(2);
-  Attrs.Spd.Set(100);
+  Attrs.Spd.Set(1);
 
   Attrs.HP.Set(10);
   Attrs.MP.Set(50);
@@ -316,7 +316,7 @@ void Player::Attack(GameObject* go)
 {
   if (go->Attrs.Indestructible)
   {
-    auto str = Util::StringFormat("No effect on %s!", go->ObjectName.data());
+    auto str = Util::StringFormat("Your attack bounces off %s!", go->ObjectName.data());
     Printer::Instance().AddMessage(str);
   }
   else
@@ -354,6 +354,11 @@ void Player::Attack(GameObject* go)
       }
 
       go->ReceiveDamage(this, dmg);
+
+      if (go->IsDestroyed)
+      {
+        ProcessKill(go);
+      }
     }
     else
     {
@@ -361,12 +366,12 @@ void Player::Attack(GameObject* go)
     }
   }
 
-  SubtractActionMeter();
+  FinishTurn();
 }
 
 void Player::ReceiveDamage(GameObject* from, int amount)
 {  
-  auto str = Util::StringFormat("You were hit for %i damage", from->ObjectName.data(), amount);
+  auto str = Util::StringFormat("You were hit for %i damage", amount);
   Printer::Instance().AddMessage(str);
 
   Attrs.HP.CurrentValue -= amount;
@@ -376,13 +381,13 @@ void Player::ReceiveDamage(GameObject* from, int amount)
     Image = '%';
     FgColor = "#FF0000";
 
-    Printer::Instance().AddMessage("You are dead. Not big surprise.");
-
     if (from != nullptr)
     {
       auto str = Util::StringFormat("%s was killed by a %s", Name.data(), from->ObjectName.data());
       Printer::Instance().AddMessage(str);
     }
+
+    Printer::Instance().AddMessage("You are dead. Not big surprise.");
 
     Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
   }
@@ -394,6 +399,9 @@ void Player::AwardExperience(int amount)
 
   Attrs.Exp.CurrentValue += amnt;
 
+  auto msg = Util::StringFormat("Received %i EXP", amount);
+  Printer::Instance().AddMessage(msg);
+
   if (Attrs.Exp.CurrentValue >= 100)
   {
     Attrs.Exp.Set(0);
@@ -403,13 +411,43 @@ void Player::AwardExperience(int amount)
 
 void Player::LevelUp()
 {
-  for (auto& a : MainAttributes)
+  // std::map automatically sorts by key, so in case of string key, it's lexicographical sorting
+  //
+  // That's why I couldn't figure out for a while why my values in the map
+  // are suddenly in the wrong order during for loop.
+  std::map<int, std::pair<std::string, Attribute&>> mainAttributes =
   {
-    if (CanRaiseAttribute(*a))
+    { 0, { "STR", Attrs.Str } },
+    { 1, { "DEF", Attrs.Def } },
+    { 2, { "MAG", Attrs.Mag } },
+    { 3, { "RES", Attrs.Res } },
+    { 4, { "SKL", Attrs.Skl } },
+    { 5, { "SPD", Attrs.Spd } }
+  };
+
+  std::vector<int> statRaises =
+  {
+    0, 0, 0, 0, 0, 0, 0, 0
+  };
+
+  int index = 0;
+
+  for (auto& i : mainAttributes)
+  {
+    auto kvp = i.second;
+
+    auto log = Util::StringFormat("Raising %s", kvp.first.data());
+    Logger::Instance().Print(log);
+
+    if (CanRaiseAttribute(kvp.second))
     {
-      a->OriginalValue++;
-      a->CurrentValue = a->OriginalValue;
+      statRaises[index] = 1;
+
+      kvp.second.OriginalValue++;
+      kvp.second.CurrentValue = kvp.second.OriginalValue;
     }
+
+    index++;
   }
 
   int minRndHp = (Attrs.HP.Talents + 1);
@@ -417,11 +455,44 @@ void Player::LevelUp()
   int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp);
   Attrs.HP.OriginalValue += hpToAdd;
 
+  statRaises[index] = hpToAdd;
+  index++;
+
   int minRndMp = Attrs.Mag.OriginalValue;
   int maxRndMp = Attrs.Mag.OriginalValue * (Attrs.MP.Talents + 1);
 
   int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp);
   Attrs.MP.OriginalValue += mpToAdd;
+
+  statRaises[index] = mpToAdd;
+
+  Attrs.Lvl.OriginalValue++;
+  Attrs.Lvl.CurrentValue = Attrs.Lvl.OriginalValue;
+
+  std::vector<std::string> levelUpResults;
+
+  index = 0;
+
+  std::string mbStr;
+  for (auto& i : mainAttributes)
+  {
+    auto kvp = i.second;
+
+    mbStr = Util::StringFormat("%s: %i  +%i", kvp.first.data(), kvp.second.OriginalValue, statRaises[index]);
+    levelUpResults.push_back(mbStr);
+
+    index++;
+  }
+
+  levelUpResults.push_back("");
+
+  mbStr = Util::StringFormat("HP: %i  +%i", Attrs.HP.OriginalValue, statRaises[6]);
+  levelUpResults.push_back(mbStr);
+
+  mbStr = Util::StringFormat("MP: %i  +%i", Attrs.MP.OriginalValue, statRaises[7]);
+  levelUpResults.push_back(mbStr);
+
+  Application::Instance().ShowMessageBox("Level Up!", levelUpResults);
 
   /*
   auto class_ = _classesMap[SelectedClass];
@@ -440,10 +511,7 @@ void Player::LevelUp()
     case PlayerClass::CUSTOM:
       break;
   }
-  */
-
-  Attrs.Lvl.OriginalValue++;
-  Attrs.Lvl.CurrentValue = Attrs.Lvl.OriginalValue;
+  */  
 }
 
 bool Player::CanRaiseAttribute(Attribute& attr)
@@ -455,15 +523,38 @@ bool Player::CanRaiseAttribute(Attribute& attr)
   int iterations = attr.Talents;
   for (int i = 0; i < iterations; i++)
   {
-    int res = Util::RollDice(chance);
-    if (res != 0)
+    if (Util::RollDice(chance))
     {
       return true;
     }
 
-    chance += GlobalConstants::AttributeMinimumRaiseChance;
+    chance += GlobalConstants::AttributeIncreasedRaiseStep;
   }
 
-  int res = Util::RollDice(GlobalConstants::AttributeMinimumRaiseChance);
-  return (res != 0);
+  return Util::RollDice(chance);
+}
+
+void Player::ProcessKill(GameObject* monster)
+{
+  int defaultExp = monster->Attrs.HP.OriginalValue;
+  int exp = defaultExp;
+
+  int d = monster->Attrs.Lvl.CurrentValue - Attrs.Lvl.CurrentValue;
+
+  if (d > 0)
+  {
+    // If monster is stronger
+
+    exp += defaultExp * std::abs(d);
+  }
+  else if (d < 0)
+  {
+    // If monster is weaker
+
+    exp -= defaultExp * std::abs(d);
+  }
+
+  exp = Util::Clamp(exp, 1, GlobalConstants::AwardedExpMax);
+
+  AwardExperience(exp);
 }

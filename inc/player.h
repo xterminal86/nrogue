@@ -48,16 +48,6 @@ class Player : public GameObject
       return _classesName[SelectedClass];
     }
 
-    void SubtractActionMeter()
-    {
-      Attrs.ActionMeter -= 100;
-
-      if (Attrs.ActionMeter < 0)
-      {
-        Attrs.ActionMeter = 0;
-      }
-    }
-
     void Draw();
     void Attack(GameObject* go);
     void ReceiveDamage(GameObject* from, int amount);
@@ -81,6 +71,7 @@ class Player : public GameObject
     void SetArcanistAttrs();
 
     bool CanRaiseAttribute(Attribute& attr);
+    void ProcessKill(GameObject* monster);
 
     std::map<int, PlayerClass> _classesMap =
     {
