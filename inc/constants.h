@@ -92,12 +92,12 @@ struct Attribute
   int CurrentValue = 0;
   int OriginalValue = 0;
   int Modifier = 0;
-  bool IsTalent = false;
+  int Talents = 0;
 
   void Set(int value)
   {
-    CurrentValue = value;
     OriginalValue = value;
+    CurrentValue = value;    
   }
 
   int Get()
@@ -144,6 +144,12 @@ namespace GlobalConstants
   static const int MapY = 50; // 45
 
   static const int HPMPBarLength = 20;
+  static const int AttributeMinimumRaiseChance = 30;
+  static const int AwardedExperienceStep = 5;
+  static const int AwardedExpDefault = 20;
+  static const int AwardedExpMax = 60;
+  static const int MinHitChance = 5;
+  static const int MaxHitChance = 95;
 
   static const std::string BlackColor = "#000000";
   static const std::string WhiteColor = "#FFFFFF";

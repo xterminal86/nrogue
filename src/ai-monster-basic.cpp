@@ -164,12 +164,46 @@ bool AIMonsterBasic::IsPlayerInRange()
 
 void AIMonsterBasic::Attack(Player* player)
 {
-  // FIXME: temporary damage
-  int dmg = ((GameObject*)OwnerGameObject)->Attrs.Str.CurrentValue - _playerRef->Attrs.Def.CurrentValue;
-  if (dmg <= 0)
+  GameObject* monster = static_cast<GameObject*>(OwnerGameObject);
+
+  int defaultHitChance = 50;
+  int hitChance = defaultHitChance;
+
+  int d = monster->Attrs.Skl.CurrentValue - player->Attrs.Skl.CurrentValue;
+
+  if (d > 0)
   {
-    dmg = 1;
+    hitChance += (d * 5);
+  }
+  else
+  {
+    hitChance -= (d * 5);
   }
 
-  player->ReceiveDamage(((GameObject*)OwnerGameObject), dmg);  
+  hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
+
+  auto logMsg = Util::StringFormat("%s (SKL %i, LVL %i) attacks Player (SKL: %i, LVL %i): chance = %i",
+                                   monster->ObjectName.data(),
+                                   monster->Attrs.Skl.CurrentValue,
+                                   monster->Attrs.Lvl.CurrentValue,
+                                   player->Attrs.Skl.CurrentValue,
+                                   player->Attrs.Lvl.CurrentValue,
+                                   hitChance);
+  Logger::Instance().Print(logMsg);
+
+  if (Util::RollDice(hitChance))
+  {
+    int dmg = monster->Attrs.Str.CurrentValue - player->Attrs.Def.CurrentValue;
+    if (dmg <= 0)
+    {
+      dmg = 1;
+    }
+
+    player->ReceiveDamage(monster, dmg);
+  }
+  else
+  {
+    auto str = Util::StringFormat("%s misses", monster->ObjectName.data());
+    Printer::Instance().AddMessage(str);
+  }
 }

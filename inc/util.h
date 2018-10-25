@@ -14,6 +14,7 @@
 #include "constants.h"
 #include "rng.h"
 #include "printer.h"
+#include "logger.h"
 
 struct Position
 {
@@ -475,6 +476,23 @@ namespace Util
     }
 
     return res;
+  }
+
+  inline bool RollDice(int successChance)
+  {
+    int dice = RNG::Instance().RandomRange(0, 100);
+
+    auto logMsg = Util::StringFormat("\tRollDice(): chance = %i, rolled = %i",
+                                     successChance,
+                                     dice);
+    Logger::Instance().Print(logMsg);
+
+    if (dice <= successChance)
+    {
+      return true;
+    }
+
+    return false;
   }
 }
 

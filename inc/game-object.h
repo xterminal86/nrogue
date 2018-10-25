@@ -147,6 +147,16 @@ class GameObject
 
     Attributes Attrs;
 
+    std::vector<Attribute*> MainAttributes =
+    {
+      &Attrs.Str,
+      &Attrs.Def,
+      &Attrs.Mag,
+      &Attrs.Res,
+      &Attrs.Skl,
+      &Attrs.Spd
+    };
+
   private:
 
     std::map<size_t, std::unique_ptr<Component>> _components;

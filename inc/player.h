@@ -68,6 +68,9 @@ class Player : public GameObject
 
     std::map<EquipmentCategory, std::vector<ItemComponent*>> EquipmentByCategory;
 
+    void AwardExperience(int amount);
+    void LevelUp();
+
   private:
     void DiscoverCell(int x, int y);
     void SetAttributes();
@@ -76,6 +79,8 @@ class Player : public GameObject
     void SetSoldierAttrs();
     void SetThiefAttrs();
     void SetArcanistAttrs();
+
+    bool CanRaiseAttribute(Attribute& attr);
 
     std::map<int, PlayerClass> _classesMap =
     {

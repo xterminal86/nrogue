@@ -267,6 +267,7 @@ void MainState::TryToPickupItem()
     if (_playerRef->Inventory.Contents.size() == _playerRef->kInventorySize)
     {
       Printer::Instance().AddMessage("Inventory is full!");
+      Application::Instance().ShowMessageBox("Epic Fail", { "Inventory is full!" });
       return;
     }
 

@@ -23,7 +23,7 @@ void Player::Init()
   _currentCell->Occupied = true;  
 
   // FIXME: remove afterwards
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 20; i++)
   {
     auto go = new GameObject(2, 2 + i, 'O', "#FFFFFF");
     go->ObjectName = "Rock";
@@ -226,13 +226,13 @@ void Player::SetAttributes()
 
 void Player::SetSoldierAttrs()
 {
-  Attrs.Str.IsTalent = true;
-  Attrs.Def.IsTalent = true;
-  Attrs.HP.IsTalent = true;
+  Attrs.Str.Talents = 3;
+  Attrs.Def.Talents = 2;
+  Attrs.HP.Talents = 2;
 
   Attrs.Str.Set(2);
   Attrs.Def.Set(2);
-  Attrs.Spd.Set(80);
+  Attrs.Spd.Set(60);
 
   Attrs.HP.Set(40);
 
@@ -248,9 +248,9 @@ void Player::SetSoldierAttrs()
 
 void Player::SetThiefAttrs()
 {
-  Attrs.Spd.IsTalent = true;
-  Attrs.Skl.IsTalent = true;
-  Attrs.Exp.IsTalent = true;
+  Attrs.Spd.Talents = 2;
+  Attrs.Skl.Talents = 2;
+  Attrs.Def.Talents = 1;
 
   Attrs.Def.Set(1);
   Attrs.Skl.Set(2);
@@ -276,9 +276,9 @@ void Player::SetThiefAttrs()
 
 void Player::SetArcanistAttrs()
 {
-  Attrs.Mag.IsTalent = true;
-  Attrs.Res.IsTalent = true;
-  Attrs.MP.IsTalent = true;
+  Attrs.Mag.Talents = 3;
+  Attrs.Res.Talents = 3;
+  Attrs.MP.Talents = 3;
 
   Attrs.Mag.Set(2);
   Attrs.Res.Set(2);
@@ -320,17 +320,45 @@ void Player::Attack(GameObject* go)
     Printer::Instance().AddMessage(str);
   }
   else
-  {
-    // FIXME: temporary damage
-    int dmg = Attrs.Str.CurrentValue - go->Attrs.Def.CurrentValue;
-    if (dmg <= 0)
+  {    
+    int defaultHitChance = 50;
+    int hitChance = defaultHitChance;
+
+    int d = Attrs.Skl.CurrentValue - go->Attrs.Skl.CurrentValue;
+    if (d > 0)
     {
-      dmg = 1;
+      hitChance += (d * 5);
+    }
+    else
+    {
+      hitChance -= (d * 5);
     }
 
-    auto str = Util::StringFormat("You hit %s for %i damage", go->ObjectName.data(), dmg);
-    Printer::Instance().AddMessage(str);
-    go->ReceiveDamage(this, dmg);
+    hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
+
+    auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
+                                     Attrs.Skl.CurrentValue,
+                                     Attrs.Lvl.CurrentValue,
+                                     go->ObjectName.data(),
+                                     go->Attrs.Skl.CurrentValue,
+                                     go->Attrs.Lvl.CurrentValue,
+                                     hitChance);
+    Logger::Instance().Print(logMsg);
+
+    if (Util::RollDice(hitChance))
+    {
+      int dmg = Attrs.Str.CurrentValue - go->Attrs.Def.CurrentValue;
+      if (dmg <= 0)
+      {
+        dmg = 1;
+      }
+
+      go->ReceiveDamage(this, dmg);
+    }
+    else
+    {
+      Printer::Instance().AddMessage("You missed");
+    }
   }
 
   SubtractActionMeter();
@@ -338,7 +366,7 @@ void Player::Attack(GameObject* go)
 
 void Player::ReceiveDamage(GameObject* from, int amount)
 {  
-  auto str = Util::StringFormat("%s hits you for %i damage", from->ObjectName.data(), amount);
+  auto str = Util::StringFormat("You were hit for %i damage", from->ObjectName.data(), amount);
   Printer::Instance().AddMessage(str);
 
   Attrs.HP.CurrentValue -= amount;
@@ -358,4 +386,84 @@ void Player::ReceiveDamage(GameObject* from, int amount)
 
     Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
   }
+}
+
+void Player::AwardExperience(int amount)
+{
+  int amnt = amount * (Attrs.Exp.Talents + 1);
+
+  Attrs.Exp.CurrentValue += amnt;
+
+  if (Attrs.Exp.CurrentValue >= 100)
+  {
+    Attrs.Exp.Set(0);
+    LevelUp();
+  }
+}
+
+void Player::LevelUp()
+{
+  for (auto& a : MainAttributes)
+  {
+    if (CanRaiseAttribute(*a))
+    {
+      a->OriginalValue++;
+      a->CurrentValue = a->OriginalValue;
+    }
+  }
+
+  int minRndHp = (Attrs.HP.Talents + 1);
+  int maxRndHp = 2 * (Attrs.HP.Talents + 1);
+  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp);
+  Attrs.HP.OriginalValue += hpToAdd;
+
+  int minRndMp = Attrs.Mag.OriginalValue;
+  int maxRndMp = Attrs.Mag.OriginalValue * (Attrs.MP.Talents + 1);
+
+  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp);
+  Attrs.MP.OriginalValue += mpToAdd;
+
+  /*
+  auto class_ = _classesMap[SelectedClass];
+
+  switch (class_)
+  {
+    case PlayerClass::SOLDIER:
+      break;
+
+    case PlayerClass::THIEF:
+      break;
+
+    case PlayerClass::ARCANIST:
+      break;
+
+    case PlayerClass::CUSTOM:
+      break;
+  }
+  */
+
+  Attrs.Lvl.OriginalValue++;
+  Attrs.Lvl.CurrentValue = Attrs.Lvl.OriginalValue;
+}
+
+bool Player::CanRaiseAttribute(Attribute& attr)
+{
+  bool success = false;
+
+  int chance = GlobalConstants::AttributeMinimumRaiseChance;
+
+  int iterations = attr.Talents;
+  for (int i = 0; i < iterations; i++)
+  {
+    int res = Util::RollDice(chance);
+    if (res != 0)
+    {
+      return true;
+    }
+
+    chance += GlobalConstants::AttributeMinimumRaiseChance;
+  }
+
+  int res = Util::RollDice(GlobalConstants::AttributeMinimumRaiseChance);
+  return (res != 0);
 }

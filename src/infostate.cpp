@@ -76,17 +76,6 @@ void InfoState::ShowInventory()
 void InfoState::PrintAttribute(int x, int y, std::string attrName, Attribute& attr)
 {
   std::string text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
-  Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, "#FFFFFF");
-
-  /*
-  if (attr.IsTalent)
-  {
-    Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, "#FFFFFF", GlobalConstants::DoorHighlightColor);
-  }
-  else
-  {
-    Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, "#FFFFFF");
-  }
-  */
+  Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, "#FFFFFF");  
 }
 
