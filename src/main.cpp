@@ -1,3 +1,5 @@
+#define RUN_TESTS 0
+
 #include <ncurses.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -8,17 +10,20 @@
 #include "game-objects-factory.h"
 #include "constants.h"
 #include "map.h"
-#include "tests.h"
 #include "printer.h"
 #include "util.h"
 #include "rng.h"
 
-bool _runTests = false;
+#if RUN_TESTS == 1
+
+#include "tests.h"
+
+#endif
 
 int main()
 {  
   Logger::Instance().Init();  
-  Logger::Instance().Prepare(true);
+  Logger::Instance().Prepare(false);
 
   RNG::Instance().Init();
   RNG::Instance().SetSeed(1);
@@ -44,10 +49,11 @@ int main()
   
   endwin();
 
-  if (_runTests)
-  {
-    Tests::Run();
-  }
+  #if RUN_TESTS == 1
+
+  Tests::Run();
+
+  #endif
 
   printf("Goodbye!\n");
 

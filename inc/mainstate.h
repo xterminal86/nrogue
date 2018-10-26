@@ -26,7 +26,7 @@ class MainState : public GameState
     void DrawHPMP();
     std::string UpdateBar(int x, int y, Attribute attr);
 
-    Position _cursorPosition;    
+    Position _cursorPosition;
 };
 
 #endif

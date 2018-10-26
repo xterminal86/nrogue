@@ -50,6 +50,16 @@ void InventoryState::HandleInput()
         return;
       }
 
+      auto go = _playerRef->Inventory.Contents[_selectedIndex].get();
+      auto c = go->GetComponent<ItemComponent>();
+      ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+      if (ic->IsEquipped)
+      {
+        Application::Instance().ShowMessageBox("Information", { "Unequip first!" });
+        return;
+      }
+
       DropItem();
       DestroyInventoryItem();
     }

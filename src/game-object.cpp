@@ -120,7 +120,7 @@ void GameObject::WaitForTurn()
   else
   {
     Attrs.ActionMeter += amount;
-  }
+  }  
 }
 
 void GameObject::FinishTurn()

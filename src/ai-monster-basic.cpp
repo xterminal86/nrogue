@@ -18,13 +18,13 @@ void AIMonsterBasic::Update()
   }
   else
   {
-    if (IsPlayerInRange())
+    if (IsPlayerInRange() && !_playerRef->IsDestroyed)
     {
       Attack(_playerRef);
     }
     else
     {
-      if (IsPlayerVisible())
+      if (IsPlayerVisible() && !_playerRef->IsDestroyed)
       {
         MoveToKill();
       }
@@ -163,7 +163,7 @@ bool AIMonsterBasic::IsPlayerInRange()
 }
 
 void AIMonsterBasic::Attack(Player* player)
-{
+{  
   GameObject* monster = static_cast<GameObject*>(OwnerGameObject);
 
   int defaultHitChance = 50;

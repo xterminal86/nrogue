@@ -228,11 +228,12 @@ void Player::SetSoldierAttrs()
 {
   Attrs.Str.Talents = 3;
   Attrs.Def.Talents = 2;
+  Attrs.Skl.Talents = 1;
   Attrs.HP.Talents = 2;
 
-  Attrs.Str.Set(2);
+  Attrs.Str.Set(3);
   Attrs.Def.Set(2);
-  Attrs.Spd.Set(0);
+  Attrs.Skl.Set(1);
 
   Attrs.HP.Set(40);
 
@@ -250,6 +251,7 @@ void Player::SetThiefAttrs()
 {
   Attrs.Spd.Talents = 3;
   Attrs.Skl.Talents = 2;
+  Attrs.Def.Talents = 1;
   Attrs.HP.Talents = 1;
 
   Attrs.Def.Set(1);
@@ -278,6 +280,7 @@ void Player::SetArcanistAttrs()
 {
   Attrs.Mag.Talents = 3;
   Attrs.Res.Talents = 3;
+  Attrs.Spd.Talents = 1;
   Attrs.MP.Talents = 3;
 
   Attrs.Mag.Set(2);
@@ -378,8 +381,12 @@ void Player::ReceiveDamage(GameObject* from, int amount)
 
   if (Attrs.HP.CurrentValue <= 0)
   {
+    Attrs.HP.CurrentValue = 0;
+
     Image = '%';
-    FgColor = "#FF0000";
+    FgColor = GlobalConstants::PlayerColor;
+    BgColor = "#FF0000";
+    IsDestroyed = true;
 
     if (from != nullptr)
     {
@@ -411,7 +418,8 @@ void Player::AwardExperience(int amount)
 
 void Player::LevelUp()
 {
-  // std::map automatically sorts by key, so in case of string key, it's lexicographical sorting
+  // std::map automatically sorts by key, so in case of string key,
+  // it's lexicographical sorting
   //
   // That's why I couldn't figure out for a while why my values in the map
   // are suddenly in the wrong order during for loop.
@@ -494,6 +502,8 @@ void Player::LevelUp()
 
   Application::Instance().ShowMessageBox("Level Up!", levelUpResults);
 
+  Printer::Instance().AddMessage("You have gained a level");
+
   /*
   auto class_ = _classesMap[SelectedClass];
 
@@ -557,4 +567,16 @@ void Player::ProcessKill(GameObject* monster)
   exp = Util::Clamp(exp, 1, GlobalConstants::AwardedExpMax);
 
   AwardExperience(exp);
+}
+
+void Player::WaitForTurn()
+{
+  GameObject::WaitForTurn();
+
+  // Redraw screen only when player is ready for action
+  // (assuming Application::_currentState is MainState)
+  if (Attrs.ActionMeter >= 100)
+  {
+    Application::Instance().DrawCurrentState();
+  }
 }

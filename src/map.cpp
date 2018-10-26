@@ -236,7 +236,12 @@ void Map::CreateTown()
 
     if (!MapArray[x][y].Blocking)
     {
+      // Special rats
+      //auto rat = GameObjectsFactory::Instance().CreateRat(x, y, false);
+
+      // Normal rats
       auto rat = GameObjectsFactory::Instance().CreateRat(x, y);
+
       InsertActor(rat);
     }
   }

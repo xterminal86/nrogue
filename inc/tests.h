@@ -2,6 +2,7 @@
 #define TESTS_H
 
 #include "util.h"
+#include "player.h"
 
 namespace Tests
 {  
@@ -128,6 +129,52 @@ namespace Tests
     }
   }
 
+  inline void AutoLevel(Player& p, int level)
+  {
+    printf("Auto level to %i:\n\n", level);
+
+    std::map<int, std::pair<std::string, Attribute&>> attrsMap =
+    {
+      { 0, { "STR", p.Attrs.Str } },
+      { 1, { "DEF", p.Attrs.Def } },
+      { 2, { "MAG", p.Attrs.Mag } },
+      { 3, { "RES", p.Attrs.Res } },
+      { 4, { "SKL", p.Attrs.Skl } },
+      { 5, { "SPD", p.Attrs.Spd } }
+    };
+
+    int maxLevel = level;
+
+    for (int i = 0; i < maxLevel; i++)
+    {
+      p.LevelUp();
+    }
+
+    for (auto& a : attrsMap)
+    {
+      auto kvp = a.second;
+
+      printf("%s: %i (* %i)\n", kvp.first.data(), kvp.second.CurrentValue, kvp.second.Talents);
+    }
+
+    printf("\n");
+    printf("HP: %i (* %i)\n", p.Attrs.HP.OriginalValue, p.Attrs.HP.Talents);
+    printf("MP: %i (* %i)\n", p.Attrs.MP.OriginalValue, p.Attrs.MP.Talents);
+  }
+
+  inline void LevelUpTests()
+  {
+    printf("\nAuto levelling tests:\n\n");
+
+    Player p1;
+
+    p1.Attrs.Str.Talents = 3;
+    p1.Attrs.Def.Talents = 2;
+    p1.Attrs.Skl.Talents = 1;
+
+    AutoLevel(p1, 20);
+  }
+
   inline void Run()
   {
     printf("***** START TESTS *****\n\n");
@@ -137,6 +184,8 @@ namespace Tests
     RoomTests();
     printf("\n- o -\n");
     RNGTests();
+    printf("\n- o -\n");
+    LevelUpTests();
 
     printf("\n\n***** o *****\n");
   }  

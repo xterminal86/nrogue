@@ -51,6 +51,7 @@ class Player : public GameObject
     void Draw();
     void Attack(GameObject* go);
     void ReceiveDamage(GameObject* from, int amount);
+    void WaitForTurn();
 
     ContainerComponent Inventory;
 

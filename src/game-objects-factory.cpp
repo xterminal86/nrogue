@@ -130,8 +130,11 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   else
   {
     // For debugging purposes
+    go->ObjectName = "Battle Rat";
+
     go->Attrs.Str.Set(2 * _playerRef->Attrs.Lvl.CurrentValue);
     go->Attrs.Def.Set(1 * _playerRef->Attrs.Lvl.CurrentValue);
+    go->Attrs.Spd.Set(10);
 
     go->Attrs.HP.Set(10);
   }

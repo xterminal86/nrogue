@@ -147,12 +147,16 @@ void MainState::HandleInput()
       case NUMPAD_5:
         Printer::Instance().AddMessage("You waited...");
 
-        // TODO: think
+        // If player waits, game objects take their turns,
+        // while player action meter is not spent.
+        //
+        // FIXME: think on better approach
+
         //_playerRef->SubtractActionMeter();
         Map::Instance().UpdateGameObjects();
         break;
 
-      case 'a':
+      case 'a':        
         Application::Instance().ChangeState(Application::GameStates::ATTACK_STATE);
         break;
 
@@ -188,6 +192,7 @@ void MainState::HandleInput()
         Application::Instance().ChangeState(Application::GameStates::EXITING_STATE);
         break;
 
+      // TODO: for debug, remove afterwards
       case 'z':
         _playerRef->LevelUp();
         break;
@@ -197,19 +202,18 @@ void MainState::HandleInput()
     }
   }
 
-  // If player's turn finished, update all game objects' components
+  // Update all game objects if player is not ready to act
   if (_playerRef->Attrs.ActionMeter < 100)
   {    
-    Map::Instance().UpdateGameObjects();
-    Update(true);
+    Map::Instance().UpdateGameObjects();    
     _playerRef->WaitForTurn();
-  }  
+  }
 }
 
 void MainState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
-  {
+  {    
     Printer::Instance().Clear();
 
     _playerRef->CheckVisibility();
