@@ -88,31 +88,26 @@ void LookInputState::Update(bool forceUpdate)
 
       bool foundGameObject = false;
 
-      // Check actors and game objects in visible area
-
-      if (tile->Visible)
+      if (CheckPlayer())
       {
-        if (CheckPlayer())
+        lookStatus = "It's you!";
+        foundGameObject = true;
+      }
+      else if (tile->Visible)
+      {        
+        auto actor = CheckActor();
+        if (actor != nullptr)
         {
-          lookStatus = "It's you!";
+          lookStatus = actor->ObjectName;
           foundGameObject = true;
         }
         else
         {
-          auto actor = CheckActor();
-          if (actor != nullptr)
+          auto gos = CheckGameObjects();
+          if (gos.size() != 0)
           {
-            lookStatus = actor->ObjectName;
+            lookStatus = gos.back()->ObjectName;
             foundGameObject = true;
-          }
-          else
-          {
-            auto gos = CheckGameObjects();
-            if (gos.size() != 0)
-            {
-              lookStatus = gos.back()->ObjectName;
-              foundGameObject = true;
-            }
           }
         }
       }
