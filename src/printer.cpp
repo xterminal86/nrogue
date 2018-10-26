@@ -1,6 +1,7 @@
 #include "printer.h"
 
 #include "application.h"
+#include "util.h"
 
 void Printer::Init()
 {
@@ -198,6 +199,10 @@ void Printer::AddMessage(std::string message)
     _inGameMessages.pop_back();
   }
 
+  _lastMessagesToDisplay++;
+
+  _lastMessagesToDisplay = Util::Clamp(_lastMessagesToDisplay, 0, 5);
+
   ShowLastMessage = true;
 }
 
@@ -311,4 +316,24 @@ void Printer::Render()
   }
 
   refresh();
+}
+
+std::vector<std::string> Printer::GetLastMessages()
+{
+  _lastMessages.clear();
+
+  int count = 0;
+  for (auto& m : _inGameMessages)
+  {
+    _lastMessages.push_back(m);
+
+    count++;
+
+    if (count >= _lastMessagesToDisplay)
+    {
+      break;
+    }
+  }
+
+  return _lastMessages;
 }

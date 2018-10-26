@@ -79,18 +79,26 @@ void AttackState::HandleInput()
 
   if (dirSet)
   {
-    auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
-    if (res.size() != 0)
+    auto res = Map::Instance().GetActorAtPosition(_cursorPosition.X, _cursorPosition.Y);
+    if (res != nullptr)
     {
-      _playerRef->Attack(res.back());
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+      _playerRef->Attack(res);
     }
     else
     {
-      auto* cell = &Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
-      _playerRef->Attack(cell);
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+      auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
+      if (res.size() != 0)
+      {
+        _playerRef->Attack(res.back());
+      }
+      else
+      {
+        auto* cell = &Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
+        _playerRef->Attack(cell);
+      }
     }
+
+    Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
   }
 }
 

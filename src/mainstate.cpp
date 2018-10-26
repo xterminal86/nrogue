@@ -228,6 +228,10 @@ void MainState::Update(bool forceUpdate)
     {
       DisplayGameLog();
     }
+    else
+    {
+      Printer::Instance().ResetMessagesToDisplay();
+    }
 
     // NOTE: Some debug info
 

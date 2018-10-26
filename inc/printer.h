@@ -69,25 +69,13 @@ class Printer : public Singleton<Printer>
       return (_inGameMessages.size() > 0) ? _inGameMessages.front() : std::string();
     }
 
-    std::vector<std::string> GetLastMessages()
+    void ResetMessagesToDisplay()
     {
-      std::vector<std::string> res;
-
-      int count = 0;
-      for (auto& m : _inGameMessages)
-      {
-        res.push_back(m);
-
-        count++;
-
-        if (count >= 3)
-        {
-          break;
-        }
-      }
-
-      return res;
+      _lastMessages.clear();
+      _lastMessagesToDisplay = 0;
     }
+
+    std::vector<std::string> GetLastMessages();
 
     const std::vector<std::string>& Messages() { return _inGameMessages; }
 
@@ -104,7 +92,11 @@ class Printer : public Singleton<Printer>
     std::map<size_t, ColorPair> _colorMap;
     std::map<size_t, short> _colorIndexMap;
 
-    std::vector<std::string> _inGameMessages;
+    std::vector<std::string> _inGameMessages;    
+    std::vector<std::string> _lastMessages;
+
+    int _lastMessagesToDisplay = 0;
+
     const int kMaxGameLogMessages = 100;
 
     short _colorPairsGlobalIndex = 1;
