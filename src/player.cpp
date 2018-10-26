@@ -500,7 +500,7 @@ void Player::LevelUp()
   mbStr = Util::StringFormat("MP: %i  +%i", Attrs.MP.OriginalValue, statRaises[7]);
   levelUpResults.push_back(mbStr);
 
-  Application::Instance().ShowMessageBox("Level Up!", levelUpResults);
+  Application::Instance().ShowMessageBox(true, "Level Up!", levelUpResults, "#888800", "#000044");
 
   Printer::Instance().AddMessage("You have gained a level");
 

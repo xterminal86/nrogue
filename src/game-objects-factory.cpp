@@ -161,7 +161,7 @@ bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
 
   if (item->EquipmentType == EquipmentCategory::NOT_EQUIPPABLE)
   {
-    Application::Instance().ShowMessageBox("Information", { "Can't be equipped!" });
+    Application::Instance().ShowMessageBox(false, "Information", { "Can't be equipped!" }, GlobalConstants::MessageBoxRedBorderColor);
     return res;
   }
 
@@ -194,7 +194,7 @@ bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
   }
   else if (itemEquipped != item)
   {
-    Application::Instance().ShowMessageBox("Information", { "Unequip first!" });
+    Application::Instance().ShowMessageBox(false, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
     res = false;
   }
   else
@@ -275,7 +275,7 @@ bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
   // Finally, if no empty slots found, print a warning
   if (!emptySlotFound)
   {
-    Application::Instance().ShowMessageBox("Information", { "Unequip first!" });    
+    Application::Instance().ShowMessageBox(false, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
   }
 
   return false;
@@ -308,7 +308,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
     case ItemType::HEALING_POTION:
       if (_playerRef->Attrs.HP.CurrentValue == _playerRef->Attrs.HP.OriginalValue)
       {        
-        Application::Instance().ShowMessageBox("Information", { "You are already at full health!" });
+        Application::Instance().ShowMessageBox(false, "Information", { "You are already at full health!" }, GlobalConstants::MessageBoxRedBorderColor);
       }
       else
       {
@@ -324,11 +324,11 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
         std::string m1 = "Your spirituality is too low";
         std::string m2 = "for this to have any effect on you";
 
-        Application::Instance().ShowMessageBox("Information", { m1, m2 });
+        Application::Instance().ShowMessageBox(false, "Information", { m1, m2 }, GlobalConstants::MessageBoxRedBorderColor);
       }
       else if (_playerRef->Attrs.MP.CurrentValue == _playerRef->Attrs.MP.OriginalValue)
       {
-        Application::Instance().ShowMessageBox("Information", { "You are already in fighting spirit!" });
+        Application::Instance().ShowMessageBox(false, "Information", { "You are already in fighting spirit!" }, GlobalConstants::MessageBoxRedBorderColor);
       }
       else
       {
@@ -339,13 +339,13 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
       break;
 
     case ItemType::COINS:      
-      Application::Instance().ShowMessageBox("Information", { "You don't 'use' money like that" });
+      Application::Instance().ShowMessageBox(false, "Information", { "You don't 'use' money like that" }, GlobalConstants::MessageBoxRedBorderColor);
       break;
 
     default:
       auto go = (GameObject*)item->OwnerGameObject;
       auto msg = Util::StringFormat("You can't use %s!", go->ObjectName.data());
-      Application::Instance().ShowMessageBox("Information", { msg });
+      Application::Instance().ShowMessageBox(false, "Information", { msg }, GlobalConstants::MessageBoxRedBorderColor);
       break;
   }
 

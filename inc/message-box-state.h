@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "gamestate.h"
+#include "constants.h"
 
 class MessageBoxState : public GameState
 {
@@ -12,18 +13,25 @@ class MessageBoxState : public GameState
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;
 
-    void SetMessage(std::string header, std::vector<std::string> message)
+    void SetMessage(bool waitForInput, std::string header, std::vector<std::string> message,
+                    std::string borderColor = GlobalConstants::MessageBoxDefaultBorderColor,
+                    std::string bgColor = GlobalConstants::MessageBoxDefaultBgColor)
     {
+      _waitForInput = waitForInput;
       _header = header;
       _message = message;
-    }
-
-    const std::string kBackgroundColor = "#222222";
-    const std::string kBorderColor = "#666666";
+      _bgColor = bgColor;
+      _borderColor = borderColor;
+    }    
 
   private:
     std::string _header;
     std::vector<std::string> _message;
+
+    std::string _bgColor;
+    std::string _borderColor;
+
+    bool _waitForInput;
 };
 
 #endif // MESSAGEBOXSTATE_H

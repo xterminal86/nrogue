@@ -39,7 +39,11 @@ class Application : public Singleton<Application>
     void Init() override;
     void Run();
     void ChangeState(const GameStates& gameStateIndex);
-    void ShowMessageBox(std::string header, std::vector<std::string> message);
+
+    void ShowMessageBox(bool waitForInput, std::string header, std::vector<std::string> message,
+                        std::string borderColor = GlobalConstants::MessageBoxDefaultBorderColor,
+                        std::string bgColor = GlobalConstants::MessageBoxDefaultBgColor);
+
     void CloseMessageBox();
 
     Player PlayerInstance;

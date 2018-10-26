@@ -56,7 +56,7 @@ void InventoryState::HandleInput()
 
       if (ic->IsEquipped)
       {
-        Application::Instance().ShowMessageBox("Information", { "Unequip first!" });
+        Application::Instance().ShowMessageBox(false, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
         return;
       }
 
@@ -113,7 +113,7 @@ void InventoryState::HandleInput()
     break;
 
     case 't':
-      Application::Instance().ShowMessageBox("Information", { "Not implemented yet!" });
+      Application::Instance().ShowMessageBox(false, "Information", { "Not implemented yet!" });
       break;
 
     case 'q':

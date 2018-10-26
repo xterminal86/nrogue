@@ -10,7 +10,14 @@ void MessageBoxState::HandleInput()
 
   if (_keyPressed != -1)
   {
-    Application::Instance().CloseMessageBox();
+    if (_waitForInput && (_keyPressed == VK_ENTER || _keyPressed == 'q'))
+    {
+      Application::Instance().CloseMessageBox();
+    }
+    else if (!_waitForInput)
+    {
+      Application::Instance().CloseMessageBox();
+    }
   }
 }
 
@@ -45,27 +52,28 @@ void MessageBoxState::Update(bool forceUpdate)
     auto area = Util::GetScreenRect(x1, y1, x2, y2);
     for (auto& p : area)
     {
-      Printer::Instance().PrintFB(p.X, p.Y, ' ', "#000000", kBackgroundColor);
+      Printer::Instance().PrintFB(p.X, p.Y, ' ', "#000000", _bgColor);
     }
 
     auto border = Util::GetScreenRectPerimeter(x1, y1, x2, y2);
     for (auto& b : border)
     {
-      Printer::Instance().PrintFB(b.X, b.Y, ' ', "#000000", kBorderColor);
+      Printer::Instance().PrintFB(b.X, b.Y, ' ', "#000000", _borderColor);
     }
 
-    if (_header.length() != 0)
+    std::string header = _header;
+    if (header.length() != 0)
     {
-      _header.insert(0, " ");
-      _header.append(" ");
+      header.insert(0, " ");
+      header.append(" ");
 
-      Printer::Instance().PrintFB(tw / 2, y1, _header, Printer::kAlignCenter, "#FFFFFF");
+      Printer::Instance().PrintFB(tw / 2, y1, header, Printer::kAlignCenter, "#FFFFFF");      
     }
 
     int offset = 0;
     for (auto& s : _message)
     {
-      Printer::Instance().PrintFB(tw / 2, th / 2 - _message.size() / 2 + offset, s, Printer::kAlignCenter, "#FFFFFF", kBackgroundColor);
+      Printer::Instance().PrintFB(tw / 2, th / 2 - _message.size() / 2 + offset, s, Printer::kAlignCenter, "#FFFFFF", _bgColor);
       offset++;
     }
 

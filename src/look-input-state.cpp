@@ -219,6 +219,6 @@ void LookInputState::DisplayMonsterStats()
     msg.push_back("");
     msg.push_back(Util::StringFormat("Action Meter: %i", actor->Attrs.ActionMeter));
 
-    Application::Instance().ShowMessageBox(actor->ObjectName, msg);
+    Application::Instance().ShowMessageBox(false, actor->ObjectName, msg);
   }
 }

@@ -169,6 +169,9 @@ namespace GlobalConstants
   static const std::string DoorHighlightColor = "#444400";
   static const std::string ShrineMightColor = "#FF0000";
   static const std::string ShrineSpiritColor = "#0044FF";
+  static const std::string MessageBoxDefaultBgColor = "#222222";
+  static const std::string MessageBoxDefaultBorderColor = "#666666";
+  static const std::string MessageBoxRedBorderColor = "#880000";
 
   static const std::vector<std::string> RandomNames =
   {    

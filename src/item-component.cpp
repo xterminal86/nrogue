@@ -39,7 +39,7 @@ bool ItemComponent::Equip()
 
 void ItemComponent::Inspect()
 {
-  Application::Instance().ShowMessageBox(((GameObject*)OwnerGameObject)->ObjectName, Description);
+  Application::Instance().ShowMessageBox(false, ((GameObject*)OwnerGameObject)->ObjectName, Description);
 }
 
 void ItemComponent::Throw()

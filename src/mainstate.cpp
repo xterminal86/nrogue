@@ -275,7 +275,7 @@ void MainState::TryToPickupItem()
     if (_playerRef->Inventory.Contents.size() == _playerRef->kInventorySize)
     {
       Printer::Instance().AddMessage("Inventory is full!");
-      Application::Instance().ShowMessageBox("Epic Fail", { "Inventory is full!" });
+      Application::Instance().ShowMessageBox(false, "Epic Fail", { "Inventory is full!" }, GlobalConstants::MessageBoxRedBorderColor);
       return;
     }
 
@@ -346,5 +346,5 @@ std::string MainState::UpdateBar(int x, int y, Attribute attr)
 
 void MainState::DisplayHelp()
 {
-  Application::Instance().ShowMessageBox("Help", _helpText);
+  Application::Instance().ShowMessageBox(false, "Help", _helpText);
 }
