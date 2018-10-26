@@ -406,7 +406,7 @@ void Player::AwardExperience(int amount)
 
   Attrs.Exp.CurrentValue += amnt;
 
-  auto msg = Util::StringFormat("Received %i EXP", amount);
+  auto msg = Util::StringFormat("Received %i EXP", amnt);
   Printer::Instance().AddMessage(msg);
 
   if (Attrs.Exp.CurrentValue >= 100)
@@ -547,22 +547,13 @@ bool Player::CanRaiseAttribute(Attribute& attr)
 void Player::ProcessKill(GameObject* monster)
 {
   int defaultExp = monster->Attrs.HP.OriginalValue;
-  int exp = defaultExp;
+  int exp = 0;
 
-  int d = monster->Attrs.Lvl.CurrentValue - Attrs.Lvl.CurrentValue;
+  float ratio = (float)monster->Attrs.Lvl.CurrentValue / (float)Attrs.Lvl.CurrentValue;
 
-  if (d > 0)
-  {
-    // If monster is stronger
+  int amount = (float)defaultExp * ratio;
 
-    exp += defaultExp * std::abs(d);
-  }
-  else if (d < 0)
-  {
-    // If monster is weaker
-
-    exp -= defaultExp * std::abs(d);
-  }
+  exp += amount;
 
   exp = Util::Clamp(exp, 1, GlobalConstants::AwardedExpMax);
 

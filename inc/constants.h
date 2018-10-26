@@ -148,7 +148,7 @@ namespace GlobalConstants
   static const int AttributeIncreasedRaiseStep = 25;
   static const int AwardedExperienceStep = 5;
   static const int AwardedExpDefault = 20;
-  static const int AwardedExpMax = 60;
+  static const int AwardedExpMax = 40;
   static const int MinHitChance = 5;
   static const int MaxHitChance = 95;
 
