@@ -10,7 +10,6 @@
 #include "message-log-state.h"
 #include "look-input-state.h"
 #include "interact-input-state.h"
-#include "help-state.h"
 #include "exiting-state.h"
 #include "message-box-state.h"
 #include "endgame-state.h"
@@ -27,7 +26,6 @@ void Application::Init()
   _gameStates[(int)GameStates::INTRO_STATE] = std::unique_ptr<GameState>(new IntroState());
   _gameStates[(int)GameStates::INVENTORY_STATE] = std::unique_ptr<GameState>(new InventoryState());
   _gameStates[(int)GameStates::SHOW_MESSAGES_STATE] = std::unique_ptr<GameState>(new MessageLogState());
-  _gameStates[(int)GameStates::SHOW_HELP_STATE] = std::unique_ptr<GameState>(new HelpState());
   _gameStates[(int)GameStates::LOOK_INPUT_STATE] = std::unique_ptr<GameState>(new LookInputState());
   _gameStates[(int)GameStates::INTERACT_INPUT_STATE] = std::unique_ptr<GameState>(new InteractInputState());
   _gameStates[(int)GameStates::EXITING_STATE] = std::unique_ptr<GameState>(new ExitingState());

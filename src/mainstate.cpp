@@ -184,8 +184,8 @@ void MainState::HandleInput()
         Application::Instance().ChangeState(Application::GameStates::INFO_STATE);
         break;
 
-      case '?':
-        Application::Instance().ChangeState(Application::GameStates::SHOW_HELP_STATE);
+      case '?':        
+        DisplayHelp();
         break;
 
       case 'q':
@@ -342,4 +342,9 @@ std::string MainState::UpdateBar(int x, int y, Attribute attr)
   Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, "#FFFFFF");
 
   return bar;
+}
+
+void MainState::DisplayHelp()
+{
+  Application::Instance().ShowMessageBox("Help", _helpText);
 }

@@ -29,7 +29,6 @@ class Application : public Singleton<Application>
       INFO_STATE,
       INVENTORY_STATE,
       SHOW_MESSAGES_STATE,
-      SHOW_HELP_STATE,
       LOOK_INPUT_STATE,
       INTERACT_INPUT_STATE,
       EXITING_STATE,

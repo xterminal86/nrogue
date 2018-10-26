@@ -24,9 +24,22 @@ class MainState : public GameState
     void DisplayGameLog();
     void TryToPickupItem();
     void DrawHPMP();
+    void DisplayHelp();
+
     std::string UpdateBar(int x, int y, Attribute attr);
 
     Position _cursorPosition;
+
+    std::vector<std::string> _helpText =
+    {
+      R"('q' - Cancel / Exit Game     )",
+      R"('a' - Attack                 )",
+      R"('i' - Interact               )",
+      R"('l' - Enter "look mode"      )",
+      R"('m' - Display message log    )",
+      R"('@' - Display character sheet)",
+      R"('e' - Display inventory      )"
+    };
 };
 
 #endif
