@@ -469,17 +469,60 @@ void Player::LevelUp()
   {
     auto kvp = i.second;
 
-    mbStr = Util::StringFormat("%s: %i  +%i", kvp.first.data(), kvp.second.OriginalValue, _statRaisesMap[kvp.first]);
+    mbStr = Util::StringFormat("%s: %i", kvp.first.data(), kvp.second.OriginalValue);
     levelUpResults.push_back(mbStr);
   }
 
   levelUpResults.push_back("");
 
-  mbStr = Util::StringFormat("HP: %i  +%i", Attrs.HP.OriginalValue, _statRaisesMap["HP"]);
+  mbStr = Util::StringFormat("HP:  %i", Attrs.HP.OriginalValue);
   levelUpResults.push_back(mbStr);
 
-  mbStr = Util::StringFormat("MP: %i  +%i", Attrs.MP.OriginalValue, _statRaisesMap["MP"]);
+  mbStr = Util::StringFormat("MP:  %i", Attrs.MP.OriginalValue);
   levelUpResults.push_back(mbStr);
+
+  // Try to make everything look pretty
+  //
+  // NOTE: probably lots of shitcode
+
+  int maxLen = 0;
+  for (auto& s : levelUpResults)
+  {
+    if (s.length() > maxLen)
+    {
+      maxLen = s.length();
+    }
+  }
+
+  for (auto& s : levelUpResults)
+  {
+    if (s.length() < maxLen)
+    {
+      int d = maxLen - s.length();
+      s.append(d, ' ');
+    }
+  }
+
+  int index = 0;
+  for (auto& i : _mainAttributes)
+  {
+    auto kvp = i.second;
+
+    auto addition = Util::StringFormat("  +%i", _statRaisesMap[kvp.first]);
+    levelUpResults[index] += addition;
+    index++;
+  }
+
+  // Take into account empty string between stats and hitpoints
+  index++;
+
+  auto addition = Util::StringFormat("  +%i", _statRaisesMap["HP"]);
+  levelUpResults[index] += addition;
+  index++;
+
+  addition = Util::StringFormat("  +%i", _statRaisesMap["MP"]);
+  levelUpResults[index] += addition;
+  index++;
 
   Application::Instance().ShowMessageBox(true, "Level Up!", levelUpResults, "#888800", "#000044");
 
