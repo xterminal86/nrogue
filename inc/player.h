@@ -90,6 +90,33 @@ class Player : public GameObject
       { 3, "Unknown" }
     };
 
+    // std::map automatically sorts by key, so in case of string key,
+    // it's lexicographical sorting
+    //
+    // That's why I couldn't figure out for a while why my values in the map
+    // are suddenly in the wrong order during for loop.
+    std::map<int, std::pair<std::string, Attribute&>> _mainAttributes =
+    {
+      { 0, { "STR", Attrs.Str } },
+      { 1, { "DEF", Attrs.Def } },
+      { 2, { "MAG", Attrs.Mag } },
+      { 3, { "RES", Attrs.Res } },
+      { 4, { "SKL", Attrs.Skl } },
+      { 5, { "SPD", Attrs.Spd } }
+    };
+
+    std::map<std::string, int> _statRaisesMap =
+    {
+      { "STR", 0 },
+      { "DEF", 0 },
+      { "MAG", 0 },
+      { "RES", 0 },
+      { "SKL", 0 },
+      { "SPD", 0 },
+      { "HP", 0 },
+      { "MP", 0 }
+    };
+
     GameObject* _previousCell = nullptr;
     GameObject* _currentCell = nullptr;
 };

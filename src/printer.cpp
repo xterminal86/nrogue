@@ -16,7 +16,8 @@ void Printer::Init()
   // Enforce colors of standard ncurses colors
   // because some colors aren't actually correspond to their
   // "names", e.g. COLOR_BLACK isn't actually black, but grey,
-  // so we redefine it
+  // so we redefine it.
+
   init_color(COLOR_BLACK, 0, 0, 0);
   init_color(COLOR_WHITE, 1000, 1000, 1000);
   init_color(COLOR_RED, 1000, 0, 0);
@@ -79,7 +80,7 @@ NColor Printer::GetNColor(const std::string& htmlColor)
   ret.G = scaledValueG;
   ret.B = scaledValueB;
 
-  return std::move(ret);
+  return ret;
 }
 
 size_t Printer::GetOrSetColor(const std::string& htmlColorFg, const std::string& htmlColorBg)

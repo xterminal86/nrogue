@@ -138,7 +138,7 @@ struct Attributes
 
 namespace GlobalConstants
 {
-  static std::string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  static const std::string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   static const int MapX = 100; // 160
   static const int MapY = 50; // 45

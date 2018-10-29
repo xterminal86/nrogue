@@ -121,6 +121,8 @@ class GameObject
     bool Blocking = false;
     bool BlocksSight = false;
     bool Revealed = false;
+
+    // Determines if objects on map tile should be drawn
     bool Visible = false;
 
     // NOTE: set manually for NPCs during creation via GameObject::Move(),

@@ -60,16 +60,17 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
   go->FgColor = GlobalConstants::CoinsColor;
 
   Component* c = go->AddComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-  ((ItemComponent*)c)->Description = { "You can buy things with these" };
+  ic->Description = { "You can buy things with these" };
 
   int pl = _playerRef->Attrs.Lvl.CurrentValue;
 
   int money = (amount == 0) ? RNG::Instance().RandomRange(1 * pl, 10 * pl) : amount;
-  ((ItemComponent*)c)->Cost = money;
-  ((ItemComponent*)c)->Amount = money;
-  ((ItemComponent*)c)->IsStackable = true;
-  ((ItemComponent*)c)->TypeOfObject = ItemType::COINS;
+  ic->Cost = money;
+  ic->Amount = money;
+  ic->IsStackable = true;
+  ic->TypeOfObject = ItemType::COINS;
 
   return go;
 }
@@ -361,12 +362,13 @@ GameObject* GameObjectsFactory::CreateHealingPotion()
   go->ObjectName = "Healing Potion";
 
   Component* c = go->AddComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-  ((ItemComponent*)c)->TypeOfObject = ItemType::HEALING_POTION;
-  ((ItemComponent*)c)->Amount = 1;
-  ((ItemComponent*)c)->IsStackable = true;
+  ic->TypeOfObject = ItemType::HEALING_POTION;
+  ic->Amount = 1;
+  ic->IsStackable = true;
 
-  ((ItemComponent*)c)->Description = { "Restores you to full health" };
+  ic->Description = { "Restores you to full health" };
 
   return go;
 }
@@ -380,12 +382,13 @@ GameObject* GameObjectsFactory::CreateManaPotion()
   go->ObjectName = "Mana Potion";
 
   Component* c = go->AddComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-  ((ItemComponent*)c)->TypeOfObject = ItemType::MANA_POTION;
-  ((ItemComponent*)c)->Amount = 1;
-  ((ItemComponent*)c)->IsStackable = true;
+  ic->TypeOfObject = ItemType::MANA_POTION;
+  ic->Amount = 1;
+  ic->IsStackable = true;
 
-  ((ItemComponent*)c)->Description = { "Helps you regain spiritual powers" };
+  ic->Description = { "Helps you regain spiritual powers" };
 
   return go;
 }

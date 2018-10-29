@@ -418,29 +418,14 @@ void Player::AwardExperience(int amount)
 
 void Player::LevelUp()
 {
-  // std::map automatically sorts by key, so in case of string key,
-  // it's lexicographical sorting
-  //
-  // That's why I couldn't figure out for a while why my values in the map
-  // are suddenly in the wrong order during for loop.
-  std::map<int, std::pair<std::string, Attribute&>> mainAttributes =
+  for (auto& kvp : _statRaisesMap)
   {
-    { 0, { "STR", Attrs.Str } },
-    { 1, { "DEF", Attrs.Def } },
-    { 2, { "MAG", Attrs.Mag } },
-    { 3, { "RES", Attrs.Res } },
-    { 4, { "SKL", Attrs.Skl } },
-    { 5, { "SPD", Attrs.Spd } }
-  };
+    kvp.second = 0;
+  }
 
-  std::vector<int> statRaises =
-  {
-    0, 0, 0, 0, 0, 0, 0, 0
-  };
+  // Try to raise main stats
 
-  int index = 0;
-
-  for (auto& i : mainAttributes)
+  for (auto& i : _mainAttributes)
   {
     auto kvp = i.second;
 
@@ -449,22 +434,22 @@ void Player::LevelUp()
 
     if (CanRaiseAttribute(kvp.second))
     {
-      statRaises[index] = 1;
+      _statRaisesMap[kvp.first] = 1;
 
       kvp.second.OriginalValue++;
       kvp.second.CurrentValue = kvp.second.OriginalValue;
-    }
-
-    index++;
+    }    
   }
+
+  // HP and MP
 
   int minRndHp = (Attrs.HP.Talents + 1);
   int maxRndHp = 2 * (Attrs.HP.Talents + 1);
+
   int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp);
   Attrs.HP.OriginalValue += hpToAdd;
 
-  statRaises[index] = hpToAdd;
-  index++;
+  _statRaisesMap["HP"] = hpToAdd;
 
   int minRndMp = Attrs.Mag.OriginalValue;
   int maxRndMp = Attrs.Mag.OriginalValue * (Attrs.MP.Talents + 1);
@@ -472,37 +457,33 @@ void Player::LevelUp()
   int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp);
   Attrs.MP.OriginalValue += mpToAdd;
 
-  statRaises[index] = mpToAdd;
+  _statRaisesMap["MP"] = mpToAdd;
 
   Attrs.Lvl.OriginalValue++;
   Attrs.Lvl.CurrentValue = Attrs.Lvl.OriginalValue;
 
   std::vector<std::string> levelUpResults;
 
-  index = 0;
-
   std::string mbStr;
-  for (auto& i : mainAttributes)
+  for (auto& i : _mainAttributes)
   {
     auto kvp = i.second;
 
-    mbStr = Util::StringFormat("%s: %i  +%i", kvp.first.data(), kvp.second.OriginalValue, statRaises[index]);
+    mbStr = Util::StringFormat("%s: %i  +%i", kvp.first.data(), kvp.second.OriginalValue, _statRaisesMap[kvp.first]);
     levelUpResults.push_back(mbStr);
-
-    index++;
   }
 
   levelUpResults.push_back("");
 
-  mbStr = Util::StringFormat("HP: %i  +%i", Attrs.HP.OriginalValue, statRaises[6]);
+  mbStr = Util::StringFormat("HP: %i  +%i", Attrs.HP.OriginalValue, _statRaisesMap["HP"]);
   levelUpResults.push_back(mbStr);
 
-  mbStr = Util::StringFormat("MP: %i  +%i", Attrs.MP.OriginalValue, statRaises[7]);
+  mbStr = Util::StringFormat("MP: %i  +%i", Attrs.MP.OriginalValue, _statRaisesMap["MP"]);
   levelUpResults.push_back(mbStr);
 
   Application::Instance().ShowMessageBox(true, "Level Up!", levelUpResults, "#888800", "#000044");
 
-  Printer::Instance().AddMessage("You have gained a level");
+  Printer::Instance().AddMessage("You have gained a level!");
 
   /*
   auto class_ = _classesMap[SelectedClass];

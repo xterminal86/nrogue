@@ -253,10 +253,6 @@ void InventoryState::DropItem()
   auto go = _playerRef->Inventory.Contents[_selectedIndex].release();
   auto c = go->GetComponent<ItemComponent>();
   ItemComponent* ic = static_cast<ItemComponent*>(c);
-  if (ic->IsEquipped)
-  {
-    ic->Equip();
-  }
 
   ic->Transfer();
 
@@ -270,7 +266,7 @@ void InventoryState::DropItem()
     message = Util::StringFormat("Dropped: %s", go->ObjectName.data());
   }
 
-  // !!! Destruction is done in other method !!!
+  // !!! Object should not be destroyed here !!!
 
   Printer::Instance().AddMessage(message);
 }

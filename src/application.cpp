@@ -50,7 +50,7 @@ void Application::Run()
     // to exit game (change state to nullptr) we get segfault because
     // _currentState->Update() gets called on nullptr.
     //
-    // TODO: Probably still a bad idea to just change order of methods call,
+    // NOTE: Probably still a bad idea to just change order of methods call,
     // since we might get the same situation in Update().
 
     _currentState->Update();
