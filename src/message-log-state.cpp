@@ -46,7 +46,6 @@ void MessageLogState::Update(bool forceUpdate)
     Printer::Instance().Clear();
 
     int tw = Printer::Instance().TerminalWidth;
-    int th = Printer::Instance().TerminalHeight;
 
     Printer::Instance().PrintFB(tw / 2, 0, "========== GAME LOG ==========", Printer::kAlignCenter, "#FFFFFF");
 

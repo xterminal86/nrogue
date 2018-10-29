@@ -550,8 +550,6 @@ void Player::LevelUp()
 
 bool Player::CanRaiseAttribute(Attribute& attr)
 {
-  bool success = false;
-
   int chance = GlobalConstants::AttributeMinimumRaiseChance;
 
   int iterations = attr.Talents;
