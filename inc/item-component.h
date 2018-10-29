@@ -19,18 +19,9 @@ class ItemComponent : public Component
     bool Equip();
     void Throw();
 
-    int Durability = -1;
-    int Cost = 0;
-    int Amount = 1;
-    bool IsStackable = false;
-    bool IsEquipped = false;
-
-    ItemType TypeOfObject = ItemType::DUMMY;
-    EquipmentCategory EquipmentType = EquipmentCategory::NOT_EQUIPPABLE;
+    ItemData Data;
 
     std::vector<std::string> Description;
-
-    Attribute Damage;
 };
 
 #endif // ITEMCOMPONENT_H

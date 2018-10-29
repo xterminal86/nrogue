@@ -16,16 +16,18 @@ void ContainerComponent::AddToInventory(GameObject* object)
 {  
   bool foundStack = false;
 
-  auto ic = object->GetComponent<ItemComponent>();
+  auto c = object->GetComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-  if (((ItemComponent*)ic)->IsStackable)
+  if (ic->Data.IsStackable)
   {
     for (auto& i : Contents)
     {
       auto iic = i->GetComponent<ItemComponent>();
-      if (((ItemComponent*)iic)->TypeOfObject == ((ItemComponent*)ic)->TypeOfObject)
+      ItemComponent* iicc = static_cast<ItemComponent*>(iic);
+      if (iicc->Data.TypeOfItem == iicc->Data.TypeOfItem)
       {
-        ((ItemComponent*)iic)->Amount += ((ItemComponent*)ic)->Amount;
+        iicc->Data.Amount += iicc->Data.Amount;
         foundStack = true;
         break;
       }

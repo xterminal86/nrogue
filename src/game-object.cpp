@@ -14,6 +14,8 @@ void GameObject::Init(int x, int y, chtype avatar, const std::string& fgColor, c
 
   Attrs.ActionMeter = 100;
 
+  // _currentCell->Occupied is not set to true by default,
+  // see game-object.h comments for Occupied field.
   _currentCell = &Map::Instance().MapArray[PosX][PosY];
 }
 

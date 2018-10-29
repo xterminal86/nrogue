@@ -41,6 +41,8 @@
 
 #include <vector>
 #include <string>
+#include <map>
+#include <functional>
 
 enum class MonsterType
 {
@@ -134,6 +136,67 @@ struct Attributes
   int ActionMeter = 0;
 
   bool Indestructible = true;
+};
+
+enum class ItemPrefix
+{
+  NORMAL = 0,
+  BLESSED,
+  CURSED
+};
+
+enum class ItemRarity
+{
+  COMMON = 0,
+  MAGIC,
+  RARE
+};
+
+enum class StatsEnum
+{
+  STR = 0,
+  DEF,
+  MAG,
+  RES,
+  SKL,
+  SPD,
+  HP,
+  MP
+};
+
+struct ItemData
+{
+  ItemType TypeOfItem = ItemType::DUMMY;
+  ItemPrefix Prefix = ItemPrefix::NORMAL;
+  ItemRarity Rarity = ItemRarity::COMMON;
+
+  EquipmentCategory EqCategory = EquipmentCategory::NOT_EQUIPPABLE;
+
+  Attribute Durability;
+  Attribute Damage;
+
+  bool IsUsable = false;
+  bool IsEquipped = false;
+  bool IsStackable = false;
+  bool IsIdentified = false;
+
+  int Amount = 1;
+  int Cost = 0;
+
+  std::map<StatsEnum, int> StatBonuses =
+  {
+    { StatsEnum::STR, 0 },
+    { StatsEnum::DEF, 0 },
+    { StatsEnum::MAG, 0 },
+    { StatsEnum::RES, 0 },
+    { StatsEnum::SKL, 0 },
+    { StatsEnum::SPD, 0 },
+    { StatsEnum::HP, 0 },
+    { StatsEnum::MP, 0 }
+  };
+
+  std::function<void()> UseCallback;
+  std::function<void()> EquipCallback;
 };
 
 namespace GlobalConstants

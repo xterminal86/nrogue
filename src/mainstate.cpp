@@ -290,9 +290,9 @@ void MainState::TryToPickupItem()
     _playerRef->Inventory.AddToInventory(go);
 
     std::string message;
-    if (((ItemComponent*)ic)->IsStackable)
+    if (((ItemComponent*)ic)->Data.IsStackable)
     {
-      message = Util::StringFormat("Picked up: %i %s", ((ItemComponent*)ic)->Amount, go->ObjectName.data());
+      message = Util::StringFormat("Picked up: %i %s", ((ItemComponent*)ic)->Data.Amount, go->ObjectName.data());
     }
     else
     {

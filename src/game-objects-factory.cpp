@@ -67,10 +67,10 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
   int pl = _playerRef->Attrs.Lvl.CurrentValue;
 
   int money = (amount == 0) ? RNG::Instance().RandomRange(1 * pl, 10 * pl) : amount;
-  ic->Cost = money;
-  ic->Amount = money;
-  ic->IsStackable = true;
-  ic->TypeOfObject = ItemType::COINS;
+  ic->Data.Cost = money;
+  ic->Data.Amount = money;
+  ic->Data.IsStackable = true;
+  ic->Data.TypeOfItem = ItemType::COINS;
 
   return go;
 }
@@ -160,7 +160,7 @@ bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
 {
   bool res = false;
 
-  if (item->EquipmentType == EquipmentCategory::NOT_EQUIPPABLE)
+  if (item->Data.EqCategory == EquipmentCategory::NOT_EQUIPPABLE)
   {
     Application::Instance().ShowMessageBox(false, "Information", { "Can't be equipped!" }, GlobalConstants::MessageBoxRedBorderColor);
     return res;
@@ -168,7 +168,7 @@ bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
 
   // TODO: cursed items
 
-  auto category = item->EquipmentType;
+  auto category = item->Data.EqCategory;
 
   if (category == EquipmentCategory::RING)
   {
@@ -186,7 +186,7 @@ bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
 {
   bool res = true;
 
-  auto itemEquipped = _playerRef->EquipmentByCategory[item->EquipmentType][0];
+  auto itemEquipped = _playerRef->EquipmentByCategory[item->Data.EqCategory][0];
 
   if (itemEquipped == nullptr)
   {
@@ -209,12 +209,12 @@ bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
 
 void GameObjectsFactory::EquipItem(ItemComponent* item)
 {
-  item->IsEquipped = true;
-  _playerRef->EquipmentByCategory[item->EquipmentType][0] = item;
+  item->Data.IsEquipped = true;
+  _playerRef->EquipmentByCategory[item->Data.EqCategory][0] = item;
 
   std::string verb;
 
-  if (item->EquipmentType == EquipmentCategory::WEAPON)
+  if (item->Data.EqCategory == EquipmentCategory::WEAPON)
   {
     verb = "arm yourself with";
   }
@@ -229,12 +229,12 @@ void GameObjectsFactory::EquipItem(ItemComponent* item)
 
 void GameObjectsFactory::UnequipItem(ItemComponent* item)
 {
-  item->IsEquipped = false;
-  _playerRef->EquipmentByCategory[item->EquipmentType][0] = nullptr;
+  item->Data.IsEquipped = false;
+  _playerRef->EquipmentByCategory[item->Data.EqCategory][0] = nullptr;
 
   std::string verb;
 
-  if (item->EquipmentType == EquipmentCategory::WEAPON)
+  if (item->Data.EqCategory == EquipmentCategory::WEAPON)
   {
     verb = "put away";
   }
@@ -251,7 +251,7 @@ bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
 {
   bool emptySlotFound = false;
 
-  auto& rings = _playerRef->EquipmentByCategory[item->EquipmentType];
+  auto& rings = _playerRef->EquipmentByCategory[item->Data.EqCategory];
 
   // First, search if this ring is already equipped
   for (int i = 0; i < rings.size(); i++)
@@ -273,7 +273,7 @@ bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
     }
   }
 
-  // Finally, if no empty slots found, print a warning
+  // Finally, if no empty slots found, display a warning
   if (!emptySlotFound)
   {
     Application::Instance().ShowMessageBox(false, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
@@ -284,8 +284,8 @@ bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
 
 void GameObjectsFactory::EquipRing(ItemComponent* ring, int index)
 {
-  ring->IsEquipped = true;
-  _playerRef->EquipmentByCategory[ring->EquipmentType][index] = ring;
+  ring->Data.IsEquipped = true;
+  _playerRef->EquipmentByCategory[ring->Data.EqCategory][index] = ring;
 
   auto str = Util::StringFormat("You put on %s", ((GameObject*)ring->OwnerGameObject)->ObjectName.data());
   Printer::Instance().AddMessage(str);
@@ -293,8 +293,8 @@ void GameObjectsFactory::EquipRing(ItemComponent* ring, int index)
 
 void GameObjectsFactory::UnequipRing(ItemComponent* ring, int index)
 {
-  ring->IsEquipped = false;
-  _playerRef->EquipmentByCategory[ring->EquipmentType][index] = nullptr;
+  ring->Data.IsEquipped = false;
+  _playerRef->EquipmentByCategory[ring->Data.EqCategory][index] = nullptr;
 
   auto str = Util::StringFormat("You take off %s", ((GameObject*)ring->OwnerGameObject)->ObjectName.data());
   Printer::Instance().AddMessage(str);
@@ -304,7 +304,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 {
   bool res = false;
 
-  switch (item->TypeOfObject)
+  switch (item->Data.TypeOfItem)
   {
     case ItemType::HEALING_POTION:
       if (_playerRef->Attrs.HP.CurrentValue == _playerRef->Attrs.HP.OriginalValue)
@@ -364,9 +364,9 @@ GameObject* GameObjectsFactory::CreateHealingPotion()
   Component* c = go->AddComponent<ItemComponent>();
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-  ic->TypeOfObject = ItemType::HEALING_POTION;
-  ic->Amount = 1;
-  ic->IsStackable = true;
+  ic->Data.TypeOfItem = ItemType::HEALING_POTION;
+  ic->Data.Amount = 1;
+  ic->Data.IsStackable = true;
 
   ic->Description = { "Restores you to full health" };
 
@@ -384,9 +384,9 @@ GameObject* GameObjectsFactory::CreateManaPotion()
   Component* c = go->AddComponent<ItemComponent>();
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-  ic->TypeOfObject = ItemType::MANA_POTION;
-  ic->Amount = 1;
-  ic->IsStackable = true;
+  ic->Data.TypeOfItem = ItemType::MANA_POTION;
+  ic->Data.Amount = 1;
+  ic->Data.IsStackable = true;
 
   ic->Description = { "Helps you regain spiritual powers" };
 

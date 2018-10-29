@@ -54,7 +54,7 @@ void InventoryState::HandleInput()
       auto c = go->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-      if (ic->IsEquipped)
+      if (ic->Data.IsEquipped)
       {
         Application::Instance().ShowMessageBox(false, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
         return;
@@ -78,11 +78,11 @@ void InventoryState::HandleInput()
 
       if (ic->Use())
       {
-        if (ic->IsStackable)
+        if (ic->Data.IsStackable)
         {
-          ic->Amount--;
+          ic->Data.Amount--;
 
-          if (ic->Amount == 0)
+          if (ic->Data.Amount == 0)
           {
             DestroyInventoryItem();
           }
@@ -144,14 +144,15 @@ void InventoryState::Update(bool forceUpdate)
       nameInInventory.resize(kInventoryMaxNameLength, ' ');
 
       auto c = item->GetComponent<ItemComponent>();
-      if (((ItemComponent*)c)->IsStackable)
+      ItemComponent* ic = static_cast<ItemComponent*>(c);
+      if (ic->Data.IsStackable)
       {        
-        auto stackAmount = Util::StringFormat("(%i)", ((ItemComponent*)c)->Amount);
+        auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
         Printer::Instance().PrintFB(kInventoryMaxNameLength + 1, 2 + yPos, stackAmount, Printer::kAlignLeft, "#FFFFFF");
       }
-      else if (((ItemComponent*)c)->IsEquipped)
+      else if (ic->Data.IsEquipped)
       {
-        auto equipStatus = Util::StringFormat("E", ((ItemComponent*)c)->Amount);
+        auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
         Printer::Instance().PrintFB(kInventoryMaxNameLength + 1, 2 + yPos, equipStatus, Printer::kAlignLeft, "#FFFFFF");
       }
 
@@ -257,9 +258,9 @@ void InventoryState::DropItem()
   ic->Transfer();
 
   std::string message;
-  if (ic->IsStackable)
+  if (ic->Data.IsStackable)
   {
-    message = Util::StringFormat("Dropped: %i %s", ic->Amount, go->ObjectName.data());
+    message = Util::StringFormat("Dropped: %i %s", ic->Data.Amount, go->ObjectName.data());
   }
   else
   {

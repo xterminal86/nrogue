@@ -45,7 +45,7 @@ void Player::Init()
     go->ObjectName = name;
 
     auto ic = go->AddComponent<ItemComponent>();
-    ((ItemComponent*)ic)->EquipmentType = EquipmentCategory::RING;
+    ((ItemComponent*)ic)->Data.EqCategory = EquipmentCategory::RING;
     ((ItemComponent*)ic)->Description = { "This is a placeholder equippable object" };
 
     Map::Instance().InsertGameObject(go);
@@ -55,7 +55,7 @@ void Player::Init()
   go->ObjectName = "Medallion";
 
   auto ic = go->AddComponent<ItemComponent>();
-  ((ItemComponent*)ic)->EquipmentType = EquipmentCategory::NECK;
+  ((ItemComponent*)ic)->Data.EqCategory = EquipmentCategory::NECK;
   ((ItemComponent*)ic)->Description = { "This is a placeholder equippable object" };
 
   Map::Instance().InsertGameObject(go);
@@ -242,7 +242,7 @@ void Player::SetSoldierAttrs()
 
   auto go = GameObjectsFactory::Instance().CreateHealingPotion();
   auto ic = go->GetComponent<ItemComponent>();
-  ((ItemComponent*)ic)->Amount = 3;
+  ((ItemComponent*)ic)->Data.Amount = 3;
 
   Inventory.AddToInventory(go);
 }
@@ -295,7 +295,7 @@ void Player::SetArcanistAttrs()
 
   auto go = GameObjectsFactory::Instance().CreateManaPotion();
   auto ic = go->GetComponent<ItemComponent>();
-  ((ItemComponent*)ic)->Amount = 3;
+  ((ItemComponent*)ic)->Data.Amount = 3;
 
   Inventory.AddToInventory(go);
 }
