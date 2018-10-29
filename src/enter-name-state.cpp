@@ -11,7 +11,7 @@ void EnterNameState::HandleInput()
   {
     switch (_keyPressed)
     {
-      case 10:
+      case VK_ENTER:
         if (_nameEntered.length() == 0)
         {
           _nameEntered = Util::ChooseRandomName();
@@ -29,7 +29,9 @@ void EnterNameState::HandleInput()
         break;
 
       default:
-        if (_nameEntered.length() < kMaxNameLength - 3)
+        if (_keyPressed >= 33 &&
+            _keyPressed <= 126 &&
+            _nameEntered.length() < kMaxNameLength - 3)
         {
           _nameEntered += (char)_keyPressed;
         }
