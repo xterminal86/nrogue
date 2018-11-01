@@ -14,6 +14,7 @@
 #include "message-box-state.h"
 #include "endgame-state.h"
 #include "attack-state.h"
+#include "map.h"
 
 void Application::Init()
 {
@@ -98,4 +99,15 @@ void Application::ShowMessageBox(bool waitForInput, std::string header, std::vec
 void Application::CloseMessageBox()
 {
   _currentState = _previousState;
+}
+
+void Application::DisplayAttack(GameObject* defender, int delayMs, std::string cursorColor)
+{
+  int posX = defender->PosX + Map::Instance().MapOffsetX;
+  int posY = defender->PosY + Map::Instance().MapOffsetY;
+
+  Printer::Instance().PrintFB(posX, posY, ' ', "#000000", cursorColor);
+  Printer::Instance().Render();
+
+  Util::Sleep(100);
 }

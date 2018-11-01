@@ -193,6 +193,8 @@ void AIMonsterBasic::Attack(Player* player)
 
   if (Util::RollDice(hitChance))
   {
+    Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FF0000");
+
     int dmg = monster->Attrs.Str.CurrentValue - player->Attrs.Def.CurrentValue;
     if (dmg <= 0)
     {
@@ -207,6 +209,8 @@ void AIMonsterBasic::Attack(Player* player)
   }
   else
   {
+    Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
+
     auto str = Util::StringFormat("%s misses", monster->ObjectName.data());
     Printer::Instance().AddMessage(str);
   }

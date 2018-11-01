@@ -88,7 +88,7 @@ enum class ShrineType
   MIGHT = 0,
   SPIRIT,
   KNOWLEDGE,
-  ALIGNMENT
+  PERCEPTION
 };
 
 enum class RoomLayoutRotation
@@ -233,6 +233,7 @@ namespace GlobalConstants
   static const int AwardedExpMax = 40;
   static const int MinHitChance = 5;
   static const int MaxHitChance = 95;
+  static const int DisplayAttackDelayMs = 100;
 
   static const std::string BlackColor = "#000000";
   static const std::string WhiteColor = "#FFFFFF";

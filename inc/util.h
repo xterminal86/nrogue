@@ -1,6 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include <chrono>
 #include <string>
 #include <cstdio>
 #include <vector>
@@ -493,6 +494,25 @@ namespace Util
     }
 
     return false;
+  }
+
+  inline void Sleep(int delayMs)
+  {
+    using timer = std::chrono::high_resolution_clock;
+    using ms = std::chrono::milliseconds;
+
+    auto delay = ms(delayMs);
+
+    auto lastTime = timer::now();
+
+    auto elapsed = timer::now() - lastTime;
+    auto msPassed = std::chrono::duration_cast<ms>(elapsed);
+
+    while (msPassed < delay)
+    {
+      elapsed = timer::now() - lastTime;
+      msPassed = std::chrono::duration_cast<ms>(elapsed);
+    }
   }
 }
 

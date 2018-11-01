@@ -46,6 +46,8 @@ class Application : public Singleton<Application>
 
     void CloseMessageBox();
 
+    void DisplayAttack(GameObject* defender, int delayMs, std::string cursorColor);
+
     Player PlayerInstance;
 
     // Assuming that _currentState is MainState,

@@ -347,6 +347,7 @@ void Player::Attack(GameObject* go)
 {
   if (go->Attrs.Indestructible)
   {
+    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
     auto str = Util::StringFormat("Your attack bounces off %s!", go->ObjectName.data());
     Printer::Instance().AddMessage(str);
   }
@@ -378,6 +379,8 @@ void Player::Attack(GameObject* go)
 
     if (Util::RollDice(hitChance))
     {
+      Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "#FF0000");
+
       int dmg = Attrs.Str.CurrentValue - go->Attrs.Def.CurrentValue;
       if (dmg <= 0)
       {
@@ -393,6 +396,7 @@ void Player::Attack(GameObject* go)
     }
     else
     {
+      Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
       Printer::Instance().AddMessage("You missed");
     }
   }
