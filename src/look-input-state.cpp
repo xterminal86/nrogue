@@ -106,7 +106,16 @@ void LookInputState::Update(bool forceUpdate)
           auto gos = CheckGameObjects();
           if (gos.size() != 0)
           {
-            lookStatus = gos.back()->ObjectName;
+            std::string objName = gos.back()->ObjectName;
+
+            Component* c = gos.back()->GetComponent<ItemComponent>();
+            if (c != nullptr)
+            {
+              ItemComponent* ic = static_cast<ItemComponent*>(c);
+              objName = ic->Data.IsIdentified ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
+            }
+
+            lookStatus = objName;
             foundGameObject = true;
           }
         }

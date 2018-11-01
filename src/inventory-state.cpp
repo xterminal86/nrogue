@@ -94,7 +94,16 @@ void InventoryState::HandleInput()
 
         _playerRef->FinishTurn();
 
-        Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+        // Check if player was killed
+        // after using something (e.g. cursed potion)
+        if (!_playerRef->IsAlive(go))
+        {
+          Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
+        }
+        else
+        {
+          Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+        }
       }      
     }
     break;

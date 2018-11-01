@@ -470,10 +470,7 @@ void GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
   }
 
   statCur += amount;
-  statCur = Util::Clamp(statCur, 0, statMax);
-
-  GameObject* go = static_cast<GameObject*>(item->OwnerGameObject);
-  _playerRef->CheckIfPlayerAlive(go);
+  statCur = Util::Clamp(statCur, 0, statMax);  
 }
 
 void GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)

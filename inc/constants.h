@@ -251,7 +251,7 @@ namespace GlobalConstants
   {
     { "Red Potion", { "#FFFFFF", "#FF0000" } },
     { "Green Potion", { "#FFFFFF", "#00FF00" } },
-    { "Radiant Potion", { "#000000", "#FFFF88" } },
+    { "Radiant Potion", { "#666666", "#FFFF88" } },
     { "Morbid Potion", { "#FFFFFF", "#660000" } },
     { "Blue Potion", { "#FFFFFF", "#0000FF" } },
     { "Yellow Potion", { "#000000", "#FFFF00" } },

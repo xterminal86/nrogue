@@ -200,6 +200,10 @@ void AIMonsterBasic::Attack(Player* player)
     }
 
     player->ReceiveDamage(monster, dmg);
+    if (!player->IsAlive(monster))
+    {
+      Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
+    }
   }
   else
   {

@@ -28,7 +28,7 @@ void Player::Init()
   {
     auto go = GameObjectsFactory::Instance().CreateRandomPotion();
     auto c = go->GetComponent<ItemComponent>();
-    ((ItemComponent*)c)->Data.IsIdentified = true;
+    //((ItemComponent*)c)->Data.IsIdentified = true;
 
     go->PosX = 2;
     go->PosY = 2 + i;
@@ -395,9 +395,7 @@ void Player::ReceiveDamage(GameObject* from, int amount)
   auto str = Util::StringFormat("You were hit for %i damage", amount);
   Printer::Instance().AddMessage(str);
 
-  Attrs.HP.CurrentValue -= amount;
-
-  CheckIfPlayerAlive(from);
+  Attrs.HP.CurrentValue -= amount;  
 }
 
 void Player::AwardExperience(int amount)
@@ -594,7 +592,7 @@ void Player::WaitForTurn()
   }
 }
 
-void Player::CheckIfPlayerAlive(GameObject* damager)
+bool Player::IsAlive(GameObject* damager)
 {
   if (Attrs.HP.CurrentValue <= 0)
   {
@@ -611,8 +609,10 @@ void Player::CheckIfPlayerAlive(GameObject* damager)
       Printer::Instance().AddMessage(str);
     }
 
-    Printer::Instance().AddMessage("You are dead. Not big surprise.");
+    Printer::Instance().AddMessage("You are dead. Not big surprise.");    
 
-    Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
+    return false;
   }
+
+  return true;
 }
