@@ -23,7 +23,7 @@ class InventoryState : public GameState
     void DropItem();
     void DisplayEquipment();
     void DrawEquipmentField(int x, int y, std::string fieldName, ItemComponent* eq);
-    void DrawSelectionBar(int yOffset, std::string& text);
+    void DrawSelectionBar(int yOffset, std::string& text, std::string& textColor);
 
     int _selectedIndex;
 };

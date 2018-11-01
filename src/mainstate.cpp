@@ -289,14 +289,16 @@ void MainState::TryToPickupItem()
 
     _playerRef->Inventory.AddToInventory(go);
 
+    std::string objName = ((ItemComponent*)ic)->Data.IsIdentified ? go->ObjectName : ((ItemComponent*)ic)->Data.UnidentifiedName;
+
     std::string message;
     if (((ItemComponent*)ic)->Data.IsStackable)
     {
-      message = Util::StringFormat("Picked up: %i %s", ((ItemComponent*)ic)->Data.Amount, go->ObjectName.data());
+      message = Util::StringFormat("Picked up: %i %s", ((ItemComponent*)ic)->Data.Amount, objName.data());
     }
     else
     {
-      message = Util::StringFormat("Picked up: %s", go->ObjectName.data());
+      message = Util::StringFormat("Picked up: %s", objName.data());
     }    
 
     Printer::Instance().AddMessage(message);

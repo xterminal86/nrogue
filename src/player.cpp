@@ -23,13 +23,30 @@ void Player::Init()
   _currentCell->Occupied = true;  
 
   // FIXME: remove afterwards
+
+  for (int i = 0; i < 20; i++)
+  {
+    auto go = GameObjectsFactory::Instance().CreateRandomPotion();
+    auto c = go->GetComponent<ItemComponent>();
+    ((ItemComponent*)c)->Data.IsIdentified = true;
+
+    go->PosX = 2;
+    go->PosY = 2 + i;
+
+    Map::Instance().InsertGameObject(go);
+
+    //auto msg = Util::StringFormat("Created 0x%X", go);
+    //Logger::Instance().Print(msg);
+  }
+
+  /*
   for (int i = 0; i < 20; i++)
   {
     auto go = new GameObject(2, 2 + i, 'O', "#FFFFFF");
     go->ObjectName = "Rock";
 
-    auto ic = go->AddComponent<ItemComponent>();
-    ((ItemComponent*)ic)->Description = { "This is a placeholder test object" };
+    auto ic = go->AddComponent<ItemComponent>();    
+    ((ItemComponent*)ic)->Data.Description = { "This is a placeholder test object" };
 
     Map::Instance().InsertGameObject(go);
 
@@ -46,7 +63,7 @@ void Player::Init()
 
     auto ic = go->AddComponent<ItemComponent>();
     ((ItemComponent*)ic)->Data.EqCategory = EquipmentCategory::RING;
-    ((ItemComponent*)ic)->Description = { "This is a placeholder equippable object" };
+    ((ItemComponent*)ic)->Data.Description = { "This is a placeholder equippable object" };
 
     Map::Instance().InsertGameObject(go);
   }
@@ -56,9 +73,10 @@ void Player::Init()
 
   auto ic = go->AddComponent<ItemComponent>();
   ((ItemComponent*)ic)->Data.EqCategory = EquipmentCategory::NECK;
-  ((ItemComponent*)ic)->Description = { "This is a placeholder equippable object" };
+  ((ItemComponent*)ic)->Data.Description = { "This is a placeholder equippable object" };
 
   Map::Instance().InsertGameObject(go);
+  */
 }
 
 void Player::Draw()
@@ -379,25 +397,7 @@ void Player::ReceiveDamage(GameObject* from, int amount)
 
   Attrs.HP.CurrentValue -= amount;
 
-  if (Attrs.HP.CurrentValue <= 0)
-  {
-    Attrs.HP.CurrentValue = 0;
-
-    Image = '%';
-    FgColor = GlobalConstants::PlayerColor;
-    BgColor = "#FF0000";
-    IsDestroyed = true;
-
-    if (from != nullptr)
-    {
-      auto str = Util::StringFormat("%s was killed by a %s", Name.data(), from->ObjectName.data());
-      Printer::Instance().AddMessage(str);
-    }
-
-    Printer::Instance().AddMessage("You are dead. Not big surprise.");
-
-    Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
-  }
+  CheckIfPlayerAlive(from);
 }
 
 void Player::AwardExperience(int amount)
@@ -591,5 +591,28 @@ void Player::WaitForTurn()
   if (Attrs.ActionMeter >= 100)
   {
     Application::Instance().DrawCurrentState();
+  }
+}
+
+void Player::CheckIfPlayerAlive(GameObject* damager)
+{
+  if (Attrs.HP.CurrentValue <= 0)
+  {
+    Attrs.HP.CurrentValue = 0;
+
+    Image = '%';
+    FgColor = GlobalConstants::PlayerColor;
+    BgColor = "#FF0000";
+    IsDestroyed = true;
+
+    if (damager != nullptr)
+    {
+      auto str = Util::StringFormat("%s was killed by a %s", Name.data(), damager->ObjectName.data());
+      Printer::Instance().AddMessage(str);
+    }
+
+    Printer::Instance().AddMessage("You are dead. Not big surprise.");
+
+    Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
   }
 }

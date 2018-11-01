@@ -104,7 +104,7 @@ struct Attribute
 
   int Get()
   {
-    return CurrentValue + Modifier;
+    return OriginalValue + Modifier;
   }
 };
 
@@ -140,7 +140,7 @@ struct Attributes
 
 enum class ItemPrefix
 {
-  NORMAL = 0,
+  UNCURSED = 0,
   BLESSED,
   CURSED
 };
@@ -167,7 +167,7 @@ enum class StatsEnum
 struct ItemData
 {
   ItemType TypeOfItem = ItemType::DUMMY;
-  ItemPrefix Prefix = ItemPrefix::NORMAL;
+  ItemPrefix Prefix = ItemPrefix::UNCURSED;
   ItemRarity Rarity = ItemRarity::COMMON;
 
   EquipmentCategory EqCategory = EquipmentCategory::NOT_EQUIPPABLE;
@@ -195,8 +195,16 @@ struct ItemData
     { StatsEnum::MP, 0 }
   };
 
-  std::function<void()> UseCallback;
-  std::function<void()> EquipCallback;
+  std::string IdentifiedName;
+  std::string UnidentifiedName;
+
+  std::vector<std::string> UnidentifiedDescription;
+  std::vector<std::string> IdentifiedDescription;
+
+  std::function<void(void*)> UseCallback;
+  std::function<void(void*)> EquipCallback;
+
+  size_t ItemTypeHash;
 };
 
 namespace GlobalConstants
@@ -235,6 +243,23 @@ namespace GlobalConstants
   static const std::string MessageBoxDefaultBgColor = "#222222";
   static const std::string MessageBoxDefaultBorderColor = "#666666";
   static const std::string MessageBoxRedBorderColor = "#880000";
+  static const std::string ItemMagicColor = "#4169E1";
+  static const std::string ItemRareColor = "#CCCC52";
+  static const std::string ItemUniqueColor = "#A59263";
+
+  static const std::map<std::string, std::vector<std::string>> PotionColors =
+  {
+    { "Red Potion", { "#FFFFFF", "#FF0000" } },
+    { "Green Potion", { "#FFFFFF", "#00FF00" } },
+    { "Radiant Potion", { "#000000", "#FFFF88" } },
+    { "Morbid Potion", { "#FFFFFF", "#660000" } },
+    { "Blue Potion", { "#FFFFFF", "#0000FF" } },
+    { "Yellow Potion", { "#000000", "#FFFF00" } },
+    { "Clear Potion", { "#000000", "#CCCCCC" } },
+    { "Black Potion", { "#FFFFFF", "#000000" } },
+    { "Cyan Potion", { "#FFFFFF", "#00FFFF" } },
+    { "Magenta Potion", { "#FFFFFF", "#FF00FF" } }
+  };
 
   static const std::vector<std::string> RandomNames =
   {    

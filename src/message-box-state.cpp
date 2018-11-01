@@ -34,6 +34,12 @@ void MessageBoxState::Update(bool forceUpdate)
       }
     }
 
+    // In case header is longer than message
+    if (len < _header.length())
+    {
+      len = _header.length();
+    }
+
     // Taking into account message size (usually > 0, so as is),
     // and that it's not actually a total count of number of rows,
     // but addition that we must add to the y1,

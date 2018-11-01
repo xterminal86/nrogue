@@ -38,8 +38,10 @@ bool ItemComponent::Equip()
 }
 
 void ItemComponent::Inspect()
-{
-  Application::Instance().ShowMessageBox(false, ((GameObject*)OwnerGameObject)->ObjectName, Description);
+{  
+  std::string header = Data.IsIdentified ? Data.IdentifiedName : Data.UnidentifiedName;
+  auto desc = Data.IsIdentified ? Data.IdentifiedDescription : Data.UnidentifiedDescription;
+  Application::Instance().ShowMessageBox(false, header, desc);
 }
 
 void ItemComponent::Throw()

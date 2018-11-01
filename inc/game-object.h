@@ -76,7 +76,12 @@ class GameObject
 
     void Init(int x, int y, chtype avatar, const std::string& fgColor, const std::string& bgColor = "#000000");
 
+    /// Adds \p dx and \p dy to corresponding game object's coordinates.
+    /// Use to move actors only.
     bool Move(int dx, int dy);
+
+    /// Sets game object's coordinates to \p x and \p y.
+    /// Use to move actors only.
     bool MoveTo(int x, int y);
 
     void Draw(const std::string& overrideFgColor = std::string(), const std::string& overrideBgColor = std::string());

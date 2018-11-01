@@ -62,7 +62,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
   Component* c = go->AddComponent<ItemComponent>();
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-  ic->Description = { "You can buy things with these" };
+  ic->Data.IdentifiedDescription = { "You can buy things with these" };
 
   int pl = _playerRef->Attrs.Lvl.CurrentValue;
 
@@ -302,52 +302,27 @@ void GameObjectsFactory::UnequipRing(ItemComponent* ring, int index)
 
 bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 {
-  bool res = false;
+  bool res = false;  
 
-  switch (item->Data.TypeOfItem)
+  if (item->Data.UseCallback.target_type() != typeid(void))
   {
-    case ItemType::HEALING_POTION:
-      if (_playerRef->Attrs.HP.CurrentValue == _playerRef->Attrs.HP.OriginalValue)
-      {        
-        Application::Instance().ShowMessageBox(false, "Information", { "You are already at full health!" }, GlobalConstants::MessageBoxRedBorderColor);
-      }
-      else
-      {
-        _playerRef->Attrs.HP.Set(_playerRef->Attrs.HP.OriginalValue);
-        Printer::Instance().AddMessage("Your wounds are healed!");
-        res = true;
-      }
-      break;
+    item->Data.UseCallback(item);
+    res = true;
+  }
+  else
+  {
+    switch (item->Data.TypeOfItem)
+    {
+      case ItemType::COINS:
+        Application::Instance().ShowMessageBox(false, "Information", { "You don't 'use' money like that" }, GlobalConstants::MessageBoxRedBorderColor);
+        break;
 
-    case ItemType::MANA_POTION:
-      if (_playerRef->Attrs.MP.OriginalValue == 0)
-      {
-        std::string m1 = "Your spirituality is too low";
-        std::string m2 = "for this to have any effect on you";
-
-        Application::Instance().ShowMessageBox(false, "Information", { m1, m2 }, GlobalConstants::MessageBoxRedBorderColor);
-      }
-      else if (_playerRef->Attrs.MP.CurrentValue == _playerRef->Attrs.MP.OriginalValue)
-      {
-        Application::Instance().ShowMessageBox(false, "Information", { "You are already in fighting spirit!" }, GlobalConstants::MessageBoxRedBorderColor);
-      }
-      else
-      {
-        _playerRef->Attrs.MP.Set(_playerRef->Attrs.MP.OriginalValue);
-        Printer::Instance().AddMessage("Your spirit is reinforced!");
-        res = true;
-      }
-      break;
-
-    case ItemType::COINS:      
-      Application::Instance().ShowMessageBox(false, "Information", { "You don't 'use' money like that" }, GlobalConstants::MessageBoxRedBorderColor);
-      break;
-
-    default:
-      auto go = (GameObject*)item->OwnerGameObject;
-      auto msg = Util::StringFormat("You can't use %s!", go->ObjectName.data());
-      Application::Instance().ShowMessageBox(false, "Information", { msg }, GlobalConstants::MessageBoxRedBorderColor);
-      break;
+      default:
+        auto go = (GameObject*)item->OwnerGameObject;
+        auto msg = Util::StringFormat("You can't use %s!", go->ObjectName.data());
+        Application::Instance().ShowMessageBox(false, "Information", { msg }, GlobalConstants::MessageBoxRedBorderColor);
+        break;
+    }
   }
 
   return res;
@@ -359,7 +334,7 @@ GameObject* GameObjectsFactory::CreateHealingPotion()
   go->FgColor = "#FFFFFF";
   go->BgColor = "#FF0000";
   go->Image = '!';
-  go->ObjectName = "Healing Potion";
+  go->ObjectName = "Red Potion";
 
   Component* c = go->AddComponent<ItemComponent>();
   ItemComponent* ic = static_cast<ItemComponent*>(c);
@@ -367,8 +342,19 @@ GameObject* GameObjectsFactory::CreateHealingPotion()
   ic->Data.TypeOfItem = ItemType::HEALING_POTION;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
+  ic->Data.IsIdentified = true;
 
-  ic->Description = { "Restores you to full health" };
+  ic->Data.IdentifiedDescription = { "Restores some of your health" };
+  ic->Data.IdentifiedName = "Red Potion";
+
+  ic->Data.UseCallback = std::bind(&GameObjectsFactory::HealingPotionUseHandler, this, ic);
+
+  auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
+  std::hash<std::string> hasher;
+
+  ic->Data.ItemTypeHash = hasher(strToHash);
+
+  SetItemName(go, ic->Data);
 
   return go;
 }
@@ -379,7 +365,7 @@ GameObject* GameObjectsFactory::CreateManaPotion()
   go->FgColor = "#FFFFFF";
   go->BgColor = "#0000FF";
   go->Image = '!';
-  go->ObjectName = "Mana Potion";
+  go->ObjectName = "Blue Potion";
 
   Component* c = go->AddComponent<ItemComponent>();
   ItemComponent* ic = static_cast<ItemComponent*>(c);
@@ -387,8 +373,163 @@ GameObject* GameObjectsFactory::CreateManaPotion()
   ic->Data.TypeOfItem = ItemType::MANA_POTION;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
+  ic->Data.IsIdentified = true;
 
-  ic->Description = { "Helps you regain spiritual powers" };
+  ic->Data.IdentifiedDescription = { "Helps you regain spiritual powers" };
+  ic->Data.IdentifiedName = "Blue Potion";
+
+  ic->Data.UseCallback = std::bind(&GameObjectsFactory::ManaPotionUseHandler, this, ic);
+
+  auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
+  std::hash<std::string> hasher;
+
+  ic->Data.ItemTypeHash = hasher(strToHash);
+
+  SetItemName(go, ic->Data);
 
   return go;
+}
+
+GameObject* GameObjectsFactory::CreateRandomPotion()
+{
+  GameObject* go = nullptr;
+
+  int roll = RNG::Instance().RandomRange(0, 2);
+
+  // TODO: more potions (+ stats, hunger etc)
+
+  if (roll == 0) { go = CreateHealingPotion(); }
+  else if (roll == 1) { go = CreateManaPotion(); }
+
+  Component* c = go->GetComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+  ic->Data.IsIdentified = false;
+  ic->Data.UnidentifiedDescription = { "You don't know what will happen if you drink it" };
+
+  int index = RNG::Instance().RandomRange(0, GlobalConstants::PotionColors.size());
+  auto it = GlobalConstants::PotionColors.begin();
+  std::advance(it, index);
+  auto kvp = *it;
+
+  go->FgColor = kvp.second[0];
+  go->BgColor = kvp.second[1];
+  go->ObjectName = kvp.first;
+
+  ic->Data.UnidentifiedName = "?" + kvp.first + "?";
+  ic->Data.IdentifiedName = kvp.first;
+
+  roll = RNG::Instance().RandomRange(0, 101);
+
+  if (roll >= 0 && roll <= 30)
+  {
+    ic->Data.Prefix = ItemPrefix::BLESSED;
+    ic->Data.IdentifiedDescription.push_back("This one is blessed and will yield better results");
+  }
+  else if (roll > 30 && roll <= 70)
+  {
+    ic->Data.Prefix = ItemPrefix::UNCURSED;
+  }
+  else if (roll > 70)
+  {
+    ic->Data.Prefix = ItemPrefix::CURSED;
+    ic->Data.IdentifiedDescription.push_back("This one is cursed and should be avoided");
+  }
+
+  auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
+  std::hash<std::string> hasher;
+
+  ic->Data.ItemTypeHash = hasher(strToHash);
+
+  SetItemName(go, ic->Data);
+
+  return go;
+}
+
+void GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
+{
+  int amount = 0;
+
+  int statMax = _playerRef->Attrs.HP.OriginalValue;
+  int& statCur = _playerRef->Attrs.HP.CurrentValue;
+
+  if (item->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    amount = statMax;
+    Printer::Instance().AddMessage("Your wounds are healed completely!");
+  }
+  else if (item->Data.Prefix == ItemPrefix::UNCURSED)
+  {
+    amount = statMax * 0.3f;
+    Printer::Instance().AddMessage("You feel better");
+  }
+  else if (item->Data.Prefix == ItemPrefix::CURSED)
+  {
+    amount = -statMax * 0.3f;
+    Printer::Instance().AddMessage("You are damaged by a cursed potion!");
+  }
+
+  statCur += amount;
+  statCur = Util::Clamp(statCur, 0, statMax);
+
+  GameObject* go = static_cast<GameObject*>(item->OwnerGameObject);
+  _playerRef->CheckIfPlayerAlive(go);
+}
+
+void GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
+{
+  int amount = 0;
+
+  int statMax = _playerRef->Attrs.MP.OriginalValue;
+  int& statCur = _playerRef->Attrs.MP.CurrentValue;
+
+  if (item->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    amount = statMax;
+    Printer::Instance().AddMessage("Your spirit force was restored!");
+  }
+  else if (item->Data.Prefix == ItemPrefix::UNCURSED)
+  {
+    amount = statMax * 0.3f;
+    Printer::Instance().AddMessage("Your spirit is reinforced");
+  }
+  else if (item->Data.Prefix == ItemPrefix::CURSED)
+  {
+    amount = -statMax * 0.3f;
+    Printer::Instance().AddMessage("Your spirit force was drained!");
+  }
+
+  statCur += amount;
+  statCur = Util::Clamp(statCur, 0, statMax);
+}
+
+void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
+{
+  switch (itemData.Prefix)
+  {
+    case ItemPrefix::BLESSED:
+      itemData.IdentifiedName.insert(0, "Blessed ");
+      break;
+
+    case ItemPrefix::UNCURSED:
+      itemData.IdentifiedName.insert(0, "Uncursed ");
+      break;
+
+    case ItemPrefix::CURSED:
+      itemData.IdentifiedName.insert(0, "Cursed ");
+      break;
+  }
+
+  switch (itemData.TypeOfItem)
+  {
+    case ItemType::HEALING_POTION:
+      itemData.IdentifiedName.append(" of Healing");
+      go->ObjectName.append(" +HP");
+      break;
+
+    case ItemType::MANA_POTION:
+      itemData.IdentifiedName.append(" of Mana");
+      go->ObjectName.append(" +MP");
+      break;
+  }
 }

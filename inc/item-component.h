@@ -19,9 +19,7 @@ class ItemComponent : public Component
     bool Equip();
     void Throw();
 
-    ItemData Data;
-
-    std::vector<std::string> Description;
+    ItemData Data;    
 };
 
 #endif // ITEMCOMPONENT_H

@@ -17,18 +17,22 @@ void ContainerComponent::AddToInventory(GameObject* object)
   bool foundStack = false;
 
   auto c = object->GetComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* itemToAdd = static_cast<ItemComponent*>(c);
 
-  if (ic->Data.IsStackable)
+  if (itemToAdd->Data.IsStackable)
   {
     for (auto& i : Contents)
     {
-      auto iic = i->GetComponent<ItemComponent>();
-      ItemComponent* iicc = static_cast<ItemComponent*>(iic);
-      if (iicc->Data.TypeOfItem == iicc->Data.TypeOfItem)
+      auto ic = i->GetComponent<ItemComponent>();
+      ItemComponent* inventoryItemComponent = static_cast<ItemComponent*>(ic);
+      if (itemToAdd->Data.IsIdentified
+       && inventoryItemComponent->Data.ItemTypeHash == itemToAdd->Data.ItemTypeHash)
       {
-        iicc->Data.Amount += iicc->Data.Amount;
+        inventoryItemComponent->Data.Amount += itemToAdd->Data.Amount;
         foundStack = true;
+
+        // !!! GameObject* object should not be destroyed here !!!
+
         break;
       }
     }

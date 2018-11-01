@@ -139,12 +139,13 @@ void InventoryState::Update(bool forceUpdate)
     int itemsCount = 0;
     int yPos = 0;
     for (auto& item : _playerRef->Inventory.Contents)
-    {      
-      std::string nameInInventory = item->ObjectName;      
-      nameInInventory.resize(kInventoryMaxNameLength, ' ');
-
+    {
       auto c = item->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+      std::string nameInInventory = ic->Data.IsIdentified ? item->ObjectName : ic->Data.UnidentifiedName;
+      nameInInventory.resize(kInventoryMaxNameLength, ' ');
+
       if (ic->Data.IsStackable)
       {        
         auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
@@ -156,7 +157,19 @@ void InventoryState::Update(bool forceUpdate)
         Printer::Instance().PrintFB(kInventoryMaxNameLength + 1, 2 + yPos, equipStatus, Printer::kAlignLeft, "#FFFFFF");
       }
 
-      DrawSelectionBar(yPos, nameInInventory);
+      std::string textColor = "#FFFFFF";
+
+      if (ic->Data.Prefix == ItemPrefix::BLESSED)
+      {
+        textColor = GlobalConstants::ItemMagicColor;
+      }
+      else if (ic->Data.Prefix == ItemPrefix::CURSED)
+      {
+        textColor = "#880000";
+      }
+
+      std::string idColor = ic->Data.IsIdentified ? textColor : "#FFFFFF";
+      DrawSelectionBar(yPos, nameInInventory, idColor);
 
       yPos++;
 
@@ -272,7 +285,7 @@ void InventoryState::DropItem()
   Printer::Instance().AddMessage(message);
 }
 
-void InventoryState::DrawSelectionBar(int yOffset, std::string& text)
+void InventoryState::DrawSelectionBar(int yOffset, std::string& text, std::string& textColor)
 {
   if (yOffset == _selectedIndex)
   {
@@ -280,6 +293,6 @@ void InventoryState::DrawSelectionBar(int yOffset, std::string& text)
   }
   else
   {
-    Printer::Instance().PrintFB(0, 2 + yOffset, text, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(0, 2 + yOffset, text, Printer::kAlignLeft, textColor);
   }
 }
