@@ -27,13 +27,17 @@ void Player::Init()
   for (int i = 0; i < 20; i++)
   {
     auto go = GameObjectsFactory::Instance().CreateRandomPotion();
-    auto c = go->GetComponent<ItemComponent>();
-    //((ItemComponent*)c)->Data.IsIdentified = true;
+    //auto go = GameObjectsFactory::Instance().CreateExpPotion();
+    if (go != nullptr)
+    {
+      auto c = go->GetComponent<ItemComponent>();
+      //((ItemComponent*)c)->Data.IsIdentified = true;
 
-    go->PosX = 2;
-    go->PosY = 2 + i;
+      go->PosX = 2;
+      go->PosY = 2 + i;
 
-    Map::Instance().InsertGameObject(go);
+      Map::Instance().InsertGameObject(go);
+    }
 
     //auto msg = Util::StringFormat("Created 0x%X", go);
     //Logger::Instance().Print(msg);
@@ -544,6 +548,91 @@ void Player::LevelUp()
       break;
   }
   */  
+}
+
+void Player::LevelDown()
+{
+  for (auto& kvp : _statRaisesMap)
+  {
+    kvp.second = 0;
+  }
+
+  // Try to raise main stats
+
+  for (auto& i : _mainAttributes)
+  {
+    auto kvp = i.second;
+
+    if (CanRaiseAttribute(kvp.second))
+    {
+      _statRaisesMap[kvp.first] = 1;
+
+      kvp.second.OriginalValue--;
+      if (kvp.second.OriginalValue < 0)
+      {
+        kvp.second.OriginalValue = 0;
+      }
+
+      kvp.second.CurrentValue = kvp.second.OriginalValue;
+    }
+  }
+
+  // HP and MP
+
+  int minRndHp = (Attrs.HP.Talents + 1);
+  int maxRndHp = 2 * (Attrs.HP.Talents + 1);
+
+  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp);
+  Attrs.HP.OriginalValue -= hpToAdd;
+
+  if (Attrs.HP.OriginalValue <= 0)
+  {
+    Attrs.HP.OriginalValue = 1;
+  }
+
+  _statRaisesMap["HP"] = hpToAdd;
+
+  int minRndMp = Attrs.Mag.OriginalValue;
+  int maxRndMp = Attrs.Mag.OriginalValue * (Attrs.MP.Talents + 1);
+
+  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp);
+  Attrs.MP.OriginalValue -= mpToAdd;
+
+  if (Attrs.MP.OriginalValue < 0)
+  {
+    Attrs.MP.OriginalValue = 0;
+  }
+
+  _statRaisesMap["MP"] = mpToAdd;
+
+  Attrs.Lvl.OriginalValue--;
+  if (Attrs.Lvl.OriginalValue <= 1)
+  {
+    Attrs.Lvl.OriginalValue = 1;
+  }
+
+  Attrs.Lvl.CurrentValue = Attrs.Lvl.OriginalValue;
+
+  Printer::Instance().AddMessage("You have LOST a level!");
+
+  /*
+  auto class_ = _classesMap[SelectedClass];
+
+  switch (class_)
+  {
+    case PlayerClass::SOLDIER:
+      break;
+
+    case PlayerClass::THIEF:
+      break;
+
+    case PlayerClass::ARCANIST:
+      break;
+
+    case PlayerClass::CUSTOM:
+      break;
+  }
+  */
 }
 
 bool Player::CanRaiseAttribute(Attribute& attr)

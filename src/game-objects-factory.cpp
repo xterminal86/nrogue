@@ -331,6 +331,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 GameObject* GameObjectsFactory::CreateHealingPotion()
 {
   GameObject* go = new GameObject();
+
   go->FgColor = "#FFFFFF";
   go->BgColor = "#FF0000";
   go->Image = '!';
@@ -362,6 +363,7 @@ GameObject* GameObjectsFactory::CreateHealingPotion()
 GameObject* GameObjectsFactory::CreateManaPotion()
 {
   GameObject* go = new GameObject();
+
   go->FgColor = "#FFFFFF";
   go->BgColor = "#0000FF";
   go->Image = '!';
@@ -390,51 +392,27 @@ GameObject* GameObjectsFactory::CreateManaPotion()
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateRandomPotion()
+GameObject* GameObjectsFactory::CreateHungerPotion()
 {
-  GameObject* go = nullptr;
+  GameObject* go = new GameObject();
 
-  int roll = RNG::Instance().RandomRange(0, 2);
+  go->FgColor = "#FFFFFF";
+  go->BgColor = "#004400";
+  go->Image = '!';
+  go->ObjectName = "Slimy Potion";
 
-  // TODO: more potions (+ stats, hunger etc)
-
-  if (roll == 0) { go = CreateHealingPotion(); }
-  else if (roll == 1) { go = CreateManaPotion(); }
-
-  Component* c = go->GetComponent<ItemComponent>();
+  Component* c = go->AddComponent<ItemComponent>();
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-  ic->Data.IsIdentified = false;
-  ic->Data.UnidentifiedDescription = { "You don't know what will happen if you drink it" };
+  ic->Data.TypeOfItem = ItemType::HUNGER_POTION;
+  ic->Data.Amount = 1;
+  ic->Data.IsStackable = true;
+  ic->Data.IsIdentified = true;
 
-  int index = RNG::Instance().RandomRange(0, GlobalConstants::PotionColors.size());
-  auto it = GlobalConstants::PotionColors.begin();
-  std::advance(it, index);
-  auto kvp = *it;
+  ic->Data.IdentifiedDescription = { "Liquid food. Drink it if there's nothing else to eat." };
+  ic->Data.IdentifiedName = "Slimy Potion";
 
-  go->FgColor = kvp.second[0];
-  go->BgColor = kvp.second[1];
-  go->ObjectName = kvp.first;
-
-  ic->Data.UnidentifiedName = "?" + kvp.first + "?";
-  ic->Data.IdentifiedName = kvp.first;
-
-  roll = RNG::Instance().RandomRange(0, 101);
-
-  if (roll >= 0 && roll <= 30)
-  {
-    ic->Data.Prefix = ItemPrefix::BLESSED;
-    ic->Data.IdentifiedDescription.push_back("This one is blessed and will yield better results");
-  }
-  else if (roll > 30 && roll <= 70)
-  {
-    ic->Data.Prefix = ItemPrefix::UNCURSED;
-  }
-  else if (roll > 70)
-  {
-    ic->Data.Prefix = ItemPrefix::CURSED;
-    ic->Data.IdentifiedDescription.push_back("This one is cursed and should be avoided");
-  }
+  ic->Data.UseCallback = std::bind(&GameObjectsFactory::HungerPotionUseHandler, this, ic);
 
   auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
   std::hash<std::string> hasher;
@@ -442,6 +420,117 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
   ic->Data.ItemTypeHash = hasher(strToHash);
 
   SetItemName(go, ic->Data);
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateExpPotion()
+{
+  GameObject* go = new GameObject();
+
+  go->FgColor = "#FFFFFF";
+  go->BgColor = "#888888";
+  go->Image = '!';
+  go->ObjectName = "Clear Potion";
+
+  Component* c = go->AddComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+  ic->Data.TypeOfItem = ItemType::EXP_POTION;
+  ic->Data.Amount = 1;
+  ic->Data.IsStackable = true;
+  ic->Data.IsIdentified = true;
+
+  ic->Data.IdentifiedDescription = { "They say drinking this will bring you to the next level", "Whatever that means..." };
+  ic->Data.IdentifiedName = "Clear Potion";
+
+  ic->Data.UseCallback = std::bind(&GameObjectsFactory::ExpPotionUseHandler, this, ic);
+
+  auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
+  std::hash<std::string> hasher;
+
+  ic->Data.ItemTypeHash = hasher(strToHash);
+
+  SetItemName(go, ic->Data);
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateRandomPotion()
+{
+  GameObject* go = nullptr;
+
+  int roll = RNG::Instance().RandomRange(0, 100);
+
+  if (roll < 3)
+  {
+    go = CreateExpPotion();
+  }
+  else if (roll < 6)
+  {
+    // random stat potion
+  }
+  else if (roll < 30)
+  {
+    int which = RNG::Instance().RandomRange(0, 3);
+    if (which == 0)
+    {
+      go = CreateHealingPotion();
+    }
+    else if (which == 1)
+    {
+      go = CreateManaPotion();
+    }
+    else
+    {
+      go = CreateHungerPotion();
+    }
+  }
+
+  if (go != nullptr)
+  {
+    Component* c = go->GetComponent<ItemComponent>();
+    ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+    ic->Data.IsIdentified = false;
+    ic->Data.UnidentifiedDescription = { "You don't know what will happen if you drink it" };
+
+    int index = RNG::Instance().RandomRange(0, GlobalConstants::PotionColors.size());
+    auto it = GlobalConstants::PotionColors.begin();
+    std::advance(it, index);
+    auto kvp = *it;
+
+    go->FgColor = kvp.second[0];
+    go->BgColor = kvp.second[1];
+    go->ObjectName = kvp.first;
+
+    ic->Data.UnidentifiedName = "?" + kvp.first + "?";
+    ic->Data.IdentifiedName = kvp.first;
+
+    roll = RNG::Instance().RandomRange(0, 101);
+
+    if (roll >= 0 && roll <= 30)
+    {
+      ic->Data.Prefix = ItemPrefix::BLESSED;
+      ic->Data.IdentifiedDescription.push_back("This one is blessed and will yield better results");
+    }
+    else if (roll > 30 && roll <= 70)
+    {
+      ic->Data.Prefix = ItemPrefix::UNCURSED;
+    }
+    else if (roll > 70)
+    {
+      ic->Data.Prefix = ItemPrefix::CURSED;
+      ic->Data.IdentifiedDescription.push_back("This one is cursed and should be avoided");
+    }
+
+    auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
+    std::hash<std::string> hasher;
+
+    ic->Data.ItemTypeHash = hasher(strToHash);
+
+    SetItemName(go, ic->Data);
+  }
 
   return go;
 }
@@ -500,6 +589,69 @@ void GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
   statCur = Util::Clamp(statCur, 0, statMax);
 }
 
+void GameObjectsFactory::HungerPotionUseHandler(ItemComponent* item)
+{
+  int amount = 0;
+
+  int statMax = _playerRef->Attrs.Hunger;
+  int& statCur = _playerRef->Attrs.Hunger;
+
+  if (item->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    amount = statMax;
+    Printer::Instance().AddMessage("You feel satiated!");
+  }
+  else if (item->Data.Prefix == ItemPrefix::UNCURSED)
+  {
+    amount = statMax * 0.3f;
+    Printer::Instance().AddMessage("Your hunger has abated somewhat");
+  }
+  else if (item->Data.Prefix == ItemPrefix::CURSED)
+  {
+    amount = -statMax * 0.3f;
+    Printer::Instance().AddMessage("Your feel peckish");
+  }
+
+  statCur += amount;
+  statCur = Util::Clamp(statCur, 0, statMax);
+}
+
+void GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
+{
+  int amount = 0;
+
+  int statMax = 100;
+  int& statCur = _playerRef->Attrs.Exp.CurrentValue;
+
+  if (item->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    amount = statMax;
+    Printer::Instance().AddMessage("You feel enlighted!");
+  }
+  else if (item->Data.Prefix == ItemPrefix::UNCURSED)
+  {
+    amount = statMax * 0.3f;
+    Printer::Instance().AddMessage("You feel more experienced");
+  }
+  else if (item->Data.Prefix == ItemPrefix::CURSED)
+  {
+    amount = -statMax * 0.3f;
+    Printer::Instance().AddMessage("You lose some experience!");
+  }
+
+  statCur += amount;
+  statCur = Util::Clamp(statCur, 0, statMax);
+
+  if (statCur >= 100)
+  {
+    _playerRef->LevelUp();
+  }
+  else if (statCur <= 0)
+  {
+    _playerRef->LevelDown();
+  }
+}
+
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
 {
   switch (itemData.Prefix)
@@ -527,6 +679,16 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
     case ItemType::MANA_POTION:
       itemData.IdentifiedName.append(" of Mana");
       go->ObjectName.append(" +MP");
+      break;
+
+    case ItemType::HUNGER_POTION:
+      itemData.IdentifiedName.append(" of Satiation");
+      go->ObjectName.append(" +SAT");
+      break;
+
+    case ItemType::EXP_POTION:
+      itemData.IdentifiedName.append(" of Enlightenment");
+      go->ObjectName.append(" +EXP");
       break;
   }
 }

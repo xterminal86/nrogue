@@ -63,6 +63,7 @@ class Player : public GameObject
 
     void AwardExperience(int amount);
     void LevelUp();
+    void LevelDown();
 
   private:
     void DiscoverCell(int x, int y);

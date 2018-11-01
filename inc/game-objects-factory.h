@@ -22,6 +22,9 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateRemains(GameObject* from);
     GameObject* CreateHealingPotion();
     GameObject* CreateManaPotion();
+    GameObject* CreateHungerPotion();
+    GameObject* CreateExpPotion();
+
     GameObject* CreateRandomPotion();
 
     bool HandleItemUse(ItemComponent* item);
@@ -40,6 +43,8 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
 
     void HealingPotionUseHandler(ItemComponent* item);
     void ManaPotionUseHandler(ItemComponent* item);
+    void HungerPotionUseHandler(ItemComponent* item);
+    void ExpPotionUseHandler(ItemComponent* item);
 
     void SetItemName(GameObject* go, ItemData& itemData);
 };
