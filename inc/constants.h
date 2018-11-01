@@ -86,7 +86,9 @@ enum class ItemType
 enum class ShrineType
 {
   MIGHT = 0,
-  SPIRIT
+  SPIRIT,
+  KNOWLEDGE,
+  ALIGNMENT
 };
 
 enum class RoomLayoutRotation
@@ -187,6 +189,7 @@ struct ItemData
   bool IsEquipped = false;
   bool IsStackable = false;
   bool IsIdentified = false;
+  bool IsPrefixDiscovered = false;
 
   int Amount = 1;
   int Cost = 0;

@@ -24,17 +24,23 @@ void Player::Init()
 
   // FIXME: remove afterwards
 
-  for (int i = 0; i < 20; i++)
+  for (int i = 0; i < 40; i++)
   {
     auto go = GameObjectsFactory::Instance().CreateRandomPotion();
     //auto go = GameObjectsFactory::Instance().CreateExpPotion();
+    //auto go = GameObjectsFactory::Instance().CreateHealingPotion(ItemPrefix::CURSED);
     if (go != nullptr)
     {
       auto c = go->GetComponent<ItemComponent>();
       //((ItemComponent*)c)->Data.IsIdentified = true;
 
-      go->PosX = 2;
-      go->PosY = 2 + i;
+      /*
+      int res = RNG::Instance().RandomRange(0, 2);
+      if (res == 0) ((ItemComponent*)c)->Data.IsPrefixDiscovered = true;
+      */
+
+      go->PosX = 2 + i;
+      go->PosY = 1;
 
       Map::Instance().InsertGameObject(go);
     }
@@ -416,6 +422,11 @@ void Player::AwardExperience(int amount)
     Attrs.Exp.Set(0);
     LevelUp();
   }
+  else if (Attrs.Exp.CurrentValue < 0)
+  {
+    Attrs.Exp.Set(0);
+    LevelDown();
+  }
 }
 
 void Player::LevelUp()
@@ -464,73 +475,15 @@ void Player::LevelUp()
   Attrs.Lvl.OriginalValue++;
   Attrs.Lvl.CurrentValue = Attrs.Lvl.OriginalValue;
 
-  std::vector<std::string> levelUpResults;
+  auto res = GetPrettyLevelUpText();
 
-  std::string mbStr;
-  for (auto& i : _mainAttributes)
-  {
-    auto kvp = i.second;
-
-    mbStr = Util::StringFormat("%s: %i", kvp.first.data(), kvp.second.OriginalValue);
-    levelUpResults.push_back(mbStr);
-  }
-
-  levelUpResults.push_back("");
-
-  mbStr = Util::StringFormat("HP:  %i", Attrs.HP.OriginalValue);
-  levelUpResults.push_back(mbStr);
-
-  mbStr = Util::StringFormat("MP:  %i", Attrs.MP.OriginalValue);
-  levelUpResults.push_back(mbStr);
-
-  // Try to make everything look pretty
-  //
-  // NOTE: probably lots of shitcode
-
-  int maxLen = 0;
-  for (auto& s : levelUpResults)
-  {
-    if (s.length() > maxLen)
-    {
-      maxLen = s.length();
-    }
-  }
-
-  for (auto& s : levelUpResults)
-  {
-    if (s.length() < maxLen)
-    {
-      int d = maxLen - s.length();
-      s.append(d, ' ');
-    }
-  }
-
-  int index = 0;
-  for (auto& i : _mainAttributes)
-  {
-    auto kvp = i.second;
-
-    auto addition = Util::StringFormat("  +%i", _statRaisesMap[kvp.first]);
-    levelUpResults[index] += addition;
-    index++;
-  }
-
-  // Take into account empty string between stats and hitpoints
-  index++;
-
-  auto addition = Util::StringFormat("  +%i", _statRaisesMap["HP"]);
-  levelUpResults[index] += addition;
-  index++;
-
-  addition = Util::StringFormat("  +%i", _statRaisesMap["MP"]);
-  levelUpResults[index] += addition;
-  index++;
-
-  Application::Instance().ShowMessageBox(true, "Level Up!", levelUpResults, "#888800", "#000044");
+  Application::Instance().ShowMessageBox(true, "Level Up!", res, "#888800", "#000044");
 
   Printer::Instance().AddMessage("You have gained a level!");
 
   /*
+   * Raise skills etc.
+   *
   auto class_ = _classesMap[SelectedClass];
 
   switch (class_)
@@ -565,7 +518,7 @@ void Player::LevelDown()
 
     if (CanRaiseAttribute(kvp.second))
     {
-      _statRaisesMap[kvp.first] = 1;
+      _statRaisesMap[kvp.first] = -1;
 
       kvp.second.OriginalValue--;
       if (kvp.second.OriginalValue < 0)
@@ -590,7 +543,7 @@ void Player::LevelDown()
     Attrs.HP.OriginalValue = 1;
   }
 
-  _statRaisesMap["HP"] = hpToAdd;
+  _statRaisesMap["HP"] = -hpToAdd;
 
   int minRndMp = Attrs.Mag.OriginalValue;
   int maxRndMp = Attrs.Mag.OriginalValue * (Attrs.MP.Talents + 1);
@@ -603,7 +556,7 @@ void Player::LevelDown()
     Attrs.MP.OriginalValue = 0;
   }
 
-  _statRaisesMap["MP"] = mpToAdd;
+  _statRaisesMap["MP"] = -mpToAdd;
 
   Attrs.Lvl.OriginalValue--;
   if (Attrs.Lvl.OriginalValue <= 1)
@@ -613,9 +566,15 @@ void Player::LevelDown()
 
   Attrs.Lvl.CurrentValue = Attrs.Lvl.OriginalValue;
 
+  auto res = GetPrettyLevelUpText();
+
+  Application::Instance().ShowMessageBox(true, "Level DOWN!", res, "#FF0000", "#000044");
+
   Printer::Instance().AddMessage("You have LOST a level!");
 
   /*
+   * Raise skills etc.
+   *
   auto class_ = _classesMap[SelectedClass];
 
   switch (class_)
@@ -704,4 +663,97 @@ bool Player::IsAlive(GameObject* damager)
   }
 
   return true;
+}
+
+std::vector<std::string> Player::GetPrettyLevelUpText()
+{
+  std::vector<std::string> levelUpResults;
+
+  std::string mbStr;
+  for (auto& i : _mainAttributes)
+  {
+    auto kvp = i.second;
+
+    mbStr = Util::StringFormat("%s: %i", kvp.first.data(), kvp.second.OriginalValue);
+    levelUpResults.push_back(mbStr);
+  }
+
+  levelUpResults.push_back("");
+
+  mbStr = Util::StringFormat("HP:  %i", Attrs.HP.OriginalValue);
+  levelUpResults.push_back(mbStr);
+
+  mbStr = Util::StringFormat("MP:  %i", Attrs.MP.OriginalValue);
+  levelUpResults.push_back(mbStr);
+
+  // Try to make everything look pretty
+  //
+  // NOTE: probably lots of shitcode
+
+  int maxLen = 0;
+  for (auto& s : levelUpResults)
+  {
+    if (s.length() > maxLen)
+    {
+      maxLen = s.length();
+    }
+  }
+
+  for (auto& s : levelUpResults)
+  {
+    if (s.length() < maxLen)
+    {
+      int d = maxLen - s.length();
+      s.append(d, ' ');
+    }
+  }
+
+  int index = 0;
+  for (auto& i : _mainAttributes)
+  {
+    auto kvp = i.second;
+
+    std::string addition;
+    if (_statRaisesMap[kvp.first] >= 0)
+    {
+      addition = Util::StringFormat("  +%i", _statRaisesMap[kvp.first]);
+    }
+    else
+    {
+      addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap[kvp.first]));
+    }
+
+    levelUpResults[index] += addition;
+    index++;
+  }
+
+  // Take into account empty string between stats and hitpoints
+  index++;
+
+  std::string addition;
+  if (_statRaisesMap["HP"] >= 0)
+  {
+    addition = Util::StringFormat("  +%i", _statRaisesMap["HP"]);
+  }
+  else
+  {
+    addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap["HP"]));
+  }
+
+  levelUpResults[index] += addition;
+  index++;
+
+  if (_statRaisesMap["MP"] >= 0)
+  {
+    addition = Util::StringFormat("  +%i", _statRaisesMap["MP"]);
+  }
+  else
+  {
+    addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap["MP"]));
+  }
+
+  levelUpResults[index] += addition;
+  index++;
+
+  return levelUpResults;
 }

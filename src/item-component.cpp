@@ -41,6 +41,17 @@ void ItemComponent::Inspect()
 {  
   std::string header = Data.IsIdentified ? Data.IdentifiedName : Data.UnidentifiedName;
   auto desc = Data.IsIdentified ? Data.IdentifiedDescription : Data.UnidentifiedDescription;
+  if (Data.IsPrefixDiscovered)
+  {
+    if (Data.Prefix == ItemPrefix::BLESSED)
+    {
+      desc.push_back("This one is blessed and will yield better results.");
+    }
+    else if (Data.Prefix == ItemPrefix::CURSED)
+    {
+      desc.push_back("This one is cursed and should be avoided.");
+    }
+  }
   Application::Instance().ShowMessageBox(false, header, desc);
 }
 

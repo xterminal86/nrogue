@@ -77,6 +77,8 @@ class Player : public GameObject
     bool CanRaiseAttribute(Attribute& attr);
     void ProcessKill(GameObject* monster);
 
+    std::vector<std::string> GetPrettyLevelUpText();
+
     std::map<int, PlayerClass> _classesMap =
     {
       { 0, PlayerClass::SOLDIER },

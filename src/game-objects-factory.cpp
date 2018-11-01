@@ -62,7 +62,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
   Component* c = go->AddComponent<ItemComponent>();
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-  ic->Data.IdentifiedDescription = { "You can buy things with these" };
+  ic->Data.IdentifiedDescription = { "You can buy things with these." };
 
   int pl = _playerRef->Attrs.Lvl.CurrentValue;
 
@@ -314,7 +314,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
     switch (item->Data.TypeOfItem)
     {
       case ItemType::COINS:
-        Application::Instance().ShowMessageBox(false, "Information", { "You don't 'use' money like that" }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(false, "Information", { "You don't 'use' money like that." }, GlobalConstants::MessageBoxRedBorderColor);
         break;
 
       default:
@@ -328,7 +328,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
   return res;
 }
 
-GameObject* GameObjectsFactory::CreateHealingPotion()
+GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject();
 
@@ -341,11 +341,12 @@ GameObject* GameObjectsFactory::CreateHealingPotion()
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
   ic->Data.TypeOfItem = ItemType::HEALING_POTION;
+  ic->Data.Prefix = prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
 
-  ic->Data.IdentifiedDescription = { "Restores some of your health" };
+  ic->Data.IdentifiedDescription = { "Restores some of your health." };
   ic->Data.IdentifiedName = "Red Potion";
 
   ic->Data.UseCallback = std::bind(&GameObjectsFactory::HealingPotionUseHandler, this, ic);
@@ -360,7 +361,7 @@ GameObject* GameObjectsFactory::CreateHealingPotion()
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateManaPotion()
+GameObject* GameObjectsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject();
 
@@ -373,11 +374,12 @@ GameObject* GameObjectsFactory::CreateManaPotion()
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
   ic->Data.TypeOfItem = ItemType::MANA_POTION;
+  ic->Data.Prefix = prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
 
-  ic->Data.IdentifiedDescription = { "Helps you regain spiritual powers" };
+  ic->Data.IdentifiedDescription = { "Helps you regain spiritual powers." };
   ic->Data.IdentifiedName = "Blue Potion";
 
   ic->Data.UseCallback = std::bind(&GameObjectsFactory::ManaPotionUseHandler, this, ic);
@@ -392,7 +394,7 @@ GameObject* GameObjectsFactory::CreateManaPotion()
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateHungerPotion()
+GameObject* GameObjectsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject();
 
@@ -405,6 +407,7 @@ GameObject* GameObjectsFactory::CreateHungerPotion()
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
   ic->Data.TypeOfItem = ItemType::HUNGER_POTION;
+  ic->Data.Prefix = prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
@@ -424,7 +427,7 @@ GameObject* GameObjectsFactory::CreateHungerPotion()
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateExpPotion()
+GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject();
 
@@ -437,11 +440,12 @@ GameObject* GameObjectsFactory::CreateExpPotion()
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
   ic->Data.TypeOfItem = ItemType::EXP_POTION;
+  ic->Data.Prefix = prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
 
-  ic->Data.IdentifiedDescription = { "They say drinking this will bring you to the next level", "Whatever that means..." };
+  ic->Data.IdentifiedDescription = { "They say drinking this will bring you to the next level.", "Whatever that means..." };
   ic->Data.IdentifiedName = "Clear Potion";
 
   ic->Data.UseCallback = std::bind(&GameObjectsFactory::ExpPotionUseHandler, this, ic);
@@ -462,15 +466,19 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
 
   int roll = RNG::Instance().RandomRange(0, 100);
 
+  // TODO: more potions
+
   if (roll < 3)
   {
-    go = CreateExpPotion();
+    // random stat potion
+    // FIXME: fallback to healing potion for now
+    go = CreateHealingPotion();
   }
   else if (roll < 6)
   {
-    // random stat potion
+    go = CreateExpPotion();
   }
-  else if (roll < 30)
+  else
   {
     int which = RNG::Instance().RandomRange(0, 3);
     if (which == 0)
@@ -487,50 +495,45 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
     }
   }
 
-  if (go != nullptr)
+  Component* c = go->GetComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+  ic->Data.IsIdentified = false;
+  ic->Data.UnidentifiedDescription = { "You don't know what will happen if you drink it." };
+
+  int index = RNG::Instance().RandomRange(0, GlobalConstants::PotionColors.size());
+  auto it = GlobalConstants::PotionColors.begin();
+  std::advance(it, index);
+  auto kvp = *it;
+
+  go->FgColor = kvp.second[0];
+  go->BgColor = kvp.second[1];
+  go->ObjectName = kvp.first;
+
+  ic->Data.UnidentifiedName = "?" + kvp.first + "?";
+  ic->Data.IdentifiedName = kvp.first;
+
+  roll = RNG::Instance().RandomRange(0, 101);
+
+  if (roll >= 0 && roll <= 30)
   {
-    Component* c = go->GetComponent<ItemComponent>();
-    ItemComponent* ic = static_cast<ItemComponent*>(c);
-
-    ic->Data.IsIdentified = false;
-    ic->Data.UnidentifiedDescription = { "You don't know what will happen if you drink it" };
-
-    int index = RNG::Instance().RandomRange(0, GlobalConstants::PotionColors.size());
-    auto it = GlobalConstants::PotionColors.begin();
-    std::advance(it, index);
-    auto kvp = *it;
-
-    go->FgColor = kvp.second[0];
-    go->BgColor = kvp.second[1];
-    go->ObjectName = kvp.first;
-
-    ic->Data.UnidentifiedName = "?" + kvp.first + "?";
-    ic->Data.IdentifiedName = kvp.first;
-
-    roll = RNG::Instance().RandomRange(0, 101);
-
-    if (roll >= 0 && roll <= 30)
-    {
-      ic->Data.Prefix = ItemPrefix::BLESSED;
-      ic->Data.IdentifiedDescription.push_back("This one is blessed and will yield better results");
-    }
-    else if (roll > 30 && roll <= 70)
-    {
-      ic->Data.Prefix = ItemPrefix::UNCURSED;
-    }
-    else if (roll > 70)
-    {
-      ic->Data.Prefix = ItemPrefix::CURSED;
-      ic->Data.IdentifiedDescription.push_back("This one is cursed and should be avoided");
-    }
-
-    auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
-    std::hash<std::string> hasher;
-
-    ic->Data.ItemTypeHash = hasher(strToHash);
-
-    SetItemName(go, ic->Data);
+    ic->Data.Prefix = ItemPrefix::BLESSED;
   }
+  else if (roll > 30 && roll <= 70)
+  {
+    ic->Data.Prefix = ItemPrefix::UNCURSED;
+  }
+  else if (roll > 70)
+  {
+    ic->Data.Prefix = ItemPrefix::CURSED;
+  }
+
+  auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
+  std::hash<std::string> hasher;
+
+  ic->Data.ItemTypeHash = hasher(strToHash);
+
+  SetItemName(go, ic->Data);
 
   return go;
 }
@@ -560,6 +563,8 @@ void GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
 
   statCur += amount;
   statCur = Util::Clamp(statCur, 0, statMax);  
+
+  Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
 }
 
 void GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
@@ -587,6 +592,8 @@ void GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
 
   statCur += amount;
   statCur = Util::Clamp(statCur, 0, statMax);
+
+  Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
 }
 
 void GameObjectsFactory::HungerPotionUseHandler(ItemComponent* item)
@@ -614,6 +621,8 @@ void GameObjectsFactory::HungerPotionUseHandler(ItemComponent* item)
 
   statCur += amount;
   statCur = Util::Clamp(statCur, 0, statMax);
+
+  Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
 }
 
 void GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
@@ -639,17 +648,9 @@ void GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
     Printer::Instance().AddMessage("You lose some experience!");
   }
 
-  statCur += amount;
-  statCur = Util::Clamp(statCur, 0, statMax);
+  Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
 
-  if (statCur >= 100)
-  {
-    _playerRef->LevelUp();
-  }
-  else if (statCur <= 0)
-  {
-    _playerRef->LevelDown();
-  }
+  _playerRef->AwardExperience(amount);
 }
 
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
@@ -658,6 +659,7 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
   {
     case ItemPrefix::BLESSED:
       itemData.IdentifiedName.insert(0, "Blessed ");
+      itemData.IdentifiedDescription.push_back("This one is blessed and will yield better results.");
       break;
 
     case ItemPrefix::UNCURSED:
@@ -666,6 +668,7 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
 
     case ItemPrefix::CURSED:
       itemData.IdentifiedName.insert(0, "Cursed ");
+      itemData.IdentifiedDescription.push_back("This one is cursed and should be avoided.");
       break;
   }
 

@@ -20,10 +20,10 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);    
     GameObject* CreateMoney(int amount = 0);
     GameObject* CreateRemains(GameObject* from);
-    GameObject* CreateHealingPotion();
-    GameObject* CreateManaPotion();
-    GameObject* CreateHungerPotion();
-    GameObject* CreateExpPotion();
+    GameObject* CreateHealingPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
+    GameObject* CreateManaPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
+    GameObject* CreateHungerPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
+    GameObject* CreateExpPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
 
     GameObject* CreateRandomPotion();
 

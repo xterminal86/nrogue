@@ -94,20 +94,12 @@ void InventoryState::HandleInput()
 
         _playerRef->FinishTurn();
 
-        // FIXME: if state was changed during item usage (e.g. potion of exp),
-        // we won't get there since state change will be overridden below.
-        // Put ChangeState inside ic->Use()?
-
         // Check if player was killed
         // after using something (e.g. cursed potion)
         if (!_playerRef->IsAlive(go))
         {
           Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
-        }
-        else
-        {
-          Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
-        }
+        }        
       }      
     }
     break;
@@ -181,7 +173,7 @@ void InventoryState::Update(bool forceUpdate)
         textColor = "#880000";
       }
 
-      std::string idColor = ic->Data.IsIdentified ? textColor : "#FFFFFF";
+      std::string idColor = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered) ? textColor : "#FFFFFF";
       DrawSelectionBar(yPos, nameInInventory, idColor);
 
       yPos++;
