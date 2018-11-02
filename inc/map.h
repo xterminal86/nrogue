@@ -10,6 +10,7 @@
 #include "constants.h"
 #include "game-object.h"
 #include "player.h"
+#include "map-level-base.h"
 
 class Map : public Singleton<Map>
 {
@@ -48,6 +49,10 @@ class Map : public Singleton<Map>
 
   private:
     Player* _playerRef;
+
+    MapLevelBase* _currentLevel;
+
+    std::map<MapType, std::unique_ptr<MapLevelBase>> _levels;
 
     void SetPlayerStartingPosition(int x, int y);
     void CreateTown();

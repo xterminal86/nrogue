@@ -47,12 +47,23 @@
 enum class MapType
 {
   TOWN = 0,
-  MINES,
-  CAVES,
+  MINES_1,
+  MINES_2,
+  MINES_3,
+  CAVES_1,
+  CAVES_2,
+  CAVES_3,
   LOST_CITY,
-  DEEP_DARK,
-  ABYSS,
-  NETHER
+  DEEP_DARK_1,
+  DEEP_DARK_2,
+  DEEP_DARK_3,
+  ABYSS_1,
+  ABYSS_2,
+  ABYSS_3,
+  NETHER_1,
+  NETHER_2,
+  NETHER_3,
+  THE_END
 };
 
 enum class MonsterType
@@ -342,12 +353,30 @@ namespace GlobalConstants
                           "Commune of Minetown",
                           "Settlement of Punchtree" } },
 
-    { MapType::MINES,     { "Abandoned Mines" } },
-    { MapType::CAVES,     { "Caves of Circe" } },
-    { MapType::LOST_CITY, { "Lost City" } },
-    { MapType::DEEP_DARK, { "Deep Dark" } },
-    { MapType::ABYSS,     { "Stygian Abyss" } },
-    { MapType::NETHER,    { "?Hell?" } }
+    // Abandoned Mines
+    { MapType::MINES_1,     { "Shallow Excavations" } },
+    { MapType::MINES_2,     { "Forsaken Prospects" } },
+    { MapType::MINES_3,     { "Deep Mines" } },
+    // Caves of Circe
+    { MapType::CAVES_1,     { "Caves of Circe" } },
+    { MapType::CAVES_2,     { "Corridors of Time" } },
+    { MapType::CAVES_3,     { "Windy Tunnels" } },
+    // Lost City
+    { MapType::LOST_CITY,   { "Lost City" } },
+    // Deep Dark
+    { MapType::DEEP_DARK_1, { "Embrace of Darkness" } },
+    { MapType::DEEP_DARK_2, { "Deep Dark" } },
+    { MapType::DEEP_DARK_3, { "Starless Night" } },
+    // Stygian Abyss
+    { MapType::ABYSS_1,     { "Planes of Desolation" } },
+    { MapType::ABYSS_2,     { "Soul Pastures" } },
+    { MapType::ABYSS_3,     { "Stygian Abyss" } },
+    // Nether
+    { MapType::NETHER_1,    { "Blazing Gates" } },
+    { MapType::NETHER_2,    { "River of Flame" } },
+    { MapType::NETHER_3,    { "The Hearth" } },
+    // The End
+    { MapType::THE_END,     { "???" } }
   };
 
   static const std::vector<std::vector<std::string>> RoomLayouts =

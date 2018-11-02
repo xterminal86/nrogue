@@ -7,10 +7,13 @@
 #include "ai-dummy.h"
 #include "door-component.h"
 #include "game-objects-factory.h"
+#include "map-level-town.h"
 #include "util.h"
 
 void Map::Init()
 {
+  _levels[MapType::TOWN] = std::unique_ptr<MapLevelBase>(new MapLevelTown(160, 60, MapType::TOWN));
+
   _playerRef = &Application::Instance().PlayerInstance;
 
   for (int x = 0; x < GlobalConstants::MapX; x++)
