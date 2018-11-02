@@ -88,7 +88,8 @@ enum class ShrineType
   MIGHT = 0,
   SPIRIT,
   KNOWLEDGE,
-  PERCEPTION
+  PERCEPTION,
+  HEALING
 };
 
 enum class RoomLayoutRotation
@@ -110,6 +111,23 @@ struct Attribute
   {
     OriginalValue = value;
     CurrentValue = value;    
+  }
+
+  int Add(int value)
+  {
+    CurrentValue += value;
+
+    // Cannot use util.h here :-(
+
+    if (CurrentValue > OriginalValue)
+    {
+      CurrentValue = OriginalValue;
+    }
+
+    if (CurrentValue < 0)
+    {
+      CurrentValue = 0;
+    }
   }
 
   int Get()
@@ -258,6 +276,24 @@ namespace GlobalConstants
   static const std::string ItemMagicColor = "#4169E1";
   static const std::string ItemRareColor = "#CCCC52";
   static const std::string ItemUniqueColor = "#A59263";
+
+  static const std::map<ShrineType, std::string> ShrineSaintByType =
+  {
+    { ShrineType::MIGHT, "St. George the Soldier" },
+    { ShrineType::SPIRIT, "St. Mary the Mother" },
+    { ShrineType::KNOWLEDGE, "St. Nestor the Scribe" },
+    { ShrineType::PERCEPTION, "St. Justin the Philosopher" },
+    { ShrineType::HEALING, "St. Luke the Healer" }
+  };
+
+  static const std::map<ShrineType, std::string> ShrineNameByType =
+  {
+    { ShrineType::MIGHT, "Shrine of Might" },
+    { ShrineType::SPIRIT, "Shrine of Spirit" },
+    { ShrineType::KNOWLEDGE, "Shrine of Knowledge" },
+    { ShrineType::PERCEPTION, "Shrine of Perception" },
+    { ShrineType::HEALING, "Shrine of Healing" }
+  };
 
   static const std::map<std::string, std::vector<std::string>> PotionColors =
   {

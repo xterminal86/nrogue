@@ -24,6 +24,7 @@ void Player::Init()
 
   // FIXME: remove afterwards
 
+#if 0
   for (int i = 0; i < 40; i++)
   {
     auto go = GameObjectsFactory::Instance().CreateRandomPotion();
@@ -87,6 +88,8 @@ void Player::Init()
 
   Map::Instance().InsertGameObject(go);
   */
+#endif
+
 }
 
 void Player::Draw()

@@ -77,11 +77,24 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
 
 GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int timeout)
 {
-  GameObject* go = new GameObject(x, y, '/',
-                                (type == ShrineType::MIGHT) ?
-                                GlobalConstants::ShrineMightColor :
-                                GlobalConstants::ShrineSpiritColor,
-                                GlobalConstants::WallColor);
+  GameObject* go = new GameObject();
+
+  go->PosX = x;
+  go->PosY = y;
+  go->Image = '/';
+
+  if (type == ShrineType::MIGHT || type == ShrineType::HEALING)
+  {
+    go->FgColor = GlobalConstants::ShrineMightColor;
+  }
+  else if (type == ShrineType::SPIRIT
+        || type == ShrineType::PERCEPTION
+        || type == ShrineType::KNOWLEDGE)
+  {
+    go->FgColor = GlobalConstants::ShrineSpiritColor;
+  }
+
+  go->BgColor = GlobalConstants::WallColor;
 
   auto c = go->AddComponent<ShrineComponent>();
   ShrineComponent* sc = static_cast<ShrineComponent*>(c);
@@ -90,7 +103,7 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
   sc->Counter = timeout;
   sc->Timeout = timeout;
 
-  go->ObjectName = (type == ShrineType::MIGHT) ? "Shrine of Might" : "Shrine of Spirit";
+  go->ObjectName = GlobalConstants::ShrineNameByType.at(type);
   go->FogOfWarName = "?Shrine?";
   go->InteractionCallback = std::bind(&ShrineComponent::Interact, sc);
 
@@ -148,7 +161,7 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
   GameObject* go = new GameObject(from->PosX, from->PosY, '%', from->FgColor);
 
   auto td = go->AddComponent<TimerDestroyerComponent>();
-  ((TimerDestroyerComponent*)td)->Time = from->Attrs.HP.OriginalValue * 2;
+  ((TimerDestroyerComponent*)td)->Time = 200; //from->Attrs.HP.OriginalValue * 2;
 
   auto str = Util::StringFormat("%s's remains", from->ObjectName.data());
   go->ObjectName = str;

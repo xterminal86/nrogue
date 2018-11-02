@@ -59,9 +59,6 @@ bool GameObject::MoveTo(int x, int y)
   return false;
 }
 
-// To allow fog of war to cover objects made of
-// background colored ' ', make sure FgColor
-// is set to empty string ( i.e. "" )
 void GameObject::Draw(const std::string& overrideColorFg, const std::string& overrideColorBg)
 {  
   Printer::Instance().PrintFB(PosX + Map::Instance().MapOffsetX,
@@ -114,15 +111,8 @@ void GameObject::ReceiveDamage(GameObject* from, int amount)
 
 void GameObject::WaitForTurn()
 {
-  int amount = Attrs.Spd.CurrentValue * 10;
-  if (amount == 0)
-  {
-    Attrs.ActionMeter += 10;
-  }
-  else
-  {
-    Attrs.ActionMeter += amount;
-  }  
+  int amount = (Attrs.Spd.CurrentValue + 1) * 10;
+  Attrs.ActionMeter += amount;
 }
 
 void GameObject::FinishTurn()
