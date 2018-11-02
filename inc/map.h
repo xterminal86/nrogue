@@ -11,12 +11,6 @@
 #include "game-object.h"
 #include "player.h"
 
-enum class MapType
-{
-  TOWN = 0,
-  MINES
-};
-
 class Map : public Singleton<Map>
 {
   public:

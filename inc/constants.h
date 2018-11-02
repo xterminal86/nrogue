@@ -44,6 +44,17 @@
 #include <map>
 #include <functional>
 
+enum class MapType
+{
+  TOWN = 0,
+  MINES,
+  CAVES,
+  LOST_CITY,
+  DEEP_DARK,
+  ABYSS,
+  NETHER
+};
+
 enum class MonsterType
 {
   RAT = 0,
@@ -320,6 +331,23 @@ namespace GlobalConstants
     "Jon Lane",
     "Mike Stephenson",
     "Markus Persson"
+  };
+
+  static const std::map<MapType, std::vector<std::string>> MapLevelRandomNames =
+  {
+    { MapType::TOWN,    { "Village of Darwin",
+                          "Town of Tristram",
+                          "Outpost of Fargoal",
+                          "Resort of Protvino",
+                          "Commune of Minetown",
+                          "Settlement of Punchtree" } },
+
+    { MapType::MINES,     { "Abandoned Mines" } },
+    { MapType::CAVES,     { "Caves of Circe" } },
+    { MapType::LOST_CITY, { "Lost City" } },
+    { MapType::DEEP_DARK, { "Deep Dark" } },
+    { MapType::ABYSS,     { "Stygian Abyss" } },
+    { MapType::NETHER,    { "?Hell?" } }
   };
 
   static const std::vector<std::vector<std::string>> RoomLayouts =
