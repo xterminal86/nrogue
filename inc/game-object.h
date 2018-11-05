@@ -10,6 +10,7 @@
 
 #include "component.h"
 #include "constants.h"
+#include "map-level-base.h"
 
 /// Helper struct to reduce the writing when creating objects
 struct Tile
@@ -47,13 +48,18 @@ struct Tile
 class GameObject
 {
   public:
-    GameObject() {}
+    GameObject(MapLevelBase* levelOwner = nullptr);
     GameObject(GameObject&) = delete;
     virtual ~GameObject() = default;
 
-    GameObject(int x, int y, chtype avatar, const std::string& htmlColor, const std::string& bgColor = "#000000")
+    GameObject(MapLevelBase* levelOwner, int x, int y, chtype avatar, const std::string& htmlColor, const std::string& bgColor = "#000000")
     {      
-      Init(x, y, avatar, htmlColor, bgColor);
+      Init(levelOwner, x, y, avatar, htmlColor, bgColor);
+    }
+
+    void SetLevelOwner(MapLevelBase* levelOwner)
+    {
+      _levelOwner = levelOwner;
     }
 
     bool Interact()
@@ -74,7 +80,7 @@ class GameObject
       return false;
     }
 
-    void Init(int x, int y, chtype avatar, const std::string& fgColor, const std::string& bgColor = "#000000");
+    void Init(MapLevelBase* levelOwner, int x, int y, chtype avatar, const std::string& fgColor, const std::string& bgColor = "#000000");
 
     /// Adds \p dx and \p dy to corresponding game object's coordinates.
     /// Use to move actors only.
@@ -160,7 +166,9 @@ class GameObject
     std::map<size_t, std::unique_ptr<Component>> _components;
 
     GameObject* _previousCell = nullptr;
-    GameObject* _currentCell = nullptr;        
+    GameObject* _currentCell = nullptr;
+
+    MapLevelBase* _levelOwner = nullptr;
 };
 
 #endif

@@ -26,8 +26,8 @@ void MainState::HandleInput()
         }
         else if (_playerRef->Move(-1, -1))
         {
-          Map::Instance().MapOffsetY++;
-          Map::Instance().MapOffsetX++;
+          Map::Instance().CurrentLevel->MapOffsetY++;
+          Map::Instance().CurrentLevel->MapOffsetX++;
 
           _playerRef->FinishTurn();
 
@@ -42,7 +42,7 @@ void MainState::HandleInput()
         }
         else if (_playerRef->Move(0, -1))
         {
-          Map::Instance().MapOffsetY++;
+          Map::Instance().CurrentLevel->MapOffsetY++;
 
           _playerRef->FinishTurn();
 
@@ -57,8 +57,8 @@ void MainState::HandleInput()
         }
         else if (_playerRef->Move(1, -1))
         {
-          Map::Instance().MapOffsetY++;
-          Map::Instance().MapOffsetX--;
+          Map::Instance().CurrentLevel->MapOffsetY++;
+          Map::Instance().CurrentLevel->MapOffsetX--;
 
           _playerRef->FinishTurn();
 
@@ -73,7 +73,7 @@ void MainState::HandleInput()
         }
         else if (_playerRef->Move(-1, 0))
         {
-          Map::Instance().MapOffsetX++;
+          Map::Instance().CurrentLevel->MapOffsetX++;
 
           _playerRef->FinishTurn();
 
@@ -88,7 +88,7 @@ void MainState::HandleInput()
         }
         else if (_playerRef->Move(0, 1))
         {
-          Map::Instance().MapOffsetY--;
+          Map::Instance().CurrentLevel->MapOffsetY--;
 
           _playerRef->FinishTurn();
 
@@ -103,7 +103,7 @@ void MainState::HandleInput()
         }
         else if (_playerRef->Move(1, 0))
         {
-          Map::Instance().MapOffsetX--;
+          Map::Instance().CurrentLevel->MapOffsetX--;
 
           _playerRef->FinishTurn();
 
@@ -118,8 +118,8 @@ void MainState::HandleInput()
         }
         else if (_playerRef->Move(-1, 1))
         {
-          Map::Instance().MapOffsetY--;
-          Map::Instance().MapOffsetX++;
+          Map::Instance().CurrentLevel->MapOffsetY--;
+          Map::Instance().CurrentLevel->MapOffsetX++;
 
           _playerRef->FinishTurn();
 
@@ -134,8 +134,8 @@ void MainState::HandleInput()
         }
         else if (_playerRef->Move(1, 1))
         {
-          Map::Instance().MapOffsetY--;
-          Map::Instance().MapOffsetX--;
+          Map::Instance().CurrentLevel->MapOffsetY--;
+          Map::Instance().CurrentLevel->MapOffsetX--;
 
           _playerRef->FinishTurn();
 
@@ -233,20 +233,22 @@ void MainState::Update(bool forceUpdate)
       Printer::Instance().ResetMessagesToDisplay();
     }
 
+    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1, 0, Map::Instance().CurrentLevel->LevelName, Printer::kAlignRight, "#FFFFFF");
+
+    _debugInfo = Util::StringFormat("World seed: %lu", RNG::Instance().Seed);
+    Printer::Instance().PrintFB(0, 0, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+
     // NOTE: Some debug info
 
     _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i: Plr: [%i;%i] Key: %i",
                                     _playerRef->Attrs.ActionMeter,
-                                    Map::Instance().MapOffsetX,
-                                    Map::Instance().MapOffsetY,
+                                    Map::Instance().CurrentLevel->MapOffsetX,
+                                    Map::Instance().CurrentLevel->MapOffsetY,
                                     _playerRef->PosX,
                                     _playerRef->PosY,
                                     _keyPressed);
 
-    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1, 0, _debugInfo, Printer::kAlignRight, "#FFFFFF");
-
-    _debugInfo = Util::StringFormat("World seed: %lu", RNG::Instance().Seed);
-    Printer::Instance().PrintFB(0, 0, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(0, 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
     // *****
 
@@ -285,7 +287,7 @@ void MainState::TryToPickupItem()
 
     ic = res.second->GetComponent<ItemComponent>();
 
-    auto go = Map::Instance().GameObjects[res.first].release();
+    auto go = Map::Instance().CurrentLevel->GameObjects[res.first].release();
 
     _playerRef->Inventory.AddToInventory(go);
 
@@ -303,8 +305,8 @@ void MainState::TryToPickupItem()
 
     Printer::Instance().AddMessage(message);
 
-    auto it = Map::Instance().GameObjects.begin();
-    Map::Instance().GameObjects.erase(it + res.first);
+    auto it = Map::Instance().CurrentLevel->GameObjects.begin();
+    Map::Instance().CurrentLevel->GameObjects.erase(it + res.first);
   }
   else
   {

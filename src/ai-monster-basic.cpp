@@ -87,8 +87,8 @@ bool AIMonsterBasic::IsPlayerVisible()
     auto line = Util::BresenhamLine(x, y, px, py);
     for (auto& c : line)
     {
-      auto& cell = Map::Instance().MapArray[c.X][c.Y];
-      if (cell.Blocking || cell.BlocksSight)
+      auto& cell = Map::Instance().CurrentLevel->MapArray[c.X][c.Y];
+      if (cell->Blocking || cell->BlocksSight)
       {
         return false;
       }
@@ -119,14 +119,14 @@ Position AIMonsterBasic::SelectCell()
   {
     for (int j = ly; j <= hy; j++)
     {
-      auto& cell = Map::Instance().MapArray[i][j];
-      if (!cell.Blocking)
+      auto cell = Map::Instance().CurrentLevel->MapArray[i][j].get();
+      if (!cell->Blocking)
       {
-        int d = Util::BlockDistance(px, py, cell.PosX, cell.PosY);
+        int d = Util::BlockDistance(px, py, cell->PosX, cell->PosY);
         if (d < minD)
         {
           minD = d;
-          c.Set(cell.PosX, cell.PosY);
+          c.Set(cell->PosX, cell->PosY);
         }
       }
     }

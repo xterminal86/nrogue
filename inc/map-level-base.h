@@ -1,8 +1,12 @@
 #ifndef MAPLEVELBASE_H
 #define MAPLEVELBASE_H
 
-#include "game-object.h"
 #include "util.h"
+
+// Forward declaration due to cyclic dependency
+
+class Player;
+class GameObject;
 
 class MapLevelBase
 {
@@ -11,19 +15,14 @@ class MapLevelBase
     MapLevelBase(const MapLevelBase&) = delete;
     virtual ~MapLevelBase() {}
 
-    void InsertActor(GameObject* actor)
-    {
-      ActorGameObjects.push_back(std::unique_ptr<GameObject>(actor));
-    }
+    void InsertActor(GameObject* actor);
+    void InsertGameObject(GameObject* goToInsert);
 
-    void InsertGameObject(GameObject* goToInsert)
-    {
-      GameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
-    }
+    virtual void PrepareMap(MapLevelBase* levelOwner);
 
     // Map tiles or objects that don't have to be updated globally.
     // Updated around player position.
-    GameObject MapArray[GlobalConstants::MapX][GlobalConstants::MapY];
+    std::vector<std::vector<std::unique_ptr<GameObject>>> MapArray;
 
     // Globally updated objects (traps with timers, shrines, etc.)
     // or objects that can be removed from the map (e.g. items)
@@ -44,6 +43,8 @@ class MapLevelBase
     int MapOffsetY;
 
   protected:
+    Player* _playerRef;
+
     void SetPlayerStartingPosition(int x, int y);
 };
 

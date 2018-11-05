@@ -9,9 +9,9 @@ class MapLevelTown : public MapLevelBase
   public:
     MapLevelTown(int sizeX, int sizeY, MapType type);
 
-  private:
-    Player* _playerRef;
+    void PrepareMap(MapLevelBase* levelOwner) override;
 
+  private:
     void CreateTown();
 
     void FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill);

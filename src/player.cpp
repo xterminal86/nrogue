@@ -10,8 +10,8 @@
 
 void Player::Init()
 {
-  PosX = Map::Instance().PlayerStartX;
-  PosY = Map::Instance().PlayerStartY;
+  PosX = Map::Instance().CurrentLevel->PlayerStartX;
+  PosY = Map::Instance().CurrentLevel->PlayerStartY;
   Image = '@';
   FgColor = GlobalConstants::PlayerColor;
   Attrs.ActionMeter = 100;
@@ -19,7 +19,7 @@ void Player::Init()
   SetAttributes();
   SetDefaultEquipment();
 
-  _currentCell = &Map::Instance().MapArray[PosX][PosY];
+  _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell->Occupied = true;  
 
   // FIXME: remove afterwards
@@ -95,7 +95,7 @@ void Player::Init()
 void Player::Draw()
 {
   bool cond = (BgColor.length() == 0 || BgColor == "#000000");
-  GameObject::Draw(FgColor, cond ? Map::Instance().MapArray[PosX][PosY].BgColor : BgColor);
+  GameObject::Draw(FgColor, cond ? Map::Instance().CurrentLevel->MapArray[PosX][PosY]->BgColor : BgColor);
 }
 
 bool Player::TryToAttack(int dx, int dy)
@@ -117,17 +117,17 @@ bool Player::TryToAttack(int dx, int dy)
 
 bool Player::Move(int dx, int dy)
 {
-  auto& cell = Map::Instance().MapArray[PosX + dx][PosY + dy];
+  auto cell = Map::Instance().CurrentLevel->MapArray[PosX + dx][PosY + dy].get();
 
-  if (!cell.Occupied && !cell.Blocking)
+  if (!cell->Occupied && !cell->Blocking)
   {
-    _previousCell = &Map::Instance().MapArray[PosX][PosY];
+    _previousCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
     _previousCell->Occupied = false;
 
     PosX += dx;
     PosY += dy;
 
-    _currentCell = &Map::Instance().MapArray[PosX][PosY];
+    _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
     _currentCell->Occupied = true;
 
     return true;
@@ -136,12 +136,12 @@ bool Player::Move(int dx, int dy)
   {    
     // Search for components only if there are any
 
-    if (cell.ComponentsSize() != 0)
+    if (cell->ComponentsSize() != 0)
     {
-      auto c = cell.GetComponent<DoorComponent>();
+      auto c = cell->GetComponent<DoorComponent>();
 
       // Automatically interact with door if it's closed
-      if (c != nullptr && cell.Blocking && cell.Interact())
+      if (c != nullptr && cell->Blocking && cell->Interact())
       {
         FinishTurn();
       }
@@ -177,15 +177,15 @@ void Player::CheckVisibility()
 
   // Update map around player
 
-  auto& map = Map::Instance().MapArray;
+  auto& map = Map::Instance().CurrentLevel->MapArray;
 
   // FIXME: think
-  int radius = (map[PosX][PosY].ObjectName == "Tree") ? VisibilityRadius / 4 : VisibilityRadius;
+  int radius = (map[PosX][PosY]->ObjectName == "Tree") ? VisibilityRadius / 4 : VisibilityRadius;
 
-  auto mapCells = Util::GetRectAroundPoint(PosX, PosY, tw / 2, th / 2);
+  auto mapCells = Util::GetRectAroundPoint(PosX, PosY, tw / 2, th / 2, Map::Instance().CurrentLevel->MapSize);
   for (auto& cell : mapCells)
   {
-    map[cell.X][cell.Y].Visible = false;
+    map[cell.X][cell.Y]->Visible = false;
   }
 
   // Update visibility around player
@@ -209,7 +209,7 @@ void Player::CheckVisibility()
         continue;
       }
 
-      if (map[point.X][point.Y].BlocksSight)
+      if (map[point.X][point.Y]->BlocksSight)
       {
         DiscoverCell(point.X, point.Y);
         break;
@@ -222,13 +222,13 @@ void Player::CheckVisibility()
 
 void Player::DiscoverCell(int x, int y)
 {
-  auto& map = Map::Instance().MapArray;
+  auto& map = Map::Instance().CurrentLevel->MapArray;
 
-  map[x][y].Visible = true;
+  map[x][y]->Visible = true;
 
-  if (!map[x][y].Revealed)
+  if (!map[x][y]->Revealed)
   {
-    map[x][y].Revealed = true;
+    map[x][y]->Revealed = true;
   }
 }
 

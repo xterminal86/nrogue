@@ -6,7 +6,13 @@
 
 MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
   MapLevelBase(sizeX, sizeY, type)
+{  
+}
+
+void MapLevelTown::PrepareMap(MapLevelBase* levelOwner)
 {
+  MapLevelBase::PrepareMap(levelOwner);
+
   CreateTown();
 }
 
@@ -29,7 +35,7 @@ void MapLevelTown::CreateTown()
   auto bounds = r.GetBoundaryElements();
   for (auto& pos : bounds)
   {
-    MapArray[pos.X][pos.Y].MakeTile(t);
+    MapArray[pos.X][pos.Y]->MakeTile(t);
   }
 
   SetPlayerStartingPosition(5, 2);
@@ -69,7 +75,7 @@ void MapLevelTown::CreateTown()
     int x = RNG::Instance().Random() % GlobalConstants::MapX;
     int y = RNG::Instance().Random() % GlobalConstants::MapY;
 
-    if (!MapArray[x][y].Blocking)
+    if (!MapArray[x][y]->Blocking)
     {
       // Special rats
       //auto rat = GameObjectsFactory::Instance().CreateRat(x, y, false);
@@ -88,7 +94,7 @@ void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFi
   {
     for (int y = ay; y <= ay + ah; y++)
     {
-      MapArray[x][y].MakeTile(tileToFill);
+      MapArray[x][y]->MakeTile(tileToFill);
     }
   }
 }
@@ -124,41 +130,41 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
       {
         case '#':
           t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
-          MapArray[posX][posY].MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t);
           break;
 
         case 'g':
         {
           t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::GrassColor, "Grass");
-          MapArray[posX][posY].MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t);
         }
         break;
 
         case 'F':
         {
           t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::WaterColor, "Fountain");
-          MapArray[posX][posY].MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t);
         }
         break;
 
         case '.':
         {
           t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
-          MapArray[posX][posY].MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t);
         }
         break;
 
         case ' ':
         {
           t.Set(false, false, c, GlobalConstants::BlackColor, GlobalConstants::GroundColor, "Stone Tiles");
-          MapArray[posX][posY].MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t);
         }
         break;
 
         case 'w':
         {
           t.Set(true, false, ' ', GlobalConstants::BlackColor, GlobalConstants::WaterColor, "Water");
-          MapArray[posX][posY].MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t);
         }
         break;
 
@@ -166,7 +172,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
         case '-':
         {
           t.Set(true, false, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Window");
-          MapArray[posX][posY].MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t);
         }
         break;
 
@@ -185,7 +191,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
 
 void MapLevelTown::CreateDoor(int x, int y, bool isOpen)
 {
-  auto c = MapArray[x][y].AddComponent<DoorComponent>();
+  auto c = MapArray[x][y]->AddComponent<DoorComponent>();
   DoorComponent* dc = static_cast<DoorComponent*>(c);
   dc->IsOpen = isOpen;
   dc->UpdateDoorState();
@@ -194,9 +200,9 @@ void MapLevelTown::CreateDoor(int x, int y, bool isOpen)
   //
   // When using std::bind to bind a member function, the first argument is the object's this pointer.
 
-  MapArray[x][y].InteractionCallback = std::bind(&DoorComponent::Interact, dc);
+  MapArray[x][y]->InteractionCallback = std::bind(&DoorComponent::Interact, dc);
 
-  MapArray[x][y].ObjectName = "Door";
+  MapArray[x][y]->ObjectName = "Door";
 }
 
 void MapLevelTown::CreateChurch(int x, int y)
@@ -215,7 +221,7 @@ void MapLevelTown::CreateChurch(int x, int y)
         case '#':
         {
           t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
-          MapArray[posX][posY].MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t);
         }
         break;
 
@@ -223,7 +229,7 @@ void MapLevelTown::CreateChurch(int x, int y)
         case '-':
         {
           t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stained Glass");
-          MapArray[posX][posY].MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t);
         }
         break;
 
@@ -232,7 +238,7 @@ void MapLevelTown::CreateChurch(int x, int y)
         case ' ':
         {
           t.Set(false, false, c, GlobalConstants::BlackColor, GlobalConstants::GroundColor, "Stone Tiles");
-          MapArray[posX][posY].MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t);
         }
         break;
 
@@ -243,7 +249,7 @@ void MapLevelTown::CreateChurch(int x, int y)
         case 'h':
         {
           t.Set(false, false, c, GlobalConstants::RoomFloorColor, GlobalConstants::BlackColor, "Wooden Bench", "?Bench?");
-          MapArray[posX][posY].MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t);
         }
         break;
 
@@ -255,7 +261,7 @@ void MapLevelTown::CreateChurch(int x, int y)
           ShrineType shrineType = ShrineType::SPIRIT;
           std::string description = (shrineType == ShrineType::MIGHT) ? "Shrine of Might" : "Shrine of Spirit";
           t.Set(true, false, '/', GlobalConstants::GroundColor, GlobalConstants::BlackColor, description, "?Shrine?");
-          MapArray[posX][posY].MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t);
 
           // Tiles are updated only around player.
           // Shrine has some logic (buff and timeout count), thus

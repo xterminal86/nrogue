@@ -8,16 +8,15 @@
 #include "singleton.h"
 #include "rect.h"
 #include "constants.h"
-#include "game-object.h"
 #include "player.h"
 #include "map-level-base.h"
+
+class GameObject;
 
 class Map : public Singleton<Map>
 {
   public:
     void Init() override;
-
-    void CreateMap(MapType mapType);
 
     void Draw(int playerX, int playerY);
 
@@ -29,47 +28,11 @@ class Map : public Singleton<Map>
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
     std::pair<int, GameObject*> GetGameObjectToPickup(int x, int y);
 
-    // Map tiles or objects that don't have to be updated globally.
-    // Updated around player position.
-    GameObject MapArray[GlobalConstants::MapX][GlobalConstants::MapY];
+    MapLevelBase* CurrentLevel;
 
-    // Globally updated objects (traps with timers, shrines, etc.)
-    // or objects that can be removed from the map (e.g. items)
-    // Updated every frame.
-    std::vector<std::unique_ptr<GameObject>> GameObjects;
-
-    // NPCs, drawn last
-    std::vector<std::unique_ptr<GameObject>> ActorGameObjects;
-
-    int PlayerStartX;
-    int PlayerStartY;
-
-    int MapOffsetX;
-    int MapOffsetY;
-
-  private:
-    Player* _playerRef;
-
-    MapLevelBase* _currentLevel;
-
+  private:    
     std::map<MapType, std::unique_ptr<MapLevelBase>> _levels;
 
-    void SetPlayerStartingPosition(int x, int y);
-    void CreateTown();
-
-    [[deprecated("Old method, creates area with ground tiles and walls")]]
-    void CreateRoom(int x, int y, int w, int h);
-
-    /// Creates room starting from (x;y) increasing to the down right
-    /// using \p layout provided
-    void CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation = false);
-
-    void CreateChurch(int x, int y);
-    void CreateCastle(int x, int y);
-    void FillArea(int x, int y, int w, int h, const Tile& tileToFill);
-    void CreateDoor(int x, int y, bool isOpen = false);
-
-    void DrawGameObjects();
     void RemoveDestroyed();
 };
 

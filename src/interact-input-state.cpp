@@ -87,7 +87,7 @@ void InteractInputState::HandleInput()
     }
     else
     {
-      auto* cell = &Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
+      auto cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
       TryToInteractWithObject(cell);
     }
   }

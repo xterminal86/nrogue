@@ -53,7 +53,7 @@ GameObject* GameObjectsFactory::CreateMonster(int x, int y, MonsterType monsterT
 
 GameObject* GameObjectsFactory::CreateMoney(int amount)
 {
-  GameObject* go = new GameObject();
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   go->ObjectName = "Gold Coins";
   go->Image = '$';
@@ -77,7 +77,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
 
 GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int timeout)
 {
-  GameObject* go = new GameObject();
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   go->PosX = x;
   go->PosY = y;
@@ -112,7 +112,7 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
 
 GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(x, y, 'r', GlobalConstants::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'r', GlobalConstants::MonsterColor);
   go->ObjectName = "Rat";
   go->Attrs.Indestructible = false;
 
@@ -158,7 +158,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
 
 GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 {
-  GameObject* go = new GameObject(from->PosX, from->PosY, '%', from->FgColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, from->PosX, from->PosY, '%', from->FgColor);
 
   auto td = go->AddComponent<TimerDestroyerComponent>();
   ((TimerDestroyerComponent*)td)->Time = 200; //from->Attrs.HP.OriginalValue * 2;
@@ -343,7 +343,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 
 GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject();
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   go->FgColor = "#FFFFFF";
   go->BgColor = "#FF0000";
@@ -376,7 +376,7 @@ GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 
 GameObject* GameObjectsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject();
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   go->FgColor = "#FFFFFF";
   go->BgColor = "#0000FF";
@@ -409,7 +409,7 @@ GameObject* GameObjectsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 
 GameObject* GameObjectsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject();
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   go->FgColor = "#FFFFFF";
   go->BgColor = "#004400";
@@ -442,7 +442,7 @@ GameObject* GameObjectsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
 
 GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject();
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   go->FgColor = "#FFFFFF";
   go->BgColor = "#888888";

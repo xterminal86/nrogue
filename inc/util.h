@@ -276,12 +276,12 @@ namespace Util
     return result;
   }
 
-  inline std::vector<Position> GetRectAroundPoint(int pointX, int pointY, int rangeX, int rangeY)
+  inline std::vector<Position> GetRectAroundPoint(int pointX, int pointY, int rangeX, int rangeY, Position mapSize)
   {    
     std::vector<Position> result;
 
-    int mw = GlobalConstants::MapX;
-    int mh = GlobalConstants::MapY;
+    int mw = mapSize.X;
+    int mh = mapSize.Y;
       
     int lx = pointX - rangeX;
     int ly = pointY - rangeY;

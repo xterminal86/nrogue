@@ -84,7 +84,7 @@ void LookInputState::Update(bool forceUpdate)
 
     if (Util::CheckLimits(_cursorPosition, Position(GlobalConstants::MapX, GlobalConstants::MapY)))
     {
-      auto* tile = &Map::Instance().MapArray[_cursorPosition.X][_cursorPosition.Y];
+      auto tile = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
 
       bool foundGameObject = false;
 
@@ -179,12 +179,12 @@ void LookInputState::MoveCursor(int dx, int dy)
 
 void LookInputState::DrawCursor()
 {
-  Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().MapOffsetX + 1,
-                              _cursorPosition.Y + Map::Instance().MapOffsetY,
+  Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().CurrentLevel->MapOffsetX + 1,
+                              _cursorPosition.Y + Map::Instance().CurrentLevel->MapOffsetY,
                               ']', "#FFFFFF");
 
-  Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().MapOffsetX - 1,
-                              _cursorPosition.Y + Map::Instance().MapOffsetY,
+  Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().CurrentLevel->MapOffsetX - 1,
+                              _cursorPosition.Y + Map::Instance().CurrentLevel->MapOffsetY,
                               '[', "#FFFFFF");
 }
 

@@ -111,7 +111,15 @@ enum class ShrineType
   SPIRIT,
   KNOWLEDGE,
   PERCEPTION,
-  HEALING
+  HEALING,
+  DESECRATED,
+  RUINED,
+  DISTURBING,
+  ABYSSAL,
+  FORGOTTEN,
+  POTENTIAL,
+  HIDDEN,
+  HOLY
 };
 
 enum class RoomLayoutRotation
@@ -135,7 +143,7 @@ struct Attribute
     CurrentValue = value;    
   }
 
-  int Add(int value)
+  void Add(int value)
   {
     CurrentValue += value;
 
@@ -273,7 +281,7 @@ namespace GlobalConstants
   static const int AwardedExpMax = 40;
   static const int MinHitChance = 5;
   static const int MaxHitChance = 95;
-  static const int DisplayAttackDelayMs = 100;
+  static const int DisplayAttackDelayMs = 50;
 
   static const std::string BlackColor = "#000000";
   static const std::string WhiteColor = "#FFFFFF";
@@ -314,7 +322,15 @@ namespace GlobalConstants
     { ShrineType::SPIRIT, "Shrine of Spirit" },
     { ShrineType::KNOWLEDGE, "Shrine of Knowledge" },
     { ShrineType::PERCEPTION, "Shrine of Perception" },
-    { ShrineType::HEALING, "Shrine of Healing" }
+    { ShrineType::HEALING, "Shrine of Healing" },
+    { ShrineType::FORGOTTEN, "Forgotten Shrine" },
+    { ShrineType::ABYSSAL, "Abyssal Shrine" },
+    { ShrineType::DESECRATED, "Desecrated Shrine" },
+    { ShrineType::DISTURBING, "Disturbing Shrine" },
+    { ShrineType::RUINED, "Ruined Shrine" },
+    { ShrineType::POTENTIAL, "Shrine of Potential" },
+    { ShrineType::HIDDEN, "Hidden Shrine" },
+    { ShrineType::HOLY, "Holy Shrine" }
   };
 
   static const std::map<std::string, std::vector<std::string>> PotionColors =

@@ -103,11 +103,16 @@ void Application::CloseMessageBox()
 
 void Application::DisplayAttack(GameObject* defender, int delayMs, std::string cursorColor)
 {
-  int posX = defender->PosX + Map::Instance().MapOffsetX;
-  int posY = defender->PosY + Map::Instance().MapOffsetY;
+  int posX = defender->PosX + Map::Instance().CurrentLevel->MapOffsetX;
+  int posY = defender->PosY + Map::Instance().CurrentLevel->MapOffsetY;
 
   Printer::Instance().PrintFB(posX, posY, ' ', "#000000", cursorColor);
   Printer::Instance().Render();
 
-  Util::Sleep(100);
+  Util::Sleep(delayMs);
+
+  Printer::Instance().PrintFB(posX, posY, defender->Image, defender->FgColor, defender->BgColor);
+  Printer::Instance().Render();
+
+  Util::Sleep(delayMs);
 }

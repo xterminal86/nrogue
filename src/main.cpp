@@ -43,7 +43,6 @@ int main()
   Application::Instance().Init();
 
   Map::Instance().Init();      
-  Map::Instance().CreateMap(MapType::TOWN);
 
   Application::Instance().Run();
   
