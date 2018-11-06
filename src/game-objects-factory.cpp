@@ -83,18 +83,8 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
   go->PosY = y;
   go->Image = '/';
 
-  if (type == ShrineType::MIGHT || type == ShrineType::HEALING)
-  {
-    go->FgColor = GlobalConstants::ShrineMightColor;
-  }
-  else if (type == ShrineType::SPIRIT
-        || type == ShrineType::PERCEPTION
-        || type == ShrineType::KNOWLEDGE)
-  {
-    go->FgColor = GlobalConstants::ShrineSpiritColor;
-  }
-
-  go->BgColor = GlobalConstants::WallColor;
+  go->FgColor = GlobalConstants::ShrineColorsByType.at(type).first;
+  go->BgColor = GlobalConstants::ShrineColorsByType.at(type).second;
 
   auto c = go->AddComponent<ShrineComponent>();
   ShrineComponent* sc = static_cast<ShrineComponent*>(c);

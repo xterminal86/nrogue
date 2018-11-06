@@ -254,18 +254,11 @@ void MapLevelTown::CreateChurch(int x, int y)
 
         case '/':
         {
-          std::vector<ShrineType> possibleShrines =
-          {
-            ShrineType::HEALING,
-            ShrineType::KNOWLEDGE,
-            ShrineType::PERCEPTION
-          };
-
           // Game objects are not shown under fog of war by default,
           // so sometimes we must "adjust" tiles if we want
           // certain objects to be shown, like in this case.
-          ShrineType shrineType = ShrineType::SPIRIT;
-          std::string description = (shrineType == ShrineType::MIGHT) ? "Shrine of Might" : "Shrine of Spirit";
+          ShrineType shrineType = ShrineType::KNOWLEDGE;
+          std::string description = GlobalConstants::ShrineNameByType.at(shrineType);
           t.Set(true, false, '/', GlobalConstants::GroundColor, GlobalConstants::BlackColor, description, "?Shrine?");
           MapArray[posX][posY]->MakeTile(t);
 

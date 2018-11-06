@@ -48,7 +48,7 @@ void ShrineComponent::Interact()
 
 void ShrineComponent::Activate()
 {
-  OwnerGameObject->FgColor = (Type == ShrineType::MIGHT) ? GlobalConstants::ShrineMightColor : GlobalConstants::ShrineSpiritColor;
+  OwnerGameObject->FgColor = GlobalConstants::ShrineColorsByType.at(Type).first;
 }
 
 void ShrineComponent::ProcessEffect()
@@ -57,7 +57,6 @@ void ShrineComponent::ProcessEffect()
 
   switch (Type)
   {
-    // TODO: temporary raise STR, DEF
     case ShrineType::MIGHT:
     {
       int percentage = (float)playerRef.Attrs.HP.OriginalValue * 0.1f;
@@ -112,7 +111,4 @@ void ShrineComponent::ProcessEffect()
       Printer::Instance().AddMessage("... but nothing happens");
       break;
   }
-
-
-
 }

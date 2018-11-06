@@ -156,9 +156,7 @@ struct Tile
   bool BlocksSight;
   chtype Image;
 
-  // set this to "" if you want only background color
   std::string FgColor;
-
   std::string BgColor;
 
   std::string ObjectName;
@@ -332,9 +330,7 @@ namespace GlobalConstants
   static const std::string MountainsColor = "#666666";
   static const std::string FogOfWarColor = "#202020";
   static const std::string CoinsColor = "#FFD700";
-  static const std::string DoorHighlightColor = "#444400";
-  static const std::string ShrineMightColor = "#FF0000";
-  static const std::string ShrineSpiritColor = "#0044FF";
+  static const std::string DoorHighlightColor = "#444400";  
   static const std::string MessageBoxDefaultBgColor = "#222222";
   static const std::string MessageBoxDefaultBorderColor = "#666666";
   static const std::string MessageBoxRedBorderColor = "#880000";
@@ -367,6 +363,24 @@ namespace GlobalConstants
     { ShrineType::POTENTIAL, "Shrine of Potential" },
     { ShrineType::HIDDEN, "Hidden Shrine" },
     { ShrineType::HOLY, "Holy Shrine" }
+  };
+
+  static const std::map<ShrineType, std::pair<std::string, std::string>> ShrineColorsByType =
+  {
+    { ShrineType::MIGHT, { "#FF0000", "#888888" } },
+    { ShrineType::SPIRIT, { "#0088FF", "#888888" } },
+    { ShrineType::TRANQUILITY, { "#0088FF", "#888888" } },
+    { ShrineType::KNOWLEDGE, { "#44FF44", "#888888" } },
+    { ShrineType::PERCEPTION, { "#FFFFFF", "#888888" } },
+    { ShrineType::HEALING, { "#FF0000", "#888888" } },
+    { ShrineType::FORGOTTEN, { "#FFFFFF", "#888888" } },
+    { ShrineType::ABYSSAL, { "#FF8000", "#880000" } },
+    { ShrineType::DESECRATED, { "#888800", "#440000" } },
+    { ShrineType::DISTURBING, { "#660000", "#888888" } },
+    { ShrineType::RUINED, { "#666666", "#000000" } },
+    { ShrineType::POTENTIAL, { "#FF0000", "#888888" } },
+    { ShrineType::HIDDEN, { "#666666", "#000000" } },
+    { ShrineType::HOLY, { "#FFFF00", "#888888" } },
   };
 
   static const std::map<std::string, std::vector<std::string>> PotionColors =
@@ -420,7 +434,7 @@ namespace GlobalConstants
     { MapType::DEEP_DARK_2, { "Deep Dark" } },
     { MapType::DEEP_DARK_3, { "Starless Night" } },
     // Stygian Abyss
-    { MapType::ABYSS_1,     { "Planes of Desolation" } },
+    { MapType::ABYSS_1,     { "Plains of Desolation" } },
     { MapType::ABYSS_2,     { "Soul Pastures" } },
     { MapType::ABYSS_3,     { "Stygian Abyss" } },
     // Nether
@@ -615,14 +629,42 @@ namespace GlobalConstants
       "#...#",
       "#.#.#"
     },
-    // Shrine
+    // Shrines
     {
       "#####",
       "#...#",
       "+./.#",
       "#...#",
       "#####"
-    }
+    },
+    {
+      "#g g#",
+      "gg gg",
+      "  /  ",
+      "gg gg",
+      "#g g#"
+    },
+    {
+      " www ",
+      "ww ww",
+      "w / w",
+      "ww ww",
+      " w w "
+    },
+    {
+      "#.#..",
+      ".  .#",
+      "+./.#",
+      "#.  .",
+      "..###"
+    },
+    {
+      "lllll",
+      "ll ll",
+      "l / l",
+      "ll ll",
+      "ll ll"
+    },
   };
 }
 
