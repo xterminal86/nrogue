@@ -10,8 +10,13 @@ class MapLevelMines : public MapLevelBase
 
     void PrepareMap(MapLevelBase* levelOwner) override;
 
+  protected:
+    void CreateLevel() override;
+
   private:
-    void CreateLevel();
+    void CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation = true);
+
+    std::vector<Position> _emptyCells;
 };
 
 #endif // MAPLEVELMINES_H

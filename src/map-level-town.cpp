@@ -14,10 +14,10 @@ void MapLevelTown::PrepareMap(MapLevelBase* levelOwner)
 {
   MapLevelBase::PrepareMap(levelOwner);
 
-  CreateTown();
+  CreateLevel();
 }
 
-void MapLevelTown::CreateTown()
+void MapLevelTown::CreateLevel()
 {
   _playerRef->VisibilityRadius = 20;
 
@@ -39,7 +39,13 @@ void MapLevelTown::CreateTown()
     MapArray[pos.X][pos.Y]->MakeTile(t);
   }
 
-  SetPlayerStartingPosition(5, 2);
+  LevelStart.X = 5;
+  LevelStart.Y = 2;
+
+  _playerRef->PosX = 5;
+  _playerRef->PosY = 2;
+
+  AdjustCamera();
 
   // Bydlo (that includes you, btw) ;-)
 
@@ -67,6 +73,12 @@ void MapLevelTown::CreateTown()
 
   CreateChurch(63, 15);
 
+  LevelExit.X = 96;
+  LevelExit.Y = 47;
+
+  GameObjectsFactory::Instance().CreateStairs(this, 96, 47, '>', MapType::MINES_1);
+
+  /*
   // Some rats
 
   for (int i = 0; i < 30; i++)
@@ -85,6 +97,7 @@ void MapLevelTown::CreateTown()
       InsertActor(rat);
     }
   }
+  */
 }
 
 void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)

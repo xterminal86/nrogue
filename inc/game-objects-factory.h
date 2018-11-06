@@ -7,6 +7,7 @@
 class ItemComponent;
 class GameObject;
 class Player;
+class MapLevelBase;
 
 class GameObjectsFactory : public Singleton<GameObjectsFactory>
 {
@@ -27,6 +28,9 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateExpPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
 
     GameObject* CreateRandomPotion();
+
+    /// Creates stairs on MapArray of current level
+    void CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, chtype image, MapType leadsTo);
 
     bool HandleItemUse(ItemComponent* item);
     bool HandleItemEquip(ItemComponent* item);

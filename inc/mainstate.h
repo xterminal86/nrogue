@@ -23,6 +23,7 @@ class MainState : public GameState
 
     void DisplayGameLog();
     void TryToPickupItem();
+    void CheckStairs(chtype stairsSymbol);
     void DrawHPMP();
     void DisplayHelp();
 

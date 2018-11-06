@@ -5,6 +5,7 @@
 #include "printer.h"
 #include "rng.h"
 #include "item-component.h"
+#include "stairs-component.h"
 #include "map-level-base.h"
 
 void MainState::Init()
@@ -193,6 +194,14 @@ void MainState::HandleInput()
         Application::Instance().ChangeState(Application::GameStates::EXITING_STATE);
         break;
 
+      case '>':
+        CheckStairs('>');
+        break;
+
+      case '<':
+        CheckStairs('<');
+        break;
+
       // TODO: for debug, remove afterwards
       case 'z':
         _playerRef->LevelUp();
@@ -356,4 +365,34 @@ std::string MainState::UpdateBar(int x, int y, Attribute attr)
 void MainState::DisplayHelp()
 {
   Application::Instance().ShowMessageBox(false, "Help", _helpText);
+}
+
+void MainState::CheckStairs(chtype stairsSymbol)
+{
+  if (stairsSymbol == '>')
+  {
+    auto tile = Map::Instance().CurrentLevel->MapArray[_playerRef->PosX][_playerRef->PosY].get();
+    if (tile->Image != '>')
+    {
+      Printer::Instance().AddMessage("There's no stairs leading down here");
+      return;
+    }
+
+    Component* c = tile->GetComponent<StairsComponent>();
+    StairsComponent* stairs = static_cast<StairsComponent*>(c);
+    Map::Instance().ChangeLevel(stairs->LeadsTo, true);
+  }
+  else if (stairsSymbol == '<')
+  {
+    auto tile = Map::Instance().CurrentLevel->MapArray[_playerRef->PosX][_playerRef->PosY].get();
+    if (tile->Image != '<')
+    {
+      Printer::Instance().AddMessage("There's no stairs leading up here");
+      return;
+    }
+
+    Component* c = tile->GetComponent<StairsComponent>();
+    StairsComponent* stairs = static_cast<StairsComponent*>(c);
+    Map::Instance().ChangeLevel(stairs->LeadsTo, false);
+  }
 }

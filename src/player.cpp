@@ -11,8 +11,8 @@
 
 void Player::Init()
 {
-  PosX = Map::Instance().CurrentLevel->PlayerStart.X;
-  PosY = Map::Instance().CurrentLevel->PlayerStart.Y;
+  PosX = Map::Instance().CurrentLevel->LevelStart.X;
+  PosY = Map::Instance().CurrentLevel->LevelStart.Y;
   Image = '@';
   FgColor = GlobalConstants::PlayerColor;
   Attrs.ActionMeter = 100;

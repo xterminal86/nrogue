@@ -34,7 +34,6 @@ class MapLevelBase
     Position MapSize;
     std::string LevelName;
 
-    Position PlayerStart;
     Position LevelStart;
     Position LevelExit;
 
@@ -45,10 +44,12 @@ class MapLevelBase
     int MonstersRespawnRate;
     int DungeonLevel;
 
+    void AdjustCamera();
+
   protected:
     Player* _playerRef;
 
-    void SetPlayerStartingPosition(int x, int y);
+    virtual void CreateLevel() {}
 };
 
 #endif // MAPLEVEL_H

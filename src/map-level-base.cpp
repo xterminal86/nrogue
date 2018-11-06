@@ -37,16 +37,13 @@ void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
   }
 }
 
-void MapLevelBase::SetPlayerStartingPosition(int x, int y)
+void MapLevelBase::AdjustCamera()
 {
-  PlayerStart.X = x;
-  PlayerStart.Y = y;
-
   int tw = Printer::Instance().TerminalWidth;
   int th = Printer::Instance().TerminalHeight;
 
-  MapOffsetX = tw / 2 - PlayerStart.X;
-  MapOffsetY = th / 2 - PlayerStart.Y;
+  MapOffsetX = tw / 2 - _playerRef->PosX;
+  MapOffsetY = th / 2 - _playerRef->PosY;
 }
 
 void MapLevelBase::InsertActor(GameObject* actor)

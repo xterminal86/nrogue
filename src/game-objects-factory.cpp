@@ -5,6 +5,7 @@
 #include "item-component.h"
 #include "shrine-component.h"
 #include "ai-monster-basic.h"
+#include "stairs-component.h"
 #include "go-timer-destroyer.h"
 #include "map.h"
 #include "application.h"
@@ -697,4 +698,17 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
       go->ObjectName.append(" +EXP");
       break;
   }
+}
+
+void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, chtype image, MapType leadsTo)
+{
+  auto tile = levelWhereCreate->MapArray[x][y].get();
+
+  auto c = tile->AddComponent<StairsComponent>();
+  StairsComponent* stairs = static_cast<StairsComponent*>(c);
+  stairs->LeadsTo = leadsTo;
+
+  tile->FgColor = GlobalConstants::WhiteColor;
+  tile->BgColor = GlobalConstants::BlackColor;
+  tile->Image = image;
 }

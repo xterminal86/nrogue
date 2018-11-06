@@ -23,6 +23,8 @@ class Map : public Singleton<Map>
     void InsertGameObject(GameObject* goToInsert);
     void UpdateGameObjects();
 
+    void ChangeLevel(MapType levelToChange, bool goingDown);
+
     GameObject* GetActorAtPosition(int x, int y);
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
     std::pair<int, GameObject*> GetGameObjectToPickup(int x, int y);

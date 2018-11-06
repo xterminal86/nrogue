@@ -200,3 +200,17 @@ void Map::RemoveDestroyed()
     }
   }
 }
+
+void Map::ChangeLevel(MapType levelToChange, bool goingDown)
+{
+  auto& player = Application::Instance().PlayerInstance;
+
+  CurrentLevel = _levels[levelToChange].get();
+
+  auto pos = goingDown ? CurrentLevel->LevelStart : CurrentLevel->LevelExit;
+
+  player.SetLevelOwner(CurrentLevel);
+  player.MoveTo(pos.X, pos.Y);
+
+  CurrentLevel->AdjustCamera();
+}
