@@ -304,9 +304,6 @@ namespace GlobalConstants
 {
   static const std::string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-  static const int MapX = 100; // 160
-  static const int MapY = 50; // 45
-
   static const int HPMPBarLength = 20;
   static const int AttributeMinimumRaiseChance = 15;
   static const int AttributeIncreasedRaiseStep = 25;

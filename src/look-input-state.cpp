@@ -84,7 +84,10 @@ void LookInputState::Update(bool forceUpdate)
 
     std::string lookStatus;
 
-    if (Util::CheckLimits(_cursorPosition, Position(GlobalConstants::MapX, GlobalConstants::MapY)))
+    int mapSizeX = Map::Instance().CurrentLevel->MapSize.X;
+    int mapSizeY = Map::Instance().CurrentLevel->MapSize.Y;
+
+    if (Util::CheckLimits(_cursorPosition, Position(mapSizeX, mapSizeY)))
     {
       auto tile = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
 

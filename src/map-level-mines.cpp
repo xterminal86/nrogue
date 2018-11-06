@@ -39,9 +39,19 @@ void MapLevelMines::CreateLevel()
     }
   }
 
-  LevelStart = _emptyCells[0];
+  Tile t;
+  t.Set(true, true, '#', GlobalConstants::WallColor, GlobalConstants::BlackColor, "Rocks");
 
-  GameObjectsFactory::Instance().CreateStairs(this, _emptyCells[0].X, _emptyCells[0].Y, '<', MapType::TOWN);
+  auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
+  for (auto& i : bounds)
+  {
+    MapArray[i.X][i.Y].get()->MakeTile(t);
+  }
+
+  LevelStart.X = _emptyCells[1].X;
+  LevelStart.Y = _emptyCells[1].Y;
+
+  GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', MapType::TOWN);
 }
 
 void MapLevelMines::CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation)
@@ -75,7 +85,7 @@ void MapLevelMines::CreateRoom(int x, int y, const std::vector<std::string>& lay
       {
         case '#':
         {
-          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
+          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Rocks");
           MapArray[posX][posY]->MakeTile(t);
         }
         break;

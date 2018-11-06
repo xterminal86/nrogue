@@ -21,13 +21,10 @@ void MapLevelTown::CreateLevel()
 {
   _playerRef->VisibilityRadius = 20;
 
-  int mw = GlobalConstants::MapX;
-  int mh = GlobalConstants::MapY;
-
   Tile t;
   t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
 
-  Rect r(0, 0, mw - 1, mh - 1);
+  Rect r(0, 0, MapSize.X - 1, MapSize.Y - 1);
 
   FillArea(r.X1, r.Y1, r.X2, r.Y2, t);
 
@@ -76,7 +73,7 @@ void MapLevelTown::CreateLevel()
   LevelExit.X = 96;
   LevelExit.Y = 47;
 
-  GameObjectsFactory::Instance().CreateStairs(this, 96, 47, '>', MapType::MINES_1);
+  GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
   /*
   // Some rats
