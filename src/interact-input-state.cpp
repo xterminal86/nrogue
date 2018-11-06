@@ -3,6 +3,7 @@
 #include "application.h"
 #include "map.h"
 #include "printer.h"
+#include "map-level-base.h"
 
 void InteractInputState::Init()
 {

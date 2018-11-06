@@ -2,14 +2,14 @@
 #define MAPLEVELBASE_H
 
 #include "util.h"
+#include "game-object.h"
 
 class Player;
-class GameObject;
 
 class MapLevelBase
 {
   public:
-    MapLevelBase(int sizeX, int sizeY, MapType type);
+    MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel);
     MapLevelBase(const MapLevelBase&) = delete;
     virtual ~MapLevelBase() {}
 
@@ -40,6 +40,10 @@ class MapLevelBase
 
     int MapOffsetX;
     int MapOffsetY;
+
+    int MaxMonsters;
+    int MonstersRespawnRate;
+    int DungeonLevel;
 
   protected:
     Player* _playerRef;

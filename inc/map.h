@@ -8,9 +8,9 @@
 
 #include "singleton.h"
 #include "constants.h"
+#include "map-level-base.h"
 
 class GameObject;
-class MapLevelBase;
 
 class Map : public Singleton<Map>
 {

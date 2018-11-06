@@ -9,16 +9,13 @@
 #include <ncurses.h>
 
 #include "component.h"
-
-// need to include for template functions to compile
-#include "item-component.h"
-
 #include "constants.h"
-#include "map-level-base.h"
+
+class MapLevelBase;
 
 class GameObject
 {
-  public:
+  public:    
     GameObject(MapLevelBase* levelOwner = nullptr);
     GameObject(GameObject&) = delete;
     virtual ~GameObject() = default;

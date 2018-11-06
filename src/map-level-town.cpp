@@ -6,7 +6,7 @@
 #include "door-component.h"
 
 MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
-  MapLevelBase(sizeX, sizeY, type)
+  MapLevelBase(sizeX, sizeY, type, 0)
 {  
 }
 

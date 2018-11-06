@@ -2,6 +2,7 @@
 #include "printer.h"
 #include "map.h"
 #include "application.h"
+#include "util.h"
 
 void EndgameState::Init()
 {

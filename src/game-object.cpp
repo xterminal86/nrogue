@@ -2,6 +2,7 @@
 
 #include "printer.h"
 #include "game-objects-factory.h"
+#include "map-level-base.h"
 
 GameObject::GameObject(MapLevelBase* levelOwner)
 {

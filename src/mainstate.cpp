@@ -5,6 +5,7 @@
 #include "printer.h"
 #include "rng.h"
 #include "item-component.h"
+#include "map-level-base.h"
 
 void MainState::Init()
 {

@@ -9,8 +9,7 @@
 #include "constants.h"
 #include "game-object.h"
 #include "container-component.h"
-
-class ItemComponent;
+#include "item-component.h"
 
 class Player : public GameObject
 {

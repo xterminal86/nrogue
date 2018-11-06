@@ -1,11 +1,12 @@
 #include "map-level-base.h"
 #include "application.h"
 
-MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type)
+MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
 {
   MapSize.X = sizeX;
   MapSize.Y = sizeY;
   MapType_ = type;
+  DungeonLevel = dungeonLevel;
 
   auto levelNames = GlobalConstants::MapLevelRandomNames.at(MapType_);
   int index = RNG::Instance().RandomRange(0, levelNames.size());

@@ -15,6 +15,7 @@
 #include "endgame-state.h"
 #include "attack-state.h"
 #include "map.h"
+#include "map-level-base.h"
 
 void Application::Init()
 {

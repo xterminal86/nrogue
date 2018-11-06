@@ -7,11 +7,15 @@
 #include "door-component.h"
 #include "game-objects-factory.h"
 #include "map-level-town.h"
+#include "map-level-mines.h"
 #include "util.h"
 
 void Map::Init()
 {
   _levels[MapType::TOWN] = std::unique_ptr<MapLevelBase>(new MapLevelTown(160, 60, MapType::TOWN));
+  _levels[MapType::MINES_1] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, MapType::MINES_1, 1));
+  _levels[MapType::MINES_2] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, MapType::MINES_1, 2));
+  _levels[MapType::MINES_3] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, MapType::MINES_1, 3));
 
   CurrentLevel = _levels[MapType::TOWN].get();
 

@@ -2,6 +2,7 @@
 #include "printer.h"
 #include "application.h"
 #include "map.h"
+#include "map-level-base.h"
 
 void AttackState::Init()
 {

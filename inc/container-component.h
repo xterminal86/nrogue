@@ -5,8 +5,7 @@
 #include <memory>
 
 #include "component.h"
-
-class GameObject;
+#include "game-object.h"
 
 class ContainerComponent : public Component
 {

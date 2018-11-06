@@ -2,6 +2,7 @@
 #include "application.h"
 #include "map.h"
 #include "rng.h"
+#include "map-level-base.h"
 
 AIMonsterBasic::AIMonsterBasic()
 {
