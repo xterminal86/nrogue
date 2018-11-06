@@ -19,7 +19,7 @@ void MapLevelTown::PrepareMap(MapLevelBase* levelOwner)
 
 void MapLevelTown::CreateLevel()
 {
-  _playerRef->VisibilityRadius = 20;
+  VisibilityRadius = 20;
 
   Tile t;
   t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
@@ -46,25 +46,25 @@ void MapLevelTown::CreateLevel()
 
   // Bydlo (that includes you, btw) ;-)
 
-  CreateRoom(3, 3, GlobalConstants::RoomLayouts[0]);
+  CreateRoom(3, 3, GlobalConstants::SpecialRooms[0]);
 
   int numHouses = 5;
 
   int offset = 15;
   for (int i = 0; i < numHouses; i++)
   {
-    CreateRoom(18 + offset * i, 3, GlobalConstants::RoomLayouts[0], true);
+    CreateRoom(18 + offset * i, 3, GlobalConstants::SpecialRooms[0], true);
   }
 
   // Majors
 
-  CreateRoom(5, 20, GlobalConstants::RoomLayouts[3]);
+  CreateRoom(5, 20, GlobalConstants::SpecialRooms[3]);
 
-  auto room = Util::RotateRoomLayout(GlobalConstants::RoomLayouts[3], RoomLayoutRotation::CCW_270);
+  auto room = Util::RotateRoomLayout(GlobalConstants::SpecialRooms[3], RoomLayoutRotation::CCW_270);
   CreateRoom(5, 32, room);
 
-  CreateRoom(25, 30, GlobalConstants::RoomLayouts[4]);
-  CreateRoom(45, 33, GlobalConstants::RoomLayouts[5]);
+  CreateRoom(25, 30, GlobalConstants::SpecialRooms[4]);
+  CreateRoom(45, 33, GlobalConstants::SpecialRooms[5]);
 
   // Church
 
@@ -221,7 +221,7 @@ void MapLevelTown::CreateChurch(int x, int y)
 
   Tile t;
 
-  for (auto& row : GlobalConstants::RoomLayouts[7])
+  for (auto& row : GlobalConstants::SpecialRooms[7])
   {
     for (auto& c : row)
     {

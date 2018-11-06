@@ -15,6 +15,7 @@ class MapLevelMines : public MapLevelBase
 
   private:
     void CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation = true);
+    void FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill);
 
     std::vector<Position> _emptyCells;
 };

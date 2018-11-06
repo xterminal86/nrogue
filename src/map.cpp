@@ -27,6 +27,8 @@ void Map::Init()
 
   // Give player reference to current level
   Application::Instance().PlayerInstance.SetLevelOwner(CurrentLevel);
+
+  Application::Instance().PlayerInstance.VisibilityRadius = CurrentLevel->VisibilityRadius;
 }
 
 void Map::Draw(int playerX, int playerY)
@@ -213,6 +215,7 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
 
   player.SetLevelOwner(CurrentLevel);
   player.MoveTo(pos.X, pos.Y);
+  player.VisibilityRadius = CurrentLevel->VisibilityRadius;
 
   CurrentLevel->AdjustCamera();
 }

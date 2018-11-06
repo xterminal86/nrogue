@@ -13,6 +13,7 @@
 #include "printer.h"
 #include "util.h"
 #include "rng.h"
+#include "level-builder.h"
 
 #if RUN_TESTS == 1
 
@@ -23,7 +24,7 @@
 int main()
 {  
   Logger::Instance().Init();  
-  Logger::Instance().Prepare(false);
+  Logger::Instance().Prepare(true);
 
   RNG::Instance().Init();
   RNG::Instance().SetSeed(1);
@@ -53,6 +54,12 @@ int main()
   Tests::Run();
 
   #endif
+
+  LevelBuilder lb;
+
+  lb.BuildLevel(50, 50);
+
+  Logger::Instance().Print(lb.Result);
 
   printf("Goodbye!\n");
 

@@ -3,6 +3,7 @@
 #include "rng.h"
 #include "constants.h"
 #include "game-objects-factory.h"
+#include "player.h"
 
 MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)
@@ -18,6 +19,14 @@ void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
 
 void MapLevelMines::CreateLevel()
 {
+  VisibilityRadius = 10;
+
+  Tile t;
+  t.Set(false, false, '.', GlobalConstants::WallColor, GlobalConstants::BlackColor, "Dirt");
+
+  FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
+
+  /*
   for (int x = 0; x < MapSize.X; x += 5)
   {
     for (int y = 0; y < MapSize.Y; y += 5)
@@ -26,10 +35,19 @@ void MapLevelMines::CreateLevel()
       CreateRoom(x, y, GlobalConstants::RoomLayouts[roomIndex]);
     }
   }
+  */
 
-  for (int x = 0; x < MapSize.X; x += 5)
+  t.Set(true, true, '#', GlobalConstants::WallColor, GlobalConstants::BlackColor, "Rocks");
+
+  auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
+  for (auto& i : bounds)
   {
-    for (int y = 0; y < MapSize.Y; y += 5)
+    MapArray[i.X][i.Y].get()->MakeTile(t);
+  }
+
+  for (int x = 0; x < MapSize.X; x++)
+  {
+    for (int y = 0; y < MapSize.Y; y++)
     {
       if (!MapArray[x][y]->Blocking)
       {
@@ -37,15 +55,6 @@ void MapLevelMines::CreateLevel()
         _emptyCells.push_back(pos);
       }
     }
-  }
-
-  Tile t;
-  t.Set(true, true, '#', GlobalConstants::WallColor, GlobalConstants::BlackColor, "Rocks");
-
-  auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
-  for (auto& i : bounds)
-  {
-    MapArray[i.X][i.Y].get()->MakeTile(t);
   }
 
   LevelStart.X = _emptyCells[1].X;
@@ -103,5 +112,16 @@ void MapLevelMines::CreateRoom(int x, int y, const std::vector<std::string>& lay
 
     posX = x;
     posY++;
+  }
+}
+
+void MapLevelMines::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)
+{
+  for (int x = ax; x <= ax + aw; x++)
+  {
+    for (int y = ay; y <= ay + ah; y++)
+    {
+      MapArray[x][y]->MakeTile(tileToFill);
+    }
   }
 }

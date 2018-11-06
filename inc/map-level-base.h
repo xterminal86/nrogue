@@ -43,6 +43,7 @@ class MapLevelBase
     int MaxMonsters;
     int MonstersRespawnRate;
     int DungeonLevel;
+    int VisibilityRadius;
 
     void AdjustCamera();
 

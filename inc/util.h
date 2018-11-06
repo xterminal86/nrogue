@@ -32,6 +32,12 @@ struct Position
     Y = y;
   }
 
+  // For use inside std::map as a key
+  bool operator< (const Position& rhs) const
+  {
+    return (X < rhs.X || Y < rhs.Y);
+  }
+
   int X;
   int Y;
 };
