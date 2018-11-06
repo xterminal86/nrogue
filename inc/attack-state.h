@@ -2,8 +2,9 @@
 #define ATTACKSTATE_H
 
 #include "gamestate.h"
-#include "player.h"
 #include "util.h"
+
+class Player;
 
 class AttackState : public GameState
 {

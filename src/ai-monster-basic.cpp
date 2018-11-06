@@ -12,9 +12,9 @@ AIMonsterBasic::AIMonsterBasic()
 
 void AIMonsterBasic::Update()
 {
-  if (((GameObject*)OwnerGameObject)->Attrs.ActionMeter < 100)
+  if (OwnerGameObject->Attrs.ActionMeter < 100)
   {
-    ((GameObject*)OwnerGameObject)->WaitForTurn();
+    OwnerGameObject->WaitForTurn();
   }
   else
   {
@@ -34,7 +34,7 @@ void AIMonsterBasic::Update()
       }
     }
 
-    ((GameObject*)OwnerGameObject)->FinishTurn();
+    OwnerGameObject->FinishTurn();
   }
 }
 
@@ -43,7 +43,7 @@ void AIMonsterBasic::MoveToKill()
   auto c = SelectCell();
   if (c.X != -1 && c.Y != -1)
   {
-    bool res = ((GameObject*)OwnerGameObject)->MoveTo(c.X, c.Y);
+    bool res = OwnerGameObject->MoveTo(c.X, c.Y);
     if (!res)
     {
       RandomMovement();
@@ -66,16 +66,15 @@ void AIMonsterBasic::RandomMovement()
   dx *= signX;
   dy *= signY;
 
-  // See component.h
-  ((GameObject*)OwnerGameObject)->Move(dx, dy);
+  OwnerGameObject->Move(dx, dy);
 }
 
 bool AIMonsterBasic::IsPlayerVisible()
 {
   int px = _playerRef->PosX;
   int py = _playerRef->PosY;
-  int x = ((GameObject*)OwnerGameObject)->PosX;
-  int y = ((GameObject*)OwnerGameObject)->PosY;
+  int x = OwnerGameObject->PosX;
+  int y = OwnerGameObject->PosY;
 
   int d = Util::LinearDistance(x, y, px, py);
   if (d > AgroRadius)
@@ -105,8 +104,8 @@ Position AIMonsterBasic::SelectCell()
   int px = _playerRef->PosX;
   int py = _playerRef->PosY;
 
-  int x = ((GameObject*)OwnerGameObject)->PosX;
-  int y = ((GameObject*)OwnerGameObject)->PosY;
+  int x = OwnerGameObject->PosX;
+  int y = OwnerGameObject->PosY;
 
   int lx = x - 1;
   int ly = y - 1;
@@ -140,8 +139,8 @@ bool AIMonsterBasic::IsPlayerInRange()
   int px = _playerRef->PosX;
   int py = _playerRef->PosY;
 
-  int x = ((GameObject*)OwnerGameObject)->PosX;
-  int y = ((GameObject*)OwnerGameObject)->PosY;
+  int x = OwnerGameObject->PosX;
+  int y = OwnerGameObject->PosY;
 
   int lx = x - 1;
   int ly = y - 1;
@@ -164,12 +163,10 @@ bool AIMonsterBasic::IsPlayerInRange()
 
 void AIMonsterBasic::Attack(Player* player)
 {  
-  GameObject* monster = static_cast<GameObject*>(OwnerGameObject);
-
   int defaultHitChance = 50;
   int hitChance = defaultHitChance;
 
-  int d = monster->Attrs.Skl.CurrentValue - player->Attrs.Skl.CurrentValue;
+  int d = OwnerGameObject->Attrs.Skl.CurrentValue - player->Attrs.Skl.CurrentValue;
 
   if (d > 0)
   {
@@ -183,9 +180,9 @@ void AIMonsterBasic::Attack(Player* player)
   hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
 
   auto logMsg = Util::StringFormat("%s (SKL %i, LVL %i) attacks Player (SKL: %i, LVL %i): chance = %i",
-                                   monster->ObjectName.data(),
-                                   monster->Attrs.Skl.CurrentValue,
-                                   monster->Attrs.Lvl.CurrentValue,
+                                   OwnerGameObject->ObjectName.data(),
+                                   OwnerGameObject->Attrs.Skl.CurrentValue,
+                                   OwnerGameObject->Attrs.Lvl.CurrentValue,
                                    player->Attrs.Skl.CurrentValue,
                                    player->Attrs.Lvl.CurrentValue,
                                    hitChance);
@@ -195,14 +192,14 @@ void AIMonsterBasic::Attack(Player* player)
   {
     Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FF0000");
 
-    int dmg = monster->Attrs.Str.CurrentValue - player->Attrs.Def.CurrentValue;
+    int dmg = OwnerGameObject->Attrs.Str.CurrentValue - player->Attrs.Def.CurrentValue;
     if (dmg <= 0)
     {
       dmg = 1;
     }
 
-    player->ReceiveDamage(monster, dmg);
-    if (!player->IsAlive(monster))
+    player->ReceiveDamage(OwnerGameObject, dmg);
+    if (!player->IsAlive(OwnerGameObject))
     {
       Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
     }
@@ -211,7 +208,7 @@ void AIMonsterBasic::Attack(Player* player)
   {
     Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
 
-    auto str = Util::StringFormat("%s misses", monster->ObjectName.data());
+    auto str = Util::StringFormat("%s misses", OwnerGameObject->ObjectName.data());
     Printer::Instance().AddMessage(str);
   }
 }

@@ -6,8 +6,8 @@
 
 #include "gamestate.h"
 #include "util.h"
-#include "player.h"
-#include "game-object.h"
+
+class Player;
 
 class MainState : public GameState
 {

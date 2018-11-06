@@ -2,7 +2,6 @@
 #define MAPLEVELTOWN_H
 
 #include "map-level-base.h"
-#include "player.h"
 
 class MapLevelTown : public MapLevelBase
 {

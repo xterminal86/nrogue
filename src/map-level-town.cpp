@@ -1,5 +1,6 @@
 #include "map-level-town.h"
 
+#include "player.h"
 #include "rect.h"
 #include "game-objects-factory.h"
 #include "door-component.h"
@@ -63,10 +64,8 @@ void MapLevelTown::CreateTown()
   CreateRoom(45, 33, GlobalConstants::RoomLayouts[5]);
 
   // Church
-  CreateChurch(63, 15);
 
-  // Castle
-  // CreateCastle(65, 15);
+  CreateChurch(63, 15);
 
   // Some rats
 
@@ -255,6 +254,13 @@ void MapLevelTown::CreateChurch(int x, int y)
 
         case '/':
         {
+          std::vector<ShrineType> possibleShrines =
+          {
+            ShrineType::HEALING,
+            ShrineType::KNOWLEDGE,
+            ShrineType::PERCEPTION
+          };
+
           // Game objects are not shown under fog of war by default,
           // so sometimes we must "adjust" tiles if we want
           // certain objects to be shown, like in this case.

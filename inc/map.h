@@ -4,14 +4,13 @@
 #include <algorithm>
 #include <random>
 #include <chrono>
+#include <memory>
 
 #include "singleton.h"
-#include "rect.h"
 #include "constants.h"
-#include "player.h"
-#include "map-level-base.h"
 
 class GameObject;
+class MapLevelBase;
 
 class Map : public Singleton<Map>
 {

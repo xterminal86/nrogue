@@ -2,10 +2,10 @@
 #define INTERACTINPUTSTATE_H
 
 #include "gamestate.h"
-
-#include "player.h"
 #include "util.h"
-#include "game-object.h"
+
+class GameObject;
+class Player;
 
 class InteractInputState : public GameState
 {

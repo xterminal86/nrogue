@@ -3,7 +3,7 @@
 
 #include "gamestate.h"
 
-#include "player.h"
+class Player;
 
 class ExitingState : public GameState
 {

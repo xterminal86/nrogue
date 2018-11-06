@@ -9,41 +9,12 @@
 #include <ncurses.h>
 
 #include "component.h"
+
+// need to include for template functions to compile
+#include "item-component.h"
+
 #include "constants.h"
 #include "map-level-base.h"
-
-/// Helper struct to reduce the writing when creating objects
-struct Tile
-{
-  void Set(bool isBlocking,
-           bool blocksSight,
-           chtype image,
-           const std::string& fgColor,
-           const std::string& bgColor,
-           const std::string& objectName,
-           const std::string& fowName = "")
-  {
-    IsBlocking = isBlocking;
-    BlocksSight = blocksSight;
-    Image = image;
-    FgColor = fgColor;
-    BgColor = bgColor;
-    ObjectName = objectName;
-    FogOfWarName = fowName;
-  }
-
-  bool IsBlocking;
-  bool BlocksSight;
-  chtype Image;
-
-  // set this to "" if you want only background color
-  std::string FgColor;
-
-  std::string BgColor;
-
-  std::string ObjectName;
-  std::string FogOfWarName;
-};
 
 class GameObject
 {
@@ -168,6 +139,7 @@ class GameObject
     GameObject* _previousCell = nullptr;
     GameObject* _currentCell = nullptr;
 
+    // Level this object belongs to
     MapLevelBase* _levelOwner = nullptr;
 };
 

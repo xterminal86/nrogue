@@ -43,6 +43,7 @@
 #include <string>
 #include <map>
 #include <functional>
+#include <ncurses.h>
 
 enum class MapType
 {
@@ -107,19 +108,20 @@ enum class ItemType
 
 enum class ShrineType
 {
-  MIGHT = 0,
-  SPIRIT,
-  KNOWLEDGE,
-  PERCEPTION,
-  HEALING,
-  DESECRATED,
-  RUINED,
-  DISTURBING,
-  ABYSSAL,
-  FORGOTTEN,
-  POTENTIAL,
-  HIDDEN,
-  HOLY
+  MIGHT = 0,    // raises STR or HP
+  SPIRIT,       // raises MAG or MP
+  TRANQUILITY,  // restores MP
+  KNOWLEDGE,    // identifies items
+  PERCEPTION,   // reveals blessed / cursed status
+  HEALING,      // restores HP
+  DESECRATED,   // random effect + receive curse
+  RUINED,       // random effect + low chance to receive negative effect
+  DISTURBING,   // random effect + high chance to receive negative effect
+  ABYSSAL,      // random stat raise + negative effect
+  FORGOTTEN,    // random effect
+  POTENTIAL,    // temporary raises stats
+  HIDDEN,       // random effect
+  HOLY          // removes curse
 };
 
 enum class RoomLayoutRotation
@@ -128,6 +130,39 @@ enum class RoomLayoutRotation
   CCW_90,
   CCW_180,
   CCW_270
+};
+
+/// Helper struct to reduce the writing when creating objects
+struct Tile
+{
+  void Set(bool isBlocking,
+           bool blocksSight,
+           chtype image,
+           const std::string& fgColor,
+           const std::string& bgColor,
+           const std::string& objectName,
+           const std::string& fowName = "")
+  {
+    IsBlocking = isBlocking;
+    BlocksSight = blocksSight;
+    Image = image;
+    FgColor = fgColor;
+    BgColor = bgColor;
+    ObjectName = objectName;
+    FogOfWarName = fowName;
+  }
+
+  bool IsBlocking;
+  bool BlocksSight;
+  chtype Image;
+
+  // set this to "" if you want only background color
+  std::string FgColor;
+
+  std::string BgColor;
+
+  std::string ObjectName;
+  std::string FogOfWarName;
 };
 
 struct Attribute
@@ -320,6 +355,7 @@ namespace GlobalConstants
   {
     { ShrineType::MIGHT, "Shrine of Might" },
     { ShrineType::SPIRIT, "Shrine of Spirit" },
+    { ShrineType::TRANQUILITY, "Shrine of Tranquility" },
     { ShrineType::KNOWLEDGE, "Shrine of Knowledge" },
     { ShrineType::PERCEPTION, "Shrine of Perception" },
     { ShrineType::HEALING, "Shrine of Healing" },

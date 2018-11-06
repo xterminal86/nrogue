@@ -3,8 +3,6 @@
 
 #include "util.h"
 
-// Forward declaration due to cyclic dependency
-
 class Player;
 class GameObject;
 
@@ -36,8 +34,9 @@ class MapLevelBase
     Position MapSize;
     std::string LevelName;
 
-    int PlayerStartX;
-    int PlayerStartY;
+    Position PlayerStart;
+    Position LevelStart;
+    Position LevelExit;
 
     int MapOffsetX;
     int MapOffsetY;

@@ -1,8 +1,12 @@
 #ifndef INVENTORYSTATE_H
 #define INVENTORYSTATE_H
 
+#include <string>
+
 #include "gamestate.h"
-#include "player.h"
+
+class Player;
+class ItemComponent;
 
 class InventoryState : public GameState
 {

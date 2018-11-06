@@ -21,14 +21,14 @@ void ItemComponent::Transfer(ContainerComponent* destination)
 
   if (destination == nullptr)
   {
-    ((GameObject*)OwnerGameObject)->PosX = Application::Instance().PlayerInstance.PosX;
-    ((GameObject*)OwnerGameObject)->PosY = Application::Instance().PlayerInstance.PosY;
+    OwnerGameObject->PosX = Application::Instance().PlayerInstance.PosX;
+    OwnerGameObject->PosY = Application::Instance().PlayerInstance.PosY;
 
-    Map::Instance().InsertGameObject(((GameObject*)OwnerGameObject));
+    Map::Instance().InsertGameObject(OwnerGameObject);
   }
   else
   {
-    destination->AddToInventory((GameObject*)OwnerGameObject);
+    destination->AddToInventory(OwnerGameObject);
   }
 }
 

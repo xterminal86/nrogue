@@ -38,14 +38,14 @@ void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
 
 void MapLevelBase::SetPlayerStartingPosition(int x, int y)
 {
-  PlayerStartX = x;
-  PlayerStartY = y;
+  PlayerStart.X = x;
+  PlayerStart.Y = y;
 
   int tw = Printer::Instance().TerminalWidth;
   int th = Printer::Instance().TerminalHeight;
 
-  MapOffsetX = tw / 2 - PlayerStartX;
-  MapOffsetY = th / 2 - PlayerStartY;
+  MapOffsetX = tw / 2 - PlayerStart.X;
+  MapOffsetY = th / 2 - PlayerStart.Y;
 }
 
 void MapLevelBase::InsertActor(GameObject* actor)

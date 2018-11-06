@@ -2,10 +2,11 @@
 #define GAMEOBJECTSFACTORY_H
 
 #include "singleton.h"
-#include "game-object.h"
 #include "constants.h"
-#include "player.h"
-#include "item-component.h"
+
+class ItemComponent;
+class GameObject;
+class Player;
 
 class GameObjectsFactory : public Singleton<GameObjectsFactory>
 {

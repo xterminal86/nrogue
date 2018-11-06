@@ -12,6 +12,6 @@ void TimerDestroyerComponent::Update()
 
   if (Time <= 0)
   {
-    ((GameObject*)OwnerGameObject)->IsDestroyed = true;
+    OwnerGameObject->IsDestroyed = true;
   }
 }

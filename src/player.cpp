@@ -7,11 +7,12 @@
 #include "game-objects-factory.h"
 #include "ai-monster-basic.h"
 #include "application.h"
+#include "item-component.h"
 
 void Player::Init()
 {
-  PosX = Map::Instance().CurrentLevel->PlayerStartX;
-  PosY = Map::Instance().CurrentLevel->PlayerStartY;
+  PosX = Map::Instance().CurrentLevel->PlayerStart.X;
+  PosY = Map::Instance().CurrentLevel->PlayerStart.Y;
   Image = '@';
   FgColor = GlobalConstants::PlayerColor;
   Attrs.ActionMeter = 100;

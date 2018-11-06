@@ -2,8 +2,9 @@
 #define AIMONSTERBASIC_H
 
 #include "component.h"
-#include "player.h"
 #include "util.h"
+
+class Player;
 
 class AIMonsterBasic : public Component
 {

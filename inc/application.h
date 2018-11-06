@@ -1,17 +1,14 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "singleton.h"
-#include "gamestate.h"
-
-#include "logger.h"
-#include "player.h"
-#include "printer.h"
-
 #include <typeinfo>
 #include <memory>
 #include <vector>
 #include <map>
+
+#include "singleton.h"
+#include "gamestate.h"
+#include "player.h"
 
 class Application : public Singleton<Application>
 {

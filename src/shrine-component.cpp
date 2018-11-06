@@ -34,7 +34,7 @@ void ShrineComponent::Interact()
   else
   {
     Counter = 0;
-    ((GameObject*)OwnerGameObject)->FgColor = GlobalConstants::BlackColor;
+    OwnerGameObject->FgColor = GlobalConstants::BlackColor;
 
     std::string message;
 
@@ -48,7 +48,7 @@ void ShrineComponent::Interact()
 
 void ShrineComponent::Activate()
 {
-  ((GameObject*)OwnerGameObject)->FgColor = (Type == ShrineType::MIGHT) ? GlobalConstants::ShrineMightColor : GlobalConstants::ShrineSpiritColor;
+  OwnerGameObject->FgColor = (Type == ShrineType::MIGHT) ? GlobalConstants::ShrineMightColor : GlobalConstants::ShrineSpiritColor;
 }
 
 void ShrineComponent::ProcessEffect()

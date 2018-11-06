@@ -2,7 +2,9 @@
 #define ENDGAMESTATE_H
 
 #include "gamestate.h"
-#include "player.h"
+#include "constants.h"
+
+class Player;
 
 class EndgameState : public GameState
 {

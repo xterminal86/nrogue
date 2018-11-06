@@ -2,9 +2,10 @@
 #define LOOKINPUTSTATE_H
 
 #include "gamestate.h"
-
-#include "player.h"
 #include "util.h"
+
+class Player;
+class GameObject;
 
 class LookInputState : public GameState
 {

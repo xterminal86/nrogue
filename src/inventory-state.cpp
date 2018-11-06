@@ -240,7 +240,7 @@ void InventoryState::DrawEquipmentField(int x, int y, std::string fieldName, Ite
 
   if (eq != nullptr)
   {
-    stub = ((GameObject*)eq->OwnerGameObject)->ObjectName;
+    stub = eq->OwnerGameObject->ObjectName;
     stub.resize(kEquipmentMaxNameLength, ' ');
   }
 

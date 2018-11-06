@@ -1,10 +1,10 @@
 #ifndef ITEMCOMPONENT_H
 #define ITEMCOMPONENT_H
 
-#include "component.h"
-#include "container-component.h"
-
 #include "constants.h"
+#include "component.h"
+
+class ContainerComponent;
 
 class ItemComponent : public Component
 {

@@ -4,6 +4,7 @@
 #include "application.h"
 #include "printer.h"
 #include "map.h"
+#include "item-component.h"
 
 void LookInputState::Init()
 {

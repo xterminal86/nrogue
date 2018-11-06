@@ -236,7 +236,7 @@ void GameObjectsFactory::EquipItem(ItemComponent* item)
     verb = "put on";
   }
 
-  auto message = Util::StringFormat("You %s %s", verb.data(), ((GameObject*)item->OwnerGameObject)->ObjectName.data());
+  auto message = Util::StringFormat("You %s %s", verb.data(), item->OwnerGameObject->ObjectName.data());
   Printer::Instance().AddMessage(message);
 }
 
@@ -256,7 +256,7 @@ void GameObjectsFactory::UnequipItem(ItemComponent* item)
     verb = "take off";
   }
 
-  auto message = Util::StringFormat("You %s %s", verb.data(), ((GameObject*)item->OwnerGameObject)->ObjectName.data());
+  auto message = Util::StringFormat("You %s %s", verb.data(), item->OwnerGameObject->ObjectName.data());
   Printer::Instance().AddMessage(message);
 }
 
@@ -300,7 +300,7 @@ void GameObjectsFactory::EquipRing(ItemComponent* ring, int index)
   ring->Data.IsEquipped = true;
   _playerRef->EquipmentByCategory[ring->Data.EqCategory][index] = ring;
 
-  auto str = Util::StringFormat("You put on %s", ((GameObject*)ring->OwnerGameObject)->ObjectName.data());
+  auto str = Util::StringFormat("You put on %s", ring->OwnerGameObject->ObjectName.data());
   Printer::Instance().AddMessage(str);
 }
 
@@ -309,7 +309,7 @@ void GameObjectsFactory::UnequipRing(ItemComponent* ring, int index)
   ring->Data.IsEquipped = false;
   _playerRef->EquipmentByCategory[ring->Data.EqCategory][index] = nullptr;
 
-  auto str = Util::StringFormat("You take off %s", ((GameObject*)ring->OwnerGameObject)->ObjectName.data());
+  auto str = Util::StringFormat("You take off %s", ring->OwnerGameObject->ObjectName.data());
   Printer::Instance().AddMessage(str);
 }
 
@@ -331,7 +331,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
         break;
 
       default:
-        auto go = (GameObject*)item->OwnerGameObject;
+        auto go = item->OwnerGameObject;
         auto msg = Util::StringFormat("You can't use %s!", go->ObjectName.data());
         Application::Instance().ShowMessageBox(false, "Information", { msg }, GlobalConstants::MessageBoxRedBorderColor);
         break;
