@@ -24,7 +24,7 @@
 int main()
 {  
   Logger::Instance().Init();  
-  Logger::Instance().Prepare(true);
+  Logger::Instance().Prepare(false);
 
   RNG::Instance().Init();
   RNG::Instance().SetSeed(1);
@@ -58,8 +58,7 @@ int main()
   LevelBuilder lb;
 
   lb.BuildLevel(50, 50);
-
-  Logger::Instance().Print(lb.Result);
+  lb.PrintResult();
 
   printf("Goodbye!\n");
 

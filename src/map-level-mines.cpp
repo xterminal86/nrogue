@@ -45,17 +45,15 @@ void MapLevelMines::CreateLevel()
     MapArray[i.X][i.Y].get()->MakeTile(t);
   }
 
-  for (int x = 0; x < MapSize.X; x++)
-  {
-    for (int y = 0; y < MapSize.Y; y++)
-    {
-      if (!MapArray[x][y]->Blocking)
-      {
-        Position pos(x, y);
-        _emptyCells.push_back(pos);
-      }
-    }
-  }
+  LevelBuilder lb;
+
+  lb.MaxRooms = 32;
+
+  lb.BuildLevel(MapSize.X, MapSize.Y);
+
+  CopyFromBuilder(lb, MapSize.X / 2, MapSize.Y / 2);
+
+  RecordEmptyCells();
 
   LevelStart.X = _emptyCells[1].X;
   LevelStart.Y = _emptyCells[1].Y;
@@ -122,6 +120,29 @@ void MapLevelMines::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToF
     for (int y = ay; y <= ay + ah; y++)
     {
       MapArray[x][y]->MakeTile(tileToFill);
+    }
+  }
+}
+
+void MapLevelMines::CopyFromBuilder(LevelBuilder& lb, int startX, int startY)
+{
+  for (auto& chunk : lb.MapChunks)
+  {
+    for (int x = 0; x < chunk.Layout.size(); x++)
+    {
+      for (int y = 0; y < chunk.Layout.size(); y++)
+      {
+        char image = chunk.Layout[x][y];
+        std::string objName = (image == '#') ? "Rocks" : "Dirt";
+
+        Tile t;
+        t.Set((image == '#'), (image == '#'), image, GlobalConstants::WallColor, GlobalConstants::BlackColor, objName);
+
+        int mapX = startX + chunk.UpperLeftCorner.X + x;
+        int mapY = startY + chunk.UpperLeftCorner.Y + y;
+
+        MapArray[mapX][mapY]->MakeTile(t);
+      }
     }
   }
 }

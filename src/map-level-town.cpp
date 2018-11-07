@@ -70,6 +70,8 @@ void MapLevelTown::CreateLevel()
 
   CreateChurch(63, 15);
 
+  RecordEmptyCells();
+
   LevelExit.X = 96;
   LevelExit.Y = 47;
 

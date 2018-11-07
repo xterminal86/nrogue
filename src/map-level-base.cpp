@@ -55,3 +55,18 @@ void MapLevelBase::InsertGameObject(GameObject* goToInsert)
 {
   GameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
 }
+
+void MapLevelBase::RecordEmptyCells()
+{
+  for (int x = 0; x < MapSize.X; x++)
+  {
+    for (int y = 0; y < MapSize.Y; y++)
+    {
+      if (!MapArray[x][y]->Blocking)
+      {
+        Position pos(x, y);
+        _emptyCells.push_back(pos);
+      }
+    }
+  }
+}

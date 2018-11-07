@@ -48,9 +48,13 @@ class MapLevelBase
     void AdjustCamera();
 
   protected:
+    std::vector<Position> _emptyCells;
+
     Player* _playerRef;
 
     virtual void CreateLevel() {}
+
+    void RecordEmptyCells();
 };
 
 #endif // MAPLEVEL_H
