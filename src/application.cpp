@@ -86,13 +86,13 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   }
 }
 
-void Application::ShowMessageBox(bool waitForInput, std::string header, std::vector<std::string> message,
+void Application::ShowMessageBox(MessageBoxType type, std::string header, std::vector<std::string> message,
                                  std::string borderColor, std::string bgColor)
 {
   _previousState = _currentState;
 
   auto ptr = _gameStates[(int)GameStates::MESSAGE_BOX_STATE].get();
-  ((MessageBoxState*)ptr)->SetMessage(waitForInput, header, message, borderColor, bgColor);
+  ((MessageBoxState*)ptr)->SetMessage(type, header, message, borderColor, bgColor);
 
   _currentState = ptr;
 }

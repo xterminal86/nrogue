@@ -61,8 +61,8 @@ struct RoomHelper
 
     bool res = CanBeTraversed(RoomEdgesByType[side], r.RoomEdgesByType[oppositeEdgeByType[side]]);
 
-    auto dbg = Util::StringFormat("result: %s", res ? "yes" : "no");
-    Logger::Instance().Print(dbg);
+    //auto dbg = Util::StringFormat("result: %s", res ? "yes" : "no");
+    //Logger::Instance().Print(dbg);
 
     //return ( (e1 == true && e2 == true) || res);
     return res;

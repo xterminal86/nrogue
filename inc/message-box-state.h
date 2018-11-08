@@ -13,11 +13,11 @@ class MessageBoxState : public GameState
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;
 
-    void SetMessage(bool waitForInput, std::string header, std::vector<std::string> message,
+    void SetMessage(MessageBoxType type, std::string header, std::vector<std::string> message,
                     std::string borderColor = GlobalConstants::MessageBoxDefaultBorderColor,
                     std::string bgColor = GlobalConstants::MessageBoxDefaultBgColor)
     {
-      _waitForInput = waitForInput;
+      _type = type;
       _header = header;
       _message = message;
       _bgColor = bgColor;
@@ -31,7 +31,7 @@ class MessageBoxState : public GameState
     std::string _bgColor;
     std::string _borderColor;
 
-    bool _waitForInput;
+    MessageBoxType _type = MessageBoxType::ANY_KEY;
 };
 
 #endif // MESSAGEBOXSTATE_H

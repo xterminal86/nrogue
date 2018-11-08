@@ -52,7 +52,7 @@ void ItemComponent::Inspect()
       desc.push_back("This one is cursed and should be avoided.");
     }
   }
-  Application::Instance().ShowMessageBox(false, header, desc);
+  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, header, desc);
 }
 
 void ItemComponent::Throw()

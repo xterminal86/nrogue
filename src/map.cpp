@@ -13,17 +13,10 @@
 void Map::Init()
 {
   _levels[MapType::TOWN] = std::unique_ptr<MapLevelBase>(new MapLevelTown(100, 50, MapType::TOWN));
-  _levels[MapType::MINES_1] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, MapType::MINES_1, 1));
-  //_levels[MapType::MINES_2] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, MapType::MINES_1, 2));
-  //_levels[MapType::MINES_3] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, MapType::MINES_1, 3));
 
   CurrentLevel = _levels[MapType::TOWN].get();
 
-  // Assign corresponding level refs to their map arrays
-  for (auto& l : _levels)
-  {
-    l.second->PrepareMap(l.second.get());
-  }
+  _levels[MapType::TOWN]->PrepareMap(_levels[MapType::TOWN].get());
 
   // Give player reference to current level
   Application::Instance().PlayerInstance.SetLevelOwner(CurrentLevel);
@@ -213,7 +206,7 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
   // Unblock cell on stairs before going
   CurrentLevel->MapArray[player.PosX][player.PosY]->Occupied = false;
 
-  CurrentLevel = _levels[levelToChange].get();
+  ChangeOrInstantiateLevel(levelToChange);
 
   auto pos = goingDown ? CurrentLevel->LevelStart : CurrentLevel->LevelExit;
 
@@ -222,4 +215,64 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
   player.VisibilityRadius = CurrentLevel->VisibilityRadius;
 
   CurrentLevel->AdjustCamera();
+}
+
+void Map::ChangeOrInstantiateLevel(MapType levelName)
+{
+  if (_levels.count(levelName) == 0)
+  {
+    ShowLoadingText();
+
+    switch (levelName)
+    {
+      case MapType::MINES_1:
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, levelName, 1));
+        break;
+
+      case MapType::MINES_2:
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, levelName, 2));
+        break;
+
+      case MapType::MINES_3:
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, levelName, 3));
+        break;
+    }
+
+    // Now GameObjectsFactory inside PrepareMap can reference correct level
+    CurrentLevel = _levels[levelName].get();
+
+    _levels[levelName]->PrepareMap(_levels[levelName].get());
+  }
+  else
+  {
+    CurrentLevel = _levels[levelName].get();
+  }
+}
+
+void Map::ShowLoadingText()
+{
+  int tw = Printer::Instance().TerminalWidth / 2;
+  int th = Printer::Instance().TerminalHeight / 2;
+
+  std::string text = "Now loading...";
+
+  int lx = tw - text.length() / 2;
+  int hx = tw + text.length() / 2;
+
+  for (int i = lx - 3; i < hx + 3; i++)
+  {
+    for (int j = th - 3; j <= th + 3; j++)
+    {
+      Printer::Instance().PrintFB(i, j, ' ', "#000000", "#222222");
+    }
+  }
+
+  auto res = Util::GetPerimeter(lx - 4, th - 4, text.length() * 2 - 7, 8, true);
+  for (auto& p : res)
+  {
+    Printer::Instance().PrintFB(p.X, p.Y, ' ', "#000000", "#FFFFFF");
+  }
+
+  Printer::Instance().PrintFB(tw, th, text, Printer::kAlignCenter, "#FFFFFF");
+  Printer::Instance().Render();
 }

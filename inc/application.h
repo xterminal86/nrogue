@@ -37,7 +37,7 @@ class Application : public Singleton<Application>
     void Run();
     void ChangeState(const GameStates& gameStateIndex);
 
-    void ShowMessageBox(bool waitForInput, std::string header, std::vector<std::string> message,
+    void ShowMessageBox(MessageBoxType type, std::string header, std::vector<std::string> message,
                         std::string borderColor = GlobalConstants::MessageBoxDefaultBorderColor,
                         std::string bgColor = GlobalConstants::MessageBoxDefaultBgColor);
 

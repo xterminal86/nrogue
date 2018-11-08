@@ -53,7 +53,7 @@ void LevelBuilder::BuildLevel(std::vector<RoomForLevel> possibleRooms, int start
     TryToAddRoomTo(currentRoom, RoomEdgeEnum::WEST);
   }
 
-  PrintVisitedCells();
+  // PrintVisitedCells();
 }
 
 void LevelBuilder::TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side)

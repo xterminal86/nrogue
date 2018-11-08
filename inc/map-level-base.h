@@ -46,6 +46,8 @@ class MapLevelBase
     int DungeonLevel;
     int VisibilityRadius;
 
+    bool IsInitialized = false;
+
     void AdjustCamera();
 
   protected:

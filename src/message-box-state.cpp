@@ -6,15 +6,21 @@
 
 void MessageBoxState::HandleInput()
 {
+  // Closed elswhere
+  if (_type == MessageBoxType::IGNORE_INPUT)
+  {
+    return;
+  }
+
   _keyPressed = getch();
 
   if (_keyPressed != -1)
   {
-    if (_waitForInput && (_keyPressed == VK_ENTER || _keyPressed == 'q'))
+    if (_type == MessageBoxType::WAIT_FOR_INPUT && (_keyPressed == VK_ENTER || _keyPressed == 'q'))
     {
       Application::Instance().CloseMessageBox();
     }
-    else if (!_waitForInput)
+    else if (_type == MessageBoxType::ANY_KEY)
     {
       Application::Instance().CloseMessageBox();
     }

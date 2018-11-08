@@ -166,7 +166,7 @@ bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
 
   if (item->Data.EqCategory == EquipmentCategory::NOT_EQUIPPABLE)
   {
-    Application::Instance().ShowMessageBox(false, "Information", { "Can't be equipped!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Can't be equipped!" }, GlobalConstants::MessageBoxRedBorderColor);
     return res;
   }
 
@@ -199,7 +199,7 @@ bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
   }
   else if (itemEquipped != item)
   {
-    Application::Instance().ShowMessageBox(false, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
     res = false;
   }
   else
@@ -280,7 +280,7 @@ bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
   // Finally, if no empty slots found, display a warning
   if (!emptySlotFound)
   {
-    Application::Instance().ShowMessageBox(false, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
   }
 
   return false;
@@ -318,13 +318,13 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
     switch (item->Data.TypeOfItem)
     {
       case ItemType::COINS:
-        Application::Instance().ShowMessageBox(false, "Information", { "You don't 'use' money like that." }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "You don't 'use' money like that." }, GlobalConstants::MessageBoxRedBorderColor);
         break;
 
       default:
         auto go = item->OwnerGameObject;
         auto msg = Util::StringFormat("You can't use %s!", go->ObjectName.data());
-        Application::Instance().ShowMessageBox(false, "Information", { msg }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { msg }, GlobalConstants::MessageBoxRedBorderColor);
         break;
     }
   }

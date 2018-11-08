@@ -291,7 +291,7 @@ void MainState::TryToPickupItem()
     if (_playerRef->Inventory.Contents.size() == _playerRef->kInventorySize)
     {
       Printer::Instance().AddMessage("Inventory is full!");
-      Application::Instance().ShowMessageBox(false, "Epic Fail", { "Inventory is full!" }, GlobalConstants::MessageBoxRedBorderColor);
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail", { "Inventory is full!" }, GlobalConstants::MessageBoxRedBorderColor);
       return;
     }
 
@@ -364,7 +364,7 @@ std::string MainState::UpdateBar(int x, int y, Attribute attr)
 
 void MainState::DisplayHelp()
 {
-  Application::Instance().ShowMessageBox(false, "Help", _helpText);
+  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Help", _helpText);
 }
 
 void MainState::CheckStairs(chtype stairsSymbol)
@@ -374,7 +374,7 @@ void MainState::CheckStairs(chtype stairsSymbol)
     auto tile = Map::Instance().CurrentLevel->MapArray[_playerRef->PosX][_playerRef->PosY].get();
     if (tile->Image != '>')
     {
-      Printer::Instance().AddMessage("There's no stairs leading down here");
+      Printer::Instance().AddMessage("There are no stairs leading down here");
       return;
     }
 
@@ -387,7 +387,7 @@ void MainState::CheckStairs(chtype stairsSymbol)
     auto tile = Map::Instance().CurrentLevel->MapArray[_playerRef->PosX][_playerRef->PosY].get();
     if (tile->Image != '<')
     {
-      Printer::Instance().AddMessage("There's no stairs leading up here");
+      Printer::Instance().AddMessage("There are no stairs leading up here");
       return;
     }
 

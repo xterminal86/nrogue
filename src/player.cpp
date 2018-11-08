@@ -486,7 +486,7 @@ void Player::LevelUp()
 
   auto res = GetPrettyLevelUpText();
 
-  Application::Instance().ShowMessageBox(true, "Level Up!", res, "#888800", "#000044");
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Level Up!", res, "#888800", "#000044");
 
   Printer::Instance().AddMessage("You have gained a level!");
 
@@ -577,7 +577,7 @@ void Player::LevelDown()
 
   auto res = GetPrettyLevelUpText();
 
-  Application::Instance().ShowMessageBox(true, "Level DOWN!", res, "#FF0000", "#000044");
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Level DOWN!", res, "#FF0000", "#000044");
 
   Printer::Instance().AddMessage("You have LOST a level!");
 

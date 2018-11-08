@@ -35,6 +35,8 @@ class Map : public Singleton<Map>
     std::map<MapType, std::unique_ptr<MapLevelBase>> _levels;
 
     void RemoveDestroyed();
+    void ChangeOrInstantiateLevel(MapType levelName);
+    void ShowLoadingText();
 };
 
 #endif

@@ -24,6 +24,7 @@ void GameObject::Init(MapLevelBase* levelOwner, int x, int y, chtype avatar, con
   // _currentCell->Occupied is not set to true by default,
   // see game-object.h comments for Occupied field.
   _currentCell = _levelOwner->MapArray[PosX][PosY].get();
+  _previousCell = _levelOwner->MapArray[PosX][PosY].get();
 }
 
 bool GameObject::Move(int dx, int dy)

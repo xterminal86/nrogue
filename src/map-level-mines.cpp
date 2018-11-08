@@ -74,6 +74,8 @@ void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
   MapLevelBase::PrepareMap(levelOwner);
 
   CreateLevel();
+
+  IsInitialized = true;
 }
 
 void MapLevelMines::CreateLevel()
@@ -110,7 +112,7 @@ void MapLevelMines::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', MapType::TOWN);
 
-  // CreateInitialMonsters();
+  CreateInitialMonsters();
 }
 
 void MapLevelMines::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)

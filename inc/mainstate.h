@@ -39,7 +39,9 @@ class MainState : public GameState
       R"('l' - Enter "look mode"      )",
       R"('m' - Display message log    )",
       R"('@' - Display character sheet)",
-      R"('e' - Display inventory      )"
+      R"('e' - Display inventory      )",
+      R"('>' - Go down the stairs     )",
+      R"('<' - Go up the stairs       )"
     };
 };
 

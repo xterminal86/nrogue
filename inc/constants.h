@@ -45,6 +45,13 @@
 #include <functional>
 #include <ncurses.h>
 
+enum class MessageBoxType
+{
+  ANY_KEY = 0,
+  WAIT_FOR_INPUT,
+  IGNORE_INPUT
+};
+
 enum class MapType
 {
   NOWHERE = 0,
@@ -418,7 +425,7 @@ namespace GlobalConstants
                           "Settlement of Punchtree" } },
 
     // Abandoned Mines
-    { MapType::MINES_1,     { "Depleted Excavations" } },
+    { MapType::MINES_1,     { "Depleted Lodes" } },
     { MapType::MINES_2,     { "Forsaken Prospects" } },
     { MapType::MINES_3,     { "Deep Mines" } },
     // Caves of Circe
