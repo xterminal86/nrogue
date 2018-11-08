@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <queue>
 #include <map>
 
 #include "util.h"
@@ -61,6 +60,9 @@ struct RoomHelper
     //bool e2 = EdgeIsAllWalls(r.RoomEdgesByType[oppositeEdgeByType[side]]);
 
     bool res = CanBeTraversed(RoomEdgesByType[side], r.RoomEdgesByType[oppositeEdgeByType[side]]);
+
+    auto dbg = Util::StringFormat("result: %s", res ? "yes" : "no");
+    Logger::Instance().Print(dbg);
 
     //return ( (e1 == true && e2 == true) || res);
     return res;

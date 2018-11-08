@@ -1,6 +1,8 @@
 #ifndef LEVELBUILDER_H
 #define LEVELBUILDER_H
 
+#include <stack>
+
 #include "util.h"
 #include "room-helper.h"
 
@@ -21,7 +23,7 @@ class LevelBuilder
   private:
     std::vector<std::vector<MapCell>> _visitedCells;
 
-    std::queue<RoomHelper> _rooms;
+    std::stack<RoomHelper> _rooms;
 
     std::vector<RoomForLevel> _roomsForLevel;
 
@@ -62,17 +64,17 @@ class LevelBuilder
     Position _mapSize;
     Position _startingPoint;
 
-    std::map<RoomEdgeEnum, std::vector<RoomHelper>> GetRoomsForLayout(RoomLayout layout, RoomEdgeEnum side);
+    std::vector<RoomHelper> GetRoomsForLayout(RoomLayout& layout, RoomEdgeEnum side);
 
     void TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side);
     void PrintChunks();
     void VisitCells(RoomHelper& room);
     void PrintVisitedCells();
 
-    bool CheckLimits(RoomHelper& room);
-    bool IsAreaVisited(Position start, int size);
+    bool CheckLimits(Position& start, int roomSize);
+    bool IsAreaVisited(Position& start, int roomSize);
 
-    RoomLayout ConstructEmptyRoom(int size);
+    RoomLayout CreateEmptyLayout(int size);
 
     RoomLayout SelectRoom();
     std::vector<RoomLayout> SelectRooms();

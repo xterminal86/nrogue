@@ -13,7 +13,7 @@
 void Map::Init()
 {
   _levels[MapType::TOWN] = std::unique_ptr<MapLevelBase>(new MapLevelTown(100, 50, MapType::TOWN));
-  _levels[MapType::MINES_1] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 50, MapType::MINES_1, 1));
+  _levels[MapType::MINES_1] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, MapType::MINES_1, 1));
   //_levels[MapType::MINES_2] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, MapType::MINES_1, 2));
   //_levels[MapType::MINES_3] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, MapType::MINES_1, 3));
 

@@ -63,9 +63,9 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
   _roomsForLevel =
   {
     { 60, _layoutsForLevel[0] },
-    { 30, _layoutsForLevel[1] },
-    { 20, _layoutsForLevel[2] },
-    { 10, _layoutsForLevel[3] }
+    { 90, _layoutsForLevel[1] },
+    { 50, _layoutsForLevel[2] },
+    { 40, _layoutsForLevel[3] }
   };
 }
 
@@ -89,6 +89,7 @@ void MapLevelMines::CreateLevel()
   LevelBuilder lb;
 
   lb.BuildLevel(_roomsForLevel, 0, 0, MapSize.X, MapSize.Y);
+  //lb.BuildLevel(_roomsForLevel, MapSize.X / 2, MapSize.Y / 2, MapSize.X, MapSize.Y);
 
   ConstructFromBuilder(lb);
 
@@ -109,26 +110,7 @@ void MapLevelMines::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', MapType::TOWN);
 
-  // Some rats
-
-  for (int i = 0; i < MaxMonsters; i++)
-  {
-    int index = RNG::Instance().RandomRange(0, _emptyCells.size());
-
-    int x = _emptyCells[index].X;
-    int y = _emptyCells[index].Y;
-
-    if (!MapArray[x][y]->Blocking && !MapArray[x][y]->Occupied)
-    {
-      // Special rats
-      //auto rat = GameObjectsFactory::Instance().CreateRat(x, y, false);
-
-      // Normal rats
-      auto rat = GameObjectsFactory::Instance().CreateRat(x, y);
-
-      InsertActor(rat);
-    }
-  }
+  // CreateInitialMonsters();
 }
 
 void MapLevelMines::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)
@@ -192,6 +174,30 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
       }
 
       mapX++;
+    }
+  }
+}
+
+void MapLevelMines::CreateInitialMonsters()
+{
+  // Some rats
+
+  for (int i = 0; i < MaxMonsters; i++)
+  {
+    int index = RNG::Instance().RandomRange(0, _emptyCells.size());
+
+    int x = _emptyCells[index].X;
+    int y = _emptyCells[index].Y;
+
+    if (!MapArray[x][y]->Blocking && !MapArray[x][y]->Occupied)
+    {
+      // Special rats
+      //auto rat = GameObjectsFactory::Instance().CreateRat(x, y, false);
+
+      // Normal rats
+      auto rat = GameObjectsFactory::Instance().CreateRat(x, y);
+
+      InsertActor(rat);
     }
   }
 }

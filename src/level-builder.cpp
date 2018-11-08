@@ -41,12 +41,9 @@ void LevelBuilder::BuildLevel(std::vector<RoomForLevel> possibleRooms, int start
 
   MapChunks.push_back(start);
 
-  // TODO: !!! optimize, optimize, optimize !!!
-  // It's too fucking slow right now.
-
   while (!_rooms.empty())
   {    
-    RoomHelper currentRoom = _rooms.front();
+    RoomHelper currentRoom = _rooms.top();
 
     _rooms.pop();    
 
@@ -56,7 +53,7 @@ void LevelBuilder::BuildLevel(std::vector<RoomForLevel> possibleRooms, int start
     TryToAddRoomTo(currentRoom, RoomEdgeEnum::WEST);
   }
 
-  // PrintVisitedCells();
+  PrintVisitedCells();
 }
 
 void LevelBuilder::TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side)
@@ -75,52 +72,71 @@ void LevelBuilder::TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side)
     { RoomEdgeEnum::WEST, Position(-offset, 0) },
   };
 
-  Position areaStart;
-  areaStart.X = currentRoom.UpperLeftCorner.X + cursorAddsByType[side].X;
-  areaStart.Y = currentRoom.UpperLeftCorner.Y + cursorAddsByType[side].Y;
+  Position newAreaStart;
+  newAreaStart.X = currentRoom.UpperLeftCorner.X + cursorAddsByType[side].X;
+  newAreaStart.Y = currentRoom.UpperLeftCorner.Y + cursorAddsByType[side].Y;
 
-  if (IsAreaVisited(areaStart, currentRoom.RoomSize))
+  if (!CheckLimits(newAreaStart, currentRoom.RoomSize))
   {
+    //dbg = Util::StringFormat("[%i;%i] failed on CheckLimits()!", newAreaStart.X, newAreaStart.Y);
+    //Logger::Instance().Print(dbg);
     return;
   }
 
+  if (IsAreaVisited(newAreaStart, currentRoom.RoomSize))
+  {
+    //dbg = Util::StringFormat("[%i;%i] already visited!", newAreaStart.X, newAreaStart.Y);
+    //Logger::Instance().Print(dbg);
+    return;
+  }
+
+  // It is possible to get 0 rooms
+  // due to failing to add empty fallback room to full wall side.
   auto rooms = GetRoomsForLayout(currentRoom.Layout, side);
   if (rooms.size() != 0)
   {
-    int index = RNG::Instance().RandomRange(0, rooms[side].size());
+    //dbg = Util::StringFormat("Rooms to select: %i", rooms.size());
+    //Logger::Instance().Print(dbg);
 
-    //Logger::Instance().Print("Found:");
-    //Util::PrintLayout(rooms[side][index].Layout);
+    int index = RNG::Instance().RandomRange(0, rooms.size());
 
-    rooms[side][index].UpperLeftCorner.X = currentRoom.UpperLeftCorner.X + cursorAddsByType[side].X;
-    rooms[side][index].UpperLeftCorner.Y = currentRoom.UpperLeftCorner.Y + cursorAddsByType[side].Y;
+    //Logger::Instance().Print("Selected:");
+    //Util::PrintLayout(rooms[index].Layout);
+
+    rooms[index].UpperLeftCorner.X = newAreaStart.X;
+    rooms[index].UpperLeftCorner.Y = newAreaStart.Y;
 
     //dbg = Util::StringFormat("position [%i;%i]", rooms[side][index].UpperLeftCorner.X, rooms[side][index].UpperLeftCorner.Y);
     //Logger::Instance().Print(dbg);
 
-    if (!CheckLimits(rooms[side][index]))
-    {
-      //dbg = Util::StringFormat("[%i;%i] failed on CheckLimits()!", rooms[side][index].UpperLeftCorner.X, rooms[side][index].UpperLeftCorner.Y);
-      //Logger::Instance().Print(dbg);
-      return;
-    }
-
-    _rooms.push(rooms[side][index]);
-    MapChunks.push_back(rooms[side][index]);
-
-    VisitCells(currentRoom);
-
-    _roomsCount++;
+    _rooms.push(rooms[index]);
+    MapChunks.push_back(rooms[index]);
   }
   else
   {
-    //Logger::Instance().Print("No rooms found!");
+    // If no rooms could be added, create empty spot
+    auto empty = CreateEmptyLayout(currentRoom.RoomSize);
+
+    RoomHelper rh;
+    rh.ParseLayout(empty);
+
+    rh.UpperLeftCorner.X = newAreaStart.X;
+    rh.UpperLeftCorner.Y = newAreaStart.Y;
+
+    _rooms.push(rh);
+    MapChunks.push_back(rh);
+
+    //Logger::Instance().Print("No rooms to attach found - creating empty spot");
   }
+
+  VisitCells(currentRoom);
+
+  _roomsCount++;
 }
 
-std::map<RoomEdgeEnum, std::vector<RoomHelper>> LevelBuilder::GetRoomsForLayout(RoomLayout layout, RoomEdgeEnum side)
+std::vector<RoomHelper> LevelBuilder::GetRoomsForLayout(RoomLayout& layout, RoomEdgeEnum side)
 {
-  std::map<RoomEdgeEnum, std::vector<RoomHelper>> res;
+  std::vector<RoomHelper> roomsVector;
 
   RoomHelper currentRoom;
   currentRoom.ParseLayout(layout);
@@ -139,9 +155,12 @@ std::map<RoomEdgeEnum, std::vector<RoomHelper>> LevelBuilder::GetRoomsForLayout(
       RoomHelper rh;
       rh.ParseLayout(newLayout);
 
+      //Logger::Instance().Print("Trying to attach:");
+      //Util::PrintLayout(rh.Layout);
+
       if (currentRoom.CanAttach(rh, side))
       {
-        res[side].push_back(rh);
+        roomsVector.push_back(rh);
       }
       else
       {
@@ -151,17 +170,15 @@ std::map<RoomEdgeEnum, std::vector<RoomHelper>> LevelBuilder::GetRoomsForLayout(
     }
   }
 
-  return res;
+  return roomsVector;
 }
 
-bool LevelBuilder::CheckLimits(RoomHelper& room)
+bool LevelBuilder::CheckLimits(Position& start, int roomSize)
 {
-  int size = room.Layout.size();
-
-  int lx = room.UpperLeftCorner.X;
-  int ly = room.UpperLeftCorner.Y;
-  int hx = lx + size;
-  int hy = ly + size;
+  int lx = start.X;
+  int ly = start.Y;
+  int hx = lx + roomSize;
+  int hy = ly + roomSize;
 
   bool fitsInMap = (lx >= 0 && hx < _mapSize.X
                  && ly >= 0 && hy < _mapSize.Y);
@@ -180,17 +197,19 @@ bool LevelBuilder::CheckLimits(RoomHelper& room)
   return true;
 }
 
-bool LevelBuilder::IsAreaVisited(Position start, int size)
+bool LevelBuilder::IsAreaVisited(Position& start, int roomSize)
 {
   int lx = start.X;
   int ly = start.Y;
-  int hx = lx + size;
-  int hy = ly + size;
+  int hx = lx + roomSize;
+  int hy = ly + roomSize;
 
+  /*
   lx = Util::Clamp(lx, 0, _mapSize.X - 1);
   ly = Util::Clamp(ly, 0, _mapSize.Y - 1);
   hx = Util::Clamp(hx, 0, _mapSize.X - 1);
   hy = Util::Clamp(hy, 0, _mapSize.Y - 1);
+  */
 
   for (int x = lx; x <= hx; x++)
   {
@@ -248,7 +267,7 @@ RoomLayout LevelBuilder::SelectRoom()
   // Construct fall back room (empty NxN)
   if (rooms.size() == 0)
   {
-    auto res = ConstructEmptyRoom(roomSize);
+    auto res = CreateEmptyLayout(roomSize);
     rooms.push_back(res);
   }
 
@@ -281,17 +300,10 @@ std::vector<RoomLayout> LevelBuilder::SelectRooms()
     }
   }
 
-  // Construct fall back room (empty NxN)
-  if (rooms.size() == 0)
-  {
-    auto res = ConstructEmptyRoom(roomSize);
-    rooms.push_back(res);
-  }
-
   return rooms;
 }
 
-RoomLayout LevelBuilder::ConstructEmptyRoom(int size)
+RoomLayout LevelBuilder::CreateEmptyLayout(int size)
 {
   RoomLayout res;
 
