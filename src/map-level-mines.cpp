@@ -8,6 +8,65 @@
 MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
+  _layoutsForLevel =
+  {
+    // 0
+    {
+      ".........",
+      ".........",
+      ".........",
+      "...###...",
+      "...###...",
+      "...###...",
+      ".........",
+      ".........",
+      ".........",
+    },
+    // 1
+    {
+      "#########",
+      "#########",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "#########",
+      "#########",
+    },
+    // 2
+    {
+      "###...###",
+      "###...###",
+      "###...###",
+      ".........",
+      ".........",
+      ".........",
+      "###...###",
+      "###...###",
+      "###...###",
+    },
+    // 3
+    {
+      ".........",
+      ".##...##.",
+      ".##...##.",
+      ".........",
+      ".........",
+      ".........",
+      ".##...##.",
+      ".##...##.",
+      ".........",
+    }
+  };
+
+  _roomsForLevel =
+  {
+    { 90, _layoutsForLevel[0] },
+    { 80, _layoutsForLevel[1] },
+    { 70, _layoutsForLevel[2] },
+    { 60, _layoutsForLevel[3] }
+  };
 }
 
 void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
@@ -37,6 +96,14 @@ void MapLevelMines::CreateLevel()
   }
   */
 
+  LevelBuilder lb;
+
+  lb.BuildLevel(_roomsForLevel, 0, 0, MapSize.X, MapSize.Y);
+
+  ConstructFromBuilder(lb);
+
+  // Borders
+
   t.Set(true, true, '#', GlobalConstants::WallColor, GlobalConstants::BlackColor, "Rocks");
 
   auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
@@ -45,72 +112,12 @@ void MapLevelMines::CreateLevel()
     MapArray[i.X][i.Y].get()->MakeTile(t);
   }
 
-  LevelBuilder lb;
-
-  lb.MaxRooms = 32;
-
-  lb.BuildLevel(MapSize.X, MapSize.Y);
-
-  CopyFromBuilder(lb, MapSize.X / 2, MapSize.Y / 2);
-
   RecordEmptyCells();
 
   LevelStart.X = _emptyCells[1].X;
   LevelStart.Y = _emptyCells[1].Y;
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', MapType::TOWN);
-}
-
-void MapLevelMines::CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation)
-{
-  Tile t;
-
-  int posX = x;
-  int posY = y;
-
-  std::vector<std::string> newLayout = layout;
-
-  std::vector<RoomLayoutRotation> rotations =
-  {
-    RoomLayoutRotation::NONE,
-    RoomLayoutRotation::CCW_90,
-    RoomLayoutRotation::CCW_180,
-    RoomLayoutRotation::CCW_270
-  };
-
-  if (randomizeOrientation)
-  {
-    int index = RNG::Instance().Random() % rotations.size();
-    newLayout = Util::RotateRoomLayout(layout, rotations[index]);
-  }
-
-  for (auto& row : newLayout)
-  {
-    for (auto& c : row)
-    {
-      switch (c)
-      {
-        case '#':
-        {
-          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Rocks");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
-
-        case '.':
-        {
-          t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Dirt");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
-      }
-
-      posX++;
-    }
-
-    posX = x;
-    posY++;
-  }
 }
 
 void MapLevelMines::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)
@@ -124,13 +131,28 @@ void MapLevelMines::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToF
   }
 }
 
-void MapLevelMines::CopyFromBuilder(LevelBuilder& lb, int startX, int startY)
+void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 {
+  Logger::Instance().Print("********** PROCESSING CHUNKS **********");
+
   for (auto& chunk : lb.MapChunks)
   {
-    for (int x = 0; x < chunk.Layout.size(); x++)
+    int sx = chunk.UpperLeftCorner.X;
+    int sy = chunk.UpperLeftCorner.Y;
+    int size = chunk.Layout.size();
+
+    //auto str = Util::StringFormat("Processing chunk [%i;%i] size %i...", sx, sy, size);
+    //Logger::Instance().Print(str);
+    //Util::PrintLayout(chunk.Layout);
+
+    int mapX = sx;
+    int mapY = sy;
+
+    for (int x = 0; x < size; x++)
     {
-      for (int y = 0; y < chunk.Layout.size(); y++)
+      mapY = sy;
+
+      for (int y = 0; y < size; y++)
       {
         char image = chunk.Layout[x][y];
         std::string objName = (image == '#') ? "Rocks" : "Dirt";
@@ -138,11 +160,12 @@ void MapLevelMines::CopyFromBuilder(LevelBuilder& lb, int startX, int startY)
         Tile t;
         t.Set((image == '#'), (image == '#'), image, GlobalConstants::WallColor, GlobalConstants::BlackColor, objName);
 
-        int mapX = startX + chunk.UpperLeftCorner.X + x;
-        int mapY = startY + chunk.UpperLeftCorner.Y + y;
-
         MapArray[mapX][mapY]->MakeTile(t);
+
+        mapY++;
       }
+
+      mapX++;
     }
   }
 }

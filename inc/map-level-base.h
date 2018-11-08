@@ -3,6 +3,7 @@
 
 #include "util.h"
 #include "game-object.h"
+#include "room-helper.h"
 
 class Player;
 
@@ -49,6 +50,8 @@ class MapLevelBase
 
   protected:
     std::vector<Position> _emptyCells;
+    std::vector<std::vector<std::string>> _layoutsForLevel;
+    std::vector<RoomForLevel> _roomsForLevel;
 
     Player* _playerRef;
 

@@ -16,9 +16,8 @@ class MapLevelMines : public MapLevelBase
     void CreateLevel() override;
 
   private:
-    void CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation = true);
     void FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill);    
-    void CopyFromBuilder(LevelBuilder& lb, int startX, int startY);
+    void ConstructFromBuilder(LevelBuilder& lb);
 };
 
 #endif // MAPLEVELMINES_H

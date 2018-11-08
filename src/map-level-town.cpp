@@ -8,6 +8,118 @@
 MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
   MapLevelBase(sizeX, sizeY, type, 0)
 {  
+  _layoutsForLevel =
+  {
+    // Common houses
+    // 0
+    {
+      "##+##",
+      "#...#",
+      "#...#",
+      "#...#",
+      "##-##"
+    },
+    // 1
+    {
+      "#+#####",
+      "#..#..#",
+      "|..+..|",
+      "#..#..#",
+      "#######"
+    },
+    // 2
+    {
+      "###+###",
+      "#.....#",
+      "#.....#",
+      "|..#+##",
+      "#..#..#",
+      "#..#..#",
+      "#######"
+    },
+    // Rich residents
+    // 3
+    {
+      "####+######-###",
+      "#.......#.....#",
+      "|.......+.....|",
+      "#.......#.....#",
+      "##+###+##.....#",
+      "#...#...#.....#",
+      "#...#...#.....|",
+      "#...#...#.....#",
+      "##-###-####-###"
+    },
+    // 4
+    {
+      "#########-#####",
+      "#......#......#",
+      "|......#......|",
+      "#......#......#",
+      "##+########+###",
+      "#   #ggggggggg#",
+      "#   #g#  #  #g#",
+      "+    g wwwww g#",
+      "#   #g wwwww g#",
+      "+    g wwwww g#",
+      "#   #g#  #  #g#",
+      "#   #ggggggggg#",
+      "##+########+###",
+      "#......#......#",
+      "|......#......|",
+      "#......#......#",
+      "#########-#####"
+    },
+    // 5
+    {
+      "####+##########",
+      "#ggg ggg#.....#",
+      "#gFg gFg#.....|",
+      "#ggg ggg|.....#",
+      "#ggg ggg|.....#",
+      "#gFg gFg#.....|",
+      "#ggg ggg#.....#",
+      "####+######+###",
+      "#.......#.....#",
+      "#.......#.....#",
+      "|.......+.....|",
+      "#.......#.....#",
+      "#.......#.....#",
+      "###############"
+    },
+    // Trader
+    // 6
+    {
+      "#########",
+      "#.......#",
+      "+.......#",
+      "#.......#",
+      "#########"
+    },
+    // Church
+    // 7
+    {
+      "................####-####........",
+      "................#       #........",
+      "................#       #........",
+      "................|       |........",
+      "................#       #........",
+      "................#       #........",
+      "####-#######-#######+#######-####",
+      "#    h h h h h h        #       #",
+      "+    h h h h h h        #       |",
+      "#                       +   /   |",
+      "+    h h h h h h        #       |",
+      "#    h h h h h h        #       #",
+      "####-#######-#######+#######-####",
+      "................#       #........",
+      "................#       #........",
+      "................|       |........",
+      "................#       #........",
+      "................#       #........",
+      "................####-####........",
+    }
+  };
 }
 
 void MapLevelTown::PrepareMap(MapLevelBase* levelOwner)
@@ -46,25 +158,25 @@ void MapLevelTown::CreateLevel()
 
   // Bydlo (that includes you, btw) ;-)
 
-  CreateRoom(3, 3, GlobalConstants::SpecialRooms[0]);
+  CreateRoom(3, 3, _layoutsForLevel[0]);
 
   int numHouses = 5;
 
   int offset = 15;
   for (int i = 0; i < numHouses; i++)
   {
-    CreateRoom(18 + offset * i, 3, GlobalConstants::SpecialRooms[0], true);
+    CreateRoom(18 + offset * i, 3, _layoutsForLevel[0], true);
   }
 
   // Majors
 
-  CreateRoom(5, 20, GlobalConstants::SpecialRooms[3]);
+  CreateRoom(5, 20, _layoutsForLevel[3]);
 
-  auto room = Util::RotateRoomLayout(GlobalConstants::SpecialRooms[3], RoomLayoutRotation::CCW_270);
+  auto room = Util::RotateRoomLayout(_layoutsForLevel[3], RoomLayoutRotation::CCW_270);
   CreateRoom(5, 32, room);
 
-  CreateRoom(25, 30, GlobalConstants::SpecialRooms[4]);
-  CreateRoom(45, 33, GlobalConstants::SpecialRooms[5]);
+  CreateRoom(25, 30, _layoutsForLevel[4]);
+  CreateRoom(45, 33, _layoutsForLevel[5]);
 
   // Church
 
@@ -223,7 +335,7 @@ void MapLevelTown::CreateChurch(int x, int y)
 
   Tile t;
 
-  for (auto& row : GlobalConstants::SpecialRooms[7])
+  for (auto& row : _layoutsForLevel[7])
   {
     for (auto& c : row)
     {

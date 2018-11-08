@@ -492,7 +492,7 @@ namespace Util
 
   inline bool RollDice(int successChance)
   {
-    int dice = RNG::Instance().RandomRange(0, 100);
+    int dice = RNG::Instance().RandomRange(0, 101);
 
     auto logMsg = Util::StringFormat("\tRollDice(): chance = %i, rolled = %i",
                                      successChance,
@@ -505,6 +505,12 @@ namespace Util
     }
 
     return false;
+  }
+
+  inline int RollDice()
+  {
+    int dice = RNG::Instance().RandomRange(0, 101);
+    return dice;
   }
 
   inline void Sleep(int delayMs)
@@ -524,6 +530,23 @@ namespace Util
       elapsed = timer::now() - lastTime;
       msPassed = std::chrono::duration_cast<ms>(elapsed);
     }
+  }
+
+  inline void PrintLayout(std::vector<std::string> l)
+  {
+    std::string dbg = "\n";
+
+    for (int x = 0; x < l.size(); x++)
+    {
+      for (int y = 0; y < l[x].length(); y++)
+      {
+        dbg += l[x][y];
+      }
+
+      dbg += "\n";
+    }
+
+    Logger::Instance().Print(dbg);
   }
 }
 

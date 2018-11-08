@@ -55,11 +55,6 @@ int main()
 
   #endif
 
-  LevelBuilder lb;
-
-  lb.BuildLevel(50, 50);
-  lb.PrintResult();
-
   printf("Goodbye!\n");
 
   return 0;
