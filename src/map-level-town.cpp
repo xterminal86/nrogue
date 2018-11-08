@@ -187,28 +187,7 @@ void MapLevelTown::CreateLevel()
   LevelExit.X = 96;
   LevelExit.Y = 47;
 
-  GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
-
-  /*
-  // Some rats
-
-  for (int i = 0; i < 30; i++)
-  {
-    int x = RNG::Instance().Random() % GlobalConstants::MapX;
-    int y = RNG::Instance().Random() % GlobalConstants::MapY;
-
-    if (!MapArray[x][y]->Blocking)
-    {
-      // Special rats
-      //auto rat = GameObjectsFactory::Instance().CreateRat(x, y, false);
-
-      // Normal rats
-      auto rat = GameObjectsFactory::Instance().CreateRat(x, y);
-
-      InsertActor(rat);
-    }
-  }
-  */
+  GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);  
 }
 
 void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)

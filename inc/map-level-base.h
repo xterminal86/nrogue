@@ -55,6 +55,8 @@ class MapLevelBase
 
     Player* _playerRef;
 
+    int _respawnCounter = 0;
+
     virtual void CreateLevel() {}
 
     void RecordEmptyCells();

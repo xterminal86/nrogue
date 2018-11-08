@@ -51,8 +51,20 @@ bool GameObject::MoveTo(int x, int y)
   if (!_levelOwner->MapArray[x][y]->Occupied &&
       !_levelOwner->MapArray[x][y]->Blocking)
   {
-    _previousCell = _levelOwner->MapArray[PosX][PosY].get();
-    _previousCell->Occupied = false;
+    // When we change level, previous position (PosX and PosY)
+    // is pointing to the stairs down on previous level,
+    // which may not have the same dimensions as the level
+    // we just arrived in. So to avoid going outside array bounds,
+    // we have to perform a check.
+    //
+    // Unblocking of stairs in such case is done directly in ChangeLevel(),
+    // so we just skip this case here.
+
+    if (PosX < _levelOwner->MapSize.X && PosY < _levelOwner->MapSize.Y)
+    {
+      _previousCell = _levelOwner->MapArray[PosX][PosY].get();
+      _previousCell->Occupied = false;
+    }
 
     PosX = x;
     PosY = y;

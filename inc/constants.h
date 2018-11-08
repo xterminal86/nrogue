@@ -418,7 +418,7 @@ namespace GlobalConstants
                           "Settlement of Punchtree" } },
 
     // Abandoned Mines
-    { MapType::MINES_1,     { "Shallow Excavations" } },
+    { MapType::MINES_1,     { "Depleted Excavations" } },
     { MapType::MINES_2,     { "Forsaken Prospects" } },
     { MapType::MINES_3,     { "Deep Mines" } },
     // Caves of Circe

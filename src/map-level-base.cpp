@@ -32,7 +32,7 @@ void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
   {
     for (int y = 0; y < MapSize.Y; y++)
     {
-      MapArray[x][y]->Init(levelOwner, x, y, ' ', "#000000", "#000000");
+      MapArray[x][y]->Init(levelOwner, x, y, '.', "#000000", "#000000");
     }
   }
 }

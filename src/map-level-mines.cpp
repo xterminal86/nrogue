@@ -14,11 +14,11 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       ".........",
       ".........",
-      ".........",
-      "...###...",
-      "...###...",
-      "...###...",
-      ".........",
+      "..#####..",
+      "..#####..",
+      "..#####..",
+      "..#####..",
+      "..#####..",
       ".........",
       ".........",
     },
@@ -62,10 +62,10 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
   _roomsForLevel =
   {
-    { 90, _layoutsForLevel[0] },
-    { 80, _layoutsForLevel[1] },
-    { 70, _layoutsForLevel[2] },
-    { 60, _layoutsForLevel[3] }
+    { 60, _layoutsForLevel[0] },
+    { 30, _layoutsForLevel[1] },
+    { 20, _layoutsForLevel[2] },
+    { 10, _layoutsForLevel[3] }
   };
 }
 
@@ -79,22 +79,12 @@ void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
 void MapLevelMines::CreateLevel()
 {
   VisibilityRadius = 10;
+  MaxMonsters = 15 * DungeonLevel;
 
   Tile t;
-  t.Set(false, false, '.', GlobalConstants::WallColor, GlobalConstants::BlackColor, "Dirt");
+  t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Dirt");
 
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
-
-  /*
-  for (int x = 0; x < MapSize.X; x += 5)
-  {
-    for (int y = 0; y < MapSize.Y; y += 5)
-    {
-      int roomIndex = RNG::Instance().RandomRange(9, 20);
-      CreateRoom(x, y, GlobalConstants::RoomLayouts[roomIndex]);
-    }
-  }
-  */
 
   LevelBuilder lb;
 
@@ -114,10 +104,31 @@ void MapLevelMines::CreateLevel()
 
   RecordEmptyCells();
 
-  LevelStart.X = _emptyCells[1].X;
-  LevelStart.Y = _emptyCells[1].Y;
+  LevelStart.X = _emptyCells[0].X;
+  LevelStart.Y = _emptyCells[0].Y;
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', MapType::TOWN);
+
+  // Some rats
+
+  for (int i = 0; i < MaxMonsters; i++)
+  {
+    int index = RNG::Instance().RandomRange(0, _emptyCells.size());
+
+    int x = _emptyCells[index].X;
+    int y = _emptyCells[index].Y;
+
+    if (!MapArray[x][y]->Blocking && !MapArray[x][y]->Occupied)
+    {
+      // Special rats
+      //auto rat = GameObjectsFactory::Instance().CreateRat(x, y, false);
+
+      // Normal rats
+      auto rat = GameObjectsFactory::Instance().CreateRat(x, y);
+
+      InsertActor(rat);
+    }
+  }
 }
 
 void MapLevelMines::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)
@@ -154,11 +165,26 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 
       for (int y = 0; y < size; y++)
       {
-        char image = chunk.Layout[x][y];
-        std::string objName = (image == '#') ? "Rocks" : "Dirt";
-
         Tile t;
-        t.Set((image == '#'), (image == '#'), image, GlobalConstants::WallColor, GlobalConstants::BlackColor, objName);
+        std::string objName;
+
+        char image = chunk.Layout[x][y];
+        switch (image)
+        {
+          case '#':
+          {
+            objName = "Rocks";
+            t.Set(true, true, image, GlobalConstants::WallColor, GlobalConstants::BlackColor, objName);
+          }
+          break;
+
+          case '.':
+          {
+            objName = "Ground";
+            t.Set(false, false, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
+          }
+          break;
+        }
 
         MapArray[mapX][mapY]->MakeTile(t);
 

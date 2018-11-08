@@ -41,6 +41,9 @@ void LevelBuilder::BuildLevel(std::vector<RoomForLevel> possibleRooms, int start
 
   MapChunks.push_back(start);
 
+  // TODO: !!! optimize, optimize, optimize !!!
+  // It's too fucking slow right now.
+
   while (!_rooms.empty())
   {    
     RoomHelper currentRoom = _rooms.front();
@@ -53,21 +56,7 @@ void LevelBuilder::BuildLevel(std::vector<RoomForLevel> possibleRooms, int start
     TryToAddRoomTo(currentRoom, RoomEdgeEnum::WEST);
   }
 
-  /*
-  std::string visitedCellsStr;
-
-  for (int x = 0; x < _mapSize.X; x++)
-  {
-    for (int y = 0; y < _mapSize.Y; y++)
-    {
-      visitedCellsStr += std::to_string(_visitedCells[x][y].Visited);
-    }
-
-    visitedCellsStr += "\n";
-  }
-
-  Logger::Instance().Print(visitedCellsStr);
-  */
+  // PrintVisitedCells();
 }
 
 void LevelBuilder::TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side)
@@ -85,6 +74,15 @@ void LevelBuilder::TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side)
     { RoomEdgeEnum::SOUTH, Position(0, offset) },
     { RoomEdgeEnum::WEST, Position(-offset, 0) },
   };
+
+  Position areaStart;
+  areaStart.X = currentRoom.UpperLeftCorner.X + cursorAddsByType[side].X;
+  areaStart.Y = currentRoom.UpperLeftCorner.Y + cursorAddsByType[side].Y;
+
+  if (IsAreaVisited(areaStart, currentRoom.RoomSize))
+  {
+    return;
+  }
 
   auto rooms = GetRoomsForLayout(currentRoom.Layout, side);
   if (rooms.size() != 0)
@@ -104,11 +102,6 @@ void LevelBuilder::TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side)
     {
       //dbg = Util::StringFormat("[%i;%i] failed on CheckLimits()!", rooms[side][index].UpperLeftCorner.X, rooms[side][index].UpperLeftCorner.Y);
       //Logger::Instance().Print(dbg);
-      return;
-    }
-
-    if (IsAreaVisited(rooms[side][index]))
-    {
       return;
     }
 
@@ -187,13 +180,17 @@ bool LevelBuilder::CheckLimits(RoomHelper& room)
   return true;
 }
 
-bool LevelBuilder::IsAreaVisited(RoomHelper& room)
+bool LevelBuilder::IsAreaVisited(Position start, int size)
 {
-  int roomSize = room.RoomSize;
-  int lx = room.UpperLeftCorner.X;
-  int ly = room.UpperLeftCorner.Y;
-  int hx = lx + roomSize;
-  int hy = ly + roomSize;
+  int lx = start.X;
+  int ly = start.Y;
+  int hx = lx + size;
+  int hy = ly + size;
+
+  lx = Util::Clamp(lx, 0, _mapSize.X - 1);
+  ly = Util::Clamp(ly, 0, _mapSize.Y - 1);
+  hx = Util::Clamp(hx, 0, _mapSize.X - 1);
+  hy = Util::Clamp(hy, 0, _mapSize.Y - 1);
 
   for (int x = lx; x <= hx; x++)
   {
@@ -363,4 +360,21 @@ void LevelBuilder::PrintChunks()
   }
 
   printf("Total of %i rooms\n", _roomsCount);
+}
+
+void LevelBuilder::PrintVisitedCells()
+{
+  std::string visitedCellsStr;
+
+  for (int x = 0; x < _mapSize.X; x++)
+  {
+    for (int y = 0; y < _mapSize.Y; y++)
+    {
+      visitedCellsStr += std::to_string(_visitedCells[x][y].Visited);
+    }
+
+    visitedCellsStr += "\n";
+  }
+
+  Logger::Instance().Print(visitedCellsStr);
 }

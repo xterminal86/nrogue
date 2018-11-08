@@ -67,8 +67,10 @@ class LevelBuilder
     void TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side);
     void PrintChunks();
     void VisitCells(RoomHelper& room);
+    void PrintVisitedCells();
+
     bool CheckLimits(RoomHelper& room);
-    bool IsAreaVisited(RoomHelper& room);
+    bool IsAreaVisited(Position start, int size);
 
     RoomLayout ConstructEmptyRoom(int size);
 

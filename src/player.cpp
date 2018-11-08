@@ -20,8 +20,9 @@ void Player::Init()
   SetAttributes();
   SetDefaultEquipment();
 
+  _previousCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
-  _currentCell->Occupied = true;  
+  _currentCell->Occupied = true;
 
   // FIXME: remove afterwards
 

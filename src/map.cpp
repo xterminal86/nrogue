@@ -13,7 +13,7 @@
 void Map::Init()
 {
   _levels[MapType::TOWN] = std::unique_ptr<MapLevelBase>(new MapLevelTown(100, 50, MapType::TOWN));
-  _levels[MapType::MINES_1] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 40, MapType::MINES_1, 1));
+  _levels[MapType::MINES_1] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 50, MapType::MINES_1, 1));
   //_levels[MapType::MINES_2] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, MapType::MINES_1, 2));
   //_levels[MapType::MINES_3] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, MapType::MINES_1, 3));
 
@@ -31,7 +31,7 @@ void Map::Init()
   Application::Instance().PlayerInstance.VisibilityRadius = CurrentLevel->VisibilityRadius;
 
   // FIXME: debug
-  ChangeLevel(MapType::MINES_1, true);
+  // ChangeLevel(MapType::MINES_1, true);
 }
 
 void Map::Draw(int playerX, int playerY)
@@ -210,6 +210,7 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
 {
   auto& player = Application::Instance().PlayerInstance;
 
+  // Unblock cell on stairs before going
   CurrentLevel->MapArray[player.PosX][player.PosY]->Occupied = false;
 
   CurrentLevel = _levels[levelToChange].get();
