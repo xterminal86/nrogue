@@ -22,11 +22,11 @@ struct RoomForLevel
   RoomForLevel(int chance, RoomLayout l)
   {
     Chance = chance;
-    Room = l;
+    Layout = l;
   }
 
   int Chance = 0;
-  RoomLayout Room;
+  RoomLayout Layout;
 };
 
 struct RoomHelper

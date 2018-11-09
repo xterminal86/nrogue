@@ -21,6 +21,7 @@ class MapLevelMines : public MapLevelBase
     void FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill);    
     void ConstructFromBuilder(LevelBuilder& lb);
     void CreateInitialMonsters();
+    void PlaceExits();
 };
 
 #endif // MAPLEVELMINES_H

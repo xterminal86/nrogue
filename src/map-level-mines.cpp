@@ -13,61 +13,138 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
   {
     // 0
     {
+      "#########",
+      "#########",
       ".........",
       ".........",
-      "..#####..",
-      "..#####..",
-      "..#####..",
-      "..#####..",
-      "..#####..",
       ".........",
       ".........",
+      ".........",
+      "#########",
+      "#########",
     },
     // 1
     {
       "#########",
       "#########",
-      ".........",
-      ".........",
-      ".........",
-      ".........",
-      ".........",
-      "#########",
-      "#########",
+      ".......##",
+      ".......##",
+      ".......##",
+      ".......##",
+      ".......##",
+      "##.....##",
+      "##.....##",
     },
     // 2
     {
-      "###...###",
-      "###...###",
-      "###...###",
       ".........",
       ".........",
+      "..#####..",
+      "..#####..",
+      "..#####..",
+      "..#####..",
+      "..#####..",
       ".........",
-      "###...###",
-      "###...###",
-      "###...###",
+      ".........",
     },
     // 3
     {
+      "#########",
       ".........",
-      ".##...##.",
-      ".##...##.",
+      "#########",
+      "#########",
       ".........",
+      "#########",
+      "#########",
       ".........",
+      "#########",
+    },
+    // 4
+    {
+      "#.#####.#",
       ".........",
-      ".##...##.",
-      ".##...##.",
+      "#.##.##.#",
+      "#.##.##.#",
       ".........",
+      "#.##.##.#",
+      "#.##.##.#",
+      ".........",
+      "#.##.##.#",
+    },
+    // 5
+    {
+      "#########",
+      "...##....",
+      "#.###.###",
+      "#.###.###",
+      "#.......#",
+      "####.##.#",
+      "#..#.#..#",
+      "...###...",
+      "#.##.##.#",
+    },
+    // 6
+    {
+      "#########",
+      "#..##....",
+      "..###.#.#",
+      "#.#.#.#.#",
+      "#.......#",
+      "####.##..",
+      "#..#.####",
+      "...#.....",
+      "#.##.##.#",
+    },
+    // 7
+    {
+      "#.##.##.#",
+      "#.#...#.#",
+      "#.#.#.#.#",
+      "#.#.#.#.#",
+      "#.#.#.#.#",
+      "#.#.#.#.#",
+      "#.#.#.#.#",
+      "#...#...#",
+      "##.###.##",
     }
   };
 
-  _roomsForLevel =
+  switch (DungeonLevel)
   {
-    { 60, _layoutsForLevel[0] },
-    { 90, _layoutsForLevel[1] },
-    { 50, _layoutsForLevel[2] },
-    { 40, _layoutsForLevel[3] }
-  };
+    case 1:
+    {
+      _roomsForLevel =
+      {
+        { 80, _layoutsForLevel[0] },
+        { 80, _layoutsForLevel[1] },
+        { 50, _layoutsForLevel[2] },
+      };
+    }
+    break;
+
+    case 2:
+    {
+      _roomsForLevel =
+      {
+        { 60, _layoutsForLevel[2] },
+        { 70, _layoutsForLevel[3] },
+        { 50, _layoutsForLevel[4] },
+      };
+    }
+    break;
+
+    case 3:
+    {
+      _roomsForLevel =
+      {
+        { 80, _layoutsForLevel[4] },
+        { 80, _layoutsForLevel[5] },
+        { 80, _layoutsForLevel[6] },
+        { 50, _layoutsForLevel[7] }
+      };
+    }
+    break;
+  }
 }
 
 void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
@@ -106,10 +183,7 @@ void MapLevelMines::CreateLevel()
 
   RecordEmptyCells();
 
-  LevelStart.X = _emptyCells[0].X;
-  LevelStart.Y = _emptyCells[0].Y;
-
-  GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', MapType::TOWN);
+  PlaceExits();
 
   CreateInitialMonsters();
 }
@@ -248,4 +322,33 @@ void MapLevelMines::TryToSpawnMonsters()
       InsertActor(rat);
     }
   }
+}
+
+void MapLevelMines::PlaceExits()
+{
+  LevelStart.X = _emptyCells[0].X;
+  LevelStart.Y = _emptyCells[0].Y;
+
+  GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', MapType::TOWN);
+
+  std::vector<Position> possibleExits;
+
+  int mapSizeMax = std::max(MapSize.X, MapSize.Y);
+
+  for (auto& c : _emptyCells)
+  {
+    int d = Util::LinearDistance(_playerRef->PosX, _playerRef->PosY, c.X, c.Y);
+    if (d > mapSizeMax / 2)
+    {
+      possibleExits.push_back(c);
+    }
+  }
+
+  int index = RNG::Instance().RandomRange(0, possibleExits.size());
+  auto exit = possibleExits[index];
+
+  LevelExit.Set(exit.X, exit.Y);
+
+  int cl = (int)MapType_;
+  GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', (MapType)(cl + 1));
 }

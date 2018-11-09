@@ -119,12 +119,14 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   if (randomize)
   {
     int pl = _playerRef->Attrs.Lvl.CurrentValue;
+    int dl = Map::Instance().CurrentLevel->DungeonLevel;
+    int difficulty = pl + dl;
 
-    int randomStr = RNG::Instance().RandomRange(1 * pl, 2 * pl);
-    int randomDef = RNG::Instance().RandomRange(0, 1 * pl);
-    int randomSkl = RNG::Instance().RandomRange(0, 1 * pl);
-    int randomHp = RNG::Instance().RandomRange(3 * pl, 10 * pl);
-    int randomSpd = RNG::Instance().RandomRange(1 * pl, 2 * pl);
+    int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
+    int randomDef = RNG::Instance().RandomRange(0, 1 * difficulty);
+    int randomSkl = RNG::Instance().RandomRange(0, 1 * difficulty);
+    int randomHp = RNG::Instance().RandomRange(3 * difficulty, 10 * difficulty);
+    int randomSpd = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
 
     go->Attrs.Str.Set(randomStr);
     go->Attrs.Def.Set(randomDef);

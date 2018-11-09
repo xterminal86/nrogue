@@ -91,7 +91,7 @@ void LevelBuilder::TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side)
   }
 
   // It is possible to get 0 rooms
-  // due to failing to add empty fallback room to full wall side.
+  // (e.g. trying to add open area to full wall side)
   auto rooms = GetRoomsForLayout(currentRoom.Layout, side);
   if (rooms.size() != 0)
   {
@@ -114,11 +114,12 @@ void LevelBuilder::TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side)
   }
   else
   {
-    // If no rooms could be added, create empty spot
-    auto empty = CreateEmptyLayout(currentRoom.RoomSize);
+    // If no rooms could be added, select random from list
+    int index = RNG::Instance().RandomRange(0, _roomsForLevel.size());
+    auto fallback = _roomsForLevel[index];
 
     RoomHelper rh;
-    rh.ParseLayout(empty);
+    rh.ParseLayout(fallback.Layout);
 
     rh.UpperLeftCorner.X = newAreaStart.X;
     rh.UpperLeftCorner.Y = newAreaStart.Y;
@@ -252,7 +253,7 @@ RoomLayout LevelBuilder::SelectRoom()
 {
   int dice = Util::RollDice();
 
-  int roomSize = _roomsForLevel[0].Room.size();
+  int roomSize = _roomsForLevel[0].Layout.size();
 
   std::vector<RoomLayout> rooms;
 
@@ -260,15 +261,17 @@ RoomLayout LevelBuilder::SelectRoom()
   {
     if (dice <= r.Chance)
     {
-      rooms.push_back(r.Room);
+      rooms.push_back(r.Layout);
     }
   }
 
-  // Construct fall back room (empty NxN)
+  // If we were unlucky with dice,
+  // just select random room
   if (rooms.size() == 0)
   {
-    auto res = CreateEmptyLayout(roomSize);
-    rooms.push_back(res);
+    int index = RNG::Instance().RandomRange(0, _roomsForLevel.size());
+    auto fallback = _roomsForLevel[index];
+    rooms.push_back(fallback.Layout);
   }
 
   int index = RNG::Instance().RandomRange(0, rooms.size());
@@ -283,7 +286,7 @@ std::vector<RoomLayout> LevelBuilder::SelectRooms()
   //auto dbg = Util::StringFormat("\t\tRolled: %i", dice);
   //Logger::Instance().Print(dbg);
 
-  int roomSize = _roomsForLevel[0].Room.size();
+  int roomSize = _roomsForLevel[0].Layout.size();
 
   std::vector<RoomLayout> rooms;
 
@@ -296,7 +299,7 @@ std::vector<RoomLayout> LevelBuilder::SelectRooms()
     {
       // Logger::Instance().Print("\t\tPassed!");
 
-      rooms.push_back(r.Room);
+      rooms.push_back(r.Layout);
     }
   }
 
