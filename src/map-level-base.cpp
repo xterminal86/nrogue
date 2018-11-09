@@ -35,6 +35,8 @@ void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
       MapArray[x][y]->Init(levelOwner, x, y, '.', "#000000", "#000000");
     }
   }
+
+  IsInitialized = true;
 }
 
 void MapLevelBase::AdjustCamera()
@@ -69,4 +71,14 @@ void MapLevelBase::RecordEmptyCells()
       }
     }
   }
+}
+
+void MapLevelBase::DisplayWelcomeText()
+{
+  std::vector<std::string> msg =
+  {
+    "You're not supposed to see this text.",
+  };
+
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "MapLevelBase", msg);
 }

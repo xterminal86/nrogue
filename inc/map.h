@@ -33,6 +33,7 @@ class Map : public Singleton<Map>
 
   private:    
     std::map<MapType, std::unique_ptr<MapLevelBase>> _levels;
+    std::map<MapType, bool> _mapVisitFirstTime;
 
     void RemoveDestroyed();
     void ChangeOrInstantiateLevel(MapType levelName);

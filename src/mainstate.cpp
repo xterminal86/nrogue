@@ -250,15 +250,7 @@ void MainState::Update(bool forceUpdate)
 
     // NOTE: Some debug info
 
-    _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i: Plr: [%i;%i] Key: %i",
-                                    _playerRef->Attrs.ActionMeter,
-                                    Map::Instance().CurrentLevel->MapOffsetX,
-                                    Map::Instance().CurrentLevel->MapOffsetY,
-                                    _playerRef->PosX,
-                                    _playerRef->PosY,
-                                    _keyPressed);
-
-    Printer::Instance().PrintFB(0, 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+    // PrintDebugInfo();
 
     // *****
 
@@ -395,4 +387,23 @@ void MainState::CheckStairs(chtype stairsSymbol)
     StairsComponent* stairs = static_cast<StairsComponent*>(c);
     Map::Instance().ChangeLevel(stairs->LeadsTo, false);
   }
+}
+
+void MainState::PrintDebugInfo()
+{
+  _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i: Plr: [%i;%i]",
+                                  _playerRef->Attrs.ActionMeter,
+                                  Map::Instance().CurrentLevel->MapOffsetX,
+                                  Map::Instance().CurrentLevel->MapOffsetY,
+                                  _playerRef->PosX,
+                                  _playerRef->PosY);
+
+  Printer::Instance().PrintFB(0, 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+
+  _debugInfo = Util::StringFormat("Key: %i Actors: %i Respawn: %i",
+                                  _keyPressed,
+                                  Map::Instance().CurrentLevel->ActorGameObjects.size(),
+                                  Map::Instance().CurrentLevel->RespawnCounter());
+
+  Printer::Instance().PrintFB(0, 2, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 }

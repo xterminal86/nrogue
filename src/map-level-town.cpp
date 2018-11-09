@@ -127,8 +127,6 @@ void MapLevelTown::PrepareMap(MapLevelBase* levelOwner)
   MapLevelBase::PrepareMap(levelOwner);
 
   CreateLevel();
-
-  IsInitialized = true;
 }
 
 void MapLevelTown::CreateLevel()

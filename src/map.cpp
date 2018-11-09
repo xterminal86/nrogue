@@ -23,6 +23,14 @@ void Map::Init()
 
   Application::Instance().PlayerInstance.VisibilityRadius = CurrentLevel->VisibilityRadius;
 
+  _mapVisitFirstTime[MapType::MINES_1] = false;
+  _mapVisitFirstTime[MapType::CAVES_1] = false;
+  _mapVisitFirstTime[MapType::LOST_CITY] = false;
+  _mapVisitFirstTime[MapType::DEEP_DARK_1] = false;
+  _mapVisitFirstTime[MapType::ABYSS_1] = false;
+  _mapVisitFirstTime[MapType::NETHER_1] = false;
+  _mapVisitFirstTime[MapType::THE_END] = false;
+
   // FIXME: debug
   // ChangeLevel(MapType::MINES_1, true);
 }
@@ -97,6 +105,8 @@ void Map::Draw(int playerX, int playerY)
 void Map::UpdateGameObjects()
 {
   RemoveDestroyed();
+
+  CurrentLevel->TryToSpawnMonsters();
 
   for (auto& go : CurrentLevel->GameObjects)
   {
@@ -246,6 +256,15 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
   else
   {
     CurrentLevel = _levels[levelName].get();
+  }
+
+  Application::Instance().DrawCurrentState();
+
+  if (_mapVisitFirstTime.count(levelName) == 1
+  && !CurrentLevel->WelcomeTextDisplayed)
+  {
+    CurrentLevel->WelcomeTextDisplayed = true;
+    CurrentLevel->DisplayWelcomeText();
   }
 }
 

@@ -26,6 +26,7 @@ class MainState : public GameState
     void CheckStairs(chtype stairsSymbol);
     void DrawHPMP();
     void DisplayHelp();
+    void PrintDebugInfo();
 
     std::string UpdateBar(int x, int y, Attribute attr);
 

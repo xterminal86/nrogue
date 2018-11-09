@@ -709,7 +709,7 @@ void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int
   stairs->LeadsTo = leadsTo;
 
   tile->ObjectName = (image == '>') ? "Stairs Down" : "Stairs Up";
-  tile->FgColor = GlobalConstants::WhiteColor;
-  tile->BgColor = GlobalConstants::BlackColor;
+  tile->FgColor = GlobalConstants::BlackColor;
+  tile->BgColor = GlobalConstants::WallColor;
   tile->Image = image;
 }

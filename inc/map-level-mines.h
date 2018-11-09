@@ -11,6 +11,8 @@ class MapLevelMines : public MapLevelBase
     MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLevel);
 
     void PrepareMap(MapLevelBase* levelOwner) override;
+    void DisplayWelcomeText() override;
+    void TryToSpawnMonsters() override;
 
   protected:
     void CreateLevel() override;

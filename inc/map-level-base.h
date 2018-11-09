@@ -18,6 +18,9 @@ class MapLevelBase
     void InsertGameObject(GameObject* goToInsert);
 
     virtual void PrepareMap(MapLevelBase* levelOwner);
+    virtual void DisplayWelcomeText();
+
+    virtual void TryToSpawnMonsters() {}
 
     // Map tiles or objects that don't have to be updated globally.
     // Updated around player position.
@@ -41,14 +44,25 @@ class MapLevelBase
     int MapOffsetX;
     int MapOffsetY;
 
-    int MaxMonsters;
-    int MonstersRespawnRate;
+    int MaxMonsters = 0;
+
+    // This depends heavily on player's speed,
+    // values can be big since several turns
+    // can pass before player turn is ready.
+    int MonstersRespawnTurns = -1;
+
     int DungeonLevel;
     int VisibilityRadius;
 
     bool IsInitialized = false;
+    bool WelcomeTextDisplayed = false;
 
-    void AdjustCamera();
+    void AdjustCamera();    
+
+    int RespawnCounter()
+    {
+      return _respawnCounter;
+    }
 
   protected:
     std::vector<Position> _emptyCells;

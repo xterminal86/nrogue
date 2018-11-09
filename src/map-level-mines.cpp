@@ -1,5 +1,6 @@
 #include "map-level-mines.h"
 
+#include "application.h"
 #include "rng.h"
 #include "constants.h"
 #include "game-objects-factory.h"
@@ -73,15 +74,14 @@ void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
 {
   MapLevelBase::PrepareMap(levelOwner);
 
-  CreateLevel();
-
-  IsInitialized = true;
+  CreateLevel();  
 }
 
 void MapLevelMines::CreateLevel()
 {
   VisibilityRadius = 10;
   MaxMonsters = 15 * DungeonLevel;
+  MonstersRespawnTurns = 1000;
 
   Tile t;
   t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Dirt");
@@ -91,7 +91,6 @@ void MapLevelMines::CreateLevel()
   LevelBuilder lb;
 
   lb.BuildLevel(_roomsForLevel, 0, 0, MapSize.X, MapSize.Y);
-  //lb.BuildLevel(_roomsForLevel, MapSize.X / 2, MapSize.Y / 2, MapSize.X, MapSize.Y);
 
   ConstructFromBuilder(lb);
 
@@ -199,6 +198,53 @@ void MapLevelMines::CreateInitialMonsters()
       // Normal rats
       auto rat = GameObjectsFactory::Instance().CreateRat(x, y);
 
+      InsertActor(rat);
+    }
+  }
+}
+
+void MapLevelMines::DisplayWelcomeText()
+{
+  std::vector<std::string> msg =
+  {
+    "These mines once were a place of",
+    "work and income for this village.",
+    "Now it's just crumbling tunnels",
+    "with occasional marks here and there",
+    "suggesting human presence in the past."
+  };
+
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Abandoned Mines", msg);
+}
+
+void MapLevelMines::TryToSpawnMonsters()
+{
+  if (_respawnCounter < MonstersRespawnTurns)
+  {
+    _respawnCounter++;
+    return;
+  }
+
+  _respawnCounter = 0;
+
+  std::vector<Position> positions;
+
+  int attempts = 20;
+
+  for (int i = 0; i < attempts; i++)
+  {
+    if (ActorGameObjects.size() >= MaxMonsters)
+    {
+      return;
+    }
+
+    int index = RNG::Instance().RandomRange(0, _emptyCells.size());
+    int cx = _emptyCells[index].X;
+    int cy = _emptyCells[index].Y;
+
+    if (!MapArray[cx][cy]->Visible && !MapArray[cx][cy]->Occupied)
+    {
+      auto rat = GameObjectsFactory::Instance().CreateRat(cx, cy);
       InsertActor(rat);
     }
   }
