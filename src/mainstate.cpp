@@ -34,6 +34,8 @@ void MainState::HandleInput()
           _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
+
+          _playerRef->ProcessHunger();
         }
         break;
 
@@ -49,6 +51,8 @@ void MainState::HandleInput()
           _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
+
+          _playerRef->ProcessHunger();
         }
         break;
 
@@ -65,6 +69,8 @@ void MainState::HandleInput()
           _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
+
+          _playerRef->ProcessHunger();
         }
         break;
 
@@ -80,6 +86,8 @@ void MainState::HandleInput()
           _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
+
+          _playerRef->ProcessHunger();
         }
         break;
 
@@ -95,6 +103,8 @@ void MainState::HandleInput()
           _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
+
+          _playerRef->ProcessHunger();
         }
         break;
 
@@ -110,6 +120,8 @@ void MainState::HandleInput()
           _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
+
+          _playerRef->ProcessHunger();
         }
         break;
 
@@ -126,6 +138,8 @@ void MainState::HandleInput()
           _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
+
+          _playerRef->ProcessHunger();
         }
         break;
 
@@ -142,6 +156,8 @@ void MainState::HandleInput()
           _playerRef->FinishTurn();
 
           Printer::Instance().ShowLastMessage = false;
+
+          _playerRef->ProcessHunger();
         }
         break;
 
@@ -250,7 +266,7 @@ void MainState::Update(bool forceUpdate)
 
     // NOTE: Some debug info
 
-    // PrintDebugInfo();
+    PrintDebugInfo();
 
     // *****
 
@@ -391,12 +407,13 @@ void MainState::CheckStairs(chtype stairsSymbol)
 
 void MainState::PrintDebugInfo()
 {
-  _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i: Plr: [%i;%i]",
+  _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i: Plr: [%i;%i] Hunger: %i",
                                   _playerRef->Attrs.ActionMeter,
                                   Map::Instance().CurrentLevel->MapOffsetX,
                                   Map::Instance().CurrentLevel->MapOffsetY,
                                   _playerRef->PosX,
-                                  _playerRef->PosY);
+                                  _playerRef->PosY,
+                                  _playerRef->Attrs.Hunger);
 
   Printer::Instance().PrintFB(0, 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 

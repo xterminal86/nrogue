@@ -52,6 +52,7 @@ class Player : public GameObject
     void Attack(GameObject* go);
     void ReceiveDamage(GameObject* from, int amount);
     void WaitForTurn();
+    void ProcessHunger();
 
     bool IsAlive(GameObject* damager);
 

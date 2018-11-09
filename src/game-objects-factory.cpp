@@ -333,6 +333,58 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 
   return res;
 }
+GameObject* GameObjectsFactory::CreateFood(FoodType type, ItemPrefix prefixOverride)
+{
+  std::string name;
+  int addsHunger = 0;
+
+  if (GlobalConstants::FoodItemHungerByName.count(type) == 1)
+  {
+    name = GlobalConstants::FoodItemHungerByName.at(type).first;
+    addsHunger = GlobalConstants::FoodItemHungerByName.at(type).second;
+  }
+  else
+  {
+    int index = RNG::Instance().RandomRange(0, GlobalConstants::FoodItemHungerByName.size());
+    name = GlobalConstants::FoodItemHungerByName.at((FoodType)index).first;
+    addsHunger = GlobalConstants::FoodItemHungerByName.at((FoodType)index).second;
+  }
+
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->FgColor = "#FFFFFF";
+  go->BgColor = "#000000";
+  go->Image = '%';
+  go->ObjectName = name;
+
+  Component* c = go->AddComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+  ic->Data.TypeOfItem = ItemType::FOOD;
+  ic->Data.Prefix = prefixOverride;
+  ic->Data.Amount = 1;
+
+  // Use Cost field to store amount of hunger replenished
+  ic->Data.Cost = addsHunger;
+
+  ic->Data.IsStackable = true;
+
+  ic->Data.UnidentifiedName = "?" + name + "?";
+  ic->Data.UnidentifiedDescription = { "Looks edible." };
+  ic->Data.IdentifiedDescription = { "Looks edible." };
+  ic->Data.IdentifiedName = name;
+
+  ic->Data.UseCallback = std::bind(&GameObjectsFactory::FoodUseHandler, this, ic);
+
+  auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
+  std::hash<std::string> hasher;
+
+  ic->Data.ItemTypeHash = hasher(strToHash);
+
+  SetItemName(go, ic->Data);
+
+  return go;
+}
 
 GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 {
@@ -714,4 +766,35 @@ void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int
   tile->FgColor = GlobalConstants::BlackColor;
   tile->BgColor = GlobalConstants::WallColor;
   tile->Image = image;
+}
+
+void GameObjectsFactory::FoodUseHandler(ItemComponent* item)
+{
+  auto objName = (item->Data.IsIdentified) ? item->Data.IdentifiedName : item->Data.UnidentifiedName;
+
+  auto str = Util::StringFormat("You eat %s...", objName.data());
+  Printer::Instance().AddMessage(str);
+
+  if (item->Data.Prefix == ItemPrefix::CURSED)
+  {
+    Printer::Instance().AddMessage("Disgusting!");
+
+    _playerRef->Attrs.Hunger += item->Data.Cost;
+  }
+  else if (item->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    Printer::Instance().AddMessage("It's delicious!");
+
+    _playerRef->Attrs.Hunger -= item->Data.Cost * 2;
+  }
+  else
+  {
+    Printer::Instance().AddMessage("It tasted OK");
+
+    _playerRef->Attrs.Hunger -= item->Data.Cost;
+  }
+
+  _playerRef->Attrs.Hunger = Util::Clamp(_playerRef->Attrs.Hunger, 0, _playerRef->Attrs.HungerRate.CurrentValue);
+
+  Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
 }

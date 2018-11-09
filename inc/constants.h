@@ -114,6 +114,16 @@ enum class ItemType
   WEAPON
 };
 
+enum class FoodType
+{
+  APPLE = 0,
+  CHEESE,
+  BREAD,
+  MEAT,
+  RATIONS,
+  IRON_RATIONS
+};
+
 enum class ShrineType
 {
   MIGHT = 0,    // raises STR or HP
@@ -231,7 +241,7 @@ struct Attributes
   Attribute Exp;
   Attribute Lvl;
 
-  int Hunger = 1000;
+  int Hunger = 0;
   int ActionMeter = 0;
 
   bool Indestructible = true;
@@ -342,6 +352,16 @@ namespace GlobalConstants
   static const std::string ItemMagicColor = "#4169E1";
   static const std::string ItemRareColor = "#CCCC52";
   static const std::string ItemUniqueColor = "#A59263";
+
+  static const std::map<FoodType, std::pair<std::string, int>> FoodItemHungerByName =
+  {
+    { FoodType::APPLE, { "Apple", 50 } },
+    { FoodType::CHEESE, { "Cheese", 100 } },
+    { FoodType::BREAD, { "Bread", 250 } },
+    { FoodType::MEAT, { "Meat", 350 } },
+    { FoodType::RATIONS, { "Rations", 500 } },
+    { FoodType::IRON_RATIONS, { "Iron Rations", 1000 } }
+  };
 
   static const std::map<ShrineType, std::string> ShrineSaintByType =
   {

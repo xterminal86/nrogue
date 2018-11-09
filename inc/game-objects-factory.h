@@ -26,6 +26,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateManaPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
     GameObject* CreateHungerPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
     GameObject* CreateExpPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
+    GameObject* CreateFood(FoodType type = FoodType::APPLE, ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
 
     GameObject* CreateRandomPotion();
 
@@ -50,6 +51,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void ManaPotionUseHandler(ItemComponent* item);
     void HungerPotionUseHandler(ItemComponent* item);
     void ExpPotionUseHandler(ItemComponent* item);
+    void FoodUseHandler(ItemComponent* item);
 
     void SetItemName(GameObject* go, ItemData& itemData);
 };

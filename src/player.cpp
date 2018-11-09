@@ -270,12 +270,19 @@ void Player::SetSoldierAttrs()
 
   Attrs.HP.Set(40);
 
-  Attrs.HungerRate.Set(50);
-  Attrs.HungerSpeed.Set(2);
+  Attrs.HungerRate.Set(400);
+  Attrs.HungerSpeed.Set(1);
 
   auto go = GameObjectsFactory::Instance().CreateHealingPotion();
   auto ic = go->GetComponent<ItemComponent>();
   ((ItemComponent*)ic)->Data.Amount = 3;
+
+  Inventory.AddToInventory(go);
+
+  go = GameObjectsFactory::Instance().CreateFood(FoodType::IRON_RATIONS, ItemPrefix::UNCURSED);
+  ic = go->GetComponent<ItemComponent>();
+  ((ItemComponent*)ic)->Data.Amount = 1;
+  ((ItemComponent*)ic)->Data.IsIdentified = true;
 
   Inventory.AddToInventory(go);
 }
@@ -293,8 +300,8 @@ void Player::SetThiefAttrs()
 
   Attrs.HP.Set(25);
 
-  Attrs.HungerRate.Set(75);
-  Attrs.HungerSpeed.Set(2);  
+  Attrs.HungerRate.Set(500);
+  Attrs.HungerSpeed.Set(1);
 
   auto go = GameObjectsFactory::Instance().CreateHealingPotion();
   auto ic = go->GetComponent<ItemComponent>();
@@ -323,7 +330,7 @@ void Player::SetArcanistAttrs()
   Attrs.HP.Set(10);
   Attrs.MP.Set(50);
 
-  Attrs.HungerRate.Set(100);
+  Attrs.HungerRate.Set(500);
   Attrs.HungerSpeed.Set(1);
 
   auto go = GameObjectsFactory::Instance().CreateManaPotion();
@@ -765,4 +772,22 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
   index++;
 
   return levelUpResults;
+}
+
+void Player::ProcessHunger()
+{
+  Attrs.Hunger += Attrs.HungerSpeed.Get();
+
+  int maxHunger = Attrs.HungerRate.CurrentValue;
+  Attrs.Hunger = Util::Clamp(Attrs.Hunger, 0, maxHunger);
+
+  // TODO: food items etc.
+
+  /*
+  if (Attrs.Hunger == maxHunger)
+  {
+    Printer::Instance().AddMessage("You are starving!");
+    ReceiveDamage(nullptr, 1);
+  }
+  */
 }
