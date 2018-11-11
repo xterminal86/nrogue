@@ -293,7 +293,7 @@ void MainState::DisplayGameLog()
 void MainState::TryToPickupItem()
 {
   auto res = Map::Instance().GetGameObjectToPickup(_playerRef->PosX, _playerRef->PosY);
-  Component* ic = nullptr;
+  Component* c = nullptr;
   if (res.first != -1)
   {
     if (_playerRef->Inventory.Contents.size() == _playerRef->kInventorySize)
@@ -303,18 +303,19 @@ void MainState::TryToPickupItem()
       return;
     }
 
-    ic = res.second->GetComponent<ItemComponent>();
+    c = res.second->GetComponent<ItemComponent>();
+    ItemComponent* ic = static_cast<ItemComponent*>(c);
 
     auto go = Map::Instance().CurrentLevel->GameObjects[res.first].release();
 
     _playerRef->Inventory.AddToInventory(go);
 
-    std::string objName = ((ItemComponent*)ic)->Data.IsIdentified ? go->ObjectName : ((ItemComponent*)ic)->Data.UnidentifiedName;
+    std::string objName = ic->Data.IsIdentified ? go->ObjectName : ic->Data.UnidentifiedName;
 
     std::string message;
-    if (((ItemComponent*)ic)->Data.IsStackable)
+    if (ic->Data.IsStackable)
     {
-      message = Util::StringFormat("Picked up: %i %s", ((ItemComponent*)ic)->Data.Amount, objName.data());
+      message = Util::StringFormat("Picked up: %i %s", ic->Data.Amount, objName.data());
     }
     else
     {

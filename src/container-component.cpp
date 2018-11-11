@@ -25,7 +25,7 @@ void ContainerComponent::AddToInventory(GameObject* object)
     {
       auto ic = i->GetComponent<ItemComponent>();
       ItemComponent* inventoryItemComponent = static_cast<ItemComponent*>(ic);
-      if (itemToAdd->Data.IsIdentified
+      if (itemToAdd->Data.IsIdentified && inventoryItemComponent->Data.IsIdentified
        && inventoryItemComponent->Data.ItemTypeHash == itemToAdd->Data.ItemTypeHash)
       {
         inventoryItemComponent->Data.Amount += itemToAdd->Data.Amount;

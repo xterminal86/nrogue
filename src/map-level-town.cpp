@@ -184,8 +184,8 @@ void MapLevelTown::CreateLevel()
 
   RecordEmptyCells();
 
-  LevelExit.X = 96;
-  LevelExit.Y = 47;
+  LevelExit.X = 98;
+  LevelExit.Y = 48;
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);  
 }

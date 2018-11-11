@@ -173,7 +173,7 @@ void MapLevelMines::CreateLevel()
 
   // Borders
 
-  t.Set(true, true, '#', GlobalConstants::WallColor, GlobalConstants::BlackColor, "Rocks");
+  t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
 
   auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
   for (auto& i : bounds)
@@ -231,7 +231,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
           case '#':
           {
             objName = "Rocks";
-            t.Set(true, true, image, GlobalConstants::WallColor, GlobalConstants::BlackColor, objName);
+            t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
           }
           break;
 

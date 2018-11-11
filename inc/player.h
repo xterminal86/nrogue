@@ -70,6 +70,11 @@ class Player : public GameObject
     void DiscoverCell(int x, int y);
     void SetAttributes();
     void SetDefaultEquipment();
+    void SetDefaultItems();
+
+    void SetSoldierDefaultItems();
+    void SetThiefDefaultItems();
+    void SetArcanistDefaultItems();
 
     void SetSoldierAttrs();
     void SetThiefAttrs();

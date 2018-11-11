@@ -72,6 +72,8 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
   ic->Data.Amount = money;
   ic->Data.IsStackable = true;
   ic->Data.TypeOfItem = ItemType::COINS;
+  ic->Data.IsIdentified = true;
+  ic->Data.IdentifiedName = "Gold Coins";
 
   return go;
 }
@@ -369,8 +371,10 @@ GameObject* GameObjectsFactory::CreateFood(FoodType type, ItemPrefix prefixOverr
 
   ic->Data.IsStackable = true;
 
-  ic->Data.UnidentifiedName = "?" + name + "?";
-  ic->Data.UnidentifiedDescription = { "Looks edible." };
+  std::string unidName = (type == FoodType::RATIONS || type == FoodType::IRON_RATIONS) ? "Rations" : name;
+  ic->Data.UnidentifiedName = "?" + unidName + "?";
+
+  ic->Data.UnidentifiedDescription = { "Looks edible but eat at your own risk." };
   ic->Data.IdentifiedDescription = { "Looks edible." };
   ic->Data.IdentifiedName = name;
 

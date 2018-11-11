@@ -26,6 +26,11 @@ void Player::Init()
 
   // FIXME: remove afterwards
 
+  auto go = GameObjectsFactory::Instance().CreateFood(FoodType::IRON_RATIONS);
+  go->PosX = 6;
+  go->PosY = 2;
+  Map::Instance().InsertGameObject(go);
+
 #if 0
   for (int i = 0; i < 40; i++)
   {
@@ -255,6 +260,8 @@ void Player::SetAttributes()
       SetSoldierAttrs();
       break;
   }
+
+  SetDefaultItems();
 }
 
 void Player::SetSoldierAttrs()
@@ -271,20 +278,7 @@ void Player::SetSoldierAttrs()
   Attrs.HP.Set(40);
 
   Attrs.HungerRate.Set(400);
-  Attrs.HungerSpeed.Set(1);
-
-  auto go = GameObjectsFactory::Instance().CreateHealingPotion();
-  auto ic = go->GetComponent<ItemComponent>();
-  ((ItemComponent*)ic)->Data.Amount = 3;
-
-  Inventory.AddToInventory(go);
-
-  go = GameObjectsFactory::Instance().CreateFood(FoodType::IRON_RATIONS, ItemPrefix::UNCURSED);
-  ic = go->GetComponent<ItemComponent>();
-  ((ItemComponent*)ic)->Data.Amount = 1;
-  ((ItemComponent*)ic)->Data.IsIdentified = true;
-
-  Inventory.AddToInventory(go);
+  Attrs.HungerSpeed.Set(1);  
 }
 
 void Player::SetThiefAttrs()
@@ -301,19 +295,7 @@ void Player::SetThiefAttrs()
   Attrs.HP.Set(25);
 
   Attrs.HungerRate.Set(500);
-  Attrs.HungerSpeed.Set(1);
-
-  auto go = GameObjectsFactory::Instance().CreateHealingPotion();
-  auto ic = go->GetComponent<ItemComponent>();
-  Inventory.AddToInventory(go);
-
-  go = GameObjectsFactory::Instance().CreateManaPotion();
-  ic = go->GetComponent<ItemComponent>();
-  Inventory.AddToInventory(go);
-
-  go = GameObjectsFactory::Instance().CreateMoney(100);
-  ic = go->GetComponent<ItemComponent>();
-  Inventory.AddToInventory(go);
+  Attrs.HungerSpeed.Set(1);  
 }
 
 void Player::SetArcanistAttrs()
@@ -331,13 +313,7 @@ void Player::SetArcanistAttrs()
   Attrs.MP.Set(50);
 
   Attrs.HungerRate.Set(500);
-  Attrs.HungerSpeed.Set(1);
-
-  auto go = GameObjectsFactory::Instance().CreateManaPotion();
-  auto ic = go->GetComponent<ItemComponent>();
-  ((ItemComponent*)ic)->Data.Amount = 3;
-
-  Inventory.AddToInventory(go);
+  Attrs.HungerSpeed.Set(1);  
 }
 
 void Player::SetDefaultEquipment()
@@ -790,4 +766,63 @@ void Player::ProcessHunger()
     ReceiveDamage(nullptr, 1);
   }
   */
+}
+
+void Player::SetDefaultItems()
+{
+  switch (_classesMap[SelectedClass])
+  {
+    case PlayerClass::SOLDIER:
+      SetSoldierDefaultItems();
+      break;
+
+    case PlayerClass::THIEF:
+      SetThiefDefaultItems();
+      break;
+
+    case PlayerClass::ARCANIST:
+      SetArcanistDefaultItems();
+      break;
+  }
+}
+
+void Player::SetSoldierDefaultItems()
+{
+  auto go = GameObjectsFactory::Instance().CreateHealingPotion();
+  auto ic = go->GetComponent<ItemComponent>();
+  ((ItemComponent*)ic)->Data.Amount = 3;
+
+  Inventory.AddToInventory(go);
+
+  go = GameObjectsFactory::Instance().CreateFood(FoodType::IRON_RATIONS, ItemPrefix::UNCURSED);
+  ic = go->GetComponent<ItemComponent>();
+  ((ItemComponent*)ic)->Data.Amount = 1;
+  ((ItemComponent*)ic)->Data.IsIdentified = true;
+
+  Inventory.AddToInventory(go);
+}
+
+void Player::SetThiefDefaultItems()
+{
+  auto go = GameObjectsFactory::Instance().CreateHealingPotion();
+  auto ic = go->GetComponent<ItemComponent>();
+  Inventory.AddToInventory(go);
+
+  go = GameObjectsFactory::Instance().CreateManaPotion();
+  ic = go->GetComponent<ItemComponent>();
+  Inventory.AddToInventory(go);
+
+  go = GameObjectsFactory::Instance().CreateMoney(100);
+  ic = go->GetComponent<ItemComponent>();
+  Inventory.AddToInventory(go);
+}
+
+void Player::SetArcanistDefaultItems()
+{
+  auto go = GameObjectsFactory::Instance().CreateManaPotion();
+  auto c = go->GetComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ic->Data.Amount = 5;
+
+  Inventory.AddToInventory(go);
 }
