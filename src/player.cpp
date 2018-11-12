@@ -336,8 +336,12 @@ void Player::Attack(GameObject* go)
   if (go->Attrs.Indestructible)
   {
     Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
+
     auto str = Util::StringFormat("Your attack bounces off %s!", go->ObjectName.data());
     Printer::Instance().AddMessage(str);
+
+    Application::Instance().DrawCurrentState();
+    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs);
   }
   else
   {    
@@ -381,11 +385,18 @@ void Player::Attack(GameObject* go)
       {
         ProcessKill(go);
       }
+
+      Application::Instance().DrawCurrentState();
+      Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs);
     }
     else
     {
       Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
+
       Printer::Instance().AddMessage("You missed");
+
+      Application::Instance().DrawCurrentState();
+      Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs);
     }
   }
 

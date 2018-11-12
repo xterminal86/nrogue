@@ -107,13 +107,16 @@ void Application::DisplayAttack(GameObject* defender, int delayMs, std::string c
   int posX = defender->PosX + Map::Instance().CurrentLevel->MapOffsetX;
   int posY = defender->PosY + Map::Instance().CurrentLevel->MapOffsetY;
 
-  Printer::Instance().PrintFB(posX, posY, ' ', "#000000", cursorColor);
-  Printer::Instance().Render();
-
-  Util::Sleep(delayMs);
-
-  Printer::Instance().PrintFB(posX, posY, defender->Image, defender->FgColor, defender->BgColor);
-  Printer::Instance().Render();
+  if (cursorColor.length() == 0)
+  {
+    Printer::Instance().PrintFB(posX, posY, defender->Image, defender->FgColor, defender->BgColor);
+    Printer::Instance().Render();
+  }
+  else
+  {
+    Printer::Instance().PrintFB(posX, posY, ' ', "#000000", cursorColor);
+    Printer::Instance().Render();
+  }
 
   Util::Sleep(delayMs);
 }

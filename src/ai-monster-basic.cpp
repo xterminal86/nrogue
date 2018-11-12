@@ -200,6 +200,10 @@ void AIMonsterBasic::Attack(Player* player)
     }
 
     player->ReceiveDamage(OwnerGameObject, dmg);
+
+    Application::Instance().DrawCurrentState();
+    Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs);
+
     if (!player->IsAlive(OwnerGameObject))
     {
       Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
@@ -211,5 +215,8 @@ void AIMonsterBasic::Attack(Player* player)
 
     auto str = Util::StringFormat("%s misses", OwnerGameObject->ObjectName.data());
     Printer::Instance().AddMessage(str);
+
+    Application::Instance().DrawCurrentState();
+    Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs);
   }
 }
