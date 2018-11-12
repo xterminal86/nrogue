@@ -802,3 +802,25 @@ void GameObjectsFactory::FoodUseHandler(ItemComponent* item)
 
   Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
 }
+
+GameObject* GameObjectsFactory::CreateNote(std::string objName, std::vector<std::string> text)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->FgColor = "#000000";
+  go->BgColor = "#FFFFFF";
+  go->Image = '?';
+  go->ObjectName = objName;
+
+  Component* c = go->AddComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+  ic->Data.TypeOfItem = ItemType::DUMMY;
+  ic->Data.IsStackable = false;
+  ic->Data.IsIdentified = true;
+
+  ic->Data.IdentifiedDescription = text;
+  ic->Data.IdentifiedName = objName;
+
+  return go;
+}

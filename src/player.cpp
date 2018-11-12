@@ -19,6 +19,7 @@ void Player::Init()
 
   SetAttributes();
   SetDefaultEquipment();
+  SetDefaultItems();
 
   _previousCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
@@ -259,9 +260,7 @@ void Player::SetAttributes()
       // TODO: custom class defaults to soldier for now
       SetSoldierAttrs();
       break;
-  }
-
-  SetDefaultItems();
+  }  
 }
 
 void Player::SetSoldierAttrs()
@@ -825,7 +824,7 @@ void Player::SetThiefDefaultItems()
 
   go = GameObjectsFactory::Instance().CreateMoney(100);
   ic = go->GetComponent<ItemComponent>();
-  Inventory.AddToInventory(go);
+  Inventory.AddToInventory(go);  
 }
 
 void Player::SetArcanistDefaultItems()

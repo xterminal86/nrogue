@@ -18,7 +18,10 @@ void EnterNameState::HandleInput()
         }
 
         Application::Instance().PlayerInstance.Name = _nameEntered;
-        Application::Instance().ChangeState(Application::GameStates::INTRO_STATE);
+        Application::Instance().PlayerInstance.ObjectName = _nameEntered;
+
+        Application::Instance().ChangeState(Application::GameStates::INTRO_STATE);        
+
         break;
 
       case VK_BACKSPACE:
@@ -29,7 +32,7 @@ void EnterNameState::HandleInput()
         break;
 
       default:
-        if (_keyPressed >= 33 &&
+        if (_keyPressed >= 32 &&
             _keyPressed <= 126 &&
             _nameEntered.length() < kMaxNameLength - 3)
         {

@@ -2,6 +2,8 @@
 #include "printer.h"
 
 #include "application.h"
+#include "game-objects-factory.h"
+#include "map.h"
 
 void IntroState::Prepare()
 {
@@ -14,6 +16,8 @@ void IntroState::Prepare()
 
   int textIndex = Application::Instance().PlayerInstance.SelectedClass;
   _textPositionY = Printer::Instance().TerminalHeight / 2 - _introStrings[textIndex].size() / 2;
+
+  AddBonusItems();
 }
 
 void IntroState::HandleInput()
@@ -67,4 +71,86 @@ void IntroState::Update(bool forceUpdate)
   }
 
   Printer::Instance().Render();
+}
+
+void IntroState::AddBonusItems()
+{
+  GameObject* go = nullptr;
+  std::vector<std::string> text;
+
+  auto& player = Application::Instance().PlayerInstance;
+
+  switch(player.GetClass())
+  {
+    case Player::PlayerClass::THIEF:
+    {
+      text =
+      {
+        "REWARD 10,000",
+        "",
+        "For the capture dead or alive of one",
+        "",
+        player.Name,
+        "",
+        "the leader of the worst band of thieves",
+        "the City has ever had to deal with.",
+        "The above reward will be paid",
+        "for his / her capture",
+        "or positive proof of death.",
+        "",
+        "Signed:",
+        "NORMAN TRUART, Sheriff",
+        "City Watch HQ",
+        "13 / II / 988"
+      };
+
+      go = GameObjectsFactory::Instance().CreateNote("Wanted Poster", text);
+      player.Inventory.AddToInventory(go);
+    }
+    break;
+
+    case Player::PlayerClass::SOLDIER:
+    {
+      text =
+      {
+        "Pvt. " + player.Name,
+        "is hereby granted permission",
+        "to take a leave of absence",
+        "until 23 / IV / 988",
+        "",
+        "Signed:",
+        "Lt. JANE MOSLEY",
+        "City Watch, Stonemarket Dpt.",
+        "13 / III / 988"
+      };
+
+      go = GameObjectsFactory::Instance().CreateNote("Leave Warrant", text);
+      player.Inventory.AddToInventory(go);
+    }
+    break;
+
+    case Player::PlayerClass::ARCANIST:
+    {
+      text =
+      {
+        player.Name,
+        "",
+        "The Order instructs you to visit",
+        Map::Instance().CurrentLevel->LevelName,
+        "Investigate the place as thorough as possible",
+        "for we believe there is a disturbance",
+        "lurking there somewhere.",
+        "Find the source of this unbalance,",
+        "restore it and come back to us.",
+        "We'll be praying for your success.",
+        "",
+        "Signed:",
+        "+ Bishop DANIEL"
+      };
+
+      go = GameObjectsFactory::Instance().CreateNote("Orders", text);
+      player.Inventory.AddToInventory(go);
+    }
+    break;
+  }
 }

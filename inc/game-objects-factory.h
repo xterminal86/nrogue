@@ -27,6 +27,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateHungerPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
     GameObject* CreateExpPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
     GameObject* CreateFood(FoodType type = FoodType::APPLE, ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
+    GameObject* CreateNote(std::string objName, std::vector<std::string> text);
 
     GameObject* CreateRandomPotion();
 

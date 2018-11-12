@@ -213,6 +213,11 @@ const std::vector<GameObject*> LookInputState::CheckGameObjects()
 void LookInputState::DisplayMonsterStats()
 {
   auto actor = CheckActor();
+  if (actor == nullptr && CheckPlayer())
+  {
+    actor = _playerRef;
+  }
+
   if (actor != nullptr)
   {
     std::vector<std::string> msg;
