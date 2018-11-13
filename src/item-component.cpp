@@ -84,7 +84,7 @@ std::vector<std::string> ItemComponent::GetWeaponInspectionInfo()
     { Util::StringFormat("MAG: %i", Data.StatBonuses[StatsEnum::MAG]) },
     { Util::StringFormat("RES: %i", Data.StatBonuses[StatsEnum::RES]) },
     { Util::StringFormat("SKL: %i", Data.StatBonuses[StatsEnum::SKL]) },
-    { Util::StringFormat("SPD: %i", Data.StatBonuses[StatsEnum::SPD]) },
+    { Util::StringFormat("SPD: %i", Data.StatBonuses[StatsEnum::SPD]) }
   };
 
   return res;

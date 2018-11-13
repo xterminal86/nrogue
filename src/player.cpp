@@ -155,7 +155,7 @@ bool Player::Move(int dx, int dy)
 }
 
 void Player::CheckVisibility()
-{
+{  
   int tw = Printer::Instance().TerminalWidth;
   int th = Printer::Instance().TerminalHeight;
 

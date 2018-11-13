@@ -262,11 +262,12 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
     CurrentLevel = _levels[levelName].get();
   }
 
-  Application::Instance().DrawCurrentState();
-
   if (_mapVisitFirstTime.count(levelName) == 1
   && !CurrentLevel->WelcomeTextDisplayed)
   {
+    Printer::Instance().Clear();
+    Printer::Instance().Render();
+
     CurrentLevel->WelcomeTextDisplayed = true;
     CurrentLevel->DisplayWelcomeText();
   }  

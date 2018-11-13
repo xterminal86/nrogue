@@ -97,7 +97,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     },
     // 7
     {
-      "#.##.##.#",
+      "#.#####.#",
       "#.#...#.#",
       "#.#.#.#.#",
       "#.#.#.#.#",
@@ -105,7 +105,19 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
       "#.#.#.#.#",
       "#.#.#.#.#",
       "#...#...#",
-      "##.###.##",
+      "#########",
+    },
+    // 8
+    {
+      "####.####",
+      "..#...#..",
+      "#.#.#.#.#",
+      "#.#.#.#.#",
+      "#.#.#.#.#",
+      "#.#...#.#",
+      "#.##.##.#",
+      "#.......#",
+      "####.####",
     }
   };
 
@@ -140,7 +152,8 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
         { 80, _layoutsForLevel[4] },
         { 80, _layoutsForLevel[5] },
         { 80, _layoutsForLevel[6] },
-        { 50, _layoutsForLevel[7] }
+        { 50, _layoutsForLevel[7] },
+        { 50, _layoutsForLevel[8] }
       };
     }
     break;
