@@ -41,6 +41,12 @@ void ItemComponent::Inspect()
 {  
   std::string header = Data.IsIdentified ? Data.IdentifiedName : Data.UnidentifiedName;
   auto desc = Data.IsIdentified ? Data.IdentifiedDescription : Data.UnidentifiedDescription;
+
+  if (Data.IsIdentified && Data.TypeOfItem == ItemType::WEAPON)
+  {
+    desc = GetWeaponInspectionInfo();
+  }
+
   if (Data.IsPrefixDiscovered)
   {
     if (Data.Prefix == ItemPrefix::BLESSED)
@@ -62,4 +68,24 @@ void ItemComponent::Throw()
 bool ItemComponent::Use()
 {
   return GameObjectsFactory::Instance().HandleItemUse(this);
+}
+
+// ************************** PRIVATE METHODS ************************** //
+
+std::vector<std::string> ItemComponent::GetWeaponInspectionInfo()
+{
+  std::vector<std::string> res =
+  {
+    { Util::StringFormat("DMG: %id%i", Data.Damage.CurrentValue, Data.Damage.OriginalValue) },
+    { Util::StringFormat("DUR: %i / %i", Data.Durability.CurrentValue, Data.Durability.OriginalValue) },
+    { "" },
+    { Util::StringFormat("STR: %i", Data.StatBonuses[StatsEnum::STR]) },
+    { Util::StringFormat("DEF: %i", Data.StatBonuses[StatsEnum::DEF]) },
+    { Util::StringFormat("MAG: %i", Data.StatBonuses[StatsEnum::MAG]) },
+    { Util::StringFormat("RES: %i", Data.StatBonuses[StatsEnum::RES]) },
+    { Util::StringFormat("SKL: %i", Data.StatBonuses[StatsEnum::SKL]) },
+    { Util::StringFormat("SPD: %i", Data.StatBonuses[StatsEnum::SPD]) },
+  };
+
+  return res;
 }

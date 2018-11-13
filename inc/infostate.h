@@ -13,6 +13,11 @@ class InfoState : public GameState
   private:
     void ShowInventory();
     void PrintAttribute(int x, int y, std::string attrName, Attribute& attr, bool displayMaxValue = false);
+    void PrintModifiers(int x, int y);
+
+    int FindAttrsMaxStringLength();
+
+    std::pair<std::string, std::string> GetModifierString(int value);
 };
 
 #endif

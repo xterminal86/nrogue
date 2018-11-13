@@ -122,13 +122,13 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   {
     int pl = _playerRef->Attrs.Lvl.CurrentValue;
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
-    int difficulty = pl + dl;
+    int difficulty = std::max(pl, dl); //pl + dl;
 
     int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
     int randomDef = RNG::Instance().RandomRange(0, 1 * difficulty);
     int randomSkl = RNG::Instance().RandomRange(0, 1 * difficulty);
     int randomHp = RNG::Instance().RandomRange(1 * difficulty, 5 * difficulty);
-    int randomSpd = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
+    int randomSpd = RNG::Instance().RandomRange(0, 2 * difficulty);
 
     go->Attrs.Str.Set(randomStr);
     go->Attrs.Def.Set(randomDef);
@@ -554,11 +554,13 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
+  ic->Data.TypeOfItem = ItemType::WEAPON;
 
   ic->Data.Prefix = overridePrefix ? ItemPrefix::UNCURSED : RollItemPrefix();
   ic->Data.IsIdentified = overridePrefix ? true : false;
 
   int avgDamage = 0;
+  int baseDurability = 0;
 
   switch (type)
   {
@@ -569,12 +571,10 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
 
-      int durability = 20 * dungeonLevel;
+      baseDurability = 10;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
-
-      ic->Data.Durability.Set(durability);
 
       ic->Data.StatBonuses[StatsEnum::SKL] = 1;
       ic->Data.StatBonuses[StatsEnum::SPD] = 3;
@@ -588,12 +588,10 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
 
-      int durability = 30 * dungeonLevel;
+      baseDurability = 20;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
-
-      ic->Data.Durability.Set(durability);
 
       ic->Data.StatBonuses[StatsEnum::STR] = 2;
       ic->Data.StatBonuses[StatsEnum::DEF] = 1;
@@ -608,12 +606,10 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
 
-      int durability = 10 * dungeonLevel;
+      baseDurability = 5;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
-
-      ic->Data.Durability.Set(durability);
 
       ic->Data.StatBonuses[StatsEnum::STR] = 1;
       ic->Data.StatBonuses[StatsEnum::DEF] = 2;
@@ -622,24 +618,19 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
     break;
   }
 
+  int durability = baseDurability + (baseDurability / 10) + dungeonLevel;
+  ic->Data.Durability.Set(durability);
+
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
 
   auto str = Util::StringFormat("It seems to inflict %d damage on average", avgDamage);
   ic->Data.UnidentifiedDescription = { str, "You can't tell anything else." };
 
-  ic->Data.IdentifiedDescription =
-  {
-    { Util::StringFormat("DMG: %id%i", ic->Data.Damage.CurrentValue, ic->Data.Damage.OriginalValue) },
-    { Util::StringFormat("DUR: %i / %i", ic->Data.Durability.CurrentValue, ic->Data.Durability.OriginalValue) },
-    { "" },
-    { Util::StringFormat("STR: %i", ic->Data.StatBonuses[StatsEnum::STR]) },
-    { Util::StringFormat("DEF: %i", ic->Data.StatBonuses[StatsEnum::DEF]) },
-    { Util::StringFormat("MAG: %i", ic->Data.StatBonuses[StatsEnum::MAG]) },
-    { Util::StringFormat("RES: %i", ic->Data.StatBonuses[StatsEnum::RES]) },
-    { Util::StringFormat("SKL: %i", ic->Data.StatBonuses[StatsEnum::SKL]) },
-    { Util::StringFormat("SPD: %i", ic->Data.StatBonuses[StatsEnum::SPD]) },
-  };
+  // *** !!!
+  // Identified description for weapon is
+  // returned via private helper method in ItemComponent
+  // *** !!!
 
   AdjustItemBonuses(ic->Data);
   SetItemName(go, ic->Data);

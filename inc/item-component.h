@@ -20,6 +20,9 @@ class ItemComponent : public Component
     void Throw();
 
     ItemData Data;    
+
+  private:
+    std::vector<std::string> GetWeaponInspectionInfo();
 };
 
 #endif // ITEMCOMPONENT_H

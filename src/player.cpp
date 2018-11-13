@@ -412,16 +412,20 @@ void Player::Attack(GameObject* go)
         }
 
         // Chance to lose durability
-        if (Util::RollDice(4))
-        {
-          EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue--;
+        if (Util::RollDice(8))
+        {          
+          EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.Add(-1);
+
           if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue <= 0)
           {
-            // FIXME: destroy broken item?
+            // NOTE: destroy broken item?
             auto objName = EquipmentByCategory[EquipmentCategory::WEAPON][0]->OwnerGameObject->ObjectName;
             auto str = Util::StringFormat("%s breaks!", objName.data());
             Printer::Instance().AddMessage(str);
           }
+
+          //auto dbg = Util::StringFormat("Durability: %i / %i", EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue, EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.OriginalValue);
+          //Logger::Instance().Print(dbg);
         }
       }
 
