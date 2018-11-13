@@ -101,7 +101,7 @@ void IntroState::AddBonusItems()
         "Signed:",
         "NORMAN TRUART, Sheriff",
         "City Watch HQ",
-        "13 / II / 988"
+        "21 / II / 988"
       };
 
       go = GameObjectsFactory::Instance().CreateNote("Wanted Poster", text);
@@ -116,12 +116,13 @@ void IntroState::AddBonusItems()
         "Pvt. " + player.Name,
         "is hereby granted permission",
         "to take a leave of absence",
-        "until 23 / IV / 988",
+        "from 13 / III / 988",
+        "until 13 / IV / 988",
         "",
         "Signed:",
-        "Lt. JANE MOSLEY",
+        "Lt. LAURA MOSLEY",
         "City Watch, Stonemarket Dpt.",
-        "13 / III / 988"
+        "21 / II / 988"
       };
 
       go = GameObjectsFactory::Instance().CreateNote("Leave Warrant", text);

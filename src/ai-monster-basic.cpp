@@ -167,7 +167,7 @@ void AIMonsterBasic::Attack(Player* player)
   int defaultHitChance = 50;
   int hitChance = defaultHitChance;
 
-  int d = OwnerGameObject->Attrs.Skl.CurrentValue - player->Attrs.Skl.CurrentValue;
+  int d = OwnerGameObject->Attrs.Skl.CurrentValue - player->Attrs.Skl.Get();
 
   if (d > 0)
   {
@@ -193,7 +193,7 @@ void AIMonsterBasic::Attack(Player* player)
   {
     Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FF0000");
 
-    int dmg = OwnerGameObject->Attrs.Str.CurrentValue - player->Attrs.Def.CurrentValue;
+    int dmg = OwnerGameObject->Attrs.Str.CurrentValue - player->Attrs.Def.Get();
     if (dmg <= 0)
     {
       dmg = 1;

@@ -170,8 +170,8 @@ void MainState::HandleInput()
         //
         // FIXME: think on better approach
 
-        //_playerRef->SubtractActionMeter();
         Map::Instance().UpdateGameObjects();
+        //_playerRef->FinishTurn();
         break;
 
       case 'a':        
@@ -218,10 +218,18 @@ void MainState::HandleInput()
         CheckStairs('<');
         break;
 
-      // TODO: for debug, remove afterwards
+      // ***** TODO: for debug, remove afterwards
+
       case 'z':
         _playerRef->LevelUp();
         break;
+
+      case 'p':
+        Map::Instance().PrintMapArrayRevealedStatus();
+        Printer::Instance().AddMessage("Current map layout revealed status logged");
+        break;
+
+      // *****
 
       default:
         break;
@@ -278,8 +286,6 @@ void MainState::DisplayGameLog()
 {
   int x = Printer::Instance().TerminalWidth - 1;
   int y = Printer::Instance().TerminalHeight - 1;
-
-  //Printer::Instance().PrintFB(x, y, Printer::Instance().GetLastMessage(), Printer::kAlignRight, "#FFFFFF");
 
   int count = 0;
   auto msgs = Printer::Instance().GetLastMessages();

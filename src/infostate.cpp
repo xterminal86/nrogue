@@ -75,16 +75,34 @@ void InfoState::ShowInventory()
 
 void InfoState::PrintAttribute(int x, int y, std::string attrName, Attribute& attr, bool displayMaxValue)
 {
+  std::string color = "#FFFFFF";
+
   std::string text;
   if (displayMaxValue)
   {
     text = Util::StringFormat("%s: %i / %i", attrName.data(), attr.CurrentValue, attr.OriginalValue);
   }
   else
-  {
-    text = Util::StringFormat("%s: %i", attrName.data(), attr.CurrentValue);
+  {    
+    if (attr.Modifier < 0)
+    {
+      color = "#FF0000";
+    }
+    else if (attr.Modifier > 0)
+    {
+      color = "#4444FF";
+    }
+
+    if (attrName == "EXP" || attrName == "LVL")
+    {
+      text = Util::StringFormat("%s: %i", attrName.data(), attr.Get(false));
+    }
+    else
+    {
+      text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
+    }
   }
 
-  Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
 }
 

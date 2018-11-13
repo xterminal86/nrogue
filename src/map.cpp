@@ -211,6 +211,10 @@ void Map::RemoveDestroyed()
 
 void Map::ChangeLevel(MapType levelToChange, bool goingDown)
 {
+  // FIXME: after level change it seems
+  // that CheckVisibility happens at old player coordinates
+  // on the new level, which fucks up Revealed state of cells.
+
   auto& player = Application::Instance().PlayerInstance;
 
   // Unblock cell on stairs before going
@@ -265,7 +269,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
   {
     CurrentLevel->WelcomeTextDisplayed = true;
     CurrentLevel->DisplayWelcomeText();
-  }
+  }  
 }
 
 void Map::ShowLoadingText()
@@ -294,4 +298,24 @@ void Map::ShowLoadingText()
 
   Printer::Instance().PrintFB(tw, th, text, Printer::kAlignCenter, "#FFFFFF");
   Printer::Instance().Render();
+}
+
+void Map::PrintMapArrayRevealedStatus()
+{
+  std::vector<std::string> dbg;
+  for (int x = 0; x < CurrentLevel->MapSize.X; x++)
+  {
+    std::string row;
+    for (int y = 0; y < CurrentLevel->MapSize.Y; y++)
+    {
+      auto str = Util::StringFormat("%i", CurrentLevel->MapArray[x][y]->Revealed);
+      row += str;
+    }
+    dbg.push_back(row);
+  }
+
+  for (auto& s : dbg)
+  {
+    Logger::Instance().Print(s);
+  }
 }

@@ -18,19 +18,14 @@ void Player::Init()
   Attrs.ActionMeter = 100;
 
   SetAttributes();
-  SetDefaultEquipment();
   SetDefaultItems();
+  SetDefaultEquipment();
 
   _previousCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell->Occupied = true;
 
   // FIXME: remove afterwards
-
-  auto go = GameObjectsFactory::Instance().CreateFood(FoodType::IRON_RATIONS);
-  go->PosX = 6;
-  go->PosY = 2;
-  Map::Instance().InsertGameObject(go);
 
 #if 0
   for (int i = 0; i < 40; i++)
@@ -242,7 +237,7 @@ void Player::DiscoverCell(int x, int y)
 
 void Player::SetAttributes()
 {
-  switch (_classesMap[SelectedClass])
+  switch (GetClass())
   {
     case PlayerClass::SOLDIER:
       SetSoldierAttrs();
@@ -274,16 +269,18 @@ void Player::SetSoldierAttrs()
   Attrs.Def.Set(2);
   Attrs.Skl.Set(1);
 
-  Attrs.HP.Set(40);
+  Attrs.HP.Set(50);
 
   Attrs.HungerRate.Set(400);
-  Attrs.HungerSpeed.Set(1);  
+  Attrs.HungerSpeed.Set(1);
+
+  _healthRegenTurns = 30;
 }
 
 void Player::SetThiefAttrs()
 {
   Attrs.Spd.Talents = 3;
-  Attrs.Skl.Talents = 2;
+  Attrs.Skl.Talents = 3;
   Attrs.Def.Talents = 1;
   Attrs.HP.Talents = 1;
 
@@ -295,6 +292,8 @@ void Player::SetThiefAttrs()
 
   Attrs.HungerRate.Set(500);
   Attrs.HungerSpeed.Set(1);  
+
+  _healthRegenTurns = 60;
 }
 
 void Player::SetArcanistAttrs()
@@ -313,6 +312,8 @@ void Player::SetArcanistAttrs()
 
   Attrs.HungerRate.Set(500);
   Attrs.HungerSpeed.Set(1);  
+
+  _healthRegenTurns = 90;
 }
 
 void Player::SetDefaultEquipment()
@@ -328,6 +329,30 @@ void Player::SetDefaultEquipment()
   EquipmentByCategory[EquipmentCategory::RING] = { nullptr, nullptr };
 
   // TODO: assign default equipment according to selected class
+
+  switch (GetClass())
+  {
+    case PlayerClass::THIEF:
+    {
+      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::DAGGER, true);
+      Inventory.AddToInventory(go);
+    }
+    break;
+
+    case PlayerClass::SOLDIER:
+    {
+      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::ARMING_SWORD, true);
+      Inventory.AddToInventory(go);
+    }
+    break;
+
+    case PlayerClass::ARCANIST:
+    {
+      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::STAFF, true);
+      Inventory.AddToInventory(go);
+    }
+    break;
+  }
 }
 
 void Player::Attack(GameObject* go)
@@ -347,7 +372,7 @@ void Player::Attack(GameObject* go)
     int defaultHitChance = 50;
     int hitChance = defaultHitChance;
 
-    int d = Attrs.Skl.CurrentValue - go->Attrs.Skl.CurrentValue;
+    int d = Attrs.Skl.Get() - go->Attrs.Skl.CurrentValue;
     if (d > 0)
     {
       hitChance += (d * 5);
@@ -372,13 +397,42 @@ void Player::Attack(GameObject* go)
     {
       Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "#FF0000");
 
-      int dmg = Attrs.Str.CurrentValue - go->Attrs.Def.CurrentValue;
-      if (dmg <= 0)
+      int weaponDamage = 0;
+
+      if (EquipmentByCategory[EquipmentCategory::WEAPON][0] != nullptr)
       {
-        dmg = 1;
+        auto wd = EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Damage;
+        int numRolls = wd.CurrentValue;
+        int diceSides = wd.OriginalValue;
+
+        for (int i = 0; i < numRolls; i++)
+        {
+          int res = RNG::Instance().RandomRange(1, diceSides + 1);
+          weaponDamage += res;
+        }
+
+        // Chance to lose durability
+        if (Util::RollDice(4))
+        {
+          EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue--;
+          if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue <= 0)
+          {
+            // FIXME: destroy broken item?
+            auto objName = EquipmentByCategory[EquipmentCategory::WEAPON][0]->OwnerGameObject->ObjectName;
+            auto str = Util::StringFormat("%s breaks!", objName.data());
+            Printer::Instance().AddMessage(str);
+          }
+        }
       }
 
-      go->ReceiveDamage(this, dmg);
+      int totalDmg = weaponDamage;
+      totalDmg += Attrs.Str.Get() - go->Attrs.Def.CurrentValue;
+      if (totalDmg <= 0)
+      {
+        totalDmg = 1;
+      }
+
+      go->ReceiveDamage(this, totalDmg);
 
       if (go->IsDestroyed)
       {
@@ -780,7 +834,7 @@ void Player::ProcessHunger()
 
 void Player::SetDefaultItems()
 {
-  switch (_classesMap[SelectedClass])
+  switch (GetClass())
   {
     case PlayerClass::SOLDIER:
       SetSoldierDefaultItems();

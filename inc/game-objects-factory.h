@@ -28,6 +28,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateExpPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
     GameObject* CreateFood(FoodType type = FoodType::APPLE, ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
     GameObject* CreateNote(std::string objName, std::vector<std::string> text);
+    GameObject* CreateWeapon(WeaponType type, bool overridePrefix = false);
 
     GameObject* CreateRandomPotion();
 
@@ -55,6 +56,12 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void FoodUseHandler(ItemComponent* item);
 
     void SetItemName(GameObject* go, ItemData& itemData);
+    void AdjustItemBonuses(ItemData& itemData);
+
+    void SetStatsModifiers(ItemData& itemData);
+    void UnsetStatsModifiers(ItemData& itemData);
+
+    ItemPrefix RollItemPrefix();
 };
 
 #endif // GAMEOBJECTSFACTORY_H

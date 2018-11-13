@@ -309,7 +309,7 @@ void MapLevelMines::TryToSpawnMonsters()
   {
     if (ActorGameObjects.size() >= MaxMonsters)
     {
-      return;
+      break;
     }
 
     int index = RNG::Instance().RandomRange(0, _emptyCells.size());
@@ -320,6 +320,7 @@ void MapLevelMines::TryToSpawnMonsters()
     {
       auto rat = GameObjectsFactory::Instance().CreateRat(cx, cy);
       InsertActor(rat);
+      break;
     }
   }
 }

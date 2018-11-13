@@ -114,6 +114,16 @@ enum class ItemType
   WEAPON
 };
 
+enum class WeaponType
+{
+  DAGGER = 0,
+  SHORT_SWORD,
+  ARMING_SWORD,
+  LONG_SWORD,
+  GREAT_SWORD,
+  STAFF
+};
+
 enum class FoodType
 {
   APPLE = 0,
@@ -211,9 +221,15 @@ struct Attribute
     }
   }
 
-  int Get()
+  int Get(bool originalValue = true)
   {
-    return OriginalValue + Modifier;
+    int res = originalValue ? OriginalValue + Modifier : CurrentValue + Modifier;
+    if (res < 0)
+    {
+      res = 0;
+    }
+
+    return res;
   }
 };
 
@@ -352,6 +368,16 @@ namespace GlobalConstants
   static const std::string ItemMagicColor = "#4169E1";
   static const std::string ItemRareColor = "#CCCC52";
   static const std::string ItemUniqueColor = "#A59263";
+
+  static const std::map<WeaponType, std::string> WeaponNameByType =
+  {
+    { WeaponType::DAGGER, "Dagger" },
+    { WeaponType::SHORT_SWORD, "Short Sword" },
+    { WeaponType::ARMING_SWORD, "Arming Sword" },
+    { WeaponType::LONG_SWORD, "Longsword" },
+    { WeaponType::GREAT_SWORD, "Great Sword" },
+    { WeaponType::STAFF, "Battle Staff" }
+  };
 
   static const std::map<FoodType, std::pair<std::string, int>> FoodItemHungerByName =
   {

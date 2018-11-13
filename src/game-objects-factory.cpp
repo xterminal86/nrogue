@@ -127,7 +127,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
     int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
     int randomDef = RNG::Instance().RandomRange(0, 1 * difficulty);
     int randomSkl = RNG::Instance().RandomRange(0, 1 * difficulty);
-    int randomHp = RNG::Instance().RandomRange(3 * difficulty, 10 * difficulty);
+    int randomHp = RNG::Instance().RandomRange(1 * difficulty, 5 * difficulty);
     int randomSpd = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
 
     go->Attrs.Str.Set(randomStr);
@@ -188,124 +188,6 @@ bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
   }
 
   return res;
-}
-
-bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
-{
-  bool res = true;
-
-  auto itemEquipped = _playerRef->EquipmentByCategory[item->Data.EqCategory][0];
-
-  if (itemEquipped == nullptr)
-  {
-    // If nothing was equipped, equip item
-    EquipItem(item);
-  }
-  else if (itemEquipped != item)
-  {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
-    res = false;
-  }
-  else
-  {
-    // If it's the same item, just unequip it
-    UnequipItem(itemEquipped);
-  }
-
-  return res;
-}
-
-void GameObjectsFactory::EquipItem(ItemComponent* item)
-{
-  item->Data.IsEquipped = true;
-  _playerRef->EquipmentByCategory[item->Data.EqCategory][0] = item;
-
-  std::string verb;
-
-  if (item->Data.EqCategory == EquipmentCategory::WEAPON)
-  {
-    verb = "arm yourself with";
-  }
-  else
-  {
-    verb = "put on";
-  }
-
-  auto message = Util::StringFormat("You %s %s", verb.data(), item->OwnerGameObject->ObjectName.data());
-  Printer::Instance().AddMessage(message);
-}
-
-void GameObjectsFactory::UnequipItem(ItemComponent* item)
-{
-  item->Data.IsEquipped = false;
-  _playerRef->EquipmentByCategory[item->Data.EqCategory][0] = nullptr;
-
-  std::string verb;
-
-  if (item->Data.EqCategory == EquipmentCategory::WEAPON)
-  {
-    verb = "put away";
-  }
-  else
-  {
-    verb = "take off";
-  }
-
-  auto message = Util::StringFormat("You %s %s", verb.data(), item->OwnerGameObject->ObjectName.data());
-  Printer::Instance().AddMessage(message);
-}
-
-bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
-{
-  bool emptySlotFound = false;
-
-  auto& rings = _playerRef->EquipmentByCategory[item->Data.EqCategory];
-
-  // First, search if this ring is already equipped
-  for (int i = 0; i < rings.size(); i++)
-  {
-    if (rings[i] == item)
-    {
-      UnequipRing(rings[i], i);
-      return true;
-    }
-  }
-
-  // Second, if it's different item, try to find empty slot for it
-  for (int i = 0; i < rings.size(); i++)
-  {
-    if (rings[i] == nullptr)
-    {
-      EquipRing(item, i);
-      return true;
-    }
-  }
-
-  // Finally, if no empty slots found, display a warning
-  if (!emptySlotFound)
-  {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
-  }
-
-  return false;
-}
-
-void GameObjectsFactory::EquipRing(ItemComponent* ring, int index)
-{
-  ring->Data.IsEquipped = true;
-  _playerRef->EquipmentByCategory[ring->Data.EqCategory][index] = ring;
-
-  auto str = Util::StringFormat("You put on %s", ring->OwnerGameObject->ObjectName.data());
-  Printer::Instance().AddMessage(str);
-}
-
-void GameObjectsFactory::UnequipRing(ItemComponent* ring, int index)
-{
-  ring->Data.IsEquipped = false;
-  _playerRef->EquipmentByCategory[ring->Data.EqCategory][index] = nullptr;
-
-  auto str = Util::StringFormat("You take off %s", ring->OwnerGameObject->ObjectName.data());
-  Printer::Instance().AddMessage(str);
 }
 
 bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
@@ -575,20 +457,7 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
   ic->Data.UnidentifiedName = "?" + kvp.first + "?";
   ic->Data.IdentifiedName = kvp.first;
 
-  roll = RNG::Instance().RandomRange(0, 101);
-
-  if (roll >= 0 && roll <= 30)
-  {
-    ic->Data.Prefix = ItemPrefix::BLESSED;
-  }
-  else if (roll > 30 && roll <= 70)
-  {
-    ic->Data.Prefix = ItemPrefix::UNCURSED;
-  }
-  else if (roll > 70)
-  {
-    ic->Data.Prefix = ItemPrefix::CURSED;
-  }
+  ic->Data.Prefix = RollItemPrefix();
 
   auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
   std::hash<std::string> hasher;
@@ -598,6 +467,381 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
   SetItemName(go, ic->Data);
 
   return go;
+}
+
+void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, chtype image, MapType leadsTo)
+{
+  auto tile = levelWhereCreate->MapArray[x][y].get();
+
+  auto c = tile->AddComponent<StairsComponent>();
+  StairsComponent* stairs = static_cast<StairsComponent*>(c);
+  stairs->LeadsTo = leadsTo;
+
+  tile->ObjectName = (image == '>') ? "Stairs Down" : "Stairs Up";
+  tile->FgColor = GlobalConstants::WhiteColor;
+  tile->BgColor = GlobalConstants::DoorHighlightColor;
+  tile->Image = image;
+}
+
+void GameObjectsFactory::FoodUseHandler(ItemComponent* item)
+{
+  auto objName = (item->Data.IsIdentified) ? item->Data.IdentifiedName : item->Data.UnidentifiedName;
+
+  auto str = Util::StringFormat("You eat %s...", objName.data());
+  Printer::Instance().AddMessage(str);
+
+  if (item->Data.Prefix == ItemPrefix::CURSED)
+  {
+    Printer::Instance().AddMessage("Disgusting!");
+
+    _playerRef->Attrs.Hunger += item->Data.Cost;
+  }
+  else if (item->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    Printer::Instance().AddMessage("It's delicious!");
+
+    _playerRef->Attrs.Hunger -= item->Data.Cost * 2;
+  }
+  else
+  {
+    Printer::Instance().AddMessage("It tasted OK");
+
+    _playerRef->Attrs.Hunger -= item->Data.Cost;
+  }
+
+  _playerRef->Attrs.Hunger = Util::Clamp(_playerRef->Attrs.Hunger, 0, _playerRef->Attrs.HungerRate.CurrentValue);
+
+  Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+}
+
+GameObject* GameObjectsFactory::CreateNote(std::string objName, std::vector<std::string> text)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->FgColor = "#000000";
+  go->BgColor = "#FFFFFF";
+  go->Image = '?';
+  go->ObjectName = objName;
+
+  Component* c = go->AddComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+  ic->Data.TypeOfItem = ItemType::DUMMY;
+  ic->Data.IsStackable = false;
+  ic->Data.IsIdentified = true;
+
+  ic->Data.IdentifiedDescription = text;
+  ic->Data.IdentifiedName = objName;
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefix)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel;
+  if (dungeonLevel == 0)
+  {
+    dungeonLevel = 1;
+  }
+
+  go->ObjectName = GlobalConstants::WeaponNameByType.at(type);
+  go->Image = ')';
+  go->FgColor = "#FFFFFF";
+
+  auto c = go->AddComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+  ic->Data.EqCategory = EquipmentCategory::WEAPON;
+
+  ic->Data.Prefix = overridePrefix ? ItemPrefix::UNCURSED : RollItemPrefix();
+  ic->Data.IsIdentified = overridePrefix ? true : false;
+
+  int avgDamage = 0;
+
+  switch (type)
+  {
+    case WeaponType::DAGGER:
+    {
+      int diceRolls = 1 * dungeonLevel;
+      int diceSides = 4 * dungeonLevel;
+
+      avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
+
+      int durability = 20 * dungeonLevel;
+
+      ic->Data.Damage.CurrentValue = diceRolls;
+      ic->Data.Damage.OriginalValue = diceSides;
+
+      ic->Data.Durability.Set(durability);
+
+      ic->Data.StatBonuses[StatsEnum::SKL] = 1;
+      ic->Data.StatBonuses[StatsEnum::SPD] = 3;
+    }
+    break;
+
+    case WeaponType::ARMING_SWORD:
+    {
+      int diceRolls = 2 * dungeonLevel;
+      int diceSides = 6 * dungeonLevel;
+
+      avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
+
+      int durability = 30 * dungeonLevel;
+
+      ic->Data.Damage.CurrentValue = diceRolls;
+      ic->Data.Damage.OriginalValue = diceSides;
+
+      ic->Data.Durability.Set(durability);
+
+      ic->Data.StatBonuses[StatsEnum::STR] = 2;
+      ic->Data.StatBonuses[StatsEnum::DEF] = 1;
+      ic->Data.StatBonuses[StatsEnum::SPD] = 1;
+    }
+    break;
+
+    case WeaponType::STAFF:
+    {
+      int diceRolls = 1 * dungeonLevel;
+      int diceSides = 6 * dungeonLevel;
+
+      avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
+
+      int durability = 10 * dungeonLevel;
+
+      ic->Data.Damage.CurrentValue = diceRolls;
+      ic->Data.Damage.OriginalValue = diceSides;
+
+      ic->Data.Durability.Set(durability);
+
+      ic->Data.StatBonuses[StatsEnum::STR] = 1;
+      ic->Data.StatBonuses[StatsEnum::DEF] = 2;
+      ic->Data.StatBonuses[StatsEnum::SPD] = 1;
+    }
+    break;
+  }
+
+  ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
+  ic->Data.IdentifiedName = go->ObjectName;
+
+  auto str = Util::StringFormat("It seems to inflict %d damage on average", avgDamage);
+  ic->Data.UnidentifiedDescription = { str, "You can't tell anything else." };
+
+  ic->Data.IdentifiedDescription =
+  {
+    { Util::StringFormat("DMG: %id%i", ic->Data.Damage.CurrentValue, ic->Data.Damage.OriginalValue) },
+    { Util::StringFormat("DUR: %i / %i", ic->Data.Durability.CurrentValue, ic->Data.Durability.OriginalValue) },
+    { "" },
+    { Util::StringFormat("STR: %i", ic->Data.StatBonuses[StatsEnum::STR]) },
+    { Util::StringFormat("DEF: %i", ic->Data.StatBonuses[StatsEnum::DEF]) },
+    { Util::StringFormat("MAG: %i", ic->Data.StatBonuses[StatsEnum::MAG]) },
+    { Util::StringFormat("RES: %i", ic->Data.StatBonuses[StatsEnum::RES]) },
+    { Util::StringFormat("SKL: %i", ic->Data.StatBonuses[StatsEnum::SKL]) },
+    { Util::StringFormat("SPD: %i", ic->Data.StatBonuses[StatsEnum::SPD]) },
+  };
+
+  AdjustItemBonuses(ic->Data);
+  SetItemName(go, ic->Data);
+
+  return go;
+}
+
+// ************************** PRIVATE METHODS ************************** //
+
+void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
+{
+  switch (itemData.Prefix)
+  {
+    case ItemPrefix::BLESSED:
+      itemData.IdentifiedName.insert(0, "Blessed ");
+      itemData.IdentifiedDescription.push_back("This one is blessed and will perform better.");
+      break;
+
+    case ItemPrefix::UNCURSED:
+      itemData.IdentifiedName.insert(0, "Uncursed ");
+      break;
+
+    case ItemPrefix::CURSED:
+      itemData.IdentifiedName.insert(0, "Cursed ");
+      itemData.IdentifiedDescription.push_back("This one is cursed and should be avoided.");
+      break;
+  }
+
+  switch (itemData.TypeOfItem)
+  {
+    case ItemType::HEALING_POTION:
+      itemData.IdentifiedName.append(" of Healing");
+      go->ObjectName.append(" +HP");
+      break;
+
+    case ItemType::MANA_POTION:
+      itemData.IdentifiedName.append(" of Mana");
+      go->ObjectName.append(" +MP");
+      break;
+
+    case ItemType::HUNGER_POTION:
+      itemData.IdentifiedName.append(" of Satiation");
+      go->ObjectName.append(" +SAT");
+      break;
+
+    case ItemType::EXP_POTION:
+      itemData.IdentifiedName.append(" of Enlightenment");
+      go->ObjectName.append(" +EXP");
+      break;
+  }
+}
+
+ItemPrefix GameObjectsFactory::RollItemPrefix()
+{
+  int roll = RNG::Instance().RandomRange(0, 101);
+
+  if (roll >= 0 && roll <= 10)
+  {
+    return ItemPrefix::BLESSED;
+  }
+  else if (roll > 10 && roll <= 80)
+  {
+    return ItemPrefix::UNCURSED;
+  }
+  else if (roll > 80)
+  {
+    return ItemPrefix::CURSED;
+  }
+
+  return ItemPrefix::UNCURSED;
+}
+
+bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
+{
+  bool res = true;
+
+  auto itemEquipped = _playerRef->EquipmentByCategory[item->Data.EqCategory][0];
+
+  if (itemEquipped == nullptr)
+  {
+    // If nothing was equipped, equip item
+    EquipItem(item);
+  }
+  else if (itemEquipped != item)
+  {
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+    res = false;
+  }
+  else
+  {
+    if (itemEquipped->Data.Prefix == ItemPrefix::CURSED)
+    {
+      itemEquipped->Data.IsPrefixDiscovered = true;
+      auto str = Util::StringFormat("You can't unequip %s - it's cursed!", itemEquipped->OwnerGameObject->ObjectName.data());
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { str }, GlobalConstants::MessageBoxRedBorderColor);
+      res = false;
+    }
+    else
+    {
+      // If it's the same item, just unequip it
+      UnequipItem(itemEquipped);
+    }
+  }
+
+  return res;
+}
+
+bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
+{
+  bool emptySlotFound = false;
+
+  auto& rings = _playerRef->EquipmentByCategory[item->Data.EqCategory];
+
+  // First, search if this ring is already equipped
+  for (int i = 0; i < rings.size(); i++)
+  {
+    if (rings[i] == item)
+    {
+      UnequipRing(rings[i], i);
+      return true;
+    }
+  }
+
+  // Second, if it's different item, try to find empty slot for it
+  for (int i = 0; i < rings.size(); i++)
+  {
+    if (rings[i] == nullptr)
+    {
+      EquipRing(item, i);
+      return true;
+    }
+  }
+
+  // Finally, if no empty slots found, display a warning
+  if (!emptySlotFound)
+  {
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+  }
+
+  return false;
+}
+
+void GameObjectsFactory::EquipItem(ItemComponent* item)
+{
+  item->Data.IsEquipped = true;
+  _playerRef->EquipmentByCategory[item->Data.EqCategory][0] = item;
+
+  std::string verb;
+
+  if (item->Data.EqCategory == EquipmentCategory::WEAPON)
+  {
+    verb = "arm yourself with";
+  }
+  else
+  {
+    verb = "put on";
+  }
+
+  SetStatsModifiers(item->Data);
+
+  auto message = Util::StringFormat("You %s %s", verb.data(), item->OwnerGameObject->ObjectName.data());
+  Printer::Instance().AddMessage(message);
+}
+
+void GameObjectsFactory::UnequipItem(ItemComponent* item)
+{
+  item->Data.IsEquipped = false;
+  _playerRef->EquipmentByCategory[item->Data.EqCategory][0] = nullptr;
+
+  std::string verb;
+
+  if (item->Data.EqCategory == EquipmentCategory::WEAPON)
+  {
+    verb = "put away";
+  }
+  else
+  {
+    verb = "take off";
+  }
+
+  UnsetStatsModifiers(item->Data);
+
+  auto message = Util::StringFormat("You %s %s", verb.data(), item->OwnerGameObject->ObjectName.data());
+  Printer::Instance().AddMessage(message);
+}
+
+void GameObjectsFactory::EquipRing(ItemComponent* ring, int index)
+{
+  ring->Data.IsEquipped = true;
+  _playerRef->EquipmentByCategory[ring->Data.EqCategory][index] = ring;
+
+  auto str = Util::StringFormat("You put on %s", ring->OwnerGameObject->ObjectName.data());
+  Printer::Instance().AddMessage(str);
+}
+
+void GameObjectsFactory::UnequipRing(ItemComponent* ring, int index)
+{
+  ring->Data.IsEquipped = false;
+  _playerRef->EquipmentByCategory[ring->Data.EqCategory][index] = nullptr;
+
+  auto str = Util::StringFormat("You take off %s", ring->OwnerGameObject->ObjectName.data());
+  Printer::Instance().AddMessage(str);
 }
 
 void GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
@@ -624,7 +868,7 @@ void GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
   }
 
   statCur += amount;
-  statCur = Util::Clamp(statCur, 0, statMax);  
+  statCur = Util::Clamp(statCur, 0, statMax);
 
   Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
 }
@@ -715,112 +959,46 @@ void GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
   _playerRef->AwardExperience(amount);
 }
 
-void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
+void GameObjectsFactory::AdjustItemBonuses(ItemData& itemData)
 {
-  switch (itemData.Prefix)
+  for (auto& kvp : itemData.StatBonuses)
   {
-    case ItemPrefix::BLESSED:
-      itemData.IdentifiedName.insert(0, "Blessed ");
-      itemData.IdentifiedDescription.push_back("This one is blessed and will yield better results.");
-      break;
+    if (kvp.second != 0)
+    {
+      switch (itemData.Prefix)
+      {
+        case ItemPrefix::CURSED:
+          kvp.second--;
+          itemData.Damage.CurrentValue--;
+          itemData.Damage.OriginalValue--;
+          break;
 
-    case ItemPrefix::UNCURSED:
-      itemData.IdentifiedName.insert(0, "Uncursed ");
-      break;
-
-    case ItemPrefix::CURSED:
-      itemData.IdentifiedName.insert(0, "Cursed ");
-      itemData.IdentifiedDescription.push_back("This one is cursed and should be avoided.");
-      break;
-  }
-
-  switch (itemData.TypeOfItem)
-  {
-    case ItemType::HEALING_POTION:
-      itemData.IdentifiedName.append(" of Healing");
-      go->ObjectName.append(" +HP");
-      break;
-
-    case ItemType::MANA_POTION:
-      itemData.IdentifiedName.append(" of Mana");
-      go->ObjectName.append(" +MP");
-      break;
-
-    case ItemType::HUNGER_POTION:
-      itemData.IdentifiedName.append(" of Satiation");
-      go->ObjectName.append(" +SAT");
-      break;
-
-    case ItemType::EXP_POTION:
-      itemData.IdentifiedName.append(" of Enlightenment");
-      go->ObjectName.append(" +EXP");
-      break;
+        case ItemPrefix::BLESSED:
+          kvp.second++;
+          itemData.Damage.CurrentValue *= 2;
+          itemData.Damage.OriginalValue *= 2;
+          break;
+      }
+    }
   }
 }
 
-void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, chtype image, MapType leadsTo)
+void GameObjectsFactory::SetStatsModifiers(ItemData& itemData)
 {
-  auto tile = levelWhereCreate->MapArray[x][y].get();
-
-  auto c = tile->AddComponent<StairsComponent>();
-  StairsComponent* stairs = static_cast<StairsComponent*>(c);
-  stairs->LeadsTo = leadsTo;
-
-  tile->ObjectName = (image == '>') ? "Stairs Down" : "Stairs Up";
-  tile->FgColor = GlobalConstants::BlackColor;
-  tile->BgColor = GlobalConstants::WallColor;
-  tile->Image = image;
+  _playerRef->Attrs.Str.Modifier += itemData.StatBonuses[StatsEnum::STR];
+  _playerRef->Attrs.Def.Modifier += itemData.StatBonuses[StatsEnum::DEF];
+  _playerRef->Attrs.Mag.Modifier += itemData.StatBonuses[StatsEnum::MAG];
+  _playerRef->Attrs.Res.Modifier += itemData.StatBonuses[StatsEnum::RES];
+  _playerRef->Attrs.Skl.Modifier += itemData.StatBonuses[StatsEnum::SKL];
+  _playerRef->Attrs.Spd.Modifier += itemData.StatBonuses[StatsEnum::SPD];
 }
 
-void GameObjectsFactory::FoodUseHandler(ItemComponent* item)
+void GameObjectsFactory::UnsetStatsModifiers(ItemData& itemData)
 {
-  auto objName = (item->Data.IsIdentified) ? item->Data.IdentifiedName : item->Data.UnidentifiedName;
-
-  auto str = Util::StringFormat("You eat %s...", objName.data());
-  Printer::Instance().AddMessage(str);
-
-  if (item->Data.Prefix == ItemPrefix::CURSED)
-  {
-    Printer::Instance().AddMessage("Disgusting!");
-
-    _playerRef->Attrs.Hunger += item->Data.Cost;
-  }
-  else if (item->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    Printer::Instance().AddMessage("It's delicious!");
-
-    _playerRef->Attrs.Hunger -= item->Data.Cost * 2;
-  }
-  else
-  {
-    Printer::Instance().AddMessage("It tasted OK");
-
-    _playerRef->Attrs.Hunger -= item->Data.Cost;
-  }
-
-  _playerRef->Attrs.Hunger = Util::Clamp(_playerRef->Attrs.Hunger, 0, _playerRef->Attrs.HungerRate.CurrentValue);
-
-  Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
-}
-
-GameObject* GameObjectsFactory::CreateNote(std::string objName, std::vector<std::string> text)
-{
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
-
-  go->FgColor = "#000000";
-  go->BgColor = "#FFFFFF";
-  go->Image = '?';
-  go->ObjectName = objName;
-
-  Component* c = go->AddComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
-
-  ic->Data.TypeOfItem = ItemType::DUMMY;
-  ic->Data.IsStackable = false;
-  ic->Data.IsIdentified = true;
-
-  ic->Data.IdentifiedDescription = text;
-  ic->Data.IdentifiedName = objName;
-
-  return go;
+  _playerRef->Attrs.Str.Modifier -= itemData.StatBonuses[StatsEnum::STR];
+  _playerRef->Attrs.Def.Modifier -= itemData.StatBonuses[StatsEnum::DEF];
+  _playerRef->Attrs.Mag.Modifier -= itemData.StatBonuses[StatsEnum::MAG];
+  _playerRef->Attrs.Res.Modifier -= itemData.StatBonuses[StatsEnum::RES];
+  _playerRef->Attrs.Skl.Modifier -= itemData.StatBonuses[StatsEnum::SKL];
+  _playerRef->Attrs.Spd.Modifier -= itemData.StatBonuses[StatsEnum::SPD];
 }

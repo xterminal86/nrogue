@@ -127,17 +127,19 @@ class GameObject
     void FinishTurn();
     void WaitForTurn();
 
-    Attributes Attrs;    
+    Attributes Attrs;        
 
-  private:
-
+  protected:
     std::map<size_t, std::unique_ptr<Component>> _components;
 
     GameObject* _previousCell = nullptr;
     GameObject* _currentCell = nullptr;
 
     // Level this object belongs to
-    MapLevelBase* _levelOwner = nullptr;
+    MapLevelBase* _levelOwner = nullptr;    
+
+    int _healthRegenTurnsCounter = 0;
+    int _healthRegenTurns = 0;
 };
 
 #endif
