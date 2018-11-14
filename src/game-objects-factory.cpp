@@ -108,6 +108,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'r', GlobalConstants::MonsterColor);
   go->ObjectName = "Rat";
   go->Attrs.Indestructible = false;
+  go->HealthRegenTurns = 30;
 
   // Sets Occupied flag for _currentCell
   go->Move(0, 0);
@@ -128,7 +129,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
     int randomDef = RNG::Instance().RandomRange(0, 1 * difficulty);
     int randomSkl = RNG::Instance().RandomRange(0, 1 * difficulty);
     int randomHp = RNG::Instance().RandomRange(1 * difficulty, 5 * difficulty);
-    int randomSpd = RNG::Instance().RandomRange(0, 2 * difficulty);
+    int randomSpd = RNG::Instance().RandomRange(0, 2 * difficulty);    
 
     go->Attrs.Str.Set(randomStr);
     go->Attrs.Def.Set(randomDef);
@@ -477,6 +478,7 @@ void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int
   StairsComponent* stairs = static_cast<StairsComponent*>(c);
   stairs->LeadsTo = leadsTo;
 
+  //tile->Blocking = false;
   tile->ObjectName = (image == '>') ? "Stairs Down" : "Stairs Up";
   tile->FgColor = GlobalConstants::WhiteColor;
   tile->BgColor = GlobalConstants::DoorHighlightColor;
@@ -571,13 +573,30 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
 
-      baseDurability = 10;
+      baseDurability = 15;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
 
       ic->Data.StatBonuses[StatsEnum::SKL] = 1;
       ic->Data.StatBonuses[StatsEnum::SPD] = 3;
+    }
+    break;
+
+    case WeaponType::SHORT_SWORD:
+    {
+      int diceRolls = 1 * dungeonLevel;
+      int diceSides = 6 * dungeonLevel;
+
+      avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
+
+      baseDurability = 20;
+
+      ic->Data.Damage.CurrentValue = diceRolls;
+      ic->Data.Damage.OriginalValue = diceSides;
+
+      ic->Data.StatBonuses[StatsEnum::STR] = 1;
+      ic->Data.StatBonuses[StatsEnum::SPD] = 1;
     }
     break;
 
@@ -588,14 +607,13 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
 
-      baseDurability = 20;
+      baseDurability = 25;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
 
       ic->Data.StatBonuses[StatsEnum::STR] = 2;
-      ic->Data.StatBonuses[StatsEnum::DEF] = 1;
-      ic->Data.StatBonuses[StatsEnum::SPD] = 1;
+      ic->Data.StatBonuses[StatsEnum::DEF] = 1;      
     }
     break;
 
@@ -606,7 +624,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
 
-      baseDurability = 5;
+      baseDurability = 10;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;

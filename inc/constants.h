@@ -54,7 +54,7 @@ enum class MessageBoxType
 
 enum class MapType
 {
-  NOWHERE = 0,
+  NOWHERE = -1,
   TOWN,
   MINES_1,
   MINES_2,
@@ -346,6 +346,7 @@ namespace GlobalConstants
   static const int MinHitChance = 5;
   static const int MaxHitChance = 95;
   static const int DisplayAttackDelayMs = 50;
+  static const int ItemSpawnMinArea = 25 * 25;
 
   static const std::string BlackColor = "#000000";
   static const std::string WhiteColor = "#FFFFFF";

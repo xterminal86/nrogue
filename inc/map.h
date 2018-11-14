@@ -26,6 +26,7 @@ class Map : public Singleton<Map>
     void ChangeLevel(MapType levelToChange, bool goingDown);
 
     void PrintMapArrayRevealedStatus();
+    void PrintMapLayout();
 
     GameObject* GetActorAtPosition(int x, int y);
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);

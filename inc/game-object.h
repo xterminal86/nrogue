@@ -129,6 +129,8 @@ class GameObject
 
     Attributes Attrs;        
 
+    int HealthRegenTurns = 0;
+
   protected:
     std::map<size_t, std::unique_ptr<Component>> _components;
 
@@ -138,8 +140,7 @@ class GameObject
     // Level this object belongs to
     MapLevelBase* _levelOwner = nullptr;    
 
-    int _healthRegenTurnsCounter = 0;
-    int _healthRegenTurns = 0;
+    int _healthRegenTurnsCounter = 0;    
 };
 
 #endif

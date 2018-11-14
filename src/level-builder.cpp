@@ -114,9 +114,9 @@ void LevelBuilder::TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side)
   }
   else
   {
-    // If no rooms could be added, select random from list
-    int index = RNG::Instance().RandomRange(0, _roomsForLevel.size());
-    auto fallback = _roomsForLevel[index];
+    // If no rooms could be added,
+    // element 0 is assumed to be fallback layout
+    auto fallback = _roomsForLevel[0];
 
     RoomHelper rh;
     rh.ParseLayout(fallback.Layout);

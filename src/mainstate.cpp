@@ -225,8 +225,8 @@ void MainState::HandleInput()
         break;
 
       case 'p':
-        Map::Instance().PrintMapArrayRevealedStatus();
-        Printer::Instance().AddMessage("Current map layout revealed status logged");
+        //Map::Instance().PrintMapArrayRevealedStatus();
+        Map::Instance().PrintMapLayout();
         break;
 
       // *****
@@ -272,7 +272,7 @@ void MainState::Update(bool forceUpdate)
     _debugInfo = Util::StringFormat("World seed: %lu", RNG::Instance().Seed);
     Printer::Instance().PrintFB(0, 0, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
-    // NOTE: Some debug info
+    // FIXME: Some debug info
 
     PrintDebugInfo();
 
@@ -431,6 +431,9 @@ void MainState::PrintDebugInfo()
 
   Printer::Instance().PrintFB(0, 2, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
-  _debugInfo = Util::StringFormat("Level Exit: [%i;%i]", Map::Instance().CurrentLevel->LevelExit.X, Map::Instance().CurrentLevel->LevelExit.Y);
+  _debugInfo = Util::StringFormat("Level Start: [%i;%i]", Map::Instance().CurrentLevel->LevelStart.X, Map::Instance().CurrentLevel->LevelStart.Y);
   Printer::Instance().PrintFB(0, 3, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+
+  _debugInfo = Util::StringFormat("Level Exit: [%i;%i]", Map::Instance().CurrentLevel->LevelExit.X, Map::Instance().CurrentLevel->LevelExit.Y);
+  Printer::Instance().PrintFB(0, 4, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 }

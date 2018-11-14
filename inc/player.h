@@ -83,6 +83,8 @@ class Player : public GameObject
     bool CanRaiseAttribute(Attribute& attr);
     void ProcessKill(GameObject* monster);
 
+    bool DoesWeaponLosesDurability();
+
     std::vector<std::string> GetPrettyLevelUpText();
 
     std::map<int, PlayerClass> _classesMap =

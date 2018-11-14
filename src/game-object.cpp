@@ -146,7 +146,7 @@ void GameObject::FinishTurn()
 
   _healthRegenTurnsCounter++;
 
-  if (_healthRegenTurnsCounter >= _healthRegenTurns)
+  if (_healthRegenTurnsCounter >= HealthRegenTurns)
   {
     _healthRegenTurnsCounter = 0;
     Attrs.HP.Add(1);

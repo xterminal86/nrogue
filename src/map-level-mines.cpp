@@ -13,15 +13,15 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
   {
     // 0
     {
-      "#########",
-      "#########",
+      ".........",
+      ".#######.",
       ".........",
       ".........",
       ".........",
       ".........",
       ".........",
-      "#########",
-      "#########",
+      ".#######.",
+      ".........",
     },
     // 1
     {
@@ -138,6 +138,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _roomsForLevel =
       {
+        { 30, _layoutsForLevel[0] },
         { 60, _layoutsForLevel[2] },
         { 70, _layoutsForLevel[3] },
         { 50, _layoutsForLevel[4] },
@@ -149,7 +150,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _roomsForLevel =
       {
-        { 80, _layoutsForLevel[4] },
+        { 0, _layoutsForLevel[2] },
         { 80, _layoutsForLevel[5] },
         { 80, _layoutsForLevel[6] },
         { 50, _layoutsForLevel[7] },
@@ -170,7 +171,7 @@ void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
 void MapLevelMines::CreateLevel()
 {
   VisibilityRadius = 10;
-  MaxMonsters = 15 * DungeonLevel;
+  MaxMonsters = 10 * DungeonLevel;
   MonstersRespawnTurns = 1000;
 
   Tile t;
@@ -196,7 +197,7 @@ void MapLevelMines::CreateLevel()
 
   RecordEmptyCells();
 
-  PlaceExits();
+  PlaceStairs();
 
   CreateInitialMonsters();
 }
@@ -338,19 +339,24 @@ void MapLevelMines::TryToSpawnMonsters()
   }
 }
 
-void MapLevelMines::PlaceExits()
+void MapLevelMines::PlaceStairs()
 {
   LevelStart.X = _emptyCells[0].X;
   LevelStart.Y = _emptyCells[0].Y;
 
-  GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', MapType::TOWN);
+  MapType stairsDownTo = (MapType)(DungeonLevel + 1);
+  MapType stairsUpTo = (MapType)(DungeonLevel - 1);
+
+  GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', stairsUpTo);
 
   std::vector<Position> possibleExits;
 
   int mapSizeMax = std::max(MapSize.X, MapSize.Y);
 
-  for (auto& c : _emptyCells)
+  for (int i = 1; i < _emptyCells.size(); i++)
   {
+    auto& c = _emptyCells[i];
+
     int d = Util::LinearDistance(_playerRef->PosX, _playerRef->PosY, c.X, c.Y);
     if (d > mapSizeMax / 2)
     {
@@ -363,6 +369,5 @@ void MapLevelMines::PlaceExits()
 
   LevelExit.Set(exit.X, exit.Y);
 
-  int cl = (int)MapType_;
-  GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', (MapType)(cl + 1));
+  GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', stairsDownTo);
 }

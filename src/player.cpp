@@ -274,7 +274,7 @@ void Player::SetSoldierAttrs()
   Attrs.HungerRate.Set(400);
   Attrs.HungerSpeed.Set(1);
 
-  _healthRegenTurns = 30;
+  HealthRegenTurns = 30;
 }
 
 void Player::SetThiefAttrs()
@@ -293,7 +293,7 @@ void Player::SetThiefAttrs()
   Attrs.HungerRate.Set(500);
   Attrs.HungerSpeed.Set(1);  
 
-  _healthRegenTurns = 60;
+  HealthRegenTurns = 60;
 }
 
 void Player::SetArcanistAttrs()
@@ -313,7 +313,7 @@ void Player::SetArcanistAttrs()
   Attrs.HungerRate.Set(500);
   Attrs.HungerSpeed.Set(1);  
 
-  _healthRegenTurns = 90;
+  HealthRegenTurns = 90;
 }
 
 void Player::SetDefaultEquipment()
@@ -341,7 +341,7 @@ void Player::SetDefaultEquipment()
 
     case PlayerClass::SOLDIER:
     {
-      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::ARMING_SWORD, true);
+      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::SHORT_SWORD, true);
       Inventory.AddToInventory(go);
     }
     break;
@@ -366,6 +366,12 @@ void Player::Attack(GameObject* go)
 
     Application::Instance().DrawCurrentState();
     Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs);
+
+    if (EquipmentByCategory[EquipmentCategory::WEAPON][0] != nullptr
+     && DoesWeaponLosesDurability())
+    {
+      Printer::Instance().AddMessage("Your weapon lost durability");
+    }
   }
   else
   {    
@@ -399,6 +405,8 @@ void Player::Attack(GameObject* go)
 
       int weaponDamage = 0;
 
+      bool durabilityLost = false;
+
       if (EquipmentByCategory[EquipmentCategory::WEAPON][0] != nullptr)
       {
         auto wd = EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Damage;
@@ -409,24 +417,9 @@ void Player::Attack(GameObject* go)
         {
           int res = RNG::Instance().RandomRange(1, diceSides + 1);
           weaponDamage += res;
-        }
+        }                
 
-        // Chance to lose durability
-        if (Util::RollDice(8))
-        {          
-          EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.Add(-1);
-
-          if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue <= 0)
-          {
-            // NOTE: destroy broken item?
-            auto objName = EquipmentByCategory[EquipmentCategory::WEAPON][0]->OwnerGameObject->ObjectName;
-            auto str = Util::StringFormat("%s breaks!", objName.data());
-            Printer::Instance().AddMessage(str);
-          }
-
-          //auto dbg = Util::StringFormat("Durability: %i / %i", EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue, EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.OriginalValue);
-          //Logger::Instance().Print(dbg);
-        }
+        durabilityLost = DoesWeaponLosesDurability();
       }
 
       int totalDmg = weaponDamage;
@@ -445,6 +438,11 @@ void Player::Attack(GameObject* go)
 
       Application::Instance().DrawCurrentState();
       Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs);
+
+      if (durabilityLost)
+      {
+        Printer::Instance().AddMessage("Your weapon lost durability");
+      }
     }
     else
     {
@@ -893,4 +891,27 @@ void Player::SetArcanistDefaultItems()
   ic->Data.Amount = 5;
 
   Inventory.AddToInventory(go);
+}
+
+bool Player::DoesWeaponLosesDurability()
+{
+  if (Util::RollDice(10))
+  {
+    EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.Add(-1);
+
+    if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue <= 0)
+    {
+      // NOTE: destroy broken item?
+      auto objName = EquipmentByCategory[EquipmentCategory::WEAPON][0]->OwnerGameObject->ObjectName;
+      auto str = Util::StringFormat("%s breaks!", objName.data());
+      Printer::Instance().AddMessage(str);
+    }
+
+    //auto dbg = Util::StringFormat("Durability: %i / %i", EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue, EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.OriginalValue);
+    //Logger::Instance().Print(dbg);
+
+    return true;
+  }
+
+  return false;
 }

@@ -210,11 +210,7 @@ void Map::RemoveDestroyed()
 }
 
 void Map::ChangeLevel(MapType levelToChange, bool goingDown)
-{
-  // FIXME: after level change it seems
-  // that CheckVisibility happens at old player coordinates
-  // on the new level, which fucks up Revealed state of cells.
-
+{  
   auto& player = Application::Instance().PlayerInstance;
 
   // Unblock cell on stairs before going
@@ -240,11 +236,11 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
     switch (levelName)
     {
       case MapType::MINES_1:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, levelName, 1));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(50, 50, levelName, 1));
         break;
 
       case MapType::MINES_2:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(100, 100, levelName, 2));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(70, 70, levelName, 2));
         break;
 
       case MapType::MINES_3:
@@ -255,7 +251,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
     // Now GameObjectsFactory inside PrepareMap can reference correct level
     CurrentLevel = _levels[levelName].get();
 
-    _levels[levelName]->PrepareMap(_levels[levelName].get());
+    _levels[levelName]->PrepareMap(CurrentLevel);
   }
   else
   {
@@ -319,4 +315,34 @@ void Map::PrintMapArrayRevealedStatus()
   {
     Logger::Instance().Print(s);
   }
+
+  Printer::Instance().AddMessage("Current map layout revealed status logged");
+}
+
+void Map::PrintMapLayout()
+{
+  std::ofstream f;
+
+  std::string fname = Util::StringFormat("%s.txt", CurrentLevel->LevelName.data());
+
+  f.open(fname);
+
+  std::string layout;
+
+  for (int x = 0; x < CurrentLevel->MapSize.Y; x++)
+  {
+    for (int y = 0; y < CurrentLevel->MapSize.X; y++)
+    {
+      layout += CurrentLevel->MapArray[y][x]->Image;
+    }
+
+    layout += "\n";
+  }
+
+  f << layout;
+
+  f.close();
+
+  auto dbg = Util::StringFormat("Layout saved to %s", fname.data());
+  Printer::Instance().AddMessage(dbg);
 }
