@@ -15,7 +15,7 @@ struct MapCell
 class LevelBuilder
 {
   public:
-    void BuildLevel(std::vector<RoomForLevel> possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY);
+    void BuildLevelFromLayouts(std::vector<RoomForLevel> possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY);
     void PrintResult();
 
     std::vector<RoomHelper> MapChunks;
@@ -74,7 +74,7 @@ class LevelBuilder
     bool CheckLimits(Position& start, int roomSize);
     bool IsAreaVisited(Position& start, int roomSize);
 
-    RoomLayout CreateEmptyLayout(int size);
+    RoomLayout CreateSquareLayout(int size, chtype ch);
 
     RoomLayout SelectRoom();
     std::vector<RoomLayout> SelectRooms();

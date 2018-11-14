@@ -3,7 +3,7 @@
 #include "util.h"
 #include "rng.h"
 
-void LevelBuilder::BuildLevel(std::vector<RoomForLevel> possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY)
+void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel> possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY)
 {  
   _roomsForLevel = possibleRooms;
 
@@ -306,7 +306,7 @@ std::vector<RoomLayout> LevelBuilder::SelectRooms()
   return rooms;
 }
 
-RoomLayout LevelBuilder::CreateEmptyLayout(int size)
+RoomLayout LevelBuilder::CreateSquareLayout(int size, chtype ch)
 {
   RoomLayout res;
 
@@ -315,7 +315,7 @@ RoomLayout LevelBuilder::CreateEmptyLayout(int size)
     std::string row;
     for (int y = 0; y < size; y++)
     {
-      row += ".";
+      row += ch;
     }
 
     res.push_back(row);

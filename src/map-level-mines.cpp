@@ -14,13 +14,13 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     // 0
     {
       ".........",
-      ".#######.",
       ".........",
+      "..#####..",
+      "..#####..",
+      "..#####..",
+      "..#####..",
+      "..#####..",
       ".........",
-      ".........",
-      ".........",
-      ".........",
-      ".#######.",
       ".........",
     },
     // 1
@@ -38,13 +38,13 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     // 2
     {
       ".........",
-      ".........",
-      "..#####..",
-      "..#####..",
-      "..#####..",
-      "..#####..",
-      "..#####..",
-      ".........",
+      ".#######.",
+      ".#######.",
+      ".#######.",
+      ".#######.",
+      ".#######.",
+      ".#######.",
+      ".#######.",
       ".........",
     },
     // 3
@@ -118,6 +118,18 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
       "#.##.##.#",
       "#.......#",
       "####.####",
+    },
+    // 9
+    {
+      "##.....##",
+      "##.....##",
+      "##.....##",
+      "##.....##",
+      "##.....##",
+      "##.....##",
+      "##.....##",
+      "##.....##",
+      "##.....##",
     }
   };
 
@@ -127,9 +139,11 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _roomsForLevel =
       {
-        { 80, _layoutsForLevel[0] },
-        { 80, _layoutsForLevel[1] },
+        { 0, _layoutsForLevel[0] },
+        { 30, _layoutsForLevel[9] },
+        { 60, _layoutsForLevel[1] },
         { 50, _layoutsForLevel[2] },
+        { 80, _layoutsForLevel[3] },
       };
     }
     break;
@@ -138,7 +152,8 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _roomsForLevel =
       {
-        { 30, _layoutsForLevel[0] },
+        { 0, _layoutsForLevel[0] },
+        { 10, _layoutsForLevel[9] },
         { 60, _layoutsForLevel[2] },
         { 70, _layoutsForLevel[3] },
         { 50, _layoutsForLevel[4] },
@@ -179,11 +194,11 @@ void MapLevelMines::CreateLevel()
 
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
 
+  // Build level
+
   LevelBuilder lb;
 
-  lb.BuildLevel(_roomsForLevel, 0, 0, MapSize.X, MapSize.Y);
-
-  ConstructFromBuilder(lb);
+  lb.BuildLevelFromLayouts(_roomsForLevel, 1, 1, MapSize.X, MapSize.Y);
 
   // Borders
 
@@ -194,6 +209,8 @@ void MapLevelMines::CreateLevel()
   {
     MapArray[i.X][i.Y].get()->MakeTile(t);
   }
+
+  ConstructFromBuilder(lb);
 
   RecordEmptyCells();
 
