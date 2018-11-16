@@ -656,6 +656,28 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateContainer(std::string name, chtype image, int x, int y)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->ObjectName = name;
+  go->PosX = x;
+  go->PosY = y;
+  go->Image = image;
+  go->FgColor = "#FFFFFF";
+  go->BgColor = GlobalConstants::RoomFloorColor;
+  go->Blocking = true;
+
+  auto c = go->AddComponent<ContainerComponent>();
+  ContainerComponent* cc = static_cast<ContainerComponent*>(c);
+
+  cc->MaxCapacity = GlobalConstants::InventoryMaxSize;
+
+  go->InteractionCallback = std::bind(&ContainerComponent::Interact, cc);
+
+  return go;
+}
+
 // ************************** PRIVATE METHODS ************************** //
 
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)

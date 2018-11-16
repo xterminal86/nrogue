@@ -17,6 +17,8 @@ void Player::Init()
   FgColor = GlobalConstants::PlayerColor;
   Attrs.ActionMeter = 100;
 
+  Inventory.MaxCapacity = GlobalConstants::InventoryMaxSize;
+
   SetAttributes();
   SetDefaultItems();
   SetDefaultEquipment();

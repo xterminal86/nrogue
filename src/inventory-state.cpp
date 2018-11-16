@@ -149,17 +149,17 @@ void InventoryState::Update(bool forceUpdate)
       ItemComponent* ic = static_cast<ItemComponent*>(c);
 
       std::string nameInInventory = ic->Data.IsIdentified ? item->ObjectName : ic->Data.UnidentifiedName;
-      nameInInventory.resize(kInventoryMaxNameLength, ' ');
+      nameInInventory.resize(GlobalConstants::InventoryMaxNameLength, ' ');
 
       if (ic->Data.IsStackable)
       {        
         auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
-        Printer::Instance().PrintFB(kInventoryMaxNameLength + 1, 2 + yPos, stackAmount, Printer::kAlignLeft, "#FFFFFF");
+        Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1, 2 + yPos, stackAmount, Printer::kAlignLeft, "#FFFFFF");
       }
       else if (ic->Data.IsEquipped)
       {
         auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
-        Printer::Instance().PrintFB(kInventoryMaxNameLength + 1, 2 + yPos, equipStatus, Printer::kAlignLeft, "#FFFFFF");
+        Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1, 2 + yPos, equipStatus, Printer::kAlignLeft, "#FFFFFF");
       }
 
       std::string textColor = "#FFFFFF";
@@ -181,9 +181,9 @@ void InventoryState::Update(bool forceUpdate)
       itemsCount++;
     }
 
-    for (int i = itemsCount; i < _playerRef->kInventorySize; i++)
+    for (int i = itemsCount; i < GlobalConstants::InventoryMaxSize; i++)
     {
-      std::string stub(kInventoryMaxNameLength, '-');
+      std::string stub(GlobalConstants::InventoryMaxNameLength, '-');
       Printer::Instance().PrintFB(0, 2 + yPos, stub, Printer::kAlignLeft, "#FFFFFF");
       yPos++;
     }

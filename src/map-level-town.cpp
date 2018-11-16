@@ -156,9 +156,9 @@ void MapLevelTown::CreateLevel()
 
   AdjustCamera();
 
-  // Bydlo (that includes you, btw) ;-)
+  CreatePlayerHouse();
 
-  CreateRoom(3, 3, _layoutsForLevel[0]);
+  // Bydlo (that includes you, btw) ;-)
 
   int numHouses = 5;
 
@@ -381,4 +381,17 @@ void MapLevelTown::CreateChurch(int x, int y)
     posX = x;
     posY++;
   }
+}
+
+void MapLevelTown::CreatePlayerHouse()
+{
+  CreateRoom(3, 3, _layoutsForLevel[0]);
+
+  Tile t;
+  t.Set(true, false, 'C', GlobalConstants::WhiteColor, GlobalConstants::RoomFloorColor, "Stash");
+
+  MapArray[5][5]->MakeTile(t);
+
+  auto stash = GameObjectsFactory::Instance().CreateContainer("Stash", 'C', 5, 5);
+  InsertGameObject(stash);
 }

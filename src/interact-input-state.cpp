@@ -119,15 +119,25 @@ void InteractInputState::Update(bool forceUpdate)
 
 void InteractInputState::TryToInteractWithObject(GameObject* go)
 {
-  if (go->Interact())
+  auto c = go->GetComponent<ContainerComponent>();
+  if (c != nullptr)
   {
-    _playerRef->FinishTurn();
-    Map::Instance().UpdateGameObjects();
-    Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);    
+    ContainerComponent* cc = static_cast<ContainerComponent*>(c);
+    cc->Interact();
+    Printer::Instance().AddMessage("You interacted with: " + go->ObjectName);
   }
   else
   {
-    Printer::Instance().AddMessage("Can't interact with: " + go->ObjectName);
-    Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+    if (go->Interact())
+    {
+      _playerRef->FinishTurn();
+      Map::Instance().UpdateGameObjects();
+      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+    }
+    else
+    {
+      Printer::Instance().AddMessage("Can't interact with: " + go->ObjectName);
+      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+    }
   }
 }

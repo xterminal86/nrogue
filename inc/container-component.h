@@ -16,7 +16,14 @@ class ContainerComponent : public Component
 
     void AddToInventory(GameObject* object);
 
+    bool IsFull();
+    bool IsEmpty();
+
+    void Interact();
+
     std::vector<std::unique_ptr<GameObject>> Contents;
+
+    int MaxCapacity = 0;
 };
 
 #endif // CONTAINERCOMPONENT_H

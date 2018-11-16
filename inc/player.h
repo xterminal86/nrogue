@@ -23,8 +23,6 @@ class Player : public GameObject
       CUSTOM
     };
 
-    const int kInventorySize = 20;
-
     Player() {}
 
     void Init();
@@ -57,6 +55,7 @@ class Player : public GameObject
     bool IsAlive(GameObject* damager);
 
     ContainerComponent Inventory;
+    ContainerComponent* ContainerToInteractWith = nullptr;
 
     std::string Name = "Nameless One";
 

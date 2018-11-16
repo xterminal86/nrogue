@@ -1,4 +1,5 @@
 #include "container-component.h"
+#include "container-interact-state.h"
 #include "application.h"
 #include "item-component.h"
 #include "util.h"
@@ -45,4 +46,20 @@ void ContainerComponent::AddToInventory(GameObject* object)
   {
     Contents.push_back(std::unique_ptr<GameObject>(object));
   }
+}
+
+void ContainerComponent::Interact()
+{
+  Application::Instance().PlayerInstance.ContainerToInteractWith = this;
+  Application::Instance().ChangeState(Application::GameStates::CONTAINER_INTERACT_STATE);
+}
+
+bool ContainerComponent::IsFull()
+{
+  return (Contents.size() >= MaxCapacity);
+}
+
+bool ContainerComponent::IsEmpty()
+{
+  return (Contents.size() == 0);
 }

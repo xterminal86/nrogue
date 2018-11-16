@@ -17,7 +17,6 @@ class InventoryState : public GameState
     void Prepare() override;
 
     const int kEquipmentMaxNameLength = 10;
-    const int kInventoryMaxNameLength = 20;
 
   private:
     Player* _playerRef;

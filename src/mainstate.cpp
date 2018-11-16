@@ -302,7 +302,7 @@ void MainState::TryToPickupItem()
   Component* c = nullptr;
   if (res.first != -1)
   {
-    if (_playerRef->Inventory.Contents.size() == _playerRef->kInventorySize)
+    if (_playerRef->Inventory.IsFull())
     {
       Printer::Instance().AddMessage("Inventory is full!");
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail", { "Inventory is full!" }, GlobalConstants::MessageBoxRedBorderColor);

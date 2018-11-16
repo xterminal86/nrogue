@@ -5,6 +5,7 @@
 #include "constants.h"
 
 class ItemComponent;
+class ContainerComponent;
 class GameObject;
 class Player;
 class MapLevelBase;
@@ -29,6 +30,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateFood(FoodType type = FoodType::APPLE, ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
     GameObject* CreateNote(std::string objName, std::vector<std::string> text);
     GameObject* CreateWeapon(WeaponType type, bool overridePrefix = false);
+    GameObject* CreateContainer(std::string name, chtype image, int x, int y);
 
     GameObject* CreateRandomPotion();
 

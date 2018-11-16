@@ -347,6 +347,8 @@ namespace GlobalConstants
   static const int MaxHitChance = 95;
   static const int DisplayAttackDelayMs = 50;
   static const int ItemSpawnMinArea = 25 * 25;
+  static const int InventoryMaxNameLength = 20;
+  static const int InventoryMaxSize = 20;
 
   static const std::string BlackColor = "#000000";
   static const std::string WhiteColor = "#FFFFFF";

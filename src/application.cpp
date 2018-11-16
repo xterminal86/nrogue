@@ -7,6 +7,7 @@
 #include "enter-name-state.h"
 #include "intro-state.h"
 #include "inventory-state.h"
+#include "container-interact-state.h"
 #include "message-log-state.h"
 #include "look-input-state.h"
 #include "interact-input-state.h"
@@ -19,20 +20,21 @@
 
 void Application::Init()
 {
-  _gameStates[(int)GameStates::MAIN_STATE] = std::unique_ptr<GameState>(new MainState());
-  _gameStates[(int)GameStates::INFO_STATE] = std::unique_ptr<GameState>(new InfoState());
-  _gameStates[(int)GameStates::ATTACK_STATE] = std::unique_ptr<GameState>(new AttackState());
-  _gameStates[(int)GameStates::MENU_STATE] = std::unique_ptr<GameState>(new MenuState());
-  _gameStates[(int)GameStates::SELECT_CLASS_STATE] = std::unique_ptr<GameState>(new SelectClassState());
-  _gameStates[(int)GameStates::ENTER_NAME_STATE] = std::unique_ptr<GameState>(new EnterNameState());
-  _gameStates[(int)GameStates::INTRO_STATE] = std::unique_ptr<GameState>(new IntroState());
-  _gameStates[(int)GameStates::INVENTORY_STATE] = std::unique_ptr<GameState>(new InventoryState());
-  _gameStates[(int)GameStates::SHOW_MESSAGES_STATE] = std::unique_ptr<GameState>(new MessageLogState());
-  _gameStates[(int)GameStates::LOOK_INPUT_STATE] = std::unique_ptr<GameState>(new LookInputState());
-  _gameStates[(int)GameStates::INTERACT_INPUT_STATE] = std::unique_ptr<GameState>(new InteractInputState());
-  _gameStates[(int)GameStates::EXITING_STATE] = std::unique_ptr<GameState>(new ExitingState());
-  _gameStates[(int)GameStates::MESSAGE_BOX_STATE] = std::unique_ptr<GameState>(new MessageBoxState());
-  _gameStates[(int)GameStates::ENDGAME_STATE] = std::unique_ptr<GameState>(new EndgameState());
+  _gameStates[(int)GameStates::MAIN_STATE]               = std::unique_ptr<GameState>(new MainState());
+  _gameStates[(int)GameStates::INFO_STATE]               = std::unique_ptr<GameState>(new InfoState());
+  _gameStates[(int)GameStates::ATTACK_STATE]             = std::unique_ptr<GameState>(new AttackState());
+  _gameStates[(int)GameStates::MENU_STATE]               = std::unique_ptr<GameState>(new MenuState());
+  _gameStates[(int)GameStates::SELECT_CLASS_STATE]       = std::unique_ptr<GameState>(new SelectClassState());
+  _gameStates[(int)GameStates::ENTER_NAME_STATE]         = std::unique_ptr<GameState>(new EnterNameState());
+  _gameStates[(int)GameStates::INTRO_STATE]              = std::unique_ptr<GameState>(new IntroState());
+  _gameStates[(int)GameStates::INVENTORY_STATE]          = std::unique_ptr<GameState>(new InventoryState());
+  _gameStates[(int)GameStates::CONTAINER_INTERACT_STATE] = std::unique_ptr<GameState>(new ContainerInteractState());
+  _gameStates[(int)GameStates::SHOW_MESSAGES_STATE]      = std::unique_ptr<GameState>(new MessageLogState());
+  _gameStates[(int)GameStates::LOOK_INPUT_STATE]         = std::unique_ptr<GameState>(new LookInputState());
+  _gameStates[(int)GameStates::INTERACT_INPUT_STATE]     = std::unique_ptr<GameState>(new InteractInputState());
+  _gameStates[(int)GameStates::EXITING_STATE]            = std::unique_ptr<GameState>(new ExitingState());
+  _gameStates[(int)GameStates::MESSAGE_BOX_STATE]        = std::unique_ptr<GameState>(new MessageBoxState());
+  _gameStates[(int)GameStates::ENDGAME_STATE]            = std::unique_ptr<GameState>(new EndgameState());
 
   for (auto& state : _gameStates)
   {
