@@ -26,15 +26,15 @@ void ContainerInteractState::HandleInput()
 
   switch (_keyPressed)
   {
-    case KEY_DOWN:
+    case NUMPAD_2:
       _inventoryItemIndex++;
       break;
 
-    case KEY_UP:
+    case NUMPAD_8:
       _inventoryItemIndex--;
       break;
 
-    case KEY_LEFT:
+    case NUMPAD_4:
     {
       if (!_playerRef->Inventory.IsEmpty())
       {
@@ -43,7 +43,7 @@ void ContainerInteractState::HandleInput()
     }
     break;
 
-    case KEY_RIGHT:
+    case NUMPAD_6:
     {
       if (!_playerRef->ContainerToInteractWith->IsEmpty())
       {
@@ -111,7 +111,7 @@ void ContainerInteractState::DisplayPlayerInventory()
     if (ic->Data.IsStackable)
     {
       auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
-      Printer::Instance().PrintFB(0, yPos + index, stackAmount, Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1, yPos + index, stackAmount, Printer::kAlignLeft, "#FFFFFF");
     }
     else if (ic->Data.IsEquipped)
     {

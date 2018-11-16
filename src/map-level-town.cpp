@@ -392,6 +392,20 @@ void MapLevelTown::CreatePlayerHouse()
 
   MapArray[5][5]->MakeTile(t);
 
+  auto money = GameObjectsFactory::Instance().CreateMoney(100);
+
+  money->PosX = 10;
+  money->PosY = 3;
+
+  InsertGameObject(money);
+
+  money = GameObjectsFactory::Instance().CreateMoney(100);
+
+  money->PosX = 11;
+  money->PosY = 3;
+
+  InsertGameObject(money);
+
   auto stash = GameObjectsFactory::Instance().CreateContainer("Stash", 'C', 5, 5);
   InsertGameObject(stash);
 }

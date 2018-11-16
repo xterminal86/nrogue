@@ -124,7 +124,9 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
   {
     ContainerComponent* cc = static_cast<ContainerComponent*>(c);
     cc->Interact();
-    Printer::Instance().AddMessage("You interacted with: " + go->ObjectName);
+
+    // FIXME: add closed containers
+    Printer::Instance().AddMessage("You opened " + go->ObjectName);
   }
   else
   {

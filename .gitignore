@@ -1,5 +1,5 @@
 build/
-build-debug/
+build-*/
 obj/
 CMakeLists.txt.user
 nrogue

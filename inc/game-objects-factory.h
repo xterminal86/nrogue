@@ -63,6 +63,8 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void SetStatsModifiers(ItemData& itemData);
     void UnsetStatsModifiers(ItemData& itemData);
 
+    size_t CalculateHash(ItemComponent* item);
+
     ItemPrefix RollItemPrefix();
 };
 

@@ -75,6 +75,8 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
   ic->Data.IsIdentified = true;
   ic->Data.IdentifiedName = "Gold Coins";
 
+  ic->Data.ItemTypeHash = CalculateHash(ic);
+
   return go;
 }
 
@@ -263,12 +265,9 @@ GameObject* GameObjectsFactory::CreateFood(FoodType type, ItemPrefix prefixOverr
 
   ic->Data.UseCallback = std::bind(&GameObjectsFactory::FoodUseHandler, this, ic);
 
-  auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
-  std::hash<std::string> hasher;
-
-  ic->Data.ItemTypeHash = hasher(strToHash);
-
   SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
 
   return go;
 }
@@ -296,12 +295,9 @@ GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 
   ic->Data.UseCallback = std::bind(&GameObjectsFactory::HealingPotionUseHandler, this, ic);
 
-  auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
-  std::hash<std::string> hasher;
-
-  ic->Data.ItemTypeHash = hasher(strToHash);
-
   SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
 
   return go;
 }
@@ -329,12 +325,9 @@ GameObject* GameObjectsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 
   ic->Data.UseCallback = std::bind(&GameObjectsFactory::ManaPotionUseHandler, this, ic);
 
-  auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
-  std::hash<std::string> hasher;
-
-  ic->Data.ItemTypeHash = hasher(strToHash);
-
   SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
 
   return go;
 }
@@ -362,12 +355,9 @@ GameObject* GameObjectsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
 
   ic->Data.UseCallback = std::bind(&GameObjectsFactory::HungerPotionUseHandler, this, ic);
 
-  auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
-  std::hash<std::string> hasher;
-
-  ic->Data.ItemTypeHash = hasher(strToHash);
-
   SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
 
   return go;
 }
@@ -395,12 +385,9 @@ GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 
   ic->Data.UseCallback = std::bind(&GameObjectsFactory::ExpPotionUseHandler, this, ic);
 
-  auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
-  std::hash<std::string> hasher;
-
-  ic->Data.ItemTypeHash = hasher(strToHash);
-
   SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
 
   return go;
 }
@@ -460,12 +447,9 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
 
   ic->Data.Prefix = RollItemPrefix();
 
-  auto strToHash = std::to_string((int)ic->Data.Prefix) + go->ObjectName;
-  std::hash<std::string> hasher;
-
-  ic->Data.ItemTypeHash = hasher(strToHash);
-
   SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
 
   return go;
 }
@@ -534,6 +518,8 @@ GameObject* GameObjectsFactory::CreateNote(std::string objName, std::vector<std:
 
   ic->Data.IdentifiedDescription = text;
   ic->Data.IdentifiedName = objName;
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
 
   return go;
 }
@@ -652,6 +638,8 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
   AdjustItemBonuses(ic->Data);
   SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
 
   return go;
 }
@@ -1032,4 +1020,12 @@ void GameObjectsFactory::UnsetStatsModifiers(ItemData& itemData)
   _playerRef->Attrs.Res.Modifier -= itemData.StatBonuses[StatsEnum::RES];
   _playerRef->Attrs.Skl.Modifier -= itemData.StatBonuses[StatsEnum::SKL];
   _playerRef->Attrs.Spd.Modifier -= itemData.StatBonuses[StatsEnum::SPD];
+}
+
+size_t GameObjectsFactory::CalculateHash(ItemComponent* item)
+{
+  auto strToHash = std::to_string((int)item->Data.Prefix) + item->OwnerGameObject->ObjectName;
+  std::hash<std::string> hasher;
+
+  return hasher(strToHash);
 }

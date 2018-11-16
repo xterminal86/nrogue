@@ -23,11 +23,11 @@ void InventoryState::HandleInput()
 
   switch(_keyPressed)
   {
-    case KEY_UP:
+    case NUMPAD_8:
       _selectedIndex--;
       break;
 
-    case KEY_DOWN:
+    case NUMPAD_2:
       _selectedIndex++;
       break;
 
