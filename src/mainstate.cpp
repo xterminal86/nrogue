@@ -335,7 +335,7 @@ void MainState::TryToPickupItem()
   }
   else
   {
-    Printer::Instance().AddMessage("Nothing of interest here");
+    Printer::Instance().AddMessage("There's nothing here");
   }
 }
 
