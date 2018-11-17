@@ -72,7 +72,7 @@ void InteractInputState::HandleInput()
 
     case 'q':
       Printer::Instance().AddMessage("Cancelled");
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+      Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
     default:
@@ -134,12 +134,12 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
     {
       _playerRef->FinishTurn();
       Map::Instance().UpdateGameObjects();
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+      Application::Instance().ChangeState(GameStates::MAIN_STATE);
     }
     else
     {
       Printer::Instance().AddMessage("Can't interact with: " + go->ObjectName);
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+      Application::Instance().ChangeState(GameStates::MAIN_STATE);
     }
   }
 }

@@ -8,7 +8,7 @@ MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
   MapType_ = type;
   DungeonLevel = dungeonLevel;
 
-  auto levelNames = GlobalConstants::MapLevelRandomNames.at(MapType_);
+  auto levelNames = GlobalConstants::MapLevelNames.at(MapType_);
   int index = RNG::Instance().RandomRange(0, levelNames.size());
   LevelName = levelNames[index];
 

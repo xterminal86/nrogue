@@ -21,11 +21,11 @@ void SelectClassState::HandleInput()
       Application::Instance().PlayerInstance.Init();
 
       // TODO: enter name, distribute talents if custom class is chosen
-      Application::Instance().ChangeState(Application::GameStates::ENTER_NAME_STATE);
+      Application::Instance().ChangeState(GameStates::ENTER_NAME_STATE);
       break;
 
     case 'q':
-      Application::Instance().ChangeState(Application::GameStates::MENU_STATE);
+      Application::Instance().ChangeState(GameStates::MENU_STATE);
       break;
   }
 

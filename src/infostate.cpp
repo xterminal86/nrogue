@@ -10,7 +10,7 @@ void InfoState::HandleInput()
   switch (_keyPressed)
   {
     case 'q':
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);      
+      Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
   }  
 }

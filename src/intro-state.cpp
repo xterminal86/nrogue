@@ -27,7 +27,7 @@ void IntroState::HandleInput()
   switch (_keyPressed)
   {
     case VK_ENTER:
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+      Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
   }
 }

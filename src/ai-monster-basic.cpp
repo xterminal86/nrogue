@@ -206,7 +206,7 @@ void AIMonsterBasic::Attack(Player* player)
 
     if (!player->IsAlive(OwnerGameObject))
     {
-      Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
+      Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
     }
   }
   else

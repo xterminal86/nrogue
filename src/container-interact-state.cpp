@@ -11,13 +11,18 @@ void ContainerInteractState::Init()
 
 void ContainerInteractState::Cleanup()
 {
-  _playerRef->ContainerToInteractWith = nullptr;
+  _containerToInteractWith = nullptr;
 }
 
 void ContainerInteractState::Prepare()
 {
   _inventoryItemIndex = 0;
   _playerSide = (_playerRef->Inventory.Contents.size() > 0);
+}
+
+void ContainerInteractState::SetContainerRef(ContainerComponent* c)
+{
+  _containerToInteractWith = c;
 }
 
 void ContainerInteractState::HandleInput()
@@ -45,7 +50,7 @@ void ContainerInteractState::HandleInput()
 
     case NUMPAD_6:
     {
-      if (!_playerRef->ContainerToInteractWith->IsEmpty())
+      if (!_containerToInteractWith->IsEmpty())
       {
         _playerSide = false;
       }
@@ -57,7 +62,7 @@ void ContainerInteractState::HandleInput()
       break;
 
     case 'q':
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+      Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
   }
 
@@ -81,7 +86,7 @@ void ContainerInteractState::Update(bool forceUpdate)
       Printer::Instance().PrintFB(half, y, ' ', "#000000", "#FFFFFF");
     }
 
-    auto containerName = _playerRef->ContainerToInteractWith->OwnerGameObject->ObjectName;
+    auto containerName = _containerToInteractWith->OwnerGameObject->ObjectName;
 
     Printer::Instance().PrintFB(quarter, 0, "Player", Printer::kAlignCenter, "#FFFFFF");
     Printer::Instance().PrintFB(tw - quarter - 1, 0, containerName, Printer::kAlignCenter, "#FFFFFF");
@@ -177,7 +182,7 @@ void ContainerInteractState::DisplayContainerInventory()
 
   int xPos = tw - 1;
 
-  for (auto& item : _playerRef->ContainerToInteractWith->Contents)
+  for (auto& item : _containerToInteractWith->Contents)
   {
     auto c = item->GetComponent<ItemComponent>();
     ItemComponent* ic = static_cast<ItemComponent*>(c);
@@ -258,9 +263,9 @@ void ContainerInteractState::CheckIndexLimits()
   }
   else
   {
-    if (_playerRef->ContainerToInteractWith != nullptr)
+    if (_containerToInteractWith != nullptr)
     {
-      invSize = _playerRef->ContainerToInteractWith->Contents.size() - 1;
+      invSize = _containerToInteractWith->Contents.size() - 1;
     }
   }
 
@@ -269,8 +274,8 @@ void ContainerInteractState::CheckIndexLimits()
 
 void ContainerInteractState::TryToTransferItem()
 {
-  ContainerComponent* src = _playerSide ? &_playerRef->Inventory : _playerRef->ContainerToInteractWith;
-  ContainerComponent* dst = _playerSide ? _playerRef->ContainerToInteractWith : &_playerRef->Inventory;
+  ContainerComponent* src = _playerSide ? &_playerRef->Inventory : _containerToInteractWith;
+  ContainerComponent* dst = _playerSide ? _containerToInteractWith : &_playerRef->Inventory;
 
   if (dst->IsFull())
   {
@@ -301,7 +306,7 @@ void ContainerInteractState::TryToTransferItem()
   {
     _playerSide = false;
   }
-  else if (!_playerSide && _playerRef->ContainerToInteractWith->IsEmpty())
+  else if (!_playerSide && _containerToInteractWith->IsEmpty())
   {
     _playerSide = true;
   }

@@ -98,7 +98,7 @@ void InventoryState::HandleInput()
         // after using something (e.g. cursed potion)
         if (!_playerRef->IsAlive(go))
         {
-          Application::Instance().ChangeState(Application::GameStates::ENDGAME_STATE);
+          Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
         }        
       }      
     }
@@ -112,7 +112,7 @@ void InventoryState::HandleInput()
       if (ic->Equip())
       {
         _playerRef->FinishTurn();
-        Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+        Application::Instance().ChangeState(GameStates::MAIN_STATE);
       }
     }
     break;
@@ -122,7 +122,7 @@ void InventoryState::HandleInput()
       break;
 
     case 'q':
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+      Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
   }
 

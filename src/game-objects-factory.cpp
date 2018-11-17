@@ -497,7 +497,7 @@ void GameObjectsFactory::FoodUseHandler(ItemComponent* item)
 
   _playerRef->Attrs.Hunger = Util::Clamp(_playerRef->Attrs.Hunger, 0, _playerRef->Attrs.HungerRate.CurrentValue);
 
-  Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+  Application::Instance().ChangeState(GameStates::MAIN_STATE);
 }
 
 GameObject* GameObjectsFactory::CreateNote(std::string objName, std::vector<std::string> text)
@@ -897,7 +897,7 @@ void GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
   statCur += amount;
   statCur = Util::Clamp(statCur, 0, statMax);
 
-  Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+  Application::Instance().ChangeState(GameStates::MAIN_STATE);
 }
 
 void GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
@@ -926,7 +926,7 @@ void GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
   statCur += amount;
   statCur = Util::Clamp(statCur, 0, statMax);
 
-  Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+  Application::Instance().ChangeState(GameStates::MAIN_STATE);
 }
 
 void GameObjectsFactory::HungerPotionUseHandler(ItemComponent* item)
@@ -955,7 +955,7 @@ void GameObjectsFactory::HungerPotionUseHandler(ItemComponent* item)
   statCur += amount;
   statCur = Util::Clamp(statCur, 0, statMax);
 
-  Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+  Application::Instance().ChangeState(GameStates::MAIN_STATE);
 }
 
 void GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
@@ -981,7 +981,7 @@ void GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
     Printer::Instance().AddMessage("You lose some experience!");
   }
 
-  Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+  Application::Instance().ChangeState(GameStates::MAIN_STATE);
 
   _playerRef->AwardExperience(amount);
 }

@@ -175,23 +175,23 @@ void MainState::HandleInput()
         break;
 
       case 'a':        
-        Application::Instance().ChangeState(Application::GameStates::ATTACK_STATE);
+        Application::Instance().ChangeState(GameStates::ATTACK_STATE);
         break;
 
       case 'e':
-        Application::Instance().ChangeState(Application::GameStates::INVENTORY_STATE);
+        Application::Instance().ChangeState(GameStates::INVENTORY_STATE);
         break;
 
       case 'm':
-        Application::Instance().ChangeState(Application::GameStates::SHOW_MESSAGES_STATE);
+        Application::Instance().ChangeState(GameStates::SHOW_MESSAGES_STATE);
         break;
 
       case 'l':
-        Application::Instance().ChangeState(Application::GameStates::LOOK_INPUT_STATE);
+        Application::Instance().ChangeState(GameStates::LOOK_INPUT_STATE);
         break;
 
       case 'i':
-        Application::Instance().ChangeState(Application::GameStates::INTERACT_INPUT_STATE);
+        Application::Instance().ChangeState(GameStates::INTERACT_INPUT_STATE);
         break;
 
       case 'g':
@@ -199,7 +199,7 @@ void MainState::HandleInput()
         break;
 
       case '@':
-        Application::Instance().ChangeState(Application::GameStates::INFO_STATE);
+        Application::Instance().ChangeState(GameStates::INFO_STATE);
         break;
 
       case '?':        
@@ -207,7 +207,7 @@ void MainState::HandleInput()
         break;
 
       case 'q':
-        Application::Instance().ChangeState(Application::GameStates::EXITING_STATE);
+        Application::Instance().ChangeState(GameStates::EXITING_STATE);
         break;
 
       case '>':

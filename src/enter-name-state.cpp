@@ -20,7 +20,7 @@ void EnterNameState::HandleInput()
         Application::Instance().PlayerInstance.Name = _nameEntered;
         Application::Instance().PlayerInstance.ObjectName = _nameEntered;
 
-        Application::Instance().ChangeState(Application::GameStates::INTRO_STATE);        
+        Application::Instance().ChangeState(GameStates::INTRO_STATE);
 
         break;
 

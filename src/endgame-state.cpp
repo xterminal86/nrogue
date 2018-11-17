@@ -16,7 +16,7 @@ void EndgameState::HandleInput()
   switch (_keyPressed)
   {
     case 'q':
-      Application::Instance().ChangeState(Application::GameStates::EXIT_GAME);
+      Application::Instance().ChangeState(GameStates::EXIT_GAME);
       break;
   }
 }

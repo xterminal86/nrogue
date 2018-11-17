@@ -50,8 +50,10 @@ void ContainerComponent::AddToInventory(GameObject* object)
 
 void ContainerComponent::Interact()
 {
-  Application::Instance().PlayerInstance.ContainerToInteractWith = this;
-  Application::Instance().ChangeState(Application::GameStates::CONTAINER_INTERACT_STATE);
+  auto s = Application::Instance().GetGameStateRefByName(GameStates::CONTAINER_INTERACT_STATE);
+  ContainerInteractState* cis = static_cast<ContainerInteractState*>(s);
+  cis->SetContainerRef(this);
+  Application::Instance().ChangeState(GameStates::CONTAINER_INTERACT_STATE);
 }
 
 bool ContainerComponent::IsFull()

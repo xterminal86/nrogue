@@ -14,9 +14,11 @@ class ContainerInteractState : public GameState
     void Prepare() override;
     void Update(bool forceUpdate = false) override;
     void HandleInput() override;
+    void SetContainerRef(ContainerComponent* c);
 
   private:
     Player* _playerRef;
+    ContainerComponent* _containerToInteractWith = nullptr;
 
     int _inventoryItemIndex = 0;
     bool _playerSide = true;

@@ -20,28 +20,28 @@
 
 void Application::Init()
 {
-  _gameStates[(int)GameStates::MAIN_STATE]               = std::unique_ptr<GameState>(new MainState());
-  _gameStates[(int)GameStates::INFO_STATE]               = std::unique_ptr<GameState>(new InfoState());
-  _gameStates[(int)GameStates::ATTACK_STATE]             = std::unique_ptr<GameState>(new AttackState());
-  _gameStates[(int)GameStates::MENU_STATE]               = std::unique_ptr<GameState>(new MenuState());
-  _gameStates[(int)GameStates::SELECT_CLASS_STATE]       = std::unique_ptr<GameState>(new SelectClassState());
-  _gameStates[(int)GameStates::ENTER_NAME_STATE]         = std::unique_ptr<GameState>(new EnterNameState());
-  _gameStates[(int)GameStates::INTRO_STATE]              = std::unique_ptr<GameState>(new IntroState());
-  _gameStates[(int)GameStates::INVENTORY_STATE]          = std::unique_ptr<GameState>(new InventoryState());
-  _gameStates[(int)GameStates::CONTAINER_INTERACT_STATE] = std::unique_ptr<GameState>(new ContainerInteractState());
-  _gameStates[(int)GameStates::SHOW_MESSAGES_STATE]      = std::unique_ptr<GameState>(new MessageLogState());
-  _gameStates[(int)GameStates::LOOK_INPUT_STATE]         = std::unique_ptr<GameState>(new LookInputState());
-  _gameStates[(int)GameStates::INTERACT_INPUT_STATE]     = std::unique_ptr<GameState>(new InteractInputState());
-  _gameStates[(int)GameStates::EXITING_STATE]            = std::unique_ptr<GameState>(new ExitingState());
-  _gameStates[(int)GameStates::MESSAGE_BOX_STATE]        = std::unique_ptr<GameState>(new MessageBoxState());
-  _gameStates[(int)GameStates::ENDGAME_STATE]            = std::unique_ptr<GameState>(new EndgameState());
+  _gameStates[GameStates::MAIN_STATE]               = std::unique_ptr<GameState>(new MainState());
+  _gameStates[GameStates::INFO_STATE]               = std::unique_ptr<GameState>(new InfoState());
+  _gameStates[GameStates::ATTACK_STATE]             = std::unique_ptr<GameState>(new AttackState());
+  _gameStates[GameStates::MENU_STATE]               = std::unique_ptr<GameState>(new MenuState());
+  _gameStates[GameStates::SELECT_CLASS_STATE]       = std::unique_ptr<GameState>(new SelectClassState());
+  _gameStates[GameStates::ENTER_NAME_STATE]         = std::unique_ptr<GameState>(new EnterNameState());
+  _gameStates[GameStates::INTRO_STATE]              = std::unique_ptr<GameState>(new IntroState());
+  _gameStates[GameStates::INVENTORY_STATE]          = std::unique_ptr<GameState>(new InventoryState());
+  _gameStates[GameStates::CONTAINER_INTERACT_STATE] = std::unique_ptr<GameState>(new ContainerInteractState());
+  _gameStates[GameStates::SHOW_MESSAGES_STATE]      = std::unique_ptr<GameState>(new MessageLogState());
+  _gameStates[GameStates::LOOK_INPUT_STATE]         = std::unique_ptr<GameState>(new LookInputState());
+  _gameStates[GameStates::INTERACT_INPUT_STATE]     = std::unique_ptr<GameState>(new InteractInputState());
+  _gameStates[GameStates::EXITING_STATE]            = std::unique_ptr<GameState>(new ExitingState());
+  _gameStates[GameStates::MESSAGE_BOX_STATE]        = std::unique_ptr<GameState>(new MessageBoxState());
+  _gameStates[GameStates::ENDGAME_STATE]            = std::unique_ptr<GameState>(new EndgameState());
 
   for (auto& state : _gameStates)
   {
     state.second.get()->Init();
   }
 
-  _currentState = _gameStates[(int)GameStates::MENU_STATE].get();
+  _currentState = _gameStates[GameStates::MENU_STATE].get();
 
   Printer::Instance().AddMessage("You begin your quest");
 }
@@ -68,8 +68,8 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   {
     auto str = Util::StringFormat("Changing state: %s [0x%X] => %s [0x%X]",
                                   typeid(*_currentState).name(), _currentState,
-                                  typeid(*_gameStates[(int)gameStateIndex].get()).name(),
-                                  _gameStates[(int)gameStateIndex].get());
+                                  typeid(*_gameStates[gameStateIndex].get()).name(),
+                                  _gameStates[gameStateIndex].get());
     Logger::Instance().Print(str);
   }
   else
@@ -80,7 +80,7 @@ void Application::ChangeState(const GameStates& gameStateIndex)
 
   _currentState->Cleanup();
 
-  _currentState = (gameStateIndex == GameStates::EXIT_GAME) ? nullptr : _gameStates[(int)gameStateIndex].get();
+  _currentState = (gameStateIndex == GameStates::EXIT_GAME) ? nullptr : _gameStates[gameStateIndex].get();
 
   if (_currentState != nullptr)
   {
@@ -88,12 +88,22 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   }
 }
 
+GameState* Application::GetGameStateRefByName(GameStates stateName)
+{
+  if (_gameStates.count(stateName) == 1)
+  {
+    return _gameStates[stateName].get();
+  }
+
+  return nullptr;
+}
+
 void Application::ShowMessageBox(MessageBoxType type, std::string header, std::vector<std::string> message,
                                  std::string borderColor, std::string bgColor)
 {
   _previousState = _currentState;
 
-  auto ptr = _gameStates[(int)GameStates::MESSAGE_BOX_STATE].get();
+  auto ptr = _gameStates[GameStates::MESSAGE_BOX_STATE].get();
   ((MessageBoxState*)ptr)->SetMessage(type, header, message, borderColor, bgColor);
 
   _currentState = ptr;

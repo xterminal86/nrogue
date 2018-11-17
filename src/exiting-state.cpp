@@ -16,11 +16,11 @@ void ExitingState::HandleInput()
   switch (_keyPressed)
   {
     case 'q':
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+      Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
     case 'y':
-      Application::Instance().ChangeState(Application::GameStates::EXIT_GAME);
+      Application::Instance().ChangeState(GameStates::EXIT_GAME);
       break;
   }
 }

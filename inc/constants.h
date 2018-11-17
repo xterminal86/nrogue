@@ -45,6 +45,26 @@
 #include <functional>
 #include <ncurses.h>
 
+enum class GameStates
+{
+  EXIT_GAME = -1,
+  ATTACK_STATE,
+  MENU_STATE,
+  MAIN_STATE,
+  SELECT_CLASS_STATE,
+  ENTER_NAME_STATE,
+  INTRO_STATE,
+  INFO_STATE,
+  INVENTORY_STATE,
+  CONTAINER_INTERACT_STATE,
+  SHOW_MESSAGES_STATE,
+  LOOK_INPUT_STATE,
+  INTERACT_INPUT_STATE,
+  EXITING_STATE,
+  MESSAGE_BOX_STATE,
+  ENDGAME_STATE
+};
+
 enum class MessageBoxType
 {
   ANY_KEY = 0,
@@ -464,7 +484,7 @@ namespace GlobalConstants
     "Markus Persson"
   };
 
-  static const std::map<MapType, std::vector<std::string>> MapLevelRandomNames =
+  static const std::map<MapType, std::vector<std::string>> MapLevelNames =
   {
     { MapType::TOWN,    { "Village of Darwin",
                           "Town of Tristram",

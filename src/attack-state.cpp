@@ -71,7 +71,7 @@ void AttackState::HandleInput()
 
     case 'q':
       Printer::Instance().AddMessage("Cancelled");
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+      Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
     default:
@@ -99,7 +99,7 @@ void AttackState::HandleInput()
       }
     }
 
-    Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+    Application::Instance().ChangeState(GameStates::MAIN_STATE);
   }
 }
 

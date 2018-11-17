@@ -10,11 +10,11 @@ void MenuState::HandleInput()
   switch (_keyPressed)
   {
     case VK_ENTER:
-      Application::Instance().ChangeState(Application::GameStates::SELECT_CLASS_STATE);
+      Application::Instance().ChangeState(GameStates::SELECT_CLASS_STATE);
       break;
 
     case 'q':    
-      Application::Instance().ChangeState(Application::GameStates::EXIT_GAME);      
+      Application::Instance().ChangeState(GameStates::EXIT_GAME);
       break;      
   }
 }

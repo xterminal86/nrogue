@@ -62,7 +62,7 @@ void LookInputState::HandleInput()
       break;
 
     case 'q':
-      Application::Instance().ChangeState(Application::GameStates::MAIN_STATE);
+      Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
     default:

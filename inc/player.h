@@ -55,7 +55,6 @@ class Player : public GameObject
     bool IsAlive(GameObject* damager);
 
     ContainerComponent Inventory;
-    ContainerComponent* ContainerToInteractWith = nullptr;
 
     std::string Name = "Nameless One";
 
