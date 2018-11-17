@@ -240,7 +240,7 @@ void InventoryState::DrawEquipmentField(int x, int y, std::string fieldName, Ite
 
   if (eq != nullptr)
   {
-    stub = eq->OwnerGameObject->ObjectName;
+    stub = eq->Data.IsIdentified ? eq->OwnerGameObject->ObjectName : eq->Data.UnidentifiedName;
     stub.resize(kEquipmentMaxNameLength, ' ');
   }
 
@@ -275,14 +275,16 @@ void InventoryState::DropItem()
 
   ic->Transfer();
 
+  std::string objName = ic->Data.IsIdentified ? go->ObjectName : ic->Data.UnidentifiedName;
+
   std::string message;
   if (ic->Data.IsStackable)
   {
-    message = Util::StringFormat("Dropped: %i %s", ic->Data.Amount, go->ObjectName.data());
+    message = Util::StringFormat("Dropped: %i %s", ic->Data.Amount, objName.data());
   }
   else
   {
-    message = Util::StringFormat("Dropped: %s", go->ObjectName.data());
+    message = Util::StringFormat("Dropped: %s", objName.data());
   }
 
   // !!! Object should not be destroyed here !!!

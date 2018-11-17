@@ -65,6 +65,8 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
 
     size_t CalculateHash(ItemComponent* item);
 
+    int CalculateAverageDamage(int numRolls, int diceSides);
+
     ItemPrefix RollItemPrefix();
 };
 

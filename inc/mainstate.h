@@ -34,15 +34,16 @@ class MainState : public GameState
 
     std::vector<std::string> _helpText =
     {
-      R"('q' - Cancel / Exit Game     )",
-      R"('a' - Attack                 )",
-      R"('i' - Interact               )",
-      R"('l' - Enter "look mode"      )",
-      R"('m' - Display message log    )",
-      R"('@' - Display character sheet)",
-      R"('e' - Display inventory      )",
-      R"('>' - Go down the stairs     )",
-      R"('<' - Go up the stairs       )"
+      R"('q' - Cancel / Exit Game      )",
+      R"('a' - Attack                  )",
+      R"('i' - Interact                )",
+      R"('l' - Enter "look mode"       )",
+      R"('m' - Display message log     )",
+      R"('@' - Display character sheet )",
+      R"('e' - Display inventory       )",
+      R"('g' - Get item from the ground)",
+      R"('>' - Go down the stairs      )",
+      R"('<' - Go up the stairs        )"
     };
 };
 

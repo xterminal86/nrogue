@@ -557,7 +557,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
       int diceRolls = 1 * dungeonLevel;
       int diceSides = 4 * dungeonLevel;
 
-      avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
+      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
       baseDurability = 15;
 
@@ -574,7 +574,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
       int diceRolls = 1 * dungeonLevel;
       int diceSides = 6 * dungeonLevel;
 
-      avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
+      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
       baseDurability = 20;
 
@@ -591,7 +591,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
       int diceRolls = 2 * dungeonLevel;
       int diceSides = 6 * dungeonLevel;
 
-      avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
+      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
       baseDurability = 25;
 
@@ -608,7 +608,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
       int diceRolls = 1 * dungeonLevel;
       int diceSides = 6 * dungeonLevel;
 
-      avgDamage = ((diceRolls * diceSides) - diceRolls) / 2;
+      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
       baseDurability = 10;
 
@@ -617,7 +617,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       ic->Data.StatBonuses[StatsEnum::STR] = 1;
       ic->Data.StatBonuses[StatsEnum::DEF] = 2;
-      ic->Data.StatBonuses[StatsEnum::SPD] = 1;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -1;
     }
     break;
   }
@@ -819,7 +819,9 @@ void GameObjectsFactory::EquipItem(ItemComponent* item)
 
   SetStatsModifiers(item->Data);
 
-  auto message = Util::StringFormat("You %s %s", verb.data(), item->OwnerGameObject->ObjectName.data());
+  std::string objName = item->Data.IsIdentified ? item->OwnerGameObject->ObjectName : item->Data.UnidentifiedName;
+
+  auto message = Util::StringFormat("You %s %s", verb.data(), objName.data());
   Printer::Instance().AddMessage(message);
 }
 
@@ -841,7 +843,9 @@ void GameObjectsFactory::UnequipItem(ItemComponent* item)
 
   UnsetStatsModifiers(item->Data);
 
-  auto message = Util::StringFormat("You %s %s", verb.data(), item->OwnerGameObject->ObjectName.data());
+  std::string objName = item->Data.IsIdentified ? item->OwnerGameObject->ObjectName : item->Data.UnidentifiedName;
+
+  auto message = Util::StringFormat("You %s %s", verb.data(), objName.data());
   Printer::Instance().AddMessage(message);
 }
 
@@ -850,7 +854,9 @@ void GameObjectsFactory::EquipRing(ItemComponent* ring, int index)
   ring->Data.IsEquipped = true;
   _playerRef->EquipmentByCategory[ring->Data.EqCategory][index] = ring;
 
-  auto str = Util::StringFormat("You put on %s", ring->OwnerGameObject->ObjectName.data());
+  std::string objName = ring->Data.IsIdentified ? ring->OwnerGameObject->ObjectName : ring->Data.UnidentifiedName;
+
+  auto str = Util::StringFormat("You put on %s", objName.data());
   Printer::Instance().AddMessage(str);
 }
 
@@ -859,7 +865,9 @@ void GameObjectsFactory::UnequipRing(ItemComponent* ring, int index)
   ring->Data.IsEquipped = false;
   _playerRef->EquipmentByCategory[ring->Data.EqCategory][index] = nullptr;
 
-  auto str = Util::StringFormat("You take off %s", ring->OwnerGameObject->ObjectName.data());
+  std::string objName = ring->Data.IsIdentified ? ring->OwnerGameObject->ObjectName : ring->Data.UnidentifiedName;
+
+  auto str = Util::StringFormat("You take off %s", objName.data());
   Printer::Instance().AddMessage(str);
 }
 
@@ -1028,4 +1036,12 @@ size_t GameObjectsFactory::CalculateHash(ItemComponent* item)
   std::hash<std::string> hasher;
 
   return hasher(strToHash);
+}
+
+int GameObjectsFactory::CalculateAverageDamage(int numRolls, int diceSides)
+{
+  int minDmg = (numRolls == 1) ? 0 : numRolls;
+  int maxDmg = numRolls * diceSides;
+
+  return (maxDmg - minDmg) / 2;
 }
