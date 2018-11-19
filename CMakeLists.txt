@@ -3,9 +3,27 @@ set (TARGET_NAME nrogue)
 project (${TARGET_NAME})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/components)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/levels)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/states)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/singletons)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/aux)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/core)
 
-file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
+file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp                  
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/*.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/states/*.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/*.cpp                  
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.cpp
+
+                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/components/*.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/levels/*.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/states/*.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/singletons/*.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/core/*.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/aux/*.h)
 
 add_executable(${TARGET_NAME} ${SOURCES})
 
