@@ -82,7 +82,7 @@ void IntroState::AddBonusItems()
 
   switch(player.GetClass())
   {
-    case Player::PlayerClass::THIEF:
+    case PlayerClass::THIEF:
     {
       text =
       {
@@ -109,7 +109,7 @@ void IntroState::AddBonusItems()
     }
     break;
 
-    case Player::PlayerClass::SOLDIER:
+    case PlayerClass::SOLDIER:
     {
       text =
       {
@@ -130,7 +130,7 @@ void IntroState::AddBonusItems()
     }
     break;
 
-    case Player::PlayerClass::ARCANIST:
+    case PlayerClass::ARCANIST:
     {
       text =
       {

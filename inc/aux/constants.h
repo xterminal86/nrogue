@@ -103,6 +103,27 @@ enum class MonsterType
   SKELETON
 };
 
+enum class NPCType
+{
+  CLAIRE = 0,
+  CLOUD,
+  PHOENIX,
+  MILES,
+  IARSPIDER,
+  TIGRA,
+  STEVE,
+  GIMLEY,
+  UNKNOWN
+};
+
+enum class PlayerClass
+{
+  SOLDIER = 0,
+  THIEF,
+  ARCANIST,
+  CUSTOM
+};
+
 enum class EquipmentCategory
 {
   NOT_EQUIPPABLE = 0,
@@ -391,6 +412,19 @@ namespace GlobalConstants
   static const std::string ItemMagicColor = "#4169E1";
   static const std::string ItemRareColor = "#CCCC52";
   static const std::string ItemUniqueColor = "#A59263";
+
+  static const std::map<NPCType, std::string> NpcNamesByType =
+  {
+    { NPCType::CLAIRE, "Claire" },
+    { NPCType::CLOUD, "Cloud" },
+    { NPCType::GIMLEY, "Gimley" },
+    { NPCType::IARSPIDER, "Ivan" },
+    { NPCType::MILES, "Miles" },
+    { NPCType::PHOENIX, "Phoenix" },
+    { NPCType::STEVE, "Steve" },
+    { NPCType::TIGRA, "Tigra" },
+    { NPCType::UNKNOWN, "???" }
+  };
 
   static const std::map<WeaponType, std::string> WeaponNameByType =
   {

@@ -9,6 +9,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/states)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/singletons)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/aux)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/core)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/ai)
 
 file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp                  
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.cpp
@@ -16,6 +17,7 @@ file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/states/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/*.cpp                  
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/*.cpp
 
                   ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/inc/components/*.h
@@ -23,7 +25,8 @@ file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/inc/states/*.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/inc/singletons/*.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/inc/core/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/aux/*.h)
+                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/aux/*.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/ai/*.h)
 
 add_executable(${TARGET_NAME} ${SOURCES})
 

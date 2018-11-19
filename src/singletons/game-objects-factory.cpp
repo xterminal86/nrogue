@@ -4,7 +4,9 @@
 #include "rng.h"
 #include "item-component.h"
 #include "shrine-component.h"
+#include "ai-component.h"
 #include "ai-monster-basic.h"
+#include "ai-npc.h"
 #include "stairs-component.h"
 #include "go-timer-destroyer.h"
 #include "map.h"
@@ -105,6 +107,20 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool standing)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, '@', "#FFFFFF");
+
+  auto c = go->AddComponent<AIComponent>();
+  AIComponent* aic = static_cast<AIComponent*>(c);
+  auto model = aic->AddModel<AINPC>();
+  AINPC* ainpc = static_cast<AINPC*>(model);
+
+  ainpc->Init(npcType, standing);
+
+  return go;
+}
+
 GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'r', GlobalConstants::MonsterColor);
@@ -115,10 +131,12 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   // Sets Occupied flag for _currentCell
   go->Move(0, 0);
 
-  auto c = go->AddComponent<AIMonsterBasic>();
-  AIMonsterBasic* ai = static_cast<AIMonsterBasic*>(c);
+  auto c = go->AddComponent<AIComponent>();
+  AIComponent* ai = static_cast<AIComponent*>(c);
+  auto aiModel = ai->AddModel<AIMonsterBasic>();
+  AIMonsterBasic* aimb = static_cast<AIMonsterBasic*>(aiModel);
 
-  ai->AgroRadius = 8;
+  aimb->AgroRadius = 8;
 
   // Set attributes
   if (randomize)
@@ -150,6 +168,8 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
 
     go->Attrs.HP.Set(10);
   }
+
+  ai->ChangeModel<AIMonsterBasic>();
 
   return go;
 }

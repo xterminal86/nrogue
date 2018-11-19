@@ -1,4 +1,5 @@
 #include "ai-monster-basic.h"
+#include "ai-component.h"
 #include "application.h"
 #include "map.h"
 #include "rng.h"
@@ -9,13 +10,15 @@ AIMonsterBasic::AIMonsterBasic()
   _hash = typeid(*this).hash_code();
 
   _playerRef = &Application::Instance().PlayerInstance;
+
+  IsAgressive = true;
 }
 
 void AIMonsterBasic::Update()
 {
-  if (OwnerGameObject->Attrs.ActionMeter < 100)
+  if (AIComponentRef->OwnerGameObject->Attrs.ActionMeter < 100)
   {
-    OwnerGameObject->WaitForTurn();
+    AIComponentRef->OwnerGameObject->WaitForTurn();
   }
   else
   {
@@ -35,7 +38,7 @@ void AIMonsterBasic::Update()
       }
     }
 
-    OwnerGameObject->FinishTurn();
+    AIComponentRef->OwnerGameObject->FinishTurn();
   }
 }
 
@@ -44,7 +47,7 @@ void AIMonsterBasic::MoveToKill()
   auto c = SelectCell();
   if (c.X != -1 && c.Y != -1)
   {
-    bool res = OwnerGameObject->MoveTo(c.X, c.Y);
+    bool res = AIComponentRef->OwnerGameObject->MoveTo(c.X, c.Y);
     if (!res)
     {
       RandomMovement();
@@ -67,15 +70,15 @@ void AIMonsterBasic::RandomMovement()
   dx *= signX;
   dy *= signY;
 
-  OwnerGameObject->Move(dx, dy);
+  AIComponentRef->OwnerGameObject->Move(dx, dy);
 }
 
 bool AIMonsterBasic::IsPlayerVisible()
 {
   int px = _playerRef->PosX;
   int py = _playerRef->PosY;
-  int x = OwnerGameObject->PosX;
-  int y = OwnerGameObject->PosY;
+  int x = AIComponentRef->OwnerGameObject->PosX;
+  int y = AIComponentRef->OwnerGameObject->PosY;
 
   int d = Util::LinearDistance(x, y, px, py);
   if (d > AgroRadius)
@@ -105,8 +108,8 @@ Position AIMonsterBasic::SelectCell()
   int px = _playerRef->PosX;
   int py = _playerRef->PosY;
 
-  int x = OwnerGameObject->PosX;
-  int y = OwnerGameObject->PosY;
+  int x = AIComponentRef->OwnerGameObject->PosX;
+  int y = AIComponentRef->OwnerGameObject->PosY;
 
   int lx = x - 1;
   int ly = y - 1;
@@ -140,8 +143,8 @@ bool AIMonsterBasic::IsPlayerInRange()
   int px = _playerRef->PosX;
   int py = _playerRef->PosY;
 
-  int x = OwnerGameObject->PosX;
-  int y = OwnerGameObject->PosY;
+  int x = AIComponentRef->OwnerGameObject->PosX;
+  int y = AIComponentRef->OwnerGameObject->PosY;
 
   int lx = x - 1;
   int ly = y - 1;
@@ -167,7 +170,7 @@ void AIMonsterBasic::Attack(Player* player)
   int defaultHitChance = 50;
   int hitChance = defaultHitChance;
 
-  int d = OwnerGameObject->Attrs.Skl.CurrentValue - player->Attrs.Skl.Get();
+  int d = AIComponentRef->OwnerGameObject->Attrs.Skl.CurrentValue - player->Attrs.Skl.Get();
 
   if (d > 0)
   {
@@ -181,9 +184,9 @@ void AIMonsterBasic::Attack(Player* player)
   hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
 
   auto logMsg = Util::StringFormat("%s (SKL %i, LVL %i) attacks Player (SKL: %i, LVL %i): chance = %i",
-                                   OwnerGameObject->ObjectName.data(),
-                                   OwnerGameObject->Attrs.Skl.CurrentValue,
-                                   OwnerGameObject->Attrs.Lvl.CurrentValue,
+                                   AIComponentRef->OwnerGameObject->ObjectName.data(),
+                                   AIComponentRef->OwnerGameObject->Attrs.Skl.CurrentValue,
+                                   AIComponentRef->OwnerGameObject->Attrs.Lvl.CurrentValue,
                                    player->Attrs.Skl.CurrentValue,
                                    player->Attrs.Lvl.CurrentValue,
                                    hitChance);
@@ -193,18 +196,18 @@ void AIMonsterBasic::Attack(Player* player)
   {
     Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FF0000");
 
-    int dmg = OwnerGameObject->Attrs.Str.CurrentValue - player->Attrs.Def.Get();
+    int dmg = AIComponentRef->OwnerGameObject->Attrs.Str.CurrentValue - player->Attrs.Def.Get();
     if (dmg <= 0)
     {
       dmg = 1;
     }
 
-    player->ReceiveDamage(OwnerGameObject, dmg);
+    player->ReceiveDamage(AIComponentRef->OwnerGameObject, dmg);
 
     Application::Instance().DrawCurrentState();
     Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs);
 
-    if (!player->IsAlive(OwnerGameObject))
+    if (!player->IsAlive(AIComponentRef->OwnerGameObject))
     {
       Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
     }
@@ -213,7 +216,7 @@ void AIMonsterBasic::Attack(Player* player)
   {
     Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
 
-    auto str = Util::StringFormat("%s misses", OwnerGameObject->ObjectName.data());
+    auto str = Util::StringFormat("%s misses", AIComponentRef->OwnerGameObject->ObjectName.data());
     Printer::Instance().AddMessage(str);
 
     Application::Instance().DrawCurrentState();

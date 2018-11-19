@@ -1,12 +1,12 @@
 #ifndef AIMONSTERBASIC_H
 #define AIMONSTERBASIC_H
 
-#include "component.h"
+#include "ai-model-base.h"
 #include "util.h"
 
 class Player;
 
-class AIMonsterBasic : public Component
+class AIMonsterBasic : public AIModelBase
 {
   public:
     AIMonsterBasic();

@@ -6,6 +6,7 @@
 #include "door-component.h"
 #include "game-objects-factory.h"
 #include "ai-monster-basic.h"
+#include "ai-component.h"
 #include "application.h"
 #include "item-component.h"
 
@@ -108,12 +109,15 @@ bool Player::TryToAttack(int dx, int dy)
   auto go = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
   if (go != nullptr)
   {
-    // FIXME: redesign
-    auto c = go->GetComponent<AIMonsterBasic>();
+    Component* c = go->GetComponent<AIComponent>();
     if (c != nullptr)
     {
-      Attack(go);
-      return true;
+      AIComponent* aic = static_cast<AIComponent*>(c);
+      if (aic->CurrentModel->IsAgressive)
+      {
+        Attack(go);
+        return true;
+      }
     }
   }
 

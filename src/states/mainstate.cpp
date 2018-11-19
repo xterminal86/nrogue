@@ -174,9 +174,20 @@ void MainState::HandleInput()
         //_playerRef->FinishTurn();
         break;
 
-      case 'a':        
-        Application::Instance().ChangeState(GameStates::ATTACK_STATE);
-        break;
+      case 'a':
+      {
+        if (Map::Instance().CurrentLevel->Peaceful)
+        {
+          std::vector<std::string> variants = { "Not here", "Not in town" };
+          int index = RNG::Instance().RandomRange(0, 2);
+          Printer::Instance().AddMessage(variants[index]);
+        }
+        else
+        {
+          Application::Instance().ChangeState(GameStates::ATTACK_STATE);
+        }
+      }
+      break;
 
       case 'e':
         Application::Instance().ChangeState(GameStates::INVENTORY_STATE);

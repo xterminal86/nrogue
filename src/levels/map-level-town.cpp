@@ -131,6 +131,8 @@ void MapLevelTown::PrepareMap(MapLevelBase* levelOwner)
 
 void MapLevelTown::CreateLevel()
 {
+  Peaceful = true;
+
   VisibilityRadius = 20;
 
   Tile t;

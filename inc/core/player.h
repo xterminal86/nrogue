@@ -13,16 +13,7 @@
 
 class Player : public GameObject
 {
-  public:
-
-    enum class PlayerClass
-    {
-      SOLDIER = 0,
-      THIEF,
-      ARCANIST,
-      CUSTOM
-    };
-
+  public:    
     Player() {}
 
     void Init();

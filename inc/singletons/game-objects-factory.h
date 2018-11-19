@@ -19,6 +19,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateGameObject(int x, int y, ItemType objType);
     GameObject* CreateMonster(int x, int y, MonsterType monsterType);
 
+    GameObject* CreateNPC(int x, int y, NPCType npcType, bool standing = false);
     GameObject* CreateRat(int x, int y, bool randomize = true);
     GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);    
     GameObject* CreateMoney(int amount = 0);
