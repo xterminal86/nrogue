@@ -38,6 +38,8 @@ void AINPC::Init(NPCType type, bool standing)
 
   auto& playerRef = Application::Instance().PlayerInstance;
 
+  // FIXME: moar?
+
   switch (_npcType)
   {
     case NPCType::CLAIRE:
@@ -65,11 +67,14 @@ void AINPC::Init(NPCType type, bool standing)
       _data.GossipResponsesByMap[MapType::TOWN] =
       {
         {
-          "I took a vacation only to arrive in a place with some evil lurking underground.",
+          // =========================================================================== 80
+          "I took a vacation only to arrive in a place",
+          "with some evil lurking underground.",
           "Worst vacation ever."
         },
         {
-          "They say the mines are enchanted or something - they're different every time you arrive here.",
+          "They say the mines are enchanted or something.",
+          "They're different every time you arrive here.",
           "Can you believe this?"
         },
         {
@@ -91,16 +96,19 @@ void AINPC::Init(NPCType type, bool standing)
 
       _data.GossipResponsesByMap[MapType::TOWN] =
       {
+        // =========================================================================== 80
         {
-          "No, I'm not a \"soldier\" like those in your City."
-          "I'm from the East actually. We're... well, a little bit different up there."
+          "No, I'm not a \"soldier\" like those in your City.",
+          "I'm from the East actually.",
+          "We're... well, a little bit different up there."
         },
         {
-          "No one knows how deep the mines are. Nobody ever returned to tell the tale."
+          "No one knows how deep the mines are.",
+          "Nobody ever returned to tell the tale."
         },
         {
           "I try no to use my sword.",
-          "Use brings about wear, tear, and rust — and THAT is a real waste."
+          "Use brings about wear, tear, and rust - and THAT is a real waste."
         },
         {
           "Why I never went to the mines myself?",
@@ -123,6 +131,7 @@ void AINPC::Init(NPCType type, bool standing)
 
       _data.GossipResponsesByMap[MapType::TOWN] =
       {
+        // =========================================================================== 80
         {
           "The Great Eye is watching you."
         },
@@ -147,6 +156,7 @@ void AINPC::Init(NPCType type, bool standing)
 
       _data.GossipResponsesByMap[MapType::TOWN] =
       {
+        // =========================================================================== 80
         {
           "They sent me here to maintain order and,",
           "as ill luck would have it, this excuse for a lawyer,",
@@ -178,6 +188,7 @@ void AINPC::Init(NPCType type, bool standing)
 
       _data.GossipResponsesByMap[MapType::TOWN] =
       {
+        // =========================================================================== 80
         {
           "Miles may act as if he doesn't know me,",
           "but we actually studied law together at the Academy.",
@@ -207,18 +218,21 @@ void AINPC::Init(NPCType type, bool standing)
 
       _data.GossipResponsesByMap[MapType::TOWN] =
       {
+        // =========================================================================== 80
         {
           "Welcome to our small neighbourhood!",
           "It wasn't always this gloomy, just so you know..."
         },
         {
           "The dungeon? Oh, you mean the mine?",
-          "Yeah, I remember people always running around, carrying stuff there and back, talking and being all busy.",
+          "Yeah, I remember people always running around,",
+          "carrying stuff there and back, talking and being all busy.",
           "Lots of commotion!",
           "But then everything kinda stopped for some reason...",
           "I don't know why, but I overheard grownups saying that",
           "there was some kind of... in-ee-qui-ty ... happened down there.",
-          "One day a miner was killed during a quarrel, and now he is seeking revenge on us for that!",
+          "One day a miner was killed during a quarrel,",
+          "and now he is seeking revenge on us for that!",
           "Scary!"
         },
         {
@@ -240,18 +254,22 @@ void AINPC::Init(NPCType type, bool standing)
 
       _data.GossipResponsesByMap[MapType::TOWN] =
       {
+        // =========================================================================== 80
         {
-          "Emeralds are green, diamonds are blue, Redstone is red and this is all true!"
+          "Emeralds are green, diamonds are blue,",
+          "Redstone is red and this is all true!"
         },
         {
           "What do you mean I'm blocky? Look who's talking!"
         },
         {
           "I've been working in these mines for almost eight years now.",
-          "I never heard or saw anything that would be even remotely connected to those stories you may hear.",
+          "I never heard or saw anything that would be even remotely",
+          "connected to those stories you may hear.",
           "Just think for yourself: how can something like",
           "that happened in a such small and isolated place like this,",
-          "where people know each other from childhood, yet nobody says he knows or heard anything?"
+          "where people know each other from childhood,",
+          "yet nobody says he knows or heard anything?"
         },
         {
           "Business has been pretty much frozen since those events started.",

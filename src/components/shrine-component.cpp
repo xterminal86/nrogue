@@ -82,7 +82,6 @@ void ShrineComponent::ProcessEffect()
     }
     break;
 
-    // TODO: temporary raise MAG, RES
     case ShrineType::SPIRIT:
     {
       int percentage = (float)playerRef.Attrs.MP.OriginalValue * 0.1f;
@@ -101,12 +100,10 @@ void ShrineComponent::ProcessEffect()
     }
     break;
 
-    // TODO: Identify all items
     case ShrineType::KNOWLEDGE:
       Printer::Instance().AddMessage("... but nothing happens");
       break;
 
-    // TODO: Identify prefix
     case ShrineType::PERCEPTION:
       Printer::Instance().AddMessage("... but nothing happens");
       break;

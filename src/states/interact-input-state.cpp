@@ -177,7 +177,7 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
       Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);
 
       std::string msg = (npcAi->Data().IsAquainted) ? npcAi->Data().Name : actor->ObjectName;
-      Printer::Instance().AddMessage("You speak with " + msg);
+      Printer::Instance().AddMessage("You spoke to " + msg);
     }
   }
 }

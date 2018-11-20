@@ -182,7 +182,7 @@ enum class ShrineType
   SPIRIT,       // raises MAG or MP
   TRANQUILITY,  // restores MP
   KNOWLEDGE,    // identifies items
-  PERCEPTION,   // reveals blessed / cursed status
+  PERCEPTION,   // reveals BUC status
   HEALING,      // restores HP
   DESECRATED,   // random effect + receive curse
   RUINED,       // random effect + low chance to receive negative effect
