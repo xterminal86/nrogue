@@ -20,6 +20,7 @@ class MapLevelTown : public MapLevelBase
     void CreateChurch(int x, int y);    
 
     void CreatePlayerHouse();
+    void CreateNPCs();
 };
 
 #endif // MAPLEVELTOWN_H

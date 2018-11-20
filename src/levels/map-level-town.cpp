@@ -186,6 +186,8 @@ void MapLevelTown::CreateLevel()
 
   RecordEmptyCells();
 
+  CreateNPCs();
+
   LevelExit.X = 98;
   LevelExit.Y = 48;
 
@@ -396,4 +398,54 @@ void MapLevelTown::CreatePlayerHouse()
 
   auto stash = GameObjectsFactory::Instance().CreateContainer("Stash", 'C', 5, 5);
   InsertGameObject(stash);
+}
+
+void MapLevelTown::CreateNPCs()
+{
+  std::vector<NPCType> npcs =
+  {
+    NPCType::CLAIRE,
+    NPCType::CLOUD,
+    NPCType::IARSPIDER,
+    NPCType::MILES,
+    NPCType::PHOENIX,
+    NPCType::STEVE,
+    NPCType::TIGRA
+  };
+
+  std::vector<Position> visited;
+
+  for (auto& npc : npcs)
+  {
+    std::vector<Position> emptyCells;
+
+    for (int x = 1; x <= MapSize.X - 1; x++)
+    {
+      for (int y = 1; y <= MapSize.Y - 1; y++)
+      {
+        bool alreadyAdded = false;
+
+        for (auto& c : visited)
+        {
+          if (c.X == x && c.Y == y)
+          {
+            alreadyAdded = true;
+            break;
+          }
+        }
+
+        if (!alreadyAdded && !MapArray[x][y]->Blocking && !MapArray[x][y]->Occupied)
+        {
+          emptyCells.push_back(Position(x, y));
+        }
+      }
+    }
+
+    int index = RNG::Instance().RandomRange(0, emptyCells.size());
+
+    auto go = GameObjectsFactory::Instance().CreateNPC(emptyCells[index].X, emptyCells[index].Y, npc);
+    InsertActor(go);
+
+    visited.push_back(Position(emptyCells[index].X, emptyCells[index].Y));
+  }
 }

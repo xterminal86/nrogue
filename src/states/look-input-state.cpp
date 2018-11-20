@@ -5,6 +5,8 @@
 #include "printer.h"
 #include "map.h"
 #include "item-component.h"
+#include "ai-component.h"
+#include "ai-npc.h"
 #include "map-level-base.h"
 
 void LookInputState::Init()
@@ -102,9 +104,20 @@ void LookInputState::Update(bool forceUpdate)
       {        
         auto actor = CheckActor();
         if (actor != nullptr)
-        {
-          lookStatus = actor->ObjectName;
-          foundGameObject = true;
+        {          
+          auto c = actor->GetComponent<AIComponent>();
+          AIComponent* aic = static_cast<AIComponent*>(c);
+          auto model = aic->GetModel<AINPC>();
+          if (model != nullptr)
+          {
+            AINPC* ainpc = static_cast<AINPC*>(model);
+            std::string name = ainpc->Data().Name;
+            std::string title = ainpc->Data().Job;
+            std::string unidStr = ainpc->Data().UnacquaintedDescription;
+            auto idStr = Util::StringFormat("You see %s the %s", name.data(), title.data());
+            lookStatus = (ainpc->Data().IsAquainted) ? idStr : unidStr;
+            foundGameObject = true;
+          }
         }
         else
         {
@@ -149,9 +162,9 @@ void LookInputState::Update(bool forceUpdate)
       lookStatus = "???";
     }
 
-    Printer::Instance().PrintFB(0, Printer::Instance().TerminalHeight - 1,
+    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth / 2, 0,
                                   "Press 'q' to exit look mode",
-                                  Printer::kAlignLeft,
+                                  Printer::kAlignCenter,
                                   "#FFFFFF");
 
     Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,

@@ -192,7 +192,7 @@ void AIMonsterBasic::Attack(Player* player)
                                    hitChance);
   Logger::Instance().Print(logMsg);
 
-  if (Util::RollDice(hitChance))
+  if (Util::Rolld100(hitChance))
   {
     Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FF0000");
 

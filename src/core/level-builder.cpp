@@ -251,7 +251,7 @@ void LevelBuilder::VisitCells(RoomHelper& room)
 
 RoomLayout LevelBuilder::SelectRoom()
 {
-  int dice = Util::RollDice();
+  int dice = Util::Rolld100();
 
   int roomSize = _roomsForLevel[0].Layout.size();
 
@@ -281,7 +281,7 @@ RoomLayout LevelBuilder::SelectRoom()
 
 std::vector<RoomLayout> LevelBuilder::SelectRooms()
 {
-  int dice = Util::RollDice();
+  int dice = Util::Rolld100();
 
   //auto dbg = Util::StringFormat("\t\tRolled: %i", dice);
   //Logger::Instance().Print(dbg);

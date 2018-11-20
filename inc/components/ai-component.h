@@ -27,6 +27,19 @@ class AIComponent : public Component
     }
 
     template <typename T>
+    AIModelBase* GetModel()
+    {
+      size_t hash = typeid(T).hash_code();
+
+      if (_aiModels.count(hash) == 1)
+      {
+        return _aiModels[hash].get();
+      }
+
+      return nullptr;
+    }
+
+    template <typename T>
     void ChangeModel()
     {
       size_t hash = typeid(T).hash_code();

@@ -405,7 +405,7 @@ void Player::Attack(GameObject* go)
                                      hitChance);
     Logger::Instance().Print(logMsg);
 
-    if (Util::RollDice(hitChance))
+    if (Util::Rolld100(hitChance))
     {
       Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "#FF0000");
 
@@ -665,7 +665,7 @@ bool Player::CanRaiseAttribute(Attribute& attr)
   int iterations = attr.Talents;
   for (int i = 0; i < iterations; i++)
   {
-    if (Util::RollDice(chance))
+    if (Util::Rolld100(chance))
     {
       return true;
     }
@@ -673,7 +673,7 @@ bool Player::CanRaiseAttribute(Attribute& attr)
     chance += GlobalConstants::AttributeIncreasedRaiseStep;
   }
 
-  return Util::RollDice(chance);
+  return Util::Rolld100(chance);
 }
 
 void Player::ProcessKill(GameObject* monster)
@@ -901,7 +901,7 @@ void Player::SetArcanistDefaultItems()
 
 bool Player::DoesWeaponLosesDurability()
 {
-  if (Util::RollDice(10))
+  if (Util::Rolld100(10))
   {
     EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.Add(-1);
 

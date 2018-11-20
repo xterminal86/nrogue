@@ -490,7 +490,7 @@ namespace Util
     return res;
   }
 
-  inline bool RollDice(int successChance)
+  inline bool Rolld100(int successChance)
   {
     int dice = RNG::Instance().RandomRange(0, 101);
 
@@ -507,9 +507,9 @@ namespace Util
     return false;
   }
 
-  inline int RollDice()
+  inline int Rolld100()
   {
-    int dice = RNG::Instance().RandomRange(0, 101);
+    int dice = RNG::Instance().RandomRange(0, 100) + 1;
     return dice;
   }
 

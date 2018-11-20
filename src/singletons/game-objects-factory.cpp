@@ -111,12 +111,20 @@ GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool st
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, '@', "#FFFFFF");
 
+  go->Move(0, 0);
+
   auto c = go->AddComponent<AIComponent>();
+
   AIComponent* aic = static_cast<AIComponent*>(c);
   auto model = aic->AddModel<AINPC>();
-  AINPC* ainpc = static_cast<AINPC*>(model);
 
+  AINPC* ainpc = static_cast<AINPC*>(model);
   ainpc->Init(npcType, standing);
+
+  std::string goColor = (ainpc->Data().IsMale) ? "#FFFFFF" : "#FF00FF";
+  go->FgColor = goColor;
+
+  aic->ChangeModel<AINPC>();
 
   return go;
 }
@@ -482,7 +490,6 @@ void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int
   StairsComponent* stairs = static_cast<StairsComponent*>(c);
   stairs->LeadsTo = leadsTo;
 
-  //tile->Blocking = false;
   tile->ObjectName = (image == '>') ? "Stairs Down" : "Stairs Up";
   tile->FgColor = GlobalConstants::WhiteColor;
   tile->BgColor = GlobalConstants::DoorHighlightColor;
