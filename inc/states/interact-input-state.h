@@ -17,6 +17,7 @@ class InteractInputState : public GameState
 
   private:
     void TryToInteractWithObject(GameObject* go);
+    void TryToInteractWithActor(GameObject* actor);
 
     Player* _playerRef;
 

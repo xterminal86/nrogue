@@ -3,6 +3,7 @@
 #include "game-object.h"
 #include "rng.h"
 #include "application.h"
+#include "map.h"
 
 AINPC::AINPC()
 {
@@ -262,6 +263,8 @@ void AINPC::Init(NPCType type, bool standing)
     }
     break;
   }
+
+  AIComponentRef->OwnerGameObject->ObjectName = (_data.IsMale) ? "man" : "woman";
 }
 
 void AINPC::RandomMovement()
@@ -276,4 +279,112 @@ void AINPC::RandomMovement()
   dy *= signY;
 
   AIComponentRef->OwnerGameObject->Move(dx, dy);
+
+  // FIXME: redesign and rethink (maybe)
+
+  /*
+  std::vector<std::pair<float, float>> probs;
+
+  std::vector<std::pair<int, int>> dirsToCheck =
+  {
+    { -1, -1 },
+    { -1, 0 },
+    { -1, 1 },
+    { 0, -1 },
+    { 0, 0 },
+    { 0, 1 },
+    { 1, -1 },
+    { 1, 0 },
+    { 1, -1 }
+  };
+
+  auto level = Map::Instance().CurrentLevel;
+
+  for (auto& dir : dirsToCheck)
+  {
+    int x = AIComponentRef->OwnerGameObject->PosX + dir.first;
+    int y = AIComponentRef->OwnerGameObject->PosY + dir.second;
+
+    if (!level->MapArray[x][y]->Blocking && !level->MapArray[x][y]->Occupied)
+    {
+      auto res = GetDirectionProbability(dir.first, dir.second);
+      probs.push_back(res);
+    }
+  }
+
+  float max = 0.0f;
+  int indexFound = -1;
+
+  int index = 0;
+  for (auto& c : probs)
+  {
+    float maxProb = std::max(c.first, c.second);
+
+    if (maxProb > max)
+    {
+      max = maxProb;
+      indexFound = index;
+    }
+
+    index++;
+  }
+
+  if (indexFound != -1)
+  {
+    auto pair = probs[indexFound];
+
+    int chanceX = (int)(pair.first * 100);
+    int chanceY = (int)(pair.second * 100);
+
+    auto str = Util::StringFormat("[%i ; %i] Trying to pass %i %i\n", AIComponentRef->OwnerGameObject->PosX, AIComponentRef->OwnerGameObject->PosY, chanceX, chanceY);
+    Logger::Instance().Print(str);
+
+    int middleX = level->MapSize.X / 2;
+    int middleY = level->MapSize.Y / 2;
+
+    int sideX = AIComponentRef->OwnerGameObject->PosX - middleX;
+    int sideY = AIComponentRef->OwnerGameObject->PosY - middleY;
+
+    str = Util::StringFormat("%i %i\n", sideX, sideY);
+    Logger::Instance().Print(str);
+
+    bool succX = Util::Rolld100(chanceX);
+    bool succY = Util::Rolld100(chanceY);
+
+    if (succX || succY)
+    {
+      int dx = std::signbit(sideX) ? 1 : -1;
+      int dy = std::signbit(sideY) ? 1 : -1;
+
+      str = Util::StringFormat("Trying to move - %i %i\n", dx, dy);
+      Logger::Instance().Print(str);
+
+      AIComponentRef->OwnerGameObject->Move(dx, dy);
+    }
+  }
+  */
+}
+
+std::pair<float, float> AINPC::GetDirectionProbability(int dirX, int dirY)
+{
+  std::pair<float, float> prob;
+
+  auto level = Map::Instance().CurrentLevel;
+
+  int middleX = level->MapSize.X / 2;
+  int middleY = level->MapSize.Y / 2;
+
+  int posX = AIComponentRef->OwnerGameObject->PosX + dirX;
+  int posY = AIComponentRef->OwnerGameObject->PosY + dirY;
+
+  int dx = std::abs(middleX - posX);
+  int dy = std::abs(middleY - posY);
+
+  float pX = ((float)dx / 100.0f) + 0.4f;
+  float pY = ((float)dy / 100.0f) + 0.4f;
+
+  prob.first = pX;
+  prob.second = pY;
+
+  return prob;
 }

@@ -492,7 +492,7 @@ namespace Util
 
   inline bool Rolld100(int successChance)
   {
-    int dice = RNG::Instance().RandomRange(0, 101);
+    int dice = RNG::Instance().RandomRange(1, 101);
 
     auto logMsg = Util::StringFormat("\tRollDice(): chance = %i, rolled = %i",
                                      successChance,
@@ -509,7 +509,7 @@ namespace Util
 
   inline int Rolld100()
   {
-    int dice = RNG::Instance().RandomRange(0, 100) + 1;
+    int dice = RNG::Instance().RandomRange(1, 101);
     return dice;
   }
 

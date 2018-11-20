@@ -4,6 +4,9 @@
 #include "map.h"
 #include "printer.h"
 #include "map-level-base.h"
+#include "ai-component.h"
+#include "ai-npc.h"
+#include "npc-interact-state.h"
 
 void InteractInputState::Init()
 {
@@ -81,15 +84,23 @@ void InteractInputState::HandleInput()
 
   if (dirSet)
   {
-    auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
-    if (res.size() != 0)
+    auto actor = Map::Instance().GetActorAtPosition(_cursorPosition.X, _cursorPosition.Y);
+    if (actor != nullptr)
     {
-      TryToInteractWithObject(res.back());
+      TryToInteractWithActor(actor);
     }
     else
     {
-      auto cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
-      TryToInteractWithObject(cell);
+      auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
+      if (res.size() != 0)
+      {
+        TryToInteractWithObject(res.back());
+      }
+      else
+      {
+        auto cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
+        TryToInteractWithObject(cell);
+      }
     }
   }
 }
@@ -140,6 +151,33 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
     {
       Printer::Instance().AddMessage("Can't interact with: " + go->ObjectName);
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
+    }
+  }
+}
+
+void InteractInputState::TryToInteractWithActor(GameObject* actor)
+{
+  auto c = actor->GetComponent<AIComponent>();
+  AIComponent* aic = static_cast<AIComponent*>(c);
+  if (aic->CurrentModel->IsAgressive)
+  {
+    auto str = Util::StringFormat("%s is attacking!", actor->ObjectName);
+    Printer::Instance().AddMessage(str);
+    return;
+  }
+  else
+  {
+    auto state = Application::Instance().GetGameStateRefByName(GameStates::NPC_INTERACT_STATE);
+    NPCInteractState* nis = static_cast<NPCInteractState*>(state);
+    auto model = aic->GetModel<AINPC>();
+    if (model != nullptr)
+    {
+      AINPC* npcAi = static_cast<AINPC*>(model);
+      nis->SetNPCRef(npcAi);
+      Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);
+
+      std::string msg = (npcAi->Data().IsAquainted) ? npcAi->Data().Name : actor->ObjectName;
+      Printer::Instance().AddMessage("You speak with " + msg);
     }
   }
 }
