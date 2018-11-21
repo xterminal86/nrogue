@@ -55,6 +55,8 @@ class Player : public GameObject
     void LevelUp();
     void LevelDown();
 
+    int Money = 0;
+
   private:
     void DiscoverCell(int x, int y);
     void SetAttributes();

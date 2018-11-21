@@ -189,6 +189,13 @@ void MainState::HandleInput()
       }
       break;
 
+      case '$':
+      {
+        auto str = Util::StringFormat("You have %i gold coins", _playerRef->Money);
+        Printer::Instance().AddMessage(str);
+      }
+      break;
+
       case 'e':
         Application::Instance().ChangeState(GameStates::INVENTORY_STATE);
         break;
@@ -310,9 +317,13 @@ void MainState::DisplayGameLog()
 void MainState::TryToPickupItem()
 {
   auto res = Map::Instance().GetGameObjectToPickup(_playerRef->PosX, _playerRef->PosY);
-  Component* c = nullptr;
   if (res.first != -1)
   {
+    if (ProcessMoneyPickup(res))
+    {
+      return;
+    }
+
     if (_playerRef->Inventory.IsFull())
     {
       Printer::Instance().AddMessage("Inventory is full!");
@@ -320,29 +331,7 @@ void MainState::TryToPickupItem()
       return;
     }
 
-    c = res.second->GetComponent<ItemComponent>();
-    ItemComponent* ic = static_cast<ItemComponent*>(c);
-
-    auto go = Map::Instance().CurrentLevel->GameObjects[res.first].release();
-
-    _playerRef->Inventory.AddToInventory(go);
-
-    std::string objName = ic->Data.IsIdentified ? go->ObjectName : ic->Data.UnidentifiedName;
-
-    std::string message;
-    if (ic->Data.IsStackable)
-    {
-      message = Util::StringFormat("Picked up: %i %s", ic->Data.Amount, objName.data());
-    }
-    else
-    {
-      message = Util::StringFormat("Picked up: %s", objName.data());
-    }    
-
-    Printer::Instance().AddMessage(message);
-
-    auto it = Map::Instance().CurrentLevel->GameObjects.begin();
-    Map::Instance().CurrentLevel->GameObjects.erase(it + res.first);
+    ProcessItemPickup(res);
   }
   else
   {
@@ -447,4 +436,49 @@ void MainState::PrintDebugInfo()
 
   _debugInfo = Util::StringFormat("Level Exit: [%i;%i]", Map::Instance().CurrentLevel->LevelExit.X, Map::Instance().CurrentLevel->LevelExit.Y);
   Printer::Instance().PrintFB(0, 4, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+}
+
+bool MainState::ProcessMoneyPickup(std::pair<int, GameObject*>& pair)
+{
+  auto c = pair.second->GetComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  if (ic->Data.TypeOfItem == ItemType::COINS)
+  {
+    auto message = Util::StringFormat("Picked up: %i %s", ic->Data.Amount, ic->OwnerGameObject->ObjectName.data());
+    Printer::Instance().AddMessage(message);
+
+    _playerRef->Money += ic->Data.Amount;
+    auto it = Map::Instance().CurrentLevel->GameObjects.begin();
+    Map::Instance().CurrentLevel->GameObjects.erase(it + pair.first);
+    return true;
+  }
+
+  return false;
+}
+
+void MainState::ProcessItemPickup(std::pair<int, GameObject*>& pair)
+{
+  auto c = pair.second->GetComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+  auto go = Map::Instance().CurrentLevel->GameObjects[pair.first].release();
+
+  _playerRef->Inventory.AddToInventory(go);
+
+  std::string objName = ic->Data.IsIdentified ? go->ObjectName : ic->Data.UnidentifiedName;
+
+  std::string message;
+  if (ic->Data.IsStackable)
+  {
+    message = Util::StringFormat("Picked up: %i %s", ic->Data.Amount, objName.data());
+  }
+  else
+  {
+    message = Util::StringFormat("Picked up: %s", objName.data());
+  }
+
+  Printer::Instance().AddMessage(message);
+
+  auto it = Map::Instance().CurrentLevel->GameObjects.begin();
+  Map::Instance().CurrentLevel->GameObjects.erase(it + pair.first);
 }

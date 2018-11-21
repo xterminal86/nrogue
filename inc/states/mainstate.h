@@ -8,6 +8,7 @@
 #include "util.h"
 
 class Player;
+class GameObject;
 
 class MainState : public GameState
 {
@@ -27,6 +28,10 @@ class MainState : public GameState
     void DrawHPMP();
     void DisplayHelp();
     void PrintDebugInfo();
+
+    bool ProcessMoneyPickup(std::pair<int, GameObject*>& pair);
+
+    void ProcessItemPickup(std::pair<int, GameObject*>& pair);
 
     std::string UpdateBar(int x, int y, Attribute attr);
 
