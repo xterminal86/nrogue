@@ -655,7 +655,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
 
-  auto str = Util::StringFormat("It seems to inflict %d damage on average", avgDamage);
+  auto str = Util::StringFormat("You think it'll do %d damage on average.", avgDamage);
   ic->Data.UnidentifiedDescription = { str, "You can't tell anything else." };
 
   // *** !!!

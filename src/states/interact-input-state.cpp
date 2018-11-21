@@ -164,7 +164,6 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
     auto str = Util::StringFormat("%s is attacking!", actor->ObjectName.data());
     Printer::Instance().AddMessage(str);
     Application::Instance().ChangeState(GameStates::MAIN_STATE);
-    return;
   }
   else
   {
