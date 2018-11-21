@@ -35,15 +35,10 @@ class AINPC : public AIModelBase
 
     void Update() override;
 
-    const NPCData& Data()
-    {
-      return _data;
-    }
+    NPCData Data;
 
   private:
     NPCType _npcType;
-
-    NPCData _data;
 
     void RandomMovement();
     std::pair<float, float> GetDirectionProbability(int dx, int dy);

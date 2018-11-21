@@ -9,7 +9,7 @@
 class AINPC;
 
 class NPCInteractState : public GameState
-{
+{  
   public:
     void Cleanup() override;
     void HandleInput() override;
@@ -26,7 +26,18 @@ class NPCInteractState : public GameState
 
     void DisplayStillText();
     void AnimateText();
+    void PrintHeader();
     void PrintFooter();
+
+    enum class WhatKey
+    {
+      NAME = 0,
+      JOB,
+      GOSSIP,
+      NONE
+    };
+
+    WhatKey _whatKey = WhatKey::NONE;
 };
 
 #endif // NPCINTERACTSTATE_H

@@ -5,12 +5,14 @@
 #include "printer.h"
 #include "util.h"
 #include "ai-npc.h"
+#include "ai-component.h"
 
 void NPCInteractState::Cleanup()
 {
   _npcRef = nullptr;
   _gossipBlockIndex = 0;
   _animatedTextFinished.clear();
+  _whatKey = WhatKey::NONE;
 }
 
 void NPCInteractState::HandleInput()
@@ -24,13 +26,41 @@ void NPCInteractState::HandleInput()
 
   switch (_keyPressed)
   {
+    case 'n':
+      _whatKey = WhatKey::NAME;
+      _textPrinting = true;
+      break;
+
+    case 'j':
+      _whatKey = WhatKey::JOB;
+      _textPrinting = true;
+      break;
+
     case 'g':
+      _whatKey = WhatKey::GOSSIP;
       _textPrinting = true;
       break;
 
     case 'q':
+    {
+      std::string msg;
+      if (_npcRef->Data.IsAquainted)
+      {
+        auto name = _npcRef->Data.Name;
+        auto title = _npcRef->Data.Job;
+
+        msg = Util::StringFormat("You finished speaking with %s the %s", name.data(), title.data());
+      }
+      else
+      {
+        auto name = _npcRef->AIComponentRef->OwnerGameObject->ObjectName;
+        msg = Util::StringFormat("You finished speaking with %s", name.data());
+      }
+
+      Printer::Instance().AddMessage(msg);
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
-      break;
+    }
+    break;
   }
 }
 
@@ -56,15 +86,30 @@ void NPCInteractState::AnimateText()
   int tw = Printer::Instance().TerminalWidth;
   int th = Printer::Instance().TerminalHeight;
 
-  Printer::Instance().PrintFB(tw / 2, 0, _npcRef->Data().UnacquaintedDescription, Printer::kAlignCenter, "#FFFFFF");
-
+  PrintHeader();
   PrintFooter();
 
   _animatedTextFinished.clear();
 
   int linePosY = 2;
 
-  auto block = _npcRef->Data().GossipResponsesByMap.at(MapType::TOWN)[_gossipBlockIndex];
+  std::vector<std::string> block;
+
+  switch (_whatKey)
+  {
+    case WhatKey::NAME:
+      _npcRef->Data.IsAquainted = true;
+      block = { _npcRef->Data.NameResponse };
+      break;
+
+    case WhatKey::JOB:
+      block = { _npcRef->Data.JobResponse };
+      break;
+
+    case WhatKey::GOSSIP:
+      block = _npcRef->Data.GossipResponsesByMap.at(MapType::TOWN)[_gossipBlockIndex];
+      break;
+  }
 
   _animatedTextFinished = block;
 
@@ -81,13 +126,16 @@ void NPCInteractState::AnimateText()
     linePosY++;
   }
 
-  _gossipBlockIndex++;
-
-  int maxBlocks = _npcRef->Data().GossipResponsesByMap.at(MapType::TOWN).size();
-
-  if (_gossipBlockIndex > maxBlocks - 1)
+  if (_whatKey == WhatKey::GOSSIP)
   {
-    _gossipBlockIndex = 0;
+    _gossipBlockIndex++;
+
+    int maxBlocks = _npcRef->Data.GossipResponsesByMap.at(MapType::TOWN).size();
+
+    if (_gossipBlockIndex > maxBlocks - 1)
+    {
+      _gossipBlockIndex = 0;
+    }
   }
 
   _textPrinting = false;
@@ -102,7 +150,7 @@ void NPCInteractState::DisplayStillText()
   int tw = Printer::Instance().TerminalWidth;
   int th = Printer::Instance().TerminalHeight;
 
-  Printer::Instance().PrintFB(tw / 2, 0, _npcRef->Data().UnacquaintedDescription, Printer::kAlignCenter, "#FFFFFF");
+  PrintHeader();
 
   int yPos = 2;
   for (auto& l : _animatedTextFinished)
@@ -119,6 +167,25 @@ void NPCInteractState::DisplayStillText()
 void NPCInteractState::SetNPCRef(AINPC* npcRef)
 {
   _npcRef = npcRef;
+}
+
+void NPCInteractState::PrintHeader()
+{
+  int tw = Printer::Instance().TerminalWidth;
+
+  std::string desc;
+
+  if (_npcRef->Data.IsAquainted)
+  {
+    auto str = Util::StringFormat("%s the %s", _npcRef->Data.Name.data(), _npcRef->Data.Job.data());
+    desc = str;
+  }
+  else
+  {
+    desc = _npcRef->Data.UnacquaintedDescription;
+  }
+
+  Printer::Instance().PrintFB(tw / 2, 0, desc, Printer::kAlignCenter, "#FFFFFF");
 }
 
 void NPCInteractState::PrintFooter()

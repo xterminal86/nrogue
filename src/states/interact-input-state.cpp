@@ -174,10 +174,7 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
     {
       AINPC* npcAi = static_cast<AINPC*>(model);
       nis->SetNPCRef(npcAi);
-      Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);
-
-      std::string msg = (npcAi->Data().IsAquainted) ? npcAi->Data().Name : actor->ObjectName;
-      Printer::Instance().AddMessage("You spoke to " + msg);
+      Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);      
     }
   }
 }

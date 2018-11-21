@@ -121,7 +121,7 @@ GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool st
   AINPC* ainpc = static_cast<AINPC*>(model);
   ainpc->Init(npcType, standing);
 
-  std::string goColor = (ainpc->Data().IsMale) ? "#FFFFFF" : "#FF00FF";
+  std::string goColor = (ainpc->Data.IsMale) ? "#FFFFFF" : "#FF00FF";
   go->FgColor = goColor;
 
   aic->ChangeModel<AINPC>();

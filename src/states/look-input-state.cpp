@@ -111,11 +111,11 @@ void LookInputState::Update(bool forceUpdate)
           if (model != nullptr)
           {
             AINPC* ainpc = static_cast<AINPC*>(model);
-            std::string name = ainpc->Data().Name;
-            std::string title = ainpc->Data().Job;
-            std::string unidStr = ainpc->Data().UnacquaintedDescription;
+            std::string name = ainpc->Data.Name;
+            std::string title = ainpc->Data.Job;
+            std::string unidStr = ainpc->Data.UnacquaintedDescription;
             auto idStr = Util::StringFormat("You see %s the %s", name.data(), title.data());
-            lookStatus = (ainpc->Data().IsAquainted) ? idStr : unidStr;
+            lookStatus = (ainpc->Data.IsAquainted) ? idStr : unidStr;
             foundGameObject = true;
           }
         }

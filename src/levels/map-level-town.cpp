@@ -408,6 +408,7 @@ void MapLevelTown::CreateNPCs()
     NPCType::MILES,
     NPCType::PHOENIX,
     NPCType::STEVE,
+    NPCType::GIMLEY,
     NPCType::TIGRA
   };
 

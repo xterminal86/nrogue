@@ -14,7 +14,7 @@ AINPC::AINPC()
 
 void AINPC::Update()
 {
-  if (_data.IsStanding)
+  if (Data.IsStanding)
   {
     return;
   }
@@ -34,7 +34,7 @@ void AINPC::Update()
 void AINPC::Init(NPCType type, bool standing)
 {
   _npcType = type;
-  _data.IsStanding = standing;
+  Data.IsStanding = standing;
 
   auto& playerRef = Application::Instance().PlayerInstance;
 
@@ -44,15 +44,15 @@ void AINPC::Init(NPCType type, bool standing)
   {
     case NPCType::CLAIRE:
     {
-      _data.IsMale = false;
-      _data.UnacquaintedDescription = "You see a pink-haired woman";
-      _data.Name = "Claire";
-      _data.Job = "Soldier";
+      Data.IsMale = false;
+      Data.UnacquaintedDescription = "You see a pink-haired woman";
+      Data.Name = "Claire";
+      Data.Job = "Soldier";
 
-      _data.NameResponse = "My name is Claire";
-      _data.JobResponse = "I'm a soldier";
+      Data.NameResponse = "My name is Claire.";
+      Data.JobResponse = "I'm a Soldier.";
 
-      _data.GossipResponsesByMap[MapType::TOWN] =
+      Data.GossipResponsesByMap[MapType::TOWN] =
       {
         {
           // =========================================================================== 80
@@ -80,25 +80,25 @@ void AINPC::Init(NPCType type, bool standing)
           "What a coincedence..."
         };
 
-        _data.GossipResponsesByMap[MapType::TOWN].push_back(bonusStr);
+        Data.GossipResponsesByMap[MapType::TOWN].push_back(bonusStr);
       }
     }
     break;
 
     case NPCType::CLOUD:
     {
-      _data.UnacquaintedDescription = "You see a man with ridiculously big sword";
-      _data.Name = "Cloud";
-      _data.Job = "Ex-Soldier";
+      Data.UnacquaintedDescription = "You see a man with ridiculously big sword";
+      Data.Name = "Cloud";
+      Data.Job = "Ex-Soldier";
 
-      _data.NameResponse = "Cloud Strife";
-      _data.JobResponse = "I'm an Ex-Soldier";
+      Data.NameResponse = "Cloud Strife.";
+      Data.JobResponse = "I'm an Ex-Soldier.";
 
-      _data.GossipResponsesByMap[MapType::TOWN] =
+      Data.GossipResponsesByMap[MapType::TOWN] =
       {
         // =========================================================================== 80
         {
-          "No, I'm not a \"soldier\" like those in your City.",
+          "I'm not a \"soldier\" like those in your City.",
           "I'm from the East actually.",
           "We're... well, a little bit different up there."
         },
@@ -122,14 +122,14 @@ void AINPC::Init(NPCType type, bool standing)
 
     case NPCType::IARSPIDER:
     {
-      _data.UnacquaintedDescription = "You see a man wearing a mask";
-      _data.Name = "Ivan";
-      _data.Job = "Anonymous";
+      Data.UnacquaintedDescription = "You see a man wearing a mask";
+      Data.Name = "Ian";
+      Data.Job = "Anonymous";
 
-      _data.NameResponse = "We are Legion";
-      _data.JobResponse = "We fight the System";
+      Data.NameResponse = "We are Legion.";
+      Data.JobResponse = "We fight the System.";
 
-      _data.GossipResponsesByMap[MapType::TOWN] =
+      Data.GossipResponsesByMap[MapType::TOWN] =
       {
         // =========================================================================== 80
         {
@@ -139,7 +139,7 @@ void AINPC::Init(NPCType type, bool standing)
           "We are Anonymous. We never forget and never forgive."
         },
         {
-          "Knowledge is power"
+          "Knowledge is power."
         }
       };
     }
@@ -147,14 +147,14 @@ void AINPC::Init(NPCType type, bool standing)
 
     case NPCType::MILES:
     {
-      _data.UnacquaintedDescription = "You see a collected nobleman in fancy clothes";
-      _data.Name = "Miles";
-      _data.Job = "Chief Prosecutor";
+      Data.UnacquaintedDescription = "You see a collected nobleman in fancy clothes";
+      Data.Name = "Miles";
+      Data.Job = "Chief Prosecutor";
 
-      _data.NameResponse = "Miles Edgeworth, at your service.";
-      _data.JobResponse = "I'm Chief Prosecutor of this province.";
+      Data.NameResponse = "Miles Edgeworth, at your service.";
+      Data.JobResponse = "I'm Chief Prosecutor of this province.";
 
-      _data.GossipResponsesByMap[MapType::TOWN] =
+      Data.GossipResponsesByMap[MapType::TOWN] =
       {
         // =========================================================================== 80
         {
@@ -179,14 +179,14 @@ void AINPC::Init(NPCType type, bool standing)
 
     case NPCType::PHOENIX:
     {
-      _data.UnacquaintedDescription = "You see a carefree guy with spiky hair";
-      _data.Name = "Phoenix";
-      _data.Job = "Attorney";
+      Data.UnacquaintedDescription = "You see a carefree guy with spiky hair";
+      Data.Name = "Phoenix";
+      Data.Job = "Attorney";
 
-      _data.NameResponse = "I'm Phoenix Wright.";
-      _data.JobResponse = "I'm a defence attorney.";
+      Data.NameResponse = "I'm Phoenix Wright.";
+      Data.JobResponse = "I'm a Defence Attorney.";
 
-      _data.GossipResponsesByMap[MapType::TOWN] =
+      Data.GossipResponsesByMap[MapType::TOWN] =
       {
         // =========================================================================== 80
         {
@@ -208,15 +208,15 @@ void AINPC::Init(NPCType type, bool standing)
 
     case NPCType::TIGRA:
     {
-      _data.IsMale = false;
-      _data.UnacquaintedDescription = "You see a little girl wearing headband with cat ears";
-      _data.Name = "Tigra";
-      _data.Job = "local";
+      Data.IsMale = false;
+      Data.UnacquaintedDescription = "You see a little girl wearing headband with cat ears";
+      Data.Name = "Tigra";
+      Data.Job = "Local";
 
-      _data.NameResponse = "I'm Tigra! Nice to meet you!";
-      _data.JobResponse = "Oh, I'm just a local.";
+      Data.NameResponse = "I'm Tigra! Nice to meet you!";
+      Data.JobResponse = "Me? Oh, I'm just a local.";
 
-      _data.GossipResponsesByMap[MapType::TOWN] =
+      Data.GossipResponsesByMap[MapType::TOWN] =
       {
         // =========================================================================== 80
         {
@@ -245,14 +245,14 @@ void AINPC::Init(NPCType type, bool standing)
 
     case NPCType::STEVE:
     {
-      _data.UnacquaintedDescription = "You see a blocky looking man carrying a pickaxe";
-      _data.Name = "Steve";
-      _data.Job = "Miner";
+      Data.UnacquaintedDescription = "You see a blocky looking man carrying a pickaxe";
+      Data.Name = "Steve";
+      Data.Job = "Miner";
 
-      _data.NameResponse = "My name's Steve";
-      _data.JobResponse = "I'm a miner.";
+      Data.NameResponse = "My name's Steve.";
+      Data.JobResponse = "I'm a Miner.";
 
-      _data.GossipResponsesByMap[MapType::TOWN] =
+      Data.GossipResponsesByMap[MapType::TOWN] =
       {
         // =========================================================================== 80
         {
@@ -268,7 +268,7 @@ void AINPC::Init(NPCType type, bool standing)
           "connected to those stories you may hear.",
           "Just think for yourself: how can something like",
           "that happened in a such small and isolated place like this,",
-          "where people know each other from childhood,",
+          "where people know each other since childhood,",
           "yet nobody says he knows or heard anything?"
         },
         {
@@ -280,9 +280,53 @@ void AINPC::Init(NPCType type, bool standing)
       };
     }
     break;
+
+    case NPCType::GIMLEY:
+    {
+      Data.UnacquaintedDescription = "You see a short but stubby looking guy with a long beard";
+      Data.Name = "Gimley";
+      Data.Job = "Warrior";
+
+      Data.NameResponse = "Gimley, son of Gloine.";
+      Data.JobResponse = "I'm a Warrior.";
+
+      Data.GossipResponsesByMap[MapType::TOWN] =
+      {
+        // =========================================================================== 80
+        {
+          "(humming)",
+          "Far over the misty mountains cold,",
+          "To dungeons deep, and caverns old.",
+          "We must away, ere break of day,",
+          "To seek the pale, enchanted gold..."
+        },
+        {
+          "(humming)",
+          "Under the Mountain dark and tall,",
+          "The King has come unto his hall!",
+          "His foe is dead, the Worm of Dread,",
+          "And ever so his foes shall fall..."
+        },
+        {
+          "(humming)",
+          "From the red sky of the East,",
+          "To the sunset in the West,",
+          "We have cheated Death,",
+          "And he has cheated us...",
+        },
+        {
+          "(humming)",
+          "The forest raised a Christmas tree,",
+          "'Twas silent and serene.",
+          "In winter and in summer it was,",
+          "Slender and so green...",
+        }
+      };
+    }
+    break;
   }
 
-  AIComponentRef->OwnerGameObject->ObjectName = (_data.IsMale) ? "man" : "woman";
+  AIComponentRef->OwnerGameObject->ObjectName = (Data.IsMale) ? "man" : "woman";
 }
 
 void AINPC::RandomMovement()
