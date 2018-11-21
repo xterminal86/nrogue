@@ -94,7 +94,7 @@ void LevelBuilder::TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side)
   // (e.g. trying to add open area to full wall side)
   auto rooms = GetRoomsForLayout(currentRoom.Layout, side);
   if (rooms.size() != 0)
-  {
+  {    
     //dbg = Util::StringFormat("Rooms to select: %i", rooms.size());
     //Logger::Instance().Print(dbg);
 
@@ -114,9 +114,13 @@ void LevelBuilder::TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side)
   }
   else
   {
+    // FIXME: may result in walled room
+
     // If no rooms could be added,
     // element 0 is assumed to be fallback layout
     auto fallback = _roomsForLevel[0];
+
+    //auto fallback = CreateSquareLayout(fallback.Layout.size(), '.');
 
     RoomHelper rh;
     rh.ParseLayout(fallback.Layout);

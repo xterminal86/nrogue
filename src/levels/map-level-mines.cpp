@@ -27,7 +27,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       "#########",
       "#########",
-      ".......##",
+      ".........",
       ".......##",
       ".......##",
       ".......##",

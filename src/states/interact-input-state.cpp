@@ -161,8 +161,9 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
   AIComponent* aic = static_cast<AIComponent*>(c);
   if (aic->CurrentModel->IsAgressive)
   {
-    auto str = Util::StringFormat("%s is attacking!", actor->ObjectName);
+    auto str = Util::StringFormat("%s is attacking!", actor->ObjectName.data());
     Printer::Instance().AddMessage(str);
+    Application::Instance().ChangeState(GameStates::MAIN_STATE);
     return;
   }
   else
