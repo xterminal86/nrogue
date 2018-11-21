@@ -10,6 +10,8 @@ class MapLevelTown : public MapLevelBase
 
     void PrepareMap(MapLevelBase* levelOwner) override;
 
+    void CreateNPCs();
+
   protected:
     void CreateLevel() override;
 
@@ -19,8 +21,7 @@ class MapLevelTown : public MapLevelBase
     void CreateDoor(int x, int y, bool isOpen = false);
     void CreateChurch(int x, int y);    
 
-    void CreatePlayerHouse();
-    void CreateNPCs();
+    void CreatePlayerHouse();    
 };
 
 #endif // MAPLEVELTOWN_H

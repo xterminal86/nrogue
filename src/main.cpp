@@ -43,7 +43,7 @@ int main()
 
   Application::Instance().Init();
 
-  Map::Instance().Init();      
+  Map::Instance().Init();
 
   Application::Instance().Run();
   

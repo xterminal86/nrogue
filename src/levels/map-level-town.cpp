@@ -186,8 +186,6 @@ void MapLevelTown::CreateLevel()
 
   RecordEmptyCells();
 
-  CreateNPCs();
-
   LevelExit.X = 98;
   LevelExit.Y = 48;
 

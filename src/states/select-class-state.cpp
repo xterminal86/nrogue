@@ -1,6 +1,8 @@
 #include "select-class-state.h"
 #include "printer.h"
 #include "application.h"
+#include "map.h"
+#include "map-level-town.h"
 #include "util.h"
 
 void SelectClassState::HandleInput()
@@ -18,11 +20,18 @@ void SelectClassState::HandleInput()
       break;
 
     case VK_ENTER:
-      Application::Instance().PlayerInstance.Init();
+    {
+      Application::Instance().PlayerInstance.Init();      
+
+      // NOTE: little bit of a hack, some NPC can contain bonus
+      // chat lines depending on player class
+      MapLevelTown* mlt = static_cast<MapLevelTown*>(Map::Instance().CurrentLevel);
+      mlt->CreateNPCs();
 
       // TODO: enter name, distribute talents if custom class is chosen
       Application::Instance().ChangeState(GameStates::ENTER_NAME_STATE);
-      break;
+    }
+    break;
 
     case 'q':
       Application::Instance().ChangeState(GameStates::MENU_STATE);

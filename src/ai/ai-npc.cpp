@@ -52,18 +52,6 @@ void AINPC::Init(NPCType type, bool standing)
       _data.NameResponse = "My name is Claire";
       _data.JobResponse = "I'm a soldier";
 
-      if (playerRef.GetClass() == PlayerClass::SOLDIER)
-      {
-        TextLines bonusStr =
-        {
-          "Greetings, fellow soldier! How are you today? ;-)",
-          "What? You're here on vacation too?",
-          "What a coincedence..."
-        };
-
-        _data.GossipResponsesByMap[MapType::TOWN].push_back(bonusStr);
-      }
-
       _data.GossipResponsesByMap[MapType::TOWN] =
       {
         {
@@ -82,6 +70,18 @@ void AINPC::Init(NPCType type, bool standing)
           "What about it?"
         }
       };
+
+      if (playerRef.GetClass() == PlayerClass::SOLDIER)
+      {
+        TextLines bonusStr =
+        {
+          "Greetings, fellow soldier! How are you today? ;-)",
+          "What? You're here on vacation too?",
+          "What a coincedence..."
+        };
+
+        _data.GossipResponsesByMap[MapType::TOWN].push_back(bonusStr);
+      }
     }
     break;
 
