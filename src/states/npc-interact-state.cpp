@@ -91,7 +91,7 @@ void NPCInteractState::AnimateText()
 
   _animatedTextFinished.clear();
 
-  int linePosY = 2;
+  int linePosY = 4;
 
   std::vector<std::string> block;
 
@@ -115,13 +115,21 @@ void NPCInteractState::AnimateText()
 
   for (auto& line : block)
   {
+    int cursorPos = 0;
+
     std::string l = line;
     for (int i = 0; i < l.length(); i++)
     {
+      cursorPos = i + 1;
+
+      Printer::Instance().PrintFB(cursorPos, linePosY, ' ',  "#000000", "#FFFFFF");
+
       Printer::Instance().PrintFB(i, linePosY, l[i], "#FFFFFF");
       Printer::Instance().Render();
       Util::Sleep(10);
     }
+
+    Printer::Instance().PrintFB(cursorPos, linePosY, ' ',  "#000000");
 
     linePosY++;
   }
@@ -152,7 +160,7 @@ void NPCInteractState::DisplayStillText()
 
   PrintHeader();
 
-  int yPos = 2;
+  int yPos = 4;
   for (auto& l : _animatedTextFinished)
   {
     Printer::Instance().PrintFB(0, yPos, l, Printer::kAlignLeft, "#FFFFFF");
@@ -182,10 +190,17 @@ void NPCInteractState::PrintHeader()
   }
   else
   {
-    desc = _npcRef->Data.UnacquaintedDescription;
+    desc = "???";
   }
 
   Printer::Instance().PrintFB(tw / 2, 0, desc, Printer::kAlignCenter, "#FFFFFF");
+
+  for (int x = 0; x < tw; x++)
+  {
+    Printer::Instance().PrintFB(x, 1, '-', "#FFFFFF");
+  }
+
+  Printer::Instance().PrintFB(tw / 2, 2, _npcRef->Data.UnacquaintedDescription, Printer::kAlignCenter, "#FFFFFF");
 }
 
 void NPCInteractState::PrintFooter()

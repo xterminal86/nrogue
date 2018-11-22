@@ -414,19 +414,6 @@ namespace GlobalConstants
   static const std::string ItemRareColor = "#CCCC52";
   static const std::string ItemUniqueColor = "#A59263";
 
-  static const std::map<NPCType, std::string> NpcNamesByType =
-  {
-    { NPCType::CLAIRE, "Claire" },
-    { NPCType::CLOUD, "Cloud" },
-    { NPCType::GIMLEY, "Gimley" },
-    { NPCType::IARSPIDER, "Ivan" },
-    { NPCType::MILES, "Miles" },
-    { NPCType::PHOENIX, "Phoenix" },
-    { NPCType::STEVE, "Steve" },
-    { NPCType::TIGRA, "Tigra" },
-    { NPCType::UNKNOWN, "???" }
-  };
-
   static const std::map<WeaponType, std::string> WeaponNameByType =
   {
     { WeaponType::DAGGER, "Dagger" },

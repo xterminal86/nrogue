@@ -41,7 +41,15 @@ class AINPC : public AIModelBase
     NPCType _npcType;
 
     void RandomMovement();
-    std::pair<float, float> GetDirectionProbability(int dx, int dy);
+
+    void SetDataClaire();
+    void SetDataCloud();
+    void SetDataIan();
+    void SetDataMiles();
+    void SetDataPhoenix();
+    void SetDataTigra();
+    void SetDataSteve();
+    void SetDataGimley();
 };
 
 #endif // AINPC_H
