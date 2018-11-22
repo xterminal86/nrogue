@@ -408,8 +408,7 @@ void MapLevelTown::CreateNPCs()
     NPCType::MILES,
     NPCType::PHOENIX,
     NPCType::STEVE,
-    NPCType::GIMLEY,
-    NPCType::TIGRA
+    NPCType::GIMLEY
   };
 
   std::vector<Position> visited;
@@ -447,4 +446,10 @@ void MapLevelTown::CreateNPCs()
 
     visited.push_back(Position(emptyCells[index].X, emptyCells[index].Y));
   }
+
+  auto go = GameObjectsFactory::Instance().CreateNPC(83, 24, NPCType::MARTIN, true);
+  InsertActor(go);
+
+  go = GameObjectsFactory::Instance().CreateNPC(73, 24, NPCType::TIGRA);
+  InsertActor(go);
 }

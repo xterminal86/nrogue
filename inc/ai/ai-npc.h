@@ -15,6 +15,7 @@ struct NPCData
   bool IsStanding = false;
   bool IsAquainted = false;
   bool IsMale = true;
+  bool CanSpeak = true;
 
   std::string UnacquaintedDescription;
 
@@ -50,6 +51,9 @@ class AINPC : public AIModelBase
     void SetDataTigra();
     void SetDataSteve();
     void SetDataGimley();
+    void SetDataMartin();
+
+    void SetDataDefault();
 };
 
 #endif // AINPC_H

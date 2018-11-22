@@ -114,6 +114,7 @@ enum class NPCType
   TIGRA,
   STEVE,
   GIMLEY,
+  MARTIN,
   UNKNOWN
 };
 

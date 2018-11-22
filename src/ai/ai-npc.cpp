@@ -71,6 +71,14 @@ void AINPC::Init(NPCType type, bool standing)
     case NPCType::GIMLEY:
       SetDataGimley();
       break;
+
+    case NPCType::MARTIN:
+      SetDataMartin();
+      break;
+
+    default:
+      SetDataDefault();
+      break;
   }  
 }
 
@@ -202,19 +210,19 @@ void AINPC::SetDataMiles()
 
   Data.UnacquaintedDescription = "You see a collected nobleman in fancy clothes";
   Data.Name = "Miles";
-  Data.Job = "Chief Prosecutor";
+  Data.Job = "Prosecutor";
 
   Data.NameResponse = "Miles Edgeworth, at your service.";
-  Data.JobResponse = "I'm Chief Prosecutor of this province.";
+  Data.JobResponse = "I work as a Prosecutor for the Department of Justice in the City.";
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     // =========================================================================== 80
     {
-      "They sent me here to maintain order and,",
-      "as ill luck would have it, this excuse for a lawyer,",
+      "I'm here to investigate rumors concerning a murder of a local miner.",
+      "But, as ill luck would have it, this excuse for a lawyer,",
       "Phoenix Wright, arrives as well!",
-      "As if we don't have enough problems already!"
+      "As if I don't have enough to worry about already!"
     },
     {
       "If you want something done - hire a bounty hunter.",
@@ -332,6 +340,19 @@ void AINPC::SetDataSteve()
       "I'm thinking on going to the City for earnings.",
       "I wonder, why they never bothered to send some guards,",
       "or soldiers or whatever here to look into our situation?"
+    },
+    {
+      "Would you believe me if I told you,",
+      "that there are places where there is nothing but empty sky around you.",
+      "You can see the clouds, the rainbows and even distant planets.",
+      "Sometimes it even rains there!",
+      "Or a place that literally looks pretty much like how you imagine Hell,",
+      "with red color everywhere, fire, lava,",
+      "and even soil itself sometimes is made of flesh?",
+      "And I'm not even talking about local \"denizens\" there...",
+      "...",
+      "...",
+      "They all think I'm just crazy..."
     }
   };
 }
@@ -379,4 +400,36 @@ void AINPC::SetDataGimley()
       "Slender and so green...",
     }
   };
+}
+
+void AINPC::SetDataMartin()
+{
+  AIComponentRef->OwnerGameObject->ObjectName = "man";
+
+  Data.UnacquaintedDescription = "You see a local cleric";
+  Data.Name = "Martin";
+  Data.Job = "Cleric";
+
+  Data.NameResponse = "I'm brother Martin.";
+  Data.JobResponse = "I'm a Cleric.";
+
+  Data.GossipResponsesByMap[MapType::TOWN] =
+  {
+    // =========================================================================== 80
+    {
+      "All money you spend buying my wares are going straight to charity."
+    }
+  };
+}
+
+void AINPC::SetDataDefault()
+{
+  int gender = RNG::Instance().RandomRange(0, 2);
+
+  Data.CanSpeak = false;
+  Data.IsMale = (gender == 0);
+
+  AIComponentRef->OwnerGameObject->ObjectName = (gender == 0) ? "man" : "woman";
+
+  Data.UnacquaintedDescription = "You see a " + AIComponentRef->OwnerGameObject->ObjectName;
 }
