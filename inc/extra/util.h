@@ -61,8 +61,8 @@ namespace Util
   }
 
   template<typename ... Args>
-  inline std::string StringFormat(const std::string& format, Args ... args )
-  {
+  inline std::string StringFormat(const std::string& format, Args ...args)
+  {    
     size_t size = snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
     std::unique_ptr<char[]> buf( new char[ size ] ); 
     snprintf( buf.get(), size, format.c_str(), args ... );
@@ -494,7 +494,7 @@ namespace Util
   {
     int dice = RNG::Instance().RandomRange(1, 101);
 
-    auto logMsg = Util::StringFormat("\tRollDice(): chance = %i, rolled = %i",
+    auto logMsg = Util::StringFormat("\tRollDice(bool): chance = %i, rolled = %i",
                                      successChance,
                                      dice);
     Logger::Instance().Print(logMsg);
@@ -510,6 +510,10 @@ namespace Util
   inline int Rolld100()
   {
     int dice = RNG::Instance().RandomRange(1, 101);
+
+    auto str = Util::StringFormat("\tRollDice(void): rolled = %i", dice);
+    Logger::Instance().Print(str);
+
     return dice;
   }
 

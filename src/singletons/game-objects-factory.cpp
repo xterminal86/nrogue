@@ -27,19 +27,6 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       go = CreateMoney();
       break;
 
-    case ItemType::FOOD:
-    {
-      std::vector<FoodType> list;
-      for (int i = (int)FoodType::FIRST_ELEMENT; i < (int)FoodType::LAST_ELEMENT; i++)
-      {
-        list.push_back((FoodType)i);
-      }
-
-      int index = RNG::Instance().RandomRange(0, list.size());
-      go = CreateFood(list[index]);
-    }
-    break;
-
     default:
       break;
   }
@@ -58,6 +45,10 @@ GameObject* GameObjectsFactory::CreateMonster(int x, int y, MonsterType monsterT
   {
     case MonsterType::RAT:
       go = CreateRat(x, y);
+      break;
+
+    case MonsterType::BAT:
+      go = CreateBat(x, y);
       break;
   }
 
@@ -82,9 +73,9 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
 
   ic->Data.IdentifiedDescription = { "You can buy things with these." };
 
-  int pl = _playerRef->Attrs.Lvl.CurrentValue;
+  int scale = Map::Instance().CurrentLevel->DungeonLevel;
 
-  int money = (amount == 0) ? RNG::Instance().RandomRange(1 * pl, 11 * pl) : amount;
+  int money = (amount == 0) ? RNG::Instance().RandomRange(1 * scale, 11 * scale) : amount;
   ic->Data.Cost = money;
   ic->Data.Amount = money;
   ic->Data.IsStackable = true;
@@ -197,6 +188,48 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'b', GlobalConstants::MonsterColor);
+  go->ObjectName = "Flying Bat";
+  go->Attrs.Indestructible = false;
+  go->HealthRegenTurns = 20;
+
+  // Sets Occupied flag for _currentCell
+  go->Move(0, 0);
+
+  auto c = go->AddComponent<AIComponent>();
+  AIComponent* ai = static_cast<AIComponent*>(c);
+  auto aiModel = ai->AddModel<AIMonsterBasic>();
+  AIMonsterBasic* aimb = static_cast<AIMonsterBasic*>(aiModel);
+
+  aimb->AgroRadius = 16;
+
+  // Set attributes
+  if (randomize)
+  {
+    int pl = _playerRef->Attrs.Lvl.CurrentValue;
+    int dl = Map::Instance().CurrentLevel->DungeonLevel;
+    int difficulty = std::max(pl, dl); //pl + dl;
+
+    int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
+    int randomDef = RNG::Instance().RandomRange(0, 1 * difficulty);
+    int randomSkl = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
+    int randomHp = RNG::Instance().RandomRange(1 * difficulty, 3 * difficulty);
+    int randomSpd = RNG::Instance().RandomRange(1 * difficulty, 3 * difficulty);
+
+    go->Attrs.Str.Set(randomStr);
+    go->Attrs.Def.Set(randomDef);
+    go->Attrs.HP.Set(randomHp);
+    go->Attrs.Spd.Set(randomSpd);
+    go->Attrs.Skl.Set(randomSkl);
+  }
+
+  ai->ChangeModel<AIMonsterBasic>();
+
+  return go;
+}
+
 GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel, from->PosX, from->PosY, '%', from->FgColor);
@@ -263,7 +296,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 
   return res;
 }
-GameObject* GameObjectsFactory::CreateFood(FoodType type, ItemPrefix prefixOverride)
+GameObject* GameObjectsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride)
 {
   std::string name;
   int addsHunger = 0;
@@ -286,12 +319,14 @@ GameObject* GameObjectsFactory::CreateFood(FoodType type, ItemPrefix prefixOverr
   go->BgColor = "#000000";
   go->Image = '%';
   go->ObjectName = name;
+  go->PosX = x;
+  go->PosY = y;
 
   Component* c = go->AddComponent<ItemComponent>();
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
   ic->Data.TypeOfItem = ItemType::FOOD;
-  ic->Data.Prefix = prefixOverride;
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
 
   // Use Cost field to store amount of hunger replenished
@@ -439,7 +474,7 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
 {
   GameObject* go = nullptr;
 
-  int roll = RNG::Instance().RandomRange(0, 100);
+  int roll = Util::Rolld100();
 
   // TODO: more potions
 
@@ -1088,42 +1123,87 @@ int GameObjectsFactory::CalculateAverageDamage(int numRolls, int diceSides)
   return (maxDmg - minDmg) / 2;
 }
 
-void GameObjectsFactory::GenerateLootIfPossible(int posX, int posY, MonsterType type)
+void GameObjectsFactory::GenerateLootIfPossible(int posX, int posY, MonsterType monsterType)
 {
-  if (GlobalConstants::LootTable.count(type) == 1)
+  if (GlobalConstants::LootTable.count(monsterType) == 1)
   {
-    auto& itemWeightsByType = GlobalConstants::LootTable.at(type);
+    auto itemDropChanceByType = GetDropChancesForMonster(monsterType);
 
-    int totalWeightsSum = 0;
-    for (auto& i : itemWeightsByType)
-    {
-      totalWeightsSum += i.second;
-    }
+    int diceRoll = Util::Rolld100();
 
-    std::map<ItemType, int> itemRollChanceByType;
-    for (auto& i : itemWeightsByType)
+    for (auto& kvp : itemDropChanceByType)
     {
-      int chance = ((float)i.second / (float)totalWeightsSum) * 100;
-      itemRollChanceByType[i.first] = chance;
-    }
-
-    for (auto& kvp : itemRollChanceByType)
-    {
-      if (Util::Rolld100(kvp.second))
+      if (diceRoll < kvp.second)
       {
-        if (kvp.first == ItemType::NOTHING)
-        {
-          break;
-        }
-
-        auto go = CreateGameObject(posX, posY, kvp.first);
-        if (go != nullptr)
-        {
-          Map::Instance().InsertGameObject(go);
-        }
-
+        GenerateLoot(posX, posY, kvp, monsterType);
         break;
       }
+    }
+  }
+}
+
+std::map<ItemType, int> GameObjectsFactory::GetDropChancesForMonster(MonsterType monsterType)
+{
+  auto& itemWeightsByType = GlobalConstants::LootTable.at(monsterType);
+
+  int dl = Map::Instance().CurrentLevel->DungeonLevel - 1;
+
+  std::map<ItemType, int> itemRollChanceByType;
+  for (auto& i : itemWeightsByType)
+  {
+    int chance = i.second;
+    itemRollChanceByType[i.first] = chance + dl;
+  }
+
+  return itemRollChanceByType;
+}
+
+std::map<FoodType, int> GameObjectsFactory::GetFoodDropChancesForMonster(MonsterType monsterType)
+{
+  auto& list = GlobalConstants::FoodLootTable.at(monsterType);
+  std::map<FoodType, int> foodChancesByType;
+  for (auto& kvp : list)
+  {
+    foodChancesByType[kvp.first] = kvp.second;
+  }
+
+  return foodChancesByType;
+}
+
+void GameObjectsFactory::GenerateLoot(int posX, int posY, std::pair<ItemType, int> kvp, MonsterType monsterType)
+{
+  if (kvp.first == ItemType::NOTHING)
+  {
+    return;
+  }
+  else if (kvp.first == ItemType::FOOD)
+  {
+    auto foodChancesByType = GetFoodDropChancesForMonster(monsterType);
+
+    FoodType foodToCreate = FoodType::FIRST_ELEMENT;
+
+    // FIXME: sometimes we can get random food item due to high roll
+    // and subsequent failing of conditions
+    int roll = Util::Rolld100();
+    for (auto& pair : foodChancesByType)
+    {
+      if (roll < pair.second)
+      {
+        roll = pair.second;
+        foodToCreate = pair.first;
+        break;
+      }
+    }
+
+    auto go = CreateFood(posX, posY, foodToCreate);
+    Map::Instance().InsertGameObject(go);
+  }
+  else
+  {
+    auto go = CreateGameObject(posX, posY, kvp.first);
+    if (go != nullptr)
+    {
+      Map::Instance().InsertGameObject(go);
     }
   }
 }

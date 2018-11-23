@@ -27,7 +27,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateManaPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
     GameObject* CreateHungerPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
     GameObject* CreateExpPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
-    GameObject* CreateFood(FoodType type = FoodType::APPLE, ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
+    GameObject* CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateNote(std::string objName, std::vector<std::string> text);
     GameObject* CreateWeapon(WeaponType type, bool overridePrefix = false);
     GameObject* CreateContainer(std::string name, chtype image, int x, int y);
@@ -40,12 +40,13 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     bool HandleItemUse(ItemComponent* item);
     bool HandleItemEquip(ItemComponent* item);
 
-    void GenerateLootIfPossible(int posX, int posY, MonsterType type);
+    void GenerateLootIfPossible(int posX, int posY, MonsterType monsterType);
 
   private:
     Player* _playerRef;
 
     GameObject* CreateRat(int x, int y, bool randomize = true);
+    GameObject* CreateBat(int x, int y, bool randomize = true);
 
     bool ProcessItemEquiption(ItemComponent* item);
     bool ProcessRingEquiption(ItemComponent* item);
@@ -72,6 +73,11 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     int CalculateAverageDamage(int numRolls, int diceSides);
 
     ItemPrefix RollItemPrefix();
+
+    std::map<ItemType, int> GetDropChancesForMonster(MonsterType monsterType);
+    std::map<FoodType, int> GetFoodDropChancesForMonster(MonsterType monsterType);
+
+    void GenerateLoot(int posX, int posY, std::pair<ItemType, int> kvp, MonsterType type);
 };
 
 #endif // GAMEOBJECTSFACTORY_H

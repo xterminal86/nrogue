@@ -868,7 +868,7 @@ void Player::SetSoldierDefaultItems()
 
   Inventory.AddToInventory(go);
 
-  go = GameObjectsFactory::Instance().CreateFood(FoodType::IRON_RATIONS, ItemPrefix::UNCURSED);
+  go = GameObjectsFactory::Instance().CreateFood(0, 0, FoodType::IRON_RATIONS, ItemPrefix::UNCURSED);
   ic = go->GetComponent<ItemComponent>();
   ((ItemComponent*)ic)->Data.Amount = 1;
   ((ItemComponent*)ic)->Data.IsIdentified = true;

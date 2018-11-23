@@ -109,7 +109,7 @@ struct RoomHelper
       std::vector<int> row;
       for (int y = 0; y < Layout[x].length(); y++)
       {
-        int res = (Layout[x][y] == '.') ? 1 : 0;
+        int res = (Layout[x][y] == '.' || Layout[x][y] == '+') ? 1 : 0;
         row.push_back(res);
       }
 

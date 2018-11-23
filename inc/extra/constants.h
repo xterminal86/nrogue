@@ -143,7 +143,7 @@ enum class ItemType
 {
   NOTHING = 0,
   DUMMY,
-  COINS,
+  COINS,  
   HEALING_POTION,
   MANA_POTION,
   HUNGER_POTION,
@@ -155,6 +155,7 @@ enum class ItemType
   SPD_POTION,
   EXP_POTION,
   FOOD,
+  POTION,
   SCROLL,
   WEAPON
 };
@@ -312,7 +313,8 @@ struct Attributes
 
 enum class ItemPrefix
 {
-  UNCURSED = 0,
+  RANDOM = 0,
+  UNCURSED,
   BLESSED,
   CURSED
 };
@@ -421,11 +423,31 @@ namespace GlobalConstants
 
   static const std::map<MonsterType, std::vector<std::pair<ItemType, int>>> LootTable =
   {
-    { MonsterType::RAT,
+    {
+      MonsterType::RAT,
       {
         { ItemType::COINS, 10 },
-        { ItemType::FOOD, 20 },
-        { ItemType::NOTHING, 100 }
+        { ItemType::FOOD, 80 }
+      }
+    },
+    {
+      MonsterType::BAT,
+      {
+        { ItemType::COINS, 10 },
+        { ItemType::FOOD, 30 },
+        { ItemType::POTION, 5 }
+      }
+    }
+  };
+
+  // Chances must add up to 100
+  static const std::map<MonsterType, std::vector<std::pair<FoodType, int>>> FoodLootTable =
+  {
+    {
+      MonsterType::RAT,
+      {
+        { FoodType::CHEESE, 70 },
+        { FoodType::MEAT, 30 }
       }
     }
   };

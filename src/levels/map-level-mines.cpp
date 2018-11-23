@@ -4,6 +4,7 @@
 #include "rng.h"
 #include "constants.h"
 #include "game-objects-factory.h"
+#include "door-component.h"
 #include "player.h"
 
 MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLevel) :
@@ -26,14 +27,14 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     // 1
     {
       "#########",
-      "#########",
-      ".........",
-      ".......##",
-      ".......##",
-      ".......##",
-      ".......##",
+      "##.....##",
+      "........+",
       "##.....##",
       "##.....##",
+      "##.....##",
+      "##.....##",
+      "####.####",
+      "####.####",
     },
     // 2
     {
@@ -145,6 +146,8 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
         { 50, _layoutsForLevel[2] },
         { 80, _layoutsForLevel[3] },
       };
+
+      _monstersForThisLevel = { MonsterType::RAT };
     }
     break;
 
@@ -158,6 +161,8 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
         { 70, _layoutsForLevel[3] },
         { 50, _layoutsForLevel[4] },
       };
+
+      _monstersForThisLevel = { MonsterType::RAT };
     }
     break;
 
@@ -171,6 +176,8 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
         { 50, _layoutsForLevel[7] },
         { 50, _layoutsForLevel[8] }
       };
+
+      _monstersForThisLevel = { MonsterType::RAT, MonsterType::BAT };
     }
     break;
   }
@@ -263,6 +270,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
           {
             objName = "Rocks";
             t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
+            MapArray[mapX][mapY]->MakeTile(t);
           }
           break;
 
@@ -270,11 +278,16 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
           {
             objName = "Ground";
             t.Set(false, false, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
+            MapArray[mapX][mapY]->MakeTile(t);
+          }
+          break;
+
+          case '+':
+          {
+            CreateDoor(mapX, mapY);
           }
           break;
         }
-
-        MapArray[mapX][mapY]->MakeTile(t);
 
         mapY++;
       }
@@ -297,13 +310,10 @@ void MapLevelMines::CreateInitialMonsters()
 
     if (!MapArray[x][y]->Blocking && !MapArray[x][y]->Occupied)
     {
-      // Special rats
-      //auto rat = GameObjectsFactory::Instance().CreateRat(x, y, false);
-
-      // Normal rats
-      auto rat = GameObjectsFactory::Instance().CreateMonster(x, y, MonsterType::RAT);
-
-      InsertActor(rat);
+      int index = RNG::Instance().RandomRange(0, _monstersForThisLevel.size());
+      MonsterType monsterToSpawn = _monstersForThisLevel[index];
+      auto monster = GameObjectsFactory::Instance().CreateMonster(x, y, monsterToSpawn);
+      InsertActor(monster);
     }
   }
 }
@@ -349,8 +359,10 @@ void MapLevelMines::TryToSpawnMonsters()
 
     if (!MapArray[cx][cy]->Visible && !MapArray[cx][cy]->Occupied)
     {
-      auto rat = GameObjectsFactory::Instance().CreateMonster(cx, cy, MonsterType::RAT);
-      InsertActor(rat);
+      int index = RNG::Instance().RandomRange(0, _monstersForThisLevel.size());
+      MonsterType monsterToSpawn = _monstersForThisLevel[index];
+      auto monster = GameObjectsFactory::Instance().CreateMonster(cx, cy, monsterToSpawn);
+      InsertActor(monster);
       break;
     }
   }
@@ -387,4 +399,20 @@ void MapLevelMines::PlaceStairs()
   LevelExit.Set(exit.X, exit.Y);
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', stairsDownTo);
+}
+
+void MapLevelMines::CreateDoor(int x, int y, bool isOpen)
+{
+  auto c = MapArray[x][y]->AddComponent<DoorComponent>();
+  DoorComponent* dc = static_cast<DoorComponent*>(c);
+  dc->IsOpen = isOpen;
+  dc->UpdateDoorState();
+
+  // https://stackoverflow.com/questions/15264003/using-stdbind-with-member-function-use-object-pointer-or-not-for-this-argumen/15264126#15264126
+  //
+  // When using std::bind to bind a member function, the first argument is the object's this pointer.
+
+  MapArray[x][y]->InteractionCallback = std::bind(&DoorComponent::Interact, dc);
+
+  MapArray[x][y]->ObjectName = "Door";
 }

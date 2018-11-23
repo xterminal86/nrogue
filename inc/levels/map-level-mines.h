@@ -22,6 +22,7 @@ class MapLevelMines : public MapLevelBase
     void ConstructFromBuilder(LevelBuilder& lb);
     void CreateInitialMonsters();
     void PlaceStairs();
+    void CreateDoor(int x, int y, bool isOpen = false);
 };
 
 #endif // MAPLEVELMINES_H
