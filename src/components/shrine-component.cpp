@@ -101,8 +101,30 @@ void ShrineComponent::ProcessEffect()
     break;
 
     case ShrineType::KNOWLEDGE:
-      Printer::Instance().AddMessage("... but nothing happens");
-      break;
+    {
+      bool success = false;
+      Player& pl = Application::Instance().PlayerInstance;
+      for (auto& i : pl.Inventory.Contents)
+      {
+        auto c = i->GetComponent<ItemComponent>();
+        ItemComponent* ic = static_cast<ItemComponent*>(c);
+        if (!ic->Data.IsIdentified)
+        {
+          ic->Data.IsIdentified = true;
+          success = true;
+        }
+      }
+
+      if (success)
+      {
+        Printer::Instance().AddMessage("Your possessions have been identified!");
+      }
+      else
+      {
+        Printer::Instance().AddMessage("... but nothing happens");
+      }
+    }
+    break;
 
     case ShrineType::PERCEPTION:
       Printer::Instance().AddMessage("... but nothing happens");

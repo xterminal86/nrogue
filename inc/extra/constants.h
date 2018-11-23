@@ -98,7 +98,8 @@ enum class MapType
 
 enum class MonsterType
 {
-  RAT = 0,
+  HARMLESS = 0,
+  RAT,
   BAT,
   SPIDER,
   SKELETON
@@ -140,7 +141,8 @@ enum class EquipmentCategory
 
 enum class ItemType
 {
-  DUMMY = 0,
+  NOTHING = 0,
+  DUMMY,
   COINS,
   HEALING_POTION,
   MANA_POTION,
@@ -169,12 +171,14 @@ enum class WeaponType
 
 enum class FoodType
 {
-  APPLE = 0,
+  FIRST_ELEMENT = 0,
+  APPLE,
   CHEESE,
   BREAD,
   MEAT,
   RATIONS,
-  IRON_RATIONS
+  IRON_RATIONS,
+  LAST_ELEMENT
 };
 
 enum class ShrineType
@@ -414,6 +418,17 @@ namespace GlobalConstants
   static const std::string ItemMagicColor = "#4169E1";
   static const std::string ItemRareColor = "#CCCC52";
   static const std::string ItemUniqueColor = "#A59263";
+
+  static const std::map<MonsterType, std::vector<std::pair<ItemType, int>>> LootTable =
+  {
+    { MonsterType::RAT,
+      {
+        { ItemType::COINS, 10 },
+        { ItemType::FOOD, 20 },
+        { ItemType::NOTHING, 100 }
+      }
+    }
+  };
 
   static const std::map<WeaponType, std::string> WeaponNameByType =
   {

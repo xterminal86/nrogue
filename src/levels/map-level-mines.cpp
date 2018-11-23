@@ -301,7 +301,7 @@ void MapLevelMines::CreateInitialMonsters()
       //auto rat = GameObjectsFactory::Instance().CreateRat(x, y, false);
 
       // Normal rats
-      auto rat = GameObjectsFactory::Instance().CreateRat(x, y);
+      auto rat = GameObjectsFactory::Instance().CreateMonster(x, y, MonsterType::RAT);
 
       InsertActor(rat);
     }
@@ -349,7 +349,7 @@ void MapLevelMines::TryToSpawnMonsters()
 
     if (!MapArray[cx][cy]->Visible && !MapArray[cx][cy]->Occupied)
     {
-      auto rat = GameObjectsFactory::Instance().CreateRat(cx, cy);
+      auto rat = GameObjectsFactory::Instance().CreateMonster(cx, cy, MonsterType::RAT);
       InsertActor(rat);
       break;
     }

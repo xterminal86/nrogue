@@ -20,8 +20,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateMonster(int x, int y, MonsterType monsterType);
 
     GameObject* CreateNPC(int x, int y, NPCType npcType, bool standing = false);
-    GameObject* CreateRat(int x, int y, bool randomize = true);
-    GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);    
+    GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);
     GameObject* CreateMoney(int amount = 0);
     GameObject* CreateRemains(GameObject* from);
     GameObject* CreateHealingPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
@@ -41,8 +40,12 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     bool HandleItemUse(ItemComponent* item);
     bool HandleItemEquip(ItemComponent* item);
 
+    void GenerateLootIfPossible(int posX, int posY, MonsterType type);
+
   private:
     Player* _playerRef;
+
+    GameObject* CreateRat(int x, int y, bool randomize = true);
 
     bool ProcessItemEquiption(ItemComponent* item);
     bool ProcessRingEquiption(ItemComponent* item);

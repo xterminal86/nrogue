@@ -7,6 +7,7 @@
 #include "item-component.h"
 #include "ai-component.h"
 #include "ai-npc.h"
+#include "ai-monster-basic.h"
 #include "map-level-base.h"
 
 void LookInputState::Init()
@@ -106,17 +107,29 @@ void LookInputState::Update(bool forceUpdate)
         if (actor != nullptr)
         {          
           auto c = actor->GetComponent<AIComponent>();
-          AIComponent* aic = static_cast<AIComponent*>(c);
-          auto model = aic->GetModel<AINPC>();
-          if (model != nullptr)
+          if (c != nullptr)
           {
-            AINPC* ainpc = static_cast<AINPC*>(model);
-            std::string name = ainpc->Data.Name;
-            std::string title = ainpc->Data.Job;
-            std::string unidStr = ainpc->Data.UnacquaintedDescription;
-            auto idStr = Util::StringFormat("You see %s the %s", name.data(), title.data());
-            lookStatus = (ainpc->Data.IsAquainted) ? idStr : unidStr;
-            foundGameObject = true;
+            AIComponent* aic = static_cast<AIComponent*>(c);
+            AIModelBase* model = dynamic_cast<AINPC*>(aic->CurrentModel);
+            if (model != nullptr)
+            {
+              AINPC* ainpc = static_cast<AINPC*>(model);
+              std::string name = ainpc->Data.Name;
+              std::string title = ainpc->Data.Job;
+              std::string unidStr = ainpc->Data.UnacquaintedDescription;
+              auto idStr = Util::StringFormat("You see %s the %s", name.data(), title.data());
+              lookStatus = (ainpc->Data.IsAquainted) ? idStr : unidStr;
+              foundGameObject = true;
+            }
+            else
+            {
+              model = dynamic_cast<AIMonsterBasic*>(aic->CurrentModel);
+              if (model != nullptr)
+              {
+                lookStatus = aic->OwnerGameObject->ObjectName;
+                foundGameObject = true;
+              }
+            }
           }
         }
         else

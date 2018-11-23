@@ -131,6 +131,8 @@ class GameObject
 
     int HealthRegenTurns = 0;
 
+    MonsterType Type = MonsterType::HARMLESS;
+
   protected:
     std::map<size_t, std::unique_ptr<Component>> _components;
 

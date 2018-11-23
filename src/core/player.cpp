@@ -689,6 +689,8 @@ void Player::ProcessKill(GameObject* monster)
 
   exp = Util::Clamp(exp, 1, GlobalConstants::AwardedExpMax);
 
+  GameObjectsFactory::Instance().GenerateLootIfPossible(monster->PosX, monster->PosY, monster->Type);
+
   AwardExperience(exp);
 }
 

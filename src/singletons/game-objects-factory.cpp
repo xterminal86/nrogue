@@ -18,7 +18,7 @@ void GameObjectsFactory::Init()
 }
 
 GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
-{
+{  
   GameObject* go = nullptr;
 
   switch (objType)
@@ -26,6 +26,19 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
     case ItemType::COINS:
       go = CreateMoney();
       break;
+
+    case ItemType::FOOD:
+    {
+      std::vector<FoodType> list;
+      for (int i = (int)FoodType::FIRST_ELEMENT; i < (int)FoodType::LAST_ELEMENT; i++)
+      {
+        list.push_back((FoodType)i);
+      }
+
+      int index = RNG::Instance().RandomRange(0, list.size());
+      go = CreateFood(list[index]);
+    }
+    break;
 
     default:
       break;
@@ -48,6 +61,8 @@ GameObject* GameObjectsFactory::CreateMonster(int x, int y, MonsterType monsterT
       break;
   }
 
+  go->Type = monsterType;
+
   go->PosX = x;
   go->PosY = y;
 
@@ -69,7 +84,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
 
   int pl = _playerRef->Attrs.Lvl.CurrentValue;
 
-  int money = (amount == 0) ? RNG::Instance().RandomRange(1 * pl, 10 * pl) : amount;
+  int money = (amount == 0) ? RNG::Instance().RandomRange(1 * pl, 11 * pl) : amount;
   ic->Data.Cost = money;
   ic->Data.Amount = money;
   ic->Data.IsStackable = true;
@@ -131,7 +146,7 @@ GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool st
 
 GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'r', GlobalConstants::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'r', GlobalConstants::MonsterColor);  
   go->ObjectName = "Rat";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 30;
@@ -167,7 +182,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   }
   else
   {
-    // For debugging purposes
+    // FIXME: for debugging purposes
     go->ObjectName = "Battle Rat";
 
     go->Attrs.Str.Set(2 * _playerRef->Attrs.Lvl.CurrentValue);
@@ -1071,4 +1086,44 @@ int GameObjectsFactory::CalculateAverageDamage(int numRolls, int diceSides)
   int maxDmg = numRolls * diceSides;
 
   return (maxDmg - minDmg) / 2;
+}
+
+void GameObjectsFactory::GenerateLootIfPossible(int posX, int posY, MonsterType type)
+{
+  if (GlobalConstants::LootTable.count(type) == 1)
+  {
+    auto& itemWeightsByType = GlobalConstants::LootTable.at(type);
+
+    int totalWeightsSum = 0;
+    for (auto& i : itemWeightsByType)
+    {
+      totalWeightsSum += i.second;
+    }
+
+    std::map<ItemType, int> itemRollChanceByType;
+    for (auto& i : itemWeightsByType)
+    {
+      int chance = ((float)i.second / (float)totalWeightsSum) * 100;
+      itemRollChanceByType[i.first] = chance;
+    }
+
+    for (auto& kvp : itemRollChanceByType)
+    {
+      if (Util::Rolld100(kvp.second))
+      {
+        if (kvp.first == ItemType::NOTHING)
+        {
+          break;
+        }
+
+        auto go = CreateGameObject(posX, posY, kvp.first);
+        if (go != nullptr)
+        {
+          Map::Instance().InsertGameObject(go);
+        }
+
+        break;
+      }
+    }
+  }
 }

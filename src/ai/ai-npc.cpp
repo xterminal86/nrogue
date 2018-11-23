@@ -219,7 +219,7 @@ void AINPC::SetDataMiles()
   {
     // =========================================================================== 80
     {
-      "I'm here to investigate rumors concerning a murder of a local miner.",
+      "I'm here to investigate rumors concerning the murder of a local miner.",
       "But, as ill luck would have it, this excuse for a lawyer,",
       "Phoenix Wright, arrives as well!",
       "As if I don't have enough to worry about already!"
@@ -293,9 +293,8 @@ void AINPC::SetDataTigra()
       "Lots of commotion!",
       "But then everything kinda stopped for some reason...",
       "I don't know why, but I overheard grownups saying that",
-      "there was some kind of... in-ee-qui-ty ... happened down there.",
-      "One day a miner was killed during a quarrel,",
-      "and now he is seeking revenge on us for that!",
+      "a miner was killed down there during a quarrel,",
+      "and now he has risen from the dead and seeking revenge on us for that!",
       "Scary!"
     },
     {
@@ -321,7 +320,19 @@ void AINPC::SetDataSteve()
     // =========================================================================== 80
     {
       "Emeralds are green, diamonds are blue,",
-      "Redstone is red and this is all true!"
+      "Redstone is red and this is all true!",
+      "What's a redstone? Well, it's the thing",
+      "we use to make all our machinery work.",
+      "Looks like red powder, it emits a faint red light too,",
+      "so you can sort of dip a stick into it and use it as a makeshift torch.",
+      "You have to go very deep below the ground to mine it, though...",
+      "But never dig straight down!"
+    },
+    {
+      "Baked bread or baked potatoes?",
+      "Cooked porkchop or steak?",
+      "...",
+      "Cooked silkworm? Hm... Don't want to remember it..."
     },
     {
       "What do you mean I'm blocky? Look who's talking!"
@@ -349,10 +360,15 @@ void AINPC::SetDataSteve()
       "Or a place that literally looks pretty much like how you imagine Hell,",
       "with red color everywhere, fire, lava,",
       "and even soil itself sometimes is made of flesh?",
-      "And I'm not even talking about local \"denizens\" there...",
+      "There was also a great desert, with nothing but dust,",
+      "stretching all the way to the horizon and beyond in all directions.",
+      "If you dig here and there you might discover that under it lie ruins of",
+      "some ancient city of some advanced civilization!",
+      "I wonder what happened to them and whether all",
+      "this desert is somehow connected to their fate.",
+      "Battling with heat was a big challenge back there...",
       "...",
-      "...",
-      "They all think I'm just crazy..."
+      "Yeah, they all think I'm just crazy..."
     }
   };
 }
