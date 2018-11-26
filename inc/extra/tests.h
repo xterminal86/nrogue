@@ -45,7 +45,7 @@ namespace Tests
   {
     printf("\nRoom layouts rotations:\n\n");
 
-    for (auto& room : GlobalConstants::RoomLayouts)
+    for (auto& room : GlobalConstants::DungeonRooms)
     {
       printf("Layout:\n");
 
@@ -175,6 +175,46 @@ namespace Tests
     AutoLevel(p1, 20);
   }
 
+  inline void WeightedRandomTest()
+  {
+    printf("\nWeighted random test:\n\n");
+
+    std::map<char, int> testMap =
+    {
+      { 'a', 8 },
+      { 'b', 1 },
+      { 'c', 2 }
+    };
+
+    for (auto& kvp : testMap)
+    {
+      printf("key: %c, weight: %i\n", kvp.first, kvp.second);
+    }
+
+    std::map<char, int> nums;
+
+    nums['a'] = 0;
+    nums['b'] = 0;
+    nums['c'] = 0;
+
+    int iterations = 10000;
+
+    printf("\n%i iterations:\n", iterations);
+
+    for (int i = 0; i < iterations; i++)
+    {
+      auto res = Util::WeightedRandom(testMap);
+      nums[res.first] += 1;
+    }
+
+    printf("\n");
+
+    for (auto& kvp : nums)
+    {
+      printf("total scores: %c = %i\n", kvp.first, kvp.second);
+    }
+  }
+
   inline void Run()
   {
     printf("***** START TESTS *****\n\n");
@@ -186,6 +226,8 @@ namespace Tests
     RNGTests();
     printf("\n- o -\n");
     LevelUpTests();
+    printf("\n- o -\n");
+    WeightedRandomTest();
 
     printf("\n\n***** o *****\n");
   }  

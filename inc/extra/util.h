@@ -552,6 +552,31 @@ namespace Util
 
     Logger::Instance().Print(dbg);
   }
+
+  template <typename T>
+  inline std::pair<T, int> WeightedRandom(std::map<T, int> weightsByType)
+  {
+    int sum = 0;
+    for (auto& i : weightsByType)
+    {
+      sum += i.second;
+    }
+
+    int target = RNG::Instance().RandomRange(1, sum + 1);
+
+    for (auto& i : weightsByType)
+    {
+      if (target <= i.second)
+      {
+        std::pair<T, int> res = { i.first, i.second };
+        return res;
+      }
+
+      target -= i.second;
+    }
+
+    return *weightsByType.begin();
+  }
 }
 
 #endif

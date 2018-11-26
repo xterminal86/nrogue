@@ -1158,18 +1158,6 @@ std::map<ItemType, int> GameObjectsFactory::GetDropChancesForMonster(MonsterType
   return itemRollChanceByType;
 }
 
-std::map<FoodType, int> GameObjectsFactory::GetFoodDropChancesForMonster(MonsterType monsterType)
-{
-  auto& list = GlobalConstants::FoodLootTable.at(monsterType);
-  std::map<FoodType, int> foodChancesByType;
-  for (auto& kvp : list)
-  {
-    foodChancesByType[kvp.first] = kvp.second;
-  }
-
-  return foodChancesByType;
-}
-
 void GameObjectsFactory::GenerateLoot(int posX, int posY, std::pair<ItemType, int> kvp, MonsterType monsterType)
 {
   if (kvp.first == ItemType::NOTHING)
@@ -1177,25 +1165,11 @@ void GameObjectsFactory::GenerateLoot(int posX, int posY, std::pair<ItemType, in
     return;
   }
   else if (kvp.first == ItemType::FOOD)
-  {
-    auto foodChancesByType = GetFoodDropChancesForMonster(monsterType);
+  {    
+    auto foodMap = GlobalConstants::FoodLootTable.at(monsterType);
+    auto kvp = Util::WeightedRandom(foodMap);
 
-    FoodType foodToCreate = FoodType::FIRST_ELEMENT;
-
-    // FIXME: sometimes we can get random food item due to high roll
-    // and subsequent failing of conditions
-    int roll = Util::Rolld100();
-    for (auto& pair : foodChancesByType)
-    {
-      if (roll < pair.second)
-      {
-        roll = pair.second;
-        foodToCreate = pair.first;
-        break;
-      }
-    }
-
-    auto go = CreateFood(posX, posY, foodToCreate);
+    auto go = CreateFood(posX, posY, kvp.first);
     Map::Instance().InsertGameObject(go);
   }
   else

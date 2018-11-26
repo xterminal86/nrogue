@@ -421,13 +421,13 @@ namespace GlobalConstants
   static const std::string ItemRareColor = "#CCCC52";
   static const std::string ItemUniqueColor = "#A59263";
 
-  static const std::map<MonsterType, std::vector<std::pair<ItemType, int>>> LootTable =
+  static const std::map<MonsterType, std::map<ItemType, int>> LootTable =
   {
     {
       MonsterType::RAT,
       {
         { ItemType::COINS, 10 },
-        { ItemType::FOOD, 80 }
+        { ItemType::FOOD, 40 }
       }
     },
     {
@@ -440,14 +440,14 @@ namespace GlobalConstants
     }
   };
 
-  // Chances must add up to 100
-  static const std::map<MonsterType, std::vector<std::pair<FoodType, int>>> FoodLootTable =
+  // Weighted random
+  static const std::map<MonsterType, std::map<FoodType, int>> FoodLootTable =
   {
     {
       MonsterType::RAT,
       {
-        { FoodType::CHEESE, 70 },
-        { FoodType::MEAT, 30 }
+        { FoodType::CHEESE, 4 },
+        { FoodType::MEAT, 1 }
       }
     }
   };
