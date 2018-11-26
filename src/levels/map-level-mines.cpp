@@ -147,7 +147,10 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
         { 80, _layoutsForLevel[3] },
       };
 
-      _monstersForThisLevel = { MonsterType::RAT };
+      _monstersSpawnRateForThisLevel =
+      {
+        { MonsterType::RAT, 1 }
+      };
     }
     break;
 
@@ -162,7 +165,11 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
         { 50, _layoutsForLevel[4] },
       };
 
-      _monstersForThisLevel = { MonsterType::RAT };
+      _monstersSpawnRateForThisLevel =
+      {
+        { MonsterType::RAT, 8 },
+        { MonsterType::BAT, 1 }
+      };
     }
     break;
 
@@ -177,7 +184,11 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
         { 50, _layoutsForLevel[8] }
       };
 
-      _monstersForThisLevel = { MonsterType::RAT, MonsterType::BAT };
+      _monstersSpawnRateForThisLevel =
+      {
+        { MonsterType::RAT, 4 },
+        { MonsterType::BAT, 1 }
+      };
     }
     break;
   }
@@ -193,7 +204,6 @@ void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
 void MapLevelMines::CreateLevel()
 {
   VisibilityRadius = 10;
-  MaxMonsters = 10 * DungeonLevel;
   MonstersRespawnTurns = 1000;
 
   Tile t;
@@ -276,6 +286,8 @@ void MapLevelMines::CreateInitialMonsters()
 {
   // Some rats
 
+  MaxMonsters = std::sqrt(_emptyCells.size());
+
   for (int i = 0; i < MaxMonsters; i++)
   {
     int index = RNG::Instance().RandomRange(0, _emptyCells.size());
@@ -285,9 +297,8 @@ void MapLevelMines::CreateInitialMonsters()
 
     if (!MapArray[x][y]->Blocking && !MapArray[x][y]->Occupied)
     {
-      int index = RNG::Instance().RandomRange(0, _monstersForThisLevel.size());
-      MonsterType monsterToSpawn = _monstersForThisLevel[index];
-      auto monster = GameObjectsFactory::Instance().CreateMonster(x, y, monsterToSpawn);
+      auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
+      auto monster = GameObjectsFactory::Instance().CreateMonster(x, y, res.first);
       InsertActor(monster);
     }
   }
@@ -334,9 +345,8 @@ void MapLevelMines::TryToSpawnMonsters()
 
     if (!MapArray[cx][cy]->Visible && !MapArray[cx][cy]->Occupied)
     {
-      int index = RNG::Instance().RandomRange(0, _monstersForThisLevel.size());
-      MonsterType monsterToSpawn = _monstersForThisLevel[index];
-      auto monster = GameObjectsFactory::Instance().CreateMonster(cx, cy, monsterToSpawn);
+      auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
+      auto monster = GameObjectsFactory::Instance().CreateMonster(cx, cy, res.first);
       InsertActor(monster);
       break;
     }

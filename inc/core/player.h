@@ -42,6 +42,7 @@ class Player : public GameObject
     void ReceiveDamage(GameObject* from, int amount);
     void WaitForTurn();
     void ProcessHunger();
+    void FinishTurn();
 
     bool IsAlive(GameObject* damager);
 
@@ -56,6 +57,8 @@ class Player : public GameObject
     void LevelDown();
 
     int Money = 0;
+
+    bool IsStarving = false;
 
   private:
     void DiscoverCell(int x, int y);
@@ -75,6 +78,8 @@ class Player : public GameObject
     void ProcessKill(GameObject* monster);
 
     bool DoesWeaponLosesDurability();
+
+    int _starvingTimeout = 0;
 
     std::vector<std::string> GetPrettyLevelUpText();
 

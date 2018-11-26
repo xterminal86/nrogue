@@ -69,7 +69,7 @@ class MapLevelBase
     std::vector<Position> _emptyCells;
     std::vector<std::vector<std::string>> _layoutsForLevel;
     std::vector<RoomForLevel> _roomsForLevel;
-    std::vector<MonsterType> _monstersForThisLevel;
+    std::map<MonsterType, int> _monstersSpawnRateForThisLevel;
 
     Player* _playerRef;
 

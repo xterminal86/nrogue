@@ -102,6 +102,22 @@ void Player::Draw()
 {
   bool cond = (BgColor.length() == 0 || BgColor == "#000000");
   GameObject::Draw(FgColor, cond ? Map::Instance().CurrentLevel->MapArray[PosX][PosY]->BgColor : BgColor);
+
+  if (IsStarving)
+  {
+    int th = Printer::Instance().TerminalHeight;
+    Printer::Instance().PrintFB(0, th - 3, '%', "#FF0000");
+  }
+  else
+  {
+    int hungerMax = Attrs.HungerRate.CurrentValue;
+    int part = hungerMax - hungerMax * 0.25;
+    if (Attrs.Hunger >= part)
+    {
+      int th = Printer::Instance().TerminalHeight;
+      Printer::Instance().PrintFB(0, th - 3, '%', "#FFFF00");
+    }
+  }
 }
 
 bool Player::TryToAttack(int dx, int dy)
@@ -275,12 +291,12 @@ void Player::SetSoldierAttrs()
   Attrs.Def.Set(2);
   Attrs.Skl.Set(1);
 
-  Attrs.HP.Set(50);
+  Attrs.HP.Set(30);
 
-  Attrs.HungerRate.Set(400);
+  Attrs.HungerRate.Set(500);
   Attrs.HungerSpeed.Set(1);
 
-  HealthRegenTurns = 30;
+  HealthRegenTurns = 100;
 }
 
 void Player::SetThiefAttrs()
@@ -294,12 +310,12 @@ void Player::SetThiefAttrs()
   Attrs.Skl.Set(2);
   Attrs.Spd.Set(3);
 
-  Attrs.HP.Set(25);
+  Attrs.HP.Set(20);
 
-  Attrs.HungerRate.Set(500);
+  Attrs.HungerRate.Set(750);
   Attrs.HungerSpeed.Set(1);  
 
-  HealthRegenTurns = 60;
+  HealthRegenTurns = 200;
 }
 
 void Player::SetArcanistAttrs()
@@ -314,12 +330,12 @@ void Player::SetArcanistAttrs()
   Attrs.Spd.Set(1);
 
   Attrs.HP.Set(10);
-  Attrs.MP.Set(50);
+  Attrs.MP.Set(30);
 
-  Attrs.HungerRate.Set(500);
+  Attrs.HungerRate.Set(1000);
   Attrs.HungerSpeed.Set(1);  
 
-  HealthRegenTurns = 90;
+  HealthRegenTurns = 300;
 }
 
 void Player::SetDefaultEquipment()
@@ -460,6 +476,8 @@ void Player::Attack(GameObject* go)
       Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs);
     }
   }
+
+  Attrs.Hunger += Attrs.HungerSpeed.Get() * 2;
 
   FinishTurn();
 }
@@ -824,6 +842,41 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
   return levelUpResults;
 }
 
+void Player::FinishTurn()
+{
+  Attrs.ActionMeter -= 100;
+
+  if (Attrs.ActionMeter < 0)
+  {
+    Attrs.ActionMeter = 0;
+  }
+
+  if (IsStarving)
+  {
+    _starvingTimeout++;
+
+    if (_starvingTimeout > 11)
+    {
+      _starvingTimeout = 0;
+    }
+  }
+  else
+  {
+    _healthRegenTurnsCounter++;
+
+    if (_healthRegenTurnsCounter >= HealthRegenTurns)
+    {
+      _healthRegenTurnsCounter = 0;
+
+      if (Attrs.HP.CurrentValue < Attrs.HP.OriginalValue)
+      {
+        Attrs.Hunger += Attrs.HungerSpeed.Get();
+        Attrs.HP.Add(1);
+      }
+    }
+  }
+}
+
 void Player::ProcessHunger()
 {
   Attrs.Hunger += Attrs.HungerSpeed.Get();
@@ -831,15 +884,21 @@ void Player::ProcessHunger()
   int maxHunger = Attrs.HungerRate.CurrentValue;
   Attrs.Hunger = Util::Clamp(Attrs.Hunger, 0, maxHunger);
 
-  // TODO: food items etc.
-
-  /*
   if (Attrs.Hunger == maxHunger)
   {
-    Printer::Instance().AddMessage("You are starving!");
-    ReceiveDamage(nullptr, 1);
+    if (_starvingTimeout > 10)
+    {
+      Printer::Instance().AddMessage("You are starving!");
+      ReceiveDamage(nullptr, 1);
+    }
+
+    IsStarving = true;
   }
-  */
+  else
+  {
+    _starvingTimeout = 0;
+    IsStarving = false;
+  }
 }
 
 void Player::SetDefaultItems()

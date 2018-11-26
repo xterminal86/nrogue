@@ -75,7 +75,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
 
   int scale = Map::Instance().CurrentLevel->DungeonLevel;
 
-  int money = (amount == 0) ? RNG::Instance().RandomRange(1 * scale, 11 * scale) : amount;
+  int money = (amount == 0) ? RNG::Instance().RandomRange(1, 11) * scale : amount;
   ic->Data.Cost = money;
   ic->Data.Amount = money;
   ic->Data.IsStackable = true;
@@ -564,12 +564,14 @@ void GameObjectsFactory::FoodUseHandler(ItemComponent* item)
     Printer::Instance().AddMessage("It's delicious!");
 
     _playerRef->Attrs.Hunger -= item->Data.Cost * 2;
+    _playerRef->IsStarving = false;
   }
   else
   {
     Printer::Instance().AddMessage("It tasted OK");
 
     _playerRef->Attrs.Hunger -= item->Data.Cost;
+    _playerRef->IsStarving = false;
   }
 
   _playerRef->Attrs.Hunger = Util::Clamp(_playerRef->Attrs.Hunger, 0, _playerRef->Attrs.HungerRate.CurrentValue);
