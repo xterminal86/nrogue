@@ -469,14 +469,14 @@ namespace GlobalConstants
     { WeaponType::STAFF, "Battle Staff" }
   };
 
-  static const std::map<FoodType, std::pair<std::string, int>> FoodItemHungerByName =
+  static const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =
   {
-    { FoodType::APPLE, { "Apple", 50 } },
-    { FoodType::CHEESE, { "Cheese", 100 } },
-    { FoodType::BREAD, { "Bread", 250 } },
-    { FoodType::MEAT, { "Meat", 350 } },
-    { FoodType::RATIONS, { "Rations", 500 } },
-    { FoodType::IRON_RATIONS, { "Iron Rations", 1000 } }
+    { FoodType::APPLE, { "Apple", 15 } },
+    { FoodType::BREAD, { "Bread", 30 } },
+    { FoodType::CHEESE, { "Cheese", 40 } },
+    { FoodType::MEAT, { "Meat", 50 } },
+    { FoodType::RATIONS, { "Rations", 75 } },
+    { FoodType::IRON_RATIONS, { "Iron Rations", 100 } }
   };
 
   static const std::map<ShrineType, std::string> ShrineSaintByType =

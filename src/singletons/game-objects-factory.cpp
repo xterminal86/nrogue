@@ -301,17 +301,12 @@ GameObject* GameObjectsFactory::CreateFood(int x, int y, FoodType type, ItemPref
   std::string name;
   int addsHunger = 0;
 
-  if (GlobalConstants::FoodItemHungerByName.count(type) == 1)
-  {
-    name = GlobalConstants::FoodItemHungerByName.at(type).first;
-    addsHunger = GlobalConstants::FoodItemHungerByName.at(type).second;
-  }
-  else
-  {
-    int index = RNG::Instance().RandomRange(0, GlobalConstants::FoodItemHungerByName.size());
-    name = GlobalConstants::FoodItemHungerByName.at((FoodType)index).first;
-    addsHunger = GlobalConstants::FoodItemHungerByName.at((FoodType)index).second;
-  }
+  name = GlobalConstants::FoodHungerPercentageByName.at(type).first;
+  int percentage = GlobalConstants::FoodHungerPercentageByName.at(type).second;
+  int hungerMax = _playerRef->Attrs.HungerRate.CurrentValue;
+  int hungerToAdd = ((float)hungerMax * ((float)percentage / 100.0f));
+
+  addsHunger = hungerToAdd;
 
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -555,7 +550,7 @@ void GameObjectsFactory::FoodUseHandler(ItemComponent* item)
 
   if (item->Data.Prefix == ItemPrefix::CURSED)
   {
-    Printer::Instance().AddMessage("Disgusting!");
+    Printer::Instance().AddMessage("You feel even more hungry!");
 
     _playerRef->Attrs.Hunger += item->Data.Cost;
   }
@@ -563,14 +558,14 @@ void GameObjectsFactory::FoodUseHandler(ItemComponent* item)
   {
     Printer::Instance().AddMessage("It's delicious!");
 
-    _playerRef->Attrs.Hunger -= item->Data.Cost * 2;
+    _playerRef->Attrs.Hunger -= item->Data.Cost;
     _playerRef->IsStarving = false;
   }
   else
   {
     Printer::Instance().AddMessage("It tasted OK");
 
-    _playerRef->Attrs.Hunger -= item->Data.Cost;
+    _playerRef->Attrs.Hunger -= item->Data.Cost * 0.5f;
     _playerRef->IsStarving = false;
   }
 
