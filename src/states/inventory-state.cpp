@@ -4,6 +4,7 @@
 #include "application.h"
 #include "printer.h"
 #include "util.h"
+#include "map.h"
 
 void InventoryState::Init()
 {
@@ -270,6 +271,11 @@ void InventoryState::DropItem()
   auto go = _playerRef->Inventory.Contents[_selectedIndex].release();
   auto c = go->GetComponent<ItemComponent>();
   ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+  // Player can drop items on different dungeon level,
+  // so reference to level where object was originally
+  // created will become invalid.
+  ic->OwnerGameObject->SetLevelOwner(Map::Instance().CurrentLevel);
 
   ic->Transfer();
 

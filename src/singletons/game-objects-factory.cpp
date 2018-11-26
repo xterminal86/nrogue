@@ -796,7 +796,7 @@ ItemPrefix GameObjectsFactory::RollItemPrefix()
   {
     return ItemPrefix::BLESSED;
   }
-  else if (roll > 10 && roll <= 80)
+  else if (roll > 10 && roll < 80)
   {
     return ItemPrefix::UNCURSED;
   }

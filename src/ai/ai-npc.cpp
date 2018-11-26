@@ -355,7 +355,7 @@ void AINPC::SetDataSteve()
     {
       "Would you believe me if I told you,",
       "that there are places where there is nothing but empty sky around you.",
-      "You can see the clouds, the rainbows and even distant planets.",
+      "You can see the clouds, the rainbows and even distant planets?",
       "Sometimes it even rains there!",
       "Or a place that literally looks pretty much like how you imagine Hell,",
       "with red color everywhere, fire, lava,",
