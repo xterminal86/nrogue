@@ -602,7 +602,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel;
+  int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel * 0.5;
   if (dungeonLevel == 0)
   {
     dungeonLevel = 1;
@@ -662,8 +662,8 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
     case WeaponType::ARMING_SWORD:
     {
-      int diceRolls = 2 * dungeonLevel;
-      int diceSides = 6 * dungeonLevel;
+      int diceRolls = 1 * dungeonLevel;
+      int diceSides = 8 * dungeonLevel;
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
@@ -674,6 +674,42 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       ic->Data.StatBonuses[StatsEnum::STR] = 2;
       ic->Data.StatBonuses[StatsEnum::DEF] = 1;      
+    }
+    break;
+
+    case WeaponType::LONG_SWORD:
+    {
+      int diceRolls = 2 * dungeonLevel;
+      int diceSides = 6 * dungeonLevel;
+
+      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
+
+      baseDurability = 35;
+
+      ic->Data.Damage.CurrentValue = diceRolls;
+      ic->Data.Damage.OriginalValue = diceSides;
+
+      ic->Data.StatBonuses[StatsEnum::STR] = 2;
+      ic->Data.StatBonuses[StatsEnum::DEF] = 1;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -1;
+    }
+    break;
+
+    case WeaponType::GREAT_SWORD:
+    {
+      int diceRolls = 3 * dungeonLevel;
+      int diceSides = 10 * dungeonLevel;
+
+      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
+
+      baseDurability = 50;
+
+      ic->Data.Damage.CurrentValue = diceRolls;
+      ic->Data.Damage.OriginalValue = diceSides;
+
+      ic->Data.StatBonuses[StatsEnum::STR] = 4;
+      ic->Data.StatBonuses[StatsEnum::SKL] = -2;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -4;
     }
     break;
 
