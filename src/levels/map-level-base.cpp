@@ -2,7 +2,7 @@
 #include "application.h"
 
 MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
-{
+{  
   MapSize.X = sizeX;
   MapSize.Y = sizeY;
   MapType_ = type;

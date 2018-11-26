@@ -74,8 +74,6 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
 
     ItemPrefix RollItemPrefix();
 
-    std::map<ItemType, int> GetDropChancesForMonster(MonsterType monsterType);
-
     void GenerateLoot(int posX, int posY, std::pair<ItemType, int> kvp, MonsterType type);
 };
 

@@ -1040,7 +1040,6 @@ void GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
   int amount = 0;
 
   int statMax = 100;
-  int& statCur = _playerRef->Attrs.Exp.CurrentValue;
 
   if (item->Data.Prefix == ItemPrefix::BLESSED)
   {
@@ -1127,57 +1126,38 @@ void GameObjectsFactory::GenerateLootIfPossible(int posX, int posY, MonsterType 
 {
   if (GlobalConstants::LootTable.count(monsterType) == 1)
   {
-    auto itemDropChanceByType = GetDropChancesForMonster(monsterType);
+    auto weights = GlobalConstants::LootTable.at(monsterType);
+    auto kvp = Util::WeightedRandom(weights);
 
-    int diceRoll = Util::Rolld100();
-
-    for (auto& kvp : itemDropChanceByType)
-    {
-      if (diceRoll < kvp.second)
-      {
-        GenerateLoot(posX, posY, kvp, monsterType);
-        break;
-      }
-    }
+    GenerateLoot(posX, posY, kvp, monsterType);
   }
-}
-
-std::map<ItemType, int> GameObjectsFactory::GetDropChancesForMonster(MonsterType monsterType)
-{
-  auto& itemWeightsByType = GlobalConstants::LootTable.at(monsterType);
-
-  int dl = Map::Instance().CurrentLevel->DungeonLevel - 1;
-
-  std::map<ItemType, int> itemRollChanceByType;
-  for (auto& i : itemWeightsByType)
-  {
-    int chance = i.second;
-    itemRollChanceByType[i.first] = chance + dl;
-  }
-
-  return itemRollChanceByType;
 }
 
 void GameObjectsFactory::GenerateLoot(int posX, int posY, std::pair<ItemType, int> kvp, MonsterType monsterType)
 {
-  if (kvp.first == ItemType::NOTHING)
+  switch (kvp.first)
   {
-    return;
-  }
-  else if (kvp.first == ItemType::FOOD)
-  {    
-    auto foodMap = GlobalConstants::FoodLootTable.at(monsterType);
-    auto kvp = Util::WeightedRandom(foodMap);
+    case ItemType::NOTHING:
+      break;
 
-    auto go = CreateFood(posX, posY, kvp.first);
-    Map::Instance().InsertGameObject(go);
-  }
-  else
-  {
-    auto go = CreateGameObject(posX, posY, kvp.first);
-    if (go != nullptr)
+    case ItemType::FOOD:
     {
+      auto foodMap = GlobalConstants::FoodLootTable.at(monsterType);
+      auto kvp = Util::WeightedRandom(foodMap);
+
+      auto go = CreateFood(posX, posY, kvp.first);
       Map::Instance().InsertGameObject(go);
     }
+    break;
+
+    default:
+    {
+      auto go = CreateGameObject(posX, posY, kvp.first);
+      if (go != nullptr)
+      {
+        Map::Instance().InsertGameObject(go);
+      }
+    }
+    break;
   }
 }

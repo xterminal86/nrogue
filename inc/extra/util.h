@@ -419,7 +419,6 @@ namespace Util
       {        
         res = layout;
 
-        int maxX = res.size() - 1;
         int maxY = res[0].length() - 1;
 
         // Swap columns then rows

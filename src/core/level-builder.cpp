@@ -257,8 +257,6 @@ RoomLayout LevelBuilder::SelectRoom()
 {
   int dice = Util::Rolld100();
 
-  int roomSize = _roomsForLevel[0].Layout.size();
-
   std::vector<RoomLayout> rooms;
 
   for (auto& r : _roomsForLevel)
@@ -289,8 +287,6 @@ std::vector<RoomLayout> LevelBuilder::SelectRooms()
 
   //auto dbg = Util::StringFormat("\t\tRolled: %i", dice);
   //Logger::Instance().Print(dbg);
-
-  int roomSize = _roomsForLevel[0].Layout.size();
 
   std::vector<RoomLayout> rooms;
 

@@ -11,7 +11,6 @@ class InfoState : public GameState
     void Update(bool forceUpdate = false) override;
 
   private:
-    void ShowInventory();
     void PrintAttribute(int x, int y, std::string attrName, Attribute& attr, bool displayMaxValue = false);
     void PrintModifiers(int x, int y);
 

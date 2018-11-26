@@ -46,6 +46,7 @@ class MainState : public GameState
       R"('m' - Display message log     )",
       R"('@' - Display character sheet )",
       R"('e' - Display inventory       )",
+      R"('$' - Count your money        )",
       R"('g' - Get item from the ground)",
       R"('>' - Go down the stairs      )",
       R"('<' - Go up the stairs        )"

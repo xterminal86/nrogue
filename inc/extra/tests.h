@@ -215,6 +215,26 @@ namespace Tests
     }
   }
 
+  inline void LootDropTest()
+  {
+    printf("\nLoot drop test:\n\n");
+
+    std::map<ItemType, int> scores;
+
+    for (int i = 0; i < 100; i++)
+    {
+      auto weights = GlobalConstants::LootTable.at(MonsterType::RAT);
+      auto kvp = Util::WeightedRandom(weights);
+
+      scores[kvp.first]++;
+    }
+
+    for (auto& kvp : scores)
+    {
+      printf("%i = %i\n", kvp.first, kvp.second);
+    }
+  }
+
   inline void Run()
   {
     printf("***** START TESTS *****\n\n");
@@ -228,6 +248,8 @@ namespace Tests
     LevelUpTests();
     printf("\n- o -\n");
     WeightedRandomTest();
+    printf("\n- o -\n");
+    LootDropTest();
 
     printf("\n\n***** o *****\n");
   }  

@@ -421,32 +421,39 @@ namespace GlobalConstants
   static const std::string ItemRareColor = "#CCCC52";
   static const std::string ItemUniqueColor = "#A59263";
 
+  // Weighted random
   static const std::map<MonsterType, std::map<ItemType, int>> LootTable =
   {
     {
       MonsterType::RAT,
       {
-        { ItemType::COINS, 10 },
-        { ItemType::FOOD, 40 }
+        { ItemType::COINS, 1 },
+        { ItemType::FOOD, 4 },
+        { ItemType::NOTHING, 20 }
       }
     },
     {
       MonsterType::BAT,
       {
-        { ItemType::COINS, 10 },
-        { ItemType::FOOD, 30 },
-        { ItemType::POTION, 5 }
+        { ItemType::COINS, 1 },
+        { ItemType::FOOD, 4 },
+        { ItemType::NOTHING, 20 }
       }
     }
   };
 
-  // Weighted random
   static const std::map<MonsterType, std::map<FoodType, int>> FoodLootTable =
   {
     {
       MonsterType::RAT,
       {
         { FoodType::CHEESE, 4 },
+        { FoodType::MEAT, 1 }
+      }
+    },
+    {
+      MonsterType::BAT,
+      {
         { FoodType::MEAT, 1 }
       }
     }

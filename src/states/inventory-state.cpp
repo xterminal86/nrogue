@@ -137,7 +137,6 @@ void InventoryState::Update(bool forceUpdate)
     Printer::Instance().Clear();
 
     int tw = Printer::Instance().TerminalWidth;
-    int th = Printer::Instance().TerminalHeight;
 
     Printer::Instance().PrintFB(tw / 2, 0, "========== INVENTORY ==========", Printer::kAlignCenter, "#FFFFFF");
 
@@ -199,7 +198,6 @@ void InventoryState::Update(bool forceUpdate)
 void InventoryState::DisplayEquipment()
 {
   int tw = Printer::Instance().TerminalWidth;
-  int th = Printer::Instance().TerminalHeight;
 
   tw /= 2;
 

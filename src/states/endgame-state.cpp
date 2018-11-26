@@ -69,12 +69,12 @@ void EndgameState::DrawHPMP()
 
   int th = Printer::Instance().TerminalHeight;
 
-  auto bar = UpdateBar(0, th - 2, _playerRef->Attrs.HP);
+  UpdateBar(0, th - 2, _playerRef->Attrs.HP);
 
   auto str = Util::StringFormat("%i/%i", curHp, maxHp);
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 2, str, Printer::kAlignCenter, "#FFFFFF", "#880000");
 
-  bar = UpdateBar(0, th - 1, _playerRef->Attrs.MP);
+  UpdateBar(0, th - 1, _playerRef->Attrs.MP);
 
   str = Util::StringFormat("%i/%i", curMp, maxMp);
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 1, str, Printer::kAlignCenter, "#FFFFFF", "#000088");

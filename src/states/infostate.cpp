@@ -34,8 +34,6 @@ void InfoState::Update(bool forceUpdate)
 
     Printer::Instance().PrintFB(0, 1, border, Printer::kAlignLeft, "#FFFFFF");
 
-    std::string attr;
-
     int yPos = 2;
 
     PrintAttribute(0, yPos, "LVL", playerRef.Attrs.Lvl);
@@ -56,24 +54,6 @@ void InfoState::Update(bool forceUpdate)
     PrintModifiers(7 + maxLength, yPos + 3);
 
     Printer::Instance().Render();
-  }
-}
-
-void InfoState::ShowInventory()
-{
-  int tw = Printer::Instance().TerminalWidth;
-
-  Printer::Instance().PrintFB(tw - 1, 0, "INVENTORY", Printer::kAlignRight, "#FFFFFF");
-  Printer::Instance().PrintFB(tw - 1, 1, "=========", Printer::kAlignRight, "#FFFFFF");
-
-  auto& playerRef = Application::Instance().PlayerInstance;
-
-  int yPos = 0;
-  for (auto& item : playerRef.Inventory.Contents)
-  {
-    std::string attr = Util::StringFormat("%s", item.get()->ObjectName.data());
-    Printer::Instance().PrintFB(tw - 1, 2 + yPos, attr, Printer::kAlignRight, "#FFFFFF");
-    yPos++;
   }
 }
 
