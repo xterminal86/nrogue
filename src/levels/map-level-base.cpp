@@ -73,6 +73,15 @@ void MapLevelBase::RecordEmptyCells()
   }
 }
 
+void MapLevelBase::CreateBorders(Tile& t)
+{
+  auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
+  for (auto& i : bounds)
+  {
+    MapArray[i.X][i.Y].get()->MakeTile(t);
+  }
+}
+
 void MapLevelBase::DisplayWelcomeText()
 {
   std::vector<std::string> msg =

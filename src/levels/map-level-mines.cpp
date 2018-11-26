@@ -28,12 +28,12 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       "#########",
       "##.....##",
-      "........+",
+      ".+.....+.",
       "##.....##",
       "##.....##",
       "##.....##",
       "##.....##",
-      "####.####",
+      "####+####",
       "####.####",
     },
     // 2
@@ -110,15 +110,15 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     },
     // 8
     {
-      "####.####",
-      "..#...#..",
+      "####+####",
+      "+.#...#.+",
       "#.#.#.#.#",
       "#.#.#.#.#",
       "#.#.#.#.#",
       "#.#...#.#",
       "#.##.##.#",
       "#.......#",
-      "####.####",
+      "####+####",
     },
     // 9
     {
@@ -207,17 +207,12 @@ void MapLevelMines::CreateLevel()
 
   lb.BuildLevelFromLayouts(_roomsForLevel, 1, 1, MapSize.X, MapSize.Y);
 
+  ConstructFromBuilder(lb);
+
   // Borders
 
   t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
-
-  auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
-  for (auto& i : bounds)
-  {
-    MapArray[i.X][i.Y].get()->MakeTile(t);
-  }
-
-  ConstructFromBuilder(lb);
+  CreateBorders(t);
 
   RecordEmptyCells();
 
@@ -239,60 +234,40 @@ void MapLevelMines::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToF
 
 void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 {
-  Logger::Instance().Print("********** PROCESSING CHUNKS **********");
+  Logger::Instance().Print("********** INSTANTIATING LAYOUT **********");
 
-  for (auto& chunk : lb.MapChunks)
+  for (int x = 0; x < MapSize.X; x++)
   {
-    int sx = chunk.UpperLeftCorner.X;
-    int sy = chunk.UpperLeftCorner.Y;
-    int size = chunk.Layout.size();
-
-    //auto str = Util::StringFormat("Processing chunk [%i;%i] size %i...", sx, sy, size);
-    //Logger::Instance().Print(str);
-    //Util::PrintLayout(chunk.Layout);
-
-    int mapX = sx;
-    int mapY = sy;
-
-    for (int x = 0; x < size; x++)
+    for (int y = 0; y < MapSize.Y; y++)
     {
-      mapY = sy;
+      Tile t;
+      std::string objName;
 
-      for (int y = 0; y < size; y++)
+      char image = lb.MapLayout[x][y];
+      switch (image)
       {
-        Tile t;
-        std::string objName;
-
-        char image = chunk.Layout[x][y];
-        switch (image)
+        case '#':
         {
-          case '#':
-          {
-            objName = "Rocks";
-            t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
-            MapArray[mapX][mapY]->MakeTile(t);
-          }
-          break;
-
-          case '.':
-          {
-            objName = "Ground";
-            t.Set(false, false, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
-            MapArray[mapX][mapY]->MakeTile(t);
-          }
-          break;
-
-          case '+':
-          {
-            CreateDoor(mapX, mapY);
-          }
-          break;
+          objName = "Rocks";
+          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
+          MapArray[x][y]->MakeTile(t);
         }
+        break;
 
-        mapY++;
+        case '.':
+        {
+          objName = "Ground";
+          t.Set(false, false, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
+          MapArray[x][y]->MakeTile(t);
+        }
+        break;
+
+        case '+':
+        {
+          CreateDoor(x, y);
+        }
+        break;
       }
-
-      mapX++;
     }
   }
 }
@@ -386,7 +361,7 @@ void MapLevelMines::PlaceStairs()
   {
     auto& c = _emptyCells[i];
 
-    int d = Util::LinearDistance(_playerRef->PosX, _playerRef->PosY, c.X, c.Y);
+    float d = Util::LinearDistance(LevelStart.X, LevelStart.Y, c.X, c.Y);
     if (d > mapSizeMax / 2)
     {
       possibleExits.push_back(c);

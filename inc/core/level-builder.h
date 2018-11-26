@@ -19,6 +19,7 @@ class LevelBuilder
     void PrintResult();
 
     std::vector<RoomHelper> MapChunks;
+    std::vector<std::vector<char>> MapLayout;
 
   private:
     std::vector<std::vector<MapCell>> _visitedCells;
@@ -70,6 +71,7 @@ class LevelBuilder
     void PrintChunks();
     void VisitCells(RoomHelper& room);
     void PrintVisitedCells();
+    void ConvertChunksToLayout();
 
     bool CheckLimits(Position& start, int roomSize);
     bool IsAreaVisited(Position& start, int roomSize);

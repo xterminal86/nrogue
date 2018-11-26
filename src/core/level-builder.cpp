@@ -53,6 +53,8 @@ void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel> possibleRooms
     TryToAddRoomTo(currentRoom, RoomEdgeEnum::WEST);
   }
 
+  ConvertChunksToLayout();
+
   // PrintVisitedCells();
 }
 
@@ -392,4 +394,37 @@ void LevelBuilder::PrintVisitedCells()
   }
 
   Logger::Instance().Print(visitedCellsStr);
+}
+
+void LevelBuilder::ConvertChunksToLayout()
+{
+  for (int x = 0; x < _mapSize.X; x++)
+  {
+    std::vector<char> row;
+    for (int y = 0; y < _mapSize.Y; y++)
+    {
+      row.push_back('.');
+    }
+
+    MapLayout.push_back(row);
+  }
+
+  int x = 0;
+  int y = 0;
+
+  for (auto& chunk : MapChunks)
+  {
+    x = chunk.UpperLeftCorner.X;
+    y = chunk.UpperLeftCorner.Y;
+
+    for (auto& row : chunk.Layout)
+    {
+      for (int c = 0; c < row.length(); c++)
+      {
+        MapLayout[x][y + c] = row[c];
+      }
+
+      x++;
+    }
+  }
 }

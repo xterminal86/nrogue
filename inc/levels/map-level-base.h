@@ -77,6 +77,7 @@ class MapLevelBase
 
     virtual void CreateLevel() {}
 
+    void CreateBorders(Tile& t);
     void RecordEmptyCells();
 };
 

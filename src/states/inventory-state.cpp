@@ -274,7 +274,9 @@ void InventoryState::DropItem()
 
   // Player can drop items on different dungeon level,
   // so reference to level where object was originally
-  // created will become invalid.
+  // created will become invalid and it will not be drawn.
+  // (well, actually it will be drawn, but using original
+  // _levelOwner->MapOffsetX and Y which might be different)
   ic->OwnerGameObject->SetLevelOwner(Map::Instance().CurrentLevel);
 
   ic->Transfer();
@@ -291,7 +293,7 @@ void InventoryState::DropItem()
     message = Util::StringFormat("Dropped: %s", objName.data());
   }
 
-  // !!! Object should not be destroyed here !!!
+  // !!! OwnerGameObject should not be destroyed here !!!
 
   Printer::Instance().AddMessage(message);
 }
