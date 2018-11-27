@@ -410,7 +410,7 @@ GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
   ic->Data.TypeOfItem = ItemType::HEALING_POTION;
-  ic->Data.Prefix = prefixOverride;
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
@@ -440,7 +440,7 @@ GameObject* GameObjectsFactory::CreateManaPotion(ItemPrefix prefixOverride)
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
   ic->Data.TypeOfItem = ItemType::MANA_POTION;
-  ic->Data.Prefix = prefixOverride;
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
@@ -470,7 +470,7 @@ GameObject* GameObjectsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
   ic->Data.TypeOfItem = ItemType::HUNGER_POTION;
-  ic->Data.Prefix = prefixOverride;
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
@@ -500,7 +500,7 @@ GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
   ItemComponent* ic = static_cast<ItemComponent*>(c);
 
   ic->Data.TypeOfItem = ItemType::EXP_POTION;
-  ic->Data.Prefix = prefixOverride;
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;

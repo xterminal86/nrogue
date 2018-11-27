@@ -23,10 +23,10 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);
     GameObject* CreateMoney(int amount = 0);
     GameObject* CreateRemains(GameObject* from);
-    GameObject* CreateHealingPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
-    GameObject* CreateManaPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
-    GameObject* CreateHungerPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
-    GameObject* CreateExpPotion(ItemPrefix prefixOverride = ItemPrefix::UNCURSED);
+    GameObject* CreateHealingPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateManaPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateHungerPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateExpPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateNote(std::string objName, std::vector<std::string> text);
     GameObject* CreateWeapon(WeaponType type, bool overridePrefix = false);
