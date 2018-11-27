@@ -50,6 +50,10 @@ GameObject* GameObjectsFactory::CreateMonster(int x, int y, MonsterType monsterT
     case MonsterType::BAT:
       go = CreateBat(x, y);
       break;
+
+    case MonsterType::SPIDER:
+      go = CreateSpider(x, y);
+      break;
   }
 
   go->Type = monsterType;
@@ -165,6 +169,8 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
     int randomHp = RNG::Instance().RandomRange(1 * difficulty, 5 * difficulty);
     int randomSpd = RNG::Instance().RandomRange(0, 2 * difficulty);    
 
+    go->Attrs.Lvl.Set(difficulty);
+
     go->Attrs.Str.Set(randomStr);
     go->Attrs.Def.Set(randomDef);
     go->Attrs.HP.Set(randomHp);
@@ -217,6 +223,52 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
     int randomSkl = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
     int randomHp = RNG::Instance().RandomRange(1 * difficulty, 3 * difficulty);
     int randomSpd = RNG::Instance().RandomRange(1 * difficulty, 3 * difficulty);
+
+    go->Attrs.Lvl.Set(difficulty);
+
+    go->Attrs.Str.Set(randomStr);
+    go->Attrs.Def.Set(randomDef);
+    go->Attrs.HP.Set(randomHp);
+    go->Attrs.Spd.Set(randomSpd);
+    go->Attrs.Skl.Set(randomSkl);
+  }
+
+  ai->ChangeModel<AIMonsterBasic>();
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 's', GlobalConstants::MonsterColor);
+  go->ObjectName = "Spider";
+  go->Attrs.Indestructible = false;
+  go->HealthRegenTurns = 30;
+
+  // Sets Occupied flag for _currentCell
+  go->Move(0, 0);
+
+  auto c = go->AddComponent<AIComponent>();
+  AIComponent* ai = static_cast<AIComponent*>(c);
+  auto aiModel = ai->AddModel<AIMonsterBasic>();
+  AIMonsterBasic* aimb = static_cast<AIMonsterBasic*>(aiModel);
+
+  aimb->AgroRadius = 12;
+
+  // Set attributes
+  if (randomize)
+  {
+    int pl = _playerRef->Attrs.Lvl.CurrentValue;
+    int dl = Map::Instance().CurrentLevel->DungeonLevel;
+    int difficulty = std::max(pl, dl); //pl + dl;
+
+    int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
+    int randomDef = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
+    int randomSkl = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
+    int randomHp = RNG::Instance().RandomRange(2 * difficulty, 6 * difficulty);
+    int randomSpd = RNG::Instance().RandomRange(0, 2 * difficulty);
+
+    go->Attrs.Lvl.Set(difficulty);
 
     go->Attrs.Str.Set(randomStr);
     go->Attrs.Def.Set(randomDef);
@@ -628,8 +680,8 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
   {
     case WeaponType::DAGGER:
     {
-      int diceRolls = 1 * dungeonLevel;
-      int diceSides = 4 * dungeonLevel;
+      int diceRolls = 1;
+      int diceSides = 4;
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
@@ -645,8 +697,8 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
     case WeaponType::SHORT_SWORD:
     {
-      int diceRolls = 1 * dungeonLevel;
-      int diceSides = 6 * dungeonLevel;
+      int diceRolls = 1;
+      int diceSides = 6;
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
@@ -662,8 +714,8 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
     case WeaponType::ARMING_SWORD:
     {
-      int diceRolls = 1 * dungeonLevel;
-      int diceSides = 8 * dungeonLevel;
+      int diceRolls = 1;
+      int diceSides = 8;
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
@@ -679,8 +731,8 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
     case WeaponType::LONG_SWORD:
     {
-      int diceRolls = 2 * dungeonLevel;
-      int diceSides = 6 * dungeonLevel;
+      int diceRolls = 2;
+      int diceSides = 6;
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
@@ -697,8 +749,8 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
     case WeaponType::GREAT_SWORD:
     {
-      int diceRolls = 3 * dungeonLevel;
-      int diceSides = 10 * dungeonLevel;
+      int diceRolls = 3;
+      int diceSides = 10;
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
@@ -715,8 +767,8 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
     case WeaponType::STAFF:
     {
-      int diceRolls = 1 * dungeonLevel;
-      int diceSides = 6 * dungeonLevel;
+      int diceRolls = 1;
+      int diceSides = 6;
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 

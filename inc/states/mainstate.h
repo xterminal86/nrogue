@@ -22,6 +22,8 @@ class MainState : public GameState
 
     std::string _debugInfo;
 
+    void DisplayExitHint();
+    void DisplayStatusIcons();
     void DisplayGameLog();
     void TryToPickupItem();
     void CheckStairs(chtype stairsSymbol);

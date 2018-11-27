@@ -186,8 +186,9 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
       _monstersSpawnRateForThisLevel =
       {
-        { MonsterType::RAT, 4 },
-        { MonsterType::BAT, 1 }
+        { MonsterType::RAT, 8 },
+        { MonsterType::SPIDER, 1 },
+        { MonsterType::BAT, 4 }
       };
     }
     break;
@@ -203,7 +204,7 @@ void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
 
 void MapLevelMines::CreateLevel()
 {
-  VisibilityRadius = 10;
+  VisibilityRadius = 5;
   MonstersRespawnTurns = 1000;
 
   Tile t;
@@ -286,7 +287,7 @@ void MapLevelMines::CreateInitialMonsters()
 {
   // Some rats
 
-  MaxMonsters = std::sqrt(_emptyCells.size());
+  MaxMonsters = std::sqrt(_emptyCells.size()) / 2;
 
   for (int i = 0; i < MaxMonsters; i++)
   {

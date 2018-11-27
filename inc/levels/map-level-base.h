@@ -57,6 +57,7 @@ class MapLevelBase
     bool IsInitialized = false;
     bool WelcomeTextDisplayed = false;
     bool Peaceful = false;
+    bool ExitFound = false;
 
     void AdjustCamera();    
 

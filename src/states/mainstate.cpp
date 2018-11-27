@@ -170,15 +170,16 @@ void MainState::HandleInput()
         //
         // FIXME: think on better approach
 
-        Map::Instance().UpdateGameObjects();
-        //_playerRef->FinishTurn();
+        //Map::Instance().UpdateGameObjects();
+        _playerRef->FinishTurn();
+        _playerRef->ProcessHunger();
         break;
 
       case 'a':
       {
         if (Map::Instance().CurrentLevel->Peaceful)
         {
-          std::vector<std::string> variants = { "Not here", "Not in town" };
+          std::vector<std::string> variants = { "Not here.", "Not in town." };
           int index = RNG::Instance().RandomRange(0, 2);
           Printer::Instance().AddMessage(variants[index]);
         }
@@ -272,8 +273,10 @@ void MainState::Update(bool forceUpdate)
 
     Map::Instance().Draw(_playerRef->PosX, _playerRef->PosY);
 
-    _playerRef->Draw();
+    _playerRef->Draw();    
 
+    DisplayExitHint();
+    DisplayStatusIcons();
     DrawHPMP();
 
     if (Printer::Instance().ShowLastMessage)
@@ -481,4 +484,62 @@ void MainState::ProcessItemPickup(std::pair<int, GameObject*>& pair)
 
   auto it = Map::Instance().CurrentLevel->GameObjects.begin();
   Map::Instance().CurrentLevel->GameObjects.erase(it + pair.first);
+}
+
+void MainState::DisplayExitHint()
+{
+  int th = Printer::Instance().TerminalHeight;
+
+  auto curLvl = Map::Instance().CurrentLevel;
+  if (curLvl->ExitFound)
+  {
+    int dx = curLvl->LevelExit.X - _playerRef->PosX;
+    int dy = curLvl->LevelExit.Y - _playerRef->PosY;
+
+    std::string dir;
+
+    if (dy > 0)
+    {
+      dir += "S";
+    }
+    else if (dy < 0)
+    {
+      dir += "N";
+    }
+
+    if (dx > 0)
+    {
+      dir += "E";
+    }
+    else if (dx < 0)
+    {
+      dir += "W";
+    }
+
+    Printer::Instance().PrintFB(0, th - 3, dir, Printer::kAlignLeft, "#FFFFFF");
+  }
+  else
+  {
+    Printer::Instance().PrintFB(0, th - 3, "??", Printer::kAlignLeft, "#FFFFFF");
+  }
+}
+
+void MainState::DisplayStatusIcons()
+{
+  int th = Printer::Instance().TerminalHeight;
+
+  if (_playerRef->IsStarving)
+  {
+    Printer::Instance().PrintFB(3, th - 3, '%', "#FF0000");
+  }
+  else
+  {
+    int hungerMax = _playerRef->Attrs.HungerRate.CurrentValue;
+    int part = hungerMax - hungerMax * 0.25;
+    if (_playerRef->Attrs.Hunger >= part)
+    {
+      int th = Printer::Instance().TerminalHeight;
+      Printer::Instance().PrintFB(3, th - 3, '%', "#FFFF00");
+    }
+  }
 }

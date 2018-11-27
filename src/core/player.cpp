@@ -101,23 +101,7 @@ void Player::Init()
 void Player::Draw()
 {
   bool cond = (BgColor.length() == 0 || BgColor == "#000000");
-  GameObject::Draw(FgColor, cond ? Map::Instance().CurrentLevel->MapArray[PosX][PosY]->BgColor : BgColor);
-
-  if (IsStarving)
-  {
-    int th = Printer::Instance().TerminalHeight;
-    Printer::Instance().PrintFB(0, th - 3, '%', "#FF0000");
-  }
-  else
-  {
-    int hungerMax = Attrs.HungerRate.CurrentValue;
-    int part = hungerMax - hungerMax * 0.25;
-    if (Attrs.Hunger >= part)
-    {
-      int th = Printer::Instance().TerminalHeight;
-      Printer::Instance().PrintFB(0, th - 3, '%', "#FFFF00");
-    }
-  }
+  GameObject::Draw(FgColor, cond ? Map::Instance().CurrentLevel->MapArray[PosX][PosY]->BgColor : BgColor);  
 }
 
 bool Player::TryToAttack(int dx, int dy)
@@ -248,6 +232,14 @@ void Player::CheckVisibility()
 void Player::DiscoverCell(int x, int y)
 {
   auto& map = Map::Instance().CurrentLevel->MapArray;
+  auto curLvl = Map::Instance().CurrentLevel;
+
+  if (x == curLvl->LevelExit.X
+   && y == curLvl->LevelExit.Y
+   && !curLvl->ExitFound)
+  {
+    curLvl->ExitFound = true;
+  }
 
   map[x][y]->Visible = true;
 
@@ -296,7 +288,7 @@ void Player::SetSoldierAttrs()
   Attrs.HungerRate.Set(1000);
   Attrs.HungerSpeed.Set(1);
 
-  HealthRegenTurns = 100;
+  HealthRegenTurns = 30;
 }
 
 void Player::SetThiefAttrs()
@@ -315,7 +307,7 @@ void Player::SetThiefAttrs()
   Attrs.HungerRate.Set(1500);
   Attrs.HungerSpeed.Set(1);  
 
-  HealthRegenTurns = 200;
+  HealthRegenTurns = 50;
 }
 
 void Player::SetArcanistAttrs()
@@ -335,7 +327,7 @@ void Player::SetArcanistAttrs()
   Attrs.HungerRate.Set(2000);
   Attrs.HungerSpeed.Set(1);  
 
-  HealthRegenTurns = 300;
+  HealthRegenTurns = 80;
 }
 
 void Player::SetDefaultEquipment()
@@ -564,7 +556,7 @@ void Player::LevelUp()
   Printer::Instance().AddMessage("You have gained a level!");
 
   /*
-   * Raise skills etc.
+   * TODO: Raise skills etc.
    *
   auto class_ = _classesMap[SelectedClass];
 

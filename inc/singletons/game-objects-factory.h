@@ -47,6 +47,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
 
     GameObject* CreateRat(int x, int y, bool randomize = true);
     GameObject* CreateBat(int x, int y, bool randomize = true);
+    GameObject* CreateSpider(int x, int y, bool randomize = true);
 
     bool ProcessItemEquiption(ItemComponent* item);
     bool ProcessRingEquiption(ItemComponent* item);

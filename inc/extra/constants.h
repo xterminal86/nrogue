@@ -439,6 +439,13 @@ namespace GlobalConstants
         { ItemType::FOOD, 4 },
         { ItemType::NOTHING, 20 }
       }
+    },
+    {
+      MonsterType::SPIDER,
+      {
+        { ItemType::COINS, 2 },
+        { ItemType::NOTHING, 20 }
+      }
     }
   };
 
