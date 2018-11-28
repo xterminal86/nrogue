@@ -61,6 +61,7 @@ enum class GameStates
   LOOK_INPUT_STATE,
   INTERACT_INPUT_STATE,
   NPC_INTERACT_STATE,
+  SHOPPING_STATE,
   EXITING_STATE,
   MESSAGE_BOX_STATE,
   ENDGAME_STATE
@@ -371,6 +372,39 @@ struct ItemData
 
   int Amount = 1;
   int Cost = 0;
+
+  int GetCost()
+  {
+    bool hasDurability = (EqCategory == EquipmentCategory::BOOTS
+                       || EqCategory == EquipmentCategory::HEAD
+                       || EqCategory == EquipmentCategory::LEGS
+                       || EqCategory == EquipmentCategory::NECK
+                       || EqCategory == EquipmentCategory::TORSO
+                       || EqCategory == EquipmentCategory::WEAPON);
+
+    if (hasDurability)
+    {
+      int price = Durability.CurrentValue;
+
+      if (Prefix == ItemPrefix::BLESSED)
+      {
+        price *= 2;
+      }
+      else if (Prefix == ItemPrefix::CURSED)
+      {
+        price /= 2;
+      }
+
+      if (price <= 0)
+      {
+        price = 1;
+      }
+
+      return price;
+    }
+
+    return Cost;
+  }
 
   std::map<StatsEnum, int> StatBonuses =
   {

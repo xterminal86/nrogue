@@ -141,7 +141,7 @@ bool Player::Move(int dx, int dy)
       {
         if (npc->Data.IsStanding)
         {
-          std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : actor->ObjectName;
+          std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : "The " + actor->ObjectName;
           Printer::Instance().AddMessage(name + " won't move over");
         }
         else
@@ -786,7 +786,7 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
 
   // Try to make everything look pretty
   //
-  // NOTE: probably lots of shitcode
+  // NOTE: probably lots of shitcode anyway
 
   int maxLen = 0;
   for (auto& s : levelUpResults)
@@ -1045,6 +1045,6 @@ void Player::SwitchPlaces(AIComponent* other)
   Map::Instance().CurrentLevel->AdjustCamera();
 
   AINPC* npc = static_cast<AINPC*>(other->CurrentModel);
-  std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : other->OwnerGameObject->ObjectName;
+  std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : "the " + other->OwnerGameObject->ObjectName;
   Printer::Instance().AddMessage("You pass by " + name);
 }
