@@ -1,5 +1,6 @@
 #include "map-level-base.h"
 #include "application.h"
+#include "game-objects-factory.h"
 
 MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
 {  
@@ -79,6 +80,23 @@ void MapLevelBase::CreateBorders(Tile& t)
   for (auto& i : bounds)
   {
     MapArray[i.X][i.Y].get()->MakeTile(t);
+  }
+}
+
+void MapLevelBase::CreateItemsForLevel(int maxItems)
+{
+  int itemsCreated = 0;
+
+  while (itemsCreated < maxItems)
+  {
+    int index = RNG::Instance().RandomRange(0, _emptyCells.size());
+
+    int x = _emptyCells[index].X;
+    int y = _emptyCells[index].Y;
+
+    auto go = GameObjectsFactory::Instance().CreateRandomItem(x, y);
+    InsertGameObject(go);
+    itemsCreated++;
   }
 }
 

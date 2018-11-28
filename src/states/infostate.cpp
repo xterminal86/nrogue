@@ -123,16 +123,16 @@ std::pair<std::string, std::string> InfoState::GetModifierString(int value)
   if (value < 0)
   {
     color = "#FF0000";
-    str = Util::StringFormat("%i", value);
+    str = Util::StringFormat("(%i)", value);
   }
   else if (value > 0)
   {
     color = "#00FF00";
-    str = Util::StringFormat("+%i", value);
+    str = Util::StringFormat("(+%i)", value);
   }
   else if (value == 0)
   {
-    str = Util::StringFormat("+%i", value);
+    str = Util::StringFormat("(+%i)", value);
   }
 
   res.first = color;

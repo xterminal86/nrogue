@@ -309,6 +309,20 @@ struct Attributes
   int ActionMeter = 0;
 
   bool Indestructible = true;
+
+  int Rating()
+  {
+    int rating = 0;
+
+    rating += Str.OriginalValue;
+    rating += Def.OriginalValue;
+    rating += Mag.OriginalValue;
+    rating += Res.OriginalValue;
+    rating += Skl.OriginalValue;
+    rating += Spd.OriginalValue;
+
+    return rating;
+  }
 };
 
 enum class ItemPrefix
@@ -398,6 +412,7 @@ namespace GlobalConstants
   static const int ItemSpawnMinArea = 25 * 25;
   static const int InventoryMaxNameLength = 20;
   static const int InventoryMaxSize = 20;
+  static const int WeaponDurabilityLostChance = 20;
 
   static const std::string BlackColor = "#000000";
   static const std::string WhiteColor = "#FFFFFF";
@@ -464,6 +479,40 @@ namespace GlobalConstants
         { FoodType::MEAT, 1 }
       }
     }
+  };
+
+  static const std::map<ItemType, int> PotionsWeightTable =
+  {
+    { ItemType::HEALING_POTION, 50 },
+    { ItemType::MANA_POTION, 50 },
+    { ItemType::HUNGER_POTION, 20 },
+    { ItemType::STR_POTION, 5 },
+    { ItemType::DEF_POTION, 5 },
+    { ItemType::MAG_POTION, 5 },
+    { ItemType::RES_POTION, 5 },
+    { ItemType::SKL_POTION, 5 },
+    { ItemType::SPD_POTION, 5 },
+    { ItemType::EXP_POTION, 10 }
+  };
+
+  static const std::map<ItemType, std::string> StatNameByPotionType =
+  {
+    { ItemType::STR_POTION, "STR" },
+    { ItemType::DEF_POTION, "DEF" },
+    { ItemType::MAG_POTION, "MAG" },
+    { ItemType::RES_POTION, "RES" },
+    { ItemType::SKL_POTION, "SKL" },
+    { ItemType::SPD_POTION, "SPD" },
+  };
+
+  static const std::map<std::string, ItemType> PotionTypeByStatName =
+  {
+    { "STR", ItemType::STR_POTION },
+    { "DEF", ItemType::DEF_POTION },
+    { "MAG", ItemType::MAG_POTION },
+    { "RES", ItemType::RES_POTION },
+    { "SKL", ItemType::SKL_POTION },
+    { "SPD", ItemType::SPD_POTION }
   };
 
   static const std::map<WeaponType, std::string> WeaponNameByType =

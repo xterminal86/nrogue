@@ -247,8 +247,10 @@ void LookInputState::DisplayMonsterStats()
   if (actor != nullptr)
   {
     std::vector<std::string> msg;
+    msg.push_back(Util::StringFormat("Rating: %i", actor->Attrs.Rating()));
+    msg.push_back("");
     msg.push_back(Util::StringFormat("LVL: %i", actor->Attrs.Lvl.CurrentValue));
-    msg.push_back(Util::StringFormat("EXP: %i", actor->Attrs.Exp.CurrentValue));
+    msg.push_back(Util::StringFormat("EXP: %i", actor->Attrs.Exp.CurrentValue));    
     msg.push_back("");
     msg.push_back(Util::StringFormat("STR: %i", actor->Attrs.Str.CurrentValue));
     msg.push_back(Util::StringFormat("DEF: %i", actor->Attrs.Def.CurrentValue));

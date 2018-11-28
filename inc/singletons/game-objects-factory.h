@@ -27,12 +27,16 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateManaPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateHungerPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateExpPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateStatPotion(std::string statName, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateNote(std::string objName, std::vector<std::string> text);
     GameObject* CreateWeapon(WeaponType type, bool overridePrefix = false);
     GameObject* CreateContainer(std::string name, chtype image, int x, int y);
 
     GameObject* CreateRandomPotion();
+    GameObject* CreateRandomWeapon();
+
+    GameObject* CreateRandomItem(int x, int y);
 
     /// Creates stairs on MapArray of current level
     void CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, chtype image, MapType leadsTo);
@@ -61,13 +65,12 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void ManaPotionUseHandler(ItemComponent* item);
     void HungerPotionUseHandler(ItemComponent* item);
     void ExpPotionUseHandler(ItemComponent* item);
+    void StatPotionUseHandler(ItemComponent* item);
+
     void FoodUseHandler(ItemComponent* item);
 
     void SetItemName(GameObject* go, ItemData& itemData);
-    void AdjustItemBonuses(ItemData& itemData);
-
-    void SetStatsModifiers(ItemData& itemData);
-    void UnsetStatsModifiers(ItemData& itemData);
+    void AdjustWeaponBonuses(ItemData& itemData);
 
     size_t CalculateHash(ItemComponent* item);
 

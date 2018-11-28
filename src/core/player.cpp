@@ -7,6 +7,7 @@
 #include "game-objects-factory.h"
 #include "ai-monster-basic.h"
 #include "ai-component.h"
+#include "ai-npc.h"
 #include "application.h"
 #include "item-component.h"
 
@@ -128,18 +129,23 @@ bool Player::Move(int dx, int dy)
 {
   auto cell = Map::Instance().CurrentLevel->MapArray[PosX + dx][PosY + dy].get();
 
-  if (!cell->Occupied && !cell->Blocking)
+  if (!cell->Blocking)
   {
-    _previousCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
-    _previousCell->Occupied = false;
-
-    PosX += dx;
-    PosY += dy;
-
-    _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
-    _currentCell->Occupied = true;
-
-    return true;
+    if (cell->Occupied)
+    {
+      auto actor = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
+      auto c = actor->GetComponent<AIComponent>();
+      AIComponent* aic = static_cast<AIComponent*>(c);
+      if (!aic->CurrentModel->IsAgressive)
+      {
+        SwitchPlaces(aic);
+      }
+    }
+    else
+    {
+      MoveGameObject(dx, dy);
+      return true;
+    }
   }
   else
   {    
@@ -385,6 +391,12 @@ void Player::Attack(GameObject* go)
      && DoesWeaponLosesDurability())
     {
       Printer::Instance().AddMessage("Your weapon lost durability");
+
+      if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue == 0)
+      {
+        BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);
+        EquipmentByCategory[EquipmentCategory::WEAPON][0] = { nullptr };
+      }
     }
   }
   else
@@ -456,6 +468,12 @@ void Player::Attack(GameObject* go)
       if (durabilityLost)
       {
         Printer::Instance().AddMessage("Your weapon lost durability");
+
+        if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue == 0)
+        {
+          BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);
+          EquipmentByCategory[EquipmentCategory::WEAPON][0] = { nullptr };
+        }
       }
     }
     else
@@ -688,14 +706,8 @@ bool Player::CanRaiseAttribute(Attribute& attr)
 
 void Player::ProcessKill(GameObject* monster)
 {
-  int defaultExp = monster->Attrs.HP.OriginalValue;
-  int exp = 0;
-
-  float ratio = (float)monster->Attrs.Lvl.CurrentValue / (float)Attrs.Lvl.CurrentValue;
-
-  int amount = (float)defaultExp * ratio;
-
-  exp += amount;
+  int defaultExp = monster->Attrs.Rating();
+  int exp = defaultExp;
 
   exp = Util::Clamp(exp, 1, GlobalConstants::AwardedExpMax);
 
@@ -952,20 +964,11 @@ void Player::SetArcanistDefaultItems()
   Inventory.AddToInventory(go);
 }
 
-bool Player::DoesWeaponLosesDurability()
+bool Player::DoesWeaponLosesDurability(int chance)
 {
-  if (Util::Rolld100(10))
+  if (Util::Rolld100(chance))
   {
-    EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.Add(-1);
-
-    if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue <= 0)
-    {
-      // NOTE: destroy broken item?
-      auto objName = EquipmentByCategory[EquipmentCategory::WEAPON][0]->OwnerGameObject->ObjectName;
-      auto str = Util::StringFormat("%s breaks!", objName.data());
-      Printer::Instance().AddMessage(str);
-    }
-
+    EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.Add(-1);    
     //auto dbg = Util::StringFormat("Durability: %i / %i", EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue, EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.OriginalValue);
     //Logger::Instance().Print(dbg);
 
@@ -973,4 +976,65 @@ bool Player::DoesWeaponLosesDurability()
   }
 
   return false;
+}
+
+void Player::SetStatsModifiers(ItemData& itemData)
+{
+  Attrs.Str.Modifier += itemData.StatBonuses[StatsEnum::STR];
+  Attrs.Def.Modifier += itemData.StatBonuses[StatsEnum::DEF];
+  Attrs.Mag.Modifier += itemData.StatBonuses[StatsEnum::MAG];
+  Attrs.Res.Modifier += itemData.StatBonuses[StatsEnum::RES];
+  Attrs.Skl.Modifier += itemData.StatBonuses[StatsEnum::SKL];
+  Attrs.Spd.Modifier += itemData.StatBonuses[StatsEnum::SPD];
+}
+
+void Player::UnsetStatsModifiers(ItemData& itemData)
+{
+  Attrs.Str.Modifier -= itemData.StatBonuses[StatsEnum::STR];
+  Attrs.Def.Modifier -= itemData.StatBonuses[StatsEnum::DEF];
+  Attrs.Mag.Modifier -= itemData.StatBonuses[StatsEnum::MAG];
+  Attrs.Res.Modifier -= itemData.StatBonuses[StatsEnum::RES];
+  Attrs.Skl.Modifier -= itemData.StatBonuses[StatsEnum::SKL];
+  Attrs.Spd.Modifier -= itemData.StatBonuses[StatsEnum::SPD];
+}
+
+void Player::BreakItem(ItemComponent* ic)
+{
+  auto objName = ic->OwnerGameObject->ObjectName;
+
+  auto str = Util::StringFormat("%s breaks!", objName.data());
+  Printer::Instance().AddMessage(str);
+
+  UnsetStatsModifiers(ic->Data);
+
+  auto typeHash = ic->Data.ItemTypeHash;
+
+  for (int i = 0; i < Inventory.Contents.size(); i++)
+  {
+    auto c = Inventory.Contents[i]->GetComponent<ItemComponent>();
+    ItemComponent* ic = static_cast<ItemComponent*>(c);
+    if (ic->Data.ItemTypeHash == typeHash)
+    {
+      Inventory.Contents.erase(Inventory.Contents.begin() + i);
+      break;
+    }
+  }
+}
+
+void Player::SwitchPlaces(AIComponent* other)
+{
+  int dxPlayer = other->OwnerGameObject->PosX - PosX;
+  int dyPlayer = other->OwnerGameObject->PosY - PosY;
+
+  int dxNpc = -dxPlayer;
+  int dyNpc = -dyPlayer;
+
+  MoveGameObject(dxPlayer, dyPlayer);
+  other->OwnerGameObject->Move(dxNpc, dyNpc);
+
+  Map::Instance().CurrentLevel->AdjustCamera();
+
+  AINPC* npc = static_cast<AINPC*>(other->CurrentModel);
+  std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : other->OwnerGameObject->ObjectName;
+  Printer::Instance().AddMessage("You pass by " + name);
 }

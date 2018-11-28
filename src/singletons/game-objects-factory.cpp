@@ -27,6 +27,31 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       go = CreateMoney();
       break;
 
+    case ItemType::HEALING_POTION:
+      go = CreateHealingPotion();
+      break;
+
+    case ItemType::MANA_POTION:
+      go = CreateManaPotion();
+      break;
+
+    case ItemType::HUNGER_POTION:
+      go = CreateHungerPotion();
+      break;
+
+    case ItemType::EXP_POTION:
+      go = CreateExpPotion();
+      break;
+
+    case ItemType::STR_POTION:
+    case ItemType::DEF_POTION:
+    case ItemType::MAG_POTION:
+    case ItemType::RES_POTION:
+    case ItemType::SKL_POTION:
+    case ItemType::SPD_POTION:
+      go = CreateStatPotion(GlobalConstants::StatNameByPotionType.at(objType));
+      break;
+
     default:
       break;
   }
@@ -517,40 +542,44 @@ GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateStatPotion(std::string statName, ItemPrefix prefixOverride)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->FgColor = "#FFFFFF";
+  go->BgColor = "#888888";
+  go->Image = '!';
+  go->ObjectName = "Radiant Potion";
+
+  Component* c = go->AddComponent<ItemComponent>();
+  ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+  ic->Data.TypeOfItem = GlobalConstants::PotionTypeByStatName.at(statName);
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+  ic->Data.Amount = 1;
+  ic->Data.IsStackable = true;
+  ic->Data.IsIdentified = true;
+
+  auto str = Util::StringFormat("This will raise your %s", statName);
+  ic->Data.IdentifiedDescription = { str };
+
+  ic->Data.IdentifiedName = "Radiant Potion";
+
+  ic->Data.UseCallback = std::bind(&GameObjectsFactory::StatPotionUseHandler, this, ic);
+
+  SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
+
+  return go;
+}
+
 GameObject* GameObjectsFactory::CreateRandomPotion()
 {
   GameObject* go = nullptr;
 
-  int roll = Util::Rolld100();
-
-  // TODO: more potions
-
-  if (roll < 3)
-  {
-    // random stat potion
-    // FIXME: fallback to healing potion for now
-    go = CreateHealingPotion();
-  }
-  else if (roll < 6)
-  {
-    go = CreateExpPotion();
-  }
-  else
-  {
-    int which = RNG::Instance().RandomRange(0, 3);
-    if (which == 0)
-    {
-      go = CreateHealingPotion();
-    }
-    else if (which == 1)
-    {
-      go = CreateManaPotion();
-    }
-    else
-    {
-      go = CreateHungerPotion();
-    }
-  }
+  auto weights = Util::WeightedRandom(GlobalConstants::PotionsWeightTable);
+  go = CreateGameObject(0, 0, weights.first);
 
   Component* c = go->GetComponent<ItemComponent>();
   ItemComponent* ic = static_cast<ItemComponent*>(c);
@@ -575,6 +604,74 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
   SetItemName(go, ic->Data);
 
   ic->Data.ItemTypeHash = CalculateHash(ic);
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateRandomWeapon()
+{
+  GameObject* go = nullptr;
+
+  int index = RNG::Instance().RandomRange(0, GlobalConstants::WeaponNameByType.size());
+  auto it = GlobalConstants::WeaponNameByType.begin();
+  std::advance(it, index);
+  auto kvp = *it;
+
+  go = CreateWeapon(kvp.first);
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateRandomItem(int x, int y)
+{
+  GameObject* go = nullptr;
+
+  std::vector<ItemType> possibleItems =
+  {
+    ItemType::COINS,
+    ItemType::WEAPON,
+    ItemType::POTION,
+    ItemType::FOOD
+  };
+
+  std::map<FoodType, int> foodMap =
+  {
+    { FoodType::APPLE, 1 },
+    { FoodType::BREAD, 1 },
+    { FoodType::CHEESE, 1 },
+    { FoodType::MEAT, 1 },
+    { FoodType::RATIONS, 1 },
+    { FoodType::IRON_RATIONS, 1 }
+  };
+
+  int index = RNG::Instance().RandomRange(0, possibleItems.size());
+
+  ItemType res = possibleItems[index];
+
+  switch (res)
+  {
+    case ItemType::COINS:
+      go = CreateMoney();
+      break;
+
+    case ItemType::WEAPON:
+      go = CreateRandomWeapon();
+      break;
+
+    case ItemType::POTION:
+      go = CreateRandomPotion();
+      break;
+
+    case ItemType::FOOD:
+    {
+      auto pair = Util::WeightedRandom(foodMap);
+      go = CreateFood(0, 0, pair.first);
+    }
+    break;
+  }
+
+  go->PosX = x;
+  go->PosY = y;
 
   return go;
 }
@@ -798,7 +895,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
   // returned via private helper method in ItemComponent
   // *** !!!
 
-  AdjustItemBonuses(ic->Data);
+  AdjustWeaponBonuses(ic->Data);
   SetItemName(go, ic->Data);
 
   ic->Data.ItemTypeHash = CalculateHash(ic);
@@ -863,12 +960,34 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
 
     case ItemType::HUNGER_POTION:
       itemData.IdentifiedName.append(" of Satiation");
-      go->ObjectName.append(" +SAT");
       break;
 
     case ItemType::EXP_POTION:
       itemData.IdentifiedName.append(" of Enlightenment");
-      go->ObjectName.append(" +EXP");
+      break;
+
+    case ItemType::STR_POTION:
+      itemData.IdentifiedName.append(" of Strength");
+      break;
+
+    case ItemType::DEF_POTION:
+      itemData.IdentifiedName.append(" of Defence");
+      break;
+
+    case ItemType::MAG_POTION:
+      itemData.IdentifiedName.append(" of Magic");
+      break;
+
+    case ItemType::RES_POTION:
+      itemData.IdentifiedName.append(" of Resistance");
+      break;
+
+    case ItemType::SKL_POTION:
+      itemData.IdentifiedName.append(" of Skill");
+      break;
+
+    case ItemType::SPD_POTION:
+      itemData.IdentifiedName.append(" of Speed");
       break;
   }
 }
@@ -877,20 +996,17 @@ ItemPrefix GameObjectsFactory::RollItemPrefix()
 {
   int roll = RNG::Instance().RandomRange(0, 101);
 
-  if (roll >= 0 && roll <= 10)
+  std::map<ItemPrefix, int> weights =
   {
-    return ItemPrefix::BLESSED;
-  }
-  else if (roll > 10 && roll < 80)
-  {
-    return ItemPrefix::UNCURSED;
-  }
-  else if (roll > 80)
-  {
-    return ItemPrefix::CURSED;
-  }
+    { ItemPrefix::UNCURSED, 5 },
+    { ItemPrefix::CURSED, 5 },
+    { ItemPrefix::BLESSED, 1 }
+  };
 
-  return ItemPrefix::UNCURSED;
+  auto res = Util::WeightedRandom(weights);
+  ItemPrefix prefix = res.first;
+
+  return prefix;
 }
 
 bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
@@ -979,7 +1095,7 @@ void GameObjectsFactory::EquipItem(ItemComponent* item)
     verb = "put on";
   }
 
-  SetStatsModifiers(item->Data);
+  _playerRef->SetStatsModifiers(item->Data);
 
   std::string objName = item->Data.IsIdentified ? item->OwnerGameObject->ObjectName : item->Data.UnidentifiedName;
 
@@ -1003,7 +1119,7 @@ void GameObjectsFactory::UnequipItem(ItemComponent* item)
     verb = "take off";
   }
 
-  UnsetStatsModifiers(item->Data);
+  _playerRef->UnsetStatsModifiers(item->Data);
 
   std::string objName = item->Data.IsIdentified ? item->OwnerGameObject->ObjectName : item->Data.UnidentifiedName;
 
@@ -1147,7 +1263,65 @@ void GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
   _playerRef->AwardExperience(amount);
 }
 
-void GameObjectsFactory::AdjustItemBonuses(ItemData& itemData)
+void GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
+{
+  ItemPrefix buc = item->Data.Prefix;
+
+  std::map<ItemType, std::string> useMessagesByType =
+  {
+    { ItemType::STR_POTION, "Your Strength has " },
+    { ItemType::DEF_POTION, "Your Defence has " },
+    { ItemType::MAG_POTION, "Your Magic has " },
+    { ItemType::RES_POTION, "Your Resistance has " },
+    { ItemType::SKL_POTION, "Your Skill has " },
+    { ItemType::SPD_POTION, "Your Speed has " }
+  };
+
+  int valueToAdd = 0;
+
+  auto message = useMessagesByType[item->Data.TypeOfItem];
+
+  if (buc == ItemPrefix::UNCURSED)
+  {
+    valueToAdd = 1;
+    message += "increased!";
+  }
+  else if (buc == ItemPrefix::BLESSED)
+  {
+    valueToAdd = 2;
+    message += "increased significantly!";
+  }
+  else if (buc == ItemPrefix::CURSED)
+  {
+    valueToAdd = -1;
+    message += "decreased!";
+  }
+
+  Printer::Instance().AddMessage(message);
+
+  std::map<ItemType, Attribute&> playerStats =
+  {
+    { ItemType::STR_POTION, _playerRef->Attrs.Str },
+    { ItemType::DEF_POTION, _playerRef->Attrs.Def },
+    { ItemType::MAG_POTION, _playerRef->Attrs.Mag },
+    { ItemType::RES_POTION, _playerRef->Attrs.Res },
+    { ItemType::SKL_POTION, _playerRef->Attrs.Skl },
+    { ItemType::SPD_POTION, _playerRef->Attrs.Spd }
+  };
+
+  auto itemType = item->Data.TypeOfItem;
+
+  int newValue = playerStats.at(itemType).OriginalValue + valueToAdd;
+
+  if (newValue < 0)
+  {
+    newValue = 0;
+  }
+
+  playerStats.at(itemType).Set(newValue);
+}
+
+void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
 {
   for (auto& kvp : itemData.StatBonuses)
   {
@@ -1157,6 +1331,7 @@ void GameObjectsFactory::AdjustItemBonuses(ItemData& itemData)
       {
         case ItemPrefix::CURSED:
           kvp.second--;
+          itemData.Durability.Set(itemData.Durability.OriginalValue / 2);
           itemData.Damage.CurrentValue--;
           itemData.Damage.OriginalValue--;
           break;
@@ -1169,26 +1344,6 @@ void GameObjectsFactory::AdjustItemBonuses(ItemData& itemData)
       }
     }
   }
-}
-
-void GameObjectsFactory::SetStatsModifiers(ItemData& itemData)
-{
-  _playerRef->Attrs.Str.Modifier += itemData.StatBonuses[StatsEnum::STR];
-  _playerRef->Attrs.Def.Modifier += itemData.StatBonuses[StatsEnum::DEF];
-  _playerRef->Attrs.Mag.Modifier += itemData.StatBonuses[StatsEnum::MAG];
-  _playerRef->Attrs.Res.Modifier += itemData.StatBonuses[StatsEnum::RES];
-  _playerRef->Attrs.Skl.Modifier += itemData.StatBonuses[StatsEnum::SKL];
-  _playerRef->Attrs.Spd.Modifier += itemData.StatBonuses[StatsEnum::SPD];
-}
-
-void GameObjectsFactory::UnsetStatsModifiers(ItemData& itemData)
-{
-  _playerRef->Attrs.Str.Modifier -= itemData.StatBonuses[StatsEnum::STR];
-  _playerRef->Attrs.Def.Modifier -= itemData.StatBonuses[StatsEnum::DEF];
-  _playerRef->Attrs.Mag.Modifier -= itemData.StatBonuses[StatsEnum::MAG];
-  _playerRef->Attrs.Res.Modifier -= itemData.StatBonuses[StatsEnum::RES];
-  _playerRef->Attrs.Skl.Modifier -= itemData.StatBonuses[StatsEnum::SKL];
-  _playerRef->Attrs.Spd.Modifier -= itemData.StatBonuses[StatsEnum::SPD];
 }
 
 size_t GameObjectsFactory::CalculateHash(ItemComponent* item)

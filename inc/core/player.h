@@ -11,6 +11,8 @@
 #include "container-component.h"
 #include "item-component.h"
 
+class AIComponent;
+
 class Player : public GameObject
 {
   public:    
@@ -56,6 +58,9 @@ class Player : public GameObject
     void LevelUp();
     void LevelDown();
 
+    void SetStatsModifiers(ItemData& itemData);
+    void UnsetStatsModifiers(ItemData& itemData);
+
     int Money = 0;
 
     bool IsStarving = false;
@@ -77,7 +82,10 @@ class Player : public GameObject
     bool CanRaiseAttribute(Attribute& attr);
     void ProcessKill(GameObject* monster);
 
-    bool DoesWeaponLosesDurability();
+    bool DoesWeaponLosesDurability(int chance = GlobalConstants::WeaponDurabilityLostChance);
+    void BreakItem(ItemComponent* ic);
+
+    void SwitchPlaces(AIComponent* other);
 
     int _starvingTimeout = 0;
 

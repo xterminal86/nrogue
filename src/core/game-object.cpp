@@ -3,6 +3,7 @@
 #include "printer.h"
 #include "game-objects-factory.h"
 #include "map-level-base.h"
+#include "map.h"
 
 GameObject::GameObject(MapLevelBase* levelOwner)
 {
@@ -32,15 +33,7 @@ bool GameObject::Move(int dx, int dy)
   if (!_levelOwner->MapArray[PosX + dx][PosY + dy]->Occupied &&
       !_levelOwner->MapArray[PosX + dx][PosY + dy]->Blocking)
   {
-    _previousCell = _levelOwner->MapArray[PosX][PosY].get();
-    _previousCell->Occupied = false;
-
-    PosX += dx;
-    PosY += dy;
-    
-    _currentCell = _levelOwner->MapArray[PosX][PosY].get();
-    _currentCell->Occupied = true;
-
+    MoveGameObject(dx, dy);
     return true;
   }
   
@@ -151,4 +144,16 @@ void GameObject::FinishTurn()
     _healthRegenTurnsCounter = 0;
     Attrs.HP.Add(1);
   }
+}
+
+void GameObject::MoveGameObject(int dx, int dy)
+{
+  _previousCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
+  _previousCell->Occupied = false;
+
+  PosX += dx;
+  PosY += dy;
+
+  _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
+  _currentCell->Occupied = true;
 }

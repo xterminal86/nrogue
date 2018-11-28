@@ -143,6 +143,8 @@ class GameObject
     MapLevelBase* _levelOwner = nullptr;    
 
     int _healthRegenTurnsCounter = 0;    
+
+    void MoveGameObject(int dx, int dy);
 };
 
 #endif

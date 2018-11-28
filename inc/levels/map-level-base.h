@@ -80,6 +80,7 @@ class MapLevelBase
 
     void CreateBorders(Tile& t);
     void RecordEmptyCells();
+    void CreateItemsForLevel(int maxItems);
 };
 
 #endif // MAPLEVEL_H

@@ -230,6 +230,7 @@ void MapLevelMines::CreateLevel()
   PlaceStairs();
 
   CreateInitialMonsters();
+  CreateItemsForLevel(10 + DungeonLevel * 2);
 }
 
 void MapLevelMines::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)
