@@ -560,7 +560,7 @@ GameObject* GameObjectsFactory::CreateStatPotion(std::string statName, ItemPrefi
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
 
-  auto str = Util::StringFormat("This will raise your %s", statName);
+  auto str = Util::StringFormat("This will affect your %s", statName);
   ic->Data.IdentifiedDescription = { str };
 
   ic->Data.IdentifiedName = "Radiant Potion";

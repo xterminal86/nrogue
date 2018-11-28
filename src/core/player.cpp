@@ -136,9 +136,19 @@ bool Player::Move(int dx, int dy)
       auto actor = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
       auto c = actor->GetComponent<AIComponent>();
       AIComponent* aic = static_cast<AIComponent*>(c);
+      AINPC* npc = static_cast<AINPC*>(aic->CurrentModel);
       if (!aic->CurrentModel->IsAgressive)
       {
-        SwitchPlaces(aic);
+        if (npc->Data.IsStanding)
+        {
+          std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : actor->ObjectName;
+          Printer::Instance().AddMessage(name + " won't move over");
+        }
+        else
+        {
+          SwitchPlaces(aic);
+          FinishTurn();
+        }
       }
     }
     else
