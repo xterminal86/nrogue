@@ -13,7 +13,7 @@ class AIComponent : public Component
     AIComponent();
 
     template <typename T>
-    AIModelBase* AddModel()
+    T* AddModel()
     {
       auto up = std::make_unique<T>();
 
@@ -23,17 +23,19 @@ class AIComponent : public Component
 
       _aiModels[hash] = std::move(up);
 
-      return _aiModels[hash].get();
+      auto pointer = _aiModels[hash].get();
+      return static_cast<T*>(pointer);
     }
 
     template <typename T>
-    AIModelBase* GetModel()
+    T* GetModel()
     {
       size_t hash = typeid(T).hash_code();
 
       if (_aiModels.count(hash) == 1)
       {
-        return _aiModels[hash].get();
+        auto pointer = _aiModels[hash].get();
+        return static_cast<T*>(pointer);
       }
 
       return nullptr;

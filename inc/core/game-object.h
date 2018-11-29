@@ -61,7 +61,7 @@ class GameObject
     void Draw(const std::string& overrideFgColor = std::string(), const std::string& overrideBgColor = std::string());
 
     template <typename T>
-    inline Component* AddComponent()
+    inline T* AddComponent()
     {
       // NOTE: No check for component already added.
       // Do we need one?
@@ -73,17 +73,20 @@ class GameObject
       // cp is null after std::move
       _components[typeid(T).hash_code()] = std::move(cp);
 
-      return _components[typeid(T).hash_code()].get();
+      auto pointer = _components[typeid(T).hash_code()].get();
+
+      return static_cast<T*>(pointer);
     }
 
     template <typename T>
-    inline Component* GetComponent()
+    inline T* GetComponent()
     {
       for (auto& c : _components)
       {
         if (c.second.get()->Hash() == typeid(T).hash_code())
         {
-          return c.second.get();
+          auto pointer = c.second.get();
+          return static_cast<T*>(pointer);
         }
       }
 

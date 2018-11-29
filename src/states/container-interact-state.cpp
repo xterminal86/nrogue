@@ -260,8 +260,7 @@ void ContainerInteractState::TryToTransferItem()
   }
 
   GameObject* go = src->Contents[_inventoryItemIndex].get();
-  auto c = go->GetComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = go->GetComponent<ItemComponent>();
 
   if (ic->Data.IsEquipped)
   {
@@ -270,8 +269,7 @@ void ContainerInteractState::TryToTransferItem()
   }
 
   go = src->Contents[_inventoryItemIndex].release();
-  c = go->GetComponent<ItemComponent>();
-  ic = static_cast<ItemComponent*>(c);
+  ic = go->GetComponent<ItemComponent>();
 
   ic->Transfer(dst);
 

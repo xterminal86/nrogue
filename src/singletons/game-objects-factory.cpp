@@ -97,8 +97,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
   go->Image = '$';
   go->FgColor = GlobalConstants::CoinsColor;
 
-  Component* c = go->AddComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.IdentifiedDescription = { "You can buy things with these." };
 
@@ -128,8 +127,7 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
   go->FgColor = GlobalConstants::ShrineColorsByType.at(type).first;
   go->BgColor = GlobalConstants::ShrineColorsByType.at(type).second;
 
-  auto c = go->AddComponent<ShrineComponent>();
-  ShrineComponent* sc = static_cast<ShrineComponent*>(c);
+  ShrineComponent* sc = go->AddComponent<ShrineComponent>();
 
   sc->Type = type;
   sc->Counter = timeout;
@@ -148,12 +146,8 @@ GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool st
 
   go->Move(0, 0);
 
-  auto c = go->AddComponent<AIComponent>();
-
-  AIComponent* aic = static_cast<AIComponent*>(c);
-  auto model = aic->AddModel<AINPC>();
-
-  AINPC* ainpc = static_cast<AINPC*>(model);
+  AIComponent* aic = go->AddComponent<AIComponent>();
+  AINPC* ainpc = aic->AddModel<AINPC>();
   ainpc->Init(npcType, standing);
 
   std::string goColor = (ainpc->Data.IsMale) ? "#FFFFFF" : "#FF00FF";
@@ -174,10 +168,8 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   // Sets Occupied flag for _currentCell
   go->Move(0, 0);
 
-  auto c = go->AddComponent<AIComponent>();
-  AIComponent* ai = static_cast<AIComponent*>(c);
-  auto aiModel = ai->AddModel<AIMonsterBasic>();
-  AIMonsterBasic* aimb = static_cast<AIMonsterBasic*>(aiModel);
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterBasic* aimb = ai->AddModel<AIMonsterBasic>();
 
   aimb->AgroRadius = 8;
 
@@ -229,10 +221,8 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
   // Sets Occupied flag for _currentCell
   go->Move(0, 0);
 
-  auto c = go->AddComponent<AIComponent>();
-  AIComponent* ai = static_cast<AIComponent*>(c);
-  auto aiModel = ai->AddModel<AIMonsterBasic>();
-  AIMonsterBasic* aimb = static_cast<AIMonsterBasic*>(aiModel);
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterBasic* aimb = ai->AddModel<AIMonsterBasic>();
 
   aimb->AgroRadius = 16;
 
@@ -273,10 +263,8 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
   // Sets Occupied flag for _currentCell
   go->Move(0, 0);
 
-  auto c = go->AddComponent<AIComponent>();
-  AIComponent* ai = static_cast<AIComponent*>(c);
-  auto aiModel = ai->AddModel<AIMonsterBasic>();
-  AIMonsterBasic* aimb = static_cast<AIMonsterBasic*>(aiModel);
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterBasic* aimb = ai->AddModel<AIMonsterBasic>();
 
   aimb->AgroRadius = 12;
 
@@ -311,8 +299,8 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel, from->PosX, from->PosY, '%', from->FgColor);
 
-  auto td = go->AddComponent<TimerDestroyerComponent>();
-  ((TimerDestroyerComponent*)td)->Time = 200; //from->Attrs.HP.OriginalValue * 2;
+  TimerDestroyerComponent* td = go->AddComponent<TimerDestroyerComponent>();
+  td->Time = 200; //from->Attrs.HP.OriginalValue * 2;
 
   auto str = Util::StringFormat("%s's remains", from->ObjectName.data());
   go->ObjectName = str;
@@ -394,8 +382,7 @@ GameObject* GameObjectsFactory::CreateFood(int x, int y, FoodType type, ItemPref
   go->PosX = x;
   go->PosY = y;
 
-  Component* c = go->AddComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.TypeOfItem = ItemType::FOOD;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
@@ -431,8 +418,7 @@ GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
   go->Image = '!';
   go->ObjectName = "Red Potion";
 
-  Component* c = go->AddComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.TypeOfItem = ItemType::HEALING_POTION;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
@@ -461,8 +447,7 @@ GameObject* GameObjectsFactory::CreateManaPotion(ItemPrefix prefixOverride)
   go->Image = '!';
   go->ObjectName = "Blue Potion";
 
-  Component* c = go->AddComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.TypeOfItem = ItemType::MANA_POTION;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
@@ -491,8 +476,7 @@ GameObject* GameObjectsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
   go->Image = '!';
   go->ObjectName = "Slimy Potion";
 
-  Component* c = go->AddComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.TypeOfItem = ItemType::HUNGER_POTION;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
@@ -521,8 +505,7 @@ GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
   go->Image = '!';
   go->ObjectName = "Clear Potion";
 
-  Component* c = go->AddComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.TypeOfItem = ItemType::EXP_POTION;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
@@ -551,8 +534,7 @@ GameObject* GameObjectsFactory::CreateStatPotion(std::string statName, ItemPrefi
   go->Image = '!';
   go->ObjectName = "Radiant Potion";
 
-  Component* c = go->AddComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.TypeOfItem = GlobalConstants::PotionTypeByStatName.at(statName);
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
@@ -581,8 +563,7 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
   auto weights = Util::WeightedRandom(GlobalConstants::PotionsWeightTable);
   go = CreateGameObject(0, 0, weights.first);
 
-  Component* c = go->GetComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = go->GetComponent<ItemComponent>();
 
   ic->Data.IsIdentified = false;
   ic->Data.UnidentifiedDescription = { "You don't know what will happen if you drink it." };
@@ -732,8 +713,7 @@ GameObject* GameObjectsFactory::CreateNote(std::string objName, std::vector<std:
   go->Image = '?';
   go->ObjectName = objName;
 
-  Component* c = go->AddComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.TypeOfItem = ItemType::DUMMY;
   ic->Data.IsStackable = false;
@@ -761,8 +741,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
   go->Image = ')';
   go->FgColor = "#FFFFFF";
 
-  auto c = go->AddComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
   ic->Data.TypeOfItem = ItemType::WEAPON;
@@ -915,8 +894,7 @@ GameObject* GameObjectsFactory::CreateContainer(std::string name, chtype image, 
   go->BgColor = GlobalConstants::RoomFloorColor;
   go->Blocking = true;
 
-  auto c = go->AddComponent<ContainerComponent>();
-  ContainerComponent* cc = static_cast<ContainerComponent*>(c);
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
 
   cc->MaxCapacity = GlobalConstants::InventoryMaxSize;
 

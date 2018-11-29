@@ -130,10 +130,9 @@ void InteractInputState::Update(bool forceUpdate)
 
 void InteractInputState::TryToInteractWithObject(GameObject* go)
 {
-  auto c = go->GetComponent<ContainerComponent>();
-  if (c != nullptr)
+  ContainerComponent* cc = go->GetComponent<ContainerComponent>();
+  if (cc != nullptr)
   {
-    ContainerComponent* cc = static_cast<ContainerComponent*>(c);
     cc->Interact();
 
     // FIXME: add closed containers
@@ -157,22 +156,20 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
 
 void InteractInputState::TryToInteractWithActor(GameObject* actor)
 {
-  auto c = actor->GetComponent<AIComponent>();
-  AIComponent* aic = static_cast<AIComponent*>(c);
+  AIComponent* aic = actor->GetComponent<AIComponent>();
   if (aic->CurrentModel->IsAgressive)
   {
     auto str = Util::StringFormat("%s is attacking!", actor->ObjectName.data());
     Printer::Instance().AddMessage(str);
     Application::Instance().ChangeState(GameStates::MAIN_STATE);
-  }
+  }  
   else
   {
     auto state = Application::Instance().GetGameStateRefByName(GameStates::NPC_INTERACT_STATE);
     NPCInteractState* nis = static_cast<NPCInteractState*>(state);
-    auto model = aic->GetModel<AINPC>();
-    if (model != nullptr)
+    AINPC* npcAi = aic->GetModel<AINPC>();
+    if (npcAi != nullptr)
     {
-      AINPC* npcAi = static_cast<AINPC*>(model);
       nis->SetNPCRef(npcAi);
       Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);      
     }

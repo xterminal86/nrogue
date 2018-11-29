@@ -139,10 +139,9 @@ void LookInputState::Update(bool forceUpdate)
           {
             std::string objName = gos.back()->ObjectName;
 
-            Component* c = gos.back()->GetComponent<ItemComponent>();
-            if (c != nullptr)
+            ItemComponent* ic = gos.back()->GetComponent<ItemComponent>();
+            if (ic != nullptr)
             {
-              ItemComponent* ic = static_cast<ItemComponent*>(c);
               objName = ic->Data.IsIdentified ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
             }
 

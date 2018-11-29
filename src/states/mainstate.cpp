@@ -443,8 +443,7 @@ void MainState::PrintDebugInfo()
 
 bool MainState::ProcessMoneyPickup(std::pair<int, GameObject*>& pair)
 {
-  auto c = pair.second->GetComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = pair.second->GetComponent<ItemComponent>();
   if (ic->Data.TypeOfItem == ItemType::COINS)
   {
     auto message = Util::StringFormat("Picked up: %i %s", ic->Data.Amount, ic->OwnerGameObject->ObjectName.data());
@@ -461,8 +460,7 @@ bool MainState::ProcessMoneyPickup(std::pair<int, GameObject*>& pair)
 
 void MainState::ProcessItemPickup(std::pair<int, GameObject*>& pair)
 {
-  auto c = pair.second->GetComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = pair.second->GetComponent<ItemComponent>();
 
   auto go = Map::Instance().CurrentLevel->GameObjects[pair.first].release();
 

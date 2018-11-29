@@ -17,8 +17,7 @@ void ContainerComponent::AddToInventory(GameObject* object)
 {  
   bool foundStack = false;
 
-  auto c = object->GetComponent<ItemComponent>();
-  ItemComponent* itemToAdd = static_cast<ItemComponent*>(c);
+  ItemComponent* itemToAdd = object->GetComponent<ItemComponent>();
 
   if (itemToAdd->Data.IsStackable)
   {

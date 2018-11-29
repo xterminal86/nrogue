@@ -52,8 +52,7 @@ void InventoryState::HandleInput()
       }
 
       auto go = _playerRef->Inventory.Contents[_selectedIndex].get();
-      auto c = go->GetComponent<ItemComponent>();
-      ItemComponent* ic = static_cast<ItemComponent*>(c);
+      ItemComponent* ic = go->GetComponent<ItemComponent>();
 
       if (ic->Data.IsEquipped)
       {
@@ -74,8 +73,7 @@ void InventoryState::HandleInput()
       }
 
       auto go = _playerRef->Inventory.Contents[_selectedIndex].get();
-      auto c = go->GetComponent<ItemComponent>();
-      ItemComponent* ic = static_cast<ItemComponent*>(c);
+      ItemComponent* ic = go->GetComponent<ItemComponent>();
 
       if (ic->Use())
       {
@@ -108,8 +106,7 @@ void InventoryState::HandleInput()
     case 'e':
     {
       auto go = _playerRef->Inventory.Contents[_selectedIndex].get();
-      auto c = go->GetComponent<ItemComponent>();
-      ItemComponent* ic = static_cast<ItemComponent*>(c);
+      ItemComponent* ic = go->GetComponent<ItemComponent>();
       if (ic->Equip())
       {
         _playerRef->FinishTurn();
@@ -269,8 +266,7 @@ void InventoryState::DestroyInventoryItem()
 void InventoryState::DropItem()
 {
   auto go = _playerRef->Inventory.Contents[_selectedIndex].release();
-  auto c = go->GetComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = go->GetComponent<ItemComponent>();
 
   // Player can drop items on different dungeon level,
   // so reference to level where object was originally
