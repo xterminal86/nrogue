@@ -116,8 +116,16 @@ enum class NPCType
   TIGRA,
   STEVE,
   GIMLEY,
-  MARTIN,
-  UNKNOWN
+  MARTIN
+};
+
+enum class TraderRole
+{
+  NONE,
+  COOK,
+  BLACKSMITH,
+  CLERIC,
+  JUNKER
 };
 
 enum class PlayerClass
@@ -355,7 +363,7 @@ enum class StatsEnum
 
 struct ItemData
 {
-  ItemType TypeOfItem = ItemType::DUMMY;
+  ItemType ItemType_ = ItemType::DUMMY;
   ItemPrefix Prefix = ItemPrefix::UNCURSED;
   ItemRarity Rarity = ItemRarity::COMMON;
 
@@ -371,6 +379,8 @@ struct ItemData
   bool IsPrefixDiscovered = false;
 
   int Amount = 1;
+
+  // !!! Use GetCost() when cost is needed !!!
   int Cost = 0;
 
   int GetCost()
@@ -382,28 +392,32 @@ struct ItemData
                        || EqCategory == EquipmentCategory::TORSO
                        || EqCategory == EquipmentCategory::WEAPON);
 
+    int price = 0;
+
     if (hasDurability)
     {
-      int price = Durability.CurrentValue;
-
-      if (Prefix == ItemPrefix::BLESSED)
-      {
-        price *= 2;
-      }
-      else if (Prefix == ItemPrefix::CURSED)
-      {
-        price /= 2;
-      }
-
-      if (price <= 0)
-      {
-        price = 1;
-      }
-
-      return price;
+      price = Durability.CurrentValue;
+    }
+    else
+    {
+      price = Cost;
     }
 
-    return Cost;
+    if (Prefix == ItemPrefix::BLESSED)
+    {
+      price *= 2;
+    }
+    else if (Prefix == ItemPrefix::CURSED)
+    {
+      price /= 2;
+    }
+
+    if (price <= 0)
+    {
+      price = 1;
+    }
+
+    return price;
   }
 
   std::map<StatsEnum, int> StatBonuses =
@@ -469,6 +483,14 @@ namespace GlobalConstants
   static const std::string ItemMagicColor = "#4169E1";
   static const std::string ItemRareColor = "#CCCC52";
   static const std::string ItemUniqueColor = "#A59263";
+
+  static const std::map<TraderRole, std::string> ShopNameByType =
+  {
+    { TraderRole::BLACKSMITH, "Armory" },
+    { TraderRole::CLERIC, "Sanctuary" },
+    { TraderRole::COOK, "Grocery" },
+    { TraderRole::JUNKER, "Junkyard" }
+  };
 
   // Weighted random
   static const std::map<MonsterType, std::map<ItemType, int>> LootTable =

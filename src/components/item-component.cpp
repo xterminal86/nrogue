@@ -42,7 +42,7 @@ void ItemComponent::Inspect()
   std::string header = Data.IsIdentified ? Data.IdentifiedName : Data.UnidentifiedName;
   auto desc = Data.IsIdentified ? Data.IdentifiedDescription : Data.UnidentifiedDescription;
 
-  if (Data.IsIdentified && Data.TypeOfItem == ItemType::WEAPON)
+  if (Data.IsIdentified && Data.ItemType_ == ItemType::WEAPON)
   {
     desc = GetWeaponInspectionInfo();
   }

@@ -107,7 +107,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
   ic->Data.Cost = money;
   ic->Data.Amount = money;
   ic->Data.IsStackable = true;
-  ic->Data.TypeOfItem = ItemType::COINS;
+  ic->Data.ItemType_ = ItemType::COINS;
   ic->Data.IsIdentified = true;
   ic->Data.IdentifiedName = "Gold Coins";
 
@@ -345,7 +345,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
   }
   else
   {
-    switch (item->Data.TypeOfItem)
+    switch (item->Data.ItemType_)
     {
       case ItemType::COINS:
         Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "You don't 'use' money like that." }, GlobalConstants::MessageBoxRedBorderColor);
@@ -384,7 +384,7 @@ GameObject* GameObjectsFactory::CreateFood(int x, int y, FoodType type, ItemPref
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.TypeOfItem = ItemType::FOOD;
+  ic->Data.ItemType_ = ItemType::FOOD;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
 
@@ -420,11 +420,12 @@ GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.TypeOfItem = ItemType::HEALING_POTION;
+  ic->Data.ItemType_ = ItemType::HEALING_POTION;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
+  ic->Data.Cost = 100;
 
   ic->Data.IdentifiedDescription = { "Restores some of your health." };
   ic->Data.IdentifiedName = "Red Potion";
@@ -449,11 +450,12 @@ GameObject* GameObjectsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.TypeOfItem = ItemType::MANA_POTION;
+  ic->Data.ItemType_ = ItemType::MANA_POTION;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
+  ic->Data.Cost = 50;
 
   ic->Data.IdentifiedDescription = { "Helps you regain spiritual powers." };
   ic->Data.IdentifiedName = "Blue Potion";
@@ -478,11 +480,12 @@ GameObject* GameObjectsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.TypeOfItem = ItemType::HUNGER_POTION;
+  ic->Data.ItemType_ = ItemType::HUNGER_POTION;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
+  ic->Data.Cost = 50;
 
   ic->Data.IdentifiedDescription = { "Liquid food. Drink it if there's nothing else to eat." };
   ic->Data.IdentifiedName = "Slimy Potion";
@@ -507,7 +510,7 @@ GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.TypeOfItem = ItemType::EXP_POTION;
+  ic->Data.ItemType_ = ItemType::EXP_POTION;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
@@ -536,7 +539,7 @@ GameObject* GameObjectsFactory::CreateStatPotion(std::string statName, ItemPrefi
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.TypeOfItem = GlobalConstants::PotionTypeByStatName.at(statName);
+  ic->Data.ItemType_ = GlobalConstants::PotionTypeByStatName.at(statName);
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
@@ -715,7 +718,7 @@ GameObject* GameObjectsFactory::CreateNote(std::string objName, std::vector<std:
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.TypeOfItem = ItemType::DUMMY;
+  ic->Data.ItemType_ = ItemType::DUMMY;
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = true;
 
@@ -744,7 +747,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
-  ic->Data.TypeOfItem = ItemType::WEAPON;
+  ic->Data.ItemType_ = ItemType::WEAPON;
 
   ic->Data.Prefix = overridePrefix ? ItemPrefix::UNCURSED : RollItemPrefix();
   ic->Data.IsIdentified = overridePrefix ? true : false;
@@ -924,7 +927,7 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
       break;
   }
 
-  switch (itemData.TypeOfItem)
+  switch (itemData.ItemType_)
   {
     case ItemType::HEALING_POTION:
       itemData.IdentifiedName.append(" of Healing");
@@ -1257,7 +1260,7 @@ void GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
 
   int valueToAdd = 0;
 
-  auto message = useMessagesByType[item->Data.TypeOfItem];
+  auto message = useMessagesByType[item->Data.ItemType_];
 
   if (buc == ItemPrefix::UNCURSED)
   {
@@ -1287,7 +1290,7 @@ void GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
     { ItemType::SPD_POTION, _playerRef->Attrs.Spd }
   };
 
-  auto itemType = item->Data.TypeOfItem;
+  auto itemType = item->Data.ItemType_;
 
   int newValue = playerStats.at(itemType).OriginalValue + valueToAdd;
 

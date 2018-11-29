@@ -81,6 +81,12 @@ class Printer : public Singleton<Printer>
 
     bool ShowLastMessage;
 
+    // FIXME: debug
+    int ColorsUsed()
+    {
+      return _colorMap.size();
+    }
+
   private:
     bool ContainsColorMap(size_t hashToCheck);
     bool ColorIndexExists(size_t hashToCheck);

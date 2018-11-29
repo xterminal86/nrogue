@@ -439,12 +439,15 @@ void MainState::PrintDebugInfo()
 
   _debugInfo = Util::StringFormat("Level Exit: [%i;%i]", Map::Instance().CurrentLevel->LevelExit.X, Map::Instance().CurrentLevel->LevelExit.Y);
   Printer::Instance().PrintFB(0, 4, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+
+  _debugInfo = Util::StringFormat("Colors Used: %i", Printer::Instance().ColorsUsed());
+  Printer::Instance().PrintFB(0, 5, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 }
 
 bool MainState::ProcessMoneyPickup(std::pair<int, GameObject*>& pair)
 {
   ItemComponent* ic = pair.second->GetComponent<ItemComponent>();
-  if (ic->Data.TypeOfItem == ItemType::COINS)
+  if (ic->Data.ItemType_ == ItemType::COINS)
   {
     auto message = Util::StringFormat("Picked up: %i %s", ic->Data.Amount, ic->OwnerGameObject->ObjectName.data());
     Printer::Instance().AddMessage(message);

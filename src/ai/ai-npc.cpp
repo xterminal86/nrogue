@@ -4,6 +4,7 @@
 #include "rng.h"
 #include "application.h"
 #include "map.h"
+#include "trader-component.h"
 
 AINPC::AINPC()
 {
@@ -436,6 +437,10 @@ void AINPC::SetDataMartin()
       "All money you spend buying my wares are going straight to charity."
     }
   };
+
+  TraderComponent* tc = AIComponentRef->OwnerGameObject->AddComponent<TraderComponent>();
+  tc->NpcRef = this;
+  tc->Init(TraderRole::CLERIC);
 }
 
 void AINPC::SetDataDefault()

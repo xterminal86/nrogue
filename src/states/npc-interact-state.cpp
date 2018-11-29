@@ -6,6 +6,8 @@
 #include "util.h"
 #include "ai-npc.h"
 #include "ai-component.h"
+#include "trader-component.h"
+#include "shopping-state.h"
 
 void NPCInteractState::Cleanup()
 {
@@ -32,9 +34,22 @@ void NPCInteractState::HandleInput()
       break;
 
     case 'j':
-      _whatKey = WhatKey::JOB;
-      _textPrinting = true;
-      break;
+    {
+      TraderComponent* tc = _npcRef->AIComponentRef->OwnerGameObject->GetComponent<TraderComponent>();
+      if (tc != nullptr)
+      {
+        auto state = Application::Instance().GetGameStateRefByName(GameStates::SHOPPING_STATE);
+        ShoppingState* ss = static_cast<ShoppingState*>(state);
+        ss->PassShopOwner(tc);
+        Application::Instance().ChangeState(GameStates::SHOPPING_STATE);
+      }
+      else
+      {
+        _whatKey = WhatKey::JOB;
+        _textPrinting = true;
+      }
+    }
+    break;
 
     case 'g':
       _whatKey = WhatKey::GOSSIP;
