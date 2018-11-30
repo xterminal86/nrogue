@@ -403,6 +403,11 @@ struct ItemData
       price = Cost;
     }
 
+    if (IsStackable)
+    {
+      price *= Amount;
+    }
+
     if (Prefix == ItemPrefix::BLESSED)
     {
       price *= 2;
@@ -410,11 +415,6 @@ struct ItemData
     else if (Prefix == ItemPrefix::CURSED)
     {
       price /= 2;
-    }
-
-    if (price <= 0)
-    {
-      price = 1;
     }
 
     return price;

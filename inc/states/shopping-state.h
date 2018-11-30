@@ -4,14 +4,17 @@
 #include "gamestate.h"
 
 #include "constants.h"
+#include "game-object.h"
 
 class TraderComponent;
 class Player;
+class ItemComponent;
 
 class ShoppingState : public GameState
 {
   public:
     void Init() override;
+    void Prepare() override;
     void PassShopOwner(TraderComponent* tc);
     void Update(bool forceUpdate = false) override;
     void HandleInput() override;
@@ -30,8 +33,13 @@ class ShoppingState : public GameState
     void DisplayPlayerInventory();
     void DisplayShopInventory();
     void CheckIndexLimits();
+    void BuyOrSellItem();
+    void CheckSide();
 
-    void GetBonusStringMaxLen(int& maxLen);
+    int GetItemStringTotalLen(std::vector<std::unique_ptr<GameObject>>& container);
+
+    std::string GetItemExtraInfo(ItemComponent* item);
+    std::string GetItemTextColor(ItemComponent* item);
 };
 
 #endif // SHOPPINGSTATE_H
