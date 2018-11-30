@@ -365,9 +365,13 @@ bool ShoppingState::CanBeBought(ItemComponent *ic)
   if (_playerRef->Money < cost)
   {
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "Not enough money!" }, GlobalConstants::MessageBoxRedBorderColor);
+    return false;
   }
   else if (_playerRef->Inventory.IsFull())
   {
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "No room in inventory!" }, GlobalConstants::MessageBoxRedBorderColor);
+    return false;
   }
+
+  return true;
 }

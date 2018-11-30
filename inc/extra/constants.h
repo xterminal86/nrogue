@@ -407,7 +407,7 @@ struct ItemData
 
     if (ItemType_ == ItemType::FOOD)
     {
-      price *= 0.1f;
+      price *= 0.01f;
     }
 
     if (IsStackable)
