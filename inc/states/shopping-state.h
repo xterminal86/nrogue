@@ -36,6 +36,8 @@ class ShoppingState : public GameState
     void BuyOrSellItem();
     void CheckSide();
 
+    bool CanBeBought(ItemComponent* ic);
+
     int GetItemStringTotalLen(std::vector<std::unique_ptr<GameObject>>& container);
 
     std::string GetItemExtraInfo(ItemComponent* item);

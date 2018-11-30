@@ -307,6 +307,12 @@ void ShoppingState::BuyOrSellItem()
     auto go = _playerRef->Inventory.Contents[_inventoryItemIndex].get();
     ItemComponent* ic = go->GetComponent<ItemComponent>();
 
+    if (ic->Data.IsEquipped)
+    {
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+      return;
+    }
+
     int cost = ic->Data.GetCost() / _kPlayerSellRate;
 
     _playerRef->Money += cost;
@@ -319,13 +325,12 @@ void ShoppingState::BuyOrSellItem()
     auto go = _shopOwner->Items[_inventoryItemIndex].get();
     ItemComponent* ic = go->GetComponent<ItemComponent>();
 
-    int cost = ic->Data.GetCost();
-
-    if (_playerRef->Money < cost)
+    if (!CanBeBought(ic))
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "Not enough money!" }, GlobalConstants::MessageBoxRedBorderColor);
       return;
     }
+
+    int cost = ic->Data.GetCost();
 
     _playerRef->Money -= cost;
 
@@ -350,5 +355,19 @@ void ShoppingState::CheckSide()
   else if (!_playerSide && _shopOwner->Items.size() == 0)
   {
     _playerSide = true;
+  }
+}
+
+bool ShoppingState::CanBeBought(ItemComponent *ic)
+{
+  int cost = ic->Data.GetCost();
+
+  if (_playerRef->Money < cost)
+  {
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "Not enough money!" }, GlobalConstants::MessageBoxRedBorderColor);
+  }
+  else if (_playerRef->Inventory.IsFull())
+  {
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "No room in inventory!" }, GlobalConstants::MessageBoxRedBorderColor);
   }
 }
