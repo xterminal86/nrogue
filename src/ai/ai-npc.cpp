@@ -462,7 +462,10 @@ void AINPC::SetDataCasey()
   {
     // =========================================================================== 80
     {
-      "<PLACEHOLDER>"
+      "I used to be a cook in the Navy.",
+      "One day we were boarded by the enemy, it was a tough battle,",
+      "but we managed to win that one in the end.",
+      "Lost many good men that day..."
     }
   };
 

@@ -18,7 +18,7 @@ void TraderComponent::Init(TraderRole traderType, int stockRefreshTurns)
 
 void TraderComponent::RefreshStock()
 {
-  _itemsToCreate = RNG::Instance().RandomRange(1, 20);
+  _itemsToCreate = RNG::Instance().RandomRange(11, 20);
 
   Items.clear();
   CreateItems();
