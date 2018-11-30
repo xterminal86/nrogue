@@ -9,15 +9,16 @@ TraderComponent::TraderComponent()
   _hash = typeid(*this).hash_code();
 }
 
-void TraderComponent::Init(TraderRole traderType)
+void TraderComponent::Init(TraderRole traderType, int stockRefreshTurns)
 {
   _traderType = traderType;
+  _stockRefreshTurns = stockRefreshTurns;
   RefreshStock();
 }
 
 void TraderComponent::RefreshStock()
 {
-  _itemsToCreate = RNG::Instance().RandomRange(8, 17);
+  _itemsToCreate = RNG::Instance().RandomRange(8, 12);
 
   Items.clear();
   CreateItems();
@@ -27,11 +28,11 @@ void TraderComponent::Update()
 {
   _stockResetCounter++;
 
-  if (_stockResetCounter > 100)
+  if (_stockResetCounter > _stockRefreshTurns)
   {
     RefreshStock();
     _stockResetCounter = 0;
-  }
+  }  
 }
 
 void TraderComponent::CreateItems()
@@ -46,10 +47,9 @@ void TraderComponent::CreateItems()
 
       std::map<ItemType, int> itemsWeights =
       {
-        { ItemType::HEALING_POTION, 6 },
-        { ItemType::MANA_POTION, 6 },
-        { ItemType::HUNGER_POTION, 2 }
-        //{ ItemType::SCROLL, 2 }
+        { ItemType::HEALING_POTION, 1 },
+        { ItemType::MANA_POTION, 1 },
+        { ItemType::FOOD, 1 }
       };
 
       std::map<ItemPrefix, int> prefixWeights =
@@ -75,9 +75,20 @@ void TraderComponent::CreateItems()
             go = GameObjectsFactory::Instance().CreateManaPotion(prefixPair.first);
             break;
 
-          case ItemType::HUNGER_POTION:
-            go = GameObjectsFactory::Instance().CreateHungerPotion(prefixPair.first);
-            break;
+          case ItemType::FOOD:
+          {
+            std::map<FoodType, int> foodWeights =
+            {
+              { FoodType::RATIONS, 2 },
+              { FoodType::IRON_RATIONS, 1 },
+              { FoodType::BREAD, 3 },
+              { FoodType::CHEESE, 3 }
+            };
+
+            auto res = Util::WeightedRandom(foodWeights);
+            go = GameObjectsFactory::Instance().CreateFood(0, 0, res.first, prefixPair.first, true);
+          }
+          break;
         }
 
         Items.push_back(std::unique_ptr<GameObject>(go));

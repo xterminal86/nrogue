@@ -15,7 +15,7 @@ class TraderComponent : public Component
 
     void Update() override;
 
-    void Init(TraderRole traderType);
+    void Init(TraderRole traderType, int stockRefreshTurns);
     void RefreshStock();
 
     std::vector<std::unique_ptr<GameObject>> Items;
@@ -27,6 +27,7 @@ class TraderComponent : public Component
   private:
     int _itemsToCreate = 0;
     int _stockResetCounter = 0;
+    int _stockRefreshTurns = 0;
 
     TraderRole _traderType = TraderRole::NONE;
 

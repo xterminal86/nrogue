@@ -27,7 +27,7 @@ int main()
   Logger::Instance().Prepare(false);
 
   RNG::Instance().Init();
-  RNG::Instance().SetSeed(1);
+  //RNG::Instance().SetSeed(1);
 
   initscr();
   nodelay(stdscr, true);     // non-blocking getch()

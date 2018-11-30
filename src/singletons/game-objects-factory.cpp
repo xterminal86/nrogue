@@ -361,7 +361,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 
   return res;
 }
-GameObject* GameObjectsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride)
+GameObject* GameObjectsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride, bool isIdentified)
 {
   std::string name;
   int addsHunger = 0;
@@ -387,6 +387,7 @@ GameObject* GameObjectsFactory::CreateFood(int x, int y, FoodType type, ItemPref
   ic->Data.ItemType_ = ItemType::FOOD;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
+  ic->Data.IsIdentified = isIdentified;
 
   // Use Cost field to store amount of hunger replenished
   ic->Data.Cost = addsHunger;
@@ -698,7 +699,7 @@ void GameObjectsFactory::FoodUseHandler(ItemComponent* item)
   {
     Printer::Instance().AddMessage("It tasted OK");
 
-    _playerRef->Attrs.Hunger -= item->Data.Cost * 0.5f;
+    _playerRef->Attrs.Hunger -= item->Data.Cost * 0.75f;
     _playerRef->IsStarving = false;
   }
 
@@ -1315,6 +1316,8 @@ void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
           itemData.Durability.Set(itemData.Durability.OriginalValue / 2);
           itemData.Damage.CurrentValue--;
           itemData.Damage.OriginalValue--;
+          itemData.Damage.CurrentValue = Util::Clamp(itemData.Damage.CurrentValue, 1, itemData.Damage.CurrentValue);
+          itemData.Damage.OriginalValue = Util::Clamp(itemData.Damage.OriginalValue, 1, itemData.Damage.OriginalValue);
           break;
 
         case ItemPrefix::BLESSED:
@@ -1322,7 +1325,7 @@ void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
           itemData.Damage.CurrentValue *= 2;
           itemData.Damage.OriginalValue *= 2;
           break;
-      }
+      }      
     }
   }
 }

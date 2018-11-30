@@ -403,6 +403,11 @@ struct ItemData
       price = Cost;
     }
 
+    if (ItemType_ == ItemType::FOOD)
+    {
+      price *= 0.1f;
+    }
+
     if (IsStackable)
     {
       price *= Amount;

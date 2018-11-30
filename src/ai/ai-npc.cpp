@@ -440,7 +440,7 @@ void AINPC::SetDataMartin()
 
   TraderComponent* tc = AIComponentRef->OwnerGameObject->AddComponent<TraderComponent>();
   tc->NpcRef = this;
-  tc->Init(TraderRole::CLERIC);
+  tc->Init(TraderRole::CLERIC, 1000);
 }
 
 void AINPC::SetDataDefault()
