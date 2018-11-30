@@ -447,9 +447,16 @@ void MapLevelTown::CreateNPCs()
     visited.push_back(Position(emptyCells[index].X, emptyCells[index].Y));
   }
 
-  auto go = GameObjectsFactory::Instance().CreateNPC(83, 24, NPCType::MARTIN, true);
-  InsertActor(go);
+  GameObject* go = nullptr;
 
   go = GameObjectsFactory::Instance().CreateNPC(73, 24, NPCType::TIGRA);
+  InsertActor(go);
+
+  // Traders
+
+  go = GameObjectsFactory::Instance().CreateNPC(83, 24, NPCType::MARTIN, true);
+  InsertActor(go);
+
+  go = GameObjectsFactory::Instance().CreateNPC(80, 5, NPCType::CASEY, true);
   InsertActor(go);
 }

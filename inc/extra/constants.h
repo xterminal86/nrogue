@@ -116,7 +116,8 @@ enum class NPCType
   TIGRA,
   STEVE,
   GIMLEY,
-  MARTIN
+  MARTIN,
+  CASEY
 };
 
 enum class TraderRole
@@ -182,9 +183,10 @@ enum class WeaponType
 enum class FoodType
 {
   FIRST_ELEMENT = 0,
-  APPLE,
+  APPLE,  
   CHEESE,
   BREAD,
+  PIE,
   MEAT,
   RATIONS,
   IRON_RATIONS,
@@ -589,8 +591,9 @@ namespace GlobalConstants
   static const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =
   {
     { FoodType::APPLE, { "Apple", 15 } },
-    { FoodType::BREAD, { "Bread", 30 } },
-    { FoodType::CHEESE, { "Cheese", 40 } },
+    { FoodType::BREAD, { "Bread", 25 } },
+    { FoodType::CHEESE, { "Cheese", 30 } },
+    { FoodType::PIE, { "Cream Pie", 40 } },
     { FoodType::MEAT, { "Meat", 50 } },
     { FoodType::RATIONS, { "Rations", 75 } },
     { FoodType::IRON_RATIONS, { "Iron Rations", 100 } }

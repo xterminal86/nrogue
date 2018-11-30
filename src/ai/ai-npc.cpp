@@ -77,6 +77,10 @@ void AINPC::Init(NPCType type, bool standing)
       SetDataMartin();
       break;
 
+    case NPCType::CASEY:
+      SetDataCasey();
+      break;
+
     default:
       SetDataDefault();
       break;
@@ -441,6 +445,30 @@ void AINPC::SetDataMartin()
   TraderComponent* tc = AIComponentRef->OwnerGameObject->AddComponent<TraderComponent>();
   tc->NpcRef = this;
   tc->Init(TraderRole::CLERIC, 1000);
+}
+
+void AINPC::SetDataCasey()
+{
+  AIComponentRef->OwnerGameObject->ObjectName = "man";
+
+  Data.UnacquaintedDescription = "You see a man wearing white cook costume";
+  Data.Name = "Casey";
+  Data.Job = "Cook";
+
+  Data.NameResponse = "My name's Casey.";
+  Data.JobResponse = "I'm a Cook.";
+
+  Data.GossipResponsesByMap[MapType::TOWN] =
+  {
+    // =========================================================================== 80
+    {
+      "<PLACEHOLDER>"
+    }
+  };
+
+  TraderComponent* tc = AIComponentRef->OwnerGameObject->AddComponent<TraderComponent>();
+  tc->NpcRef = this;
+  tc->Init(TraderRole::COOK, 1000);
 }
 
 void AINPC::SetDataDefault()
