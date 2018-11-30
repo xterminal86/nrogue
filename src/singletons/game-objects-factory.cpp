@@ -976,8 +976,6 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
 
 ItemPrefix GameObjectsFactory::RollItemPrefix()
 {
-  int roll = RNG::Instance().RandomRange(0, 101);
-
   std::map<ItemPrefix, int> weights =
   {
     { ItemPrefix::UNCURSED, 5 },

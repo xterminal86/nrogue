@@ -167,9 +167,6 @@ void NPCInteractState::DisplayStillText()
 {
   Printer::Instance().Clear();
 
-  int tw = Printer::Instance().TerminalWidth;
-  int th = Printer::Instance().TerminalHeight;
-
   PrintHeader();
 
   int yPos = 4;

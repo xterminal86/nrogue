@@ -3,7 +3,7 @@
 #include "util.h"
 #include "rng.h"
 
-void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel> possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY)
+void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY)
 {  
   _roomsForLevel = possibleRooms;
 
@@ -409,13 +409,10 @@ void LevelBuilder::ConvertChunksToLayout()
     MapLayout.push_back(row);
   }
 
-  int x = 0;
-  int y = 0;
-
   for (auto& chunk : MapChunks)
   {
-    x = chunk.UpperLeftCorner.X;
-    y = chunk.UpperLeftCorner.Y;
+    int x = chunk.UpperLeftCorner.X;
+    int y = chunk.UpperLeftCorner.Y;
 
     for (auto& row : chunk.Layout)
     {
