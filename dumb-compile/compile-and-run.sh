@@ -8,7 +8,7 @@ fi
 
 cd $build_dir
 rm -rf *
-cmake3 ../../
+cmake -D CMAKE_BUILD_TYPE=Release ../../ || cmake3 -D CMAKE_BUILD_TYPE=Release ../../
 make -j4
 ./nrogue
 
