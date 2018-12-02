@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.6)
 set (TARGET_NAME nrogue)
 project (${TARGET_NAME})
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/components)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/levels)
