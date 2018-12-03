@@ -81,6 +81,10 @@ void AINPC::Init(NPCType type, bool standing)
       SetDataCasey();
       break;
 
+    case NPCType::MAYA:
+      SetDataMaya();
+      break;
+
     default:
       SetDataDefault();
       break;
@@ -432,7 +436,6 @@ void AINPC::SetDataMartin()
   Data.Job = "Cleric";
 
   Data.NameResponse = "I'm brother Martin.";
-  Data.JobResponse = "I'm a Cleric.";
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
@@ -456,7 +459,6 @@ void AINPC::SetDataCasey()
   Data.Job = "Cook";
 
   Data.NameResponse = "My name's Casey.";
-  Data.JobResponse = "I'm a Cook.";
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
@@ -472,6 +474,49 @@ void AINPC::SetDataCasey()
   TraderComponent* tc = AIComponentRef->OwnerGameObject->AddComponent<TraderComponent>();
   tc->NpcRef = this;
   tc->Init(TraderRole::COOK, 1000);
+}
+
+void AINPC::SetDataMaya()
+{
+  AIComponentRef->OwnerGameObject->ObjectName = "woman";
+
+  Data.IsMale = false;
+  Data.UnacquaintedDescription = "You see a blue-haired woman wearing strange clothes";
+  Data.Name = "Maya";
+  Data.Job = "Junker";
+
+  Data.NameResponse = "I'm Maya.";
+
+  Data.GossipResponsesByMap[MapType::TOWN] =
+  {
+    // =========================================================================== 80
+    {
+      "We, the Junkers, collect discarded and abandoned items.",
+      "And then we sell them to others for profit.",
+      "Yes, it probably isn't an honorable job, if you can even call it a job,",
+      "but there are always somebody willing to pay for the stuff we find.",
+      "The thing is, you never know WHAT you'll find, so it might be some",
+      "useless trinket, a cursed ring or a blessed artifact, who knows..."
+    },
+    {
+      "I know what I'm selling, but I won't tell you.",
+      "But you can bring any unidentified items to me and I'll buy them from you",
+      "for a higher price than they might be, if you identify them.",
+      "So it's a little bit of a fair deal, don't you think? ;-)"
+    },
+    {
+      "Me? I hail from the distant town called Oasis.",
+      "It's a long-long journey overseas, then across the barren lands,"
+      "mountains and canyons, further into the West...",
+      "I want to see the world as much as possible, that's why I'm here.",
+      "You cannot imagine how different all this looks compared to my homeland.",
+      "Everything is so green!"
+    }
+  };
+
+  TraderComponent* tc = AIComponentRef->OwnerGameObject->AddComponent<TraderComponent>();
+  tc->NpcRef = this;
+  tc->Init(TraderRole::JUNKER, 1000);
 }
 
 void AINPC::SetDataDefault()

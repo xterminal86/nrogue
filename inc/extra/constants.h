@@ -117,7 +117,8 @@ enum class NPCType
   STEVE,
   GIMLEY,
   MARTIN,
-  CASEY
+  CASEY,
+  MAYA
 };
 
 enum class TraderRole

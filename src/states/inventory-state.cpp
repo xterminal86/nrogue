@@ -362,12 +362,6 @@ void InventoryState::SortInventory()
     {
       int from = i + 1;
 
-      // If it's the last item, do nothing
-      if (from > inventory.size() - 1)
-      {
-        break;
-      }
-
       for (int j = from; j < inventory.size(); j++)
       {
         auto go2 = inventory.at(j).get();
