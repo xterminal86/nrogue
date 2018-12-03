@@ -516,6 +516,7 @@ GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
+  ic->Data.Cost = 250;
 
   ic->Data.IdentifiedDescription = { "They say drinking this will bring you to the next level.", "Whatever that means..." };
   ic->Data.IdentifiedName = "Clear Potion";
@@ -545,6 +546,7 @@ GameObject* GameObjectsFactory::CreateStatPotion(std::string statName, ItemPrefi
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
+  ic->Data.Cost = 500;
 
   auto str = Util::StringFormat("This will affect your %s", statName);
   ic->Data.IdentifiedDescription = { str };

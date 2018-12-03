@@ -28,75 +28,6 @@ void Player::Init()
   _previousCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell->Occupied = true;
-
-  // FIXME: remove afterwards
-
-#if 0
-  for (int i = 0; i < 40; i++)
-  {
-    auto go = GameObjectsFactory::Instance().CreateRandomPotion();
-    //auto go = GameObjectsFactory::Instance().CreateExpPotion();
-    //auto go = GameObjectsFactory::Instance().CreateHealingPotion(ItemPrefix::CURSED);
-    if (go != nullptr)
-    {
-      auto c = go->GetComponent<ItemComponent>();
-      //((ItemComponent*)c)->Data.IsIdentified = true;
-
-      /*
-      int res = RNG::Instance().RandomRange(0, 2);
-      if (res == 0) ((ItemComponent*)c)->Data.IsPrefixDiscovered = true;
-      */
-
-      go->PosX = 2 + i;
-      go->PosY = 1;
-
-      Map::Instance().InsertGameObject(go);
-    }
-
-    //auto msg = Util::StringFormat("Created 0x%X", go);
-    //Logger::Instance().Print(msg);
-  }
-
-  /*
-  for (int i = 0; i < 20; i++)
-  {
-    auto go = new GameObject(2, 2 + i, 'O', "#FFFFFF");
-    go->ObjectName = "Rock";
-
-    auto ic = go->AddComponent<ItemComponent>();    
-    ((ItemComponent*)ic)->Data.Description = { "This is a placeholder test object" };
-
-    Map::Instance().InsertGameObject(go);
-
-    //auto msg = Util::StringFormat("Created 0x%X", go);
-    //Logger::Instance().Print(msg);
-  }
-
-  for (int i = 0; i < 3; i++)
-  {
-    auto go = new GameObject(3 + i, 1, 'o', "#FFFFFF");
-
-    auto name = Util::StringFormat("Ring %i", i);
-    go->ObjectName = name;
-
-    auto ic = go->AddComponent<ItemComponent>();
-    ((ItemComponent*)ic)->Data.EqCategory = EquipmentCategory::RING;
-    ((ItemComponent*)ic)->Data.Description = { "This is a placeholder equippable object" };
-
-    Map::Instance().InsertGameObject(go);
-  }
-
-  auto go = new GameObject(10, 1, 'O', "#FFFFFF");
-  go->ObjectName = "Medallion";
-
-  auto ic = go->AddComponent<ItemComponent>();
-  ((ItemComponent*)ic)->Data.EqCategory = EquipmentCategory::NECK;
-  ((ItemComponent*)ic)->Data.Description = { "This is a placeholder equippable object" };
-
-  Map::Instance().InsertGameObject(go);
-  */
-#endif
-
 }
 
 void Player::Draw()
@@ -356,6 +287,7 @@ void Player::SetDefaultEquipment()
   EquipmentByCategory[EquipmentCategory::LEGS] = { nullptr };
   EquipmentByCategory[EquipmentCategory::BOOTS] = { nullptr };
   EquipmentByCategory[EquipmentCategory::WEAPON] = { nullptr };
+  EquipmentByCategory[EquipmentCategory::SHIELD] = { nullptr };
   EquipmentByCategory[EquipmentCategory::RING] = { nullptr, nullptr };
 
   // TODO: assign default equipment according to selected class
@@ -716,7 +648,9 @@ bool Player::CanRaiseAttribute(Attribute& attr)
 
 void Player::ProcessKill(GameObject* monster)
 {
-  int defaultExp = monster->Attrs.Rating();
+  // FIXME: experience for monsters
+
+  int defaultExp = monster->Attrs.Rating() - Attrs.Rating();
   int exp = defaultExp;
 
   exp = Util::Clamp(exp, 1, GlobalConstants::AwardedExpMax);
@@ -975,7 +909,7 @@ bool Player::DoesWeaponLosesDurability(int chance)
 {
   if (Util::Rolld100(chance))
   {
-    EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.Add(-1);    
+    EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.Add(-1);
     //auto dbg = Util::StringFormat("Durability: %i / %i", EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue, EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.OriginalValue);
     //Logger::Instance().Print(dbg);
 

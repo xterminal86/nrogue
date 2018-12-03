@@ -108,7 +108,8 @@ void Application::ShowMessageBox(MessageBoxType type, std::string header, std::v
   _previousState = _currentState;
 
   auto ptr = _gameStates[GameStates::MESSAGE_BOX_STATE].get();
-  ((MessageBoxState*)ptr)->SetMessage(type, header, message, borderColor, bgColor);
+  MessageBoxState* mbs = static_cast<MessageBoxState*>(ptr);
+  mbs->SetMessage(type, header, message, borderColor, bgColor);
 
   _currentState = ptr;
 }

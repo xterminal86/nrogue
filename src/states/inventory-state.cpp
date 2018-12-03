@@ -115,6 +115,10 @@ void InventoryState::HandleInput()
     }
     break;
 
+    case 's':
+      SortInventory();
+      break;
+
     case 't':
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Not implemented yet!" });
       break;
@@ -215,6 +219,9 @@ void InventoryState::DisplayEquipment()
   eq = _playerRef->EquipmentByCategory[EquipmentCategory::TORSO][0];
   DrawEquipmentField(tw + 10, yPos + 3, "Torso", eq);
 
+  eq = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+  DrawEquipmentField(tw + 24, yPos + 3, "Shield", eq);
+
   eq = _playerRef->EquipmentByCategory[EquipmentCategory::LEGS][0];
   DrawEquipmentField(tw + 10, yPos + 6, "Legs", eq);
 
@@ -248,13 +255,50 @@ void InventoryState::PrintFooter()
   int tw = Printer::Instance().TerminalWidth;
   int th = Printer::Instance().TerminalHeight;
 
-  int part = tw / 5;
+  int part = tw / 6;
 
-  Printer::Instance().PrintFB(tw / 2 - part * 2, th - 1, "'i' - inspect", Printer::kAlignCenter, "#FFFFFF");
-  Printer::Instance().PrintFB(tw / 2 - part, th - 1, "'e' - equip", Printer::kAlignCenter, "#FFFFFF");
-  Printer::Instance().PrintFB(tw / 2, th - 1, "'u' - use", Printer::kAlignCenter, "#FFFFFF");
-  Printer::Instance().PrintFB(tw / 2 + part, th - 1, "'d' - drop", Printer::kAlignCenter, "#FFFFFF");
-  Printer::Instance().PrintFB(tw / 2 + part * 2, th - 1, "'t' - throw", Printer::kAlignCenter, "#FFFFFF");
+  std::vector<std::string> footer =
+  {
+    "'i' - inspect",
+    "'e' - equip",
+    "'s' - sort",
+    "'u' - use",
+    "'d' - drop",
+    "'t' - throw"
+  };
+
+  int additive = 0;
+
+  int counter = 0;
+  for (int i = 0; i < 3; i++)
+  {
+    std::string tmp = footer[i];
+    tmp.resize(part, ' ');
+
+    additive = (counter > 0) ? 3 : 0;
+
+    Printer::Instance().PrintFB(counter * part + additive, th - 1, tmp, Printer::kAlignLeft, "#FFFFFF");
+    counter++;
+  }
+
+  counter = 0;
+  additive = 0;
+
+  for (int i = 3; i < footer.size(); i++)
+  {
+    int d = part - footer[i].length();
+
+    std::string tmp = footer[i];
+    for (int j = 0; j < d; j++)
+    {
+      tmp.insert(0, " ");
+    }
+
+    additive = (counter < 2) ? 1 : 0;
+
+    Printer::Instance().PrintFB(tw / 2 + 1 + counter * part - additive, th - 1, tmp, Printer::kAlignLeft, "#FFFFFF");
+    counter++;
+  }
 }
 
 void InventoryState::DestroyInventoryItem()
@@ -303,5 +347,39 @@ void InventoryState::DrawSelectionBar(int yOffset, std::string& text, std::strin
   else
   {
     Printer::Instance().PrintFB(0, 2 + yOffset, text, Printer::kAlignLeft, textColor);
+  }
+}
+
+void InventoryState::SortInventory()
+{
+  std::vector<std::unique_ptr<GameObject>>& inventory = _playerRef->Inventory.Contents;
+
+  for (int i = 0; i < inventory.size(); i++)
+  {
+    auto go1 = inventory.at(i).get();
+    ItemComponent* currentItem = go1->GetComponent<ItemComponent>();
+    if (currentItem->Data.IsIdentified && currentItem->Data.IsStackable)
+    {
+      int from = i + 1;
+
+      // If it's the last item, do nothing
+      if (from > inventory.size() - 1)
+      {
+        break;
+      }
+
+      for (int j = from; j < inventory.size(); j++)
+      {
+        auto go2 = inventory.at(j).get();
+        ItemComponent* nextItem = go2->GetComponent<ItemComponent>();
+        if (nextItem->Data.IsIdentified
+         && nextItem->Data.IsStackable
+         && currentItem->Data.ItemTypeHash == nextItem->Data.ItemTypeHash)
+        {
+          currentItem->Data.Amount++;
+          inventory.erase(inventory.begin() + j);
+        }
+      }
+    }
   }
 }

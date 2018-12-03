@@ -146,6 +146,7 @@ enum class EquipmentCategory
   LEGS,
   BOOTS,
   WEAPON,
+  SHIELD,
   RING
 };
 

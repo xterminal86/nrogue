@@ -204,7 +204,7 @@ void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
 
 void MapLevelMines::CreateLevel()
 {
-  VisibilityRadius = 5;
+  VisibilityRadius = 4;
   MonstersRespawnTurns = 1000;
 
   Tile t;
