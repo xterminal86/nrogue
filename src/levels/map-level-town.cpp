@@ -459,4 +459,7 @@ void MapLevelTown::CreateNPCs()
 
   go = GameObjectsFactory::Instance().CreateNPC(80, 5, NPCType::CASEY, true);
   InsertActor(go);
+
+  go = GameObjectsFactory::Instance().CreateNPC(65, 5, NPCType::MAYA, true);
+  InsertActor(go);
 }

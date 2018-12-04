@@ -492,23 +492,28 @@ void AINPC::SetDataMaya()
     // =========================================================================== 80
     {
       "We, the Junkers, collect discarded and abandoned items.",
-      "And then we sell them to others for profit.",
-      "Yes, it probably isn't an honorable job, if you can even call it a job,",
-      "but there are always somebody willing to pay for the stuff we find.",
-      "The thing is, you never know WHAT you'll find, so it might be some",
-      "useless trinket, a cursed ring or a blessed artifact, who knows..."
+      "Our culture revolves around it - we believe every item is usable",
+      "as long as it's not destroyed completely.",
+      "Because of this \"junky\" business, people think that we're some kind of",
+      "a poor and homeless group of outcasts, making their living by rummaging",
+      "through piles of garbage, hoping to find food or random valuable items.",
+      "Well, it may look repulsive and suspicious, but the thing is,",
+      "you never know WHAT you'll find, so it might be some",
+      "useless trinket, a cursed ring or a blessed artifact, who knows...",
+      "And there are always somebody willing to pay for it."
     },
     {
-      "I know what I'm selling, but I won't tell you.",
+      "I don't know what I'm selling, so you buy at your own risk.",
       "But you can bring any unidentified items to me and I'll buy them from you",
       "for a higher price than they might be, if you identify them.",
       "So it's a little bit of a fair deal, don't you think? ;-)"
     },
     {
-      "Me? I hail from the distant town called Oasis.",
-      "It's a long-long journey overseas, then across the barren lands,"
+      "I hail from a distant town called Oasis.",
+      "It's a long-long journey overseas, then across the barren lands,",
       "mountains and canyons, further into the West...",
-      "I want to see the world as much as possible, that's why I'm here.",
+      "I just want to see the world as much as possible,",
+      "that's why I'm so far away from home.",
       "You cannot imagine how different all this looks compared to my homeland.",
       "Everything is so green!"
     }
