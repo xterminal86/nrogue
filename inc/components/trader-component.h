@@ -15,7 +15,7 @@ class TraderComponent : public Component
 
     void Update() override;
 
-    void Init(TraderRole traderType, int stockRefreshTurns);
+    void Init(TraderRole traderType, int stockRefreshTurns, int maxItems);
     void RefreshStock();
 
     std::vector<std::unique_ptr<GameObject>> Items;
@@ -24,7 +24,12 @@ class TraderComponent : public Component
 
     AINPC* NpcRef = nullptr;
 
-  private:
+    TraderRole Type()
+    {
+      return _traderType;
+    }
+
+  private:    
     int _itemsToCreate = 0;
     int _stockResetCounter = 0;
     int _stockRefreshTurns = 0;

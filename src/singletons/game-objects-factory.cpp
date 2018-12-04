@@ -767,7 +767,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 15;
+      baseDurability = 30;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -784,7 +784,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 20;
+      baseDurability = 50;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -801,7 +801,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 25;
+      baseDurability = 70;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -818,7 +818,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 35;
+      baseDurability = 90;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -836,7 +836,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 50;
+      baseDurability = 120;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -854,7 +854,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 10;
+      baseDurability = 30;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -866,7 +866,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
     break;
   }
 
-  int durability = baseDurability + (baseDurability / 10) + dungeonLevel;
+  int durability = baseDurability + (baseDurability * 0.1f) + dungeonLevel;
   ic->Data.Durability.Set(durability);
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";

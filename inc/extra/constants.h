@@ -417,13 +417,20 @@ struct ItemData
       price *= Amount;
     }
 
-    if (Prefix == ItemPrefix::BLESSED)
+    if (IsIdentified)
     {
-      price *= 2;
+      if (Prefix == ItemPrefix::BLESSED)
+      {
+        price *= 2;
+      }
+      else if (Prefix == ItemPrefix::CURSED)
+      {
+        price *= 0.5f;
+      }
     }
-    else if (Prefix == ItemPrefix::CURSED)
+    else
     {
-      price /= 2;
+      price *= 0.5f;
     }
 
     return price;
@@ -469,7 +476,6 @@ namespace GlobalConstants
   static const int ItemSpawnMinArea = 25 * 25;
   static const int InventoryMaxNameLength = 20;
   static const int InventoryMaxSize = 20;
-  static const int WeaponDurabilityLostChance = 20;
 
   static const std::string BlackColor = "#000000";
   static const std::string WhiteColor = "#FFFFFF";

@@ -132,6 +132,12 @@ void ShoppingState::DisplayPlayerInventory()
 
     int cost = ic->Data.GetCost() / _kPlayerSellRate;
 
+    if (!ic->Data.IsIdentified
+     && _shopOwner->Type() == TraderRole::JUNKER)
+    {
+      cost *= 2;
+    }
+
     costString = Util::StringFormat(" $ %i", cost);
 
     Printer::Instance().PrintFB(extraInfoStringPosX + itemStringTotalLen, yPos + index, costString, Printer::kAlignLeft, GlobalConstants::CoinsColor);
@@ -314,6 +320,12 @@ void ShoppingState::BuyOrSellItem()
     }
 
     int cost = ic->Data.GetCost() / _kPlayerSellRate;
+
+    if (!ic->Data.IsIdentified
+     && _shopOwner->Type() == TraderRole::JUNKER)
+    {
+      cost *= 2;
+    }
 
     _playerRef->Money += cost;
 

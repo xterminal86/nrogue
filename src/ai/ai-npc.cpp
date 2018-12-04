@@ -447,7 +447,7 @@ void AINPC::SetDataMartin()
 
   TraderComponent* tc = AIComponentRef->OwnerGameObject->AddComponent<TraderComponent>();
   tc->NpcRef = this;
-  tc->Init(TraderRole::CLERIC, 1000);
+  tc->Init(TraderRole::CLERIC, 1000, 10);
 }
 
 void AINPC::SetDataCasey()
@@ -473,7 +473,7 @@ void AINPC::SetDataCasey()
 
   TraderComponent* tc = AIComponentRef->OwnerGameObject->AddComponent<TraderComponent>();
   tc->NpcRef = this;
-  tc->Init(TraderRole::COOK, 1000);
+  tc->Init(TraderRole::COOK, 1000, 15);
 }
 
 void AINPC::SetDataMaya()
@@ -521,7 +521,7 @@ void AINPC::SetDataMaya()
 
   TraderComponent* tc = AIComponentRef->OwnerGameObject->AddComponent<TraderComponent>();
   tc->NpcRef = this;
-  tc->Init(TraderRole::JUNKER, 1000);
+  tc->Init(TraderRole::JUNKER, 1000, 5);
 }
 
 void AINPC::SetDataDefault()

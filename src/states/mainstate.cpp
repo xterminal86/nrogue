@@ -539,8 +539,19 @@ void MainState::DisplayStatusIcons()
     int part = hungerMax - hungerMax * 0.25;
     if (_playerRef->Attrs.Hunger >= part)
     {
-      int th = Printer::Instance().TerminalHeight;
       Printer::Instance().PrintFB(3, th - 3, '%', "#FFFF00");
+    }
+  }
+
+  ItemComponent* weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  if (weapon != nullptr)
+  {
+    int maxDur = weapon->Data.Durability.OriginalValue;
+    int warning = maxDur * 0.2f;
+
+    if (weapon->Data.Durability.CurrentValue <= warning)
+    {
+      Printer::Instance().PrintFB(5, th - 3, ')', "#FFFF00");
     }
   }
 }

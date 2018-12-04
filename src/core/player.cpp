@@ -330,10 +330,8 @@ void Player::Attack(GameObject* go)
     Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs);
 
     if (EquipmentByCategory[EquipmentCategory::WEAPON][0] != nullptr
-     && DoesWeaponLosesDurability())
+     && WeaponLosesDurability())
     {
-      Printer::Instance().AddMessage("Your weapon lost durability");
-
       if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue == 0)
       {
         BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);
@@ -387,7 +385,7 @@ void Player::Attack(GameObject* go)
           weaponDamage += res;
         }                
 
-        durabilityLost = DoesWeaponLosesDurability();
+        durabilityLost = WeaponLosesDurability();
       }
 
       int totalDmg = weaponDamage;
@@ -409,8 +407,6 @@ void Player::Attack(GameObject* go)
 
       if (durabilityLost)
       {
-        Printer::Instance().AddMessage("Your weapon lost durability");
-
         if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue == 0)
         {
           BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);
@@ -905,18 +901,11 @@ void Player::SetArcanistDefaultItems()
   Inventory.AddToInventory(go);
 }
 
-bool Player::DoesWeaponLosesDurability(int chance)
+bool Player::WeaponLosesDurability()
 {
-  if (Util::Rolld100(chance))
-  {
-    EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.Add(-1);
-    //auto dbg = Util::StringFormat("Durability: %i / %i", EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue, EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.OriginalValue);
-    //Logger::Instance().Print(dbg);
+  EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.Add(-1);
 
-    return true;
-  }
-
-  return false;
+  return true;
 }
 
 void Player::SetStatsModifiers(ItemData& itemData)

@@ -82,7 +82,7 @@ class Player : public GameObject
     bool CanRaiseAttribute(Attribute& attr);
     void ProcessKill(GameObject* monster);
 
-    bool DoesWeaponLosesDurability(int chance = GlobalConstants::WeaponDurabilityLostChance);
+    bool WeaponLosesDurability();
     void BreakItem(ItemComponent* ic);
 
     void SwitchPlaces(AIComponent* other);
