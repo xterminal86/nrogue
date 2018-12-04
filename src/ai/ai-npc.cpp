@@ -500,11 +500,11 @@ void AINPC::SetDataMaya()
       "Well, it may look repulsive and suspicious, but the thing is,",
       "you never know WHAT you'll find, so it might be some",
       "useless trinket, a cursed ring or a blessed artifact, who knows...",
-      "And there are always somebody willing to pay for it."
+      "And there is always somebody willing to pay for it."
     },
     {
       "I don't know what I'm selling, so you buy at your own risk.",
-      "But you can bring any unidentified items to me and I'll buy them from you",
+      "But you can bring me any unidentified items and I'll buy them from you",
       "for a higher price than they might be, if you identify them.",
       "So it's a little bit of a fair deal, don't you think? ;-)"
     },

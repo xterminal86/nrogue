@@ -13,13 +13,13 @@ void TraderComponent::Init(TraderRole traderType, int stockRefreshTurns, int max
 {
   _traderType = traderType;
   _stockRefreshTurns = stockRefreshTurns;
-  _itemsToCreate = maxItems;
+  _maxItems = maxItems;
   RefreshStock();
 }
 
 void TraderComponent::RefreshStock()
 {
-  _itemsToCreate = RNG::Instance().RandomRange(1, _itemsToCreate + 1);
+  _itemsToCreate = RNG::Instance().RandomRange(1, _maxItems + 1);
 
   Items.clear();
   CreateItems();
@@ -124,7 +124,7 @@ void TraderComponent::CreateItems()
 
       for (int i = 0; i < _itemsToCreate; i++)
       {
-        GameObject* go = GameObjectsFactory::Instance().CreateRandomItem(0, 0);
+        GameObject* go = GameObjectsFactory::Instance().CreateRandomItem(0, 0, ItemType::COINS);
         Items.push_back(std::unique_ptr<GameObject>(go));
       }
     }

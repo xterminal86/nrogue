@@ -130,13 +130,7 @@ void ShoppingState::DisplayPlayerInventory()
 
     Printer::Instance().PrintFB(extraInfoStringPosX, yPos + index, extraInfo, Printer::kAlignLeft, "#FFFFFF");
 
-    int cost = ic->Data.GetCost() / _kPlayerSellRate;
-
-    if (!ic->Data.IsIdentified
-     && _shopOwner->Type() == TraderRole::JUNKER)
-    {
-      cost *= 2;
-    }
+    int cost = GetCost(ic, true);
 
     costString = Util::StringFormat(" $ %i", cost);
 
@@ -196,7 +190,7 @@ void ShoppingState::DisplayShopInventory()
 
     Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1, yPos + index, extraInfo, Printer::kAlignRight, "#FFFFFF");
 
-    int cost = ic->Data.GetCost();
+    int cost = GetCost(ic, false);
 
     std::string costString = Util::StringFormat("%i $ ", cost);
 
@@ -319,13 +313,7 @@ void ShoppingState::BuyOrSellItem()
       return;
     }
 
-    int cost = ic->Data.GetCost() / _kPlayerSellRate;
-
-    if (!ic->Data.IsIdentified
-     && _shopOwner->Type() == TraderRole::JUNKER)
-    {
-      cost *= 2;
-    }
+    int cost = GetCost(ic, true);
 
     _playerRef->Money += cost;
 
@@ -342,12 +330,17 @@ void ShoppingState::BuyOrSellItem()
       return;
     }
 
-    int cost = ic->Data.GetCost();
+    int cost = GetCost(ic, false);
 
     _playerRef->Money -= cost;
 
     go = _shopOwner->Items[_inventoryItemIndex].release();
     ic = go->GetComponent<ItemComponent>();
+
+    if (_shopOwner->Type() == TraderRole::JUNKER)
+    {
+      ic->Data.IsIdentified = true;
+    }
 
     ic->Transfer(&_playerRef->Inventory);
 
@@ -372,7 +365,7 @@ void ShoppingState::CheckSide()
 
 bool ShoppingState::CanBeBought(ItemComponent *ic)
 {
-  int cost = ic->Data.GetCost();
+  int cost = GetCost(ic, false);
 
   if (_playerRef->Money < cost)
   {
@@ -386,4 +379,31 @@ bool ShoppingState::CanBeBought(ItemComponent *ic)
   }
 
   return true;
+}
+
+int ShoppingState::GetCost(ItemComponent* ic, bool playerSide)
+{
+  int cost = ic->Data.GetCost();
+
+  if (!playerSide)
+  {
+    cost *= 2;
+
+    if (_shopOwner->Type() == TraderRole::JUNKER)
+    {
+      cost = 50;
+    }
+  }
+  else
+  {
+    cost /= _kPlayerSellRate;
+
+    if (!ic->Data.IsIdentified
+     && _shopOwner->Type() == TraderRole::JUNKER)
+    {
+      cost *= 2;
+    }
+  }
+
+  return cost;
 }

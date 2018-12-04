@@ -19,6 +19,9 @@ void Player::Init()
   FgColor = GlobalConstants::PlayerColor;
   Attrs.ActionMeter = 100;
 
+  // FIXME: remove
+  Money = 1000;
+
   Inventory.MaxCapacity = GlobalConstants::InventoryMaxSize;
 
   SetAttributes();

@@ -40,6 +40,8 @@ class ShoppingState : public GameState
 
     int GetItemStringTotalLen(std::vector<std::unique_ptr<GameObject>>& container);
 
+    int GetCost(ItemComponent* ic, bool playerSide);
+
     std::string GetItemExtraInfo(ItemComponent* item);
     std::string GetItemTextColor(ItemComponent* item);
 };

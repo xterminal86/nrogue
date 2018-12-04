@@ -428,10 +428,6 @@ struct ItemData
         price *= 0.5f;
       }
     }
-    else
-    {
-      price *= 0.5f;
-    }
 
     return price;
   }

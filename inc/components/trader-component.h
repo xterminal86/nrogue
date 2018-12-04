@@ -30,6 +30,7 @@ class TraderComponent : public Component
     }
 
   private:    
+    int _maxItems = 0;
     int _itemsToCreate = 0;
     int _stockResetCounter = 0;
     int _stockRefreshTurns = 0;

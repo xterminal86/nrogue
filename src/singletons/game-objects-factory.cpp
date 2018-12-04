@@ -548,7 +548,7 @@ GameObject* GameObjectsFactory::CreateStatPotion(std::string statName, ItemPrefi
   ic->Data.IsIdentified = true;
   ic->Data.Cost = 500;
 
-  auto str = Util::StringFormat("This will affect your %s", statName);
+  auto str = Util::StringFormat("This will affect your %s", statName.data());
   ic->Data.IdentifiedDescription = { str };
 
   ic->Data.IdentifiedName = "Radiant Potion";
@@ -586,7 +586,7 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
   ic->Data.UnidentifiedName = "?" + kvp.first + "?";
   ic->Data.IdentifiedName = kvp.first;
 
-  ic->Data.Prefix = RollItemPrefix();
+  // Prefix is rolled inside CreateGameObject()->...
 
   SetItemName(go, ic->Data);
 
@@ -609,7 +609,7 @@ GameObject* GameObjectsFactory::CreateRandomWeapon()
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateRandomItem(int x, int y)
+GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 {
   GameObject* go = nullptr;
 
@@ -620,6 +620,13 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y)
     ItemType::POTION,
     ItemType::FOOD
   };
+
+  auto findRes = std::find(possibleItems.begin(), possibleItems.end(), exclude);
+
+  if (findRes != possibleItems.end())
+  {
+    possibleItems.erase(findRes);
+  }
 
   std::map<FoodType, int> foodMap =
   {
@@ -1240,9 +1247,9 @@ void GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
     Printer::Instance().AddMessage("You lose some experience!");
   }
 
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
-
   _playerRef->AwardExperience(amount);
+
+  Application::Instance().ChangeState(GameStates::MAIN_STATE);
 }
 
 void GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
@@ -1301,6 +1308,8 @@ void GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
   }
 
   playerStats.at(itemType).Set(newValue);
+
+  Application::Instance().ChangeState(GameStates::MAIN_STATE);
 }
 
 void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)

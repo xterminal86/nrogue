@@ -421,6 +421,12 @@ void MapLevelTown::CreateNPCs()
     {
       for (int y = 1; y <= MapSize.Y - 1; y++)
       {
+        // skip player house
+        if (x >= 4 && x <= 6 && y >= 4 && y <= 6)
+        {
+          continue;
+        }
+
         bool alreadyAdded = false;
 
         for (auto& c : visited)

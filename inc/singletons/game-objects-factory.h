@@ -36,7 +36,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateRandomPotion();
     GameObject* CreateRandomWeapon();
 
-    GameObject* CreateRandomItem(int x, int y);
+    GameObject* CreateRandomItem(int x, int y, ItemType exclude = ItemType::NOTHING);
 
     /// Creates stairs on MapArray of current level
     void CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, chtype image, MapType leadsTo);
