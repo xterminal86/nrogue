@@ -547,7 +547,7 @@ void MainState::DisplayStatusIcons()
   if (weapon != nullptr)
   {
     int maxDur = weapon->Data.Durability.OriginalValue;
-    int warning = maxDur * 0.2f;
+    int warning = maxDur * 0.3f;
 
     if (weapon->Data.Durability.CurrentValue <= warning)
     {

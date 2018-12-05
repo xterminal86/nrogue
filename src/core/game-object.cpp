@@ -124,6 +124,12 @@ void GameObject::ReceiveDamage(GameObject* from, int amount)
 
 void GameObject::WaitForTurn()
 {
+  // In towns SPD is ignored
+  if (Map::Instance().CurrentLevel->Peaceful)
+  {
+    Attrs.ActionMeter = 99;
+  }
+
   int amount = (Attrs.Spd.CurrentValue + 1) * 10;
   Attrs.ActionMeter += amount;
 }
