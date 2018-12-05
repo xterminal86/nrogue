@@ -774,7 +774,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 30;
+      baseDurability = 15;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -791,7 +791,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 50;
+      baseDurability = 25;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -808,7 +808,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 70;
+      baseDurability = 35;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -825,7 +825,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 90;
+      baseDurability = 45;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -843,7 +843,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 120;
+      baseDurability = 60;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -861,19 +861,20 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 30;
+      baseDurability = 15;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
 
-      ic->Data.StatBonuses[StatsEnum::STR] = 1;
-      ic->Data.StatBonuses[StatsEnum::DEF] = 2;
+      ic->Data.StatBonuses[StatsEnum::DEF] = 1;
       ic->Data.StatBonuses[StatsEnum::SPD] = -1;
     }
     break;
   }
 
-  int durability = baseDurability + (baseDurability * 0.1f) + dungeonLevel;
+  int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1f) + dungeonLevel;
+
+  int durability = baseDurability + randomDurAdd;
   ic->Data.Durability.Set(durability);
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";

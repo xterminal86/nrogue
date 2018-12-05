@@ -19,9 +19,6 @@ void Player::Init()
   FgColor = GlobalConstants::PlayerColor;
   Attrs.ActionMeter = 100;
 
-  // FIXME: remove
-  Money = 1000;
-
   Inventory.MaxCapacity = GlobalConstants::InventoryMaxSize;
 
   SetAttributes();
@@ -114,25 +111,6 @@ void Player::CheckVisibility()
 {  
   int tw = Printer::Instance().TerminalWidth;
   int th = Printer::Instance().TerminalHeight;
-
-  // FIXME: think
-  //
-  // Should we compensate for different terminal sizes,
-  // so we get more circle-like visible area around player?
-  /*
-
-  int vrx = VisibilityRadius;
-  int vry = VisibilityRadius;
-
-  if (tw > th)
-  {
-    vry /= 2;
-  }
-  else if (tw < th)
-  {
-    vrx /= 2;
-  }
-  */
 
   // Update map around player
 
@@ -647,8 +625,6 @@ bool Player::CanRaiseAttribute(Attribute& attr)
 
 void Player::ProcessKill(GameObject* monster)
 {
-  // FIXME: experience for monsters
-
   int defaultExp = monster->Attrs.Rating() - Attrs.Rating();
   int exp = defaultExp;
 
@@ -884,13 +860,12 @@ void Player::SetSoldierDefaultItems()
 
 void Player::SetThiefDefaultItems()
 {
+  Money = 100;
+
   auto go = GameObjectsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
   Inventory.AddToInventory(go);
 
   go = GameObjectsFactory::Instance().CreateManaPotion(ItemPrefix::UNCURSED);
-  Inventory.AddToInventory(go);
-
-  go = GameObjectsFactory::Instance().CreateMoney(100);
   Inventory.AddToInventory(go);  
 }
 

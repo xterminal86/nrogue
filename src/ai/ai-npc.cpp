@@ -37,7 +37,7 @@ void AINPC::Init(NPCType type, bool standing)
   _npcType = type;
   Data.IsStanding = standing;
 
-  // FIXME: moar?
+  // TODO: moar?
 
   switch (_npcType)
   {
@@ -308,7 +308,7 @@ void AINPC::SetDataTigra()
     },
     {
       "My parents are... not around anymore.",
-      "Our priest was kind enough to adopt me, so I'm staying at the chapel now."
+      "Our priest was kind enough to adopt me so I'm staying at the chapel now."
     }
   };
 }
@@ -350,7 +350,7 @@ void AINPC::SetDataSteve()
       "I've been working in these mines for almost eight years now.",
       "I never heard or saw anything that would be even remotely",
       "connected to those stories you may hear.",
-      "Just think for yourself: how can something like",
+      "Just think for yourself: how could something like",
       "that happened in a such small and isolated place like this,",
       "where people know each other since childhood,",
       "yet nobody says he knows or heard anything?"
@@ -358,7 +358,7 @@ void AINPC::SetDataSteve()
     {
       "Business has been pretty much frozen since those events started.",
       "I'm thinking on going to the City for earnings.",
-      "I wonder, why they never bothered to send some guards,",
+      "I wonder, why they never bothered to send some guards",
       "or soldiers or whatever here to look into our situation?"
     },
     {
@@ -369,7 +369,7 @@ void AINPC::SetDataSteve()
       "Or a place that literally looks pretty much like how you imagine Hell,",
       "with red color everywhere, fire, lava,",
       "and even soil itself sometimes is made of flesh?",
-      "There was also a great desert, with nothing but dust,",
+      "There was also a great desert with nothing but dust,",
       "stretching all the way to the horizon and beyond in all directions.",
       "If you dig here and there you might discover that under it lie ruins of",
       "some ancient city of some advanced civilization!",
@@ -499,14 +499,14 @@ void AINPC::SetDataMaya()
       "through piles of garbage, hoping to find food or random valuable items.",
       "Well, it may look repulsive and suspicious, but the thing is,",
       "you never know WHAT you'll find, so it might be some",
-      "useless trinket, a cursed ring or a blessed artifact, who knows...",
-      "And there is always somebody willing to pay for it."
+      "useless trinket, a cursed ring or a blessed artifact, who knows..."
     },
     {
-      "I don't know what I'm selling, so you buy at your own risk.",
-      "But you can bring me any unidentified items and I'll buy them from you",
-      "for a higher price than they might be, if you identify them.",
-      "So it's a little bit of a fair deal, don't you think? ;-)"
+      "Think of my services as a gambling - you can try to buy something",
+      "if you're feeling lucky and have money to spare.",
+      "Also you can bring me any unidentified items and I'll buy them from you",
+      "for a higher price than if they were identified.",
+      "So it's kind of a compensation for the risk, don't you think? ;-)"
     },
     {
       "I hail from a distant town called Oasis.",

@@ -168,7 +168,7 @@ void MainState::HandleInput()
         // If player waits, game objects take their turns,
         // while player action meter is not spent.
         //
-        // FIXME: think on better approach
+        // FIXME: maybe think on some better approach
 
         //Map::Instance().UpdateGameObjects();
         _playerRef->FinishTurn();
