@@ -939,6 +939,7 @@ void Player::SwitchPlaces(AIComponent* other)
 
   MoveGameObject(dxPlayer, dyPlayer);
   other->OwnerGameObject->Move(dxNpc, dyNpc);
+  other->OwnerGameObject->FinishTurn();
 
   Map::Instance().CurrentLevel->AdjustCamera();
 
