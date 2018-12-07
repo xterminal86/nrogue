@@ -41,7 +41,7 @@ class MainState : public GameState
 
     std::vector<std::string> _helpText =
     {
-      R"('q' - Cancel / Exit Game      )",
+      R"('q' - Cancel / Close menu     )",
       R"('a' - Attack                  )",
       R"('i' - Interact                )",
       R"('l' - Enter "look mode"       )",
@@ -51,7 +51,8 @@ class MainState : public GameState
       R"('$' - Count your money        )",
       R"('g' - Get item from the ground)",
       R"('>' - Go down the stairs      )",
-      R"('<' - Go up the stairs        )"
+      R"('<' - Go up the stairs        )",
+      R"('Q' - Exit game               )"
     };
 };
 

@@ -225,7 +225,7 @@ void MainState::HandleInput()
         DisplayHelp();
         break;
 
-      case 'q':
+      case 'Q':
         Application::Instance().ChangeState(GameStates::EXITING_STATE);
         break;
 
