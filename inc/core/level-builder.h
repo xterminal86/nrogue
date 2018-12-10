@@ -8,6 +8,7 @@
 
 struct MapCell
 {
+  char Image = '#';
   Position Coordinates;
   bool Visited = false;
 };
@@ -16,12 +17,14 @@ class LevelBuilder
 {
   public:
     void BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY);
+    void RecursiveBacktracker(Position mapSize, Position startingPoint = { -1, -1 });
     void PrintResult();
 
     std::vector<RoomHelper> MapChunks;
     std::vector<std::vector<char>> MapLayout;
 
   private:
+    std::vector<std::vector<MapCell>> _map;
     std::vector<std::vector<MapCell>> _visitedCells;
 
     std::stack<RoomHelper> _rooms;
@@ -66,6 +69,10 @@ class LevelBuilder
     Position _startingPoint;
 
     std::vector<RoomHelper> GetRoomsForLayout(RoomLayout& layout, RoomEdgeEnum side);
+
+    std::vector<std::vector<MapCell>> CreateEmptyMap(int w, int h);
+    std::vector<Position> GetWallAroundPoint(Position p);
+    std::pair<Position, std::vector<Position>> CheckCorridor(RoomEdgeEnum dir, Position p, int length);
 
     void TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side);
     void PrintChunks();

@@ -8,11 +8,12 @@
 
 #include "application.h"
 #include "game-objects-factory.h"
-#include "constants.h"
 #include "map.h"
 #include "printer.h"
 #include "util.h"
 #include "rng.h"
+
+// FIXME: remove
 #include "level-builder.h"
 
 #if RUN_TESTS == 1
@@ -24,7 +25,7 @@
 int main()
 {  
   Logger::Instance().Init();  
-  Logger::Instance().Prepare(false);
+  Logger::Instance().Prepare(true);
 
   RNG::Instance().Init();
   //RNG::Instance().SetSeed(1);
@@ -56,6 +57,12 @@ int main()
   #endif
 
   printf("Goodbye!\n");
+
+  LevelBuilder lb;
+
+  Position ms(100, 100);
+
+  lb.RecursiveBacktracker(ms);
 
   return 0;
 }

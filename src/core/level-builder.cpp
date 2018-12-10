@@ -3,6 +3,68 @@
 #include "util.h"
 #include "rng.h"
 
+void LevelBuilder::RecursiveBacktracker(Position mapSize, Position startingPoint)
+{
+  std::stack<Position> openCells;
+
+  _mapSize = mapSize;
+
+  _map = CreateEmptyMap(mapSize.X, mapSize.Y);
+
+  int sx, sy = 0;
+
+  if (startingPoint.X == -1 && startingPoint.Y == -1)
+  {
+    sx = RNG::Instance().RandomRange(0, mapSize.X);
+    sy = RNG::Instance().RandomRange(0, mapSize.Y);
+  }
+  else
+  {
+    sx = startingPoint.X;
+    sy = startingPoint.Y;
+  }
+
+  _startingPoint.Set(sx, sy);
+
+  auto spDbg = Util::StringFormat("Starting point [%i;%i]", sx, sy);
+  Logger::Instance().Print(spDbg);
+
+  _map[sx][sy].Visited = true;
+  _map[sx][sy].Image = 'X';
+
+  Position p(sx, sy);
+  openCells.push(p);
+
+  while (!openCells.empty())
+  {
+    auto np = openCells.top();
+    auto res = GetWallAroundPoint(np);
+    if (res.size() != 0)
+    {      
+      openCells.push(res[0]);
+    }
+    else
+    {
+      openCells.pop();
+    }
+  }
+
+  std::string dbg;
+
+  for (int x = 0; x < _mapSize.X; x++)
+  {
+    for (int y = 0; y < _mapSize.Y; y++)
+    {
+      auto str = Util::StringFormat("%c", _map[x][y].Image);
+      dbg += str;
+    }
+
+    dbg += "\n";
+  }
+
+  Logger::Instance().Print(dbg);
+}
+
 void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY)
 {  
   _roomsForLevel = possibleRooms;
@@ -424,4 +486,206 @@ void LevelBuilder::ConvertChunksToLayout()
       x++;
     }
   }
+}
+
+std::vector<std::vector<MapCell>> LevelBuilder::CreateEmptyMap(int w, int h)
+{
+  std::vector<std::vector<MapCell>> map;
+
+  for (int x = 0; x < w; x++)
+  {
+    std::vector<MapCell> row;
+    for (int y = 0; y < h; y++)
+    {
+      MapCell c;
+      c.Coordinates.X = x;
+      c.Coordinates.Y = y;
+      c.Image = '#';
+      c.Visited = false;
+      row.push_back(c);
+    }
+
+    map.push_back(row);
+  }
+
+  return map;
+}
+
+std::vector<Position> LevelBuilder::GetWallAroundPoint(Position p)
+{
+  std::vector<Position> res;
+
+  int corridorLength = 3;
+
+  std::vector<RoomEdgeEnum> sides =
+  {
+    RoomEdgeEnum::NORTH, RoomEdgeEnum::SOUTH,
+    RoomEdgeEnum::EAST, RoomEdgeEnum::WEST
+  };
+
+  std::vector<std::pair<Position, std::vector<Position>>> corridors;
+
+  for (auto& s : sides)
+  {
+    Position np(p.X, p.Y);
+
+    if (s == RoomEdgeEnum::NORTH)
+    {
+      np.X--;
+    }
+    else if (s == RoomEdgeEnum::SOUTH)
+    {
+      np.X++;
+    }
+    else if (s == RoomEdgeEnum::EAST)
+    {
+      np.Y++;
+    }
+    else if (s == RoomEdgeEnum::WEST)
+    {
+      np.Y--;
+    }
+
+    if (np.X >= 0 && np.X < _mapSize.X
+     && np.Y >= 0 && np.Y < _mapSize.Y)
+    {
+      auto c = CheckCorridor(s, np, corridorLength);
+      if (c.second.size() != 0)
+      {
+        corridors.push_back(c);
+      }
+    }
+  }
+
+  if (corridors.size() != 0)
+  {
+    int index = RNG::Instance().RandomRange(0, corridors.size());
+
+    std::vector<Position> corridor = corridors[index].second;
+    Position corridorEndPoint = corridors[index].first;
+
+    for (auto& i : corridor)
+    {
+      _map[i.X][i.Y].Image = '.';
+      _map[i.X][i.Y].Visited = true;
+    }
+
+    res = { corridorEndPoint };
+  }
+
+  return res;
+}
+
+std::pair<Position, std::vector<Position>> LevelBuilder::CheckCorridor(RoomEdgeEnum dir, Position corridorStartingPoint, int length)
+{
+  std::vector<Position> corridor;
+
+  switch (dir)
+  {
+    case RoomEdgeEnum::NORTH:
+    {
+      for (int y = corridorStartingPoint.Y; y > corridorStartingPoint.Y - length; y--)
+      {
+        if (y < 0 || _map[corridorStartingPoint.X][y].Visited)
+        {
+          corridor.clear();
+          break;
+        }
+
+        Position p(corridorStartingPoint.X, y);
+        corridor.push_back(p);
+      }
+    }
+    break;
+
+    case RoomEdgeEnum::SOUTH:
+    {
+      for (int y = corridorStartingPoint.Y; y < corridorStartingPoint.Y + length; y++)
+      {
+        if (y > _mapSize.Y - 1 || _map[corridorStartingPoint.X][y].Visited)
+        {
+          corridor.clear();
+          break;
+        }
+
+        Position p(corridorStartingPoint.X, y);
+        corridor.push_back(p);
+      }
+    }
+    break;
+
+    case RoomEdgeEnum::EAST:
+    {
+      for (int x = corridorStartingPoint.X; x < corridorStartingPoint.X + length; x++)
+      {
+        if (x > _mapSize.X - 1 || _map[x][corridorStartingPoint.Y].Visited)
+        {
+          corridor.clear();
+          break;
+        }
+
+        Position p(x, corridorStartingPoint.Y);
+        corridor.push_back(p);
+      }
+    }
+    break;
+
+    case RoomEdgeEnum::WEST:
+    {
+      for (int x = corridorStartingPoint.X; x > corridorStartingPoint.X - length; x--)
+      {
+        if (x < 0 || _map[x][corridorStartingPoint.Y].Visited)
+        {
+          corridor.clear();
+          break;
+        }
+
+        Position p(x, corridorStartingPoint.Y);
+        corridor.push_back(p);
+      }
+    }
+    break;
+  }
+
+  std::pair<Position, std::vector<Position>> res;
+
+  if (corridor.size() != 0)
+  {
+    Position rp;
+
+    switch (dir)
+    {
+      case RoomEdgeEnum::NORTH:
+      {
+        rp.X = corridorStartingPoint.X;
+        rp.Y = corridorStartingPoint.Y - length;
+      }
+      break;
+
+      case RoomEdgeEnum::SOUTH:
+      {
+        rp.X = corridorStartingPoint.X;
+        rp.Y = corridorStartingPoint.Y + length;
+      }
+      break;
+
+      case RoomEdgeEnum::EAST:
+      {
+        rp.X = corridorStartingPoint.X + length;
+        rp.Y = corridorStartingPoint.Y;
+      }
+      break;
+
+      case RoomEdgeEnum::WEST:
+      {
+        rp.X = corridorStartingPoint.X - length;
+        rp.Y = corridorStartingPoint.Y;
+      }
+      break;
+    }
+
+    res = { rp, corridor };
+  }
+
+  return res;
 }
