@@ -312,11 +312,11 @@ void InventoryState::DropItem()
   auto go = _playerRef->Inventory.Contents[_selectedIndex].release();
   ItemComponent* ic = go->GetComponent<ItemComponent>();
 
-  // Player can drop items on different dungeon level,
-  // so reference to level where object was originally
+  // Player may drop item on a different dungeon level,
+  // so reference to the level where object was originally
   // created will become invalid and it will not be drawn.
-  // (well, actually it will be drawn, but using original
-  // _levelOwner->MapOffsetX and Y which might be different)
+  // Well, actually it will be drawn, but using original
+  // _levelOwner->MapOffsetX and Y which might be different.
   ic->OwnerGameObject->SetLevelOwner(Map::Instance().CurrentLevel);
 
   ic->Transfer();

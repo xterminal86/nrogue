@@ -120,15 +120,10 @@ size_t Printer::GetOrSetColor(const std::string& htmlColorFg, const std::string&
       bg.ColorIndex = _colorIndexMap[hashBg];
     }
 
-    //mvprintw(12, 10, "%i => %i %i %i", fg.ColorIndex, fg.R, fg.G, fg.B);
-    //mvprintw(13, 10, "%i => %i %i %i", bg.ColorIndex, bg.R, bg.G, bg.B);
-
     ColorPair cp = { _colorPairsGlobalIndex++, fg, bg };
     _colorMap[hash] = cp;
 
     init_pair(_colorMap[hash].PairIndex, _colorIndexMap[hashFg], _colorIndexMap[hashBg]);
-
-    //mvprintw(11, 10, "%u %u %u", hashFg, hashBg, _colorGlobalIndex);
   }
 
   return hash;

@@ -57,8 +57,6 @@ class IntroState : public GameState
       }
     };
 
-    void AddBonusItems();
-
     int _stringIndex = 0;
     int _textPositionCursor = 0;
 

@@ -60,6 +60,7 @@ class Player : public GameObject
 
     void SetStatsModifiers(ItemData& itemData);
     void UnsetStatsModifiers(ItemData& itemData);
+    void AddBonusItems();
 
     int Money = 0;
 

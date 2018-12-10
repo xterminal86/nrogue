@@ -161,7 +161,6 @@ void MainState::HandleInput()
         }
         break;
 
-      // wait
       case NUMPAD_5:
         Printer::Instance().AddMessage("You waited...");
 
@@ -329,7 +328,6 @@ void MainState::TryToPickupItem()
 
     if (_playerRef->Inventory.IsFull())
     {
-      Printer::Instance().AddMessage("Inventory is full!");
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail", { "Inventory is full!" }, GlobalConstants::MessageBoxRedBorderColor);
       return;
     }
@@ -529,6 +527,8 @@ void MainState::DisplayStatusIcons()
 {
   int th = Printer::Instance().TerminalHeight;
 
+  // Hungry
+
   if (_playerRef->IsStarving)
   {
     Printer::Instance().PrintFB(3, th - 3, '%', "#FF0000");
@@ -542,6 +542,8 @@ void MainState::DisplayStatusIcons()
       Printer::Instance().PrintFB(3, th - 3, '%', "#FFFF00");
     }
   }
+
+  // Weapon condition
 
   ItemComponent* weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
   if (weapon != nullptr)

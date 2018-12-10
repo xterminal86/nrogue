@@ -19,6 +19,7 @@ void EnterNameState::HandleInput()
 
         Application::Instance().PlayerInstance.Name = _nameEntered;
         Application::Instance().PlayerInstance.ObjectName = _nameEntered;
+        Application::Instance().PlayerInstance.AddBonusItems();
 
         Application::Instance().ChangeState(GameStates::INTRO_STATE);
 

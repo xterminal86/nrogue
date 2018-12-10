@@ -947,3 +947,84 @@ void Player::SwitchPlaces(AIComponent* other)
   std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : "the " + other->OwnerGameObject->ObjectName;
   Printer::Instance().AddMessage("You pass by " + name);
 }
+
+void Player::AddBonusItems()
+{
+  GameObject* go = nullptr;
+  std::vector<std::string> text;
+
+  switch(GetClass())
+  {
+    case PlayerClass::THIEF:
+    {
+      text =
+      {
+        "REWARD 10,000",
+        "",
+        "For the capture dead or alive of one",
+        "",
+        Name,
+        "",
+        "the leader of the worst band of thieves",
+        "the City has ever had to deal with.",
+        "The above reward will be paid",
+        "for his / her capture",
+        "or positive proof of death.",
+        "",
+        "Signed:",
+        "NORMAN TRUART, Sheriff",
+        "City Watch HQ",
+        "21 / II / 988"
+      };
+
+      go = GameObjectsFactory::Instance().CreateNote("Wanted Poster", text);
+      Inventory.AddToInventory(go);
+    }
+    break;
+
+    case PlayerClass::SOLDIER:
+    {
+      text =
+      {
+        "Pvt. " + Name,
+        "is hereby granted permission",
+        "to take a leave of absence",
+        "from 13 / III / 988",
+        "until 13 / IV / 988",
+        "",
+        "Signed:",
+        "Lt. LAURA MOSLEY",
+        "City Watch, Stonemarket Dpt.",
+        "21 / II / 988"
+      };
+
+      go = GameObjectsFactory::Instance().CreateNote("Leave Warrant", text);
+      Inventory.AddToInventory(go);
+    }
+    break;
+
+    case PlayerClass::ARCANIST:
+    {
+      text =
+      {
+        Name,
+        "",
+        "The Order instructs you to visit",
+        Map::Instance().CurrentLevel->LevelName,
+        "Investigate the place as thorough as possible",
+        "for we believe there is a disturbance",
+        "lurking there somewhere.",
+        "Find the source of this unbalance,",
+        "restore it and come back to us.",
+        "We'll be praying for your success.",
+        "",
+        "Signed:",
+        "+ Bishop DANIEL"
+      };
+
+      go = GameObjectsFactory::Instance().CreateNote("Orders", text);
+      Inventory.AddToInventory(go);
+    }
+    break;
+  }
+}

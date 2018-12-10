@@ -106,10 +106,9 @@ void LookInputState::Update(bool forceUpdate)
         auto actor = CheckActor();
         if (actor != nullptr)
         {          
-          auto c = actor->GetComponent<AIComponent>();
-          if (c != nullptr)
+          AIComponent* aic = actor->GetComponent<AIComponent>();
+          if (aic != nullptr)
           {
-            AIComponent* aic = static_cast<AIComponent*>(c);
             AIModelBase* model = dynamic_cast<AINPC*>(aic->CurrentModel);
             if (model != nullptr)
             {

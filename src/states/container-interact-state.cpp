@@ -172,8 +172,7 @@ void ContainerInteractState::DisplayContainerInventory()
 
   for (auto& item : _containerToInteractWith->Contents)
   {
-    auto c = item->GetComponent<ItemComponent>();
-    ItemComponent* ic = static_cast<ItemComponent*>(c);
+    ItemComponent* ic = item->GetComponent<ItemComponent>();
 
     std::string nameInInventory = ic->Data.IsIdentified ? item->ObjectName : ic->Data.UnidentifiedName;
 
