@@ -81,19 +81,29 @@ enum class MapType
   MINES_1,
   MINES_2,
   MINES_3,
+  MINES_4,
+  MINES_5,
   CAVES_1,
   CAVES_2,
   CAVES_3,
+  CAVES_4,
+  CAVES_5,
   LOST_CITY,
   DEEP_DARK_1,
   DEEP_DARK_2,
   DEEP_DARK_3,
+  DEEP_DARK_4,
+  DEEP_DARK_5,
   ABYSS_1,
   ABYSS_2,
   ABYSS_3,
+  ABYSS_4,
+  ABYSS_5,
   NETHER_1,
   NETHER_2,
   NETHER_3,
+  NETHER_4,
+  NETHER_5,
   THE_END
 };
 
@@ -687,25 +697,35 @@ namespace GlobalConstants
     // Abandoned Mines
     { MapType::MINES_1,     { "Mine Entrance" } },
     { MapType::MINES_2,     { "Forsaken Prospects" } },
-    { MapType::MINES_3,     { "Deep Mines" } },
+    { MapType::MINES_3,     { "Forsaken Prospects" } },
+    { MapType::MINES_4,     { "Deep Mines" } },
+    { MapType::MINES_5,     { "Deep Mines" } },
     // Caves of Circe
     { MapType::CAVES_1,     { "Caves of Circe" } },
     { MapType::CAVES_2,     { "Corridors of Time" } },
-    { MapType::CAVES_3,     { "Windy Tunnels" } },
+    { MapType::CAVES_3,     { "Corridors of Time" } },
+    { MapType::CAVES_4,     { "Windy Tunnels" } },
+    { MapType::CAVES_5,     { "Windy Tunnels" } },
     // Lost City
     { MapType::LOST_CITY,   { "Lost City" } },
     // Deep Dark
     { MapType::DEEP_DARK_1, { "Embrace of Darkness" } },
     { MapType::DEEP_DARK_2, { "Deep Dark" } },
-    { MapType::DEEP_DARK_3, { "Starless Night" } },
+    { MapType::DEEP_DARK_3, { "Deep Dark" } },
+    { MapType::DEEP_DARK_4, { "Starless Night" } },
+    { MapType::DEEP_DARK_5, { "Starless Night" } },
     // Stygian Abyss
     { MapType::ABYSS_1,     { "Plains of Desolation" } },
-    { MapType::ABYSS_2,     { "Soul Pastures" } },
-    { MapType::ABYSS_3,     { "Stygian Abyss" } },
+    { MapType::ABYSS_2,     { "Grey Wastes" } },
+    { MapType::ABYSS_3,     { "Soul Pastures" } },
+    { MapType::ABYSS_4,     { "Stygian Abyss" } },
+    { MapType::ABYSS_5,     { "Stygian Abyss" } },
     // Nether
     { MapType::NETHER_1,    { "Blazing Gates" } },
     { MapType::NETHER_2,    { "River of Flame" } },
-    { MapType::NETHER_3,    { "The Hearth" } },
+    { MapType::NETHER_3,    { "Red Wastes" } },
+    { MapType::NETHER_4,    { "Red Wastes" } },
+    { MapType::NETHER_5,    { "The Hearth" } },
     // The End
     { MapType::THE_END,     { "???" } }
   };
