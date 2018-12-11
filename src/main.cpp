@@ -25,7 +25,7 @@
 int main()
 {  
   Logger::Instance().Init();  
-  Logger::Instance().Prepare(true);
+  Logger::Instance().Prepare(false);
 
   RNG::Instance().Init();
   //RNG::Instance().SetSeed(1);
@@ -57,12 +57,6 @@ int main()
   #endif
 
   printf("Goodbye!\n");
-
-  LevelBuilder lb;
-
-  Position ms(100, 100);
-
-  lb.RecursiveBacktracker(ms);
 
   return 0;
 }

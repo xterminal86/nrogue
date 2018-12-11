@@ -52,11 +52,11 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       "#########",
       ".........",
-      "#########",
-      "#########",
+      "####.####",
+      "####.####",
       ".........",
-      "#########",
-      "#########",
+      "####.####",
+      "####.####",
       ".........",
       "#########",
     },
@@ -357,8 +357,10 @@ void MapLevelMines::TryToSpawnMonsters()
 
 void MapLevelMines::PlaceStairs()
 {
-  LevelStart.X = _emptyCells[0].X;
-  LevelStart.Y = _emptyCells[0].Y;
+  int startIndex = RNG::Instance().RandomRange(0, _emptyCells.size());
+
+  LevelStart.X = _emptyCells[startIndex].X;
+  LevelStart.Y = _emptyCells[startIndex].Y;
 
   MapType stairsDownTo = (MapType)(DungeonLevel + 1);
   MapType stairsUpTo = (MapType)(DungeonLevel - 1);
@@ -369,12 +371,12 @@ void MapLevelMines::PlaceStairs()
 
   int mapSizeMax = std::max(MapSize.X, MapSize.Y);
 
-  for (int i = 1; i < _emptyCells.size(); i++)
+  for (int i = 0; i < _emptyCells.size(); i++)
   {
     auto& c = _emptyCells[i];
 
     float d = Util::LinearDistance(LevelStart.X, LevelStart.Y, c.X, c.Y);
-    if (d > mapSizeMax / 2)
+    if (i != startIndex && d > mapSizeMax / 2)
     {
       possibleExits.push_back(c);
     }

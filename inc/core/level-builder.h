@@ -22,6 +22,7 @@ class LevelBuilder
 
     std::vector<RoomHelper> MapChunks;
     std::vector<std::vector<char>> MapLayout;
+    std::vector<std::vector<char>> MapRaw;
 
   private:
     std::vector<std::vector<MapCell>> _map;
@@ -70,18 +71,21 @@ class LevelBuilder
 
     std::vector<RoomHelper> GetRoomsForLayout(RoomLayout& layout, RoomEdgeEnum side);
 
-    std::vector<std::vector<MapCell>> CreateEmptyMap(int w, int h);
-    std::vector<Position> GetWallAroundPoint(Position p);
-    std::pair<Position, std::vector<Position>> CheckCorridor(RoomEdgeEnum dir, Position p, int length);
+    std::vector<std::vector<MapCell>> CreateFilledMap(int w, int h);
+    std::vector<Position> GetRandomCell(Position p);
 
     void TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side);
     void PrintChunks();
     void VisitCells(RoomHelper& room);
     void PrintVisitedCells();
     void ConvertChunksToLayout();
+    void CutCorners();
+    void FillMapRaw();
 
     bool CheckLimits(Position& start, int roomSize);
     bool IsAreaVisited(Position& start, int roomSize);
+    bool IsCellValid(Position p);
+    void CheckIfProblemCorner(Position p);
 
     RoomLayout CreateSquareLayout(int size, chtype ch);
 

@@ -31,6 +31,12 @@ struct Position
     Y = y;
   }
 
+  Position(const Position& from)
+  {
+    X = from.X;
+    Y = from.Y;
+  }
+
   void Set(int x, int y)
   {
     X = x;

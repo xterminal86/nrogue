@@ -416,6 +416,9 @@ void Player::ReceiveDamage(GameObject* from, int amount)
   auto str = Util::StringFormat("You were hit for %i damage", amount);
   Printer::Instance().AddMessage(str);
 
+  // FIXME: debug
+  amount = 0;
+
   Attrs.HP.CurrentValue -= amount;  
 }
 

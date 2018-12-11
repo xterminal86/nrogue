@@ -8,6 +8,7 @@
 #include "game-objects-factory.h"
 #include "map-level-town.h"
 #include "map-level-mines.h"
+#include "map-level-caves.h"
 #include "util.h"
 
 void Map::Init()
@@ -236,15 +237,27 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
     switch (levelName)
     {
       case MapType::MINES_1:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(108, 108, levelName, 1));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(108, 108, levelName, (int)levelName));
         break;
 
       case MapType::MINES_2:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(135, 135, levelName, 2));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(135, 135, levelName, (int)levelName));
         break;
 
       case MapType::MINES_3:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(180, 180, levelName, 3));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(180, 180, levelName, (int)levelName));
+        break;
+
+      case MapType::CAVES_1:
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelCaves(200, 200, levelName, (int)levelName));
+        break;
+
+      case MapType::CAVES_2:
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelCaves(200, 200, levelName, (int)levelName));
+        break;
+
+      case MapType::CAVES_3:
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelCaves(200, 200, levelName, (int)levelName));
         break;
     }
 
