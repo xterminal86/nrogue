@@ -24,9 +24,9 @@ void MapLevelCaves::CreateLevel()
 
   LevelBuilder lb;
 
-  Position start(1, 1);
+  //Position start(1, 1);
 
-  lb.RecursiveBacktracker(MapSize, start);
+  lb.RecursiveBacktracker(MapSize);
 
   ConstructFromBuilder(lb);
 
@@ -51,8 +51,8 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
       {
         case '#':
         {
-          objName = "Rocks";
-          t.Set(true, true, ' ', GlobalConstants::BlackColor, "#964B00", "Rocks");
+          objName = "Cave Wall";
+          t.Set(true, true, ' ', GlobalConstants::BlackColor, "#964B00", "Cave Wall");
           MapArray[x][y]->MakeTile(t);
         }
         break;
@@ -73,7 +73,7 @@ void MapLevelCaves::DisplayWelcomeText()
 {
   std::vector<std::string> msg =
   {
-    "Caves description goes here"
+    "Caves level description goes here"
   };
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Caves of Circe", msg);

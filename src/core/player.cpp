@@ -417,7 +417,7 @@ void Player::ReceiveDamage(GameObject* from, int amount)
   Printer::Instance().AddMessage(str);
 
   // FIXME: debug
-  amount = 0;
+  // amount = 0;
 
   Attrs.HP.CurrentValue -= amount;  
 }

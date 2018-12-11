@@ -216,7 +216,7 @@ void AIMonsterBasic::Attack(Player* player)
   {
     Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
 
-    auto str = Util::StringFormat("%s misses", AIComponentRef->OwnerGameObject->ObjectName.data());
+    auto str = Util::StringFormat("%s missed", AIComponentRef->OwnerGameObject->ObjectName.data());
     Printer::Instance().AddMessage(str);
 
     Application::Instance().DrawCurrentState();

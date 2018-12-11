@@ -15,8 +15,8 @@ void LevelBuilder::RecursiveBacktracker(Position mapSize, Position startingPoint
 
   if (startingPoint.X == -1 || startingPoint.Y == -1)
   {
-    sx = RNG::Instance().RandomRange(0, mapSize.X);
-    sy = RNG::Instance().RandomRange(0, mapSize.Y);
+    sx = RNG::Instance().RandomRange(1, mapSize.X - 1);
+    sy = RNG::Instance().RandomRange(1, mapSize.Y - 1);
   }
   else
   {
