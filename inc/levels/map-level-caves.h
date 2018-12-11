@@ -12,14 +12,12 @@ class MapLevelCaves : public MapLevelBase
 
     void PrepareMap(MapLevelBase* levelOwner) override;
     void DisplayWelcomeText() override;
-    void TryToSpawnMonsters() override;
 
   protected:
     void CreateLevel() override;
 
   private:
     void ConstructFromBuilder(LevelBuilder& lb);
-    void PlaceStairs();
 };
 
 #endif // MAPLEVELCAVES_H

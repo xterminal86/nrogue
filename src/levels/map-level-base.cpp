@@ -100,6 +100,96 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
   }
 }
 
+void MapLevelBase::PlaceStairs()
+{
+  int startIndex = RNG::Instance().RandomRange(0, _emptyCells.size());
+
+  LevelStart.X = _emptyCells[startIndex].X;
+  LevelStart.Y = _emptyCells[startIndex].Y;
+
+  MapType stairsDownTo = (MapType)(DungeonLevel + 1);
+  MapType stairsUpTo = (MapType)(DungeonLevel - 1);
+
+  GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', stairsUpTo);
+
+  std::vector<Position> possibleExits;
+
+  int mapSizeMax = std::max(MapSize.X, MapSize.Y);
+
+  for (int i = 0; i < _emptyCells.size(); i++)
+  {
+    auto& c = _emptyCells[i];
+
+    float d = Util::LinearDistance(LevelStart.X, LevelStart.Y, c.X, c.Y);
+    if (i != startIndex && d > mapSizeMax / 2)
+    {
+      possibleExits.push_back(c);
+    }
+  }
+
+  int index = RNG::Instance().RandomRange(0, possibleExits.size());
+  auto exit = possibleExits[index];
+
+  LevelExit.Set(exit.X, exit.Y);
+
+  GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', stairsDownTo);
+}
+
+void MapLevelBase::CreateInitialMonsters()
+{
+  MaxMonsters = std::sqrt(_emptyCells.size()) / 2;
+
+  for (int i = 0; i < MaxMonsters; i++)
+  {
+    int index = RNG::Instance().RandomRange(0, _emptyCells.size());
+
+    int x = _emptyCells[index].X;
+    int y = _emptyCells[index].Y;
+
+    if (!MapArray[x][y]->Blocking && !MapArray[x][y]->Occupied)
+    {
+      auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
+      auto monster = GameObjectsFactory::Instance().CreateMonster(x, y, res.first);
+      InsertActor(monster);
+    }
+  }
+}
+
+void MapLevelBase::TryToSpawnMonsters()
+{
+  if (_respawnCounter < MonstersRespawnTurns)
+  {
+    _respawnCounter++;
+    return;
+  }
+
+  _respawnCounter = 0;
+
+  std::vector<Position> positions;
+
+  int attempts = 20;
+
+  for (int i = 0; i < attempts; i++)
+  {
+    if (ActorGameObjects.size() >= MaxMonsters)
+    {
+      break;
+    }
+
+    int index = RNG::Instance().RandomRange(0, _emptyCells.size());
+    int cx = _emptyCells[index].X;
+    int cy = _emptyCells[index].Y;
+
+    if (!MapArray[cx][cy]->Visible && !MapArray[cx][cy]->Occupied)
+    {
+      auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
+      auto monster = GameObjectsFactory::Instance().CreateMonster(cx, cy, res.first);
+      InsertActor(monster);
+      break;
+    }
+  }
+}
+
 void MapLevelBase::DisplayWelcomeText()
 {
   std::vector<std::string> msg =

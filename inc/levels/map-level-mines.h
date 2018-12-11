@@ -12,7 +12,6 @@ class MapLevelMines : public MapLevelBase
 
     void PrepareMap(MapLevelBase* levelOwner) override;
     void DisplayWelcomeText() override;
-    void TryToSpawnMonsters() override;
 
   protected:
     void CreateLevel() override;
@@ -20,8 +19,6 @@ class MapLevelMines : public MapLevelBase
   private:
     void FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill);    
     void ConstructFromBuilder(LevelBuilder& lb);
-    void CreateInitialMonsters();    
-    void PlaceStairs();
     void CreateDoor(int x, int y, bool isOpen = false);
 };
 

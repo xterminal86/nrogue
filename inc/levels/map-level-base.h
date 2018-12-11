@@ -16,11 +16,10 @@ class MapLevelBase
 
     void InsertActor(GameObject* actor);
     void InsertGameObject(GameObject* goToInsert);
+    void TryToSpawnMonsters();
 
     virtual void PrepareMap(MapLevelBase* levelOwner);
     virtual void DisplayWelcomeText();
-
-    virtual void TryToSpawnMonsters() {}
 
     // Map tiles or objects that don't have to be updated globally.
     // Updated around player position.
@@ -81,6 +80,8 @@ class MapLevelBase
     void CreateBorders(Tile& t);
     void RecordEmptyCells();
     void CreateItemsForLevel(int maxItems);
+    void PlaceStairs();
+    void CreateInitialMonsters();
 };
 
 #endif // MAPLEVEL_H

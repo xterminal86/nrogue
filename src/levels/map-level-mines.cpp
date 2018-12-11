@@ -131,6 +131,18 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
       "##.....##",
       "##.....##",
       "##.....##",
+    },
+    // 10
+    {
+      "#########",
+      "#.......#",
+      "#.......#",
+      "#.......#",
+      "+.......#",
+      "#.......#",
+      "#.......#",
+      "#.......#",
+      "#########",
     }
   };
 
@@ -143,8 +155,8 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
         { 0, _layoutsForLevel[0] },
         { 30, _layoutsForLevel[9] },
         { 60, _layoutsForLevel[1] },
-        { 50, _layoutsForLevel[2] },
-        { 80, _layoutsForLevel[3] },
+        { 60, _layoutsForLevel[2] },
+        { 50, _layoutsForLevel[10] },
       };
 
       _monstersSpawnRateForThisLevel =
@@ -204,7 +216,7 @@ void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
 
 void MapLevelMines::CreateLevel()
 {
-  VisibilityRadius = 4;
+  VisibilityRadius = 8;
   MonstersRespawnTurns = 1000;
 
   Tile t;
@@ -284,28 +296,6 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
   }
 }
 
-void MapLevelMines::CreateInitialMonsters()
-{
-  // Some rats
-
-  MaxMonsters = std::sqrt(_emptyCells.size()) / 2;
-
-  for (int i = 0; i < MaxMonsters; i++)
-  {
-    int index = RNG::Instance().RandomRange(0, _emptyCells.size());
-
-    int x = _emptyCells[index].X;
-    int y = _emptyCells[index].Y;
-
-    if (!MapArray[x][y]->Blocking && !MapArray[x][y]->Occupied)
-    {
-      auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
-      auto monster = GameObjectsFactory::Instance().CreateMonster(x, y, res.first);
-      InsertActor(monster);
-    }
-  }
-}
-
 void MapLevelMines::DisplayWelcomeText()
 {
   std::vector<std::string> msg =
@@ -318,76 +308,6 @@ void MapLevelMines::DisplayWelcomeText()
   };
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Abandoned Mines", msg);
-}
-
-void MapLevelMines::TryToSpawnMonsters()
-{
-  if (_respawnCounter < MonstersRespawnTurns)
-  {
-    _respawnCounter++;
-    return;
-  }
-
-  _respawnCounter = 0;
-
-  std::vector<Position> positions;
-
-  int attempts = 20;
-
-  for (int i = 0; i < attempts; i++)
-  {
-    if (ActorGameObjects.size() >= MaxMonsters)
-    {
-      break;
-    }
-
-    int index = RNG::Instance().RandomRange(0, _emptyCells.size());
-    int cx = _emptyCells[index].X;
-    int cy = _emptyCells[index].Y;
-
-    if (!MapArray[cx][cy]->Visible && !MapArray[cx][cy]->Occupied)
-    {
-      auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
-      auto monster = GameObjectsFactory::Instance().CreateMonster(cx, cy, res.first);
-      InsertActor(monster);
-      break;
-    }
-  }
-}
-
-void MapLevelMines::PlaceStairs()
-{
-  int startIndex = RNG::Instance().RandomRange(0, _emptyCells.size());
-
-  LevelStart.X = _emptyCells[startIndex].X;
-  LevelStart.Y = _emptyCells[startIndex].Y;
-
-  MapType stairsDownTo = (MapType)(DungeonLevel + 1);
-  MapType stairsUpTo = (MapType)(DungeonLevel - 1);
-
-  GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', stairsUpTo);
-
-  std::vector<Position> possibleExits;
-
-  int mapSizeMax = std::max(MapSize.X, MapSize.Y);
-
-  for (int i = 0; i < _emptyCells.size(); i++)
-  {
-    auto& c = _emptyCells[i];
-
-    float d = Util::LinearDistance(LevelStart.X, LevelStart.Y, c.X, c.Y);
-    if (i != startIndex && d > mapSizeMax / 2)
-    {
-      possibleExits.push_back(c);
-    }
-  }
-
-  int index = RNG::Instance().RandomRange(0, possibleExits.size());
-  auto exit = possibleExits[index];
-
-  LevelExit.Set(exit.X, exit.Y);
-
-  GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', stairsDownTo);
 }
 
 void MapLevelMines::CreateDoor(int x, int y, bool isOpen)
