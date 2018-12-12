@@ -32,6 +32,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateNote(std::string objName, std::vector<std::string> text);
     GameObject* CreateWeapon(WeaponType type, bool overridePrefix = false);
     GameObject* CreateContainer(std::string name, chtype image, int x, int y);
+    GameObject* CreateGem(int x, int y, GemType type = GemType::RANDOM);
 
     GameObject* CreateRandomPotion();
     GameObject* CreateRandomWeapon();
@@ -52,6 +53,9 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateRat(int x, int y, bool randomize = true);
     GameObject* CreateBat(int x, int y, bool randomize = true);
     GameObject* CreateSpider(int x, int y, bool randomize = true);
+
+    GameObject* CreateRandomGlass();
+    GameObject* CreateGemHelper(GemType t);
 
     bool ProcessItemEquiption(ItemComponent* item);
     bool ProcessRingEquiption(ItemComponent* item);

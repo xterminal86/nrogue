@@ -153,9 +153,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
       _roomsForLevel =
       {
         { 0, _layoutsForLevel[0] },
-        { 30, _layoutsForLevel[9] },
         { 60, _layoutsForLevel[1] },
-        { 60, _layoutsForLevel[2] },
         { 50, _layoutsForLevel[10] },
       };
 
@@ -171,10 +169,10 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
       _roomsForLevel =
       {
         { 0, _layoutsForLevel[0] },
-        { 10, _layoutsForLevel[9] },
-        { 60, _layoutsForLevel[2] },
+        { 60, _layoutsForLevel[1] },
         { 70, _layoutsForLevel[3] },
-        { 50, _layoutsForLevel[4] },
+        { 70, _layoutsForLevel[2] },
+        { 50, _layoutsForLevel[10] },
       };
 
       _monstersSpawnRateForThisLevel =
@@ -189,17 +187,61 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _roomsForLevel =
       {
-        { 0, _layoutsForLevel[2] },
-        { 80, _layoutsForLevel[5] },
-        { 80, _layoutsForLevel[6] },
-        { 50, _layoutsForLevel[7] },
-        { 50, _layoutsForLevel[8] }
+        { 0, _layoutsForLevel[0] },
+        { 80, _layoutsForLevel[2] },
+        { 80, _layoutsForLevel[3] },
+        { 50, _layoutsForLevel[4] },
+        { 50, _layoutsForLevel[9] }
       };
 
       _monstersSpawnRateForThisLevel =
       {
         { MonsterType::RAT, 8 },
         { MonsterType::SPIDER, 1 },
+        { MonsterType::BAT, 4 }
+      };
+    }
+    break;
+
+    case 4:
+    {
+      _roomsForLevel =
+      {
+        { 0, _layoutsForLevel[2] },
+        { 50, _layoutsForLevel[3] },
+        { 50, _layoutsForLevel[4] },
+        { 50, _layoutsForLevel[5] },
+        { 50, _layoutsForLevel[6] },
+        { 50, _layoutsForLevel[7] },
+        { 50, _layoutsForLevel[8] }
+      };
+
+      _monstersSpawnRateForThisLevel =
+      {
+        { MonsterType::RAT, 4 },
+        { MonsterType::SPIDER, 4 },
+        { MonsterType::BAT, 4 }
+      };
+    }
+    break;
+
+    case 5:
+    {
+      _roomsForLevel =
+      {
+        { 0, _layoutsForLevel[2] },
+        { 50, _layoutsForLevel[3] },
+        { 50, _layoutsForLevel[4] },
+        { 50, _layoutsForLevel[5] },
+        { 50, _layoutsForLevel[6] },
+        { 50, _layoutsForLevel[7] },
+        { 50, _layoutsForLevel[8] }
+      };
+
+      _monstersSpawnRateForThisLevel =
+      {
+        { MonsterType::RAT, 4 },
+        { MonsterType::SPIDER, 4 },
         { MonsterType::BAT, 4 }
       };
     }

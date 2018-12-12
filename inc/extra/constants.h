@@ -179,6 +179,7 @@ enum class ItemType
   FOOD,
   POTION,
   SCROLL,
+  GEM,
   WEAPON
 };
 
@@ -196,13 +197,36 @@ enum class FoodType
 {
   FIRST_ELEMENT = 0,
   APPLE,  
-  CHEESE,
+  CHEESE,  
   BREAD,
+  FISH,
   PIE,
   MEAT,
+  TIN,
   RATIONS,
   IRON_RATIONS,
   LAST_ELEMENT
+};
+
+enum class GemType
+{
+  RANDOM = -1,
+  WORTHLESS_GLASS = 0,
+  RED_GARNET,
+  RED_RUBY,
+  ORANGE_JACINTH,
+  ORANGE_AMBER,
+  YELLOW_CITRINE,
+  GREEN_JADE,
+  GREEN_EMERALD,
+  BLUE_SAPPHIRE,
+  BLUE_AQUAMARINE,
+  PURPLE_AMETHYST,
+  PURPLE_FLUORITE,
+  WHITE_OPAL,
+  WHITE_DIAMOND,
+  BLACK_JETSTONE,
+  BLACK_OBSIDIAN
 };
 
 enum class ShrineType
@@ -422,6 +446,11 @@ struct ItemData
       price *= 0.01f;
     }
 
+    if (ItemType_ == ItemType::GEM)
+    {
+      price = (IsIdentified) ? Cost : 20;
+    }
+
     if (IsStackable)
     {
       price *= Amount;
@@ -604,13 +633,109 @@ namespace GlobalConstants
 
   static const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =
   {
-    { FoodType::APPLE, { "Apple", 15 } },
-    { FoodType::BREAD, { "Bread", 25 } },
+    { FoodType::APPLE, { "Apple", 10 } },
+    { FoodType::BREAD, { "Bread", 20 } },
+    { FoodType::FISH, { "Fish", 20 } },
     { FoodType::CHEESE, { "Cheese", 30 } },
     { FoodType::PIE, { "Cream Pie", 40 } },
     { FoodType::MEAT, { "Meat", 50 } },
+    { FoodType::TIN, { "Canned Food", 60 } },
     { FoodType::RATIONS, { "Rations", 75 } },
     { FoodType::IRON_RATIONS, { "Iron Rations", 100 } }
+  };
+
+  static const std::map<GemType, std::pair<std::string, std::string>> GemColorByType =
+  {
+    { GemType::BLACK_JETSTONE,  { "#FFFFFF", "#000000" } },
+    { GemType::BLACK_OBSIDIAN,  { "#FFFFFF", "#000000" } },
+    { GemType::BLUE_AQUAMARINE, { "#FFFFFF", "#0000FF" } },
+    { GemType::BLUE_SAPPHIRE,   { "#FFFFFF", "#0000FF" } },
+    { GemType::GREEN_EMERALD,   { "#FFFFFF", "#008800" } },
+    { GemType::GREEN_JADE,      { "#FFFFFF", "#008800" } },
+    { GemType::ORANGE_AMBER,    { "#FFFFFF", "#FF9900" } },
+    { GemType::ORANGE_JACINTH,  { "#FFFFFF", "#FF9900" } },
+    { GemType::PURPLE_AMETHYST, { "#FFFFFF", "#800080" } },
+    { GemType::PURPLE_FLUORITE, { "#FFFFFF", "#800080" } },
+    { GemType::RED_GARNET,      { "#FFFFFF", "#AA0000" } },
+    { GemType::RED_RUBY,        { "#FFFFFF", "#AA0000" } },
+    { GemType::WHITE_DIAMOND,   { "#000000", "#FFFFFF" } },
+    { GemType::WHITE_OPAL,      { "#000000", "#FFFFFF" } },
+    { GemType::YELLOW_CITRINE,  { "#FFFFFF", "#AAAA00" } }
+  };
+
+  static const std::map<GemType, std::string> GemColorNameByType =
+  {
+    { GemType::BLACK_JETSTONE, "Black" },
+    { GemType::BLACK_OBSIDIAN, "Black" },
+    { GemType::BLUE_AQUAMARINE, "Blue" },
+    { GemType::BLUE_SAPPHIRE, "Blue" },
+    { GemType::GREEN_EMERALD, "Green" },
+    { GemType::GREEN_JADE, "Green" },
+    { GemType::ORANGE_AMBER, "Orange" },
+    { GemType::ORANGE_JACINTH, "Orange" },
+    { GemType::PURPLE_AMETHYST, "Purple" },
+    { GemType::PURPLE_FLUORITE, "Purple" },
+    { GemType::RED_GARNET, "Red" },
+    { GemType::RED_RUBY, "Red" },
+    { GemType::WHITE_DIAMOND, "White" },
+    { GemType::WHITE_OPAL, "White" },
+    { GemType::YELLOW_CITRINE, "Yellow" }
+  };
+
+  static const std::map<GemType, std::string> GemNameByType =
+  {
+    { GemType::WORTHLESS_GLASS, "Worthless Glass" },
+    { GemType::BLACK_JETSTONE, "Jetstone" },
+    { GemType::BLACK_OBSIDIAN, "Obsidian" },
+    { GemType::BLUE_AQUAMARINE, "Aquamarine" },
+    { GemType::BLUE_SAPPHIRE, "Sapphire" },
+    { GemType::GREEN_EMERALD, "Emerald" },
+    { GemType::GREEN_JADE, "Jade" },
+    { GemType::ORANGE_AMBER, "Amber" },
+    { GemType::ORANGE_JACINTH, "Jacinth" },
+    { GemType::PURPLE_AMETHYST, "Amethyst" },
+    { GemType::PURPLE_FLUORITE, "Fluorite" },
+    { GemType::RED_GARNET, "Garnet" },
+    { GemType::RED_RUBY, "Ruby" },
+    { GemType::WHITE_DIAMOND, "Diamond" },
+    { GemType::WHITE_OPAL, "Opal" },
+    { GemType::YELLOW_CITRINE, "Citrine" }
+  };
+
+  static const std::map<GemType, int> GemCostByType =
+  {
+    // 0
+    { GemType::WORTHLESS_GLASS, 0 },
+    // 200
+    { GemType::BLACK_OBSIDIAN, 20 },
+    // 300
+    { GemType::GREEN_JADE, 30 },
+    // 400
+    { GemType::PURPLE_FLUORITE, 40 },
+    // 600
+    { GemType::PURPLE_AMETHYST, 60 },
+    // 700
+    { GemType::RED_GARNET, 70 },
+    // 800
+    { GemType::WHITE_OPAL, 80 },
+    // 850
+    { GemType::BLACK_JETSTONE, 85 },
+    // 1000
+    { GemType::ORANGE_AMBER, 100 },
+    // 1500
+    { GemType::YELLOW_CITRINE, 150 },
+    // 1500
+    { GemType::BLUE_AQUAMARINE, 150 },
+    // 2500
+    { GemType::GREEN_EMERALD, 250 },
+    // 3000
+    { GemType::BLUE_SAPPHIRE, 300 },
+    // 3250
+    { GemType::ORANGE_JACINTH, 325 },
+    // 3500
+    { GemType::RED_RUBY, 350 },
+    // 4000
+    { GemType::WHITE_DIAMOND, 400 }
   };
 
   static const std::map<ShrineType, std::string> ShrineSaintByType =

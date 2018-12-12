@@ -52,6 +52,10 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       go = CreateStatPotion(GlobalConstants::StatNameByPotionType.at(objType));
       break;
 
+    case ItemType::GEM:
+      go = CreateGem(x, y, GemType::RANDOM);
+      break;
+
     default:
       break;
   }
@@ -352,9 +356,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
         break;
 
       default:
-        auto go = item->OwnerGameObject;
-        auto msg = Util::StringFormat("You can't use %s!", go->ObjectName.data());
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { msg }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Can't be used!" }, GlobalConstants::MessageBoxRedBorderColor);
         break;
     }
   }
@@ -618,7 +620,8 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
     ItemType::COINS,
     ItemType::WEAPON,
     ItemType::POTION,
-    ItemType::FOOD
+    ItemType::FOOD,
+    ItemType::GEM
   };
 
   auto findRes = std::find(possibleItems.begin(), possibleItems.end(), exclude);
@@ -633,9 +636,32 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
     { FoodType::APPLE, 1 },
     { FoodType::BREAD, 1 },
     { FoodType::CHEESE, 1 },
+    { FoodType::PIE, 1 },
     { FoodType::MEAT, 1 },
+    { FoodType::FISH, 1 },
+    { FoodType::TIN, 1 },
     { FoodType::RATIONS, 1 },
     { FoodType::IRON_RATIONS, 1 }
+  };
+
+  std::map<GemType, int> gemsMap =
+  {
+    { GemType::WORTHLESS_GLASS, 600 },
+    { GemType::BLACK_OBSIDIAN, 150 },
+    { GemType::GREEN_JADE, 145 },
+    { GemType::PURPLE_FLUORITE, 135 },
+    { GemType::PURPLE_AMETHYST, 130 },
+    { GemType::RED_GARNET, 110 },
+    { GemType::WHITE_OPAL, 100 },
+    { GemType::BLACK_JETSTONE, 95 },
+    { GemType::ORANGE_AMBER, 75 },
+    { GemType::BLUE_AQUAMARINE, 55 },
+    { GemType::YELLOW_CITRINE, 55 },
+    { GemType::GREEN_EMERALD, 30 },
+    { GemType::BLUE_SAPPHIRE, 25 },
+    { GemType::ORANGE_JACINTH, 20 },
+    { GemType::RED_RUBY, 15 },
+    { GemType::WHITE_DIAMOND, 15 },
   };
 
   int index = RNG::Instance().RandomRange(0, possibleItems.size());
@@ -660,6 +686,13 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
     {
       auto pair = Util::WeightedRandom(foodMap);
       go = CreateFood(0, 0, pair.first);
+    }
+    break;
+
+    case ItemType::GEM:
+    {
+      auto pair = Util::WeightedRandom(gemsMap);
+      go = CreateGem(0, 0, pair.first);
     }
     break;
   }
@@ -917,6 +950,41 @@ GameObject* GameObjectsFactory::CreateContainer(std::string name, chtype image, 
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateGem(int x, int y, GemType type)
+{
+  GameObject* go = nullptr;
+
+  if (type == GemType::RANDOM)
+  {
+    int index = RNG::Instance().RandomRange(0, GlobalConstants::GemNameByType.size());
+    GemType t = (GemType)index;
+    if (t == GemType::WORTHLESS_GLASS)
+    {
+      go = CreateRandomGlass();
+    }
+    else
+    {
+      go = CreateGemHelper(t);
+    }
+  }
+  else
+  {
+    if (type == GemType::WORTHLESS_GLASS)
+    {
+      go = CreateRandomGlass();
+    }
+    else
+    {
+      go = CreateGemHelper(type);
+    }
+  }
+
+  go->PosX = x;
+  go->PosY = y;
+
+  return go;
+}
+
 // ************************** PRIVATE METHODS ************************** //
 
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
@@ -1025,7 +1093,7 @@ bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
       res = false;
     }
     else
-    {
+    {      
       // If it's the same item, just unequip it
       UnequipItem(itemEquipped);
     }
@@ -1394,4 +1462,72 @@ void GameObjectsFactory::GenerateLoot(int posX, int posY, std::pair<ItemType, in
     }
     break;
   }
+}
+
+GameObject* GameObjectsFactory::CreateRandomGlass()
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->Image = '*';
+
+  int colorIndex = RNG::Instance().RandomRange(1, GlobalConstants::GemColorNameByType.size());
+
+  GemType t = (GemType)colorIndex;
+
+  go->FgColor = GlobalConstants::GemColorByType.at(t).first;
+  go->BgColor = GlobalConstants::GemColorByType.at(t).second;
+
+  std::string colorDesc = GlobalConstants::GemColorNameByType.at(t);
+  go->ObjectName = Util::StringFormat("%s Glass", colorDesc.data());
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+  ic->Data.ItemType_ = ItemType::GEM;
+  ic->Data.IsStackable = false;
+  ic->Data.IsIdentified = false;
+
+  ic->Data.UnidentifiedDescription = { "Is this valuable?" };
+  ic->Data.UnidentifiedName = Util::StringFormat("?%s Gem?", colorDesc.data());
+
+  auto str = Util::StringFormat("This is a piece of %s worthless glass", colorDesc.data());
+  ic->Data.IdentifiedDescription = { str };
+
+  ic->Data.IdentifiedName = Util::StringFormat("%s worthless glass", colorDesc.data());
+  ic->Data.Cost = 0;
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateGemHelper(GemType t)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->Image = '*';
+
+  go->FgColor = GlobalConstants::GemColorByType.at(t).first;
+  go->BgColor = GlobalConstants::GemColorByType.at(t).second;
+
+  go->ObjectName = GlobalConstants::GemNameByType.at(t);
+
+  std::string colorDesc = GlobalConstants::GemColorNameByType.at(t);
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  ic->Data.ItemType_ = ItemType::GEM;
+  ic->Data.IsStackable = false;
+  ic->Data.IsIdentified = false;
+
+  ic->Data.UnidentifiedDescription = { "Is this valuable?" };
+  ic->Data.UnidentifiedName = Util::StringFormat("?%s Gem?", colorDesc.data());
+
+  auto str = Util::StringFormat("%s description goes here", GlobalConstants::GemNameByType.at(t).data());
+  ic->Data.IdentifiedDescription = { str };
+
+  ic->Data.IdentifiedName = GlobalConstants::GemNameByType.at(t);
+  ic->Data.Cost = GlobalConstants::GemCostByType.at(t);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
+
+  return go;
 }
