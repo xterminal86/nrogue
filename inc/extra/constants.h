@@ -479,8 +479,8 @@ struct ItemData
     { StatsEnum::RES, 0 },
     { StatsEnum::SKL, 0 },
     { StatsEnum::SPD, 0 },
-    { StatsEnum::HP, 0 },
-    { StatsEnum::MP, 0 }
+    { StatsEnum::HP,  0 },
+    { StatsEnum::MP,  0 }
   };
 
   std::string IdentifiedName;
@@ -536,10 +536,10 @@ namespace GlobalConstants
 
   static const std::map<TraderRole, std::string> ShopNameByType =
   {
-    { TraderRole::BLACKSMITH, "Armory" },
-    { TraderRole::CLERIC, "Sanctuary" },
-    { TraderRole::COOK, "Grocery" },
-    { TraderRole::JUNKER, "Junkyard" }
+    { TraderRole::BLACKSMITH, "Armory"    },
+    { TraderRole::CLERIC,     "Sanctuary" },
+    { TraderRole::COOK,       "Grocery"   },
+    { TraderRole::JUNKER,     "Junkyard"  }
   };
 
   // Weighted random
@@ -548,23 +548,23 @@ namespace GlobalConstants
     {
       MonsterType::RAT,
       {
-        { ItemType::COINS, 1 },
-        { ItemType::FOOD, 4 },
+        { ItemType::COINS,    1 },
+        { ItemType::FOOD,     4 },
         { ItemType::NOTHING, 20 }
       }
     },
     {
       MonsterType::BAT,
       {
-        { ItemType::COINS, 1 },
-        { ItemType::FOOD, 4 },
+        { ItemType::COINS,    1 },
+        { ItemType::FOOD,     4 },
         { ItemType::NOTHING, 20 }
       }
     },
     {
       MonsterType::SPIDER,
       {
-        { ItemType::COINS, 2 },
+        { ItemType::COINS,    2 },
         { ItemType::NOTHING, 20 }
       }
     }
@@ -576,7 +576,7 @@ namespace GlobalConstants
       MonsterType::RAT,
       {
         { FoodType::CHEESE, 4 },
-        { FoodType::MEAT, 1 }
+        { FoodType::MEAT,   1 }
       }
     },
     {
@@ -590,15 +590,15 @@ namespace GlobalConstants
   static const std::map<ItemType, int> PotionsWeightTable =
   {
     { ItemType::HEALING_POTION, 50 },
-    { ItemType::MANA_POTION, 50 },
-    { ItemType::HUNGER_POTION, 20 },
-    { ItemType::STR_POTION, 5 },
-    { ItemType::DEF_POTION, 5 },
-    { ItemType::MAG_POTION, 5 },
-    { ItemType::RES_POTION, 5 },
-    { ItemType::SKL_POTION, 5 },
-    { ItemType::SPD_POTION, 5 },
-    { ItemType::EXP_POTION, 10 }
+    { ItemType::MANA_POTION,    50 },
+    { ItemType::HUNGER_POTION,  20 },
+    { ItemType::STR_POTION,     5 },
+    { ItemType::DEF_POTION,     5 },
+    { ItemType::MAG_POTION,     5 },
+    { ItemType::RES_POTION,     5 },
+    { ItemType::SKL_POTION,     5 },
+    { ItemType::SPD_POTION,     5 },
+    { ItemType::EXP_POTION,     10 }
   };
 
   static const std::map<ItemType, std::string> StatNameByPotionType =
@@ -623,24 +623,24 @@ namespace GlobalConstants
 
   static const std::map<WeaponType, std::string> WeaponNameByType =
   {
-    { WeaponType::DAGGER, "Dagger" },
-    { WeaponType::SHORT_SWORD, "Short Sword" },
+    { WeaponType::DAGGER,       "Dagger" },
+    { WeaponType::SHORT_SWORD,  "Short Sword" },
     { WeaponType::ARMING_SWORD, "Arming Sword" },
-    { WeaponType::LONG_SWORD, "Longsword" },
-    { WeaponType::GREAT_SWORD, "Great Sword" },
-    { WeaponType::STAFF, "Battle Staff" }
+    { WeaponType::LONG_SWORD,   "Longsword" },
+    { WeaponType::GREAT_SWORD,  "Great Sword" },
+    { WeaponType::STAFF,        "Battle Staff" }
   };
 
   static const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =
   {
-    { FoodType::APPLE, { "Apple", 10 } },
-    { FoodType::BREAD, { "Bread", 20 } },
-    { FoodType::FISH, { "Fish", 20 } },
-    { FoodType::CHEESE, { "Cheese", 30 } },
-    { FoodType::PIE, { "Cream Pie", 40 } },
-    { FoodType::MEAT, { "Meat", 50 } },
-    { FoodType::TIN, { "Canned Food", 60 } },
-    { FoodType::RATIONS, { "Rations", 75 } },
+    { FoodType::APPLE,        { "Apple",       10 } },
+    { FoodType::BREAD,        { "Bread",       20 } },
+    { FoodType::FISH,         { "Fish",        20 } },
+    { FoodType::CHEESE,       { "Cheese",      30 } },
+    { FoodType::PIE,          { "Cream Pie",   40 } },
+    { FoodType::MEAT,         { "Meat",        50 } },
+    { FoodType::TIN,          { "Canned Food", 60 } },
+    { FoodType::RATIONS,      { "Rations",     75 } },
     { FoodType::IRON_RATIONS, { "Iron Rations", 100 } }
   };
 
@@ -665,41 +665,41 @@ namespace GlobalConstants
 
   static const std::map<GemType, std::string> GemColorNameByType =
   {
-    { GemType::BLACK_JETSTONE, "Black" },
-    { GemType::BLACK_OBSIDIAN, "Black" },
-    { GemType::BLUE_AQUAMARINE, "Blue" },
-    { GemType::BLUE_SAPPHIRE, "Blue" },
-    { GemType::GREEN_EMERALD, "Green" },
-    { GemType::GREEN_JADE, "Green" },
-    { GemType::ORANGE_AMBER, "Orange" },
-    { GemType::ORANGE_JACINTH, "Orange" },
+    { GemType::BLACK_JETSTONE,  "Black"  },
+    { GemType::BLACK_OBSIDIAN,  "Black"  },
+    { GemType::BLUE_AQUAMARINE, "Blue"   },
+    { GemType::BLUE_SAPPHIRE,   "Blue"   },
+    { GemType::GREEN_EMERALD,   "Green"  },
+    { GemType::GREEN_JADE,      "Green"  },
+    { GemType::ORANGE_AMBER,    "Orange" },
+    { GemType::ORANGE_JACINTH,  "Orange" },
     { GemType::PURPLE_AMETHYST, "Purple" },
     { GemType::PURPLE_FLUORITE, "Purple" },
-    { GemType::RED_GARNET, "Red" },
-    { GemType::RED_RUBY, "Red" },
-    { GemType::WHITE_DIAMOND, "White" },
-    { GemType::WHITE_OPAL, "White" },
-    { GemType::YELLOW_CITRINE, "Yellow" }
+    { GemType::RED_GARNET,      "Red"    },
+    { GemType::RED_RUBY,        "Red"    },
+    { GemType::WHITE_DIAMOND,   "White"  },
+    { GemType::WHITE_OPAL,      "White"  },
+    { GemType::YELLOW_CITRINE,  "Yellow" }
   };
 
   static const std::map<GemType, std::string> GemNameByType =
   {
     { GemType::WORTHLESS_GLASS, "Worthless Glass" },
-    { GemType::BLACK_JETSTONE, "Jetstone" },
-    { GemType::BLACK_OBSIDIAN, "Obsidian" },
-    { GemType::BLUE_AQUAMARINE, "Aquamarine" },
-    { GemType::BLUE_SAPPHIRE, "Sapphire" },
-    { GemType::GREEN_EMERALD, "Emerald" },
-    { GemType::GREEN_JADE, "Jade" },
-    { GemType::ORANGE_AMBER, "Amber" },
-    { GemType::ORANGE_JACINTH, "Jacinth" },
-    { GemType::PURPLE_AMETHYST, "Amethyst" },
-    { GemType::PURPLE_FLUORITE, "Fluorite" },
-    { GemType::RED_GARNET, "Garnet" },
-    { GemType::RED_RUBY, "Ruby" },
-    { GemType::WHITE_DIAMOND, "Diamond" },
-    { GemType::WHITE_OPAL, "Opal" },
-    { GemType::YELLOW_CITRINE, "Citrine" }
+    { GemType::BLACK_JETSTONE,  "Jetstone"        },
+    { GemType::BLACK_OBSIDIAN,  "Obsidian"        },
+    { GemType::BLUE_AQUAMARINE, "Aquamarine"      },
+    { GemType::BLUE_SAPPHIRE,   "Sapphire"        },
+    { GemType::GREEN_EMERALD,   "Emerald"         },
+    { GemType::GREEN_JADE,      "Jade"            },
+    { GemType::ORANGE_AMBER,    "Amber"           },
+    { GemType::ORANGE_JACINTH,  "Jacinth"         },
+    { GemType::PURPLE_AMETHYST, "Amethyst"        },
+    { GemType::PURPLE_FLUORITE, "Fluorite"        },
+    { GemType::RED_GARNET,      "Garnet"          },
+    { GemType::RED_RUBY,        "Ruby"            },
+    { GemType::WHITE_DIAMOND,   "Diamond"         },
+    { GemType::WHITE_OPAL,      "Opal"            },
+    { GemType::YELLOW_CITRINE,  "Citrine"         }
   };
 
   static const std::map<GemType, int> GemCostByType =
@@ -740,60 +740,60 @@ namespace GlobalConstants
 
   static const std::map<ShrineType, std::string> ShrineSaintByType =
   {
-    { ShrineType::MIGHT, "St. George the Soldier" },
-    { ShrineType::SPIRIT, "St. Mary the Mother" },
-    { ShrineType::KNOWLEDGE, "St. Nestor the Scribe" },
+    { ShrineType::MIGHT,      "St. George the Soldier" },
+    { ShrineType::SPIRIT,     "St. Mary the Mother" },
+    { ShrineType::KNOWLEDGE,  "St. Nestor the Scribe" },
     { ShrineType::PERCEPTION, "St. Justin the Philosopher" },
-    { ShrineType::HEALING, "St. Luke the Healer" }
+    { ShrineType::HEALING,    "St. Luke the Healer" }
   };
 
   static const std::map<ShrineType, std::string> ShrineNameByType =
   {
-    { ShrineType::MIGHT, "Shrine of Might" },
-    { ShrineType::SPIRIT, "Shrine of Spirit" },
-    { ShrineType::TRANQUILITY, "Shrine of Tranquility" },
-    { ShrineType::KNOWLEDGE, "Shrine of Knowledge" },
-    { ShrineType::PERCEPTION, "Shrine of Perception" },
-    { ShrineType::HEALING, "Shrine of Healing" },
-    { ShrineType::FORGOTTEN, "Forgotten Shrine" },
-    { ShrineType::ABYSSAL, "Abyssal Shrine" },
-    { ShrineType::DESECRATED, "Desecrated Shrine" },
-    { ShrineType::DISTURBING, "Disturbing Shrine" },
-    { ShrineType::RUINED, "Ruined Shrine" },
-    { ShrineType::POTENTIAL, "Shrine of Potential" },
-    { ShrineType::HIDDEN, "Hidden Shrine" },
-    { ShrineType::HOLY, "Holy Shrine" }
+    { ShrineType::MIGHT,        "Shrine of Might" },
+    { ShrineType::SPIRIT,       "Shrine of Spirit" },
+    { ShrineType::TRANQUILITY,  "Shrine of Tranquility" },
+    { ShrineType::KNOWLEDGE,    "Shrine of Knowledge" },
+    { ShrineType::PERCEPTION,   "Shrine of Perception" },
+    { ShrineType::HEALING,      "Shrine of Healing" },
+    { ShrineType::FORGOTTEN,    "Forgotten Shrine" },
+    { ShrineType::ABYSSAL,      "Abyssal Shrine" },
+    { ShrineType::DESECRATED,   "Desecrated Shrine" },
+    { ShrineType::DISTURBING,   "Disturbing Shrine" },
+    { ShrineType::RUINED,       "Ruined Shrine" },
+    { ShrineType::POTENTIAL,    "Shrine of Potential" },
+    { ShrineType::HIDDEN,       "Hidden Shrine" },
+    { ShrineType::HOLY,         "Holy Shrine" }
   };
 
   static const std::map<ShrineType, std::pair<std::string, std::string>> ShrineColorsByType =
   {
-    { ShrineType::MIGHT, { "#FF0000", "#888888" } },
-    { ShrineType::SPIRIT, { "#0088FF", "#888888" } },
+    { ShrineType::MIGHT,       { "#FF0000", "#888888" } },
+    { ShrineType::SPIRIT,      { "#0088FF", "#888888" } },
     { ShrineType::TRANQUILITY, { "#0088FF", "#888888" } },
-    { ShrineType::KNOWLEDGE, { "#44FF44", "#888888" } },
-    { ShrineType::PERCEPTION, { "#FFFFFF", "#888888" } },
-    { ShrineType::HEALING, { "#FF0000", "#888888" } },
-    { ShrineType::FORGOTTEN, { "#FFFFFF", "#888888" } },
-    { ShrineType::ABYSSAL, { "#FF8000", "#880000" } },
-    { ShrineType::DESECRATED, { "#888800", "#440000" } },
-    { ShrineType::DISTURBING, { "#660000", "#888888" } },
-    { ShrineType::RUINED, { "#666666", "#000000" } },
-    { ShrineType::POTENTIAL, { "#FF0000", "#888888" } },
-    { ShrineType::HIDDEN, { "#666666", "#000000" } },
-    { ShrineType::HOLY, { "#FFFF00", "#888888" } },
+    { ShrineType::KNOWLEDGE,   { "#44FF44", "#888888" } },
+    { ShrineType::PERCEPTION,  { "#FFFFFF", "#888888" } },
+    { ShrineType::HEALING,     { "#FF0000", "#888888" } },
+    { ShrineType::FORGOTTEN,   { "#FFFFFF", "#888888" } },
+    { ShrineType::ABYSSAL,     { "#FF8000", "#880000" } },
+    { ShrineType::DESECRATED,  { "#888800", "#440000" } },
+    { ShrineType::DISTURBING,  { "#660000", "#888888" } },
+    { ShrineType::RUINED,      { "#666666", "#000000" } },
+    { ShrineType::POTENTIAL,   { "#FF0000", "#888888" } },
+    { ShrineType::HIDDEN,      { "#666666", "#000000" } },
+    { ShrineType::HOLY,        { "#FFFF00", "#888888" } },
   };
 
   static const std::map<std::string, std::vector<std::string>> PotionColors =
   {
-    { "Red Potion", { "#FFFFFF", "#FF0000" } },
-    { "Green Potion", { "#FFFFFF", "#00FF00" } },
+    { "Red Potion",     { "#FFFFFF", "#FF0000" } },
+    { "Green Potion",   { "#FFFFFF", "#00FF00" } },
     { "Radiant Potion", { "#666666", "#FFFF88" } },
-    { "Morbid Potion", { "#FFFFFF", "#660000" } },
-    { "Blue Potion", { "#FFFFFF", "#0000FF" } },
-    { "Yellow Potion", { "#000000", "#FFFF00" } },
-    { "Clear Potion", { "#000000", "#CCCCCC" } },
-    { "Black Potion", { "#FFFFFF", "#000000" } },
-    { "Cyan Potion", { "#FFFFFF", "#00FFFF" } },
+    { "Morbid Potion",  { "#FFFFFF", "#660000" } },
+    { "Blue Potion",    { "#FFFFFF", "#0000FF" } },
+    { "Yellow Potion",  { "#000000", "#FFFF00" } },
+    { "Clear Potion",   { "#000000", "#CCCCCC" } },
+    { "Black Potion",   { "#FFFFFF", "#000000" } },
+    { "Cyan Potion",    { "#FFFFFF", "#00FFFF" } },
     { "Magenta Potion", { "#FFFFFF", "#FF00FF" } }
   };
 
@@ -1024,86 +1024,8 @@ namespace GlobalConstants
   };
 
   static const std::vector<std::vector<std::string>> SpecialRooms =
-  {
-    // Common houses
-    // 0
-    {
-      "##+##",
-      "#...#",
-      "#...#",
-      "#...#",
-      "##-##"
-    },
-    // 1
-    {
-      "#+#####",
-      "#..#..#",
-      "|..+..|",
-      "#..#..#",
-      "#######"
-    },
-    // 2
-    {
-      "###+###",
-      "#.....#",
-      "#.....#",
-      "|..#+##",
-      "#..#..#",
-      "#..#..#",
-      "#######"
-    },
-    // Rich residents
-    // 3
-    {
-      "####+######-###",
-      "#.......#.....#",
-      "|.......+.....|",
-      "#.......#.....#",
-      "##+###+##.....#",
-      "#...#...#.....#",
-      "#...#...#.....|",
-      "#...#...#.....#",
-      "##-###-####-###"
-    },
-    // 4
-    {
-      "#########-#####",
-      "#......#......#",
-      "|......#......|",
-      "#......#......#",
-      "##+########+###",
-      "#   #ggggggggg#",
-      "#   #g#  #  #g#",
-      "+    g wwwww g#",
-      "#   #g wwwww g#",
-      "+    g wwwww g#",
-      "#   #g#  #  #g#",
-      "#   #ggggggggg#",
-      "##+########+###",
-      "#......#......#",
-      "|......#......|",
-      "#......#......#",
-      "#########-#####"
-    },
-    // 5
-    {
-      "####+##########",
-      "#ggg ggg#.....#",
-      "#gFg gFg#.....|",
-      "#ggg ggg|.....#",
-      "#ggg ggg|.....#",
-      "#gFg gFg#.....|",
-      "#ggg ggg#.....#",
-      "####+######+###",
-      "#.......#.....#",
-      "#.......#.....#",
-      "|.......+.....|",
-      "#.......#.....#",
-      "#.......#.....#",
-      "###############"
-    },
+  {    
     // Castle
-    // 6
     {
       "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
       "w###-###wwwwwwwwwwwwwww###-###w",
@@ -1133,38 +1055,6 @@ namespace GlobalConstants
       "w#     #wwwwwwwwwwwwwww#     #w",
       "w###-###wwwwwwwwwwwwwww###-###w",
       "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-    },
-    // Church
-    // 7
-    {
-      "................####-####........",
-      "................#       #........",
-      "................#       #........",
-      "................|       |........",
-      "................#       #........",
-      "................#       #........",
-      "####-#######-#######+#######-####",
-      "#    h h h h h h        #       #",
-      "+    h h h h h h        #       |",
-      "#                       +   /   |",
-      "+    h h h h h h        #       |",
-      "#    h h h h h h        #       #",
-      "####-#######-#######+#######-####",
-      "................#       #........",
-      "................#       #........",
-      "................|       |........",
-      "................#       #........",
-      "................#       #........",
-      "................####-####........",
-    },
-    // Trader
-    // 8
-    {
-      "#########",
-      "#.......#",
-      "+.......#",
-      "#.......#",
-      "#########"
     }
   };
 }
