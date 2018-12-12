@@ -22,6 +22,7 @@ class MainState : public GameState
 
     std::string _debugInfo;
 
+    void DisplayStartHint();
     void DisplayExitHint();
     void DisplayStatusIcons();
     void DisplayGameLog();

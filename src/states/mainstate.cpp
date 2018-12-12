@@ -274,6 +274,7 @@ void MainState::Update(bool forceUpdate)
 
     _playerRef->Draw();    
 
+    DisplayStartHint();
     DisplayExitHint();
     DisplayStatusIcons();
     DrawHPMP();
@@ -485,9 +486,44 @@ void MainState::ProcessItemPickup(std::pair<int, GameObject*>& pair)
   Map::Instance().CurrentLevel->GameObjects.erase(it + pair.first);
 }
 
+void MainState::DisplayStartHint()
+{
+  int th = Printer::Instance().TerminalHeight;
+
+  Printer::Instance().PrintFB(0, th - 4, '<', "#FFFFFF");
+
+  auto curLvl = Map::Instance().CurrentLevel;
+  int dx = curLvl->LevelStart.X - _playerRef->PosX;
+  int dy = curLvl->LevelStart.Y - _playerRef->PosY;
+
+  std::string dir;
+
+  if (dy > 0)
+  {
+    dir += "S";
+  }
+  else if (dy < 0)
+  {
+    dir += "N";
+  }
+
+  if (dx > 0)
+  {
+    dir += "E";
+  }
+  else if (dx < 0)
+  {
+    dir += "W";
+  }
+
+  Printer::Instance().PrintFB(1, th - 4, dir, Printer::kAlignLeft, "#FFFFFF");
+}
+
 void MainState::DisplayExitHint()
 {
   int th = Printer::Instance().TerminalHeight;
+
+  Printer::Instance().PrintFB(0, th - 3, '>', "#FFFFFF");
 
   auto curLvl = Map::Instance().CurrentLevel;
   if (curLvl->ExitFound)
@@ -515,11 +551,11 @@ void MainState::DisplayExitHint()
       dir += "W";
     }
 
-    Printer::Instance().PrintFB(0, th - 3, dir, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(1, th - 3, dir, Printer::kAlignLeft, "#FFFFFF");
   }
   else
   {
-    Printer::Instance().PrintFB(0, th - 3, "??", Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(1, th - 3, "??", Printer::kAlignLeft, "#FFFFFF");
   }
 }
 
