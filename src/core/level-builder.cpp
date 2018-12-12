@@ -3,6 +3,92 @@
 #include "util.h"
 #include "rng.h"
 
+void LevelBuilder::Tunneler(Position mapSize, int maxTunnels, int maxTunnelLength, Position start)
+{
+  int tunnelsMax = maxTunnels;
+
+  _mapSize = mapSize;
+
+  _map = CreateFilledMap(mapSize.X, mapSize.Y);
+
+  int sx, sy = 0;
+
+  if (start.X == -1 || start.Y == -1)
+  {
+    sx = RNG::Instance().RandomRange(1, mapSize.X - 1);
+    sy = RNG::Instance().RandomRange(1, mapSize.Y - 1);
+  }
+  else
+  {
+    sx = start.X;
+    sy = start.Y;
+  }
+
+  _startingPoint.Set(sx, sy);
+
+  std::vector<Position> directions =
+  {
+    { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }
+  };
+
+  std::vector<std::vector<Position>> choicesByDir =
+  {
+    { { 0, 1 }, { 0, -1 } },
+    { { 0, 1 }, { 0, -1 } },
+    { { 1, 0 }, { -1, 0 } },
+    { { 1, 0 }, { -1, 0 } }
+  };
+
+  int mx = sx;
+  int my = sy;
+
+  int index = RNG::Instance().RandomRange(0, directions.size());
+  Position lastDir = directions[index];
+
+  while (tunnelsMax > 0)
+  {
+    int newDirChoice = RNG::Instance().RandomRange(0, 2);
+    Position newDir = choicesByDir[index][newDirChoice];
+
+    int currentLength = 0;
+    int rndLength = RNG::Instance().RandomRange(1, maxTunnelLength);
+
+    bool limits = (mx >= 0 && mx < _mapSize.X
+                && my >= 0 && my < _mapSize.Y);
+
+    std::vector<Position> corridor;
+
+    while (currentLength <= rndLength && limits)
+    {
+      _map[mx][my].Image = '.';
+
+      mx += newDir.X;
+      my += newDir.Y;
+
+      corridor.push_back( { mx, my } );
+
+      currentLength++;
+
+      limits = (mx >= 0 && mx < _mapSize.X
+             && my >= 0 && my < _mapSize.Y);
+    }
+
+    lastDir.Set(newDir);
+
+    if (corridor.size() != 0)
+    {
+      int newPosIndex = RNG::Instance().RandomRange(0, corridor.size());
+
+      mx = corridor[newPosIndex].X;
+      my = corridor[newPosIndex].Y;
+    }
+
+    tunnelsMax--;
+  }
+
+  FillMapRaw();
+}
+
 void LevelBuilder::RecursiveBacktracker(Position mapSize, Position startingPoint)
 {
   std::stack<Position> openCells;
@@ -25,9 +111,6 @@ void LevelBuilder::RecursiveBacktracker(Position mapSize, Position startingPoint
   }
 
   _startingPoint.Set(sx, sy);
-
-  auto spDbg = Util::StringFormat("Starting point [%i;%i]", sx, sy);
-  Logger::Instance().Print(spDbg);
 
   _map[sx][sy].Visited = true;
   _map[sx][sy].Image = '.';
@@ -392,6 +475,26 @@ RoomLayout LevelBuilder::CreateSquareLayout(int size, chtype ch)
 
   return res;
 }
+
+void LevelBuilder::LogPrintMapRaw()
+{
+  Logger::Instance().Print("***** MapRaw *****\n\n");
+
+  std::string result = "\n";
+
+  for (int x = 0; x < _mapSize.X; x++)
+  {
+    for (int y = 0; y < _mapSize.Y; y++)
+    {
+      result += MapRaw[x][y];
+    }
+
+    result += "\n";
+  }
+
+  Logger::Instance().Print(result);
+}
+
 
 void LevelBuilder::PrintResult()
 {

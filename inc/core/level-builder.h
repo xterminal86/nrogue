@@ -18,7 +18,9 @@ class LevelBuilder
   public:
     void BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY);
     void RecursiveBacktracker(Position mapSize, Position startingPoint = { -1, -1 });
+    void Tunneler(Position mapSize, int maxTunnels, int maxTunnelLength, Position start = { -1, -1 } );
     void PrintResult();
+    void LogPrintMapRaw();
 
     std::vector<RoomHelper> MapChunks;
     std::vector<std::vector<char>> MapLayout;

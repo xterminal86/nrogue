@@ -43,6 +43,12 @@ struct Position
     Y = y;
   }
 
+  void Set(const Position& from)
+  {
+    X = from.X;
+    Y = from.Y;
+  }
+
   // For use inside std::map as a key
   bool operator< (const Position& rhs) const
   {
