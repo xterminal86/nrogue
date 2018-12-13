@@ -17,16 +17,17 @@ void MapLevelCaves::PrepareMap(MapLevelBase* levelOwner)
 
 void MapLevelCaves::CreateLevel()
 {
-  VisibilityRadius = 8;
+  VisibilityRadius = 4;
   MonstersRespawnTurns = 1000;
 
   // Build level
 
+  Position mapStart(MapSize.X / 2, MapSize.Y / 2);
+
   LevelBuilder lb;
-
-  //Position start(1, 1);
-
-  lb.RecursiveBacktracker(MapSize);
+  int maxTunnels = MapSize.X * 4;
+  int maxTunnelLength = (MapSize.X / 10) * 2;
+  lb.Tunneler(MapSize, maxTunnels, maxTunnelLength, mapStart);
 
   ConstructFromBuilder(lb);
 

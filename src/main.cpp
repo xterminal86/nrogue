@@ -13,22 +13,24 @@
 #include "util.h"
 #include "rng.h"
 
+#if RUN_TESTS == 1
+#include "tests.h"
+#endif
+
 // FIXME: remove
 #include "level-builder.h"
 
-#if RUN_TESTS == 1
-
-#include "tests.h"
-
-#endif
-
 int main()
-{  
-  Logger::Instance().Init();  
-  Logger::Instance().Prepare(true);
-
+{
   RNG::Instance().Init();
   //RNG::Instance().SetSeed(1);
+  RNG::Instance().SetSeed(1544714037606745311);
+
+  Logger::Instance().Init();
+  Logger::Instance().Prepare(true);
+
+  auto str = Util::StringFormat("World seed is %lu", RNG::Instance().Seed);
+  Logger::Instance().Print(str);
 
   initscr();
   nodelay(stdscr, true);     // non-blocking getch()
@@ -51,16 +53,16 @@ int main()
   endwin();
 
   #if RUN_TESTS == 1
-
   Tests::Run();
-
   #endif
 
-  printf("Goodbye!\n");
-
   LevelBuilder lb;
-  lb.Tunneler( { 100, 100 }, 100, 10);
+  Position s(3, 3);
+  lb.BacktrackingTunneler( { 10, 10 }, 5, s);
+  lb.MapRaw[s.X][s.Y] = 'X';
   lb.LogPrintMapRaw();
+
+  printf("Goodbye!\n");
 
   return 0;
 }

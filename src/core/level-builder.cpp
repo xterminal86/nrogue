@@ -3,6 +3,102 @@
 #include "util.h"
 #include "rng.h"
 
+void LevelBuilder::BacktrackingTunneler(Position mapSize, int maxTunnelLength, Position start)
+{
+  _mapSize = mapSize;
+
+  _map = CreateFilledMap(mapSize.X, mapSize.Y);
+
+  int sx, sy = 0;
+
+  if (start.X == -1 || start.Y == -1)
+  {
+    sx = RNG::Instance().RandomRange(4, mapSize.X - 4);
+    sy = RNG::Instance().RandomRange(4, mapSize.Y - 4);
+  }
+  else
+  {
+    sx = start.X;
+    sy = start.Y;
+  }
+
+  _startingPoint.Set(sx, sy);
+
+  _map[sx][sy].Image = '.';
+
+  // Contains corridor start position and direction
+  std::stack<std::pair<Position, Position>> nodePoints;
+
+  Position startDir = GetRandomDir(_startingPoint)[0];
+
+  nodePoints.push({ _startingPoint, startDir });
+
+  while (nodePoints.size() != 0)
+  {
+    std::pair<Position, Position> currentNode = nodePoints.top();
+
+    Position start = currentNode.first;
+    Position dir = currentNode.second;
+
+    int x = start.X;
+    int y = start.Y;
+
+    _map[x][y].Image = '.';
+
+    int length = RNG::Instance().RandomRange(2, maxTunnelLength);
+
+    auto str = Util::StringFormat("Building from %i %i dir %i %i length %i", x, y, dir.X, dir.Y, length);
+    Logger::Instance().Print(str);
+
+    while (length > 0)
+    {
+      if (!IsDeadEnd({ x + dir.X, y + dir.Y }))
+      {
+        auto str = Util::StringFormat("Stopped at %i %i", x + dir.X, y + dir.Y);
+        Logger::Instance().Print(str);
+
+        _map[x][y].Image = '.';
+
+        break;
+      }
+
+      x += dir.X;
+      y += dir.Y;
+
+      _map[x][y].Image = '.';
+
+      length--;
+    }
+
+    auto dbg = Util::StringFormat("Finished building at %i %i", x, y);
+    Logger::Instance().Print(dbg);
+
+    auto newDir = GetPerpendicularDir({ x, y }, dir);
+    if (newDir.size() != 0)
+    {
+      auto str = Util::StringFormat("Adding node point %i %i dir %i %i", x, y, newDir[0].X, newDir[0].Y);
+      Logger::Instance().Print(str);
+
+      nodePoints.push({ { x, y }, newDir[0] });
+    }
+    else
+    {
+      Logger::Instance().Print("Invalid pairs, backtracking");
+
+      nodePoints.pop();
+
+      if (nodePoints.size() != 0)
+      {
+        Position p = nodePoints.top().first;
+        auto str = Util::StringFormat("Backtracked to %i %i", p.X, p.Y);
+        Logger::Instance().Print(str);
+      }
+    }
+  }
+
+  FillMapRaw();
+}
+
 void LevelBuilder::Tunneler(Position mapSize, int maxTunnels, int maxTunnelLength, Position start)
 {
   int tunnelsMax = maxTunnels;
@@ -31,57 +127,37 @@ void LevelBuilder::Tunneler(Position mapSize, int maxTunnels, int maxTunnelLengt
     { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }
   };
 
-  std::vector<std::vector<Position>> choicesByDir =
-  {
-    { { 0, 1 }, { 0, -1 } },
-    { { 0, 1 }, { 0, -1 } },
-    { { 1, 0 }, { -1, 0 } },
-    { { 1, 0 }, { -1, 0 } }
-  };
-
-  int mx = sx;
-  int my = sy;
+  Position mapPos(sx, sy);
 
   int index = RNG::Instance().RandomRange(0, directions.size());
   Position lastDir = directions[index];
 
   while (tunnelsMax > 0)
   {
-    int newDirChoice = RNG::Instance().RandomRange(0, 2);
-    Position newDir = choicesByDir[index][newDirChoice];
+    Position newDir = GetRandomPerpendicularDir(lastDir);
 
     int currentLength = 0;
     int rndLength = RNG::Instance().RandomRange(1, maxTunnelLength);
 
-    bool limits = (mx >= 0 && mx < _mapSize.X
-                && my >= 0 && my < _mapSize.Y);
-
     std::vector<Position> corridor;
 
-    while (currentLength <= rndLength && limits)
+    while (currentLength <= rndLength && IsInsideMap(mapPos))
     {
-      _map[mx][my].Image = '.';
+      corridor.push_back(mapPos);
 
-      mx += newDir.X;
-      my += newDir.Y;
+      _map[mapPos.X][mapPos.Y].Image = '.';
 
-      corridor.push_back( { mx, my } );
+      mapPos.X += newDir.X;
+      mapPos.Y += newDir.Y;
 
       currentLength++;
-
-      limits = (mx >= 0 && mx < _mapSize.X
-             && my >= 0 && my < _mapSize.Y);
     }
 
     lastDir.Set(newDir);
 
-    if (corridor.size() != 0)
-    {
-      int newPosIndex = RNG::Instance().RandomRange(0, corridor.size());
+    index = RNG::Instance().RandomRange(0, corridor.size());
 
-      mx = corridor[newPosIndex].X;
-      my = corridor[newPosIndex].Y;
-    }
+    mapPos = corridor[index];
 
     tunnelsMax--;
   }
@@ -352,6 +428,14 @@ bool LevelBuilder::CheckLimits(Position& start, int roomSize)
   //Logger::Instance().Print("\t\tPassed!");
 
   return true;
+}
+
+bool LevelBuilder::IsInsideMap(Position& pos)
+{
+  return (pos.X >= 1
+       && pos.X < _mapSize.X - 2
+       && pos.Y >= 1
+       && pos.Y < _mapSize.Y - 2);
 }
 
 bool LevelBuilder::IsAreaVisited(Position& start, int roomSize)
@@ -639,7 +723,7 @@ std::vector<Position> LevelBuilder::GetRandomCell(Position p)
     newPos.X = p.X + kvp.second.X;
     newPos.Y = p.Y + kvp.second.Y;
 
-    if (IsCellValid(newPos))
+    if (IsDeadEnd(newPos))
     {
       candidates.push_back(newPos);
     }
@@ -658,8 +742,8 @@ std::vector<Position> LevelBuilder::GetRandomCell(Position p)
 }
 
 // Cell is "valid" if it touches only one floor tile
-bool LevelBuilder::IsCellValid(Position p)
-{
+bool LevelBuilder::IsDeadEnd(Position p)
+{  
   int lx = p.X - 1;
   int ly = p.Y - 1;
   int hx = p.X + 1;
@@ -667,7 +751,8 @@ bool LevelBuilder::IsCellValid(Position p)
 
   int count = 0;
 
-  if (lx < 0 || ly < 0 || hx > _mapSize.X - 1 || hy > _mapSize.Y - 1)
+  // Don't count map borders
+  if (lx < 1 || ly < 1 || hx > _mapSize.X - 2 || hy > _mapSize.Y - 2)
   {
     return false;
   }
@@ -760,4 +845,124 @@ void LevelBuilder::FillMapRaw()
 
     MapRaw.push_back(row);
   }
+}
+
+Position LevelBuilder::GetRandomPerpendicularDir(Position dir)
+{
+  Position res;
+
+  std::vector<std::vector<Position>> choicesByDir =
+  {
+    { { 0, 1 }, { 0, -1 } },
+    { { 0, 1 }, { 0, -1 } },
+    { { 1, 0 }, { -1, 0 } },
+    { { 1, 0 }, { -1, 0 } }
+  };
+
+  std::vector<Position> directions =
+  {
+    { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }
+  };
+
+  for (int i = 0; i < directions.size(); i++)
+  {
+    if (dir.X == directions[i].X && dir.Y == directions[i].Y)
+    {
+      int index = RNG::Instance().RandomRange(0, 2);
+      res = choicesByDir[i][index];
+      break;
+    }
+  }
+
+  return res;
+}
+
+std::vector<Position> LevelBuilder::GetRandomDir(Position pos)
+{
+  std::vector<Position> res;
+
+  std::vector<Position> directions =
+  {
+    { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }
+  };
+
+  while (!directions.empty())
+  {
+    int index = RNG::Instance().RandomRange(0, directions.size());
+    Position newDir = directions[index];
+    int nx = pos.X + newDir.X;
+    int ny = pos.Y + newDir.Y;
+
+    if (IsDeadEnd({ nx, ny }))
+    {
+      res.push_back(newDir);
+      break;
+    }
+
+    directions.erase(directions.begin() + index);
+  }
+
+  return res;
+}
+
+std::vector<Position> LevelBuilder::GetPerpendicularDir(Position pos, Position lastDir)
+{
+  std::vector<Position> res;
+
+  std::vector<Position> directions =
+  {
+    { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }
+  };
+
+  std::vector<std::vector<Position>> choicesByDir =
+  {
+    { { 0, 1 }, { 0, -1 } },
+    { { 0, 1 }, { 0, -1 } },
+    { { 1, 0 }, { -1, 0 } },
+    { { 1, 0 }, { -1, 0 } }
+  };
+
+  std::vector<Position> selectedPair;
+
+  auto str = Util::StringFormat("Trying to get perpendicular dir to %i %i", lastDir.X, lastDir.Y);
+  Logger::Instance().Print(str);
+
+  for (int i = 0; i < directions.size(); i++)
+  {
+    if (lastDir.X == directions[i].X && lastDir.Y == directions[i].Y)
+    {
+      selectedPair = choicesByDir[i];
+
+      Logger::Instance().Print("\tFound pairs:");
+
+      for (auto& i : selectedPair)
+      {
+        auto str = Util::StringFormat("\t%i %i", i.X, i.Y);
+        Logger::Instance().Print(str);
+      }
+
+      break;
+    }
+  }
+
+  for (int i = 0; i < selectedPair.size(); i++)
+  {
+    int index = RNG::Instance().RandomRange(0, selectedPair.size());
+
+    int x = pos.X + selectedPair[index].X;
+    int y = pos.Y + selectedPair[index].Y;
+
+    if (IsDeadEnd({ x, y }))
+    {
+      auto str = Util::StringFormat("\t Found %i %i", selectedPair[index].X, selectedPair[index].Y);
+      Logger::Instance().Print(str);
+
+      res.push_back(selectedPair[index]);
+      break;
+    }
+
+    selectedPair.erase(selectedPair.begin() + index);
+  }
+
+  return res;
 }

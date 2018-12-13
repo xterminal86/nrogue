@@ -19,6 +19,7 @@ class LevelBuilder
     void BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY);
     void RecursiveBacktracker(Position mapSize, Position startingPoint = { -1, -1 });
     void Tunneler(Position mapSize, int maxTunnels, int maxTunnelLength, Position start = { -1, -1 } );
+    void BacktrackingTunneler(Position mapSize, int maxTunnelLength, Position start = { - 1, -1 } );
     void PrintResult();
     void LogPrintMapRaw();
 
@@ -75,6 +76,7 @@ class LevelBuilder
 
     std::vector<std::vector<MapCell>> CreateFilledMap(int w, int h);
     std::vector<Position> GetRandomCell(Position p);
+    std::vector<Position> GetRandomDir(Position pos);
 
     void TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side);
     void PrintChunks();
@@ -85,9 +87,14 @@ class LevelBuilder
     void FillMapRaw();
 
     bool CheckLimits(Position& start, int roomSize);
+    bool IsInsideMap(Position& pos);
     bool IsAreaVisited(Position& start, int roomSize);
-    bool IsCellValid(Position p);
+    bool IsDeadEnd(Position p);
+
     void CheckIfProblemCorner(Position p);
+
+    Position GetRandomPerpendicularDir(Position dir);
+    std::vector<Position> GetPerpendicularDir(Position pos, Position lastDir);
 
     RoomLayout CreateSquareLayout(int size, chtype ch);
 
