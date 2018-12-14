@@ -109,12 +109,14 @@ void LevelBuilder::BacktrackingTunneler(Position mapSize, Position tunnelMinMax,
     {
       nodePoints.pop();
 
+      /*
       if (nodePoints.size() != 0)
       {
-        //auto p = nodePoints.top();
-        //auto str = Util::StringFormat("\tBacktracking to %i %i dir %i %i", p.first.X, p.first.Y, p.second.X, p.second.Y);
-        //Logger::Instance().Print(str);
+        auto p = nodePoints.top();
+        auto str = Util::StringFormat("\tBacktracking to %i %i dir %i %i", p.first.X, p.first.Y, p.second.X, p.second.Y);
+        Logger::Instance().Print(str);
       }
+      */
     }
     else
     {

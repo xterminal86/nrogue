@@ -822,34 +822,34 @@ namespace GlobalConstants
     // Abandoned Mines
     { MapType::MINES_1,     { "Mine Entrance" } },
     { MapType::MINES_2,     { "Forsaken Prospects" } },
-    { MapType::MINES_3,     { "Forsaken Prospects" } },
+    { MapType::MINES_3,     { "Abandoned Mines" } },
     { MapType::MINES_4,     { "Deep Mines" } },
-    { MapType::MINES_5,     { "Deep Mines" } },
+    { MapType::MINES_5,     { "Crumbling Tunnels" } },
     // Caves of Circe
-    { MapType::CAVES_1,     { "Caves of Circe" } },
-    { MapType::CAVES_2,     { "Corridors of Time" } },
+    { MapType::CAVES_1,     { "Catacombs" } },
+    { MapType::CAVES_2,     { "Caves of Circe" } },
     { MapType::CAVES_3,     { "Corridors of Time" } },
     { MapType::CAVES_4,     { "Windy Tunnels" } },
-    { MapType::CAVES_5,     { "Windy Tunnels" } },
+    { MapType::CAVES_5,     { "Vertigo" } },
     // Lost City
     { MapType::LOST_CITY,   { "Lost City" } },
     // Deep Dark
     { MapType::DEEP_DARK_1, { "Embrace of Darkness" } },
-    { MapType::DEEP_DARK_2, { "Deep Dark" } },
+    { MapType::DEEP_DARK_2, { "Underdark" } },
     { MapType::DEEP_DARK_3, { "Deep Dark" } },
     { MapType::DEEP_DARK_4, { "Starless Night" } },
-    { MapType::DEEP_DARK_5, { "Starless Night" } },
+    { MapType::DEEP_DARK_5, { "Sinister" } },
     // Stygian Abyss
     { MapType::ABYSS_1,     { "Plains of Desolation" } },
     { MapType::ABYSS_2,     { "Grey Wastes" } },
     { MapType::ABYSS_3,     { "Soul Pastures" } },
     { MapType::ABYSS_4,     { "Stygian Abyss" } },
-    { MapType::ABYSS_5,     { "Stygian Abyss" } },
+    { MapType::ABYSS_5,     { "Hell's Maw" } },
     // Nether
     { MapType::NETHER_1,    { "Blazing Gates" } },
-    { MapType::NETHER_2,    { "River of Flame" } },
+    { MapType::NETHER_2,    { "River of Fire" } },
     { MapType::NETHER_3,    { "Red Wastes" } },
-    { MapType::NETHER_4,    { "Red Wastes" } },
+    { MapType::NETHER_4,    { "Citadel" } },
     { MapType::NETHER_5,    { "The Hearth" } },
     // The End
     { MapType::THE_END,     { "???" } }

@@ -20,12 +20,11 @@ void MapLevelCaves::CreateLevel()
   VisibilityRadius = 4;
   MonstersRespawnTurns = 1000;
 
-  // Build level
-
-  Position mapStart(MapSize.X / 2, MapSize.Y / 2);
+  int tunnelLengthMax = MapSize.X / 10;
+  int tunnelLengthMin = tunnelLengthMax / 2;
 
   LevelBuilder lb;
-  lb.BacktrackingTunneler(MapSize, { 5, 20 }, true);
+  lb.BacktrackingTunneler(MapSize, { tunnelLengthMin, tunnelLengthMax }, true);
 
   ConstructFromBuilder(lb);
 
