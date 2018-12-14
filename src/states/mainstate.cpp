@@ -567,7 +567,7 @@ void MainState::DisplayStatusIcons()
 
   if (_playerRef->IsStarving)
   {
-    Printer::Instance().PrintFB(3, th - 3, '%', "#FF0000");
+    Printer::Instance().PrintFB(4, th - 3, '%', "#FF0000");
   }
   else
   {
@@ -575,7 +575,7 @@ void MainState::DisplayStatusIcons()
     int part = hungerMax - hungerMax * 0.25;
     if (_playerRef->Attrs.Hunger >= part)
     {
-      Printer::Instance().PrintFB(3, th - 3, '%', "#FFFF00");
+      Printer::Instance().PrintFB(4, th - 3, '%', "#FFFF00");
     }
   }
 
@@ -589,7 +589,7 @@ void MainState::DisplayStatusIcons()
 
     if (weapon->Data.Durability.CurrentValue <= warning)
     {
-      Printer::Instance().PrintFB(5, th - 3, ')', "#FFFF00");
+      Printer::Instance().PrintFB(6, th - 3, ')', "#FFFF00");
     }
   }
 }
