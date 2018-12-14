@@ -646,7 +646,7 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 
   std::map<GemType, int> gemsMap =
   {
-    { GemType::WORTHLESS_GLASS, 600 },
+    { GemType::WORTHLESS_GLASS, 800 },
     { GemType::BLACK_OBSIDIAN, 150 },
     { GemType::GREEN_JADE, 145 },
     { GemType::PURPLE_FLUORITE, 135 },
@@ -989,6 +989,9 @@ GameObject* GameObjectsFactory::CreateGem(int x, int y, GemType type)
 
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
 {
+  // BUG: identified prefix description text gets duplicated
+  // during creation of random unidentified potions due to
+  // calling this method twice.
   switch (itemData.Prefix)
   {
     case ItemPrefix::BLESSED:
