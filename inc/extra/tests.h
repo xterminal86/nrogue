@@ -3,6 +3,7 @@
 
 #include "util.h"
 #include "player.h"
+#include "level-builder.h"
 
 namespace Tests
 {  
@@ -235,6 +236,40 @@ namespace Tests
     }
   }
 
+  inline void LevelBuilderTest()
+  {
+    printf("\nLevel builders:\n\n");
+
+    LevelBuilder lb;
+
+    Position s(1, 1);
+    Position mapSize(30, 30);
+
+    printf("1) Tunneler:\n\n");
+
+    lb.Reset();
+    lb.Tunneler(mapSize, 50, { 10, 20 }, s);
+    lb.MapRaw[s.X][s.Y] = 'X';
+    lb.LogPrintMapRaw();
+    lb.PrintMapRaw();
+
+    printf("2) Tunneler (backtracking):\n\n");
+
+    lb.Reset();
+    lb.BacktrackingTunneler(mapSize, { 5, 20 }, true, s);
+    lb.MapRaw[s.X][s.Y] = 'X';
+    lb.LogPrintMapRaw();
+    lb.PrintMapRaw();
+
+    printf("3) Recursive Bactracker:\n\n");
+
+    lb.Reset();
+    lb.RecursiveBacktracker(mapSize, s);
+    lb.MapRaw[s.X][s.Y] = 'X';
+    lb.LogPrintMapRaw();
+    lb.PrintMapRaw();
+  }
+
   inline void Run()
   {
     printf("***** START TESTS *****\n\n");
@@ -250,6 +285,8 @@ namespace Tests
     WeightedRandomTest();
     printf("\n- o -\n");
     LootDropTest();
+    printf("\n- o -\n");
+    LevelBuilderTest();
 
     printf("\n\n***** o *****\n");
   }  

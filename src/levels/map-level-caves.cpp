@@ -25,9 +25,7 @@ void MapLevelCaves::CreateLevel()
   Position mapStart(MapSize.X / 2, MapSize.Y / 2);
 
   LevelBuilder lb;
-  int maxTunnels = MapSize.X * 4;
-  int maxTunnelLength = (MapSize.X / 10) * 2;
-  lb.Tunneler(MapSize, maxTunnels, maxTunnelLength, mapStart);
+  lb.BacktrackingTunneler(MapSize, { 5, 20 }, true);
 
   ConstructFromBuilder(lb);
 

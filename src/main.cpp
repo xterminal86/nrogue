@@ -17,17 +17,14 @@
 #include "tests.h"
 #endif
 
-// FIXME: remove
-#include "level-builder.h"
-
 int main()
 {
   RNG::Instance().Init();
   //RNG::Instance().SetSeed(1);
-  RNG::Instance().SetSeed(1544714037606745311);
+  //RNG::Instance().SetSeed(1544714037606745311);
 
   Logger::Instance().Init();
-  Logger::Instance().Prepare(true);
+  Logger::Instance().Prepare(false);
 
   auto str = Util::StringFormat("World seed is %lu", RNG::Instance().Seed);
   Logger::Instance().Print(str);
@@ -55,12 +52,6 @@ int main()
   #if RUN_TESTS == 1
   Tests::Run();
   #endif
-
-  LevelBuilder lb;
-  Position s(3, 3);
-  lb.BacktrackingTunneler( { 10, 10 }, 5, s);
-  lb.MapRaw[s.X][s.Y] = 'X';
-  lb.LogPrintMapRaw();
 
   printf("Goodbye!\n");
 
