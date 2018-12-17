@@ -243,7 +243,7 @@ namespace Tests
     LevelBuilder lb;
 
     Position s(1, 1);
-    Position mapSize(30, 30);
+    Position mapSize(24, 80);
 
     printf("1) Tunneler:\n\n");
 
@@ -266,6 +266,13 @@ namespace Tests
     lb.Reset();
     lb.RecursiveBacktracker(mapSize, s);
     lb.MapRaw[s.X][s.Y] = 'X';
+    lb.LogPrintMapRaw();
+    lb.PrintMapRaw();
+
+    printf("4) Cellular Automata:\n\n");
+
+    lb.Reset();
+    lb.CellularAutomata(mapSize, 40, 5, 4, 12);
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
   }

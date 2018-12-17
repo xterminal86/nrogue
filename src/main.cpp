@@ -1,4 +1,4 @@
-#define RUN_TESTS 0
+#define RUN_TESTS 1
 
 #include <ncurses.h>
 #include <unistd.h>

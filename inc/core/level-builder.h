@@ -20,6 +20,7 @@ class LevelBuilder
     void RecursiveBacktracker(Position mapSize, Position startingPoint = { -1, -1 });
     void Tunneler(Position mapSize, int maxTunnels, Position tunnelLengthMinMax, Position start = { -1, -1 } );
     void BacktrackingTunneler(Position mapSize, Position tunnelLengthMinMax, bool additionalTweaks, Position start = { - 1, -1 } );
+    void CellularAutomata(Position mapSize, int initialWallChance, int birthThreshold, int deathThreshold, int maxIterations);
     void PrintResult();
     void PrintMapRaw();
     void LogPrintMapRaw();
@@ -76,7 +77,9 @@ class LevelBuilder
 
     std::vector<RoomHelper> GetRoomsForLayout(RoomLayout& layout, RoomEdgeEnum side);
 
+    std::vector<std::vector<MapCell>> CreateEmptyMap(int w, int h);
     std::vector<std::vector<MapCell>> CreateFilledMap(int w, int h);
+    std::vector<std::vector<MapCell>> CreateRandomlyFilledMap(int w, int h, int chance);
     std::vector<Position> GetRandomCell(Position p);
     std::vector<Position> GetRandomDir(Position pos);
 
@@ -93,6 +96,8 @@ class LevelBuilder
     bool IsInsideMap(Position pos);
     bool IsAreaVisited(Position& start, int roomSize);
     bool IsDeadEnd(Position p);
+
+    int CountAround(int x, int y, char ch);
 
     void CheckIfProblemCorner(Position p);
 

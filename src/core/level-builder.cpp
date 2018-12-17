@@ -3,6 +3,95 @@
 #include "util.h"
 #include "rng.h"
 
+void LevelBuilder::CellularAutomata(Position mapSize, int initialWallChance, int birthThreshold, int deathThreshold, int maxIterations)
+{
+  _map = CreateRandomlyFilledMap(mapSize.X, mapSize.Y, initialWallChance);
+
+  // If we change data in-place we would mix old and
+  // new results, so we should perform check on initial map
+  // and store results in temporary one and copy them after
+  // whole initial map was scanned.
+  auto tmp = CreateEmptyMap(mapSize.X, mapSize.Y);
+
+  for (int i = 0; i < maxIterations; i++)
+  {
+    // copy original map contents to temp
+    for (int x = 0; x < mapSize.X; x++)
+    {
+      for (int y = 0; y < mapSize.Y; y++)
+      {
+        tmp[x][y].Image = _map[x][y].Image;
+      }
+    }
+
+    for (int x = 0; x < mapSize.X; x++)
+    {
+      for (int y = 0; y < mapSize.Y; y++)
+      {
+        if (_map[x][y].Visited)
+        {
+          continue;
+        }
+
+        int aliveCells = CountAround(x, y, '.');
+        if (_map[x][y].Image == '.')
+        {
+          tmp[x][y].Image = (aliveCells < deathThreshold) ? '#' : '.';
+        }
+        else if (_map[x][y].Image == '#')
+        {
+          tmp[x][y].Image = (aliveCells > birthThreshold) ? '.' : '#';
+        }
+      }
+    }
+
+    // copy temp array to original map
+    for (int x = 0; x < mapSize.X; x++)
+    {
+      for (int y = 0; y < mapSize.Y; y++)
+      {
+        _map[x][y].Image = tmp[x][y].Image;
+      }
+    }
+  }
+
+  FillMapRaw();
+}
+
+int LevelBuilder::CountAround(int x, int y, char ch)
+{
+  int lx = x - 1;
+  int ly = y - 1;
+  int hx = x + 1;
+  int hy = y + 1;
+
+  int res = 0;
+
+  for (int ix = lx; ix <= hx; ix++)
+  {
+    for (int iy = ly; iy <= hy; iy++)
+    {
+      if (x == ix && y == iy)
+      {
+        continue;
+      }
+
+      if (!IsInsideMap({ ix, iy }))
+      {
+        //res++;
+        continue;
+      }
+
+      if (_map[ix][iy].Image == ch)
+      {
+        res++;
+      }
+    }
+  }
+
+  return res;
+}
+
 /// Builds tunnels perpendicular to previous direction,
 /// backtracks to previous position if failed.
 ///
@@ -722,6 +811,29 @@ void LevelBuilder::ConvertChunksToLayout()
   }
 }
 
+std::vector<std::vector<MapCell>> LevelBuilder::CreateEmptyMap(int w, int h)
+{
+  std::vector<std::vector<MapCell>> map;
+
+  for (int x = 0; x < w; x++)
+  {
+    std::vector<MapCell> row;
+    for (int y = 0; y < h; y++)
+    {
+      MapCell c;
+      c.Coordinates.X = x;
+      c.Coordinates.Y = y;
+      c.Image = '.';
+      c.Visited = false;
+      row.push_back(c);
+    }
+
+    map.push_back(row);
+  }
+
+  return map;
+}
+
 std::vector<std::vector<MapCell>> LevelBuilder::CreateFilledMap(int w, int h)
 {
   std::vector<std::vector<MapCell>> map;
@@ -735,6 +847,31 @@ std::vector<std::vector<MapCell>> LevelBuilder::CreateFilledMap(int w, int h)
       c.Coordinates.X = x;
       c.Coordinates.Y = y;
       c.Image = '#';
+      c.Visited = false;
+      row.push_back(c);
+    }
+
+    map.push_back(row);
+  }
+
+  return map;
+}
+
+std::vector<std::vector<MapCell>> LevelBuilder::CreateRandomlyFilledMap(int w, int h, int chance)
+{
+  std::vector<std::vector<MapCell>> map;
+
+  for (int x = 0; x < w; x++)
+  {
+    std::vector<MapCell> row;
+    for (int y = 0; y < h; y++)
+    {
+      bool isWall = Util::Rolld100(chance);
+
+      MapCell c;
+      c.Coordinates.X = x;
+      c.Coordinates.Y = y;
+      c.Image = isWall ? '#' : '.';
       c.Visited = false;
       row.push_back(c);
     }
