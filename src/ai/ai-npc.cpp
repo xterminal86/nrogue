@@ -109,8 +109,6 @@ void AINPC::SetDataClaire()
 {
   AIComponentRef->OwnerGameObject->ObjectName = "woman";
 
-  auto& playerRef = Application::Instance().PlayerInstance;
-
   Data.IsMale = false;
   Data.UnacquaintedDescription = "You see a pink-haired woman";
   Data.Name = "Claire";
@@ -137,6 +135,8 @@ void AINPC::SetDataClaire()
       "What about it?"
     }
   };
+
+  auto& playerRef = Application::Instance().PlayerInstance;
 
   if (playerRef.GetClass() == PlayerClass::SOLDIER)
   {
@@ -181,10 +181,23 @@ void AINPC::SetDataCloud()
     {
       "Why I never went to the mines myself?",
       "Because I'm retired, that's why!",
-      "I've had enough nasty stuff happened to me for the past years.",
+      "I've had enough nasty stuff happened to me in the past years.",
       "I don't want any more."
     }
   };
+
+  auto& playerRef = Application::Instance().PlayerInstance;
+
+  if (playerRef.GetClass() == PlayerClass::SOLDIER)
+  {
+    TextLines bonusStr =
+    {
+      "A Soldier, huh?",
+      "Well, say hello to Zack for me when you see him.",
+    };
+
+    Data.GossipResponsesByMap[MapType::TOWN].push_back(bonusStr);
+  }
 }
 
 void AINPC::SetDataIan()
@@ -350,15 +363,15 @@ void AINPC::SetDataSteve()
       "I've been working in these mines for almost eight years now.",
       "I never heard or saw anything that would be even remotely",
       "connected to those stories you may hear.",
-      "Just think for yourself: how could something like",
-      "that happened in a such small and isolated place like this,",
+      "Just think for yourself: how could've something like",
+      "that happenned in a such small and isolated place like this,",
       "where people know each other since childhood,",
       "yet nobody says he knows or heard anything?"
     },
     {
       "Business has been pretty much frozen since those events started.",
       "I'm thinking on going to the City for earnings.",
-      "I wonder, why they never bothered to send some guards",
+      "I wonder why they never bothered to send some guards",
       "or soldiers or whatever here to look into our situation?"
     },
     {
@@ -442,6 +455,25 @@ void AINPC::SetDataMartin()
     // =========================================================================== 80
     {
       "All money you spend buying my wares are going straight to charity."
+    },
+    {
+      "I guess you know about Lost City, don't you?",
+      "They say it predates our City and is buried somewhere deep underground.",
+      "It was the center of an ancient civilization in the long past but some",
+      "catastrophe led to its demise along with its denizens.",
+      "I'd say it was arrogance - the more advanced we get, the more",
+      "reckless and irresponsible we become.",
+      "First we try to defeat some long-lasted issues that plague human",
+      "existence for centuries, like diseases, and it seems just and good.",
+      "After that we decide that we need to improve our quality of life even",
+      "further - we make artificial lights that allow us to see during the night",
+      "so we could extend our daytime this way, artificial instruments, so that",
+      "they will do the work for us. Then we decide that our life must not end",
+      "at all and we seek meanings to prolong it.",
+      "In the end we just start to think that we \"own\" everything and can do",
+      "everything and nothing is impossible. We try to become gods.",
+      "How come that originally good intentions lead to such results?",
+      "Can it be avoided? And how?..."
     }
   };
 
@@ -496,7 +528,7 @@ void AINPC::SetDataMaya()
       "as long as it's not destroyed completely.",
       "Because of this \"junky\" business, people think that we're some kind of",
       "a poor and homeless group of outcasts, making their living by rummaging",
-      "through piles of garbage, hoping to find food or random valuable items.",
+      "through piles of garbage, hoping to find food or something valuable.",
       "Well, it may look repulsive and suspicious, but the thing is,",
       "you never know WHAT you'll find, so it might be some",
       "useless trinket, a cursed ring or a blessed artifact, who knows..."

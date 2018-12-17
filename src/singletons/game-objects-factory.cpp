@@ -428,7 +428,7 @@ GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
-  ic->Data.Cost = 100;
+  ic->Data.Cost = 25;
 
   ic->Data.IdentifiedDescription = { "Restores some of your health." };
   ic->Data.IdentifiedName = "Red Potion";
@@ -458,7 +458,7 @@ GameObject* GameObjectsFactory::CreateManaPotion(ItemPrefix prefixOverride)
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
-  ic->Data.Cost = 50;
+  ic->Data.Cost = 25;
 
   ic->Data.IdentifiedDescription = { "Helps you regain spiritual powers." };
   ic->Data.IdentifiedName = "Blue Potion";
@@ -488,7 +488,7 @@ GameObject* GameObjectsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
-  ic->Data.Cost = 50;
+  ic->Data.Cost = 15;
 
   ic->Data.IdentifiedDescription = { "Liquid food. Drink it if there's nothing else to eat." };
   ic->Data.IdentifiedName = "Slimy Potion";
