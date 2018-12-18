@@ -3,7 +3,17 @@
 #include "util.h"
 #include "rng.h"
 
-void LevelBuilder::CellularAutomata(Position mapSize, int initialWallChance, int birthThreshold, int deathThreshold, int maxIterations)
+void LevelBuilder::FeatureRooms(Position mapSize, int maxIterations)
+{
+  _mapSize = mapSize;
+
+  _map = CreateFilledMap(mapSize.X, mapSize.Y);
+}
+
+/// Use cellular automata to generate cave-like area.
+void LevelBuilder::CellularAutomata(Position mapSize, int initialWallChance,
+                                    int birthThreshold, int deathThreshold,
+                                    int maxIterations)
 {
   _mapSize = mapSize;
 

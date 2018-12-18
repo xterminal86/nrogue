@@ -23,6 +23,7 @@ class LevelBuilder
     void Tunneler(Position mapSize, int maxTunnels, Position tunnelLengthMinMax, Position start = { -1, -1 } );
     void BacktrackingTunneler(Position mapSize, Position tunnelLengthMinMax, bool additionalTweaks, Position start = { - 1, -1 } );
     void CellularAutomata(Position mapSize, int initialWallChance, int birthThreshold, int deathThreshold, int maxIterations);
+    void FeatureRooms(Position mapSize, int maxIterations);
     void PrintMapChunks();
     void PrintMapRaw();
     void LogPrintMapRaw();
