@@ -2,12 +2,14 @@
 #define LEVELBUILDER_H
 
 #include <stack>
+#include <queue>
 
 #include "util.h"
 #include "room-helper.h"
 
 struct MapCell
 {
+  int Marker = -1;
   char Image = '#';
   Position Coordinates;
   bool Visited = false;
@@ -21,7 +23,7 @@ class LevelBuilder
     void Tunneler(Position mapSize, int maxTunnels, Position tunnelLengthMinMax, Position start = { -1, -1 } );
     void BacktrackingTunneler(Position mapSize, Position tunnelLengthMinMax, bool additionalTweaks, Position start = { - 1, -1 } );
     void CellularAutomata(Position mapSize, int initialWallChance, int birthThreshold, int deathThreshold, int maxIterations);
-    void PrintResult();
+    void PrintMapChunks();
     void PrintMapRaw();
     void LogPrintMapRaw();
     void Reset();
@@ -70,13 +72,17 @@ class LevelBuilder
       { RoomEdgeEnum::WEST,  "West Edge " }
     };
 
+    std::map<int, std::vector<Position>> _areasByMarker;
+
     int _roomsCount = 0;
+    int _markerValue = 0;
 
     Position _mapSize;
     Position _startingPoint;
 
-    std::vector<RoomHelper> GetRoomsForLayout(RoomLayout& layout, RoomEdgeEnum side);
+    std::string GetMapRawString();
 
+    std::vector<RoomHelper> GetRoomsForLayout(RoomLayout& layout, RoomEdgeEnum side);
     std::vector<std::vector<MapCell>> CreateEmptyMap(int w, int h);
     std::vector<std::vector<MapCell>> CreateFilledMap(int w, int h);
     std::vector<std::vector<MapCell>> CreateRandomlyFilledMap(int w, int h, int chance);
@@ -91,6 +97,10 @@ class LevelBuilder
     void CutProblemCorners();
     void FillDeadEnds();
     void FillMapRaw();
+    void ConnectIsolatedAreas();
+    void FloodFill(Position start);
+    void TryToMarkCell(Position p, std::queue<Position>& visitedCells);
+    void ConnectPoints(Position p1, Position p2);
 
     bool CheckLimits(Position& start, int roomSize);
     bool IsInsideMap(Position pos);
@@ -108,6 +118,9 @@ class LevelBuilder
 
     RoomLayout SelectRoom();
     std::vector<RoomLayout> SelectRooms();
+
+    std::vector<Position> FindNonMarkedCell();
+    std::pair<Position, Position> FindClosestPointsToArea(int areaMarker);
 };
 
 #endif // LEVELBUILDER_H

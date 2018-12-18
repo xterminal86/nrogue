@@ -243,7 +243,7 @@ namespace Tests
     LevelBuilder lb;
 
     Position s(1, 1);
-    Position mapSize(24, 80);
+    Position mapSize(24, 79);
 
     printf("1) Tunneler:\n\n");
 
