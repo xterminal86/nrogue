@@ -238,14 +238,21 @@ namespace Tests
 
   inline void LevelBuilderTest()
   {
-    printf("\nLevel builders:\n\n");
+    std::string str;
+
+    str = "\nLevel builders:\n\n";
+
+    Logger::Instance().Print(str);
+    printf("%s", str.data());
 
     LevelBuilder lb;
 
     Position s(1, 1);
     Position mapSize(24, 79);
 
-    printf("1) Tunneler:\n\n");
+    str = "1) Tunneler:\n\n";
+    printf("%s", str.data());
+    Logger::Instance().Print(str);
 
     lb.Reset();
     lb.Tunneler(mapSize, 50, { 10, 20 }, s);
@@ -253,7 +260,9 @@ namespace Tests
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
 
-    printf("2) Tunneler (backtracking):\n\n");
+    str = "2) Tunneler (backtracking):\n\n";
+    printf("%s", str.data());
+    Logger::Instance().Print(str);
 
     lb.Reset();
     lb.BacktrackingTunneler(mapSize, { 5, 20 }, true, s);
@@ -261,7 +270,9 @@ namespace Tests
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
 
-    printf("3) Recursive Bactracker:\n\n");
+    str = "3) Recursive Backtracker:\n\n";
+    printf("%s", str.data());
+    Logger::Instance().Print(str);
 
     lb.Reset();
     lb.RecursiveBacktracker(mapSize, s);
@@ -269,7 +280,9 @@ namespace Tests
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
 
-    printf("4) Cellular Automata:\n\n");
+    str = "4) Cellular Automata:\n\n";
+    Logger::Instance().Print(str);
+    printf("%s", str.data());
 
     lb.Reset();
     lb.CellularAutomata(mapSize, 40, 5, 4, 12);

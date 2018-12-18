@@ -498,6 +498,7 @@ struct ItemData
 namespace GlobalConstants
 {
   static const std::string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  static const std::string Numbers = "0123456789";
 
   static const int HPMPBarLength = 20;
   static const int AttributeMinimumRaiseChance = 15;
@@ -526,7 +527,7 @@ namespace GlobalConstants
   static const std::string MountainsColor = "#666666";
   static const std::string FogOfWarColor = "#202020";
   static const std::string CoinsColor = "#FFD700";
-  static const std::string DoorHighlightColor = "#444400";  
+  static const std::string DoorHighlightColor = "#444400";
   static const std::string MessageBoxDefaultBgColor = "#222222";
   static const std::string MessageBoxDefaultBorderColor = "#666666";
   static const std::string MessageBoxRedBorderColor = "#880000";
@@ -633,14 +634,14 @@ namespace GlobalConstants
 
   static const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =
   {
-    { FoodType::APPLE,        { "Apple",       10 } },
-    { FoodType::BREAD,        { "Bread",       20 } },
-    { FoodType::FISH,         { "Fish",        20 } },
-    { FoodType::CHEESE,       { "Cheese",      30 } },
-    { FoodType::PIE,          { "Cream Pie",   40 } },
-    { FoodType::MEAT,         { "Meat",        50 } },
-    { FoodType::TIN,          { "Canned Food", 60 } },
-    { FoodType::RATIONS,      { "Rations",     75 } },
+    { FoodType::APPLE,        { "Apple",        10 } },
+    { FoodType::BREAD,        { "Bread",        20 } },
+    { FoodType::FISH,         { "Fish",         20 } },
+    { FoodType::CHEESE,       { "Cheese",       30 } },
+    { FoodType::PIE,          { "Cream Pie",    40 } },
+    { FoodType::MEAT,         { "Meat",         50 } },
+    { FoodType::TIN,          { "Canned Food",  60 } },
+    { FoodType::RATIONS,      { "Rations",      75 } },
     { FoodType::IRON_RATIONS, { "Iron Rations", 100 } }
   };
 

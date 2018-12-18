@@ -58,7 +58,7 @@ void LevelBuilder::CellularAutomata(Position mapSize, int initialWallChance, int
   }
 
   ConnectIsolatedAreas();
-  //CutProblemCorners();
+  CutProblemCorners();
   FillMapRaw();
 }
 
@@ -371,6 +371,7 @@ void LevelBuilder::BacktrackingTunneler(Position mapSize, Position tunnelMinMax,
     }
   }
 
+  // Starting point might become wall if it was near the corner
   if (additionalTweaks)
   {
     FillDeadEnds();
