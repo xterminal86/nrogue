@@ -4,9 +4,11 @@
 #include "rng.h"
 
 /// Builds dungeon by attaching new rooms to existing ones
-/// maxIterations should probably be around
-/// std::max(mapSize.X, mapSize.Y) * 10 for best results.
-void LevelBuilder::FeatureRooms(Position mapSize, int maxIterations)
+/// maxIterations should be empirically chosen, because
+/// it depends on roomSizes.
+/// Set to (mapSize.X * mapSize.Y) to use all available map area, but
+/// be aware of computational time.
+void LevelBuilder::FeatureRooms(Position mapSize, Position roomSizes, int maxIterations)
 {
   // Based on
   // http://www.roguebasin.roguelikedevelopment.org/index.php?title=Dungeon-Building_Algorithm
@@ -28,8 +30,8 @@ void LevelBuilder::FeatureRooms(Position mapSize, int maxIterations)
 
   _map = CreateFilledMap(mapSize.X, mapSize.Y);
 
-  int roomMinSize = 1;
-  int roomMaxSize = 10;
+  int roomMinSize = roomSizes.X;
+  int roomMaxSize = roomSizes.Y;
 
   int roomSizeX = RNG::Instance().RandomRange(roomMinSize, roomMaxSize);
   int roomSizeY = RNG::Instance().RandomRange(roomMinSize, roomMaxSize);

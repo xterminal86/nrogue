@@ -295,7 +295,7 @@ namespace Tests
     printf("%s", str.data());
 
     lb.Reset();
-    lb.FeatureRooms(mapSize, mapSize.X * 10);
+    lb.FeatureRooms(mapSize, { 1, 14 }, mapSize.X * mapSize.Y);
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
   }
