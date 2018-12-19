@@ -15,6 +15,11 @@ struct MapCell
   bool Visited = false;
 };
 
+enum class RoomBuildDirection
+{
+  NE = 0, SE, SW, NW
+};
+
 class LevelBuilder
 {
   public:
@@ -102,17 +107,19 @@ class LevelBuilder
     void FloodFill(Position start);
     void TryToMarkCell(Position p, std::queue<Position>& visitedCells);
     void ConnectPoints(Position p1, Position p2);
+    void CreateRoom(Position upperLeftCorner, Position size, RoomBuildDirection buildDir = RoomBuildDirection::SE);
 
     bool CheckLimits(Position& start, int roomSize);
     bool IsInsideMap(Position pos);
     bool IsAreaVisited(Position& start, int roomSize);
     bool IsDeadEnd(Position p);
+    bool IsAreaWalls(Position corner, Position size, RoomBuildDirection dir);
 
     int CountAround(int x, int y, char ch);
 
     void CheckIfProblemCorner(Position p);
 
-    Position GetRandomPerpendicularDir(Position dir);
+    Position GetRandomPerpendicularDir(Position dir);    
     std::vector<Position> TryToGetPerpendicularDir(Position pos, Position lastDir);
 
     RoomLayout CreateSquareLayout(int size, chtype ch);
@@ -122,6 +129,9 @@ class LevelBuilder
 
     std::vector<Position> FindNonMarkedCell();
     std::pair<Position, Position> FindClosestPointsToArea(int areaMarker);
+
+    Position GetOffsetsForDirection(RoomBuildDirection buildDir);
+    RoomEdgeEnum GetCarveDirectionForDeadend(Position pos);
 };
 
 #endif // LEVELBUILDER_H

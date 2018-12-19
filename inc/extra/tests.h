@@ -249,6 +249,7 @@ namespace Tests
 
     Position s(1, 1);
     Position mapSize(24, 79);
+    //Position mapSize(200, 200);
 
     str = "1) Tunneler:\n\n";
     printf("%s", str.data());
@@ -286,6 +287,15 @@ namespace Tests
 
     lb.Reset();
     lb.CellularAutomata(mapSize, 40, 5, 4, 12);
+    lb.LogPrintMapRaw();
+    lb.PrintMapRaw();
+
+    str = "5) Digger:\n\n";
+    Logger::Instance().Print(str);
+    printf("%s", str.data());
+
+    lb.Reset();
+    lb.FeatureRooms(mapSize, mapSize.X * 10);
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
   }
