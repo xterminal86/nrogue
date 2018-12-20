@@ -7,14 +7,6 @@
 
 #include "util.h"
 
-enum class RoomEdgeEnum
-{
-  NORTH = 0,
-  EAST,
-  SOUTH,
-  WEST
-};
-
 using RoomLayout = std::vector<std::string>;
 
 struct RoomForLevel

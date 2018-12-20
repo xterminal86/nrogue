@@ -12,6 +12,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/singletons)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/extra)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/core)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/ai)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc/dungeon-generators)
 
 file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp                  
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.cpp
@@ -20,6 +21,7 @@ file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/*.cpp                  
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/*.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/dungeon-generators/*.cpp
 
                   ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/inc/components/*.h
@@ -28,7 +30,8 @@ file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/inc/singletons/*.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/inc/core/*.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/inc/extra/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/ai/*.h)
+                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/ai/*.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/inc/dungeon-generators/*.h)
 
 add_executable(${TARGET_NAME} ${SOURCES})
 

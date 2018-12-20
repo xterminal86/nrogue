@@ -248,15 +248,14 @@ namespace Tests
     LevelBuilder lb;
 
     Position s(1, 1);
-    Position mapSize(24, 79);
+    Position mapSize(24, 78);
     //Position mapSize(200, 200);
 
     str = "1) Tunneler:\n\n";
     printf("%s", str.data());
     Logger::Instance().Print(str);
 
-    lb.Reset();
-    lb.Tunneler(mapSize, 50, { 10, 20 }, s);
+    lb.TunnelerMethod(mapSize, 50, { 10, 20 }, s);
     lb.MapRaw[s.X][s.Y] = 'X';
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
@@ -265,8 +264,7 @@ namespace Tests
     printf("%s", str.data());
     Logger::Instance().Print(str);
 
-    lb.Reset();
-    lb.BacktrackingTunneler(mapSize, { 5, 20 }, true, s);
+    lb.BacktrackingTunnelerMethod(mapSize, { 5, 20 }, s, true);
     lb.MapRaw[s.X][s.Y] = 'X';
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
@@ -275,8 +273,7 @@ namespace Tests
     printf("%s", str.data());
     Logger::Instance().Print(str);
 
-    lb.Reset();
-    lb.RecursiveBacktracker(mapSize, s);
+    lb.RecursiveBacktrackerMethod(mapSize, s);
     lb.MapRaw[s.X][s.Y] = 'X';
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
@@ -285,8 +282,7 @@ namespace Tests
     Logger::Instance().Print(str);
     printf("%s", str.data());
 
-    lb.Reset();
-    lb.CellularAutomata(mapSize, 40, 5, 4, 12);
+    lb.CellularAutomataMethod(mapSize, 40, 5, 4, 12);
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
 
@@ -294,8 +290,7 @@ namespace Tests
     Logger::Instance().Print(str);
     printf("%s", str.data());
 
-    lb.Reset();
-    lb.FeatureRooms(mapSize, { 1, 14 }, mapSize.X * mapSize.Y);
+    lb.FeatureRoomsMethod(mapSize, { 1, 14 }, mapSize.X * mapSize.Y);
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
   }

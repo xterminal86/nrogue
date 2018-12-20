@@ -270,7 +270,12 @@ void MapLevelMines::CreateLevel()
 
   LevelBuilder lb;
 
-  lb.BuildLevelFromLayouts(_roomsForLevel, 1, 1, MapSize.X, MapSize.Y);
+  int iterations = MapSize.X * MapSize.Y;
+
+  lb.FeatureRoomsMethod(MapSize, { 1, 10 }, iterations);
+
+  // FIXME: build from layouts needs improvements
+  //lb.BuildLevelFromLayouts(_roomsForLevel, 1, 1, MapSize.X, MapSize.Y);
 
   ConstructFromBuilder(lb);
 
@@ -309,7 +314,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
       Tile t;
       std::string objName;
 
-      char image = lb.MapLayout[x][y];
+      char image = lb.MapRaw[x][y];
       switch (image)
       {
         case '#':
@@ -320,17 +325,17 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
         }
         break;
 
+        case '+':
+        {
+          CreateDoor(x, y);
+        }
+        break;
+
         case '.':
         {
           objName = "Ground";
           t.Set(false, false, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
           MapArray[x][y]->MakeTile(t);
-        }
-        break;
-
-        case '+':
-        {
-          CreateDoor(x, y);
         }
         break;
       }

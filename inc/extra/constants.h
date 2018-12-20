@@ -255,6 +255,14 @@ enum class RoomLayoutRotation
   CCW_270
 };
 
+enum class RoomEdgeEnum
+{
+  NORTH = 0,
+  EAST,
+  SOUTH,
+  WEST
+};
+
 /// Helper struct to reduce the writing when creating objects
 struct Tile
 {
