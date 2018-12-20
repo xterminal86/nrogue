@@ -8,6 +8,7 @@
 #include <utility>
 #include <memory>
 #include <algorithm>
+#include <climits>
 
 #include <math.h>
 

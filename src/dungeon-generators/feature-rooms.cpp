@@ -52,7 +52,9 @@ void FeatureRooms::Generate(Position mapSize, Position roomSizes, int maxIterati
       Position doorPos = validCells[posIndex];
 
       // Get direction of further carving for deadend.
-      // I.e.
+      //
+      // i.e.
+      //
       // ####
       // ..X# ->
       // ####

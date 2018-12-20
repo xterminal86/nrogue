@@ -181,7 +181,7 @@ std::pair<Position, Position> CellularAutomata::FindClosestPointsToArea(int area
 
   for (auto& p1 : _areasByMarker[areaMarker])
   {
-    int minD = _mapSize.X * _mapSize.Y;
+    int minD = INT_MAX;
 
     for (auto& kvp : _areasByMarker)
     {

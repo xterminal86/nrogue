@@ -1,4 +1,4 @@
-#define RUN_TESTS 0
+#define RUN_TESTS 1
 
 #include <ncurses.h>
 #include <unistd.h>
@@ -16,8 +16,6 @@
 #if RUN_TESTS == 1
 #include "tests.h"
 #endif
-
-#include "feature-rooms.h"
 
 int main()
 {

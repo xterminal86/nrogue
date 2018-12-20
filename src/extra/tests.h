@@ -4,6 +4,7 @@
 #include "util.h"
 #include "player.h"
 #include "level-builder.h"
+#include "pathfinder.h"
 
 namespace Tests
 {  
@@ -290,7 +291,21 @@ namespace Tests
     Logger::Instance().Print(str);
     printf("%s", str.data());
 
-    lb.FeatureRoomsMethod(mapSize, { 1, 14 }, mapSize.X * mapSize.Y);
+    int iterations = (mapSize.X * mapSize.Y) / 10;
+
+    lb.FeatureRoomsMethod(mapSize, { 1, 10 }, iterations);
+    lb.LogPrintMapRaw();
+    lb.PrintMapRaw();
+
+    str = "6) Rooms:\n\n";
+    Logger::Instance().Print(str);
+    printf("%s", str.data());
+
+    lb.RoomsMethod(mapSize, { 4, 12 }, 100);
+
+    Pathfinder pf;
+    pf.BuildRoad(lb.MapRaw, mapSize, { 1, 1 }, { 30, 30 });
+
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
   }

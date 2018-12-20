@@ -82,7 +82,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
       "####.##.#",
       "#..#.#..#",
       "...###...",
-      "#.##.##.#",
+      "#.#####.#",
     },
     // 6
     {
@@ -270,12 +270,12 @@ void MapLevelMines::CreateLevel()
 
   LevelBuilder lb;
 
-  int iterations = MapSize.X * MapSize.Y;
+  int iterations = (MapSize.X * MapSize.Y) / 10;
 
-  lb.FeatureRoomsMethod(MapSize, { 1, 10 }, iterations);
+  //lb.FeatureRoomsMethod(MapSize, { 1, 10 }, iterations);
 
   // FIXME: build from layouts needs improvements
-  //lb.BuildLevelFromLayouts(_roomsForLevel, 1, 1, MapSize.X, MapSize.Y);
+  lb.BuildLevelFromLayouts(_roomsForLevel, 1, 1, MapSize.X, MapSize.Y);
 
   ConstructFromBuilder(lb);
 

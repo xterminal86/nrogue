@@ -8,6 +8,7 @@
 #include "tunneler.h"
 #include "cellular-automata.h"
 #include "from-layouts.h"
+#include "rooms.h"
 
 void LevelBuilder::FeatureRoomsMethod(Position mapSize, Position roomSizes, int maxIterations)
 {
@@ -67,6 +68,16 @@ void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRoom
 
   FromLayouts* fl = static_cast<FromLayouts*>(_generator.get());
   fl->Generate(possibleRooms, startX, startY, mapSizeX, mapSizeY);
+
+  MapRaw = fl->MapRaw;
+}
+
+void LevelBuilder::RoomsMethod(Position mapSize, Position roomSize, int maxIterations)
+{
+  _generator.reset(new Rooms());
+
+  Rooms* fl = static_cast<Rooms*>(_generator.get());
+  fl->Generate(mapSize, roomSize, maxIterations);
 
   MapRaw = fl->MapRaw;
 }
