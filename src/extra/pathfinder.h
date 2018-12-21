@@ -65,11 +65,13 @@ class Pathfinder
     int FindCheapestElement(const std::vector<PathNode>& list);
     int TraverseCost(Position p1, Position p2);
 
-    void LookAround(PathNode& node,
+    void LookAround(const std::vector<std::vector<char>>& map,
+                    PathNode& node,
                     std::vector<PathNode>& openList,
                     std::vector<PathNode>& closedList);
 
-    bool IsNodePresent(Position& p, const std::vector<PathNode>& list);
+    bool IsNodePresent(PathNode& n, const std::vector<PathNode>& list);
+    bool IsInsideMap(Position c);
 };
 
 #endif // PATHFINDER_H

@@ -56,6 +56,11 @@ struct Position
     return (X < rhs.X || Y < rhs.Y);
   }
 
+  bool operator== (const Position& rhs) const
+  {
+    return (X == rhs.X && Y == rhs.Y);
+  }
+
   int X;
   int Y;
 };

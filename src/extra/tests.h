@@ -302,12 +302,41 @@ namespace Tests
     printf("%s", str.data());
 
     lb.RoomsMethod(mapSize, { 4, 12 }, 100);
-
-    Pathfinder pf;
-    pf.BuildRoad(lb.MapRaw, mapSize, { 1, 1 }, { 30, 30 });
-
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
+
+    printf("********** PATHFINDER\n\n");
+
+    Position p1(1, 1);
+    Position p2(4, 4);
+
+    std::vector<std::vector<char>> map;
+
+    for (int x = 0; x < 24; x++)
+    {
+      std::vector<char> row;
+      for (int y = 0; y < 80; y++)
+      {
+        int choice = RNG::Instance().RandomRange(0, 2);
+        char c = (choice == 0) ? '.' : '#';
+        row.push_back(c);
+        printf("%c", c);
+      }
+
+      printf("\n");
+
+      map.push_back(row);
+    }
+
+    Pathfinder pf;
+    auto path = pf.BuildRoad(map, mapSize, p1, p2);
+
+    printf("%i\n", path.size());
+
+    for (auto& i : path)
+    {
+      printf("%i %i -> ", i.Coordinate.X, i.Coordinate.Y);
+    }
   }
 
   inline void Run()
