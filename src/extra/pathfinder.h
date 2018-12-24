@@ -5,6 +5,8 @@
 
 struct PathNode
 {
+  PathNode() {}
+
   PathNode(Position coord)
   {
     Coordinate.X = coord.X;
@@ -14,25 +16,27 @@ struct PathNode
   PathNode(const PathNode& rhs)
   {
     Coordinate = rhs.Coordinate;
-    ParentNode = rhs.ParentNode;
+    ParentNodePosition = rhs.ParentNodePosition;
     CostF = rhs.CostF;
     CostG = rhs.CostG;
     CostH = rhs.CostH;
   }
 
-  PathNode(Position coord, PathNode* parent)
+  PathNode(Position coord, Position parentNodePos)
   {
     Coordinate.X = coord.X;
     Coordinate.Y = coord.Y;
 
-    ParentNode = parent;
+    ParentNodePosition = parentNodePos;
   }
 
   // Map coordinate of this node
   Position Coordinate;
 
-  // Reference to parent node
-  PathNode* ParentNode = nullptr;
+  // Can't use PathNode* here, beacuse it's not C# and .NET
+  // and we can't just assign "reference to previous node"
+  // and assume it will stay there no matter the containers.
+  Position ParentNodePosition = { -1, -1 };
 
   // Total cost
   int CostF = 0;
@@ -48,10 +52,12 @@ struct PathNode
 class Pathfinder
 {
   public:
-    std::vector<PathNode> BuildRoad(const std::vector<std::vector<char>>& map,
+    std::vector<Position> BuildRoad(const std::vector<std::vector<char>>& map,
                                     Position mapSize,
                                     Position start,
-                                    Position end);
+                                    Position end,
+                                    std::vector<char> obstacles,
+                                    bool eightDirs = false);
 
   private:
     Position _mapSize;
@@ -68,10 +74,14 @@ class Pathfinder
     void LookAround(const std::vector<std::vector<char>>& map,
                     PathNode& node,
                     std::vector<PathNode>& openList,
-                    std::vector<PathNode>& closedList);
+                    std::vector<PathNode>& closedList,
+                    std::vector<char>& obstacles,
+                    bool eightDirs);
 
     bool IsNodePresent(PathNode& n, const std::vector<PathNode>& list);
     bool IsInsideMap(Position c);
+
+    PathNode FindNodeWithPosition(std::vector<PathNode>& list, Position p);
 };
 
 #endif // PATHFINDER_H

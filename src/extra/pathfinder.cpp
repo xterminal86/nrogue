@@ -1,16 +1,18 @@
 #include "pathfinder.h"
 
-std::vector<PathNode> Pathfinder::BuildRoad(const std::vector<std::vector<char>>& map,
+std::vector<Position> Pathfinder::BuildRoad(const std::vector<std::vector<char>>& map,
                                             Position mapSize,
                                             Position start,
-                                            Position end)
+                                            Position end,
+                                            std::vector<char> obstacles,
+                                            bool eightDirs)
 {
   _mapSize = mapSize;
 
   _start = start;
   _end = end;
 
-  std::vector<PathNode> path;
+  std::vector<Position> path;
 
   std::vector<PathNode> openList;
   std::vector<PathNode> closedList;
@@ -24,123 +26,123 @@ std::vector<PathNode> Pathfinder::BuildRoad(const std::vector<std::vector<char>>
   while (!openList.empty())
   {
     int index = FindCheapestElement(openList);
-    if (index == -1)
-    {
-      break;
-    }
 
     PathNode currentNode = openList[index];
 
-    auto dbg = Util::StringFormat("Open node %i %i", currentNode.Coordinate.X, currentNode.Coordinate.Y);
-    Logger::Instance().Print(dbg);
+    closedList.push_back(openList[index]);
 
-    openList.erase(openList.begin() + index);
-
-    if (currentNode.Coordinate == end)
+    if (openList[index].Coordinate == end)
     {
-      // FIXME:
-      break;
-
-      path.push_back(currentNode);
-
-      PathNode* parent = currentNode.ParentNode;
-      while (parent)
+      PathNode n = FindNodeWithPosition(closedList, end);
+      while (n.ParentNodePosition.X != -1 && n.ParentNodePosition.Y != -1)
       {
-        path.push_back(*parent);
-        parent = parent->ParentNode;
+        path.push_back(n.Coordinate);
+        n = FindNodeWithPosition(closedList, n.ParentNodePosition);
       }
+
+      path.push_back(start);
+
+      std::reverse(path.begin(), path.end());
 
       break;
     }
 
-    LookAround(map, currentNode, openList, closedList);
+    LookAround(map, openList[index], openList, closedList, obstacles, eightDirs);
 
-    closedList.push_back(currentNode);
+    openList.erase(openList.begin() + index);
   }
 
   return path;
 }
 
 void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
-                            PathNode& node,
+                            PathNode& currentNode,
                             std::vector<PathNode>& openList,
-                            std::vector<PathNode>& closedList)
+                            std::vector<PathNode>& closedList,
+                            std::vector<char>& obstacles,
+                            bool eightDirs)
 {
-  std::vector<Position> direction =
+  std::vector<Position> directions;
+
+  if (eightDirs)
   {
-    { 0, -1 },
-    { 1, 0 },
-    { 0, 1 },
-    { -1, 0 }
-  };
+    directions =
+    {
+      { -1, -1 },
+      { -1, 0 },
+      { -1, 1 },
+      { 0, -1 },
+      { 0, 1 },
+      { 1, -1 },
+      { 1, 0 },
+      { 1, 1 }
+    };
+  }
+  else
+  {
+    directions =
+    {
+      { -1, 0 },
+      { 0, -1 },
+      { 0, 1 },
+      { 1, 0 }
+    };
+  }
 
   std::vector<PathNode> nodesAround;
 
-  for (int i = 0; i < 4; i++)
+  for (auto& p : directions)
   {
     Position coordinate;
 
-    coordinate.X = node.Coordinate.X + direction[i].X;
-    coordinate.Y = node.Coordinate.Y + direction[i].Y;
+    coordinate.X = currentNode.Coordinate.X + p.X;
+    coordinate.Y = currentNode.Coordinate.Y + p.Y;
 
-    if (!IsInsideMap(coordinate)
-      || map[coordinate.X][coordinate.Y] == '#')
+    bool walkable = true;
+    for (auto& o : obstacles)
+    {
+      if (map[coordinate.X][coordinate.Y] == o)
+      {
+        walkable = false;
+        break;
+      }
+    }
+
+    if (!IsInsideMap(coordinate) || !walkable)
     {
       continue;
     }
 
-    PathNode newNode(coordinate);
+    PathNode newNode(coordinate, currentNode.Coordinate);
     nodesAround.push_back(newNode);
   }
 
-  for (auto& c : nodesAround)
-  {
-    if (c.Coordinate == _end)
-    {
-      return;
-    }
-
-    c.CostG = node.CostG + TraverseCost(node.Coordinate, c.Coordinate);
-    c.CostH = Util::BlockDistance(c.Coordinate, _end);
-    c.CostF = c.CostH + c.CostG;
-    c.ParentNode = &node;
-
-    bool isInOpenList = false;
-    for (auto& n : openList)
-    {
-      if (n.Coordinate == c.Coordinate
-       && n.CostF < c.CostF)
-      {
-        isInOpenList = true;
-        break;
-      }
-    }
-
-    if (isInOpenList)
+  for (auto& nodeAround : nodesAround)
+  {    
+    if (IsNodePresent(nodeAround, closedList))
     {
       continue;
     }
 
-    bool isInClosedList = false;
-    for (auto& n : closedList)
+    if (IsNodePresent(nodeAround, openList))
     {
-      if (n.Coordinate == c.Coordinate
-       && n.CostF < c.CostF)
+      int newG = nodeAround.CostG + TraverseCost(nodeAround.Coordinate, currentNode.Coordinate);
+      if (newG < nodeAround.CostG)
       {
-        isInClosedList = true;
-        break;
+        nodeAround.CostG = newG;
+        nodeAround.CostH = Util::BlockDistance(nodeAround.Coordinate, _end);
+        nodeAround.CostF = nodeAround.CostG + nodeAround.CostH;
+        nodeAround.ParentNodePosition = currentNode.Coordinate;
       }
     }
-
-    if (isInClosedList)
+    else
     {
-      continue;
+      nodeAround.CostG = currentNode.CostG + TraverseCost(currentNode.Coordinate, nodeAround.Coordinate);
+      nodeAround.CostH = Util::BlockDistance(nodeAround.Coordinate, _end);
+      nodeAround.CostF = nodeAround.CostG + nodeAround.CostH;
+
+      openList.push_back(nodeAround);
     }
-
-    openList.push_back(c);
-
-    auto dbg = Util::StringFormat("\tAdding to open list: %i %i, costF %i, parent %i %i", c.Coordinate.X, c.Coordinate.Y, c.CostF, node.Coordinate.X, node.Coordinate.Y);
-    Logger::Instance().Print(dbg);
   }
 }
 
@@ -157,11 +159,6 @@ int Pathfinder::FindCheapestElement(const std::vector<PathNode>& list)
       index = i;
     }    
   }
-
-  auto dbg = Util::StringFormat("\tCheapest element %i %i - %i", list[index].Coordinate.X, list[index].Coordinate.Y, list[index].CostF);
-  Logger::Instance().Print(dbg);
-
-  //Debug.Log("Cheapest element " + list[index].Coordinate + " " + list[index].CostF);
 
   return index;
 }
@@ -198,4 +195,20 @@ bool Pathfinder::IsInsideMap(Position c)
             && c.Y < _mapSize.Y - 1);
 
   return cond;
+}
+
+PathNode Pathfinder::FindNodeWithPosition(std::vector<PathNode>& list, Position p)
+{
+  PathNode res;
+
+  for (auto& i : list)
+  {
+    if (i.Coordinate.X == p.X && i.Coordinate.Y == p.Y)
+    {
+      res = i;
+      break;
+    }
+  }
+
+  return res;
 }
