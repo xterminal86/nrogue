@@ -18,7 +18,7 @@ class LevelBuilder
     void BacktrackingTunnelerMethod(Position mapSize, Position tunnelLengthMinMax, Position start = { - 1, -1 }, bool additionalTweaks = false);
     void CellularAutomataMethod(Position mapSize, int initialWallChance, int birthThreshold, int deathThreshold, int maxIterations);
     void FeatureRoomsMethod(Position mapSize, Position roomSizes, int maxIterations);
-    void RoomsMethod(Position mapSize, Position roomSize, int maxIterations);
+    void RoomsMethod(Position mapSize, int minRoomSize);
 
     void LogPrintMapRaw();
     void PrintMapRaw();

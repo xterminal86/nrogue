@@ -301,7 +301,7 @@ namespace Tests
     Logger::Instance().Print(str);
     printf("%s", str.data());
 
-    lb.RoomsMethod(mapSize, { 4, 12 }, 100);
+    lb.RoomsMethod(mapSize, 3);
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();    
   }
