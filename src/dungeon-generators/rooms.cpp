@@ -2,87 +2,124 @@
 
 void Rooms::Generate(Position mapSize, int minRoomSize)
 {
-  /*
   _mapSize = mapSize;
+
+  _minRoomSize = minRoomSize;
 
   _map = CreateFilledMap(mapSize.X, mapSize.Y);
 
-  int depth = std::max(mapSize.X, mapSize.Y);
+  Rect area = { 0, 0, mapSize.X, mapSize.Y };
+  auto split = GetSplitRatio(area);
 
   BSPNode root;
-
   root.CornerStart.Set(0, 0);
   root.CornerEnd.Set(mapSize.X - 1, mapSize.Y - 1);
-  root.Depth = depth;
 
-  int r = RNG::Instance().RandomRange(10, 90);
-  int splitX = RNG::Instance().RandomRange(0, 2);
-
-  Subdivide(root, r, (splitX == 0), depth);
+  Subdivide(root, split.second, split.first);
 
   FillMapRaw();
-  */
 }
 
-void Rooms::Subdivide(BSPNode& parent, int ratio, bool splitX, int& currentDepth)
-{
-  if (currentDepth < 3)
-  {
-    return;
-  }
-
-  int w = parent.CornerEnd.X - parent.CornerStart.X;
-  int h = parent.CornerEnd.Y - parent.CornerStart.Y;
-
-  int addX = (((float)ratio / 100.0f) * (float)w);
-  int addY = (((float)ratio / 100.0f) * (float)h);
-
+void Rooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
+{  
   int sx = parent.CornerStart.X;
   int sy = parent.CornerStart.Y;
 
   int ex = parent.CornerEnd.X;
   int ey = parent.CornerEnd.Y;
 
-  int nsx = splitX ? sx + addX : sx;
-  int nsy = !splitX ? sy + addY : sy;
+  int w = ey - sy;
+  int h = ex - sx;
 
-  int nex = splitX ? sx + addX : ex;
-  int ney = !splitX ? sy + addY : ey;
+  Rect leaf1, leaf2;
 
-  Position c1Start(sx, sy);
-  Position c1End(nex, ney);
+  if (splitX)
+  {
+    int add = ratio * h;
 
-  auto leftLeaf = std::make_unique<BSPNode>();
+    leaf1 = { { sx, sy }, { sx + add, ey } };
+    leaf2 = { { sx + add, sy }, { ex, ey } };
 
-  leftLeaf->CornerStart = c1Start;
-  leftLeaf->CornerEnd = c1End;
+    //leaf1.LogPrint();
+    //leaf2.LogPrint();
+  }
+  else
+  {
+    int add = ratio * w;
 
-  int lW = c1End.X - c1Start.X;
-  int lH = c1End.Y - c1Start.Y;
+    leaf1 = { { sx, sy }, { ex, sy + add } };
+    leaf2 = { { sx, sy + add }, { ex, ey } };
 
-  leftLeaf->Depth = std::max(lW, lH);
+    //leaf1.LogPrint();
+    //leaf2.LogPrint();
+  }
 
-  parent.Left = std::move(leftLeaf);
+  if (w < _minRoomSize || h < _minRoomSize)
+  {
+    return;
+  }
 
-  Position c2Start(nsx, nsy);
-  Position c2End(nex, ney);
+  auto splitChance1 = GetSplitRatio(leaf1);
+  auto splitChance2 = GetSplitRatio(leaf2);
 
-  auto rightLeaf = std::make_unique<BSPNode>();
+  BSPNode* left = new BSPNode();
 
-  rightLeaf->CornerStart = c2Start;
-  rightLeaf->CornerEnd = c2End;
+  left->CornerStart = { leaf1.X1, leaf1.Y1 };
+  left->CornerEnd = { leaf1.X2, leaf1.Y2 };
 
-  int rW = c2End.X - c2Start.X;
-  int rH = c2End.Y - c2Start.Y;
+  BSPNode* right = new BSPNode();
 
-  rightLeaf->Depth = std::max(rW, rH);
+  right->CornerStart = { leaf2.X1, leaf2.Y1 };
+  right->CornerEnd = { leaf2.X2, leaf2.Y2 };
 
-  parent.Right = std::move(rightLeaf);
+  parent.Left.reset(left);
+  parent.Right.reset(right);
 
-  int r = RNG::Instance().RandomRange(10, 90);
-  int newSplitX = RNG::Instance().RandomRange(0, 2);
+  Subdivide(*parent.Left.get(), splitChance1.second, splitChance1.first);
+  Subdivide(*parent.Right.get(), splitChance2.second, splitChance2.first);
 
-  Subdivide(*parent.Left.get(), r, (newSplitX == 0), currentDepth);
-  Subdivide(*parent.Right.get(), r, (newSplitX == 0), currentDepth);
+  Rect area({ sx, sy }, { ex, ey });
+  FillArea(area);
 }
 
+std::pair<bool, float> Rooms::GetSplitRatio(Rect area)
+{
+  std::pair<bool, float> res;
+
+  int r = RNG::Instance().RandomRange(10, 91);
+
+  float ratio = (float)r / 100.0f;
+
+  if (area.Dimensions().X >= area.Dimensions().Y)
+  {
+    res = { false, ratio };
+  }
+  else
+  {
+    res = { true, ratio };
+  }
+
+  return res;
+}
+
+void Rooms::FillArea(Rect area)
+{
+  for (int x = area.X1 + 1; x <= area.X2 - 1; x++)
+  {
+    for (int y = area.Y1 + 1; y <= area.Y2 - 1; y++)
+    {
+      if (_map[x][y].Image == '.')
+      {
+        return;
+      }
+    }
+  }
+
+  for (int x = area.X1 + 1; x <= area.X2 - 1; x++)
+  {
+    for (int y = area.Y1 + 1; y <= area.Y2 - 1; y++)
+    {
+      _map[x][y].Image = '.';
+    }
+  }
+}

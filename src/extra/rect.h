@@ -9,12 +9,31 @@
 class Rect
 {
   public:
+    Rect() {}
+
+    Rect(Position p1, Position p2)
+    {
+      X1 = p1.X;
+      Y1 = p1.Y;
+      X2 = p2.X;
+      Y2 = p2.Y;
+    }
+
     Rect(int x, int y, int w, int h)
     {
       X1 = x;
       Y1 = y;
       X2 = x + w;
       Y2 = y + h;
+    }
+
+    inline Position Dimensions()
+    {
+      Position res;
+
+      res.Set(Y2 - Y1, X2 - X1);
+
+      return res;
     }
 
     inline std::vector<Position> GetBoundaryElements(bool excludeCorners = false)
@@ -58,6 +77,17 @@ class Rect
     {
       return (X1 <= other.X2 && X2 >= other.X1 &&
               Y1 <= other.Y2 && Y2 >= other.Y1);
+    }
+
+    inline void Print()
+    {
+      printf("[%i; %i] -> [%i %i]\n", X1, Y1, X2, Y2);
+    }
+
+    inline void LogPrint()
+    {
+      auto str = Util::StringFormat("[%i; %i] -> [%i %i]\n", X1, Y1, X2, Y2);
+      Logger::Instance().Print(str);
     }
 
     int X1;

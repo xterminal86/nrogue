@@ -3,6 +3,8 @@
 
 #include "dg-base.h"
 
+#include "rect.h"
+
 struct BSPNode
 {
   Position CornerStart;
@@ -20,7 +22,12 @@ class Rooms : public DGBase
     void Generate(Position mapSize, int minRoomSize);
 
   private:
-    void Subdivide(BSPNode& parent, int ratio, bool splitX, int& currentDepth);
+    int _minRoomSize = 0;
+
+    std::pair<bool, float> GetSplitRatio(Rect area);
+
+    void Subdivide(BSPNode& parent, float ratio, bool splitX);
+    void FillArea(Rect area);
 };
 
 #endif // ROOMS_H

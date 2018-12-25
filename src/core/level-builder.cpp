@@ -77,7 +77,7 @@ void LevelBuilder::RoomsMethod(Position mapSize, int minRoomSize)
   _generator.reset(new Rooms());
 
   Rooms* fl = static_cast<Rooms*>(_generator.get());
-  fl->Generate(mapSize, 3);
+  fl->Generate(mapSize, minRoomSize);
 
   MapRaw = fl->MapRaw;
 }
