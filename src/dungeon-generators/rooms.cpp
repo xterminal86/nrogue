@@ -5,6 +5,7 @@ void Rooms::Generate(Position mapSize, int minRoomSize)
   _mapSize = mapSize;
 
   _minRoomSize = minRoomSize;
+  _minRoomArea = minRoomSize * minRoomSize;
 
   _map = CreateFilledMap(mapSize.X, mapSize.Y);
 
@@ -54,7 +55,7 @@ void Rooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
     //leaf2.LogPrint();
   }
 
-  if (w < _minRoomSize || h < _minRoomSize)
+  if (!DoesRoomFit(leaf1) && !DoesRoomFit(leaf2))
   {
     return;
   }
@@ -76,10 +77,21 @@ void Rooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
   parent.Right.reset(right);
 
   Subdivide(*parent.Left.get(), splitChance1.second, splitChance1.first);
-  Subdivide(*parent.Right.get(), splitChance2.second, splitChance2.first);
+  Subdivide(*parent.Right.get(), splitChance2.second, splitChance2.first);  
 
-  Rect area({ sx, sy }, { ex, ey });
-  FillArea(area);
+  printf("Root: %i %i - %i %i\n", parent.CornerStart.X,
+                                  parent.CornerStart.Y,
+                                  parent.CornerEnd.X,
+                                  parent.CornerEnd.Y);
+  printf("\tLeft: %i %i - %i %i\n", parent.Left->CornerStart.X,
+                                  parent.Left->CornerStart.Y,
+                                  parent.Left->CornerEnd.X,
+                                  parent.Left->CornerEnd.Y);
+  printf("\tRight: %i %i - %i %i\n", parent.Right->CornerStart.X,
+                                   parent.Right->CornerStart.Y,
+                                   parent.Right->CornerEnd.X,
+                                   parent.Right->CornerEnd.Y);
+  Connect(parent);
 }
 
 std::pair<bool, float> Rooms::GetSplitRatio(Rect area)
@@ -102,24 +114,47 @@ std::pair<bool, float> Rooms::GetSplitRatio(Rect area)
   return res;
 }
 
-void Rooms::FillArea(Rect area)
+void Rooms::FillArea(Rect area, char ch)
+{  
+  for (int x = area.X1 + 1; x <= area.X2 - 1; x++)
+  {
+    for (int y = area.Y1 + 1; y <= area.Y2 - 1; y++)
+    {
+      _map[x][y].Image = ch;
+    }
+  }
+}
+
+void Rooms::Connect(BSPNode& parent)
+{
+  if (!WasFilled({ parent.Left->CornerStart, parent.Left->CornerEnd })
+   && !WasFilled({ parent.Right->CornerStart, parent.Right->CornerEnd }))
+  {
+    FillArea({ parent.Left->CornerStart, parent.Left->CornerEnd }, 'L');
+    FillArea({ parent.Right->CornerStart, parent.Right->CornerEnd }, 'R');
+  }
+}
+
+bool Rooms::DoesRoomFit(Rect area)
+{
+  int w = area.Dimensions().X;
+  int h = area.Dimensions().Y;
+
+  return (w > _minRoomSize && h > _minRoomSize);
+}
+
+bool Rooms::WasFilled(Rect area)
 {
   for (int x = area.X1 + 1; x <= area.X2 - 1; x++)
   {
     for (int y = area.Y1 + 1; y <= area.Y2 - 1; y++)
     {
-      if (_map[x][y].Image == '.')
+      if (_map[x][y].Image != '#')
       {
-        return;
+        return true;
       }
     }
   }
 
-  for (int x = area.X1 + 1; x <= area.X2 - 1; x++)
-  {
-    for (int y = area.Y1 + 1; y <= area.Y2 - 1; y++)
-    {
-      _map[x][y].Image = '.';
-    }
-  }
+  return false;
 }
