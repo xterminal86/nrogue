@@ -297,11 +297,11 @@ namespace Tests
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
 
-    str = "6) Rooms:\n\n";
+    str = "6) BSP rooms:\n\n";
     Logger::Instance().Print(str);
     printf("%s", str.data());
 
-    lb.RoomsMethod({ 20, 20 }, 5);
+    lb.RoomsMethod(mapSize, { 45, 55 }, 5);
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();    
   }

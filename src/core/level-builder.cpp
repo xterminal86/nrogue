@@ -72,12 +72,12 @@ void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRoom
   MapRaw = fl->MapRaw;
 }
 
-void LevelBuilder::RoomsMethod(Position mapSize, int minRoomSize)
+void LevelBuilder::RoomsMethod(Position mapSize, Position splitRatio, int minRoomSize)
 {
   _generator.reset(new Rooms());
 
   Rooms* fl = static_cast<Rooms*>(_generator.get());
-  fl->Generate(mapSize, minRoomSize);
+  fl->Generate(mapSize, splitRatio, minRoomSize);
 
   MapRaw = fl->MapRaw;
 }

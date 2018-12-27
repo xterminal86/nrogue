@@ -1,11 +1,16 @@
 #include "rooms.h"
 
-void Rooms::Generate(Position mapSize, int minRoomSize)
+void Rooms::Generate(Position mapSize, Position splitRatio, int minRoomSize)
 {
   _mapSize = mapSize;
 
   _minRoomSize = minRoomSize;
   _minRoomArea = minRoomSize * minRoomSize;
+
+  _splitRatio = splitRatio;
+
+  _splitRatio.X = Util::Clamp(_splitRatio.X, 10, 90);
+  _splitRatio.Y = Util::Clamp(_splitRatio.Y, 10, 90);
 
   _map = CreateFilledMap(mapSize.X, mapSize.Y);
 
@@ -17,6 +22,9 @@ void Rooms::Generate(Position mapSize, int minRoomSize)
   root.CornerEnd.Set(mapSize.X - 1, mapSize.Y - 1);
 
   Subdivide(root, split.second, split.first);
+
+  int depth = 0;
+  Traverse(&root, depth);
 
   FillMapRaw();
 }
@@ -77,28 +85,14 @@ void Rooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
   parent.Right.reset(right);
 
   Subdivide(*parent.Left.get(), splitChance1.second, splitChance1.first);
-  Subdivide(*parent.Right.get(), splitChance2.second, splitChance2.first);  
-
-  printf("Root: %i %i - %i %i\n", parent.CornerStart.X,
-                                  parent.CornerStart.Y,
-                                  parent.CornerEnd.X,
-                                  parent.CornerEnd.Y);
-  printf("\tLeft: %i %i - %i %i\n", parent.Left->CornerStart.X,
-                                  parent.Left->CornerStart.Y,
-                                  parent.Left->CornerEnd.X,
-                                  parent.Left->CornerEnd.Y);
-  printf("\tRight: %i %i - %i %i\n", parent.Right->CornerStart.X,
-                                   parent.Right->CornerStart.Y,
-                                   parent.Right->CornerEnd.X,
-                                   parent.Right->CornerEnd.Y);
-  Connect(parent);
+  Subdivide(*parent.Right.get(), splitChance2.second, splitChance2.first);    
 }
 
 std::pair<bool, float> Rooms::GetSplitRatio(Rect area)
 {
   std::pair<bool, float> res;
 
-  int r = RNG::Instance().RandomRange(10, 91);
+  int r = RNG::Instance().RandomRange(_splitRatio.X, _splitRatio.Y + 1);
 
   float ratio = (float)r / 100.0f;
 
@@ -125,17 +119,7 @@ void Rooms::FillArea(Rect area, char ch)
   }
 }
 
-void Rooms::Connect(BSPNode& parent)
-{
-  if (!WasFilled({ parent.Left->CornerStart, parent.Left->CornerEnd })
-   && !WasFilled({ parent.Right->CornerStart, parent.Right->CornerEnd }))
-  {
-    FillArea({ parent.Left->CornerStart, parent.Left->CornerEnd }, 'L');
-    FillArea({ parent.Right->CornerStart, parent.Right->CornerEnd }, 'R');
-  }
-}
-
-bool Rooms::DoesRoomFit(Rect area)
+bool Rooms::DoesRoomFit(Rect& area)
 {
   int w = area.Dimensions().X;
   int h = area.Dimensions().Y;
@@ -157,4 +141,36 @@ bool Rooms::WasFilled(Rect area)
   }
 
   return false;
+}
+
+void Rooms::Traverse(BSPNode* node, int depth)
+{
+  if (node->Left && node->Right)
+  {
+    Traverse(node->Left.get(), depth + 1);
+    Traverse(node->Right.get(), depth + 1);
+  }
+  else
+  {
+    Rect roomArea(node->CornerStart, node->CornerEnd);
+    if (DoesRoomFit(roomArea))
+    {
+      // Randomize room size inside valid cells
+      // Start from 4 because FillArea fills
+      // [X + 1, Y + 1] to [X - 1; Y - 1]
+      // + 1 at the end because RandomRange traditionally excludes last number
+      int roomW = RNG::Instance().RandomRange(4, roomArea.Dimensions().X + 1);
+      int roomH = RNG::Instance().RandomRange(4, roomArea.Dimensions().Y + 1);
+
+      Position newEnd =
+      {
+        node->CornerStart.X + roomH,
+        node->CornerStart.Y + roomW
+      };
+
+      Rect r(node->CornerStart, newEnd);
+
+      FillArea(r);
+    }
+  }
 }

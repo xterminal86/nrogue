@@ -17,9 +17,11 @@ struct BSPNode
 class Rooms : public DGBase
 {
   public:
-    void Generate(Position mapSize, int minRoomSize);
+    void Generate(Position mapSize, Position splitRatio, int minRoomSize);
 
   private:
+    Position _splitRatio;
+
     int _minRoomArea = 0;
     int _minRoomSize = 0;
 
@@ -27,10 +29,11 @@ class Rooms : public DGBase
 
     void Subdivide(BSPNode& parent, float ratio, bool splitX);
     void FillArea(Rect area, char ch = '.');
-    void Connect(BSPNode& parent);
 
-    bool DoesRoomFit(Rect area);
+    bool DoesRoomFit(Rect& area);
     bool WasFilled(Rect area);
+
+    void Traverse(BSPNode* node, int depth);
 };
 
 #endif // ROOMS_H
