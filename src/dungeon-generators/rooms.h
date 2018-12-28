@@ -25,6 +25,8 @@ class Rooms : public DGBase
     int _minRoomArea = 0;
     int _minRoomSize = 0;
 
+    std::vector<Position> _connectionPoints;
+
     std::pair<bool, float> GetSplitRatio(Rect area);
 
     void Subdivide(BSPNode& parent, float ratio, bool splitX);
@@ -34,6 +36,12 @@ class Rooms : public DGBase
     bool WasFilled(Rect area);
 
     void Traverse(BSPNode* node, int depth);
+    void ConnectPoints(Position p1, Position p2);
+    void PlaceDoors();
+
+    bool IsSpotValidForDoor(Position p);
+
+    std::vector<Position> FindPlaceForDoor();
 };
 
 #endif // ROOMS_H

@@ -267,7 +267,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
 
         case 'w':
         {
-          t.Set(true, false, ' ', GlobalConstants::BlackColor, GlobalConstants::WaterColor, "Water");
+          t.Set(true, false, '~', GlobalConstants::WhiteColor, GlobalConstants::WaterColor, "Water");
           MapArray[posX][posY]->MakeTile(t);
         }
         break;

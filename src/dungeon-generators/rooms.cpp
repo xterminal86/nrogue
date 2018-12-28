@@ -1,5 +1,7 @@
 #include "rooms.h"
 
+#include "pathfinder.h"
+
 void Rooms::Generate(Position mapSize, Position splitRatio, int minRoomSize)
 {
   _mapSize = mapSize;
@@ -25,6 +27,13 @@ void Rooms::Generate(Position mapSize, Position splitRatio, int minRoomSize)
 
   int depth = 0;
   Traverse(&root, depth);
+
+  for (int i = 0; i < _connectionPoints.size() - 1; i++)
+  {
+    ConnectPoints(_connectionPoints[i], _connectionPoints[i + 1]);
+  }
+
+  //PlaceDoors();
 
   FillMapRaw();
 }
@@ -109,14 +118,14 @@ std::pair<bool, float> Rooms::GetSplitRatio(Rect area)
 }
 
 void Rooms::FillArea(Rect area, char ch)
-{  
+{
   for (int x = area.X1 + 1; x <= area.X2 - 1; x++)
   {
     for (int y = area.Y1 + 1; y <= area.Y2 - 1; y++)
     {
       _map[x][y].Image = ch;
     }
-  }
+  }  
 }
 
 bool Rooms::DoesRoomFit(Rect& area)
@@ -171,6 +180,89 @@ void Rooms::Traverse(BSPNode* node, int depth)
       Rect r(node->CornerStart, newEnd);
 
       FillArea(r);
+
+      int indX = RNG::Instance().RandomRange(node->CornerStart.X + 1, newEnd.X);
+      int indY = RNG::Instance().RandomRange(node->CornerStart.Y + 1, newEnd.Y);
+
+      _connectionPoints.push_back({ indX, indY });
     }
   }
+}
+
+void Rooms::ConnectPoints(Position p1, Position p2)
+{
+  int dirX = (p1.X > p2.X) ? -1 : 1;
+  int dirY = (p1.Y > p2.Y) ? -1 : 1;
+
+  Position tmp1 = p1;
+  Position tmp2 = p2;
+
+  while (tmp1.X != tmp2.X)
+  {
+    _map[tmp1.X][tmp1.Y].Image = '.';
+    tmp1.X += dirX;
+  }
+
+  while (tmp1.Y != tmp2.Y)
+  {
+    _map[tmp1.X][tmp1.Y].Image = '.';
+    tmp1.Y += dirY;
+  }
+}
+
+void Rooms::PlaceDoors()
+{
+  auto spotFound = FindPlaceForDoor();
+  //while (spotFound.size() != 0)
+  for (int i = 0; i < 100; i++)
+  {
+    if (spotFound.size() != 0)
+    {
+      Position p = spotFound[0];
+      _map[p.X][p.Y].Image = '+';
+    }
+
+    spotFound = FindPlaceForDoor();
+  }
+}
+
+std::vector<Position> Rooms::FindPlaceForDoor()
+{
+  std::vector<Position> res;
+
+  for (int x = 1; x < _mapSize.X - 1; x++)
+  {
+    for (int y = 1; y < _mapSize.Y - 1; y++)
+    {
+      if (IsSpotValidForDoor({ x, y }))
+      {
+        res.push_back({ x, y });
+        return res;
+      }
+    }
+  }
+
+  return res;
+}
+
+bool Rooms::IsSpotValidForDoor(Position p)
+{
+  int lx = p.X - 1;
+  int ly = p.Y - 1;
+  int hx = p.X + 1;
+  int hy = p.Y + 1;
+
+  int sum = 0;
+  for (int x = lx; x <= hx; x++)
+  {
+    for (int y = ly; y <= hy; y++)
+    {
+      if (_map[x][y].Image == '.')
+      {
+        sum++;
+      }
+    }
+  }
+
+  return (sum == 4);
 }
