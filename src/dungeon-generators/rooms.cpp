@@ -33,7 +33,7 @@ void Rooms::Generate(Position mapSize, Position splitRatio, int minRoomSize)
     ConnectPoints(_connectionPoints[i], _connectionPoints[i + 1]);
   }
 
-  //PlaceDoors();
+  PlaceDoors();
 
   FillMapRaw();
 }
@@ -213,8 +213,7 @@ void Rooms::ConnectPoints(Position p1, Position p2)
 void Rooms::PlaceDoors()
 {
   auto spotFound = FindPlaceForDoor();
-  //while (spotFound.size() != 0)
-  for (int i = 0; i < 100; i++)
+  while (spotFound.size() != 0)
   {
     if (spotFound.size() != 0)
     {
@@ -247,22 +246,99 @@ std::vector<Position> Rooms::FindPlaceForDoor()
 
 bool Rooms::IsSpotValidForDoor(Position p)
 {
+  using Pattern = std::vector<std::string>;
+
+  std::vector<Pattern> validPatterns =
+  {
+    {
+      "...",
+      "#.#",
+      "#.#"
+    },
+    {
+      "...",
+      "#.#",
+      "..."
+    },
+    {
+      "#..",
+      "#.#",
+      "..."
+    },
+    {
+      "..#",
+      "#.#",
+      "..."
+    },
+    {
+      "#.#",
+      "#.#",
+      "#.."
+    },
+    {
+      "#..",
+      "#.#",
+      "#.."
+    }
+  };
+
+  auto angles =
+  {
+    RoomLayoutRotation::NONE,
+    RoomLayoutRotation::CCW_90,
+    RoomLayoutRotation::CCW_180,
+    RoomLayoutRotation::CCW_270
+  };
+
   int lx = p.X - 1;
   int ly = p.Y - 1;
   int hx = p.X + 1;
   int hy = p.Y + 1;
 
-  int sum = 0;
+  Pattern patternToCheck;
   for (int x = lx; x <= hx; x++)
   {
+    std::string row;
     for (int y = ly; y <= hy; y++)
     {
-      if (_map[x][y].Image == '.')
+      row += _map[x][y].Image;
+    }
+
+    patternToCheck.push_back(row);
+  }
+
+  bool spotValid = false;
+  for (auto& pattern : validPatterns)
+  {
+    for (auto& angle : angles)
+    {
+      auto layout = Util::RotateRoomLayout(pattern, angle);
+      if (!ComparePatterns(layout, patternToCheck))
       {
-        sum++;
+        continue;
+      }
+      else
+      {
+        return true;
       }
     }
   }
 
-  return (sum == 4);
+  return spotValid;
+}
+
+bool Rooms::ComparePatterns(std::vector<std::string>& p1, std::vector<std::string>& p2)
+{
+  for (int row = 0; row < p1.size(); row++)
+  {
+    for (int col = 0; col < p1[row].length(); col++)
+    {
+      if (p1[row][col] != p2[row][col])
+      {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }

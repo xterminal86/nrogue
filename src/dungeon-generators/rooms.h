@@ -40,6 +40,7 @@ class Rooms : public DGBase
     void PlaceDoors();
 
     bool IsSpotValidForDoor(Position p);
+    bool ComparePatterns(std::vector<std::string>& p1, std::vector<std::string>& p2);
 
     std::vector<Position> FindPlaceForDoor();
 };
