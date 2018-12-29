@@ -1,4 +1,5 @@
 #define RUN_TESTS 0
+#define DEBUG_INFO 0
 
 #include <ncurses.h>
 #include <unistd.h>
@@ -20,12 +21,12 @@
 int main()
 {
   RNG::Instance().Init();
-  RNG::Instance().SetSeed(1);
+  //RNG::Instance().SetSeed(1);
   //RNG::Instance().SetSeed(1544714037606745311);
   //RNG::Instance().SetSeed(1545127588351497486);
 
   Logger::Instance().Init();
-  Logger::Instance().Prepare(true);
+  Logger::Instance().Prepare(false);
 
   auto str = Util::StringFormat("World seed is %lu", RNG::Instance().Seed);
   Logger::Instance().Print(str);

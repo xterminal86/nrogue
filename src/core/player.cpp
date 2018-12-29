@@ -316,7 +316,7 @@ void Player::Attack(GameObject* go)
     if (EquipmentByCategory[EquipmentCategory::WEAPON][0] != nullptr
      && WeaponLosesDurability())
     {
-      if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue == 0)
+      if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue <= 0)
       {
         BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);
         EquipmentByCategory[EquipmentCategory::WEAPON][0] = { nullptr };
@@ -391,7 +391,7 @@ void Player::Attack(GameObject* go)
 
       if (durabilityLost)
       {
-        if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue == 0)
+        if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue <= 0)
         {
           BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);
           EquipmentByCategory[EquipmentCategory::WEAPON][0] = { nullptr };

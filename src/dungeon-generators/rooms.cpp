@@ -270,11 +270,13 @@ bool Rooms::IsSpotValidForDoor(Position p)
       "#.#",
       "..."
     },
+    /*
     {
       "#.#",
       "#.#",
       "#.."
     },
+    */
     {
       "#..",
       "#.#",
