@@ -280,21 +280,21 @@ void Player::SetDefaultEquipment()
   {
     case PlayerClass::THIEF:
     {
-      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::DAGGER, true);
+      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::DAGGER, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(go);
     }
     break;
 
     case PlayerClass::SOLDIER:
     {
-      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::SHORT_SWORD, true);
+      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(go);
     }
     break;
 
     case PlayerClass::ARCANIST:
     {
-      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::STAFF, true);
+      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::STAFF, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(go);
     }
     break;
@@ -303,6 +303,15 @@ void Player::SetDefaultEquipment()
 
 void Player::Attack(GameObject* go)
 {
+  // BUG:
+  //
+  // 1) There are two identical cursed weapons in inventory
+  // 2) One of them is equipped
+  // 3) Use it unil it breaks
+  // 4) Open inventory - other one is shown as equipped
+  //
+  // Trying to force 'equip' it shows that it wasn't actually eqipped.
+
   if (go->Attrs.Indestructible)
   {
     Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
@@ -927,7 +936,11 @@ void Player::BreakItem(ItemComponent* ic)
   {
     auto c = Inventory.Contents[i]->GetComponent<ItemComponent>();
     ItemComponent* ic = static_cast<ItemComponent*>(c);
-    if (ic->Data.ItemTypeHash == typeHash)
+
+    // FIXME: breaking only equipped item, trying to fix bug
+    // when having two identical cursed items in inventory
+    // with one equipped, wrong one breaks after durability lose.
+    if (ic->Data.ItemTypeHash == typeHash && ic->Data.IsEquipped)
     {
       Inventory.Contents.erase(Inventory.Contents.begin() + i);
       break;

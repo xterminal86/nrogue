@@ -30,7 +30,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateStatPotion(std::string statName, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, bool isIdentified = false);
     GameObject* CreateNote(std::string objName, std::vector<std::string> text);
-    GameObject* CreateWeapon(WeaponType type, bool overridePrefix = false);
+    GameObject* CreateWeapon(WeaponType type, ItemPrefix preifx = ItemPrefix::RANDOM);
     GameObject* CreateContainer(std::string name, chtype image, int x, int y);
     GameObject* CreateGem(int x, int y, GemType type = GemType::RANDOM);
 

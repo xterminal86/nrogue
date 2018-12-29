@@ -273,15 +273,15 @@ void MapLevelMines::CreateLevel()
   //int iterations = (MapSize.X * MapSize.Y) / 10;
   //lb.FeatureRoomsMethod(MapSize, { 1, 10 }, iterations);
 
-  if (DungeonLevel > 2)
-  {
-    lb.RoomsMethod(MapSize, { 45, 55 }, 5);
-  }
-  else
-  {
+  //if (DungeonLevel < 2)
+  //{
+    lb.RoomsMethod(MapSize, { 45, 55 }, 7);
+  //}
+  //else
+  //{
     // FIXME: build from layouts needs improvements
-    lb.BuildLevelFromLayouts(_roomsForLevel, 1, 1, MapSize.X, MapSize.Y);
-  }
+    //lb.BuildLevelFromLayouts(_roomsForLevel, 1, 1, MapSize.X, MapSize.Y);
+  //}
 
   ConstructFromBuilder(lb);
 

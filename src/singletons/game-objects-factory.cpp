@@ -773,8 +773,8 @@ GameObject* GameObjectsFactory::CreateNote(std::string objName, std::vector<std:
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefix)
-{
+GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
+{  
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel * 0.5;
@@ -792,8 +792,8 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, bool overridePrefi
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
   ic->Data.ItemType_ = ItemType::WEAPON;
 
-  ic->Data.Prefix = overridePrefix ? ItemPrefix::UNCURSED : RollItemPrefix();
-  ic->Data.IsIdentified = overridePrefix ? true : false;
+  ic->Data.Prefix = (prefix != ItemPrefix::RANDOM) ? prefix : RollItemPrefix();
+  ic->Data.IsIdentified = (prefix != ItemPrefix::RANDOM) ? true : false;
 
   int avgDamage = 0;
   int baseDurability = 0;
