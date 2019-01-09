@@ -247,6 +247,15 @@ void MainState::HandleInput()
         Map::Instance().PrintMapLayout();
         break;
 
+      case 'T':
+      {
+        int x = Map::Instance().CurrentLevel->LevelExit.X;
+        int y = Map::Instance().CurrentLevel->LevelExit.Y;
+        _playerRef->MoveTo(x, y);
+        Update(true);
+      }
+      break;
+
       // *****
 
       default:

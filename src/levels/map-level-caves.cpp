@@ -24,7 +24,20 @@ void MapLevelCaves::CreateLevel()
   int tunnelLengthMin = tunnelLengthMax / 2;
 
   LevelBuilder lb;
-  lb.BacktrackingTunnelerMethod(MapSize, { tunnelLengthMin, tunnelLengthMax }, { -1, -1 }, true);
+
+  switch (MapType_)
+  {
+    case MapType::CAVES_1:
+    {
+      int iterations = (MapSize.X * MapSize.Y) / 2;
+      lb.TunnelerMethod(MapSize, iterations, { tunnelLengthMin, tunnelLengthMax });
+    }
+    break;
+
+    default:
+      lb.BacktrackingTunnelerMethod(MapSize, { tunnelLengthMin, tunnelLengthMax }, { -1, -1 }, true);
+      break;
+  }
 
   ConstructFromBuilder(lb);
 

@@ -146,9 +146,9 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     }
   };
 
-  switch (DungeonLevel)
+  switch (MapType_)
   {
-    case 1:
+    case MapType::MINES_1:
     {
       _roomsForLevel =
       {
@@ -164,7 +164,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     }
     break;
 
-    case 2:
+    case MapType::MINES_2:
     {
       _roomsForLevel =
       {
@@ -183,7 +183,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     }
     break;
 
-    case 3:
+    case MapType::MINES_3:
     {
       _roomsForLevel =
       {
@@ -203,7 +203,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     }
     break;
 
-    case 4:
+    case MapType::MINES_4:
     {
       _roomsForLevel =
       {
@@ -225,7 +225,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     }
     break;
 
-    case 5:
+    case MapType::MINES_5:
     {
       _roomsForLevel =
       {
@@ -270,24 +270,24 @@ void MapLevelMines::CreateLevel()
 
   LevelBuilder lb;
 
-  switch (DungeonLevel)
+  switch (MapType_)
   {
-    case 1:
+    case MapType::MINES_1:
     {
       lb.RoomsMethod(MapSize, { 45, 55 }, 7);
     }
     break;
 
-    case 2:
-    case 3:
+    case MapType::MINES_2:
+    case MapType::MINES_3:
     {
       int iterations = (MapSize.X * MapSize.Y) / 2;
       lb.TunnelerMethod(MapSize, iterations, { 5, 15 });
     }
     break;
 
-    case 4:
-    case 5:
+    case MapType::MINES_4:
+    case MapType::MINES_5:
     {
       lb.RecursiveBacktrackerMethod(MapSize);
     }
