@@ -47,7 +47,9 @@ void RecursiveBacktracker::Generate(Position mapSize, Position startingPoint)
     }
   }
 
+  FillDeadEnds();
   CutProblemCorners();
+
   FillMapRaw();
 }
 

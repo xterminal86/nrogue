@@ -293,13 +293,11 @@ void MainState::Update(bool forceUpdate)
     _debugInfo = Util::StringFormat("World seed: %lu", RNG::Instance().Seed);
     Printer::Instance().PrintFB(0, 0, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
-    #ifdef DEBUG_INFO
     // FIXME: Some debug info
 
     PrintDebugInfo();
 
     // *****
-    #endif
 
     Printer::Instance().Render();
   }

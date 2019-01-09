@@ -523,12 +523,14 @@ namespace GlobalConstants
 
   static const std::string BlackColor = "#000000";
   static const std::string WhiteColor = "#FFFFFF";
+  static const std::string MarbleColor = "#FFE0E0";
   static const std::string WallColor = "#888888";
   static const std::string GrassColor = "#006600";
   static const std::string TreeColor = "#00FF00";
   static const std::string PlayerColor = "#00FFFF";
   static const std::string MonsterColor = "#FF0000";
-  static const std::string WaterColor = "#3333FF";
+  static const std::string ShallowWaterColor = "#9999FF";
+  static const std::string DeepWaterColor = "#3333FF";
   static const std::string NpcColor = "#FFFF00";
   static const std::string GroundColor = "#444444";
   static const std::string RoomFloorColor = "#692E11";  
@@ -991,6 +993,7 @@ namespace GlobalConstants
   static const std::vector<std::vector<std::string>> ShrineLayouts =
   {
     // 0
+    // Might, Spirit, Knowledge, Holy, Healing, Potential, Tranquility, Perception
     {
       "#####",
       "#...#",
@@ -999,6 +1002,7 @@ namespace GlobalConstants
       "#####"
     },
     // 1
+    // Holy, Healing, Potential, Tranquility, Perception
     {
       "#g g#",
       "gg gg",
@@ -1007,6 +1011,7 @@ namespace GlobalConstants
       "#g g#"
     },
     // 2
+    // Holy, Healing, Potential, Tranquility, Perception
     {
       " www ",
       "ww ww",
@@ -1015,6 +1020,7 @@ namespace GlobalConstants
       " w w "
     },
     // 3
+    // Forgotten, Hidden, Ruined, Desecrated, Disturbing
     {
       "#.#..",
       ".  .#",
@@ -1023,6 +1029,7 @@ namespace GlobalConstants
       "..###"
     },
     // 4
+    // Abyssal
     {
       "lllll",
       "ll ll",

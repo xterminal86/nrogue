@@ -42,12 +42,12 @@ void LevelBuilder::BacktrackingTunnelerMethod(Position mapSize, Position tunnelM
   MapRaw = t->MapRaw;
 }
 
-void LevelBuilder::TunnelerMethod(Position mapSize, int maxTunnels, Position tunnelLengthMinMax, Position start)
+void LevelBuilder::TunnelerMethod(Position mapSize, int maxIterations, Position tunnelLengthMinMax, Position start)
 {
   _generator.reset(new Tunneler());
 
   Tunneler* t = static_cast<Tunneler*>(_generator.get());
-  t->Normal(mapSize, tunnelLengthMinMax, start, maxTunnels, false);
+  t->Normal(mapSize, tunnelLengthMinMax, start, maxIterations, true);
 
   MapRaw = t->MapRaw;
 }
@@ -62,6 +62,7 @@ void LevelBuilder::RecursiveBacktrackerMethod(Position mapSize, Position startin
   MapRaw = rb->MapRaw;
 }
 
+// FIXME: build from layouts needs improvements
 void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY)
 {
   _generator.reset(new FromLayouts());

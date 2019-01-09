@@ -112,25 +112,31 @@ void MapLevelBase::PlaceStairs()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', stairsUpTo);
 
-  std::vector<Position> possibleExits;
+  _emptyCells.erase(_emptyCells.begin() + startIndex);
 
-  int mapSizeMax = std::max(MapSize.X, MapSize.Y);
+  int endIndex = RNG::Instance().RandomRange(0, _emptyCells.size());
 
+  LevelExit.X = _emptyCells[endIndex].X;
+  LevelExit.Y = _emptyCells[endIndex].Y;
+
+  /*
+  int maxDistance = 0;
+
+  Position exitPos;
   for (int i = 0; i < _emptyCells.size(); i++)
   {
     auto& c = _emptyCells[i];
 
     float d = Util::LinearDistance(LevelStart.X, LevelStart.Y, c.X, c.Y);
-    if (i != startIndex && d > mapSizeMax / 2)
+    if (d > maxDistance)
     {
-      possibleExits.push_back(c);
+      maxDistance = d;
+      exitPos = c;
     }
   }
 
-  int index = RNG::Instance().RandomRange(0, possibleExits.size());
-  auto exit = possibleExits[index];
-
-  LevelExit.Set(exit.X, exit.Y);
+  LevelExit.Set(exitPos.X, exitPos.Y);
+  */
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', stairsDownTo);
 }

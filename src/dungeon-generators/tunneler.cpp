@@ -114,10 +114,10 @@ void Tunneler::Backtracking(Position mapSize, Position tunnelLengthMinMax, Posit
   FillMapRaw();
 }
 
-/// Builds tunnels in all directions until maxTunnels are built.
+/// Builds tunnels in random directions until maxIterations.
 void Tunneler::Normal(Position mapSize, Position tunnelLengthMinMax, Position start, int maxIterations, bool additionalTweaks)
 {
-  int tunnelsMax = maxIterations;
+  int iterations = maxIterations;
 
   _mapSize = mapSize;
 
@@ -138,44 +138,48 @@ void Tunneler::Normal(Position mapSize, Position tunnelLengthMinMax, Position st
 
   _startingPoint.Set(sx, sy);
 
-  std::vector<Position> directions =
-  {
-    { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }
-  };
-
   Position mapPos(sx, sy);
 
-  int index = RNG::Instance().RandomRange(0, directions.size());
-  Position lastDir = directions[index];
+  std::vector<Position> carvedPoints;
 
-  while (tunnelsMax > 0)
+  _map[mapPos.X][mapPos.Y].Image = '.';
+
+  while (iterations > 0)
   {
-    Position newDir = GetRandomPerpendicularDir(lastDir);
+    auto newDir = GetCorridorDir(mapPos);
 
-    int currentLength = 0;
-    int rndLength = RNG::Instance().RandomRange(tunnelLengthMinMax.X, tunnelLengthMinMax.Y);
-
-    std::vector<Position> corridor;
-
-    while (currentLength <= rndLength && IsInsideMap(mapPos))
+    if (newDir.size() != 0)
     {
-      corridor.push_back(mapPos);
+      int currentLength = 0;
+      int rndLength = RNG::Instance().RandomRange(tunnelLengthMinMax.X, tunnelLengthMinMax.Y);
 
-      _map[mapPos.X][mapPos.Y].Image = '.';
+      std::vector<Position> corridor;
 
-      mapPos.X += newDir.X;
-      mapPos.Y += newDir.Y;
+      mapPos.X += newDir[0].X;
+      mapPos.Y += newDir[0].Y;
 
-      currentLength++;
+      while (currentLength <= rndLength
+          && IsInsideMap(mapPos)
+          && IsDeadEnd(mapPos))
+      {
+        corridor.push_back(mapPos);
+        carvedPoints.push_back(mapPos);
+
+        _map[mapPos.X][mapPos.Y].Image = '.';
+
+        mapPos.X += newDir[0].X;
+        mapPos.Y += newDir[0].Y;
+
+        currentLength++;
+      }
     }
 
-    lastDir.Set(newDir);
+    int index = RNG::Instance().RandomRange(0, carvedPoints.size());
+    mapPos = carvedPoints[index];
 
-    index = RNG::Instance().RandomRange(0, corridor.size());
+    carvedPoints.erase(carvedPoints.begin() + index);
 
-    mapPos = corridor[index];
-
-    tunnelsMax--;
+    iterations--;
   }
 
   // Starting point might become wall if it was near the corner
@@ -314,6 +318,50 @@ Position Tunneler::GetRandomPerpendicularDir(Position dir)
       res = choicesByDir[i][index];
       break;
     }
+  }
+
+  return res;
+}
+
+bool Tunneler::IsDirectionValid(Position pos, Position dir)
+{
+  Position newPos;
+
+  newPos.X = pos.X + dir.X;
+  newPos.Y = pos.Y + dir.Y;
+
+  if (IsInsideMap(newPos) && _map[newPos.X][newPos.Y].Image == '#')
+  {
+    return true;
+  }
+
+  return false;
+}
+
+std::vector<Position> Tunneler::GetCorridorDir(Position pos)
+{
+  std::vector<Position> res;
+
+  std::vector<Position> directions =
+  {
+    { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }
+  };
+
+  std::vector<Position> validDirs;
+
+  for (auto& d : directions)
+  {
+    if (IsDirectionValid(pos, d))
+    {
+      validDirs.push_back(d);
+    }
+  }
+
+  if (validDirs.size() != 0)
+  {
+    int index = RNG::Instance().RandomRange(0, validDirs.size());
+    Position dir = validDirs[index];
+    res.push_back(dir);
   }
 
   return res;

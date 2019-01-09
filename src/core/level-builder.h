@@ -14,7 +14,7 @@ class LevelBuilder
   public:
     void BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY);
     void RecursiveBacktrackerMethod(Position mapSize, Position startingPoint = { -1, -1 });
-    void TunnelerMethod(Position mapSize, int maxTunnels, Position tunnelLengthMinMax, Position start = { -1, -1 } );
+    void TunnelerMethod(Position mapSize, int maxIterations, Position tunnelLengthMinMax, Position start = { -1, -1 } );
     void BacktrackingTunnelerMethod(Position mapSize, Position tunnelLengthMinMax, Position start = { - 1, -1 }, bool additionalTweaks = false);
     void CellularAutomataMethod(Position mapSize, int initialWallChance, int birthThreshold, int deathThreshold, int maxIterations);
     void FeatureRoomsMethod(Position mapSize, Position roomSizes, int maxIterations);

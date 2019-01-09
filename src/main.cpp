@@ -1,5 +1,4 @@
 #define RUN_TESTS 0
-#define DEBUG_INFO 0
 
 #include <ncurses.h>
 #include <unistd.h>
@@ -21,6 +20,7 @@
 int main()
 {
   RNG::Instance().Init();
+  RNG::Instance().SetSeed(1547020537474375167);
   //RNG::Instance().SetSeed(1);
   //RNG::Instance().SetSeed(1544714037606745311);
   //RNG::Instance().SetSeed(1545127588351497486);

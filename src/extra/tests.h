@@ -256,7 +256,8 @@ namespace Tests
     printf("%s", str.data());
     Logger::Instance().Print(str);
 
-    lb.TunnelerMethod(mapSize, 50, { 10, 20 }, s);
+    int iterations = (mapSize.X * mapSize.Y) / 2;
+    lb.TunnelerMethod(mapSize, iterations, { 5, 10 }, s);
     lb.MapRaw[s.X][s.Y] = 'X';
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
@@ -265,7 +266,7 @@ namespace Tests
     printf("%s", str.data());
     Logger::Instance().Print(str);
 
-    lb.BacktrackingTunnelerMethod(mapSize, { 5, 20 }, s, true);
+    lb.BacktrackingTunnelerMethod(mapSize, { 5, 10 }, s, true);
     lb.MapRaw[s.X][s.Y] = 'X';
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
@@ -291,7 +292,7 @@ namespace Tests
     Logger::Instance().Print(str);
     printf("%s", str.data());
 
-    int iterations = (mapSize.X * mapSize.Y) / 10;
+    iterations = (mapSize.X * mapSize.Y) / 10;
 
     lb.FeatureRoomsMethod(mapSize, { 1, 10 }, iterations);
     lb.LogPrintMapRaw();

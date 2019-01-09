@@ -270,18 +270,29 @@ void MapLevelMines::CreateLevel()
 
   LevelBuilder lb;
 
-  //int iterations = (MapSize.X * MapSize.Y) / 10;
-  //lb.FeatureRoomsMethod(MapSize, { 1, 10 }, iterations);
+  switch (DungeonLevel)
+  {
+    case 1:
+    {
+      lb.RoomsMethod(MapSize, { 45, 55 }, 7);
+    }
+    break;
 
-  //if (DungeonLevel < 2)
-  //{
-    lb.RoomsMethod(MapSize, { 45, 55 }, 7);
-  //}
-  //else
-  //{
-    // FIXME: build from layouts needs improvements
-    //lb.BuildLevelFromLayouts(_roomsForLevel, 1, 1, MapSize.X, MapSize.Y);
-  //}
+    case 2:
+    case 3:
+    {
+      int iterations = (MapSize.X * MapSize.Y) / 2;
+      lb.TunnelerMethod(MapSize, iterations, { 5, 15 });
+    }
+    break;
+
+    case 4:
+    case 5:
+    {
+      lb.RecursiveBacktrackerMethod(MapSize);
+    }
+    break;
+  }
 
   ConstructFromBuilder(lb);
 
@@ -294,8 +305,10 @@ void MapLevelMines::CreateLevel()
 
   PlaceStairs();
 
-  CreateInitialMonsters();
-  CreateItemsForLevel(10 + DungeonLevel * 2);
+  //CreateInitialMonsters();
+
+  int itemsToCreate = RNG::Instance().RandomRange(1, 3 + DungeonLevel);
+  CreateItemsForLevel(itemsToCreate);
 }
 
 void MapLevelMines::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)

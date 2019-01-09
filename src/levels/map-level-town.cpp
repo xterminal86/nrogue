@@ -58,11 +58,11 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
       "#......#......#",
       "##+########+###",
       "#   #ggggggggg#",
-      "#   #g#  #  #g#",
-      "+    g wwwww g#",
-      "#   #g wwwww g#",
-      "+    g wwwww g#",
-      "#   #g#  #  #g#",
+      "#   #g#mm#mm#g#",
+      "+    gmwwwwwmg#",
+      "#   #gmwwFwwmg#",
+      "+    gmwwwwwmg#",
+      "#   #g#mm#mm#g#",
       "#   #ggggggggg#",
       "##+########+###",
       "#......#......#",
@@ -74,10 +74,10 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
     {
       "####+##########",
       "#ggg ggg#.....#",
-      "#gFg gFg#.....|",
+      "#gTg gTg#.....|",
       "#ggg ggg#.....#",
       "#ggg ggg#.....#",
-      "#gFg gFg#.....|",
+      "#gTg gTg#.....|",
       "#ggg ggg#.....#",
       "####+######+###",
       "#.......#.....#",
@@ -246,7 +246,14 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
 
         case 'F':
         {
-          t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::WaterColor, "Fountain");
+          t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Fountain");
+          MapArray[posX][posY]->MakeTile(t);
+        }
+        break;
+
+        case 'T':
+        {
+          t.Set(true, false, c, GlobalConstants::TreeColor,GlobalConstants::BlackColor, "Tree");
           MapArray[posX][posY]->MakeTile(t);
         }
         break;
@@ -265,9 +272,16 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
         }
         break;
 
+        case 'm':
+        {
+          t.Set(true, false, ' ', GlobalConstants::BlackColor, GlobalConstants::MarbleColor, "Marble Fence");
+          MapArray[posX][posY]->MakeTile(t);
+        }
+        break;
+
         case 'w':
         {
-          t.Set(true, false, '~', GlobalConstants::WhiteColor, GlobalConstants::WaterColor, "Water");
+          t.Set(false, false, '~', GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, "Shallow Water");
           MapArray[posX][posY]->MakeTile(t);
         }
         break;

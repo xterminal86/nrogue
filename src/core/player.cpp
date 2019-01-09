@@ -20,7 +20,8 @@ void Player::Init()
   Attrs.ActionMeter = 100;
 
   // FIXME: debug
-  Money = 1000;
+  //Money = 1000;
+  Money = 0;
 
   Inventory.MaxCapacity = GlobalConstants::InventoryMaxSize;
 
