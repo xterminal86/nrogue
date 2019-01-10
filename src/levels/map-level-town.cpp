@@ -59,9 +59,9 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
       "##+########+###",
       "#   #ggggggggg#",
       "#   #g#mm#mm#g#",
-      "+    gmwwwwwmg#",
-      "#   #gmwwFwwmg#",
-      "+    gmwwwwwmg#",
+      "+    gm~~~~~mg#",
+      "#   #gm~~F~~mg#",
+      "+    gm~~~~~mg#",
       "#   #g#mm#mm#g#",
       "#   #ggggggggg#",
       "##+########+###",
@@ -279,9 +279,9 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
         }
         break;
 
-        case 'w':
+        case '~':
         {
-          t.Set(false, false, '~', GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, "Shallow Water");
+          t.Set(false, false, c, GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, "Shallow Water");
           MapArray[posX][posY]->MakeTile(t);
         }
         break;

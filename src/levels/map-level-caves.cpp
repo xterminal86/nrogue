@@ -39,10 +39,9 @@ void MapLevelCaves::CreateLevel()
       break;
   }
 
-  ConstructFromBuilder(lb);
-
-  RecordEmptyCells();
-
+  ConstructFromBuilder(lb);  
+  CreateRivers();
+  RecordEmptyCells();  
   PlaceStairs();
 }
 
@@ -63,7 +62,7 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
         case '#':
         {
           objName = "Cave Wall";
-          t.Set(true, true, ' ', GlobalConstants::BlackColor, "#964B00", "Cave Wall");
+          t.Set(true, true, ' ', GlobalConstants::BlackColor, "#964B00", objName);
           MapArray[x][y]->MakeTile(t);
         }
         break;
@@ -74,7 +73,7 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
           t.Set(false, false, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
           MapArray[x][y]->MakeTile(t);
         }
-        break;
+        break;        
       }
     }
   }
@@ -88,4 +87,44 @@ void MapLevelCaves::DisplayWelcomeText()
   };
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Caves of Circe", msg);
+}
+
+void MapLevelCaves::CreateRivers()
+{
+  int num = RNG::Instance().RandomRange(10, 21);
+
+  for (int i = 0; i < num; i++)
+  {
+    Position start, end;
+
+    bool isVertical = (RNG::Instance().RandomRange(0, 2) == 0);
+    if (isVertical)
+    {
+      int x1 = RNG::Instance().RandomRange(0, MapSize.X);
+      int x2 = RNG::Instance().RandomRange(0, MapSize.X);
+
+      start.Set(0, x1);
+      end.Set(MapSize.Y - 1, x2);
+    }
+    else
+    {
+      int y1 = RNG::Instance().RandomRange(0, MapSize.Y);
+      int y2 = RNG::Instance().RandomRange(0, MapSize.Y);
+
+      start.Set(y1, 0);
+      end.Set(y2, MapSize.X - 1);
+    }
+
+    auto line = Util::BresenhamLine(start, end);
+    for (auto& p : line)
+    {
+      if (MapArray[p.X][p.Y]->Image == '.')
+      {
+        Tile t;
+        std::string objName = "Shallow Water";
+        t.Set(false, false, '~', GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, objName);
+        MapArray[p.X][p.Y]->MakeTile(t);
+      }
+    }
+  }
 }

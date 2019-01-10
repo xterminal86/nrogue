@@ -18,6 +18,7 @@ class MapLevelCaves : public MapLevelBase
 
   private:
     void ConstructFromBuilder(LevelBuilder& lb);
+    void CreateRivers();
 };
 
 #endif // MAPLEVELCAVES_H
