@@ -369,7 +369,7 @@ void MapLevelMines::DisplayWelcomeText()
     "These mines once were a place of",
     "work and income for this village.",
     "Now it's just crumbling tunnels",
-    "with occasional marks here and there",
+    "with occasional trails and marks here and there",
     "suggesting human presence in the past."
   };
 

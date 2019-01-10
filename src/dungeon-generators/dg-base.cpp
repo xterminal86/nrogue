@@ -235,8 +235,8 @@ void DGBase::CutProblemCorners()
 /// #.....
 /// #.....
 ///
-/// we replace random wall around A (which is '.') with empty space
-/// to disallow diagonal walking from A to B
+/// we replace random wall around A (which itself is '.')
+/// with empty space to disallow diagonal walking from A to B
 void DGBase::CheckIfProblemCorner(Position p)
 {
   int lx = p.X - 1;

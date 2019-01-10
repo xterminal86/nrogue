@@ -5,8 +5,8 @@
 ///
 /// Additional tweaks include removal of deadends and
 /// ....
-/// ..#.
-/// .#..
+/// .A#.
+/// .#B.
 /// ....
 /// situations
 void Tunneler::Backtracking(Position mapSize, Position tunnelLengthMinMax, Position start, bool additionalTweaks)
@@ -115,6 +115,9 @@ void Tunneler::Backtracking(Position mapSize, Position tunnelLengthMinMax, Posit
 }
 
 /// Builds tunnels in random directions until maxIterations.
+/// Does not cross already carved tunnel.
+/// maxIterations is empirically chosen but should be around
+/// (mapSize.X * mapSize.Y) / 2 to cover all map area.
 void Tunneler::Normal(Position mapSize, Position tunnelLengthMinMax, Position start, int maxIterations, bool additionalTweaks)
 {
   int iterations = maxIterations;
@@ -182,7 +185,6 @@ void Tunneler::Normal(Position mapSize, Position tunnelLengthMinMax, Position st
     iterations--;
   }
 
-  // Starting point might become wall if it was near the corner
   if (additionalTweaks)
   {
     FillDeadEnds();
