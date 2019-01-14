@@ -807,7 +807,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 15;
+      baseDurability = 30;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -824,7 +824,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 25;
+      baseDurability = 45;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -841,7 +841,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 35;
+      baseDurability = 60;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -858,7 +858,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 45;
+      baseDurability = 80;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -876,7 +876,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 60;
+      baseDurability = 100;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -894,7 +894,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 15;
+      baseDurability = 30;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -1403,6 +1403,7 @@ void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
 
         case ItemPrefix::BLESSED:
           kvp.second++;
+          itemData.Durability.Set(itemData.Durability.OriginalValue * 2);
           itemData.Damage.CurrentValue *= 2;
           itemData.Damage.OriginalValue *= 2;
           break;

@@ -304,7 +304,8 @@ void Player::SetDefaultEquipment()
 
 void Player::Attack(GameObject* go)
 {
-  // BUG:
+  // BUG: (probably was already fixed,
+  //       was caused by two weapons having same hash)
   //
   // 1) There are two identical cursed weapons in inventory
   // 2) One of them is equipped
@@ -642,7 +643,7 @@ bool Player::CanRaiseAttribute(Attribute& attr)
 void Player::ProcessKill(GameObject* monster)
 {
   int defaultExp = monster->Attrs.Rating() - Attrs.Rating();
-  int exp = defaultExp;
+  int exp = defaultExp; // + Map::Instance().CurrentLevel->DungeonLevel;
 
   exp = Util::Clamp(exp, 1, GlobalConstants::AwardedExpMax);
 

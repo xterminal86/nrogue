@@ -249,9 +249,12 @@ void MainState::HandleInput()
 
       case 'T':
       {
-        int x = Map::Instance().CurrentLevel->LevelExit.X;
-        int y = Map::Instance().CurrentLevel->LevelExit.Y;
-        _playerRef->MoveTo(x, y);
+        int exitX = Map::Instance().CurrentLevel->LevelExit.X;
+        int exitY = Map::Instance().CurrentLevel->LevelExit.Y;
+
+        _playerRef->MoveTo(exitX, exitY);
+
+        Map::Instance().CurrentLevel->AdjustCamera();
         Update(true);
       }
       break;

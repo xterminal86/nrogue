@@ -65,7 +65,9 @@ void MapLevelBase::RecordEmptyCells()
   {
     for (int y = 0; y < MapSize.Y; y++)
     {
-      if (!MapArray[x][y]->Blocking)
+      if (!MapArray[x][y]->Blocking
+      && (MapArray[x][y]->Image != '>'
+       || MapArray[x][y]->Image != '<'))
       {
         Position pos(x, y);
         _emptyCells.push_back(pos);
@@ -120,6 +122,9 @@ void MapLevelBase::PlaceStairs()
   LevelExit.Y = _emptyCells[endIndex].Y;
 
   /*
+  // Place stairs down on random cell
+  // at maximum distance from stairs up
+
   int maxDistance = 0;
 
   Position exitPos;
@@ -186,7 +191,10 @@ void MapLevelBase::TryToSpawnMonsters()
     int cx = _emptyCells[index].X;
     int cy = _emptyCells[index].Y;
 
-    if (!MapArray[cx][cy]->Visible && !MapArray[cx][cy]->Occupied)
+    // Spawn monsters on cells invisible to the player
+    if (!MapArray[cx][cy]->Visible
+     && !MapArray[cx][cy]->Occupied
+     && !MapArray[cx][cy]->Blocking)
     {
       auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
       auto monster = GameObjectsFactory::Instance().CreateMonster(cx, cy, res.first);

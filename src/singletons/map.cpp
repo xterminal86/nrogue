@@ -242,23 +242,23 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
     switch (levelName)
     {
       case MapType::MINES_1:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(110, 110, levelName, (int)levelName));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(60, 60, levelName, (int)levelName));
         break;
 
       case MapType::MINES_2:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(130, 130, levelName, (int)levelName));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(60, 60, levelName, (int)levelName));
         break;
 
       case MapType::MINES_3:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(150, 150, levelName, (int)levelName));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(60, 60, levelName, (int)levelName));
         break;
 
       case MapType::MINES_4:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(170, 170, levelName, (int)levelName));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(60, 60, levelName, (int)levelName));
         break;
 
       case MapType::MINES_5:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(190, 190, levelName, (int)levelName));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(60, 60, levelName, (int)levelName));
         break;
 
       case MapType::CAVES_1:
@@ -266,7 +266,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
       case MapType::CAVES_3:
       case MapType::CAVES_4:
       case MapType::CAVES_5:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelCaves(200, 200, levelName, (int)levelName));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelCaves(100, 100, levelName, (int)levelName));
         break;
 
       case MapType::LOST_CITY:
@@ -387,7 +387,13 @@ void Map::PrintMapLayout()
   {
     for (int y = 0; y < CurrentLevel->MapSize.X; y++)
     {
-      layout += CurrentLevel->MapArray[y][x]->Image;
+      char ch = CurrentLevel->MapArray[y][x]->Image;
+      if (ch == ' ')
+      {
+        ch = '#';
+      }
+
+      layout += ch;
     }
 
     layout += "\n";

@@ -192,7 +192,7 @@ void AINPC::SetDataCloud()
   {
     TextLines bonusStr =
     {
-      "A Soldier, huh?",
+      "You're a Soldier, huh?",
       "Well, say hello to Zack for me when you see him.",
     };
 
