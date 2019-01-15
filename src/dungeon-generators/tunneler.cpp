@@ -177,10 +177,13 @@ void Tunneler::Normal(Position mapSize, Position tunnelLengthMinMax, Position st
       }
     }
 
-    int index = RNG::Instance().RandomRange(0, carvedPoints.size());
-    mapPos = carvedPoints[index];
+    if (carvedPoints.size() != 0)
+    {
+      int index = RNG::Instance().RandomRange(0, carvedPoints.size());
+      mapPos = carvedPoints[index];
 
-    carvedPoints.erase(carvedPoints.begin() + index);
+      carvedPoints.erase(carvedPoints.begin() + index);
+    }
 
     iterations--;
   }

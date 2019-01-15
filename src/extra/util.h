@@ -38,6 +38,10 @@ struct Position
     Y = from.Y;
   }
 
+  virtual ~Position()
+  {
+  }
+
   void Set(int x, int y)
   {
     X = x;
