@@ -533,6 +533,7 @@ namespace GlobalConstants
   static const std::string DeepWaterColor = "#3333FF";
   static const std::string NpcColor = "#FFFF00";
   static const std::string GroundColor = "#444444";
+  static const std::string IronColor = "#CBCDCD";
   static const std::string RoomFloorColor = "#692E11";  
   static const std::string MountainsColor = "#666666";
   static const std::string FogOfWarColor = "#202020";

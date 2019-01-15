@@ -16,13 +16,13 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
       "##+##",
       "#...#",
       "#...#",
-      "#...#",
+      "#B..#",
       "##-##"
     },
     // 1
     {
       "#+#####",
-      "#..#..#",
+      "#..#.B#",
       "|..+..|",
       "#..#..#",
       "#######"
@@ -34,7 +34,7 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
       "#.....#",
       "|..#+##",
       "#..#..#",
-      "#..#..#",
+      "#..#.B#",
       "#######"
     },
     // Rich residents
@@ -47,13 +47,13 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
       "##+###+##.....#",
       "#...#...#.....#",
       "#...#...#.....|",
-      "#...#...#.....#",
+      "#B..#B..#.....#",
       "##-###-####-###"
     },
     // 4
     {
       "#########-#####",
-      "#......#......#",
+      "#......#.....B#",
       "|......#......|",
       "#......#......#",
       "##+########+###",
@@ -67,13 +67,13 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
       "##+########+###",
       "#......#......#",
       "|......#......|",
-      "#......#......#",
+      "#......#.....B#",
       "#########-#####"
     },
     // 5
     {
       "####+##########",
-      "#ggg ggg#.....#",
+      "#ggg ggg#....B#",
       "#gTg gTg#.....|",
       "#ggg ggg#.....#",
       "#ggg ggg#.....#",
@@ -87,14 +87,16 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
       "#.......#.....#",
       "###############"
     },
-    // Trader
+    // Blacksmith
     // 6
     {
-      "#########",
-      "#.......#",
-      "+.......#",
-      "#.......#",
-      "#########"
+       "#########",
+       "# _  #.B#",
+     R"(#/.\_#..#)",
+       "#...T#..#",
+       "+...T#..#",
+       "#....+..#",
+       "#########"
     },
     // Church
     // 7
@@ -162,13 +164,15 @@ void MapLevelTown::CreateLevel()
 
   // Bydlo (that includes you, btw) ;-)
 
-  int numHouses = 5;
+  int numHouses = 4;
 
   int offset = 15;
   for (int i = 0; i < numHouses; i++)
   {
     CreateRoom(18 + offset * i, 3, _layoutsForLevel[0], true);
   }
+
+  CreateBlacksmith(78, 3, _layoutsForLevel[6], true);
 
   // Majors
 
@@ -200,6 +204,92 @@ void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFi
     {
       MapArray[x][y]->MakeTile(tileToFill);
     }
+  }
+}
+
+void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation)
+{
+  Tile t;
+
+  int posX = x;
+  int posY = y;
+
+  std::vector<std::string> newLayout = layout;
+
+  std::vector<RoomLayoutRotation> rotations =
+  {
+    RoomLayoutRotation::NONE,
+    RoomLayoutRotation::CCW_90,
+    RoomLayoutRotation::CCW_180,
+    RoomLayoutRotation::CCW_270
+  };
+
+  if (randomizeOrientation)
+  {
+    int index = RNG::Instance().Random() % rotations.size();
+    newLayout = Util::RotateRoomLayout(layout, rotations[index]);
+  }
+
+  for (auto& row : newLayout)
+  {
+    for (auto& c : row)
+    {
+      switch (c)
+      {
+        case '#':
+          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
+          MapArray[posX][posY]->MakeTile(t);
+          break;
+
+        case 'T':
+        {
+          t.Set(true, false, c, GlobalConstants::IronColor, GlobalConstants::BlackColor, "Workbench");
+          MapArray[posX][posY]->MakeTile(t);
+        }
+        break;
+
+        case 'B':
+        {
+          t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Bed");
+          MapArray[posX][posY]->MakeTile(t);
+        }
+        break;
+
+        case '.':
+        {
+          t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
+          MapArray[posX][posY]->MakeTile(t);
+        }
+        break;
+
+        case '\\':
+        case '/':
+        case '_':
+        case '|':
+        case '-':
+        {
+          t.Set(true, true, c, GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Forge");
+          MapArray[posX][posY]->MakeTile(t);
+        }
+        break;
+
+        case ' ':
+        {
+          t.Set(true, true, c, GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Forge");
+          MapArray[posX][posY]->MakeTile(t);
+        }
+        break;
+
+        case '+':
+          CreateDoor(posX, posY);
+          break;
+      }
+
+      posX++;
+    }
+
+    posX = x;
+    posY++;
   }
 }
 
@@ -253,7 +343,14 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
 
         case 'T':
         {
-          t.Set(true, false, c, GlobalConstants::TreeColor,GlobalConstants::BlackColor, "Tree");
+          t.Set(true, true, c, GlobalConstants::TreeColor, GlobalConstants::BlackColor, "Tree");
+          MapArray[posX][posY]->MakeTile(t);
+        }
+        break;
+
+        case 'B':
+        {
+          t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Bed");
           MapArray[posX][posY]->MakeTile(t);
         }
         break;
@@ -406,9 +503,11 @@ void MapLevelTown::CreatePlayerHouse()
   Tile t;
   t.Set(true, false, 'C', GlobalConstants::WhiteColor, GlobalConstants::RoomFloorColor, "Stash");
 
-  MapArray[5][5]->MakeTile(t);
+  Position cp(6, 6);
 
-  auto stash = GameObjectsFactory::Instance().CreateContainer("Stash", 'C', 5, 5);
+  MapArray[cp.X][cp.Y]->MakeTile(t);
+
+  auto stash = GameObjectsFactory::Instance().CreateContainer("Stash", 'C', cp.X, cp.Y);
   InsertGameObject(stash);
 }
 

@@ -418,12 +418,21 @@ namespace Util
 
             switch (c)
             {
+              case '_':
               case '-':
                 c = '|';
                 break;
 
               case '|':
                 c = '-';
+                break;
+
+              case '/':
+                c = '\\';
+                break;
+
+              case '\\':
+                c = '/';
                 break;
             }
 
@@ -484,12 +493,21 @@ namespace Util
 
             switch (c)
             {
+              case '_':
               case '-':
                 c = '|';
                 break;
 
               case '|':
                 c = '-';
+                break;
+
+              case '/':
+                c = '\\';
+                break;
+
+              case '\\':
+                c = '/';
                 break;
             }
 
