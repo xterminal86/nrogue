@@ -188,6 +188,8 @@ void MapLevelTown::CreateLevel()
 
   CreateChurch(63, 15);
 
+  CreateTownGates();
+
   RecordEmptyCells();
 
   LevelExit.X = 98;
@@ -581,4 +583,13 @@ void MapLevelTown::CreateNPCs()
 
   go = GameObjectsFactory::Instance().CreateNPC(9, 43, NPCType::MAYA, true);
   InsertActor(go);
+}
+
+void MapLevelTown::CreateTownGates()
+{
+  Tile t;
+  t.Set(true, true, '+', GlobalConstants::BlackColor, GlobalConstants::DoorHighlightColor, "Town Gates");
+
+  MapArray[0][13]->MakeTile(t);
+  MapArray[0][14]->MakeTile(t);
 }

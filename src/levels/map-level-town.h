@@ -22,6 +22,7 @@ class MapLevelTown : public MapLevelBase
     void CreateChurch(int x, int y);
     void CreateBlacksmith(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation = false);
     void CreatePlayerHouse();    
+    void CreateTownGates();
 };
 
 #endif // MAPLEVELTOWN_H
