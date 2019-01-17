@@ -588,7 +588,7 @@ void MapLevelTown::CreateNPCs()
 void MapLevelTown::CreateTownGates()
 {
   Tile t;
-  t.Set(true, true, '+', GlobalConstants::BlackColor, GlobalConstants::DoorHighlightColor, "Town Gates");
+  t.Set(true, true, '+', GlobalConstants::BlackColor, GlobalConstants::DoorHighlightColor, "Village Gates");
 
   MapArray[0][13]->MakeTile(t);
   MapArray[0][14]->MakeTile(t);
