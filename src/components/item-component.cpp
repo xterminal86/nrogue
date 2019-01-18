@@ -77,7 +77,7 @@ std::vector<std::string> ItemComponent::GetWeaponInspectionInfo()
   std::vector<std::string> res =
   {
     { Util::StringFormat("DMG: %id%i", Data.Damage.CurrentValue, Data.Damage.OriginalValue) },
-    { Util::StringFormat("DUR: %i / %i", Data.Durability.CurrentValue, Data.Durability.OriginalValue) },
+    { Util::StringFormat("%i / %i", Data.Durability.CurrentValue, Data.Durability.OriginalValue) },
     { "" },
     { Util::StringFormat("STR: %i", Data.StatBonuses[StatsEnum::STR]) },
     { Util::StringFormat("DEF: %i", Data.StatBonuses[StatsEnum::DEF]) },
