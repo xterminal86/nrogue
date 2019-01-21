@@ -83,6 +83,17 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     ItemPrefix RollItemPrefix();
 
     void GenerateLoot(int posX, int posY, std::pair<ItemType, int> kvp, MonsterType type);
+
+    void InitPotionColors();
+
+    struct PotionInfo
+    {
+      ItemType PotionType = ItemType::DUMMY;
+      std::string PotionName;
+      std::pair<std::string, std::string> FgBgColor;
+    };
+
+    std::map<ItemType, PotionInfo> _gamePotionsMap;
 };
 
 #endif // GAMEOBJECTSFACTORY_H

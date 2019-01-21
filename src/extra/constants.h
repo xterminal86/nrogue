@@ -604,13 +604,27 @@ namespace GlobalConstants
     { ItemType::HEALING_POTION, 50 },
     { ItemType::MANA_POTION,    50 },
     { ItemType::HUNGER_POTION,  20 },
-    { ItemType::STR_POTION,     5 },
-    { ItemType::DEF_POTION,     5 },
-    { ItemType::MAG_POTION,     5 },
-    { ItemType::RES_POTION,     5 },
-    { ItemType::SKL_POTION,     5 },
-    { ItemType::SPD_POTION,     5 },
-    { ItemType::EXP_POTION,     10 }
+    { ItemType::STR_POTION,     1 },
+    { ItemType::DEF_POTION,     1 },
+    { ItemType::MAG_POTION,     1 },
+    { ItemType::RES_POTION,     1 },
+    { ItemType::SKL_POTION,     1 },
+    { ItemType::SPD_POTION,     1 },
+    { ItemType::EXP_POTION,     5 }
+  };
+
+  static const std::map<ItemType, std::string> PotionNameByType =
+  {
+    { ItemType::HEALING_POTION, "Healing Potion" },
+    { ItemType::MANA_POTION,    "Mana Potion" },
+    { ItemType::HUNGER_POTION,  "Hunger Potion" },
+    { ItemType::STR_POTION,     "STR Potion" },
+    { ItemType::DEF_POTION,     "DEF Potion" },
+    { ItemType::MAG_POTION,     "MAG Potion" },
+    { ItemType::RES_POTION,     "RES Potion" },
+    { ItemType::SKL_POTION,     "SKL Potion" },
+    { ItemType::SPD_POTION,     "SPD Potion" },
+    { ItemType::EXP_POTION,     "EXP Potion" }
   };
 
   static const std::map<ItemType, std::string> StatNameByPotionType =
@@ -795,7 +809,7 @@ namespace GlobalConstants
     { ShrineType::HOLY,        { "#FFFF00", "#888888" } },
   };
 
-  static const std::map<std::string, std::vector<std::string>> PotionColors =
+  static const std::map<std::string, std::vector<std::string>> PotionColorsByName =
   {
     { "Red Potion",     { "#FFFFFF", "#FF0000" } },
     { "Green Potion",   { "#FFFFFF", "#00FF00" } },
