@@ -948,7 +948,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateContainer(std::string name, chtype image, int x, int y)
+GameObject* GameObjectsFactory::CreateContainer(std::string name, std::string bgColor, chtype image, int x, int y)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -957,7 +957,7 @@ GameObject* GameObjectsFactory::CreateContainer(std::string name, chtype image, 
   go->PosY = y;
   go->Image = image;
   go->FgColor = "#FFFFFF";
-  go->BgColor = GlobalConstants::RoomFloorColor;
+  go->BgColor = bgColor;
   go->Blocking = true;
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();

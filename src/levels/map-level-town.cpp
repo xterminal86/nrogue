@@ -465,7 +465,7 @@ void MapLevelTown::CreateChurch(int x, int y)
 
         case 'h':
         {
-          t.Set(false, false, c, GlobalConstants::RoomFloorColor, GlobalConstants::BlackColor, "Wooden Bench", "?Bench?");
+          t.Set(false, false, c, GlobalConstants::WoodColor, GlobalConstants::BlackColor, "Wooden Bench", "?Bench?");
           MapArray[posX][posY]->MakeTile(t);
         }
         break;
@@ -503,13 +503,13 @@ void MapLevelTown::CreatePlayerHouse()
   CreateRoom(3, 3, _layoutsForLevel[0]);
 
   Tile t;
-  t.Set(true, false, 'C', GlobalConstants::WhiteColor, GlobalConstants::RoomFloorColor, "Stash");
+  t.Set(true, false, 'C', GlobalConstants::WhiteColor, GlobalConstants::ChestColor, "Stash");
 
   Position cp(6, 6);
 
   MapArray[cp.X][cp.Y]->MakeTile(t);
 
-  auto stash = GameObjectsFactory::Instance().CreateContainer("Stash", 'C', cp.X, cp.Y);
+  auto stash = GameObjectsFactory::Instance().CreateContainer("Stash", GlobalConstants::ChestColor, 'C', cp.X, cp.Y);
   InsertGameObject(stash);
 }
 
@@ -588,7 +588,7 @@ void MapLevelTown::CreateNPCs()
 void MapLevelTown::CreateTownGates()
 {
   Tile t;
-  t.Set(true, true, '+', GlobalConstants::BlackColor, GlobalConstants::DoorHighlightColor, "Village Gates");
+  t.Set(true, true, '+', GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Village Gates");
 
   MapArray[0][13]->MakeTile(t);
   MapArray[0][14]->MakeTile(t);
