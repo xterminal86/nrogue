@@ -346,8 +346,8 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 
   if (item->Data.UseCallback.target_type() != typeid(void))
   {
-    item->Data.UseCallback(item);
-    res = true;
+    return item->Data.UseCallback(item);
+    //res = true;
   }
   else
   {
@@ -736,7 +736,7 @@ void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int
   tile->Image = image;
 }
 
-void GameObjectsFactory::FoodUseHandler(ItemComponent* item)
+bool GameObjectsFactory::FoodUseHandler(ItemComponent* item)
 {
   auto objName = (item->Data.IsIdentified) ? item->Data.IdentifiedName : item->Data.UnidentifiedName;
 
@@ -767,6 +767,8 @@ void GameObjectsFactory::FoodUseHandler(ItemComponent* item)
   _playerRef->Attrs.Hunger = Util::Clamp(_playerRef->Attrs.Hunger, 0, _playerRef->Attrs.HungerRate.CurrentValue);
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
+
+  return true;
 }
 
 GameObject* GameObjectsFactory::CreateNote(std::string objName, std::vector<std::string> text)
@@ -1004,6 +1006,56 @@ GameObject* GameObjectsFactory::CreateGem(int x, int y, GemType type)
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateReturner(int x, int y, ItemPrefix prefixOverride)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->PosX = x;
+  go->PosY = y;
+
+  go->Image = '*';
+
+  int colorIndex = RNG::Instance().RandomRange(1, GlobalConstants::GemColorNameByType.size());
+
+  GemType t = (GemType)colorIndex;
+
+  std::string colorName = GlobalConstants::GemColorNameByType.at(t);
+
+  std::string fgColor = GlobalConstants::GemColorByType.at(t).first;
+  std::string bgColor = GlobalConstants::GemColorByType.at(t).second;
+
+  go->FgColor = fgColor;
+  go->BgColor = bgColor;
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  ic->Data.ItemType_ = ItemType::RETURNER;
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+  ic->Data.Amount = 1;
+  ic->Data.IsStackable = false;
+  ic->Data.IsIdentified = false;
+  ic->Data.Cost = 25;
+
+  ic->Data.IdentifiedDescription =
+  {
+    "This strange stone lets you mark a spot",
+    "and instantly return to it any time you want."
+  };
+
+  ic->Data.UnidentifiedDescription = { "Is this valuable?" };
+
+  ic->Data.IdentifiedName = colorName + " Returner";
+  ic->Data.UnidentifiedName = "?" + colorName + " Gem?";
+
+  ic->Data.UseCallback = std::bind(&GameObjectsFactory::ReturnerUseHandler, this, ic);
+
+  SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
+
+  return go;
+}
+
 // ************************** PRIVATE METHODS ************************** //
 
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
@@ -1229,7 +1281,7 @@ void GameObjectsFactory::UnequipRing(ItemComponent* ring, int index)
   Printer::Instance().AddMessage(str);
 }
 
-void GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
+bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
 {
   int amount = 0;
 
@@ -1256,9 +1308,11 @@ void GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
   statCur = Util::Clamp(statCur, 0, statMax);
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
+
+  return true;
 }
 
-void GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
+bool GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
 {
   int amount = 0;
 
@@ -1285,9 +1339,11 @@ void GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
   statCur = Util::Clamp(statCur, 0, statMax);
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
+
+  return true;
 }
 
-void GameObjectsFactory::HungerPotionUseHandler(ItemComponent* item)
+bool GameObjectsFactory::HungerPotionUseHandler(ItemComponent* item)
 {
   int amount = 0;
 
@@ -1314,9 +1370,11 @@ void GameObjectsFactory::HungerPotionUseHandler(ItemComponent* item)
   statCur = Util::Clamp(statCur, 0, statMax);
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
+
+  return true;
 }
 
-void GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
+bool GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
 {
   int amount = 0;
 
@@ -1341,9 +1399,11 @@ void GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
   _playerRef->AwardExperience(amount);
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
+
+  return true;
 }
 
-void GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
+bool GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
 {
   ItemPrefix buc = item->Data.Prefix;
 
@@ -1401,6 +1461,8 @@ void GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
   playerStats.at(itemType).Set(newValue);
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
+
+  return true;
 }
 
 void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
@@ -1600,4 +1662,17 @@ void GameObjectsFactory::InitPotionColors()
     potionTypes.erase(potionTypes.begin() + potionsTypeIndex);
     potions.erase(it);
   }
+}
+
+bool GameObjectsFactory::ReturnerUseHandler(ItemComponent* item)
+{
+  if (!item->Data.IsIdentified)
+  {
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Can't be used!" }, GlobalConstants::MessageBoxRedBorderColor);
+    return false;
+  }
+
+  // TODO: returner use code goes here
+
+  return true;
 }

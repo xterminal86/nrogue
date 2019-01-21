@@ -195,6 +195,10 @@ void MapLevelTown::CreateLevel()
   LevelExit.X = 98;
   LevelExit.Y = 48;
 
+  // FIXME: debug
+  auto go = GameObjectsFactory::Instance().CreateReturner(1, 1, ItemPrefix::UNCURSED);
+  InsertGameObject(go);
+
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);    
 }
 

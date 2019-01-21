@@ -77,6 +77,8 @@ void InventoryState::HandleInput()
 
       if (ic->Use())
       {
+        // TODO: items with charges
+
         if (ic->Data.IsStackable)
         {
           ic->Data.Amount--;
@@ -98,7 +100,7 @@ void InventoryState::HandleInput()
         if (!_playerRef->IsAlive(go))
         {
           Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
-        }        
+        }
       }      
     }
     break;

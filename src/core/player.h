@@ -131,8 +131,8 @@ class Player : public GameObject
       { "RES", 0 },
       { "SKL", 0 },
       { "SPD", 0 },
-      { "HP", 0 },
-      { "MP", 0 }
+      { "HP",  0 },
+      { "MP",  0 }
     };
 
     GameObject* _previousCell = nullptr;

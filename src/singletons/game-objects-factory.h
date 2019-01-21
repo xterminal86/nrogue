@@ -33,6 +33,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateWeapon(WeaponType type, ItemPrefix preifx = ItemPrefix::RANDOM);
     GameObject* CreateContainer(std::string name, std::string bgColor, chtype image, int x, int y);
     GameObject* CreateGem(int x, int y, GemType type = GemType::RANDOM);
+    GameObject* CreateReturner(int x, int y, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
 
     GameObject* CreateRandomPotion();
     GameObject* CreateRandomWeapon();
@@ -65,13 +66,14 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void EquipRing(ItemComponent* ring, int index);
     void UnequipRing(ItemComponent* ring, int index);
 
-    void HealingPotionUseHandler(ItemComponent* item);
-    void ManaPotionUseHandler(ItemComponent* item);
-    void HungerPotionUseHandler(ItemComponent* item);
-    void ExpPotionUseHandler(ItemComponent* item);
-    void StatPotionUseHandler(ItemComponent* item);
+    bool HealingPotionUseHandler(ItemComponent* item);
+    bool ManaPotionUseHandler(ItemComponent* item);
+    bool HungerPotionUseHandler(ItemComponent* item);
+    bool ExpPotionUseHandler(ItemComponent* item);
+    bool StatPotionUseHandler(ItemComponent* item);
+    bool ReturnerUseHandler(ItemComponent* item);
 
-    void FoodUseHandler(ItemComponent* item);
+    bool FoodUseHandler(ItemComponent* item);
 
     void SetItemName(GameObject* go, ItemData& itemData);
     void AdjustWeaponBonuses(ItemData& itemData);

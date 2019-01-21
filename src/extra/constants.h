@@ -180,6 +180,7 @@ enum class ItemType
   POTION,
   SCROLL,
   GEM,
+  RETURNER,
   WEAPON
 };
 
@@ -497,7 +498,7 @@ struct ItemData
   std::vector<std::string> UnidentifiedDescription;
   std::vector<std::string> IdentifiedDescription;
 
-  std::function<void(void*)> UseCallback;
+  std::function<bool(void*)> UseCallback;
   std::function<void(void*)> EquipCallback;
 
   size_t ItemTypeHash;
