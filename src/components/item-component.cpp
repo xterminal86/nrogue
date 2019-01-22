@@ -117,7 +117,7 @@ std::vector<std::string> ItemComponent::GetReturnerInspectionInfo()
     else
     {
       auto levelName = Map::Instance().GetLevelRefByType(mt)->LevelName;
-      text = Util::StringFormat("Set to %s at [%i; %i]", levelName.data(), pos.X, pos.Y);
+      text = Util::StringFormat("Set to %s at [%i;%i]", levelName.data(), pos.X, pos.Y);
     }
   }
   else
