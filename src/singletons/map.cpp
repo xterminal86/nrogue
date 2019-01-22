@@ -260,6 +260,11 @@ void Map::TeleportToExistingLevel(MapType levelToChange, Position teleportTo)
 
   if (CurrentLevel->MapArray[teleportTo.X][teleportTo.Y]->Blocking)
   {
+    auto objName = CurrentLevel->MapArray[teleportTo.X][teleportTo.Y]->ObjectName;
+
+    auto str = Util::StringFormat("You teleported into a %s!", objName.data());
+    Printer::Instance().AddMessage(str);
+
     player.Attrs.HP.Set(0);
   }
 }

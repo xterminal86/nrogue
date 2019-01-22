@@ -301,17 +301,7 @@ void Player::SetDefaultEquipment()
 }
 
 void Player::Attack(GameObject* go)
-{
-  // BUG: (probably was already fixed,
-  //       was caused by two weapons having same hash)
-  //
-  // 1) There are two identical cursed weapons in inventory
-  // 2) One of them is equipped
-  // 3) Use it unil it breaks
-  // 4) Open inventory - other one is shown as equipped
-  //
-  // Trying to force 'equip' it shows that it wasn't actually eqipped.
-
+{  
   if (go->Attrs.Indestructible)
   {
     Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");

@@ -1089,9 +1089,6 @@ GameObject* GameObjectsFactory::CreateReturner(int x, int y, int charges, ItemPr
 
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
 {
-  // BUG: identified prefix description text gets duplicated
-  // during creation of random unidentified potions due to
-  // calling this method twice.
   switch (itemData.Prefix)
   {
     case ItemPrefix::BLESSED:
