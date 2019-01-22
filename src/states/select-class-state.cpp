@@ -23,8 +23,8 @@ void SelectClassState::HandleInput()
     {
       Application::Instance().PlayerInstance.Init();      
 
-      // NOTE: little bit of a hack, some NPC can contain bonus
-      // chat lines depending on player class
+      // NOTE: little bit of an out of place hack,
+      // since some NPC can contain bonus chat lines depending on player class
       MapLevelTown* mlt = static_cast<MapLevelTown*>(Map::Instance().CurrentLevel);
       mlt->CreateNPCs();
 

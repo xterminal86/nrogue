@@ -615,7 +615,7 @@ namespace Util
     }
 
     return *weightsByType.begin();
-  }
+  }  
 }
 
 #endif

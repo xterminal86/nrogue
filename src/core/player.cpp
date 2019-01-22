@@ -264,8 +264,6 @@ void Player::SetArcanistAttrs()
 
 void Player::SetDefaultEquipment()
 {
-  // Initialize map
-
   EquipmentByCategory[EquipmentCategory::HEAD] = { nullptr };
   EquipmentByCategory[EquipmentCategory::NECK] = { nullptr };
   EquipmentByCategory[EquipmentCategory::TORSO] = { nullptr };
@@ -893,6 +891,9 @@ void Player::SetArcanistDefaultItems()
   ItemComponent* ic = static_cast<ItemComponent*>(c);
   ic->Data.Amount = 5;
 
+  Inventory.AddToInventory(go);
+
+  go = GameObjectsFactory::Instance().CreateReturner(0, 0, 3, ItemPrefix::UNCURSED);
   Inventory.AddToInventory(go);
 }
 

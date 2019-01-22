@@ -3,6 +3,7 @@
 #include "item-component.h"
 #include "application.h"
 #include "printer.h"
+#include "returner-state.h"
 #include "util.h"
 #include "map.h"
 
@@ -77,8 +78,6 @@ void InventoryState::HandleInput()
 
       if (ic->Use())
       {
-        // TODO: items with charges
-
         if (ic->Data.IsStackable)
         {
           ic->Data.Amount--;
@@ -87,6 +86,13 @@ void InventoryState::HandleInput()
           {
             DestroyInventoryItem();
           }
+        }        
+        else if (ic->Data.IsChargeable)
+        {
+          auto s = Application::Instance().GetGameStateRefByName(GameStates::RETURNER_STATE);
+          ReturnerState* rs = static_cast<ReturnerState*>(s);
+          rs->SetItemComponentRef(ic);
+          Application::Instance().ChangeState(GameStates::RETURNER_STATE);
         }
         else
         {
@@ -96,7 +102,7 @@ void InventoryState::HandleInput()
         _playerRef->FinishTurn();
 
         // Check if player was killed
-        // after using something (e.g. cursed potion)
+        // after using something (e.g. cursed potion, teleported into wall)
         if (!_playerRef->IsAlive(go))
         {
           Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
@@ -151,10 +157,13 @@ void InventoryState::Update(bool forceUpdate)
       auto c = item->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-      std::string nameInInventory = ic->Data.IsIdentified ? item->ObjectName : ic->Data.UnidentifiedName;
+      std::string nameInInventory = ic->Data.IsIdentified ?
+                                    item->ObjectName :
+                                    ic->Data.UnidentifiedName;
+
       nameInInventory.resize(GlobalConstants::InventoryMaxNameLength, ' ');
 
-      if (ic->Data.IsStackable)
+      if (ic->Data.IsStackable || (ic->Data.IsChargeable && ic->Data.IsIdentified))
       {        
         auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
         Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1, 2 + yPos, stackAmount, Printer::kAlignLeft, "#FFFFFF");

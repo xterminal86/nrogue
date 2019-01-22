@@ -24,6 +24,7 @@ class Map : public Singleton<Map>
     void UpdateGameObjects();
 
     void ChangeLevel(MapType levelToChange, bool goingDown);
+    void TeleportToExistingLevel(MapType levelToChange, Position teleportTo);
 
     void PrintMapArrayRevealedStatus();
     void PrintMapLayout();
@@ -31,6 +32,7 @@ class Map : public Singleton<Map>
     GameObject* GetActorAtPosition(int x, int y);
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
     std::pair<int, GameObject*> GetGameObjectToPickup(int x, int y);
+    MapLevelBase* GetLevelRefByType(MapType type);
 
     MapLevelBase* CurrentLevel;
 

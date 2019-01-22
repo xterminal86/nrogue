@@ -62,6 +62,7 @@ enum class GameStates
   INTERACT_INPUT_STATE,
   NPC_INTERACT_STATE,
   SHOPPING_STATE,
+  RETURNER_STATE,
   EXITING_STATE,
   MESSAGE_BOX_STATE,
   ENDGAME_STATE
@@ -419,11 +420,18 @@ struct ItemData
   Attribute Durability;
   Attribute Damage;
 
+  // Kinda out of place hack
+  std::pair<MapType, std::pair<int, int>> ReturnerPosition =
+  {
+    MapType::NOWHERE, { -1, -1 }
+  };
+
   bool IsUsable = false;
   bool IsEquipped = false;
   bool IsStackable = false;
   bool IsIdentified = false;
   bool IsPrefixDiscovered = false;
+  bool IsChargeable = false;
 
   int Amount = 1;
 
@@ -460,9 +468,14 @@ struct ItemData
       price = (IsIdentified) ? Cost : 20;
     }
 
-    if (IsStackable)
+    if (IsStackable || IsChargeable)
     {
       price *= Amount;
+    }
+
+    if (ItemType_ == ItemType::RETURNER && !IsIdentified)
+    {
+      price = 20;
     }
 
     if (IsIdentified)
@@ -492,7 +505,11 @@ struct ItemData
     { StatsEnum::MP,  0 }
   };
 
+  // BUC status + object name [+ suffix]
+  // Used in inspection window
   std::string IdentifiedName;
+
+  // ? + object name + ?
   std::string UnidentifiedName;
 
   std::vector<std::string> UnidentifiedDescription;

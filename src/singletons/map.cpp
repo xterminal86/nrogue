@@ -186,6 +186,16 @@ std::vector<GameObject*> Map::GetGameObjectsAtPosition(int x, int y)
   return res;
 }
 
+MapLevelBase* Map::GetLevelRefByType(MapType type)
+{
+  if (_levels.count(type) != 0)
+  {
+    return _levels[type].get();
+  }
+
+  return nullptr;
+}
+
 void Map::RemoveDestroyed()
 {  
   for (int i = 0; i < CurrentLevel->GameObjects.size(); i++)
@@ -231,6 +241,27 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
   player.VisibilityRadius = CurrentLevel->VisibilityRadius;
 
   CurrentLevel->AdjustCamera();
+}
+
+void Map::TeleportToExistingLevel(MapType levelToChange, Position teleportTo)
+{
+  auto& player = Application::Instance().PlayerInstance;
+
+  // Unblock cell on stairs before going
+  CurrentLevel->MapArray[player.PosX][player.PosY]->Occupied = false;
+
+  CurrentLevel = _levels[levelToChange].get();
+
+  player.SetLevelOwner(CurrentLevel);
+  player.MoveTo(teleportTo.X, teleportTo.Y);
+  player.VisibilityRadius = CurrentLevel->VisibilityRadius;
+
+  CurrentLevel->AdjustCamera();
+
+  if (CurrentLevel->MapArray[teleportTo.X][teleportTo.Y]->Blocking)
+  {
+    player.Attrs.HP.Set(0);
+  }
 }
 
 void Map::ChangeOrInstantiateLevel(MapType levelName)

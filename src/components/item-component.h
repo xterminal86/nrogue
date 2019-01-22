@@ -23,6 +23,7 @@ class ItemComponent : public Component
 
   private:
     std::vector<std::string> GetWeaponInspectionInfo();
+    std::vector<std::string> GetReturnerInspectionInfo();
 };
 
 #endif // ITEMCOMPONENT_H

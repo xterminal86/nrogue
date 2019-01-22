@@ -58,6 +58,10 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       go = CreateGem(x, y, GemType::RANDOM);
       break;
 
+    case ItemType::RETURNER:
+      go = CreateReturner(x, y);
+      break;
+
     default:
       break;
   }
@@ -324,7 +328,7 @@ bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
     return res;
   }
 
-  // TODO: cursed items
+  // TODO: cursed items modify stats
 
   auto category = item->Data.EqCategory;
 
@@ -346,8 +350,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 
   if (item->Data.UseCallback.target_type() != typeid(void))
   {
-    return item->Data.UseCallback(item);
-    //res = true;
+    return item->Data.UseCallback(item);    
   }
   else
   {
@@ -640,7 +643,8 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
     ItemType::WEAPON,
     ItemType::POTION,
     ItemType::FOOD,
-    ItemType::GEM
+    ItemType::GEM,
+    ItemType::RETURNER
   };
 
   auto findRes = std::find(possibleItems.begin(), possibleItems.end(), exclude);
@@ -652,35 +656,41 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 
   std::map<FoodType, int> foodMap =
   {
-    { FoodType::APPLE, 1 },
-    { FoodType::BREAD, 1 },
-    { FoodType::CHEESE, 1 },
-    { FoodType::PIE, 1 },
-    { FoodType::MEAT, 1 },
-    { FoodType::FISH, 1 },
-    { FoodType::TIN, 1 },
-    { FoodType::RATIONS, 1 },
+    { FoodType::APPLE,        1 },
+    { FoodType::BREAD,        1 },
+    { FoodType::CHEESE,       1 },
+    { FoodType::PIE,          1 },
+    { FoodType::MEAT,         1 },
+    { FoodType::FISH,         1 },
+    { FoodType::TIN,          1 },
+    { FoodType::RATIONS,      1 },
     { FoodType::IRON_RATIONS, 1 }
   };
 
   std::map<GemType, int> gemsMap =
   {
     { GemType::WORTHLESS_GLASS, 800 },
-    { GemType::BLACK_OBSIDIAN, 150 },
-    { GemType::GREEN_JADE, 145 },
+    { GemType::BLACK_OBSIDIAN,  150 },
+    { GemType::GREEN_JADE,      145 },
     { GemType::PURPLE_FLUORITE, 135 },
     { GemType::PURPLE_AMETHYST, 130 },
-    { GemType::RED_GARNET, 110 },
-    { GemType::WHITE_OPAL, 100 },
-    { GemType::BLACK_JETSTONE, 95 },
-    { GemType::ORANGE_AMBER, 75 },
-    { GemType::BLUE_AQUAMARINE, 55 },
-    { GemType::YELLOW_CITRINE, 55 },
-    { GemType::GREEN_EMERALD, 30 },
-    { GemType::BLUE_SAPPHIRE, 25 },
-    { GemType::ORANGE_JACINTH, 20 },
-    { GemType::RED_RUBY, 15 },
-    { GemType::WHITE_DIAMOND, 15 },
+    { GemType::RED_GARNET,      110 },
+    { GemType::WHITE_OPAL,      100 },
+    { GemType::BLACK_JETSTONE,  95  },
+    { GemType::ORANGE_AMBER,    75  },
+    { GemType::BLUE_AQUAMARINE, 55  },
+    { GemType::YELLOW_CITRINE,  55  },
+    { GemType::GREEN_EMERALD,   30  },
+    { GemType::BLUE_SAPPHIRE,   25  },
+    { GemType::ORANGE_JACINTH,  20  },
+    { GemType::RED_RUBY,        15  },
+    { GemType::WHITE_DIAMOND,   15  },
+  };
+
+  std::map<ItemType, int> returnerMap =
+  {
+    { ItemType::RETURNER, 1 },
+    { ItemType::NOTHING,  20 }
   };
 
   int index = RNG::Instance().RandomRange(0, possibleItems.size());
@@ -712,6 +722,20 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
     {
       auto pair = Util::WeightedRandom(gemsMap);
       go = CreateGem(0, 0, pair.first);
+    }
+    break;
+
+    case ItemType::RETURNER:
+    {
+      auto pair = Util::WeightedRandom(returnerMap);
+      if (pair.first == ItemType::RETURNER)
+      {
+        go = CreateReturner(0, 0);
+      }
+      else
+      {
+        go = CreateGem(0, 0, GemType::WORTHLESS_GLASS);
+      }
     }
     break;
   }
@@ -1006,7 +1030,7 @@ GameObject* GameObjectsFactory::CreateGem(int x, int y, GemType type)
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateReturner(int x, int y, ItemPrefix prefixOverride)
+GameObject* GameObjectsFactory::CreateReturner(int x, int y, int charges, ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1029,18 +1053,21 @@ GameObject* GameObjectsFactory::CreateReturner(int x, int y, ItemPrefix prefixOv
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.ItemType_ = ItemType::RETURNER;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
-  ic->Data.Amount = 1;
-  ic->Data.IsStackable = false;
-  ic->Data.IsIdentified = false;
-  ic->Data.Cost = 25;
+  int chargesNum = (charges == -1) ? RNG::Instance().RandomRange(1, 11) : charges;
 
-  ic->Data.IdentifiedDescription =
+  ic->Data.ItemType_ = ItemType::RETURNER;
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;  
+  ic->Data.IsStackable = false;
+  ic->Data.IsIdentified = (prefixOverride == ItemPrefix::RANDOM) ? false : true;
+  ic->Data.IsChargeable = true;
+  ic->Data.Cost = 50;
+
+  ic->Data.Amount = chargesNum;
+
+  if (ic->Data.Prefix == ItemPrefix::BLESSED)
   {
-    "This strange stone lets you mark a spot",
-    "and instantly return to it any time you want."
-  };
+    ic->Data.Amount = chargesNum * 2;
+  }
 
   ic->Data.UnidentifiedDescription = { "Is this valuable?" };
 
@@ -1048,6 +1075,8 @@ GameObject* GameObjectsFactory::CreateReturner(int x, int y, ItemPrefix prefixOv
   ic->Data.UnidentifiedName = "?" + colorName + " Gem?";
 
   ic->Data.UseCallback = std::bind(&GameObjectsFactory::ReturnerUseHandler, this, ic);
+
+  go->ObjectName = ic->Data.IdentifiedName;
 
   SetItemName(go, ic->Data);
 
@@ -1066,8 +1095,7 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
   switch (itemData.Prefix)
   {
     case ItemPrefix::BLESSED:
-      itemData.IdentifiedName.insert(0, "Blessed ");
-      itemData.IdentifiedDescription.push_back("This one is blessed and will perform better.");
+      itemData.IdentifiedName.insert(0, "Blessed ");      
       break;
 
     case ItemPrefix::UNCURSED:
@@ -1075,8 +1103,7 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
       break;
 
     case ItemPrefix::CURSED:
-      itemData.IdentifiedName.insert(0, "Cursed ");
-      itemData.IdentifiedDescription.push_back("This one is cursed and should be avoided.");
+      itemData.IdentifiedName.insert(0, "Cursed ");      
       break;
   }
 
@@ -1123,6 +1150,22 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
     case ItemType::SPD_POTION:
       itemData.IdentifiedName.append(" of Speed");
       break;
+  }
+
+  switch (itemData.ItemType_)
+  {    
+    default:
+    {
+      if (itemData.Prefix == ItemPrefix::BLESSED)
+      {
+        itemData.IdentifiedDescription.push_back("This one is blessed and will perform better.");
+      }
+      else if (itemData.Prefix == ItemPrefix::CURSED)
+      {
+        itemData.IdentifiedDescription.push_back("This one is cursed and should be avoided.");
+      }
+    }
+    break;
   }
 }
 
@@ -1672,7 +1715,11 @@ bool GameObjectsFactory::ReturnerUseHandler(ItemComponent* item)
     return false;
   }
 
-  // TODO: returner use code goes here
+  if (item->Data.Amount == 0)
+  {
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "You invoke the returner, but nothing happens." }, GlobalConstants::MessageBoxDefaultBorderColor);
+    return false;
+  }
 
   return true;
 }

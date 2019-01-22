@@ -13,6 +13,7 @@
 #include "interact-input-state.h"
 #include "npc-interact-state.h"
 #include "shopping-state.h"
+#include "returner-state.h"
 #include "exiting-state.h"
 #include "message-box-state.h"
 #include "endgame-state.h"
@@ -36,6 +37,7 @@ void Application::Init()
   _gameStates[GameStates::INTERACT_INPUT_STATE]     = std::unique_ptr<GameState>(new InteractInputState());
   _gameStates[GameStates::NPC_INTERACT_STATE]       = std::unique_ptr<GameState>(new NPCInteractState());
   _gameStates[GameStates::SHOPPING_STATE]           = std::unique_ptr<GameState>(new ShoppingState());
+  _gameStates[GameStates::RETURNER_STATE]           = std::unique_ptr<GameState>(new ReturnerState());
   _gameStates[GameStates::EXITING_STATE]            = std::unique_ptr<GameState>(new ExitingState());
   _gameStates[GameStates::MESSAGE_BOX_STATE]        = std::unique_ptr<GameState>(new MessageBoxState());
   _gameStates[GameStates::ENDGAME_STATE]            = std::unique_ptr<GameState>(new EndgameState());

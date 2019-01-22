@@ -54,8 +54,9 @@ void TraderComponent::CreateItems()
 
       std::map<ItemType, int> itemsWeights =
       {
-        { ItemType::HEALING_POTION, 1 },
-        { ItemType::MANA_POTION, 1 }
+        { ItemType::HEALING_POTION, 10 },
+        { ItemType::MANA_POTION,    10 },
+        { ItemType::RETURNER,       1  }
       };
 
       std::map<ItemPrefix, int> prefixWeights =
@@ -79,7 +80,11 @@ void TraderComponent::CreateItems()
 
           case ItemType::MANA_POTION:
             go = GameObjectsFactory::Instance().CreateManaPotion(prefixPair.first);
-            break;          
+            break;
+
+          case ItemType::RETURNER:
+            go = GameObjectsFactory::Instance().CreateReturner(0, 0, -1, prefixPair.first);
+            break;
         }
 
         Items.push_back(std::unique_ptr<GameObject>(go));

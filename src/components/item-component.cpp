@@ -42,9 +42,16 @@ void ItemComponent::Inspect()
   std::string header = Data.IsIdentified ? Data.IdentifiedName : Data.UnidentifiedName;
   auto desc = Data.IsIdentified ? Data.IdentifiedDescription : Data.UnidentifiedDescription;
 
-  if (Data.IsIdentified && Data.ItemType_ == ItemType::WEAPON)
+  if (Data.IsIdentified)
   {
-    desc = GetWeaponInspectionInfo();
+    if (Data.ItemType_ == ItemType::WEAPON)
+    {
+      desc = GetWeaponInspectionInfo();
+    }
+    else if (Data.ItemType_ == ItemType::RETURNER)
+    {
+      desc = GetReturnerInspectionInfo();
+    }
   }
 
   if (Data.IsPrefixDiscovered)
@@ -86,6 +93,54 @@ std::vector<std::string> ItemComponent::GetWeaponInspectionInfo()
     { Util::StringFormat("SKL: %i", Data.StatBonuses[StatsEnum::SKL]) },
     { Util::StringFormat("SPD: %i", Data.StatBonuses[StatsEnum::SPD]) }
   };
+
+  return res;
+}
+
+std::vector<std::string> ItemComponent::GetReturnerInspectionInfo()
+{
+  std::string text;
+
+  MapType mt = Data.ReturnerPosition.first;
+  Position pos =
+  {
+    Data.ReturnerPosition.second.first,
+    Data.ReturnerPosition.second.second
+  };
+
+  if (Data.Amount != 0)
+  {
+    if (mt == MapType::NOWHERE)
+    {
+      text = "This one has not been attuned yet.";
+    }
+    else
+    {
+      auto levelName = Map::Instance().GetLevelRefByType(mt)->LevelName;
+      text = Util::StringFormat("Set to %s at [%i; %i]", levelName.data(), pos.X, pos.Y);
+    }
+  }
+  else
+  {
+    text = "The stone is inert.";
+  }
+
+  std::vector<std::string> res =
+  {
+    "This strange stone lets you mark a spot",
+    "and instantly return to it any time you want."
+  };
+
+  if (Data.Prefix == ItemPrefix::BLESSED)
+  {
+    res.push_back("This one is blessed and can be used longer.");
+  }
+  else if (Data.Prefix == ItemPrefix::CURSED)
+  {
+    res.push_back("This one is cursed and its performance is quite unpredictable.");
+  }
+
+  res.push_back(text);
 
   return res;
 }
