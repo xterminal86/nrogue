@@ -77,7 +77,7 @@ class Printer : public Singleton<Printer>
 
     std::vector<std::string> GetLastMessages();
 
-    const std::vector<std::string>& Messages() { return _inGameMessages; }
+    std::vector<std::string>& Messages() { return _inGameMessages; }
 
     bool ShowLastMessage;
 

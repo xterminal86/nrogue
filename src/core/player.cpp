@@ -21,7 +21,6 @@ void Player::Init()
 
   // FIXME: debug
   //Money = 1000;
-  Money = 0;
 
   Inventory.MaxCapacity = GlobalConstants::InventoryMaxSize;
 
@@ -273,31 +272,39 @@ void Player::SetDefaultEquipment()
   EquipmentByCategory[EquipmentCategory::SHIELD] = { nullptr };
   EquipmentByCategory[EquipmentCategory::RING] = { nullptr, nullptr };
 
-  // TODO: assign default equipment according to selected class
+  GameObject* go = nullptr;
 
   switch (GetClass())
   {
     case PlayerClass::THIEF:
     {
-      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::DAGGER, ItemPrefix::UNCURSED);
-      Inventory.AddToInventory(go);
+      go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::DAGGER, ItemPrefix::UNCURSED);
+      Inventory.AddToInventory(go);      
     }
     break;
 
     case PlayerClass::SOLDIER:
     {
-      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED);
+      go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(go);
     }
     break;
 
     case PlayerClass::ARCANIST:
     {
-      auto go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::STAFF, ItemPrefix::UNCURSED);
+      go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::STAFF, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(go);
     }
     break;
   }
+
+  ItemComponent* ic = go->GetComponent<ItemComponent>();
+  ic->Equip();
+
+  // Since equipping produces message in log,
+  // we explicitly delete it here.
+  auto it = Printer::Instance().Messages().begin();
+  Printer::Instance().Messages().erase(it);
 }
 
 void Player::Attack(GameObject* go)

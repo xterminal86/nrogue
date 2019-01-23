@@ -698,15 +698,15 @@ namespace GlobalConstants
     { GemType::BLUE_SAPPHIRE,   { "#FFFFFF", "#0000FF" } },
     { GemType::GREEN_EMERALD,   { "#FFFFFF", "#008800" } },
     { GemType::GREEN_JADE,      { "#FFFFFF", "#008800" } },
-    { GemType::ORANGE_AMBER,    { "#FFFFFF", "#FF9900" } },
-    { GemType::ORANGE_JACINTH,  { "#FFFFFF", "#FF9900" } },
+    { GemType::ORANGE_AMBER,    { "#000000", "#FF9900" } },
+    { GemType::ORANGE_JACINTH,  { "#000000", "#FF9900" } },
     { GemType::PURPLE_AMETHYST, { "#FFFFFF", "#800080" } },
     { GemType::PURPLE_FLUORITE, { "#FFFFFF", "#800080" } },
     { GemType::RED_GARNET,      { "#FFFFFF", "#AA0000" } },
     { GemType::RED_RUBY,        { "#FFFFFF", "#AA0000" } },
     { GemType::WHITE_DIAMOND,   { "#000000", "#FFFFFF" } },
     { GemType::WHITE_OPAL,      { "#000000", "#FFFFFF" } },
-    { GemType::YELLOW_CITRINE,  { "#FFFFFF", "#AAAA00" } }
+    { GemType::YELLOW_CITRINE,  { "#000000", "#FFFF00" } }
   };
 
   static const std::map<GemType, std::string> GemColorNameByType =
