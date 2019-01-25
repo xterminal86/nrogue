@@ -8,7 +8,8 @@ void ReturnerState::Prepare()
 {
   _playerRef = &Application::Instance().PlayerInstance;
 
-  Printer::Instance().AddMessage("(a) - attune, (u) - use, (q) - cancel");
+  Printer::Instance().AddMessage("What do you want to do with returner?");
+  Printer::Instance().AddMessage("(a) - attune, (u) - use, (q) - nothing");
 }
 
 void ReturnerState::HandleInput()
@@ -81,9 +82,19 @@ void ReturnerState::Update(bool forceUpdate)
 
     _playerRef->Draw();
 
+    auto& msgs = Printer::Instance().Messages();
+    auto msg1 = msgs.at(0);
+    auto msg2 = msgs.at(1);
+
     Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
                                 Printer::Instance().TerminalHeight - 1,
-                                Printer::Instance().GetLastMessage(),
+                                msg1,
+                                Printer::kAlignRight,
+                                "#FFFFFF");
+
+    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
+                                Printer::Instance().TerminalHeight - 2,
+                                msg2,
                                 Printer::kAlignRight,
                                 "#FFFFFF");
 
