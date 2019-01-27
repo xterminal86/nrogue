@@ -284,7 +284,7 @@ void MainState::Update(bool forceUpdate)
 
     Map::Instance().Draw(_playerRef->PosX, _playerRef->PosY);
 
-    _playerRef->Draw();    
+    _playerRef->Draw();
 
     DisplayStartHint();
     DisplayExitHint();
@@ -502,7 +502,7 @@ void MainState::DisplayStartHint()
 {
   int th = Printer::Instance().TerminalHeight;
 
-  Printer::Instance().PrintFB(0, th - 4, '<', "#FFFFFF");
+  Printer::Instance().PrintFB(0, th - 4, '<', "#FFFFFF", GlobalConstants::DoorHighlightColor);
 
   auto curLvl = Map::Instance().CurrentLevel;
   int dx = curLvl->LevelStart.X - _playerRef->PosX;
@@ -535,7 +535,7 @@ void MainState::DisplayExitHint()
 {
   int th = Printer::Instance().TerminalHeight;
 
-  Printer::Instance().PrintFB(0, th - 3, '>', "#FFFFFF");
+  Printer::Instance().PrintFB(0, th - 3, '>', "#FFFFFF", GlobalConstants::DoorHighlightColor);
 
   auto curLvl = Map::Instance().CurrentLevel;
   if (curLvl->ExitFound)
