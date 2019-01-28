@@ -208,7 +208,7 @@ void Player::SetSoldierAttrs()
   Attrs.Str.Talents = 3;
   Attrs.Def.Talents = 2;
   Attrs.Skl.Talents = 1;
-  Attrs.HP.Talents = 2;
+  Attrs.HP.Talents = 3;
 
   Attrs.Str.Set(3);
   Attrs.Def.Set(2);
@@ -488,7 +488,7 @@ void Player::LevelUp()
   _statRaisesMap["HP"] = hpToAdd;
 
   int minRndMp = Attrs.Mag.OriginalValue;
-  int maxRndMp = Attrs.Mag.OriginalValue * (Attrs.MP.Talents + 1);
+  int maxRndMp = Attrs.Mag.OriginalValue + Attrs.MP.Talents;
 
   int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp);
   Attrs.MP.OriginalValue += mpToAdd;

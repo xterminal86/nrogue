@@ -26,6 +26,7 @@
 // 5) Skills
 // 6) Magic / Rare / Unique items
 // 7) Traps, secrets
+// 8) Locked doors / chests
 
 int main()
 {

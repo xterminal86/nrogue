@@ -182,7 +182,8 @@ enum class ItemType
   SCROLL,
   GEM,
   RETURNER,
-  WEAPON
+  WEAPON,
+  WAND
 };
 
 enum class WeaponType
@@ -229,6 +230,44 @@ enum class GemType
   WHITE_DIAMOND,
   BLACK_JETSTONE,
   BLACK_OBSIDIAN
+};
+
+enum class SpellType
+{
+  // 1 target, DEF
+  STRIKE = 0,
+  // 1 target, RES
+  MAGIC_MISSILE,
+  // 1 target, RES, slow
+  FROST,
+  // area damage, RES
+  FIREBALL,
+  // chains (self-damage possible), RES
+  LIGHTNING,
+  // pierces through, DEF
+  LASER,
+  // increase visibility radius, temporary
+  LIGHT,
+  IDENTIFY,
+  MAGIC_MAPPING,
+  TELEPORT,
+  // shows monsters (not all?), temporary
+  DETECT_MONSTERS,
+  REMOVE_CURSE,
+  HEAL,
+  NEUTRALIZE_POISON,
+  MANA_SHIELD
+};
+
+enum class WandMaterials
+{
+  YEW = 0,
+  IVORY,
+  EBONY,
+  ONYX,
+  GLASS,
+  COPPER,
+  GOLDEN
 };
 
 enum class ShrineType
@@ -555,7 +594,7 @@ namespace GlobalConstants
   static const std::string NpcColor = "#FFFF00";
   static const std::string GroundColor = "#444444";
   static const std::string IronColor = "#CBCDCD";
-  static const std::string RoomFloorColor = "#692E11";  
+  static const std::string RoomFloorColor = "#692E11";
   static const std::string WoodColor = "#DCB579";
   static const std::string ChestColor = "#A0793D";
   static const std::string MountainsColor = "#666666";
@@ -627,27 +666,27 @@ namespace GlobalConstants
     { ItemType::HEALING_POTION, 50 },
     { ItemType::MANA_POTION,    50 },
     { ItemType::HUNGER_POTION,  20 },
-    { ItemType::STR_POTION,     1 },
-    { ItemType::DEF_POTION,     1 },
-    { ItemType::MAG_POTION,     1 },
-    { ItemType::RES_POTION,     1 },
-    { ItemType::SKL_POTION,     1 },
-    { ItemType::SPD_POTION,     1 },
-    { ItemType::EXP_POTION,     5 }
+    { ItemType::STR_POTION,     1  },
+    { ItemType::DEF_POTION,     1  },
+    { ItemType::MAG_POTION,     1  },
+    { ItemType::RES_POTION,     1  },
+    { ItemType::SKL_POTION,     1  },
+    { ItemType::SPD_POTION,     1  },
+    { ItemType::EXP_POTION,     5  }
   };
 
   static const std::map<ItemType, std::string> PotionNameByType =
   {
     { ItemType::HEALING_POTION, "Healing Potion" },
-    { ItemType::MANA_POTION,    "Mana Potion" },
-    { ItemType::HUNGER_POTION,  "Hunger Potion" },
-    { ItemType::STR_POTION,     "STR Potion" },
-    { ItemType::DEF_POTION,     "DEF Potion" },
-    { ItemType::MAG_POTION,     "MAG Potion" },
-    { ItemType::RES_POTION,     "RES Potion" },
-    { ItemType::SKL_POTION,     "SKL Potion" },
-    { ItemType::SPD_POTION,     "SPD Potion" },
-    { ItemType::EXP_POTION,     "EXP Potion" }
+    { ItemType::MANA_POTION,    "Mana Potion"    },
+    { ItemType::HUNGER_POTION,  "Hunger Potion"  },
+    { ItemType::STR_POTION,     "STR Potion"     },
+    { ItemType::DEF_POTION,     "DEF Potion"     },
+    { ItemType::MAG_POTION,     "MAG Potion"     },
+    { ItemType::RES_POTION,     "RES Potion"     },
+    { ItemType::SKL_POTION,     "SKL Potion"     },
+    { ItemType::SPD_POTION,     "SPD Potion"     },
+    { ItemType::EXP_POTION,     "EXP Potion"     }
   };
 
   static const std::map<ItemType, std::string> StatNameByPotionType =
@@ -672,24 +711,24 @@ namespace GlobalConstants
 
   static const std::map<WeaponType, std::string> WeaponNameByType =
   {
-    { WeaponType::DAGGER,       "Dagger" },
-    { WeaponType::SHORT_SWORD,  "Short Sword" },
+    { WeaponType::DAGGER,       "Dagger"       },
+    { WeaponType::SHORT_SWORD,  "Short Sword"  },
     { WeaponType::ARMING_SWORD, "Arming Sword" },
-    { WeaponType::LONG_SWORD,   "Longsword" },
-    { WeaponType::GREAT_SWORD,  "Great Sword" },
+    { WeaponType::LONG_SWORD,   "Longsword"    },
+    { WeaponType::GREAT_SWORD,  "Great Sword"  },
     { WeaponType::STAFF,        "Battle Staff" }
   };
 
   static const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =
   {
-    { FoodType::APPLE,        { "Apple",        10 } },
-    { FoodType::BREAD,        { "Bread",        20 } },
-    { FoodType::FISH,         { "Fish",         20 } },
-    { FoodType::CHEESE,       { "Cheese",       30 } },
-    { FoodType::PIE,          { "Cream Pie",    40 } },
-    { FoodType::MEAT,         { "Meat",         50 } },
-    { FoodType::TIN,          { "Canned Food",  60 } },
-    { FoodType::RATIONS,      { "Rations",      75 } },
+    { FoodType::APPLE,        { "Apple",        10  } },
+    { FoodType::BREAD,        { "Bread",        20  } },
+    { FoodType::FISH,         { "Fish",         20  } },
+    { FoodType::CHEESE,       { "Cheese",       30  } },
+    { FoodType::PIE,          { "Cream Pie",    40  } },
+    { FoodType::MEAT,         { "Meat",         50  } },
+    { FoodType::TIN,          { "Canned Food",  60  } },
+    { FoodType::RATIONS,      { "Rations",      75  } },
     { FoodType::IRON_RATIONS, { "Iron Rations", 100 } }
   };
 
@@ -754,64 +793,87 @@ namespace GlobalConstants
   static const std::map<GemType, int> GemCostByType =
   {
     // 0
-    { GemType::WORTHLESS_GLASS, 0 },
+    { GemType::WORTHLESS_GLASS, 0   },
     // 200
-    { GemType::BLACK_OBSIDIAN, 20 },
+    { GemType::BLACK_OBSIDIAN,  20  },
     // 300
-    { GemType::GREEN_JADE, 30 },
+    { GemType::GREEN_JADE,      30  },
     // 400
-    { GemType::PURPLE_FLUORITE, 40 },
+    { GemType::PURPLE_FLUORITE, 40  },
     // 600
-    { GemType::PURPLE_AMETHYST, 60 },
+    { GemType::PURPLE_AMETHYST, 60  },
     // 700
-    { GemType::RED_GARNET, 70 },
+    { GemType::RED_GARNET,      70  },
     // 800
-    { GemType::WHITE_OPAL, 80 },
+    { GemType::WHITE_OPAL,      80  },
     // 850
-    { GemType::BLACK_JETSTONE, 85 },
+    { GemType::BLACK_JETSTONE,  85  },
     // 1000
-    { GemType::ORANGE_AMBER, 100 },
+    { GemType::ORANGE_AMBER,    100 },
     // 1500
-    { GemType::YELLOW_CITRINE, 150 },
+    { GemType::YELLOW_CITRINE,  150 },
     // 1500
     { GemType::BLUE_AQUAMARINE, 150 },
     // 2500
-    { GemType::GREEN_EMERALD, 250 },
+    { GemType::GREEN_EMERALD,   250 },
     // 3000
-    { GemType::BLUE_SAPPHIRE, 300 },
+    { GemType::BLUE_SAPPHIRE,   300 },
     // 3250
-    { GemType::ORANGE_JACINTH, 325 },
+    { GemType::ORANGE_JACINTH,  325 },
     // 3500
-    { GemType::RED_RUBY, 350 },
+    { GemType::RED_RUBY,        350 },
     // 4000
-    { GemType::WHITE_DIAMOND, 400 }
+    { GemType::WHITE_DIAMOND,   400 }
+  };
+
+  static const std::map<WandMaterials, int> WandCapacityByMaterial =
+  {
+    { WandMaterials::YEW,    100 },
+    { WandMaterials::IVORY,  150 },
+    { WandMaterials::EBONY,  200 },
+    { WandMaterials::ONYX,   250 },
+    { WandMaterials::GLASS,  400 },
+    { WandMaterials::COPPER, 600 },
+    { WandMaterials::GOLDEN, 800 }
+  };
+
+  // Divide wand capacity by this value to get amount of charges,
+  // then randomize if needed.
+  static const std::map<SpellType, int> WandSpellCapacityCostByType =
+  {
+    { SpellType::STRIKE,        25  },
+    { SpellType::FROST,         50  },
+    { SpellType::FIREBALL,      100 },
+    { SpellType::LASER,         150 },
+    { SpellType::LIGHTNING,     100 },
+    { SpellType::MAGIC_MISSILE, 25  }
   };
 
   static const std::map<ShrineType, std::string> ShrineSaintByType =
   {
-    { ShrineType::MIGHT,      "St. George the Soldier" },
-    { ShrineType::SPIRIT,     "St. Mary the Mother" },
-    { ShrineType::KNOWLEDGE,  "St. Nestor the Scribe" },
+    { ShrineType::MIGHT,      "St. George the Soldier"     },
+    { ShrineType::SPIRIT,     "St. Mary the Mother"        },
+    { ShrineType::KNOWLEDGE,  "St. Nestor the Scribe"      },
     { ShrineType::PERCEPTION, "St. Justin the Philosopher" },
-    { ShrineType::HEALING,    "St. Luke the Healer" }
+    { ShrineType::HEALING,    "St. Luke the Healer"        }
   };
 
   static const std::map<ShrineType, std::string> ShrineNameByType =
   {
-    { ShrineType::MIGHT,        "Shrine of Might" },
-    { ShrineType::SPIRIT,       "Shrine of Spirit" },
+    { ShrineType::MIGHT,        "Shrine of Might"       },
+    { ShrineType::SPIRIT,       "Shrine of Spirit"      },
     { ShrineType::TRANQUILITY,  "Shrine of Tranquility" },
-    { ShrineType::KNOWLEDGE,    "Shrine of Knowledge" },
-    { ShrineType::PERCEPTION,   "Shrine of Perception" },
-    { ShrineType::HEALING,      "Shrine of Healing" },
-    { ShrineType::FORGOTTEN,    "Forgotten Shrine" },
-    { ShrineType::ABYSSAL,      "Abyssal Shrine" },
-    { ShrineType::DESECRATED,   "Desecrated Shrine" },
-    { ShrineType::DISTURBING,   "Disturbing Shrine" },
-    { ShrineType::RUINED,       "Ruined Shrine" },
-    { ShrineType::POTENTIAL,    "Shrine of Potential" },
-    { ShrineType::HIDDEN,       "Hidden Shrine" },
-    { ShrineType::HOLY,         "Holy Shrine" }
+    { ShrineType::KNOWLEDGE,    "Shrine of Knowledge"   },
+    { ShrineType::PERCEPTION,   "Shrine of Perception"  },
+    { ShrineType::HEALING,      "Shrine of Healing"     },
+    { ShrineType::FORGOTTEN,    "Forgotten Shrine"      },
+    { ShrineType::ABYSSAL,      "Abyssal Shrine"        },
+    { ShrineType::DESECRATED,   "Desecrated Shrine"     },
+    { ShrineType::DISTURBING,   "Disturbing Shrine"     },
+    { ShrineType::RUINED,       "Ruined Shrine"         },
+    { ShrineType::POTENTIAL,    "Shrine of Potential"   },
+    { ShrineType::HIDDEN,       "Hidden Shrine"         },
+    { ShrineType::HOLY,         "Holy Shrine"           }
   };
 
   static const std::map<ShrineType, std::pair<std::string, std::string>> ShrineColorsByType =
