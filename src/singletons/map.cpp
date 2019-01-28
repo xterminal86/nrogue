@@ -84,10 +84,14 @@ void Map::Draw(int playerX, int playerY)
 
     if (CurrentLevel->MapArray[x][y]->Visible)
     {
+      // NOTE: gems should not respect floor color
+
       // If game object has black bg color,
       // replace it with current floor color
-      bool cond = (go->BgColor == GlobalConstants::BlackColor);
-      go.get()->Draw(go.get()->FgColor, cond ? CurrentLevel->MapArray[x][y]->BgColor : go->BgColor);
+      //bool cond = (go->BgColor == GlobalConstants::BlackColor);
+      //go.get()->Draw(go.get()->FgColor, cond ? CurrentLevel->MapArray[x][y]->BgColor : go->BgColor);
+
+      go->Draw(go->FgColor, go->BgColor);
     }
   }
 
@@ -95,15 +99,15 @@ void Map::Draw(int playerX, int playerY)
 
   for (auto& go : CurrentLevel->ActorGameObjects)
   {
-    int x = go.get()->PosX;
-    int y = go.get()->PosY;
+    int x = go->PosX;
+    int y = go->PosY;
 
     if (CurrentLevel->MapArray[x][y]->Visible)
     {
       // If game object has black bg color,
       // replace it with current floor color
       bool cond = (go->BgColor == GlobalConstants::BlackColor);
-      go.get()->Draw(go.get()->FgColor, cond ? CurrentLevel->MapArray[x][y]->BgColor : go->BgColor);
+      go->Draw(go->FgColor, cond ? CurrentLevel->MapArray[x][y]->BgColor : go->BgColor);
     }
   }
 }

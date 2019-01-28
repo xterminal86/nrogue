@@ -20,7 +20,7 @@ void Player::Init()
   Attrs.ActionMeter = 100;
 
   // FIXME: debug
-  //Money = 1000;
+  Money = 1000;
 
   Inventory.MaxCapacity = GlobalConstants::InventoryMaxSize;
 
@@ -596,7 +596,7 @@ void Player::LevelDown()
   Printer::Instance().AddMessage("You have LOST a level!");
 
   /*
-   * Raise skills etc.
+   * TODO: Raise skills etc.
    *
   auto class_ = _classesMap[SelectedClass];
 

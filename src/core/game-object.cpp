@@ -124,14 +124,23 @@ void GameObject::ReceiveDamage(GameObject* from, int amount)
 
 void GameObject::WaitForTurn()
 {
+  int speedBase = 50;
+
+  int speedAttr = Attrs.Spd.Get();
+
+  int speedIncrement = speedBase + speedAttr * 2;
+
+  // In impossible case that speed penalties
+  // are too great that speed increment is negative
+  speedIncrement = (speedIncrement <= 0) ? 1 : speedIncrement;
+
   // In towns SPD is ignored
   if (Map::Instance().CurrentLevel->Peaceful)
   {
     Attrs.ActionMeter = 99;
-  }
+  }  
 
-  int amount = (Attrs.Spd.CurrentValue + 1) * 10;
-  Attrs.ActionMeter += amount;
+  Attrs.ActionMeter += speedIncrement;
 }
 
 void GameObject::FinishTurn()

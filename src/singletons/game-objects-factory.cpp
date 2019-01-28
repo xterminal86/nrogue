@@ -1613,7 +1613,10 @@ GameObject* GameObjectsFactory::CreateRandomGlass()
   ic->Data.UnidentifiedDescription = { "Is this valuable?" };
   ic->Data.UnidentifiedName = Util::StringFormat("?%s Gem?", colorDesc.data());
 
-  auto str = Util::StringFormat("This is a piece of %s worthless glass", colorDesc.data());
+  std::string lowerCase = colorDesc;
+  std::transform(lowerCase.begin(), lowerCase.end(), lowerCase.begin(), ::tolower);
+
+  auto str = Util::StringFormat("This is a piece of %s worthless glass", lowerCase.data());
   ic->Data.IdentifiedDescription = { str };
 
   ic->Data.IdentifiedName = Util::StringFormat("%s worthless glass", colorDesc.data());

@@ -329,10 +329,13 @@ struct Attribute
   int Get(bool originalValue = true)
   {
     int res = originalValue ? OriginalValue + Modifier : CurrentValue + Modifier;
+
+    /*
     if (res < 0)
     {
       res = 0;
     }
+    */
 
     return res;
   }

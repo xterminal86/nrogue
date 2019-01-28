@@ -17,6 +17,16 @@
 #include "tests.h"
 #endif
 
+// TODO:
+//
+// 1) Status effects
+// 2) Ranged weapons / throwing
+// 3) Scrolls
+// 4) Level design
+// 5) Skills
+// 6) Magic / Rare / Unique items
+// 7) Traps, secrets
+
 int main()
 {
   RNG::Instance().Init();
@@ -26,7 +36,7 @@ int main()
   //RNG::Instance().SetSeed(1545127588351497486);
 
   Logger::Instance().Init();
-  Logger::Instance().Prepare(true);
+  Logger::Instance().Prepare(false);
 
   auto str = Util::StringFormat("World seed is %lu", RNG::Instance().Seed);
   Logger::Instance().Print(str);

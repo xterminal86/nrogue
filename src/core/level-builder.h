@@ -16,7 +16,8 @@ class LevelBuilder
                                   int startX, int startY,
                                   int mapSizeX, int mapSizeY);
 
-    void RecursiveBacktrackerMethod(Position mapSize, Position startingPoint = { -1, -1 });
+    void RecursiveBacktrackerMethod(Position mapSize,
+                                    Position startingPoint = { -1, -1 });
 
     void TunnelerMethod(Position mapSize,
                           int maxIterations,
