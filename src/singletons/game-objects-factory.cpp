@@ -1328,21 +1328,30 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
   int statMax = _playerRef->Attrs.HP.OriginalValue;
   int& statCur = _playerRef->Attrs.HP.CurrentValue;
 
+  std::string message;
+
   if (item->Data.Prefix == ItemPrefix::BLESSED)
   {
     amount = statMax;
-    Printer::Instance().AddMessage("Your wounds are healed completely!");
+    message = (statCur == statMax)
+              ? "Nothing happens"
+              : "Your wounds are healed completely!";
   }
   else if (item->Data.Prefix == ItemPrefix::UNCURSED)
   {
     amount = statMax * 0.3f;
-    Printer::Instance().AddMessage("You feel better");
+    message = "You feel better";
+    message = (statCur == statMax)
+              ? "Nothing happens"
+              : "You feel better";
   }
   else if (item->Data.Prefix == ItemPrefix::CURSED)
   {
-    amount = -statMax * 0.3f;
-    Printer::Instance().AddMessage("You are damaged by a cursed potion!");
+    amount = -statMax * 0.3f;    
+    message = "You are damaged by a cursed potion!";
   }
+
+  Printer::Instance().AddMessage(message);
 
   statCur += amount;
   statCur = Util::Clamp(statCur, 0, statMax);
@@ -1390,21 +1399,29 @@ bool GameObjectsFactory::HungerPotionUseHandler(ItemComponent* item)
   int statMax = _playerRef->Attrs.Hunger;
   int& statCur = _playerRef->Attrs.Hunger;
 
+  std::string message;
+
   if (item->Data.Prefix == ItemPrefix::BLESSED)
   {
     amount = statMax;
-    Printer::Instance().AddMessage("You feel satiated!");
+    message = (statCur == statMax)
+              ? "Nothing happens"
+              : "You feel satiated!";
   }
   else if (item->Data.Prefix == ItemPrefix::UNCURSED)
   {
     amount = statMax * 0.3f;
-    Printer::Instance().AddMessage("Your hunger has abated somewhat");
+    message = (statCur == statMax)
+              ? "Nothing happens"
+              : "Your hunger has abated somewhat";
   }
   else if (item->Data.Prefix == ItemPrefix::CURSED)
   {
     amount = -statMax * 0.3f;
-    Printer::Instance().AddMessage("Your feel peckish");
+    message = "Your feel peckish";
   }
+
+  Printer::Instance().AddMessage(message);
 
   statCur += amount;
   statCur = Util::Clamp(statCur, 0, statMax);
