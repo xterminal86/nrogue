@@ -20,7 +20,7 @@ void Player::Init()
   Attrs.ActionMeter = 100;
 
   // FIXME: debug
-  Money = 1000;
+  // Money = 1000;
 
   Inventory.MaxCapacity = GlobalConstants::InventoryMaxSize;
 
@@ -646,6 +646,15 @@ void Player::ProcessKill(GameObject* monster)
   GameObjectsFactory::Instance().GenerateLootIfPossible(monster->PosX, monster->PosY, monster->Type);
 
   AwardExperience(exp);
+
+  if (TotalKills.count(monster->ObjectName))
+  {
+    TotalKills[monster->ObjectName]++;
+  }
+  else
+  {
+    TotalKills[monster->ObjectName] = 1;
+  }
 }
 
 void Player::WaitForTurn()
@@ -677,7 +686,7 @@ bool Player::IsAlive(GameObject* damager)
       Printer::Instance().AddMessage(str);
     }
 
-    Printer::Instance().AddMessage("You are dead. Not big surprise.");    
+    Printer::Instance().AddMessage("You are dead. Not big soup rice.");
 
     return false;
   }
@@ -963,6 +972,8 @@ void Player::BreakItem(ItemComponent* ic)
     // FIXME: breaking only equipped item, trying to fix bug
     // when having two identical cursed items in inventory
     // with one equipped, wrong one breaks after durability lose.
+    //
+    // (probably was already fixed)
     if (ic->Data.ItemTypeHash == typeHash && ic->Data.IsEquipped)
     {
       Inventory.Contents.erase(Inventory.Contents.begin() + i);

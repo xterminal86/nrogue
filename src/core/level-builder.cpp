@@ -63,6 +63,7 @@ void LevelBuilder::RecursiveBacktrackerMethod(Position mapSize, Position startin
 }
 
 // FIXME: build from layouts needs improvements
+// (see comments in Generate() method)
 void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY)
 {
   _generator.reset(new FromLayouts());

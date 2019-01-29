@@ -12,6 +12,7 @@ class EndgameState : public GameState
     void Init() override;
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;
+    void Prepare() override;
 
   private:
     void DisplayGameLog();

@@ -68,7 +68,7 @@ class Player : public GameObject
 
     std::map<PlayerSkills, int> SkillLevelBySkill;
 
-    std::map<MonsterType, int> TotalKills;
+    std::map<std::string, int> TotalKills;
 
   private:
     void DiscoverCell(int x, int y);

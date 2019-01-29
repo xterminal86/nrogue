@@ -171,7 +171,7 @@ GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool st
 GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'r', GlobalConstants::MonsterColor);  
-  go->ObjectName = "Rat";
+  go->ObjectName = "Feral Rat";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 30;
 
@@ -203,17 +203,6 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
     go->Attrs.HP.Set(randomHp);
     go->Attrs.Spd.Set(randomSpd);
     go->Attrs.Skl.Set(randomSkl);
-  }
-  else
-  {
-    // FIXME: for debugging purposes
-    go->ObjectName = "Battle Rat";
-
-    go->Attrs.Str.Set(2 * _playerRef->Attrs.Lvl.CurrentValue);
-    go->Attrs.Def.Set(1 * _playerRef->Attrs.Lvl.CurrentValue);
-    go->Attrs.Spd.Set(10);
-
-    go->Attrs.HP.Set(10);
   }
 
   ai->ChangeModel<AIMonsterBasic>();
@@ -266,7 +255,7 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
 GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 's', GlobalConstants::MonsterColor);
-  go->ObjectName = "Spider";
+  go->ObjectName = "Cave Spider";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 30;
 
@@ -289,7 +278,7 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
     int randomDef = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
     int randomSkl = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
     int randomHp = RNG::Instance().RandomRange(2 * difficulty, 6 * difficulty);
-    int randomSpd = RNG::Instance().RandomRange(0, 2 * difficulty);
+    int randomSpd = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
 
     go->Attrs.Lvl.Set(difficulty);
 
