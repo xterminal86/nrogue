@@ -12,6 +12,13 @@ void EnterNameState::HandleInput()
     switch (_keyPressed)
     {
       case VK_ENTER:
+      {
+        // Check if entered string is only spaces
+        if (_nameEntered.find_first_not_of(' ') == std::string::npos)
+        {
+          _nameEntered.clear();
+        }
+
         if (_nameEntered.length() == 0)
         {
           _nameEntered = Util::ChooseRandomName();
@@ -22,8 +29,8 @@ void EnterNameState::HandleInput()
         Application::Instance().PlayerInstance.AddBonusItems();
 
         Application::Instance().ChangeState(GameStates::INTRO_STATE);
-
-        break;
+      }
+      break;
 
       case VK_BACKSPACE:
         if (_nameEntered.length() > 0)
@@ -35,7 +42,7 @@ void EnterNameState::HandleInput()
       default:
         if (_keyPressed >= 32 &&
             _keyPressed <= 126 &&
-            _nameEntered.length() < kMaxNameLength - 3)
+            _nameEntered.length() < GlobalConstants::MaxNameLength - 3)
         {
           _nameEntered += (char)_keyPressed;
         }
@@ -55,7 +62,10 @@ void EnterNameState::Update(bool forceUpdate)
 
     Printer::Instance().PrintFB(x, y - 2, "What is your name?", Printer::kAlignCenter, "#FFFFFF");
 
-    auto border = Util::GetPerimeter(x - kMaxNameLength / 2, y - 3, kMaxNameLength, 5, true);
+    auto border = Util::GetPerimeter(x - GlobalConstants::MaxNameLength / 2,
+                                     y - 3,
+                                     GlobalConstants::MaxNameLength,
+                                     5, true);
 
     for (auto& i : border)
     {
@@ -64,12 +74,12 @@ void EnterNameState::Update(bool forceUpdate)
 
     if (_nameEntered.length() == 0)
     {
-      Printer::Instance().PrintFB(x - kMaxNameLength / 2 + 2, y, ' ', "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(x - GlobalConstants::MaxNameLength / 2 + 2, y, ' ', "#000000", "#FFFFFF");
     }
     else
     {
-      Printer::Instance().PrintFB(x - kMaxNameLength / 2 + 2, y, _nameEntered, Printer::kAlignLeft, "#FFFFFF");
-      Printer::Instance().PrintFB(x - kMaxNameLength / 2 + 2 + _nameEntered.length(), y, ' ', "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(x - GlobalConstants::MaxNameLength / 2 + 2, y, _nameEntered, Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(x - GlobalConstants::MaxNameLength / 2 + 2 + _nameEntered.length(), y, ' ', "#000000", "#FFFFFF");
     }
 
     Printer::Instance().Render();

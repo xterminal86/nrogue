@@ -66,11 +66,16 @@ class Player : public GameObject
 
     bool IsStarving = false;
 
+    std::map<PlayerSkills, int> SkillLevelBySkill;
+
+    std::map<MonsterType, int> TotalKills;
+
   private:
     void DiscoverCell(int x, int y);
     void SetAttributes();
     void SetDefaultEquipment();
     void SetDefaultItems();
+    void SetDefaultSkills();
 
     void SetSoldierDefaultItems();
     void SetThiefDefaultItems();

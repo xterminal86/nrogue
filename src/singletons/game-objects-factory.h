@@ -34,7 +34,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateContainer(std::string name, std::string bgColor, chtype image, int x, int y);
     GameObject* CreateGem(int x, int y, GemType type = GemType::RANDOM);
     GameObject* CreateReturner(int x, int y, int charges = -1, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
-
+    GameObject* CreateRepairKit(int x, int y, int charges = -1, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRandomPotion();
     GameObject* CreateRandomWeapon();
 
@@ -72,6 +72,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     bool ExpPotionUseHandler(ItemComponent* item);
     bool StatPotionUseHandler(ItemComponent* item);
     bool ReturnerUseHandler(ItemComponent* item);
+    bool RepairKitUseHandler(ItemComponent* item);
 
     bool FoodUseHandler(ItemComponent* item);
 

@@ -27,6 +27,7 @@ void Player::Init()
   SetAttributes();
   SetDefaultItems();
   SetDefaultEquipment();
+  SetDefaultSkills();
 
   _previousCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
@@ -868,6 +869,10 @@ void Player::SetSoldierDefaultItems()
   ic->Data.IsIdentified = true;
 
   Inventory.AddToInventory(go);
+
+  go = GameObjectsFactory::Instance().CreateRepairKit(0, 0, 30, ItemPrefix::BLESSED);
+
+  Inventory.AddToInventory(go);
 }
 
 void Player::SetThiefDefaultItems()
@@ -892,6 +897,24 @@ void Player::SetArcanistDefaultItems()
 
   go = GameObjectsFactory::Instance().CreateReturner(0, 0, 3, ItemPrefix::UNCURSED);
   Inventory.AddToInventory(go);
+}
+
+void Player::SetDefaultSkills()
+{
+  switch (GetClass())
+  {
+    case PlayerClass::SOLDIER:
+      SkillLevelBySkill[PlayerSkills::REPAIR] = 1;
+      break;
+
+    case PlayerClass::ARCANIST:
+      SkillLevelBySkill[PlayerSkills::RECHARGE] = 1;
+      break;
+
+    case PlayerClass::THIEF:
+      SkillLevelBySkill[PlayerSkills::AWARENESS] = 1;
+      break;
+  }
 }
 
 bool Player::WeaponLosesDurability()

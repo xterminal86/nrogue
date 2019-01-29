@@ -136,7 +136,10 @@ void TraderComponent::CreateItems()
       for (int i = 0; i < _itemsToCreate; i++)
       {
         GameObject* go = GameObjectsFactory::Instance().CreateRandomItem(0, 0, ItemType::COINS);
-        Items.push_back(std::unique_ptr<GameObject>(go));
+        if (go != nullptr)
+        {
+          Items.push_back(std::unique_ptr<GameObject>(go));
+        }
       }
     }
     break;

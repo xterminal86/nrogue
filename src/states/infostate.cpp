@@ -23,13 +23,21 @@ void InfoState::Update(bool forceUpdate)
     
     auto& playerRef = Application::Instance().PlayerInstance;
 
-    std::string title = Util::StringFormat("%s the %s", playerRef.Name.data(), playerRef.GetClassName().data());
+    std::string title = Util::StringFormat("%s the %s",
+                                           playerRef.Name.data(),
+                                           playerRef.GetClassName().data());
     Printer::Instance().PrintFB(0, 0, title, Printer::kAlignLeft, "#FFFFFF");
 
     std::string border;
-    for (int i = 0; i < title.length(); i++)
+    for (int i = 0; i < kMaxNameUnderscoreLength; i++)
     {
       border += '=';
+    }
+
+    int th = Printer::Instance().TerminalHeight;
+    for (int y = 0; y < th; y++)
+    {
+      Printer::Instance().PrintFB(kMaxNameUnderscoreLength, y, '|', "#FFFFFF");
     }
 
     Printer::Instance().PrintFB(0, 1, border, Printer::kAlignLeft, "#FFFFFF");
@@ -52,6 +60,19 @@ void InfoState::Update(bool forceUpdate)
     int maxLength = FindAttrsMaxStringLength();
 
     PrintModifiers(7 + maxLength, yPos + 3);
+
+    // Skills
+
+    Printer::Instance().PrintFB(0, yPos + 12, border, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(kMaxNameUnderscoreLength / 2, yPos + 13, "SKILLS", Printer::kAlignCenter, "#FFFFFF");
+
+    int i = 14;
+    for (auto& kvp : playerRef.SkillLevelBySkill)
+    {
+      std::string skillName = GlobalConstants::SkillNameByType.at(kvp.first);
+      Printer::Instance().PrintFB(0, yPos + i, skillName, Printer::kAlignLeft, "#FFFFFF");
+      i++;
+    }
 
     Printer::Instance().Render();
   }

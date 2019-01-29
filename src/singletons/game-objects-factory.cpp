@@ -644,7 +644,10 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
     ItemType::POTION,
     ItemType::FOOD,
     ItemType::GEM,
-    ItemType::RETURNER
+    ItemType::RETURNER,
+    ItemType::REPAIR_KIT,
+    ItemType::WAND,
+    ItemType::SCROLL
   };
 
   auto findRes = std::find(possibleItems.begin(), possibleItems.end(), exclude);
@@ -738,10 +741,21 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
       }
     }
     break;
+
+    case ItemType::REPAIR_KIT:
+    {
+      go = CreateRepairKit(0, 0);
+      ItemComponent* ic = go->GetComponent<ItemComponent>();
+      ic->Data.IsIdentified = false;
+    }
+    break;
   }
 
-  go->PosX = x;
-  go->PosY = y;
+  if (go != nullptr)
+  {
+    go->PosX = x;
+    go->PosY = y;
+  }
 
   return go;
 }
@@ -1085,6 +1099,52 @@ GameObject* GameObjectsFactory::CreateReturner(int x, int y, int charges, ItemPr
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateRepairKit(int x, int y, int charges, ItemPrefix prefixOverride)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->PosX = x;
+  go->PosY = y;
+
+  go->Image = '(';
+
+  go->FgColor = GlobalConstants::WhiteColor;
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  int chargesNum = (charges == -1) ? RNG::Instance().RandomRange(10, 51) : charges;
+
+  ic->Data.ItemType_ = ItemType::REPAIR_KIT;
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+  ic->Data.IsStackable = false;
+  ic->Data.IsIdentified = true;
+  ic->Data.IsChargeable = true;
+  ic->Data.Cost = 10;
+
+  ic->Data.Amount = chargesNum;
+
+  ic->Data.UnidentifiedDescription =
+  {
+    "A box filled with various materials and appliances",
+    "that are used to repair weapons or armor."
+  };
+
+  ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;
+
+  ic->Data.IdentifiedName = "Repair Kit";
+  ic->Data.UnidentifiedName = "?Repair Kit?";
+
+  ic->Data.UseCallback = std::bind(&GameObjectsFactory::RepairKitUseHandler, this, ic);
+
+  go->ObjectName = ic->Data.IdentifiedName;
+
+  SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
+
+  return go;
+}
+
 // ************************** PRIVATE METHODS ************************** //
 
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
@@ -1150,7 +1210,20 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
   }
 
   switch (itemData.ItemType_)
-  {    
+  {
+    case ItemType::REPAIR_KIT:
+    {
+      if (itemData.Prefix == ItemPrefix::BLESSED)
+      {
+        itemData.IdentifiedDescription.push_back("Because of its excellent condition, repairing will be more effective.");
+      }
+      else if (itemData.Prefix == ItemPrefix::CURSED)
+      {
+        itemData.IdentifiedDescription.push_back("Because of its poor condition, repairing will be less effective.");
+      }
+    }
+    break;
+
     default:
     {
       if (itemData.Prefix == ItemPrefix::BLESSED)
@@ -1524,6 +1597,23 @@ bool GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
 
 void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
 {
+  switch (itemData.Prefix)
+  {
+    case ItemPrefix::CURSED:
+      itemData.Durability.Set(itemData.Durability.OriginalValue / 2);
+      itemData.Damage.CurrentValue--;
+      itemData.Damage.OriginalValue--;
+      itemData.Damage.CurrentValue = Util::Clamp(itemData.Damage.CurrentValue, 1, itemData.Damage.CurrentValue);
+      itemData.Damage.OriginalValue = Util::Clamp(itemData.Damage.OriginalValue, 1, itemData.Damage.OriginalValue);
+      break;
+
+    case ItemPrefix::BLESSED:
+      itemData.Durability.Set(itemData.Durability.OriginalValue * 2);
+      itemData.Damage.CurrentValue *= 2;
+      itemData.Damage.OriginalValue *= 2;
+      break;
+  }
+
   for (auto& kvp : itemData.StatBonuses)
   {
     if (kvp.second != 0)
@@ -1532,18 +1622,10 @@ void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
       {
         case ItemPrefix::CURSED:
           kvp.second--;
-          itemData.Durability.Set(itemData.Durability.OriginalValue / 2);
-          itemData.Damage.CurrentValue--;
-          itemData.Damage.OriginalValue--;
-          itemData.Damage.CurrentValue = Util::Clamp(itemData.Damage.CurrentValue, 1, itemData.Damage.CurrentValue);
-          itemData.Damage.OriginalValue = Util::Clamp(itemData.Damage.OriginalValue, 1, itemData.Damage.OriginalValue);
           break;
 
         case ItemPrefix::BLESSED:
           kvp.second++;
-          itemData.Durability.Set(itemData.Durability.OriginalValue * 2);
-          itemData.Damage.CurrentValue *= 2;
-          itemData.Damage.OriginalValue *= 2;
           break;
       }      
     }
@@ -1735,6 +1817,17 @@ bool GameObjectsFactory::ReturnerUseHandler(ItemComponent* item)
   if (item->Data.Amount == 0)
   {
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "You invoke the returner, but nothing happens." }, GlobalConstants::MessageBoxDefaultBorderColor);
+    return false;
+  }
+
+  return true;
+}
+
+bool GameObjectsFactory::RepairKitUseHandler(ItemComponent* item)
+{
+  if (!_playerRef->SkillLevelBySkill.count(PlayerSkills::REPAIR))
+  {
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "You don't possess necessary skill!" }, GlobalConstants::MessageBoxRedBorderColor);
     return false;
   }
 

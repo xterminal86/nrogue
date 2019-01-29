@@ -53,18 +53,18 @@ void ItemComponent::Inspect()
       desc = GetReturnerInspectionInfo();
     }
   }
-
-  if (Data.IsPrefixDiscovered)
+  else if (!Data.IsIdentified && Data.IsPrefixDiscovered)
   {
     if (Data.Prefix == ItemPrefix::BLESSED)
     {
-      desc.push_back("This one is blessed and will yield better results.");
+      desc.push_back("This one is blessed and will perform better.");
     }
     else if (Data.Prefix == ItemPrefix::CURSED)
     {
       desc.push_back("This one is cursed and should be avoided.");
     }
   }
+
   Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, header, desc);
 }
 

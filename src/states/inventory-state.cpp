@@ -4,6 +4,7 @@
 #include "application.h"
 #include "printer.h"
 #include "returner-state.h"
+#include "repair-state.h"
 #include "util.h"
 #include "map.h"
 
@@ -89,10 +90,20 @@ void InventoryState::HandleInput()
         }        
         else if (ic->Data.IsChargeable)
         {
-          auto s = Application::Instance().GetGameStateRefByName(GameStates::RETURNER_STATE);
-          ReturnerState* rs = static_cast<ReturnerState*>(s);
-          rs->SetItemComponentRef(ic);
-          Application::Instance().ChangeState(GameStates::RETURNER_STATE);
+          if (ic->Data.ItemType_ == ItemType::RETURNER)
+          {
+            auto s = Application::Instance().GetGameStateRefByName(GameStates::RETURNER_STATE);
+            ReturnerState* rs = static_cast<ReturnerState*>(s);
+            rs->SetItemComponentRef(ic);
+            Application::Instance().ChangeState(GameStates::RETURNER_STATE);
+          }
+          else if (ic->Data.ItemType_ == ItemType::REPAIR_KIT)
+          {
+            auto s = Application::Instance().GetGameStateRefByName(GameStates::REPAIR_STATE);
+            RepairState* rs = static_cast<RepairState*>(s);
+            rs->SetRepairKitRef(ic, _selectedIndex);
+            Application::Instance().ChangeState(GameStates::REPAIR_STATE);
+          }
         }
         else
         {

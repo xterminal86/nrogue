@@ -13,8 +13,6 @@ class EnterNameState : public GameState
 
   private:
     std::string _nameEntered;
-
-    const int kMaxNameLength = 24;    
 };
 
 #endif // ENTERNAMESTATE_H

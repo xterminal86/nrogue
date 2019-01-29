@@ -63,6 +63,7 @@ enum class GameStates
   NPC_INTERACT_STATE,
   SHOPPING_STATE,
   RETURNER_STATE,
+  REPAIR_STATE,
   EXITING_STATE,
   MESSAGE_BOX_STATE,
   ENDGAME_STATE
@@ -114,7 +115,12 @@ enum class MonsterType
   RAT,
   BAT,
   SPIDER,
-  SKELETON
+  SKELETON,
+  ZOMBIE,
+  LICH,
+  HUMAN,
+  KOBOLD,
+  HEROBRINE
 };
 
 enum class NPCType
@@ -147,6 +153,16 @@ enum class PlayerClass
   THIEF,
   ARCANIST,
   CUSTOM
+};
+
+enum class PlayerSkills
+{
+  // Use mana to recharge a wand (starting, Arcanist)
+  RECHARGE = 0,
+  // Use repair kit to repair a weapon (starting, Soldier)
+  REPAIR,
+  // Show enemy stats (currently by pressing Enter in Look Mode)
+  AWARENESS
 };
 
 enum class EquipmentCategory
@@ -183,7 +199,8 @@ enum class ItemType
   GEM,
   RETURNER,
   WEAPON,
-  WAND
+  WAND,
+  REPAIR_KIT
 };
 
 enum class WeaponType
@@ -256,6 +273,7 @@ enum class SpellType
   REMOVE_CURSE,
   HEAL,
   NEUTRALIZE_POISON,
+  // nuff said
   MANA_SHIELD
 };
 
@@ -480,14 +498,19 @@ struct ItemData
   // !!! Use GetCost() when cost is needed !!!
   int Cost = 0;
 
+  bool HasDurability()
+  {
+    return (EqCategory == EquipmentCategory::BOOTS
+         || EqCategory == EquipmentCategory::HEAD
+         || EqCategory == EquipmentCategory::LEGS
+         || EqCategory == EquipmentCategory::NECK
+         || EqCategory == EquipmentCategory::TORSO
+         || EqCategory == EquipmentCategory::WEAPON);
+  }
+
   int GetCost()
   {
-    bool hasDurability = (EqCategory == EquipmentCategory::BOOTS
-                       || EqCategory == EquipmentCategory::HEAD
-                       || EqCategory == EquipmentCategory::LEGS
-                       || EqCategory == EquipmentCategory::NECK
-                       || EqCategory == EquipmentCategory::TORSO
-                       || EqCategory == EquipmentCategory::WEAPON);
+    bool hasDurability = HasDurability();
 
     int price = 0;
 
@@ -565,9 +588,11 @@ struct ItemData
 
 namespace GlobalConstants
 {
-  static const std::string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  static const std::string AlphabetUppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  static const std::string AlphabetLowercase = "abcdefghijklmnopqrstuvwxyz";
   static const std::string Numbers = "0123456789";
 
+  static const int MaxNameLength = 24;
   static const int HPMPBarLength = 20;
   static const int AttributeMinimumRaiseChance = 15;
   static const int AttributeIncreasedRaiseStep = 25;
@@ -607,6 +632,13 @@ namespace GlobalConstants
   static const std::string ItemMagicColor = "#4169E1";
   static const std::string ItemRareColor = "#CCCC52";
   static const std::string ItemUniqueColor = "#A59263";
+
+  static const std::map<PlayerSkills, std::string> SkillNameByType =
+  {
+    { PlayerSkills::REPAIR,    "Repair" },
+    { PlayerSkills::RECHARGE,  "Recharge" },
+    { PlayerSkills::AWARENESS, "Awareness" },
+  };
 
   static const std::map<TraderRole, std::string> ShopNameByType =
   {

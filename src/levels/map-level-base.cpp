@@ -96,9 +96,14 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
     int x = _emptyCells[index].X;
     int y = _emptyCells[index].Y;
 
+    // NOTE: Not all objects may be added to the factory yet,
+    // so check against nullptr is needed.
     auto go = GameObjectsFactory::Instance().CreateRandomItem(x, y);
-    InsertGameObject(go);
-    itemsCreated++;
+    if (go != nullptr)
+    {
+      InsertGameObject(go);
+      itemsCreated++;
+    }
   }
 }
 
