@@ -608,7 +608,7 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateRandomWeapon()
+GameObject* GameObjectsFactory::CreateRandomWeapon(ItemPrefix prefixOverride)
 {
   GameObject* go = nullptr;
 
@@ -617,7 +617,7 @@ GameObject* GameObjectsFactory::CreateRandomWeapon()
   std::advance(it, index);
   auto kvp = *it;
 
-  go = CreateWeapon(kvp.first);
+  go = CreateWeapon(kvp.first, prefixOverride);
 
   return go;
 }
@@ -1108,7 +1108,7 @@ GameObject* GameObjectsFactory::CreateRepairKit(int x, int y, int charges, ItemP
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = true;
   ic->Data.IsChargeable = true;
-  ic->Data.Cost = 10;
+  ic->Data.Cost = 1;
 
   ic->Data.Amount = chargesNum;
 

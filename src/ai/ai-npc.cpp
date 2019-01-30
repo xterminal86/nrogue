@@ -85,6 +85,10 @@ void AINPC::Init(NPCType type, bool standing)
       SetDataMaya();
       break;
 
+    case NPCType::GRISWOLD:
+      SetDataGriswold();
+      break;
+
     default:
       SetDataDefault();
       break;
@@ -566,4 +570,28 @@ void AINPC::SetDataDefault()
   AIComponentRef->OwnerGameObject->ObjectName = (gender == 0) ? "man" : "woman";
 
   Data.UnacquaintedDescription = "You see a " + AIComponentRef->OwnerGameObject->ObjectName;
+}
+
+void AINPC::SetDataGriswold()
+{
+  AIComponentRef->OwnerGameObject->ObjectName = "man";
+
+  Data.IsMale = true;
+  Data.UnacquaintedDescription = "You see a bald man wearing an apron";
+  Data.Name = "Griswold";
+  Data.Job = "Blacksmith";
+
+  Data.NameResponse = "Name's Griswold.";
+
+  Data.GossipResponsesByMap[MapType::TOWN] =
+  {
+    // =========================================================================== 80
+    {
+      "Well, what kin I do fer ya?"
+    }
+  };
+
+  TraderComponent* tc = AIComponentRef->OwnerGameObject->AddComponent<TraderComponent>();
+  tc->NpcRef = this;
+  tc->Init(TraderRole::BLACKSMITH, 1000, 10);
 }

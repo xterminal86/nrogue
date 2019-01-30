@@ -54,6 +54,7 @@ class AINPC : public AIModelBase
     void SetDataMartin();
     void SetDataCasey();
     void SetDataMaya();
+    void SetDataGriswold();
 
     void SetDataDefault();
 };

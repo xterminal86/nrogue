@@ -266,7 +266,9 @@ std::string ShoppingState::GetItemExtraInfo(ItemComponent* item)
 {
   std::string extraInfo;
 
-  if (item->Data.IsStackable)
+  bool stackCond = (item->Data.IsStackable && item->Data.Amount > 1);
+  if (item->Data.IsIdentified
+  && (stackCond || item->Data.IsChargeable))
   {
     extraInfo = Util::StringFormat("(%i)", item->Data.Amount);
   }

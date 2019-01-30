@@ -14,6 +14,7 @@ void TraderComponent::Init(TraderRole traderType, int stockRefreshTurns, int max
   _traderType = traderType;
   _stockRefreshTurns = stockRefreshTurns;
   _maxItems = maxItems;
+
   RefreshStock();
 }
 
@@ -28,6 +29,7 @@ void TraderComponent::RefreshStock()
   _itemsToCreate = RNG::Instance().RandomRange(min, _maxItems + 1);
 
   Items.clear();
+
   CreateItems();
 }
 
@@ -136,6 +138,56 @@ void TraderComponent::CreateItems()
       for (int i = 0; i < _itemsToCreate; i++)
       {
         GameObject* go = GameObjectsFactory::Instance().CreateRandomItem(0, 0, ItemType::COINS);
+        if (go != nullptr)
+        {
+          Items.push_back(std::unique_ptr<GameObject>(go));
+        }
+      }
+    }
+    break;
+
+    case TraderRole::BLACKSMITH:
+    {
+      std::string shopName = GlobalConstants::ShopNameByType.at(_traderType);
+      std::string npcName = NpcRef->Data.Name;
+      ShopTitle = Util::StringFormat("%s's %s", npcName.data(), shopName.data());
+
+      std::map<ItemType, int> itemsWeights =
+      {
+        { ItemType::WEAPON, 5 },
+        { ItemType::ARMOR, 5 },
+        { ItemType::REPAIR_KIT, 2 },
+      };
+
+      std::map<ItemPrefix, int> prefixWeights =
+      {
+        { ItemPrefix::BLESSED, 1 },
+        { ItemPrefix::UNCURSED, 6 }
+      };
+
+      for (int i = 0; i < _itemsToCreate; i++)
+      {
+        auto itemPair = Util::WeightedRandom(itemsWeights);
+        auto prefixPair = Util::WeightedRandom(prefixWeights);
+
+        GameObject* go = nullptr;
+
+        switch (itemPair.first)
+        {
+          case ItemType::WEAPON:
+            go = GameObjectsFactory::Instance().CreateRandomWeapon(prefixPair.first);
+            break;
+
+          case ItemType::REPAIR_KIT:
+            go = GameObjectsFactory::Instance().CreateRepairKit(0, 0, -1, prefixPair.first);
+            break;
+
+          case ItemType::ARMOR:
+            // TODO:
+            break;
+        }
+
+        // FIXME:
         if (go != nullptr)
         {
           Items.push_back(std::unique_ptr<GameObject>(go));

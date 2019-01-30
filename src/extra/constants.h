@@ -135,7 +135,8 @@ enum class NPCType
   GIMLEY,
   MARTIN,
   CASEY,
-  MAYA
+  MAYA,
+  GRISWOLD
 };
 
 enum class TraderRole
@@ -199,6 +200,7 @@ enum class ItemType
   GEM,
   RETURNER,
   WEAPON,
+  ARMOR,
   WAND,
   REPAIR_KIT
 };

@@ -172,7 +172,7 @@ void MapLevelTown::CreateLevel()
     CreateRoom(18 + offset * i, 3, _layoutsForLevel[0], true);
   }
 
-  CreateBlacksmith(78, 3, _layoutsForLevel[6], true);
+  CreateBlacksmith(78, 3, _layoutsForLevel[6]);
 
   // Majors
 
@@ -582,6 +582,9 @@ void MapLevelTown::CreateNPCs()
   InsertActor(go);
 
   go = GameObjectsFactory::Instance().CreateNPC(9, 43, NPCType::MAYA, true);
+  InsertActor(go);
+
+  go = GameObjectsFactory::Instance().CreateNPC(81, 7, NPCType::GRISWOLD, true);
   InsertActor(go);
 }
 
