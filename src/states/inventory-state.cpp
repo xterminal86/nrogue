@@ -239,7 +239,7 @@ void InventoryState::DisplayEquipment()
   DrawEquipmentField(tw - 4, yPos + 3, "Weapon", eq);
 
   eq = _playerRef->EquipmentByCategory[EquipmentCategory::TORSO][0];
-  DrawEquipmentField(tw + 10, yPos + 3, "Torso", eq);
+  DrawEquipmentField(tw + 10, yPos + 3, "Armor", eq);
 
   eq = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0];
   DrawEquipmentField(tw + 24, yPos + 3, "Shield", eq);

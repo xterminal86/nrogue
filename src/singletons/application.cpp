@@ -151,16 +151,7 @@ void Application::WriteObituary(bool wasKilled)
   std::ofstream postMortem;
   std::stringstream ss;
 
-  time_t now = std::time(nullptr);
-  tm *ltm = std::localtime(&now);
-
-  ss << "obituary_";
-  ss << (ltm->tm_year + 1900) << "_";
-  ss << (ltm->tm_mon + 1) << "_";
-  ss << ltm->tm_mday << "_";
-  ss << ltm->tm_hour << "_";
-  ss << ltm->tm_min << "_";
-  ss << ltm->tm_sec << ".txt";
+  ss << "obituary.txt";
 
   postMortem.open(ss.str());
 
@@ -214,13 +205,17 @@ void Application::WriteObituary(bool wasKilled)
         }
 
         auto gos = Map::Instance().GetGameObjectsAtPosition(x, y);
-        if (gos.size() != 0)
+        if (gos.size() != 0
+         && (curLvl->MapArray[x][y]->Visible
+          || curLvl->MapArray[x][y]->Revealed))
         {
           ch = gos.back()->Image;
         }
 
         auto actor = Map::Instance().GetActorAtPosition(x, y);
-        if (actor != nullptr)
+        if (actor != nullptr
+         && (curLvl->MapArray[x][y]->Visible
+          || curLvl->MapArray[x][y]->Revealed))
         {
           ch = actor->Image;
         }

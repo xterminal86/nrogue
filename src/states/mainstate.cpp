@@ -238,10 +238,6 @@ void MainState::HandleInput()
 
       // ***** TODO: for debug, remove afterwards
 
-      case 'X':
-        Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
-        break;
-
       case 'z':
         _playerRef->LevelUp();
         break;
