@@ -22,7 +22,7 @@ class ItemComponent : public Component
     ItemData Data;    
 
   private:
-    std::vector<std::string> GetWeaponInspectionInfo();
+    std::vector<std::string> GetWeaponInspectionInfo();    
     std::vector<std::string> GetReturnerInspectionInfo();    
 };
 

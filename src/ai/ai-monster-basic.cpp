@@ -196,6 +196,8 @@ void AIMonsterBasic::Attack(Player* player)
   {
     Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FF0000");
 
+    // TODO: rewrite damage calculation taking into account armor value
+
     int dmg = AIComponentRef->OwnerGameObject->Attrs.Str.CurrentValue - player->Attrs.Def.Get();
     if (dmg <= 0)
     {

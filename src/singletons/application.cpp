@@ -250,7 +250,7 @@ void Application::WriteObituary(bool wasKilled)
 
   std::string nameAndTitle = playerRef->Name + " the " + playerRef->GetClassName();
 
-  ss << nameAndTitle << " level " << playerRef->Attrs.Lvl.CurrentValue << '\n';
+  ss << nameAndTitle << " of level " << playerRef->Attrs.Lvl.CurrentValue << '\n';
   ss << playerEndCause << curLvl->LevelName << "\n\n";
 
   ss << "STR " << playerRef->Attrs.Str.CurrentValue << '\n';

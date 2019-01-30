@@ -47,7 +47,7 @@ void ItemComponent::Inspect()
     if (Data.ItemType_ == ItemType::WEAPON)
     {
       desc = GetWeaponInspectionInfo();
-    }
+    }    
     else if (Data.ItemType_ == ItemType::RETURNER)
     {
       desc = GetReturnerInspectionInfo();

@@ -37,6 +37,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateRepairKit(int x, int y, int charges = -1, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRandomPotion();
     GameObject* CreateRandomWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateArmor(ArmorType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
 
     GameObject* CreateRandomItem(int x, int y, ItemType exclude = ItemType::NOTHING);
 

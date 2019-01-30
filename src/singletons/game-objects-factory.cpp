@@ -1134,6 +1134,100 @@ GameObject* GameObjectsFactory::CreateRepairKit(int x, int y, int charges, ItemP
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOverride)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel * 0.5;
+  if (dungeonLevel == 0)
+  {
+    dungeonLevel = 1;
+  }
+
+  go->ObjectName = GlobalConstants::ArmorNameByType.at(type);
+  go->Image = '[';
+
+  go->FgColor = GlobalConstants::WhiteColor;
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  ic->Data.EqCategory = EquipmentCategory::TORSO;
+  ic->Data.ItemType_ = ItemType::ARMOR;
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+  ic->Data.IsStackable = false;
+  ic->Data.IsIdentified = (prefixOverride == ItemPrefix::RANDOM) ? false : true;
+
+  int baseDurability = 0;
+
+  switch (type)
+  {
+    case ArmorType::PADDING:
+      baseDurability = 30;
+      ic->Data.UnidentifiedDescription =
+      {
+        "A thick coat with straw or horsehair filling to soften incoming blows.",
+        "It won't last long, but any armor is better than nothing."
+      };
+
+      ic->Data.StatBonuses[StatsEnum::SKL] = -1;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -1;
+
+      break;
+
+    case ArmorType::LEATHER:
+      baseDurability = 60;
+      ic->Data.UnidentifiedDescription =
+      {
+        "Overlapping leather straps provide decent protection against cutting blows."
+      };
+      break;
+
+    case ArmorType::MAIL:
+      baseDurability = 120;
+      ic->Data.UnidentifiedDescription =
+      {
+        "A shirt made of metal rings is a popular outfit among common soldiers.",
+        "It takes a while to adjust to its weight, but it offers good",
+        "overall protection and it's easy to repair."
+      };
+
+      ic->Data.StatBonuses[StatsEnum::SKL] = -2;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -2;
+
+      break;
+
+    case ArmorType::PLATE:
+      baseDurability = 240;
+      ic->Data.UnidentifiedDescription =
+      {
+        "A thick layer of padding, then a layer of a strong mail with metal plates",
+        "riveted on top. This armor pretty much combines all others in itself.",
+        "It's very hard to bring down someone wearing this."
+      };
+
+      ic->Data.StatBonuses[StatsEnum::SKL] = -4;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -4;
+
+      break;
+  }
+
+  ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;
+
+  int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1f) + dungeonLevel;
+
+  int durability = baseDurability + randomDurAdd;
+  ic->Data.Durability.Set(durability);
+
+  ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
+  ic->Data.IdentifiedName = go->ObjectName;
+
+  SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
+
+  return go;
+}
+
 // ************************** PRIVATE METHODS ************************** //
 
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
@@ -1816,7 +1910,7 @@ bool GameObjectsFactory::RepairKitUseHandler(ItemComponent* item)
 {
   if (!_playerRef->SkillLevelBySkill.count(PlayerSkills::REPAIR))
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "You don't possess necessary skill!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "You don't possess the necessary skill!" }, GlobalConstants::MessageBoxRedBorderColor);
     return false;
   }
 

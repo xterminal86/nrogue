@@ -215,6 +215,14 @@ enum class WeaponType
   STAFF
 };
 
+enum class ArmorType
+{
+  PADDING = 0,
+  LEATHER,
+  MAIL,
+  PLATE
+};
+
 enum class FoodType
 {
   FIRST_ELEMENT = 0,
@@ -481,6 +489,8 @@ struct ItemData
 
   Attribute Durability;
   Attribute Damage;
+
+  int IgnoreArmorPercentage = 0;
 
   // Kinda out of place hack
   std::pair<MapType, std::pair<int, int>> ReturnerPosition =
@@ -751,6 +761,14 @@ namespace GlobalConstants
     { WeaponType::LONG_SWORD,   "Longsword"    },
     { WeaponType::GREAT_SWORD,  "Great Sword"  },
     { WeaponType::STAFF,        "Battle Staff" }
+  };
+
+  static const std::map<ArmorType, std::string> ArmorNameByType =
+  {
+    { ArmorType::PADDING, "Gambeson"         },
+    { ArmorType::LEATHER, "Leather Lammelar" },
+    { ArmorType::MAIL,    "Mail Hauberk"     },
+    { ArmorType::PLATE,   "Coat of Plates"   }
   };
 
   static const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =
