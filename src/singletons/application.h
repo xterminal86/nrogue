@@ -25,6 +25,8 @@ class Application : public Singleton<Application>
 
     void DisplayAttack(GameObject* defender, int delayMs, std::string cursorColor = "");
 
+    void WriteObituary(bool wasKilled = true);
+
     Player PlayerInstance;
 
     /// Force redraw current state
@@ -46,7 +48,7 @@ class Application : public Singleton<Application>
     GameState* _currentState = nullptr;
     GameState* _previousState = nullptr;
 
-    std::map<GameStates, std::unique_ptr<GameState>> _gameStates;
+    std::map<GameStates, std::unique_ptr<GameState>> _gameStates;    
 };
 
 #endif

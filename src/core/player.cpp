@@ -686,7 +686,7 @@ bool Player::IsAlive(GameObject* damager)
       Printer::Instance().AddMessage(str);
     }
 
-    Printer::Instance().AddMessage("You are dead. Not big soup rice.");
+    Printer::Instance().AddMessage("You are dead. Not big surprise.");
 
     return false;
   }

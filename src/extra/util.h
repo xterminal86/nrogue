@@ -176,6 +176,16 @@ namespace Util
     return result;
   }
 
+  inline bool IsInsideMap(Position pos, Position mapSize, bool leaveBorders = true)
+  {
+    int offset = leaveBorders ? 1 : 0;
+
+    return (pos.X >= offset
+         && pos.X < mapSize.X - offset
+         && pos.Y >= offset
+         && pos.Y < mapSize.Y - offset);
+  }
+
   inline std::vector<Position> BresenhamLine(Position& start, Position& end)
   {
     return BresenhamLine(start.X, start.Y, end.X, end.Y);

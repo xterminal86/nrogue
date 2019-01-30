@@ -4,8 +4,6 @@
 #include "application.h"
 #include "util.h"
 
-#include <sstream>
-
 void EndgameState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
@@ -13,80 +11,7 @@ void EndgameState::Init()
 
 void EndgameState::Prepare()
 {
-  std::ofstream postMortem;
-  std::stringstream ss;
-
-  time_t now = time(nullptr);
-  tm *ltm = localtime(&now);
-
-  ss << "obituary_";
-  ss << ltm->tm_hour << "_";
-  ss << ltm->tm_min << "_";
-  ss << ltm->tm_sec << ".txt";
-
-  postMortem.open(ss.str());
-
-  ss.str(std::string());
-
-  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
-
-  // Form string
-
-  ss << "********** OBITUARY **********\n\n";
-
-  std::string nameAndTitle = _playerRef->Name + " the " + _playerRef->GetClassName();
-
-  ss << nameAndTitle << " level " << _playerRef->Attrs.Lvl.CurrentValue << '\n';
-  ss << "has perished at " << curLvl->LevelName << "\n\n";
-
-  ss << "STR " << _playerRef->Attrs.Str.CurrentValue << '\n';
-  ss << "DEF " << _playerRef->Attrs.Def.CurrentValue << '\n';
-  ss << "MAG " << _playerRef->Attrs.Mag.CurrentValue << '\n';
-  ss << "RES " << _playerRef->Attrs.Res.CurrentValue << '\n';
-  ss << "SKL " << _playerRef->Attrs.Skl.CurrentValue << '\n';
-  ss << "SPD " << _playerRef->Attrs.Spd.CurrentValue << '\n';
-
-  ss << '\n';
-  ss << "********** POSSESSIONS **********\n\n";
-
-  int stringResizeWidth = 40;
-
-  for (auto& i : _playerRef->Inventory.Contents)
-  {
-    ItemComponent* ic = i->GetComponent<ItemComponent>();
-
-    std::string name = ic->Data.IdentifiedName;
-    name.resize(stringResizeWidth, ' ');
-
-    ss << name;
-
-    if (ic->Data.IsStackable || ic->Data.IsChargeable)
-    {
-      ss << " (" << ic->Data.Amount << ")";
-    }
-
-    if (ic->Data.IsEquipped)
-    {
-      ss << " (E)";
-    }
-
-    ss << '\n';
-  }
-
-  ss << '\n';
-  ss << "********** KILLS **********\n\n";
-
-  for (auto& kvp : _playerRef->TotalKills)
-  {
-    std::string name = kvp.first;
-    name.resize(stringResizeWidth, ' ');
-
-    ss << name << " " << kvp.second << '\n';
-  }
-
-  postMortem << ss.str();
-
-  postMortem.close();
+  Application::Instance().WriteObituary();
 }
 
 void EndgameState::HandleInput()

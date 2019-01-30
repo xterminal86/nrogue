@@ -20,6 +20,7 @@ void ExitingState::HandleInput()
       break;
 
     case 'y':
+      Application::Instance().WriteObituary(false);
       Application::Instance().ChangeState(GameStates::EXIT_GAME);
       break;
   }
