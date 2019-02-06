@@ -163,13 +163,6 @@ void MainState::HandleInput()
 
       case NUMPAD_5:
         Printer::Instance().AddMessage("You waited...");
-
-        // If player waits, game objects take their turns,
-        // while player action meter is not spent.
-        //
-        // FIXME: maybe think on some better approach
-
-        //Map::Instance().UpdateGameObjects();
         _playerRef->FinishTurn();
         _playerRef->ProcessHunger();
         break;
@@ -270,6 +263,8 @@ void MainState::HandleInput()
   if (_playerRef->Attrs.ActionMeter < 100)
   {    
     Map::Instance().UpdateGameObjects();    
+
+    // FIXME: enemies and player SPD is not handled correctly
     _playerRef->WaitForTurn();
   }
 }
@@ -602,6 +597,20 @@ void MainState::DisplayStatusIcons()
     if (weapon->Data.Durability.CurrentValue <= warning)
     {
       Printer::Instance().PrintFB(6, th - 3, ')', "#FFFF00");
+    }
+  }
+
+  // Armor condition
+
+  ItemComponent* armor = _playerRef->EquipmentByCategory[EquipmentCategory::TORSO][0];
+  if (armor != nullptr)
+  {
+    int maxDur = armor->Data.Durability.OriginalValue;
+    int warning = maxDur * 0.3f;
+
+    if (armor->Data.Durability.CurrentValue <= warning)
+    {
+      Printer::Instance().PrintFB(8, th - 3, '[', "#FFFF00");
     }
   }
 }

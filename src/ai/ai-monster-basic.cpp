@@ -170,7 +170,7 @@ void AIMonsterBasic::Attack(Player* player)
   int defaultHitChance = 50;
   int hitChance = defaultHitChance;
 
-  int d = AIComponentRef->OwnerGameObject->Attrs.Skl.CurrentValue - player->Attrs.Skl.Get();
+  int d = AIComponentRef->OwnerGameObject->Attrs.Skl.Get() - player->Attrs.Skl.Get();
 
   if (d > 0)
   {
