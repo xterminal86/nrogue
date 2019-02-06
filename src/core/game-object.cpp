@@ -124,11 +124,11 @@ void GameObject::ReceiveDamage(GameObject* from, int amount)
 
 void GameObject::WaitForTurn()
 {
-  int speedBase = 50;
+  int speedBase = 100;
 
   int speedAttr = Attrs.Spd.Get();
 
-  int speedIncrement = speedBase + speedAttr * 2;
+  int speedIncrement = speedBase + speedAttr * 10;
 
   // In impossible case that speed penalties
   // are too great that speed increment is negative

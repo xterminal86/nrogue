@@ -264,14 +264,14 @@ void Player::SetArcanistAttrs()
 
 void Player::SetDefaultEquipment()
 {
-  EquipmentByCategory[EquipmentCategory::HEAD] = { nullptr };
-  EquipmentByCategory[EquipmentCategory::NECK] = { nullptr };
-  EquipmentByCategory[EquipmentCategory::TORSO] = { nullptr };
-  EquipmentByCategory[EquipmentCategory::LEGS] = { nullptr };
-  EquipmentByCategory[EquipmentCategory::BOOTS] = { nullptr };
+  EquipmentByCategory[EquipmentCategory::HEAD]   = { nullptr };
+  EquipmentByCategory[EquipmentCategory::NECK]   = { nullptr };
+  EquipmentByCategory[EquipmentCategory::TORSO]  = { nullptr };
+  EquipmentByCategory[EquipmentCategory::LEGS]   = { nullptr };
+  EquipmentByCategory[EquipmentCategory::BOOTS]  = { nullptr };
   EquipmentByCategory[EquipmentCategory::WEAPON] = { nullptr };
   EquipmentByCategory[EquipmentCategory::SHIELD] = { nullptr };
-  EquipmentByCategory[EquipmentCategory::RING] = { nullptr, nullptr };
+  EquipmentByCategory[EquipmentCategory::RING]   = { nullptr, nullptr };
 
   GameObject* go = nullptr;
 
@@ -325,8 +325,7 @@ void Player::Attack(GameObject* go)
     {
       if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue <= 0)
       {
-        BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);
-        EquipmentByCategory[EquipmentCategory::WEAPON][0] = { nullptr };
+        BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);        
       }
     }
   }
@@ -335,7 +334,7 @@ void Player::Attack(GameObject* go)
     int defaultHitChance = 50;
     int hitChance = defaultHitChance;
 
-    int d = Attrs.Skl.Get() - go->Attrs.Skl.CurrentValue;
+    int d = Attrs.Skl.Get() - go->Attrs.Skl.Get();
     if (d > 0)
     {
       hitChance += (d * 5);
@@ -380,7 +379,7 @@ void Player::Attack(GameObject* go)
       }
 
       int totalDmg = weaponDamage;
-      totalDmg += Attrs.Str.Get() - go->Attrs.Def.CurrentValue;
+      totalDmg += Attrs.Str.Get() - go->Attrs.Def.Get();
       if (totalDmg <= 0)
       {
         totalDmg = 1;
@@ -400,8 +399,7 @@ void Player::Attack(GameObject* go)
       {
         if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue <= 0)
         {
-          BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);
-          EquipmentByCategory[EquipmentCategory::WEAPON][0] = { nullptr };
+          BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);          
         }
       }
     }
@@ -422,14 +420,44 @@ void Player::Attack(GameObject* go)
 }
 
 void Player::ReceiveDamage(GameObject* from, int amount)
-{  
-  auto str = Util::StringFormat("You were hit for %i damage", amount);
-  Printer::Instance().AddMessage(str);
-
+{
   // FIXME: debug
   // amount = 0;
 
-  Attrs.HP.CurrentValue -= amount;  
+  ItemComponent* armor = EquipmentByCategory[EquipmentCategory::TORSO][0];
+  if (armor != nullptr)
+  {
+    int durabilityLeft = armor->Data.Durability.CurrentValue;
+    int armorDamage = durabilityLeft - amount;
+    if (armorDamage < 0)
+    {
+      int hpDamage = std::abs(armorDamage);
+
+      auto str = Util::StringFormat("You were hit for %i damage", hpDamage);
+      Printer::Instance().AddMessage(str);
+
+      Attrs.HP.CurrentValue -= hpDamage;
+      BreakItem(armor);
+    }
+    else
+    {
+      auto str = Util::StringFormat("Your armor takes %i damage", amount);
+      Printer::Instance().AddMessage(str);
+
+      armor->Data.Durability.Add(-amount);
+      if (armor->Data.Durability.CurrentValue == 0)
+      {
+        BreakItem(armor);
+      }
+    }
+  }
+  else
+  {
+    auto str = Util::StringFormat("You were hit for %i damage", amount);
+    Printer::Instance().AddMessage(str);
+
+    Attrs.HP.CurrentValue -= amount;
+  }
 }
 
 void Player::AwardExperience(int amount)
@@ -990,26 +1018,25 @@ void Player::BreakItem(ItemComponent* ic)
   auto str = Util::StringFormat("%s breaks!", objName.data());
   Printer::Instance().AddMessage(str);
 
-  RecalculateStatsModifiers();
-
   auto typeHash = ic->Data.ItemTypeHash;
+
+  EquipmentCategory ec = ic->Data.EqCategory;
 
   for (int i = 0; i < Inventory.Contents.size(); i++)
   {
     auto c = Inventory.Contents[i]->GetComponent<ItemComponent>();
     ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-    // FIXME: breaking only equipped item, trying to fix bug
-    // when having two identical cursed items in inventory
-    // with one equipped, wrong one breaks after durability lose.
-    //
-    // (probably was already fixed)
     if (ic->Data.ItemTypeHash == typeHash && ic->Data.IsEquipped)
     {
       Inventory.Contents.erase(Inventory.Contents.begin() + i);
       break;
     }
   }
+
+  EquipmentByCategory[ec][0] = nullptr;
+
+  RecalculateStatsModifiers();
 }
 
 void Player::SwitchPlaces(AIComponent* other)

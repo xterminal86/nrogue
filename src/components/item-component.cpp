@@ -47,7 +47,11 @@ void ItemComponent::Inspect()
     if (Data.ItemType_ == ItemType::WEAPON)
     {
       desc = GetWeaponInspectionInfo();
-    }    
+    }
+    else if (Data.ItemType_ == ItemType::ARMOR)
+    {
+      desc = GetArmorInspectionInfo();
+    }
     else if (Data.ItemType_ == ItemType::RETURNER)
     {
       desc = GetReturnerInspectionInfo();
@@ -85,14 +89,25 @@ std::vector<std::string> ItemComponent::GetWeaponInspectionInfo()
   {
     { Util::StringFormat("DMG: %id%i", Data.Damage.CurrentValue, Data.Damage.OriginalValue) },
     { Util::StringFormat("%i / %i", Data.Durability.CurrentValue, Data.Durability.OriginalValue) },
-    { "" },
-    { Util::StringFormat("STR: %i", Data.StatBonuses[StatsEnum::STR]) },
-    { Util::StringFormat("DEF: %i", Data.StatBonuses[StatsEnum::DEF]) },
-    { Util::StringFormat("MAG: %i", Data.StatBonuses[StatsEnum::MAG]) },
-    { Util::StringFormat("RES: %i", Data.StatBonuses[StatsEnum::RES]) },
-    { Util::StringFormat("SKL: %i", Data.StatBonuses[StatsEnum::SKL]) },
-    { Util::StringFormat("SPD: %i", Data.StatBonuses[StatsEnum::SPD]) }
+    { "" }
   };
+
+  AddModifiersInfo(res);
+
+  return res;
+}
+
+std::vector<std::string> ItemComponent::GetArmorInspectionInfo()
+{
+  std::vector<std::string> res =
+  {
+    { Util::StringFormat("%i / %i", Data.Durability.CurrentValue, Data.Durability.OriginalValue) },
+    { "" },
+    { Util::StringFormat("STR required: %i", Data.StatRequirements[StatsEnum::STR]) },
+    { "" }
+  };
+
+  AddModifiersInfo(res);
 
   return res;
 }
@@ -143,4 +158,33 @@ std::vector<std::string> ItemComponent::GetReturnerInspectionInfo()
   res.push_back(text);
 
   return res;
+}
+
+void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
+{
+  for (auto& kvp : _allStatNames)
+  {
+    int bonus = Data.StatBonuses.at(kvp.second.first);
+    std::string statName = kvp.second.second;
+    char prefix = ' ';
+    if (bonus < 0)
+    {
+      prefix = '-';
+    }
+    else if (bonus > 0)
+    {
+      prefix = '+';
+    }
+
+    std::string bonusStr = std::to_string(std::abs(bonus));
+    char bonus1 = bonusStr[0];
+    char bonus2 = ' ';
+    if (std::abs(bonus) >= 10)
+    {
+      bonus2 = bonusStr[1];
+    }
+
+    auto str = Util::StringFormat("%s: %c%c%c", statName.data(), prefix, bonus1, bonus2);
+    res.push_back(str);
+  }
 }

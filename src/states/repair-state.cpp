@@ -76,6 +76,8 @@ void RepairState::Update(bool forceUpdate)
         Printer::Instance().PrintFB(0, 2 + itemIndex, str, Printer::kAlignLeft, "#FFFFFF");
 
         _itemRefByChar[c] = ic;
+
+        itemIndex++;
       }
     }
 

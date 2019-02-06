@@ -1176,15 +1176,27 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = (prefixOverride == ItemPrefix::RANDOM) ? false : true;
 
-  int baseDurability = GlobalConstants::ArmorDurabilityByType.at(type);
-  int cursedPenalty = (ic->Data.Prefix == ItemPrefix::CURSED) ? -2 : 0;
+  int baseDurability = GlobalConstants::ArmorDurabilityByType.at(type);  
+  int cursedPenalty = 0;
+
+  if (ic->Data.Prefix == ItemPrefix::CURSED)
+  {
+    cursedPenalty = -4;
+    baseDurability /= 4;
+  }
+  else if (ic->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    cursedPenalty = 4;
+  }
 
   switch (type)
   {
     case ArmorType::PADDING:      
       ic->Data.UnidentifiedDescription =
       {
-        "A thick coat with straw or horsehair filling to soften incoming blows.",
+        // ======================================================================70
+        "A thick coat with straw or horsehair filling",
+        "to soften incoming blows.",
         "It won't last long, but any armor is better than nothing."
       };
 
@@ -1197,7 +1209,9 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
     case ArmorType::LEATHER:
       ic->Data.UnidentifiedDescription =
       {
-        "Overlapping leather straps provide decent protection against cutting blows."
+        // ======================================================================70
+        "Overlapping leather straps provide decent",
+        "protection against cutting blows."
       };
 
       ic->Data.StatBonuses[StatsEnum::RES] = -1 + cursedPenalty;
@@ -1210,9 +1224,12 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
     case ArmorType::MAIL:
       ic->Data.UnidentifiedDescription =
       {
-        "A shirt made of metal rings is a popular outfit among common soldiers.",
-        "It takes a while to adjust to its weight, but it offers good",
-        "overall protection and it's easy to repair."
+        // ======================================================================70
+        "A shirt made of metal rings",
+        "is a popular outfit among common soldiers.",
+        "It takes a while to adjust to its weight,",
+        "but it offers good overall protection",
+        "and is easy to repair."
       };
 
       ic->Data.StatBonuses[StatsEnum::RES] = -4 + cursedPenalty;
@@ -1225,8 +1242,10 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
     case ArmorType::PLATE:
       ic->Data.UnidentifiedDescription =
       {
-        "A thick layer of padding, then a layer of a strong mail with metal plates",
-        "riveted on top. This armor pretty much combines all others in itself.",
+        // ======================================================================70
+        "A thick layer of padding, then a layer of a strong mail",
+        "with metal plates riveted on top.",
+        "This armor pretty much combines all others in itself.",
         "It's very hard to bring down someone wearing this."
       };
 
@@ -1236,6 +1255,11 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
       ic->Data.StatRequirements[StatsEnum::STR] = 10;
 
       break;
+  }
+
+  if (_playerRef->Attrs.Str.Get() < ic->Data.StatRequirements[StatsEnum::STR])
+  {
+    ic->Data.UnidentifiedDescription.push_back("This armor is too heavy for you");
   }
 
   ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;

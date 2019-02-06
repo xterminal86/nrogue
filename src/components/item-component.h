@@ -24,6 +24,20 @@ class ItemComponent : public Component
   private:
     std::vector<std::string> GetWeaponInspectionInfo();    
     std::vector<std::string> GetReturnerInspectionInfo();    
+    std::vector<std::string> GetArmorInspectionInfo();
+
+    void AddModifiersInfo(std::vector<std::string>& res);
+
+    // std::map is sorted by key
+    std::map<int, std::pair<StatsEnum, std::string>> _allStatNames =
+    {
+      { 0, { StatsEnum::STR, "STR" } },
+      { 1, { StatsEnum::DEF, "DEF" } },
+      { 2, { StatsEnum::MAG, "MAG" } },
+      { 3, { StatsEnum::RES, "RES" } },
+      { 4, { StatsEnum::SKL, "SKL" } },
+      { 5, { StatsEnum::SPD, "SPD" } }
+    };
 };
 
 #endif // ITEMCOMPONENT_H
