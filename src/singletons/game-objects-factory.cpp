@@ -622,6 +622,20 @@ GameObject* GameObjectsFactory::CreateRandomWeapon(ItemPrefix prefixOverride)
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateRandomArmor(ItemPrefix prefixOverride)
+{
+  GameObject* go = nullptr;
+
+  int index = RNG::Instance().RandomRange(0, GlobalConstants::ArmorNameByType.size());
+  auto it = GlobalConstants::ArmorNameByType.begin();
+  std::advance(it, index);
+  auto kvp = *it;
+
+  go = CreateArmor(kvp.first, prefixOverride);
+
+  return go;
+}
+
 GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 {
   GameObject* go = nullptr;
@@ -630,6 +644,7 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
   {
     ItemType::COINS,
     ItemType::WEAPON,
+    ItemType::ARMOR,
     ItemType::POTION,
     ItemType::FOOD,
     ItemType::GEM,
@@ -697,6 +712,10 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 
     case ItemType::WEAPON:
       go = CreateRandomWeapon();
+      break;
+
+    case ItemType::ARMOR:
+      go = CreateRandomArmor();
       break;
 
     case ItemType::POTION:
@@ -1157,40 +1176,38 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = (prefixOverride == ItemPrefix::RANDOM) ? false : true;
 
-  int baseDurability = 0;
+  int baseDurability = GlobalConstants::ArmorDurabilityByType.at(type);
+  int cursedPenalty = (ic->Data.Prefix == ItemPrefix::CURSED) ? -2 : 0;
 
   switch (type)
   {
-    case ArmorType::PADDING:
-      baseDurability = 30;
+    case ArmorType::PADDING:      
       ic->Data.UnidentifiedDescription =
       {
         "A thick coat with straw or horsehair filling to soften incoming blows.",
         "It won't last long, but any armor is better than nothing."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SPD] = -1;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -1 + cursedPenalty;
 
       ic->Data.StatRequirements[StatsEnum::STR] = 1;
 
       break;
 
     case ArmorType::LEATHER:
-      baseDurability = 60;
       ic->Data.UnidentifiedDescription =
       {
         "Overlapping leather straps provide decent protection against cutting blows."
       };
 
-      ic->Data.StatBonuses[StatsEnum::RES] = -1;
-      ic->Data.StatBonuses[StatsEnum::SPD] = -2;
+      ic->Data.StatBonuses[StatsEnum::RES] = -1 + cursedPenalty;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -2 + cursedPenalty;
 
       ic->Data.StatRequirements[StatsEnum::STR] = 2;
 
       break;
 
     case ArmorType::MAIL:
-      baseDurability = 120;
       ic->Data.UnidentifiedDescription =
       {
         "A shirt made of metal rings is a popular outfit among common soldiers.",
@@ -1198,15 +1215,14 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
         "overall protection and it's easy to repair."
       };
 
-      ic->Data.StatBonuses[StatsEnum::RES] = -4;
-      ic->Data.StatBonuses[StatsEnum::SPD] = -4;
+      ic->Data.StatBonuses[StatsEnum::RES] = -4 + cursedPenalty;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -4 + cursedPenalty;
 
       ic->Data.StatRequirements[StatsEnum::STR] = 6;
 
       break;
 
     case ArmorType::PLATE:
-      baseDurability = 240;
       ic->Data.UnidentifiedDescription =
       {
         "A thick layer of padding, then a layer of a strong mail with metal plates",
@@ -1214,8 +1230,8 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
         "It's very hard to bring down someone wearing this."
       };
 
-      ic->Data.StatBonuses[StatsEnum::RES] = -8;
-      ic->Data.StatBonuses[StatsEnum::SPD] = -8;
+      ic->Data.StatBonuses[StatsEnum::RES] = -8 + cursedPenalty;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -8 + cursedPenalty;
 
       ic->Data.StatRequirements[StatsEnum::STR] = 10;
 

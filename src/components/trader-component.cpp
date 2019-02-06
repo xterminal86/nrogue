@@ -154,14 +154,22 @@ void TraderComponent::CreateItems()
 
       std::map<ItemType, int> itemsWeights =
       {
-        { ItemType::WEAPON, 5 },
-        { ItemType::ARMOR, 5 },
+        { ItemType::WEAPON,     5 },
+        { ItemType::ARMOR,      5 },
         { ItemType::REPAIR_KIT, 2 },
+      };
+
+      std::map<ArmorType, int> armorWeights =
+      {
+        { ArmorType::PADDING, 6 },
+        { ArmorType::LEATHER, 5 },
+        { ArmorType::MAIL,    3 },
+        { ArmorType::PLATE,   1 }
       };
 
       std::map<ItemPrefix, int> prefixWeights =
       {
-        { ItemPrefix::BLESSED, 1 },
+        { ItemPrefix::BLESSED,  1 },
         { ItemPrefix::UNCURSED, 6 }
       };
 
@@ -183,11 +191,11 @@ void TraderComponent::CreateItems()
             break;
 
           case ItemType::ARMOR:
-            // TODO:
+            auto armorPair = Util::WeightedRandom(armorWeights);
+            go = GameObjectsFactory::Instance().CreateArmor(armorPair.first, prefixPair.first);
             break;
         }
 
-        // FIXME:
         if (go != nullptr)
         {
           Items.push_back(std::unique_ptr<GameObject>(go));

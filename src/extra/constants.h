@@ -783,6 +783,14 @@ namespace GlobalConstants
     { ArmorType::PLATE,   "Coat of Plates"   }
   };
 
+  static const std::map<ArmorType, int> ArmorDurabilityByType =
+  {
+    { ArmorType::PADDING, 30 },
+    { ArmorType::LEATHER, 60 },
+    { ArmorType::MAIL,   120 },
+    { ArmorType::PLATE,  240 }
+  };
+
   static const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =
   {
     { FoodType::APPLE,        { "Apple",        10  } },
