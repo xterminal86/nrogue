@@ -933,24 +933,54 @@ bool Player::WeaponLosesDurability()
   return true;
 }
 
-void Player::SetStatsModifiers(ItemData& itemData)
+void Player::RecalculateStatsModifiers()
 {
-  Attrs.Str.Modifier += itemData.StatBonuses[StatsEnum::STR];
-  Attrs.Def.Modifier += itemData.StatBonuses[StatsEnum::DEF];
-  Attrs.Mag.Modifier += itemData.StatBonuses[StatsEnum::MAG];
-  Attrs.Res.Modifier += itemData.StatBonuses[StatsEnum::RES];
-  Attrs.Skl.Modifier += itemData.StatBonuses[StatsEnum::SKL];
-  Attrs.Spd.Modifier += itemData.StatBonuses[StatsEnum::SPD];
-}
+  for (auto& a : _attributesRefsByType)
+  {
+    a.second.Modifier = 0;
 
-void Player::UnsetStatsModifiers(ItemData& itemData)
-{
-  Attrs.Str.Modifier -= itemData.StatBonuses[StatsEnum::STR];
-  Attrs.Def.Modifier -= itemData.StatBonuses[StatsEnum::DEF];
-  Attrs.Mag.Modifier -= itemData.StatBonuses[StatsEnum::MAG];
-  Attrs.Res.Modifier -= itemData.StatBonuses[StatsEnum::RES];
-  Attrs.Skl.Modifier -= itemData.StatBonuses[StatsEnum::SKL];
-  Attrs.Spd.Modifier -= itemData.StatBonuses[StatsEnum::SPD];
+    for (auto& kvp : EquipmentByCategory)
+    {
+      for (ItemComponent* item : kvp.second)
+      {
+        if (item != nullptr)
+        {
+          int bonus = item->Data.StatBonuses.at(a.first);
+          a.second.Modifier += bonus;
+        }
+      }
+    }
+  }
+
+  // Hardcoded weapon and armor penalties
+
+  ItemComponent* weapon = EquipmentByCategory.at(EquipmentCategory::WEAPON)[0];
+  if (weapon != nullptr)
+  {
+    int req = weapon->Data.StatRequirements.at(StatsEnum::STR);
+    if(req != 0)
+    {
+      int penalty = _attributesRefsByType.at(StatsEnum::STR).CurrentValue - req;
+      if (penalty < 0)
+      {
+        _attributesRefsByType.at(StatsEnum::SKL).Modifier += penalty;
+      }
+    }
+  }
+
+  ItemComponent* armor = EquipmentByCategory.at(EquipmentCategory::TORSO)[0];
+  if (armor != nullptr)
+  {
+    int req = armor->Data.StatRequirements.at(StatsEnum::STR);
+    if(req != 0)
+    {
+      int penalty = _attributesRefsByType.at(StatsEnum::STR).CurrentValue - req;
+      if (penalty < 0)
+      {
+        _attributesRefsByType.at(StatsEnum::SPD).Modifier += penalty;
+      }
+    }
+  }
 }
 
 void Player::BreakItem(ItemComponent* ic)
@@ -960,7 +990,7 @@ void Player::BreakItem(ItemComponent* ic)
   auto str = Util::StringFormat("%s breaks!", objName.data());
   Printer::Instance().AddMessage(str);
 
-  UnsetStatsModifiers(ic->Data);
+  RecalculateStatsModifiers();
 
   auto typeHash = ic->Data.ItemTypeHash;
 

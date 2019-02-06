@@ -1169,8 +1169,9 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
         "It won't last long, but any armor is better than nothing."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SKL] = -1;
       ic->Data.StatBonuses[StatsEnum::SPD] = -1;
+
+      ic->Data.StatRequirements[StatsEnum::STR] = 1;
 
       break;
 
@@ -1180,6 +1181,12 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
       {
         "Overlapping leather straps provide decent protection against cutting blows."
       };
+
+      ic->Data.StatBonuses[StatsEnum::RES] = -1;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -2;
+
+      ic->Data.StatRequirements[StatsEnum::STR] = 2;
+
       break;
 
     case ArmorType::MAIL:
@@ -1191,8 +1198,10 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
         "overall protection and it's easy to repair."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SKL] = -2;
-      ic->Data.StatBonuses[StatsEnum::SPD] = -2;
+      ic->Data.StatBonuses[StatsEnum::RES] = -4;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -4;
+
+      ic->Data.StatRequirements[StatsEnum::STR] = 6;
 
       break;
 
@@ -1205,8 +1214,10 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
         "It's very hard to bring down someone wearing this."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SKL] = -4;
-      ic->Data.StatBonuses[StatsEnum::SPD] = -4;
+      ic->Data.StatBonuses[StatsEnum::RES] = -8;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -8;
+
+      ic->Data.StatRequirements[StatsEnum::STR] = 10;
 
       break;
   }
@@ -1423,7 +1434,7 @@ void GameObjectsFactory::EquipItem(ItemComponent* item)
     verb = "put on";
   }
 
-  _playerRef->SetStatsModifiers(item->Data);
+  _playerRef->RecalculateStatsModifiers();
 
   std::string objName = item->Data.IsIdentified ? item->OwnerGameObject->ObjectName : item->Data.UnidentifiedName;
 
@@ -1447,7 +1458,7 @@ void GameObjectsFactory::UnequipItem(ItemComponent* item)
     verb = "take off";
   }
 
-  _playerRef->UnsetStatsModifiers(item->Data);
+  _playerRef->RecalculateStatsModifiers();
 
   std::string objName = item->Data.IsIdentified ? item->OwnerGameObject->ObjectName : item->Data.UnidentifiedName;
 

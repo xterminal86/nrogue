@@ -58,8 +58,7 @@ class Player : public GameObject
     void LevelUp();
     void LevelDown();
 
-    void SetStatsModifiers(ItemData& itemData);
-    void UnsetStatsModifiers(ItemData& itemData);
+    void RecalculateStatsModifiers();
     void AddBonusItems();
 
     int Money = 0;
@@ -138,6 +137,16 @@ class Player : public GameObject
       { "SPD", 0 },
       { "HP",  0 },
       { "MP",  0 }
+    };
+
+    std::map<StatsEnum, Attribute&> _attributesRefsByType =
+    {
+      { StatsEnum::STR, Attrs.Str },
+      { StatsEnum::DEF, Attrs.Def },
+      { StatsEnum::MAG, Attrs.Mag },
+      { StatsEnum::RES, Attrs.Res },
+      { StatsEnum::SKL, Attrs.Skl },
+      { StatsEnum::SPD, Attrs.Spd }
     };
 
     GameObject* _previousCell = nullptr;
