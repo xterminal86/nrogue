@@ -898,6 +898,8 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
 
       ic->Data.StatBonuses[StatsEnum::STR] = 1;
       ic->Data.StatBonuses[StatsEnum::SPD] = 1;
+
+      ic->Data.StatRequirements[StatsEnum::STR] = 2;
     }
     break;
 
@@ -914,7 +916,9 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
       ic->Data.Damage.OriginalValue = diceSides;
 
       ic->Data.StatBonuses[StatsEnum::STR] = 2;
-      ic->Data.StatBonuses[StatsEnum::DEF] = 1;      
+      ic->Data.StatBonuses[StatsEnum::DEF] = 1;
+
+      ic->Data.StatRequirements[StatsEnum::STR] = 3;
     }
     break;
 
@@ -933,6 +937,8 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
       ic->Data.StatBonuses[StatsEnum::STR] = 2;
       ic->Data.StatBonuses[StatsEnum::DEF] = 1;
       ic->Data.StatBonuses[StatsEnum::SPD] = -1;
+
+      ic->Data.StatRequirements[StatsEnum::STR] = 4;
     }
     break;
 
@@ -951,6 +957,8 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
       ic->Data.StatBonuses[StatsEnum::STR] = 4;
       ic->Data.StatBonuses[StatsEnum::SKL] = -2;
       ic->Data.StatBonuses[StatsEnum::SPD] = -4;
+
+      ic->Data.StatRequirements[StatsEnum::STR] = 6;
     }
     break;
 

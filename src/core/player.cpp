@@ -120,7 +120,7 @@ void Player::CheckVisibility()
 
   auto& map = Map::Instance().CurrentLevel->MapArray;
 
-  // FIXME: think
+  // FIXME: some objects can modify visibility radius
   int radius = (map[PosX][PosY]->ObjectName == "Tree") ? VisibilityRadius / 4 : VisibilityRadius;
 
   auto mapCells = Util::GetRectAroundPoint(PosX, PosY, tw / 2, th / 2, Map::Instance().CurrentLevel->MapSize);
@@ -991,7 +991,7 @@ void Player::RecalculateStatsModifiers()
       int penalty = _attributesRefsByType.at(StatsEnum::STR).CurrentValue - req;
       if (penalty < 0)
       {
-        _attributesRefsByType.at(StatsEnum::SKL).Modifier += penalty;
+        _attributesRefsByType.at(StatsEnum::SKL).Modifier += penalty;        
       }
     }
   }

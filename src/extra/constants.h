@@ -332,7 +332,7 @@ enum class RoomEdgeEnum
   WEST
 };
 
-/// Helper struct to reduce the writing when creating objects
+/// Helper struct to reduce the amount of writing when creating objects
 struct Tile
 {
   void Set(bool isBlocking,
@@ -393,6 +393,7 @@ struct Attribute
     }
   }
 
+  /// Returns value including modifier
   int Get(bool originalValue = true)
   {
     int res = originalValue ? OriginalValue + Modifier : CurrentValue + Modifier;

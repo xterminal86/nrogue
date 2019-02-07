@@ -19,14 +19,15 @@
 
 // TODO:
 //
-// 1) Status effects
-// 2) Ranged weapons / throwing
-// 3) Scrolls
-// 4) Level design
-// 5) Skills
-// 6) Magic / Rare / Unique items
-// 7) Traps, secrets
-// 8) Locked doors / chests
+// Status effects
+// Ranged weapons / throwing
+// Wands
+// Scrolls
+// Level design
+// Skills
+// Magic / Rare / Unique items
+// Traps, secrets
+// Locked doors / chests
 
 int main()
 {

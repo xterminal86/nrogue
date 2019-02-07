@@ -89,6 +89,8 @@ std::vector<std::string> ItemComponent::GetWeaponInspectionInfo()
   {
     { Util::StringFormat("DMG: %id%i", Data.Damage.CurrentValue, Data.Damage.OriginalValue) },
     { Util::StringFormat("%i / %i", Data.Durability.CurrentValue, Data.Durability.OriginalValue) },
+    { "" },
+    { Util::StringFormat("STR required: %i", Data.StatRequirements[StatsEnum::STR]) },
     { "" }
   };
 
