@@ -18,7 +18,7 @@ void GameObject::Init(MapLevelBase* levelOwner, int x, int y, chtype avatar, con
   FgColor = fgColor;
   BgColor = bgColor;
 
-  Attrs.ActionMeter = 100;
+  Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
   _levelOwner = levelOwner;
 
@@ -124,11 +124,11 @@ void GameObject::ReceiveDamage(GameObject* from, int amount)
 
 void GameObject::WaitForTurn()
 {
-  int speedBase = 100;
+  int speedTickBase = GlobalConstants::TurnTickValue;
 
   int speedAttr = Attrs.Spd.Get();
 
-  int speedIncrement = speedBase + speedAttr * 10;
+  int speedIncrement = speedTickBase;// + speedAttr * 10;
 
   // In impossible case that speed penalties
   // are too great that speed increment is negative
@@ -137,7 +137,7 @@ void GameObject::WaitForTurn()
   // In towns SPD is ignored
   if (Map::Instance().CurrentLevel->Peaceful)
   {
-    Attrs.ActionMeter = 99;
+    Attrs.ActionMeter = GlobalConstants::TurnReadyValue - 1;
   }  
 
   Attrs.ActionMeter += speedIncrement;
@@ -145,7 +145,7 @@ void GameObject::WaitForTurn()
 
 void GameObject::FinishTurn()
 {
-  Attrs.ActionMeter -= 100;
+  Attrs.ActionMeter -= GlobalConstants::TurnReadyValue;
 
   if (Attrs.ActionMeter < 0)
   {

@@ -17,7 +17,7 @@ void MainState::HandleInput()
 {
   _keyPressed = getch();
 
-  if (_playerRef->Attrs.ActionMeter >= 100)
+  if (_playerRef->Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
   {
     switch (_keyPressed)
     {
@@ -260,7 +260,7 @@ void MainState::HandleInput()
   }
 
   // Update all game objects if player is not ready to act
-  if (_playerRef->Attrs.ActionMeter < 100)
+  if (_playerRef->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
   {    
     Map::Instance().UpdateGameObjects();    
 

@@ -20,7 +20,7 @@ void AINPC::Update()
     return;
   }
 
-  if (AIComponentRef->OwnerGameObject->Attrs.ActionMeter < 100)
+  if (AIComponentRef->OwnerGameObject->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
   {
     AIComponentRef->OwnerGameObject->WaitForTurn();
   }

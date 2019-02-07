@@ -17,7 +17,7 @@ void Player::Init()
   PosY = Map::Instance().CurrentLevel->LevelStart.Y;
   Image = '@';
   FgColor = GlobalConstants::PlayerColor;
-  Attrs.ActionMeter = 100;
+  Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
   // FIXME: debug
   Money = 1000;
@@ -691,7 +691,7 @@ void Player::WaitForTurn()
 
   // Redraw screen only when player is ready for action
   // (assuming Application::_currentState is MainState)
-  if (Attrs.ActionMeter >= 100)
+  if (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
   {
     Application::Instance().DrawCurrentState();
   }
@@ -817,7 +817,7 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
 
 void Player::FinishTurn()
 {
-  Attrs.ActionMeter -= 100;
+  Attrs.ActionMeter -= GlobalConstants::TurnReadyValue;
 
   if (Attrs.ActionMeter < 0)
   {

@@ -629,6 +629,8 @@ namespace GlobalConstants
   static const int ItemSpawnMinArea = 25 * 25;
   static const int InventoryMaxNameLength = 20;
   static const int InventoryMaxSize = 20;
+  static const int TurnReadyValue = 1000;
+  static const int TurnTickValue = 100;
 
   static const std::string BlackColor = "#000000";
   static const std::string WhiteColor = "#FFFFFF";
