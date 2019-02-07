@@ -128,11 +128,12 @@ void GameObject::WaitForTurn()
 
   int speedAttr = Attrs.Spd.Get();
 
-  int speedIncrement = speedTickBase;// + speedAttr * 10;
+  int scale = GlobalConstants::TurnTickValue / 10;
+  int speedIncrement = speedTickBase + speedAttr * scale;
 
   // In impossible case that speed penalties
   // are too great that speed increment is negative
-  speedIncrement = (speedIncrement <= 0) ? 1 : speedIncrement;
+  speedIncrement = (speedIncrement <= 0) ? scale: speedIncrement;
 
   // In towns SPD is ignored
   if (Map::Instance().CurrentLevel->Peaceful)

@@ -20,7 +20,7 @@ void Player::Init()
   Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
   // FIXME: debug
-  Money = 1000;
+  //Money = 1000;
 
   Inventory.MaxCapacity = GlobalConstants::InventoryMaxSize;
 
@@ -1015,7 +1015,11 @@ void Player::BreakItem(ItemComponent* ic)
 {
   auto objName = ic->OwnerGameObject->ObjectName;
 
-  auto str = Util::StringFormat("%s breaks!", objName.data());
+  std::string breakStr = (ic->Data.ItemType_ == ItemType::ARMOR)
+                        ? "is destroyed!"
+                        : "breaks!";
+
+  auto str = Util::StringFormat("%s %s", objName.data(), breakStr.data());
   Printer::Instance().AddMessage(str);
 
   auto typeHash = ic->Data.ItemTypeHash;

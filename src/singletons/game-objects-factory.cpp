@@ -194,9 +194,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
     int randomDef = RNG::Instance().RandomRange(0, 1 * difficulty);
     int randomSkl = RNG::Instance().RandomRange(0, 1 * difficulty);
     int randomHp = RNG::Instance().RandomRange(1 * difficulty, 5 * difficulty);
-    // FIXME: debug
-    //int randomSpd = RNG::Instance().RandomRange(0, 2 * difficulty);
-    int randomSpd = 40;
+    int randomSpd = RNG::Instance().RandomRange(0, 2 * difficulty);
 
     go->Attrs.Lvl.Set(difficulty);
 

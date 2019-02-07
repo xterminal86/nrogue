@@ -125,7 +125,17 @@ void Map::UpdateGameObjects()
 
   for (auto& go : CurrentLevel->ActorGameObjects)
   {
-    go.get()->Update();
+    if (go->Attrs.ActionMeter > GlobalConstants::TurnReadyValue)
+    {
+      while (go->Attrs.ActionMeter > GlobalConstants::TurnReadyValue)
+      {
+        go.get()->Update();
+      }
+    }
+    else
+    {
+      go.get()->Update();
+    }
   }
 }
 

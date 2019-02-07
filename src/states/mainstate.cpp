@@ -263,8 +263,6 @@ void MainState::HandleInput()
   if (_playerRef->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
   {    
     Map::Instance().UpdateGameObjects();    
-
-    // FIXME: enemies and player SPD is not handled correctly
     _playerRef->WaitForTurn();
   }
 }
