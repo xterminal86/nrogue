@@ -273,39 +273,59 @@ void Player::SetDefaultEquipment()
   EquipmentByCategory[EquipmentCategory::SHIELD] = { nullptr };
   EquipmentByCategory[EquipmentCategory::RING]   = { nullptr, nullptr };
 
-  GameObject* go = nullptr;
+  std::vector<GameObject*> weaponAndArmor;
+
+  GameObject* weapon = nullptr;
+  GameObject* armor = nullptr;
 
   switch (GetClass())
   {
     case PlayerClass::THIEF:
     {
-      go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::DAGGER, ItemPrefix::UNCURSED);
-      Inventory.AddToInventory(go);      
+      weapon = GameObjectsFactory::Instance().CreateWeapon(WeaponType::DAGGER, ItemPrefix::UNCURSED);
+      Inventory.AddToInventory(weapon);
+
+      armor = GameObjectsFactory::Instance().CreateArmor(ArmorType::PADDING, ItemPrefix::UNCURSED);
+      Inventory.AddToInventory(armor);
+
+      weaponAndArmor.push_back(weapon);
+      weaponAndArmor.push_back(armor);
     }
     break;
 
     case PlayerClass::SOLDIER:
     {
-      go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED);
-      Inventory.AddToInventory(go);
+      weapon = GameObjectsFactory::Instance().CreateWeapon(WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED);
+      Inventory.AddToInventory(weapon);
+
+      armor = GameObjectsFactory::Instance().CreateArmor(ArmorType::LEATHER, ItemPrefix::UNCURSED);
+      Inventory.AddToInventory(armor);
+
+      weaponAndArmor.push_back(weapon);
+      weaponAndArmor.push_back(armor);
     }
     break;
 
     case PlayerClass::ARCANIST:
     {
-      go = GameObjectsFactory::Instance().CreateWeapon(WeaponType::STAFF, ItemPrefix::UNCURSED);
-      Inventory.AddToInventory(go);
+      weapon = GameObjectsFactory::Instance().CreateWeapon(WeaponType::STAFF, ItemPrefix::UNCURSED);
+      Inventory.AddToInventory(weapon);
+
+      weaponAndArmor.push_back(weapon);
     }
     break;
   }
-
-  ItemComponent* ic = go->GetComponent<ItemComponent>();
-  ic->Equip();
-
   // Since equipping produces message in log,
   // we explicitly delete it here.
-  auto it = Printer::Instance().Messages().begin();
-  Printer::Instance().Messages().erase(it);
+
+  for (auto& i : weaponAndArmor)
+  {
+    ItemComponent* ic = i->GetComponent<ItemComponent>();
+    ic->Equip();
+
+    auto it = Printer::Instance().Messages().begin();
+    Printer::Instance().Messages().erase(it);
+  }
 }
 
 void Player::Attack(GameObject* go)

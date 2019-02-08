@@ -1210,8 +1210,6 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
 
       ic->Data.StatBonuses[StatsEnum::SPD] = -1 + cursedPenalty;
 
-      ic->Data.StatRequirements[StatsEnum::STR] = 1;
-
       break;
 
     case ArmorType::LEATHER:
