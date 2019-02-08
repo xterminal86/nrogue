@@ -4,6 +4,7 @@
 #include "game-objects-factory.h"
 #include "map-level-base.h"
 #include "map.h"
+#include "application.h"
 
 GameObject::GameObject(MapLevelBase* levelOwner)
 {
@@ -128,12 +129,15 @@ void GameObject::WaitForTurn()
 
   int speedAttr = Attrs.Spd.Get();
 
-  int scale = GlobalConstants::TurnTickValue / 10;
+  int playerSpd = Application::Instance().PlayerInstance.Attrs.Spd.Get();
+
+  int minSpdIncr = GlobalConstants::TurnTickValue / 10;
+  int scale = (speedAttr - playerSpd) * GlobalConstants::TurnTickValue;
   int speedIncrement = speedTickBase + speedAttr * scale;
 
   // In impossible case that speed penalties
   // are too great that speed increment is negative
-  speedIncrement = (speedIncrement <= 0) ? scale: speedIncrement;
+  speedIncrement = (speedIncrement <= 0) ? minSpdIncr : speedIncrement;
 
   // In towns SPD is ignored
   if (Map::Instance().CurrentLevel->Peaceful)

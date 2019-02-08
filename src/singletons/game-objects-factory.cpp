@@ -190,7 +190,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
     int difficulty = std::max(pl, dl); //pl + dl;
 
-    int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
+    int randomStr = RNG::Instance().RandomRange(0 * difficulty, 1 * difficulty);
     int randomDef = RNG::Instance().RandomRange(0, 1 * difficulty);
     int randomSkl = RNG::Instance().RandomRange(0, 1 * difficulty);
     int randomHp = RNG::Instance().RandomRange(1 * difficulty, 5 * difficulty);
@@ -232,7 +232,7 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
     int difficulty = std::max(pl, dl); //pl + dl;
 
-    int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
+    int randomStr = RNG::Instance().RandomRange(0 * difficulty, 1 * difficulty);
     int randomDef = RNG::Instance().RandomRange(0, 1 * difficulty);
     int randomSkl = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
     int randomHp = RNG::Instance().RandomRange(1 * difficulty, 3 * difficulty);

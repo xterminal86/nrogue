@@ -166,7 +166,7 @@ void Application::WriteObituary(bool wasKilled)
   int px = playerRef->PosX;
   int py = playerRef->PosY;
 
-  curLvl->MapArray[px][py]->Image = '%';
+  curLvl->MapArray[px][py]->Image = wasKilled ? '%' : '@';
 
   int range = 10;
 
@@ -218,11 +218,6 @@ void Application::WriteObituary(bool wasKilled)
           || curLvl->MapArray[x][y]->Revealed))
         {
           ch = actor->Image;
-        }
-
-        if (x == px && y == py)
-        {
-          ch = wasKilled ? '%' : '@';
         }
 
         row.push_back(ch);
