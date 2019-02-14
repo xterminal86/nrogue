@@ -11,7 +11,7 @@ GameObject::GameObject(MapLevelBase* levelOwner)
   _levelOwner = levelOwner;
 }
 
-void GameObject::Init(MapLevelBase* levelOwner, int x, int y, chtype avatar, const std::string& fgColor, const std::string& bgColor)
+void GameObject::Init(MapLevelBase* levelOwner, int x, int y, int avatar, const std::string& fgColor, const std::string& bgColor)
 {
   PosX = x;
   PosY = y;
@@ -74,7 +74,7 @@ bool GameObject::MoveTo(int x, int y)
 }
 
 void GameObject::Draw(const std::string& overrideColorFg, const std::string& overrideColorBg)
-{  
+{
   Printer::Instance().PrintFB(PosX + _levelOwner->MapOffsetX,
                               PosY + _levelOwner->MapOffsetY,
                               Image,

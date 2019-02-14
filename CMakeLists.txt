@@ -4,6 +4,17 @@ project (${TARGET_NAME})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
 
+option(USE_SDL "Build with SDL2" false)
+option(RUN_TESTS "Run some tests" false)
+
+if (USE_SDL)
+  add_definitions(-DUSE_SDL)
+endif()
+
+if (RUN_TESTS)
+  add_definitions(-DRUN_TESTS)
+endif()
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/components)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/levels)
@@ -36,9 +47,16 @@ file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 
 add_executable(${TARGET_NAME} ${SOURCES})
 
-if (WIN32)
-  target_link_libraries(${TARGET_NAME} pdcurses)
+if (USE_SDL)
+  find_package(SDL2 REQUIRED)
+  include_directories(${SDL2_INCLUDE_DIRS})
+  target_link_libraries(${TARGET_NAME} SDL2 SDL2_image)
 else()
-  target_link_libraries(${TARGET_NAME} ncurses)
+  if (WIN32)
+    target_link_libraries(${TARGET_NAME} pdcurses)
+  else()
+    target_link_libraries(${TARGET_NAME} ncurses)
+  endif()
 endif()
+
 

@@ -1,7 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#ifndef USE_SDL
 #include <ncurses.h>
+#endif
 
 #include <string>
 #include <map>

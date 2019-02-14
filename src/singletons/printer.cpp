@@ -5,6 +5,88 @@
 
 void Printer::Init()
 {
+#ifdef USE_SDL
+  InitForSDL();
+#else
+  InitForCurses();
+#endif
+}
+
+#ifdef USE_SDL
+void Printer::InitForSDL()
+{
+  std::string tilesetFile = "tileset.png";
+  SDL_Surface* surf = IMG_Load(tilesetFile.data());
+  if (surf)
+  {
+    _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
+    SDL_FreeSurface(surf);
+
+    int w = 0, h = 0;
+    SDL_QueryTexture(_tileset, nullptr, nullptr, &w, &h);
+
+    _tilesetWidth = w;
+    _tilesetHeight = h;
+
+    char asciiIndex = 0;
+    int tileIndex = 0;
+    for (int x = 0; x < w; x += kTileSize)
+    {
+      for (int y = 0; y < h; y += kTileSize)
+      {
+        TileInfo ti;
+        ti.X = y;
+        ti.Y = x;
+        _tiles.push_back(ti);
+
+        _tileIndexByChar[asciiIndex] = tileIndex;
+
+        asciiIndex++;
+        tileIndex++;
+      }
+    }
+  }
+  else
+  {
+    printf("Could not load tileset: %s!\n", SDL_GetError());
+  }
+}
+
+void Printer::PrintFB(const int& x, const int& y,
+                      int image,
+                      const std::string& htmlColorFg,
+                      const std::string& htmlColorBg)
+{
+  TileInfo& tile = _tiles[image];
+
+  SDL_Rect src;
+  src.x = tile.X;
+  src.y = tile.Y;
+  src.w = kTileSize;
+  src.h = kTileSize;
+
+  SDL_Rect dst;
+  dst.x = x;
+  dst.y = y;
+  dst.w = kTileSize;
+  dst.h = kTileSize;
+
+  SDL_RenderCopy(Application::Instance().Renderer, _tileset, &src, &dst);
+}
+
+void Printer::PrintFB(const int& x, const int& y,
+                      const std::string& text,
+                      int align,
+                      const std::string& htmlColorFg,
+                      const std::string& htmlColorBg)
+{
+}
+
+#endif
+
+#ifndef USE_SDL
+void Printer::InitForCurses()
+{
   int mx = 0;
   int my = 0;
 
@@ -27,7 +109,7 @@ void Printer::Init()
   init_color(COLOR_MAGENTA, 1000, 0, 1000);
   init_color(COLOR_YELLOW, 1000, 1000, 0);
 
-  PrepareFrameBuffer();  
+  PrepareFrameBuffer();
 }
 
 bool Printer::ContainsColorMap(size_t hashToCheck)
@@ -177,7 +259,7 @@ void Printer::Print(const int& x, const int& y, const std::string& text, int ali
   attroff(COLOR_PAIR(_colorMap[hash].PairIndex));   
 }
 
-void Printer::Print(const int& x, const int& y, const chtype& ch, const std::string& htmlColorFg, const std::string& htmlColorBg)
+void Printer::Print(const int& x, const int& y, const int& ch, const std::string& htmlColorFg, const std::string& htmlColorBg)
 {
   size_t hash = GetOrSetColor(htmlColorFg, htmlColorBg);
 
@@ -186,24 +268,8 @@ void Printer::Print(const int& x, const int& y, const chtype& ch, const std::str
   attroff(COLOR_PAIR(_colorMap[hash].PairIndex));
 }
 
-void Printer::AddMessage(std::string message)
-{
-  _inGameMessages.insert(_inGameMessages.begin(), message);
-
-  if (_inGameMessages.size() > kMaxGameLogMessages)
-  {
-    _inGameMessages.pop_back();
-  }
-
-  _lastMessagesToDisplay++;
-
-  _lastMessagesToDisplay = Util::Clamp(_lastMessagesToDisplay, 0, 5);
-
-  ShowLastMessage = true;
-}
-
 void Printer::PrintFB(const int& x, const int& y,
-                                 const chtype& ch,
+                                 const int& ch,
                                  const std::string& htmlColorFg,
                                  const std::string& htmlColorBg)
 {
@@ -287,9 +353,11 @@ void Printer::PrepareFrameBuffer()
     _frameBuffer.push_back(row);
   }
 }
+#endif
 
 void Printer::Clear()
 {
+#ifndef USE_SDL
   for (int x = 0; x < TerminalWidth; x++)
   {
     for (int y = 0; y < TerminalHeight; y++)
@@ -297,10 +365,14 @@ void Printer::Clear()
       PrintFB(x, y, ' ', "#000000");
     }
   }
+#else
+  SDL_RenderClear(Application::Instance().Renderer);
+#endif
 }
 
 void Printer::Render()
 {
+#ifndef USE_SDL
   for (int x = 0; x < TerminalWidth; x++)
   {
     for (int y = 0; y < TerminalHeight; y++)
@@ -312,6 +384,25 @@ void Printer::Render()
   }
 
   refresh();
+#else
+  SDL_RenderPresent(Application::Instance().Renderer);
+#endif
+}
+
+void Printer::AddMessage(std::string message)
+{
+  _inGameMessages.insert(_inGameMessages.begin(), message);
+
+  if (_inGameMessages.size() > kMaxGameLogMessages)
+  {
+    _inGameMessages.pop_back();
+  }
+
+  _lastMessagesToDisplay++;
+
+  _lastMessagesToDisplay = Util::Clamp(_lastMessagesToDisplay, 0, 5);
+
+  ShowLastMessage = true;
 }
 
 std::vector<std::string> Printer::GetLastMessages()

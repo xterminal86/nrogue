@@ -23,7 +23,7 @@ void InteractInputState::Prepare()
 
 void InteractInputState::HandleInput()
 {
-  _keyPressed = getch();
+  _keyPressed = GetKeyDown();
 
   bool dirSet = false;
 

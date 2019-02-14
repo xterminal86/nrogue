@@ -5,7 +5,7 @@
 
 void InfoState::HandleInput()
 {
-  _keyPressed = getch();  
+  _keyPressed = GetKeyDown();
   
   switch (_keyPressed)
   {

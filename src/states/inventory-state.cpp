@@ -20,7 +20,7 @@ void InventoryState::Prepare()
 
 void InventoryState::HandleInput()
 {
-  _keyPressed = getch();    
+  _keyPressed = GetKeyDown();
 
   bool isInventoryEmpty = (_playerRef->Inventory.Contents.size() == 0);
 

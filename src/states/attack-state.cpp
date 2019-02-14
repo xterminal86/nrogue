@@ -19,7 +19,7 @@ void AttackState::Prepare()
 
 void AttackState::HandleInput()
 {
-  _keyPressed = getch();
+  _keyPressed = GetKeyDown();
 
   bool dirSet = false;
 

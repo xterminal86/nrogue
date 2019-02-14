@@ -24,7 +24,7 @@ void NPCInteractState::HandleInput()
     return;
   }
 
-  _keyPressed = getch();
+  _keyPressed = GetKeyDown();
 
   switch (_keyPressed)
   {

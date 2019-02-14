@@ -1,6 +1,7 @@
-#define RUN_TESTS 0
-
+#ifndef USE_SDL
 #include <ncurses.h>
+#endif
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <vector>
@@ -9,11 +10,10 @@
 #include "application.h"
 #include "game-objects-factory.h"
 #include "map.h"
-#include "printer.h"
 #include "util.h"
 #include "rng.h"
 
-#if RUN_TESTS == 1
+#ifdef RUN_TESTS
 #include "tests.h"
 #endif
 
@@ -43,16 +43,6 @@ int main()
   auto str = Util::StringFormat("World seed is %lu", RNG::Instance().Seed);
   Logger::Instance().Print(str);
 
-  initscr();
-  nodelay(stdscr, true);     // non-blocking getch()
-  keypad(stdscr, true);      // enable numpad
-  noecho();
-  curs_set(false);
-    
-  start_color();
-
-  Printer::Instance().Init();  
-
   GameObjectsFactory::Instance().Init();
 
   Application::Instance().Init();
@@ -60,14 +50,12 @@ int main()
   Map::Instance().Init();
 
   Application::Instance().Run();
-  
-  endwin();
 
-  #if RUN_TESTS == 1
+  Application::Instance().Cleanup();
+
+#ifdef RUN_TESTS
   Tests::Run();
-  #endif
-
-  printf("Goodbye!\n");
+#endif
 
   return 0;
 }

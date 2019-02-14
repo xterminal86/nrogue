@@ -768,7 +768,7 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
   return go;
 }
 
-void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, chtype image, MapType leadsTo)
+void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, int image, MapType leadsTo)
 {
   auto tile = levelWhereCreate->MapArray[x][y].get();
 
@@ -1004,7 +1004,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateContainer(std::string name, std::string bgColor, chtype image, int x, int y)
+GameObject* GameObjectsFactory::CreateContainer(std::string name, std::string bgColor, int image, int x, int y)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 

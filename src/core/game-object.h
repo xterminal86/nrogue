@@ -6,7 +6,9 @@
 #include <memory>
 #include <functional>
 
+#ifndef USE_SDL
 #include <ncurses.h>
+#endif
 
 #include "component.h"
 #include "constants.h"
@@ -20,7 +22,7 @@ class GameObject
     GameObject(GameObject&) = delete;
     virtual ~GameObject() = default;
 
-    GameObject(MapLevelBase* levelOwner, int x, int y, chtype avatar, const std::string& htmlColor, const std::string& bgColor = "#000000")
+    GameObject(MapLevelBase* levelOwner, int x, int y, int avatar, const std::string& htmlColor, const std::string& bgColor = "#000000")
     {      
       Init(levelOwner, x, y, avatar, htmlColor, bgColor);
     }
@@ -48,7 +50,7 @@ class GameObject
       return false;
     }
 
-    void Init(MapLevelBase* levelOwner, int x, int y, chtype avatar, const std::string& fgColor, const std::string& bgColor = "#000000");
+    void Init(MapLevelBase* levelOwner, int x, int y, int avatar, const std::string& fgColor, const std::string& bgColor = "#000000");
 
     /// Adds \p dx and \p dy to corresponding game object's coordinates.
     /// Use to move actors only.
@@ -113,7 +115,7 @@ class GameObject
 
     bool IsDestroyed = false;
 
-    chtype Image;
+    int Image;
     std::string FgColor = GlobalConstants::BlackColor;
     std::string BgColor = GlobalConstants::BlackColor;
     std::string ObjectName;

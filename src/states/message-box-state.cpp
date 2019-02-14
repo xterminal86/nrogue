@@ -12,7 +12,7 @@ void MessageBoxState::HandleInput()
     return;
   }
 
-  _keyPressed = getch();
+  _keyPressed = GetKeyDown();
 
   if (_keyPressed != -1)
   {

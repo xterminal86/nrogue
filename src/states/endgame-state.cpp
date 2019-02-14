@@ -16,7 +16,7 @@ void EndgameState::Prepare()
 
 void EndgameState::HandleInput()
 {
-  _keyPressed = getch();
+  _keyPressed = GetKeyDown();
 
   switch (_keyPressed)
   {

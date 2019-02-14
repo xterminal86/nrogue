@@ -27,7 +27,7 @@ class MainState : public GameState
     void DisplayStatusIcons();
     void DisplayGameLog();
     void TryToPickupItem();
-    void CheckStairs(chtype stairsSymbol);
+    void CheckStairs(int stairsSymbol);
     void DrawHPMP();
     void DisplayHelp();
     void PrintDebugInfo();

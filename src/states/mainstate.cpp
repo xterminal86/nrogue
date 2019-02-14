@@ -15,7 +15,7 @@ void MainState::Init()
 
 void MainState::HandleInput()
 {
-  _keyPressed = getch();
+  _keyPressed = GetKeyDown();
 
   if (_playerRef->Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
   {
@@ -389,7 +389,7 @@ void MainState::DisplayHelp()
   Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Help", _helpText);
 }
 
-void MainState::CheckStairs(chtype stairsSymbol)
+void MainState::CheckStairs(int stairsSymbol)
 {
   if (stairsSymbol == '>')
   {

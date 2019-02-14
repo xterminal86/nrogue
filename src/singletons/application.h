@@ -15,6 +15,7 @@ class Application : public Singleton<Application>
   public:
     void Init() override;
     void Run();
+    void Cleanup();
     void ChangeState(const GameStates& gameStateIndex);
 
     void ShowMessageBox(MessageBoxType type, std::string header, std::vector<std::string> message,
@@ -44,11 +45,24 @@ class Application : public Singleton<Application>
 
     GameState* GetGameStateRefByName(GameStates stateName);
 
+    #ifdef USE_SDL
+    SDL_Renderer* Renderer = nullptr;
+    SDL_Window* Window = nullptr;
+    #endif
+
   private:
     GameState* _currentState = nullptr;
     GameState* _previousState = nullptr;
 
     std::map<GameStates, std::unique_ptr<GameState>> _gameStates;    
+
+    void InitGraphics();
+
+    #ifdef USE_SDL
+    void InitSDL();
+    #else
+    void InitCurses();
+    #endif
 };
 
 #endif

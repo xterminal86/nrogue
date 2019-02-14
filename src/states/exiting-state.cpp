@@ -11,7 +11,7 @@ void ExitingState::Init()
 
 void ExitingState::HandleInput()
 {
-  _keyPressed = getch();
+  _keyPressed = GetKeyDown();
 
   switch (_keyPressed)
   {

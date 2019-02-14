@@ -43,7 +43,10 @@
 #include <string>
 #include <map>
 #include <functional>
+
+#ifndef USE_SDL
 #include <ncurses.h>
+#endif
 
 enum class GameStates
 {
@@ -337,7 +340,7 @@ struct Tile
 {
   void Set(bool isBlocking,
            bool blocksSight,
-           chtype image,
+           int image,
            const std::string& fgColor,
            const std::string& bgColor,
            const std::string& objectName,
@@ -354,7 +357,7 @@ struct Tile
 
   bool IsBlocking;
   bool BlocksSight;
-  chtype Image;
+  int Image;
 
   std::string FgColor;
   std::string BgColor;

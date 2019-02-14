@@ -5,15 +5,27 @@
 #include <map>
 #include <vector>
 
+#ifndef USE_SDL
 #include <ncurses.h>
+#else
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#endif
 
 #include "singleton.h"
 #include "colorpair.h"
 
+struct TileInfo
+{
+  int X = 0;
+  int Y = 0;
+  std::string Data;
+};
+
 struct FBPixel
 {
   size_t ColorPairHash;
-  chtype Character;
+  int Character;
 };
 
 /// Singleton for ncurses text printing
@@ -29,6 +41,14 @@ class Printer : public Singleton<Printer>
 
     void Init() override;
 
+    /// Clears framebuffer (use this before PrintFB calls)
+    void Clear();
+
+    /// Prints framebuffer contents to the screen
+    /// (call this after all PrintFB calls)
+    void Render();
+
+#ifndef USE_SDL
     /// Print text at (x, y) directly to the screen,
     /// with (0, 0) at upper left corner and y increases down
     void Print(const int& x, const int& y,
@@ -38,13 +58,13 @@ class Printer : public Singleton<Printer>
                 const std::string& htmlColorBg = "#000000");
 
     void Print(const int& x, const int& y,
-                const chtype& ch,
+                const int& ch,
                 const std::string& htmlColorFg,
                 const std::string& htmlColorBg = "#000000");
 
     /// Print to "framebuffer" instead of directly to the screen
     void PrintFB(const int& x, const int& y,
-                  const chtype& ch,
+                  const int& ch,
                   const std::string& htmlColorFg,
                   const std::string& htmlColorBg = "#000000");
 
@@ -52,14 +72,19 @@ class Printer : public Singleton<Printer>
                   const std::string& text,
                   int align,
                   const std::string& htmlColorFg,
-                  const std::string& htmlColorBg = "#000000");
+                  const std::string& htmlColorBg = "#000000");    
+#else
+    void PrintFB(const int& x, const int& y,
+                 int image,
+                 const std::string& htmlColorFg,
+                 const std::string& htmlColorBg = "#000000");
 
-    /// Clears framebuffer (use this before PrintFB calls)
-    void Clear();
-
-    /// Prints framebuffer contents to the screen
-    /// (call this after all PrintFB calls)
-    void Render();
+    void PrintFB(const int& x, const int& y,
+                 const std::string& text,
+                 int align,
+                 const std::string& htmlColorFg,
+                 const std::string& htmlColorBg = "#000000");
+#endif
 
     /// Add message to the game log
     void AddMessage(std::string message);
@@ -84,10 +109,15 @@ class Printer : public Singleton<Printer>
     // FIXME: debug
     int ColorsUsed()
     {
+      #ifndef USE_SDL
       return _colorMap.size();
+      #else
+      return -1;
+      #endif
     }
 
   private:
+#ifndef USE_SDL
     bool ContainsColorMap(size_t hashToCheck);
     bool ColorIndexExists(size_t hashToCheck);
 
@@ -95,8 +125,16 @@ class Printer : public Singleton<Printer>
     size_t GetOrSetColor(const std::string& htmlColorFg, const std::string& htmlColorBg);
     std::pair<int, int> AlignText(int x, int y, int align, const std::string& text);
 
+    void PrepareFrameBuffer();
+
     std::map<size_t, ColorPair> _colorMap;
     std::map<size_t, short> _colorIndexMap;
+
+    short _colorPairsGlobalIndex = 1;
+    short _colorGlobalIndex = 8;
+
+    std::vector<std::vector<FBPixel>> _frameBuffer;
+#endif
 
     std::vector<std::string> _inGameMessages;    
     std::vector<std::string> _lastMessages;
@@ -105,12 +143,21 @@ class Printer : public Singleton<Printer>
 
     const int kMaxGameLogMessages = 100;
 
-    short _colorPairsGlobalIndex = 1;
-    short _colorGlobalIndex = 8;
+    #ifndef USE_SDL
+    void InitForCurses();
+    #else
+    SDL_Texture* _tileset = nullptr;
 
-    void PrepareFrameBuffer();
+    int _tilesetWidth = 0;
+    int _tilesetHeight = 0;
 
-    std::vector<std::vector<FBPixel>> _frameBuffer;
+    std::vector<TileInfo> _tiles;
+    std::map<char, int> _tileIndexByChar;
+
+    const int kTileSize = 16;
+
+    void InitForSDL();
+    #endif
 };
 
 #endif

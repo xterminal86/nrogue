@@ -30,7 +30,7 @@ void ShoppingState::PassShopOwner(TraderComponent* tc)
 
 void ShoppingState::HandleInput()
 {
-  _keyPressed = getch();
+  _keyPressed = GetKeyDown();
 
   switch (_keyPressed)
   {

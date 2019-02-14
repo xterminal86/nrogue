@@ -7,7 +7,7 @@
 
 void MessageLogState::HandleInput()
 {
-  _keyPressed = getch();
+  _keyPressed = GetKeyDown();
 
   int msgSize = Printer::Instance().Messages().size();
   int th = Printer::Instance().TerminalHeight;

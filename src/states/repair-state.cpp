@@ -11,7 +11,7 @@ void RepairState::Init()
 
 void RepairState::HandleInput()
 {
-  _keyPressed = getch();
+  _keyPressed = GetKeyDown();
 
   switch (_keyPressed)
   {

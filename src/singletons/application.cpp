@@ -26,6 +26,8 @@
 
 void Application::Init()
 {
+  InitGraphics();
+
   _gameStates[GameStates::MAIN_STATE]               = std::unique_ptr<GameState>(new MainState());
   _gameStates[GameStates::INFO_STATE]               = std::unique_ptr<GameState>(new InfoState());
   _gameStates[GameStates::ATTACK_STATE]             = std::unique_ptr<GameState>(new AttackState());
@@ -296,4 +298,99 @@ void Application::WriteObituary(bool wasKilled)
   postMortem << ss.str();
 
   postMortem.close();
+}
+
+void Application::InitGraphics()
+{
+#ifdef USE_SDL
+  InitSDL();
+#else
+  InitCurses();
+#endif
+
+  Printer::Instance().Init();
+}
+
+#ifndef USE_SDL
+void Application::InitCurses()
+{
+  initscr();
+  nodelay(stdscr, true);     // non-blocking getch()
+  keypad(stdscr, true);      // enable numpad
+  noecho();
+  curs_set(false);
+
+  start_color();
+}
+#endif
+
+#ifdef USE_SDL
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
+void Application::InitSDL()
+{
+  const int kTileSize = 16;
+
+  int tilesetWidth = 0;
+  int tilesetHeight = 0;
+
+  const int kWindowWidth = 80 * kTileSize;
+  const int kWindowHeight = 24 * kTileSize;
+
+  if (SDL_Init(SDL_INIT_VIDEO) != 0)
+  {
+    printf("SDL_Init Error: %s\n", SDL_GetError());
+  }
+
+  Window = SDL_CreateWindow("nrogue",
+                            0, 0,
+                            kWindowWidth, kWindowHeight,
+                            SDL_WINDOW_SHOWN);
+
+  int drivers = SDL_GetNumRenderDrivers();
+
+  for (int i = 0; i < drivers; i++)
+  {
+    SDL_RendererInfo info;
+    SDL_GetRenderDriverInfo(i, &info);
+
+    Renderer = SDL_CreateRenderer(Window, i, info.flags);
+    if (Renderer != nullptr)
+    {
+      break;
+    }
+  }
+
+  SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
+
+  IMG_Init(IMG_INIT_PNG);
+
+  SDL_DisplayMode displayMode;
+
+  /*
+  for (int i = 0; i < SDL_GetNumVideoDisplays(); i++)
+  {
+    int shouldBeZero = SDL_GetCurrentDisplayMode(i, &displayMode);
+    if (shouldBeZero == 0)
+    {
+      printf("Could not set current display mode: %s!\n", SDL_GetError());
+      break;
+    }
+  }
+  */
+}
+#endif
+
+void Application::Cleanup()
+{
+#ifdef USE_SDL
+  IMG_Quit();
+  SDL_Quit();
+#else
+  endwin();
+#endif
+
+  printf("Goodbye!\n");
 }

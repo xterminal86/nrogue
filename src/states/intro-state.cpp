@@ -20,7 +20,7 @@ void IntroState::Prepare()
 
 void IntroState::HandleInput()
 {
-  _keyPressed = getch();
+  _keyPressed = GetKeyDown();
 
   switch (_keyPressed)
   {

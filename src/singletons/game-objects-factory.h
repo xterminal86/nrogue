@@ -31,7 +31,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, bool isIdentified = false);
     GameObject* CreateNote(std::string objName, std::vector<std::string> text);
     GameObject* CreateWeapon(WeaponType type, ItemPrefix preifx = ItemPrefix::RANDOM);
-    GameObject* CreateContainer(std::string name, std::string bgColor, chtype image, int x, int y);
+    GameObject* CreateContainer(std::string name, std::string bgColor, int image, int x, int y);
     GameObject* CreateGem(int x, int y, GemType type = GemType::RANDOM);
     GameObject* CreateReturner(int x, int y, int charges = -1, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRepairKit(int x, int y, int charges = -1, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
@@ -43,7 +43,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateRandomItem(int x, int y, ItemType exclude = ItemType::NOTHING);
 
     /// Creates stairs on MapArray of current level
-    void CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, chtype image, MapType leadsTo);
+    void CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, int image, MapType leadsTo);
 
     bool HandleItemUse(ItemComponent* item);
     bool HandleItemEquip(ItemComponent* item);

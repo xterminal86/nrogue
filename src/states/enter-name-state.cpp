@@ -5,7 +5,7 @@
 
 void EnterNameState::HandleInput()
 {
-  _keyPressed = getch();
+  _keyPressed = GetKeyDown();
 
   if (_keyPressed != -1)
   {
