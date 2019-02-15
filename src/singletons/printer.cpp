@@ -34,19 +34,19 @@ void Printer::InitForSDL()
 
     char asciiIndex = 0;
     int tileIndex = 0;
-    for (int x = 0; x < w; x += _tileWidth)
+    for (int y = 0; y < h; y += _tileHeight)
     {
-      for (int y = 0; y < h; y += _tileWidth)
+      for (int x = 0; x < w; x += _tileWidth)
       {
         TileInfo ti;
-        ti.X = y;
-        ti.Y = x;
+        ti.X = x;
+        ti.Y = y;
         _tiles.push_back(ti);
 
         _tileIndexByChar[asciiIndex] = tileIndex;
 
         asciiIndex++;
-        tileIndex++;
+        tileIndex++;        
       }
     }
   }
