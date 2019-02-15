@@ -2,11 +2,11 @@
 
 int GameState::GetKeyDown()
 {
+  int res = -1;
+
 #ifdef USE_SDL
   SDL_Event event;
   SDL_PollEvent(&event);
-
-  int res = -1;
 
   static Uint32 now = SDL_GetTicks();
   static Uint32 msPassed = now;

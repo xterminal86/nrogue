@@ -319,6 +319,8 @@ void Application::InitCurses()
   curs_set(false);
 
   start_color();
+
+  Printer::Instance().Init();
 }
 #endif
 

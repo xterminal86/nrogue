@@ -48,12 +48,12 @@ class Application : public Singleton<Application>
     #ifdef USE_SDL
     SDL_Renderer* Renderer = nullptr;
     SDL_Window* Window = nullptr;
-    #endif
 
     float ScaleFactor = TILES_SCALE_FACTOR;
 
     int TileWidth = TILESET_WIDTH;
     int TileHeight = TILESET_HEIGHT;
+    #endif
 
   private:
     GameState* _currentState = nullptr;
