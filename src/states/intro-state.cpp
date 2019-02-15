@@ -7,7 +7,7 @@
 
 void IntroState::Prepare()
 {
-  Printer::Instance().Clear();
+  Printer::Instance().Clear();  
 
   _lastTime = std::chrono::high_resolution_clock::now();
 

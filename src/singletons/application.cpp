@@ -306,9 +306,7 @@ void Application::InitGraphics()
   InitSDL();
 #else
   InitCurses();
-#endif
-
-  Printer::Instance().Init();
+#endif  
 }
 
 #ifndef USE_SDL
@@ -330,14 +328,17 @@ void Application::InitCurses()
 #include <SDL2/SDL_image.h>
 
 void Application::InitSDL()
-{
-  const int kTileSize = 16;
-
+{  
   int tilesetWidth = 0;
   int tilesetHeight = 0;
 
-  const int kWindowWidth = 80 * kTileSize;
-  const int kWindowHeight = 24 * kTileSize;
+  TileWidth = (int)((float)TileWidth * ScaleFactor);
+  TileHeight = (int)((float)TileHeight * ScaleFactor);
+
+  const int kTerminalWidth = 80;
+  const int kTerminalHeight = 24;
+  const int kWindowWidth = kTerminalWidth * TileWidth;
+  const int kWindowHeight = kTerminalHeight * TileHeight;
 
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
   {
@@ -367,25 +368,16 @@ void Application::InitSDL()
 
   IMG_Init(IMG_INIT_PNG);
 
-  SDL_DisplayMode displayMode;
+  Printer::Instance().Init();
 
-  /*
-  for (int i = 0; i < SDL_GetNumVideoDisplays(); i++)
-  {
-    int shouldBeZero = SDL_GetCurrentDisplayMode(i, &displayMode);
-    if (shouldBeZero == 0)
-    {
-      printf("Could not set current display mode: %s!\n", SDL_GetError());
-      break;
-    }
-  }
-  */
+  Printer::Instance().TerminalWidth = kTerminalWidth;
+  Printer::Instance().TerminalHeight = kTerminalHeight;
 }
 #endif
 
 void Application::Cleanup()
 {
-#ifdef USE_SDL
+#ifdef USE_SDL  
   IMG_Quit();
   SDL_Quit();
 #else

@@ -36,8 +36,8 @@ void MenuState::Update(bool forceUpdate)
 
     auto border = Util::GetPerimeter(0, 0, tw - 1, th - 1);
     for (auto& i : border)
-    {
-      Printer::Instance().PrintFB(i.X, i.Y, ' ', "#000000", "#FFFFFF");
+    {      
+      Printer::Instance().PrintFB(i.X, i.Y, ' ', "#FFFFFF", "#FFFFFF");
     }
 
     int yOffset = 0;

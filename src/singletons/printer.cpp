@@ -15,7 +15,11 @@ void Printer::Init()
 #ifdef USE_SDL
 void Printer::InitForSDL()
 {
-  std::string tilesetFile = "tileset.png";
+  std::string tilesetFile = TILESET_FILE;
+
+  _tileWidth = TILESET_WIDTH;
+  _tileHeight = TILESET_HEIGHT;
+
   SDL_Surface* surf = IMG_Load(tilesetFile.data());
   if (surf)
   {
@@ -30,9 +34,9 @@ void Printer::InitForSDL()
 
     char asciiIndex = 0;
     int tileIndex = 0;
-    for (int x = 0; x < w; x += kTileSize)
+    for (int x = 0; x < w; x += _tileWidth)
     {
-      for (int y = 0; y < h; y += kTileSize)
+      for (int y = 0; y < h; y += _tileWidth)
       {
         TileInfo ti;
         ti.X = y;
@@ -52,26 +56,53 @@ void Printer::InitForSDL()
   }
 }
 
+void Printer::DrawTile(int x, int y, int tileIndex)
+{
+  TileInfo& tile = _tiles[tileIndex];
+
+  SDL_Rect src;
+  src.x = tile.X;
+  src.y = tile.Y;
+  src.w = _tileWidth;
+  src.h = _tileHeight;
+
+  int scaledW = Application::Instance().TileWidth;
+  int scaledH = Application::Instance().TileHeight;
+
+  SDL_Rect dst;
+  dst.x = x;
+  dst.y = y;
+  dst.w = scaledW;
+  dst.h = scaledH;
+
+  SDL_RenderCopy(Application::Instance().Renderer, _tileset, &src, &dst);
+}
+
 void Printer::PrintFB(const int& x, const int& y,
                       int image,
                       const std::string& htmlColorFg,
                       const std::string& htmlColorBg)
 {
-  TileInfo& tile = _tiles[image];
+  TileColor tc;
 
-  SDL_Rect src;
-  src.x = tile.X;
-  src.y = tile.Y;
-  src.w = kTileSize;
-  src.h = kTileSize;
+  int tileIndex = image;
 
-  SDL_Rect dst;
-  dst.x = x;
-  dst.y = y;
-  dst.w = kTileSize;
-  dst.h = kTileSize;
+  int scaledW = Application::Instance().TileWidth;
+  int scaledH = Application::Instance().TileHeight;
 
-  SDL_RenderCopy(Application::Instance().Renderer, _tileset, &src, &dst);
+  int posX = x * scaledW;
+  int posY = y * scaledH;
+
+  if (htmlColorBg.length() != 0)
+  {
+    tc = ConvertHtmlToRGB(htmlColorBg);
+    SDL_SetTextureColorMod(_tileset, tc.R, tc.G, tc.B);
+    DrawTile(posX, posY, 219);
+  }
+
+  tc = ConvertHtmlToRGB(htmlColorFg);
+  SDL_SetTextureColorMod(_tileset, tc.R, tc.G, tc.B);
+  DrawTile(posX, posY, image);
 }
 
 void Printer::PrintFB(const int& x, const int& y,
@@ -80,6 +111,65 @@ void Printer::PrintFB(const int& x, const int& y,
                       const std::string& htmlColorFg,
                       const std::string& htmlColorBg)
 {
+  int scaledW = Application::Instance().TileWidth;
+  int scaledH = Application::Instance().TileHeight;
+
+  int px = x * scaledW;
+  int py = y * scaledH;
+
+  switch (align)
+  {
+    case kAlignCenter:
+    {
+      int pixelWidth = text.length() * scaledW;
+      px -= pixelWidth / 2;
+    }
+    break;
+
+    case kAlignRight:
+    {
+      int pixelWidth = text.length() * scaledW;
+      px -= pixelWidth;
+    }
+    break;
+  }
+
+  for (auto& c : text)
+  {
+    TileColor tc;
+
+    if (htmlColorBg.length() != 0)
+    {
+      tc = ConvertHtmlToRGB(htmlColorBg);
+      SDL_SetTextureColorMod(_tileset, tc.R, tc.G, tc.B);
+      DrawTile(px, py, 219);
+    }
+
+    tc = ConvertHtmlToRGB(htmlColorFg);
+    SDL_SetTextureColorMod(_tileset, tc.R, tc.G, tc.B);
+    DrawTile(px, py, c);
+
+    px += scaledW;
+  }
+}
+
+TileColor Printer::ConvertHtmlToRGB(const std::string& htmlColor)
+{
+  TileColor res;
+
+  std::string hexR = { htmlColor[1], htmlColor[2] };
+  std::string hexG = { htmlColor[3], htmlColor[4] };
+  std::string hexB = { htmlColor[5], htmlColor[6] };
+
+  int valueR = strtol(hexR.data(), nullptr, 16);
+  int valueG = strtol(hexG.data(), nullptr, 16);
+  int valueB = strtol(hexB.data(), nullptr, 16);
+
+  res.R = valueR;
+  res.G = valueG;
+  res.B = valueB;
+
+  return res;
 }
 
 #endif

@@ -50,6 +50,11 @@ class Application : public Singleton<Application>
     SDL_Window* Window = nullptr;
     #endif
 
+    float ScaleFactor = 2.0f;
+
+    int TileWidth = TILESET_WIDTH;
+    int TileHeight = TILESET_HEIGHT;
+
   private:
     GameState* _currentState = nullptr;
     GameState* _previousState = nullptr;

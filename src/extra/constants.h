@@ -1,52 +1,79 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-// 262, 259, 339, 260, 350, 261, 360, 258, 338
+#ifdef USE_SDL
 
-#if defined(__unix__) || defined(__linux__)
+  #include <SDL2/SDL_keycode.h>
 
-  #define NUMPAD_7  262
-  #define NUMPAD_8  259
-  #define NUMPAD_9  339
-  #define NUMPAD_4  260
-  #define NUMPAD_5  350
-  #define NUMPAD_6  261
-  #define NUMPAD_1  360
-  #define NUMPAD_2  258
-  #define NUMPAD_3  338
+  #define NUMPAD_7  SDLK_KP_7
+  #define NUMPAD_8  SDLK_KP_8
+  #define NUMPAD_9  SDLK_KP_9
+  #define NUMPAD_4  SDLK_KP_4
+  #define NUMPAD_5  SDLK_KP_5
+  #define NUMPAD_6  SDLK_KP_6
+  #define NUMPAD_1  SDLK_KP_1
+  #define NUMPAD_2  SDLK_KP_2
+  #define NUMPAD_3  SDLK_KP_3
 
   // ********************
 
-  #define VK_BACKSPACE 127
-  #define VK_ENTER     10
+  #define VK_BACKSPACE SDLK_BACKSPACE
+  #define VK_ENTER     SDLK_RETURN
+
+  #define KEY_DOWN     SDLK_DOWN
+  #define KEY_UP       SDLK_UP
+
+  #define TILESET_FILE  "tileset_10x10.png"
+  #define TILESET_WIDTH  10;
+  #define TILESET_HEIGHT 10;
 
 #else
 
-  #define NUMPAD_7  KEY_A1
-  #define NUMPAD_8  KEY_A2
-  #define NUMPAD_9  KEY_A3
-  #define NUMPAD_4  KEY_B1
-  #define NUMPAD_5  KEY_B2
-  #define NUMPAD_6  KEY_B3
-  #define NUMPAD_1  KEY_C1
-  #define NUMPAD_2  KEY_C2
-  #define NUMPAD_3  KEY_C3
+#include <ncurses.h>
 
-  // ********************
+  // 262, 259, 339, 260, 350, 261, 360, 258, 338
 
-  #define VK_BACKSPACE 8
-  #define VK_ENTER     10
+  #if defined(__unix__) || defined(__linux__)
 
+    #define NUMPAD_7  262
+    #define NUMPAD_8  259
+    #define NUMPAD_9  339
+    #define NUMPAD_4  260
+    #define NUMPAD_5  350
+    #define NUMPAD_6  261
+    #define NUMPAD_1  360
+    #define NUMPAD_2  258
+    #define NUMPAD_3  338
+
+    // ********************
+
+    #define VK_BACKSPACE 127
+    #define VK_ENTER     10
+
+  #else
+
+    #define NUMPAD_7  KEY_A1
+    #define NUMPAD_8  KEY_A2
+    #define NUMPAD_9  KEY_A3
+    #define NUMPAD_4  KEY_B1
+    #define NUMPAD_5  KEY_B2
+    #define NUMPAD_6  KEY_B3
+    #define NUMPAD_1  KEY_C1
+    #define NUMPAD_2  KEY_C2
+    #define NUMPAD_3  KEY_C3
+
+    // ********************
+
+    #define VK_BACKSPACE 8
+    #define VK_ENTER     10
+
+  #endif
 #endif
 
 #include <vector>
 #include <string>
 #include <map>
 #include <functional>
-
-#ifndef USE_SDL
-#include <ncurses.h>
-#endif
 
 enum class GameStates
 {

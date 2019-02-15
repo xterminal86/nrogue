@@ -15,6 +15,14 @@
 #include "singleton.h"
 #include "colorpair.h"
 
+#ifdef USE_SDL
+struct TileColor
+{
+  int R = 0;
+  int G = 0;
+  int B = 0;
+};
+
 struct TileInfo
 {
   int X = 0;
@@ -22,11 +30,13 @@ struct TileInfo
   std::string Data;
 };
 
+#else
 struct FBPixel
 {
   size_t ColorPairHash;
   int Character;
 };
+#endif
 
 /// Singleton for ncurses text printing
 class Printer : public Singleton<Printer> 
@@ -41,11 +51,12 @@ class Printer : public Singleton<Printer>
 
     void Init() override;
 
-    /// Clears framebuffer (use this before PrintFB calls)
+    /// Clears framebuffer (ncurses) or renderer (SDL)
+    /// Use this before all PrintFB calls
     void Clear();
 
     /// Prints framebuffer contents to the screen
-    /// (call this after all PrintFB calls)
+    /// Call this after all PrintFB calls
     void Render();
 
 #ifndef USE_SDL
@@ -154,9 +165,15 @@ class Printer : public Singleton<Printer>
     std::vector<TileInfo> _tiles;
     std::map<char, int> _tileIndexByChar;
 
-    const int kTileSize = 16;
+    int _tileWidth = 0;
+    int _tileHeight = 0;
 
     void InitForSDL();
+
+    void DrawTile(int x, int y, int tileIndex);
+
+    TileColor ConvertHtmlToRGB(const std::string& htmlColor);
+
     #endif
 };
 

@@ -568,6 +568,15 @@ namespace Util
 
   inline void Sleep(int delayMs)
   {
+    #ifdef USE_SDL
+    Uint32 now = SDL_GetTicks();
+    Uint32 lastTime = now;
+    Uint32 goal = now + delayMs;
+    while (now < goal)
+    {
+      now = SDL_GetTicks();
+    }
+    #else
     using timer = std::chrono::high_resolution_clock;
     using ms = std::chrono::milliseconds;
 
@@ -583,6 +592,7 @@ namespace Util
       elapsed = timer::now() - lastTime;
       msPassed = std::chrono::duration_cast<ms>(elapsed);
     }
+    #endif
   }
 
   inline void PrintLayout(std::vector<std::string> l)
