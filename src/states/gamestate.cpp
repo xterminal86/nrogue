@@ -36,9 +36,21 @@ int GameState::GetKeyDown()
         {
           c = '@';
         }
+        else if (c == '4')
+        {
+          c = '$';
+        }
         else if (c == '/')
         {
           c = '?';
+        }
+        else if (c == '.')
+        {
+          c = '>';
+        }
+        else if (c == ',')
+        {
+          c = '<';
         }
 
         res = c;

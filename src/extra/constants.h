@@ -24,8 +24,9 @@
   #define KEY_UP       SDLK_UP
 
   #define TILESET_FILE  "tileset_10x10.png"
-  #define TILESET_WIDTH  10;
-  #define TILESET_HEIGHT 10;
+  #define TILESET_WIDTH  10
+  #define TILESET_HEIGHT 10
+  #define TILES_SCALE_FACTOR 1
 
 #else
 
