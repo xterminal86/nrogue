@@ -31,6 +31,10 @@
 
 // NOTE: When building in Windows, main() must have "correct" signature
 // i.e. (int argc, char* agrv[]) or you'll get "undefined reference to SDLmain"
+//
+// You also need to manually add "File" in "Projects" tab of cmake config
+// called SDL2_LIBRARY and point it to libSDL2.dll.a file
+
 int main(int argc, char* argv[])
 {
   RNG::Instance().Init();
