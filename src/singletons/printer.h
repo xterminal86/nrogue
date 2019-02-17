@@ -8,8 +8,8 @@
 #ifndef USE_SDL
 #include <ncurses.h>
 #else
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_image.h"
 #endif
 
 #include "singleton.h"
@@ -95,6 +95,9 @@ class Printer : public Singleton<Printer>
                  int align,
                  const std::string& htmlColorFg,
                  const std::string& htmlColorBg = "#000000");
+
+    void DrawImage(const int& x, const int& y, SDL_Texture* tex);
+
 #endif
 
     /// Add message to the game log

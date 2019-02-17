@@ -348,7 +348,7 @@ void Application::InitSDL()
   }
 
   Window = SDL_CreateWindow("nrogue",
-                            0, 0,
+                            50, 50,
                             kWindowWidth, kWindowHeight,
                             SDL_WINDOW_SHOWN);
 
@@ -385,6 +385,8 @@ void Application::Cleanup()
 #else
   endwin();
 #endif
+
+  Logger::Instance().Print("Application::Cleanup()");
 
   printf("Goodbye!\n");
 }

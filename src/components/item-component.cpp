@@ -145,7 +145,7 @@ std::vector<std::string> ItemComponent::GetReturnerInspectionInfo()
   std::vector<std::string> res =
   {
     "This strange stone lets you mark a spot",
-    "and instantly return to it any time you want."
+    "and then instantly return to it any time you want."
   };
 
   if (Data.Prefix == ItemPrefix::BLESSED)

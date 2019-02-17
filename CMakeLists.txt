@@ -48,9 +48,19 @@ file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 add_executable(${TARGET_NAME} ${SOURCES})
 
 if (USE_SDL)
-  find_package(SDL2 REQUIRED)
-  include_directories(${SDL2_INCLUDE_DIRS})
-  target_link_libraries(${TARGET_NAME} SDL2 SDL2_image)
+  if (WIN32)
+    find_package(SDL2 REQUIRED)
+    find_package(SDL2_image REQUIRED)
+    include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
+    target_link_libraries(${TARGET_NAME} ${MINGW32_LIBRARY}
+                                            ${SDL2MAIN_LIBRARY}
+                                            ${SDL2_LIBRARY}
+                                            ${SDL2_IMAGE_LIBRARIES})
+  else()
+    find_package(SDL2 REQUIRED)
+    include_directories(${SDL2_INCLUDE_DIRS})
+    target_link_libraries(${TARGET_NAME} SDL2 SDL2_image)
+  endif()
 else()
   if (WIN32)
     target_link_libraries(${TARGET_NAME} pdcurses)

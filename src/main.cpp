@@ -29,7 +29,9 @@
 // Traps, secrets
 // Locked doors / chests
 
-int main()
+// NOTE: When building in Windows, main() must have "correct" signature
+// i.e. (int argc, char* agrv[]) or you'll get "undefined reference to SDLmain"
+int main(int argc, char* argv[])
 {
   RNG::Instance().Init();
   RNG::Instance().SetSeed(1547020537474375167);
@@ -38,7 +40,7 @@ int main()
   //RNG::Instance().SetSeed(1545127588351497486);
 
   Logger::Instance().Init();
-  Logger::Instance().Prepare(false);
+  Logger::Instance().Prepare(true);
 
   auto str = Util::StringFormat("World seed is %lu", RNG::Instance().Seed);
   Logger::Instance().Print(str);

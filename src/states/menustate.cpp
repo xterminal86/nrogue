@@ -65,6 +65,20 @@ void MenuState::Update(bool forceUpdate)
     Printer::Instance().PrintFB(halfW, halfH + 2, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
     Printer::Instance().PrintFB(tw - 2, th - 2, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
 
+    std::string builtWith;
+
+    #ifdef USE_SDL
+    builtWith = "powered by SDL2";
+    #else
+      #if defined(__unix__) || defined(__linux__)
+      builtWith = "powered by pdcurses";
+      #else
+      builtWith = "powered by ncurses";
+      #endif
+    #endif
+
+    Printer::Instance().PrintFB(halfW, th - 2, builtWith, Printer::kAlignCenter, "#FFFFFF");
+
     auto debugInfo = Util::StringFormat("terminal size: %ix%i", tw, th);
     Printer::Instance().PrintFB(1, th - 2, debugInfo, Printer::kAlignLeft, "#FFFFFF");
 

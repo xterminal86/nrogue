@@ -24,36 +24,75 @@ void Printer::InitForSDL()
   if (surf)
   {
     _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
-    SDL_FreeSurface(surf);
-
-    int w = 0, h = 0;
-    SDL_QueryTexture(_tileset, nullptr, nullptr, &w, &h);
-
-    _tilesetWidth = w;
-    _tilesetHeight = h;
-
-    char asciiIndex = 0;
-    int tileIndex = 0;
-    for (int y = 0; y < h; y += _tileHeight)
-    {
-      for (int x = 0; x < w; x += _tileWidth)
-      {
-        TileInfo ti;
-        ti.X = x;
-        ti.Y = y;
-        _tiles.push_back(ti);
-
-        _tileIndexByChar[asciiIndex] = tileIndex;
-
-        asciiIndex++;
-        tileIndex++;        
-      }
-    }
+    SDL_FreeSurface(surf);    
   }
   else
   {
-    printf("Could not load tileset: %s!\n", SDL_GetError());
+    auto str = Util::StringFormat("***** Could not load tileset: %s! *****\nFalling back to embedded.\n", SDL_GetError());
+    printf("%s\n", str.data());
+    Logger::Instance().Print(str);
+
+    _tileWidth = 8;
+    _tileHeight = 16;
+
+    auto res = Util::Base64_Decode(GlobalConstants::Tileset8x16Base64);
+    auto bytes = Util::ConvertStringToBytes(res);
+    SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
+    surf = IMG_Load_RW(data, 1);
+    if (!surf)
+    {
+      auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", IMG_GetError());
+      printf("%s\n", str.data());
+      Logger::Instance().Print(str);
+    }
+
+    _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
+    SDL_FreeSurface(surf);
   }
+
+  int w = 0, h = 0;
+  SDL_QueryTexture(_tileset, nullptr, nullptr, &w, &h);
+
+  _tilesetWidth = w;
+  _tilesetHeight = h;
+
+  char asciiIndex = 0;
+  int tileIndex = 0;
+  for (int y = 0; y < h; y += _tileHeight)
+  {
+    for (int x = 0; x < w; x += _tileWidth)
+    {
+      TileInfo ti;
+      ti.X = x;
+      ti.Y = y;
+      _tiles.push_back(ti);
+
+      _tileIndexByChar[asciiIndex] = tileIndex;
+
+      asciiIndex++;
+      tileIndex++;
+    }
+  }
+}
+
+void Printer::DrawImage(const int& x, const int& y, SDL_Texture* tex)
+{
+  int tw, th;
+  SDL_QueryTexture(tex, nullptr, nullptr, &tw, &th);
+
+  SDL_Rect src;
+  src.x = 0;
+  src.y = 0;
+  src.w = tw;
+  src.h = th;
+
+  SDL_Rect dst;
+  dst.x = x;
+  dst.y = y;
+  dst.w = tw;
+  dst.h = th;
+
+  SDL_RenderCopy(Application::Instance().Renderer, tex, &src, &dst);
 }
 
 void Printer::DrawTile(int x, int y, int tileIndex)
