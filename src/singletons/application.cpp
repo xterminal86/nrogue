@@ -334,22 +334,62 @@ void Application::InitSDL()
   int tilesetWidth = 0;
   int tilesetHeight = 0;
 
-  TileWidth = (int)((float)TileWidth * ScaleFactor);
-  TileHeight = (int)((float)TileHeight * ScaleFactor);
-
   const int kTerminalWidth = 80;
   const int kTerminalHeight = 24;
-  const int kWindowWidth = kTerminalWidth * TileWidth;
-  const int kWindowHeight = kTerminalHeight * TileHeight;
 
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
   {
     printf("SDL_Init Error: %s\n", SDL_GetError());
+    return;
   }
+
+  std::ifstream config("config.txt");
+  if (config.is_open())
+  {
+    std::string line;
+    while (std::getline(config, line))
+    {
+      auto res = Util::StringSplit(line, '=');
+      if (res.size() > 1)
+      {
+        _config.emplace(res[0], res[1]);
+      }
+    }
+  }
+
+  config.close();
+
+  if (_config.count("FILE") != 0)
+  {
+    TilesetFilename = _config["FILE"];
+  }
+
+  if (_config.count("TILE_W") != 0
+   && _config.count("TILE_H") != 0)
+  {
+    TileWidth = std::stoi(_config["TILE_W"]);
+    TileHeight = std::stoi(_config["TILE_H"]);
+  }
+  else
+  {
+    TileWidth = 8;
+    TileHeight = 16;
+  }
+
+  if (_config.count("SCALE") != 0)
+  {
+    ScaleFactor = std::stof(_config["SCALE"]);
+  }
+
+  int scaledW = (int)((float)TileWidth * ScaleFactor);
+  int scaledH = (int)((float)TileHeight * ScaleFactor);
+
+  int ww = kTerminalWidth * scaledW;
+  int wh = kTerminalHeight * scaledH;
 
   Window = SDL_CreateWindow("nrogue",
                             50, 50,
-                            kWindowWidth, kWindowHeight,
+                            ww, wh,
                             SDL_WINDOW_SHOWN);
 
   int drivers = SDL_GetNumRenderDrivers();

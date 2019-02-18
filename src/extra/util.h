@@ -71,6 +71,34 @@ struct Position
 
 namespace Util
 {
+  inline std::vector<std::string> StringSplit(const std::string& str, char delim)
+  {
+    std::vector<std::string> res = { str };
+
+    for (size_t i = 0; i < str.length(); i++)
+    {
+      if (str[i] == delim)
+      {
+        res.clear();
+
+        std::string before = str.substr(0, i);
+        std::string after;
+
+        if (i + 1 < str.length())
+        {
+          after = str.substr(i + 1, str.length() - i + 1);
+        }
+
+        res.push_back(before);
+        res.push_back(after);
+
+        break;
+      }
+    }
+
+    return res;
+  }
+
   // *** https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c
 
   inline bool IsBase64(unsigned char c)

@@ -171,6 +171,9 @@ class Printer : public Singleton<Printer>
     int _tileWidth = 0;
     int _tileHeight = 0;
 
+    int _tileWidthScaled = 0;
+    int _tileHeightScaled = 0;
+
     void InitForSDL();
 
     void DrawTile(int x, int y, int tileIndex);

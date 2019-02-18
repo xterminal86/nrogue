@@ -15,16 +15,19 @@ void Printer::Init()
 #ifdef USE_SDL
 void Printer::InitForSDL()
 {
-  std::string tilesetFile = TILESET_FILE;
+  std::string tilesetFile = Application::Instance().TilesetFilename;
 
-  _tileWidth = TILESET_WIDTH;
-  _tileHeight = TILESET_HEIGHT;
+  _tileWidth = 0;
+  _tileHeight = 0;
 
   SDL_Surface* surf = IMG_Load(tilesetFile.data());
   if (surf)
   {
     _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
-    SDL_FreeSurface(surf);    
+    SDL_FreeSurface(surf);
+
+    _tileWidth = Application::Instance().TileWidth;
+    _tileHeight = Application::Instance().TileHeight;
   }
   else
   {
@@ -49,6 +52,9 @@ void Printer::InitForSDL()
     _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
     SDL_FreeSurface(surf);
   }
+
+  _tileWidthScaled = _tileWidth * Application::Instance().ScaleFactor;
+  _tileHeightScaled = _tileHeight * Application::Instance().ScaleFactor;
 
   int w = 0, h = 0;
   SDL_QueryTexture(_tileset, nullptr, nullptr, &w, &h);
@@ -105,14 +111,11 @@ void Printer::DrawTile(int x, int y, int tileIndex)
   src.w = _tileWidth;
   src.h = _tileHeight;
 
-  int scaledW = Application::Instance().TileWidth;
-  int scaledH = Application::Instance().TileHeight;
-
   SDL_Rect dst;
   dst.x = x;
   dst.y = y;
-  dst.w = scaledW;
-  dst.h = scaledH;
+  dst.w = _tileWidthScaled;
+  dst.h = _tileHeightScaled;
 
   SDL_RenderCopy(Application::Instance().Renderer, _tileset, &src, &dst);
 }
@@ -126,11 +129,8 @@ void Printer::PrintFB(const int& x, const int& y,
 
   int tileIndex = image;
 
-  int scaledW = Application::Instance().TileWidth;
-  int scaledH = Application::Instance().TileHeight;
-
-  int posX = x * scaledW;
-  int posY = y * scaledH;
+  int posX = x * _tileWidthScaled;
+  int posY = y * _tileHeightScaled;
 
   if (htmlColorBg.length() != 0)
   {
@@ -150,24 +150,21 @@ void Printer::PrintFB(const int& x, const int& y,
                       const std::string& htmlColorFg,
                       const std::string& htmlColorBg)
 {
-  int scaledW = Application::Instance().TileWidth;
-  int scaledH = Application::Instance().TileHeight;
-
-  int px = x * scaledW;
-  int py = y * scaledH;
+  int px = x * _tileWidthScaled;
+  int py = y * _tileHeightScaled;
 
   switch (align)
   {
     case kAlignCenter:
     {
-      int pixelWidth = text.length() * scaledW;
+      int pixelWidth = text.length() * _tileWidthScaled;
       px -= pixelWidth / 2;
     }
     break;
 
     case kAlignRight:
     {
-      int pixelWidth = text.length() * scaledW;
+      int pixelWidth = text.length() * _tileWidthScaled;
       px -= pixelWidth;
     }
     break;
@@ -188,7 +185,7 @@ void Printer::PrintFB(const int& x, const int& y,
     SDL_SetTextureColorMod(_tileset, tc.R, tc.G, tc.B);
     DrawTile(px, py, c);
 
-    px += scaledW;
+    px += _tileWidthScaled;
   }
 }
 

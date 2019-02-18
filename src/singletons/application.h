@@ -49,10 +49,12 @@ class Application : public Singleton<Application>
     SDL_Renderer* Renderer = nullptr;
     SDL_Window* Window = nullptr;
 
-    float ScaleFactor = TILES_SCALE_FACTOR;
+    float ScaleFactor = 1.0f;
 
-    int TileWidth = TILESET_WIDTH;
-    int TileHeight = TILESET_HEIGHT;
+    int TileWidth = 0;
+    int TileHeight = 0;
+
+    std::string TilesetFilename;
     #endif
 
   private:
@@ -64,6 +66,7 @@ class Application : public Singleton<Application>
     void InitGraphics();
 
     #ifdef USE_SDL
+    std::map<std::string, std::string> _config;
     void InitSDL();
     #else
     void InitCurses();
