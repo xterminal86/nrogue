@@ -71,9 +71,9 @@ void MenuState::Update(bool forceUpdate)
     builtWith = "powered by SDL2";
     #else
       #if defined(__unix__) || defined(__linux__)
-      builtWith = "powered by pdcurses";
-      #else
       builtWith = "powered by ncurses";
+      #else
+      builtWith = "powered by pdcurses";
       #endif
     #endif
 
