@@ -36,7 +36,7 @@ void IntroState::Update(bool forceUpdate)
   auto msPassed = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed);
 
   if (msPassed > kTextPrintDelay)
-  {
+  {    
     _lastTime = std::chrono::high_resolution_clock::now();
 
     int textIndex = Application::Instance().PlayerInstance.SelectedClass;
@@ -64,7 +64,7 @@ void IntroState::Update(bool forceUpdate)
     }
     else
     {
-      Printer::Instance().PrintFB(Printer::Instance().TerminalWidth / 2, Printer::Instance().TerminalHeight - 1, "Press 'Enter' to continue", Printer::kAlignCenter, "#FFFFFF");
+      Printer::Instance().PrintFB(Printer::Instance().TerminalWidth / 2, Printer::Instance().TerminalHeight - 1, "Press 'Enter' to continue", Printer::kAlignCenter, "#FFFFFF");      
     }
   }
 

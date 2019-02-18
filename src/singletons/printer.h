@@ -161,6 +161,7 @@ class Printer : public Singleton<Printer>
     void InitForCurses();
     #else
     SDL_Texture* _tileset = nullptr;
+    SDL_Texture* _frameBuffer = nullptr;
 
     int _tilesetWidth = 0;
     int _tilesetHeight = 0;

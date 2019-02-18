@@ -54,6 +54,9 @@ class Application : public Singleton<Application>
     int TileWidth = 0;
     int TileHeight = 0;
 
+    int WindowWidth = 0;
+    int WindowHeight = 0;
+
     std::string TilesetFilename;
     #endif
 

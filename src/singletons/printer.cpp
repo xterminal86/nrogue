@@ -62,6 +62,12 @@ void Printer::InitForSDL()
   _tilesetWidth = w;
   _tilesetHeight = h;
 
+  _frameBuffer = SDL_CreateTexture(Application::Instance().Renderer,
+                                   SDL_PIXELFORMAT_RGBA32,
+                                   SDL_TEXTUREACCESS_TARGET,
+                                   Application::Instance().WindowWidth,
+                                   Application::Instance().WindowHeight);
+
   char asciiIndex = 0;
   int tileIndex = 0;
   for (int y = 0; y < h; y += _tileHeight)
@@ -98,6 +104,7 @@ void Printer::DrawImage(const int& x, const int& y, SDL_Texture* tex)
   dst.w = tw;
   dst.h = th;
 
+  SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
   SDL_RenderCopy(Application::Instance().Renderer, tex, &src, &dst);
 }
 
@@ -117,6 +124,7 @@ void Printer::DrawTile(int x, int y, int tileIndex)
   dst.w = _tileWidthScaled;
   dst.h = _tileHeightScaled;
 
+  SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
   SDL_RenderCopy(Application::Instance().Renderer, _tileset, &src, &dst);
 }
 
@@ -492,6 +500,7 @@ void Printer::Clear()
     }
   }
 #else
+  SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
   SDL_RenderClear(Application::Instance().Renderer);
 #endif
 }
@@ -511,6 +520,9 @@ void Printer::Render()
 
   refresh();
 #else
+  SDL_SetRenderTarget(Application::Instance().Renderer, nullptr);
+  SDL_RenderClear(Application::Instance().Renderer);
+  SDL_RenderCopy(Application::Instance().Renderer, _frameBuffer, nullptr, nullptr);
   SDL_RenderPresent(Application::Instance().Renderer);
 #endif
 }

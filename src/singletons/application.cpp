@@ -70,7 +70,7 @@ void Application::Run()
     // since we might get the same situation in Update().
 
     _currentState->Update();
-    _currentState->HandleInput();
+    _currentState->HandleInput();    
   }
 }
 
@@ -387,6 +387,9 @@ void Application::InitSDL()
   int ww = kTerminalWidth * scaledW;
   int wh = kTerminalHeight * scaledH;
 
+  WindowWidth = ww;
+  WindowHeight = wh;
+
   Window = SDL_CreateWindow("nrogue",
                             50, 50,
                             ww, wh,
@@ -399,10 +402,13 @@ void Application::InitSDL()
     SDL_RendererInfo info;
     SDL_GetRenderDriverInfo(i, &info);
 
-    Renderer = SDL_CreateRenderer(Window, i, info.flags);
-    if (Renderer != nullptr)
+    if (info.flags & SDL_RENDERER_TARGETTEXTURE)
     {
-      break;
+      Renderer = SDL_CreateRenderer(Window, i, info.flags);
+      if (Renderer != nullptr)
+      {
+        break;
+      }
     }
   }
 
