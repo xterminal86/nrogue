@@ -49,7 +49,8 @@ class GameState
       "Up",
       "Down",
       "Left",
-      "Right"
+      "Right",
+      "Left Ctrl"
     };
 #endif
 

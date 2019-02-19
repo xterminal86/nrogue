@@ -226,7 +226,7 @@ void Player::SetSoldierAttrs()
 void Player::SetThiefAttrs()
 {
   Attrs.Spd.Talents = 3;
-  Attrs.Skl.Talents = 3;
+  Attrs.Skl.Talents = 2;
   Attrs.Def.Talents = 1;
   Attrs.HP.Talents = 1;
 
@@ -245,7 +245,7 @@ void Player::SetThiefAttrs()
 void Player::SetArcanistAttrs()
 {
   Attrs.Mag.Talents = 3;
-  Attrs.Res.Talents = 3;
+  Attrs.Res.Talents = 2;
   Attrs.Spd.Talents = 1;
   Attrs.MP.Talents = 3;
 

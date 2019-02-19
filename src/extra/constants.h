@@ -882,7 +882,7 @@ namespace GlobalConstants
   };
 
   static const std::map<ArmorType, std::string> ArmorNameByType =
-  {
+  {    
     { ArmorType::PADDING, "Gambeson"         },
     { ArmorType::LEATHER, "Leather Lammelar" },
     { ArmorType::MAIL,    "Mail Hauberk"     },
