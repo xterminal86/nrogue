@@ -79,7 +79,7 @@ void MessageBoxState::Update(bool forceUpdate)
       header.insert(0, " ");
       header.append(" ");
 
-      Printer::Instance().PrintFB(tw / 2, y1, header, Printer::kAlignCenter, "#FFFFFF");      
+      Printer::Instance().PrintFB(tw / 2, y1, header, Printer::kAlignCenter, "#FFFFFF", "#4444FF");
     }
 
     int offset = 0;
