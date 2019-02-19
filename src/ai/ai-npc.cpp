@@ -557,7 +557,7 @@ void AINPC::SetDataMaya()
 
   TraderComponent* tc = AIComponentRef->OwnerGameObject->AddComponent<TraderComponent>();
   tc->NpcRef = this;
-  tc->Init(TraderRole::JUNKER, 1000, 15);
+  tc->Init(TraderRole::JUNKER, 1000, 8);
 }
 
 void AINPC::SetDataDefault()
