@@ -6,3 +6,4 @@ core.*
 *.txt
 *.out
 *.exe
+config.txt
