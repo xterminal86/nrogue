@@ -4,6 +4,5 @@ CMakeLists.txt.user*
 nrogue
 core.*
 *.txt
-!config.txt
 *.out
 *.exe
