@@ -728,15 +728,11 @@ namespace Util
 
     auto delay = ms(delayMs);
 
-    auto lastTime = timer::now();
-
-    auto elapsed = timer::now() - lastTime;
-    auto msPassed = std::chrono::duration_cast<ms>(elapsed);
-
-    while (msPassed < delay)
+    auto now = timer::now();
+    auto goal = now + delay;
+    while (now < goal)
     {
-      elapsed = timer::now() - lastTime;
-      msPassed = std::chrono::duration_cast<ms>(elapsed);
+      now = timer::now();
     }
     #endif
   }

@@ -300,7 +300,7 @@ void MainState::Update(bool forceUpdate)
 
     // FIXME: Some debug info
 
-    PrintDebugInfo();
+    // PrintDebugInfo();
 
     // *****
 

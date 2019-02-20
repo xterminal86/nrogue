@@ -188,6 +188,8 @@ enum class PlayerSkills
   RECHARGE = 0,
   // Use repair kit to repair a weapon (starting, Soldier)
   REPAIR,
+  // Allows character to cast spells
+  SPELLCASTING,
   // Show enemy stats (currently by pressing Enter in Look Mode)
   AWARENESS
 };
@@ -546,6 +548,20 @@ enum class NameCP437
   DRCORNER_1 = 217,
   HBAR_1 = 196,
   VBAR_1 = 179,
+  ULCORNER_2 = 201,
+  DLCORNER_2 = 200,
+  URCORNER_2 = 187,
+  DRCORNER_2 = 188,
+  HBAR_2 = 205,
+  VBAR_2 = 186,
+  ULCORNER_3 = 222,
+  DLCORNER_3 = 222,
+  URCORNER_3 = 221,
+  DRCORNER_3 = 221,
+  HBAR_3U = 223,
+  HBAR_3D = 220,
+  VBAR_3L = 222,
+  VBAR_3R = 221,
   BLOCK = 219,
   WAVES = 247,
 };
@@ -723,7 +739,21 @@ namespace GlobalConstants
     { NameCP437::DRCORNER_1,   (int)NameCP437::DRCORNER_1   },
     { NameCP437::DLCORNER_1,   (int)NameCP437::DLCORNER_1   },
     { NameCP437::HBAR_1,       (int)NameCP437::HBAR_1       },
-    { NameCP437::VBAR_1,       (int)NameCP437::VBAR_1       }
+    { NameCP437::VBAR_1,       (int)NameCP437::VBAR_1       },
+    { NameCP437::URCORNER_2,   (int)NameCP437::URCORNER_2   },
+    { NameCP437::ULCORNER_2,   (int)NameCP437::ULCORNER_2   },
+    { NameCP437::DRCORNER_2,   (int)NameCP437::DRCORNER_2   },
+    { NameCP437::DLCORNER_2,   (int)NameCP437::DLCORNER_2   },
+    { NameCP437::HBAR_2,       (int)NameCP437::HBAR_2       },
+    { NameCP437::VBAR_2,       (int)NameCP437::VBAR_2       },
+    { NameCP437::URCORNER_3,   (int)NameCP437::URCORNER_3   },
+    { NameCP437::ULCORNER_3,   (int)NameCP437::ULCORNER_3   },
+    { NameCP437::DRCORNER_3,   (int)NameCP437::DRCORNER_3   },
+    { NameCP437::DLCORNER_3,   (int)NameCP437::DLCORNER_3   },
+    { NameCP437::HBAR_3U,      (int)NameCP437::HBAR_3U      },
+    { NameCP437::HBAR_3D,      (int)NameCP437::HBAR_3D      },
+    { NameCP437::VBAR_3L,      (int)NameCP437::VBAR_3L      },
+    { NameCP437::VBAR_3R,      (int)NameCP437::VBAR_3R      }
   };
 
   static const std::string Base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -771,15 +801,17 @@ namespace GlobalConstants
   static const std::string MessageBoxDefaultBgColor = "#222222";
   static const std::string MessageBoxDefaultBorderColor = "#666666";
   static const std::string MessageBoxRedBorderColor = "#880000";
+  static const std::string MessageBoxHeaderBgColor = "#4444AA";
   static const std::string ItemMagicColor = "#4169E1";
   static const std::string ItemRareColor = "#CCCC52";
   static const std::string ItemUniqueColor = "#A59263";
 
   static const std::map<PlayerSkills, std::string> SkillNameByType =
   {
-    { PlayerSkills::REPAIR,    "Repair" },
-    { PlayerSkills::RECHARGE,  "Recharge" },
-    { PlayerSkills::AWARENESS, "Awareness" },
+    { PlayerSkills::REPAIR,        "Repair"       },
+    { PlayerSkills::RECHARGE,      "Recharge"     },
+    { PlayerSkills::SPELLCASTING,  "Spellcasting" },
+    { PlayerSkills::AWARENESS,     "Awareness"    }
   };
 
   static const std::map<TraderRole, std::string> ShopNameByType =

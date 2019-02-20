@@ -61,6 +61,7 @@ void MessageBoxState::Update(bool forceUpdate)
     int x2 = x1 + len + 5;
     int y2 = y1 + rows;
 
+    #ifndef USE_SDL
     auto area = Util::GetScreenRect(x1, y1, x2, y2);
     for (auto& p : area)
     {
@@ -88,6 +89,29 @@ void MessageBoxState::Update(bool forceUpdate)
       Printer::Instance().PrintFB(tw / 2, th / 2 - _message.size() / 2 + offset, s, Printer::kAlignCenter, "#FFFFFF", _bgColor);
       offset++;
     }
+    #else
+
+    std::string headerBgColor = GlobalConstants::MessageBoxHeaderBgColor;
+    if (_borderColor == GlobalConstants::MessageBoxRedBorderColor)
+    {
+      headerBgColor = "#660000";
+    }
+
+    Printer::Instance().DrawWindow({ x1, y1 }, { x2 - x1, y2 - y1 },
+                                   _header,
+                                   headerBgColor,
+                                   _borderColor,
+                                   "#000000",
+                                   _bgColor);
+
+    int offset = 0;
+    for (auto& s : _message)
+    {
+      Printer::Instance().PrintFB(tw / 2, th / 2 - _message.size() / 2 + offset, s, Printer::kAlignCenter, "#FFFFFF", _bgColor);
+      offset++;
+    }
+
+    #endif
 
     Printer::Instance().Render();
   }

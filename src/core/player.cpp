@@ -966,6 +966,7 @@ void Player::SetDefaultSkills()
 
     case PlayerClass::ARCANIST:
       SkillLevelBySkill[PlayerSkills::RECHARGE] = 1;
+      SkillLevelBySkill[PlayerSkills::SPELLCASTING] = 1;
       break;
 
     case PlayerClass::THIEF:

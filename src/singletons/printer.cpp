@@ -92,6 +92,7 @@ void Printer::DrawWindow(const Position& leftCorner,
                          const std::string& header,
                          const std::string& headerBgColor,
                          const std::string& borderColor,
+                         const std::string& borderBgColor,
                          const std::string& bgColor)
 {
   auto res = Util::GetPerimeter(leftCorner.X, leftCorner.Y,
@@ -100,12 +101,25 @@ void Printer::DrawWindow(const Position& leftCorner,
   int x = leftCorner.X;
   int y = leftCorner.Y;
 
-  int ulCorner = GlobalConstants::CP437IndexByType[NameCP437::ULCORNER_1];
-  int urCorner = GlobalConstants::CP437IndexByType[NameCP437::URCORNER_1];
-  int dlCorner = GlobalConstants::CP437IndexByType[NameCP437::DLCORNER_1];
-  int drCorner = GlobalConstants::CP437IndexByType[NameCP437::DRCORNER_1];
-  int hBar = GlobalConstants::CP437IndexByType[NameCP437::HBAR_1];
-  int vBar = GlobalConstants::CP437IndexByType[NameCP437::VBAR_1];
+  int ulCorner = GlobalConstants::CP437IndexByType[NameCP437::ULCORNER_2];
+  int urCorner = GlobalConstants::CP437IndexByType[NameCP437::URCORNER_2];
+  int dlCorner = GlobalConstants::CP437IndexByType[NameCP437::DLCORNER_2];
+  int drCorner = GlobalConstants::CP437IndexByType[NameCP437::DRCORNER_2];
+  int hBarU = GlobalConstants::CP437IndexByType[NameCP437::HBAR_2];
+  int hBarD = GlobalConstants::CP437IndexByType[NameCP437::HBAR_2];
+  int vBarL = GlobalConstants::CP437IndexByType[NameCP437::VBAR_2];
+  int vBarR = GlobalConstants::CP437IndexByType[NameCP437::VBAR_2];
+
+  /*
+  int ulCorner = GlobalConstants::CP437IndexByType[NameCP437::ULCORNER_3];
+  int urCorner = GlobalConstants::CP437IndexByType[NameCP437::URCORNER_3];
+  int dlCorner = GlobalConstants::CP437IndexByType[NameCP437::DLCORNER_3];
+  int drCorner = GlobalConstants::CP437IndexByType[NameCP437::DRCORNER_3];
+  int hBarU = GlobalConstants::CP437IndexByType[NameCP437::HBAR_3U];
+  int hBarD = GlobalConstants::CP437IndexByType[NameCP437::HBAR_3D];
+  int vBarL = GlobalConstants::CP437IndexByType[NameCP437::VBAR_3L];
+  int vBarR = GlobalConstants::CP437IndexByType[NameCP437::VBAR_3R];
+  */
 
   // Fill background
 
@@ -119,30 +133,34 @@ void Printer::DrawWindow(const Position& leftCorner,
 
   // Corners
 
-  PrintFB(x, y, ulCorner, borderColor, bgColor);
-  PrintFB(x + size.X, y, urCorner, borderColor, bgColor);
-  PrintFB(x, y + size.Y, dlCorner, borderColor, bgColor);
-  PrintFB(x + size.X, y + size.Y, drCorner, borderColor, bgColor);
+  PrintFB(x, y, ulCorner, borderColor, borderBgColor);
+  PrintFB(x + size.X, y, urCorner, borderColor, borderBgColor);
+  PrintFB(x, y + size.Y, dlCorner, borderColor, borderBgColor);
+  PrintFB(x + size.X, y + size.Y, drCorner, borderColor, borderBgColor);
 
   // Horizontal bars
 
   for (int i = x + 1; i < x + size.X; i++)
   {
-    PrintFB(i, y, hBar, borderColor, bgColor);
-    PrintFB(i, y + size.Y, hBar, borderColor, bgColor);
+    PrintFB(i, y, hBarU, borderColor, borderBgColor);
+    PrintFB(i, y + size.Y, hBarD, borderColor, borderBgColor);
   }
 
   // Vertical bars
 
   for (int i = y + 1; i < y + size.Y; i++)
   {
-    PrintFB(x, i, vBar, borderColor, bgColor);
-    PrintFB(x + size.X, i, vBar, borderColor, bgColor);
+    PrintFB(x, i, vBarL, borderColor, borderBgColor);
+    PrintFB(x + size.X, i, vBarR, borderColor, borderBgColor);
   }
 
   if (header.length() != 0)
   {
-    PrintFB(x + size.X / 2, y, header, kAlignCenter, "#FFFFFF", headerBgColor);
+    std::string lHeader = header;
+    lHeader.insert(0, " ");
+    lHeader.append(" ");
+
+    PrintFB(TerminalWidth / 2, y, lHeader, kAlignCenter, "#FFFFFF", headerBgColor);
   }
 }
 

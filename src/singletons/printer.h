@@ -104,6 +104,7 @@ class Printer : public Singleton<Printer>
                     const std::string& header = std::string{},
                     const std::string& headerBgColor = "#000000",
                     const std::string& borderColor = "#FFFFFF",
+                    const std::string& borderBgColor = "#000000",
                     const std::string& bgColor = "#000000");
 
 #endif
