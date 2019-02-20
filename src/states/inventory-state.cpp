@@ -365,7 +365,8 @@ void InventoryState::DropItem()
   // so reference to the level where object was originally
   // created will become invalid and it will not be drawn.
   // Well, actually it will be drawn, but using original
-  // _levelOwner->MapOffsetX and Y which might be different.
+  // _levelOwner->MapOffsetX and Y, which might be different
+  // or out of bounds on current level.
   ic->OwnerGameObject->SetLevelOwner(Map::Instance().CurrentLevel);
 
   ic->Transfer();

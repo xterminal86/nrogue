@@ -60,7 +60,13 @@ void EnterNameState::Update(bool forceUpdate)
     int x = Printer::Instance().TerminalWidth / 2;
     int y = Printer::Instance().TerminalHeight / 2;
 
-    Printer::Instance().PrintFB(x, y - 2, "What is your name?", Printer::kAlignCenter, "#FFFFFF");
+    #ifdef USE_SDL
+    Printer::Instance().DrawWindow({ x - GlobalConstants::MaxNameLength / 2, y - 2 },
+                                   { GlobalConstants::MaxNameLength, 4 },
+                                   kHeaderString,
+                                   GlobalConstants::MessageBoxHeaderBgColor);
+    #else
+    Printer::Instance().PrintFB(x, y - 2, kHeaderString, Printer::kAlignCenter, "#FFFFFF");
 
     auto border = Util::GetPerimeter(x - GlobalConstants::MaxNameLength / 2,
                                      y - 3,
@@ -71,6 +77,7 @@ void EnterNameState::Update(bool forceUpdate)
     {
       Printer::Instance().PrintFB(i.X, i.Y, '*', "#FFFFFF");
     }
+    #endif
 
     if (_nameEntered.length() == 0)
     {
