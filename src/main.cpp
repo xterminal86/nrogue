@@ -29,7 +29,7 @@
 // Traps, secrets
 // Locked doors / chests
 
-// NOTE: When building in Windows, main() must have "full" signature
+// NOTE: When building with SDL2 in Windows, main() must have "full" signature
 // i.e. (int argc, char* agrv[]) or you'll get "undefined reference to SDLmain"
 //
 // You also need to manually add "File" in "Projects" tab of cmake config
