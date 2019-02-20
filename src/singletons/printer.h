@@ -30,6 +30,8 @@ struct TileInfo
   std::string Data;
 };
 
+class Position;
+
 #else
 struct FBPixel
 {
@@ -97,6 +99,12 @@ class Printer : public Singleton<Printer>
                  const std::string& htmlColorBg = "#000000");
 
     void DrawImage(const int& x, const int& y, SDL_Texture* tex);
+    void DrawWindow(const Position& leftCorner,
+                    const Position& size,
+                    const std::string& header = std::string{},
+                    const std::string& headerBgColor = "#000000",
+                    const std::string& borderColor = "#FFFFFF",
+                    const std::string& bgColor = "#000000");
 
 #endif
 

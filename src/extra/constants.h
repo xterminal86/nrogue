@@ -540,6 +540,12 @@ enum class NameCP437
   LRARROW,
   UARROW_2,
   DARROW_2,
+  ULCORNER_1 = 218,
+  DLCORNER_1 = 192,
+  URCORNER_1 = 191,
+  DRCORNER_1 = 217,
+  HBAR_1 = 196,
+  VBAR_1 = 179,
   BLOCK = 219,
   WAVES = 247,
 };
@@ -711,7 +717,13 @@ namespace GlobalConstants
     { NameCP437::UARROW_2,     (int)NameCP437::UARROW_2     },
     { NameCP437::DARROW_2,     (int)NameCP437::DARROW_2     },
     { NameCP437::BLOCK,        (int)NameCP437::BLOCK        },
-    { NameCP437::WAVES,        (int)NameCP437::WAVES        }
+    { NameCP437::WAVES,        (int)NameCP437::WAVES        },
+    { NameCP437::URCORNER_1,   (int)NameCP437::URCORNER_1   },
+    { NameCP437::ULCORNER_1,   (int)NameCP437::ULCORNER_1   },
+    { NameCP437::DRCORNER_1,   (int)NameCP437::DRCORNER_1   },
+    { NameCP437::DLCORNER_1,   (int)NameCP437::DLCORNER_1   },
+    { NameCP437::HBAR_1,       (int)NameCP437::HBAR_1       },
+    { NameCP437::VBAR_1,       (int)NameCP437::VBAR_1       }
   };
 
   static const std::string Base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

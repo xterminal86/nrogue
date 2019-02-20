@@ -87,6 +87,65 @@ void Printer::InitForSDL()
   }
 }
 
+void Printer::DrawWindow(const Position& leftCorner,
+                         const Position& size,
+                         const std::string& header,
+                         const std::string& headerBgColor,
+                         const std::string& borderColor,
+                         const std::string& bgColor)
+{
+  auto res = Util::GetPerimeter(leftCorner.X, leftCorner.Y,
+                                size.X, size.Y, true);
+
+  int x = leftCorner.X;
+  int y = leftCorner.Y;
+
+  int ulCorner = GlobalConstants::CP437IndexByType[NameCP437::ULCORNER_1];
+  int urCorner = GlobalConstants::CP437IndexByType[NameCP437::URCORNER_1];
+  int dlCorner = GlobalConstants::CP437IndexByType[NameCP437::DLCORNER_1];
+  int drCorner = GlobalConstants::CP437IndexByType[NameCP437::DRCORNER_1];
+  int hBar = GlobalConstants::CP437IndexByType[NameCP437::HBAR_1];
+  int vBar = GlobalConstants::CP437IndexByType[NameCP437::VBAR_1];
+
+  // Fill background
+
+  for (int i = x + 1; i < x + size.X; i++)
+  {
+    for (int j = y + 1; j < y + size.Y; j++)
+    {
+      PrintFB(i, j, ' ', "#000000", bgColor);
+    }
+  }
+
+  // Corners
+
+  PrintFB(x, y, ulCorner, borderColor, bgColor);
+  PrintFB(x + size.X, y, urCorner, borderColor, bgColor);
+  PrintFB(x, y + size.Y, dlCorner, borderColor, bgColor);
+  PrintFB(x + size.X, y + size.Y, drCorner, borderColor, bgColor);
+
+  // Horizontal bars
+
+  for (int i = x + 1; i < x + size.X; i++)
+  {
+    PrintFB(i, y, hBar, borderColor, bgColor);
+    PrintFB(i, y + size.Y, hBar, borderColor, bgColor);
+  }
+
+  // Vertical bars
+
+  for (int i = y + 1; i < y + size.Y; i++)
+  {
+    PrintFB(x, i, vBar, borderColor, bgColor);
+    PrintFB(x + size.X, i, vBar, borderColor, bgColor);
+  }
+
+  if (header.length() != 0)
+  {
+    PrintFB(x + size.X / 2, y, header, kAlignCenter, "#FFFFFF", headerBgColor);
+  }
+}
+
 void Printer::DrawImage(const int& x, const int& y, SDL_Texture* tex)
 {
   int tw, th;
@@ -104,7 +163,11 @@ void Printer::DrawImage(const int& x, const int& y, SDL_Texture* tex)
   dst.w = tw;
   dst.h = th;
 
-  SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
+  if (SDL_GetRenderTarget(Application::Instance().Renderer) == nullptr)
+  {
+    SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
+  }
+
   SDL_RenderCopy(Application::Instance().Renderer, tex, &src, &dst);
 }
 
@@ -124,7 +187,11 @@ void Printer::DrawTile(int x, int y, int tileIndex)
   dst.w = _tileWidthScaled;
   dst.h = _tileHeightScaled;
 
-  SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
+  if (SDL_GetRenderTarget(Application::Instance().Renderer) == nullptr)
+  {
+    SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
+  }
+
   SDL_RenderCopy(Application::Instance().Renderer, _tileset, &src, &dst);
 }
 
