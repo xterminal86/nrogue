@@ -102,6 +102,7 @@ class Printer : public Singleton<Printer>
     void DrawWindow(const Position& leftCorner,
                     const Position& size,
                     const std::string& header = std::string{},
+                    const std::string& headerFgColor = "#FFFFFF",
                     const std::string& headerBgColor = "#000000",
                     const std::string& borderColor = "#FFFFFF",
                     const std::string& borderBgColor = "#000000",

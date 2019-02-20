@@ -99,6 +99,7 @@ void MessageBoxState::Update(bool forceUpdate)
 
     Printer::Instance().DrawWindow({ x1, y1 }, { x2 - x1, y2 - y1 },
                                    _header,
+                                   "#FFFFFF",
                                    headerBgColor,
                                    _borderColor,
                                    "#000000",

@@ -62,8 +62,9 @@ void EnterNameState::Update(bool forceUpdate)
 
     #ifdef USE_SDL
     Printer::Instance().DrawWindow({ x - GlobalConstants::MaxNameLength / 2, y - 2 },
-                                   { GlobalConstants::MaxNameLength, 4 },
+                                   { GlobalConstants::MaxNameLength + 1, 4 },
                                    kHeaderString,
+                                   "#FFFFFF",
                                    GlobalConstants::MessageBoxHeaderBgColor);
     #else
     Printer::Instance().PrintFB(x, y - 2, kHeaderString, Printer::kAlignCenter, "#FFFFFF");

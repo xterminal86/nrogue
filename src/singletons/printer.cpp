@@ -90,6 +90,7 @@ void Printer::InitForSDL()
 void Printer::DrawWindow(const Position& leftCorner,
                          const Position& size,
                          const std::string& header,
+                         const std::string& headerFgColor,
                          const std::string& headerBgColor,
                          const std::string& borderColor,
                          const std::string& borderBgColor,
@@ -160,7 +161,38 @@ void Printer::DrawWindow(const Position& leftCorner,
     lHeader.insert(0, " ");
     lHeader.append(" ");
 
-    PrintFB(TerminalWidth / 2, y, lHeader, kAlignCenter, "#FFFFFF", headerBgColor);
+    int stringPixelWidth = (lHeader.length() * _tileWidthScaled);
+    int headerPosX = x * _tileWidthScaled;
+    int headerPosY = y * _tileHeightScaled;
+
+    if (size.X % 2 != 0)
+    {
+      int toAdd = ((size.X + 1) / 2) * _tileWidthScaled;
+      headerPosX += toAdd;
+      headerPosX -= stringPixelWidth / 2;
+    }
+    else
+    {
+      int toAdd = (size.X / 2) * _tileWidthScaled;
+      headerPosX += toAdd;
+      headerPosX -= stringPixelWidth / 2;
+      headerPosX += _tileWidthScaled / 2;
+    }
+
+    SDL_SetTextureColorMod(_tileset, 255, 0, 0);
+
+    for (auto& c : lHeader)
+    {
+      TileColor tc = ConvertHtmlToRGB(headerBgColor);
+      SDL_SetTextureColorMod(_tileset, tc.R, tc.G, tc.B);
+      DrawTile(headerPosX, headerPosY, 219);
+
+      tc = ConvertHtmlToRGB(headerFgColor);
+      SDL_SetTextureColorMod(_tileset, tc.R, tc.G, tc.B);
+      DrawTile(headerPosX, headerPosY, c);
+
+      headerPosX += _tileWidthScaled;
+    }
   }
 }
 
@@ -251,7 +283,7 @@ void Printer::PrintFB(const int& x, const int& y,
     case kAlignCenter:
     {
       int pixelWidth = text.length() * _tileWidthScaled;
-      px -= pixelWidth / 2;
+      px -= pixelWidth / 2;      
     }
     break;
 
