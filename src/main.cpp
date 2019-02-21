@@ -32,9 +32,12 @@
 // NOTE: When building with SDL2 in Windows, main() must have "full" signature
 // i.e. (int argc, char* agrv[]) or you'll get "undefined reference to SDLmain"
 //
-// You also need to manually add "File" in "Projects" tab of cmake config
+// You also need to manually add "File" in "Projects" tab of QT Creator's cmake config
 // called SDL2_LIBRARY and point it to libSDL2.dll.a file
-
+//
+// In Linux everything should configure and build without problems,
+// provided you have distro specific ncurses-dev / SDL2-dev, SDL2_image-dev
+// packages installed.
 int main(int argc, char* argv[])
 {
   RNG::Instance().Init();
@@ -43,8 +46,14 @@ int main(int argc, char* argv[])
   //RNG::Instance().SetSeed(1544714037606745311);
   //RNG::Instance().SetSeed(1545127588351497486);
 
+  #ifdef RELEASE_BUILD
+  bool printLog = false;
+  #else
+  bool printLog = true;
+  #endif
+
   Logger::Instance().Init();
-  Logger::Instance().Prepare(true);
+  Logger::Instance().Prepare(printLog);
 
   auto str = Util::StringFormat("World seed is %lu", RNG::Instance().Seed);
   Logger::Instance().Print(str);

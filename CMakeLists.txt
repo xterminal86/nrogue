@@ -7,6 +7,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
 option(USE_SDL "Build with SDL2" false)
 option(RUN_TESTS "Run some tests" false)
 
+if (${CMAKE_BUILD_TYPE} MATCHES Release)
+  add_definitions(-DRELEASE_BUILD)
+else()
+  add_definitions(-DDEBUG_BUILD)
+endif()
+
 if (USE_SDL)
   add_definitions(-DUSE_SDL)
 endif()
