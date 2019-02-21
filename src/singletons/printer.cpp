@@ -165,6 +165,15 @@ void Printer::DrawWindow(const Position& leftCorner,
     int headerPosX = x * _tileWidthScaled;
     int headerPosY = y * _tileHeightScaled;
 
+    // size.X is actually gives + 1 (see corners PrintFBs above),
+    // so if size.X = 4 it means span from x to x + 4 end point.
+    // Thus, we either must align to string.length() / 2, or
+    // adjust header's position by adding additional _tileWidthScaled / 2,
+    // depending on size.X
+    //
+    // It's too long to explain thoroughly,
+    // just open some graphics editor and see for yourself.
+
     if (size.X % 2 != 0)
     {
       int toAdd = ((size.X + 1) / 2) * _tileWidthScaled;

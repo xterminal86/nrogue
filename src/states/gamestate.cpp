@@ -8,30 +8,28 @@ int GameState::GetKeyDown()
   SDL_Event event;
   SDL_PollEvent(&event);
 
-  static Uint32 now = SDL_GetTicks();
-  static Uint32 msPassed = now;
-  static bool pressed = false;
   static bool shiftPressed = false;
+  static char passThrough = 0;
 
   if (event.type == SDL_KEYDOWN)
   {
-    std::string keyName = SDL_GetKeyName(event.key.keysym.sym);
-    if (keyName == "Left Shift")
+    if (event.key.keysym.scancode == SDL_SCANCODE_LSHIFT)
     {
       shiftPressed = true;
     }
-    else if (ShouldPassThrough(keyName))
+    else if (ShouldPassThrough(event.key.keysym.scancode))
     {
       res = event.key.keysym.sym;
     }
     else
     {
-      char c = keyName[0];
-
-      //printf("Shift + %c\n", c);
+      // operator [] doesn't throw exception
+      char c = _charsByScancodes[event.key.keysym.scancode];
 
       if (shiftPressed)
       {
+        // printf("Shift + %c (%u;%i)\n", c, event.key.keysym.sym, (int)event.key.keysym.scancode);
+
         if (c == '2')
         {
           c = '@';
@@ -57,7 +55,8 @@ int GameState::GetKeyDown()
       }
       else
       {
-        //printf("%s\n", keyName.data());
+        // printf("%s (%u:%i)\n", SDL_GetKeyName(event.key.keysym.sym), event.key.keysym.sym, (int)event.key.keysym.scancode);
+
         char lowerCase = std::tolower(c);
         res = lowerCase;
       }
@@ -65,8 +64,7 @@ int GameState::GetKeyDown()
   }
   else if (event.type == SDL_KEYUP)
   {
-    std::string keyName = SDL_GetKeyName(event.key.keysym.sym);
-    if (keyName == "Left Shift")
+    if (event.key.keysym.scancode == SDL_SCANCODE_LSHIFT)
     {
       shiftPressed = false;
     }
@@ -80,9 +78,9 @@ int GameState::GetKeyDown()
 }
 
 #ifdef USE_SDL
-bool GameState::ShouldPassThrough(std::string& keyName)
-{
-  auto res = std::find(_validKeys.begin(), _validKeys.end(), keyName);
-  return (res != _validKeys.end());
+bool GameState::ShouldPassThrough(SDL_Scancode& sc)
+{  
+  auto res = std::find(_specialKeys.begin(), _specialKeys.end(), sc);
+  return (res != _specialKeys.end());
 }
 #endif
