@@ -4,10 +4,12 @@
 #include <cstddef>
 
 class AIComponent;
+class Player;
 
 class AIModelBase
 {
   public:
+    AIModelBase();
     virtual ~AIModelBase() {}
 
     virtual void Update() {}
@@ -16,8 +18,15 @@ class AIModelBase
 
     bool IsAgressive = false;
 
-  protected:
+    int AgroRadius = 0;
+
+  protected:    
     size_t _hash;
+
+    Player* _playerRef;
+
+    bool IsPlayerVisible();
+    bool IsPlayerInRange();
 };
 
 #endif

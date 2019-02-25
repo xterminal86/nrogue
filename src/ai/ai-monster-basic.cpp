@@ -9,8 +9,6 @@ AIMonsterBasic::AIMonsterBasic()
 {
   _hash = typeid(*this).hash_code();
 
-  _playerRef = &Application::Instance().PlayerInstance;
-
   IsAgressive = true;
 }
 
@@ -44,10 +42,10 @@ void AIMonsterBasic::Update()
 
 void AIMonsterBasic::MoveToKill()
 {
-  auto c = SelectCell();
-  if (c.X != -1 && c.Y != -1)
+  auto c = SelectCellNearestToPlayer();
+  if (c.size() != 0)
   {
-    bool res = AIComponentRef->OwnerGameObject->MoveTo(c.X, c.Y);
+    bool res = AIComponentRef->OwnerGameObject->MoveTo(c[0].X, c[0].Y);
     if (!res)
     {
       RandomMovement();
@@ -73,37 +71,11 @@ void AIMonsterBasic::RandomMovement()
   AIComponentRef->OwnerGameObject->Move(dx, dy);
 }
 
-bool AIMonsterBasic::IsPlayerVisible()
+std::vector<Position> AIMonsterBasic::SelectCellNearestToPlayer()
 {
-  int px = _playerRef->PosX;
-  int py = _playerRef->PosY;
-  int x = AIComponentRef->OwnerGameObject->PosX;
-  int y = AIComponentRef->OwnerGameObject->PosY;
+  std::vector<Position> res;
 
-  int d = Util::LinearDistance(x, y, px, py);
-  if (d > AgroRadius)
-  {
-    return false;
-  }
-  else
-  {
-    auto line = Util::BresenhamLine(x, y, px, py);
-    for (auto& c : line)
-    {
-      auto& cell = Map::Instance().CurrentLevel->MapArray[c.X][c.Y];
-      if (cell->Blocking || cell->BlocksSight)
-      {
-        return false;
-      }
-    }
-
-    return true;
-  }
-}
-
-Position AIMonsterBasic::SelectCell()
-{
-  Position c(-1, -1);
+  Position c;
 
   int px = _playerRef->PosX;
   int py = _playerRef->PosY;
@@ -118,6 +90,8 @@ Position AIMonsterBasic::SelectCell()
 
   int minD = AgroRadius + 1;
 
+  bool cellFound = false;
+
   for (int i = lx; i <= hx; i++)
   {
     for (int j = ly; j <= hy; j++)
@@ -128,6 +102,7 @@ Position AIMonsterBasic::SelectCell()
         int d = Util::BlockDistance(px, py, cell->PosX, cell->PosY);
         if (d < minD)
         {
+          cellFound = true;
           minD = d;
           c.Set(cell->PosX, cell->PosY);
         }
@@ -135,38 +110,18 @@ Position AIMonsterBasic::SelectCell()
     }
   }
 
-  return c;
-}
-
-bool AIMonsterBasic::IsPlayerInRange()
-{
-  int px = _playerRef->PosX;
-  int py = _playerRef->PosY;
-
-  int x = AIComponentRef->OwnerGameObject->PosX;
-  int y = AIComponentRef->OwnerGameObject->PosY;
-
-  int lx = x - 1;
-  int ly = y - 1;
-  int hx = x + 1;
-  int hy = y + 1;
-
-  for (int i = lx; i <= hx; i++)
+  if (cellFound)
   {
-    for (int j = ly; j <= hy; j++)
-    {
-      if (px == i && py == j)
-      {
-        return true;
-      }
-    }
+    res.push_back(c);
   }
 
-  return false;
+  return res;
 }
 
-void AIMonsterBasic::Attack(Player* player)
+bool AIMonsterBasic::Attack(Player* player)
 {  
+  bool result = false;
+
   int defaultHitChance = 50;
   int hitChance = defaultHitChance;
 
@@ -194,6 +149,8 @@ void AIMonsterBasic::Attack(Player* player)
 
   if (Util::Rolld100(hitChance))
   {
+    result = true;
+
     Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FF0000");
 
     int dmg = AIComponentRef->OwnerGameObject->Attrs.Str.Get() - player->Attrs.Def.Get();
@@ -214,6 +171,8 @@ void AIMonsterBasic::Attack(Player* player)
   }
   else
   {
+    result = false;
+
     Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
 
     auto str = Util::StringFormat("%s missed", AIComponentRef->OwnerGameObject->ObjectName.data());
@@ -222,4 +181,6 @@ void AIMonsterBasic::Attack(Player* player)
     Application::Instance().DrawCurrentState();
     Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs);
   }
+
+  return result;
 }

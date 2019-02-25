@@ -34,6 +34,8 @@ class Map : public Singleton<Map>
     std::pair<int, GameObject*> GetGameObjectToPickup(int x, int y);
     MapLevelBase* GetLevelRefByType(MapType type);
 
+    std::vector<Position> GetUnoccupiedCellsAround(const Position& pos);
+
     MapLevelBase* CurrentLevel;
 
   private:    

@@ -375,14 +375,22 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
 
 void Map::ShowLoadingText()
 {
+  std::string text = "Now loading...";
+
   int tw = Printer::Instance().TerminalWidth / 2;
   int th = Printer::Instance().TerminalHeight / 2;
-
-  std::string text = "Now loading...";
 
   int lx = tw - text.length() / 2;
   int hx = tw + text.length() / 2;
 
+  #ifdef USE_SDL
+  Printer::Instance().DrawWindow({ lx - 3, th - 3 },
+                                 { hx - lx + 5, 6 },
+                                 "",
+                                 "#FFFFFF",
+                                 GlobalConstants::MessageBoxHeaderBgColor,
+                                 "#444444");
+  #else
   for (int i = lx - 3; i < hx + 3; i++)
   {
     for (int j = th - 3; j <= th + 3; j++)
@@ -396,8 +404,10 @@ void Map::ShowLoadingText()
   {
     Printer::Instance().PrintFB(p.X, p.Y, ' ', "#000000", "#FFFFFF");
   }
+  #endif
 
   Printer::Instance().PrintFB(tw, th, text, Printer::kAlignCenter, "#FFFFFF");
+
   Printer::Instance().Render();
 }
 
@@ -455,4 +465,37 @@ void Map::PrintMapLayout()
 
   auto dbg = Util::StringFormat("Layout saved to %s", fname.data());
   Printer::Instance().AddMessage(dbg);
+}
+
+std::vector<Position> Map::GetUnoccupiedCellsAround(const Position& pos)
+{
+  std::vector<Position> res;
+
+  if (CurrentLevel != nullptr)
+  {
+    int lx = pos.X - 1;
+    int ly = pos.Y - 1;
+    int hx = pos.X + 1;
+    int hy = pos.Y + 1;
+
+    for (int x = lx; x <= hx; x++)
+    {
+      for (int y = ly; y <= hy; y++)
+      {
+        if (x == pos.X && y == pos.Y)
+        {
+          continue;
+        }
+
+        if (Util::IsInsideMap({ x, y }, CurrentLevel->MapSize)
+        && (!CurrentLevel->MapArray[x][y]->Occupied
+         && !CurrentLevel->MapArray[x][y]->Blocking))
+        {
+          res.push_back({ x, y });
+        }
+      }
+    }
+  }
+
+  return res;
 }

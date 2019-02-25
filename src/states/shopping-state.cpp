@@ -16,7 +16,7 @@ void ShoppingState::Init()
 void ShoppingState::Prepare()
 {
   _inventoryItemIndex = 0;
-  _playerSide = (_playerRef->Inventory.Contents.size() > 0);
+  _playerSide = (!_playerRef->Inventory.IsEmpty());
 }
 
 void ShoppingState::PassShopOwner(TraderComponent* tc)

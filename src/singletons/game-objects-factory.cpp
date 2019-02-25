@@ -6,6 +6,7 @@
 #include "shrine-component.h"
 #include "ai-component.h"
 #include "ai-monster-basic.h"
+#include "ai-monster-bat.h"
 #include "ai-npc.h"
 #include "stairs-component.h"
 #include "go-timer-destroyer.h"
@@ -221,7 +222,7 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
   go->Move(0, 0);
 
   AIComponent* ai = go->AddComponent<AIComponent>();
-  AIMonsterBasic* aimb = ai->AddModel<AIMonsterBasic>();
+  AIMonsterBasic* aimb = ai->AddModel<AIMonsterBat>();
 
   aimb->AgroRadius = 16;
 
@@ -247,7 +248,7 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
     go->Attrs.Skl.Set(randomSkl);
   }
 
-  ai->ChangeModel<AIMonsterBasic>();
+  ai->ChangeModel<AIMonsterBat>();
 
   return go;
 }
@@ -1852,7 +1853,7 @@ GameObject* GameObjectsFactory::CreateRandomGlass()
   ic->Data.UnidentifiedDescription = { "Is this valuable?" };
   ic->Data.UnidentifiedName = Util::StringFormat("?%s Gem?", colorDesc.data());
 
-  std::string lowerCase = colorDesc;
+  std::string lowerCase = colorDesc;  
   std::transform(lowerCase.begin(), lowerCase.end(), lowerCase.begin(), ::tolower);
 
   auto str = Util::StringFormat("This is a piece of %s worthless glass", lowerCase.data());

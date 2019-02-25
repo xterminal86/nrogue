@@ -17,7 +17,7 @@ void ContainerInteractState::Cleanup()
 void ContainerInteractState::Prepare()
 {
   _inventoryItemIndex = 0;
-  _playerSide = (_playerRef->Inventory.Contents.size() > 0);
+  _playerSide = (!_playerRef->Inventory.IsEmpty());
 }
 
 void ContainerInteractState::SetContainerRef(ContainerComponent* c)

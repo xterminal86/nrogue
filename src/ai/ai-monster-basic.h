@@ -6,6 +6,7 @@
 
 class Player;
 
+/// Rudimentary AI mainly for testing purposes
 class AIMonsterBasic : public AIModelBase
 {
   public:
@@ -13,19 +14,13 @@ class AIMonsterBasic : public AIModelBase
 
     void Update() override;
 
-    int AgroRadius;    
-
-  private:
+  protected:
     void RandomMovement();
     void MoveToKill();
-    void Attack(Player* player);
 
-    Position SelectCell();
+    bool Attack(Player* player);
 
-    bool IsPlayerVisible();
-    bool IsPlayerInRange();
-
-    Player* _playerRef;
+    std::vector<Position> SelectCellNearestToPlayer();
 };
 
 #endif // AIMONSTERBASIC_H

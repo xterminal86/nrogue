@@ -34,11 +34,21 @@ void MenuState::Update(bool forceUpdate)
     int titleX = halfW;
     int titleY = halfH / 2 - _title.size() / 2;
 
+    #ifdef USE_SDL
+    Printer::Instance().DrawWindow({ 0, 0 },
+                                   { tw - 1, th - 1 },
+                                   "",
+                                   "#000000",
+                                   "#000000",
+                                   "#FFFFFF");
+
+    #else
     auto border = Util::GetPerimeter(0, 0, tw - 1, th - 1);
     for (auto& i : border)
     {      
       Printer::Instance().PrintFB(i.X, i.Y, ' ', "#FFFFFF", "#FFFFFF");
     }
+    #endif
 
     int yOffset = 0;
     for (auto& s : _title)
