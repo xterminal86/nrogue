@@ -84,17 +84,16 @@ void ShoppingState::Update(bool forceUpdate)
     int tw = Printer::Instance().TerminalWidth;
     int th = Printer::Instance().TerminalHeight;
 
-    for (int x = 0; x < tw; x++)
-    {
-      Printer::Instance().PrintFB(x, 0, ' ', "#000000", "#FFFFFF");
-    }
+    DrawHeader(_shopTitle);
 
     for (int y = 1; y < th; y++)
     {
-      Printer::Instance().PrintFB(tw / 2, y, ' ', "#000000", "#FFFFFF");
+      #ifdef USE_SDL
+      Printer::Instance().PrintFB(tw / 2, y, (int)NameCP437::VBAR_2, "#FFFFFF");
+      #else
+      Printer::Instance().PrintFB(tw / 2, y, '|', "#000000", "#FFFFFF");
+      #endif
     }
-
-    Printer::Instance().PrintFB(tw / 2, 0, _shopTitle, Printer::kAlignCenter, "#000000", "#FFFFFF");
 
     DisplayPlayerInventory();
     DisplayShopInventory();

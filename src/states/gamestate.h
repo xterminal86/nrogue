@@ -29,6 +29,8 @@ class GameState
   protected:
     int _keyPressed;    
 
+    void DrawHeader(const std::string& header);
+
 #ifdef USE_SDL
     bool ShouldPassThrough(SDL_Scancode& sc);
 

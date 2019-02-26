@@ -47,7 +47,7 @@ void RepairState::Update(bool forceUpdate)
     int tw = Printer::Instance().TerminalWidth;
     int th = Printer::Instance().TerminalHeight;
 
-    Printer::Instance().PrintFB(tw / 2, 0, "========== REPAIR ITEMS ==========", Printer::kAlignCenter, "#FFFFFF");
+    DrawHeader(" REPAIR ITEMS ");
 
     int itemIndex = 0;
     for (auto& i : _playerRef->Inventory.Contents)

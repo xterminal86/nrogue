@@ -92,7 +92,7 @@ void AIMonsterBat::MoveToKill()
     if (!res)
     {
       GetNewDirection();
-    }
+    }    
   }
   else
   {
@@ -131,7 +131,7 @@ std::vector<Position> AIMonsterBat::GetRandomDirectionToMove()
 }
 
 void AIMonsterBat::GetNewDirection()
-{
+{  
   auto res = GetRandomDirectionToMove();
   if (res.size() != 0)
   {

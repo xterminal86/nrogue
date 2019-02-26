@@ -194,22 +194,15 @@ void NPCInteractState::PrintHeader()
 
   if (_npcRef->Data.IsAquainted)
   {
-    auto str = Util::StringFormat("%s the %s", _npcRef->Data.Name.data(), _npcRef->Data.Job.data());
+    auto str = Util::StringFormat(" %s the %s ", _npcRef->Data.Name.data(), _npcRef->Data.Job.data());
     desc = str;
   }
   else
   {
-    desc = "???";
+    desc = " ??? ";
   }
 
-  Printer::Instance().PrintFB(tw / 2, 0, desc, Printer::kAlignCenter, "#FFFFFF");
-
-  for (int x = 0; x < tw; x++)
-  {
-    Printer::Instance().PrintFB(x, 1, '-', "#FFFFFF");
-  }
-
-  Printer::Instance().PrintFB(tw / 2, 2, _npcRef->Data.UnacquaintedDescription, Printer::kAlignCenter, "#FFFFFF");
+  DrawHeader(desc);
 }
 
 void NPCInteractState::PrintFooter()

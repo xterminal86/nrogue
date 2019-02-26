@@ -1,4 +1,5 @@
 #include "gamestate.h"
+#include "printer.h"
 
 int GameState::GetKeyDown()
 {
@@ -75,6 +76,22 @@ int GameState::GetKeyDown()
 #endif
 
   return res;
+}
+
+void GameState::DrawHeader(const std::string& header)
+{
+  int tw = Printer::Instance().TerminalWidth;
+
+  for (int x = 0; x < tw; x++)
+  {
+    #ifdef USE_SDL
+    Printer::Instance().PrintFB(x, 0, (int)NameCP437::HBAR_2, "#FFFFFF");
+    #else
+    Printer::Instance().PrintFB(x, 0, '-', "#FFFFFF");
+    #endif
+  }
+
+  Printer::Instance().PrintFB(tw / 2, 0, header, Printer::kAlignCenter, "#FFFFFF", GlobalConstants::MessageBoxHeaderBgColor);
 }
 
 #ifdef USE_SDL

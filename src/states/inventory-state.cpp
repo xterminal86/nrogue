@@ -157,9 +157,7 @@ void InventoryState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    int tw = Printer::Instance().TerminalWidth;
-
-    Printer::Instance().PrintFB(tw / 2, 0, "========== INVENTORY ==========", Printer::kAlignCenter, "#FFFFFF");
+    DrawHeader(" INVENTORY ");
 
     int itemsCount = 0;
     int yPos = 0;

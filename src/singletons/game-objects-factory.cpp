@@ -237,7 +237,7 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
     int randomDef = RNG::Instance().RandomRange(0, 1 * difficulty);
     int randomSkl = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
     int randomHp = RNG::Instance().RandomRange(1 * difficulty, 3 * difficulty);
-    int randomSpd = RNG::Instance().RandomRange(1 * difficulty, 3 * difficulty);
+    int randomSpd = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
 
     go->Attrs.Lvl.Set(difficulty);
 

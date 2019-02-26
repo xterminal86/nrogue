@@ -45,9 +45,7 @@ void MessageLogState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    int tw = Printer::Instance().TerminalWidth;
-
-    Printer::Instance().PrintFB(tw / 2, 0, "========== GAME LOG ==========", Printer::kAlignCenter, "#FFFFFF");
+    DrawHeader(" GAME LOG ");
 
     DrawScrollBars();
 
@@ -83,16 +81,29 @@ void MessageLogState::DrawScrollBars()
   {
     if (_scrollPosition == 0)
     {
+      #ifdef USE_SDL
+      Printer::Instance().PrintFB(tw - 1, th - 1, (int)NameCP437::DARROW_2, "#FFFFFF");
+      #else
       Printer::Instance().PrintFB(tw - 1, th - 1, "\\/", Printer::kAlignRight, "#FFFFFF");
+      #endif
     }
     else if (_scrollPosition == scrollLimit)
     {
+      #ifdef USE_SDL
+      Printer::Instance().PrintFB(tw - 1, 1, (int)NameCP437::UARROW_2, "#FFFFFF");
+      #else
       Printer::Instance().PrintFB(tw - 1, 1, "/\\", Printer::kAlignRight, "#FFFFFF");
+      #endif
     }
     else if (_scrollPosition > 0 && _scrollPosition != scrollLimit)
     {
+      #ifdef USE_SDL
+      Printer::Instance().PrintFB(tw - 1, 1, (int)NameCP437::UARROW_2, "#FFFFFF");
+      Printer::Instance().PrintFB(tw - 1, th - 1, (int)NameCP437::DARROW_2, "#FFFFFF");
+      #else
       Printer::Instance().PrintFB(tw - 1, 1, "/\\", Printer::kAlignRight, "#FFFFFF");
       Printer::Instance().PrintFB(tw - 1, th - 1, "\\/", Printer::kAlignRight, "#FFFFFF");
+      #endif
     }
   }
 }

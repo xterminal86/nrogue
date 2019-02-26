@@ -687,10 +687,11 @@ bool Player::CanRaiseAttribute(Attribute& attr)
 void Player::ProcessKill(GameObject* monster)
 {
   int dungeonLvl = Map::Instance().CurrentLevel->DungeonLevel;
-  int defaultExp = std::abs(monster->Attrs.Rating() - Attrs.Rating());
-  int exp = defaultExp * dungeonLvl; // + dungeonLvl
+  int defaultExp = monster->Attrs.Rating() - Attrs.Rating();
 
-  exp = Util::Clamp(exp, 1, GlobalConstants::AwardedExpMax);
+  defaultExp = Util::Clamp(defaultExp, 1, GlobalConstants::AwardedExpMax);
+
+  int exp = defaultExp * dungeonLvl; // + dungeonLvl
 
   GameObjectsFactory::Instance().GenerateLootIfPossible(monster->PosX, monster->PosY, monster->Type);
 
