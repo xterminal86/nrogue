@@ -16,9 +16,14 @@ void AIMonsterBat::Update()
     {
       Attack(_playerRef);
 
-      int shouldChangePos = RNG::Instance().RandomRange(0, 2);
+      std::map<int, int> weightsMap =
+      {
+        { 0, 1 },
+        { 1, 7 }
+      };
 
-      if (shouldChangePos && AIComponentRef->OwnerGameObject->Attrs.ActionMeter > GlobalConstants::TurnReadyValue)
+      auto shouldChangePos = Util::WeightedRandom(weightsMap);
+      if (shouldChangePos.first && AIComponentRef->OwnerGameObject->Attrs.ActionMeter > GlobalConstants::TurnReadyValue)
       {
         CircleAroundPlayer();
       }
@@ -61,7 +66,7 @@ void AIMonsterBat::CircleAroundPlayer()
       continue;
     }
 
-    if (Util::BlockDistance(c.X, c.Y, px, py) == 1)
+    if (Util::BlockDistance(c.X, c.Y, goX, goY) == 1)
     {
       validCells.push_back(c);
     }
