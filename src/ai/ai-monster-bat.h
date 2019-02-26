@@ -9,7 +9,7 @@ class AIMonsterBat : public AIMonsterBasic
     void Update() override;
 
   private:
-    Position _directionToMove;
+    std::vector<Position> _directionToMove;
 
     void GetNewDirection();
     std::vector<Position> GetRandomDirectionToMove();
@@ -17,6 +17,12 @@ class AIMonsterBat : public AIMonsterBasic
     void MoveInDirection();
     void MoveToKill();
     void CircleAroundPlayer();
+
+    std::map<int, int> _probabilityMap =
+    {
+      { 0, 1 },
+      { 1, 7 }
+    };
 };
 
 #endif // AIMONSTERBAT_H

@@ -16,13 +16,7 @@ void AIMonsterBat::Update()
     {
       Attack(_playerRef);
 
-      std::map<int, int> weightsMap =
-      {
-        { 0, 1 },
-        { 1, 7 }
-      };
-
-      auto shouldChangePos = Util::WeightedRandom(weightsMap);
+      auto shouldChangePos = Util::WeightedRandom(_probabilityMap);
       if (shouldChangePos.first && AIComponentRef->OwnerGameObject->Attrs.ActionMeter > GlobalConstants::TurnReadyValue)
       {
         CircleAroundPlayer();
@@ -34,7 +28,7 @@ void AIMonsterBat::Update()
     }
     else
     {
-      if (_directionToMove.X == 0 && _directionToMove.Y == 0)
+      if (_directionToMove.size() == 0)
       {
         GetNewDirection();
       }
@@ -48,6 +42,7 @@ void AIMonsterBat::Update()
   }
 }
 
+/// Try to find empty cells around player to move to
 void AIMonsterBat::CircleAroundPlayer()
 {
   std::vector<Position> validCells;
@@ -66,17 +61,26 @@ void AIMonsterBat::CircleAroundPlayer()
       continue;
     }
 
+    // Select only those cells that are also near this actor
     if (Util::BlockDistance(c.X, c.Y, goX, goY) == 1)
     {
       validCells.push_back(c);
     }
   }
 
-  int index = RNG::Instance().RandomRange(0, validCells.size());
-  Position p = validCells[index];
+  if (validCells.size() != 0)
+  {
+    int index = RNG::Instance().RandomRange(0, validCells.size());
+    Position p = validCells[index];
 
-  AIComponentRef->OwnerGameObject->MoveTo(p.X, p.Y);
-  AIComponentRef->OwnerGameObject->FinishTurn();
+    AIComponentRef->OwnerGameObject->MoveTo(p.X, p.Y);
+    AIComponentRef->OwnerGameObject->FinishTurn();
+  }
+  else
+  {
+    Attack(_playerRef);
+    AIComponentRef->OwnerGameObject->FinishTurn();
+  }
 }
 
 void AIMonsterBat::MoveToKill()
@@ -98,9 +102,9 @@ void AIMonsterBat::MoveToKill()
 
 void AIMonsterBat::MoveInDirection()
 {
-  if (!AIComponentRef->OwnerGameObject->Move(_directionToMove.X, _directionToMove.Y))
+  if (!AIComponentRef->OwnerGameObject->Move(_directionToMove[0].X, _directionToMove[0].Y))
   {
-    GetNewDirection();
+    _directionToMove.clear();
   }
 }
 
@@ -117,8 +121,8 @@ std::vector<Position> AIMonsterBat::GetRandomDirectionToMove()
     int index = RNG::Instance().RandomRange(0, cellsAround.size());
     Position p = cellsAround[index];
 
-    int dx = posX - p.X;
-    int dy = posY - p.Y;
+    int dx = p.X - posX;
+    int dy = p.Y - posY;
 
     res.push_back({ dx, dy });
   }
@@ -131,6 +135,7 @@ void AIMonsterBat::GetNewDirection()
   auto res = GetRandomDirectionToMove();
   if (res.size() != 0)
   {
-    _directionToMove.Set(res[0].X, res[0].Y);
+    Position dir = res[0];
+    _directionToMove.push_back(dir);
   }
 }
