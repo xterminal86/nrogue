@@ -184,13 +184,13 @@ enum class PlayerClass
 
 enum class PlayerSkills
 {
-  // Use mana to recharge a wand (starting, Arcanist)
+  // Use mana to recharge a wand (starting for Arcanist)
   RECHARGE = 0,
-  // Use repair kit to repair a weapon (starting, Soldier)
+  // Use repair kit to repair a weapon (starting for Soldier)
   REPAIR,
-  // Allows character to cast spells
+  // Allows character to cast spells (starting for Arcanist)
   SPELLCASTING,
-  // Show enemy stats (currently by pressing Enter in Look Mode)
+  // Show enemy stats (starting for Thief)
   AWARENESS
 };
 
@@ -305,6 +305,7 @@ enum class SpellType
   LIGHT,
   IDENTIFY,
   MAGIC_MAPPING,
+  // TODO: teleport control?
   TELEPORT,
   // shows monsters (not all?), temporary
   DETECT_MONSTERS,
@@ -566,6 +567,7 @@ enum class NameCP437
   WAVES = 247,
 };
 
+// TODO: possible god object
 struct ItemData
 {
   ItemType ItemType_ = ItemType::DUMMY;
@@ -579,7 +581,6 @@ struct ItemData
 
   int IgnoreArmorPercentage = 0;
 
-  // Kinda out of place hack
   std::pair<MapType, std::pair<int, int>> ReturnerPosition =
   {
     MapType::NOWHERE, { -1, -1 }

@@ -63,6 +63,11 @@ class Player : public GameObject
     void RecalculateStatsModifiers();
     void AddBonusItems();
 
+    bool HasSkill(PlayerSkills skillToCheck)
+    {
+      return (SkillLevelBySkill.count(skillToCheck) == 1);
+    }
+
     int Money = 0;
 
     bool IsStarving = false;

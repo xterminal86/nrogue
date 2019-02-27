@@ -1966,7 +1966,7 @@ bool GameObjectsFactory::ReturnerUseHandler(ItemComponent* item)
 
 bool GameObjectsFactory::RepairKitUseHandler(ItemComponent* item)
 {
-  if (!_playerRef->SkillLevelBySkill.count(PlayerSkills::REPAIR))
+  if (!_playerRef->HasSkill(PlayerSkills::REPAIR))
   {
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "You don't possess the necessary skill!" }, GlobalConstants::MessageBoxRedBorderColor);
     return false;

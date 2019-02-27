@@ -1,6 +1,6 @@
 #include "from-layouts.h"
 
-/// Build dungoen by attaching random rooms to each other from
+/// Build dungeon by attaching random rooms to each other from
 /// possibleRooms list.
 /// May result in imperfect and/or impassable dungeon
 /// if layouts in the list are not connectable.
