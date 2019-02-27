@@ -103,7 +103,7 @@ void NPCInteractState::AnimateText()
 
   _animatedTextFinished.clear();
 
-  int linePosY = 4;
+  int linePosY = 2;
 
   std::vector<std::string> block;
 
@@ -169,7 +169,7 @@ void NPCInteractState::DisplayStillText()
 
   PrintHeader();
 
-  int yPos = 4;
+  int yPos = 2;
   for (auto& l : _animatedTextFinished)
   {
     Printer::Instance().PrintFB(0, yPos, l, Printer::kAlignLeft, "#FFFFFF");

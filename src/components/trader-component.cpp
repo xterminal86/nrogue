@@ -52,7 +52,7 @@ void TraderComponent::CreateItems()
     {
       std::string shopName = GlobalConstants::ShopNameByType.at(_traderType);
       std::string npcName = NpcRef->Data.Name;
-      ShopTitle = Util::StringFormat("%s's %s", npcName.data(), shopName.data());
+      ShopTitle = Util::StringFormat(" %s's %s ", npcName.data(), shopName.data());
 
       std::map<ItemType, int> itemsWeights =
       {
@@ -98,7 +98,7 @@ void TraderComponent::CreateItems()
     {
       std::string shopName = GlobalConstants::ShopNameByType.at(_traderType);
       std::string npcName = NpcRef->Data.Name;
-      ShopTitle = Util::StringFormat("%s's %s", npcName.data(), shopName.data());
+      ShopTitle = Util::StringFormat(" %s's %s ", npcName.data(), shopName.data());
 
       std::map<FoodType, int> itemsWeights =
       {
@@ -133,7 +133,7 @@ void TraderComponent::CreateItems()
     {
       std::string shopName = GlobalConstants::ShopNameByType.at(_traderType);
       std::string npcName = NpcRef->Data.Name;
-      ShopTitle = Util::StringFormat("%s's %s", npcName.data(), shopName.data());
+      ShopTitle = Util::StringFormat(" %s's %s ", npcName.data(), shopName.data());
 
       for (int i = 0; i < _itemsToCreate; i++)
       {
@@ -150,7 +150,7 @@ void TraderComponent::CreateItems()
     {
       std::string shopName = GlobalConstants::ShopNameByType.at(_traderType);
       std::string npcName = NpcRef->Data.Name;
-      ShopTitle = Util::StringFormat("%s's %s", npcName.data(), shopName.data());
+      ShopTitle = Util::StringFormat(" %s's %s ", npcName.data(), shopName.data());
 
       std::map<ItemType, int> itemsWeights =
       {
