@@ -12,7 +12,9 @@ When building with SDL2 you can use custom font and scale it by creating
 file called "config.txt" and placing it with the game's binary.
 The format should be as follows (no empty lines):
 
+```
 FILE=resources/standard_8x16.png  
 TILE_W=8  
 TILE_H=16  
 SCALE=2  
+```
