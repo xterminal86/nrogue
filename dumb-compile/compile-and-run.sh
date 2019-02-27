@@ -14,7 +14,7 @@ if [ $? -ne 0 ]; then
 fi
 
 rm -rf *
-cmake -D CMAKE_BUILD_TYPE=Release ../../ || cmake3 -D CMAKE_BUILD_TYPE=Release ../../
+cmake -D USE_SDL=ON -D CMAKE_BUILD_TYPE=Release ../../ || cmake3 -D USE_SDL=ON -D CMAKE_BUILD_TYPE=Release ../../
 make -j4
 ./nrogue
 

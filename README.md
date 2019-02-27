@@ -7,3 +7,12 @@ Since I'm working with Linux, I thought that making a game that uses just termin
 seems like a perfect candidate. And what games are known to use terminal graphics? That's right, roguelikes.  
 So I decided to make a roguelike.  
 It probably should've been named **ncrogue** or something, but whatever...
+
+When building with SDL2 you can use custom font and scale it by creating
+file called "config.txt" and placing it with the game's binary.
+The format should be as follows (no empty lines):
+
+FILE=resources/standard_8x16.png
+TILE_W=8
+TILE_H=16
+SCALE=2

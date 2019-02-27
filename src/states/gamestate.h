@@ -5,13 +5,13 @@
 #include <ncurses.h>
 #else
 #include <SDL2/SDL.h>
-#include <string>
-#include <algorithm>
-
-#include "constants.h"
 #endif
 
+#include <algorithm>
+#include <string>
 #include <typeinfo>
+
+#include "constants.h"
 
 class GameState
 {
