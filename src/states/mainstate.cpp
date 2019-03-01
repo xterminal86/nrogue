@@ -264,6 +264,7 @@ void MainState::HandleInput()
   {    
     Map::Instance().UpdateGameObjects();    
     _playerRef->WaitForTurn();
+    //Update(true);
   }
 }
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-inc=$(find inc/ -type d);
+inc=$(find src/ -type d);
 
 inc_dirs=""
 

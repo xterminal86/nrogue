@@ -155,9 +155,6 @@ class Player : public GameObject
       { StatsEnum::SKL, Attrs.Skl },
       { StatsEnum::SPD, Attrs.Spd }
     };
-
-    GameObject* _previousCell = nullptr;
-    GameObject* _currentCell = nullptr;
 };
 
 #endif // PLAYER_H

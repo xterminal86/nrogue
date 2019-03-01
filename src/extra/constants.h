@@ -230,7 +230,9 @@ enum class ItemType
   WEAPON,
   ARMOR,
   WAND,
-  REPAIR_KIT
+  SPELLBOOK,
+  REPAIR_KIT,
+  ARROWS
 };
 
 enum class WeaponType
@@ -477,6 +479,7 @@ struct Attributes
     rating += Res.OriginalValue;
     rating += Skl.OriginalValue;
     rating += Spd.OriginalValue;
+    rating += Lvl.CurrentValue;
 
     return rating;
   }
@@ -593,7 +596,11 @@ struct ItemData
   bool IsPrefixDiscovered = false;
   bool IsChargeable = false;
 
+  // For stackable / chargeable items
   int Amount = 1;
+
+  // For ranged weapons
+  int Range = 1;
 
   // !!! Use GetCost() when cost is needed !!!
   int Cost = 0;
