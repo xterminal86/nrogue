@@ -35,10 +35,11 @@ class Map : public Singleton<Map>
     MapLevelBase* GetLevelRefByType(MapType type);
 
     std::vector<Position> GetUnoccupiedCellsAround(const Position& pos);
+    std::vector<MapType> GetAllVisitedLevels();
 
     MapLevelBase* CurrentLevel;
 
-  private:    
+  private:
     std::map<MapType, std::unique_ptr<MapLevelBase>> _levels;
     std::map<MapType, bool> _mapVisitFirstTime;
 

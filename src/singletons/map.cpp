@@ -373,6 +373,18 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
   }  
 }
 
+std::vector<MapType> Map::GetAllVisitedLevels()
+{
+  std::vector<MapType> res;
+
+  for (auto& kvp : _levels)
+  {
+    res.push_back(kvp.first);
+  }
+
+  return res;
+}
+
 void Map::ShowLoadingText()
 {
   std::string text = "Now loading...";
