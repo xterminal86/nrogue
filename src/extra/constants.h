@@ -19,9 +19,10 @@
 
   #define VK_BACKSPACE SDLK_BACKSPACE
   #define VK_ENTER     SDLK_RETURN
+  #define VK_TAB       SDLK_TAB
 
   #define KEY_DOWN     SDLK_DOWN
-  #define KEY_UP       SDLK_UP
+  #define KEY_UP       SDLK_UP  
 
 #else
 
@@ -45,6 +46,7 @@
 
     #define VK_BACKSPACE 127
     #define VK_ENTER     10
+    #define VK_TAB       '\t'
 
   #else
 
@@ -62,6 +64,7 @@
 
     #define VK_BACKSPACE 8
     #define VK_ENTER     10
+    #define VK_TAB       '\t'
 
   #endif
 #endif
@@ -90,6 +93,7 @@ enum class GameStates
   SHOPPING_STATE,
   RETURNER_STATE,
   REPAIR_STATE,
+  TARGET_STATE,
   EXITING_STATE,
   MESSAGE_BOX_STATE,
   ENDGAME_STATE
@@ -190,7 +194,7 @@ enum class PlayerSkills
   REPAIR,
   // Allows character to cast spells (starting for Arcanist)
   SPELLCASTING,
-  // Show enemy stats (starting for Thief)
+  // Autodetect traps
   AWARENESS
 };
 
@@ -291,6 +295,7 @@ enum class GemType
 
 enum class SpellType
 {
+  NONE = -1,
   // 1 target, DEF
   STRIKE = 0,
   // 1 target, RES
@@ -581,6 +586,9 @@ struct ItemData
 
   Attribute Durability;
   Attribute Damage;
+  Attribute WandCapacity;
+
+  SpellType SpellHeld = SpellType::NONE;
 
   int IgnoreArmorPercentage = 0;
 
@@ -596,7 +604,7 @@ struct ItemData
   bool IsPrefixDiscovered = false;
   bool IsChargeable = false;
 
-  // For stackable / chargeable items
+  // For stackable
   int Amount = 1;
 
   // For ranged weapons
@@ -1061,22 +1069,93 @@ namespace GlobalConstants
     { WandMaterials::YEW,    100 },
     { WandMaterials::IVORY,  150 },
     { WandMaterials::EBONY,  200 },
-    { WandMaterials::ONYX,   250 },
-    { WandMaterials::GLASS,  400 },
+    { WandMaterials::ONYX,   300 },
+    { WandMaterials::GLASS,  450 },
     { WandMaterials::COPPER, 600 },
     { WandMaterials::GOLDEN, 800 }
   };
 
-  // Divide wand capacity by this value to get amount of charges,
-  // then randomize if needed.
+  // Divide wand capacity by this value to get amount of charges
   static const std::map<SpellType, int> WandSpellCapacityCostByType =
   {
+    { SpellType::LIGHT,         10  },
     { SpellType::STRIKE,        25  },
     { SpellType::FROST,         50  },
     { SpellType::FIREBALL,      100 },
     { SpellType::LASER,         150 },
     { SpellType::LIGHTNING,     100 },
     { SpellType::MAGIC_MISSILE, 25  }
+  };
+
+  static const std::map<SpellType, std::pair<int, int>> SpellBaseDamageByType =
+  {
+    { SpellType::STRIKE,        { 1, 4  } },
+    { SpellType::FROST,         { 1, 4  } },
+    { SpellType::FIREBALL,      { 2, 8  } },
+    { SpellType::LASER,         { 3, 10 } },
+    { SpellType::LIGHTNING,     { 2, 6  } },
+    { SpellType::MAGIC_MISSILE, { 1, 6  } },
+    { SpellType::HEAL,          { 1, 8  } }
+  };
+
+  static const std::map<SpellType, std::string> SpellNameByType =
+  {
+    { SpellType::LIGHT,             "Light"             },
+    { SpellType::STRIKE,            "Striking"          },
+    { SpellType::FROST,             "Frost"             },
+    { SpellType::FIREBALL,          "Fireball"          },
+    { SpellType::LASER,             "Piercing"          },
+    { SpellType::LIGHTNING,         "Lightning"         },
+    { SpellType::MAGIC_MISSILE,     "Magic Missile"     },
+    { SpellType::IDENTIFY,          "Identify"          },
+    { SpellType::MAGIC_MAPPING,     "Magic Mapping"     },
+    { SpellType::TELEPORT,          "Teleportation"     },
+    { SpellType::DETECT_MONSTERS,   "Detect Monsters"   },
+    { SpellType::REMOVE_CURSE,      "Remove Curse"      },
+    { SpellType::HEAL,              "Healing"           },
+    { SpellType::NEUTRALIZE_POISON, "Neutralize Poison" },
+    { SpellType::MANA_SHIELD,       "Mana Shield"       }
+  };
+
+  static const std::map<SpellType, std::string> SpellShortNameByType =
+  {
+    { SpellType::LIGHT,             "L"   },
+    { SpellType::STRIKE,            "S"   },
+    { SpellType::FROST,             "F"   },
+    { SpellType::FIREBALL,          "Fl"  },
+    { SpellType::LASER,             "P"   },
+    { SpellType::LIGHTNING,         "Lg"  },
+    { SpellType::MAGIC_MISSILE,     "MM"  },
+    { SpellType::IDENTIFY,          "I"   },
+    { SpellType::MAGIC_MAPPING,     "MMg" },
+    { SpellType::TELEPORT,          "T"   },
+    { SpellType::DETECT_MONSTERS,   "DM"  },
+    { SpellType::REMOVE_CURSE,      "RC"  },
+    { SpellType::HEAL,              "H"   },
+    { SpellType::NEUTRALIZE_POISON, "NP"  },
+    { SpellType::MANA_SHIELD,       "MS"  }
+  };
+
+  static const std::map<WandMaterials, std::pair<std::string, std::string>> WandColorsByMaterial =
+  {
+    { WandMaterials::YEW,    { "#C19A6B", "#8A8B5C" } },
+    { WandMaterials::IVORY,  { "#FFFFFF", "#DDDDD0" } },
+    { WandMaterials::EBONY,  { "#888888", "#555D50" } },
+    { WandMaterials::ONYX,   { "#666666", "#2F2F2F" } },
+    { WandMaterials::GLASS,  { "#000000", "#FFFFFF" } },
+    { WandMaterials::COPPER, { "#FF8C00", "#B87333" } },
+    { WandMaterials::GOLDEN, { "#FFFF00", "#DDD700" } }
+  };
+
+  static const std::map<WandMaterials, std::string> WandMaterialNamesByMaterial =
+  {
+    { WandMaterials::YEW,    "Yew"    },
+    { WandMaterials::IVORY,  "Ivory"  },
+    { WandMaterials::EBONY,  "Ebony"  },
+    { WandMaterials::ONYX,   "Onyx"   },
+    { WandMaterials::GLASS,  "Glass"  },
+    { WandMaterials::COPPER, "Copper" },
+    { WandMaterials::GOLDEN, "Golden" }
   };
 
   static const std::map<ShrineType, std::string> ShrineSaintByType =

@@ -19,6 +19,7 @@
 #include "message-box-state.h"
 #include "endgame-state.h"
 #include "attack-state.h"
+#include "target-state.h"
 #include "map.h"
 #include "map-level-base.h"
 
@@ -46,6 +47,7 @@ void Application::Init()
   _gameStates[GameStates::REPAIR_STATE]             = std::unique_ptr<GameState>(new RepairState());
   _gameStates[GameStates::EXITING_STATE]            = std::unique_ptr<GameState>(new ExitingState());
   _gameStates[GameStates::MESSAGE_BOX_STATE]        = std::unique_ptr<GameState>(new MessageBoxState());
+  _gameStates[GameStates::TARGET_STATE]             = std::unique_ptr<GameState>(new TargetState());
   _gameStates[GameStates::ENDGAME_STATE]            = std::unique_ptr<GameState>(new EndgameState());
 
   for (auto& state : _gameStates)

@@ -7,6 +7,7 @@
 #include "item-component.h"
 #include "stairs-component.h"
 #include "map-level-base.h"
+#include "target-state.h"
 
 void MainState::Init()
 {
@@ -221,6 +222,10 @@ void MainState::HandleInput()
         Application::Instance().ChangeState(GameStates::EXITING_STATE);
         break;
 
+      case 'z':
+        ProcessZapping();
+        break;
+
       case '>':
         CheckStairs('>');
         break;
@@ -231,7 +236,7 @@ void MainState::HandleInput()
 
       // ***** TODO: for debug, remove afterwards
 
-      case 'z':
+      case 'L':
         _playerRef->LevelUp();
         break;
 
@@ -447,6 +452,44 @@ void MainState::PrintDebugInfo()
 
   _debugInfo = Util::StringFormat("Colors Used: %i", Printer::Instance().ColorsUsed());
   Printer::Instance().PrintFB(0, 5, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+}
+
+void MainState::ProcessZapping()
+{
+  // TODO: wands in both hands?
+
+  ItemComponent* wand = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  if (wand != nullptr && wand->Data.ItemType_ == ItemType::WAND)
+  {
+    if (wand->Data.Amount == 0)
+    {
+      Printer::Instance().AddMessage("No charges left");
+    }
+    else
+    {
+      switch (wand->Data.SpellHeld)
+      {
+        case SpellType::LIGHT:
+          break;
+
+        case SpellType::STRIKE:
+        {
+          auto s = Application::Instance().GetGameStateRefByName(GameStates::TARGET_STATE);
+          TargetState* ts = static_cast<TargetState*>(s);
+          ts->Setup(wand);
+          Application::Instance().ChangeState(GameStates::TARGET_STATE);
+        }
+        break;
+
+        default:
+          break;
+      }
+    }
+  }
+  else
+  {
+    Printer::Instance().AddMessage("Equip a wand first!");
+  }
 }
 
 bool MainState::ProcessMoneyPickup(std::pair<int, GameObject*>& pair)

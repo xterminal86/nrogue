@@ -6,7 +6,12 @@
 
 void RepairState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Application::Instance().PlayerInstance;  
+}
+
+void RepairState::Prepare()
+{
+  _itemRefByChar.clear();
 }
 
 void RepairState::HandleInput()

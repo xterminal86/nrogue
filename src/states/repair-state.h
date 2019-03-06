@@ -14,6 +14,7 @@ class RepairState : public GameState
     void Update(bool forceUpdate = false) override;
     void SetRepairKitRef(ItemComponent* item, int inventoryIndex);
     void Cleanup() override;
+    void Prepare() override;
 
   private:
     Player* _playerRef;

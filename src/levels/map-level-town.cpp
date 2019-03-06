@@ -196,6 +196,14 @@ void MapLevelTown::CreateLevel()
   LevelExit.Y = 48;
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);          
+
+  int x = 1;
+  for (auto& i : GlobalConstants::WandColorsByMaterial)
+  {
+    auto wand = GameObjectsFactory::Instance().CreateWand(x, 1, i.first, SpellType::STRIKE);
+    InsertGameObject(wand);
+    x++;
+  }
 }
 
 void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)

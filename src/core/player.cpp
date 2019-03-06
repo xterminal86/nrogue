@@ -383,19 +383,28 @@ void Player::Attack(GameObject* go)
 
       bool durabilityLost = false;
 
-      if (EquipmentByCategory[EquipmentCategory::WEAPON][0] != nullptr)
+      ItemComponent* weaponInHand = EquipmentByCategory[EquipmentCategory::WEAPON][0];
+      if (weaponInHand != nullptr)
       {
-        auto wd = EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Damage;
-        int numRolls = wd.CurrentValue;
-        int diceSides = wd.OriginalValue;
-
-        for (int i = 0; i < numRolls; i++)
+        if (weaponInHand->Data.ItemType_ == ItemType::WAND)
         {
-          int res = RNG::Instance().RandomRange(1, diceSides + 1);
-          weaponDamage += res;
-        }                
+          // Melee attack with any wand is 1d4 dmg
+          weaponDamage = RNG::Instance().RandomRange(1, 5);
+        }
+        else
+        {
+          auto wd = EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Damage;
+          int numRolls = wd.CurrentValue;
+          int diceSides = wd.OriginalValue;
 
-        durabilityLost = WeaponLosesDurability();
+          for (int i = 0; i < numRolls; i++)
+          {
+            int res = RNG::Instance().RandomRange(1, diceSides + 1);
+            weaponDamage += res;
+          }
+
+          durabilityLost = WeaponLosesDurability();
+        }
       }
 
       int totalDmg = weaponDamage;
@@ -419,7 +428,7 @@ void Player::Attack(GameObject* go)
       {
         if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue <= 0)
         {
-          BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);          
+          BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);
         }
       }
     }

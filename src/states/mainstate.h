@@ -31,6 +31,7 @@ class MainState : public GameState
     void DrawHPMP();
     void DisplayHelp();
     void PrintDebugInfo();
+    void ProcessZapping();
 
     bool ProcessMoneyPickup(std::pair<int, GameObject*>& pair);
 

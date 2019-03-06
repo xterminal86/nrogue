@@ -1061,6 +1061,67 @@ GameObject* GameObjectsFactory::CreateGem(int x, int y, GemType type)
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material, SpellType spellType, ItemPrefix prefixOverride)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  auto wandColorPair = GlobalConstants::WandColorsByMaterial.at(material);
+  std::string wandMaterialName = GlobalConstants::WandMaterialNamesByMaterial.at(material);
+  std::string spellName = GlobalConstants::SpellNameByType.at(spellType);
+  std::string spellShortName = GlobalConstants::SpellShortNameByType.at(spellType);
+
+  go->PosX = x;
+  go->PosY = y;
+
+  go->Image = 'i';
+
+  go->FgColor = wandColorPair.first;
+  go->BgColor = wandColorPair.second;
+
+  int dl = Map::Instance().CurrentLevel->DungeonLevel;
+
+  int capacity = GlobalConstants::WandCapacityByMaterial.at(material);
+
+  int randomness = RNG::Instance().RandomRange(0, dl) * 10;
+
+  capacity += randomness;
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  if (ic->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    capacity *= 2;
+  }
+
+  ic->Data.WandCapacity.Set(capacity);
+
+  int spellCost = GlobalConstants::WandSpellCapacityCostByType.at(spellType);
+  int charges = capacity / spellCost;
+
+  ic->Data.Amount = charges;
+
+  ic->Data.IsChargeable = true;
+  ic->Data.EqCategory = EquipmentCategory::WEAPON;
+  ic->Data.ItemType_ = ItemType::WAND;
+  ic->Data.SpellHeld = spellType;
+
+  ic->Data.UnidentifiedName = "?" + wandMaterialName + " Wand?";
+  ic->Data.IdentifiedName = wandMaterialName + " Wand of " + spellName;
+
+  ic->Data.UnidentifiedDescription = { "You don't know what it can do" };
+
+  auto str = Util::StringFormat("%s Wand (%s)", wandMaterialName.data(), spellShortName.data());
+  go->ObjectName = str;
+
+  SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
+
+  return go;
+}
+
 GameObject* GameObjectsFactory::CreateReturner(int x, int y, int charges, ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
