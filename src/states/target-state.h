@@ -29,6 +29,8 @@ class TargetState : public GameState
     void ProcessHit(GameObject* objHit);
     void FindTargets();
     void CycleTargets();
+    void ProcessRangedWeapon();
+    void ProcessWand();
 
     std::vector<GameObject*> _targets;
 

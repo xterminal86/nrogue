@@ -131,14 +131,14 @@ void TargetState::HandleInput()
   }
 }
 
-void TargetState::FireWeapon()
+void TargetState::ProcessRangedWeapon()
 {
   Position startPoint = { _playerRef->PosX, _playerRef->PosY };
   Position endPoint = _cursorPosition;
 
   auto line = Util::BresenhamLine(startPoint, endPoint);
 
-  char projectile = (_weaponRef->Data.ItemType_ == ItemType::WAND) ? '*' : '+';
+  char projectile = '+';
 
   // Don't include player's position
   for (int i = 1; i < line.size(); i++)
@@ -167,6 +167,30 @@ void TargetState::FireWeapon()
 
     Printer::Instance().PrintFB(drawingPosX, drawingPosY, projectile, "#FFFF00");
     Printer::Instance().Render();
+
+    #ifndef USE_SDL
+    Util::Sleep(10);
+    #endif
+  }
+}
+
+void TargetState::ProcessWand()
+{
+  switch (_weaponRef->Data.SpellHeld)
+  {
+  }
+}
+
+void TargetState::FireWeapon()
+{
+  if (_weaponRef->Data.ItemType_ == ItemType::WAND)
+  {
+    ProcessWand();
+  }
+  else if (_weaponRef->Data.ItemType_ == ItemType::WEAPON
+        && _weaponRef->Data.Range > 1)
+  {
+    ProcessRangedWeapon();
   }
 
   _playerRef->FinishTurn();
