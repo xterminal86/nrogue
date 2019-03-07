@@ -200,7 +200,7 @@ void MapLevelTown::CreateLevel()
   int x = 1;
   for (auto& i : GlobalConstants::WandColorsByMaterial)
   {
-    auto wand = GameObjectsFactory::Instance().CreateWand(x, 1, i.first, SpellType::STRIKE);
+    auto wand = GameObjectsFactory::Instance().CreateWand(x, 1, i.first, SpellType::FIREBALL);
     InsertGameObject(wand);
     x++;
   }

@@ -131,14 +131,14 @@ void TargetState::HandleInput()
   }
 }
 
-void TargetState::ProcessRangedWeapon()
+GameObject* TargetState::LaunchProjectile(char image)
 {
+  GameObject* stoppedAt = nullptr;
+
   Position startPoint = { _playerRef->PosX, _playerRef->PosY };
   Position endPoint = _cursorPosition;
 
   auto line = Util::BresenhamLine(startPoint, endPoint);
-
-  char projectile = '+';
 
   // Don't include player's position
   for (int i = 1; i < line.size(); i++)
@@ -151,59 +151,137 @@ void TargetState::ProcessRangedWeapon()
     auto actor = Map::Instance().GetActorAtPosition(mx, my);
     if (actor != nullptr)
     {
-      ProcessHit(actor);
+      stoppedAt = actor;
       break;
     }
 
     auto cell = Map::Instance().CurrentLevel->MapArray[mx][my].get();
     if (cell->Blocking)
     {
-      ProcessHit(cell);
+      stoppedAt = cell;
       break;
     }
 
     int drawingPosX = mx + Map::Instance().CurrentLevel->MapOffsetX;
     int drawingPosY = my + Map::Instance().CurrentLevel->MapOffsetY;
 
-    Printer::Instance().PrintFB(drawingPosX, drawingPosY, projectile, "#FFFF00");
+    Printer::Instance().PrintFB(drawingPosX, drawingPosY, image, "#FFFF00");
     Printer::Instance().Render();
 
     #ifndef USE_SDL
     Util::Sleep(10);
     #endif
   }
-}
 
-void TargetState::ProcessWand()
-{
-  switch (_weaponRef->Data.SpellHeld)
-  {
-  }
+  return stoppedAt;
 }
 
 void TargetState::FireWeapon()
 {
-  if (_weaponRef->Data.ItemType_ == ItemType::WAND)
+  GameObject* stoppedAt = nullptr;
+
+  bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
+  bool isWeapon = (_weaponRef->Data.ItemType_ == ItemType::WEAPON
+                && _weaponRef->Data.Range > 1);
+
+  char projectile = ' ';
+  if (isWand)
   {
-    ProcessWand();
+    projectile = '*';
   }
-  else if (_weaponRef->Data.ItemType_ == ItemType::WEAPON
-        && _weaponRef->Data.Range > 1)
+  else if (isWeapon)
   {
-    ProcessRangedWeapon();
+    projectile = '+';
   }
+
+  stoppedAt = LaunchProjectile(projectile);
+  ProcessHit(stoppedAt);
 
   _playerRef->FinishTurn();
   Map::Instance().UpdateGameObjects();
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
 }
 
-void TargetState::ProcessHit(GameObject* objHit)
+void TargetState::ProcessHit(GameObject *hitPoint)
 {
-  AIComponent* enemy = objHit->GetComponent<AIComponent>();
-  if (enemy != nullptr)
+  if (_weaponRef->Data.SpellHeld == SpellType::FIREBALL)
   {
+    DrawExplosion({ hitPoint->PosX, hitPoint->PosY });
   }
+}
+
+void TargetState::DrawExplosion(Position pos)
+{
+  for (int range = 1; range <= 3; range++)
+  {
+    auto res = GetVisiblePointsFrom(pos, range);
+    for (auto& p : res)
+    {
+      int drawX = p.X + Map::Instance().CurrentLevel->MapOffsetX;
+      int drawY = p.Y + Map::Instance().CurrentLevel->MapOffsetY;
+
+      Printer::Instance().PrintFB(drawX, drawY, 'X', "#FF0000");
+    }
+
+    Printer::Instance().Render();
+    Util::Sleep(1000);
+    Update(true);
+  }
+}
+
+std::vector<Position> TargetState::GetVisiblePointsFrom(Position from, int range)
+{
+  std::vector<Position> res;
+
+  int lx = from.X - range;
+  int ly = from.Y - range;
+  int hx = from.X + range;
+  int hy = from.Y + range;
+
+  std::vector<Position> perimeterPoints;
+
+  for (int x = lx; x <= hx; x++)
+  {
+    Position p1 = { x, ly };
+    Position p2 = { x, hy };
+
+    perimeterPoints.push_back(p1);
+    perimeterPoints.push_back(p2);
+  }
+
+  for (int y = ly + 1; y <= ly - 1; y++)
+  {
+    Position p1 = { lx, y };
+    Position p2 = { hx, y };
+
+    perimeterPoints.push_back(p1);
+    perimeterPoints.push_back(p2);
+  }
+
+  for (auto& p : perimeterPoints)
+  {
+    auto line = Util::BresenhamLine(from, p);
+    for (auto& point : line)
+    {
+      if (!Util::IsInsideMap(point, Map::Instance().CurrentLevel->MapSize)
+       || (point.X == from.X && point.Y == from.Y))
+      {
+        continue;
+      }
+
+      auto cell = Map::Instance().CurrentLevel->MapArray[point.X][point.Y].get();
+      if (!cell->Blocking)
+      {
+        res.push_back({ cell->PosX, cell->PosY });
+      }
+      else
+      {
+        break;
+      }
+    }
+  }
+
+  return res;
 }
 
 void TargetState::MoveCursor(int dx, int dy)

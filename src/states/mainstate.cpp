@@ -472,6 +472,7 @@ void MainState::ProcessZapping()
         case SpellType::LIGHT:
           break;
 
+        case SpellType::FIREBALL:
         case SpellType::STRIKE:
         {
           auto s = Application::Instance().GetGameStateRefByName(GameStates::TARGET_STATE);

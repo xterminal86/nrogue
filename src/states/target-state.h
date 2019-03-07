@@ -25,12 +25,14 @@ class TargetState : public GameState
 
     void DrawCursor();
     void MoveCursor(int dx, int dy);
-    void FireWeapon();
-    void ProcessHit(GameObject* objHit);
+    void FireWeapon();    
     void FindTargets();
     void CycleTargets();
-    void ProcessRangedWeapon();
-    void ProcessWand();
+    void ProcessHit(GameObject* hitPoint);
+    void DrawExplosion(Position pos);
+    std::vector<Position> GetVisiblePointsFrom(Position from, int range);
+
+    GameObject* LaunchProjectile(char image);
 
     std::vector<GameObject*> _targets;
 
