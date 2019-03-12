@@ -632,8 +632,8 @@ void MainState::DisplayStatusIcons()
   // Weapon condition
 
   ItemComponent* weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
-  if (weapon != nullptr)
-  {
+  if (weapon != nullptr && weapon->Data.ItemType_ == ItemType::WEAPON)
+  {    
     int maxDur = weapon->Data.Durability.OriginalValue;
     int warning = maxDur * 0.3f;
 
@@ -646,7 +646,7 @@ void MainState::DisplayStatusIcons()
   // Armor condition
 
   ItemComponent* armor = _playerRef->EquipmentByCategory[EquipmentCategory::TORSO][0];
-  if (armor != nullptr)
+  if (armor != nullptr && armor->Data.ItemType_ == ItemType::ARMOR)
   {
     int maxDur = armor->Data.Durability.OriginalValue;
     int warning = maxDur * 0.3f;
