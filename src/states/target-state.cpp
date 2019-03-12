@@ -157,8 +157,13 @@ GameObject* TargetState::LaunchProjectile(char image)
 
     auto cell = Map::Instance().CurrentLevel->MapArray[mx][my].get();
     if (cell->Blocking)
-    {
-      stoppedAt = cell;
+    {      
+      int prevX = line[i - 1].X;
+      int prevY = line[i - 1].Y;
+
+      auto prevCell = Map::Instance().CurrentLevel->MapArray[prevX][prevY].get();
+      stoppedAt = prevCell;
+
       break;
     }
 
@@ -171,6 +176,12 @@ GameObject* TargetState::LaunchProjectile(char image)
     #ifndef USE_SDL
     Util::Sleep(10);
     #endif
+  }
+
+  if (stoppedAt == nullptr)
+  {
+    auto cell = Map::Instance().CurrentLevel->MapArray[endPoint.X][endPoint.Y].get();
+    stoppedAt = cell;
   }
 
   return stoppedAt;
@@ -220,11 +231,14 @@ void TargetState::DrawExplosion(Position pos)
       int drawX = p.X + Map::Instance().CurrentLevel->MapOffsetX;
       int drawY = p.Y + Map::Instance().CurrentLevel->MapOffsetY;
 
-      Printer::Instance().PrintFB(drawX, drawY, 'X', "#FF0000");
+      if (Map::Instance().CurrentLevel->MapArray[p.X][p.Y]->Visible)
+      {
+        Printer::Instance().PrintFB(drawX, drawY, 'x', "#FF0000");
+      }
     }
 
     Printer::Instance().Render();
-    Util::Sleep(1000);
+    Util::Sleep(100);
     Update(true);
   }
 }
@@ -249,7 +263,7 @@ std::vector<Position> TargetState::GetVisiblePointsFrom(Position from, int range
     perimeterPoints.push_back(p2);
   }
 
-  for (int y = ly + 1; y <= ly - 1; y++)
+  for (int y = ly + 1; y <= hy - 1; y++)
   {
     Position p1 = { lx, y };
     Position p2 = { hx, y };
@@ -263,8 +277,7 @@ std::vector<Position> TargetState::GetVisiblePointsFrom(Position from, int range
     auto line = Util::BresenhamLine(from, p);
     for (auto& point : line)
     {
-      if (!Util::IsInsideMap(point, Map::Instance().CurrentLevel->MapSize)
-       || (point.X == from.X && point.Y == from.Y))
+      if (!Util::IsInsideMap(point, Map::Instance().CurrentLevel->MapSize))
       {
         continue;
       }
