@@ -37,7 +37,7 @@ class MainState : public GameState
 
     void ProcessItemPickup(std::pair<int, GameObject*>& pair);
 
-    std::string UpdateBar(int x, int y, Attribute attr);
+    void UpdateBar(int x, int y, Attribute attr);
 
     Position _cursorPosition;
 
@@ -45,6 +45,7 @@ class MainState : public GameState
     {
       R"('q' - Cancel / Close menu     )",
       R"('a' - Attack                  )",
+      R"('z' - Zap wand                )",
       R"('i' - Interact                )",
       R"('l' - Enter "look mode"       )",
       R"('m' - Display message log     )",

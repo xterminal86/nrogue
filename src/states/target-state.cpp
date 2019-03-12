@@ -47,8 +47,16 @@ void TargetState::FindTargets()
   {
     for (int y = ly; y <= hy; y++)
     {
+      if (x == px && y == py )
+      {
+        continue;
+      }
+
+      float d = Util::LinearDistance(px, py, x, y);
+
       if (Util::IsInsideMap({ x, y }, Map::Instance().CurrentLevel->MapSize)
-       && Map::Instance().CurrentLevel->MapArray[x][y]->Visible)
+       && Map::Instance().CurrentLevel->MapArray[x][y]->Visible
+       && (int)d <= r)
       {
         auto actor = Map::Instance().GetActorAtPosition(x, y);
         if (actor != nullptr)
@@ -140,6 +148,8 @@ GameObject* TargetState::LaunchProjectile(char image)
 
   auto line = Util::BresenhamLine(startPoint, endPoint);
 
+  int maxDistance = 0;
+
   // Don't include player's position
   for (int i = 1; i < line.size(); i++)
   {
@@ -148,22 +158,15 @@ GameObject* TargetState::LaunchProjectile(char image)
     int mx = line[i].X;
     int my = line[i].Y;
 
-    auto actor = Map::Instance().GetActorAtPosition(mx, my);
-    if (actor != nullptr)
+    if (maxDistance >= _weaponRef->Data.Range)
     {
-      stoppedAt = actor;
+      stoppedAt = CheckHit({ mx, my }, { line[i - 1].X, line[i - 1].Y });
       break;
     }
 
-    auto cell = Map::Instance().CurrentLevel->MapArray[mx][my].get();
-    if (cell->Blocking)
-    {      
-      int prevX = line[i - 1].X;
-      int prevY = line[i - 1].Y;
-
-      auto prevCell = Map::Instance().CurrentLevel->MapArray[prevX][prevY].get();
-      stoppedAt = prevCell;
-
+    stoppedAt = CheckHit({ mx, my }, { line[i - 1].X, line[i - 1].Y });
+    if (stoppedAt != nullptr)
+    {
       break;
     }
 
@@ -176,8 +179,11 @@ GameObject* TargetState::LaunchProjectile(char image)
     #ifndef USE_SDL
     Util::Sleep(10);
     #endif
+
+    maxDistance++;
   }
 
+  // Projectile reached end point without hitting anyone
   if (stoppedAt == nullptr)
   {
     auto cell = Map::Instance().CurrentLevel->MapArray[endPoint.X][endPoint.Y].get();
@@ -185,6 +191,24 @@ GameObject* TargetState::LaunchProjectile(char image)
   }
 
   return stoppedAt;
+}
+
+GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
+{
+  auto actor = Map::Instance().GetActorAtPosition(at.X, at.Y);
+  if (actor != nullptr)
+  {
+    return actor;
+  }
+
+  auto cell = Map::Instance().CurrentLevel->MapArray[at.X][at.Y].get();
+  if (cell->Blocking)
+  {
+    auto prevCell = Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
+    return prevCell;
+  }
+
+  return nullptr;
 }
 
 void TargetState::FireWeapon()
@@ -215,9 +239,22 @@ void TargetState::FireWeapon()
 
 void TargetState::ProcessHit(GameObject *hitPoint)
 {
-  if (_weaponRef->Data.SpellHeld == SpellType::FIREBALL)
+  bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
+  bool isWeapon = (_weaponRef->Data.ItemType_ == ItemType::WEAPON
+                && _weaponRef->Data.Range > 1);
+
+  if (isWand)
   {
-    DrawExplosion({ hitPoint->PosX, hitPoint->PosY });
+    switch (_weaponRef->Data.SpellHeld)
+    {
+      case SpellType::FIREBALL:
+        DrawExplosion({ hitPoint->PosX, hitPoint->PosY });
+        break;
+    }
+  }
+  else if (isWeapon)
+  {
+    // TODO:
   }
 }
 
@@ -238,7 +275,11 @@ void TargetState::DrawExplosion(Position pos)
     }
 
     Printer::Instance().Render();
-    Util::Sleep(100);
+
+    #ifndef USE_SDL
+    Util::Sleep(10);
+    #endif
+
     Update(true);
   }
 }

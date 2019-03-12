@@ -372,7 +372,7 @@ void MainState::DrawHPMP()
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 1, str, Printer::kAlignCenter, "#FFFFFF", "#000088");
 }
 
-std::string MainState::UpdateBar(int x, int y, Attribute attr)
+void MainState::UpdateBar(int x, int y, Attribute attr)
 {
   float ratio = ((float)attr.CurrentValue / (float)attr.OriginalValue);
   int len = ratio * GlobalConstants::HPMPBarLength;
@@ -386,8 +386,6 @@ std::string MainState::UpdateBar(int x, int y, Attribute attr)
   bar += "]";
 
   Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, "#FFFFFF");
-
-  return bar;
 }
 
 void MainState::DisplayHelp()

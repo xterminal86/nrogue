@@ -33,6 +33,7 @@ class TargetState : public GameState
     std::vector<Position> GetVisiblePointsFrom(Position from, int range);
 
     GameObject* LaunchProjectile(char image);
+    GameObject* CheckHit(const Position& at, const Position& prev);
 
     std::vector<GameObject*> _targets;
 
