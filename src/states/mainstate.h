@@ -9,6 +9,7 @@
 
 class Player;
 class GameObject;
+class ItemComponent;
 
 class MainState : public GameState
 {
@@ -31,7 +32,9 @@ class MainState : public GameState
     void DrawHPMP();
     void DisplayHelp();
     void PrintDebugInfo();
-    void ProcessZapping();
+    void ProcessRangedWeapon();
+    void ProcessWand(ItemComponent* wand);
+    void ProcessWeapon(ItemComponent* wand);
 
     bool ProcessMoneyPickup(std::pair<int, GameObject*>& pair);
 
@@ -45,7 +48,7 @@ class MainState : public GameState
     {
       R"('q' - Cancel / Close menu     )",
       R"('a' - Attack                  )",
-      R"('z' - Zap wand                )",
+      R"('f' - Fire weapon / wand      )",
       R"('i' - Interact                )",
       R"('l' - Enter "look mode"       )",
       R"('m' - Display message log     )",

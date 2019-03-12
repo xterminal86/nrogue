@@ -1123,6 +1123,84 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponType type, ItemPrefix prefixOverride)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->PosX = x;
+  go->PosY = y;
+
+  go->Image = ')';
+  go->FgColor = "#FFFFFF";
+
+  go->ObjectName = GlobalConstants::RangedWeaponNameByType.at(type);
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  switch (type)
+  {
+    case RangedWeaponType::LIGHT_BOW:
+    {
+      int numRolls = 1;
+      int diceType = 8;
+
+      ic->Data.Damage.CurrentValue = numRolls;
+      ic->Data.Damage.OriginalValue = diceType;
+    }
+    break;
+  }
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.EqCategory = EquipmentCategory::WEAPON;
+  ic->Data.ItemType_ = ItemType::WEAPON;
+  ic->Data.Range = 6;
+
+  ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
+  ic->Data.IdentifiedName = go->ObjectName;
+
+  ic->Data.UnidentifiedDescription = { "You don't know what it can do" };
+
+  SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateArrows(int x, int y, ArrowType type, ItemPrefix prefixOverride)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->PosX = x;
+  go->PosY = y;
+
+  go->Image = '^';
+  go->FgColor = "#FFFFFF";
+
+  go->ObjectName = GlobalConstants::ArrowNameByType.at(type);
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  ic->Data.ItemType_ = ItemType::ARROWS;
+  ic->Data.EqCategory = EquipmentCategory::SHIELD;
+  ic->Data.Amount = 20;
+  ic->Data.IsStackable = true;
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
+  ic->Data.IdentifiedName = go->ObjectName;
+
+  ic->Data.UnidentifiedDescription = { "You don't know what it can do" };
+
+  SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
+
+  return go;
+}
+
 GameObject* GameObjectsFactory::CreateReturner(int x, int y, int charges, ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);

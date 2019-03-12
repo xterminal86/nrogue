@@ -28,18 +28,20 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateHungerPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateExpPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateStatPotion(std::string statName, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateRandomPotion();
     GameObject* CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, bool isIdentified = false);
     GameObject* CreateNote(std::string objName, std::vector<std::string> text);
     GameObject* CreateWeapon(WeaponType type, ItemPrefix preifx = ItemPrefix::RANDOM);
+    GameObject* CreateRandomWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateContainer(std::string name, std::string bgColor, int image, int x, int y);
     GameObject* CreateGem(int x, int y, GemType type = GemType::RANDOM);
     GameObject* CreateWand(int x, int y, WandMaterials material, SpellType spellType, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateReturner(int x, int y, int charges = -1, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRepairKit(int x, int y, int charges = -1, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
-    GameObject* CreateRandomPotion();
-    GameObject* CreateRandomWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateArmor(ArmorType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRandomArmor(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateArrows(int x, int y, ArrowType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateRangedWeapon(int x, int y, RangedWeaponType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
 
     GameObject* CreateRandomItem(int x, int y, ItemType exclude = ItemType::NOTHING);
 

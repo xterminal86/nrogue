@@ -249,6 +249,16 @@ enum class WeaponType
   STAFF
 };
 
+enum class RangedWeaponType
+{
+  LIGHT_BOW,
+  LONGBOW,
+  WAR_BOW,
+  LIGHT_XBOW,
+  XBOW,
+  HEAVY_XBOW
+};
+
 enum class ArmorType
 {
   PADDING = 0,
@@ -332,6 +342,12 @@ enum class WandMaterials
   GLASS,
   COPPER,
   GOLDEN
+};
+
+enum class ArrowType
+{
+  ARROWS,
+  BOLTS
 };
 
 enum class ShrineType
@@ -933,12 +949,28 @@ namespace GlobalConstants
 
   static const std::map<WeaponType, std::string> WeaponNameByType =
   {
-    { WeaponType::DAGGER,       "Dagger"       },
-    { WeaponType::SHORT_SWORD,  "Short Sword"  },
-    { WeaponType::ARMING_SWORD, "Arming Sword" },
-    { WeaponType::LONG_SWORD,   "Longsword"    },
-    { WeaponType::GREAT_SWORD,  "Great Sword"  },
-    { WeaponType::STAFF,        "Battle Staff" }
+    { WeaponType::DAGGER,       "Dagger"         },
+    { WeaponType::SHORT_SWORD,  "Short Sword"    },
+    { WeaponType::ARMING_SWORD, "Arming Sword"   },
+    { WeaponType::LONG_SWORD,   "Longsword"      },
+    { WeaponType::GREAT_SWORD,  "Great Sword"    },
+    { WeaponType::STAFF,        "Battle Staff"   }
+  };
+
+  static const std::map<RangedWeaponType, std::string> RangedWeaponNameByType =
+  {
+    { RangedWeaponType::LIGHT_BOW,    "Light Bow"      },
+    { RangedWeaponType::LONGBOW,      "Longbow"        },
+    { RangedWeaponType::WAR_BOW,      "War Bow"        },
+    { RangedWeaponType::LIGHT_XBOW,   "Light Crossbow" },
+    { RangedWeaponType::XBOW,         "Crossbow"       },
+    { RangedWeaponType::HEAVY_XBOW,   "Heavy Crossbow" }
+  };
+
+  static const std::map<ArrowType, std::string> ArrowNameByType =
+  {
+    { ArrowType::ARROWS, "Arrows" },
+    { ArrowType::BOLTS,  "Bolts"  }
   };
 
   static const std::map<ArmorType, std::string> ArmorNameByType =

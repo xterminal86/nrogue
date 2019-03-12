@@ -197,13 +197,15 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);          
 
-  int x = 1;
-  for (auto& i : GlobalConstants::WandColorsByMaterial)
-  {
-    auto wand = GameObjectsFactory::Instance().CreateWand(x, 1, i.first, SpellType::FIREBALL);
-    InsertGameObject(wand);
-    x++;
-  }
+  // FIXME: debug
+  auto wand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::GOLDEN, SpellType::FIREBALL, ItemPrefix::UNCURSED);
+  InsertGameObject(wand);
+
+  auto bow = GameObjectsFactory::Instance().CreateRangedWeapon(2, 1, RangedWeaponType::LIGHT_BOW, ItemPrefix::UNCURSED);
+  InsertGameObject(bow);
+
+  auto arrows = GameObjectsFactory::Instance().CreateArrows(3, 1, ArrowType::ARROWS, ItemPrefix::UNCURSED);
+  InsertGameObject(arrows);
 }
 
 void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)

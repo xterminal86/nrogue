@@ -222,8 +222,8 @@ void MainState::HandleInput()
         Application::Instance().ChangeState(GameStates::EXITING_STATE);
         break;
 
-      case 'z':
-        ProcessZapping();
+      case 'f':
+        ProcessRangedWeapon();
         break;
 
       case '>':
@@ -452,42 +452,87 @@ void MainState::PrintDebugInfo()
   Printer::Instance().PrintFB(0, 5, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 }
 
-void MainState::ProcessZapping()
+void MainState::ProcessRangedWeapon()
 {
   // TODO: wands in both hands?
 
-  ItemComponent* wand = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
-  if (wand != nullptr && wand->Data.ItemType_ == ItemType::WAND)
+  ItemComponent* weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  if (weapon != nullptr)
   {
-    if (wand->Data.Amount == 0)
+    if (weapon->Data.Range <= 1)
     {
-      Printer::Instance().AddMessage("No charges left");
+      Printer::Instance().AddMessage("Not a ranged weapon!");
     }
     else
     {
-      switch (wand->Data.SpellHeld)
+      if (weapon->Data.ItemType_ == ItemType::WAND)
       {
-        case SpellType::LIGHT:
-          break;
-
-        case SpellType::FIREBALL:
-        case SpellType::STRIKE:
-        {
-          auto s = Application::Instance().GetGameStateRefByName(GameStates::TARGET_STATE);
-          TargetState* ts = static_cast<TargetState*>(s);
-          ts->Setup(wand);
-          Application::Instance().ChangeState(GameStates::TARGET_STATE);
-        }
-        break;
-
-        default:
-          break;
+        ProcessWand(weapon);
+      }
+      else if (weapon->Data.ItemType_ == ItemType::WEAPON)
+      {
+        ProcessWeapon(weapon);
       }
     }
   }
   else
   {
-    Printer::Instance().AddMessage("Equip a wand first!");
+    Printer::Instance().AddMessage("Equip a weapon first!");
+  }
+}
+
+void MainState::ProcessWeapon(ItemComponent* weapon)
+{
+  ItemComponent* arrows = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+  if (arrows != nullptr)
+  {
+    if (arrows->Data.ItemType_ != ItemType::ARROWS)
+    {
+      Printer::Instance().AddMessage("What are you going to shoot with?");
+    }
+    else
+    {
+      if (arrows->Data.Amount == 0)
+      {
+        Printer::Instance().AddMessage("No ammunition!");
+      }
+      else
+      {
+      }
+    }
+  }
+  else
+  {
+    Printer::Instance().AddMessage("What are you going to shoot with?");
+  }
+}
+
+void MainState::ProcessWand(ItemComponent* wand)
+{
+  if (wand->Data.Amount == 0)
+  {
+    Printer::Instance().AddMessage("No charges left");
+  }
+  else
+  {
+    switch (wand->Data.SpellHeld)
+    {
+      case SpellType::LIGHT:
+        break;
+
+      case SpellType::FIREBALL:
+      case SpellType::STRIKE:
+      {
+        auto s = Application::Instance().GetGameStateRefByName(GameStates::TARGET_STATE);
+        TargetState* ts = static_cast<TargetState*>(s);
+        ts->Setup(wand);
+        Application::Instance().ChangeState(GameStates::TARGET_STATE);
+      }
+      break;
+
+      default:
+        break;
+    }
   }
 }
 
