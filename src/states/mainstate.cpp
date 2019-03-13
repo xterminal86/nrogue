@@ -11,7 +11,7 @@
 
 void MainState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;  
+  _playerRef = &Application::Instance().PlayerInstance;
 }
 
 void MainState::HandleInput()
@@ -214,7 +214,7 @@ void MainState::HandleInput()
         Application::Instance().ChangeState(GameStates::INFO_STATE);
         break;
 
-      case '?':        
+      case '?':
         DisplayHelp();
         break;
 
@@ -266,8 +266,8 @@ void MainState::HandleInput()
 
   // Update all game objects if player is not ready to act
   if (_playerRef->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
-  {    
-    Map::Instance().UpdateGameObjects();    
+  {
+    Map::Instance().UpdateGameObjects();
     _playerRef->WaitForTurn();
     //Update(true);
   }
@@ -276,7 +276,7 @@ void MainState::HandleInput()
 void MainState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
-  {    
+  {
     Printer::Instance().Clear();
 
     _playerRef->CheckVisibility();
@@ -459,20 +459,17 @@ void MainState::ProcessRangedWeapon()
   ItemComponent* weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
   if (weapon != nullptr)
   {
-    if (weapon->Data.Range <= 1)
+    if (weapon->Data.ItemType_ == ItemType::WAND)
     {
-      Printer::Instance().AddMessage("Not a ranged weapon!");
+      ProcessWand(weapon);
+    }
+    else if (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON)
+    {
+      ProcessWeapon(weapon);
     }
     else
     {
-      if (weapon->Data.ItemType_ == ItemType::WAND)
-      {
-        ProcessWand(weapon);
-      }
-      else if (weapon->Data.ItemType_ == ItemType::WEAPON)
-      {
-        ProcessWeapon(weapon);
-      }
+      Printer::Instance().AddMessage("Not a ranged weapon!");
     }
   }
   else
@@ -498,6 +495,10 @@ void MainState::ProcessWeapon(ItemComponent* weapon)
       }
       else
       {
+        auto s = Application::Instance().GetGameStateRefByName(GameStates::TARGET_STATE);
+        TargetState* ts = static_cast<TargetState*>(s);
+        ts->Setup(weapon);
+        Application::Instance().ChangeState(GameStates::TARGET_STATE);
       }
     }
   }
@@ -676,7 +677,7 @@ void MainState::DisplayStatusIcons()
 
   ItemComponent* weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
   if (weapon != nullptr && weapon->Data.ItemType_ == ItemType::WEAPON)
-  {    
+  {
     int maxDur = weapon->Data.Durability.OriginalValue;
     int warning = maxDur * 0.3f;
 

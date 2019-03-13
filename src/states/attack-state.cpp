@@ -83,19 +83,19 @@ void AttackState::HandleInput()
     auto res = Map::Instance().GetActorAtPosition(_cursorPosition.X, _cursorPosition.Y);
     if (res != nullptr)
     {
-      _playerRef->Attack(res);
+      _playerRef->MeleeAttack(res);
     }
     else
     {
       auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
       if (res.size() != 0)
       {
-        _playerRef->Attack(res.back());
+        _playerRef->MeleeAttack(res.back());
       }
       else
       {
         auto* cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
-        _playerRef->Attack(cell);
+        _playerRef->MeleeAttack(cell);
       }
     }
 

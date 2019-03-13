@@ -236,6 +236,7 @@ enum class ItemType
   WAND,
   SPELLBOOK,
   REPAIR_KIT,
+  RANGED_WEAPON,
   ARROWS
 };
 

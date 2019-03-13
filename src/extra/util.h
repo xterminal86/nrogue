@@ -702,6 +702,19 @@ namespace Util
     return false;
   }
 
+  inline int RollDamage(int numRolls, int diceSides)
+  {
+    int totalDamage = 0;
+
+    for (int i = 0; i < numRolls; i++)
+    {
+      int dmg = RNG::Instance().RandomRange(1, diceSides + 1);
+      totalDamage += dmg;
+    }
+
+    return totalDamage;
+  }
+
   inline int Rolld100()
   {
     int dice = RNG::Instance().RandomRange(1, 101);

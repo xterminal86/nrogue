@@ -1,6 +1,7 @@
 #include "printer.h"
 
 #include "application.h"
+#include "map.h"
 #include "util.h"
 
 void Printer::Init()
@@ -651,6 +652,86 @@ void Printer::Render()
   SDL_RenderCopy(Application::Instance().Renderer, _frameBuffer, nullptr, nullptr);
   SDL_RenderPresent(Application::Instance().Renderer);
 #endif
+}
+
+void Printer::DrawExplosion(Position pos)
+{
+  for (int range = 1; range <= 3; range++)
+  {
+    auto res = GetVisiblePointsFrom(pos, range);
+    for (auto& p : res)
+    {
+      int drawX = p.X + Map::Instance().CurrentLevel->MapOffsetX;
+      int drawY = p.Y + Map::Instance().CurrentLevel->MapOffsetY;
+
+      if (Map::Instance().CurrentLevel->MapArray[p.X][p.Y]->Visible)
+      {
+        Printer::Instance().PrintFB(drawX, drawY, 'x', "#FF0000");
+      }
+    }
+
+    Printer::Instance().Render();
+
+    #ifndef USE_SDL
+    Util::Sleep(10);
+    #endif
+
+    Application::Instance().DrawCurrentState();
+  }
+}
+
+std::vector<Position> Printer::GetVisiblePointsFrom(Position from, int range)
+{
+  std::vector<Position> res;
+
+  int lx = from.X - range;
+  int ly = from.Y - range;
+  int hx = from.X + range;
+  int hy = from.Y + range;
+
+  std::vector<Position> perimeterPoints;
+
+  for (int x = lx; x <= hx; x++)
+  {
+    Position p1 = { x, ly };
+    Position p2 = { x, hy };
+
+    perimeterPoints.push_back(p1);
+    perimeterPoints.push_back(p2);
+  }
+
+  for (int y = ly + 1; y <= hy - 1; y++)
+  {
+    Position p1 = { lx, y };
+    Position p2 = { hx, y };
+
+    perimeterPoints.push_back(p1);
+    perimeterPoints.push_back(p2);
+  }
+
+  for (auto& p : perimeterPoints)
+  {
+    auto line = Util::BresenhamLine(from, p);
+    for (auto& point : line)
+    {
+      if (!Util::IsInsideMap(point, Map::Instance().CurrentLevel->MapSize))
+      {
+        continue;
+      }
+
+      auto cell = Map::Instance().CurrentLevel->MapArray[point.X][point.Y].get();
+      if (!cell->Blocking)
+      {
+        res.push_back({ cell->PosX, cell->PosY });
+      }
+      else
+      {
+        break;
+      }
+    }
+  }
+
+  return res;
 }
 
 void Printer::AddMessage(std::string message)

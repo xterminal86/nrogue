@@ -51,7 +51,7 @@ bool Player::TryToAttack(int dx, int dy)
       AIComponent* aic = static_cast<AIComponent*>(c);
       if (aic->CurrentModel->IsAgressive)
       {
-        Attack(go);
+        MeleeAttack(go);
         return true;
       }
     }
@@ -328,7 +328,27 @@ void Player::SetDefaultEquipment()
   }
 }
 
-void Player::Attack(GameObject* go)
+// 'what' is either actor or GameObject, 'with' is a weapon
+void Player::RangedAttack(GameObject* what, ItemComponent* with)
+{
+  AIComponent* ai = what->GetComponent<AIComponent>();
+  if (ai != nullptr)
+  {
+  }
+}
+
+// 'what' is either actor or GameObject, 'with' is a wand
+void Player::MagicAttack(GameObject* what, ItemComponent* with)
+{
+  switch (with->Data.SpellHeld)
+  {
+    case SpellType::FIREBALL:
+      Printer::Instance().DrawExplosion({ what->PosX, what->PosY });
+      break;
+  }
+}
+
+void Player::MeleeAttack(GameObject* go)
 {  
   if (go->Attrs.Indestructible)
   {
@@ -351,17 +371,18 @@ void Player::Attack(GameObject* go)
   }
   else
   {    
+    int attackChanceScale = 2;
     int defaultHitChance = 50;
     int hitChance = defaultHitChance;
 
     int d = Attrs.Skl.Get() - go->Attrs.Skl.Get();
     if (d > 0)
     {
-      hitChance += (d * 5);
+      hitChance += (d * attackChanceScale);
     }
     else
     {
-      hitChance -= (d * 5);
+      hitChance -= (d * attackChanceScale);
     }
 
     hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
@@ -386,25 +407,11 @@ void Player::Attack(GameObject* go)
       ItemComponent* weaponInHand = EquipmentByCategory[EquipmentCategory::WEAPON][0];
       if (weaponInHand != nullptr)
       {
-        if (weaponInHand->Data.ItemType_ == ItemType::WAND)
-        {
-          // Melee attack with any wand is 1d4 dmg
-          weaponDamage = RNG::Instance().RandomRange(1, 5);
-        }
-        else
-        {
-          auto wd = EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Damage;
-          int numRolls = wd.CurrentValue;
-          int diceSides = wd.OriginalValue;
+        auto wd = EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Damage;
 
-          for (int i = 0; i < numRolls; i++)
-          {
-            int res = RNG::Instance().RandomRange(1, diceSides + 1);
-            weaponDamage += res;
-          }
+        weaponDamage = Util::RollDamage(wd.CurrentValue, wd.OriginalValue);
 
-          durabilityLost = WeaponLosesDurability();
-        }
+        durabilityLost = WeaponLosesDurability();
       }
 
       int totalDmg = weaponDamage;

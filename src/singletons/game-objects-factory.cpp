@@ -1146,6 +1146,32 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
+      ic->Data.Range = 6;
+      ic->Data.Durability.Set(60);
+    }
+    break;
+
+    case RangedWeaponType::LONGBOW:
+    {
+      int numRolls = 2;
+      int diceType = 6;
+
+      ic->Data.Damage.CurrentValue = numRolls;
+      ic->Data.Damage.OriginalValue = diceType;
+      ic->Data.Range = 10;
+      ic->Data.Durability.Set(80);
+    }
+    break;
+
+    case RangedWeaponType::WAR_BOW:
+    {
+      int numRolls = 3;
+      int diceType = 8;
+
+      ic->Data.Damage.CurrentValue = numRolls;
+      ic->Data.Damage.OriginalValue = diceType;
+      ic->Data.Range = 14;
+      ic->Data.Durability.Set(100);
     }
     break;
   }
@@ -1153,13 +1179,12 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
 
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
-  ic->Data.ItemType_ = ItemType::WEAPON;
-  ic->Data.Range = 6;
+  ic->Data.ItemType_ = ItemType::RANGED_WEAPON;
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
 
-  ic->Data.UnidentifiedDescription = { "You don't know what it can do" };
+  ic->Data.UnidentifiedDescription = { "FIXME" };
 
   SetItemName(go, ic->Data);
 

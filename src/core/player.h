@@ -42,7 +42,9 @@ class Player : public GameObject
     }
 
     void Draw();
-    void Attack(GameObject* go);
+    void MeleeAttack(GameObject* go);
+    void RangedAttack(GameObject* what, ItemComponent* with);
+    void MagicAttack(GameObject* what, ItemComponent* with);
     void ReceiveDamage(GameObject* from, int amount);
     void WaitForTurn();
     void ProcessHunger();

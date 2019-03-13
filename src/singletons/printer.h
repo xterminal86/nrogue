@@ -53,6 +53,8 @@ class Printer : public Singleton<Printer>
 
     void Init() override;
 
+    void DrawExplosion(Position pos);
+
     /// Clears framebuffer (ncurses) or renderer (SDL)
     /// Use this before all PrintFB calls
     void Clear();
@@ -192,6 +194,8 @@ class Printer : public Singleton<Printer>
     TileColor ConvertHtmlToRGB(const std::string& htmlColor);
 
     #endif
+
+    std::vector<Position> GetVisiblePointsFrom(Position from, int range);
 };
 
 #endif
