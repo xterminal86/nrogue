@@ -175,6 +175,13 @@ void InventoryState::Update(bool forceUpdate)
       if (ic->Data.IsStackable || (ic->Data.IsChargeable && ic->Data.IsIdentified))
       {        
         auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
+        if ((ic->Data.ItemType_ == ItemType::ARROWS
+          || ic->Data.ItemType_ == ItemType::WAND)
+            && ic->Data.IsEquipped)
+        {
+          stackAmount += " (E)";
+        }
+
         Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1, 2 + yPos, stackAmount, Printer::kAlignLeft, "#FFFFFF");
       }
       else if (ic->Data.IsEquipped)

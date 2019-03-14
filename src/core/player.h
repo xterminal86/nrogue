@@ -97,7 +97,8 @@ class Player : public GameObject
     void ProcessKill(GameObject* monster);
 
     bool WeaponLosesDurability();
-    void BreakItem(ItemComponent* ic);
+    bool ShouldBreak(ItemComponent* ic);
+    void BreakItem(ItemComponent* ic, bool suppressMessage = false);
 
     void SwitchPlaces(AIComponent* other);
 

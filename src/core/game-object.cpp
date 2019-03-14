@@ -121,6 +121,11 @@ void GameObject::ReceiveDamage(GameObject* from, int amount)
       Printer::Instance().AddMessage(msg);
     }
   }
+  else
+  {
+    auto msg = Util::StringFormat("%s wasn't even scratched!", ObjectName.data());
+    Printer::Instance().AddMessage(msg);
+  }
 }
 
 void GameObject::WaitForTurn()

@@ -363,6 +363,36 @@ namespace Util
     return LinearDistance(s.X, s.Y, e.X, e.Y);
   }
   
+  inline std::vector<Position> GetEightPointsAround(Position pos, Position mapSize)
+  {
+    std::vector<Position> result;
+
+    int lx = pos.X - 1;
+    int ly = pos.Y - 1;
+    int hx = pos.X + 1;
+    int hy = pos.Y + 1;
+
+    for (int x = lx; x <= hx; x++)
+    {
+      for (int y = ly; y <= hy; y++)
+      {
+        if (x == pos.X && y == pos.Y)
+        {
+          continue;
+        }
+
+        Position p(x, y);
+
+        if (IsInsideMap(p, mapSize))
+        {
+          result.push_back(p);
+        }
+      }
+    }
+
+    return result;
+  }
+
   inline std::vector<Position> GetScreenRect(int x1, int y1, int x2, int y2)
   {
     std::vector<Position> result;

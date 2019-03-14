@@ -172,9 +172,7 @@ void MainState::HandleInput()
       {
         if (Map::Instance().CurrentLevel->Peaceful)
         {
-          std::vector<std::string> variants = { "Not here.", "Not in town." };
-          int index = RNG::Instance().RandomRange(0, 2);
-          Printer::Instance().AddMessage(variants[index]);
+          PrintNoAttackInTown();
         }
         else
         {
@@ -223,8 +221,17 @@ void MainState::HandleInput()
         break;
 
       case 'f':
-        ProcessRangedWeapon();
-        break;
+      {
+        if (Map::Instance().CurrentLevel->Peaceful)
+        {
+          PrintNoAttackInTown();
+        }
+        else
+        {
+          ProcessRangedWeapon();
+        }
+      }
+      break;
 
       case '>':
         CheckStairs('>');
@@ -700,4 +707,23 @@ void MainState::DisplayStatusIcons()
       Printer::Instance().PrintFB(8, th - 3, '[', "#FFFF00");
     }
   }
+
+  // Arrows condition
+
+  ItemComponent* arrows = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+  if (arrows != nullptr && arrows->Data.ItemType_ == ItemType::ARROWS)
+  {
+    int amount = arrows->Data.Amount;
+    if (amount <= 3)
+    {
+      Printer::Instance().PrintFB(10, th - 3, '^', "#FFFF00");
+    }
+  }
+}
+
+void MainState::PrintNoAttackInTown()
+{
+  std::vector<std::string> variants = { "Not here.", "Not in town." };
+  int index = RNG::Instance().RandomRange(0, 2);
+  Printer::Instance().AddMessage(variants[index]);
 }

@@ -212,8 +212,21 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
 }
 
 void TargetState::FireWeapon()
-{
+{  
+  if (_cursorPosition.X == _playerRef->PosX
+   && _cursorPosition.Y == _playerRef->PosY)
+  {
+    Printer::Instance().AddMessage("Find a better way to commit suicide");
+    return;
+  }
+
   // TODO: randomize end point with regard to SKL / hit chance?
+
+  int chance = CalculateHitChance();
+  if (!Util::Rolld100(chance))
+  {
+    auto rect = Util::GetEightPointsAround(_cursorPosition, Map::Instance().CurrentLevel->MapSize);
+  }
 
   GameObject* stoppedAt = nullptr;
 
@@ -245,6 +258,7 @@ void TargetState::ProcessHit(GameObject *hitPoint)
 
   if (isWand)
   {    
+    _playerRef->MagicAttack(hitPoint, _weaponRef);
   }
   else if (isWeapon)
   {
@@ -268,17 +282,63 @@ void TargetState::MoveCursor(int dx, int dy)
                        _playerRef->PosY + hh - 2);
 
   _cursorPosition.X = nx;
-  _cursorPosition.Y = ny;
+  _cursorPosition.Y = ny;  
+}
+
+void TargetState::DrawHint()
+{
+  Position startPoint = { _playerRef->PosX, _playerRef->PosY };
+
+  int mox = Map::Instance().CurrentLevel->MapOffsetX;
+  int moy = Map::Instance().CurrentLevel->MapOffsetY;
+
+  Position mapSize = Map::Instance().CurrentLevel->MapSize;
+  auto& mapRef = Map::Instance().CurrentLevel->MapArray;
+
+  std::vector<Position> cellsToHighlight;
+
+  auto line = Util::BresenhamLine(startPoint, _cursorPosition);
+  for (auto& p : line)
+  {
+    if (p == startPoint)
+    {
+      continue;
+    }
+
+    if (Util::IsInsideMap(p, mapSize))
+    {
+      auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+
+      if (actor != nullptr
+       || mapRef[p.X][p.Y]->Blocking
+       || !mapRef[p.X][p.Y]->Visible)
+      {
+        break;
+      }
+      else
+      {
+        cellsToHighlight.push_back(p);
+      }
+    }
+  }
+
+  for (auto& p : cellsToHighlight)
+  {
+    Printer::Instance().PrintFB(p.X + mox, p.Y + moy, '.', "#FF0000");
+  }
 }
 
 void TargetState::DrawCursor()
 {
-  Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().CurrentLevel->MapOffsetX + 1,
-                              _cursorPosition.Y + Map::Instance().CurrentLevel->MapOffsetY,
+  int mox = Map::Instance().CurrentLevel->MapOffsetX;
+  int moy = Map::Instance().CurrentLevel->MapOffsetY;
+
+  Printer::Instance().PrintFB(_cursorPosition.X + mox + 1,
+                              _cursorPosition.Y + moy,
                               ']', "#FFFFFF");
 
-  Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().CurrentLevel->MapOffsetX - 1,
-                              _cursorPosition.Y + Map::Instance().CurrentLevel->MapOffsetY,
+  Printer::Instance().PrintFB(_cursorPosition.X + mox - 1,
+                              _cursorPosition.Y + moy,
                               '[', "#FFFFFF");
 }
 
@@ -292,6 +352,7 @@ void TargetState::Update(bool forceUpdate)
 
     _playerRef->Draw();
 
+    DrawHint();
     DrawCursor();
 
     auto& msgs = Printer::Instance().Messages();
@@ -310,4 +371,38 @@ void TargetState::Update(bool forceUpdate)
 void TargetState::Setup(ItemComponent* weapon)
 {
   _weaponRef = weapon;
+}
+
+int TargetState::CalculateHitChance()
+{
+  int chance = 0;
+
+  Position startPoint = { _playerRef->PosX, _playerRef->PosY };
+  Position endPoint = _cursorPosition;
+
+  int baseChance = 50;
+  int attackChanceScale = 5;
+
+  chance = baseChance;
+
+  int skl = _playerRef->Attrs.Skl.Get();
+  if (skl > 0)
+  {
+    chance += (attackChanceScale * skl);
+  }
+  else
+  {
+    chance -= (attackChanceScale * skl);
+  }
+
+  int d = (int)Util::LinearDistance(startPoint, endPoint);
+
+  for (int i = 0; i < d; i++)
+  {
+    chance -= attackChanceScale;
+  }
+
+  chance = Util::Clamp(chance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
+
+  return chance;
 }

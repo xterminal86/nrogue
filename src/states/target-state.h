@@ -23,6 +23,9 @@ class TargetState : public GameState
 
     Position _cursorPosition;
 
+    int CalculateHitChance();
+
+    void DrawHint();
     void DrawCursor();
     void MoveCursor(int dx, int dy);
     void FireWeapon();    

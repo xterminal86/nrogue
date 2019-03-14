@@ -334,6 +334,24 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   AIComponent* ai = what->GetComponent<AIComponent>();
   if (ai != nullptr)
   {
+    int dmg = Util::RollDamage(with->Data.Damage.CurrentValue, with->Data.Damage.OriginalValue);
+    ai->OwnerGameObject->ReceiveDamage(this, dmg);
+  }
+
+  ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  ItemComponent* arrows = EquipmentByCategory[EquipmentCategory::SHIELD][0];
+
+  arrows->Data.Amount--;
+
+  if (arrows->Data.Amount <= 0)
+  {
+    BreakItem(arrows, true);
+  }
+
+  WeaponLosesDurability();
+  if (ShouldBreak(weapon))
+  {
+    BreakItem(weapon);
   }
 }
 
@@ -350,6 +368,8 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
 
 void Player::MeleeAttack(GameObject* go)
 {  
+  ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
+
   if (go->Attrs.Indestructible)
   {
     Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
@@ -360,12 +380,11 @@ void Player::MeleeAttack(GameObject* go)
     Application::Instance().DrawCurrentState();
     Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs);
 
-    if (EquipmentByCategory[EquipmentCategory::WEAPON][0] != nullptr
-     && WeaponLosesDurability())
+    if (weapon != nullptr && WeaponLosesDurability())
     {
-      if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue <= 0)
+      if (ShouldBreak(weapon))
       {
-        BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);        
+        BreakItem(weapon);
       }
     }
   }
@@ -404,10 +423,9 @@ void Player::MeleeAttack(GameObject* go)
 
       bool durabilityLost = false;
 
-      ItemComponent* weaponInHand = EquipmentByCategory[EquipmentCategory::WEAPON][0];
-      if (weaponInHand != nullptr)
+      if (weapon != nullptr)
       {
-        auto wd = EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Damage;
+        auto wd = weapon->Data.Damage;
 
         weaponDamage = Util::RollDamage(wd.CurrentValue, wd.OriginalValue);
 
@@ -431,11 +449,12 @@ void Player::MeleeAttack(GameObject* go)
       Application::Instance().DrawCurrentState();
       Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs);
 
+      // Leftover from the days when durability lost was probabilistic
       if (durabilityLost)
       {
-        if (EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.CurrentValue <= 0)
+        if (ShouldBreak(weapon))
         {
-          BreakItem(EquipmentByCategory[EquipmentCategory::WEAPON][0]);
+          BreakItem(weapon);
         }
       }
     }
@@ -481,7 +500,7 @@ void Player::ReceiveDamage(GameObject* from, int amount)
       Printer::Instance().AddMessage(str);
 
       armor->Data.Durability.Add(-amount);
-      if (armor->Data.Durability.CurrentValue == 0)
+      if (ShouldBreak(armor))
       {
         BreakItem(armor);
       }
@@ -494,6 +513,11 @@ void Player::ReceiveDamage(GameObject* from, int amount)
 
     Attrs.HP.CurrentValue -= amount;
   }
+}
+
+bool Player::ShouldBreak(ItemComponent *ic)
+{
+  return (ic->Data.Durability.CurrentValue <= 0);
 }
 
 void Player::AwardExperience(int amount)
@@ -1050,16 +1074,19 @@ void Player::RecalculateStatsModifiers()
   }
 }
 
-void Player::BreakItem(ItemComponent* ic)
+void Player::BreakItem(ItemComponent* ic, bool suppressMessage)
 {
-  auto objName = ic->OwnerGameObject->ObjectName;
+  if (!suppressMessage)
+  {
+    auto objName = ic->OwnerGameObject->ObjectName;
 
-  std::string breakStr = (ic->Data.ItemType_ == ItemType::ARMOR)
-                        ? "is destroyed!"
-                        : "breaks!";
+    std::string breakStr = (ic->Data.ItemType_ == ItemType::ARMOR)
+                          ? "is destroyed!"
+                          : "breaks!";
 
-  auto str = Util::StringFormat("%s %s", objName.data(), breakStr.data());
-  Printer::Instance().AddMessage(str);
+    auto str = Util::StringFormat("%s %s", objName.data(), breakStr.data());
+    Printer::Instance().AddMessage(str);
+  }
 
   auto typeHash = ic->Data.ItemTypeHash;
 
