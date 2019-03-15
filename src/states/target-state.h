@@ -41,6 +41,8 @@ class TargetState : public GameState
     std::vector<GameObject*> _targets;
 
     int _lastTargetIndex = -1;
+
+    bool _drawHint = false;
 };
 
 #endif // TARGETSTATE_H

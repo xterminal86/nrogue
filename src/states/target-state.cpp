@@ -12,6 +12,8 @@ void TargetState::Init()
 
 void TargetState::Prepare()
 {
+  _drawHint = true;
+
   _cursorPosition.X = _playerRef->PosX;
   _cursorPosition.Y = _playerRef->PosY;
 
@@ -26,8 +28,6 @@ void TargetState::Prepare()
 
     _lastTargetIndex = 0;
   }
-
-  Printer::Instance().AddMessage("Select target (TAB to cycle through visible ones)");
 }
 
 void TargetState::FindTargets()
@@ -128,7 +128,7 @@ void TargetState::HandleInput()
       CycleTargets();
       break;
 
-    case VK_ENTER:
+    case 'f':
       FireWeapon();
       break;
 
@@ -215,17 +215,25 @@ void TargetState::FireWeapon()
 {  
   if (_cursorPosition.X == _playerRef->PosX
    && _cursorPosition.Y == _playerRef->PosY)
-  {
-    Printer::Instance().AddMessage("Find a better way to commit suicide");
+  {    
     return;
   }
 
+  _drawHint = false;
+
   // TODO: randomize end point with regard to SKL / hit chance?
+
+  auto str = "You fire " + _weaponRef->OwnerGameObject->ObjectName;
+  Printer::Instance().AddMessage(str);
 
   int chance = CalculateHitChance();
   if (!Util::Rolld100(chance))
   {
+    Printer::Instance().AddMessage("The shot goes astray due to lack of skill");
+
     auto rect = Util::GetEightPointsAround(_cursorPosition, Map::Instance().CurrentLevel->MapSize);
+    int index = RNG::Instance().RandomRange(0, rect.size());
+    _cursorPosition = rect[index];
   }
 
   GameObject* stoppedAt = nullptr;
@@ -352,16 +360,17 @@ void TargetState::Update(bool forceUpdate)
 
     _playerRef->Draw();
 
-    DrawHint();
-    DrawCursor();
+    if (_drawHint)
+    {
+      DrawHint();
+      DrawCursor();
+    }
 
-    auto& msgs = Printer::Instance().Messages();
-    auto msg1 = msgs.at(0);
+    int tw = Printer::Instance().TerminalWidth;
 
-    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
-                                Printer::Instance().TerminalHeight - 1,
-                                msg1,
-                                Printer::kAlignRight,
+    Printer::Instance().PrintFB(tw / 2, 0,
+                                "Select target (TAB to cycle through visible ones)",
+                                Printer::kAlignCenter,
                                 "#FFFFFF");
 
     Printer::Instance().Render();

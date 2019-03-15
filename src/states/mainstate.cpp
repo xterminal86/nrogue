@@ -222,13 +222,15 @@ void MainState::HandleInput()
 
       case 'f':
       {
+        ProcessRangedWeapon();
+
         if (Map::Instance().CurrentLevel->Peaceful)
         {
-          PrintNoAttackInTown();
+          //PrintNoAttackInTown();
         }
         else
         {
-          ProcessRangedWeapon();
+          //ProcessRangedWeapon();
         }
       }
       break;
