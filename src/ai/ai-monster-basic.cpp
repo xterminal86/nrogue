@@ -122,6 +122,7 @@ bool AIMonsterBasic::Attack(Player* player)
 {  
   bool result = false;
 
+  int attackChanceScale = 2;
   int defaultHitChance = 50;
   int hitChance = defaultHitChance;
 
@@ -129,21 +130,21 @@ bool AIMonsterBasic::Attack(Player* player)
 
   if (d > 0)
   {
-    hitChance += (d * 5);
+    hitChance += (d * attackChanceScale);
   }
   else
   {
-    hitChance -= (d * 5);
+    hitChance -= (std::abs(d) * attackChanceScale);
   }
 
   hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
 
   auto logMsg = Util::StringFormat("%s (SKL %i, LVL %i) attacks Player (SKL: %i, LVL %i): chance = %i",
                                    AIComponentRef->OwnerGameObject->ObjectName.data(),
-                                   AIComponentRef->OwnerGameObject->Attrs.Skl.CurrentValue,
-                                   AIComponentRef->OwnerGameObject->Attrs.Lvl.CurrentValue,
-                                   player->Attrs.Skl.CurrentValue,
-                                   player->Attrs.Lvl.CurrentValue,
+                                   AIComponentRef->OwnerGameObject->Attrs.Skl.Get(),
+                                   AIComponentRef->OwnerGameObject->Attrs.Lvl.Get(),
+                                   player->Attrs.Skl.Get(),
+                                   player->Attrs.Lvl.Get(),
                                    hitChance);
   Logger::Instance().Print(logMsg);
 

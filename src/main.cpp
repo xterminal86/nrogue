@@ -68,9 +68,9 @@ int main(int argc, char* argv[])
 
   Application::Instance().Cleanup();
 
-#ifdef RUN_TESTS
+  #ifdef RUN_TESTS
   Tests::Run();
-#endif
+  #endif
 
   return 0;
 }

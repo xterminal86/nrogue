@@ -340,6 +340,11 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
     what->ReceiveDamage(this, dmg);
   }
 
+  if (what->IsDestroyed)
+  {
+    ProcessKill(what);
+  }
+
   ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
   ItemComponent* arrows = EquipmentByCategory[EquipmentCategory::SHIELD][0];
 
@@ -403,7 +408,7 @@ void Player::MeleeAttack(GameObject* go)
     }
     else
     {
-      hitChance -= (d * attackChanceScale);
+      hitChance -= (std::abs(d) * attackChanceScale);
     }
 
     hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
