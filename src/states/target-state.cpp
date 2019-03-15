@@ -152,11 +152,23 @@ GameObject* TargetState::LaunchProjectile(char image)
 
   // Don't include player's position
   for (int i = 1; i < line.size(); i++)
-  {
-    Update(true);
-
+  {    
     int mx = line[i].X;
     int my = line[i].Y;
+
+    Update(true);
+
+    int drawingPosX = mx + Map::Instance().CurrentLevel->MapOffsetX;
+    int drawingPosY = my + Map::Instance().CurrentLevel->MapOffsetY;
+
+    Printer::Instance().PrintFB(drawingPosX, drawingPosY, image, "#FFFF00");
+    Printer::Instance().Render();
+
+    Util::Sleep(100);
+
+    #ifndef USE_SDL
+    Util::Sleep(10);
+    #endif
 
     if (maxDistance >= _weaponRef->Data.Range)
     {
@@ -169,16 +181,6 @@ GameObject* TargetState::LaunchProjectile(char image)
     {
       break;
     }
-
-    int drawingPosX = mx + Map::Instance().CurrentLevel->MapOffsetX;
-    int drawingPosY = my + Map::Instance().CurrentLevel->MapOffsetY;
-
-    Printer::Instance().PrintFB(drawingPosX, drawingPosY, image, "#FFFF00");
-    Printer::Instance().Render();
-
-    #ifndef USE_SDL
-    Util::Sleep(10);
-    #endif
 
     maxDistance++;
   }
@@ -203,9 +205,16 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
 
   auto cell = Map::Instance().CurrentLevel->MapArray[at.X][at.Y].get();
   if (cell->Blocking)
-  {
-    auto prevCell = Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
-    return prevCell;
+  {    
+    if (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON)
+    {
+      return cell;
+    }
+    else if (_weaponRef->Data.ItemType_ == ItemType::WAND)
+    {
+      auto prevCell = Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
+      return prevCell;
+    }
   }
 
   return nullptr;
@@ -221,19 +230,32 @@ void TargetState::FireWeapon()
 
   _drawHint = false;
 
-  // TODO: randomize end point with regard to SKL / hit chance?
-
-  auto str = "You fire " + _weaponRef->OwnerGameObject->ObjectName;
+  std::string weaponName = _weaponRef->Data.IsIdentified ? _weaponRef->Data.IdentifiedName : _weaponRef->Data.UnidentifiedName;
+  auto str = "You fire " + weaponName;
   Printer::Instance().AddMessage(str);
 
   int chance = CalculateHitChance();
   if (!Util::Rolld100(chance))
-  {
-    Printer::Instance().AddMessage("The shot goes astray due to lack of skill");
-
+  {    
     auto rect = Util::GetEightPointsAround(_cursorPosition, Map::Instance().CurrentLevel->MapSize);
+
+    // If we shoot from point blank in a corridor,
+    // we shouldn't accidentaly target ourselves
+    // due to lack of skill
+    for (int i = 0; i < rect.size(); i++)
+    {
+      if (rect[i].X == _playerRef->PosX
+       && rect[i].Y == _playerRef->PosY)
+      {
+        rect.erase(rect.begin() + i);
+        break;
+      }
+    }
+
     int index = RNG::Instance().RandomRange(0, rect.size());
     _cursorPosition = rect[index];
+
+    Printer::Instance().AddMessage("The shot goes astray due to lack of skill");
   }
 
   GameObject* stoppedAt = nullptr;

@@ -331,11 +331,13 @@ void Player::SetDefaultEquipment()
 // 'what' is either actor or GameObject, 'with' is a weapon
 void Player::RangedAttack(GameObject* what, ItemComponent* with)
 {
-  AIComponent* ai = what->GetComponent<AIComponent>();
-  if (ai != nullptr)
+  int dmg = Util::RollDamage(with->Data.Damage.CurrentValue, with->Data.Damage.OriginalValue);
+
+  // FIXME: Doors, walls etc. are MapArray's GameObjects,
+  // because of fog of war, so we can't destroy them even if we want.
+  if (what->ComponentsSize() != 0)
   {
-    int dmg = Util::RollDamage(with->Data.Damage.CurrentValue, with->Data.Damage.OriginalValue);
-    ai->OwnerGameObject->ReceiveDamage(this, dmg);
+    what->ReceiveDamage(this, dmg);
   }
 
   ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
