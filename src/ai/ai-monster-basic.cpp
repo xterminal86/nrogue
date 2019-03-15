@@ -128,14 +128,7 @@ bool AIMonsterBasic::Attack(Player* player)
 
   int d = AIComponentRef->OwnerGameObject->Attrs.Skl.Get() - player->Attrs.Skl.Get();
 
-  if (d > 0)
-  {
-    hitChance += (d * attackChanceScale);
-  }
-  else
-  {
-    hitChance -= (std::abs(d) * attackChanceScale);
-  }
+  hitChance += (d * attackChanceScale);
 
   hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
 
