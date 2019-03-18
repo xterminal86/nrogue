@@ -30,8 +30,6 @@ struct TileInfo
   std::string Data;
 };
 
-class Position;
-
 #else
 struct FBPixel
 {
@@ -39,6 +37,8 @@ struct FBPixel
   int Character;
 };
 #endif
+
+class Position;
 
 /// Singleton for ncurses text printing
 class Printer : public Singleton<Printer> 

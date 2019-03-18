@@ -1217,7 +1217,7 @@ GameObject* GameObjectsFactory::CreateArrows(int x, int y, ArrowType type, ItemP
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
 
-  ic->Data.UnidentifiedDescription = { "You don't know what it can do" };
+  ic->Data.UnidentifiedDescription = { "FIXME" };
 
   SetItemName(go, ic->Data);
 
