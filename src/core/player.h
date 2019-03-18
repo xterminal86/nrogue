@@ -45,7 +45,7 @@ class Player : public GameObject
     void MeleeAttack(GameObject* go);
     void RangedAttack(GameObject* what, ItemComponent* with);
     void MagicAttack(GameObject* what, ItemComponent* with);
-    void ReceiveDamage(GameObject* from, int amount);
+    void ReceiveDamage(GameObject* from, int amount, bool godMode = false);
     void WaitForTurn();
     void ProcessHunger();
     void FinishTurn();

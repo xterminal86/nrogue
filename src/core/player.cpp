@@ -387,8 +387,18 @@ void Player::MeleeAttack(GameObject* go)
     Application::Instance().DrawCurrentState();
     Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs);
 
-    if (weapon != nullptr && WeaponLosesDurability())
+    if (weapon != nullptr)
     {
+      // Melee attack with ranged weapon in hand fallbacks to punch
+
+      bool isRanged = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON
+                    || weapon->Data.ItemType_ == ItemType::WAND);
+
+      if (!isRanged)
+      {
+        WeaponLosesDurability();
+      }
+
       if (ShouldBreak(weapon))
       {
         BreakItem(weapon);
@@ -426,11 +436,17 @@ void Player::MeleeAttack(GameObject* go)
 
       if (weapon != nullptr)
       {
+        bool isRanged = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON
+                      || weapon->Data.ItemType_ == ItemType::WAND);
+
         auto wd = weapon->Data.Damage;
 
-        weaponDamage = Util::RollDamage(wd.CurrentValue, wd.OriginalValue);
+        // Melee attack with ranged weapon in hand fallbacks to punch
 
-        durabilityLost = WeaponLosesDurability();
+        weaponDamage = isRanged ? Util::RollDamage(1, 4) :
+                                  Util::RollDamage(wd.CurrentValue, wd.OriginalValue);
+
+        durabilityLost = isRanged ? false : WeaponLosesDurability();
       }
 
       int totalDmg = weaponDamage;
@@ -475,10 +491,14 @@ void Player::MeleeAttack(GameObject* go)
   FinishTurn();
 }
 
-void Player::ReceiveDamage(GameObject* from, int amount)
+void Player::ReceiveDamage(GameObject* from, int amount, bool godMode)
 {
-  // FIXME: debug
-  // amount = 0;
+  if (godMode)
+  {
+    auto str = Util::StringFormat("You laugh at the face of %s", from->ObjectName.data());
+    Printer::Instance().AddMessage(str);
+    return;
+  }
 
   ItemComponent* armor = EquipmentByCategory[EquipmentCategory::TORSO][0];
   if (armor != nullptr)
@@ -1020,7 +1040,8 @@ void Player::SetDefaultSkills()
 
 bool Player::WeaponLosesDurability()
 {
-  EquipmentByCategory[EquipmentCategory::WEAPON][0]->Data.Durability.Add(-1);
+  auto weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  weapon->Data.Durability.Add(-1);
 
   return true;
 }

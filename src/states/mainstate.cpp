@@ -222,6 +222,7 @@ void MainState::HandleInput()
 
       case 'f':
       {
+        // FIXME: debug
         ProcessRangedWeapon();
 
         if (Map::Instance().CurrentLevel->Peaceful)
@@ -243,7 +244,7 @@ void MainState::HandleInput()
         CheckStairs('<');
         break;
 
-      // ***** TODO: for debug, remove afterwards
+      // ***** FIXME: for debug, remove afterwards
 
       case 'L':
         _playerRef->LevelUp();
@@ -313,7 +314,7 @@ void MainState::Update(bool forceUpdate)
     _debugInfo = Util::StringFormat("World seed: %lu", RNG::Instance().Seed);
     Printer::Instance().PrintFB(0, 0, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
-    // FIXME: Some debug info
+    // FIXME: Print some debug info
 
     // PrintDebugInfo();
 
@@ -521,7 +522,7 @@ void MainState::ProcessWand(ItemComponent* wand)
 {
   if (wand->Data.Amount == 0)
   {
-    Printer::Instance().AddMessage("No charges left");
+    Printer::Instance().AddMessage("No charges left!");
   }
   else
   {
@@ -666,11 +667,13 @@ void MainState::DisplayStatusIcons()
 {
   int th = Printer::Instance().TerminalHeight;
 
+  int startPos = 4;
+
   // Hungry
 
   if (_playerRef->IsStarving)
   {
-    Printer::Instance().PrintFB(4, th - 3, '%', "#FF0000");
+    Printer::Instance().PrintFB(startPos, th - 3, '%', "#FF0000");
   }
   else
   {
@@ -678,7 +681,7 @@ void MainState::DisplayStatusIcons()
     int part = hungerMax - hungerMax * 0.25;
     if (_playerRef->Attrs.Hunger >= part)
     {
-      Printer::Instance().PrintFB(4, th - 3, '%', "#FFFF00");
+      Printer::Instance().PrintFB(startPos, th - 3, '%', "#FFFF00");
     }
   }
 
@@ -692,7 +695,7 @@ void MainState::DisplayStatusIcons()
 
     if (weapon->Data.Durability.CurrentValue <= warning)
     {
-      Printer::Instance().PrintFB(6, th - 3, ')', "#FFFF00");
+      Printer::Instance().PrintFB(startPos + 2, th - 3, ')', "#FFFF00");
     }
   }
 
@@ -706,11 +709,11 @@ void MainState::DisplayStatusIcons()
 
     if (armor->Data.Durability.CurrentValue <= warning)
     {
-      Printer::Instance().PrintFB(8, th - 3, '[', "#FFFF00");
+      Printer::Instance().PrintFB(startPos + 4, th - 3, '[', "#FFFF00");
     }
   }
 
-  // Arrows condition
+  // Ammo condition
 
   ItemComponent* arrows = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0];
   if (arrows != nullptr && arrows->Data.ItemType_ == ItemType::ARROWS)
@@ -718,14 +721,14 @@ void MainState::DisplayStatusIcons()
     int amount = arrows->Data.Amount;
     if (amount <= 3)
     {
-      Printer::Instance().PrintFB(10, th - 3, '^', "#FFFF00");
+      Printer::Instance().PrintFB(startPos + 6, th - 3, '^', "#FFFF00");
     }
   }
 }
 
 void MainState::PrintNoAttackInTown()
 {
-  std::vector<std::string> variants = { "Not here.", "Not in town." };
+  std::vector<std::string> variants = { "Not here", "Not in town" };
   int index = RNG::Instance().RandomRange(0, 2);
   Printer::Instance().AddMessage(variants[index]);
 }
