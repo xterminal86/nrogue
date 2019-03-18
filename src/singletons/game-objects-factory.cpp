@@ -1172,21 +1172,13 @@ GameObject* GameObjectsFactory::CreateRandomWand(ItemPrefix prefixOverride)
 
   std::map<SpellType, int> spellsDistribution =
   {
-    { SpellType::LIGHT,             30 },
-    { SpellType::STRIKE,            20 },
-    { SpellType::MAGIC_MISSILE,     20 },
-    { SpellType::FROST,             20 },
-    { SpellType::DETECT_MONSTERS,   15 },
-    { SpellType::NEUTRALIZE_POISON, 15 },
-    { SpellType::TELEPORT,          15 },
-    { SpellType::IDENTIFY,          10 },
-    { SpellType::MAGIC_MAPPING,     10 },
-    { SpellType::HEAL,              10 },
-    { SpellType::FIREBALL,           5 },
-    { SpellType::LIGHTNING,          5 },
-    { SpellType::LASER,              5 },
-    { SpellType::REMOVE_CURSE,       5 },
-    { SpellType::MANA_SHIELD,        5 }
+    { SpellType::LIGHT,         40 },
+    { SpellType::STRIKE,        30 },
+    { SpellType::FROST,         30 },
+    { SpellType::FIREBALL,       5 },
+    { SpellType::LASER,          5 },
+    { SpellType::LIGHTNING,      5 },
+    { SpellType::MAGIC_MISSILE, 30 }
   };
 
   auto spellPair = Util::WeightedRandom(spellsDistribution);
@@ -1332,6 +1324,8 @@ GameObject* GameObjectsFactory::CreateArrows(int x, int y, ArrowType type, ItemP
   ic->Data.EqCategory = EquipmentCategory::SHIELD;
   ic->Data.Amount = randomAmount;
   ic->Data.IsStackable = true;
+  ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
+  ic->Data.Cost = 1;
 
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
 

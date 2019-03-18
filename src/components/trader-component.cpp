@@ -160,6 +160,7 @@ void TraderComponent::CreateItems()
       std::map<ItemType, int> itemsWeights =
       {
         { ItemType::WEAPON,     5 },
+        { ItemType::ARROWS,     3 },
         { ItemType::ARMOR,      5 },
         { ItemType::REPAIR_KIT, 2 },
       };
@@ -196,9 +197,19 @@ void TraderComponent::CreateItems()
             break;
 
           case ItemType::ARMOR:
+          {
             auto armorPair = Util::WeightedRandom(armorWeights);
             go = GameObjectsFactory::Instance().CreateArmor(armorPair.first, prefixPair.first);
-            break;
+          }
+          break;
+
+          case ItemType::ARROWS:
+          {
+            int flag = RNG::Instance().RandomRange(0, 2);
+            ArrowType arrowsType = (flag == 0) ? ArrowType::ARROWS : ArrowType::BOLTS;
+            go = GameObjectsFactory::Instance().CreateArrows(0, 0, arrowsType, prefixPair.first);
+          }
+          break;
         }
 
         if (go != nullptr)
