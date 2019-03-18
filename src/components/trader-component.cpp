@@ -58,7 +58,8 @@ void TraderComponent::CreateItems()
       {
         { ItemType::HEALING_POTION, 10 },
         { ItemType::MANA_POTION,    10 },
-        { ItemType::RETURNER,       1  }
+        { ItemType::WAND,            3 },
+        { ItemType::RETURNER,        1 }
       };
 
       std::map<ItemPrefix, int> prefixWeights =
@@ -86,6 +87,10 @@ void TraderComponent::CreateItems()
 
           case ItemType::RETURNER:
             go = GameObjectsFactory::Instance().CreateReturner(0, 0, -1, prefixPair.first);
+            break;
+
+          case ItemType::WAND:
+            go = GameObjectsFactory::Instance().CreateRandomWand(prefixPair.first);
             break;
         }
 

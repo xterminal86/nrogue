@@ -36,6 +36,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateContainer(std::string name, std::string bgColor, int image, int x, int y);
     GameObject* CreateGem(int x, int y, GemType type = GemType::RANDOM);
     GameObject* CreateWand(int x, int y, WandMaterials material, SpellType spellType, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateRandomWand(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateReturner(int x, int y, int charges = -1, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRepairKit(int x, int y, int charges = -1, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateArmor(ArmorType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);

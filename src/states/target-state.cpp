@@ -164,7 +164,8 @@ GameObject* TargetState::LaunchProjectile(char image)
     Printer::Instance().PrintFB(drawingPosX, drawingPosY, image, "#FFFF00");
     Printer::Instance().Render();
 
-    Util::Sleep(100);
+    // FIXME: debug
+    //Util::Sleep(100);
 
     #ifndef USE_SDL
     Util::Sleep(10);
@@ -222,6 +223,10 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
 
 void TargetState::FireWeapon()
 {  
+  // It is assumed that we have valid weapon and ammunition
+  // in corresponding equipment slots
+  // (necessary checks were performed in MainState)
+
   if (_cursorPosition.X == _playerRef->PosX
    && _cursorPosition.Y == _playerRef->PosY)
   {    
@@ -411,10 +416,14 @@ int TargetState::CalculateHitChance()
   Position startPoint = { _playerRef->PosX, _playerRef->PosY };
   Position endPoint = _cursorPosition;
 
+  bool isXBow = (_weaponRef->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_XBOW
+              || _weaponRef->Data.RangedWeaponType_ == RangedWeaponType::XBOW
+              || _weaponRef->Data.RangedWeaponType_ == RangedWeaponType::HEAVY_XBOW);
+
   int baseChance = 50;
   int attackChanceScale = 5;
 
-  chance = baseChance;
+  chance = isXBow ? (baseChance + 15) : baseChance;
 
   int skl = _playerRef->Attrs.Skl.Get();
   if (skl > 0)
@@ -431,6 +440,18 @@ int TargetState::CalculateHitChance()
   for (int i = 0; i < d; i++)
   {
     chance -= attackChanceScale;
+  }
+
+  ItemPrefix ammoPrefix = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0]->Data.Prefix;
+  switch (ammoPrefix)
+  {
+    case ItemPrefix::BLESSED:
+      chance *= 2;
+      break;
+
+    case ItemPrefix::CURSED:
+      chance /= 2;
+      break;
   }
 
   chance = Util::Clamp(chance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);

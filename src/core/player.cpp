@@ -328,7 +328,7 @@ void Player::SetDefaultEquipment()
   }
 }
 
-// 'what' is either actor or GameObject, 'with' is a weapon
+/// 'what' is either actor or GameObject, 'with' is a weapon
 void Player::RangedAttack(GameObject* what, ItemComponent* with)
 {
   int dmg = Util::RollDamage(with->Data.Damage.CurrentValue, with->Data.Damage.OriginalValue);
@@ -356,13 +356,14 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   }
 
   WeaponLosesDurability();
+
   if (ShouldBreak(weapon))
   {
     BreakItem(weapon);
   }
 }
 
-// 'what' is either actor or GameObject, 'with' is a wand
+/// 'what' is either actor or GameObject, 'with' is a wand
 void Player::MagicAttack(GameObject* what, ItemComponent* with)
 {
   switch (with->Data.SpellHeld)
@@ -389,7 +390,7 @@ void Player::MeleeAttack(GameObject* go)
 
     if (weapon != nullptr)
     {
-      // Melee attack with ranged weapon in hand fallbacks to punch
+      // Melee attack with ranged weapon in hand fallbacks to "punch"
 
       bool isRanged = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON
                     || weapon->Data.ItemType_ == ItemType::WAND);
@@ -441,7 +442,7 @@ void Player::MeleeAttack(GameObject* go)
 
         auto wd = weapon->Data.Damage;
 
-        // Melee attack with ranged weapon in hand fallbacks to punch
+        // Melee attack with ranged weapon in hand fallbacks to 1d4 "punch"
 
         weaponDamage = isRanged ? Util::RollDamage(1, 4) :
                                   Util::RollDamage(wd.CurrentValue, wd.OriginalValue);

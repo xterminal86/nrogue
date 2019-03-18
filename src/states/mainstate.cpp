@@ -493,12 +493,27 @@ void MainState::ProcessWeapon(ItemComponent* weapon)
   ItemComponent* arrows = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0];
   if (arrows != nullptr)
   {
+    bool isBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_BOW
+               || weapon->Data.RangedWeaponType_ == RangedWeaponType::LONGBOW
+               || weapon->Data.RangedWeaponType_ == RangedWeaponType::WAR_BOW);
+
+    bool isXBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_XBOW
+                || weapon->Data.RangedWeaponType_ == RangedWeaponType::XBOW
+                || weapon->Data.RangedWeaponType_ == RangedWeaponType::HEAVY_XBOW);
+
     if (arrows->Data.ItemType_ != ItemType::ARROWS)
     {
       Printer::Instance().AddMessage("What are you going to shoot with?");
     }
     else
-    {
+    {      
+      if ( (isBow && arrows->Data.AmmoType == ArrowType::BOLTS)
+        || (isXBow && arrows->Data.AmmoType == ArrowType::ARROWS) )
+      {
+        Printer::Instance().AddMessage("Wrong ammunition type!");
+        return;
+      }
+
       if (arrows->Data.Amount == 0)
       {
         Printer::Instance().AddMessage("No ammunition!");

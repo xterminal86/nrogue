@@ -613,12 +613,25 @@ GameObject* GameObjectsFactory::CreateRandomWeapon(ItemPrefix prefixOverride)
 {
   GameObject* go = nullptr;
 
-  int index = RNG::Instance().RandomRange(0, GlobalConstants::WeaponNameByType.size());
-  auto it = GlobalConstants::WeaponNameByType.begin();
-  std::advance(it, index);
-  auto kvp = *it;
+  int isMelee = RNG::Instance().RandomRange(0, 2);
+  if (isMelee == 0)
+  {
+    int index = RNG::Instance().RandomRange(0, GlobalConstants::WeaponNameByType.size());
+    auto it = GlobalConstants::WeaponNameByType.begin();
+    std::advance(it, index);
+    auto kvp = *it;
 
-  go = CreateWeapon(kvp.first, prefixOverride);
+    go = CreateWeapon(kvp.first, prefixOverride);
+  }
+  else
+  {
+    int index = RNG::Instance().RandomRange(0, GlobalConstants::RangedWeaponNameByType.size());
+    auto it = GlobalConstants::RangedWeaponNameByType.begin();
+    std::advance(it, index);
+    auto kvp = *it;
+
+    go = CreateRangedWeapon(0, 0, kvp.first, prefixOverride);
+  }
 
   return go;
 }
@@ -652,7 +665,9 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
     ItemType::RETURNER,
     ItemType::REPAIR_KIT,
     ItemType::WAND,
-    ItemType::SCROLL
+    ItemType::SCROLL,
+    ItemType::ARROWS,
+    ItemType::SPELLBOOK
   };
 
   auto findRes = std::find(possibleItems.begin(), possibleItems.end(), exclude);
@@ -758,6 +773,18 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
       ic->Data.IsIdentified = false;
     }
     break;
+
+    case ItemType::ARROWS:
+    {
+      int isArrows = RNG::Instance().RandomRange(0, 2);
+      ArrowType type = (isArrows == 0) ? ArrowType::ARROWS : ArrowType::BOLTS;
+      go = CreateArrows(0, 0, type);
+    }
+    break;
+
+    case ItemType::WAND:
+      go = CreateRandomWand();
+      break;
   }
 
   if (go != nullptr)
@@ -1108,6 +1135,9 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
   ic->Data.SpellHeld = spellType;
   ic->Data.Range = 100;
 
+  // TODO: cost calculation
+  ic->Data.Cost = 100;
+
   ic->Data.UnidentifiedName = "?" + wandMaterialName + " Wand?";
   ic->Data.IdentifiedName = wandMaterialName + " Wand of " + spellName;
 
@@ -1119,6 +1149,49 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
   SetItemName(go, ic->Data);
 
   ic->Data.ItemTypeHash = CalculateHash(ic);
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateRandomWand(ItemPrefix prefixOverride)
+{
+  GameObject* go = nullptr;
+
+  std::map<WandMaterials, int> materialsDistribution =
+  {
+    { WandMaterials::YEW,   12 },
+    { WandMaterials::IVORY, 10 },
+    { WandMaterials::EBONY,  8 },
+    { WandMaterials::ONYX,   6 },
+    { WandMaterials::GLASS,  4 },
+    { WandMaterials::COPPER, 2 },
+    { WandMaterials::GOLDEN, 1 },
+  };
+
+  auto materialPair = Util::WeightedRandom(materialsDistribution);
+
+  std::map<SpellType, int> spellsDistribution =
+  {
+    { SpellType::LIGHT,             30 },
+    { SpellType::STRIKE,            20 },
+    { SpellType::MAGIC_MISSILE,     20 },
+    { SpellType::FROST,             20 },
+    { SpellType::DETECT_MONSTERS,   15 },
+    { SpellType::NEUTRALIZE_POISON, 15 },
+    { SpellType::TELEPORT,          15 },
+    { SpellType::IDENTIFY,          10 },
+    { SpellType::MAGIC_MAPPING,     10 },
+    { SpellType::HEAL,              10 },
+    { SpellType::FIREBALL,           5 },
+    { SpellType::LIGHTNING,          5 },
+    { SpellType::LASER,              5 },
+    { SpellType::REMOVE_CURSE,       5 },
+    { SpellType::MANA_SHIELD,        5 }
+  };
+
+  auto spellPair = Util::WeightedRandom(spellsDistribution);
+
+  go = CreateWand(0, 0, materialPair.first, spellPair.first, prefixOverride);
 
   return go;
 }
@@ -1137,36 +1210,74 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
+  ic->Data.RangedWeaponType_ = type;
+
   switch (type)
   {
     case RangedWeaponType::LIGHT_BOW:
     {
       int numRolls = 1;
-      int diceType = 8;
+      int diceType = 4;
 
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
-      ic->Data.Range = 6;
-      ic->Data.Durability.Set(60);
+      ic->Data.Range = 10;
+      ic->Data.Durability.Set(30);
     }
     break;
 
     case RangedWeaponType::LONGBOW:
     {
       int numRolls = 2;
-      int diceType = 6;
+      int diceType = 4;
 
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
-      ic->Data.Range = 10;
-      ic->Data.Durability.Set(80);
+      ic->Data.Range = 14;
+      ic->Data.Durability.Set(60);
     }
     break;
 
     case RangedWeaponType::WAR_BOW:
     {
       int numRolls = 3;
-      int diceType = 8;
+      int diceType = 4;
+
+      ic->Data.Damage.CurrentValue = numRolls;
+      ic->Data.Damage.OriginalValue = diceType;
+      ic->Data.Range = 18;
+      ic->Data.Durability.Set(80);
+    }
+    break;
+
+    case RangedWeaponType::LIGHT_XBOW:
+    {
+      int numRolls = 1;
+      int diceType = 6;
+
+      ic->Data.Damage.CurrentValue = numRolls;
+      ic->Data.Damage.OriginalValue = diceType;
+      ic->Data.Range = 8;
+      ic->Data.Durability.Set(60);
+    }
+    break;
+
+    case RangedWeaponType::XBOW:
+    {
+      int numRolls = 2;
+      int diceType = 6;
+
+      ic->Data.Damage.CurrentValue = numRolls;
+      ic->Data.Damage.OriginalValue = diceType;
+      ic->Data.Range = 12;
+      ic->Data.Durability.Set(80);
+    }
+    break;
+
+    case RangedWeaponType::HEAVY_XBOW:
+    {
+      int numRolls = 3;
+      int diceType = 6;
 
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
@@ -1180,6 +1291,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
   ic->Data.ItemType_ = ItemType::RANGED_WEAPON;
+  ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
@@ -1207,9 +1319,18 @@ GameObject* GameObjectsFactory::CreateArrows(int x, int y, ArrowType type, ItemP
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
+  int dl = Map::Instance().CurrentLevel->DungeonLevel;
+  int randomAmount = RNG::Instance().RandomRange(1 + dl, 10 + dl);
+
+  if (randomAmount <= 0)
+  {
+    randomAmount = 1;
+  }
+
   ic->Data.ItemType_ = ItemType::ARROWS;
+  ic->Data.AmmoType = type;
   ic->Data.EqCategory = EquipmentCategory::SHIELD;
-  ic->Data.Amount = 20;
+  ic->Data.Amount = randomAmount;
   ic->Data.IsStackable = true;
 
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;

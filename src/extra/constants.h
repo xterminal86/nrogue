@@ -242,7 +242,8 @@ enum class ItemType
 
 enum class WeaponType
 {
-  DAGGER = 0,
+  NONE = 0,
+  DAGGER,
   SHORT_SWORD,
   ARMING_SWORD,
   LONG_SWORD,
@@ -252,6 +253,7 @@ enum class WeaponType
 
 enum class RangedWeaponType
 {
+  NONE = 0,
   LIGHT_BOW,
   LONGBOW,
   WAR_BOW,
@@ -262,7 +264,8 @@ enum class RangedWeaponType
 
 enum class ArmorType
 {
-  PADDING = 0,
+  NONE = 0,
+  PADDING,
   LEATHER,
   MAIL,
   PLATE
@@ -347,6 +350,7 @@ enum class WandMaterials
 
 enum class ArrowType
 {
+  NONE = 0,
   ARROWS,
   BOLTS
 };
@@ -606,6 +610,9 @@ struct ItemData
   Attribute WandCapacity;
 
   SpellType SpellHeld = SpellType::NONE;
+
+  RangedWeaponType RangedWeaponType_ = RangedWeaponType::NONE;
+  ArrowType AmmoType = ArrowType::NONE;
 
   int IgnoreArmorPercentage = 0;
 
