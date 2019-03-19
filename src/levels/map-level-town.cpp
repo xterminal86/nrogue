@@ -197,7 +197,7 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);          
 
-  // FIXME: debug
+  // *** FIXME: debug
   auto wand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::GOLDEN, SpellType::FIREBALL, ItemPrefix::UNCURSED);
   InsertGameObject(wand);
 
@@ -206,6 +206,13 @@ void MapLevelTown::CreateLevel()
 
   auto arrows = GameObjectsFactory::Instance().CreateArrows(3, 1, ArrowType::ARROWS, ItemPrefix::UNCURSED);
   InsertGameObject(arrows);
+
+  // ***
+
+  // FIXME: think about moving doors from MapArray into vector of GameObjects
+  // to allow bashing of locked doors
+  auto door = GameObjectsFactory::Instance().CreateDoor(4, 1, false, "Test Door");
+  InsertGameObject(door);
 }
 
 void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)

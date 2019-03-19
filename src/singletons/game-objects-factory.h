@@ -9,6 +9,7 @@ class ContainerComponent;
 class GameObject;
 class Player;
 class MapLevelBase;
+class DoorComponent;
 
 class GameObjectsFactory : public Singleton<GameObjectsFactory>
 {
@@ -41,7 +42,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateRepairKit(int x, int y, int charges = -1, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateArmor(ArmorType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRandomArmor(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
-    GameObject* CreateArrows(int x, int y, ArrowType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateArrows(int x, int y, ArrowType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, int amount = -1);
     GameObject* CreateRangedWeapon(int x, int y, RangedWeaponType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
 
     GameObject* CreateRandomItem(int x, int y, ItemType exclude = ItemType::NOTHING);
@@ -53,6 +54,8 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     bool HandleItemEquip(ItemComponent* item);
 
     void GenerateLootIfPossible(int posX, int posY, MonsterType monsterType);
+
+    GameObject* CreateDoor(int x, int y, bool isOpen, const std::string& doorName);
 
   private:
     Player* _playerRef;
@@ -81,6 +84,8 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     bool RepairKitUseHandler(ItemComponent* item);
 
     bool FoodUseHandler(ItemComponent* item);
+
+    void DoorUseHandler(DoorComponent* dc);
 
     void SetItemName(GameObject* go, ItemData& itemData);
     void AdjustWeaponBonuses(ItemData& itemData);

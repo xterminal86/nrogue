@@ -9,6 +9,7 @@
 #include "ai-monster-bat.h"
 #include "ai-npc.h"
 #include "stairs-component.h"
+#include "door-component.h"
 #include "go-timer-destroyer.h"
 #include "map.h"
 #include "application.h"
@@ -1297,7 +1298,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateArrows(int x, int y, ArrowType type, ItemPrefix prefixOverride)
+GameObject* GameObjectsFactory::CreateArrows(int x, int y, ArrowType type, ItemPrefix prefixOverride, int amount)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1322,7 +1323,7 @@ GameObject* GameObjectsFactory::CreateArrows(int x, int y, ArrowType type, ItemP
   ic->Data.ItemType_ = ItemType::ARROWS;
   ic->Data.AmmoType = type;
   ic->Data.EqCategory = EquipmentCategory::SHIELD;
-  ic->Data.Amount = randomAmount;
+  ic->Data.Amount = (amount != -1) ? amount : randomAmount;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
   ic->Data.Cost = 1;
@@ -1562,6 +1563,28 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
   SetItemName(go, ic->Data);
 
   ic->Data.ItemTypeHash = CalculateHash(ic);
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateDoor(int x, int y, bool isOpen, const std::string& doorName)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->PosX = x;
+  go->PosY = y;
+
+  DoorComponent* dc = go->AddComponent<DoorComponent>();
+  dc->IsOpen = isOpen;
+  dc->UpdateDoorState();
+
+  // https://stackoverflow.com/questions/15264003/using-stdbind-with-member-function-use-object-pointer-or-not-for-this-argumen/15264126#15264126
+  //
+  // When using std::bind to bind a member function, the first argument is the object's this pointer.
+
+  //dc->OwnerGameObject->InteractionCallback = std::bind(&GameObjectsFactory::DoorUseHandler, this, dc);
+  dc->OwnerGameObject->InteractionCallback = std::bind(&GameObjectsFactory::DoorUseHandler, this, dc);
+  dc->OwnerGameObject->ObjectName = doorName;
 
   return go;
 }
@@ -2253,4 +2276,9 @@ bool GameObjectsFactory::RepairKitUseHandler(ItemComponent* item)
   }
 
   return true;
+}
+
+void GameObjectsFactory::DoorUseHandler(DoorComponent* dc)
+{
+  dc->Interact();
 }

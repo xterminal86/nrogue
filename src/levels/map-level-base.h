@@ -22,15 +22,15 @@ class MapLevelBase
     virtual void DisplayWelcomeText();
 
     // Map tiles or objects that don't have to be updated globally.
-    // Updated around player position.
+    // Updated around player position. Drawn under fog of war.
     std::vector<std::vector<std::unique_ptr<GameObject>>> MapArray;
 
     // Globally updated objects (traps with timers, shrines, etc.)
     // or objects that can be removed from the map (e.g. items)
-    // Updated every frame.
+    // Updated every frame. Aren't drawn under fog of war.
     std::vector<std::unique_ptr<GameObject>> GameObjects;
 
-    // NPCs, drawn last
+    // NPCs, drawn last. Aren't drawn under fog of war.
     std::vector<std::unique_ptr<GameObject>> ActorGameObjects;
 
     MapType MapType_;

@@ -113,6 +113,7 @@ void TraderComponent::CreateItems()
         { FoodType::IRON_RATIONS, 1 },
         { FoodType::MEAT, 4 },
         { FoodType::PIE, 4 },
+        { FoodType::TIN, 3 },
         { FoodType::RATIONS, 2 }
       };
 
@@ -207,7 +208,8 @@ void TraderComponent::CreateItems()
           {
             int flag = RNG::Instance().RandomRange(0, 2);
             ArrowType arrowsType = (flag == 0) ? ArrowType::ARROWS : ArrowType::BOLTS;
-            go = GameObjectsFactory::Instance().CreateArrows(0, 0, arrowsType, prefixPair.first);
+            int amount = RNG::Instance().RandomRange(5, 21);
+            go = GameObjectsFactory::Instance().CreateArrows(0, 0, arrowsType, prefixPair.first, amount);
           }
           break;
         }

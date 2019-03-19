@@ -543,6 +543,7 @@ void MainState::ProcessWand(ItemComponent* wand)
   {
     switch (wand->Data.SpellHeld)
     {
+      // TODO:
       case SpellType::LIGHT:
         break;
 
