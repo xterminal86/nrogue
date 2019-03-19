@@ -46,6 +46,8 @@ class Map : public Singleton<Map>
     void RemoveDestroyed();
     void ChangeOrInstantiateLevel(MapType levelName);
     void ShowLoadingText();
+    void DrawNonVisibleMapTile(int x, int y);
+    void DrawNonVisibleStaticObject(int x, int y);
 };
 
 #endif

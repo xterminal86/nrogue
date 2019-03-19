@@ -212,7 +212,7 @@ void MapLevelTown::CreateLevel()
   // FIXME: think about moving doors from MapArray into vector of GameObjects
   // to allow bashing of locked doors
   auto door = GameObjectsFactory::Instance().CreateDoor(4, 1, false, "Test Door");
-  InsertGameObject(door);
+  InsertStaticObject(door);
 }
 
 void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)
@@ -425,6 +425,10 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
 
 void MapLevelTown::CreateDoor(int x, int y, bool isOpen)
 {
+  GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, isOpen, "Door");
+  InsertStaticObject(door);
+
+  /*
   auto c = MapArray[x][y]->AddComponent<DoorComponent>();
   DoorComponent* dc = static_cast<DoorComponent*>(c);
   dc->IsOpen = isOpen;
@@ -437,6 +441,7 @@ void MapLevelTown::CreateDoor(int x, int y, bool isOpen)
   MapArray[x][y]->InteractionCallback = std::bind(&DoorComponent::Interact, dc);
 
   MapArray[x][y]->ObjectName = "Door";
+  */
 }
 
 void MapLevelTown::CreateChurch(int x, int y)

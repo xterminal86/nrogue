@@ -98,8 +98,16 @@ void InteractInputState::HandleInput()
       }
       else
       {
-        auto cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
-        TryToInteractWithObject(cell);
+        auto staticObject = Map::Instance().CurrentLevel->StaticMapObjects[_cursorPosition.X][_cursorPosition.Y].get();
+        if (staticObject != nullptr)
+        {
+          TryToInteractWithObject(staticObject);
+        }
+        else
+        {
+          auto cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
+          TryToInteractWithObject(cell);
+        }
       }
     }
   }

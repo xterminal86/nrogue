@@ -63,47 +63,58 @@ bool Player::TryToAttack(int dx, int dy)
 bool Player::Move(int dx, int dy)
 {
   auto cell = Map::Instance().CurrentLevel->MapArray[PosX + dx][PosY + dy].get();
+  auto staticObject = Map::Instance().CurrentLevel->StaticMapObjects[PosX + dx][PosY + dy].get();
 
   if (!cell->Blocking)
   {
-    if (cell->Occupied)
+    if (staticObject != nullptr)
     {
-      auto actor = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
-      auto c = actor->GetComponent<AIComponent>();
-      AIComponent* aic = static_cast<AIComponent*>(c);
-      AINPC* npc = static_cast<AINPC*>(aic->CurrentModel);
-      if (!aic->CurrentModel->IsAgressive)
+      if (staticObject->Blocking)
       {
-        if (npc->Data.IsStanding)
+        // Search for components only if there are any
+        if (staticObject->ComponentsSize() != 0)
         {
-          std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : "The " + actor->ObjectName;
-          Printer::Instance().AddMessage(name + " won't move over");
+          auto c = staticObject->GetComponent<DoorComponent>();
+
+          // Automatically interact with door if it's closed
+          if (c != nullptr && staticObject->Blocking && staticObject->Interact())
+          {
+            FinishTurn();
+          }
         }
-        else
-        {
-          SwitchPlaces(aic);
-          FinishTurn();
-        }
+      }
+      else
+      {
+        MoveGameObject(dx, dy);
+        return true;
       }
     }
     else
     {
-      MoveGameObject(dx, dy);
-      return true;
-    }
-  }
-  else
-  {    
-    // Search for components only if there are any
-
-    if (cell->ComponentsSize() != 0)
-    {
-      auto c = cell->GetComponent<DoorComponent>();
-
-      // Automatically interact with door if it's closed
-      if (c != nullptr && cell->Blocking && cell->Interact())
+      if (cell->Occupied)
       {
-        FinishTurn();
+        auto actor = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
+        auto c = actor->GetComponent<AIComponent>();
+        AIComponent* aic = static_cast<AIComponent*>(c);
+        AINPC* npc = static_cast<AINPC*>(aic->CurrentModel);
+        if (!aic->CurrentModel->IsAgressive)
+        {
+          if (npc->Data.IsStanding)
+          {
+            std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : "The " + actor->ObjectName;
+            Printer::Instance().AddMessage(name + " won't move over");
+          }
+          else
+          {
+            SwitchPlaces(aic);
+            FinishTurn();
+          }
+        }
+      }
+      else
+      {
+        MoveGameObject(dx, dy);
+        return true;
       }
     }
   }
@@ -119,6 +130,7 @@ void Player::CheckVisibility()
   // Update map around player
 
   auto& map = Map::Instance().CurrentLevel->MapArray;
+  auto& staticObjects = Map::Instance().CurrentLevel->StaticMapObjects;
 
   // FIXME: some objects can modify visibility radius
   int radius = (map[PosX][PosY]->ObjectName == "Tree") ? VisibilityRadius / 4 : VisibilityRadius;
@@ -126,7 +138,12 @@ void Player::CheckVisibility()
   auto mapCells = Util::GetRectAroundPoint(PosX, PosY, tw / 2, th / 2, Map::Instance().CurrentLevel->MapSize);
   for (auto& cell : mapCells)
   {
-    map[cell.X][cell.Y]->Visible = false;
+    map[cell.X][cell.Y]->Visible = false;    
+
+    if (staticObjects[cell.X][cell.Y] != nullptr)
+    {
+      staticObjects[cell.X][cell.Y]->Visible = false;
+    }
   }
 
   // Update visibility around player
@@ -164,6 +181,8 @@ void Player::CheckVisibility()
 void Player::DiscoverCell(int x, int y)
 {
   auto& map = Map::Instance().CurrentLevel->MapArray;
+  auto& staticObjects = Map::Instance().CurrentLevel->StaticMapObjects;
+
   auto curLvl = Map::Instance().CurrentLevel;
 
   if (x == curLvl->LevelExit.X
@@ -175,9 +194,19 @@ void Player::DiscoverCell(int x, int y)
 
   map[x][y]->Visible = true;
 
+  if (staticObjects[x][y] != nullptr)
+  {
+    staticObjects[x][y]->Visible = true;
+  }
+
   if (!map[x][y]->Revealed)
   {
     map[x][y]->Revealed = true;
+
+    if (staticObjects[x][y] != nullptr)
+    {
+      staticObjects[x][y]->Revealed = true;
+    }
   }
 }
 

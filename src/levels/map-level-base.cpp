@@ -21,12 +21,15 @@ void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
   for (int x = 0; x < MapSize.X; x++)
   {
     std::vector<std::unique_ptr<GameObject>> row;
+    std::vector<std::unique_ptr<GameObject>> rowStatic;
     for (int y = 0; y < MapSize.Y; y++)
     {
-      row.push_back(std::unique_ptr<GameObject>(new GameObject()));
+      row.push_back(std::unique_ptr<GameObject>(new GameObject()));      
+      rowStatic.push_back(nullptr);
     }
 
     MapArray.push_back(std::move(row));
+    StaticMapObjects.push_back(std::move(rowStatic));
   }
 
   for (int x = 0; x < MapSize.X; x++)
@@ -57,6 +60,14 @@ void MapLevelBase::InsertActor(GameObject* actor)
 void MapLevelBase::InsertGameObject(GameObject* goToInsert)
 {
   GameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
+}
+
+void MapLevelBase::InsertStaticObject(GameObject* goToInsert)
+{
+  int x = goToInsert->PosX;
+  int y = goToInsert->PosY;
+
+  StaticMapObjects[x][y].reset(goToInsert);
 }
 
 void MapLevelBase::RecordEmptyCells()

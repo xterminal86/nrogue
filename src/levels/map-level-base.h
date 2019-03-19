@@ -16,14 +16,17 @@ class MapLevelBase
 
     void InsertActor(GameObject* actor);
     void InsertGameObject(GameObject* goToInsert);
+    void InsertStaticObject(GameObject* goToInsert);
     void TryToSpawnMonsters();
 
     virtual void PrepareMap(MapLevelBase* levelOwner);
     virtual void DisplayWelcomeText();
 
-    // Map tiles or objects that don't have to be updated globally.
-    // Updated around player position. Drawn under fog of war.
+    // Map ground tiles
     std::vector<std::vector<std::unique_ptr<GameObject>>> MapArray;
+
+    // Static map objects without global update (walls, doors etc.)
+    std::vector<std::vector<std::unique_ptr<GameObject>>> StaticMapObjects;
 
     // Globally updated objects (traps with timers, shrines, etc.)
     // or objects that can be removed from the map (e.g. items)

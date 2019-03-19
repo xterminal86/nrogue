@@ -57,21 +57,17 @@ void Map::Draw(int playerX, int playerY)
     if (CurrentLevel->MapArray[x][y]->Visible)
     {
       CurrentLevel->MapArray[x][y]->Draw();
+
+      // Draw static object on top if present
+      if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
+      {
+        CurrentLevel->StaticMapObjects[x][y]->Draw();
+      }
     }
     else
     {
-      std::string tileColor = CurrentLevel->MapArray[x][y]->Revealed ?
-                              GlobalConstants::FogOfWarColor :
-                              GlobalConstants::BlackColor;
-
-      if (CurrentLevel->MapArray[x][y]->FgColor == GlobalConstants::BlackColor)
-      {
-        CurrentLevel->MapArray[x][y]->Draw(GlobalConstants::BlackColor, tileColor);
-      }
-      else
-      {
-        CurrentLevel->MapArray[x][y]->Draw(tileColor, GlobalConstants::BlackColor);
-      }
+      DrawNonVisibleMapTile(x, y);
+      DrawNonVisibleStaticObject(x, y);
     }
   }
 
@@ -510,4 +506,47 @@ std::vector<Position> Map::GetUnoccupiedCellsAround(const Position& pos)
   }
 
   return res;
+}
+
+void Map::DrawNonVisibleMapTile(int x, int y)
+{
+  // If map tile has already been seen (revealed),
+  // draw it with fog of war color,
+  // otherwise use tile's color and black color as a background.
+  std::string tileColor = CurrentLevel->MapArray[x][y]->Revealed ?
+                          GlobalConstants::FogOfWarColor :
+                          GlobalConstants::BlackColor;
+
+  // If tile's fg color is already black
+  // ("block" tiles with no symbols like water, floor, walls etc.),
+  // replace the background instead.
+  if (CurrentLevel->MapArray[x][y]->FgColor == GlobalConstants::BlackColor)
+  {
+    CurrentLevel->MapArray[x][y]->Draw(GlobalConstants::BlackColor, tileColor);
+  }
+  else
+  {
+    CurrentLevel->MapArray[x][y]->Draw(tileColor, GlobalConstants::BlackColor);
+  }
+}
+
+void Map::DrawNonVisibleStaticObject(int x, int y)
+{
+  // Same as in method above
+
+  std::string tileColor = CurrentLevel->MapArray[x][y]->Revealed ?
+                          GlobalConstants::FogOfWarColor :
+                          GlobalConstants::BlackColor;
+
+  if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
+  {
+    if (CurrentLevel->StaticMapObjects[x][y]->FgColor == GlobalConstants::BlackColor)
+    {
+      CurrentLevel->StaticMapObjects[x][y]->Draw(GlobalConstants::BlackColor, tileColor);
+    }
+    else
+    {
+      CurrentLevel->StaticMapObjects[x][y]->Draw(tileColor, GlobalConstants::BlackColor);
+    }
+  }
 }
