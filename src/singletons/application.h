@@ -24,7 +24,7 @@ class Application : public Singleton<Application>
 
     void CloseMessageBox();
 
-    void DisplayAttack(GameObject* defender, int delayMs, std::string cursorColor = "");
+    void DisplayAttack(GameObject* defender, int delayMs, const std::string& messageToPrint, const std::string& cursorColor = "");
 
     void WriteObituary(bool wasKilled = true);
 
@@ -67,6 +67,7 @@ class Application : public Singleton<Application>
     std::map<GameStates, std::unique_ptr<GameState>> _gameStates;    
 
     void InitGraphics();
+    void DrawAttackCursor(int x, int y, GameObject* defender, const std::string& cursorColor = "");
 
     #ifdef USE_SDL
     std::map<std::string, std::string> _config;

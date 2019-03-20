@@ -150,20 +150,32 @@ void LookInputState::Update(bool forceUpdate)
         }
       }
 
-      // If nothing is found or area is under fog of war,
-      // check map tile instead
+      // If nothing is found or area is under fog of war
       if (!foundGameObject)
-      {
+      {        
         if (!tile->Revealed)
         {
           lookStatus = "???";
         }
         else if (tile->Revealed)
         {
-          auto nameHidden = (tile->FogOfWarName.length() == 0) ?
-                            "?" + tile->ObjectName + "?" :
-                            tile->FogOfWarName;
-          lookStatus = tile->Visible ? tile->ObjectName : nameHidden;
+          auto& staticObj = Map::Instance().CurrentLevel->StaticMapObjects[_cursorPosition.X][_cursorPosition.Y];
+
+          if (staticObj != nullptr)
+          {
+            auto nameHidden = (staticObj->FogOfWarName.length() == 0) ?
+                              "?" + staticObj->ObjectName + "?" :
+                              staticObj->FogOfWarName;
+
+            lookStatus = tile->Visible ? staticObj->ObjectName : nameHidden;
+          }
+          else
+          {
+            auto nameHidden = (tile->FogOfWarName.length() == 0) ?
+                              "?" + tile->ObjectName + "?" :
+                              tile->FogOfWarName;
+            lookStatus = tile->Visible ? tile->ObjectName : nameHidden;
+          }
         }
       }
     }

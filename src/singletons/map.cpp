@@ -59,14 +59,7 @@ void Map::Draw(int playerX, int playerY)
       // Draw static object on top if present
       if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
       {
-        if (CurrentLevel->StaticMapObjects[x][y]->IsDestroyed)
-        {
-          CurrentLevel->StaticMapObjects[x][y].reset(nullptr);
-        }
-        else
-        {
-          CurrentLevel->StaticMapObjects[x][y]->Draw();
-        }
+        CurrentLevel->StaticMapObjects[x][y]->Draw();
       }
     }
     else
@@ -220,7 +213,27 @@ MapLevelBase* Map::GetLevelRefByType(MapType type)
 }
 
 void Map::RemoveDestroyed()
-{  
+{
+  // Check if static objects need to be destroyed
+
+  int playerX = Application::Instance().PlayerInstance.PosX;
+  int playerY = Application::Instance().PlayerInstance.PosY;
+
+  int tw = Printer::Instance().TerminalWidth;
+  int th = Printer::Instance().TerminalHeight;
+
+  auto mapCells = Util::GetRectAroundPoint(playerX, playerY, tw / 2, th / 2, CurrentLevel->MapSize);
+  for (auto& cell : mapCells)
+  {
+    if (CurrentLevel->StaticMapObjects[cell.X][cell.Y] != nullptr
+     && CurrentLevel->StaticMapObjects[cell.X][cell.Y]->IsDestroyed)
+    {
+      CurrentLevel->StaticMapObjects[cell.X][cell.Y].reset(nullptr);
+    }
+  }
+
+  // Check if globally updated objects need to be destroyed
+
   for (int i = 0; i < CurrentLevel->GameObjects.size(); i++)
   {
     if (CurrentLevel->GameObjects[i]->IsDestroyed)
@@ -233,6 +246,8 @@ void Map::RemoveDestroyed()
       CurrentLevel->GameObjects.erase(CurrentLevel->GameObjects.begin() + i);
     }
   }
+
+  // Check if actors need to be destroyed
 
   for (int i = 0; i < CurrentLevel->ActorGameObjects.size(); i++)
   {

@@ -410,13 +410,8 @@ void Player::MeleeAttack(GameObject* go)
 
   if (go->Attrs.Indestructible)
   {
-    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
-
     auto str = Util::StringFormat("Your attack bounces off %s!", go->ObjectName.data());
-    Printer::Instance().AddMessage(str);
-
-    Application::Instance().DrawCurrentState();
-    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs);
+    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, str, "#FFFFFF");
 
     if (weapon != nullptr)
     {
@@ -458,9 +453,7 @@ void Player::MeleeAttack(GameObject* go)
     Logger::Instance().Print(logMsg);
 
     if (Util::Rolld100(hitChance))
-    {
-      Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "#FF0000");
-
+    {      
       int weaponDamage = 0;
 
       bool durabilityLost = false;
@@ -487,15 +480,15 @@ void Player::MeleeAttack(GameObject* go)
         totalDmg = 1;
       }
 
+      std::string msg = Util::StringFormat("You hit %s for %i damage", go->ObjectName.data(), totalDmg);
+      Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, msg, "#FF0000");
+
       go->ReceiveDamage(this, totalDmg);
 
       if (go->IsDestroyed)
       {
         ProcessKill(go);
       }
-
-      Application::Instance().DrawCurrentState();
-      Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs);
 
       // Leftover from the days when durability lost was probabilistic
       if (durabilityLost)
@@ -508,12 +501,7 @@ void Player::MeleeAttack(GameObject* go)
     }
     else
     {
-      Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
-
-      Printer::Instance().AddMessage("You missed");
-
-      Application::Instance().DrawCurrentState();
-      Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs);
+      Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "You missed", "#FFFFFF");
     }
   }
 

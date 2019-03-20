@@ -734,7 +734,7 @@ std::vector<Position> Printer::GetVisiblePointsFrom(Position from, int range)
   return res;
 }
 
-void Printer::AddMessage(std::string message)
+void Printer::AddMessage(const std::string& message)
 {
   _inGameMessages.insert(_inGameMessages.begin(), message);
 

@@ -339,7 +339,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
         case '#':
         {
           objName = "Rocks";
-          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
+          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");                    
           InsertStaticObject(x, y, t);
         }
         break;

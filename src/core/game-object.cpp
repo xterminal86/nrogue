@@ -134,8 +134,11 @@ void GameObject::ReceiveDamage(GameObject* from, int amount)
 
     if (Attrs.HP.CurrentValue <= 0)
     {
-      auto go = GameObjectsFactory::Instance().CreateRemains(this);
-      _levelOwner->InsertGameObject(go);
+      if (Type != MonsterType::HARMLESS)
+      {
+        auto go = GameObjectsFactory::Instance().CreateRemains(this);
+        _levelOwner->InsertGameObject(go);
+      }
 
       IsDestroyed = true;
 

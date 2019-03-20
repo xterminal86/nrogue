@@ -87,15 +87,13 @@ void AttackState::HandleInput()
     }
     else
     {
-      auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
-      if (res.size() != 0)
+      if (CheckPickaxe())
       {
-        _playerRef->MeleeAttack(res.back());
+        ProcessPickaxe();
       }
       else
       {
-        auto* cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
-        _playerRef->MeleeAttack(cell);
+        ProcessWeapon();
       }
     }
 
@@ -122,5 +120,46 @@ void AttackState::Update(bool forceUpdate)
                                 "#FFFFFF");
 
     Printer::Instance().Render();
+  }
+}
+
+bool AttackState::CheckPickaxe()
+{
+  auto weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  if (weapon != nullptr && weapon->Data.WeaponType_ == WeaponType::PICKAXE)
+  {
+    return true;
+  }
+
+  return false;
+}
+
+void AttackState::ProcessPickaxe()
+{
+  auto& so = Map::Instance().CurrentLevel->StaticMapObjects;
+
+  int x = _cursorPosition.X;
+  int y = _cursorPosition.Y;
+
+  if (so[x][y] != nullptr)
+  {
+    Application::Instance().DisplayAttack(so[x][y].get(),
+                                          GlobalConstants::DisplayAttackDelayMs,
+                                          "You tear down the wall");
+    so[x][y]->IsDestroyed = true;
+  }
+}
+
+void AttackState::ProcessWeapon()
+{
+  auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
+  if (res.size() != 0)
+  {
+    _playerRef->MeleeAttack(res.back());
+  }
+  else
+  {
+    auto* cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
+    _playerRef->MeleeAttack(cell);
   }
 }

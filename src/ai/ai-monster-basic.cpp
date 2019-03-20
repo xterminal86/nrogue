@@ -145,18 +145,17 @@ bool AIMonsterBasic::Attack(Player* player)
   {
     result = true;
 
-    Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FF0000");
-
     int dmg = AIComponentRef->OwnerGameObject->Attrs.Str.Get() - player->Attrs.Def.Get();
     if (dmg <= 0)
     {
       dmg = 1;
     }
 
-    player->ReceiveDamage(AIComponentRef->OwnerGameObject, dmg);
+    std::string msg = Util::StringFormat("You were hit for %i damage", dmg);
 
-    Application::Instance().DrawCurrentState();
-    Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs);
+    Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, msg, "#FF0000");
+
+    player->ReceiveDamage(AIComponentRef->OwnerGameObject, dmg);
 
     if (!player->IsAlive(AIComponentRef->OwnerGameObject))
     {
@@ -167,13 +166,8 @@ bool AIMonsterBasic::Attack(Player* player)
   {
     result = false;
 
-    Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "#FFFFFF");
-
-    auto str = Util::StringFormat("%s missed", AIComponentRef->OwnerGameObject->ObjectName.data());
-    Printer::Instance().AddMessage(str);
-
-    Application::Instance().DrawCurrentState();
-    Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs);
+    auto msg = Util::StringFormat("%s missed", AIComponentRef->OwnerGameObject->ObjectName.data());
+    Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, msg, "#FFFFFF");
   }
 
   return result;

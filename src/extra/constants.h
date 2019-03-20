@@ -248,7 +248,8 @@ enum class WeaponType
   ARMING_SWORD,
   LONG_SWORD,
   GREAT_SWORD,
-  STAFF
+  STAFF,
+  PICKAXE
 };
 
 enum class RangedWeaponType
@@ -617,6 +618,7 @@ struct ItemData
 
   RangedWeaponType RangedWeaponType_ = RangedWeaponType::NONE;
   ArrowType AmmoType = ArrowType::NONE;
+  WeaponType WeaponType_ = WeaponType::NONE;
 
   int IgnoreArmorPercentage = 0;
 

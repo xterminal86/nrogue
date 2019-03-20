@@ -129,23 +129,32 @@ void Application::CloseMessageBox()
   _currentState = _previousState;
 }
 
-void Application::DisplayAttack(GameObject* defender, int delayMs, std::string cursorColor)
+void Application::DisplayAttack(GameObject* defender, int delayMs, const std::string& messageToPrint, const std::string& cursorColor)
 {
   int posX = defender->PosX + Map::Instance().CurrentLevel->MapOffsetX;
   int posY = defender->PosY + Map::Instance().CurrentLevel->MapOffsetY;
 
+  DrawAttackCursor(posX, posY, defender, cursorColor);
+  Util::Sleep(delayMs);
+
+  Printer::Instance().AddMessage(messageToPrint);
+
+  DrawAttackCursor(posX, posY, defender);
+  Util::Sleep(delayMs);
+}
+
+void Application::DrawAttackCursor(int x, int y, GameObject* defender, const std::string& cursorColor)
+{
   if (cursorColor.length() == 0)
   {
-    Printer::Instance().PrintFB(posX, posY, defender->Image, defender->FgColor, defender->BgColor);
+    Printer::Instance().PrintFB(x, y, defender->Image, defender->FgColor, defender->BgColor);
     Printer::Instance().Render();
   }
   else
   {
-    Printer::Instance().PrintFB(posX, posY, ' ', "#000000", cursorColor);
+    Printer::Instance().PrintFB(x, y, ' ', "#000000", cursorColor);
     Printer::Instance().Render();
   }
-
-  Util::Sleep(delayMs);
 }
 
 void Application::WriteObituary(bool wasKilled)

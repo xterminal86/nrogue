@@ -112,7 +112,7 @@ class Printer : public Singleton<Printer>
 #endif
 
     /// Add message to the game log
-    void AddMessage(std::string message);
+    void AddMessage(const std::string& message);
 
     std::string GetLastMessage()
     {

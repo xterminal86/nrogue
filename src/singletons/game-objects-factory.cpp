@@ -894,6 +894,8 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
   int avgDamage = 0;
   int baseDurability = 0;
 
+  ic->Data.WeaponType_ = type;
+
   switch (type)
   {
     case WeaponType::DAGGER:
@@ -1004,6 +1006,22 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
       ic->Data.Damage.OriginalValue = diceSides;
 
       ic->Data.StatBonuses[StatsEnum::DEF] = 1;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -1;
+    }
+    break;
+
+    case WeaponType::PICKAXE:
+    {
+      int diceRolls = 1;
+      int diceSides = 8;
+
+      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
+
+      baseDurability = 10;
+
+      ic->Data.Damage.CurrentValue = diceRolls;
+      ic->Data.Damage.OriginalValue = diceSides;
+
       ic->Data.StatBonuses[StatsEnum::SPD] = -1;
     }
     break;
@@ -1603,6 +1621,7 @@ GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, const GameObjec
   go->PosY = y;
   go->Image = objectInfo.Image;
   go->ObjectName = objectInfo.ObjectName;
+  go->FogOfWarName = objectInfo.FogOfWarName;
   go->FgColor = objectInfo.FgColor;
   go->BgColor = objectInfo.BgColor;
   go->Blocking = objectInfo.IsBlocking;

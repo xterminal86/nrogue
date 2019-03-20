@@ -18,6 +18,11 @@ class AttackState : public GameState
     Player* _playerRef;
 
     Position _cursorPosition;
+
+    bool CheckPickaxe();
+
+    void ProcessPickaxe();
+    void ProcessWeapon();
 };
 
 #endif // ATTACKSTATE_H
