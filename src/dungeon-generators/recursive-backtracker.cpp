@@ -1,5 +1,11 @@
 #include "recursive-backtracker.h"
 
+#include "rng.h"
+#include "constants.h"
+
+#include <stack>
+#include <map>
+
 /// 1. Get random direction.
 /// 2. Try to replace wall with empty space.
 /// 3. Backtrack to previous cell if failed.

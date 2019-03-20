@@ -2,7 +2,10 @@
 #include "printer.h"
 #include "constants.h"
 #include "application.h"
+
+#ifndef USE_SDL
 #include "util.h"
+#endif
 
 void MessageBoxState::HandleInput()
 {

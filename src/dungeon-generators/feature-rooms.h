@@ -2,6 +2,7 @@
 #define FEATUREROOMS_H
 
 #include "dg-base.h"
+#include "constants.h"
 
 class FeatureRooms : public DGBase
 {

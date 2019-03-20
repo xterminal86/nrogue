@@ -2,7 +2,7 @@
 #define INTERACTINPUTSTATE_H
 
 #include "gamestate.h"
-#include "util.h"
+#include "position.h"
 
 class GameObject;
 class Player;

@@ -1,10 +1,10 @@
 #include "pathfinder.h"
 
 std::vector<Position> Pathfinder::BuildRoad(const std::vector<std::vector<char>>& map,
-                                            Position mapSize,
-                                            Position start,
-                                            Position end,
-                                            std::vector<char> obstacles,
+                                            const Position& mapSize,
+                                            const Position& start,
+                                            const Position& end,
+                                            const std::vector<char>& obstacles,
                                             bool eightDirs)
 {
   _mapSize = mapSize;
@@ -56,10 +56,10 @@ std::vector<Position> Pathfinder::BuildRoad(const std::vector<std::vector<char>>
 }
 
 void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
-                            PathNode& currentNode,
+                            const PathNode& currentNode,
                             std::vector<PathNode>& openList,
                             std::vector<PathNode>& closedList,
-                            std::vector<char>& obstacles,
+                            const std::vector<char>& obstacles,
                             bool eightDirs)
 {
   std::vector<Position> directions;
@@ -163,7 +163,7 @@ int Pathfinder::FindCheapestElement(const std::vector<PathNode>& list)
   return index;
 }
 
-int Pathfinder::TraverseCost(Position p1, Position p2)
+int Pathfinder::TraverseCost(const Position& p1, const Position& p2)
 {
   if (p1.X == p2.X || p1.Y == p2.Y)
   {
@@ -173,7 +173,7 @@ int Pathfinder::TraverseCost(Position p1, Position p2)
   return _diagonalCost;
 }
 
-bool Pathfinder::IsNodePresent(PathNode& n, const std::vector<PathNode>& list)
+bool Pathfinder::IsNodePresent(const PathNode& n, const std::vector<PathNode>& list)
 {
   for (auto& item : list)
   {
@@ -187,7 +187,7 @@ bool Pathfinder::IsNodePresent(PathNode& n, const std::vector<PathNode>& list)
   return false;
 }
 
-bool Pathfinder::IsInsideMap(Position c)
+bool Pathfinder::IsInsideMap(const Position& c)
 {
   bool cond = (c.X >= 1
             && c.Y >= 1
@@ -197,7 +197,7 @@ bool Pathfinder::IsInsideMap(Position c)
   return cond;
 }
 
-PathNode Pathfinder::FindNodeWithPosition(std::vector<PathNode>& list, Position p)
+PathNode Pathfinder::FindNodeWithPosition(const std::vector<PathNode>& list, const Position& p)
 {
   PathNode res;
 

@@ -3,8 +3,10 @@
 
 #include "gamestate.h"
 
-#include "player.h"
-#include "util.h"
+#include "position.h"
+
+class Player;
+class ItemComponent;
 
 class ReturnerState : public GameState
 {

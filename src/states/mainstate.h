@@ -5,7 +5,7 @@
 #include <memory>
 
 #include "gamestate.h"
-#include "util.h"
+#include "position.h"
 
 class Player;
 class GameObject;

@@ -1,5 +1,7 @@
 #include "cellular-automata.h"
 
+#include "util.h"
+
 /// Use cellular automata to generate cave-like area.
 void CellularAutomata::Generate(Position mapSize, int initialWallChance,
                                     int birthThreshold, int deathThreshold,

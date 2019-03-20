@@ -1,8 +1,6 @@
 #ifndef RECURSIVEBACKTRACKER_H
 #define RECURSIVEBACKTRACKER_H
 
-#include <stack>
-
 #include "dg-base.h"
 
 class RecursiveBacktracker : public DGBase

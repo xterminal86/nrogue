@@ -2,7 +2,6 @@
 
 #include "application.h"
 #include "printer.h"
-#include "util.h"
 #include "rng.h"
 #include "door-component.h"
 #include "game-objects-factory.h"
@@ -14,7 +13,6 @@
 #include "map-level-abyss.h"
 #include "map-level-nether.h"
 #include "map-level-endgame.h"
-#include "util.h"
 
 void Map::Init()
 {

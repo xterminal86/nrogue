@@ -1,6 +1,5 @@
 #include "level-builder.h"
 
-#include "util.h"
 #include "rng.h"
 
 #include "feature-rooms.h"
@@ -10,7 +9,7 @@
 #include "from-layouts.h"
 #include "rooms.h"
 
-void LevelBuilder::FeatureRoomsMethod(Position mapSize, Position roomSizes, int maxIterations)
+void LevelBuilder::FeatureRoomsMethod(const Position& mapSize, const Position& roomSizes, int maxIterations)
 {
   _generator.reset(new FeatureRooms());
 
@@ -20,7 +19,7 @@ void LevelBuilder::FeatureRoomsMethod(Position mapSize, Position roomSizes, int 
   MapRaw = fr->MapRaw;
 }
 
-void LevelBuilder::CellularAutomataMethod(Position mapSize, int initialWallChance,
+void LevelBuilder::CellularAutomataMethod(const Position& mapSize, int initialWallChance,
                                     int birthThreshold, int deathThreshold,
                                     int maxIterations)
 {
@@ -32,7 +31,7 @@ void LevelBuilder::CellularAutomataMethod(Position mapSize, int initialWallChanc
   MapRaw = ca->MapRaw;
 }
 
-void LevelBuilder::BacktrackingTunnelerMethod(Position mapSize, Position tunnelMinMax, Position start, bool additionalTweaks)
+void LevelBuilder::BacktrackingTunnelerMethod(const Position& mapSize, const Position& tunnelMinMax, const Position& start, bool additionalTweaks)
 {
   _generator.reset(new Tunneler());
 
@@ -42,7 +41,7 @@ void LevelBuilder::BacktrackingTunnelerMethod(Position mapSize, Position tunnelM
   MapRaw = t->MapRaw;
 }
 
-void LevelBuilder::TunnelerMethod(Position mapSize, int maxIterations, Position tunnelLengthMinMax, Position start)
+void LevelBuilder::TunnelerMethod(const Position& mapSize, int maxIterations, const Position& tunnelLengthMinMax, const Position& start)
 {
   _generator.reset(new Tunneler());
 
@@ -52,7 +51,7 @@ void LevelBuilder::TunnelerMethod(Position mapSize, int maxIterations, Position 
   MapRaw = t->MapRaw;
 }
 
-void LevelBuilder::RecursiveBacktrackerMethod(Position mapSize, Position startingPoint)
+void LevelBuilder::RecursiveBacktrackerMethod(const Position& mapSize, const Position& startingPoint)
 {
   _generator.reset(new RecursiveBacktracker());
 
@@ -75,7 +74,7 @@ void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRoom
   MapRaw = fl->MapRaw;
 }
 
-void LevelBuilder::RoomsMethod(Position mapSize, Position splitRatio, int minRoomSize)
+void LevelBuilder::RoomsMethod(const Position& mapSize, const Position& splitRatio, int minRoomSize)
 {
   _generator.reset(new Rooms());
 

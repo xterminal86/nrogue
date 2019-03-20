@@ -2,6 +2,7 @@
 #include "mainstate.h"
 #include "printer.h"
 #include "application.h"
+#include "util.h"
 
 void InfoState::HandleInput()
 {

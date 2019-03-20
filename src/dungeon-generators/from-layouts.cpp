@@ -1,5 +1,8 @@
 #include "from-layouts.h"
 
+#include "rng.h"
+#include "util.h"
+
 /// Build dungeon by attaching random rooms to each other from
 /// possibleRooms list.
 /// May result in imperfect and/or impassable dungeon

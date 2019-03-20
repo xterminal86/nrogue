@@ -1,5 +1,7 @@
 #include "tunneler.h"
 
+#include "rng.h"
+
 /// Builds tunnels perpendicular to previous direction,
 /// backtracks to previous position if failed.
 ///

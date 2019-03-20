@@ -5,7 +5,8 @@
 #include <vector>
 #include <map>
 
-#include "util.h"
+#include "constants.h"
+#include "position.h"
 
 using RoomLayout = std::vector<std::string>;
 
@@ -53,9 +54,6 @@ struct RoomHelper
 
     bool res = CanBeTraversed(RoomEdgesByType[side], r.RoomEdgesByType[oppositeEdgeByType[side]]);
 
-    //auto dbg = Util::StringFormat("result: %s", res ? "yes" : "no");
-    //Logger::Instance().Print(dbg);
-
     //return ( (e1 == true && e2 == true) || res);
     return res;
   }
@@ -75,7 +73,7 @@ struct RoomHelper
     return false;
   }
 
-  bool EdgeIsAllWalls(std::vector<int>& edge)
+  bool EdgeIsAllWalls(const std::vector<int>& edge)
   {
     for (int i = 0; i < edge.size(); i++)
     {
@@ -88,7 +86,7 @@ struct RoomHelper
     return true;
   }
 
-  void ParseLayout(RoomLayout layout)
+  void ParseLayout(const RoomLayout& layout)
   {
     // Assuming rooms are square
 

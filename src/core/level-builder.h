@@ -3,8 +3,8 @@
 
 #include <stack>
 #include <queue>
+#include <memory>
 
-#include "util.h"
 #include "room-helper.h"
 
 #include "dg-base.h"
@@ -16,27 +16,27 @@ class LevelBuilder
                                   int startX, int startY,
                                   int mapSizeX, int mapSizeY);
 
-    void RecursiveBacktrackerMethod(Position mapSize,
-                                    Position startingPoint = { -1, -1 });
+    void RecursiveBacktrackerMethod(const Position& mapSize,
+                                    const Position& startingPoint = { -1, -1 });
 
-    void TunnelerMethod(Position mapSize,
+    void TunnelerMethod(const Position& mapSize,
                           int maxIterations,
-                          Position tunnelLengthMinMax,
-                          Position start = { -1, -1 } );
+                          const Position& tunnelLengthMinMax,
+                          const Position& start = { -1, -1 } );
 
-    void BacktrackingTunnelerMethod(Position mapSize,
-                                       Position tunnelLengthMinMax,
-                                       Position start = { - 1, -1 },
+    void BacktrackingTunnelerMethod(const Position& mapSize,
+                                    const Position& tunnelLengthMinMax,
+                                       const Position& start = { - 1, -1 },
                                        bool additionalTweaks = false);
 
-    void CellularAutomataMethod(Position mapSize,
+    void CellularAutomataMethod(const Position& mapSize,
                                    int initialWallChance,
                                    int birthThreshold,
                                    int deathThreshold,
                                    int maxIterations);
 
-    void FeatureRoomsMethod(Position mapSize, Position roomSizes, int maxIterations);
-    void RoomsMethod(Position mapSize, Position splitRatio, int minRoomSize);
+    void FeatureRoomsMethod(const Position& mapSize, const Position& roomSizes, int maxIterations);
+    void RoomsMethod(const Position& mapSize, const Position& splitRatio, int minRoomSize);
 
     void LogPrintMapRaw();
     void PrintMapRaw();

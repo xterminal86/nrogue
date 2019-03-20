@@ -1,8 +1,10 @@
 #ifndef AIMONSTERBASIC_H
 #define AIMONSTERBASIC_H
 
+#include <vector>
+
 #include "ai-model-base.h"
-#include "util.h"
+#include "position.h"
 
 class Player;
 

@@ -11,7 +11,7 @@ class Rect
   public:
     Rect() {}
 
-    Rect(Position p1, Position p2)
+    Rect(const Position& p1, const Position& p2)
     {
       X1 = p1.X;
       Y1 = p1.Y;

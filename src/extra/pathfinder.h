@@ -7,7 +7,7 @@ struct PathNode
 {
   PathNode() {}
 
-  PathNode(Position coord)
+  PathNode(const Position& coord)
   {
     Coordinate.X = coord.X;
     Coordinate.Y = coord.Y;
@@ -22,7 +22,7 @@ struct PathNode
     CostH = rhs.CostH;
   }
 
-  PathNode(Position coord, Position parentNodePos)
+  PathNode(const Position& coord, const Position& parentNodePos)
   {
     Coordinate.X = coord.X;
     Coordinate.Y = coord.Y;
@@ -53,10 +53,10 @@ class Pathfinder
 {
   public:
     std::vector<Position> BuildRoad(const std::vector<std::vector<char>>& map,
-                                    Position mapSize,
-                                    Position start,
-                                    Position end,
-                                    std::vector<char> obstacles,
+                                    const Position& mapSize,
+                                    const Position& start,
+                                    const Position& end,
+                                    const std::vector<char>& obstacles,
                                     bool eightDirs = false);
 
   private:
@@ -69,19 +69,19 @@ class Pathfinder
     int _diagonalCost = 20;
 
     int FindCheapestElement(const std::vector<PathNode>& list);
-    int TraverseCost(Position p1, Position p2);
+    int TraverseCost(const Position& p1, const Position& p2);
 
     void LookAround(const std::vector<std::vector<char>>& map,
-                    PathNode& node,
+                    const PathNode& node,
                     std::vector<PathNode>& openList,
                     std::vector<PathNode>& closedList,
-                    std::vector<char>& obstacles,
+                    const std::vector<char>& obstacles,
                     bool eightDirs);
 
-    bool IsNodePresent(PathNode& n, const std::vector<PathNode>& list);
-    bool IsInsideMap(Position c);
+    bool IsNodePresent(const PathNode& n, const std::vector<PathNode>& list);
+    bool IsInsideMap(const Position& c);
 
-    PathNode FindNodeWithPosition(std::vector<PathNode>& list, Position p);
+    PathNode FindNodeWithPosition(const std::vector<PathNode>& list, const Position& p);
 };
 
 #endif // PATHFINDER_H

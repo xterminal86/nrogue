@@ -1,7 +1,10 @@
 #ifndef DG_BASE_H
 #define DG_BASE_H
 
-#include "util.h"
+#include <vector>
+#include <string>
+
+#include "position.h"
 
 struct MapCell
 {

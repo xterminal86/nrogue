@@ -2,7 +2,6 @@
 
 #include "map.h"
 #include "printer.h"
-#include "util.h"
 #include "door-component.h"
 #include "game-objects-factory.h"
 #include "ai-monster-basic.h"

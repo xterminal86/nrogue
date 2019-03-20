@@ -1,73 +1,17 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <chrono>
-#include <string>
-#include <cstdio>
-#include <vector>
-#include <utility>
 #include <memory>
 #include <algorithm>
 #include <climits>
 
 #include <math.h>
 
-#include "colorpair.h"
 #include "constants.h"
 #include "rng.h"
 #include "printer.h"
 #include "logger.h"
-
-struct Position
-{
-  Position()
-  {
-    X = 0;
-    Y = 0;
-  }
-
-  Position(int x, int y)
-  {
-    X = x;
-    Y = y;
-  }
-
-  Position(const Position& from)
-  {
-    X = from.X;
-    Y = from.Y;
-  }
-
-  virtual ~Position()
-  {
-  }
-
-  void Set(int x, int y)
-  {
-    X = x;
-    Y = y;
-  }
-
-  void Set(const Position& from)
-  {
-    X = from.X;
-    Y = from.Y;
-  }
-
-  // For use inside std::map as a key
-  bool operator< (const Position& rhs) const
-  {
-    return (X < rhs.X || Y < rhs.Y);
-  }
-
-  bool operator== (const Position& rhs) const
-  {
-    return (X == rhs.X && Y == rhs.Y);
-  }
-
-  int X;
-  int Y;
-};
+#include "position.h"
 
 namespace Util
 {
@@ -104,8 +48,8 @@ namespace Util
   inline bool IsBase64(unsigned char c)
   {
     auto res = std::find(GlobalConstants::Base64Chars.begin(),
-                          GlobalConstants::Base64Chars.end(),
-                          c);
+                         GlobalConstants::Base64Chars.end(),
+                         c);
 
     return (res != GlobalConstants::Base64Chars.end());
   }
@@ -217,7 +161,7 @@ namespace Util
     return byteArray;
   }
 
-  inline bool CheckLimits(Position posToCheck, Position limits)
+  inline bool CheckLimits(const Position& posToCheck, const Position& limits)
   {
     if (posToCheck.X >= 0 && posToCheck.X < limits.X
      && posToCheck.Y >= 0 && posToCheck.Y < limits.Y)
@@ -322,7 +266,7 @@ namespace Util
     return result;
   }
 
-  inline bool IsInsideMap(Position pos, Position mapSize, bool leaveBorders = true)
+  inline bool IsInsideMap(const Position& pos, const Position& mapSize, bool leaveBorders = true)
   {
     int offset = leaveBorders ? 1 : 0;
 
@@ -332,7 +276,7 @@ namespace Util
          && pos.Y < mapSize.Y - offset);
   }
 
-  inline std::vector<Position> BresenhamLine(Position& start, Position& end)
+  inline std::vector<Position> BresenhamLine(const Position& start, const Position& end)
   {
     return BresenhamLine(start.X, start.Y, end.X, end.Y);
   }  
@@ -347,7 +291,7 @@ namespace Util
      return abs(y2 - y1) + abs(x2 - x1);
   }
 
-  inline int BlockDistance(Position from, Position to)
+  inline int BlockDistance(const Position& from, const Position& to)
   {
      return abs(to.Y - from.Y) + abs(to.X - from.X);
   }
@@ -358,12 +302,12 @@ namespace Util
     return d;
   }
   
-  inline float LinearDistance(Position& s, Position& e)
+  inline float LinearDistance(const Position& s, const Position& e)
   {
     return LinearDistance(s.X, s.Y, e.X, e.Y);
   }
   
-  inline std::vector<Position> GetEightPointsAround(Position pos, Position mapSize)
+  inline std::vector<Position> GetEightPointsAround(const Position& pos, const Position& mapSize)
   {
     std::vector<Position> result;
 
@@ -495,7 +439,7 @@ namespace Util
     return result;
   }
 
-  inline std::vector<Position> GetRectAroundPoint(int pointX, int pointY, int rangeX, int rangeY, Position mapSize)
+  inline std::vector<Position> GetRectAroundPoint(int pointX, int pointY, int rangeX, int rangeY, const Position& mapSize)
   {    
     std::vector<Position> result;
 
@@ -780,7 +724,7 @@ namespace Util
     #endif
   }
 
-  inline void PrintLayout(std::vector<std::string> l)
+  inline void PrintLayout(const std::vector<std::string>& l)
   {
     std::string dbg = "\n";
 
@@ -798,7 +742,7 @@ namespace Util
   }
 
   template <typename T>
-  inline std::pair<T, int> WeightedRandom(std::map<T, int> weightsByType)
+  inline std::pair<T, int> WeightedRandom(const std::map<T, int>& weightsByType)
   {
     int sum = 0;
     for (auto& i : weightsByType)

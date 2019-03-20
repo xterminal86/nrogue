@@ -1589,6 +1589,24 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y, bool isOpen, const std:
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, int image, std::string& objectName, int hitPoints)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->PosX = x;
+  go->PosY = y;
+  go->Image = image;
+  go->ObjectName = objectName;
+
+  if (hitPoints > 0)
+  {
+    go->Attrs.Indestructible = false;
+    go->Attrs.HP.Set(hitPoints);
+  }
+
+  return go;
+}
+
 // ************************** PRIVATE METHODS ************************** //
 
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)

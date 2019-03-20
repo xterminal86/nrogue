@@ -2,7 +2,7 @@
 #define LOOKINPUTSTATE_H
 
 #include "gamestate.h"
-#include "util.h"
+#include "position.h"
 
 class Player;
 class GameObject;

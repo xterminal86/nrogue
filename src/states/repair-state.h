@@ -3,8 +3,8 @@
 
 #include "gamestate.h"
 
-#include "player.h"
-#include "util.h"
+class Player;
+class ItemComponent;
 
 class RepairState : public GameState
 {

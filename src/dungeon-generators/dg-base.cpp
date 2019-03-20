@@ -1,5 +1,8 @@
 #include "dg-base.h"
 
+#include "logger.h"
+#include "util.h"
+
 void DGBase::PrintMapRaw()
 {
   auto raw = GetMapRawString();

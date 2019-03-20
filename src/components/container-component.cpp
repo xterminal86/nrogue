@@ -2,7 +2,6 @@
 #include "container-interact-state.h"
 #include "application.h"
 #include "item-component.h"
-#include "util.h"
 
 ContainerComponent::ContainerComponent()
 {

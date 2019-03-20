@@ -2,7 +2,7 @@
 #define TARGETSTATE_H
 
 #include "gamestate.h"
-#include "util.h"
+#include "position.h"
 
 class Player;
 class ItemComponent;

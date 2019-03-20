@@ -2,6 +2,7 @@
 #define CELLULARAUTOMATA_H
 
 #include <queue>
+#include <map>
 
 #include "dg-base.h"
 

@@ -14,6 +14,7 @@
 
 #include "singleton.h"
 #include "colorpair.h"
+#include "position.h"
 
 #ifdef USE_SDL
 struct TileColor
@@ -37,8 +38,6 @@ struct FBPixel
   int Character;
 };
 #endif
-
-class Position;
 
 /// Singleton for ncurses text printing
 class Printer : public Singleton<Printer> 

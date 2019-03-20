@@ -1,5 +1,7 @@
 #include "feature-rooms.h"
 
+#include "rng.h"
+
 /// Builds dungeon by attaching new rooms to existing ones
 /// maxIterations should be empirically chosen, because
 /// it depends on roomSizes.
