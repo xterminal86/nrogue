@@ -390,7 +390,7 @@ enum class RoomEdgeEnum
 };
 
 /// Helper struct to reduce the amount of writing when creating objects
-struct Tile
+struct GameObjectInfo
 {
   void Set(bool isBlocking,
            bool blocksSight,
@@ -407,6 +407,8 @@ struct Tile
     BgColor = bgColor;
     ObjectName = objectName;
     FogOfWarName = fowName;
+
+    IsSet = true;
   }
 
   bool IsBlocking;
@@ -418,6 +420,8 @@ struct Tile
 
   std::string ObjectName;
   std::string FogOfWarName;
+
+  bool IsSet = false;
 };
 
 struct Attribute

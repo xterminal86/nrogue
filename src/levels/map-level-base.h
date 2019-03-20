@@ -17,12 +17,13 @@ class MapLevelBase
     void InsertActor(GameObject* actor);
     void InsertGameObject(GameObject* goToInsert);
     void InsertStaticObject(GameObject* goToInsert);
+    void InsertStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1);
     void TryToSpawnMonsters();
 
     virtual void PrepareMap(MapLevelBase* levelOwner);
     virtual void DisplayWelcomeText();
 
-    // Map ground tiles
+    // Map ground tiles (floor, water, ground etc.)
     std::vector<std::vector<std::unique_ptr<GameObject>>> MapArray;
 
     // Static map objects without global update (walls, doors etc.)
@@ -80,7 +81,9 @@ class MapLevelBase
 
     virtual void CreateLevel() {}
 
-    void CreateBorders(Tile& t);
+    bool IsSpotValidForSpawn(const Position& pos);
+
+    void CreateBorders(GameObjectInfo& t);
     void RecordEmptyCells();
     void CreateItemsForLevel(int maxItems);
     void PlaceStairs();

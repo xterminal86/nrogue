@@ -166,7 +166,9 @@ void Player::CheckVisibility()
         continue;
       }
 
-      if (map[point.X][point.Y]->BlocksSight)
+      if (map[point.X][point.Y]->BlocksSight
+          || (staticObjects[point.X][point.Y] != nullptr
+           && staticObjects[point.X][point.Y]->BlocksSight) )
       {
         DiscoverCell(point.X, point.Y);
         break;
@@ -776,6 +778,11 @@ bool Player::CanRaiseAttribute(Attribute& attr)
 
 void Player::ProcessKill(GameObject* monster)
 {
+  if (monster->Type == MonsterType::HARMLESS)
+  {
+    return;
+  }
+
   int dungeonLvl = Map::Instance().CurrentLevel->DungeonLevel;
   int defaultExp = monster->Attrs.Rating() - Attrs.Rating();
 

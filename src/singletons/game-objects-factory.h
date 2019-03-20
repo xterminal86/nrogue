@@ -55,8 +55,8 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
 
     void GenerateLootIfPossible(int posX, int posY, MonsterType monsterType);
 
-    GameObject* CreateStaticObject(int x, int y, int image, std::string& objectName, int hitPoints = -1);
-    GameObject* CreateDoor(int x, int y, bool isOpen, const std::string& doorName);
+    GameObject* CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1);
+    GameObject* CreateDoor(int x, int y, bool isOpen, const std::string& doorName, int hitPoints = -1);
 
   private:
     Player* _playerRef;

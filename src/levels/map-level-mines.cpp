@@ -261,7 +261,7 @@ void MapLevelMines::CreateLevel()
   VisibilityRadius = 8;
   MonstersRespawnTurns = 1000;
 
-  Tile t;
+  GameObjectInfo t;
   t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Dirt");
 
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
@@ -311,7 +311,7 @@ void MapLevelMines::CreateLevel()
   CreateItemsForLevel(itemsToCreate);
 }
 
-void MapLevelMines::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)
+void MapLevelMines::FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill)
 {
   for (int x = ax; x <= ax + aw; x++)
   {
@@ -330,7 +330,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
   {
     for (int y = 0; y < MapSize.Y; y++)
     {
-      Tile t;
+      GameObjectInfo t;
       std::string objName;
 
       char image = lb.MapRaw[x][y];
@@ -340,7 +340,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
         {
           objName = "Rocks";
           t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
-          MapArray[x][y]->MakeTile(t);
+          InsertStaticObject(x, y, t);
         }
         break;
 
@@ -378,16 +378,6 @@ void MapLevelMines::DisplayWelcomeText()
 
 void MapLevelMines::CreateDoor(int x, int y, bool isOpen)
 {
-  auto c = MapArray[x][y]->AddComponent<DoorComponent>();
-  DoorComponent* dc = static_cast<DoorComponent*>(c);
-  dc->IsOpen = isOpen;
-  dc->UpdateDoorState();
-
-  // https://stackoverflow.com/questions/15264003/using-stdbind-with-member-function-use-object-pointer-or-not-for-this-argumen/15264126#15264126
-  //
-  // When using std::bind to bind a member function, the first argument is the object's this pointer.
-
-  MapArray[x][y]->InteractionCallback = std::bind(&DoorComponent::Interact, dc);
-
-  MapArray[x][y]->ObjectName = "Door";
+  GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, isOpen, "Door");
+  InsertStaticObject(door);
 }

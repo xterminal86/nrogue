@@ -31,8 +31,22 @@ void GameObject::Init(MapLevelBase* levelOwner, int x, int y, int avatar, const 
 
 bool GameObject::Move(int dx, int dy)
 {
-  if (!_levelOwner->MapArray[PosX + dx][PosY + dy]->Occupied &&
-      !_levelOwner->MapArray[PosX + dx][PosY + dy]->Blocking)
+  auto& groundRef = _levelOwner->MapArray;
+  auto& staticObjRef = _levelOwner->StaticMapObjects;
+
+  int nx = PosX + dx;
+  int ny = PosY + dy;
+
+  bool condGround = (!groundRef[nx][ny]->Occupied
+                  && !groundRef[nx][ny]->Blocking);
+
+  bool condStatic = true;
+  if (staticObjRef[nx][ny] != nullptr)
+  {
+    condStatic = !staticObjRef[nx][ny]->Blocking;
+  }
+
+  if (condGround && condStatic)
   {
     MoveGameObject(dx, dy);
     return true;
@@ -43,8 +57,16 @@ bool GameObject::Move(int dx, int dy)
 
 bool GameObject::MoveTo(int x, int y)
 {
-  if (!_levelOwner->MapArray[x][y]->Occupied &&
-      !_levelOwner->MapArray[x][y]->Blocking)
+  bool condGround = (!_levelOwner->MapArray[x][y]->Occupied
+                  && !_levelOwner->MapArray[x][y]->Blocking);
+
+  bool condStatic = true;
+  if (_levelOwner->StaticMapObjects[x][y] != nullptr)
+  {
+    condStatic = !_levelOwner->StaticMapObjects[x][y]->Blocking;
+  }
+
+  if (condGround && condStatic)
   {
     // When we change level, previous position (PosX and PosY)
     // is pointing to the stairs down on previous level,
@@ -90,7 +112,7 @@ void GameObject::Update()
   }
 }
 
-void GameObject::MakeTile(Tile t)
+void GameObject::MakeTile(GameObjectInfo t)
 {
   Blocking = t.IsBlocking;
   BlocksSight = t.BlocksSight;
@@ -117,7 +139,11 @@ void GameObject::ReceiveDamage(GameObject* from, int amount)
 
       IsDestroyed = true;
 
-      auto msg = Util::StringFormat("%s was killed", ObjectName.data());
+      std::string verb = (Type == MonsterType::HARMLESS)
+                       ? "destroyed"
+                       : "killed";
+
+      auto msg = Util::StringFormat("%s was %s", ObjectName.data(), verb.data());
       Printer::Instance().AddMessage(msg);
     }
   }

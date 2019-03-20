@@ -204,8 +204,8 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
     return actor;
   }
 
-  auto cell = Map::Instance().CurrentLevel->MapArray[at.X][at.Y].get();
-  if (cell->Blocking)
+  auto cell = Map::Instance().CurrentLevel->StaticMapObjects[at.X][at.Y].get();
+  if (cell != nullptr && cell->Blocking)
   {    
     if (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON)
     {
@@ -329,6 +329,7 @@ void TargetState::DrawHint()
 
   Position mapSize = Map::Instance().CurrentLevel->MapSize;
   auto& mapRef = Map::Instance().CurrentLevel->MapArray;
+  auto& staticObjRef = Map::Instance().CurrentLevel->StaticMapObjects;
 
   std::vector<Position> cellsToHighlight;
 
@@ -344,9 +345,17 @@ void TargetState::DrawHint()
     {
       auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
 
-      if (actor != nullptr
-       || mapRef[p.X][p.Y]->Blocking
-       || !mapRef[p.X][p.Y]->Visible)
+      bool condActor = (actor != nullptr);
+      bool condGround = (mapRef[p.X][p.Y]->Blocking
+                      || !mapRef[p.X][p.Y]->Visible);
+      bool condStatic = false;
+
+      if (staticObjRef[p.X][p.Y] != nullptr)
+      {
+        condStatic = staticObjRef[p.X][p.Y]->Blocking;
+      }
+
+      if (condActor || condGround || condStatic)
       {
         break;
       }

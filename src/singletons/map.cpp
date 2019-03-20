@@ -59,7 +59,14 @@ void Map::Draw(int playerX, int playerY)
       // Draw static object on top if present
       if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
       {
-        CurrentLevel->StaticMapObjects[x][y]->Draw();
+        if (CurrentLevel->StaticMapObjects[x][y]->IsDestroyed)
+        {
+          CurrentLevel->StaticMapObjects[x][y].reset(nullptr);
+        }
+        else
+        {
+          CurrentLevel->StaticMapObjects[x][y]->Draw();
+        }
       }
     }
     else
@@ -188,6 +195,14 @@ std::vector<GameObject*> Map::GetGameObjectsAtPosition(int x, int y)
     if (go.get()->PosX == x && go.get()->PosY == y)
     {
       res.push_back(go.get());
+    }
+  }
+
+  if (res.empty())
+  {
+    if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
+    {
+      res.push_back(CurrentLevel->StaticMapObjects[x][y].get());
     }
   }
 
@@ -529,15 +544,15 @@ void Map::DrawNonVisibleMapTile(int x, int y)
 }
 
 void Map::DrawNonVisibleStaticObject(int x, int y)
-{
-  // Same as in method above
-
-  std::string tileColor = CurrentLevel->MapArray[x][y]->Revealed ?
-                          GlobalConstants::FogOfWarColor :
-                          GlobalConstants::BlackColor;
-
+{  
   if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
   {
+    // Same as in method above
+
+    std::string tileColor = CurrentLevel->MapArray[x][y]->Revealed ?
+                            GlobalConstants::FogOfWarColor :
+                            GlobalConstants::BlackColor;
+
     if (CurrentLevel->StaticMapObjects[x][y]->FgColor == GlobalConstants::BlackColor)
     {
       CurrentLevel->StaticMapObjects[x][y]->Draw(GlobalConstants::BlackColor, tileColor);

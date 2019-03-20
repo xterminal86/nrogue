@@ -1567,12 +1567,18 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateDoor(int x, int y, bool isOpen, const std::string& doorName)
+GameObject* GameObjectsFactory::CreateDoor(int x, int y, bool isOpen, const std::string& doorName, int hitPoints)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   go->PosX = x;
   go->PosY = y;
+
+  if (hitPoints > 0)
+  {
+    go->Attrs.Indestructible = false;
+    go->Attrs.HP.Set(hitPoints);
+  }
 
   DoorComponent* dc = go->AddComponent<DoorComponent>();
   dc->IsOpen = isOpen;
@@ -1589,14 +1595,18 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y, bool isOpen, const std:
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, int image, std::string& objectName, int hitPoints)
+GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   go->PosX = x;
   go->PosY = y;
-  go->Image = image;
-  go->ObjectName = objectName;
+  go->Image = objectInfo.Image;
+  go->ObjectName = objectInfo.ObjectName;
+  go->FgColor = objectInfo.FgColor;
+  go->BgColor = objectInfo.BgColor;
+  go->Blocking = objectInfo.IsBlocking;
+  go->BlocksSight = objectInfo.BlocksSight;
 
   if (hitPoints > 0)
   {

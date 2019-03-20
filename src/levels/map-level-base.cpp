@@ -62,6 +62,12 @@ void MapLevelBase::InsertGameObject(GameObject* goToInsert)
   GameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
 }
 
+void MapLevelBase::InsertStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints)
+{
+  GameObject* go = GameObjectsFactory::Instance().CreateStaticObject(x, y, objectInfo, hitPoints);
+  InsertStaticObject(go);
+}
+
 void MapLevelBase::InsertStaticObject(GameObject* goToInsert)
 {
   int x = goToInsert->PosX;
@@ -76,9 +82,18 @@ void MapLevelBase::RecordEmptyCells()
   {
     for (int y = 0; y < MapSize.Y; y++)
     {
-      if (!MapArray[x][y]->Blocking
-      && (MapArray[x][y]->Image != '>'
-       || MapArray[x][y]->Image != '<'))
+      bool condGround = (!MapArray[x][y]->Blocking
+                         && (MapArray[x][y]->Image != '>'
+                          || MapArray[x][y]->Image != '<'));
+
+      bool condStatic = true;
+
+      if (StaticMapObjects[x][y] != nullptr)
+      {
+        condStatic = !StaticMapObjects[x][y]->Blocking;
+      }
+
+      if (condGround && condStatic)
       {
         Position pos(x, y);
         _emptyCells.push_back(pos);
@@ -87,12 +102,12 @@ void MapLevelBase::RecordEmptyCells()
   }
 }
 
-void MapLevelBase::CreateBorders(Tile& t)
+void MapLevelBase::CreateBorders(GameObjectInfo& t)
 {
   auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
   for (auto& i : bounds)
   {
-    MapArray[i.X][i.Y].get()->MakeTile(t);
+    InsertStaticObject(i.X, i.Y, t);
   }
 }
 
@@ -173,13 +188,27 @@ void MapLevelBase::CreateInitialMonsters()
     int x = _emptyCells[index].X;
     int y = _emptyCells[index].Y;
 
-    if (!MapArray[x][y]->Blocking && !MapArray[x][y]->Occupied)
+    if (IsSpotValidForSpawn({ x, y }))
     {
       auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
       auto monster = GameObjectsFactory::Instance().CreateMonster(x, y, res.first);
       InsertActor(monster);
     }
   }
+}
+
+bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
+{
+  bool condGround = (!MapArray[pos.X][pos.Y]->Blocking
+                  && !MapArray[pos.X][pos.Y]->Occupied);
+  bool condStatic = true;
+
+  if (StaticMapObjects[pos.X][pos.Y] != nullptr)
+  {
+    condStatic = !StaticMapObjects[pos.X][pos.Y]->Blocking;
+  }
+
+  return (condGround && condStatic);
 }
 
 void MapLevelBase::TryToSpawnMonsters()

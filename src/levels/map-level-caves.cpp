@@ -53,7 +53,7 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
   {
     for (int y = 0; y < MapSize.Y; y++)
     {
-      Tile t;
+      GameObjectInfo t;
       std::string objName;
 
       char image = lb.MapRaw[x][y];
@@ -120,7 +120,7 @@ void MapLevelCaves::CreateRivers()
     {
       if (MapArray[p.X][p.Y]->Image == '.')
       {
-        Tile t;
+        GameObjectInfo t;
         std::string objName = "Shallow Water";
         t.Set(false, false, '~', GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, objName);
         MapArray[p.X][p.Y]->MakeTile(t);

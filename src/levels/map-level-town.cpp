@@ -137,7 +137,7 @@ void MapLevelTown::CreateLevel()
 
   VisibilityRadius = 20;
 
-  Tile t;
+  GameObjectInfo t;
   t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
 
   Rect r(0, 0, MapSize.X - 1, MapSize.Y - 1);
@@ -149,7 +149,7 @@ void MapLevelTown::CreateLevel()
   auto bounds = r.GetBoundaryElements();
   for (auto& pos : bounds)
   {
-    MapArray[pos.X][pos.Y]->MakeTile(t);
+    InsertStaticObject(pos.X, pos.Y, t);
   }
 
   LevelStart.X = 5;
@@ -211,11 +211,11 @@ void MapLevelTown::CreateLevel()
 
   // FIXME: think about moving doors from MapArray into vector of GameObjects
   // to allow bashing of locked doors
-  auto door = GameObjectsFactory::Instance().CreateDoor(4, 1, false, "Test Door");
+  auto door = GameObjectsFactory::Instance().CreateDoor(4, 1, false, "Test Door", 1);
   InsertStaticObject(door);
 }
 
-void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFill)
+void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill)
 {
   for (int x = ax; x <= ax + aw; x++)
   {
@@ -228,7 +228,7 @@ void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const Tile& tileToFi
 
 void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation)
 {
-  Tile t;
+  GameObjectInfo t;
 
   int posX = x;
   int posY = y;
@@ -257,29 +257,23 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
       {
         case '#':
           t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
-          MapArray[posX][posY]->MakeTile(t);
+          InsertStaticObject(posX, posY, t);
           break;
 
         case 'T':
-        {
           t.Set(true, false, c, GlobalConstants::IronColor, GlobalConstants::BlackColor, "Workbench");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          InsertStaticObject(posX, posY, t);
+          break;
 
         case 'B':
-        {
           t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Bed");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          InsertStaticObject(posX, posY, t);
+          break;
 
         case '.':
-        {
           t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
           MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          break;
 
         case '\\':
         case '/':
@@ -288,7 +282,7 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
         case '-':
         {
           t.Set(true, true, c, GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Forge");
-          MapArray[posX][posY]->MakeTile(t);
+          InsertStaticObject(posX, posY, t);
         }
         break;
 
@@ -313,9 +307,7 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
 }
 
 void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation)
-{
-  Tile t;
-
+{  
   int posX = x;
   int posY = y;
 
@@ -339,76 +331,60 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
   {
     for (auto& c : row)
     {
+      GameObjectInfo t;
+
       switch (c)
       {
         case '#':
-          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
-          MapArray[posX][posY]->MakeTile(t);
+          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");          
+          InsertStaticObject(posX, posY, t);
           break;
 
         case 'g':
-        {
           t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::GrassColor, "Grass");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          InsertStaticObject(posX, posY, t);
+          break;
 
         case 'F':
-        {
           t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Fountain");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          InsertStaticObject(posX, posY, t);
+          break;
 
         case 'T':
-        {
           t.Set(true, true, c, GlobalConstants::TreeColor, GlobalConstants::BlackColor, "Tree");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          InsertStaticObject(posX, posY, t);
+          break;
 
         case 'B':
-        {
           t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Bed");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          InsertStaticObject(posX, posY, t);
+          break;
 
         case '.':
-        {
           t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
           MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          break;
 
         case ' ':
-        {
           t.Set(false, false, c, GlobalConstants::BlackColor, GlobalConstants::GroundColor, "Stone Tiles");
           MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          break;
 
         case 'm':
-        {
           t.Set(true, false, ' ', GlobalConstants::BlackColor, GlobalConstants::MarbleColor, "Marble Fence");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          InsertStaticObject(posX, posY, t);
+          break;
 
         case '~':
-        {
           t.Set(false, false, c, GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, "Shallow Water");
           MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          break;
 
         case '|':
         case '-':
-        {
           t.Set(true, false, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Window");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          InsertStaticObject(posX, posY, t);
+          break;
 
         case '+':
           CreateDoor(posX, posY);
@@ -427,21 +403,6 @@ void MapLevelTown::CreateDoor(int x, int y, bool isOpen)
 {
   GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, isOpen, "Door");
   InsertStaticObject(door);
-
-  /*
-  auto c = MapArray[x][y]->AddComponent<DoorComponent>();
-  DoorComponent* dc = static_cast<DoorComponent*>(c);
-  dc->IsOpen = isOpen;
-  dc->UpdateDoorState();
-
-  // https://stackoverflow.com/questions/15264003/using-stdbind-with-member-function-use-object-pointer-or-not-for-this-argumen/15264126#15264126
-  //
-  // When using std::bind to bind a member function, the first argument is the object's this pointer.
-
-  MapArray[x][y]->InteractionCallback = std::bind(&DoorComponent::Interact, dc);
-
-  MapArray[x][y]->ObjectName = "Door";
-  */
 }
 
 void MapLevelTown::CreateChurch(int x, int y)
@@ -449,7 +410,7 @@ void MapLevelTown::CreateChurch(int x, int y)
   int posX = x;
   int posY = y;
 
-  Tile t;
+  GameObjectInfo t;
 
   for (auto& row : _layoutsForLevel[7])
   {
@@ -458,19 +419,15 @@ void MapLevelTown::CreateChurch(int x, int y)
       switch (c)
       {
         case '#':
-        {
           t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          InsertStaticObject(posX, posY, t);
+          break;
 
         case '|':
         case '-':
-        {
           t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stained Glass");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          InsertStaticObject(posX, posY, t);
+          break;
 
         // To allow fog of war to cover floor made of
         // background colored ' ', set FgColor to empty string.
@@ -486,21 +443,20 @@ void MapLevelTown::CreateChurch(int x, int y)
           break;
 
         case 'h':
-        {
           t.Set(false, false, c, GlobalConstants::WoodColor, GlobalConstants::BlackColor, "Wooden Bench", "?Bench?");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          InsertStaticObject(posX, posY, t);
+          break;
 
         case '/':
         {
-          // Game objects are not shown under fog of war by default,
+          // Globally updated game objects are not shown under
+          // fog of war by default,
           // so sometimes we must "adjust" tiles if we want
           // certain objects to be shown, like in this case.
           ShrineType shrineType = ShrineType::KNOWLEDGE;
           std::string description = GlobalConstants::ShrineNameByType.at(shrineType);
           t.Set(true, false, '/', GlobalConstants::GroundColor, GlobalConstants::BlackColor, description, "?Shrine?");
-          MapArray[posX][posY]->MakeTile(t);
+          InsertStaticObject(posX, posY, t);
 
           // Tiles are updated only around player.
           // Shrine has some logic (buff and timeout count), thus
@@ -524,12 +480,11 @@ void MapLevelTown::CreatePlayerHouse()
 {
   CreateRoom(3, 3, _layoutsForLevel[0]);
 
-  Tile t;
+  GameObjectInfo t;
   t.Set(true, false, 'C', GlobalConstants::WhiteColor, GlobalConstants::ChestColor, "Stash");
 
   Position cp(6, 6);
-
-  MapArray[cp.X][cp.Y]->MakeTile(t);
+  InsertStaticObject(6, 6, t);
 
   auto stash = GameObjectsFactory::Instance().CreateContainer("Stash", GlobalConstants::ChestColor, 'C', cp.X, cp.Y);
   InsertGameObject(stash);
@@ -575,7 +530,16 @@ void MapLevelTown::CreateNPCs()
           }
         }
 
-        if (!alreadyAdded && !MapArray[x][y]->Blocking && !MapArray[x][y]->Occupied)
+        bool condGround = (!MapArray[x][y]->Blocking
+                        && !MapArray[x][y]->Occupied);
+        bool condStatic = true;
+
+        if (StaticMapObjects[x][y] != nullptr)
+        {
+          condStatic = !StaticMapObjects[x][y]->Blocking;
+        }
+
+        if (!alreadyAdded && condGround && condStatic)
         {
           emptyCells.push_back(Position(x, y));
         }
@@ -612,9 +576,9 @@ void MapLevelTown::CreateNPCs()
 
 void MapLevelTown::CreateTownGates()
 {
-  Tile t;
+  GameObjectInfo t;
   t.Set(true, true, '+', GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Village Gates");
 
-  MapArray[0][13]->MakeTile(t);
-  MapArray[0][14]->MakeTile(t);
+  InsertStaticObject(0, 13, t);
+  InsertStaticObject(0, 14, t);
 }

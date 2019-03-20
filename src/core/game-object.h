@@ -95,7 +95,7 @@ class GameObject
       return nullptr;
     }
 
-    void MakeTile(Tile t);
+    void MakeTile(GameObjectInfo t);
 
     void Update();
 
