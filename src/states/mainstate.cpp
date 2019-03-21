@@ -170,9 +170,6 @@ void MainState::HandleInput()
 
       case 'a':
       {
-        Application::Instance().ChangeState(GameStates::ATTACK_STATE);
-
-        /*
         if (Map::Instance().CurrentLevel->Peaceful)
         {
           PrintNoAttackInTown();
@@ -181,7 +178,6 @@ void MainState::HandleInput()
         {
           Application::Instance().ChangeState(GameStates::ATTACK_STATE);
         }
-        */
       }
       break;
 
@@ -226,16 +222,13 @@ void MainState::HandleInput()
 
       case 'f':
       {
-        // FIXME: debug
-        ProcessRangedWeapon();
-
         if (Map::Instance().CurrentLevel->Peaceful)
         {
-          //PrintNoAttackInTown();
+          PrintNoAttackInTown();
         }
         else
         {
-          //ProcessRangedWeapon();
+          ProcessRangedWeapon();
         }
       }
       break;

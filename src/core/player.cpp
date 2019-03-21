@@ -404,9 +404,9 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
   }
 }
 
-void Player::MeleeAttack(GameObject* go)
+void Player::MeleeAttack(GameObject* go, bool alwaysHit)
 {
-  bool hitLanded = WasHitLanded(go);
+  bool hitLanded = alwaysHit ? true : WasHitLanded(go);
   if (!hitLanded)
   {
     Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "You missed", "#FFFFFF");
@@ -425,12 +425,16 @@ void Player::MeleeAttack(GameObject* go)
 
 void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict)
 {
+  bool shouldTearDownWall = false;
+
   if (weapon != nullptr)
   {
     // Melee attack with ranged weapon in hand ignores durability,
     // since it is considered a punch
     bool isRanged = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON
                   || weapon->Data.ItemType_ == ItemType::WAND);
+
+    shouldTearDownWall = (weapon->Data.WeaponType_ == WeaponType::PICKAXE);
 
     if (!isRanged)
     {
@@ -445,12 +449,38 @@ void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int dama
     }
   }
 
-  defender->ReceiveDamage(this, damageToInflict);
+  bool canBeTearedDown = (defender->Type == MonsterType::PICKAXEABLE);
+  bool isWallOnBorder = IsGameObjectBorder(defender);
 
-  if (defender->IsDestroyed)
+  shouldTearDownWall &= (canBeTearedDown && !isWallOnBorder);
+
+  if (shouldTearDownWall)
   {
-    ProcessKill(defender);
+    defender->Attrs.HP.Set(0);
+    defender->IsDestroyed = true;
+
+    auto msg = Util::StringFormat("You tear down the %s", defender->ObjectName.data());
+    Printer::Instance().AddMessage(msg);
   }
+  else
+  {
+    defender->ReceiveDamage(this, damageToInflict);
+
+    if (defender->IsDestroyed)
+    {
+      ProcessKill(defender);
+    }
+  }
+}
+
+bool Player::IsGameObjectBorder(GameObject* go)
+{
+  auto& lvl = Map::Instance().CurrentLevel;
+
+  return (go->PosX == 0
+       || go->PosY == 0
+       || go->PosX == lvl->MapSize.X - 2
+       || go->PosY == lvl->MapSize.Y - 2);
 }
 
 bool Player::WasHitLanded(GameObject* defender)

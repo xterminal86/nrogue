@@ -63,7 +63,7 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
         {
           objName = "Cave Wall";
           t.Set(true, true, ' ', GlobalConstants::BlackColor, "#964B00", objName);
-          MapArray[x][y]->MakeTile(t);
+          InsertStaticObject(x, y, t, 1, MonsterType::PICKAXEABLE);
         }
         break;
 

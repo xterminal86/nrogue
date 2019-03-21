@@ -142,6 +142,7 @@ enum class MapType
 enum class MonsterType
 {
   HARMLESS = 0,
+  PICKAXEABLE,
   RAT,
   BAT,
   SPIDER,

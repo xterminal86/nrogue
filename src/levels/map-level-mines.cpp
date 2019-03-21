@@ -340,7 +340,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
         {
           objName = "Rocks";
           t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");                    
-          InsertStaticObject(x, y, t);
+          InsertStaticObject(x, y, t, 1, MonsterType::PICKAXEABLE);
         }
         break;
 

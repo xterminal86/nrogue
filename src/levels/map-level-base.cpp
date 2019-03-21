@@ -62,9 +62,9 @@ void MapLevelBase::InsertGameObject(GameObject* goToInsert)
   GameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
 }
 
-void MapLevelBase::InsertStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints)
+void MapLevelBase::InsertStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints, MonsterType type)
 {
-  GameObject* go = GameObjectsFactory::Instance().CreateStaticObject(x, y, objectInfo, hitPoints);
+  GameObject* go = GameObjectsFactory::Instance().CreateStaticObject(x, y, objectInfo, hitPoints, type);
   InsertStaticObject(go);
 }
 

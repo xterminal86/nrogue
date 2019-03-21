@@ -124,7 +124,7 @@ void GameObject::MakeTile(GameObjectInfo t)
 }
 
 void GameObject::ReceiveDamage(GameObject* from, int amount)
-{
+{  
   if (!Attrs.Indestructible)
   {
     Attrs.HP.CurrentValue -= amount;

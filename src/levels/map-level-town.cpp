@@ -198,6 +198,7 @@ void MapLevelTown::CreateLevel()
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);          
 
   // *** FIXME: debug
+  /*
   auto wand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::GOLDEN, SpellType::FIREBALL, ItemPrefix::UNCURSED);
   InsertGameObject(wand);
 
@@ -212,7 +213,7 @@ void MapLevelTown::CreateLevel()
 
   auto pickaxe = GameObjectsFactory::Instance().CreateWeapon(5, 1, WeaponType::PICKAXE, ItemPrefix::UNCURSED);
   InsertGameObject(pickaxe);
-
+  */
   // ***
 }
 
@@ -281,16 +282,10 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
         case '_':
         case '|':
         case '-':
-        {
-          t.Set(true, true, c, GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Forge");
-          InsertStaticObject(posX, posY, t);
-        }
-        break;
-
         case ' ':
         {
           t.Set(true, true, c, GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Forge");
-          MapArray[posX][posY]->MakeTile(t);
+          InsertStaticObject(posX, posY, t);
         }
         break;
 

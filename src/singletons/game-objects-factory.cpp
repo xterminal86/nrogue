@@ -1625,7 +1625,7 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y, bool isOpen, const std:
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints)
+GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints, MonsterType type)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1638,6 +1638,7 @@ GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, const GameObjec
   go->BgColor = objectInfo.BgColor;
   go->Blocking = objectInfo.IsBlocking;
   go->BlocksSight = objectInfo.BlocksSight;
+  go->Type = type;
 
   if (hitPoints > 0)
   {

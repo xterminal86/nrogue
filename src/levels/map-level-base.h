@@ -17,7 +17,7 @@ class MapLevelBase
     void InsertActor(GameObject* actor);
     void InsertGameObject(GameObject* goToInsert);
     void InsertStaticObject(GameObject* goToInsert);
-    void InsertStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1);
+    void InsertStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1, MonsterType type = MonsterType::HARMLESS);
     void TryToSpawnMonsters();
 
     virtual void PrepareMap(MapLevelBase* levelOwner);
