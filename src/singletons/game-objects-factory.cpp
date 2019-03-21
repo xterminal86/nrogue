@@ -80,21 +80,21 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateMonster(int x, int y, MonsterType monsterType)
+GameObject* GameObjectsFactory::CreateMonster(int x, int y, GameObjectType monsterType)
 {
   GameObject* go = nullptr;
 
   switch (monsterType)
   {
-    case MonsterType::RAT:
+    case GameObjectType::RAT:
       go = CreateRat(x, y);
       break;
 
-    case MonsterType::BAT:
+    case GameObjectType::BAT:
       go = CreateBat(x, y);
       break;
 
-    case MonsterType::SPIDER:
+    case GameObjectType::SPIDER:
       go = CreateSpider(x, y);
       break;
   }
@@ -1625,7 +1625,7 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y, bool isOpen, const std:
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints, MonsterType type)
+GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints, GameObjectType type)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -2152,7 +2152,7 @@ int GameObjectsFactory::CalculateAverageDamage(int numRolls, int diceSides)
   return (maxDmg - minDmg) / 2;
 }
 
-void GameObjectsFactory::GenerateLootIfPossible(int posX, int posY, MonsterType monsterType)
+void GameObjectsFactory::GenerateLootIfPossible(int posX, int posY, GameObjectType monsterType)
 {
   if (GlobalConstants::LootTable.count(monsterType) == 1)
   {
@@ -2163,7 +2163,7 @@ void GameObjectsFactory::GenerateLootIfPossible(int posX, int posY, MonsterType 
   }
 }
 
-void GameObjectsFactory::GenerateLoot(int posX, int posY, std::pair<ItemType, int> kvp, MonsterType monsterType)
+void GameObjectsFactory::GenerateLoot(int posX, int posY, std::pair<ItemType, int> kvp, GameObjectType monsterType)
 {
   switch (kvp.first)
   {

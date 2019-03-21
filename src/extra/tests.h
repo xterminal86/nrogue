@@ -225,7 +225,7 @@ namespace Tests
 
     for (int i = 0; i < 100; i++)
     {
-      auto weights = GlobalConstants::LootTable.at(MonsterType::RAT);
+      auto weights = GlobalConstants::LootTable.at(GameObjectType::RAT);
       auto kvp = Util::WeightedRandom(weights);
 
       scores[kvp.first]++;

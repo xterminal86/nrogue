@@ -134,7 +134,7 @@ void GameObject::ReceiveDamage(GameObject* from, int amount)
 
     if (Attrs.HP.CurrentValue <= 0)
     {
-      if (Type != MonsterType::HARMLESS)
+      if (Type != GameObjectType::HARMLESS)
       {
         auto go = GameObjectsFactory::Instance().CreateRemains(this);
         _levelOwner->InsertGameObject(go);
@@ -142,7 +142,7 @@ void GameObject::ReceiveDamage(GameObject* from, int amount)
 
       IsDestroyed = true;
 
-      std::string verb = (Type == MonsterType::HARMLESS)
+      std::string verb = (Type == GameObjectType::HARMLESS)
                        ? "destroyed"
                        : "killed";
 

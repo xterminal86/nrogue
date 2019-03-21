@@ -159,7 +159,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
       _monstersSpawnRateForThisLevel =
       {
-        { MonsterType::RAT, 1 }
+        { GameObjectType::RAT, 1 }
       };
     }
     break;
@@ -177,8 +177,8 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
       _monstersSpawnRateForThisLevel =
       {
-        { MonsterType::RAT, 8 },
-        { MonsterType::BAT, 1 }
+        { GameObjectType::RAT, 8 },
+        { GameObjectType::BAT, 1 }
       };
     }
     break;
@@ -196,9 +196,9 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
       _monstersSpawnRateForThisLevel =
       {
-        { MonsterType::RAT, 8 },
-        { MonsterType::SPIDER, 1 },
-        { MonsterType::BAT, 4 }
+        { GameObjectType::RAT, 8 },
+        { GameObjectType::SPIDER, 1 },
+        { GameObjectType::BAT, 4 }
       };
     }
     break;
@@ -218,9 +218,9 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
       _monstersSpawnRateForThisLevel =
       {
-        { MonsterType::RAT, 4 },
-        { MonsterType::SPIDER, 4 },
-        { MonsterType::BAT, 4 }
+        { GameObjectType::RAT, 4 },
+        { GameObjectType::SPIDER, 4 },
+        { GameObjectType::BAT, 4 }
       };
     }
     break;
@@ -240,9 +240,9 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
       _monstersSpawnRateForThisLevel =
       {
-        { MonsterType::RAT, 4 },
-        { MonsterType::SPIDER, 4 },
-        { MonsterType::BAT, 4 }
+        { GameObjectType::RAT, 4 },
+        { GameObjectType::SPIDER, 4 },
+        { GameObjectType::BAT, 4 }
       };
     }
     break;
@@ -340,7 +340,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
         {
           objName = "Rocks";
           t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");                    
-          InsertStaticObject(x, y, t, 1, MonsterType::PICKAXEABLE);
+          InsertStaticObject(x, y, t, 1, GameObjectType::PICKAXEABLE);
         }
         break;
 

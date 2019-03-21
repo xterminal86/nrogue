@@ -139,7 +139,7 @@ enum class MapType
   THE_END
 };
 
-enum class MonsterType
+enum class GameObjectType
 {
   HARMLESS = 0,
   PICKAXEABLE,
@@ -872,10 +872,10 @@ namespace GlobalConstants
   };
 
   // Weighted random
-  static const std::map<MonsterType, std::map<ItemType, int>> LootTable =
+  static const std::map<GameObjectType, std::map<ItemType, int>> LootTable =
   {
     {
-      MonsterType::RAT,
+      GameObjectType::RAT,
       {
         { ItemType::COINS,    1 },
         { ItemType::FOOD,     4 },
@@ -883,7 +883,7 @@ namespace GlobalConstants
       }
     },
     {
-      MonsterType::BAT,
+      GameObjectType::BAT,
       {
         { ItemType::COINS,    1 },
         { ItemType::FOOD,     4 },
@@ -891,7 +891,7 @@ namespace GlobalConstants
       }
     },
     {
-      MonsterType::SPIDER,
+      GameObjectType::SPIDER,
       {
         { ItemType::COINS,    2 },
         { ItemType::NOTHING, 20 }
@@ -899,17 +899,17 @@ namespace GlobalConstants
     }
   };
 
-  static const std::map<MonsterType, std::map<FoodType, int>> FoodLootTable =
+  static const std::map<GameObjectType, std::map<FoodType, int>> FoodLootTable =
   {
     {
-      MonsterType::RAT,
+      GameObjectType::RAT,
       {
         { FoodType::CHEESE, 4 },
         { FoodType::MEAT,   1 }
       }
     },
     {
-      MonsterType::BAT,
+      GameObjectType::BAT,
       {
         { FoodType::MEAT, 1 }
       }

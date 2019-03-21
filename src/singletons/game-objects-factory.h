@@ -18,7 +18,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
 
     /// For random generation
     GameObject* CreateGameObject(int x, int y, ItemType objType);
-    GameObject* CreateMonster(int x, int y, MonsterType monsterType);
+    GameObject* CreateMonster(int x, int y, GameObjectType monsterType);
 
     GameObject* CreateNPC(int x, int y, NPCType npcType, bool standing = false);
     GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);
@@ -53,9 +53,9 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     bool HandleItemUse(ItemComponent* item);
     bool HandleItemEquip(ItemComponent* item);
 
-    void GenerateLootIfPossible(int posX, int posY, MonsterType monsterType);
+    void GenerateLootIfPossible(int posX, int posY, GameObjectType monsterType);
 
-    GameObject* CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1, MonsterType type = MonsterType::HARMLESS);
+    GameObject* CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1, GameObjectType type = GameObjectType::HARMLESS);
     GameObject* CreateDoor(int x, int y, bool isOpen, const std::string& doorName, int hitPoints = -1);
 
   private:
@@ -97,7 +97,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
 
     ItemPrefix RollItemPrefix();
 
-    void GenerateLoot(int posX, int posY, std::pair<ItemType, int> kvp, MonsterType type);
+    void GenerateLoot(int posX, int posY, std::pair<ItemType, int> kvp, GameObjectType type);
 
     void InitPotionColors();
 

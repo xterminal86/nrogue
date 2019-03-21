@@ -17,7 +17,7 @@ class MapLevelBase
     void InsertActor(GameObject* actor);
     void InsertGameObject(GameObject* goToInsert);
     void InsertStaticObject(GameObject* goToInsert);
-    void InsertStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1, MonsterType type = MonsterType::HARMLESS);
+    void InsertStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1, GameObjectType type = GameObjectType::HARMLESS);
     void TryToSpawnMonsters();
 
     virtual void PrepareMap(MapLevelBase* levelOwner);
@@ -75,7 +75,7 @@ class MapLevelBase
     std::vector<Position> _emptyCells;
     std::vector<std::vector<std::string>> _layoutsForLevel;
     std::vector<RoomForLevel> _roomsForLevel;
-    std::map<MonsterType, int> _monstersSpawnRateForThisLevel;
+    std::map<GameObjectType, int> _monstersSpawnRateForThisLevel;
 
     Player* _playerRef;
 

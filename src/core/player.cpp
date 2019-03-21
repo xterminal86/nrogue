@@ -449,7 +449,7 @@ void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int dama
     }
   }
 
-  bool canBeTearedDown = (defender->Type == MonsterType::PICKAXEABLE);
+  bool canBeTearedDown = (defender->Type == GameObjectType::PICKAXEABLE);
   bool isWallOnBorder = IsGameObjectBorder(defender);
 
   shouldTearDownWall &= (canBeTearedDown && !isWallOnBorder);
@@ -798,7 +798,7 @@ bool Player::CanRaiseAttribute(Attribute& attr)
 
 void Player::ProcessKill(GameObject* monster)
 {
-  if (monster->Type == MonsterType::HARMLESS)
+  if (monster->Type == GameObjectType::HARMLESS)
   {
     return;
   }
