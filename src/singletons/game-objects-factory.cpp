@@ -23,10 +23,12 @@ void GameObjectsFactory::Init()
 
 GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
 {  
+  // NOTE: no random items allowed
+
   GameObject* go = nullptr;
 
   switch (objType)
-  {
+  {    
     case ItemType::COINS:
       go = CreateMoney();
       break;
@@ -62,6 +64,10 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
 
     case ItemType::RETURNER:
       go = CreateReturner(x, y);
+      break;
+
+    case ItemType::REPAIR_KIT:
+      go = CreateRepairKit(x, y);
       break;
 
     default:
@@ -622,7 +628,7 @@ GameObject* GameObjectsFactory::CreateRandomWeapon(ItemPrefix prefixOverride)
     std::advance(it, index);
     auto kvp = *it;
 
-    go = CreateWeapon(kvp.first, prefixOverride);
+    go = CreateWeapon(0, 0, kvp.first, prefixOverride);
   }
   else
   {
@@ -646,7 +652,7 @@ GameObject* GameObjectsFactory::CreateRandomArmor(ItemPrefix prefixOverride)
   std::advance(it, index);
   auto kvp = *it;
 
-  go = CreateArmor(kvp.first, prefixOverride);
+  go = CreateArmor(0, 0, kvp.first, prefixOverride);
 
   return go;
 }
@@ -713,7 +719,7 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 
   std::map<ItemType, int> returnerMap =
   {
-    { ItemType::RETURNER, 1 },
+    { ItemType::RETURNER, 5 },
     { ItemType::NOTHING,  20 }
   };
 
@@ -869,7 +875,7 @@ GameObject* GameObjectsFactory::CreateNote(std::string objName, std::vector<std:
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
+GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, ItemPrefix prefix)
 {  
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -878,6 +884,9 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
   {
     dungeonLevel = 1;
   }
+
+  go->PosX = x;
+  go->PosY = y;
 
   go->ObjectName = GlobalConstants::WeaponNameByType.at(type);
   go->Image = ')';
@@ -1017,7 +1026,7 @@ GameObject* GameObjectsFactory::CreateWeapon(WeaponType type, ItemPrefix prefix)
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 10;
+      baseDurability = 30;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -1428,7 +1437,7 @@ GameObject* GameObjectsFactory::CreateRepairKit(int x, int y, int charges, ItemP
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  int chargesNum = (charges == -1) ? RNG::Instance().RandomRange(10, 51) : charges;
+  int chargesNum = (charges == -1) ? RNG::Instance().RandomRange(1, 51) : charges;
 
   ic->Data.ItemType_ = ItemType::REPAIR_KIT;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
@@ -1461,7 +1470,7 @@ GameObject* GameObjectsFactory::CreateRepairKit(int x, int y, int charges, ItemP
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOverride)
+GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1470,6 +1479,9 @@ GameObject* GameObjectsFactory::CreateArmor(ArmorType type, ItemPrefix prefixOve
   {
     dungeonLevel = 1;
   }
+
+  go->PosX = x;
+  go->PosY = y;
 
   go->ObjectName = GlobalConstants::ArmorNameByType.at(type);
   go->Image = '[';

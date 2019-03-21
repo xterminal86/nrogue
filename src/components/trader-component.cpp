@@ -200,7 +200,7 @@ void TraderComponent::CreateItems()
           case ItemType::ARMOR:
           {
             auto armorPair = Util::WeightedRandom(armorWeights);
-            go = GameObjectsFactory::Instance().CreateArmor(armorPair.first, prefixPair.first);
+            go = GameObjectsFactory::Instance().CreateArmor(0, 0, armorPair.first, prefixPair.first);
           }
           break;
 

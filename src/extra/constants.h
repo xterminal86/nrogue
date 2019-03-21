@@ -211,6 +211,8 @@ enum class EquipmentCategory
   RING
 };
 
+// NOTE: do not forget to add creation of new
+// object into factory (GameObjectsFactory::CreateGameObject())
 enum class ItemType
 {
   NOTHING = 0,
@@ -968,7 +970,8 @@ namespace GlobalConstants
     { WeaponType::ARMING_SWORD, "Arming Sword"   },
     { WeaponType::LONG_SWORD,   "Longsword"      },
     { WeaponType::GREAT_SWORD,  "Great Sword"    },
-    { WeaponType::STAFF,        "Battle Staff"   }
+    { WeaponType::STAFF,        "Battle Staff"   },
+    { WeaponType::PICKAXE,      "Pickaxe"        }
   };
 
   static const std::map<RangedWeaponType, std::string> RangedWeaponNameByType =

@@ -312,10 +312,10 @@ void Player::SetDefaultEquipment()
   {
     case PlayerClass::THIEF:
     {
-      weapon = GameObjectsFactory::Instance().CreateWeapon(WeaponType::DAGGER, ItemPrefix::UNCURSED);
+      weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::DAGGER, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(weapon);
 
-      armor = GameObjectsFactory::Instance().CreateArmor(ArmorType::PADDING, ItemPrefix::UNCURSED);
+      armor = GameObjectsFactory::Instance().CreateArmor(0, 0, ArmorType::PADDING, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(armor);
 
       weaponAndArmor.push_back(weapon);
@@ -325,10 +325,10 @@ void Player::SetDefaultEquipment()
 
     case PlayerClass::SOLDIER:
     {
-      weapon = GameObjectsFactory::Instance().CreateWeapon(WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED);
+      weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(weapon);
 
-      armor = GameObjectsFactory::Instance().CreateArmor(ArmorType::LEATHER, ItemPrefix::UNCURSED);
+      armor = GameObjectsFactory::Instance().CreateArmor(0, 0, ArmorType::LEATHER, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(armor);
 
       weaponAndArmor.push_back(weapon);
@@ -338,7 +338,7 @@ void Player::SetDefaultEquipment()
 
     case PlayerClass::ARCANIST:
     {
-      weapon = GameObjectsFactory::Instance().CreateWeapon(WeaponType::STAFF, ItemPrefix::UNCURSED);
+      weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::STAFF, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(weapon);
 
       weaponAndArmor.push_back(weapon);

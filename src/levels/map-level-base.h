@@ -23,14 +23,16 @@ class MapLevelBase
     virtual void PrepareMap(MapLevelBase* levelOwner);
     virtual void DisplayWelcomeText();
 
-    // Map ground tiles (floor, water, ground etc.)
+    // Map ground tiles (floor, water, ground etc.).
+    // Drawn under fog of war.
     std::vector<std::vector<std::unique_ptr<GameObject>>> MapArray;
 
     // Static map objects without global update (walls, doors etc.)
+    // Drawn under fog of war.
     std::vector<std::vector<std::unique_ptr<GameObject>>> StaticMapObjects;
 
     // Globally updated objects (traps with timers, shrines, etc.)
-    // or objects that can be removed from the map (e.g. items)
+    // or objects that can be picked up (e.g. items).
     // Updated every frame. Aren't drawn under fog of war.
     std::vector<std::unique_ptr<GameObject>> GameObjects;
 
