@@ -405,109 +405,111 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
 }
 
 void Player::MeleeAttack(GameObject* go)
-{  
-  ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
-
-  if (go->Attrs.Indestructible)
+{
+  bool hitLanded = WasHitLanded(go);
+  if (!hitLanded)
   {
-    auto str = Util::StringFormat("Your attack bounces off %s!", go->ObjectName.data());
-    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, str, "#FFFFFF");
-
-    if (weapon != nullptr)
-    {
-      // Melee attack with ranged weapon in hand fallbacks to "punch"
-
-      bool isRanged = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON
-                    || weapon->Data.ItemType_ == ItemType::WAND);
-
-      if (!isRanged)
-      {
-        WeaponLosesDurability();
-      }
-
-      if (ShouldBreak(weapon))
-      {
-        BreakItem(weapon);
-      }
-    }
+    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "You missed", "#FFFFFF");
   }
   else
-  {    
-    int attackChanceScale = 2;
-    int defaultHitChance = 50;
-    int hitChance = defaultHitChance;
-
-    int d = Attrs.Skl.Get() - go->Attrs.Skl.Get();
-
-    hitChance += (d * attackChanceScale);
-
-    hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
-
-    auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
-                                     Attrs.Skl.CurrentValue,
-                                     Attrs.Lvl.CurrentValue,
-                                     go->ObjectName.data(),
-                                     go->Attrs.Skl.CurrentValue,
-                                     go->Attrs.Lvl.CurrentValue,
-                                     hitChance);
-    Logger::Instance().Print(logMsg);
-
-    if (Util::Rolld100(hitChance))
-    {      
-      int weaponDamage = 0;
-
-      bool durabilityLost = false;
-
-      if (weapon != nullptr)
-      {
-        bool isRanged = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON
-                      || weapon->Data.ItemType_ == ItemType::WAND);
-
-        auto wd = weapon->Data.Damage;
-
-        // Melee attack with ranged weapon in hand fallbacks to 1d4 "punch"
-
-        weaponDamage = isRanged ? Util::RollDamage(1, 4) :
-                                  Util::RollDamage(wd.CurrentValue, wd.OriginalValue);
-
-        durabilityLost = isRanged ? false : WeaponLosesDurability();
-      }
-
-      int totalDmg = weaponDamage;
-      totalDmg += Attrs.Str.Get() - go->Attrs.Def.Get();
-      if (totalDmg <= 0)
-      {
-        totalDmg = 1;
-      }
-
-      std::string msg = Util::StringFormat("You hit %s for %i damage", go->ObjectName.data(), totalDmg);
-      Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, msg, "#FF0000");
-
-      go->ReceiveDamage(this, totalDmg);
-
-      if (go->IsDestroyed)
-      {
-        ProcessKill(go);
-      }
-
-      // Leftover from the days when durability lost was probabilistic
-      if (durabilityLost)
-      {
-        if (ShouldBreak(weapon))
-        {
-          BreakItem(weapon);
-        }
-      }
-    }
-    else
-    {
-      Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "You missed", "#FFFFFF");
-    }
+  {
+    ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
+    int dmg = CalculateDamageValue(weapon, go);
+    ProcessAttack(weapon, go, dmg);
   }
 
   Attrs.Hunger += Attrs.HungerSpeed.Get() * 2;
 
   FinishTurn();
+}
+
+void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict)
+{
+  if (weapon != nullptr)
+  {
+    // Melee attack with ranged weapon in hand ignores durability,
+    // since it is considered a punch
+    bool isRanged = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON
+                  || weapon->Data.ItemType_ == ItemType::WAND);
+
+    if (!isRanged)
+    {
+      WeaponLosesDurability();
+    }
+
+    Application::Instance().DisplayAttack(defender, GlobalConstants::DisplayAttackDelayMs, "", "#FF0000");
+
+    if (ShouldBreak(weapon))
+    {
+      BreakItem(weapon);
+    }
+  }
+
+  defender->ReceiveDamage(this, damageToInflict);
+
+  if (defender->IsDestroyed)
+  {
+    ProcessKill(defender);
+  }
+}
+
+bool Player::WasHitLanded(GameObject* defender)
+{
+  int attackChanceScale = 2;
+  int defaultHitChance = 50;
+  int hitChance = defaultHitChance;
+
+  int d = Attrs.Skl.Get() - defender->Attrs.Skl.Get();
+
+  hitChance += (d * attackChanceScale);
+
+  hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
+
+  auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
+                                   Attrs.Skl.CurrentValue,
+                                   Attrs.Lvl.CurrentValue,
+                                   defender->ObjectName.data(),
+                                   defender->Attrs.Skl.CurrentValue,
+                                   defender->Attrs.Lvl.CurrentValue,
+                                   hitChance);
+  Logger::Instance().Print(logMsg);
+
+  return Util::Rolld100(hitChance);
+}
+
+int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender)
+{
+  int totalDmg = 0;
+
+  if (weapon == nullptr)
+  {
+    totalDmg = Util::RollDamage(1, 4);
+    totalDmg += Attrs.Str.Get() - defender->Attrs.Def.Get();
+    if (totalDmg <= 0)
+    {
+      totalDmg = 1;
+    }
+  }
+  else
+  {
+    bool isRanged = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON
+                  || weapon->Data.ItemType_ == ItemType::WAND);
+
+    auto wd = weapon->Data.Damage;
+
+    // Melee attack with ranged weapon in hand fallbacks to 1d4 "punch"
+    int weaponDamage = isRanged ? Util::RollDamage(1, 4) :
+                                  Util::RollDamage(wd.CurrentValue, wd.OriginalValue);
+
+    totalDmg = weaponDamage;
+    totalDmg += Attrs.Str.Get() - defender->Attrs.Def.Get();
+    if (totalDmg <= 0)
+    {
+      totalDmg = 1;
+    }
+  }
+
+  return totalDmg;
 }
 
 void Player::ReceiveDamage(GameObject* from, int amount, bool godMode)

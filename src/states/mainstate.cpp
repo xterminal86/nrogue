@@ -170,6 +170,9 @@ void MainState::HandleInput()
 
       case 'a':
       {
+        Application::Instance().ChangeState(GameStates::ATTACK_STATE);
+
+        /*
         if (Map::Instance().CurrentLevel->Peaceful)
         {
           PrintNoAttackInTown();
@@ -178,6 +181,7 @@ void MainState::HandleInput()
         {
           Application::Instance().ChangeState(GameStates::ATTACK_STATE);
         }
+        */
       }
       break;
 

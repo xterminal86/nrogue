@@ -137,7 +137,10 @@ void Application::DisplayAttack(GameObject* defender, int delayMs, const std::st
   DrawAttackCursor(posX, posY, defender, cursorColor);
   Util::Sleep(delayMs);
 
-  Printer::Instance().AddMessage(messageToPrint);
+  if (messageToPrint.length() != 0)
+  {
+    Printer::Instance().AddMessage(messageToPrint);
+  }
 
   DrawAttackCursor(posX, posY, defender);
   Util::Sleep(delayMs);

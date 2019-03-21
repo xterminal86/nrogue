@@ -96,11 +96,15 @@ class Player : public GameObject
     bool CanRaiseAttribute(Attribute& attr);
     void ProcessKill(GameObject* monster);
 
+    void ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict);
     bool WeaponLosesDurability();
     bool ShouldBreak(ItemComponent* ic);
     void BreakItem(ItemComponent* ic, bool suppressMessage = false);
 
     void SwitchPlaces(AIComponent* other);
+
+    int CalculateDamageValue(ItemComponent* weapon, GameObject* defender);
+    bool WasHitLanded(GameObject* defender);
 
     int _starvingTimeout = 0;
 
