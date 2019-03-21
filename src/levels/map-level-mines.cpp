@@ -340,13 +340,14 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
         {
           objName = "Rocks";
           t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");                    
-          InsertStaticObject(x, y, t, 1, GameObjectType::PICKAXEABLE);
+          InsertStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
         }
         break;
 
         case '+':
         {
-          CreateDoor(x, y);
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, "Door", 30);
+          InsertStaticObject(door);
         }
         break;
 
@@ -374,10 +375,4 @@ void MapLevelMines::DisplayWelcomeText()
   };
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Abandoned Mines", msg);
-}
-
-void MapLevelMines::CreateDoor(int x, int y, bool isOpen)
-{
-  GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, isOpen, "Door");
-  InsertStaticObject(door);
 }

@@ -38,6 +38,8 @@ class TargetState : public GameState
     GameObject* LaunchProjectile(char image);
     GameObject* CheckHit(const Position& at, const Position& prev);
 
+    int CalculateChance(const Position& startPoint, const Position& endPoint, int baseChance);
+
     std::vector<GameObject*> _targets;
 
     int _lastTargetIndex = -1;

@@ -21,7 +21,9 @@ void InfoState::Update(bool forceUpdate)
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();
-    
+
+    int yPos = 2;
+
     auto& playerRef = Application::Instance().PlayerInstance;
 
     std::string title = Util::StringFormat("%s the %s",
@@ -29,21 +31,31 @@ void InfoState::Update(bool forceUpdate)
                                            playerRef.GetClassName().data());
     Printer::Instance().PrintFB(0, 0, title, Printer::kAlignLeft, "#FFFFFF");
 
-    std::string border;
+    int charToPrint = 0;
+
+    #ifdef USE_SDL
+    charToPrint = (int)NameCP437::HBAR_2;
+    #else
+    charToPrint = '=';
+    #endif
+
     for (int i = 0; i < kMaxNameUnderscoreLength; i++)
-    {
-      border += '=';
+    {      
+      Printer::Instance().PrintFB(i, 1, charToPrint, "#FFFFFF");
+      Printer::Instance().PrintFB(i, yPos + 12, charToPrint, "#FFFFFF");
     }
+
+    #ifdef USE_SDL
+    charToPrint = (int)NameCP437::VBAR_1;
+    #else
+    charToPrint = '|';
+    #endif
 
     int th = Printer::Instance().TerminalHeight;
     for (int y = 0; y < th; y++)
     {
-      Printer::Instance().PrintFB(kMaxNameUnderscoreLength, y, '|', "#FFFFFF");
+      Printer::Instance().PrintFB(kMaxNameUnderscoreLength, y, charToPrint, "#FFFFFF");
     }
-
-    Printer::Instance().PrintFB(0, 1, border, Printer::kAlignLeft, "#FFFFFF");
-
-    int yPos = 2;
 
     PrintAttribute(0, yPos, "LVL", playerRef.Attrs.Lvl);
     PrintAttribute(0, yPos + 1, "EXP", playerRef.Attrs.Exp);
@@ -64,7 +76,6 @@ void InfoState::Update(bool forceUpdate)
 
     // Skills
 
-    Printer::Instance().PrintFB(0, yPos + 12, border, Printer::kAlignLeft, "#FFFFFF");
     Printer::Instance().PrintFB(kMaxNameUnderscoreLength / 2, yPos + 13, "SKILLS", Printer::kAlignCenter, "#FFFFFF");
 
     int i = 14;

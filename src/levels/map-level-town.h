@@ -18,7 +18,6 @@ class MapLevelTown : public MapLevelBase
   private:    
     void FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill);
     void CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation = false);
-    void CreateDoor(int x, int y, bool isOpen = false);
     void CreateChurch(int x, int y);
     void CreateBlacksmith(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation = false);
     void CreatePlayerHouse();    

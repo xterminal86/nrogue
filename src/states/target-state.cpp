@@ -420,19 +420,49 @@ void TargetState::Setup(ItemComponent* weapon)
 
 int TargetState::CalculateHitChance()
 {
+  int baseChance = 50;
   int chance = 0;
 
   Position startPoint = { _playerRef->PosX, _playerRef->PosY };
   Position endPoint = _cursorPosition;
 
-  bool isXBow = (_weaponRef->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_XBOW
-              || _weaponRef->Data.RangedWeaponType_ == RangedWeaponType::XBOW
-              || _weaponRef->Data.RangedWeaponType_ == RangedWeaponType::HEAVY_XBOW);
+  if (_weaponRef->Data.ItemType_ == ItemType::WAND)
+  {
+    chance = CalculateChance(startPoint, endPoint, baseChance);
+  }
+  else
+  {
+    bool isXBow = (_weaponRef->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_XBOW
+                || _weaponRef->Data.RangedWeaponType_ == RangedWeaponType::XBOW
+                || _weaponRef->Data.RangedWeaponType_ == RangedWeaponType::HEAVY_XBOW);
 
-  int baseChance = 50;
+    baseChance = isXBow ? (baseChance + 15) : baseChance;
+
+    chance = CalculateChance(startPoint, endPoint, baseChance);
+
+    ItemPrefix ammoPrefix = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0]->Data.Prefix;
+    switch (ammoPrefix)
+    {
+      case ItemPrefix::BLESSED:
+        chance *= 2;
+        break;
+
+      case ItemPrefix::CURSED:
+        chance /= 2;
+        break;
+    }
+  }
+
+  chance = Util::Clamp(chance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
+
+  return chance;
+}
+
+int TargetState::CalculateChance(const Position& startPoint, const Position& endPoint, int baseChance)
+{
   int attackChanceScale = 5;
 
-  chance = isXBow ? (baseChance + 15) : baseChance;
+  int chance = baseChance;
 
   int skl = _playerRef->Attrs.Skl.Get();
   if (skl > 0)
@@ -450,20 +480,6 @@ int TargetState::CalculateHitChance()
   {
     chance -= attackChanceScale;
   }
-
-  ItemPrefix ammoPrefix = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0]->Data.Prefix;
-  switch (ammoPrefix)
-  {
-    case ItemPrefix::BLESSED:
-      chance *= 2;
-      break;
-
-    case ItemPrefix::CURSED:
-      chance /= 2;
-      break;
-  }
-
-  chance = Util::Clamp(chance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
 
   return chance;
 }

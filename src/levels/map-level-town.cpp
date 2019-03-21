@@ -197,6 +197,9 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);          
 
+  auto wand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::GOLDEN, SpellType::FIREBALL, ItemPrefix::UNCURSED);
+  InsertGameObject(wand);
+
   // *** FIXME: debug
   /*
   auto wand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::GOLDEN, SpellType::FIREBALL, ItemPrefix::UNCURSED);
@@ -290,8 +293,11 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
         break;
 
         case '+':
-          CreateDoor(posX, posY);
-          break;
+        {
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Door");
+          InsertStaticObject(door);
+        }
+        break;
       }
 
       posX++;
@@ -382,9 +388,12 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
           InsertStaticObject(posX, posY, t);
           break;
 
-        case '+':
-          CreateDoor(posX, posY);
-          break;
+        case '+':          
+        {
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Door");
+          InsertStaticObject(door);
+        }
+        break;
       }
 
       posX++;
@@ -393,12 +402,6 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
     posX = x;
     posY++;
   }
-}
-
-void MapLevelTown::CreateDoor(int x, int y, bool isOpen)
-{
-  GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, isOpen, "Door");
-  InsertStaticObject(door);
 }
 
 void MapLevelTown::CreateChurch(int x, int y)
@@ -435,8 +438,11 @@ void MapLevelTown::CreateChurch(int x, int y)
         break;
 
         case '+':
-          CreateDoor(posX, posY);
-          break;
+        {
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Door");
+          InsertStaticObject(door);
+        }
+        break;
 
         case 'h':
           t.Set(false, false, c, GlobalConstants::WoodColor, GlobalConstants::BlackColor, "Wooden Bench", "?Bench?");

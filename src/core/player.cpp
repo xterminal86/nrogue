@@ -396,11 +396,64 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
 /// 'what' is either actor or GameObject, 'with' is a wand
 void Player::MagicAttack(GameObject* what, ItemComponent* with)
 {
+  auto baseDamagePair = GlobalConstants::SpellBaseDamageByType.at(with->Data.SpellHeld);
+
+  int bonus = Attrs.Mag.Get();
+
+  int centralDamage = Util::RollDamage(baseDamagePair.first, baseDamagePair.second);
+
+  centralDamage += bonus;
+
   switch (with->Data.SpellHeld)
   {
     case SpellType::FIREBALL:
-      Printer::Instance().DrawExplosion({ what->PosX, what->PosY });
-      break;
+    {
+      auto pointsAffected = Printer::Instance().DrawExplosion({ what->PosX, what->PosY });
+      for (auto& p : pointsAffected)
+      {
+        int d = Util::LinearDistance({ what->PosX, what->PosY }, p);
+        if (d == 0)
+        {
+          d = 1;
+        }
+
+        auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+        if (actor != nullptr)
+        {
+          int dmgHere = centralDamage / d;
+          dmgHere -= actor->Attrs.Res.Get();
+
+          // TODO: monsters heal by certain spells?
+          if (dmgHere <= 0)
+          {
+            auto msg = Util::StringFormat("%s seems unaffected!", actor->ObjectName.data());
+            Printer::Instance().AddMessage(msg);
+          }
+          else
+          {
+            actor->ReceiveDamage(this, dmgHere);
+          }
+        }
+
+        auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
+        for (auto& obj : mapObjs)
+        {
+          int dmgHere = centralDamage / d;
+          dmgHere -= obj->Attrs.Res.Get();
+
+          if (dmgHere <= 0)
+          {
+            auto msg = Util::StringFormat("%s seems unaffected!", obj->ObjectName.data());
+            Printer::Instance().AddMessage(msg);
+          }
+          else
+          {
+            obj->ReceiveDamage(this, dmgHere);
+          }
+        }
+      }
+    }
+    break;
   }
 }
 

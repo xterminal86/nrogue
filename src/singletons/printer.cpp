@@ -654,11 +654,13 @@ void Printer::Render()
 #endif
 }
 
-void Printer::DrawExplosion(Position pos)
+std::vector<Position> Printer::DrawExplosion(Position pos)
 {
+  std::vector<Position> cellsAffected = GetAreaDamagePointsFrom(pos, 3);
+
   for (int range = 1; range <= 3; range++)
   {
-    auto res = GetVisiblePointsFrom(pos, range);
+    auto res = GetAreaDamagePointsFrom(pos, range);
     for (auto& p : res)
     {
       int drawX = p.X + Map::Instance().CurrentLevel->MapOffsetX;
@@ -666,7 +668,7 @@ void Printer::DrawExplosion(Position pos)
 
       if (Map::Instance().CurrentLevel->MapArray[p.X][p.Y]->Visible)
       {
-        Printer::Instance().PrintFB(drawX, drawY, 'x', "#FF0000");
+        Printer::Instance().PrintFB(drawX, drawY, 'x', "#FF0000");        
       }
     }
 
@@ -678,9 +680,11 @@ void Printer::DrawExplosion(Position pos)
 
     Application::Instance().DrawCurrentState();
   }
+
+  return cellsAffected;
 }
 
-std::vector<Position> Printer::GetVisiblePointsFrom(Position from, int range)
+std::vector<Position> Printer::GetAreaDamagePointsFrom(Position from, int range)
 {
   std::vector<Position> res;
 
@@ -720,7 +724,12 @@ std::vector<Position> Printer::GetVisiblePointsFrom(Position from, int range)
       }
 
       auto cell = Map::Instance().CurrentLevel->MapArray[point.X][point.Y].get();
-      if (!cell->Blocking)
+      auto obj = Map::Instance().CurrentLevel->StaticMapObjects[point.X][point.Y].get();
+
+      bool cellOk = (!cell->Blocking);
+      bool objOk = (obj == nullptr);
+
+      if (cellOk && objOk)
       {
         res.push_back({ cell->PosX, cell->PosY });
       }

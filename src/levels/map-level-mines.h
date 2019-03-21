@@ -19,7 +19,6 @@ class MapLevelMines : public MapLevelBase
   private:
     void FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill);    
     void ConstructFromBuilder(LevelBuilder& lb);
-    void CreateDoor(int x, int y, bool isOpen = false);
 };
 
 #endif // MAPLEVELMINES_H

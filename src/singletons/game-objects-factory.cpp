@@ -719,7 +719,7 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 
   std::map<ItemType, int> returnerMap =
   {
-    { ItemType::RETURNER, 5 },
+    { ItemType::RETURNER,  5 },
     { ItemType::NOTHING,  20 }
   };
 
@@ -1026,7 +1026,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 30;
+      baseDurability = 15;
 
       ic->Data.Damage.CurrentValue = diceRolls;
       ic->Data.Damage.OriginalValue = diceSides;
@@ -1162,6 +1162,7 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
   ic->Data.ItemType_ = ItemType::WAND;
   ic->Data.SpellHeld = spellType;
   ic->Data.Range = 100;
+  ic->Data.Durability.Set(1);
 
   // TODO: cost calculation
   ic->Data.Cost = 100;

@@ -63,7 +63,7 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
         {
           objName = "Cave Wall";
           t.Set(true, true, ' ', GlobalConstants::BlackColor, "#964B00", objName);
-          InsertStaticObject(x, y, t, 1, GameObjectType::PICKAXEABLE);
+          InsertStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
         }
         break;
 
