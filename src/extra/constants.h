@@ -213,8 +213,9 @@ enum class EquipmentCategory
   RING
 };
 
-// NOTE: do not forget to add creation of new
-// object into factory (GameObjectsFactory::CreateGameObject())
+// TODO: loot from kills uses GameObjectsFactory::CreateGameObject()
+// which in turn does switch case on this enum.
+// Add other cases when finished with deciding loot tables for monsters.
 enum class ItemType
 {
   NOTHING = 0,

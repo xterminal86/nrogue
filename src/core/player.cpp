@@ -363,16 +363,15 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
 {
   int dmg = Util::RollDamage(with->Data.Damage.CurrentValue, with->Data.Damage.OriginalValue);
 
-  // FIXME: Doors, walls etc. are MapArray's GameObjects,
-  // because of fog of war, so we can't destroy them even if we want.
+  // If it's not the ground GameObject
   if (what->ComponentsSize() != 0)
   {
     what->ReceiveDamage(this, dmg, false);
-  }
 
-  if (what->IsDestroyed)
-  {
-    ProcessKill(what);
+    if (what->IsDestroyed)
+    {
+      ProcessKill(what);
+    }
   }
 
   ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];

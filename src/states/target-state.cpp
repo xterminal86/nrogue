@@ -165,7 +165,7 @@ GameObject* TargetState::LaunchProjectile(char image)
     Printer::Instance().Render();
 
     // FIXME: debug
-    //Util::Sleep(100);
+    // Util::Sleep(100);
 
     #ifndef USE_SDL
     Util::Sleep(10);

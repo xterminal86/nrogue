@@ -143,7 +143,7 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
   {
     cc->Interact();
 
-    // FIXME: add locked containers
+    // TODO: add locked containers
     Printer::Instance().AddMessage("You opened: " + go->ObjectName);
   }
   else

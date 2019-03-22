@@ -8,7 +8,6 @@
 #include "room-helper.h"
 
 // FIXME: needs further improvement
-
 class FromLayouts : public DGBase
 {
   public:

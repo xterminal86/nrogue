@@ -1168,7 +1168,7 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
   ic->Data.Durability.Set(1);
   ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
 
-  // TODO: cost calculation
+  // TODO: cost calculation for wands
   ic->Data.Cost = 100;
 
   ic->Data.UnidentifiedName = "?" + wandMaterialName + " Wand?";
