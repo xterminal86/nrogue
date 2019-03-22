@@ -312,6 +312,9 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
   auto str = Util::StringFormat("%s's remains", from->ObjectName.data());
   go->ObjectName = str;
 
+  go->Attrs.Indestructible = false;
+  go->Attrs.HP.Set(1);
+
   return go;
 }
 
@@ -1137,7 +1140,7 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
 
   int capacity = GlobalConstants::WandCapacityByMaterial.at(material);
 
-  int randomness = RNG::Instance().RandomRange(0, dl) * 10;
+  int randomness = RNG::Instance().RandomRange(0, capacity);
 
   capacity += randomness;
 
@@ -1163,6 +1166,7 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
   ic->Data.SpellHeld = spellType;
   ic->Data.Range = 100;
   ic->Data.Durability.Set(1);
+  ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
 
   // TODO: cost calculation
   ic->Data.Cost = 100;
@@ -1188,13 +1192,13 @@ GameObject* GameObjectsFactory::CreateRandomWand(ItemPrefix prefixOverride)
 
   std::map<WandMaterials, int> materialsDistribution =
   {
-    { WandMaterials::YEW,   12 },
-    { WandMaterials::IVORY, 10 },
-    { WandMaterials::EBONY,  8 },
-    { WandMaterials::ONYX,   6 },
-    { WandMaterials::GLASS,  4 },
-    { WandMaterials::COPPER, 2 },
-    { WandMaterials::GOLDEN, 1 },
+    { WandMaterials::YEW_1,   12 },
+    { WandMaterials::IVORY_2, 10 },
+    { WandMaterials::EBONY_3,  8 },
+    { WandMaterials::ONYX_4,   6 },
+    { WandMaterials::GLASS_5,  4 },
+    { WandMaterials::COPPER_6, 2 },
+    { WandMaterials::GOLDEN_7, 1 },
   };
 
   auto materialPair = Util::WeightedRandom(materialsDistribution);

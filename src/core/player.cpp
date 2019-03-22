@@ -396,6 +396,8 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
 /// 'what' is either actor or GameObject, 'with' is a wand
 void Player::MagicAttack(GameObject* what, ItemComponent* with)
 {
+  with->Data.Amount--;
+
   auto baseDamagePair = GlobalConstants::SpellBaseDamageByType.at(with->Data.SpellHeld);
 
   int bonus = Attrs.Mag.Get();
@@ -426,7 +428,6 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
           int dmgHere = centralDamage / d;
           dmgHere -= actor->Attrs.Res.Get();
 
-          // TODO: monsters heal by certain spells?
           if (dmgHere <= 0)
           {
             auto msg = Util::StringFormat("%s seems unaffected!", actor->ObjectName.data());
@@ -935,7 +936,17 @@ bool Player::IsAlive(GameObject* damager)
 
     if (damager != nullptr)
     {
-      auto str = Util::StringFormat("%s was killed by a %s", Name.data(), damager->ObjectName.data());
+      std::string str;
+
+      if (damager == this)
+      {
+        str = Util::StringFormat("%s has commited suicide", Name.data());
+      }
+      else
+      {
+        str = Util::StringFormat("%s was killed by a %s", Name.data(), damager->ObjectName.data());
+      }
+
       Printer::Instance().AddMessage(str);
     }
 

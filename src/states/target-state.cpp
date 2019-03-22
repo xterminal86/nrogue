@@ -281,7 +281,9 @@ void TargetState::FireWeapon()
   stoppedAt = LaunchProjectile(projectile);
   ProcessHit(stoppedAt);
 
-  if (!_playerRef->IsAlive(_weaponRef->OwnerGameObject))
+  // Check if player accidentally killed himself
+  // (e.g. after firing fireball close to the wall)
+  if (!_playerRef->IsAlive(_playerRef))
   {
     Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
   }

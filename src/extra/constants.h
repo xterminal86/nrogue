@@ -342,15 +342,16 @@ enum class SpellType
   MANA_SHIELD
 };
 
+// Number means tier
 enum class WandMaterials
 {
-  YEW = 0,
-  IVORY,
-  EBONY,
-  ONYX,
-  GLASS,
-  COPPER,
-  GOLDEN
+  YEW_1 = 0,
+  IVORY_2,
+  EBONY_3,
+  ONYX_4,
+  GLASS_5,
+  COPPER_6,
+  GOLDEN_7
 };
 
 enum class ArrowType
@@ -1117,13 +1118,13 @@ namespace GlobalConstants
 
   static const std::map<WandMaterials, int> WandCapacityByMaterial =
   {
-    { WandMaterials::YEW,    100 },
-    { WandMaterials::IVORY,  150 },
-    { WandMaterials::EBONY,  200 },
-    { WandMaterials::ONYX,   300 },
-    { WandMaterials::GLASS,  450 },
-    { WandMaterials::COPPER, 600 },
-    { WandMaterials::GOLDEN, 800 }
+    { WandMaterials::YEW_1,    100 },
+    { WandMaterials::IVORY_2,  150 },
+    { WandMaterials::EBONY_3,  200 },
+    { WandMaterials::ONYX_4,   300 },
+    { WandMaterials::GLASS_5,  450 },
+    { WandMaterials::COPPER_6, 600 },
+    { WandMaterials::GOLDEN_7, 800 }
   };
 
   // Divide wand capacity by this value to get amount of charges
@@ -1189,24 +1190,24 @@ namespace GlobalConstants
 
   static const std::map<WandMaterials, std::pair<std::string, std::string>> WandColorsByMaterial =
   {
-    { WandMaterials::YEW,    { "#C19A6B", "#8A8B5C" } },
-    { WandMaterials::IVORY,  { "#FFFFFF", "#DDDDD0" } },
-    { WandMaterials::EBONY,  { "#888888", "#555D50" } },
-    { WandMaterials::ONYX,   { "#666666", "#2F2F2F" } },
-    { WandMaterials::GLASS,  { "#000000", "#FFFFFF" } },
-    { WandMaterials::COPPER, { "#FF8C00", "#B87333" } },
-    { WandMaterials::GOLDEN, { "#FFFF00", "#DDD700" } }
+    { WandMaterials::YEW_1,    { "#C19A6B", "#8A8B5C" } },
+    { WandMaterials::IVORY_2,  { "#FFFFFF", "#DDDDD0" } },
+    { WandMaterials::EBONY_3,  { "#888888", "#555D50" } },
+    { WandMaterials::ONYX_4,   { "#666666", "#2F2F2F" } },
+    { WandMaterials::GLASS_5,  { "#000000", "#FFFFFF" } },
+    { WandMaterials::COPPER_6, { "#FF8C00", "#B87333" } },
+    { WandMaterials::GOLDEN_7, { "#FFFF00", "#DDD700" } }
   };
 
   static const std::map<WandMaterials, std::string> WandMaterialNamesByMaterial =
   {
-    { WandMaterials::YEW,    "Yew"    },
-    { WandMaterials::IVORY,  "Ivory"  },
-    { WandMaterials::EBONY,  "Ebony"  },
-    { WandMaterials::ONYX,   "Onyx"   },
-    { WandMaterials::GLASS,  "Glass"  },
-    { WandMaterials::COPPER, "Copper" },
-    { WandMaterials::GOLDEN, "Golden" }
+    { WandMaterials::YEW_1,    "Yew"    },
+    { WandMaterials::IVORY_2,  "Ivory"  },
+    { WandMaterials::EBONY_3,  "Ebony"  },
+    { WandMaterials::ONYX_4,   "Onyx"   },
+    { WandMaterials::GLASS_5,  "Glass"  },
+    { WandMaterials::COPPER_6, "Copper" },
+    { WandMaterials::GOLDEN_7, "Golden" }
   };
 
   static const std::map<ShrineType, std::string> ShrineSaintByType =
