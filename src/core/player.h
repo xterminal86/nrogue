@@ -45,7 +45,7 @@ class Player : public GameObject
     void MeleeAttack(GameObject* go, bool alwaysHit = false);
     void RangedAttack(GameObject* what, ItemComponent* with);
     void MagicAttack(GameObject* what, ItemComponent* with);
-    void ReceiveDamage(GameObject* from, int amount, bool godMode = false);
+    void ReceiveDamage(GameObject* from, int amount, bool isMagical, bool godMode = false);
     void WaitForTurn();
     void ProcessHunger();
     void FinishTurn();
@@ -107,6 +107,8 @@ class Player : public GameObject
     bool WasHitLanded(GameObject* defender);
 
     bool IsGameObjectBorder(GameObject* go);
+
+    bool DamageArmor(int amount);
 
     int _starvingTimeout = 0;
 

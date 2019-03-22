@@ -367,7 +367,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   // because of fog of war, so we can't destroy them even if we want.
   if (what->ComponentsSize() != 0)
   {
-    what->ReceiveDamage(this, dmg);
+    what->ReceiveDamage(this, dmg, false);
   }
 
   if (what->IsDestroyed)
@@ -408,7 +408,10 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
   {
     case SpellType::FIREBALL:
     {
-      auto pointsAffected = Printer::Instance().DrawExplosion({ what->PosX, what->PosY });
+      auto pointsAffected = Printer::Instance().DrawExplosion({ what->PosX, what->PosY }, 3);
+
+      //Util::PrintVector("points affected", pointsAffected);
+
       for (auto& p : pointsAffected)
       {
         int d = Util::LinearDistance({ what->PosX, what->PosY }, p);
@@ -431,8 +434,8 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
           }
           else
           {
-            actor->ReceiveDamage(this, dmgHere);
-          }
+            actor->ReceiveDamage(this, dmgHere, true);
+          }          
         }
 
         auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
@@ -448,8 +451,17 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
           }
           else
           {
-            obj->ReceiveDamage(this, dmgHere);
-          }
+            obj->ReceiveDamage(this, dmgHere, true);
+          }          
+        }
+
+        // Check self damage
+        if (PosX == p.X && PosY == p.Y)
+        {
+          int dmgHere = centralDamage / d;
+          dmgHere -= Attrs.Res.Get();
+
+          ReceiveDamage(this, dmgHere, true);
         }
       }
     }
@@ -517,7 +529,7 @@ void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int dama
   }
   else
   {
-    defender->ReceiveDamage(this, damageToInflict);
+    defender->ReceiveDamage(this, damageToInflict, false);
 
     if (defender->IsDestroyed)
     {
@@ -595,15 +607,39 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender)
   return totalDmg;
 }
 
-void Player::ReceiveDamage(GameObject* from, int amount, bool godMode)
-{
+void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool godMode)
+{  
   if (godMode)
   {
-    auto str = Util::StringFormat("You laugh at the face of %s", from->ObjectName.data());
+    std::string objName = (from != nullptr) ? from->ObjectName : "unknown";
+    auto str = Util::StringFormat("You laugh at the face of %s", objName.data());
     Printer::Instance().AddMessage(str);
     return;
   }
 
+  if (isMagical)
+  {
+    if (from == this)
+    {
+      auto str = Util::StringFormat("You hit yourself for %i damage!", amount);
+      Printer::Instance().AddMessage(str);
+      Attrs.HP.CurrentValue -= amount;
+    }
+  }
+  else
+  {
+    if (!DamageArmor(amount))
+    {
+      auto str = Util::StringFormat("You were hit for %i damage", amount);
+      Printer::Instance().AddMessage(str);
+
+      Attrs.HP.CurrentValue -= amount;
+    }
+  }
+}
+
+bool Player::DamageArmor(int amount)
+{
   ItemComponent* armor = EquipmentByCategory[EquipmentCategory::TORSO][0];
   if (armor != nullptr)
   {
@@ -630,14 +666,11 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool godMode)
         BreakItem(armor);
       }
     }
-  }
-  else
-  {
-    auto str = Util::StringFormat("You were hit for %i damage", amount);
-    Printer::Instance().AddMessage(str);
 
-    Attrs.HP.CurrentValue -= amount;
+    return true;
   }
+
+  return false;
 }
 
 bool Player::ShouldBreak(ItemComponent *ic)
@@ -1054,7 +1087,7 @@ void Player::ProcessHunger()
     if (_starvingTimeout > 10)
     {
       Printer::Instance().AddMessage("You are starving!");
-      ReceiveDamage(nullptr, 1);
+      ReceiveDamage(nullptr, 1, false);
     }
 
     IsStarving = true;

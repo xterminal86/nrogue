@@ -281,9 +281,16 @@ void TargetState::FireWeapon()
   stoppedAt = LaunchProjectile(projectile);
   ProcessHit(stoppedAt);
 
-  _playerRef->FinishTurn();
-  Map::Instance().UpdateGameObjects();
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
+  if (!_playerRef->IsAlive(_weaponRef->OwnerGameObject))
+  {
+    Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
+  }
+  else
+  {
+    _playerRef->FinishTurn();
+    Map::Instance().UpdateGameObjects();
+    Application::Instance().ChangeState(GameStates::MAIN_STATE);
+  }
 }
 
 void TargetState::ProcessHit(GameObject *hitPoint)

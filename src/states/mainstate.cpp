@@ -221,17 +221,8 @@ void MainState::HandleInput()
         break;
 
       case 'f':
-      {
-        if (Map::Instance().CurrentLevel->Peaceful)
-        {
-          PrintNoAttackInTown();
-        }
-        else
-        {
-          ProcessRangedWeapon();
-        }
-      }
-      break;
+        ProcessRangedWeapon();
+        break;
 
       case '>':
         CheckStairs('>');
@@ -461,6 +452,12 @@ void MainState::PrintDebugInfo()
 
 void MainState::ProcessRangedWeapon()
 {
+  if (Map::Instance().CurrentLevel->Peaceful)
+  {
+    PrintNoAttackInTown();
+    return;
+  }
+
   // TODO: wands in both hands?
 
   ItemComponent* weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];

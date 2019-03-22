@@ -128,7 +128,7 @@ class GameObject
       return _components.size();
     }
 
-    void ReceiveDamage(GameObject* from, int amount);
+    void ReceiveDamage(GameObject* from, int amount, bool isMagical);
     void FinishTurn();
     void WaitForTurn();
 

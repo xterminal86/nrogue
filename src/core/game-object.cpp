@@ -121,9 +121,10 @@ void GameObject::MakeTile(GameObjectInfo t)
   BgColor = t.BgColor;
   ObjectName = t.ObjectName;
   FogOfWarName = t.FogOfWarName;
+  Type = GameObjectType::GROUND;
 }
 
-void GameObject::ReceiveDamage(GameObject* from, int amount)
+void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical)
 {  
   if (!Attrs.Indestructible)
   {
@@ -152,7 +153,11 @@ void GameObject::ReceiveDamage(GameObject* from, int amount)
   }
   else
   {    
-    Printer::Instance().AddMessage("Not even scratched!");
+    if (Type != GameObjectType::GROUND)
+    {
+      auto str = Util::StringFormat("%s not even scratched!", ObjectName.data());
+      Printer::Instance().AddMessage(str);
+    }
   }
 }
 

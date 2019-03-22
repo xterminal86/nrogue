@@ -52,7 +52,7 @@ class Printer : public Singleton<Printer>
 
     void Init() override;
 
-    std::vector<Position> DrawExplosion(Position pos);
+    std::vector<Position> DrawExplosion(Position pos, int range);
 
     /// Clears framebuffer (ncurses) or renderer (SDL)
     /// Use this before all PrintFB calls

@@ -155,7 +155,7 @@ bool AIMonsterBasic::Attack(Player* player)
 
     Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, msg, "#FF0000");
 
-    player->ReceiveDamage(AIComponentRef->OwnerGameObject, dmg);
+    player->ReceiveDamage(AIComponentRef->OwnerGameObject, dmg, false);
 
     if (!player->IsAlive(AIComponentRef->OwnerGameObject))
     {

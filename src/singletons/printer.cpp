@@ -654,11 +654,11 @@ void Printer::Render()
 #endif
 }
 
-std::vector<Position> Printer::DrawExplosion(Position pos)
+std::vector<Position> Printer::DrawExplosion(Position pos, int aRange)
 {
-  std::vector<Position> cellsAffected = GetAreaDamagePointsFrom(pos, 3);
+  std::vector<Position> cellsAffected = GetAreaDamagePointsFrom(pos, aRange);
 
-  for (int range = 1; range <= 3; range++)
+  for (int range = 1; range <= aRange; range++)
   {
     auto res = GetAreaDamagePointsFrom(pos, range);
     for (auto& p : res)
@@ -715,6 +715,8 @@ std::vector<Position> Printer::GetAreaDamagePointsFrom(Position from, int range)
 
   for (auto& p : perimeterPoints)
   {
+    // Different lines can go through the same points
+    // so a check if a point was already added is needed.
     auto line = Util::BresenhamLine(from, p);
     for (auto& point : line)
     {
@@ -723,18 +725,35 @@ std::vector<Position> Printer::GetAreaDamagePointsFrom(Position from, int range)
         continue;
       }
 
+      auto it = std::find_if(res.begin(), res.end(),
+                [&point](const Position& p) ->
+                bool { return (p == point); });
+
+      // If point was already added, skip it
+      if (it != res.end())
+      {
+        continue;
+      }
+
+      int d = Util::LinearDistance(from, point);
+
       auto cell = Map::Instance().CurrentLevel->MapArray[point.X][point.Y].get();
       auto obj = Map::Instance().CurrentLevel->StaticMapObjects[point.X][point.Y].get();
 
       bool cellOk = (!cell->Blocking);
       bool objOk = (obj == nullptr);
 
-      if (cellOk && objOk)
+      if (cellOk && objOk && d <= range)
       {
         res.push_back({ cell->PosX, cell->PosY });
       }
       else
       {
+        if (obj != nullptr && !obj->Attrs.Indestructible)
+        {
+          res.push_back({ cell->PosX, cell->PosY });
+        }
+
         break;
       }
     }

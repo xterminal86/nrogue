@@ -142,6 +142,7 @@ enum class MapType
 enum class GameObjectType
 {
   HARMLESS = 0,
+  GROUND,
   PICKAXEABLE,
   RAT,
   BAT,
