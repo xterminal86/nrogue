@@ -649,23 +649,21 @@ struct ItemData
   // !!! Use GetCost() when cost is needed !!!
   int Cost = 0;
 
-  bool HasDurability()
+  bool IsWeaponOrArmor()
   {
-    return (EqCategory == EquipmentCategory::BOOTS
-         || EqCategory == EquipmentCategory::HEAD
-         || EqCategory == EquipmentCategory::LEGS
-         || EqCategory == EquipmentCategory::NECK
-         || EqCategory == EquipmentCategory::TORSO
-         || EqCategory == EquipmentCategory::WEAPON);
+    bool cond = (ItemType_ == ItemType::WEAPON
+              || ItemType_ == ItemType::ARMOR);
+
+    return cond;
   }
 
   int GetCost()
   {
-    bool hasDurability = HasDurability();
+    bool weaponOrArmor = IsWeaponOrArmor();
 
     int price = 0;
 
-    if (hasDurability)
+    if (weaponOrArmor)
     {
       price = Durability.CurrentValue;
     }
@@ -1168,6 +1166,26 @@ namespace GlobalConstants
     { SpellType::HEAL,              "Healing"           },
     { SpellType::NEUTRALIZE_POISON, "Neutralize Poison" },
     { SpellType::MANA_SHIELD,       "Mana Shield"       }
+  };
+
+  // TODO: spellbooks cost calculation
+  static const std::map<SpellType, int> SpellBaseCostByType =
+  {
+    { SpellType::LIGHT,              10  },
+    { SpellType::STRIKE,             25  },
+    { SpellType::FROST,              50  },
+    { SpellType::FIREBALL,           100 },
+    { SpellType::LASER,              150 },
+    { SpellType::LIGHTNING,          100 },
+    { SpellType::MAGIC_MISSILE,      25  },
+    { SpellType::IDENTIFY,           100 },
+    { SpellType::MAGIC_MAPPING,      80  },
+    { SpellType::TELEPORT,           100 },
+    { SpellType::DETECT_MONSTERS,    80  },
+    { SpellType::REMOVE_CURSE,       200 },
+    { SpellType::HEAL,               100 },
+    { SpellType::NEUTRALIZE_POISON,  50  },
+    { SpellType::MANA_SHIELD,        200 },
   };
 
   static const std::map<SpellType, std::string> SpellShortNameByType =

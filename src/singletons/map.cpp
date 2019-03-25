@@ -290,21 +290,50 @@ void Map::TeleportToExistingLevel(MapType levelToChange, Position teleportTo)
 
   CurrentLevel = _levels[levelToChange].get();
 
+  auto& mapRef = CurrentLevel->MapArray[teleportTo.X][teleportTo.Y];
+  auto& soRef = CurrentLevel->StaticMapObjects[teleportTo.X][teleportTo.Y];
+
+  bool tpToWall = (mapRef->Blocking || soRef->Blocking);
+
+  auto actor = GetActorAtPosition(teleportTo.X, teleportTo.Y);
+  bool tpOccupied = (actor != nullptr);
+
+  std::string tpTo = mapRef->Blocking ? mapRef->ObjectName : soRef->ObjectName;
+
+  if (tpToWall)
+  {
+    auto str = Util::StringFormat("You teleported into a %s!", tpTo.data());
+    Printer::Instance().AddMessage(str);
+
+    player.Attrs.HP.Set(0);
+  }  
+  else if (tpOccupied)
+  {
+    // Assume that if some NPC occupied returner destination,
+    // he can be moved at least to his previous position.
+
+    Printer::Instance().AddMessage("Conflicting destination!");
+
+    Position tp = teleportTo;
+
+    auto points = Util::GetEightPointsAround(teleportTo, CurrentLevel->MapSize);
+    for (auto& p : points)
+    {
+      if (!CurrentLevel->IsCellBlocking(p))
+      {
+        tp = p;
+        break;
+      }
+    }
+
+    actor->MoveTo(tp.X, tp.Y);
+  }
+
   player.SetLevelOwner(CurrentLevel);
   player.MoveTo(teleportTo.X, teleportTo.Y);
   player.VisibilityRadius = CurrentLevel->VisibilityRadius;
 
   CurrentLevel->AdjustCamera();
-
-  if (CurrentLevel->MapArray[teleportTo.X][teleportTo.Y]->Blocking)
-  {
-    auto objName = CurrentLevel->MapArray[teleportTo.X][teleportTo.Y]->ObjectName;
-
-    auto str = Util::StringFormat("You teleported into a %s!", objName.data());
-    Printer::Instance().AddMessage(str);
-
-    player.Attrs.HP.Set(0);
-  }
 }
 
 void Map::ChangeOrInstantiateLevel(MapType levelName)

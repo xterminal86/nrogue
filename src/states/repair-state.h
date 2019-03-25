@@ -12,9 +12,10 @@ class RepairState : public GameState
     void Init() override;
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;
-    void SetRepairKitRef(ItemComponent* item, int inventoryIndex);
     void Cleanup() override;
     void Prepare() override;
+
+    void SetRepairKitRef(ItemComponent* item, int inventoryIndex);
 
   private:
     Player* _playerRef;

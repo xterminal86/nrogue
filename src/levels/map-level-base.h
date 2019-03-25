@@ -71,6 +71,8 @@ class MapLevelBase
       return _respawnCounter;
     }
 
+    bool IsCellBlocking(const Position& pos);
+
   protected:
     std::vector<Position> _emptyCells;
     std::vector<std::vector<std::string>> _layoutsForLevel;

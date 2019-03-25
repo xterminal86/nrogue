@@ -1142,6 +1142,8 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
 
   int randomness = RNG::Instance().RandomRange(0, capacity);
 
+  randomness /= 2;
+
   capacity += randomness;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
@@ -1168,8 +1170,8 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
   ic->Data.Durability.Set(1);
   ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
 
-  // TODO: cost calculation for wands
-  ic->Data.Cost = 100;
+  // Actual cost is going to be calculated in GetCost()
+  ic->Data.Cost = GlobalConstants::SpellBaseCostByType.at(spellType);
 
   ic->Data.UnidentifiedName = "?" + wandMaterialName + " Wand?";
   ic->Data.IdentifiedName = wandMaterialName + " Wand of " + spellName;

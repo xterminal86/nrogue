@@ -529,16 +529,9 @@ void MapLevelTown::CreateNPCs()
           }
         }
 
-        bool condGround = (!MapArray[x][y]->Blocking
-                        && !MapArray[x][y]->Occupied);
-        bool condStatic = true;
+        bool isBlocking = IsCellBlocking({ x, y });
 
-        if (StaticMapObjects[x][y] != nullptr)
-        {
-          condStatic = !StaticMapObjects[x][y]->Blocking;
-        }
-
-        if (!alreadyAdded && condGround && condStatic)
+        if (!alreadyAdded && !isBlocking)
         {
           emptyCells.push_back(Position(x, y));
         }

@@ -82,18 +82,8 @@ void MapLevelBase::RecordEmptyCells()
   {
     for (int y = 0; y < MapSize.Y; y++)
     {
-      bool condGround = (!MapArray[x][y]->Blocking
-                         && (MapArray[x][y]->Image != '>'
-                          || MapArray[x][y]->Image != '<'));
-
-      bool condStatic = true;
-
-      if (StaticMapObjects[x][y] != nullptr)
-      {
-        condStatic = !StaticMapObjects[x][y]->Blocking;
-      }
-
-      if (condGround && condStatic)
+      bool isBlocking = IsCellBlocking({ x, y });
+      if (!isBlocking)
       {
         Position pos(x, y);
         _emptyCells.push_back(pos);
@@ -152,28 +142,6 @@ void MapLevelBase::PlaceStairs()
   LevelExit.X = _emptyCells[endIndex].X;
   LevelExit.Y = _emptyCells[endIndex].Y;
 
-  /*
-  // Place stairs down on random cell
-  // at maximum distance from stairs up
-
-  int maxDistance = 0;
-
-  Position exitPos;
-  for (int i = 0; i < _emptyCells.size(); i++)
-  {
-    auto& c = _emptyCells[i];
-
-    float d = Util::LinearDistance(LevelStart.X, LevelStart.Y, c.X, c.Y);
-    if (d > maxDistance)
-    {
-      maxDistance = d;
-      exitPos = c;
-    }
-  }
-
-  LevelExit.Set(exitPos.X, exitPos.Y);
-  */
-
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', stairsDownTo);
 }
 
@@ -198,17 +166,8 @@ void MapLevelBase::CreateInitialMonsters()
 }
 
 bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
-{
-  bool condGround = (!MapArray[pos.X][pos.Y]->Blocking
-                  && !MapArray[pos.X][pos.Y]->Occupied);
-  bool condStatic = true;
-
-  if (StaticMapObjects[pos.X][pos.Y] != nullptr)
-  {
-    condStatic = !StaticMapObjects[pos.X][pos.Y]->Blocking;
-  }
-
-  return (condGround && condStatic);
+{  
+  return !IsCellBlocking(pos);
 }
 
 void MapLevelBase::TryToSpawnMonsters()
@@ -257,4 +216,16 @@ void MapLevelBase::DisplayWelcomeText()
   };
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "MapLevelBase", msg);
+}
+
+bool MapLevelBase::IsCellBlocking(const Position& pos)
+{
+  bool groundBlock = MapArray[pos.X][pos.Y]->Blocking;  
+  if (StaticMapObjects[pos.X][pos.Y] != nullptr)
+  {
+    bool staticObjectsBlock = StaticMapObjects[pos.X][pos.Y]->Blocking;
+    return staticObjectsBlock;
+  }
+
+  return groundBlock;
 }

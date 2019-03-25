@@ -31,22 +31,11 @@ void GameObject::Init(MapLevelBase* levelOwner, int x, int y, int avatar, const 
 
 bool GameObject::Move(int dx, int dy)
 {
-  auto& groundRef = _levelOwner->MapArray;
-  auto& staticObjRef = _levelOwner->StaticMapObjects;
-
   int nx = PosX + dx;
   int ny = PosY + dy;
 
-  bool condGround = (!groundRef[nx][ny]->Occupied
-                  && !groundRef[nx][ny]->Blocking);
-
-  bool condStatic = true;
-  if (staticObjRef[nx][ny] != nullptr)
-  {
-    condStatic = !staticObjRef[nx][ny]->Blocking;
-  }
-
-  if (condGround && condStatic)
+  bool isBlocked = Map::Instance().CurrentLevel->IsCellBlocking({ nx, ny });
+  if (!isBlocked)
   {
     MoveGameObject(dx, dy);
     return true;
@@ -57,16 +46,8 @@ bool GameObject::Move(int dx, int dy)
 
 bool GameObject::MoveTo(int x, int y)
 {
-  bool condGround = (!_levelOwner->MapArray[x][y]->Occupied
-                  && !_levelOwner->MapArray[x][y]->Blocking);
-
-  bool condStatic = true;
-  if (_levelOwner->StaticMapObjects[x][y] != nullptr)
-  {
-    condStatic = !_levelOwner->StaticMapObjects[x][y]->Blocking;
-  }
-
-  if (condGround && condStatic)
+  bool isBlocked = Map::Instance().CurrentLevel->IsCellBlocking({ x, y });
+  if (!isBlocked)
   {
     // When we change level, previous position (PosX and PosY)
     // is pointing to the stairs down on previous level,

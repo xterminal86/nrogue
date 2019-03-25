@@ -30,7 +30,6 @@ struct TileInfo
   int Y = 0;
   std::string Data;
 };
-
 #else
 struct FBPixel
 {
@@ -131,7 +130,7 @@ class Printer : public Singleton<Printer>
 
     bool ShowLastMessage;
 
-    // FIXME: debug
+    // NOTE: for debugging purposes
     int ColorsUsed()
     {
       #ifndef USE_SDL

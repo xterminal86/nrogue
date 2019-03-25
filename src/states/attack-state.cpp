@@ -89,8 +89,9 @@ void AttackState::HandleInput()
     {
       auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
       if (res.size() != 0)
-      {
-        _playerRef->MeleeAttack(res.back());
+      {        
+        // Always hit static objects in front of you
+        _playerRef->MeleeAttack(res.back(), true);
       }
       else
       {

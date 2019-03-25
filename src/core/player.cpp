@@ -76,7 +76,7 @@ bool Player::Move(int dx, int dy)
           auto c = staticObject->GetComponent<DoorComponent>();
 
           // Automatically interact with door if it's closed
-          if (c != nullptr && staticObject->Blocking && staticObject->Interact())
+          if (c != nullptr && staticObject->Interact())
           {
             FinishTurn();
           }

@@ -355,16 +355,8 @@ void TargetState::DrawHint()
       auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
 
       bool condActor = (actor != nullptr);
-      bool condGround = (mapRef[p.X][p.Y]->Blocking
-                      || !mapRef[p.X][p.Y]->Visible);
-      bool condStatic = false;
 
-      if (staticObjRef[p.X][p.Y] != nullptr)
-      {
-        condStatic = staticObjRef[p.X][p.Y]->Blocking;
-      }
-
-      if (condActor || condGround || condStatic)
+      if (condActor || Map::Instance().CurrentLevel->IsCellBlocking(p))
       {
         break;
       }

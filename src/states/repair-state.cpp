@@ -58,7 +58,7 @@ void RepairState::Update(bool forceUpdate)
     for (auto& i : _playerRef->Inventory.Contents)
     {
       ItemComponent* ic = i->GetComponent<ItemComponent>();
-      if (ic->Data.IsEquipped && ic->Data.HasDurability())
+      if (ic->Data.IsEquipped && ic->Data.IsWeaponOrArmor())
       {
         std::string name = ic->Data.IsIdentified ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
 

@@ -56,8 +56,8 @@ void TraderComponent::CreateItems()
 
       std::map<ItemType, int> itemsWeights =
       {
-        { ItemType::HEALING_POTION, 10 },
-        { ItemType::MANA_POTION,    10 },
+        { ItemType::HEALING_POTION,  8 },
+        { ItemType::MANA_POTION,     8 },
         { ItemType::WAND,            3 },
         { ItemType::RETURNER,        1 }
       };

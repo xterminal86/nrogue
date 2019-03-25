@@ -2,10 +2,10 @@
 #include "printer.h"
 
 int GameState::GetKeyDown()
-{
+{  
+#ifdef USE_SDL
   int res = -1;
 
-#ifdef USE_SDL
   SDL_Event event;
   SDL_PollEvent(&event);
 
@@ -71,11 +71,11 @@ int GameState::GetKeyDown()
     }
   }
 
+  return res;
+
 #else
   return getch();
 #endif
-
-  return res;
 }
 
 void GameState::DrawHeader(const std::string& header)
