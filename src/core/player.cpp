@@ -312,14 +312,14 @@ void Player::SetDefaultEquipment()
   {
     case PlayerClass::THIEF:
     {
-      weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::DAGGER, ItemPrefix::UNCURSED);
+      weapon = GameObjectsFactory::Instance().CreateRangedWeapon(0, 0, RangedWeaponType::SHORT_BOW, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(weapon);
 
-      armor = GameObjectsFactory::Instance().CreateArmor(0, 0, ArmorType::PADDING, ItemPrefix::UNCURSED);
-      Inventory.AddToInventory(armor);
+      GameObject* arrows = GameObjectsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::UNCURSED, 30);
+      Inventory.AddToInventory(arrows);
 
-      weaponAndArmor.push_back(weapon);
-      weaponAndArmor.push_back(armor);
+      weaponAndArmor.push_back(arrows);
+      weaponAndArmor.push_back(weapon);      
     }
     break;
 

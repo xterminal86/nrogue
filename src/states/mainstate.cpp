@@ -487,7 +487,7 @@ void MainState::ProcessWeapon(ItemComponent* weapon)
   ItemComponent* arrows = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0];
   if (arrows != nullptr)
   {
-    bool isBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_BOW
+    bool isBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::SHORT_BOW
                || weapon->Data.RangedWeaponType_ == RangedWeaponType::LONGBOW
                || weapon->Data.RangedWeaponType_ == RangedWeaponType::WAR_BOW);
 

@@ -44,7 +44,8 @@ void ItemComponent::Inspect()
 
   if (Data.IsIdentified)
   {
-    if (Data.ItemType_ == ItemType::WEAPON)
+    if (Data.ItemType_ == ItemType::WEAPON
+     || Data.ItemType_ == ItemType::RANGED_WEAPON)
     {
       desc = GetWeaponInspectionInfo();
     }

@@ -260,7 +260,7 @@ enum class WeaponType
 enum class RangedWeaponType
 {
   NONE = 0,
-  LIGHT_BOW,
+  SHORT_BOW,
   LONGBOW,
   WAR_BOW,
   LIGHT_XBOW,
@@ -978,7 +978,7 @@ namespace GlobalConstants
 
   static const std::map<RangedWeaponType, std::string> RangedWeaponNameByType =
   {
-    { RangedWeaponType::LIGHT_BOW,    "Light Bow"      },
+    { RangedWeaponType::SHORT_BOW,    "Short Bow"      },
     { RangedWeaponType::LONGBOW,      "Longbow"        },
     { RangedWeaponType::WAR_BOW,      "War Bow"        },
     { RangedWeaponType::LIGHT_XBOW,   "Light Crossbow" },
