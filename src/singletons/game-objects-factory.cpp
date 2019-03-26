@@ -1029,12 +1029,10 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 15;
+      baseDurability = 10;
 
       ic->Data.Damage.CurrentValue = diceRolls;
-      ic->Data.Damage.OriginalValue = diceSides;
-
-      ic->Data.StatBonuses[StatsEnum::SPD] = -1;
+      ic->Data.Damage.OriginalValue = diceSides;      
     }
     break;
   }
@@ -1240,17 +1238,6 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
   ic->Data.RangedWeaponType_ = type;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
 
-  int cursedPenalty = 0;
-
-  if (ic->Data.Prefix == ItemPrefix::CURSED)
-  {
-    cursedPenalty = -2;
-  }
-  else if (ic->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    cursedPenalty = 2;
-  }
-
   switch (type)
   {
     case RangedWeaponType::SHORT_BOW:
@@ -1260,16 +1247,17 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
-      ic->Data.Range = 10;
+      ic->Data.Range = 6;
       ic->Data.Durability.Set(30);
 
+      // ======================================================================70
       ic->Data.UnidentifiedDescription =
       {
         "A simple wooden short bow with short range.",
         "Requires some skill to be used effectively."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SKL] = -1 + cursedPenalty;
+      ic->Data.StatBonuses[StatsEnum::SKL] = -1;
     }
     break;
 
@@ -1280,16 +1268,17 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
-      ic->Data.Range = 14;
+      ic->Data.Range = 8;
       ic->Data.Durability.Set(60);
 
+      // ======================================================================70
       ic->Data.UnidentifiedDescription =
       {
-        "A simple wooden short bow with medium range.",
+        "A wooden bow for hunting animals and the like with medium range.",
         "Requires some skill to be used effectively."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SKL] = -2 + cursedPenalty;
+      ic->Data.StatBonuses[StatsEnum::SKL] = -2;
     }
     break;
 
@@ -1300,9 +1289,10 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
-      ic->Data.Range = 18;
+      ic->Data.Range = 10;
       ic->Data.Durability.Set(80);
 
+      // ======================================================================70
       ic->Data.UnidentifiedDescription =
       {
         "A long bow with massive pulling power.",
@@ -1310,7 +1300,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
         "Requires some skill to be used effectively."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SKL] = -3 + cursedPenalty;
+      ic->Data.StatBonuses[StatsEnum::SKL] = -3;
     }
     break;
 
@@ -1321,14 +1311,19 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
-      ic->Data.Range = 8;
+      ic->Data.Range = 4;
       ic->Data.Durability.Set(60);
 
+      // ======================================================================70
       ic->Data.UnidentifiedDescription =
       {
         "A light crossbow has shorter range than its bow counterpart",
-        "but has more punch and is easier to aim with."
+        "but has more punch and is easier to aim with.",
+        "Requires some time to reload."
       };
+
+      ic->Data.StatBonuses[StatsEnum::SPD] = -1;
+      ic->Data.StatBonuses[StatsEnum::SKL] = 1;
     }
     break;
 
@@ -1339,16 +1334,19 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
-      ic->Data.Range = 12;
+      ic->Data.Range = 6;
       ic->Data.Durability.Set(80);
 
+      // ======================================================================70
       ic->Data.UnidentifiedDescription =
       {
         "A crossbow has shorter range than its bow counterpart",
-        "but has more punch and is easier to aim with."
+        "but has more punch and is easier to aim with.",
+        "Requires some time to reload."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SKL] = 1;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -2;
+      ic->Data.StatBonuses[StatsEnum::SKL] = 2;
     }
     break;
 
@@ -1359,16 +1357,19 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
-      ic->Data.Range = 14;
+      ic->Data.Range = 8;
       ic->Data.Durability.Set(100);
 
+      // ======================================================================70
       ic->Data.UnidentifiedDescription =
       {
-        "This heavy crossbow deals some serious damage,",
-        "but doesn't have that much range than its bow counterpart."
+        "This heavy crossbow can deal some serious damage,",
+        "but doesn't have that much range than its bow counterpart.",
+        "Requires some time to reload."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SKL] = 2;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -3;
+      ic->Data.StatBonuses[StatsEnum::SKL] = 3;
     }
     break;
   }
@@ -1379,8 +1380,6 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
-
-  ic->Data.UnidentifiedDescription = { "FIXME" };
 
   // *** !!!
   // Identified description for weapon is
@@ -1802,11 +1801,13 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
     {
       if (itemData.Prefix == ItemPrefix::BLESSED)
       {
-        itemData.IdentifiedDescription.push_back("Because of its excellent condition, repairing will be more effective.");
+        itemData.IdentifiedDescription.push_back("Because of its excellent condition,");
+        itemData.IdentifiedDescription.push_back("repairing will be more effective.");
       }
       else if (itemData.Prefix == ItemPrefix::CURSED)
       {
-        itemData.IdentifiedDescription.push_back("Because of its poor condition, repairing will be less effective.");
+        itemData.IdentifiedDescription.push_back("Because of its poor condition,");
+        itemData.IdentifiedDescription.push_back("repairing will be less effective.");
       }
     }
     break;
@@ -1815,11 +1816,13 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
     {
       if (itemData.Prefix == ItemPrefix::BLESSED)
       {
-        itemData.IdentifiedDescription.push_back("These projectiles are blessed and thus more likely to hit the enemy.");
+        itemData.IdentifiedDescription.push_back("These projectiles are blessed");
+        itemData.IdentifiedDescription.push_back("and thus more likely to hit the enemy.");
       }
       else if (itemData.Prefix == ItemPrefix::CURSED)
       {
-        itemData.IdentifiedDescription.push_back("These projectiles are cursed and thus less likely to hit the enemy.");
+        itemData.IdentifiedDescription.push_back("These projectiles are cursed");
+        itemData.IdentifiedDescription.push_back("and thus less likely to hit the enemy.");
       }
     }
     break;

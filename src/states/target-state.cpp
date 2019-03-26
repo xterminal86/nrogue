@@ -148,7 +148,7 @@ GameObject* TargetState::LaunchProjectile(char image)
 
   auto line = Util::BresenhamLine(startPoint, endPoint);
 
-  int maxDistance = 0;
+  int distanceCovered = 0;
 
   // Don't include player's position
   for (int i = 1; i < line.size(); i++)
@@ -171,19 +171,14 @@ GameObject* TargetState::LaunchProjectile(char image)
     Util::Sleep(10);
     #endif
 
-    if (maxDistance >= _weaponRef->Data.Range)
-    {
-      stoppedAt = CheckHit({ mx, my }, { line[i - 1].X, line[i - 1].Y });
-      break;
-    }
-
     stoppedAt = CheckHit({ mx, my }, { line[i - 1].X, line[i - 1].Y });
-    if (stoppedAt != nullptr)
+
+    distanceCovered++;
+
+    if (stoppedAt != nullptr || distanceCovered >= _weaponRef->Data.Range)
     {
       break;
     }
-
-    maxDistance++;
   }
 
   // Projectile reached end point without hitting anyone
@@ -356,7 +351,11 @@ void TargetState::DrawHint()
 
       bool condActor = (actor != nullptr);
 
-      if (condActor || Map::Instance().CurrentLevel->IsCellBlocking(p))
+      int d = Util::LinearDistance(startPoint, p);
+
+      if (condActor
+       || Map::Instance().CurrentLevel->IsCellBlocking(p)
+       || d > _weaponRef->Data.Range)
       {
         break;
       }
@@ -454,6 +453,9 @@ int TargetState::CalculateHitChance()
     }
   }
 
+  auto str = Util::StringFormat("Total unclamped hit chance: %i", chance);
+  Logger::Instance().Print(str);
+
   chance = Util::Clamp(chance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
 
   return chance;
@@ -466,21 +468,15 @@ int TargetState::CalculateChance(const Position& startPoint, const Position& end
   int chance = baseChance;
 
   int skl = _playerRef->Attrs.Skl.Get();
-  if (skl > 0)
-  {
-    chance += (attackChanceScale * skl);
-  }
-  else
-  {
-    chance -= (attackChanceScale * skl);
-  }
+  chance += (attackChanceScale * skl);
+
+  int distanceChanceDrop = 3;
 
   int d = (int)Util::LinearDistance(startPoint, endPoint);
+  chance -= (distanceChanceDrop * d);
 
-  for (int i = 0; i < d; i++)
-  {
-    chance -= attackChanceScale;
-  }
+  auto str = Util::StringFormat("Calculated hit chance: %i (SKL bonus: %i, distance: -%i)", chance, (attackChanceScale * skl), (distanceChanceDrop * d));
+  Logger::Instance().Print(str);
 
   return chance;
 }
