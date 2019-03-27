@@ -341,7 +341,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
 
         case 'g':
           t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::GrassColor, "Grass");
-          InsertStaticObject(posX, posY, t);
+          MapArray[posX][posY]->MakeTile(t);
           break;
 
         case 'F':

@@ -105,8 +105,10 @@ void InteractInputState::HandleInput()
         }
         else
         {
-          auto cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
-          TryToInteractWithObject(cell);
+          Printer::Instance().AddMessage("There's nothing here");
+          Application::Instance().ChangeState(GameStates::MAIN_STATE);
+          //auto cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
+          //TryToInteractWithObject(cell);
         }
       }
     }

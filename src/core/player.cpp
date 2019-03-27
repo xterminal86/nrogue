@@ -88,37 +88,42 @@ bool Player::Move(int dx, int dy)
         return true;
       }
     }
+    else if (cell->Occupied)
+    {
+      // Do not return true, since it will cause
+      // MapOffsetY and MapOffsetX to be incremented in MainState,
+      // but we manually call AdjustCamera() inside this method in
+      // SwitchPlaces().
+      PassByNPC(dx, dy);
+    }
     else
     {
-      if (cell->Occupied)
-      {
-        auto actor = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
-        auto c = actor->GetComponent<AIComponent>();
-        AIComponent* aic = static_cast<AIComponent*>(c);
-        AINPC* npc = static_cast<AINPC*>(aic->CurrentModel);
-        if (!aic->CurrentModel->IsAgressive)
-        {
-          if (npc->Data.IsStanding)
-          {
-            std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : "The " + actor->ObjectName;
-            Printer::Instance().AddMessage(name + " won't move over");
-          }
-          else
-          {
-            SwitchPlaces(aic);
-            FinishTurn();
-          }
-        }
-      }
-      else
-      {
-        MoveGameObject(dx, dy);
-        return true;
-      }
+      MoveGameObject(dx, dy);
+      return true;
     }
   }
 
   return false;
+}
+
+void Player::PassByNPC(int dx, int dy)
+{
+  auto actor = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
+  auto c = actor->GetComponent<AIComponent>();
+  AIComponent* aic = static_cast<AIComponent*>(c);
+  AINPC* npc = static_cast<AINPC*>(aic->CurrentModel);
+  if (!aic->CurrentModel->IsAgressive)
+  {
+    if (npc->Data.IsStanding)
+    {
+      std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : "The " + actor->ObjectName;
+      Printer::Instance().AddMessage(name + " won't move over");
+    }
+    else
+    {
+      SwitchPlaces(aic);
+    }
+  }
 }
 
 void Player::CheckVisibility()

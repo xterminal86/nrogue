@@ -652,6 +652,7 @@ struct ItemData
   bool IsWeaponOrArmor()
   {
     bool cond = (ItemType_ == ItemType::WEAPON
+              || ItemType_ == ItemType::RANGED_WEAPON
               || ItemType_ == ItemType::ARMOR);
 
     return cond;
@@ -674,7 +675,7 @@ struct ItemData
 
     if (ItemType_ == ItemType::FOOD)
     {
-      price *= 0.01f;
+      price *= 0.05f;
     }
 
     if (ItemType_ == ItemType::GEM)

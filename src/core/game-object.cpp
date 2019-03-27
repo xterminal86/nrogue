@@ -34,8 +34,9 @@ bool GameObject::Move(int dx, int dy)
   int nx = PosX + dx;
   int ny = PosY + dy;
 
-  bool isBlocked = Map::Instance().CurrentLevel->IsCellBlocking({ nx, ny });
-  if (!isBlocked)
+  bool isBlocked = Map::Instance().CurrentLevel->IsCellBlocking({ nx, ny });  
+  bool isOccupied = Map::Instance().CurrentLevel->MapArray[nx][ny]->Occupied;
+  if (!isBlocked && !isOccupied)
   {
     MoveGameObject(dx, dy);
     return true;

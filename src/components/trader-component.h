@@ -38,6 +38,11 @@ class TraderComponent : public Component
     TraderRole _traderType = TraderRole::NONE;
 
     void CreateItems();
+
+    void CreateClericItems();
+    void CreateCookItems();
+    void CreateJunkerItems();
+    void CreateBlacksmithItems();
 };
 
 #endif // TRADERCOMPONENT_H

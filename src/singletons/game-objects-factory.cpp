@@ -1248,7 +1248,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
       ic->Data.Range = 6;
-      ic->Data.Durability.Set(30);
+      ic->Data.Durability.Set(100);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1269,7 +1269,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
       ic->Data.Range = 8;
-      ic->Data.Durability.Set(60);
+      ic->Data.Durability.Set(200);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1290,7 +1290,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
       ic->Data.Range = 10;
-      ic->Data.Durability.Set(80);
+      ic->Data.Durability.Set(300);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1335,7 +1335,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
       ic->Data.Range = 6;
-      ic->Data.Durability.Set(80);
+      ic->Data.Durability.Set(120);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1358,7 +1358,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.CurrentValue = numRolls;
       ic->Data.Damage.OriginalValue = diceType;
       ic->Data.Range = 8;
-      ic->Data.Durability.Set(100);
+      ic->Data.Durability.Set(180);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =

@@ -101,6 +101,7 @@ class Player : public GameObject
     bool ShouldBreak(ItemComponent* ic);
     void BreakItem(ItemComponent* ic, bool suppressMessage = false);
 
+    void PassByNPC(int dx, int dy);
     void SwitchPlaces(AIComponent* other);
 
     int CalculateDamageValue(ItemComponent* weapon, GameObject* defender);

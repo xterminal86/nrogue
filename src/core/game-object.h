@@ -68,7 +68,7 @@ class GameObject
       // NOTE: No check for component already added.
       // Do we need one?
 
-      auto cp = std::make_unique<T>();
+      std::unique_ptr<T> cp = std::make_unique<T>();
 
       cp.get()->OwnerGameObject = this;
 
