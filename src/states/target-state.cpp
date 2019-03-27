@@ -139,7 +139,7 @@ void TargetState::HandleInput()
   }
 }
 
-GameObject* TargetState::LaunchProjectile(char image)
+GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
 {
   GameObject* stoppedAt = nullptr;
 
@@ -161,7 +161,7 @@ GameObject* TargetState::LaunchProjectile(char image)
     int drawingPosX = mx + Map::Instance().CurrentLevel->MapOffsetX;
     int drawingPosY = my + Map::Instance().CurrentLevel->MapOffsetY;
 
-    Printer::Instance().PrintFB(drawingPosX, drawingPosY, image, "#FFFF00");
+    Printer::Instance().PrintFB(drawingPosX, drawingPosY, image, color);
     Printer::Instance().Render();
 
     // FIXME: debug
@@ -277,7 +277,17 @@ void TargetState::FireWeapon()
     projectile = '+';
   }
 
-  stoppedAt = LaunchProjectile(projectile);
+  std::string projColor = "#FFFFFF";
+  if (isWand)
+  {
+    SpellType spell = _weaponRef->Data.SpellHeld;
+    if (GlobalConstants::SpellProjectileColorByType.count(spell) != 0)
+    {
+      projColor = GlobalConstants::SpellProjectileColorByType.at(spell);
+    }
+  }
+
+  stoppedAt = LaunchProjectile(projectile, projColor);
   ProcessHit(stoppedAt);
 
   // Check if player accidentally killed himself

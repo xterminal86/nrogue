@@ -108,6 +108,8 @@ void GameObject::MakeTile(GameObjectInfo t)
 
 void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical)
 {  
+  // TODO: isMagical for enemies' armor damage
+
   if (!Attrs.Indestructible)
   {
     Attrs.HP.CurrentValue -= amount;

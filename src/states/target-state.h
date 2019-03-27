@@ -35,7 +35,7 @@ class TargetState : public GameState
     void DrawExplosion(Position pos);
     std::vector<Position> GetVisiblePointsFrom(Position from, int range);
 
-    GameObject* LaunchProjectile(char image);
+    GameObject* LaunchProjectile(char image, const std::string& color);
     GameObject* CheckHit(const Position& at, const Position& prev);
 
     int CalculateChance(const Position& startPoint, const Position& endPoint, int baseChance);

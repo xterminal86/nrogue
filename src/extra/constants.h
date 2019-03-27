@@ -1139,6 +1139,15 @@ namespace GlobalConstants
     { SpellType::MAGIC_MISSILE, 25  }
   };
 
+  static const std::map<SpellType, std::string> SpellProjectileColorByType =
+  {
+    { SpellType::STRIKE,        "#FFFFFF" },
+    { SpellType::FROST,         "#4444FF" },
+    { SpellType::FIREBALL,      "#FFFF00" },
+    { SpellType::LIGHTNING,     "#FFFFFF" },
+    { SpellType::MAGIC_MISSILE, "#FFA500" }
+  };
+
   static const std::map<SpellType, std::pair<int, int>> SpellBaseDamageByType =
   {
     { SpellType::STRIKE,        { 1, 4  } },

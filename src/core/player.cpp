@@ -412,65 +412,96 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
 
   switch (with->Data.SpellHeld)
   {
+    case SpellType::STRIKE:
+      ProcessMagicAttack(what, with, centralDamage, false);
+      break;
+
+    case SpellType::MAGIC_MISSILE:
+    case SpellType::FROST:
+      ProcessMagicAttack(what, with, centralDamage, true);
+      break;
+
     case SpellType::FIREBALL:
+      ProcessAoEDamage(what, with, centralDamage, true);
+      break;
+  }
+}
+
+void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int damage, bool againstRes)
+{
+  Position p = { target->PosX, target->PosY };
+
+  auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+  if (actor != nullptr)
+  {
+    TryToDamageObject(actor, damage, againstRes);
+  }
+  else
+  {
+    auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
+    for (auto& obj : mapObjs)
     {
-      auto pointsAffected = Printer::Instance().DrawExplosion({ what->PosX, what->PosY }, 3);
-
-      //Util::PrintVector("points affected", pointsAffected);
-
-      for (auto& p : pointsAffected)
-      {
-        int d = Util::LinearDistance({ what->PosX, what->PosY }, p);
-        if (d == 0)
-        {
-          d = 1;
-        }
-
-        auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
-        if (actor != nullptr)
-        {
-          int dmgHere = centralDamage / d;
-          dmgHere -= actor->Attrs.Res.Get();
-
-          if (dmgHere <= 0)
-          {
-            auto msg = Util::StringFormat("%s seems unaffected!", actor->ObjectName.data());
-            Printer::Instance().AddMessage(msg);
-          }
-          else
-          {
-            actor->ReceiveDamage(this, dmgHere, true);
-          }          
-        }
-
-        auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
-        for (auto& obj : mapObjs)
-        {
-          int dmgHere = centralDamage / d;
-          dmgHere -= obj->Attrs.Res.Get();
-
-          if (dmgHere <= 0)
-          {
-            auto msg = Util::StringFormat("%s seems unaffected!", obj->ObjectName.data());
-            Printer::Instance().AddMessage(msg);
-          }
-          else
-          {
-            obj->ReceiveDamage(this, dmgHere, true);
-          }          
-        }
-
-        // Check self damage
-        if (PosX == p.X && PosY == p.Y)
-        {
-          int dmgHere = centralDamage / d;
-          dmgHere -= Attrs.Res.Get();
-
-          ReceiveDamage(this, dmgHere, true);
-        }
-      }
+      TryToDamageObject(obj, damage, againstRes);
     }
-    break;
+  }
+}
+
+void Player::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes)
+{
+  auto pointsAffected = Printer::Instance().DrawExplosion({ target->PosX, target->PosY }, 3);
+
+  //Util::PrintVector("points affected", pointsAffected);
+
+  for (auto& p : pointsAffected)
+  {
+    int d = Util::LinearDistance({ target->PosX, target->PosY }, p);
+    if (d == 0)
+    {
+      d = 1;
+    }
+
+    int dmgHere = centralDamage / d;
+
+    auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+    TryToDamageObject(actor, dmgHere, againstRes);
+
+    auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
+    for (auto& obj : mapObjs)
+    {
+      TryToDamageObject(obj, dmgHere, againstRes);
+    }
+
+    // Check self damage
+    if (PosX == p.X && PosY == p.Y)
+    {
+      int dmgHere = centralDamage / d;
+      dmgHere -= Attrs.Res.Get();
+
+      ReceiveDamage(this, dmgHere, true);
+    }
+  }
+}
+
+void Player::TryToDamageObject(GameObject* object, int amount, bool againstRes)
+{
+  if (object != nullptr)
+  {
+    int dmgHere = amount;
+
+    if (againstRes)
+    {
+      dmgHere -= object->Attrs.Res.Get();
+    }
+
+    if (dmgHere <= 0)
+    {
+      auto msg = Util::StringFormat("%s seems unaffected!", object->ObjectName.data());
+      Printer::Instance().AddMessage(msg);
+    }
+    else
+    {
+      object->ReceiveDamage(this, dmgHere, againstRes);
+    }
   }
 }
 
