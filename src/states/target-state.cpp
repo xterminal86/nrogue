@@ -241,11 +241,15 @@ void TargetState::FireWeapon()
 
     // If we shoot from point blank in a corridor,
     // we shouldn't accidentaly target ourselves
-    // due to lack of skill
+    // due to lack of skill.
     for (int i = 0; i < rect.size(); i++)
     {
-      if (rect[i].X == _playerRef->PosX
-       && rect[i].Y == _playerRef->PosY)
+      // Do not include points above weapon's maximum range as well.
+      int d = Util::LinearDistance(_cursorPosition, rect[i]);
+
+      if ((rect[i].X == _playerRef->PosX
+        && rect[i].Y == _playerRef->PosY)
+        || d > _weaponRef->Data.Range)
       {
         rect.erase(rect.begin() + i);
         break;

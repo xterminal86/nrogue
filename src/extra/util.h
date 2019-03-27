@@ -4,8 +4,7 @@
 #include <memory>
 #include <algorithm>
 #include <climits>
-
-#include <math.h>
+#include <cmath>
 
 #include "constants.h"
 #include "rng.h"
@@ -73,7 +72,10 @@ namespace Util
         char_array_4[3] = char_array_3[2] & 0x3f;
 
         for(i = 0; (i < 4) ; i++)
+        {
           ret += GlobalConstants::Base64Chars[char_array_4[i]];
+        }
+
         i = 0;
       }
     }
@@ -81,7 +83,9 @@ namespace Util
     if (i)
     {
       for(j = i; j < 3; j++)
+      {
         char_array_3[j] = '\0';
+      }
 
       char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
       char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
@@ -89,11 +93,14 @@ namespace Util
       char_array_4[3] = char_array_3[2] & 0x3f;
 
       for (j = 0; (j < i + 1); j++)
+      {
         ret += GlobalConstants::Base64Chars[char_array_4[j]];
+      }
 
       while((i++ < 3))
+      {
         ret += '=';
-
+      }
     }
 
     return ret;
@@ -123,7 +130,9 @@ namespace Util
         char_array_3[2] = ((char_array_4[2] & 0x3) << 6) + char_array_4[3];
 
         for (i = 0; (i < 3); i++)
+        {
           ret += char_array_3[i];
+        }
 
         i = 0;
       }
@@ -132,17 +141,23 @@ namespace Util
     if (i)
     {
       for (j = i; j <4; j++)
+      {
         char_array_4[j] = 0;
+      }
 
       for (j = 0; j <4; j++)
+      {
         char_array_4[j] = GlobalConstants::Base64Chars.find(char_array_4[j]);
+      }
 
       char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
       char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
       char_array_3[2] = ((char_array_4[2] & 0x3) << 6) + char_array_4[3];
 
       for (j = 0; (j < i - 1); j++)
+      {
         ret += char_array_3[j];
+      }
     }
 
     return ret;
@@ -175,10 +190,13 @@ namespace Util
   template<typename ... Args>
   inline std::string StringFormat(const std::string& format, Args ...args)
   {    
-    size_t size = snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
+    // Extra space for '\0'
+    size_t size = snprintf( nullptr, 0, format.c_str(), args ... ) + 1;
     std::unique_ptr<char[]> buf( new char[ size ] ); 
     snprintf( buf.get(), size, format.c_str(), args ... );
-    return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
+
+    // We don't want the '\0' inside
+    return std::string( buf.get(), buf.get() + size - 1 );
   }
 
   /// Bresenham line including end point
@@ -297,8 +315,8 @@ namespace Util
   }
 
   inline float LinearDistance(int x1, int y1, int x2, int y2)
-  {
-    float d = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+  {    
+    float d = std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2));
     return d;
   }
   
@@ -663,9 +681,9 @@ namespace Util
   {
     int dice = RNG::Instance().RandomRange(1, 101);
 
-    auto logMsg = Util::StringFormat("\tRollDice(bool): chance = %i, rolled = %i",
-                                     successChance,
-                                     dice);
+    auto logMsg = StringFormat("\tRollDice(bool): chance = %i, rolled = %i",
+                                successChance,
+                                dice);
     Logger::Instance().Print(logMsg);
 
     if (dice <= successChance)
@@ -693,7 +711,7 @@ namespace Util
   {
     int dice = RNG::Instance().RandomRange(1, 101);
 
-    auto str = Util::StringFormat("\tRollDice(void): rolled = %i", dice);
+    auto str = StringFormat("\tRollDice(void): rolled = %i", dice);
     Logger::Instance().Print(str);
 
     return dice;
@@ -753,6 +771,16 @@ namespace Util
     Logger::Instance().Print(dbg);
   }
 
+  /// Produces random pair from pairs list according to weight value:
+  /// the more the number, the more likely it will appear as a result.
+  /// Returns result in the form of a pair of value type rolled
+  /// and its weight in the list. Example list follows:
+  /// weightsByType =
+  /// {
+  ///   { APPLE,   1 },
+  ///   { BANANA,  3 },
+  ///   { ORANGE, 10 }
+  /// };
   template <typename T>
   inline std::pair<T, int> WeightedRandom(const std::map<T, int>& weightsByType)
   {

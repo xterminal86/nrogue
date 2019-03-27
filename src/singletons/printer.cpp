@@ -729,7 +729,7 @@ std::vector<Position> Printer::GetAreaDamagePointsFrom(Position from, int range)
                 [&point](const Position& p) ->
                 bool { return (p == point); });
 
-      // If point was already added, skip it
+      // If point was already added, skip it.
       if (it != res.end())
       {
         continue;

@@ -312,7 +312,8 @@ void Map::TeleportToExistingLevel(MapType levelToChange, Position teleportTo)
     // Assume that if some NPC occupied returner destination,
     // he can be moved at least to his previous position.
 
-    Printer::Instance().AddMessage("Conflicting destination!");
+    auto str = Util::StringFormat("You bump into %s!", actor->ObjectName.data());
+    Printer::Instance().AddMessage(str);
 
     Position tp = teleportTo;
 
