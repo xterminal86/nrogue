@@ -21,12 +21,26 @@ void TargetState::Prepare()
 
   if (!_targets.empty())
   {
-    int x = _targets[0]->PosX;
-    int y = _targets[0]->PosY;
-
-    _cursorPosition.Set(x, y);
-
     _lastTargetIndex = 0;
+
+    for (int i = 0; i < _targets.size(); i++)
+    {
+      if (_targets[i]->PosX == _lastCursorPosition.X
+       && _targets[i]->PosY == _lastCursorPosition.Y)
+      {
+        _cursorPosition = _lastCursorPosition;
+        _lastTargetIndex = i;
+        break;
+      }
+    }
+
+    if (_lastTargetIndex == 0)
+    {
+      int x = _targets[0]->PosX;
+      int y = _targets[0]->PosY;
+
+      _cursorPosition.Set(x, y);
+    }
   }
 }
 
@@ -47,7 +61,7 @@ void TargetState::FindTargets()
   {
     for (int y = ly; y <= hy; y++)
     {
-      if (x == px && y == py )
+      if (x == px && y == py)
       {
         continue;
       }
@@ -227,6 +241,8 @@ void TargetState::FireWeapon()
   {    
     return;
   }
+
+  _lastCursorPosition = _cursorPosition;
 
   _drawHint = false;
 
@@ -489,7 +505,11 @@ int TargetState::CalculateChance(const Position& startPoint, const Position& end
   int d = (int)Util::LinearDistance(startPoint, endPoint);
   chance -= (distanceChanceDrop * d);
 
-  auto str = Util::StringFormat("Calculated hit chance: %i (SKL bonus: %i, distance: -%i)", chance, (attackChanceScale * skl), (distanceChanceDrop * d));
+  auto str = Util::StringFormat("Calculated hit chance: %i (SKL: %i, SKL bonus: %i, distance: -%i)",
+                                chance,
+                                _playerRef->Attrs.Skl.Get(),
+                                (attackChanceScale * skl),
+                                (distanceChanceDrop * d));
   Logger::Instance().Print(str);
 
   return chance;

@@ -65,7 +65,6 @@ int main(int argc, char* argv[])
   Map::Instance().Init();
 
   Application::Instance().Run();
-
   Application::Instance().Cleanup();
 
   #ifdef RUN_TESTS

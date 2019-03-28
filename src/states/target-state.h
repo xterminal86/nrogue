@@ -22,6 +22,7 @@ class TargetState : public GameState
     ItemComponent* _weaponRef;
 
     Position _cursorPosition;
+    Position _lastCursorPosition;
 
     int CalculateHitChance();
 

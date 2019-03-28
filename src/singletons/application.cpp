@@ -90,7 +90,7 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   }
   else
   {
-    auto str = Util::StringFormat("Changing state: %s [0x%X] => EXIT_GAME", typeid(*_currentState).name(), _currentState);
+    auto str = Util::StringFormat("Changing state: %s [0x%X] => EXIT_GAME [0x0]", typeid(*_currentState).name(), _currentState);
     Logger::Instance().Print(str);
   }
 
