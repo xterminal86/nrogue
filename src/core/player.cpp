@@ -369,7 +369,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   int dmg = Util::RollDamage(with->Data.Damage.CurrentValue, with->Data.Damage.OriginalValue);
 
   // If it's not the ground GameObject
-  if (what->ComponentsSize() != 0)
+  if (what->Type != GameObjectType::GROUND)
   {
     what->ReceiveDamage(this, dmg, false);
 
@@ -377,6 +377,16 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
     {
       ProcessKill(what);
     }
+  }
+  else
+  {
+    // Create arrow object on the cell where it landed
+    GameObject* arrow = GameObjectsFactory::Instance().CopycatItem(EquipmentByCategory[EquipmentCategory::SHIELD][0]);
+    arrow->PosX = what->PosX;
+    arrow->PosY = what->PosY;
+    ItemComponent* ic = arrow->GetComponent<ItemComponent>();
+    ic->Data.Amount = 1;
+    Map::Instance().InsertGameObject(arrow);
   }
 
   ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];

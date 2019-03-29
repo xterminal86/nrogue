@@ -451,11 +451,12 @@ void MainState::PrintDebugInfo()
 }
 
 void MainState::ProcessRangedWeapon()
-{
+{  
   if (Map::Instance().CurrentLevel->Peaceful)
   {
-    PrintNoAttackInTown();
-    return;
+    // FIXME: debug
+    //PrintNoAttackInTown();
+    //return;
   }
 
   // TODO: wands in both hands?

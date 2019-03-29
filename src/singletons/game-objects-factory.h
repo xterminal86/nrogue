@@ -20,6 +20,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateGameObject(int x, int y, ItemType objType);
     GameObject* CreateMonster(int x, int y, GameObjectType monsterType);
 
+    /// Various
     GameObject* CreateNPC(int x, int y, NPCType npcType, bool standing = false);
     GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);
     GameObject* CreateMoney(int amount = 0);
@@ -57,6 +58,8 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
 
     GameObject* CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1, GameObjectType type = GameObjectType::HARMLESS);
     GameObject* CreateDoor(int x, int y, bool isOpen, const std::string& doorName, int hitPoints = -1);
+
+    GameObject* CopycatItem(ItemComponent* copyFrom);
 
   private:
     Player* _playerRef;

@@ -177,7 +177,7 @@ void Application::WriteObituary(bool wasKilled)
 
   MapLevelBase* curLvl = Map::Instance().CurrentLevel;
 
-  std::string playerEndCause = wasKilled ? "has perished at " : "has quit on ";
+  std::string playerEndCause = wasKilled ? "has perished at " : "has quit at ";
 
   // Write part of the map with player
 

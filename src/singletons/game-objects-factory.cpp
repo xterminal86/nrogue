@@ -1731,6 +1731,39 @@ GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, const GameObjec
   return go;
 }
 
+GameObject* GameObjectsFactory::CopycatItem(ItemComponent* copyFrom)
+{
+  GameObject* original = copyFrom->OwnerGameObject;
+  GameObject* copy = new GameObject(Map::Instance().CurrentLevel);
+
+  // Object data
+
+  copy->Attrs = original->Attrs;
+  copy->BgColor = original->BgColor;
+  copy->Blocking = original->Blocking;
+  copy->BlocksSight = original->BlocksSight;
+  copy->FgColor = original->FgColor;
+  copy->FogOfWarName = original->FogOfWarName;
+  copy->HealthRegenTurns = original->HealthRegenTurns;
+  copy->Image = original->Image;
+  copy->InteractionCallback = original->InteractionCallback;
+  copy->IsDestroyed = original->IsDestroyed;
+  copy->ObjectName = original->ObjectName;
+  copy->Occupied = original->Occupied;
+  copy->PosX = original->PosX;
+  copy->PosY = original->PosY;
+  copy->Revealed = original->Revealed;
+  copy->Type = original->Type;
+  copy->Visible = original->Visible;
+
+  // ItemComponent
+
+  ItemComponent* ic = copy->AddComponent<ItemComponent>();
+  ic->Data = copyFrom->Data;
+
+  return copy;
+}
+
 // ************************** PRIVATE METHODS ************************** //
 
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
