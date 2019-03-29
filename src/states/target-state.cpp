@@ -189,8 +189,14 @@ GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
 
     distanceCovered++;
 
-    if (stoppedAt != nullptr || distanceCovered >= _weaponRef->Data.Range)
+    // Hit object or max shooting distance reached
+    if (stoppedAt != nullptr)
     {
+      break;
+    }
+    else if (distanceCovered >= _weaponRef->Data.Range)
+    {
+      endPoint.Set(mx, my);
       break;
     }
   }
@@ -230,17 +236,48 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
   return nullptr;
 }
 
+bool TargetState::SafetyCheck()
+{
+  bool posCheck = (_cursorPosition.X != _playerRef->PosX
+                && _cursorPosition.Y != _playerRef->PosY);
+
+  return posCheck;
+}
+
+void TargetState::CheckCursorPositionBounds()
+{
+  Position lastPositionInsideMap;
+  bool isOutsideMap = false;
+  auto line = Util::BresenhamLine({ _playerRef->PosX, _playerRef->PosY }, _cursorPosition);
+  for (auto& p : line)
+  {
+    if (!Util::IsInsideMap(p, Map::Instance().CurrentLevel->MapSize))
+    {
+      isOutsideMap = true;
+      break;
+    }
+
+    lastPositionInsideMap = p;
+  }
+
+  if (isOutsideMap)
+  {
+    _cursorPosition = lastPositionInsideMap;
+  }
+}
+
 void TargetState::FireWeapon()
 {  
   // It is assumed that we have valid weapon and ammunition
   // in corresponding equipment slots
   // (necessary checks were performed in MainState)
 
-  if (_cursorPosition.X == _playerRef->PosX
-   && _cursorPosition.Y == _playerRef->PosY)
-  {    
+  if (!SafetyCheck())
+  {
     return;
   }
+
+  CheckCursorPositionBounds();
 
   _lastCursorPosition = _cursorPosition;
 
@@ -261,7 +298,7 @@ void TargetState::FireWeapon()
     for (int i = 0; i < rect.size(); i++)
     {
       // Do not include points above weapon's maximum range as well.
-      int d = Util::LinearDistance(_cursorPosition, rect[i]);
+      int d = Util::LinearDistance({ _playerRef->PosX, _playerRef->PosY }, rect[i]);
 
       if ((rect[i].X == _playerRef->PosX
         && rect[i].Y == _playerRef->PosY)
@@ -275,7 +312,7 @@ void TargetState::FireWeapon()
     int index = RNG::Instance().RandomRange(0, rect.size());
     _cursorPosition = rect[index];
 
-    Printer::Instance().AddMessage("The shot goes astray due to lack of skill");
+    Printer::Instance().AddMessage("The shot goes astray");
   }
 
   GameObject* stoppedAt = nullptr;

@@ -320,7 +320,7 @@ void Player::SetDefaultEquipment()
       weapon = GameObjectsFactory::Instance().CreateRangedWeapon(0, 0, RangedWeaponType::SHORT_BOW, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(weapon);
 
-      GameObject* arrows = GameObjectsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::UNCURSED, 30);
+      GameObject* arrows = GameObjectsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::UNCURSED, 60);
       Inventory.AddToInventory(arrows);
 
       weaponAndArmor.push_back(arrows);
@@ -385,7 +385,8 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
     arrow->PosX = what->PosX;
     arrow->PosY = what->PosY;
     ItemComponent* ic = arrow->GetComponent<ItemComponent>();
-    ic->Data.Amount = 1;
+    ic->Data.Amount = 1;    
+    ic->Data.IsEquipped = false;
     Map::Instance().InsertGameObject(arrow);
   }
 

@@ -26,6 +26,9 @@ class TargetState : public GameState
 
     int CalculateHitChance();
 
+    bool SafetyCheck();
+    void CheckCursorPositionBounds();
+
     void DrawHint();
     void DrawCursor();
     void MoveCursor(int dx, int dy);
