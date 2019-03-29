@@ -48,7 +48,7 @@ class Player : public GameObject
     void MagicAttack(GameObject* what, ItemComponent* with);
     void ReceiveDamage(GameObject* from, int amount, bool isMagical, bool godMode = false);
     void WaitForTurn();
-    void ProcessHunger();
+    void ProcessHunger();    
     void FinishTurn();
 
     bool IsAlive(GameObject* damager);
@@ -97,6 +97,8 @@ class Player : public GameObject
     bool CanRaiseAttribute(Attribute& attr);
     void ProcessKill(GameObject* monster);
 
+    void ProcessStarvation();
+    void ProcessEffects();
     void ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict);
     void ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes);
     void ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int damage, bool againstRes);

@@ -199,3 +199,67 @@ void GameObject::MoveGameObject(int dx, int dy)
   _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell->Occupied = true;
 }
+
+void GameObject::AddEffect(EffectType type, int power, int duration)
+{
+  Effect e = { type, power, duration };
+
+  switch (type)
+  {
+    case EffectType::ILLUMINATED:
+    {
+      //VisibilityRadius += power;
+    }
+    break;
+  }
+
+  _activeEffects.push_back(e);
+}
+
+void GameObject::RemoveEffect(EffectType t)
+{
+  for (int i = 0; i < _activeEffects.size(); i++)
+  {
+    if (_activeEffects[i].Type == t)
+    {
+      /*
+      if (_activeEffects[i].Type == EffectType::ILLUMINATED)
+      {
+        VisibilityRadius -= _activeEffects[i].Power;
+      }
+      */
+
+      _activeEffects.erase(_activeEffects.begin() + i);
+      break;
+    }
+  }
+}
+
+bool GameObject::HasEffect(EffectType t)
+{
+  for (auto& i : _activeEffects)
+  {
+    if (i.Type == t)
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+void GameObject::ProcessEffects()
+{
+  for (int i = 0; i < _activeEffects.size(); i++)
+  {
+    if (_activeEffects[i].Timeout <= 0)
+    {
+      _activeEffects.erase(_activeEffects.begin() + i);
+    }
+    else
+    {
+      _activeEffects[i].Timeout--;
+    }
+  }
+}
+

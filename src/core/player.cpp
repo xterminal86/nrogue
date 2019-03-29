@@ -1105,6 +1105,12 @@ void Player::FinishTurn()
     Attrs.ActionMeter = 0;
   }
 
+  ProcessStarvation();
+  GameObject::ProcessEffects();
+}
+
+void Player::ProcessStarvation()
+{
   if (IsStarving)
   {
     _starvingTimeout++;

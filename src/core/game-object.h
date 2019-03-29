@@ -12,6 +12,7 @@
 
 #include "component.h"
 #include "constants.h"
+#include "effect.h"
 
 class MapLevelBase;
 
@@ -132,6 +133,10 @@ class GameObject
     void FinishTurn();
     void WaitForTurn();
 
+    void AddEffect(EffectType type, int power, int duration);
+    void RemoveEffect(EffectType t);
+    bool HasEffect(EffectType t);
+
     Attributes Attrs;        
 
     int HealthRegenTurns = 0;
@@ -140,6 +145,7 @@ class GameObject
 
   protected:
     std::map<size_t, std::unique_ptr<Component>> _components;
+    std::vector<Effect> _activeEffects;
 
     GameObject* _previousCell = nullptr;
     GameObject* _currentCell = nullptr;
@@ -150,6 +156,7 @@ class GameObject
     int _healthRegenTurnsCounter = 0;    
 
     void MoveGameObject(int dx, int dy);
+    void ProcessEffects();
 };
 
 #endif
