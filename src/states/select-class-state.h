@@ -20,7 +20,7 @@ class SelectClassState : public GameState
       " Soldier  ",
       "  Thief   ",
       " Arcanist "
-      //"  No one  "
+      //"  No one  "  // FIXME: remove?
     };
 };
 

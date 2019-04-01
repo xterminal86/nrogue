@@ -23,7 +23,11 @@ class GameObject
     GameObject(GameObject&) = delete;
     virtual ~GameObject() = default;
 
-    GameObject(MapLevelBase* levelOwner, int x, int y, int avatar, const std::string& htmlColor, const std::string& bgColor = "#000000")
+    GameObject(MapLevelBase* levelOwner,
+               int x, int y,
+               int avatar,
+               const std::string& htmlColor,
+               const std::string& bgColor = "#000000")
     {      
       Init(levelOwner, x, y, avatar, htmlColor, bgColor);
     }
@@ -51,7 +55,11 @@ class GameObject
       return false;
     }
 
-    void Init(MapLevelBase* levelOwner, int x, int y, int avatar, const std::string& fgColor, const std::string& bgColor = "#000000");
+    void Init(MapLevelBase* levelOwner,
+              int x, int y,
+              int avatar,
+              const std::string& fgColor,
+              const std::string& bgColor = "#000000");
 
     /// Adds \p dx and \p dy to corresponding game object's coordinates.
     /// Use to move actors only.
@@ -61,7 +69,8 @@ class GameObject
     /// Use to move actors only.
     bool MoveTo(int x, int y);
 
-    void Draw(const std::string& overrideFgColor = std::string(), const std::string& overrideBgColor = std::string());
+    void Draw(const std::string& overrideFgColor = std::string(),
+              const std::string& overrideBgColor = std::string());
 
     template <typename T>
     inline T* AddComponent()
