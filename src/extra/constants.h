@@ -189,15 +189,11 @@ enum class PlayerClass
 };
 
 enum class PlayerSkills
-{
-  // Use mana to recharge a wand (starting for Arcanist)
-  RECHARGE = 0,
-  // Use repair kit to repair a weapon (starting for Soldier)
-  REPAIR,
-  // Allows character to cast spells (starting for Arcanist)
-  SPELLCASTING,
-  // Autodetect traps
-  AWARENESS
+{  
+  RECHARGE = 0, // Use mana to recharge a wand (starting for Arcanist)
+  REPAIR,       // Use repair kit to repair a weapon (starting for Soldier)
+  SPELLCASTING, // Allows character to cast spells (starting for Arcanist)
+  AWARENESS     // Autodetect traps
 };
 
 enum class EquipmentCategory
@@ -315,32 +311,22 @@ enum class GemType
 
 enum class SpellType
 {
-  NONE = -1,
-  // 1 target, DEF
-  STRIKE = 0,
-  // 1 target, RES
-  MAGIC_MISSILE,
-  // 1 target, RES, slow
-  FROST,
-  // area damage, RES
-  FIREBALL,
-  // chains (self-damage possible), RES
-  LIGHTNING,
-  // pierces through, DEF
-  LASER,
-  // increase visibility radius, temporary
-  LIGHT,
+  NONE = -1,  
+  STRIKE = 0,      // 1 target, DEF
+  MAGIC_MISSILE,   // 1 target, RES
+  FROST,           // 1 target, RES, slow
+  FIREBALL,        // area damage, RES
+  LIGHTNING,       // chains (self-damage possible), RES
+  LASER,           // pierces through, DEF
+  LIGHT,           // increase visibility radius, temporary
   IDENTIFY,
-  MAGIC_MAPPING,
-  // TODO: teleport control?
-  TELEPORT,
-  // shows monsters (not all?), temporary
-  DETECT_MONSTERS,
+  MAGIC_MAPPING,  
+  TELEPORT,        // TODO: teleport control?
+  DETECT_MONSTERS, // shows monsters (not all?), temporary
   REMOVE_CURSE,
   HEAL,
-  NEUTRALIZE_POISON,
-  // nuff said
-  MANA_SHIELD
+  NEUTRALIZE_POISON,  
+  MANA_SHIELD      // nuff said
 };
 
 // Number means tier
@@ -736,7 +722,7 @@ struct ItemData
   // Used in inspection window
   std::string IdentifiedName;
 
-  // ? + object name + ?
+  // ? + GameObject::ObjectName + ?
   std::string UnidentifiedName;
 
   std::vector<std::string> UnidentifiedDescription;
@@ -1081,39 +1067,23 @@ namespace GlobalConstants
   };
 
   static const std::map<GemType, int> GemCostByType =
-  {
-    // 0
-    { GemType::WORTHLESS_GLASS, 0   },
-    // 200
-    { GemType::BLACK_OBSIDIAN,  20  },
-    // 300
-    { GemType::GREEN_JADE,      30  },
-    // 400
-    { GemType::PURPLE_FLUORITE, 40  },
-    // 600
-    { GemType::PURPLE_AMETHYST, 60  },
-    // 700
-    { GemType::RED_GARNET,      70  },
-    // 800
-    { GemType::WHITE_OPAL,      80  },
-    // 850
-    { GemType::BLACK_JETSTONE,  85  },
-    // 1000
-    { GemType::ORANGE_AMBER,    100 },
-    // 1500
-    { GemType::YELLOW_CITRINE,  150 },
-    // 1500
-    { GemType::BLUE_AQUAMARINE, 150 },
-    // 2500
-    { GemType::GREEN_EMERALD,   250 },
-    // 3000
-    { GemType::BLUE_SAPPHIRE,   300 },
-    // 3250
-    { GemType::ORANGE_JACINTH,  325 },
-    // 3500
-    { GemType::RED_RUBY,        350 },
-    // 4000
-    { GemType::WHITE_DIAMOND,   400 }
+  {    
+    { GemType::WORTHLESS_GLASS, 0   },  // 0
+    { GemType::BLACK_OBSIDIAN,  20  },  // 200
+    { GemType::GREEN_JADE,      30  },  // 300
+    { GemType::PURPLE_FLUORITE, 40  },  // 400
+    { GemType::PURPLE_AMETHYST, 60  },  // 600
+    { GemType::RED_GARNET,      70  },  // 700
+    { GemType::WHITE_OPAL,      80  },  // 800
+    { GemType::BLACK_JETSTONE,  85  },  // 850
+    { GemType::ORANGE_AMBER,    100 },  // 1000
+    { GemType::YELLOW_CITRINE,  150 },  // 1500
+    { GemType::BLUE_AQUAMARINE, 150 },  // 1500
+    { GemType::GREEN_EMERALD,   250 },  // 2500
+    { GemType::BLUE_SAPPHIRE,   300 },  // 3000
+    { GemType::ORANGE_JACINTH,  325 },  // 3250
+    { GemType::RED_RUBY,        350 },  // 3500
+    { GemType::WHITE_DIAMOND,   400 }   // 4000
   };
 
   static const std::map<WandMaterials, int> WandCapacityByMaterial =
