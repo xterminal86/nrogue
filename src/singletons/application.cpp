@@ -385,6 +385,7 @@ void Application::InitSDL()
 
   config.close();
 
+  // Trying to get values from config map
   if (_config.count("FILE") != 0)
   {
     TilesetFilename = _config["FILE"];
@@ -396,16 +397,23 @@ void Application::InitSDL()
     TileWidth = std::stoi(_config["TILE_W"]);
     TileHeight = std::stoi(_config["TILE_H"]);
   }
-  else
-  {
-    TileWidth = 8;
-    TileHeight = 16;
-  }
 
   if (_config.count("SCALE") != 0)
   {
     ScaleFactor = std::stof(_config["SCALE"]);
   }
+
+  // If tileset file can't be opened,
+  // fallback to default '8x16' scaled window size.
+  // Scale can still be read.
+  std::ifstream tileset(_config["FILE"]);
+  if (!tileset.is_open())
+  {
+    TileWidth = 8;
+    TileHeight = 16;
+  }
+
+  tileset.close();
 
   int scaledW = (int)((float)TileWidth * ScaleFactor);
   int scaledH = (int)((float)TileHeight * ScaleFactor);

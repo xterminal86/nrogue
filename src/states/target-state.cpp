@@ -321,10 +321,12 @@ void TargetState::FireWeapon()
     int index = RNG::Instance().RandomRange(0, rect.size());
     _cursorPosition = rect[index];
 
+    /*
     if (!outOfRange)
     {
       Printer::Instance().AddMessage("The shot goes astray");
     }
+    */
   }
 
   GameObject* stoppedAt = nullptr;
