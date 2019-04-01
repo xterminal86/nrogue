@@ -238,8 +238,8 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
 
 bool TargetState::SafetyCheck()
 {
-  bool posCheck = (_cursorPosition.X != _playerRef->PosX
-                && _cursorPosition.Y != _playerRef->PosY);
+  bool posCheck = (_cursorPosition.X == _playerRef->PosX
+                && _cursorPosition.Y == _playerRef->PosY);
 
   return posCheck;
 }
@@ -251,7 +251,7 @@ void TargetState::CheckCursorPositionBounds()
   auto line = Util::BresenhamLine({ _playerRef->PosX, _playerRef->PosY }, _cursorPosition);
   for (auto& p : line)
   {
-    if (!Util::IsInsideMap(p, Map::Instance().CurrentLevel->MapSize))
+    if (!Util::IsInsideMap(p, Map::Instance().CurrentLevel->MapSize, false))
     {
       isOutsideMap = true;
       break;
@@ -266,17 +266,19 @@ void TargetState::CheckCursorPositionBounds()
   }
 }
 
+/// It is assumed that we have valid weapon and ammunition
+/// in corresponding equipment slots
+/// (necessary checks were performed in MainState)
 void TargetState::FireWeapon()
-{  
-  // It is assumed that we have valid weapon and ammunition
-  // in corresponding equipment slots
-  // (necessary checks were performed in MainState)
-
-  if (!SafetyCheck())
+{
+  // Do not target self.
+  if (SafetyCheck())
   {
     return;
   }
 
+  // If cursor is outside map,
+  // pick last valid point as target end point.
   CheckCursorPositionBounds();
 
   _lastCursorPosition = _cursorPosition;
@@ -292,6 +294,8 @@ void TargetState::FireWeapon()
   {    
     auto rect = Util::GetEightPointsAround(_cursorPosition, Map::Instance().CurrentLevel->MapSize);
 
+    bool outOfRange = false;
+
     // If we shoot from point blank in a corridor,
     // we shouldn't accidentaly target ourselves
     // due to lack of skill.
@@ -300,9 +304,14 @@ void TargetState::FireWeapon()
       // Do not include points above weapon's maximum range as well.
       int d = Util::LinearDistance({ _playerRef->PosX, _playerRef->PosY }, rect[i]);
 
+      if (d > _weaponRef->Data.Range)
+      {
+        outOfRange = true;
+      }
+
       if ((rect[i].X == _playerRef->PosX
         && rect[i].Y == _playerRef->PosY)
-        || d > _weaponRef->Data.Range)
+        || outOfRange)
       {
         rect.erase(rect.begin() + i);
         break;
@@ -312,7 +321,10 @@ void TargetState::FireWeapon()
     int index = RNG::Instance().RandomRange(0, rect.size());
     _cursorPosition = rect[index];
 
-    Printer::Instance().AddMessage("The shot goes astray");
+    if (!outOfRange)
+    {
+      Printer::Instance().AddMessage("The shot goes astray");
+    }
   }
 
   GameObject* stoppedAt = nullptr;
