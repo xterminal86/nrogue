@@ -629,18 +629,14 @@ GameObject* GameObjectsFactory::CreateRandomWeapon(ItemPrefix prefixOverride)
     int index = RNG::Instance().RandomRange(0, GlobalConstants::WeaponNameByType.size());
     auto it = GlobalConstants::WeaponNameByType.begin();
     std::advance(it, index);
-    auto kvp = *it;
-
-    go = CreateWeapon(0, 0, kvp.first, prefixOverride);
+    go = CreateWeapon(0, 0, it->first, prefixOverride);
   }
   else
   {
     int index = RNG::Instance().RandomRange(0, GlobalConstants::RangedWeaponNameByType.size());
     auto it = GlobalConstants::RangedWeaponNameByType.begin();
     std::advance(it, index);
-    auto kvp = *it;
-
-    go = CreateRangedWeapon(0, 0, kvp.first, prefixOverride);
+    go = CreateRangedWeapon(0, 0, it->first, prefixOverride);
   }
 
   return go;
@@ -653,9 +649,7 @@ GameObject* GameObjectsFactory::CreateRandomArmor(ItemPrefix prefixOverride)
   int index = RNG::Instance().RandomRange(0, GlobalConstants::ArmorNameByType.size());
   auto it = GlobalConstants::ArmorNameByType.begin();
   std::advance(it, index);
-  auto kvp = *it;
-
-  go = CreateArmor(0, 0, kvp.first, prefixOverride);
+  go = CreateArmor(0, 0, it->first, prefixOverride);
 
   return go;
 }

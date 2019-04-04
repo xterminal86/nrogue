@@ -109,8 +109,10 @@ class GameObject
 
     void Update();
 
-    int PosX;
-    int PosY;
+    Attribute VisibilityRadius;
+
+    int PosX = 0;
+    int PosY = 0;
 
     bool Blocking = false;
     bool BlocksSight = false;
@@ -143,7 +145,7 @@ class GameObject
     void WaitForTurn();
 
     void AddEffect(EffectType type, int power, int duration);
-    void RemoveEffect(EffectType t);
+    void RemoveEffect(EffectType t);    
     bool HasEffect(EffectType t);
 
     Attributes Attrs;        
@@ -154,7 +156,7 @@ class GameObject
 
   protected:
     std::map<size_t, std::unique_ptr<Component>> _components;
-    std::vector<Effect> _activeEffects;
+    std::map<EffectType, Effect> _activeEffects;
 
     GameObject* _previousCell = nullptr;
     GameObject* _currentCell = nullptr;
@@ -166,6 +168,9 @@ class GameObject
 
     void MoveGameObject(int dx, int dy);
     void ProcessEffects();
+    void ApplyEffect(const Effect& e);
+    void UnapplyEffect(const Effect& e);
+    void EffectAction(const Effect& e);
 };
 
 #endif

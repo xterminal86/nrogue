@@ -137,7 +137,7 @@ void Player::CheckVisibility()
   auto& staticObjects = Map::Instance().CurrentLevel->StaticMapObjects;
 
   // FIXME: some objects can modify visibility radius
-  int radius = (map[PosX][PosY]->ObjectName == "Tree") ? VisibilityRadius / 4 : VisibilityRadius;
+  int radius = (map[PosX][PosY]->ObjectName == "Tree") ? VisibilityRadius.Get() / 4 : VisibilityRadius.Get();
 
   auto mapCells = Util::GetRectAroundPoint(PosX, PosY, tw / 2, th / 2, Map::Instance().CurrentLevel->MapSize);
   for (auto& cell : mapCells)

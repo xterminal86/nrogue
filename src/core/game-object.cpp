@@ -9,6 +9,7 @@
 GameObject::GameObject(MapLevelBase* levelOwner)
 {
   _levelOwner = levelOwner;
+  VisibilityRadius.Set(0);
 }
 
 void GameObject::Init(MapLevelBase* levelOwner, int x, int y, int avatar, const std::string& fgColor, const std::string& bgColor)
@@ -186,6 +187,8 @@ void GameObject::FinishTurn()
     _healthRegenTurnsCounter = 0;
     Attrs.HP.Add(1);
   }
+
+  ProcessEffects();
 }
 
 void GameObject::MoveGameObject(int dx, int dy)
@@ -202,64 +205,82 @@ void GameObject::MoveGameObject(int dx, int dy)
 
 void GameObject::AddEffect(EffectType type, int power, int duration)
 {
-  Effect e = { type, power, duration };
+  if (HasEffect(type))
+  {
+    // NOTE: possibly op
 
-  switch (type)
+    _activeEffects[type].Power += power;
+    _activeEffects[type].Duration += duration;
+    ApplyEffect(_activeEffects[type]);
+  }
+  else
+  {
+    Effect e = { type, power, duration };
+    ApplyEffect(e);
+    _activeEffects[type] = e;
+  }
+}
+
+void GameObject::ApplyEffect(const Effect& e)
+{
+  switch (e.Type)
   {
     case EffectType::ILLUMINATED:
     {
-      //VisibilityRadius += power;
+      VisibilityRadius.Modifier = e.Power;
     }
     break;
   }
+}
 
-  _activeEffects.push_back(e);
+void GameObject::UnapplyEffect(const Effect& e)
+{
+  switch (e.Type)
+  {
+    case EffectType::ILLUMINATED:
+    {
+      VisibilityRadius.Modifier = 0;
+    }
+    break;
+  }
 }
 
 void GameObject::RemoveEffect(EffectType t)
-{
-  for (int i = 0; i < _activeEffects.size(); i++)
+{  
+  if (HasEffect(t))
   {
-    if (_activeEffects[i].Type == t)
-    {
-      /*
-      if (_activeEffects[i].Type == EffectType::ILLUMINATED)
-      {
-        VisibilityRadius -= _activeEffects[i].Power;
-      }
-      */
-
-      _activeEffects.erase(_activeEffects.begin() + i);
-      break;
-    }
+    _activeEffects.erase(t);
   }
 }
 
 bool GameObject::HasEffect(EffectType t)
-{
-  for (auto& i : _activeEffects)
-  {
-    if (i.Type == t)
-    {
-      return true;
-    }
-  }
-
-  return false;
+{  
+  return (_activeEffects.count(t) != 0);
 }
 
 void GameObject::ProcessEffects()
 {
   for (int i = 0; i < _activeEffects.size(); i++)
   {
-    if (_activeEffects[i].Timeout <= 0)
+    auto it = _activeEffects.begin();
+    std::advance(it, i);
+
+    if (it->second.Duration <= 0)
     {
-      _activeEffects.erase(_activeEffects.begin() + i);
+      UnapplyEffect(it->second);
+      _activeEffects.erase(it);
     }
     else
     {
-      _activeEffects[i].Timeout--;
+      EffectAction(it->second);
+      it->second.Duration--;
     }
   }
 }
 
+void GameObject::EffectAction(const Effect& e)
+{
+  switch (e.Type)
+  {
+  }
+}

@@ -24,7 +24,7 @@ struct Effect
   {
     Type = t;
     Power = p;
-    Timeout = to;
+    Duration = to;
   }
 
   EffectType Type = EffectType::NONE;
@@ -37,7 +37,7 @@ struct Effect
 
   // After this amount of turns passed, effect autoremoves itself.
   // -1 means it lasts until removed explicitly.
-  int Timeout = 0;
+  int Duration = 0;
 };
 
 #endif // EFFECT_H

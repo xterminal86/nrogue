@@ -48,7 +48,7 @@ void TargetState::FindTargets()
 {
   _targets.clear();
 
-  int r = _playerRef->VisibilityRadius;
+  int r = _playerRef->VisibilityRadius.Get();
   int px = _playerRef->PosX;
   int py = _playerRef->PosY;
 

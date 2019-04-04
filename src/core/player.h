@@ -28,8 +28,6 @@ class Player : public GameObject
     void CheckVisibility();
     bool TryToAttack(int dx, int dy);
 
-    int VisibilityRadius;
-
     int SelectedClass;
 
     PlayerClass GetClass()

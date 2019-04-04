@@ -25,7 +25,7 @@ void Map::Init()
   // Give player reference to current level
   Application::Instance().PlayerInstance.SetLevelOwner(CurrentLevel);
 
-  Application::Instance().PlayerInstance.VisibilityRadius = CurrentLevel->VisibilityRadius;
+  Application::Instance().PlayerInstance.VisibilityRadius.Set(CurrentLevel->VisibilityRadius);
 
   _mapVisitFirstTime[MapType::MINES_1] = false;
   _mapVisitFirstTime[MapType::CAVES_1] = false;
@@ -276,7 +276,7 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
 
   player.SetLevelOwner(CurrentLevel);
   player.MoveTo(pos.X, pos.Y);
-  player.VisibilityRadius = CurrentLevel->VisibilityRadius;
+  player.VisibilityRadius.Set(CurrentLevel->VisibilityRadius);
 
   CurrentLevel->AdjustCamera();
 }
@@ -332,7 +332,7 @@ void Map::TeleportToExistingLevel(MapType levelToChange, Position teleportTo)
 
   player.SetLevelOwner(CurrentLevel);
   player.MoveTo(teleportTo.X, teleportTo.Y);
-  player.VisibilityRadius = CurrentLevel->VisibilityRadius;
+  player.VisibilityRadius.Set(CurrentLevel->VisibilityRadius);
 
   CurrentLevel->AdjustCamera();
 }
