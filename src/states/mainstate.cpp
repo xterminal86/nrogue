@@ -464,8 +464,8 @@ void MainState::ProcessRangedWeapon()
   if (Map::Instance().CurrentLevel->Peaceful)
   {
     // FIXME: debug
-    //PrintNoAttackInTown();
-    //return;
+    PrintNoAttackInTown();
+    return;
   }
 
   // TODO: wands in both hands?
