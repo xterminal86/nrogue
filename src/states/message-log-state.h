@@ -6,10 +6,7 @@
 class MessageLogState : public GameState
 {
   public:
-    void Prepare() override
-    {
-      _scrollPosition = 0;
-    }
+    void Prepare() override;
 
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;

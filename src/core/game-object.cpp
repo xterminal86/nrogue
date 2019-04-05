@@ -12,7 +12,22 @@ GameObject::GameObject(MapLevelBase* levelOwner)
   VisibilityRadius.Set(0);
 }
 
-void GameObject::Init(MapLevelBase* levelOwner, int x, int y, int avatar, const std::string& fgColor, const std::string& bgColor)
+GameObject::GameObject(MapLevelBase *levelOwner,
+                       int x,
+                       int y,
+                       int avatar,
+                       const std::string &htmlColor,
+                       const std::string &bgColor)
+{
+  Init(levelOwner, x, y, avatar, htmlColor, bgColor);
+}
+
+void GameObject::Init(MapLevelBase* levelOwner,
+                      int x,
+                      int y,
+                      int avatar,
+                      const std::string& fgColor,
+                      const std::string& bgColor)
 {
   PosX = x;
   PosY = y;
@@ -118,15 +133,9 @@ void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical)
     auto str = Util::StringFormat("%s was hit for %i damage", ObjectName.data(), amount);
     Printer::Instance().AddMessage(str);
 
-    if (Attrs.HP.CurrentValue <= 0)
+    if (!IsAlive())
     {
-      if (Type != GameObjectType::HARMLESS)
-      {
-        auto go = GameObjectsFactory::Instance().CreateRemains(this);
-        _levelOwner->InsertGameObject(go);
-      }
-
-      IsDestroyed = true;
+      MarkAndCreateRemains();
 
       std::string verb = (Type == GameObjectType::HARMLESS)
                        ? "destroyed"
@@ -171,6 +180,11 @@ void GameObject::WaitForTurn()
   Attrs.ActionMeter += speedIncrement;
 }
 
+bool GameObject::IsAlive()
+{
+  return (Attrs.HP.CurrentValue > 0);
+}
+
 void GameObject::FinishTurn()
 {
   Attrs.ActionMeter -= GlobalConstants::TurnReadyValue;
@@ -189,6 +203,11 @@ void GameObject::FinishTurn()
   }
 
   ProcessEffects();
+
+  if (!IsAlive())
+  {
+    MarkAndCreateRemains();
+  }
 }
 
 void GameObject::MoveGameObject(int dx, int dy)
@@ -249,6 +268,7 @@ void GameObject::RemoveEffect(EffectType t)
 {  
   if (HasEffect(t))
   {
+    UnapplyEffect(_activeEffects[t]);
     _activeEffects.erase(t);
   }
 }
@@ -282,5 +302,47 @@ void GameObject::EffectAction(const Effect& e)
 {
   switch (e.Type)
   {
+    case EffectType::POISONED:
+      Attrs.HP.Add(-e.Power);
+      break;
   }
+}
+
+void GameObject::MarkAndCreateRemains()
+{
+  if (Type != GameObjectType::HARMLESS)
+  {
+    auto go = GameObjectsFactory::Instance().CreateRemains(this);
+    _levelOwner->InsertGameObject(go);
+  }
+
+  IsDestroyed = true;
+}
+
+bool GameObject::Interact()
+{
+  // http://www.cplusplus.com/reference/functional/function/target_type/
+  //
+  // Return value
+  // The type_info object that corresponds to the type of the target,
+  // or typeid(void) if the object is an empty function.
+
+  if (InteractionCallback.target_type() != typeid(void))
+  {
+    InteractionCallback();
+
+    return true;
+  }
+
+  return false;
+}
+
+void GameObject::SetLevelOwner(MapLevelBase *levelOwner)
+{
+  _levelOwner = levelOwner;
+}
+
+size_t GameObject::ComponentsSize()
+{
+  return _components.size();
 }

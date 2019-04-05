@@ -235,3 +235,8 @@ void TraderComponent::CreateBlacksmithItems()
     }
   }
 }
+
+TraderRole TraderComponent::Type()
+{
+  return _traderType;
+}

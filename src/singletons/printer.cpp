@@ -797,3 +797,28 @@ std::vector<std::string> Printer::GetLastMessages()
 
   return _lastMessages;
 }
+
+std::string Printer::GetLastMessage()
+{
+  return (_inGameMessages.size() > 0) ? _inGameMessages.front() : std::string();
+}
+
+void Printer::ResetMessagesToDisplay()
+{
+  _lastMessages.clear();
+  _lastMessagesToDisplay = 0;
+}
+
+std::vector<std::string>& Printer::Messages()
+{
+  return _inGameMessages;
+}
+
+int Printer::ColorsUsed()
+{
+  #ifndef USE_SDL
+  return _colorMap.size();
+  #else
+  return -1;
+  #endif
+}

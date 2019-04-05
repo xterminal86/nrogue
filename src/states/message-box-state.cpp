@@ -120,3 +120,16 @@ void MessageBoxState::Update(bool forceUpdate)
     Printer::Instance().Render();
   }
 }
+
+void MessageBoxState::SetMessage(MessageBoxType type,
+                                 const std::string& header,
+                                 const std::vector<std::string>& message,
+                                 const std::string& borderColor,
+                                 const std::string& bgColor)
+{
+  _type = type;
+  _header = header;
+  _message = message;
+  _bgColor = bgColor;
+  _borderColor = borderColor;
+}

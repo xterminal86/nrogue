@@ -27,33 +27,11 @@ class GameObject
                int x, int y,
                int avatar,
                const std::string& htmlColor,
-               const std::string& bgColor = "#000000")
-    {      
-      Init(levelOwner, x, y, avatar, htmlColor, bgColor);
-    }
+               const std::string& bgColor = "#000000");
 
-    void SetLevelOwner(MapLevelBase* levelOwner)
-    {
-      _levelOwner = levelOwner;
-    }
+    void SetLevelOwner(MapLevelBase* levelOwner);
 
-    bool Interact()
-    {
-      // http://www.cplusplus.com/reference/functional/function/target_type/
-      //
-      // Return value
-      // The type_info object that corresponds to the type of the target,
-      // or typeid(void) if the object is an empty function.
-
-      if (InteractionCallback.target_type() != typeid(void))
-      {
-        InteractionCallback();
-
-        return true;
-      }
-
-      return false;
-    }
+    bool Interact();
 
     void Init(MapLevelBase* levelOwner,
               int x, int y,
@@ -135,10 +113,7 @@ class GameObject
 
     std::function<void()> InteractionCallback;
 
-    size_t ComponentsSize()
-    {
-      return _components.size();
-    }
+    size_t ComponentsSize();
 
     void ReceiveDamage(GameObject* from, int amount, bool isMagical);
     void FinishTurn();
@@ -147,6 +122,7 @@ class GameObject
     void AddEffect(EffectType type, int power, int duration);
     void RemoveEffect(EffectType t);    
     bool HasEffect(EffectType t);
+    bool IsAlive();
 
     Attributes Attrs;        
 
@@ -171,6 +147,7 @@ class GameObject
     void ApplyEffect(const Effect& e);
     void UnapplyEffect(const Effect& e);
     void EffectAction(const Effect& e);
+    void MarkAndCreateRemains();
 };
 
 #endif

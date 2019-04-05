@@ -19,7 +19,7 @@ class Position;
 class Player : public GameObject
 {
   public:    
-    Player() {}
+    Player() = default;
 
     void Init();
 
@@ -30,15 +30,9 @@ class Player : public GameObject
 
     int SelectedClass;
 
-    PlayerClass GetClass()
-    {
-      return _classesMap[SelectedClass];
-    }
+    PlayerClass GetClass();
 
-    std::string& GetClassName()
-    {
-      return _classesName[SelectedClass];
-    }
+    std::string& GetClassName();
 
     void Draw();
     void MeleeAttack(GameObject* go, bool alwaysHit = false);
@@ -64,10 +58,7 @@ class Player : public GameObject
     void RecalculateStatsModifiers();
     void AddBonusItems();
 
-    bool HasSkill(PlayerSkills skillToCheck)
-    {
-      return (SkillLevelBySkill.count(skillToCheck) == 1);
-    }
+    bool HasSkill(PlayerSkills skillToCheck);
 
     int Money = 0;
 

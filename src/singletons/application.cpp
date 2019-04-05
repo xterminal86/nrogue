@@ -470,3 +470,11 @@ void Application::Cleanup()
 
   printf("Goodbye!\n");
 }
+
+void Application::DrawCurrentState()
+{
+  if (_currentState != nullptr)
+  {
+    _currentState->Update(true);
+  }
+}

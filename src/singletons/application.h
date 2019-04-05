@@ -35,13 +35,7 @@ class Application : public Singleton<Application>
     /// Assuming that _currentState is MainState,
     /// call this to force redraw screen in that state
     /// only when needed ( see Player::WaitForTurn() )
-    void DrawCurrentState()
-    {
-      if (_currentState != nullptr)
-      {
-        _currentState->Update(true);
-      }
-    }
+    void DrawCurrentState();
 
     GameState* GetGameStateRefByName(GameStates stateName);
 

@@ -5,6 +5,11 @@
 #include "constants.h"
 #include "util.h"
 
+void MessageLogState::Prepare()
+{
+  _scrollPosition = 0;
+}
+
 void MessageLogState::HandleInput()
 {
   _keyPressed = GetKeyDown();

@@ -24,10 +24,7 @@ class TraderComponent : public Component
 
     AINPC* NpcRef = nullptr;
 
-    TraderRole Type()
-    {
-      return _traderType;
-    }
+    TraderRole Type();
 
   private:    
     int _maxItems = 0;

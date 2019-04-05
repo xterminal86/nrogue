@@ -1435,3 +1435,18 @@ void Player::AddBonusItems()
     break;
   }
 }
+
+PlayerClass Player::GetClass()
+{
+  return _classesMap[SelectedClass];
+}
+
+std::string& Player::GetClassName()
+{
+  return _classesName[SelectedClass];
+}
+
+bool Player::HasSkill(PlayerSkills skillToCheck)
+{
+  return (SkillLevelBySkill.count(skillToCheck) == 1);
+}

@@ -113,32 +113,18 @@ class Printer : public Singleton<Printer>
     /// Add message to the game log
     void AddMessage(const std::string& message);
 
-    std::string GetLastMessage()
-    {
-      return (_inGameMessages.size() > 0) ? _inGameMessages.front() : std::string();
-    }
+    std::string GetLastMessage();
 
-    void ResetMessagesToDisplay()
-    {
-      _lastMessages.clear();
-      _lastMessagesToDisplay = 0;
-    }
+    void ResetMessagesToDisplay();
 
     std::vector<std::string> GetLastMessages();
 
-    std::vector<std::string>& Messages() { return _inGameMessages; }
+    std::vector<std::string>& Messages();
 
     bool ShowLastMessage;
 
     // NOTE: for debugging purposes
-    int ColorsUsed()
-    {
-      #ifndef USE_SDL
-      return _colorMap.size();
-      #else
-      return -1;
-      #endif
-    }
+    int ColorsUsed();
 
   private:
 #ifndef USE_SDL
