@@ -95,6 +95,8 @@ void FeatureRooms::Generate(Position mapSize, Position roomSizes, int maxIterati
 
       if (IsAreaWalls(newPos, { roomSizeX, roomSizeY }, buildDir))
       {
+        // TODO: moar room types
+
         _map[doorPos.X][doorPos.Y].Image = '+';
 
         CreateRoom(newPos, { roomSizeX, roomSizeY }, buildDir);
