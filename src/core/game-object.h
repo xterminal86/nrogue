@@ -119,6 +119,8 @@ class GameObject
     void FinishTurn();
     void WaitForTurn();
 
+    virtual void LevelUp();
+
     void AddEffect(EffectType type, int power, int duration);
     void RemoveEffect(EffectType t);    
     bool HasEffect(EffectType t);
@@ -130,7 +132,7 @@ class GameObject
 
     GameObjectType Type = GameObjectType::HARMLESS;
 
-  protected:
+  protected:    
     std::map<size_t, std::unique_ptr<Component>> _components;
     std::map<EffectType, Effect> _activeEffects;
 
@@ -148,6 +150,8 @@ class GameObject
     void UnapplyEffect(const Effect& e);
     void EffectAction(const Effect& e);
     void MarkAndCreateRemains();
+
+    bool CanRaiseAttribute(Attribute& attr);
 };
 
 #endif

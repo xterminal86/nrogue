@@ -727,6 +727,7 @@ bool Player::ShouldBreak(ItemComponent *ic)
 
 void Player::AwardExperience(int amount)
 {
+  // FIXME: exp value is too unbalanced
   int amnt = amount * (Attrs.Exp.Talents + 1);
 
   Attrs.Exp.CurrentValue += amnt;
@@ -911,24 +912,6 @@ void Player::LevelDown()
   */
 }
 
-bool Player::CanRaiseAttribute(Attribute& attr)
-{
-  int chance = GlobalConstants::AttributeMinimumRaiseChance;
-
-  int iterations = attr.Talents;
-  for (int i = 0; i < iterations; i++)
-  {
-    if (Util::Rolld100(chance))
-    {
-      return true;
-    }
-
-    chance += GlobalConstants::AttributeIncreasedRaiseStep;
-  }
-
-  return Util::Rolld100(chance);
-}
-
 void Player::ProcessKill(GameObject* monster)
 {
   if (monster->Type == GameObjectType::HARMLESS)
@@ -965,6 +948,9 @@ void Player::WaitForTurn()
   // (assuming Application::_currentState is MainState)
   if (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
   {
+    // FIXME: try to optimize.
+    // When you move player in dungeons while holding direction key,
+    // it gets "jaggy" due to this constant redrawing of stuff.
     Application::Instance().DrawCurrentState();
   }
 }

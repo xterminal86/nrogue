@@ -92,7 +92,12 @@ void AINPC::Init(NPCType type, bool standing)
     default:
       SetDataDefault();
       break;
-  }  
+  }
+
+  for (int i = 0; i < 19; i++)
+  {
+    AIComponentRef->OwnerGameObject->LevelUp();
+  }
 }
 
 void AINPC::RandomMovement()
@@ -111,6 +116,11 @@ void AINPC::RandomMovement()
 
 void AINPC::SetDataClaire()
 {
+  AIComponentRef->OwnerGameObject->Attrs.Str.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 2;
+  AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 1;
+  AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 3;
+
   AIComponentRef->OwnerGameObject->ObjectName = "woman";
 
   Data.IsMale = false;
@@ -157,6 +167,11 @@ void AINPC::SetDataClaire()
 
 void AINPC::SetDataCloud()
 {
+  AIComponentRef->OwnerGameObject->Attrs.Str.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 2;
+  AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 1;
+  AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 3;
+
   AIComponentRef->OwnerGameObject->ObjectName = "man";
 
   Data.UnacquaintedDescription = "You see a man with ridiculously big sword";
@@ -206,6 +221,11 @@ void AINPC::SetDataCloud()
 
 void AINPC::SetDataIan()
 {
+  AIComponentRef->OwnerGameObject->Attrs.Spd.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 2;
+  AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 1;
+  AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 1;
+
   AIComponentRef->OwnerGameObject->ObjectName = "man";
 
   Data.UnacquaintedDescription = "You see a man wearing a mask";
@@ -332,6 +352,11 @@ void AINPC::SetDataTigra()
 
 void AINPC::SetDataSteve()
 {
+  AIComponentRef->OwnerGameObject->Attrs.Spd.Talents = 1;
+  AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 1;
+  AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 2;
+
   AIComponentRef->OwnerGameObject->ObjectName = "man";
 
   Data.UnacquaintedDescription = "You see a blocky looking man carrying a pickaxe";
@@ -401,6 +426,10 @@ void AINPC::SetDataSteve()
 
 void AINPC::SetDataGimley()
 {
+  AIComponentRef->OwnerGameObject->Attrs.Str.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 3;
+
   AIComponentRef->OwnerGameObject->ObjectName = "man";
 
   Data.UnacquaintedDescription = "You see a short but stubby looking guy with a long beard";
@@ -446,6 +475,11 @@ void AINPC::SetDataGimley()
 
 void AINPC::SetDataMartin()
 {
+  AIComponentRef->OwnerGameObject->Attrs.Mag.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.Res.Talents = 2;
+  AIComponentRef->OwnerGameObject->Attrs.Spd.Talents = 1;
+  AIComponentRef->OwnerGameObject->Attrs.MP.Talents = 3;
+
   AIComponentRef->OwnerGameObject->ObjectName = "man";
 
   Data.UnacquaintedDescription = "You see a local cleric";
@@ -488,6 +522,11 @@ void AINPC::SetDataMartin()
 
 void AINPC::SetDataCasey()
 {
+  AIComponentRef->OwnerGameObject->Attrs.Spd.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 1;
+
   AIComponentRef->OwnerGameObject->ObjectName = "man";
 
   Data.UnacquaintedDescription = "You see a man wearing white cook costume";
@@ -514,6 +553,11 @@ void AINPC::SetDataCasey()
 
 void AINPC::SetDataMaya()
 {
+  AIComponentRef->OwnerGameObject->Attrs.Spd.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.Mag.Talents = 2;
+  AIComponentRef->OwnerGameObject->Attrs.Res.Talents = 2;
+  AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 1;
+
   AIComponentRef->OwnerGameObject->ObjectName = "woman";
 
   Data.IsMale = false;
@@ -574,6 +618,11 @@ void AINPC::SetDataDefault()
 
 void AINPC::SetDataGriswold()
 {
+  AIComponentRef->OwnerGameObject->Attrs.Str.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 2;
+  AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 1;
+  AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 3;
+
   AIComponentRef->OwnerGameObject->ObjectName = "man";
 
   Data.IsMale = true;

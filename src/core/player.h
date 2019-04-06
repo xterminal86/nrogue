@@ -52,7 +52,7 @@ class Player : public GameObject
     std::map<EquipmentCategory, std::vector<ItemComponent*>> EquipmentByCategory;
 
     void AwardExperience(int amount);
-    void LevelUp();
+    void LevelUp() override;
     void LevelDown();
 
     void RecalculateStatsModifiers();
@@ -83,7 +83,6 @@ class Player : public GameObject
     void SetThiefAttrs();
     void SetArcanistAttrs();
 
-    bool CanRaiseAttribute(Attribute& attr);
     void ProcessKill(GameObject* monster);
 
     void ProcessStarvation();

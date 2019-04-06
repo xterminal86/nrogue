@@ -174,6 +174,7 @@ void GameObject::WaitForTurn()
   // In towns SPD is ignored
   if (Map::Instance().CurrentLevel->Peaceful)
   {
+    speedIncrement = 1;
     Attrs.ActionMeter = GlobalConstants::TurnReadyValue - 1;
   }  
 
@@ -345,4 +346,65 @@ void GameObject::SetLevelOwner(MapLevelBase *levelOwner)
 size_t GameObject::ComponentsSize()
 {
   return _components.size();
+}
+
+void GameObject::LevelUp()
+{
+  std::map<int, std::pair<std::string, Attribute&>> mainAttributes =
+  {
+    { 0, { "STR", Attrs.Str } },
+    { 1, { "DEF", Attrs.Def } },
+    { 2, { "MAG", Attrs.Mag } },
+    { 3, { "RES", Attrs.Res } },
+    { 4, { "SKL", Attrs.Skl } },
+    { 5, { "SPD", Attrs.Spd } }
+  };
+
+  for (auto& i : mainAttributes)
+  {
+    auto kvp = i.second;
+
+    if (CanRaiseAttribute(kvp.second))
+    {
+      kvp.second.OriginalValue++;
+      kvp.second.CurrentValue = kvp.second.OriginalValue;
+    }
+  }
+
+  // HP and MP
+
+  int minRndHp = (Attrs.HP.Talents + 1);
+  int maxRndHp = 2 * (Attrs.HP.Talents + 1);
+
+  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp);
+  Attrs.HP.OriginalValue += hpToAdd;
+  Attrs.HP.CurrentValue = Attrs.HP.OriginalValue;
+
+  int minRndMp = Attrs.Mag.OriginalValue;
+  int maxRndMp = Attrs.Mag.OriginalValue + Attrs.MP.Talents;
+
+  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp);
+  Attrs.MP.OriginalValue += mpToAdd;
+  Attrs.MP.CurrentValue = Attrs.MP.OriginalValue;
+
+  Attrs.Lvl.OriginalValue++;
+  Attrs.Lvl.CurrentValue = Attrs.Lvl.OriginalValue;
+}
+
+bool GameObject::CanRaiseAttribute(Attribute& attr)
+{
+  int chance = GlobalConstants::AttributeMinimumRaiseChance;
+
+  int iterations = attr.Talents;
+  for (int i = 0; i < iterations; i++)
+  {
+    if (Util::Rolld100(chance))
+    {
+      return true;
+    }
+
+    chance += GlobalConstants::AttributeIncreasedRaiseStep;
+  }
+
+  return Util::Rolld100(chance);
 }

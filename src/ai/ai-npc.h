@@ -38,7 +38,7 @@ class AINPC : public AIModelBase
 
     NPCData Data;
 
-  private:
+  private:    
     NPCType _npcType;
 
     void RandomMovement();
@@ -56,7 +56,7 @@ class AINPC : public AIModelBase
     void SetDataMaya();
     void SetDataGriswold();
 
-    void SetDataDefault();
+    void SetDataDefault();    
 };
 
 #endif // AINPC_H
