@@ -801,7 +801,7 @@ namespace GlobalConstants
 
   static const int MaxNameLength = 24;
   static const int HPMPBarLength = 20;
-  static const int AttributeMinimumRaiseChance = 15;
+  static const int AttributeMinimumRaiseChance = 5;
   static const int AttributeIncreasedRaiseStep = 25;
   static const int AwardedExperienceStep = 5;
   static const int AwardedExpDefault = 20;
