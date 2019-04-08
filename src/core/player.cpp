@@ -727,7 +727,6 @@ bool Player::ShouldBreak(ItemComponent *ic)
 
 void Player::AwardExperience(int amount)
 {
-  // FIXME: exp value is too unbalanced
   int amnt = amount * (Attrs.Exp.Talents + 1);
 
   Attrs.Exp.CurrentValue += amnt;
@@ -747,7 +746,7 @@ void Player::AwardExperience(int amount)
   }
 }
 
-void Player::LevelUp()
+void Player::LevelUp(int baseHpOverride)
 {
   for (auto& kvp : _statRaisesMap)
   {
@@ -919,12 +918,16 @@ void Player::ProcessKill(GameObject* monster)
     return;
   }
 
+  // FIXME: exp value is too unbalanced
+
   int dungeonLvl = Map::Instance().CurrentLevel->DungeonLevel;
   int defaultExp = monster->Attrs.Rating() - Attrs.Rating();
 
+  defaultExp = monster->Attrs.Rating();
   defaultExp = Util::Clamp(defaultExp, 1, GlobalConstants::AwardedExpMax);
 
-  int exp = defaultExp * dungeonLvl; // + dungeonLvl
+  //int exp = defaultExp * dungeonLvl; // + dungeonLvl
+  int exp = defaultExp;
 
   GameObjectsFactory::Instance().GenerateLootIfPossible(monster->PosX, monster->PosY, monster->Type);
 

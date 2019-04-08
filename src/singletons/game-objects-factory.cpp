@@ -199,7 +199,18 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
     int pl = _playerRef->Attrs.Lvl.CurrentValue;
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
     int difficulty = std::max(pl, dl); //pl + dl;
+    int diffOffset = RNG::Instance().RandomRange(0, 3);
 
+    difficulty += diffOffset;
+
+    go->Attrs.Str.Talents = 3;
+
+    for (int i = 0; i < difficulty; i++)
+    {
+      go->LevelUp(3);
+    }
+
+    /*
     int randomStr = RNG::Instance().RandomRange(0 * difficulty, 1 * difficulty);
     int randomDef = RNG::Instance().RandomRange(0, 1 * difficulty);
     int randomSkl = RNG::Instance().RandomRange(0, 1 * difficulty);
@@ -213,6 +224,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
     go->Attrs.HP.Set(randomHp);
     go->Attrs.Spd.Set(randomSpd);
     go->Attrs.Skl.Set(randomSkl);
+    */
   }
 
   ai->ChangeModel<AIMonsterBasic>();
@@ -241,7 +253,19 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
     int pl = _playerRef->Attrs.Lvl.CurrentValue;
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
     int difficulty = std::max(pl, dl); //pl + dl;
+    int diffOffset = RNG::Instance().RandomRange(0, 3);
 
+    difficulty += diffOffset;
+
+    go->Attrs.Def.Talents = 2;
+    go->Attrs.Spd.Talents = 2;
+
+    for (int i = 0; i < difficulty; i++)
+    {
+      go->LevelUp();
+    }
+
+    /*
     int randomStr = RNG::Instance().RandomRange(0 * difficulty, 1 * difficulty);
     int randomDef = RNG::Instance().RandomRange(0, 1 * difficulty);
     int randomSkl = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
@@ -255,6 +279,7 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
     go->Attrs.HP.Set(randomHp);
     go->Attrs.Spd.Set(randomSpd);
     go->Attrs.Skl.Set(randomSkl);
+    */
   }
 
   ai->ChangeModel<AIMonsterBat>();
@@ -283,7 +308,20 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
     int pl = _playerRef->Attrs.Lvl.CurrentValue;
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
     int difficulty = std::max(pl, dl); //pl + dl;
+    int diffOffset = RNG::Instance().RandomRange(0, 3);
 
+    difficulty += diffOffset;
+
+    go->Attrs.Str.Talents = 2;
+    go->Attrs.Def.Talents = 2;
+    go->Attrs.HP.Talents = 2;
+
+    for (int i = 0; i < difficulty; i++)
+    {
+      go->LevelUp(5);
+    }
+
+    /*
     int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
     int randomDef = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
     int randomSkl = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
@@ -297,6 +335,7 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
     go->Attrs.HP.Set(randomHp);
     go->Attrs.Spd.Set(randomSpd);
     go->Attrs.Skl.Set(randomSkl);
+    */
   }
 
   ai->ChangeModel<AIMonsterBasic>();

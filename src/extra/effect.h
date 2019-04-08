@@ -12,8 +12,24 @@ enum class EffectType
   BURNING,      // Take damage each turn, gain illuminated
   FROZEN,       // SPD penalty
   INFRAVISION,  // See actors in visibility radius through walls
+  BLINDNESS,    // Reduced visibility radius
   INVISIBLE,    // Monsters can't see you (unless they can via infravision)
   LEVITATE      // Nuff said
+};
+
+static const std::map<EffectType, std::string> EffectNameByType =
+{
+  { EffectType::ILLUMINATED, "Lgt" },
+  { EffectType::PARALYZED,   "Par" },
+  { EffectType::POISONED,    "Psd" },
+  { EffectType::REGEN,       "Reg" },
+  { EffectType::REFLECT,     "Ref" },
+  { EffectType::BURNING,     "Bur" },
+  { EffectType::FROZEN,      "Frz" },
+  { EffectType::INFRAVISION, "Ivs" },
+  { EffectType::BLINDNESS,   "Bli" },
+  { EffectType::INVISIBLE,   "Hid" },
+  { EffectType::LEVITATE,    "Lev" },
 };
 
 struct Effect

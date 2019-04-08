@@ -52,7 +52,7 @@ class Player : public GameObject
     std::map<EquipmentCategory, std::vector<ItemComponent*>> EquipmentByCategory;
 
     void AwardExperience(int amount);
-    void LevelUp() override;
+    void LevelUp(int baseHpOverride = -1) override;
     void LevelDown();
 
     void RecalculateStatsModifiers();

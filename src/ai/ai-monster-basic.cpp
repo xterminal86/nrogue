@@ -151,9 +151,7 @@ bool AIMonsterBasic::Attack(Player* player)
       dmg = 1;
     }
 
-    std::string msg = Util::StringFormat("You were hit for %i damage", dmg);
-
-    Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, msg, "#FF0000");
+    Application::Instance().DisplayAttack(player, GlobalConstants::DisplayAttackDelayMs, "", "#FF0000");
 
     player->ReceiveDamage(AIComponentRef->OwnerGameObject, dmg, false);
 

@@ -547,8 +547,11 @@ void MainState::ProcessWand(ItemComponent* wand)
   {
     switch (wand->Data.SpellHeld)
     {
-      // TODO:
+      // TODO: complete other wands
+      // (see GameObjectsFactory::CreateRandomWand())
+
       case SpellType::LIGHT:
+        ProcessWandOfLight(wand);
         break;
 
       case SpellType::FIREBALL:
@@ -744,6 +747,16 @@ void MainState::DisplayStatusIcons()
       Printer::Instance().PrintFB(startPos + 6, th - 3, '^', "#FFFF00");
     }
   }
+
+  // Active effects
+
+  int offsetX = startPos;
+  for (auto& i : _playerRef->Effects())
+  {
+    auto shortName = EffectNameByType.at(i.first);
+    Printer::Instance().PrintFB(offsetX, th - 4, shortName, Printer::kAlignLeft, "#FFFFFF");
+    offsetX += 4;
+  }
 }
 
 void MainState::PrintNoAttackInTown()
@@ -751,4 +764,40 @@ void MainState::PrintNoAttackInTown()
   std::vector<std::string> variants = { "Not here", "Not in town" };
   int index = RNG::Instance().RandomRange(0, 2);
   Printer::Instance().AddMessage(variants[index]);
+}
+
+void MainState::ProcessWandOfLight(ItemComponent* wand)
+{
+  Printer::Instance().AddMessage("You invoke the wand");
+
+  int basePower = 10;
+  int baseDuration = 100;
+
+  int duration = baseDuration;
+  int power = basePower;
+
+  if (wand->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    if (!wand->Data.IsPrefixDiscovered)
+    {
+      Printer::Instance().AddMessage("The golden light surrounds you!");
+    }
+
+    wand->Data.IsPrefixDiscovered = true;
+
+    duration *= 2;
+    power += 5;
+  }
+  else if (wand->Data.Prefix == ItemPrefix::CURSED)
+  {
+    if (!wand->Data.IsPrefixDiscovered)
+    {
+      Printer::Instance().AddMessage("You are surrounded by darkness!");
+    }
+
+    wand->Data.IsPrefixDiscovered = true;
+    power = -5;
+  }
+
+  _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration);
 }

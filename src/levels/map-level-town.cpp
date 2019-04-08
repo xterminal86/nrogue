@@ -199,6 +199,9 @@ void MapLevelTown::CreateLevel()
 
   // *** FIXME: debug
   /*
+  auto lwand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::IVORY_2, SpellType::LIGHT, ItemPrefix::BLESSED);
+  InsertGameObject(lwand);
+
   auto wand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::GOLDEN, SpellType::FIREBALL, ItemPrefix::UNCURSED);
   InsertGameObject(wand);
 

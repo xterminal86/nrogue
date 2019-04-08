@@ -223,14 +223,21 @@ void GameObject::MoveGameObject(int dx, int dy)
   _currentCell->Occupied = true;
 }
 
-void GameObject::AddEffect(EffectType type, int power, int duration)
+void GameObject::AddEffect(EffectType type, int power, int duration, bool cumulative)
 {
   if (HasEffect(type))
   {
-    // NOTE: possibly op
+    if (cumulative)
+    {
+      _activeEffects[type].Power += power;
+      _activeEffects[type].Duration += duration;
+    }
+    else
+    {
+      _activeEffects[type].Power = power;
+      _activeEffects[type].Duration = duration;
+    }
 
-    _activeEffects[type].Power += power;
-    _activeEffects[type].Duration += duration;
     ApplyEffect(_activeEffects[type]);
   }
   else
@@ -348,7 +355,7 @@ size_t GameObject::ComponentsSize()
   return _components.size();
 }
 
-void GameObject::LevelUp()
+void GameObject::LevelUp(int baseHpOverride)
 {
   std::map<int, std::pair<std::string, Attribute&>> mainAttributes =
   {
@@ -373,8 +380,9 @@ void GameObject::LevelUp()
 
   // HP and MP
 
-  int minRndHp = (Attrs.HP.Talents + 1);
-  int maxRndHp = 2 * (Attrs.HP.Talents + 1);
+  int baseHp = (baseHpOverride == -1) ? Attrs.HP.Talents : baseHpOverride;
+  int minRndHp = (baseHp + 1);
+  int maxRndHp = 2 * (baseHp + 1);
 
   int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp);
   Attrs.HP.OriginalValue += hpToAdd;
@@ -407,4 +415,9 @@ bool GameObject::CanRaiseAttribute(Attribute& attr)
   }
 
   return Util::Rolld100(chance);
+}
+
+const std::map<EffectType, Effect>& GameObject::Effects()
+{
+  return _activeEffects;
 }

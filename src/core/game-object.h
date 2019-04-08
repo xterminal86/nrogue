@@ -119,12 +119,14 @@ class GameObject
     void FinishTurn();
     void WaitForTurn();
 
-    virtual void LevelUp();
+    virtual void LevelUp(int baseHpOverride = -1);
 
-    void AddEffect(EffectType type, int power, int duration);
+    void AddEffect(EffectType type, int power, int duration, bool cumulative = false);
     void RemoveEffect(EffectType t);    
     bool HasEffect(EffectType t);
     bool IsAlive();
+
+    const std::map<EffectType, Effect>& Effects();
 
     Attributes Attrs;        
 
