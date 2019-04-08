@@ -257,8 +257,8 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
 
     difficulty += diffOffset;
 
-    go->Attrs.Def.Talents = 2;
-    go->Attrs.Spd.Talents = 2;
+    go->Attrs.Def.Talents = 3;
+    go->Attrs.Spd.Talents = 1;
 
     for (int i = 0; i < difficulty; i++)
     {
@@ -368,8 +368,6 @@ bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Can't be equipped!" }, GlobalConstants::MessageBoxRedBorderColor);
     return res;
   }
-
-  // TODO: cursed items modify stats
 
   auto category = item->Data.EqCategory;
 

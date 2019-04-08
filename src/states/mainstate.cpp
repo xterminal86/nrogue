@@ -783,8 +783,6 @@ void MainState::ProcessWandOfLight(ItemComponent* wand)
       Printer::Instance().AddMessage("The golden light surrounds you!");
     }
 
-    wand->Data.IsPrefixDiscovered = true;
-
     duration *= 2;
     power += 5;
   }
@@ -795,9 +793,11 @@ void MainState::ProcessWandOfLight(ItemComponent* wand)
       Printer::Instance().AddMessage("You are surrounded by darkness!");
     }
 
-    wand->Data.IsPrefixDiscovered = true;
     power = -5;
   }
+
+  wand->Data.IsPrefixDiscovered = true;
+  wand->Data.IsIdentified = true;
 
   _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration);
 }
