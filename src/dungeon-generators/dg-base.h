@@ -6,6 +6,20 @@
 
 #include "position.h"
 
+enum class FeatureRoomType
+{
+  EMPTY = 0,
+  SHRINE,
+  GARDEN,
+  FLOODED,
+  DIAMOND,
+  ROUND,
+  PILLARS,
+  POND
+};
+
+using FeatureRoomsWeights = std::vector<std::pair<FeatureRoomType, int>>;
+
 struct MapCell
 {
   int Marker = -1;

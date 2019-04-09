@@ -9,12 +9,15 @@
 #include "from-layouts.h"
 #include "rooms.h"
 
-void LevelBuilder::FeatureRoomsMethod(const Position& mapSize, const Position& roomSizes, int maxIterations)
+void LevelBuilder::FeatureRoomsMethod(const Position& mapSize,
+                                      const Position& roomSizes,
+                                      int maxIterations,
+                                      const FeatureRoomsWeights& weightsMap)
 {
   _generator.reset(new FeatureRooms());
 
   FeatureRooms* fr = static_cast<FeatureRooms*>(_generator.get());
-  fr->Generate(mapSize, roomSizes, maxIterations);
+  fr->Generate(mapSize, roomSizes, maxIterations, weightsMap);
 
   MapRaw = fr->MapRaw;
 }
@@ -74,7 +77,9 @@ void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRoom
   MapRaw = fl->MapRaw;
 }
 
-void LevelBuilder::RoomsMethod(const Position& mapSize, const Position& splitRatio, int minRoomSize)
+void LevelBuilder::RoomsMethod(const Position& mapSize,
+                               const Position& splitRatio,
+                               int minRoomSize)
 {
   _generator.reset(new Rooms());
 

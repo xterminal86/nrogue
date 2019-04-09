@@ -74,6 +74,8 @@
 #include <map>
 #include <functional>
 
+using StringsArray2D = std::vector<std::string>;
+
 enum class GameStates
 {
   EXIT_GAME = -1,
@@ -1450,16 +1452,16 @@ namespace GlobalConstants
     }
   };
 
-  static const std::vector<std::vector<std::string>> ShrineLayouts =
+  static const std::vector<StringsArray2D> ShrineLayouts =
   {
     // 0
     // Might, Spirit, Knowledge, Holy, Healing, Potential, Tranquility, Perception
     {
-      "#####",
-      "#...#",
-      "+./.#",
-      "#...#",
-      "#####"
+      ".....",
+      ".....",
+      "../..",
+      ".....",
+      "....."
     },
     // 1
     // Holy, Healing, Potential, Tranquility, Perception
@@ -1496,6 +1498,62 @@ namespace GlobalConstants
       "l / l",
       "ll ll",
       "ll ll"
+    }
+  };
+
+  static const std::map<ShrineType, std::vector<StringsArray2D>> ShrineLayoutsByType =
+  {
+    {
+      ShrineType::MIGHT,       { ShrineLayouts[0] }
+    },
+    {
+      ShrineType::SPIRIT,      { ShrineLayouts[0] }
+    },
+    {
+      ShrineType::KNOWLEDGE,   { ShrineLayouts[0]}
+    },
+    {
+      ShrineType::HOLY,        { ShrineLayouts[0],
+                                 ShrineLayouts[1],
+                                 ShrineLayouts[2] }
+    },
+    {
+      ShrineType::HEALING,     { ShrineLayouts[0],
+                                 ShrineLayouts[1],
+                                 ShrineLayouts[2] }
+    },
+    {
+      ShrineType::POTENTIAL,   { ShrineLayouts[0],
+                                 ShrineLayouts[1],
+                                 ShrineLayouts[2] }
+    },
+    {
+      ShrineType::TRANQUILITY, { ShrineLayouts[0],
+                                 ShrineLayouts[1],
+                                 ShrineLayouts[2] }
+    },
+    {
+      ShrineType::PERCEPTION,  { ShrineLayouts[0],
+                                 ShrineLayouts[1],
+                                 ShrineLayouts[2] }
+    },
+    {
+      ShrineType::FORGOTTEN,   { ShrineLayouts[3] }
+    },
+    {
+      ShrineType::HIDDEN,      { ShrineLayouts[3] }
+    },
+    {
+      ShrineType::DESECRATED,  { ShrineLayouts[3] }
+    },
+    {
+      ShrineType::RUINED,      { ShrineLayouts[3] }
+    },
+    {
+      ShrineType::DISTURBING,  { ShrineLayouts[3] }
+    },
+    {
+      ShrineType::ABYSSAL,     { ShrineLayouts[4] }
     }
   };
 

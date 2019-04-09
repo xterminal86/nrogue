@@ -85,12 +85,12 @@ void Rooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
   BSPNode* left = new BSPNode();
 
   left->CornerStart = { leaf1.X1, leaf1.Y1 };
-  left->CornerEnd = { leaf1.X2, leaf1.Y2 };
+  left->CornerEnd   = { leaf1.X2, leaf1.Y2 };
 
   BSPNode* right = new BSPNode();
 
   right->CornerStart = { leaf2.X1, leaf2.Y1 };
-  right->CornerEnd = { leaf2.X2, leaf2.Y2 };
+  right->CornerEnd   = { leaf2.X2, leaf2.Y2 };
 
   parent.Left.reset(left);
   parent.Right.reset(right);

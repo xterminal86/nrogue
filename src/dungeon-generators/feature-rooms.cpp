@@ -7,8 +7,12 @@
 /// it depends on roomSizes.
 /// Set to (mapSize.X * mapSize.Y) to use all available map area, but
 /// be aware of computational time.
-void FeatureRooms::Generate(Position mapSize, Position roomSizes, int maxIterations)
+void FeatureRooms::Generate(Position mapSize,
+                            Position roomSizes,
+                            int maxIterations,
+                            const FeatureRoomsWeights& weightsMap)
 {
+  _weightsMap = weightsMap;
   _mapSize = mapSize;
 
   _map = CreateFilledMap(mapSize.X, mapSize.Y);
@@ -24,7 +28,7 @@ void FeatureRooms::Generate(Position mapSize, Position roomSizes, int maxIterati
 
   Position start(startX, startY);
 
-  CreateRoom(start, { roomSizeX, roomSizeY });
+  CreateEmptyRoom(start, { roomSizeX, roomSizeY });
 
   for (int i = 0; i < maxIterations; i++)
   {
@@ -99,7 +103,7 @@ void FeatureRooms::Generate(Position mapSize, Position roomSizes, int maxIterati
 
         _map[doorPos.X][doorPos.Y].Image = '+';
 
-        CreateRoom(newPos, { roomSizeX, roomSizeY }, buildDir);
+        CreateEmptyRoom(newPos, { roomSizeX, roomSizeY }, buildDir);
       }
     }
   }
@@ -107,7 +111,9 @@ void FeatureRooms::Generate(Position mapSize, Position roomSizes, int maxIterati
   FillMapRaw();
 }
 
-void FeatureRooms::CreateRoom(Position upperLeftCorner, Position size, RoomBuildDirection buildDir)
+void FeatureRooms::CreateEmptyRoom(Position upperLeftCorner,
+                                   Position size,
+                                   RoomBuildDirection buildDir)
 {
   int sx = upperLeftCorner.X;
   int sy = upperLeftCorner.Y;
@@ -124,12 +130,44 @@ void FeatureRooms::CreateRoom(Position upperLeftCorner, Position size, RoomBuild
     return;
   }
 
-  for (int x = sx; x != ex; x += dir.X)
+  FillWithEmpty({ sx, sy }, { ex, ey }, dir);
+}
+
+void FeatureRooms::FillWithEmpty(const Position& start,
+                                 const Position& end,
+                                 const Position& dir)
+{
+  for (int x = start.X; x != end.X; x += dir.X)
   {
-    for (int y = sy; y != ey; y += dir.Y)
+    for (int y = start.Y; y != end.Y; y += dir.Y)
     {
       _map[x][y].Image = '.';
     }
+  }
+}
+
+void FeatureRooms::CreateShrine(const Position& start,
+                                const Position& end,
+                                const Position& dir,
+                                ShrineType type)
+{
+  std::vector<StringsArray2D> layouts = GlobalConstants::ShrineLayoutsByType.at(type);
+  int index = RNG::Instance().RandomRange(0, layouts.size());
+  auto layout = layouts[index];
+
+  int lx = 0;
+  int ly = 0;
+
+  for (int x = start.X; x != end.X; x += dir.X)
+  {
+    for (int y = start.Y; y != end.Y; y += dir.Y)
+    {
+      _map[x][y].Image = layout[lx][ly];
+      ly++;
+    }
+
+    lx++;
+    ly = 0;
   }
 }
 

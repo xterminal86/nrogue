@@ -13,6 +13,8 @@
 #include "util.h"
 #include "rng.h"
 
+#include "level-builder.h"
+
 #ifdef RUN_TESTS
 #include "tests.h"
 #endif
@@ -70,6 +72,22 @@ int main(int argc, char* argv[])
   #ifdef RUN_TESTS
   Tests::Run();
   #endif
+
+  FeatureRoomsWeights weights =
+  {
+    { FeatureRoomType::EMPTY, 10 },
+    { FeatureRoomType::DIAMOND, 5 },
+    { FeatureRoomType::FLOODED, 2 },
+    { FeatureRoomType::GARDEN, 3 },
+    { FeatureRoomType::PILLARS, 5 },
+    { FeatureRoomType::ROUND, 5 },
+    { FeatureRoomType::POND, 3 },
+    { FeatureRoomType::SHRINE, 2 },
+  };
+
+  LevelBuilder lb;
+  lb.FeatureRoomsMethod({ 200, 200 }, { 1, 10 }, 10000, weights);
+  lb.LogPrintMapRaw();
 
   return 0;
 }

@@ -13,30 +13,36 @@ class LevelBuilder
 {
   public:
     void BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRooms,
-                                  int startX, int startY,
-                                  int mapSizeX, int mapSizeY);
+                               int startX, int startY,
+                               int mapSizeX, int mapSizeY);
 
     void RecursiveBacktrackerMethod(const Position& mapSize,
                                     const Position& startingPoint = { -1, -1 });
 
     void TunnelerMethod(const Position& mapSize,
-                          int maxIterations,
-                          const Position& tunnelLengthMinMax,
-                          const Position& start = { -1, -1 } );
+                        int maxIterations,
+                        const Position& tunnelLengthMinMax,
+                        const Position& start = { -1, -1 } );
 
     void BacktrackingTunnelerMethod(const Position& mapSize,
                                     const Position& tunnelLengthMinMax,
-                                       const Position& start = { - 1, -1 },
-                                       bool additionalTweaks = false);
+                                    const Position& start = { - 1, -1 },
+                                    bool additionalTweaks = false);
 
     void CellularAutomataMethod(const Position& mapSize,
-                                   int initialWallChance,
-                                   int birthThreshold,
-                                   int deathThreshold,
-                                   int maxIterations);
+                                int initialWallChance,
+                                int birthThreshold,
+                                int deathThreshold,
+                                int maxIterations);
 
-    void FeatureRoomsMethod(const Position& mapSize, const Position& roomSizes, int maxIterations);
-    void RoomsMethod(const Position& mapSize, const Position& splitRatio, int minRoomSize);
+    void FeatureRoomsMethod(const Position& mapSize,
+                            const Position& roomSizes,
+                            int maxIterations,
+                            const FeatureRoomsWeights& weightsMap);
+
+    void RoomsMethod(const Position& mapSize,
+                     const Position& splitRatio,
+                     int minRoomSize);
 
     void LogPrintMapRaw();
     void PrintMapRaw();
