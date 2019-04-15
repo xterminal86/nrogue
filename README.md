@@ -9,7 +9,7 @@ So I decided to make a roguelike.
 It probably should've been named **ncrogue** or something, but whatever...
 
 When building with SDL2 you can use custom font and scale it by creating
-file called "config.txt" and placing it with the game's binary.
+file called "config.txt" and placing it alongside with the game's binary.
 The format should be as follows (no empty lines):
 
 ```
