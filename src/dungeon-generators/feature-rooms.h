@@ -15,17 +15,21 @@ class FeatureRooms : public DGBase
 
   public:
     void Generate(Position mapSize,
-                  Position roomSizes,
-                  int maxIterations,
-                  const FeatureRoomsWeights& weightsMap);
+                  Position roomSizes,                  
+                  const FeatureRoomsWeights& weightsMap,
+                  int maxIterations);
 
   private:
-    void CreateEmptyRoom(Position upperLeftCorner,
-                         Position size,
-                         RoomBuildDirection buildDir = RoomBuildDirection::SE);
+    bool CreateEmptyRoom(Position start, bool centered);
 
-    bool IsAreaWalls(Position corner, Position size, RoomBuildDirection buildDir);
+    bool IsAreaWalls(const Position& start,
+                     const Position& size,
+                     RoomBuildDirection buildDir);
 
+    bool IsAreaWallsCentered(const Position& start,
+                             const Position& size);
+
+    Position GetRandomRoomSize();
     Position GetOffsetsForDirection(RoomBuildDirection buildDir);
     RoomEdgeEnum GetCarveDirectionForDeadend(Position pos);
 
@@ -34,11 +38,27 @@ class FeatureRooms : public DGBase
                        const Position& dir);
 
     void CreateShrine(const Position& start,
-                      const Position& end,
-                      const Position& dir,
+                      RoomBuildDirection buildDir,
                       ShrineType type);
 
+    void CreateDiamondRoom(const Position& start,
+                           const Position& roomSize,
+                           RoomBuildDirection buildDir);
+
+    std::vector<Position> GetValidCellsToCarveFrom();
+
+    Position GetCarveOffsetsForDir(RoomEdgeEnum carveDir);
+
+    bool TryToCreateRoom(const Position& doorPos,
+                         const Position& newRoomStartPos,
+                         FeatureRoomType roomType);
+
     FeatureRoomsWeights _weightsMap;
+
+    Position _roomSizes;
+
+    std::map<FeatureRoomType, int> _generatedSoFar;
+    std::map<FeatureRoomType, int> _roomWeightByType;
 };
 
 #endif // FEATUREROOMS_H

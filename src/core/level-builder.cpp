@@ -10,14 +10,14 @@
 #include "rooms.h"
 
 void LevelBuilder::FeatureRoomsMethod(const Position& mapSize,
-                                      const Position& roomSizes,
-                                      int maxIterations,
-                                      const FeatureRoomsWeights& weightsMap)
+                                      const Position& roomSizes,                                      
+                                      const FeatureRoomsWeights& weightsMap,
+                                      int maxIterations)
 {
   _generator.reset(new FeatureRooms());
 
   FeatureRooms* fr = static_cast<FeatureRooms*>(_generator.get());
-  fr->Generate(mapSize, roomSizes, maxIterations, weightsMap);
+  fr->Generate(mapSize, roomSizes, weightsMap, maxIterations);
 
   MapRaw = fr->MapRaw;
 }

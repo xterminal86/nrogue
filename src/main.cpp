@@ -47,6 +47,7 @@ int main(int argc, char* argv[])
   //RNG::Instance().SetSeed(1);
   //RNG::Instance().SetSeed(1544714037606745311);
   //RNG::Instance().SetSeed(1545127588351497486);
+  //RNG::Instance().SetSeed(1555423752080957420);
 
   #ifdef RELEASE_BUILD
   bool printLog = false;
@@ -75,18 +76,18 @@ int main(int argc, char* argv[])
 
   FeatureRoomsWeights weights =
   {
-    { FeatureRoomType::EMPTY, 10 },
-    { FeatureRoomType::DIAMOND, 5 },
-    { FeatureRoomType::FLOODED, 2 },
-    { FeatureRoomType::GARDEN, 3 },
-    { FeatureRoomType::PILLARS, 5 },
-    { FeatureRoomType::ROUND, 5 },
-    { FeatureRoomType::POND, 3 },
-    { FeatureRoomType::SHRINE, 2 },
+    { FeatureRoomType::EMPTY,   { 10, 0 }  },
+    { FeatureRoomType::DIAMOND, { 7, 3 }   },
+    { FeatureRoomType::FLOODED, { 2, 1 }   },
+    { FeatureRoomType::GARDEN,  { 3, 1 }   },
+    { FeatureRoomType::PILLARS, { 7, 0 }   },
+    { FeatureRoomType::ROUND,   { 7, 3 }   },
+    { FeatureRoomType::POND,    { 3, 1 }   },
+    { FeatureRoomType::SHRINE,  { 5, 1 }   }
   };
 
   LevelBuilder lb;
-  lb.FeatureRoomsMethod({ 200, 200 }, { 1, 10 }, 10000, weights);
+  lb.FeatureRoomsMethod({ 80, 24 }, { 1, 10 }, weights, 1000);
   lb.LogPrintMapRaw();
 
   return 0;

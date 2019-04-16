@@ -2,6 +2,7 @@
 #define DG_BASE_H
 
 #include <vector>
+#include <map>
 #include <string>
 
 #include "position.h"
@@ -18,7 +19,16 @@ enum class FeatureRoomType
   POND
 };
 
-using FeatureRoomsWeights = std::vector<std::pair<FeatureRoomType, int>>;
+// {
+//   <room type>,
+//   {
+//     <probability weight>,
+//     <maximum number of rooms allowed to be generated>
+//   }
+// }
+//
+// -1 if there is no limit to amount of rooms
+using FeatureRoomsWeights = std::map<FeatureRoomType, std::pair<int, int>>;
 
 struct MapCell
 {

@@ -1466,18 +1466,18 @@ namespace GlobalConstants
     // 1
     // Holy, Healing, Potential, Tranquility, Perception
     {
-      "#g g#",
+      " g g ",
       "gg gg",
       "  /  ",
       "gg gg",
-      "#g g#"
+      " g g "
     },
     // 2
     // Holy, Healing, Potential, Tranquility, Perception
     {
-      " www ",
+      " w w ",
       "ww ww",
-      "w / w",
+      "  /  ",
       "ww ww",
       " w w "
     },
@@ -1493,9 +1493,9 @@ namespace GlobalConstants
     // 4
     // Abyssal
     {
-      "lllll",
       "ll ll",
-      "l / l",
+      "ll ll",
+      "  /  ",
       "ll ll",
       "ll ll"
     }
