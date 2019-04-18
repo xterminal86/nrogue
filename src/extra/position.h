@@ -1,6 +1,8 @@
 #ifndef POSITION_H
 #define POSITION_H
 
+#include <cstdio>
+
 struct Position
 {
   Position()
@@ -46,6 +48,11 @@ struct Position
   bool operator== (const Position& rhs) const
   {
     return (X == rhs.X && Y == rhs.Y);
+  }
+
+  void Print()
+  {
+    printf("%s: [%i; %i]\n", __PRETTY_FUNCTION__, X, Y);
   }
 
   int X;

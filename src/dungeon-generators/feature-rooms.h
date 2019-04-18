@@ -8,11 +8,6 @@ class FeatureRooms : public DGBase
 {  
   using RoomLayout = std::vector<std::vector<std::string>>;
 
-  enum class RoomBuildDirection
-  {
-    NE = 0, SE, SW, NW
-  };
-
   public:
     void Generate(Position mapSize,
                   Position roomSizes,                  
@@ -20,37 +15,36 @@ class FeatureRooms : public DGBase
                   int maxIterations);
 
   private:
-    bool CreateEmptyRoom(Position start, bool centered);
-
-    bool IsAreaWalls(const Position& start,
-                     const Position& size,
-                     RoomBuildDirection buildDir);
-
-    bool IsAreaWallsCentered(const Position& start,
-                             const Position& size);
+    bool CreateEmptyRoom(Position start, Position size, RoomEdgeEnum dir);
 
     Position GetRandomRoomSize();
-    Position GetOffsetsForDirection(RoomBuildDirection buildDir);
+    Position GetOffsetsForDirection(RoomEdgeEnum dir);
     RoomEdgeEnum GetCarveDirectionForDeadend(Position pos);
 
     void FillWithEmpty(const Position& start,
-                       const Position& end,
-                       const Position& dir);
+                       const Position& end);
 
-    void CreateShrine(const Position& start,
-                      RoomBuildDirection buildDir,
+    bool CreateShrine(const Position& start,
+                      RoomEdgeEnum dir,
                       ShrineType type);
 
-    void CreateDiamondRoom(const Position& start,
-                           const Position& roomSize,
-                           RoomBuildDirection buildDir);
+    bool CreateDiamondRoom(const Position& start,
+                           int size,
+                           RoomEdgeEnum dir);
+
+    bool CreateRoundRoom(const Position& start,
+                         int radius,
+                         RoomEdgeEnum dir);
+
+    void CreateStartingRoom();
 
     std::vector<Position> GetValidCellsToCarveFrom();
 
-    Position GetCarveOffsetsForDir(RoomEdgeEnum carveDir);
+    bool IsCellValid(const Position& pos);
 
     bool TryToCreateRoom(const Position& doorPos,
                          const Position& newRoomStartPos,
+                         RoomEdgeEnum direction,
                          FeatureRoomType roomType);
 
     FeatureRoomsWeights _weightsMap;
@@ -58,7 +52,7 @@ class FeatureRooms : public DGBase
     Position _roomSizes;
 
     std::map<FeatureRoomType, int> _generatedSoFar;
-    std::map<FeatureRoomType, int> _roomWeightByType;
+    std::map<FeatureRoomType, int> _roomWeightByType;    
 };
 
 #endif // FEATUREROOMS_H

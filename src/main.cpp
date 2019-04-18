@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
   FeatureRoomsWeights weights =
   {
     { FeatureRoomType::EMPTY,   { 10, 0 }  },
-    { FeatureRoomType::DIAMOND, { 7, 3 }   },
+    { FeatureRoomType::DIAMOND, { 7, 5 }   },
     { FeatureRoomType::FLOODED, { 2, 1 }   },
     { FeatureRoomType::GARDEN,  { 3, 1 }   },
     { FeatureRoomType::PILLARS, { 7, 0 }   },
@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
   };
 
   LevelBuilder lb;
-  lb.FeatureRoomsMethod({ 80, 24 }, { 1, 10 }, weights, 1000);
+  lb.FeatureRoomsMethod({ 160, 80 }, { 1, 10 }, weights, 1000);
   lb.LogPrintMapRaw();
 
   return 0;

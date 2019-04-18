@@ -25,14 +25,7 @@ void FeatureRooms::Generate(Position mapSize,
 
   _map = CreateFilledMap(mapSize.X, mapSize.Y);
 
-  auto newSize = GetRandomRoomSize();
-
-  int startX = _mapSize.X / 2 - newSize.X / 2;
-  int startY = _mapSize.Y / 2 - newSize.Y / 2;
-
-  Position start(startX, startY);
-
-  CreateEmptyRoom(start, newSize);
+  CreateStartingRoom();
 
   for (int i = 0; i < maxIterations; i++)
   {
@@ -55,11 +48,11 @@ void FeatureRooms::Generate(Position mapSize,
       //
       RoomEdgeEnum carveDir = GetCarveDirectionForDeadend(doorPos);
 
-      // Get position offsets for carving
-      auto carveOffset = GetCarveOffsetsForDir(carveDir);
+      Position carveOffsets = GetOffsetsForDirection(carveDir);
 
-      newRoomStartPos.X = doorPos.X + carveOffset.X;
-      newRoomStartPos.Y = doorPos.Y + carveOffset.Y;
+      // Go to next cell behind the door position in corresponding direction
+      newRoomStartPos.X = doorPos.X + carveOffsets.X;
+      newRoomStartPos.Y = doorPos.Y + carveOffsets.Y;
 
       auto res = Util::WeightedRandom(_roomWeightByType);
 
@@ -72,42 +65,41 @@ void FeatureRooms::Generate(Position mapSize,
         continue;
       }
 
-      bool failed = TryToCreateRoom(doorPos, newRoomStartPos, typeRolled);
-      if (!failed)
+      bool success = TryToCreateRoom(doorPos, newRoomStartPos, carveDir, typeRolled);
+      if (success)
       {
         _map[doorPos.X][doorPos.Y].Image = '+';
         _generatedSoFar[typeRolled]++;
       }
-
-      /*
-      // Select random dir to carve
-
-      std::vector<RoomBuildDirection> dirs =
-      {
-        RoomBuildDirection::NE,
-        RoomBuildDirection::NW,
-        RoomBuildDirection::SE,
-        RoomBuildDirection::SW
-      };
-
-      int dirIndex = RNG::Instance().RandomRange(0, dirs.size());
-
-      auto buildDir = dirs[dirIndex];
-
-      int roomSizeX = RNG::Instance().RandomRange(roomMinSize, roomMaxSize);
-      int roomSizeY = RNG::Instance().RandomRange(roomMinSize, roomMaxSize);
-
-      Position roomSize = { roomSizeX, roomSizeY };
-
-      if (IsAreaWalls(newRoomStartPos, roomSize, buildDir))
-      {
-        TryToCreateRoom(doorPos, newRoomStartPos, roomSize, buildDir);
-      }
-      */
     }
+    else
+    {
+      break;
+    }    
   }
 
   FillMapRaw();
+}
+
+void FeatureRooms::CreateStartingRoom()
+{
+  Position newSize = GetRandomRoomSize();
+
+  std::vector<RoomEdgeEnum> dirs =
+  {
+    RoomEdgeEnum::EAST,
+    RoomEdgeEnum::NORTH,
+    RoomEdgeEnum::SOUTH,
+    RoomEdgeEnum::WEST
+  };
+
+  int index = RNG::Instance().RandomRange(0, dirs.size());
+  RoomEdgeEnum d = dirs[index];
+
+  int sx = _mapSize.X / 2;
+  int sy = _mapSize.Y / 2;
+
+  CreateEmptyRoom({ sx, sy }, newSize, d);
 }
 
 Position FeatureRooms::GetRandomRoomSize()
@@ -123,82 +115,195 @@ Position FeatureRooms::GetRandomRoomSize()
 
 bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
                                    const Position& newRoomStartPos,
+                                   RoomEdgeEnum direction,
                                    FeatureRoomType roomType)
 {
   // TODO: moar room types
 
-  bool failed = false;
+  bool success = false;
 
   switch (roomType)
   {
     case FeatureRoomType::EMPTY:
     {
-      int rnd = RNG::Instance().RandomRange(0, 2);
-      bool isCentered = (rnd == 0);
-      CreateEmptyRoom(doorPos, isCentered);
-    }
-    break;
-
-    case FeatureRoomType::SHRINE:
-    {
-      // FIXME: kinda hack
-      if (roomSize.X >= GlobalConstants::ShrineLayouts[0].size()
-       && roomSize.Y >= GlobalConstants::ShrineLayouts[0].size())
-      {
-        int index = RNG::Instance().RandomRange(0, GlobalConstants::ShrineNameByType.size());
-        auto it = GlobalConstants::ShrineNameByType.begin();
-        std::advance(it, index);
-
-        CreateShrine(newRoomStartPos, buildDir, it->first);
-      }
-      else
-      {
-        failed = true;
-      }
+      auto rndSize = GetRandomRoomSize();
+      success = CreateEmptyRoom(newRoomStartPos, rndSize, direction);
     }
     break;
 
     case FeatureRoomType::DIAMOND:
     {
-      if ((roomSize.X == roomSize.Y)
-       && (roomSize.X >= 3)
-       && (roomSize.X % 2 != 0))
-      {
-        CreateDiamondRoom(newRoomStartPos, roomSize, buildDir);
-      }
-      else
-      {
-        failed = true;
-      }
+      int size = RNG::Instance().RandomRange(2, 8);
+      success = CreateDiamondRoom(newRoomStartPos, size, direction);
     }
     break;
 
+    case FeatureRoomType::ROUND:
+    {
+      // Round room works well starting from radius = 4,
+      // otherwise it degenerates into empty room.
+      int r = RNG::Instance().RandomRange(4, 8);
+      success = CreateRoundRoom(newRoomStartPos, r, direction);
+    }
+    break;
+
+    case FeatureRoomType::SHRINE:
+    {
+      int index = RNG::Instance().RandomRange(0, GlobalConstants::ShrineNameByType.size());
+      auto it = GlobalConstants::ShrineNameByType.begin();
+      std::advance(it, index);
+
+      // FIXME: finish
+      //success = CreateShrine(newRoomStartPos, direction, it->first);
+    }
+    break;    
+
     default:
-      failed = true;
+      success = false;
       break;
   }
 
-  return failed;
+  return success;
 }
 
-void FeatureRooms::CreateDiamondRoom(const Position& start,
-                                     const Position& roomSize,
-                                     RoomBuildDirection buildDir)
+bool FeatureRooms::CreateRoundRoom(const Position& start,
+                                   int radius,
+                                   RoomEdgeEnum dir)
 {
+  int sx = start.X;
+  int sy = start.Y;
 
+  switch (dir)
+  {
+    case RoomEdgeEnum::NORTH:
+      sx -= (radius - 1);
+      break;
+
+    case RoomEdgeEnum::EAST:
+      sy += (radius - 1);
+      break;
+
+    case RoomEdgeEnum::SOUTH:
+      sx += (radius - 1);
+      break;
+
+    case RoomEdgeEnum::WEST:
+      sy -= (radius - 1);
+      break;
+  }
+
+  int lx = sx - radius;
+  int ly = sy - radius;
+  int hx = sx + radius;
+  int hy = sy + radius;
+
+  std::vector<Position> cellsToChange;
+
+  for (int x = lx; x <= hx; x++)
+  {
+    for (int y = ly; y <= hy; y++)
+    {
+      float d = Util::LinearDistance({ x, y }, { sx, sy });
+      if (d < radius)
+      {
+        if (!IsCellValid({ x, y }))
+        {
+          return false;
+        }
+        else
+        {
+          cellsToChange.push_back({ x, y });
+        }
+      }
+    }
+  }
+
+  for (auto& i : cellsToChange)
+  {
+    _map[i.X][i.Y].Image = '.';
+  }
+
+  return true;
 }
 
-Position FeatureRooms::GetCarveOffsetsForDir(RoomEdgeEnum carveDir)
+bool FeatureRooms::CreateDiamondRoom(const Position& start,
+                                     int size,
+                                     RoomEdgeEnum dir)
 {
-  std::map<RoomEdgeEnum, Position> carveOffsetsByDir =
+  int mx = start.X;
+  int my = start.Y;
+
+  std::map<RoomEdgeEnum, Position> firstStep =
   {
     { RoomEdgeEnum::NORTH, { -1, 0 } },
-    { RoomEdgeEnum::EAST, { 0, 1 } },
+    { RoomEdgeEnum::EAST,  { 0, 1 } },
     { RoomEdgeEnum::SOUTH, { 1, 0 } },
-    { RoomEdgeEnum::WEST, { 0, -1 } }
+    { RoomEdgeEnum::WEST,  { 0, -1 } }
   };
 
-  return carveOffsetsByDir[carveDir];
+  std::map<RoomEdgeEnum, Position> secondStep =
+  {
+    { RoomEdgeEnum::NORTH, { 0, -1 } },
+    { RoomEdgeEnum::EAST,  { -1, 0 } },
+    { RoomEdgeEnum::SOUTH, { 0, 1 } },
+    { RoomEdgeEnum::WEST,  { 1, 0 } }
+  };
+
+  std::map<RoomEdgeEnum, Position> offsetsByDir =
+  {
+    { RoomEdgeEnum::NORTH, { -1, 1 } },
+    { RoomEdgeEnum::EAST,  { 1, 1 } },
+    { RoomEdgeEnum::SOUTH, { 1, -1 } },
+    { RoomEdgeEnum::WEST,  { -1, -1 } }
+  };
+
+  bool isFirstStep = true;
+
+  int iterations = size * 2 - 1;
+
+  std::vector<Position> cellsToChange;
+
+  for (int i = 0; i < iterations; i++)
+  {
+    int tx = mx;
+    int ty = my;
+
+    for (int j = 0; j < size; j++)
+    {
+      if (!isFirstStep && (j == size - 1))
+      {
+        break;
+      }
+
+      if (!IsCellValid({ tx, ty }))
+      {
+        return false;
+      }
+      else
+      {
+        cellsToChange.push_back({ tx, ty });
+      }
+
+      Position drawOffsets = offsetsByDir[dir];
+
+      tx += drawOffsets.X;
+      ty += drawOffsets.Y;
+    }
+
+    Position nextOffset = isFirstStep ? firstStep[dir] : secondStep[dir];
+
+    mx += nextOffset.X;
+    my += nextOffset.Y;
+
+    isFirstStep = !isFirstStep;
+  }
+
+  for (auto& i : cellsToChange)
+  {
+    _map[i.X][i.Y].Image = '.';
+  }
+
+  return true;
 }
 
 std::vector<Position> FeatureRooms::GetValidCellsToCarveFrom()
@@ -223,49 +328,102 @@ std::vector<Position> FeatureRooms::GetValidCellsToCarveFrom()
   return validCells;
 }
 
-bool FeatureRooms::CreateEmptyRoom(Position start, bool centered)
-{  
-  auto carveDir = GetCarveDirectionForDeadend(start);
+bool FeatureRooms::CreateEmptyRoom(Position start, Position size, RoomEdgeEnum dir)
+{
+  int sx = start.X;
+  int sy = start.Y;
 
-  if (centered)
+  int shift = 0;
+
+  if (dir == RoomEdgeEnum::NORTH || dir == RoomEdgeEnum::SOUTH)
   {
-    auto roomSizes = GetRandomRoomSize();
-
+    shift = RNG::Instance().RandomRange(0, size.X);
+    sy -= shift;
   }
-  else
+  else if (dir == RoomEdgeEnum::EAST || dir == RoomEdgeEnum::WEST)
   {
-  }
-
-  Position dir = GetOffsetsForDirection(buildDir);
-
-  ex += size.X * dir.X;
-  ey += size.Y * dir.Y;
-
-  if (!IsInsideMap(start) || !IsInsideMap({ ex, ey }))
-  {
-    return false;
+    shift = RNG::Instance().RandomRange(0, size.Y);
+    sx -= shift;
   }
 
-  FillWithEmpty({ sx, sy }, { ex, ey }, dir);
+  int ex = sx;
+  int ey = sy;
+
+  switch (dir)
+  {
+    case RoomEdgeEnum::NORTH:
+      ex -= size.Y;
+      ey += size.X;
+      break;
+
+    case RoomEdgeEnum::SOUTH:
+      ex += size.Y;
+      ey += size.X;
+      break;
+
+    case RoomEdgeEnum::EAST:
+      ex += size.Y;
+      ey += size.X;
+      break;
+
+    case RoomEdgeEnum::WEST:
+      ex += size.Y;
+      ey -= size.X;
+      break;
+  }
+
+  int minX = std::min(sx, ex);
+  int minY = std::min(sy, ey);
+  int maxX = std::max(sx, ex);
+  int maxY = std::max(sy, ey);
+
+  // Since corner points may be swapped,
+  // for loop may go from corner to the starting point,
+  // thus not including it.
+  // It happens in these two cases, so we just hack it.
+
+  if (dir == RoomEdgeEnum::NORTH)
+  {
+    minX++;
+    maxX++;
+  }
+  else if (dir == RoomEdgeEnum::WEST)
+  {
+    minY++;
+    maxY++;
+  }
+
+  std::vector<Position> cellsToChange;
+
+  // Do not include maxX and maxY since
+  // 'size' was added to 'start', making the whole thing
+  // 1 unit longer.
+
+  for (int x = minX; x < maxX; x++)
+  {
+    for (int y = minY; y < maxY; y++)
+    {
+      if (!IsCellValid({ x, y }))
+      {
+        return false;
+      }
+      else
+      {
+        cellsToChange.push_back({ x, y });
+      }
+    }
+  }
+
+  for (auto& i : cellsToChange)
+  {
+    _map[i.X][i.Y].Image = '.';
+  }
 
   return true;
 }
 
-void FeatureRooms::FillWithEmpty(const Position& start,
-                                 const Position& end,
-                                 const Position& dir)
-{
-  for (int x = start.X; x != end.X; x += dir.X)
-  {
-    for (int y = start.Y; y != end.Y; y += dir.Y)
-    {
-      _map[x][y].Image = '.';
-    }
-  }
-}
-
-void FeatureRooms::CreateShrine(const Position& start,
-                                RoomBuildDirection buildDir,
+bool FeatureRooms::CreateShrine(const Position& start,
+                                RoomEdgeEnum dir,
                                 ShrineType type)
 {
   std::vector<StringsArray2D> layouts = GlobalConstants::ShrineLayoutsByType.at(type);
@@ -282,14 +440,14 @@ void FeatureRooms::CreateShrine(const Position& start,
   int ex = start.X;
   int ey = start.Y;
 
-  Position dir = GetOffsetsForDirection(buildDir);
+  Position d = GetOffsetsForDirection(dir);
 
-  ex += roomSize * dir.X;
-  ey += roomSize * dir.Y;
+  ex += roomSize * d.X;
+  ey += roomSize * d.Y;
 
-  for (int x = start.X; x != ex; x += dir.X)
+  for (int x = start.X; x != ex; x += d.X)
   {
-    for (int y = start.Y; y != ey; y += dir.Y)
+    for (int y = start.Y; y != ey; y += d.Y)
     {
       _map[x][y].Image = layout[lx][ly];
       ly++;
@@ -298,6 +456,8 @@ void FeatureRooms::CreateShrine(const Position& start,
     lx++;
     ly = 0;
   }
+
+  return true;
 }
 
 RoomEdgeEnum FeatureRooms::GetCarveDirectionForDeadend(Position pos)
@@ -336,36 +496,56 @@ RoomEdgeEnum FeatureRooms::GetCarveDirectionForDeadend(Position pos)
   return RoomEdgeEnum::NORTH;
 }
 
-bool FeatureRooms::IsAreaWalls(const Position& start,
-                               const Position& size,
-                               RoomBuildDirection buildDir)
+Position FeatureRooms::GetOffsetsForDirection(RoomEdgeEnum dir)
 {
-  int sx = start.X;
-  int sy = start.Y;
-  int ex = start.X;
-  int ey = start.Y;
+  Position res;
 
-  Position dir = GetOffsetsForDirection(buildDir);
+  switch (dir)
+  {
+    case RoomEdgeEnum::EAST:
+      res = { 0, 1 };
+      break;
 
-  // Grab one more row and column in corresponding directions
+    case RoomEdgeEnum::NORTH:
+      res = { -1, 0 };
+      break;
 
-  // Starting point goes in opposite direction
+    case RoomEdgeEnum::SOUTH:
+      res = { 1, 0 };
+      break;
 
-  sx += -dir.X;
-  sy += -dir.Y;
+    case RoomEdgeEnum::WEST:
+      res = { 0, -1 };
+      break;
+  }
 
-  ex += (size.X * dir.X + dir.X);
-  ey += (size.Y * dir.Y + dir.Y);
+  return res;
+}
 
-  if (!IsInsideMap({ sx, sy }) || !IsInsideMap({ ex, ey }))
+// In order to forbid "eating" of walls by other rooms during generation,
+// ensure that cell to be changed is surrounded by walls
+// (i.e. it's not adjacent to some room space already built).
+bool FeatureRooms::IsCellValid(const Position& pos)
+{
+  int lx = pos.X - 1;
+  int ly = pos.Y - 1;
+  int hx = pos.X + 1;
+  int hy = pos.Y + 1;
+
+  if (!IsInsideMap({ lx, ly }) || !IsInsideMap({ hx, hy }))
   {
     return false;
   }
 
-  for (int x = sx; x != ex; x += dir.X)
+  for (int x = lx; x <= hx; x++)
   {
-    for (int y = sy; y != ey; y += dir.Y)
+    for (int y = ly; y <= hy; y++)
     {
+      if (x == pos.X && y == pos.Y)
+      {
+        continue;
+      }
+
       if (_map[x][y].Image != '#')
       {
         return false;
@@ -374,40 +554,4 @@ bool FeatureRooms::IsAreaWalls(const Position& start,
   }
 
   return true;
-}
-
-bool FeatureRooms::IsAreaWallsCentered(const Position& start,
-                                       const Position& size)
-{
-  return true;
-}
-
-Position FeatureRooms::GetOffsetsForDirection(RoomBuildDirection dir)
-{
-  Position res;
-
-  switch (dir)
-  {
-    case RoomBuildDirection::SE:
-      res.X = 1;
-      res.Y = 1;
-      break;
-
-    case RoomBuildDirection::SW:
-      res.X = 1;
-      res.Y = -1;
-      break;
-
-    case RoomBuildDirection::NW:
-      res.X = -1;
-      res.Y = -1;
-      break;
-
-    case RoomBuildDirection::NE:
-      res.X = -1;
-      res.Y = 1;
-      break;
-  }
-
-  return res;
 }
