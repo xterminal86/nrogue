@@ -83,11 +83,14 @@ int main(int argc, char* argv[])
     { FeatureRoomType::PILLARS, { 7, 0 }   },
     { FeatureRoomType::ROUND,   { 7, 3 }   },
     { FeatureRoomType::POND,    { 3, 1 }   },
-    { FeatureRoomType::SHRINE,  { 5, 1 }   }
+    { FeatureRoomType::SHRINE,  { 10, 3 }   }
   };
 
+  Position mapSize = { 25, 80 };
+  Position roomSize = { 1, 10 };
+
   LevelBuilder lb;
-  lb.FeatureRoomsMethod({ 160, 80 }, { 1, 10 }, weights, 1000);
+  lb.FeatureRoomsMethod(mapSize, roomSize, weights, mapSize.X * mapSize.Y);
   lb.LogPrintMapRaw();
 
   return 0;

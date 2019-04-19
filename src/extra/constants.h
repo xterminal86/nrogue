@@ -1457,38 +1457,38 @@ namespace GlobalConstants
     // 0
     // Might, Spirit, Knowledge, Holy, Healing, Potential, Tranquility, Perception
     {
-      ".....",
-      ".....",
+      "##.##",
+      "#...#",
       "../..",
-      ".....",
-      "....."
+      "#...#",
+      "##.##"
     },
     // 1
     // Holy, Healing, Potential, Tranquility, Perception
     {
-      " g g ",
+      "wg gw",
       "gg gg",
       "  /  ",
       "gg gg",
-      " g g "
+      "wg gw"
     },
     // 2
     // Holy, Healing, Potential, Tranquility, Perception
     {
-      " w w ",
+      "#w w#",
       "ww ww",
       "  /  ",
       "ww ww",
-      " w w "
+      "#w w#"
     },
     // 3
     // Forgotten, Hidden, Ruined, Desecrated, Disturbing
     {
-      "#.#..",
+      ".#+..",
       ".  .#",
-      "+./.#",
+      "#./.#",
       "#.  .",
-      "..###"
+      "..#.#"
     },
     // 4
     // Abyssal

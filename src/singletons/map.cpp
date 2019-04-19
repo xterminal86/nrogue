@@ -374,7 +374,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
         break;
 
       case MapType::LOST_CITY:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelLostCity(150, 75, levelName, (int)levelName));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelLostCity(75, 150, levelName, (int)levelName));
         break;
 
       case MapType::DEEP_DARK_1:

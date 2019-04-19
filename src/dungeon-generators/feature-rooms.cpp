@@ -153,8 +153,7 @@ bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
       auto it = GlobalConstants::ShrineNameByType.begin();
       std::advance(it, index);
 
-      // FIXME: finish
-      //success = CreateShrine(newRoomStartPos, direction, it->first);
+      success = CreateShrine(newRoomStartPos, direction, it->first);
     }
     break;    
 
@@ -430,6 +429,18 @@ bool FeatureRooms::CreateShrine(const Position& start,
   int index = RNG::Instance().RandomRange(0, layouts.size());
   auto layout = layouts[index];
 
+  // Assuming that shrine room door is located at the north edge,
+  // rotate layout accordingly to carve direction.
+  std::map<RoomEdgeEnum, RoomLayoutRotation> rotationByDir =
+  {
+    { RoomEdgeEnum::NORTH, RoomLayoutRotation::CCW_180 },
+    { RoomEdgeEnum::EAST, RoomLayoutRotation::CCW_90 },
+    { RoomEdgeEnum::SOUTH, RoomLayoutRotation::NONE },
+    { RoomEdgeEnum::WEST, RoomLayoutRotation::CCW_270 }
+  };
+
+  layout = Util::RotateRoomLayout(layout, rotationByDir[dir]);
+
   int roomSize = layout.size();
 
   int lx = 0;
@@ -444,6 +455,17 @@ bool FeatureRooms::CreateShrine(const Position& start,
 
   ex += roomSize * d.X;
   ey += roomSize * d.Y;
+
+  for (int x = start.X; x != ex; x += d.X)
+  {
+    for (int y = start.Y; y != ey; y += d.Y)
+    {
+      if (!IsCellValid({ x, y }))
+      {
+        return false;
+      }
+    }
+  }
 
   for (int x = start.X; x != ex; x += d.X)
   {
