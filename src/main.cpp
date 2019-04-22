@@ -78,8 +78,8 @@ int main(int argc, char* argv[])
   {
     { FeatureRoomType::EMPTY,    { 10, 0 }  },
     { FeatureRoomType::DIAMOND,  { 3, 3 }   },
-    { FeatureRoomType::FLOODED,  { 2, 3 }   },
-    { FeatureRoomType::GARDEN,   { 3, 1 }   },
+    { FeatureRoomType::FLOODED,  { 1, 3 }   },
+    { FeatureRoomType::GARDEN,   { 3, 3 }   },
     { FeatureRoomType::PILLARS,  { 7, 0 }   },
     { FeatureRoomType::ROUND,    { 5, 3 }   },
     { FeatureRoomType::POND,     { 3, 3 }   },

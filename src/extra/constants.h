@@ -1549,15 +1549,26 @@ namespace GlobalConstants
   static const std::vector<StringsArray2D> FountainLayouts =
   {
     {
-      "         ",
-      " www www ",
-      " www www ",
-      " ww   ww ",
-      "    F    ",
-      " ww   ww ",
-      " www www ",
-      " www www ",
-      "         "
+      ".... ....",
+      ".##. .##.",
+      ".#.   .#.",
+      ".. www ..",
+      "   wFw   ",
+      ".. www ..",
+      ".#.   .#.",
+      ".##. .##.",
+      ".... ...."
+    },
+    {
+      ".........",
+      ".www.www.",
+      ".wFw.wFw.",
+      ".www.www.",
+      ".........",
+      ".www.www.",
+      ".wFw.wFw.",
+      ".www.www.",
+      "........."
     }
   };
 
