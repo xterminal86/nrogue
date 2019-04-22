@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 
+#include "constants.h"
 #include "position.h"
 
 enum class FeatureRoomType
@@ -16,7 +17,8 @@ enum class FeatureRoomType
   DIAMOND,
   ROUND,
   PILLARS,
-  POND
+  POND,
+  FOUNTAIN
 };
 
 // {
@@ -48,10 +50,15 @@ class DGBase
 
     std::vector<std::vector<char>> MapRaw;
 
+    // Since we cannot specify shrine type inside text map array
+    // during generation, we save all shrines into this map and
+    // use it at level instantiation stage.
+    std::map<Position, ShrineType> ShrinesByPosition;
+
   protected:
     bool CheckLimits(Position& start, int roomSize);
     bool IsInsideMap(Position pos);
-    bool IsDeadEnd(Position p);
+    bool IsDeadEnd(const Position& p);
 
     void FillDeadEnds();
     void FillMapRaw();

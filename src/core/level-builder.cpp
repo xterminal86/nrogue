@@ -104,3 +104,8 @@ void LevelBuilder::LogPrintMapRaw()
     _generator->LogPrintMapRaw();
   }
 }
+
+const std::map<Position, ShrineType>& LevelBuilder::ShrinesByPosition()
+{
+  return _generator->ShrinesByPosition;
+}

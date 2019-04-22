@@ -76,17 +76,18 @@ int main(int argc, char* argv[])
 
   FeatureRoomsWeights weights =
   {
-    { FeatureRoomType::EMPTY,   { 10, 0 }  },
-    { FeatureRoomType::DIAMOND, { 3, 5 }   },
-    { FeatureRoomType::FLOODED, { 2, 1 }   },
-    { FeatureRoomType::GARDEN,  { 3, 1 }   },
-    { FeatureRoomType::PILLARS, { 7, 0 }   },
-    { FeatureRoomType::ROUND,   { 5, 3 }   },
-    { FeatureRoomType::POND,    { 3, 1 }   },
-    { FeatureRoomType::SHRINE,  { 10, 1 }   }
+    { FeatureRoomType::EMPTY,    { 10, 0 }  },
+    { FeatureRoomType::DIAMOND,  { 3, 3 }   },
+    { FeatureRoomType::FLOODED,  { 2, 3 }   },
+    { FeatureRoomType::GARDEN,   { 3, 1 }   },
+    { FeatureRoomType::PILLARS,  { 7, 0 }   },
+    { FeatureRoomType::ROUND,    { 5, 3 }   },
+    { FeatureRoomType::POND,     { 3, 3 }   },
+    { FeatureRoomType::FOUNTAIN, { 3, 2 }   },
+    { FeatureRoomType::SHRINE,   { 10, 1 }   }
   };
 
-  Position mapSize = { 50, 160 };
+  Position mapSize = { 50, 100 };
   Position roomSize = { 1, 10 };
 
   LevelBuilder lb;

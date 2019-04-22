@@ -1509,6 +1509,84 @@ namespace GlobalConstants
     }
   };
 
+  static const std::vector<StringsArray2D> PondLayouts =
+  {
+    {
+      "         ",
+      " www www ",
+      " wgg ggw ",
+      " wgg ggw ",
+      "    W    ",
+      " wgg ggw ",
+      " wgg ggw ",
+      " www www ",
+      "         "
+    },
+    {
+      "ggggggggg",
+      "g.......g",
+      "g.     .g",
+      "g. WWW .g",
+      "g. WWW .g",
+      "g. WWW .g",
+      "g.     .g",
+      "g.......g",
+      "ggggggggg"
+    },
+    {
+      "         ",
+      " ### ### ",
+      " #ggggg# ",
+      " #gwwwg# ",
+      "  gwWwg  ",
+      " #gwwwg# ",
+      " #ggggg# ",
+      " ### ### ",
+      "         "
+    }
+  };
+
+  static const std::vector<StringsArray2D> FountainLayouts =
+  {
+    {
+      "         ",
+      " www www ",
+      " www www ",
+      " ww   ww ",
+      "    F    ",
+      " ww   ww ",
+      " www www ",
+      " www www ",
+      "         "
+    }
+  };
+
+  static const std::vector<StringsArray2D> GardenLayouts =
+  {
+    {
+      "ggggggggg",
+      "ggggTgggg",
+      "ggTgggTgg",
+      "ggggggggg",
+      "gTggTggTg",
+      "ggggggggg",
+      "ggTgggTgg",
+      "ggggTgggg",
+      "ggggggggg"
+    },
+    {
+      "gggg gggg",
+      "gwww wwwg",
+      "gwTg gTwg",
+      "gwgg ggwg",
+      "         ",
+      "gwgg ggwg",
+      "gwTg gTwg",
+      "gwww wwwg",
+      "gggg gggg"
+    }
+  };
+
   static const std::map<ShrineType, std::vector<StringsArray2D>> ShrineLayoutsByType =
   {
     {
@@ -1569,34 +1647,34 @@ namespace GlobalConstants
   {    
     // Castle
     {
-      "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-      "w###-###wwwwwwwwwwwwwww###-###w",
-      "w#     #wwwwwwwwwwwwwww#     #w",
-      "w#     #################     #w",
-      "w|                           |w",
-      "w#     #################     #w",
-      "w#     #.#######.......#     #w",
-      "w### #+#.#hh   S.......#+# ###w",
-      "www# #...+   / S.........# #www",
-      "www# #...#hh   S..######## #www",
-      "www# #...#######..#     ## #www",
-      "www# #............#     ## #www",
-      ".#######..........+     ## #www",
-      ".+.....+...ggg....+     ## #www",
-      ".+.....+...gFg....#     ## #www",
-      ".#######...ggg....#     ## #www",
-      "www# #............######## #www",
-      "www# #...................# #www",
-      "www# #..##+###+###+##....# #www",
-      "www# #..#   #   #   #....# #www",
-      "w### #+##   #   #   #..#+# ###w",
-      "w#     ##############..#     #w",
-      "w#     #################     #w",
-      "w|                           |w",
-      "w#     #################     #w",
-      "w#     #wwwwwwwwwwwwwww#     #w",
-      "w###-###wwwwwwwwwwwwwww###-###w",
-      "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+      "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+      "W###-###WWWWWWWWWWWWWWW###-###W",
+      "W#     #WWWWWWWWWWWWWWW#     #W",
+      "W#     #################     #W",
+      "W|                           |W",
+      "W#     #################     #W",
+      "W#     #.#######.......#     #W",
+      "W### #+#.#hh   S.......#+# ###W",
+      "WWW# #...+   / S.........# #WWW",
+      "WWW# #...#hh   S..######## #WWW",
+      "WWW# #...#######..#     ## #WWW",
+      "WWW# #............#     ## #WWW",
+      ".#######..........+     ## #WWW",
+      ".+.....+...ggg....+     ## #WWW",
+      ".+.....+...gFg....#     ## #WWW",
+      ".#######...ggg....#     ## #WWW",
+      "WWW# #............######## #WWW",
+      "WWW# #...................# #WWW",
+      "WWW# #..##+###+###+##....# #WWW",
+      "WWW# #..#   #   #   #....# #WWW",
+      "W### #+##   #   #   #..#+# ###W",
+      "W#     ##############..#     #W",
+      "W#     #################     #W",
+      "W|                           |W",
+      "W#     #################     #W",
+      "W#     #WWWWWWWWWWWWWWW#     #W",
+      "W###-###WWWWWWWWWWWWWWW###-###W",
+      "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
     }
   };
 }

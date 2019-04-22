@@ -187,7 +187,7 @@ bool DGBase::IsInsideMap(Position pos)
 }
 
 // Cell is "valid" if it touches only one floor tile
-bool DGBase::IsDeadEnd(Position p)
+bool DGBase::IsDeadEnd(const Position& p)
 {
   int lx = p.X - 1;
   int ly = p.Y - 1;
@@ -196,10 +196,30 @@ bool DGBase::IsDeadEnd(Position p)
 
   int count = 0;
 
-  if (_map[lx][p.Y].Image == '.') count++;
-  if (_map[hx][p.Y].Image == '.') count++;
-  if (_map[p.X][ly].Image == '.') count++;
-  if (_map[p.X][hy].Image == '.') count++;
+  auto walkable = [&, this](int x, int y)
+  {
+    char& img = _map[x][y].Image;
+
+    // Tile is walkable if it's
+    //
+    // 'ground'
+    // 'stone'
+    // 'shallow water'
+    // 'grass'
+    // 'dirt'
+    bool cond = (img == '.'
+              || img == ' '
+              || img == 'w'
+              || img == 'g'
+              || img == 'd');
+
+    return cond;
+  };
+
+  if (walkable(lx, p.Y)) count++;
+  if (walkable(hx, p.Y)) count++;
+  if (walkable(p.X, ly)) count++;
+  if (walkable(p.X, hy)) count++;
 
   return (count == 1);
 }

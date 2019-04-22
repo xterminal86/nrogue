@@ -3,11 +3,11 @@
 #include "rng.h"
 #include "util.h"
 
-/// Builds dungeon by attaching new rooms to existing ones
-/// maxIterations should be empirically chosen, because
+/// Builds dungeon by attaching new rooms to existing ones.
+/// 'maxIterations' should be empirically chosen, because
 /// it depends on roomSizes.
-/// Set to (mapSize.X * mapSize.Y) to use all available map area, but
-/// be aware of computational time.
+/// Generally set 'maxIterations' to (mapSize.X * mapSize.Y)
+/// to maximize the effect, but be aware of computational time.
 void FeatureRooms::Generate(Position mapSize,
                             Position roomSizes,
                             const FeatureRoomsWeights& weightsMap,
@@ -131,6 +131,15 @@ bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
     }
     break;
 
+    case FeatureRoomType::FLOODED:
+    {
+      auto rndSize = GetRandomRoomSize();
+      int choice = RNG::Instance().RandomRange(0, 2);
+      char variant = (choice == 0) ? 'w' : 'l';
+      success = CreateEmptyRoom(newRoomStartPos, rndSize, direction, variant);
+    }
+    break;
+
     case FeatureRoomType::DIAMOND:
     {
       int size = RNG::Instance().RandomRange(2, 8);
@@ -140,7 +149,7 @@ bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
 
     case FeatureRoomType::ROUND:
     {
-      // Round room works well starting from radius = 4,
+      // Round room works with radius >= 4,
       // otherwise it degenerates into empty room.
       int r = RNG::Instance().RandomRange(4, 8);
       success = CreateRoundRoom(newRoomStartPos, r, direction);
@@ -153,9 +162,21 @@ bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
       auto it = GlobalConstants::ShrineNameByType.begin();
       std::advance(it, index);
 
-      success = CreateShrine(newRoomStartPos, direction, it->first);
+      success = CreateShrine(newRoomStartPos, direction, it->first);      
     }
     break;    
+
+    case FeatureRoomType::POND:
+    case FeatureRoomType::GARDEN:
+    case FeatureRoomType::FOUNTAIN:
+    {
+      auto layoutVariant = _specialRoomLayoutByType.at(roomType);
+      int choice = RNG::Instance().RandomRange(0, 2);
+      int index = RNG::Instance().RandomRange(0, layoutVariant.size());
+      auto layout = layoutVariant[index];
+      success = Create9x9Room(newRoomStartPos, layout, direction, (choice == 0));
+    }
+    break;
 
     default:
       success = false;
@@ -327,7 +348,7 @@ std::vector<Position> FeatureRooms::GetValidCellsToCarveFrom()
   return validCells;
 }
 
-bool FeatureRooms::CreateEmptyRoom(Position start, Position size, RoomEdgeEnum dir)
+bool FeatureRooms::CreateEmptyRoom(Position start, Position size, RoomEdgeEnum dir, char ground)
 {
   int sx = start.X;
   int sy = start.Y;
@@ -415,7 +436,7 @@ bool FeatureRooms::CreateEmptyRoom(Position start, Position size, RoomEdgeEnum d
 
   for (auto& i : cellsToChange)
   {
-    _map[i.X][i.Y].Image = '.';
+    _map[i.X][i.Y].Image = ground;
   }
 
   return true;
@@ -429,74 +450,14 @@ bool FeatureRooms::CreateShrine(const Position& start,
   int index = RNG::Instance().RandomRange(0, layouts.size());
   auto layout = layouts[index];
 
-  // roomSize is 5
-  int roomSize = layout.size();
-  int shift = (roomSize - 1) / 2;
+  // layout.size() is 5
+  // Center room entrance along the dir.
+  auto res = CenterRoomAlongDir(start, layout.size(), dir);
 
-  int sx = start.X;
-  int sy = start.Y;
-  int ex = start.X;
-  int ey = start.Y;
-
-  switch (dir)
-  {
-    case RoomEdgeEnum::NORTH:
-      sx -= roomSize;
-      sy -= shift;
-      ey += shift;
-      break;
-
-    case RoomEdgeEnum::EAST:
-      sx -= shift;
-      ex += shift;
-      ey += roomSize;
-      break;
-
-    case RoomEdgeEnum::SOUTH:
-      ex += roomSize;
-      sy -= shift;
-      ey += shift;
-      break;
-
-    case RoomEdgeEnum::WEST:
-      sx -= shift;
-      ex += shift;
-      sy -= roomSize;
-      break;
-  }
-
-  if (dir == RoomEdgeEnum::NORTH)
-  {
-    // To attach layout to the door position
-    sx++;
-    ex++;
-
-    // Include last row of the layout
-    ey++;
-  }
-  else if (dir == RoomEdgeEnum::SOUTH)
-  {
-    // Same logic as above
-
-    sx--;
-    ex--;
-
-    ey++;
-  }
-  else if (dir == RoomEdgeEnum::WEST)
-  {
-    sy++;
-    ey++;
-
-    ex++;
-  }
-  else if (dir == RoomEdgeEnum::EAST)
-  {
-    sy--;
-    ey--;
-
-    ex++;
-  }
+  int sx = res.first.X;
+  int ex = res.first.Y;
+  int sy = res.second.X;
+  int ey = res.second.Y;
 
   for (int x = sx; x < ex; x++)
   {
@@ -516,6 +477,13 @@ bool FeatureRooms::CreateShrine(const Position& start,
   {
     for (int y = sy; y < ey; y++)
     {
+      // Remember shrine type and position
+      if (lx == 2 && ly == 2)
+      {
+        Position key = { x, y };
+        ShrinesByPosition.emplace(key, type);
+      }
+
       _map[x][y].Image = layout[lx][ly];
       ly++;
     }
@@ -525,6 +493,75 @@ bool FeatureRooms::CreateShrine(const Position& start,
   }
 
   return true;
+}
+
+bool FeatureRooms::Create9x9Room(const Position& start,
+                                 StringsArray2D& layout,
+                                 RoomEdgeEnum dir,
+                                 bool hellish)
+{
+  // layout.size() is 9
+  // Center room entrance along the dir.
+  auto res = CenterRoomAlongDir(start, layout.size(), dir);
+
+  int sx = res.first.X;
+  int ex = res.first.Y;
+  int sy = res.second.X;
+  int ey = res.second.Y;
+
+  for (int x = sx; x < ex; x++)
+  {
+    for (int y = sy; y < ey; y++)
+    {
+      if (!IsCellValid({ x, y }))
+      {
+        return false;
+      }
+    }
+  }
+
+  if (hellish)
+  {
+    DemonizeLayout(layout);
+  }
+
+  int lx = 0;
+  int ly = 0;
+
+  for (int x = sx; x < ex; x++)
+  {
+    for (int y = sy; y < ey; y++)
+    {
+      _map[x][y].Image = layout[lx][ly];
+      ly++;
+    }
+
+    lx++;
+    ly = 0;
+  }
+
+  return true;
+}
+
+void FeatureRooms::DemonizeLayout(StringsArray2D& layout)
+{
+  for (int x = 0; x < layout.size(); x++)
+  {
+    for (int y = 0; y < layout.size(); y++)
+    {
+      char img = layout[x][y];
+      if (img == 'w' || img == 'W')
+      {
+        img = 'l';
+      }
+      else if (img == 'g')
+      {
+        img = 'd';
+      }
+
+      layout[x][y] = img;
+    }
+  }
 }
 
 RoomEdgeEnum FeatureRooms::GetCarveDirectionForDeadend(Position pos)
@@ -621,4 +658,88 @@ bool FeatureRooms::IsCellValid(const Position& pos)
   }
 
   return true;
+}
+
+// Returns pair of coordinates span [ (x1 -> x2), (y1 -> y2) ]
+// for a room centered along specified direction.
+//
+// 'roomSize' must be odd
+std::pair<Position, Position> FeatureRooms::CenterRoomAlongDir(const Position& start, int roomSize, RoomEdgeEnum dir)
+{
+  std::pair<Position, Position> res;
+
+  int shift = (roomSize - 1) / 2;
+
+  int sx = start.X;
+  int sy = start.Y;
+  int ex = start.X;
+  int ey = start.Y;
+
+  switch (dir)
+  {
+    case RoomEdgeEnum::NORTH:
+      sx -= roomSize;
+      sy -= shift;
+      ey += shift;
+      break;
+
+    case RoomEdgeEnum::EAST:
+      sx -= shift;
+      ex += shift;
+      ey += roomSize;
+      break;
+
+    case RoomEdgeEnum::SOUTH:
+      ex += roomSize;
+      sy -= shift;
+      ey += shift;
+      break;
+
+    case RoomEdgeEnum::WEST:
+      sx -= shift;
+      ex += shift;
+      sy -= roomSize;
+      break;
+  }
+
+  if (dir == RoomEdgeEnum::NORTH)
+  {
+    // To attach layout to the door position
+    sx++;
+    ex++;
+
+    // Include last row of the layout
+    ey++;
+  }
+  else if (dir == RoomEdgeEnum::SOUTH)
+  {
+    // Same logic as above
+
+    sx--;
+    ex--;
+
+    ey++;
+  }
+  else if (dir == RoomEdgeEnum::WEST)
+  {
+    sy++;
+    ey++;
+
+    ex++;
+  }
+  else if (dir == RoomEdgeEnum::EAST)
+  {
+    sy--;
+    ey--;
+
+    ex++;
+  }
+
+  res =
+  {
+    { sx, ex },
+    { sy, ey }
+  };
+
+  return res;
 }

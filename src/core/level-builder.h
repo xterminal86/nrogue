@@ -49,6 +49,8 @@ class LevelBuilder
 
     std::vector<std::vector<char>> MapRaw;
 
+    const std::map<Position, ShrineType>& ShrinesByPosition();
+
   private:
     std::unique_ptr<DGBase> _generator;
 };
