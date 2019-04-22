@@ -429,36 +429,78 @@ bool FeatureRooms::CreateShrine(const Position& start,
   int index = RNG::Instance().RandomRange(0, layouts.size());
   auto layout = layouts[index];
 
-  // Assuming that shrine room door is located at the north edge,
-  // rotate layout accordingly to carve direction.
-  std::map<RoomEdgeEnum, RoomLayoutRotation> rotationByDir =
-  {
-    { RoomEdgeEnum::NORTH, RoomLayoutRotation::CCW_180 },
-    { RoomEdgeEnum::EAST, RoomLayoutRotation::CCW_90 },
-    { RoomEdgeEnum::SOUTH, RoomLayoutRotation::NONE },
-    { RoomEdgeEnum::WEST, RoomLayoutRotation::CCW_270 }
-  };
-
-  layout = Util::RotateRoomLayout(layout, rotationByDir[dir]);
-
+  // roomSize is 5
   int roomSize = layout.size();
-
-  int lx = 0;
-  int ly = 0;
+  int shift = (roomSize - 1) / 2;
 
   int sx = start.X;
   int sy = start.Y;
   int ex = start.X;
   int ey = start.Y;
 
-  Position d = GetOffsetsForDirection(dir);
-
-  ex += roomSize * d.X;
-  ey += roomSize * d.Y;
-
-  for (int x = start.X; x != ex; x += d.X)
+  switch (dir)
   {
-    for (int y = start.Y; y != ey; y += d.Y)
+    case RoomEdgeEnum::NORTH:
+      sx -= roomSize;
+      sy -= shift;
+      ey += shift;
+      break;
+
+    case RoomEdgeEnum::EAST:
+      sx -= shift;
+      ex += shift;
+      ey += roomSize;
+      break;
+
+    case RoomEdgeEnum::SOUTH:
+      ex += roomSize;
+      sy -= shift;
+      ey += shift;
+      break;
+
+    case RoomEdgeEnum::WEST:
+      sx -= shift;
+      ex += shift;
+      sy -= roomSize;
+      break;
+  }
+
+  if (dir == RoomEdgeEnum::NORTH)
+  {
+    // To attach layout to the door position
+    sx++;
+    ex++;
+
+    // Include last row of the layout
+    ey++;
+  }
+  else if (dir == RoomEdgeEnum::SOUTH)
+  {
+    // Same logic as above
+
+    sx--;
+    ex--;
+
+    ey++;
+  }
+  else if (dir == RoomEdgeEnum::WEST)
+  {
+    sy++;
+    ey++;
+
+    ex++;
+  }
+  else if (dir == RoomEdgeEnum::EAST)
+  {
+    sy--;
+    ey--;
+
+    ex++;
+  }
+
+  for (int x = sx; x < ex; x++)
+  {
+    for (int y = sy; y < ey; y++)
     {
       if (!IsCellValid({ x, y }))
       {
@@ -467,15 +509,18 @@ bool FeatureRooms::CreateShrine(const Position& start,
     }
   }
 
-  for (int x = start.X; x != ex; x += d.X)
+  int lx = 0;
+  int ly = 0;
+
+  for (int x = sx; x < ex; x++)
   {
-    for (int y = start.Y; y != ey; y += d.Y)
+    for (int y = sy; y < ey; y++)
     {
       _map[x][y].Image = layout[lx][ly];
       ly++;
     }
 
-    lx++;
+    lx++;    
     ly = 0;
   }
 

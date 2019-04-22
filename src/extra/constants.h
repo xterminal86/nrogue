@@ -738,6 +738,14 @@ struct ItemData
 
 namespace GlobalConstants
 {
+  static std::map<RoomEdgeEnum, std::string> DirNamesByDir =
+  {
+    { RoomEdgeEnum::NORTH, "NORTH" },
+    { RoomEdgeEnum::EAST,  "EAST"  },
+    { RoomEdgeEnum::SOUTH, "SOUTH" },
+    { RoomEdgeEnum::WEST,  "WEST"  }
+  };
+
   static std::map<NameCP437, int> CP437IndexByType =
   {
     { NameCP437::FACE_1,       (int)NameCP437::FACE_1       },
@@ -1484,11 +1492,11 @@ namespace GlobalConstants
     // 3
     // Forgotten, Hidden, Ruined, Desecrated, Disturbing
     {
-      ".#+..",
-      ".  .#",
-      "#./.#",
+      ".#+.#",
+      ".   #",
+      "../..",
       "#.  .",
-      "..#.#"
+      "##..#"
     },
     // 4
     // Abyssal
