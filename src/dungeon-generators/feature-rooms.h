@@ -36,16 +36,17 @@ class FeatureRooms : public DGBase
                          int radius,
                          RoomEdgeEnum dir);
 
-    bool Create9x9Room(const Position& start,
-                       StringsArray2D& layout,
-                       RoomEdgeEnum dir,
-                       bool hellish);
+    bool PlaceLayout(const Position& start,
+                     StringsArray2D& layout,
+                     RoomEdgeEnum dir,
+                     bool demonize = false);
 
     void CreateStartingRoom();
 
     std::vector<Position> GetValidCellsToCarveFrom();
 
     bool IsCellValid(const Position& pos);
+    bool IsRangeOK(const Position& start, const Position& end);
 
     bool TryToCreateRoom(const Position& doorPos,
                          const Position& newRoomStartPos,

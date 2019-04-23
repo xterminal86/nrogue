@@ -80,11 +80,11 @@ int main(int argc, char* argv[])
     { FeatureRoomType::DIAMOND,  { 3, 3 }   },
     { FeatureRoomType::FLOODED,  { 1, 3 }   },
     { FeatureRoomType::GARDEN,   { 3, 3 }   },
-    { FeatureRoomType::PILLARS,  { 7, 0 }   },
+    { FeatureRoomType::PILLARS,  { 5, 0 }   },
     { FeatureRoomType::ROUND,    { 5, 3 }   },
     { FeatureRoomType::POND,     { 3, 3 }   },
     { FeatureRoomType::FOUNTAIN, { 3, 2 }   },
-    { FeatureRoomType::SHRINE,   { 10, 1 }   }
+    { FeatureRoomType::SHRINE,   { 10, 1 }  }
   };
 
   Position mapSize = { 50, 100 };

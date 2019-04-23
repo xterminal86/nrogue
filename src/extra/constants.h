@@ -595,7 +595,7 @@ enum class NameCP437
   WAVES = 247,
 };
 
-// TODO: possible god object
+// NOTE: possible god object
 struct ItemData
 {
   ItemType ItemType_ = ItemType::DUMMY;
@@ -1483,11 +1483,11 @@ namespace GlobalConstants
     // 2
     // Holy, Healing, Potential, Tranquility, Perception
     {
-      "#w w#",
       "ww ww",
+      "w   w",
       "  /  ",
-      "ww ww",
-      "#w w#"
+      "w   w",
+      "ww ww"
     },
     // 3
     // Forgotten, Hidden, Ruined, Desecrated, Disturbing
@@ -1502,9 +1502,9 @@ namespace GlobalConstants
     // Abyssal
     {
       "ll ll",
-      "ll ll",
+      "l   l",
       "  /  ",
-      "ll ll",
+      "l   l",
       "ll ll"
     }
   };
@@ -1595,6 +1595,37 @@ namespace GlobalConstants
       "gwTg gTwg",
       "gwww wwwg",
       "gggg gggg"
+    }
+  };
+
+  static const std::vector<StringsArray2D> PillarsLayouts =
+  {
+    {
+      ".....",
+      ".#.#.",
+      ".....",
+      ".#.#.",
+      "....."
+    },
+    {
+      ".......",
+      ".##.##.",
+      ".##.##.",
+      ".......",
+      ".##.##.",
+      ".##.##.",
+      "......."
+    },
+    {
+      ".........",
+      "..#...#..",
+      ".###.###.",
+      "..#...#..",
+      ".........",
+      "..#...#..",
+      ".###.###.",
+      "..#...#..",
+      "........."
     }
   };
 

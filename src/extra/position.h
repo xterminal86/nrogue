@@ -52,7 +52,7 @@ struct Position
 
   void Print()
   {
-    printf("%s: [%i; %i]\n", __PRETTY_FUNCTION__, X, Y);
+    printf("%s: [%i ; %i]\n", __PRETTY_FUNCTION__, X, Y);
   }
 
   int X;
