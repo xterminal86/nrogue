@@ -74,25 +74,5 @@ int main(int argc, char* argv[])
   Tests::Run();
   #endif
 
-  FeatureRoomsWeights weights =
-  {
-    { FeatureRoomType::EMPTY,    { 10, 0 }  },
-    { FeatureRoomType::DIAMOND,  { 3, 3 }   },
-    { FeatureRoomType::FLOODED,  { 1, 3 }   },
-    { FeatureRoomType::GARDEN,   { 3, 3 }   },
-    { FeatureRoomType::PILLARS,  { 5, 0 }   },
-    { FeatureRoomType::ROUND,    { 5, 3 }   },
-    { FeatureRoomType::POND,     { 3, 3 }   },
-    { FeatureRoomType::FOUNTAIN, { 3, 2 }   },
-    { FeatureRoomType::SHRINE,   { 10, 1 }  }
-  };
-
-  Position mapSize = { 50, 100 };
-  Position roomSize = { 1, 10 };
-
-  LevelBuilder lb;
-  lb.FeatureRoomsMethod(mapSize, roomSize, weights, 3, mapSize.X * mapSize.Y);
-  lb.LogPrintMapRaw();
-
   return 0;
 }

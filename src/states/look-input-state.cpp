@@ -23,7 +23,7 @@ void LookInputState::Prepare()
 
 void LookInputState::HandleInput()
 {
-  _keyPressed = GetKeyDown();
+  _keyPressed = GetKeyDown(true);
 
   switch (_keyPressed)
   {

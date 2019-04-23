@@ -1,13 +1,23 @@
 #include "gamestate.h"
 #include "printer.h"
 
-int GameState::GetKeyDown()
+int GameState::GetKeyDown(bool keyPressOnce)
 {  
 #ifdef USE_SDL
   int res = -1;
 
   SDL_Event event;
-  SDL_PollEvent(&event);
+  if (keyPressOnce)
+  {
+    if (!SDL_PollEvent(&event))
+    {
+      return res;
+    }
+  }
+  else
+  {
+    SDL_PollEvent(&event);
+  }
 
   static bool shiftPressed = false;
   static char passThrough = 0;

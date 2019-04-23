@@ -305,6 +305,30 @@ namespace Tests
     lb.RoomsMethod(mapSize, { 45, 55 }, 5);
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();    
+
+    str = "7) Feature rooms:\n\n";
+    Logger::Instance().Print(str);
+    printf("%s", str.data());
+
+    FeatureRoomsWeights weights =
+    {
+      { FeatureRoomType::EMPTY,    { 10, 0 }  },
+      { FeatureRoomType::DIAMOND,  { 3, 3 }   },
+      { FeatureRoomType::FLOODED,  { 1, 3 }   },
+      { FeatureRoomType::GARDEN,   { 3, 3 }   },
+      { FeatureRoomType::PILLARS,  { 5, 0 }   },
+      { FeatureRoomType::ROUND,    { 5, 3 }   },
+      { FeatureRoomType::POND,     { 3, 3 }   },
+      { FeatureRoomType::FOUNTAIN, { 3, 2 }   },
+      { FeatureRoomType::SHRINE,   { 10, 1 }  }
+    };
+
+    Position mapSize = { 50, 100 };
+    Position roomSize = { 1, 10 };
+
+    lb.FeatureRoomsMethod(mapSize, roomSize, weights, 3, mapSize.X * mapSize.Y);
+    lb.LogPrintMapRaw();
+    lb.PrintMapRaw();
   }
 
   inline void Run()
