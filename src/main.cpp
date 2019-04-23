@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
   Position roomSize = { 1, 10 };
 
   LevelBuilder lb;
-  lb.FeatureRoomsMethod(mapSize, roomSize, weights, mapSize.X * mapSize.Y);
+  lb.FeatureRoomsMethod(mapSize, roomSize, weights, 3, mapSize.X * mapSize.Y);
   lb.LogPrintMapRaw();
 
   return 0;

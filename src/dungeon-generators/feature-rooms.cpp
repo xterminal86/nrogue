@@ -4,6 +4,8 @@
 #include "util.h"
 
 /// Builds dungeon by attaching new rooms to existing ones.
+/// 'doorPlacementChance' is a value from 0 to 10 with higher
+/// values meaning higher chance to place door between rooms.
 /// 'maxIterations' should be empirically chosen, because
 /// it depends on roomSizes.
 /// Generally set 'maxIterations' to (mapSize.X * mapSize.Y)
@@ -11,6 +13,7 @@
 void FeatureRooms::Generate(Position mapSize,
                             Position roomSizes,
                             const FeatureRoomsWeights& weightsMap,
+                            int doorPlacementChance,
                             int maxIterations)
 {
   _weightsMap = weightsMap;
@@ -71,8 +74,8 @@ void FeatureRooms::Generate(Position mapSize,
     bool success = TryToCreateRoom(doorPos, newRoomStartPos, carveDir, typeRolled);
     if (success)
     {
-      int shouldPlaceDoor = RNG::Instance().RandomRange(0, 11);
-      _map[doorPos.X][doorPos.Y].Image = (shouldPlaceDoor <= 3) ? '+' : '.';
+      int shouldPlaceDoor = RNG::Instance().RandomRange(1, 11);
+      _map[doorPos.X][doorPos.Y].Image = (shouldPlaceDoor <= doorPlacementChance) ? '+' : '.';
       _generatedSoFar[typeRolled]++;
     }
   }
@@ -357,93 +360,60 @@ std::vector<Position> FeatureRooms::GetValidCellsToCarveFrom()
 
 bool FeatureRooms::CreateEmptyRoom(Position start, Position size, RoomEdgeEnum dir, char ground)
 {
+  int shiftX = RNG::Instance().RandomRange(0, size.X);
+  int shiftY = RNG::Instance().RandomRange(0, size.Y);
+
+  int heightOffsetToStart = size.X - 1;
+  int widthOffsetToStart = size.Y - 1;
+
   int sx = start.X;
   int sy = start.Y;
-
-  int shift = 0;
-
-  if (dir == RoomEdgeEnum::NORTH || dir == RoomEdgeEnum::SOUTH)
-  {
-    shift = RNG::Instance().RandomRange(0, size.X);
-    sy -= shift;
-  }
-  else if (dir == RoomEdgeEnum::EAST || dir == RoomEdgeEnum::WEST)
-  {
-    shift = RNG::Instance().RandomRange(0, size.Y);
-    sx -= shift;
-  }
-
   int ex = sx;
   int ey = sy;
 
   switch (dir)
   {
     case RoomEdgeEnum::NORTH:
-      ex -= size.Y;
-      ey += size.X;
-      break;
-
-    case RoomEdgeEnum::SOUTH:
-      ex += size.Y;
-      ey += size.X;
-      break;
+    {
+      sx -= heightOffsetToStart;
+      sy -= shiftY;
+    }
+    break;
 
     case RoomEdgeEnum::EAST:
-      ex += size.Y;
-      ey += size.X;
-      break;
+    {
+      sx -= shiftX;
+    }
+    break;
+
+    case RoomEdgeEnum::SOUTH:
+    {
+      sy -= shiftY;
+    }
+    break;
 
     case RoomEdgeEnum::WEST:
-      ex += size.Y;
-      ey -= size.X;
-      break;
-  }
-
-  int minX = std::min(sx, ex);
-  int minY = std::min(sy, ey);
-  int maxX = std::max(sx, ex);
-  int maxY = std::max(sy, ey);
-
-  // Since corner points may be swapped,
-  // for loop may go from corner to the starting point,
-  // thus not including it.
-  // It happens in these two cases, so we just hack it.
-
-  if (dir == RoomEdgeEnum::NORTH)
-  {
-    minX++;
-    maxX++;
-  }
-  else if (dir == RoomEdgeEnum::WEST)
-  {
-    minY++;
-    maxY++;
-  }
-
-  std::vector<Position> cellsToChange;
-
-  // Do not include maxX and maxY since
-  // 'size' was added to 'start', making the whole thing
-  // 1 unit longer.
-
-  for (int x = minX; x < maxX; x++)
-  {
-    for (int y = minY; y < maxY; y++)
     {
-      if (!IsCellValid({ x, y }))
-      {
-        return false;
-      }
-      else
-      {
-        cellsToChange.push_back({ x, y });
-      }
+      sx -= shiftX;
+      sy -= widthOffsetToStart;
     }
+    break;
   }
 
-  for (auto& i : cellsToChange)
+  ex = sx + size.X;
+  ey = sy + size.Y;
+
+  if (!IsAreaValid({ sx, sy }, { ex, ey }))
   {
-    _map[i.X][i.Y].Image = ground;
+    return false;
+  }
+
+  for (int x = sx; x < ex; x++)
+  {
+    for (int y = sy; y < ey; y++)
+    {
+      _map[x][y].Image = '.';
+    }
   }
 
   return true;
@@ -466,7 +436,7 @@ bool FeatureRooms::CreateShrine(const Position& start,
   int sy = res.second.X;
   int ey = res.second.Y;
 
-  if (!IsRangeOK({ sx, sy }, { ex, ey }))
+  if (!IsAreaValid({ sx, sy }, { ex, ey }))
   {
     return false;
   }
@@ -546,24 +516,18 @@ bool FeatureRooms::PlaceLayout(const Position& start,
     {
       sx -= heightOffsetToStart;
       sy -= shiftY;
-      ex = sx + layout.size();
-      ey = sy + layout[0].size();
     }
     break;
 
     case RoomEdgeEnum::EAST:
     {
       sx -= shiftX;
-      ex = sx + layout.size();
-      ey = sy + layout[0].size();
     }
     break;
 
     case RoomEdgeEnum::SOUTH:
     {
       sy -= shiftY;
-      ex = sx + layout.size();
-      ey = sy + layout[0].size();
     }
     break;
 
@@ -571,13 +535,14 @@ bool FeatureRooms::PlaceLayout(const Position& start,
     {
       sx -= shiftX;
       sy -= widthOffsetToStart;
-      ex = sx + layout.size();
-      ey = sy + layout[0].size();
     }
     break;
   }
 
-  if (!IsRangeOK({ sx, sy }, { ex, ey }))
+  ex = sx + layout.size();
+  ey = sy + layout[0].size();
+
+  if (!IsAreaValid({ sx, sy }, { ex, ey }))
   {
     return false;
   }
@@ -785,7 +750,7 @@ std::pair<Position, Position> FeatureRooms::CenterRoomAlongDir(const Position& s
   return res;
 }
 
-bool FeatureRooms::IsRangeOK(const Position& start, const Position& end)
+bool FeatureRooms::IsAreaValid(const Position& start, const Position& end)
 {
   for (int x = start.X; x < end.X; x++)
   {

@@ -12,12 +12,13 @@
 void LevelBuilder::FeatureRoomsMethod(const Position& mapSize,
                                       const Position& roomSizes,                                      
                                       const FeatureRoomsWeights& weightsMap,
+                                      int doorPlacementChance,
                                       int maxIterations)
 {
   _generator.reset(new FeatureRooms());
 
   FeatureRooms* fr = static_cast<FeatureRooms*>(_generator.get());
-  fr->Generate(mapSize, roomSizes, weightsMap, maxIterations);
+  fr->Generate(mapSize, roomSizes, weightsMap, doorPlacementChance, maxIterations);
 
   MapRaw = fr->MapRaw;
 }

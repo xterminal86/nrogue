@@ -12,6 +12,7 @@ class FeatureRooms : public DGBase
     void Generate(Position mapSize,
                   Position roomSizes,                  
                   const FeatureRoomsWeights& weightsMap,
+                  int doorPlacementChance,
                   int maxIterations);
 
   private:
@@ -46,7 +47,7 @@ class FeatureRooms : public DGBase
     std::vector<Position> GetValidCellsToCarveFrom();
 
     bool IsCellValid(const Position& pos);
-    bool IsRangeOK(const Position& start, const Position& end);
+    bool IsAreaValid(const Position& start, const Position& end);
 
     bool TryToCreateRoom(const Position& doorPos,
                          const Position& newRoomStartPos,
