@@ -1,13 +1,13 @@
 #include "gamestate.h"
 #include "printer.h"
 
-int GameState::GetKeyDown(bool keyPressOnce)
+int GameState::GetKeyDown(bool waitForEvent)
 {  
 #ifdef USE_SDL
   int res = -1;
 
   SDL_Event event;
-  if (keyPressOnce)
+  if (waitForEvent)
   {
     if (!SDL_PollEvent(&event))
     {

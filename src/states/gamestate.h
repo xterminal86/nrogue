@@ -24,7 +24,7 @@ class GameState
     virtual void HandleInput() = 0;
     virtual void Update(bool forceUpdate = false) = 0;
 
-    int GetKeyDown(bool keyPressOnce = false);
+    int GetKeyDown(bool waitForEvent = false);
 
   protected:
     int _keyPressed;    
