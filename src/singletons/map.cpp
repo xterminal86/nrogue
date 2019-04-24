@@ -33,10 +33,7 @@ void Map::Init()
   _mapVisitFirstTime[MapType::DEEP_DARK_1] = false;
   _mapVisitFirstTime[MapType::ABYSS_1] = false;
   _mapVisitFirstTime[MapType::NETHER_1] = false;
-  _mapVisitFirstTime[MapType::THE_END] = false;
-
-  // FIXME: debug
-  // ChangeLevel(MapType::MINES_1, true);
+  _mapVisitFirstTime[MapType::THE_END] = false;  
 }
 
 void Map::Draw(int playerX, int playerY)

@@ -229,3 +229,24 @@ bool MapLevelBase::IsCellBlocking(const Position& pos)
 
   return groundBlock;
 }
+
+void MapLevelBase::PlaceGrassTile(int x, int y)
+{
+  char img = ' ';
+
+  // Create 'flowers'
+  int tileChoice = RNG::Instance().RandomRange(0, 10);
+  if (tileChoice < 2) img = '.';
+
+  std::string flowerColor = GlobalConstants::BlackColor;
+
+  int colorChoice = RNG::Instance().RandomRange(0, 3);
+  if (colorChoice == 0)      flowerColor = GlobalConstants::WhiteColor;
+  else if (colorChoice == 1) flowerColor = GlobalConstants::DandelionYellowColor;
+  else if (colorChoice == 2) flowerColor = GlobalConstants::RedPoppyColor;
+
+  GameObjectInfo t;
+  t.Set(false, false, img, flowerColor, GlobalConstants::GrassColor, "Grass");
+
+  MapArray[x][y]->MakeTile(t);
+}

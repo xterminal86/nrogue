@@ -92,6 +92,8 @@ class MapLevelBase
     void CreateItemsForLevel(int maxItems);
     void PlaceStairs();
     void CreateInitialMonsters();
+
+    void PlaceGrassTile(int x, int y);
 };
 
 #endif // MAPLEVEL_H

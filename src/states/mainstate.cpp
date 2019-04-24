@@ -226,6 +226,9 @@ void MainState::HandleInput()
 
       case '>':
         CheckStairs('>');
+
+        //FIXME: debug
+        //Map::Instance().ChangeLevel(MapType::LOST_CITY, true);
         break;
 
       case '<':

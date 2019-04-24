@@ -343,8 +343,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
           break;
 
         case 'g':
-          t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::GrassColor, "Grass");
-          MapArray[posX][posY]->MakeTile(t);
+          PlaceGrassTile(posX, posY);
           break;
 
         case 'F':

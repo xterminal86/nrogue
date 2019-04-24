@@ -827,9 +827,12 @@ namespace GlobalConstants
 
   static const std::string BlackColor = "#000000";
   static const std::string WhiteColor = "#FFFFFF";
+  static const std::string DandelionYellowColor = "#F0E130";
+  static const std::string RedPoppyColor = "#E42F0C";
   static const std::string MarbleColor = "#FFE0E0";
   static const std::string WallColor = "#888888";
   static const std::string GrassColor = "#006600";
+  static const std::string DirtColor = "#9B7653";
   static const std::string TreeColor = "#00FF00";
   static const std::string PlayerColor = "#00FFFF";
   static const std::string MonsterColor = "#FF0000";
@@ -842,6 +845,9 @@ namespace GlobalConstants
   static const std::string WoodColor = "#DCB579";
   static const std::string ChestColor = "#A0793D";
   static const std::string MountainsColor = "#666666";
+  static const std::string StoneColor = "#AAAAAA";
+  static const std::string LavaColor = "#E36517";
+  static const std::string LavaWavesColor = "#E3A917";
   static const std::string FogOfWarColor = "#202020";
   static const std::string CoinsColor = "#FFD700";
   static const std::string DoorHighlightColor = "#666600";
@@ -1524,13 +1530,13 @@ namespace GlobalConstants
     },
     {
       "ggggggggg",
-      "g.......g",
-      "g.     .g",
-      "g. WWW .g",
-      "g. WWW .g",
-      "g. WWW .g",
-      "g.     .g",
-      "g.......g",
+      "ggggggggg",
+      "gg     gg",
+      "gg WWW gg",
+      "gg WWW gg",
+      "gg WWW gg",
+      "gg     gg",
+      "ggggggggg",
       "ggggggggg"
     },
     {
@@ -1560,15 +1566,15 @@ namespace GlobalConstants
       ".... ...."
     },
     {
-      ".........",
-      ".www.www.",
-      ".wFw.wFw.",
-      ".www.www.",
-      ".........",
-      ".www.www.",
-      ".wFw.wFw.",
-      ".www.www.",
-      "........."
+      "ggggggggg",
+      "gwwwgwwwg",
+      "gwFwgwFwg",
+      "gwwwgwwwg",
+      "ggggggggg",
+      "gwwwgwwwg",
+      "gwFwgwFwg",
+      "gwwwgwwwg",
+      "ggggggggg"
     }
   };
 

@@ -3,6 +3,8 @@
 
 #include "map-level-base.h"
 
+#include "level-builder.h"
+
 class MapLevelLostCity : public MapLevelBase
 {
   public:
@@ -13,6 +15,9 @@ class MapLevelLostCity : public MapLevelBase
 
   protected:
     void CreateLevel() override;
+
+  private:
+    void ConstructFromBuilder(LevelBuilder& lb);
 };
 
 #endif // MAPLEVELLOSTCITY_H
