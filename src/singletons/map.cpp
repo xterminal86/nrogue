@@ -509,11 +509,29 @@ void Map::PrintMapLayout()
   for (int x = 0; x < CurrentLevel->MapSize.Y; x++)
   {
     for (int y = 0; y < CurrentLevel->MapSize.X; y++)
-    {
+    {      
       char ch = CurrentLevel->MapArray[y][x]->Image;
-      if (ch == ' ')
+
+      // Replace wall tiles with '#'
+      if (CurrentLevel->MapArray[y][x]->Blocking
+       && CurrentLevel->MapArray[y][x]->BlocksSight
+       && ch == ' ')
       {
         ch = '#';
+      }
+
+      auto staticObjects = GetGameObjectsAtPosition(y, x);
+      if (!staticObjects.empty())
+      {
+        ch = staticObjects.back()->Image;
+
+        // Replace wall objects with '#'
+        if (staticObjects.back()->Blocking
+         && staticObjects.back()->BlocksSight
+         && ch == ' ')
+        {
+          ch = '#';
+        }
       }
 
       layout += ch;

@@ -235,6 +235,8 @@ void MainState::HandleInput()
         CheckStairs('<');
         break;
 
+      #ifndef RELEASE_BUILD
+
       // ***** FIXME: for debug, remove afterwards
 
       case 'L':
@@ -259,6 +261,8 @@ void MainState::HandleInput()
       break;
 
       // *****
+
+      #endif
 
       default:
         break;
