@@ -44,7 +44,7 @@ void AIMonsterBasic::MoveToKill()
 {
   auto c = SelectCellNearestToPlayer();
   if (c.size() != 0)
-  {
+  {    
     bool res = AIComponentRef->OwnerGameObject->MoveTo(c[0].X, c[0].Y);
     if (!res)
     {

@@ -232,15 +232,16 @@ bool MapLevelBase::IsCellBlocking(const Position& pos)
 
 void MapLevelBase::PlaceGrassTile(int x, int y)
 {
-  char img = ' ';
+  char img = '.';
 
   // Create 'flowers'
-  int tileChoice = RNG::Instance().RandomRange(0, 10);
-  if (tileChoice < 2) img = '.';
+  //int tileChoice = RNG::Instance().RandomRange(0, 10);
+  //if (tileChoice < 2) img = '.';
 
-  std::string flowerColor = GlobalConstants::BlackColor;
+  //std::string flowerColor = GlobalConstants::BlackColor;
+  std::string flowerColor = GlobalConstants::GrassDotColor;
 
-  int colorChoice = RNG::Instance().RandomRange(0, 3);
+  int colorChoice = RNG::Instance().RandomRange(0, 10);
   if (colorChoice == 0)      flowerColor = GlobalConstants::WhiteColor;
   else if (colorChoice == 1) flowerColor = GlobalConstants::DandelionYellowColor;
   else if (colorChoice == 2) flowerColor = GlobalConstants::RedPoppyColor;

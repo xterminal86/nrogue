@@ -681,7 +681,8 @@ namespace Util
   {
     int dice = RNG::Instance().RandomRange(1, 101);
 
-    auto logMsg = StringFormat("\tRollDice(bool): chance = %i, rolled = %i",
+    auto logMsg = StringFormat("\t%s: chance = %i, rolled = %i",
+                               __PRETTY_FUNCTION__,
                                 successChance,
                                 dice);
     Logger::Instance().Print(logMsg);
@@ -711,7 +712,7 @@ namespace Util
   {
     int dice = RNG::Instance().RandomRange(1, 101);
 
-    auto str = StringFormat("\tRollDice(void): rolled = %i", dice);
+    auto str = StringFormat("\t%s: rolled = %i", __PRETTY_FUNCTION__, dice);
     Logger::Instance().Print(str);
 
     return dice;

@@ -15,16 +15,6 @@ void MapLevelLostCity::PrepareMap(MapLevelBase* levelOwner)
   CreateLevel();
 }
 
-void MapLevelLostCity::DisplayWelcomeText()
-{
-  std::vector<std::string> msg =
-  {
-    "Lost City level description goes here"
-  };
-
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Lost City", msg);
-}
-
 void MapLevelLostCity::CreateLevel()
 {
   VisibilityRadius = 12;
@@ -152,7 +142,7 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
         case 'd':
         {
           objName = "Dirt";
-          t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::DirtColor, objName);
+          t.Set(false, false, '.', GlobalConstants::DirtDotColor, GlobalConstants::DirtColor, objName);
           MapArray[x][y]->MakeTile(t);
         }
         break;
@@ -183,4 +173,14 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
     auto go = GameObjectsFactory::Instance().CreateShrine(kvp.first.X, kvp.first.Y, shrineType, 1000);
     InsertGameObject(go);
   }
+}
+
+void MapLevelLostCity::DisplayWelcomeText()
+{
+  std::vector<std::string> msg =
+  {
+    "Lost City level description goes here"
+  };
+
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Lost City", msg);
 }

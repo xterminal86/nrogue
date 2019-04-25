@@ -64,7 +64,8 @@ bool GameObject::Move(int dx, int dy)
 bool GameObject::MoveTo(int x, int y)
 {
   bool isBlocked = Map::Instance().CurrentLevel->IsCellBlocking({ x, y });
-  if (!isBlocked)
+  bool isOccupied = Map::Instance().CurrentLevel->MapArray[x][y]->Occupied;
+  if (!isBlocked && !isOccupied)
   {
     // When we change level, previous position (PosX and PosY)
     // is pointing to the stairs down on previous level,

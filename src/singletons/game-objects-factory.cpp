@@ -82,7 +82,7 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
 
 GameObject* GameObjectsFactory::CreateMonster(int x, int y, GameObjectType monsterType)
 {
-  // FIXME: monsters' stats are too unbalanced: they become too op very fast.
+  // FIXME: monsters stats are too unbalanced: they become too op very fast.
   // Change them to talents based, like player?
   GameObject* go = nullptr;
 

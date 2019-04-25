@@ -832,7 +832,9 @@ namespace GlobalConstants
   static const std::string MarbleColor = "#FFE0E0";
   static const std::string WallColor = "#888888";
   static const std::string GrassColor = "#006600";
+  static const std::string GrassDotColor = "#009900";
   static const std::string DirtColor = "#9B7653";
+  static const std::string DirtDotColor = "#7B5633";
   static const std::string TreeColor = "#00FF00";
   static const std::string PlayerColor = "#00FFFF";
   static const std::string MonsterColor = "#FF0000";

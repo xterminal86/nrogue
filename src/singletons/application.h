@@ -61,6 +61,7 @@ class Application : public Singleton<Application>
     std::map<GameStates, std::unique_ptr<GameState>> _gameStates;    
 
     void InitGraphics();
+    void InitGameStates();
     void DrawAttackCursor(int x, int y, GameObject* defender, const std::string& cursorColor = "");
 
     #ifdef USE_SDL
