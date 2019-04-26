@@ -3,9 +3,11 @@
 #include "util.h"
 
 /// Use cellular automata to generate cave-like area.
-void CellularAutomata::Generate(Position mapSize, int initialWallChance,
-                                    int birthThreshold, int deathThreshold,
-                                    int maxIterations)
+void CellularAutomata::Generate(const Position& mapSize,
+                                int initialWallChance,
+                                int birthThreshold,
+                                int deathThreshold,
+                                int maxIterations)
 {
   _mapSize = mapSize;
 
@@ -112,7 +114,7 @@ std::vector<Position> CellularAutomata::FindNonMarkedCell()
   return res;
 }
 
-void CellularAutomata::FloodFill(Position start)
+void CellularAutomata::FloodFill(const Position& start)
 {
   std::queue<Position> visitedCells;
 
@@ -141,7 +143,8 @@ void CellularAutomata::FloodFill(Position start)
   }
 }
 
-void CellularAutomata::TryToMarkCell(Position p, std::queue<Position>& visitedCells)
+void CellularAutomata::TryToMarkCell(const Position& p,
+                                     std::queue<Position>& visitedCells)
 {
   if (IsInsideMap(p)
    && _map[p.X][p.Y].Image == '.'
@@ -154,7 +157,7 @@ void CellularAutomata::TryToMarkCell(Position p, std::queue<Position>& visitedCe
   }
 }
 
-void CellularAutomata::ConnectPoints(Position p1, Position p2)
+void CellularAutomata::ConnectPoints(const Position& p1, const Position& p2)
 {
   int dirX = (p1.X > p2.X) ? -1 : 1;
   int dirY = (p1.Y > p2.Y) ? -1 : 1;

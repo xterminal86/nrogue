@@ -278,7 +278,7 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
   CurrentLevel->AdjustCamera();
 }
 
-void Map::TeleportToExistingLevel(MapType levelToChange, Position teleportTo)
+void Map::TeleportToExistingLevel(MapType levelToChange, const Position& teleportTo)
 {
   auto& player = Application::Instance().PlayerInstance;
 

@@ -11,7 +11,7 @@
 class FromLayouts : public DGBase
 {
   public:
-    void Generate(std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY);
+    void Generate(const std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY);
 
     std::vector<RoomHelper> MapChunks;
 
@@ -33,13 +33,13 @@ class FromLayouts : public DGBase
 
     RoomLayout SelectRoom();
 
-    void TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side);
-    void VisitCells(RoomHelper& room);
+    void TryToAddRoomTo(const RoomHelper& currentRoom, RoomEdgeEnum side);
+    void VisitCells(const RoomHelper& room);
     void ConvertChunksToMapRaw();
 
-    bool IsAreaVisited(Position& start, int roomSize);
+    bool IsAreaVisited(const Position& start, int roomSize);
 
-    std::vector<RoomHelper> GetRoomsForLayout(RoomLayout& layout, RoomEdgeEnum side);
+    std::vector<RoomHelper> GetRoomsForLayout(const RoomLayout& layout, RoomEdgeEnum side);
     std::vector<RoomLayout> SelectRooms();
 };
 

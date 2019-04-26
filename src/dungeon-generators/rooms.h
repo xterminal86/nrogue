@@ -19,7 +19,9 @@ struct BSPNode
 class Rooms : public DGBase
 {
   public:
-    void Generate(Position mapSize, Position splitRatio, int minRoomSize);
+    void Generate(const Position& mapSize,
+                  const Position& splitRatio,
+                  int minRoomSize);
 
   private:
     Position _splitRatio;
@@ -29,20 +31,21 @@ class Rooms : public DGBase
 
     std::vector<Position> _connectionPoints;
 
-    std::pair<bool, float> GetSplitRatio(Rect area);
+    std::pair<bool, float> GetSplitRatio(Rect& area);
 
     void Subdivide(BSPNode& parent, float ratio, bool splitX);
-    void FillArea(Rect area, char ch = '.');
+    void FillArea(const Rect& area, char ch = '.');
 
     bool DoesRoomFit(Rect& area);
-    bool WasFilled(Rect area);
+    bool WasFilled(const Rect& area);
 
     void Traverse(BSPNode* node, int depth);
-    void ConnectPoints(Position p1, Position p2);
+    void ConnectPoints(const Position& p1, const Position& p2);
     void PlaceDoors();
 
-    bool IsSpotValidForDoor(Position p);
-    bool ComparePatterns(std::vector<std::string>& p1, std::vector<std::string>& p2);
+    bool IsSpotValidForDoor(const Position& p);
+    bool ComparePatterns(std::vector<std::string>& p1,
+                         std::vector<std::string>& p2);
 
     std::vector<Position> FindPlaceForDoor();
 };

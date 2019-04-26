@@ -106,7 +106,7 @@ namespace Util
     return ret;
   }
 
-  inline std::string Base64_Decode(std::string const& encoded_string)
+  inline std::string Base64_Decode(const std::string& encoded_string)
   {
     int in_len = encoded_string.size();
     int i = 0;

@@ -89,8 +89,11 @@ GameState* Application::GetGameStateRefByName(GameStates stateName)
   return nullptr;
 }
 
-void Application::ShowMessageBox(MessageBoxType type, std::string header, std::vector<std::string> message,
-                                 std::string borderColor, std::string bgColor)
+void Application::ShowMessageBox(MessageBoxType type,
+                                 const std::string& header,
+                                 const std::vector<std::string>& message,
+                                 const std::string& borderColor,
+                                 const std::string& bgColor)
 {
   _previousState = _currentState;
 
@@ -106,7 +109,10 @@ void Application::CloseMessageBox()
   _currentState = _previousState;
 }
 
-void Application::DisplayAttack(GameObject* defender, int delayMs, const std::string& messageToPrint, const std::string& cursorColor)
+void Application::DisplayAttack(GameObject* defender,
+                                int delayMs,
+                                const std::string& messageToPrint,
+                                const std::string& cursorColor)
 {
   int posX = defender->PosX + Map::Instance().CurrentLevel->MapOffsetX;
   int posY = defender->PosY + Map::Instance().CurrentLevel->MapOffsetY;
@@ -123,7 +129,9 @@ void Application::DisplayAttack(GameObject* defender, int delayMs, const std::st
   Util::Sleep(delayMs);
 }
 
-void Application::DrawAttackCursor(int x, int y, GameObject* defender, const std::string& cursorColor)
+void Application::DrawAttackCursor(int x, int y,
+                                   GameObject* defender,
+                                   const std::string& cursorColor)
 {
   if (cursorColor.length() == 0)
   {

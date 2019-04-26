@@ -8,18 +8,26 @@
 class Tunneler : public DGBase
 {
   public:
-    void Backtracking(Position mapSize, Position tunnelLengthMinMax, Position start = { -1, -1 }, bool additionalTweaks = false);
-    void Normal(Position mapSize, Position tunnelLengthMinMax, Position start, int maxIterations, bool additionalTweaks = false);
+    void Backtracking(const Position& mapSize,
+                      const Position& tunnelLengthMinMax,
+                      const Position& start = { -1, -1 },
+                      bool additionalTweaks = false);
+
+    void Normal(const Position& mapSize,
+                const Position& tunnelLengthMinMax,
+                const Position& start,
+                int maxIterations,
+                bool additionalTweaks = false);
 
   private:
-    std::vector<Position> GetRandomDir(Position pos);
-    std::vector<Position> TryToGetPerpendicularDir(Position pos, Position lastDir);
+    std::vector<Position> GetRandomDir(const Position& pos);
+    std::vector<Position> TryToGetPerpendicularDir(const Position& pos, const Position& lastDir);
 
-    Position GetRandomPerpendicularDir(Position dir);
+    Position GetRandomPerpendicularDir(const Position& dir);
 
-    std::vector<Position> GetCorridorDir(Position pos);
+    std::vector<Position> GetCorridorDir(const Position& pos);
 
-    bool IsDirectionValid(Position pos, Position dir);
+    bool IsDirectionValid(const Position& pos, const Position& dir);
 };
 
 #endif // TUNNELER_H

@@ -36,8 +36,8 @@ class TargetState : public GameState
     void FindTargets();
     void CycleTargets();
     void ProcessHit(GameObject* hitPoint);
-    void DrawExplosion(Position pos);
-    std::vector<Position> GetVisiblePointsFrom(Position from, int range);
+
+    std::vector<Position> GetVisiblePointsFrom(const Position& from, int range);
 
     GameObject* LaunchProjectile(char image, const std::string& color);
     GameObject* CheckHit(const Position& at, const Position& prev);

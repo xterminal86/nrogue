@@ -9,14 +9,17 @@ class FeatureRooms : public DGBase
   using RoomLayout = std::vector<std::vector<std::string>>;
 
   public:
-    void Generate(Position mapSize,
-                  Position roomSizes,                  
+    void Generate(const Position& mapSize,
+                  const Position& roomSizes,
                   const FeatureRoomsWeights& weightsMap,
                   int doorPlacementChance,
                   int maxIterations);
 
   private:
-    bool CreateEmptyRoom(Position start, Position size, RoomEdgeEnum dir, char ground = '.');
+    bool CreateEmptyRoom(const Position& start,
+                         const Position& size,
+                         RoomEdgeEnum dir,
+                         char ground = '.');
 
     Position GetRandomRoomSize();
     Position GetOffsetsForDirection(RoomEdgeEnum dir);

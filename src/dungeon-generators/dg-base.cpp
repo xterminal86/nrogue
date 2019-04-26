@@ -160,7 +160,7 @@ std::vector<std::vector<MapCell>> DGBase::CreateRandomlyFilledMap(int w, int h, 
   return map;
 }
 
-bool DGBase::CheckLimits(Position& start, int roomSize)
+bool DGBase::CheckLimits(const Position& start, int roomSize)
 {
   int lx = start.X;
   int ly = start.Y;
@@ -178,7 +178,7 @@ bool DGBase::CheckLimits(Position& start, int roomSize)
   return true;
 }
 
-bool DGBase::IsInsideMap(Position pos)
+bool DGBase::IsInsideMap(const Position& pos)
 {
   return (pos.X >= 1
        && pos.X < _mapSize.X - 1
@@ -260,7 +260,7 @@ void DGBase::CutProblemCorners()
 ///
 /// we replace random wall around A (which itself is '.')
 /// with empty space to disallow diagonal walking from A to B
-void DGBase::CheckIfProblemCorner(Position p)
+void DGBase::CheckIfProblemCorner(const Position& p)
 {
   int lx = p.X - 1;
   int ly = p.Y - 1;

@@ -605,7 +605,7 @@ GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateStatPotion(std::string statName, ItemPrefix prefixOverride)
+GameObject* GameObjectsFactory::CreateStatPotion(const std::string& statName, ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -889,7 +889,7 @@ bool GameObjectsFactory::FoodUseHandler(ItemComponent* item)
   return true;
 }
 
-GameObject* GameObjectsFactory::CreateNote(std::string objName, std::vector<std::string> text)
+GameObject* GameObjectsFactory::CreateNote(const std::string& objName, const std::vector<std::string>& text)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1095,7 +1095,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateContainer(std::string name, std::string bgColor, int image, int x, int y)
+GameObject* GameObjectsFactory::CreateContainer(const std::string& name, const std::string& bgColor, int image, int x, int y)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -2329,7 +2329,7 @@ void GameObjectsFactory::GenerateLootIfPossible(int posX, int posY, GameObjectTy
   }
 }
 
-void GameObjectsFactory::GenerateLoot(int posX, int posY, std::pair<ItemType, int> kvp, GameObjectType monsterType)
+void GameObjectsFactory::GenerateLoot(int posX, int posY, const std::pair<ItemType, int>& kvp, GameObjectType monsterType)
 {
   switch (kvp.first)
   {

@@ -56,14 +56,14 @@ class DGBase
     std::map<Position, ShrineType> ShrinesByPosition;
 
   protected:
-    bool CheckLimits(Position& start, int roomSize);
-    bool IsInsideMap(Position pos);
+    bool CheckLimits(const Position& start, int roomSize);
+    bool IsInsideMap(const Position& pos);
     bool IsDeadEnd(const Position& p);
 
     void FillDeadEnds();
     void FillMapRaw();
     void CutProblemCorners();
-    void CheckIfProblemCorner(Position p);
+    void CheckIfProblemCorner(const Position& p);
 
     int CountAround(int x, int y, char ch);
 

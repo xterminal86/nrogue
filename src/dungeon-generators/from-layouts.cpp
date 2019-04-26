@@ -7,7 +7,7 @@
 /// possibleRooms list.
 /// May result in imperfect and/or impassable dungeon
 /// if layouts in the list are not connectable.
-void FromLayouts::Generate(std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY)
+void FromLayouts::Generate(const std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY)
 {
   _roomsForLevel = possibleRooms;
 
@@ -88,7 +88,7 @@ RoomLayout FromLayouts::SelectRoom()
   return rooms[index];
 }
 
-void FromLayouts::TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side)
+void FromLayouts::TryToAddRoomTo(const RoomHelper& currentRoom, RoomEdgeEnum side)
 {
   int offset = currentRoom.RoomSize + 1;
 
@@ -155,7 +155,7 @@ void FromLayouts::TryToAddRoomTo(RoomHelper& currentRoom, RoomEdgeEnum side)
   _roomsCount++;
 }
 
-void FromLayouts::VisitCells(RoomHelper& room)
+void FromLayouts::VisitCells(const RoomHelper& room)
 {
   int size = room.Layout.size();
 
@@ -206,7 +206,7 @@ void FromLayouts::ConvertChunksToMapRaw()
   }
 }
 
-bool FromLayouts::IsAreaVisited(Position& start, int roomSize)
+bool FromLayouts::IsAreaVisited(const Position& start, int roomSize)
 {
   int lx = start.X;
   int ly = start.Y;
@@ -236,7 +236,7 @@ bool FromLayouts::IsAreaVisited(Position& start, int roomSize)
   return false;
 }
 
-std::vector<RoomHelper> FromLayouts::GetRoomsForLayout(RoomLayout& layout, RoomEdgeEnum side)
+std::vector<RoomHelper> FromLayouts::GetRoomsForLayout(const RoomLayout& layout, RoomEdgeEnum side)
 {
   std::vector<RoomHelper> roomsVector;
 

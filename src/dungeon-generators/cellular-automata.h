@@ -9,7 +9,7 @@
 class CellularAutomata : public DGBase
 {
   public:
-    void Generate(Position mapSize,
+    void Generate(const Position& mapSize,
                   int initialWallChance,
                   int birthThreshold,
                   int deathThreshold,
@@ -21,9 +21,9 @@ class CellularAutomata : public DGBase
     std::map<int, std::vector<Position>> _areasByMarker;
 
     void ConnectIsolatedAreas();
-    void TryToMarkCell(Position p, std::queue<Position>& visitedCells);
-    void FloodFill(Position start);
-    void ConnectPoints(Position p1, Position p2);
+    void TryToMarkCell(const Position& p, std::queue<Position>& visitedCells);
+    void FloodFill(const Position& start);
+    void ConnectPoints(const Position& p1, const Position& p2);
 
     std::vector<Position> FindNonMarkedCell();
 

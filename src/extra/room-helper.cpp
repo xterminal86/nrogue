@@ -1,6 +1,6 @@
 #include "room-helper.h"
 
-RoomForLevel::RoomForLevel(int chance, RoomLayout l)
+RoomForLevel::RoomForLevel(int chance, const RoomLayout& l)
 {
   Chance = chance;
   Layout = l;
@@ -8,7 +8,7 @@ RoomForLevel::RoomForLevel(int chance, RoomLayout l)
 
 // *********************************
 
-bool RoomHelper::CanAttach(RoomHelper &r, RoomEdgeEnum side)
+bool RoomHelper::CanAttach(const RoomHelper &r, RoomEdgeEnum side)
 {
   std::map<RoomEdgeEnum, RoomEdgeEnum> oppositeEdgeByType =
   {
@@ -21,13 +21,14 @@ bool RoomHelper::CanAttach(RoomHelper &r, RoomEdgeEnum side)
   //bool e1 = EdgeIsAllWalls(RoomEdgesByType[side]);
   //bool e2 = EdgeIsAllWalls(r.RoomEdgesByType[oppositeEdgeByType[side]]);
 
-  bool res = CanBeTraversed(RoomEdgesByType[side], r.RoomEdgesByType[oppositeEdgeByType[side]]);
+  bool res = CanBeTraversed(RoomEdgesByType.at(side), r.RoomEdgesByType.at(oppositeEdgeByType[side]));
 
   //return ( (e1 == true && e2 == true) || res);
   return res;
 }
 
-bool RoomHelper::CanBeTraversed(std::vector<int> &e1, std::vector<int> &e2)
+bool RoomHelper::CanBeTraversed(const std::vector<int> &e1,
+                                const std::vector<int> &e2)
 {
   int size = e1.size();
 

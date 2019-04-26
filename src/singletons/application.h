@@ -18,13 +18,18 @@ class Application : public Singleton<Application>
     void Cleanup();
     void ChangeState(const GameStates& gameStateIndex);
 
-    void ShowMessageBox(MessageBoxType type, std::string header, std::vector<std::string> message,
-                        std::string borderColor = GlobalConstants::MessageBoxDefaultBorderColor,
-                        std::string bgColor = GlobalConstants::MessageBoxDefaultBgColor);
+    void ShowMessageBox(MessageBoxType type,
+                        const std::string& header,
+                        const std::vector<std::string>& message,
+                        const std::string& borderColor = GlobalConstants::MessageBoxDefaultBorderColor,
+                        const std::string& bgColor = GlobalConstants::MessageBoxDefaultBgColor);
 
     void CloseMessageBox();
 
-    void DisplayAttack(GameObject* defender, int delayMs, const std::string& messageToPrint, const std::string& cursorColor = "");
+    void DisplayAttack(GameObject* defender,
+                       int delayMs,
+                       const std::string& messageToPrint,
+                       const std::string& cursorColor = "");
 
     void WriteObituary(bool wasKilled = true);
 
@@ -62,7 +67,9 @@ class Application : public Singleton<Application>
 
     void InitGraphics();
     void InitGameStates();
-    void DrawAttackCursor(int x, int y, GameObject* defender, const std::string& cursorColor = "");
+    void DrawAttackCursor(int x, int y,
+                          GameObject* defender,
+                          const std::string& cursorColor = "");
 
     #ifdef USE_SDL
     std::map<std::string, std::string> _config;

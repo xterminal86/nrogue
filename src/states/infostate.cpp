@@ -91,7 +91,7 @@ void InfoState::Update(bool forceUpdate)
   }
 }
 
-void InfoState::PrintAttribute(int x, int y, std::string attrName, const Attribute& attr, bool displayMaxValue)
+void InfoState::PrintAttribute(int x, int y, const std::string& attrName, const Attribute& attr, bool displayMaxValue)
 {
   std::string color = "#FFFFFF";
 

@@ -12,7 +12,7 @@ using RoomLayout = std::vector<std::string>;
 
 struct RoomForLevel
 {
-  RoomForLevel(int chance, RoomLayout l);
+  RoomForLevel(int chance, const RoomLayout& l);
 
   int Chance = 0;
   RoomLayout Layout;
@@ -35,9 +35,10 @@ struct RoomHelper
 
   int RoomSize;
 
-  bool CanAttach(RoomHelper& r, RoomEdgeEnum side);
+  bool CanAttach(const RoomHelper& r, RoomEdgeEnum side);
 
-  bool CanBeTraversed(std::vector<int>& e1, std::vector<int>& e2);
+  bool CanBeTraversed(const std::vector<int>& e1,
+                      const std::vector<int>& e2);
 
   bool EdgeIsAllWalls(const std::vector<int>& edge);
 

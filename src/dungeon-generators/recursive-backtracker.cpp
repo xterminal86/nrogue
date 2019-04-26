@@ -10,7 +10,8 @@
 /// 2. Try to replace wall with empty space.
 /// 3. Backtrack to previous cell if failed.
 /// 4. Repeat until all cells are visited.
-void RecursiveBacktracker::Generate(Position mapSize, Position startingPoint)
+void RecursiveBacktracker::Generate(const Position& mapSize,
+                                    const Position& startingPoint)
 {
   std::stack<Position> openCells;
 
@@ -81,7 +82,7 @@ void RecursiveBacktracker::CutProblemCorners()
 ///
 /// we replace random wall around A (which is '.') with empty space
 /// to disallow diagonal walking from A to B
-void RecursiveBacktracker::CheckIfProblemCorner(Position p)
+void RecursiveBacktracker::CheckIfProblemCorner(const Position& p)
 {
   int lx = p.X - 1;
   int ly = p.Y - 1;
@@ -135,7 +136,7 @@ void RecursiveBacktracker::CheckIfProblemCorner(Position p)
   }
 }
 
-std::vector<Position> RecursiveBacktracker::GetRandomCell(Position p)
+std::vector<Position> RecursiveBacktracker::GetRandomCell(const Position& p)
 {
   std::vector<Position> res;
 

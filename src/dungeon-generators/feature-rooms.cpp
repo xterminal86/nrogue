@@ -10,8 +10,8 @@
 /// it depends on roomSizes.
 /// Generally set 'maxIterations' to (mapSize.X * mapSize.Y)
 /// to maximize the effect, but be aware of computational time.
-void FeatureRooms::Generate(Position mapSize,
-                            Position roomSizes,
+void FeatureRooms::Generate(const Position& mapSize,
+                            const Position& roomSizes,
                             const FeatureRoomsWeights& weightsMap,
                             int doorPlacementChance,
                             int maxIterations)
@@ -358,7 +358,10 @@ std::vector<Position> FeatureRooms::GetValidCellsToCarveFrom()
   return validCells;
 }
 
-bool FeatureRooms::CreateEmptyRoom(Position start, Position size, RoomEdgeEnum dir, char ground)
+bool FeatureRooms::CreateEmptyRoom(const Position& start,
+                                   const Position& size,
+                                   RoomEdgeEnum dir,
+                                   char ground)
 {
   int shiftX = RNG::Instance().RandomRange(0, size.X);
   int shiftY = RNG::Instance().RandomRange(0, size.Y);

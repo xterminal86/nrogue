@@ -289,7 +289,7 @@ void InventoryState::DisplayEquipment()
   */
 }
 
-void InventoryState::DrawEquipmentField(int x, int y, std::string fieldName, ItemComponent* eq)
+void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldName, ItemComponent* eq)
 {
   std::string stub(kEquipmentMaxNameLength, '-');
 
@@ -393,7 +393,7 @@ void InventoryState::DropItem()
   Printer::Instance().AddMessage(message);
 }
 
-void InventoryState::DrawSelectionBar(int yOffset, std::string& text, std::string& textColor)
+void InventoryState::DrawSelectionBar(int yOffset, const std::string& text, const std::string& textColor)
 {
   if (yOffset == _selectedIndex)
   {
