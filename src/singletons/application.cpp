@@ -257,6 +257,11 @@ void Application::WriteObituary(bool wasKilled)
   ss << nameAndTitle << " of level " << PlayerInstance.Attrs.Lvl.CurrentValue << '\n';
   ss << playerEndCause << curLvl->LevelName << "\n\n";
 
+  ss << "HP " << PlayerInstance.Attrs.HP.CurrentValue << " / " << PlayerInstance.Attrs.HP.OriginalValue << '\n';
+  ss << "MP " << PlayerInstance.Attrs.MP.CurrentValue << " / " << PlayerInstance.Attrs.MP.OriginalValue << '\n';
+
+  ss << '\n';
+
   ss << "STR " << PlayerInstance.Attrs.Str.CurrentValue << '\n';
   ss << "DEF " << PlayerInstance.Attrs.Def.CurrentValue << '\n';
   ss << "MAG " << PlayerInstance.Attrs.Mag.CurrentValue << '\n';

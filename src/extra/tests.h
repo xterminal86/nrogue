@@ -294,7 +294,12 @@ namespace Tests
 
     iterations = (mapSize.X * mapSize.Y) / 10;
 
-    lb.FeatureRoomsMethod(mapSize, { 1, 10 }, iterations);
+    FeatureRoomsWeights weights =
+    {
+      { FeatureRoomType::EMPTY,    { 10, 0 }  }
+    };
+
+    lb.FeatureRoomsMethod(mapSize, { 1, 10 }, weights, 3, iterations);
     lb.LogPrintMapRaw();
     lb.PrintMapRaw();
 
@@ -310,7 +315,7 @@ namespace Tests
     Logger::Instance().Print(str);
     printf("%s", str.data());
 
-    FeatureRoomsWeights weights =
+    weights =
     {
       { FeatureRoomType::EMPTY,    { 10, 0 }  },
       { FeatureRoomType::DIAMOND,  { 3, 3 }   },
@@ -323,7 +328,6 @@ namespace Tests
       { FeatureRoomType::SHRINE,   { 10, 1 }  }
     };
 
-    Position mapSize = { 50, 100 };
     Position roomSize = { 1, 10 };
 
     lb.FeatureRoomsMethod(mapSize, roomSize, weights, 3, mapSize.X * mapSize.Y);
