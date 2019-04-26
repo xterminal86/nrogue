@@ -1,59 +1,22 @@
 #ifndef POSITION_H
 #define POSITION_H
 
-#include <cstdio>
-
 struct Position
 {
-  Position()
-  {
-    X = 0;
-    Y = 0;
-  }
+  Position();
+  Position(int x, int y);
+  Position(const Position& from);
 
-  Position(int x, int y)
-  {
-    X = x;
-    Y = y;
-  }
+  virtual ~Position() = default;
 
-  Position(const Position& from)
-  {
-    X = from.X;
-    Y = from.Y;
-  }
-
-  virtual ~Position()
-  {
-  }
-
-  void Set(int x, int y)
-  {
-    X = x;
-    Y = y;
-  }
-
-  void Set(const Position& from)
-  {
-    X = from.X;
-    Y = from.Y;
-  }
+  void Set(int x, int y);
+  void Set(const Position& from);
 
   // For use inside std::map as a key
-  bool operator< (const Position& rhs) const
-  {
-    return (X < rhs.X || Y < rhs.Y);
-  }
+  bool operator< (const Position& rhs) const;
+  bool operator== (const Position& rhs) const;
 
-  bool operator== (const Position& rhs) const
-  {
-    return (X == rhs.X && Y == rhs.Y);
-  }
-
-  void Print()
-  {
-    printf("%s: [%i ; %i]\n", __PRETTY_FUNCTION__, X, Y);
-  }
+  void Print();
 
   int X;
   int Y;

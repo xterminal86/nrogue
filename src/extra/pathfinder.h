@@ -5,30 +5,12 @@
 
 struct PathNode
 {
-  PathNode() {}
+  PathNode() = default;
 
-  PathNode(const Position& coord)
-  {
-    Coordinate.X = coord.X;
-    Coordinate.Y = coord.Y;
-  }
+  PathNode(const Position& coord);
+  PathNode(const PathNode& rhs);
 
-  PathNode(const PathNode& rhs)
-  {
-    Coordinate = rhs.Coordinate;
-    ParentNodePosition = rhs.ParentNodePosition;
-    CostF = rhs.CostF;
-    CostG = rhs.CostG;
-    CostH = rhs.CostH;
-  }
-
-  PathNode(const Position& coord, const Position& parentNodePos)
-  {
-    Coordinate.X = coord.X;
-    Coordinate.Y = coord.Y;
-
-    ParentNodePosition = parentNodePos;
-  }
+  PathNode(const Position& coord, const Position& parentNodePos);
 
   // Map coordinate of this node
   Position Coordinate;
@@ -48,6 +30,8 @@ struct PathNode
   // Heuristic cost
   int CostH = 0;
 };
+
+// ***********************************************
 
 class Pathfinder
 {

@@ -1,6 +1,8 @@
 #ifndef ROOMS_H
 #define ROOMS_H
 
+#include <memory>
+
 #include "dg-base.h"
 
 #include "rect.h"

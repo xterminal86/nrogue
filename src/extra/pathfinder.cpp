@@ -1,5 +1,30 @@
 #include "pathfinder.h"
 
+PathNode::PathNode(const Position &coord)
+{
+  Coordinate.X = coord.X;
+  Coordinate.Y = coord.Y;
+}
+
+PathNode::PathNode(const PathNode &rhs)
+{
+  Coordinate = rhs.Coordinate;
+  ParentNodePosition = rhs.ParentNodePosition;
+  CostF = rhs.CostF;
+  CostG = rhs.CostG;
+  CostH = rhs.CostH;
+}
+
+PathNode::PathNode(const Position &coord, const Position &parentNodePos)
+{
+  Coordinate.X = coord.X;
+  Coordinate.Y = coord.Y;
+
+  ParentNodePosition = parentNodePos;
+}
+
+// ***********************************************
+
 std::vector<Position> Pathfinder::BuildRoad(const std::vector<std::vector<char>>& map,
                                             const Position& mapSize,
                                             const Position& start,
