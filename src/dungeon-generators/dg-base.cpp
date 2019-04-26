@@ -196,7 +196,7 @@ bool DGBase::IsDeadEnd(const Position& p)
 
   int count = 0;
 
-  auto walkable = [&, this](int x, int y)
+  auto walkable = [this](int x, int y)
   {
     char& img = _map[x][y].Image;
 
