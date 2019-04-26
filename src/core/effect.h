@@ -1,6 +1,8 @@
 #ifndef EFFECT_H
 #define EFFECT_H
 
+#include <map>
+
 enum class EffectType
 {
   NONE = 0,  
@@ -36,12 +38,7 @@ struct Effect
 {
   Effect() = default;
 
-  Effect(EffectType t, int p, int to)
-  {
-    Type = t;
-    Power = p;
-    Duration = to;
-  }
+  Effect(EffectType t, int p, int to);
 
   EffectType Type = EffectType::NONE;
 
