@@ -2,6 +2,7 @@
 
 #include "application.h"
 #include "game-objects-factory.h"
+#include "game-object-info.h"
 
 MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)

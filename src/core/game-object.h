@@ -12,8 +12,10 @@
 
 #include "component.h"
 #include "constants.h"
+#include "attribute.h"
 #include "effect.h"
 
+class GameObjectInfo;
 class MapLevelBase;
 
 class GameObject
@@ -83,7 +85,7 @@ class GameObject
       return nullptr;
     }
 
-    void MakeTile(GameObjectInfo t);
+    void MakeTile(const GameObjectInfo& t);
 
     void Update();
 

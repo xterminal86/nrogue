@@ -2,6 +2,7 @@
 #include "mainstate.h"
 #include "printer.h"
 #include "application.h"
+#include "attribute.h"
 #include "util.h"
 
 void InfoState::HandleInput()
@@ -90,7 +91,7 @@ void InfoState::Update(bool forceUpdate)
   }
 }
 
-void InfoState::PrintAttribute(int x, int y, std::string attrName, Attribute& attr, bool displayMaxValue)
+void InfoState::PrintAttribute(int x, int y, std::string attrName, const Attribute& attr, bool displayMaxValue)
 {
   std::string color = "#FFFFFF";
 

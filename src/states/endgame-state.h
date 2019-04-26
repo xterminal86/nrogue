@@ -2,8 +2,8 @@
 #define ENDGAMESTATE_H
 
 #include "gamestate.h"
-#include "constants.h"
 
+class Attribute;
 class Player;
 
 class EndgameState : public GameState
@@ -17,7 +17,7 @@ class EndgameState : public GameState
   private:
     void DisplayGameLog();
     void DrawHPMP();
-    std::string UpdateBar(int x, int y, Attribute attr);
+    std::string UpdateBar(int x, int y, const Attribute& attr);
 
     Player* _playerRef;
 };

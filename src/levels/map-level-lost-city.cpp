@@ -1,6 +1,7 @@
 #include "map-level-lost-city.h"
 
 #include "game-objects-factory.h"
+#include "game-object-info.h"
 #include "application.h"
 
 MapLevelLostCity::MapLevelLostCity(int sizeX, int sizeY, MapType type, int dungeonLevel)

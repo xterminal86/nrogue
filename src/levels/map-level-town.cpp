@@ -3,6 +3,7 @@
 #include "player.h"
 #include "rect.h"
 #include "game-objects-factory.h"
+#include "game-object-info.h"
 #include "door-component.h"
 
 MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :

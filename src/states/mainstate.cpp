@@ -8,6 +8,7 @@
 #include "stairs-component.h"
 #include "map-level-base.h"
 #include "target-state.h"
+#include "attribute.h"
 
 void MainState::Init()
 {
@@ -386,7 +387,7 @@ void MainState::DrawHPMP()
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 1, str, Printer::kAlignCenter, "#FFFFFF", "#000088");
 }
 
-void MainState::UpdateBar(int x, int y, Attribute attr)
+void MainState::UpdateBar(int x, int y, const Attribute& attr)
 {
   float ratio = ((float)attr.CurrentValue / (float)attr.OriginalValue);
   int len = ratio * GlobalConstants::HPMPBarLength;

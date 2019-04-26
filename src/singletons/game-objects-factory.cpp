@@ -13,6 +13,7 @@
 #include "go-timer-destroyer.h"
 #include "map.h"
 #include "application.h"
+#include "game-object-info.h"
 
 void GameObjectsFactory::Init()
 {

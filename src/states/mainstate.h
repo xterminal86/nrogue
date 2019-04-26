@@ -7,6 +7,7 @@
 #include "gamestate.h"
 #include "position.h"
 
+class Attribute;
 class Player;
 class GameObject;
 class ItemComponent;
@@ -42,7 +43,7 @@ class MainState : public GameState
 
     void ProcessItemPickup(std::pair<int, GameObject*>& pair);
 
-    void UpdateBar(int x, int y, Attribute attr);
+    void UpdateBar(int x, int y, const Attribute& attr);
 
     Position _cursorPosition;
 

@@ -2,8 +2,9 @@
 #define GAMEOBJECTSFACTORY_H
 
 #include "singleton.h"
-#include "constants.h"
+#include "item-data.h"
 
+class GameObjectInfo;
 class ItemComponent;
 class ContainerComponent;
 class GameObject;

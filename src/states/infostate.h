@@ -2,7 +2,8 @@
 #define INFOSTATE_H
 
 #include "gamestate.h"
-#include "constants.h"
+
+class Attribute;
 
 class InfoState : public GameState
 {
@@ -11,7 +12,7 @@ class InfoState : public GameState
     void Update(bool forceUpdate = false) override;
 
   private:
-    void PrintAttribute(int x, int y, std::string attrName, Attribute& attr, bool displayMaxValue = false);
+    void PrintAttribute(int x, int y, std::string attrName, const Attribute& attr, bool displayMaxValue = false);
     void PrintModifiers(int x, int y);
 
     int FindAttrsMaxStringLength();

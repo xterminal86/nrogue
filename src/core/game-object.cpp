@@ -5,6 +5,7 @@
 #include "map-level-base.h"
 #include "map.h"
 #include "application.h"
+#include "game-object-info.h"
 
 GameObject::GameObject(MapLevelBase* levelOwner)
 {
@@ -111,7 +112,7 @@ void GameObject::Update()
   }
 }
 
-void GameObject::MakeTile(GameObjectInfo t)
+void GameObject::MakeTile(const GameObjectInfo& t)
 {
   Blocking = t.IsBlocking;
   BlocksSight = t.BlocksSight;

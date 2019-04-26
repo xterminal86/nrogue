@@ -1,7 +1,7 @@
 #ifndef ITEMCOMPONENT_H
 #define ITEMCOMPONENT_H
 
-#include "constants.h"
+#include "item-data.h"
 #include "component.h"
 
 class ContainerComponent;

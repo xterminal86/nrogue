@@ -3,6 +3,7 @@
 #include "map.h"
 #include "application.h"
 #include "util.h"
+#include "attribute.h"
 
 void EndgameState::Init()
 {
@@ -85,7 +86,7 @@ void EndgameState::DrawHPMP()
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 1, str, Printer::kAlignCenter, "#FFFFFF", "#000088");
 }
 
-std::string EndgameState::UpdateBar(int x, int y, Attribute attr)
+std::string EndgameState::UpdateBar(int x, int y, const Attribute& attr)
 {
   float ratio = ((float)attr.CurrentValue / (float)attr.OriginalValue);
   int len = ratio * GlobalConstants::HPMPBarLength;

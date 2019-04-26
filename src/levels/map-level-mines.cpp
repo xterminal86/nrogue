@@ -4,6 +4,7 @@
 #include "rng.h"
 #include "constants.h"
 #include "game-objects-factory.h"
+#include "game-object-info.h"
 #include "door-component.h"
 #include "player.h"
 
