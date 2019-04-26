@@ -19,6 +19,8 @@
 #include "tests.h"
 #endif
 
+// BUG: possible bug with level up not showing / working after killing with ranged weapon
+
 // TODO:
 //
 // Status effects
