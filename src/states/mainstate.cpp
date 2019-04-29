@@ -19,257 +19,255 @@ void MainState::HandleInput()
 {
   _keyPressed = GetKeyDown();
 
-  if (_playerRef->Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
+  switch (_keyPressed)
   {
-    switch (_keyPressed)
-    {
-      case NUMPAD_7:
-        if (_playerRef->TryToAttack(-1, -1))
-        {
-          _playerRef->FinishTurn();
-        }
-        else if (_playerRef->Move(-1, -1))
-        {
-          Map::Instance().CurrentLevel->MapOffsetY++;
-          Map::Instance().CurrentLevel->MapOffsetX++;
-
-          _playerRef->FinishTurn();
-
-          Printer::Instance().ShowLastMessage = false;
-
-          _playerRef->ProcessHunger();
-        }
-        break;
-
-      case NUMPAD_8:
-        if (_playerRef->TryToAttack(0, -1))
-        {
-          _playerRef->FinishTurn();
-        }
-        else if (_playerRef->Move(0, -1))
-        {
-          Map::Instance().CurrentLevel->MapOffsetY++;
-
-          _playerRef->FinishTurn();
-
-          Printer::Instance().ShowLastMessage = false;
-
-          _playerRef->ProcessHunger();
-        }
-        break;
-
-      case NUMPAD_9:
-        if (_playerRef->TryToAttack(1, -1))
-        {
-          _playerRef->FinishTurn();
-        }
-        else if (_playerRef->Move(1, -1))
-        {
-          Map::Instance().CurrentLevel->MapOffsetY++;
-          Map::Instance().CurrentLevel->MapOffsetX--;
-
-          _playerRef->FinishTurn();
-
-          Printer::Instance().ShowLastMessage = false;
-
-          _playerRef->ProcessHunger();
-        }
-        break;
-
-      case NUMPAD_4:
-        if (_playerRef->TryToAttack(-1, 0))
-        {
-          _playerRef->FinishTurn();
-        }
-        else if (_playerRef->Move(-1, 0))
-        {
-          Map::Instance().CurrentLevel->MapOffsetX++;
-
-          _playerRef->FinishTurn();
-
-          Printer::Instance().ShowLastMessage = false;
-
-          _playerRef->ProcessHunger();
-        }
-        break;
-
-      case NUMPAD_2:
-        if (_playerRef->TryToAttack(0, 1))
-        {
-          _playerRef->FinishTurn();
-        }
-        else if (_playerRef->Move(0, 1))
-        {
-          Map::Instance().CurrentLevel->MapOffsetY--;
-
-          _playerRef->FinishTurn();
-
-          Printer::Instance().ShowLastMessage = false;
-
-          _playerRef->ProcessHunger();
-        }
-        break;
-
-      case NUMPAD_6:
-        if (_playerRef->TryToAttack(1, 0))
-        {
-          _playerRef->FinishTurn();
-        }
-        else if (_playerRef->Move(1, 0))
-        {
-          Map::Instance().CurrentLevel->MapOffsetX--;
-
-          _playerRef->FinishTurn();
-
-          Printer::Instance().ShowLastMessage = false;
-
-          _playerRef->ProcessHunger();
-        }
-        break;
-
-      case NUMPAD_1:
-        if (_playerRef->TryToAttack(-1, 1))
-        {
-          _playerRef->FinishTurn();
-        }
-        else if (_playerRef->Move(-1, 1))
-        {
-          Map::Instance().CurrentLevel->MapOffsetY--;
-          Map::Instance().CurrentLevel->MapOffsetX++;
-
-          _playerRef->FinishTurn();
-
-          Printer::Instance().ShowLastMessage = false;
-
-          _playerRef->ProcessHunger();
-        }
-        break;
-
-      case NUMPAD_3:
-        if (_playerRef->TryToAttack(1, 1))
-        {
-          _playerRef->FinishTurn();
-        }
-        else if (_playerRef->Move(1, 1))
-        {
-          Map::Instance().CurrentLevel->MapOffsetY--;
-          Map::Instance().CurrentLevel->MapOffsetX--;
-
-          _playerRef->FinishTurn();
-
-          Printer::Instance().ShowLastMessage = false;
-
-          _playerRef->ProcessHunger();
-        }
-        break;
-
-      case NUMPAD_5:
-        Printer::Instance().AddMessage("You waited...");
+    case NUMPAD_7:
+      if (_playerRef->TryToAttack(-1, -1))
+      {
         _playerRef->FinishTurn();
+      }
+      else if (_playerRef->Move(-1, -1))
+      {
+        Map::Instance().CurrentLevel->MapOffsetY++;
+        Map::Instance().CurrentLevel->MapOffsetX++;
+
+        _playerRef->FinishTurn();
+
+        Printer::Instance().ShowLastMessage = false;
+
         _playerRef->ProcessHunger();
-        break;
-
-      case 'a':
-      {
-        if (Map::Instance().CurrentLevel->Peaceful)
-        {
-          PrintNoAttackInTown();
-        }
-        else
-        {
-          Application::Instance().ChangeState(GameStates::ATTACK_STATE);
-        }
       }
       break;
 
-      case '$':
+    case NUMPAD_8:
+      if (_playerRef->TryToAttack(0, -1))
       {
-        auto str = Util::StringFormat("You have %i gold coins", _playerRef->Money);
-        Printer::Instance().AddMessage(str);
+        _playerRef->FinishTurn();
+      }
+      else if (_playerRef->Move(0, -1))
+      {
+        Map::Instance().CurrentLevel->MapOffsetY++;
+
+        _playerRef->FinishTurn();
+
+        Printer::Instance().ShowLastMessage = false;
+
+        _playerRef->ProcessHunger();
       }
       break;
 
-      case 'e':
-        Application::Instance().ChangeState(GameStates::INVENTORY_STATE);
-        break;
-
-      case 'm':
-        Application::Instance().ChangeState(GameStates::SHOW_MESSAGES_STATE);
-        break;
-
-      case 'l':
-        Application::Instance().ChangeState(GameStates::LOOK_INPUT_STATE);
-        break;
-
-      case 'i':
-        Application::Instance().ChangeState(GameStates::INTERACT_INPUT_STATE);
-        break;
-
-      case 'g':
-        TryToPickupItem();
-        break;
-
-      case '@':
-        Application::Instance().ChangeState(GameStates::INFO_STATE);
-        break;
-
-      case '?':
-        DisplayHelp();
-        break;
-
-      case 'Q':
-        Application::Instance().ChangeState(GameStates::EXITING_STATE);
-        break;
-
-      case 'f':
-        ProcessRangedWeapon();
-        break;
-
-      case '>':
-        CheckStairs('>');
-
-        //FIXME: debug
-        //Map::Instance().ChangeLevel(MapType::LOST_CITY, true);
-        break;
-
-      case '<':
-        CheckStairs('<');
-        break;
-
-      #ifndef RELEASE_BUILD
-
-      // ***** FIXME: for debug, remove afterwards
-
-      case 'L':
-        _playerRef->LevelUp();
-        break;
-
-      case 'p':
-        //Map::Instance().PrintMapArrayRevealedStatus();
-        Map::Instance().PrintMapLayout();
-        break;
-
-      case 'T':
+    case NUMPAD_9:
+      if (_playerRef->TryToAttack(1, -1))
       {
-        int exitX = Map::Instance().CurrentLevel->LevelExit.X;
-        int exitY = Map::Instance().CurrentLevel->LevelExit.Y;
+        _playerRef->FinishTurn();
+      }
+      else if (_playerRef->Move(1, -1))
+      {
+        Map::Instance().CurrentLevel->MapOffsetY++;
+        Map::Instance().CurrentLevel->MapOffsetX--;
 
-        _playerRef->MoveTo(exitX, exitY);
+        _playerRef->FinishTurn();
 
-        Map::Instance().CurrentLevel->AdjustCamera();
-        Update(true);
+        Printer::Instance().ShowLastMessage = false;
+
+        _playerRef->ProcessHunger();
       }
       break;
 
-      // *****
+    case NUMPAD_4:
+      if (_playerRef->TryToAttack(-1, 0))
+      {
+        _playerRef->FinishTurn();
+      }
+      else if (_playerRef->Move(-1, 0))
+      {
+        Map::Instance().CurrentLevel->MapOffsetX++;
 
-      #endif
+        _playerRef->FinishTurn();
 
-      default:
-        break;
+        Printer::Instance().ShowLastMessage = false;
+
+        _playerRef->ProcessHunger();
+      }
+      break;
+
+    case NUMPAD_2:
+      if (_playerRef->TryToAttack(0, 1))
+      {
+        _playerRef->FinishTurn();
+      }
+      else if (_playerRef->Move(0, 1))
+      {
+        Map::Instance().CurrentLevel->MapOffsetY--;
+
+        _playerRef->FinishTurn();
+
+        Printer::Instance().ShowLastMessage = false;
+
+        _playerRef->ProcessHunger();
+      }
+      break;
+
+    case NUMPAD_6:
+      if (_playerRef->TryToAttack(1, 0))
+      {
+        _playerRef->FinishTurn();
+      }
+      else if (_playerRef->Move(1, 0))
+      {
+        Map::Instance().CurrentLevel->MapOffsetX--;
+
+        _playerRef->FinishTurn();
+
+        Printer::Instance().ShowLastMessage = false;
+
+        _playerRef->ProcessHunger();
+      }
+      break;
+
+    case NUMPAD_1:
+      if (_playerRef->TryToAttack(-1, 1))
+      {
+        _playerRef->FinishTurn();
+      }
+      else if (_playerRef->Move(-1, 1))
+      {
+        Map::Instance().CurrentLevel->MapOffsetY--;
+        Map::Instance().CurrentLevel->MapOffsetX++;
+
+        _playerRef->FinishTurn();
+
+        Printer::Instance().ShowLastMessage = false;
+
+        _playerRef->ProcessHunger();
+      }
+      break;
+
+    case NUMPAD_3:
+      if (_playerRef->TryToAttack(1, 1))
+      {
+        _playerRef->FinishTurn();
+      }
+      else if (_playerRef->Move(1, 1))
+      {
+        Map::Instance().CurrentLevel->MapOffsetY--;
+        Map::Instance().CurrentLevel->MapOffsetX--;
+
+        _playerRef->FinishTurn();
+
+        Printer::Instance().ShowLastMessage = false;
+
+        _playerRef->ProcessHunger();
+      }
+      break;
+
+    case NUMPAD_5:
+      Printer::Instance().AddMessage("You waited...");
+      _playerRef->FinishTurn();
+      _playerRef->ProcessHunger();
+      break;
+
+    case 'a':
+    {
+      if (Map::Instance().CurrentLevel->Peaceful)
+      {
+        PrintNoAttackInTown();
+      }
+      else
+      {
+        Application::Instance().ChangeState(GameStates::ATTACK_STATE);
+      }
     }
+    break;
+
+    case '$':
+    {
+      auto str = Util::StringFormat("You have %i gold coins", _playerRef->Money);
+      Printer::Instance().AddMessage(str);
+    }
+    break;
+
+    case 'e':
+      Application::Instance().ChangeState(GameStates::INVENTORY_STATE);
+      break;
+
+    case 'm':
+      Application::Instance().ChangeState(GameStates::SHOW_MESSAGES_STATE);
+      break;
+
+    case 'l':
+      Application::Instance().ChangeState(GameStates::LOOK_INPUT_STATE);
+      break;
+
+    case 'i':
+      Application::Instance().ChangeState(GameStates::INTERACT_INPUT_STATE);
+      break;
+
+    case 'g':
+      TryToPickupItem();
+      break;
+
+    case '@':
+      Application::Instance().ChangeState(GameStates::INFO_STATE);
+      break;
+
+    case '?':
+      DisplayHelp();
+      break;
+
+    case 'Q':
+      Application::Instance().ChangeState(GameStates::EXITING_STATE);
+      break;
+
+    case 'f':
+      ProcessRangedWeapon();
+      break;
+
+    case '>':
+      CheckStairs('>');
+
+      //FIXME: debug
+      //Map::Instance().ChangeLevel(MapType::LOST_CITY, true);
+      break;
+
+    case '<':
+      CheckStairs('<');
+      break;
+
+    #ifndef RELEASE_BUILD
+
+    // ***** FIXME: for debug, remove afterwards
+
+    case 'L':
+      _playerRef->LevelUp();
+      break;
+
+    case 'p':
+      //Map::Instance().PrintMapArrayRevealedStatus();
+      Map::Instance().PrintMapLayout();
+      break;
+
+    case 'T':
+    {
+      int exitX = Map::Instance().CurrentLevel->LevelExit.X;
+      int exitY = Map::Instance().CurrentLevel->LevelExit.Y;
+
+      _playerRef->MoveTo(exitX, exitY);
+
+      Map::Instance().CurrentLevel->AdjustCamera();
+      Update(true);
+    }
+    break;
+
+    // *****
+
+    #endif
+
+    default:
+      break;
   }
 
+  /*
   // Check if player has died from some effect (like poison)
   if (!_playerRef->IsAlive(nullptr))
   {
@@ -286,6 +284,7 @@ void MainState::HandleInput()
       //Update(true);
     }
   }
+  */
 }
 
 void MainState::Update(bool forceUpdate)

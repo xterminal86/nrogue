@@ -91,15 +91,16 @@ void AttackState::HandleInput()
       if (res.size() != 0)
       {        
         // Always hit static objects in front of you
-        _playerRef->MeleeAttack(res.back(), true);
+        _playerRef->MeleeAttack(res.back(), true);        
       }
       else
       {
         auto* cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
-        Application::Instance().DisplayAttack(cell, GlobalConstants::DisplayAttackDelayMs, "Whoosh!", "#FFFFFF");
-        _playerRef->FinishTurn();
+        Application::Instance().DisplayAttack(cell, GlobalConstants::DisplayAttackDelayMs, "Whoosh!", "#FFFFFF");        
       }
     }
+
+    _playerRef->FinishTurn();
 
     Application::Instance().ChangeState(GameStates::MAIN_STATE);
   }

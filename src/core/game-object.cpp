@@ -162,7 +162,7 @@ void GameObject::WaitForTurn()
   // In order to enhance the difference between two GameObjects
   // with slightly different stats (SPD 1 and SPD 2),
   // we introduce a little scaling for speed incrementation.
-  int spdIncrMinFrac = GlobalConstants::TurnTickValue / 10;
+  int spdIncrMinFrac = GlobalConstants::TurnTickValue / 5;
 
   int speedTickBase = GlobalConstants::TurnTickValue;
   int speedAttr = Attrs.Spd.Get() * spdIncrMinFrac;

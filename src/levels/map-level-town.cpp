@@ -217,6 +217,12 @@ void MapLevelTown::CreateLevel()
 
   auto pickaxe = GameObjectsFactory::Instance().CreateWeapon(5, 1, WeaponType::PICKAXE, ItemPrefix::UNCURSED);
   InsertGameObject(pickaxe);
+
+  auto xbow = GameObjectsFactory::Instance().CreateRangedWeapon(2, 1, RangedWeaponType::HEAVY_XBOW, ItemPrefix::BLESSED);
+  InsertGameObject(xbow);
+
+  auto bolts = GameObjectsFactory::Instance().CreateArrows(1, 3, ArrowType::BOLTS, ItemPrefix::UNCURSED, 50);
+  InsertGameObject(bolts);
   */
   // ***
 }

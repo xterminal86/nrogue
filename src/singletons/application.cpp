@@ -41,15 +41,23 @@ void Application::Run()
 {
   while (_currentState != nullptr)
   {
-    // Since change state happens in HandleInput, if it's called before Update
-    // to exit game (change state to nullptr) we get segfault because
-    // _currentState->Update() gets called on nullptr.
-    //
-    // NOTE: Probably still a bad idea to just change order of methods call,
-    // since we might get the same situation in Update().
+    if (PlayerInstance.Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
+    {
+      // Since change state happens in HandleInput, if it's called before Update
+      // to exit game (change state to nullptr) we get segfault because
+      // _currentState->Update() gets called on nullptr.
+      //
+      // NOTE: Probably still a bad idea to just change order of methods call,
+      // since we might get the same situation in Update().
 
-    _currentState->Update();
-    _currentState->HandleInput();    
+      _currentState->Update();
+      _currentState->HandleInput();
+    }
+    else
+    {
+      Map::Instance().UpdateGameObjects();
+      PlayerInstance.WaitForTurn();
+    }
   }
 }
 

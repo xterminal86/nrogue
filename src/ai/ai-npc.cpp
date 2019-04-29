@@ -17,6 +17,7 @@ void AINPC::Update()
 {
   if (Data.IsStanding)
   {
+    AIComponentRef->OwnerGameObject->Attrs.ActionMeter = 0;
     return;
   }
 

@@ -357,6 +357,20 @@ void TargetState::FireWeapon()
   stoppedAt = LaunchProjectile(projectile, projColor);
   ProcessHit(stoppedAt);
 
+  _playerRef->FinishTurn();
+
+  // Check if player accidentally killed himself
+  // (e.g. after firing fireball close to the wall)
+  if (!_playerRef->IsAlive(_playerRef))
+  {
+    Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
+  }
+  else
+  {
+    Application::Instance().ChangeState(GameStates::MAIN_STATE);
+  }
+
+  /*
   // Check if player accidentally killed himself
   // (e.g. after firing fireball close to the wall)
   if (!_playerRef->IsAlive(_playerRef))
@@ -369,6 +383,7 @@ void TargetState::FireWeapon()
     Map::Instance().UpdateGameObjects();
     Application::Instance().ChangeState(GameStates::MAIN_STATE);
   }
+  */
 }
 
 void TargetState::ProcessHit(GameObject *hitPoint)
@@ -551,7 +566,7 @@ int TargetState::CalculateChance(const Position& startPoint, const Position& end
   int skl = _playerRef->Attrs.Skl.Get();
   chance += (attackChanceScale * skl);
 
-  int distanceChanceDrop = 3;
+  int distanceChanceDrop = 2;
 
   int d = (int)Util::LinearDistance(startPoint, endPoint);
   chance -= (distanceChanceDrop * d);

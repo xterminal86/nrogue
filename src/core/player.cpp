@@ -12,6 +12,8 @@
 
 void Player::Init()
 {
+  Type = GameObjectType::PLAYER;
+
   PosX = Map::Instance().CurrentLevel->LevelStart.X;
   PosY = Map::Instance().CurrentLevel->LevelStart.Y;
   Image = '@';
@@ -76,9 +78,9 @@ bool Player::Move(int dx, int dy)
           auto c = staticObject->GetComponent<DoorComponent>();
 
           // Automatically interact with door if it's closed
-          if (c != nullptr && staticObject->Interact())
+          if (c != nullptr)
           {
-            FinishTurn();
+            staticObject->Interact();
           }
         }
       }
@@ -530,9 +532,7 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
     ProcessAttack(weapon, go, dmg);
   }
 
-  Attrs.Hunger += Attrs.HungerSpeed.Get() * 2;
-
-  FinishTurn();
+  Attrs.Hunger += Attrs.HungerSpeed.Get() * 2;  
 }
 
 void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict)

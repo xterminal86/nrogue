@@ -116,16 +116,16 @@ void Map::UpdateGameObjects()
 
   for (auto& go : CurrentLevel->ActorGameObjects)
   {
-    if (go->Attrs.ActionMeter > GlobalConstants::TurnReadyValue)
+    // Update does the action meter increment as well
+    // so if object had action meter 0 at start,
+    // it needs to increment it in its component logic class
+    // (e.g. ai-monster-basic)
+    go->Update();
+
+    // If there are extra turns available, perform them
+    while (go->Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
     {
-      while (go->Attrs.ActionMeter > GlobalConstants::TurnReadyValue)
-      {
-        go.get()->Update();
-      }
-    }
-    else
-    {
-      go.get()->Update();
+      go->Update();
     }
   }
 }
