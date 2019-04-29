@@ -159,26 +159,25 @@ void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical)
 
 void GameObject::WaitForTurn()
 {
+  // In order to enhance the difference between two GameObjects
+  // with slightly different stats (SPD 1 and SPD 2),
+  // we introduce a little scaling for speed incrementation.
+  int spdIncrMinFrac = GlobalConstants::TurnTickValue / 10;
+
   int speedTickBase = GlobalConstants::TurnTickValue;
-
-  int speedAttr = Attrs.Spd.Get();
-
-  int playerSpd = Application::Instance().PlayerInstance.Attrs.Spd.Get();
-
-  int minSpdIncr = GlobalConstants::TurnTickValue / 10;
-  int scale = (speedAttr - playerSpd) * GlobalConstants::TurnTickValue;
-  int speedIncrement = speedTickBase + speedAttr * scale;
+  int speedAttr = Attrs.Spd.Get() * spdIncrMinFrac;
+  int speedIncrement = speedTickBase + speedAttr;
 
   // In impossible case that speed penalties
   // are too great that speed increment is negative
-  speedIncrement = (speedIncrement <= 0) ? minSpdIncr : speedIncrement;
+  speedIncrement = (speedIncrement <= 0) ? spdIncrMinFrac : speedIncrement;
 
   // In towns SPD is ignored
   if (Map::Instance().CurrentLevel->Peaceful)
   {
     speedIncrement = 1;
     Attrs.ActionMeter = GlobalConstants::TurnReadyValue - 1;
-  }  
+  }
 
   Attrs.ActionMeter += speedIncrement;
 }

@@ -12,7 +12,7 @@ class MapLevelBase
   public:
     MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel);
     MapLevelBase(const MapLevelBase&) = delete;
-    virtual ~MapLevelBase() {}
+    virtual ~MapLevelBase() = default;
 
     void InsertActor(GameObject* actor);
     void InsertGameObject(GameObject* goToInsert);

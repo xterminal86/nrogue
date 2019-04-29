@@ -43,7 +43,7 @@ struct MapCell
 class DGBase
 {
   public:
-    virtual ~DGBase() {}
+    virtual ~DGBase() = default;
 
     void PrintMapRaw();
     void LogPrintMapRaw();

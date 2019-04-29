@@ -10,7 +10,7 @@ class AIModelBase
 {
   public:
     AIModelBase();
-    virtual ~AIModelBase() {}
+    virtual ~AIModelBase() = default;
 
     virtual void Update() {}
 

@@ -7,8 +7,6 @@ struct Position
   Position(int x, int y);
   Position(const Position& from);
 
-  virtual ~Position() = default;
-
   void Set(int x, int y);
   void Set(const Position& from);
 

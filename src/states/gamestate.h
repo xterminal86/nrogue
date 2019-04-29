@@ -16,7 +16,7 @@
 class GameState
 {
   public:
-    virtual ~GameState() {}
+    virtual ~GameState() = default;
 
     virtual void Init() {}
     virtual void Cleanup() {}
