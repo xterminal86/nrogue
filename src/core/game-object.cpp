@@ -160,17 +160,18 @@ void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical)
 void GameObject::WaitForTurn()
 {
   // In order to enhance the difference between two GameObjects
-  // with slightly different stats (SPD 1 and SPD 2),
+  // with slightly different stats (SPD 1 and SPD 2)
+  // and to reduce number of idle waiting cycles,
   // we introduce a little scaling for speed incrementation.
-  int spdIncrMinFrac = GlobalConstants::TurnTickValue / 5;
+  int spdIncrScale = GlobalConstants::TurnTickValue / 4;
 
   int speedTickBase = GlobalConstants::TurnTickValue;
-  int speedAttr = Attrs.Spd.Get() * spdIncrMinFrac;
+  int speedAttr = Attrs.Spd.Get() * spdIncrScale;
   int speedIncrement = speedTickBase + speedAttr;
 
   // In impossible case that speed penalties
   // are too great that speed increment is negative
-  speedIncrement = (speedIncrement <= 0) ? spdIncrMinFrac : speedIncrement;
+  speedIncrement = (speedIncrement <= 0) ? spdIncrScale : speedIncrement;
 
   // In towns SPD is ignored
   if (Map::Instance().CurrentLevel->Peaceful)

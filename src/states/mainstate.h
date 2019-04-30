@@ -38,6 +38,7 @@ class MainState : public GameState
     void ProcessWeapon(ItemComponent* wand);
     void PrintNoAttackInTown();
     void ProcessWandOfLight(ItemComponent* wand);
+    void ProcessMovement(const Position& dirOffsets);
 
     bool ProcessMoneyPickup(std::pair<int, GameObject*>& pair);
 

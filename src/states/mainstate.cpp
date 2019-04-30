@@ -22,143 +22,35 @@ void MainState::HandleInput()
   switch (_keyPressed)
   {
     case NUMPAD_7:
-      if (_playerRef->TryToAttack(-1, -1))
-      {
-        _playerRef->FinishTurn();
-      }
-      else if (_playerRef->Move(-1, -1))
-      {
-        Map::Instance().CurrentLevel->MapOffsetY++;
-        Map::Instance().CurrentLevel->MapOffsetX++;
-
-        _playerRef->FinishTurn();
-
-        Printer::Instance().ShowLastMessage = false;
-
-        _playerRef->ProcessHunger();
-      }
+      ProcessMovement({ -1, -1 });
       break;
 
     case NUMPAD_8:
-      if (_playerRef->TryToAttack(0, -1))
-      {
-        _playerRef->FinishTurn();
-      }
-      else if (_playerRef->Move(0, -1))
-      {
-        Map::Instance().CurrentLevel->MapOffsetY++;
-
-        _playerRef->FinishTurn();
-
-        Printer::Instance().ShowLastMessage = false;
-
-        _playerRef->ProcessHunger();
-      }
+      ProcessMovement({ 0, -1 });
       break;
 
     case NUMPAD_9:
-      if (_playerRef->TryToAttack(1, -1))
-      {
-        _playerRef->FinishTurn();
-      }
-      else if (_playerRef->Move(1, -1))
-      {
-        Map::Instance().CurrentLevel->MapOffsetY++;
-        Map::Instance().CurrentLevel->MapOffsetX--;
-
-        _playerRef->FinishTurn();
-
-        Printer::Instance().ShowLastMessage = false;
-
-        _playerRef->ProcessHunger();
-      }
+      ProcessMovement({ 1, -1 });
       break;
 
     case NUMPAD_4:
-      if (_playerRef->TryToAttack(-1, 0))
-      {
-        _playerRef->FinishTurn();
-      }
-      else if (_playerRef->Move(-1, 0))
-      {
-        Map::Instance().CurrentLevel->MapOffsetX++;
-
-        _playerRef->FinishTurn();
-
-        Printer::Instance().ShowLastMessage = false;
-
-        _playerRef->ProcessHunger();
-      }
+      ProcessMovement({ -1, 0 });
       break;
 
     case NUMPAD_2:
-      if (_playerRef->TryToAttack(0, 1))
-      {
-        _playerRef->FinishTurn();
-      }
-      else if (_playerRef->Move(0, 1))
-      {
-        Map::Instance().CurrentLevel->MapOffsetY--;
-
-        _playerRef->FinishTurn();
-
-        Printer::Instance().ShowLastMessage = false;
-
-        _playerRef->ProcessHunger();
-      }
+      ProcessMovement({ 0, 1 });
       break;
 
     case NUMPAD_6:
-      if (_playerRef->TryToAttack(1, 0))
-      {
-        _playerRef->FinishTurn();
-      }
-      else if (_playerRef->Move(1, 0))
-      {
-        Map::Instance().CurrentLevel->MapOffsetX--;
-
-        _playerRef->FinishTurn();
-
-        Printer::Instance().ShowLastMessage = false;
-
-        _playerRef->ProcessHunger();
-      }
+      ProcessMovement({ 1, 0 });
       break;
 
     case NUMPAD_1:
-      if (_playerRef->TryToAttack(-1, 1))
-      {
-        _playerRef->FinishTurn();
-      }
-      else if (_playerRef->Move(-1, 1))
-      {
-        Map::Instance().CurrentLevel->MapOffsetY--;
-        Map::Instance().CurrentLevel->MapOffsetX++;
-
-        _playerRef->FinishTurn();
-
-        Printer::Instance().ShowLastMessage = false;
-
-        _playerRef->ProcessHunger();
-      }
+      ProcessMovement({ -1, 1 });
       break;
 
     case NUMPAD_3:
-      if (_playerRef->TryToAttack(1, 1))
-      {
-        _playerRef->FinishTurn();
-      }
-      else if (_playerRef->Move(1, 1))
-      {
-        Map::Instance().CurrentLevel->MapOffsetY--;
-        Map::Instance().CurrentLevel->MapOffsetX--;
-
-        _playerRef->FinishTurn();
-
-        Printer::Instance().ShowLastMessage = false;
-
-        _playerRef->ProcessHunger();
-      }
+      ProcessMovement({ 1, 1 });
       break;
 
     case NUMPAD_5:
@@ -325,6 +217,25 @@ void MainState::Update(bool forceUpdate)
     // *****
 
     Printer::Instance().Render();
+  }
+}
+
+void MainState::ProcessMovement(const Position& dirOffsets)
+{
+  if (_playerRef->TryToAttack(dirOffsets.X, dirOffsets.Y))
+  {
+    _playerRef->FinishTurn();
+  }
+  else if (_playerRef->Move(dirOffsets.X, dirOffsets.Y))
+  {
+    Map::Instance().CurrentLevel->MapOffsetX -= dirOffsets.X;
+    Map::Instance().CurrentLevel->MapOffsetY -= dirOffsets.Y;
+
+    _playerRef->FinishTurn();
+
+    Printer::Instance().ShowLastMessage = false;
+
+    _playerRef->ProcessHunger();
   }
 }
 
