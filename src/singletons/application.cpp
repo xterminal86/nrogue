@@ -54,7 +54,7 @@ void Application::Run()
       _currentState->HandleInput();
     }
     else
-    {
+    {      
       Map::Instance().UpdateGameObjects();
       PlayerInstance.WaitForTurn();
     }

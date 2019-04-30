@@ -322,7 +322,7 @@ void Player::SetDefaultEquipment()
       weapon = GameObjectsFactory::Instance().CreateRangedWeapon(0, 0, RangedWeaponType::SHORT_BOW, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(weapon);
 
-      GameObject* arrows = GameObjectsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::UNCURSED, 60);
+      GameObject* arrows = GameObjectsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::BLESSED, 60);
       Inventory.AddToInventory(arrows);
 
       weaponAndArmor.push_back(arrows);
@@ -753,6 +753,8 @@ void Player::LevelUp(int baseHpOverride)
     kvp.second = 0;
   }
 
+  Printer::Instance().AddMessage("You have gained a level!");
+
   // Try to raise main stats
 
   for (auto& i : _mainAttributes)
@@ -768,6 +770,9 @@ void Player::LevelUp(int baseHpOverride)
 
       kvp.second.OriginalValue++;
       kvp.second.CurrentValue = kvp.second.OriginalValue;
+
+      auto str = Util::StringFormat("%s +1", kvp.first.data());
+      Printer::Instance().AddMessage(str);
     }    
   }
 
@@ -781,6 +786,12 @@ void Player::LevelUp(int baseHpOverride)
 
   _statRaisesMap["HP"] = hpToAdd;
 
+  if (hpToAdd > 0)
+  {
+    auto str = Util::StringFormat("HP +%i", hpToAdd);
+    Printer::Instance().AddMessage(str);
+  }
+
   int minRndMp = Attrs.Mag.OriginalValue;
   int maxRndMp = Attrs.Mag.OriginalValue + Attrs.MP.Talents;
 
@@ -789,14 +800,18 @@ void Player::LevelUp(int baseHpOverride)
 
   _statRaisesMap["MP"] = mpToAdd;
 
+  if (mpToAdd > 0)
+  {
+    auto str = Util::StringFormat("MP +%i", mpToAdd);
+    Printer::Instance().AddMessage(str);
+  }
+
   Attrs.Lvl.OriginalValue++;
   Attrs.Lvl.CurrentValue = Attrs.Lvl.OriginalValue;
 
   auto res = GetPrettyLevelUpText();
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Level Up!", res, "#888800", "#000044");
-
-  Printer::Instance().AddMessage("You have gained a level!");
 
   /*
    * TODO: Raise skills etc.
@@ -844,6 +859,9 @@ void Player::LevelDown()
       }
 
       kvp.second.CurrentValue = kvp.second.OriginalValue;
+
+      auto str = Util::StringFormat("%s -1", kvp.first.data());
+      Printer::Instance().AddMessage(str);
     }
   }
 
@@ -862,6 +880,12 @@ void Player::LevelDown()
 
   _statRaisesMap["HP"] = -hpToAdd;
 
+  if (hpToAdd > 0)
+  {
+    auto str = Util::StringFormat("HP -%i", hpToAdd);
+    Printer::Instance().AddMessage(str);
+  }
+
   int minRndMp = Attrs.Mag.OriginalValue;
   int maxRndMp = Attrs.Mag.OriginalValue * (Attrs.MP.Talents + 1);
 
@@ -874,6 +898,12 @@ void Player::LevelDown()
   }
 
   _statRaisesMap["MP"] = -mpToAdd;
+
+  if (mpToAdd > 0)
+  {
+    auto str = Util::StringFormat("MP -%i", mpToAdd);
+    Printer::Instance().AddMessage(str);
+  }
 
   Attrs.Lvl.OriginalValue--;
   if (Attrs.Lvl.OriginalValue <= 1)
@@ -950,10 +980,10 @@ void Player::WaitForTurn()
   // Redraw screen only when player is ready for action
   // (assuming Application::_currentState is MainState)
   if (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
-  {
+  {    
     // FIXME: try to optimize.
     // When you move player in dungeons while holding direction key,
-    // it gets "jaggy" due to this constant redrawing of stuff.
+    // it gets "jaggy" due to this constant redrawing of stuff.    
     Application::Instance().DrawCurrentState();
   }
 }
@@ -1097,6 +1127,13 @@ void Player::FinishTurn()
 
   ProcessStarvation();
   GameObject::ProcessEffects();
+
+  // If player killed an enemy but can still make another turn,
+  // we must check and remove objects marked for deletion
+  // or Application::DrawCurrentState() won't reflect that.
+  //
+  // Probably bad design anyway but fuck it.
+  Map::Instance().RemoveDestroyed();
 }
 
 void Player::ProcessStarvation()

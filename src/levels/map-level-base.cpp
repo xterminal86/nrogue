@@ -55,11 +55,21 @@ void MapLevelBase::AdjustCamera()
 
 void MapLevelBase::InsertActor(GameObject* actor)
 {
+  if (actor == nullptr)
+  {
+    return;
+  }
+
   ActorGameObjects.push_back(std::unique_ptr<GameObject>(actor));
 }
 
 void MapLevelBase::InsertGameObject(GameObject* goToInsert)
 {
+  if (goToInsert == nullptr)
+  {
+    return;
+  }
+
   GameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
 }
 
@@ -71,6 +81,11 @@ void MapLevelBase::InsertStaticObject(int x, int y, const GameObjectInfo& object
 
 void MapLevelBase::InsertStaticObject(GameObject* goToInsert)
 {
+  if (goToInsert == nullptr)
+  {
+    return;
+  }
+
   int x = goToInsert->PosX;
   int y = goToInsert->PosY;
 

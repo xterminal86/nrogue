@@ -21,6 +21,7 @@ class Map : public Singleton<Map>
 
     void InsertActor(GameObject* actor);
     void InsertGameObject(GameObject* goToInsert);
+    void RemoveDestroyed();
     void UpdateGameObjects();
 
     void ChangeLevel(MapType levelToChange, bool goingDown);
@@ -43,7 +44,6 @@ class Map : public Singleton<Map>
     std::map<MapType, std::unique_ptr<MapLevelBase>> _levels;
     std::map<MapType, bool> _mapVisitFirstTime;
 
-    void RemoveDestroyed();
     void ChangeOrInstantiateLevel(MapType levelName);
     void ShowLoadingText();
     void DrawNonVisibleMapTile(int x, int y);

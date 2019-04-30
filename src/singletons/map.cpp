@@ -131,13 +131,13 @@ void Map::UpdateGameObjects()
 }
 
 void Map::InsertActor(GameObject* goToInsert)
-{
-  CurrentLevel->ActorGameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
+{  
+  CurrentLevel->InsertActor(goToInsert);
 }
 
 void Map::InsertGameObject(GameObject* goToInsert)
-{
-  CurrentLevel->GameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
+{  
+  CurrentLevel->InsertGameObject(goToInsert);
 }
 
 std::pair<int, GameObject*> Map::GetGameObjectToPickup(int x, int y)
@@ -233,7 +233,8 @@ void Map::RemoveDestroyed()
 
   for (int i = 0; i < CurrentLevel->GameObjects.size(); i++)
   {
-    if (CurrentLevel->GameObjects[i]->IsDestroyed)
+    if (CurrentLevel->GameObjects[i] != nullptr &&
+        CurrentLevel->GameObjects[i]->IsDestroyed)
     {
       int x = CurrentLevel->GameObjects[i]->PosX;
       int y = CurrentLevel->GameObjects[i]->PosY;
@@ -248,7 +249,8 @@ void Map::RemoveDestroyed()
 
   for (int i = 0; i < CurrentLevel->ActorGameObjects.size(); i++)
   {
-    if (CurrentLevel->ActorGameObjects[i]->IsDestroyed)
+    if (CurrentLevel->ActorGameObjects[i] != nullptr &&
+        CurrentLevel->ActorGameObjects[i]->IsDestroyed)
     {
       int x = CurrentLevel->ActorGameObjects[i]->PosX;
       int y = CurrentLevel->ActorGameObjects[i]->PosY;

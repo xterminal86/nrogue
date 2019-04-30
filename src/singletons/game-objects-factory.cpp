@@ -75,6 +75,9 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       break;
   }
 
+  // No check for nullptr, program will crash and
+  // thus we will know that we forgot to add object
+  // into the factory.
   go->PosX = x;
   go->PosY = y;
 
@@ -102,8 +105,10 @@ GameObject* GameObjectsFactory::CreateMonster(int x, int y, GameObjectType monst
       break;
   }
 
+  // No check for nullptr, program will crash and
+  // thus we will know that we forgot to add object
+  // into the factory.
   go->Type = monsterType;
-
   go->PosX = x;
   go->PosY = y;
 
@@ -2349,10 +2354,7 @@ void GameObjectsFactory::GenerateLoot(int posX, int posY, const std::pair<ItemTy
     default:
     {
       auto go = CreateGameObject(posX, posY, kvp.first);
-      if (go != nullptr)
-      {
-        Map::Instance().InsertGameObject(go);
-      }
+      Map::Instance().InsertGameObject(go);
     }
     break;
   }
