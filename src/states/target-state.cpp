@@ -368,22 +368,7 @@ void TargetState::FireWeapon()
   else
   {
     Application::Instance().ChangeState(GameStates::MAIN_STATE);
-  }
-
-  /*
-  // Check if player accidentally killed himself
-  // (e.g. after firing fireball close to the wall)
-  if (!_playerRef->IsAlive(_playerRef))
-  {
-    Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
-  }
-  else
-  {
-    _playerRef->FinishTurn();
-    Map::Instance().UpdateGameObjects();
-    Application::Instance().ChangeState(GameStates::MAIN_STATE);
-  }
-  */
+  }  
 }
 
 void TargetState::ProcessHit(GameObject *hitPoint)

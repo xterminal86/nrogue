@@ -157,26 +157,7 @@ void MainState::HandleInput()
 
     default:
       break;
-  }
-
-  /*
-  // Check if player has died from some effect (like poison)
-  if (!_playerRef->IsAlive(nullptr))
-  {
-    Application::Instance().WriteObituary(true);
-    Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
-  }
-  else
-  {
-    // Update all game objects if player is not ready to act
-    if (_playerRef->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
-    {
-      Map::Instance().UpdateGameObjects();
-      _playerRef->WaitForTurn();
-      //Update(true);
-    }
-  }
-  */
+  }  
 }
 
 void MainState::Update(bool forceUpdate)
