@@ -502,7 +502,7 @@ void Map::PrintMapLayout()
     {      
       char ch = CurrentLevel->MapArray[y][x]->Image;
 
-      // Replace wall tiles with '#'
+      // Replace 'wall' tiles with '#'
       if (CurrentLevel->MapArray[y][x]->Blocking
        && CurrentLevel->MapArray[y][x]->BlocksSight
        && ch == ' ')
@@ -515,7 +515,7 @@ void Map::PrintMapLayout()
       {
         ch = staticObjects.back()->Image;
 
-        // Replace wall objects with '#'
+        // Replace 'wall' objects with '#'
         if (staticObjects.back()->Blocking
          && staticObjects.back()->BlocksSight
          && ch == ' ')

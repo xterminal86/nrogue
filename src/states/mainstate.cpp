@@ -56,7 +56,6 @@ void MainState::HandleInput()
     case NUMPAD_5:
       Printer::Instance().AddMessage("You waited...");
       _playerRef->FinishTurn();
-      _playerRef->ProcessHunger();
       break;
 
     case 'a':
@@ -212,11 +211,9 @@ void MainState::ProcessMovement(const Position& dirOffsets)
     Map::Instance().CurrentLevel->MapOffsetX -= dirOffsets.X;
     Map::Instance().CurrentLevel->MapOffsetY -= dirOffsets.Y;
 
-    _playerRef->FinishTurn();
+    _playerRef->FinishTurn();    
 
     Printer::Instance().ShowLastMessage = false;
-
-    _playerRef->ProcessHunger();
   }
 }
 

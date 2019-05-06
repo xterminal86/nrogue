@@ -658,9 +658,18 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
 {  
   if (godMode)
   {
-    std::string objName = (from != nullptr) ? from->ObjectName : "unknown";
-    auto str = Util::StringFormat("You laugh at the face of %s", objName.data());
-    Printer::Instance().AddMessage(str);
+    std::string msgString;
+    if (from != nullptr)
+    {
+      msgString = Util::StringFormat("You laugh at the face of %s!", from->ObjectName.data());
+    }
+    else
+    {
+      msgString = "You were hit for no damage";
+    }
+
+    Printer::Instance().AddMessage(msgString);
+
     return;
   }
 
@@ -669,9 +678,15 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
     if (from == this)
     {
       auto str = Util::StringFormat("You hit yourself for %i damage!", amount);
-      Printer::Instance().AddMessage(str);
-      Attrs.HP.CurrentValue -= amount;
+      Printer::Instance().AddMessage(str);      
     }
+    else
+    {
+      auto str = Util::StringFormat("You were hit for %i damage", amount);
+      Printer::Instance().AddMessage(str);
+    }
+
+    Attrs.HP.CurrentValue -= amount;
   }
   else
   {
@@ -1125,6 +1140,7 @@ void Player::FinishTurn()
     Attrs.ActionMeter = 0;
   }
 
+  ProcessHunger();
   ProcessStarvation();
   GameObject::ProcessEffects();
 
@@ -1142,7 +1158,7 @@ void Player::ProcessStarvation()
   {
     _starvingTimeout++;
 
-    if (_starvingTimeout > 11)
+    if (_starvingTimeout > GlobalConstants::StarvationDamageTimeout)
     {
       _starvingTimeout = 0;
     }
@@ -1168,15 +1184,19 @@ void Player::ProcessHunger()
 {
   Attrs.Hunger += Attrs.HungerSpeed.Get();
 
+  // Hunger's CurrentValue is equal to OriginalValue
   int maxHunger = Attrs.HungerRate.CurrentValue;
+
   Attrs.Hunger = Util::Clamp(Attrs.Hunger, 0, maxHunger);
 
   if (Attrs.Hunger == maxHunger)
   {
-    if (_starvingTimeout > 10)
+    if (_starvingTimeout > GlobalConstants::StarvationDamageTimeout - 1)
     {
       Printer::Instance().AddMessage("You are starving!");
-      ReceiveDamage(nullptr, 1, false);
+
+      // Yes, hunger damage is magical. Deal with it.
+      ReceiveDamage(nullptr, 1, true);
     }
 
     IsStarving = true;

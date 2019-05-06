@@ -31,6 +31,7 @@ struct Attributes
 
   // number of turns before Hunger decrements by HungerSpeed
   Attribute HungerRate;
+
   Attribute HungerSpeed;
 
   Attribute Exp;

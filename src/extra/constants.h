@@ -559,6 +559,9 @@ namespace GlobalConstants
   static const int TurnReadyValue = 100;
   static const int TurnTickValue = 100;
 
+  // Because if ( < StarvationDamageTimeout)
+  static const int StarvationDamageTimeout = 11;
+
   static const std::string BlackColor = "#000000";
   static const std::string WhiteColor = "#FFFFFF";
   static const std::string DandelionYellowColor = "#F0E130";
