@@ -284,7 +284,11 @@ void Map::TeleportToExistingLevel(MapType levelToChange, const Position& telepor
 {
   auto& player = Application::Instance().PlayerInstance;
 
-  // Unblock cell on stairs before going
+  // Unblock cell before teleporting.
+  //
+  // MoveTo() does the unblocking as well, but if we switch places with actor,
+  // we must manually unblock player's cell first
+  // or MoveTo() for actor won't work.
   CurrentLevel->MapArray[player.PosX][player.PosY]->Occupied = false;
 
   CurrentLevel = _levels[levelToChange].get();
@@ -309,8 +313,8 @@ void Map::TeleportToExistingLevel(MapType levelToChange, const Position& telepor
   else if (tpOccupied)
   {
     // Assume that if some NPC occupied returner destination,
-    // he can be moved at least to his previous position.
-
+    // he can be moved at least to his 'previous' position
+    // (thus, any empty cell around him).
     auto str = Util::StringFormat("You bump into %s!", actor->ObjectName.data());
     Printer::Instance().AddMessage(str);
 
@@ -326,6 +330,7 @@ void Map::TeleportToExistingLevel(MapType levelToChange, const Position& telepor
       }
     }
 
+    // Read the comment in the beginning of the method
     actor->MoveTo(tp.X, tp.Y);
   }
 

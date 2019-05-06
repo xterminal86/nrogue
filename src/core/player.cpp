@@ -1146,7 +1146,9 @@ void Player::FinishTurn()
 
   // If player killed an enemy but can still make another turn,
   // we must check and remove objects marked for deletion
-  // or Application::DrawCurrentState() won't reflect that.
+  // or Application::DrawCurrentState() won't reflect that visually,
+  // and we might also still attack / interact with objects,
+  // that should've already been destroyed, as well.
   //
   // Probably bad design anyway but fuck it.
   Map::Instance().RemoveDestroyed();

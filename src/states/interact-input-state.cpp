@@ -30,47 +30,35 @@ void InteractInputState::HandleInput()
   switch (_keyPressed)
   {
     case NUMPAD_7:
-      dirSet = true;
-      _cursorPosition.X -= 1;
-      _cursorPosition.Y -= 1;
+      dirSet = SetDir({ -1, -1 });
       break;
 
     case NUMPAD_8:
-      dirSet = true;
-      _cursorPosition.Y -= 1;
+      dirSet = SetDir({ 0, -1 });
       break;
 
     case NUMPAD_9:
-      dirSet = true;
-      _cursorPosition.X += 1;
-      _cursorPosition.Y -= 1;
+      dirSet = SetDir({ 1, -1 });
       break;
 
     case NUMPAD_4:
-      dirSet = true;
-      _cursorPosition.X -= 1;
+      dirSet = SetDir({ -1, 0 });
       break;
 
     case NUMPAD_6:
-      dirSet = true;
-      _cursorPosition.X += 1;
+      dirSet = SetDir({ 1, 0 });
       break;
 
     case NUMPAD_1:
-      dirSet = true;
-      _cursorPosition.X -= 1;
-      _cursorPosition.Y += 1;
+      dirSet = SetDir({ -1, 1 });
       break;
 
     case NUMPAD_2:
-      dirSet = true;
-      _cursorPosition.Y += 1;
+      dirSet = SetDir({ 0, 1 });
       break;
 
     case NUMPAD_3:
-      dirSet = true;
-      _cursorPosition.X += 1;
-      _cursorPosition.Y += 1;
+      dirSet = SetDir({ 1, 1 });
       break;
 
     case 'q':
@@ -84,57 +72,45 @@ void InteractInputState::HandleInput()
 
   if (dirSet)
   {
-    auto actor = Map::Instance().GetActorAtPosition(_cursorPosition.X, _cursorPosition.Y);
-    if (actor != nullptr)
-    {
-      TryToInteractWithActor(actor);
-    }
-    else
-    {
-      auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
-      if (res.size() != 0)
-      {
-        TryToInteractWithObject(res.back());
-      }
-      else
-      {
-        auto staticObject = Map::Instance().CurrentLevel->StaticMapObjects[_cursorPosition.X][_cursorPosition.Y].get();
-        if (staticObject != nullptr)
-        {
-          TryToInteractWithObject(staticObject);
-        }
-        else
-        {
-          Printer::Instance().AddMessage("There's nothing there");
-          Application::Instance().ChangeState(GameStates::MAIN_STATE);
-          //auto cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
-          //TryToInteractWithObject(cell);
-        }
-      }
-    }
+    ProcessInteraction();
   }
 }
 
-
-void InteractInputState::Update(bool forceUpdate)
+bool InteractInputState::SetDir(const Position& dir)
 {
-  if (_keyPressed != -1 || forceUpdate)
+  _cursorPosition.X += dir.X;
+  _cursorPosition.Y += dir.Y;
+
+  return true;
+}
+
+void InteractInputState::ProcessInteraction()
+{
+  auto actor = Map::Instance().GetActorAtPosition(_cursorPosition.X, _cursorPosition.Y);
+  if (actor != nullptr)
   {
-    Printer::Instance().Clear();
-
-    _playerRef->CheckVisibility();
-
-    Map::Instance().Draw(_playerRef->PosX, _playerRef->PosY);
-
-    _playerRef->Draw();
-
-    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
-                                Printer::Instance().TerminalHeight - 1,
-                                Printer::Instance().GetLastMessage(),
-                                Printer::kAlignRight,
-                                "#FFFFFF");
-
-    Printer::Instance().Render();
+    TryToInteractWithActor(actor);
+  }
+  else
+  {
+    auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
+    if (res.size() != 0)
+    {
+      TryToInteractWithObject(res.back());
+    }
+    else
+    {
+      auto staticObject = Map::Instance().CurrentLevel->StaticMapObjects[_cursorPosition.X][_cursorPosition.Y].get();
+      if (staticObject != nullptr)
+      {
+        TryToInteractWithObject(staticObject);
+      }
+      else
+      {
+        Printer::Instance().AddMessage("There's nothing there");
+        Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      }
+    }
   }
 }
 
@@ -183,5 +159,27 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
       nis->SetNPCRef(npcAi);
       Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);      
     }
+  }
+}
+
+void InteractInputState::Update(bool forceUpdate)
+{
+  if (_keyPressed != -1 || forceUpdate)
+  {
+    Printer::Instance().Clear();
+
+    _playerRef->CheckVisibility();
+
+    Map::Instance().Draw(_playerRef->PosX, _playerRef->PosY);
+
+    _playerRef->Draw();
+
+    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
+                                Printer::Instance().TerminalHeight - 1,
+                                Printer::Instance().GetLastMessage(),
+                                Printer::kAlignRight,
+                                "#FFFFFF");
+
+    Printer::Instance().Render();
   }
 }

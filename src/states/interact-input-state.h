@@ -16,8 +16,11 @@ class InteractInputState : public GameState
     void Prepare() override;
 
   private:
+    void ProcessInteraction();
     void TryToInteractWithObject(GameObject* go);
     void TryToInteractWithActor(GameObject* actor);
+
+    bool SetDir(const Position& dir);
 
     Player* _playerRef;
 
