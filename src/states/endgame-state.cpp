@@ -24,6 +24,9 @@ void EndgameState::HandleInput()
     case 'q':
       Application::Instance().ChangeState(GameStates::EXIT_GAME);
       break;
+
+    default:
+      break;
   }
 }
 

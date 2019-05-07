@@ -14,6 +14,9 @@ void InfoState::HandleInput()
     case 'q':
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
+
+    default:
+      break;
   }  
 }
 

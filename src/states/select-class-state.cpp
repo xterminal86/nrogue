@@ -37,6 +37,9 @@ void SelectClassState::HandleInput()
     case 'q':
       Application::Instance().ChangeState(GameStates::MENU_STATE);
       break;
+
+    default:
+      break;
   }
 
   _menuIndex = Util::Clamp(_menuIndex, 0, _menuItems.size() - 1);

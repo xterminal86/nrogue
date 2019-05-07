@@ -23,6 +23,9 @@ void ExitingState::HandleInput()
       Application::Instance().WriteObituary(false);
       Application::Instance().ChangeState(GameStates::EXIT_GAME);
       break;
+
+    default:
+      break;
   }
 }
 

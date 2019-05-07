@@ -39,6 +39,9 @@ void MessageLogState::HandleInput()
     case 'q':
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
+
+    default:
+      break;
   }
 
   _scrollPosition = Util::Clamp(_scrollPosition, 0, scrollLimit);

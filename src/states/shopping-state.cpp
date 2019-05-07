@@ -65,10 +65,15 @@ void ShoppingState::HandleInput()
       break;
 
     case 'q':
+    {
       auto res = Application::Instance().GetGameStateRefByName(GameStates::NPC_INTERACT_STATE);
       NPCInteractState* nis = static_cast<NPCInteractState*>(res);
       nis->SetNPCRef(_shopOwner->NpcRef);
       Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);
+    }
+    break;
+
+    default:
       break;
   }
 

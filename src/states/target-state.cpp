@@ -150,6 +150,9 @@ void TargetState::HandleInput()
       Printer::Instance().AddMessage("Cancelled");
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
+
+    default:
+      break;
   }
 }
 
