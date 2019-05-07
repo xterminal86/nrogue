@@ -836,6 +836,7 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
       break;
   }
 
+  // TODO: add cases for all item types after they are decided
   if (go != nullptr)
   {
     go->PosX = x;
