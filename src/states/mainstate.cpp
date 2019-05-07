@@ -156,7 +156,12 @@ void MainState::HandleInput()
 
     default:
       break;
-  }  
+  }
+
+  if (!_playerRef->IsAlive(nullptr))
+  {
+    Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
+  }
 }
 
 void MainState::Update(bool forceUpdate)
