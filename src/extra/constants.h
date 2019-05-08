@@ -558,6 +558,7 @@ namespace GlobalConstants
   static const int InventoryMaxSize = 20;
   static const int TurnReadyValue = 100;
   static const int TurnTickValue = 100;
+  static const int PathfindingSearchLimit = 20;
 
   // Because if ( < StarvationDamageTimeout)
   static const int StarvationDamageTimeout = 11;

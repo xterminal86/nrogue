@@ -6,37 +6,25 @@
 #include "map.h"
 #include "trader-component.h"
 
+#include "ai-idle-state.h"
+#include "ai-patrol-state.h"
+
 AINPC::AINPC()
 {
   _hash = typeid(*this).hash_code();
 
-  IsAgressive = false;
+  IsAgressive = false;  
 }
 
 void AINPC::Update()
 {
-  if (Data.IsStanding)
-  {
-    AIComponentRef->OwnerGameObject->Attrs.ActionMeter = 0;
-    return;
-  }
-
-  if (AIComponentRef->OwnerGameObject->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
-  {
-    AIComponentRef->OwnerGameObject->WaitForTurn();
-  }
-  else
-  {
-    RandomMovement();
-
-    AIComponentRef->OwnerGameObject->FinishTurn();
-  }
+  AIModelBase::Update();
 }
 
-void AINPC::Init(NPCType type, bool standing)
+void AINPC::Init(NPCType type, bool immovable)
 {
   _npcType = type;
-  Data.IsStanding = standing;
+  Data.IsImmovable = immovable;
 
   // TODO: moar?
 
@@ -99,20 +87,15 @@ void AINPC::Init(NPCType type, bool standing)
   {
     AIComponentRef->OwnerGameObject->LevelUp();
   }
-}
 
-void AINPC::RandomMovement()
-{
-  int dx = RNG::Instance().Random() % 2;
-  int dy = RNG::Instance().Random() % 2;
-
-  int signX = (RNG::Instance().Random() % 2) == 0 ? -1 : 1;
-  int signY = (RNG::Instance().Random() % 2) == 0 ? -1 : 1;
-
-  dx *= signX;
-  dy *= signY;
-
-  AIComponentRef->OwnerGameObject->Move(dx, dy);  
+  if (!immovable)
+  {
+    ChangeAIState<AIPatrolState>();
+  }
+  else
+  {
+    ChangeAIState<AIIdleState>();
+  }
 }
 
 void AINPC::SetDataClaire()

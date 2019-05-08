@@ -9,6 +9,14 @@ AIModelBase::AIModelBase()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+void AIModelBase::Update()
+{
+  if (_currentState != nullptr)
+  {
+    _currentState->Run();
+  }
+}
+
 bool AIModelBase::IsPlayerVisible()
 {
   int px = _playerRef->PosX;

@@ -721,13 +721,7 @@ namespace Util
   inline void Sleep(int delayMs)
   {
     #ifdef USE_SDL
-    Uint32 now = SDL_GetTicks();
-    Uint32 lastTime = now;
-    Uint32 goal = now + delayMs;
-    while (now < goal)
-    {
-      now = SDL_GetTicks();
-    }
+    SDL_Delay(delayMs);
     #else
     using timer = std::chrono::high_resolution_clock;
     using ms = std::chrono::milliseconds;

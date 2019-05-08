@@ -1,5 +1,7 @@
 #include "pathfinder.h"
 
+#include "map-level-base.h"
+
 PathNode::PathNode(const Position &coord)
 {
   Coordinate.X = coord.X;
@@ -80,6 +82,65 @@ std::vector<Position> Pathfinder::BuildRoad(const std::vector<std::vector<char>>
   return path;
 }
 
+std::vector<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
+                                            const Position& start,
+                                            const Position& end,
+                                            bool eightDirs,
+                                            int maxNodes)
+{
+  _mapSize = mapRef->MapSize;
+
+  _start = start;
+  _end = end;
+
+  std::vector<Position> path;
+
+  std::vector<PathNode> openList;
+  std::vector<PathNode> closedList;
+
+  PathNode node(start);
+  node.CostH = Util::BlockDistance(start, end);
+  node.CostF = node.CostG + node.CostH;
+
+  openList.push_back(node);
+
+  while (!openList.empty())
+  {
+    if (maxNodes != -1 && openList.size() > maxNodes)
+    {
+      break;
+    }
+
+    int index = FindCheapestElement(openList);
+
+    PathNode currentNode = openList[index];
+
+    closedList.push_back(openList[index]);
+
+    if (openList[index].Coordinate == end)
+    {
+      PathNode n = FindNodeWithPosition(closedList, end);
+      while (n.ParentNodePosition.X != -1 && n.ParentNodePosition.Y != -1)
+      {
+        path.push_back(n.Coordinate);
+        n = FindNodeWithPosition(closedList, n.ParentNodePosition);
+      }
+
+      path.push_back(start);
+
+      std::reverse(path.begin(), path.end());
+
+      break;
+    }
+
+    LookAround(mapRef, openList[index], openList, closedList, eightDirs);
+
+    openList.erase(openList.begin() + index);
+  }
+
+  return path;
+}
+
 void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
                             const PathNode& currentNode,
                             std::vector<PathNode>& openList,
@@ -144,6 +205,93 @@ void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
 
   for (auto& nodeAround : nodesAround)
   {    
+    if (IsNodePresent(nodeAround, closedList))
+    {
+      continue;
+    }
+
+    if (IsNodePresent(nodeAround, openList))
+    {
+      int newG = nodeAround.CostG + TraverseCost(nodeAround.Coordinate, currentNode.Coordinate);
+      if (newG < nodeAround.CostG)
+      {
+        nodeAround.CostG = newG;
+        nodeAround.CostH = Util::BlockDistance(nodeAround.Coordinate, _end);
+        nodeAround.CostF = nodeAround.CostG + nodeAround.CostH;
+        nodeAround.ParentNodePosition = currentNode.Coordinate;
+      }
+    }
+    else
+    {
+      nodeAround.CostG = currentNode.CostG + TraverseCost(currentNode.Coordinate, nodeAround.Coordinate);
+      nodeAround.CostH = Util::BlockDistance(nodeAround.Coordinate, _end);
+      nodeAround.CostF = nodeAround.CostG + nodeAround.CostH;
+
+      openList.push_back(nodeAround);
+    }
+  }
+}
+
+void Pathfinder::LookAround(MapLevelBase* mapRef,
+                            const PathNode& currentNode,
+                            std::vector<PathNode>& openList,
+                            std::vector<PathNode>& closedList,
+                            bool eightDirs)
+{
+  std::vector<Position> directions;
+
+  if (eightDirs)
+  {
+    directions =
+    {
+      { -1, -1 },
+      { -1,  0 },
+      { -1,  1 },
+      {  0, -1 },
+      {  0,  1 },
+      {  1, -1 },
+      {  1,  0 },
+      {  1,  1 }
+    };
+  }
+  else
+  {
+    directions =
+    {
+      { -1,  0 },
+      {  0, -1 },
+      {  0,  1 },
+      {  1,  0 }
+    };
+  }
+
+  std::vector<PathNode> nodesAround;
+
+  for (auto& p : directions)
+  {
+    Position coordinate;
+
+    coordinate.X = currentNode.Coordinate.X + p.X;
+    coordinate.Y = currentNode.Coordinate.Y + p.Y;
+
+    bool walkable = true;
+    auto& staticObj = mapRef->StaticMapObjects[coordinate.X][coordinate.Y];
+    if (staticObj != nullptr && staticObj->Blocking)
+    {
+      walkable = false;
+    }
+
+    if (!IsInsideMap(coordinate) || !walkable)
+    {
+      continue;
+    }
+
+    PathNode newNode(coordinate, currentNode.Coordinate);
+    nodesAround.push_back(newNode);
+  }
+
+  for (auto& nodeAround : nodesAround)
+  {
     if (IsNodePresent(nodeAround, closedList))
     {
       continue;

@@ -12,7 +12,7 @@ using TextLines = std::vector<std::string>;
 
 struct NPCData
 {
-  bool IsStanding = false;
+  bool IsImmovable = false;
   bool IsAquainted = false;
   bool IsMale = true;
   bool CanSpeak = true;
@@ -32,7 +32,7 @@ class AINPC : public AIModelBase
   public:
     AINPC();
 
-    void Init(NPCType type, bool standing);
+    void Init(NPCType type, bool immovable);
 
     void Update() override;
 
@@ -40,8 +40,6 @@ class AINPC : public AIModelBase
 
   private:    
     NPCType _npcType;
-
-    void RandomMovement();
 
     void SetDataClaire();
     void SetDataCloud();

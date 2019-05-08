@@ -111,7 +111,7 @@ void Map::UpdateGameObjects()
 
   for (auto& go : CurrentLevel->GameObjects)
   {
-    go.get()->Update();
+    go->Update();
   }
 
   for (auto& go : CurrentLevel->ActorGameObjects)

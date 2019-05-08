@@ -3,6 +3,8 @@
 
 #include "util.h"
 
+class MapLevelBase;
+
 struct PathNode
 {
   PathNode() = default;
@@ -43,6 +45,12 @@ class Pathfinder
                                     const std::vector<char>& obstacles,
                                     bool eightDirs = false);
 
+    std::vector<Position> BuildRoad(MapLevelBase* mapRef,
+                                    const Position& start,
+                                    const Position& end,                                    
+                                    bool eightDirs = false,
+                                    int maxNodes = -1);
+
   private:
     Position _mapSize;
 
@@ -60,6 +68,12 @@ class Pathfinder
                     std::vector<PathNode>& openList,
                     std::vector<PathNode>& closedList,
                     const std::vector<char>& obstacles,
+                    bool eightDirs);
+
+    void LookAround(MapLevelBase* mapRef,
+                    const PathNode& node,
+                    std::vector<PathNode>& openList,
+                    std::vector<PathNode>& closedList,
                     bool eightDirs);
 
     bool IsNodePresent(const PathNode& n, const std::vector<PathNode>& list);

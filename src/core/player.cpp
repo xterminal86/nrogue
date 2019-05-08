@@ -116,7 +116,7 @@ void Player::PassByNPC(int dx, int dy)
   AINPC* npc = static_cast<AINPC*>(aic->CurrentModel);
   if (!aic->CurrentModel->IsAgressive)
   {
-    if (npc->Data.IsStanding)
+    if (npc->Data.IsImmovable)
     {
       std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : "The " + actor->ObjectName;
       Printer::Instance().AddMessage(name + " won't move over");
