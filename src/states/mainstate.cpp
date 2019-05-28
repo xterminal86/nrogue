@@ -213,12 +213,12 @@ void MainState::ProcessMovement(const Position& dirOffsets)
   }
   else if (_playerRef->Move(dirOffsets.X, dirOffsets.Y))
   {
+    Printer::Instance().ShowLastMessage = false;
+
     Map::Instance().CurrentLevel->MapOffsetX -= dirOffsets.X;
     Map::Instance().CurrentLevel->MapOffsetY -= dirOffsets.Y;
 
-    _playerRef->FinishTurn();    
-
-    Printer::Instance().ShowLastMessage = false;
+    _playerRef->FinishTurn();        
   }
 }
 

@@ -33,6 +33,8 @@ void Player::Init()
   _previousCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell->Occupied = true;
+
+  //Attrs.HungerRate.Set(0);
 }
 
 void Player::Draw()
