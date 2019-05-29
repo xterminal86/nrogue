@@ -114,7 +114,7 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
         }
         break;
 
-        // TODO: can step in lava and got killed / damaged?
+        // TODO: can step in lava and get killed / damaged?
 
         case 'l':
         {

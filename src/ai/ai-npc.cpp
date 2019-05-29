@@ -118,7 +118,7 @@ void AINPC::SetDataClaire()
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      // =========================================================================== 80
+      // ================================================================================ 80
       "I took a vacation only to arrive in a place",
       "with some evil lurking underground.",
       "Worst vacation ever."
@@ -167,7 +167,7 @@ void AINPC::SetDataCloud()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // =========================================================================== 80
+    // ================================================================================ 80
     {
       "I'm not a \"soldier\" like those in your City.",
       "I'm from the East actually.",
@@ -221,7 +221,7 @@ void AINPC::SetDataIan()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // =========================================================================== 80
+    // ================================================================================ 80
     {
       "The Great Eye is watching you."
     },
@@ -247,7 +247,7 @@ void AINPC::SetDataMiles()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // =========================================================================== 80
+    // ================================================================================ 80
     {
       "I'm here to investigate rumors concerning the murder of a local miner.",
       "But, as ill luck would have it, this excuse for a lawyer,",
@@ -280,7 +280,7 @@ void AINPC::SetDataPhoenix()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // =========================================================================== 80
+    // ================================================================================ 80
     {
       "Miles may act as if he doesn't know me,",
       "but we actually studied law together at the Academy.",
@@ -311,7 +311,7 @@ void AINPC::SetDataTigra()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // =========================================================================== 80
+    // ================================================================================ 80
     {
       "Welcome to our small neighbourhood!",
       "It wasn't always this gloomy, just so you know..."
@@ -352,7 +352,7 @@ void AINPC::SetDataSteve()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // =========================================================================== 80
+    // ================================================================================ 80
     {
       "Emeralds are green, diamonds are blue,",
       "Redstone is red and this is all true!",
@@ -425,7 +425,7 @@ void AINPC::SetDataGimley()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // =========================================================================== 80
+    // ================================================================================ 80
     {
       "(humming)",
       "Far over the misty mountains cold,",
@@ -474,7 +474,7 @@ void AINPC::SetDataMartin()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // =========================================================================== 80
+    // ================================================================================ 80
     {
       "All money you spend buying my wares are going straight to charity."
     },
@@ -521,7 +521,7 @@ void AINPC::SetDataCasey()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // =========================================================================== 80
+    // ================================================================================ 80
     {
       "I used to be a cook in the Navy.",
       "One day we were boarded by the enemy, it was a tough battle,",
@@ -553,7 +553,7 @@ void AINPC::SetDataMaya()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // =========================================================================== 80
+    // ================================================================================ 80
     {
       "We, the Junkers, collect discarded and abandoned items.",
       "Our culture revolves around it - we believe every item is usable",
@@ -618,7 +618,7 @@ void AINPC::SetDataGriswold()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // =========================================================================== 80
+    // ================================================================================ 80
     {
       "Well, what kin I do fer ya?"
     }

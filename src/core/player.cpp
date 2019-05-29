@@ -1188,7 +1188,7 @@ void Player::ProcessHunger()
 {
   Attrs.Hunger += Attrs.HungerSpeed.Get();
 
-  // Hunger's CurrentValue is equal to OriginalValue
+  // HungerRate's CurrentValue is equal to OriginalValue
   int maxHunger = Attrs.HungerRate.CurrentValue;
 
   Attrs.Hunger = Util::Clamp(Attrs.Hunger, 0, maxHunger);
