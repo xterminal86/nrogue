@@ -49,7 +49,7 @@ class Pathfinder
                                     const Position& start,
                                     const Position& end,                                    
                                     bool eightDirs = false,
-                                    int maxNodes = -1);
+                                    int maxPathLength = -1);
 
   private:
     Position _mapSize;

@@ -86,7 +86,7 @@ std::vector<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
                                             const Position& start,
                                             const Position& end,
                                             bool eightDirs,
-                                            int maxNodes)
+                                            int maxPathLength)
 {
   _mapSize = mapRef->MapSize;
 
@@ -106,8 +106,8 @@ std::vector<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
 
   while (!openList.empty())
   {
-    if (maxNodes != -1 && openList.size() > maxNodes)
-    {
+    if (maxPathLength != -1 && closedList.size() > maxPathLength)
+    {      
       break;
     }
 
