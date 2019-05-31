@@ -1,9 +1,9 @@
-#ifndef AIPATROLSTATE_H
-#define AIPATROLSTATE_H
+#ifndef AIWANDERSTATE_H
+#define AIWANDERSTATE_H
 
 #include "ai-state-base.h"
 
-class AIPatrolState : public AIStateBase
+class AIWanderState : public AIStateBase
 {
   using AIStateBase::AIStateBase;
 
@@ -13,4 +13,4 @@ class AIPatrolState : public AIStateBase
     void Enter() override;
 };
 
-#endif // AIPATROLSTATE_H
+#endif // AIWANDERSTATE_H

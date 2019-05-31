@@ -14,6 +14,13 @@ AIMonsterBasic::AIMonsterBasic()
 
 void AIMonsterBasic::Update()
 {
+  // FIXME: rewrite according to new AI state system
+
+  AIModelBase::Update();
+
+  // Specific AI changes (push / pop / change of states) should go here
+
+  /*
   if (AIComponentRef->OwnerGameObject->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
   {
     AIComponentRef->OwnerGameObject->WaitForTurn();
@@ -38,6 +45,7 @@ void AIMonsterBasic::Update()
 
     AIComponentRef->OwnerGameObject->FinishTurn();
   }
+  */
 }
 
 void AIMonsterBasic::MoveToKill()

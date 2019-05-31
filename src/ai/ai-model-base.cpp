@@ -24,8 +24,7 @@ bool AIModelBase::IsPlayerVisible()
   int x = AIComponentRef->OwnerGameObject->PosX;
   int y = AIComponentRef->OwnerGameObject->PosY;
 
-  int d = Util::LinearDistance(x, y, px, py);
-  if (d > AgroRadius)
+  if (!IsPlayerInRange(AgroRadius))
   {
     return false;
   }
@@ -45,7 +44,7 @@ bool AIModelBase::IsPlayerVisible()
   }
 }
 
-bool AIModelBase::IsPlayerInRange()
+bool AIModelBase::IsPlayerInRange(int range)
 {
   int px = _playerRef->PosX;
   int py = _playerRef->PosY;
@@ -53,21 +52,25 @@ bool AIModelBase::IsPlayerInRange()
   int x = AIComponentRef->OwnerGameObject->PosX;
   int y = AIComponentRef->OwnerGameObject->PosY;
 
-  int lx = x - 1;
-  int ly = y - 1;
-  int hx = x + 1;
-  int hy = y + 1;
+  int lx = x - range;
+  int ly = y - range;
+  int hx = x + range;
+  int hy = y + range;
 
-  for (int i = lx; i <= hx; i++)
-  {
-    for (int j = ly; j <= hy; j++)
-    {
-      if (px == i && py == j)
-      {
-        return true;
-      }
-    }
-  }
+  return (px >= lx && px <= hx
+       && py >= ly && py <= hy);
+}
 
-  return false;
+bool AIModelBase::RandomMovement()
+{
+  int dx = RNG::Instance().Random() % 2;
+  int dy = RNG::Instance().Random() % 2;
+
+  int signX = (RNG::Instance().Random() % 2) == 0 ? -1 : 1;
+  int signY = (RNG::Instance().Random() % 2) == 0 ? -1 : 1;
+
+  dx *= signX;
+  dy *= signY;
+
+  return AIComponentRef->OwnerGameObject->Move(dx, dy);
 }

@@ -52,15 +52,16 @@ class AIModelBase
       }
     }
 
+    bool IsPlayerVisible();
+    bool IsPlayerInRange(int range = 1);
+    bool RandomMovement();
+
   protected:    
     size_t _hash;
     std::stack<std::unique_ptr<AIStateBase>> _aiStates;
 
     AIStateBase* _currentState = nullptr;
-    Player* _playerRef = nullptr;
-
-    bool IsPlayerVisible();
-    bool IsPlayerInRange();    
+    Player* _playerRef = nullptr;    
 };
 
 #endif

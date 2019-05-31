@@ -7,7 +7,7 @@
 #include "trader-component.h"
 
 #include "ai-idle-state.h"
-#include "ai-patrol-state.h"
+#include "ai-wander-state.h"
 
 AINPC::AINPC()
 {
@@ -90,7 +90,7 @@ void AINPC::Init(NPCType type, bool immovable)
 
   if (!immovable)
   {
-    ChangeAIState<AIPatrolState>();
+    ChangeAIState<AIWanderState>();
   }
   else
   {
