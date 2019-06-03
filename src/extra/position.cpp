@@ -42,6 +42,11 @@ bool Position::operator== (const Position& rhs) const
   return (X == rhs.X && Y == rhs.Y);
 }
 
+bool Position::operator!= (const Position& rhs) const
+{
+  return (X != rhs.X || Y != rhs.Y);
+}
+
 void Position::Print()
 {
   printf("%s: [%i ; %i]\n", __PRETTY_FUNCTION__, X, Y);

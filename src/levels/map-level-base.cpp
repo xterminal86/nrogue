@@ -175,7 +175,10 @@ void MapLevelBase::PlaceStairs()
 
 void MapLevelBase::CreateInitialMonsters()
 {
-  MaxMonsters = std::sqrt(_emptyCells.size()) / 2;
+  // FIXME: debug
+  MaxMonsters = 1;
+
+  //MaxMonsters = std::sqrt(_emptyCells.size()) / 2;
 
   for (int i = 0; i < MaxMonsters; i++)
   {

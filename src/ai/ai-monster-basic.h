@@ -14,12 +14,10 @@ class AIMonsterBasic : public AIModelBase
   public:
     AIMonsterBasic();
 
+    void Init();
     void Update() override;
 
   protected:
-    void RandomMovement();
-    void MoveToKill();
-
     bool Attack(Player* player);
 
     std::vector<Position> SelectCellNearestToPlayer();

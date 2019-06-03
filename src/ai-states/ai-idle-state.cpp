@@ -2,15 +2,16 @@
 
 #include "game-object.h"
 
-void AIIdleState::Run()
+void AIIdleState::Enter()
 {
-  _objectToControl->FinishTurn();
 }
 
 void AIIdleState::Exit()
 {
 }
 
-void AIIdleState::Enter()
+void AIIdleState::Run()
 {
+  _objectToControl->FinishTurn();
 }
+

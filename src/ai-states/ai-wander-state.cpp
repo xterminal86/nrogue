@@ -4,6 +4,14 @@
 #include "game-object.h"
 #include "rng.h"
 
+void AIWanderState::Enter()
+{
+}
+
+void AIWanderState::Exit()
+{
+}
+
 void AIWanderState::Run()
 {
   if (_objectToControl->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
@@ -16,12 +24,4 @@ void AIWanderState::Run()
   {
     _objectToControl->FinishTurn();
   }
-}
-
-void AIWanderState::Exit()
-{
-}
-
-void AIWanderState::Enter()
-{
 }

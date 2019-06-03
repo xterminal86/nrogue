@@ -1,4 +1,6 @@
 #include "ai-monster-basic.h"
+#include "ai-chase-player-state.h"
+#include "ai-wander-state.h"
 #include "ai-component.h"
 #include "application.h"
 #include "map.h"
@@ -12,71 +14,34 @@ AIMonsterBasic::AIMonsterBasic()
   IsAgressive = true;
 }
 
+void AIMonsterBasic::Init()
+{
+  ChangeAIState<AIWanderState>();
+}
+
 void AIMonsterBasic::Update()
 {
-  // FIXME: rewrite according to new AI state system
-
   AIModelBase::Update();
 
-  // Specific AI changes (push / pop / change of states) should go here
-
-  /*
-  if (AIComponentRef->OwnerGameObject->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
+  if (CurrentStateIs<AIWanderState>())
   {
-    AIComponentRef->OwnerGameObject->WaitForTurn();
-  }
-  else
-  {
-    if (IsPlayerInRange() && !_playerRef->IsDestroyed)
+    if (IsPlayerVisible() && IsPlayerInRange(AgroRadius))
     {
-      Attack(_playerRef);
+      ChangeAIState<AIChasePlayerState>();
     }
-    else
+  }
+  else if (CurrentStateIs<AIChasePlayerState>())
+  {
+    // Player can be attacked
+    if (IsPlayerVisible() && IsPlayerInRange())
     {
-      if (IsPlayerVisible() && !_playerRef->IsDestroyed)
+      if (!_playerRef->IsDestroyed)
       {
-        MoveToKill();
-      }
-      else
-      {
-        RandomMovement();
+        Attack(_playerRef);
+        AIComponentRef->OwnerGameObject->FinishTurn();
       }
     }
-
-    AIComponentRef->OwnerGameObject->FinishTurn();
   }
-  */
-}
-
-void AIMonsterBasic::MoveToKill()
-{
-  auto c = SelectCellNearestToPlayer();
-  if (c.size() != 0)
-  {    
-    bool res = AIComponentRef->OwnerGameObject->MoveTo(c[0].X, c[0].Y);
-    if (!res)
-    {
-      RandomMovement();
-    }
-  }
-  else
-  {
-    RandomMovement();
-  }
-}
-
-void AIMonsterBasic::RandomMovement()
-{
-  int dx = RNG::Instance().Random() % 2;
-  int dy = RNG::Instance().Random() % 2;
-
-  int signX = (RNG::Instance().Random() % 2) == 0 ? -1 : 1;
-  int signY = (RNG::Instance().Random() % 2) == 0 ? -1 : 1;
-
-  dx *= signX;
-  dy *= signY;
-
-  AIComponentRef->OwnerGameObject->Move(dx, dy);
 }
 
 std::vector<Position> AIMonsterBasic::SelectCellNearestToPlayer()

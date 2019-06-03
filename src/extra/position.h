@@ -13,6 +13,7 @@ struct Position
   // For use inside std::map as a key
   bool operator< (const Position& rhs) const;
   bool operator== (const Position& rhs) const;
+  bool operator!= (const Position& rhs) const;
 
   void Print();
 

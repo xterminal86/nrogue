@@ -4,6 +4,7 @@
 #include <stack>
 #include <memory>
 #include <cstddef>
+#include <ctime>
 
 #include "ai-state-base.h"
 
@@ -27,6 +28,8 @@ class AIModelBase
     template <typename T>
     inline void ChangeAIState()
     {
+      printf("%lu changing to %s\n", time(nullptr), typeid(T).name());
+
       PopAIState();
       PushAIState<T>();
     }
@@ -50,6 +53,23 @@ class AIModelBase
       {
         _aiStates.pop();
       }
+      else
+      {
+        _currentState = nullptr;
+      }
+    }
+
+    template <typename T>
+    inline bool CurrentStateIs()
+    {
+      const auto& ti = typeid(T);
+
+      if (_currentState != nullptr)
+      {
+        return (ti == typeid(*_currentState));
+      }
+
+      return false;
     }
 
     bool IsPlayerVisible();

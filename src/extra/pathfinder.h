@@ -3,6 +3,8 @@
 
 #include "util.h"
 
+#include <stack>
+
 class MapLevelBase;
 
 struct PathNode
@@ -45,7 +47,7 @@ class Pathfinder
                                     const std::vector<char>& obstacles,
                                     bool eightDirs = false);
 
-    std::vector<Position> BuildRoad(MapLevelBase* mapRef,
+    std::stack<Position> BuildRoad(MapLevelBase* mapRef,
                                     const Position& start,
                                     const Position& end,                                    
                                     bool eightDirs = false,

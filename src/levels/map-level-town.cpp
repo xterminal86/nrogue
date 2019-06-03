@@ -129,7 +129,7 @@ void MapLevelTown::PrepareMap(MapLevelBase* levelOwner)
 {
   MapLevelBase::PrepareMap(levelOwner);
 
-  CreateLevel();
+  CreateLevel();  
 }
 
 void MapLevelTown::CreateLevel()

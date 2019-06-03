@@ -82,7 +82,7 @@ std::vector<Position> Pathfinder::BuildRoad(const std::vector<std::vector<char>>
   return path;
 }
 
-std::vector<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
+std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
                                             const Position& start,
                                             const Position& end,
                                             bool eightDirs,
@@ -93,7 +93,7 @@ std::vector<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
   _start = start;
   _end = end;
 
-  std::vector<Position> path;
+  std::stack<Position> path;
 
   std::vector<PathNode> openList;
   std::vector<PathNode> closedList;
@@ -122,13 +122,9 @@ std::vector<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
       PathNode n = FindNodeWithPosition(closedList, end);
       while (n.ParentNodePosition.X != -1 && n.ParentNodePosition.Y != -1)
       {
-        path.push_back(n.Coordinate);
+        path.push(n.Coordinate);
         n = FindNodeWithPosition(closedList, n.ParentNodePosition);
       }
-
-      path.push_back(start);
-
-      std::reverse(path.begin(), path.end());
 
       break;
     }
