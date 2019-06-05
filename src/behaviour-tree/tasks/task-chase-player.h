@@ -8,20 +8,22 @@
 
 class TaskChasePlayer : public Node
 {
-  using Node::Node;
-
   public:
-    void TryToFindPath()
+    TaskChasePlayer(GameObject* objectToControl, bool pfLimit = true)
+      : Node(objectToControl)
     {
       int tw = Printer::Instance().TerminalWidth;
       int th = Printer::Instance().TerminalHeight;
-      int pfLimit = (tw * th) / 2;
+      _pfLimit = pfLimit ? (tw * th) / 2 : -1;
+    }
 
+    void TryToFindPath()
+    {      
       _path = _pf.BuildRoad(Map::Instance().CurrentLevel,
                            { _objectToControl->PosX, _objectToControl->PosY },
                            _playerPos,
                             true,
-                            pfLimit);
+                            _pfLimit);
 
       _lastPlayerPos = _playerPos;
     }
@@ -71,6 +73,8 @@ class TaskChasePlayer : public Node
     Position _lastPlayerPos;
 
     Position _lastPos = { -1, -1 };
+
+    int _pfLimit = -1;
 };
 
 #endif // TASKCHASEPLAYER_H
