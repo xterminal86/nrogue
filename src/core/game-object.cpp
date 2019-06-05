@@ -95,6 +95,11 @@ bool GameObject::MoveTo(int x, int y)
   return false;
 }
 
+bool GameObject::MoveTo(const Position &pos)
+{
+  return MoveTo(pos.X, pos.Y);
+}
+
 void GameObject::Draw(const std::string& overrideColorFg, const std::string& overrideColorBg)
 {
   Printer::Instance().PrintFB(PosX + _levelOwner->MapOffsetX,

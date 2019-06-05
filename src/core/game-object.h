@@ -17,6 +17,7 @@
 
 class GameObjectInfo;
 class MapLevelBase;
+class Position;
 
 class GameObject
 {
@@ -48,6 +49,7 @@ class GameObject
     /// Sets game object's coordinates to \p x and \p y.
     /// Use to move actors only.
     bool MoveTo(int x, int y);
+    bool MoveTo(const Position& pos);
 
     void Draw(const std::string& overrideFgColor = std::string(),
               const std::string& overrideBgColor = std::string());

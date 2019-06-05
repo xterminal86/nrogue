@@ -29,8 +29,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/singletons)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/extra)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/core)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/ai)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/ai-states)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/dungeon-generators)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks)
 
 file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp                  
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.cpp
@@ -40,8 +41,9 @@ file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/ai-states/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/dungeon-generators/*.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/*.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks/*.cpp
 
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.h
@@ -51,8 +53,9 @@ file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/*.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/ai-states/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/dungeon-generators/*.h)
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/dungeon-generators/*.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/*.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks/*.h)
 
 add_executable(${TARGET_NAME} ${SOURCES})
 

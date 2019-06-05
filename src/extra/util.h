@@ -13,7 +13,7 @@
 #include "position.h"
 
 namespace Util
-{
+{  
   inline std::vector<std::string> StringSplit(const std::string& str, char delim)
   {
     std::vector<std::string> res = { str };
@@ -799,7 +799,7 @@ namespace Util
     }
 
     return *weightsByType.begin();
-  }  
+  }    
 }
 
 #endif

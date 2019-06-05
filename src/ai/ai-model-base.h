@@ -6,7 +6,8 @@
 #include <cstddef>
 #include <ctime>
 
-#include "ai-state-base.h"
+//#include "ai-state-base.h"
+#include "behaviour-tree.h"
 
 class AIComponent;
 class Player;
@@ -17,6 +18,7 @@ class AIModelBase
     AIModelBase();
     virtual ~AIModelBase() = default;
 
+    virtual void ConstructAI();
     virtual void Update();
 
     AIComponent* AIComponentRef = nullptr;
@@ -25,63 +27,11 @@ class AIModelBase
 
     int AgroRadius = 0;
 
-    template <typename T>
-    inline void ChangeAIState()
-    {
-      printf("%lu changing to %s\n", time(nullptr), typeid(T).name());
-
-      PopAIState();
-      PushAIState<T>();
-    }
-
-    template <typename T>
-    inline void PushAIState()
-    {
-      _aiStates.push(std::unique_ptr<T>(new T(this)));
-      _currentState = _aiStates.top().get();
-      _currentState->Enter();
-    }
-
-    inline void PopAIState()
-    {
-      if (_currentState != nullptr)
-      {
-        _currentState->Exit();
-      }
-
-      if (!_aiStates.empty())
-      {
-        _aiStates.pop();
-      }
-      else
-      {
-        _currentState = nullptr;
-      }
-    }
-
-    template <typename T>
-    inline bool CurrentStateIs()
-    {
-      const auto& ti = typeid(T);
-
-      if (_currentState != nullptr)
-      {
-        return (ti == typeid(*_currentState));
-      }
-
-      return false;
-    }
-
-    bool IsPlayerVisible();
-    bool IsPlayerInRange(int range = 1);
-    bool RandomMovement();
-
-  protected:    
+  protected:
     size_t _hash;
-    std::stack<std::unique_ptr<AIStateBase>> _aiStates;
-
-    AIStateBase* _currentState = nullptr;
     Player* _playerRef = nullptr;    
+
+    std::unique_ptr<Root> _root;
 };
 
 #endif

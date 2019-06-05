@@ -6,19 +6,15 @@
 #include "map.h"
 #include "trader-component.h"
 
-#include "ai-idle-state.h"
-#include "ai-wander-state.h"
+#include "task-random-movement.h"
+#include "task-idle.h"
+#include "behaviour-tree.h"
 
 AINPC::AINPC()
 {
   _hash = typeid(*this).hash_code();
 
   IsAgressive = false;  
-}
-
-void AINPC::Update()
-{
-  AIModelBase::Update();
 }
 
 void AINPC::Init(NPCType type, bool immovable)
@@ -88,14 +84,46 @@ void AINPC::Init(NPCType type, bool immovable)
     AIComponentRef->OwnerGameObject->LevelUp();
   }
 
-  if (!immovable)
+  ConstructAI();
+}
+
+void AINPC::ConstructAI()
+{
+  auto& objRef = AIComponentRef->OwnerGameObject;
+
+  Root* rootNode = new Root(objRef);
+
+  if (Data.IsImmovable)
   {
-    ChangeAIState<AIWanderState>();
+    // Do nothing
+    TaskIdle* taskIdle = new TaskIdle(objRef);
+    rootNode->SetNode(taskIdle);
   }
   else
   {
-    ChangeAIState<AIIdleState>();
+    // NPC can either try to perform a random movement with
+    // decision chance of 30%, or do nothing.
+    Selector* selectorMain = new Selector(objRef);
+    {
+      Sequence* sequenceDecision = new Sequence(objRef);
+      {
+        ProbabilisticNode* taskRndDecider = new ProbabilisticNode(objRef, 30);
+        TaskRandomMovement* taskMove = new TaskRandomMovement(objRef);
+
+        sequenceDecision->AddNode(taskRndDecider);
+        sequenceDecision->AddNode(taskMove);
+      }
+
+      TaskIdle* taskIdle = new TaskIdle(objRef);
+
+      selectorMain->AddNode(sequenceDecision);
+      selectorMain->AddNode(taskIdle);
+    }
+
+    rootNode->SetNode(selectorMain);
   }
+
+  _root.reset(rootNode);
 }
 
 void AINPC::SetDataClaire()

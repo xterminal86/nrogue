@@ -274,7 +274,7 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
   auto pos = goingDown ? CurrentLevel->LevelStart : CurrentLevel->LevelExit;
 
   player.SetLevelOwner(CurrentLevel);
-  player.MoveTo(pos.X, pos.Y);
+  player.MoveTo(pos);
   player.VisibilityRadius.Set(CurrentLevel->VisibilityRadius);
 
   CurrentLevel->AdjustCamera();
@@ -331,11 +331,11 @@ void Map::TeleportToExistingLevel(MapType levelToChange, const Position& telepor
     }
 
     // Read the comment in the beginning of the method
-    actor->MoveTo(tp.X, tp.Y);
+    actor->MoveTo(tp);
   }
 
   player.SetLevelOwner(CurrentLevel);
-  player.MoveTo(teleportTo.X, teleportTo.Y);
+  player.MoveTo(teleportTo);
   player.VisibilityRadius.Set(CurrentLevel->VisibilityRadius);
 
   CurrentLevel->AdjustCamera();

@@ -197,7 +197,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   AIComponent* ai = go->AddComponent<AIComponent>();
   AIMonsterBasic* aimb = ai->AddModel<AIMonsterBasic>();
   aimb->AgroRadius = 8;
-  aimb->Init();
+  aimb->ConstructAI();
 
   // Set attributes
   if (randomize)
@@ -251,7 +251,6 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
   AIComponent* ai = go->AddComponent<AIComponent>();
   AIMonsterBasic* aimb = ai->AddModel<AIMonsterBat>();
   aimb->AgroRadius = 16;
-  aimb->Init();
 
   // Set attributes
   if (randomize)

@@ -14,13 +14,7 @@ class AIMonsterBasic : public AIModelBase
   public:
     AIMonsterBasic();
 
-    void Init();
-    void Update() override;
-
-  protected:
-    bool Attack(Player* player);
-
-    std::vector<Position> SelectCellNearestToPlayer();
+    void ConstructAI() override;
 };
 
 #endif // AIMONSTERBASIC_H

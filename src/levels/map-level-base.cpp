@@ -190,6 +190,10 @@ void MapLevelBase::CreateInitialMonsters()
     if (IsSpotValidForSpawn({ x, y }))
     {
       auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
+
+      // FIXME: debug
+      res = { GameObjectType::RAT, 1 };
+
       auto monster = GameObjectsFactory::Instance().CreateMonster(x, y, res.first);
       InsertActor(monster);
     }

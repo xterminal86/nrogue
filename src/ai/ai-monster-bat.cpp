@@ -6,6 +6,7 @@
 
 void AIMonsterBat::Update()
 {
+  /*
   if (AIComponentRef->OwnerGameObject->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
   {
     AIComponentRef->OwnerGameObject->WaitForTurn();
@@ -40,6 +41,7 @@ void AIMonsterBat::Update()
 
     AIComponentRef->OwnerGameObject->FinishTurn();
   }
+  */
 }
 
 /// Try to find empty cells around player to move to
@@ -73,18 +75,19 @@ void AIMonsterBat::CircleAroundPlayer()
     int index = RNG::Instance().RandomRange(0, validCells.size());
     Position p = validCells[index];
 
-    AIComponentRef->OwnerGameObject->MoveTo(p.X, p.Y);
+    AIComponentRef->OwnerGameObject->MoveTo(p);
     AIComponentRef->OwnerGameObject->FinishTurn();
   }
   else
   {
-    Attack(_playerRef);
+    //Attack(_playerRef);
     AIComponentRef->OwnerGameObject->FinishTurn();
   }
 }
 
 void AIMonsterBat::MoveToKill()
 {
+  /*
   auto c = SelectCellNearestToPlayer();
   if (c.size() != 0)
   {
@@ -98,6 +101,7 @@ void AIMonsterBat::MoveToKill()
   {
     GetNewDirection();
   }
+  */
 }
 
 void AIMonsterBat::MoveInDirection()
