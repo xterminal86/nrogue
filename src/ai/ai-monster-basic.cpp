@@ -36,18 +36,26 @@ void AIMonsterBasic::ConstructAI()
         TaskPlayerInRange* taskPlayerInRange = new TaskPlayerInRange(objRef, AgroRadius);
         TaskPlayerVisible* taskPlayerVisible = new TaskPlayerVisible(objRef);
 
-        Sequence* seqChase = new Sequence(objRef);
+        Selector* selChase = new Selector(objRef);
         {
-          TaskChasePlayer* taskChasePlayer = new TaskChasePlayer(objRef);
-          TaskAttackBasic* taskAttackBasic = new TaskAttackBasic(objRef);
+          Sequence* seqAtk = new Sequence(objRef);
+          {
+            TaskPlayerInRange* taskPlayerInRange = new TaskPlayerInRange(objRef);
+            TaskAttackBasic* taskAttackBasic = new TaskAttackBasic(objRef);
 
-          seqChase->AddNode(taskChasePlayer);
-          seqChase->AddNode(taskAttackBasic);
+            seqAtk->AddNode(taskPlayerInRange);
+            seqAtk->AddNode(taskAttackBasic);
+          }
+
+          TaskChasePlayer* taskChasePlayer = new TaskChasePlayer(objRef);
+
+          selChase->AddNode(seqAtk);
+          selChase->AddNode(taskChasePlayer);
         }
 
         offenceSeq->AddNode(taskPlayerInRange);
         offenceSeq->AddNode(taskPlayerVisible);
-        offenceSeq->AddNode(seqChase);
+        offenceSeq->AddNode(selChase);
       }
 
       Selector* selectorIdle = new Selector(objRef);

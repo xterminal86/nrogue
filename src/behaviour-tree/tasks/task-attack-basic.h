@@ -3,15 +3,13 @@
 
 #include "behaviour-tree.h"
 
-#include "util.h"
-
 class TaskAttackBasic : public Node
 {
   using Node::Node;
 
   public:
     bool Run() override
-    {
+    {      
       bool result = false;
 
       int attackChanceScale = 2;
@@ -62,7 +60,7 @@ class TaskAttackBasic : public Node
 
       _objectToControl->FinishTurn();
 
-      return result;
+      return true;
     }
 };
 

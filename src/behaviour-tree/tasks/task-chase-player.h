@@ -26,6 +26,23 @@ class TaskChasePlayer : public Node
       _lastPlayerPos = _playerPos;
     }
 
+    bool TryToMove()
+    {
+      _lastPos = _path.top();
+      if (!_objectToControl->MoveTo(_lastPos))
+      {
+        // If path became invalid, abort
+        _path = std::stack<Position>();
+        _lastPos = { -1, -1 };
+        return false;
+      }
+
+      _objectToControl->FinishTurn();
+      _path.pop();
+
+      return true;
+    }
+
     bool Run() override
     {
       _playerPos = { _playerRef->PosX, _playerRef->PosY };
@@ -37,38 +54,12 @@ class TaskChasePlayer : public Node
         // Player is unreachable
         if (_path.empty())
         {
+          _lastPos = { -1, -1 };
           return false;
-        }
-      }
-      else
-      {
-        int bd = Util::BlockDistance({ _objectToControl->PosX, _objectToControl->PosY },
-                                     { _playerRef->PosX, _playerRef->PosY });
-
-        // If player is directly adjacent, we're done
-        if (bd == 1 || bd == 2)
-        {
-          return true;
-        }
-        else
-        {
-          // Otherwise proceed along the path
-
-          _lastPos = _path.top();
-          if (!_objectToControl->MoveTo(_lastPos))
-          {
-            // If path became invalid, return fail
-            _path = std::stack<Position>();
-            _lastPos = { -1, -1 };
-            return false;
-          }
-
-          _objectToControl->FinishTurn();
-          _path.pop();
-        }
+        }        
       }
 
-      return true;
+      return TryToMove();
     }
 
   private:
