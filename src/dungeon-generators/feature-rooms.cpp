@@ -120,7 +120,7 @@ bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
                                    RoomEdgeEnum direction,
                                    FeatureRoomType roomType)
 {
-  // TODO: moar room types
+  // TODO: moar room types?
 
   bool success = false;
 

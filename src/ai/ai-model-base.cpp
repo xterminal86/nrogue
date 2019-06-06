@@ -18,7 +18,7 @@ void AIModelBase::ConstructAI()
   // should be constructed in this method via override.
   //
   // If that wasn't done (e.g. forgot), we add a failsafe idle state
-  // to avoid infinite loop.
+  // to avoid infinite while loop in Map::UpdateGameObjects().
 
   auto& objRef = AIComponentRef->OwnerGameObject;
 

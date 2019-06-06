@@ -7,7 +7,7 @@
 
 #include "room-helper.h"
 
-// FIXME: needs further improvement
+// FIXME: needs further improvement (low / discard priority)
 class FromLayouts : public DGBase
 {
   public:

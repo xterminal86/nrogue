@@ -23,9 +23,9 @@ void SelectClassState::HandleInput()
     {
       Application::Instance().PlayerInstance.Init();      
 
-      // NOTE: little bit of an out of place hack,
+      // NOTE: little bit of an out of place hack:
       // since some NPCs can contain bonus chat lines depending on player class,
-      // so we create NPCs for level after player has selected his class.
+      // we create NPCs for level after player has selected his class.
       MapLevelTown* mlt = static_cast<MapLevelTown*>(Map::Instance().CurrentLevel);
       mlt->CreateNPCs();
 

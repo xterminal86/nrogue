@@ -176,9 +176,9 @@ void MapLevelBase::PlaceStairs()
 void MapLevelBase::CreateInitialMonsters()
 {
   // FIXME: debug
-  MaxMonsters = 1;
+  //MaxMonsters = 1;
 
-  //MaxMonsters = std::sqrt(_emptyCells.size()) / 2;
+  MaxMonsters = std::sqrt(_emptyCells.size()) / 2;
 
   for (int i = 0; i < MaxMonsters; i++)
   {
@@ -192,7 +192,7 @@ void MapLevelBase::CreateInitialMonsters()
       auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
 
       // FIXME: debug
-      res = { GameObjectType::RAT, 1 };
+      //res = { GameObjectType::BAT, 1 };
 
       auto monster = GameObjectsFactory::Instance().CreateMonster(x, y, res.first);
       InsertActor(monster);

@@ -543,7 +543,8 @@ void Map::PrintMapLayout()
   Printer::Instance().AddMessage(dbg);
 }
 
-std::vector<Position> Map::GetUnoccupiedCellsAround(const Position& pos)
+/// Returns list of cell that can be walked upon
+std::vector<Position> Map::GetWalkableCellsAround(const Position& pos)
 {
   std::vector<Position> res;
 
@@ -564,8 +565,8 @@ std::vector<Position> Map::GetUnoccupiedCellsAround(const Position& pos)
         }
 
         if (Util::IsInsideMap({ x, y }, CurrentLevel->MapSize)
-        && (!CurrentLevel->MapArray[x][y]->Occupied
-         && !CurrentLevel->MapArray[x][y]->Blocking))
+        && (!CurrentLevel->IsCellBlocking({ x, y })
+         && !CurrentLevel->MapArray[x][y]->Occupied))
         {
           res.push_back({ x, y });
         }

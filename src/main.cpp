@@ -38,8 +38,8 @@
 // NOTE: When building with SDL2 in Windows, main() must have "full" signature
 // i.e. (int argc, char* agrv[]) or you'll get "undefined reference to SDLmain"
 //
-// You also need to manually add "File" in "Projects" tab of QT Creator's cmake config
-// called SDL2_LIBRARY and point it to libSDL2.dll.a file
+// You also need to manually "Add" -> "File" in "Projects" tab of QT Creator's
+// cmake config window called SDL2_LIBRARY and point it to libSDL2.dll.a file.
 //
 // In Linux everything should configure and build without problems,
 // provided you have distro specific ncurses-dev / SDL2-dev, SDL2_image-dev

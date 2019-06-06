@@ -259,37 +259,7 @@ void InventoryState::DisplayEquipment()
   DrawEquipmentField(tw + 24, yPos + 3, "Accessory", eq);
 
   eq = _playerRef->EquipmentByCategory[EquipmentCategory::RING][1];
-  DrawEquipmentField(tw + 24, yPos + 6, "Accessory", eq);
-
-  // TODO: too much slots, remove?
-  /*
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::HEAD][0];
-  DrawEquipmentField(tw + 10, yPos, "Head", eq);
-
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::NECK][0];
-  DrawEquipmentField(tw + 24, yPos, "Neck", eq);
-
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
-  DrawEquipmentField(tw - 4, yPos + 3, "Weapon", eq);
-
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::TORSO][0];
-  DrawEquipmentField(tw + 10, yPos + 3, "Armor", eq);
-
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0];
-  DrawEquipmentField(tw + 24, yPos + 3, "Shield", eq);
-
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::LEGS][0];
-  DrawEquipmentField(tw + 10, yPos + 6, "Legs", eq);
-
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::BOOTS][0];
-  DrawEquipmentField(tw + 10, yPos + 9, "Boots", eq);
-
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::RING][0];
-  DrawEquipmentField(tw + 24, yPos + 6, "Ring", eq);
-
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::RING][1];
-  DrawEquipmentField(tw + 24, yPos + 9, "Ring", eq);
-  */
+  DrawEquipmentField(tw + 24, yPos + 6, "Accessory", eq);  
 }
 
 void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldName, ItemComponent* eq)

@@ -8,7 +8,7 @@
 
 class Player;
 
-/// Rudimentary AI mainly for testing purposes
+/// Rudimentary AI (wander, see player, chase, melee attack)
 class AIMonsterBasic : public AIModelBase
 {
   public:

@@ -34,6 +34,7 @@ void Player::Init()
   _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell->Occupied = true;
 
+  // FIXME: debug
   //Attrs.HungerRate.Set(0);
 }
 
@@ -994,13 +995,22 @@ void Player::WaitForTurn()
 {
   GameObject::WaitForTurn();
 
+  // NOTE: comment out the condition to see "offline" movement
+  //
+  // FIXME: try to optimize.
+  //
+  // TODO: Disable "offline" rendering when we are engaged in combat
+  // to allow player to see what's happening (e.g. if we have fast monster
+  // that employs hit-and-run tactics, player should be able to see
+  // that it's moving after attack and not just attacking from distance).
+  //
+  // When you move player in dungeons while holding direction key,
+  // it gets "jaggy" due to this constant redrawing of stuff.
+  //
   // Redraw screen only when player is ready for action
   // (assuming Application::_currentState is MainState)
   if (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
-  {    
-    // FIXME: try to optimize.
-    // When you move player in dungeons while holding direction key,
-    // it gets "jaggy" due to this constant redrawing of stuff.    
+  {
     Application::Instance().DrawCurrentState();
   }
 }

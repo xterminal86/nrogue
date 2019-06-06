@@ -1,145 +1,74 @@
 #include "ai-monster-bat.h"
+
 #include "ai-component.h"
-#include "game-object.h"
-#include "map.h"
-#include "player.h"
 
-void AIMonsterBat::Update()
+#include "task-player-in-range.h"
+#include "task-player-visible.h"
+#include "task-attack-basic.h"
+#include "task-chase-player.h"
+#include "task-random-movement.h"
+#include "task-idle.h"
+#include "task-run-from-player.h"
+
+AIMonsterBat::AIMonsterBat()
 {
-  /*
-  if (AIComponentRef->OwnerGameObject->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
-  {
-    AIComponentRef->OwnerGameObject->WaitForTurn();
-  }
-  else
-  {
-    if (IsPlayerInRange() && !_playerRef->IsDestroyed)
-    {
-      Attack(_playerRef);
+  _hash = typeid(*this).hash_code();
 
-      auto shouldChangePos = Util::WeightedRandom(_probabilityMap);
-      if (shouldChangePos.first && AIComponentRef->OwnerGameObject->Attrs.ActionMeter > GlobalConstants::TurnReadyValue)
+  IsAgressive = true;
+}
+
+void AIMonsterBat::ConstructAI()
+{
+  auto& objRef = AIComponentRef->OwnerGameObject;
+
+  Root* rootNode = new Root(objRef);
+  {
+    Selector* selectorMain = new Selector(objRef);
+    {
+      Sequence* offenceSeq = new Sequence(objRef);
       {
-        CircleAroundPlayer();
+        TaskPlayerInRange* taskPlayerInRange = new TaskPlayerInRange(objRef, AgroRadius);
+        TaskPlayerVisible* taskPlayerVisible = new TaskPlayerVisible(objRef);
+
+        Selector* selChase = new Selector(objRef);
+        {
+          TaskChasePlayer* taskChasePlayer = new TaskChasePlayer(objRef);
+
+          Sequence* seqAtk = new Sequence(objRef);
+          {
+            TaskPlayerInRange* taskPlayerInRange = new TaskPlayerInRange(objRef);
+            TaskAttackBasic* taskAttackBasic = new TaskAttackBasic(objRef);
+            TaskRunFromPlayer* taskRun = new TaskRunFromPlayer(objRef);
+
+            seqAtk->AddNode(taskPlayerInRange);
+            seqAtk->AddNode(taskAttackBasic);
+            seqAtk->AddNode(taskRun);
+          }
+
+          selChase->AddNode(seqAtk);
+          selChase->AddNode(taskChasePlayer);
+        }
+
+        offenceSeq->AddNode(taskPlayerInRange);
+        offenceSeq->AddNode(taskPlayerVisible);
+        offenceSeq->AddNode(selChase);
       }
-    }
-    else if (IsPlayerVisible())
-    {
-      MoveToKill();
-    }
-    else
-    {
-      if (_directionToMove.size() == 0)
+
+      Selector* selectorIdle = new Selector(objRef);
       {
-        GetNewDirection();
+        TaskRandomMovement* taskMove = new TaskRandomMovement(objRef);
+        TaskIdle* taskIdle = new TaskIdle(objRef);
+
+        selectorIdle->AddNode(taskMove);
+        selectorIdle->AddNode(taskIdle);
       }
-      else
-      {
-        MoveInDirection();
-      }
+
+      selectorMain->AddNode(offenceSeq);
+      selectorMain->AddNode(selectorIdle);
     }
 
-    AIComponentRef->OwnerGameObject->FinishTurn();
-  }
-  */
-}
-
-/// Try to find empty cells around player to move to
-void AIMonsterBat::CircleAroundPlayer()
-{
-  std::vector<Position> validCells;
-
-  int goX = AIComponentRef->OwnerGameObject->PosX;
-  int goY = AIComponentRef->OwnerGameObject->PosY;
-
-  int px = _playerRef->PosX;
-  int py = _playerRef->PosY;
-
-  auto cells = Map::Instance().GetUnoccupiedCellsAround({ px, py });
-  for (auto& c : cells)
-  {
-    if (c.X == goX && c.Y == goY)
-    {
-      continue;
-    }
-
-    // Select only those cells that are also near this actor
-    if (Util::BlockDistance(c.X, c.Y, goX, goY) == 1)
-    {
-      validCells.push_back(c);
-    }
+    rootNode->SetNode(selectorMain);
   }
 
-  if (validCells.size() != 0)
-  {
-    int index = RNG::Instance().RandomRange(0, validCells.size());
-    Position p = validCells[index];
-
-    AIComponentRef->OwnerGameObject->MoveTo(p);
-    AIComponentRef->OwnerGameObject->FinishTurn();
-  }
-  else
-  {
-    //Attack(_playerRef);
-    AIComponentRef->OwnerGameObject->FinishTurn();
-  }
-}
-
-void AIMonsterBat::MoveToKill()
-{
-  /*
-  auto c = SelectCellNearestToPlayer();
-  if (c.size() != 0)
-  {
-    bool res = AIComponentRef->OwnerGameObject->MoveTo(c[0].X, c[0].Y);
-    if (!res)
-    {
-      GetNewDirection();
-    }    
-  }
-  else
-  {
-    GetNewDirection();
-  }
-  */
-}
-
-void AIMonsterBat::MoveInDirection()
-{
-  if (!AIComponentRef->OwnerGameObject->Move(_directionToMove[0].X, _directionToMove[0].Y))
-  {
-    _directionToMove.clear();
-  }
-}
-
-std::vector<Position> AIMonsterBat::GetRandomDirectionToMove()
-{
-  std::vector<Position> res;
-
-  int posX = AIComponentRef->OwnerGameObject->PosX;
-  int posY = AIComponentRef->OwnerGameObject->PosY;
-
-  auto cellsAround = Map::Instance().GetUnoccupiedCellsAround({ posX, posY });
-  if (cellsAround.size() != 0)
-  {
-    int index = RNG::Instance().RandomRange(0, cellsAround.size());
-    Position p = cellsAround[index];
-
-    int dx = p.X - posX;
-    int dy = p.Y - posY;
-
-    res.push_back({ dx, dy });
-  }
-
-  return res;
-}
-
-void AIMonsterBat::GetNewDirection()
-{  
-  auto res = GetRandomDirectionToMove();
-  if (res.size() != 0)
-  {
-    Position dir = res[0];
-    _directionToMove.push_back(dir);
-  }
+  _root.reset(rootNode);
 }
