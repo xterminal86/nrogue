@@ -7,6 +7,7 @@
 #include "ai-component.h"
 #include "ai-npc.h"
 #include "npc-interact-state.h"
+#include "door-component.h"
 
 void InteractInputState::Init()
 {
@@ -128,6 +129,13 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
   {
     if (go->Interact())
     {
+      DoorComponent* dc = go->GetComponent<DoorComponent>();
+      if (dc != nullptr)
+      {
+        auto str = Util::StringFormat("You %s: %s", (dc->IsOpen ? "opened" : "closed"), go->ObjectName.data());
+        Printer::Instance().AddMessage(str);
+      }
+
       _playerRef->FinishTurn();
       Map::Instance().UpdateGameObjects();
       Application::Instance().ChangeState(GameStates::MAIN_STATE);

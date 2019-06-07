@@ -83,7 +83,11 @@ bool Player::Move(int dx, int dy)
           // Automatically interact with door if it's closed
           if (c != nullptr)
           {
-            staticObject->Interact();
+            if (staticObject->Interact())
+            {
+              auto str = Util::StringFormat("You %s: %s", (c->IsOpen ? "opened" : "closed"), staticObject->ObjectName.data());
+              Printer::Instance().AddMessage(str);
+            }
           }
         }
       }

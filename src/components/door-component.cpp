@@ -16,10 +16,7 @@ void DoorComponent::Update()
 void DoorComponent::Interact()
 {
   IsOpen = !IsOpen;
-  UpdateDoorState();
-
-  auto str = Util::StringFormat("You %s: %s", (IsOpen ? "opened" : "closed"), ((GameObject*)OwnerGameObject)->ObjectName.data());
-  Printer::Instance().AddMessage(str);
+  UpdateDoorState();  
 }
 
 void DoorComponent::UpdateDoorState()
