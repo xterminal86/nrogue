@@ -619,3 +619,28 @@ void Map::DrawNonVisibleStaticObject(int x, int y)
     }
   }
 }
+
+bool Map::IsObjectVisible(const Position &from, const Position &to)
+{
+  auto line = Util::BresenhamLine(from, to);
+  for (auto& c : line)
+  {
+    // Object can be blocking but not block sight (e.g. lava, chasm)
+    // so check against BlocksSight only is needed.
+
+    bool groundBlock = CurrentLevel->MapArray[c.X][c.Y]->BlocksSight;
+    bool staticBlock = false;
+
+    if (CurrentLevel->StaticMapObjects[c.X][c.Y] != nullptr)
+    {
+      staticBlock = CurrentLevel->StaticMapObjects[c.X][c.Y]->BlocksSight;
+    }
+
+    if (groundBlock || staticBlock)
+    {
+      return false;
+    }
+  }
+
+  return true;
+}

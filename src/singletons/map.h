@@ -30,6 +30,9 @@ class Map : public Singleton<Map>
     void PrintMapArrayRevealedStatus();
     void PrintMapLayout();
 
+    bool IsObjectVisible(const Position& from,
+                         const Position& to);
+
     GameObject* GetActorAtPosition(int x, int y);
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
     std::pair<int, GameObject*> GetGameObjectToPickup(int x, int y);

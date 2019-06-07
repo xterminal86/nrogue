@@ -3,6 +3,8 @@
 
 #include "behaviour-tree.h"
 
+#include "util.h"
+
 class TaskPlayerInRange : public Node
 {
   public:
@@ -14,19 +16,10 @@ class TaskPlayerInRange : public Node
 
     bool Run() override
     {
-      int px = _playerRef->PosX;
-      int py = _playerRef->PosY;
+      Position plPos = { _playerRef->PosX, _playerRef->PosY };
+      Position objPos = { _objectToControl->PosX, _objectToControl->PosY };
 
-      int x = _objectToControl->PosX;
-      int y = _objectToControl->PosY;
-
-      int lx = x - _range;
-      int ly = y - _range;
-      int hx = x + _range;
-      int hy = y + _range;
-
-      return (px >= lx && px <= hx
-           && py >= ly && py <= hy);
+      return Util::IsObjectInRange(plPos, objPos, _range, _range);
     }
 
   private:

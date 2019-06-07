@@ -995,24 +995,50 @@ void Player::WaitForTurn()
 {
   GameObject::WaitForTurn();
 
-  // NOTE: comment out the condition to see "offline" movement
-  //
-  // FIXME: try to optimize.
-  //
-  // TODO: Disable "offline" rendering when we are engaged in combat
-  // to allow player to see what's happening (e.g. if we have fast monster
-  // that employs hit-and-run tactics, player should be able to see
-  // that it's moving after attack and not just attacking from distance).
-  //
-  // When you move player in dungeons while holding direction key,
-  // it gets "jaggy" due to this constant redrawing of stuff.
-  //
-  // Redraw screen only when player is ready for action
-  // (assuming Application::_currentState is MainState)
-  if (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
+  // NOTE: replace conditions to see global "offline" movement
+
+  //if (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
+  if (ShouldForceRedrawScreen())
   {
     Application::Instance().DrawCurrentState();
+  }  
+}
+
+/// If we have fast monster, player should be able to see its movements
+/// or it may look like monster just popped out of nowhere before the player
+/// since all movement updates were off-screen.
+/// Same case with hit-and-run monster tactics: it may seem as if
+/// monster is attacking from distance.
+bool Player::ShouldForceRedrawScreen()
+{
+  // If player is ready to act,
+  // we should redraw screen to reflect any recent changes.
+  bool playerIsReady = (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue);
+  if (playerIsReady)
+  {
+    return true;
   }
+
+  // If not, check if there is any actor in the vicinity.
+  bool actorVisible = false;
+  for (auto& actor : Map::Instance().CurrentLevel->ActorGameObjects)
+  {
+    bool inRange = Util::IsObjectInRange({ PosX, PosY },
+                                         { actor->PosX, actor->PosY },
+                                         VisibilityRadius.Get(),
+                                         VisibilityRadius.Get());
+
+    bool visible = Map::Instance().IsObjectVisible({ PosX, PosY },
+                                                   { actor->PosX, actor->PosY });
+
+    if (inRange && visible)
+    {
+      return true;
+    }
+  }
+
+  // Do not redraw screen otherwise.
+  return false;
 }
 
 bool Player::IsAlive(GameObject* damager)

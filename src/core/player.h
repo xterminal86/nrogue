@@ -105,6 +105,8 @@ class Player : public GameObject
 
     bool DamageArmor(int amount);
 
+    bool ShouldForceRedrawScreen();
+
     int _starvingTimeout = 0;
 
     std::vector<std::string> GetPrettyLevelUpText();

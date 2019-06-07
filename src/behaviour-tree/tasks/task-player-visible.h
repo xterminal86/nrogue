@@ -12,30 +12,10 @@ class TaskPlayerVisible : public Node
   public:    
     bool Run() override
     {
-      auto& mapRef = Map::Instance().CurrentLevel;
+      Position plPos = { _playerRef->PosX, _playerRef->PosY };
+      Position objPos = { _objectToControl->PosX, _objectToControl->PosY };
 
-      auto line = Util::BresenhamLine(_objectToControl->PosX, _objectToControl->PosY,
-                                      _playerRef->PosX, _playerRef->PosY);
-      for (auto& c : line)
-      {
-        // Object can be blocking but not block sight (e.g. lava, chasm)
-        // so check against BlocksSight only is needed.
-
-        bool groundBlock = mapRef->MapArray[c.X][c.Y]->BlocksSight;
-        bool staticBlock = false;
-
-        if (mapRef->StaticMapObjects[c.X][c.Y] != nullptr)
-        {
-          staticBlock = mapRef->StaticMapObjects[c.X][c.Y]->BlocksSight;
-        }
-
-        if (groundBlock || staticBlock)
-        {
-          return false;
-        }
-      }
-
-      return true;
+      return Map::Instance().IsObjectVisible(objPos, plPos);
     }  
 };
 

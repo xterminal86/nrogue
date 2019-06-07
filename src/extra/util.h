@@ -42,6 +42,26 @@ namespace Util
     return res;
   }
 
+  inline bool IsObjectInRange(const Position& posToCheckFrom,
+                              const Position& objectToCheck,
+                              int rangeX,
+                              int rangeY)
+  {
+    int px = posToCheckFrom.X;
+    int py = posToCheckFrom.Y;
+
+    int x = objectToCheck.X;
+    int y = objectToCheck.Y;
+
+    int lx = x - rangeX;
+    int ly = y - rangeY;
+    int hx = x + rangeX;
+    int hy = y + rangeY;
+
+    return (px >= lx && px <= hx
+         && py >= ly && py <= hy);
+  }
+
   // *** https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c
 
   inline bool IsBase64(unsigned char c)
