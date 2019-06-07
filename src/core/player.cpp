@@ -1020,18 +1020,21 @@ bool Player::ShouldForceRedrawScreen()
   }
 
   // If not, check if there is any actor in the vicinity.
-  bool actorVisible = false;
   for (auto& actor : Map::Instance().CurrentLevel->ActorGameObjects)
   {
     bool inRange = Util::IsObjectInRange({ PosX, PosY },
                                          { actor->PosX, actor->PosY },
                                          VisibilityRadius.Get(),
                                          VisibilityRadius.Get());
+    if (!inRange)
+    {
+      continue;
+    }
 
     bool visible = Map::Instance().IsObjectVisible({ PosX, PosY },
                                                    { actor->PosX, actor->PosY });
 
-    if (inRange && visible)
+    if (visible)
     {
       return true;
     }
