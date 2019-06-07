@@ -625,6 +625,11 @@ bool Map::IsObjectVisible(const Position &from, const Position &to)
   auto line = Util::BresenhamLine(from, to);
   for (auto& c : line)
   {
+    if (!Util::IsInsideMap(c, CurrentLevel->MapSize))
+    {
+      return false;
+    }
+
     // Object can be blocking but not block sight (e.g. lava, chasm)
     // so check against BlocksSight only is needed.
 
