@@ -26,18 +26,17 @@ void AIMonsterBasic::ConstructAI()
 
   Root* rootNode = new Root(objRef);
   {
-    // If player is in agro range and is visible, try to chase him down
-    // and attack him.
-    // Otherwise move randomly or wait.
     Selector* selectorMain = new Selector(objRef);
     {
       Sequence* offenceSeq = new Sequence(objRef);
       {
+        // Player is in agro range and is visible.
         TaskPlayerInRange* taskPlayerInRange = new TaskPlayerInRange(objRef, AgroRadius);
         TaskPlayerVisible* taskPlayerVisible = new TaskPlayerVisible(objRef);
 
         Selector* selChase = new Selector(objRef);
         {
+          // If player is in 1 tile range, attack him.
           Sequence* seqAtk = new Sequence(objRef);
           {
             TaskPlayerInRange* taskPlayerInRange = new TaskPlayerInRange(objRef);
@@ -47,6 +46,7 @@ void AIMonsterBasic::ConstructAI()
             seqAtk->AddNode(taskAttackBasic);
           }
 
+          // Otherwise chase him down.
           TaskChasePlayer* taskChasePlayer = new TaskChasePlayer(objRef);
 
           selChase->AddNode(seqAtk);

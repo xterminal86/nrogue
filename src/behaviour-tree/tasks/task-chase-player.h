@@ -59,7 +59,7 @@ class TaskChasePlayer : public Node
       // Recalculate path only if there's no path in the first place,
       // or if player changed his position but is still visible.
       if (_path.empty()
-       || (_lastPlayerPos != _playerPos && IsPlayerVisible(_playerPos)))
+       || (IsPlayerVisible(_playerPos) && _lastPlayerPos != _playerPos))
       {
         TryToFindPath();
 
