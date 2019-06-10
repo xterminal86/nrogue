@@ -45,21 +45,13 @@ class TaskChasePlayer : public Node
       return true;
     }
 
-    bool IsPlayerVisible(const Position& playerPos)
-    {
-      Position objPos = { _objectToControl->PosX, _objectToControl->PosY };
-
-      return Map::Instance().IsObjectVisible(objPos, playerPos);
-    }
-
     bool Run() override
     {
       _playerPos = { _playerRef->PosX, _playerRef->PosY };
 
       // Recalculate path only if there's no path in the first place,
       // or if player changed his position but is still visible.
-      if (_path.empty()
-       || (IsPlayerVisible(_playerPos) && _lastPlayerPos != _playerPos))
+      if (_path.empty() || _lastPlayerPos != _playerPos)
       {
         TryToFindPath();
 
