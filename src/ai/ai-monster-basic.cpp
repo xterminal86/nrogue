@@ -46,10 +46,10 @@ void AIMonsterBasic::ConstructAI()
             seqAtk->AddNode(taskAttackBasic);
           }
 
+          selChase->AddNode(seqAtk);
+
           // Otherwise chase him down.
           TaskChasePlayer* taskChasePlayer = new TaskChasePlayer(objRef);
-
-          selChase->AddNode(seqAtk);
           selChase->AddNode(taskChasePlayer);
         }
 
