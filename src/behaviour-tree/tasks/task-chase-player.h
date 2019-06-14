@@ -66,7 +66,7 @@ class TaskChasePlayer : public Node
       return TryToMove();
     }
 
-  private:
+  protected:
     Pathfinder _pf;
 
     std::stack<Position> _path;

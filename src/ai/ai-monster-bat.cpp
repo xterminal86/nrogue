@@ -5,7 +5,7 @@
 #include "task-player-in-range.h"
 #include "task-player-visible.h"
 #include "task-attack-basic.h"
-#include "task-chase-player.h"
+#include "task-chase-player-smart.h"
 #include "task-random-movement.h"
 #include "task-idle.h"
 #include "task-run-from-player.h"
@@ -27,12 +27,9 @@ void AIMonsterBat::ConstructAI()
     {
       Sequence* offenceSeq = new Sequence(objRef);
       {
-        TaskPlayerInRange* taskPlayerInRange = new TaskPlayerInRange(objRef, AgroRadius);
-        TaskPlayerVisible* taskPlayerVisible = new TaskPlayerVisible(objRef);
-
         Selector* selChase = new Selector(objRef);
         {
-          TaskChasePlayer* taskChasePlayer = new TaskChasePlayer(objRef);
+          TaskChasePlayerSmart* taskChasePlayer = new TaskChasePlayerSmart(objRef, AgroRadius);
 
           Sequence* seqAtk = new Sequence(objRef);
           {
@@ -49,8 +46,6 @@ void AIMonsterBat::ConstructAI()
           selChase->AddNode(taskChasePlayer);
         }
 
-        offenceSeq->AddNode(taskPlayerInRange);
-        offenceSeq->AddNode(taskPlayerVisible);
         offenceSeq->AddNode(selChase);
       }
 

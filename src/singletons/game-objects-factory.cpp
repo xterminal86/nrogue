@@ -7,6 +7,7 @@
 #include "ai-component.h"
 #include "ai-monster-basic.h"
 #include "ai-monster-bat.h"
+#include "ai-monster-smart.h"
 #include "ai-npc.h"
 #include "stairs-component.h"
 #include "door-component.h"
@@ -199,6 +200,8 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   aimb->AgroRadius = 8;
   aimb->ConstructAI();
 
+  ai->ChangeModel<AIMonsterBasic>();
+
   // Set attributes
   if (randomize)
   {
@@ -233,8 +236,6 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
     */
   }
 
-  ai->ChangeModel<AIMonsterBasic>();
-
   return go;
 }
 
@@ -249,9 +250,11 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
   go->Move(0, 0);
 
   AIComponent* ai = go->AddComponent<AIComponent>();
-  AIMonsterBasic* aimb = ai->AddModel<AIMonsterBat>();
+  AIMonsterBat* aimb = ai->AddModel<AIMonsterBat>();
   aimb->AgroRadius = 16;
   aimb->ConstructAI();
+
+  ai->ChangeModel<AIMonsterBat>();
 
   // Set attributes
   if (randomize)
@@ -288,8 +291,6 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
     */
   }
 
-  ai->ChangeModel<AIMonsterBat>();
-
   return go;
 }
 
@@ -307,6 +308,8 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
   AIMonsterBasic* aimb = ai->AddModel<AIMonsterBasic>();
   aimb->AgroRadius = 12;
   aimb->ConstructAI();
+
+  ai->ChangeModel<AIMonsterBasic>();
 
   // Set attributes
   if (randomize)
@@ -343,8 +346,6 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
     go->Attrs.Skl.Set(randomSkl);
     */
   }
-
-  ai->ChangeModel<AIMonsterBasic>();
 
   return go;
 }
