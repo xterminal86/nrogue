@@ -32,6 +32,8 @@ class AIModelBase
     Player* _playerRef = nullptr;    
 
     std::unique_ptr<Root> _root;
+
+    Selector* GetIdleSelector();
 };
 
 #endif

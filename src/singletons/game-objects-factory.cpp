@@ -7,6 +7,7 @@
 #include "ai-component.h"
 #include "ai-monster-basic.h"
 #include "ai-monster-bat.h"
+#include "ai-monster-spider.h"
 #include "ai-monster-smart.h"
 #include "ai-npc.h"
 #include "stairs-component.h"
@@ -305,11 +306,11 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
   go->Move(0, 0);
 
   AIComponent* ai = go->AddComponent<AIComponent>();
-  AIMonsterBasic* aimb = ai->AddModel<AIMonsterBasic>();
-  aimb->AgroRadius = 12;
-  aimb->ConstructAI();
+  AIMonsterSpider* aims = ai->AddModel<AIMonsterSpider>();
+  aims->AgroRadius = 12;
+  aims->ConstructAI();
 
-  ai->ChangeModel<AIMonsterBasic>();
+  ai->ChangeModel<AIMonsterSpider>();
 
   // Set attributes
   if (randomize)
@@ -873,6 +874,12 @@ bool GameObjectsFactory::FoodUseHandler(ItemComponent* item)
     Printer::Instance().AddMessage("You feel even more hungry!");
 
     _playerRef->Attrs.Hunger += item->Data.Cost;
+
+    // FIXME: duration of food poisoning.
+    if (Util::Rolld100(50))
+    {
+      _playerRef->AddEffect(EffectType::POISONED, 1, 20, true, true);
+    }
   }
   else if (item->Data.Prefix == ItemPrefix::BLESSED)
   {

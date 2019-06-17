@@ -703,5 +703,5 @@ void MainState::ProcessWandOfLight(ItemComponent* wand)
   wand->Data.IsPrefixDiscovered = true;
   wand->Data.IsIdentified = true;
 
-  _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration);
+  _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration, false, true);
 }

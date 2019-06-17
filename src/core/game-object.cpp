@@ -230,7 +230,35 @@ void GameObject::MoveGameObject(int dx, int dy)
   _currentCell->Occupied = true;
 }
 
-void GameObject::AddEffect(EffectType type, int power, int duration, bool cumulative)
+void GameObject::AddEffect(const Effect &effectToAdd)
+{
+  if (HasEffect(effectToAdd.Type))
+  {
+    if (effectToAdd.Cumulative)
+    {
+      _activeEffects[effectToAdd.Type].Power += effectToAdd.Power;
+      _activeEffects[effectToAdd.Type].Duration += effectToAdd.Duration;
+    }
+    else
+    {
+      _activeEffects[effectToAdd.Type].Power = effectToAdd.Power;
+      _activeEffects[effectToAdd.Type].Duration = effectToAdd.Duration;
+    }
+
+    ApplyEffect(_activeEffects[effectToAdd.Type]);
+  }
+  else
+  {
+    ApplyEffect(effectToAdd);
+    _activeEffects[effectToAdd.Type] = effectToAdd;
+  }
+}
+
+void GameObject::AddEffect(EffectType type,
+                           int power,
+                           int duration,
+                           bool cumulative,
+                           bool ignoresArmor)
 {
   if (HasEffect(type))
   {
@@ -249,7 +277,7 @@ void GameObject::AddEffect(EffectType type, int power, int duration, bool cumula
   }
   else
   {
-    Effect e = { type, power, duration };
+    Effect e = { type, power, duration, cumulative, ignoresArmor };
     ApplyEffect(e);
     _activeEffects[type] = e;
   }
@@ -300,15 +328,19 @@ void GameObject::ProcessEffects()
     auto it = _activeEffects.begin();
     std::advance(it, i);
 
-    if (it->second.Duration <= 0)
+    if (it->second.Duration > 0)
+    {
+      EffectAction(it->second);
+      it->second.Duration--;
+    }
+    else if (it->second.Duration == 0)
     {
       UnapplyEffect(it->second);
       _activeEffects.erase(it);
     }
-    else
+    else if (it->second.Duration == -1)
     {
       EffectAction(it->second);
-      it->second.Duration--;
     }
   }
 }

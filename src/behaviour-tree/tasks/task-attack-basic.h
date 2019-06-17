@@ -60,8 +60,17 @@ class TaskAttackBasic : public Node
 
       _objectToControl->FinishTurn();
 
+      ItemComponent* armor = _playerRef->EquipmentByCategory[EquipmentCategory::TORSO][0];
+
+      _attackResultPlayerHasArmor.first = result;
+      _attackResultPlayerHasArmor.second = (armor != nullptr);
+
       return true;
     }
+
+  protected:
+    // first means successful hit, second means if player has armor
+    std::pair<bool, bool> _attackResultPlayerHasArmor;
 };
 
 #endif // TASKATTACKBASIC_H

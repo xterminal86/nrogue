@@ -125,7 +125,8 @@ class GameObject
 
     virtual void LevelUp(int baseHpOverride = -1);
 
-    void AddEffect(EffectType type, int power, int duration, bool cumulative = false);
+    void AddEffect(const Effect& effectToAdd);
+    void AddEffect(EffectType type, int power, int duration, bool cumulative, bool ignoresArmor);
     void RemoveEffect(EffectType t);    
     bool HasEffect(EffectType t);
     bool IsAlive();

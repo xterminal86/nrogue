@@ -58,14 +58,7 @@ void AIMonsterBasic::ConstructAI()
         offenceSeq->AddNode(selChase);
       }
 
-      Selector* selectorIdle = new Selector(objRef);
-      {
-        TaskRandomMovement* taskMove = new TaskRandomMovement(objRef);
-        TaskIdle* taskIdle = new TaskIdle(objRef);
-
-        selectorIdle->AddNode(taskMove);
-        selectorIdle->AddNode(taskIdle);
-      }
+      Selector* selectorIdle = GetIdleSelector();
 
       selectorMain->AddNode(offenceSeq);
       selectorMain->AddNode(selectorIdle);

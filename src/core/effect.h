@@ -28,7 +28,7 @@ static const std::map<EffectType, std::string> EffectNameByType =
   { EffectType::REFLECT,     "Ref" },
   { EffectType::BURNING,     "Bur" },
   { EffectType::FROZEN,      "Frz" },
-  { EffectType::INFRAVISION, "Ivs" },
+  { EffectType::INFRAVISION, "Ifr" },
   { EffectType::BLINDNESS,   "Bli" },
   { EffectType::INVISIBLE,   "Hid" },
   { EffectType::LEVITATE,    "Lev" },
@@ -38,7 +38,9 @@ struct Effect
 {
   Effect() = default;
 
-  Effect(EffectType t, int p, int to);
+  Effect(EffectType t, int p, int to, bool cumulative, bool ignoresArmor);
+
+  bool operator< (const Effect& rhs) const;
 
   EffectType Type = EffectType::NONE;
 
@@ -51,6 +53,11 @@ struct Effect
   // After this amount of turns passed, effect autoremoves itself.
   // -1 means it lasts until removed explicitly.
   int Duration = 0;
+
+  bool Cumulative = false;
+
+  // Effect is applied on successful hit
+  bool ApplicationIgnoresArmor = false;
 };
 
 #endif // EFFECT_H

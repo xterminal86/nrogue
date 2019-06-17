@@ -42,14 +42,7 @@ void AIMonsterSmart::ConstructAI()
         attackOrChase->AddNode(taskChaseSmart);
       }
 
-      Selector* selectorIdle = new Selector(objRef);
-      {
-        TaskRandomMovement* taskMove = new TaskRandomMovement(objRef);
-        TaskIdle* taskIdle = new TaskIdle(objRef);
-
-        selectorIdle->AddNode(taskMove);
-        selectorIdle->AddNode(taskIdle);
-      }
+      Selector* selectorIdle = GetIdleSelector();
 
       selectorMain->AddNode(attackOrChase);
       selectorMain->AddNode(selectorIdle);

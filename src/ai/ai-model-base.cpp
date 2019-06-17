@@ -5,6 +5,7 @@
 #include "util.h"
 
 #include "task-idle.h"
+#include "task-random-movement.h"
 
 AIModelBase::AIModelBase()
 {
@@ -44,3 +45,18 @@ void AIModelBase::Update()
   }
 }
 
+Selector* AIModelBase::GetIdleSelector()
+{
+  auto& objRef = AIComponentRef->OwnerGameObject;
+
+  Selector* selectorIdle = new Selector(objRef);
+  {
+    TaskRandomMovement* taskMove = new TaskRandomMovement(objRef);
+    TaskIdle* taskIdle = new TaskIdle(objRef);
+
+    selectorIdle->AddNode(taskMove);
+    selectorIdle->AddNode(taskIdle);
+  }
+
+  return selectorIdle;
+}

@@ -54,7 +54,7 @@ class AIComponent : public Component
 
     void Update() override;
 
-    AIModelBase* CurrentModel;
+    AIModelBase* CurrentModel = nullptr;
 
   private:
     std::map<size_t, std::unique_ptr<AIModelBase>> _aiModels;
