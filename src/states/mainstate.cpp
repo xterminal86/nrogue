@@ -102,6 +102,8 @@ void MainState::HandleInput()
       Application::Instance().ChangeState(GameStates::INFO_STATE);
       break;
 
+    case 'H':
+    case 'h':
     case '?':
       DisplayHelp();
       break;

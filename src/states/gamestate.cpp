@@ -24,7 +24,8 @@ int GameState::GetKeyDown(bool waitForEvent)
 
   if (event.type == SDL_KEYDOWN)
   {
-    if (event.key.keysym.scancode == SDL_SCANCODE_LSHIFT)
+    if (event.key.keysym.scancode == SDL_SCANCODE_LSHIFT
+     || event.key.keysym.scancode == SDL_SCANCODE_RSHIFT)
     {
       shiftPressed = true;
     }
@@ -75,7 +76,8 @@ int GameState::GetKeyDown(bool waitForEvent)
   }
   else if (event.type == SDL_KEYUP)
   {
-    if (event.key.keysym.scancode == SDL_SCANCODE_LSHIFT)
+    if (event.key.keysym.scancode == SDL_SCANCODE_LSHIFT
+     || event.key.keysym.scancode == SDL_SCANCODE_RSHIFT)
     {
       shiftPressed = false;
     }
