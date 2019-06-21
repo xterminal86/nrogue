@@ -317,7 +317,7 @@ void Player::SetDefaultEquipment()
   EquipmentByCategory[EquipmentCategory::SHIELD] = { nullptr };
   EquipmentByCategory[EquipmentCategory::RING]   = { nullptr, nullptr };
 
-  std::vector<GameObject*> weaponAndArmor;
+  std::vector<GameObject*> weaponAndArmorToEquip;
 
   GameObject* weapon = nullptr;
   GameObject* armor = nullptr;
@@ -332,8 +332,8 @@ void Player::SetDefaultEquipment()
       GameObject* arrows = GameObjectsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::BLESSED, 60);
       Inventory.AddToInventory(arrows);
 
-      weaponAndArmor.push_back(arrows);
-      weaponAndArmor.push_back(weapon);      
+      weaponAndArmorToEquip.push_back(arrows);
+      weaponAndArmorToEquip.push_back(weapon);
     }
     break;
 
@@ -345,8 +345,8 @@ void Player::SetDefaultEquipment()
       armor = GameObjectsFactory::Instance().CreateArmor(0, 0, ArmorType::LEATHER, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(armor);
 
-      weaponAndArmor.push_back(weapon);
-      weaponAndArmor.push_back(armor);
+      weaponAndArmorToEquip.push_back(weapon);
+      weaponAndArmorToEquip.push_back(armor);
     }
     break;
 
@@ -355,14 +355,17 @@ void Player::SetDefaultEquipment()
       weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::STAFF, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(weapon);
 
-      weaponAndArmor.push_back(weapon);
+      auto wand = GameObjectsFactory::Instance().CreateWand(0, 0, WandMaterials::EBONY_3, SpellType::MAGIC_MISSILE, ItemPrefix::BLESSED);
+      Inventory.AddToInventory(wand);
+
+      weaponAndArmorToEquip.push_back(weapon);
     }
     break;
   }
+
   // Since equipping produces message in log,
   // we explicitly delete it here.
-
-  for (auto& i : weaponAndArmor)
+  for (auto& i : weaponAndArmorToEquip)
   {
     ItemComponent* ic = i->GetComponent<ItemComponent>();
     ic->Equip();

@@ -199,6 +199,7 @@ void MapLevelTown::CreateLevel()
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);          
 
   // *** FIXME: debug
+
   /*
   auto lwand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::IVORY_2, SpellType::LIGHT, ItemPrefix::BLESSED);
   InsertGameObject(lwand);

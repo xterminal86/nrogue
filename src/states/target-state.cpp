@@ -512,7 +512,10 @@ int TargetState::CalculateHitChance()
 
   if (_weaponRef->Data.ItemType_ == ItemType::WAND)
   {
-    chance = CalculateChance(startPoint, endPoint, baseChance);
+    //chance = CalculateChance(startPoint, endPoint, baseChance);
+
+    // TODO: too OP for wands?
+    chance = 100;
   }
   else
   {
