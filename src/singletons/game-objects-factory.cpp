@@ -926,6 +926,34 @@ GameObject* GameObjectsFactory::CreateNote(const std::string& objName, const std
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix prefixOverride)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->FgColor = "#000000";
+  go->BgColor = "#FFFFFF";
+  go->Image = '?';
+  go->ObjectName = GlobalConstants::SpellNameByType.at(type);
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  ic->Data.Prefix = (prefixOverride != ItemPrefix::RANDOM) ? prefixOverride : RollItemPrefix();
+  ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
+
+  ic->Data.ItemType_ = ItemType::SCROLL;
+  ic->Data.IsStackable = false;
+  ic->Data.SpellHeld = type;
+
+  ic->Data.IdentifiedDescription = { "TODO:" };
+  ic->Data.IdentifiedName = go->ObjectName;
+
+  ic->Data.UseCallback = std::bind(&GameObjectsFactory::ScrollUseHandler, this, ic);
+
+  ic->Data.ItemTypeHash = CalculateHash(ic);
+
+  return go;
+}
+
 GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, ItemPrefix prefix)
 {  
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -2510,6 +2538,55 @@ bool GameObjectsFactory::RepairKitUseHandler(ItemComponent* item)
   {
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "You don't possess the necessary skill!" }, GlobalConstants::MessageBoxRedBorderColor);
     return false;
+  }
+
+  return true;
+}
+
+bool GameObjectsFactory::ScrollUseHandler(ItemComponent *item)
+{
+  // TODO: cursed scrolls,
+  // TODO: effects processor for both wands and scrolls
+  //       to avoid code duplication
+
+  switch (item->Data.SpellHeld)
+  {
+    case SpellType::LIGHT:
+    {
+      Printer::Instance().AddMessage("You read the scroll...");
+
+      int basePower = 10;
+      int baseDuration = 100;
+
+      int duration = baseDuration;
+      int power = basePower;
+
+      if (item->Data.Prefix == ItemPrefix::BLESSED)
+      {
+        if (!item->Data.IsPrefixDiscovered)
+        {
+          Printer::Instance().AddMessage("The golden light surrounds you!");
+        }
+
+        duration *= 2;
+        power += 5;
+      }
+      else if (item->Data.Prefix == ItemPrefix::CURSED)
+      {
+        if (!item->Data.IsPrefixDiscovered)
+        {
+          Printer::Instance().AddMessage("You are surrounded by darkness!");
+        }
+
+        power = -5;
+      }
+
+      item->Data.IsPrefixDiscovered = true;
+      item->Data.IsIdentified = true;
+
+      _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration, false, true);
+    }
+    break;
   }
 
   return true;

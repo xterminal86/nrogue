@@ -328,6 +328,7 @@ enum class SpellType
   TELEPORT,        // TODO: teleport control?
   DETECT_MONSTERS, // shows monsters (not all?), temporary
   REMOVE_CURSE,
+  REPAIR,
   HEAL,
   NEUTRALIZE_POISON,  
   MANA_SHIELD      // nuff said
