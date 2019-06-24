@@ -109,9 +109,8 @@ void MapLevelBase::RecordEmptyCells()
   for (int x = 0; x < MapSize.X; x++)
   {
     for (int y = 0; y < MapSize.Y; y++)
-    {
-      bool isBlocking = IsCellBlocking({ x, y });
-      if (!isBlocking)
+    {      
+      if (!IsCellBlocking({ x, y }))
       {
         Position pos(x, y);
         _emptyCells.push_back(pos);
@@ -265,7 +264,7 @@ bool MapLevelBase::IsCellBlocking(const Position& pos)
   return groundBlock;
 }
 
-void MapLevelBase::PlaceGrassTile(int x, int y)
+void MapLevelBase::PlaceGrassTile(int x, int y, int freq)
 {
   char img = '.';
 
@@ -276,8 +275,8 @@ void MapLevelBase::PlaceGrassTile(int x, int y)
   //std::string flowerColor = GlobalConstants::BlackColor;
   std::string flowerColor = GlobalConstants::GrassDotColor;
 
-  int colorChoice = RNG::Instance().RandomRange(0, 10);
-  if (colorChoice == 0)      flowerColor = GlobalConstants::WhiteColor;
+  int colorChoice = RNG::Instance().RandomRange(0, freq);
+  if      (colorChoice == 0) flowerColor = GlobalConstants::WhiteColor;
   else if (colorChoice == 1) flowerColor = GlobalConstants::DandelionYellowColor;
   else if (colorChoice == 2) flowerColor = GlobalConstants::RedPoppyColor;
 

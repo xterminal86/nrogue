@@ -664,7 +664,7 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender)
   return totalDmg;
 }
 
-void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool godMode)
+void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool godMode, bool suppressLog)
 {  
   if (godMode)
   {
@@ -683,17 +683,17 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
     return;
   }
 
+  std::string logMsg;
+
   if (isMagical)
   {
     if (from == this)
     {
-      auto str = Util::StringFormat("You hit yourself for %i damage!", amount);
-      Printer::Instance().AddMessage(str);      
+      logMsg = Util::StringFormat("You hit yourself for %i damage!", amount);
     }
     else
     {
-      auto str = Util::StringFormat("You were hit for %i damage", amount);
-      Printer::Instance().AddMessage(str);
+      logMsg = Util::StringFormat("You were hit for %i damage", amount);
     }
 
     Attrs.HP.CurrentValue -= amount;
@@ -702,11 +702,14 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
   {
     if (!DamageArmor(amount))
     {
-      auto str = Util::StringFormat("You were hit for %i damage", amount);
-      Printer::Instance().AddMessage(str);
-
+      logMsg = Util::StringFormat("You were hit for %i damage", amount);
       Attrs.HP.CurrentValue -= amount;
     }
+  }
+
+  if (!suppressLog)
+  {
+    Printer::Instance().AddMessage(logMsg);
   }
 }
 

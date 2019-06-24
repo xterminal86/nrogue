@@ -93,7 +93,7 @@ class MapLevelBase
     void PlaceStairs();
     void CreateInitialMonsters();
 
-    void PlaceGrassTile(int x, int y);
+    void PlaceGrassTile(int x, int y, int freq = 10);
 };
 
 #endif // MAPLEVEL_H

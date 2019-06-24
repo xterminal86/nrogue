@@ -187,6 +187,11 @@ void ShoppingState::DisplayShopInventory()
 
     std::string tmpName = nameInInventory;
 
+    if (tmpName.length() > GlobalConstants::InventoryMaxNameLength)
+    {
+      tmpName.resize(GlobalConstants::InventoryMaxNameLength);
+    }
+
     nameInInventory.insert(0, GlobalConstants::InventoryMaxNameLength - tmpName.length(), ' ');
     nameInInventory.resize(GlobalConstants::InventoryMaxNameLength);
 

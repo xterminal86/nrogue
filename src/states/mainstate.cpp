@@ -9,6 +9,7 @@
 #include "map-level-base.h"
 #include "target-state.h"
 #include "attribute.h"
+#include "effects-processor.h"
 
 void MainState::Init()
 {
@@ -445,19 +446,27 @@ void MainState::ProcessWeapon(ItemComponent* weapon)
 
 void MainState::ProcessWand(ItemComponent* wand)
 {
+  // NOTE: amount of charges should be subtracted
+  // separately in corresponding methods
+  // (i.e. EffectsProcessor or inside TargetState),
+  // because combat wands require targeting,
+  // which is checked against out of bounds,
+  // and only after it's OK and player hit "fire"
+  // the actual firing takes place.
+
   if (wand->Data.Amount == 0)
   {
     Printer::Instance().AddMessage("No charges left!");
   }
   else
-  {
+  {    
     switch (wand->Data.SpellHeld)
     {
       // TODO: complete other wands
       // (see GameObjectsFactory::CreateRandomWand())
 
       case SpellType::LIGHT:
-        ProcessWandOfLight(wand);
+        EffectsProcessor::Instance().ProcessWand(wand);
         break;
 
       case SpellType::FIREBALL:
@@ -671,40 +680,4 @@ void MainState::PrintNoAttackInTown()
   std::vector<std::string> variants = { "Not here", "Not in town" };
   int index = RNG::Instance().RandomRange(0, 2);
   Printer::Instance().AddMessage(variants[index]);
-}
-
-void MainState::ProcessWandOfLight(ItemComponent* wand)
-{
-  Printer::Instance().AddMessage("You invoke the wand");
-
-  int basePower = 10;
-  int baseDuration = 100;
-
-  int duration = baseDuration;
-  int power = basePower;
-
-  if (wand->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    if (!wand->Data.IsPrefixDiscovered)
-    {
-      Printer::Instance().AddMessage("The golden light surrounds you!");
-    }
-
-    duration *= 2;
-    power += 5;
-  }
-  else if (wand->Data.Prefix == ItemPrefix::CURSED)
-  {
-    if (!wand->Data.IsPrefixDiscovered)
-    {
-      Printer::Instance().AddMessage("You are surrounded by darkness!");
-    }
-
-    power = -5;
-  }
-
-  wand->Data.IsPrefixDiscovered = true;
-  wand->Data.IsIdentified = true;
-
-  _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration, false, true);
 }

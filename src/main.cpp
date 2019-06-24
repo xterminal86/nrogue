@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "application.h"
+#include "effects-processor.h"
 #include "game-objects-factory.h"
 #include "map.h"
 #include "util.h"
@@ -70,6 +71,8 @@ int main(int argc, char* argv[])
   Application::Instance().Init();
 
   Map::Instance().Init();
+
+  EffectsProcessor::Instance().Init();
 
   Application::Instance().Run();
   Application::Instance().Cleanup();

@@ -77,6 +77,7 @@ void TraderComponent::CreateClericItems()
     { ItemType::HEALING_POTION,  8 },
     { ItemType::MANA_POTION,     8 },
     { ItemType::WAND,            3 },
+    { ItemType::SCROLL,          3 },
     { ItemType::RETURNER,        1 }
   };
 
@@ -109,6 +110,10 @@ void TraderComponent::CreateClericItems()
 
       case ItemType::WAND:
         go = GameObjectsFactory::Instance().CreateRandomWand(prefixPair.first);
+        break;
+
+      case ItemType::SCROLL:
+        go = GameObjectsFactory::Instance().CreateRandomScroll(prefixPair.first);
         break;
     }
 

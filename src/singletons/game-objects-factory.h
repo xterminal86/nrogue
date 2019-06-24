@@ -35,6 +35,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, bool isIdentified = false);
     GameObject* CreateNote(const std::string& objName, const std::vector<std::string>& text);
     GameObject* CreateScroll(int x, int y, SpellType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateRandomScroll(ItemPrefix prefix = ItemPrefix::RANDOM);
     GameObject* CreateWeapon(int x, int y, WeaponType type, ItemPrefix preifx = ItemPrefix::RANDOM);
     GameObject* CreateRandomWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateContainer(const std::string& name, const std::string& bgColor, int image, int x, int y);
@@ -106,6 +107,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void GenerateLoot(int posX, int posY, const std::pair<ItemType, int>& kvp, GameObjectType type);
 
     void InitPotionColors();
+    void InitScrolls();
 
     struct PotionInfo
     {
@@ -114,7 +116,14 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
       std::pair<std::string, std::string> FgBgColor;
     };
 
+    struct ScrollInfo
+    {
+      SpellType SpellType_ = SpellType::NONE;
+      std::string ScrollName;
+    };
+
     std::map<ItemType, PotionInfo> _gamePotionsMap;
+    std::map<SpellType, ScrollInfo> _gameScrollsMap;
 };
 
 #endif // GAMEOBJECTSFACTORY_H

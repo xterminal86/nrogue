@@ -153,6 +153,9 @@ void MapLevelTown::CreateLevel()
     InsertStaticObject(pos.X, pos.Y, t);
   }
 
+  // FIXME: experimental
+  ReplaceGroundWithGrass();
+
   LevelStart.X = 5;
   LevelStart.Y = 2;
 
@@ -201,6 +204,9 @@ void MapLevelTown::CreateLevel()
   // *** FIXME: debug
 
   /*
+  auto scroll = GameObjectsFactory::Instance().CreateScroll(1, 1, SpellType::MAGIC_MAPPING);
+  InsertGameObject(scroll);
+
   auto lwand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::IVORY_2, SpellType::LIGHT, ItemPrefix::BLESSED);
   InsertGameObject(lwand);
 
@@ -226,6 +232,20 @@ void MapLevelTown::CreateLevel()
   InsertGameObject(bolts);
   */
   // ***
+}
+
+void MapLevelTown::ReplaceGroundWithGrass()
+{
+  for (int x = 1; x < MapSize.X - 1; x++)
+  {
+    for (int y = 1; y < MapSize.Y - 1; y++)
+    {
+      if (MapArray[x][y]->Image == '.')
+      {
+        PlaceGrassTile(x, y, 30);
+      }
+    }
+  }
 }
 
 void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill)
@@ -541,7 +561,9 @@ void MapLevelTown::CreateNPCs()
 
         bool isBlocking = IsCellBlocking({ x, y });
 
-        if (!alreadyAdded && !isBlocking)
+        // Also avoid water tiles
+        // or NPC may spawn inside walled fountain.
+        if (!alreadyAdded && !isBlocking && MapArray[x][y]->Image != '~')
         {
           emptyCells.push_back(Position(x, y));
         }

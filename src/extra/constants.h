@@ -889,21 +889,51 @@ namespace GlobalConstants
 
   static const std::map<SpellType, std::string> SpellNameByType =
   {
-    { SpellType::LIGHT,             "Light"             },
     { SpellType::STRIKE,            "Striking"          },
+    { SpellType::MAGIC_MISSILE,     "Magic Missile"     },
     { SpellType::FROST,             "Frost"             },
     { SpellType::FIREBALL,          "Fireball"          },
-    { SpellType::LASER,             "Piercing"          },
     { SpellType::LIGHTNING,         "Lightning"         },
-    { SpellType::MAGIC_MISSILE,     "Magic Missile"     },
+    { SpellType::LASER,             "Piercing"          },
+    { SpellType::LIGHT,             "Light"             },
     { SpellType::IDENTIFY,          "Identify"          },
     { SpellType::MAGIC_MAPPING,     "Magic Mapping"     },
     { SpellType::TELEPORT,          "Teleportation"     },
     { SpellType::DETECT_MONSTERS,   "Detect Monsters"   },
     { SpellType::REMOVE_CURSE,      "Remove Curse"      },
+    { SpellType::REPAIR,            "Repair"            },
     { SpellType::HEAL,              "Healing"           },
     { SpellType::NEUTRALIZE_POISON, "Neutralize Poison" },
     { SpellType::MANA_SHIELD,       "Mana Shield"       }
+  };
+
+  // Not including combat spells
+  static const std::vector<std::string> ScrollUnidentifiedNames =
+  {
+    "TAMAM SHUD",
+    "ELAM EBOW",
+    "ELBIB YLOH",
+    "ZELGO MER",
+    "LOREM IPSUM",
+    "GHOTI",
+    "SHAN DONG",
+    "SUIL A RUIN",
+    "DULAMAN GAELACH",
+    "KOBAYASHI MARU"
+  };
+
+  static const std::vector<SpellType> ScrollValidSpellTypes =
+  {
+    SpellType::LIGHT,
+    SpellType::IDENTIFY,
+    SpellType::MAGIC_MAPPING,
+    SpellType::TELEPORT,
+    SpellType::DETECT_MONSTERS,
+    SpellType::REMOVE_CURSE,
+    SpellType::REPAIR,
+    SpellType::HEAL,
+    SpellType::NEUTRALIZE_POISON,
+    SpellType::MANA_SHIELD,
   };
 
   // TODO: spellbooks cost calculation
@@ -936,10 +966,11 @@ namespace GlobalConstants
     { SpellType::LIGHTNING,         "Lg"  },
     { SpellType::MAGIC_MISSILE,     "MM"  },
     { SpellType::IDENTIFY,          "I"   },
-    { SpellType::MAGIC_MAPPING,     "MMg" },
+    { SpellType::MAGIC_MAPPING,     "Mg"  },
     { SpellType::TELEPORT,          "T"   },
     { SpellType::DETECT_MONSTERS,   "DM"  },
     { SpellType::REMOVE_CURSE,      "RC"  },
+    { SpellType::REPAIR,            "R"   },
     { SpellType::HEAL,              "H"   },
     { SpellType::NEUTRALIZE_POISON, "NP"  },
     { SpellType::MANA_SHIELD,       "MS"  }

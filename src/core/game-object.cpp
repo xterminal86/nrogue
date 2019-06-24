@@ -352,6 +352,10 @@ void GameObject::EffectAction(const Effect& e)
     case EffectType::POISONED:
       Attrs.HP.Add(-e.Power);
       break;
+
+    case EffectType::REGEN:
+      Attrs.HP.Add(e.Power);
+      break;
   }
 }
 

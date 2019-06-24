@@ -38,7 +38,7 @@ class Player : public GameObject
     void MeleeAttack(GameObject* go, bool alwaysHit = false);
     void RangedAttack(GameObject* what, ItemComponent* with);
     void MagicAttack(GameObject* what, ItemComponent* with);
-    void ReceiveDamage(GameObject* from, int amount, bool isMagical, bool godMode = false);
+    void ReceiveDamage(GameObject* from, int amount, bool isMagical, bool godMode = false, bool suppressLog = false);
     void WaitForTurn();
     void ProcessHunger();    
     void FinishTurn();
@@ -163,6 +163,8 @@ class Player : public GameObject
       { StatsEnum::SKL, Attrs.Skl },
       { StatsEnum::SPD, Attrs.Spd }
     };
+
+    friend class EffectsProcessor;
 };
 
 #endif // PLAYER_H

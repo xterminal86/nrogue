@@ -16,12 +16,14 @@
 #include "map.h"
 #include "application.h"
 #include "game-object-info.h"
+#include "effects-processor.h"
 
 void GameObjectsFactory::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
 
   InitPotionColors();
+  InitScrolls();
 }
 
 GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
@@ -767,6 +769,8 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
     { ItemType::NOTHING,  20 }
   };
 
+  // TODO: power of randomly created item
+  // should scale with dungeon level.
   int index = RNG::Instance().RandomRange(0, possibleItems.size());
 
   ItemType res = possibleItems[index];
@@ -835,6 +839,10 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 
     case ItemType::WAND:
       go = CreateRandomWand();
+      break;
+
+    case ItemType::SCROLL:
+      go = CreateRandomScroll();
       break;
   }
 
@@ -926,14 +934,32 @@ GameObject* GameObjectsFactory::CreateNote(const std::string& objName, const std
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateRandomScroll(ItemPrefix prefix)
+{
+  int index = RNG::Instance().RandomRange(0, GlobalConstants::ScrollValidSpellTypes.size());
+  SpellType type = GlobalConstants::ScrollValidSpellTypes.at(index);
+  return CreateScroll(0, 0, type, prefix);
+}
+
 GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix prefixOverride)
 {
+  if (std::find(GlobalConstants::ScrollValidSpellTypes.begin(),
+                GlobalConstants::ScrollValidSpellTypes.end(),
+                type) == GlobalConstants::ScrollValidSpellTypes.end())
+  {
+    std::string name = GlobalConstants::SpellNameByType.at(type);
+    printf("[WARNING] Trying to create a scroll with invalid spell (%s)!\n", name.data());
+    return nullptr;
+  }
+
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
+  go->PosX = x;
+  go->PosY = y;
   go->FgColor = "#000000";
   go->BgColor = "#FFFFFF";
   go->Image = '?';
-  go->ObjectName = GlobalConstants::SpellNameByType.at(type);
+  go->ObjectName = "\"" + GlobalConstants::SpellNameByType.at(type) + "\"";
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -944,8 +970,13 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
   ic->Data.IsStackable = false;
   ic->Data.SpellHeld = type;
 
+  ic->Data.UnidentifiedName = "\"" + _gameScrollsMap[type].ScrollName + "\"";
+  ic->Data.UnidentifiedDescription = { "Who knows what will happen if you read these words aloud..." };
+
   ic->Data.IdentifiedDescription = { "TODO:" };
-  ic->Data.IdentifiedName = go->ObjectName;
+  ic->Data.IdentifiedName = "Scroll of " + GlobalConstants::SpellNameByType.at(type);
+
+  SetItemName(go, ic->Data);
 
   ic->Data.UseCallback = std::bind(&GameObjectsFactory::ScrollUseHandler, this, ic);
 
@@ -1902,10 +1933,7 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
     case ItemType::SPD_POTION:
       itemData.IdentifiedName.append(" of Speed");
       break;
-  }
 
-  switch (itemData.ItemType_)
-  {
     case ItemType::REPAIR_KIT:
     {
       if (itemData.Prefix == ItemPrefix::BLESSED)
@@ -2515,6 +2543,38 @@ void GameObjectsFactory::InitPotionColors()
   }
 }
 
+void GameObjectsFactory::InitScrolls()
+{
+  _gameScrollsMap.clear();
+
+  auto scrollNames = GlobalConstants::ScrollUnidentifiedNames;
+  auto validSpells = GlobalConstants::ScrollValidSpellTypes;
+
+  while (scrollNames.size() != 0)
+  {
+    int scrollNameIndex = RNG::Instance().RandomRange(0, scrollNames.size());
+    std::string scrollName = scrollNames[scrollNameIndex];
+
+    int spellIndex = RNG::Instance().RandomRange(0, validSpells.size());
+    SpellType spell = validSpells[spellIndex];
+
+    ScrollInfo si;
+
+    si.ScrollName = scrollName;
+    si.SpellType_ = spell;
+
+    _gameScrollsMap[spell] = si;
+
+    //auto str = Util::StringFormat("%s = %s", GlobalConstants::SpellNameByType.at(si.SpellType_).data(), si.ScrollName.data());
+    //Logger::Instance().Print(str);
+
+    // printf("%s = %s\n", GlobalConstants::SpellNameByType.at(si.SpellType_).data(), si.ScrollName.data());
+
+    scrollNames.erase(scrollNames.begin() + scrollNameIndex);
+    validSpells.erase(validSpells.begin() + spellIndex);
+  }
+}
+
 bool GameObjectsFactory::ReturnerUseHandler(ItemComponent* item)
 {
   if (!item->Data.IsIdentified)
@@ -2543,52 +2603,10 @@ bool GameObjectsFactory::RepairKitUseHandler(ItemComponent* item)
   return true;
 }
 
-bool GameObjectsFactory::ScrollUseHandler(ItemComponent *item)
+bool GameObjectsFactory::ScrollUseHandler(ItemComponent* item)
 {
-  // TODO: cursed scrolls,
-  // TODO: effects processor for both wands and scrolls
-  //       to avoid code duplication
-
-  switch (item->Data.SpellHeld)
-  {
-    case SpellType::LIGHT:
-    {
-      Printer::Instance().AddMessage("You read the scroll...");
-
-      int basePower = 10;
-      int baseDuration = 100;
-
-      int duration = baseDuration;
-      int power = basePower;
-
-      if (item->Data.Prefix == ItemPrefix::BLESSED)
-      {
-        if (!item->Data.IsPrefixDiscovered)
-        {
-          Printer::Instance().AddMessage("The golden light surrounds you!");
-        }
-
-        duration *= 2;
-        power += 5;
-      }
-      else if (item->Data.Prefix == ItemPrefix::CURSED)
-      {
-        if (!item->Data.IsPrefixDiscovered)
-        {
-          Printer::Instance().AddMessage("You are surrounded by darkness!");
-        }
-
-        power = -5;
-      }
-
-      item->Data.IsPrefixDiscovered = true;
-      item->Data.IsIdentified = true;
-
-      _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration, false, true);
-    }
-    break;
-  }
-
+  EffectsProcessor::Instance().ProcessScroll(item);
+  Application::Instance().ChangeState(GameStates::MAIN_STATE);
   return true;
 }
 
