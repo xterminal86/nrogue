@@ -9,7 +9,7 @@
 #include "map-level-base.h"
 #include "target-state.h"
 #include "attribute.h"
-#include "effects-processor.h"
+#include "spells-processor.h"
 
 void MainState::Init()
 {
@@ -200,7 +200,7 @@ void MainState::Update(bool forceUpdate)
 
     // FIXME: print some debug info on the screen
 
-    // PrintDebugInfo();
+    PrintDebugInfo();
 
     // *****
 
@@ -466,7 +466,7 @@ void MainState::ProcessWand(ItemComponent* wand)
       // (see GameObjectsFactory::CreateRandomWand())
 
       case SpellType::LIGHT:
-        EffectsProcessor::Instance().ProcessWand(wand);
+        SpellsProcessor::Instance().ProcessWand(wand);
         break;
 
       case SpellType::FIREBALL:

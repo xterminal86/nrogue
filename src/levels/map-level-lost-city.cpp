@@ -84,16 +84,28 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
 
         case 't':
         {
+          char img = 'T';
+
+          #ifdef USE_SDL
+          img = GlobalConstants::CP437IndexByType[NameCP437::CLUB];
+          #endif
+
           objName = "Withered Tree";
-          t.Set(true, true, 'T', GlobalConstants::DirtColor, GlobalConstants::BlackColor, objName);
+          t.Set(true, true, img, GlobalConstants::DirtColor, GlobalConstants::BlackColor, objName);
           InsertStaticObject(x, y, t);
         }
         break;
 
         case 'T':
         {
+          char img = 'T';
+
+          #ifdef USE_SDL
+          img = GlobalConstants::CP437IndexByType[NameCP437::CLUB];
+          #endif
+
           objName = "Tree";
-          t.Set(true, true, 'T', GlobalConstants::TreeColor, GlobalConstants::BlackColor, objName);
+          t.Set(true, true, img, GlobalConstants::TreeColor, GlobalConstants::BlackColor, objName);
           InsertStaticObject(x, y, t);
         }
         break;

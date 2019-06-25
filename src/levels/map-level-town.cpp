@@ -5,6 +5,7 @@
 #include "game-objects-factory.h"
 #include "game-object-info.h"
 #include "door-component.h"
+#include "pathfinder.h"
 
 MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
   MapLevelBase(sizeX, sizeY, type, 0)
@@ -121,6 +122,19 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
       "................#       #........",
       "................#       #........",
       "................####-####........",
+    },
+    // Garden
+    // 8
+    {
+      "T.T.T.T.T.T.T.T.T.T",
+      "........~~~........",
+      "#####..~WWW~..#####",
+      "#~~~#.~WWWWW~.#~~~#",
+      "#~F~#.~WWWWW~.#~F~#",
+      "#~~~#.~WWWWW~.#~~~#",
+      "#####..~WWW~..#####",
+      "........~~~........",
+      "T.T.T.T.T.T.T.T.T.T",
     }
   };
 }
@@ -192,7 +206,12 @@ void MapLevelTown::CreateLevel()
 
   CreateChurch(63, 15);
 
+  PlaceGarden(33, 20);
+
   CreateTownGates();
+
+  // FIXME: experimental
+  //BuildRoads();
 
   RecordEmptyCells();
 
@@ -232,6 +251,72 @@ void MapLevelTown::CreateLevel()
   InsertGameObject(bolts);
   */
   // ***
+}
+
+void MapLevelTown::BuildRoads()
+{
+  std::vector<Position> roadMarks;
+
+  for (int x = 1; x < MapSize.X - 1; x++)
+  {
+    for (int y = 1; y < MapSize.Y - 1; y++)
+    {
+      Position left  = { x, y - 1 };
+      Position right = { x, y + 1 };
+      Position up    = { x - 1, y };
+      Position down  = { x + 1, y };
+
+      std::vector<Position> tilesToCheck =
+      {
+        left, right, up, down
+      };
+
+      if (StaticMapObjects[x][y] == nullptr && MapArray[x][y]->Image == '.')
+      {
+        for (auto& c : tilesToCheck)
+        {
+          if (StaticMapObjects[c.X][c.Y] != nullptr
+           && StaticMapObjects[c.X][c.Y]->Image == '+')
+          {
+            roadMarks.push_back({ x, y });
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  /*
+  printf("%i\n", roadMarks.size());
+
+  for (auto& c : roadMarks)
+  {
+    GameObjectInfo gi;
+    gi.Set(false, false, ' ', "#888888", "#888888", "Path");
+
+    MapArray[c.X][c.Y]->MakeTile(gi);
+  }
+  */
+
+  /*
+  for (int i = 0; i < roadMarks.size() - 1; i++)
+  {
+    Pathfinder pf;
+    auto path = pf.BuildRoad(this, roadMarks[i], roadMarks[i + 1]);
+
+    while (!path.empty())
+    {
+      Position c = path.top();
+
+      GameObjectInfo gi;
+      gi.Set(false, false, ' ', "#888888", "#888888", "Path");
+
+      MapArray[c.X][c.Y]->MakeTile(gi);
+
+      path.pop();
+    }
+  }
+  */
 }
 
 void MapLevelTown::ReplaceGroundWithGrass()
@@ -380,9 +465,17 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
           break;
 
         case 'T':
-          t.Set(true, true, c, GlobalConstants::TreeColor, GlobalConstants::BlackColor, "Tree");
-          InsertStaticObject(posX, posY, t);
-          break;
+        {
+          char img = c;
+
+          #ifdef USE_SDL
+          img = GlobalConstants::CP437IndexByType[NameCP437::CLUB];
+          #endif
+
+          t.Set(true, true, img, GlobalConstants::TreeColor, GlobalConstants::BlackColor, "Tree");
+          InsertStaticObject(posX, posY, t);          
+        }
+        break;
 
         case 'B':
           t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Bed");
@@ -596,6 +689,65 @@ void MapLevelTown::CreateNPCs()
 
   go = GameObjectsFactory::Instance().CreateNPC(81, 7, NPCType::GRISWOLD, true);
   InsertActor(go);
+}
+
+void MapLevelTown::PlaceGarden(int x, int y)
+{
+  int posX = x;
+  int posY = y;
+
+  GameObjectInfo t;
+
+  for (auto& row : _layoutsForLevel[8])
+  {
+    for (auto& c : row)
+    {
+      switch (c)
+      {
+        case '#':
+          t.Set(true, false, ' ', GlobalConstants::BlackColor, GlobalConstants::MarbleColor, "Marble Fence");
+          InsertStaticObject(posX, posY, t);
+          break;
+
+        case '.':
+          PlaceGrassTile(posX, posY, 30);
+          break;
+
+        case 'T':
+        {
+          char img = c;
+
+          #ifdef USE_SDL
+          img = GlobalConstants::CP437IndexByType[NameCP437::CLUB];
+          #endif
+
+          t.Set(true, true, img, GlobalConstants::TreeColor, GlobalConstants::BlackColor, "Tree");
+          InsertStaticObject(posX, posY, t);
+        }
+        break;
+
+        case '~':
+          t.Set(false, false, c, GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, "Shallow Water");
+          MapArray[posX][posY]->MakeTile(t);
+          break;
+
+        case 'W':
+          t.Set(true, false, '~', GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
+          MapArray[posX][posY]->MakeTile(t);
+          break;
+
+        case 'F':
+          t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Fountain");
+          InsertStaticObject(posX, posY, t);
+          break;
+      }
+
+      posX++;
+    }
+
+    posX = x;
+    posY++;
+  }
 }
 
 void MapLevelTown::CreateTownGates()

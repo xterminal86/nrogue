@@ -1,15 +1,15 @@
-#include "effects-processor.h"
+#include "spells-processor.h"
 
 #include "application.h"
 #include "printer.h"
 #include "map.h"
 
-void EffectsProcessor::Init()
+void SpellsProcessor::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
-void EffectsProcessor::ProcessWand(ItemComponent* wand)
+void SpellsProcessor::ProcessWand(ItemComponent* wand)
 {
   Printer::Instance().AddMessage("You invoke the wand...");
 
@@ -27,7 +27,7 @@ void EffectsProcessor::ProcessWand(ItemComponent* wand)
   }
 }
 
-void EffectsProcessor::ProcessScroll(ItemComponent* scroll)
+void SpellsProcessor::ProcessScroll(ItemComponent* scroll)
 {
   Printer::Instance().AddMessage("You read the scroll...");
 
@@ -65,7 +65,7 @@ void EffectsProcessor::ProcessScroll(ItemComponent* scroll)
   Printer::Instance().AddMessage("The scroll crumbles to dust");
 }
 
-void EffectsProcessor::ProcessScrollOfRepair(ItemComponent* scroll)
+void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll)
 {
   std::vector<ItemComponent*> itemsToRepair;
   for (auto& i : _playerRef->Inventory.Contents)
@@ -109,7 +109,7 @@ void EffectsProcessor::ProcessScrollOfRepair(ItemComponent* scroll)
   }
 }
 
-void EffectsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
+void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
 {
   std::vector<ItemComponent*> itemsToId;
   std::vector<ItemComponent*> itemsKnown;
@@ -172,7 +172,7 @@ void EffectsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
   }
 }
 
-void EffectsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
+void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
 {
   if (!_playerRef->HasEffect(EffectType::POISONED))
   {
@@ -200,7 +200,7 @@ void EffectsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
   }
 }
 
-void EffectsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
+void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
 {
   int power = _playerRef->Attrs.HP.OriginalValue;
 
@@ -223,7 +223,7 @@ void EffectsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
   _playerRef->ReceiveDamage(nullptr, power, true, false, true);
 }
 
-void EffectsProcessor::ProcessWandOfLight(ItemComponent* wand)
+void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
 {
   int playerPow = _playerRef->Attrs.Mag.Get();
   int power = wand->Data.WandCapacity.CurrentValue / 100 + playerPow;
@@ -260,7 +260,7 @@ void EffectsProcessor::ProcessWandOfLight(ItemComponent* wand)
   IlluminatePlayer(power, duration);
 }
 
-void EffectsProcessor::ProcessScrollOfMM(ItemComponent* scroll)
+void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll)
 {
   // NOTE: blessed scroll reveals traps as well
 
@@ -276,7 +276,9 @@ void EffectsProcessor::ProcessScrollOfMM(ItemComponent* scroll)
       }
     }
 
-    Printer::Instance().AddMessage("You suddenly forgot where you are!");
+    Map::Instance().CurrentLevel->ExitFound = false;
+
+    Printer::Instance().AddMessage("You suddenly forget where you are!");
   }
   else
   {
@@ -288,7 +290,9 @@ void EffectsProcessor::ProcessScrollOfMM(ItemComponent* scroll)
       }
     }
 
-    Printer::Instance().AddMessage("The map coalesces in your mind!");
+    Map::Instance().CurrentLevel->ExitFound = true;
+
+    Printer::Instance().AddMessage("A map coalesces in your mind!");
 
     if (scroll->Data.Prefix == ItemPrefix::BLESSED)
     {
@@ -310,7 +314,7 @@ void EffectsProcessor::ProcessScrollOfMM(ItemComponent* scroll)
   }
 }
 
-void EffectsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
+void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
 {
   int playerPow = _playerRef->Attrs.Mag.Get();
   int power = playerPow;
@@ -334,7 +338,7 @@ void EffectsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
   IlluminatePlayer(power, duration);
 }
 
-void EffectsProcessor::IlluminatePlayer(int pow, int dur)
+void SpellsProcessor::IlluminatePlayer(int pow, int dur)
 {
   _playerRef->AddEffect(EffectType::ILLUMINATED, pow, dur, false, true);
 }

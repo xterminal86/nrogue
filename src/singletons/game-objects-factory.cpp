@@ -16,7 +16,7 @@
 #include "map.h"
 #include "application.h"
 #include "game-object-info.h"
-#include "effects-processor.h"
+#include "spells-processor.h"
 
 void GameObjectsFactory::Init()
 {
@@ -172,7 +172,13 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
 
 GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool standing)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, '@', "#FFFFFF");
+  char img = '@';
+
+  #ifdef USE_SDL
+  img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
+  #endif
+
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, "#FFFFFF");
 
   go->Move(0, 0);
 
@@ -2605,7 +2611,7 @@ bool GameObjectsFactory::RepairKitUseHandler(ItemComponent* item)
 
 bool GameObjectsFactory::ScrollUseHandler(ItemComponent* item)
 {
-  EffectsProcessor::Instance().ProcessScroll(item);
+  SpellsProcessor::Instance().ProcessScroll(item);
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
   return true;
 }

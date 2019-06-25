@@ -164,7 +164,7 @@ class Player : public GameObject
       { StatsEnum::SPD, Attrs.Spd }
     };
 
-    friend class EffectsProcessor;
+    friend class SpellsProcessor;
 };
 
 #endif // PLAYER_H

@@ -292,6 +292,12 @@ void GameObject::ApplyEffect(const Effect& e)
       VisibilityRadius.Modifier = e.Power;
     }
     break;
+
+    case EffectType::FROZEN:
+    {
+      Attrs.Spd.Modifier += -e.Power;
+    }
+    break;
   }
 }
 
@@ -302,6 +308,12 @@ void GameObject::UnapplyEffect(const Effect& e)
     case EffectType::ILLUMINATED:
     {
       VisibilityRadius.Modifier = 0;
+    }
+    break;
+
+    case EffectType::FROZEN:
+    {
+      Attrs.Spd.Modifier -= -e.Power;
     }
     break;
   }

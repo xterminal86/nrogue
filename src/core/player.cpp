@@ -16,7 +16,13 @@ void Player::Init()
 
   PosX = Map::Instance().CurrentLevel->LevelStart.X;
   PosY = Map::Instance().CurrentLevel->LevelStart.Y;
+
   Image = '@';
+
+  #ifdef USE_SDL
+  Image = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
+  #endif
+
   FgColor = GlobalConstants::PlayerColor;
   Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
@@ -707,7 +713,7 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
     }
   }
 
-  if (!suppressLog)
+  if (!suppressLog && !logMsg.empty())
   {
     Printer::Instance().AddMessage(logMsg);
   }

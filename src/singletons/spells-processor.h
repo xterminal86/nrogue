@@ -1,12 +1,12 @@
-#ifndef EFFECTSPROCESSOR_H
-#define EFFECTSPROCESSOR_H
+#ifndef SPELLSPROCESSOR_H
+#define SPELLSPROCESSOR_H
 
 #include "singleton.h"
 
 class Player;
 class ItemComponent;
 
-class EffectsProcessor : public Singleton<EffectsProcessor>
+class SpellsProcessor : public Singleton<SpellsProcessor>
 {
   public:
     void Init() override;
@@ -29,4 +29,4 @@ class EffectsProcessor : public Singleton<EffectsProcessor>
     Player* _playerRef = nullptr;
 };
 
-#endif // EFFECTSPROCESSOR_H
+#endif // SPELLSPROCESSOR_H
