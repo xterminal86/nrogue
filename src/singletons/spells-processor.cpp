@@ -66,6 +66,10 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll)
       ProcessScrollOfTownPortal(scroll);
       break;
 
+    case SpellType::TELEPORT:
+      ProcessScrollOfTeleport(scroll);
+      break;
+
     default:
       Printer::Instance().AddMessage("...but nothing happens.");
       break;
@@ -417,5 +421,31 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
     Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos);
 
     Printer::Instance().AddMessage("You are suddenly transported elsewhere!");
+  }
+}
+
+void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll)
+{
+  auto& mapRef = Map::Instance().CurrentLevel;
+
+  // TODO: blessed scroll of teleport - what to do?
+
+  if (scroll->Data.Prefix == ItemPrefix::UNCURSED
+   || scroll->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    Printer::Instance().AddMessage("You are suddenly transported elsewhere!");
+
+    int index = RNG::Instance().RandomRange(0, mapRef->EmptyCells().size());
+    auto pos = mapRef->EmptyCells()[index];
+    Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos);
+  }
+  else if (scroll->Data.Prefix == ItemPrefix::CURSED)
+  {
+    Printer::Instance().AddMessage("You are suddenly transported elsewhere!");
+
+    int rx = RNG::Instance().RandomRange(1, mapRef->MapSize.X);
+    int ry = RNG::Instance().RandomRange(1, mapRef->MapSize.Y);
+    Position pos = { rx, ry };
+    Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos);
   }
 }
