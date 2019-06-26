@@ -71,6 +71,16 @@ class MapLevelBase
       return _respawnCounter;
     }
 
+    const Position& TownPortalPos()
+    {
+      return _townPortalPos;
+    }
+
+    const std::vector<Position>& EmptyCells()
+    {
+      return _emptyCells;
+    }
+
     bool IsCellBlocking(const Position& pos);
 
   protected:
@@ -94,6 +104,8 @@ class MapLevelBase
     void CreateInitialMonsters();
 
     void PlaceGrassTile(int x, int y, int freq = 10);
+
+    Position _townPortalPos;
 };
 
 #endif // MAPLEVEL_H

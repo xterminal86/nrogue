@@ -142,7 +142,7 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
       ".......",
       ".#~t~#.",
       ".~~t~~.",
-      ".ttttt.",
+      ".ttPtt.",
       ".~~t~~.",
       ".#~t~#.",
       ".......",
@@ -665,10 +665,12 @@ void MapLevelTown::CreateNPCs()
         }
 
         bool isBlocking = IsCellBlocking({ x, y });
+        bool isSpecial = MapArray[x][y]->Special;
 
         // Also avoid water tiles
         // or NPC may spawn inside walled fountain.
-        if (!alreadyAdded && !isBlocking && MapArray[x][y]->Image != '~')
+        if (!alreadyAdded && !isBlocking
+         && !isSpecial && MapArray[x][y]->Image != '~')
         {
           emptyCells.push_back(Position(x, y));
         }
@@ -789,8 +791,17 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
           PlaceGrassTile(posX, posY, 30);
           break;
 
-        case 't':
+        case 'P':
         {
+          _townPortalPos.Set(posX, posY);
+          t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::StoneColor, "Stone Tiles");
+          MapArray[posX][posY]->MakeTile(t);
+          MapArray[posX][posY]->Special = true;
+        }
+        break;
+
+        case 't':
+        {            
           t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::StoneColor, "Stone Tiles");
           MapArray[posX][posY]->MakeTile(t);
           MapArray[posX][posY]->Special = true;

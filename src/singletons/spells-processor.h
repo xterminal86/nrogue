@@ -24,6 +24,7 @@ class SpellsProcessor : public Singleton<SpellsProcessor>
     void ProcessScrollOfIdentify(ItemComponent* scroll);
     void ProcessScrollOfRepair(ItemComponent* scroll);
     void ProcessScrollOfDetectMonsters(ItemComponent* scroll);
+    void ProcessScrollOfTownPortal(ItemComponent* scroll);
 
     Player* _playerRef = nullptr;
 };

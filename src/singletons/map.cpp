@@ -324,12 +324,14 @@ void Map::TeleportToExistingLevel(MapType levelToChange, const Position& telepor
   auto& mapRef = CurrentLevel->MapArray[teleportTo.X][teleportTo.Y];
   auto& soRef = CurrentLevel->StaticMapObjects[teleportTo.X][teleportTo.Y];
 
-  bool tpToWall = (mapRef->Blocking || soRef->Blocking);
+  bool tpToWall = (mapRef->Blocking || (soRef != nullptr && soRef->Blocking));
 
   auto actor = GetActorAtPosition(teleportTo.X, teleportTo.Y);
   bool tpOccupied = (actor != nullptr);
 
-  std::string tpTo = mapRef->Blocking ? mapRef->ObjectName : soRef->ObjectName;
+  std::string tpTo = mapRef->Blocking ?
+                     mapRef->ObjectName :
+                     (soRef != nullptr ? soRef->ObjectName : "unknown");
 
   if (tpToWall)
   {

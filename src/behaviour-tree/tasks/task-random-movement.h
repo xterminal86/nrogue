@@ -4,6 +4,7 @@
 #include "behaviour-tree.h"
 
 #include "rng.h"
+#include "map.h"
 
 class TaskRandomMovement : public Node
 {
@@ -21,7 +22,10 @@ class TaskRandomMovement : public Node
       dx *= signX;
       dy *= signY;
 
-      return _objectToControl->Move(dx, dy);
+      Position newPos = { _objectToControl->PosX + dx, _objectToControl->PosY + dy };
+      bool isOk = !Map::Instance().CurrentLevel->MapArray[newPos.X][newPos.Y]->Special;
+
+      return (isOk && _objectToControl->Move(dx, dy));
     }
 };
 

@@ -254,7 +254,7 @@ void MapLevelBase::DisplayWelcomeText()
 
 bool MapLevelBase::IsCellBlocking(const Position& pos)
 {
-  bool groundBlock = (MapArray[pos.X][pos.Y]->Blocking || MapArray[pos.X][pos.Y]->Special);
+  bool groundBlock = (MapArray[pos.X][pos.Y]->Blocking);
   if (StaticMapObjects[pos.X][pos.Y] != nullptr)
   {
     bool staticObjectsBlock = StaticMapObjects[pos.X][pos.Y]->Blocking;

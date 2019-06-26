@@ -147,6 +147,7 @@ enum class GameObjectType
   PLAYER,
   GROUND,
   PICKAXEABLE,
+  TRAP,
   RAT,
   BAT,
   SPIDER,
@@ -241,7 +242,7 @@ enum class ItemType
   WAND,
   SPELLBOOK,
   REPAIR_KIT,
-  RANGED_WEAPON,
+  RANGED_WEAPON,  
   ARROWS
 };
 

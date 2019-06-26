@@ -3,6 +3,7 @@
 #include "application.h"
 #include "printer.h"
 #include "map.h"
+#include "town-portal-component.h"
 
 void SpellsProcessor::Init()
 {
@@ -59,6 +60,10 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll)
 
     case SpellType::DETECT_MONSTERS:
       ProcessScrollOfDetectMonsters(scroll);
+      break;
+
+    case SpellType::TOWN_PORTAL:
+      ProcessScrollOfTownPortal(scroll);
       break;
 
     default:
@@ -342,7 +347,7 @@ void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
   _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration, false, true);
 }
 
-void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent *scroll)
+void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
 {
   int playerPow = _playerRef->Attrs.Mag.Get();
   if (playerPow <= 0)
@@ -369,4 +374,48 @@ void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent *scroll)
   Printer::Instance().AddMessage("You can sense nearby creatures");
 
   _playerRef->AddEffect(EffectType::INFRAVISION, power, duration, false, true);
+}
+
+void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
+{
+  auto lvl = Map::Instance().GetLevelRefByType(MapType::TOWN);
+  if (scroll->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    Position tpPos = lvl->TownPortalPos();
+    std::vector<Position> posToAppear =
+    {
+      { tpPos.X - 1, tpPos.Y },
+      { tpPos.X + 1, tpPos.Y },
+      { tpPos.X, tpPos.Y - 1 },
+      { tpPos.X, tpPos.Y + 1 },
+    };
+
+    int index = RNG::Instance().RandomRange(0, posToAppear.size());
+    Position res = posToAppear[index];
+
+    GameObject* portal = new GameObject(lvl, tpPos.X, tpPos.Y, 'O', "#FFFFFF", "#0000FF");
+
+    portal->BlocksSight = true;
+    portal->ObjectName = "Town Portal";
+
+    TownPortalComponent* tpc = portal->AddComponent<TownPortalComponent>();
+    tpc->SavePosition(Map::Instance().CurrentLevel->MapType_, { _playerRef->PosX, _playerRef->PosY });
+
+    lvl->InsertGameObject(portal);
+
+    Map::Instance().TeleportToExistingLevel(MapType::TOWN, res);
+  }
+  else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
+  {
+    Map::Instance().TeleportToExistingLevel(MapType::TOWN, lvl->TownPortalPos());
+  }
+  else if (scroll->Data.Prefix == ItemPrefix::CURSED)
+  {
+    auto& mapRef = Map::Instance().CurrentLevel;
+    int index = RNG::Instance().RandomRange(0, mapRef->EmptyCells().size());
+    auto pos = mapRef->EmptyCells()[index];
+    Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos);
+
+    Printer::Instance().AddMessage("You are suddenly transported elsewhere!");
+  }
 }

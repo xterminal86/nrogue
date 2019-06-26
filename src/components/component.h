@@ -19,6 +19,7 @@ class Component
 
     size_t Hash();
 
+    // Automatically assigned in GameObject::AddComponent()
     GameObject* OwnerGameObject;
 
   protected:
