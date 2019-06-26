@@ -128,9 +128,7 @@ void MainState::HandleInput()
       CheckStairs('<');
       break;
 
-    #ifndef RELEASE_BUILD
-
-    // ***** FIXME: for debug, remove afterwards
+    #ifdef DEBUG_BUILD
 
     case 'L':
       _playerRef->LevelUp();
@@ -152,8 +150,6 @@ void MainState::HandleInput()
       Update(true);
     }
     break;
-
-    // *****
 
     #endif
 
@@ -198,11 +194,9 @@ void MainState::Update(bool forceUpdate)
     _debugInfo = Util::StringFormat("World seed: %lu", RNG::Instance().Seed);
     Printer::Instance().PrintFB(0, 0, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
-    // FIXME: print some debug info on the screen
-
+    #ifdef DEBUG_BUILD
     PrintDebugInfo();
-
-    // *****
+    #endif
 
     Printer::Instance().Render();
   }

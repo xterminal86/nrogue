@@ -326,6 +326,7 @@ enum class SpellType
   IDENTIFY,
   MAGIC_MAPPING,  
   TELEPORT,        // TODO: teleport control?
+  TOWN_PORTAL,
   DETECT_MONSTERS, // shows monsters (not all?), temporary
   REMOVE_CURSE,
   REPAIR,
@@ -867,44 +868,19 @@ namespace GlobalConstants
     { SpellType::MAGIC_MISSILE, 25  }
   };
 
-  static const std::map<SpellType, std::string> SpellProjectileColorByType =
+  static const std::vector<SpellType> ScrollValidSpellTypes =
   {
-    { SpellType::STRIKE,        "#FFFFFF" },
-    { SpellType::FROST,         "#4444FF" },
-    { SpellType::FIREBALL,      "#FFFF00" },
-    { SpellType::LIGHTNING,     "#FFFFFF" },
-    { SpellType::MAGIC_MISSILE, "#FFA500" }
-  };
-
-  static const std::map<SpellType, std::pair<int, int>> SpellBaseDamageByType =
-  {
-    { SpellType::STRIKE,        { 1, 4  } },
-    { SpellType::FROST,         { 1, 4  } },
-    { SpellType::FIREBALL,      { 2, 8  } },
-    { SpellType::LASER,         { 3, 10 } },
-    { SpellType::LIGHTNING,     { 2, 6  } },
-    { SpellType::MAGIC_MISSILE, { 1, 6  } },
-    { SpellType::HEAL,          { 1, 8  } }
-  };
-
-  static const std::map<SpellType, std::string> SpellNameByType =
-  {
-    { SpellType::STRIKE,            "Striking"          },
-    { SpellType::MAGIC_MISSILE,     "Magic Missile"     },
-    { SpellType::FROST,             "Frost"             },
-    { SpellType::FIREBALL,          "Fireball"          },
-    { SpellType::LIGHTNING,         "Lightning"         },
-    { SpellType::LASER,             "Piercing"          },
-    { SpellType::LIGHT,             "Light"             },
-    { SpellType::IDENTIFY,          "Identify"          },
-    { SpellType::MAGIC_MAPPING,     "Magic Mapping"     },
-    { SpellType::TELEPORT,          "Teleportation"     },
-    { SpellType::DETECT_MONSTERS,   "Detect Monsters"   },
-    { SpellType::REMOVE_CURSE,      "Remove Curse"      },
-    { SpellType::REPAIR,            "Repair"            },
-    { SpellType::HEAL,              "Healing"           },
-    { SpellType::NEUTRALIZE_POISON, "Neutralize Poison" },
-    { SpellType::MANA_SHIELD,       "Mana Shield"       }
+    SpellType::LIGHT,
+    SpellType::IDENTIFY,
+    SpellType::MAGIC_MAPPING,
+    SpellType::TELEPORT,
+    SpellType::DETECT_MONSTERS,
+    SpellType::REMOVE_CURSE,
+    SpellType::REPAIR,
+    SpellType::TOWN_PORTAL,
+    SpellType::HEAL,
+    SpellType::NEUTRALIZE_POISON,
+    SpellType::MANA_SHIELD,
   };
 
   // Not including combat spells
@@ -916,64 +892,11 @@ namespace GlobalConstants
     "ZELGO MER",
     "LOREM IPSUM",
     "GHOTI",
+    "LALIHO",
     "SHAN DONG",
     "SUIL A RUIN",
     "DULAMAN GAELACH",
     "KOBAYASHI MARU"
-  };
-
-  static const std::vector<SpellType> ScrollValidSpellTypes =
-  {
-    SpellType::LIGHT,
-    SpellType::IDENTIFY,
-    SpellType::MAGIC_MAPPING,
-    SpellType::TELEPORT,
-    SpellType::DETECT_MONSTERS,
-    SpellType::REMOVE_CURSE,
-    SpellType::REPAIR,
-    SpellType::HEAL,
-    SpellType::NEUTRALIZE_POISON,
-    SpellType::MANA_SHIELD,
-  };
-
-  // TODO: spellbooks cost calculation
-  static const std::map<SpellType, int> SpellBaseCostByType =
-  {
-    { SpellType::LIGHT,              10  },
-    { SpellType::STRIKE,             25  },
-    { SpellType::FROST,              50  },
-    { SpellType::FIREBALL,           100 },
-    { SpellType::LASER,              150 },
-    { SpellType::LIGHTNING,          100 },
-    { SpellType::MAGIC_MISSILE,      25  },
-    { SpellType::IDENTIFY,           100 },
-    { SpellType::MAGIC_MAPPING,      80  },
-    { SpellType::TELEPORT,           100 },
-    { SpellType::DETECT_MONSTERS,    80  },
-    { SpellType::REMOVE_CURSE,       200 },
-    { SpellType::HEAL,               100 },
-    { SpellType::NEUTRALIZE_POISON,  50  },
-    { SpellType::MANA_SHIELD,        200 },
-  };
-
-  static const std::map<SpellType, std::string> SpellShortNameByType =
-  {
-    { SpellType::LIGHT,             "L"   },
-    { SpellType::STRIKE,            "S"   },
-    { SpellType::FROST,             "F"   },
-    { SpellType::FIREBALL,          "Fl"  },
-    { SpellType::LASER,             "P"   },
-    { SpellType::LIGHTNING,         "Lg"  },
-    { SpellType::MAGIC_MISSILE,     "MM"  },
-    { SpellType::IDENTIFY,          "I"   },
-    { SpellType::MAGIC_MAPPING,     "Mg"  },
-    { SpellType::TELEPORT,          "T"   },
-    { SpellType::DETECT_MONSTERS,   "DM"  },
-    { SpellType::REMOVE_CURSE,      "RC"  },
-    { SpellType::REPAIR,            "R"   },
-    { SpellType::HEAL,              "H"   },
-    { SpellType::NEUTRALIZE_POISON, "NP"  },
-    { SpellType::MANA_SHIELD,       "MS"  }
   };
 
   static const std::map<WandMaterials, std::pair<std::string, std::string>> WandColorsByMaterial =

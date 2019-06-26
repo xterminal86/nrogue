@@ -17,6 +17,7 @@
 #include "application.h"
 #include "game-object-info.h"
 #include "spells-processor.h"
+#include "spells-database.h"
 
 void GameObjectsFactory::Init()
 {
@@ -885,14 +886,22 @@ bool GameObjectsFactory::FoodUseHandler(ItemComponent* item)
 
   if (item->Data.Prefix == ItemPrefix::CURSED)
   {
-    Printer::Instance().AddMessage("You feel even more hungry!");
+    Printer::Instance().AddMessage("Disgusting!");
 
-    _playerRef->Attrs.Hunger += item->Data.Cost;
-
-    // FIXME: duration of food poisoning.
     if (Util::Rolld100(50))
+    {      
+      _playerRef->Attrs.Hunger += item->Data.Cost;
+
+      Printer::Instance().AddMessage("Rotten food!");
+
+      // NOTE: assuming player hunger meter is in order of 1000
+      int dur = item->Data.Cost / 100;
+
+      _playerRef->AddEffect(EffectType::POISONED, 1, dur, true, true);
+    }
+    else
     {
-      _playerRef->AddEffect(EffectType::POISONED, 1, 20, true, true);
+      _playerRef->Attrs.Hunger -= item->Data.Cost * 0.5f;
     }
   }
   else if (item->Data.Prefix == ItemPrefix::BLESSED)
@@ -949,11 +958,13 @@ GameObject* GameObjectsFactory::CreateRandomScroll(ItemPrefix prefix)
 
 GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix prefixOverride)
 {
+  SpellInfo* si = SpellsDatabase::Instance().GetInfo(type);
+
   if (std::find(GlobalConstants::ScrollValidSpellTypes.begin(),
                 GlobalConstants::ScrollValidSpellTypes.end(),
                 type) == GlobalConstants::ScrollValidSpellTypes.end())
   {
-    std::string name = GlobalConstants::SpellNameByType.at(type);
+    std::string name = si->SpellName;
     printf("[WARNING] Trying to create a scroll with invalid spell (%s)!\n", name.data());
     return nullptr;
   }
@@ -965,7 +976,7 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
   go->FgColor = "#000000";
   go->BgColor = "#FFFFFF";
   go->Image = '?';
-  go->ObjectName = "\"" + GlobalConstants::SpellNameByType.at(type) + "\"";
+  go->ObjectName = "\"" + si->SpellName + "\"";
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -976,11 +987,14 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
   ic->Data.IsStackable = false;
   ic->Data.SpellHeld = type;
 
+  // NOTE: scrolls cost = base * 2, spellbooks = base * 10
+  ic->Data.Cost = si->SpellBaseCost * 2;
+
   ic->Data.UnidentifiedName = "\"" + _gameScrollsMap[type].ScrollName + "\"";
   ic->Data.UnidentifiedDescription = { "Who knows what will happen if you read these words aloud..." };
 
   ic->Data.IdentifiedDescription = { "TODO:" };
-  ic->Data.IdentifiedName = "Scroll of " + GlobalConstants::SpellNameByType.at(type);
+  ic->Data.IdentifiedName = "Scroll of " + si->SpellName;
 
   SetItemName(go, ic->Data);
 
@@ -1234,10 +1248,12 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
+  SpellInfo* si = SpellsDatabase::Instance().GetInfo(spellType);
+
   auto wandColorPair = GlobalConstants::WandColorsByMaterial.at(material);
   std::string wandMaterialName = GlobalConstants::WandMaterialNamesByMaterial.at(material);
-  std::string spellName = GlobalConstants::SpellNameByType.at(spellType);
-  std::string spellShortName = GlobalConstants::SpellShortNameByType.at(spellType);
+  std::string spellName = si->SpellName;
+  std::string spellShortName = si->SpellShortName;
 
   go->PosX = x;
   go->PosY = y;
@@ -1282,7 +1298,7 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
   ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
 
   // Actual cost is going to be calculated in GetCost()
-  ic->Data.Cost = GlobalConstants::SpellBaseCostByType.at(spellType);
+  ic->Data.Cost = si->SpellBaseCost;
 
   ic->Data.UnidentifiedName = "?" + wandMaterialName + " Wand?";
   ic->Data.IdentifiedName = wandMaterialName + " Wand of " + spellName;

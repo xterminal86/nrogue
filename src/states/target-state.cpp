@@ -4,6 +4,7 @@
 #include "printer.h"
 #include "map.h"
 #include "ai-component.h"
+#include "spells-database.h"
 
 void TargetState::Init()
 {
@@ -351,9 +352,10 @@ void TargetState::FireWeapon()
   if (isWand)
   {
     SpellType spell = _weaponRef->Data.SpellHeld;
-    if (GlobalConstants::SpellProjectileColorByType.count(spell) != 0)
+    SpellInfo* si = SpellsDatabase::Instance().GetInfo(spell);
+    if (!si->SpellProjectileColor.empty())
     {
-      projColor = GlobalConstants::SpellProjectileColorByType.at(spell);
+      projColor = si->SpellProjectileColor;
     }
   }
 

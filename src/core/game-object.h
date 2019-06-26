@@ -96,6 +96,9 @@ class GameObject
     int PosX = 0;
     int PosY = 0;
 
+    // e.g., to disallow walking into a tile for NPC
+    bool Special = false;
+
     bool Blocking = false;
     bool BlocksSight = false;
     bool Revealed = false;
@@ -119,7 +122,7 @@ class GameObject
 
     size_t ComponentsSize();
 
-    void ReceiveDamage(GameObject* from, int amount, bool isMagical);
+    void ReceiveDamage(GameObject* from, int amount, bool isMagical, const std::string& logMsgOverride = std::string());
     void FinishTurn();
     void WaitForTurn();
 

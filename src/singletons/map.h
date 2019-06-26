@@ -35,6 +35,7 @@ class Map : public Singleton<Map>
 
     GameObject* GetActorAtPosition(int x, int y);
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
+    std::vector<GameObject*> GetActorsInRange(int range);
     std::pair<int, GameObject*> GetGameObjectToPickup(int x, int y);
     MapLevelBase* GetLevelRefByType(MapType type);
 
@@ -51,6 +52,8 @@ class Map : public Singleton<Map>
     void ShowLoadingText();
     void DrawNonVisibleMapTile(int x, int y);
     void DrawNonVisibleStaticObject(int x, int y);
+
+    Player* _playerRef;
 };
 
 #endif

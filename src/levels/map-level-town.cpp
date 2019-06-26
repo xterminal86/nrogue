@@ -135,6 +135,17 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
       "#####..~WWW~..#####",
       "........~~~........",
       "T.T.T.T.T.T.T.T.T.T",
+    },
+    // Portal square
+    // 9
+    {
+      ".......",
+      ".#~t~#.",
+      ".~~t~~.",
+      ".ttttt.",
+      ".~~t~~.",
+      ".#~t~#.",
+      ".......",
     }
   };
 }
@@ -167,7 +178,6 @@ void MapLevelTown::CreateLevel()
     InsertStaticObject(pos.X, pos.Y, t);
   }
 
-  // FIXME: experimental
   ReplaceGroundWithGrass();
 
   LevelStart.X = 5;
@@ -207,6 +217,8 @@ void MapLevelTown::CreateLevel()
   CreateChurch(63, 15);
 
   PlaceGarden(33, 20);
+
+  PlacePortalSquare(22, 21);
 
   CreateTownGates();
 
@@ -740,6 +752,50 @@ void MapLevelTown::PlaceGarden(int x, int y)
           t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Fountain");
           InsertStaticObject(posX, posY, t);
           break;
+      }
+
+      posX++;
+    }
+
+    posX = x;
+    posY++;
+  }
+}
+
+void MapLevelTown::PlacePortalSquare(int x, int y)
+{
+  int posX = x;
+  int posY = y;
+
+  GameObjectInfo t;
+
+  for (auto& row : _layoutsForLevel[9])
+  {
+    for (auto& c : row)
+    {
+      switch (c)
+      {
+        case '#':
+          t.Set(true, true, c, GlobalConstants::StoneColor, GlobalConstants::DeepWaterColor, "Stone Column");
+          InsertStaticObject(posX, posY, t);
+          break;
+
+        case '~':
+          t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
+          MapArray[posX][posY]->MakeTile(t);
+          break;
+
+        case '.':
+          PlaceGrassTile(posX, posY, 30);
+          break;
+
+        case 't':
+        {
+          t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::StoneColor, "Stone Tiles");
+          MapArray[posX][posY]->MakeTile(t);
+          MapArray[posX][posY]->Special = true;
+        }
+        break;
       }
 
       posX++;

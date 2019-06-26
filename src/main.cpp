@@ -10,6 +10,7 @@
 #include "application.h"
 #include "spells-processor.h"
 #include "game-objects-factory.h"
+#include "spells-database.h"
 #include "map.h"
 #include "util.h"
 #include "rng.h"
@@ -68,11 +69,12 @@ int main(int argc, char* argv[])
 
   GameObjectsFactory::Instance().Init();
 
+  SpellsDatabase::Instance().Init();
+  SpellsProcessor::Instance().Init();
+
   Application::Instance().Init();
 
   Map::Instance().Init();
-
-  SpellsProcessor::Instance().Init();
 
   Application::Instance().Run();
   Application::Instance().Cleanup();

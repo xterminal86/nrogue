@@ -14,8 +14,6 @@ class SpellsProcessor : public Singleton<SpellsProcessor>
     void ProcessWand(ItemComponent* wand);
     void ProcessScroll(ItemComponent* scroll);
 
-    void IlluminatePlayer(int pow, int dur);
-
   private:
     void ProcessWandOfLight(ItemComponent* wand);
 
@@ -25,6 +23,7 @@ class SpellsProcessor : public Singleton<SpellsProcessor>
     void ProcessScrollOfNeutralizePoison(ItemComponent* scroll);
     void ProcessScrollOfIdentify(ItemComponent* scroll);
     void ProcessScrollOfRepair(ItemComponent* scroll);
+    void ProcessScrollOfDetectMonsters(ItemComponent* scroll);
 
     Player* _playerRef = nullptr;
 };

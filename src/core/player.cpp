@@ -9,6 +9,7 @@
 #include "ai-npc.h"
 #include "application.h"
 #include "item-component.h"
+#include "spells-database.h"
 
 void Player::Init()
 {
@@ -26,9 +27,6 @@ void Player::Init()
   FgColor = GlobalConstants::PlayerColor;
   Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
-  // FIXME: debug
-  //Money = 1000;
-
   Inventory.MaxCapacity = GlobalConstants::InventoryMaxSize;
 
   SetAttributes();
@@ -41,6 +39,7 @@ void Player::Init()
   _currentCell->Occupied = true;
 
   // FIXME: debug
+  //Money = 10000;
   //Attrs.HungerRate.Set(0);
 }
 
@@ -431,7 +430,9 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
 {
   with->Data.Amount--;
 
-  auto baseDamagePair = GlobalConstants::SpellBaseDamageByType.at(with->Data.SpellHeld);
+  SpellInfo* si = SpellsDatabase::Instance().GetInfo(with->Data.SpellHeld);
+
+  auto baseDamagePair = si->SpellBaseDamage;
 
   int bonus = Attrs.Mag.Get();
 
@@ -1255,7 +1256,7 @@ void Player::ProcessHunger()
       Printer::Instance().AddMessage("You are starving!");
 
       // Yes, hunger damage is magical. Deal with it.
-      ReceiveDamage(nullptr, 1, true);
+      ReceiveDamage(nullptr, 1, true, false, true);
     }
 
     IsStarving = true;
@@ -1287,6 +1288,8 @@ void Player::SetDefaultItems()
 
 void Player::SetSoldierDefaultItems()
 {
+  Money = 500;
+
   auto go = GameObjectsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
   ItemComponent* ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 3;
@@ -1307,7 +1310,7 @@ void Player::SetSoldierDefaultItems()
 
 void Player::SetThiefDefaultItems()
 {
-  Money = 100;
+  Money = 1000;
 
   auto go = GameObjectsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
   Inventory.AddToInventory(go);
@@ -1318,6 +1321,8 @@ void Player::SetThiefDefaultItems()
 
 void Player::SetArcanistDefaultItems()
 {
+  Money = 250;
+
   auto go = GameObjectsFactory::Instance().CreateManaPotion(ItemPrefix::BLESSED);
   auto c = go->GetComponent<ItemComponent>();
   ItemComponent* ic = static_cast<ItemComponent*>(c);

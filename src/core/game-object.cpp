@@ -52,7 +52,7 @@ bool GameObject::Move(int dx, int dy)
   int ny = PosY + dy;
 
   bool isBlocked = Map::Instance().CurrentLevel->IsCellBlocking({ nx, ny });  
-  bool isOccupied = Map::Instance().CurrentLevel->MapArray[nx][ny]->Occupied;
+  bool isOccupied = Map::Instance().CurrentLevel->MapArray[nx][ny]->Occupied;  
   if (!isBlocked && !isOccupied)
   {
     MoveGameObject(dx, dy);
@@ -65,7 +65,7 @@ bool GameObject::Move(int dx, int dy)
 bool GameObject::MoveTo(int x, int y)
 {
   bool isBlocked = Map::Instance().CurrentLevel->IsCellBlocking({ x, y });
-  bool isOccupied = Map::Instance().CurrentLevel->MapArray[x][y]->Occupied;
+  bool isOccupied = Map::Instance().CurrentLevel->MapArray[x][y]->Occupied;  
   if (!isBlocked && !isOccupied)
   {
     // When we change level, previous position (PosX and PosY)
@@ -129,7 +129,7 @@ void GameObject::MakeTile(const GameObjectInfo& t)
   Type = GameObjectType::GROUND;
 }
 
-void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical)
+void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, const std::string& logMsgOverride)
 {  
   // TODO: isMagical for enemies' armor damage
 
@@ -138,7 +138,8 @@ void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical)
     Attrs.HP.CurrentValue -= amount;
 
     auto str = Util::StringFormat("%s was hit for %i damage", ObjectName.data(), amount);
-    Printer::Instance().AddMessage(str);
+
+    Printer::Instance().AddMessage((logMsgOverride.length() == 0) ? str : logMsgOverride);
 
     if (!IsAlive())
     {
@@ -287,6 +288,7 @@ void GameObject::ApplyEffect(const Effect& e)
 {
   switch (e.Type)
   {
+    case EffectType::INFRAVISION:
     case EffectType::ILLUMINATED:
     {
       VisibilityRadius.Modifier = e.Power;
@@ -305,6 +307,7 @@ void GameObject::UnapplyEffect(const Effect& e)
 {
   switch (e.Type)
   {
+    case EffectType::INFRAVISION:
     case EffectType::ILLUMINATED:
     {
       VisibilityRadius.Modifier = 0;
@@ -315,7 +318,7 @@ void GameObject::UnapplyEffect(const Effect& e)
     {
       Attrs.Spd.Modifier -= -e.Power;
     }
-    break;
+    break;    
   }
 }
 
@@ -361,13 +364,13 @@ void GameObject::EffectAction(const Effect& e)
 {
   switch (e.Type)
   {
-    case EffectType::POISONED:
+    case EffectType::POISONED:      
       Attrs.HP.Add(-e.Power);
       break;
 
     case EffectType::REGEN:
       Attrs.HP.Add(e.Power);
-      break;
+      break;    
   }
 }
 

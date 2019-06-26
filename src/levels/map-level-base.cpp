@@ -191,7 +191,7 @@ void MapLevelBase::CreateInitialMonsters()
       auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
 
       // FIXME: debug
-      //res = { GameObjectType::BAT, 1 };
+      //res = { GameObjectType::SPIDER, 1 };
 
       auto monster = GameObjectsFactory::Instance().CreateMonster(x, y, res.first);
       InsertActor(monster);
@@ -254,7 +254,7 @@ void MapLevelBase::DisplayWelcomeText()
 
 bool MapLevelBase::IsCellBlocking(const Position& pos)
 {
-  bool groundBlock = MapArray[pos.X][pos.Y]->Blocking;  
+  bool groundBlock = (MapArray[pos.X][pos.Y]->Blocking || MapArray[pos.X][pos.Y]->Special);
   if (StaticMapObjects[pos.X][pos.Y] != nullptr)
   {
     bool staticObjectsBlock = StaticMapObjects[pos.X][pos.Y]->Blocking;

@@ -57,6 +57,10 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll)
       ProcessScrollOfRepair(scroll);
       break;
 
+    case SpellType::DETECT_MONSTERS:
+      ProcessScrollOfDetectMonsters(scroll);
+      break;
+
     default:
       Printer::Instance().AddMessage("...but nothing happens.");
       break;
@@ -257,7 +261,7 @@ void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
     wand->Data.IsIdentified = true;
   }
 
-  IlluminatePlayer(power, duration);
+  _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration, false, true);
 }
 
 void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll)
@@ -335,10 +339,34 @@ void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
     Printer::Instance().AddMessage("You are surrounded by darkness!");
   }
 
-  IlluminatePlayer(power, duration);
+  _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration, false, true);
 }
 
-void SpellsProcessor::IlluminatePlayer(int pow, int dur)
+void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent *scroll)
 {
-  _playerRef->AddEffect(EffectType::ILLUMINATED, pow, dur, false, true);
+  int playerPow = _playerRef->Attrs.Mag.Get();
+  if (playerPow <= 0)
+  {
+    playerPow = 1;
+  }
+
+  int power = 10 + playerPow * 2;
+  int duration = 20 + playerPow * 2;
+
+  if (scroll->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    duration *= 2;
+    power *= 2;
+  }
+  else if (scroll->Data.Prefix == ItemPrefix::CURSED)
+  {
+    // TODO: what else to do with player?
+
+    duration /= 2;
+    power /= 2;
+  }
+
+  Printer::Instance().AddMessage("You can sense nearby creatures");
+
+  _playerRef->AddEffect(EffectType::INFRAVISION, power, duration, false, true);
 }

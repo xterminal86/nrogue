@@ -34,6 +34,8 @@ void Map::Init()
   _mapVisitFirstTime[MapType::ABYSS_1] = false;
   _mapVisitFirstTime[MapType::NETHER_1] = false;
   _mapVisitFirstTime[MapType::THE_END] = false;  
+
+  _playerRef = &Application::Instance().PlayerInstance;
 }
 
 void Map::Draw(int playerX, int playerY)
@@ -93,7 +95,8 @@ void Map::Draw(int playerX, int playerY)
     int x = go->PosX;
     int y = go->PosY;
 
-    if (CurrentLevel->MapArray[x][y]->Visible)
+    if (_playerRef->HasEffect(EffectType::INFRAVISION)
+     || CurrentLevel->MapArray[x][y]->Visible)
     {
       // If game object has black bg color,
       // replace it with current floor color
@@ -193,6 +196,31 @@ std::vector<GameObject*> Map::GetGameObjectsAtPosition(int x, int y)
     if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
     {
       res.push_back(CurrentLevel->StaticMapObjects[x][y].get());
+    }
+  }
+
+  return res;
+}
+
+std::vector<GameObject*> Map::GetActorsInRange(int range)
+{
+  std::vector<GameObject*> res;
+
+  auto& playerRef = Application::Instance().PlayerInstance;
+
+  int lx = playerRef.PosX - range;
+  int ly = playerRef.PosY - range;
+  int hx = playerRef.PosX + range;
+  int hy = playerRef.PosY + range;
+
+  for (auto& a : CurrentLevel->ActorGameObjects)
+  {
+    if (a->PosX >= lx &&
+        a->PosY >= ly &&
+        a->PosX <= hx &&
+        a->PosY <= hy)
+    {
+      res.push_back(a.get());
     }
   }
 
