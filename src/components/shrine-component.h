@@ -22,6 +22,9 @@ class ShrineComponent : public Component
   private:
     void Activate();    
     void ProcessEffect();
+    void ApplyRandomEffect();
+    void ApplyRandomPositiveEffect();
+    void ApplyRandomNegativeEffect();
 };
 
 #endif // SHRINECOMPONENT_H

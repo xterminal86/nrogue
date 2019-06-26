@@ -373,7 +373,7 @@ void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
 
   Printer::Instance().AddMessage("You can sense nearby creatures");
 
-  _playerRef->AddEffect(EffectType::INFRAVISION, power, duration, false, true);
+  _playerRef->AddEffect(EffectType::TELEPATHY, power, duration, false, true);
 }
 
 void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)

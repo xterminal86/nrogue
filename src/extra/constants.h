@@ -924,11 +924,11 @@ namespace GlobalConstants
 
   static const std::map<ShrineType, std::string> ShrineSaintByType =
   {
-    { ShrineType::MIGHT,      "St. George the Soldier"     },
-    { ShrineType::SPIRIT,     "St. Mary the Mother"        },
-    { ShrineType::KNOWLEDGE,  "St. Nestor the Scribe"      },
-    { ShrineType::PERCEPTION, "St. Justin the Philosopher" },
-    { ShrineType::HEALING,    "St. Luke the Healer"        }
+    { ShrineType::MIGHT,       "St. George the Soldier"     },
+    { ShrineType::SPIRIT,      "St. Mary the Mother"        },
+    { ShrineType::KNOWLEDGE,   "St. Nestor the Scribe"      },
+    { ShrineType::PERCEPTION,  "St. Justin the Philosopher" },
+    { ShrineType::HEALING,     "St. Luke the Healer"        }
   };
 
   static const std::map<ShrineType, std::string> ShrineNameByType =

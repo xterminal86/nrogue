@@ -95,7 +95,7 @@ void Map::Draw(int playerX, int playerY)
     int x = go->PosX;
     int y = go->PosY;
 
-    if (_playerRef->HasEffect(EffectType::INFRAVISION)
+    if (_playerRef->HasEffect(EffectType::TELEPATHY)
      || CurrentLevel->MapArray[x][y]->Visible)
     {
       // If game object has black bg color,

@@ -288,7 +288,7 @@ void GameObject::ApplyEffect(const Effect& e)
 {
   switch (e.Type)
   {
-    case EffectType::INFRAVISION:
+    case EffectType::TELEPATHY:
     case EffectType::ILLUMINATED:
     {
       VisibilityRadius.Modifier = e.Power;
@@ -307,7 +307,7 @@ void GameObject::UnapplyEffect(const Effect& e)
 {
   switch (e.Type)
   {
-    case EffectType::INFRAVISION:
+    case EffectType::TELEPATHY:
     case EffectType::ILLUMINATED:
     {
       VisibilityRadius.Modifier = 0;

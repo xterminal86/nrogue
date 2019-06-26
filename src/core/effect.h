@@ -2,6 +2,7 @@
 #define EFFECT_H
 
 #include <map>
+#include <vector>
 
 enum class EffectType
 {
@@ -13,9 +14,9 @@ enum class EffectType
   REFLECT,      // Hurl offensive (NOTE: not only?) spell back at the attacker
   BURNING,      // Take damage each turn, gain illuminated
   FROZEN,       // SPD penalty
-  INFRAVISION,  // See actors in visibility radius through walls
+  TELEPATHY,    // See actors in visibility radius through walls
   BLINDNESS,    // Reduced visibility radius
-  INVISIBLE,    // Monsters can't see you (unless they can via infravision)
+  INVISIBLE,    // Monsters can't see you (unless they can via telepathy)
   LEVITATE      // Nuff said
 };
 
@@ -28,10 +29,29 @@ static const std::map<EffectType, std::string> EffectNameByType =
   { EffectType::REFLECT,     "Ref" },
   { EffectType::BURNING,     "Bur" },
   { EffectType::FROZEN,      "Frz" },
-  { EffectType::INFRAVISION, "Ifr" },
+  { EffectType::TELEPATHY,   "Tel" },
   { EffectType::BLINDNESS,   "Bli" },
   { EffectType::INVISIBLE,   "Hid" },
   { EffectType::LEVITATE,    "Lev" },
+};
+
+static const std::vector<EffectType> PositiveEffects =
+{
+  EffectType::ILLUMINATED,
+  EffectType::REGEN,
+  EffectType::REFLECT,
+  EffectType::TELEPATHY,
+  EffectType::INVISIBLE,
+  EffectType::LEVITATE
+};
+
+static const std::vector<EffectType> NegativeEffects =
+{
+  EffectType::PARALYZED,
+  EffectType::POISONED,
+  EffectType::BURNING,
+  EffectType::FROZEN,
+  EffectType::BLINDNESS
 };
 
 struct Effect
