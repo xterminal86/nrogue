@@ -280,7 +280,7 @@ void Player::SetThiefAttrs()
   Attrs.HP.Talents = 1;
 
   Attrs.Def.Set(1);
-  Attrs.Skl.Set(2);
+  Attrs.Skl.Set(3);
   Attrs.Spd.Set(3);
 
   Attrs.HP.Set(20);

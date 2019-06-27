@@ -12,7 +12,7 @@ class InfoState : public GameState
     void Update(bool forceUpdate = false) override;
 
   private:
-    void PrintAttribute(int x, int y, const std::string& attrName, const Attribute& attr, bool displayMaxValue = false);
+    void PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr, bool displayMaxValue = false);
     void PrintModifiers(int x, int y);
 
     int FindAttrsMaxStringLength();

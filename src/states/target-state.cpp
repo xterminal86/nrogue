@@ -359,6 +359,11 @@ void TargetState::FireWeapon()
     }
   }
 
+  // FIXME: in case player gained a level after firing a ranged weapon,
+  // message box state will be overridden by one of the
+  // ChangeState() calls below.
+  // Should either introduce a hack and display message box
+  // after those calls below, or refactor message box state.
   stoppedAt = LaunchProjectile(projectile, projColor);
   ProcessHit(stoppedAt);
 
@@ -566,7 +571,7 @@ int TargetState::CalculateChance(const Position& startPoint, const Position& end
 
   auto str = Util::StringFormat("Calculated hit chance: %i (SKL: %i, SKL bonus: %i, distance: -%i)",
                                 chance,
-                                _playerRef->Attrs.Skl.Get(),
+                                skl,
                                 (attackChanceScale * skl),
                                 (distanceChanceDrop * d));
   Logger::Instance().Print(str);

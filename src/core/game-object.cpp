@@ -448,8 +448,13 @@ void GameObject::LevelUp(int baseHpOverride)
   // HP and MP
 
   int baseHp = (baseHpOverride == -1) ? Attrs.HP.Talents : baseHpOverride;
-  int minRndHp = (baseHp + 1);
-  int maxRndHp = 2 * (baseHp + 1);
+  if (baseHp == 0)
+  {
+    baseHp = 1;
+  }
+
+  int minRndHp = baseHp;
+  int maxRndHp = 2 * baseHp;
 
   int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp);
   Attrs.HP.OriginalValue += hpToAdd;

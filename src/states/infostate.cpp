@@ -76,6 +76,7 @@ void InfoState::Update(bool forceUpdate)
 
     int maxLength = FindAttrsMaxStringLength();
 
+    // FIXME: experimental
     PrintModifiers(7 + maxLength, yPos + 3);
 
     // Skills
@@ -94,9 +95,18 @@ void InfoState::Update(bool forceUpdate)
   }
 }
 
-void InfoState::PrintAttribute(int x, int y, const std::string& attrName, const Attribute& attr, bool displayMaxValue)
+void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr, bool displayMaxValue)
 {
   std::string color = "#FFFFFF";
+
+  if (attr.Modifier > 0)
+  {
+    color = "#00FF00";
+  }
+  else if (attr.Modifier < 0)
+  {
+    color = "#FF0000";
+  }
 
   std::string text;
   if (displayMaxValue)
@@ -110,12 +120,16 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, const 
       text = Util::StringFormat("%s: %i", attrName.data(), attr.CurrentValue);
     }
     else
-    {
-      text = Util::StringFormat("%s: %i", attrName.data(), attr.OriginalValue);
+    {      
+      text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
     }
   }
 
   Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
+
+  // Replace stat name back with white color (kinda hack)
+  auto str = Util::StringFormat("%s:", attrName.data());
+  Printer::Instance().PrintFB(x, y, str, Printer::kAlignLeft, "#FFFFFF");
 }
 
 void InfoState::PrintModifiers(int x, int y)

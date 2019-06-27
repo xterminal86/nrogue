@@ -226,7 +226,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
 
     for (int i = 0; i < difficulty; i++)
     {
-      go->LevelUp(3);
+      go->LevelUp(2);
     }
 
     /*
@@ -337,7 +337,7 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
 
     for (int i = 0; i < difficulty; i++)
     {
-      go->LevelUp(5);
+      go->LevelUp(4);
     }
 
     /*

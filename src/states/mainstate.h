@@ -48,7 +48,7 @@ class MainState : public GameState
     Position _cursorPosition;
 
     std::vector<std::string> _helpText =
-    {
+    {      
       R"('q' - Cancel / Close menu     )",
       R"('a' - Attack                  )",
       R"('f' - Fire weapon / wand      )",
