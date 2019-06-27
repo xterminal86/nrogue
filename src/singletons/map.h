@@ -25,8 +25,7 @@ class Map : public Singleton<Map>
     void UpdateGameObjects();
 
     void ChangeLevel(MapType levelToChange, bool goingDown);
-    void TeleportToExistingLevel(MapType levelToChange, const Position& teleportTo);
-
+    void TeleportToExistingLevel(MapType levelToChange, const Position& teleportTo, GameObject* objectToTeleport = nullptr);
     void PrintMapArrayRevealedStatus();
     void PrintMapLayout();
 
@@ -41,6 +40,7 @@ class Map : public Singleton<Map>
 
     std::vector<Position> GetWalkableCellsAround(const Position& pos);
     std::vector<MapType> GetAllVisitedLevels();
+    Position GetRandomEmptyCell();
 
     MapLevelBase* CurrentLevel;
 

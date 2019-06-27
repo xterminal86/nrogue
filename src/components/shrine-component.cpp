@@ -303,7 +303,14 @@ void ShrineComponent::ApplyRandomPositiveEffect()
   int effectIndex = RNG::Instance().RandomRange(0, PositiveEffects.size());
   EffectType e = PositiveEffects[effectIndex];
 
-  playerRef.AddEffect(e, power, dur, false, true);
+  if (e == EffectType::MANA_SHIELD && playerRef.Attrs.MP.OriginalValue != 0)
+  {
+    playerRef.AddEffect(e, 0, -1, false, true);
+  }
+  else
+  {
+    playerRef.AddEffect(e, power, dur, false, true);
+  }
 }
 
 void ShrineComponent::ApplyRandomNegativeEffect()

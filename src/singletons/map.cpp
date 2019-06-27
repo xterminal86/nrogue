@@ -308,16 +308,27 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
   CurrentLevel->AdjustCamera();
 }
 
-void Map::TeleportToExistingLevel(MapType levelToChange, const Position& teleportTo)
+void Map::TeleportToExistingLevel(MapType levelToChange, const Position& teleportTo, GameObject* objectToTeleport)
 {
-  auto& player = Application::Instance().PlayerInstance;
+  bool forPlayer = false;
+
+  GameObject* whoToTeleport = nullptr;
+  if (objectToTeleport == nullptr)
+  {
+    forPlayer = true;
+    whoToTeleport = &Application::Instance().PlayerInstance;
+  }
+  else
+  {
+    whoToTeleport = objectToTeleport;
+  }
 
   // Unblock cell before teleporting.
   //
   // MoveTo() does the unblocking as well, but if we switch places with actor,
   // we must manually unblock player's cell first
   // or MoveTo() for actor won't work.
-  CurrentLevel->MapArray[player.PosX][player.PosY]->Occupied = false;
+  CurrentLevel->MapArray[whoToTeleport->PosX][whoToTeleport->PosY]->Occupied = false;
 
   CurrentLevel = _levels[levelToChange].get();
 
@@ -335,18 +346,24 @@ void Map::TeleportToExistingLevel(MapType levelToChange, const Position& telepor
 
   if (tpToWall)
   {
-    auto str = Util::StringFormat("You teleported into a %s!", tpTo.data());
-    Printer::Instance().AddMessage(str);
+    if (forPlayer)
+    {
+      auto str = Util::StringFormat("You teleported into a %s!", tpTo.data());
+      Printer::Instance().AddMessage(str);
+    }
 
-    player.Attrs.HP.Set(0);
+    whoToTeleport->Attrs.HP.Set(0);
   }  
   else if (tpOccupied)
   {
-    // Assume that if some NPC occupied returner destination,
-    // he can be moved at least to his 'previous' position
-    // (thus, any empty cell around him).
-    auto str = Util::StringFormat("You bump into %s!", actor->ObjectName.data());
-    Printer::Instance().AddMessage(str);
+    if (forPlayer)
+    {
+      // Assume that if some NPC occupied returner destination,
+      // he can be moved at least to his 'previous' position
+      // (thus, any empty cell around him).
+      auto str = Util::StringFormat("You bump into %s!", actor->ObjectName.data());
+      Printer::Instance().AddMessage(str);
+    }
 
     Position tp = teleportTo;
 
@@ -364,9 +381,13 @@ void Map::TeleportToExistingLevel(MapType levelToChange, const Position& telepor
     actor->MoveTo(tp);
   }
 
-  player.SetLevelOwner(CurrentLevel);
-  player.MoveTo(teleportTo);
-  player.VisibilityRadius.Set(CurrentLevel->VisibilityRadius);
+  whoToTeleport->SetLevelOwner(CurrentLevel);
+  whoToTeleport->MoveTo(teleportTo);
+
+  if (forPlayer)
+  {
+    whoToTeleport->VisibilityRadius.Set(CurrentLevel->VisibilityRadius);
+  }
 
   CurrentLevel->AdjustCamera();
 }
@@ -447,6 +468,12 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
     CurrentLevel->WelcomeTextDisplayed = true;
     CurrentLevel->DisplayWelcomeText();
   }  
+}
+
+Position Map::GetRandomEmptyCell()
+{
+  int index = RNG::Instance().RandomRange(0, CurrentLevel->EmptyCells().size());
+  return CurrentLevel->EmptyCells()[index];
 }
 
 std::vector<MapType> Map::GetAllVisitedLevels()
@@ -660,7 +687,7 @@ bool Map::IsObjectVisible(const Position &from, const Position &to)
       return false;
     }
 
-    // Object can be blocking but not block sight (e.g. lava, chasm)
+    // Object can be blocking but not blocking the sight (e.g. lava, chasm)
     // so check against BlocksSight only is needed.
 
     bool groundBlock = CurrentLevel->MapArray[c.X][c.Y]->BlocksSight;

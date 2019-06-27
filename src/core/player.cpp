@@ -440,6 +440,8 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
 
   centralDamage += bonus;
 
+  // TODO: cursed wands side-effects?
+
   switch (with->Data.SpellHeld)
   {
     case SpellType::STRIKE:
@@ -454,6 +456,26 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
     case SpellType::FIREBALL:
       ProcessAoEDamage(what, with, centralDamage, true);
       break;
+
+    case SpellType::TELEPORT:
+      ProcessTeleport(what, with);
+      break;
+  }
+}
+
+void Player::ProcessTeleport(GameObject* target, ItemComponent* weapon)
+{
+  Position p = { target->PosX, target->PosY };
+
+  auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+  if (actor != nullptr)
+  {
+    auto pos = Map::Instance().GetRandomEmptyCell();
+    MapType mt = Map::Instance().CurrentLevel->MapType_;
+    Map::Instance().TeleportToExistingLevel(mt, pos, actor);
+
+    auto str = Util::StringFormat("%s suddenly disappears!", actor->ObjectName.data());
+    Printer::Instance().AddMessage(str);
   }
 }
 
@@ -464,7 +486,11 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
   auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
   if (actor != nullptr)
   {
-    TryToDamageObject(actor, damage, againstRes);
+    bool res = TryToDamageObject(actor, damage, againstRes);
+    if (weapon->Data.SpellHeld == SpellType::FROST)
+    {
+      actor->AddEffect(EffectType::FROZEN, 1, 10, true, true);
+    }
   }
   else
   {
@@ -512,8 +538,10 @@ void Player::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int cen
   }
 }
 
-void Player::TryToDamageObject(GameObject* object, int amount, bool againstRes)
+bool Player::TryToDamageObject(GameObject* object, int amount, bool againstRes)
 {
+  bool success = false;
+
   if (object != nullptr)
   {
     int dmgHere = amount;
@@ -531,8 +559,11 @@ void Player::TryToDamageObject(GameObject* object, int amount, bool againstRes)
     else
     {
       object->ReceiveDamage(this, dmgHere, againstRes);
+      success = true;
     }
   }
+
+  return success;
 }
 
 void Player::MeleeAttack(GameObject* go, bool alwaysHit)
@@ -703,14 +734,29 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
       logMsg = Util::StringFormat("You were hit for %i damage", amount);
     }
 
-    Attrs.HP.CurrentValue -= amount;
+    if (HasEffect(EffectType::MANA_SHIELD))
+    {
+      Attrs.MP.Add(-amount);
+    }
+    else
+    {
+      Attrs.HP.Add(-amount);
+    }
   }
   else
   {
     if (!DamageArmor(amount))
     {
       logMsg = Util::StringFormat("You were hit for %i damage", amount);
-      Attrs.HP.CurrentValue -= amount;
+
+      if (HasEffect(EffectType::MANA_SHIELD))
+      {
+        Attrs.MP.Add(-amount);
+      }
+      else
+      {
+        Attrs.HP.Add(-amount);
+      }
     }
   }
 
@@ -846,28 +892,7 @@ void Player::LevelUp(int baseHpOverride)
 
   auto res = GetPrettyLevelUpText();
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Level Up!", res, "#888800", "#000044");
-
-  /*
-   * TODO: Raise skills etc.
-   *
-  auto class_ = _classesMap[SelectedClass];
-
-  switch (class_)
-  {
-    case PlayerClass::SOLDIER:
-      break;
-
-    case PlayerClass::THIEF:
-      break;
-
-    case PlayerClass::ARCANIST:
-      break;
-
-    case PlayerClass::CUSTOM:
-      break;
-  }
-  */  
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Level Up!", res, "#888800", "#000044");  
 }
 
 void Player::LevelDown()
@@ -952,28 +977,7 @@ void Player::LevelDown()
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Level DOWN!", res, "#FF0000", "#000044");
 
-  Printer::Instance().AddMessage("You have LOST a level!");
-
-  /*
-   * TODO: Raise skills etc.
-   *
-  auto class_ = _classesMap[SelectedClass];
-
-  switch (class_)
-  {
-    case PlayerClass::SOLDIER:
-      break;
-
-    case PlayerClass::THIEF:
-      break;
-
-    case PlayerClass::ARCANIST:
-      break;
-
-    case PlayerClass::CUSTOM:
-      break;
-  }
-  */
+  Printer::Instance().AddMessage("You have LOST a level!");  
 }
 
 void Player::ProcessKill(GameObject* monster)
@@ -1331,6 +1335,9 @@ void Player::SetArcanistDefaultItems()
   Inventory.AddToInventory(go);
 
   go = GameObjectsFactory::Instance().CreateReturner(0, 0, 3, ItemPrefix::UNCURSED);
+  Inventory.AddToInventory(go);
+
+  go = GameObjectsFactory::Instance().CreateScroll(0, 0, SpellType::MANA_SHIELD, ItemPrefix::BLESSED);
   Inventory.AddToInventory(go);
 }
 

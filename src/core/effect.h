@@ -7,6 +7,7 @@
 enum class EffectType
 {
   NONE = 0,  
+  MANA_SHIELD,
   ILLUMINATED,  // Visibility radius increased
   PARALYZED,    // Cannot move or act
   POISONED,     // Take damage after each turn
@@ -22,6 +23,7 @@ enum class EffectType
 
 static const std::map<EffectType, std::string> EffectNameByType =
 {
+  { EffectType::MANA_SHIELD, "Shi" },
   { EffectType::ILLUMINATED, "Lgt" },
   { EffectType::PARALYZED,   "Par" },
   { EffectType::POISONED,    "Psd" },
@@ -37,6 +39,7 @@ static const std::map<EffectType, std::string> EffectNameByType =
 
 static const std::vector<EffectType> PositiveEffects =
 {
+  EffectType::MANA_SHIELD,
   EffectType::ILLUMINATED,
   EffectType::REGEN,
   EffectType::REFLECT,
@@ -77,6 +80,7 @@ struct Effect
   bool Cumulative = false;
 
   // Effect is applied on successful hit
+  // TODO: unused for now
   bool ApplicationIgnoresArmor = false;
 };
 

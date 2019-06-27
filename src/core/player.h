@@ -90,7 +90,8 @@ class Player : public GameObject
     void ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict);
     void ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes);
     void ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int damage, bool againstRes);
-    void TryToDamageObject(GameObject* object, int amount, bool againstRes = true);
+    void ProcessTeleport(GameObject* target, ItemComponent* weapon);
+    bool TryToDamageObject(GameObject* object, int amount, bool againstRes = true);
     bool WeaponLosesDurability();
     bool ShouldBreak(ItemComponent* ic);
     void BreakItem(ItemComponent* ic, bool suppressMessage = false);

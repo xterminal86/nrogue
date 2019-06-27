@@ -42,7 +42,7 @@ void SpellsDatabase::Init()
                   });
 
     RegisterSpell({
-    SpellType::TELEPORT, "Teleport", "Te", 100
+    SpellType::TELEPORT, "Teleport", "Te", 100, { 0, 0 }, "#FFFFFF"
                   });
 
     RegisterSpell({

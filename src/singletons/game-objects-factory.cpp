@@ -1337,6 +1337,7 @@ GameObject* GameObjectsFactory::CreateRandomWand(ItemPrefix prefixOverride)
     { SpellType::LIGHT,         40 },
     { SpellType::STRIKE,        30 },
     { SpellType::FROST,         30 },
+    { SpellType::TELEPORT,      15 },
     { SpellType::FIREBALL,       5 },
     { SpellType::LASER,          5 },
     { SpellType::LIGHTNING,      5 },

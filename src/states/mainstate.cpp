@@ -445,7 +445,7 @@ void MainState::ProcessWand(ItemComponent* wand)
   // (i.e. EffectsProcessor or inside TargetState),
   // because combat wands require targeting,
   // which is checked against out of bounds,
-  // and only after it's OK and player hit "fire"
+  // and only after it's OK and player hits "fire",
   // the actual firing takes place.
 
   if (wand->Data.Amount == 0)
@@ -466,6 +466,7 @@ void MainState::ProcessWand(ItemComponent* wand)
       case SpellType::FIREBALL:
       case SpellType::STRIKE:
       case SpellType::MAGIC_MISSILE:
+      case SpellType::TELEPORT:
       {
         auto s = Application::Instance().GetGameStateRefByName(GameStates::TARGET_STATE);
         TargetState* ts = static_cast<TargetState*>(s);

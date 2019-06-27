@@ -70,6 +70,14 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll)
       ProcessScrollOfTeleport(scroll);
       break;
 
+    case SpellType::MANA_SHIELD:
+      ProcessScrollOfManaShield(scroll);
+      break;
+
+    case SpellType::REMOVE_CURSE:
+      ProcessScrollOfRemoveCurse(scroll);
+      break;
+
     default:
       Printer::Instance().AddMessage("...but nothing happens.");
       break;
@@ -447,5 +455,96 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll)
     int ry = RNG::Instance().RandomRange(1, mapRef->MapSize.Y);
     Position pos = { rx, ry };
     Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos);
+  }
+}
+
+void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
+{
+  if (_playerRef->Attrs.MP.OriginalValue > 0)
+  {
+    if (scroll->Data.Prefix == ItemPrefix::BLESSED)
+    {
+      _playerRef->Attrs.MP.CurrentValue = _playerRef->Attrs.MP.OriginalValue;
+
+      Printer::Instance().AddMessage("Your spirit is reinforced!");
+    }
+    else if (scroll->Data.Prefix == ItemPrefix::CURSED)
+    {
+      _playerRef->Attrs.MP.CurrentValue /= 2;
+
+      Printer::Instance().AddMessage("Your spirit force was drained!");
+    }
+
+    _playerRef->AddEffect(EffectType::MANA_SHIELD, 0, -1, false, true);
+  }
+}
+
+void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
+{
+  if (scroll->Data.Prefix == ItemPrefix::CURSED)
+  {
+    std::vector<ItemComponent*> nonCursedItems;
+    for (auto& i : _playerRef->Inventory.Contents)
+    {
+      auto c = i->GetComponent<ItemComponent>();
+      ItemComponent* ic = static_cast<ItemComponent*>(c);
+      if (ic->Data.Prefix != ItemPrefix::CURSED)
+      {
+        nonCursedItems.push_back(ic);
+      }
+    }
+
+    if (!nonCursedItems.empty())
+    {
+      int index = RNG::Instance().RandomRange(0, nonCursedItems.size());
+      ItemComponent* item = nonCursedItems[index];
+      item->Data.IsPrefixDiscovered = true;
+      item->Data.Prefix = ItemPrefix::CURSED;
+
+      Printer::Instance().AddMessage("The malevolent energy creeps in...");
+    }
+  }
+  else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
+  {
+    std::vector<ItemComponent*> cursedItems;
+    for (auto& i : _playerRef->Inventory.Contents)
+    {
+      auto c = i->GetComponent<ItemComponent>();
+      ItemComponent* ic = static_cast<ItemComponent*>(c);
+      if (ic->Data.Prefix == ItemPrefix::CURSED)
+      {
+        cursedItems.push_back(ic);
+      }
+    }
+
+    if (!cursedItems.empty())
+    {
+      int index = RNG::Instance().RandomRange(0, cursedItems.size());
+      ItemComponent* item = cursedItems[index];
+      item->Data.IsPrefixDiscovered = true;
+      item->Data.Prefix = ItemPrefix::UNCURSED;
+
+      Printer::Instance().AddMessage("The malevolent energy disperses!");
+    }
+  }
+  else if (scroll->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    bool success = false;
+    for (auto& i : _playerRef->Inventory.Contents)
+    {
+      auto c = i->GetComponent<ItemComponent>();
+      ItemComponent* ic = static_cast<ItemComponent*>(c);
+      if (ic->Data.Prefix == ItemPrefix::CURSED)
+      {
+        ic->Data.IsPrefixDiscovered = true;
+        ic->Data.Prefix = ItemPrefix::UNCURSED;
+        success = true;
+      }
+    }
+
+    if (success)
+    {
+      Printer::Instance().AddMessage("The malevolent energy disperses completely!");
+    }
   }
 }

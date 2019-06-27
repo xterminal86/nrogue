@@ -135,7 +135,7 @@ void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
 
   if (!Attrs.Indestructible)
   {
-    Attrs.HP.CurrentValue -= amount;
+    Attrs.HP.Add(-amount);
 
     auto str = Util::StringFormat("%s was hit for %i damage", ObjectName.data(), amount);
 
@@ -370,7 +370,16 @@ void GameObject::EffectAction(const Effect& e)
 
     case EffectType::REGEN:
       Attrs.HP.Add(e.Power);
-      break;    
+      break;
+
+    case EffectType::MANA_SHIELD:
+    {
+      if (Attrs.MP.CurrentValue == 0)
+      {
+        RemoveEffect(EffectType::MANA_SHIELD);
+      }
+    }
+    break;
   }
 }
 

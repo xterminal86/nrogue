@@ -557,14 +557,12 @@ namespace GlobalConstants
   static const int MinHitChance = 5;
   static const int MaxHitChance = 95;
   static const int DisplayAttackDelayMs = 50;
-  static const int ItemSpawnMinArea = 25 * 25;
   static const int InventoryMaxNameLength = 20;
   static const int InventoryMaxSize = 20;
   static const int TurnReadyValue = 100;
   static const int TurnTickValue = 100;
-  static const int PathfindingSearchLimit = 20;
 
-  // Because if ( < StarvationDamageTimeout)
+  // 11 is because if ( < StarvationDamageTimeout)
   static const int StarvationDamageTimeout = 11;
 
   static const std::string BlackColor = "#000000";
@@ -863,6 +861,7 @@ namespace GlobalConstants
     { SpellType::LIGHT,         10  },
     { SpellType::STRIKE,        25  },
     { SpellType::FROST,         50  },
+    { SpellType::TELEPORT,      75  },
     { SpellType::FIREBALL,      100 },
     { SpellType::LASER,         150 },
     { SpellType::LIGHTNING,     100 },
