@@ -359,7 +359,7 @@ void TargetState::FireWeapon()
     }
   }
 
-  // FIXME: in case player gained a level after firing a ranged weapon,
+  // BUG: in case player gained a level after firing a ranged weapon,
   // message box state will be overridden by one of the
   // ChangeState() calls below.
   // Should either introduce a hack and display message box
@@ -377,7 +377,26 @@ void TargetState::FireWeapon()
   }
   else
   {
-    Application::Instance().ChangeState(GameStates::MAIN_STATE);
+    // FIXME: OK, so dirty hack it is, because I don't have time
+    // to refactor all this bullshit.
+    //
+    // If we are in message box state, it means player got level up
+    // in ProcessHit() and changed state to MessageBoxState
+    // to show level up window.
+    // To fix state override, manually set
+    // previous state variable to MainState
+    // for message box, so that after closing we kinda
+    // "change state" to MainState.
+    // Looks safe (haha) since we don't have
+    // any Cleanup() or Prepare() to do in this case.
+    if (Application::Instance().CurrentStateIs(GameStates::MESSAGE_BOX_STATE))
+    {
+      Application::Instance()._previousState = Application::Instance().GetGameStateRefByName(GameStates::MAIN_STATE);
+    }
+    else
+    {
+      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+    }
   }  
 }
 

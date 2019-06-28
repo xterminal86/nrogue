@@ -810,6 +810,9 @@ void Player::AwardExperience(int amount)
 {
   int amnt = amount * (Attrs.Exp.Talents + 1);
 
+  // FIXME: debug
+  //amnt = 100;
+
   Attrs.Exp.CurrentValue += amnt;
 
   auto msg = Util::StringFormat("Received %i EXP", amnt);

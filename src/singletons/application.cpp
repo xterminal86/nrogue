@@ -97,6 +97,16 @@ GameState* Application::GetGameStateRefByName(GameStates stateName)
   return nullptr;
 }
 
+bool Application::CurrentStateIs(GameStates stateName)
+{
+  if (_gameStates.count(stateName) == 1)
+  {
+    return (_currentState == _gameStates[stateName].get());
+  }
+
+  return false;
+}
+
 void Application::ShowMessageBox(MessageBoxType type,
                                  const std::string& header,
                                  const std::vector<std::string>& message,

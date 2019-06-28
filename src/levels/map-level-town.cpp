@@ -161,7 +161,7 @@ void MapLevelTown::CreateLevel()
 {
   Peaceful = true;
 
-  VisibilityRadius = 20;
+  VisibilityRadius = 32;
 
   GameObjectInfo t;
   t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");

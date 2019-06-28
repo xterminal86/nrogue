@@ -43,6 +43,7 @@ class Application : public Singleton<Application>
     void DrawCurrentState();
 
     GameState* GetGameStateRefByName(GameStates stateName);
+    bool CurrentStateIs(GameStates stateName);
 
     #ifdef USE_SDL
     SDL_Renderer* Renderer = nullptr;
@@ -77,6 +78,8 @@ class Application : public Singleton<Application>
     #else
     void InitCurses();
     #endif
+
+    friend class TargetState;
 };
 
 #endif
