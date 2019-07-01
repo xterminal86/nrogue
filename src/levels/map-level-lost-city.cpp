@@ -18,7 +18,7 @@ void MapLevelLostCity::PrepareMap(MapLevelBase* levelOwner)
 
 void MapLevelLostCity::CreateLevel()
 {
-  VisibilityRadius = 12;
+  VisibilityRadius = 20;
   MonstersRespawnTurns = 1000;
 
   LevelBuilder lb;
@@ -33,7 +33,7 @@ void MapLevelLostCity::CreateLevel()
     { FeatureRoomType::ROUND,    { 5, 3 }   },
     { FeatureRoomType::POND,     { 3, 3 }   },
     { FeatureRoomType::FOUNTAIN, { 3, 2 }   },
-    { FeatureRoomType::SHRINE,   { 10, 1 }  }
+    { FeatureRoomType::SHRINE,   { 10, 2 }  }
   };
 
   Position roomSize = { 1, 10 };
@@ -50,6 +50,8 @@ void MapLevelLostCity::CreateLevel()
   RecordEmptyCells();
   PlaceStairs();
   //CreateInitialMonsters();
+
+  CreateShrines(lb);
 
   int itemsToCreate = RNG::Instance().RandomRange(1, 3 + DungeonLevel);
   CreateItemsForLevel(itemsToCreate);
@@ -170,8 +172,11 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
           break;
       }
     }
-  }
+  }  
+}
 
+void MapLevelLostCity::CreateShrines(LevelBuilder& lb)
+{
   auto allShrines = lb.ShrinesByPosition();
   for (auto& kvp : allShrines)
   {

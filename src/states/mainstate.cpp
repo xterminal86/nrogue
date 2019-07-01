@@ -118,10 +118,10 @@ void MainState::HandleInput()
       break;
 
     case '>':
-      CheckStairs('>');
+      //CheckStairs('>');
 
       //FIXME: debug
-      //Map::Instance().ChangeLevel(MapType::LOST_CITY, true);
+      Map::Instance().ChangeLevel(MapType::MINES_5, true);
       break;
 
     case '<':

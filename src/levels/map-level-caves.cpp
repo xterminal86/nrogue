@@ -35,12 +35,22 @@ void MapLevelCaves::CreateLevel()
     }
     break;
 
+    case MapType::CAVES_5:
+    {
+      CreateSpecialLevel();
+    }
+    break;
+
     default:
       lb.BacktrackingTunnelerMethod(MapSize, { tunnelLengthMin, tunnelLengthMax }, { -1, -1 }, true);
       break;
   }
 
-  ConstructFromBuilder(lb);  
+  if (lb.WasUsed())
+  {
+    ConstructFromBuilder(lb);
+  }
+
   CreateRivers();
   RecordEmptyCells();  
   PlaceStairs();
@@ -78,6 +88,10 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
       }
     }
   }
+}
+
+void MapLevelCaves::CreateSpecialLevel()
+{
 }
 
 void MapLevelCaves::DisplayWelcomeText()

@@ -75,6 +75,7 @@
 #include <functional>
 
 using StringsArray2D = std::vector<std::string>;
+using CharArray2D = std::vector<std::vector<char>>;
 
 enum class GameStates
 {
@@ -1007,7 +1008,7 @@ namespace GlobalConstants
     { MapType::MINES_2,     { "Forsaken Prospects" } },
     { MapType::MINES_3,     { "Abandoned Mines" } },
     { MapType::MINES_4,     { "Deep Mines" } },
-    { MapType::MINES_5,     { "Crumbling Tunnels" } },
+    { MapType::MINES_5,     { "Sealed Chamber" } },
     // Caves of Circe
     { MapType::CAVES_1,     { "Catacombs" } },
     { MapType::CAVES_2,     { "Caves of Circe" } },

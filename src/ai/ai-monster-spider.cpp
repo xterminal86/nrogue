@@ -53,7 +53,7 @@ void AIMonsterSpider::ConstructAI()
             {
               EffectType::POISONED,
               objRef->Attrs.Lvl.CurrentValue,
-              objRef->Attrs.Lvl.CurrentValue * 2,
+              10 + objRef->Attrs.Lvl.CurrentValue,
               true,
               false
             };

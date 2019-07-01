@@ -338,7 +338,12 @@ void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll)
 void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
 {
   int playerPow = _playerRef->Attrs.Mag.Get();
-  int power = playerPow;
+  if (playerPow <= 0)
+  {
+    playerPow = 1;
+  }
+
+  int power = playerPow + 6;
   int duration = playerPow * 10;
 
   if (scroll->Data.Prefix == ItemPrefix::BLESSED)

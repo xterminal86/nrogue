@@ -285,3 +285,20 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int freq)
 
   MapArray[x][y]->MakeTile(t);
 }
+
+void MapLevelBase::CreateLevel()
+{
+  auto str = Util::StringFormat("%s, %s - no level was created!", __PRETTY_FUNCTION__, LevelName.data());
+  Logger::Instance().Print(str);
+}
+
+void MapLevelBase::ConstructFromBuilder(LevelBuilder& lb)
+{
+  auto str = Util::StringFormat("%s, %s - calling base ConstructFromBuilder()!", __PRETTY_FUNCTION__, LevelName.data());
+  Logger::Instance().Print(str);
+}
+
+void MapLevelBase::CreateSpecialLevel()
+{
+  // For overriding procedural design generation
+}

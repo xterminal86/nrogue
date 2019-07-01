@@ -4,6 +4,7 @@
 #include "util.h"
 #include "game-object.h"
 #include "room-helper.h"
+#include "level-builder.h"
 
 class Player;
 
@@ -93,7 +94,9 @@ class MapLevelBase
 
     int _respawnCounter = 0;
 
-    virtual void CreateLevel() {}
+    virtual void CreateLevel();
+    virtual void ConstructFromBuilder(LevelBuilder& lb);
+    virtual void CreateSpecialLevel();
 
     bool IsSpotValidForSpawn(const Position& pos);
 

@@ -48,6 +48,8 @@ class LevelBuilder
     void LogPrintMapRaw();
     void PrintMapRaw();
 
+    bool WasUsed();
+
     std::vector<std::vector<char>> MapRaw;
 
     const std::map<Position, ShrineType>& ShrinesByPosition();

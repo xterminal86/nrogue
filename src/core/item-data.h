@@ -23,8 +23,6 @@ struct ItemData
   ArrowType AmmoType = ArrowType::NONE;
   WeaponType WeaponType_ = WeaponType::NONE;
 
-  int IgnoreArmorPercentage = 0;
-
   std::pair<MapType, std::pair<int, int>> ReturnerPosition =
   {
     MapType::NOWHERE, { -1, -1 }

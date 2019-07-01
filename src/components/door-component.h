@@ -3,6 +3,8 @@
 
 #include "component.h"
 
+#include <string>
+
 class DoorComponent : public Component
 {
   public:
@@ -14,6 +16,13 @@ class DoorComponent : public Component
     void UpdateDoorState();
 
     bool IsOpen;
+
+    // Hash of item that opens this door,
+    // -1 to leave unlocked
+    size_t OpenedBy = -1;
+
+    std::string FgColorOverride;
+    std::string BgColorOverride;
 };
 
 #endif // DOORCOMPONENT_H

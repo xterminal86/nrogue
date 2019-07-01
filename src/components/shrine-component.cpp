@@ -37,7 +37,8 @@ void ShrineComponent::Interact()
     Counter = 0;
     OwnerGameObject->FgColor = GlobalConstants::BlackColor;
 
-    std::string message = "You pray for a while...";
+    std::string shrineName = GlobalConstants::ShrineNameByType.at(Type);
+    std::string message = Util::StringFormat("You touch the %s...", shrineName.data());
 
     if (GlobalConstants::ShrineSaintByType.count(Type) == 1)
     {
@@ -60,7 +61,7 @@ void ShrineComponent::ProcessEffect()
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
-  std::string msg = "... but nothing happens";
+  std::string msg = "...but nothing happens";
 
   switch (Type)
   {

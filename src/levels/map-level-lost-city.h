@@ -15,9 +15,10 @@ class MapLevelLostCity : public MapLevelBase
 
   protected:
     void CreateLevel() override;
+    void ConstructFromBuilder(LevelBuilder& lb) override;
 
   private:
-    void ConstructFromBuilder(LevelBuilder& lb);
+    void CreateShrines(LevelBuilder& lb);
 };
 
 #endif // MAPLEVELLOSTCITY_H

@@ -404,16 +404,22 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
       case MapType::MINES_2:
       case MapType::MINES_3:
       case MapType::MINES_4:
-      case MapType::MINES_5:
         _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(60, 60, levelName, (int)levelName));
+        break;
+
+      case MapType::MINES_5:
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(30, 30, levelName, (int)levelName));
         break;
 
       case MapType::CAVES_1:
       case MapType::CAVES_2:
       case MapType::CAVES_3:
       case MapType::CAVES_4:
-      case MapType::CAVES_5:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelCaves(80, 80, levelName, (int)levelName));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelCaves(60, 60, levelName, (int)levelName));
+        break;
+
+      case MapType::CAVES_5:        
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelCaves(30, 30, levelName, (int)levelName));
         break;
 
       case MapType::LOST_CITY:
@@ -425,7 +431,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
       case MapType::DEEP_DARK_3:
       case MapType::DEEP_DARK_4:
       case MapType::DEEP_DARK_5:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelDeepDark(100, 100, levelName, (int)levelName));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelDeepDark(80, 80, levelName, (int)levelName));
         break;
 
       case MapType::ABYSS_1:
@@ -433,7 +439,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
       case MapType::ABYSS_3:
       case MapType::ABYSS_4:
       case MapType::ABYSS_5:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelAbyss(150, 150, levelName, (int)levelName));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelAbyss(200, 200, levelName, (int)levelName));
         break;
 
       case MapType::NETHER_1:
@@ -441,7 +447,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
       case MapType::NETHER_3:
       case MapType::NETHER_4:
       case MapType::NETHER_5:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelNether(200, 200, levelName, (int)levelName));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelNether(120, 120, levelName, (int)levelName));
         break;
 
       case MapType::THE_END:

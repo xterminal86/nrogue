@@ -15,10 +15,28 @@ class MapLevelMines : public MapLevelBase
 
   protected:
     void CreateLevel() override;
+    void ConstructFromBuilder(LevelBuilder& lb) override;
+    void CreateSpecialLevel() override;
 
   private:
-    void FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill);    
-    void ConstructFromBuilder(LevelBuilder& lb);
+    void FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill);        
+
+  const StringsArray2D _specialLevel =
+  {
+    "##############################",
+    "#...#..................#.....#",
+    "#.<.#..###.........###.#.WWW.#",
+    "#...#..###.........###.#.WWW.#",
+    "##+##..###.........###.#.WWW.#",
+    "#............###.......#.....#",
+    "#............###.....b.D...>.#",
+    "#............###.......#.....#",
+    "#......###.........###.#.WWW.#",
+    "#......###.........###.#.WWW.#",
+    "#......###.........###.#.WWW.#",
+    "#......................#.....#",
+    "##############################"
+  };
 };
 
 #endif // MAPLEVELMINES_H

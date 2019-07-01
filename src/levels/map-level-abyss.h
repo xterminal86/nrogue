@@ -13,6 +13,7 @@ class MapLevelAbyss : public MapLevelBase
 
   protected:
     void CreateLevel() override;
+    void ConstructFromBuilder(LevelBuilder& lb) override;
 };
 
 #endif // MAPLEVELABYSS_H

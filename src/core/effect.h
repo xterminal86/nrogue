@@ -17,7 +17,7 @@ enum class EffectType
   FROZEN,       // SPD penalty
   TELEPATHY,    // See actors in visibility radius through walls
   BLINDNESS,    // Reduced visibility radius
-  INVISIBLE,    // Monsters can't see you (unless they can via telepathy)
+  INVISIBLE,    // Monsters can't see you (unless they can via telepathy)  
   LEVITATE      // Nuff said
 };
 

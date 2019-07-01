@@ -110,3 +110,8 @@ const std::map<Position, ShrineType>& LevelBuilder::ShrinesByPosition()
 {
   return _generator->ShrinesByPosition;
 }
+
+bool LevelBuilder::WasUsed()
+{
+  return (_generator != nullptr);
+}

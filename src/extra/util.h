@@ -820,6 +820,22 @@ namespace Util
 
     return *weightsByType.begin();
   }    
+
+  inline CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map)
+  {
+    CharArray2D res;
+    for (auto& row : map)
+    {
+      std::vector<char> r;
+      for (auto& c : row)
+      {
+        r.push_back(c);
+      }
+      res.push_back(r);
+    }
+
+    return res;
+  }
 }
 
 #endif
