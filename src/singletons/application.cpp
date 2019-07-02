@@ -359,20 +359,8 @@ void Application::InitCurses()
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-void Application::InitSDL()
-{  
-  int tilesetWidth = 0;
-  int tilesetHeight = 0;
-
-  const int kTerminalWidth = 80;
-  const int kTerminalHeight = 24;
-
-  if (SDL_Init(SDL_INIT_VIDEO) != 0)
-  {
-    printf("SDL_Init Error: %s\n", SDL_GetError());
-    return;
-  }
-
+void Application::ParseConfig()
+{
   std::ifstream config("config.txt");
   if (config.is_open())
   {
@@ -385,10 +373,13 @@ void Application::InitSDL()
         _config.emplace(res[0], res[1]);
       }
     }
+
+    config.close();
   }
+}
 
-  config.close();
-
+void Application::ProcessConfig()
+{
   // Trying to get values from config map
   if (_config.count("FILE") != 0)
   {
@@ -418,6 +409,24 @@ void Application::InitSDL()
   }
 
   tileset.close();
+}
+
+void Application::InitSDL()
+{  
+  int tilesetWidth = 0;
+  int tilesetHeight = 0;
+
+  const int kTerminalWidth = 80;
+  const int kTerminalHeight = 24;
+
+  if (SDL_Init(SDL_INIT_VIDEO) != 0)
+  {
+    printf("SDL_Init Error: %s\n", SDL_GetError());
+    return;
+  }
+
+  ParseConfig();
+  ProcessConfig();
 
   int scaledW = (int)((float)TileWidth * ScaleFactor);
   int scaledH = (int)((float)TileHeight * ScaleFactor);
@@ -440,6 +449,7 @@ void Application::InitSDL()
     SDL_RendererInfo info;
     SDL_GetRenderDriverInfo(i, &info);
 
+    // Create double buffer by searching for SDL_RENDERER_TARGETTEXTURE
     if (info.flags & SDL_RENDERER_TARGETTEXTURE)
     {
       Renderer = SDL_CreateRenderer(Window, i, info.flags);

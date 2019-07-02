@@ -57,7 +57,7 @@ void MapLevelBase::InsertActor(GameObject* actor)
 {
   if (actor == nullptr)
   {
-    #ifndef RELEASE_BUILD
+    #ifdef DEBUG_BUILD
     Printer::Instance().AddMessage("[WARNING] tried to insert null actor!");
     #endif
 
@@ -71,7 +71,7 @@ void MapLevelBase::InsertGameObject(GameObject* goToInsert)
 {
   if (goToInsert == nullptr)
   {
-    #ifndef RELEASE_BUILD
+    #ifdef DEBUG_BUILD
     Printer::Instance().AddMessage("[WARNING] tried to insert null object!");
     #endif
 
@@ -91,7 +91,7 @@ void MapLevelBase::InsertStaticObject(GameObject* goToInsert)
 {
   if (goToInsert == nullptr)
   {
-    #ifndef RELEASE_BUILD
+    #ifdef DEBUG_BUILD
     Printer::Instance().AddMessage("[WARNING] tried to insert null static object!");
     #endif
 

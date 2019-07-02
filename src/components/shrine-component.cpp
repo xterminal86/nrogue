@@ -245,6 +245,7 @@ void ShrineComponent::ProcessEffect()
 
     // temporary raises stats
     case ShrineType::POTENTIAL:
+      // TODO:
       break;
 
     // random effect

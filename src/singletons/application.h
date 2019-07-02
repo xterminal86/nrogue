@@ -66,6 +66,8 @@ class Application : public Singleton<Application>
 
     std::map<GameStates, std::unique_ptr<GameState>> _gameStates;    
 
+    void ParseConfig();
+    void ProcessConfig();
     void InitGraphics();
     void InitGameStates();
     void DrawAttackCursor(int x, int y,

@@ -1089,6 +1089,11 @@ bool Player::IsAlive(GameObject* damager)
       }
       else
       {
+        // BUG: once crashed here while highly likely trying
+        // to drink unidentified cursed potion of healing
+        // which resulted in player's demise.
+        // gdb said something about "unable to access memory"
+        // inside Util::StringFormat().
         str = Util::StringFormat("%s was killed by a %s", Name.data(), damager->ObjectName.data());
       }
 

@@ -33,6 +33,7 @@ void Map::Init()
   _mapVisitFirstTime[MapType::NETHER_1] = false;
   _mapVisitFirstTime[MapType::THE_END] = false;  
 
+  // Shortcut variable
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
@@ -124,6 +125,9 @@ void Map::UpdateGameObjects()
 
   for (auto& go : CurrentLevel->ActorGameObjects)
   {
+    // NOTE: I don't know what this comment means anymore,
+    // it's probably a leftover from early development stage.
+    //
     // Update does the action meter increment as well
     // so if object had action meter 0 at start,
     // it needs to increment it in its component logic class
@@ -382,7 +386,7 @@ void Map::TeleportToExistingLevel(MapType levelToChange, const Position& telepor
       }
     }
 
-    // Read the comment in the beginning of the method
+    // Read the first comment from the beginning of the method
     actor->MoveTo(tp);
   }
 
