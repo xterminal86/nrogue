@@ -431,7 +431,7 @@ void Application::InitSDL()
   Window = SDL_CreateWindow("nrogue",
                             50, 50,
                             ww, wh,
-                            SDL_WINDOW_SHOWN);
+                            SDL_WINDOW_SHOWN | SDL_WINDOW_ALWAYS_ON_TOP);
 
   int drivers = SDL_GetNumRenderDrivers();
 

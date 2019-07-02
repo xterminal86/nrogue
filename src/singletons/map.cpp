@@ -16,15 +16,13 @@
 
 void Map::Init()
 {
-  _levels[MapType::TOWN] = std::unique_ptr<MapLevelBase>(new MapLevelTown(100, 50, MapType::TOWN));
+  PrepareStartingLevel();
 
-  CurrentLevel = _levels[MapType::TOWN].get();
-
-  _levels[MapType::TOWN]->PrepareMap(_levels[MapType::TOWN].get());
+  // FIXME: debug
+  // OverrideStartingLevel<MapLevelMines>(MapType::MINES_5, { 60, 60 });
 
   // Give player reference to current level
   Application::Instance().PlayerInstance.SetLevelOwner(CurrentLevel);
-
   Application::Instance().PlayerInstance.VisibilityRadius.Set(CurrentLevel->VisibilityRadius);
 
   _mapVisitFirstTime[MapType::MINES_1] = false;
@@ -36,6 +34,13 @@ void Map::Init()
   _mapVisitFirstTime[MapType::THE_END] = false;  
 
   _playerRef = &Application::Instance().PlayerInstance;
+}
+
+void Map::PrepareStartingLevel()
+{
+  _levels[MapType::TOWN] = std::unique_ptr<MapLevelBase>(new MapLevelTown(100, 50, MapType::TOWN));
+  CurrentLevel = _levels[MapType::TOWN].get();
+  _levels[MapType::TOWN]->PrepareMap(_levels[MapType::TOWN].get());
 }
 
 void Map::Draw(int playerX, int playerY)
@@ -77,7 +82,7 @@ void Map::Draw(int playerX, int playerY)
 
     if (CurrentLevel->MapArray[x][y]->Visible)
     {
-      // NOTE: gems should not respect floor color
+      // NOTE: gems should not respect floor color (unused now)
 
       // If game object has black bg color,
       // replace it with current floor color
@@ -404,22 +409,16 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
       case MapType::MINES_2:
       case MapType::MINES_3:
       case MapType::MINES_4:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(60, 60, levelName, (int)levelName));
-        break;
-
       case MapType::MINES_5:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(30, 30, levelName, (int)levelName));
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(60, 60, levelName, (int)levelName));
         break;
 
       case MapType::CAVES_1:
       case MapType::CAVES_2:
       case MapType::CAVES_3:
       case MapType::CAVES_4:
+      case MapType::CAVES_5:
         _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelCaves(60, 60, levelName, (int)levelName));
-        break;
-
-      case MapType::CAVES_5:        
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelCaves(30, 30, levelName, (int)levelName));
         break;
 
       case MapType::LOST_CITY:

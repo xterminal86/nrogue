@@ -7,7 +7,7 @@
 
 DoorComponent::DoorComponent()
 {
-  _hash = typeid(*this).hash_code();
+  _hash = typeid(*this).hash_code();  
 }
 
 void DoorComponent::Update()
@@ -52,7 +52,11 @@ void DoorComponent::UpdateDoorState()
   OwnerGameObject->Blocking = !IsOpen;
   OwnerGameObject->BlocksSight = !IsOpen;
   OwnerGameObject->Image = IsOpen ? '_' : '+';
-  OwnerGameObject->FgColor = FgColorOverride.empty() ? "#FFFFFF" : FgColorOverride;
+  OwnerGameObject->FgColor = IsOpen ?
+                               "#FFFFFF" :
+                                (FgColorOverride.empty() ?
+                                 "#FFFFFF" :
+                                 FgColorOverride);
   OwnerGameObject->BgColor = IsOpen ?
                                "#000000" :
                                 (BgColorOverride.empty() ?

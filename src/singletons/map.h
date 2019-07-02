@@ -53,6 +53,17 @@ class Map : public Singleton<Map>
     void DrawNonVisibleMapTile(int x, int y);
     void DrawNonVisibleStaticObject(int x, int y);
 
+    void PrepareStartingLevel();
+
+    template <typename T>
+    void OverrideStartingLevel(MapType level, const Position& size)
+    {
+      // Do not forget to change level class as well
+      _levels[level] = std::unique_ptr<T>(new T(size.X, size.Y, level, (int)level));
+      CurrentLevel = _levels[level].get();
+      _levels[level]->PrepareMap(_levels[level].get());
+    }
+
     Player* _playerRef;
 };
 

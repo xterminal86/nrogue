@@ -1809,7 +1809,12 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateDoor(int x, int y, bool isOpen, const std::string& doorName, int hitPoints)
+GameObject* GameObjectsFactory::CreateDoor(int x, int y,
+                                           bool isOpen,
+                                           const std::string& doorName,
+                                           int hitPoints,
+                                           const std::string& fgOverrideColor,
+                                           const std::string& bgOverrideColor)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1824,6 +1829,8 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y, bool isOpen, const std:
 
   DoorComponent* dc = go->AddComponent<DoorComponent>();
   dc->IsOpen = isOpen;
+  dc->FgColorOverride = fgOverrideColor;
+  dc->BgColorOverride = bgOverrideColor;
   dc->UpdateDoorState();
 
   // https://stackoverflow.com/questions/15264003/using-stdbind-with-member-function-use-object-pointer-or-not-for-this-argumen/15264126#15264126

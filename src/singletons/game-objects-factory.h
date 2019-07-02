@@ -60,7 +60,12 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void GenerateLootIfPossible(int posX, int posY, GameObjectType monsterType);
 
     GameObject* CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1, GameObjectType type = GameObjectType::HARMLESS);
-    GameObject* CreateDoor(int x, int y, bool isOpen, const std::string& doorName, int hitPoints = -1);
+    GameObject* CreateDoor(int x, int y,
+                           bool isOpen,
+                           const std::string& doorName,
+                           int hitPoints = -1,
+                           const std::string& fgOverrideColor = std::string(),
+                           const std::string& bgOverrideColor = std::string());
 
     GameObject* CopycatItem(ItemComponent* copyFrom);
 

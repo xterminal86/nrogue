@@ -367,39 +367,38 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 
 void MapLevelMines::CreateSpecialLevel()
 {
-  MapSize.X = _specialLevel.size();
-  MapSize.Y = _specialLevel[0].length();
-
   auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
 
   MapType stairsDownTo = (MapType)(DungeonLevel + 1);
   MapType stairsUpTo = (MapType)(DungeonLevel - 1);
 
-  for (int x = 0; x < MapSize.X; x++)
+  int posX = 0;
+  int posY = 0;
+
+  for (auto& row : convLevel)
   {
-    for (int y = 0; y < MapSize.Y; y++)
+    for (auto& c : row)
     {
       GameObjectInfo t;
       std::string objName;
 
-      char image = convLevel[x][y];
-      switch (image)
+      switch (c)
       {
         case '<':
         {
-          LevelStart.X = x;
-          LevelStart.Y = y;
+          LevelStart.X = posX;
+          LevelStart.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, image, stairsUpTo);
+          GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, c, stairsUpTo);
         }
         break;
 
         case '>':
         {
-          LevelExit.X = x;
-          LevelExit.Y = y;
+          LevelExit.X = posX;
+          LevelExit.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, image, stairsDownTo);
+          GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, c, stairsDownTo);
         }
         break;
 
@@ -407,23 +406,20 @@ void MapLevelMines::CreateSpecialLevel()
         {
           objName = "Rocks";
           t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
-          InsertStaticObject(x, y, t, -1);
+          InsertStaticObject(posX, posY, t, -1);
         }
         break;
 
         case '+':
         {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, "Door", 30);
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Door", 30);
           InsertStaticObject(door);
         }
         break;
 
         case 'D':
         {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, "Iron Door");
-          DoorComponent* dc = door->GetComponent<DoorComponent>();
-          dc->FgColorOverride = GlobalConstants::BlackColor;
-          dc->BgColorOverride = GlobalConstants::IronColor;
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Iron Door", -1, GlobalConstants::BlackColor, GlobalConstants::IronColor);
           InsertStaticObject(door);
 
           // TODO: assign OpenedBy
@@ -433,8 +429,8 @@ void MapLevelMines::CreateSpecialLevel()
         case 'b':
         {
           objName = "Ground";
-          t.Set(false, false, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
-          MapArray[x][y]->MakeTile(t);
+          t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
+          MapArray[posX][posY]->MakeTile(t);
 
           // TODO: spawn boss
         }
@@ -442,18 +438,23 @@ void MapLevelMines::CreateSpecialLevel()
 
         case 'W':
           t.Set(true, false, '~', GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
-          MapArray[x][y]->MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t);
           break;
 
         case '.':
         {
           objName = "Ground";
-          t.Set(false, false, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
-          MapArray[x][y]->MakeTile(t);
+          t.Set(false, false, c, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
+          MapArray[posX][posY]->MakeTile(t);
         }
         break;
       }
+
+      posX++;
     }
+
+    posX = 0;
+    posY++;
   }
 }
 
