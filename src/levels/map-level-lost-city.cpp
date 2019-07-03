@@ -134,7 +134,7 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
         {
           objName = "Lava";
           t.Set(true, false, '~', GlobalConstants::LavaWavesColor, GlobalConstants::LavaColor, objName);
-          MapArray[x][y]->MakeTile(t);
+          MapArray[x][y]->MakeTile(t, GameObjectType::LAVA);
         }
         break;
 
@@ -142,7 +142,7 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
         {
           objName = "Shallow Water";
           t.Set(false, false, '~', GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, objName);
-          MapArray[x][y]->MakeTile(t);
+          MapArray[x][y]->MakeTile(t, GameObjectType::SHALLOW_WATER);
         }
         break;
 
@@ -150,7 +150,7 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
         {
           objName = "Deep Water";
           t.Set(true, false, '~', GlobalConstants::ShallowWaterColor, GlobalConstants::DeepWaterColor, objName);
-          MapArray[x][y]->MakeTile(t);
+          MapArray[x][y]->MakeTile(t, GameObjectType::DEEP_WATER);
         }
         break;
 

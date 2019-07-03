@@ -117,7 +117,7 @@ void GameObject::Update()
   }
 }
 
-void GameObject::MakeTile(const GameObjectInfo& t)
+void GameObject::MakeTile(const GameObjectInfo& t, GameObjectType typeOverride)
 {
   Blocking = t.IsBlocking;
   BlocksSight = t.BlocksSight;
@@ -126,7 +126,7 @@ void GameObject::MakeTile(const GameObjectInfo& t)
   BgColor = t.BgColor;
   ObjectName = t.ObjectName;
   FogOfWarName = t.FogOfWarName;
-  Type = GameObjectType::GROUND;
+  Type = typeOverride;
 }
 
 void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, const std::string& logMsgOverride)

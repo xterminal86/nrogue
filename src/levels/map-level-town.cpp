@@ -511,7 +511,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
 
         case '~':
           t.Set(false, false, c, GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, "Shallow Water");
-          MapArray[posX][posY]->MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t, GameObjectType::SHALLOW_WATER);
           break;
 
         case '|':
@@ -742,12 +742,12 @@ void MapLevelTown::PlaceGarden(int x, int y)
 
         case '~':
           t.Set(false, false, c, GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, "Shallow Water");
-          MapArray[posX][posY]->MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t, GameObjectType::SHALLOW_WATER);
           break;
 
         case 'W':
           t.Set(true, false, '~', GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
-          MapArray[posX][posY]->MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t, GameObjectType::DEEP_WATER);
           break;
 
         case 'F':
@@ -784,7 +784,7 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
 
         case '~':
           t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
-          MapArray[posX][posY]->MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t, GameObjectType::DEEP_WATER);
           break;
 
         case '.':

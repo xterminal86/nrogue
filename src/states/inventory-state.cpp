@@ -5,6 +5,7 @@
 #include "printer.h"
 #include "returner-state.h"
 #include "repair-state.h"
+#include "target-state.h"
 #include "util.h"
 #include "map.h"
 
@@ -139,8 +140,26 @@ void InventoryState::HandleInput()
       break;
 
     case 't':
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Not implemented yet!" });
-      break;
+    {
+      if (isInventoryEmpty)
+      {
+        return;
+      }
+
+      auto go = _playerRef->Inventory.Contents[_selectedIndex].get();
+      ItemComponent* ic = go->GetComponent<ItemComponent>();
+      if (ic->Data.IsEquipped)
+      {
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+        return;
+      }
+
+      auto s = Application::Instance().GetGameStateRefByName(GameStates::TARGET_STATE);
+      TargetState* ts = static_cast<TargetState*>(s);
+      ts->SetupForThrowing(ic, _selectedIndex);
+      Application::Instance().ChangeState(GameStates::TARGET_STATE);
+    }
+    break;
 
     case 'q':
       Application::Instance().ChangeState(GameStates::MAIN_STATE);

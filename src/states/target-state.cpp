@@ -12,7 +12,7 @@ void TargetState::Init()
 }
 
 void TargetState::Prepare()
-{
+{  
   _drawHint = true;
 
   _cursorPosition.X = _playerRef->PosX;
@@ -43,6 +43,12 @@ void TargetState::Prepare()
       _cursorPosition.Set(x, y);
     }
   }
+}
+
+void TargetState::Cleanup()
+{
+  _throwingItemInventoryIndex = -1;
+  _weaponRef = nullptr;
 }
 
 void TargetState::FindTargets()
@@ -144,7 +150,7 @@ void TargetState::HandleInput()
       break;
 
     case 'f':
-      FireWeapon();
+      FireWeapon((_throwingItemInventoryIndex != -1));
       break;
 
     case 'q':
@@ -193,12 +199,16 @@ GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
 
     distanceCovered++;
 
+    bool isThrowing = (_throwingItemInventoryIndex != -1);
+    int maxThrowingRange = (_playerRef->Attrs.Str.Get() <= 0) ? 1 : _playerRef->Attrs.Str.Get();
+
     // Hit object or max shooting distance reached
     if (stoppedAt != nullptr)
     {
       break;
     }
-    else if (distanceCovered >= _weaponRef->Data.Range)
+    else if ((!isThrowing && distanceCovered >= _weaponRef->Data.Range)
+          || (isThrowing && distanceCovered >= maxThrowingRange))
     {
       endPoint.Set(mx, my);
       break;
@@ -224,16 +234,38 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
   }
 
   auto cell = Map::Instance().CurrentLevel->StaticMapObjects[at.X][at.Y].get();
-  if (cell != nullptr && cell->Blocking)
+  if (cell != nullptr)
   {    
-    if (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON)
+    if (_throwingItemInventoryIndex != -1)
     {
-      return cell;
+      if (cell->Blocking)
+      {
+        auto prevCell = Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
+        return prevCell;
+      }
+      else
+      {
+        return cell;
+      }
     }
-    else if (_weaponRef->Data.ItemType_ == ItemType::WAND)
+    else
     {
-      auto prevCell = Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
-      return prevCell;
+      if (cell->Blocking)
+      {
+        if (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON)
+        {
+          return cell;
+        }
+        else if (_weaponRef->Data.ItemType_ == ItemType::WAND)
+        {
+          auto prevCell = Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
+          return prevCell;
+        }
+      }
+      else
+      {
+        return cell;
+      }
     }
   }
 
@@ -273,7 +305,7 @@ void TargetState::CheckCursorPositionBounds()
 /// It is assumed that we have valid weapon and ammunition
 /// in corresponding equipment slots
 /// (necessary checks were performed in MainState)
-void TargetState::FireWeapon()
+void TargetState::FireWeapon(bool throwingFromInventory)
 {
   // Do not target self.
   if (SafetyCheck())
@@ -290,7 +322,10 @@ void TargetState::FireWeapon()
   _drawHint = false;
 
   std::string weaponName = _weaponRef->Data.IsIdentified ? _weaponRef->Data.IdentifiedName : _weaponRef->Data.UnidentifiedName;
-  auto str = "You fire " + weaponName;
+
+  std::string str = throwingFromInventory ? "You throw " : "You fire ";
+  str += weaponName;
+
   Printer::Instance().AddMessage(str);
 
   int chance = CalculateHitChance();
@@ -335,27 +370,32 @@ void TargetState::FireWeapon()
 
   GameObject* stoppedAt = nullptr;
 
+  std::string projColor = "#FFFFFF";
+
   bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
   bool isWeapon = (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON);
 
   char projectile = ' ';
-  if (isWand)
+  if (throwingFromInventory)
   {
-    projectile = '*';
+    projectile = _weaponRef->OwnerGameObject->Image;
   }
-  else if (isWeapon)
+  else
   {
-    projectile = '+';
-  }
-
-  std::string projColor = "#FFFFFF";
-  if (isWand)
-  {
-    SpellType spell = _weaponRef->Data.SpellHeld;
-    SpellInfo* si = SpellsDatabase::Instance().GetInfo(spell);
-    if (!si->SpellProjectileColor.empty())
+    if (isWand)
     {
-      projColor = si->SpellProjectileColor;
+      projectile = '*';
+
+      SpellType spell = _weaponRef->Data.SpellHeld;
+      SpellInfo* si = SpellsDatabase::Instance().GetInfo(spell);
+      if (!si->SpellProjectileColor.empty())
+      {
+        projColor = si->SpellProjectileColor;
+      }
+    }
+    else if (isWeapon)
+    {
+      projectile = '+';
     }
   }
 
@@ -400,7 +440,7 @@ void TargetState::FireWeapon()
   }  
 }
 
-void TargetState::ProcessHit(GameObject *hitPoint)
+void TargetState::ProcessHit(GameObject* hitPoint)
 {
   bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
   bool isWeapon = (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON);
@@ -413,8 +453,50 @@ void TargetState::ProcessHit(GameObject *hitPoint)
   {
     _playerRef->RangedAttack(hitPoint, _weaponRef);
   }
-}
+  else
+  {
+    auto& mapRef = Map::Instance().CurrentLevel->MapArray;
 
+    int x = hitPoint->PosX;
+    int y = hitPoint->PosY;
+
+    if (mapRef[x][y]->Type != GameObjectType::DEEP_WATER
+     && mapRef[x][y]->Type != GameObjectType::LAVA)
+    {
+      // TODO: potions break on impact, items damage monsters (not?)
+
+      GameObject* item = _playerRef->Inventory.Contents[_throwingItemInventoryIndex].release();
+      item->PosX = x;
+      item->PosY = y;
+      Map::Instance().CurrentLevel->InsertGameObject(item);
+    }
+    else
+    {
+      GameObjectType tile = mapRef[x][y]->Type;
+
+      std::string verb;
+      std::string tileName = mapRef[x][y]->ObjectName;
+
+      if (tile == GameObjectType::DEEP_WATER)
+      {
+        verb = "drowns";
+      }
+      else if (tile == GameObjectType::LAVA)
+      {
+        verb = "burns";
+      }
+
+      if (!verb.empty())
+      {
+        auto str = Util::StringFormat("%s %s in %s!", _weaponRef->OwnerGameObject->ObjectName.data(), verb.data(), tileName.data());
+        Printer::Instance().AddMessage(str);
+      }
+    }
+
+    auto it = _playerRef->Inventory.Contents.begin();
+    _playerRef->Inventory.Contents.erase(it + _throwingItemInventoryIndex);
+  }
+}
 
 void TargetState::MoveCursor(int dx, int dy)
 {
@@ -463,9 +545,15 @@ void TargetState::DrawHint()
 
       int d = Util::LinearDistance(startPoint, p);
 
+      bool isCellBlocking = Map::Instance().CurrentLevel->IsCellBlocking(p);
+      bool isThrowing = (_throwingItemInventoryIndex != -1);
+
+      int maxThrowingRange = (_playerRef->Attrs.Str.Get() <= 0) ? 1 : _playerRef->Attrs.Str.Get();
+
       if (condActor
-       || Map::Instance().CurrentLevel->IsCellBlocking(p)
-       || d > _weaponRef->Data.Range)
+       || isCellBlocking
+       || (!isThrowing && d > _weaponRef->Data.Range)
+       || (isThrowing && d > maxThrowingRange))
       {
         break;
       }
@@ -528,6 +616,12 @@ void TargetState::Setup(ItemComponent* weapon)
   _weaponRef = weapon;
 }
 
+void TargetState::SetupForThrowing(ItemComponent* itemToThrow, int throwingItemInventoryIndex)
+{
+  _throwingItemInventoryIndex = throwingItemInventoryIndex;
+  _weaponRef = itemToThrow;
+}
+
 int TargetState::CalculateHitChance()
 {
   int baseChance = 50;
@@ -536,7 +630,8 @@ int TargetState::CalculateHitChance()
   Position startPoint = { _playerRef->PosX, _playerRef->PosY };
   Position endPoint = _cursorPosition;
 
-  if (_weaponRef->Data.ItemType_ == ItemType::WAND)
+  if (_weaponRef->Data.ItemType_ == ItemType::WAND
+   || _throwingItemInventoryIndex != -1)
   {
     //chance = CalculateChance(startPoint, endPoint, baseChance);
 

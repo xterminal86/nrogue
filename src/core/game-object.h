@@ -87,7 +87,7 @@ class GameObject
       return nullptr;
     }
 
-    void MakeTile(const GameObjectInfo& t);
+    void MakeTile(const GameObjectInfo& t, GameObjectType typeOverride = GameObjectType::GROUND);
 
     void Update();
 

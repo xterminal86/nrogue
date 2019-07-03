@@ -138,7 +138,7 @@ void MapLevelCaves::CreateRivers()
         GameObjectInfo t;
         std::string objName = "Shallow Water";
         t.Set(false, false, '~', GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, objName);
-        MapArray[p.X][p.Y]->MakeTile(t);
+        MapArray[p.X][p.Y]->MakeTile(t, GameObjectType::SHALLOW_WATER);
       }
     }
   }

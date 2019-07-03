@@ -400,6 +400,8 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   }
   else
   {
+    // FIXME: if object is landed in deep water or lava, it should be destroyed
+
     // Create arrow object on the cell where it landed
     GameObject* arrow = GameObjectsFactory::Instance().CopycatItem(EquipmentByCategory[EquipmentCategory::SHIELD][0]);
     arrow->PosX = what->PosX;

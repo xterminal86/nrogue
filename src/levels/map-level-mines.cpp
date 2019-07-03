@@ -456,7 +456,7 @@ void MapLevelMines::CreateSpecialLevel()
 
         case 'W':
           t.Set(true, false, '~', GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
-          MapArray[posX][posY]->MakeTile(t);
+          MapArray[posX][posY]->MakeTile(t, GameObjectType::DEEP_WATER);
           break;
 
         case '.':

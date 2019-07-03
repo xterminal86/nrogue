@@ -4,6 +4,8 @@
 #include "gamestate.h"
 #include "position.h"
 
+#include <memory>
+
 class Player;
 class ItemComponent;
 class GameObject;
@@ -13,13 +15,16 @@ class TargetState : public GameState
   public:
     void Init() override;
     void Prepare() override;
+    void Cleanup() override;
     void HandleInput() override;
     void Update(bool forceUpdate) override;
     void Setup(ItemComponent* weapon);
+    void SetupForThrowing(ItemComponent* itemToThrow, int inventoryIndex);
 
   private:
     Player* _playerRef;
     ItemComponent* _weaponRef;
+    int _throwingItemInventoryIndex = -1;
 
     Position _cursorPosition;
     Position _lastCursorPosition;
@@ -32,7 +37,7 @@ class TargetState : public GameState
     void DrawHint();
     void DrawCursor();
     void MoveCursor(int dx, int dy);
-    void FireWeapon();    
+    void FireWeapon(bool throwingFromInventory = false);
     void FindTargets();
     void CycleTargets();
     void ProcessHit(GameObject* hitPoint);
@@ -48,7 +53,7 @@ class TargetState : public GameState
 
     int _lastTargetIndex = -1;
 
-    bool _drawHint = false;
+    bool _drawHint = false;    
 };
 
 #endif // TARGETSTATE_H
