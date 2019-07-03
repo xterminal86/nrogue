@@ -367,8 +367,16 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 }
 
 void MapLevelMines::CreateSpecialLevel()
-{
-  GameObject* key = GameObjectsFactory::Instance().CreateDummyObject("Iron Key", '1', GlobalConstants::IronColor, GlobalConstants::BlackColor);
+{  
+  GameObject* key = GameObjectsFactory::Instance().CreateDummyObject("Iron Key",
+                                                                     '1',
+                                                                     GlobalConstants::IronColor,
+                                                                     GlobalConstants::BlackColor,
+                                                                     {
+                                                                       "A simple iron key.",
+                                                                       "Now you just need to find a lock."
+                                                                     }
+                                                                     );
 
   auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
 

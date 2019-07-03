@@ -995,7 +995,8 @@ GameObject* GameObjectsFactory::CreateNote(const std::string& objName, const std
 GameObject* GameObjectsFactory::CreateDummyObject(const std::string& objName,
                                                   char image,
                                                   const std::string& fgColor,
-                                                  const std::string& bgColor)
+                                                  const std::string& bgColor,
+                                                  const std::vector<std::string>& descText)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1010,6 +1011,7 @@ GameObject* GameObjectsFactory::CreateDummyObject(const std::string& objName,
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = true;
   ic->Data.IdentifiedName = objName;
+  ic->Data.IdentifiedDescription = descText;
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
 

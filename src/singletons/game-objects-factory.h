@@ -34,7 +34,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateRandomPotion();
     GameObject* CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, bool isIdentified = false);
     GameObject* CreateNote(const std::string& objName, const std::vector<std::string>& text);
-    GameObject* CreateDummyObject(const std::string& objName, char image, const std::string& fgColor, const std::string& bgColor);
+    GameObject* CreateDummyObject(const std::string& objName, char image, const std::string& fgColor, const std::string& bgColor, const std::vector<std::string>& descText);
     GameObject* CreateScroll(int x, int y, SpellType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRandomScroll(ItemPrefix prefix = ItemPrefix::RANDOM);
     GameObject* CreateWeapon(int x, int y, WeaponType type, ItemPrefix preifx = ItemPrefix::RANDOM);

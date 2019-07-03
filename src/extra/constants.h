@@ -827,22 +827,22 @@ namespace GlobalConstants
 
   static const std::map<GemType, int> GemCostByType =
   {    
-    { GemType::WORTHLESS_GLASS, 0   },  // 0
-    { GemType::BLACK_OBSIDIAN,  20  },  // 200
-    { GemType::GREEN_JADE,      30  },  // 300
-    { GemType::PURPLE_FLUORITE, 40  },  // 400
-    { GemType::PURPLE_AMETHYST, 60  },  // 600
-    { GemType::RED_GARNET,      70  },  // 700
-    { GemType::WHITE_OPAL,      80  },  // 800
-    { GemType::BLACK_JETSTONE,  85  },  // 850
-    { GemType::ORANGE_AMBER,    100 },  // 1000
-    { GemType::YELLOW_CITRINE,  150 },  // 1500
-    { GemType::BLUE_AQUAMARINE, 150 },  // 1500
-    { GemType::GREEN_EMERALD,   250 },  // 2500
-    { GemType::BLUE_SAPPHIRE,   300 },  // 3000
-    { GemType::ORANGE_JACINTH,  325 },  // 3250
-    { GemType::RED_RUBY,        350 },  // 3500
-    { GemType::WHITE_DIAMOND,   400 }   // 4000
+    { GemType::WORTHLESS_GLASS, 0    },   // 0
+    { GemType::BLACK_OBSIDIAN,  200  },  // 200
+    { GemType::GREEN_JADE,      300  },  // 300
+    { GemType::PURPLE_FLUORITE, 400  },  // 400
+    { GemType::PURPLE_AMETHYST, 600  },  // 600
+    { GemType::RED_GARNET,      700  },  // 700
+    { GemType::WHITE_OPAL,      800  },  // 800
+    { GemType::BLACK_JETSTONE,  850  },  // 850
+    { GemType::ORANGE_AMBER,    1000 },  // 1000
+    { GemType::YELLOW_CITRINE,  1500 },  // 1500
+    { GemType::BLUE_AQUAMARINE, 1500 },  // 1500
+    { GemType::GREEN_EMERALD,   2500 },  // 2500
+    { GemType::BLUE_SAPPHIRE,   3000 },  // 3000
+    { GemType::ORANGE_JACINTH,  3250 },  // 3250
+    { GemType::RED_RUBY,        3500 },  // 3500
+    { GemType::WHITE_DIAMOND,   4000 }   // 4000
   };
 
   static const std::map<WandMaterials, int> WandCapacityByMaterial =
