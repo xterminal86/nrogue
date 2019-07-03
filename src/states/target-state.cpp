@@ -464,6 +464,7 @@ void TargetState::ProcessHit(GameObject* hitPoint)
      && mapRef[x][y]->Type != GameObjectType::LAVA)
     {
       // TODO: potions break on impact, items damage monsters (not?)
+      // throwing one item at a time from the stack of items.
 
       GameObject* item = _playerRef->Inventory.Contents[_throwingItemInventoryIndex].release();
       item->PosX = x;
@@ -474,6 +475,7 @@ void TargetState::ProcessHit(GameObject* hitPoint)
     {
       GameObjectType tile = mapRef[x][y]->Type;
 
+      std::string objName = _weaponRef->OwnerGameObject->ObjectName;
       std::string verb;
       std::string tileName = mapRef[x][y]->ObjectName;
 
@@ -488,7 +490,7 @@ void TargetState::ProcessHit(GameObject* hitPoint)
 
       if (!verb.empty())
       {
-        auto str = Util::StringFormat("%s %s in %s!", _weaponRef->OwnerGameObject->ObjectName.data(), verb.data(), tileName.data());
+        auto str = Util::StringFormat("%s %s in %s!", objName.data(), verb.data(), tileName.data());
         Printer::Instance().AddMessage(str);
       }
     }
