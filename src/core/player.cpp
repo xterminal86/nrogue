@@ -83,15 +83,18 @@ bool Player::Move(int dx, int dy)
         // Search for components only if there are any
         if (staticObject->ComponentsSize() != 0)
         {
-          auto c = staticObject->GetComponent<DoorComponent>();
+          auto dc = staticObject->GetComponent<DoorComponent>();
 
           // Automatically interact with door if it's closed
-          if (c != nullptr)
+          if (dc != nullptr)
           {
             if (staticObject->Interact())
             {
-              auto str = Util::StringFormat("You %s: %s", (c->IsOpen ? "opened" : "closed"), staticObject->ObjectName.data());
-              Printer::Instance().AddMessage(str);
+              if (dc->OpenedBy == -1)
+              {
+                auto str = Util::StringFormat("You %s: %s", (dc->IsOpen ? "opened" : "closed"), staticObject->ObjectName.data());
+                Printer::Instance().AddMessage(str);
+              }
             }
           }
         }
@@ -1001,7 +1004,24 @@ void Player::ProcessKill(GameObject* monster)
   //int exp = defaultExp * dungeonLvl; // + dungeonLvl
   int exp = defaultExp;
 
-  GameObjectsFactory::Instance().GenerateLootIfPossible(monster->PosX, monster->PosY, monster->Type);
+  // Check for monster's inventory and drop all items from there if any
+  ContainerComponent* cc = monster->GetComponent<ContainerComponent>();
+  if (cc != nullptr)
+  {
+    for (auto& i : cc->Contents)
+    {
+      GameObject* obj = i.release();
+      ItemComponent* ic = obj->GetComponent<ItemComponent>();
+      ic->OwnerGameObject->SetLevelOwner(Map::Instance().CurrentLevel);
+      ic->Transfer();
+      ic->OwnerGameObject->PosX = monster->PosX;
+      ic->OwnerGameObject->PosY = monster->PosY;
+    }
+  }
+  else
+  {
+    GameObjectsFactory::Instance().GenerateLootIfPossible(monster->PosX, monster->PosY, monster->Type);
+  }
 
   AwardExperience(exp);
 

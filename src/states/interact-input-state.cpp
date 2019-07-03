@@ -132,8 +132,11 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
       DoorComponent* dc = go->GetComponent<DoorComponent>();
       if (dc != nullptr)
       {
-        auto str = Util::StringFormat("You %s: %s", (dc->IsOpen ? "opened" : "closed"), go->ObjectName.data());
-        Printer::Instance().AddMessage(str);
+        if (dc->OpenedBy == -1)
+        {
+          auto str = Util::StringFormat("You %s: %s", (dc->IsOpen ? "opened" : "closed"), go->ObjectName.data());
+          Printer::Instance().AddMessage(str);
+        }
       }
 
       _playerRef->FinishTurn();

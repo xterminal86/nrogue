@@ -6,6 +6,7 @@
 #include "game-objects-factory.h"
 #include "game-object-info.h"
 #include "door-component.h"
+#include "container-component.h"
 #include "player.h"
 
 MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLevel) :
@@ -367,6 +368,8 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 
 void MapLevelMines::CreateSpecialLevel()
 {
+  GameObject* key = GameObjectsFactory::Instance().CreateDummyObject("Iron Key", '1', GlobalConstants::IronColor, GlobalConstants::BlackColor);
+
   auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
 
   MapType stairsDownTo = (MapType)(DungeonLevel + 1);
@@ -420,9 +423,11 @@ void MapLevelMines::CreateSpecialLevel()
         case 'D':
         {
           GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Iron Door", -1, GlobalConstants::BlackColor, GlobalConstants::IronColor);
-          InsertStaticObject(door);
 
-          // TODO: assign OpenedBy
+          DoorComponent* dc = door->GetComponent<DoorComponent>();
+          dc->OpenedBy = key->GetComponent<ItemComponent>()->Data.ItemTypeHash;
+
+          InsertStaticObject(door);          
         }
         break;
 
@@ -432,7 +437,12 @@ void MapLevelMines::CreateSpecialLevel()
           t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
           MapArray[posX][posY]->MakeTile(t);
 
-          // TODO: spawn boss
+          GameObject* boss = GameObjectsFactory::Instance().CreateMonster(posX, posY, GameObjectType::HEROBRINE);
+
+          ContainerComponent* cc = boss->GetComponent<ContainerComponent>();
+          cc->AddToInventory(key);
+
+          InsertActor(boss);
         }
         break;
 

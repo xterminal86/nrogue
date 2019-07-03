@@ -62,7 +62,7 @@ void InventoryState::HandleInput()
         return;
       }
 
-      DropItem();
+      DropItem(ic);
       DestroyInventoryItem();
     }
     break;
@@ -334,10 +334,9 @@ void InventoryState::DestroyInventoryItem()
   _playerRef->Inventory.Contents.erase(it + _selectedIndex);
 }
 
-void InventoryState::DropItem()
+void InventoryState::DropItem(ItemComponent* ic)
 {
   auto go = _playerRef->Inventory.Contents[_selectedIndex].release();
-  ItemComponent* ic = go->GetComponent<ItemComponent>();
 
   // Player may drop item on a different dungeon level,
   // so reference to the level where object was originally

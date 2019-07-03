@@ -7,6 +7,7 @@
 
 class Player;
 class ItemComponent;
+class GameObject;
 
 class InventoryState : public GameState
 {
@@ -23,7 +24,7 @@ class InventoryState : public GameState
 
     void PrintFooter();
     void DestroyInventoryItem();
-    void DropItem();
+    void DropItem(ItemComponent* ic);
     void DisplayEquipment();    
     void SortInventory();
     void DrawEquipmentField(int x, int y, const std::string& fieldName, ItemComponent* eq);

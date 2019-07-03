@@ -34,6 +34,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateRandomPotion();
     GameObject* CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, bool isIdentified = false);
     GameObject* CreateNote(const std::string& objName, const std::vector<std::string>& text);
+    GameObject* CreateDummyObject(const std::string& objName, char image, const std::string& fgColor, const std::string& bgColor);
     GameObject* CreateScroll(int x, int y, SpellType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRandomScroll(ItemPrefix prefix = ItemPrefix::RANDOM);
     GameObject* CreateWeapon(int x, int y, WeaponType type, ItemPrefix preifx = ItemPrefix::RANDOM);
@@ -75,6 +76,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateRat(int x, int y, bool randomize = true);
     GameObject* CreateBat(int x, int y, bool randomize = true);
     GameObject* CreateSpider(int x, int y, bool randomize = true);
+    GameObject* CreateHerobrine(int x, int y);
 
     GameObject* CreateRandomGlass();
     GameObject* CreateGemHelper(GemType t);
@@ -103,7 +105,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void SetItemName(GameObject* go, ItemData& itemData);
     void AdjustWeaponBonuses(ItemData& itemData);
 
-    size_t CalculateHash(ItemComponent* item);
+    size_t CalculateItemHash(ItemComponent* item);
 
     int CalculateAverageDamage(int numRolls, int diceSides);
 

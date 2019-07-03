@@ -9,6 +9,7 @@
 #include "ai-monster-bat.h"
 #include "ai-monster-spider.h"
 #include "ai-monster-smart.h"
+#include "ai-monster-herobrine.h"
 #include "ai-npc.h"
 #include "stairs-component.h"
 #include "door-component.h"
@@ -108,6 +109,10 @@ GameObject* GameObjectsFactory::CreateMonster(int x, int y, GameObjectType monst
     case GameObjectType::SPIDER:
       go = CreateSpider(x, y);
       break;
+
+    case GameObjectType::HEROBRINE:
+      go = CreateHerobrine(x, y);
+      break;
   }
 
   // No check for nullptr, program will crash and
@@ -142,7 +147,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
   ic->Data.IsIdentified = true;
   ic->Data.IdentifiedName = "Gold Coins";
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -360,6 +365,44 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateHerobrine(int x, int y)
+{
+  char img = '@';
+
+  #ifdef USE_SDL
+  img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
+  #endif
+
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, GlobalConstants::MonsterColor);
+  go->ObjectName = "Herobrine";
+  go->Attrs.Indestructible = false;
+  go->HealthRegenTurns = 30;
+
+  // Sets Occupied flag for _currentCell
+  go->Move(x, y);
+
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterHerobrine* aims = ai->AddModel<AIMonsterHerobrine>();
+  aims->AgroRadius = 12;
+  aims->ConstructAI();
+
+  ai->ChangeModel<AIMonsterHerobrine>();
+
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
+  cc->MaxCapacity = 20;
+
+  go->Attrs.Str.Talents = 3;
+  go->Attrs.Def.Talents = 1;
+  go->Attrs.HP.Talents = 2;
+
+  for (int i = 0; i < 10; i++)
+  {
+    go->LevelUp(1);
+  }
+
+  return go;
+}
+
 GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel, from->PosX, from->PosY, '%', from->FgColor);
@@ -468,7 +511,7 @@ GameObject* GameObjectsFactory::CreateFood(int x, int y, FoodType type, ItemPref
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -505,7 +548,7 @@ GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -542,7 +585,7 @@ GameObject* GameObjectsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -579,7 +622,7 @@ GameObject* GameObjectsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -616,7 +659,7 @@ GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -655,7 +698,7 @@ GameObject* GameObjectsFactory::CreateStatPotion(const std::string& statName, It
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -944,7 +987,31 @@ GameObject* GameObjectsFactory::CreateNote(const std::string& objName, const std
   ic->Data.IdentifiedDescription = text;
   ic->Data.IdentifiedName = objName;
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateDummyObject(const std::string& objName,
+                                                  char image,
+                                                  const std::string& fgColor,
+                                                  const std::string& bgColor)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->FgColor = fgColor;
+  go->BgColor = bgColor;
+  go->Image = image;
+  go->ObjectName = objName;
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  ic->Data.ItemType_ = ItemType::DUMMY;
+  ic->Data.IsStackable = false;
+  ic->Data.IsIdentified = true;
+  ic->Data.IdentifiedName = objName;
+
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -1000,7 +1067,7 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
 
   ic->Data.UseCallback = std::bind(&GameObjectsFactory::ScrollUseHandler, this, ic);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -1183,7 +1250,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
   AdjustWeaponBonuses(ic->Data);
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -1310,7 +1377,7 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -1519,7 +1586,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
   AdjustWeaponBonuses(ic->Data);
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -1576,7 +1643,7 @@ GameObject* GameObjectsFactory::CreateArrows(int x, int y, ArrowType type, ItemP
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -1631,7 +1698,7 @@ GameObject* GameObjectsFactory::CreateReturner(int x, int y, int charges, ItemPr
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -1677,7 +1744,7 @@ GameObject* GameObjectsFactory::CreateRepairKit(int x, int y, int charges, ItemP
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -1804,7 +1871,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -2402,7 +2469,7 @@ void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
   }
 }
 
-size_t GameObjectsFactory::CalculateHash(ItemComponent* item)
+size_t GameObjectsFactory::CalculateItemHash(ItemComponent* item)
 {
   auto strToHash = std::to_string((int)item->Data.Prefix) + item->OwnerGameObject->ObjectName;
   std::hash<std::string> hasher;
@@ -2488,7 +2555,7 @@ GameObject* GameObjectsFactory::CreateRandomGlass()
   ic->Data.IdentifiedName = Util::StringFormat("%s worthless glass", colorDesc.data());
   ic->Data.Cost = 0;
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }
@@ -2521,7 +2588,7 @@ GameObject* GameObjectsFactory::CreateGemHelper(GemType t)
   ic->Data.IdentifiedName = GlobalConstants::GemNameByType.at(t);
   ic->Data.Cost = GlobalConstants::GemCostByType.at(t);
 
-  ic->Data.ItemTypeHash = CalculateHash(ic);
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }

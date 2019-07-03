@@ -24,7 +24,7 @@ void DoorComponent::Interact()
     for (auto& i : playerPref->Inventory.Contents)
     {
       ItemComponent* ic = i->GetComponent<ItemComponent>();
-      if (ic->Hash() == OpenedBy)
+      if (ic->Data.ItemTypeHash == OpenedBy)
       {
         IsOpen = !IsOpen;
         UpdateDoorState();
