@@ -5,7 +5,7 @@
 
 ContainerComponent::ContainerComponent()
 {
-  _hash = typeid(*this).hash_code();
+  _componentHash = typeid(*this).hash_code();
 }
 
 void ContainerComponent::Update()

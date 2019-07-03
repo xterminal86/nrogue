@@ -77,7 +77,7 @@ class GameObject
     {
       for (auto& c : _components)
       {
-        if (c.second.get()->Hash() == typeid(T).hash_code())
+        if (c.second.get()->GetComponentHash() == typeid(T).hash_code())
         {
           auto pointer = c.second.get();
           return static_cast<T*>(pointer);

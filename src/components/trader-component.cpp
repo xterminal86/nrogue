@@ -6,7 +6,7 @@
 
 TraderComponent::TraderComponent()
 {
-  _hash = typeid(*this).hash_code();
+  _componentHash = typeid(*this).hash_code();
 }
 
 void TraderComponent::Init(TraderRole traderType, int stockRefreshTurns, int maxItems)

@@ -4,10 +4,10 @@ Component::Component()
 {
   // NOTE: repeat this line in all
   // subsequent custom components constructors
-  _hash = typeid(*this).hash_code();
+  _componentHash = typeid(*this).hash_code();
 }
 
-size_t Component::Hash()
+size_t Component::GetComponentHash()
 {
-  return _hash;
+  return _componentHash;
 }

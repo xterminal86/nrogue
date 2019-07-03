@@ -17,13 +17,13 @@ class Component
     // Called after player finishes his turn
     virtual void Update() = 0;    
 
-    size_t Hash();
+    size_t GetComponentHash();
 
     // Automatically assigned in GameObject::AddComponent()
     GameObject* OwnerGameObject;
 
   protected:
-    size_t _hash;
+    size_t _componentHash;
 };
 
 #endif

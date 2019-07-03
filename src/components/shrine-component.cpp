@@ -7,7 +7,7 @@
 
 ShrineComponent::ShrineComponent()
 {
-  _hash = typeid(*this).hash_code();
+  _componentHash = typeid(*this).hash_code();
 }
 
 void ShrineComponent::Update()
