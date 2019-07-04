@@ -411,9 +411,15 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
     {
       case MapType::MINES_1:
       case MapType::MINES_2:
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(60, 60, levelName, (int)levelName));
+        break;
+
       case MapType::MINES_3:
       case MapType::MINES_4:
-      case MapType::MINES_5:
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(30, 30, levelName, (int)levelName));
+        break;
+
+      case MapType::MINES_5:        
         _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(60, 60, levelName, (int)levelName));
         break;
 
