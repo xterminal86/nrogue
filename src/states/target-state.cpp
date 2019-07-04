@@ -470,14 +470,13 @@ void TargetState::ProcessHit(GameObject* hitPoint)
 
       if (tileOk)
       {
-        GameObject* copy = GameObjectsFactory::Instance().CopycatItem(_weaponRef);
-        ItemComponent* ic = copy->GetComponent<ItemComponent>();
-        ic->Data.Amount = 1;
+        ItemComponent* copy = GameObjectsFactory::Instance().CloneItem(_weaponRef);
+        copy->Data.Amount = 1;
 
-        copy->PosX = x;
-        copy->PosY = y;
+        copy->OwnerGameObject->PosX = x;
+        copy->OwnerGameObject->PosY = y;
 
-        Map::Instance().CurrentLevel->InsertGameObject(copy);
+        Map::Instance().CurrentLevel->InsertGameObject(copy->OwnerGameObject);
       }
       else
       {

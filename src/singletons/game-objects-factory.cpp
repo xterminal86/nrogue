@@ -1937,44 +1937,46 @@ GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, const GameObjec
   return go;
 }
 
-GameObject* GameObjectsFactory::CopycatItem(ItemComponent* copyFrom)
+ItemComponent* GameObjectsFactory::CloneItem(ItemComponent* copyFrom)
 {
-  GameObject* original = copyFrom->OwnerGameObject;
+  GameObject* copy = CloneObject(copyFrom->OwnerGameObject);
+
+  ItemComponent* ic = copy->AddComponent<ItemComponent>();
+  ic->Data = copyFrom->Data;
+
+  return ic;
+}
+
+GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
+{
   GameObject* copy = new GameObject(Map::Instance().CurrentLevel);
 
   // NOTE: don't forget to copy any newly added fields
 
-  // Object data
+  copy->VisibilityRadius    = copyFrom->VisibilityRadius;
+  copy->PosX                = copyFrom->PosX;
+  copy->PosY                = copyFrom->PosY;
+  copy->Special             = copyFrom->Special;
+  copy->Blocking            = copyFrom->Blocking;
+  copy->BlocksSight         = copyFrom->BlocksSight;
+  copy->Revealed            = copyFrom->Revealed;
+  copy->Visible             = copyFrom->Visible;
+  copy->Occupied            = copyFrom->Occupied;
+  copy->IsDestroyed         = copyFrom->IsDestroyed;
+  copy->Image               = copyFrom->Image;
+  copy->FgColor             = copyFrom->FgColor;
+  copy->BgColor             = copyFrom->BgColor;
+  copy->ObjectName          = copyFrom->ObjectName;
+  copy->FogOfWarName        = copyFrom->FogOfWarName;
+  copy->InteractionCallback = copyFrom->InteractionCallback;
+  copy->Attrs               = copyFrom->Attrs;
+  copy->HealthRegenTurns    = copyFrom->HealthRegenTurns;
+  copy->Type                = copyFrom->Type;
 
-  copy->VisibilityRadius = original->VisibilityRadius;
-  copy->PosX = original->PosX;
-  copy->PosY = original->PosY;
-  copy->Special = original->Special;
-  copy->Blocking = original->Blocking;
-  copy->BlocksSight = original->BlocksSight;
-  copy->Revealed = original->Revealed;
-  copy->Visible = original->Visible;
-  copy->Occupied = original->Occupied;
-  copy->IsDestroyed = original->IsDestroyed;
-  copy->Image = original->Image;
-  copy->FgColor = original->FgColor;
-  copy->BgColor = original->BgColor;
-  copy->ObjectName = original->ObjectName;
-  copy->FogOfWarName = original->FogOfWarName;
-  copy->InteractionCallback = original->InteractionCallback;
-  copy->Attrs = original->Attrs;
-  copy->HealthRegenTurns = original->HealthRegenTurns;
-  copy->Type = original->Type;
-
-  copy->_activeEffects = original->_activeEffects;
-  copy->_previousCell = original->_previousCell;
-  copy->_currentCell = original->_currentCell;
-  copy->_healthRegenTurnsCounter = original->_healthRegenTurnsCounter;
-
-  // ItemComponent
-
-  ItemComponent* ic = copy->AddComponent<ItemComponent>();
-  ic->Data = copyFrom->Data;
+  copy->_activeEffects           = copyFrom->_activeEffects;
+  copy->_previousCell            = copyFrom->_previousCell;
+  copy->_currentCell             = copyFrom->_currentCell;
+  copy->_healthRegenTurnsCounter = copyFrom->_healthRegenTurnsCounter;
 
   return copy;
 }

@@ -68,7 +68,8 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
                            const std::string& fgOverrideColor = std::string(),
                            const std::string& bgOverrideColor = std::string());
 
-    GameObject* CopycatItem(ItemComponent* copyFrom);
+    ItemComponent* CloneItem(ItemComponent* copyFrom);
+    GameObject* CloneObject(GameObject* copyFrom);
 
   private:
     Player* _playerRef;

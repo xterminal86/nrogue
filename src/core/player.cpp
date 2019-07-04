@@ -398,18 +398,16 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
       ProcessKill(what);
     }
   }
-  else
+  else if (what->Type != GameObjectType::DEEP_WATER
+        || what->Type != GameObjectType::LAVA)
   {
-    // FIXME: if object is landed in deep water or lava, it should be destroyed
-
     // Create arrow object on the cell where it landed
-    GameObject* arrow = GameObjectsFactory::Instance().CopycatItem(EquipmentByCategory[EquipmentCategory::SHIELD][0]);
-    arrow->PosX = what->PosX;
-    arrow->PosY = what->PosY;
-    ItemComponent* ic = arrow->GetComponent<ItemComponent>();
-    ic->Data.Amount = 1;    
-    ic->Data.IsEquipped = false;
-    Map::Instance().InsertGameObject(arrow);
+    ItemComponent* arrow = GameObjectsFactory::Instance().CloneItem(EquipmentByCategory[EquipmentCategory::SHIELD][0]);
+    arrow->OwnerGameObject->PosX = what->PosX;
+    arrow->OwnerGameObject->PosY = what->PosY;
+    arrow->Data.Amount = 1;
+    arrow->Data.IsEquipped = false;
+    Map::Instance().InsertGameObject(arrow->OwnerGameObject);
   }
 
   ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
