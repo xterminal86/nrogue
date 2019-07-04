@@ -21,10 +21,6 @@
 #include "tests.h"
 #endif
 
-// BUG:
-// 1) Possible bug with level up not showing / working after killing with ranged weapon
-// 2) Hitting spider via move-attack acted like skipping turns; possible bug in speed system.
-
 // TODO:
 //
 // Status effects

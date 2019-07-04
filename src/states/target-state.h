@@ -52,6 +52,7 @@ class TargetState : public GameState
     std::vector<GameObject*> _targets;
 
     int _lastTargetIndex = -1;
+    int _maxThrowingRange = 1;
 
     bool _drawHint = false;    
 };

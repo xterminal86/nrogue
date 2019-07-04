@@ -8,11 +8,13 @@
 
 void TargetState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Application::Instance().PlayerInstance;  
 }
 
 void TargetState::Prepare()
 {  
+  _maxThrowingRange = (_playerRef->Attrs.Str.Get() <= 0) ? 4 : _playerRef->Attrs.Str.Get() + 4;
+
   _drawHint = true;
 
   _cursorPosition.X = _playerRef->PosX;
@@ -200,7 +202,6 @@ GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
     distanceCovered++;
 
     bool isThrowing = (_throwingItemInventoryIndex != -1);
-    int maxThrowingRange = (_playerRef->Attrs.Str.Get() <= 0) ? 1 : _playerRef->Attrs.Str.Get();
 
     // Hit object or max shooting distance reached
     if (stoppedAt != nullptr)
@@ -208,7 +209,7 @@ GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
       break;
     }
     else if ((!isThrowing && distanceCovered >= _weaponRef->Data.Range)
-          || (isThrowing && distanceCovered >= maxThrowingRange))
+          || (isThrowing && distanceCovered >= _maxThrowingRange))
     {
       endPoint.Set(mx, my);
       break;
@@ -399,7 +400,7 @@ void TargetState::FireWeapon(bool throwingFromInventory)
     }
   }
 
-  // BUG: in case player gained a level after firing a ranged weapon,
+  // In case player gained a level after firing a ranged weapon,
   // message box state will be overridden by one of the
   // ChangeState() calls below.
   // Should either introduce a hack and display message box
@@ -417,7 +418,7 @@ void TargetState::FireWeapon(bool throwingFromInventory)
   }
   else
   {
-    // FIXME: OK, so dirty hack it is, because I don't have time
+    // NOTE: OK, so dirty hack it is, because I don't have time
     // to refactor all this bullshit.
     //
     // If we are in message box state, it means player got level up
@@ -550,12 +551,10 @@ void TargetState::DrawHint()
       bool isCellBlocking = Map::Instance().CurrentLevel->IsCellBlocking(p);
       bool isThrowing = (_throwingItemInventoryIndex != -1);
 
-      int maxThrowingRange = (_playerRef->Attrs.Str.Get() <= 0) ? 1 : _playerRef->Attrs.Str.Get();
-
       if (condActor
        || isCellBlocking
        || (!isThrowing && d > _weaponRef->Data.Range)
-       || (isThrowing && d > maxThrowingRange))
+       || (isThrowing && d > _maxThrowingRange))
       {
         break;
       }
