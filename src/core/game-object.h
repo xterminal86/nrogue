@@ -162,6 +162,8 @@ class GameObject
     void MarkAndCreateRemains();
 
     bool CanRaiseAttribute(Attribute& attr);
+
+    friend class GameObjectsFactory;
 };
 
 #endif

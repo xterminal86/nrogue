@@ -5,6 +5,7 @@
 #include "map.h"
 #include "ai-component.h"
 #include "spells-database.h"
+#include "game-objects-factory.h"
 
 void TargetState::Init()
 {
@@ -444,60 +445,105 @@ void TargetState::FireWeapon(bool throwingFromInventory)
 void TargetState::ProcessHit(GameObject* hitPoint)
 {
   bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
-  bool isWeapon = (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON);
+  bool isRangedWeapon = (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON);
 
-  if (isWand)
-  {    
-    _playerRef->MagicAttack(hitPoint, _weaponRef);
-  }
-  else if (isWeapon)
+  if (_throwingItemInventoryIndex != -1)
   {
-    _playerRef->RangedAttack(hitPoint, _weaponRef);
-  }
-  else
-  {
+    // _weaponRef is item to be thrown
+
     auto& mapRef = Map::Instance().CurrentLevel->MapArray;
 
     int x = hitPoint->PosX;
     int y = hitPoint->PosY;
 
-    if (mapRef[x][y]->Type != GameObjectType::DEEP_WATER
-     && mapRef[x][y]->Type != GameObjectType::LAVA)
-    {
-      // TODO: potions break on impact, items damage monsters (not?)
-      // throwing one item at a time from the stack of items.
+    bool isStackable = (!isWand && !isRangedWeapon && _weaponRef->Data.IsStackable);
 
-      GameObject* item = _playerRef->Inventory.Contents[_throwingItemInventoryIndex].release();
-      item->PosX = x;
-      item->PosY = y;
-      Map::Instance().CurrentLevel->InsertGameObject(item);
+    bool tileOk = (mapRef[x][y]->Type != GameObjectType::DEEP_WATER
+                && mapRef[x][y]->Type != GameObjectType::LAVA);
+
+    // TODO: potions break on impact, items damage monsters (not?)
+    // throwing one item at a time from the stack of items.
+
+    if (isStackable)
+    {
+      _weaponRef->Data.Amount--;
+
+      if (tileOk)
+      {
+        GameObject* copy = GameObjectsFactory::Instance().CopycatItem(_weaponRef);
+        ItemComponent* ic = copy->GetComponent<ItemComponent>();
+        ic->Data.Amount = 1;
+
+        copy->PosX = x;
+        copy->PosY = y;
+
+        Map::Instance().CurrentLevel->InsertGameObject(copy);
+      }
+      else
+      {
+        PrintThrowResult(mapRef[x][y].get());
+      }
+
+      if (_weaponRef->Data.Amount == 0)
+      {
+        auto it = _playerRef->Inventory.Contents.begin();
+        _playerRef->Inventory.Contents.erase(it + _throwingItemInventoryIndex);
+      }
     }
     else
     {
-      GameObjectType tile = mapRef[x][y]->Type;
-
-      std::string objName = _weaponRef->OwnerGameObject->ObjectName;
-      std::string verb;
-      std::string tileName = mapRef[x][y]->ObjectName;
-
-      if (tile == GameObjectType::DEEP_WATER)
+      if (tileOk)
       {
-        verb = "drowns";
+        GameObject* item = _playerRef->Inventory.Contents[_throwingItemInventoryIndex].release();
+
+        item->PosX = x;
+        item->PosY = y;
+
+        Map::Instance().CurrentLevel->InsertGameObject(item);
       }
-      else if (tile == GameObjectType::LAVA)
+      else
       {
-        verb = "burns";
+        PrintThrowResult(mapRef[x][y].get());
       }
 
-      if (!verb.empty())
-      {
-        auto str = Util::StringFormat("%s %s in %s!", objName.data(), verb.data(), tileName.data());
-        Printer::Instance().AddMessage(str);
-      }
+      auto it = _playerRef->Inventory.Contents.begin();
+      _playerRef->Inventory.Contents.erase(it + _throwingItemInventoryIndex);
     }
+  }
+  else
+  {
+    if (isWand)
+    {
+      _playerRef->MagicAttack(hitPoint, _weaponRef);
+    }
+    else if (isRangedWeapon)
+    {
+      _playerRef->RangedAttack(hitPoint, _weaponRef);
+    }
+  }
+}
 
-    auto it = _playerRef->Inventory.Contents.begin();
-    _playerRef->Inventory.Contents.erase(it + _throwingItemInventoryIndex);
+void TargetState::PrintThrowResult(GameObject* tileRef)
+{
+  GameObjectType tile = tileRef->Type;
+
+  std::string objName = _weaponRef->OwnerGameObject->ObjectName;
+  std::string verb;
+  std::string tileName = tileRef->ObjectName;
+
+  if (tile == GameObjectType::DEEP_WATER)
+  {
+    verb = "drowns";
+  }
+  else if (tile == GameObjectType::LAVA)
+  {
+    verb = "burns";
+  }
+
+  if (!verb.empty())
+  {
+    auto str = Util::StringFormat("%s %s in %s!", objName.data(), verb.data(), tileName.data());
+    Printer::Instance().AddMessage(str);
   }
 }
 

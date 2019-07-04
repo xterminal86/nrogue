@@ -397,7 +397,7 @@ GameObject* GameObjectsFactory::CreateHerobrine(int x, int y)
 
   for (int i = 0; i < 10; i++)
   {
-    go->LevelUp(1);
+    go->LevelUp(5);
   }
 
   return go;
@@ -1942,25 +1942,34 @@ GameObject* GameObjectsFactory::CopycatItem(ItemComponent* copyFrom)
   GameObject* original = copyFrom->OwnerGameObject;
   GameObject* copy = new GameObject(Map::Instance().CurrentLevel);
 
+  // NOTE: don't forget to copy any newly added fields
+
   // Object data
 
-  copy->Attrs = original->Attrs;
-  copy->BgColor = original->BgColor;
-  copy->Blocking = original->Blocking;
-  copy->BlocksSight = original->BlocksSight;
-  copy->FgColor = original->FgColor;
-  copy->FogOfWarName = original->FogOfWarName;
-  copy->HealthRegenTurns = original->HealthRegenTurns;
-  copy->Image = original->Image;
-  copy->InteractionCallback = original->InteractionCallback;
-  copy->IsDestroyed = original->IsDestroyed;
-  copy->ObjectName = original->ObjectName;
-  copy->Occupied = original->Occupied;
+  copy->VisibilityRadius = original->VisibilityRadius;
   copy->PosX = original->PosX;
   copy->PosY = original->PosY;
+  copy->Special = original->Special;
+  copy->Blocking = original->Blocking;
+  copy->BlocksSight = original->BlocksSight;
   copy->Revealed = original->Revealed;
-  copy->Type = original->Type;
   copy->Visible = original->Visible;
+  copy->Occupied = original->Occupied;
+  copy->IsDestroyed = original->IsDestroyed;
+  copy->Image = original->Image;
+  copy->FgColor = original->FgColor;
+  copy->BgColor = original->BgColor;
+  copy->ObjectName = original->ObjectName;
+  copy->FogOfWarName = original->FogOfWarName;
+  copy->InteractionCallback = original->InteractionCallback;
+  copy->Attrs = original->Attrs;
+  copy->HealthRegenTurns = original->HealthRegenTurns;
+  copy->Type = original->Type;
+
+  copy->_activeEffects = original->_activeEffects;
+  copy->_previousCell = original->_previousCell;
+  copy->_currentCell = original->_currentCell;
+  copy->_healthRegenTurnsCounter = original->_healthRegenTurnsCounter;
 
   // ItemComponent
 
@@ -2277,7 +2286,6 @@ bool GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
   int amount = 0;
 
   int statMax = _playerRef->Attrs.MP.OriginalValue;
-  int& statCur = _playerRef->Attrs.MP.CurrentValue;
 
   if (item->Data.Prefix == ItemPrefix::BLESSED)
   {
@@ -2295,8 +2303,7 @@ bool GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
     Printer::Instance().AddMessage("Your spirit force was drained!");
   }
 
-  statCur += amount;
-  statCur = Util::Clamp(statCur, 0, statMax);
+  _playerRef->Attrs.MP.Add(amount);
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
 
