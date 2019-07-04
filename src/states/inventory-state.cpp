@@ -115,7 +115,7 @@ void InventoryState::HandleInput()
 
         // Check if player was killed
         // after using something (e.g. cursed potion, teleported into wall)
-        if (!_playerRef->IsAlive(go))
+        if (!_playerRef->IsAlive())
         {
           Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
         }

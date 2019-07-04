@@ -412,7 +412,7 @@ void TargetState::FireWeapon(bool throwingFromInventory)
 
   // Check if player accidentally killed himself
   // (e.g. after firing fireball close to the wall)
-  if (!_playerRef->IsAlive(_playerRef))
+  if (!_playerRef->IsAlive())
   {
     Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
   }

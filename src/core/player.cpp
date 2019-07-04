@@ -1090,7 +1090,7 @@ bool Player::ShouldForceRedrawScreen()
   return false;
 }
 
-bool Player::IsAlive(GameObject* damager)
+bool Player::IsAlive()
 {
   if (Attrs.HP.CurrentValue <= 0)
   {
@@ -1100,27 +1100,6 @@ bool Player::IsAlive(GameObject* damager)
     FgColor = GlobalConstants::PlayerColor;
     BgColor = "#FF0000";
     IsDestroyed = true;
-
-    if (damager != nullptr)
-    {
-      std::string str;
-
-      if (damager == this)
-      {
-        str = Util::StringFormat("%s has commited suicide", Name.data());
-      }
-      else
-      {
-        // BUG: once crashed here while highly likely trying
-        // to drink unidentified cursed potion of healing
-        // which resulted in player's demise.
-        // gdb said something about "unable to access memory"
-        // inside Util::StringFormat().
-        str = Util::StringFormat("%s was killed by a %s", Name.data(), damager->ObjectName.data());
-      }
-
-      Printer::Instance().AddMessage(str);
-    }
 
     Printer::Instance().AddMessage("You are dead. Not big surprise.");
 

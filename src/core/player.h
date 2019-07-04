@@ -43,7 +43,7 @@ class Player : public GameObject
     void ProcessHunger();    
     void FinishTurn();
 
-    bool IsAlive(GameObject* damager);
+    bool IsAlive();
 
     ContainerComponent Inventory;
 

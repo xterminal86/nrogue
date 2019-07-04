@@ -2265,8 +2265,7 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
 
   Printer::Instance().AddMessage(message);
 
-  statCur += amount;
-  statCur = Util::Clamp(statCur, 0, statMax);
+  _playerRef->Attrs.HP.Add(amount);
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
 

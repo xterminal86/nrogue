@@ -158,7 +158,7 @@ void MainState::HandleInput()
       break;
   }
 
-  if (!_playerRef->IsAlive(nullptr))
+  if (!_playerRef->IsAlive())
   {
     Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
   }

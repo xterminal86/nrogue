@@ -45,7 +45,7 @@ class TaskAttackBasic : public Node
 
         _playerRef->ReceiveDamage(_objectToControl, dmg, false);
 
-        if (!_playerRef->IsAlive(_objectToControl))
+        if (!_playerRef->IsAlive())
         {
           Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
         }
