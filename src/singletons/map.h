@@ -55,6 +55,7 @@ class Map : public Singleton<Map>
 
     void PrepareStartingLevel();
 
+    #ifdef DEBUG_BUILD
     template <typename T>
     void OverrideStartingLevel(MapType level, const Position& size)
     {
@@ -62,6 +63,7 @@ class Map : public Singleton<Map>
       CurrentLevel = _levels[level].get();
       _levels[level]->PrepareMap(_levels[level].get());
     }
+    #endif
 
     Player* _playerRef;
 };
