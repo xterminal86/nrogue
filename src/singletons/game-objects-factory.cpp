@@ -379,7 +379,7 @@ GameObject* GameObjectsFactory::CreateHerobrine(int x, int y)
   go->HealthRegenTurns = 30;
 
   // Sets Occupied flag for _currentCell
-  go->Move(x, y);
+  go->MoveTo(x, y);
 
   AIComponent* ai = go->AddComponent<AIComponent>();
   AIMonsterHerobrine* aims = ai->AddModel<AIMonsterHerobrine>();

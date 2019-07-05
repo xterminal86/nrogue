@@ -19,24 +19,7 @@ class MapLevelMines : public MapLevelBase
     void CreateSpecialLevel() override;
 
   private:
-    void FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill);        
-
-  const StringsArray2D _specialLevel =
-  {
-    "##############################",
-    "#...#..................#.....#",
-    "#.<.#..###.........###.#.WWW.#",
-    "#...#..###.........###.#.WWW.#",
-    "##+##..###.........###.#.WWW.#",
-    "#............###.......#.....#",
-    "#............###.....b.D...>.#",
-    "#............###.......#.....#",
-    "#......###.........###.#.WWW.#",
-    "#......###.........###.#.WWW.#",
-    "#......###.........###.#.WWW.#",
-    "#......................#.....#",
-    "##############################"
-  };
+    void FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill);          
 };
 
 #endif // MAPLEVELMINES_H

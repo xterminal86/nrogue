@@ -229,23 +229,29 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
     case MapType::MINES_5:
     {
-      _roomsForLevel =
+      _specialLevel =
       {
-        { 0, _layoutsForLevel[2] },
-        { 50, _layoutsForLevel[3] },
-        { 50, _layoutsForLevel[4] },
-        { 50, _layoutsForLevel[5] },
-        { 50, _layoutsForLevel[6] },
-        { 50, _layoutsForLevel[7] },
-        { 50, _layoutsForLevel[8] }
+        "##############################",
+        "#...#..................#.....#",
+        "#.<.#..###.........###.#.WWW.#",
+        "#...#..###.........###.#.WWW.#",
+        "##+##..###.........###.#.WWW.#",
+        "#............###.......#.....#",
+        "#............###.....b.D...>.#",
+        "#............###.......#.....#",
+        "#......###.........###.#.WWW.#",
+        "#......###.........###.#.WWW.#",
+        "#......###.........###.#.WWW.#",
+        "#......................#.....#",
+        "##############################"
       };
 
-      _monstersSpawnRateForThisLevel =
-      {
-        { GameObjectType::RAT, 4 },
-        { GameObjectType::SPIDER, 4 },
-        { GameObjectType::BAT, 4 }
-      };
+      // Note that x and y are swapped to correspond to
+      // "world" dimensions.
+      int sx = _specialLevel[0].length();
+      int sy = _specialLevel.size();
+
+      MapSize.Set(sx, sy);
     }
     break;
   }

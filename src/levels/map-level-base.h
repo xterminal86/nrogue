@@ -90,6 +90,8 @@ class MapLevelBase
     std::vector<RoomForLevel> _roomsForLevel;
     std::map<GameObjectType, int> _monstersSpawnRateForThisLevel;
 
+    StringsArray2D _specialLevel;
+
     Player* _playerRef;
 
     int _respawnCounter = 0;
