@@ -304,7 +304,7 @@ void MapLevelTown::BuildRoads()
             roadMarks.end(),
             [](const Position& a, const Position& b)
             {
-              return (a.X < b.X && a.Y < b.Y);
+              return (a.X <= b.X && a.Y <= b.Y);
             });
 
   // Draw roads

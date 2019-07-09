@@ -46,14 +46,16 @@ void MapLevelCaves::CreateLevel()
       break;
   }
 
-  if (lb.WasUsed())
+  if (MapType_ != MapType::CAVES_5)
   {
     ConstructFromBuilder(lb);
-  }
 
-  CreateRivers();
-  RecordEmptyCells();  
-  PlaceStairs();
+    CreateRivers();
+    RecordEmptyCells();
+    PlaceStairs();
+    CreateInitialMonsters();
+    CreateItemsForLevel(DungeonLevel + 6);
+  }
 }
 
 void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
@@ -92,6 +94,7 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
 
 void MapLevelCaves::CreateSpecialLevel()
 {
+  // TODO:
 }
 
 void MapLevelCaves::DisplayWelcomeText()
