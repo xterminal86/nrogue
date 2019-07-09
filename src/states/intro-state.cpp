@@ -5,7 +5,6 @@
 #include "game-objects-factory.h"
 #include "map.h"
 #include "map-level-town.h"
-#include "map-level-mines.h"
 
 void IntroState::Prepare()
 {
