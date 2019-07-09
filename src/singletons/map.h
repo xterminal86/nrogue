@@ -8,6 +8,7 @@
 
 #include "singleton.h"
 #include "constants.h"
+#include "position.h"
 #include "map-level-base.h"
 
 class GameObject;
@@ -49,23 +50,13 @@ class Map : public Singleton<Map>
     std::map<MapType, bool> _mapVisitFirstTime;
 
     void ChangeOrInstantiateLevel(MapType levelName);
-    void ShowLoadingText();
+    void ShowLoadingText(const std::string& textOverride = std::string());
     void DrawNonVisibleMapTile(int x, int y);
     void DrawNonVisibleStaticObject(int x, int y);
 
-    void PrepareStartingLevel();
+    Player* _playerRef;    
 
-    #ifdef DEBUG_BUILD
-    template <typename T>
-    void OverrideStartingLevel(MapType level, const Position& size)
-    {
-      _levels[level] = std::unique_ptr<T>(new T(size.X, size.Y, level, (int)level));
-      CurrentLevel = _levels[level].get();
-      _levels[level]->PrepareMap(_levels[level].get());
-    }
-    #endif
-
-    Player* _playerRef;
+    friend class IntroState;
 };
 
 #endif

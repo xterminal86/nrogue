@@ -264,7 +264,10 @@ bool MapLevelBase::IsCellBlocking(const Position& pos)
   return groundBlock;
 }
 
-void MapLevelBase::PlaceGrassTile(int x, int y, int freq)
+/// Places grass tile at [x; y], maxDiceRoll serves as a
+/// "frequency" modifier - the more its value, the less is the chance
+/// for flowers to appear.
+void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
 {
   char img = '.';
 
@@ -275,13 +278,26 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int freq)
   //std::string flowerColor = GlobalConstants::BlackColor;
   std::string flowerColor = GlobalConstants::GrassDotColor;
 
-  int colorChoice = RNG::Instance().RandomRange(0, freq);
+  int colorChoice = RNG::Instance().RandomRange(0, maxDiceRoll);
   if      (colorChoice == 0) flowerColor = GlobalConstants::WhiteColor;
   else if (colorChoice == 1) flowerColor = GlobalConstants::DandelionYellowColor;
   else if (colorChoice == 2) flowerColor = GlobalConstants::RedPoppyColor;
 
+  std::map<int, std::string> flowersNameByChoice =
+  {
+    { 0, "Chamomile" },
+    { 1, "Dandelion" },
+    { 2, "Poppy"     }
+  };
+
+  std::string tileName = "Grass";
+  if (flowersNameByChoice.count(colorChoice) == 1)
+  {
+    tileName = flowersNameByChoice[colorChoice];
+  }
+
   GameObjectInfo t;
-  t.Set(false, false, img, flowerColor, GlobalConstants::GrassColor, "Grass");
+  t.Set(false, false, img, flowerColor, GlobalConstants::GrassColor, tileName);
 
   MapArray[x][y]->MakeTile(t);
 }

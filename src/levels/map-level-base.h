@@ -108,7 +108,7 @@ class MapLevelBase
     void PlaceStairs();
     void CreateInitialMonsters();
 
-    void PlaceGrassTile(int x, int y, int freq = 10);
+    void PlaceGrassTile(int x, int y, int maxDiceRoll = 10);
 
     Position _townPortalPos;
 };

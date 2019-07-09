@@ -5,7 +5,9 @@
 #include <vector>
 #include <chrono>
 
+#include "application.h"
 #include "gamestate.h"
+#include "map.h"
 
 class IntroState : public GameState
 {
@@ -66,6 +68,21 @@ class IntroState : public GameState
     std::chrono::high_resolution_clock::time_point _lastTime;
 
     const std::chrono::milliseconds kTextPrintDelay = std::chrono::milliseconds(10);
+
+    void PrepareTown();
+
+    #ifdef DEBUG_BUILD
+    template <typename T>
+    void OverrideStartingLevel(MapType level, const Position& size)
+    {
+      Map::Instance()._levels[level] = std::unique_ptr<T>(new T(size.X, size.Y, level, (int)level));
+      Map::Instance().CurrentLevel = Map::Instance()._levels[level].get();
+      Map::Instance()._levels[level]->PrepareMap(Map::Instance()._levels[level].get());
+      Application::Instance().PlayerInstance.SetLevelOwner(Map::Instance().CurrentLevel);
+      Application::Instance().PlayerInstance.MoveTo(Map::Instance().CurrentLevel->LevelStart);
+      Map::Instance().CurrentLevel->AdjustCamera();
+    }
+    #endif
 };
 
 #endif // INTROSTATE_H

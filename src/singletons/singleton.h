@@ -16,6 +16,8 @@ class Singleton
   protected:
     Singleton() = default;
     virtual ~Singleton() = default;
+
+    bool _initialized = false;
 };
 
 #endif

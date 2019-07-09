@@ -6,11 +6,18 @@
 
 void Printer::Init()
 {
+  if (_initialized)
+  {
+    return;
+  }
+
 #ifdef USE_SDL
   InitForSDL();
 #else
   InitForCurses();
 #endif
+
+  _initialized = true;
 }
 
 #ifdef USE_SDL

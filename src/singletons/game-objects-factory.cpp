@@ -22,10 +22,17 @@
 
 void GameObjectsFactory::Init()
 {
+  if (_initialized)
+  {
+    return;
+  }
+
   _playerRef = &Application::Instance().PlayerInstance;
 
   InitPotionColors();
   InitScrolls();
+
+  _initialized = true;
 }
 
 GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
@@ -129,7 +136,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  go->ObjectName = "Gold Coins";
+  go->ObjectName = GlobalConstants::MoneyName;
   go->Image = '$';
   go->FgColor = GlobalConstants::CoinsColor;
 
@@ -145,7 +152,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
   ic->Data.IsStackable = true;
   ic->Data.ItemType_ = ItemType::COINS;
   ic->Data.IsIdentified = true;
-  ic->Data.IdentifiedName = "Gold Coins";
+  ic->Data.IdentifiedName = GlobalConstants::MoneyName;
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
 

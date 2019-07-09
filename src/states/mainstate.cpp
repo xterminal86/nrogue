@@ -74,7 +74,7 @@ void MainState::HandleInput()
 
     case '$':
     {
-      auto str = Util::StringFormat("You have %i gold coins", _playerRef->Money);
+      auto str = Util::StringFormat("You have %i %s", _playerRef->Money, GlobalConstants::MoneyName.data());
       Printer::Instance().AddMessage(str);
     }
     break;

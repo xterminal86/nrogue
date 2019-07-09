@@ -23,9 +23,7 @@ class SpellsDatabase : public Singleton<SpellsDatabase>
 
     SpellInfo* GetInfo(SpellType t);
 
-  private:
-    bool _initialized = false;
-
+  private:    
     std::map<SpellType, SpellInfo> _database;
 };
 

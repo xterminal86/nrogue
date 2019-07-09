@@ -27,6 +27,11 @@
 
 void Application::Init()
 {
+  if (_initialized)
+  {
+    return;
+  }
+
   InitGraphics();
   InitGameStates();
 
@@ -35,6 +40,8 @@ void Application::Init()
   PlayerInstance.Attrs.Indestructible = false;
 
   Printer::Instance().AddMessage("You begin your quest");
+
+  _initialized = true;
 }
 
 void Application::Run()
@@ -518,6 +525,6 @@ void Application::InitGameStates()
 
   for (auto& state : _gameStates)
   {
-    state.second.get()->Init();
+    state.second->Init();
   }
 }

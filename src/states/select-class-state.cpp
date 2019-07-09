@@ -20,25 +20,9 @@ void SelectClassState::HandleInput()
       break;
 
     case VK_ENTER:
-    {
-      Application::Instance().PlayerInstance.Init();      
-
-      // NOTE: little bit of an out of place hack:
-      // since some NPCs can contain bonus chat lines depending on player class,
-      // we create NPCs for level after player has selected his class.
-      // Condition check is for avoiding crash when overriding initial level
-      // for testing purposes.
-      if (Map::Instance().CurrentLevel != nullptr
-       && Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
-      {
-        MapLevelTown* mlt = static_cast<MapLevelTown*>(Map::Instance().CurrentLevel);
-        mlt->CreateNPCs();
-      }
-
       // TODO: enter name, distribute talents if custom class is chosen
       Application::Instance().ChangeState(GameStates::ENTER_NAME_STATE);
-    }
-    break;
+      break;
 
     case 'q':
       Application::Instance().ChangeState(GameStates::MENU_STATE);

@@ -223,7 +223,7 @@ void MapLevelTown::CreateLevel()
   CreateTownGates();
 
   // FIXME: experimental
-  //BuildRoads();
+  BuildRoads();
 
   RecordEmptyCells();
 
@@ -269,6 +269,8 @@ void MapLevelTown::BuildRoads()
 {
   std::vector<Position> roadMarks;
 
+  // Build roads
+
   for (int x = 1; x < MapSize.X - 1; x++)
   {
     for (int y = 1; y < MapSize.Y - 1; y++)
@@ -298,19 +300,23 @@ void MapLevelTown::BuildRoads()
     }
   }
 
-  /*
-  printf("%i\n", roadMarks.size());
+  std::sort(roadMarks.begin(),
+            roadMarks.end(),
+            [](const Position& a, const Position& b)
+            {
+              return (a.X < b.X && a.Y < b.Y);
+            });
+
+  // Draw roads
 
   for (auto& c : roadMarks)
   {
     GameObjectInfo gi;
-    gi.Set(false, false, ' ', "#888888", "#888888", "Path");
+    gi.Set(false, false, '=', "#AAAAAA", "#888888", "Path");
 
     MapArray[c.X][c.Y]->MakeTile(gi);
   }
-  */
 
-  /*
   for (int i = 0; i < roadMarks.size() - 1; i++)
   {
     Pathfinder pf;
@@ -321,14 +327,13 @@ void MapLevelTown::BuildRoads()
       Position c = path.top();
 
       GameObjectInfo gi;
-      gi.Set(false, false, ' ', "#888888", "#888888", "Path");
+      gi.Set(false, false, '=', "#AAAAAA", "#888888", "Path");
 
       MapArray[c.X][c.Y]->MakeTile(gi);
 
       path.pop();
     }
   }
-  */
 }
 
 void MapLevelTown::ReplaceGroundWithGrass()
@@ -339,7 +344,7 @@ void MapLevelTown::ReplaceGroundWithGrass()
     {
       if (MapArray[x][y]->Image == '.')
       {
-        PlaceGrassTile(x, y, 30);
+        PlaceGrassTile(x, y, 25);
       }
     }
   }

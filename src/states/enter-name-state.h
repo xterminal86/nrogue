@@ -14,7 +14,7 @@ class EnterNameState : public GameState
   private:
     std::string _nameEntered;
 
-    const std::string kHeaderString = "Enter your name";
+    const std::string kHeaderString = "Enter your name";    
 };
 
 #endif // ENTERNAMESTATE_H

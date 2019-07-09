@@ -4,6 +4,8 @@
 #include "application.h"
 #include "game-objects-factory.h"
 #include "map.h"
+#include "map-level-town.h"
+#include "map-level-mines.h"
 
 void IntroState::Prepare()
 {
@@ -25,12 +27,40 @@ void IntroState::HandleInput()
   switch (_keyPressed)
   {
     case VK_ENTER:
+    {
+      PrepareTown();
+
+      // FIXME: debug
+      // OverrideStartingLevel<MapLevelMines>(MapType::MINES_5, { 60, 60 });
+
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
-      break;
+    }
+    break;
 
     default:
       break;
   }
+}
+
+void IntroState::PrepareTown()
+{
+  Printer::Instance().Clear();
+
+  Map::Instance().ChangeOrInstantiateLevel(MapType::TOWN);
+
+  auto& curLvl = Map::Instance().CurrentLevel;
+  auto& playerRef = Application::Instance().PlayerInstance;
+
+  // Some NPCs contain bonus lines
+  // depending on selected player character class.
+  MapLevelTown* mlt = static_cast<MapLevelTown*>(curLvl);
+  mlt->CreateNPCs();
+
+  playerRef.SetLevelOwner(curLvl);
+  playerRef.Init();
+
+  playerRef.AddBonusItems();
+  playerRef.VisibilityRadius.Set(curLvl->VisibilityRadius);
 }
 
 void IntroState::Update(bool forceUpdate)

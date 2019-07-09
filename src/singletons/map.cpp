@@ -15,15 +15,11 @@
 #include "map-level-endgame.h"
 
 void Map::Init()
-{
-  PrepareStartingLevel();
-
-  // FIXME: debug
-  // OverrideStartingLevel<MapLevelMines>(MapType::MINES_5, { 60, 60 });
-
-  // Give player reference to current level
-  Application::Instance().PlayerInstance.SetLevelOwner(CurrentLevel);
-  Application::Instance().PlayerInstance.VisibilityRadius.Set(CurrentLevel->VisibilityRadius);
+{  
+  if (_initialized)
+  {
+    return;
+  }
 
   _mapVisitFirstTime[MapType::MINES_1] = false;
   _mapVisitFirstTime[MapType::CAVES_1] = false;
@@ -35,13 +31,12 @@ void Map::Init()
 
   // Shortcut variable
   _playerRef = &Application::Instance().PlayerInstance;
-}
 
-void Map::PrepareStartingLevel()
-{
-  _levels[MapType::TOWN] = std::unique_ptr<MapLevelBase>(new MapLevelTown(100, 50, MapType::TOWN));
-  CurrentLevel = _levels[MapType::TOWN].get();
-  _levels[MapType::TOWN]->PrepareMap(_levels[MapType::TOWN].get());
+  // In order to prevent Map::UpdateGameObjects()
+  // condition branch in Application::Run() on nullptr level.
+  _playerRef->Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
+
+  _initialized = true;
 }
 
 void Map::Draw(int playerX, int playerY)
@@ -114,6 +109,11 @@ void Map::Draw(int playerX, int playerY)
 
 void Map::UpdateGameObjects()
 {
+  if (CurrentLevel == nullptr)
+  {
+    return;
+  }
+
   RemoveDestroyed();
 
   CurrentLevel->TryToSpawnMonsters();
@@ -409,6 +409,10 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
 
     switch (levelName)
     {
+      case MapType::TOWN:
+        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelTown(100, 50, MapType::TOWN));
+        break;
+
       case MapType::MINES_1:
       case MapType::MINES_2:
         _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(60, 60, levelName, (int)levelName));
@@ -507,9 +511,9 @@ std::vector<MapType> Map::GetAllVisitedLevels()
   return res;
 }
 
-void Map::ShowLoadingText()
+void Map::ShowLoadingText(const std::string& textOverride)
 {
-  std::string text = "Now loading...";
+  std::string text = textOverride.empty() ? "Now loading..." : textOverride;
 
   int tw = Printer::Instance().TerminalWidth / 2;
   int th = Printer::Instance().TerminalHeight / 2;
