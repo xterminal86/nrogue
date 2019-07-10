@@ -25,6 +25,8 @@ void TownPortalComponent::SavePosition(MapType mapToReturn, const Position& posT
 
 void TownPortalComponent::TeleportBack()
 {
+  Printer::Instance().AddMessage("The blue portal disappears!");
+
   OwnerGameObject->IsDestroyed = true;
   Map::Instance().RemoveDestroyed();
   Map::Instance().TeleportToExistingLevel(_posToReturn.first, _posToReturn.second);

@@ -73,10 +73,6 @@ void ItemComponent::Inspect()
   Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, header, desc);
 }
 
-void ItemComponent::Throw()
-{
-}
-
 bool ItemComponent::Use()
 {
   return GameObjectsFactory::Instance().HandleItemUse(this);

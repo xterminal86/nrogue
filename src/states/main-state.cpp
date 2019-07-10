@@ -117,12 +117,20 @@ void MainState::HandleInput()
       ProcessRangedWeapon();
       break;
 
-    case '>':
+    case '>':      
       CheckStairs('>');
 
       // FIXME: debug, further going down won't work
       // because of this override.
-      // Map::Instance().ChangeLevel(MapType::MINES_5, true);
+      //
+      // CheckStairs() also uses Map::ChangeLevel() which in turn
+      // can display welcome text via MessageBox(), which sets
+      // previousState and currentState variables.
+      // Comment out CheckStairs() to avoid pointer loop
+      // for them (i.e. CheckStairs() will set previousState to MainState
+      // and then this call will "override" that to MessageBoxState and
+      // now we have both variables pointing to the same state).
+      //Map::Instance().ChangeLevel(MapType::CAVES_1, true);
       break;
 
     case '<':

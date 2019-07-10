@@ -420,10 +420,12 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
 
     lvl->InsertGameObject(portal);
 
-    Map::Instance().TeleportToExistingLevel(MapType::TOWN, res);
+    Printer::Instance().AddMessage("You're back in town all of a sudden!");
+    Map::Instance().TeleportToExistingLevel(MapType::TOWN, res);        
   }
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {
+    Printer::Instance().AddMessage("You're back in town all of a sudden!");
     Map::Instance().TeleportToExistingLevel(MapType::TOWN, lvl->TownPortalPos());
   }
   else if (scroll->Data.Prefix == ItemPrefix::CURSED)

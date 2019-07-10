@@ -186,7 +186,7 @@ void MapLevelBase::CreateInitialMonsters()
     int x = _emptyCells[index].X;
     int y = _emptyCells[index].Y;
 
-    if (IsSpotValidForSpawn({ x, y }))
+    if (IsSpotValidForSpawn({ x, y }) && !_monstersSpawnRateForThisLevel.empty())
     {
       auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
 

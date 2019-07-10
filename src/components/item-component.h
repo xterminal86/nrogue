@@ -17,7 +17,6 @@ class ItemComponent : public Component
     void Transfer(ContainerComponent* destination = nullptr);
     void Inspect();
     bool Equip();
-    void Throw();
 
     ItemData Data;    
 
