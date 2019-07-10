@@ -333,7 +333,7 @@ void MapLevelTown::BuildRoads()
 
       path.pop();
     }
-  }
+  }  
 }
 
 void MapLevelTown::ReplaceGroundWithGrass()
@@ -344,7 +344,7 @@ void MapLevelTown::ReplaceGroundWithGrass()
     {
       if (MapArray[x][y]->Image == '.')
       {
-        PlaceGrassTile(x, y, 25);
+        PlaceGrassTile(x, y, FlowersFrequency);
       }
     }
   }
@@ -729,7 +729,7 @@ void MapLevelTown::PlaceGarden(int x, int y)
           break;
 
         case '.':
-          PlaceGrassTile(posX, posY, 30);
+          PlaceGrassTile(posX, posY, FlowersFrequency);
           break;
 
         case 'T':
@@ -793,7 +793,7 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
           break;
 
         case '.':
-          PlaceGrassTile(posX, posY, 30);
+          PlaceGrassTile(posX, posY, FlowersFrequency);
           break;
 
         case 'P':

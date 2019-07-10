@@ -26,6 +26,8 @@ class MapLevelTown : public MapLevelBase
     void CreateTownGates();
     void ReplaceGroundWithGrass();
     void BuildRoads();
+
+    const int FlowersFrequency = 25;
 };
 
 #endif // MAPLEVELTOWN_H
