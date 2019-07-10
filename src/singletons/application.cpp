@@ -1,8 +1,8 @@
 #include "application.h"
 
-#include "mainstate.h"
-#include "infostate.h"
-#include "menustate.h"
+#include "main-state.h"
+#include "info-state.h"
+#include "menu-state.h"
 #include "select-class-state.h"
 #include "enter-name-state.h"
 #include "intro-state.h"

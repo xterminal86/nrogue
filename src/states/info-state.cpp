@@ -1,5 +1,5 @@
-#include "infostate.h"
-#include "mainstate.h"
+#include "info-state.h"
+#include "main-state.h"
 #include "printer.h"
 #include "application.h"
 #include "attribute.h"

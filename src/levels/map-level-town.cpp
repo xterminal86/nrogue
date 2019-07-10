@@ -672,7 +672,7 @@ void MapLevelTown::CreateNPCs()
         bool isBlocking = IsCellBlocking({ x, y });
         bool isSpecial = MapArray[x][y]->Special;
 
-        // Also avoid water tiles
+        // Also avoid shallow water tiles
         // or NPC may spawn inside walled fountain.
         if (!alreadyAdded && !isBlocking
          && !isSpecial && MapArray[x][y]->Image != '~')

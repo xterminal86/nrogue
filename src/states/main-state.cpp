@@ -1,4 +1,4 @@
-#include "mainstate.h"
+#include "main-state.h"
 
 #include "application.h"
 #include "map.h"
