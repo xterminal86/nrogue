@@ -45,8 +45,28 @@ void Player::Init()
 
 void Player::Draw()
 {
-  bool cond = (BgColor.length() == 0 || BgColor == "#000000");
-  GameObject::Draw(FgColor, cond ? Map::Instance().CurrentLevel->MapArray[PosX][PosY]->BgColor : BgColor);  
+  auto& mapRef = Map::Instance().CurrentLevel;
+
+  // If game object has black bg color,
+  // replace it with current floor color
+  std::string bgColor = BgColor;
+
+  bool cond = (BgColor == GlobalConstants::BlackColor);
+  bool isOnStaticObject = (mapRef->StaticMapObjects[PosX][PosY] != nullptr);
+
+  if (cond)
+  {
+    if (isOnStaticObject)
+    {
+      bgColor = mapRef->StaticMapObjects[PosX][PosY]->BgColor;
+    }
+    else
+    {
+      bgColor = mapRef->MapArray[PosX][PosY]->BgColor;
+    }
+  }
+
+  GameObject::Draw(FgColor, bgColor);
 }
 
 bool Player::TryToAttack(int dx, int dy)
@@ -1258,6 +1278,12 @@ void Player::ProcessStarvation()
 
 void Player::ProcessHunger()
 {
+  // No starving in town
+  if (Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
+  {
+    return;
+  }
+
   Attrs.Hunger += Attrs.HungerSpeed.Get();
 
   // HungerRate's CurrentValue is equal to OriginalValue

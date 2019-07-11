@@ -244,8 +244,9 @@ void Application::WriteObituary(bool wasKilled)
         if (actor != nullptr
          && (curLvl->MapArray[x][y]->Visible
           || curLvl->MapArray[x][y]->Revealed))
-        {
-          ch = actor->Image;
+        {          
+          bool imageNonPrintable = (actor->Image < 33);
+          ch = (imageNonPrintable ? '@' : actor->Image);
         }
 
         // Draw player

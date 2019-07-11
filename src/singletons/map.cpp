@@ -100,9 +100,25 @@ void Map::Draw(int playerX, int playerY)
      || CurrentLevel->MapArray[x][y]->Visible)
     {
       // If game object has black bg color,
-      // replace it with current floor color
+      // replace it with current floor color      
+      std::string bgColor = go->BgColor;
+
       bool cond = (go->BgColor == GlobalConstants::BlackColor);
-      go->Draw(go->FgColor, cond ? CurrentLevel->MapArray[x][y]->BgColor : go->BgColor);
+      bool isOnStaticObject = (CurrentLevel->StaticMapObjects[x][y] != nullptr);
+
+      if (cond)
+      {
+        if (isOnStaticObject)
+        {
+          bgColor = CurrentLevel->StaticMapObjects[x][y]->BgColor;
+        }
+        else
+        {
+          bgColor = CurrentLevel->MapArray[x][y]->BgColor;
+        }
+      }
+
+      go->Draw(go->FgColor, bgColor);
     }
   }
 }

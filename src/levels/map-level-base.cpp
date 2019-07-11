@@ -214,6 +214,11 @@ void MapLevelBase::TryToSpawnMonsters()
 
   _respawnCounter = 0;
 
+  if (_monstersSpawnRateForThisLevel.empty())
+  {
+    return;
+  }
+
   std::vector<Position> positions;
 
   int attempts = 20;

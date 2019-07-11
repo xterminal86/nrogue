@@ -73,8 +73,13 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       break;
 
     case ItemType::GEM:
-      go = CreateGem(x, y, GemType::RANDOM);
-      break;
+    {
+      // The deeper you go, the more is the chance to get actual gem
+      // and not worthless glass.
+      int gemChance = Map::Instance().CurrentLevel->DungeonLevel * 3;
+      go = CreateGem(x, y, GemType::RANDOM, gemChance);
+    }
+    break;
 
     case ItemType::RETURNER:
       go = CreateReturner(x, y);
@@ -408,11 +413,10 @@ GameObject* GameObjectsFactory::CreateHerobrine(int x, int y)
   go->Attrs.Skl.Talents = 3;
   go->Attrs.Def.Talents = 1;
   go->Attrs.Spd.Talents = 1;
-  go->Attrs.HP.Talents = 2;
 
   for (int i = 1; i < 10; i++)
   {
-    go->LevelUp();
+    go->LevelUp(5);
   }
 
   return go;
@@ -459,7 +463,7 @@ GameObject* GameObjectsFactory::CreateUniquePickaxe()
   ic->Data.IdentifiedDescription =
   {
     "This is quite an old but sturdy looking pickaxe,",
-    "yet you can't shake the uneasy feeling about it."
+    "yet you can't shake the uneasy feeling about it.",
     "There are traces of blood on its head."
   };
 
@@ -1343,13 +1347,21 @@ GameObject* GameObjectsFactory::CreateContainer(const std::string& name, const s
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateGem(int x, int y, GemType type)
+GameObject* GameObjectsFactory::CreateGem(int x, int y, GemType type, int gemChance)
 {
   GameObject* go = nullptr;
 
   if (type == GemType::RANDOM)
   {
-    int index = RNG::Instance().RandomRange(0, GlobalConstants::GemNameByType.size());
+    int rndStartingIndex = 0;
+
+    if (gemChance != -1)
+    {
+      bool isGem = Util::Rolld100(gemChance);
+      rndStartingIndex = 1;
+    }
+
+    int index = RNG::Instance().RandomRange(rndStartingIndex, GlobalConstants::GemNameByType.size());
     GemType t = (GemType)index;
     if (t == GemType::WORTHLESS_GLASS)
     {

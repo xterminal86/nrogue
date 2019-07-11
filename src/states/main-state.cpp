@@ -136,7 +136,7 @@ void MainState::HandleInput()
       // and currentState variables pointing to the same state,
       // which will lead to inability to close message box.
       //
-      //Map::Instance().ChangeLevel(MapType::CAVES_1, true);
+      //Map::Instance().ChangeLevel(MapType::MINES_5, true);
       break;
 
     case '<':

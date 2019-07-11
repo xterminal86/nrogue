@@ -601,7 +601,7 @@ void MapLevelTown::CreateChurch(int x, int y)
           // Shrine has some logic (buff and timeout count), thus
           // we must make it a global game object so it could be updated
           // every turn no matter where the player is.
-          auto go = GameObjectsFactory::Instance().CreateShrine(posX, posY, shrineType, 1000);
+          auto go = GameObjectsFactory::Instance().CreateShrine(posX, posY, shrineType, 100);
           InsertGameObject(go);
         }
         break;
