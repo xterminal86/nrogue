@@ -2093,34 +2093,42 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
 
     case ItemType::HUNGER_POTION:
       itemData.IdentifiedName.append(" of Satiation");
+      go->ObjectName.append(" +SAT");
       break;
 
     case ItemType::EXP_POTION:
       itemData.IdentifiedName.append(" of Enlightenment");
+      go->ObjectName.append(" +EXP");
       break;
 
     case ItemType::STR_POTION:
       itemData.IdentifiedName.append(" of Strength");
+      go->ObjectName.append(" +STR");
       break;
 
     case ItemType::DEF_POTION:
       itemData.IdentifiedName.append(" of Defence");
+      go->ObjectName.append(" +DEF");
       break;
 
     case ItemType::MAG_POTION:
       itemData.IdentifiedName.append(" of Magic");
+      go->ObjectName.append(" +MAG");
       break;
 
     case ItemType::RES_POTION:
       itemData.IdentifiedName.append(" of Resistance");
+      go->ObjectName.append(" +RES");
       break;
 
     case ItemType::SKL_POTION:
       itemData.IdentifiedName.append(" of Skill");
+      go->ObjectName.append(" +SKL");
       break;
 
     case ItemType::SPD_POTION:
       itemData.IdentifiedName.append(" of Speed");
+      go->ObjectName.append(" +SPD");
       break;
 
     case ItemType::REPAIR_KIT:
