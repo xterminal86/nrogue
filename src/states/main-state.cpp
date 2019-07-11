@@ -120,16 +120,22 @@ void MainState::HandleInput()
     case '>':      
       CheckStairs('>');
 
-      // FIXME: debug, further going down won't work
+      // FIXME: for debug, further going down won't work
       // because of this override.
+      //
+      // NOTE: Comment out CheckStairs() above to avoid pointer loop.
       //
       // CheckStairs() also uses Map::ChangeLevel() which in turn
       // can display welcome text via MessageBox(), which sets
       // previousState and currentState variables.
-      // Comment out CheckStairs() to avoid pointer loop
-      // for them (i.e. CheckStairs() will set previousState to MainState
-      // and then this call will "override" that to MessageBoxState and
-      // now we have both variables pointing to the same state).
+      // If leave CheckStairs() uncommented, then during first visit
+      // on a level message box will be displayed.
+      // It will set previousState to MainState
+      // and then call below will "override" that previousState
+      // to MessageBoxState and now we have both previousState
+      // and currentState variables pointing to the same state,
+      // which will lead to inability to close message box.
+      //
       //Map::Instance().ChangeLevel(MapType::CAVES_1, true);
       break;
 

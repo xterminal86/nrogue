@@ -489,10 +489,15 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
   auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
   if (actor != nullptr)
   {
-    bool res = TryToDamageObject(actor, damage, againstRes);
+    bool damageDone = TryToDamageObject(actor, damage, againstRes);
     if (weapon->Data.SpellHeld == SpellType::FROST)
     {
       actor->AddEffect(EffectType::FROZEN, 1, 10, true, true);
+    }
+
+    if (damageDone && actor->IsDestroyed)
+    {
+      ProcessKill(actor);
     }
   }
   else

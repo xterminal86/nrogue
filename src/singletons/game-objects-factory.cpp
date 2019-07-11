@@ -398,14 +398,74 @@ GameObject* GameObjectsFactory::CreateHerobrine(int x, int y)
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
   cc->MaxCapacity = 20;
 
+  GameObject* pickaxe = CreateUniquePickaxe();
+  cc->AddToInventory(pickaxe);
+
   go->Attrs.Str.Talents = 3;
+  go->Attrs.Skl.Talents = 3;
   go->Attrs.Def.Talents = 1;
   go->Attrs.HP.Talents = 2;
 
-  for (int i = 0; i < 10; i++)
+  for (int i = 1; i < 10; i++)
   {
     go->LevelUp(5);
   }
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateUniquePickaxe()
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->ObjectName = "Pickaxe";
+  go->Image = '(';
+  go->FgColor = GlobalConstants::ItemUniqueColor;
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  ic->Data.EqCategory = EquipmentCategory::WEAPON;
+  ic->Data.ItemType_ = ItemType::WEAPON;
+  ic->Data.Rarity = ItemRarity::UNIQUE;
+
+  ic->Data.Prefix = ItemPrefix::CURSED;
+  ic->Data.IsIdentified = false;
+
+  int diceRolls = 1;
+  int diceSides = 8;
+
+  ic->Data.WeaponType_ = WeaponType::PICKAXE;
+
+  int avgDamage = CalculateAverageDamage(diceRolls, diceSides);
+
+  ic->Data.Damage.CurrentValue = diceRolls;
+  ic->Data.Damage.OriginalValue = diceSides;
+
+  ic->Data.StatBonuses[StatsEnum::SKL] = 1;
+  ic->Data.StatBonuses[StatsEnum::SPD] = 1;
+
+  ic->Data.Durability.Set(30);
+
+  ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
+  ic->Data.IdentifiedName = "Block Breaker";
+
+  auto str = Util::StringFormat("You think it'll do %d damage on average.", avgDamage);
+  ic->Data.UnidentifiedDescription = { str, "You can't tell anything else." };
+
+  ic->Data.IdentifiedDescription =
+  {
+    "This is quite an old but sturdy looking pickaxe",
+    "that belonged to a miner named Herobrine",
+    "who was murdered down here some time ago.",
+    "There are traces of blood on the pickaxe's head."
+  };
+
+  // *** !!!
+  // Identified description for weapon is
+  // returned via private helper method in ItemComponent
+  // *** !!!
+
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
   return go;
 }

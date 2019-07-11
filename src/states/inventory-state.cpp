@@ -42,8 +42,8 @@ void InventoryState::HandleInput()
         return;
       }
 
-      auto c = _playerRef->Inventory.Contents[_selectedIndex]->GetComponent<ItemComponent>();
-      ((ItemComponent*)c)->Inspect();            
+      ItemComponent* c = _playerRef->Inventory.Contents[_selectedIndex]->GetComponent<ItemComponent>();
+      c->Inspect();
     }
     break;
 
@@ -212,16 +212,7 @@ void InventoryState::Update(bool forceUpdate)
         Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1, 2 + yPos, equipStatus, Printer::kAlignLeft, "#FFFFFF");
       }
 
-      std::string textColor = "#FFFFFF";
-
-      if (ic->Data.Prefix == ItemPrefix::BLESSED)
-      {
-        textColor = GlobalConstants::ItemMagicColor;
-      }
-      else if (ic->Data.Prefix == ItemPrefix::CURSED)
-      {
-        textColor = "#880000";
-      }
+      std::string textColor = GetTextColor(ic);
 
       std::string idColor = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered) ? textColor : "#FFFFFF";
       DrawSelectionBar(yPos, nameInInventory, idColor);
@@ -244,6 +235,35 @@ void InventoryState::Update(bool forceUpdate)
 
     Printer::Instance().Render();
   }
+}
+
+std::string InventoryState::GetTextColor(ItemComponent* ic)
+{
+  std::string textColor = "#FFFFFF";
+
+  bool isMagicOrBlessed = (ic->Data.Prefix == ItemPrefix::BLESSED || ic->Data.Rarity == ItemRarity::MAGIC);
+  bool isRare = (ic->Data.Rarity == ItemRarity::RARE);
+  bool isUnique = (ic->Data.Rarity == ItemRarity::UNIQUE);
+  bool isCursed = (ic->Data.Prefix == ItemPrefix::CURSED);
+
+  if (isMagicOrBlessed)
+  {
+    textColor = GlobalConstants::ItemMagicColor;
+  }
+  else if (isRare)
+  {
+    textColor = GlobalConstants::ItemRareColor;
+  }
+  else if (isUnique)
+  {
+    textColor = GlobalConstants::ItemUniqueColor;
+  }
+  else if (isCursed)
+  {
+    textColor = GlobalConstants::ItemCursedColor;
+  }
+
+  return textColor;
 }
 
 void InventoryState::DisplayEquipment()

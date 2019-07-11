@@ -15,7 +15,7 @@ class ItemComponent : public Component
 
     bool Use();
     void Transfer(ContainerComponent* destination = nullptr);
-    void Inspect();
+    void Inspect(bool overrideDescriptions = false);
     bool Equip();
 
     ItemData Data;    

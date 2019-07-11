@@ -30,6 +30,8 @@ class InventoryState : public GameState
     void DrawEquipmentField(int x, int y, const std::string& fieldName, ItemComponent* eq);
     void DrawSelectionBar(int yOffset, const std::string& text, const std::string& textColor);
 
+    std::string GetTextColor(ItemComponent* ic);
+
     int _selectedIndex;
 };
 

@@ -78,6 +78,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateBat(int x, int y, bool randomize = true);
     GameObject* CreateSpider(int x, int y, bool randomize = true);
     GameObject* CreateHerobrine(int x, int y);
+    GameObject* CreateUniquePickaxe();
 
     GameObject* CreateRandomGlass();
     GameObject* CreateGemHelper(GemType t);

@@ -37,40 +37,56 @@ bool ItemComponent::Equip()
   return GameObjectsFactory::Instance().HandleItemEquip(this);
 }
 
-void ItemComponent::Inspect()
+void ItemComponent::Inspect(bool overrideDescriptions)
 {  
   std::string header = Data.IsIdentified ? Data.IdentifiedName : Data.UnidentifiedName;
-  auto desc = Data.IsIdentified ? Data.IdentifiedDescription : Data.UnidentifiedDescription;
+  auto lore = Data.IsIdentified ? Data.IdentifiedDescription : Data.UnidentifiedDescription;
 
-  if (Data.IsIdentified)
+  if (!overrideDescriptions)
   {
-    if (Data.ItemType_ == ItemType::WEAPON
-     || Data.ItemType_ == ItemType::RANGED_WEAPON)
+    if (Data.IsIdentified)
     {
-      desc = GetWeaponInspectionInfo();
+      std::vector<std::string> info;
+
+      if (Data.ItemType_ == ItemType::WEAPON
+       || Data.ItemType_ == ItemType::RANGED_WEAPON)
+      {
+        info = GetWeaponInspectionInfo();
+      }
+      else if (Data.ItemType_ == ItemType::ARMOR)
+      {
+        info = GetArmorInspectionInfo();
+      }
+      else if (Data.ItemType_ == ItemType::RETURNER)
+      {
+        info = GetReturnerInspectionInfo();
+      }
+
+      // To avoid empty line at the bottom if there is no description.
+      if (!lore.empty() && !info.empty())
+      {
+        lore.push_back("");
+      }
+
+      for (auto& s : info)
+      {
+        lore.push_back(s);
+      }
     }
-    else if (Data.ItemType_ == ItemType::ARMOR)
+    else if (!Data.IsIdentified && Data.IsPrefixDiscovered)
     {
-      desc = GetArmorInspectionInfo();
-    }
-    else if (Data.ItemType_ == ItemType::RETURNER)
-    {
-      desc = GetReturnerInspectionInfo();
+      if (Data.Prefix == ItemPrefix::BLESSED)
+      {
+        lore.push_back("This one is blessed and will perform better.");
+      }
+      else if (Data.Prefix == ItemPrefix::CURSED)
+      {
+        lore.push_back("This one is cursed and should be avoided.");
+      }
     }
   }
-  else if (!Data.IsIdentified && Data.IsPrefixDiscovered)
-  {
-    if (Data.Prefix == ItemPrefix::BLESSED)
-    {
-      desc.push_back("This one is blessed and will perform better.");
-    }
-    else if (Data.Prefix == ItemPrefix::CURSED)
-    {
-      desc.push_back("This one is cursed and should be avoided.");
-    }
-  }
 
-  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, header, desc);
+  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, header, lore);
 }
 
 bool ItemComponent::Use()

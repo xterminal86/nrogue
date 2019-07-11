@@ -122,7 +122,7 @@ void LookInputState::Update(bool forceUpdate)
             }
             else
             {
-              model = dynamic_cast<AIMonsterBasic*>(aic->CurrentModel);
+              model = dynamic_cast<AIModelBase*>(aic->CurrentModel);
               if (model != nullptr)
               {
                 lookStatus = aic->OwnerGameObject->ObjectName;
