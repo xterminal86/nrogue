@@ -268,6 +268,12 @@ void MainState::TryToPickupItem()
     }
 
     ProcessItemPickup(res);
+
+    res = Map::Instance().GetGameObjectToPickup(_playerRef->PosX, _playerRef->PosY);
+    if (res.first != -1)
+    {
+      Printer::Instance().AddMessage("There's something else lying here");
+    }
   }
   else
   {

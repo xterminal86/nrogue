@@ -401,14 +401,18 @@ GameObject* GameObjectsFactory::CreateHerobrine(int x, int y)
   GameObject* pickaxe = CreateUniquePickaxe();
   cc->AddToInventory(pickaxe);
 
+  GameObject* gem = CreateGem(0, 0, GemType::ORANGE_AMBER);
+  cc->AddToInventory(gem);
+
   go->Attrs.Str.Talents = 3;
   go->Attrs.Skl.Talents = 3;
   go->Attrs.Def.Talents = 1;
+  go->Attrs.Spd.Talents = 1;
   go->Attrs.HP.Talents = 2;
 
   for (int i = 1; i < 10; i++)
   {
-    go->LevelUp(5);
+    go->LevelUp();
   }
 
   return go;
@@ -1639,6 +1643,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
     }
     break;
   }
+
+  ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;
 
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
   ic->Data.ItemType_ = ItemType::RANGED_WEAPON;

@@ -431,7 +431,13 @@ void MapLevelMines::CreateSpecialLevel()
 
         case '+':
         {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Door", 30);
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Wooden Door", 30);
+
+          DoorComponent* dc = door->GetComponent<DoorComponent>();
+
+          // This door should be kicked out, so OpenedBy doesn't matter
+          dc->OpenedBy = 0;
+
           InsertStaticObject(door);
         }
         break;

@@ -244,7 +244,7 @@ void MapLevelTown::CreateLevel()
   auto wand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::GOLDEN, SpellType::FIREBALL, ItemPrefix::UNCURSED);
   InsertGameObject(wand);
 
-  auto bow = GameObjectsFactory::Instance().CreateRangedWeapon(2, 1, RangedWeaponType::LIGHT_BOW, ItemPrefix::UNCURSED);
+  auto bow = GameObjectsFactory::Instance().CreateRangedWeapon(2, 1, RangedWeaponType::SHORT_BOW, ItemPrefix::UNCURSED);
   InsertGameObject(bow);
 
   auto arrows = GameObjectsFactory::Instance().CreateArrows(3, 1, ArrowType::ARROWS, ItemPrefix::UNCURSED);

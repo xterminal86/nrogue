@@ -607,7 +607,7 @@ namespace GlobalConstants
   static const std::string ItemMagicColor = "#4169E1";
   static const std::string ItemRareColor = "#CCCC52";
   static const std::string ItemUniqueColor = "#A59263";
-  static const std::string ItemCursedColor = "#FF0000";
+  static const std::string ItemCursedColor = "#AA0000";
 
   static const std::map<PlayerSkills, std::string> SkillNameByType =
   {
