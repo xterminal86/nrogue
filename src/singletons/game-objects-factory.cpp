@@ -458,16 +458,10 @@ GameObject* GameObjectsFactory::CreateUniquePickaxe()
 
   ic->Data.IdentifiedDescription =
   {
-    "This is quite an old but sturdy looking pickaxe",
-    "that belonged to a miner named Herobrine",
-    "who was murdered down here some time ago.",
-    "There are traces of blood on the pickaxe's head."
+    "This is quite an old but sturdy looking pickaxe,",
+    "yet you can't shake the uneasy feeling about it."
+    "There are traces of blood on its head."
   };
-
-  // *** !!!
-  // Identified description for weapon is
-  // returned via private helper method in ItemComponent
-  // *** !!!
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
