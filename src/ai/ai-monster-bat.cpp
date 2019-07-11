@@ -19,6 +19,9 @@ AIMonsterBat::AIMonsterBat()
 
 void AIMonsterBat::ConstructAI()
 {
+  // BUG: Windows build, bat was cornered and then game stuck in infinite attack animation loop
+  // (player was subsequently killed, obituary written but animation kept going)
+  // Either something is wrong with SDL_Delay() or this AI configuration.
   auto& objRef = AIComponentRef->OwnerGameObject;
 
   Root* rootNode = new Root(objRef);
