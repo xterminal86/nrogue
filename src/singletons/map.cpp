@@ -147,13 +147,20 @@ void Map::UpdateGameObjects()
     // (e.g. ai-monster-basic).
     //
     // That's why we should always call Update() at least once.
-    go->Update();
 
-    // If there are extra turns available, perform them
-    while (go->Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
+    // Achievement unlocked:
+    //
+    // ******************************************
+    // * Use do / while loop in the actual code *
+    // * for the first time in your life        *
+    // ******************************************
+    //
+    do
     {
       go->Update();
     }
+    // If there are extra turns available, perform them
+    while (go->Attrs.ActionMeter >= GlobalConstants::TurnReadyValue);
   }
 }
 
