@@ -224,21 +224,31 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
 void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
 {
   int power = _playerRef->Attrs.HP.OriginalValue;
+  bool atFullHealth = (_playerRef->Attrs.HP.CurrentValue == _playerRef->Attrs.HP.OriginalValue);
 
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
     power = RNG::Instance().RandomRange(1, _playerRef->Attrs.HP.CurrentValue / 2);
     Printer::Instance().AddMessage("You writhe in pain!");
   }
-  else if (scroll->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    power = -power;
-    Printer::Instance().AddMessage("Your wounds are healed completely!");
-  }
   else
   {
-    power = -power / 2;
-    Printer::Instance().AddMessage("You feel better");
+    if (atFullHealth)
+    {
+      Printer::Instance().AddMessage("...but nothing happens.");
+      return;
+    }
+
+    if (scroll->Data.Prefix == ItemPrefix::BLESSED)
+    {
+      power = -power;
+      Printer::Instance().AddMessage("Your wounds are healed completely!");
+    }
+    else
+    {
+      power = -power / 2;
+      Printer::Instance().AddMessage("You feel better");
+    }
   }
 
   _playerRef->ReceiveDamage(nullptr, power, true, false, true);
@@ -250,25 +260,19 @@ void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
   int power = wand->Data.WandCapacity.CurrentValue / 100 + playerPow;
   int duration = wand->Data.WandCapacity.CurrentValue;
 
+  std::string message = "The golden light surrounds you!";
+
   if (wand->Data.Prefix == ItemPrefix::BLESSED)
   {
     duration *= 2;
     power *= 2;
-
-    if (!wand->Data.IsPrefixDiscovered)
-    {
-      Printer::Instance().AddMessage("The golden light surrounds you!");
-    }
   }
   else if (wand->Data.Prefix == ItemPrefix::CURSED)
   {
     duration /= 2;
     power = -power;
 
-    if (!wand->Data.IsPrefixDiscovered)
-    {
-      Printer::Instance().AddMessage("You are surrounded by darkness!");
-    }
+    message = "You are surrounded by darkness!";
   }
 
   if (!wand->Data.IsPrefixDiscovered
@@ -277,6 +281,8 @@ void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
     wand->Data.IsPrefixDiscovered = true;
     wand->Data.IsIdentified = true;
   }
+
+  Printer::Instance().AddMessage(message);
 
   _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration, false, true);
 }
@@ -343,6 +349,8 @@ void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
     playerPow = 1;
   }
 
+  std::string message = "The golden light surrounds you!";
+
   int power = playerPow + 6;
   int duration = playerPow * 10;
 
@@ -350,16 +358,16 @@ void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
   {
     duration *= 2;
     power *= 2;
-
-    Printer::Instance().AddMessage("The golden light surrounds you!");
   }
   else if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
     duration /= 2;
     power = -power;
 
-    Printer::Instance().AddMessage("You are surrounded by darkness!");
+    message = "You are surrounded by darkness!";
   }
+
+  Printer::Instance().AddMessage(message);
 
   _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration, false, true);
 }
@@ -448,21 +456,19 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll)
   if (scroll->Data.Prefix == ItemPrefix::UNCURSED
    || scroll->Data.Prefix == ItemPrefix::BLESSED)
   {
-    Printer::Instance().AddMessage("You are suddenly transported elsewhere!");
-
     int index = RNG::Instance().RandomRange(0, mapRef->EmptyCells().size());
     auto pos = mapRef->EmptyCells()[index];
     Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos);
   }
   else if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
-    Printer::Instance().AddMessage("You are suddenly transported elsewhere!");
-
     int rx = RNG::Instance().RandomRange(1, mapRef->MapSize.X);
     int ry = RNG::Instance().RandomRange(1, mapRef->MapSize.Y);
     Position pos = { rx, ry };
     Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos);
   }
+
+  Printer::Instance().AddMessage("You are suddenly transported elsewhere!");
 }
 
 void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
@@ -483,6 +489,10 @@ void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
     }
 
     _playerRef->AddEffect(EffectType::MANA_SHIELD, 0, -1, false, true);
+  }
+  else
+  {
+    Printer::Instance().AddMessage("...but nothing happens.");
   }
 }
 

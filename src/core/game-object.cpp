@@ -177,7 +177,7 @@ void GameObject::WaitForTurn()
 
   // In impossible case that speed penalties
   // are too great that speed increment is negative
-  speedIncrement = (speedIncrement <= 0) ? spdIncrScale : speedIncrement;
+  speedIncrement = (speedIncrement <= 0) ? 5 : speedIncrement;
 
   // In towns SPD is ignored
   if (Map::Instance().CurrentLevel->Peaceful)

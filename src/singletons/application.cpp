@@ -61,7 +61,8 @@ void Application::Run()
       _currentState->HandleInput();
     }
     else
-    {      
+    {
+      // Order of calls results in slightly different visual update.
       Map::Instance().UpdateGameObjects();
       PlayerInstance.WaitForTurn();
     }
