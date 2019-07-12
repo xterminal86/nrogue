@@ -747,6 +747,11 @@ namespace Util
     // application got stuck in endless animation loop.
     // Interrupt in debugger showed that the program
     // is hanging on SDL_Delay() call.
+    // But maybe it was related to not having WaitForTurn() for AI.
+
+    #ifdef USE_SDL
+    SDL_Delay(delayMs);
+    #else
     using timer = std::chrono::high_resolution_clock;
     using ms = std::chrono::milliseconds;
 
@@ -758,6 +763,7 @@ namespace Util
     {
       now = timer::now();
     }
+    #endif
   }
 
   inline void PrintVector(const std::string& title, const std::vector<Position>& v)

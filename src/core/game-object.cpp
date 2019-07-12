@@ -169,7 +169,7 @@ void GameObject::WaitForTurn()
   // with slightly different stats (SPD 1 and SPD 2)
   // and to reduce number of idle waiting cycles,
   // we introduce a little scaling for speed incrementation.
-  int spdIncrScale = GlobalConstants::TurnTickValue / 2;
+  int spdIncrScale = GlobalConstants::TurnTickValue / 4;
 
   int speedTickBase = GlobalConstants::TurnTickValue;
   int speedAttr = Attrs.Spd.Get() * spdIncrScale;
