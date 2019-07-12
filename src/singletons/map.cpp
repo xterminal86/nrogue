@@ -125,7 +125,7 @@ void Map::Draw(int playerX, int playerY)
 
 void Map::UpdateGameObjects()
 {
-  if (CurrentLevel == nullptr)
+  if (CurrentLevel == nullptr || !_playerRef->IsAlive())
   {
     return;
   }

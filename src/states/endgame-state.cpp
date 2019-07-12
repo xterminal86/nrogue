@@ -12,6 +12,8 @@ void EndgameState::Init()
 
 void EndgameState::Prepare()
 {
+  Printer::Instance().AddMessage("You are dead. Not big surprise.");
+
   Application::Instance().WriteObituary();
 }
 

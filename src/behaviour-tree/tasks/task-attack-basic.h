@@ -9,7 +9,7 @@ class TaskAttackBasic : public Node
 
   public:
     bool Run() override
-    {      
+    {
       bool result = false;
 
       int attackChanceScale = 2;
@@ -48,6 +48,7 @@ class TaskAttackBasic : public Node
         if (!_playerRef->IsAlive())
         {
           Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
+          return false;
         }
       }
       else

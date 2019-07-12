@@ -1124,8 +1124,6 @@ bool Player::IsAlive()
     BgColor = "#FF0000";
     IsDestroyed = true;
 
-    Printer::Instance().AddMessage("You are dead. Not big surprise.");
-
     return false;
   }
 
