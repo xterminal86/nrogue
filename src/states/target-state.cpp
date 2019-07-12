@@ -4,6 +4,7 @@
 #include "printer.h"
 #include "map.h"
 #include "ai-component.h"
+#include "door-component.h"
 #include "spells-database.h"
 #include "game-objects-factory.h"
 
@@ -238,6 +239,13 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
   auto cell = Map::Instance().CurrentLevel->StaticMapObjects[at.X][at.Y].get();
   if (cell != nullptr)
   {    
+    // If door is open, ignore it
+    DoorComponent* dc = cell->GetComponent<DoorComponent>();
+    if (dc != nullptr && dc->IsOpen)
+    {
+      return nullptr;
+    }
+
     if (_throwingItemInventoryIndex != -1)
     {
       if (cell->Blocking)

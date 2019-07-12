@@ -240,7 +240,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
     difficulty += diffOffset;
 
     go->Attrs.Str.Talents = 1;
-    go->Attrs.Spd.Talents = 2;
+    go->Attrs.Spd.Talents = 1;
 
     for (int i = 0; i < difficulty; i++)
     {
