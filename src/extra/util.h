@@ -740,9 +740,13 @@ namespace Util
 
   inline void Sleep(int delayMs)
   {
-    #ifdef USE_SDL
-    SDL_Delay(delayMs);
-    #else
+    // NOTE: Application can freeze on SDL_Delay().
+    //
+    // There was a confirmed bug with bat being cornered
+    // and after player engaged it to attack,
+    // application got stuck in endless animation loop.
+    // Interrupt in debugger showed that the program
+    // is hanging on SDL_Delay() call.
     using timer = std::chrono::high_resolution_clock;
     using ms = std::chrono::milliseconds;
 
@@ -754,7 +758,6 @@ namespace Util
     {
       now = timer::now();
     }
-    #endif
   }
 
   inline void PrintVector(const std::string& title, const std::vector<Position>& v)

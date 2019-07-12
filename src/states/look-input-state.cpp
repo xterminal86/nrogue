@@ -10,6 +10,10 @@
 #include "ai-monster-basic.h"
 #include "map-level-base.h"
 
+#ifdef DEBUG_BUILD
+#include "game-objects-factory.h"
+#endif
+
 void LookInputState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
@@ -67,6 +71,15 @@ void LookInputState::HandleInput()
     case 'q':
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
+
+    #ifdef DEBUG_BUILD
+    case 'b':
+    {
+      GameObject* bat = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::BAT);
+      Map::Instance().InsertActor(bat);
+    }
+    break;
+    #endif
 
     default:
       break;
