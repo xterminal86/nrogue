@@ -79,6 +79,13 @@ void LookInputState::HandleInput()
       Map::Instance().InsertActor(bat);
     }
     break;
+
+    case 'r':
+    {
+      GameObject* rat = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::RAT);
+      Map::Instance().InsertActor(rat);
+    }
+    break;
     #endif
 
     default:

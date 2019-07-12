@@ -41,7 +41,14 @@ void AIModelBase::Update()
 
   if (_root)
   {
-    _root->Run();
+    if (AIComponentRef->OwnerGameObject->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
+    {
+      AIComponentRef->OwnerGameObject->WaitForTurn();
+    }
+    else
+    {
+      _root->Run();
+    }
   }
 }
 

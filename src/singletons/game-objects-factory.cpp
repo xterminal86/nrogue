@@ -239,7 +239,8 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
 
     difficulty += diffOffset;
 
-    go->Attrs.Str.Talents = 3;
+    go->Attrs.Str.Talents = 1;
+    go->Attrs.Spd.Talents = 2;
 
     for (int i = 0; i < difficulty; i++)
     {
@@ -294,7 +295,7 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
     difficulty += diffOffset;
 
     go->Attrs.Def.Talents = 3;
-    go->Attrs.Spd.Talents = 1;
+    go->Attrs.Spd.Talents = 3;
 
     for (int i = 0; i < difficulty; i++)
     {
@@ -350,7 +351,7 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
 
     go->Attrs.Str.Talents = 2;
     go->Attrs.Def.Talents = 2;
-    go->Attrs.HP.Talents = 2;
+    go->Attrs.Spd.Talents = 1;
 
     for (int i = 0; i < difficulty; i++)
     {

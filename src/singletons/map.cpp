@@ -141,13 +141,12 @@ void Map::UpdateGameObjects()
 
   for (auto& go : CurrentLevel->ActorGameObjects)
   {
-    // NOTE: I don't know what this comment means anymore,
-    // it's probably a leftover from early development stage.
-    //
     // Update does the action meter increment as well
     // so if object had action meter 0 at start,
     // it needs to increment it in its component logic class
-    // (e.g. ai-monster-basic)
+    // (e.g. ai-monster-basic).
+    //
+    // That's why we should always call Update() at least once.
     go->Update();
 
     // If there are extra turns available, perform them
@@ -654,13 +653,13 @@ std::vector<Position> Map::GetWalkableCellsAround(const Position& pos)
     for (int x = lx; x <= hx; x++)
     {
       for (int y = ly; y <= hy; y++)
-      {
+      {        
         if (x == pos.X && y == pos.Y)
         {
           continue;
         }
 
-        if (Util::IsInsideMap({ x, y }, CurrentLevel->MapSize)
+        if (Util::IsInsideMap({ x, y }, CurrentLevel->MapSize)         
         && (!CurrentLevel->IsCellBlocking({ x, y })
          && !CurrentLevel->MapArray[x][y]->Occupied))
         {

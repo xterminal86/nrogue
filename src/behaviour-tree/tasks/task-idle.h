@@ -10,15 +10,7 @@ class TaskIdle : public Node
   public:
     bool Run() override
     {
-      if (_objectToControl->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
-      {
-        _objectToControl->WaitForTurn();
-      }
-      else
-      {
-        _objectToControl->FinishTurn();
-      }
-
+      _objectToControl->FinishTurn();
       return true;
     }
 };

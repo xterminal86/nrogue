@@ -25,7 +25,13 @@ class TaskRandomMovement : public Node
       Position newPos = { _objectToControl->PosX + dx, _objectToControl->PosY + dy };
       bool isOk = !Map::Instance().CurrentLevel->MapArray[newPos.X][newPos.Y]->Special;
 
-      return (isOk && _objectToControl->Move(dx, dy));
+      if (isOk && _objectToControl->Move(dx, dy))
+      {
+        _objectToControl->FinishTurn();
+        return true;
+      }
+
+      return false;
     }
 };
 

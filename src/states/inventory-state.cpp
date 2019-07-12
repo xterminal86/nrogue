@@ -246,21 +246,23 @@ std::string InventoryState::GetTextColor(ItemComponent* ic)
   bool isUnique = (ic->Data.Rarity == ItemRarity::UNIQUE);
   bool isCursed = (ic->Data.Prefix == ItemPrefix::CURSED);
 
-  if (isMagicOrBlessed)
+  // Iterate over this map and select color
+  // for the first entry found with bool key == true.
+  std::map<int, std::pair<bool, std::string>> itemFirstColorToChoose =
   {
-    textColor = GlobalConstants::ItemMagicColor;
-  }
-  else if (isRare)
+    { 0, { isMagicOrBlessed, GlobalConstants::ItemMagicColor   } },
+    { 1, { isRare,           GlobalConstants::ItemRareColor    } },
+    { 2, { isUnique,         GlobalConstants::ItemUniqueColor  } },
+    { 3, { isCursed,         GlobalConstants::ItemCursedColor  } }
+  };
+
+  for (auto& kvp : itemFirstColorToChoose)
   {
-    textColor = GlobalConstants::ItemRareColor;
-  }
-  else if (isUnique)
-  {
-    textColor = GlobalConstants::ItemUniqueColor;
-  }
-  else if (isCursed)
-  {
-    textColor = GlobalConstants::ItemCursedColor;
+    if (kvp.second.first)
+    {
+      textColor = kvp.second.second;
+      break;
+    }
   }
 
   return textColor;
