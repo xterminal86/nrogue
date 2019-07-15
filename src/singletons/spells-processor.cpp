@@ -23,14 +23,20 @@ void SpellsProcessor::ProcessWand(ItemComponent* wand)
       break;
 
     default:
-      Printer::Instance().AddMessage("...but nothing happens.");
+      Printer::Instance().AddMessage(_kNoActionText);
       break;
   }
 }
 
 void SpellsProcessor::ProcessScroll(ItemComponent* scroll)
 {
-  Printer::Instance().AddMessage("You read the scroll...");
+  std::string scrollName = scroll->Data.IsIdentified ?
+                           scroll->Data.IdentifiedName :
+                           scroll->Data.UnidentifiedName;
+
+  auto str = Util::StringFormat("You read the scroll %s...", scrollName.data());
+
+  Printer::Instance().AddMessage(str);
 
   switch(scroll->Data.SpellHeld)
   {
@@ -79,7 +85,7 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll)
       break;
 
     default:
-      Printer::Instance().AddMessage("...but nothing happens.");
+      Printer::Instance().AddMessage(_kNoActionText);
       break;
   }
 
@@ -101,7 +107,7 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll)
 
   if (itemsToRepair.empty())
   {
-    Printer::Instance().AddMessage("...but nothing happens.");
+    Printer::Instance().AddMessage(_kNoActionText);
     return;
   }
 
@@ -151,7 +157,7 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
   {
     if (itemsKnown.empty())
     {
-      Printer::Instance().AddMessage("...but nothing happens.");
+      Printer::Instance().AddMessage(_kNoActionText);
       return;
     }
 
@@ -166,7 +172,7 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
   {
     if (itemsToId.empty())
     {
-      Printer::Instance().AddMessage("...but nothing happens.");
+      Printer::Instance().AddMessage(_kNoActionText);
       return;
     }
 
@@ -179,7 +185,7 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
   {
     if (itemsToId.empty())
     {
-      Printer::Instance().AddMessage("...but nothing happens.");
+      Printer::Instance().AddMessage(_kNoActionText);
       return;
     }
 
@@ -197,7 +203,7 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
 {
   if (!_playerRef->HasEffect(EffectType::POISONED))
   {
-    Printer::Instance().AddMessage("...but nothing happens.");
+    Printer::Instance().AddMessage(_kNoActionText);
     return;
   }
 
@@ -235,7 +241,7 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
   {
     if (atFullHealth)
     {
-      Printer::Instance().AddMessage("...but nothing happens.");
+      Printer::Instance().AddMessage(_kNoActionText);
       return;
     }
 
@@ -492,7 +498,7 @@ void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
   }
   else
   {
-    Printer::Instance().AddMessage("...but nothing happens.");
+    Printer::Instance().AddMessage(_kNoActionText);
   }
 }
 

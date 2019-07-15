@@ -3,6 +3,8 @@
 
 #include "singleton.h"
 
+#include <string>
+
 class Player;
 class ItemComponent;
 
@@ -30,6 +32,8 @@ class SpellsProcessor : public Singleton<SpellsProcessor>
     void ProcessScrollOfRemoveCurse(ItemComponent* scroll);
 
     Player* _playerRef = nullptr;
+
+    const std::string _kNoActionText = "...but nothing happens.";
 };
 
 #endif // SPELLSPROCESSOR_H
