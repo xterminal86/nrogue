@@ -32,7 +32,7 @@ void SpellsDatabase::Init()
                 });
 
   RegisterSpell({
-  SpellType::MAGIC_MISSILE, "Magic Missile", "MM", 25, { 1, 6 }, "#FFA500"
+  SpellType::MAGIC_MISSILE, "Magic Missile", "Mg", 25, { 1, 6 }, "#FFA500"
                 });
 
   RegisterSpell({
@@ -40,7 +40,7 @@ void SpellsDatabase::Init()
                 });
 
   RegisterSpell({
-  SpellType::MAGIC_MAPPING, "Magic Mapping", "Mg", 80
+  SpellType::MAGIC_MAPPING, "Magic Mapping", "MM", 80
                 });
 
   RegisterSpell({
