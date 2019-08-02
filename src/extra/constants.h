@@ -32,21 +32,33 @@
 
   #if defined(__unix__) || defined(__linux__)
 
-    #define NUMPAD_7  262
-    #define NUMPAD_8  259
-    #define NUMPAD_9  339
-    #define NUMPAD_4  260
-    #define NUMPAD_5  350
-    #define NUMPAD_6  261
-    #define NUMPAD_1  360
-    #define NUMPAD_2  258
-    #define NUMPAD_3  338
+  // NOTE: probably will work in xterm only
 
-    // ********************
+    #if NCURSES_VERSION_MAJOR > 5
+      #define NUMPAD_7  262
+      #define NUMPAD_8  259
+      #define NUMPAD_9  339
+      #define NUMPAD_4  260
+      #define NUMPAD_5  350
+      #define NUMPAD_6  261
+      #define NUMPAD_1  360
+      #define NUMPAD_2  258
+      #define NUMPAD_3  338
 
-    #define VK_BACKSPACE 127
-    #define VK_ENTER     10
-    #define VK_TAB       '\t'
+      #define VK_BACKSPACE 127
+    #else
+      #define NUMPAD_7  KEY_HOME
+      #define NUMPAD_8  KEY_UP
+      #define NUMPAD_9  KEY_PPAGE
+      #define NUMPAD_4  KEY_LEFT
+      #define NUMPAD_5  KEY_B2
+      #define NUMPAD_6  KEY_RIGHT
+      #define NUMPAD_1  KEY_END
+      #define NUMPAD_2  KEY_DOWN
+      #define NUMPAD_3  KEY_NPAGE
+
+      #define VK_BACKSPACE KEY_BACKSPACE
+    #endif
 
   #else
 
@@ -62,11 +74,13 @@
 
     // ********************
 
-    #define VK_BACKSPACE 8
-    #define VK_ENTER     10
-    #define VK_TAB       '\t'
+    #define VK_BACKSPACE 8    
 
   #endif
+
+  #define VK_ENTER     10
+  #define VK_TAB       '\t'
+
 #endif
 
 #include <vector>
