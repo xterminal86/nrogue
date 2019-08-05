@@ -44,12 +44,13 @@ class Pathfinder
                                     const Position& mapSize,
                                     const Position& start,
                                     const Position& end,
-                                    const std::vector<char>& obstacles,
+                                    const std::vector<char>& mapTilesToIgnore,
                                     bool eightDirs = false);
 
     std::stack<Position> BuildRoad(MapLevelBase* mapRef,
                                     const Position& start,
-                                    const Position& end,                                    
+                                    const Position& end,
+                                    const std::vector<char>& mapTilesToIgnore,
                                     bool eightDirs = false,
                                     int maxPathLength = -1);
 
@@ -69,13 +70,14 @@ class Pathfinder
                     const PathNode& node,
                     std::vector<PathNode>& openList,
                     std::vector<PathNode>& closedList,
-                    const std::vector<char>& obstacles,
+                    const std::vector<char>& mapTilesToIgnore,
                     bool eightDirs);
 
     void LookAround(MapLevelBase* mapRef,
                     const PathNode& node,
                     std::vector<PathNode>& openList,
                     std::vector<PathNode>& closedList,
+                    const std::vector<char>& mapTilesToIgnore,
                     bool eightDirs);
 
     bool IsNodePresent(const PathNode& n, const std::vector<PathNode>& list);

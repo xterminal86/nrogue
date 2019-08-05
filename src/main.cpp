@@ -2,11 +2,6 @@
 #include <ncurses.h>
 #endif
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <vector>
-#include <memory>
-
 #include "application.h"
 #include "spells-processor.h"
 #include "game-objects-factory.h"

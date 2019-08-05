@@ -83,10 +83,11 @@ std::vector<Position> Pathfinder::BuildRoad(const std::vector<std::vector<char>>
 }
 
 std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
-                                            const Position& start,
-                                            const Position& end,
-                                            bool eightDirs,
-                                            int maxPathLength)
+                                           const Position& start,
+                                           const Position& end,
+                                           const std::vector<char>& mapTilesToIgnore,
+                                           bool eightDirs,
+                                           int maxPathLength)
 {
   _mapSize = mapRef->MapSize;
 
@@ -129,7 +130,7 @@ std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
       break;
     }
 
-    LookAround(mapRef, openList[index], openList, closedList, eightDirs);
+    LookAround(mapRef, openList[index], openList, closedList, mapTilesToIgnore, eightDirs);
 
     openList.erase(openList.begin() + index);
   }
@@ -141,7 +142,7 @@ void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
                             const PathNode& currentNode,
                             std::vector<PathNode>& openList,
                             std::vector<PathNode>& closedList,
-                            const std::vector<char>& obstacles,
+                            const std::vector<char>& mapTilesToIgnore,
                             bool eightDirs)
 {
   std::vector<Position> directions;
@@ -181,7 +182,7 @@ void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
     coordinate.Y = currentNode.Coordinate.Y + p.Y;
 
     bool walkable = true;
-    for (auto& o : obstacles)
+    for (auto& o : mapTilesToIgnore)
     {
       if (map[coordinate.X][coordinate.Y] == o)
       {
@@ -232,6 +233,7 @@ void Pathfinder::LookAround(MapLevelBase* mapRef,
                             const PathNode& currentNode,
                             std::vector<PathNode>& openList,
                             std::vector<PathNode>& closedList,
+                            const std::vector<char>& mapTilesToIgnore,
                             bool eightDirs)
 {
   std::vector<Position> directions;
@@ -275,6 +277,15 @@ void Pathfinder::LookAround(MapLevelBase* mapRef,
     if (staticObj != nullptr && staticObj->Blocking)
     {
       walkable = false;
+    }
+
+    for (auto& o : mapTilesToIgnore)
+    {
+      if (mapRef->MapArray[coordinate.X][coordinate.Y]->Image == o)
+      {
+        walkable = false;
+        break;
+      }
     }
 
     if (!IsInsideMap(coordinate) || !walkable)

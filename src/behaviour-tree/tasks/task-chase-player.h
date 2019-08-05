@@ -22,6 +22,7 @@ class TaskChasePlayer : public Node
       _path = _pf.BuildRoad(Map::Instance().CurrentLevel,
                            { _objectToControl->PosX, _objectToControl->PosY },
                            _playerPos,
+                            std::vector<char>(),
                             true,
                             _pfLimit);
 

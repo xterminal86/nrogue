@@ -320,7 +320,7 @@ void MapLevelTown::BuildRoads()
   for (int i = 0; i < roadMarks.size() - 1; i++)
   {
     Pathfinder pf;
-    auto path = pf.BuildRoad(this, roadMarks[i], roadMarks[i + 1]);
+    auto path = pf.BuildRoad(this, roadMarks[i], roadMarks[i + 1], { '~' });
 
     while (!path.empty())
     {
@@ -510,7 +510,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
           break;
 
         case 'm':
-          t.Set(true, false, ' ', GlobalConstants::BlackColor, GlobalConstants::MarbleColor, "Marble Fence");
+          t.Set(true, false, '#', GlobalConstants::MarbleColor, GlobalConstants::GrassColor, "Marble Fence");
           InsertStaticObject(posX, posY, t);
           break;
 
@@ -724,7 +724,7 @@ void MapLevelTown::PlaceGarden(int x, int y)
       switch (c)
       {
         case '#':
-          t.Set(true, false, ' ', GlobalConstants::BlackColor, GlobalConstants::MarbleColor, "Marble Fence");
+          t.Set(true, false, '#', GlobalConstants::MarbleColor, GlobalConstants::GrassColor, "Marble Fence");
           InsertStaticObject(posX, posY, t);
           break;
 
