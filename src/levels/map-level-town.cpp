@@ -751,9 +751,19 @@ void MapLevelTown::PlaceGarden(int x, int y)
           break;
 
         case 'W':
-          t.Set(true, false, '~', GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
+        {
+          // int type is to avoid truncation
+          // in case of CP437 image which is 247
+          int img = '~';
+
+          #ifdef USE_SDL
+          img = GlobalConstants::CP437IndexByType[NameCP437::WAVES];
+          #endif
+
+          t.Set(true, false, img, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
           MapArray[posX][posY]->MakeTile(t, GameObjectType::DEEP_WATER);
-          break;
+        }
+        break;
 
         case 'F':
           t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Fountain");
@@ -788,9 +798,19 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
           break;
 
         case '~':
-          t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
+        {
+          // int type is to avoid truncation
+          // in case of CP437 image which is 247
+          int img = c;
+
+          #ifdef USE_SDL
+          img = GlobalConstants::CP437IndexByType[NameCP437::WAVES];
+          #endif
+
+          t.Set(true, false, img, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
           MapArray[posX][posY]->MakeTile(t, GameObjectType::DEEP_WATER);
-          break;
+        }
+        break;
 
         case '.':
           PlaceGrassTile(posX, posY, FlowersFrequency);

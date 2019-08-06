@@ -148,8 +148,14 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
 
         case 'W':
         {
+          int img = '~';
+
+          #ifdef USE_SDL
+          img = GlobalConstants::CP437IndexByType[NameCP437::WAVES];
+          #endif
+
           objName = "Deep Water";
-          t.Set(true, false, '~', GlobalConstants::ShallowWaterColor, GlobalConstants::DeepWaterColor, objName);
+          t.Set(true, false, img, GlobalConstants::ShallowWaterColor, GlobalConstants::DeepWaterColor, objName);
           MapArray[x][y]->MakeTile(t, GameObjectType::DEEP_WATER);
         }
         break;

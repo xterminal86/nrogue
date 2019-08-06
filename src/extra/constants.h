@@ -536,8 +536,6 @@ namespace GlobalConstants
     { NameCP437::LRARROW,      (int)NameCP437::LRARROW      },
     { NameCP437::UARROW_2,     (int)NameCP437::UARROW_2     },
     { NameCP437::DARROW_2,     (int)NameCP437::DARROW_2     },
-    { NameCP437::BLOCK,        (int)NameCP437::BLOCK        },
-    { NameCP437::WAVES,        (int)NameCP437::WAVES        },
     { NameCP437::URCORNER_1,   (int)NameCP437::URCORNER_1   },
     { NameCP437::ULCORNER_1,   (int)NameCP437::ULCORNER_1   },
     { NameCP437::DRCORNER_1,   (int)NameCP437::DRCORNER_1   },
@@ -557,7 +555,9 @@ namespace GlobalConstants
     { NameCP437::HBAR_3U,      (int)NameCP437::HBAR_3U      },
     { NameCP437::HBAR_3D,      (int)NameCP437::HBAR_3D      },
     { NameCP437::VBAR_3L,      (int)NameCP437::VBAR_3L      },
-    { NameCP437::VBAR_3R,      (int)NameCP437::VBAR_3R      }
+    { NameCP437::VBAR_3R,      (int)NameCP437::VBAR_3R      },
+    { NameCP437::BLOCK,        (int)NameCP437::BLOCK        },
+    { NameCP437::WAVES,        (int)NameCP437::WAVES        }
   };
 
   static const std::string Base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
