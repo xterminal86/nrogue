@@ -60,6 +60,8 @@ class Application : public Singleton<Application>
     std::string TilesetFilename;
     #endif
 
+    unsigned int TurnsPassed = 0;
+
   private:
     GameState* _currentState = nullptr;
     GameState* _previousState = nullptr;

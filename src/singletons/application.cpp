@@ -65,6 +65,8 @@ void Application::Run()
       // Order of calls results in slightly different visual update.
       Map::Instance().UpdateGameObjects();
       PlayerInstance.WaitForTurn();
+
+      TurnsPassed++;
     }
   }
 }
@@ -283,6 +285,8 @@ void Application::WriteObituary(bool wasKilled)
 
   ss << nameAndTitle << " of level " << PlayerInstance.Attrs.Lvl.CurrentValue << '\n';
   ss << playerEndCause << curLvl->LevelName << "\n\n";
+
+  ss << "He survived " << TurnsPassed << " turns\n\n";
 
   ss << "HP " << PlayerInstance.Attrs.HP.CurrentValue << " / " << PlayerInstance.Attrs.HP.OriginalValue << '\n';
   ss << "MP " << PlayerInstance.Attrs.MP.CurrentValue << " / " << PlayerInstance.Attrs.MP.OriginalValue << '\n';

@@ -21,15 +21,25 @@ void DoorComponent::Interact()
     bool success = false;
 
     auto playerPref = &Application::Instance().PlayerInstance;
-    for (auto& i : playerPref->Inventory.Contents)
+    for (int i = 0; i < playerPref->Inventory.Contents.size(); i++)
     {
-      ItemComponent* ic = i->GetComponent<ItemComponent>();
+      auto& itemRef = playerPref->Inventory.Contents[i];
+      ItemComponent* ic = itemRef->GetComponent<ItemComponent>();
       if (ic->Data.ItemTypeHash == OpenedBy)
       {
         IsOpen = !IsOpen;
         UpdateDoorState();
         OpenedBy = -1;
         success = true;
+
+        // NOTE: what if the same "key" can open several doors?
+        //
+        // Destroy "key" item from inventory since it's no longer needed
+        //ic->Data.IsImportant = false;
+        //
+        //auto it = playerPref->Inventory.Contents.begin();
+        //playerPref->Inventory.Contents.erase(it + i);
+
         break;
       }
     }

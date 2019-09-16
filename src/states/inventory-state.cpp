@@ -63,6 +63,12 @@ void InventoryState::HandleInput()
         return;
       }
 
+      if (ic->Data.IsImportant)
+      {
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "This looks important - better hold on to it" }, GlobalConstants::MessageBoxBlueBorderColor);
+        return;
+      }
+
       DropItem(ic);
       DestroyInventoryItem();
     }
@@ -151,6 +157,12 @@ void InventoryState::HandleInput()
       if (ic->Data.IsEquipped)
       {
         Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+        return;
+      }
+
+      if (ic->Data.IsImportant)
+      {
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "This looks important - better hold on to it" }, GlobalConstants::MessageBoxBlueBorderColor);
         return;
       }
 

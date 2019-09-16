@@ -415,6 +415,9 @@ GameObject* GameObjectsFactory::CreateHerobrine(int x, int y)
   go->Attrs.Def.Talents = 1;
   go->Attrs.Spd.Talents = 1;
 
+  // FIXME: debug
+  //go->LevelUp();
+
   for (int i = 1; i < 10; i++)
   {
     go->LevelUp(5);

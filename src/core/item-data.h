@@ -35,6 +35,9 @@ struct ItemData
   bool IsPrefixDiscovered = false;
   bool IsChargeable = false;
 
+  // Can't be dropped from inventory if true
+  bool IsImportant = false;
+
   // For stackable
   int Amount = 1;
 

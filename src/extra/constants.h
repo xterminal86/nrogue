@@ -617,6 +617,7 @@ namespace GlobalConstants
   static const std::string MessageBoxDefaultBgColor = "#222222";
   static const std::string MessageBoxDefaultBorderColor = "#666666";
   static const std::string MessageBoxRedBorderColor = "#880000";
+  static const std::string MessageBoxBlueBorderColor = "#8888FF";
   static const std::string MessageBoxHeaderBgColor = "#4444AA";
   static const std::string ItemMagicColor = "#4169E1";
   static const std::string ItemRareColor = "#CCCC52";

@@ -379,6 +379,9 @@ void MainState::PrintDebugInfo()
 
   _debugInfo = Util::StringFormat("Colors Used: %i", Printer::Instance().ColorsUsed());
   Printer::Instance().PrintFB(0, 5, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+
+  _debugInfo = Util::StringFormat("Turns passed: %i", Application::Instance().TurnsPassed);
+  Printer::Instance().PrintFB(0, 6, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 }
 
 void MainState::ProcessRangedWeapon()

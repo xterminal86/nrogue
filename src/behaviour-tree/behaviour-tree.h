@@ -9,6 +9,13 @@
 
 class GameObject;
 
+enum class BTResult
+{
+  Success = 0,
+  Running,
+  Failure
+};
+
 class Node
 {
   public:
