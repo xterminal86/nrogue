@@ -811,6 +811,9 @@ GameObject* GameObjectsFactory::CreateRandomWeapon(ItemPrefix prefixOverride)
     go = CreateRangedWeapon(0, 0, it->first, prefixOverride);
   }
 
+  ItemComponent* ic = go->GetComponent<ItemComponent>();
+  TryToAddBonuses(ic);
+
   return go;
 }
 
@@ -822,6 +825,9 @@ GameObject* GameObjectsFactory::CreateRandomArmor(ItemPrefix prefixOverride)
   auto it = GlobalConstants::ArmorNameByType.begin();
   std::advance(it, index);
   go = CreateArmor(0, 0, it->first, prefixOverride);
+
+  ItemComponent* ic = go->GetComponent<ItemComponent>();
+  TryToAddBonuses(ic);
 
   return go;
 }
@@ -1917,6 +1923,20 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
       ic->Data.StatBonuses[StatsEnum::RES] = -4 + cursedPenalty;
       ic->Data.StatBonuses[StatsEnum::SPD] = -4 + cursedPenalty;
 
+      ic->Data.StatRequirements[StatsEnum::STR] = 4;
+
+      break;
+
+    case ArmorType::SCALE:
+      ic->Data.UnidentifiedDescription =
+      {
+        // ======================================================================70
+        "A body vest with overlapping scales worn over a small mail shirt.",
+      };
+
+      ic->Data.StatBonuses[StatsEnum::RES] = -6 + cursedPenalty;
+      ic->Data.StatBonuses[StatsEnum::SPD] = -6 + cursedPenalty;
+
       ic->Data.StatRequirements[StatsEnum::STR] = 6;
 
       break;
@@ -2281,6 +2301,7 @@ void GameObjectsFactory::EquipItem(ItemComponent* item)
     verb = "put on";
   }
 
+  _playerRef->ApplyBonuses(item);
   _playerRef->RecalculateStatsModifiers();
 
   std::string objName = item->Data.IsIdentified ? item->OwnerGameObject->ObjectName : item->Data.UnidentifiedName;
@@ -2305,6 +2326,7 @@ void GameObjectsFactory::UnequipItem(ItemComponent* item)
     verb = "take off";
   }
 
+  _playerRef->UnapplyBonuses(item);
   _playerRef->RecalculateStatsModifiers();
 
   std::string objName = item->Data.IsIdentified ? item->OwnerGameObject->ObjectName : item->Data.UnidentifiedName;
@@ -2811,4 +2833,212 @@ bool GameObjectsFactory::ScrollUseHandler(ItemComponent* item)
 void GameObjectsFactory::DoorUseHandler(DoorComponent* dc)
 {
   dc->Interact();
+}
+
+void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef)
+{
+  std::map<ItemBonusType, int> bonusWeightByType =
+  {
+    { ItemBonusType::STR,             5 },
+    { ItemBonusType::DEF,             5 },
+    { ItemBonusType::MAG,             5 },
+    { ItemBonusType::RES,             5 },
+    { ItemBonusType::SKL,             5 },
+    { ItemBonusType::SPD,             5 },
+    { ItemBonusType::HP,             20 },
+    { ItemBonusType::MP,             20 },
+    { ItemBonusType::INDESTRUCTIBLE,  1 },
+    { ItemBonusType::SELF_REPAIR,    10 },
+    { ItemBonusType::VISIBILITY,     20 },
+    { ItemBonusType::DAMAGE,         20 },
+    { ItemBonusType::HUNGER,         10 },
+    { ItemBonusType::IGNORE_DEFENCE, 10 },
+    { ItemBonusType::KNOCKBACK,      15 },
+    { ItemBonusType::MANA_SHIELD,     8 },
+    { ItemBonusType::REGEN,           8 },
+    { ItemBonusType::REFLECT,         8 },
+    { ItemBonusType::LEECH,           8 },
+    { ItemBonusType::DMG_ABSORB,     10 },
+    { ItemBonusType::MAG_ABSORB,     10 },
+    { ItemBonusType::THORNS,         10 }
+  };
+
+  AdjustBonusWeightsMap(itemRef, bonusWeightByType);
+
+  int curDungeonLvl = Map::Instance().CurrentLevel->DungeonLevel;
+
+  // Increase chance of traders having magic items in town
+  if (Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
+  {
+    curDungeonLvl = (int)MapType::THE_END / 2;
+  }
+
+  const float scale = 1.5f;
+  float minSucc = 1.0f / ((float)MapType::THE_END * scale);
+  float curSucc = minSucc * curDungeonLvl;
+  int chance = (int)(curSucc * 100);
+
+  std::vector<ItemBonusType> bonusesRolled;
+
+  for (int i = 0; i < 3; i++)
+  {
+    if (Util::Rolld100(chance))
+    {
+      auto res = Util::WeightedRandom(bonusWeightByType);
+
+      // No same bonuses on a single item
+      bonusWeightByType.erase(res.first);
+
+      AddBonus(itemRef, res.first);
+
+      bonusesRolled.push_back(res.first);
+    }
+  }
+
+  std::string prefix;
+  std::string suffix;
+
+  switch (bonusesRolled.size())
+  {
+    case 1:
+      prefix = GlobalConstants::ItemBonusPrefixes.at(bonusesRolled[0]);
+      itemRef->Data.Rarity = ItemRarity::MAGIC;
+      break;
+
+    case 2:
+      prefix = GlobalConstants::ItemBonusPrefixes.at(bonusesRolled[0]);
+      suffix = GlobalConstants::ItemBonusSuffixes.at(bonusesRolled[1]);
+      itemRef->Data.Rarity = ItemRarity::MAGIC;
+      break;
+
+    case 3:
+    {
+      // Randomize resulting name a bit in case of more than 2 bonuses
+
+      std::vector<ItemBonusType> bonusesRolledCopy = bonusesRolled;
+
+      int ind = RNG::Instance().RandomRange(0, 3);
+      prefix = GlobalConstants::ItemBonusPrefixes.at(bonusesRolledCopy[ind]);
+      bonusesRolledCopy.erase(bonusesRolledCopy.begin() + ind);
+
+      ind = RNG::Instance().RandomRange(0, 2);
+      suffix = GlobalConstants::ItemBonusSuffixes.at(bonusesRolledCopy[ind]);
+
+      itemRef->Data.Rarity = ItemRarity::RARE;
+    }
+    break;
+  }
+
+  std::string objName = itemRef->OwnerGameObject->ObjectName;
+
+  std::string bucStatus = "Uncursed";
+  if (itemRef->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    bucStatus = "Blessed";
+  }
+  else if (itemRef->Data.Prefix == ItemPrefix::CURSED)
+  {
+    bucStatus = "Cursed";
+  }
+
+  std::string itemName = bucStatus + " " + objName;
+  if (bonusesRolled.size() == 1)
+  {
+    itemName = bucStatus + " " + prefix + " " + objName;
+  }
+  else if (bonusesRolled.size() > 1)
+  {
+    itemName = bucStatus + " " + prefix + " " + objName + " " + suffix;
+  }
+
+  itemRef->Data.IdentifiedName = itemName;
+}
+
+void GameObjectsFactory::AddBonus(ItemComponent* itemRef, ItemBonusType bonusType)
+{
+  int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusType);
+
+  ItemBonusStruct bs;
+  bs.Type = bonusType;
+  bs.MoneyCostIncrease = (itemRef->Data.Prefix == ItemPrefix::CURSED) ? moneyIncrease / 2 : moneyIncrease;
+
+  // Probability of stat increase values
+  std::map<int, int> statIncreaseWeightsMap =
+  {
+    { 1, 25 },
+    { 2, 15 },
+    { 3, 8  },
+    { 4, 2  },
+    { 5, 1  }
+  };
+
+  int value = 0;
+  switch (bonusType)
+  {
+    case ItemBonusType::STR:
+    case ItemBonusType::DEF:
+    case ItemBonusType::MAG:
+    case ItemBonusType::RES:
+    case ItemBonusType::SKL:
+    case ItemBonusType::SPD:
+    {
+      auto res = Util::WeightedRandom(statIncreaseWeightsMap);
+      value = res.first;
+    }
+    break;
+
+    case ItemBonusType::HP:
+    case ItemBonusType::MP:
+      value = RNG::Instance().RandomRange(5, 20);
+      break;
+  }
+
+  // TODO: should there be cursed magic / rare items or fuck it?
+  //
+  // If item is cursed, there's 50% chance
+  // that we'll get penalty instead of a bonus
+  //bool fuckupChance = Util::Rolld100(50);
+
+  //bs.IsCursed = fuckupChance;
+  //bs.Value = (itemRef->Data.Prefix == ItemPrefix::CURSED && fuckupChance) ? -value : value;
+
+  bs.Value = value;
+
+  itemRef->Data.Bonuses.push_back(bs);
+}
+
+void GameObjectsFactory::AdjustBonusWeightsMap(ItemComponent* itemRef, std::map<ItemBonusType, int>& bonusWeightByType)
+{
+  // Certain items shouldn't have certain bonuses
+  // that don't make sense (kinda)
+  if (itemRef->Data.EqCategory == EquipmentCategory::BOOTS
+   || itemRef->Data.EqCategory == EquipmentCategory::HEAD
+   || itemRef->Data.EqCategory == EquipmentCategory::LEGS
+   || itemRef->Data.EqCategory == EquipmentCategory::TORSO)
+  {
+    bonusWeightByType.erase(ItemBonusType::DAMAGE);
+    bonusWeightByType.erase(ItemBonusType::IGNORE_DEFENCE);
+    bonusWeightByType.erase(ItemBonusType::KNOCKBACK);
+    bonusWeightByType.erase(ItemBonusType::LEECH);
+  }
+  else if (itemRef->Data.EqCategory == EquipmentCategory::WEAPON)
+  {
+    bonusWeightByType.erase(ItemBonusType::REFLECT);
+    bonusWeightByType.erase(ItemBonusType::REGEN);
+    bonusWeightByType.erase(ItemBonusType::MANA_SHIELD);
+    bonusWeightByType.erase(ItemBonusType::DMG_ABSORB);
+    bonusWeightByType.erase(ItemBonusType::MAG_ABSORB);
+    bonusWeightByType.erase(ItemBonusType::THORNS);
+    bonusWeightByType.erase(ItemBonusType::HUNGER);
+  }
+  else if (itemRef->Data.EqCategory == EquipmentCategory::NECK
+        || itemRef->Data.EqCategory == EquipmentCategory::RING)
+  {
+    bonusWeightByType.erase(ItemBonusType::INDESTRUCTIBLE);
+    bonusWeightByType.erase(ItemBonusType::SELF_REPAIR);
+    bonusWeightByType.erase(ItemBonusType::KNOCKBACK);
+    bonusWeightByType.erase(ItemBonusType::DAMAGE);
+    bonusWeightByType.erase(ItemBonusType::IGNORE_DEFENCE);
+    bonusWeightByType.erase(ItemBonusType::LEECH);
+  }
 }

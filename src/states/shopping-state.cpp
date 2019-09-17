@@ -296,10 +296,21 @@ std::string ShoppingState::GetItemTextColor(ItemComponent* item)
   if (item->Data.Prefix == ItemPrefix::BLESSED)
   {
     textColor = GlobalConstants::ItemMagicColor;
-  }
+  }  
   else if (item->Data.Prefix == ItemPrefix::CURSED)
   {
     textColor = "#880000";
+  }
+  else
+  {
+    if (item->Data.Rarity == ItemRarity::MAGIC)
+    {
+      textColor = GlobalConstants::ItemMagicColor;
+    }
+    else if (item->Data.Rarity == ItemRarity::RARE)
+    {
+      textColor = GlobalConstants::ItemRareColor;
+    }
   }
 
   return textColor;
@@ -395,6 +406,11 @@ bool ShoppingState::CanBeBought(ItemComponent *ic)
 int ShoppingState::GetCost(ItemComponent* ic, bool playerSide)
 {
   int cost = ic->Data.GetCost();
+
+  for (auto& i : ic->Data.Bonuses)
+  {
+    cost += i.MoneyCostIncrease;
+  }
 
   if (!playerSide)
   {

@@ -55,6 +55,8 @@ class Player : public GameObject
     void LevelUp(int baseHpOverride = -1) override;
     void LevelDown();
 
+    void ApplyBonuses(ItemComponent* itemRef);
+    void UnapplyBonuses(ItemComponent* itemRef);
     void RecalculateStatsModifiers();
     void AddBonusItems();
 
@@ -107,6 +109,9 @@ class Player : public GameObject
     bool DamageArmor(int amount);
 
     bool ShouldForceRedrawScreen();
+
+    void ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
+    void UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
 
     int _starvingTimeout = 0;
 
@@ -163,6 +168,18 @@ class Player : public GameObject
       { StatsEnum::RES, Attrs.Res },
       { StatsEnum::SKL, Attrs.Skl },
       { StatsEnum::SPD, Attrs.Spd }
+    };
+
+    std::map<ItemBonusType, Attribute&> _attributesRefsByBonus =
+    {
+      { ItemBonusType::STR, Attrs.Str },
+      { ItemBonusType::DEF, Attrs.Def },
+      { ItemBonusType::MAG, Attrs.Mag },
+      { ItemBonusType::RES, Attrs.Res },
+      { ItemBonusType::SKL, Attrs.Skl },
+      { ItemBonusType::SPD, Attrs.Spd },
+      { ItemBonusType::HP,  Attrs.HP  },
+      { ItemBonusType::MP,  Attrs.MP  }
     };
 
     friend class SpellsProcessor;

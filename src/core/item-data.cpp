@@ -58,3 +58,16 @@ int ItemData::GetCost()
 
   return price;
 }
+
+bool ItemData::HasBonus(ItemBonusType bonusType)
+{
+  for (auto& i : Bonuses)
+  {
+    if (i.Type == bonusType)
+    {
+      return true;
+    }
+  }
+
+  return false;
+}

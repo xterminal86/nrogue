@@ -39,7 +39,7 @@ void Player::Init()
   _currentCell->Occupied = true;
 
   // FIXME: debug
-  //Money = 10000;
+  Money = 10000;
   //Attrs.HungerRate.Set(0);
 }
 
@@ -799,6 +799,12 @@ bool Player::DamageArmor(int amount)
   ItemComponent* armor = EquipmentByCategory[EquipmentCategory::TORSO][0];
   if (armor != nullptr)
   {
+    // TODO: OPAF
+    if (armor->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE))
+    {
+      return false;
+    }
+
     int durabilityLeft = armor->Data.Durability.CurrentValue;
     int armorDamage = durabilityLeft - amount;
     if (armorDamage < 0)
@@ -1399,9 +1405,78 @@ void Player::SetDefaultSkills()
 bool Player::WeaponLosesDurability()
 {
   auto weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
+
+  // TODO: OPAF
+  if (weapon->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE))
+  {
+    return false;
+  }
+
   weapon->Data.Durability.Add(-1);
 
   return true;
+}
+
+void Player::ApplyBonuses(ItemComponent* itemRef)
+{
+  if (!itemRef->Data.StatBonuses.empty())
+  {
+    for (auto& i : itemRef->Data.Bonuses)
+    {
+      ApplyBonus(itemRef, i);
+    }
+  }
+}
+
+void Player::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
+{
+  switch (bonus.Type)
+  {
+    case ItemBonusType::STR:
+    case ItemBonusType::DEF:
+    case ItemBonusType::MAG:
+    case ItemBonusType::RES:
+    case ItemBonusType::SKL:
+    case ItemBonusType::SPD:
+    case ItemBonusType::HP:
+    case ItemBonusType::MP:
+    {
+      int newValue = _attributesRefsByBonus.at(bonus.Type).CurrentValue + bonus.Value;
+      _attributesRefsByBonus.at(bonus.Type).Set(newValue);
+    }
+    break;
+  }
+}
+
+void Player::UnapplyBonuses(ItemComponent* itemRef)
+{
+  if (!itemRef->Data.StatBonuses.empty())
+  {
+    for (auto& i : itemRef->Data.Bonuses)
+    {
+      UnapplyBonus(itemRef, i);
+    }
+  }
+}
+
+void Player::UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
+{
+  switch (bonus.Type)
+  {
+    case ItemBonusType::STR:
+    case ItemBonusType::DEF:
+    case ItemBonusType::MAG:
+    case ItemBonusType::RES:
+    case ItemBonusType::SKL:
+    case ItemBonusType::SPD:
+    case ItemBonusType::HP:
+    case ItemBonusType::MP:
+    {
+      int newValue = _attributesRefsByBonus.at(bonus.Type).CurrentValue - bonus.Value;
+      _attributesRefsByBonus.at(bonus.Type).Set(newValue);
+    }
+    break;
+  }
 }
 
 void Player::RecalculateStatsModifiers()
@@ -1479,6 +1554,7 @@ void Player::BreakItem(ItemComponent* ic, bool suppressMessage)
 
     if (ic->Data.ItemTypeHash == typeHash && ic->Data.IsEquipped)
     {
+      UnapplyBonuses(ic);
       Inventory.Contents.erase(Inventory.Contents.begin() + i);
       break;
     }

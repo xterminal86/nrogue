@@ -8,7 +8,7 @@ void Attribute::Set(int value)
 }
 
 void Attribute::Add(int value)
-{
+{  
   CurrentValue += value;
 
   CurrentValue = Util::Clamp(CurrentValue, 0, OriginalValue);

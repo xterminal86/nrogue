@@ -40,7 +40,8 @@ bool ItemComponent::Equip()
 void ItemComponent::Inspect(bool overrideDescriptions)
 {  
   std::string header = Data.IsIdentified ? Data.IdentifiedName : Data.UnidentifiedName;
-  auto lore = Data.IsIdentified ? Data.IdentifiedDescription : Data.UnidentifiedDescription;
+  std::vector<std::string> lore = Data.IsIdentified ? Data.IdentifiedDescription : Data.UnidentifiedDescription;
+  //std::vector<std::string> lore;
 
   if (!overrideDescriptions)
   {
@@ -180,6 +181,11 @@ void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
   for (auto& kvp : _allStatNames)
   {
     int bonus = Data.StatBonuses.at(kvp.second.first);
+    if (bonus == 0)
+    {
+      continue;
+    }
+
     std::string statName = kvp.second.second;
     char prefix = ' ';
     if (bonus < 0)

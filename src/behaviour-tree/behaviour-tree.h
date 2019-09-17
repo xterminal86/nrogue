@@ -137,4 +137,23 @@ class ProbabilisticNode : public Node
     int _successChance = 100;
 };
 
+class IgnoreFailureNode : public ControlNode
+{
+  using ControlNode::ControlNode;
+
+  public:
+    bool Run() override
+    {
+      for (auto& i : _children)
+      {
+        if (!i->Run())
+        {
+          return true;
+        }
+      }
+
+      return true;
+    }
+};
+
 #endif

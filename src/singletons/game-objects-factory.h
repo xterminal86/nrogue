@@ -83,6 +83,10 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateRandomGlass();
     GameObject* CreateGemHelper(GemType t);
 
+    void AdjustBonusWeightsMap(ItemComponent* itemRef, std::map<ItemBonusType, int>& bonusWeightByType);
+    void TryToAddBonuses(ItemComponent* itemRef);
+    void AddBonus(ItemComponent* itemRef, ItemBonusType bonusType);
+
     bool ProcessItemEquiption(ItemComponent* item);
     bool ProcessRingEquiption(ItemComponent* item);
 

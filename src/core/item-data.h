@@ -4,6 +4,14 @@
 #include "constants.h"
 #include "attribute.h"
 
+struct ItemBonusStruct
+{
+  ItemBonusType Type = ItemBonusType::NONE;
+  int Value = 0;
+  int MoneyCostIncrease = 0;
+  bool IsCursed = false;
+};
+
 // NOTE: possible god object
 struct ItemData
 {
@@ -48,6 +56,7 @@ struct ItemData
   int Cost = 0;
 
   bool IsWeaponOrArmor();
+  bool HasBonus(ItemBonusType bonusType);
 
   int GetCost();
 
@@ -84,6 +93,8 @@ struct ItemData
 
   std::vector<std::string> UnidentifiedDescription;
   std::vector<std::string> IdentifiedDescription;
+
+  std::vector<ItemBonusStruct> Bonuses;
 
   std::function<bool(void*)> UseCallback;
   std::function<void(void*)> EquipCallback;

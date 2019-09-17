@@ -293,7 +293,35 @@ enum class ArmorType
   PADDING,
   LEATHER,
   MAIL,
+  SCALE,
   PLATE
+};
+
+enum class ItemBonusType
+{
+  NONE = 0,
+  STR,            // adds to corresponding stat
+  DEF,            //
+  MAG,            //
+  RES,            //
+  SKL,            //
+  SPD,            //
+  HP,             // adds to max HP
+  MP,             // adds to max MP
+  INDESTRUCTIBLE,
+  SELF_REPAIR,
+  VISIBILITY,     // increases visibility radius
+  DAMAGE,         // adds to damage
+  HUNGER,         // no hunger (or decreased)
+  IGNORE_DEFENCE,
+  KNOCKBACK,
+  MANA_SHIELD,
+  REGEN,
+  REFLECT,
+  LEECH,          // get hp on hit
+  DMG_ABSORB,
+  MAG_ABSORB,
+  THORNS          // damages enemy if player was hit
 };
 
 enum class FoodType
@@ -418,8 +446,8 @@ enum class ItemPrefix
 enum class ItemRarity
 {
   COMMON = 0,
-  MAGIC,
-  RARE,
+  MAGIC,        // 1 or 2 bonuses (50% chance)
+  RARE,         // 3 bonuses
   UNIQUE
 };
 
@@ -762,18 +790,20 @@ namespace GlobalConstants
 
   static const std::map<ArmorType, std::string> ArmorNameByType =
   {    
-    { ArmorType::PADDING, "Gambeson"         },
+    { ArmorType::PADDING, "Padded Surcoat"   },
     { ArmorType::LEATHER, "Leather Lammelar" },
     { ArmorType::MAIL,    "Mail Hauberk"     },
+    { ArmorType::SCALE,   "Scale Armor"      },
     { ArmorType::PLATE,   "Coat of Plates"   }
   };
 
   static const std::map<ArmorType, int> ArmorDurabilityByType =
   {
-    { ArmorType::PADDING, 30 },
-    { ArmorType::LEATHER, 60 },
+    { ArmorType::PADDING, 50 },
+    { ArmorType::LEATHER, 80 },
     { ArmorType::MAIL,   120 },
-    { ArmorType::PLATE,  240 }
+    { ArmorType::SCALE,  240 },
+    { ArmorType::PLATE,  320 }
   };
 
   static const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =
@@ -1059,6 +1089,84 @@ namespace GlobalConstants
     { MapType::NETHER_5,    { "The Hearth" } },
     // The End
     { MapType::THE_END,     { "???" } }
+  };
+
+  static const std::map<ItemBonusType, std::string> ItemBonusPrefixes =
+  {
+    { ItemBonusType::STR,             "Heavy"       },
+    { ItemBonusType::DEF,             "Rampart"     },
+    { ItemBonusType::MAG,             "Magical"     },
+    { ItemBonusType::RES,             "Electrum"    },
+    { ItemBonusType::SKL,             "Expert"      },
+    { ItemBonusType::SPD,             "Swift"       },
+    { ItemBonusType::HP,              "Heart's"     },
+    { ItemBonusType::MP,              "Soul"        },
+    { ItemBonusType::INDESTRUCTIBLE,  "Everlasting" },
+    { ItemBonusType::SELF_REPAIR,     "Reliable"    },
+    { ItemBonusType::VISIBILITY,      "Shining"     },
+    { ItemBonusType::DAMAGE,          "Fighter's"   },
+    { ItemBonusType::HUNGER,          "Carefree"    },
+    { ItemBonusType::IGNORE_DEFENCE,  "Piercing"    },
+    { ItemBonusType::KNOCKBACK,       "Power"       },
+    { ItemBonusType::MANA_SHIELD,     "Spirit"      },
+    { ItemBonusType::REGEN,           "Undying"     },
+    { ItemBonusType::REFLECT,         "Silver"      },
+    { ItemBonusType::LEECH,           "Vampire"     },
+    { ItemBonusType::DMG_ABSORB,      "Protective"  },
+    { ItemBonusType::MAG_ABSORB,      "Shielding"   },
+    { ItemBonusType::THORNS,          "Ivy"         }
+  };
+
+  static const std::map<ItemBonusType, std::string> ItemBonusSuffixes =
+  {
+    { ItemBonusType::STR,             "of Strength"    },
+    { ItemBonusType::DEF,             "of Defence"     },
+    { ItemBonusType::MAG,             "of Magic"       },
+    { ItemBonusType::RES,             "of Resistance"  },
+    { ItemBonusType::SKL,             "of Skill"       },
+    { ItemBonusType::SPD,             "of Speed"       },
+    { ItemBonusType::HP,              "of Life"        },
+    { ItemBonusType::MP,              "of Spirit"      },
+    { ItemBonusType::INDESTRUCTIBLE,  "of Ages"        },
+    { ItemBonusType::SELF_REPAIR,     "of Reliability" },
+    { ItemBonusType::VISIBILITY,      "of the Light"   },
+    { ItemBonusType::DAMAGE,          "of Destruction" },
+    { ItemBonusType::HUNGER,          "of Satiation"   },
+    { ItemBonusType::IGNORE_DEFENCE,  "of the Master"  },
+    { ItemBonusType::KNOCKBACK,       "of the Bear"    },
+    { ItemBonusType::MANA_SHIELD,     "of the Force"   },
+    { ItemBonusType::REGEN,           "of the Undying" },
+    { ItemBonusType::REFLECT,         "of Reflection"  },
+    { ItemBonusType::LEECH,           "of the Blood"   },
+    { ItemBonusType::DMG_ABSORB,      "of Protection"  },
+    { ItemBonusType::MAG_ABSORB,      "of Shielding"   },
+    { ItemBonusType::THORNS,          "of the Ivy"     }
+  };
+
+  static const std::map<ItemBonusType, int> MoneyCostIncreaseByBonusType =
+  {
+    { ItemBonusType::STR,             500 },
+    { ItemBonusType::DEF,             500 },
+    { ItemBonusType::MAG,             500 },
+    { ItemBonusType::RES,             500 },
+    { ItemBonusType::SKL,             500 },
+    { ItemBonusType::SPD,             500 },
+    { ItemBonusType::HP,              100 },
+    { ItemBonusType::MP,              100 },
+    { ItemBonusType::INDESTRUCTIBLE,  250 },
+    { ItemBonusType::SELF_REPAIR,     125 },
+    { ItemBonusType::VISIBILITY,       50 },
+    { ItemBonusType::DAMAGE,          200 },
+    { ItemBonusType::HUNGER,          300 },
+    { ItemBonusType::IGNORE_DEFENCE,  350 },
+    { ItemBonusType::KNOCKBACK,       100 },
+    { ItemBonusType::MANA_SHIELD,     250 },
+    { ItemBonusType::REGEN,           400 },
+    { ItemBonusType::REFLECT,         200 },
+    { ItemBonusType::LEECH,           250 },
+    { ItemBonusType::DMG_ABSORB,      300 },
+    { ItemBonusType::MAG_ABSORB,      300 },
+    { ItemBonusType::THORNS,          250 }
   };
 
   static const std::vector<std::vector<std::string>> DungeonRooms =
