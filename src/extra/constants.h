@@ -648,7 +648,7 @@ namespace GlobalConstants
   static const std::string MessageBoxBlueBorderColor = "#8888FF";
   static const std::string MessageBoxHeaderBgColor = "#4444AA";
   static const std::string ItemMagicColor = "#4169E1";
-  static const std::string ItemRareColor = "#CCCC52";
+  static const std::string ItemRareColor = "#EEEE52";
   static const std::string ItemUniqueColor = "#A59263";
   static const std::string ItemCursedColor = "#AA0000";
 
@@ -1145,15 +1145,15 @@ namespace GlobalConstants
 
   static const std::map<ItemBonusType, int> MoneyCostIncreaseByBonusType =
   {
-    { ItemBonusType::STR,             500 },
-    { ItemBonusType::DEF,             500 },
-    { ItemBonusType::MAG,             500 },
-    { ItemBonusType::RES,             500 },
-    { ItemBonusType::SKL,             500 },
-    { ItemBonusType::SPD,             500 },
+    { ItemBonusType::STR,             250 },
+    { ItemBonusType::DEF,             250 },
+    { ItemBonusType::MAG,             250 },
+    { ItemBonusType::RES,             250 },
+    { ItemBonusType::SKL,             250 },
+    { ItemBonusType::SPD,             250 },
     { ItemBonusType::HP,              100 },
     { ItemBonusType::MP,              100 },
-    { ItemBonusType::INDESTRUCTIBLE,  250 },
+    { ItemBonusType::INDESTRUCTIBLE,  500 },
     { ItemBonusType::SELF_REPAIR,     125 },
     { ItemBonusType::VISIBILITY,       50 },
     { ItemBonusType::DAMAGE,          200 },

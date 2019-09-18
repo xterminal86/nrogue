@@ -26,6 +26,7 @@ class ItemComponent : public Component
     std::vector<std::string> GetArmorInspectionInfo();
 
     void AddModifiersInfo(std::vector<std::string>& res);
+    void AddBonusesInfo(std::vector<std::string>& res);
 
     // std::map is sorted by key
     std::map<int, std::pair<StatsEnum, std::string>> _allStatNames =

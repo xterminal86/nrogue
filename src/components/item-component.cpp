@@ -109,6 +109,7 @@ std::vector<std::string> ItemComponent::GetWeaponInspectionInfo()
   };
 
   AddModifiersInfo(res);
+  AddBonusesInfo(res);
 
   return res;
 }
@@ -124,6 +125,7 @@ std::vector<std::string> ItemComponent::GetArmorInspectionInfo()
   };
 
   AddModifiersInfo(res);
+  AddBonusesInfo(res);
 
   return res;
 }
@@ -207,5 +209,120 @@ void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
 
     auto str = Util::StringFormat("%s: %c%c%c", statName.data(), prefix, bonus1, bonus2);
     res.push_back(str);
+  }
+}
+
+void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
+{
+  std::map<ItemBonusType, std::string> bonusNameByType =
+  {
+    { ItemBonusType::STR, "STR" },
+    { ItemBonusType::DEF, "DEF" },
+    { ItemBonusType::MAG, "MAG" },
+    { ItemBonusType::RES, "RES" },
+    { ItemBonusType::SPD, "SPD" },
+    { ItemBonusType::SKL, "SKL" },
+    { ItemBonusType::HP,  "HP"  },
+    { ItemBonusType::MP,  "MP"  }
+  };
+
+  if (!Data.Bonuses.empty())
+  {
+    res.push_back("");
+  }
+
+  for (auto& i : Data.Bonuses)
+  {
+    switch (i.Type)
+    {
+      case ItemBonusType::STR:
+      case ItemBonusType::DEF:
+      case ItemBonusType::MAG:
+      case ItemBonusType::RES:
+      case ItemBonusType::SPD:
+      case ItemBonusType::SKL:
+      case ItemBonusType::HP:
+      case ItemBonusType::MP:
+      {
+        std::string name = bonusNameByType[i.Type];
+        auto str = Util::StringFormat("%i to %s", i.Value, name.data());
+        res.push_back(str);
+      }
+      break;
+
+      case ItemBonusType::INDESTRUCTIBLE:
+        res.push_back("Indestructible");
+        break;
+
+      case ItemBonusType::SELF_REPAIR:
+        res.push_back("Repairs durability over time");
+        break;
+
+      case ItemBonusType::VISIBILITY:
+      {
+        auto str = Util::StringFormat("%i to light radius", i.Value);
+        res.push_back(str);
+      }
+      break;
+
+      case ItemBonusType::DAMAGE:
+      {
+        auto str = Util::StringFormat("%i to total damage", i.Value);
+        res.push_back(str);
+      }
+      break;
+
+      case ItemBonusType::HUNGER:
+        res.push_back("Removes need for food");
+        break;
+
+      case ItemBonusType::IGNORE_DEFENCE:
+        res.push_back("Ignores target DEF");
+        break;
+
+      case ItemBonusType::KNOCKBACK:
+        res.push_back("Knocks back the enemy");
+        break;
+
+      case ItemBonusType::MANA_SHIELD:
+        res.push_back("Applies mana shield while equipped");
+        break;
+
+      case ItemBonusType::REGEN:
+        res.push_back("Regenerates HP over time");
+        break;
+
+      case ItemBonusType::REFLECT:
+        res.push_back("Reflects spells while equipped");
+        break;
+
+      case ItemBonusType::LEECH:
+      {
+        auto str = Util::StringFormat("%i damage goes to HP", i.Value);
+        res.push_back(str);
+      }
+      break;
+
+      case ItemBonusType::DMG_ABSORB:
+      {
+        auto str = Util::StringFormat("Absorbs %i of melee damage", i.Value);
+        res.push_back(str);
+      }
+      break;
+
+      case ItemBonusType::MAG_ABSORB:
+      {
+        auto str = Util::StringFormat("Absorbs %i of magic damage", i.Value);
+        res.push_back(str);
+      }
+      break;
+
+      case ItemBonusType::THORNS:
+      {
+        auto str = Util::StringFormat("Enemy receives %i of inflicted damage", i.Value);
+        res.push_back(str);
+      }
+      break;
+    }
   }
 }

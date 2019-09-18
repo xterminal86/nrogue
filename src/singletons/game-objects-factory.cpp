@@ -1660,7 +1660,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
     break;
   }
 
-  ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;
+  //ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;
 
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
   ic->Data.ItemType_ = ItemType::RANGED_WEAPON;
@@ -1964,7 +1964,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
     ic->Data.UnidentifiedDescription.push_back("This armor is too heavy for you");
   }
 
-  ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;
+  //ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;
 
   int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1f) + dungeonLevel;
 
@@ -2187,11 +2187,17 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
 
     default:
     {
-      if (itemData.Prefix == ItemPrefix::BLESSED)
+      if (itemData.Prefix == ItemPrefix::BLESSED
+      && (itemData.ItemType_ != ItemType::WEAPON
+       && itemData.ItemType_ != ItemType::ARMOR
+       && itemData.ItemType_ != ItemType::RANGED_WEAPON))
       {
         itemData.IdentifiedDescription.push_back("This one is blessed and will perform better.");
       }
-      else if (itemData.Prefix == ItemPrefix::CURSED)
+      else if (itemData.Prefix == ItemPrefix::CURSED
+           && (itemData.ItemType_ != ItemType::WEAPON
+            && itemData.ItemType_ != ItemType::ARMOR
+            && itemData.ItemType_ != ItemType::RANGED_WEAPON))
       {
         itemData.IdentifiedDescription.push_back("This one is cursed and should be avoided.");
       }
@@ -2971,6 +2977,8 @@ void GameObjectsFactory::AddBonus(ItemComponent* itemRef, ItemBonusType bonusTyp
     { 4, 2  },
     { 5, 1  }
   };
+
+  // TODO: finish other bonuses
 
   int value = 0;
   switch (bonusType)
