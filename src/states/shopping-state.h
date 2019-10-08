@@ -35,6 +35,7 @@ class ShoppingState : public GameState
     void CheckIndexLimits();
     void BuyOrSellItem();
     void CheckSide();
+    void ShowItemInfo();
 
     bool CanBeBought(ItemComponent* ic);
 

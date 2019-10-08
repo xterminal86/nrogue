@@ -37,11 +37,13 @@ bool ItemComponent::Equip()
   return GameObjectsFactory::Instance().HandleItemEquip(this);
 }
 
-void ItemComponent::Inspect(bool overrideDescriptions)
-{  
+std::pair<std::string, StringsArray2D> ItemComponent::GetInspectionInfo(bool overrideDescriptions)
+{
+  std::pair<std::string, StringsArray2D> res;
+
   std::string header = Data.IsIdentified ? Data.IdentifiedName : Data.UnidentifiedName;
-  std::vector<std::string> lore = Data.IsIdentified ? Data.IdentifiedDescription : Data.UnidentifiedDescription;
-  //std::vector<std::string> lore;
+  StringsArray2D lore = Data.IsIdentified ? Data.IdentifiedDescription : Data.UnidentifiedDescription;
+  //StringsArray2D lore;
 
   if (!overrideDescriptions)
   {
@@ -87,7 +89,16 @@ void ItemComponent::Inspect(bool overrideDescriptions)
     }
   }
 
-  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, header, lore);
+  res.first = header;
+  res.second = lore;
+
+  return res;
+}
+
+void ItemComponent::Inspect(bool overrideDescriptions)
+{  
+  auto lore = GetInspectionInfo(overrideDescriptions);
+  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, lore.first, lore.second);
 }
 
 bool ItemComponent::Use()

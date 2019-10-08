@@ -53,7 +53,7 @@ void ShoppingState::HandleInput()
 
     case NUMPAD_6:
     {
-      if (_shopOwner->Items.size() > 0)
+      if (!_shopOwner->Items.empty())
       {
         _playerSide = false;
       }
@@ -62,6 +62,10 @@ void ShoppingState::HandleInput()
 
     case VK_ENTER:
       BuyOrSellItem();
+      break;
+
+    case 'i':
+      ShowItemInfo();
       break;
 
     case 'q':
@@ -105,6 +109,8 @@ void ShoppingState::Update(bool forceUpdate)
 
     auto playerMoney = Util::StringFormat("You have: %i $", _playerRef->Money);
     Printer::Instance().PrintFB(0, th - 1, playerMoney, Printer::kAlignLeft, GlobalConstants::CoinsColor);
+
+    Printer::Instance().PrintFB(tw, th - 1, "'i' - inspect ", Printer::kAlignRight, GlobalConstants::WhiteColor);
 
     Printer::Instance().Render();
   }
@@ -243,7 +249,7 @@ void ShoppingState::CheckIndexLimits()
   }
   else
   {
-    if (_shopOwner->Items.size() > 0)
+    if (!_shopOwner->Items.empty())
     {
       invSize = _shopOwner->Items.size() - 1;
     }
@@ -319,7 +325,7 @@ std::string ShoppingState::GetItemTextColor(ItemComponent* item)
 void ShoppingState::BuyOrSellItem()
 {
   if (_playerRef->Inventory.IsEmpty()
-   && _shopOwner->Items.size() == 0)
+   && _shopOwner->Items.empty())
   {
     return;
   }
@@ -379,7 +385,7 @@ void ShoppingState::CheckSide()
   {
     _playerSide = false;
   }
-  else if (!_playerSide && _shopOwner->Items.size() == 0)
+  else if (!_playerSide && _shopOwner->Items.empty())
   {
     _playerSide = true;
   }
@@ -433,4 +439,28 @@ int ShoppingState::GetCost(ItemComponent* ic, bool playerSide)
   }
 
   return cost;
+}
+
+void ShoppingState::ShowItemInfo()
+{
+  if (_playerRef->Inventory.IsEmpty()
+   && _shopOwner->Items.empty())
+  {
+    return;
+  }
+
+  ItemComponent* ic = nullptr;
+
+  if (_playerSide)
+  {
+    auto go = _playerRef->Inventory.Contents[_inventoryItemIndex].get();
+    ic = go->GetComponent<ItemComponent>();
+  }
+  else
+  {
+    auto go = _shopOwner->Items[_inventoryItemIndex].get();
+    ic = go->GetComponent<ItemComponent>();
+  }
+
+  ic->Inspect();
 }

@@ -593,7 +593,7 @@ namespace GlobalConstants
   static const std::string AlphabetUppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   static const std::string AlphabetLowercase = "abcdefghijklmnopqrstuvwxyz";
   static const std::string Numbers = "0123456789";
-  static const std::string MoneyName = "Florins";
+  static const std::string MoneyName = "Crowns";
 
   static const int MaxNameLength = 24;
   static const int HPMPBarLength = 20;
