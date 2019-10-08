@@ -256,7 +256,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
       case ItemBonusType::MP:
       {
         std::string name = bonusNameByType[i.Type];
-        auto str = Util::StringFormat("%i to %s", i.Value, name.data());
+        auto str = Util::StringFormat("%s: +%i", name.data(), i.Value);
         res.push_back(str);
       }
       break;
@@ -271,14 +271,14 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::VISIBILITY:
       {
-        auto str = Util::StringFormat("%i to light radius", i.Value);
+        auto str = Util::StringFormat("+%i to light radius", i.Value);
         res.push_back(str);
       }
       break;
 
       case ItemBonusType::DAMAGE:
       {
-        auto str = Util::StringFormat("%i to total damage", i.Value);
+        auto str = Util::StringFormat("+%i to total damage", i.Value);
         res.push_back(str);
       }
       break;
@@ -288,7 +288,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
         break;
 
       case ItemBonusType::IGNORE_DEFENCE:
-        res.push_back("Ignores target DEF");
+        res.push_back("Ignores target's DEF");
         break;
 
       case ItemBonusType::KNOCKBACK:

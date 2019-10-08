@@ -1871,12 +1871,12 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
 
   if (ic->Data.Prefix == ItemPrefix::CURSED)
   {
-    cursedPenalty = -4;
+    cursedPenalty = -2;
     baseDurability /= 4;
   }
   else if (ic->Data.Prefix == ItemPrefix::BLESSED)
   {
-    cursedPenalty = 4;
+    cursedPenalty = 2;
   }
 
   switch (type)
@@ -1890,7 +1890,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "It won't last long, but any armor is better than nothing."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SPD] = -1 + cursedPenalty;
+      ic->Data.StatBonuses[StatsEnum::SPD] = cursedPenalty;
 
       break;
 
@@ -1902,8 +1902,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "protection against cutting blows."
       };
 
-      ic->Data.StatBonuses[StatsEnum::RES] = -1 + cursedPenalty;
-      ic->Data.StatBonuses[StatsEnum::SPD] = -2 + cursedPenalty;
+      ic->Data.StatBonuses[StatsEnum::RES] = cursedPenalty - 1;
+      ic->Data.StatBonuses[StatsEnum::SPD] = cursedPenalty - 1;
 
       ic->Data.StatRequirements[StatsEnum::STR] = 2;
 
@@ -1920,8 +1920,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "and is easy to repair."
       };
 
-      ic->Data.StatBonuses[StatsEnum::RES] = -4 + cursedPenalty;
-      ic->Data.StatBonuses[StatsEnum::SPD] = -4 + cursedPenalty;
+      ic->Data.StatBonuses[StatsEnum::RES] = cursedPenalty - 3;
+      ic->Data.StatBonuses[StatsEnum::SPD] = cursedPenalty - 2;
 
       ic->Data.StatRequirements[StatsEnum::STR] = 4;
 
@@ -1934,8 +1934,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "A body vest with overlapping scales worn over a small mail shirt.",
       };
 
-      ic->Data.StatBonuses[StatsEnum::RES] = -6 + cursedPenalty;
-      ic->Data.StatBonuses[StatsEnum::SPD] = -6 + cursedPenalty;
+      ic->Data.StatBonuses[StatsEnum::RES] = cursedPenalty - 4;
+      ic->Data.StatBonuses[StatsEnum::SPD] = cursedPenalty - 3;
 
       ic->Data.StatRequirements[StatsEnum::STR] = 6;
 
@@ -1951,8 +1951,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "It's very hard to bring down someone wearing this."
       };
 
-      ic->Data.StatBonuses[StatsEnum::RES] = -8 + cursedPenalty;
-      ic->Data.StatBonuses[StatsEnum::SPD] = -8 + cursedPenalty;
+      ic->Data.StatBonuses[StatsEnum::RES] = cursedPenalty - 6;
+      ic->Data.StatBonuses[StatsEnum::SPD] = cursedPenalty - 4;
 
       ic->Data.StatRequirements[StatsEnum::STR] = 10;
 
@@ -2892,7 +2892,7 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef)
     {
       auto res = Util::WeightedRandom(bonusWeightByType);
 
-      // No same bonuses on a single item
+      // No duplicate bonuses on a single item
       bonusWeightByType.erase(res.first);
 
       AddBonus(itemRef, res.first);

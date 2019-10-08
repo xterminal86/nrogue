@@ -777,9 +777,9 @@ namespace GlobalConstants
     { RangedWeaponType::SHORT_BOW,    "Short Bow"      },
     { RangedWeaponType::LONGBOW,      "Longbow"        },
     { RangedWeaponType::WAR_BOW,      "War Bow"        },
-    { RangedWeaponType::LIGHT_XBOW,   "Light Crossbow" },
+    { RangedWeaponType::LIGHT_XBOW,   "L. Crossbow"    },
     { RangedWeaponType::XBOW,         "Crossbow"       },
-    { RangedWeaponType::HEAVY_XBOW,   "Heavy Crossbow" }
+    { RangedWeaponType::HEAVY_XBOW,   "H. Crossbow"    }
   };
 
   static const std::map<ArrowType, std::string> ArrowNameByType =
@@ -1100,15 +1100,15 @@ namespace GlobalConstants
     { ItemBonusType::SKL,             "Expert"      },
     { ItemBonusType::SPD,             "Swift"       },
     { ItemBonusType::HP,              "Heart's"     },
-    { ItemBonusType::MP,              "Soul"        },
+    { ItemBonusType::MP,              "Soulful"     },
     { ItemBonusType::INDESTRUCTIBLE,  "Everlasting" },
     { ItemBonusType::SELF_REPAIR,     "Reliable"    },
     { ItemBonusType::VISIBILITY,      "Shining"     },
     { ItemBonusType::DAMAGE,          "Fighter's"   },
     { ItemBonusType::HUNGER,          "Carefree"    },
     { ItemBonusType::IGNORE_DEFENCE,  "Piercing"    },
-    { ItemBonusType::KNOCKBACK,       "Power"       },
-    { ItemBonusType::MANA_SHIELD,     "Spirit"      },
+    { ItemBonusType::KNOCKBACK,       "Mighty"      },
+    { ItemBonusType::MANA_SHIELD,     "Spiritual"   },
     { ItemBonusType::REGEN,           "Undying"     },
     { ItemBonusType::REFLECT,         "Silver"      },
     { ItemBonusType::LEECH,           "Vampire"     },
@@ -1126,10 +1126,10 @@ namespace GlobalConstants
     { ItemBonusType::SKL,             "of Skill"       },
     { ItemBonusType::SPD,             "of Speed"       },
     { ItemBonusType::HP,              "of Life"        },
-    { ItemBonusType::MP,              "of Spirit"      },
+    { ItemBonusType::MP,              "of Mana"        },
     { ItemBonusType::INDESTRUCTIBLE,  "of Ages"        },
     { ItemBonusType::SELF_REPAIR,     "of Reliability" },
-    { ItemBonusType::VISIBILITY,      "of the Light"   },
+    { ItemBonusType::VISIBILITY,      "of the Sun"     },
     { ItemBonusType::DAMAGE,          "of Destruction" },
     { ItemBonusType::HUNGER,          "of Satiation"   },
     { ItemBonusType::IGNORE_DEFENCE,  "of the Master"  },
