@@ -196,8 +196,6 @@ void Printer::DrawWindow(const Position& leftCorner,
       headerPosX += _tileWidthScaled / 2;
     }
 
-    SDL_SetTextureColorMod(_tileset, 255, 0, 0);
-
     for (auto& c : lHeader)
     {
       TileColor tc = ConvertHtmlToRGB(headerBgColor);
