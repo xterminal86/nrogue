@@ -33,6 +33,8 @@ class Application : public Singleton<Application>
 
     void WriteObituary(bool wasKilled = true);
 
+    static uint64_t GetNewId();
+
     Player PlayerInstance;
 
     /// Force redraw current state

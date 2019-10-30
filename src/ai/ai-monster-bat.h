@@ -9,8 +9,6 @@ class AIMonsterBat : public AIMonsterBasic
 {
   public:
     AIMonsterBat();
-
-    void ConstructAI() override;
 };
 
 #endif // AIMONSTERBAT_H

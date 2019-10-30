@@ -9,8 +9,6 @@ class AIMonsterSmart : public AIModelBase
 {
   public:
     AIMonsterSmart();
-
-    void ConstructAI() override;
 };
 
 #endif // AIMONSTERSMART_H

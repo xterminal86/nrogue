@@ -1,8 +1,6 @@
 #include "ai-monster-herobrine.h"
 #include "ai-component.h"
 
-#include "task-chase-player.h"
-#include "task-player-in-range.h"
 #include "task-attack-basic.h"
 
 AIMonsterHerobrine::AIMonsterHerobrine()
@@ -12,6 +10,7 @@ AIMonsterHerobrine::AIMonsterHerobrine()
   IsAgressive = true;
 }
 
+/*
 void AIMonsterHerobrine::ConstructAI()
 {
   auto& objRef = AIComponentRef->OwnerGameObject;
@@ -56,3 +55,4 @@ void AIMonsterHerobrine::ConstructAI()
 
   _root.reset(rootNode);
 }
+*/

@@ -9,6 +9,7 @@
 #include "map.h"
 #include "util.h"
 #include "rng.h"
+#include "blackboard.h"
 
 #include "level-builder.h"
 
@@ -45,6 +46,8 @@ int main(int argc, char* argv[])
   //RNG::Instance().SetSeed(1544714037606745311);
   //RNG::Instance().SetSeed(1545127588351497486);
   //RNG::Instance().SetSeed(1555423752080957420);
+
+  Blackboard::Instance().Init();
 
   #ifdef RELEASE_BUILD
   bool printLog = false;

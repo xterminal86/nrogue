@@ -6,8 +6,8 @@
 #include <cstddef>
 #include <ctime>
 
-//#include "ai-state-base.h"
 #include "behaviour-tree.h"
+#include "bts-parser.h"
 
 class AIComponent;
 class Player;
@@ -18,8 +18,9 @@ class AIModelBase
     AIModelBase();
     virtual ~AIModelBase() = default;
 
-    virtual void ConstructAI();
     virtual void Update();
+
+    void ConstructAI();
 
     AIComponent* AIComponentRef = nullptr;
 
@@ -33,7 +34,18 @@ class AIModelBase
 
     std::unique_ptr<Root> _root;
 
-    Selector* GetIdleSelector();
+    // Behaviour tree script for AI management
+    std::string _script;
+
+    BTSParser _aiReader;
+
+    Node* CreateNode(const ScriptNode* data);
+    Node* CreateTask(const ScriptNode* data);
+    Node* CreateConditionNode(const ScriptNode* data);
+
+    std::function<BTResult()> GetConditionFunction(const ScriptNode* data);
+
+    virtual void PrepareScript();
 };
 
 #endif

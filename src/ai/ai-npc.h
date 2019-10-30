@@ -34,9 +34,10 @@ class AINPC : public AIModelBase
 
     void Init(NPCType type, bool immovable);
 
-    void ConstructAI() override;
-
     NPCData Data;
+
+  protected:
+    void PrepareScript() override;
 
   private:    
     NPCType _npcType;
@@ -54,7 +55,7 @@ class AINPC : public AIModelBase
     void SetDataMaya();
     void SetDataGriswold();
 
-    void SetDataDefault();        
+    void SetDataDefault();            
 };
 
 #endif // AINPC_H

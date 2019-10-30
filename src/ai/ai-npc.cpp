@@ -87,43 +87,27 @@ void AINPC::Init(NPCType type, bool immovable)
   ConstructAI();
 }
 
-void AINPC::ConstructAI()
+void AINPC::PrepareScript()
 {
-  auto& objRef = AIComponentRef->OwnerGameObject;
+  const std::string scriptImmovable =
+R"(
+[TREE]
+  [SEL]
+    [TASK p1="task_idle"]
+    [TASK p1="end"]
+)";
 
-  Root* rootNode = new Root(objRef);
+  const std::string scriptMovable =
+R"(
+[TREE]
+  [SEL]
+    [COND p1="d100" p2="40"]
+      [TASK p1="task_move_rnd"]
+    [TASK p1="task_idle"]
+    [TASK p1="end"]
+)";
 
-  if (Data.IsImmovable)
-  {
-    // Do nothing
-    TaskIdle* taskIdle = new TaskIdle(objRef);
-    rootNode->SetNode(taskIdle);
-  }
-  else
-  {
-    // NPC can either try to perform a random movement with
-    // decision chance of 30%, or do nothing.
-    Selector* selectorMain = new Selector(objRef);
-    {
-      Sequence* sequenceDecision = new Sequence(objRef);
-      {
-        ProbabilisticNode* taskRndDecider = new ProbabilisticNode(objRef, 30);
-        TaskRandomMovement* taskMove = new TaskRandomMovement(objRef);
-
-        sequenceDecision->AddNode(taskRndDecider);
-        sequenceDecision->AddNode(taskMove);
-      }
-
-      TaskIdle* taskIdle = new TaskIdle(objRef);
-
-      selectorMain->AddNode(sequenceDecision);
-      selectorMain->AddNode(taskIdle);
-    }
-
-    rootNode->SetNode(selectorMain);
-  }
-
-  _root.reset(rootNode);
+  _script = Data.IsImmovable ? scriptImmovable : scriptMovable;
 }
 
 void AINPC::SetDataClaire()

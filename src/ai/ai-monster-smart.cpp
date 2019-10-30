@@ -3,9 +3,7 @@
 
 #include "behaviour-tree.h"
 
-#include "task-player-in-range.h"
 #include "task-attack-basic.h"
-#include "task-chase-player-smart.h"
 #include "task-random-movement.h"
 #include "task-idle.h"
 
@@ -16,6 +14,7 @@ AIMonsterSmart::AIMonsterSmart()
   IsAgressive = true;
 }
 
+/*
 void AIMonsterSmart::ConstructAI()
 {
   auto& objRef = AIComponentRef->OwnerGameObject;
@@ -53,3 +52,4 @@ void AIMonsterSmart::ConstructAI()
 
   _root.reset(rootNode);
 }
+*/

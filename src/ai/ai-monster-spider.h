@@ -7,8 +7,6 @@ class AIMonsterSpider : public AIModelBase
 {
   public:
     AIMonsterSpider();
-
-    void ConstructAI() override;
 };
 
 #endif // AIMONSTERSPIDER_H

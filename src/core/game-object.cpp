@@ -6,11 +6,14 @@
 #include "map.h"
 #include "application.h"
 #include "game-object-info.h"
+#include "blackboard.h"
 
 GameObject::GameObject(MapLevelBase* levelOwner)
 {
   _levelOwner = levelOwner;
   VisibilityRadius.Set(0);
+
+  _objectId = Application::GetNewId();
 }
 
 GameObject::GameObject(MapLevelBase *levelOwner,
@@ -20,7 +23,14 @@ GameObject::GameObject(MapLevelBase *levelOwner,
                        const std::string &htmlColor,
                        const std::string &bgColor)
 {
+  _objectId = Application::GetNewId();
+
   Init(levelOwner, x, y, avatar, htmlColor, bgColor);
+}
+
+GameObject::~GameObject()
+{
+  Blackboard::Instance().Remove(_objectId);
 }
 
 void GameObject::Init(MapLevelBase* levelOwner,
@@ -43,7 +53,7 @@ void GameObject::Init(MapLevelBase* levelOwner,
   // _currentCell->Occupied is not set to true by default,
   // see game-object.h comments for Occupied field.
   _currentCell = _levelOwner->MapArray[PosX][PosY].get();
-  _previousCell = _levelOwner->MapArray[PosX][PosY].get();
+  _previousCell = _levelOwner->MapArray[PosX][PosY].get();  
 }
 
 bool GameObject::Move(int dx, int dy)
@@ -492,4 +502,9 @@ bool GameObject::CanRaiseAttribute(Attribute& attr)
 const std::map<EffectType, Effect>& GameObject::Effects()
 {
   return _activeEffects;
+}
+
+const uint64_t GameObject::ObjectId()
+{
+  return _objectId;
 }

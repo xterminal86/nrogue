@@ -14,7 +14,8 @@ class AIMonsterBasic : public AIModelBase
   public:
     AIMonsterBasic();
 
-    void ConstructAI() override;
+  protected:
+    void PrepareScript() override;
 };
 
 #endif // AIMONSTERBASIC_H

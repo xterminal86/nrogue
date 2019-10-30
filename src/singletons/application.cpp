@@ -534,3 +534,9 @@ void Application::InitGameStates()
     state.second->Init();
   }
 }
+
+uint64_t Application::GetNewId()
+{  
+  static uint64_t globalId = 0;
+  return globalId++;
+}

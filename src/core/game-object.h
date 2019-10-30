@@ -18,13 +18,14 @@
 class GameObjectInfo;
 class MapLevelBase;
 class Position;
+class Node;
 
 class GameObject
 {
   public:    
     GameObject(MapLevelBase* levelOwner = nullptr);
     GameObject(GameObject&) = delete;
-    virtual ~GameObject() = default;
+    virtual ~GameObject();
 
     GameObject(MapLevelBase* levelOwner,
                int x, int y,
@@ -136,11 +137,15 @@ class GameObject
 
     const std::map<EffectType, Effect>& Effects();
 
+    const uint64_t ObjectId();
+
     Attributes Attrs;        
 
     int HealthRegenTurns = 0;
 
     GameObjectType Type = GameObjectType::HARMLESS;
+
+    Node* CurrentlyExecutingNode = nullptr;
 
   protected:    
     std::map<size_t, std::unique_ptr<Component>> _components;
@@ -162,6 +167,9 @@ class GameObject
     void MarkAndCreateRemains();
 
     bool CanRaiseAttribute(Attribute& attr);
+
+    // Used by blackboard
+    uint64_t _objectId = 0;
 
     friend class GameObjectsFactory;
 };

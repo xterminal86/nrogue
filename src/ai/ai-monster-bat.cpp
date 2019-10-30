@@ -2,13 +2,9 @@
 
 #include "ai-component.h"
 
-#include "task-player-in-range.h"
-#include "task-player-visible.h"
 #include "task-attack-basic.h"
-#include "task-chase-player-smart.h"
 #include "task-random-movement.h"
 #include "task-idle.h"
-#include "task-run-from-player.h"
 
 AIMonsterBat::AIMonsterBat()
 {
@@ -17,6 +13,7 @@ AIMonsterBat::AIMonsterBat()
   IsAgressive = true;
 }
 
+/*
 void AIMonsterBat::ConstructAI()
 {
   auto& objRef = AIComponentRef->OwnerGameObject;
@@ -60,3 +57,4 @@ void AIMonsterBat::ConstructAI()
 
   _root.reset(rootNode);
 }
+*/

@@ -2,14 +2,8 @@
 
 #include "ai-component.h"
 
-#include "task-player-in-range.h"
-#include "task-player-has-effect.h"
-#include "task-player-visible.h"
 #include "task-random-movement.h"
-#include "task-run-from-player.h"
 #include "task-idle.h"
-#include "task-attack-effect.h"
-#include "task-chase-player-smart.h"
 
 AIMonsterSpider::AIMonsterSpider()
 {
@@ -18,6 +12,7 @@ AIMonsterSpider::AIMonsterSpider()
   IsAgressive = true;
 }
 
+/*
 void AIMonsterSpider::ConstructAI()
 {
   auto& objRef = AIComponentRef->OwnerGameObject;
@@ -89,3 +84,4 @@ void AIMonsterSpider::ConstructAI()
 
   _root.reset(rootNode);
 }
+*/

@@ -3,8 +3,9 @@
 
 #include <memory>
 #include <vector>
+#include <map>
+#include <functional>
 
-#include "application.h"
 #include "util.h"
 
 class GameObject;
@@ -13,55 +14,45 @@ enum class BTResult
 {
   Success = 0,
   Running,
-  Failure
+  Failure,
+  Undefined
 };
 
 class Node
 {
   public:
-    Node(GameObject* objectToControl)
-    {
-      if (objectToControl != nullptr)
-      {
-        _objectToControl = objectToControl;
-      }
+    Node(GameObject* objectToControl);
+    virtual ~Node();
 
-      _playerRef = &Application::Instance().PlayerInstance;
-    }
+    virtual void AddNode(Node* node);
 
-    virtual ~Node() = default;
-    virtual bool Run() = 0;
+    virtual BTResult Run() = 0;
 
-  protected:
+    virtual std::string ToString();
+
+  protected:    
+    void FirstRun();    
+    void Reset();
+
+    virtual void FirstRunSpecific();
+    virtual void ResetSpecific();
+
     GameObject* _objectToControl = nullptr;
-    Player* _playerRef = nullptr;
-};
 
-class Root : public Node
-{
-  using Node::Node;
+    bool _firstRunFlag = false;
 
-  public:
-    bool Run() override
-    {
-      if (_root)
-      {
-        _root->Run();
-      }
+    // FirstRun and Reset shouldn't be allowed to call
+    // directly on task objects.
+    // They should be visible only to
+    // fundamental behaviour tree nodes only.
 
-      return true;
-    }
-
-    void SetNode(Node* node)
-    {
-      if (node != nullptr)
-      {
-        _root.reset(node);
-      }
-    }
-
-  private:
-    std::unique_ptr<Node> _root;
+    friend class Root;
+    friend class ControlNode;
+    friend class IgnoreFailure;
+    friend class Sequence;
+    friend class Selector;
+    friend class Repeater;
+    friend class Condition;
 };
 
 class ControlNode : public Node
@@ -69,91 +60,126 @@ class ControlNode : public Node
   using Node::Node;
 
   public:
-    void AddNode(Node* node)
-    {
-      if (node != nullptr)
-      {
-        _children.push_back(std::unique_ptr<Node>(node));
-      }      
-    }
+    std::string ToString() override;
+
+    void AddNode(Node* node) override;
 
   protected:
-    std::vector<std::unique_ptr<Node>> _children;
+    void ResetSpecific() override;
+
+    std::vector<std::unique_ptr<Node>> _children;    
 };
 
+class Root : public Node
+{
+  using Node::Node;
+
+  public:
+    BTResult Run() override;
+
+    void AddNode(Node* node) override;
+
+    std::string ToString() override;
+
+  protected:
+    void Set(Node* node);
+
+    void ResetSpecific() override;
+
+    std::unique_ptr<Node> _root;
+
+    friend class AIModelBase;
+};
+
+class Condition : public ControlNode
+{
+  using ControlNode::ControlNode;
+
+  public:
+    Condition(GameObject* objToControl, const std::function<BTResult()>& fn);
+
+    void AddNode(Node* node) override;
+
+    BTResult Run() override;
+
+    std::string ToString() override;
+
+  protected:
+    void ResetSpecific() override;
+
+    std::function<BTResult()> _fn;
+};
+
+///
+/// Can be used as an "end state" node - if root node receives
+/// BTResult::Failure, Reset() gets called.
+///
+class Failure : public Node
+{
+  using Node::Node;
+
+  public:
+    BTResult Run() override;
+
+    std::string ToString() override;    
+};
+
+class IgnoreFailure : public ControlNode
+{
+  using ControlNode::ControlNode;
+
+  public:
+    BTResult Run() override;
+
+    std::string ToString() override;
+};
+
+///
+/// A sequence runs each task in order until one fails,
+/// at which point it returns FAILURE. If all tasks succeed, a SUCCESS
+/// status is returned.  If a subtask is still RUNNING, then a RUNNING
+/// status is returned and processing continues until either SUCCESS
+/// or FAILURE is returned from the subtask.
+///
 class Sequence : public ControlNode
 {
   using ControlNode::ControlNode;
 
   public:
-    bool Run() override
-    {
-      for (auto& i : _children)
-      {
-        if (!i->Run())
-        {
-          return false;
-        }
-      }
+    BTResult Run() override;
 
-      return true;
-    }
+    std::string ToString() override;    
 };
 
+///
+/// A selector runs each task in order until one succeeds,
+/// at which point it returns SUCCESS. If all tasks fail, a FAILURE
+/// status is returned.  If a subtask is still RUNNING, then a RUNNING
+/// status is returned and processing continues until either SUCCESS
+/// or FAILURE is returned from the subtask.
+///
 class Selector : public ControlNode
 {
   using ControlNode::ControlNode;
 
   public:
-    bool Run() override
-    {
-      for (auto& i : _children)
-      {
-        if (i->Run())
-        {
-          return true;
-        }
-      }
+    BTResult Run() override;
 
-      return false;
-    }
+    std::string ToString() override;    
 };
 
-class ProbabilisticNode : public Node
+class Repeater : public ControlNode
 {
   public:
-    ProbabilisticNode(GameObject* objectToControl, int successChance)
-      : Node(objectToControl)
-    {
-      _successChance = successChance;
-    }
+    Repeater(GameObject* objectToControl, int toRepeat = -1);
 
-    bool Run() override
-    {
-      return Util::Rolld100(_successChance);
-    }
+    BTResult Run() override;
+
+    std::string ToString() override;
 
   private:
-    int _successChance = 100;
-};
-
-class IgnoreFailureNode : public ControlNode
-{
-  using ControlNode::ControlNode;
-
-  public:
-    bool Run() override
-    {
-      for (auto& i : _children)
-      {
-        if (!i->Run())
-        {
-          return true;
-        }
-      }
-
-      return true;
-    }
+    int _toRepeat = 0;
+    int _repeatCount = 0;
 };
 
 #endif

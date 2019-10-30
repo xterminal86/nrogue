@@ -8,11 +8,7 @@ class TaskIdle : public Node
   using Node::Node;
 
   public:
-    bool Run() override
-    {
-      _objectToControl->FinishTurn();
-      return true;
-    }
+    BTResult Run() override;
 };
 
 #endif // TASKIDLE_H
