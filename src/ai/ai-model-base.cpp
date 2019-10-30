@@ -104,19 +104,19 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   Node* task = nullptr;
 
   std::string taskType = data->Params.at("p1");
-  if (taskType == "task_move_rnd")
+  if (taskType == "move_rnd")
   {
     task = new TaskRandomMovement(AIComponentRef->OwnerGameObject);
   }
-  else if (taskType == "task_idle")
+  else if (taskType == "idle")
   {
     task = new TaskIdle(AIComponentRef->OwnerGameObject);
   }
-  else if (taskType == "task_attack_basic")
+  else if (taskType == "attack_basic")
   {
     task = new TaskAttackBasic(AIComponentRef->OwnerGameObject);
   }
-  else if (taskType == "task_chase_player")
+  else if (taskType == "chase_player")
   {
     task = new TaskChasePlayer(AIComponentRef->OwnerGameObject);
   }
@@ -142,12 +142,23 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
 {
   std::function<BTResult()> fn;
 
+  // "If a non-reference entity is captured by reference,
+  // implicitly or explicitly, and the function call operator
+  // of the closure object is invoked after the entity's
+  // lifetime has ended, undefined behavior occurs.
+  //
+  // The C++ closures do not extend the lifetimes of the captured references.
+  // Same applies to the lifetime of the object pointed to by the captured
+  // this pointer."
+  //
+  // TLDR: cannot capture 'succ', 'range' by reference.
+
   std::string condType = data->Params.at("p1");
   if (condType == "d100")
   {
     unsigned int succ = std::stoul(data->Params.at("p2"));
-    fn = [=]()
-    {
+    fn = [succ]()
+    {      
       bool res = Util::Rolld100(succ);
       return res ? BTResult::Success : BTResult::Failure;
     };
@@ -186,7 +197,7 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
       return res ? BTResult::Success : BTResult::Failure;
     };
   }
-  else if (condType == "turn_left")
+  else if (condType == "turns_left")
   {
     fn = [this]()
     {

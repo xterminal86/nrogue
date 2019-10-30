@@ -19,6 +19,9 @@ enum class BTResult
   Undefined
 };
 
+///
+/// Base class for behaviour tree logic.
+///
 class Node
 {
   public:
@@ -58,6 +61,9 @@ class Node
     friend class Condition;
 };
 
+///
+/// Base class for fundamental control nodes (selector and sequence).
+///
 class ControlNode : public Node
 {
   using Node::Node;
@@ -73,6 +79,9 @@ class ControlNode : public Node
     std::vector<std::unique_ptr<Node>> _children;    
 };
 
+///
+/// Starting node of the behaviour tree.
+///
 class Root : public Node
 {
   using Node::Node;
@@ -94,6 +103,14 @@ class Root : public Node
     friend class AIModelBase;
 };
 
+///
+/// Calls underlying condition function and returns
+/// result of the child node if condition function is a success,
+/// BTResult::Failure otherwise.
+///
+/// If no condition function is specified,
+/// the result is BTResult::Undefined.
+///
 class Condition : public ControlNode
 {
   using ControlNode::ControlNode;
@@ -114,8 +131,19 @@ class Condition : public ControlNode
 };
 
 ///
-/// Can be used as an "end state" node - if root node receives
-/// BTResult::Failure, Reset() gets called.
+/// Always returns BTResult::Failure.
+///
+/// Can be used as an "end state" node -
+/// e.g. if root node receives BTResult::Failure,
+/// Reset() gets called which calls Reset()
+/// on the whole tree nodes.
+///
+/// You can override reset behaviour for tasks
+/// by overriding ResetSpecific() method,
+/// as well as "call once" functionality by overriding
+/// FirstRunSpecific().
+/// Don't forget to reset _firstRunFlag as well if you
+/// need to repeat FirstRun() after Reset().
 ///
 class Failure : public Node
 {
@@ -127,6 +155,10 @@ class Failure : public Node
     std::string ToString() override;    
 };
 
+///
+/// If child node returns BTResult::Failure,
+/// returns BTResult::Success.
+///
 class IgnoreFailure : public ControlNode
 {
   using ControlNode::ControlNode;
@@ -171,6 +203,10 @@ class Selector : public ControlNode
     std::string ToString() override;    
 };
 
+///
+/// Executes child node 'toRepeat' number of times
+/// or inifinitely if 'toRepeat' is -1.
+///
 class Repeater : public ControlNode
 {
   public:
@@ -179,6 +215,9 @@ class Repeater : public ControlNode
     BTResult Run() override;
 
     std::string ToString() override;
+
+  protected:
+    void ResetSpecific() override;
 
   private:
     int _toRepeat = 0;

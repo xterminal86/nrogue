@@ -93,7 +93,7 @@ void AINPC::PrepareScript()
 R"(
 [TREE]
   [SEL]
-    [TASK p1="task_idle"]
+    [TASK p1="idle"]
     [TASK p1="end"]
 )";
 
@@ -102,12 +102,12 @@ R"(
 [TREE]
   [SEL]
     [COND p1="d100" p2="40"]
-      [TASK p1="task_move_rnd"]
-    [TASK p1="task_idle"]
+      [TASK p1="move_rnd"]
+    [TASK p1="idle"]
     [TASK p1="end"]
 )";
 
-  _script = Data.IsImmovable ? scriptImmovable : scriptMovable;
+  _script = Data.IsImmovable ? scriptImmovable : scriptMovable;  
 }
 
 void AINPC::SetDataClaire()

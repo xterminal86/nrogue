@@ -204,8 +204,6 @@ BTResult Failure::Run()
 {
   _objectToControl->CurrentlyExecutingNode = this;
 
-  FirstRun();
-
   return BTResult::Failure;
 }
 
@@ -337,6 +335,11 @@ BTResult Repeater::Run()
   }
 
   return BTResult::Running;
+}
+
+void Repeater::ResetSpecific()
+{
+  _repeatCount = 0;
 }
 
 std::string Repeater::ToString()

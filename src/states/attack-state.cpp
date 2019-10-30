@@ -96,7 +96,7 @@ void AttackState::HandleInput()
       else
       {
         auto* cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
-        Application::Instance().DisplayAttack(cell, GlobalConstants::DisplayAttackDelayMs, "Whoosh!", "#FFFFFF");        
+        Application::Instance().DisplayAttack(cell, GlobalConstants::DisplayAttackDelayMs, "*whoosh*", "#FFFFFF");
       }
     }
 

@@ -24,12 +24,12 @@ R"(
         [SEL]
           [COND p1="in_range" p2="1"]
             [SEQ]
-              [TASK p1="task_attack_basic"]
+              [TASK p1="attack_basic"]
               [SUCC]
-                [COND p1="turn_left"]
+                [COND p1="turns_left"]
                   [TASK p1="move_away"]
-          [TASK p1="task_chase_player"]
-    [TASK p1="task_move_rnd"]
+          [TASK p1="chase_player"]
+    [TASK p1="move_rnd"]
     [TASK p1="end"]
 )";
 }
