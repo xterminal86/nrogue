@@ -8,6 +8,7 @@
 #include "task-random-movement.h"
 #include "task-attack-basic.h"
 #include "task-chase-player.h"
+#include "task-move-away-from-player.h"
 
 AIModelBase::AIModelBase()
 {
@@ -119,6 +120,10 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   {
     task = new TaskChasePlayer(AIComponentRef->OwnerGameObject);
   }
+  else if (taskType == "move_away")
+  {
+    task = new TaskMoveAwayFromPlayer(AIComponentRef->OwnerGameObject);
+  }
   else if (taskType == "end")
   {
     task = new Failure(AIComponentRef->OwnerGameObject);
@@ -181,6 +186,14 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
       return res ? BTResult::Success : BTResult::Failure;
     };
   }
+  else if (condType == "turn_left")
+  {
+    fn = [this]()
+    {
+      bool res = AIComponentRef->OwnerGameObject->Attrs.ActionMeter >= GlobalConstants::TurnReadyValue;
+      return res ? BTResult::Success : BTResult::Failure;
+    };
+  }
 
   return fn;
 }
@@ -211,6 +224,10 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
   else if (type == "SEL")
   {
     n = new Selector(AIComponentRef->OwnerGameObject);
+  }
+  else if (type == "SUCC")
+  {
+    n = new IgnoreFailure(AIComponentRef->OwnerGameObject);
   }
   else if (type == "COND")
   {

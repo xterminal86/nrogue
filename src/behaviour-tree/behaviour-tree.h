@@ -9,6 +9,7 @@
 #include "util.h"
 
 class GameObject;
+class Player;
 
 enum class BTResult
 {
@@ -40,6 +41,8 @@ class Node
     GameObject* _objectToControl = nullptr;
 
     bool _firstRunFlag = false;
+
+    Player* _playerRef;
 
     // FirstRun and Reset shouldn't be allowed to call
     // directly on task objects.

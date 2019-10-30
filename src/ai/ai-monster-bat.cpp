@@ -13,48 +13,23 @@ AIMonsterBat::AIMonsterBat()
   IsAgressive = true;
 }
 
-/*
-void AIMonsterBat::ConstructAI()
+void AIMonsterBat::PrepareScript()
 {
-  auto& objRef = AIComponentRef->OwnerGameObject;
-
-  Root* rootNode = new Root(objRef);
-  {
-    Selector* selectorMain = new Selector(objRef);
-    {
-      Sequence* offenceSeq = new Sequence(objRef);
-      {
-        Selector* selChase = new Selector(objRef);
-        {
-          TaskChasePlayerSmart* taskChasePlayer = new TaskChasePlayerSmart(objRef, AgroRadius);
-
-          Sequence* seqAtk = new Sequence(objRef);
-          {
-            TaskPlayerInRange* taskPlayerInRange = new TaskPlayerInRange(objRef);
-            TaskAttackBasic* taskAttackBasic = new TaskAttackBasic(objRef);
-            TaskRunFromPlayer* taskRun = new TaskRunFromPlayer(objRef);
-
-            seqAtk->AddNode(taskPlayerInRange);
-            seqAtk->AddNode(taskAttackBasic);
-            seqAtk->AddNode(taskRun);
-          }
-
-          selChase->AddNode(seqAtk);
-          selChase->AddNode(taskChasePlayer);
-        }
-
-        offenceSeq->AddNode(selChase);
-      }
-
-      Selector* selectorIdle = GetIdleSelector();
-
-      selectorMain->AddNode(offenceSeq);
-      selectorMain->AddNode(selectorIdle);
-    }
-
-    rootNode->SetNode(selectorMain);
-  }
-
-  _root.reset(rootNode);
+  _script =
+R"(
+[TREE]
+  [SEL]
+    [COND p1="in_range"]
+      [COND p1="player_visible"]
+        [SEL]
+          [COND p1="in_range" p2="1"]
+            [SEQ]
+              [TASK p1="task_attack_basic"]
+              [SUCC]
+                [COND p1="turn_left"]
+                  [TASK p1="move_away"]
+          [TASK p1="task_chase_player"]
+    [TASK p1="task_move_rnd"]
+    [TASK p1="end"]
+)";
 }
-*/

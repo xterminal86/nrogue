@@ -1,11 +1,15 @@
 #include "behaviour-tree.h"
 #include "game-object.h"
 
+#include "application.h"
+
 //
 // ***** Node *****
 //
 Node::Node(GameObject* objectToControl)
 {
+  _playerRef = &Application::Instance().PlayerInstance;
+
   if (objectToControl != nullptr)
   {
     _objectToControl = objectToControl;

@@ -154,7 +154,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _roomsForLevel =
       {
-        { 0, _layoutsForLevel[0] },
+        { 0,  _layoutsForLevel[0] },
         { 60, _layoutsForLevel[1] },
         { 50, _layoutsForLevel[10] },
       };
@@ -170,7 +170,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _roomsForLevel =
       {
-        { 0, _layoutsForLevel[0] },
+        { 0,  _layoutsForLevel[0] },
         { 60, _layoutsForLevel[1] },
         { 70, _layoutsForLevel[3] },
         { 70, _layoutsForLevel[2] },
@@ -189,7 +189,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _roomsForLevel =
       {
-        { 0, _layoutsForLevel[0] },
+        { 0,  _layoutsForLevel[0] },
         { 80, _layoutsForLevel[2] },
         { 80, _layoutsForLevel[3] },
         { 50, _layoutsForLevel[4] },
@@ -198,9 +198,9 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
       _monstersSpawnRateForThisLevel =
       {
-        { GameObjectType::RAT, 8 },
+        { GameObjectType::RAT,    8 },
         { GameObjectType::SPIDER, 1 },
-        { GameObjectType::BAT, 4 }
+        { GameObjectType::BAT,    4 }
       };
     }
     break;
@@ -209,7 +209,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _roomsForLevel =
       {
-        { 0, _layoutsForLevel[2] },
+        { 0,  _layoutsForLevel[2] },
         { 50, _layoutsForLevel[3] },
         { 50, _layoutsForLevel[4] },
         { 50, _layoutsForLevel[5] },
@@ -220,9 +220,9 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
       _monstersSpawnRateForThisLevel =
       {
-        { GameObjectType::RAT, 4 },
+        { GameObjectType::RAT,    4 },
         { GameObjectType::SPIDER, 4 },
-        { GameObjectType::BAT, 4 }
+        { GameObjectType::BAT,    4 }
       };
     }
     break;

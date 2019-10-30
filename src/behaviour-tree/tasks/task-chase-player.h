@@ -9,13 +9,10 @@ class Player;
 
 class TaskChasePlayer : public Node
 {
-  public:    
-    TaskChasePlayer(GameObject* objectToControl);
+  using Node::Node;
 
+  public:
     BTResult Run() override;
-
-  private:
-    Player* _playerRef;
 };
 
 #endif // TASKCHASEPLAYER_H

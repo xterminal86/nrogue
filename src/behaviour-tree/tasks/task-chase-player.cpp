@@ -5,12 +5,6 @@
 #include "pathfinder.h"
 #include "map.h"
 
-TaskChasePlayer::TaskChasePlayer(GameObject *objectToControl)
-  : Node(objectToControl)
-{
-  _playerRef = &Application::Instance().PlayerInstance;
-}
-
 BTResult TaskChasePlayer::Run()
 {
   Position playerPos = { _playerRef->PosX, _playerRef->PosY };
