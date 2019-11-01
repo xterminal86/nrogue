@@ -46,6 +46,8 @@ class AIModelBase
     std::function<BTResult()> GetConditionFunction(const ScriptNode* data);
 
     virtual void PrepareScript();
+
+    void PrintBrains(Node* n, int indent);
 };
 
 #endif

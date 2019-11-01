@@ -69,14 +69,15 @@ class ControlNode : public Node
   using Node::Node;
 
   public:
-    std::string ToString() override;
-
     void AddNode(Node* node) override;
 
   protected:
     void ResetSpecific() override;
 
-    std::vector<std::unique_ptr<Node>> _children;    
+    std::vector<std::unique_ptr<Node>> _children;
+
+    // For allowing debug print of the behaviour tree
+    friend class AIModelBase;
 };
 
 ///
@@ -90,8 +91,6 @@ class Root : public Node
     BTResult Run() override;
 
     void AddNode(Node* node) override;
-
-    std::string ToString() override;
 
   protected:
     void Set(Node* node);
@@ -122,8 +121,6 @@ class Condition : public ControlNode
 
     BTResult Run() override;
 
-    std::string ToString() override;
-
   protected:
     void ResetSpecific() override;
 
@@ -151,8 +148,6 @@ class Failure : public Node
 
   public:
     BTResult Run() override;
-
-    std::string ToString() override;    
 };
 
 ///
@@ -165,8 +160,6 @@ class IgnoreFailure : public ControlNode
 
   public:
     BTResult Run() override;
-
-    std::string ToString() override;
 };
 
 ///
@@ -182,8 +175,6 @@ class Sequence : public ControlNode
 
   public:
     BTResult Run() override;
-
-    std::string ToString() override;    
 };
 
 ///
@@ -199,8 +190,6 @@ class Selector : public ControlNode
 
   public:
     BTResult Run() override;
-
-    std::string ToString() override;    
 };
 
 ///
@@ -213,8 +202,6 @@ class Repeater : public ControlNode
     Repeater(GameObject* objectToControl, int toRepeat = -1);
 
     BTResult Run() override;
-
-    std::string ToString() override;
 
   protected:
     void ResetSpecific() override;

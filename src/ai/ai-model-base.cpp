@@ -73,6 +73,16 @@ void AIModelBase::ConstructAI()
   }
 
   _root.reset(static_cast<Root*>(parentRef));
+
+  //FIXME: debug
+  /*
+  if (_root)
+  {
+    printf("\n");
+    PrintBrains(_root->_root.get(), 0);
+    printf("\n");
+  }
+  */
 }
 
 void AIModelBase::Update()
@@ -267,4 +277,20 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
   }
 
   return n;
+}
+
+void AIModelBase::PrintBrains(Node* n, int indent)
+{
+  std::string tabs(indent, '.');
+
+  printf("%s0x%X - %s\n", tabs.data(), n, n->ToString().data());
+
+  ControlNode* cn = dynamic_cast<ControlNode*>(n);
+  if (cn)
+  {
+    for (auto& i : cn->_children)
+    {
+      PrintBrains(i.get(), indent + 1);
+    }
+  }
 }

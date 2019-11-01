@@ -49,7 +49,7 @@ void Node::AddNode(Node* node)
 
 std::string Node::ToString()
 {
-  std::string res = Util::StringFormat("[NodeBase]");
+  std::string res = Util::StringFormat("[%s]", typeid(*this).name());
   return res;
 }
 //
@@ -92,11 +92,6 @@ void Root::Set(Node* node)
   }
 }
 
-std::string Root::ToString()
-{
-  std::string res = Util::StringFormat("[RootNode]");
-  return res;
-}
 //
 // ********************
 //
@@ -159,12 +154,6 @@ void Condition::ResetSpecific()
     _children[0]->Reset();
   }
 }
-
-std::string Condition::ToString()
-{
-  std::string res = Util::StringFormat("[Condition]");
-  return res;
-}
 //
 // ********************
 //
@@ -187,12 +176,6 @@ void ControlNode::ResetSpecific()
     i->Reset();
   }
 }
-
-std::string ControlNode::ToString()
-{
-  std::string res = Util::StringFormat("[ControlNode]");
-  return res;
-}
 //
 // ********************
 //
@@ -205,12 +188,6 @@ BTResult Failure::Run()
   _objectToControl->CurrentlyExecutingNode = this;
 
   return BTResult::Failure;
-}
-
-std::string Failure::ToString()
-{
-  std::string res = Util::StringFormat("[Failure]");
-  return res;
 }
 //
 // ********************
@@ -238,12 +215,6 @@ BTResult IgnoreFailure::Run()
 
   return BTResult::Success;
 }
-
-std::string IgnoreFailure::ToString()
-{
-  std::string res = Util::StringFormat("[IgnoreFailure]");
-  return res;
-}
 //
 // ********************
 //
@@ -267,12 +238,6 @@ BTResult Sequence::Run()
 
   return BTResult::Success;
 }
-
-std::string Sequence::ToString()
-{
-  std::string res = Util::StringFormat("[Sequence]");
-  return res;
-}
 //
 // ********************
 //
@@ -295,12 +260,6 @@ BTResult Selector::Run()
   }
 
   return BTResult::Failure;
-}
-
-std::string Selector::ToString()
-{
-  std::string res = Util::StringFormat("[Selector]");
-  return res;
 }
 //
 // ********************
@@ -340,10 +299,4 @@ BTResult Repeater::Run()
 void Repeater::ResetSpecific()
 {
   _repeatCount = 0;
-}
-
-std::string Repeater::ToString()
-{
-  std::string res = Util::StringFormat("[Repeater]");
-  return res;
 }
