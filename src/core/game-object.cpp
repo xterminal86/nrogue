@@ -504,7 +504,7 @@ const std::map<EffectType, Effect>& GameObject::Effects()
   return _activeEffects;
 }
 
-const uint64_t GameObject::ObjectId()
+uint64_t GameObject::ObjectId()
 {
   return _objectId;
 }

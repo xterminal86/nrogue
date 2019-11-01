@@ -12,6 +12,10 @@ AIMonsterSpider::AIMonsterSpider()
   IsAgressive = true;
 }
 
+void AIMonsterSpider::PrepareScript()
+{
+}
+
 /*
 void AIMonsterSpider::ConstructAI()
 {

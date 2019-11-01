@@ -93,8 +93,7 @@ void AINPC::PrepareScript()
 R"(
 [TREE]
   [SEL]
-    [TASK p1="idle"]
-    [TASK p1="end"]
+    [TASK p1="idle"]    
 )";
 
   const std::string scriptMovable =
@@ -103,8 +102,7 @@ R"(
   [SEL]
     [COND p1="d100" p2="40"]
       [TASK p1="move_rnd"]
-    [TASK p1="idle"]
-    [TASK p1="end"]
+    [TASK p1="idle"]    
 )";
 
   _script = Data.IsImmovable ? scriptImmovable : scriptMovable;  

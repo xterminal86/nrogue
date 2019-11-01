@@ -30,7 +30,7 @@ R"(
             [TASK p1="attack_basic"]
           [TASK p1="chase_player"]
     [TASK p1="move_rnd"]
-    [TASK p1="end"]
+    [TASK p1="idle"]
 )";
 }
 

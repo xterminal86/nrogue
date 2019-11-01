@@ -1,5 +1,5 @@
-#ifndef TASKCHASEPLAYER_H
-#define TASKCHASEPLAYER_H
+#ifndef TASKGOTOLASTPLAYERPOS_H
+#define TASKGOTOLASTPLAYERPOS_H
 
 #include "behaviour-tree.h"
 
@@ -7,7 +7,7 @@
 
 class Player;
 
-class TaskChasePlayer : public Node
+class TaskGotoLastPlayerPos : public Node
 {
   using Node::Node;
 
@@ -15,8 +15,7 @@ class TaskChasePlayer : public Node
     BTResult Run() override;
 
   private:
-    Position _lastPlayerPos = { -1, -1 };
     std::stack<Position> _path;
 };
 
-#endif // TASKCHASEPLAYER_H
+#endif // TASKGOTOLASTPLAYERPOS_H

@@ -137,7 +137,7 @@ class GameObject
 
     const std::map<EffectType, Effect>& Effects();
 
-    const uint64_t ObjectId();
+    uint64_t ObjectId();
 
     Attributes Attrs;        
 

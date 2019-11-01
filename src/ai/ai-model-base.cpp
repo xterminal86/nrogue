@@ -9,6 +9,7 @@
 #include "task-attack-basic.h"
 #include "task-chase-player.h"
 #include "task-move-away-from-player.h"
+#include "task-goto-last-player-pos.h"
 
 AIModelBase::AIModelBase()
 {
@@ -85,7 +86,7 @@ void AIModelBase::Update()
       AIComponentRef->OwnerGameObject->WaitForTurn();
     }
     else
-    {
+    {      
       if (_root->Run() == BTResult::Failure)
       {
         _root->Reset();
@@ -123,6 +124,10 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   else if (taskType == "move_away")
   {
     task = new TaskMoveAwayFromPlayer(AIComponentRef->OwnerGameObject);
+  }
+  else if (taskType == "goto_last_player_pos")
+  {
+    task = new TaskGotoLastPlayerPos(AIComponentRef->OwnerGameObject);
   }
   else if (taskType == "end")
   {

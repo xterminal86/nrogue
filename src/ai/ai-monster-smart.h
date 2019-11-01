@@ -9,6 +9,9 @@ class AIMonsterSmart : public AIModelBase
 {
   public:
     AIMonsterSmart();
+
+  protected:
+    void PrepareScript() override;
 };
 
 #endif // AIMONSTERSMART_H

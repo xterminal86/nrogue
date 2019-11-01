@@ -10,49 +10,21 @@ AIMonsterHerobrine::AIMonsterHerobrine()
   IsAgressive = true;
 }
 
-/*
-void AIMonsterHerobrine::ConstructAI()
+void AIMonsterHerobrine::PrepareScript()
 {
-  auto& objRef = AIComponentRef->OwnerGameObject;
+  // TODO: improve
 
-  Root* rootNode = new Root(objRef);
-  {
-    Selector* selectorMain = new Selector(objRef);
-    {
-      Sequence* offenceSeq = new Sequence(objRef);
-      {
-        Selector* selChase = new Selector(objRef);
-        {
-          // If player is in 1 tile range, attack him.
-          Sequence* seqAtk = new Sequence(objRef);
-          {
-            TaskPlayerInRange* taskPlayerInRange = new TaskPlayerInRange(objRef);
-            TaskAttackBasic* taskAttackBasic = new TaskAttackBasic(objRef);
-
-            seqAtk->AddNode(taskPlayerInRange);
-            seqAtk->AddNode(taskAttackBasic);
-          }
-
-          selChase->AddNode(seqAtk);
-
-          TaskChasePlayer* taskChasePlayer = new TaskChasePlayer(objRef);
-          selChase->AddNode(taskChasePlayer);
-        }
-
-        offenceSeq->AddNode(selChase);
-      }
-
-      // Since we start in closed room,
-      // there should be at least idle state for enemy.
-      Selector* selectorIdle = GetIdleSelector();
-
-      selectorMain->AddNode(offenceSeq);
-      selectorMain->AddNode(selectorIdle);
-    }
-
-    rootNode->SetNode(selectorMain);
-  }
-
-  _root.reset(rootNode);
+  _script =
+R"(
+[TREE]
+  [SEL]
+    [COND p1="in_range"]
+      [COND p1="player_visible"]
+        [SEL]
+          [COND p1="in_range" p2="1"]
+            [TASK p1="attack_basic"]
+          [TASK p1="chase_player"]
+    [TASK p1="move_rnd"]
+    [TASK p1="idle"]
+)";
 }
-*/

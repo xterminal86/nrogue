@@ -14,42 +14,21 @@ AIMonsterSmart::AIMonsterSmart()
   IsAgressive = true;
 }
 
-/*
-void AIMonsterSmart::ConstructAI()
+void AIMonsterSmart::PrepareScript()
 {
-  auto& objRef = AIComponentRef->OwnerGameObject;
-
-  Root* rootNode = new Root(objRef);
-  {
-    Selector* selectorMain = new Selector(objRef);
-    {
-      Selector* attackOrChase = new Selector(objRef);
-      {
-        Sequence* attackSeq = new Sequence(objRef);
-        {
-          TaskPlayerInRange* taskPlayerInRange = new TaskPlayerInRange(objRef);
-          TaskAttackBasic* taskAttack = new TaskAttackBasic(objRef);
-
-          attackSeq->AddNode(taskPlayerInRange);
-          attackSeq->AddNode(taskAttack);
-        }
-
-        attackOrChase->AddNode(attackSeq);
-
-        TaskChasePlayerSmart* taskChaseSmart = new TaskChasePlayerSmart(objRef, AgroRadius);
-
-        attackOrChase->AddNode(taskChaseSmart);
-      }
-
-      Selector* selectorIdle = GetIdleSelector();
-
-      selectorMain->AddNode(attackOrChase);
-      selectorMain->AddNode(selectorIdle);
-    }
-
-    rootNode->SetNode(selectorMain);
-  }
-
-  _root.reset(rootNode);
+  _script =
+R"(
+[TREE]
+  [SEL]
+    [COND p1="in_range"]
+      [SEL]
+        [COND p1="player_visible"]
+          [SEL]
+            [COND p1="in_range" p2="1"]
+              [TASK p1="attack_basic"]
+            [TASK p1="chase_player"]
+        [TASK p1="goto_last_player_pos"]
+    [TASK p1="move_rnd"]
+    [TASK p1="idle"]
+)";
 }
-*/
