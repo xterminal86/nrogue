@@ -153,7 +153,11 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   if (task == nullptr)
   {
     auto who = Util::StringFormat("%s_%u", AIComponentRef->OwnerGameObject->ObjectName.data(), AIComponentRef->OwnerGameObject->ObjectId());
+    Logger::Instance().Print(who, true);
+
+    #ifdef DEBUG_BUILD
     printf("\t[%s] no such task - %s!\n", who.data(), taskType.data());
+    #endif
   }
 
   return task;
@@ -273,7 +277,11 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
   if (n == nullptr && type != "TASK")
   {
     auto who = Util::StringFormat("%s_%u", AIComponentRef->OwnerGameObject->ObjectName.data(), AIComponentRef->OwnerGameObject->ObjectId());
+    Logger::Instance().Print(who);
+
+    #ifdef DEBUG_BUILD
     printf("[%s] no such node - %s!\n", who.data(), type.data());
+    #endif
   }
 
   return n;
@@ -288,7 +296,7 @@ void AIModelBase::PrintBrains(Node* n, int indent)
   ControlNode* cn = dynamic_cast<ControlNode*>(n);
   if (cn)
   {
-    for (auto& i : cn->_children)
+    for (auto& i : cn->GetChildren())
     {
       PrintBrains(i.get(), indent + 1);
     }

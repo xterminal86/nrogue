@@ -258,6 +258,12 @@ void Application::WriteObituary(bool wasKilled)
           ch = wasKilled ? '%' : '@';
         }
 
+        // If character is not printable, replace it with x
+        if (ch < 32)
+        {
+          ch = 'x';
+        }
+
         row.push_back(ch);
       }
     }

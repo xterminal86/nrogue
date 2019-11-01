@@ -71,13 +71,13 @@ class ControlNode : public Node
   public:
     void AddNode(Node* node) override;
 
+    // For allowing debug print of the behaviour tree
+    const std::vector<std::unique_ptr<Node>>& GetChildren();
+
   protected:
     void ResetSpecific() override;
 
     std::vector<std::unique_ptr<Node>> _children;
-
-    // For allowing debug print of the behaviour tree
-    friend class AIModelBase;
 };
 
 ///

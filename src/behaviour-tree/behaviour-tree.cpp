@@ -176,6 +176,12 @@ void ControlNode::ResetSpecific()
     i->Reset();
   }
 }
+
+const std::vector<std::unique_ptr<Node>>& ControlNode::GetChildren()
+{
+  return _children;
+}
+
 //
 // ********************
 //

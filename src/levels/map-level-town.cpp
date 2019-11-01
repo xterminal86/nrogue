@@ -652,8 +652,8 @@ void MapLevelTown::CreateNPCs()
     {
       for (int y = 1; y <= MapSize.Y - 1; y++)
       {
-        // skip player house
-        if (x >= 4 && x <= 6 && y >= 4 && y <= 6)
+        // Skip area around player house
+        if (x >= 2 && x <= 8 && y >= 2 && y <= 8)
         {
           continue;
         }
