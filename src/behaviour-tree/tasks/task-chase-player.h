@@ -13,10 +13,6 @@ class TaskChasePlayer : public Node
 
   public:
     BTResult Run() override;
-
-  private:
-    Position _lastPlayerPos = { -1, -1 };
-    std::stack<Position> _path;
 };
 
 #endif // TASKCHASEPLAYER_H

@@ -15,8 +15,8 @@ void AIComponent::Update()
   }
   else
   {
-    auto str = Util::StringFormat("%s (%s) no AI model set!\n", __PRETTY_FUNCTION__, OwnerGameObject->ObjectName.data());
-    Logger::Instance().Print(str);
+    auto str = Util::StringFormat("%s (%s) no AI model set!", __PRETTY_FUNCTION__, OwnerGameObject->ObjectName.data());
+    Logger::Instance().Print(str, true);
 
     #ifdef DEBUG_BUILD
     printf("%s\n", str.data());

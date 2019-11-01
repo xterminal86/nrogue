@@ -175,9 +175,9 @@ void MapLevelBase::PlaceStairs()
 void MapLevelBase::CreateInitialMonsters()
 {
   // FIXME: debug
-  //MaxMonsters = 1;
+  MaxMonsters = 1;
 
-  MaxMonsters = std::sqrt(_emptyCells.size()) / 2;
+  //MaxMonsters = std::sqrt(_emptyCells.size()) / 2;
 
   for (int i = 0; i < MaxMonsters; i++)
   {
@@ -310,13 +310,13 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
 void MapLevelBase::CreateLevel()
 {
   auto str = Util::StringFormat("%s, %s - no level was created!", __PRETTY_FUNCTION__, LevelName.data());
-  Logger::Instance().Print(str);
+  Logger::Instance().Print(str, true);
 }
 
 void MapLevelBase::ConstructFromBuilder(LevelBuilder& lb)
 {
   auto str = Util::StringFormat("%s, %s - calling base ConstructFromBuilder()!", __PRETTY_FUNCTION__, LevelName.data());
-  Logger::Instance().Print(str);
+  Logger::Instance().Print(str, true);
 }
 
 void MapLevelBase::CreateSpecialLevel()

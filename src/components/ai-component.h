@@ -50,6 +50,15 @@ class AIComponent : public Component
       {
         CurrentModel = _aiModels[hash].get();
       }
+      else
+      {
+        auto str = Util::StringFormat("%s no such AI model - %s!", __PRETTY_FUNCTION__, typeid(T).name());
+        Logger::Instance().Print(str, true);
+
+        #ifdef DEBUG_BUILD
+        printf("%s\n", str.data());
+        #endif
+      }
     }
 
     void Update() override;

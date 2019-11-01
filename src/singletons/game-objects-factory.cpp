@@ -223,11 +223,13 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   go->Move(0, 0);
 
   AIComponent* ai = go->AddComponent<AIComponent>();
+  //AIMonsterSmart* aimb = ai->AddModel<AIMonsterSmart>();
   AIMonsterBasic* aimb = ai->AddModel<AIMonsterBasic>();
   aimb->AgroRadius = 8;
   aimb->ConstructAI();
 
   ai->ChangeModel<AIMonsterBasic>();
+  //ai->ChangeModel<AIMonsterSmart>();
 
   // Set attributes
   if (randomize)

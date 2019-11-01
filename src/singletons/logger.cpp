@@ -17,7 +17,7 @@ void Logger::Prepare(bool enabled)
   }
 }
 
-void Logger::Print(const std::string &stringToPrint)
+void Logger::Print(const std::string &stringToPrint, bool error)
 {
   if (_enabled)
   {
@@ -43,7 +43,7 @@ void Logger::Print(const std::string &stringToPrint)
       _logFile << "0";
     }
 
-    _logFile << ltm->tm_sec << " *** ";
+    _logFile << ltm->tm_sec << (error ? " !!! " : " *** ");
 
     _logFile << stringToPrint << "\n";
 

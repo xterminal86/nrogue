@@ -41,7 +41,7 @@ void Printer::InitForSDL()
   {
     auto str = Util::StringFormat("***** Could not load tileset: %s! *****\nFalling back to embedded.\n", SDL_GetError());
     printf("%s\n", str.data());
-    Logger::Instance().Print(str);
+    Logger::Instance().Print(str, true);
 
     _tileWidth = 8;
     _tileHeight = 16;
@@ -54,7 +54,7 @@ void Printer::InitForSDL()
     {
       auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", IMG_GetError());
       printf("%s\n", str.data());
-      Logger::Instance().Print(str);
+      Logger::Instance().Print(str, true);
     }
 
     _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);

@@ -95,7 +95,13 @@ void AIModelBase::Update()
   }
   else
   {
-    printf("No AI on this object: %s!\n", AIComponentRef->OwnerGameObject->ObjectName.data());
+    auto str = Util::StringFormat("No AI on this object: %s!", AIComponentRef->OwnerGameObject->ObjectName.data());
+    Logger::Instance().Print(str, true);
+
+    #ifdef DEBUG_BUILD
+    printf("%s\n", str.data());
+    #endif
+
     AIComponentRef->OwnerGameObject->FinishTurn();
   }
 }

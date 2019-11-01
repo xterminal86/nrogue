@@ -19,6 +19,8 @@ BTResult TaskGotoLastPlayerPos::Run()
   int plX = std::stoi(sX);
   int plY = std::stoi(sY);
 
+  printf("%i %i\n", plX, plY);
+
   if (_path.empty())
   {
     Pathfinder pf;

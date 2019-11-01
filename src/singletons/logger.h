@@ -13,7 +13,7 @@ class Logger : public Singleton<Logger>
 
     void Init() override;
     void Prepare(bool enabled);
-    void Print(const std::string& stringToPrint);
+    void Print(const std::string& stringToPrint, bool error = false);
 
   private:
     std::ofstream _logFile;
