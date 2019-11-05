@@ -1,6 +1,5 @@
 #include "inventory-state.h"
 
-#include "item-component.h"
 #include "application.h"
 #include "printer.h"
 #include "returner-state.h"

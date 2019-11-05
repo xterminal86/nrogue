@@ -3,12 +3,7 @@
 #include "game-object.h"
 #include "rng.h"
 #include "application.h"
-#include "map.h"
 #include "trader-component.h"
-
-#include "task-random-movement.h"
-#include "task-idle.h"
-#include "behaviour-tree.h"
 
 AINPC::AINPC()
 {

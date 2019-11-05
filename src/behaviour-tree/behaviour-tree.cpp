@@ -1,6 +1,6 @@
 #include "behaviour-tree.h"
-#include "game-object.h"
 
+#include "game-object.h"
 #include "application.h"
 
 //
@@ -191,8 +191,6 @@ const std::vector<std::unique_ptr<Node>>& ControlNode::GetChildren()
 //
 BTResult Failure::Run()
 {
-  _objectToControl->CurrentlyExecutingNode = this;
-
   return BTResult::Failure;
 }
 //

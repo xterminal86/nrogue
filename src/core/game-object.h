@@ -97,14 +97,14 @@ class GameObject
     int PosX = 0;
     int PosY = 0;
 
-    // e.g., to disallow walking into a tile for NPC
+    // e.g. to disallow walking into a tile for NPC
     bool Special = false;
 
     bool Blocking = false;
     bool BlocksSight = false;
     bool Revealed = false;
 
-    // Determines if objects on map tile should be drawn
+    // Determines if objects on the map tile should be drawn
     bool Visible = false;
 
     // NOTE: set manually for NPCs during creation via GameObject::Move(),
@@ -144,8 +144,6 @@ class GameObject
     int HealthRegenTurns = 0;
 
     GameObjectType Type = GameObjectType::HARMLESS;
-
-    Node* CurrentlyExecutingNode = nullptr;
 
   protected:    
     std::map<size_t, std::unique_ptr<Component>> _components;

@@ -3,12 +3,8 @@
 #include "application.h"
 #include "map.h"
 #include "printer.h"
-#include "rng.h"
-#include "item-component.h"
 #include "stairs-component.h"
-#include "map-level-base.h"
 #include "target-state.h"
-#include "attribute.h"
 #include "spells-processor.h"
 
 void MainState::Init()

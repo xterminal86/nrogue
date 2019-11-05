@@ -2,7 +2,6 @@
 #include "printer.h"
 
 #include "application.h"
-#include "game-objects-factory.h"
 #include "map.h"
 #include "map-level-town.h"
 

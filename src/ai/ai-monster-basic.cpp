@@ -1,14 +1,4 @@
 #include "ai-monster-basic.h"
-#include "ai-component.h"
-#include "application.h"
-#include "map.h"
-#include "rng.h"
-#include "map-level-base.h"
-
-#include "behaviour-tree.h"
-#include "task-random-movement.h"
-#include "task-attack-basic.h"
-#include "task-idle.h"
 
 AIMonsterBasic::AIMonsterBasic()
 {

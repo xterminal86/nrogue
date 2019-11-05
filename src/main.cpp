@@ -11,8 +11,6 @@
 #include "rng.h"
 #include "blackboard.h"
 
-#include "level-builder.h"
-
 #ifdef RUN_TESTS
 #include "tests.h"
 #endif

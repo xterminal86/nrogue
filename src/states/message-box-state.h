@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "gamestate.h"
-#include "constants.h"
 
 class MessageBoxState : public GameState
 {

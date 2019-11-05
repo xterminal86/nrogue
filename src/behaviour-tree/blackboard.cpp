@@ -4,7 +4,7 @@ void Blackboard::Init()
 {
 }
 
-void Blackboard::Set(unsigned long goId, const sspair& data)
+void Blackboard::Set(uint64_t goId, const sspair& data)
 {
   if (_blackboard.count(goId) != 1)
   {

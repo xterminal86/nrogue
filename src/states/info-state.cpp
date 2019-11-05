@@ -1,8 +1,6 @@
 #include "info-state.h"
-#include "main-state.h"
 #include "printer.h"
 #include "application.h"
-#include "attribute.h"
 #include "util.h"
 
 void InfoState::HandleInput()

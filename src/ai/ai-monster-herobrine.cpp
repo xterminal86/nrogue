@@ -1,7 +1,4 @@
 #include "ai-monster-herobrine.h"
-#include "ai-component.h"
-
-#include "task-attack-basic.h"
 
 AIMonsterHerobrine::AIMonsterHerobrine()
 {

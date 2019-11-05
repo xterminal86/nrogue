@@ -1,11 +1,4 @@
 #include "ai-monster-smart.h"
-#include "ai-component.h"
-
-#include "behaviour-tree.h"
-
-#include "task-attack-basic.h"
-#include "task-random-movement.h"
-#include "task-idle.h"
 
 AIMonsterSmart::AIMonsterSmart()
 {

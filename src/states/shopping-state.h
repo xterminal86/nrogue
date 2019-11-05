@@ -3,7 +3,6 @@
 
 #include "gamestate.h"
 
-#include "constants.h"
 #include "game-object.h"
 
 class TraderComponent;

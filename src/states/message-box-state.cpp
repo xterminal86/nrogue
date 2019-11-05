@@ -1,6 +1,5 @@
 #include "message-box-state.h"
 #include "printer.h"
-#include "constants.h"
 #include "application.h"
 
 #ifndef USE_SDL

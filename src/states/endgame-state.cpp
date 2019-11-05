@@ -3,7 +3,6 @@
 #include "map.h"
 #include "application.h"
 #include "util.h"
-#include "attribute.h"
 
 void EndgameState::Init()
 {

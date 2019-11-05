@@ -1,8 +1,6 @@
 #include "select-class-state.h"
 #include "printer.h"
 #include "application.h"
-#include "map.h"
-#include "map-level-town.h"
 #include "util.h"
 
 void SelectClassState::HandleInput()

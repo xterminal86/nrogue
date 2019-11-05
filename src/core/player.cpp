@@ -8,7 +8,6 @@
 #include "ai-component.h"
 #include "ai-npc.h"
 #include "application.h"
-#include "item-component.h"
 #include "spells-database.h"
 
 void Player::Init()

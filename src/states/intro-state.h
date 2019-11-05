@@ -5,9 +5,12 @@
 #include <vector>
 #include <chrono>
 
-#include "application.h"
 #include "gamestate.h"
+
+#ifdef DEBUG_BUILD
+#include "application.h"
 #include "map.h"
+#endif
 
 class IntroState : public GameState
 {

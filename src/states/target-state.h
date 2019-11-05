@@ -1,10 +1,10 @@
 #ifndef TARGETSTATE_H
 #define TARGETSTATE_H
 
+#include <memory>
+
 #include "gamestate.h"
 #include "position.h"
-
-#include <memory>
 
 class Player;
 class ItemComponent;

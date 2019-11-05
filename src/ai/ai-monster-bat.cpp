@@ -1,11 +1,5 @@
 #include "ai-monster-bat.h"
 
-#include "ai-component.h"
-
-#include "task-attack-basic.h"
-#include "task-random-movement.h"
-#include "task-idle.h"
-
 AIMonsterBat::AIMonsterBat()
 {
   _hash = typeid(*this).hash_code();

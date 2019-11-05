@@ -1,10 +1,5 @@
 #include "ai-monster-spider.h"
 
-#include "ai-component.h"
-
-#include "task-random-movement.h"
-#include "task-idle.h"
-
 AIMonsterSpider::AIMonsterSpider()
 {
   _hash = typeid(*this).hash_code();

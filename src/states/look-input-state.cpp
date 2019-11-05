@@ -1,13 +1,10 @@
 #include "look-input-state.h"
 
-#include "constants.h"
 #include "application.h"
 #include "printer.h"
 #include "map.h"
-#include "item-component.h"
 #include "ai-component.h"
 #include "ai-npc.h"
-#include "ai-monster-basic.h"
 #include "map-level-base.h"
 
 #ifdef DEBUG_BUILD

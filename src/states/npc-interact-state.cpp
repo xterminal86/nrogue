@@ -1,7 +1,6 @@
 #include "npc-interact-state.h"
 
 #include "application.h"
-#include "constants.h"
 #include "printer.h"
 #include "util.h"
 #include "ai-npc.h"
