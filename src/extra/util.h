@@ -848,6 +848,22 @@ namespace Util
 
     return res;
   }
+
+  template <typename key, typename value>
+  inline std::map<value, key> FlipMap(const std::map<key, value>& src)
+  {
+    std::map<value, key> ret;
+
+    std::transform(src.begin(),
+                   src.end(),
+                   std::inserter(ret, ret.begin()),
+                   [](const std::pair<key, value>& p)
+    {
+      return std::pair<value, key>(p.second, p.first);
+    });
+
+    return ret;
+  }
 }
 
 #endif

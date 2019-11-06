@@ -14,9 +14,10 @@ BTResult TaskMoveAwayFromPlayer::Run()
     return BTResult::Failure;
   }
 
-  int maxDistance = 0;
+  int maxDistance = 1;
   Position posToWalk;
 
+  bool found = false;
   for (auto& c : res)
   {
     int d = Util::BlockDistance(c.X, c.Y, px, py);
@@ -24,7 +25,13 @@ BTResult TaskMoveAwayFromPlayer::Run()
     {
       maxDistance = d;
       posToWalk = c;
+      found = true;
     }
+  }
+
+  if (!found)
+  {
+    return BTResult::Failure;
   }
 
   // posToWalk cell should be empty so MoveTo() should succeed

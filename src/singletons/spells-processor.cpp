@@ -210,7 +210,7 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
     int power = RNG::Instance().RandomRange(1, 10);
-    _playerRef->AddEffect(EffectType::POISONED, power, 10, true, true);
+    _playerRef->AddEffect(EffectType::POISONED, power, 10, true);
 
     Printer::Instance().AddMessage("You feel unwell!");
   }
@@ -222,7 +222,7 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
 
     if (scroll->Data.Prefix == ItemPrefix::BLESSED)
     {
-      _playerRef->AddEffect(EffectType::REGEN, 1, 20, false, true);
+      _playerRef->AddEffect(EffectType::REGEN, 1, 20, false);
     }
   }
 }
@@ -290,7 +290,7 @@ void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
 
   Printer::Instance().AddMessage(message);
 
-  _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration, false, true);
+  _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration, false);
 }
 
 void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll)
@@ -375,7 +375,7 @@ void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
 
   Printer::Instance().AddMessage(message);
 
-  _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration, false, true);
+  _playerRef->AddEffect(EffectType::ILLUMINATED, power, duration, false);
 }
 
 void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
@@ -404,7 +404,7 @@ void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
 
   Printer::Instance().AddMessage("You can sense nearby creatures");
 
-  _playerRef->AddEffect(EffectType::TELEPATHY, power, duration, false, true);
+  _playerRef->AddEffect(EffectType::TELEPATHY, power, duration, false);
 }
 
 void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
@@ -494,7 +494,7 @@ void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
       Printer::Instance().AddMessage("Your spirit force was drained!");
     }
 
-    _playerRef->AddEffect(EffectType::MANA_SHIELD, 0, -1, false, true);
+    _playerRef->AddEffect(EffectType::MANA_SHIELD, 0, -1, false);
   }
   else
   {

@@ -39,12 +39,10 @@ BTResult TaskGotoLastPlayerPos::Run()
       return BTResult::Success;
     }
   }
-  else
-  {
-    // No path can be built or we arrived to last known player pos
-    Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_x", "" });
-    Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_y", "" });
-  }
+
+  // No path can be built or we arrived to last known player pos
+  Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_x", "" });
+  Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_y", "" });
 
   return BTResult::Failure;
 }

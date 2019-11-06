@@ -38,7 +38,7 @@ void Player::Init()
   _currentCell->Occupied = true;
 
   // FIXME: debug
-  Money = 10000;
+  //Money = 10000;
   //Attrs.HungerRate.Set(0);
 }
 
@@ -511,7 +511,7 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
     bool damageDone = TryToDamageObject(actor, damage, againstRes);
     if (weapon->Data.SpellHeld == SpellType::FROST)
     {
-      actor->AddEffect(EffectType::FROZEN, 1, 10, true, true);
+      actor->AddEffect(EffectType::FROZEN, 1, 10, true);
     }
 
     if (damageDone && actor->IsDestroyed)

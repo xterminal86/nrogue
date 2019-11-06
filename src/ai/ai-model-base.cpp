@@ -10,6 +10,7 @@
 #include "task-chase-player.h"
 #include "task-move-away-from-player.h"
 #include "task-goto-last-player-pos.h"
+#include "task-attack-effect.h"
 
 AIModelBase::AIModelBase()
 {
@@ -145,6 +146,26 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   {
     task = new TaskGotoLastPlayerPos(AIComponentRef->OwnerGameObject);
   }
+  else if (taskType == "attack_effect")
+  {
+    std::string effectType = data->Params.at("p2");
+    bool ignoreArmor = (data->Params.count("p3") == 1);
+
+    Effect e;
+
+    if (effectType == "Psd")
+    {
+      e =
+      {
+        EffectType::POISONED,
+        AIComponentRef->OwnerGameObject->Attrs.Lvl.CurrentValue,
+        10 + AIComponentRef->OwnerGameObject->Attrs.Lvl.CurrentValue,
+        true
+      };
+    }
+
+    task = new TaskAttackEffect(AIComponentRef->OwnerGameObject, e, ignoreArmor);
+  }
   else if (taskType == "end")
   {
     task = new Failure(AIComponentRef->OwnerGameObject);
@@ -176,7 +197,7 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
   // Same applies to the lifetime of the object pointed to by the captured
   // this pointer."
   //
-  // TLDR: cannot capture 'succ', 'range' by reference.
+  // TLDR: cannot capture 'succ', 'range' et al. by reference.
 
   std::string condType = data->Params.at("p1");
   if (condType == "d100")
@@ -204,7 +225,9 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
   }
   else if (condType == "in_range")
   {
+    // If range is not specified, it defaults to AgroRadius
     unsigned int range = AgroRadius;
+
     if (data->Params.count("p2"))
     {
       range = std::stoul(data->Params.at("p2"));
@@ -223,10 +246,26 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
     };
   }
   else if (condType == "turns_left")
-  {
+  {    
     fn = [this]()
     {
       bool res = AIComponentRef->OwnerGameObject->Attrs.ActionMeter >= GlobalConstants::TurnReadyValue;
+      return res ? BTResult::Success : BTResult::Failure;
+    };
+  }
+  else if (condType == "has_effect")
+  {
+    std::string who = data->Params.at("p2");
+    std::string effect = data->Params.at("p3");
+
+    auto invMap = Util::FlipMap(EffectNameByType);
+
+    fn = [this, invMap, who, effect]()
+    {
+      bool res = (who == "player")
+                 ? _playerRef->HasEffect(invMap.at(effect))
+                 : AIComponentRef->OwnerGameObject->HasEffect(invMap.at(effect));
+
       return res ? BTResult::Success : BTResult::Failure;
     };
   }
@@ -237,6 +276,16 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
 Node* AIModelBase::CreateConditionNode(const ScriptNode* data)
 {
   std::function<BTResult()> fn = GetConditionFunction(data);
+
+  if (fn.target_type() == typeid(void))
+  {
+    auto str = Util::StringFormat("%s - empty COND function (%s)!", __PRETTY_FUNCTION__, data->Params.at("p1").data());
+    Logger::Instance().Print(str);
+
+    #ifdef DEBUG_BUILD
+    printf("%s\n", str.data());
+    #endif
+  }
 
   Node* node = new Condition(AIComponentRef->OwnerGameObject, fn);
 

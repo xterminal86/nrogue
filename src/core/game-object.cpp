@@ -268,8 +268,7 @@ void GameObject::AddEffect(const Effect &effectToAdd)
 void GameObject::AddEffect(EffectType type,
                            int power,
                            int duration,
-                           bool cumulative,
-                           bool ignoresArmor)
+                           bool cumulative)
 {
   if (HasEffect(type))
   {
@@ -288,7 +287,7 @@ void GameObject::AddEffect(EffectType type,
   }
   else
   {
-    Effect e = { type, power, duration, cumulative, ignoresArmor };
+    Effect e = { type, power, duration, cumulative };
     ApplyEffect(e);
     _activeEffects[type] = e;
   }

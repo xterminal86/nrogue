@@ -119,18 +119,18 @@ class Player : public GameObject
 
     std::map<int, PlayerClass> _classesMap =
     {
-      { 0, PlayerClass::SOLDIER },
-      { 1, PlayerClass::THIEF },
+      { 0, PlayerClass::SOLDIER  },
+      { 1, PlayerClass::THIEF    },
       { 2, PlayerClass::ARCANIST },
-      { 3, PlayerClass::CUSTOM }
+      { 3, PlayerClass::CUSTOM   }
     };
 
     std::map<int, std::string> _classesName =
     {
-      { 0, "Soldier" },
-      { 1, "Thief" },
+      { 0, "Soldier"  },
+      { 1, "Thief"    },
       { 2, "Arcanist" },
-      { 3, "Unknown" }
+      { 3, "Unknown"  }
     };
 
     // std::map automatically sorts by key, so in case of string key,

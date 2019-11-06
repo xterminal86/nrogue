@@ -61,7 +61,7 @@ struct Effect
 {
   Effect() = default;
 
-  Effect(EffectType t, int p, int to, bool cumulative, bool ignoresArmor);
+  Effect(EffectType t, int p, int to, bool cumulative);
 
   bool operator< (const Effect& rhs) const;
 
@@ -78,10 +78,6 @@ struct Effect
   int Duration = 0;
 
   bool Cumulative = false;
-
-  // Effect is applied on successful hit
-  // TODO: unused for now
-  bool ApplicationIgnoresArmor = false;
 };
 
 #endif // EFFECT_H
