@@ -81,6 +81,7 @@ class Application : public Singleton<Application>
     #ifdef USE_SDL
     std::map<std::string, std::string> _config;
     void InitSDL();
+    void SetIcon();
     #else
     void InitCurses();
     #endif

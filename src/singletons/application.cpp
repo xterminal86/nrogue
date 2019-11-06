@@ -430,6 +430,26 @@ void Application::ProcessConfig()
   tileset.close();
 }
 
+void Application::SetIcon()
+{
+  auto res = Util::Base64_Decode(GlobalConstants::IconBase64);
+  auto bytes = Util::ConvertStringToBytes(res);
+  SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
+  auto surf = IMG_Load_RW(data, 1);
+  if (!surf)
+  {
+    auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", IMG_GetError());
+    Logger::Instance().Print(str);
+    #ifdef DEBUG_BUILD
+    printf("%s\n", str.data());
+    #endif
+    return;
+  }
+
+  SDL_SetWindowIcon(Window, surf);
+  SDL_FreeSurface(surf);
+}
+
 void Application::InitSDL()
 {  
   int tilesetWidth = 0;
@@ -482,6 +502,8 @@ void Application::InitSDL()
   SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
 
   IMG_Init(IMG_INIT_PNG);
+
+  SetIcon();
 
   Printer::Instance().Init();
 
