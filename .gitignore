@@ -2,7 +2,6 @@ build*/
 obj/
 CMakeLists.txt.user*
 nrogue
-config.txt
 core.*
 *.txt
 *.out

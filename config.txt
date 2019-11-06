@@ -1,4 +1,0 @@
-FILE=resources/standard_8x16.png
-TILE_W=8
-TILE_H=16
-SCALE=2
