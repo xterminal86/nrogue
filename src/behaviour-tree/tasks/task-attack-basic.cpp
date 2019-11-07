@@ -5,6 +5,8 @@
 
 BTResult TaskAttackBasic::Run()
 {
+  //printf("[TaskAttackBasic]\n");
+
   bool result = false;
 
   int attackChanceScale = 2;

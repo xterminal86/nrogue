@@ -8,6 +8,8 @@
 
 BTResult TaskGotoLastPlayerPos::Run()
 {
+  //printf("[TaskGotoLastPlayerPos]\n");
+
   auto sX = Blackboard::Instance().Get(_objectToControl->ObjectId(), "pl_x");
   auto sY = Blackboard::Instance().Get(_objectToControl->ObjectId(), "pl_y");
 
@@ -19,6 +21,8 @@ BTResult TaskGotoLastPlayerPos::Run()
   int plX = std::stoi(sX);
   int plY = std::stoi(sY);
 
+  //printf("\tplX: %i plY: %i\n", plX, plY);
+
   if (_path.empty())
   {
     Pathfinder pf;
@@ -26,7 +30,7 @@ BTResult TaskGotoLastPlayerPos::Run()
                         { _objectToControl->PosX, _objectToControl->PosY },
                         { plX, plY },
                         std::vector<char>(),
-                        true);
+                        true);    
   }
 
   if (!_path.empty())
@@ -38,11 +42,18 @@ BTResult TaskGotoLastPlayerPos::Run()
       _objectToControl->FinishTurn();
       return BTResult::Success;
     }
+    else
+    {
+      // If MoveTo() failed, clear possible remaining path
+      _path = std::stack<Position>();
+    }
   }
-
-  // No path can be built or we arrived to last known player pos
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_x", "" });
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_y", "" });
+  else
+  {
+    // No path can be built or we arrived to last known player pos
+    Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_x", "" });
+    Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_y", "" });
+  }
 
   return BTResult::Failure;
 }

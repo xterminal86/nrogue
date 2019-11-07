@@ -8,6 +8,8 @@
 
 BTResult TaskChasePlayer::Run()
 {
+  //printf("[TaskChasePlayer]\n");
+
   Position playerPos = { _playerRef->PosX, _playerRef->PosY };
   Position objPos = { _objectToControl->PosX, _objectToControl->PosY };
 
@@ -24,6 +26,18 @@ BTResult TaskChasePlayer::Run()
                            playerPos,
                            std::vector<char>(),
                            true);
+
+  /*
+  auto copy = path;
+  while (!copy.empty())
+  {
+    auto pos = copy.top();
+    printf("[%i %i] ", pos.X, pos.Y);
+    copy.pop();
+  }
+
+  printf("\n");
+  */
 
   if (path.empty())
   {

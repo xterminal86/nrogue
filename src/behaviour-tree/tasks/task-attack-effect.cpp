@@ -15,6 +15,8 @@ BTResult TaskAttackEffect::Run()
 {
   TaskAttackBasic::Run();
 
+  //printf("\t[TaskAttackEffect]\n");
+
   // TODO: should 'attack_effect' task have additional parameter
   // to indicate whether an attack should ignore armor?
 

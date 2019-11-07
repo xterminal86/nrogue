@@ -40,6 +40,7 @@ void Player::Init()
   // FIXME: debug
   //Money = 10000;
   //Attrs.HungerRate.Set(0);
+  Attrs.HP.Set(1000);
 }
 
 void Player::Draw()

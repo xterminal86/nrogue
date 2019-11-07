@@ -6,6 +6,8 @@
 
 BTResult TaskRandomMovement::Run()
 {
+  //printf("[TaskRandomMovement]\n");
+
   int dx = RNG::Instance().Random() % 2;
   int dy = RNG::Instance().Random() % 2;
 

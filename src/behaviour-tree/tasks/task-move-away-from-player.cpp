@@ -5,6 +5,8 @@
 
 BTResult TaskMoveAwayFromPlayer::Run()
 {
+  //printf("[TaskMoveAwayFromPlayer]\n");
+
   int px = _playerRef->PosX;
   int py = _playerRef->PosY;
 
