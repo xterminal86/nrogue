@@ -153,6 +153,7 @@ void TargetState::HandleInput()
       CycleTargets();
       break;
 
+    case VK_ENTER:
     case 'f':
       FireWeapon((_throwingItemInventoryIndex != -1));
       break;
@@ -657,7 +658,12 @@ void TargetState::Update(bool forceUpdate)
     int tw = Printer::Instance().TerminalWidth;
 
     Printer::Instance().PrintFB(tw / 2, 0,
-                                "Select target (TAB to cycle through visible ones)",
+                                "Select target then press 'f' or 'Enter' to fire",
+                                Printer::kAlignCenter,
+                                "#FFFFFF");
+
+    Printer::Instance().PrintFB(tw / 2, 1,
+                                "(TAB to cycle through visible ones)",
                                 Printer::kAlignCenter,
                                 "#FFFFFF");
 

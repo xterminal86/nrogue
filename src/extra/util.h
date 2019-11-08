@@ -11,6 +11,7 @@
 #include "printer.h"
 #include "logger.h"
 #include "position.h"
+#include "item-data.h"
 
 namespace Util
 {  
@@ -742,12 +743,11 @@ namespace Util
   {
     // NOTE: Application can freeze on SDL_Delay().
     //
-    // There was a confirmed bug with bat being cornered
-    // and after player engaged it to attack,
-    // application got stuck in endless animation loop.
-    // Interrupt in debugger showed that the program
-    // is hanging on SDL_Delay() call.
-    // But maybe it was related to not having WaitForTurn() for AI.
+    // At least on Windows if you listen through a long NPC text
+    // and at the same time click on other window to lose focus of
+    // this one, text (and the whole window) will freeze and then "unfreeze"
+    // possibly after specified delay passes in "background".
+    // It seems there's no difference in whether you use SDL_Delay() or C++ chrono library.
 
     #ifdef USE_SDL
     SDL_Delay(delayMs);
@@ -863,6 +863,37 @@ namespace Util
     });
 
     return ret;
+  }
+
+  inline std::string GetItemColor(const ItemData& data)
+  {
+    std::string textColor = "#FFFFFF";
+
+    bool isMagicOrBlessed = (data.Prefix == ItemPrefix::BLESSED || data.Rarity == ItemRarity::MAGIC);
+    bool isRare = (data.Rarity == ItemRarity::RARE);
+    bool isUnique = (data.Rarity == ItemRarity::UNIQUE);
+    bool isCursed = (data.Prefix == ItemPrefix::CURSED);
+
+    // Iterate over this map and select color
+    // for the first entry found with bool key == true.
+    std::map<int, std::pair<bool, std::string>> itemFirstColorToChoose =
+    {
+      { 0, { isMagicOrBlessed, GlobalConstants::ItemMagicColor   } },
+      { 1, { isRare,           GlobalConstants::ItemRareColor    } },
+      { 2, { isUnique,         GlobalConstants::ItemUniqueColor  } },
+      { 3, { isCursed,         GlobalConstants::ItemCursedColor  } }
+    };
+
+    for (auto& kvp : itemFirstColorToChoose)
+    {
+      if (kvp.second.first)
+      {
+        textColor = kvp.second.second;
+        break;
+      }
+    }
+
+    return textColor;
   }
 }
 

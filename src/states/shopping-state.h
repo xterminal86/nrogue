@@ -43,7 +43,6 @@ class ShoppingState : public GameState
     int GetCost(ItemComponent* ic, bool playerSide);
 
     std::string GetItemExtraInfo(ItemComponent* item);
-    std::string GetItemTextColor(ItemComponent* item);
 };
 
 #endif // SHOPPINGSTATE_H

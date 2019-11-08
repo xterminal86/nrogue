@@ -223,7 +223,7 @@ void InventoryState::Update(bool forceUpdate)
         Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1, 2 + yPos, equipStatus, Printer::kAlignLeft, "#FFFFFF");
       }
 
-      std::string textColor = GetTextColor(ic);
+      std::string textColor = Util::GetItemColor(ic->Data);
 
       std::string idColor = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered) ? textColor : "#FFFFFF";
       DrawSelectionBar(yPos, nameInInventory, idColor);
@@ -246,37 +246,6 @@ void InventoryState::Update(bool forceUpdate)
 
     Printer::Instance().Render();
   }
-}
-
-std::string InventoryState::GetTextColor(ItemComponent* ic)
-{
-  std::string textColor = "#FFFFFF";
-
-  bool isMagicOrBlessed = (ic->Data.Prefix == ItemPrefix::BLESSED || ic->Data.Rarity == ItemRarity::MAGIC);
-  bool isRare = (ic->Data.Rarity == ItemRarity::RARE);
-  bool isUnique = (ic->Data.Rarity == ItemRarity::UNIQUE);
-  bool isCursed = (ic->Data.Prefix == ItemPrefix::CURSED);
-
-  // Iterate over this map and select color
-  // for the first entry found with bool key == true.
-  std::map<int, std::pair<bool, std::string>> itemFirstColorToChoose =
-  {
-    { 0, { isMagicOrBlessed, GlobalConstants::ItemMagicColor   } },
-    { 1, { isRare,           GlobalConstants::ItemRareColor    } },
-    { 2, { isUnique,         GlobalConstants::ItemUniqueColor  } },
-    { 3, { isCursed,         GlobalConstants::ItemCursedColor  } }
-  };
-
-  for (auto& kvp : itemFirstColorToChoose)
-  {
-    if (kvp.second.first)
-    {
-      textColor = kvp.second.second;
-      break;
-    }
-  }
-
-  return textColor;
 }
 
 void InventoryState::DisplayEquipment()

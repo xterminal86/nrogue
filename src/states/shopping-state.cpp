@@ -146,7 +146,7 @@ void ShoppingState::DisplayPlayerInventory()
 
     Printer::Instance().PrintFB(extraInfoStringPosX + itemStringTotalLen, yPos + index, costString, Printer::kAlignLeft, GlobalConstants::CoinsColor);
 
-    std::string textColor = GetItemTextColor(ic);
+    std::string textColor = Util::GetItemColor(ic->Data);
 
     std::string idColor = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered) ? textColor : "#FFFFFF";
 
@@ -213,7 +213,7 @@ void ShoppingState::DisplayShopInventory()
 
     Printer::Instance().PrintFB(bonusStringPosX - itemStringTotalLen, yPos + index, costString, Printer::kAlignRight, GlobalConstants::CoinsColor);
 
-    std::string textColor = GetItemTextColor(ic);
+    std::string textColor = Util::GetItemColor(ic->Data);
 
     std::string idColor = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered) ? textColor : "#FFFFFF";
 
@@ -293,33 +293,6 @@ std::string ShoppingState::GetItemExtraInfo(ItemComponent* item)
   }
 
   return extraInfo;
-}
-
-std::string ShoppingState::GetItemTextColor(ItemComponent* item)
-{
-  std::string textColor = "#FFFFFF";
-
-  if (item->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    textColor = GlobalConstants::ItemMagicColor;
-  }  
-  else if (item->Data.Prefix == ItemPrefix::CURSED)
-  {
-    textColor = "#880000";
-  }
-  else
-  {
-    if (item->Data.Rarity == ItemRarity::MAGIC)
-    {
-      textColor = GlobalConstants::ItemMagicColor;
-    }
-    else if (item->Data.Rarity == ItemRarity::RARE)
-    {
-      textColor = GlobalConstants::ItemRareColor;
-    }
-  }
-
-  return textColor;
 }
 
 void ShoppingState::BuyOrSellItem()
