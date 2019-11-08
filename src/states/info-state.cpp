@@ -74,7 +74,7 @@ void InfoState::Update(bool forceUpdate)
 
     int maxLength = FindAttrsMaxStringLength();
 
-    // FIXME: experimental
+    // NOTE: experimental
     PrintModifiers(7 + maxLength, yPos + 3);
 
     // Skills

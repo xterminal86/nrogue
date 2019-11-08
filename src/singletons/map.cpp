@@ -101,8 +101,7 @@ void Map::UpdateGameObjects()
         if (d <= _playerRef->VisibilityRadius.Get())
         {
           // Check if he's actually visible
-          bool visCheck = IsObjectVisible(plPos, objPos);
-          if (visCheck)
+          if (IsObjectVisible(plPos, objPos))
           {
             Application::Instance().ForceDrawMainState();
           }

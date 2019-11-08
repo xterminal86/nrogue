@@ -1628,7 +1628,7 @@ bool Player::HasSkill(PlayerSkills skillToCheck)
   return (SkillLevelBySkill.count(skillToCheck) == 1);
 }
 
-// FIXME: unused for now
+// NOTE: unused for now
 bool Player::AreEnemiesInRange()
 {
   bool ret = false;

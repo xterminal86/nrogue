@@ -222,7 +222,6 @@ void MapLevelTown::CreateLevel()
 
   CreateTownGates();
 
-  // FIXME: experimental
   BuildRoads();
 
   RecordEmptyCells();
