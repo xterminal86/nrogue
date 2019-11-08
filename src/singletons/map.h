@@ -43,7 +43,7 @@ class Map : public Singleton<Map>
     std::vector<MapType> GetAllVisitedLevels();
     Position GetRandomEmptyCell();
 
-    MapLevelBase* CurrentLevel;
+    MapLevelBase* CurrentLevel;    
 
   private:
     std::map<MapType, std::unique_ptr<MapLevelBase>> _levels;

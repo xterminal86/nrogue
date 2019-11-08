@@ -83,6 +83,13 @@ void LookInputState::HandleInput()
       Map::Instance().InsertActor(rat);
     }
     break;
+
+    case 's':
+    {
+      GameObject* spider = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::SPIDER);
+      Map::Instance().InsertActor(spider);
+    }
+    break;
     #endif
 
     default:
@@ -213,6 +220,10 @@ void LookInputState::Update(bool forceUpdate)
                                   Printer::kAlignRight,
                                   "#FFFFFF");
 
+    #ifdef DEBUG_BUILD
+    PrintDebugInfo();
+    #endif
+
     Printer::Instance().Render();
   }
 }
@@ -293,6 +304,14 @@ void LookInputState::DisplayMonsterStats()
     msg.push_back("");
     msg.push_back(Util::StringFormat("Action Meter: %i", actor->Attrs.ActionMeter));
 
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, name, msg);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, name, msg);    
   }
+}
+
+void LookInputState::PrintDebugInfo()
+{
+  Printer::Instance().PrintFB(0, 2, "'ENTER' - display actor stats", Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(0, 3, "'r' - spawn rat", Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(0, 4, "'b' - spawn bat", Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(0, 5, "'s' - spawn spider", Printer::kAlignLeft, "#FFFFFF");
 }

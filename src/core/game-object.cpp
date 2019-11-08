@@ -96,6 +96,8 @@ bool GameObject::MoveTo(int x, int y)
     PosX = x;
     PosY = y;
 
+    //printf("MoveTo(%i, %i)\n", x, y);
+
     _currentCell = _levelOwner->MapArray[PosX][PosY].get();
     _currentCell->Occupied = true;
 

@@ -43,6 +43,8 @@ BTResult TaskMoveAwayFromPlayer::Run()
     return BTResult::Failure;
   }
 
+  //printf("Found [%i %i] (%i)\n", posToWalk.X, posToWalk.Y, maxDistance);
+
   // posToWalk cell should be empty so MoveTo() should succeed
   _objectToControl->MoveTo(posToWalk);
   _objectToControl->FinishTurn();

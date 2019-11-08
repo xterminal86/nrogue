@@ -162,6 +162,10 @@ void MainState::HandleInput()
     }
     break;
 
+    case 's':
+    case 'S':
+      GetActorsAround();
+      break;
     #endif
 
     default:
@@ -378,6 +382,29 @@ void MainState::PrintDebugInfo()
 
   _debugInfo = Util::StringFormat("Turns passed: %i", Application::Instance().TurnsPassed);
   Printer::Instance().PrintFB(0, 6, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+
+  Printer::Instance().PrintFB(0, 7, "Actors watched:", Printer::kAlignLeft, "#FFFFFF");
+
+  int yOffset = 0;
+  bool found = false;
+  for (auto& id : _actorsForDebugDisplay)
+  {
+    for (auto& a : Map::Instance().CurrentLevel->ActorGameObjects)
+    {
+      if (a->ObjectId() == id)
+      {
+        _debugInfo = Util::StringFormat("%s_%lu (%i)", a->ObjectName.data(), id, a->Attrs.ActionMeter);
+        Printer::Instance().PrintFB(0, 8 + yOffset, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+        yOffset++;
+        found = true;
+      }
+    }
+  }
+
+  if (!found)
+  {
+    Printer::Instance().PrintFB(0, 8, "<Press 's' to scan 1x1 around player>", Printer::kAlignLeft, "#FFFFFF");
+  }
 }
 
 void MainState::ProcessRangedWeapon()
@@ -695,4 +722,33 @@ void MainState::PrintNoAttackInTown()
   std::vector<std::string> variants = { "Not here", "Not in town" };
   int index = RNG::Instance().RandomRange(0, 2);
   Printer::Instance().AddMessage(variants[index]);
+}
+
+void MainState::GetActorsAround()
+{
+  _actorsForDebugDisplay.clear();
+
+  int lx = _playerRef->PosX - 1;
+  int ly = _playerRef->PosY - 1;
+  int hx = _playerRef->PosX + 1;
+  int hy = _playerRef->PosY + 1;
+
+  if (lx >= 0 && ly >= 0
+   && hx < Map::Instance().CurrentLevel->MapSize.X - 1
+   && hy < Map::Instance().CurrentLevel->MapSize.Y - 1)
+  {
+    for (int x = lx; x <= hx; x++)
+    {
+      for (int y = ly; y <= hy; y++)
+      {
+        for (auto& a : Map::Instance().CurrentLevel->ActorGameObjects)
+        {
+          if (a->PosX == x && a->PosY == y)
+          {
+            _actorsForDebugDisplay.push_back(a->ObjectId());
+          }
+        }
+      }
+    }
+  }
 }

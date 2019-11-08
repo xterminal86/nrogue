@@ -92,7 +92,7 @@ class Application : public Singleton<Application>
       _gameStates[stateName] = std::unique_ptr<GameState>(new StateClass());
     }
 
-    friend class TargetState;
+    friend class TargetState;    
 };
 
 #endif

@@ -45,6 +45,8 @@ class MainState : public GameState
 
     void UpdateBar(int x, int y, const Attribute& attr);
 
+    void GetActorsAround();
+
     Position _cursorPosition;
 
     std::vector<std::string> _helpText =
@@ -63,6 +65,8 @@ class MainState : public GameState
       R"('<' - Go up the stairs        )",
       R"('Q' - Exit game               )"
     };
+
+    std::vector<uint64_t> _actorsForDebugDisplay;
 };
 
 #endif
