@@ -42,7 +42,7 @@ class Application : public Singleton<Application>
     /// Assuming that _currentState is MainState,
     /// call this to force redraw screen in that state
     /// only when needed ( see Player::WaitForTurn() )
-    void DrawCurrentState();
+    void ForceDrawMainState();
 
     GameState* GetGameStateRefByName(GameStates stateName);
     bool CurrentStateIs(GameStates stateName);
@@ -85,6 +85,12 @@ class Application : public Singleton<Application>
     #else
     void InitCurses();
     #endif
+
+    template <typename StateClass>
+    void RegisterState(GameStates stateName)
+    {
+      _gameStates[stateName] = std::unique_ptr<GameState>(new StateClass());
+    }
 
     friend class TargetState;
 };

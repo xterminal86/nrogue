@@ -100,21 +100,17 @@ bool Player::Move(int dx, int dy)
     {
       if (staticObject->Blocking)
       {
-        // Search for components only if there are any
-        if (staticObject->ComponentsSize() != 0)
-        {
-          auto dc = staticObject->GetComponent<DoorComponent>();
+        auto dc = staticObject->GetComponent<DoorComponent>();
 
-          // Automatically interact with door if it's closed
-          if (dc != nullptr)
+        // Automatically interact with door if it's closed
+        if (dc != nullptr)
+        {
+          if (staticObject->Interact())
           {
-            if (staticObject->Interact())
+            if (dc->OpenedBy == -1)
             {
-              if (dc->OpenedBy == -1)
-              {
-                auto str = Util::StringFormat("You %s: %s", (dc->IsOpen ? "opened" : "closed"), staticObject->ObjectName.data());
-                Printer::Instance().AddMessage(str);
-              }
+              auto str = Util::StringFormat("You %s: %s", (dc->IsOpen ? "opened" : "closed"), staticObject->ObjectName.data());
+              Printer::Instance().AddMessage(str);
             }
           }
         }
@@ -1068,55 +1064,7 @@ void Player::ProcessKill(GameObject* monster)
 
 void Player::WaitForTurn()
 {
-  GameObject::WaitForTurn();
-
-  // NOTE: replace conditions to see global "offline" movement
-
-  //if (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
-  if (ShouldForceRedrawScreen())
-  {
-    Application::Instance().DrawCurrentState();
-  }  
-}
-
-/// If we have fast monster, player should be able to see its movements
-/// or it may look like monster just popped out of nowhere before the player
-/// since all movement updates were off-screen.
-/// Same case with hit-and-run monster tactics: it may seem as if
-/// monster is attacking from distance.
-bool Player::ShouldForceRedrawScreen()
-{
-  // If player is ready to act,
-  // we should redraw screen to reflect any recent changes.
-  bool playerIsReady = (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue);
-  if (playerIsReady)
-  {
-    return true;
-  }
-
-  // If not, check if there is any actor in the vicinity.
-  for (auto& actor : Map::Instance().CurrentLevel->ActorGameObjects)
-  {
-    bool inRange = Util::IsObjectInRange({ PosX, PosY },
-                                         { actor->PosX, actor->PosY },
-                                         VisibilityRadius.Get(),
-                                         VisibilityRadius.Get());
-    if (!inRange)
-    {
-      continue;
-    }
-
-    bool visible = Map::Instance().IsObjectVisible({ PosX, PosY },
-                                                   { actor->PosX, actor->PosY });
-
-    if (visible)
-    {
-      return true;
-    }
-  }
-
-  // Do not redraw screen otherwise.
-  return false;
+  GameObject::WaitForTurn();  
 }
 
 bool Player::IsAlive()
@@ -1250,6 +1198,11 @@ void Player::FinishTurn()
   //
   // Probably bad design anyway but fuck it.
   Map::Instance().RemoveDestroyed();
+
+  //if (AreEnemiesInRange())
+  {
+    //Application::Instance().DrawCurrentState();
+  }
 }
 
 void Player::ProcessStarvation()
@@ -1678,4 +1631,30 @@ std::string& Player::GetClassName()
 bool Player::HasSkill(PlayerSkills skillToCheck)
 {
   return (SkillLevelBySkill.count(skillToCheck) == 1);
+}
+
+// FIXME: unused for now
+bool Player::AreEnemiesInRange()
+{
+  bool ret = false;
+
+  auto res = Map::Instance().GetActorsInRange(VisibilityRadius.Get());
+  for (auto& i : res)
+  {
+    AIComponent* aic = i->GetComponent<AIComponent>();
+    if (aic != nullptr)
+    {
+      if (aic->CurrentModel != nullptr && aic->CurrentModel->IsAgressive)
+      {
+        bool visible = Map::Instance().IsObjectVisible({ PosX, PosY }, { i->PosX, i->PosY });
+        if (visible)
+        {
+          ret = true;
+          break;
+        }
+      }
+    }
+  }
+
+  return ret;
 }

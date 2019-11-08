@@ -62,7 +62,6 @@ void Application::Run()
     }
     else
     {
-      // Order of calls results in slightly different visual update.
       Map::Instance().UpdateGameObjects();
       PlayerInstance.WaitForTurn();
 
@@ -146,6 +145,7 @@ void Application::DisplayAttack(GameObject* defender,
   int posY = defender->PosY + Map::Instance().CurrentLevel->MapOffsetY;
 
   DrawAttackCursor(posX, posY, defender, cursorColor);
+
   Util::Sleep(delayMs);
 
   if (messageToPrint.length() != 0)
@@ -154,6 +154,7 @@ void Application::DisplayAttack(GameObject* defender,
   }
 
   DrawAttackCursor(posX, posY, defender);
+
   Util::Sleep(delayMs);
 }
 
@@ -526,9 +527,9 @@ void Application::Cleanup()
   printf("Goodbye!\n");
 }
 
-void Application::DrawCurrentState()
+void Application::ForceDrawMainState()
 {
-  if (_currentState != nullptr)
+  if (CurrentStateIs(GameStates::MAIN_STATE))// && PlayerInstance.AreEnemiesInRange())
   {
     _currentState->Update(true);
   }
@@ -536,26 +537,26 @@ void Application::DrawCurrentState()
 
 void Application::InitGameStates()
 {
-  _gameStates[GameStates::MAIN_STATE]               = std::unique_ptr<GameState>(new MainState());
-  _gameStates[GameStates::INFO_STATE]               = std::unique_ptr<GameState>(new InfoState());
-  _gameStates[GameStates::ATTACK_STATE]             = std::unique_ptr<GameState>(new AttackState());
-  _gameStates[GameStates::MENU_STATE]               = std::unique_ptr<GameState>(new MenuState());
-  _gameStates[GameStates::SELECT_CLASS_STATE]       = std::unique_ptr<GameState>(new SelectClassState());
-  _gameStates[GameStates::ENTER_NAME_STATE]         = std::unique_ptr<GameState>(new EnterNameState());
-  _gameStates[GameStates::INTRO_STATE]              = std::unique_ptr<GameState>(new IntroState());
-  _gameStates[GameStates::INVENTORY_STATE]          = std::unique_ptr<GameState>(new InventoryState());
-  _gameStates[GameStates::CONTAINER_INTERACT_STATE] = std::unique_ptr<GameState>(new ContainerInteractState());
-  _gameStates[GameStates::SHOW_MESSAGES_STATE]      = std::unique_ptr<GameState>(new MessageLogState());
-  _gameStates[GameStates::LOOK_INPUT_STATE]         = std::unique_ptr<GameState>(new LookInputState());
-  _gameStates[GameStates::INTERACT_INPUT_STATE]     = std::unique_ptr<GameState>(new InteractInputState());
-  _gameStates[GameStates::NPC_INTERACT_STATE]       = std::unique_ptr<GameState>(new NPCInteractState());
-  _gameStates[GameStates::SHOPPING_STATE]           = std::unique_ptr<GameState>(new ShoppingState());
-  _gameStates[GameStates::RETURNER_STATE]           = std::unique_ptr<GameState>(new ReturnerState());
-  _gameStates[GameStates::REPAIR_STATE]             = std::unique_ptr<GameState>(new RepairState());
-  _gameStates[GameStates::EXITING_STATE]            = std::unique_ptr<GameState>(new ExitingState());
-  _gameStates[GameStates::MESSAGE_BOX_STATE]        = std::unique_ptr<GameState>(new MessageBoxState());
-  _gameStates[GameStates::TARGET_STATE]             = std::unique_ptr<GameState>(new TargetState());
-  _gameStates[GameStates::ENDGAME_STATE]            = std::unique_ptr<GameState>(new EndgameState());
+  RegisterState<MainState>             (GameStates::MAIN_STATE);
+  RegisterState<InfoState>             (GameStates::INFO_STATE);
+  RegisterState<AttackState>           (GameStates::ATTACK_STATE);
+  RegisterState<MenuState>             (GameStates::MENU_STATE);
+  RegisterState<SelectClassState>      (GameStates::SELECT_CLASS_STATE);
+  RegisterState<EnterNameState>        (GameStates::ENTER_NAME_STATE);
+  RegisterState<IntroState>            (GameStates::INTRO_STATE);
+  RegisterState<InventoryState>        (GameStates::INVENTORY_STATE);
+  RegisterState<ContainerInteractState>(GameStates::CONTAINER_INTERACT_STATE);
+  RegisterState<MessageLogState>       (GameStates::SHOW_MESSAGES_STATE);
+  RegisterState<LookInputState>        (GameStates::LOOK_INPUT_STATE);
+  RegisterState<InteractInputState>    (GameStates::INTERACT_INPUT_STATE);
+  RegisterState<NPCInteractState>      (GameStates::NPC_INTERACT_STATE);
+  RegisterState<ShoppingState>         (GameStates::SHOPPING_STATE);
+  RegisterState<ReturnerState>         (GameStates::RETURNER_STATE);
+  RegisterState<RepairState>           (GameStates::REPAIR_STATE);
+  RegisterState<ExitingState>          (GameStates::EXITING_STATE);
+  RegisterState<MessageBoxState>       (GameStates::MESSAGE_BOX_STATE);
+  RegisterState<TargetState>           (GameStates::TARGET_STATE);
+  RegisterState<EndgameState>          (GameStates::ENDGAME_STATE);
 
   for (auto& state : _gameStates)
   {

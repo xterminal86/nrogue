@@ -39,88 +39,11 @@ void Map::Init()
   _initialized = true;
 }
 
-void Map::Draw(int playerX, int playerY)
+void Map::Draw()
 {
-  // Draw map tiles around player
-
-  int tw = Printer::Instance().TerminalWidth;
-  int th = Printer::Instance().TerminalHeight;
-    
-  auto mapCells = Util::GetRectAroundPoint(playerX, playerY, tw / 2, th / 2, CurrentLevel->MapSize);
-  for (auto& cell : mapCells)
-  {
-    int x = cell.X;
-    int y = cell.Y;
-
-    if (CurrentLevel->MapArray[x][y]->Visible)
-    {
-      CurrentLevel->MapArray[x][y]->Draw();
-
-      // Draw static object on top if present
-      if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
-      {
-        CurrentLevel->StaticMapObjects[x][y]->Draw();
-      }
-    }
-    else
-    {
-      DrawNonVisibleMapTile(x, y);
-      DrawNonVisibleStaticObject(x, y);
-    }
-  }
-
-  // Draw game objects
-
-  for (auto& go : CurrentLevel->GameObjects)
-  {
-    int x = go.get()->PosX;
-    int y = go.get()->PosY;
-
-    if (CurrentLevel->MapArray[x][y]->Visible)
-    {
-      // NOTE: gems should not respect floor color (unused now)
-
-      // If game object has black bg color,
-      // replace it with current floor color
-      //bool cond = (go->BgColor == GlobalConstants::BlackColor);
-      //go.get()->Draw(go.get()->FgColor, cond ? CurrentLevel->MapArray[x][y]->BgColor : go->BgColor);
-
-      go->Draw(go->FgColor, go->BgColor);
-    }
-  }
-
-  // Draw actors
-
-  for (auto& go : CurrentLevel->ActorGameObjects)
-  {
-    int x = go->PosX;
-    int y = go->PosY;
-
-    if (_playerRef->HasEffect(EffectType::TELEPATHY)
-     || CurrentLevel->MapArray[x][y]->Visible)
-    {
-      // If game object has black bg color,
-      // replace it with current floor color      
-      std::string bgColor = go->BgColor;
-
-      bool cond = (go->BgColor == GlobalConstants::BlackColor);
-      bool isOnStaticObject = (CurrentLevel->StaticMapObjects[x][y] != nullptr);
-
-      if (cond)
-      {
-        if (isOnStaticObject)
-        {
-          bgColor = CurrentLevel->StaticMapObjects[x][y]->BgColor;
-        }
-        else
-        {
-          bgColor = CurrentLevel->MapArray[x][y]->BgColor;
-        }
-      }
-
-      go->Draw(go->FgColor, bgColor);
-    }
-  }
+  DrawMapTilesAroundPlayer();
+  DrawGameObjects();
+  DrawActors();
 }
 
 void Map::UpdateGameObjects()
@@ -158,6 +81,33 @@ void Map::UpdateGameObjects()
     do
     {
       go->Update();
+
+      // NOTE: check if this actually works.
+
+      // If we have fast monster, player should be able to see its movements
+      // or it may look like monster just popped out of nowhere before the player
+      // since all movement updates are off-screen.
+      // Same case with hit-and-run monster tactics: it may seem as if
+      // monster is attacking from distance.
+      // Check against specific level is needed to avoid update lag
+      // in levels where player cannot attack anyway.
+      if (CurrentLevel->MapType_ != MapType::TOWN)
+      {
+        Position plPos = { _playerRef->PosX, _playerRef->PosY };
+        Position objPos = { go->PosX, go->PosY };
+
+        // Check if object is in visibility radius
+        int d = (int)Util::LinearDistance(plPos, objPos);
+        if (d <= _playerRef->VisibilityRadius.Get())
+        {
+          // Check if he's actually visible
+          bool visCheck = IsObjectVisible(plPos, objPos);
+          if (visCheck)
+          {
+            Application::Instance().ForceDrawMainState();
+          }
+        }
+      }
     }
     // If there are extra turns available, perform them
     while (go->Attrs.ActionMeter >= GlobalConstants::TurnReadyValue);
@@ -244,14 +194,17 @@ std::vector<GameObject*> Map::GetActorsInRange(int range)
   int hx = playerRef.PosX + range;
   int hy = playerRef.PosY + range;
 
-  for (auto& a : CurrentLevel->ActorGameObjects)
+  if (CurrentLevel != nullptr)
   {
-    if (a->PosX >= lx &&
-        a->PosY >= ly &&
-        a->PosX <= hx &&
-        a->PosY <= hy)
+    for (auto& a : CurrentLevel->ActorGameObjects)
     {
-      res.push_back(a.get());
+      if (a->PosX >= lx &&
+          a->PosY >= ly &&
+          a->PosX <= hx &&
+          a->PosY <= hy)
+      {
+        res.push_back(a.get());
+      }
     }
   }
 
@@ -750,4 +703,88 @@ bool Map::IsObjectVisible(const Position &from, const Position &to)
   }
 
   return true;
+}
+
+void Map::DrawMapTilesAroundPlayer()
+{
+  int tw = Printer::Instance().TerminalWidth;
+  int th = Printer::Instance().TerminalHeight;
+
+  auto mapCells = Util::GetRectAroundPoint(_playerRef->PosX, _playerRef->PosY, tw / 2, th / 2, CurrentLevel->MapSize);
+  for (auto& cell : mapCells)
+  {
+    int x = cell.X;
+    int y = cell.Y;
+
+    if (CurrentLevel->MapArray[x][y]->Visible)
+    {
+      CurrentLevel->MapArray[x][y]->Draw();
+
+      // Draw static object on top if present
+      if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
+      {
+        CurrentLevel->StaticMapObjects[x][y]->Draw();
+      }
+    }
+    else
+    {
+      DrawNonVisibleMapTile(x, y);
+      DrawNonVisibleStaticObject(x, y);
+    }
+  }
+}
+
+void Map::DrawGameObjects()
+{
+  for (auto& go : CurrentLevel->GameObjects)
+  {
+    int x = go.get()->PosX;
+    int y = go.get()->PosY;
+
+    if (CurrentLevel->MapArray[x][y]->Visible)
+    {
+      // NOTE: gems should not respect floor color (unused now)
+
+      // If game object has black bg color,
+      // replace it with current floor color
+      //bool cond = (go->BgColor == GlobalConstants::BlackColor);
+      //go.get()->Draw(go.get()->FgColor, cond ? CurrentLevel->MapArray[x][y]->BgColor : go->BgColor);
+
+      go->Draw(go->FgColor, go->BgColor);
+    }
+  }
+}
+
+void Map::DrawActors()
+{
+  for (auto& go : CurrentLevel->ActorGameObjects)
+  {
+    int x = go->PosX;
+    int y = go->PosY;
+
+    if (_playerRef->HasEffect(EffectType::TELEPATHY)
+     || CurrentLevel->MapArray[x][y]->Visible)
+    {
+      // If game object has black bg color,
+      // replace it with current floor color
+      std::string bgColor = go->BgColor;
+
+      bool cond = (go->BgColor == GlobalConstants::BlackColor);
+      bool isOnStaticObject = (CurrentLevel->StaticMapObjects[x][y] != nullptr);
+
+      if (cond)
+      {
+        if (isOnStaticObject)
+        {
+          bgColor = CurrentLevel->StaticMapObjects[x][y]->BgColor;
+        }
+        else
+        {
+          bgColor = CurrentLevel->MapArray[x][y]->BgColor;
+        }
+      }
+
+      go->Draw(go->FgColor, bgColor);
+    }
+  }
 }

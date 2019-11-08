@@ -37,7 +37,7 @@ void ExitingState::Update(bool forceUpdate)
 
     _playerRef->CheckVisibility();
 
-    Map::Instance().Draw(_playerRef->PosX, _playerRef->PosY);
+    Map::Instance().Draw();
 
     _playerRef->Draw();
 

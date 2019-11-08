@@ -182,7 +182,7 @@ void MainState::Update(bool forceUpdate)
 
     _playerRef->CheckVisibility();
 
-    Map::Instance().Draw(_playerRef->PosX, _playerRef->PosY);
+    Map::Instance().Draw();
 
     _playerRef->Draw();
 
@@ -220,7 +220,7 @@ void MainState::ProcessMovement(const Position& dirOffsets)
     _playerRef->FinishTurn();
   }
   else if (_playerRef->Move(dirOffsets.X, dirOffsets.Y))
-  {
+  {    
     // This line must be the first in order to
     // allow potential messages to show in FinishTurn()
     // (e.g. starvation damage message) after player moved.
@@ -230,7 +230,7 @@ void MainState::ProcessMovement(const Position& dirOffsets)
     Map::Instance().CurrentLevel->MapOffsetY -= dirOffsets.Y;
 
     _playerRef->FinishTurn();        
-  }
+  }  
 }
 
 void MainState::DisplayGameLog()

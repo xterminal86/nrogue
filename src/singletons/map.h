@@ -18,7 +18,7 @@ class Map : public Singleton<Map>
   public:
     void Init() override;
 
-    void Draw(int playerX, int playerY);
+    void Draw();
 
     void InsertActor(GameObject* actor);
     void InsertGameObject(GameObject* goToInsert);
@@ -53,10 +53,13 @@ class Map : public Singleton<Map>
     void ShowLoadingText(const std::string& textOverride = std::string());
     void DrawNonVisibleMapTile(int x, int y);
     void DrawNonVisibleStaticObject(int x, int y);
+    void DrawMapTilesAroundPlayer();
+    void DrawGameObjects();
+    void DrawActors();
 
     Player* _playerRef;    
 
-    friend class IntroState;
+    friend class IntroState;    
 };
 
 #endif

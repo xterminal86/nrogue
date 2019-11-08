@@ -683,7 +683,7 @@ std::vector<Position> Printer::DrawExplosion(Position pos, int aRange)
     Util::Sleep(10);
     #endif
 
-    Application::Instance().DrawCurrentState();
+    Application::Instance().ForceDrawMainState();
   }
 
   return cellsAffected;

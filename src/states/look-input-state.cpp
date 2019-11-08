@@ -96,7 +96,7 @@ void LookInputState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    Map::Instance().Draw(_playerRef->PosX, _playerRef->PosY);
+    Map::Instance().Draw();
 
     _playerRef->Draw();
 

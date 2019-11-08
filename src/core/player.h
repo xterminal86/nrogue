@@ -61,6 +61,7 @@ class Player : public GameObject
     void AddBonusItems();
 
     bool HasSkill(PlayerSkills skillToCheck);
+    bool AreEnemiesInRange();
 
     int Money = 0;
 
@@ -107,8 +108,6 @@ class Player : public GameObject
     bool IsGameObjectBorder(GameObject* go);
 
     bool DamageArmor(int amount);
-
-    bool ShouldForceRedrawScreen();
 
     void ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
     void UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
