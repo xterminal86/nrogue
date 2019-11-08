@@ -1198,11 +1198,6 @@ void Player::FinishTurn()
   //
   // Probably bad design anyway but fuck it.
   Map::Instance().RemoveDestroyed();
-
-  //if (AreEnemiesInRange())
-  {
-    //Application::Instance().DrawCurrentState();
-  }
 }
 
 void Player::ProcessStarvation()
