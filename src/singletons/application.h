@@ -5,10 +5,16 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <chrono>
 
 #include "singleton.h"
 #include "gamestate.h"
 #include "player.h"
+
+using Timer = std::chrono::high_resolution_clock;
+using Ms = std::chrono::milliseconds;
+using Ns = std::chrono::nanoseconds;
+using Sec = std::chrono::seconds;
 
 class Application : public Singleton<Application>
 {

@@ -96,5 +96,5 @@ void MenuState::Update(bool forceUpdate)
     Printer::Instance().PrintFB(1, th - 2, debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
     Printer::Instance().Render();
-  }  
+  }
 }

@@ -48,6 +48,8 @@ void Application::Run()
 {
   while (_currentState != nullptr)
   {
+    auto t1 = Timer::now();
+
     if (PlayerInstance.Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
     {
       // Since change state happens in HandleInput, if it's called before Update
@@ -67,6 +69,30 @@ void Application::Run()
 
       TurnsPassed++;
     }
+
+    auto t2 = Timer::now();
+
+    auto dt = t2 - t1;
+
+    // chrono clock now() uses
+    // nanoseconds as internal duration period
+    // (see time_point struct declaration)
+    static Ns acc = Ns{0};
+    acc += dt;
+
+    // FIXME: why dafuq does this work but doesn't if you spam
+    // printf of acc in while() loop (the values printed are not
+    // printed in "realtime" intervals)?
+    Sec s = std::chrono::duration_cast<Sec>(acc);
+    static int64_t prevSec = 0;
+    if (s.count() > prevSec)
+    {
+      prevSec = s.count();
+      printf("*tick*\n");
+    }
+
+    //printf("%ld\n", s.count());
+    //printf("%ld (%f)\n", dt.count(), (double)acc.count() / 1000000000.0);
   }
 }
 
@@ -477,10 +503,16 @@ void Application::InitSDL()
   WindowWidth = ww;
   WindowHeight = wh;
 
+  SDL_DisplayMode dm;
+  SDL_GetCurrentDisplayMode(0, &dm);
+
+  int wx = dm.w / 2 - ww / 2;
+  int wy = dm.h / 2 - wh / 2;
+
   Window = SDL_CreateWindow("nrogue",
-                            50, 50,
+                            wx, wy,
                             ww, wh,
-                            SDL_WINDOW_SHOWN | SDL_WINDOW_ALWAYS_ON_TOP);
+                            SDL_WINDOW_SHOWN);
 
   int drivers = SDL_GetNumRenderDrivers();
 
