@@ -53,6 +53,9 @@ class Application : public Singleton<Application>
     GameState* GetGameStateRefByName(GameStates stateName);
     bool CurrentStateIs(GameStates stateName);
 
+    Ns DeltaTime();
+    Ns TimePassed();
+
     #ifdef USE_SDL
     SDL_Renderer* Renderer = nullptr;
     SDL_Window* Window = nullptr;
@@ -97,6 +100,12 @@ class Application : public Singleton<Application>
     {
       _gameStates[stateName] = std::unique_ptr<GameState>(new StateClass());
     }
+
+    // chrono clock now() uses
+    // nanoseconds as internal duration period
+    // (see time_point struct declaration)
+    Ns _deltaTime = Ns{0};
+    Ns _timePassed = Ns{0};
 
     friend class TargetState;    
 };

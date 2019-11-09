@@ -72,27 +72,8 @@ void Application::Run()
 
     auto t2 = Timer::now();
 
-    auto dt = t2 - t1;
-
-    // chrono clock now() uses
-    // nanoseconds as internal duration period
-    // (see time_point struct declaration)
-    static Ns acc = Ns{0};
-    acc += dt;
-
-    // FIXME: why dafuq does this work but doesn't if you spam
-    // printf of acc in while() loop (the values printed are not
-    // printed in "realtime" intervals)?
-    Sec s = std::chrono::duration_cast<Sec>(acc);
-    static int64_t prevSec = 0;
-    if (s.count() > prevSec)
-    {
-      prevSec = s.count();
-      printf("*tick*\n");
-    }
-
-    //printf("%ld\n", s.count());
-    //printf("%ld (%f)\n", dt.count(), (double)acc.count() / 1000000000.0);
+    _deltaTime = t2 - t1;
+    _timePassed += _deltaTime;
   }
 }
 
@@ -601,3 +582,14 @@ uint64_t Application::GetNewId()
   static uint64_t globalId = 0;
   return globalId++;
 }
+
+Ns Application::DeltaTime()
+{
+  return _deltaTime;
+}
+
+Ns Application::TimePassed()
+{
+  return _timePassed;
+}
+
