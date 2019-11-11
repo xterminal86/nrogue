@@ -139,7 +139,7 @@ void NPCInteractState::AnimateText()
       Printer::Instance().PrintFB(cursorPos, linePosY, ' ',  "#000000", "#FFFFFF");
 
       Printer::Instance().PrintFB(i, linePosY, l[i], "#FFFFFF");
-      Printer::Instance().Render();
+      Printer::Instance().Render();      
       Util::Sleep(10);
     }
 

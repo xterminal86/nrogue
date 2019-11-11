@@ -9,8 +9,6 @@ void IntroState::Prepare()
 {
   Printer::Instance().Clear();  
 
-  _lastTime = std::chrono::high_resolution_clock::now();
-
   _textPositionCursor = 0;
   _textPositionX = Printer::Instance().TerminalWidth / 2;
 
@@ -63,13 +61,8 @@ void IntroState::PrepareTown()
 
 void IntroState::Update(bool forceUpdate)
 {
-  auto elapsed = std::chrono::high_resolution_clock::now() - _lastTime;
-  auto msPassed = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed);
-
-  if (msPassed > kTextPrintDelay)
+  if (Util::WaitForMs(10))
   {    
-    _lastTime = std::chrono::high_resolution_clock::now();
-
     int textIndex = Application::Instance().PlayerInstance.SelectedClass;
     if (_stringIndex != _introStrings[textIndex].size())
     {

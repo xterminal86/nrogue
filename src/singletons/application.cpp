@@ -49,6 +49,7 @@ void Application::Run()
   while (_currentState != nullptr)
   {
     auto t1 = Timer::now();
+    auto t2 = t1;
 
     if (PlayerInstance.Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
     {
@@ -70,10 +71,20 @@ void Application::Run()
       TurnsPassed++;
     }
 
-    auto t2 = Timer::now();
+    t2 = Timer::now();
 
     _deltaTime = t2 - t1;
     _timePassed += _deltaTime;
+
+    /*
+    Sec s = std::chrono::duration_cast<Sec>(_timePassed);
+    static int64_t prevSec = 0;
+    if (s.count() > prevSec)
+    {
+      prevSec = s.count();
+      printf("%ld (%ld, %ld)\n", s.count(), _timePassed.count(), _deltaTime.count());
+    }
+    */
   }
 }
 

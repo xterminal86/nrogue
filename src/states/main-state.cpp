@@ -179,7 +179,7 @@ void MainState::HandleInput()
 }
 
 void MainState::Update(bool forceUpdate)
-{
+{  
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();

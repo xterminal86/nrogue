@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <chrono>
 
 #include "gamestate.h"
 
@@ -67,10 +66,6 @@ class IntroState : public GameState
 
     int _textPositionX = 0;
     int _textPositionY = 0;
-
-    std::chrono::high_resolution_clock::time_point _lastTime;
-
-    const std::chrono::milliseconds kTextPrintDelay = std::chrono::milliseconds(10);
 
     void PrepareTown();
 

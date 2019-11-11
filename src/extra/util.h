@@ -6,6 +6,7 @@
 #include <climits>
 #include <cmath>
 
+#include "application.h"
 #include "constants.h"
 #include "rng.h"
 #include "printer.h"
@@ -764,6 +765,20 @@ namespace Util
       now = timer::now();
     }
     #endif
+  }
+
+  inline bool WaitForMs(uint64_t delayMs)
+  {
+    auto timePassed = Application::Instance().TimePassed();
+    Ms s = std::chrono::duration_cast<Ms>(timePassed);
+    static int64_t prevMs = s.count();
+    if (s.count() - prevMs > delayMs)
+    {
+      prevMs = s.count();
+      return true;
+    }
+
+    return false;
   }
 
   inline void PrintVector(const std::string& title, const std::vector<Position>& v)
