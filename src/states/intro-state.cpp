@@ -90,7 +90,7 @@ void IntroState::Update(bool forceUpdate)
     {
       Printer::Instance().PrintFB(Printer::Instance().TerminalWidth / 2, Printer::Instance().TerminalHeight - 1, "Press 'Enter' to continue", Printer::kAlignCenter, "#FFFFFF");      
     }
-  }
 
-  Printer::Instance().Render();
+    Printer::Instance().Render();
+  }  
 }
