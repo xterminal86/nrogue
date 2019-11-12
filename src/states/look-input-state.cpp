@@ -285,7 +285,7 @@ void LookInputState::DisplayMonsterStats()
   if (actor != nullptr)
   {
     std::vector<std::string> msg;
-    std::string name = actor->ObjectName;
+    std::string name = Util::StringFormat("%s_%lu", actor->ObjectName.data(), actor->ObjectId());
 
     msg.push_back(Util::StringFormat("Rating: %i", actor->Attrs.Rating()));
     msg.push_back("");
