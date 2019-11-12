@@ -771,10 +771,25 @@ namespace Util
   {
     auto timePassed = Application::Instance().TimePassed();
     Ms s = std::chrono::duration_cast<Ms>(timePassed);
-    static int64_t prevMs = s.count();
+    static int64_t prevMs = 0;
+
+    // If WaitForMs() hasn't been called for some time,
+    // wthout this check the condition will immediately
+    // succeed since s.count() - prevMs will be a very big value,
+    // thus the first "run" of this function in some animation
+    // loop, for example, will yield wrong result, since
+    // at first run there won't be any 'delayMs' waiting.
+    static bool firstRun = true;
+    if (firstRun)
+    {
+      firstRun = false;
+      prevMs = s.count();
+    }
+
     if (s.count() - prevMs > delayMs)
     {
       prevMs = s.count();
+      firstRun = true;
       return true;
     }
 
