@@ -11,6 +11,7 @@ class AINPC;
 class NPCInteractState : public GameState
 {  
   public:
+    void Prepare() override;
     void Cleanup() override;
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;
@@ -19,8 +20,6 @@ class NPCInteractState : public GameState
   private:
     bool _textPrinting = false;
     int _gossipBlockIndex = 0;
-
-    std::vector<std::string> _animatedTextFinished;
 
     AINPC* _npcRef;
 
@@ -38,6 +37,10 @@ class NPCInteractState : public GameState
     };
 
     WhatKey _whatKey = WhatKey::NONE;
+
+    std::vector<std::string> _blockToPrint;
+    int _charPos = 0;
+    int _currentLine = 0;
 };
 
 #endif // NPCINTERACTSTATE_H

@@ -8,28 +8,42 @@
 #include "trader-component.h"
 #include "shopping-state.h"
 
+void NPCInteractState::Prepare()
+{
+  _charPos = 0;
+  _currentLine = 0;
+
+  Printer::Instance().Clear();
+
+  PrintHeader();
+  PrintFooter();
+
+  Printer::Instance().Render();
+}
+
 void NPCInteractState::Cleanup()
 {
   _npcRef = nullptr;
   _gossipBlockIndex = 0;
-  _animatedTextFinished.clear();
   _whatKey = WhatKey::NONE;
+  _textPrinting = false;
+  _charPos = 0;
+  _currentLine = 0;
+  _blockToPrint.clear();
 }
 
 void NPCInteractState::HandleInput()
-{
-  if (_textPrinting)
-  {
-    return;
-  }
-
+{  
   _keyPressed = GetKeyDown();
 
   switch (_keyPressed)
   {
     case 'n':
       _whatKey = WhatKey::NAME;
+      _npcRef->Data.IsAquainted = true;
+      _blockToPrint = { _npcRef->Data.NameResponse };
       _textPrinting = true;
+      Prepare();
       break;
 
     case 'j':
@@ -45,15 +59,29 @@ void NPCInteractState::HandleInput()
       else
       {
         _whatKey = WhatKey::JOB;
+        _blockToPrint = { _npcRef->Data.JobResponse };
         _textPrinting = true;
+        Prepare();
       }
     }
     break;
 
     case 'g':
+    {
+      _gossipBlockIndex++;
+
+      int maxBlocks = _npcRef->Data.GossipResponsesByMap.at(MapType::TOWN).size();
+      if (_gossipBlockIndex > maxBlocks - 1)
+      {
+        _gossipBlockIndex = 0;
+      }
+
       _whatKey = WhatKey::GOSSIP;
+      _blockToPrint = _npcRef->Data.GossipResponsesByMap.at(MapType::TOWN)[_gossipBlockIndex];
       _textPrinting = true;
-      break;
+      Prepare();
+    }
+    break;
 
     case 'q':
     {
@@ -78,17 +106,20 @@ void NPCInteractState::HandleInput()
 
     default:
       break;
-  }
+  }  
 }
 
 void NPCInteractState::Update(bool forceUpdate)
 {
   if (_textPrinting)
   {
-    AnimateText();
+    if (Util::WaitForMs(10))
+    {
+      AnimateText();
+    }
   }
   else
-  {
+  {    
     if (_keyPressed != -1 || forceUpdate)
     {
       DisplayStillText();
@@ -98,71 +129,30 @@ void NPCInteractState::Update(bool forceUpdate)
 
 void NPCInteractState::AnimateText()
 {
-  Printer::Instance().Clear();
-
-  PrintHeader();
+  // To print 'Listening...' during animation
   PrintFooter();
 
-  _animatedTextFinished.clear();
+  auto line = _blockToPrint[_currentLine];
 
-  int linePosY = 2;
+  Printer::Instance().PrintFB(_charPos + 1, _currentLine + 2, ' ',  "#000000", "#FFFFFF");
+  Printer::Instance().PrintFB(_charPos, _currentLine + 2, line[_charPos], "#FFFFFF");
 
-  std::vector<std::string> block;
+  Printer::Instance().Render();
 
-  switch (_whatKey)
+  _charPos++;
+
+  if (_charPos >= line.length())
   {
-    case WhatKey::NAME:
-      _npcRef->Data.IsAquainted = true;
-      block = { _npcRef->Data.NameResponse };
-      break;
-
-    case WhatKey::JOB:
-      block = { _npcRef->Data.JobResponse };
-      break;
-
-    case WhatKey::GOSSIP:
-      block = _npcRef->Data.GossipResponsesByMap.at(MapType::TOWN)[_gossipBlockIndex];
-      break;
+    Printer::Instance().PrintFB(_charPos, _currentLine + 2, ' ', "#000000");
+    _charPos = 0;
+    _currentLine++;
   }
 
-  _animatedTextFinished = block;
-
-  for (auto& line : block)
+  if (_currentLine >= _blockToPrint.size())
   {
-    int cursorPos = 0;
-
-    std::string l = line;
-    for (int i = 0; i < l.length(); i++)
-    {
-      cursorPos = i + 1;
-
-      Printer::Instance().PrintFB(cursorPos, linePosY, ' ',  "#000000", "#FFFFFF");
-
-      Printer::Instance().PrintFB(i, linePosY, l[i], "#FFFFFF");
-      Printer::Instance().Render();      
-      Util::Sleep(10);
-    }
-
-    Printer::Instance().PrintFB(cursorPos, linePosY, ' ',  "#000000");
-
-    linePosY++;
+    _textPrinting = false;
+    DisplayStillText();
   }
-
-  if (_whatKey == WhatKey::GOSSIP)
-  {
-    _gossipBlockIndex++;
-
-    int maxBlocks = _npcRef->Data.GossipResponsesByMap.at(MapType::TOWN).size();
-
-    if (_gossipBlockIndex > maxBlocks - 1)
-    {
-      _gossipBlockIndex = 0;
-    }
-  }
-
-  _textPrinting = false;
-
-  DisplayStillText();
 }
 
 void NPCInteractState::DisplayStillText()
@@ -172,7 +162,7 @@ void NPCInteractState::DisplayStillText()
   PrintHeader();
 
   int yPos = 2;
-  for (auto& l : _animatedTextFinished)
+  for (auto& l : _blockToPrint)
   {
     Printer::Instance().PrintFB(0, yPos, l, Printer::kAlignLeft, "#FFFFFF");
     yPos++;

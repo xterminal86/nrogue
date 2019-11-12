@@ -66,11 +66,12 @@ void IntroState::Update(bool forceUpdate)
     int textIndex = Application::Instance().PlayerInstance.SelectedClass;
     if (_stringIndex != _introStrings[textIndex].size())
     {
-      if (_textPositionCursor != _introStrings[textIndex][_stringIndex].length())
-      {
-        int len = _introStrings[textIndex][_stringIndex].length();
+      int len = _introStrings[textIndex][_stringIndex].length();
 
+      if (_textPositionCursor != _introStrings[textIndex][_stringIndex].length())
+      {        
         Printer::Instance().PrintFB(_textPositionX - len / 2, _textPositionY, _introStrings[textIndex][_stringIndex][_textPositionCursor], "#FFFFFF");
+        Printer::Instance().PrintFB(_textPositionX - len / 2 + 1, _textPositionY, ' ', "#000000", "#FFFFFF");
 
         _textPositionX++;
 
@@ -78,6 +79,8 @@ void IntroState::Update(bool forceUpdate)
       }
       else
       {
+        Printer::Instance().PrintFB(_textPositionX - len / 2, _textPositionY, ' ', "#000000");
+
         _textPositionCursor = 0;
 
         _textPositionX = Printer::Instance().TerminalWidth / 2;
