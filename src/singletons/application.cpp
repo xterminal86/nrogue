@@ -75,16 +75,6 @@ void Application::Run()
 
     _deltaTime = t2 - t1;
     _timePassed += _deltaTime;
-
-    /*
-    Sec s = std::chrono::duration_cast<Sec>(_timePassed);
-    static int64_t prevSec = 0;
-    if (s.count() > prevSec)
-    {
-      prevSec = s.count();
-      printf("%ld (%ld, %ld)\n", s.count(), _timePassed.count(), _deltaTime.count());
-    }
-    */
   }
 }
 

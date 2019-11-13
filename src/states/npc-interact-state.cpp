@@ -30,6 +30,7 @@ void NPCInteractState::Cleanup()
   _charPos = 0;
   _currentLine = 0;
   _blockToPrint.clear();
+  Util::WaitForMs(0, true);
 }
 
 void NPCInteractState::HandleInput()

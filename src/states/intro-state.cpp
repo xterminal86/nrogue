@@ -14,6 +14,8 @@ void IntroState::Prepare()
 
   int textIndex = Application::Instance().PlayerInstance.SelectedClass;
   _textPositionY = Printer::Instance().TerminalHeight / 2 - _introStrings[textIndex].size() / 2;  
+
+  Util::WaitForMs(0, true);
 }
 
 void IntroState::HandleInput()

@@ -753,25 +753,20 @@ namespace Util
     #ifdef USE_SDL
     SDL_Delay(delayMs);
     #else
-    using timer = std::chrono::high_resolution_clock;
-    using ms = std::chrono::milliseconds;
-
-    auto delay = ms(delayMs);
-
-    auto now = timer::now();
-    auto goal = now + delay;
-    while (now < goal)
+    auto tp1 = std::chrono::high_resolution_clock::now();
+    auto tp2 = tp1;
+    while (std::chrono::duration_cast<Ms>(tp1 - tp2).count() < delayMs)
     {
-      now = timer::now();
+      tp1 = std::chrono::high_resolution_clock::now();
     }
     #endif
   }
 
-  inline bool WaitForMs(uint64_t delayMs)
+  inline bool WaitForMs(uint64_t delayMs, bool reset = false)
   {
     auto timePassed = Application::Instance().TimePassed();
     Ms s = std::chrono::duration_cast<Ms>(timePassed);
-    static int64_t prevMs = 0;
+    static int64_t prevMs = s.count();
 
     // If WaitForMs() hasn't been called for some time,
     // wthout this check the condition will immediately
@@ -779,17 +774,15 @@ namespace Util
     // thus the first "run" of this function in some animation
     // loop, for example, will yield wrong result, since
     // at first run there won't be any 'delayMs' waiting.
-    static bool firstRun = true;
-    if (firstRun)
+    if (reset)
     {
-      firstRun = false;
       prevMs = s.count();
+      return true;
     }
 
     if (s.count() - prevMs > delayMs)
     {
       prevMs = s.count();
-      firstRun = true;
       return true;
     }
 
