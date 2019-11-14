@@ -152,7 +152,9 @@ class GameObject
     GameObject* _previousCell = nullptr;
     GameObject* _currentCell = nullptr;
 
-    // Level this object belongs to
+    // Level this object belongs to.
+    // Needed for correct drawing on the screen.
+    // (see comments in InventoryState::DropItem() for details)
     MapLevelBase* _levelOwner = nullptr;    
 
     int _healthRegenTurnsCounter = 0;    
