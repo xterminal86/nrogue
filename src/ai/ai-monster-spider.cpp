@@ -25,5 +25,5 @@ R"(
         [TASK p1="goto_last_player_pos"]
     [TASK p1="move_rnd"]
     [TASK p1="idle"]
-)";  
+)";
 }

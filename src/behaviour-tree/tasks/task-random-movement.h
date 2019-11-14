@@ -9,6 +9,10 @@ class TaskRandomMovement : public Node
 
   public:
     BTResult Run() override;
+
+  private:
+    BTResult Smart();
+    BTResult Dumb();
 };
 
 #endif // TASKRANDOMMOVEMENT_H

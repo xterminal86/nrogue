@@ -11,6 +11,7 @@
 #include "task-move-away-from-player.h"
 #include "task-goto-last-player-pos.h"
 #include "task-attack-effect.h"
+#include "blackboard.h"
 
 AIModelBase::AIModelBase()
 {
@@ -219,6 +220,14 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
       Position objPos = { AIComponentRef->OwnerGameObject->PosX, AIComponentRef->OwnerGameObject->PosY };
 
       bool res = Map::Instance().IsObjectVisible(objPos, plPos);
+      if (res)
+      {
+        std::string plX = std::to_string(plPos.X);
+        std::string plY = std::to_string(plPos.Y);
+
+        Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { "pl_x", plX });
+        Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { "pl_y", plY });
+      }
 
       return res ? BTResult::Success : BTResult::Failure;
     };

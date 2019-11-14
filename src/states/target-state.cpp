@@ -504,6 +504,8 @@ void TargetState::ProcessHit(GameObject* hitPoint)
       {
         GameObject* item = _playerRef->Inventory.Contents[_throwingItemInventoryIndex].release();
 
+        item->SetLevelOwner(Map::Instance().CurrentLevel);
+
         item->PosX = x;
         item->PosY = y;
 

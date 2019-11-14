@@ -40,7 +40,7 @@ void Player::Init()
   // FIXME: debug
   //Money = 10000;
   //Attrs.HungerRate.Set(0);
-  //Attrs.HP.Set(1000);
+  Attrs.HP.Set(1000);
 }
 
 void Player::Draw()
@@ -599,6 +599,7 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
   }
   else
   {
+    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "", "#FF0000");
     ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
     int dmg = CalculateDamageValue(weapon, go);
     ProcessAttack(weapon, go, dmg);
@@ -608,7 +609,7 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
 }
 
 void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict)
-{
+{  
   bool shouldTearDownWall = false;
 
   if (weapon != nullptr)
@@ -624,8 +625,6 @@ void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int dama
     {
       WeaponLosesDurability();
     }
-
-    Application::Instance().DisplayAttack(defender, GlobalConstants::DisplayAttackDelayMs, "", "#FF0000");
 
     if (ShouldBreak(weapon))
     {

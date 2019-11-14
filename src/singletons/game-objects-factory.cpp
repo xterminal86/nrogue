@@ -785,6 +785,9 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
   auto weights = Util::WeightedRandom(GlobalConstants::PotionsWeightTable);
   go = CreateGameObject(0, 0, weights.first);
 
+  go->Attrs.Indestructible = false;
+  go->Attrs.HP.Set(1);
+
   ItemComponent* ic = go->GetComponent<ItemComponent>();
 
   ic->Data.IsIdentified = false;

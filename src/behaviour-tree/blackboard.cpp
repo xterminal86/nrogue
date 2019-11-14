@@ -4,11 +4,11 @@ void Blackboard::Init()
 {
 }
 
-void Blackboard::Set(uint64_t goId, const sspair& data)
+void Blackboard::Set(uint64_t goId, const SSPair& data)
 {
-  if (_blackboard.count(goId) != 1)
+  if (_blackboard.count(goId) == 0)
   {
-    ssmap placeholder;
+    SSMap placeholder;
     _blackboard.emplace(goId, placeholder);
   }
 

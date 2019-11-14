@@ -161,10 +161,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
       _monstersSpawnRateForThisLevel =
       {
-        // FIXME: debug
         { GameObjectType::RAT, 1 }
-        //{ GameObjectType::BAT, 1 }
-        //{ GameObjectType::SPIDER, 1 }
       };
     }
     break;

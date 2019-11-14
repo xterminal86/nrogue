@@ -21,39 +21,40 @@ BTResult TaskGotoLastPlayerPos::Run()
   int plX = std::stoi(sX);
   int plY = std::stoi(sY);
 
-  //printf("\tplX: %i plY: %i\n", plX, plY);
+  if (_objectToControl->PosX == plX
+   && _objectToControl->PosY == plY)
+  {
+    // We have arrived at the last known player position
 
-  if (_path.empty())
-  {
-    Pathfinder pf;
-    _path = pf.BuildRoad(Map::Instance().CurrentLevel,
-                        { _objectToControl->PosX, _objectToControl->PosY },
-                        { plX, plY },
-                        std::vector<char>(),
-                        true);    
-  }
-
-  if (!_path.empty())
-  {
-    auto moveTo = _path.top();
-    if (_objectToControl->MoveTo(moveTo))
-    {
-      _path.pop();
-      _objectToControl->FinishTurn();
-      return BTResult::Success;
-    }
-    else
-    {
-      // If MoveTo() failed, clear possible remaining path
-      _path = std::stack<Position>();
-    }
-  }
-  else
-  {
-    // No path can be built or we arrived to last known player pos
     Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_x", "" });
     Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_y", "" });
+
+    return BTResult::Success;
   }
+
+  //printf("\tplX: %i plY: %i\n\n", plX, plY);
+
+  Pathfinder pf;
+  auto path = pf.BuildRoad(Map::Instance().CurrentLevel,
+                      { _objectToControl->PosX, _objectToControl->PosY },
+                      { plX, plY },
+                      std::vector<char>(),
+                      true);
+
+  if (!path.empty())
+  {
+    auto moveTo = path.top();
+    if (_objectToControl->MoveTo(moveTo))
+    {
+      path.pop();
+      _objectToControl->FinishTurn();
+      return BTResult::Success;
+    }    
+  }
+
+  // No path can be built or MoveTo() failed
+  Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_x", "" });
+  Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_y", "" });
 
   return BTResult::Failure;
 }

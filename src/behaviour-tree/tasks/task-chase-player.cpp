@@ -4,7 +4,6 @@
 #include "application.h"
 #include "pathfinder.h"
 #include "map.h"
-#include "blackboard.h"
 
 BTResult TaskChasePlayer::Run()
 {
@@ -14,12 +13,6 @@ BTResult TaskChasePlayer::Run()
   Position objPos = { _objectToControl->PosX, _objectToControl->PosY };
 
   Pathfinder pf;
-
-  std::string plX = std::to_string(playerPos.X);
-  std::string plY = std::to_string(playerPos.Y);
-
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_x", plX });
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { "pl_y", plY });
 
   auto path = pf.BuildRoad(Map::Instance().CurrentLevel,
                            objPos,

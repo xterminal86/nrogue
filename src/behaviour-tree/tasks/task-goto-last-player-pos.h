@@ -13,9 +13,6 @@ class TaskGotoLastPlayerPos : public Node
 
   public:
     BTResult Run() override;
-
-  private:
-    std::stack<Position> _path;
 };
 
 #endif // TASKGOTOLASTPLAYERPOS_H

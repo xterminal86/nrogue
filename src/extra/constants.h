@@ -957,7 +957,7 @@ namespace GlobalConstants
   static const std::map<WandMaterials, std::pair<std::string, std::string>> WandColorsByMaterial =
   {
     { WandMaterials::YEW_1,    { "#C19A6B", "#8A8B5C" } },
-    { WandMaterials::IVORY_2,  { "#FFFFFF", "#DDDDD0" } },
+    { WandMaterials::IVORY_2,  { "#FFFFFF", "#9A9A9A" } },
     { WandMaterials::EBONY_3,  { "#888888", "#555D50" } },
     { WandMaterials::ONYX_4,   { "#666666", "#2F2F2F" } },
     { WandMaterials::GLASS_5,  { "#000000", "#FFFFFF" } },

@@ -109,6 +109,7 @@ bool GameObject::MoveTo(int x, int y)
 
 bool GameObject::MoveTo(const Position &pos)
 {
+  //printf("MoveTo(%i;%i)\n\n", pos.X, pos.Y);
   return MoveTo(pos.X, pos.Y);
 }
 
@@ -145,6 +146,13 @@ void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
 {  
   // TODO: isMagical for enemies' armor damage
 
+  std::string objName = ObjectName;
+  ItemComponent* ic = GetComponent<ItemComponent>();
+  if (ic != nullptr)
+  {
+    objName = (ic->Data.IsIdentified) ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
+  }
+
   if (!Attrs.Indestructible)
   {
     Attrs.HP.Add(-amount);
@@ -161,7 +169,7 @@ void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
                        ? "destroyed"
                        : "killed";
 
-      auto msg = Util::StringFormat("%s was %s", ObjectName.data(), verb.data());
+      auto msg = Util::StringFormat("%s was %s", objName.data(), verb.data());
       Printer::Instance().AddMessage(msg);
     }
   }
@@ -169,7 +177,7 @@ void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
   {    
     if (Type != GameObjectType::GROUND)
     {
-      auto str = Util::StringFormat("%s not even scratched!", ObjectName.data());
+      auto str = Util::StringFormat("%s not even scratched!", objName.data());
       Printer::Instance().AddMessage(str);
     }
   }
