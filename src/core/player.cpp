@@ -40,7 +40,7 @@ void Player::Init()
   // FIXME: debug
   //Money = 10000;
   //Attrs.HungerRate.Set(0);
-  Attrs.HP.Set(1000);
+  //Attrs.HP.Set(1000);
 }
 
 void Player::Draw()
@@ -1281,7 +1281,7 @@ void Player::SetDefaultItems()
 
 void Player::SetSoldierDefaultItems()
 {
-  Money = 500;
+  Money = 250;
 
   auto go = GameObjectsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
   ItemComponent* ic = go->GetComponent<ItemComponent>();
@@ -1303,7 +1303,7 @@ void Player::SetSoldierDefaultItems()
 
 void Player::SetThiefDefaultItems()
 {
-  Money = 1000;
+  Money = 500;
 
   auto go = GameObjectsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
   Inventory.AddToInventory(go);
@@ -1314,7 +1314,7 @@ void Player::SetThiefDefaultItems()
 
 void Player::SetArcanistDefaultItems()
 {
-  Money = 250;
+  Money = 0;
 
   auto go = GameObjectsFactory::Instance().CreateManaPotion(ItemPrefix::BLESSED);
   auto c = go->GetComponent<ItemComponent>();

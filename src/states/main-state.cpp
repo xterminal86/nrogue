@@ -140,7 +140,6 @@ void MainState::HandleInput()
       break;
 
     #ifdef DEBUG_BUILD
-
     case 'L':
       _playerRef->LevelUp();
       break;
@@ -155,10 +154,16 @@ void MainState::HandleInput()
       int exitX = Map::Instance().CurrentLevel->LevelExit.X;
       int exitY = Map::Instance().CurrentLevel->LevelExit.Y;
 
-      _playerRef->MoveTo(exitX, exitY);
-
-      Map::Instance().CurrentLevel->AdjustCamera();
-      Update(true);
+      if (_playerRef->MoveTo(exitX, exitY))
+      {
+        Map::Instance().CurrentLevel->AdjustCamera();
+        Update(true);
+        _playerRef->FinishTurn();
+      }
+      else
+      {
+        printf("[%i;%i] is occupied!\n", exitX, exitY);
+      }
     }
     break;
 

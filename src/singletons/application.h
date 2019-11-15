@@ -96,7 +96,7 @@ class Application : public Singleton<Application>
     #endif
 
     template <typename StateClass>
-    void RegisterState(GameStates stateName)
+    inline void RegisterState(GameStates stateName)
     {
       _gameStates[stateName] = std::unique_ptr<GameState>(new StateClass());
     }

@@ -1889,7 +1889,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
     case ArmorType::PADDING:      
       ic->Data.UnidentifiedDescription =
       {
-        // ======================================================================70
+      // ======================================================================70
         "A thick coat with straw or horsehair filling",
         "to soften incoming blows.",
         "It won't last long, but any armor is better than nothing."
@@ -1902,8 +1902,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
     case ArmorType::LEATHER:
       ic->Data.UnidentifiedDescription =
       {
-        // ======================================================================70
-        "Overlapping leather straps provide decent",
+      // ======================================================================70
+        "Jacket made of tanned leather provides decent",
         "protection against cutting blows."
       };
 
@@ -1917,7 +1917,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
     case ArmorType::MAIL:
       ic->Data.UnidentifiedDescription =
       {
-        // ======================================================================70
+      // ======================================================================70
         "A shirt made of metal rings",
         "is a popular outfit among common soldiers.",
         "It takes a while to adjust to its weight,",
@@ -1935,7 +1935,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
     case ArmorType::SCALE:
       ic->Data.UnidentifiedDescription =
       {
-        // ======================================================================70
+      // ======================================================================70
         "A body vest with overlapping scales worn over a small mail shirt.",
       };
 
@@ -1949,11 +1949,12 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
     case ArmorType::PLATE:
       ic->Data.UnidentifiedDescription =
       {
-        // ======================================================================70
+      // ======================================================================70
         "A thick layer of padding, then a layer of a strong mail",
         "with metal plates riveted on top.",
-        "This armor pretty much combines all others in itself.",
-        "It's very hard to bring down someone wearing this."
+        "The best protection you can find, usually worn by",
+        "nobles and knights, this armor pretty much combines",
+        "all others in itself."
       };
 
       ic->Data.StatBonuses[StatsEnum::RES] = cursedPenalty - 6;

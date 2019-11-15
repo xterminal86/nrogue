@@ -26,7 +26,7 @@ void AIModelBase::ConstructAI()
 {
   PrepareScript();
 
-  _aiReader.Init();
+  _aiReader.Init(AIComponentRef->OwnerGameObject);
   _aiReader.ParseFromString(_script);
   _aiReader.FormTree();
 

@@ -793,7 +793,7 @@ namespace GlobalConstants
   static const std::map<ArmorType, std::string> ArmorNameByType =
   {    
     { ArmorType::PADDING, "Padded Surcoat"   },
-    { ArmorType::LEATHER, "Leather Lammelar" },
+    { ArmorType::LEATHER, "Leather Jacket"   },
     { ArmorType::MAIL,    "Mail Hauberk"     },
     { ArmorType::SCALE,   "Scale Armor"      },
     { ArmorType::PLATE,   "Coat of Plates"   }
@@ -801,11 +801,11 @@ namespace GlobalConstants
 
   static const std::map<ArmorType, int> ArmorDurabilityByType =
   {
-    { ArmorType::PADDING, 50 },
-    { ArmorType::LEATHER, 80 },
-    { ArmorType::MAIL,   120 },
-    { ArmorType::SCALE,  240 },
-    { ArmorType::PLATE,  320 }
+    { ArmorType::PADDING, 25 },
+    { ArmorType::LEATHER, 50 },
+    { ArmorType::MAIL,    80 },
+    { ArmorType::SCALE,  120 },
+    { ArmorType::PLATE,  180 }
   };
 
   static const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =

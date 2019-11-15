@@ -23,9 +23,11 @@ void LevelBuilder::FeatureRoomsMethod(const Position& mapSize,
   MapRaw = fr->MapRaw;
 }
 
-void LevelBuilder::CellularAutomataMethod(const Position& mapSize, int initialWallChance,
-                                    int birthThreshold, int deathThreshold,
-                                    int maxIterations)
+void LevelBuilder::CellularAutomataMethod(const Position& mapSize,
+                                          int initialWallChance,
+                                          int birthThreshold,
+                                          int deathThreshold,
+                                          int maxIterations)
 {
   _generator.reset(new CellularAutomata());
 
@@ -35,7 +37,10 @@ void LevelBuilder::CellularAutomataMethod(const Position& mapSize, int initialWa
   MapRaw = ca->MapRaw;
 }
 
-void LevelBuilder::BacktrackingTunnelerMethod(const Position& mapSize, const Position& tunnelMinMax, const Position& start, bool additionalTweaks)
+void LevelBuilder::BacktrackingTunnelerMethod(const Position& mapSize,
+                                              const Position& tunnelMinMax,
+                                              const Position& start,
+                                              bool additionalTweaks)
 {
   _generator.reset(new Tunneler());
 
@@ -45,7 +50,10 @@ void LevelBuilder::BacktrackingTunnelerMethod(const Position& mapSize, const Pos
   MapRaw = t->MapRaw;
 }
 
-void LevelBuilder::TunnelerMethod(const Position& mapSize, int maxIterations, const Position& tunnelLengthMinMax, const Position& start)
+void LevelBuilder::TunnelerMethod(const Position& mapSize,
+                                  int maxIterations,
+                                  const Position& tunnelLengthMinMax,
+                                  const Position& start)
 {
   _generator.reset(new Tunneler());
 
@@ -55,7 +63,8 @@ void LevelBuilder::TunnelerMethod(const Position& mapSize, int maxIterations, co
   MapRaw = t->MapRaw;
 }
 
-void LevelBuilder::RecursiveBacktrackerMethod(const Position& mapSize, const Position& startingPoint)
+void LevelBuilder::RecursiveBacktrackerMethod(const Position& mapSize,
+                                              const Position& startingPoint)
 {
   _generator.reset(new RecursiveBacktracker());
 
@@ -68,7 +77,11 @@ void LevelBuilder::RecursiveBacktrackerMethod(const Position& mapSize, const Pos
 // FIXME: build from layouts needs improvements
 // (see comments in Generate() method)
 // Use carefully, better avoid using altogether.
-void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY)
+void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRooms,
+                                         int startX,
+                                         int startY,
+                                         int mapSizeX,
+                                         int mapSizeY)
 {
   _generator.reset(new FromLayouts());
 

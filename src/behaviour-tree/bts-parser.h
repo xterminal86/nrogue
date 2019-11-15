@@ -23,7 +23,7 @@ using ConstructionOrder = std::vector<std::pair<const ScriptNode*, const ScriptN
 class BTSParser
 {
   public:
-    void Init();
+    void Init(GameObject* objRef = nullptr);
     void Reset();
     void ParseFromString(const std::string& script);
     void ParseFromFile(const std::string& filename);
@@ -50,6 +50,8 @@ class BTSParser
     int _maxIndent = 0;
 
     ConstructionOrder _constructionOrder;
+
+    GameObject* _goRef;
 };
 
 #endif // BTSPARSER_H

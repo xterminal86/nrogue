@@ -161,7 +161,7 @@ void MapLevelTown::CreateLevel()
 {
   Peaceful = true;
 
-  VisibilityRadius = 32;
+  VisibilityRadius = 64;
 
   GameObjectInfo t;
   t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
@@ -212,7 +212,7 @@ void MapLevelTown::CreateLevel()
   CreateRoom(25, 30, _layoutsForLevel[4]);
   CreateRoom(45, 33, _layoutsForLevel[5]);
 
-  // Church
+  // Other stuff
 
   CreateChurch(63, 15);
 

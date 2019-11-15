@@ -2,9 +2,11 @@
 
 #include "util.h"
 
-void BTSParser::Init()
+void BTSParser::Init(GameObject* objRef)
 {
-  Reset();
+  _goRef = objRef;
+
+  Reset();  
 }
 
 void BTSParser::Reset()
@@ -47,6 +49,19 @@ void BTSParser::ParseFromFile(const std::string& filename)
 void BTSParser::ParseFromString(const std::string& script)
 {
   Reset();
+
+  if (script.empty())
+  {
+    std::string objName = (_goRef != nullptr) ? _goRef->ObjectName : "<nullptr>";
+    auto str = Util::StringFormat("%s: script on %s is empty!", __PRETTY_FUNCTION__, objName.data());
+    Logger::Instance().Print(str, true);
+
+    #ifdef DEBUG_BUILD
+    printf("%s\n", str.data());
+    #endif
+
+    return;
+  }
 
   _rawText = script;
 
