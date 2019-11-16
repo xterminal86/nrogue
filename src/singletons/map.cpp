@@ -48,8 +48,14 @@ void Map::Draw()
 
 void Map::UpdateGameObjects()
 {
-  if (CurrentLevel == nullptr || !_playerRef->IsAlive())
+  if (CurrentLevel == nullptr)
   {
+    return;
+  }
+
+  if (!_playerRef->IsAlive())
+  {
+    Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
     return;
   }
 

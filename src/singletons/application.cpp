@@ -51,7 +51,7 @@ void Application::Run()
     auto t1 = Timer::now();
     auto t2 = t1;
 
-    if (PlayerInstance.Attrs.ActionMeter >= GlobalConstants::TurnReadyValue)
+    if (PlayerInstance.Attrs.ActionMeter >= GlobalConstants::TurnReadyValue || !PlayerInstance.IsAlive())
     {
       // Since change state happens in HandleInput, if it's called before Update
       // to exit game (change state to nullptr) we get segfault because

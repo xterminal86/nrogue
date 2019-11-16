@@ -42,13 +42,7 @@ BTResult TaskAttackBasic::Run()
 
     playerRef.ReceiveDamage(_objectToControl, dmg, false);
 
-    result = true;
-
-    if (!playerRef.IsAlive())
-    {
-      Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
-      return BTResult::Success;
-    }
+    result = true;    
   }
   else
   {

@@ -41,6 +41,7 @@ void Player::Init()
   //Money = 10000;
   //Attrs.HungerRate.Set(0);
   //Attrs.HP.Set(1000);
+  //Attrs.HP.Set(10);
 }
 
 void Player::Draw()
