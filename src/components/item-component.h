@@ -26,6 +26,7 @@ class ItemComponent : public Component
     std::vector<std::string> GetWeaponInspectionInfo();    
     std::vector<std::string> GetReturnerInspectionInfo();    
     std::vector<std::string> GetArmorInspectionInfo();
+    std::vector<std::string> GetAccessoryInspectionInfo();
 
     void AddModifiersInfo(std::vector<std::string>& res);
     void AddBonusesInfo(std::vector<std::string>& res);

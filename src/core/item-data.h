@@ -21,9 +21,9 @@ struct ItemData
 
   EquipmentCategory EqCategory = EquipmentCategory::NOT_EQUIPPABLE;
 
-  Attribute Durability;
-  Attribute Damage;
-  Attribute WandCapacity;
+  RangedAttribute Durability;
+  RangedAttribute Damage;
+  RangedAttribute WandCapacity;
 
   SpellType SpellHeld = SpellType::NONE;
 
@@ -59,30 +59,6 @@ struct ItemData
   bool HasBonus(ItemBonusType bonusType);
 
   int GetCost();
-
-  std::map<StatsEnum, int> StatBonuses =
-  {
-    { StatsEnum::STR, 0 },
-    { StatsEnum::DEF, 0 },
-    { StatsEnum::MAG, 0 },
-    { StatsEnum::RES, 0 },
-    { StatsEnum::SKL, 0 },
-    { StatsEnum::SPD, 0 },
-    { StatsEnum::HP,  0 },
-    { StatsEnum::MP,  0 }
-  };
-
-  std::map<StatsEnum, int> StatRequirements =
-  {
-    { StatsEnum::STR, 0 },
-    { StatsEnum::DEF, 0 },
-    { StatsEnum::MAG, 0 },
-    { StatsEnum::RES, 0 },
-    { StatsEnum::SKL, 0 },
-    { StatsEnum::SPD, 0 },
-    { StatsEnum::HP,  0 },
-    { StatsEnum::MP,  0 }
-  };
 
   // BUC status + object name [+ suffix]
   // Used in inspection window

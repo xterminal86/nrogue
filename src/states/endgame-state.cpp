@@ -72,10 +72,10 @@ void EndgameState::DisplayGameLog()
 
 void EndgameState::DrawHPMP()
 {
-  int curHp = _playerRef->Attrs.HP.CurrentValue;
-  int maxHp = _playerRef->Attrs.HP.OriginalValue;
-  int curMp = _playerRef->Attrs.MP.CurrentValue;
-  int maxMp = _playerRef->Attrs.MP.OriginalValue;
+  int curHp = _playerRef->Attrs.HP.Min().Get();
+  int maxHp = _playerRef->Attrs.HP.Max().Get();
+  int curMp = _playerRef->Attrs.MP.Min().Get();
+  int maxMp = _playerRef->Attrs.MP.Max().Get();
 
   int th = Printer::Instance().TerminalHeight;
 
@@ -90,9 +90,9 @@ void EndgameState::DrawHPMP()
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 1, str, Printer::kAlignCenter, "#FFFFFF", "#000088");
 }
 
-std::string EndgameState::UpdateBar(int x, int y, const Attribute& attr)
+std::string EndgameState::UpdateBar(int x, int y, RangedAttribute& attr)
 {
-  float ratio = ((float)attr.CurrentValue / (float)attr.OriginalValue);
+  float ratio = ((float)attr.Min().Get() / (float)attr.Max().Get());
   int len = ratio * GlobalConstants::HPMPBarLength;
 
   std::string bar = "[";

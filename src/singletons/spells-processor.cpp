@@ -98,8 +98,9 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll)
   for (auto& i : _playerRef->Inventory.Contents)
   {
     ItemComponent* ic = i->GetComponent<ItemComponent>();
-    if ((ic->Data.ItemType_ == ItemType::WEAPON || ic->Data.ItemType_ == ItemType::ARMOR)
-     && (ic->Data.Durability.CurrentValue < ic->Data.Durability.OriginalValue))
+    if ((ic->Data.ItemType_ == ItemType::WEAPON
+      || ic->Data.ItemType_ == ItemType::ARMOR)
+     && (ic->Data.Durability.Min().Get() < ic->Data.Durability.Max().Get()))
     {
       itemsToRepair.push_back(ic);
     }
@@ -123,7 +124,7 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll)
     auto str = Util::StringFormat("Your %s is repaired!", itemsToRepair[0]->OwnerGameObject->ObjectName.data());
     Printer::Instance().AddMessage(str);
 
-    itemsToRepair[0]->Data.Durability.CurrentValue = itemsToRepair[0]->Data.Durability.OriginalValue;
+    itemsToRepair[0]->Data.Durability.Restore();
   }
   else if (scroll->Data.Prefix == ItemPrefix::BLESSED)
   {
@@ -131,7 +132,7 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll)
 
     for (auto& i : itemsToRepair)
     {
-      i->Data.Durability.CurrentValue = i->Data.Durability.OriginalValue;
+      i->Data.Durability.Restore();
     }
   }
 }
@@ -229,12 +230,12 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
 
 void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
 {
-  int power = _playerRef->Attrs.HP.OriginalValue;
-  bool atFullHealth = (_playerRef->Attrs.HP.CurrentValue == _playerRef->Attrs.HP.OriginalValue);
+  int power = _playerRef->Attrs.HP.Max().Get();
+  bool atFullHealth = (_playerRef->Attrs.HP.Min().Get() == _playerRef->Attrs.HP.Max().Get());
 
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
-    power = RNG::Instance().RandomRange(1, _playerRef->Attrs.HP.CurrentValue / 2);
+    power = RNG::Instance().RandomRange(1, _playerRef->Attrs.HP.Min().Get() / 2);
     Printer::Instance().AddMessage("You writhe in pain!");
   }
   else
@@ -263,8 +264,8 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
 void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
 {
   int playerPow = _playerRef->Attrs.Mag.Get();
-  int power = wand->Data.WandCapacity.CurrentValue / 100 + playerPow;
-  int duration = wand->Data.WandCapacity.CurrentValue;
+  int power = wand->Data.WandCapacity.Max().Get() / 100 + playerPow;
+  int duration = wand->Data.WandCapacity.Max().Get();
 
   std::string message = "The golden light surrounds you!";
 
@@ -479,17 +480,17 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll)
 
 void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
 {
-  if (_playerRef->Attrs.MP.OriginalValue > 0)
+  if (_playerRef->Attrs.MP.Max().Get() > 0)
   {
     if (scroll->Data.Prefix == ItemPrefix::BLESSED)
     {
-      _playerRef->Attrs.MP.CurrentValue = _playerRef->Attrs.MP.OriginalValue;
-
+      _playerRef->Attrs.MP.Restore();
       Printer::Instance().AddMessage("Your spirit is reinforced!");
     }
     else if (scroll->Data.Prefix == ItemPrefix::CURSED)
     {
-      _playerRef->Attrs.MP.CurrentValue /= 2;
+      int valueToAdd = _playerRef->Attrs.MP.Min().Get() / 2;
+      _playerRef->Attrs.MP.AddMin(-valueToAdd);
 
       Printer::Instance().AddMessage("Your spirit force was drained!");
     }

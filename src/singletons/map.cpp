@@ -341,7 +341,7 @@ void Map::TeleportToExistingLevel(MapType levelToChange, const Position& telepor
       Printer::Instance().AddMessage(str);
     }
 
-    whoToTeleport->Attrs.HP.Set(0);
+    whoToTeleport->Attrs.HP.SetMin(0);
   }  
   else if (tpOccupied)
   {

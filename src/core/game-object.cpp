@@ -155,7 +155,7 @@ void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
 
   if (!Attrs.Indestructible)
   {
-    Attrs.HP.Add(-amount);
+    Attrs.HP.AddMin(-amount);
 
     auto str = Util::StringFormat("%s was hit for %i damage", ObjectName.data(), amount);
 
@@ -211,7 +211,7 @@ void GameObject::WaitForTurn()
 
 bool GameObject::IsAlive()
 {
-  return (Attrs.HP.CurrentValue > 0);
+  return (Attrs.HP.Min().Get() > 0);
 }
 
 void GameObject::FinishTurn()
@@ -228,7 +228,7 @@ void GameObject::FinishTurn()
   if (_healthRegenTurnsCounter >= HealthRegenTurns)
   {
     _healthRegenTurnsCounter = 0;
-    Attrs.HP.Add(1);
+    Attrs.HP.AddMin(1);
   }
 
   ProcessEffects();
@@ -305,18 +305,20 @@ void GameObject::AddEffect(EffectType type,
 
 void GameObject::ApplyEffect(const Effect& e)
 {
+  // FIXME:
+
   switch (e.Type)
   {
     case EffectType::TELEPATHY:
     case EffectType::ILLUMINATED:
     {
-      VisibilityRadius.Modifier = e.Power;
+      //VisibilityRadius.Modifier = e.Power;
     }
     break;
 
     case EffectType::FROZEN:
     {
-      Attrs.Spd.Modifier += -e.Power;
+      //Attrs.Spd.Modifier += -e.Power;
     }
     break;
   }
@@ -324,18 +326,20 @@ void GameObject::ApplyEffect(const Effect& e)
 
 void GameObject::UnapplyEffect(const Effect& e)
 {
+  // FIXME:
+
   switch (e.Type)
   {
     case EffectType::TELEPATHY:
     case EffectType::ILLUMINATED:
     {
-      VisibilityRadius.Modifier = 0;
+      //VisibilityRadius.Modifier = 0;
     }
     break;
 
     case EffectType::FROZEN:
     {
-      Attrs.Spd.Modifier -= -e.Power;
+      //Attrs.Spd.Modifier -= -e.Power;
     }
     break;    
   }
@@ -381,21 +385,23 @@ void GameObject::ProcessEffects()
 
 void GameObject::EffectAction(const Effect& e)
 {
+  // FIXME:
+
   switch (e.Type)
   {
     case EffectType::POISONED:      
-      Attrs.HP.Add(-e.Power);
+      //Attrs.HP.Add(-e.Power);
       break;
 
     case EffectType::REGEN:
-      Attrs.HP.Add(e.Power);
+      //Attrs.HP.Add(e.Power);
       break;
 
     case EffectType::MANA_SHIELD:
     {
-      if (Attrs.MP.CurrentValue == 0)
+      //if (Attrs.MP.CurrentValue == 0)
       {
-        RemoveEffect(EffectType::MANA_SHIELD);
+        //RemoveEffect(EffectType::MANA_SHIELD);
       }
     }
     break;
@@ -459,8 +465,7 @@ void GameObject::LevelUp(int baseHpOverride)
 
     if (CanRaiseAttribute(kvp.second))
     {
-      kvp.second.OriginalValue++;
-      kvp.second.CurrentValue = kvp.second.OriginalValue;
+      kvp.second.Add(1);
     }
   }
 
@@ -476,18 +481,15 @@ void GameObject::LevelUp(int baseHpOverride)
   int maxRndHp = 2 * baseHp;
 
   int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp);
-  Attrs.HP.OriginalValue += hpToAdd;
-  Attrs.HP.CurrentValue = Attrs.HP.OriginalValue;
+  Attrs.HP.AddMax(hpToAdd);
 
-  int minRndMp = Attrs.Mag.OriginalValue;
-  int maxRndMp = Attrs.Mag.OriginalValue + Attrs.MP.Talents;
+  int minRndMp = Attrs.Mag.OriginalValue();
+  int maxRndMp = Attrs.Mag.OriginalValue() + Attrs.MP.Talents;
 
   int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp);
-  Attrs.MP.OriginalValue += mpToAdd;
-  Attrs.MP.CurrentValue = Attrs.MP.OriginalValue;
+  Attrs.MP.AddMax(mpToAdd);
 
-  Attrs.Lvl.OriginalValue++;
-  Attrs.Lvl.CurrentValue = Attrs.Lvl.OriginalValue;
+  Attrs.Lvl.Add(1);
 }
 
 bool GameObject::CanRaiseAttribute(Attribute& attr)

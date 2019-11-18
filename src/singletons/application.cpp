@@ -298,22 +298,22 @@ void Application::WriteObituary(bool wasKilled)
 
   std::string nameAndTitle = PlayerInstance.Name + " the " + PlayerInstance.GetClassName();
 
-  ss << nameAndTitle << " of level " << PlayerInstance.Attrs.Lvl.CurrentValue << '\n';
+  ss << nameAndTitle << " of level " << PlayerInstance.Attrs.Lvl.Get() << '\n';
   ss << playerEndCause << curLvl->LevelName << "\n\n";
 
   ss << "He survived " << TurnsPassed << " turns\n\n";
 
-  ss << "HP " << PlayerInstance.Attrs.HP.CurrentValue << " / " << PlayerInstance.Attrs.HP.OriginalValue << '\n';
-  ss << "MP " << PlayerInstance.Attrs.MP.CurrentValue << " / " << PlayerInstance.Attrs.MP.OriginalValue << '\n';
+  ss << "HP " << PlayerInstance.Attrs.HP.Min().Get() << " / " << PlayerInstance.Attrs.HP.Max().Get() << '\n';
+  ss << "MP " << PlayerInstance.Attrs.MP.Min().Get() << " / " << PlayerInstance.Attrs.MP.Max().Get() << '\n';
 
   ss << '\n';
 
-  ss << "STR " << PlayerInstance.Attrs.Str.CurrentValue << '\n';
-  ss << "DEF " << PlayerInstance.Attrs.Def.CurrentValue << '\n';
-  ss << "MAG " << PlayerInstance.Attrs.Mag.CurrentValue << '\n';
-  ss << "RES " << PlayerInstance.Attrs.Res.CurrentValue << '\n';
-  ss << "SKL " << PlayerInstance.Attrs.Skl.CurrentValue << '\n';
-  ss << "SPD " << PlayerInstance.Attrs.Spd.CurrentValue << '\n';
+  ss << GetStatInfo("STR") << '\n';
+  ss << GetStatInfo("DEF") << '\n';
+  ss << GetStatInfo("MAG") << '\n';
+  ss << GetStatInfo("RES") << '\n';
+  ss << GetStatInfo("SKL") << '\n';
+  ss << GetStatInfo("SPD") << '\n';
 
   ss << '\n';
   ss << "********** POSSESSIONS **********\n\n";
@@ -356,6 +356,48 @@ void Application::WriteObituary(bool wasKilled)
   postMortem << ss.str();
 
   postMortem.close();
+}
+
+std::string Application::GetStatInfo(const std::string& attrName)
+{
+  std::map<std::string, Attribute&> attrsByName =
+  {
+    { "STR", PlayerInstance.Attrs.Str },
+    { "DEF", PlayerInstance.Attrs.Def },
+    { "MAG", PlayerInstance.Attrs.Mag },
+    { "RES", PlayerInstance.Attrs.Res },
+    { "SKL", PlayerInstance.Attrs.Skl },
+    { "SPD", PlayerInstance.Attrs.Spd }
+  };
+
+  std::string str;
+
+  for (auto& i : attrsByName)
+  {
+    if (i.first == attrName)
+    {
+      int modifiers = i.second.GetModifiers();
+
+      std::string strMod = std::to_string(modifiers);
+      if (modifiers > 0)
+      {
+        strMod.insert(strMod.begin(), '+');
+      }
+      else if (modifiers < 0)
+      {
+        strMod.insert(strMod.begin(), '-');
+      }
+
+      str = Util::StringFormat("%s: %i (%s) = %i",
+                               attrName.data(),
+                               i.second.OriginalValue(),
+                               strMod.data(),
+                               i.second.Get());
+      break;
+    }
+  }
+
+  return str;
 }
 
 void Application::InitGraphics()

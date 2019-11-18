@@ -1,31 +1,139 @@
 #include "attribute.h"
 #include "util.h"
 
+void Attribute::Reset()
+{
+  _modifiersByGoId.clear();
+  _originalValue = 0;
+  Talents = 0;
+}
+
 void Attribute::Set(int value)
 {
-  OriginalValue = value;
-  CurrentValue = value;
+  _originalValue = value;
+}
+
+void Attribute::AddModifier(int64_t who, int value)
+{
+  _modifiersByGoId[who] = value;
+}
+
+void Attribute::RemoveModifier(int64_t who)
+{
+  _modifiersByGoId.erase(who);
+}
+
+int Attribute::Get()
+{
+  int res = _originalValue;
+
+  for (auto& i : _modifiersByGoId)
+  {
+    res += i.second;
+  }
+
+  return res;
+}
+
+int Attribute::GetModifiers()
+{
+  int res = 0;
+
+  for (auto& i : _modifiersByGoId)
+  {
+    res += i.second;
+  }
+
+  return res;
+}
+
+int Attribute::OriginalValue()
+{
+  return _originalValue;
 }
 
 void Attribute::Add(int value)
-{  
-  CurrentValue += value;
-
-  CurrentValue = Util::Clamp(CurrentValue, 0, OriginalValue);
+{
+  _originalValue += value;
 }
 
-int Attribute::Get(bool originalValue)
-{
-  int res = originalValue ? OriginalValue + Modifier : CurrentValue + Modifier;
+// *******************************************************
 
-  /*
+void RangedAttribute::Reset(int initialValue)
+{
+  _min.Reset();
+  _max.Reset();
+
+  _min.Set(initialValue);
+  _max.Set(initialValue);
+
+  Restore();
+}
+
+void RangedAttribute::SetMin(int valueToSet)
+{
+  _min.Set(valueToSet);
+}
+
+void RangedAttribute::SetMax(int valueToSet)
+{
+  _max.Set(valueToSet);
+}
+
+void RangedAttribute::AddMin(int valueToAdd)
+{
+  int res = _min.OriginalValue() + valueToAdd;
+  if (res > _max.Get())
+  {
+    res = _max.Get();
+  }
+  else if (res < 0)
+  {
+    res = 0;
+  }
+
+  _min.Set(res);
+}
+
+void RangedAttribute::AddMax(int valueToAdd)
+{
+  int res = _max.OriginalValue() + valueToAdd;
   if (res < 0)
   {
     res = 0;
   }
-  */
 
-  return res;
+  _max.Set(res);
+
+  // If max value is dropped because of modifier,
+  // adjust min value accordingly.
+  if (_min.OriginalValue() > _max.Get())
+  {
+    _min.Set(_max.Get());
+  }
+}
+
+void RangedAttribute::Restore()
+{
+  _min.Set(_max.Get());
+}
+
+Attribute& RangedAttribute::Min()
+{
+  return _min;
+}
+
+Attribute& RangedAttribute::Max()
+{
+  return _max;
+}
+
+void RangedAttribute::CheckOverflow()
+{
+  if (_min.Get() > _max.Get())
+  {
+    _min.Set(_max.Get());
+  }
 }
 
 // *******************************************************
@@ -39,13 +147,13 @@ int Attributes::Rating()
 {
   int rating = 0;
 
-  rating += Str.OriginalValue;
-  rating += Def.OriginalValue;
-  rating += Mag.OriginalValue;
-  rating += Res.OriginalValue;
-  rating += Skl.OriginalValue;
-  rating += Spd.OriginalValue;
-  rating += Lvl.CurrentValue;
+  rating += Str.Get();
+  rating += Def.Get();
+  rating += Mag.Get();
+  rating += Res.Get();
+  rating += Skl.Get();
+  rating += Spd.Get();
+  rating += Lvl.Get();
 
   return rating;
 }

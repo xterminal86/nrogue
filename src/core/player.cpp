@@ -284,7 +284,7 @@ void Player::SetSoldierAttrs()
   Attrs.Def.Set(2);
   Attrs.Skl.Set(1);
 
-  Attrs.HP.Set(30);
+  Attrs.HP.Reset(30);
 
   Attrs.HungerRate.Set(1500);
   Attrs.HungerSpeed.Set(1);
@@ -303,7 +303,7 @@ void Player::SetThiefAttrs()
   Attrs.Skl.Set(3);
   Attrs.Spd.Set(3);
 
-  Attrs.HP.Set(20);
+  Attrs.HP.Reset(20);
 
   Attrs.HungerRate.Set(2000);
   Attrs.HungerSpeed.Set(1);  
@@ -322,8 +322,8 @@ void Player::SetArcanistAttrs()
   Attrs.Res.Set(2);
   Attrs.Spd.Set(1);
 
-  Attrs.HP.Set(10);
-  Attrs.MP.Set(30);
+  Attrs.HP.Reset(10);
+  Attrs.MP.Reset(30);
 
   Attrs.HungerRate.Set(3000);
   Attrs.HungerSpeed.Set(1);  
@@ -403,7 +403,7 @@ void Player::SetDefaultEquipment()
 /// 'what' is either actor or GameObject, 'with' is a weapon
 void Player::RangedAttack(GameObject* what, ItemComponent* with)
 {
-  int dmg = Util::RollDamage(with->Data.Damage.CurrentValue, with->Data.Damage.OriginalValue);
+  int dmg = Util::RollDamage(with->Data.Damage.Min().Get(), with->Data.Damage.Max().Get());
 
   // If it's not the ground GameObject
   if (what->Type != GameObjectType::GROUND)
@@ -640,7 +640,7 @@ void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int dama
 
   if (shouldTearDownWall)
   {
-    defender->Attrs.HP.Set(0);
+    defender->Attrs.HP.SetMin(0);
     defender->IsDestroyed = true;
 
     auto msg = Util::StringFormat("You tear down the %s", defender->ObjectName.data());
@@ -679,12 +679,14 @@ bool Player::WasHitLanded(GameObject* defender)
 
   hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
 
-  auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
-                                   Attrs.Skl.CurrentValue,
-                                   Attrs.Lvl.CurrentValue,
+  auto logMsg = Util::StringFormat("Player (SKL %i (%i), LVL %i) attacks %s (SKL: %i (%i), LVL %i): chance = %i",
+                                   Attrs.Skl.OriginalValue(),
+                                   Attrs.Skl.GetModifiers(),
+                                   Attrs.Lvl.Get(),
                                    defender->ObjectName.data(),
-                                   defender->Attrs.Skl.CurrentValue,
-                                   defender->Attrs.Lvl.CurrentValue,
+                                   defender->Attrs.Skl.OriginalValue(),
+                                   defender->Attrs.Skl.GetModifiers(),
+                                   defender->Attrs.Lvl.Get(),
                                    hitChance);
   Logger::Instance().Print(logMsg);
 
@@ -713,7 +715,7 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender)
 
     // Melee attack with ranged weapon in hand fallbacks to 1d4 "punch"
     int weaponDamage = isRanged ? Util::RollDamage(1, 4) :
-                                  Util::RollDamage(wd.CurrentValue, wd.OriginalValue);
+                                  Util::RollDamage(wd.Min().Get(), wd.Max().Get());
 
     totalDmg = weaponDamage;
     totalDmg += Attrs.Str.Get() - defender->Attrs.Def.Get();
@@ -760,11 +762,11 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
 
     if (HasEffect(EffectType::MANA_SHIELD))
     {
-      Attrs.MP.Add(-amount);
+      Attrs.MP.AddMin(-amount);
     }
     else
     {
-      Attrs.HP.Add(-amount);
+      Attrs.HP.AddMin(-amount);
     }
   }
   else
@@ -775,11 +777,11 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
 
       if (HasEffect(EffectType::MANA_SHIELD))
       {
-        Attrs.MP.Add(-amount);
+        Attrs.MP.AddMin(-amount);
       }
       else
       {
-        Attrs.HP.Add(-amount);
+        Attrs.HP.AddMin(-amount);
       }
     }
   }
@@ -801,7 +803,7 @@ bool Player::DamageArmor(int amount)
       return false;
     }
 
-    int durabilityLeft = armor->Data.Durability.CurrentValue;
+    int durabilityLeft = armor->Data.Durability.Min().Get();
     int armorDamage = durabilityLeft - amount;
     if (armorDamage < 0)
     {
@@ -810,7 +812,7 @@ bool Player::DamageArmor(int amount)
       auto str = Util::StringFormat("You were hit for %i damage", hpDamage);
       Printer::Instance().AddMessage(str);
 
-      Attrs.HP.CurrentValue -= hpDamage;
+      Attrs.HP.AddMin(-hpDamage);
       BreakItem(armor);
     }
     else
@@ -818,7 +820,7 @@ bool Player::DamageArmor(int amount)
       auto str = Util::StringFormat("Your armor takes %i damage", amount);
       Printer::Instance().AddMessage(str);
 
-      armor->Data.Durability.Add(-amount);
+      armor->Data.Durability.AddMin(-amount);
       if (ShouldBreak(armor))
       {
         BreakItem(armor);
@@ -833,7 +835,7 @@ bool Player::DamageArmor(int amount)
 
 bool Player::ShouldBreak(ItemComponent *ic)
 {
-  return (ic->Data.Durability.CurrentValue <= 0);
+  return (ic->Data.Durability.Min().Get() <= 0);
 }
 
 void Player::AwardExperience(int amount)
@@ -843,19 +845,19 @@ void Player::AwardExperience(int amount)
   // FIXME: debug
   //amnt = 100;
 
-  Attrs.Exp.CurrentValue += amnt;
+  Attrs.Exp.AddMin(amnt);
 
   auto msg = Util::StringFormat("Received %i EXP", amnt);
   Printer::Instance().AddMessage(msg);
 
-  if (Attrs.Exp.CurrentValue >= 100)
+  if (Attrs.Exp.Min().Get() >= 100)
   {
-    Attrs.Exp.Set(0);
+    Attrs.Exp.SetMin(0);
     LevelUp();
   }
-  else if (Attrs.Exp.CurrentValue < 0)
+  else if (Attrs.Exp.Min().Get() < 0)
   {
-    Attrs.Exp.Set(0);
+    Attrs.Exp.SetMin(0);
     LevelDown();
   }
 }
@@ -882,8 +884,7 @@ void Player::LevelUp(int baseHpOverride)
     {
       _statRaisesMap[kvp.first] = 1;
 
-      kvp.second.OriginalValue++;
-      kvp.second.CurrentValue = kvp.second.OriginalValue;
+      kvp.second.Add(1);
 
       auto str = Util::StringFormat("%s +1", kvp.first.data());
       Printer::Instance().AddMessage(str);
@@ -896,7 +897,7 @@ void Player::LevelUp(int baseHpOverride)
   int maxRndHp = 2 * (Attrs.HP.Talents + 1);
 
   int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp);
-  Attrs.HP.OriginalValue += hpToAdd;
+  Attrs.HP.AddMax(hpToAdd);
 
   _statRaisesMap["HP"] = hpToAdd;
 
@@ -906,11 +907,11 @@ void Player::LevelUp(int baseHpOverride)
     Printer::Instance().AddMessage(str);
   }
 
-  int minRndMp = Attrs.Mag.OriginalValue;
-  int maxRndMp = Attrs.Mag.OriginalValue + Attrs.MP.Talents;
+  int minRndMp = Attrs.Mag.OriginalValue();
+  int maxRndMp = Attrs.Mag.OriginalValue() + Attrs.MP.Talents;
 
   int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp);
-  Attrs.MP.OriginalValue += mpToAdd;
+  Attrs.MP.AddMax(mpToAdd);
 
   _statRaisesMap["MP"] = mpToAdd;
 
@@ -920,8 +921,7 @@ void Player::LevelUp(int baseHpOverride)
     Printer::Instance().AddMessage(str);
   }
 
-  Attrs.Lvl.OriginalValue++;
-  Attrs.Lvl.CurrentValue = Attrs.Lvl.OriginalValue;
+  Attrs.Lvl.Add(1);
 
   auto res = GetPrettyLevelUpText();
 
@@ -945,13 +945,11 @@ void Player::LevelDown()
     {
       _statRaisesMap[kvp.first] = -1;
 
-      kvp.second.OriginalValue--;
-      if (kvp.second.OriginalValue < 0)
+      kvp.second.Add(-1);
+      if (kvp.second.OriginalValue() < 0)
       {
-        kvp.second.OriginalValue = 0;
+        kvp.second.Set(0);
       }
-
-      kvp.second.CurrentValue = kvp.second.OriginalValue;
 
       auto str = Util::StringFormat("%s -1", kvp.first.data());
       Printer::Instance().AddMessage(str);
@@ -964,11 +962,11 @@ void Player::LevelDown()
   int maxRndHp = 2 * (Attrs.HP.Talents + 1);
 
   int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp);
-  Attrs.HP.OriginalValue -= hpToAdd;
+  Attrs.HP.AddMax(-hpToAdd);
 
-  if (Attrs.HP.OriginalValue <= 0)
+  if (Attrs.HP.Max().OriginalValue() <= 0)
   {
-    Attrs.HP.OriginalValue = 1;
+    Attrs.HP.SetMax(1);
   }
 
   _statRaisesMap["HP"] = -hpToAdd;
@@ -979,15 +977,15 @@ void Player::LevelDown()
     Printer::Instance().AddMessage(str);
   }
 
-  int minRndMp = Attrs.Mag.OriginalValue;
-  int maxRndMp = Attrs.Mag.OriginalValue * (Attrs.MP.Talents + 1);
+  int minRndMp = Attrs.Mag.OriginalValue();
+  int maxRndMp = Attrs.Mag.OriginalValue() * (Attrs.MP.Talents + 1);
 
   int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp);
-  Attrs.MP.OriginalValue -= mpToAdd;
+  Attrs.MP.AddMax(-mpToAdd);
 
-  if (Attrs.MP.OriginalValue < 0)
+  if (Attrs.MP.Max().OriginalValue() < 0)
   {
-    Attrs.MP.OriginalValue = 0;
+    Attrs.MP.SetMax(0);
   }
 
   _statRaisesMap["MP"] = -mpToAdd;
@@ -998,13 +996,11 @@ void Player::LevelDown()
     Printer::Instance().AddMessage(str);
   }
 
-  Attrs.Lvl.OriginalValue--;
-  if (Attrs.Lvl.OriginalValue <= 1)
+  Attrs.Lvl.Add(-1);
+  if (Attrs.Lvl.OriginalValue() <= 1)
   {
-    Attrs.Lvl.OriginalValue = 1;
+    Attrs.Lvl.Set(1);
   }
-
-  Attrs.Lvl.CurrentValue = Attrs.Lvl.OriginalValue;
 
   auto res = GetPrettyLevelUpText();
 
@@ -1069,9 +1065,9 @@ void Player::WaitForTurn()
 
 bool Player::IsAlive()
 {
-  if (Attrs.HP.CurrentValue <= 0)
+  if (Attrs.HP.Min().Get() <= 0)
   {
-    Attrs.HP.CurrentValue = 0;
+    Attrs.HP.SetMin(0);
 
     Image = '%';
     FgColor = GlobalConstants::PlayerColor;
@@ -1093,16 +1089,16 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
   {
     auto kvp = i.second;
 
-    mbStr = Util::StringFormat("%s: %i", kvp.first.data(), kvp.second.OriginalValue);
+    mbStr = Util::StringFormat("%s: %i", kvp.first.data(), kvp.second.OriginalValue());
     levelUpResults.push_back(mbStr);
   }
 
   levelUpResults.push_back("");
 
-  mbStr = Util::StringFormat("HP:  %i", Attrs.HP.OriginalValue);
+  mbStr = Util::StringFormat("HP:  %i", Attrs.HP.Max().OriginalValue());
   levelUpResults.push_back(mbStr);
 
-  mbStr = Util::StringFormat("MP:  %i", Attrs.MP.OriginalValue);
+  mbStr = Util::StringFormat("MP:  %i", Attrs.MP.Max().OriginalValue());
   levelUpResults.push_back(mbStr);
 
   // Try to make everything look pretty
@@ -1219,10 +1215,10 @@ void Player::ProcessStarvation()
     {
       _healthRegenTurnsCounter = 0;
 
-      if (Attrs.HP.CurrentValue < Attrs.HP.OriginalValue)
+      if (Attrs.HP.Min().Get() < Attrs.HP.Max().Get())
       {
         Attrs.Hunger += Attrs.HungerSpeed.Get();
-        Attrs.HP.Add(1);
+        Attrs.HP.AddMin(1);
       }
     }
   }
@@ -1239,7 +1235,7 @@ void Player::ProcessHunger()
   Attrs.Hunger += Attrs.HungerSpeed.Get();
 
   // HungerRate's CurrentValue is equal to OriginalValue
-  int maxHunger = Attrs.HungerRate.CurrentValue;
+  int maxHunger = Attrs.HungerRate.OriginalValue();
 
   Attrs.Hunger = Util::Clamp(Attrs.Hunger, 0, maxHunger);
 
@@ -1360,19 +1356,16 @@ bool Player::WeaponLosesDurability()
     return false;
   }
 
-  weapon->Data.Durability.Add(-1);
+  weapon->Data.Durability.AddMin(-1);
 
   return true;
 }
 
 void Player::ApplyBonuses(ItemComponent* itemRef)
 {
-  if (!itemRef->Data.StatBonuses.empty())
+  for (auto& i : itemRef->Data.Bonuses)
   {
-    for (auto& i : itemRef->Data.Bonuses)
-    {
-      ApplyBonus(itemRef, i);
-    }
+    ApplyBonus(itemRef, i);
   }
 }
 
@@ -1386,24 +1379,26 @@ void Player::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
     case ItemBonusType::RES:
     case ItemBonusType::SKL:
     case ItemBonusType::SPD:
+      _attributesRefsByBonus.at(bonus.Type).AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.Value);
+      break;
+
     case ItemBonusType::HP:
     case ItemBonusType::MP:
-    {
-      int newValue = _attributesRefsByBonus.at(bonus.Type).CurrentValue + bonus.Value;
-      _attributesRefsByBonus.at(bonus.Type).Set(newValue);
-    }
-    break;
+      _rangedAttributesRefsByBonus.at(bonus.Type).Max().AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.Value);
+      _rangedAttributesRefsByBonus.at(bonus.Type).CheckOverflow();
+      break;
+
+    case ItemBonusType::VISIBILITY:
+      VisibilityRadius.AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.Value);
+      break;
   }
 }
 
 void Player::UnapplyBonuses(ItemComponent* itemRef)
 {
-  if (!itemRef->Data.StatBonuses.empty())
+  for (auto& i : itemRef->Data.Bonuses)
   {
-    for (auto& i : itemRef->Data.Bonuses)
-    {
-      UnapplyBonus(itemRef, i);
-    }
+    UnapplyBonus(itemRef, i);
   }
 }
 
@@ -1417,63 +1412,18 @@ void Player::UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
     case ItemBonusType::RES:
     case ItemBonusType::SKL:
     case ItemBonusType::SPD:
+      _attributesRefsByBonus.at(bonus.Type).RemoveModifier(itemRef->OwnerGameObject->ObjectId());
+      break;
+
     case ItemBonusType::HP:
     case ItemBonusType::MP:
-    {
-      int newValue = _attributesRefsByBonus.at(bonus.Type).CurrentValue - bonus.Value;
-      _attributesRefsByBonus.at(bonus.Type).Set(newValue);
-    }
-    break;
-  }
-}
+      _rangedAttributesRefsByBonus.at(bonus.Type).Max().RemoveModifier(itemRef->OwnerGameObject->ObjectId());
+      _rangedAttributesRefsByBonus.at(bonus.Type).CheckOverflow();
+      break;
 
-void Player::RecalculateStatsModifiers()
-{
-  for (auto& a : _attributesRefsByType)
-  {
-    a.second.Modifier = 0;
-
-    for (auto& kvp : EquipmentByCategory)
-    {
-      for (ItemComponent* item : kvp.second)
-      {
-        if (item != nullptr)
-        {
-          int bonus = item->Data.StatBonuses.at(a.first);
-          a.second.Modifier += bonus;
-        }
-      }
-    }
-  }
-
-  // Hardcoded weapon and armor penalties
-
-  ItemComponent* weapon = EquipmentByCategory.at(EquipmentCategory::WEAPON)[0];
-  if (weapon != nullptr)
-  {
-    int req = weapon->Data.StatRequirements.at(StatsEnum::STR);
-    if(req != 0)
-    {
-      int penalty = _attributesRefsByType.at(StatsEnum::STR).CurrentValue - req;
-      if (penalty < 0)
-      {
-        _attributesRefsByType.at(StatsEnum::SKL).Modifier += penalty;        
-      }
-    }
-  }
-
-  ItemComponent* armor = EquipmentByCategory.at(EquipmentCategory::TORSO)[0];
-  if (armor != nullptr)
-  {
-    int req = armor->Data.StatRequirements.at(StatsEnum::STR);
-    if(req != 0)
-    {
-      int penalty = _attributesRefsByType.at(StatsEnum::STR).CurrentValue - req;
-      if (penalty < 0)
-      {
-        _attributesRefsByType.at(StatsEnum::SPD).Modifier += penalty;
-      }
-    }
+    case ItemBonusType::VISIBILITY:
+      VisibilityRadius.RemoveModifier(itemRef->OwnerGameObject->ObjectId());
+      break;
   }
 }
 
@@ -1508,9 +1458,7 @@ void Player::BreakItem(ItemComponent* ic, bool suppressMessage)
     }
   }
 
-  EquipmentByCategory[ec][0] = nullptr;
-
-  RecalculateStatsModifiers();
+  EquipmentByCategory[ec][0] = nullptr;  
 }
 
 void Player::SwitchPlaces(AIComponent* other)

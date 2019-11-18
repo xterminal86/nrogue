@@ -234,6 +234,24 @@ void MapLevelTown::CreateLevel()
   // *** FIXME: debug
 
   /*
+  for (int i = 0; i < 20; i++)
+  {
+    int val = RNG::Instance().RandomRange(0, 2);
+    EquipmentCategory cat = (val == 0) ? EquipmentCategory::NECK : EquipmentCategory::RING;
+    auto ring = GameObjectsFactory::Instance().CreateRandomAccessory(i + 1, 1, cat);
+    InsertGameObject(ring);
+  }
+  */
+
+  /*
+  ItemBonusStruct bs = { ItemBonusType::HP, 5, 0, false };
+
+  auto ring1 = GameObjectsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED);
+  InsertGameObject(ring1);
+
+  auto ring2 = GameObjectsFactory::Instance().CreateAccessory(2, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED);
+  InsertGameObject(ring2);
+
   auto scroll = GameObjectsFactory::Instance().CreateScroll(1, 1, SpellType::MAGIC_MAPPING);
   InsertGameObject(scroll);
 

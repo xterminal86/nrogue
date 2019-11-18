@@ -257,6 +257,7 @@ enum class ItemType
   RETURNER,
   WEAPON,
   ARMOR,
+  ACCESSORY,
   WAND,
   SPELLBOOK,
   REPAIR_KIT,

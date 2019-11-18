@@ -87,6 +87,8 @@ class Application : public Singleton<Application>
                           GameObject* defender,
                           const std::string& cursorColor = "");
 
+    std::string GetStatInfo(const std::string& attrName);
+
     #ifdef USE_SDL
     std::map<std::string, std::string> _config;
     void InitSDL();
@@ -105,7 +107,7 @@ class Application : public Singleton<Application>
     // nanoseconds as internal duration period
     // (see time_point struct declaration)
     Ns _deltaTime = Ns{0};
-    Ns _timePassed = Ns{0};
+    Ns _timePassed = Ns{0};    
 
     friend class TargetState;    
 };

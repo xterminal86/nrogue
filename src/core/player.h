@@ -57,7 +57,6 @@ class Player : public GameObject
 
     void ApplyBonuses(ItemComponent* itemRef);
     void UnapplyBonuses(ItemComponent* itemRef);
-    void RecalculateStatsModifiers();
     void AddBonusItems();
 
     bool HasSkill(PlayerSkills skillToCheck);
@@ -176,9 +175,13 @@ class Player : public GameObject
       { ItemBonusType::MAG, Attrs.Mag },
       { ItemBonusType::RES, Attrs.Res },
       { ItemBonusType::SKL, Attrs.Skl },
-      { ItemBonusType::SPD, Attrs.Spd },
-      { ItemBonusType::HP,  Attrs.HP  },
-      { ItemBonusType::MP,  Attrs.MP  }
+      { ItemBonusType::SPD, Attrs.Spd }
+    };
+
+    std::map<ItemBonusType, RangedAttribute&> _rangedAttributesRefsByBonus =
+    {
+      { ItemBonusType::HP, Attrs.HP },
+      { ItemBonusType::MP, Attrs.MP }
     };
 
     friend class SpellsProcessor;

@@ -70,16 +70,15 @@ void ShrineComponent::ProcessEffect()
     {
       int choice = RNG::Instance().RandomRange(0, 2);
       if (choice == 0)
-      {
-        int orig = playerRef.Attrs.Str.OriginalValue;
-        playerRef.Attrs.Str.Set(orig + 1);
-        playerRef.RecalculateStatsModifiers();
+      {        
+        playerRef.Attrs.Str.Add(1);
+        //playerRef.RecalculateStatsModifiers();
         msg = "You feel stronger!";
       }
       else
       {
         int hpToAdd = 2 * (playerRef.Attrs.HP.Talents + 1);
-        playerRef.Attrs.HP.OriginalValue += hpToAdd;
+        playerRef.Attrs.HP.AddMax(hpToAdd);
         msg = "You feel tougher!";
       }
     }
@@ -90,15 +89,14 @@ void ShrineComponent::ProcessEffect()
     {
       int choice = RNG::Instance().RandomRange(0, 2);
       if (choice == 0)
-      {
-        int orig = playerRef.Attrs.Mag.OriginalValue;
-        playerRef.Attrs.Mag.Set(orig + 1);
+      {        
+        playerRef.Attrs.Mag.Add(1);
         msg = "You feel strong-willed!";
       }
       else
       {
         int mpToAdd = 2 * (playerRef.Attrs.MP.Talents + 1);
-        playerRef.Attrs.MP.OriginalValue += mpToAdd;
+        playerRef.Attrs.MP.AddMax(mpToAdd);
         msg = "You spirituality has increased!";
       }
     }
@@ -107,9 +105,9 @@ void ShrineComponent::ProcessEffect()
     // restores MP
     case ShrineType::TRANQUILITY:
     {
-      if (playerRef.Attrs.MP.OriginalValue != 0)
+      if (playerRef.Attrs.MP.Max().OriginalValue() != 0)
       {
-        playerRef.Attrs.MP.CurrentValue = playerRef.Attrs.MP.OriginalValue;
+        playerRef.Attrs.MP.Restore();
         msg = "Your spirit force is restored!";
       }
     }
@@ -162,7 +160,7 @@ void ShrineComponent::ProcessEffect()
     // restores HP
     case ShrineType::HEALING:
     {      
-      playerRef.Attrs.HP.CurrentValue = playerRef.Attrs.HP.OriginalValue;
+      playerRef.Attrs.HP.Restore();
       msg = "You feel better!";
     }
     break;
@@ -232,7 +230,7 @@ void ShrineComponent::ProcessEffect()
       int index = RNG::Instance().RandomRange(0, playerStatsRef.size());
       auto it = playerStatsRef.begin();
       std::advance(it, index);
-      it->second.OriginalValue++;
+      it->second.Add(1);
 
       ApplyRandomNegativeEffect();
     }
@@ -305,7 +303,7 @@ void ShrineComponent::ApplyRandomPositiveEffect()
   int effectIndex = RNG::Instance().RandomRange(0, PositiveEffects.size());
   EffectType e = PositiveEffects[effectIndex];
 
-  if (e == EffectType::MANA_SHIELD && playerRef.Attrs.MP.OriginalValue != 0)
+  if (e == EffectType::MANA_SHIELD && playerRef.Attrs.MP.Max().Get() != 0)
   {
     playerRef.AddEffect(e, 0, -1, false);
   }

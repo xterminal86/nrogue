@@ -17,7 +17,7 @@ int ItemData::GetCost()
 
   if (weaponOrArmor)
   {
-    price = Durability.CurrentValue * 2;
+    price = Durability.Min().Get() * 2;
   }
   else
   {

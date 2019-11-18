@@ -288,10 +288,10 @@ void MainState::TryToPickupItem()
 
 void MainState::DrawHPMP()
 {
-  int curHp = _playerRef->Attrs.HP.CurrentValue;
-  int maxHp = _playerRef->Attrs.HP.OriginalValue;
-  int curMp = _playerRef->Attrs.MP.CurrentValue;
-  int maxMp = _playerRef->Attrs.MP.OriginalValue;
+  int curHp = _playerRef->Attrs.HP.Min().Get();
+  int maxHp = _playerRef->Attrs.HP.Max().Get();
+  int curMp = _playerRef->Attrs.MP.Min().Get();
+  int maxMp = _playerRef->Attrs.MP.Max().Get();
 
   int th = Printer::Instance().TerminalHeight;
 
@@ -306,9 +306,9 @@ void MainState::DrawHPMP()
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 1, str, Printer::kAlignCenter, "#FFFFFF", "#000088");
 }
 
-void MainState::UpdateBar(int x, int y, const Attribute& attr)
+void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
 {
-  float ratio = ((float)attr.CurrentValue / (float)attr.OriginalValue);
+  float ratio = ((float)attr.Min().Get() / (float)attr.Max().Get());
   int len = ratio * GlobalConstants::HPMPBarLength;
 
   std::string bar = "[";
@@ -663,7 +663,7 @@ void MainState::DisplayStatusIcons()
   }
   else
   {
-    int hungerMax = _playerRef->Attrs.HungerRate.CurrentValue;
+    int hungerMax = _playerRef->Attrs.HungerRate.Get();
     int part = hungerMax - hungerMax * 0.25;
     if (_playerRef->Attrs.Hunger >= part)
     {
@@ -676,10 +676,10 @@ void MainState::DisplayStatusIcons()
   ItemComponent* weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
   if (weapon != nullptr && weapon->Data.ItemType_ == ItemType::WEAPON)
   {
-    int maxDur = weapon->Data.Durability.OriginalValue;
+    int maxDur = weapon->Data.Durability.Max().Get();
     int warning = maxDur * 0.3f;
 
-    if (weapon->Data.Durability.CurrentValue <= warning)
+    if (weapon->Data.Durability.Min().Get() <= warning)
     {
       Printer::Instance().PrintFB(startPos + 2, th - 3, ')', "#FFFF00");
     }
@@ -690,10 +690,10 @@ void MainState::DisplayStatusIcons()
   ItemComponent* armor = _playerRef->EquipmentByCategory[EquipmentCategory::TORSO][0];
   if (armor != nullptr && armor->Data.ItemType_ == ItemType::ARMOR)
   {
-    int maxDur = armor->Data.Durability.OriginalValue;
+    int maxDur = armor->Data.Durability.Max().Get();
     int warning = maxDur * 0.3f;
 
-    if (armor->Data.Durability.CurrentValue <= warning)
+    if (armor->Data.Durability.Min().Get() <= warning)
     {
       Printer::Instance().PrintFB(startPos + 4, th - 3, '[', "#FFFF00");
     }

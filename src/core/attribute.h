@@ -1,18 +1,46 @@
 #ifndef ATTRIBUTE_H
 #define ATTRIBUTE_H
 
-struct Attribute
-{
-  int CurrentValue = 0;
-  int OriginalValue = 0;
-  int Modifier = 0;
-  int Talents = 0;
+#include <unordered_map>
 
+struct Attribute
+{  
+  void Reset();
   void Set(int value);
   void Add(int value);
+  void AddModifier(int64_t who, int value);
+  void RemoveModifier(int64_t who);
 
-  /// Returns value including modifier
-  int Get(bool originalValue = true);
+  int GetModifiers();
+  int Get();
+  int OriginalValue();
+
+  int Talents = 0;
+
+  private:
+    std::unordered_map<int64_t, int> _modifiersByGoId;
+
+    int _originalValue = 0;
+};
+
+struct RangedAttribute
+{
+  void Reset(int initialValue);
+  void SetMin(int valueToSet);
+  void SetMax(int valueToSet);
+  void AddMin(int valueToAdd);
+  void AddMax(int valueToAdd);
+  void CheckOverflow();
+  void Restore();
+
+  Attribute& Min();
+  Attribute& Max();
+
+  int Talents = 0;
+
+  private:
+    Attribute _min;
+    Attribute _max;
 };
 
 struct Attributes
@@ -26,15 +54,15 @@ struct Attributes
   Attribute Skl;
   Attribute Spd;
 
-  Attribute HP;
-  Attribute MP;
+  RangedAttribute HP;
+  RangedAttribute MP;
 
   // number of turns before Hunger decrements by HungerSpeed
   Attribute HungerRate;
 
   Attribute HungerSpeed;
 
-  Attribute Exp;
+  RangedAttribute Exp;
   Attribute Lvl;
 
   int Hunger = 0;

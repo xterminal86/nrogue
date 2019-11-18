@@ -184,6 +184,7 @@ void TraderComponent::CreateBlacksmithItems()
     { ItemType::ARROWS,     3 },
     { ItemType::ARMOR,      5 },
     { ItemType::REPAIR_KIT, 2 },
+    { ItemType::ACCESSORY,  1 }
   };
 
   std::map<ArmorType, int> armorWeights =
@@ -230,6 +231,14 @@ void TraderComponent::CreateBlacksmithItems()
         ArrowType arrowsType = (flag == 0) ? ArrowType::ARROWS : ArrowType::BOLTS;
         int amount = RNG::Instance().RandomRange(5, 21);
         go = GameObjectsFactory::Instance().CreateArrows(0, 0, arrowsType, prefixPair.first, amount);
+      }
+      break;
+
+      case ItemType::ACCESSORY:
+      {
+        int isAmulet = RNG::Instance().RandomRange(0, 4);
+        EquipmentCategory cat = (isAmulet == 0) ? EquipmentCategory::NECK : EquipmentCategory::RING;
+        go = GameObjectsFactory::Instance().CreateRandomAccessory(0, 0, cat, prefixPair.first);
       }
       break;
     }

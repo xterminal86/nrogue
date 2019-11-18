@@ -234,7 +234,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   // Set attributes
   if (randomize)
   {
-    int pl = _playerRef->Attrs.Lvl.CurrentValue;
+    int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
     int difficulty = std::max(pl, dl); //pl + dl;
     int diffOffset = RNG::Instance().RandomRange(0, 3);
@@ -248,6 +248,9 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
     {
       go->LevelUp(2);
     }
+
+    go->Attrs.HP.Restore();
+    go->Attrs.MP.Restore();
 
     /*
     int randomStr = RNG::Instance().RandomRange(0 * difficulty, 1 * difficulty);
@@ -289,7 +292,7 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
   // Set attributes
   if (randomize)
   {
-    int pl = _playerRef->Attrs.Lvl.CurrentValue;
+    int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
     int difficulty = std::max(pl, dl); //pl + dl;
     int diffOffset = RNG::Instance().RandomRange(0, 3);
@@ -303,6 +306,9 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
     {
       go->LevelUp();
     }
+
+    go->Attrs.HP.Restore();
+    go->Attrs.MP.Restore();
 
     /*
     int randomStr = RNG::Instance().RandomRange(0 * difficulty, 1 * difficulty);
@@ -344,7 +350,7 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
   // Set attributes
   if (randomize)
   {
-    int pl = _playerRef->Attrs.Lvl.CurrentValue;
+    int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
     int difficulty = std::max(pl, dl); //pl + dl;
     int diffOffset = RNG::Instance().RandomRange(0, 3);
@@ -359,6 +365,9 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
     {
       go->LevelUp(4);
     }
+
+    go->Attrs.HP.Restore();
+    go->Attrs.MP.Restore();
 
     /*
     int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
@@ -425,6 +434,9 @@ GameObject* GameObjectsFactory::CreateHerobrine(int x, int y)
     go->LevelUp(5);
   }
 
+  go->Attrs.HP.Restore();
+  go->Attrs.MP.Restore();
+
   return go;
 }
 
@@ -452,13 +464,15 @@ GameObject* GameObjectsFactory::CreateUniquePickaxe()
 
   int avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-  ic->Data.Damage.CurrentValue = diceRolls;
-  ic->Data.Damage.OriginalValue = diceSides;
+  ic->Data.Damage.SetMin(diceRolls);
+  ic->Data.Damage.SetMax(diceSides);
 
-  ic->Data.StatBonuses[StatsEnum::SKL] = 1;
-  ic->Data.StatBonuses[StatsEnum::SPD] = 1;
+  AddRandomBonus(ic, ItemBonusType::SKL);
 
-  ic->Data.Durability.Set(30);
+  AddBonus(ic, { ItemBonusType::SKL, 1, 0, false });
+  AddBonus(ic, { ItemBonusType::SPD, 1, 0, false });
+
+  ic->Data.Durability.Reset(30);
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = "Block Breaker";
@@ -489,7 +503,7 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
   go->ObjectName = str;
 
   go->Attrs.Indestructible = false;
-  go->Attrs.HP.Set(1);
+  go->Attrs.HP.Reset(1);
 
   return go;
 }
@@ -549,7 +563,7 @@ GameObject* GameObjectsFactory::CreateFood(int x, int y, FoodType type, ItemPref
 
   name = GlobalConstants::FoodHungerPercentageByName.at(type).first;
   int percentage = GlobalConstants::FoodHungerPercentageByName.at(type).second;
-  int hungerMax = _playerRef->Attrs.HungerRate.CurrentValue;
+  int hungerMax = _playerRef->Attrs.HungerRate.Get();
   int hungerToAdd = ((float)hungerMax * ((float)percentage / 100.0f));
 
   addsHunger = hungerToAdd;
@@ -786,7 +800,7 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
   go = CreateGameObject(0, 0, weights.first);
 
   go->Attrs.Indestructible = false;
-  go->Attrs.HP.Set(1);
+  go->Attrs.HP.Reset(1);
 
   ItemComponent* ic = go->GetComponent<ItemComponent>();
 
@@ -854,6 +868,7 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
     ItemType::WAND,
     ItemType::SCROLL,
     ItemType::ARROWS,
+    ItemType::ACCESSORY,
     ItemType::SPELLBOOK
   };
 
@@ -978,6 +993,14 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
     case ItemType::SCROLL:
       go = CreateRandomScroll();
       break;
+
+    case ItemType::ACCESSORY:
+    {
+      int isAmulet = RNG::Instance().RandomRange(0, 4);
+      EquipmentCategory cat = (isAmulet == 0) ? EquipmentCategory::NECK : EquipmentCategory::RING;
+      go = CreateRandomAccessory(0, 0, cat);
+    }
+    break;
   }
 
   // TODO: add cases for all item types after they are decided
@@ -1046,7 +1069,7 @@ bool GameObjectsFactory::FoodUseHandler(ItemComponent* item)
     _playerRef->IsStarving = false;
   }
 
-  _playerRef->Attrs.Hunger = Util::Clamp(_playerRef->Attrs.Hunger, 0, _playerRef->Attrs.HungerRate.CurrentValue);
+  _playerRef->Attrs.Hunger = Util::Clamp(_playerRef->Attrs.Hunger, 0, _playerRef->Attrs.HungerRate.Get());
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
 
@@ -1199,11 +1222,11 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       baseDurability = 30;
 
-      ic->Data.Damage.CurrentValue = diceRolls;
-      ic->Data.Damage.OriginalValue = diceSides;
+      ic->Data.Damage.SetMin(diceRolls);
+      ic->Data.Damage.SetMax(diceSides);
 
-      ic->Data.StatBonuses[StatsEnum::SKL] = 1;
-      ic->Data.StatBonuses[StatsEnum::SPD] = 3;
+      AddBonus(ic, { ItemBonusType::SKL, 1, 0, false });
+      AddBonus(ic, { ItemBonusType::SPD, 1, 0, false });
     }
     break;
 
@@ -1216,13 +1239,10 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       baseDurability = 45;
 
-      ic->Data.Damage.CurrentValue = diceRolls;
-      ic->Data.Damage.OriginalValue = diceSides;
+      ic->Data.Damage.SetMin(diceRolls);
+      ic->Data.Damage.SetMax(diceSides);
 
-      ic->Data.StatBonuses[StatsEnum::STR] = 1;
-      ic->Data.StatBonuses[StatsEnum::SPD] = 1;
-
-      ic->Data.StatRequirements[StatsEnum::STR] = 2;
+      AddBonus(ic, { ItemBonusType::STR, 1, 0, false });
     }
     break;
 
@@ -1235,13 +1255,11 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       baseDurability = 60;
 
-      ic->Data.Damage.CurrentValue = diceRolls;
-      ic->Data.Damage.OriginalValue = diceSides;
+      ic->Data.Damage.SetMin(diceRolls);
+      ic->Data.Damage.SetMax(diceSides);
 
-      ic->Data.StatBonuses[StatsEnum::STR] = 2;
-      ic->Data.StatBonuses[StatsEnum::DEF] = 1;
-
-      ic->Data.StatRequirements[StatsEnum::STR] = 3;
+      AddBonus(ic, { ItemBonusType::STR, 2, 0, false });
+      AddBonus(ic, { ItemBonusType::DEF, 1, 0, false });
     }
     break;
 
@@ -1254,14 +1272,12 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       baseDurability = 80;
 
-      ic->Data.Damage.CurrentValue = diceRolls;
-      ic->Data.Damage.OriginalValue = diceSides;
+      ic->Data.Damage.SetMin(diceRolls);
+      ic->Data.Damage.SetMax(diceSides);
 
-      ic->Data.StatBonuses[StatsEnum::STR] = 2;
-      ic->Data.StatBonuses[StatsEnum::DEF] = 1;
-      ic->Data.StatBonuses[StatsEnum::SPD] = -1;
-
-      ic->Data.StatRequirements[StatsEnum::STR] = 4;
+      AddBonus(ic, { ItemBonusType::STR, 2, 0, false });
+      AddBonus(ic, { ItemBonusType::DEF, 1, 0, false });
+      AddBonus(ic, { ItemBonusType::SPD, -1, 0, false });
     }
     break;
 
@@ -1274,14 +1290,12 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       baseDurability = 100;
 
-      ic->Data.Damage.CurrentValue = diceRolls;
-      ic->Data.Damage.OriginalValue = diceSides;
+      ic->Data.Damage.SetMin(diceRolls);
+      ic->Data.Damage.SetMax(diceSides);
 
-      ic->Data.StatBonuses[StatsEnum::STR] = 4;
-      ic->Data.StatBonuses[StatsEnum::SKL] = -2;
-      ic->Data.StatBonuses[StatsEnum::SPD] = -4;
-
-      ic->Data.StatRequirements[StatsEnum::STR] = 6;
+      AddBonus(ic, { ItemBonusType::STR, 4, 0, false });
+      AddBonus(ic, { ItemBonusType::SKL, -2, 0, false });
+      AddBonus(ic, { ItemBonusType::SPD, -4, 0, false });
     }
     break;
 
@@ -1294,11 +1308,11 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       baseDurability = 30;
 
-      ic->Data.Damage.CurrentValue = diceRolls;
-      ic->Data.Damage.OriginalValue = diceSides;
+      ic->Data.Damage.SetMin(diceRolls);
+      ic->Data.Damage.SetMax(diceSides);
 
-      ic->Data.StatBonuses[StatsEnum::DEF] = 1;
-      ic->Data.StatBonuses[StatsEnum::SPD] = -1;
+      AddBonus(ic, { ItemBonusType::DEF, 1, 0, false });
+      AddBonus(ic, { ItemBonusType::SPD, -1, 0, false });
     }
     break;
 
@@ -1311,8 +1325,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       baseDurability = 10;
 
-      ic->Data.Damage.CurrentValue = diceRolls;
-      ic->Data.Damage.OriginalValue = diceSides;      
+      ic->Data.Damage.SetMin(diceRolls);
+      ic->Data.Damage.SetMax(diceSides);
     }
     break;
   }
@@ -1320,7 +1334,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
   int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1f) + dungeonLevel;
 
   int durability = baseDurability + randomDurAdd;
-  ic->Data.Durability.Set(durability);
+  ic->Data.Durability.Reset(durability);
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
@@ -1443,7 +1457,7 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
     capacity *= 2;
   }
 
-  ic->Data.WandCapacity.Set(capacity);
+  ic->Data.WandCapacity.Reset(capacity);
 
   int spellCost = GlobalConstants::WandSpellCapacityCostByType.at(spellType);
   int charges = capacity / spellCost;
@@ -1455,7 +1469,7 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
   ic->Data.ItemType_ = ItemType::WAND;
   ic->Data.SpellHeld = spellType;
   ic->Data.Range = 100;
-  ic->Data.Durability.Set(1);
+  ic->Data.Durability.Reset(1);
   ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
 
   // Actual cost is going to be calculated in GetCost()
@@ -1536,10 +1550,10 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       int numRolls = 1;
       int diceType = 4;
 
-      ic->Data.Damage.CurrentValue = numRolls;
-      ic->Data.Damage.OriginalValue = diceType;
+      ic->Data.Damage.SetMin(numRolls);
+      ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 6;
-      ic->Data.Durability.Set(100);
+      ic->Data.Durability.Reset(100);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1548,7 +1562,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
         "Requires some skill to be used effectively."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SKL] = -1;
+      AddBonus(ic, { ItemBonusType::SKL, -1, 0, false });
     }
     break;
 
@@ -1557,10 +1571,10 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       int numRolls = 2;
       int diceType = 4;
 
-      ic->Data.Damage.CurrentValue = numRolls;
-      ic->Data.Damage.OriginalValue = diceType;
+      ic->Data.Damage.SetMin(numRolls);
+      ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 8;
-      ic->Data.Durability.Set(200);
+      ic->Data.Durability.Reset(200);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1569,7 +1583,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
         "Requires some skill to be used effectively."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SKL] = -2;
+      AddBonus(ic, { ItemBonusType::SKL, -2, 0, false });
     }
     break;
 
@@ -1578,10 +1592,10 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       int numRolls = 3;
       int diceType = 4;
 
-      ic->Data.Damage.CurrentValue = numRolls;
-      ic->Data.Damage.OriginalValue = diceType;
+      ic->Data.Damage.SetMin(numRolls);
+      ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 10;
-      ic->Data.Durability.Set(300);
+      ic->Data.Durability.Reset(300);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1591,7 +1605,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
         "Requires some skill to be used effectively."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SKL] = -3;
+      AddBonus(ic, { ItemBonusType::SKL, -3, 0, false });
     }
     break;
 
@@ -1600,10 +1614,10 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       int numRolls = 1;
       int diceType = 8;
 
-      ic->Data.Damage.CurrentValue = numRolls;
-      ic->Data.Damage.OriginalValue = diceType;
+      ic->Data.Damage.SetMin(numRolls);
+      ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 4;
-      ic->Data.Durability.Set(60);
+      ic->Data.Durability.Reset(60);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1613,8 +1627,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
         "Requires some time to reload."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SPD] = -1;
-      ic->Data.StatBonuses[StatsEnum::SKL] = 1;
+      AddBonus(ic, { ItemBonusType::SPD, -1, 0, false });
+      AddBonus(ic, { ItemBonusType::SKL, 1, 0, false });
     }
     break;
 
@@ -1623,10 +1637,10 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       int numRolls = 2;
       int diceType = 8;
 
-      ic->Data.Damage.CurrentValue = numRolls;
-      ic->Data.Damage.OriginalValue = diceType;
+      ic->Data.Damage.SetMin(numRolls);
+      ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 6;
-      ic->Data.Durability.Set(120);
+      ic->Data.Durability.Reset(120);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1636,8 +1650,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
         "Requires some time to reload."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SPD] = -2;
-      ic->Data.StatBonuses[StatsEnum::SKL] = 2;
+      AddBonus(ic, { ItemBonusType::SPD, -2, 0, false });
+      AddBonus(ic, { ItemBonusType::SKL, 2, 0, false });
     }
     break;
 
@@ -1646,10 +1660,10 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       int numRolls = 3;
       int diceType = 8;
 
-      ic->Data.Damage.CurrentValue = numRolls;
-      ic->Data.Damage.OriginalValue = diceType;
+      ic->Data.Damage.SetMin(numRolls);
+      ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 8;
-      ic->Data.Durability.Set(180);
+      ic->Data.Durability.Reset(180);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1659,8 +1673,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
         "Requires some time to reload."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SPD] = -3;
-      ic->Data.StatBonuses[StatsEnum::SKL] = 3;
+      AddBonus(ic, { ItemBonusType::SPD, -3, 0, false });
+      AddBonus(ic, { ItemBonusType::SKL, 3, 0, false });
     }
     break;
   }
@@ -1681,6 +1695,89 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
   AdjustWeaponBonuses(ic->Data);
   SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateRandomAccessory(int x, int y, EquipmentCategory category, ItemPrefix prefixOverride)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  if (category == EquipmentCategory::RING)
+  {
+    go->Image = '=';
+    go->ObjectName = "Ring";
+  }
+  else if (category == EquipmentCategory::NECK)
+  {
+    go->Image = '"';
+    go->ObjectName = "Amulet";
+  }
+
+  go->PosX = x;
+  go->PosY = y;
+
+  go->FgColor = "#FFFFFF";
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+  ic->Data.EqCategory = category;
+  ic->Data.ItemType_ = ItemType::ACCESSORY;
+  ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
+  ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
+  ic->Data.IdentifiedName = go->ObjectName;
+
+  TryToAddBonuses(ic);
+
+  if (ic->Data.Bonuses.empty())
+  {
+    ic->Data.IdentifiedName += " of the Bauble";
+  }
+
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateAccessory(int x, int y, EquipmentCategory category, const std::vector<ItemBonusStruct>& bonuses, ItemPrefix prefix)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  if (category == EquipmentCategory::RING)
+  {
+    go->Image = '=';
+    go->ObjectName = "Ring";
+  }
+  else if (category == EquipmentCategory::NECK)
+  {
+    go->Image = '"';
+    go->ObjectName = "Amulet";
+  }
+
+  go->PosX = x;
+  go->PosY = y;
+
+  go->FgColor = "#FFFFFF";
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+  ic->Data.Prefix = (prefix == ItemPrefix::RANDOM) ? RollItemPrefix() : prefix;
+  ic->Data.EqCategory = category;
+  ic->Data.ItemType_ = ItemType::ACCESSORY;
+  ic->Data.IsIdentified = (prefix != ItemPrefix::RANDOM) ? true : false;
+  ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
+  ic->Data.IdentifiedName = go->ObjectName;
+
+  for (auto& b : bonuses)
+  {
+    AddBonus(ic, b);
+  }
+
+  if (ic->Data.Bonuses.empty())
+  {
+    ic->Data.IdentifiedName += " of the Bauble";
+  }
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
@@ -1895,7 +1992,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "It won't last long, but any armor is better than nothing."
       };
 
-      ic->Data.StatBonuses[StatsEnum::SPD] = cursedPenalty;
+      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty, 0, false });
 
       break;
 
@@ -1907,10 +2004,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "protection against cutting blows."
       };
 
-      ic->Data.StatBonuses[StatsEnum::RES] = cursedPenalty - 1;
-      ic->Data.StatBonuses[StatsEnum::SPD] = cursedPenalty - 1;
-
-      ic->Data.StatRequirements[StatsEnum::STR] = 2;
+      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 1, 0, false });
+      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 1, 0, false });
 
       break;
 
@@ -1925,10 +2020,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "and is easy to repair."
       };
 
-      ic->Data.StatBonuses[StatsEnum::RES] = cursedPenalty - 3;
-      ic->Data.StatBonuses[StatsEnum::SPD] = cursedPenalty - 2;
-
-      ic->Data.StatRequirements[StatsEnum::STR] = 4;
+      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 3, 0, false });
+      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 2, 0, false });
 
       break;
 
@@ -1939,10 +2032,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "A body vest with overlapping scales worn over a small mail shirt.",
       };
 
-      ic->Data.StatBonuses[StatsEnum::RES] = cursedPenalty - 4;
-      ic->Data.StatBonuses[StatsEnum::SPD] = cursedPenalty - 3;
-
-      ic->Data.StatRequirements[StatsEnum::STR] = 6;
+      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 4, 0, false });
+      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 3, 0, false });
 
       break;
 
@@ -1957,17 +2048,10 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "all others in itself."
       };
 
-      ic->Data.StatBonuses[StatsEnum::RES] = cursedPenalty - 6;
-      ic->Data.StatBonuses[StatsEnum::SPD] = cursedPenalty - 4;
-
-      ic->Data.StatRequirements[StatsEnum::STR] = 10;
+      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 6, 0, false });
+      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 4, 0, false });
 
       break;
-  }
-
-  if (_playerRef->Attrs.Str.Get() < ic->Data.StatRequirements[StatsEnum::STR])
-  {
-    ic->Data.UnidentifiedDescription.push_back("This armor is too heavy for you");
   }
 
   //ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;
@@ -1975,7 +2059,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
   int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1f) + dungeonLevel;
 
   int durability = baseDurability + randomDurAdd;
-  ic->Data.Durability.Set(durability);
+  ic->Data.Durability.Reset(durability);
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
@@ -2002,7 +2086,7 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
   if (hitPoints > 0)
   {
     go->Attrs.Indestructible = false;
-    go->Attrs.HP.Set(hitPoints);
+    go->Attrs.HP.Reset(hitPoints);
   }
 
   DoorComponent* dc = go->AddComponent<DoorComponent>();
@@ -2040,7 +2124,7 @@ GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, const GameObjec
   if (hitPoints > 0)
   {
     go->Attrs.Indestructible = false;
-    go->Attrs.HP.Set(hitPoints);
+    go->Attrs.HP.Reset(hitPoints);
   }
 
   return go;
@@ -2314,7 +2398,6 @@ void GameObjectsFactory::EquipItem(ItemComponent* item)
   }
 
   _playerRef->ApplyBonuses(item);
-  _playerRef->RecalculateStatsModifiers();
 
   std::string objName = item->Data.IsIdentified ? item->OwnerGameObject->ObjectName : item->Data.UnidentifiedName;
 
@@ -2339,7 +2422,6 @@ void GameObjectsFactory::UnequipItem(ItemComponent* item)
   }
 
   _playerRef->UnapplyBonuses(item);
-  _playerRef->RecalculateStatsModifiers();
 
   std::string objName = item->Data.IsIdentified ? item->OwnerGameObject->ObjectName : item->Data.UnidentifiedName;
 
@@ -2352,6 +2434,8 @@ void GameObjectsFactory::EquipRing(ItemComponent* ring, int index)
   ring->Data.IsEquipped = true;
   _playerRef->EquipmentByCategory[ring->Data.EqCategory][index] = ring;
 
+  _playerRef->ApplyBonuses(ring);
+
   std::string objName = ring->Data.IsIdentified ? ring->OwnerGameObject->ObjectName : ring->Data.UnidentifiedName;
 
   auto str = Util::StringFormat("You put on %s", objName.data());
@@ -2363,6 +2447,8 @@ void GameObjectsFactory::UnequipRing(ItemComponent* ring, int index)
   ring->Data.IsEquipped = false;
   _playerRef->EquipmentByCategory[ring->Data.EqCategory][index] = nullptr;
 
+  _playerRef->UnapplyBonuses(ring);
+
   std::string objName = ring->Data.IsIdentified ? ring->OwnerGameObject->ObjectName : ring->Data.UnidentifiedName;
 
   auto str = Util::StringFormat("You take off %s", objName.data());
@@ -2373,8 +2459,8 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
 {
   int amount = 0;
 
-  int statMax = _playerRef->Attrs.HP.OriginalValue;
-  int& statCur = _playerRef->Attrs.HP.CurrentValue;
+  int statMax = _playerRef->Attrs.HP.Max().Get();
+  int statCur = _playerRef->Attrs.HP.Min().Get();
 
   std::string message;
 
@@ -2401,7 +2487,7 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
 
   Printer::Instance().AddMessage(message);
 
-  _playerRef->Attrs.HP.Add(amount);
+  _playerRef->Attrs.HP.AddMin(amount);
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
 
@@ -2412,7 +2498,7 @@ bool GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
 {
   int amount = 0;
 
-  int statMax = _playerRef->Attrs.MP.OriginalValue;
+  int statMax = _playerRef->Attrs.MP.Max().Get();
 
   if (item->Data.Prefix == ItemPrefix::BLESSED)
   {
@@ -2430,7 +2516,7 @@ bool GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
     Printer::Instance().AddMessage("Your spirit force was drained!");
   }
 
-  _playerRef->Attrs.MP.Add(amount);
+  _playerRef->Attrs.MP.AddMin(amount);
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
 
@@ -2553,14 +2639,14 @@ bool GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
 
   auto itemType = item->Data.ItemType_;
 
-  int newValue = playerStats.at(itemType).OriginalValue + valueToAdd;
+  int newValue = playerStats.at(itemType).OriginalValue() + valueToAdd;
 
   if (newValue < 0)
   {
     newValue = 0;
   }
 
-  playerStats.at(itemType).Set(newValue);
+  playerStats.at(itemType).Add(newValue);
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
 
@@ -2572,36 +2658,23 @@ void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
   switch (itemData.Prefix)
   {
     case ItemPrefix::CURSED:
-      itemData.Durability.Set(itemData.Durability.OriginalValue / 2);
-      itemData.Damage.CurrentValue--;
-      itemData.Damage.OriginalValue--;
-      itemData.Damage.CurrentValue = Util::Clamp(itemData.Damage.CurrentValue, 1, itemData.Damage.CurrentValue);
-      itemData.Damage.OriginalValue = Util::Clamp(itemData.Damage.OriginalValue, 1, itemData.Damage.OriginalValue);
-      break;
+    {
+      int dur = itemData.Durability.Max().Get();
+      itemData.Durability.Reset(dur / 2);
+      itemData.Damage.AddMax(-1);
+      itemData.Damage.AddMin(-1);
+    }
+    break;
 
     case ItemPrefix::BLESSED:
-      itemData.Durability.Set(itemData.Durability.OriginalValue * 2);
-      itemData.Damage.CurrentValue *= 2;
-      itemData.Damage.OriginalValue *= 2;
-      break;
-  }
-
-  for (auto& kvp : itemData.StatBonuses)
-  {
-    if (kvp.second != 0)
     {
-      switch (itemData.Prefix)
-      {
-        case ItemPrefix::CURSED:
-          kvp.second--;
-          break;
-
-        case ItemPrefix::BLESSED:
-          kvp.second++;
-          break;
-      }      
+      int dur = itemData.Durability.Max().Get();
+      itemData.Durability.Reset(dur * 2);
+      itemData.Damage.AddMax(2);
+      itemData.Damage.AddMin(2);
     }
-  }
+    break;
+  }  
 }
 
 size_t GameObjectsFactory::CalculateItemHash(ItemComponent* item)
@@ -2901,7 +2974,7 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef)
       // No duplicate bonuses on a single item
       bonusWeightByType.erase(res.first);
 
-      AddBonus(itemRef, res.first);
+      AddRandomBonus(itemRef, res.first);
 
       bonusesRolled.push_back(res.first);
     }
@@ -2953,7 +3026,7 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef)
     bucStatus = "Cursed";
   }
 
-  std::string itemName = bucStatus + " " + objName;
+  std::string itemName = bucStatus + " " + objName;  
   if (bonusesRolled.size() == 1)
   {
     itemName = bucStatus + " " + prefix + " " + objName;
@@ -2966,7 +3039,15 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef)
   itemRef->Data.IdentifiedName = itemName;
 }
 
-void GameObjectsFactory::AddBonus(ItemComponent* itemRef, ItemBonusType bonusType)
+void GameObjectsFactory::AddBonus(ItemComponent* itemRef, const ItemBonusStruct& bonusData)
+{
+  int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusData.Type);
+  auto copy = bonusData;
+  copy.MoneyCostIncrease = moneyIncrease;
+  itemRef->Data.Bonuses.push_back(copy);
+}
+
+void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bonusType)
 {
   int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusType);
 
@@ -2987,6 +3068,7 @@ void GameObjectsFactory::AddBonus(ItemComponent* itemRef, ItemBonusType bonusTyp
   // TODO: finish other bonuses
 
   int value = 0;
+
   switch (bonusType)
   {
     case ItemBonusType::STR:
@@ -3004,6 +3086,10 @@ void GameObjectsFactory::AddBonus(ItemComponent* itemRef, ItemBonusType bonusTyp
     case ItemBonusType::HP:
     case ItemBonusType::MP:
       value = RNG::Instance().RandomRange(5, 20);
+      break;
+
+    case ItemBonusType::LEECH:
+      value = RNG::Instance().RandomRange(1, 10);
       break;
   }
 

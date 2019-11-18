@@ -29,7 +29,7 @@ void RepairState::HandleInput()
       if (_itemRefByChar.count(_keyPressed))
       {
         ItemComponent* ic = _itemRefByChar[_keyPressed];
-        if (ic->Data.Durability.CurrentValue == ic->Data.Durability.OriginalValue)
+        if (ic->Data.Durability.Min().Get() == ic->Data.Durability.Max().Get())
         {
           Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "This item looks undamaged" }, GlobalConstants::MessageBoxDefaultBorderColor);
         }
@@ -70,12 +70,12 @@ void RepairState::Update(bool forceUpdate)
           str = Util::StringFormat("'%c' - %s (%i/%i)",
                                    c,
                                    name.data(),
-                                   ic->Data.Durability.CurrentValue,
-                                   ic->Data.Durability.OriginalValue);
+                                   ic->Data.Durability.Min().Get(),
+                                   ic->Data.Durability.Max().Get());
         }
         else
         {
-          str = Util::StringFormat("'%c' - %s (\?\?/\?\?)", c, name.data());
+          str = Util::StringFormat(R"('%c' - %s (??/??))", c, name.data());
         }
 
         Printer::Instance().PrintFB(0, 2 + itemIndex, str, Printer::kAlignLeft, "#FFFFFF");
@@ -100,8 +100,8 @@ void RepairState::SetRepairKitRef(ItemComponent* item, int inventoryIndex)
 
 void RepairState::RepairItem(ItemComponent* itemToRepair)
 {
-  int& maxDur = itemToRepair->Data.Durability.OriginalValue;
-  int& currentDur = itemToRepair->Data.Durability.CurrentValue;
+  int maxDur = itemToRepair->Data.Durability.Max().Get();
+  int currentDur = itemToRepair->Data.Durability.Min().Get();
 
   int repaired = 0;
 
@@ -112,24 +112,27 @@ void RepairState::RepairItem(ItemComponent* itemToRepair)
       _repairKit->Data.Amount--;
       currentDur += 2;
       repaired += 2;
+      itemToRepair->Data.Durability.AddMin(2);
     }
     else if (_repairKit->Data.Prefix == ItemPrefix::UNCURSED)
     {
       _repairKit->Data.Amount--;
       currentDur++;
       repaired++;
+      itemToRepair->Data.Durability.AddMin(1);
     }
     else if (_repairKit->Data.Prefix == ItemPrefix::CURSED)
     {
       _repairKit->Data.Amount -= 2;
       currentDur++;
       repaired++;
+      itemToRepair->Data.Durability.AddMin(1);
     }
   }
 
   if (currentDur > maxDur)
   {
-    currentDur = maxDur;
+    itemToRepair->Data.Durability.Restore();
   }
 
   if (_repairKit->Data.Amount < 0)

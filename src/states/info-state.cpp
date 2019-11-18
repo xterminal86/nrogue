@@ -60,7 +60,7 @@ void InfoState::Update(bool forceUpdate)
     }
 
     PrintAttribute(0, yPos, "LVL", playerRef.Attrs.Lvl);
-    PrintAttribute(0, yPos + 1, "EXP", playerRef.Attrs.Exp);
+    PrintRangedAttribute(0, yPos + 1, "EXP", playerRef.Attrs.Exp);
 
     PrintAttribute(0, yPos + 3, "STR", playerRef.Attrs.Str);
     PrintAttribute(0, yPos + 4, "DEF", playerRef.Attrs.Def);
@@ -69,12 +69,11 @@ void InfoState::Update(bool forceUpdate)
     PrintAttribute(0, yPos + 7, "SKL", playerRef.Attrs.Skl);
     PrintAttribute(0, yPos + 8, "SPD", playerRef.Attrs.Spd);
 
-    PrintAttribute(0, yPos + 10, "HP", playerRef.Attrs.HP, true);
-    PrintAttribute(0, yPos + 11, "MP", playerRef.Attrs.MP, true);
+    PrintRangedAttribute(0, yPos + 10, "HP", playerRef.Attrs.HP);
+    PrintRangedAttribute(0, yPos + 11, "MP", playerRef.Attrs.MP);
 
     int maxLength = FindAttrsMaxStringLength();
 
-    // NOTE: experimental
     PrintModifiers(7 + maxLength, yPos + 3);
 
     // Skills
@@ -93,36 +92,43 @@ void InfoState::Update(bool forceUpdate)
   }
 }
 
-void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr, bool displayMaxValue)
+void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr)
 {
   std::string color = "#FFFFFF";
 
-  if (attr.Modifier > 0)
+  int modifiers = attr.GetModifiers();
+  if (modifiers > 0)
   {
     color = "#00FF00";
   }
-  else if (attr.Modifier < 0)
+  else if (modifiers < 0)
   {
     color = "#FF0000";
   }
 
-  std::string text;
-  if (displayMaxValue)
+  std::string text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
+  Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
+
+  // Replace stat name back with white color (kinda hack)
+  auto str = Util::StringFormat("%s:", attrName.data());
+  Printer::Instance().PrintFB(x, y, str, Printer::kAlignLeft, "#FFFFFF");
+}
+
+void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, RangedAttribute& attr)
+{
+  std::string color = "#FFFFFF";
+
+  int modifiers = attr.Max().GetModifiers();
+  if (modifiers > 0)
   {
-    text = Util::StringFormat("%s: %i / %i", attrName.data(), attr.CurrentValue, attr.OriginalValue);
+    color = "#00FF00";
   }
-  else
-  {    
-    if (attrName == "EXP" || attrName == "LVL")
-    {
-      text = Util::StringFormat("%s: %i", attrName.data(), attr.CurrentValue);
-    }
-    else
-    {      
-      text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
-    }
+  else if (modifiers < 0)
+  {
+    color = "#FF0000";
   }
 
+  std::string text = Util::StringFormat("%s: %i / %i", attrName.data(), attr.Min().Get(), attr.Max().Get());
   Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
 
   // Replace stat name back with white color (kinda hack)
@@ -134,12 +140,12 @@ void InfoState::PrintModifiers(int x, int y)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
-  int strMod = playerRef.Attrs.Str.Modifier;
-  int defMod = playerRef.Attrs.Def.Modifier;
-  int magMod = playerRef.Attrs.Mag.Modifier;
-  int resMod = playerRef.Attrs.Res.Modifier;
-  int sklMod = playerRef.Attrs.Skl.Modifier;
-  int spdMod = playerRef.Attrs.Spd.Modifier;
+  int strMod = playerRef.Attrs.Str.GetModifiers();
+  int defMod = playerRef.Attrs.Def.GetModifiers();
+  int magMod = playerRef.Attrs.Mag.GetModifiers();
+  int resMod = playerRef.Attrs.Res.GetModifiers();
+  int sklMod = playerRef.Attrs.Skl.GetModifiers();
+  int spdMod = playerRef.Attrs.Spd.GetModifiers();
 
   std::pair<std::string, std::string> res;
 
@@ -196,12 +202,12 @@ int InfoState::FindAttrsMaxStringLength()
 
   std::vector<int> lengths;
 
-  lengths.push_back(std::to_string(playerRef.Attrs.Str.OriginalValue).length());
-  lengths.push_back(std::to_string(playerRef.Attrs.Def.OriginalValue).length());
-  lengths.push_back(std::to_string(playerRef.Attrs.Mag.OriginalValue).length());
-  lengths.push_back(std::to_string(playerRef.Attrs.Res.OriginalValue).length());
-  lengths.push_back(std::to_string(playerRef.Attrs.Skl.OriginalValue).length());
-  lengths.push_back(std::to_string(playerRef.Attrs.Spd.OriginalValue).length());
+  lengths.push_back(std::to_string(playerRef.Attrs.Str.OriginalValue()).length());
+  lengths.push_back(std::to_string(playerRef.Attrs.Def.OriginalValue()).length());
+  lengths.push_back(std::to_string(playerRef.Attrs.Mag.OriginalValue()).length());
+  lengths.push_back(std::to_string(playerRef.Attrs.Res.OriginalValue()).length());
+  lengths.push_back(std::to_string(playerRef.Attrs.Skl.OriginalValue()).length());
+  lengths.push_back(std::to_string(playerRef.Attrs.Spd.OriginalValue()).length());
 
   int max = 0;
   for (auto& l : lengths)

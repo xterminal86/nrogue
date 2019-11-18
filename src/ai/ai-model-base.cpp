@@ -159,8 +159,8 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
       e =
       {
         EffectType::POISONED,
-        AIComponentRef->OwnerGameObject->Attrs.Lvl.CurrentValue,
-        10 + AIComponentRef->OwnerGameObject->Attrs.Lvl.CurrentValue,
+        AIComponentRef->OwnerGameObject->Attrs.Lvl.Get(),
+        10 + AIComponentRef->OwnerGameObject->Attrs.Lvl.Get(),
         true
       };
     }

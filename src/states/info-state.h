@@ -4,6 +4,7 @@
 #include "gamestate.h"
 
 class Attribute;
+class RangedAttribute;
 
 class InfoState : public GameState
 {
@@ -12,7 +13,8 @@ class InfoState : public GameState
     void Update(bool forceUpdate = false) override;
 
   private:
-    void PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr, bool displayMaxValue = false);
+    void PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr);
+    void PrintRangedAttribute(int x, int y, const std::string& attrName, RangedAttribute& attr);
     void PrintModifiers(int x, int y);
 
     int FindAttrsMaxStringLength();

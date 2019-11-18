@@ -60,6 +60,10 @@ std::pair<std::string, StringsArray2D> ItemComponent::GetInspectionInfo(bool ove
       {
         info = GetArmorInspectionInfo();
       }
+      else if (Data.ItemType_ == ItemType::ACCESSORY)
+      {
+        info = GetAccessoryInspectionInfo();
+      }
       else if (Data.ItemType_ == ItemType::RETURNER)
       {
         info = GetReturnerInspectionInfo();
@@ -112,14 +116,10 @@ std::vector<std::string> ItemComponent::GetWeaponInspectionInfo()
 {
   std::vector<std::string> res =
   {
-    { Util::StringFormat("DMG: %id%i", Data.Damage.CurrentValue, Data.Damage.OriginalValue) },
-    { Util::StringFormat("%i / %i", Data.Durability.CurrentValue, Data.Durability.OriginalValue) },
-    { "" },
-    { Util::StringFormat("STR required: %i", Data.StatRequirements[StatsEnum::STR]) },
-    { "" }
+    { Util::StringFormat("DMG: %id%i", Data.Damage.Min().Get(), Data.Damage.Max().Get()) },
+    { Util::StringFormat("%i / %i", Data.Durability.Min().Get(), Data.Durability.Max().Get()) }
   };
 
-  AddModifiersInfo(res);
   AddBonusesInfo(res);
 
   return res;
@@ -129,14 +129,24 @@ std::vector<std::string> ItemComponent::GetArmorInspectionInfo()
 {
   std::vector<std::string> res =
   {
-    { Util::StringFormat("%i / %i", Data.Durability.CurrentValue, Data.Durability.OriginalValue) },
-    { "" },
-    { Util::StringFormat("STR required: %i", Data.StatRequirements[StatsEnum::STR]) },
-    { "" }
+    { Util::StringFormat("%i / %i", Data.Durability.Min().Get(), Data.Durability.Max().Get()) }
   };
 
-  AddModifiersInfo(res);
   AddBonusesInfo(res);
+
+  return res;
+}
+
+std::vector<std::string> ItemComponent::GetAccessoryInspectionInfo()
+{
+  std::vector<std::string> res;
+
+  AddBonusesInfo(res);
+
+  if (!res.empty())
+  {
+    res.erase(res.begin());
+  }
 
   return res;
 }
@@ -191,9 +201,33 @@ std::vector<std::string> ItemComponent::GetReturnerInspectionInfo()
 
 void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
 {
-  for (auto& kvp : _allStatNames)
+  if (!_allStatNames.empty())
   {
-    int bonus = Data.StatBonuses.at(kvp.second.first);
+    res.push_back("");
+  }
+
+  std::map<StatsEnum, ItemBonusType> bonusByStat =
+  {
+    { StatsEnum::STR, ItemBonusType::STR },
+    { StatsEnum::DEF, ItemBonusType::DEF },
+    { StatsEnum::MAG, ItemBonusType::MAG },
+    { StatsEnum::RES, ItemBonusType::RES },
+    { StatsEnum::SKL, ItemBonusType::SKL },
+    { StatsEnum::SPD, ItemBonusType::SPD }
+  };
+
+  for (auto& kvp : _allStatNames)
+  {    
+    int bonus = 0;
+    for (auto& b : Data.Bonuses)
+    {
+      if (b.Type == bonusByStat[kvp.second.first])
+      {
+        bonus = b.Value;
+        break;
+      }
+    }
+
     if (bonus == 0)
     {
       continue;
@@ -256,7 +290,13 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
       case ItemBonusType::MP:
       {
         std::string name = bonusNameByType[i.Type];
-        auto str = Util::StringFormat("%s: +%i", name.data(), i.Value);
+        auto modStr = Util::StringFormat("%i", i.Value);
+        if (i.Value > 0)
+        {
+          modStr.insert(modStr.begin(), '+');
+        }
+
+        auto str = Util::StringFormat("%s: %s", name.data(), modStr.data());
         res.push_back(str);
       }
       break;

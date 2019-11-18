@@ -387,7 +387,7 @@ void MapLevelMines::CreateSpecialLevel()
                                                                      );
 
   // Look for "NOTE:" in DoorComponent::Interact()
-  //key->GetComponent<ItemComponent>()->Data.IsImportant = true;
+  key->GetComponent<ItemComponent>()->Data.IsImportant = true;
 
   auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
 

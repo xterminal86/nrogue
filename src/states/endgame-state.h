@@ -3,7 +3,7 @@
 
 #include "gamestate.h"
 
-class Attribute;
+class RangedAttribute;
 class Player;
 
 class EndgameState : public GameState
@@ -17,7 +17,7 @@ class EndgameState : public GameState
   private:
     void DisplayGameLog();
     void DrawHPMP();
-    std::string UpdateBar(int x, int y, const Attribute& attr);
+    std::string UpdateBar(int x, int y, RangedAttribute& attr);
 
     Player* _playerRef;
 };
