@@ -142,9 +142,11 @@ void GameObject::MakeTile(const GameObjectInfo& t, GameObjectType typeOverride)
   Type = typeOverride;
 }
 
-void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, const std::string& logMsgOverride)
+bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, const std::string& logMsgOverride)
 {  
   // TODO: isMagical for enemies' armor damage
+
+  int dmgSuccess = false;
 
   std::string objName = ObjectName;
   ItemComponent* ic = GetComponent<ItemComponent>();
@@ -172,6 +174,8 @@ void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
       auto msg = Util::StringFormat("%s was %s", objName.data(), verb.data());
       Printer::Instance().AddMessage(msg);
     }
+
+    dmgSuccess = true;
   }
   else
   {    
@@ -181,6 +185,8 @@ void GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
       Printer::Instance().AddMessage(str);
     }
   }
+
+  return dmgSuccess;
 }
 
 void GameObject::WaitForTurn()

@@ -318,7 +318,16 @@ void Application::WriteObituary(bool wasKilled)
   ss << '\n';
   ss << "********** POSSESSIONS **********\n\n";
 
-  int stringResizeWidth = 40;
+  int stringResizeWidth = 0;
+  for (auto& i : PlayerInstance.Inventory.Contents)
+  {
+    ItemComponent* ic = i->GetComponent<ItemComponent>();
+    std::string name = ic->Data.IdentifiedName;
+    if (name.length() > stringResizeWidth)
+    {
+      stringResizeWidth = name.length();
+    }
+  }
 
   for (auto& i : PlayerInstance.Inventory.Contents)
   {
@@ -382,10 +391,6 @@ std::string Application::GetStatInfo(const std::string& attrName)
       if (modifiers > 0)
       {
         strMod.insert(strMod.begin(), '+');
-      }
-      else if (modifiers < 0)
-      {
-        strMod.insert(strMod.begin(), '-');
       }
 
       str = Util::StringFormat("%s: %i (%s) = %i",

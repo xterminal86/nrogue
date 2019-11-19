@@ -674,7 +674,9 @@ void MainState::DisplayStatusIcons()
   // Weapon condition
 
   ItemComponent* weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
-  if (weapon != nullptr && weapon->Data.ItemType_ == ItemType::WEAPON)
+  if (weapon != nullptr &&
+     (weapon->Data.ItemType_ == ItemType::WEAPON
+   || weapon->Data.ItemType_ == ItemType::RANGED_WEAPON))
   {
     int maxDur = weapon->Data.Durability.Max().Get();
     int warning = maxDur * 0.3f;

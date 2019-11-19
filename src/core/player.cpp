@@ -37,6 +37,9 @@ void Player::Init()
   _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell->Occupied = true;
 
+  Attrs.Exp.Reset(0);
+  Attrs.Exp.SetMax(100);
+
   // FIXME: debug
   //Money = 10000;
   //Attrs.HungerRate.Set(0);
@@ -400,9 +403,12 @@ void Player::SetDefaultEquipment()
   }
 }
 
-/// 'what' is either actor or GameObject, 'with' is a weapon
+/// 'what' is either actor or GameObject, 'with' is a weapon (i.e. arrow)
 void Player::RangedAttack(GameObject* what, ItemComponent* with)
 {
+  ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  ItemComponent* arrows = EquipmentByCategory[EquipmentCategory::SHIELD][0];
+
   int dmg = Util::RollDamage(with->Data.Damage.Min().Get(), with->Data.Damage.Max().Get());
 
   if (with->Data.HasBonus(ItemBonusType::DAMAGE))
@@ -417,7 +423,11 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   // If it's not the ground GameObject
   if (what->Type != GameObjectType::GROUND)
   {
-    what->ReceiveDamage(this, dmg, false);
+    bool succ = what->ReceiveDamage(this, dmg, false);
+    if (succ && weapon->Data.HasBonus(ItemBonusType::LEECH) && what->IsLiving)
+    {
+      Attrs.HP.AddMin(dmg);
+    }
 
     if (what->IsDestroyed)
     {
@@ -435,9 +445,6 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
     arrow->Data.IsEquipped = false;
     Map::Instance().InsertGameObject(arrow->OwnerGameObject);
   }
-
-  ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
-  ItemComponent* arrows = EquipmentByCategory[EquipmentCategory::SHIELD][0];
 
   arrows->Data.Amount--;
 
@@ -621,6 +628,7 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
 void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict)
 {  
   bool shouldTearDownWall = false;
+  bool hasLeech = false;
 
   if (weapon != nullptr)
   {
@@ -634,6 +642,11 @@ void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int dama
     if (!isRanged)
     {
       WeaponLosesDurability();
+    }
+
+    if (weapon->Data.HasBonus(ItemBonusType::LEECH))
+    {
+      hasLeech = true;
     }
 
     if (ShouldBreak(weapon))
@@ -657,7 +670,11 @@ void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int dama
   }
   else
   {
-    defender->ReceiveDamage(this, damageToInflict, false);
+    bool succ = defender->ReceiveDamage(this, damageToInflict, false);
+    if (succ && hasLeech && defender->IsLiving)
+    {
+      Attrs.HP.AddMin(damageToInflict);
+    }
 
     if (defender->IsDestroyed)
     {
@@ -883,7 +900,7 @@ void Player::AwardExperience(int amount)
   auto msg = Util::StringFormat("Received %i EXP", amnt);
   Printer::Instance().AddMessage(msg);
 
-  if (Attrs.Exp.Min().Get() >= 100)
+  if (Attrs.Exp.Min().Get() >= Attrs.Exp.Max().Get())
   {
     Attrs.Exp.SetMin(0);
     LevelUp();

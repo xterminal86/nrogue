@@ -123,7 +123,7 @@ class GameObject
 
     size_t ComponentsSize();
 
-    void ReceiveDamage(GameObject* from, int amount, bool isMagical, const std::string& logMsgOverride = std::string());
+    bool ReceiveDamage(GameObject* from, int amount, bool isMagical, const std::string& logMsgOverride = std::string());
     void FinishTurn();
     void WaitForTurn();
 
@@ -144,6 +144,7 @@ class GameObject
     int HealthRegenTurns = 0;
 
     GameObjectType Type = GameObjectType::HARMLESS;
+    bool IsLiving = false;
 
   protected:    
     std::map<size_t, std::unique_ptr<Component>> _components;

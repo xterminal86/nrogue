@@ -650,6 +650,7 @@ namespace GlobalConstants
   static const std::string ChestColor = "#A0793D";
   static const std::string MountainsColor = "#666666";
   static const std::string StoneColor = "#AAAAAA";
+  static const std::string BrickColor = "#DC5539";
   static const std::string LavaColor = "#E36517";
   static const std::string LavaWavesColor = "#E3A917";
   static const std::string FogOfWarColor = "#202020";

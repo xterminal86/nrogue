@@ -146,6 +146,17 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
       ".~~t~~.",
       ".#~t~#.",
       ".......",
+    },
+    // Mine entrance
+    // 10
+    {
+      "#######",
+      "#.....#",
+      "#.#.#.#",
+      "+.....#",
+      "#.#.#.#",
+      "#.....#",
+      "#######",
     }
   };
 }
@@ -220,14 +231,16 @@ void MapLevelTown::CreateLevel()
 
   PlacePortalSquare(22, 21);
 
+  PlaceMineEntrance(88, 41);
+
   CreateTownGates();
 
   BuildRoads();
 
   RecordEmptyCells();
 
-  LevelExit.X = 98;
-  LevelExit.Y = 48;
+  LevelExit.X = 91;
+  LevelExit.Y = 44;
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);          
 
@@ -316,6 +329,8 @@ void MapLevelTown::BuildRoads()
       }
     }
   }
+
+  roadMarks.push_back({ 62, 25 });
 
   std::sort(roadMarks.begin(),
             roadMarks.end(),
@@ -725,6 +740,45 @@ void MapLevelTown::CreateNPCs()
 
   go = GameObjectsFactory::Instance().CreateNPC(81, 7, NPCType::GRISWOLD, true);
   InsertActor(go);
+}
+
+void MapLevelTown::PlaceMineEntrance(int x, int y)
+{
+  int posX = x;
+  int posY = y;
+
+  GameObjectInfo t;
+
+  for (auto& row : _layoutsForLevel[10])
+  {
+    for (auto& c : row)
+    {
+      switch (c)
+      {
+        case '#':
+          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::BrickColor, "Brick Wall");
+          InsertStaticObject(posX, posY, t);
+          break;
+
+        case '.':
+          t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
+          MapArray[posX][posY]->MakeTile(t);
+          break;
+
+        case '+':
+        {
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Door");
+          InsertStaticObject(door);
+        }
+        break;
+      }
+
+      posX++;
+    }
+
+    posX = x;
+    posY++;
+  }
 }
 
 void MapLevelTown::PlaceGarden(int x, int y)

@@ -222,6 +222,8 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   // Sets Occupied flag for _currentCell
   go->Move(0, 0);
 
+  go->IsLiving = true;
+
   AIComponent* ai = go->AddComponent<AIComponent>();
   //AIMonsterSmart* aimb = ai->AddModel<AIMonsterSmart>();
   AIMonsterBasic* aimb = ai->AddModel<AIMonsterBasic>();
@@ -278,6 +280,8 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
   go->ObjectName = "Flying Bat";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 20;
+
+  go->IsLiving = true;
 
   // Sets Occupied flag for _currentCell
   go->Move(0, 0);
@@ -336,6 +340,8 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
   go->ObjectName = "Cave Spider";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 30;
+
+  go->IsLiving = true;
 
   // Sets Occupied flag for _currentCell
   go->Move(0, 0);
@@ -1217,7 +1223,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 20 + 1 * (int)ic->Data.ItemQuality_;
+      baseDurability = 30 + 1 * (int)ic->Data.ItemQuality_;
 
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
@@ -1303,7 +1309,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 15 + 2 * (int)ic->Data.ItemQuality_;
+      baseDurability = 30 + 2 * (int)ic->Data.ItemQuality_;
 
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
@@ -1554,7 +1560,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 6;
-      ic->Data.Durability.Reset(40 + 10 * (int)ic->Data.ItemQuality_);
+      ic->Data.Durability.Reset(40 + 4 * (int)ic->Data.ItemQuality_);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1575,7 +1581,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 8;
-      ic->Data.Durability.Reset(60 + 15 * (int)ic->Data.ItemQuality_);
+      ic->Data.Durability.Reset(60 + 6 * (int)ic->Data.ItemQuality_);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1596,7 +1602,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 10;
-      ic->Data.Durability.Reset(80 + 20 * (int)ic->Data.ItemQuality_);
+      ic->Data.Durability.Reset(80 + 8 * (int)ic->Data.ItemQuality_);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1786,6 +1792,7 @@ GameObject* GameObjectsFactory::CreateAccessory(int x, int y, EquipmentCategory 
   if (ic->Data.Bonuses.empty())
   {
     ic->Data.IdentifiedName += " of the Bauble";
+    ic->Data.Cost = 50 + (int)ic->Data.ItemQuality_ * 10;
   }
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
