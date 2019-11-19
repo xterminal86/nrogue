@@ -34,7 +34,7 @@ static const std::map<EffectType, std::string> EffectNameByType =
   { EffectType::TELEPATHY,   "Tel" },
   { EffectType::BLINDNESS,   "Bli" },
   { EffectType::INVISIBLE,   "Hid" },
-  { EffectType::LEVITATE,    "Lev" },
+  { EffectType::LEVITATE,    "Fly" },
 };
 
 static const std::vector<EffectType> PositiveEffects =
@@ -78,6 +78,9 @@ struct Effect
   int Duration = 0;
 
   bool Cumulative = false;
+
+  // Item that gives this effect or -1 of none
+  int64_t ObjectId = -1;
 };
 
 #endif // EFFECT_H

@@ -312,7 +312,7 @@ void GameObject::ApplyEffect(const Effect& e)
     case EffectType::TELEPATHY:
     case EffectType::ILLUMINATED:
     {
-      //VisibilityRadius.Modifier = e.Power;
+      //VisibilityRadius.AddModifier(e.ObjectId, e.Power);
     }
     break;
 
@@ -385,23 +385,21 @@ void GameObject::ProcessEffects()
 
 void GameObject::EffectAction(const Effect& e)
 {
-  // FIXME:
-
   switch (e.Type)
   {
     case EffectType::POISONED:      
-      //Attrs.HP.Add(-e.Power);
+      Attrs.HP.AddMin(-e.Power);
       break;
 
     case EffectType::REGEN:
-      //Attrs.HP.Add(e.Power);
+      Attrs.HP.AddMin(e.Power);
       break;
 
     case EffectType::MANA_SHIELD:
     {
-      //if (Attrs.MP.CurrentValue == 0)
+      if (Attrs.MP.Min().Get() == 0)
       {
-        //RemoveEffect(EffectType::MANA_SHIELD);
+        RemoveEffect(EffectType::MANA_SHIELD);
       }
     }
     break;

@@ -78,6 +78,7 @@ void TraderComponent::CreateClericItems()
     { ItemType::MANA_POTION,     8 },
     { ItemType::WAND,            3 },
     { ItemType::SCROLL,          3 },
+    { ItemType::ACCESSORY,       1 },
     { ItemType::RETURNER,        1 }
   };
 
@@ -114,6 +115,10 @@ void TraderComponent::CreateClericItems()
 
       case ItemType::SCROLL:
         go = GameObjectsFactory::Instance().CreateRandomScroll(prefixPair.first);
+        break;
+
+      case ItemType::ACCESSORY:
+        go = GameObjectsFactory::Instance().CreateRandomAccessory(0, 0, prefixPair.first);
         break;
     }
 
@@ -235,12 +240,8 @@ void TraderComponent::CreateBlacksmithItems()
       break;
 
       case ItemType::ACCESSORY:
-      {
-        int isAmulet = RNG::Instance().RandomRange(0, 4);
-        EquipmentCategory cat = (isAmulet == 0) ? EquipmentCategory::NECK : EquipmentCategory::RING;
-        go = GameObjectsFactory::Instance().CreateRandomAccessory(0, 0, cat, prefixPair.first);
-      }
-      break;
+        go = GameObjectsFactory::Instance().CreateRandomAccessory(0, 0, prefixPair.first);
+        break;
     }
 
     if (go != nullptr)

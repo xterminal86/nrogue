@@ -18,6 +18,7 @@ struct ItemData
   ItemType ItemType_ = ItemType::DUMMY;
   ItemPrefix Prefix = ItemPrefix::UNCURSED;
   ItemRarity Rarity = ItemRarity::COMMON;
+  ItemQuality ItemQuality_ = ItemQuality::NORMAL;
 
   EquipmentCategory EqCategory = EquipmentCategory::NOT_EQUIPPABLE;
 
@@ -57,6 +58,7 @@ struct ItemData
 
   bool IsWeaponOrArmor();
   bool HasBonus(ItemBonusType bonusType);
+  ItemBonusStruct* GetBonus(ItemBonusType type);
 
   int GetCost();
 

@@ -71,3 +71,19 @@ bool ItemData::HasBonus(ItemBonusType bonusType)
 
   return false;
 }
+
+ItemBonusStruct* ItemData::GetBonus(ItemBonusType type)
+{
+  ItemBonusStruct* res = nullptr;
+
+  for (auto& i : Bonuses)
+  {
+    if (i.Type == type)
+    {
+      res = &i;
+      break;
+    }
+  }
+
+  return res;
+}

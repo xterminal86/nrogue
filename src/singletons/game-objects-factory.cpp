@@ -995,12 +995,8 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
       break;
 
     case ItemType::ACCESSORY:
-    {
-      int isAmulet = RNG::Instance().RandomRange(0, 4);
-      EquipmentCategory cat = (isAmulet == 0) ? EquipmentCategory::NECK : EquipmentCategory::RING;
-      go = CreateRandomAccessory(0, 0, cat);
-    }
-    break;
+      go = CreateRandomAccessory(0, 0);
+      break;
   }
 
   // TODO: add cases for all item types after they are decided
@@ -1181,7 +1177,7 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, ItemPrefix prefix)
+GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, ItemPrefix prefix, ItemQuality quality)
 {  
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1205,6 +1201,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
   ic->Data.Prefix = (prefix != ItemPrefix::RANDOM) ? prefix : RollItemPrefix();
   ic->Data.IsIdentified = (prefix != ItemPrefix::RANDOM) ? true : false;
+  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
 
   int avgDamage = 0;
   int baseDurability = 0;
@@ -1220,7 +1217,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 30;
+      baseDurability = 20 + 1 * (int)ic->Data.ItemQuality_;
 
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
@@ -1237,7 +1234,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 45;
+      baseDurability = 35 + 2 * (int)ic->Data.ItemQuality_;;
 
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
@@ -1253,7 +1250,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 60;
+      baseDurability = 50 + 3 * (int)ic->Data.ItemQuality_;
 
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
@@ -1270,7 +1267,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 80;
+      baseDurability = 65 + 3 * (int)ic->Data.ItemQuality_;
 
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
@@ -1288,7 +1285,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 100;
+      baseDurability = 80 + 4 * (int)ic->Data.ItemQuality_;
 
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
@@ -1306,7 +1303,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 30;
+      baseDurability = 15 + 2 * (int)ic->Data.ItemQuality_;
 
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
@@ -1323,7 +1320,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
       avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-      baseDurability = 10;
+      baseDurability = 10 + 2 * (int)ic->Data.ItemQuality_;
 
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
@@ -1442,15 +1439,18 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
 
   int capacity = GlobalConstants::WandCapacityByMaterial.at(material);
 
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+  ic->Data.ItemQuality_ = RollItemQuality();
+
   int randomness = RNG::Instance().RandomRange(0, capacity);
+
+  randomness += ((capacity / 10) * (int)ic->Data.ItemQuality_);
 
   randomness /= 2;
 
   capacity += randomness;
-
-  ItemComponent* ic = go->AddComponent<ItemComponent>();
-
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
 
   if (ic->Data.Prefix == ItemPrefix::BLESSED)
   {
@@ -1526,7 +1526,7 @@ GameObject* GameObjectsFactory::CreateRandomWand(ItemPrefix prefixOverride)
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponType type, ItemPrefix prefixOverride)
+GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponType type, ItemPrefix prefixOverride, ItemQuality quality)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1542,6 +1542,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
   ic->Data.RangedWeaponType_ = type;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
 
   switch (type)
   {
@@ -1553,7 +1554,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 6;
-      ic->Data.Durability.Reset(100);
+      ic->Data.Durability.Reset(40 + 10 * (int)ic->Data.ItemQuality_);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1574,7 +1575,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 8;
-      ic->Data.Durability.Reset(200);
+      ic->Data.Durability.Reset(60 + 15 * (int)ic->Data.ItemQuality_);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1595,7 +1596,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 10;
-      ic->Data.Durability.Reset(300);
+      ic->Data.Durability.Reset(80 + 20 * (int)ic->Data.ItemQuality_);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1617,7 +1618,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 4;
-      ic->Data.Durability.Reset(60);
+      ic->Data.Durability.Reset(30 + 5 * (int)ic->Data.ItemQuality_);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1640,7 +1641,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 6;
-      ic->Data.Durability.Reset(120);
+      ic->Data.Durability.Reset(45 + 8 * (int)ic->Data.ItemQuality_);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1663,7 +1664,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
       ic->Data.Range = 8;
-      ic->Data.Durability.Reset(180);
+      ic->Data.Durability.Reset(70 + 12 * (int)ic->Data.ItemQuality_);
 
       // ======================================================================70
       ic->Data.UnidentifiedDescription =
@@ -1701,9 +1702,16 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateRandomAccessory(int x, int y, EquipmentCategory category, ItemPrefix prefixOverride)
+GameObject* GameObjectsFactory::CreateRandomAccessory(int x, int y, ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  EquipmentCategory category = EquipmentCategory::RING;
+  int chance = RNG::Instance().RandomRange(0, 4);
+  if (chance == 0)
+  {
+    category = EquipmentCategory::NECK;
+  }
 
   if (category == EquipmentCategory::RING)
   {
@@ -1741,7 +1749,7 @@ GameObject* GameObjectsFactory::CreateRandomAccessory(int x, int y, EquipmentCat
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateAccessory(int x, int y, EquipmentCategory category, const std::vector<ItemBonusStruct>& bonuses, ItemPrefix prefix)
+GameObject* GameObjectsFactory::CreateAccessory(int x, int y, EquipmentCategory category, const std::vector<ItemBonusStruct>& bonuses, ItemPrefix prefix, ItemQuality quality)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1763,6 +1771,7 @@ GameObject* GameObjectsFactory::CreateAccessory(int x, int y, EquipmentCategory 
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
   ic->Data.Prefix = (prefix == ItemPrefix::RANDOM) ? RollItemPrefix() : prefix;
+  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
   ic->Data.EqCategory = category;
   ic->Data.ItemType_ = ItemType::ACCESSORY;
   ic->Data.IsIdentified = (prefix != ItemPrefix::RANDOM) ? true : false;
@@ -1942,7 +1951,7 @@ GameObject* GameObjectsFactory::CreateRepairKit(int x, int y, int charges, ItemP
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix prefixOverride)
+GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix prefixOverride, ItemQuality quality)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1967,6 +1976,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = (prefixOverride == ItemPrefix::RANDOM) ? false : true;
+  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
 
   int baseDurability = GlobalConstants::ArmorDurabilityByType.at(type);  
   int cursedPenalty = 0;
@@ -1994,6 +2004,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
 
       AddBonus(ic, { ItemBonusType::SPD, cursedPenalty, 0, false });
 
+      baseDurability += 2 * (int)ic->Data.ItemQuality_;
+
       break;
 
     case ArmorType::LEATHER:
@@ -2006,6 +2018,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
 
       AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 1, 0, false });
       AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 1, 0, false });
+
+      baseDurability += 3 * (int)ic->Data.ItemQuality_;
 
       break;
 
@@ -2023,6 +2037,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
       AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 3, 0, false });
       AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 2, 0, false });
 
+      baseDurability += 4 * (int)ic->Data.ItemQuality_;
+
       break;
 
     case ArmorType::SCALE:
@@ -2034,6 +2050,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
 
       AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 4, 0, false });
       AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 3, 0, false });
+
+      baseDurability += 5 * (int)ic->Data.ItemQuality_;
 
       break;
 
@@ -2050,6 +2068,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
 
       AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 6, 0, false });
       AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 4, 0, false });
+
+      baseDurability += 6 * (int)ic->Data.ItemQuality_;
 
       break;
   }
@@ -2178,6 +2198,28 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
 
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
 {
+  // Insertionto front  goes in stack-like order:
+  // objName + ItemQuality + BUC = BUC_ItemQuality_objName
+  //
+  switch (itemData.ItemQuality_)
+  {
+    case ItemQuality::CRACKED:
+      itemData.IdentifiedName.insert(0, "Cracked ");
+      break;
+
+    case ItemQuality::FLAWED:
+      itemData.IdentifiedName.insert(0, "Flawed ");
+      break;
+
+    case ItemQuality::FINE:
+      itemData.IdentifiedName.insert(0, "Fine ");
+      break;
+
+    case ItemQuality::EXCEPTIONAL:
+      itemData.IdentifiedName.insert(0, "Exceptional ");
+      break;
+  }
+
   switch (itemData.Prefix)
   {
     case ItemPrefix::BLESSED:
@@ -2309,6 +2351,37 @@ ItemPrefix GameObjectsFactory::RollItemPrefix()
   ItemPrefix prefix = res.first;
 
   return prefix;
+}
+
+ItemQuality GameObjectsFactory::RollItemQuality()
+{
+  int maxLevel = (int)MapType::THE_END;
+
+  int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel;
+  if (Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
+  {
+    dungeonLevel = maxLevel / 2;
+  }
+
+  int rate = dungeonLevel / 2;
+  int f = Util::Clamp(rate, 1, maxLevel);
+  int e = Util::Clamp(rate / 2, 1, maxLevel);
+
+  //printf("%i rate: %i f: %i e: %i maxlevel: %i diff: %i\n", dungeonLevel, rate, f, e, maxLevel, maxLevel - dungeonLevel);
+
+  std::map<ItemQuality, int> weights =
+  {
+    { ItemQuality::CRACKED,     maxLevel - dungeonLevel },
+    { ItemQuality::FLAWED,      maxLevel - dungeonLevel },
+    { ItemQuality::NORMAL,      dungeonLevel            },
+    { ItemQuality::FINE,        f                       },
+    { ItemQuality::EXCEPTIONAL, e                       },
+  };
+
+  auto res = Util::WeightedRandom(weights);
+  ItemQuality quality = res.first;
+
+  return quality;
 }
 
 bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
@@ -2768,7 +2841,7 @@ GameObject* GameObjectsFactory::CreateRandomGlass()
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateGemHelper(GemType t)
+GameObject* GameObjectsFactory::CreateGemHelper(GemType t, ItemQuality quality)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -2795,6 +2868,21 @@ GameObject* GameObjectsFactory::CreateGemHelper(GemType t)
 
   ic->Data.IdentifiedName = GlobalConstants::GemNameByType.at(t);
   ic->Data.Cost = GlobalConstants::GemCostByType.at(t);
+
+  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
+  std::map<ItemQuality, float> costModByQ =
+  {
+    { ItemQuality::CRACKED,      2.0f },
+    { ItemQuality::FLAWED,       1.5f },
+    { ItemQuality::NORMAL,       1.0f },
+    { ItemQuality::FINE,         0.8f },
+    { ItemQuality::EXCEPTIONAL,  0.5f }
+  };
+
+  float newCost = (float)ic->Data.Cost / costModByQ[ic->Data.ItemQuality_];
+  ic->Data.Cost = (int)newCost;
+
+  SetItemName(go, ic->Data);
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
@@ -2963,6 +3051,19 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef)
   float curSucc = minSucc * curDungeonLvl;
   int chance = (int)(curSucc * 100);
 
+  std::map<ItemQuality, int> chanceModByQ =
+  {
+    { ItemQuality::CRACKED,     -10 },
+    { ItemQuality::FLAWED,       -5 },
+    { ItemQuality::NORMAL,        0 },
+    { ItemQuality::FINE,          5 },
+    { ItemQuality::EXCEPTIONAL,  10 },
+  };
+
+  chance += chanceModByQ[itemRef->Data.ItemQuality_];
+
+  chance = Util::Clamp(chance, 1, 100);
+
   std::vector<ItemBonusType> bonusesRolled;
 
   for (int i = 0; i < 3; i++)
@@ -3026,14 +3127,26 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef)
     bucStatus = "Cursed";
   }
 
-  std::string itemName = bucStatus + " " + objName;  
+  std::string quality;
+  std::map<ItemQuality, std::string> strByQ =
+  {
+    { ItemQuality::CRACKED,     " Cracked"     },
+    { ItemQuality::FLAWED,      " Flawed"      },
+    { ItemQuality::NORMAL,      ""             },
+    { ItemQuality::FINE,        " Fine"        },
+    { ItemQuality::EXCEPTIONAL, " Exceptional" }
+  };
+
+  quality = strByQ[itemRef->Data.ItemQuality_];
+
+  std::string itemName = bucStatus + quality + " " + objName;
   if (bonusesRolled.size() == 1)
   {
-    itemName = bucStatus + " " + prefix + " " + objName;
+    itemName = bucStatus + quality + " " + prefix + " " + objName;
   }
   else if (bonusesRolled.size() > 1)
   {
-    itemName = bucStatus + " " + prefix + " " + objName + " " + suffix;
+    itemName = bucStatus + quality + " " + prefix + " " + objName + " " + suffix;
   }
 
   itemRef->Data.IdentifiedName = itemName;
@@ -3041,6 +3154,11 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef)
 
 void GameObjectsFactory::AddBonus(ItemComponent* itemRef, const ItemBonusStruct& bonusData)
 {
+  if (bonusData.Value == 0)
+  {
+    return;
+  }
+
   int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusData.Type);
   auto copy = bonusData;
   copy.MoneyCostIncrease = moneyIncrease;
@@ -3054,6 +3172,15 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
   ItemBonusStruct bs;
   bs.Type = bonusType;
   bs.MoneyCostIncrease = (itemRef->Data.Prefix == ItemPrefix::CURSED) ? moneyIncrease / 2 : moneyIncrease;
+
+  std::map<ItemQuality, int> multByQ =
+  {
+    { ItemQuality::CRACKED,      1 },
+    { ItemQuality::FLAWED,       2 },
+    { ItemQuality::NORMAL,       3 },
+    { ItemQuality::FINE,         4 },
+    { ItemQuality::EXCEPTIONAL,  5 },
+  };
 
   // Probability of stat increase values
   std::map<int, int> statIncreaseWeightsMap =
@@ -3085,12 +3212,32 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
 
     case ItemBonusType::HP:
     case ItemBonusType::MP:
-      value = RNG::Instance().RandomRange(5, 20);
-      break;
+    {
+      ItemQuality q = itemRef->Data.ItemQuality_;
+      int min = 1 + multByQ[q];
+      int max = 10 + multByQ[q] * 2;
+      value = RNG::Instance().RandomRange(min, max);
+    }
+    break;
 
+    // TODO: finish implementation in MelleAttack()
     case ItemBonusType::LEECH:
-      value = RNG::Instance().RandomRange(1, 10);
-      break;
+    {
+      ItemQuality q = itemRef->Data.ItemQuality_;
+      int min = 1;
+      int max = multByQ[q] * 2;
+      value = RNG::Instance().RandomRange(min, max + 1);
+    }
+    break;
+
+    case ItemBonusType::DAMAGE:
+    {
+      ItemQuality q = itemRef->Data.ItemQuality_;
+      int min = multByQ[q];
+      int max = multByQ[q] * 2;
+      value = RNG::Instance().RandomRange(min, max + 1);
+    }
+    break;
   }
 
   // TODO: should there be cursed magic / rare items or fuck it?

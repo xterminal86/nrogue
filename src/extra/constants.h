@@ -265,6 +265,16 @@ enum class ItemType
   ARROWS
 };
 
+enum class ItemQuality
+{
+  RANDOM = -3,
+  CRACKED,
+  FLAWED,
+  NORMAL,
+  FINE,
+  EXCEPTIONAL
+};
+
 enum class WeaponType
 {
   NONE = 0,
@@ -314,7 +324,7 @@ enum class ItemBonusType
   VISIBILITY,     // increases visibility radius
   DAMAGE,         // adds to damage
   HUNGER,         // no hunger (or decreased)
-  IGNORE_DEFENCE,
+  IGNORE_DEFENCE, // ignores SKL difference
   KNOCKBACK,
   MANA_SHIELD,
   REGEN,
@@ -344,21 +354,21 @@ enum class GemType
 {
   RANDOM = -1,
   WORTHLESS_GLASS = 0,
+  BLACK_OBSIDIAN,
+  GREEN_JADE,
+  PURPLE_FLUORITE,
+  PURPLE_AMETHYST,
   RED_GARNET,
-  RED_RUBY,
-  ORANGE_JACINTH,
+  WHITE_OPAL,
+  BLACK_JETSTONE,
   ORANGE_AMBER,
   YELLOW_CITRINE,
-  GREEN_JADE,
+  BLUE_AQUAMARINE,
   GREEN_EMERALD,
   BLUE_SAPPHIRE,
-  BLUE_AQUAMARINE,
-  PURPLE_AMETHYST,
-  PURPLE_FLUORITE,
-  WHITE_OPAL,
-  WHITE_DIAMOND,
-  BLACK_JETSTONE,
-  BLACK_OBSIDIAN
+  ORANGE_JACINTH,
+  RED_RUBY,
+  WHITE_DIAMOND
 };
 
 enum class SpellType
