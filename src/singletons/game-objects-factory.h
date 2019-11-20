@@ -49,7 +49,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateRandomArmor(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateArrows(int x, int y, ArrowType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, int amount = -1);
     GameObject* CreateRangedWeapon(int x, int y, RangedWeaponType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM);
-    GameObject* CreateRandomAccessory(int x, int y, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateRandomAccessory(int x, int y, ItemPrefix prefixOverride = ItemPrefix::RANDOM, bool atLeastOneBonus = false);
     GameObject* CreateAccessory(int x, int y, EquipmentCategory category, const std::vector<ItemBonusStruct>& bonuses, ItemPrefix prefix, ItemQuality quality);
 
     GameObject* CreateRandomItem(int x, int y, ItemType exclude = ItemType::NOTHING);
@@ -86,7 +86,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateGemHelper(GemType t, ItemQuality quality = ItemQuality::RANDOM);
 
     void AdjustBonusWeightsMap(ItemComponent* itemRef, std::map<ItemBonusType, int>& bonusWeightByType);
-    void TryToAddBonuses(ItemComponent* itemRef);
+    void TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne = false);
     void AddRandomBonus(ItemComponent* itemRef, ItemBonusType bonusType);
     void AddBonus(ItemComponent* itemRef, const ItemBonusStruct& bonusData);
 

@@ -118,7 +118,7 @@ void TraderComponent::CreateClericItems()
         break;
 
       case ItemType::ACCESSORY:
-        go = GameObjectsFactory::Instance().CreateRandomAccessory(0, 0, prefixPair.first);
+        go = GameObjectsFactory::Instance().CreateRandomAccessory(0, 0, prefixPair.first, true);
         break;
     }
 
@@ -240,7 +240,7 @@ void TraderComponent::CreateBlacksmithItems()
       break;
 
       case ItemType::ACCESSORY:
-        go = GameObjectsFactory::Instance().CreateRandomAccessory(0, 0, prefixPair.first);
+        go = GameObjectsFactory::Instance().CreateRandomAccessory(0, 0, prefixPair.first, true);
         break;
     }
 

@@ -101,7 +101,7 @@ class Player : public GameObject
     void PassByNPC(int dx, int dy);
     void SwitchPlaces(AIComponent* other);
 
-    int CalculateDamageValue(ItemComponent* weapon, GameObject* defender);
+    int CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bool meleeAttackWithRangedWeapon);
     bool WasHitLanded(GameObject* defender);
 
     bool IsGameObjectBorder(GameObject* go);

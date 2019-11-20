@@ -157,22 +157,29 @@ bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
 
   if (!Attrs.Indestructible)
   {
-    Attrs.HP.AddMin(-amount);
-
-    auto str = Util::StringFormat("%s was hit for %i damage", ObjectName.data(), amount);
-
-    Printer::Instance().AddMessage((logMsgOverride.length() == 0) ? str : logMsgOverride);
-
-    if (!IsAlive())
+    if (amount != 0)
     {
-      MarkAndCreateRemains();
+      Attrs.HP.AddMin(-amount);
 
-      std::string verb = (Type == GameObjectType::HARMLESS)
-                       ? "destroyed"
-                       : "killed";
+      auto str = Util::StringFormat("%s was hit for %i damage", ObjectName.data(), amount);
+      Printer::Instance().AddMessage((logMsgOverride.length() == 0) ? str : logMsgOverride);
 
-      auto msg = Util::StringFormat("%s was %s", objName.data(), verb.data());
-      Printer::Instance().AddMessage(msg);
+      if (!IsAlive())
+      {
+        MarkAndCreateRemains();
+
+        std::string verb = (Type == GameObjectType::HARMLESS)
+                         ? "destroyed"
+                         : "killed";
+
+        auto msg = Util::StringFormat("%s was %s", objName.data(), verb.data());
+        Printer::Instance().AddMessage(msg);
+      }
+    }
+    else
+    {
+      auto str = Util::StringFormat("%s was hit for no damage", ObjectName.data());
+      Printer::Instance().AddMessage((logMsgOverride.length() == 0) ? str : logMsgOverride);
     }
 
     dmgSuccess = true;

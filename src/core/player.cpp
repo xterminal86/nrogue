@@ -409,16 +409,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
   ItemComponent* arrows = EquipmentByCategory[EquipmentCategory::SHIELD][0];
 
-  int dmg = Util::RollDamage(with->Data.Damage.Min().Get(), with->Data.Damage.Max().Get());
-
-  if (with->Data.HasBonus(ItemBonusType::DAMAGE))
-  {
-    ItemBonusStruct* res = with->Data.GetBonus(ItemBonusType::DAMAGE);
-    if (res != nullptr)
-    {
-      dmg += res->Value;
-    }
-  }
+  int dmg = CalculateDamageValue(with, what, false);
 
   // If it's not the ground GameObject
   if (what->Type != GameObjectType::GROUND)
@@ -618,7 +609,15 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
   {
     Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "", "#FF0000");
     ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
-    int dmg = CalculateDamageValue(weapon, go);
+
+    bool isRanged = false;
+    if (weapon != nullptr)
+    {
+      isRanged = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON
+               || weapon->Data.ItemType_ == ItemType::WAND);
+    }
+
+    int dmg = CalculateDamageValue(weapon, go, isRanged);
     ProcessAttack(weapon, go, dmg);
   }
 
@@ -720,7 +719,7 @@ bool Player::WasHitLanded(GameObject* defender)
   return Util::Rolld100(hitChance);
 }
 
-int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender)
+int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bool meleeAttackWithRangedWeapon)
 {
   int totalDmg = 0;
 
@@ -734,15 +733,12 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender)
     }
   }
   else
-  {
-    bool isRanged = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON
-                  || weapon->Data.ItemType_ == ItemType::WAND);
-
-    auto wd = weapon->Data.Damage;
-
+  {    
     // Melee attack with ranged weapon in hand fallbacks to 1d4 "punch"
-    int weaponDamage = isRanged ? Util::RollDamage(1, 4) :
-                                  Util::RollDamage(wd.Min().Get(), wd.Max().Get());
+    int weaponDamage = meleeAttackWithRangedWeapon
+                       ? Util::RollDamage(1, 4)
+                       : Util::RollDamage(weapon->Data.Damage.Min().Get(),
+                                          weapon->Data.Damage.Max().Get());
 
     totalDmg = weaponDamage;
 
@@ -752,13 +748,10 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender)
 
     totalDmg += Attrs.Str.Get() - targetDef;
 
-    if (!isRanged)
+    ItemBonusStruct* res = weapon->Data.GetBonus(ItemBonusType::DAMAGE);
+    if (res != nullptr)
     {
-      ItemBonusStruct* res = weapon->Data.GetBonus(ItemBonusType::DAMAGE);
-      if (res != nullptr)
-      {
-        totalDmg += res->Value;
-      }
+      totalDmg += res->Value;
     }
 
     if (totalDmg <= 0)

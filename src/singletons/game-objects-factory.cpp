@@ -930,6 +930,7 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 
   ItemType res = possibleItems[index];
 
+  // TODO: add cases for all item types after they are decided
   switch (res)
   {
     case ItemType::COINS:
@@ -1005,7 +1006,6 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
       break;
   }
 
-  // TODO: add cases for all item types after they are decided
   if (go != nullptr)
   {
     go->PosX = x;
@@ -1708,7 +1708,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateRandomAccessory(int x, int y, ItemPrefix prefixOverride)
+GameObject* GameObjectsFactory::CreateRandomAccessory(int x, int y, ItemPrefix prefixOverride, bool atLeastOneBonus)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1743,7 +1743,7 @@ GameObject* GameObjectsFactory::CreateRandomAccessory(int x, int y, ItemPrefix p
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
 
-  TryToAddBonuses(ic);
+  TryToAddBonuses(ic, atLeastOneBonus);
 
   if (ic->Data.Bonuses.empty())
   {
@@ -3004,7 +3004,7 @@ void GameObjectsFactory::DoorUseHandler(DoorComponent* dc)
   dc->Interact();
 }
 
-void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef)
+void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne)
 {
   std::map<ItemBonusType, int> bonusWeightByType =
   {
@@ -3061,20 +3061,27 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef)
   chance = Util::Clamp(chance, 1, 100);
 
   std::vector<ItemBonusType> bonusesRolled;
+  auto bonusesWeightCopy = bonusWeightByType;
 
   for (int i = 0; i < 3; i++)
   {
     if (Util::Rolld100(chance))
     {
-      auto res = Util::WeightedRandom(bonusWeightByType);
+      auto res = Util::WeightedRandom(bonusesWeightCopy);
 
       // No duplicate bonuses on a single item
-      bonusWeightByType.erase(res.first);
+      bonusesWeightCopy.erase(res.first);
 
       AddRandomBonus(itemRef, res.first);
 
       bonusesRolled.push_back(res.first);
     }
+  }
+
+  if (bonusesRolled.size() == 0 && atLeastOne)
+  {
+    auto res = Util::WeightedRandom(bonusWeightByType);
+    AddRandomBonus(itemRef, res.first);
   }
 
   std::string prefix;
