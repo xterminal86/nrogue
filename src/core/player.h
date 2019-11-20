@@ -111,6 +111,8 @@ class Player : public GameObject
     void ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
     void UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
 
+    int GetDamageAbsorbtionValue(bool magic);
+
     int _starvingTimeout = 0;
 
     std::vector<std::string> GetPrettyLevelUpText();

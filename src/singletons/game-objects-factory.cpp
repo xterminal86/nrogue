@@ -3082,6 +3082,7 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne
   {
     auto res = Util::WeightedRandom(bonusWeightByType);
     AddRandomBonus(itemRef, res.first);
+    bonusesRolled.push_back(res.first);
   }
 
   std::string prefix;
@@ -3162,9 +3163,13 @@ void GameObjectsFactory::AddBonus(ItemComponent* itemRef, const ItemBonusStruct&
     return;
   }
 
-  int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusData.Type);
   auto copy = bonusData;
-  copy.MoneyCostIncrease = moneyIncrease;
+  if (bonusData.MoneyCostIncrease == 0)
+  {
+    int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusData.Type);
+    copy.MoneyCostIncrease = moneyIncrease;
+  }
+
   itemRef->Data.Bonuses.push_back(copy);
 }
 
@@ -3199,6 +3204,8 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
 
   int value = 0;
 
+  ItemQuality q = itemRef->Data.ItemQuality_;
+
   switch (bonusType)
   {
     case ItemBonusType::STR:
@@ -3208,27 +3215,39 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
     case ItemBonusType::SKL:
     case ItemBonusType::SPD:
     {
-      auto res = Util::WeightedRandom(statIncreaseWeightsMap);
+      auto res = Util::WeightedRandom(statIncreaseWeightsMap);            
       value = res.first;
+      bs.MoneyCostIncrease = res.first * moneyIncrease;
     }
     break;
 
     case ItemBonusType::HP:
     case ItemBonusType::MP:
     {
-      ItemQuality q = itemRef->Data.ItemQuality_;
       int min = 1 + multByQ[q];
       int max = 10 + multByQ[q] * 2;
       value = RNG::Instance().RandomRange(min, max);
+      bs.MoneyCostIncrease = value * moneyIncrease;
     }
     break;
 
+    case ItemBonusType::DMG_ABSORB:
+    case ItemBonusType::MAG_ABSORB:
     case ItemBonusType::DAMAGE:
     {
-      ItemQuality q = itemRef->Data.ItemQuality_;
       int min = multByQ[q];
       int max = multByQ[q] * 2;
       value = RNG::Instance().RandomRange(min, max + 1);
+      bs.MoneyCostIncrease = value * moneyIncrease;
+    }
+    break;
+
+    case ItemBonusType::VISIBILITY:
+    {
+      int min = multByQ[q];
+      int max = multByQ[q] * 3;
+      value = RNG::Instance().RandomRange(min, max + 1);
+      bs.MoneyCostIncrease = value * moneyIncrease;
     }
     break;
   }

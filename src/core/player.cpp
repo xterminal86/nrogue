@@ -370,7 +370,7 @@ void Player::SetDefaultEquipment()
       weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(weapon);
 
-      armor = GameObjectsFactory::Instance().CreateArmor(0, 0, ArmorType::LEATHER, ItemPrefix::UNCURSED);
+      armor = GameObjectsFactory::Instance().CreateArmor(0, 0, ArmorType::PADDING, ItemPrefix::UNCURSED);
       Inventory.AddToInventory(armor);
 
       weaponAndArmorToEquip.push_back(weapon);
@@ -795,7 +795,15 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
       logMsg = Util::StringFormat("You were hit for %i damage", amount);
     }
 
-    if (HasEffect(EffectType::MANA_SHIELD))
+    int abs = GetDamageAbsorbtionValue(true);
+    amount -= abs;
+
+    if (amount < 0)
+    {
+      amount = 0;
+    }
+
+    if (HasEffect(EffectType::MANA_SHIELD) && Attrs.MP.Min().Get() != 0)
     {
       Attrs.MP.AddMin(-amount);
     }
@@ -806,11 +814,19 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
   }
   else
   {
+    int abs = GetDamageAbsorbtionValue(false);
+    amount -= abs;
+
+    if (amount < 0)
+    {
+      amount = 0;
+    }
+
     if (!DamageArmor(amount))
     {
       logMsg = Util::StringFormat("You were hit for %i damage", amount);
 
-      if (HasEffect(EffectType::MANA_SHIELD))
+      if (HasEffect(EffectType::MANA_SHIELD) && Attrs.MP.Min().Get() != 0)
       {
         Attrs.MP.AddMin(-amount);
       }
@@ -1267,6 +1283,22 @@ void Player::ProcessHunger()
     return;
   }
 
+  // Check only rings and amulet
+  std::vector<ItemComponent*> ringsAndAmuletRefs =
+  {
+    EquipmentByCategory[EquipmentCategory::RING][0],
+    EquipmentByCategory[EquipmentCategory::RING][1],
+    EquipmentByCategory[EquipmentCategory::NECK][0],
+  };
+
+  for (auto& ref : ringsAndAmuletRefs)
+  {
+    if (ref != nullptr && ref->Data.HasBonus(ItemBonusType::HUNGER))
+    {
+      return;
+    }
+  }
+
   Attrs.Hunger += Attrs.HungerSpeed.Get();
 
   // HungerRate's CurrentValue is equal to OriginalValue
@@ -1425,7 +1457,7 @@ void Player::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
 
     case ItemBonusType::VISIBILITY:
       VisibilityRadius.AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.Value);
-      break;
+      break;    
   }
 }
 
@@ -1635,4 +1667,25 @@ bool Player::AreEnemiesInRange()
   }
 
   return ret;
+}
+
+int Player::GetDamageAbsorbtionValue(bool magic)
+{
+  int res = 0;
+
+  ItemBonusType t = magic ? ItemBonusType::MAG_ABSORB : ItemBonusType::DMG_ABSORB;
+
+  for (auto& kvp : EquipmentByCategory)
+  {
+    for (ItemComponent* item : kvp.second)
+    {
+      if (item != nullptr && item->Data.HasBonus(t))
+      {
+        ItemBonusStruct* ibs = item->Data.GetBonus(t);
+        res += ibs->Value;
+      }
+    }
+  }
+
+  return res;
 }

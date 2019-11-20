@@ -348,7 +348,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
         break;
 
       case ItemBonusType::LEECH:
-        res.push_back("Damage done goes to HP");
+        res.push_back("Damage inflicted goes to HP");
         break;
 
       case ItemBonusType::DMG_ABSORB:
@@ -367,7 +367,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::THORNS:
       {
-        auto str = Util::StringFormat("Enemy receives %i of inflicted damage", i.Value);
+        auto str = Util::StringFormat("Enemy receives %i of the inflicted damage", i.Value);
         res.push_back(str);
       }
       break;

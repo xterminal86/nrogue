@@ -322,8 +322,8 @@ enum class ItemBonusType
   INDESTRUCTIBLE,
   SELF_REPAIR,
   VISIBILITY,     // increases visibility radius
-  DAMAGE,         // adds to damage
-  HUNGER,         // no hunger (or decreased)
+  DAMAGE,         // adds to total damage
+  HUNGER,         // stops hunger counter
   IGNORE_DEFENCE, // ignores DEF for damage calculation
   KNOCKBACK,
   MANA_SHIELD,
@@ -1167,7 +1167,7 @@ namespace GlobalConstants
     { ItemBonusType::SPD,             250  },
     { ItemBonusType::HP,              100  },
     { ItemBonusType::MP,              100  },
-    { ItemBonusType::INDESTRUCTIBLE,  1000 },
+    { ItemBonusType::INDESTRUCTIBLE,  5000 },
     { ItemBonusType::SELF_REPAIR,     125  },
     { ItemBonusType::VISIBILITY,       50  },
     { ItemBonusType::DAMAGE,          200  },
