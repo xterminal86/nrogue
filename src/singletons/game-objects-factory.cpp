@@ -473,7 +473,7 @@ GameObject* GameObjectsFactory::CreateUniquePickaxe()
   ic->Data.Damage.SetMin(diceRolls);
   ic->Data.Damage.SetMax(diceSides);
 
-  AddRandomBonus(ic, ItemBonusType::SKL);
+  AddRandomBonus(ic, ItemBonusType::SELF_REPAIR);
 
   AddBonus(ic, { ItemBonusType::SKL, 1, 0, false });
   AddBonus(ic, { ItemBonusType::SPD, 1, 0, false });
@@ -2877,17 +2877,6 @@ GameObject* GameObjectsFactory::CreateGemHelper(GemType t, ItemQuality quality)
   ic->Data.Cost = GlobalConstants::GemCostByType.at(t);
 
   ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
-  std::map<ItemQuality, float> costModByQ =
-  {
-    { ItemQuality::CRACKED,      2.0f },
-    { ItemQuality::FLAWED,       1.5f },
-    { ItemQuality::NORMAL,       1.0f },
-    { ItemQuality::FINE,         0.8f },
-    { ItemQuality::EXCEPTIONAL,  0.5f }
-  };
-
-  float newCost = (float)ic->Data.Cost / costModByQ[ic->Data.ItemQuality_];
-  ic->Data.Cost = (int)newCost;
 
   SetItemName(go, ic->Data);
 
@@ -3224,16 +3213,6 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
       int min = 1 + multByQ[q];
       int max = 10 + multByQ[q] * 2;
       value = RNG::Instance().RandomRange(min, max);
-    }
-    break;
-
-    // TODO: finish implementation in MelleAttack()
-    case ItemBonusType::LEECH:
-    {
-      ItemQuality q = itemRef->Data.ItemQuality_;
-      int min = 1;
-      int max = multByQ[q] * 2;
-      value = RNG::Instance().RandomRange(min, max + 1);
     }
     break;
 

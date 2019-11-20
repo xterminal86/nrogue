@@ -348,11 +348,8 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
         break;
 
       case ItemBonusType::LEECH:
-      {
-        auto str = Util::StringFormat("%i damage goes to HP", i.Value);
-        res.push_back(str);
-      }
-      break;
+        res.push_back("Damage done goes to HP");
+        break;
 
       case ItemBonusType::DMG_ABSORB:
       {

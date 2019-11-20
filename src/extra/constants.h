@@ -324,7 +324,7 @@ enum class ItemBonusType
   VISIBILITY,     // increases visibility radius
   DAMAGE,         // adds to damage
   HUNGER,         // no hunger (or decreased)
-  IGNORE_DEFENCE, // ignores SKL difference
+  IGNORE_DEFENCE, // ignores DEF for damage calculation
   KNOCKBACK,
   MANA_SHIELD,
   REGEN,

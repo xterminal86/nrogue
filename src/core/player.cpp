@@ -702,19 +702,6 @@ bool Player::WasHitLanded(GameObject* defender)
   int skillDiff = Attrs.Skl.Get() - defender->Attrs.Skl.Get();
   int difficulty = (skillDiff * attackChanceScale);
 
-  ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
-  if (weapon != nullptr)
-  {
-    bool isRanged = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON
-                  || weapon->Data.ItemType_ == ItemType::WAND);
-
-    ItemBonusStruct* res = weapon->Data.GetBonus(ItemBonusType::IGNORE_DEFENCE);
-    if (res != nullptr && !isRanged)
-    {
-      difficulty = 0;
-    }
-  }
-
   hitChance += difficulty;
 
   hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
@@ -758,7 +745,12 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender)
                                   Util::RollDamage(wd.Min().Get(), wd.Max().Get());
 
     totalDmg = weaponDamage;
-    totalDmg += Attrs.Str.Get() - defender->Attrs.Def.Get();
+
+    int targetDef = weapon->Data.HasBonus(ItemBonusType::IGNORE_DEFENCE)
+                  ? 0
+                  : defender->Attrs.Def.Get();
+
+    totalDmg += Attrs.Str.Get() - targetDef;
 
     if (!isRanged)
     {

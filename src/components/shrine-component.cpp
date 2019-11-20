@@ -72,7 +72,6 @@ void ShrineComponent::ProcessEffect()
       if (choice == 0)
       {        
         playerRef.Attrs.Str.Add(1);
-        //playerRef.RecalculateStatsModifiers();
         msg = "You feel stronger!";
       }
       else

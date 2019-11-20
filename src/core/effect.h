@@ -79,7 +79,7 @@ struct Effect
 
   bool Cumulative = false;
 
-  // Item that gives this effect or -1 of none
+  // Item that gives this effect or -1 for none
   int64_t ObjectId = -1;
 };
 

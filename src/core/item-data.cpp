@@ -54,6 +54,18 @@ int ItemData::GetCost()
     {
       price *= 0.5f;
     }
+
+    std::map<ItemQuality, float> costModByQ =
+    {
+      { ItemQuality::CRACKED,      2.0f },
+      { ItemQuality::FLAWED,       1.5f },
+      { ItemQuality::NORMAL,       1.0f },
+      { ItemQuality::FINE,         0.8f },
+      { ItemQuality::EXCEPTIONAL,  0.6f }
+    };
+
+    float newCost = (float)price / costModByQ[ItemQuality_];
+    price = (int)newCost;
   }
 
   return price;
