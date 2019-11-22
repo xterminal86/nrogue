@@ -242,7 +242,7 @@ void MapLevelTown::CreateLevel()
   LevelExit.X = 91;
   LevelExit.Y = 44;
 
-  GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);          
+  GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
   // *** FIXME: debug
 
@@ -257,6 +257,9 @@ void MapLevelTown::CreateLevel()
   */
 
   /*
+  auto scroll = GameObjectsFactory::Instance().CreateScroll(1, 1, SpellType::LIGHT, ItemPrefix::UNCURSED);
+  InsertGameObject(scroll);
+
   ItemBonusStruct bs = { ItemBonusType::HP, 5, 0, false };
 
   auto ring1 = GameObjectsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED);

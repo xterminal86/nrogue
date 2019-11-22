@@ -358,7 +358,7 @@ void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
 
   std::string message = "The golden light surrounds you!";
 
-  int power = playerPow + 6;
+  int power = (playerPow - 1) + 6;
   int duration = playerPow * 10;
 
   if (scroll->Data.Prefix == ItemPrefix::BLESSED)

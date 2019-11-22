@@ -318,43 +318,31 @@ void GameObject::AddEffect(EffectType type,
 
 void GameObject::ApplyEffect(const Effect& e)
 {
-  // FIXME:
-
   switch (e.Type)
   {
     case EffectType::TELEPATHY:
     case EffectType::ILLUMINATED:
-    {
-      //VisibilityRadius.AddModifier(e.ObjectId, e.Power);
-    }
-    break;
+      VisibilityRadius.AddModifier(ObjectId(), e.Power);
+      break;
 
     case EffectType::FROZEN:
-    {
-      //Attrs.Spd.Modifier += -e.Power;
-    }
-    break;
+      Attrs.Spd.AddModifier(ObjectId(), -e.Power);
+      break;
   }
 }
 
 void GameObject::UnapplyEffect(const Effect& e)
 {
-  // FIXME:
-
   switch (e.Type)
   {
     case EffectType::TELEPATHY:
     case EffectType::ILLUMINATED:
-    {
-      //VisibilityRadius.Modifier = 0;
-    }
-    break;
+      VisibilityRadius.RemoveModifier(ObjectId());
+      break;
 
     case EffectType::FROZEN:
-    {
-      //Attrs.Spd.Modifier -= -e.Power;
-    }
-    break;    
+      Attrs.Spd.RemoveModifier(ObjectId());
+      break;
   }
 }
 

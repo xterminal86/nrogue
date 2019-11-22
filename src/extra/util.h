@@ -819,7 +819,7 @@ namespace Util
   }
 
   /// Produces random pair from pairs list according to weight value:
-  /// the more the number, the more likely it will appear as a result.
+  /// the greater the number, the more likely item will appear as a result.
   /// Returns result in the form of a pair of value type rolled
   /// and its weight in the list. Example list follows:
   /// weightsByType =

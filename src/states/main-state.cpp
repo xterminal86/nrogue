@@ -416,7 +416,7 @@ void MainState::ProcessRangedWeapon()
 {  
   if (Map::Instance().CurrentLevel->Peaceful)
   {
-    // FIXME: comment out all lines for debug if needed
+    // NOTE: comment out all lines for debug if needed
     PrintNoAttackInTown();
     return;
   }
