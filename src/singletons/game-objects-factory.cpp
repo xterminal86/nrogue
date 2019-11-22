@@ -1278,8 +1278,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::STR, 2, 0, false });
-      AddBonus(ic, { ItemBonusType::DEF, 1, 0, false });
+      AddBonus(ic, { ItemBonusType::STR,  2, 0, false });
+      AddBonus(ic, { ItemBonusType::DEF,  1, 0, false });
       AddBonus(ic, { ItemBonusType::SPD, -1, 0, false });
     }
     break;
@@ -1296,7 +1296,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::STR, 4, 0, false });
+      AddBonus(ic, { ItemBonusType::STR,  4, 0, false });
       AddBonus(ic, { ItemBonusType::SKL, -2, 0, false });
       AddBonus(ic, { ItemBonusType::SPD, -4, 0, false });
     }
@@ -1314,7 +1314,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::DEF, 1, 0, false });
+      AddBonus(ic, { ItemBonusType::DEF,  1, 0, false });
       AddBonus(ic, { ItemBonusType::SPD, -1, 0, false });
     }
     break;
@@ -1635,7 +1635,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       };
 
       AddBonus(ic, { ItemBonusType::SPD, -1, 0, false });
-      AddBonus(ic, { ItemBonusType::SKL, 1, 0, false });
+      AddBonus(ic, { ItemBonusType::SKL,  1, 0, false });
     }
     break;
 
@@ -1658,7 +1658,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       };
 
       AddBonus(ic, { ItemBonusType::SPD, -2, 0, false });
-      AddBonus(ic, { ItemBonusType::SKL, 2, 0, false });
+      AddBonus(ic, { ItemBonusType::SKL,  2, 0, false });
     }
     break;
 
@@ -1681,7 +1681,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       };
 
       AddBonus(ic, { ItemBonusType::SPD, -3, 0, false });
-      AddBonus(ic, { ItemBonusType::SKL, 3, 0, false });
+      AddBonus(ic, { ItemBonusType::SKL,  3, 0, false });
     }
     break;
   }
@@ -1708,7 +1708,9 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateRandomAccessory(int x, int y, ItemPrefix prefixOverride, bool atLeastOneBonus)
+GameObject* GameObjectsFactory::CreateRandomAccessory(int x, int y,
+                                                      ItemPrefix prefixOverride,
+                                                      bool atLeastOneBonus)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1755,7 +1757,11 @@ GameObject* GameObjectsFactory::CreateRandomAccessory(int x, int y, ItemPrefix p
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateAccessory(int x, int y, EquipmentCategory category, const std::vector<ItemBonusStruct>& bonuses, ItemPrefix prefix, ItemQuality quality)
+GameObject* GameObjectsFactory::CreateAccessory(int x, int y,
+                                                EquipmentCategory category,
+                                                const std::vector<ItemBonusStruct>& bonuses,
+                                                ItemPrefix prefix,
+                                                ItemQuality quality)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -2437,6 +2443,14 @@ bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
   {
     if (rings[i] == item)
     {
+      if (rings[i]->Data.Prefix == ItemPrefix::CURSED)
+      {
+        rings[i]->Data.IsPrefixDiscovered = true;
+        auto str = Util::StringFormat("You can't unequip %s - it's cursed!", rings[i]->OwnerGameObject->ObjectName.data());
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { str }, GlobalConstants::MessageBoxRedBorderColor);
+        return false;
+      }
+
       UnequipRing(rings[i], i);
       return true;
     }
