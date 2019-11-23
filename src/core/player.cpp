@@ -42,7 +42,7 @@ void Player::Init()
 
   // FIXME: debug
   //Money = 10000;
-  //Attrs.HungerRate.Set(0);
+  Attrs.HungerRate.Set(0);
   //Attrs.HP.Set(1000);
   //Attrs.HP.Set(10);
 }
@@ -751,7 +751,7 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bo
     ItemBonusStruct* res = weapon->Data.GetBonus(ItemBonusType::DAMAGE);
     if (res != nullptr)
     {
-      totalDmg += res->Value;
+      totalDmg += res->BonusValue;
     }
 
     if (totalDmg <= 0)
@@ -1446,18 +1446,22 @@ void Player::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
     case ItemBonusType::RES:
     case ItemBonusType::SKL:
     case ItemBonusType::SPD:
-      _attributesRefsByBonus.at(bonus.Type).AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.Value);
+      _attributesRefsByBonus.at(bonus.Type).AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.BonusValue);
       break;
 
     case ItemBonusType::HP:
     case ItemBonusType::MP:
-      _rangedAttributesRefsByBonus.at(bonus.Type).Max().AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.Value);
+      _rangedAttributesRefsByBonus.at(bonus.Type).Max().AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.BonusValue);
       _rangedAttributesRefsByBonus.at(bonus.Type).CheckOverflow();
       break;
 
     case ItemBonusType::VISIBILITY:
-      VisibilityRadius.AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.Value);
+      VisibilityRadius.AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.BonusValue);
       break;    
+
+    case ItemBonusType::MANA_SHIELD:
+      AddEffect(EffectType::MANA_SHIELD, 0, -1, false);
+      break;
   }
 }
 
@@ -1490,6 +1494,10 @@ void Player::UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
 
     case ItemBonusType::VISIBILITY:
       VisibilityRadius.RemoveModifier(itemRef->OwnerGameObject->ObjectId());
+      break;
+
+    case ItemBonusType::MANA_SHIELD:
+      RemoveEffect(EffectType::MANA_SHIELD);
       break;
   }
 }
@@ -1682,7 +1690,7 @@ int Player::GetDamageAbsorbtionValue(bool magic)
       if (item != nullptr && item->Data.HasBonus(t))
       {
         ItemBonusStruct* ibs = item->Data.GetBonus(t);
-        res += ibs->Value;
+        res += ibs->BonusValue;
       }
     }
   }

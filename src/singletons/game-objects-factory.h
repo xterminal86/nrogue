@@ -88,7 +88,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void AdjustBonusWeightsMap(ItemComponent* itemRef, std::map<ItemBonusType, int>& bonusWeightByType);
     void TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne = false);
     void AddRandomBonus(ItemComponent* itemRef, ItemBonusType bonusType);
-    void AddBonus(ItemComponent* itemRef, const ItemBonusStruct& bonusData);
+    void AddBonus(ItemComponent* itemRef, const ItemBonusStruct& bonusData, bool forceAdd = false);
 
     bool ProcessItemEquiption(ItemComponent* item);
     bool ProcessRingEquiption(ItemComponent* item);
@@ -112,6 +112,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void DoorUseHandler(DoorComponent* dc);
 
     void SetItemName(GameObject* go, ItemData& itemData);
+    void SetMagicItemName(ItemComponent* itemRef, const std::vector<ItemBonusType>& bonusesRolled);
     void AdjustWeaponBonuses(ItemData& itemData);
 
     size_t CalculateItemHash(ItemComponent* item);

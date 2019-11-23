@@ -1261,7 +1261,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::STR, 2, 0, false });
+      AddBonus(ic, { ItemBonusType::STR, 1, 0, false });
       AddBonus(ic, { ItemBonusType::DEF, 1, 0, false });
     }
     break;
@@ -1750,6 +1750,7 @@ GameObject* GameObjectsFactory::CreateRandomAccessory(int x, int y,
   if (ic->Data.Bonuses.empty())
   {
     ic->Data.IdentifiedName += " of the Bauble";
+    ic->Data.Cost = 50 + (int)ic->Data.ItemQuality_ * 10;
   }
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
@@ -1790,8 +1791,10 @@ GameObject* GameObjectsFactory::CreateAccessory(int x, int y,
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
 
+  std::vector<ItemBonusType> bonusesRolled;
   for (auto& b : bonuses)
   {
+    bonusesRolled.push_back(b.Type);
     AddBonus(ic, b);
   }
 
@@ -1799,6 +1802,10 @@ GameObject* GameObjectsFactory::CreateAccessory(int x, int y,
   {
     ic->Data.IdentifiedName += " of the Bauble";
     ic->Data.Cost = 50 + (int)ic->Data.ItemQuality_ * 10;
+  }
+  else
+  {
+    SetMagicItemName(ic, bonusesRolled);
   }
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
@@ -2208,6 +2215,79 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
 }
 
 // ************************** PRIVATE METHODS ************************** //
+
+void GameObjectsFactory::SetMagicItemName(ItemComponent* itemRef, const std::vector<ItemBonusType>& bonusesRolled)
+{
+  std::string prefix;
+  std::string suffix;
+
+  switch (bonusesRolled.size())
+  {
+    case 1:
+      prefix = GlobalConstants::ItemBonusPrefixes.at(bonusesRolled[0]);
+      itemRef->Data.Rarity = ItemRarity::MAGIC;
+      break;
+
+    case 2:
+      prefix = GlobalConstants::ItemBonusPrefixes.at(bonusesRolled[0]);
+      suffix = GlobalConstants::ItemBonusSuffixes.at(bonusesRolled[1]);
+      itemRef->Data.Rarity = ItemRarity::MAGIC;
+      break;
+
+    case 3:
+    {
+      // Randomize resulting name a bit in case of more than 2 bonuses
+
+      std::vector<ItemBonusType> bonusesRolledCopy = bonusesRolled;
+
+      int ind = RNG::Instance().RandomRange(0, 3);
+      prefix = GlobalConstants::ItemBonusPrefixes.at(bonusesRolledCopy[ind]);
+      bonusesRolledCopy.erase(bonusesRolledCopy.begin() + ind);
+
+      ind = RNG::Instance().RandomRange(0, 2);
+      suffix = GlobalConstants::ItemBonusSuffixes.at(bonusesRolledCopy[ind]);
+
+      itemRef->Data.Rarity = ItemRarity::RARE;
+    }
+    break;
+  }
+
+  std::string objName = itemRef->OwnerGameObject->ObjectName;
+
+  std::string bucStatus = "Uncursed";
+  if (itemRef->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    bucStatus = "Blessed";
+  }
+  else if (itemRef->Data.Prefix == ItemPrefix::CURSED)
+  {
+    bucStatus = "Cursed";
+  }
+
+  std::string quality;
+  std::map<ItemQuality, std::string> strByQ =
+  {
+    { ItemQuality::CRACKED,     " Cracked"     },
+    { ItemQuality::FLAWED,      " Flawed"      },
+    { ItemQuality::NORMAL,      ""             },
+    { ItemQuality::FINE,        " Fine"        },
+    { ItemQuality::EXCEPTIONAL, " Exceptional" }
+  };
+
+  quality = strByQ[itemRef->Data.ItemQuality_];
+
+  std::string itemName = bucStatus + quality + " " + objName;
+  if (bonusesRolled.size() == 1)
+  {
+    itemName = bucStatus + quality + " " + prefix + " " + objName;
+  }
+  else if (bonusesRolled.size() > 1)
+  {
+    itemName = bucStatus + quality + " " + prefix + " " + objName + " " + suffix;
+  }
+
+  itemRef->Data.IdentifiedName = itemName;
+}
 
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
 {
@@ -3099,80 +3179,17 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne
     bonusesRolled.push_back(res.first);
   }
 
-  std::string prefix;
-  std::string suffix;
-
-  switch (bonusesRolled.size())
-  {
-    case 1:
-      prefix = GlobalConstants::ItemBonusPrefixes.at(bonusesRolled[0]);
-      itemRef->Data.Rarity = ItemRarity::MAGIC;
-      break;
-
-    case 2:
-      prefix = GlobalConstants::ItemBonusPrefixes.at(bonusesRolled[0]);
-      suffix = GlobalConstants::ItemBonusSuffixes.at(bonusesRolled[1]);
-      itemRef->Data.Rarity = ItemRarity::MAGIC;
-      break;
-
-    case 3:
-    {
-      // Randomize resulting name a bit in case of more than 2 bonuses
-
-      std::vector<ItemBonusType> bonusesRolledCopy = bonusesRolled;
-
-      int ind = RNG::Instance().RandomRange(0, 3);
-      prefix = GlobalConstants::ItemBonusPrefixes.at(bonusesRolledCopy[ind]);
-      bonusesRolledCopy.erase(bonusesRolledCopy.begin() + ind);
-
-      ind = RNG::Instance().RandomRange(0, 2);
-      suffix = GlobalConstants::ItemBonusSuffixes.at(bonusesRolledCopy[ind]);
-
-      itemRef->Data.Rarity = ItemRarity::RARE;
-    }
-    break;
-  }
-
-  std::string objName = itemRef->OwnerGameObject->ObjectName;
-
-  std::string bucStatus = "Uncursed";
-  if (itemRef->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    bucStatus = "Blessed";
-  }
-  else if (itemRef->Data.Prefix == ItemPrefix::CURSED)
-  {
-    bucStatus = "Cursed";
-  }
-
-  std::string quality;
-  std::map<ItemQuality, std::string> strByQ =
-  {
-    { ItemQuality::CRACKED,     " Cracked"     },
-    { ItemQuality::FLAWED,      " Flawed"      },
-    { ItemQuality::NORMAL,      ""             },
-    { ItemQuality::FINE,        " Fine"        },
-    { ItemQuality::EXCEPTIONAL, " Exceptional" }
-  };
-
-  quality = strByQ[itemRef->Data.ItemQuality_];
-
-  std::string itemName = bucStatus + quality + " " + objName;
-  if (bonusesRolled.size() == 1)
-  {
-    itemName = bucStatus + quality + " " + prefix + " " + objName;
-  }
-  else if (bonusesRolled.size() > 1)
-  {
-    itemName = bucStatus + quality + " " + prefix + " " + objName + " " + suffix;
-  }
-
-  itemRef->Data.IdentifiedName = itemName;
+  SetMagicItemName(itemRef, bonusesRolled);
 }
 
-void GameObjectsFactory::AddBonus(ItemComponent* itemRef, const ItemBonusStruct& bonusData)
+void GameObjectsFactory::AddBonus(ItemComponent* itemRef, const ItemBonusStruct& bonusData, bool forceAdd)
 {
-  if (bonusData.Value == 0)
+  // If bonus doesn't modify anything,
+  // (i.e. if during weapon / armor generation total value of modifier
+  // became 0 due to being cursed), don't add it unless forced to
+  // (if it's some kind of 'special' item bonus
+  // like mana shield or knockback where bonus value is not used).
+  if (!forceAdd && bonusData.BonusValue == 0)
   {
     return;
   }
@@ -3275,7 +3292,7 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
   //bs.IsCursed = fuckupChance;
   //bs.Value = (itemRef->Data.Prefix == ItemPrefix::CURSED && fuckupChance) ? -value : value;
 
-  bs.Value = value;
+  bs.BonusValue = value;
 
   itemRef->Data.Bonuses.push_back(bs);
 }

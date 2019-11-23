@@ -244,6 +244,17 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
+  // TODO: check comments in GameObject::EffectAction()
+
+  /*
+  ItemBonusStruct bs = { ItemBonusType::MANA_SHIELD, 1, 0, false };
+
+  auto ring1 = GameObjectsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+  auto ring2 = GameObjectsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+  InsertGameObject(ring1);
+  InsertGameObject(ring2);
+  */
+
   // *** FIXME: debug
 
   /*

@@ -7,7 +7,7 @@
 struct ItemBonusStruct
 {
   ItemBonusType Type = ItemBonusType::NONE;
-  int Value = 0;
+  int BonusValue = 0;
   int MoneyCostIncrease = 0;
   bool IsCursed = false;
 };

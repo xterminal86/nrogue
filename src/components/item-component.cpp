@@ -223,7 +223,7 @@ void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
     {
       if (b.Type == bonusByStat[kvp.second.first])
       {
-        bonus = b.Value;
+        bonus = b.BonusValue;
         break;
       }
     }
@@ -290,8 +290,8 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
       case ItemBonusType::MP:
       {
         std::string name = bonusNameByType[i.Type];
-        auto modStr = Util::StringFormat("%i", i.Value);
-        if (i.Value > 0)
+        auto modStr = Util::StringFormat("%i", i.BonusValue);
+        if (i.BonusValue > 0)
         {
           modStr.insert(modStr.begin(), '+');
         }
@@ -311,14 +311,14 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::VISIBILITY:
       {
-        auto str = Util::StringFormat("+%i to light radius", i.Value);
+        auto str = Util::StringFormat("+%i to light radius", i.BonusValue);
         res.push_back(str);
       }
       break;
 
       case ItemBonusType::DAMAGE:
       {
-        auto str = Util::StringFormat("+%i to total damage", i.Value);
+        auto str = Util::StringFormat("+%i to total damage", i.BonusValue);
         res.push_back(str);
       }
       break;
@@ -353,21 +353,21 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::DMG_ABSORB:
       {
-        auto str = Util::StringFormat("Absorbs %i of melee damage", i.Value);
+        auto str = Util::StringFormat("Absorbs %i of melee damage", i.BonusValue);
         res.push_back(str);
       }
       break;
 
       case ItemBonusType::MAG_ABSORB:
       {
-        auto str = Util::StringFormat("Absorbs %i of magic damage", i.Value);
+        auto str = Util::StringFormat("Absorbs %i of magic damage", i.BonusValue);
         res.push_back(str);
       }
       break;
 
       case ItemBonusType::THORNS:
       {
-        auto str = Util::StringFormat("Enemy receives %i of the inflicted damage", i.Value);
+        auto str = Util::StringFormat("Enemy receives %i of the inflicted damage", i.BonusValue);
         res.push_back(str);
       }
       break;

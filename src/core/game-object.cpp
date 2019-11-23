@@ -398,7 +398,7 @@ void GameObject::EffectAction(const Effect& e)
 
     case EffectType::MANA_SHIELD:
     {
-      // TODO: what to do if effect is from eqipped item?
+      // TODO: what to do if effect comes from eqipped item?
       if (Attrs.MP.Min().Get() == 0)
       {
         RemoveEffect(EffectType::MANA_SHIELD);

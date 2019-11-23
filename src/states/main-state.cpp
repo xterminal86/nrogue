@@ -659,7 +659,7 @@ void MainState::DisplayStatusIcons()
 
   if (_playerRef->IsStarving)
   {
-    Printer::Instance().PrintFB(startPos, th - 3, '%', "#FF0000");
+    Printer::Instance().PrintFB(startPos, th - 3, '%', "#FFFFFF", "#FF0000");
   }
   else
   {
@@ -667,7 +667,7 @@ void MainState::DisplayStatusIcons()
     int part = hungerMax - hungerMax * 0.25;
     if (_playerRef->Attrs.Hunger >= part)
     {
-      Printer::Instance().PrintFB(startPos, th - 3, '%', "#FFFF00");
+      Printer::Instance().PrintFB(startPos, th - 3, '%', "#FFFFFF", "#999900");
     }
   }
 
