@@ -892,19 +892,22 @@ namespace Util
   {
     std::string textColor = "#FFFFFF";
 
-    bool isMagicOrBlessed = (data.Prefix == ItemPrefix::BLESSED || data.Rarity == ItemRarity::MAGIC);
+    bool isBlessed = (data.Prefix == ItemPrefix::BLESSED);
+    bool isCommon = (data.Prefix == ItemPrefix::UNCURSED);
+    bool isCursed = (data.Prefix == ItemPrefix::CURSED);
+    bool isMagic = (data.Rarity == ItemRarity::MAGIC);
     bool isRare = (data.Rarity == ItemRarity::RARE);
     bool isUnique = (data.Rarity == ItemRarity::UNIQUE);
-    bool isCursed = (data.Prefix == ItemPrefix::CURSED);
 
     // Iterate over this map and select color
     // for the first entry found with bool key == true.
     std::map<int, std::pair<bool, std::string>> itemFirstColorToChoose =
     {
-      { 0, { isMagicOrBlessed, GlobalConstants::ItemMagicColor   } },
+      { 0, { isMagic,          GlobalConstants::ItemMagicColor   } },
       { 1, { isRare,           GlobalConstants::ItemRareColor    } },
       { 2, { isUnique,         GlobalConstants::ItemUniqueColor  } },
-      { 3, { isCursed,         GlobalConstants::ItemCursedColor  } }
+      { 3, { isBlessed,        GlobalConstants::ItemMagicColor   } },
+      { 4, { isCursed,         GlobalConstants::ItemCursedColor  } }
     };
 
     for (auto& kvp : itemFirstColorToChoose)

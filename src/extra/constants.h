@@ -666,6 +666,15 @@ namespace GlobalConstants
   static const std::string ItemUniqueColor = "#A59263";
   static const std::string ItemCursedColor = "#AA0000";
 
+  static std::map<ItemQuality, std::string> QualityNameByQuality =
+  {
+    { ItemQuality::DAMAGED,     "Damaged"     },
+    { ItemQuality::FLAWED,      "Flawed"      },
+    { ItemQuality::NORMAL,      ""            },
+    { ItemQuality::FINE,        "Fine"        },
+    { ItemQuality::EXCEPTIONAL, "Exceptional" }
+  };
+
   static const std::map<PlayerSkills, std::string> SkillNameByType =
   {
     { PlayerSkills::REPAIR,        "Repair"       },

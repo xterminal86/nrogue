@@ -1736,6 +1736,8 @@ GameObject* GameObjectsFactory::CreateRandomAccessory(int x, int y,
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
 
+  // TODO: should rings and amulets quality affect bonuses?
+
   TryToAddBonuses(ic, atLeastOneBonus);
 
   if (ic->Data.Bonuses.empty())
@@ -2211,6 +2213,7 @@ void GameObjectsFactory::SetMagicItemName(ItemComponent* itemRef, const std::vec
 {
   std::string prefix;
   std::string suffix;
+  std::vector<std::string> rarePrefixes;
 
   switch (bonusesRolled.size())
   {
@@ -2231,12 +2234,17 @@ void GameObjectsFactory::SetMagicItemName(ItemComponent* itemRef, const std::vec
 
       std::vector<ItemBonusType> bonusesRolledCopy = bonusesRolled;
 
-      int ind = RNG::Instance().RandomRange(0, 3);
-      prefix = GlobalConstants::ItemBonusPrefixes.at(bonusesRolledCopy[ind]);
-      bonusesRolledCopy.erase(bonusesRolledCopy.begin() + ind);
+      int suffixInd1 = RNG::Instance().RandomRange(0, 3);
+      auto prefix1 = GlobalConstants::ItemBonusPrefixes.at(bonusesRolledCopy[suffixInd1]);
+      rarePrefixes.push_back(prefix1);
+      bonusesRolledCopy.erase(bonusesRolledCopy.begin() + suffixInd1);
 
-      ind = RNG::Instance().RandomRange(0, 2);
-      suffix = GlobalConstants::ItemBonusSuffixes.at(bonusesRolledCopy[ind]);
+      int suffixInd2 = RNG::Instance().RandomRange(0, 2);
+      auto prefix2 = GlobalConstants::ItemBonusPrefixes.at(bonusesRolledCopy[suffixInd2]);
+      rarePrefixes.push_back(prefix2);
+      bonusesRolledCopy.erase(bonusesRolledCopy.begin() + suffixInd2);
+
+      suffix = GlobalConstants::ItemBonusSuffixes.at(bonusesRolledCopy[0]);
 
       itemRef->Data.Rarity = ItemRarity::RARE;
     }
@@ -2255,26 +2263,24 @@ void GameObjectsFactory::SetMagicItemName(ItemComponent* itemRef, const std::vec
     bucStatus = "Cursed";
   }
 
-  std::string quality;
-  std::map<ItemQuality, std::string> strByQ =
+  std::string quality = GlobalConstants::QualityNameByQuality.at(itemRef->Data.ItemQuality_);
+  if (!quality.empty())
   {
-    { ItemQuality::DAMAGED,     " Damaged"     },
-    { ItemQuality::FLAWED,      " Flawed"      },
-    { ItemQuality::NORMAL,      ""             },
-    { ItemQuality::FINE,        " Fine"        },
-    { ItemQuality::EXCEPTIONAL, " Exceptional" }
-  };
-
-  quality = strByQ[itemRef->Data.ItemQuality_];
+    bucStatus += " ";
+  }
 
   std::string itemName = bucStatus + quality + " " + objName;
   if (bonusesRolled.size() == 1)
   {
     itemName = bucStatus + quality + " " + prefix + " " + objName;
   }
-  else if (bonusesRolled.size() > 1)
+  else if (bonusesRolled.size() == 2)
   {
     itemName = bucStatus + quality + " " + prefix + " " + objName + " " + suffix;
+  }
+  else if (bonusesRolled.size() == 3)
+  {
+    itemName = bucStatus + quality + " " + rarePrefixes[0] + " " + rarePrefixes[1] + " " + objName + " " + suffix;
   }
 
   itemRef->Data.IdentifiedName = itemName;
@@ -2282,25 +2288,18 @@ void GameObjectsFactory::SetMagicItemName(ItemComponent* itemRef, const std::vec
 
 void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
 {
-  // Insertionto front  goes in stack-like order:
+  // Insertion to front goes in stack-like order:
   // objName + ItemQuality + BUC = BUC_ItemQuality_objName
   //
   switch (itemData.ItemQuality_)
-  {
+  {    
     case ItemQuality::DAMAGED:
-      itemData.IdentifiedName.insert(0, "Cracked ");
-      break;
-
     case ItemQuality::FLAWED:
-      itemData.IdentifiedName.insert(0, "Flawed ");
-      break;
-
     case ItemQuality::FINE:
-      itemData.IdentifiedName.insert(0, "Fine ");
-      break;
-
     case ItemQuality::EXCEPTIONAL:
-      itemData.IdentifiedName.insert(0, "Exceptional ");
+      std::string qualityName = GlobalConstants::QualityNameByQuality.at(itemData.ItemQuality_);
+      std::string strToInsert = qualityName + " ";
+      itemData.IdentifiedName.insert(0, strToInsert);
       break;
   }
 
@@ -3131,12 +3130,12 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne
 {
   std::map<ItemBonusType, int> bonusWeightByType =
   {
-    { ItemBonusType::STR,             5 },
-    { ItemBonusType::DEF,             5 },
-    { ItemBonusType::MAG,             5 },
-    { ItemBonusType::RES,             5 },
-    { ItemBonusType::SKL,             5 },
-    { ItemBonusType::SPD,             5 },
+    { ItemBonusType::STR,             6 },
+    { ItemBonusType::DEF,             6 },
+    { ItemBonusType::MAG,             6 },
+    { ItemBonusType::RES,             6 },
+    { ItemBonusType::SKL,             6 },
+    { ItemBonusType::SPD,             6 },
     { ItemBonusType::HP,             20 },
     { ItemBonusType::MP,             20 },
     { ItemBonusType::INDESTRUCTIBLE,  1 },
@@ -3253,11 +3252,11 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
   // Probability of stat increase values
   std::map<int, int> statIncreaseWeightsMap =
   {
-    { 1, 25 },
-    { 2, 15 },
+    { 1, 24 },
+    { 2, 12 },
     { 3, 8  },
-    { 4, 2  },
-    { 5, 1  }
+    { 4, 8  },
+    { 5, 8  }
   };
 
   // TODO: finish other bonuses
