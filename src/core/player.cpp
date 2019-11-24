@@ -42,7 +42,7 @@ void Player::Init()
 
   // FIXME: debug
   //Money = 10000;
-  Attrs.HungerRate.Set(0);
+  //Attrs.HungerRate.Set(0);
   //Attrs.HP.Set(1000);
   //Attrs.HP.Set(10);
 }
@@ -727,6 +727,7 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bo
   {
     totalDmg = Util::RollDamage(1, 4);
     totalDmg += Attrs.Str.Get() - defender->Attrs.Def.Get();
+
     if (totalDmg <= 0)
     {
       totalDmg = 1;

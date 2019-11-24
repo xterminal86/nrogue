@@ -57,7 +57,7 @@ int ItemData::GetCost()
 
     std::map<ItemQuality, float> costModByQ =
     {
-      { ItemQuality::CRACKED,      2.0f },
+      { ItemQuality::DAMAGED,      2.0f },
       { ItemQuality::FLAWED,       1.5f },
       { ItemQuality::NORMAL,       1.0f },
       { ItemQuality::FINE,         0.8f },

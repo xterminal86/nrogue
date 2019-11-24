@@ -268,7 +268,7 @@ enum class ItemType
 enum class ItemQuality
 {
   RANDOM = -3,
-  CRACKED,
+  DAMAGED,
   FLAWED,
   NORMAL,
   FINE,

@@ -1212,16 +1212,17 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
   int avgDamage = 0;
   int baseDurability = 0;
 
+  int diceRolls = 0;
+  int diceSides = 0;
+
   ic->Data.WeaponType_ = type;
 
   switch (type)
   {
     case WeaponType::DAGGER:
-    {
-      int diceRolls = 1;
-      int diceSides = 4;
-
-      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
+    {      
+      diceRolls = 1;
+      diceSides = 3;
 
       baseDurability = 30 + 1 * (int)ic->Data.ItemQuality_;
 
@@ -1235,10 +1236,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
     case WeaponType::SHORT_SWORD:
     {
-      int diceRolls = 1;
-      int diceSides = 6;
-
-      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
+      diceRolls = 1;
+      diceSides = 6;
 
       baseDurability = 35 + 2 * (int)ic->Data.ItemQuality_;;
 
@@ -1251,10 +1250,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
     case WeaponType::ARMING_SWORD:
     {
-      int diceRolls = 1;
-      int diceSides = 8;
-
-      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
+      diceRolls = 1;
+      diceSides = 8;
 
       baseDurability = 50 + 3 * (int)ic->Data.ItemQuality_;
 
@@ -1268,10 +1265,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
     case WeaponType::LONG_SWORD:
     {
-      int diceRolls = 2;
-      int diceSides = 6;
-
-      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
+      diceRolls = 2;
+      diceSides = 6;
 
       baseDurability = 65 + 3 * (int)ic->Data.ItemQuality_;
 
@@ -1286,10 +1281,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
     case WeaponType::GREAT_SWORD:
     {
-      int diceRolls = 3;
-      int diceSides = 10;
-
-      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
+      diceRolls = 3;
+      diceSides = 10;
 
       baseDurability = 80 + 4 * (int)ic->Data.ItemQuality_;
 
@@ -1304,10 +1297,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
     case WeaponType::STAFF:
     {
-      int diceRolls = 1;
-      int diceSides = 6;
-
-      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
+      diceRolls = 1;
+      diceSides = 6;
 
       baseDurability = 30 + 2 * (int)ic->Data.ItemQuality_;
 
@@ -1321,10 +1312,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
     case WeaponType::PICKAXE:
     {
-      int diceRolls = 1;
-      int diceSides = 8;
-
-      avgDamage = CalculateAverageDamage(diceRolls, diceSides);
+      diceRolls = 1;
+      diceSides = 6;
 
       baseDurability = 10 + 2 * (int)ic->Data.ItemQuality_;
 
@@ -1333,6 +1322,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
     }
     break;
   }
+
+  avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
   int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1f) + dungeonLevel;
 
@@ -1575,8 +1566,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
     case RangedWeaponType::LONGBOW:
     {
-      int numRolls = 2;
-      int diceType = 4;
+      int numRolls = 1;
+      int diceType = 6;
 
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
@@ -1596,8 +1587,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
     case RangedWeaponType::WAR_BOW:
     {
-      int numRolls = 3;
-      int diceType = 4;
+      int numRolls = 1;
+      int diceType = 8;
 
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
@@ -1618,8 +1609,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
     case RangedWeaponType::LIGHT_XBOW:
     {
-      int numRolls = 1;
-      int diceType = 8;
+      int numRolls = 2;
+      int diceType = 4;
 
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
@@ -1641,8 +1632,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
     case RangedWeaponType::XBOW:
     {
-      int numRolls = 2;
-      int diceType = 8;
+      int numRolls = 3;
+      int diceType = 4;
 
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
@@ -1664,8 +1655,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
 
     case RangedWeaponType::HEAVY_XBOW:
     {
-      int numRolls = 3;
-      int diceType = 8;
+      int numRolls = 4;
+      int diceType = 4;
 
       ic->Data.Damage.SetMin(numRolls);
       ic->Data.Damage.SetMax(diceType);
@@ -2267,7 +2258,7 @@ void GameObjectsFactory::SetMagicItemName(ItemComponent* itemRef, const std::vec
   std::string quality;
   std::map<ItemQuality, std::string> strByQ =
   {
-    { ItemQuality::CRACKED,     " Cracked"     },
+    { ItemQuality::DAMAGED,     " Damaged"     },
     { ItemQuality::FLAWED,      " Flawed"      },
     { ItemQuality::NORMAL,      ""             },
     { ItemQuality::FINE,        " Fine"        },
@@ -2296,7 +2287,7 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
   //
   switch (itemData.ItemQuality_)
   {
-    case ItemQuality::CRACKED:
+    case ItemQuality::DAMAGED:
       itemData.IdentifiedName.insert(0, "Cracked ");
       break;
 
@@ -2464,7 +2455,7 @@ ItemQuality GameObjectsFactory::RollItemQuality()
 
   std::map<ItemQuality, int> weights =
   {
-    { ItemQuality::CRACKED,     maxLevel - dungeonLevel },
+    { ItemQuality::DAMAGED,     maxLevel - dungeonLevel },
     { ItemQuality::FLAWED,      maxLevel - dungeonLevel },
     { ItemQuality::NORMAL,      dungeonLevel            },
     { ItemQuality::FINE,        f                       },
@@ -2844,11 +2835,49 @@ void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
     {
       int dur = itemData.Durability.Max().Get();
       itemData.Durability.Reset(dur * 2);
-      itemData.Damage.AddMax(2);
-      itemData.Damage.AddMin(2);
+      itemData.Damage.AddMax(1);
+      itemData.Damage.AddMin(1);
     }
     break;
   }  
+
+  switch (itemData.ItemQuality_)
+  {
+    case ItemQuality::DAMAGED:
+    {
+      itemData.Damage.AddMax(-1);
+      itemData.Damage.AddMin(-1);
+    }
+    break;
+
+    case ItemQuality::FLAWED:
+    {
+      int oldMin = itemData.Damage.Min().OriginalValue();
+      if (oldMin - 1 == 0)
+      {
+        itemData.Damage.AddMax(-1);
+      }
+      else
+      {
+        itemData.Damage.AddMin(-1);
+      }
+    }
+    break;
+
+    case ItemQuality::FINE:
+    {
+      int oldMin = itemData.Damage.Min().OriginalValue();
+      itemData.Damage.SetMin(oldMin + 1);
+    }
+    break;
+
+    case ItemQuality::EXCEPTIONAL:
+    {
+      itemData.Damage.AddMax(1);
+      itemData.Damage.AddMin(1);
+    }
+    break;
+  }
 }
 
 size_t GameObjectsFactory::CalculateItemHash(ItemComponent* item)
@@ -3143,7 +3172,7 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne
 
   std::map<ItemQuality, int> chanceModByQ =
   {
-    { ItemQuality::CRACKED,     -10 },
+    { ItemQuality::DAMAGED,     -10 },
     { ItemQuality::FLAWED,       -5 },
     { ItemQuality::NORMAL,        0 },
     { ItemQuality::FINE,          5 },
@@ -3214,7 +3243,7 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
 
   std::map<ItemQuality, int> multByQ =
   {
-    { ItemQuality::CRACKED,      1 },
+    { ItemQuality::DAMAGED,      1 },
     { ItemQuality::FLAWED,       2 },
     { ItemQuality::NORMAL,       3 },
     { ItemQuality::FINE,         4 },

@@ -57,7 +57,7 @@ struct Attributes
   RangedAttribute HP;
   RangedAttribute MP;
 
-  // number of turns before Hunger decrements by HungerSpeed
+  // number of turns before player becomes starving
   Attribute HungerRate;
 
   Attribute HungerSpeed;

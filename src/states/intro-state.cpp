@@ -50,15 +50,18 @@ void IntroState::PrepareTown()
   auto& playerRef = Application::Instance().PlayerInstance;
 
   // Some NPCs contain bonus lines
-  // depending on selected player character class.
-  MapLevelTown* mlt = static_cast<MapLevelTown*>(curLvl);
-  mlt->CreateNPCs();
-
+  // depending on selected player character class and stats,
+  // as well as other initializations (e.g. food cost in shops
+  // depends on player hunger rate which is determined by selected class)
+  // so we need to initialize player first.
   playerRef.SetLevelOwner(curLvl);
   playerRef.Init();
 
   playerRef.AddBonusItems();
   playerRef.VisibilityRadius.Set(curLvl->VisibilityRadius);
+
+  MapLevelTown* mlt = static_cast<MapLevelTown*>(curLvl);
+  mlt->CreateNPCs();  
 }
 
 void IntroState::Update(bool forceUpdate)

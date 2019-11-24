@@ -77,6 +77,12 @@ void ShoppingState::HandleInput()
     }
     break;
 
+    #ifdef DEBUG_BUILD
+    case 'r':
+      _shopOwner->RefreshStock();
+      break;
+    #endif
+
     default:
       break;
   }
