@@ -715,12 +715,21 @@ void MainState::DisplayStatusIcons()
 
   // Active effects
 
+  std::string lastDisplayedEffect;
+
   int offsetX = startPos;
   for (auto& i : _playerRef->Effects())
   {
-    auto shortName = EffectNameByType.at(i.first);
+    auto shortName = EffectNameByType.at(i.second.Type);
+    if (shortName == lastDisplayedEffect)
+    {
+      continue;
+    }
+
     Printer::Instance().PrintFB(offsetX, th - 4, shortName, Printer::kAlignLeft, "#FFFFFF");
     offsetX += 4;
+
+    lastDisplayedEffect = shortName;
   }
 }
 

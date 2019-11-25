@@ -129,13 +129,14 @@ class GameObject
 
     virtual void LevelUp(int baseHpOverride = -1);
 
-    void AddEffect(const Effect& effectToAdd);
-    void AddEffect(EffectType type, int power, int duration, bool cumulative);
-    void RemoveEffect(EffectType t);    
+    void AddEffect(uint64_t effectGiver, const Effect& effectToAdd);
+    void AddEffect(uint64_t effectGiver, EffectType type, int power, int duration, bool cumulative);
+    void RemoveEffectAll(EffectType t);
+    void RemoveEffect(uint64_t itemId, EffectType t, int usePowerAsAdditionalInfo = -1);
     bool HasEffect(EffectType t);
     bool IsAlive();
 
-    const std::map<EffectType, Effect>& Effects();
+    const std::map<uint64_t, Effect>& Effects();
 
     uint64_t ObjectId();
 
@@ -148,7 +149,7 @@ class GameObject
 
   protected:    
     std::map<size_t, std::unique_ptr<Component>> _components;
-    std::map<EffectType, Effect> _activeEffects;
+    std::map<uint64_t, Effect> _activeEffects;
 
     GameObject* _previousCell = nullptr;
     GameObject* _currentCell = nullptr;

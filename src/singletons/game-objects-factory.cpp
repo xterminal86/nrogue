@@ -1049,7 +1049,7 @@ bool GameObjectsFactory::FoodUseHandler(ItemComponent* item)
       // NOTE: assuming player hunger meter is in order of 1000
       int dur = item->Data.Cost / 100;
 
-      _playerRef->AddEffect(EffectType::POISONED, 1, dur, true);
+      _playerRef->AddEffect(item->OwnerGameObject->ObjectId(), EffectType::POISONED, 1, dur, true);
     }
     else
     {

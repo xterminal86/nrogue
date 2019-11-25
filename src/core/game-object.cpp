@@ -264,56 +264,54 @@ void GameObject::MoveGameObject(int dx, int dy)
   _currentCell->Occupied = true;
 }
 
-void GameObject::AddEffect(const Effect &effectToAdd)
+void GameObject::AddEffect(uint64_t effectGiver, const Effect &effectToAdd)
 {
-  if (HasEffect(effectToAdd.Type))
+  if (_activeEffects.count(effectGiver) == 0)
   {
-    if (effectToAdd.Cumulative)
-    {
-      _activeEffects[effectToAdd.Type].Power += effectToAdd.Power;
-      _activeEffects[effectToAdd.Type].Duration += effectToAdd.Duration;
-    }
-    else
-    {
-      _activeEffects[effectToAdd.Type].Power = effectToAdd.Power;
-      _activeEffects[effectToAdd.Type].Duration = effectToAdd.Duration;
-    }
-
-    ApplyEffect(_activeEffects[effectToAdd.Type]);
+    _activeEffects[effectGiver] = effectToAdd;
   }
   else
   {
-    ApplyEffect(effectToAdd);
-    _activeEffects[effectToAdd.Type] = effectToAdd;
+    if (effectToAdd.Cumulative)
+    {
+      _activeEffects[effectGiver].Duration += effectToAdd.Duration;
+      _activeEffects[effectGiver].Power += effectToAdd.Power;
+    }
+    else
+    {
+      _activeEffects[effectGiver] = effectToAdd;
+    }
   }
+
+  ApplyEffect(_activeEffects[effectGiver]);
 }
 
-void GameObject::AddEffect(EffectType type,
+void GameObject::AddEffect(uint64_t effectGiver,
+                           EffectType type,
                            int power,
                            int duration,
                            bool cumulative)
 {
-  if (HasEffect(type))
-  {
-    if (cumulative)
-    {
-      _activeEffects[type].Power += power;
-      _activeEffects[type].Duration += duration;
-    }
-    else
-    {
-      _activeEffects[type].Power = power;
-      _activeEffects[type].Duration = duration;
-    }
+  Effect e = { type, power, duration, cumulative };
 
-    ApplyEffect(_activeEffects[type]);
+  if (_activeEffects.count(effectGiver) == 0)
+  {
+    _activeEffects[effectGiver] = e;
   }
   else
   {
-    Effect e = { type, power, duration, cumulative };
-    ApplyEffect(e);
-    _activeEffects[type] = e;
+    if (cumulative)
+    {
+      _activeEffects[effectGiver].Duration += duration;
+      _activeEffects[effectGiver].Power += power;
+    }
+    else
+    {
+      _activeEffects[effectGiver] = e;
+    }
   }
+
+  ApplyEffect(_activeEffects[effectGiver]);
 }
 
 void GameObject::ApplyEffect(const Effect& e)
@@ -346,18 +344,57 @@ void GameObject::UnapplyEffect(const Effect& e)
   }
 }
 
-void GameObject::RemoveEffect(EffectType t)
+void GameObject::RemoveEffect(uint64_t itemId, EffectType t, int usePowerAsAdditionalInfo)
 {  
-  if (HasEffect(t))
+  if (usePowerAsAdditionalInfo != -1)
   {
-    UnapplyEffect(_activeEffects[t]);
-    _activeEffects.erase(t);
+    for (int i = 0; i < _activeEffects.size(); i++)
+    {
+      auto it = _activeEffects.begin();
+      std::advance(it, i);
+
+      if (it->second.Type == t && it->second.Power == usePowerAsAdditionalInfo)
+      {
+        UnapplyEffect(it->second);
+        _activeEffects.erase(it);
+      }
+    }
+  }
+  else
+  {
+    if (_activeEffects.count(itemId) == 1)
+    {
+      UnapplyEffect(_activeEffects[itemId]);
+      _activeEffects.erase(itemId);
+    }
+  }
+}
+
+void GameObject::RemoveEffectAll(EffectType t)
+{
+  for (int i = 0; i < _activeEffects.size(); i++)
+  {
+    auto it = _activeEffects.begin();
+    std::advance(it, i);
+
+    if (it->second.Type == t)
+    {
+      _activeEffects.erase(it);
+    }
   }
 }
 
 bool GameObject::HasEffect(EffectType t)
 {  
-  return (_activeEffects.count(t) != 0);
+  for (auto& kvp : _activeEffects)
+  {
+    if (kvp.second.Type == t)
+    {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 void GameObject::ProcessEffects()
@@ -394,17 +431,7 @@ void GameObject::EffectAction(const Effect& e)
 
     case EffectType::REGEN:
       Attrs.HP.AddMin(e.Power);
-      break;
-
-    case EffectType::MANA_SHIELD:
-    {
-      // TODO: what to do if effect comes from eqipped item?
-      if (Attrs.MP.Min().Get() == 0)
-      {
-        RemoveEffect(EffectType::MANA_SHIELD);
-      }
-    }
-    break;
+      break;    
   }
 }
 
@@ -510,7 +537,7 @@ bool GameObject::CanRaiseAttribute(Attribute& attr)
   return Util::Rolld100(chance);
 }
 
-const std::map<EffectType, Effect>& GameObject::Effects()
+const std::map<uint64_t, Effect>& GameObject::Effects()
 {
   return _activeEffects;
 }

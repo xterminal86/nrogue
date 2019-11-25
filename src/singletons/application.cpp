@@ -627,7 +627,7 @@ void Application::InitGameStates()
 
 uint64_t Application::GetNewId()
 {  
-  static uint64_t globalId = 0;
+  static uint64_t globalId = 1;
   return globalId++;
 }
 

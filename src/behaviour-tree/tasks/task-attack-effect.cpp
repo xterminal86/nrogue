@@ -25,7 +25,7 @@ BTResult TaskAttackEffect::Run()
   {
     if (_shouldIgnoreArmor || !_attackResultPlayerHasArmor.second)
     {
-      _playerRef->AddEffect(_effectToApply);
+      _playerRef->AddEffect(_objectToControl->ObjectId(), _effectToApply);
     }
   }
 
