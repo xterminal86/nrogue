@@ -258,7 +258,7 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
     }
   }
 
-  _playerRef->ReceiveDamage(nullptr, power, true, false, true);
+  _playerRef->Attrs.HP.AddMin(power);
 }
 
 void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)

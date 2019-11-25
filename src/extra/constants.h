@@ -1189,10 +1189,10 @@ namespace GlobalConstants
     { ItemBonusType::MANA_SHIELD,     500  },
     { ItemBonusType::REGEN,           400  },
     { ItemBonusType::REFLECT,         500  },
-    { ItemBonusType::LEECH,           500  },
+    { ItemBonusType::LEECH,            20  },
     { ItemBonusType::DMG_ABSORB,      300  },
     { ItemBonusType::MAG_ABSORB,      300  },
-    { ItemBonusType::THORNS,          250  }
+    { ItemBonusType::THORNS,           40  }
   };
 
   static const std::vector<std::vector<std::string>> DungeonRooms =

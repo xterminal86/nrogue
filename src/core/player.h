@@ -112,6 +112,7 @@ class Player : public GameObject
     void UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
 
     int GetDamageAbsorbtionValue(bool magic);
+    std::vector<ItemComponent*> GetItemsWithBonus(const ItemBonusType& bonusType);
 
     int _starvingTimeout = 0;
 

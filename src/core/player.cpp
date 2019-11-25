@@ -672,7 +672,13 @@ void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int dama
     bool succ = defender->ReceiveDamage(this, damageToInflict, false);
     if (succ && hasLeech && defender->IsLiving)
     {
-      Attrs.HP.AddMin(damageToInflict);
+      auto b = weapon->Data.GetBonus(ItemBonusType::LEECH);
+      float fract = (float)b->BonusValue * 0.01f;
+      int dmgToHp = (int)((float)damageToInflict * fract);
+      if (dmgToHp != 0)
+      {
+        Attrs.HP.AddMin(dmgToHp);
+      }
     }
 
     if (defender->IsDestroyed)
@@ -835,6 +841,22 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
       {
         Attrs.HP.AddMin(-amount);
       }
+    }
+
+    auto thorns = GetItemsWithBonus(ItemBonusType::THORNS);
+    int dmgReturned = 0;
+    for (auto& i : thorns)
+    {
+      auto b = i->Data.GetBonus(ItemBonusType::THORNS);
+      float fract = (float)b->BonusValue * 0.01f;
+      int dmg = (int)((float)amount * fract);
+      dmgReturned += dmg;
+    }
+
+    if (dmgReturned != 0 && from != nullptr)
+    {
+      auto msg = Util::StringFormat("%s receives %i thorns damage", from->ObjectName.data(), dmgReturned);
+      from->ReceiveDamage(this, dmgReturned, false, msg);
     }
   }
 
@@ -1312,9 +1334,7 @@ void Player::ProcessHunger()
     if (_starvingTimeout > GlobalConstants::StarvationDamageTimeout - 1)
     {
       Printer::Instance().AddMessage("You are starving!");
-
-      // Yes, hunger damage is magical. Deal with it.
-      ReceiveDamage(nullptr, 1, true, false, true);
+      Attrs.HP.AddMin(-1);
     }
 
     IsStarving = true;
@@ -1692,6 +1712,24 @@ int Player::GetDamageAbsorbtionValue(bool magic)
       {
         ItemBonusStruct* ibs = item->Data.GetBonus(t);
         res += ibs->BonusValue;
+      }
+    }
+  }
+
+  return res;
+}
+
+std::vector<ItemComponent*> Player::GetItemsWithBonus(const ItemBonusType& bonusType)
+{
+  std::vector<ItemComponent*> res;
+
+  for (auto& item : EquipmentByCategory)
+  {
+    for (auto& e : item.second)
+    {
+      if (e != nullptr && e->Data.HasBonus(bonusType))
+      {
+        res.push_back(e);
       }
     }
   }

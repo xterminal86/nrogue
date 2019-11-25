@@ -3327,7 +3327,19 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
 
     case ItemBonusType::THORNS:
     {
-      int percentage = 25 * multByQ[q];
+      int min = 20 + 5 * (multByQ[q] - 1);
+      int max = 21 + 20 * multByQ[q];
+      int percentage = RNG::Instance().RandomRange(min, max);
+      value = percentage;
+      bs.MoneyCostIncrease = value * moneyIncrease;
+    }
+    break;
+
+    case ItemBonusType::LEECH:
+    {
+      int min = 20 + 5 * (multByQ[q] - 1);
+      int max = 21 + 15 * multByQ[q];
+      int percentage = RNG::Instance().RandomRange(min, max);
       value = percentage;
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
