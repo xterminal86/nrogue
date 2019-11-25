@@ -302,7 +302,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
       break;
 
       case ItemBonusType::INDESTRUCTIBLE:
-        res.push_back("Indestructible");
+        res.push_back("Does not wear out");
         break;
 
       case ItemBonusType::SELF_REPAIR:
@@ -353,21 +353,21 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::DMG_ABSORB:
       {
-        auto str = Util::StringFormat("Absorbs %i of melee damage", i.BonusValue);
+        auto str = Util::StringFormat("Absorbs %i physical damage", i.BonusValue);
         res.push_back(str);
       }
       break;
 
       case ItemBonusType::MAG_ABSORB:
       {
-        auto str = Util::StringFormat("Absorbs %i of magic damage", i.BonusValue);
+        auto str = Util::StringFormat("Absorbs %i magical damage", i.BonusValue);
         res.push_back(str);
       }
       break;
 
       case ItemBonusType::THORNS:
       {
-        auto str = Util::StringFormat("Enemy receives %i of the inflicted damage", i.BonusValue);
+        auto str = Util::StringFormat("Returns %i%c of the inflicted physical damage", i.BonusValue, '%');
         res.push_back(str);
       }
       break;

@@ -2823,17 +2823,17 @@ void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
   {
     case ItemPrefix::CURSED:
     {
-      int dur = itemData.Durability.Max().Get();
-      itemData.Durability.Reset(dur / 2);
       itemData.Damage.AddMax(-1);
-      itemData.Damage.AddMin(-1);
+      int oldMin = itemData.Damage.Min().OriginalValue();
+      if (oldMin - 1 != 0)
+      {
+        itemData.Damage.SetMin(oldMin - 1);
+      }
     }
     break;
 
     case ItemPrefix::BLESSED:
     {
-      int dur = itemData.Durability.Max().Get();
-      itemData.Durability.Reset(dur * 2);
       itemData.Damage.AddMax(1);
       itemData.Damage.AddMin(1);
     }
@@ -2844,13 +2844,23 @@ void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
   {
     case ItemQuality::DAMAGED:
     {
+      int dur = itemData.Durability.Max().Get();
+      itemData.Durability.Reset(dur / 2);
+
       itemData.Damage.AddMax(-1);
-      itemData.Damage.AddMin(-1);
+      int oldMin = itemData.Damage.Min().OriginalValue();
+      if (oldMin - 1 != 0)
+      {
+        itemData.Damage.SetMin(oldMin - 1);
+      }
     }
     break;
 
     case ItemQuality::FLAWED:
     {
+      float durF = (float)itemData.Durability.Max().Get() / 1.5f;
+      itemData.Durability.Reset((int)durF);
+
       int oldMin = itemData.Damage.Min().OriginalValue();
       if (oldMin - 1 == 0)
       {
@@ -2865,6 +2875,9 @@ void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
 
     case ItemQuality::FINE:
     {
+      float durF = (float)itemData.Durability.Max().Get() * 1.5f;
+      itemData.Durability.Reset((int)durF);
+
       int oldMin = itemData.Damage.Min().OriginalValue();
       itemData.Damage.SetMin(oldMin + 1);
     }
@@ -2872,6 +2885,8 @@ void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
 
     case ItemQuality::EXCEPTIONAL:
     {
+      int dur = itemData.Durability.Max().Get();
+      itemData.Durability.Reset(dur * 2);
       itemData.Damage.AddMax(1);
       itemData.Damage.AddMin(1);
     }
@@ -3306,6 +3321,14 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
       int min = multByQ[q];
       int max = multByQ[q] * 3;
       value = RNG::Instance().RandomRange(min, max + 1);
+      bs.MoneyCostIncrease = value * moneyIncrease;
+    }
+    break;
+
+    case ItemBonusType::THORNS:
+    {
+      int percentage = 25 * multByQ[q];
+      value = percentage;
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
     break;

@@ -3,6 +3,8 @@
 
 #include "map-level-base.h"
 
+class Rect;
+
 class MapLevelTown : public MapLevelBase
 {
   public:
@@ -27,6 +29,8 @@ class MapLevelTown : public MapLevelBase
     void CreateTownGates();
     void ReplaceGroundWithGrass();
     void BuildRoads();
+
+    bool SkipArea(const Position& pos, const Rect& area);
 
     const int FlowersFrequency = 25;
 };

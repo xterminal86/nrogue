@@ -677,6 +677,9 @@ void MapLevelTown::CreatePlayerHouse()
 
 void MapLevelTown::CreateNPCs()
 {
+  Rect playerHome = { 2, 2, 8, 8 };
+  Rect mineEntrance = { 87, 40, 95, 48 };
+
   std::vector<NPCType> npcs =
   {
     NPCType::CLAIRE,
@@ -698,8 +701,8 @@ void MapLevelTown::CreateNPCs()
     {
       for (int y = 1; y <= MapSize.Y - 1; y++)
       {
-        // Skip area around player house
-        if (x >= 2 && x <= 8 && y >= 2 && y <= 8)
+        // Skip area around player house and mine entrance
+        if (SkipArea({ x, y }, playerHome) || SkipArea({ x, y }, mineEntrance))
         {
           continue;
         }
@@ -934,4 +937,12 @@ void MapLevelTown::CreateTownGates()
 
   InsertStaticObject(0, 13, t);
   InsertStaticObject(0, 14, t);
+}
+
+bool MapLevelTown::SkipArea(const Position& pos, const Rect& area)
+{
+  return (pos.X >= area.X1
+       && pos.X <= area.X2
+       && pos.Y >= area.Y1
+       && pos.Y <= area.Y2);
 }
