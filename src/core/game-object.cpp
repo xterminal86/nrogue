@@ -434,7 +434,6 @@ bool GameObject::Interact()
   if (InteractionCallback.target_type() != typeid(void))
   {
     InteractionCallback();
-
     return true;
   }
 

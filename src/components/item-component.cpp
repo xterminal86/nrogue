@@ -373,7 +373,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::THORNS:
       {
-        auto str = Util::StringFormat("Returns %i%c of the inflicted physical damage", i.BonusValue, '%');
+        auto str = Util::StringFormat("Returns %i%c of the received physical damage", i.BonusValue, '%');
         res.push_back(str);
       }
       break;
