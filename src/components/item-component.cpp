@@ -340,8 +340,11 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
         break;
 
       case ItemBonusType::REGEN:
-        res.push_back("Regenerates HP over time");
-        break;
+      {
+        auto str = Util::StringFormat("Regenerates 1 HP after %i turns", i.BonusValue);
+        res.push_back(str);
+      }
+      break;
 
       case ItemBonusType::REFLECT:
         res.push_back("Reflects spells while equipped");

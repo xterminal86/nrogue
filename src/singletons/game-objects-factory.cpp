@@ -1049,7 +1049,7 @@ bool GameObjectsFactory::FoodUseHandler(ItemComponent* item)
       // NOTE: assuming player hunger meter is in order of 1000
       int dur = item->Data.Cost / 100;
 
-      _playerRef->AddEffect(item->OwnerGameObject->ObjectId(), EffectType::POISONED, 1, dur, true);
+      _playerRef->AddEffect(item->OwnerGameObject->ObjectId(), { EffectType::POISONED, 1, dur, true });
     }
     else
     {
@@ -3342,6 +3342,19 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
       int percentage = RNG::Instance().RandomRange(min, max);
       value = percentage;
       bs.MoneyCostIncrease = value * moneyIncrease;
+    }
+    break;
+
+    case ItemBonusType::REGEN:
+    {
+      int min = 20;
+      int max = 40;
+
+      // Number of turns before +1 to HP
+      int minVal = min - 2 * multByQ[q];
+      int maxVal = max - 2 * multByQ[q];
+      value = RNG::Instance().RandomRange(minVal, maxVal + 1);
+      bs.MoneyCostIncrease = (int)(((float)max / (float)value) * (float)moneyIncrease);
     }
     break;
   }

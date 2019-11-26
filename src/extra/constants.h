@@ -666,6 +666,8 @@ namespace GlobalConstants
   static const std::string ItemUniqueColor = "#A59263";
   static const std::string ItemCursedColor = "#AA0000";
 
+  static const std::string EffectExtraInfo = "external";
+
   static std::map<ItemQuality, std::string> QualityNameByQuality =
   {
     { ItemQuality::DAMAGED,     "Damaged"     },

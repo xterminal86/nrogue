@@ -286,34 +286,6 @@ void GameObject::AddEffect(uint64_t effectGiver, const Effect &effectToAdd)
   ApplyEffect(_activeEffects[effectGiver]);
 }
 
-void GameObject::AddEffect(uint64_t effectGiver,
-                           EffectType type,
-                           int power,
-                           int duration,
-                           bool cumulative)
-{
-  Effect e = { type, power, duration, cumulative };
-
-  if (_activeEffects.count(effectGiver) == 0)
-  {
-    _activeEffects[effectGiver] = e;
-  }
-  else
-  {
-    if (cumulative)
-    {
-      _activeEffects[effectGiver].Duration += duration;
-      _activeEffects[effectGiver].Power += power;
-    }
-    else
-    {
-      _activeEffects[effectGiver] = e;
-    }
-  }
-
-  ApplyEffect(_activeEffects[effectGiver]);
-}
-
 void GameObject::ApplyEffect(const Effect& e)
 {
   switch (e.Type)
@@ -326,6 +298,11 @@ void GameObject::ApplyEffect(const Effect& e)
     case EffectType::FROZEN:
       Attrs.Spd.AddModifier(ObjectId(), -e.Power);
       break;
+
+    // TODO:
+    //case EffectType::REGEN:
+    //  _effectActionTimeoutByObjId[objId] = 0;
+    //  break;
   }
 }
 
@@ -344,16 +321,16 @@ void GameObject::UnapplyEffect(const Effect& e)
   }
 }
 
-void GameObject::RemoveEffect(uint64_t itemId, EffectType t, int usePowerAsAdditionalInfo)
+void GameObject::RemoveEffect(uint64_t itemId, EffectType t, const std::string& extraInfo)
 {  
-  if (usePowerAsAdditionalInfo != -1)
+  if (!extraInfo.empty())
   {
     for (int i = 0; i < _activeEffects.size(); i++)
     {
       auto it = _activeEffects.begin();
       std::advance(it, i);
 
-      if (it->second.Type == t && it->second.Power == usePowerAsAdditionalInfo)
+      if (it->second.Type == t && it->second.ExtraInfo == extraInfo)
       {
         UnapplyEffect(it->second);
         _activeEffects.erase(it);
@@ -365,7 +342,7 @@ void GameObject::RemoveEffect(uint64_t itemId, EffectType t, int usePowerAsAddit
     if (_activeEffects.count(itemId) == 1)
     {
       UnapplyEffect(_activeEffects[itemId]);
-      _activeEffects.erase(itemId);
+      _activeEffects.erase(itemId);      
     }
   }
 }
@@ -431,7 +408,7 @@ void GameObject::EffectAction(const Effect& e)
 
     case EffectType::REGEN:
       Attrs.HP.AddMin(e.Power);
-      break;    
+      break;
   }
 }
 

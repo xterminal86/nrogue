@@ -61,7 +61,7 @@ struct Effect
 {
   Effect() = default;
 
-  Effect(EffectType t, int p, int to, bool cumulative);
+  Effect(EffectType t, int p, int to, bool cumulative, const std::string& extraInfo = std::string());
 
   bool operator< (const Effect& rhs) const;
 
@@ -78,6 +78,10 @@ struct Effect
   int Duration = 0;
 
   bool Cumulative = false;
+
+  // If effect comes from non-item object, use this variable
+  // to differentiate it from effect that comes from equipped items.
+  std::string ExtraInfo;
 };
 
 #endif // EFFECT_H

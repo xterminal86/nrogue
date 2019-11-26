@@ -130,9 +130,8 @@ class GameObject
     virtual void LevelUp(int baseHpOverride = -1);
 
     void AddEffect(uint64_t effectGiver, const Effect& effectToAdd);
-    void AddEffect(uint64_t effectGiver, EffectType type, int power, int duration, bool cumulative);
     void RemoveEffectAll(EffectType t);
-    void RemoveEffect(uint64_t itemId, EffectType t, int usePowerAsAdditionalInfo = -1);
+    void RemoveEffect(uint64_t itemId, EffectType t, const std::string& extraInfo = std::string());
     bool HasEffect(EffectType t);
     bool IsAlive();
 
@@ -159,7 +158,7 @@ class GameObject
     // (see comments in InventoryState::DropItem() for details)
     MapLevelBase* _levelOwner = nullptr;    
 
-    int _healthRegenTurnsCounter = 0;    
+    int _healthRegenTurnsCounter = 0;
 
     void MoveGameObject(int dx, int dy);
     void ProcessEffects();
@@ -170,8 +169,8 @@ class GameObject
 
     bool CanRaiseAttribute(Attribute& attr);
 
-    // Used by blackboard
-    uint64_t _objectId = 0;
+    // Unique in-game id
+    uint64_t _objectId = 1;
 
     friend class GameObjectsFactory;
 };

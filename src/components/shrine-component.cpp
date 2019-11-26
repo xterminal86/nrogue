@@ -289,7 +289,7 @@ void ShrineComponent::ApplyRandomEffect()
   std::advance(it, effectIndex);
   EffectType e = it->first;
 
-  playerRef.AddEffect(OwnerGameObject->ObjectId(), e, power, dur, false);
+  playerRef.AddEffect(OwnerGameObject->ObjectId(), { e, power, dur, false });
 }
 
 void ShrineComponent::ApplyRandomPositiveEffect()
@@ -304,11 +304,11 @@ void ShrineComponent::ApplyRandomPositiveEffect()
 
   if (e == EffectType::MANA_SHIELD && playerRef.Attrs.MP.Max().Get() != 0)
   {
-    playerRef.AddEffect(OwnerGameObject->ObjectId(), e, 2, -1, false);
+    playerRef.AddEffect(OwnerGameObject->ObjectId(), { e, power, -1, false, GlobalConstants::EffectExtraInfo });
   }
   else
   {
-    playerRef.AddEffect(OwnerGameObject->ObjectId(), e, power, dur, false);
+    playerRef.AddEffect(OwnerGameObject->ObjectId(), { e, power, dur, false });
   }
 }
 
@@ -322,5 +322,5 @@ void ShrineComponent::ApplyRandomNegativeEffect()
   int effectIndex = RNG::Instance().RandomRange(0, NegativeEffects.size());
   EffectType e = NegativeEffects[effectIndex];
 
-  playerRef.AddEffect(OwnerGameObject->ObjectId(), e, power, dur, false);
+  playerRef.AddEffect(OwnerGameObject->ObjectId(), { e, power, dur, false });
 }

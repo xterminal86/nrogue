@@ -211,7 +211,7 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
     int power = RNG::Instance().RandomRange(1, 10);
-    _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), EffectType::POISONED, power, 10, true);
+    _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), { EffectType::POISONED, power, 10, true });
 
     Printer::Instance().AddMessage("You feel unwell!");
   }
@@ -223,7 +223,7 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
 
     if (scroll->Data.Prefix == ItemPrefix::BLESSED)
     {
-      _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), EffectType::REGEN, 1, 20, false);
+      _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), { EffectType::REGEN, 1, 20, false });
     }
   }
 }
@@ -291,7 +291,7 @@ void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
 
   Printer::Instance().AddMessage(message);
 
-  _playerRef->AddEffect(wand->OwnerGameObject->ObjectId(), EffectType::ILLUMINATED, power, duration, false);
+  _playerRef->AddEffect(wand->OwnerGameObject->ObjectId(), { EffectType::ILLUMINATED, power, duration, false });
 }
 
 void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll)
@@ -376,7 +376,7 @@ void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
 
   Printer::Instance().AddMessage(message);
 
-  _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), EffectType::ILLUMINATED, power, duration, false);
+  _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), { EffectType::ILLUMINATED, power, duration, false });
 }
 
 void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
@@ -405,7 +405,7 @@ void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
 
   Printer::Instance().AddMessage("You can sense nearby creatures");
 
-  _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), EffectType::TELEPATHY, power, duration, false);
+  _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), { EffectType::TELEPATHY, power, duration, false });
 }
 
 void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
@@ -495,7 +495,7 @@ void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
       Printer::Instance().AddMessage("Your spirit force was drained!");
     }
 
-    _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), EffectType::MANA_SHIELD, 2, -1, false);
+    _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), { EffectType::MANA_SHIELD, 0, -1, false, GlobalConstants::EffectExtraInfo });
   }
   else
   {

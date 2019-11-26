@@ -41,7 +41,7 @@ void Player::Init()
   Attrs.Exp.SetMax(100);
 
   // FIXME: debug
-  Money = 100000;
+  // Money = 100000;
   //Attrs.HungerRate.Set(0);
   //Attrs.HP.Set(1000);
   //Attrs.HP.Set(10);
@@ -516,7 +516,7 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
     bool damageDone = TryToDamageObject(actor, damage, againstRes);
     if (weapon->Data.SpellHeld == SpellType::FROST)
     {
-      actor->AddEffect(weapon->OwnerGameObject->ObjectId(), EffectType::FROZEN, 1, 10, true);
+      actor->AddEffect(weapon->OwnerGameObject->ObjectId(), { EffectType::FROZEN, 1, 10, true });
     }
 
     if (damageDone && actor->IsDestroyed)
@@ -817,9 +817,8 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
     else
     {
       if (Attrs.MP.Min().Get() == 0)
-      {
-        // Mana shield from shrines and scrolls has duration -1 and power 2
-        RemoveEffect(0, EffectType::MANA_SHIELD, 2);
+      {        
+        RemoveEffect(0, EffectType::MANA_SHIELD, GlobalConstants::EffectExtraInfo);
       }
 
       Attrs.HP.AddMin(-amount);
@@ -846,9 +845,8 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
       else
       {
         if (Attrs.MP.Min().Get() == 0)
-        {
-          // Mana shield from shrines and scrolls has duration -1 and power 2
-          RemoveEffect(0, EffectType::MANA_SHIELD, 2);
+        {          
+          RemoveEffect(0, EffectType::MANA_SHIELD, GlobalConstants::EffectExtraInfo);
         }
 
         Attrs.HP.AddMin(-amount);
@@ -1493,15 +1491,15 @@ void Player::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
       break;    
 
     case ItemBonusType::MANA_SHIELD:
-      AddEffect(itemRef->OwnerGameObject->ObjectId(), EffectType::MANA_SHIELD, 0, -1, false);
+      AddEffect(itemRef->OwnerGameObject->ObjectId(), { EffectType::MANA_SHIELD, 0, -1, false });
       break;
 
     case ItemBonusType::REGEN:
-      AddEffect(itemRef->OwnerGameObject->ObjectId(), EffectType::REGEN, bonus.BonusValue, -1, false);
+      AddEffect(itemRef->OwnerGameObject->ObjectId(), { EffectType::REGEN, bonus.BonusValue, -1, false });
       break;
 
     case ItemBonusType::REFLECT:
-      AddEffect(itemRef->OwnerGameObject->ObjectId(), EffectType::REFLECT, 0, -1, false);
+      AddEffect(itemRef->OwnerGameObject->ObjectId(), { EffectType::REFLECT, 0, -1, false });
       break;
   }
 }
