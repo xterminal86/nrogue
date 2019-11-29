@@ -305,9 +305,12 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
         res.push_back("Does not wear out");
         break;
 
-      case ItemBonusType::SELF_REPAIR:
-        res.push_back("Repairs durability over time");
-        break;
+      case ItemBonusType::SELF_REPAIR:        
+      {
+        auto str = Util::StringFormat("Repairs 1 point of durability every %i turns", i.BonusValue);
+        res.push_back(str);
+      }
+      break;
 
       case ItemBonusType::VISIBILITY:
       {
@@ -341,7 +344,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::REGEN:
       {
-        auto str = Util::StringFormat("Regenerates 1 HP after %i turns", i.BonusValue);
+        auto str = Util::StringFormat("Regenerates 1 HP every %i turns", i.BonusValue);
         res.push_back(str);
       }
       break;

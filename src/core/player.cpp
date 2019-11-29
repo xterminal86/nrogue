@@ -292,7 +292,7 @@ void Player::SetSoldierAttrs()
   Attrs.HungerRate.Set(1500);
   Attrs.HungerSpeed.Set(1);
 
-  HealthRegenTurns = 30;
+  HealthRegenTurns = 40;
 }
 
 void Player::SetThiefAttrs()
@@ -311,7 +311,7 @@ void Player::SetThiefAttrs()
   Attrs.HungerRate.Set(2000);
   Attrs.HungerSpeed.Set(1);  
 
-  HealthRegenTurns = 50;
+  HealthRegenTurns = 60;
 }
 
 void Player::SetArcanistAttrs()

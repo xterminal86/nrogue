@@ -2414,7 +2414,7 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
             && itemData.ItemType_ != ItemType::ARMOR
             && itemData.ItemType_ != ItemType::RANGED_WEAPON))
       {
-        itemData.IdentifiedDescription.push_back("This one is cursed and should be avoided.");
+        itemData.IdentifiedDescription.push_back("This one is cursed and should probably be avoided.");
       }
     }
     break;
@@ -3345,12 +3345,13 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
     }
     break;
 
+    case ItemBonusType::SELF_REPAIR:
     case ItemBonusType::REGEN:
     {
       int min = 20;
       int max = 40;
 
-      // Number of turns before +1 to HP
+      // Number of turns before effect acts
       int minVal = min - 2 * multByQ[q];
       int maxVal = max - 2 * multByQ[q];
       value = RNG::Instance().RandomRange(minVal, maxVal + 1);

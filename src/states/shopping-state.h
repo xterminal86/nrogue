@@ -19,7 +19,7 @@ class ShoppingState : public GameState
     void HandleInput() override;
 
   private:
-    const int _kPlayerSellRate = 4;
+    const float _kPlayerSellRate = 2.5f;
 
     Player* _playerRef;
     TraderComponent* _shopOwner;

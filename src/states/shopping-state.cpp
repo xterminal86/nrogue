@@ -408,7 +408,8 @@ int ShoppingState::GetCost(ItemComponent* ic, bool playerSide)
   }
   else
   {
-    cost /= _kPlayerSellRate;
+    float tmp = (float)cost / _kPlayerSellRate;
+    cost = (int)tmp;
 
     if (!ic->Data.IsIdentified
      && _shopOwner->Type() == TraderRole::JUNKER)
