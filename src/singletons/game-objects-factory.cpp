@@ -475,8 +475,8 @@ GameObject* GameObjectsFactory::CreateUniquePickaxe()
 
   AddRandomBonus(ic, ItemBonusType::SELF_REPAIR);
 
-  AddBonus(ic, { ItemBonusType::SKL, 1, 0, false });
-  AddBonus(ic, { ItemBonusType::SPD, 1, 0, false });
+  AddBonus(ic, { ItemBonusType::SKL, 1 });
+  AddBonus(ic, { ItemBonusType::SPD, 1 });
 
   ic->Data.Durability.Reset(30);
 
@@ -1049,7 +1049,15 @@ bool GameObjectsFactory::FoodUseHandler(ItemComponent* item)
       // NOTE: assuming player hunger meter is in order of 1000
       int dur = item->Data.Cost / 100;
 
-      _playerRef->AddEffect(item->OwnerGameObject->ObjectId(), { EffectType::POISONED, 1, dur, true });
+      ItemBonusStruct b;
+      b.Type = ItemBonusType::POISONED;
+      b.BonusValue = -1;
+      b.Period = 10;
+      b.Duration = dur;
+      b.Cumulative = true;
+      b.Id = item->OwnerGameObject->ObjectId();
+
+      _playerRef->AddEffect(b);
     }
     else
     {
@@ -3244,6 +3252,9 @@ void GameObjectsFactory::AddBonus(ItemComponent* itemRef, const ItemBonusStruct&
     copy.MoneyCostIncrease = moneyIncrease;
   }
 
+  copy.Id = itemRef->OwnerGameObject->ObjectId();
+  copy.FromItem = true;
+
   itemRef->Data.Bonuses.push_back(copy);
 }
 
@@ -3370,6 +3381,8 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
   //bs.Value = (itemRef->Data.Prefix == ItemPrefix::CURSED && fuckupChance) ? -value : value;
 
   bs.BonusValue = value;
+  bs.Id = itemRef->OwnerGameObject->ObjectId();
+  bs.FromItem = true;
 
   itemRef->Data.Bonuses.push_back(bs);
 }

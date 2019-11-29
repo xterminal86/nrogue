@@ -202,7 +202,7 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
 
 void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
 {
-  if (!_playerRef->HasEffect(EffectType::POISONED))
+  if (!_playerRef->HasEffect(ItemBonusType::POISONED))
   {
     Printer::Instance().AddMessage(_kNoActionText);
     return;
@@ -210,20 +210,33 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
 
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
-    int power = RNG::Instance().RandomRange(1, 10);
-    _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), { EffectType::POISONED, power, 10, true });
+    ItemBonusStruct b;
+    b.Type = ItemBonusType::POISONED;
+    b.BonusValue = -1;
+    b.Period = 10;
+    b.Duration = 50;
+    b.Cumulative = true;
+
+    _playerRef->AddEffect(b);
 
     Printer::Instance().AddMessage("You feel unwell!");
   }
   else
   {
-    _playerRef->RemoveEffectAll(EffectType::POISONED);
+    _playerRef->DispelEffect(ItemBonusType::POISONED);
 
     Printer::Instance().AddMessage("You feel better");
 
     if (scroll->Data.Prefix == ItemPrefix::BLESSED)
     {
-      _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), { EffectType::REGEN, 1, 20, false });
+      ItemBonusStruct b;
+      b.Type = ItemBonusType::REGEN;
+      b.BonusValue = 1;
+      b.Period = 10;
+      b.Duration = 100;
+      b.Cumulative = true;
+
+      _playerRef->AddEffect(b);
     }
   }
 }
@@ -291,7 +304,13 @@ void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
 
   Printer::Instance().AddMessage(message);
 
-  _playerRef->AddEffect(wand->OwnerGameObject->ObjectId(), { EffectType::ILLUMINATED, power, duration, false });
+  ItemBonusStruct b;
+  b.Type = ItemBonusType::ILLUMINATED;
+  b.BonusValue = power;
+  b.Duration = duration;
+  b.Id = wand->OwnerGameObject->ObjectId();
+
+  _playerRef->AddEffect(b);
 }
 
 void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll)
@@ -376,7 +395,13 @@ void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
 
   Printer::Instance().AddMessage(message);
 
-  _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), { EffectType::ILLUMINATED, power, duration, false });
+  ItemBonusStruct b;
+  b.Type = ItemBonusType::ILLUMINATED;
+  b.BonusValue = power;
+  b.Duration = duration;
+  b.Id = scroll->OwnerGameObject->ObjectId();
+
+  _playerRef->AddEffect(b);
 }
 
 void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
@@ -405,7 +430,13 @@ void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
 
   Printer::Instance().AddMessage("You can sense nearby creatures");
 
-  _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), { EffectType::TELEPATHY, power, duration, false });
+  ItemBonusStruct b;
+  b.Type = ItemBonusType::TELEPATHY;
+  b.BonusValue = power;
+  b.Duration = duration;
+  b.Id = scroll->OwnerGameObject->ObjectId();
+
+  _playerRef->AddEffect(b);
 }
 
 void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
@@ -495,7 +526,12 @@ void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
       Printer::Instance().AddMessage("Your spirit force was drained!");
     }
 
-    _playerRef->AddEffect(scroll->OwnerGameObject->ObjectId(), { EffectType::MANA_SHIELD, 0, -1, false, GlobalConstants::EffectExtraInfo });
+    ItemBonusStruct b;
+    b.Type = ItemBonusType::MANA_SHIELD;
+    b.BonusValue = -1;
+    b.Id = scroll->OwnerGameObject->ObjectId();
+
+    _playerRef->AddEffect(b);
   }
   else
   {

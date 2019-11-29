@@ -5,6 +5,27 @@
 
 #include "component.h"
 
+// TODO: moar?
+static const std::vector<ItemBonusType> PositiveEffects =
+{
+  ItemBonusType::MANA_SHIELD,
+  ItemBonusType::ILLUMINATED,
+  ItemBonusType::REGEN,
+  ItemBonusType::REFLECT,
+  ItemBonusType::TELEPATHY,
+  ItemBonusType::INVISIBILITY,
+  ItemBonusType::LEVITATION
+};
+
+static const std::vector<ItemBonusType> NegativeEffects =
+{
+  ItemBonusType::PARALYZE,
+  ItemBonusType::POISONED,
+  ItemBonusType::BURNING,
+  ItemBonusType::FROZEN,
+  ItemBonusType::BLINDNESS
+};
+
 class ShrineComponent : public Component
 {
   public:

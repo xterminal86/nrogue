@@ -3,7 +3,6 @@
 #include "game-object.h"
 #include "util.h"
 #include "application.h"
-#include "effect.h"
 
 ShrineComponent::ShrineComponent()
 {
@@ -284,12 +283,17 @@ void ShrineComponent::ApplyRandomEffect()
   int power = Timeout / 100;
   int dur = Timeout / 10;
 
-  int effectIndex = RNG::Instance().RandomRange(0, EffectNameByType.size());
-  auto it = EffectNameByType.begin();
+  int effectIndex = RNG::Instance().RandomRange(0, GlobalConstants::BonusDisplayNameByType.size());
+  auto it = GlobalConstants::BonusDisplayNameByType.begin();
   std::advance(it, effectIndex);
-  EffectType e = it->first;
 
-  playerRef.AddEffect(OwnerGameObject->ObjectId(), { e, power, dur, false });
+  ItemBonusStruct b;
+  b.Type = it->first;
+  b.BonusValue = power;
+  b.Duration= dur;
+  b.Id = OwnerGameObject->ObjectId();
+
+  playerRef.AddEffect(b);
 }
 
 void ShrineComponent::ApplyRandomPositiveEffect()
@@ -300,16 +304,20 @@ void ShrineComponent::ApplyRandomPositiveEffect()
   int dur = Timeout / 5;
 
   int effectIndex = RNG::Instance().RandomRange(0, PositiveEffects.size());
-  EffectType e = PositiveEffects[effectIndex];
+  ItemBonusType t = PositiveEffects[effectIndex];
 
-  if (e == EffectType::MANA_SHIELD && playerRef.Attrs.MP.Max().Get() != 0)
+  ItemBonusStruct b;
+  b.Type = t;
+  b.BonusValue = power;
+  b.Duration = dur;
+  b.Id = OwnerGameObject->ObjectId();
+
+  if (t == ItemBonusType::MANA_SHIELD && playerRef.Attrs.MP.Max().Get() != 0)
   {
-    playerRef.AddEffect(OwnerGameObject->ObjectId(), { e, power, -1, false, GlobalConstants::EffectExtraInfo });
+    b.Duration = -1;
   }
-  else
-  {
-    playerRef.AddEffect(OwnerGameObject->ObjectId(), { e, power, dur, false });
-  }
+
+  playerRef.AddEffect(b);
 }
 
 void ShrineComponent::ApplyRandomNegativeEffect()
@@ -320,7 +328,13 @@ void ShrineComponent::ApplyRandomNegativeEffect()
   int dur = Timeout / 5;
 
   int effectIndex = RNG::Instance().RandomRange(0, NegativeEffects.size());
-  EffectType e = NegativeEffects[effectIndex];
+  ItemBonusType t = NegativeEffects[effectIndex];
 
-  playerRef.AddEffect(OwnerGameObject->ObjectId(), { e, power, dur, false });
+  ItemBonusStruct b;
+  b.Type = t;
+  b.BonusValue = power;
+  b.Duration = dur;
+  b.Id = OwnerGameObject->ObjectId();
+
+  playerRef.AddEffect(b);
 }

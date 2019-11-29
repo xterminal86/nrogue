@@ -13,7 +13,7 @@
 #include "component.h"
 #include "constants.h"
 #include "attribute.h"
-#include "effect.h"
+#include "item-data.h"
 
 class GameObjectInfo;
 class MapLevelBase;
@@ -129,13 +129,17 @@ class GameObject
 
     virtual void LevelUp(int baseHpOverride = -1);
 
-    void AddEffect(uint64_t effectGiver, const Effect& effectToAdd);
-    void RemoveEffectAll(EffectType t);
-    void RemoveEffect(uint64_t itemId, EffectType t, const std::string& extraInfo = std::string());
-    bool HasEffect(EffectType t);
+    void AddEffect(const ItemBonusStruct& effectToAdd);
+
+    // Erases only effects that have ItemRef = nullptr
+    void DispelEffect(const ItemBonusType& e);
+
+    void RemoveEffect(const ItemBonusStruct& e);
+
+    bool HasEffect(const ItemBonusType& e);
     bool IsAlive();
 
-    const std::map<uint64_t, Effect>& Effects();
+    const std::map<uint64_t, ItemBonusStruct>& Effects();
 
     uint64_t ObjectId();
 
@@ -148,7 +152,7 @@ class GameObject
 
   protected:    
     std::map<size_t, std::unique_ptr<Component>> _components;
-    std::map<uint64_t, Effect> _activeEffects;
+    std::map<uint64_t, ItemBonusStruct> _activeEffects;
 
     GameObject* _previousCell = nullptr;
     GameObject* _currentCell = nullptr;
@@ -162,9 +166,9 @@ class GameObject
 
     void MoveGameObject(int dx, int dy);
     void ProcessEffects();
-    void ApplyEffect(const Effect& e);
-    void UnapplyEffect(const Effect& e);
-    void EffectAction(const Effect& e);
+    void ApplyEffect(const ItemBonusStruct& e);
+    void UnapplyEffect(const ItemBonusStruct& e);
+    void EffectAction(const ItemBonusStruct& e);
     void MarkAndCreateRemains();
 
     bool CanRaiseAttribute(Attribute& attr);

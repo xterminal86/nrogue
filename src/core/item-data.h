@@ -8,8 +8,13 @@ struct ItemBonusStruct
 {
   ItemBonusType Type = ItemBonusType::NONE;
   int BonusValue = 0;
+  int Duration = -1;
+  int Period = -1;
   int MoneyCostIncrease = 0;
   bool IsCursed = false;
+  bool Cumulative = false;
+  bool FromItem = false;
+  uint64_t Id = 0;
 };
 
 // NOTE: possible god object

@@ -767,7 +767,7 @@ void Map::DrawActors()
     int x = go->PosX;
     int y = go->PosY;
 
-    if (_playerRef->HasEffect(EffectType::TELEPATHY)
+    if (_playerRef->HasEffect(ItemBonusType::TELEPATHY)
      || CurrentLevel->MapArray[x][y]->Visible)
     {
       // If game object has black bg color,

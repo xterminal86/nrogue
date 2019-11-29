@@ -3,17 +3,15 @@
 
 #include "task-attack-basic.h"
 
-#include "effect.h"
-
 class TaskAttackEffect : public TaskAttackBasic
 {
   public:
-    TaskAttackEffect(GameObject* objectToControl, const Effect& e, bool ignoreArmor);
+    TaskAttackEffect(GameObject* objectToControl, const ItemBonusStruct& e, bool ignoreArmor);
 
     BTResult Run() override;
 
   private:
-    Effect _effectToApply;
+    ItemBonusStruct _effectToApply;
     bool _shouldIgnoreArmor;
 };
 

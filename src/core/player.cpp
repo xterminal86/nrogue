@@ -516,7 +516,14 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
     bool damageDone = TryToDamageObject(actor, damage, againstRes);
     if (weapon->Data.SpellHeld == SpellType::FROST)
     {
-      actor->AddEffect(weapon->OwnerGameObject->ObjectId(), { EffectType::FROZEN, 1, 10, true });
+      ItemBonusStruct b;
+      b.Type = ItemBonusType::FROZEN;
+      b.BonusValue = 1;
+      b.Duration = 10;
+      b.Id = weapon->OwnerGameObject->ObjectId();
+      b.Cumulative = true;
+
+      actor->AddEffect(b);
     }
 
     if (damageDone && actor->IsDestroyed)
@@ -810,7 +817,7 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
       amount = 0;
     }
 
-    if (HasEffect(EffectType::MANA_SHIELD) && Attrs.MP.Min().Get() != 0)
+    if (HasEffect(ItemBonusType::MANA_SHIELD) && Attrs.MP.Min().Get() != 0)
     {
       Attrs.MP.AddMin(-amount);
     }
@@ -818,7 +825,7 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
     {
       if (Attrs.MP.Min().Get() == 0)
       {        
-        RemoveEffect(0, EffectType::MANA_SHIELD, GlobalConstants::EffectExtraInfo);
+        DispelEffect(ItemBonusType::MANA_SHIELD);
       }
 
       Attrs.HP.AddMin(-amount);
@@ -838,7 +845,7 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
     {
       logMsg = Util::StringFormat("You were hit for %i damage", amount);
 
-      if (HasEffect(EffectType::MANA_SHIELD) && Attrs.MP.Min().Get() != 0)
+      if (HasEffect(ItemBonusType::MANA_SHIELD) && Attrs.MP.Min().Get() != 0)
       {
         Attrs.MP.AddMin(-amount);
       }
@@ -846,7 +853,7 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
       {
         if (Attrs.MP.Min().Get() == 0)
         {          
-          RemoveEffect(0, EffectType::MANA_SHIELD, GlobalConstants::EffectExtraInfo);
+          DispelEffect(ItemBonusType::MANA_SHIELD);
         }
 
         Attrs.HP.AddMin(-amount);
@@ -1490,16 +1497,10 @@ void Player::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
       VisibilityRadius.AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.BonusValue);
       break;    
 
-    case ItemBonusType::MANA_SHIELD:
-      AddEffect(itemRef->OwnerGameObject->ObjectId(), { EffectType::MANA_SHIELD, 0, -1, false });
-      break;
-
     case ItemBonusType::REGEN:
-      AddEffect(itemRef->OwnerGameObject->ObjectId(), { EffectType::REGEN, bonus.BonusValue, -1, false });
-      break;
-
     case ItemBonusType::REFLECT:
-      AddEffect(itemRef->OwnerGameObject->ObjectId(), { EffectType::REFLECT, 0, -1, false });
+    case ItemBonusType::MANA_SHIELD:
+      AddEffect(bonus);
       break;
   }
 }
@@ -1535,12 +1536,10 @@ void Player::UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
       VisibilityRadius.RemoveModifier(itemRef->OwnerGameObject->ObjectId());
       break;
 
-    case ItemBonusType::MANA_SHIELD:
-      RemoveEffect(itemRef->OwnerGameObject->ObjectId(), EffectType::MANA_SHIELD);
-      break;
-
     case ItemBonusType::REGEN:
-      RemoveEffect(itemRef->OwnerGameObject->ObjectId(), EffectType::REGEN);
+    case ItemBonusType::REFLECT:
+    case ItemBonusType::MANA_SHIELD:
+      RemoveEffect(bonus);
       break;
   }
 }

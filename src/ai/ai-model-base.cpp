@@ -152,17 +152,14 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
     std::string effectType = data->Params.at("p2");
     bool ignoreArmor = (data->Params.count("p3") == 1);
 
-    Effect e;
+    ItemBonusStruct e;
 
     if (effectType == "Psd")
     {
-      e =
-      {
-        EffectType::POISONED,
-        AIComponentRef->OwnerGameObject->Attrs.Lvl.Get(),
-        10 + AIComponentRef->OwnerGameObject->Attrs.Lvl.Get(),
-        true
-      };
+      e.Type = ItemBonusType::POISONED;
+      e.BonusValue = AIComponentRef->OwnerGameObject->Attrs.Lvl.Get();
+      e.Duration = 10 + AIComponentRef->OwnerGameObject->Attrs.Lvl.Get();
+      e.Period = 5;
     }
 
     task = new TaskAttackEffect(AIComponentRef->OwnerGameObject, e, ignoreArmor);
@@ -267,7 +264,7 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
     std::string who = data->Params.at("p2");
     std::string effect = data->Params.at("p3");
 
-    auto invMap = Util::FlipMap(EffectNameByType);
+    auto invMap = Util::FlipMap(GlobalConstants::BonusDisplayNameByType);
 
     fn = [this, invMap, who, effect]()
     {

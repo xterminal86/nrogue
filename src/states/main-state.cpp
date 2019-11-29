@@ -720,7 +720,7 @@ void MainState::DisplayStatusIcons()
   int offsetX = startPos;
   for (auto& i : _playerRef->Effects())
   {
-    auto shortName = EffectNameByType.at(i.second.Type);
+    auto shortName = GlobalConstants::BonusDisplayNameByType.at(i.second.Type);
     if (shortName == lastDisplayedEffect)
     {
       continue;

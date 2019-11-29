@@ -264,39 +264,41 @@ void GameObject::MoveGameObject(int dx, int dy)
   _currentCell->Occupied = true;
 }
 
-void GameObject::AddEffect(uint64_t effectGiver, const Effect &effectToAdd)
+void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
 {
-  if (_activeEffects.count(effectGiver) == 0)
+  uint64_t id = effectToAdd.Id;
+
+  if (_activeEffects.count(id) == 0)
   {
-    _activeEffects[effectGiver] = effectToAdd;
+    _activeEffects[id] = effectToAdd;
   }
   else
   {
     if (effectToAdd.Cumulative)
     {
-      _activeEffects[effectGiver].Duration += effectToAdd.Duration;
-      _activeEffects[effectGiver].Power += effectToAdd.Power;
+      _activeEffects[id].Duration += effectToAdd.Duration;
+      _activeEffects[id].BonusValue += effectToAdd.BonusValue;
     }
     else
     {
-      _activeEffects[effectGiver] = effectToAdd;
+      _activeEffects[id] = effectToAdd;
     }
   }
 
-  ApplyEffect(_activeEffects[effectGiver]);
+  ApplyEffect(_activeEffects[id]);
 }
 
-void GameObject::ApplyEffect(const Effect& e)
+void GameObject::ApplyEffect(const ItemBonusStruct& e)
 {
   switch (e.Type)
   {
-    case EffectType::TELEPATHY:
-    case EffectType::ILLUMINATED:
-      VisibilityRadius.AddModifier(ObjectId(), e.Power);
+    case ItemBonusType::TELEPATHY:
+    case ItemBonusType::ILLUMINATED:
+      VisibilityRadius.AddModifier(e.Id, e.BonusValue);
       break;
 
-    case EffectType::FROZEN:
-      Attrs.Spd.AddModifier(ObjectId(), -e.Power);
+    case ItemBonusType::FROZEN:
+      Attrs.Spd.AddModifier(e.Id, -e.BonusValue);
       break;
 
     // TODO:
@@ -306,62 +308,52 @@ void GameObject::ApplyEffect(const Effect& e)
   }
 }
 
-void GameObject::UnapplyEffect(const Effect& e)
+void GameObject::UnapplyEffect(const ItemBonusStruct& e)
 {
   switch (e.Type)
   {
-    case EffectType::TELEPATHY:
-    case EffectType::ILLUMINATED:
-      VisibilityRadius.RemoveModifier(ObjectId());
+    case ItemBonusType::TELEPATHY:
+    case ItemBonusType::ILLUMINATED:
+      VisibilityRadius.RemoveModifier(e.Id);
       break;
 
-    case EffectType::FROZEN:
-      Attrs.Spd.RemoveModifier(ObjectId());
+    case ItemBonusType::FROZEN:
+      Attrs.Spd.RemoveModifier(e.Id);
       break;
   }
 }
 
-void GameObject::RemoveEffect(uint64_t itemId, EffectType t, const std::string& extraInfo)
-{  
-  if (!extraInfo.empty())
+void GameObject::RemoveEffect(const ItemBonusStruct& t)
+{
+  for (int i = 0; i < _activeEffects.size(); i++)
   {
-    for (int i = 0; i < _activeEffects.size(); i++)
+    auto it = _activeEffects.begin();
+    std::advance(it, i);
+    if (it->second.Id == t.Id)
     {
-      auto it = _activeEffects.begin();
-      std::advance(it, i);
-
-      if (it->second.Type == t && it->second.ExtraInfo == extraInfo)
-      {
-        UnapplyEffect(it->second);
-        _activeEffects.erase(it);
-      }
-    }
-  }
-  else
-  {
-    if (_activeEffects.count(itemId) == 1)
-    {
-      UnapplyEffect(_activeEffects[itemId]);
-      _activeEffects.erase(itemId);      
+      UnapplyEffect(it->second);
+      _activeEffects.erase(it);
+      break;
     }
   }
 }
 
-void GameObject::RemoveEffectAll(EffectType t)
+void GameObject::DispelEffect(const ItemBonusType& t)
 {
   for (int i = 0; i < _activeEffects.size(); i++)
   {
     auto it = _activeEffects.begin();
     std::advance(it, i);
 
-    if (it->second.Type == t)
+    if (it->second.Type == t && !it->second.FromItem)
     {
+      UnapplyEffect(it->second);
       _activeEffects.erase(it);
     }
   }
 }
 
-bool GameObject::HasEffect(EffectType t)
+bool GameObject::HasEffect(const ItemBonusType& t)
 {  
   for (auto& kvp : _activeEffects)
   {
@@ -398,16 +390,13 @@ void GameObject::ProcessEffects()
   }
 }
 
-void GameObject::EffectAction(const Effect& e)
+void GameObject::EffectAction(const ItemBonusStruct& e)
 {
   switch (e.Type)
   {
-    case EffectType::POISONED:      
-      Attrs.HP.AddMin(-e.Power);
-      break;
-
-    case EffectType::REGEN:
-      Attrs.HP.AddMin(e.Power);
+    case ItemBonusType::POISONED:
+    case ItemBonusType::REGEN:
+      Attrs.HP.AddMin(e.BonusValue);
       break;
   }
 }
@@ -513,7 +502,7 @@ bool GameObject::CanRaiseAttribute(Attribute& attr)
   return Util::Rolld100(chance);
 }
 
-const std::map<uint64_t, Effect>& GameObject::Effects()
+const std::map<uint64_t, ItemBonusStruct>& GameObject::Effects()
 {
   return _activeEffects;
 }

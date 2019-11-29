@@ -3,11 +3,12 @@
 #include "player.h"
 
 TaskAttackEffect::TaskAttackEffect(GameObject* objectToControl,
-                                   const Effect &e,
+                                   const ItemBonusStruct& e,
                                    bool ignoreArmor)
   : TaskAttackBasic(objectToControl)
 {
   _effectToApply = e;
+  _effectToApply.Id = objectToControl->ObjectId();
   _shouldIgnoreArmor = ignoreArmor;
 }
 
@@ -25,7 +26,7 @@ BTResult TaskAttackEffect::Run()
   {
     if (_shouldIgnoreArmor || !_attackResultPlayerHasArmor.second)
     {
-      _playerRef->AddEffect(_objectToControl->ObjectId(), _effectToApply);
+      _playerRef->AddEffect(_effectToApply);
     }
   }
 

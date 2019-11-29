@@ -322,6 +322,7 @@ enum class ItemBonusType
   INDESTRUCTIBLE,
   SELF_REPAIR,
   VISIBILITY,     // increases visibility radius
+  INVISIBILITY,   // monsters can't see you (unless they can)
   DAMAGE,         // adds to total damage
   HUNGER,         // stops hunger counter
   IGNORE_DEFENCE, // ignores DEF for damage calculation
@@ -332,7 +333,15 @@ enum class ItemBonusType
   LEECH,          // get hp on hit
   DMG_ABSORB,
   MAG_ABSORB,
-  THORNS          // damages enemy if player was hit
+  THORNS,         // damages enemy if player was hit
+  PARALYZE,
+  TELEPATHY,      // See monsters
+  LEVITATION,
+  BLINDNESS,      // anti-visibility (-100500 to LightRadius)
+  FROZEN,         // SPD penalty
+  BURNING,        // inflicts fire damage over several turns + gives illuminated
+  ILLUMINATED,    // + to light radius
+  POISONED        // anti-regen
 };
 
 enum class FoodType
@@ -1195,6 +1204,25 @@ namespace GlobalConstants
     { ItemBonusType::DMG_ABSORB,      300  },
     { ItemBonusType::MAG_ABSORB,      300  },
     { ItemBonusType::THORNS,           40  }
+  };
+
+  static const std::map<ItemBonusType, std::string> BonusDisplayNameByType =
+  {
+    { ItemBonusType::INVISIBILITY, "Hid" },
+    { ItemBonusType::MANA_SHIELD,  "Shi" },
+    { ItemBonusType::REGEN,        "Reg" },
+    { ItemBonusType::REFLECT,      "Ref" },
+    { ItemBonusType::DMG_ABSORB,   "PAb" },
+    { ItemBonusType::MAG_ABSORB,   "MAb" },
+    { ItemBonusType::THORNS,       "Ths" },
+    { ItemBonusType::PARALYZE,     "Par" },
+    { ItemBonusType::TELEPATHY,    "Tel" },
+    { ItemBonusType::LEVITATION,   "Fly" },
+    { ItemBonusType::BLINDNESS,    "Bli" },
+    { ItemBonusType::FROZEN,       "Frz" },
+    { ItemBonusType::BURNING,      "Bur" },
+    { ItemBonusType::ILLUMINATED,  "Lgt" },
+    { ItemBonusType::POISONED,     "Psd" }
   };
 
   static const std::vector<std::vector<std::string>> DungeonRooms =
