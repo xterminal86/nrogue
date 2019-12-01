@@ -1237,8 +1237,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::SKL, 1, 0, false });
-      AddBonus(ic, { ItemBonusType::SPD, 1, 0, false });
+      AddBonus(ic, { ItemBonusType::SKL, 1 });
+      AddBonus(ic, { ItemBonusType::SPD, 1 });
     }
     break;
 
@@ -1252,7 +1252,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::STR, 1, 0, false });
+      AddBonus(ic, { ItemBonusType::STR, 1 });
     }
     break;
 
@@ -1266,8 +1266,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::STR, 1, 0, false });
-      AddBonus(ic, { ItemBonusType::DEF, 1, 0, false });
+      AddBonus(ic, { ItemBonusType::STR, 1 });
+      AddBonus(ic, { ItemBonusType::DEF, 1 });
     }
     break;
 
@@ -1281,9 +1281,9 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::STR,  2, 0, false });
-      AddBonus(ic, { ItemBonusType::DEF,  1, 0, false });
-      AddBonus(ic, { ItemBonusType::SPD, -1, 0, false });
+      AddBonus(ic, { ItemBonusType::STR,  2 });
+      AddBonus(ic, { ItemBonusType::DEF,  1 });
+      AddBonus(ic, { ItemBonusType::SPD, -1 });
     }
     break;
 
@@ -1297,9 +1297,9 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::STR,  4, 0, false });
-      AddBonus(ic, { ItemBonusType::SKL, -2, 0, false });
-      AddBonus(ic, { ItemBonusType::SPD, -4, 0, false });
+      AddBonus(ic, { ItemBonusType::STR,  4 });
+      AddBonus(ic, { ItemBonusType::SKL, -2 });
+      AddBonus(ic, { ItemBonusType::SPD, -4 });
     }
     break;
 
@@ -1313,8 +1313,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::DEF,  1, 0, false });
-      AddBonus(ic, { ItemBonusType::SPD, -1, 0, false });
+      AddBonus(ic, { ItemBonusType::DEF,  1 });
+      AddBonus(ic, { ItemBonusType::SPD, -1 });
     }
     break;
 
@@ -1568,7 +1568,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
         "Requires some skill to be used effectively."
       };
 
-      AddBonus(ic, { ItemBonusType::SKL, -1, 0, false });
+      AddBonus(ic, { ItemBonusType::SKL, -1 });
     }
     break;
 
@@ -1589,7 +1589,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
         "Requires some skill to be used effectively."
       };
 
-      AddBonus(ic, { ItemBonusType::SKL, -2, 0, false });
+      AddBonus(ic, { ItemBonusType::SKL, -2 });
     }
     break;
 
@@ -1611,7 +1611,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
         "Requires some skill to be used effectively."
       };
 
-      AddBonus(ic, { ItemBonusType::SKL, -3, 0, false });
+      AddBonus(ic, { ItemBonusType::SKL, -3 });
     }
     break;
 
@@ -1633,8 +1633,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
         "Requires some time to reload."
       };
 
-      AddBonus(ic, { ItemBonusType::SPD, -1, 0, false });
-      AddBonus(ic, { ItemBonusType::SKL,  1, 0, false });
+      AddBonus(ic, { ItemBonusType::SPD, -1 });
+      AddBonus(ic, { ItemBonusType::SKL,  1 });
     }
     break;
 
@@ -1656,8 +1656,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
         "Requires some time to reload."
       };
 
-      AddBonus(ic, { ItemBonusType::SPD, -2, 0, false });
-      AddBonus(ic, { ItemBonusType::SKL,  2, 0, false });
+      AddBonus(ic, { ItemBonusType::SPD, -2 });
+      AddBonus(ic, { ItemBonusType::SKL,  2 });
     }
     break;
 
@@ -1679,8 +1679,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
         "Requires some time to reload."
       };
 
-      AddBonus(ic, { ItemBonusType::SPD, -3, 0, false });
-      AddBonus(ic, { ItemBonusType::SKL,  3, 0, false });
+      AddBonus(ic, { ItemBonusType::SPD, -3 });
+      AddBonus(ic, { ItemBonusType::SKL,  3 });
     }
     break;
   }
@@ -2023,7 +2023,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "It won't last long, but any armor is better than nothing."
       };
 
-      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty, 0, false });
+      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty });
 
       baseDurability += 2 * (int)ic->Data.ItemQuality_;
 
@@ -2037,8 +2037,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "protection against cutting blows."
       };
 
-      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 1, 0, false });
-      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 1, 0, false });
+      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 1 });
+      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 1 });
 
       baseDurability += 3 * (int)ic->Data.ItemQuality_;
 
@@ -2055,8 +2055,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "and is easy to repair."
       };
 
-      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 3, 0, false });
-      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 2, 0, false });
+      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 3 });
+      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 2 });
 
       baseDurability += 4 * (int)ic->Data.ItemQuality_;
 
@@ -2069,8 +2069,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "A body vest with overlapping scales worn over a small mail shirt.",
       };
 
-      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 4, 0, false });
-      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 3, 0, false });
+      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 4 });
+      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 3 });
 
       baseDurability += 5 * (int)ic->Data.ItemQuality_;
 
@@ -2087,8 +2087,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "all others in itself."
       };
 
-      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 6, 0, false });
-      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 4, 0, false });
+      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 6 });
+      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 4 });
 
       baseDurability += 6 * (int)ic->Data.ItemQuality_;
 

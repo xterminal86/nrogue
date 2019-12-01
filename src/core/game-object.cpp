@@ -266,6 +266,8 @@ void GameObject::MoveGameObject(int dx, int dy)
 
 void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
 {
+  // TODO: change std::map to std::map<id, std::vector<ItemBonusStruct>>
+  // for easy cumulative effect addition
   uint64_t id = effectToAdd.Id;
 
   if (_activeEffects.count(id) == 0)
@@ -276,6 +278,8 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
   {
     if (effectToAdd.Cumulative)
     {
+      // FIXME: do we always need to += Duration and BonusValue?
+      // What if it's new REGEN?
       _activeEffects[id].Duration += effectToAdd.Duration;
       _activeEffects[id].BonusValue += effectToAdd.BonusValue;
     }
