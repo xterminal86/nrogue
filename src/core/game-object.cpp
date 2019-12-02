@@ -266,10 +266,28 @@ void GameObject::MoveGameObject(int dx, int dy)
 
 void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
 {
-  // TODO: change std::map to std::map<id, std::vector<ItemBonusStruct>>
-  // for easy cumulative effect addition
   uint64_t id = effectToAdd.Id;
 
+  if (effectToAdd.Cumulative)
+  {
+    _activeEffects[id].push_back(effectToAdd);
+  }
+  else
+  {
+    if (_activeEffects[id].empty())
+    {
+      _activeEffects[id].push_back(effectToAdd);
+    }
+    else
+    {
+      // There can be only one.
+      _activeEffects[id][0] = effectToAdd;
+    }
+  }
+
+  ApplyEffect(effectToAdd);
+
+  /*
   if (_activeEffects.count(id) == 0)
   {
     _activeEffects[id] = effectToAdd;
@@ -290,12 +308,22 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
   }
 
   ApplyEffect(_activeEffects[id]);
+  */
 }
 
 void GameObject::ApplyEffect(const ItemBonusStruct& e)
-{
+{  
   switch (e.Type)
-  {
+  {      
+    case ItemBonusType::STR:
+    case ItemBonusType::DEF:
+    case ItemBonusType::MAG:
+    case ItemBonusType::RES:
+    case ItemBonusType::SPD:
+    case ItemBonusType::SKL:
+      _attributesRefsByBonus.at(e.Type).AddModifier(e.Id, e.BonusValue);
+      break;
+
     case ItemBonusType::TELEPATHY:
     case ItemBonusType::ILLUMINATED:
       VisibilityRadius.AddModifier(e.Id, e.BonusValue);
@@ -316,6 +344,15 @@ void GameObject::UnapplyEffect(const ItemBonusStruct& e)
 {
   switch (e.Type)
   {
+    case ItemBonusType::STR:
+    case ItemBonusType::DEF:
+    case ItemBonusType::MAG:
+    case ItemBonusType::RES:
+    case ItemBonusType::SPD:
+    case ItemBonusType::SKL:
+      _attributesRefsByBonus.at(e.Type).RemoveModifier(e.Id);
+      break;
+
     case ItemBonusType::TELEPATHY:
     case ItemBonusType::ILLUMINATED:
       VisibilityRadius.RemoveModifier(e.Id);
@@ -333,11 +370,21 @@ void GameObject::RemoveEffect(const ItemBonusStruct& t)
   {
     auto it = _activeEffects.begin();
     std::advance(it, i);
-    if (it->second.Id == t.Id)
+
+    bool shouldErase = false;
+    for (auto& item : it->second)
     {
-      UnapplyEffect(it->second);
+      if (item.Id == t.Id)
+      {
+        UnapplyEffect(item);
+        shouldErase = true;
+        break;
+      }
+    }
+
+    if (shouldErase)
+    {
       _activeEffects.erase(it);
-      break;
     }
   }
 }
@@ -349,9 +396,18 @@ void GameObject::DispelEffect(const ItemBonusType& t)
     auto it = _activeEffects.begin();
     std::advance(it, i);
 
-    if (it->second.Type == t && !it->second.FromItem)
+    bool shouldErase = false;
+    for (auto& item : it->second)
     {
-      UnapplyEffect(it->second);
+      if (item.Type == t && !item.FromItem)
+      {
+        UnapplyEffect(item);
+        shouldErase = true;
+      }
+    }
+
+    if (shouldErase)
+    {
       _activeEffects.erase(it);
     }
   }
@@ -361,9 +417,12 @@ bool GameObject::HasEffect(const ItemBonusType& t)
 {  
   for (auto& kvp : _activeEffects)
   {
-    if (kvp.second.Type == t)
+    for (auto& i : kvp.second)
     {
-      return true;
+      if (i.Type == t)
+      {
+        return true;
+      }
     }
   }
 
@@ -377,19 +436,55 @@ void GameObject::ProcessEffects()
     auto it = _activeEffects.begin();
     std::advance(it, i);
 
-    if (it->second.Duration > 0)
+    auto& v = _activeEffects[it->first];
+    for (int j = 0; j < v.size(); j++)
     {
-      EffectAction(it->second);
-      it->second.Duration--;
+      if (v[j].Duration > 0)
+      {
+        if (v[j].Period > 0)
+        {
+          v[j].EffectCounter++;
+
+          if (v[j].EffectCounter % v[j].Period == 0)
+          {
+            v[j].EffectCounter = 0;
+            EffectAction(v[j]);
+          }
+        }
+        else
+        {
+          EffectAction(v[j]);
+        }
+
+        v[j].Duration--;
+      }
+      else if (v[j].Duration == 0)
+      {
+        UnapplyEffect(v[j]);
+        v.erase(v.begin(), v.begin() + j);
+      }
+      else if (v[j].Duration == -1)
+      {
+        if (v[j].Period > 0)
+        {
+          v[j].EffectCounter++;
+
+          if (v[j].EffectCounter % v[j].Period == 0)
+          {
+            v[j].EffectCounter = 0;
+            EffectAction(v[j]);
+          }
+        }
+        else
+        {
+          EffectAction(v[j]);
+        }
+      }
     }
-    else if (it->second.Duration == 0)
+
+    if (v.empty())
     {
-      UnapplyEffect(it->second);
       _activeEffects.erase(it);
-    }
-    else if (it->second.Duration == -1)
-    {
-      EffectAction(it->second);
     }
   }
 }
@@ -506,7 +601,7 @@ bool GameObject::CanRaiseAttribute(Attribute& attr)
   return Util::Rolld100(chance);
 }
 
-const std::map<uint64_t, ItemBonusStruct>& GameObject::Effects()
+const std::map<uint64_t, std::vector<ItemBonusStruct>>& GameObject::Effects()
 {
   return _activeEffects;
 }

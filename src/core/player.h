@@ -161,32 +161,6 @@ class Player : public GameObject
       { "MP",  0 }
     };
 
-    std::map<StatsEnum, Attribute&> _attributesRefsByType =
-    {
-      { StatsEnum::STR, Attrs.Str },
-      { StatsEnum::DEF, Attrs.Def },
-      { StatsEnum::MAG, Attrs.Mag },
-      { StatsEnum::RES, Attrs.Res },
-      { StatsEnum::SKL, Attrs.Skl },
-      { StatsEnum::SPD, Attrs.Spd }
-    };
-
-    std::map<ItemBonusType, Attribute&> _attributesRefsByBonus =
-    {
-      { ItemBonusType::STR, Attrs.Str },
-      { ItemBonusType::DEF, Attrs.Def },
-      { ItemBonusType::MAG, Attrs.Mag },
-      { ItemBonusType::RES, Attrs.Res },
-      { ItemBonusType::SKL, Attrs.Skl },
-      { ItemBonusType::SPD, Attrs.Spd }
-    };
-
-    std::map<ItemBonusType, RangedAttribute&> _rangedAttributesRefsByBonus =
-    {
-      { ItemBonusType::HP, Attrs.HP },
-      { ItemBonusType::MP, Attrs.MP }
-    };
-
     friend class SpellsProcessor;
 };
 

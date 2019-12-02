@@ -3359,14 +3359,16 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
     case ItemBonusType::SELF_REPAIR:
     case ItemBonusType::REGEN:
     {
+      value = 1;
+
       int min = 20;
       int max = 40;
 
       // Number of turns before effect acts
       int minVal = min - 2 * multByQ[q];
       int maxVal = max - 2 * multByQ[q];
-      value = RNG::Instance().RandomRange(minVal, maxVal + 1);
-      bs.MoneyCostIncrease = (int)(((float)max / (float)value) * (float)moneyIncrease);
+      bs.Period = RNG::Instance().RandomRange(minVal, maxVal + 1);
+      bs.MoneyCostIncrease = (int)(((float)max / (float)bs.Period) * (float)moneyIncrease);
     }
     break;
   }

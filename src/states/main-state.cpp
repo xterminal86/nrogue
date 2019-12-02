@@ -718,18 +718,21 @@ void MainState::DisplayStatusIcons()
   std::string lastDisplayedEffect;
 
   int offsetX = startPos;
-  for (auto& i : _playerRef->Effects())
+  for (auto& kvp : _playerRef->Effects())
   {
-    auto shortName = GlobalConstants::BonusDisplayNameByType.at(i.second.Type);
-    if (shortName == lastDisplayedEffect)
+    for (auto& item : kvp.second)
     {
-      continue;
+      auto shortName = GlobalConstants::BonusDisplayNameByType.at(item.Type);
+      if (shortName == lastDisplayedEffect)
+      {
+        continue;
+      }
+
+      Printer::Instance().PrintFB(offsetX, th - 4, shortName, Printer::kAlignLeft, "#FFFFFF");
+      offsetX += 4;
+
+      lastDisplayedEffect = shortName;
     }
-
-    Printer::Instance().PrintFB(offsetX, th - 4, shortName, Printer::kAlignLeft, "#FFFFFF");
-    offsetX += 4;
-
-    lastDisplayedEffect = shortName;
   }
 }
 

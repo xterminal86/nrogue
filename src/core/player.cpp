@@ -1470,6 +1470,11 @@ void Player::ApplyBonuses(ItemComponent* itemRef)
 {
   for (auto& i : itemRef->Data.Bonuses)
   {
+    if (i.Period > 0)
+    {
+      i.EffectCounter = 0;
+    }
+
     ApplyBonus(itemRef, i);
   }
 }
@@ -1497,6 +1502,9 @@ void Player::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
       VisibilityRadius.AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.BonusValue);
       break;    
 
+    // FIXME: how to "effect action" self-repair?
+    //case ItemBonusType::SELF_REPAIR:
+
     case ItemBonusType::REGEN:
     case ItemBonusType::REFLECT:
     case ItemBonusType::MANA_SHIELD:
@@ -1509,6 +1517,11 @@ void Player::UnapplyBonuses(ItemComponent* itemRef)
 {
   for (auto& i : itemRef->Data.Bonuses)
   {
+    if (i.Period > 0)
+    {
+      i.EffectCounter = 0;
+    }
+
     UnapplyBonus(itemRef, i);
   }
 }

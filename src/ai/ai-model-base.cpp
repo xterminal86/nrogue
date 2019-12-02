@@ -153,13 +153,13 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
     bool ignoreArmor = (data->Params.count("p3") == 1);
 
     ItemBonusStruct e;
-
     if (effectType == "Psd")
     {
       e.Type = ItemBonusType::POISONED;
       e.BonusValue = AIComponentRef->OwnerGameObject->Attrs.Lvl.Get();
       e.Duration = 10 + AIComponentRef->OwnerGameObject->Attrs.Lvl.Get();
-      e.Period = 5;
+      e.Period = 5;      
+      e.Cumulative = true;
     }
 
     task = new TaskAttackEffect(AIComponentRef->OwnerGameObject, e, ignoreArmor);

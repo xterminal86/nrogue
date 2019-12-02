@@ -10,11 +10,12 @@ struct ItemBonusStruct
   int BonusValue = 0;
   int Duration = -1;
   int Period = -1;
+  int EffectCounter = 0;
   int MoneyCostIncrease = 0;
   bool IsCursed = false;
   bool Cumulative = false;
   bool FromItem = false;
-  uint64_t Id = 0;
+  uint64_t Id = 0;  
 };
 
 // NOTE: possible god object

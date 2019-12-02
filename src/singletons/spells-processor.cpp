@@ -216,6 +216,7 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
     b.Period = 10;
     b.Duration = 50;
     b.Cumulative = true;
+    b.Id = scroll->OwnerGameObject->ObjectId();
 
     _playerRef->AddEffect(b);
 
@@ -235,6 +236,7 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
       b.Period = 10;
       b.Duration = 100;
       b.Cumulative = true;
+      b.Id = scroll->OwnerGameObject->ObjectId();
 
       _playerRef->AddEffect(b);
     }
@@ -528,7 +530,6 @@ void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
 
     ItemBonusStruct b;
     b.Type = ItemBonusType::MANA_SHIELD;
-    b.BonusValue = -1;
     b.Id = scroll->OwnerGameObject->ObjectId();
 
     _playerRef->AddEffect(b);

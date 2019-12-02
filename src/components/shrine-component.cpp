@@ -293,6 +293,12 @@ void ShrineComponent::ApplyRandomEffect()
   b.Duration= dur;
   b.Id = OwnerGameObject->ObjectId();
 
+  if (b.Type == ItemBonusType::REGEN
+   || b.Type == ItemBonusType::POISONED)
+  {
+    b.Period = power;
+  }
+
   playerRef.AddEffect(b);
 }
 
@@ -316,6 +322,10 @@ void ShrineComponent::ApplyRandomPositiveEffect()
   {
     b.Duration = -1;
   }
+  else if (t == ItemBonusType::REGEN)
+  {
+    b.Period = 10;
+  }
 
   playerRef.AddEffect(b);
 }
@@ -335,6 +345,11 @@ void ShrineComponent::ApplyRandomNegativeEffect()
   b.BonusValue = power;
   b.Duration = dur;
   b.Id = OwnerGameObject->ObjectId();
+
+  if (t == ItemBonusType::POISONED)
+  {
+    b.Period = 10;
+  }
 
   playerRef.AddEffect(b);
 }

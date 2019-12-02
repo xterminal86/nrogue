@@ -1208,6 +1208,12 @@ namespace GlobalConstants
 
   static const std::map<ItemBonusType, std::string> BonusDisplayNameByType =
   {
+    { ItemBonusType::STR,          "STR" },
+    { ItemBonusType::DEF,          "DEF" },
+    { ItemBonusType::MAG,          "MAG" },
+    { ItemBonusType::RES,          "RES" },
+    { ItemBonusType::SKL,          "SKL" },
+    { ItemBonusType::SPD,          "SPD" },
     { ItemBonusType::INVISIBILITY, "Hid" },
     { ItemBonusType::MANA_SHIELD,  "Shi" },
     { ItemBonusType::REGEN,        "Reg" },

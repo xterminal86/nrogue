@@ -139,7 +139,7 @@ class GameObject
     bool HasEffect(const ItemBonusType& e);
     bool IsAlive();
 
-    const std::map<uint64_t, ItemBonusStruct>& Effects();
+    const std::map<uint64_t, std::vector<ItemBonusStruct>>& Effects();
 
     uint64_t ObjectId();
 
@@ -152,7 +152,7 @@ class GameObject
 
   protected:    
     std::map<size_t, std::unique_ptr<Component>> _components;
-    std::map<uint64_t, ItemBonusStruct> _activeEffects;
+    std::map<uint64_t, std::vector<ItemBonusStruct>> _activeEffects;
 
     GameObject* _previousCell = nullptr;
     GameObject* _currentCell = nullptr;
@@ -175,6 +175,22 @@ class GameObject
 
     // Unique in-game id
     uint64_t _objectId = 1;
+
+    std::map<ItemBonusType, Attribute&> _attributesRefsByBonus =
+    {
+      { ItemBonusType::STR, Attrs.Str },
+      { ItemBonusType::DEF, Attrs.Def },
+      { ItemBonusType::MAG, Attrs.Mag },
+      { ItemBonusType::RES, Attrs.Res },
+      { ItemBonusType::SPD, Attrs.Spd },
+      { ItemBonusType::SKL, Attrs.Skl }
+    };
+
+    std::map<ItemBonusType, RangedAttribute&> _rangedAttributesRefsByBonus =
+    {
+      { ItemBonusType::HP, Attrs.HP },
+      { ItemBonusType::MP, Attrs.MP }
+    };
 
     friend class GameObjectsFactory;
 };
