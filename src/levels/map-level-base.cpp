@@ -106,6 +106,8 @@ void MapLevelBase::InsertStaticObject(GameObject* goToInsert)
 
 void MapLevelBase::RecordEmptyCells()
 {
+  _emptyCells.clear();
+
   for (int x = 0; x < MapSize.X; x++)
   {
     for (int y = 0; y < MapSize.Y; y++)

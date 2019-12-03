@@ -637,6 +637,37 @@ std::vector<Position> Map::GetWalkableCellsAround(const Position& pos)
   return res;
 }
 
+std::vector<Position> Map::GetEmptyCellsAround(const Position& pos, int range)
+{
+  std::vector<Position> res;
+
+  if (range >= 1)
+  {
+    int lx = pos.X - range;
+    int ly = pos.Y - range;
+    int hx = pos.X + range;
+    int hy = pos.Y + range;
+
+    for (int x = lx; x <= hx; x++)
+    {
+      for (int y = ly; y <= hy; y++)
+      {
+        if (!Util::IsInsideMap({ x, y }, CurrentLevel->MapSize))
+        {
+          continue;
+        }
+
+        if (!CurrentLevel->IsCellBlocking({ x, y }))
+        {
+          res.push_back({ x, y });
+        }
+      }
+    }
+  }
+
+  return res;
+}
+
 void Map::DrawNonVisibleMapTile(int x, int y)
 {
   // If map tile has already been seen (revealed),

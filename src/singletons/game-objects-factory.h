@@ -51,6 +51,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateRangedWeapon(int x, int y, RangedWeaponType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM);
     GameObject* CreateRandomAccessory(int x, int y, ItemPrefix prefixOverride = ItemPrefix::RANDOM, bool atLeastOneBonus = false);
     GameObject* CreateAccessory(int x, int y, EquipmentCategory category, const std::vector<ItemBonusStruct>& bonuses, ItemPrefix prefix, ItemQuality quality);
+    GameObject* CreateBreakableObjectWithRandomLoot(int x, int y, char image, const std::string& objName, const std::string& fgColor, const std::string& bgColor);
 
     GameObject* CreateRandomItem(int x, int y, ItemType exclude = ItemType::NOTHING);
 

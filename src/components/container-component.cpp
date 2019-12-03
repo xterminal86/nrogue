@@ -12,7 +12,7 @@ void ContainerComponent::Update()
 {
 }
 
-void ContainerComponent::AddToInventory(GameObject* object)
+bool ContainerComponent::AddToInventory(GameObject* object)
 {  
   bool foundStack = false;
 
@@ -44,6 +44,8 @@ void ContainerComponent::AddToInventory(GameObject* object)
   {
     Contents.push_back(std::unique_ptr<GameObject>(object));
   }
+
+  return foundStack;
 }
 
 void ContainerComponent::Interact()

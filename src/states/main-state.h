@@ -47,6 +47,8 @@ class MainState : public GameState
 
     void GetActorsAround();
 
+    void CheckIfSomethingElseIsLyingHere(const Position& pos);
+
     Position _cursorPosition;
 
     std::vector<std::string> _helpText =

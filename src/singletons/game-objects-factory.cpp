@@ -502,8 +502,21 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel, from->PosX, from->PosY, '%', from->FgColor);
 
-  TimerDestroyerComponent* td = go->AddComponent<TimerDestroyerComponent>();
-  td->Time = 200; //from->Attrs.HP.OriginalValue * 2;
+  std::vector<GameObjectType> doNotAttachTimerForThese =
+  {
+    GameObjectType::HARMLESS,
+    GameObjectType::BREAKABLE,
+    GameObjectType::PICKAXEABLE
+  };
+
+  auto res = std::find(doNotAttachTimerForThese.begin(), doNotAttachTimerForThese.end(), go->Type);
+
+  // Do not attach timer if object is one of types in vector above
+  if (res == doNotAttachTimerForThese.end())
+  {
+    TimerDestroyerComponent* td = go->AddComponent<TimerDestroyerComponent>();
+    td->Time = 200; //from->Attrs.HP.OriginalValue * 2;
+  }
 
   auto str = Util::StringFormat("%s's remains", from->ObjectName.data());
   go->ObjectName = str;
@@ -1368,6 +1381,7 @@ GameObject* GameObjectsFactory::CreateContainer(const std::string& name, const s
   go->FgColor = "#FFFFFF";
   go->BgColor = bgColor;
   go->Blocking = true;
+  go->BlocksSight = true;
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
 
@@ -3443,4 +3457,68 @@ void GameObjectsFactory::AdjustBonusWeightsMap(ItemComponent* itemRef, std::map<
     bonusWeightByType.erase(ItemBonusType::IGNORE_DEFENCE);
     bonusWeightByType.erase(ItemBonusType::LEECH);
   }
+}
+
+GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
+                                                                    int y,
+                                                                    char image,
+                                                                    const std::string& objName,
+                                                                    const std::string& fgColor,
+                                                                    const std::string& bgColor)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->PosX = x;
+  go->PosY = y;
+
+  go->Type = GameObjectType::BREAKABLE;
+  go->FgColor = fgColor;
+  go->BgColor = bgColor;
+  go->Image = image;
+  go->ObjectName = objName;
+  go->Blocking = true;
+
+  go->Attrs.Indestructible = false;
+  go->Attrs.HP.Reset(1);
+
+  int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel;
+  int maxLevel = (int)MapType::THE_END;
+
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
+  cc->MaxCapacity = maxLevel + 1;
+
+  int maxItems = maxLevel;
+
+  int nothingChance = maxLevel - dungeonLevel;
+  int somethingChance = dungeonLevel;
+
+  float failScale = 1.25f;
+
+  std::map<ItemType, int> weights =
+  {
+    { ItemType::NOTHING, nothingChance },
+    { ItemType::DUMMY, somethingChance }
+  };
+
+  for (int i = 0; i < maxItems; i++)
+  {
+    auto res = Util::WeightedRandom(weights);
+    if (res.first != ItemType::NOTHING)
+    {
+      auto item = CreateRandomItem(0, 0);
+
+      // If there is already such stackable item in inventory,
+      // delete the game object we just created.
+      if (item != nullptr && cc->AddToInventory(item))
+      {
+        delete item;
+      }
+    }
+    else
+    {
+      maxItems = (int)((float)maxItems / failScale);
+    }
+  }
+
+  return go;
 }

@@ -20,6 +20,8 @@ class MapLevelMines : public MapLevelBase
 
   private:
     void FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill);          
+
+    void CreateRandomBarrels();
 };
 
 #endif // MAPLEVELMINES_H

@@ -14,7 +14,7 @@ class ContainerComponent : public Component
 
     void Update() override;
 
-    void AddToInventory(GameObject* object);
+    bool AddToInventory(GameObject* object);
 
     bool IsFull();
     bool IsEmpty();

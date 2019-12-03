@@ -1,5 +1,6 @@
 #include "map-level-mines.h"
 
+#include "map.h"
 #include "application.h"
 #include "rng.h"
 #include "constants.h"
@@ -311,6 +312,10 @@ void MapLevelMines::CreateLevel()
 
     RecordEmptyCells();
 
+    CreateRandomBarrels();
+
+    RecordEmptyCells();
+
     PlaceStairs();
 
     CreateInitialMonsters();
@@ -318,7 +323,7 @@ void MapLevelMines::CreateLevel()
     // FIXME: too many items?
     //int itemsToCreate = RNG::Instance().RandomRange(1, 6 + DungeonLevel);
     int itemsToCreate = DungeonLevel + 5;
-    CreateItemsForLevel(itemsToCreate);
+    CreateItemsForLevel(itemsToCreate);    
   }
 }
 
@@ -493,6 +498,45 @@ void MapLevelMines::CreateSpecialLevel()
   }
 }
 
+void MapLevelMines::CreateRandomBarrels()
+{
+  auto curLvl = Map::Instance().CurrentLevel;
+
+  auto emptyCellsCopy = _emptyCells;
+
+  int maxAttempts = 10;
+  int maxBarrels = 8;
+
+  int barrelsNum = RNG::Instance().RandomRange(1, maxBarrels + 1);
+  int squareRequired = (int)std::ceil(std::sqrt(barrelsNum));
+
+  for (int i = 0; i < maxAttempts; i++)
+  {
+    int index = RNG::Instance().RandomRange(0, emptyCellsCopy.size());
+    Position pos = emptyCellsCopy[index];
+    auto res = Map::Instance().GetEmptyCellsAround(pos, squareRequired);
+    if (res.size() >= barrelsNum)
+    {
+      // res.size() is a minimum required square to put numBarrels into,
+      // which may be significantly larger than amount of barrels to create
+      // (e.g. 5 barrels can only fit in 4x4=16 square), so we need
+      // to check the number of barrels created so far separately.
+      int created = 0;
+      for (auto& p : res)
+      {
+        if (created >= barrelsNum)
+        {
+          break;
+        }
+
+        GameObject* barrel = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(p.X, p.Y, 'B', "Wooden Barrel", GlobalConstants::WoodColor, GlobalConstants::BlackColor);
+        InsertStaticObject(barrel);
+        created++;
+      }
+    }
+  }
+}
+
 void MapLevelMines::DisplayWelcomeText()
 {
   std::vector<std::string> msg =
@@ -506,3 +550,4 @@ void MapLevelMines::DisplayWelcomeText()
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Abandoned Mines", msg);
 }
+

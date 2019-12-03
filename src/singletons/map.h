@@ -39,7 +39,8 @@ class Map : public Singleton<Map>
     std::pair<int, GameObject*> GetGameObjectToPickup(int x, int y);
     MapLevelBase* GetLevelRefByType(MapType type);
 
-    std::vector<Position> GetWalkableCellsAround(const Position& pos);
+    std::vector<Position> GetWalkableCellsAround(const Position& pos);    
+    std::vector<Position> GetEmptyCellsAround(const Position& pos, int range);
     std::vector<MapType> GetAllVisitedLevels();
     Position GetRandomEmptyCell();
 

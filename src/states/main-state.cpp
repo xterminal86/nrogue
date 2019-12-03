@@ -263,6 +263,7 @@ void MainState::TryToPickupItem()
   {
     if (ProcessMoneyPickup(res))
     {
+      CheckIfSomethingElseIsLyingHere({ _playerRef->PosX, _playerRef->PosY });
       return;
     }
 
@@ -274,15 +275,20 @@ void MainState::TryToPickupItem()
 
     ProcessItemPickup(res);
 
-    res = Map::Instance().GetGameObjectToPickup(_playerRef->PosX, _playerRef->PosY);
-    if (res.first != -1)
-    {
-      Printer::Instance().AddMessage("There's something else lying here");
-    }
+    CheckIfSomethingElseIsLyingHere({ _playerRef->PosX, _playerRef->PosY });
   }
   else
   {
     Printer::Instance().AddMessage("There's nothing here");
+  }
+}
+
+void MainState::CheckIfSomethingElseIsLyingHere(const Position& pos)
+{
+  auto res = Map::Instance().GetGameObjectToPickup(pos.X, pos.Y);
+  if (res.first != -1)
+  {
+    Printer::Instance().AddMessage("There's something else lying here");
   }
 }
 
