@@ -98,6 +98,8 @@ class Player : public GameObject
     bool ShouldBreak(ItemComponent* ic);
     void BreakItem(ItemComponent* ic, bool suppressMessage = false);
 
+    void ProcessItemsEffects();
+
     void PassByNPC(int dx, int dy);
     void SwitchPlaces(AIComponent* other);
 

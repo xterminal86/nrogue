@@ -1182,6 +1182,7 @@ namespace GlobalConstants
 
   static const std::map<ItemBonusType, int> MoneyCostIncreaseByBonusType =
   {
+    { ItemBonusType::NONE,              0  },
     { ItemBonusType::STR,             250  },
     { ItemBonusType::DEF,             250  },
     { ItemBonusType::MAG,             250  },

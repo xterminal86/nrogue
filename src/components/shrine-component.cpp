@@ -241,7 +241,7 @@ void ShrineComponent::ProcessEffect()
 
     // temporary raises stats
     case ShrineType::POTENTIAL:
-      // TODO:
+      ApplyTemporaryStatRaise();
       break;
 
     // random effect
@@ -281,7 +281,7 @@ void ShrineComponent::ApplyRandomEffect()
   auto& playerRef = Application::Instance().PlayerInstance;
 
   int power = Timeout / 100;
-  int dur = Timeout / 10;
+  int dur = Timeout / 2;
 
   int effectIndex = RNG::Instance().RandomRange(0, GlobalConstants::BonusDisplayNameByType.size());
   auto it = GlobalConstants::BonusDisplayNameByType.begin();
@@ -294,9 +294,12 @@ void ShrineComponent::ApplyRandomEffect()
   b.Id = OwnerGameObject->ObjectId();
 
   if (b.Type == ItemBonusType::REGEN
-   || b.Type == ItemBonusType::POISONED)
+   || b.Type == ItemBonusType::POISONED
+   || b.Type == ItemBonusType::PARALYZE)
   {
-    b.Period = power;
+    b.Cumulative = true;
+    b.BonusValue = 1;
+    b.Period = Timeout / 10;
   }
 
   playerRef.AddEffect(b);
@@ -307,7 +310,7 @@ void ShrineComponent::ApplyRandomPositiveEffect()
   auto& playerRef = Application::Instance().PlayerInstance;
 
   int power = Timeout / 100;
-  int dur = Timeout / 5;
+  int dur = Timeout / 2;
 
   int effectIndex = RNG::Instance().RandomRange(0, PositiveEffects.size());
   ItemBonusType t = PositiveEffects[effectIndex];
@@ -324,7 +327,9 @@ void ShrineComponent::ApplyRandomPositiveEffect()
   }
   else if (t == ItemBonusType::REGEN)
   {
-    b.Period = 10;
+    b.Cumulative = true;
+    b.BonusValue = 1;
+    b.Period = Timeout / 10;
   }
 
   playerRef.AddEffect(b);
@@ -335,7 +340,7 @@ void ShrineComponent::ApplyRandomNegativeEffect()
   auto& playerRef = Application::Instance().PlayerInstance;
 
   int power = Timeout / 100;
-  int dur = Timeout / 5;
+  int dur = Timeout / 2;
 
   int effectIndex = RNG::Instance().RandomRange(0, NegativeEffects.size());
   ItemBonusType t = NegativeEffects[effectIndex];
@@ -346,10 +351,38 @@ void ShrineComponent::ApplyRandomNegativeEffect()
   b.Duration = dur;
   b.Id = OwnerGameObject->ObjectId();
 
-  if (t == ItemBonusType::POISONED)
+  if (t == ItemBonusType::POISONED
+   || t == ItemBonusType::PARALYZE)
   {
-    b.Period = 10;
+    b.Cumulative = true;
+    b.Period = Timeout / 10;
   }
 
   playerRef.AddEffect(b);
+}
+
+void ShrineComponent::ApplyTemporaryStatRaise()
+{
+  auto& playerRef = Application::Instance().PlayerInstance;
+
+  std::vector<ItemBonusType> attrs =
+  {
+    { ItemBonusType::STR },
+    { ItemBonusType::DEF },
+    { ItemBonusType::MAG },
+    { ItemBonusType::RES },
+    { ItemBonusType::SPD },
+    { ItemBonusType::SKL }
+  };
+
+  int index = RNG::Instance().RandomRange(0, attrs.size());
+
+  ItemBonusStruct bs;
+  bs.Type = attrs[index];
+  bs.Duration = Timeout / 2;
+  bs.BonusValue = 1;
+  bs.Id = OwnerGameObject->ObjectId();
+  bs.Cumulative = true;
+
+  playerRef.AddEffect(bs);
 }

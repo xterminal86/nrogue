@@ -41,7 +41,7 @@ void Player::Init()
   Attrs.Exp.SetMax(100);
 
   // FIXME: debug
-  // Money = 100000;
+  //Money = 100000;
   //Attrs.HungerRate.Set(0);
   //Attrs.HP.Set(1000);
   //Attrs.HP.Set(10);
@@ -1150,8 +1150,10 @@ void Player::ProcessKill(GameObject* monster)
 }
 
 void Player::WaitForTurn()
-{
-  GameObject::WaitForTurn();  
+{  
+  GameObject::WaitForTurn();
+  GameObject::ProcessEffects();
+  ProcessItemsEffects();
 }
 
 bool Player::IsAlive()
@@ -1276,6 +1278,7 @@ void Player::FinishTurn()
   ProcessHunger();
   ProcessStarvation();
   GameObject::ProcessEffects();
+  ProcessItemsEffects();
 
   // If player killed an enemy but can still make another turn,
   // we must check and remove objects marked for deletion
@@ -1360,6 +1363,34 @@ void Player::ProcessHunger()
   {
     _starvingTimeout = 0;
     IsStarving = false;
+  }
+}
+
+void Player::ProcessItemsEffects()
+{
+  for (auto& item : Inventory.Contents)
+  {
+    ItemComponent* ic = item->GetComponent<ItemComponent>();
+    if (ic != nullptr)
+    {
+      for (auto& bonus : ic->Data.Bonuses)
+      {
+        switch (bonus.Type)
+        {
+          case ItemBonusType::SELF_REPAIR:
+          {
+            bonus.EffectCounter++;
+
+            if (bonus.EffectCounter % bonus.Period == 0)
+            {
+              bonus.EffectCounter = 0;
+              ic->Data.Durability.AddMin(bonus.BonusValue);
+            }
+          }
+          break;
+        }
+      }
+    }
   }
 }
 
@@ -1501,9 +1532,6 @@ void Player::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
     case ItemBonusType::VISIBILITY:
       VisibilityRadius.AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.BonusValue);
       break;    
-
-    // FIXME: how to "effect action" self-repair?
-    //case ItemBonusType::SELF_REPAIR:
 
     case ItemBonusType::REGEN:
     case ItemBonusType::REFLECT:

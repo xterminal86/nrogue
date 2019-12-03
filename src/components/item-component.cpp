@@ -279,7 +279,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
   for (auto& i : Data.Bonuses)
   {
     switch (i.Type)
-    {
+    {      
       case ItemBonusType::STR:
       case ItemBonusType::DEF:
       case ItemBonusType::MAG:

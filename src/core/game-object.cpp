@@ -286,29 +286,6 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
   }
 
   ApplyEffect(effectToAdd);
-
-  /*
-  if (_activeEffects.count(id) == 0)
-  {
-    _activeEffects[id] = effectToAdd;
-  }
-  else
-  {
-    if (effectToAdd.Cumulative)
-    {
-      // FIXME: do we always need to += Duration and BonusValue?
-      // What if it's new REGEN?
-      _activeEffects[id].Duration += effectToAdd.Duration;
-      _activeEffects[id].BonusValue += effectToAdd.BonusValue;
-    }
-    else
-    {
-      _activeEffects[id] = effectToAdd;
-    }
-  }
-
-  ApplyEffect(_activeEffects[id]);
-  */
 }
 
 void GameObject::ApplyEffect(const ItemBonusStruct& e)
@@ -332,11 +309,6 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
     case ItemBonusType::FROZEN:
       Attrs.Spd.AddModifier(e.Id, -e.BonusValue);
       break;
-
-    // TODO:
-    //case EffectType::REGEN:
-    //  _effectActionTimeoutByObjId[objId] = 0;
-    //  break;
   }
 }
 
@@ -375,7 +347,7 @@ void GameObject::RemoveEffect(const ItemBonusStruct& t)
     for (auto& item : it->second)
     {
       if (item.Id == t.Id)
-      {
+      {        
         UnapplyEffect(item);
         shouldErase = true;
         break;
@@ -383,7 +355,7 @@ void GameObject::RemoveEffect(const ItemBonusStruct& t)
     }
 
     if (shouldErase)
-    {
+    {      
       _activeEffects.erase(it);
     }
   }
@@ -459,9 +431,9 @@ void GameObject::ProcessEffects()
         v[j].Duration--;
       }
       else if (v[j].Duration == 0)
-      {
+      {        
         UnapplyEffect(v[j]);
-        v.erase(v.begin(), v.begin() + j);
+        v.erase(v.begin() + j);
       }
       else if (v[j].Duration == -1)
       {
@@ -484,7 +456,8 @@ void GameObject::ProcessEffects()
 
     if (v.empty())
     {
-      _activeEffects.erase(it);
+      printf("here\n");
+      _activeEffects.erase(it);      
     }
   }
 }
@@ -496,6 +469,10 @@ void GameObject::EffectAction(const ItemBonusStruct& e)
     case ItemBonusType::POISONED:
     case ItemBonusType::REGEN:
       Attrs.HP.AddMin(e.BonusValue);
+      break;
+
+    case ItemBonusType::PARALYZE:
+      Attrs.ActionMeter = 0;
       break;
   }
 }

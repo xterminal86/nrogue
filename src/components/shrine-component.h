@@ -46,6 +46,7 @@ class ShrineComponent : public Component
     void ApplyRandomEffect();
     void ApplyRandomPositiveEffect();
     void ApplyRandomNegativeEffect();
+    void ApplyTemporaryStatRaise();
 };
 
 #endif // SHRINECOMPONENT_H
