@@ -2431,11 +2431,25 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
 
 ItemPrefix GameObjectsFactory::RollItemPrefix()
 {
+  int maxLevel = (int)MapType::THE_END;
+
+  int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel;
+  if (Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
+  {
+    dungeonLevel = maxLevel / 2;
+  }
+
+  float cursedScale = 2.0f;
+  float blessedScale = 4.0f;
+
+  int cursedRate = (int)((float)(maxLevel - dungeonLevel) / cursedScale);
+  int blessedRate = (int)((float)(cursedRate + dungeonLevel) / blessedScale);
+
   std::map<ItemPrefix, int> weights =
   {
-    { ItemPrefix::UNCURSED, 5 },
-    { ItemPrefix::CURSED, 5 },
-    { ItemPrefix::BLESSED, 1 }
+    { ItemPrefix::UNCURSED, dungeonLevel },
+    { ItemPrefix::CURSED,   cursedRate   },
+    { ItemPrefix::BLESSED,  blessedRate  }
   };
 
   auto res = Util::WeightedRandom(weights);
@@ -2455,18 +2469,24 @@ ItemQuality GameObjectsFactory::RollItemQuality()
   }
 
   int rate = dungeonLevel / 2;
-  int f = Util::Clamp(rate, 1, maxLevel);
-  int e = Util::Clamp(rate / 2, 1, maxLevel);
 
-  //printf("%i rate: %i f: %i e: %i maxlevel: %i diff: %i\n", dungeonLevel, rate, f, e, maxLevel, maxLevel - dungeonLevel);
+  float dmgdRateScale = 1.5f;
+  float flawedRateScale = 1.125f;
+
+  int fine = Util::Clamp(rate, 1, maxLevel);
+  int exceptional = Util::Clamp(rate / 2, 1, maxLevel);
+  int damaged = (int)((float)(maxLevel - dungeonLevel) * dmgdRateScale);
+  int flawed = (int)((float)(maxLevel - dungeonLevel) * flawedRateScale);
+
+  //printf("%i rate: %i f: %i e: %i maxlevel: %i diff: %i\n", dungeonLevel, rate, fine, exceptional, maxLevel, maxLevel - dungeonLevel);
 
   std::map<ItemQuality, int> weights =
   {
-    { ItemQuality::DAMAGED,     maxLevel - dungeonLevel },
-    { ItemQuality::FLAWED,      maxLevel - dungeonLevel },
-    { ItemQuality::NORMAL,      dungeonLevel            },
-    { ItemQuality::FINE,        f                       },
-    { ItemQuality::EXCEPTIONAL, e                       },
+    { ItemQuality::DAMAGED,     damaged      },
+    { ItemQuality::FLAWED,      flawed       },
+    { ItemQuality::NORMAL,      dungeonLevel },
+    { ItemQuality::FINE,        fine         },
+    { ItemQuality::EXCEPTIONAL, exceptional  },
   };
 
   auto res = Util::WeightedRandom(weights);
@@ -3187,7 +3207,7 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne
     curDungeonLvl = (int)MapType::THE_END / 2;
   }
 
-  const float scale = 1.5f;
+  const float scale = 1.25f;
   float minSucc = 1.0f / ((float)MapType::THE_END * scale);
   float curSucc = minSucc * curDungeonLvl;
   int chance = (int)(curSucc * 100);

@@ -707,7 +707,6 @@ namespace GlobalConstants
     {
       GameObjectType::RAT,
       {
-        { ItemType::COINS,    1 },
         { ItemType::FOOD,     4 },
         { ItemType::NOTHING, 20 }
       }
@@ -715,7 +714,6 @@ namespace GlobalConstants
     {
       GameObjectType::BAT,
       {
-        { ItemType::COINS,    1 },
         { ItemType::FOOD,     4 },
         { ItemType::NOTHING, 20 }
       }
@@ -723,7 +721,7 @@ namespace GlobalConstants
     {
       GameObjectType::SPIDER,
       {
-        { ItemType::COINS,    2 },
+        { ItemType::FOOD,     4 },
         { ItemType::NOTHING, 20 }
       }
     }
@@ -734,12 +732,17 @@ namespace GlobalConstants
     {
       GameObjectType::RAT,
       {
-        { FoodType::CHEESE, 4 },
-        { FoodType::MEAT,   1 }
+        { FoodType::CHEESE, 1 }
       }
     },
     {
       GameObjectType::BAT,
+      {
+        { FoodType::MEAT, 1 }
+      }
+    },
+    {
+      GameObjectType::SPIDER,
       {
         { FoodType::MEAT, 1 }
       }
