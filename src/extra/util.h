@@ -898,16 +898,18 @@ namespace Util
     bool isMagic = (data.Rarity == ItemRarity::MAGIC);
     bool isRare = (data.Rarity == ItemRarity::RARE);
     bool isUnique = (data.Rarity == ItemRarity::UNIQUE);
+    bool isMixed = (isCursed && (isMagic || isRare));
 
     // Iterate over this map and select color
     // for the first entry found with bool key == true.
     std::map<int, std::pair<bool, std::string>> itemFirstColorToChoose =
     {
-      { 0, { isMagic,          GlobalConstants::ItemMagicColor   } },
-      { 1, { isRare,           GlobalConstants::ItemRareColor    } },
-      { 2, { isUnique,         GlobalConstants::ItemUniqueColor  } },
-      { 3, { isBlessed,        GlobalConstants::ItemMagicColor   } },
-      { 4, { isCursed,         GlobalConstants::ItemCursedColor  } }
+      { 0, { isMixed,          GlobalConstants::ItemMixedColor   } },
+      { 1, { isMagic,          GlobalConstants::ItemMagicColor   } },
+      { 2, { isRare,           GlobalConstants::ItemRareColor    } },
+      { 3, { isUnique,         GlobalConstants::ItemUniqueColor  } },
+      { 4, { isBlessed,        GlobalConstants::ItemMagicColor   } },
+      { 5, { isCursed,         GlobalConstants::ItemCursedColor  } }
     };
 
     for (auto& kvp : itemFirstColorToChoose)
