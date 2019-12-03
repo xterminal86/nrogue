@@ -60,7 +60,8 @@ void InfoState::Update(bool forceUpdate)
     }
 
     PrintAttribute(0, yPos, "LVL", playerRef.Attrs.Lvl);
-    PrintRangedAttribute(0, yPos + 1, "EXP", playerRef.Attrs.Exp);
+    //PrintRangedAttribute(0, yPos + 1, "EXP", playerRef.Attrs.Exp);
+    PrintAttribute(0, yPos + 1, "EXP", playerRef.Attrs.Exp.Min());
 
     PrintAttribute(0, yPos + 3, "STR", playerRef.Attrs.Str);
     PrintAttribute(0, yPos + 4, "DEF", playerRef.Attrs.Def);

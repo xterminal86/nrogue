@@ -7,6 +7,28 @@
 MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
+  switch (MapType_)
+  {
+    case MapType::CAVES_5:
+    {
+      _specialLevel =
+      {
+        "########",
+        "#......#",
+        "#.<..>.#",
+        "#......#",
+        "########"
+      };
+
+      // Note that x and y are swapped to correspond to
+      // "world" dimensions.
+      int sx = _specialLevel[0].length();
+      int sy = _specialLevel.size();
+
+      MapSize.Set(sx, sy);
+    }
+    break;
+  }
 }
 
 void MapLevelCaves::PrepareMap(MapLevelBase* levelOwner)
@@ -94,7 +116,69 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
 
 void MapLevelCaves::CreateSpecialLevel()
 {
-  // TODO:
+  auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
+
+  MapType stairsDownTo = (MapType)(DungeonLevel + 1);
+  MapType stairsUpTo = (MapType)(DungeonLevel - 1);
+
+  int posX = 0;
+  int posY = 0;
+
+  for (auto& row : convLevel)
+  {
+    for (auto& c : row)
+    {
+      GameObjectInfo t;
+      std::string objName;
+
+      switch (c)
+      {
+        case '<':
+        {
+          LevelStart.X = posX;
+          LevelStart.Y = posY;
+
+          GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, c, stairsUpTo);
+        }
+        break;
+
+        case '>':
+        {
+          LevelExit.X = posX;
+          LevelExit.Y = posY;
+
+          GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, c, stairsDownTo);
+        }
+        break;
+
+        case '#':
+        {
+          objName = "Rocks";
+          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
+          InsertStaticObject(posX, posY, t, -1);
+        }
+        break;
+
+        case 'W':
+          t.Set(true, false, '~', GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
+          MapArray[posX][posY]->MakeTile(t, GameObjectType::DEEP_WATER);
+          break;
+
+        case '.':
+        {
+          objName = "Ground";
+          t.Set(false, false, c, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
+          MapArray[posX][posY]->MakeTile(t);
+        }
+        break;
+      }
+
+      posX++;
+    }
+
+    posX = 0;
+    posY++;
+  }
 }
 
 void MapLevelCaves::DisplayWelcomeText()
