@@ -245,6 +245,29 @@ void GameObject::FinishTurn()
     Attrs.HP.AddMin(1);
   }
 
+  _manaRegenTurnsCounter++;
+
+  float turnsManaRegen = 0.0f;
+  if (Attrs.Mag.Get() <= 0)
+  {
+    _manaRegenTurnsCounter = 0;
+  }
+  else
+  {
+    turnsManaRegen = 1.0f / (float)Attrs.Mag.Get();
+    int turnsInt = (int)(turnsManaRegen * 100.0f);
+    if (turnsInt < 5)
+    {
+      turnsInt = 5;
+    }
+
+    if (_manaRegenTurnsCounter > turnsInt)
+    {
+      Attrs.MP.AddMin(1);
+      _manaRegenTurnsCounter = 0;
+    }
+  }
+
   ProcessEffects();
 
   if (!IsAlive())

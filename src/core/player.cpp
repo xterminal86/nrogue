@@ -987,7 +987,7 @@ void Player::LevelUp(int baseHpOverride)
   int minRndHp = (Attrs.HP.Talents + 1);
   int maxRndHp = 2 * (Attrs.HP.Talents + 1);
 
-  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp);
+  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp + 1);
   Attrs.HP.AddMax(hpToAdd);
 
   _statRaisesMap["HP"] = hpToAdd;
@@ -1001,7 +1001,7 @@ void Player::LevelUp(int baseHpOverride)
   int minRndMp = Attrs.Mag.OriginalValue();
   int maxRndMp = Attrs.Mag.OriginalValue() + Attrs.MP.Talents;
 
-  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp);
+  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp + 1);
   Attrs.MP.AddMax(mpToAdd);
 
   _statRaisesMap["MP"] = mpToAdd;
@@ -1052,7 +1052,7 @@ void Player::LevelDown()
   int minRndHp = (Attrs.HP.Talents + 1);
   int maxRndHp = 2 * (Attrs.HP.Talents + 1);
 
-  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp);
+  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp + 1);
   Attrs.HP.AddMax(-hpToAdd);
 
   if (Attrs.HP.Max().OriginalValue() <= 0)
@@ -1069,9 +1069,9 @@ void Player::LevelDown()
   }
 
   int minRndMp = Attrs.Mag.OriginalValue();
-  int maxRndMp = Attrs.Mag.OriginalValue() * (Attrs.MP.Talents + 1);
+  int maxRndMp = Attrs.Mag.OriginalValue() + Attrs.MP.Talents;
 
-  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp);
+  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp + 1);
   Attrs.MP.AddMax(-mpToAdd);
 
   if (Attrs.MP.Max().OriginalValue() < 0)

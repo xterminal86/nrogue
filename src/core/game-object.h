@@ -146,6 +146,7 @@ class GameObject
     Attributes Attrs;        
 
     int HealthRegenTurns = 0;
+    int ManaRegenTurns = 0;
 
     GameObjectType Type = GameObjectType::HARMLESS;
     bool IsLiving = false;
@@ -163,6 +164,7 @@ class GameObject
     MapLevelBase* _levelOwner = nullptr;    
 
     int _healthRegenTurnsCounter = 0;
+    int _manaRegenTurnsCounter = 0;
 
     void MoveGameObject(int dx, int dy);
     void ProcessEffects();

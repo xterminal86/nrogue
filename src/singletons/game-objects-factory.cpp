@@ -2214,12 +2214,14 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
   copy->InteractionCallback = copyFrom->InteractionCallback;
   copy->Attrs               = copyFrom->Attrs;
   copy->HealthRegenTurns    = copyFrom->HealthRegenTurns;
+  copy->ManaRegenTurns      = copyFrom->ManaRegenTurns;
   copy->Type                = copyFrom->Type;
 
   copy->_activeEffects           = copyFrom->_activeEffects;
   copy->_previousCell            = copyFrom->_previousCell;
   copy->_currentCell             = copyFrom->_currentCell;
   copy->_healthRegenTurnsCounter = copyFrom->_healthRegenTurnsCounter;
+  copy->_manaRegenTurnsCounter   = copyFrom->_manaRegenTurnsCounter;
 
   return copy;
 }
