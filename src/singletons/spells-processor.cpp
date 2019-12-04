@@ -251,6 +251,7 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
     power = RNG::Instance().RandomRange(1, _playerRef->Attrs.HP.Min().Get() / 2);
+    power = -power;
     Printer::Instance().AddMessage("You writhe in pain!");
   }
   else
@@ -262,13 +263,12 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
     }
 
     if (scroll->Data.Prefix == ItemPrefix::BLESSED)
-    {
-      power = -power;
+    {      
       Printer::Instance().AddMessage("Your wounds are healed completely!");
     }
     else
     {
-      power = -power / 2;
+      power = power / 2;
       Printer::Instance().AddMessage("You feel better");
     }
   }
