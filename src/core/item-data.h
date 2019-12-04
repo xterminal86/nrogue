@@ -49,6 +49,7 @@ struct ItemData
   bool IsIdentified = false;
   bool IsPrefixDiscovered = false;
   bool IsChargeable = false;
+  bool IsBurnable = false;
 
   // Can't be dropped from inventory if true
   bool IsImportant = false;

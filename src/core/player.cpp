@@ -1151,7 +1151,7 @@ void Player::ProcessKill(GameObject* monster)
 void Player::WaitForTurn()
 {  
   GameObject::WaitForTurn();
-  GameObject::ProcessEffects();
+  ProcessEffectsPlayer();
   ProcessItemsEffects();
 }
 
@@ -1276,7 +1276,7 @@ void Player::FinishTurn()
 
   ProcessHunger();
   ProcessStarvation();
-  GameObject::ProcessEffects();
+  ProcessEffectsPlayer();
   ProcessItemsEffects();
 
   // If player killed an enemy but can still make another turn,
@@ -1287,6 +1287,33 @@ void Player::FinishTurn()
   //
   // Probably bad design anyway but fuck it.
   Map::Instance().RemoveDestroyed();
+}
+
+void Player::ProcessEffectsPlayer()
+{
+  GameObject::ProcessEffects();
+
+  if (HasEffect(ItemBonusType::BURNING))
+  {
+    if (Util::Rolld100(50))
+    {
+      for (int i = 0; i < Inventory.Contents.size(); i++)
+      {
+        ItemComponent* ic = Inventory.Contents[i]->GetComponent<ItemComponent>();
+        if (ic != nullptr)
+        {
+          if (ic->Data.IsBurnable)
+          {
+            std::string objName = ic->Data.IsIdentified ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
+            auto str = Util::StringFormat("%s burns up!", objName.data());
+            Printer::Instance().AddMessage(str);
+            Inventory.Contents.erase(Inventory.Contents.begin() + i);
+            break;
+          }
+        }
+      }
+    }
+  }
 }
 
 void Player::ProcessStarvation()

@@ -298,11 +298,11 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
     case ItemBonusType::MAG:
     case ItemBonusType::RES:
     case ItemBonusType::SPD:
-    case ItemBonusType::SKL:
+    case ItemBonusType::SKL:      
       _attributesRefsByBonus.at(e.Type).AddModifier(e.Id, e.BonusValue);
       break;
 
-    case ItemBonusType::TELEPATHY:
+    case ItemBonusType::BLINDNESS:
     case ItemBonusType::ILLUMINATED:
       VisibilityRadius.AddModifier(e.Id, e.BonusValue);
       break;
@@ -310,6 +310,20 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
     case ItemBonusType::FROZEN:
       Attrs.Spd.AddModifier(e.Id, -e.BonusValue);
       break;
+
+    case ItemBonusType::BURNING:
+    {
+      Printer::Instance().AddMessage("You catch fire!");
+
+      ItemBonusStruct eff;
+      eff.Type = ItemBonusType::ILLUMINATED;
+      eff.Duration = e.Duration;
+      eff.Id = e.Id;
+      eff.BonusValue = 10;
+
+      AddEffect(eff);
+    }
+    break;
   }
 }
 
@@ -326,14 +340,14 @@ void GameObject::UnapplyEffect(const ItemBonusStruct& e)
       _attributesRefsByBonus.at(e.Type).RemoveModifier(e.Id);
       break;
 
-    case ItemBonusType::TELEPATHY:
+    case ItemBonusType::BLINDNESS:
     case ItemBonusType::ILLUMINATED:
       VisibilityRadius.RemoveModifier(e.Id);
       break;
 
     case ItemBonusType::FROZEN:
       Attrs.Spd.RemoveModifier(e.Id);
-      break;
+      break;    
   }
 }
 
@@ -466,6 +480,7 @@ void GameObject::EffectAction(const ItemBonusStruct& e)
 {
   switch (e.Type)
   {
+    case ItemBonusType::BURNING:
     case ItemBonusType::POISONED:
     case ItemBonusType::REGEN:
       Attrs.HP.AddMin(e.BonusValue);

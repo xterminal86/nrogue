@@ -351,6 +351,11 @@ void ShrineComponent::ApplyRandomNegativeEffect()
   b.Duration = dur;
   b.Id = OwnerGameObject->ObjectId();
 
+  if (t == ItemBonusType::BURNING)
+  {
+    b.BonusValue = 1;
+  }
+
   if (t == ItemBonusType::POISONED
    || t == ItemBonusType::PARALYZE)
   {

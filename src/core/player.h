@@ -98,6 +98,7 @@ class Player : public GameObject
     bool ShouldBreak(ItemComponent* ic);
     void BreakItem(ItemComponent* ic, bool suppressMessage = false);
 
+    void ProcessEffectsPlayer();
     void ProcessItemsEffects();
 
     void PassByNPC(int dx, int dy);

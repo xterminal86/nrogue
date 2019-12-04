@@ -201,13 +201,7 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
 }
 
 void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
-{
-  if (!_playerRef->HasEffect(ItemBonusType::POISONED))
-  {
-    Printer::Instance().AddMessage(_kNoActionText);
-    return;
-  }
-
+{  
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
     ItemBonusStruct b;
@@ -224,6 +218,12 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
   }
   else
   {
+    if (!_playerRef->HasEffect(ItemBonusType::POISONED))
+    {
+      Printer::Instance().AddMessage(_kNoActionText);
+      return;
+    }
+
     _playerRef->DispelEffect(ItemBonusType::POISONED);
 
     Printer::Instance().AddMessage("You feel better");
@@ -388,10 +388,8 @@ void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
     power *= 2;
   }
   else if (scroll->Data.Prefix == ItemPrefix::CURSED)
-  {
-    duration /= 2;
+  {    
     power = -power;
-
     message = "You are surrounded by darkness!";
   }
 
@@ -468,7 +466,7 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
 
     lvl->InsertGameObject(portal);
 
-    Printer::Instance().AddMessage("You're back in town all of a sudden!");
+    Printer::Instance().AddMessage("You're back in town all of a sudden!");    
     Map::Instance().TeleportToExistingLevel(MapType::TOWN, res);        
   }
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)

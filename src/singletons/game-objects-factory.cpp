@@ -1111,6 +1111,7 @@ GameObject* GameObjectsFactory::CreateNote(const std::string& objName, const std
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
+  ic->Data.IsBurnable = true;
   ic->Data.ItemType_ = ItemType::DUMMY;
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = true;
@@ -1180,6 +1181,7 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
+  ic->Data.IsBurnable = true;
   ic->Data.Prefix = (prefixOverride != ItemPrefix::RANDOM) ? prefixOverride : RollItemPrefix();
   ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
 
