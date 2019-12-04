@@ -535,7 +535,7 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
   {
     auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
-    {
+    {      
       TryToDamageObject(obj, damage, againstRes);
     }
   }

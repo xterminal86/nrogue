@@ -24,7 +24,7 @@ void SpellsDatabase::Init()
                 });
 
   RegisterSpell({
-  SpellType::LASER, "Pierce", "P", 150, { 3, 10 }, "#FF0000"
+  SpellType::LASER, "Pierce", "P", 150, { 3, 10 }, "#FFFFFF"
                 });
 
   RegisterSpell({
@@ -32,7 +32,7 @@ void SpellsDatabase::Init()
                 });
 
   RegisterSpell({
-  SpellType::MAGIC_MISSILE, "Magic Missile", "Mg", 25, { 1, 6 }, "#FFA500"
+  SpellType::MAGIC_MISSILE, "Magic Missile", "Mg", 25, { 1, 6 }, "#AAAAFF"
                 });
 
   RegisterSpell({

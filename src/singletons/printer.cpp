@@ -679,9 +679,9 @@ std::vector<Position> Printer::DrawExplosion(Position pos, int aRange)
 
     Printer::Instance().Render();
 
-    #ifndef USE_SDL
-    Util::Sleep(10);
-    #endif
+    //#ifndef USE_SDL
+    Util::Sleep(20);
+    //#endif
 
     Application::Instance().ForceDrawMainState();
   }

@@ -196,9 +196,9 @@ GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
     // FIXME: debug
     // Util::Sleep(100);
 
-    #ifndef USE_SDL
-    Util::Sleep(10);
-    #endif
+    //#ifndef USE_SDL
+    Util::Sleep(20);
+    //#endif
 
     stoppedAt = CheckHit({ mx, my }, { line[i - 1].X, line[i - 1].Y });
 
@@ -267,7 +267,8 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
         {
           return cell;
         }
-        else if (_weaponRef->Data.ItemType_ == ItemType::WAND)
+        else if (_weaponRef->Data.ItemType_ == ItemType::WAND
+              && _weaponRef->Data.SpellHeld == SpellType::FIREBALL)
         {
           auto prevCell = Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
           return prevCell;
