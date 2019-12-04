@@ -157,7 +157,7 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
     {
       e.Type = ItemBonusType::POISONED;
       e.BonusValue = AIComponentRef->OwnerGameObject->Attrs.Lvl.Get();
-      e.Duration = 10 + AIComponentRef->OwnerGameObject->Attrs.Lvl.Get();
+      e.Duration = AIComponentRef->OwnerGameObject->Attrs.Lvl.Get() * 10;
       e.Period = 5;      
       e.Cumulative = true;
     }

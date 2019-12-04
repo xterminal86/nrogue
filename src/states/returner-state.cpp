@@ -59,6 +59,9 @@ void ReturnerState::HandleInput()
       }
 
       Printer::Instance().AddMessage("The stone has been attuned to this position");
+
+      _playerRef->FinishTurn();
+
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
     }
     break;

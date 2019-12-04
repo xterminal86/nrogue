@@ -116,7 +116,12 @@ void InventoryState::HandleInput()
           DestroyInventoryItem();
         }
 
-        _playerRef->FinishTurn();
+        // Turn is finished in corresponding states
+        if (ic->Data.ItemType_ != ItemType::REPAIR_KIT
+         && ic->Data.ItemType_ != ItemType::RETURNER)
+        {
+          _playerRef->FinishTurn();
+        }
 
         // Check if player was killed
         // after using something (e.g. cursed potion, teleported into wall)

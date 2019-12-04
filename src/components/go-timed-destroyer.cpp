@@ -1,12 +1,12 @@
-#include "go-timer-destroyer.h"
+#include "go-timed-destroyer.h"
 #include "game-object.h"
 
-TimerDestroyerComponent::TimerDestroyerComponent()
+TimedDestroyerComponent::TimedDestroyerComponent()
 {
   _componentHash = typeid(*this).hash_code();
 }
 
-void TimerDestroyerComponent::Update()
+void TimedDestroyerComponent::Update()
 {
   Time--;
 

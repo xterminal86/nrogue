@@ -143,7 +143,9 @@ void RepairState::RepairItem(ItemComponent* itemToRepair)
   auto str = Util::StringFormat("You've repaired %i durability", repaired);
   Printer::Instance().AddMessage(str);
 
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
+  _playerRef->FinishTurn();
+
+  Application::Instance().ChangeState(GameStates::MAIN_STATE);  
 }
 
 void RepairState::Cleanup()

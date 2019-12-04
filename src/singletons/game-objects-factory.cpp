@@ -13,7 +13,7 @@
 #include "ai-npc.h"
 #include "stairs-component.h"
 #include "door-component.h"
-#include "go-timer-destroyer.h"
+#include "go-timed-destroyer.h"
 #include "map.h"
 #include "application.h"
 #include "game-object-info.h"
@@ -504,18 +504,10 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 
   go->Type = GameObjectType::REMAINS;
 
-  std::vector<GameObjectType> doNotAttachTimerForThese =
+  // Living creatures leave decomposable corpses
+  if (from->IsLiving)
   {
-    GameObjectType::HARMLESS,
-    GameObjectType::PICKAXEABLE
-  };
-
-  auto res = std::find(doNotAttachTimerForThese.begin(), doNotAttachTimerForThese.end(), go->Type);
-
-  // Do not attach timer if object is one of types in vector above
-  if (res == doNotAttachTimerForThese.end())
-  {
-    TimerDestroyerComponent* td = go->AddComponent<TimerDestroyerComponent>();
+    TimedDestroyerComponent* td = go->AddComponent<TimedDestroyerComponent>();
     td->Time = 200; //from->Attrs.HP.OriginalValue * 2;
   }
 
@@ -3474,7 +3466,6 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
   go->PosX = x;
   go->PosY = y;
 
-  go->Type = GameObjectType::HARMLESS;
   go->FgColor = fgColor;
   go->BgColor = bgColor;
   go->Image = image;
