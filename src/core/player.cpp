@@ -760,13 +760,13 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bo
                   ? 0
                   : defender->Attrs.Def.Get();
 
-    totalDmg += Attrs.Str.Get() - targetDef;
-
     ItemBonusStruct* res = weapon->Data.GetBonus(ItemBonusType::DAMAGE);
     if (res != nullptr)
     {
       totalDmg += res->BonusValue;
     }
+
+    totalDmg += Attrs.Str.Get() - targetDef;
 
     if (totalDmg <= 0)
     {

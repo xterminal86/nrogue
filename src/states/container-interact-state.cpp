@@ -127,16 +127,7 @@ void ContainerInteractState::DisplayPlayerInventory()
       Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1, yPos + index, equipStatus, Printer::kAlignLeft, "#FFFFFF");
     }
 
-    std::string textColor = "#FFFFFF";
-
-    if (ic->Data.Prefix == ItemPrefix::BLESSED)
-    {
-      textColor = GlobalConstants::ItemMagicColor;
-    }
-    else if (ic->Data.Prefix == ItemPrefix::CURSED)
-    {
-      textColor = "#880000";
-    }
+    std::string textColor = Util::GetItemColor(ic->Data);
 
     std::string idColor = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered) ? textColor : "#FFFFFF";
 
@@ -195,16 +186,7 @@ void ContainerInteractState::DisplayContainerInventory()
       Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1, yPos + index, equipStatus, Printer::kAlignRight, "#FFFFFF");
     }
 
-    std::string textColor = "#FFFFFF";
-
-    if (ic->Data.Prefix == ItemPrefix::BLESSED)
-    {
-      textColor = GlobalConstants::ItemMagicColor;
-    }
-    else if (ic->Data.Prefix == ItemPrefix::CURSED)
-    {
-      textColor = "#880000";
-    }
+    std::string textColor = Util::GetItemColor(ic->Data);
 
     std::string idColor = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered) ? textColor : "#FFFFFF";
 

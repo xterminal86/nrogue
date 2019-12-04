@@ -320,6 +320,12 @@ void ShoppingState::BuyOrSellItem()
       return;
     }
 
+    if (ic->Data.IsImportant)
+    {
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "This looks important - better hold on to it" }, GlobalConstants::MessageBoxBlueBorderColor);
+      return;
+    }
+
     int cost = GetCost(ic, true);
 
     _playerRef->Money += cost;
