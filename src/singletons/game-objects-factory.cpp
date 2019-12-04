@@ -500,7 +500,7 @@ GameObject* GameObjectsFactory::CreateUniquePickaxe()
 
 GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, from->PosX, from->PosY, '%', from->FgColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, from->PosX, from->PosY, '%', from->FgColor, from->BgColor);
 
   go->Type = GameObjectType::REMAINS;
 

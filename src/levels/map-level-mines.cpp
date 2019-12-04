@@ -365,6 +365,13 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
         case '+':
         {
           GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, "Door", 30);
+
+          if (Util::Rolld100(25))
+          {
+            DoorComponent* dc = door->GetComponent<DoorComponent>();
+            dc->OpenedBy = 0;
+          }
+
           InsertStaticObject(door);
         }
         break;
