@@ -152,9 +152,7 @@ void ShoppingState::DisplayPlayerInventory()
 
     Printer::Instance().PrintFB(extraInfoStringPosX + itemStringTotalLen, yPos + index, costString, Printer::kAlignLeft, GlobalConstants::CoinsColor);
 
-    std::string textColor = Util::GetItemColor(ic->Data);
-
-    std::string idColor = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered) ? textColor : "#FFFFFF";
+    std::string textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (_playerSide && index == _inventoryItemIndex)
     {
@@ -162,7 +160,7 @@ void ShoppingState::DisplayPlayerInventory()
     }
     else
     {
-      Printer::Instance().PrintFB(0, yPos + index, nameInInventory, Printer::kAlignLeft, idColor);
+      Printer::Instance().PrintFB(0, yPos + index, nameInInventory, Printer::kAlignLeft, textColor);
     }
 
     index++;
@@ -219,9 +217,7 @@ void ShoppingState::DisplayShopInventory()
 
     Printer::Instance().PrintFB(bonusStringPosX - itemStringTotalLen, yPos + index, costString, Printer::kAlignRight, GlobalConstants::CoinsColor);
 
-    std::string textColor = Util::GetItemColor(ic->Data);
-
-    std::string idColor = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered) ? textColor : "#FFFFFF";
+    std::string textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (!_playerSide && index == _inventoryItemIndex)
     {
@@ -229,7 +225,7 @@ void ShoppingState::DisplayShopInventory()
     }
     else
     {
-      Printer::Instance().PrintFB(xPos, yPos + index, nameInInventory, Printer::kAlignRight, idColor);
+      Printer::Instance().PrintFB(xPos, yPos + index, nameInInventory, Printer::kAlignRight, textColor);
     }
 
     index++;

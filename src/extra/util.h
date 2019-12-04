@@ -888,7 +888,7 @@ namespace Util
     return ret;
   }
 
-  inline std::string GetItemColor(const ItemData& data)
+  inline std::string GetItemInventoryColor(const ItemData& data)
   {
     std::string textColor = "#FFFFFF";
 
@@ -919,6 +919,11 @@ namespace Util
         textColor = kvp.second.second;
         break;
       }
+    }
+
+    if (!data.IsIdentified && !data.IsPrefixDiscovered)
+    {
+      textColor = "#FFFFFF";
     }
 
     return textColor;

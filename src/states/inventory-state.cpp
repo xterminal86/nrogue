@@ -223,10 +223,9 @@ void InventoryState::Update(bool forceUpdate)
         Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1, 2 + yPos, equipStatus, Printer::kAlignLeft, "#FFFFFF");
       }
 
-      std::string textColor = Util::GetItemColor(ic->Data);
+      std::string textColor = Util::GetItemInventoryColor(ic->Data);
 
-      std::string idColor = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered) ? textColor : "#FFFFFF";
-      DrawSelectionBar(yPos, nameInInventory, idColor);
+      DrawSelectionBar(yPos, nameInInventory, textColor);
 
       yPos++;
 
