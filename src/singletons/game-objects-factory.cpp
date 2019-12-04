@@ -502,10 +502,11 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel, from->PosX, from->PosY, '%', from->FgColor);
 
+  go->Type = GameObjectType::REMAINS;
+
   std::vector<GameObjectType> doNotAttachTimerForThese =
   {
     GameObjectType::HARMLESS,
-    GameObjectType::BREAKABLE,
     GameObjectType::PICKAXEABLE
   };
 
@@ -3471,7 +3472,7 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
   go->PosX = x;
   go->PosY = y;
 
-  go->Type = GameObjectType::BREAKABLE;
+  go->Type = GameObjectType::HARMLESS;
   go->FgColor = fgColor;
   go->BgColor = bgColor;
   go->Image = image;
@@ -3485,6 +3486,7 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
   int maxLevel = (int)MapType::THE_END;
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
+  cc->CanBeOpened = false;
   cc->MaxCapacity = maxLevel + 1;
 
   int maxItems = maxLevel;

@@ -168,7 +168,8 @@ bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
       {
         MarkAndCreateRemains();
 
-        std::string verb = (Type == GameObjectType::HARMLESS)
+        std::string verb = (Type == GameObjectType::HARMLESS
+                         || Type == GameObjectType::REMAINS)
                          ? "destroyed"
                          : "killed";
 
@@ -479,7 +480,8 @@ void GameObject::EffectAction(const ItemBonusStruct& e)
 
 void GameObject::MarkAndCreateRemains()
 {
-  if (Type != GameObjectType::HARMLESS)
+  // Destroying remains should not spawn another remains.
+  if (Type != GameObjectType::REMAINS)
   {
     auto go = GameObjectsFactory::Instance().CreateRemains(this);
     _levelOwner->InsertGameObject(go);

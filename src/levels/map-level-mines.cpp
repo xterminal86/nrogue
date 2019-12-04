@@ -312,9 +312,11 @@ void MapLevelMines::CreateLevel()
 
     RecordEmptyCells();
 
-    CreateRandomBarrels();
-
-    RecordEmptyCells();
+    if (MapType_ == MapType::MINES_1 || MapType_ == MapType::MINES_2)
+    {
+      CreateRandomBarrels();
+      RecordEmptyCells();
+    }
 
     PlaceStairs();
 
@@ -507,20 +509,29 @@ void MapLevelMines::CreateRandomBarrels()
   int maxAttempts = 10;
   int maxBarrels = 8;
 
-  int barrelsNum = RNG::Instance().RandomRange(1, maxBarrels + 1);
-  int squareRequired = (int)std::ceil(std::sqrt(barrelsNum));
-
   for (int i = 0; i < maxAttempts; i++)
   {
+    // Calculate range to check needed for required amount of barrels
+    int barrelsNum = RNG::Instance().RandomRange(1, maxBarrels + 1);
+    int squareSideLengthRequired = (int)std::ceil(std::sqrt(barrelsNum));
+    int rangeNeeded = (squareSideLengthRequired % 2 == 0)
+                     ? squareSideLengthRequired / 2
+                    : (squareSideLengthRequired - 1) / 2;
+
+    if (rangeNeeded == 0)
+    {
+      rangeNeeded = 1;
+    }
+
     int index = RNG::Instance().RandomRange(0, emptyCellsCopy.size());
-    Position pos = emptyCellsCopy[index];
-    auto res = Map::Instance().GetEmptyCellsAround(pos, squareRequired);
+    Position pos = emptyCellsCopy[index];    
+    auto res = Map::Instance().GetEmptyCellsAround(pos, rangeNeeded);
     if (res.size() >= barrelsNum)
     {
       // res.size() is a minimum required square to put numBarrels into,
       // which may be significantly larger than amount of barrels to create
-      // (e.g. 5 barrels can only fit in 4x4=16 square), so we need
-      // to check the number of barrels created so far separately.
+      // (e.g. 10 barrels can only fit in 5x5=25 in-game square area),
+      // so we need to check the number of barrels created so far separately.
       int created = 0;
       for (auto& p : res)
       {
@@ -533,6 +544,8 @@ void MapLevelMines::CreateRandomBarrels()
         InsertStaticObject(barrel);
         created++;
       }
+
+      emptyCellsCopy.erase(emptyCellsCopy.begin() + index);
     }
   }
 }

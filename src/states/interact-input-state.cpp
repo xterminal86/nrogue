@@ -119,10 +119,16 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
   ContainerComponent* cc = go->GetComponent<ContainerComponent>();
   if (cc != nullptr)
   {
-    cc->Interact();
-
-    // TODO: add locked containers
-    Printer::Instance().AddMessage("You opened: " + go->ObjectName);
+    // TODO: locked containers?
+    if (!cc->Interact())
+    {
+      Printer::Instance().AddMessage(go->ObjectName + " can't be opened");
+      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+    }
+    else
+    {
+      Printer::Instance().AddMessage("You opened: " + go->ObjectName);
+    }
   }
   else
   {

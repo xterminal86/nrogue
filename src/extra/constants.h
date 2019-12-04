@@ -158,13 +158,13 @@ enum class MapType
 
 enum class GameObjectType
 {
-  HARMLESS = 0,  
+  HARMLESS = 0,
+  REMAINS,
   PLAYER,
   GROUND,
   SHALLOW_WATER,
   DEEP_WATER,
   LAVA,
-  BREAKABLE,
   PICKAXEABLE,
   TRAP,
   RAT,

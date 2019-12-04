@@ -19,11 +19,13 @@ class ContainerComponent : public Component
     bool IsFull();
     bool IsEmpty();
 
-    void Interact();
+    bool Interact();
 
     std::vector<std::unique_ptr<GameObject>> Contents;
 
     int MaxCapacity = 0;
+
+    bool CanBeOpened = true;
 };
 
 #endif // CONTAINERCOMPONENT_H

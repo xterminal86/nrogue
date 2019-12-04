@@ -1102,22 +1102,6 @@ void Player::LevelDown()
 
 void Player::ProcessKill(GameObject* monster)
 {
-  if (monster->Type == GameObjectType::HARMLESS)
-  {
-    return;
-  }
-
-  // FIXME: exp value is too unbalanced
-
-  int dungeonLvl = Map::Instance().CurrentLevel->DungeonLevel;
-  int defaultExp = monster->Attrs.Rating() - Attrs.Rating();
-
-  defaultExp = monster->Attrs.Rating();
-  defaultExp = Util::Clamp(defaultExp, 1, GlobalConstants::AwardedExpMax);
-
-  //int exp = defaultExp * dungeonLvl; // + dungeonLvl
-  int exp = defaultExp;
-
   // Check for monster's inventory and drop all items from there if any
   ContainerComponent* cc = monster->GetComponent<ContainerComponent>();
   if (cc != nullptr)
@@ -1132,20 +1116,35 @@ void Player::ProcessKill(GameObject* monster)
       ic->OwnerGameObject->PosY = monster->PosY;
     }
   }
-  else
-  {
-    GameObjectsFactory::Instance().GenerateLootIfPossible(monster->PosX, monster->PosY, monster->Type);
-  }
 
-  AwardExperience(exp);
+  // Try to generate loot from the kill itself
+  GameObjectsFactory::Instance().GenerateLootIfPossible(monster->PosX, monster->PosY, monster->Type);
 
-  if (TotalKills.count(monster->ObjectName))
+  // Do not award experience for nothing
+  if (monster->Type != GameObjectType::HARMLESS
+   && monster->Type != GameObjectType::REMAINS)
   {
-    TotalKills[monster->ObjectName]++;
-  }
-  else
-  {
-    TotalKills[monster->ObjectName] = 1;
+    // FIXME: exp value is too unbalanced (maybe)
+
+    int dungeonLvl = Map::Instance().CurrentLevel->DungeonLevel;
+    int defaultExp = monster->Attrs.Rating() - Attrs.Rating();
+
+    defaultExp = monster->Attrs.Rating();
+    defaultExp = Util::Clamp(defaultExp, 1, GlobalConstants::AwardedExpMax);
+
+    //int exp = defaultExp * dungeonLvl; // + dungeonLvl
+    int exp = defaultExp;
+
+    AwardExperience(exp);
+
+    if (TotalKills.count(monster->ObjectName))
+    {
+      TotalKills[monster->ObjectName]++;
+    }
+    else
+    {
+      TotalKills[monster->ObjectName] = 1;
+    }
   }
 }
 

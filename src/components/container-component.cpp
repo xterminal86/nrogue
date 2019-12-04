@@ -48,12 +48,19 @@ bool ContainerComponent::AddToInventory(GameObject* object)
   return foundStack;
 }
 
-void ContainerComponent::Interact()
+bool ContainerComponent::Interact()
 {
+  if (!CanBeOpened)
+  {
+    return false;
+  }
+
   auto s = Application::Instance().GetGameStateRefByName(GameStates::CONTAINER_INTERACT_STATE);
   ContainerInteractState* cis = static_cast<ContainerInteractState*>(s);
   cis->SetContainerRef(this);
   Application::Instance().ChangeState(GameStates::CONTAINER_INTERACT_STATE);
+
+  return true;
 }
 
 bool ContainerComponent::IsFull()
