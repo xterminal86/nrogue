@@ -1255,7 +1255,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       diceRolls = 1;
       diceSides = 6;
 
-      baseDurability = 35 + 2 * (int)ic->Data.ItemQuality_;;
+      baseDurability = 40 + 2 * (int)ic->Data.ItemQuality_;
 
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
@@ -3195,6 +3195,7 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne
     { ItemBonusType::INDESTRUCTIBLE,  1 },
     { ItemBonusType::SELF_REPAIR,    10 },
     { ItemBonusType::VISIBILITY,     20 },
+    { ItemBonusType::INVISIBILITY,    4 },
     { ItemBonusType::DAMAGE,         20 },
     { ItemBonusType::HUNGER,         10 },
     { ItemBonusType::IGNORE_DEFENCE, 10 },
@@ -3205,7 +3206,8 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne
     { ItemBonusType::LEECH,           8 },
     { ItemBonusType::DMG_ABSORB,     10 },
     { ItemBonusType::MAG_ABSORB,     10 },
-    { ItemBonusType::THORNS,         10 }
+    { ItemBonusType::THORNS,         10 },
+    { ItemBonusType::TELEPATHY,       6 },
   };
 
   AdjustBonusWeightsMap(itemRef, bonusWeightByType);
@@ -3349,6 +3351,14 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
 
     case ItemBonusType::DMG_ABSORB:
     case ItemBonusType::MAG_ABSORB:
+    {
+      int min = 1;
+      int max = multByQ[q];
+      value = RNG::Instance().RandomRange(min, max + 1);
+      bs.MoneyCostIncrease = value * moneyIncrease;
+    }
+    break;
+
     case ItemBonusType::DAMAGE:
     {
       int min = multByQ[q];
@@ -3433,6 +3443,8 @@ void GameObjectsFactory::AdjustBonusWeightsMap(ItemComponent* itemRef, std::map<
     bonusWeightByType.erase(ItemBonusType::IGNORE_DEFENCE);
     bonusWeightByType.erase(ItemBonusType::KNOCKBACK);
     bonusWeightByType.erase(ItemBonusType::LEECH);
+    bonusWeightByType.erase(ItemBonusType::INVISIBILITY);
+    bonusWeightByType.erase(ItemBonusType::TELEPATHY);
   }
   else if (itemRef->Data.EqCategory == EquipmentCategory::WEAPON)
   {
@@ -3443,6 +3455,8 @@ void GameObjectsFactory::AdjustBonusWeightsMap(ItemComponent* itemRef, std::map<
     bonusWeightByType.erase(ItemBonusType::MAG_ABSORB);
     bonusWeightByType.erase(ItemBonusType::THORNS);
     bonusWeightByType.erase(ItemBonusType::HUNGER);
+    bonusWeightByType.erase(ItemBonusType::INVISIBILITY);
+    bonusWeightByType.erase(ItemBonusType::TELEPATHY);
   }
   else if (itemRef->Data.EqCategory == EquipmentCategory::NECK
         || itemRef->Data.EqCategory == EquipmentCategory::RING)

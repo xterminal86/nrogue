@@ -1144,6 +1144,7 @@ namespace GlobalConstants
     { ItemBonusType::INDESTRUCTIBLE,  "Everlasting" },
     { ItemBonusType::SELF_REPAIR,     "Reliable"    },
     { ItemBonusType::VISIBILITY,      "Shining"     },
+    { ItemBonusType::INVISIBILITY,    "Concealing"  },
     { ItemBonusType::DAMAGE,          "Fighter's"   },
     { ItemBonusType::HUNGER,          "Sustaining"  },
     { ItemBonusType::IGNORE_DEFENCE,  "Piercing"    },
@@ -1153,8 +1154,9 @@ namespace GlobalConstants
     { ItemBonusType::REFLECT,         "Silver"      },
     { ItemBonusType::LEECH,           "Vampire"     },
     { ItemBonusType::DMG_ABSORB,      "Protective"  },
-    { ItemBonusType::MAG_ABSORB,      "Shielding"   },
-    { ItemBonusType::THORNS,          "Ivy"         }
+    { ItemBonusType::MAG_ABSORB,      "Shielding"   },    
+    { ItemBonusType::THORNS,          "Spiked"      },
+    { ItemBonusType::TELEPATHY,       "Cautious"    }
   };
 
   static const std::map<ItemBonusType, std::string> ItemBonusSuffixes =
@@ -1170,6 +1172,7 @@ namespace GlobalConstants
     { ItemBonusType::INDESTRUCTIBLE,  "of Ages"        },
     { ItemBonusType::SELF_REPAIR,     "of Reliability" },
     { ItemBonusType::VISIBILITY,      "of the Sun"     },
+    { ItemBonusType::INVISIBILITY,    "of the Ghost"   },
     { ItemBonusType::DAMAGE,          "of Destruction" },
     { ItemBonusType::HUNGER,          "of Satiation"   },
     { ItemBonusType::IGNORE_DEFENCE,  "of the Master"  },
@@ -1180,44 +1183,47 @@ namespace GlobalConstants
     { ItemBonusType::LEECH,           "of the Blood"   },
     { ItemBonusType::DMG_ABSORB,      "of Protection"  },
     { ItemBonusType::MAG_ABSORB,      "of Shielding"   },
-    { ItemBonusType::THORNS,          "of the Ivy"     }
+    { ItemBonusType::THORNS,          "of the Ivy"     },
+    { ItemBonusType::TELEPATHY,       "of the Oracle"  }
   };
 
   static const std::map<ItemBonusType, int> MoneyCostIncreaseByBonusType =
   {
-    { ItemBonusType::NONE,              0  },
-    { ItemBonusType::STR,             250  },
-    { ItemBonusType::DEF,             250  },
-    { ItemBonusType::MAG,             250  },
-    { ItemBonusType::RES,             250  },
-    { ItemBonusType::SKL,             250  },
-    { ItemBonusType::SPD,             250  },
-    { ItemBonusType::HP,              125  },
-    { ItemBonusType::MP,              125  },
-    { ItemBonusType::INDESTRUCTIBLE,  5000 },
-    { ItemBonusType::SELF_REPAIR,     300  },
-    { ItemBonusType::VISIBILITY,       50  },
-    { ItemBonusType::DAMAGE,          400  },
-    { ItemBonusType::HUNGER,          300  },
-    { ItemBonusType::IGNORE_DEFENCE,  350  },
-    { ItemBonusType::KNOCKBACK,       100  },
-    { ItemBonusType::MANA_SHIELD,     500  },
-    { ItemBonusType::REGEN,           400  },
+    { ItemBonusType::NONE,               0 },
+    { ItemBonusType::STR,              350 },
+    { ItemBonusType::DEF,              350 },
+    { ItemBonusType::MAG,              350 },
+    { ItemBonusType::RES,              350 },
+    { ItemBonusType::SKL,              350 },
+    { ItemBonusType::SPD,              350 },
+    { ItemBonusType::HP,               175 },
+    { ItemBonusType::MP,               175 },
+    { ItemBonusType::INDESTRUCTIBLE, 10000 },
+    { ItemBonusType::SELF_REPAIR,      500 },
+    { ItemBonusType::VISIBILITY,        50 },
+    { ItemBonusType::INVISIBILITY,    2000 },
+    { ItemBonusType::DAMAGE,           400 },
+    { ItemBonusType::HUNGER,           300 },
+    { ItemBonusType::IGNORE_DEFENCE,   350 },
+    { ItemBonusType::KNOCKBACK,        100 },
+    { ItemBonusType::MANA_SHIELD,      500 },
+    { ItemBonusType::REGEN,            400 },
     { ItemBonusType::REFLECT,         1000 },
-    { ItemBonusType::LEECH,            20  },
-    { ItemBonusType::DMG_ABSORB,      300  },
-    { ItemBonusType::MAG_ABSORB,      300  },
-    { ItemBonusType::THORNS,           40  }
+    { ItemBonusType::LEECH,             20 },
+    { ItemBonusType::DMG_ABSORB,       750 },
+    { ItemBonusType::MAG_ABSORB,       750 },
+    { ItemBonusType::THORNS,            40 },
+    { ItemBonusType::TELEPATHY,        500 }
   };
 
   static const std::map<ItemBonusType, std::string> BonusDisplayNameByType =
   {
-    { ItemBonusType::STR,          "STR" },
-    { ItemBonusType::DEF,          "DEF" },
-    { ItemBonusType::MAG,          "MAG" },
-    { ItemBonusType::RES,          "RES" },
-    { ItemBonusType::SKL,          "SKL" },
-    { ItemBonusType::SPD,          "SPD" },
+    { ItemBonusType::STR,          "+ST" },
+    { ItemBonusType::DEF,          "+DF" },
+    { ItemBonusType::MAG,          "+MG" },
+    { ItemBonusType::RES,          "+RS" },
+    { ItemBonusType::SKL,          "+SK" },
+    { ItemBonusType::SPD,          "+SP" },
     { ItemBonusType::INVISIBILITY, "Hid" },
     { ItemBonusType::MANA_SHIELD,  "Shi" },
     { ItemBonusType::REGEN,        "Reg" },

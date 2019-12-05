@@ -843,7 +843,14 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
 
     if (!DamageArmor(amount))
     {
-      logMsg = Util::StringFormat("You were hit for %i damage", amount);
+      if (amount == 0)
+      {
+        logMsg = "You were hit for no damage";
+      }
+      else
+      {
+        logMsg = Util::StringFormat("You were hit for %i damage", amount);
+      }
 
       if (HasEffect(ItemBonusType::MANA_SHIELD) && Attrs.MP.Min().Get() != 0)
       {
@@ -1562,6 +1569,7 @@ void Player::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
     case ItemBonusType::REGEN:
     case ItemBonusType::REFLECT:
     case ItemBonusType::MANA_SHIELD:
+    case ItemBonusType::INVISIBILITY:
       AddEffect(bonus);
       break;
   }
@@ -1606,6 +1614,7 @@ void Player::UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
     case ItemBonusType::REGEN:
     case ItemBonusType::REFLECT:
     case ItemBonusType::MANA_SHIELD:
+    case ItemBonusType::INVISIBILITY:
       RemoveEffect(bonus);
       break;
   }

@@ -218,12 +218,18 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
 
       bool res = Map::Instance().IsObjectVisible(objPos, plPos);
       if (res)
-      {
+      {        
         std::string plX = std::to_string(plPos.X);
         std::string plY = std::to_string(plPos.Y);
 
         Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { "pl_x", plX });
         Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { "pl_y", plY });
+      }
+
+      // TODO: what if monsters can see invisible?
+      if (res && playerRef.HasEffect(ItemBonusType::INVISIBILITY))
+      {
+        res = false;
       }
 
       return res ? BTResult::Success : BTResult::Failure;

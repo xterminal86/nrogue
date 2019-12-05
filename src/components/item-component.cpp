@@ -319,6 +319,14 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
       }
       break;
 
+      case ItemBonusType::TELEPATHY:
+        res.push_back("You can sense nearby monsters");
+        break;
+
+      case ItemBonusType::INVISIBILITY:
+        res.push_back("Makes you invisible");
+        break;
+
       case ItemBonusType::DAMAGE:
       {
         auto str = Util::StringFormat("+%i to total damage", i.BonusValue);
