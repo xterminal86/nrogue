@@ -201,6 +201,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
       {
         { GameObjectType::RAT,    6 },
         { GameObjectType::SPIDER, 1 },
+        { GameObjectType::TROLL,  1 },
         { GameObjectType::BAT,    4 }
       };
     }
@@ -223,6 +224,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
       {
         { GameObjectType::RAT,    4 },
         { GameObjectType::SPIDER, 4 },
+        { GameObjectType::TROLL,  2 },
         { GameObjectType::BAT,    4 }
       };
     }

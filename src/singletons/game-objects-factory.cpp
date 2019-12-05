@@ -9,6 +9,7 @@
 #include "ai-monster-bat.h"
 #include "ai-monster-spider.h"
 #include "ai-monster-smart.h"
+#include "ai-monster-troll.h"
 #include "ai-monster-herobrine.h"
 #include "ai-npc.h"
 #include "stairs-component.h"
@@ -125,6 +126,10 @@ GameObject* GameObjectsFactory::CreateMonster(int x, int y, GameObjectType monst
     case GameObjectType::HEROBRINE:
       go = CreateHerobrine(x, y);
       break;
+
+    case GameObjectType::TROLL:
+      go = CreateTroll(x, y);
+      break;
   }
 
   // No check for nullptr, program will crash and
@@ -239,7 +244,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
     int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
     int difficulty = std::max(pl, dl); //pl + dl;
-    int diffOffset = RNG::Instance().RandomRange(0, 3);
+    int diffOffset = RNG::Instance().RandomRange(0, 4);
 
     difficulty += diffOffset;
 
@@ -299,7 +304,7 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
     int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
     int difficulty = std::max(pl, dl); //pl + dl;
-    int diffOffset = RNG::Instance().RandomRange(0, 3);
+    int diffOffset = RNG::Instance().RandomRange(0, 4);
 
     difficulty += diffOffset;
 
@@ -359,7 +364,7 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
     int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
     int difficulty = std::max(pl, dl); //pl + dl;
-    int diffOffset = RNG::Instance().RandomRange(0, 3);
+    int diffOffset = RNG::Instance().RandomRange(0, 4);
 
     difficulty += diffOffset;
 
@@ -374,6 +379,72 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
 
     go->Attrs.HP.Restore();
     go->Attrs.MP.Restore();
+
+    /*
+    int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
+    int randomDef = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
+    int randomSkl = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
+    int randomHp = RNG::Instance().RandomRange(2 * difficulty, 6 * difficulty);
+    int randomSpd = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
+
+    go->Attrs.Lvl.Set(difficulty);
+
+    go->Attrs.Str.Set(randomStr);
+    go->Attrs.Def.Set(randomDef);
+    go->Attrs.HP.Set(randomHp);
+    go->Attrs.Spd.Set(randomSpd);
+    go->Attrs.Skl.Set(randomSkl);
+    */
+  }
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateTroll(int x, int y, bool randomize)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'T', GlobalConstants::MonsterColor);
+  go->ObjectName = "Troll";
+  go->Attrs.Indestructible = false;
+  go->HealthRegenTurns = 3;
+
+  go->IsLiving = true;
+
+  // Sets Occupied flag for _currentCell
+  go->Move(0, 0);
+
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterTroll* aims = ai->AddModel<AIMonsterTroll>();
+  aims->AgroRadius = 8;
+  aims->ConstructAI();
+
+  ai->ChangeModel<AIMonsterTroll>();
+
+  // Set attributes
+  if (randomize)
+  {
+    int pl = _playerRef->Attrs.Lvl.Get();
+    int dl = Map::Instance().CurrentLevel->DungeonLevel;
+    int difficulty = std::max(pl, dl); //pl + dl;
+    int diffOffset = RNG::Instance().RandomRange(0, 4);
+
+    difficulty += diffOffset;
+
+    go->Attrs.Str.Set(5);
+
+    go->Attrs.Str.Talents = 3;
+    go->Attrs.Def.Talents = 3;
+    go->Attrs.HP.Talents = 3;
+
+    for (int i = 0; i < difficulty; i++)
+    {
+      go->LevelUp();
+    }
+
+    go->Attrs.HP.Restore();
+    go->Attrs.MP.Restore();
+
+    int str = go->Attrs.Str.Get() * 2;
+    go->Attrs.Str.Set(str);
 
     /*
     int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);

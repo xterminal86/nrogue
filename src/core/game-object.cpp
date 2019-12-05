@@ -578,22 +578,24 @@ void GameObject::LevelUp(int baseHpOverride)
 
   // HP and MP
 
-  int baseHp = (baseHpOverride == -1) ? Attrs.HP.Talents : baseHpOverride;
-  if (baseHp == 0)
+  int minRndHp = (Attrs.HP.Talents + 1);
+  int maxRndHp = 2 * (Attrs.HP.Talents + 1);
+
+  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp + 1);
+
+  if (baseHpOverride != -1)
   {
-    baseHp = 1;
+    Attrs.HP.AddMax(baseHpOverride);
   }
-
-  int minRndHp = baseHp;
-  int maxRndHp = 2 * baseHp;
-
-  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp);
-  Attrs.HP.AddMax(hpToAdd);
+  else
+  {
+    Attrs.HP.AddMax(hpToAdd);
+  }
 
   int minRndMp = Attrs.Mag.OriginalValue();
   int maxRndMp = Attrs.Mag.OriginalValue() + Attrs.MP.Talents;
 
-  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp);
+  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp + 1);
   Attrs.MP.AddMax(mpToAdd);
 
   Attrs.Lvl.Add(1);

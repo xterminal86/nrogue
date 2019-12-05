@@ -29,6 +29,18 @@ class LookInputState : public GameState
     Player* _playerRef;
 
     Position _cursorPosition;
+
+    #ifdef DEBUG_BUILD
+    const StringsArray2D _debugInfo =
+    {
+      "'ENTER' - display actor stats",
+      "'r' - spawn rat",
+      "'b' - spawn bat",
+      "'s' - spawn spider",
+      "'T' - spawn troll"
+    };
+    #endif
+
 };
 
 #endif // LOOKINPUTSTATE_H

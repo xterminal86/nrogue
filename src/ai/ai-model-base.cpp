@@ -281,6 +281,20 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
       return res ? BTResult::Success : BTResult::Failure;
     };
   }
+  else if (condType == "hp_low")
+  {
+    fn = [this]()
+    {
+      int maxHp = AIComponentRef->OwnerGameObject->Attrs.HP.Max().OriginalValue();
+      int curHp = AIComponentRef->OwnerGameObject->Attrs.HP.Min().Get();
+
+      float perc = (float)curHp * 100.0f / (float)maxHp;
+
+      bool res = ((int)perc < 30);
+
+      return res ? BTResult::Success : BTResult::Failure;
+    };
+  }
 
   return fn;
 }
