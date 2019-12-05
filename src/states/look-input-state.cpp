@@ -315,6 +315,7 @@ void LookInputState::DisplayMonsterStats()
   }
 }
 
+#ifdef DEBUG_BUILD
 void LookInputState::PrintDebugInfo()
 {
   int yStart = 2;
@@ -325,3 +326,4 @@ void LookInputState::PrintDebugInfo()
     yStart++;
   }
 }
+#endif

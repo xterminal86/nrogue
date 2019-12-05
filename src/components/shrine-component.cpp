@@ -298,7 +298,7 @@ void ShrineComponent::ApplyRandomEffect()
    || b.Type == ItemBonusType::PARALYZE)
   {
     b.Cumulative = true;
-    b.BonusValue = 1;
+    b.BonusValue = (b.Type == ItemBonusType::POISONED) ? -1 : 1;
     b.Period = Timeout / 10;
   }
 
