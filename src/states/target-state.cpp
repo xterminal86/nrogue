@@ -267,11 +267,17 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
         {
           return cell;
         }
-        else if (_weaponRef->Data.ItemType_ == ItemType::WAND
-              && _weaponRef->Data.SpellHeld == SpellType::FIREBALL)
+        else if (_weaponRef->Data.ItemType_ == ItemType::WAND)
         {
-          auto prevCell = Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
-          return prevCell;
+          if (_weaponRef->Data.SpellHeld == SpellType::FIREBALL)
+          {
+            auto prevCell = Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
+            return prevCell;
+          }
+          else
+          {
+            return cell;
+          }
         }
       }
       else
