@@ -429,11 +429,11 @@ GameObject* GameObjectsFactory::CreateTroll(int x, int y, bool randomize)
 
     difficulty += diffOffset;
 
-    go->Attrs.Str.Set(5);
+    go->Attrs.Str.Set(4);
 
-    go->Attrs.Str.Talents = 3;
+    go->Attrs.Str.Talents = 4;
     go->Attrs.Def.Talents = 3;
-    go->Attrs.HP.Talents = 3;
+    go->Attrs.HP.Talents = 10;
 
     for (int i = 0; i < difficulty; i++)
     {
@@ -445,6 +445,9 @@ GameObject* GameObjectsFactory::CreateTroll(int x, int y, bool randomize)
 
     int str = go->Attrs.Str.Get() * 2;
     go->Attrs.Str.Set(str);
+
+    int spd = go->Attrs.Spd.Get() / 2;
+    go->Attrs.Spd.Set(spd);
 
     /*
     int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
@@ -2738,6 +2741,8 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
 
   std::string message;
 
+  float scale = 0.4f;
+
   if (item->Data.Prefix == ItemPrefix::BLESSED)
   {
     amount = statMax;
@@ -2747,7 +2752,7 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
   }
   else if (item->Data.Prefix == ItemPrefix::UNCURSED)
   {
-    amount = statMax * 0.3f;
+    amount = statMax * scale;
     message = "You feel better";
     message = (statCur == statMax)
               ? "Nothing happens"
@@ -2755,8 +2760,33 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
   }
   else if (item->Data.Prefix == ItemPrefix::CURSED)
   {
-    amount = -statMax * 0.3f;    
-    message = "You are damaged by a cursed potion!";
+    amount = statMax * (scale / 2.0f);
+
+    int var = RNG::Instance().RandomRange(0, 3);
+    if (var == 0)
+    {
+      message = (statCur == statMax)
+                ? "Nothing happens"
+                : "You feel a little better";
+    }
+    else if (var == 1)
+    {
+      amount = -amount;
+      message = "You are damaged by a cursed potion!";
+    }
+    else if (var == 2)
+    {
+      message = "You feel unwell!";
+
+      ItemBonusStruct e;
+      e.Type = ItemBonusType::POISONED;
+      e.Duration = 50;
+      e.Period = 10;
+      e.BonusValue = -1;
+      e.Cumulative = true;
+
+      _playerRef->AddEffect(e);
+    }
   }
 
   Printer::Instance().AddMessage(message);

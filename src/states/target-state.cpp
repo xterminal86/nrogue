@@ -212,7 +212,7 @@ GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
       break;
     }
     else if ((!isThrowing && distanceCovered >= _weaponRef->Data.Range)
-          || (isThrowing && distanceCovered >= _maxThrowingRange))
+           || (isThrowing && distanceCovered >= _maxThrowingRange))
     {
       endPoint.Set(mx, my);
       break;
@@ -417,16 +417,22 @@ void TargetState::FireWeapon(bool throwingFromInventory)
     }
   }
 
-  // In case player gained a level after firing a ranged weapon,
-  // message box state will be overridden by one of the
-  // ChangeState() calls below.
-  // Should either introduce a hack and display message box
-  // after those calls below, or refactor message box state.
   stoppedAt = LaunchProjectile(projectile, projColor);
   ProcessHit(stoppedAt);
 
   _playerRef->FinishTurn();
 
+  DirtyHack();
+}
+
+void TargetState::DirtyHack()
+{
+  // In case player gained a level after firing a ranged weapon,
+  // message box state will be overridden by one of the
+  // ChangeState() calls below.
+  // Should either introduce a hack and display message box
+  // after those calls below, or refactor message box state.
+  //
   // Check if player accidentally killed himself
   // (e.g. after firing fireball close to the wall)
   if (!_playerRef->IsAlive())
@@ -455,7 +461,7 @@ void TargetState::FireWeapon(bool throwingFromInventory)
     {
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
     }
-  }  
+  }
 }
 
 void TargetState::ProcessHit(GameObject* hitPoint)
@@ -615,10 +621,10 @@ void TargetState::DrawHint()
       bool isCellBlocking = Map::Instance().CurrentLevel->IsCellBlocking(p);
       bool isThrowing = (_throwingItemInventoryIndex != -1);
 
-      if (condActor
-       || isCellBlocking
+      if (_weaponRef->Data.SpellHeld != SpellType::LASER
+       && (condActor || isCellBlocking
        || (!isThrowing && d > _weaponRef->Data.Range)
-       || (isThrowing && d > _maxThrowingRange))
+       || (isThrowing && d > _maxThrowingRange)))
       {
         break;
       }

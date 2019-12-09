@@ -525,6 +525,7 @@ void MainState::ProcessWand(ItemComponent* wand)
       case SpellType::STRIKE:
       case SpellType::MAGIC_MISSILE:
       case SpellType::TELEPORT:
+      case SpellType::LASER:
       {
         auto s = Application::Instance().GetGameStateRefByName(GameStates::TARGET_STATE);
         TargetState* ts = static_cast<TargetState*>(s);

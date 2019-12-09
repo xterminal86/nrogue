@@ -42,6 +42,7 @@ class TargetState : public GameState
     void CycleTargets();
     void ProcessHit(GameObject* hitPoint);
     void PrintThrowResult(GameObject* tileRef);
+    void DirtyHack();
 
     std::vector<Position> GetVisiblePointsFrom(const Position& from, int range);
 
