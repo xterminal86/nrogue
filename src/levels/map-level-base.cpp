@@ -262,13 +262,13 @@ void MapLevelBase::DisplayWelcomeText()
 bool MapLevelBase::IsCellBlocking(const Position& pos)
 {
   bool groundBlock = MapArray[pos.X][pos.Y]->Blocking;
+  bool staticBlock = false;
   if (StaticMapObjects[pos.X][pos.Y] != nullptr)
   {
-    bool staticObjectsBlock = StaticMapObjects[pos.X][pos.Y]->Blocking;
-    return staticObjectsBlock;
+    staticBlock = StaticMapObjects[pos.X][pos.Y]->Blocking;
   }
 
-  return groundBlock;
+  return (groundBlock || staticBlock);
 }
 
 /// Places grass tile at [x; y], maxDiceRoll serves as a

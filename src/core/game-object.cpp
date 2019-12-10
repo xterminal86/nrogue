@@ -72,11 +72,11 @@ bool GameObject::Move(int dx, int dy)
   return false;
 }
 
-bool GameObject::MoveTo(int x, int y)
+bool GameObject::MoveTo(int x, int y, bool force)
 {
   bool isBlocked = Map::Instance().CurrentLevel->IsCellBlocking({ x, y });
   bool isOccupied = Map::Instance().CurrentLevel->MapArray[x][y]->Occupied;  
-  if (!isBlocked && !isOccupied)
+  if ((!isBlocked && !isOccupied) || force)
   {
     // When we change level, previous position (PosX and PosY)
     // is pointing to the stairs down on previous level,
@@ -107,10 +107,10 @@ bool GameObject::MoveTo(int x, int y)
   return false;
 }
 
-bool GameObject::MoveTo(const Position &pos)
+bool GameObject::MoveTo(const Position &pos, bool force)
 {
   //printf("MoveTo(%i;%i)\n\n", pos.X, pos.Y);
-  return MoveTo(pos.X, pos.Y);
+  return MoveTo(pos.X, pos.Y, force);
 }
 
 void GameObject::Draw(const std::string& overrideColorFg, const std::string& overrideColorBg)

@@ -333,11 +333,14 @@ void Map::TeleportToExistingLevel(MapType levelToChange, const Position& telepor
                      mapRef->ObjectName :
                      (soRef != nullptr ? soRef->ObjectName : "unknown");
 
+  bool forceMove = false;
   if (tpToWall)
   {
+    forceMove = true;
+
     if (forPlayer)
     {
-      auto str = Util::StringFormat("You teleported into a %s!", tpTo.data());
+      auto str = Util::StringFormat("You teleported into %s!", tpTo.data());
       Printer::Instance().AddMessage(str);
     }
 
@@ -371,7 +374,7 @@ void Map::TeleportToExistingLevel(MapType levelToChange, const Position& telepor
   }
 
   whoToTeleport->SetLevelOwner(CurrentLevel);
-  whoToTeleport->MoveTo(teleportTo);
+  whoToTeleport->MoveTo(teleportTo, forceMove);
 
   if (forPlayer)
   {

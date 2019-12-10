@@ -487,6 +487,8 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
 
 void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll)
 {
+  Printer::Instance().AddMessage("You are suddenly transported elsewhere!");
+
   auto& mapRef = Map::Instance().CurrentLevel;
 
   // TODO: blessed scroll of teleport - what to do?
@@ -504,9 +506,7 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll)
     int ry = RNG::Instance().RandomRange(1, mapRef->MapSize.Y);
     Position pos = { rx, ry };
     Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos);
-  }
-
-  Printer::Instance().AddMessage("You are suddenly transported elsewhere!");
+  }  
 }
 
 void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
