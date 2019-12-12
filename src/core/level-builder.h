@@ -50,6 +50,8 @@ class LevelBuilder
 
     bool WasUsed();
 
+    std::string GetMapRawString();
+
     std::vector<std::vector<char>> MapRaw;
 
     const std::map<Position, ShrineType>& ShrinesByPosition();

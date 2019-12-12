@@ -936,11 +936,31 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
 
 void MapLevelTown::CreateTownGates()
 {
-  GameObjectInfo t;
-  t.Set(true, true, '+', GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Village Gates");
+  GameObject* gate1 = GameObjectsFactory::Instance().CreateDummyObject("Village Gates", '+', GlobalConstants::WhiteColor, GlobalConstants::BlackColor, std::vector<std::string>());
+  GameObject* gate2 = GameObjectsFactory::Instance().CreateDummyObject("Village Gates", '+', GlobalConstants::WhiteColor, GlobalConstants::BlackColor, std::vector<std::string>());
 
-  InsertStaticObject(0, 13, t);
-  InsertStaticObject(0, 14, t);
+  std::function<void()> fn = []()
+  {
+    Printer::Instance().AddMessage("The village gates are closed");
+  };
+
+  gate1->Blocking = true;
+  gate1->BlocksSight = true;
+
+  gate1->PosX = 0;
+  gate1->PosY = 13;
+
+  gate2->Blocking = true;
+  gate2->BlocksSight = true;
+
+  gate2->PosX = 0;
+  gate2->PosY = 14;
+
+  gate1->InteractionCallback = fn;
+  gate2->InteractionCallback = fn;
+
+  InsertStaticObject(gate1);
+  InsertStaticObject(gate2);
 }
 
 bool MapLevelTown::SkipArea(const Position& pos, const Rect& area)

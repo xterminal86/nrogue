@@ -128,3 +128,8 @@ bool LevelBuilder::WasUsed()
 {
   return (_generator != nullptr);
 }
+
+std::string LevelBuilder::GetMapRawString()
+{
+  return (_generator != nullptr) ? _generator->GetMapRawString() : "_generator is null\n";
+}

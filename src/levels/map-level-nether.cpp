@@ -26,6 +26,12 @@ void MapLevelNether::DisplayWelcomeText()
 
 void MapLevelNether::CreateLevel()
 {
+  if (MapType_ != MapType::CAVES_5)
+  {
+    LevelBuilder lb;
+    lb.CellularAutomataMethod(MapSize, 40, 5, 4, 12);
+  }
+
   RecordEmptyCells();
   PlaceStairs();
 }

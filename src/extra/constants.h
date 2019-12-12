@@ -1111,8 +1111,8 @@ namespace GlobalConstants
     // Lost City
     { MapType::LOST_CITY,   { "Lost City"            } },
     // Deep Dark
-    { MapType::DEEP_DARK_1, { "Embrace of Darkness"  } },
-    { MapType::DEEP_DARK_2, { "Underdark"            } },
+    { MapType::DEEP_DARK_1, { "Underdark"            } },
+    { MapType::DEEP_DARK_2, { "Embrace of Darkness"  } },
     { MapType::DEEP_DARK_3, { "Deep Dark"            } },
     { MapType::DEEP_DARK_4, { "Starless Night"       } },
     { MapType::DEEP_DARK_5, { "Sinister"             } },

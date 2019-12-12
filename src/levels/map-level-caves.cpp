@@ -40,7 +40,7 @@ void MapLevelCaves::PrepareMap(MapLevelBase* levelOwner)
 
 void MapLevelCaves::CreateLevel()
 {
-  VisibilityRadius = 4;
+  VisibilityRadius = 6;
   MonstersRespawnTurns = 1000;
 
   int tunnelLengthMax = MapSize.X / 10;
@@ -51,9 +51,17 @@ void MapLevelCaves::CreateLevel()
   switch (MapType_)
   {
     case MapType::CAVES_1:
+    case MapType::CAVES_2:
     {
       int iterations = (MapSize.X * MapSize.Y) / 2;
       lb.TunnelerMethod(MapSize, iterations, { tunnelLengthMin, tunnelLengthMax });
+    }
+    break;
+
+    case MapType::CAVES_3:
+    case MapType::CAVES_4:
+    {
+      lb.RecursiveBacktrackerMethod(MapSize);
     }
     break;
 
@@ -62,10 +70,6 @@ void MapLevelCaves::CreateLevel()
       CreateSpecialLevel();
     }
     break;
-
-    default:
-      lb.BacktrackingTunnelerMethod(MapSize, { tunnelLengthMin, tunnelLengthMax }, { -1, -1 }, true);
-      break;
   }
 
   if (MapType_ != MapType::CAVES_5)

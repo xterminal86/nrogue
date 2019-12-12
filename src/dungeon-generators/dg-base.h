@@ -55,6 +55,8 @@ class DGBase
     // use it at level instantiation stage.
     std::map<Position, ShrineType> ShrinesByPosition;
 
+    std::string GetMapRawString();
+
   protected:
     bool CheckLimits(const Position& start, int roomSize);
     bool IsInsideMap(const Position& pos);
@@ -66,8 +68,6 @@ class DGBase
     void CheckIfProblemCorner(const Position& p);
 
     int CountAround(int x, int y, char ch);
-
-    std::string GetMapRawString();
 
     std::vector<std::vector<MapCell>> CreateEmptyMap(int w, int h);
     std::vector<std::vector<MapCell>> CreateFilledMap(int w, int h);

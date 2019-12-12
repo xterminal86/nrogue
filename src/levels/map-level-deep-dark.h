@@ -13,6 +13,7 @@ class MapLevelDeepDark : public MapLevelBase
 
   protected:
     void CreateLevel() override;
+    void CreateSpecialLevel() override;
 };
 
 #endif // MAPLEVELDEEPDARK_H
