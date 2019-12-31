@@ -1,5 +1,6 @@
 #include "map-level-deep-dark.h"
 
+#include "game-object-info.h"
 #include "application.h"
 
 MapLevelDeepDark::MapLevelDeepDark(int sizeX, int sizeY, MapType type, int dungeonLevel)
@@ -54,6 +55,11 @@ void MapLevelDeepDark::CreateLevel()
   int tunnelLengthMax = MapSize.X / 10;
   int tunnelLengthMin = tunnelLengthMax / 2;
 
+  GameObjectInfo t;
+  t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Stone Wall");
+
+  CreateBorders(t);
+
   LevelBuilder lb;
 
   switch (MapType_)
@@ -100,4 +106,27 @@ void MapLevelDeepDark::CreateLevel()
 
 void MapLevelDeepDark::CreateSpecialLevel()
 {
+}
+
+void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
+{
+  Logger::Instance().Print("********** INSTANTIATING LAYOUT **********");
+
+  for (int x = 0; x < MapSize.X; x++)
+  {
+    for (int y = 0; y < MapSize.Y; y++)
+    {
+      char image = lb.MapRaw[x][y];
+      switch (image)
+      {
+        case '#':
+          PlaceWall(x, y, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Stone Wall");
+          break;
+
+        case '.':
+          PlaceGroundTile(x, y, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          break;
+      }
+    }
+  }
 }

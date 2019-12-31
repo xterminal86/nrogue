@@ -59,6 +59,8 @@ void MapLevelLostCity::CreateLevel()
 
 void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
 {
+  Logger::Instance().Print("********** INSTANTIATING LAYOUT **********");
+
   for (int x = 0; x < MapSize.X; x++)
   {
     for (int y = 0; y < MapSize.Y; y++)
@@ -70,19 +72,12 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
       switch (image)
       {
         case '#':
-        {
-          objName = "Rocks";
-          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
-          InsertStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
-        }
-        break;
+          PlaceWall(x, y, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
+          break;
 
         case '+':
-        {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, "Door", 30);
-          InsertStaticObject(door);
-        }
-        break;
+          PlaceDoor(x, y);
+          break;
 
         case 't':
         {
@@ -99,74 +94,34 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
         break;
 
         case 'T':
-        {
-          char img = 'T';
-
-          #ifdef USE_SDL
-          img = GlobalConstants::CP437IndexByType[NameCP437::CLUB];
-          #endif
-
-          objName = "Tree";
-          t.Set(true, true, img, GlobalConstants::TreeColor, GlobalConstants::BlackColor, objName);
-          InsertStaticObject(x, y, t);
-        }
-        break;
+          PlaceTree(x, y);
+          break;
 
         case '.':
-        {
-          objName = "Ground";
-          t.Set(false, false, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
-          MapArray[x][y]->MakeTile(t);
-        }
-        break;
+          PlaceGroundTile(x, y, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          break;
 
         case ' ':
-        {
-          objName = "Stone";
-          t.Set(false, false, image, GlobalConstants::BlackColor, GlobalConstants::StoneColor, objName);
-          MapArray[x][y]->MakeTile(t);
-        }
-        break;
+          PlaceGroundTile(x, y, image, GlobalConstants::BlackColor, GlobalConstants::StoneColor, "Stone");
+          break;
 
         // TODO: can step in lava and get killed / damaged?
 
         case 'l':
-        {
-          objName = "Lava";
-          t.Set(true, false, '~', GlobalConstants::LavaWavesColor, GlobalConstants::LavaColor, objName);
-          MapArray[x][y]->MakeTile(t, GameObjectType::LAVA);
-        }
-        break;
+          PlaceLavaTile(x, y);
+          break;
 
         case 'w':
-        {
-          objName = "Shallow Water";
-          t.Set(false, false, '~', GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, objName);
-          MapArray[x][y]->MakeTile(t, GameObjectType::SHALLOW_WATER);
-        }
-        break;
+          PlaceShallowWaterTile(x, y);
+          break;
 
         case 'W':
-        {
-          int img = '~';
-
-          #ifdef USE_SDL
-          img = GlobalConstants::CP437IndexByType[NameCP437::WAVES];
-          #endif
-
-          objName = "Deep Water";
-          t.Set(true, false, img, GlobalConstants::ShallowWaterColor, GlobalConstants::DeepWaterColor, objName);
-          MapArray[x][y]->MakeTile(t, GameObjectType::DEEP_WATER);
-        }
-        break;
+          PlaceDeepWaterTile(x, y);
+          break;
 
         case 'd':
-        {
-          objName = "Dirt";
-          t.Set(false, false, '.', GlobalConstants::DirtDotColor, GlobalConstants::DirtColor, objName);
-          MapArray[x][y]->MakeTile(t);
-        }
-        break;
+          PlaceGroundTile(x, y, '.', GlobalConstants::DirtDotColor, GlobalConstants::DirtColor, "Dirt");
+          break;
 
         case 'F':
           t.Set(true, false, image, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Fountain");

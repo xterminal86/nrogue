@@ -46,6 +46,11 @@ void MapLevelCaves::CreateLevel()
   int tunnelLengthMax = MapSize.X / 10;
   int tunnelLengthMin = tunnelLengthMax / 2;
 
+  GameObjectInfo t;
+  t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::CaveWallColor, "Cave Wall");
+
+  CreateBorders(t);
+
   LevelBuilder lb;
 
   switch (MapType_)
@@ -146,8 +151,8 @@ void MapLevelCaves::CreateSpecialLevel()
 
         case '#':          
         {
-          objName = "Rocks";
-          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, objName);
+          objName = "Cave Wall";
+          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::CaveWallColor, objName);
           InsertStaticObject(posX, posY, t, -1);
         }
         break;
