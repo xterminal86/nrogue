@@ -92,27 +92,16 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
   {
     for (int y = 0; y < MapSize.Y; y++)
     {
-      GameObjectInfo t;
-      std::string objName;
-
       char image = lb.MapRaw[x][y];
       switch (image)
       {
         case '#':
-        {
-          objName = "Cave Wall";
-          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::CaveWallColor, objName);
-          InsertStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
-        }
-        break;
+          PlaceWall(x, y, ' ', GlobalConstants::BlackColor, GlobalConstants::CaveWallColor, "Cave Wall");
+          break;
 
         case '.':
-        {
-          objName = "Ground";
-          t.Set(false, false, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
-          MapArray[x][y]->MakeTile(t);
-        }
-        break;        
+          PlaceGroundTile(x, y, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          break;
       }
     }
   }
@@ -155,26 +144,21 @@ void MapLevelCaves::CreateSpecialLevel()
         }
         break;
 
-        case '#':
+        case '#':          
         {
           objName = "Rocks";
-          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
+          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, objName);
           InsertStaticObject(posX, posY, t, -1);
         }
         break;
 
         case 'W':
-          t.Set(true, false, '~', GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
-          MapArray[posX][posY]->MakeTile(t, GameObjectType::DEEP_WATER);
+          PlaceDeepWaterTile(posX, posY);
           break;
 
         case '.':
-        {
-          objName = "Ground";
-          t.Set(false, false, c, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          PlaceGroundTile(posX, posY, c, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          break;
       }
 
       posX++;

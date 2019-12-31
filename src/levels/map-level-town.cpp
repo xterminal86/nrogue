@@ -441,8 +441,7 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
       switch (c)
       {
         case '#':
-          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
-          InsertStaticObject(posX, posY, t);
+          PlaceWall(posX, posY, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
           break;
 
         case 'T':
@@ -456,8 +455,7 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
           break;
 
         case '.':
-          t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
-          MapArray[posX][posY]->MakeTile(t);
+          PlaceGroundTile(posX, posY, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
           break;
 
         case '\\':
@@ -473,11 +471,8 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
         break;
 
         case '+':
-        {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Door");
-          InsertStaticObject(door);
-        }
-        break;
+          PlaceDoor(posX, posY);
+          break;
       }
 
       posX++;
@@ -518,8 +513,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
       switch (c)
       {
         case '#':
-          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");          
-          InsertStaticObject(posX, posY, t);
+          PlaceWall(posX, posY, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
           break;
 
         case 'g':
@@ -532,17 +526,8 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
           break;
 
         case 'T':
-        {
-          char img = c;
-
-          #ifdef USE_SDL
-          img = GlobalConstants::CP437IndexByType[NameCP437::CLUB];
-          #endif
-
-          t.Set(true, true, img, GlobalConstants::TreeColor, GlobalConstants::BlackColor, "Tree");
-          InsertStaticObject(posX, posY, t);          
-        }
-        break;
+          PlaceTree(posX, posY);
+          break;
 
         case 'B':
           t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Bed");
@@ -550,13 +535,11 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
           break;
 
         case '.':
-          t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
-          MapArray[posX][posY]->MakeTile(t);
+          PlaceGroundTile(posX, posY, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
           break;
 
         case ' ':
-          t.Set(false, false, c, GlobalConstants::BlackColor, GlobalConstants::GroundColor, "Stone Tiles");
-          MapArray[posX][posY]->MakeTile(t);
+          PlaceGroundTile(posX, posY, c, GlobalConstants::BlackColor, GlobalConstants::GroundColor, "Stone Tiles");
           break;
 
         case 'm':
@@ -565,8 +548,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
           break;
 
         case '~':
-          t.Set(false, false, c, GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, "Shallow Water");
-          MapArray[posX][posY]->MakeTile(t, GameObjectType::SHALLOW_WATER);
+          PlaceShallowWaterTile(posX, posY);
           break;
 
         case '|':
@@ -576,11 +558,8 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
           break;
 
         case '+':          
-        {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Door");
-          InsertStaticObject(door);
-        }
-        break;
+          PlaceDoor(posX, posY);
+          break;
       }
 
       posX++;
@@ -605,8 +584,7 @@ void MapLevelTown::CreateChurch(int x, int y)
       switch (c)
       {
         case '#':
-          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
-          InsertStaticObject(posX, posY, t);
+          PlaceWall(posX, posY, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
           break;
 
         case '|':
@@ -618,18 +596,12 @@ void MapLevelTown::CreateChurch(int x, int y)
         // To allow fog of war to cover floor made of
         // background colored ' ', set FgColor to empty string.
         case ' ':
-        {
-          t.Set(false, false, c, GlobalConstants::BlackColor, GlobalConstants::GroundColor, "Stone Tiles");
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          PlaceGroundTile(posX, posY, c, GlobalConstants::BlackColor, GlobalConstants::GroundColor, "Stone Tiles");
+          break;
 
         case '+':
-        {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Door");
-          InsertStaticObject(door);
-        }
-        break;
+          PlaceDoor(posX, posY);
+          break;
 
         case 'h':
           t.Set(false, false, c, GlobalConstants::WoodColor, GlobalConstants::BlackColor, "Wooden Bench", "?Bench?");
@@ -777,21 +749,16 @@ void MapLevelTown::PlaceMineEntrance(int x, int y)
       switch (c)
       {
         case '#':
-          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::BrickColor, "Brick Wall");
-          InsertStaticObject(posX, posY, t);
+          PlaceWall(posX, posY, ' ', GlobalConstants::BlackColor, GlobalConstants::BrickColor, "Brick Wall");
           break;
 
         case '.':
-          t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
-          MapArray[posX][posY]->MakeTile(t);
+          PlaceGroundTile(posX, posY, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
           break;
 
         case '+':
-        {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Door");
-          InsertStaticObject(door);
-        }
-        break;
+          PlaceDoor(posX, posY);
+          break;
       }
 
       posX++;
@@ -825,37 +792,16 @@ void MapLevelTown::PlaceGarden(int x, int y)
           break;
 
         case 'T':
-        {
-          char img = c;
-
-          #ifdef USE_SDL
-          img = GlobalConstants::CP437IndexByType[NameCP437::CLUB];
-          #endif
-
-          t.Set(true, true, img, GlobalConstants::TreeColor, GlobalConstants::BlackColor, "Tree");
-          InsertStaticObject(posX, posY, t);
-        }
-        break;
+          PlaceTree(posX, posY);
+          break;
 
         case '~':
-          t.Set(false, false, c, GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, "Shallow Water");
-          MapArray[posX][posY]->MakeTile(t, GameObjectType::SHALLOW_WATER);
+          PlaceShallowWaterTile(posX, posY);
           break;
 
         case 'W':
-        {
-          // int type is to avoid truncation
-          // in case of CP437 image which is 247
-          int img = '~';
-
-          #ifdef USE_SDL
-          img = GlobalConstants::CP437IndexByType[NameCP437::WAVES];
-          #endif
-
-          t.Set(true, false, img, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
-          MapArray[posX][posY]->MakeTile(t, GameObjectType::DEEP_WATER);
-        }
-        break;
+          PlaceDeepWaterTile(posX, posY);
+          break;
 
         case 'F':
           t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Fountain");
@@ -885,24 +831,12 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
       switch (c)
       {
         case '#':
-          t.Set(true, true, c, GlobalConstants::StoneColor, GlobalConstants::DeepWaterColor, "Stone Column");
-          InsertStaticObject(posX, posY, t);
+          PlaceWall(posX, posY, c, GlobalConstants::StoneColor, GlobalConstants::DeepWaterColor, "Stone Column");
           break;
 
         case '~':
-        {
-          // int type is to avoid truncation
-          // in case of CP437 image which is 247
-          int img = c;
-
-          #ifdef USE_SDL
-          img = GlobalConstants::CP437IndexByType[NameCP437::WAVES];
-          #endif
-
-          t.Set(true, false, img, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
-          MapArray[posX][posY]->MakeTile(t, GameObjectType::DEEP_WATER);
-        }
-        break;
+          PlaceDeepWaterTile(posX, posY);
+          break;
 
         case '.':
           PlaceGrassTile(posX, posY, FlowersFrequency);

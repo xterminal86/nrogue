@@ -67,10 +67,9 @@ void ShrineComponent::ProcessEffect()
     // raises STR or HP
     case ShrineType::MIGHT:
     {
-      int choice = RNG::Instance().RandomRange(0, 2);
-      if (choice == 0)
+      if (Util::Rolld100(50))
       {        
-        playerRef.Attrs.Str.Add(1);
+        playerRef.Attrs.Str.Add(1);        
         msg = "You feel stronger!";
       }
       else
@@ -85,8 +84,7 @@ void ShrineComponent::ProcessEffect()
     // raises MAG or MP
     case ShrineType::SPIRIT:
     {
-      int choice = RNG::Instance().RandomRange(0, 2);
-      if (choice == 0)
+      if (Util::Rolld100(50))
       {        
         playerRef.Attrs.Mag.Add(1);
         msg = "You feel strong-willed!";

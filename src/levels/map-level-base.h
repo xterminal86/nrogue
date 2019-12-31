@@ -105,10 +105,29 @@ class MapLevelBase
     void CreateBorders(GameObjectInfo& t);
     void RecordEmptyCells();
     void CreateItemsForLevel(int maxItems);
+    void PlaceRandomShrine(LevelBuilder& lb);
     void PlaceStairs();
     void CreateInitialMonsters();
 
+    void PlaceGroundTile(int x, int y,
+                         char image,
+                         const std::string& fgColor,
+                         const std::string& bgColor,
+                         const std::string& objName);
+
     void PlaceGrassTile(int x, int y, int maxDiceRoll = 10);
+    void PlaceShallowWaterTile(int x, int y);
+    void PlaceDeepWaterTile(int x, int y);
+    void PlaceLavaTile(int x, int y);
+    void PlaceTree(int x, int y);
+    void PlaceWall(int x, int y,
+                   char image,
+                   const std::string& fgColor,
+                   const std::string& bgColor,
+                   const std::string& objName,
+                   GameObjectType pickaxeable = GameObjectType::PICKAXEABLE);
+
+    void PlaceDoor(int x, int y, bool isOpen = false);
 
     Position _townPortalPos;
 };

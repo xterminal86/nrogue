@@ -1053,7 +1053,7 @@ namespace GlobalConstants
     { ShrineType::DISTURBING,  { "#660000", "#888888" } },
     { ShrineType::RUINED,      { "#666666", "#000000" } },
     { ShrineType::POTENTIAL,   { "#FF0000", "#888888" } },
-    { ShrineType::HIDDEN,      { "#666666", "#000000" } },
+    { ShrineType::HIDDEN,      { "#888888", "#333333" } },
     { ShrineType::HOLY,        { "#FFFF00", "#888888" } },
   };
 

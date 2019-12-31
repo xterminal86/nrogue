@@ -152,6 +152,46 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
   }
 }
 
+void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
+{
+  std::vector<Position> possibleSpots;
+
+  for (int x = 1; x < MapSize.X - 6; x++)
+  {
+    for (int y = 1; y < MapSize.Y - 6; y++)
+    {
+      if (lb.MapRaw[x][y] == '.')
+      {
+        possibleSpots.push_back({ x, y });
+      }
+    }
+  }
+
+  // Just in case
+  if (possibleSpots.empty())
+  {
+    return;
+  }
+
+  int index = RNG::Instance().RandomRange(0, possibleSpots.size());
+  Position p = possibleSpots[index];
+  int x = p.X;
+  int y = p.Y;
+
+  index = RNG::Instance().RandomRange(0, GlobalConstants::ShrineLayoutsByType.size());
+  auto it = GlobalConstants::ShrineLayoutsByType.begin();
+  std::advance(it, index);
+  ShrineType type = it->first;
+  int layoutIndex = RNG::Instance().RandomRange(0, it->second.size());
+  auto l = it->second[layoutIndex];
+  lb.PlaceLayout({ x, y }, l);
+
+  auto& sbp = lb.ShrinesByPosition();
+
+  // NOTE: shrine position is always assumed to be in the center of layout
+  sbp[{ x + 2, y + 2 }] = type;
+}
+
 void MapLevelBase::PlaceStairs()
 {
   int startIndex = RNG::Instance().RandomRange(0, _emptyCells.size());
@@ -271,6 +311,18 @@ bool MapLevelBase::IsCellBlocking(const Position& pos)
   return (groundBlock || staticBlock);
 }
 
+void MapLevelBase::PlaceGroundTile(int x, int y,
+                                   char image,
+                                   const std::string& fgColor,
+                                   const std::string& bgColor,
+                                   const std::string& objName)
+{
+  GameObjectInfo t;
+  t.Set(false, false, image, fgColor, bgColor, objName);
+  MapArray[x][y]->MakeTile(t);
+}
+
+
 /// Places grass tile at [x; y], maxDiceRoll serves as a
 /// "frequency" modifier - the more its value, the less is the chance
 /// for flowers to appear.
@@ -307,6 +359,66 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
   t.Set(false, false, img, flowerColor, GlobalConstants::GrassColor, tileName);
 
   MapArray[x][y]->MakeTile(t);
+}
+
+void MapLevelBase::PlaceShallowWaterTile(int x, int y)
+{
+  GameObjectInfo t;
+  t.Set(false, false, '~', GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, "Shallow Water");
+  MapArray[x][y]->MakeTile(t, GameObjectType::SHALLOW_WATER);
+}
+
+void MapLevelBase::PlaceDeepWaterTile(int x, int y)
+{
+  // int type is to avoid truncation
+  // in case of CP437 image which is 247
+  int img = '~';
+
+  #ifdef USE_SDL
+  img = GlobalConstants::CP437IndexByType[NameCP437::WAVES];
+  #endif
+
+  GameObjectInfo t;
+  t.Set(true, false, img, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
+  MapArray[x][y]->MakeTile(t, GameObjectType::DEEP_WATER);
+}
+
+void MapLevelBase::PlaceLavaTile(int x, int y)
+{
+  GameObjectInfo t;
+  t.Set(true, false, '~', GlobalConstants::LavaWavesColor, GlobalConstants::LavaColor, "Lava");
+  MapArray[x][y]->MakeTile(t, GameObjectType::LAVA);
+}
+
+void MapLevelBase::PlaceTree(int x, int y)
+{
+  char img = 'T';
+
+  #ifdef USE_SDL
+  img = GlobalConstants::CP437IndexByType[NameCP437::CLUB];
+  #endif
+
+  GameObjectInfo t;
+  t.Set(true, true, img, GlobalConstants::TreeColor, GlobalConstants::BlackColor, "Tree");
+  InsertStaticObject(x, y, t);
+}
+
+void MapLevelBase::PlaceWall(int x, int y,
+                             char image,
+                             const std::string& fgColor,
+                             const std::string& bgColor,
+                             const std::string& objName,
+                             GameObjectType pickaxeable)
+{
+  GameObjectInfo t;
+  t.Set(true, true, image, fgColor, bgColor, objName);
+  InsertStaticObject(x, y, t, -1, pickaxeable);
+}
+
+void MapLevelBase::PlaceDoor(int x, int y, bool isOpen)
+{
+  GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, isOpen, "Door");
+  InsertStaticObject(door);
 }
 
 void MapLevelBase::CreateLevel()

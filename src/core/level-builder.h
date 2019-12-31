@@ -45,6 +45,8 @@ class LevelBuilder
                      const Position& splitRatio,
                      int minRoomSize);
 
+    void PlaceLayout(const Position& start, const StringsArray2D& layout);
+
     void LogPrintMapRaw();
     void PrintMapRaw();
 
@@ -54,7 +56,7 @@ class LevelBuilder
 
     std::vector<std::vector<char>> MapRaw;
 
-    const std::map<Position, ShrineType>& ShrinesByPosition();
+    std::map<Position, ShrineType>& ShrinesByPosition();
 
   private:
     std::unique_ptr<DGBase> _generator;

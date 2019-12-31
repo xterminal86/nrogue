@@ -547,7 +547,8 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
     {
       auto c = i->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);
-      if (ic->Data.Prefix != ItemPrefix::CURSED)
+      if (ic->Data.Prefix != ItemPrefix::CURSED
+       && ic->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE)
       {
         nonCursedItems.push_back(ic);
       }
@@ -562,6 +563,10 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
 
       Printer::Instance().AddMessage("The malevolent energy creeps in...");
     }
+    else
+    {
+      Printer::Instance().AddMessage(_kNoActionText);
+    }
   }
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {
@@ -570,7 +575,8 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
     {
       auto c = i->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);
-      if (ic->Data.Prefix == ItemPrefix::CURSED)
+      if (ic->Data.Prefix == ItemPrefix::CURSED
+       && ic->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE)
       {
         cursedItems.push_back(ic);
       }
@@ -585,6 +591,10 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
 
       Printer::Instance().AddMessage("The malevolent energy disperses!");
     }
+    else
+    {
+      Printer::Instance().AddMessage(_kNoActionText);
+    }
   }
   else if (scroll->Data.Prefix == ItemPrefix::BLESSED)
   {
@@ -593,7 +603,8 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
     {
       auto c = i->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);
-      if (ic->Data.Prefix == ItemPrefix::CURSED)
+      if (ic->Data.Prefix == ItemPrefix::CURSED
+       && ic->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE)
       {
         ic->Data.IsPrefixDiscovered = true;
         ic->Data.Prefix = ItemPrefix::UNCURSED;
@@ -604,6 +615,10 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
     if (success)
     {
       Printer::Instance().AddMessage("The malevolent energy disperses completely!");
+    }
+    else
+    {
+      Printer::Instance().AddMessage(_kNoActionText);
     }
   }
 }

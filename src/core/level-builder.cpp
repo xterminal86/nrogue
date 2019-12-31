@@ -8,6 +8,7 @@
 #include "cellular-automata.h"
 #include "from-layouts.h"
 #include "rooms.h"
+#include "util.h"
 
 void LevelBuilder::FeatureRoomsMethod(const Position& mapSize,
                                       const Position& roomSizes,                                      
@@ -103,6 +104,29 @@ void LevelBuilder::RoomsMethod(const Position& mapSize,
   MapRaw = fl->MapRaw;
 }
 
+void LevelBuilder::PlaceLayout(const Position& start, const StringsArray2D& layout)
+{
+  int sx = start.X;
+  int sy = start.Y;
+  int ex = sx + layout.size();
+  int ey = sy + layout[0].size();
+
+  int lx = 0;
+  int ly = 0;
+
+  for (int x = sx; x < ex; x++)
+  {
+    for (int y = sy; y < ey; y++)
+    {      
+      MapRaw[x][y] = layout[lx][ly];
+      ly++;
+    }
+
+    lx++;
+    ly = 0;
+  }
+}
+
 void LevelBuilder::PrintMapRaw()
 {
   if (_generator)
@@ -119,7 +143,7 @@ void LevelBuilder::LogPrintMapRaw()
   }
 }
 
-const std::map<Position, ShrineType>& LevelBuilder::ShrinesByPosition()
+std::map<Position, ShrineType>& LevelBuilder::ShrinesByPosition()
 {
   return _generator->ShrinesByPosition;
 }

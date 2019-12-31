@@ -310,6 +310,11 @@ void MapLevelMines::CreateLevel()
 
   if (MapType_ != MapType::MINES_5)
   {
+    if (Util::Rolld100(50))
+    {
+      PlaceRandomShrine(lb);
+    }
+
     ConstructFromBuilder(lb);
 
     RecordEmptyCells();
@@ -357,12 +362,8 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
       switch (image)
       {
         case '#':
-        {
-          objName = "Rocks";
-          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");                    
-          InsertStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
-        }
-        break;
+          PlaceWall(x, y, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
+          break;
 
         case '+':
         {
@@ -379,10 +380,34 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
         break;
 
         case '.':
+          PlaceGroundTile(x, y, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          break;
+
+        case 'g':
+          PlaceGrassTile(x, y);
+          break;
+
+        case 'w':
+          PlaceDeepWaterTile(x, y);
+          break;
+
+        case ' ':
+          PlaceGroundTile(x, y, '.', GlobalConstants::BlackColor, GlobalConstants::StoneColor, "Stone");
+          break;
+
+        case 'l':
+          PlaceLavaTile(x, y);
+          break;
+
+        case '/':
         {
-          objName = "Ground";
-          t.Set(false, false, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
-          MapArray[x][y]->MakeTile(t);
+          ShrineType type = lb.ShrinesByPosition().at({ x, y });
+          auto go = GameObjectsFactory::Instance().CreateShrine(x, y, type, 1000);
+          InsertGameObject(go);
+
+          std::string description = GlobalConstants::ShrineNameByType.at(type);
+          t.Set(true, false, '/', GlobalConstants::GroundColor, GlobalConstants::BlackColor, description, "?Shrine?");
+          InsertStaticObject(x, y, t);
         }
         break;
       }
@@ -443,7 +468,7 @@ void MapLevelMines::CreateSpecialLevel()
         case '#':
         {
           objName = "Rocks";
-          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
+          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, objName);
           InsertStaticObject(posX, posY, t, -1);
         }
         break;
@@ -488,17 +513,12 @@ void MapLevelMines::CreateSpecialLevel()
         break;
 
         case 'W':
-          t.Set(true, false, '~', GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
-          MapArray[posX][posY]->MakeTile(t, GameObjectType::DEEP_WATER);
+          PlaceDeepWaterTile(posX, posY);
           break;
 
         case '.':
-        {
-          objName = "Ground";
-          t.Set(false, false, c, GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
-          MapArray[posX][posY]->MakeTile(t);
-        }
-        break;
+          PlaceGroundTile(posX, posY, c, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          break;
       }
 
       posX++;
