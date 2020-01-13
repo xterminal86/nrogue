@@ -13,6 +13,7 @@ class MapLevelNether : public MapLevelBase
 
   protected:
     void CreateLevel() override;
+    void ConstructFromBuilder(LevelBuilder& lb) override;
 };
 
 #endif // MAPLEVELNETHER_H

@@ -558,7 +558,7 @@ void Map::PrintMapLayout()
 {
   std::ofstream f;
 
-  std::string fname = Util::StringFormat("%s.txt", CurrentLevel->LevelName.data());
+  std::string fname = Util::StringFormat("DBG_%s.txt", CurrentLevel->LevelName.data());
 
   f.open(fname);
 

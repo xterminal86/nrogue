@@ -117,7 +117,7 @@ void LevelBuilder::PlaceLayout(const Position& start, const StringsArray2D& layo
   for (int x = sx; x < ex; x++)
   {
     for (int y = sy; y < ey; y++)
-    {      
+    {
       MapRaw[x][y] = layout[lx][ly];
       ly++;
     }

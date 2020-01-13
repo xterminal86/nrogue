@@ -2,10 +2,27 @@
 
 #include "application.h"
 #include "game-object-info.h"
+#include "game-objects-factory.h"
+#include "door-component.h"
 
 MapLevelAbyss::MapLevelAbyss(int sizeX, int sizeY, MapType type, int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
+  _specialLevel =
+  {
+    "########",
+    "#......#",
+    "#.<..>.#",
+    "#......#",
+    "########"
+  };
+
+  // Note that x and y are swapped to correspond to
+  // "world" dimensions.
+  int sx = _specialLevel[0].length();
+  int sy = _specialLevel.size();
+
+  MapSize.Set(sx, sy);
 }
 
 void MapLevelAbyss::PrepareMap(MapLevelBase* levelOwner)
@@ -27,20 +44,36 @@ void MapLevelAbyss::DisplayWelcomeText()
 
 void MapLevelAbyss::CreateLevel()
 {
-  LevelBuilder lb;
-  lb.CellularAutomataMethod(MapSize, 40, 5, 4, 12);
-
-  ConstructFromBuilder(lb);
-
   // Borders
-
   GameObjectInfo t;
 
   t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
   CreateBorders(t);
 
-  RecordEmptyCells();
-  PlaceStairs();
+  LevelBuilder lb;
+  switch (MapType_)
+  {
+    case MapType::ABYSS_5:
+      CreateSpecialLevel();
+      break;
+
+    default:
+      lb.CellularAutomataMethod(MapSize, 40, 5, 4, 12);
+      break;
+  }
+
+  if (MapType_ != MapType::ABYSS_5)
+  {
+    if (Util::Rolld100(50))
+    {
+      PlaceRandomShrine(lb);
+    }
+
+    ConstructFromBuilder(lb);
+
+    RecordEmptyCells();
+    PlaceStairs();
+  }
 }
 
 void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
@@ -59,11 +92,49 @@ void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
       {
         case '#':
         {
-          objName = "Rocks";
-          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
+          objName = "Abyss Rocks";
+          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::RedPoppyColor, objName);
           InsertStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
         }
         break;
+
+        case '+':
+        {
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, "Door", 30);
+
+          if (Util::Rolld100(15))
+          {
+            DoorComponent* dc = door->GetComponent<DoorComponent>();
+            dc->OpenedBy = 0;
+          }
+
+          InsertStaticObject(door);
+        }
+        break;
+
+        case '.':
+          PlaceGroundTile(x, y, ' ', GlobalConstants::BlackColor, "#440000", "Abyss Floor");
+          break;
+
+        case 'g':
+          PlaceGrassTile(x, y);
+          break;
+
+        case 'w':
+          PlaceDeepWaterTile(x, y);
+          break;
+
+        case ' ':
+          PlaceGroundTile(x, y, '.', GlobalConstants::BlackColor, GlobalConstants::StoneColor, "Stone");
+          break;
+
+        case 'l':
+          PlaceLavaTile(x, y);
+          break;
+
+        case '/':
+          PlaceShrine({ x, y }, lb);
+          break;
       }
     }
   }

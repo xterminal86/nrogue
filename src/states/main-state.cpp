@@ -162,7 +162,9 @@ void MainState::HandleInput()
       }
       else
       {
-        printf("[%i;%i] is occupied!\n", exitX, exitY);
+        auto str = Util::StringFormat("[%i;%i] is occupied!", exitX, exitY);
+        Printer::Instance().AddMessage(str);
+        printf("%s\n", str.data());
       }
     }
     break;

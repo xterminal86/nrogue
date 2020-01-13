@@ -1,4 +1,4 @@
-#include "map-level-base.h"
+﻿#include "map-level-base.h"
 #include "application.h"
 #include "game-objects-factory.h"
 #include "game-object-info.h"
@@ -154,11 +154,12 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
 
 void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
 {
+  // TODO: only certain shrine types for certain levels.
   std::vector<Position> possibleSpots;
 
-  for (int x = 1; x < MapSize.X - 6; x++)
+  for (int x = 3; x < MapSize.X - 6; x++)
   {
-    for (int y = 1; y < MapSize.Y - 6; y++)
+    for (int y = 1; y < MapSize.Y - 7; y++)
     {
       if (lb.MapRaw[x][y] == '.')
       {
@@ -175,8 +176,20 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
 
   int index = RNG::Instance().RandomRange(0, possibleSpots.size());
   Position p = possibleSpots[index];
-  int x = p.X;
-  int y = p.Y;
+
+  // Center shrine entrance against empty spot.
+  // Also shift placement down for 1 unit to safeguard against
+  // accidental blocking of a passage, i.e.:
+  //
+  // #########     #########
+  // .........  -> ##.##....
+  // #########     #...#####
+  // #########     ../..####
+  // #########     #...#####
+  // #########     ##.######
+
+  int x = p.X - 2;
+  int y = p.Y + 1;
 
   index = RNG::Instance().RandomRange(0, GlobalConstants::ShrineLayoutsByType.size());
   auto it = GlobalConstants::ShrineLayoutsByType.begin();
@@ -188,7 +201,7 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
 
   auto& sbp = lb.ShrinesByPosition();
 
-  // NOTE: shrine position is always assumed to be in the center of layout
+  // Shrine position is always assumed to be in the center of the layout
   sbp[{ x + 2, y + 2 }] = type;
 }
 
@@ -390,6 +403,18 @@ void MapLevelBase::PlaceLavaTile(int x, int y)
   MapArray[x][y]->MakeTile(t, GameObjectType::LAVA);
 }
 
+void MapLevelBase::PlaceShrine(const Position& pos, LevelBuilder& lb)
+{
+  GameObjectInfo t;
+  ShrineType type = lb.ShrinesByPosition().at(pos);
+  auto go = GameObjectsFactory::Instance().CreateShrine(pos.X, pos.Y, type, 1000);
+  InsertGameObject(go);
+
+  std::string description = GlobalConstants::ShrineNameByType.at(type);
+  t.Set(true, false, '/', GlobalConstants::GroundColor, GlobalConstants::BlackColor, description, "?Shrine?");
+  InsertStaticObject(pos.X, pos.Y, t);
+}
+
 void MapLevelBase::PlaceTree(int x, int y)
 {
   char img = 'T';
@@ -431,6 +456,17 @@ void MapLevelBase::ConstructFromBuilder(LevelBuilder& lb)
 {
   auto str = Util::StringFormat("%s, %s - calling base ConstructFromBuilder()!", __PRETTY_FUNCTION__, LevelName.data());
   Logger::Instance().Print(str, true);
+}
+
+void MapLevelBase::FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill)
+{
+  for (int x = ax; x <= ax + aw; x++)
+  {
+    for (int y = ay; y <= ay + ah; y++)
+    {
+      MapArray[x][y]->MakeTile(tileToFill);
+    }
+  }
 }
 
 void MapLevelBase::CreateSpecialLevel()

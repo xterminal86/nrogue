@@ -2,6 +2,8 @@
 
 #include "game-object-info.h"
 #include "application.h"
+#include "game-objects-factory.h"
+#include "door-component.h"
 
 MapLevelDeepDark::MapLevelDeepDark(int sizeX, int sizeY, MapType type, int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)
@@ -95,6 +97,11 @@ void MapLevelDeepDark::CreateLevel()
 
   if (MapType_ != MapType::CAVES_5)
   {
+    if (Util::Rolld100(50))
+    {
+      PlaceRandomShrine(lb);
+    }
+
     ConstructFromBuilder(lb);
 
     RecordEmptyCells();
@@ -125,6 +132,40 @@ void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
 
         case '.':
           PlaceGroundTile(x, y, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          break;
+
+        case '+':
+        {
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, "Door", 30);
+
+          if (Util::Rolld100(15))
+          {
+            DoorComponent* dc = door->GetComponent<DoorComponent>();
+            dc->OpenedBy = 0;
+          }
+
+          InsertStaticObject(door);
+        }
+        break;
+
+        case 'g':
+          PlaceGrassTile(x, y);
+          break;
+
+        case 'w':
+          PlaceDeepWaterTile(x, y);
+          break;
+
+        case ' ':
+          PlaceGroundTile(x, y, '.', GlobalConstants::BlackColor, GlobalConstants::StoneColor, "Stone");
+          break;
+
+        case 'l':
+          PlaceLavaTile(x, y);
+          break;
+
+        case '/':
+          PlaceShrine({ x, y }, lb);
           break;
       }
     }

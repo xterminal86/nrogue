@@ -102,6 +102,7 @@ class MapLevelBase
 
     bool IsSpotValidForSpawn(const Position& pos);
 
+    void FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill);
     void CreateBorders(GameObjectInfo& t);
     void RecordEmptyCells();
     void CreateItemsForLevel(int maxItems);
@@ -126,7 +127,7 @@ class MapLevelBase
                    const std::string& bgColor,
                    const std::string& objName,
                    GameObjectType pickaxeable = GameObjectType::PICKAXEABLE);
-
+    void PlaceShrine(const Position& pos, LevelBuilder& lb);
     void PlaceDoor(int x, int y, bool isOpen = false);
 
     Position _townPortalPos;

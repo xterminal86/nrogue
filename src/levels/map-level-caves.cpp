@@ -3,6 +3,7 @@
 #include "application.h"
 #include "game-objects-factory.h"
 #include "game-object-info.h"
+#include "door-component.h"
 
 MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)
@@ -79,6 +80,11 @@ void MapLevelCaves::CreateLevel()
 
   if (MapType_ != MapType::CAVES_5)
   {
+    if (Util::Rolld100(50))
+    {
+      PlaceRandomShrine(lb);
+    }
+
     ConstructFromBuilder(lb);
 
     CreateRivers();
@@ -104,8 +110,42 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
           PlaceWall(x, y, ' ', GlobalConstants::BlackColor, GlobalConstants::CaveWallColor, "Cave Wall");
           break;
 
+        case '+':
+        {
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, "Door", 30);
+
+          if (Util::Rolld100(15))
+          {
+            DoorComponent* dc = door->GetComponent<DoorComponent>();
+            dc->OpenedBy = 0;
+          }
+
+          InsertStaticObject(door);
+        }
+        break;
+
         case '.':
-          PlaceGroundTile(x, y, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          PlaceGroundTile(x, y, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Stone Floor");
+          break;
+
+        case 'g':
+          PlaceGrassTile(x, y);
+          break;
+
+        case 'w':
+          PlaceDeepWaterTile(x, y);
+          break;
+
+        case ' ':
+          PlaceGroundTile(x, y, '.', GlobalConstants::BlackColor, GlobalConstants::StoneColor, "Stone");
+          break;
+
+        case 'l':
+          PlaceLavaTile(x, y);
+          break;
+
+        case '/':
+          PlaceShrine({ x, y }, lb);
           break;
       }
     }

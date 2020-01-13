@@ -336,17 +336,6 @@ void MapLevelMines::CreateLevel()
   }
 }
 
-void MapLevelMines::FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill)
-{
-  for (int x = ax; x <= ax + aw; x++)
-  {
-    for (int y = ay; y <= ay + ah; y++)
-    {
-      MapArray[x][y]->MakeTile(tileToFill);
-    }
-  }
-}
-
 void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 {
   Logger::Instance().Print("********** INSTANTIATING LAYOUT **********");
@@ -362,7 +351,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
       switch (image)
       {
         case '#':
-          PlaceWall(x, y, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
+          PlaceWall(x, y, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Mine Wall");
           break;
 
         case '+':
@@ -380,7 +369,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
         break;
 
         case '.':
-          PlaceGroundTile(x, y, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          PlaceGroundTile(x, y, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Dirt");
           break;
 
         case 'g':
@@ -400,16 +389,8 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
           break;
 
         case '/':
-        {
-          ShrineType type = lb.ShrinesByPosition().at({ x, y });
-          auto go = GameObjectsFactory::Instance().CreateShrine(x, y, type, 1000);
-          InsertGameObject(go);
-
-          std::string description = GlobalConstants::ShrineNameByType.at(type);
-          t.Set(true, false, '/', GlobalConstants::GroundColor, GlobalConstants::BlackColor, description, "?Shrine?");
-          InsertStaticObject(x, y, t);
-        }
-        break;
+          PlaceShrine({ x, y, }, lb);
+          break;
       }
     }
   }

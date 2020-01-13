@@ -19,8 +19,6 @@ class MapLevelMines : public MapLevelBase
     void CreateSpecialLevel() override;
 
   private:
-    void FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill);          
-
     void CreateRandomBarrels();
 };
 
