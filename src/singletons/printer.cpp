@@ -93,6 +93,19 @@ void Printer::InitForSDL()
       tileIndex++;
     }
   }
+
+  // Hacky way of doing it but that's C++ for you
+  for (int i = (int)GraphicTiles::BARREL; i < (int)GraphicTiles::LAST_ELEMENT; i++)
+  {
+    GraphicTiles key = static_cast<GraphicTiles>(i);
+    GlobalConstants::GraphicTilesIndexByType[key] = i;
+  }
+
+  for (int i = (int)NameCP437::FIRST; i < (int)NameCP437::LAST_ELEMENT; i++)
+  {
+    NameCP437 key = static_cast<NameCP437>(i);
+    GlobalConstants::CP437IndexByType[key] = i;
+  }
 }
 
 void Printer::DrawWindow(const Position& leftCorner,
