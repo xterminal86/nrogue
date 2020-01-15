@@ -511,8 +511,8 @@ void Application::InitSDL()
   int tilesetWidth = 0;
   int tilesetHeight = 0;
 
-  const int kTerminalWidth = 80;
-  const int kTerminalHeight = 24;
+  int kTerminalWidth = 80;
+  int kTerminalHeight = 24;
 
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
   {
@@ -525,6 +525,18 @@ void Application::InitSDL()
 
   int scaledW = (int)((float)TileWidth * ScaleFactor);
   int scaledH = (int)((float)TileHeight * ScaleFactor);
+
+  // This is just a plain hack to fit
+  // graphics tileset to screen at certain resolution
+  if (scaledW == 32)
+  {
+    kTerminalWidth = 60;
+  }
+
+  if (scaledW == scaledH)
+  {
+    kTerminalHeight = 30;
+  }
 
   int ww = kTerminalWidth * scaledW;
   int wh = kTerminalHeight * scaledH;
