@@ -217,7 +217,7 @@ enum class PlayerSkills
   RECHARGE = 0, // Use mana to recharge a wand (starting for Arcanist)
   REPAIR,       // Use repair kit to repair a weapon (starting for Soldier)
   SPELLCASTING, // Allows character to cast spells (starting for Arcanist)
-  AWARENESS     // Autodetect traps
+  AWARENESS     // Autodetect traps (starting for Thief)
 };
 
 enum class EquipmentCategory

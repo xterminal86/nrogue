@@ -153,6 +153,9 @@ class Printer : public Singleton<Printer>
 
     const int kMaxGameLogMessages = 100;
 
+    int _messageRepeatCounter = 0;
+    std::string _repeatingMessage;
+
     #ifndef USE_SDL
     void InitForCurses();
     #else

@@ -901,8 +901,7 @@ bool Player::DamageArmor(int amount)
 {
   ItemComponent* armor = EquipmentByCategory[EquipmentCategory::TORSO][0];
   if (armor != nullptr)
-  {
-    // TODO: OPAF
+  {    
     if (armor->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE))
     {
       return false;
@@ -1308,6 +1307,15 @@ void Player::ProcessEffectsPlayer()
 {
   GameObject::ProcessEffects();
 
+  bool shouldRedraw = false;
+
+  if (HasEffect(ItemBonusType::PARALYZE))
+  {
+    //Util::Sleep(100);
+    Printer::Instance().AddMessage("You can't move!");
+    shouldRedraw = true;
+  }
+
   if (HasEffect(ItemBonusType::BURNING))
   {
     if (Util::Rolld100(50))
@@ -1322,12 +1330,17 @@ void Player::ProcessEffectsPlayer()
             std::string objName = ic->Data.IsIdentified ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
             auto str = Util::StringFormat("%s burns up!", objName.data());
             Printer::Instance().AddMessage(str);
-            Inventory.Contents.erase(Inventory.Contents.begin() + i);
+            Inventory.Contents.erase(Inventory.Contents.begin() + i);            
             break;
           }
         }
       }
     }
+  }
+
+  if (shouldRedraw)
+  {
+    Application::Instance().ForceDrawMainState();
   }
 }
 
@@ -1516,7 +1529,6 @@ bool Player::WeaponLosesDurability()
 {
   auto weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
 
-  // TODO: OPAF
   if (weapon->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE))
   {
     return false;

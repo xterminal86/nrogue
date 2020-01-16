@@ -783,14 +783,25 @@ std::vector<Position> Printer::GetAreaDamagePointsFrom(Position from, int range)
 
 void Printer::AddMessage(const std::string& message)
 {
-  _inGameMessages.insert(_inGameMessages.begin(), message);
+  if (!_inGameMessages.empty() && (_repeatingMessage == message))
+  {
+    _messageRepeatCounter++;
+    auto newStr = Util::StringFormat("%s (x%i)", _repeatingMessage.data(), _messageRepeatCounter);
+    _inGameMessages.front() = newStr;
+  }
+  else
+  {
+    _messageRepeatCounter = 1;
+    _inGameMessages.insert(_inGameMessages.begin(), message);
+    _lastMessagesToDisplay++;
+  }
+
+  _repeatingMessage = message;
 
   if (_inGameMessages.size() > kMaxGameLogMessages)
   {
     _inGameMessages.pop_back();
   }
-
-  _lastMessagesToDisplay++;
 
   _lastMessagesToDisplay = Util::Clamp(_lastMessagesToDisplay, 0, 5);
 
@@ -826,6 +837,8 @@ void Printer::ResetMessagesToDisplay()
 {
   _lastMessages.clear();
   _lastMessagesToDisplay = 0;
+  _messageRepeatCounter = 1;
+  _repeatingMessage.clear();
 }
 
 std::vector<std::string>& Printer::Messages()
