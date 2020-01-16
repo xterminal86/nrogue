@@ -1,6 +1,7 @@
 #include "rect.h"
 
 #include "util.h"
+#include "logger.h"
 
 Rect::Rect(const Position &p1, const Position &p2)
 {

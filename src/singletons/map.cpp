@@ -13,6 +13,7 @@
 #include "map-level-abyss.h"
 #include "map-level-nether.h"
 #include "map-level-endgame.h"
+#include "logger.h"
 
 void Map::Init()
 {  

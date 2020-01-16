@@ -2,6 +2,7 @@
 
 #include "application.h"
 #include "util.h"
+#include "printer.h"
 
 void EnterNameState::HandleInput()
 {

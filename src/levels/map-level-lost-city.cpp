@@ -3,6 +3,7 @@
 #include "game-objects-factory.h"
 #include "game-object-info.h"
 #include "application.h"
+#include "logger.h"
 
 MapLevelLostCity::MapLevelLostCity(int sizeX, int sizeY, MapType type, int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)

@@ -1,6 +1,7 @@
 #include "town-portal-component.h"
 #include "map.h"
 #include "application.h"
+#include "printer.h"
 
 TownPortalComponent::TownPortalComponent()
 {

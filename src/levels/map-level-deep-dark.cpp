@@ -4,6 +4,7 @@
 #include "application.h"
 #include "game-objects-factory.h"
 #include "door-component.h"
+#include "logger.h"
 
 MapLevelDeepDark::MapLevelDeepDark(int sizeX, int sizeY, MapType type, int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)

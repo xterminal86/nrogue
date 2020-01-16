@@ -3,6 +3,7 @@
 #include "application.h"
 #include "map.h"
 #include "util.h"
+#include "logger.h"
 
 void Printer::Init()
 {

@@ -2,6 +2,8 @@
 #include "application.h"
 #include "game-objects-factory.h"
 #include "game-object-info.h"
+#include "printer.h"
+#include "logger.h"
 
 MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
 {  

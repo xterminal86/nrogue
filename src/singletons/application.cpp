@@ -22,6 +22,8 @@
 #include "target-state.h"
 #include "map.h"
 #include "map-level-base.h"
+#include "printer.h"
+#include "logger.h"
 
 #include <sstream>
 

@@ -707,7 +707,10 @@ bool Player::IsGameObjectBorder(GameObject* go)
 
 bool Player::WasHitLanded(GameObject* defender)
 {
-  int attackChanceScale = 2;
+  // Amount of addition to hit chance
+  // times SKL difference of attacker and defender
+  int attackChanceScale = 3;
+
   int defaultHitChance = 50;
   int hitChance = defaultHitChance;
 

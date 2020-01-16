@@ -4,6 +4,7 @@
 #include "game-object-info.h"
 #include "game-objects-factory.h"
 #include "door-component.h"
+#include "logger.h"
 
 MapLevelAbyss::MapLevelAbyss(int sizeX, int sizeY, MapType type, int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)

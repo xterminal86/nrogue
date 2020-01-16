@@ -2,6 +2,7 @@
 
 #include "application.h"
 #include "game-object.h"
+#include "logger.h"
 
 BTResult TaskAttackBasic::Run()
 {

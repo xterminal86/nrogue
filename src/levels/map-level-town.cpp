@@ -6,6 +6,7 @@
 #include "game-object-info.h"
 #include "door-component.h"
 #include "pathfinder.h"
+#include "printer.h"
 
 MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
   MapLevelBase(sizeX, sizeY, type, 0)

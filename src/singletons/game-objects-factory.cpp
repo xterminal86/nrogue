@@ -20,6 +20,7 @@
 #include "game-object-info.h"
 #include "spells-processor.h"
 #include "spells-database.h"
+#include "printer.h"
 
 void GameObjectsFactory::Init()
 {

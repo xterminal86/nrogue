@@ -10,6 +10,7 @@
 #include "util.h"
 #include "rng.h"
 #include "blackboard.h"
+#include "logger.h"
 
 #ifdef RUN_TESTS
 #include "tests.h"

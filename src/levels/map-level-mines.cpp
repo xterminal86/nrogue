@@ -9,6 +9,7 @@
 #include "door-component.h"
 #include "container-component.h"
 #include "player.h"
+#include "logger.h"
 
 MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)

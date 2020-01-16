@@ -4,6 +4,7 @@
 #include "game-object-info.h"
 #include "game-objects-factory.h"
 #include "door-component.h"
+#include "logger.h"
 
 MapLevelNether::MapLevelNether(int sizeX, int sizeY, MapType type, int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)

@@ -3,6 +3,7 @@
 #include "game-object.h"
 #include "util.h"
 #include "application.h"
+#include "printer.h"
 
 ShrineComponent::ShrineComponent()
 {

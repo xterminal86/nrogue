@@ -1,6 +1,8 @@
 #include "bts-parser.h"
 
 #include "util.h"
+#include "game-object.h"
+#include "logger.h"
 
 void BTSParser::Init(GameObject* objRef)
 {

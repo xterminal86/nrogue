@@ -6,6 +6,7 @@
 
 #include "component.h"
 #include "ai-model-base.h"
+#include "logger.h"
 
 class AIComponent : public Component
 {
