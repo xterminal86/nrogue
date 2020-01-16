@@ -2289,7 +2289,6 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
   copy->InteractionCallback = copyFrom->InteractionCallback;
   copy->Attrs               = copyFrom->Attrs;
   copy->HealthRegenTurns    = copyFrom->HealthRegenTurns;
-  copy->ManaRegenTurns      = copyFrom->ManaRegenTurns;
   copy->Type                = copyFrom->Type;
 
   copy->_activeEffects           = copyFrom->_activeEffects;

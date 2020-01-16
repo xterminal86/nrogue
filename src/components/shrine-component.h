@@ -43,10 +43,11 @@ class ShrineComponent : public Component
   private:
     void Activate();    
     void ProcessEffect();
-    void ApplyRandomEffect();
-    void ApplyRandomPositiveEffect();
-    void ApplyRandomNegativeEffect();
-    void ApplyTemporaryStatRaise();
+    void ApplyRandomEffect(std::string& logMessageToWrite);
+    void ApplyRandomPositiveEffect(std::string& logMessageToWrite);
+    void ApplyRandomNegativeEffect(std::string& logMessageToWrite);
+    void ApplyTemporaryStatRaise(std::string& logMessageToWrite);
+    void SetEffectGainMessage(std::string& logMessageToWrite, ItemBonusType e);
 };
 
 #endif // SHRINECOMPONENT_H

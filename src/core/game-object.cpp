@@ -237,6 +237,19 @@ void GameObject::FinishTurn()
     Attrs.ActionMeter = 0;
   }
 
+  ProcessNaturalRegenHP();
+  ProcessNaturalRegenMP();
+
+  ProcessEffects();
+
+  if (!IsAlive())
+  {
+    MarkAndCreateRemains();
+  }
+}
+
+void GameObject::ProcessNaturalRegenHP()
+{
   _healthRegenTurnsCounter++;
 
   if (_healthRegenTurnsCounter >= HealthRegenTurns)
@@ -244,7 +257,10 @@ void GameObject::FinishTurn()
     _healthRegenTurnsCounter = 0;
     Attrs.HP.AddMin(1);
   }
+}
 
+void GameObject::ProcessNaturalRegenMP()
+{
   _manaRegenTurnsCounter++;
 
   float turnsManaRegen = 0.0f;
@@ -266,13 +282,6 @@ void GameObject::FinishTurn()
       Attrs.MP.AddMin(1);
       _manaRegenTurnsCounter = 0;
     }
-  }
-
-  ProcessEffects();
-
-  if (!IsAlive())
-  {
-    MarkAndCreateRemains();
   }
 }
 

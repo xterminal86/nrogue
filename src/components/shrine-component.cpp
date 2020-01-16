@@ -165,7 +165,7 @@ void ShrineComponent::ProcessEffect()
     // random effect + receive curse
     case ShrineType::DESECRATED:
     {
-      ApplyRandomEffect();
+      ApplyRandomEffect(msg);
 
       std::vector<ItemComponent*> itemsToCurse;
       for (auto& i : playerRef.Inventory.Contents)
@@ -190,11 +190,11 @@ void ShrineComponent::ProcessEffect()
     // random effect + low chance to receive negative effect
     case ShrineType::RUINED:
     {
-      ApplyRandomEffect();
+      ApplyRandomEffect(msg);
 
       if (Util::Rolld100(25))
       {
-        ApplyRandomNegativeEffect();
+        ApplyRandomNegativeEffect(msg);
       }
     }
     break;
@@ -202,11 +202,11 @@ void ShrineComponent::ProcessEffect()
     // random effect + high chance to receive negative effect
     case ShrineType::DISTURBING:
     {
-      ApplyRandomEffect();
+      ApplyRandomEffect(msg);
 
       if (Util::Rolld100(75))
       {
-        ApplyRandomNegativeEffect();
+        ApplyRandomNegativeEffect(msg);
       }
     }
     break;
@@ -229,23 +229,23 @@ void ShrineComponent::ProcessEffect()
       std::advance(it, index);
       it->second.Add(1);
 
-      ApplyRandomNegativeEffect();
+      ApplyRandomNegativeEffect(msg);
     }
     break;
 
     // random effect
     case ShrineType::FORGOTTEN:
-      ApplyRandomEffect();
+      ApplyRandomEffect(msg);
       break;
 
     // temporary raises stats
     case ShrineType::POTENTIAL:
-      ApplyTemporaryStatRaise();
+      ApplyTemporaryStatRaise(msg);
       break;
 
     // random effect
     case ShrineType::HIDDEN:
-      ApplyRandomEffect();
+      ApplyRandomEffect(msg);
       break;
 
     // removes curse
@@ -275,7 +275,7 @@ void ShrineComponent::ProcessEffect()
   Printer::Instance().AddMessage(msg);
 }
 
-void ShrineComponent::ApplyRandomEffect()
+void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
@@ -302,9 +302,11 @@ void ShrineComponent::ApplyRandomEffect()
   }
 
   playerRef.AddEffect(b);
+
+  SetEffectGainMessage(logMessageToWrite, b.Type);
 }
 
-void ShrineComponent::ApplyRandomPositiveEffect()
+void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
@@ -332,9 +334,11 @@ void ShrineComponent::ApplyRandomPositiveEffect()
   }
 
   playerRef.AddEffect(b);
+
+  SetEffectGainMessage(logMessageToWrite, b.Type);
 }
 
-void ShrineComponent::ApplyRandomNegativeEffect()
+void ShrineComponent::ApplyRandomNegativeEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
@@ -363,9 +367,11 @@ void ShrineComponent::ApplyRandomNegativeEffect()
   }
 
   playerRef.AddEffect(b);
+
+  SetEffectGainMessage(logMessageToWrite, b.Type);
 }
 
-void ShrineComponent::ApplyTemporaryStatRaise()
+void ShrineComponent::ApplyTemporaryStatRaise(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
@@ -389,4 +395,81 @@ void ShrineComponent::ApplyTemporaryStatRaise()
   bs.Cumulative = true;
 
   playerRef.AddEffect(bs);
+
+  SetEffectGainMessage(logMessageToWrite, bs.Type);
+}
+
+void ShrineComponent::SetEffectGainMessage(std::string& logMessageToWrite,
+                                           ItemBonusType e)
+{
+  switch (e)
+  {
+    case ItemBonusType::STR:
+      logMessageToWrite = "You feel stronger!";
+      break;
+
+    case ItemBonusType::DEF:
+      logMessageToWrite = "Your skin hardens!";
+      break;
+
+    case ItemBonusType::MAG:
+      logMessageToWrite = "Your spirit is invigorated!";
+      break;
+
+    case ItemBonusType::RES:
+      logMessageToWrite = "You don't fear magic anymore!";
+      break;
+
+    case ItemBonusType::SPD:
+      logMessageToWrite = "Your moves became quicker!";
+      break;
+
+    case ItemBonusType::SKL:
+      logMessageToWrite = "Your melee skills increased!";
+      break;
+
+    case ItemBonusType::MANA_SHIELD:
+      logMessageToWrite = "Spirit force is guarding you";
+      break;
+
+    case ItemBonusType::ILLUMINATED:
+      logMessageToWrite = "The darkness disperses!";
+      break;
+
+    case ItemBonusType::REGEN:
+      logMessageToWrite = "Your wounds heal faster";
+      break;
+
+    case ItemBonusType::REFLECT:
+      logMessageToWrite = "Magic spells will be reflected";
+      break;
+
+    case ItemBonusType::TELEPATHY:
+      logMessageToWrite = "You can sense others";
+      break;
+
+    case ItemBonusType::LEVITATION:
+      logMessageToWrite = "You float above ground!";
+      break;
+
+    case ItemBonusType::PARALYZE:
+      logMessageToWrite = "You can't move!";
+      break;
+
+    case ItemBonusType::POISONED:
+      logMessageToWrite = "You are feeling unwell...";
+      break;
+
+    case ItemBonusType::BURNING:
+      logMessageToWrite = "You catch fire!";
+      break;
+
+    case ItemBonusType::FROZEN:
+      logMessageToWrite = "You are shackled by cold!";
+      break;
+
+    case ItemBonusType::BLINDNESS:
+      logMessageToWrite = "You can't see!";
+      break;
+  }
 }

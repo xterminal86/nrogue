@@ -146,7 +146,6 @@ class GameObject
     Attributes Attrs;        
 
     int HealthRegenTurns = 0;
-    int ManaRegenTurns = 0;
 
     GameObjectType Type = GameObjectType::HARMLESS;
     bool IsLiving = false;
@@ -173,6 +172,8 @@ class GameObject
     void EffectAction(const ItemBonusStruct& e);
     void MarkAndCreateRemains();
     void TryToBurnItem();
+    void ProcessNaturalRegenHP();
+    void ProcessNaturalRegenMP();
 
     bool CanRaiseAttribute(Attribute& attr);
 

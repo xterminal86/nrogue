@@ -287,7 +287,7 @@ void Player::SetSoldierAttrs()
   Attrs.Def.Set(2);
   Attrs.Skl.Set(1);
 
-  Attrs.HP.Reset(30);
+  Attrs.HP.Reset(35);
 
   Attrs.HungerRate.Set(1500);
   Attrs.HungerSpeed.Set(1);
@@ -303,10 +303,10 @@ void Player::SetThiefAttrs()
   Attrs.HP.Talents = 1;
 
   Attrs.Def.Set(1);
-  Attrs.Skl.Set(3);
+  Attrs.Skl.Set(2);
   Attrs.Spd.Set(3);
 
-  Attrs.HP.Reset(20);
+  Attrs.HP.Reset(15);
 
   Attrs.HungerRate.Set(2000);
   Attrs.HungerSpeed.Set(1);  
@@ -321,11 +321,11 @@ void Player::SetArcanistAttrs()
   Attrs.Spd.Talents = 1;
   Attrs.MP.Talents = 3;
 
-  Attrs.Mag.Set(2);
+  Attrs.Mag.Set(3);
   Attrs.Res.Set(2);
   Attrs.Spd.Set(1);
 
-  Attrs.HP.Reset(10);
+  Attrs.HP.Reset(5);
   Attrs.MP.Reset(30);
 
   Attrs.HungerRate.Set(3000);
@@ -1284,6 +1284,7 @@ void Player::FinishTurn()
     Attrs.ActionMeter = 0;
   }
 
+  ProcessNaturalRegenMP();
   ProcessHunger();
   ProcessStarvation();
   ProcessEffectsPlayer();
@@ -1339,18 +1340,7 @@ void Player::ProcessStarvation()
   }
   else
   {
-    _healthRegenTurnsCounter++;
-
-    if (_healthRegenTurnsCounter >= HealthRegenTurns)
-    {
-      _healthRegenTurnsCounter = 0;
-
-      if (Attrs.HP.Min().Get() < Attrs.HP.Max().Get())
-      {
-        Attrs.Hunger += Attrs.HungerSpeed.Get();
-        Attrs.HP.AddMin(1);
-      }
-    }
+    ProcessNaturalRegenHP();
   }
 }
 

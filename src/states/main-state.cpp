@@ -172,18 +172,7 @@ void MainState::HandleInput()
     case 's':
     case 'S':
       GetActorsAround();
-      break;
-
-    case 'B':
-    {
-      ItemBonusStruct bs;
-      bs.BonusValue = 10;
-      bs.Duration = 1000;
-      bs.Id = 9999;
-      bs.Type = ItemBonusType::SKL;
-      _playerRef->AddEffect(bs);
-    }
-    break;
+      break;    
     #endif
 
     default:

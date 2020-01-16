@@ -55,6 +55,7 @@ namespace Util
   }
 
   // *** https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c
+
   bool IsBase64(unsigned char c)
   {
     auto res = std::find(GlobalConstants::Base64Chars.begin(),
