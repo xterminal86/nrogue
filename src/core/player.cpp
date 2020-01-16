@@ -360,8 +360,12 @@ void Player::SetDefaultEquipment()
       GameObject* arrows = GameObjectsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::BLESSED, 60);
       Inventory.AddToInventory(arrows);
 
+      GameObject* dagger = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::DAGGER, ItemPrefix::UNCURSED);
+      Inventory.AddToInventory(dagger);
+
       weaponAndArmorToEquip.push_back(arrows);
       weaponAndArmorToEquip.push_back(weapon);
+      weaponAndArmorToEquip.push_back(dagger);
     }
     break;
 
