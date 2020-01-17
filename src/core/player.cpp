@@ -959,7 +959,7 @@ void Player::AwardExperience(int amount)
     Attrs.Exp.SetMin(0);
     LevelUp();
   }
-  else if (Attrs.Exp.Min().Get() < 0)
+  else if (amnt < 0 && Attrs.Exp.Min().Get() <= 0)
   {
     Attrs.Exp.SetMin(0);
     LevelDown();

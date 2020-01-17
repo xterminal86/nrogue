@@ -2888,9 +2888,9 @@ bool GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
     Printer::Instance().AddMessage("You lose some experience!");
   }
 
-  _playerRef->AwardExperience(amount);
-
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
+
+  _playerRef->AwardExperience(amount);
 
   return true;
 }
@@ -2948,9 +2948,10 @@ bool GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
   if (newValue < 0)
   {
     newValue = 0;
+    message = "Nothing happens";
   }
 
-  playerStats.at(itemType).Add(newValue);
+  playerStats.at(itemType).Set(newValue);
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
 
