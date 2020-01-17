@@ -11,13 +11,13 @@ MapLevelDeepDark::MapLevelDeepDark(int sizeX, int sizeY, MapType type, int dunge
 {
   switch (MapType_)
   {
-    case MapType::CAVES_5:
+    case MapType::DEEP_DARK_5:
     {
       _specialLevel =
       {
         "########",
         "#......#",
-        "#.<..>.#",
+        "#.<....#",
         "#......#",
         "########"
       };
@@ -96,7 +96,7 @@ void MapLevelDeepDark::CreateLevel()
     break;
   }
 
-  if (MapType_ != MapType::CAVES_5)
+  if (MapType_ != MapType::DEEP_DARK_5)
   {
     if (Util::Rolld100(50))
     {
@@ -114,6 +114,64 @@ void MapLevelDeepDark::CreateLevel()
 
 void MapLevelDeepDark::CreateSpecialLevel()
 {
+  GameObject* note = GameObjectsFactory::Instance().CreateNote("A4 paper",
+  {
+    "Sorry, but the game is not finished yet.",
+    "So this is as far as you can go. :-)"
+  });
+
+  note->PosX = 5;
+  note->PosY = 2;
+
+  InsertGameObject(note);
+
+  auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
+
+  MapType stairsDownTo = (MapType)(DungeonLevel + 1);
+  MapType stairsUpTo = (MapType)(DungeonLevel - 1);
+
+  int posX = 0;
+  int posY = 0;
+
+  for (auto& row : convLevel)
+  {
+    for (auto& c : row)
+    {
+      switch (c)
+      {
+        case '<':
+        {
+          LevelStart.X = posX;
+          LevelStart.Y = posY;
+
+          GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, c, stairsUpTo);
+        }
+        break;
+
+        case '>':
+        {
+          LevelExit.X = posX;
+          LevelExit.Y = posY;
+
+          GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, c, stairsDownTo);
+        }
+        break;
+
+        case '#':
+          PlaceWall(posX, posY, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Stone Wall");
+          break;
+
+        case '.':
+          PlaceGroundTile(posX, posY, c, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          break;
+      }
+
+      posX++;
+    }
+
+    posX = 0;
+    posY++;
+  }
 }
 
 void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
