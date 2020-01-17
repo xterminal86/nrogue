@@ -1557,7 +1557,7 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
   ic->Data.ItemType_ = ItemType::WAND;
   ic->Data.SpellHeld = spellType;
-  ic->Data.Range = 100;
+  ic->Data.Range = 20;
   ic->Data.Durability.Reset(1);
   ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
 

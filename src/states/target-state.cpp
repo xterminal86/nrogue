@@ -614,17 +614,17 @@ void TargetState::DrawHint()
     {
       auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
 
-      bool condActor = (actor != nullptr);
+      bool actorPresent = (actor != nullptr);
 
       int d = Util::LinearDistance(startPoint, p);
 
       bool isCellBlocking = Map::Instance().CurrentLevel->IsCellBlocking(p);
-      bool isThrowing = (_throwingItemInventoryIndex != -1);
+      bool isThrowing = (_throwingItemInventoryIndex != -1);      
+      bool isLaser = (_weaponRef->Data.SpellHeld == SpellType::LASER);
+      bool isThrowingOk = ((!isThrowing && d > _weaponRef->Data.Range)
+                         || (isThrowing && d > _maxThrowingRange));
 
-      if (_weaponRef->Data.SpellHeld != SpellType::LASER
-       && (condActor || isCellBlocking
-       || (!isThrowing && d > _weaponRef->Data.Range)
-       || (isThrowing && d > _maxThrowingRange)))
+      if (!isLaser && (actorPresent || isCellBlocking || isThrowingOk))
       {
         break;
       }
