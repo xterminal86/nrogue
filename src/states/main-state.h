@@ -31,7 +31,6 @@ class MainState : public GameState
     void TryToPickupItem();
     void CheckStairs(int stairsSymbol);
     void DrawHPMP();
-    void DisplayHelp();
     void PrintDebugInfo();
     void ProcessRangedWeapon();
     void ProcessWand(ItemComponent* wand);
@@ -50,23 +49,6 @@ class MainState : public GameState
     void CheckIfSomethingElseIsLyingHere(const Position& pos);
 
     Position _cursorPosition;
-
-    std::vector<std::string> _helpText =
-    {      
-      R"('q' - Cancel / Close menu     )",
-      R"('a' - Attack                  )",
-      R"('f' - Fire weapon / wand      )",
-      R"('i' - Interact                )",
-      R"('l' - Enter "look mode"       )",
-      R"('m' - Display message log     )",
-      R"('@' - Display character sheet )",
-      R"('e' - Display inventory       )",
-      R"('$' - Count your money        )",
-      R"('g' - Get item from the ground)",
-      R"('>' - Go down the stairs      )",
-      R"('<' - Go up the stairs        )",
-      R"('Q' - Exit game               )"
-    };
 
     std::vector<uint64_t> _actorsForDebugDisplay;
 };

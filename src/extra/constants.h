@@ -1,6 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#define VK_CANCEL      'Q'
+
 #ifdef USE_SDL
 
   #include <SDL2/SDL_keycode.h>
@@ -100,6 +102,7 @@ enum class GameStates
   SELECT_CLASS_STATE,
   ENTER_NAME_STATE,
   INTRO_STATE,
+  HELP_STATE,
   INFO_STATE,
   INVENTORY_STATE,
   CONTAINER_INTERACT_STATE,

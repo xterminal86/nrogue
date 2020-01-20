@@ -7,6 +7,7 @@
 #include "enter-name-state.h"
 #include "intro-state.h"
 #include "inventory-state.h"
+#include "help-state.h"
 #include "container-interact-state.h"
 #include "message-log-state.h"
 #include "look-input-state.h"
@@ -42,6 +43,7 @@ void Application::Init()
   PlayerInstance.Attrs.Indestructible = false;
 
   Printer::Instance().AddMessage("You begin your quest");
+  Printer::Instance().AddMessage("Press 'h' for help");
 
   _initialized = true;
 }
@@ -620,6 +622,7 @@ void Application::InitGameStates()
   RegisterState<EnterNameState>        (GameStates::ENTER_NAME_STATE);
   RegisterState<IntroState>            (GameStates::INTRO_STATE);
   RegisterState<InventoryState>        (GameStates::INVENTORY_STATE);
+  RegisterState<HelpState>             (GameStates::HELP_STATE);
   RegisterState<ContainerInteractState>(GameStates::CONTAINER_INTERACT_STATE);
   RegisterState<MessageLogState>       (GameStates::SHOW_MESSAGES_STATE);
   RegisterState<LookInputState>        (GameStates::LOOK_INPUT_STATE);

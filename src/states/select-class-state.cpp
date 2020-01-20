@@ -22,7 +22,7 @@ void SelectClassState::HandleInput()
       Application::Instance().ChangeState(GameStates::ENTER_NAME_STATE);
       break;
 
-    case 'q':
+    case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::MENU_STATE);
       break;
 

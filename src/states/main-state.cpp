@@ -18,44 +18,53 @@ void MainState::HandleInput()
 
   switch (_keyPressed)
   {
+    case 'q':
     case NUMPAD_7:
       ProcessMovement({ -1, -1 });
       break;
 
+    case 'w':
     case NUMPAD_8:
       ProcessMovement({ 0, -1 });
       break;
 
+    case 'e':
     case NUMPAD_9:
       ProcessMovement({ 1, -1 });
       break;
 
+    case 'a':
     case NUMPAD_4:
       ProcessMovement({ -1, 0 });
       break;
 
+    case 's':
     case NUMPAD_2:
       ProcessMovement({ 0, 1 });
       break;
 
+    case 'd':
     case NUMPAD_6:
       ProcessMovement({ 1, 0 });
       break;
 
+    case 'z':
     case NUMPAD_1:
       ProcessMovement({ -1, 1 });
       break;
 
+    case 'c':
     case NUMPAD_3:
       ProcessMovement({ 1, 1 });
       break;
 
+    case 'x':
     case NUMPAD_5:
       Printer::Instance().AddMessage("You waited...");
       _playerRef->FinishTurn();
       break;
 
-    case 'a':
+    case 'A':
     {
       if (Map::Instance().CurrentLevel->Peaceful)
       {
@@ -75,7 +84,7 @@ void MainState::HandleInput()
     }
     break;
 
-    case 'e':
+    case 'E':
       Application::Instance().ChangeState(GameStates::INVENTORY_STATE);
       break;
 
@@ -102,10 +111,10 @@ void MainState::HandleInput()
     case 'H':
     case 'h':
     case '?':
-      DisplayHelp();
+      Application::Instance().ChangeState(GameStates::HELP_STATE);
       break;
 
-    case 'Q':
+    case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::EXITING_STATE);
       break;
 
@@ -169,7 +178,6 @@ void MainState::HandleInput()
     }
     break;
 
-    case 's':
     case 'S':
       GetActorsAround();
       break;    
@@ -328,11 +336,6 @@ void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
   bar += "]";
 
   Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, "#FFFFFF");
-}
-
-void MainState::DisplayHelp()
-{
-  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Help", _helpText);
 }
 
 void MainState::CheckStairs(int stairsSymbol)

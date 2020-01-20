@@ -66,7 +66,7 @@ void ReturnerState::HandleInput()
     }
     break;
 
-    case 'q':
+    case VK_CANCEL:
       Printer::Instance().AddMessage("Cancelled");
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;

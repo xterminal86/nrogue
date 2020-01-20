@@ -1,19 +1,19 @@
-#include "message-log-state.h"
+#include "help-state.h"
 
 #include "application.h"
 #include "printer.h"
 #include "util.h"
 
-void MessageLogState::Prepare()
+void HelpState::Prepare()
 {
   _scrollPosition = 0;
 }
 
-void MessageLogState::HandleInput()
+void HelpState::HandleInput()
 {
   _keyPressed = GetKeyDown();
 
-  int msgSize = Printer::Instance().Messages().size();
+  int msgSize = _helpText.size();
   int th = Printer::Instance().TerminalHeight;
 
   // Since we draw messages from y = 1, compensate with (th - 2)
@@ -48,27 +48,20 @@ void MessageLogState::HandleInput()
   _scrollPosition = Util::Clamp(_scrollPosition, 0, scrollLimit);
 }
 
-void MessageLogState::Update(bool forceUpdate)
+void HelpState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();
 
-    DrawHeader(" GAME LOG ");
+    DrawHeader(" HELP ");
 
     DrawScrollBars();
 
-    auto messages = Printer::Instance().Messages();
-
     int offsetY = 1;
-    for (int i = _scrollPosition; i < messages.size(); i++)
+    for (int i = _scrollPosition; i < _helpText.size(); i++)
     {
-      if (_scrollPosition == 0)
-      {
-        Printer::Instance().PrintFB(0, 1, '*', "#FFFFFF");
-      }
-
-      Printer::Instance().PrintFB(1, offsetY, messages[i], Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(1, offsetY, _helpText[i], Printer::kAlignLeft, "#FFFFFF");
       offsetY++;
     }
 
@@ -76,17 +69,15 @@ void MessageLogState::Update(bool forceUpdate)
   }
 }
 
-void MessageLogState::DrawScrollBars()
+void HelpState::DrawScrollBars()
 {
-  auto messages = Printer::Instance().Messages();
-
   int tw = Printer::Instance().TerminalWidth;
   int th = Printer::Instance().TerminalHeight;
 
   // Since we draw messages from y = 1, compensate y pos with (th - 2)
-  int scrollLimit = (messages.size() - 1) - (th - 2);
+  int scrollLimit = (_helpText.size() - 1) - (th - 2);
 
-  if (messages.size() - 1 > th - 2)
+  if (_helpText.size() - 1 > th - 2)
   {
     if (_scrollPosition == 0)
     {

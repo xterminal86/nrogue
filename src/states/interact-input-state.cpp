@@ -29,39 +29,47 @@ void InteractInputState::HandleInput()
 
   switch (_keyPressed)
   {
+    case 'q':
     case NUMPAD_7:
       dirSet = SetDir({ -1, -1 });
       break;
 
+    case 'w':
     case NUMPAD_8:
       dirSet = SetDir({ 0, -1 });
       break;
 
+    case 'e':
     case NUMPAD_9:
       dirSet = SetDir({ 1, -1 });
       break;
 
+    case 'a':
     case NUMPAD_4:
       dirSet = SetDir({ -1, 0 });
       break;
 
+    case 'd':
     case NUMPAD_6:
       dirSet = SetDir({ 1, 0 });
       break;
 
+    case 'z':
     case NUMPAD_1:
       dirSet = SetDir({ -1, 1 });
       break;
 
+    case 's':
     case NUMPAD_2:
       dirSet = SetDir({ 0, 1 });
       break;
 
+    case 'c':
     case NUMPAD_3:
       dirSet = SetDir({ 1, 1 });
       break;
 
-    case 'q':
+    case VK_CANCEL:
       Printer::Instance().AddMessage("Cancelled");
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;

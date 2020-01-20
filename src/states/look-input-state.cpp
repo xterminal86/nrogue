@@ -28,34 +28,42 @@ void LookInputState::HandleInput()
 
   switch (_keyPressed)
   {
+    case 'q':
     case NUMPAD_7:
       MoveCursor(-1, -1);
       break;
 
+    case 'w':
     case NUMPAD_8:
       MoveCursor(0, -1);
       break;
 
+    case 'e':
     case NUMPAD_9:
       MoveCursor(1, -1);
       break;
 
+    case 'a':
     case NUMPAD_4:
       MoveCursor(-1, 0);
       break;
 
+    case 'd':
     case NUMPAD_6:
       MoveCursor(1, 0);
       break;
 
+    case 'z':
     case NUMPAD_1:
       MoveCursor(-1, 1);
       break;
 
+    case 's':
     case NUMPAD_2:
       MoveCursor(0, 1);
       break;
 
+    case 'c':
     case NUMPAD_3:
       MoveCursor(1, 1);
       break;
@@ -65,7 +73,7 @@ void LookInputState::HandleInput()
       DisplayMonsterStats();
       break;
 
-    case 'q':
+    case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
@@ -84,7 +92,7 @@ void LookInputState::HandleInput()
     }
     break;
 
-    case 's':
+    case 'S':
     {
       GameObject* spider = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::SPIDER);
       Map::Instance().InsertActor(spider);

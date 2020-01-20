@@ -22,7 +22,7 @@ void EndgameState::HandleInput()
 
   switch (_keyPressed)
   {
-    case 'q':
+    case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::EXIT_GAME);
       break;
 

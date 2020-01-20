@@ -9,7 +9,7 @@ void InfoState::HandleInput()
   
   switch (_keyPressed)
   {
-    case 'q':
+    case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 

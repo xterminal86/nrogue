@@ -15,7 +15,7 @@ void ExitingState::HandleInput()
 
   switch (_keyPressed)
   {
-    case 'q':
+    case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
@@ -43,7 +43,7 @@ void ExitingState::Update(bool forceUpdate)
 
     Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
                                 Printer::Instance().TerminalHeight - 1,
-                                "Exit game? (y/q)",
+                                "Exit game? (y/Q)",
                                 Printer::kAlignRight,
                                 "#FFFFFF");
 

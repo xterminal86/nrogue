@@ -20,7 +20,7 @@ void RepairState::HandleInput()
 
   switch (_keyPressed)
   {
-    case 'q':
+    case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::INVENTORY_STATE);
       break;
 

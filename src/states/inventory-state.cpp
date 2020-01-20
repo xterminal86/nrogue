@@ -26,10 +26,12 @@ void InventoryState::HandleInput()
 
   switch(_keyPressed)
   {
+    case 'w':
     case NUMPAD_8:
       _selectedIndex--;
       break;
 
+    case 's':
     case NUMPAD_2:
       _selectedIndex++;
       break;
@@ -145,7 +147,7 @@ void InventoryState::HandleInput()
     }
     break;
 
-    case 's':
+    case 'S':
       SortInventory();
       break;
 
@@ -177,7 +179,7 @@ void InventoryState::HandleInput()
     }
     break;
 
-    case 'q':
+    case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
@@ -313,7 +315,7 @@ void InventoryState::PrintFooter()
   {
     "'i' - inspect",
     "'e' - equip",
-    "'s' - sort",
+    "'S' - sort",
     "'u' - use",
     "'d' - drop",
     "'t' - throw"

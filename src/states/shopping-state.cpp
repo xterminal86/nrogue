@@ -34,14 +34,17 @@ void ShoppingState::HandleInput()
 
   switch (_keyPressed)
   {
+    case 's':
     case NUMPAD_2:
       _inventoryItemIndex++;
       break;
 
+    case 'w':
     case NUMPAD_8:
       _inventoryItemIndex--;
       break;
 
+    case 'a':
     case NUMPAD_4:
     {
       if (!_playerRef->Inventory.IsEmpty())
@@ -51,6 +54,7 @@ void ShoppingState::HandleInput()
     }
     break;
 
+    case 'd':
     case NUMPAD_6:
     {
       if (!_shopOwner->Items.empty())
@@ -68,7 +72,7 @@ void ShoppingState::HandleInput()
       ShowItemInfo();
       break;
 
-    case 'q':
+    case VK_CANCEL:
     {
       auto res = Application::Instance().GetGameStateRefByName(GameStates::NPC_INTERACT_STATE);
       NPCInteractState* nis = static_cast<NPCInteractState*>(res);

@@ -31,14 +31,17 @@ void ContainerInteractState::HandleInput()
 
   switch (_keyPressed)
   {
+    case 's':
     case NUMPAD_2:
       _inventoryItemIndex++;
       break;
 
+    case 'w':
     case NUMPAD_8:
       _inventoryItemIndex--;
       break;
 
+    case 'a':
     case NUMPAD_4:
     {
       if (!_playerRef->Inventory.IsEmpty())
@@ -48,6 +51,7 @@ void ContainerInteractState::HandleInput()
     }
     break;
 
+    case 'd':
     case NUMPAD_6:
     {
       if (!_containerToInteractWith->IsEmpty())
@@ -61,7 +65,7 @@ void ContainerInteractState::HandleInput()
       TryToTransferItem();
       break;
 
-    case 'q':
+    case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 

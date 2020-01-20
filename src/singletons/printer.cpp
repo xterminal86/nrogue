@@ -786,7 +786,7 @@ void Printer::AddMessage(const std::string& message)
   if (!_inGameMessages.empty() && (_repeatingMessage == message))
   {
     _messageRepeatCounter++;
-    auto newStr = Util::StringFormat("%s (x%i)", _repeatingMessage.data(), _messageRepeatCounter);
+    auto newStr = Util::StringFormat("(x%i) %s", _messageRepeatCounter, _repeatingMessage.data());
     _inGameMessages.front() = newStr;
   }
   else
