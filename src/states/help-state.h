@@ -34,7 +34,7 @@ class HelpState : public GameState
       R"()",
       R"('q' 'w' 'e' )",
       R"(   \ | /    )",
-      R"('a'-'x'-'d' or keypad for movement)",
+      R"('a'-'x'-'d' or numpad for movement)",
       R"(   / | \    )",
       R"('z' 's' 'c' )",
     };

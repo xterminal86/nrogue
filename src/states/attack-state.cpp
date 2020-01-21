@@ -24,44 +24,52 @@ void AttackState::HandleInput()
 
   switch (_keyPressed)
   {
+    case 'q':
     case NUMPAD_7:
       dirSet = true;
       _cursorPosition.X -= 1;
       _cursorPosition.Y -= 1;
       break;
 
+    case 'w':
     case NUMPAD_8:
       dirSet = true;
       _cursorPosition.Y -= 1;
       break;
 
+    case 'e':
     case NUMPAD_9:
       dirSet = true;
       _cursorPosition.X += 1;
       _cursorPosition.Y -= 1;
       break;
 
+    case 'a':
     case NUMPAD_4:
       dirSet = true;
       _cursorPosition.X -= 1;
       break;
 
+    case 'd':
     case NUMPAD_6:
       dirSet = true;
       _cursorPosition.X += 1;
       break;
 
+    case 'z':
     case NUMPAD_1:
       dirSet = true;
       _cursorPosition.X -= 1;
       _cursorPosition.Y += 1;
       break;
 
+    case 's':
     case NUMPAD_2:
       dirSet = true;
       _cursorPosition.Y += 1;
       break;
 
+    case 'c':
     case NUMPAD_3:
       dirSet = true;
       _cursorPosition.X += 1;
