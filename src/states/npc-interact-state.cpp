@@ -214,5 +214,5 @@ void NPCInteractState::PrintFooter()
   Printer::Instance().PrintFB(tw / 2 - part * 2, th - 1, "'n' - name", Printer::kAlignLeft, "#FFFFFF");
   Printer::Instance().PrintFB(tw / 2 - part, th - 1, "'j' - job", Printer::kAlignLeft, "#FFFFFF");
   Printer::Instance().PrintFB(tw / 2 + part, th - 1, "'g' - gossip", Printer::kAlignRight, "#FFFFFF");
-  Printer::Instance().PrintFB(tw / 2 + part * 2, th - 1, "'Q' - bye", Printer::kAlignRight, "#FFFFFF");
+  Printer::Instance().PrintFB(tw / 2 + part * 2, th - 1, "'q' - bye", Printer::kAlignRight, "#FFFFFF");
 }

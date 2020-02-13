@@ -343,8 +343,13 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
         break;
 
       case ItemBonusType::KNOCKBACK:
-        res.push_back("Knocks back the enemy");
-        break;
+      {
+        int tiles = i.BonusValue;
+        std::string tilesStr = (tiles == 1) ? "tile" : "tiles";
+        auto str = Util::StringFormat("Knocks enemy %i %s back", tiles, tilesStr.data());
+        res.push_back(str);
+      }
+      break;
 
       case ItemBonusType::MANA_SHIELD:
         res.push_back("Applies mana shield while equipped");

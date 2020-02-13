@@ -18,6 +18,7 @@ class AttackState : public GameState
     Player* _playerRef;
 
     Position _cursorPosition;
+    Position _dir;
 };
 
 #endif // ATTACKSTATE_H

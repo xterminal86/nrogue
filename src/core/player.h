@@ -12,9 +12,9 @@
 #include "game-object.h"
 #include "container-component.h"
 #include "item-component.h"
+#include "position.h"
 
 class AIComponent;
-class Position;
 
 class Player : public GameObject
 {
@@ -121,6 +121,8 @@ class Player : public GameObject
 
     std::vector<std::string> GetPrettyLevelUpText();
 
+    void KnockBack(GameObject* go, int tiles);
+
     std::map<int, PlayerClass> _classesMap =
     {
       { 0, PlayerClass::SOLDIER  },
@@ -164,7 +166,10 @@ class Player : public GameObject
       { "MP",  0 }
     };
 
+    Position _attackDir;
+
     friend class SpellsProcessor;
+    friend class AttackState;
 };
 
 #endif // PLAYER_H

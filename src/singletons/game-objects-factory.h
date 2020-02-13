@@ -37,7 +37,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateDummyObject(const std::string& objName, char image, const std::string& fgColor, const std::string& bgColor, const std::vector<std::string>& descText);
     GameObject* CreateScroll(int x, int y, SpellType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRandomScroll(ItemPrefix prefix = ItemPrefix::RANDOM);
-    GameObject* CreateWeapon(int x, int y, WeaponType type, ItemPrefix preifx = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM);
+    GameObject* CreateWeapon(int x, int y, WeaponType type, ItemPrefix preifx = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM, const std::vector<ItemBonusStruct>& bonuses = std::vector<ItemBonusStruct>());
     GameObject* CreateRandomWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateContainer(const std::string& name, const std::string& bgColor, int image, int x, int y);
     GameObject* CreateGem(int x, int y, GemType type = GemType::RANDOM, int gemChance = -1);
@@ -48,7 +48,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateArmor(int x, int y, ArmorType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM);
     GameObject* CreateRandomArmor(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateArrows(int x, int y, ArrowType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, int amount = -1);
-    GameObject* CreateRangedWeapon(int x, int y, RangedWeaponType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM);
+    GameObject* CreateRangedWeapon(int x, int y, RangedWeaponType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM, const std::vector<ItemBonusStruct>& bonuses = std::vector<ItemBonusStruct>());
     GameObject* CreateRandomAccessory(int x, int y, ItemPrefix prefixOverride = ItemPrefix::RANDOM, bool atLeastOneBonus = false);
     GameObject* CreateAccessory(int x, int y, EquipmentCategory category, const std::vector<ItemBonusStruct>& bonuses, ItemPrefix prefix, ItemQuality quality);
     GameObject* CreateBreakableObjectWithRandomLoot(int x, int y, char image, const std::string& objName, const std::string& fgColor, const std::string& bgColor);

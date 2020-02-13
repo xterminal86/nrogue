@@ -1274,7 +1274,7 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, ItemPrefix prefix, ItemQuality quality)
+GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, ItemPrefix prefix, ItemQuality quality, const std::vector<ItemBonusStruct>& bonuses)
 {  
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1412,6 +1412,11 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMax(diceSides);
     }
     break;
+  }
+
+  for (auto& b : bonuses)
+  {
+    AddBonus(ic, b);
   }
 
   avgDamage = CalculateAverageDamage(diceRolls, diceSides);
@@ -1615,7 +1620,12 @@ GameObject* GameObjectsFactory::CreateRandomWand(ItemPrefix prefixOverride)
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponType type, ItemPrefix prefixOverride, ItemQuality quality)
+GameObject* GameObjectsFactory::CreateRangedWeapon(int x,
+                                                   int y,
+                                                   RangedWeaponType type,
+                                                   ItemPrefix prefixOverride,
+                                                   ItemQuality quality,
+                                                   const std::vector<ItemBonusStruct>& bonuses)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1767,6 +1777,11 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x, int y, RangedWeaponTyp
       AddBonus(ic, { ItemBonusType::SKL,  3 });
     }
     break;
+  }
+
+  for (auto& b : bonuses)
+  {
+    AddBonus(ic, b);
   }
 
   //ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;
@@ -3514,6 +3529,14 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
       bs.MoneyCostIncrease = (int)(((float)max / (float)bs.Period) * (float)moneyIncrease);
     }
     break;
+
+    case ItemBonusType::KNOCKBACK:
+    {
+      value = RNG::Instance().RandomRange(1, 4);
+      bs.MoneyCostIncrease = value * moneyIncrease;
+    }
+    break;
+
   }
 
   // TODO: should there be cursed magic / rare items or fuck it?

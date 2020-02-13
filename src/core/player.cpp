@@ -75,6 +75,9 @@ void Player::Draw()
 
 bool Player::TryToAttack(int dx, int dy)
 {
+  _attackDir.X = dx;
+  _attackDir.Y = dy;
+
   auto go = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
   if (go != nullptr)
   {
@@ -424,6 +427,16 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
       Attrs.HP.AddMin(dmg);
     }
 
+    AIComponent* aic = what->GetComponent<AIComponent>();
+
+    if (aic != nullptr
+     && weapon != nullptr
+     && weapon->Data.HasBonus(ItemBonusType::KNOCKBACK))
+    {
+      int tiles = weapon->Data.GetBonus(ItemBonusType::KNOCKBACK)->BonusValue;
+      KnockBack(what, tiles);
+    }
+
     if (what->IsDestroyed)
     {
       ProcessKill(what);
@@ -630,9 +643,48 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
 
     int dmg = CalculateDamageValue(weapon, go, isRanged);
     ProcessAttack(weapon, go, dmg);
+
+    AIComponent* aic = go->GetComponent<AIComponent>();
+
+    if (aic != nullptr
+     && weapon != nullptr
+     && weapon->Data.HasBonus(ItemBonusType::KNOCKBACK))
+    {
+      int tiles = weapon->Data.GetBonus(ItemBonusType::KNOCKBACK)->BonusValue;
+      KnockBack(go, tiles);
+    }
   }
 
   Attrs.Hunger += Attrs.HungerSpeed.Get() * 2;  
+}
+
+void Player::KnockBack(GameObject* go, int tiles)
+{
+  auto& mapRef = Map::Instance().CurrentLevel->MapArray;
+  auto curLvl = Map::Instance().CurrentLevel;
+
+  Position newPos = { go->PosX, go->PosY };
+
+  bool canBeMoved = false;
+
+  for (int i = 1; i <= tiles; i++)
+  {
+    newPos.X += _attackDir.X;
+    newPos.Y += _attackDir.Y;
+
+    if (mapRef[newPos.X][newPos.Y]->Occupied || curLvl->IsCellBlocking(newPos))
+    {
+      break;
+    }
+
+    canBeMoved = true;
+  }
+
+  if (canBeMoved)
+  {
+    go->MoveTo(newPos);
+    go->Attrs.ActionMeter = 0;
+  }
 }
 
 void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict)

@@ -29,12 +29,16 @@ void AttackState::HandleInput()
       dirSet = true;
       _cursorPosition.X -= 1;
       _cursorPosition.Y -= 1;
+      _dir.X = -1;
+      _dir.Y = -1;
       break;
 
     case ALT_K8:
     case NUMPAD_8:
       dirSet = true;
       _cursorPosition.Y -= 1;
+      _dir.X = 0;
+      _dir.Y = -1;
       break;
 
     case ALT_K9:
@@ -42,18 +46,24 @@ void AttackState::HandleInput()
       dirSet = true;
       _cursorPosition.X += 1;
       _cursorPosition.Y -= 1;
+      _dir.X = 1;
+      _dir.Y = -1;
       break;
 
     case ALT_K4:
     case NUMPAD_4:
       dirSet = true;
       _cursorPosition.X -= 1;
+      _dir.X = -1;
+      _dir.Y = 0;
       break;
 
     case ALT_K6:
     case NUMPAD_6:
       dirSet = true;
       _cursorPosition.X += 1;
+      _dir.X = 1;
+      _dir.Y = 0;
       break;
 
     case ALT_K1:
@@ -61,12 +71,16 @@ void AttackState::HandleInput()
       dirSet = true;
       _cursorPosition.X -= 1;
       _cursorPosition.Y += 1;
+      _dir.X = -1;
+      _dir.Y = 1;
       break;
 
     case ALT_K2:
     case NUMPAD_2:
       dirSet = true;
       _cursorPosition.Y += 1;
+      _dir.X = 0;
+      _dir.Y = 1;
       break;
 
     case ALT_K3:
@@ -74,6 +88,8 @@ void AttackState::HandleInput()
       dirSet = true;
       _cursorPosition.X += 1;
       _cursorPosition.Y += 1;
+      _dir.X = 1;
+      _dir.Y = 1;
       break;
 
     case VK_CANCEL:
@@ -87,6 +103,8 @@ void AttackState::HandleInput()
 
   if (dirSet)
   {
+    _playerRef->_attackDir = _dir;
+
     auto res = Map::Instance().GetActorAtPosition(_cursorPosition.X, _cursorPosition.Y);
     if (res != nullptr)
     {
