@@ -21,7 +21,7 @@ void MessageLogState::HandleInput()
 
   switch (_keyPressed)
   {
-    case 's':
+    case ALT_K2:
     case NUMPAD_2:
       if (msgSize > th - 2)
       {
@@ -29,7 +29,7 @@ void MessageLogState::HandleInput()
       }
       break;
 
-    case 'w':
+    case ALT_K8:
     case NUMPAD_8:
       if (msgSize > th - 2)
       {

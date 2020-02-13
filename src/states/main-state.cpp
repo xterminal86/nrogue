@@ -18,53 +18,53 @@ void MainState::HandleInput()
 
   switch (_keyPressed)
   {
-    case 'q':
+    case ALT_K7:
     case NUMPAD_7:
       ProcessMovement({ -1, -1 });
       break;
 
-    case 'w':
+    case ALT_K8:
     case NUMPAD_8:
       ProcessMovement({ 0, -1 });
       break;
 
-    case 'e':
+    case ALT_K9:
     case NUMPAD_9:
       ProcessMovement({ 1, -1 });
       break;
 
-    case 'a':
+    case ALT_K4:
     case NUMPAD_4:
       ProcessMovement({ -1, 0 });
       break;
 
-    case 's':
+    case ALT_K2:
     case NUMPAD_2:
       ProcessMovement({ 0, 1 });
       break;
 
-    case 'd':
+    case ALT_K6:
     case NUMPAD_6:
       ProcessMovement({ 1, 0 });
       break;
 
-    case 'z':
+    case ALT_K1:
     case NUMPAD_1:
       ProcessMovement({ -1, 1 });
       break;
 
-    case 'c':
+    case ALT_K3:
     case NUMPAD_3:
       ProcessMovement({ 1, 1 });
       break;
 
-    case 'x':
+    case ALT_K5:
     case NUMPAD_5:
       Printer::Instance().AddMessage("You waited...");
       _playerRef->FinishTurn();
       break;
 
-    case 'A':
+    case 'a':
     {
       if (Map::Instance().CurrentLevel->Peaceful)
       {
@@ -84,7 +84,7 @@ void MainState::HandleInput()
     }
     break;
 
-    case 'E':
+    case 'e':
       Application::Instance().ChangeState(GameStates::INVENTORY_STATE);
       break;
 
@@ -114,7 +114,7 @@ void MainState::HandleInput()
       Application::Instance().ChangeState(GameStates::HELP_STATE);
       break;
 
-    case VK_CANCEL:
+    case 'Q':
       Application::Instance().ChangeState(GameStates::EXITING_STATE);
       break;
 
@@ -153,7 +153,7 @@ void MainState::HandleInput()
       _playerRef->LevelUp();
       break;
 
-    case 'p':
+    case 'P':
       //Map::Instance().PrintMapArrayRevealedStatus();
       Map::Instance().PrintMapLayout();
       break;
@@ -178,7 +178,7 @@ void MainState::HandleInput()
     }
     break;
 
-    case 'S':
+    case 's':
       GetActorsAround();
       break;    
     #endif

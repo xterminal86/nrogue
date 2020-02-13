@@ -28,42 +28,42 @@ void LookInputState::HandleInput()
 
   switch (_keyPressed)
   {
-    case 'q':
+    case ALT_K7:
     case NUMPAD_7:
       MoveCursor(-1, -1);
       break;
 
-    case 'w':
+    case ALT_K8:
     case NUMPAD_8:
       MoveCursor(0, -1);
       break;
 
-    case 'e':
+    case ALT_K9:
     case NUMPAD_9:
       MoveCursor(1, -1);
       break;
 
-    case 'a':
+    case ALT_K4:
     case NUMPAD_4:
       MoveCursor(-1, 0);
       break;
 
-    case 'd':
+    case ALT_K6:
     case NUMPAD_6:
       MoveCursor(1, 0);
       break;
 
-    case 'z':
+    case ALT_K1:
     case NUMPAD_1:
       MoveCursor(-1, 1);
       break;
 
-    case 's':
+    case ALT_K2:
     case NUMPAD_2:
       MoveCursor(0, 1);
       break;
 
-    case 'c':
+    case ALT_K3:
     case NUMPAD_3:
       MoveCursor(1, 1);
       break;

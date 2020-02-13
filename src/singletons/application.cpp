@@ -440,11 +440,11 @@ void Application::InitCurses()
 
 void Application::ParseConfig()
 {
-  std::ifstream config("config.txt");
-  if (config.is_open())
+  std::ifstream configFile("config.txt");
+  if (configFile.is_open())
   {
     std::string line;
-    while (std::getline(config, line))
+    while (std::getline(configFile, line))
     {
       auto res = Util::StringSplit(line, '=');
       if (res.size() > 1)
@@ -453,8 +453,15 @@ void Application::ParseConfig()
       }
     }
 
-    config.close();
+    configFile.close();
   }
+
+  /*
+  for (auto& kvp : _config)
+  {
+    printf("%s = %s\n", kvp.first.data(), kvp.second.data());
+  }
+  */
 }
 
 void Application::ProcessConfig()

@@ -75,7 +75,7 @@ void MenuState::Update(bool forceUpdate)
       yOffset++;
     }
 
-    Printer::Instance().PrintFB(halfW, halfH + 2, "(press 'Enter' to start, 'Q' to exit)", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(halfW, halfH + 2, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
     Printer::Instance().PrintFB(tw - 2, th - 2, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
 
     std::string builtWith;

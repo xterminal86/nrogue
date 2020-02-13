@@ -43,7 +43,7 @@ void ExitingState::Update(bool forceUpdate)
 
     Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
                                 Printer::Instance().TerminalHeight - 1,
-                                "Exit game? (y/Q)",
+                                "Exit game? (y/q)",
                                 Printer::kAlignRight,
                                 "#FFFFFF");
 

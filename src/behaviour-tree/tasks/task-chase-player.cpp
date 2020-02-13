@@ -18,6 +18,7 @@ BTResult TaskChasePlayer::Run()
                            objPos,
                            playerPos,
                            std::vector<char>(),
+                           false,
                            true);
 
   /*

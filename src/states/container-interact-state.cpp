@@ -31,17 +31,17 @@ void ContainerInteractState::HandleInput()
 
   switch (_keyPressed)
   {
-    case 's':
+    case ALT_K2:
     case NUMPAD_2:
       _inventoryItemIndex++;
       break;
 
-    case 'w':
+    case ALT_K8:
     case NUMPAD_8:
       _inventoryItemIndex--;
       break;
 
-    case 'a':
+    case ALT_K4:
     case NUMPAD_4:
     {
       if (!_playerRef->Inventory.IsEmpty())
@@ -51,7 +51,7 @@ void ContainerInteractState::HandleInput()
     }
     break;
 
-    case 'd':
+    case ALT_K6:
     case NUMPAD_6:
     {
       if (!_containerToInteractWith->IsEmpty())

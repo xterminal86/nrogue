@@ -6,6 +6,8 @@
 class HelpState : public GameState
 {
   public:
+    HelpState();
+
     void Prepare() override;
 
     void HandleInput() override;
@@ -18,14 +20,14 @@ class HelpState : public GameState
 
     StringsArray2D _helpText =
     {
-      R"('Q' - Cancel / Close menu     )",
-      R"('A' - Attack                  )",
+      R"('q' - Cancel / Close menu     )",
+      R"('a' - Attack                  )",
       R"('f' - Fire weapon / wand      )",
       R"('i' - Interact                )",
       R"('l' - Enter "look mode"       )",
       R"('m' - Display message log     )",
       R"('@' - Display character sheet )",
-      R"('E' - Display inventory       )",
+      R"('e' - Display inventory       )",
       R"('$' - Count your money        )",
       R"('g' - Get item from the ground)",
       R"('>' - Go down the stairs      )",

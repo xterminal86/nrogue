@@ -35,11 +35,14 @@ BTResult TaskGotoLastPlayerPos::Run()
   //printf("\tplX: %i plY: %i\n\n", plX, plY);
 
   Pathfinder pf;
+  Position objPos = { _objectToControl->PosX, _objectToControl->PosY };
+  Position playerPos = { plX, plY };
   auto path = pf.BuildRoad(Map::Instance().CurrentLevel,
-                      { _objectToControl->PosX, _objectToControl->PosY },
-                      { plX, plY },
-                      std::vector<char>(),
-                      true);
+                           objPos,
+                           playerPos,
+                           std::vector<char>(),
+                           false,
+                           true);
 
   if (!path.empty())
   {

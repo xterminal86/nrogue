@@ -26,12 +26,12 @@ void InventoryState::HandleInput()
 
   switch(_keyPressed)
   {
-    case 'w':
+    case ALT_K8:
     case NUMPAD_8:
       _selectedIndex--;
       break;
 
-    case 's':
+    case ALT_K2:
     case NUMPAD_2:
       _selectedIndex++;
       break;
@@ -147,7 +147,7 @@ void InventoryState::HandleInput()
     }
     break;
 
-    case 'S':
+    case 's':
       SortInventory();
       break;
 
@@ -315,7 +315,7 @@ void InventoryState::PrintFooter()
   {
     "'i' - inspect",
     "'e' - equip",
-    "'S' - sort",
+    "'s' - sort",
     "'u' - use",
     "'d' - drop",
     "'t' - throw"

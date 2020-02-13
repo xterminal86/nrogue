@@ -51,6 +51,7 @@ class Pathfinder
                                     const Position& start,
                                     const Position& end,
                                     const std::vector<char>& mapTilesToIgnore,
+                                    bool ignoreActors = true,
                                     bool eightDirs = false,
                                     int maxPathLength = -1);
 
@@ -78,6 +79,7 @@ class Pathfinder
                     std::vector<PathNode>& openList,
                     std::vector<PathNode>& closedList,
                     const std::vector<char>& mapTilesToIgnore,
+                    bool ignoreActors,
                     bool eightDirs);
 
     bool IsNodePresent(const PathNode& n, const std::vector<PathNode>& list);

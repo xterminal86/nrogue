@@ -1,7 +1,17 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#define VK_CANCEL      'Q'
+#define VK_CANCEL      'q'
+
+#define ALT_K7         '0'
+#define ALT_K8         '-'
+#define ALT_K9         '='
+#define ALT_K4         'p'
+#define ALT_K5         '\''
+#define ALT_K6         ']'
+#define ALT_K1         ';'
+#define ALT_K2         '['
+#define ALT_K3         '\\'
 
 #ifdef USE_SDL
 

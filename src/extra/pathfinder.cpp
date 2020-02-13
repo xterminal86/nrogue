@@ -86,6 +86,7 @@ std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
                                            const Position& start,
                                            const Position& end,
                                            const std::vector<char>& mapTilesToIgnore,
+                                           bool ignoreActors,
                                            bool eightDirs,
                                            int maxPathLength)
 {
@@ -130,7 +131,7 @@ std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
       break;
     }
 
-    LookAround(mapRef, openList[index], openList, closedList, mapTilesToIgnore, eightDirs);
+    LookAround(mapRef, openList[index], openList, closedList, mapTilesToIgnore, ignoreActors, eightDirs);
 
     openList.erase(openList.begin() + index);
   }
@@ -234,6 +235,7 @@ void Pathfinder::LookAround(MapLevelBase* mapRef,
                             std::vector<PathNode>& openList,
                             std::vector<PathNode>& closedList,
                             const std::vector<char>& mapTilesToIgnore,
+                            bool ignoreActors,
                             bool eightDirs)
 {
   std::vector<Position> directions;
@@ -273,7 +275,8 @@ void Pathfinder::LookAround(MapLevelBase* mapRef,
     coordinate.Y = currentNode.Coordinate.Y + p.Y;
 
     bool walkable = true;
-    auto& staticObj = mapRef->StaticMapObjects[coordinate.X][coordinate.Y];
+
+    auto& staticObj = mapRef->StaticMapObjects[coordinate.X][coordinate.Y];    
     if (staticObj != nullptr && staticObj->Blocking)
     {
       walkable = false;
@@ -285,6 +288,18 @@ void Pathfinder::LookAround(MapLevelBase* mapRef,
       {
         walkable = false;
         break;
+      }
+    }
+
+    if (!ignoreActors)
+    {
+      for (auto& o : mapRef->ActorGameObjects)
+      {
+        if (o->PosX == coordinate.X && o->PosY == coordinate.Y)
+        {
+          walkable = false;
+          break;
+        }
       }
     }
 
