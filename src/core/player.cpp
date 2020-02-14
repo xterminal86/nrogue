@@ -682,9 +682,20 @@ void Player::KnockBack(GameObject* go, int tiles)
 
   if (canBeMoved)
   {
-    go->MoveTo(newPos);
-    go->Attrs.ActionMeter = 0;
-  }
+    ItemBonusStruct bs;
+    bs.Type = ItemBonusType::PARALYZE;
+    bs.BonusValue = 1;
+    bs.Duration = 1;
+    bs.Id = ObjectId();
+
+    go->AddEffect(bs);
+    go->FinishTurn();
+
+    if (go->IsAlive())
+    {
+      go->MoveTo(newPos);
+    }
+  }  
 }
 
 void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict)

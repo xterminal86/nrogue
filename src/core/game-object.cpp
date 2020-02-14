@@ -221,6 +221,11 @@ void GameObject::WaitForTurn()
   }
 
   Attrs.ActionMeter += speedIncrement;
+
+  if (Type != GameObjectType::PLAYER)
+  {
+    ProcessEffects();
+  }
 }
 
 bool GameObject::IsAlive()
@@ -240,7 +245,9 @@ void GameObject::FinishTurn()
   ProcessNaturalRegenHP();
   ProcessNaturalRegenMP();
 
-  ProcessEffects();
+  // Moved to WaitForTurn for GameObjects because otherwise effects processing
+  // will be done only once after player has finished his turn.
+  //ProcessEffects();
 
   if (!IsAlive())
   {
