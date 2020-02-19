@@ -847,6 +847,85 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bo
   return totalDmg;
 }
 
+std::string Player::ProcessMagicalDamage(GameObject* from, int& amount)
+{
+  std::string logMsg;
+
+  if (from == this)
+  {
+    logMsg = Util::StringFormat("You hit yourself for %i damage!", amount);
+  }
+  else
+  {
+    logMsg = Util::StringFormat("@ <= %i", amount);
+  }
+
+  int abs = GetDamageAbsorbtionValue(true);
+  amount -= abs;
+
+  if (amount < 0)
+  {
+    amount = 0;
+  }
+
+  if (HasEffect(ItemBonusType::MANA_SHIELD) && Attrs.MP.Min().Get() != 0)
+  {
+    Attrs.MP.AddMin(-amount);
+  }
+  else
+  {
+    if (Attrs.MP.Min().Get() == 0)
+    {
+      DispelEffect(ItemBonusType::MANA_SHIELD);
+    }
+
+    Attrs.HP.AddMin(-amount);
+  }
+
+  return logMsg;
+}
+
+std::string Player::ProcessPhysicalDamage(int& amount)
+{
+  std::string logMsg;
+
+  int abs = GetDamageAbsorbtionValue(false);
+  amount -= abs;
+
+  if (amount < 0)
+  {
+    amount = 0;
+  }
+
+  if (!DamageArmor(amount))
+  {
+    if (amount == 0)
+    {
+      logMsg = "@ <= 0";
+    }
+    else
+    {
+      logMsg = Util::StringFormat("@ <= %i", amount);
+    }
+
+    if (HasEffect(ItemBonusType::MANA_SHIELD) && Attrs.MP.Min().Get() != 0)
+    {
+      Attrs.MP.AddMin(-amount);
+    }
+    else
+    {
+      if (Attrs.MP.Min().Get() == 0)
+      {
+        DispelEffect(ItemBonusType::MANA_SHIELD);
+      }
+
+      Attrs.HP.AddMin(-amount);
+    }
+  }
+
+  return logMsg;
+}
+
 void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool godMode, bool suppressLog)
 {  
   if (godMode)
@@ -858,7 +937,7 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
     }
     else
     {
-      msgString = "You were hit for no damage";
+      msgString = "@ <= 0";
     }
 
     Printer::Instance().AddMessage(msgString);
@@ -868,95 +947,35 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
 
   std::string logMsg;
 
+  int dmgReturned = 0;
+
   if (isMagical)
   {
-    if (from == this)
-    {
-      logMsg = Util::StringFormat("You hit yourself for %i damage!", amount);
-    }
-    else
-    {
-      logMsg = Util::StringFormat("You were hit for %i damage", amount);
-    }
-
-    int abs = GetDamageAbsorbtionValue(true);
-    amount -= abs;
-
-    if (amount < 0)
-    {
-      amount = 0;
-    }
-
-    if (HasEffect(ItemBonusType::MANA_SHIELD) && Attrs.MP.Min().Get() != 0)
-    {
-      Attrs.MP.AddMin(-amount);
-    }
-    else
-    {
-      if (Attrs.MP.Min().Get() == 0)
-      {        
-        DispelEffect(ItemBonusType::MANA_SHIELD);
-      }
-
-      Attrs.HP.AddMin(-amount);
-    }
+    logMsg = ProcessMagicalDamage(from, amount);
   }
   else
   {
-    int abs = GetDamageAbsorbtionValue(false);
-    amount -= abs;
+    logMsg = ProcessPhysicalDamage(amount);
 
-    if (amount < 0)
-    {
-      amount = 0;
-    }
-
-    if (!DamageArmor(amount))
-    {
-      if (amount == 0)
-      {
-        logMsg = "You were hit for no damage";
-      }
-      else
-      {
-        logMsg = Util::StringFormat("You were hit for %i damage", amount);
-      }
-
-      if (HasEffect(ItemBonusType::MANA_SHIELD) && Attrs.MP.Min().Get() != 0)
-      {
-        Attrs.MP.AddMin(-amount);
-      }
-      else
-      {
-        if (Attrs.MP.Min().Get() == 0)
-        {          
-          DispelEffect(ItemBonusType::MANA_SHIELD);
-        }
-
-        Attrs.HP.AddMin(-amount);
-      }
-    }
-
-    auto thorns = GetItemsWithBonus(ItemBonusType::THORNS);
-    int dmgReturned = 0;
+    auto thorns = GetItemsWithBonus(ItemBonusType::THORNS);    
     for (auto& i : thorns)
     {
       auto b = i->Data.GetBonus(ItemBonusType::THORNS);
       float fract = (float)b->BonusValue * 0.01f;
       int dmg = (int)((float)amount * fract);
       dmgReturned += dmg;
-    }
-
-    if (dmgReturned != 0 && from != nullptr)
-    {
-      auto msg = Util::StringFormat("%s receives %i thorns damage", from->ObjectName.data(), dmgReturned);
-      from->ReceiveDamage(this, dmgReturned, false, msg);
-    }
+    }    
   }
 
   if (!suppressLog && !logMsg.empty())
   {
-    Printer::Instance().AddMessage(logMsg);
+    Printer::Instance().AddMessage(logMsg);    
+  }
+
+  if (dmgReturned != 0 && from != nullptr)
+  {
+    auto thornsLogMsg = Util::StringFormat("%s <= %i", from->ObjectName.data(), dmgReturned);
+    from->ReceiveDamage(this, dmgReturned, true, thornsLogMsg);
   }
 }
 
@@ -976,7 +995,7 @@ bool Player::DamageArmor(int amount)
     {
       int hpDamage = std::abs(armorDamage);
 
-      auto str = Util::StringFormat("You were hit for %i damage", hpDamage);
+      auto str = Util::StringFormat("@ <= %i", hpDamage);
       Printer::Instance().AddMessage(str);
 
       Attrs.HP.AddMin(-hpDamage);
@@ -984,7 +1003,7 @@ bool Player::DamageArmor(int amount)
     }
     else
     {
-      auto str = Util::StringFormat("Your armor takes %i damage", amount);
+      auto str = Util::StringFormat("@ ([) <= %i", amount);
       Printer::Instance().AddMessage(str);
 
       armor->Data.Durability.AddMin(-amount);
@@ -1014,7 +1033,7 @@ void Player::AwardExperience(int amount)
 
   Attrs.Exp.AddMin(amnt);
 
-  auto msg = Util::StringFormat("Received %i EXP", amnt);
+  auto msg = Util::StringFormat("+%i EXP", amnt);
   Printer::Instance().AddMessage(msg);
 
   if (Attrs.Exp.Min().Get() >= Attrs.Exp.Max().Get())
@@ -1642,6 +1661,7 @@ void Player::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
     case ItemBonusType::REFLECT:
     case ItemBonusType::MANA_SHIELD:
     case ItemBonusType::INVISIBILITY:
+    case ItemBonusType::THORNS:
       AddEffect(bonus);
       break;
   }
@@ -1687,6 +1707,7 @@ void Player::UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
     case ItemBonusType::REFLECT:
     case ItemBonusType::MANA_SHIELD:
     case ItemBonusType::INVISIBILITY:
+    case ItemBonusType::THORNS:
       RemoveEffect(bonus);
       break;
   }

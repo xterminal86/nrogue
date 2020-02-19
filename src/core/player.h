@@ -123,6 +123,9 @@ class Player : public GameObject
 
     void KnockBack(GameObject* go, int tiles);
 
+    std::string ProcessMagicalDamage(GameObject* from, int& amount);
+    std::string ProcessPhysicalDamage(int& amount);
+
     std::map<int, PlayerClass> _classesMap =
     {
       { 0, PlayerClass::SOLDIER  },

@@ -161,7 +161,7 @@ bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
     {
       Attrs.HP.AddMin(-amount);
 
-      auto str = Util::StringFormat("%s was hit for %i damage", ObjectName.data(), amount);
+      auto str = Util::StringFormat("%s <= %i", ObjectName.data(), amount);
       Printer::Instance().AddMessage((logMsgOverride.length() == 0) ? str : logMsgOverride);
 
       if (!IsAlive())
@@ -179,7 +179,7 @@ bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
     }
     else
     {
-      auto str = Util::StringFormat("%s was hit for no damage", ObjectName.data());
+      auto str = Util::StringFormat("%s <= 0", ObjectName.data());
       Printer::Instance().AddMessage((logMsgOverride.length() == 0) ? str : logMsgOverride);
     }
 

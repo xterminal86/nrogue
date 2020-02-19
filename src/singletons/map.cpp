@@ -60,8 +60,6 @@ void Map::UpdateGameObjects()
     return;
   }
 
-  RemoveDestroyed();
-
   CurrentLevel->TryToSpawnMonsters();
 
   for (auto& go : CurrentLevel->GameObjects)
@@ -118,6 +116,13 @@ void Map::UpdateGameObjects()
     // If there are extra turns available, perform them
     while (go->Attrs.ActionMeter >= GlobalConstants::TurnReadyValue);
   }
+
+  // If enemy is killed via thorns damage,
+  // it happens inside go->Update() (i.e. AI of enemy doing attack),
+  // so we must check for destroyed objects after all game logic updates,
+  // or we will end up with object that is not alive,
+  // but can still be attacked on player turn, killed and gained EXP for it.
+  RemoveDestroyed();
 }
 
 void Map::InsertActor(GameObject* goToInsert)
