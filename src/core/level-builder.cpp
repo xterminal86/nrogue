@@ -104,7 +104,9 @@ void LevelBuilder::RoomsMethod(const Position& mapSize,
   MapRaw = fl->MapRaw;
 }
 
-void LevelBuilder::PlaceLayout(const Position& start, const StringsArray2D& layout)
+void LevelBuilder::PlaceLayout(const Position& start,
+                               const StringsArray2D& layout,
+                               const std::vector<char>& tilesToIgnore)
 {
   int sx = start.X;
   int sy = start.Y;
@@ -118,7 +120,16 @@ void LevelBuilder::PlaceLayout(const Position& start, const StringsArray2D& layo
   {
     for (int y = sy; y < ey; y++)
     {
-      MapRaw[x][y] = layout[lx][ly];
+      const char& c = MapRaw[x][y];
+
+      // Do not replace map tile with layout tile if it is to be ignored
+      // (e.g. you don't want to accidentally replace
+      // generated dungeon hallway with walls from some custom made room layout)
+      if (std::find(tilesToIgnore.begin(), tilesToIgnore.end(), c) == tilesToIgnore.end())
+      {
+        MapRaw[x][y] = layout[lx][ly];
+      }
+
       ly++;
     }
 

@@ -179,32 +179,18 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
   int index = RNG::Instance().RandomRange(0, possibleSpots.size());
   Position p = possibleSpots[index];
 
-  // Center shrine entrance against empty spot.
-  // Also shift placement down for 1 unit to safeguard against
-  // accidental blocking of a passage, i.e.:
-  //
-  // #########     #########
-  // .........  -> ##.##....
-  // #########     #...#####
-  // #########     ../..####
-  // #########     #...#####
-  // #########     ##.######
-
-  int x = p.X - 2;
-  int y = p.Y + 1;
-
   index = RNG::Instance().RandomRange(0, GlobalConstants::ShrineLayoutsByType.size());
   auto it = GlobalConstants::ShrineLayoutsByType.begin();
   std::advance(it, index);
   ShrineType type = it->first;
   int layoutIndex = RNG::Instance().RandomRange(0, it->second.size());
   auto l = it->second[layoutIndex];
-  lb.PlaceLayout({ x, y }, l);
+  lb.PlaceLayout(p, l, { '.', ' ' });
 
   auto& sbp = lb.ShrinesByPosition();
 
   // Shrine position is always assumed to be in the center of the layout
-  sbp[{ x + 2, y + 2 }] = type;
+  sbp[{ p.X + 2, p.Y + 2 }] = type;
 }
 
 void MapLevelBase::PlaceStairs()

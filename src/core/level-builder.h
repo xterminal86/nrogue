@@ -45,7 +45,9 @@ class LevelBuilder
                      const Position& splitRatio,
                      int minRoomSize);
 
-    void PlaceLayout(const Position& start, const StringsArray2D& layout);
+    void PlaceLayout(const Position& start,
+                     const StringsArray2D& layout,
+                     const std::vector<char>& tilesToIgnore = std::vector<char>());
 
     void LogPrintMapRaw();
     void PrintMapRaw();
