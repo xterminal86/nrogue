@@ -2,6 +2,7 @@
 #define ATTRIBUTE_H
 
 #include <unordered_map>
+#include <vector>
 
 struct Attribute
 {  
@@ -18,7 +19,9 @@ struct Attribute
   int Talents = 0;
 
   private:
-    std::unordered_map<int64_t, int> _modifiersByGoId;
+    // Some items may modify stat several times (e.g. dagger gives +SKL
+    // but may also be magic that gives further modifier to SKL)
+    std::unordered_map<int64_t, std::vector<int>> _modifiersByGoId;
 
     int _originalValue = 0;
 };

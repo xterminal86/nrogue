@@ -31,6 +31,8 @@ class ItemComponent : public Component
     void AddModifiersInfo(std::vector<std::string>& res);
     void AddBonusesInfo(std::vector<std::string>& res);
 
+    void CountAllStatBonuses(std::vector<std::string>& res);
+
     // std::map is sorted by key
     std::map<int, std::pair<StatsEnum, std::string>> _allStatNames =
     {
@@ -40,6 +42,18 @@ class ItemComponent : public Component
       { 3, { StatsEnum::RES, "RES" } },
       { 4, { StatsEnum::SKL, "SKL" } },
       { 5, { StatsEnum::SPD, "SPD" } }
+    };
+
+    std::map<ItemBonusType, std::string> _bonusNameByType =
+    {
+      { ItemBonusType::STR, "STR" },
+      { ItemBonusType::DEF, "DEF" },
+      { ItemBonusType::MAG, "MAG" },
+      { ItemBonusType::RES, "RES" },
+      { ItemBonusType::SPD, "SPD" },
+      { ItemBonusType::SKL, "SKL" },
+      { ItemBonusType::HP,  "HP"  },
+      { ItemBonusType::MP,  "MP"  }
     };
 };
 

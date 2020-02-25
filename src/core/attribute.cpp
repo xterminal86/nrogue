@@ -15,7 +15,7 @@ void Attribute::Set(int value)
 
 void Attribute::AddModifier(int64_t who, int value)
 {
-  _modifiersByGoId[who] = value;
+  _modifiersByGoId[who].push_back(value);
 }
 
 void Attribute::RemoveModifier(int64_t who)
@@ -27,9 +27,12 @@ int Attribute::Get()
 {
   int res = _originalValue;
 
-  for (auto& i : _modifiersByGoId)
+  for (auto& kvp : _modifiersByGoId)
   {
-    res += i.second;
+    for (auto& v : kvp.second)
+    {
+      res += v;
+    }
   }
 
   return res;
@@ -39,9 +42,12 @@ int Attribute::GetModifiers()
 {
   int res = 0;
 
-  for (auto& i : _modifiersByGoId)
+  for (auto& kvp : _modifiersByGoId)
   {
-    res += i.second;
+    for (auto& v : kvp.second)
+    {
+      res += v;
+    }
   }
 
   return res;

@@ -115,7 +115,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
 
     void SetItemName(GameObject* go, ItemData& itemData);
     void SetMagicItemName(ItemComponent* itemRef, const std::vector<ItemBonusType>& bonusesRolled);
-    void AdjustWeaponBonuses(ItemData& itemData);
+    void BUCQualityAdjust(ItemData& itemData);
 
     size_t CalculateItemHash(ItemComponent* item);
 

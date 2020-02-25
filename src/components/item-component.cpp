@@ -258,28 +258,23 @@ void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
 }
 
 void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
-{
-  std::map<ItemBonusType, std::string> bonusNameByType =
-  {
-    { ItemBonusType::STR, "STR" },
-    { ItemBonusType::DEF, "DEF" },
-    { ItemBonusType::MAG, "MAG" },
-    { ItemBonusType::RES, "RES" },
-    { ItemBonusType::SPD, "SPD" },
-    { ItemBonusType::SKL, "SKL" },
-    { ItemBonusType::HP,  "HP"  },
-    { ItemBonusType::MP,  "MP"  }
-  };
-
+{  
   if (!Data.Bonuses.empty())
   {
     res.push_back("");
   }
 
+  // Certain items give bonus to stats by default (e.g. dagger to SKL)
+  // so to avoid several lines that show increase in the same stat
+  // because of additional bonus via magic, count them all beforehand.
+  CountAllStatBonuses(res);
+
   for (auto& i : Data.Bonuses)
   {
     switch (i.Type)
     {      
+      // Shows every entry of stat bonuses, including from item itself
+      /*
       case ItemBonusType::STR:
       case ItemBonusType::DEF:
       case ItemBonusType::MAG:
@@ -300,6 +295,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
         res.push_back(str);
       }
       break;
+      */
 
       case ItemBonusType::INDESTRUCTIBLE:
         res.push_back("Does not wear out");
@@ -394,5 +390,53 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
       }
       break;
     }
+  }  
+}
+
+void ItemComponent::CountAllStatBonuses(std::vector<std::string>& res)
+{
+  std::map<ItemBonusType, int> allStatModifiers =
+  {
+    { ItemBonusType::STR, 0 },
+    { ItemBonusType::DEF, 0 },
+    { ItemBonusType::MAG, 0 },
+    { ItemBonusType::RES, 0 },
+    { ItemBonusType::SPD, 0 },
+    { ItemBonusType::SKL, 0 }
+  };
+
+  for (auto& i : Data.Bonuses)
+  {
+    switch (i.Type)
+    {
+      case ItemBonusType::STR:
+      case ItemBonusType::DEF:
+      case ItemBonusType::MAG:
+      case ItemBonusType::RES:
+      case ItemBonusType::SPD:
+      case ItemBonusType::SKL:
+      {
+        allStatModifiers[i.Type] += i.BonusValue;
+      }
+      break;
+    }
+  }
+
+  for (auto& kvp : allStatModifiers)
+  {
+    if (kvp.second == 0)
+    {
+      continue;
+    }
+
+    std::string name = _bonusNameByType[kvp.first];
+    auto modStr = Util::StringFormat("%i", kvp.second);
+    if (kvp.second > 0)
+    {
+      modStr.insert(modStr.begin(), '+');
+    }
+
+    auto str = Util::StringFormat("%s: %s", name.data(), modStr.data());
+    res.push_back(str);
   }
 }

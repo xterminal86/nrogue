@@ -1437,7 +1437,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
   // returned via private helper method in ItemComponent
   // *** !!!
 
-  AdjustWeaponBonuses(ic->Data);
+  BUCQualityAdjust(ic->Data);
   SetItemName(go, ic->Data);
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
@@ -1798,7 +1798,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x,
   // returned via private helper method in ItemComponent
   // *** !!!
 
-  AdjustWeaponBonuses(ic->Data);
+  BUCQualityAdjust(ic->Data);
   SetItemName(go, ic->Data);
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
@@ -2973,7 +2973,7 @@ bool GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
   return true;
 }
 
-void GameObjectsFactory::AdjustWeaponBonuses(ItemData& itemData)
+void GameObjectsFactory::BUCQualityAdjust(ItemData& itemData)
 {
   switch (itemData.Prefix)
   {
