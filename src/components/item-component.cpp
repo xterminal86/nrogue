@@ -402,7 +402,9 @@ void ItemComponent::CountAllStatBonuses(std::vector<std::string>& res)
     { ItemBonusType::MAG, 0 },
     { ItemBonusType::RES, 0 },
     { ItemBonusType::SPD, 0 },
-    { ItemBonusType::SKL, 0 }
+    { ItemBonusType::SKL, 0 },
+    { ItemBonusType::HP, 0 },
+    { ItemBonusType::MP, 0 }
   };
 
   for (auto& i : Data.Bonuses)
@@ -415,6 +417,8 @@ void ItemComponent::CountAllStatBonuses(std::vector<std::string>& res)
       case ItemBonusType::RES:
       case ItemBonusType::SPD:
       case ItemBonusType::SKL:
+      case ItemBonusType::HP:
+      case ItemBonusType::MP:
       {
         allStatModifiers[i.Type] += i.BonusValue;
       }
