@@ -822,12 +822,12 @@ namespace Util
     std::string textColor = "#FFFFFF";
 
     bool isBlessed = (data.Prefix == ItemPrefix::BLESSED);
-    bool isCommon = (data.Prefix == ItemPrefix::UNCURSED);
-    bool isCursed = (data.Prefix == ItemPrefix::CURSED);
-    bool isMagic = (data.Rarity == ItemRarity::MAGIC);
-    bool isRare = (data.Rarity == ItemRarity::RARE);
-    bool isUnique = (data.Rarity == ItemRarity::UNIQUE);
-    bool isMixed = (isCursed && (isMagic || isRare));
+    bool isCommon  = (data.Prefix == ItemPrefix::UNCURSED);
+    bool isCursed  = (data.Prefix == ItemPrefix::CURSED);
+    bool isMagic   = (data.Rarity == ItemRarity::MAGIC);
+    bool isRare    = (data.Rarity == ItemRarity::RARE);
+    bool isUnique  = (data.Rarity == ItemRarity::UNIQUE);
+    bool isMixed   = (isCursed && (isMagic || isRare));
 
     // Iterate over this map and select color
     // for the first entry found with bool key == true.

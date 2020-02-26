@@ -20,6 +20,7 @@ class ShoppingState : public GameState
 
   private:
     const float _kPlayerSellRate = 2.5f;
+    const int _kJunkerBuyCost = 100;
 
     Player* _playerRef;
     TraderComponent* _shopOwner;

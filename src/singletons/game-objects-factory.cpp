@@ -1895,7 +1895,7 @@ GameObject* GameObjectsFactory::CreateAccessory(int x, int y,
   for (auto& b : bonuses)
   {
     bonusesRolled.push_back(b.Type);
-    AddBonus(ic, b);
+    AddBonus(ic, b, true);
   }
 
   if (ic->Data.Bonuses.empty())
@@ -3396,10 +3396,23 @@ void GameObjectsFactory::AddBonus(ItemComponent* itemRef, const ItemBonusStruct&
   }
 
   auto copy = bonusData;
-  if (bonusData.MoneyCostIncrease == 0)
+
+  int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusData.Type);
+
+  // If bonus is like mana shield that has no bonus value, count it only once
+  if (bonusData.BonusValue == 0)
   {
-    int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusData.Type);
     copy.MoneyCostIncrease = moneyIncrease;
+  }
+  // Negative bonus values aren't taken into account regarding total cost
+  else if (bonusData.BonusValue > 0)
+  {
+    int total = bonusData.BonusValue * moneyIncrease;
+
+    // MoneyCostIncrease is used to calculate total cost of the item
+    // in ShoppingState by accumulating all these
+    // values into one resulting variable.
+    copy.MoneyCostIncrease = total;
   }
 
   copy.Id = itemRef->OwnerGameObject->ObjectId();
@@ -3410,6 +3423,7 @@ void GameObjectsFactory::AddBonus(ItemComponent* itemRef, const ItemBonusStruct&
 
 void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bonusType)
 {
+  // No negative bonuses assumed
   int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusType);
 
   ItemBonusStruct bs;
@@ -3536,7 +3550,6 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
     break;
-
   }
 
   // TODO: should there be cursed magic / rare items or fuck it?

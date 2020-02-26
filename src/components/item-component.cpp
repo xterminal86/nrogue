@@ -403,8 +403,8 @@ void ItemComponent::CountAllStatBonuses(std::vector<std::string>& res)
     { ItemBonusType::RES, 0 },
     { ItemBonusType::SPD, 0 },
     { ItemBonusType::SKL, 0 },
-    { ItemBonusType::HP, 0 },
-    { ItemBonusType::MP, 0 }
+    { ItemBonusType::HP,  0 },
+    { ItemBonusType::MP,  0 }
   };
 
   for (auto& i : Data.Bonuses)

@@ -15,7 +15,7 @@ struct ItemBonusStruct
   bool IsCursed = false;
   bool Cumulative = false;
   bool FromItem = false;
-  uint64_t Id = 0;  
+  uint64_t Id = 0;
 };
 
 // NOTE: possible god object

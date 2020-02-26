@@ -409,7 +409,7 @@ int ShoppingState::GetCost(ItemComponent* ic, bool playerSide)
 
     if (_shopOwner->Type() == TraderRole::JUNKER)
     {
-      cost = 50;
+      cost = _kJunkerBuyCost;
     }
   }
   else
