@@ -109,7 +109,7 @@ class Player : public GameObject
 
     bool IsGameObjectBorder(GameObject* go);
 
-    bool DamageArmor(int amount);
+    bool DamageArmor(GameObject* from, int amount);
 
     void ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
     void UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
@@ -124,7 +124,7 @@ class Player : public GameObject
     void KnockBack(GameObject* go, int tiles);
 
     std::string ProcessMagicalDamage(GameObject* from, int& amount);
-    std::string ProcessPhysicalDamage(int& amount);
+    std::string ProcessPhysicalDamage(GameObject* from, int& amount);
 
     std::map<int, PlayerClass> _classesMap =
     {

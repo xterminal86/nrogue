@@ -4,6 +4,7 @@
 #include "util.h"
 #include "application.h"
 #include "printer.h"
+#include "game-objects-factory.h"
 
 ShrineComponent::ShrineComponent()
 {
@@ -261,6 +262,12 @@ void ShrineComponent::ProcessEffect()
           ic->Data.IsPrefixDiscovered = true;
           ic->Data.Prefix = ItemPrefix::UNCURSED;
           success = true;
+
+          // FIXME: cannot easily update BUC status and description:
+          // object's identified description and name are constructed
+          // during object's creation via string
+          // 'append' and 'insert' methods to existing text.
+          // GameObjectsFactory::Instance().UpdateItemName(ic);
         }
       }
 

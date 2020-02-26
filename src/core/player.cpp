@@ -857,7 +857,7 @@ std::string Player::ProcessMagicalDamage(GameObject* from, int& amount)
   }
   else
   {
-    logMsg = Util::StringFormat("@ <= %i", amount);
+    logMsg = Util::StringFormat("%s => @ (%i)", from->ObjectName.data(), amount);
   }
 
   int abs = GetDamageAbsorbtionValue(true);
@@ -885,7 +885,7 @@ std::string Player::ProcessMagicalDamage(GameObject* from, int& amount)
   return logMsg;
 }
 
-std::string Player::ProcessPhysicalDamage(int& amount)
+std::string Player::ProcessPhysicalDamage(GameObject* from, int& amount)
 {
   std::string logMsg;
 
@@ -897,15 +897,15 @@ std::string Player::ProcessPhysicalDamage(int& amount)
     amount = 0;
   }
 
-  if (!DamageArmor(amount))
+  if (!DamageArmor(from, amount))
   {
     if (amount == 0)
     {
-      logMsg = "@ <= 0";
+      logMsg = Util::StringFormat("%s => @ (%i)", from->ObjectName.data(), amount);
     }
     else
     {
-      logMsg = Util::StringFormat("@ <= %i", amount);
+      logMsg = Util::StringFormat("%s => @ (%i)", from->ObjectName.data(), amount);
     }
 
     if (HasEffect(ItemBonusType::MANA_SHIELD) && Attrs.MP.Min().Get() != 0)
@@ -937,7 +937,7 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
     }
     else
     {
-      msgString = "@ <= 0";
+      msgString = Util::StringFormat("%s => @ (0)", from->ObjectName.data());
     }
 
     Printer::Instance().AddMessage(msgString);
@@ -955,7 +955,7 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
   }
   else
   {
-    logMsg = ProcessPhysicalDamage(amount);
+    logMsg = ProcessPhysicalDamage(from, amount);
 
     auto thorns = GetItemsWithBonus(ItemBonusType::THORNS);    
     for (auto& i : thorns)
@@ -974,12 +974,12 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
 
   if (dmgReturned != 0 && from != nullptr)
   {
-    auto thornsLogMsg = Util::StringFormat("%s <= %i", from->ObjectName.data(), dmgReturned);
+    auto thornsLogMsg = Util::StringFormat("@ => %s (%i)", from->ObjectName.data(), dmgReturned);
     from->ReceiveDamage(this, dmgReturned, true, thornsLogMsg);
   }
 }
 
-bool Player::DamageArmor(int amount)
+bool Player::DamageArmor(GameObject* from, int amount)
 {
   ItemComponent* armor = EquipmentByCategory[EquipmentCategory::TORSO][0];
   if (armor != nullptr)
@@ -995,7 +995,7 @@ bool Player::DamageArmor(int amount)
     {
       int hpDamage = std::abs(armorDamage);
 
-      auto str = Util::StringFormat("@ <= %i", hpDamage);
+      auto str = Util::StringFormat("%s => @ (%i)", from->ObjectName.data(), hpDamage);
       Printer::Instance().AddMessage(str);
 
       Attrs.HP.AddMin(-hpDamage);
@@ -1003,7 +1003,7 @@ bool Player::DamageArmor(int amount)
     }
     else
     {
-      auto str = Util::StringFormat("@ ([) <= %i", amount);
+      auto str = Util::StringFormat("%s => [ (%i)", from->ObjectName.data(), amount);
       Printer::Instance().AddMessage(str);
 
       armor->Data.Durability.AddMin(-amount);

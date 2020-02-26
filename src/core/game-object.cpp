@@ -155,13 +155,15 @@ bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
     objName = (ic->Data.IsIdentified) ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
   }
 
+  std::string who = (from->Type == GameObjectType::PLAYER) ? "@" : from->ObjectName;
+
   if (!Attrs.Indestructible)
   {
     if (amount != 0)
     {
       Attrs.HP.AddMin(-amount);
 
-      auto str = Util::StringFormat("%s <= %i", ObjectName.data(), amount);
+      auto str = Util::StringFormat("%s => %s (%i)", who.data(), objName.data(), amount);
       Printer::Instance().AddMessage((logMsgOverride.length() == 0) ? str : logMsgOverride);
 
       if (!IsAlive())
@@ -179,7 +181,7 @@ bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
     }
     else
     {
-      auto str = Util::StringFormat("%s <= 0", ObjectName.data());
+      auto str = Util::StringFormat("%s => %s (0)", who.data(), ObjectName.data());
       Printer::Instance().AddMessage((logMsgOverride.length() == 0) ? str : logMsgOverride);
     }
 

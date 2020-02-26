@@ -4,6 +4,7 @@
 #include "printer.h"
 #include "map.h"
 #include "town-portal-component.h"
+#include "game-objects-factory.h"
 
 void SpellsProcessor::Init()
 {
@@ -589,6 +590,9 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
       item->Data.IsPrefixDiscovered = true;
       item->Data.Prefix = ItemPrefix::UNCURSED;
 
+      // Check comments in ShrineComponent::ProcessEffect()
+      //GameObjectsFactory::Instance().UpdateItemName(item);
+
       Printer::Instance().AddMessage("The malevolent energy disperses!");
     }
     else
@@ -609,6 +613,9 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
         ic->Data.IsPrefixDiscovered = true;
         ic->Data.Prefix = ItemPrefix::UNCURSED;
         success = true;
+
+        // Check comments in ShrineComponent::ProcessEffect()
+        //GameObjectsFactory::Instance().UpdateItemName(ic);
       }
     }
 
