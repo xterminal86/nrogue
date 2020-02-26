@@ -46,8 +46,7 @@ class LevelBuilder
                      int minRoomSize);
 
     void PlaceLayout(const Position& start,
-                     const StringsArray2D& layout,
-                     const std::vector<char>& tilesToIgnore = std::vector<char>());
+                     const StringsArray2D& layout);
 
     void LogPrintMapRaw();
     void PrintMapRaw();

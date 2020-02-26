@@ -771,6 +771,8 @@ namespace GlobalConstants
     }
   };
 
+  // Different game levels may create different themed
+  // tiles in place of '.' or ' '
   const std::vector<StringsArray2D> ShrineLayouts =
   {
     // 0

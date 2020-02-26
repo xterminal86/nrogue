@@ -173,6 +173,7 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
   // Just in case
   if (possibleSpots.empty())
   {
+    //printf("couldn't find possible spots!\n");
     return;
   }
 
@@ -185,7 +186,7 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
   ShrineType type = it->first;
   int layoutIndex = RNG::Instance().RandomRange(0, it->second.size());
   auto l = it->second[layoutIndex];
-  lb.PlaceLayout(p, l, { '.', ' ' });
+  lb.PlaceLayout(p, l);
 
   auto& sbp = lb.ShrinesByPosition();
 

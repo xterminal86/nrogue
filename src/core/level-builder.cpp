@@ -105,8 +105,7 @@ void LevelBuilder::RoomsMethod(const Position& mapSize,
 }
 
 void LevelBuilder::PlaceLayout(const Position& start,
-                               const StringsArray2D& layout,
-                               const std::vector<char>& tilesToIgnore)
+                               const StringsArray2D& layout)
 {
   int sx = start.X;
   int sy = start.Y;
@@ -120,21 +119,34 @@ void LevelBuilder::PlaceLayout(const Position& start,
   {
     for (int y = sy; y < ey; y++)
     {
-      const char& c = MapRaw[x][y];
+      const char& l = layout[ly][lx];
 
-      // Do not replace map tile with layout tile if it is to be ignored
-      // (e.g. you don't want to accidentally replace
-      // generated dungeon hallway with walls from some custom made room layout)
-      if (std::find(tilesToIgnore.begin(), tilesToIgnore.end(), c) == tilesToIgnore.end())
-      {
-        MapRaw[x][y] = layout[lx][ly];
-      }
+      MapRaw[x][y] = l;
 
       ly++;
     }
 
     lx++;
     ly = 0;
+  }
+
+  // Ensure shrine is always accessible
+  // by constructing perimeter of empty cells around it.
+  //
+  // Kinda cheating, since it won't always look fitting
+  // to the generated level design but I don't want
+  // to mull over other methods and it's better than
+  // accidental blocking of level paths.
+  for (int x = sx - 1; x < ex + 1; x++)
+  {
+    MapRaw[x][sy - 1] = '.';
+    MapRaw[x][ey]     = '.';
+  }
+
+  for (int y = sy - 1; y < ey + 1; y++)
+  {
+    MapRaw[sx - 1][y] = '.';
+    MapRaw[ex][y]     = '.';
   }
 }
 

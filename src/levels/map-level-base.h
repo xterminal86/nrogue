@@ -95,6 +95,7 @@ class MapLevelBase
     Player* _playerRef;
 
     int _respawnCounter = 0;
+    int _shrineRollChance = 50;
 
     virtual void CreateLevel();
     virtual void ConstructFromBuilder(LevelBuilder& lb);

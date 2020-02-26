@@ -81,7 +81,7 @@ void MapLevelCaves::CreateLevel()
 
   if (MapType_ != MapType::CAVES_5)
   {
-    if (Util::Rolld100(50))
+    if (Util::Rolld100(_shrineRollChance))
     {
       PlaceRandomShrine(lb);
     }

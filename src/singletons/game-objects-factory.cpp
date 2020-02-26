@@ -2305,6 +2305,7 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
   copy->Attrs               = copyFrom->Attrs;
   copy->HealthRegenTurns    = copyFrom->HealthRegenTurns;
   copy->Type                = copyFrom->Type;
+  copy->IsLiving            = copyFrom->IsLiving;
 
   copy->_activeEffects           = copyFrom->_activeEffects;
   copy->_previousCell            = copyFrom->_previousCell;

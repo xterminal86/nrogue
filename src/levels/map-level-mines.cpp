@@ -311,7 +311,7 @@ void MapLevelMines::CreateLevel()
 
   if (MapType_ != MapType::MINES_5)
   {
-    if (Util::Rolld100(50))
+    if (Util::Rolld100(_shrineRollChance))
     {
       PlaceRandomShrine(lb);
     }

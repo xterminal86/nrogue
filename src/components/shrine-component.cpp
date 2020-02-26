@@ -294,11 +294,16 @@ void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
 
   if (b.Type == ItemBonusType::REGEN
    || b.Type == ItemBonusType::POISONED
-   || b.Type == ItemBonusType::PARALYZE)
+   || b.Type == ItemBonusType::PARALYZE
+   || b.Type == ItemBonusType::BURNING)
   {
     b.Cumulative = true;
     b.BonusValue = (b.Type == ItemBonusType::POISONED) ? -1 : 1;
     b.Period = Timeout / 10;
+  }
+  else if (b.Type == ItemBonusType::BLINDNESS)
+  {
+    b.BonusValue = -power;
   }
 
   playerRef.AddEffect(b);
@@ -359,8 +364,14 @@ void ShrineComponent::ApplyRandomNegativeEffect(std::string& logMessageToWrite)
     b.BonusValue = 1;
   }
 
+  if (t == ItemBonusType::BLINDNESS)
+  {
+    b.BonusValue = -power;
+  }
+
   if (t == ItemBonusType::POISONED
-   || t == ItemBonusType::PARALYZE)
+   || t == ItemBonusType::PARALYZE
+   || t == ItemBonusType::BURNING)
   {
     b.Cumulative = true;
     b.Period = Timeout / 10;
@@ -470,6 +481,10 @@ void ShrineComponent::SetEffectGainMessage(std::string& logMessageToWrite,
 
     case ItemBonusType::BLINDNESS:
       logMessageToWrite = "You can't see!";
+      break;
+
+    case ItemBonusType::INVISIBILITY:
+      logMessageToWrite = "You can see through yourself!";
       break;
   }
 }
