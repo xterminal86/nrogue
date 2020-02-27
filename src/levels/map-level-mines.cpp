@@ -517,7 +517,7 @@ void MapLevelMines::CreateRandomBarrels()
 
   auto emptyCellsCopy = _emptyCells;
 
-  int maxAttempts = 10;
+  int maxAttempts = 5;
   int maxBarrels = 8;
 
   for (int i = 0; i < maxAttempts; i++)
@@ -541,7 +541,7 @@ void MapLevelMines::CreateRandomBarrels()
     {
       // res.size() is a minimum required square to put numBarrels into,
       // which may be significantly larger than amount of barrels to create
-      // (e.g. 10 barrels can only fit in 5x5=25 in-game square area),
+      // (e.g. 10 barrels can only fit in 5x5=25 square area around point),
       // so we need to check the number of barrels created so far separately.
       int created = 0;
       for (auto& p : res)

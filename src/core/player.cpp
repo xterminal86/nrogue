@@ -806,9 +806,10 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bo
 {
   int totalDmg = 0;
 
+  // Unarmed strike
   if (weapon == nullptr)
   {
-    totalDmg = Util::RollDamage(1, 4);
+    totalDmg = Util::RollDamage(1, 2);
     totalDmg += Attrs.Str.Get() - defender->Attrs.Def.Get();
 
     if (totalDmg <= 0)
@@ -820,7 +821,7 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bo
   {    
     // Melee attack with ranged weapon in hand fallbacks to 1d4 "punch"
     int weaponDamage = meleeAttackWithRangedWeapon
-                       ? Util::RollDamage(1, 4)
+                       ? Util::RollDamage(1, 2)
                        : Util::RollDamage(weapon->Data.Damage.Min().Get(),
                                           weapon->Data.Damage.Max().Get());
 

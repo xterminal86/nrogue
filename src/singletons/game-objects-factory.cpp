@@ -3035,8 +3035,8 @@ void GameObjectsFactory::BUCQualityAdjust(ItemData& itemData)
       float durF = (float)itemData.Durability.Max().Get() * 1.5f;
       itemData.Durability.Reset((int)durF);
 
-      int oldMin = itemData.Damage.Min().OriginalValue();
-      itemData.Damage.SetMin(oldMin + 1);
+      //int oldMin = itemData.Damage.Min().OriginalValue();
+      //itemData.Damage.SetMin(oldMin + 1);
     }
     break;
 
@@ -3044,8 +3044,8 @@ void GameObjectsFactory::BUCQualityAdjust(ItemData& itemData)
     {
       int dur = itemData.Durability.Max().Get();
       itemData.Durability.Reset(dur * 2);
-      itemData.Damage.AddMax(1);
-      itemData.Damage.AddMin(1);
+      //itemData.Damage.AddMax(1);
+      //itemData.Damage.AddMin(1);
     }
     break;
   }
