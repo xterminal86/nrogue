@@ -39,7 +39,9 @@
 // packages installed.
 int main(int argc, char* argv[])
 {
-  RNG::Instance().Init();
+  RNG::Instance().Init();    
+  //RNG::Instance().SetSeed("CAFEBABE");
+  //RNG::Instance().SetSeed("DEADBEEF");
   //RNG::Instance().SetSeed(1547020537474375167);
   //RNG::Instance().SetSeed(1);
   //RNG::Instance().SetSeed(1544714037606745311);

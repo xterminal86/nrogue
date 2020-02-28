@@ -609,6 +609,7 @@ namespace GlobalConstants
   extern const std::string Base64Chars;
   extern const std::string Tileset8x16Base64;
   extern const std::string IconBase64;
+  extern const std::string HexChars;
 
   extern const std::string AlphabetUppercase;
   extern const std::string AlphabetLowercase;

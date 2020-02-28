@@ -221,7 +221,7 @@ void MainState::Update(bool forceUpdate)
 
     Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1, 0, Map::Instance().CurrentLevel->LevelName, Printer::kAlignRight, "#FFFFFF");
 
-    _debugInfo = Util::StringFormat("World seed: %lu", RNG::Instance().Seed);
+    _debugInfo = Util::StringFormat("World seed: %lu (0x%X)", RNG::Instance().Seed, RNG::Instance().Seed);
     Printer::Instance().PrintFB(0, 0, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
     #ifdef DEBUG_BUILD

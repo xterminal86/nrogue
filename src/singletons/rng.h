@@ -12,6 +12,7 @@ class RNG : public Singleton<RNG>
     void Init() override;
 
     void SetSeed(unsigned long long seed);
+    void SetSeed(const std::string& hexValue);
 
     int RandomRange(int min, int max);
 
