@@ -245,6 +245,9 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
+  auto wand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::GOLDEN_7, SpellType::LASER, ItemPrefix::UNCURSED);
+  InsertGameObject(wand);
+
   /*
   // *** FIXME: debug
 
@@ -276,9 +279,6 @@ void MapLevelTown::CreateLevel()
     auto ring = GameObjectsFactory::Instance().CreateAccessory(1 + i, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, q);
     InsertGameObject(ring);
   }
-
-  //auto wand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::GOLDEN_7, SpellType::LASER, ItemPrefix::UNCURSED);
-  //InsertGameObject(wand);
   */
 
   /*

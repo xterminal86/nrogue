@@ -527,6 +527,7 @@ void MainState::ProcessWand(ItemComponent* wand)
         break;
 
       case SpellType::FIREBALL:
+      case SpellType::LIGHTNING:
       case SpellType::STRIKE:
       case SpellType::MAGIC_MISSILE:
       case SpellType::TELEPORT:

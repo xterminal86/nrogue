@@ -628,11 +628,10 @@ void TargetState::DrawHint()
 
       bool isCellBlocking = Map::Instance().CurrentLevel->IsCellBlocking(p);
       bool isThrowing = (_throwingItemInventoryIndex != -1);      
-      bool isLaser = (_weaponRef->Data.SpellHeld == SpellType::LASER);
       bool isThrowingOk = ((!isThrowing && d > _weaponRef->Data.Range)
                          || (isThrowing && d > _maxThrowingRange));
 
-      if (!isLaser && (actorPresent || isCellBlocking || isThrowingOk))
+      if (actorPresent || isCellBlocking || isThrowingOk)
       {
         break;
       }
