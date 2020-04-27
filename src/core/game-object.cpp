@@ -621,7 +621,7 @@ void GameObject::LevelUp(int baseHpOverride)
 
 bool GameObject::CanRaiseAttribute(Attribute& attr)
 {
-  bool customChance = (attr.RaiseProbability > 0);
+  bool customChance = (attr.RaiseProbability >= 0);
   int chance = customChance ? attr.RaiseProbability : GlobalConstants::AttributeMinimumRaiseChance;
 
   if (!customChance)
