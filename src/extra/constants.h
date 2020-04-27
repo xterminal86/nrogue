@@ -35,6 +35,8 @@
 
   #define KEY_DOWN     SDLK_DOWN
   #define KEY_UP       SDLK_UP  
+  #define KEY_RIGHT    SDLK_RIGHT
+  #define KEY_LEFT     SDLK_LEFT
 
 #else
 
@@ -110,6 +112,7 @@ enum class GameStates
   MENU_STATE,
   MAIN_STATE,
   SELECT_CLASS_STATE,
+  CUSTOM_CLASS_STATE,
   ENTER_NAME_STATE,
   INTRO_STATE,
   HELP_STATE,
@@ -231,6 +234,18 @@ enum class PlayerSkills
   REPAIR,       // Use repair kit to repair a weapon (starting for Soldier)
   SPELLCASTING, // Allows character to cast spells (starting for Arcanist)
   AWARENESS     // Autodetect traps (starting for Thief)
+};
+
+enum class PlayerStats
+{
+  STR = 0,
+  DEF,
+  MAG,
+  RES,
+  SKL,
+  SPD,
+  HP,
+  MP
 };
 
 enum class EquipmentCategory
@@ -680,6 +695,7 @@ namespace GlobalConstants
   extern const std::map<GameObjectType, std::map<ItemType, int>> LootTable;
   extern const std::map<GameObjectType, std::map<FoodType, int>> FoodLootTable;
   extern const std::map<ItemType, int> PotionsWeightTable;
+  extern const std::map<PlayerStats, std::string> StatNameByType;
   extern const std::map<ItemType, std::string> PotionNameByType;
   extern const std::map<ItemType, std::string> StatNameByPotionType;
   extern const std::map<std::string, ItemType> PotionTypeByStatName;

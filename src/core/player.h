@@ -84,6 +84,7 @@ class Player : public GameObject
     void SetSoldierAttrs();
     void SetThiefAttrs();
     void SetArcanistAttrs();
+    void SetCustomClassAttrs();
 
     void ProcessKill(GameObject* monster);
 

@@ -22,8 +22,14 @@ void SelectClassState::HandleInput()
       break;
 
     case VK_ENTER:
-      // TODO: enter name, distribute talents if custom class is chosen
-      Application::Instance().ChangeState(GameStates::ENTER_NAME_STATE);
+      if (_menuIndex == 3)
+      {
+        Application::Instance().ChangeState(GameStates::CUSTOM_CLASS_STATE);
+      }
+      else
+      {
+        Application::Instance().ChangeState(GameStates::ENTER_NAME_STATE);
+      }
       break;
 
     case VK_CANCEL:

@@ -9,6 +9,7 @@
 #include "ai-npc.h"
 #include "application.h"
 #include "spells-database.h"
+#include "custom-class-state.h"
 
 void Player::Init()
 {
@@ -272,9 +273,8 @@ void Player::SetAttributes()
       SetArcanistAttrs();
       break;
 
-    default:
-      // TODO: custom class defaults to soldier for now
-      SetSoldierAttrs();
+    case PlayerClass::CUSTOM:
+      SetCustomClassAttrs();
       break;
   }  
 }
@@ -337,6 +337,13 @@ void Player::SetArcanistAttrs()
   HealthRegenTurns = 80;
 }
 
+void Player::SetCustomClassAttrs()
+{
+  GameState* stateRef = Application::Instance().GetGameStateRefByName(GameStates::CUSTOM_CLASS_STATE);
+  CustomClassState* ccs = static_cast<CustomClassState*>(stateRef);
+  ccs->InitPlayerAttributes(this);
+}
+
 void Player::SetDefaultEquipment()
 {
   EquipmentByCategory[EquipmentCategory::HEAD]   = { nullptr };
@@ -394,6 +401,25 @@ void Player::SetDefaultEquipment()
       Inventory.AddToInventory(wand);
 
       weaponAndArmorToEquip.push_back(weapon);
+    }
+    break;
+
+    case PlayerClass::CUSTOM:
+    {
+      weapon = GameObjectsFactory::Instance().CreateRandomWeapon();
+      Inventory.AddToInventory(weapon);
+
+      armor = GameObjectsFactory::Instance().CreateRandomArmor();
+      Inventory.AddToInventory(armor);
+
+      auto acc = GameObjectsFactory::Instance().CreateRandomAccessory(0, 0);
+      Inventory.AddToInventory(acc);
+
+      auto potion = GameObjectsFactory::Instance().CreateRandomPotion();
+      Inventory.AddToInventory(potion);
+
+      auto gem = GameObjectsFactory::Instance().CreateGem(0, 0);
+      Inventory.AddToInventory(gem);
     }
     break;
   }

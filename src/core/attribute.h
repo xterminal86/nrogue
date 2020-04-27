@@ -18,6 +18,9 @@ struct Attribute
 
   int Talents = 0;
 
+  // For "custom" class, percentage of stat raise during level up
+  int RaiseProbability = -1;
+
   private:
     // Some items may modify stat several times (e.g. dagger gives +SKL
     // but may also be magic that gives further modifier to SKL)

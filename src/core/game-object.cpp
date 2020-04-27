@@ -621,17 +621,21 @@ void GameObject::LevelUp(int baseHpOverride)
 
 bool GameObject::CanRaiseAttribute(Attribute& attr)
 {
-  int chance = GlobalConstants::AttributeMinimumRaiseChance;
+  bool customChance = (attr.RaiseProbability > 0);
+  int chance = customChance ? attr.RaiseProbability : GlobalConstants::AttributeMinimumRaiseChance;
 
-  int iterations = attr.Talents;
-  for (int i = 0; i < iterations; i++)
+  if (!customChance)
   {
-    if (Util::Rolld100(chance))
+    int iterations = attr.Talents;
+    for (int i = 0; i < iterations; i++)
     {
-      return true;
-    }
+      if (Util::Rolld100(chance))
+      {
+        return true;
+      }
 
-    chance += GlobalConstants::AttributeIncreasedRaiseStep;
+      chance += GlobalConstants::AttributeIncreasedRaiseStep;
+    }
   }
 
   return Util::Rolld100(chance);

@@ -19,8 +19,8 @@ class SelectClassState : public GameState
     {
       " Soldier  ",
       "  Thief   ",
-      " Arcanist "
-      //"  No one  "  // FIXME: remove?
+      " Arcanist ",
+      "  No one  "
     };
 };
 

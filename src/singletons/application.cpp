@@ -4,6 +4,7 @@
 #include "info-state.h"
 #include "menu-state.h"
 #include "select-class-state.h"
+#include "custom-class-state.h"
 #include "enter-name-state.h"
 #include "intro-state.h"
 #include "inventory-state.h"
@@ -626,6 +627,7 @@ void Application::InitGameStates()
   RegisterState<AttackState>           (GameStates::ATTACK_STATE);
   RegisterState<MenuState>             (GameStates::MENU_STATE);
   RegisterState<SelectClassState>      (GameStates::SELECT_CLASS_STATE);
+  RegisterState<CustomClassState>      (GameStates::CUSTOM_CLASS_STATE);
   RegisterState<EnterNameState>        (GameStates::ENTER_NAME_STATE);
   RegisterState<IntroState>            (GameStates::INTRO_STATE);
   RegisterState<InventoryState>        (GameStates::INVENTORY_STATE);

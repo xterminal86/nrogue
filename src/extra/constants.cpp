@@ -171,6 +171,18 @@ namespace GlobalConstants
     { ItemType::EXP_POTION,     5  }
   };
 
+  const std::map<PlayerStats, std::string> StatNameByType =
+  {
+    { PlayerStats::STR, "STR" },
+    { PlayerStats::DEF, "DEF" },
+    { PlayerStats::MAG, "MAG" },
+    { PlayerStats::RES, "RES" },
+    { PlayerStats::SKL, "SKL" },
+    { PlayerStats::SPD, "SPD" },
+    { PlayerStats::HP,  "HP" },
+    { PlayerStats::MP,  "MP" }
+  };
+
   const std::map<ItemType, std::string> PotionNameByType =
   {
     { ItemType::HEALING_POTION, "Healing Potion" },
