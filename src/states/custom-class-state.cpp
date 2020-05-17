@@ -33,7 +33,7 @@ void CustomClassState::Prepare()
 
   for (auto& kvp : _statDataByType)
   {
-    _statStringByType[kvp.first] = GetStringForStat(kvp.first);
+    _statStringByType[kvp.first] = GetStringsForStat(kvp.first);
   }
 }
 
@@ -139,13 +139,14 @@ void CustomClassState::Update(bool forceUpdate)
 
     for (auto& kvp : _statDataByType)
     {
-      _statStringByType[kvp.first] = GetStringForStat(kvp.first);
+      _statStringByType[kvp.first] = GetStringsForStat(kvp.first);
     }
 
     int count = 0;
     for (auto& kvp : _statStringByType)
     {
-      Printer::Instance().PrintFB(_hw, _startY + 2 + count, kvp.second.data(), Printer::kAlignCenter, "#FFFFFF");
+      Printer::Instance().PrintFB(_hw - 7, _startY + 2 + count, kvp.second.first.data(), Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(_hw + 2, _startY + 2 + count, kvp.second.second.data(), Printer::kAlignLeft, "#FFFFFF");
       count++;
 
       // Additional space between base stats and HP MP
@@ -173,15 +174,16 @@ void CustomClassState::Update(bool forceUpdate)
   }
 }
 
-std::string CustomClassState::GetStringForStat(PlayerStats statType)
+sspair CustomClassState::GetStringsForStat(PlayerStats statType)
 {
-  std::string res;
+  sspair res;
 
   std::string statName = GlobalConstants::StatNameByType.at(statType);
 
   if (statType != PlayerStats::HP && statType != PlayerStats::MP)
   {
-    res = Util::StringFormat("%s:  %i   (%i%)", statName.data(), _statDataByType[statType].first, _statDataByType[statType].second);
+    res.first  = Util::StringFormat("%s:  %i  ", statName.data(), _statDataByType[statType].first);
+    res.second = Util::StringFormat("(%i%)", _statDataByType[statType].second);
   }
   else
   {
@@ -191,7 +193,8 @@ std::string CustomClassState::GetStringForStat(PlayerStats statType)
       stars[i] = '*';
     }
 
-    res = Util::StringFormat("%s:  %i  (%s)", statName.data(), _statDataByType[statType].first, stars.data());
+    res.first = Util::StringFormat("%s:  %i  ", statName.data(), _statDataByType[statType].first);
+    res.second = Util::StringFormat("(%s)", stars.data());
   }
 
   return res;
@@ -330,12 +333,12 @@ void CustomClassState::InitPlayerAttributes(Player* playerRef)
 
   playerRef->Attrs.HungerSpeed.Set(1);
 
-  // FIXME:
-  playerRef->Attrs.HungerRate.Set(1750);
-  playerRef->HealthRegenTurns = 60;
-
   // TODO:
   // HungerRate
   // HealthRegenTurns
   // Skills
+
+  // FIXME:
+  playerRef->Attrs.HungerRate.Set(1750);
+  playerRef->HealthRegenTurns = 60;  
 }

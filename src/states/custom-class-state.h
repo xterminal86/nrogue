@@ -5,6 +5,8 @@
 
 class Player;
 
+using sspair = std::pair<std::string, std::string>;
+
 class CustomClassState : public GameState
 {
   public:
@@ -17,11 +19,11 @@ class CustomClassState : public GameState
     void InitPlayerAttributes(Player* playerRef);
 
   private:
-    const int kBaseStatCost = 10;
+    const int kBaseStatCost = 25;
     const int kGrowthRateCost = 1;
     const int kGrowthRateCostShift = 5;
-    const int kTalentCost = 5;
-    const int kStartingPoints = 150;
+    const int kTalentCost = 10;
+    const int kStartingPoints = 300;
 
     int _points = kStartingPoints;
 
@@ -44,7 +46,7 @@ class CustomClassState : public GameState
     bool _warning = false;
     bool _displayWarning = false;
 
-    std::map<PlayerStats, std::string> _statStringByType;
+    std::map<PlayerStats, sspair> _statStringByType;
     std::map<PlayerStats, std::pair<int, int>> _statDataByType;
 
     std::map<int, PlayerStats> _playerStatByCursorRows =
@@ -59,7 +61,7 @@ class CustomClassState : public GameState
       { 7, PlayerStats::MP  }
     };
 
-    std::string GetStringForStat(PlayerStats statType);
+    sspair GetStringsForStat(PlayerStats statType);
     void ModifyStat(bool isIncreasing, bool shiftPressed);
 
     int GetHp();
