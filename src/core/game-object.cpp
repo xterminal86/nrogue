@@ -394,7 +394,9 @@ void GameObject::UnapplyEffect(const ItemBonusStruct& e)
 
 void GameObject::RemoveEffect(const ItemBonusStruct& t)
 {
-  for (int i = 0; i < _activeEffects.size(); i++)
+  // Loop goes from end to start to avoid potential skipping
+  // during erasing when there are adjacent elements.
+  for (int i = _activeEffects.size() - 1; i >= 0; i--)
   {
     auto it = _activeEffects.begin();
     std::advance(it, i);
@@ -419,7 +421,7 @@ void GameObject::RemoveEffect(const ItemBonusStruct& t)
 
 void GameObject::DispelEffect(const ItemBonusType& t)
 {
-  for (int i = 0; i < _activeEffects.size(); i++)
+  for (int i = _activeEffects.size() - 1; i >= 0; i--)
   {
     auto it = _activeEffects.begin();
     std::advance(it, i);
@@ -459,13 +461,13 @@ bool GameObject::HasEffect(const ItemBonusType& t)
 
 void GameObject::ProcessEffects()
 {
-  for (int i = 0; i < _activeEffects.size(); i++)
+  for (int i = _activeEffects.size() - 1; i >= 0; i--)
   {
     auto it = _activeEffects.begin();
     std::advance(it, i);
 
     auto& v = _activeEffects[it->first];
-    for (int j = 0; j < v.size(); j++)
+    for (int j = v.size() - 1; j >= 0; j--)
     {
       if (v[j].Duration > 0)
       {

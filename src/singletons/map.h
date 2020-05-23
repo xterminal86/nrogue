@@ -58,6 +58,8 @@ class Map : public Singleton<Map>
     void DrawGameObjects();
     void DrawActors();
 
+    void EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list);
+
     Player* _playerRef;    
 
     friend class IntroState;    

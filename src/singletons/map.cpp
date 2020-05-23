@@ -253,36 +253,10 @@ void Map::RemoveDestroyed()
   }
 
   // Check if globally updated objects need to be destroyed
-
-  for (int i = 0; i < CurrentLevel->GameObjects.size(); i++)
-  {
-    if (CurrentLevel->GameObjects[i] != nullptr &&
-        CurrentLevel->GameObjects[i]->IsDestroyed)
-    {
-      int x = CurrentLevel->GameObjects[i]->PosX;
-      int y = CurrentLevel->GameObjects[i]->PosY;
-
-      CurrentLevel->MapArray[x][y]->Occupied = false;
-
-      CurrentLevel->GameObjects.erase(CurrentLevel->GameObjects.begin() + i);
-    }
-  }
+  EraseFromCollection(CurrentLevel->GameObjects);
 
   // Check if actors need to be destroyed
-
-  for (int i = 0; i < CurrentLevel->ActorGameObjects.size(); i++)
-  {
-    if (CurrentLevel->ActorGameObjects[i] != nullptr &&
-        CurrentLevel->ActorGameObjects[i]->IsDestroyed)
-    {
-      int x = CurrentLevel->ActorGameObjects[i]->PosX;
-      int y = CurrentLevel->ActorGameObjects[i]->PosY;
-
-      CurrentLevel->MapArray[x][y]->Occupied = false;
-
-      CurrentLevel->ActorGameObjects.erase(CurrentLevel->ActorGameObjects.begin() + i);
-    }
-  }
+  EraseFromCollection(CurrentLevel->ActorGameObjects);
 }
 
 void Map::ChangeLevel(MapType levelToChange, bool goingDown)
@@ -832,4 +806,49 @@ void Map::DrawActors()
       go->Draw(go->FgColor, bgColor);
     }
   }
+}
+
+void Map::EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list)
+{
+  // It's dangerous to iterate over collection from start to end using plain for loop
+  // to remove elements that satisfy certain condition, because it is possible to skip
+  // some of them if such elements happen to be adjacent. E.g.:
+  //
+  // i: 0  1  2  3
+  //  { 1, 2, 2, 4 }
+  //
+  // If we were to erase every element that equals 2 using for loop,
+  // we'll get these iterations:
+  //
+  // i = 0 -> 1
+  // i = 1 -> 2 -> erase() -> now elements are shifted and are now like this:
+  //
+  // i: 0  1  2
+  //   {1, 2, 4 }
+  //
+  // Next index is 2 which equals to element 4, thus we missed another 2.
+  //
+  // The recommended way is to use so-called "erase-remove" idiom by utilizing
+  // STL algorithms.
+  // Or use ye olde C-style way by iterating over collection
+  // from end to start.
+
+  auto newBegin = std::remove_if(list.begin(),
+                                  list.end(),
+                                  [this](const std::unique_ptr<GameObject>& go)
+                                  {
+                                     if (go != nullptr && go->IsDestroyed)
+                                     {
+                                       int x = go->PosX;
+                                       int y = go->PosY;
+
+                                       CurrentLevel->MapArray[x][y]->Occupied = false;
+
+                                       return true;
+                                     }
+
+                                     return false;
+                                   });
+
+  list.erase(newBegin, list.end());
 }

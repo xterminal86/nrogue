@@ -1429,6 +1429,7 @@ void Player::ProcessEffectsPlayer()
   {
     if (Util::Rolld100(50))
     {
+      // One-time deletion, can leave "forward" loop iteration
       for (int i = 0; i < Inventory.Contents.size(); i++)
       {
         ItemComponent* ic = Inventory.Contents[i]->GetComponent<ItemComponent>();
@@ -1758,6 +1759,7 @@ void Player::BreakItem(ItemComponent* ic, bool suppressMessage)
 
   EquipmentCategory ec = ic->Data.EqCategory;
 
+  // One-time deletion, can leave "forward" loop iteration
   for (int i = 0; i < Inventory.Contents.size(); i++)
   {
     auto c = Inventory.Contents[i]->GetComponent<ItemComponent>();
