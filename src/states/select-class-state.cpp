@@ -11,13 +11,17 @@ void SelectClassState::HandleInput()
   {
     case ALT_K2:
     case NUMPAD_2:
+    #ifdef USE_SDL2
     case KEY_DOWN:
+    #endif
       _menuIndex++;
       break;
 
     case ALT_K8:
     case NUMPAD_8:
+    #ifdef USE_SDL2
     case KEY_UP:
+    #endif
       _menuIndex--;
       break;
 

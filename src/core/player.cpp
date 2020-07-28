@@ -1690,6 +1690,7 @@ void Player::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
     case ItemBonusType::MANA_SHIELD:
     case ItemBonusType::INVISIBILITY:
     case ItemBonusType::THORNS:
+    case ItemBonusType::TELEPATHY:
       AddEffect(bonus);
       break;
   }
@@ -1736,6 +1737,7 @@ void Player::UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
     case ItemBonusType::MANA_SHIELD:
     case ItemBonusType::INVISIBILITY:
     case ItemBonusType::THORNS:
+    case ItemBonusType::TELEPATHY:
       RemoveEffect(bonus);
       break;
   }

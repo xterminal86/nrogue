@@ -3551,6 +3551,14 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
     break;
+
+    case ItemBonusType::TELEPATHY:
+    {
+      // There is no range (at least for now)
+      value = 1;
+      bs.MoneyCostIncrease = value * moneyIncrease;
+    }
+    break;
   }
 
   // TODO: should there be cursed magic / rare items or fuck it?

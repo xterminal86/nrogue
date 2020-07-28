@@ -49,24 +49,32 @@ void CustomClassState::HandleInput()
   {
     switch (_keyPressed)
     {
-      // NOTE: cannot use alternate keys because it clashes with '+' and '-'
+      // NOTE: cannot use alternate keys because it clashes with '+' and '-'      
       case NUMPAD_2:
+      #ifdef USE_SDL2
       case KEY_DOWN:
+      #endif
         _cursorRows++;
         break;
 
       case NUMPAD_6:
+      #ifdef USE_SDL2
       case KEY_RIGHT:
+      #endif
         _cursorCols++;
         break;
 
       case NUMPAD_4:
+      #ifdef USE_SDL2
       case KEY_LEFT:
+      #endif
         _cursorCols--;
         break;
 
       case NUMPAD_8:
+      #ifdef USE_SDL2
       case KEY_UP:
+      #endif
         _cursorRows--;
         break;
 

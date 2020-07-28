@@ -59,6 +59,8 @@ file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 
 add_executable(${TARGET_NAME} ${SOURCES})
 
+set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD_REQUIRED 11)
+
 if (USE_SDL)
   if (WIN32)
     find_package(SDL2 REQUIRED)
