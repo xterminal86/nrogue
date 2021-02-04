@@ -147,7 +147,7 @@ void ContainerInteractState::DisplayPlayerInventory()
     itemsCount++;
   }
 
-  for (int i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
+  for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
     std::string stub(GlobalConstants::InventoryMaxNameLength, '-');
     Printer::Instance().PrintFB(0, yPos + index, stub, Printer::kAlignLeft, "#FFFFFF");
@@ -204,7 +204,7 @@ void ContainerInteractState::DisplayContainerInventory()
     itemsCount++;
   }
 
-  for (int i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
+  for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
     std::string stub(GlobalConstants::InventoryMaxNameLength, '-');
     Printer::Instance().PrintFB(xPos, yPos + index, stub, Printer::kAlignRight, "#FFFFFF");

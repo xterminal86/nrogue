@@ -54,8 +54,6 @@ std::vector<Position> Pathfinder::BuildRoad(const std::vector<std::vector<char>>
   {
     int index = FindCheapestElement(openList);
 
-    PathNode currentNode = openList[index];
-
     closedList.push_back(openList[index]);
 
     if (openList[index].Coordinate == end)
@@ -88,7 +86,7 @@ std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
                                            const std::vector<char>& mapTilesToIgnore,
                                            bool ignoreActors,
                                            bool eightDirs,
-                                           int maxPathLength)
+                                           size_t maxPathLength)
 {
   _mapSize = mapRef->MapSize;
 
@@ -108,14 +106,12 @@ std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
 
   while (!openList.empty())
   {
-    if (maxPathLength != -1 && closedList.size() > maxPathLength)
+    if (maxPathLength != 0 && closedList.size() > maxPathLength)
     {      
       break;
     }
 
     int index = FindCheapestElement(openList);
-
-    PathNode currentNode = openList[index];
 
     closedList.push_back(openList[index]);
 
@@ -346,7 +342,7 @@ int Pathfinder::FindCheapestElement(const std::vector<PathNode>& list)
   int f = INT_MAX;
   int index = -1;
 
-  for (int i = 0; i < list.size(); i++)
+  for (size_t i = 0; i < list.size(); i++)
   {
     if (list[i].CostF < f)
     {

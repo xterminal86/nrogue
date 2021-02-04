@@ -338,7 +338,7 @@ void InventoryState::PrintFooter()
   counter = 0;
   additive = 0;
 
-  for (int i = 3; i < footer.size(); i++)
+  for (size_t i = 3; i < footer.size(); i++)
   {
     int d = part - footer[i].length();
 
@@ -408,7 +408,7 @@ void InventoryState::SortInventory()
 {
   std::vector<std::unique_ptr<GameObject>>& inventory = _playerRef->Inventory.Contents;
 
-  for (int i = 0; i < inventory.size(); i++)
+  for (size_t i = 0; i < inventory.size(); i++)
   {
     auto go1 = inventory.at(i).get();
     ItemComponent* currentItem = go1->GetComponent<ItemComponent>();
@@ -416,7 +416,7 @@ void InventoryState::SortInventory()
     {
       int from = i + 1;
 
-      for (int j = from; j < inventory.size(); j++)
+      for (size_t j = from; j < inventory.size(); j++)
       {
         auto go2 = inventory.at(j).get();
         ItemComponent* nextItem = go2->GetComponent<ItemComponent>();

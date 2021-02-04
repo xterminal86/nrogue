@@ -33,7 +33,7 @@ void MessageBoxState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    int len = 0;
+    size_t len = 0;
     for (auto& s : _message)
     {
       if (s.length() > len)

@@ -2,7 +2,7 @@
 
 #include "printer.h"
 #include "logger.h"
-#include "application.h"
+#include "timer.h"
 
 namespace Util
 {
@@ -35,9 +35,9 @@ namespace Util
   }
 
   bool IsObjectInRange(const Position& posToCheckFrom,
-                       const Position& objectToCheck,
-                       int rangeX,
-                       int rangeY)
+                        const Position& objectToCheck,
+                        int rangeX,
+                        int rangeY)
   {
     int px = posToCheckFrom.X;
     int py = posToCheckFrom.Y;
@@ -549,7 +549,7 @@ namespace Util
         }
 
         int maxX = res.size() - 1;
-        int maxY = res[0].length() - 1;
+        //int maxY = res[0].length() - 1;
 
         // In case of 3x5 size:
         //
@@ -562,9 +562,9 @@ namespace Util
         // 1;1 -> 2;1
         // ...
 
-        for (int x = 0; x < layout.size(); x++)
+        for (size_t x = 0; x < layout.size(); x++)
         {
-          for (int y = 0; y < layout[x].length(); y++)
+          for (size_t y = 0; y < layout[x].length(); y++)
           {
             char c = layout[x][y];
 
@@ -601,9 +601,9 @@ namespace Util
         int maxY = res[0].length() - 1;
 
         // Swap columns then rows
-        for (int x = 0; x < layout.size(); x++)
+        for (size_t x = 0; x < layout.size(); x++)
         {
-          for (int y = 0; y < layout[x].length(); y++)
+          for (size_t y = 0; y < layout[x].length(); y++)
           {
             res[x][maxY - y] = layout[x][y];
           }
@@ -623,7 +623,7 @@ namespace Util
           res.push_back(std::string(layout.size(), '_'));
         }
 
-        int maxX = res.size() - 1;
+        //int maxX = res.size() - 1;
         int maxY = res[0].length() - 1;
 
         // In case of 3x5 size:
@@ -637,9 +637,9 @@ namespace Util
         // 1;1 -> 1;4
         // ...
 
-        for (int x = 0; x < layout.size(); x++)
+        for (size_t x = 0; x < layout.size(); x++)
         {
-          for (int y = 0; y < layout[x].length(); y++)
+          for (size_t y = 0; y < layout[x].length(); y++)
           {
             char c = layout[x][y];
 
@@ -744,9 +744,9 @@ namespace Util
 
   bool WaitForMs(uint64_t delayMs, bool reset)
   {
-    auto timePassed = Application::Instance().TimePassed();
+    auto timePassed = Timer::Instance().TimePassed();
     Ms s = std::chrono::duration_cast<Ms>(timePassed);
-    static int64_t prevMs = s.count();
+    static uint64_t prevMs = s.count();
 
     // If WaitForMs() hasn't been called for some time,
     // wthout this check the condition will immediately
@@ -785,9 +785,9 @@ namespace Util
   {
     std::string dbg = "\n";
 
-    for (int x = 0; x < l.size(); x++)
+    for (size_t x = 0; x < l.size(); x++)
     {
-      for (int y = 0; y < l[x].length(); y++)
+      for (size_t y = 0; y < l[x].length(); y++)
       {
         dbg += l[x][y];
       }
@@ -822,7 +822,6 @@ namespace Util
     std::string textColor = "#FFFFFF";
 
     bool isBlessed = (data.Prefix == ItemPrefix::BLESSED);
-    bool isCommon  = (data.Prefix == ItemPrefix::UNCURSED);
     bool isCursed  = (data.Prefix == ItemPrefix::CURSED);
     bool isMagic   = (data.Rarity == ItemRarity::MAGIC);
     bool isRare    = (data.Rarity == ItemRarity::RARE);
@@ -856,5 +855,113 @@ namespace Util
     }
 
     return textColor;
+  }
+
+  std::string GenerateName(bool allowDoubleVowels)
+  {
+    const std::vector<std::string> endings =
+    {
+      "ia",
+      "ya",
+      "nd",
+      "nt",
+      "sh",
+      "rsh",
+      "ey",
+      "urgh",
+      "urg",
+      "stan",
+      "heim",
+      "town",
+      "ton",
+      "shire"
+    };
+
+    std::string name;
+
+    int maxLength = RNG::Instance().RandomRange(2, 4);
+    int addEnding = RNG::Instance().RandomRange(0, 2);
+
+    std::string syllable;
+
+    for (int i = 0; i < maxLength; i++)
+    {
+      while (true)
+      {
+        int mode = RNG::Instance().RandomRange(0, 2);
+
+        int vowelIndex = 0, consIndex = 0;
+        std::string vowel;
+        std::string cons;
+        std::string syl;
+
+        switch (mode)
+        {
+          case 0:
+          {
+            vowelIndex = RNG::Instance().RandomRange(0, GlobalConstants::Vowels.length());
+            consIndex  = RNG::Instance().RandomRange(0, GlobalConstants::Consonants.length());
+
+            vowel = { GlobalConstants::Vowels[vowelIndex]    };
+            cons  = { GlobalConstants::Consonants[consIndex] };
+
+            syl = { cons + vowel };
+          }
+          break;
+
+          case 1:
+          {
+            consIndex = RNG::Instance().RandomRange(0, GlobalConstants::Consonants.length());
+            cons      = GlobalConstants::Consonants[consIndex];
+
+            syl = cons;
+
+            char lastVowel = 0;
+
+            for (int i = 0; i < 2; i++)
+            {
+              vowelIndex = RNG::Instance().RandomRange(0, GlobalConstants::Vowels.length());
+
+              char v = GlobalConstants::Vowels[vowelIndex];
+              vowel  = { v };
+
+              if (allowDoubleVowels ||
+                (!allowDoubleVowels && (lastVowel != v)))
+              {
+                syl += vowel;
+              }
+
+              lastVowel = v;
+            }
+          }
+          break;
+        }
+
+        syllable = syl;
+        break;
+      }
+
+      name += syllable;
+    }
+
+    if (addEnding == 0)
+    {
+      int endingIndex = RNG::Instance().RandomRange(0, endings.size());
+      std::string ending = endings[endingIndex];
+
+      if (!allowDoubleVowels)
+      {
+        if (name[name.length() - 1] == ending[0])
+        {
+          name.pop_back();
+        }
+      }
+
+      name += ending;
+    }
+
+    name[0] = std::toupper(name[0]);
+
+    return name;
   }
 }

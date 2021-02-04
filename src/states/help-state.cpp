@@ -73,7 +73,7 @@ void HelpState::Update(bool forceUpdate)
     DrawScrollBars();
 
     int offsetY = 1;
-    for (int i = _scrollPosition; i < _helpText.size(); i++)
+    for (size_t i = _scrollPosition; i < _helpText.size(); i++)
     {
       Printer::Instance().PrintFB(1, offsetY, _helpText[i], Printer::kAlignLeft, "#FFFFFF");
       offsetY++;
@@ -85,8 +85,8 @@ void HelpState::Update(bool forceUpdate)
 
 void HelpState::DrawScrollBars()
 {
-  int tw = Printer::Instance().TerminalWidth;
-  int th = Printer::Instance().TerminalHeight;
+  size_t tw = Printer::Instance().TerminalWidth;
+  size_t th = Printer::Instance().TerminalHeight;
 
   // Since we draw messages from y = 1, compensate y pos with (th - 2)
   int scrollLimit = (_helpText.size() - 1) - (th - 2);

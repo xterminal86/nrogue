@@ -399,7 +399,7 @@ void MapLevelTown::BuildRoads()
     MapArray[c.X][c.Y]->MakeTile(gi);
   }
 
-  for (int i = 0; i < roadMarks.size() - 1; i++)
+  for (size_t i = 0; i < roadMarks.size() - 1; i++)
   {
     Pathfinder pf;
     auto path = pf.BuildRoad(this, roadMarks[i], roadMarks[i + 1], { '~' });

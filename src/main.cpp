@@ -11,6 +11,7 @@
 #include "rng.h"
 #include "blackboard.h"
 #include "logger.h"
+#include "timer.h"
 
 #ifdef RUN_TESTS
 #include "tests.h"
@@ -18,15 +19,17 @@
 
 // TODO:
 //
-// Status effects
-// Ranged weapons / throwing
-// Wands
-// Scrolls
-// Level design
-// Skills
-// Magic / Rare / Unique items
-// Traps, secrets
-// Locked doors / chests
+// - Status effects
+// - Ranged weapons / throwing
+// - Wands
+// - Scrolls
+// - Level design
+// - Skills
+// - Magic / Rare / Unique items
+// - Traps, secrets
+// - Locked doors / chests
+// - std::stringstream for text aligment
+//   using ss.width() and ss.fill() instead of manual bullshit
 
 // NOTE: When building with SDL2 in Windows, main() must have "full" signature
 // i.e. (int argc, char* agrv[]) or you'll get "undefined reference to SDLmain"
@@ -39,7 +42,7 @@
 // packages installed.
 int main(int argc, char* argv[])
 {
-  RNG::Instance().Init();    
+  RNG::Instance().Init();
   //RNG::Instance().SetSeed("CAFEBABE");
   //RNG::Instance().SetSeed("DEADBEEF");
   //RNG::Instance().SetSeed(1547020537474375167);
@@ -49,6 +52,7 @@ int main(int argc, char* argv[])
   //RNG::Instance().SetSeed(1555423752080957420);
 
   Blackboard::Instance().Init();
+  Timer::Instance().Init();
 
   #ifdef RELEASE_BUILD
   bool printLog = false;

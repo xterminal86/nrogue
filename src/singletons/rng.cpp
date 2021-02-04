@@ -4,6 +4,11 @@
 
 void RNG::Init()
 {
+  if (_initialized)
+  {
+    return;
+  }
+
   auto seed = std::chrono::system_clock::now().time_since_epoch().count();
   Random.seed(seed);
   Seed = seed;

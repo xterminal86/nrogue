@@ -14,7 +14,7 @@ void MainState::Init()
 
 void MainState::HandleInput()
 {
-  _keyPressed = GetKeyDown();
+  _keyPressed = GetKeyDown(false);
 
   switch (_keyPressed)
   {

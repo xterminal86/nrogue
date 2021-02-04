@@ -55,8 +55,10 @@ void MapLevelDeepDark::CreateLevel()
   VisibilityRadius = 3;
   MonstersRespawnTurns = 1000;
 
-  int tunnelLengthMax = MapSize.X / 10;
-  int tunnelLengthMin = tunnelLengthMax / 2;
+  // NOTE: find out what was planned to do with these
+
+  //int tunnelLengthMax = MapSize.X / 10;
+  //int tunnelLengthMin = tunnelLengthMax / 2;
 
   GameObjectInfo t;
   t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Stone Wall");
@@ -200,7 +202,7 @@ void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
           if (Util::Rolld100(15))
           {
             DoorComponent* dc = door->GetComponent<DoorComponent>();
-            dc->OpenedBy = 0;
+            dc->OpenedBy = GlobalConstants::OpenedByNobody;
           }
 
           InsertStaticObject(door);

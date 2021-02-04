@@ -3,13 +3,14 @@
 #include "rng.h"
 #include "util.h"
 
-/// Build dungeon by attaching random rooms to each other from
+/// \brief Build dungeon by attaching random rooms to each other from
 /// possibleRooms list.
+///
 /// May result in imperfect and/or impassable dungeon
 /// if layouts in the list are not connectable.
 void FromLayouts::Generate(const std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY)
 {
-  _roomsForLevel = possibleRooms;
+  _roomsForLevel = possibleRooms;  
 
   for (int x = 0; x < mapSizeX; x++)
   {
@@ -196,7 +197,7 @@ void FromLayouts::ConvertChunksToMapRaw()
 
     for (auto& row : chunk.Layout)
     {
-      for (int c = 0; c < row.length(); c++)
+      for (size_t c = 0; c < row.length(); c++)
       {
         MapRaw[x][y + c] = row[c];
       }

@@ -628,10 +628,16 @@ namespace GlobalConstants
 
   extern const std::string AlphabetUppercase;
   extern const std::string AlphabetLowercase;
+  extern const std::string Vowels;
+  extern const std::string Consonants;
   extern const std::string Numbers;
   extern const std::string MoneyName;
 
-  extern const int MaxNameLength;
+  extern const size_t OpenedByAnyone;
+  extern const size_t OpenedByNobody;
+
+  extern const size_t MaxNameLength;
+
   extern const int HPMPBarLength;
   extern const int AttributeMinimumRaiseChance;
   extern const int AttributeIncreasedRaiseStep;
@@ -641,7 +647,7 @@ namespace GlobalConstants
   extern const int MinHitChance;
   extern const int MaxHitChance;
   extern const int DisplayAttackDelayMs;
-  extern const int InventoryMaxNameLength;
+  extern const size_t InventoryMaxNameLength;
   extern const int InventoryMaxSize;
   extern const int TurnReadyValue;
   extern const int TurnTickValue;

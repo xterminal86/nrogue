@@ -244,7 +244,7 @@ void BTSParser::FormTree(bool printDebug)
   {
     const ScriptNode* parent = nullptr;
 
-    for (int i = 0; i < _parsedData.size(); i++)
+    for (size_t i = 0; i < _parsedData.size(); i++)
     {
       if (_traverseMap.at((ScriptNode*)&_parsedData[i]))
       {

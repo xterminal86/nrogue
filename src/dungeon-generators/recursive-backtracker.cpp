@@ -6,6 +6,8 @@
 #include <stack>
 #include <map>
 
+/// \brief Everybody's favourite
+///
 /// 1. Get random direction.
 /// 2. Try to replace wall with empty space.
 /// 3. Backtrack to previous cell if failed.
@@ -89,8 +91,6 @@ void RecursiveBacktracker::CheckIfProblemCorner(const Position& p)
   int hx = p.X + 1;
   int hy = p.Y + 1;
 
-  int count = 0;
-
   if (lx < 0 || ly < 0 || hx > _mapSize.X - 1 || hy > _mapSize.Y - 1)
   {
     return;
@@ -112,7 +112,7 @@ void RecursiveBacktracker::CheckIfProblemCorner(const Position& p)
     { {  1,  0 },  { 0,  1 } }
   };
 
-  for (int i = 0; i < diagonals.size(); i++)
+  for (size_t i = 0; i < diagonals.size(); i++)
   {
     Position d = diagonals[i];
 

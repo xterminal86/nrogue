@@ -223,7 +223,7 @@ void MapLevelBase::CreateInitialMonsters()
   // FIXME: debug
   //MaxMonsters = 1;
 
-  for (int i = 0; i < MaxMonsters; i++)
+  for (size_t i = 0; i < MaxMonsters; i++)
   {
     int index = RNG::Instance().RandomRange(0, _emptyCells.size());
 

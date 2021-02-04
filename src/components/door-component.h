@@ -2,6 +2,7 @@
 #define DOORCOMPONENT_H
 
 #include "component.h"
+#include "constants.h"
 
 #include <string>
 
@@ -18,8 +19,8 @@ class DoorComponent : public Component
     bool IsOpen;
 
     // Hash of item that opens this door,
-    // -1 to leave unlocked
-    size_t OpenedBy = -1;
+    // Set to GlobalConstants::OpenedByAnyone to leave unlocked
+    size_t OpenedBy = GlobalConstants::OpenedByAnyone;
 
     std::string FgColorOverride;
     std::string BgColorOverride;

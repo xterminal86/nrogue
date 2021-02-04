@@ -16,12 +16,12 @@ void DoorComponent::Update()
 
 void DoorComponent::Interact()
 {
-  if (OpenedBy != -1)
+  if (OpenedBy != GlobalConstants::OpenedByAnyone)
   {
     bool success = false;
 
     auto playerPref = &Application::Instance().PlayerInstance;
-    for (int i = 0; i < playerPref->Inventory.Contents.size(); i++)
+    for (size_t i = 0; i < playerPref->Inventory.Contents.size(); i++)
     {
       auto& itemRef = playerPref->Inventory.Contents[i];
       ItemComponent* ic = itemRef->GetComponent<ItemComponent>();
@@ -29,7 +29,7 @@ void DoorComponent::Interact()
       {
         IsOpen = !IsOpen;
         UpdateDoorState();
-        OpenedBy = -1;
+        OpenedBy = GlobalConstants::OpenedByAnyone;
         success = true;
 
         // NOTE: what if the same "key" can open several doors?

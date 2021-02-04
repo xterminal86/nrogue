@@ -393,6 +393,23 @@ namespace Tests
     ss << lb.GetMapRawString();
   }
 
+  inline void GenNamesTest(std::stringstream& ss)
+  {
+    for (int i = 0; i < 10; i++)
+    {
+      auto n = Util::GenerateName(true);
+      ss << n;
+    }
+
+    ss << "no duplicate vowels\n";
+
+    for (int i = 0; i < 10; i++)
+    {
+      auto n = Util::GenerateName();
+      ss << n;
+    }
+  }
+
   inline void Run()
   {
     std::ofstream file;
@@ -422,6 +439,8 @@ namespace Tests
     //printf("\n- o -\n");
     ss << "\n- o -\n";
     LevelBuilderTest(ss);
+    ss << "\n- o -\n";
+    GenNamesTest(ss);
 
     //printf("\n\n***** o *****\n");
     ss << "\n\n***** o *****\n";

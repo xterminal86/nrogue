@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.9)
 set (TARGET_NAME nrogue)
 project (${TARGET_NAME})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-switch -Wno-format -Werror=return-type -Wfatal-errors")
 
 option(USE_SDL "Build with SDL2" false)
 option(RUN_TESTS "Run some tests" false)
@@ -63,17 +63,15 @@ set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD_REQUIRED 11)
 
 if (USE_SDL)
   if (WIN32)
-    find_package(SDL2 REQUIRED)
-    find_package(SDL2_image REQUIRED)
-    include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
+    find_package(SDL2 REQUIRED)    
+    include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(${TARGET_NAME} ${MINGW32_LIBRARY}
-                                            ${SDL2MAIN_LIBRARY}
-                                            ${SDL2_LIBRARY}
-                                            ${SDL2_IMAGE_LIBRARIES})
+                                           ${SDL2MAIN_LIBRARY}
+                                            ${SDL2_LIBRARY})
   else()
     find_package(SDL2 REQUIRED)
     include_directories(${SDL2_INCLUDE_DIRS})
-    target_link_libraries(${TARGET_NAME} SDL2 SDL2_image)
+    target_link_libraries(${TARGET_NAME} SDL2)
   endif()
 else()
   if (WIN32)

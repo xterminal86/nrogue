@@ -106,7 +106,7 @@ void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
           if (Util::Rolld100(15))
           {
             DoorComponent* dc = door->GetComponent<DoorComponent>();
-            dc->OpenedBy = 0;
+            dc->OpenedBy = GlobalConstants::OpenedByNobody;
           }
 
           InsertStaticObject(door);

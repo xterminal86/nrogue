@@ -181,8 +181,6 @@ void NPCInteractState::SetNPCRef(AINPC* npcRef)
 
 void NPCInteractState::PrintHeader()
 {
-  int tw = Printer::Instance().TerminalWidth;
-
   std::string desc;
 
   if (_npcRef->Data.IsAquainted)

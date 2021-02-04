@@ -2,7 +2,7 @@
 
 #include "pathfinder.h"
 
-/// Use BSP to split area into big "cells"
+/// \brief Use BSP to split area into big "cells"
 /// and place randomly sized rooms inside them.
 void Rooms::Generate(const Position& mapSize,
                      const Position& splitRatio,
@@ -32,7 +32,7 @@ void Rooms::Generate(const Position& mapSize,
   int depth = 0;
   Traverse(&root, depth);
 
-  for (int i = 0; i < _connectionPoints.size() - 1; i++)
+  for (size_t i = 0; i < _connectionPoints.size() - 1; i++)
   {
     ConnectPoints(_connectionPoints[i], _connectionPoints[i + 1]);
   }
@@ -334,11 +334,11 @@ bool Rooms::IsSpotValidForDoor(const Position& p)
 }
 
 bool Rooms::ComparePatterns(std::vector<std::string>& p1,
-                            std::vector<std::string>& p2)
+                             std::vector<std::string>& p2)
 {
-  for (int row = 0; row < p1.size(); row++)
+  for (size_t row = 0; row < p1.size(); row++)
   {
-    for (int col = 0; col < p1[row].length(); col++)
+    for (size_t col = 0; col < p1[row].length(); col++)
     {
       if (p1[row][col] != p2[row][col])
       {

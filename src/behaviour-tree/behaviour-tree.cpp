@@ -284,7 +284,7 @@ BTResult Repeater::Run()
   {
     _children[0]->FirstRun();
 
-    auto res = _children[0]->Run();
+    _children[0]->Run();
 
     if (_toRepeat > 0)
     {

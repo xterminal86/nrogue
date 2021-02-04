@@ -362,7 +362,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
           if (Util::Rolld100(15))
           {
             DoorComponent* dc = door->GetComponent<DoorComponent>();
-            dc->OpenedBy = 0;
+            dc->OpenedBy = GlobalConstants::OpenedByNobody;
           }
 
           InsertStaticObject(door);
@@ -462,7 +462,7 @@ void MapLevelMines::CreateSpecialLevel()
           DoorComponent* dc = door->GetComponent<DoorComponent>();
 
           // This door should be kicked out, so OpenedBy doesn't matter
-          dc->OpenedBy = 0;
+          dc->OpenedBy = GlobalConstants::OpenedByNobody;
 
           InsertStaticObject(door);
         }
@@ -523,7 +523,7 @@ void MapLevelMines::CreateRandomBarrels()
   for (int i = 0; i < maxAttempts; i++)
   {
     // Calculate range to check needed for required amount of barrels
-    int barrelsNum = RNG::Instance().RandomRange(1, maxBarrels + 1);
+    size_t barrelsNum = RNG::Instance().RandomRange(1, maxBarrels + 1);
     int squareSideLengthRequired = (int)std::ceil(std::sqrt(barrelsNum));
     int rangeNeeded = (squareSideLengthRequired % 2 == 0)
                      ? squareSideLengthRequired / 2
@@ -543,7 +543,7 @@ void MapLevelMines::CreateRandomBarrels()
       // which may be significantly larger than amount of barrels to create
       // (e.g. 10 barrels can only fit in 5x5=25 square area around point),
       // so we need to check the number of barrels created so far separately.
-      int created = 0;
+      size_t created = 0;
       for (auto& p : res)
       {
         if (created >= barrelsNum)

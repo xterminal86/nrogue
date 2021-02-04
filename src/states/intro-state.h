@@ -61,8 +61,8 @@ class IntroState : public GameState
       }
     };
 
-    int _stringIndex = 0;
-    int _textPositionCursor = 0;
+    size_t _stringIndex = 0;
+    size_t _textPositionCursor = 0;
 
     int _textPositionX = 0;
     int _textPositionY = 0;

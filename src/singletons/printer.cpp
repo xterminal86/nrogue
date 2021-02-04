@@ -29,9 +29,10 @@ void Printer::InitForSDL()
   _tileWidth = 0;
   _tileHeight = 0;
 
-  SDL_Surface* surf = IMG_Load(tilesetFile.data());
+  SDL_Surface* surf = SDL_LoadBMP(tilesetFile.data());
   if (surf)
   {
+    SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
     _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
     SDL_FreeSurface(surf);
 
@@ -41,7 +42,7 @@ void Printer::InitForSDL()
   else
   {
     auto str = Util::StringFormat("***** Could not load tileset: %s! *****\nFalling back to embedded.\n", SDL_GetError());
-    printf("%s\n", str.data());
+    DebugLog("%s\n", str.data());
     Logger::Instance().Print(str, true);
 
     _tileWidth = 8;
@@ -50,14 +51,15 @@ void Printer::InitForSDL()
     auto res = Util::Base64_Decode(GlobalConstants::Tileset8x16Base64);
     auto bytes = Util::ConvertStringToBytes(res);
     SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
-    surf = IMG_Load_RW(data, 1);
+    surf = SDL_LoadBMP_RW(data, 1);
     if (!surf)
     {
-      auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", IMG_GetError());
-      printf("%s\n", str.data());
+      auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", SDL_GetError());
+      DebugLog("%s\n", str.data());
       Logger::Instance().Print(str, true);
     }
 
+    SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
     _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
     SDL_FreeSurface(surf);
   }
@@ -280,8 +282,6 @@ void Printer::PrintFB(const int& x, const int& y,
                       const std::string& htmlColorBg)
 {
   TileColor tc;
-
-  int tileIndex = image;
 
   int posX = x * _tileWidthScaled;
   int posY = y * _tileHeightScaled;

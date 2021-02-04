@@ -28,7 +28,7 @@ void TargetState::Prepare()
   {
     _lastTargetIndex = 0;
 
-    for (int i = 0; i < _targets.size(); i++)
+    for (size_t i = 0; i < _targets.size(); i++)
     {
       if (_targets[i]->PosX == _lastCursorPosition.X
        && _targets[i]->PosY == _lastCursorPosition.Y)
@@ -113,7 +113,7 @@ void TargetState::CycleTargets()
 
 void TargetState::HandleInput()
 {
-  _keyPressed = GetKeyDown();
+  _keyPressed = GetKeyDown(false);
 
   switch (_keyPressed)
   {
@@ -188,7 +188,7 @@ GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
   int distanceCovered = 0;
 
   // Don't include player's position
-  for (int i = 1; i < line.size(); i++)
+  for (size_t i = 1; i < line.size(); i++)
   {    
     int mx = line[i].X;
     int my = line[i].Y;
@@ -364,7 +364,7 @@ void TargetState::FireWeapon(bool throwingFromInventory)
     // If we shoot from point blank in a corridor,
     // we shouldn't accidentaly target ourselves
     // due to lack of skill.
-    for (int i = 0; i < rect.size(); i++)
+    for (size_t i = 0; i < rect.size(); i++)
     {
       // Do not include points above weapon's maximum range as well.
       int d = Util::LinearDistance({ _playerRef->PosX, _playerRef->PosY }, rect[i]);

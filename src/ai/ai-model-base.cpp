@@ -111,7 +111,7 @@ void AIModelBase::Update()
     Logger::Instance().Print(str, true);
 
     #ifdef DEBUG_BUILD
-    printf("%s\n", str.data());
+    DebugLog("%s\n", str.data());
     #endif
 
     AIComponentRef->OwnerGameObject->FinishTurn();
@@ -175,7 +175,7 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
     Logger::Instance().Print(who, true);
 
     #ifdef DEBUG_BUILD
-    printf("\t[%s] no such task - %s!\n", who.data(), taskType.data());
+    DebugLog("\t[%s] no such task - %s!\n", who.data(), taskType.data());
     #endif
   }
 
@@ -309,7 +309,7 @@ Node* AIModelBase::CreateConditionNode(const ScriptNode* data)
     Logger::Instance().Print(str);
 
     #ifdef DEBUG_BUILD
-    printf("%s\n", str.data());
+    DebugLog("%s\n", str.data());
     #endif
   }
 
@@ -355,7 +355,7 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
     Logger::Instance().Print(who);
 
     #ifdef DEBUG_BUILD
-    printf("[%s] no such node - %s!\n", who.data(), type.data());
+    DebugLog("[%s] no such node - %s!\n", who.data(), type.data());
     #endif
   }
 
@@ -366,7 +366,7 @@ void AIModelBase::PrintBrains(Node* n, int indent)
 {
   std::string tabs(indent, '.');
 
-  printf("%s0x%X - %s\n", tabs.data(), n, n->ToString().data());
+  DebugLog("%s0x%X - %s\n", tabs.data(), n, n->ToString().data());
 
   ControlNode* cn = dynamic_cast<ControlNode*>(n);
   if (cn)

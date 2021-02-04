@@ -3,7 +3,8 @@
 #include "rng.h"
 #include "util.h"
 
-/// Builds dungeon by attaching new rooms to existing ones.
+/// \brief Builds dungeon by attaching new rooms to existing ones.
+///
 /// 'doorPlacementChance' is a value from 0 to 10 with higher
 /// values meaning higher chance to place door between rooms.
 /// 'maxIterations' should be empirically chosen, because
@@ -471,9 +472,9 @@ bool FeatureRooms::CreateShrine(const Position& start,
 
 void FeatureRooms::DemonizeLayout(StringsArray2D& layout)
 {
-  for (int x = 0; x < layout.size(); x++)
+  for (size_t x = 0; x < layout.size(); x++)
   {
-    for (int y = 0; y < layout.size(); y++)
+    for (size_t y = 0; y < layout.size(); y++)
     {
       char img = layout[x][y];
 

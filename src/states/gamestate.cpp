@@ -1,95 +1,199 @@
 #include "gamestate.h"
 #include "printer.h"
+#include "timer.h"
+#include "util.h"
 
-int GameState::GetKeyDown(bool waitForEvent)
-{  
 #ifdef USE_SDL
+int GameState::_lastPressedKey = SDL_NUM_SCANCODES;
+#endif
+
+GameState::GameState()
+{
+}
+
+#ifdef USE_SDL
+int GameState::GetKeyDown(bool noRepeat)
+{
   int res = -1;
 
-  SDL_Event event;
+  // We don't want all SDL events, just the keyboard state,
+  // so no 'while (SDL_PollEvent()) {}' or anything.
+  SDL_PumpEvents();
 
-  if (waitForEvent)
+  // From SDL2 documentation:
+  // "Note: This function gives you the current state
+  // after all events have been processed,
+  // so if a key or button has been pressed and released
+  // before you process events,
+  // then the pressed state will never show up
+  // in the SDL_GetKeyboardState() calls."
+  //
+  // TLDR: keyboard state querying must be done after
+  // any form of SDL_PumpEvents()
+  const Uint8* kbState = SDL_GetKeyboardState(nullptr);
+  SDL_Keymod keyMod = SDL_GetModState();
+
+  bool shiftPressed = (keyMod & KMOD_LSHIFT || keyMod & KMOD_RSHIFT);
+
+  if (noRepeat)
   {
-    if (!SDL_PollEvent(&event))
-    {
-      return res;
-    }
+    res = ProcessKeydown(kbState, shiftPressed);
   }
   else
   {
-    SDL_PollEvent(&event);
+    res = ProcessKeyRepeat(kbState, shiftPressed);
   }
 
-  static bool shiftPressed = false;
-  static char passThrough = 0;
+  return res;
+}
+#endif
 
-  if (event.type == SDL_KEYDOWN)
+#ifndef USE_SDL
+int GameState::GetKeyDown(bool waitForEvent)
+{
+  return getch();
+}
+#endif
+
+#ifdef USE_SDL
+int GameState::ProcessKeydown(const Uint8* kbState, bool shiftPressed)
+{
+  int res = -1;
+
+  // At first I wanted to make fast movement only when
+  // user holds Shift and arrow keys. But it didn't work.
+  // If we try to made this check inside if (shiftPressed) {}
+  // block, for some reason key spamming happens only
+  // AFTER you press desired key and THEN Shift,
+  // not Shift first and then desired key.
+  // So I decided to go with OS-like style.
+  //
+  // As if SDL_PumpEvents() collects character data first
+  // and special keys data second somehow, because it all should
+  // happen in one update, so wtf?
+  //
+  res = FindKeyIn(_specialKeysByScancode, kbState);
+  if (res == -1)
   {
-    if (event.key.keysym.scancode == SDL_SCANCODE_LSHIFT
-     || event.key.keysym.scancode == SDL_SCANCODE_RSHIFT)
+    res = FindKeyIn(_charsByScancodes, kbState);
+  }
+
+  if (shiftPressed)
+  {
+    if (!ShouldShiftMap(res))
     {
-      shiftPressed = true;
+      res = std::toupper(res);
     }
-    else if (ShouldPassThrough(event.key.keysym.scancode))
+  }
+
+  bool isNew = (res != _lastPressedKey
+             && res != std::tolower(_lastPressedKey)
+             && res != std::toupper(_lastPressedKey));
+
+  if (isNew)
+  {
+    //DebugLog("[NEW] %i\n", res);
+    _lastPressedKey = res;
+  }  
+  else
+  {
+    res = -1;
+  }
+
+  return res;
+}
+
+int GameState::ProcessKeyRepeat(const Uint8* kbState, bool shiftPressed)
+{
+  int res = -1;
+
+  res = FindKeyIn(_specialKeysByScancode, kbState);
+  if (res == -1)
+  {
+    res = FindKeyIn(_charsByScancodes, kbState);
+  }
+
+  if (res != -1)
+  {
+    if (shiftPressed && !ShouldShiftMap(res))
     {
-      res = event.key.keysym.sym;
+      res = std::toupper(res);
+    }
+
+    if (_inputDelayCounter == Ns{0} || _inputDelayCounter > _inputDelay)
+    {
+      _lastPressedKey = res;
     }
     else
     {
-      // operator [] doesn't throw exception
-      char c = _charsByScancodes[event.key.keysym.scancode];
-
-      if (shiftPressed)
-      {
-        // printf("Shift + %c (%u;%i)\n", c, event.key.keysym.sym, (int)event.key.keysym.scancode);
-
-        if (c == '2')
-        {
-          c = '@';
-        }
-        else if (c == '4')
-        {
-          c = '$';
-        }
-        else if (c == '/')
-        {
-          c = '?';
-        }
-        else if (c == '.')
-        {
-          c = '>';
-        }
-        else if (c == ',')
-        {
-          c = '<';
-        }
-
-        res = c;
-      }
-      else
-      {
-        // printf("%s (%u:%i)\n", SDL_GetKeyName(event.key.keysym.sym), event.key.keysym.sym, (int)event.key.keysym.scancode);
-
-        char lowerCase = std::tolower(c);
-        res = lowerCase;
-      }
+      res = -1;
     }
+
+    // For some reason this works, but if we try to accumulate
+    // Timer::DeltaTime(), it doesn't.
+    // Probably has something to do with my accumulation
+    // of delta time in nanoseconds and subsequent overflow
+    // of this counter or something.
+    //
+    // Also, input delay value is different, it seems like 300ms
+    // is equal to Ns{30000} for this implementation.
+    //
+    // std::chrono is a piece of shit.
+    //
+    _inputDelayCounter++;
   }
-  else if (event.type == SDL_KEYUP)
+  else
   {
-    if (event.key.keysym.scancode == SDL_SCANCODE_LSHIFT
-     || event.key.keysym.scancode == SDL_SCANCODE_RSHIFT)
+    if (_inputDelayCounter != Ns{0})
     {
-      shiftPressed = false;
+      _inputDelayCounter = Ns{0};
     }
   }
 
   return res;
-
-#else
-  return getch();
-#endif
 }
+
+int GameState::GetKeysPressed(const Uint8* kbState)
+{
+  int count = 0;
+
+  for (auto& kvp : _charsByScancodes)
+  {
+    if (kbState[kvp.first])
+    {
+      count++;
+    }
+  }
+
+  for (auto& kvp : _specialKeysByScancode)
+  {
+    if (kbState[kvp.first])
+    {
+      count++;
+    }
+  }
+
+  return count;
+}
+
+bool GameState::ShouldShiftMap(int& key)
+{
+  bool res = false;
+
+  for (auto& kvp : _shiftMapping)
+  {
+    if (key == kvp.first)
+    {
+      key = kvp.second;
+      res = true;
+      break;
+    }
+  }
+
+  return res;
+}
+
+#endif
 
 void GameState::DrawHeader(const std::string& header)
 {
@@ -106,11 +210,3 @@ void GameState::DrawHeader(const std::string& header)
 
   Printer::Instance().PrintFB(tw / 2, 0, header, Printer::kAlignCenter, "#FFFFFF", GlobalConstants::MessageBoxHeaderBgColor);
 }
-
-#ifdef USE_SDL
-bool GameState::ShouldPassThrough(SDL_Scancode& sc)
-{  
-  auto res = std::find(_specialKeys.begin(), _specialKeys.end(), sc);
-  return (res != _specialKeys.end());
-}
-#endif

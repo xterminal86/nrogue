@@ -9,7 +9,6 @@
 #include <ncurses.h>
 #else
 #include "SDL2/SDL.h"
-#include "SDL2/SDL_image.h"
 #endif
 
 #include "singleton.h"
@@ -42,8 +41,8 @@ struct FBPixel
 class Printer : public Singleton<Printer> 
 {
   public:
-    int TerminalWidth;
-    int TerminalHeight;
+    size_t TerminalWidth;
+    size_t TerminalHeight;
 
     static const int kAlignLeft = 0;
     static const int kAlignCenter = 1;
@@ -151,7 +150,7 @@ class Printer : public Singleton<Printer>
 
     int _lastMessagesToDisplay = 0;
 
-    const int kMaxGameLogMessages = 100;
+    const size_t kMaxGameLogMessages = 100;
 
     int _messageRepeatCounter = 0;
     std::string _repeatingMessage;

@@ -12,6 +12,25 @@
 #include "room-helper.h"
 #include "item-data.h"
 
+// We surround statements with one-shot do ... while loop
+// to prevent accidental bugs due to unexpected execution
+// after macro expansion.
+// E.g. after no-curly-braced 'if' condition,
+// only first expanded macro statement will be executed,
+// which may be not what we wanted.
+// Also this will make function-like macro usage syntax
+// uniform with regular function syntax, which will
+// be impossible if we just used { } braces, since, for example,
+// trying to write 'DebugLog("хуй");' inside if...else{}
+// won't compile, because it will be unfolded into compound
+// statement with ; at the end of } brace, which will invalidate
+// syntax of if...else form.
+#define DebugLog(format, ...)       \
+  do {                               \
+  printf(format, ##__VA_ARGS__);     \
+  fflush(stdout);                    \
+  } while (false)
+
 namespace Util
 {  
   extern std::vector<std::string> StringSplit(const std::string& str, char delim);
@@ -76,6 +95,8 @@ namespace Util
   extern CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map);
 
   extern std::string GetItemInventoryColor(const ItemData& data);
+
+  extern std::string GenerateName(bool allowDoubleVowels = false);
 
   // ===========================================================================
 

@@ -53,7 +53,7 @@ class Pathfinder
                                     const std::vector<char>& mapTilesToIgnore,
                                     bool ignoreActors = true,
                                     bool eightDirs = false,
-                                    int maxPathLength = -1);
+                                    size_t maxPathLength = 0);
 
   private:
     Position _mapSize;

@@ -172,7 +172,7 @@ void ShoppingState::DisplayPlayerInventory()
     itemsCount++;
   }
 
-  for (int i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
+  for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
     std::string stub(GlobalConstants::InventoryMaxNameLength, '-');
     Printer::Instance().PrintFB(0, yPos + index, stub, Printer::kAlignLeft, "#FFFFFF");
@@ -237,7 +237,7 @@ void ShoppingState::DisplayShopInventory()
     itemsCount++;
   }
 
-  for (int i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
+  for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
     std::string stub(GlobalConstants::InventoryMaxNameLength, '-');
     Printer::Instance().PrintFB(xPos, yPos + index, stub, Printer::kAlignRight, "#FFFFFF");
@@ -264,9 +264,9 @@ void ShoppingState::CheckIndexLimits()
   _inventoryItemIndex = Util::Clamp(_inventoryItemIndex, 0, invSize);
 }
 
-int ShoppingState::GetItemStringTotalLen(std::vector<std::unique_ptr<GameObject>>& container)
+size_t ShoppingState::GetItemStringTotalLen(std::vector<std::unique_ptr<GameObject>>& container)
 {
-  int maxLen = 0;
+  size_t maxLen = 0;
 
   for (auto& item : container)
   {

@@ -2,7 +2,7 @@
 
 #include "rng.h"
 
-/// Builds tunnels perpendicular to previous direction,
+/// \brief Builds tunnels perpendicular to previous direction,
 /// backtracks to previous position if failed.
 ///
 /// Additional tweaks include removal of deadends and
@@ -257,7 +257,7 @@ std::vector<Position> Tunneler::TryToGetPerpendicularDir(const Position& pos, co
   //auto str = Util::StringFormat("Trying to get perpendicular dir to %i %i", lastDir.X, lastDir.Y);
   //Logger::Instance().Print(str);
 
-  for (int i = 0; i < directions.size(); i++)
+  for (size_t i = 0; i < directions.size(); i++)
   {
     if (lastDir.X == directions[i].X && lastDir.Y == directions[i].Y)
     {
@@ -324,7 +324,7 @@ Position Tunneler::GetRandomPerpendicularDir(const Position& dir)
     { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }
   };
 
-  for (int i = 0; i < directions.size(); i++)
+  for (size_t i = 0; i < directions.size(); i++)
   {
     if (dir.X == directions[i].X && dir.Y == directions[i].Y)
     {

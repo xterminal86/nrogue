@@ -25,6 +25,7 @@
 #include "map.h"
 #include "map-level-base.h"
 #include "printer.h"
+#include "timer.h"
 #include "logger.h"
 
 #include <sstream>
@@ -41,6 +42,12 @@ void Application::Init()
 
   _currentState = _gameStates[GameStates::MENU_STATE].get();
 
+  // In SDL build GetKeyDown() will return -1 on application
+  // start resulting in white screen during to not
+  // redundantly drawing the "scene"
+  // because no key has been pressed yet.
+  _currentState->Update(true);
+
   PlayerInstance.Attrs.Indestructible = false;
 
   Printer::Instance().AddMessage("You begin your quest");
@@ -53,8 +60,7 @@ void Application::Run()
 {
   while (_currentState != nullptr)
   {
-    auto t1 = Timer::now();
-    auto t2 = t1;
+    Timer::Instance().MeasureStart();
 
     if (PlayerInstance.Attrs.ActionMeter >= GlobalConstants::TurnReadyValue || !PlayerInstance.IsAlive())
     {
@@ -76,10 +82,7 @@ void Application::Run()
       TurnsPassed++;
     }
 
-    t2 = Timer::now();
-
-    _deltaTime = t2 - t1;
-    _timePassed += _deltaTime;
+    Timer::Instance().MeasureEnd();
   }
 }
 
@@ -92,11 +95,13 @@ void Application::ChangeState(const GameStates& gameStateIndex)
                                   typeid(*_gameStates[gameStateIndex].get()).name(),
                                   _gameStates[gameStateIndex].get());
     Logger::Instance().Print(str);
+    //DebugLog("%s\n", str.data());
   }
   else
   {
     auto str = Util::StringFormat("Changing state: %s [0x%X] => EXIT_GAME [0x0]", typeid(*_currentState).name(), _currentState);
     Logger::Instance().Print(str);
+    //DebugLog("%s\n", str.data());
   }
 
   _currentState->Cleanup();
@@ -104,9 +109,12 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   _currentState = (gameStateIndex == GameStates::EXIT_GAME) ? nullptr : _gameStates[gameStateIndex].get();
 
   if (_currentState != nullptr)
-  {
-    _currentState->Prepare();    
-  }
+  {    
+    _currentState->Prepare();
+
+    // I don't know how it worked before without this line
+    _currentState->Update(true);    
+  }  
 }
 
 GameState* Application::GetGameStateRefByName(GameStates stateName)
@@ -142,6 +150,8 @@ void Application::ShowMessageBox(MessageBoxType type,
   mbs->SetMessage(type, header, message, borderColor, bgColor);
 
   _currentState = ptr;
+
+  _currentState->Update(true);
 }
 
 void Application::CloseMessageBox()
@@ -285,9 +295,9 @@ void Application::WriteObituary(bool wasKilled)
     map.push_back(row);
   }
 
-  for (int x = 0; x < map.size(); x++)
+  for (size_t x = 0; x < map.size(); x++)
   {
-    for (int y = 0; y < map[x].size(); y++)
+    for (size_t y = 0; y < map[x].size(); y++)
     {
       ss << map[x][y];
     }
@@ -323,7 +333,7 @@ void Application::WriteObituary(bool wasKilled)
   ss << '\n';
   ss << "********** POSSESSIONS **********\n\n";
 
-  int stringResizeWidth = 0;
+  size_t stringResizeWidth = 0;
   for (auto& i : PlayerInstance.Inventory.Contents)
   {
     ItemComponent* ic = i->GetComponent<ItemComponent>();
@@ -437,7 +447,6 @@ void Application::InitCurses()
 #ifdef USE_SDL
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
 void Application::ParseConfig()
 {
@@ -503,26 +512,22 @@ void Application::SetIcon()
   auto res = Util::Base64_Decode(GlobalConstants::IconBase64);
   auto bytes = Util::ConvertStringToBytes(res);
   SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
-  auto surf = IMG_Load_RW(data, 1);
+  SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);
   if (!surf)
   {
-    auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", IMG_GetError());
+    auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", SDL_GetError());
     Logger::Instance().Print(str);
-    #ifdef DEBUG_BUILD
-    printf("%s\n", str.data());
-    #endif
+    DebugLog("%s\n", str.data());
     return;
   }
 
+  SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
   SDL_SetWindowIcon(Window, surf);
   SDL_FreeSurface(surf);
 }
 
 void Application::InitSDL()
 {  
-  int tilesetWidth = 0;
-  int tilesetHeight = 0;
-
   int kTerminalWidth = 80;
   int kTerminalHeight = 24;
 
@@ -587,8 +592,6 @@ void Application::InitSDL()
 
   SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
 
-  IMG_Init(IMG_INIT_PNG);
-
   SetIcon();
 
   Printer::Instance().Init();
@@ -601,7 +604,6 @@ void Application::InitSDL()
 void Application::Cleanup()
 {
 #ifdef USE_SDL  
-  IMG_Quit();
   SDL_Quit();
 #else
   endwin();
@@ -609,7 +611,7 @@ void Application::Cleanup()
 
   Logger::Instance().Print("Application::Cleanup()");
 
-  printf("Goodbye!\n");
+  DebugLog("Goodbye!\n");
 }
 
 void Application::ForceDrawMainState()
@@ -655,15 +657,5 @@ uint64_t Application::GetNewId()
 {  
   static uint64_t globalId = 1;
   return globalId++;
-}
-
-Ns Application::DeltaTime()
-{
-  return _deltaTime;
-}
-
-Ns Application::TimePassed()
-{
-  return _timePassed;
 }
 

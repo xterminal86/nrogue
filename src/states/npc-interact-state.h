@@ -39,8 +39,9 @@ class NPCInteractState : public GameState
     WhatKey _whatKey = WhatKey::NONE;
 
     std::vector<std::string> _blockToPrint;
-    int _charPos = 0;
-    int _currentLine = 0;
+
+    size_t _charPos = 0;
+    size_t _currentLine = 0;
 };
 
 #endif // NPCINTERACTSTATE_H

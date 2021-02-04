@@ -23,7 +23,7 @@ class ContainerComponent : public Component
 
     std::vector<std::unique_ptr<GameObject>> Contents;
 
-    int MaxCapacity = 0;
+    size_t MaxCapacity = 0;
 
     bool CanBeOpened = true;
 };

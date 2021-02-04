@@ -11,7 +11,7 @@ void MessageLogState::Prepare()
 
 void MessageLogState::HandleInput()
 {
-  _keyPressed = GetKeyDown();
+  _keyPressed = GetKeyDown(false);
 
   int msgSize = Printer::Instance().Messages().size();
   int th = Printer::Instance().TerminalHeight;
@@ -61,7 +61,7 @@ void MessageLogState::Update(bool forceUpdate)
     auto messages = Printer::Instance().Messages();
 
     int offsetY = 1;
-    for (int i = _scrollPosition; i < messages.size(); i++)
+    for (size_t i = _scrollPosition; i < messages.size(); i++)
     {
       if (_scrollPosition == 0)
       {
@@ -80,8 +80,8 @@ void MessageLogState::DrawScrollBars()
 {
   auto messages = Printer::Instance().Messages();
 
-  int tw = Printer::Instance().TerminalWidth;
-  int th = Printer::Instance().TerminalHeight;
+  size_t tw = Printer::Instance().TerminalWidth;
+  size_t th = Printer::Instance().TerminalHeight;
 
   // Since we draw messages from y = 1, compensate y pos with (th - 2)
   int scrollLimit = (messages.size() - 1) - (th - 2);

@@ -50,7 +50,7 @@ class MapLevelBase
     int MapOffsetX;
     int MapOffsetY;
 
-    int MaxMonsters = 0;
+    size_t MaxMonsters = 0;
 
     // This depends heavily on player's speed,
     // values can be big since several turns

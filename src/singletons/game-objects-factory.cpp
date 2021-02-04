@@ -1476,8 +1476,7 @@ GameObject* GameObjectsFactory::CreateGem(int x, int y, GemType type, int gemCha
     int rndStartingIndex = 0;
 
     if (gemChance != -1)
-    {
-      bool isGem = Util::Rolld100(gemChance);
+    {      
       rndStartingIndex = 1;
     }
 
@@ -2638,7 +2637,7 @@ bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
   auto& rings = _playerRef->EquipmentByCategory[item->Data.EqCategory];
 
   // First, search if this ring is already equipped
-  for (int i = 0; i < rings.size(); i++)
+  for (size_t i = 0; i < rings.size(); i++)
   {
     if (rings[i] == item)
     {
@@ -2656,7 +2655,7 @@ bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
   }
 
   // Second, if it's different item, try to find empty slot for it
-  for (int i = 0; i < rings.size(); i++)
+  for (size_t i = 0; i < rings.size(); i++)
   {
     if (rings[i] == nullptr)
     {

@@ -51,28 +51,28 @@ void CustomClassState::HandleInput()
     {
       // NOTE: cannot use alternate keys because it clashes with '+' and '-'      
       case NUMPAD_2:
-      #ifdef USE_SDL2
+      #ifdef USE_SDL
       case KEY_DOWN:
       #endif
         _cursorRows++;
         break;
 
       case NUMPAD_6:
-      #ifdef USE_SDL2
+      #ifdef USE_SDL
       case KEY_RIGHT:
       #endif
         _cursorCols++;
         break;
 
       case NUMPAD_4:
-      #ifdef USE_SDL2
+      #ifdef USE_SDL
       case KEY_LEFT:
       #endif
         _cursorCols--;
         break;
 
       case NUMPAD_8:
-      #ifdef USE_SDL2
+      #ifdef USE_SDL
       case KEY_UP:
       #endif
         _cursorRows--;
@@ -172,8 +172,9 @@ void CustomClassState::Update(bool forceUpdate)
 
     Printer::Instance().PrintFB(_hw - 9 + 10 * _cursorCols, _startY + 2 + _cursorY, _cursorImage, "#FFFFFF");
 
-    Printer::Instance().PrintFB(_hw, Printer::Instance().TerminalHeight - 2, "Arrow keys to navigate", Printer::kAlignCenter, "#FFFFFF");
-    Printer::Instance().PrintFB(_hw, Printer::Instance().TerminalHeight - 1, "[Shift + ] '.' or ',' to modify", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(_hw, Printer::Instance().TerminalHeight - 3, "Arrow keys to navigate", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(_hw, Printer::Instance().TerminalHeight - 2, "'.' or ',' to modify", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(_hw, Printer::Instance().TerminalHeight - 1, "Hold [SHIFT] for 5% step", Printer::kAlignCenter, "#FFFFFF");
 
     Printer::Instance().PrintFB(0, Printer::Instance().TerminalHeight - 1, "'q' - go back", Printer::kAlignLeft, "#FFFFFF");
     Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1, Printer::Instance().TerminalHeight - 1, "'Enter' - accept", Printer::kAlignRight, "#FFFFFF");

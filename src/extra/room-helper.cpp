@@ -45,7 +45,7 @@ bool RoomHelper::CanBeTraversed(const std::vector<int> &e1,
 
 bool RoomHelper::EdgeIsAllWalls(const std::vector<int> &edge)
 {
-  for (int i = 0; i < edge.size(); i++)
+  for (size_t i = 0; i < edge.size(); i++)
   {
     if (edge[i] == 1)
     {
@@ -64,10 +64,10 @@ void RoomHelper::ParseLayout(const RoomLayout &layout)
 
   Layout = layout;
 
-  for (int x = 0; x < Layout.size(); x++)
+  for (size_t x = 0; x < Layout.size(); x++)
   {
     std::vector<int> row;
-    for (int y = 0; y < Layout[x].length(); y++)
+    for (size_t y = 0; y < Layout[x].length(); y++)
     {
       int res = (Layout[x][y] == '.' || Layout[x][y] == '+') ? 1 : 0;
       row.push_back(res);
@@ -100,9 +100,9 @@ void RoomHelper::PrintInfo()
 
   printf("[\n");
 
-  for (int x = 0; x < Layout.size(); x++)
+  for (size_t x = 0; x < Layout.size(); x++)
   {
-    for (int y = 0; y < Layout[x].length(); y++)
+    for (size_t y = 0; y < Layout[x].length(); y++)
     {
       printf("%c", Layout[x][y]);
     }
@@ -119,7 +119,7 @@ void RoomHelper::PrintInfo()
   {
     printf("%i: ", kvp.first);
 
-    for (int i = 0; i < kvp.second.size(); i++)
+    for (size_t i = 0; i < kvp.second.size(); i++)
     {
       printf("%i", RoomEdgesByType[kvp.first][i]);
     }

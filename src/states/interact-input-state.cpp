@@ -145,7 +145,7 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
       DoorComponent* dc = go->GetComponent<DoorComponent>();
       if (dc != nullptr)
       {
-        if (dc->OpenedBy == -1)
+        if (dc->OpenedBy == GlobalConstants::OpenedByAnyone)
         {
           auto str = Util::StringFormat("You %s: %s", (dc->IsOpen ? "opened" : "closed"), go->ObjectName.data());
           Printer::Instance().AddMessage(str);
