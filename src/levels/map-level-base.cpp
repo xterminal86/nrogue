@@ -12,9 +12,33 @@ MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
   MapType_ = type;
   DungeonLevel = dungeonLevel;
 
-  auto levelNames = GlobalConstants::MapLevelNames.at(MapType_);
-  int index = RNG::Instance().RandomRange(0, levelNames.size());
-  LevelName = levelNames[index];
+  std::string levelName;
+
+  auto GetSpecialName = [this]()
+  {
+    auto levelNames = GlobalConstants::MapLevelNames.at(MapType_);
+    int index = RNG::Instance().RandomRange(0, levelNames.size());
+    return levelNames[index];
+  };
+
+  if (MapType_ == MapType::TOWN)
+  {
+    bool shouldGenerate = Util::Rolld100(90);
+    if (shouldGenerate)
+    {
+      levelName = "Village of " + Util::GenerateName();
+    }
+    else
+    {
+      levelName = GetSpecialName();
+    }
+  }
+  else
+  {
+    levelName = GetSpecialName();
+  }
+
+  LevelName = levelName;
 
   _playerRef = &Application::Instance().PlayerInstance;
 }

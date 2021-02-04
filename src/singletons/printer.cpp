@@ -549,9 +549,9 @@ void Printer::Print(const int& x, const int& y, const int& ch, const std::string
 }
 
 void Printer::PrintFB(const int& x, const int& y,
-                                 const int& ch,
-                                 const std::string& htmlColorFg,
-                                 const std::string& htmlColorBg)
+                      const int& ch,
+                      const std::string& htmlColorFg,
+                      const std::string& htmlColorBg)
 {
   if (x < 0 || x > TerminalWidth - 1
    || y < 0 || y > TerminalHeight - 1)
@@ -616,11 +616,11 @@ void Printer::PrintFB(const int& x, const int& y,
 
 void Printer::PrepareFrameBuffer()
 {
-  for (int x = 0; x < TerminalWidth; x++)
+  for (size_t x = 0; x < TerminalWidth; x++)
   {
     std::vector<FBPixel> row;
 
-    for (int y = 0; y < TerminalHeight; y++)
+    for (size_t y = 0; y < TerminalHeight; y++)
     {
       FBPixel s;
 
@@ -638,9 +638,9 @@ void Printer::PrepareFrameBuffer()
 void Printer::Clear()
 {
 #ifndef USE_SDL
-  for (int x = 0; x < TerminalWidth; x++)
+  for (size_t x = 0; x < TerminalWidth; x++)
   {
-    for (int y = 0; y < TerminalHeight; y++)
+    for (size_t y = 0; y < TerminalHeight; y++)
     {
       PrintFB(x, y, ' ', "#000000");
     }
@@ -654,9 +654,9 @@ void Printer::Clear()
 void Printer::Render()
 {
 #ifndef USE_SDL
-  for (int x = 0; x < TerminalWidth; x++)
+  for (size_t x = 0; x < TerminalWidth; x++)
   {
-    for (int y = 0; y < TerminalHeight; y++)
+    for (size_t y = 0; y < TerminalHeight; y++)
     {
       attron(COLOR_PAIR(_colorMap[_frameBuffer[x][y].ColorPairHash].PairIndex));
       mvaddch(y, x, _frameBuffer[x][y].Character);

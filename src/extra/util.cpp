@@ -861,6 +861,7 @@ namespace Util
   {
     const std::vector<std::string> endings =
     {
+      "na",
       "ia",
       "ya",
       "nd",
@@ -868,13 +869,16 @@ namespace Util
       "sh",
       "rsh",
       "ey",
+      "el",
       "urgh",
       "urg",
       "stan",
       "heim",
       "town",
       "ton",
-      "shire"
+      "shire",
+      "pool",
+      "gow"
     };
 
     std::string name;
