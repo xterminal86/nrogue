@@ -347,7 +347,9 @@ void TargetState::FireWeapon(bool throwingFromInventory)
 
   _drawHint = false;
 
-  std::string weaponName = _weaponRef->Data.IsIdentified ? _weaponRef->Data.IdentifiedName : _weaponRef->Data.UnidentifiedName;
+  std::string weaponName = _weaponRef->Data.IsIdentified
+                         ? _weaponRef->OwnerGameObject->ObjectName
+                         : _weaponRef->Data.UnidentifiedName;
 
   std::string str = throwingFromInventory ? "You throw " : "You fire ";
   str += weaponName;
@@ -559,7 +561,9 @@ void TargetState::PrintThrowResult(GameObject* tileRef)
 {
   GameObjectType tile = tileRef->Type;
 
-  std::string objName = _weaponRef->OwnerGameObject->ObjectName;
+  std::string objName = _weaponRef->Data.IsIdentified
+                      ? _weaponRef->OwnerGameObject->ObjectName
+                      : _weaponRef->Data.UnidentifiedName;
   std::string verb;
   std::string tileName = tileRef->ObjectName;
 
