@@ -1,4 +1,6 @@
 #include "gamestate.h"
+
+#include "application.h"
 #include "printer.h"
 #include "timer.h"
 #include "util.h"
@@ -14,12 +16,17 @@ int GameState::GetKeyDown()
 
   SDL_Event evt;
 
-  // By convention we must pop all gathered events
-  // out of the SDL queue
+  // SDL_WaitEvent() cannot be used because we have animations
   while (SDL_PollEvent(&evt))
   {
     switch(evt.type)
     {
+      // To allow application closing by clicking 'X'
+      // on window frame
+      case SDL_QUIT:
+        Application::Instance().ChangeState(GameStates::EXIT_GAME);
+        break;
+
       case SDL_KEYDOWN:
       {
         auto& sc = evt.key.keysym.scancode;
@@ -38,8 +45,8 @@ int GameState::GetKeyDown()
       {
         res = -1;
       }
-      break;
-    }
+      break;      
+    }    
   }
 
   // SDL_GetModState() must be called after all events

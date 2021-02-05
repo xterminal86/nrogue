@@ -64,15 +64,29 @@ void Application::Run()
 
     if (PlayerInstance.Attrs.ActionMeter >= GlobalConstants::TurnReadyValue || !PlayerInstance.IsAlive())
     {
-      // Since change state happens in HandleInput, if it's called before Update
-      // to exit game (change state to nullptr) we get segfault because
+      // Since change state usually happens in HandleInput(),
+      // if it's called before Update() to exit game
+      // (change state to nullptr), we'll get segfault because
       // _currentState->Update() gets called on nullptr.
       //
-      // NOTE: Probably still a bad idea to just change order of methods call,
-      // since we might get the same situation in Update().
+      // Same thing happens if we change order of methods calls,
+      // since theoretically state can be changed in Update() too.
+      //
+      // Thus, this shitcode below.
+      //
+      // Also we need to immediately update changes that happenned after
+      // user pressed some keys that affected visual representation.
+      //
 
-      _currentState->Update();
-      _currentState->HandleInput();
+      if (_currentState != nullptr)
+      {        
+        _currentState->Update();
+      }
+
+      if (_currentState != nullptr)
+      {
+        _currentState->HandleInput();
+      }
     }
     else
     {
