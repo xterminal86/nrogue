@@ -8,7 +8,7 @@
 
 BTResult TaskGotoLastPlayerPos::Run()
 {
-  //printf("[TaskGotoLastPlayerPos]\n");
+  //DebugLog("[TaskGotoLastPlayerPos]\n");
 
   auto sX = Blackboard::Instance().Get(_objectToControl->ObjectId(), "pl_x");
   auto sY = Blackboard::Instance().Get(_objectToControl->ObjectId(), "pl_y");
@@ -32,7 +32,7 @@ BTResult TaskGotoLastPlayerPos::Run()
     return BTResult::Success;
   }
 
-  //printf("\tplX: %i plY: %i\n\n", plX, plY);
+  //DebugLog("\tplX: %i plY: %i\n\n", plX, plY);
 
   Pathfinder pf;
   Position objPos = { _objectToControl->PosX, _objectToControl->PosY };

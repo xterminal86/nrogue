@@ -2,6 +2,8 @@
 
 #include <cstdio>
 
+#include "util.h"
+
 Position::Position()
 {
   X = 0;
@@ -49,5 +51,5 @@ bool Position::operator!= (const Position& rhs) const
 
 void Position::Print()
 {
-  printf("%s: [%i ; %i]\n", __PRETTY_FUNCTION__, X, Y);
+  DebugLog("%s: [%i ; %i]\n", __PRETTY_FUNCTION__, X, Y);
 }

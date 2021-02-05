@@ -19,7 +19,7 @@ void AIComponent::Update()
     Logger::Instance().Print(str, true);
 
     #ifdef DEBUG_BUILD
-    printf("%s\n", str.data());
+    DebugLog("%s\n", str.data());
     #endif
 
     OwnerGameObject->FinishTurn();

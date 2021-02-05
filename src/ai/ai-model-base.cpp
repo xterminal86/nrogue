@@ -52,7 +52,7 @@ void AIModelBase::ConstructAI()
 
     if (scriptNodesChecked.count(nodeData) != 1)
     {
-      //printf("\tinstantiate 0x%X (%s, %s)\n", nodeData, nodeData->NodeName.data(), addInfo1.data());
+      //DebugLog("\tinstantiate 0x%X (%s, %s)\n", nodeData, nodeData->NodeName.data(), addInfo1.data());
       scriptNodesChecked[nodeData] = true;
       task = CreateNode(nodeData);
       behaviourNodesCreated[nodeData] = task;
@@ -60,7 +60,7 @@ void AIModelBase::ConstructAI()
 
     if (scriptNodesChecked.count(parentNodeData) != 1)
     {
-      //printf("\tinstantiate 0x%X (%s, %s)\n", parentNodeData, parentNodeData->NodeName.data(), addInfo2.data());
+      //DebugLog("\tinstantiate 0x%X (%s, %s)\n", parentNodeData, parentNodeData->NodeName.data(), addInfo2.data());
       scriptNodesChecked[parentNodeData] = true;
       parent = CreateNode(parentNodeData);
       behaviourNodesCreated[parentNodeData] = parent;
@@ -71,7 +71,7 @@ void AIModelBase::ConstructAI()
 
     parentRef->AddNode(taskRef);
 
-    //printf("\n(0x%X)(%s) %s::AddNode(%s) (0x%X)(%s)\n\n", parentNodeData, addInfo2.data(), parentNodeData->NodeName.data(), nodeData->NodeName.data(), nodeData, addInfo1.data());
+    //DebugLog("\n(0x%X)(%s) %s::AddNode(%s) (0x%X)(%s)\n\n", parentNodeData, addInfo2.data(), parentNodeData->NodeName.data(), nodeData->NodeName.data(), nodeData, addInfo1.data());
   }
 
   _root.reset(static_cast<Root*>(parentRef));
@@ -80,9 +80,9 @@ void AIModelBase::ConstructAI()
   /*
   if (_root)
   {
-    printf("\n");
+    DebugLog("\n");
     PrintBrains(_root->_root.get(), 0);
-    printf("\n");
+    DebugLog("\n");
   }
   */
 }

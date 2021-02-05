@@ -6,7 +6,7 @@
 
 BTResult TaskAttackBasic::Run()
 {
-  //printf("[TaskAttackBasic]\n");
+  //DebugLog("[TaskAttackBasic]\n");
 
   bool result = false;
 

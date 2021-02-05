@@ -197,7 +197,7 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
   // Just in case
   if (possibleSpots.empty())
   {
-    //printf("couldn't find possible spots!\n");
+    //DebugLog("couldn't find possible spots!\n");
     return;
   }
 

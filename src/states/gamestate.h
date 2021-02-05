@@ -29,7 +29,7 @@ class GameState
     virtual void HandleInput() = 0;
     virtual void Update(bool forceUpdate = false) = 0;
 
-    int GetKeyDown(bool noRepeat = true);
+    int GetKeyDown();
 
   protected:
     int _keyPressed = -1;
@@ -37,34 +37,7 @@ class GameState
     void DrawHeader(const std::string& header);
 
 #ifdef USE_SDL    
-    int GetKeysPressed(const Uint8* kbState);
-
-    int ProcessKeydown(const Uint8* kbState, bool shiftPressed);
-    int ProcessKeyRepeat(const Uint8* kbState, bool shiftPressed);
-
     bool ShouldShiftMap(int& key);
-
-    template <typename T>
-    int FindKeyIn(const T& dic, const Uint8* kbState)
-    {
-      for (auto& kvp : dic)
-      {
-        if (kbState[kvp.first])
-        {
-          return kvp.second;
-        }
-      }
-
-      return -1;
-    }
-
-    // We need to share this variable across all
-    // GameState instances
-    static int _lastPressedKey;
-
-    const Ns _inputDelay = Ns{50000};
-
-    Ns _inputDelayCounter;
 
     std::map<SDL_Scancode, char> _charsByScancodes =
     {

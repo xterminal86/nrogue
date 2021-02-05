@@ -6,7 +6,7 @@
 
 BTResult TaskRandomMovement::Run()
 {
-  //printf("[TaskRandomMovement]\n");
+  //DebugLog("[TaskRandomMovement]\n");
 
   return Smart();
   //return Dumb();

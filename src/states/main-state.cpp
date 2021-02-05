@@ -14,7 +14,7 @@ void MainState::Init()
 
 void MainState::HandleInput()
 {
-  _keyPressed = GetKeyDown(false);
+  _keyPressed = GetKeyDown();
 
   switch (_keyPressed)
   {
@@ -173,7 +173,7 @@ void MainState::HandleInput()
       {
         auto str = Util::StringFormat("[%i;%i] is occupied!", exitX, exitY);
         Printer::Instance().AddMessage(str);
-        printf("%s\n", str.data());
+        DebugLog("%s\n", str.data());
       }
     }
     break;

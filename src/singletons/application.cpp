@@ -469,7 +469,7 @@ void Application::ParseConfig()
   /*
   for (auto& kvp : _config)
   {
-    printf("%s = %s\n", kvp.first.data(), kvp.second.data());
+    DebugLog("%s = %s\n", kvp.first.data(), kvp.second.data());
   }
   */
 }
@@ -533,9 +533,11 @@ void Application::InitSDL()
 
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
   {
-    printf("SDL_Init Error: %s\n", SDL_GetError());
+    DebugLog("SDL_Init Error: %s\n", SDL_GetError());
     return;
   }
+
+  SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
 
   ParseConfig();
   ProcessConfig();

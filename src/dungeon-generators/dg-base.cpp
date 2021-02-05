@@ -6,7 +6,7 @@
 void DGBase::PrintMapRaw()
 {
   auto raw = GetMapRawString();
-  printf("%s\n", raw.data());
+  DebugLog("%s\n", raw.data());
 }
 
 void DGBase::LogPrintMapRaw()

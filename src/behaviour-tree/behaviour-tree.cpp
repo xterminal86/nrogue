@@ -18,7 +18,7 @@ Node::Node(GameObject* objectToControl)
 
 Node::~Node()
 {
-  //printf("0x%X dtor\n", this);
+  //DebugLog("0x%X dtor\n", this);
 }
 
 void Node::FirstRun()

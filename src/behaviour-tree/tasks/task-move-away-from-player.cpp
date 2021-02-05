@@ -5,7 +5,7 @@
 
 BTResult TaskMoveAwayFromPlayer::Run()
 {
-  //printf("[TaskMoveAwayFromPlayer]\n");
+  //DebugLog("[TaskMoveAwayFromPlayer]\n");
 
   // FIXME: improve, try to figure out how to
   // go away from the player without just randomly picking
@@ -43,7 +43,7 @@ BTResult TaskMoveAwayFromPlayer::Run()
     return BTResult::Failure;
   }
 
-  //printf("Found [%i %i] (%i)\n", posToWalk.X, posToWalk.Y, maxDistance);
+  //DebugLog("Found [%i %i] (%i)\n", posToWalk.X, posToWalk.Y, maxDistance);
 
   // posToWalk cell should be empty so MoveTo() should succeed
   _objectToControl->MoveTo(posToWalk);

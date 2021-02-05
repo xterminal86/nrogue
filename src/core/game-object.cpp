@@ -96,7 +96,7 @@ bool GameObject::MoveTo(int x, int y, bool force)
     PosX = x;
     PosY = y;
 
-    //printf("MoveTo(%i, %i)\n", x, y);
+    //DebugLog("MoveTo(%i, %i)\n", x, y);
 
     _currentCell = _levelOwner->MapArray[PosX][PosY].get();
     _currentCell->Occupied = true;
@@ -109,7 +109,7 @@ bool GameObject::MoveTo(int x, int y, bool force)
 
 bool GameObject::MoveTo(const Position &pos, bool force)
 {
-  //printf("MoveTo(%i;%i)\n\n", pos.X, pos.Y);
+  //DebugLog("MoveTo(%i;%i)\n\n", pos.X, pos.Y);
   return MoveTo(pos.X, pos.Y, force);
 }
 

@@ -113,7 +113,7 @@ void TargetState::CycleTargets()
 
 void TargetState::HandleInput()
 {
-  _keyPressed = GetKeyDown(false);
+  _keyPressed = GetKeyDown();
 
   switch (_keyPressed)
   {

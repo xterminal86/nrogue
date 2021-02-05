@@ -73,7 +73,7 @@ bool Rect::Intersects(const Rect &other)
 
 void Rect::Print()
 {
-  printf("[%i; %i] -> [%i %i]\n", X1, Y1, X2, Y2);
+  DebugLog("[%i; %i] -> [%i %i]\n", X1, Y1, X2, Y2);
 }
 
 void Rect::LogPrint()

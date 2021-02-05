@@ -207,14 +207,14 @@ std::pair<Position, Position> CellularAutomata::FindClosestPointsToArea(int area
 
         if (minD <= minDistance)
         {
-          //printf ("min distance points: %i %i - %i %i\n", res.first.X, res.first.Y, res.second.X, res.second.Y);
+          //DebugLog ("min distance points: %i %i - %i %i\n", res.first.X, res.first.Y, res.second.X, res.second.Y);
           return res;
         }
       }
     }
   }
 
-  //printf ("min distance points: %i %i - %i %i\n", res.first.X, res.first.Y, res.second.X, res.second.Y);
+  //DebugLog ("min distance points: %i %i - %i %i\n", res.first.X, res.first.Y, res.second.X, res.second.Y);
 
   return res;
 }

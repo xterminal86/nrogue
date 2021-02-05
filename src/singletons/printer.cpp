@@ -436,7 +436,7 @@ NColor Printer::GetNColor(const std::string& htmlColor)
   int scaledValueG = (valueG / 255.0f) * 1000;
   int scaledValueB = (valueB / 255.0f) * 1000;
   
-  //printf("%s %s %s => %i %i %i\n", hexR.data(), hexG.data(), hexB.data(), c.R, c.G, c.B);
+  //DebugLog("%s %s %s => %i %i %i\n", hexR.data(), hexG.data(), hexB.data(), c.R, c.G, c.B);
 
   ret.R = scaledValueR;
   ret.G = scaledValueG;

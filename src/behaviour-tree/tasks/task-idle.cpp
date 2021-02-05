@@ -4,7 +4,7 @@
 
 BTResult TaskIdle::Run()
 {
-  //printf("[TaskIdle]\n");
+  //DebugLog("[TaskIdle]\n");
 
   _objectToControl->FinishTurn();
   return BTResult::Success;

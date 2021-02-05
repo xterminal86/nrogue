@@ -1233,7 +1233,7 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
                 type) == GlobalConstants::ScrollValidSpellTypes.end())
   {
     std::string name = si->SpellName;
-    printf("[WARNING] Trying to create a scroll with invalid spell (%s)!\n", name.data());
+    DebugLog("[WARNING] Trying to create a scroll with invalid spell (%s)!\n", name.data());
     return nullptr;
   }
 
@@ -2578,7 +2578,7 @@ ItemQuality GameObjectsFactory::RollItemQuality()
   int damaged = (int)((float)(maxLevel - dungeonLevel) * dmgdRateScale);
   int flawed = (int)((float)(maxLevel - dungeonLevel) * flawedRateScale);
 
-  //printf("%i rate: %i f: %i e: %i maxlevel: %i diff: %i\n", dungeonLevel, rate, fine, exceptional, maxLevel, maxLevel - dungeonLevel);
+  //DebugLog("%i rate: %i f: %i e: %i maxlevel: %i diff: %i\n", dungeonLevel, rate, fine, exceptional, maxLevel, maxLevel - dungeonLevel);
 
   std::map<ItemQuality, int> weights =
   {
@@ -3250,7 +3250,7 @@ void GameObjectsFactory::InitScrolls()
     //auto str = Util::StringFormat("%s = %s", GlobalConstants::SpellNameByType.at(si.SpellType_).data(), si.ScrollName.data());
     //Logger::Instance().Print(str);
 
-    // printf("%s = %s\n", GlobalConstants::SpellNameByType.at(si.SpellType_).data(), si.ScrollName.data());
+    // DebugLog("%s = %s\n", GlobalConstants::SpellNameByType.at(si.SpellType_).data(), si.ScrollName.data());
 
     scrollNames.erase(scrollNames.begin() + scrollNameIndex);
     validSpells.erase(validSpells.begin() + spellIndex);

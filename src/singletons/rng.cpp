@@ -1,6 +1,7 @@
 #include "rng.h"
 
 #include "constants.h"
+#include "util.h"
 
 void RNG::Init()
 {
@@ -21,12 +22,12 @@ void RNG::SetSeed(const std::string& hexValue)
   bool isSeedValid = true;
   if (hexValue.empty())
   {
-    printf("Seed value is empty, generating random\n");
+    DebugLog("Seed value is empty, generating random\n");
     isSeedValid = false;
   }
   else if (hexValue.length() > sizeof(unsigned long long))
   {
-    printf("!!! Seed value is too big (%lu digits against system's max of %lu), generating random\n", hexValue.length(), sizeof(unsigned long long) * 2);
+    DebugLog("!!! Seed value is too big (%lu digits against system's max of %lu), generating random\n", hexValue.length(), sizeof(unsigned long long) * 2);
     isSeedValid = false;
   }
   else
@@ -35,7 +36,7 @@ void RNG::SetSeed(const std::string& hexValue)
     {
       if (GlobalConstants::HexChars.find(c) == std::string::npos)
       {
-        printf("!!! Invalid seed value ('%s'), generating random\n", hexValue.data());
+        DebugLog("!!! Invalid seed value ('%s'), generating random\n", hexValue.data());
         isSeedValid = false;
         break;
       }

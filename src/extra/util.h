@@ -25,11 +25,16 @@
 // won't compile, because it will be unfolded into compound
 // statement with ; at the end of } brace, which will invalidate
 // syntax of if...else form.
+#ifndef USE_SDL
 #define DebugLog(format, ...)       \
   do {                               \
   printf(format, ##__VA_ARGS__);     \
   fflush(stdout);                    \
   } while (false)
+#else
+#include "SDL2/SDL.h"
+#define DebugLog(format, ...) SDL_Log(format, ##__VA_ARGS__)
+#endif
 
 namespace Util
 {  

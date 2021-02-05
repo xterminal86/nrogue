@@ -26,7 +26,7 @@ void BTSParser::ParseFromFile(const std::string& filename)
   std::ifstream f(filename);
   if (!f.is_open())
   {
-    printf("Can't open %s!\n", filename.data());
+    DebugLog("Can't open %s!\n", filename.data());
     return;
   }
 
@@ -45,7 +45,7 @@ void BTSParser::ParseFromFile(const std::string& filename)
 
   ParseFromString(text);
 
-  //printf("%s\n", _rawText.data());
+  //DebugLog("%s\n", _rawText.data());
 }
 
 void BTSParser::ParseFromString(const std::string& script)
@@ -59,7 +59,7 @@ void BTSParser::ParseFromString(const std::string& script)
     Logger::Instance().Print(str, true);
 
     #ifdef DEBUG_BUILD
-    printf("%s\n", str.data());
+    DebugLog("%s\n", str.data());
     #endif
 
     return;
@@ -108,7 +108,7 @@ void BTSParser::Print()
     i.Print();
   }
 
-  printf("Max indent: %i\n", _maxIndent);
+  DebugLog("Max indent: %i\n", _maxIndent);
 }
 
 void BTSParser::ParseLine(int indent, const std::string& line)
@@ -143,7 +143,7 @@ void BTSParser::ParseLine(int indent, const std::string& line)
 
   ReadTag(tagData, indent);
 
-  //printf("indent: %i, %s\n", indent, line.data());
+  //DebugLog("indent: %i, %s\n", indent, line.data());
 }
 
 void BTSParser::ReadTag(const std::string& tagData, int indent)
@@ -208,15 +208,15 @@ void BTSParser::FormTree(bool printDebug)
 {
   if (printDebug)
   {
-    printf("*** FORMING TREE ***\n\n");
+    DebugLog("*** FORMING TREE ***\n\n");
   }
 
   _traverseMap.clear();
 
   if (printDebug)
   {
-    printf("parsed nodes data:\n");
-    printf("------------------\n");
+    DebugLog("parsed nodes data:\n");
+    DebugLog("------------------\n");
   }
 
   for (auto& i : _parsedData)
@@ -227,14 +227,14 @@ void BTSParser::FormTree(bool printDebug)
     {
       std::string tabs(i.Indent, '.');
       std::string addInfo = (i.Params.size() != 0 ? i.Params["p1"].data() : "");
-      printf("%s 0x%X %s (%s)\n", tabs.data(), &i, i.NodeName.data(), addInfo.data());
+      DebugLog("%s 0x%X %s (%s)\n", tabs.data(), &i, i.NodeName.data(), addInfo.data());
     }
   }
 
   if (printDebug)
   {
-    printf("------------------\n\n");
-    printf("tree formed:\n\n");
+    DebugLog("------------------\n\n");
+    DebugLog("tree formed:\n\n");
   }
 
   std::map<ScriptNode*, bool> nodesCreatedMap;
@@ -261,14 +261,14 @@ void BTSParser::FormTree(bool printDebug)
           std::string addInfo2 = (parent->Params.size() != 0 ? parent->Params.at("p1").data() : "");
 
           std::string tabs(indent, '.');
-          printf("%s 0x%X %s (%s) <- 0x%X %s (%s)\n",
-                 tabs.data(),
-                 &_parsedData[i],
-                 _parsedData[i].NodeName.data(),
-                 addInfo1.data(),
-                 parent,
-                 parent->NodeName.data(),
-                 addInfo2.data());
+          DebugLog("%s 0x%X %s (%s) <- 0x%X %s (%s)\n",
+                   tabs.data(),
+                   &_parsedData[i],
+                   _parsedData[i].NodeName.data(),
+                   addInfo1.data(),
+                   parent,
+                   parent->NodeName.data(),
+                   addInfo2.data());
         }
 
         _traverseMap.at((ScriptNode*)&_parsedData[i]) = true;
@@ -306,15 +306,15 @@ void ScriptNode::Print()
 {
   std::string tabs(Indent, ' ');
 
-  printf("%s0x%X\n", tabs.data(), this);
-  printf("%sNodeName: %s\n", tabs.data(), NodeName.data());
-  printf("%sIndent  : %i\n", tabs.data(), Indent);
-  printf("%sParams:\n", tabs.data());
-  printf("%s{\n", tabs.data());
+  DebugLog("%s0x%X\n", tabs.data(), this);
+  DebugLog("%sNodeName: %s\n", tabs.data(), NodeName.data());
+  DebugLog("%sIndent  : %i\n", tabs.data(), Indent);
+  DebugLog("%sParams:\n", tabs.data());
+  DebugLog("%s{\n", tabs.data());
   for (auto& kvp : Params)
   {
-    printf("%s\t%s : %s\n", tabs.data(), kvp.first.data(), kvp.second.data());
+    DebugLog("%s\t%s : %s\n", tabs.data(), kvp.first.data(), kvp.second.data());
   }
 
-  printf("%s}\n", tabs.data());
+  DebugLog("%s}\n", tabs.data());
 }

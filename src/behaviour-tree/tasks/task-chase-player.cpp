@@ -7,7 +7,7 @@
 
 BTResult TaskChasePlayer::Run()
 {
-  //printf("[TaskChasePlayer]\n");
+  //DebugLog("[TaskChasePlayer]\n");
 
   Position playerPos = { _playerRef->PosX, _playerRef->PosY };
   Position objPos = { _objectToControl->PosX, _objectToControl->PosY };
@@ -26,11 +26,11 @@ BTResult TaskChasePlayer::Run()
   while (!copy.empty())
   {
     auto pos = copy.top();
-    printf("[%i %i] ", pos.X, pos.Y);
+    DebugLog("[%i %i] ", pos.X, pos.Y);
     copy.pop();
   }
 
-  printf("\n");
+  DebugLog("\n");
   */
 
   if (path.empty())

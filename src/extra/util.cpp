@@ -771,14 +771,14 @@ namespace Util
 
   void PrintVector(const std::string& title, const std::vector<Position>& v)
   {
-    printf("Vector of '%s' (size %u)\n", title.data(), v.size());
+    DebugLog("Vector of '%s' (size %u)\n", title.data(), v.size());
 
     for (auto& p : v)
     {
-      printf("[%i;%i] ", p.X, p.Y);
+      DebugLog("[%i;%i] ", p.X, p.Y);
     }
 
-    printf("\n");
+    DebugLog("\n");
   }
 
   void PrintLayout(const std::vector<std::string>& l)

@@ -1,5 +1,7 @@
 #include "room-helper.h"
 
+#include "util.h"
+
 RoomForLevel::RoomForLevel(int chance, const RoomLayout& l)
 {
   Chance = chance;
@@ -96,36 +98,36 @@ void RoomHelper::ParseLayout(const RoomLayout &layout)
 
 void RoomHelper::PrintInfo()
 {
-  printf("Parsed layout:\n");
+  DebugLog("Parsed layout:\n");
 
-  printf("[\n");
+  DebugLog("[\n");
 
   for (size_t x = 0; x < Layout.size(); x++)
   {
     for (size_t y = 0; y < Layout[x].length(); y++)
     {
-      printf("%c", Layout[x][y]);
+      DebugLog("%c", Layout[x][y]);
     }
 
-    printf("\n");
+    DebugLog("\n");
   }
-  printf("]\n");
+  DebugLog("]\n");
 
-  printf("\n");
+  DebugLog("\n");
 
-  printf("Edges:\n");
+  DebugLog("Edges:\n");
 
   for (auto& kvp : RoomEdgesByType)
   {
-    printf("%i: ", kvp.first);
+    DebugLog("%i: ", kvp.first);
 
     for (size_t i = 0; i < kvp.second.size(); i++)
     {
-      printf("%i", RoomEdgesByType[kvp.first][i]);
+      DebugLog("%i", RoomEdgesByType[kvp.first][i]);
     }
 
-    printf("\n");
+    DebugLog("\n");
   }
 
-  printf("\n");
+  DebugLog("\n");
 }
