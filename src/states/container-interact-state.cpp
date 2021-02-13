@@ -89,7 +89,7 @@ void ContainerInteractState::Update(bool forceUpdate)
     int quarter = tw / 4;
 
     for (int y = 0; y < th; y++)
-    {
+    {      
       Printer::Instance().PrintFB(half, y, ' ', "#000000", "#FFFFFF");
     }
 
@@ -97,6 +97,8 @@ void ContainerInteractState::Update(bool forceUpdate)
 
     Printer::Instance().PrintFB(quarter, 0, "Player", Printer::kAlignCenter, "#FFFFFF");
     Printer::Instance().PrintFB(tw - quarter - 1, 0, containerName, Printer::kAlignCenter, "#FFFFFF");
+
+    Printer::Instance().PrintFB(1, th - 1, "'Enter' - exchange", Printer::kAlignLeft, "#FFFFFF");
 
     DisplayPlayerInventory();
     DisplayContainerInventory();
@@ -135,11 +137,11 @@ void ContainerInteractState::DisplayPlayerInventory()
 
     if (_playerSide && index == _inventoryItemIndex)
     {
-      Printer::Instance().PrintFB(0, yPos + index, nameInInventory, Printer::kAlignLeft, "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(1, yPos + index, nameInInventory, Printer::kAlignLeft, "#000000", "#FFFFFF");
     }
     else
     {      
-      Printer::Instance().PrintFB(0, yPos + index, nameInInventory, Printer::kAlignLeft, textColor);
+      Printer::Instance().PrintFB(1, yPos + index, nameInInventory, Printer::kAlignLeft, textColor);
     }
 
     index++;
@@ -150,7 +152,7 @@ void ContainerInteractState::DisplayPlayerInventory()
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
     std::string stub(GlobalConstants::InventoryMaxNameLength, '-');
-    Printer::Instance().PrintFB(0, yPos + index, stub, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(1, yPos + index, stub, Printer::kAlignLeft, "#FFFFFF");
     yPos++;
   }
 }

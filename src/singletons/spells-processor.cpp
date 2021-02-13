@@ -457,7 +457,7 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
     int index = RNG::Instance().RandomRange(0, posToAppear.size());
     Position res = posToAppear[index];
 
-    GameObject* portal = new GameObject(lvl, tpPos.X, tpPos.Y, 'O', "#FFFFFF", "#0000FF");
+    GameObject* portal = new GameObject(lvl, tpPos.X, tpPos.Y, '0', "#FFFFFF", "#0000FF");
 
     portal->BlocksSight = true;
     portal->ObjectName = "Town Portal";

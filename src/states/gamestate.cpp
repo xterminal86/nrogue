@@ -65,7 +65,7 @@ int GameState::GetKeyDown()
   return res;
 }
 #else
-int GameState::GetKeyDown(bool waitForEvent)
+int GameState::GetKeyDown()
 {
   return getch();
 }

@@ -38,7 +38,7 @@
 // cmake config window called SDL2_LIBRARY and point it to libSDL2.dll.a file.
 //
 // In Linux everything should configure and build without problems,
-// provided you have distro specific ncurses-dev / SDL2-dev, SDL2_image-dev
+// provided you have distro specific ncurses-dev / SDL2-dev
 // packages installed.
 int main(int argc, char* argv[])
 {

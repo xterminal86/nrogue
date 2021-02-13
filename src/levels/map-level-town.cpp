@@ -108,17 +108,17 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
       "................#       #........",
       "................#       #........",
       "................|       |........",
-      "................#       #........",
-      "................#       #........",
-      "####-#######-#######+#######-####",
+      "####-###-###-####       #........",
+      "#               #       #........",
+      "## # # # # # # #####+#######-####",
       "#    h h h h h h        #       #",
       "+    h h h h h h        #       |",
-      "#                       +   /   |",
+      "#                       A   /   |",
       "+    h h h h h h        #       |",
       "#    h h h h h h        #       #",
-      "####-#######-#######+#######-####",
-      "................#       #........",
-      "................#       #........",
+      "## # # # # # # #####+#######-####",
+      "#               #       #........",
+      "####-###-###-####       #........",
       "................|       |........",
       "................#       #........",
       "................#       #........",
@@ -570,6 +570,13 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
           PlaceGroundTile(posX, posY, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
           break;
 
+        // NOTE: since ' ' (i.e. 'Space', 32 ASCII) is a transparent tile in the tileset,
+        // you must use bg color to color it, because colored tile for background
+        // is made from tile 219, which is a white block. So basically for ' ' tile
+        // foreground color is ignored.
+        //
+        // To allow fog of war to cover floor made of
+        // background colored ' ', set FgColor to black.
         case ' ':
           PlaceGroundTile(posX, posY, c, GlobalConstants::BlackColor, GlobalConstants::GroundColor, "Stone Tiles");
           break;
@@ -625,8 +632,7 @@ void MapLevelTown::CreateChurch(int x, int y)
           InsertStaticObject(posX, posY, t);
           break;
 
-        // To allow fog of war to cover floor made of
-        // background colored ' ', set FgColor to empty string.
+        // Check out important comments in CreateRoom()
         case ' ':
           PlaceGroundTile(posX, posY, c, GlobalConstants::BlackColor, GlobalConstants::GroundColor, "Stone Tiles");
           break;
@@ -634,6 +640,15 @@ void MapLevelTown::CreateChurch(int x, int y)
         case '+':
           PlaceDoor(posX, posY);
           break;
+
+        case 'A':
+        {
+          auto pc = _playerRef->GetClass();
+          // Only members of the clergy are allowed into the altar room
+          size_t openedBy = (pc != PlayerClass::ARCANIST) ? GlobalConstants::OpenedByNobody : GlobalConstants::OpenedByAnyone;
+          PlaceDoor(posX, posY, false, openedBy, "Royal Gate");
+        }
+        break;
 
         case 'h':
           t.Set(false, false, c, GlobalConstants::WoodColor, GlobalConstants::BlackColor, "Wooden Bench", "?Bench?");

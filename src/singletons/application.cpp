@@ -96,7 +96,7 @@ void Application::Run()
       TurnsPassed++;
     }
 
-    Timer::Instance().MeasureEnd();
+    Timer::Instance().MeasureEnd();    
   }
 }
 

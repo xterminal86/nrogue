@@ -4,6 +4,7 @@
 #include "game-object-info.h"
 #include "printer.h"
 #include "logger.h"
+#include "door-component.h"
 
 MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
 {  
@@ -453,9 +454,14 @@ void MapLevelBase::PlaceWall(int x, int y,
   InsertStaticObject(x, y, t, -1, pickaxeable);
 }
 
-void MapLevelBase::PlaceDoor(int x, int y, bool isOpen)
+void MapLevelBase::PlaceDoor(int x, int y, bool isOpen, size_t openedBy, const std::string& objName)
 {
-  GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, isOpen, "Door");
+  GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, isOpen, objName.empty() ? "Door" : objName);
+  if (openedBy != GlobalConstants::OpenedByAnyone)
+  {
+    DoorComponent* dc = door->GetComponent<DoorComponent>();
+    dc->OpenedBy = openedBy;
+  }
   InsertStaticObject(door);
 }
 

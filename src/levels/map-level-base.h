@@ -129,7 +129,7 @@ class MapLevelBase
                    const std::string& objName,
                    GameObjectType pickaxeable = GameObjectType::PICKAXEABLE);
     void PlaceShrine(const Position& pos, LevelBuilder& lb);
-    void PlaceDoor(int x, int y, bool isOpen = false);
+    void PlaceDoor(int x, int y, bool isOpen = false, size_t openedBy = GlobalConstants::OpenedByAnyone, const std::string& objName = std::string());
 
     Position _townPortalPos;
 };

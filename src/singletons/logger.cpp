@@ -2,6 +2,8 @@
 
 #include <ctime>
 
+#include "util.h"
+
 void Logger::Init()
 {
 }
@@ -47,8 +49,8 @@ void Logger::Print(const std::string &stringToPrint, bool error)
 
     _logFile << stringToPrint << "\n";
 
-    _logFile.flush();
-  }
+    _logFile.flush();    
+  }  
 }
 
 Logger::~Logger()

@@ -16,6 +16,8 @@ class Timer : public Singleton<Timer>
     const Ns& DeltaTime();
     const Ns& TimePassed();
 
+    const float& DT();
+
     void MeasureStart();
     void MeasureEnd();
 
@@ -28,6 +30,8 @@ class Timer : public Singleton<Timer>
 
     Clock::time_point _measureStart;
     Clock::time_point _measureEnd;
+
+    float _dt = 0.0f;
 };
 
 #endif // TIMER_H

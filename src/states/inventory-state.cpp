@@ -222,12 +222,12 @@ void InventoryState::Update(bool forceUpdate)
           stackAmount += " (E)";
         }
 
-        Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1, 2 + yPos, stackAmount, Printer::kAlignLeft, "#FFFFFF");
+        Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 2, 2 + yPos, stackAmount, Printer::kAlignLeft, "#FFFFFF");
       }
       else if (ic->Data.IsEquipped)
       {
         auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
-        Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1, 2 + yPos, equipStatus, Printer::kAlignLeft, "#FFFFFF");
+        Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 2, 2 + yPos, equipStatus, Printer::kAlignLeft, "#FFFFFF");
       }
 
       std::string textColor = Util::GetItemInventoryColor(ic->Data);
@@ -242,7 +242,7 @@ void InventoryState::Update(bool forceUpdate)
     for (int i = itemsCount; i < GlobalConstants::InventoryMaxSize; i++)
     {
       std::string stub(GlobalConstants::InventoryMaxNameLength, '-');
-      Printer::Instance().PrintFB(0, 2 + yPos, stub, Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(1, 2 + yPos, stub, Printer::kAlignLeft, "#FFFFFF");
       yPos++;
     }
 
@@ -322,14 +322,15 @@ void InventoryState::PrintFooter()
   };
 
   int additive = 0;
-
   int counter = 0;
+
+  // Left part
   for (int i = 0; i < 3; i++)
   {
     std::string tmp = footer[i];
     tmp.resize(part, ' ');
 
-    additive = (counter > 0) ? 3 : 0;
+    additive = (counter > 0) ? 3 : 1;
 
     Printer::Instance().PrintFB(counter * part + additive, th - 1, tmp, Printer::kAlignLeft, "#FFFFFF");
     counter++;
@@ -338,6 +339,7 @@ void InventoryState::PrintFooter()
   counter = 0;
   additive = 0;
 
+  // Right part
   for (size_t i = 3; i < footer.size(); i++)
   {
     int d = part - footer[i].length();
@@ -348,7 +350,7 @@ void InventoryState::PrintFooter()
       tmp.insert(0, " ");
     }
 
-    additive = (counter < 2) ? 1 : 0;
+    additive = 1; //(counter < 2) ? 1 : 0;
 
     Printer::Instance().PrintFB(tw / 2 + 1 + counter * part - additive, th - 1, tmp, Printer::kAlignLeft, "#FFFFFF");
     counter++;
@@ -396,11 +398,11 @@ void InventoryState::DrawSelectionBar(int yOffset, const std::string& text, cons
 {
   if (yOffset == _selectedIndex)
   {
-    Printer::Instance().PrintFB(0, 2 + yOffset, text, Printer::kAlignLeft, "#000000", "#FFFFFF");
+    Printer::Instance().PrintFB(1, 2 + yOffset, text, Printer::kAlignLeft, "#000000", "#FFFFFF");
   }
   else
   {
-    Printer::Instance().PrintFB(0, 2 + yOffset, text, Printer::kAlignLeft, textColor);
+    Printer::Instance().PrintFB(1, 2 + yOffset, text, Printer::kAlignLeft, textColor);
   }
 }
 

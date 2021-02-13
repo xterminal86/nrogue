@@ -32,10 +32,6 @@ void EnterNameState::HandleInput()
 
     case VK_BACKSPACE:
     {
-      //DebugLog("here\n");
-
-      // BUG: in SDL build backspace spams after
-      // entering some text
       if (_nameEntered.length() > 0)
       {
         _nameEntered.pop_back();
