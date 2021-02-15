@@ -69,6 +69,14 @@ class IntroState : public GameState
 
     void PrepareTown();
 
+    const std::map<PlayerClass, std::string> _scenarioNameByClass =
+    {
+      { PlayerClass::SOLDIER,  "WARRIOR'S REST"      },
+      { PlayerClass::THIEF,    "THIEF'S HIDEOUT"     },
+      { PlayerClass::ARCANIST, "HOLY QUEST"          },
+      { PlayerClass::CUSTOM,   "MYSTERIOUS STRANGER" }
+    };
+
     #ifdef DEBUG_BUILD
     template <typename T>
     void OverrideStartingLevel(MapType level, const Position& size)

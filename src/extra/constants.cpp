@@ -33,8 +33,6 @@ namespace GlobalConstants
   const size_t OpenedByAnyone = 0;
   const size_t OpenedByNobody = 1;
 
-  const size_t MaxNameLength = 24;
-
   const int HPMPBarLength = 20;
   const int AttributeMinimumRaiseChance = 5;
   const int AttributeIncreasedRaiseStep = 25;

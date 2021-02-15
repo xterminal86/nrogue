@@ -4,12 +4,26 @@
 #include "util.h"
 #include "printer.h"
 
+void EnterNameState::Prepare()
+{
+  _areEnteringName = true;
+
+  _x = Printer::Instance().TerminalWidth / 2;
+  _y = Printer::Instance().TerminalHeight / 2;
+
+  _cursorPos = _y - 2;
+}
+
 void EnterNameState::HandleInput()
 {
   _keyPressed = GetKeyDown();
 
   switch (_keyPressed)
   {
+    case VK_TAB:
+      _areEnteringName = !_areEnteringName;
+      break;
+
     case VK_ENTER:
     {
       // Check if entered string is only spaces
@@ -23,6 +37,8 @@ void EnterNameState::HandleInput()
         _nameEntered = Util::ChooseRandomName();
       }
 
+      RNG::Instance().SetSeed(_seedEntered);
+
       Application::Instance().PlayerInstance.Name = _nameEntered;
       Application::Instance().PlayerInstance.ObjectName = _nameEntered;
 
@@ -32,21 +48,38 @@ void EnterNameState::HandleInput()
 
     case VK_BACKSPACE:
     {
-      if (_nameEntered.length() > 0)
+      if (_areEnteringName)
       {
-        _nameEntered.pop_back();
+        if (_nameEntered.length() > 0)
+        {
+          _nameEntered.pop_back();
+        }
+      }
+      else
+      {
+        if (_seedEntered.length() > 0)
+        {
+          _seedEntered.pop_back();
+        }
       }
     }
     break;
 
     default:
-      if (_keyPressed >= 32 &&
-          _keyPressed <= 126 &&
-          _nameEntered.length() < GlobalConstants::MaxNameLength - 3)
+    {
+      if (_keyPressed >= 32 && _keyPressed <= 126)
       {
-        _nameEntered += (char)_keyPressed;
+        if (_areEnteringName && _nameEntered.length() < MaxNameLength - 3)
+        {
+          _nameEntered += (char)_keyPressed;
+        }
+        else if (!_areEnteringName && _seedEntered.length() < MaxSeedStringLength - 3)
+        {
+          _seedEntered += (char)_keyPressed;
+        }
       }
-      break;
+    }
+    break;
   }
 }
 
@@ -56,38 +89,62 @@ void EnterNameState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    size_t x = Printer::Instance().TerminalWidth / 2;
-    size_t y = Printer::Instance().TerminalHeight / 2;
-
     #ifdef USE_SDL
-    Printer::Instance().DrawWindow({ x - GlobalConstants::MaxNameLength / 2, y - 2 },
-                                   { GlobalConstants::MaxNameLength + 1, 4 },
-                                   kHeaderString,
-                                   "#FFFFFF",
-                                   GlobalConstants::MessageBoxHeaderBgColor);
-    #else
-    Printer::Instance().PrintFB(x, y - 2, kHeaderString, Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().DrawWindow({ _x - _maxNameHalf, _cursorPos - 2 },
+                                   { MaxNameLength + 1, 4 },
+                                   kEnterNameString,
+                                   _areEnteringName ? "#FFFFFF" : "#000000",
+                                   _areEnteringName ? GlobalConstants::MessageBoxHeaderBgColor : "#666666");
 
-    auto border = Util::GetPerimeter(x - GlobalConstants::MaxNameLength / 2,
-                                     y - 3,
-                                     GlobalConstants::MaxNameLength,
-                                     5, true);
+    Printer::Instance().DrawWindow({ _x - _maxSeedHalf, _cursorPos + 4 },
+                                   { MaxSeedStringLength + 1, 4 },
+                                   kEnterSeedString,
+                                   !_areEnteringName ? "#FFFFFF" : "#000000",
+                                   !_areEnteringName ? GlobalConstants::MessageBoxHeaderBgColor : "#666666");
+    #else    
+    auto border = Util::GetPerimeter(_x - _maxNameHalf,
+                                      _cursorPos - 2,
+                                      MaxNameLength,
+                                      4,
+                                      true);
 
     for (auto& i : border)
     {
       Printer::Instance().PrintFB(i.X, i.Y, '*', "#FFFFFF");
     }
+
+    border = Util::GetPerimeter(_x - _maxSeedHalf,
+                                 _cursorPos + 4,
+                                 MaxSeedStringLength,
+                                 4,
+                                 true);
+
+    for (auto& i : border)
+    {
+      Printer::Instance().PrintFB(i.X, i.Y, '*', "#FFFFFF");
+    }
+
+    Printer::Instance().PrintFB(_x, _cursorPos - 2, kEnterNameString, Printer::kAlignCenter, "#000000", "#FFFFFF");
+    Printer::Instance().PrintFB(_x, _cursorPos + 4, kEnterSeedString, Printer::kAlignCenter, "#000000", "#FFFFFF");
     #endif
 
-    if (_nameEntered.length() == 0)
+    Printer::Instance().PrintFB(_x - _maxNameHalf + 2, _cursorPos, _nameEntered, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(_x - _maxSeedHalf + 2, _cursorPos + 6, _seedEntered, Printer::kAlignLeft, "#FFFFFF");
+
+    if (_areEnteringName)
     {
-      Printer::Instance().PrintFB(x - GlobalConstants::MaxNameLength / 2 + 2, y, ' ', "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(_x - _maxNameHalf + 2 + _nameEntered.length(), _cursorPos, ' ', "#000000", "#FFFFFF");
     }
     else
     {
-      Printer::Instance().PrintFB(x - GlobalConstants::MaxNameLength / 2 + 2, y, _nameEntered, Printer::kAlignLeft, "#FFFFFF");
-      Printer::Instance().PrintFB(x - GlobalConstants::MaxNameLength / 2 + 2 + _nameEntered.length(), y, ' ', "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(_x - _maxSeedHalf + 2 + _seedEntered.length(), _cursorPos + 6, ' ', "#000000", "#FFFFFF");
     }
+
+    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth / 2,
+                                 Printer::Instance().TerminalHeight - 1,
+                                 "'Tab' - change fields",
+                                 Printer::kAlignCenter,
+                                 "#FFFFFF");
 
     Printer::Instance().Render();
   }

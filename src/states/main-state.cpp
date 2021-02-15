@@ -7,6 +7,8 @@
 #include "target-state.h"
 #include "spells-processor.h"
 
+#include <iomanip>
+
 void MainState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
@@ -99,6 +101,27 @@ void MainState::HandleInput()
     case 'i':
       Application::Instance().ChangeState(GameStates::INTERACT_INPUT_STATE);
       break;
+
+    case 'I':
+    {
+      std::vector<std::string> messages;
+
+      auto seedString = RNG::Instance().GetSeedString();
+
+      std::stringstream ss;
+
+      ss << "Seed string: \"" << seedString.first << "\"";
+      messages.push_back(ss.str());
+
+      ss.str("");
+
+      ss << "Seed value: " << seedString.second;
+
+      messages.push_back(ss.str());
+
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Scenario Information", messages);
+    }
+    break;
 
     case 'g':
       TryToPickupItem();
@@ -220,9 +243,6 @@ void MainState::Update(bool forceUpdate)
     }
 
     Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1, 0, Map::Instance().CurrentLevel->LevelName, Printer::kAlignRight, "#FFFFFF");
-
-    _debugInfo = Util::StringFormat("World seed: %lu (0x%X)", RNG::Instance().Seed, RNG::Instance().Seed);
-    Printer::Instance().PrintFB(0, 0, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
 
     #ifdef DEBUG_BUILD
     PrintDebugInfo();

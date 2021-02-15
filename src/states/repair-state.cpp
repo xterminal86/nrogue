@@ -78,7 +78,7 @@ void RepairState::Update(bool forceUpdate)
           str = Util::StringFormat(R"('%c' - %s (??/??))", c, name.data());
         }
 
-        Printer::Instance().PrintFB(0, 2 + itemIndex, str, Printer::kAlignLeft, "#FFFFFF");
+        Printer::Instance().PrintFB(1, 2 + itemIndex, str, Printer::kAlignLeft, "#FFFFFF");
 
         _itemRefByChar[c] = ic;
 

@@ -205,7 +205,7 @@ GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
     // Util::Sleep(100);
 
     //#ifndef USE_SDL
-    Util::Sleep(20);
+    //Util::Sleep(20);
     //#endif
 
     stoppedAt = CheckHit({ mx, my }, { line[i - 1].X, line[i - 1].Y });
@@ -751,6 +751,8 @@ int TargetState::CalculateHitChance()
   auto str = Util::StringFormat("Total unclamped hit chance: %i", chance);
   Logger::Instance().Print(str);
 
+  //DebugLog("%s", str.data());
+
   chance = Util::Clamp(chance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
 
   return chance;
@@ -776,6 +778,14 @@ int TargetState::CalculateChance(const Position& startPoint, const Position& end
                                 (attackChanceScale * skl),
                                 (distanceChanceDrop * d));
   Logger::Instance().Print(str);
+
+  /*
+  DebugLog("%s\n%i + %i - %i = %i\n", __PRETTY_FUNCTION__,
+                                     baseChance,
+                                     (attackChanceScale * skl),
+                                     (distanceChanceDrop * d),
+                                     chance);
+  */
 
   return chance;
 }

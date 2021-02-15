@@ -66,6 +66,11 @@ void IntroState::PrepareTown()
 
 void IntroState::Update(bool forceUpdate)
 {
+  Printer::Instance().PrintFB(Printer::Instance().TerminalWidth / 2,
+                               (Printer::Instance().TerminalHeight - _introStrings[Application::Instance().PlayerInstance.SelectedClass].size()) / 4,
+                               _scenarioNameByClass.at(Application::Instance().PlayerInstance.GetClass()),
+                               Printer::kAlignCenter,
+                               "#FFFFFF");
   if (Util::WaitForMs(10))
   {    
     int textIndex = Application::Instance().PlayerInstance.SelectedClass;

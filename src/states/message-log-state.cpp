@@ -65,10 +65,10 @@ void MessageLogState::Update(bool forceUpdate)
     {
       if (_scrollPosition == 0)
       {
-        Printer::Instance().PrintFB(0, 1, '*', "#FFFFFF");
+        Printer::Instance().PrintFB(0, 1, "->", Printer::kAlignLeft, "#FFFFFF");
       }
 
-      Printer::Instance().PrintFB(1, offsetY, messages[i], Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(3, offsetY, messages[i], Printer::kAlignLeft, "#FFFFFF");
       offsetY++;
     }
 

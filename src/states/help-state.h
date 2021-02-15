@@ -24,6 +24,7 @@ class HelpState : public GameState
       R"('a' - Attack                  )",
       R"('f' - Fire weapon / wand      )",
       R"('i' - Interact                )",
+      R"('I' - Scenario information    )",
       R"('l' - Enter "look mode"       )",
       R"('m' - Display message log     )",
       R"('@' - Display character sheet )",

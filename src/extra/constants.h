@@ -636,8 +636,6 @@ namespace GlobalConstants
   extern const size_t OpenedByAnyone;
   extern const size_t OpenedByNobody;
 
-  extern const size_t MaxNameLength;
-
   extern const int HPMPBarLength;
   extern const int AttributeMinimumRaiseChance;
   extern const int AttributeIncreasedRaiseStep;

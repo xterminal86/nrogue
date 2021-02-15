@@ -6,16 +6,16 @@
 
 HelpState::HelpState()
 {
-  // Kinda hack but fuck it
+  // NOTE: Kinda hack but fuck it
 
   std::string s = Util::StringFormat("'%c' '%c' '%c'", ALT_K7, ALT_K8, ALT_K9);
-  _helpText[14] = s;
+  _helpText[15] = s;
 
   s = Util::StringFormat("'%c' '%c' '%c' or numpad for movement", ALT_K4, ALT_K5, ALT_K6);
-  _helpText[16] = s;
+  _helpText[17] = s;
 
   s = Util::StringFormat("'%c' '%c' '%c'", ALT_K1, ALT_K2, ALT_K3);
-  _helpText[18] = s;
+  _helpText[19] = s;
 }
 
 void HelpState::Prepare()

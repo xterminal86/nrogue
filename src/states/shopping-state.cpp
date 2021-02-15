@@ -118,7 +118,7 @@ void ShoppingState::Update(bool forceUpdate)
     DisplayShopInventory();
 
     auto playerMoney = Util::StringFormat("You have: %i $", _playerRef->Money);
-    Printer::Instance().PrintFB(0, th - 1, playerMoney, Printer::kAlignLeft, GlobalConstants::CoinsColor);
+    Printer::Instance().PrintFB(1, th - 1, playerMoney, Printer::kAlignLeft, GlobalConstants::CoinsColor);
 
     Printer::Instance().PrintFB(tw, th - 1, "'i' - inspect ", Printer::kAlignRight, GlobalConstants::WhiteColor);
 
@@ -148,23 +148,23 @@ void ShoppingState::DisplayPlayerInventory()
 
     std::string extraInfo = GetItemExtraInfo(ic);
 
-    Printer::Instance().PrintFB(extraInfoStringPosX, yPos + index, extraInfo, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(extraInfoStringPosX + 1, yPos + index, extraInfo, Printer::kAlignLeft, "#FFFFFF");
 
     int cost = GetCost(ic, true);
 
     costString = Util::StringFormat(" $ %i", cost);
 
-    Printer::Instance().PrintFB(extraInfoStringPosX + itemStringTotalLen, yPos + index, costString, Printer::kAlignLeft, GlobalConstants::CoinsColor);
+    Printer::Instance().PrintFB(extraInfoStringPosX + itemStringTotalLen + 1, yPos + index, costString, Printer::kAlignLeft, GlobalConstants::CoinsColor);
 
     std::string textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (_playerSide && index == _inventoryItemIndex)
     {
-      Printer::Instance().PrintFB(0, yPos + index, nameInInventory, Printer::kAlignLeft, "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(1, yPos + index, nameInInventory, Printer::kAlignLeft, "#000000", "#FFFFFF");
     }
     else
     {
-      Printer::Instance().PrintFB(0, yPos + index, nameInInventory, Printer::kAlignLeft, textColor);
+      Printer::Instance().PrintFB(1, yPos + index, nameInInventory, Printer::kAlignLeft, textColor);
     }
 
     index++;
@@ -175,7 +175,7 @@ void ShoppingState::DisplayPlayerInventory()
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
     std::string stub(GlobalConstants::InventoryMaxNameLength, '-');
-    Printer::Instance().PrintFB(0, yPos + index, stub, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(1, yPos + index, stub, Printer::kAlignLeft, "#FFFFFF");
     yPos++;
   }
 }
