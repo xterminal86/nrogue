@@ -198,8 +198,8 @@ void NPCInteractState::PrintHeader()
 
 void NPCInteractState::PrintFooter()
 {
-  int tw = Printer::Instance().TerminalWidth;
-  int th = Printer::Instance().TerminalHeight;
+  int tw = Printer::TerminalWidth;
+  int th = Printer::TerminalHeight;
 
   if (_textPrinting)
   {

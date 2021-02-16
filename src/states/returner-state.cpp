@@ -92,14 +92,14 @@ void ReturnerState::Update(bool forceUpdate)
     auto msg1 = msgs.at(0);
     auto msg2 = msgs.at(1);
 
-    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
-                                Printer::Instance().TerminalHeight - 1,
+    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
+                                Printer::TerminalHeight - 1,
                                 msg1,
                                 Printer::kAlignRight,
                                 "#FFFFFF");
 
-    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
-                                Printer::Instance().TerminalHeight - 2,
+    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
+                                Printer::TerminalHeight - 2,
                                 msg2,
                                 Printer::kAlignRight,
                                 "#FFFFFF");

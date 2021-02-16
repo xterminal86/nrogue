@@ -49,8 +49,8 @@ void RepairState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    int tw = Printer::Instance().TerminalWidth;
-    int th = Printer::Instance().TerminalHeight;
+    int tw = Printer::TerminalWidth;
+    int th = Printer::TerminalHeight;
 
     DrawHeader(" REPAIR ITEMS ");
 

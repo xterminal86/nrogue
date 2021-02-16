@@ -31,7 +31,7 @@ void InfoState::Update(bool forceUpdate)
     std::string title = Util::StringFormat("%s the %s",
                                            playerRef.Name.data(),
                                            playerRef.GetClassName().data());
-    Printer::Instance().PrintFB(0, 0, title, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(1, 0, title, Printer::kAlignLeft, "#FFFFFF");
 
     int charToPrint = 0;
 
@@ -53,25 +53,25 @@ void InfoState::Update(bool forceUpdate)
     charToPrint = '|';
     #endif
 
-    int th = Printer::Instance().TerminalHeight;
+    int th = Printer::TerminalHeight;
     for (int y = 0; y < th; y++)
     {
       Printer::Instance().PrintFB(kMaxNameUnderscoreLength, y, charToPrint, "#FFFFFF");
     }
 
-    PrintAttribute(0, yPos, "LVL", playerRef.Attrs.Lvl);
+    PrintAttribute(1, yPos, "LVL", playerRef.Attrs.Lvl);
     //PrintRangedAttribute(0, yPos + 1, "EXP", playerRef.Attrs.Exp);
-    PrintAttribute(0, yPos + 1, "EXP", playerRef.Attrs.Exp.Min());
+    PrintAttribute(1, yPos + 1, "EXP", playerRef.Attrs.Exp.Min());
 
-    PrintAttribute(0, yPos + 3, "STR", playerRef.Attrs.Str);
-    PrintAttribute(0, yPos + 4, "DEF", playerRef.Attrs.Def);
-    PrintAttribute(0, yPos + 5, "MAG", playerRef.Attrs.Mag);
-    PrintAttribute(0, yPos + 6, "RES", playerRef.Attrs.Res);
-    PrintAttribute(0, yPos + 7, "SKL", playerRef.Attrs.Skl);
-    PrintAttribute(0, yPos + 8, "SPD", playerRef.Attrs.Spd);
+    PrintAttribute(1, yPos + 3, "STR", playerRef.Attrs.Str);
+    PrintAttribute(1, yPos + 4, "DEF", playerRef.Attrs.Def);
+    PrintAttribute(1, yPos + 5, "MAG", playerRef.Attrs.Mag);
+    PrintAttribute(1, yPos + 6, "RES", playerRef.Attrs.Res);
+    PrintAttribute(1, yPos + 7, "SKL", playerRef.Attrs.Skl);
+    PrintAttribute(1, yPos + 8, "SPD", playerRef.Attrs.Spd);
 
-    PrintRangedAttribute(0, yPos + 10, "HP", playerRef.Attrs.HP);
-    PrintRangedAttribute(0, yPos + 11, "MP", playerRef.Attrs.MP);
+    PrintRangedAttribute(1, yPos + 10, "HP", playerRef.Attrs.HP);
+    PrintRangedAttribute(1, yPos + 11, "MP", playerRef.Attrs.MP);
 
     int maxLength = FindAttrsMaxStringLength();
 
@@ -85,7 +85,7 @@ void InfoState::Update(bool forceUpdate)
     for (auto& kvp : playerRef.SkillLevelBySkill)
     {
       std::string skillName = GlobalConstants::SkillNameByType.at(kvp.first);
-      Printer::Instance().PrintFB(0, yPos + i, skillName, Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(1, yPos + i, skillName, Printer::kAlignLeft, "#FFFFFF");
       i++;
     }
 

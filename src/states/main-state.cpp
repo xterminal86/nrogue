@@ -242,7 +242,7 @@ void MainState::Update(bool forceUpdate)
       Printer::Instance().ResetMessagesToDisplay();
     }
 
-    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1, 0, Map::Instance().CurrentLevel->LevelName, Printer::kAlignRight, "#FFFFFF");
+    Printer::Instance().PrintFB(Printer::TerminalWidth - 1, 0, Map::Instance().CurrentLevel->LevelName, Printer::kAlignRight, "#FFFFFF");
 
     #ifdef DEBUG_BUILD
     PrintDebugInfo();
@@ -274,8 +274,8 @@ void MainState::ProcessMovement(const Position& dirOffsets)
 
 void MainState::DisplayGameLog()
 {
-  int x = Printer::Instance().TerminalWidth - 1;
-  int y = Printer::Instance().TerminalHeight - 1;
+  int x = Printer::TerminalWidth - 1;
+  int y = Printer::TerminalHeight - 1;
 
   int count = 0;
   auto msgs = Printer::Instance().GetLastMessages();
@@ -329,7 +329,7 @@ void MainState::DrawHPMP()
   int curMp = _playerRef->Attrs.MP.Min().Get();
   int maxMp = _playerRef->Attrs.MP.Max().Get();
 
-  int th = Printer::Instance().TerminalHeight;
+  int th = Printer::TerminalHeight;
 
   UpdateBar(0, th - 2, _playerRef->Attrs.HP);
 
@@ -611,7 +611,7 @@ void MainState::ProcessItemPickup(std::pair<int, GameObject*>& pair)
 
 void MainState::DisplayStartHint()
 {
-  int th = Printer::Instance().TerminalHeight;
+  int th = Printer::TerminalHeight;
 
   Printer::Instance().PrintFB(0, th - 4, '<', "#FFFFFF", GlobalConstants::DoorHighlightColor);
 
@@ -644,7 +644,7 @@ void MainState::DisplayStartHint()
 
 void MainState::DisplayExitHint()
 {
-  int th = Printer::Instance().TerminalHeight;
+  int th = Printer::TerminalHeight;
 
   Printer::Instance().PrintFB(0, th - 3, '>', "#FFFFFF", GlobalConstants::DoorHighlightColor);
 
@@ -684,7 +684,7 @@ void MainState::DisplayExitHint()
 
 void MainState::DisplayStatusIcons()
 {
-  int th = Printer::Instance().TerminalHeight;
+  int th = Printer::TerminalHeight;
 
   int startPos = 4;
 

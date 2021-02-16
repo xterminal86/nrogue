@@ -41,8 +41,8 @@ struct FBPixel
 class Printer : public Singleton<Printer> 
 {
   public:
-    size_t TerminalWidth;
-    size_t TerminalHeight;
+    static size_t TerminalWidth;
+    static size_t TerminalHeight;
 
     static const int kAlignLeft = 0;
     static const int kAlignCenter = 1;
@@ -84,7 +84,14 @@ class Printer : public Singleton<Printer>
                   const std::string& text,
                   int align,
                   const std::string& htmlColorFg,
-                  const std::string& htmlColorBg = "#000000");    
+                  const std::string& htmlColorBg = "#000000");
+
+    void PrintFB(const int& x, const int& y,
+                  const std::string& text,                  
+                  size_t scale,
+                  int align,
+                  const std::string& htmlColorFg,
+                  const std::string& htmlColorBg = "#000000");
 #else
     void PrintFB(const int& x, const int& y,
                  int image,
@@ -93,6 +100,13 @@ class Printer : public Singleton<Printer>
 
     void PrintFB(const int& x, const int& y,
                  const std::string& text,
+                 int align,
+                 const std::string& htmlColorFg,
+                 const std::string& htmlColorBg = "#000000");
+
+    void PrintFB(const int& x, const int& y,
+                 const std::string& text,
+                 size_t scale,
                  int align,
                  const std::string& htmlColorFg,
                  const std::string& htmlColorBg = "#000000");
@@ -176,6 +190,7 @@ class Printer : public Singleton<Printer>
     void InitForSDL();
 
     void DrawTile(int x, int y, int tileIndex);
+    void DrawTile(int x, int y, int tileIndex, size_t scale);
 
     TileColor ConvertHtmlToRGB(const std::string& htmlColor);
 

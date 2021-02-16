@@ -54,8 +54,8 @@ void MessageBoxState::Update(bool forceUpdate)
     // so 5 rows means we must add 4 if message.size = 1, 5 if 2 and so on
     int rows = 3 + _message.size();
 
-    int tw = Printer::Instance().TerminalWidth;
-    int th = Printer::Instance().TerminalHeight;
+    int tw = Printer::TerminalWidth;
+    int th = Printer::TerminalHeight;
 
     // x padding is randomly chosen
     int x1 = tw / 2 - len / 2 - 3;

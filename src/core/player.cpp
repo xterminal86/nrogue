@@ -169,8 +169,8 @@ void Player::PassByNPC(int dx, int dy)
 
 void Player::CheckVisibility()
 {  
-  int tw = Printer::Instance().TerminalWidth;
-  int th = Printer::Instance().TerminalHeight;
+  int tw = Printer::TerminalWidth;
+  int th = Printer::TerminalHeight;
 
   // Update map around player
 

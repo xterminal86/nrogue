@@ -143,8 +143,8 @@ void AttackState::Update(bool forceUpdate)
 
     _playerRef->Draw();
 
-    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
-                                Printer::Instance().TerminalHeight - 1,
+    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
+                                Printer::TerminalHeight - 1,
                                 Printer::Instance().GetLastMessage(),
                                 Printer::kAlignRight,
                                 "#FFFFFF");

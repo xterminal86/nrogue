@@ -73,8 +73,8 @@ void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
 
 void MapLevelBase::AdjustCamera()
 {
-  int tw = Printer::Instance().TerminalWidth;
-  int th = Printer::Instance().TerminalHeight;
+  int tw = Printer::TerminalWidth;
+  int th = Printer::TerminalHeight;
 
   MapOffsetX = tw / 2 - _playerRef->PosX;
   MapOffsetY = th / 2 - _playerRef->PosY;

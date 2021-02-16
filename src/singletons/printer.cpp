@@ -5,6 +5,9 @@
 #include "util.h"
 #include "logger.h"
 
+size_t Printer::TerminalWidth = 0;
+size_t Printer::TerminalHeight = 0;
+
 void Printer::Init()
 {
   if (_initialized)
@@ -276,6 +279,36 @@ void Printer::DrawTile(int x, int y, int tileIndex)
   SDL_RenderCopy(Application::Instance().Renderer, _tileset, &src, &dst);
 }
 
+void Printer::DrawTile(int x, int y, int tileIndex, size_t scale)
+{
+  size_t tileScaleW = (scale <= 1) ? _tileWidthScaled : _tileWidthScaled * ((scale - 1) * 3);
+  size_t tileScaleH = (scale <= 1) ? _tileHeightScaled : _tileHeightScaled * ((scale - 1) * 3);
+
+  size_t offsetX = (scale <= 1) ? 0 : tileScaleW / 3;
+  size_t offsetY = (scale <= 1) ? 0 : tileScaleH / 3;
+
+  TileInfo& tile = _tiles[tileIndex];
+
+  SDL_Rect src;
+  src.x = tile.X;
+  src.y = tile.Y;
+  src.w = _tileWidth;
+  src.h = _tileHeight;
+
+  SDL_Rect dst;
+  dst.x = x - offsetX;
+  dst.y = y - offsetY;
+  dst.w = tileScaleW;
+  dst.h = tileScaleH;
+
+  if (SDL_GetRenderTarget(Application::Instance().Renderer) == nullptr)
+  {
+    SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
+  }
+
+  SDL_RenderCopy(Application::Instance().Renderer, _tileset, &src, &dst);
+}
+
 void Printer::PrintFB(const int& x, const int& y,
                       int image,
                       const std::string& htmlColorFg,
@@ -340,6 +373,55 @@ void Printer::PrintFB(const int& x, const int& y,
     DrawTile(px, py, c);
 
     px += _tileWidthScaled;
+  }
+}
+
+void Printer::PrintFB(const int& x, const int& y,
+                      const std::string& text,
+                      size_t scale,
+                      int align,
+                      const std::string& htmlColorFg,
+                      const std::string& htmlColorBg)
+{
+  size_t tileScaleW = (scale <= 1) ? _tileWidthScaled : _tileWidthScaled * ((scale - 1) * 3);
+  size_t tileScaleH = (scale <= 1) ? _tileHeightScaled : _tileHeightScaled * ((scale - 1) * 3);
+
+  int px = x * _tileWidthScaled;
+  int py = y * _tileHeightScaled;
+
+  switch (align)
+  {
+    case kAlignCenter:
+    {
+      int pixelWidth = text.length() * tileScaleW;
+      px -= pixelWidth / 2;
+    }
+    break;
+
+    case kAlignRight:
+    {
+      int pixelWidth = text.length() * tileScaleW;
+      px -= pixelWidth;
+    }
+    break;
+  }
+
+  for (auto& c : text)
+  {
+    TileColor tc;
+
+    if (htmlColorBg.length() != 0)
+    {
+      tc = ConvertHtmlToRGB(htmlColorBg);
+      SDL_SetTextureColorMod(_tileset, tc.R, tc.G, tc.B);
+      DrawTile(px, py, 219, scale);
+    }
+
+    tc = ConvertHtmlToRGB(htmlColorFg);
+    SDL_SetTextureColorMod(_tileset, tc.R, tc.G, tc.B);
+    DrawTile(px, py, c, scale);
+
+    px += tileScaleW;
   }
 }
 
@@ -597,10 +679,10 @@ void Printer::PrintFB(const int& x, const int& y,
 }
 
 void Printer::PrintFB(const int& x, const int& y,
-                                 const std::string& text,
-                                 int align,
-                                 const std::string& htmlColorFg,
-                                 const std::string& htmlColorBg)
+                       const std::string& text,
+                       int align,
+                       const std::string& htmlColorFg,
+                       const std::string& htmlColorBg)
 {
   auto textPos = AlignText(x, y, align, text);
 
@@ -612,6 +694,17 @@ void Printer::PrintFB(const int& x, const int& y,
     PrintFB(textPos.second + xOffset, textPos.first, c, htmlColorFg, htmlColorBg);
     xOffset++;
   }
+}
+
+void Printer::PrintFB(const int& x, const int& y,
+                       const std::string& text,                       
+                       size_t scale,
+                       int align,
+                       const std::string& htmlColorFg,
+                       const std::string& htmlColorBg)
+{
+  // No scaling in ncurses :-(
+  PrintFB(x, y, text, align, htmlColorFg, htmlColorBg);
 }
 
 void Printer::PrepareFrameBuffer()

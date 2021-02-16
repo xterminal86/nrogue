@@ -28,7 +28,7 @@ void HelpState::HandleInput()
   _keyPressed = GetKeyDown();
 
   int msgSize = _helpText.size();
-  int th = Printer::Instance().TerminalHeight;
+  int th = Printer::TerminalHeight;
 
   // Since we draw messages from y = 1, compensate with (th - 2)
   int scrollLimit = (msgSize - 1) - (th - 2);
@@ -85,8 +85,8 @@ void HelpState::Update(bool forceUpdate)
 
 void HelpState::DrawScrollBars()
 {
-  size_t tw = Printer::Instance().TerminalWidth;
-  size_t th = Printer::Instance().TerminalHeight;
+  size_t tw = Printer::TerminalWidth;
+  size_t th = Printer::TerminalHeight;
 
   // Since we draw messages from y = 1, compensate y pos with (th - 2)
   int scrollLimit = (_helpText.size() - 1) - (th - 2);

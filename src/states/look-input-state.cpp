@@ -224,13 +224,13 @@ void LookInputState::Update(bool forceUpdate)
       lookStatus = "???";
     }
 
-    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth / 2, 0,
+    Printer::Instance().PrintFB(Printer::TerminalWidth / 2, 0,
                                   "Press 'q' to exit look mode",
                                   Printer::kAlignCenter,
                                   "#FFFFFF");
 
-    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1,
-                                  Printer::Instance().TerminalHeight - 1,
+    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
+                                  Printer::TerminalHeight - 1,
                                   lookStatus,
                                   Printer::kAlignRight,
                                   "#FFFFFF");
@@ -248,8 +248,8 @@ void LookInputState::MoveCursor(int dx, int dy)
   int nx = _cursorPosition.X + dx;
   int ny = _cursorPosition.Y + dy;
 
-  int hw = Printer::Instance().TerminalWidth / 2;
-  int hh = Printer::Instance().TerminalHeight / 2;
+  int hw = Printer::TerminalWidth / 2;
+  int hh = Printer::TerminalHeight / 2;
 
   nx = Util::Clamp(nx, _playerRef->PosX - hw + 1,
                        _playerRef->PosX + hw - 2);

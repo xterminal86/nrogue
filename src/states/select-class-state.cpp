@@ -55,8 +55,8 @@ void SelectClassState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    int tw = Printer::Instance().TerminalWidth;
-    int th = Printer::Instance().TerminalHeight;
+    int tw = Printer::TerminalWidth;
+    int th = Printer::TerminalHeight;
 
     Printer::Instance().PrintFB(tw / 2, th / 2 - 4, "Who are you?", Printer::kAlignCenter, "#FFFFFF");
 

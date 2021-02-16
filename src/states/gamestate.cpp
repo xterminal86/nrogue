@@ -92,7 +92,7 @@ bool GameState::ShouldShiftMap(int& key)
 
 void GameState::DrawHeader(const std::string& header)
 {
-  int tw = Printer::Instance().TerminalWidth;
+  int tw = Printer::TerminalWidth;
 
   for (int x = 0; x < tw; x++)
   {

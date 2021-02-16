@@ -612,8 +612,8 @@ void Application::InitSDL()
 
   Printer::Instance().Init();
 
-  Printer::Instance().TerminalWidth = kTerminalWidth;
-  Printer::Instance().TerminalHeight = kTerminalHeight;
+  Printer::TerminalWidth = kTerminalWidth;
+  Printer::TerminalHeight = kTerminalHeight;
 }
 #endif
 

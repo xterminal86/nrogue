@@ -10,8 +10,8 @@ void CustomClassState::Init()
 
 void CustomClassState::Prepare()
 {
-  _hw = Printer::Instance().TerminalWidth / 2;
-  _hh = Printer::Instance().TerminalHeight / 2;
+  _hw = Printer::TerminalWidth / 2;
+  _hh = Printer::TerminalHeight / 2;
 
   _points = kStartingPoints;
 
@@ -166,18 +166,18 @@ void CustomClassState::Update(bool forceUpdate)
 
     if (_displayWarning)
     {
-      Printer::Instance().PrintFB(_hw, Printer::Instance().TerminalHeight - 8, "[WARNING] unused points remaining", Printer::kAlignCenter, "#FFFF00");
-      Printer::Instance().PrintFB(_hw, Printer::Instance().TerminalHeight - 7, "Press 'Enter' if that's OK", Printer::kAlignCenter, "#FFFFFF");
+      Printer::Instance().PrintFB(_hw, Printer::TerminalHeight - 8, "[WARNING] unused points remaining", Printer::kAlignCenter, "#FFFF00");
+      Printer::Instance().PrintFB(_hw, Printer::TerminalHeight - 7, "Press 'Enter' if that's OK", Printer::kAlignCenter, "#FFFFFF");
     }
 
     Printer::Instance().PrintFB(_hw - 9 + 10 * _cursorCols, _startY + 2 + _cursorY, _cursorImage, "#FFFFFF");
 
-    Printer::Instance().PrintFB(_hw, Printer::Instance().TerminalHeight - 3, "Arrow keys to navigate", Printer::kAlignCenter, "#FFFFFF");
-    Printer::Instance().PrintFB(_hw, Printer::Instance().TerminalHeight - 2, "'.' or ',' to modify", Printer::kAlignCenter, "#FFFFFF");
-    Printer::Instance().PrintFB(_hw, Printer::Instance().TerminalHeight - 1, "Hold [SHIFT] for 5% step", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(_hw, Printer::TerminalHeight - 3, "Arrow keys to navigate", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(_hw, Printer::TerminalHeight - 2, "'.' or ',' to modify", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(_hw, Printer::TerminalHeight - 1, "Hold [SHIFT] for 5% step", Printer::kAlignCenter, "#FFFFFF");
 
-    Printer::Instance().PrintFB(0, Printer::Instance().TerminalHeight - 1, "'q' - go back", Printer::kAlignLeft, "#FFFFFF");
-    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth - 1, Printer::Instance().TerminalHeight - 1, "'Enter' - accept", Printer::kAlignRight, "#FFFFFF");
+    Printer::Instance().PrintFB(0, Printer::TerminalHeight - 1, "'q' - go back", Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(Printer::TerminalWidth - 1, Printer::TerminalHeight - 1, "'Enter' - accept", Printer::kAlignRight, "#FFFFFF");
 
     Printer::Instance().Render();
   }

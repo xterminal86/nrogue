@@ -100,8 +100,8 @@ void ShoppingState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    int tw = Printer::Instance().TerminalWidth;
-    int th = Printer::Instance().TerminalHeight;
+    int tw = Printer::TerminalWidth;
+    int th = Printer::TerminalHeight;
 
     DrawHeader(_shopTitle);
 
@@ -187,7 +187,7 @@ void ShoppingState::DisplayShopInventory()
   int yPos = 2;
   int index = 0;
 
-  int tw = Printer::Instance().TerminalWidth;
+  int tw = Printer::TerminalWidth;
 
   int xPos = tw - 1;
 

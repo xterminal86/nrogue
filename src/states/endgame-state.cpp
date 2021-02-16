@@ -48,7 +48,7 @@ void EndgameState::Update(bool forceUpdate)
       DisplayGameLog();
     }
 
-    Printer::Instance().PrintFB(Printer::Instance().TerminalWidth / 2, 0, "Press 'q' to exit", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(Printer::TerminalWidth / 2, 0, "Press 'q' to exit", Printer::kAlignCenter, "#FFFFFF");
 
     Printer::Instance().Render();
   }
@@ -56,8 +56,8 @@ void EndgameState::Update(bool forceUpdate)
 
 void EndgameState::DisplayGameLog()
 {
-  int x = Printer::Instance().TerminalWidth - 1;
-  int y = Printer::Instance().TerminalHeight - 1;
+  int x = Printer::TerminalWidth - 1;
+  int y = Printer::TerminalHeight - 1;
 
   //Printer::Instance().PrintFB(x, y, Printer::Instance().GetLastMessage(), Printer::kAlignRight, "#FFFFFF");
 
@@ -77,7 +77,7 @@ void EndgameState::DrawHPMP()
   int curMp = _playerRef->Attrs.MP.Min().Get();
   int maxMp = _playerRef->Attrs.MP.Max().Get();
 
-  int th = Printer::Instance().TerminalHeight;
+  int th = Printer::TerminalHeight;
 
   UpdateBar(0, th - 2, _playerRef->Attrs.HP);
 

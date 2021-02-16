@@ -588,8 +588,8 @@ void TargetState::MoveCursor(int dx, int dy)
   int nx = _cursorPosition.X + dx;
   int ny = _cursorPosition.Y + dy;
 
-  int hw = Printer::Instance().TerminalWidth / 2;
-  int hh = Printer::Instance().TerminalHeight / 2;
+  int hw = Printer::TerminalWidth / 2;
+  int hh = Printer::TerminalHeight / 2;
 
   nx = Util::Clamp(nx, _playerRef->PosX - hw + 1,
                        _playerRef->PosX + hw - 2);
@@ -682,7 +682,7 @@ void TargetState::Update(bool forceUpdate)
       DrawCursor();
     }
 
-    int tw = Printer::Instance().TerminalWidth;
+    int tw = Printer::TerminalWidth;
 
     Printer::Instance().PrintFB(tw / 2, 0,
                                 "Select target then press 'f' or 'Enter' to fire",

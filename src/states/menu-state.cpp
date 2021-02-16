@@ -28,8 +28,8 @@ void MenuState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    int tw = Printer::Instance().TerminalWidth;
-    int th = Printer::Instance().TerminalHeight;
+    int tw = Printer::TerminalWidth;
+    int th = Printer::TerminalHeight;
 
     int halfW = tw / 2;
     int halfH = th / 2;

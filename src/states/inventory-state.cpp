@@ -256,7 +256,7 @@ void InventoryState::Update(bool forceUpdate)
 
 void InventoryState::DisplayEquipment()
 {
-  int tw = Printer::Instance().TerminalWidth;
+  int tw = Printer::TerminalWidth;
 
   tw /= 2;
 
@@ -306,8 +306,8 @@ void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldNa
 
 void InventoryState::PrintFooter()
 {
-  int tw = Printer::Instance().TerminalWidth;
-  int th = Printer::Instance().TerminalHeight;
+  int tw = Printer::TerminalWidth;
+  int th = Printer::TerminalHeight;
 
   int part = tw / 6;
 

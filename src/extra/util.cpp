@@ -359,8 +359,8 @@ namespace Util
   {
     std::vector<Position> result;
 
-    int tw = Printer::Instance().TerminalWidth;
-    int th = Printer::Instance().TerminalHeight;
+    int tw = Printer::TerminalWidth;
+    int th = Printer::TerminalHeight;
 
     int lx = x1;
     int ly = y1;
@@ -388,8 +388,8 @@ namespace Util
   {
     std::vector<Position> res;
 
-    int tw = Printer::Instance().TerminalWidth;
-    int th = Printer::Instance().TerminalHeight;
+    int tw = Printer::TerminalWidth;
+    int th = Printer::TerminalHeight;
 
     int lx = x1;
     int ly = y1;
@@ -432,8 +432,8 @@ namespace Util
   {
     std::vector<Position> result;
 
-    int tw = Printer::Instance().TerminalWidth;
-    int th = Printer::Instance().TerminalHeight;
+    int tw = Printer::TerminalWidth;
+    int th = Printer::TerminalHeight;
 
     int lx = pointX - rangeX;
     int ly = pointY - rangeY;

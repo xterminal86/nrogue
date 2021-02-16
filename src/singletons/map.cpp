@@ -239,8 +239,8 @@ void Map::RemoveDestroyed()
   int playerX = Application::Instance().PlayerInstance.PosX;
   int playerY = Application::Instance().PlayerInstance.PosY;
 
-  int tw = Printer::Instance().TerminalWidth;
-  int th = Printer::Instance().TerminalHeight;
+  int tw = Printer::TerminalWidth;
+  int th = Printer::TerminalHeight;
 
   auto mapCells = Util::GetRectAroundPoint(playerX, playerY, tw / 2, th / 2, CurrentLevel->MapSize);
   for (auto& cell : mapCells)
@@ -478,8 +478,8 @@ void Map::ShowLoadingText(const std::string& textOverride)
 {
   std::string text = textOverride.empty() ? "Now loading..." : textOverride;
 
-  int tw = Printer::Instance().TerminalWidth / 2;
-  int th = Printer::Instance().TerminalHeight / 2;
+  int tw = Printer::TerminalWidth / 2;
+  int th = Printer::TerminalHeight / 2;
 
   int lx = tw - text.length() / 2;
   int hx = tw + text.length() / 2;
@@ -726,8 +726,8 @@ bool Map::IsObjectVisible(const Position &from, const Position &to)
 
 void Map::DrawMapTilesAroundPlayer()
 {
-  int tw = Printer::Instance().TerminalWidth;
-  int th = Printer::Instance().TerminalHeight;
+  int tw = Printer::TerminalWidth;
+  int th = Printer::TerminalHeight;
 
   auto mapCells = Util::GetRectAroundPoint(_playerRef->PosX, _playerRef->PosY, tw / 2, th / 2, CurrentLevel->MapSize);
   for (auto& cell : mapCells)
