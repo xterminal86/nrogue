@@ -1,6 +1,8 @@
 # NROGUE
 *ncurses roguelike challenge*
 
+![screenshot](https://user-images.githubusercontent.com/11379604/108273698-f7167d00-7184-11eb-9946-0b7a9b0f6ed9.png)
+
 I decided to challenge myself by making a game with minimal requirements possible.  
 Just like in old times, when all you had was just one binary file.  
 Since I'm working with Linux, I thought that making a game that uses just terminal libraries (e.g. ncurses)
