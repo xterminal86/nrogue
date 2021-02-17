@@ -654,6 +654,7 @@ namespace GlobalConstants
 
   extern const std::string BlackColor;
   extern const std::string WhiteColor;
+  extern const std::string RedColor;
   extern const std::string DandelionYellowColor;
   extern const std::string RedPoppyColor;
   extern const std::string MarbleColor;

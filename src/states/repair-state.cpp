@@ -52,7 +52,7 @@ void RepairState::Update(bool forceUpdate)
     int tw = Printer::TerminalWidth;
     int th = Printer::TerminalHeight;
 
-    DrawHeader(" REPAIR ITEMS ");
+    DrawHeader(_header);
 
     int itemIndex = 0;
     for (auto& i : _playerRef->Inventory.Contents)
@@ -78,7 +78,7 @@ void RepairState::Update(bool forceUpdate)
           str = Util::StringFormat(R"('%c' - %s (??/??))", c, name.data());
         }
 
-        Printer::Instance().PrintFB(1, 2 + itemIndex, str, Printer::kAlignLeft, "#FFFFFF");
+        Printer::Instance().PrintFB(1, 2 + itemIndex, str, Printer::kAlignLeft, GlobalConstants::WhiteColor);
 
         _itemRefByChar[c] = ic;
 
@@ -86,7 +86,7 @@ void RepairState::Update(bool forceUpdate)
       }
     }
 
-    Printer::Instance().PrintFB(tw / 2, th - 1, "'q' - cancel", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(tw / 2, th - 1, "'q' - cancel", Printer::kAlignCenter, GlobalConstants::WhiteColor);
 
     Printer::Instance().Render();
   }

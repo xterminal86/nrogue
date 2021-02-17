@@ -11,6 +11,9 @@
 void ShoppingState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
+
+  _tw = Printer::TerminalWidth;
+  _th = Printer::TerminalHeight;
 }
 
 void ShoppingState::Prepare()
@@ -100,17 +103,14 @@ void ShoppingState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    int tw = Printer::TerminalWidth;
-    int th = Printer::TerminalHeight;
-
     DrawHeader(_shopTitle);
 
-    for (int y = 1; y < th; y++)
+    for (int y = 1; y < _th; y++)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(tw / 2, y, (int)NameCP437::VBAR_2, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw / 2, y, (int)NameCP437::VBAR_2, GlobalConstants::WhiteColor);
       #else
-      Printer::Instance().PrintFB(tw / 2, y, '|', "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(_tw / 2, y, '|', GlobalConstants::BlackColor, GlobalConstants::WhiteColor);
       #endif
     }
 
@@ -118,9 +118,9 @@ void ShoppingState::Update(bool forceUpdate)
     DisplayShopInventory();
 
     auto playerMoney = Util::StringFormat("You have: %i $", _playerRef->Money);
-    Printer::Instance().PrintFB(1, th - 1, playerMoney, Printer::kAlignLeft, GlobalConstants::CoinsColor);
+    Printer::Instance().PrintFB(1, _th - 1, playerMoney, Printer::kAlignLeft, GlobalConstants::CoinsColor);
 
-    Printer::Instance().PrintFB(tw, th - 1, "'i' - inspect ", Printer::kAlignRight, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(_tw, _th - 1, "'i' - inspect ", Printer::kAlignRight, GlobalConstants::WhiteColor);
 
     Printer::Instance().Render();
   }
@@ -148,23 +148,40 @@ void ShoppingState::DisplayPlayerInventory()
 
     std::string extraInfo = GetItemExtraInfo(ic);
 
-    Printer::Instance().PrintFB(extraInfoStringPosX + 1, yPos + index, extraInfo, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(extraInfoStringPosX + 1,
+                                 yPos + index,
+                                 extraInfo,
+                                 Printer::kAlignLeft,
+                                 GlobalConstants::WhiteColor);
 
     int cost = GetCost(ic, true);
 
     costString = Util::StringFormat(" $ %i", cost);
 
-    Printer::Instance().PrintFB(extraInfoStringPosX + itemStringTotalLen + 1, yPos + index, costString, Printer::kAlignLeft, GlobalConstants::CoinsColor);
+    Printer::Instance().PrintFB(extraInfoStringPosX + itemStringTotalLen + 1,
+                                 yPos + index,
+                                 costString,
+                                 Printer::kAlignLeft,
+                                 GlobalConstants::CoinsColor);
 
     std::string textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (_playerSide && index == _inventoryItemIndex)
     {
-      Printer::Instance().PrintFB(1, yPos + index, nameInInventory, Printer::kAlignLeft, "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(1,
+                                   yPos + index,
+                                   nameInInventory,
+                                   Printer::kAlignLeft,
+                                   GlobalConstants::BlackColor,
+                                   GlobalConstants::WhiteColor);
     }
     else
     {
-      Printer::Instance().PrintFB(1, yPos + index, nameInInventory, Printer::kAlignLeft, textColor);
+      Printer::Instance().PrintFB(1,
+                                   yPos + index,
+                                   nameInInventory,
+                                   Printer::kAlignLeft,
+                                   textColor);
     }
 
     index++;
@@ -175,7 +192,11 @@ void ShoppingState::DisplayPlayerInventory()
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
     std::string stub(GlobalConstants::InventoryMaxNameLength, '-');
-    Printer::Instance().PrintFB(1, yPos + index, stub, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(1,
+                                 yPos + index,
+                                 stub,
+                                 Printer::kAlignLeft,
+                                 GlobalConstants::WhiteColor);
     yPos++;
   }
 }
@@ -211,7 +232,11 @@ void ShoppingState::DisplayShopInventory()
 
     std::string extraInfo = GetItemExtraInfo(ic);
 
-    Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1, yPos + index, extraInfo, Printer::kAlignRight, "#FFFFFF");
+    Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1,
+                                 yPos + index,
+                                 extraInfo,
+                                 Printer::kAlignRight,
+                                 GlobalConstants::WhiteColor);
 
     int cost = GetCost(ic, false);
 
@@ -225,11 +250,20 @@ void ShoppingState::DisplayShopInventory()
 
     if (!_playerSide && index == _inventoryItemIndex)
     {
-      Printer::Instance().PrintFB(xPos, yPos + index, nameInInventory, Printer::kAlignRight, "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(xPos,
+                                   yPos + index,
+                                   nameInInventory,
+                                   Printer::kAlignRight,
+                                   GlobalConstants::BlackColor,
+                                   GlobalConstants::WhiteColor);
     }
     else
     {
-      Printer::Instance().PrintFB(xPos, yPos + index, nameInInventory, Printer::kAlignRight, textColor);
+      Printer::Instance().PrintFB(xPos,
+                                   yPos + index,
+                                   nameInInventory,
+                                   Printer::kAlignRight,
+                                   textColor);
     }
 
     index++;
@@ -240,7 +274,11 @@ void ShoppingState::DisplayShopInventory()
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
     std::string stub(GlobalConstants::InventoryMaxNameLength, '-');
-    Printer::Instance().PrintFB(xPos, yPos + index, stub, Printer::kAlignRight, "#FFFFFF");
+    Printer::Instance().PrintFB(xPos,
+                                 yPos + index,
+                                 stub,
+                                 Printer::kAlignRight,
+                                 GlobalConstants::WhiteColor);
     yPos++;
   }
 }
@@ -316,13 +354,19 @@ void ShoppingState::BuyOrSellItem()
 
     if (ic->Data.IsEquipped)
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                              "Information",
+                                              { "Unequip first!" },
+                                              GlobalConstants::MessageBoxRedBorderColor);
       return;
     }
 
     if (ic->Data.IsImportant)
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "This looks important - better hold on to it" }, GlobalConstants::MessageBoxBlueBorderColor);
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                              "Information",
+                                              { "This looks important - better hold on to it" },
+                                              GlobalConstants::MessageBoxBlueBorderColor);
       return;
     }
 

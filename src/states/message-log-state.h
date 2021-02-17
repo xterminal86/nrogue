@@ -17,6 +17,8 @@ class MessageLogState : public GameState
     const int kMaxGameLogMessages = 100;
 
     int _scrollPosition = 0;
+
+    const std::string _windowHeader = " GAME LOG ";
 };
 
 #endif // MESSAGELOGSTATE_H

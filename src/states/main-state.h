@@ -28,25 +28,22 @@ class MainState : public GameState
     void DisplayExitHint();
     void DisplayStatusIcons();
     void DisplayGameLog();
+    void DisplayScenarioInformation();
     void TryToPickupItem();
+    void CheckIfSomethingElseIsLyingHere(const Position& pos);
     void CheckStairs(int stairsSymbol);
     void DrawHPMP();
+    void GetActorsAround();
     void PrintDebugInfo();
+    void PrintNoAttackInTown();
+    void ProcessItemPickup(std::pair<int, GameObject*>& pair);
     void ProcessRangedWeapon();
     void ProcessWand(ItemComponent* wand);
     void ProcessWeapon(ItemComponent* wand);
-    void PrintNoAttackInTown();
     void ProcessMovement(const Position& dirOffsets);
-
-    bool ProcessMoneyPickup(std::pair<int, GameObject*>& pair);
-
-    void ProcessItemPickup(std::pair<int, GameObject*>& pair);
-
     void UpdateBar(int x, int y, RangedAttribute& attr);
 
-    void GetActorsAround();
-
-    void CheckIfSomethingElseIsLyingHere(const Position& pos);
+    bool ProcessMoneyPickup(std::pair<int, GameObject*>& pair);
 
     Position _cursorPosition;
 

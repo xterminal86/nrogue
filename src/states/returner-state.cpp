@@ -96,13 +96,13 @@ void ReturnerState::Update(bool forceUpdate)
                                 Printer::TerminalHeight - 1,
                                 msg1,
                                 Printer::kAlignRight,
-                                "#FFFFFF");
+                                GlobalConstants::WhiteColor);
 
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 2,
                                 msg2,
                                 Printer::kAlignRight,
-                                "#FFFFFF");
+                                GlobalConstants::WhiteColor);
 
     Printer::Instance().Render();
   }

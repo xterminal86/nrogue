@@ -31,6 +31,16 @@ class InventoryState : public GameState
     void DrawSelectionBar(int yOffset, const std::string& text, const std::string& textColor);
 
     int _selectedIndex;
+
+    const std::vector<std::string> _footer =
+    {
+      "'i' - inspect",
+      "'e' - equip",
+      "'s' - sort",
+      "'u' - use",
+      "'d' - drop",
+      "'t' - throw"
+    };
 };
 
 #endif // INVENTORYSTATE_H

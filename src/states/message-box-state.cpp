@@ -67,13 +67,13 @@ void MessageBoxState::Update(bool forceUpdate)
     auto area = Util::GetScreenRect(x1, y1, x2, y2);
     for (auto& p : area)
     {
-      Printer::Instance().PrintFB(p.X, p.Y, ' ', "#000000", _bgColor);
+      Printer::Instance().PrintFB(p.X, p.Y, ' ', GlobalConstants::BlackColor, _bgColor);
     }
 
     auto border = Util::GetScreenRectPerimeter(x1, y1, x2, y2);
     for (auto& b : border)
     {
-      Printer::Instance().PrintFB(b.X, b.Y, ' ', "#000000", _borderColor);
+      Printer::Instance().PrintFB(b.X, b.Y, ' ', GlobalConstants::BlackColor, _borderColor);
     }
 
     std::string header = _header;
@@ -82,13 +82,23 @@ void MessageBoxState::Update(bool forceUpdate)
       header.insert(0, " ");
       header.append(" ");
 
-      Printer::Instance().PrintFB(tw / 2, y1, header, Printer::kAlignCenter, "#FFFFFF", "#4444FF");
+      Printer::Instance().PrintFB(tw / 2,
+                                  y1,
+                                  header,
+                                  Printer::kAlignCenter,
+                                  GlobalConstants::WhiteColor,
+                                  "#4444FF");
     }
 
     int offset = 0;
     for (auto& s : _message)
     {
-      Printer::Instance().PrintFB(tw / 2, th / 2 - _message.size() / 2 + offset, s, Printer::kAlignCenter, "#FFFFFF", _bgColor);
+      Printer::Instance().PrintFB(tw / 2,
+                                  th / 2 - _message.size() / 2 + offset,
+                                  s,
+                                  Printer::kAlignCenter,
+                                  GlobalConstants::WhiteColor,
+                                  _bgColor);
       offset++;
     }
     #else
@@ -101,16 +111,21 @@ void MessageBoxState::Update(bool forceUpdate)
 
     Printer::Instance().DrawWindow({ x1, y1 }, { x2 - x1, y2 - y1 },
                                    _header,
-                                   "#FFFFFF",
+                                   GlobalConstants::WhiteColor,
                                    headerBgColor,
                                    _borderColor,
-                                   "#000000",
+                                   GlobalConstants::BlackColor,
                                    _bgColor);
 
     int offset = 0;
     for (auto& s : _message)
     {
-      Printer::Instance().PrintFB(tw / 2, th / 2 - _message.size() / 2 + offset, s, Printer::kAlignCenter, "#FFFFFF", _bgColor);
+      Printer::Instance().PrintFB(tw / 2,
+                                   th / 2 - _message.size() / 2 + offset,
+                                   s,
+                                   Printer::kAlignCenter,
+                                   GlobalConstants::WhiteColor,
+                                   _bgColor);
       offset++;
     }
 

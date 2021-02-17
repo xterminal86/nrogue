@@ -52,6 +52,7 @@ namespace GlobalConstants
 
   const std::string BlackColor = "#000000";
   const std::string WhiteColor = "#FFFFFF";
+  const std::string RedColor = "#FF0000";
   const std::string DandelionYellowColor = "#F0E130";
   const std::string RedPoppyColor = "#E42F0C";
   const std::string MarbleColor = "#FFE0E0";

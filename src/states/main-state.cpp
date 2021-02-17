@@ -103,25 +103,8 @@ void MainState::HandleInput()
       break;
 
     case 'I':
-    {
-      std::vector<std::string> messages;
-
-      auto seedString = RNG::Instance().GetSeedString();
-
-      std::stringstream ss;
-
-      ss << "Seed string: \"" << seedString.first << "\"";
-      messages.push_back(ss.str());
-
-      ss.str("");
-
-      ss << "Seed value: " << seedString.second;
-
-      messages.push_back(ss.str());
-
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Scenario Information", messages);
-    }
-    break;
+      DisplayScenarioInformation();
+      break;
 
     case 'g':
       TryToPickupItem();
@@ -242,7 +225,11 @@ void MainState::Update(bool forceUpdate)
       Printer::Instance().ResetMessagesToDisplay();
     }
 
-    Printer::Instance().PrintFB(Printer::TerminalWidth - 1, 0, Map::Instance().CurrentLevel->LevelName, Printer::kAlignRight, "#FFFFFF");
+    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
+                                 0,
+                                 Map::Instance().CurrentLevel->LevelName,
+                                 Printer::kAlignRight,
+                                 GlobalConstants::WhiteColor);
 
     #ifdef DEBUG_BUILD
     PrintDebugInfo();
@@ -281,7 +268,11 @@ void MainState::DisplayGameLog()
   auto msgs = Printer::Instance().GetLastMessages();
   for (auto& m : msgs)
   {
-    Printer::Instance().PrintFB(x, y - count, m, Printer::kAlignRight, "#FFFFFF");
+    Printer::Instance().PrintFB(x,
+                                 y - count,
+                                 m,
+                                 Printer::kAlignRight,
+                                 GlobalConstants::WhiteColor);
     count++;
   }
 }
@@ -334,7 +325,12 @@ void MainState::DrawHPMP()
   UpdateBar(0, th - 2, _playerRef->Attrs.HP);
 
   auto str = Util::StringFormat("%i/%i", curHp, maxHp);
-  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 2, str, Printer::kAlignCenter, "#FFFFFF", "#880000");
+  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
+                               th - 2,
+                               str,
+                               Printer::kAlignCenter,
+                               GlobalConstants::WhiteColor,
+                               "#880000");
 
   UpdateBar(0, th - 1, _playerRef->Attrs.MP);
 
@@ -355,7 +351,7 @@ void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
 
   bar += "]";
 
-  Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, GlobalConstants::WhiteColor);
 }
 
 void MainState::CheckStairs(int stairsSymbol)
@@ -398,28 +394,28 @@ void MainState::PrintDebugInfo()
                                   _playerRef->PosY,
                                   _playerRef->Attrs.Hunger);
 
-  Printer::Instance().PrintFB(0, 1, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(0, 1, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
 
   _debugInfo = Util::StringFormat("Key: %i Actors: %i Respawn: %i",
                                   _keyPressed,
                                   Map::Instance().CurrentLevel->ActorGameObjects.size(),
                                   Map::Instance().CurrentLevel->RespawnCounter());
 
-  Printer::Instance().PrintFB(0, 2, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(0, 2, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
 
   _debugInfo = Util::StringFormat("Level Start: [%i;%i]", Map::Instance().CurrentLevel->LevelStart.X, Map::Instance().CurrentLevel->LevelStart.Y);
-  Printer::Instance().PrintFB(0, 3, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(0, 3, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
 
   _debugInfo = Util::StringFormat("Level Exit: [%i;%i]", Map::Instance().CurrentLevel->LevelExit.X, Map::Instance().CurrentLevel->LevelExit.Y);
-  Printer::Instance().PrintFB(0, 4, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(0, 4, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
 
   _debugInfo = Util::StringFormat("Colors Used: %i", Printer::Instance().ColorsUsed());
-  Printer::Instance().PrintFB(0, 5, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(0, 5, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
 
   _debugInfo = Util::StringFormat("Turns passed: %i", Application::Instance().TurnsPassed);
-  Printer::Instance().PrintFB(0, 6, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(0, 6, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
 
-  Printer::Instance().PrintFB(0, 7, "Actors watched:", Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(0, 7, "Actors watched:", Printer::kAlignLeft, GlobalConstants::WhiteColor);
 
   int yOffset = 0;
   bool found = false;
@@ -430,7 +426,7 @@ void MainState::PrintDebugInfo()
       if (a->ObjectId() == id)
       {
         _debugInfo = Util::StringFormat("%s_%lu (%i)", a->ObjectName.data(), id, a->Attrs.ActionMeter);
-        Printer::Instance().PrintFB(0, 8 + yOffset, _debugInfo, Printer::kAlignLeft, "#FFFFFF");
+        Printer::Instance().PrintFB(0, 8 + yOffset, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
         yOffset++;
         found = true;
       }
@@ -439,7 +435,7 @@ void MainState::PrintDebugInfo()
 
   if (!found)
   {
-    Printer::Instance().PrintFB(0, 8, "<Press 's' to scan 1x1 around player>", Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(0, 8, "<Press 's' to scan 1x1 around player>", Printer::kAlignLeft, GlobalConstants::WhiteColor);
   }
 }
 
@@ -539,19 +535,19 @@ void MainState::ProcessWand(ItemComponent* wand)
   {    
     switch (wand->Data.SpellHeld)
     {
-      // TODO: complete other wands
-      // (see GameObjectsFactory::CreateRandomWand())
+      // TODO: finish wands effects and attack
 
       case SpellType::LIGHT:
         SpellsProcessor::Instance().ProcessWand(wand);
         break;
 
-      case SpellType::FIREBALL:
-      case SpellType::LIGHTNING:
       case SpellType::STRIKE:
-      case SpellType::MAGIC_MISSILE:
+      case SpellType::FROST:
       case SpellType::TELEPORT:
+      case SpellType::FIREBALL:
       case SpellType::LASER:
+      case SpellType::LIGHTNING:
+      case SpellType::MAGIC_MISSILE:
       {
         auto s = Application::Instance().GetGameStateRefByName(GameStates::TARGET_STATE);
         TargetState* ts = static_cast<TargetState*>(s);
@@ -613,7 +609,11 @@ void MainState::DisplayStartHint()
 {
   int th = Printer::TerminalHeight;
 
-  Printer::Instance().PrintFB(0, th - 4, '<', "#FFFFFF", GlobalConstants::DoorHighlightColor);
+  Printer::Instance().PrintFB(0,
+                               th - 4,
+                               '<',
+                               GlobalConstants::WhiteColor,
+                               GlobalConstants::DoorHighlightColor);
 
   auto curLvl = Map::Instance().CurrentLevel;
   int dx = curLvl->LevelStart.X - _playerRef->PosX;
@@ -639,14 +639,22 @@ void MainState::DisplayStartHint()
     dir += "W";
   }
 
-  Printer::Instance().PrintFB(1, th - 4, dir, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(1,
+                               th - 4,
+                               dir,
+                               Printer::kAlignLeft,
+                               GlobalConstants::WhiteColor);
 }
 
 void MainState::DisplayExitHint()
 {
   int th = Printer::TerminalHeight;
 
-  Printer::Instance().PrintFB(0, th - 3, '>', "#FFFFFF", GlobalConstants::DoorHighlightColor);
+  Printer::Instance().PrintFB(0,
+                               th - 3,
+                               '>',
+                               GlobalConstants::WhiteColor,
+                               GlobalConstants::DoorHighlightColor);
 
   auto curLvl = Map::Instance().CurrentLevel;
   if (curLvl->ExitFound)
@@ -674,11 +682,19 @@ void MainState::DisplayExitHint()
       dir += "W";
     }
 
-    Printer::Instance().PrintFB(1, th - 3, dir, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(1,
+                                 th - 3,
+                                 dir,
+                                 Printer::kAlignLeft,
+                                 GlobalConstants::WhiteColor);
   }
   else
   {
-    Printer::Instance().PrintFB(1, th - 3, "??", Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(1,
+                                 th - 3,
+                                 "??",
+                                 Printer::kAlignLeft,
+                                 GlobalConstants::WhiteColor);
   }
 }
 
@@ -692,7 +708,11 @@ void MainState::DisplayStatusIcons()
 
   if (_playerRef->IsStarving)
   {
-    Printer::Instance().PrintFB(startPos, th - 3, '%', "#FFFFFF", "#FF0000");
+    Printer::Instance().PrintFB(startPos,
+                                 th - 3,
+                                 '%',
+                                 GlobalConstants::WhiteColor,
+                                 GlobalConstants::RedColor);
   }
   else
   {
@@ -700,7 +720,7 @@ void MainState::DisplayStatusIcons()
     int part = hungerMax - hungerMax * 0.25;
     if (_playerRef->Attrs.Hunger >= part)
     {
-      Printer::Instance().PrintFB(startPos, th - 3, '%', "#FFFFFF", "#999900");
+      Printer::Instance().PrintFB(startPos, th - 3, '%', GlobalConstants::WhiteColor, "#999900");
     }
   }
 
@@ -761,7 +781,11 @@ void MainState::DisplayStatusIcons()
         continue;
       }
 
-      Printer::Instance().PrintFB(offsetX, th - 4, shortName, Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(offsetX,
+                                   th - 4,
+                                   shortName,
+                                   Printer::kAlignLeft,
+                                   GlobalConstants::WhiteColor);
       offsetX += 4;
 
       lastDisplayedEffect = shortName;
@@ -803,4 +827,24 @@ void MainState::GetActorsAround()
       }
     }
   }
+}
+
+void MainState::DisplayScenarioInformation()
+{
+  std::vector<std::string> messages;
+
+  auto seedString = RNG::Instance().GetSeedString();
+
+  std::stringstream ss;
+
+  ss << "Seed string: \"" << seedString.first << "\"";
+  messages.push_back(ss.str());
+
+  ss.str("");
+
+  ss << "Seed value: " << seedString.second;
+
+  messages.push_back(ss.str());
+
+  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Scenario Information", messages);
 }

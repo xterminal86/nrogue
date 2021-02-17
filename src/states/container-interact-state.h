@@ -28,6 +28,9 @@ class ContainerInteractState : public GameState
 
     void CheckIndexLimits();
     void TryToTransferItem();
+
+    size_t _twHalf = 0;
+    size_t _twQuarter = 0;
 };
 
 #endif // CONTAINERINTERACTSTATE_H

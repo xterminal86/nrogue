@@ -311,23 +311,13 @@ void InventoryState::PrintFooter()
 
   int part = tw / 6;
 
-  std::vector<std::string> footer =
-  {
-    "'i' - inspect",
-    "'e' - equip",
-    "'s' - sort",
-    "'u' - use",
-    "'d' - drop",
-    "'t' - throw"
-  };
-
   int additive = 0;
   int counter = 0;
 
   // Left part
   for (int i = 0; i < 3; i++)
   {
-    std::string tmp = footer[i];
+    std::string tmp = _footer[i];
     tmp.resize(part, ' ');
 
     additive = (counter > 0) ? 3 : 1;
@@ -340,11 +330,11 @@ void InventoryState::PrintFooter()
   additive = 0;
 
   // Right part
-  for (size_t i = 3; i < footer.size(); i++)
+  for (size_t i = 3; i < _footer.size(); i++)
   {
-    int d = part - footer[i].length();
+    int d = part - _footer[i].length();
 
-    std::string tmp = footer[i];
+    std::string tmp = _footer[i];
     for (int j = 0; j < d; j++)
     {
       tmp.insert(0, " ");

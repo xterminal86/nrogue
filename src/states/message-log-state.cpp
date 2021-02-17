@@ -54,7 +54,7 @@ void MessageLogState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    DrawHeader(" GAME LOG ");
+    DrawHeader(_windowHeader);
 
     DrawScrollBars();
 
@@ -65,10 +65,10 @@ void MessageLogState::Update(bool forceUpdate)
     {
       if (_scrollPosition == 0)
       {
-        Printer::Instance().PrintFB(0, 1, "->", Printer::kAlignLeft, "#FFFFFF");
+        Printer::Instance().PrintFB(0, 1, "=>", Printer::kAlignLeft, GlobalConstants::WhiteColor, "#666666");
       }
 
-      Printer::Instance().PrintFB(3, offsetY, messages[i], Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(3, offsetY, messages[i], Printer::kAlignLeft, GlobalConstants::WhiteColor);
       offsetY++;
     }
 
@@ -91,27 +91,27 @@ void MessageLogState::DrawScrollBars()
     if (_scrollPosition == 0)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(tw - 1, th - 1, (int)NameCP437::DARROW_2, "#FFFFFF");
+      Printer::Instance().PrintFB(tw - 1, th - 1, (int)NameCP437::DARROW_2, GlobalConstants::WhiteColor);
       #else
-      Printer::Instance().PrintFB(tw - 1, th - 1, "\\/", Printer::kAlignRight, "#FFFFFF");
+      Printer::Instance().PrintFB(tw - 1, th - 1, "\\/", Printer::kAlignRight, GlobalConstants::WhiteColor);
       #endif
     }
     else if (_scrollPosition == scrollLimit)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(tw - 1, 1, (int)NameCP437::UARROW_2, "#FFFFFF");
+      Printer::Instance().PrintFB(tw - 1, 1, (int)NameCP437::UARROW_2, GlobalConstants::WhiteColor);
       #else
-      Printer::Instance().PrintFB(tw - 1, 1, "/\\", Printer::kAlignRight, "#FFFFFF");
+      Printer::Instance().PrintFB(tw - 1, 1, "/\\", Printer::kAlignRight, GlobalConstants::WhiteColor);
       #endif
     }
     else if (_scrollPosition > 0 && _scrollPosition != scrollLimit)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(tw - 1, 1, (int)NameCP437::UARROW_2, "#FFFFFF");
-      Printer::Instance().PrintFB(tw - 1, th - 1, (int)NameCP437::DARROW_2, "#FFFFFF");
+      Printer::Instance().PrintFB(tw - 1, 1, (int)NameCP437::UARROW_2, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(tw - 1, th - 1, (int)NameCP437::DARROW_2, GlobalConstants::WhiteColor);
       #else
-      Printer::Instance().PrintFB(tw - 1, 1, "/\\", Printer::kAlignRight, "#FFFFFF");
-      Printer::Instance().PrintFB(tw - 1, th - 1, "\\/", Printer::kAlignRight, "#FFFFFF");
+      Printer::Instance().PrintFB(tw - 1, 1, "/\\", Printer::kAlignRight, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(tw - 1, th - 1, "\\/", Printer::kAlignRight, GlobalConstants::WhiteColor);
       #endif
     }
   }

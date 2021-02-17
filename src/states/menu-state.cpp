@@ -3,6 +3,20 @@
 #include "printer.h"
 #include "util.h"
 
+void MenuState::Init()
+{
+  _tw = Printer::TerminalWidth;
+  _th = Printer::TerminalHeight;
+
+  _twHalf = _tw / 2;
+  _thHalf = _th / 2;
+
+  _titleX = _twHalf;
+  _titleY = _thHalf / 2 - _title.size() / 2;
+
+  _debugInfo = Util::StringFormat("terminal size: %ix%i", _tw, _th);
+}
+
 void MenuState::HandleInput()
 {
   _keyPressed = GetKeyDown();
@@ -28,28 +42,19 @@ void MenuState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    int tw = Printer::TerminalWidth;
-    int th = Printer::TerminalHeight;
-
-    int halfW = tw / 2;
-    int halfH = th / 2;
-
-    int titleX = halfW;
-    int titleY = halfH / 2 - _title.size() / 2;
-
     #ifdef USE_SDL
     Printer::Instance().DrawWindow({ 0, 0 },
-                                   { tw - 1, th - 1 },
+                                   { _tw - 1, _th - 1 },
                                    "",
-                                   "#000000",
-                                   "#000000",
-                                   "#FFFFFF");
+                                   GlobalConstants::BlackColor,
+                                   GlobalConstants::BlackColor,
+                                   GlobalConstants::WhiteColor);
 
     #else
-    auto border = Util::GetPerimeter(0, 0, tw - 1, th - 1);
+    auto border = Util::GetPerimeter(0, 0, _tw - 1, _th - 1);
     for (auto& i : border)
     {      
-      Printer::Instance().PrintFB(i.X, i.Y, ' ', "#FFFFFF", "#FFFFFF");
+      Printer::Instance().PrintFB(i.X, i.Y, ' ', GlobalConstants::WhiteColor, GlobalConstants::WhiteColor);
     }
     #endif
 
@@ -62,11 +67,18 @@ void MenuState::Update(bool forceUpdate)
       {
         if (c == '#')
         {
-          Printer::Instance().PrintFB(titleX - xAlign + xOffset, titleY + yOffset, ' ', "#000000", "#FFFFFF");
+          Printer::Instance().PrintFB(_titleX - xAlign + xOffset,
+                                       _titleY + yOffset,
+                                       ' ',
+                                       GlobalConstants::BlackColor,
+                                       GlobalConstants::WhiteColor);
         }
         else
         {
-          Printer::Instance().PrintFB(titleX - xAlign + xOffset, titleY + yOffset, c, "#FFFFFF");
+          Printer::Instance().PrintFB(_titleX - xAlign + xOffset,
+                                       _titleY + yOffset,
+                                       c,
+                                       GlobalConstants::WhiteColor);
         }
 
         xOffset++;
@@ -75,25 +87,32 @@ void MenuState::Update(bool forceUpdate)
       yOffset++;
     }
 
-    Printer::Instance().PrintFB(halfW, halfH + 2, "(press 'Enter' to start, 'q' to exit)", Printer::kAlignCenter, "#FFFFFF");
-    Printer::Instance().PrintFB(tw - 2, th - 2, "(c) 2018 by xterminal86", Printer::kAlignRight, "#FFFFFF");
+    Printer::Instance().PrintFB(_twHalf,
+                                 _thHalf + 2,
+                                 _welcome,
+                                 Printer::kAlignCenter,
+                                 GlobalConstants::WhiteColor);
 
-    std::string builtWith;
+    for (size_t i = 0; i < _signature.size(); i++)
+    {
+      Printer::Instance().PrintFB(_tw - 2,
+                                   _th - 1 - (_signature.size() - i),
+                                   _signature[i],
+                                   Printer::kAlignRight,
+                                   GlobalConstants::WhiteColor);
+    }
 
-    #ifdef USE_SDL
-    builtWith = "powered by SDL2";
-    #else
-      #if defined(__unix__) || defined(__linux__)
-      builtWith = "powered by ncurses";
-      #else
-      builtWith = "powered by pdcurses";
-      #endif
-    #endif
+    Printer::Instance().PrintFB(_twHalf,
+                                 _th - 2,
+                                 _builtWith,
+                                 Printer::kAlignCenter,
+                                 GlobalConstants::WhiteColor);
 
-    Printer::Instance().PrintFB(halfW, th - 2, builtWith, Printer::kAlignCenter, "#FFFFFF");
-
-    auto debugInfo = Util::StringFormat("terminal size: %ix%i", tw, th);
-    Printer::Instance().PrintFB(1, th - 2, debugInfo, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(2,
+                                 _th - 2,
+                                 _debugInfo,
+                                 Printer::kAlignLeft,
+                                 GlobalConstants::WhiteColor);
 
     Printer::Instance().Render();
   }

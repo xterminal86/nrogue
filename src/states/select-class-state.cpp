@@ -58,14 +58,19 @@ void SelectClassState::Update(bool forceUpdate)
     int tw = Printer::TerminalWidth;
     int th = Printer::TerminalHeight;
 
-    Printer::Instance().PrintFB(tw / 2, th / 2 - 4, "Who are you?", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(tw / 2, th / 2 - 4, "Who are you?", Printer::kAlignCenter, GlobalConstants::WhiteColor);
 
     int offset = 0;
     int index = 0;
     for (auto& i : _menuItems)
     {
-      std::string fgColor = (index == _menuIndex) ? "#000000" : "#FFFFFF";
-      std::string bgColor = (index == _menuIndex) ? "#FFFFFF" : "#000000";
+      std::string fgColor = (index == _menuIndex) ?
+                            GlobalConstants::BlackColor :
+                            GlobalConstants::WhiteColor;
+
+      std::string bgColor = (index == _menuIndex) ?
+                            GlobalConstants::WhiteColor :
+                            GlobalConstants::BlackColor;
 
       Printer::Instance().PrintFB(tw / 2, th / 2 + offset, i, Printer::kAlignCenter, fgColor, bgColor);
 

@@ -135,8 +135,8 @@ void NPCInteractState::AnimateText()
 
   auto line = _blockToPrint[_currentLine];
 
-  Printer::Instance().PrintFB(_charPos + 1, _currentLine + 2, ' ',  "#000000", "#FFFFFF");
-  Printer::Instance().PrintFB(_charPos, _currentLine + 2, line[_charPos], "#FFFFFF");
+  Printer::Instance().PrintFB(_charPos + 1, _currentLine + 2, ' ',  GlobalConstants::BlackColor, GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(_charPos, _currentLine + 2, line[_charPos], GlobalConstants::WhiteColor);
 
   Printer::Instance().Render();
 
@@ -144,7 +144,7 @@ void NPCInteractState::AnimateText()
 
   if (_charPos >= line.length())
   {
-    Printer::Instance().PrintFB(_charPos, _currentLine + 2, ' ', "#000000");
+    Printer::Instance().PrintFB(_charPos, _currentLine + 2, ' ', GlobalConstants::BlackColor);
     _charPos = 0;
     _currentLine++;
   }
@@ -165,7 +165,7 @@ void NPCInteractState::DisplayStillText()
   int yPos = 2;
   for (auto& l : _blockToPrint)
   {
-    Printer::Instance().PrintFB(0, yPos, l, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(0, yPos, l, Printer::kAlignLeft, GlobalConstants::WhiteColor);
     yPos++;
   }
 
@@ -198,19 +198,19 @@ void NPCInteractState::PrintHeader()
 
 void NPCInteractState::PrintFooter()
 {
-  int tw = Printer::TerminalWidth;
-  int th = Printer::TerminalHeight;
+  size_t tw = Printer::TerminalWidth;
+  size_t th = Printer::TerminalHeight;
 
   if (_textPrinting)
   {
-    Printer::Instance().PrintFB(tw / 2, th - 1, "Listening...", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(tw / 2, th - 1, "Listening...", Printer::kAlignCenter, GlobalConstants::WhiteColor);
     return;
   }
 
-  int part = tw / 5;
+  size_t part = tw / 5;
 
-  Printer::Instance().PrintFB(tw / 2 - part * 2, th - 1, "'n' - name", Printer::kAlignLeft, "#FFFFFF");
-  Printer::Instance().PrintFB(tw / 2 - part, th - 1, "'j' - job", Printer::kAlignLeft, "#FFFFFF");
-  Printer::Instance().PrintFB(tw / 2 + part, th - 1, "'g' - gossip", Printer::kAlignRight, "#FFFFFF");
-  Printer::Instance().PrintFB(tw / 2 + part * 2, th - 1, "'q' - bye", Printer::kAlignRight, "#FFFFFF");
+  Printer::Instance().PrintFB(tw / 2 - part * 2, th - 1, "'n' - name", Printer::kAlignLeft, GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(tw / 2 - part, th - 1, "'j' - job", Printer::kAlignLeft, GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(tw / 2 + part, th - 1, "'g' - gossip", Printer::kAlignRight, GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(tw / 2 + part * 2, th - 1, "'q' - bye", Printer::kAlignRight, GlobalConstants::WhiteColor);
 }

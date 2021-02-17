@@ -7,6 +7,9 @@
 void ContainerInteractState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;  
+
+  _twHalf = Printer::TerminalWidth / 2;
+  _twQuarter = Printer::TerminalWidth / 4;
 }
 
 void ContainerInteractState::Cleanup()
@@ -82,23 +85,17 @@ void ContainerInteractState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    int tw = Printer::TerminalWidth;
-    int th = Printer::TerminalHeight;
-
-    int half = tw / 2;
-    int quarter = tw / 4;
-
-    for (int y = 0; y < th; y++)
+    for (size_t y = 0; y < Printer::TerminalHeight; y++)
     {      
-      Printer::Instance().PrintFB(half, y, ' ', "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(_twHalf, y, ' ', "#000000", "#FFFFFF");
     }
 
     auto containerName = _containerToInteractWith->OwnerGameObject->ObjectName;
 
-    Printer::Instance().PrintFB(quarter, 0, "Player", Printer::kAlignCenter, "#FFFFFF");
-    Printer::Instance().PrintFB(tw - quarter - 1, 0, containerName, Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(_twQuarter, 0, "Player", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(Printer::TerminalWidth - _twQuarter - 1, 0, containerName, Printer::kAlignCenter, "#FFFFFF");
 
-    Printer::Instance().PrintFB(1, th - 1, "'Enter' - exchange", Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(1, Printer::TerminalHeight - 1, "'Enter' - exchange", Printer::kAlignLeft, "#FFFFFF");
 
     DisplayPlayerInventory();
     DisplayContainerInventory();

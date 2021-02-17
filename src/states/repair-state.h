@@ -26,6 +26,8 @@ class RepairState : public GameState
     std::map<char, ItemComponent*> _itemRefByChar;
 
     void RepairItem(ItemComponent* itemToRepair);
+
+    const std::string _header = " REPAIR ITEMS ";
 };
 
 
