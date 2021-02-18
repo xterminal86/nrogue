@@ -43,6 +43,8 @@ class EnterNameState : public GameState
 
     size_t _inputTypeIndex = 0;
 
+    size_t _seedHex = 0;
+
     const std::map<size_t, InputType> _inputTypeByIndex =
     {
       { 0, InputType::NAME        },

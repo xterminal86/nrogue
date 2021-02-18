@@ -27,10 +27,8 @@ void EnterNameState::HandleInput()
 
       _inputType = _inputTypeByIndex.at(_inputTypeIndex);
 
-      if (_inputType != InputType::NAME)
-      {
-        _seedEntered.clear();
-      }
+      _seedEntered.clear();
+      _seedHex = 0;
     }
     break;
 
@@ -47,7 +45,14 @@ void EnterNameState::HandleInput()
         _nameEntered = Util::ChooseRandomName();
       }
 
-      RNG::Instance().SetSeed(_seedEntered);
+      if (_seedHex != 0)
+      {
+        RNG::Instance().SetSeed(_seedHex);
+      }
+      else
+      {
+        RNG::Instance().SetSeed(_seedEntered);
+      }
 
       Application::Instance().PlayerInstance.Name = _nameEntered;
       Application::Instance().PlayerInstance.ObjectName = _nameEntered;
@@ -110,6 +115,8 @@ void EnterNameState::HandleInput()
             }
 
             _seedEntered += c;
+
+            _seedHex = std::stoull(_seedEntered, nullptr, 16);
           }
         }
       }
