@@ -19,13 +19,10 @@
 
 // TODO:
 //
-// - Status effects
-// - Ranged weapons / throwing
 // - Wands
 // - Scrolls
 // - Level design
 // - Skills
-// - Magic / Rare / Unique items
 // - Traps, secrets
 // - Locked doors / chests
 // - std::stringstream for text aligment

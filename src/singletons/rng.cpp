@@ -27,7 +27,7 @@ void RNG::SetSeed(const std::string& string)
 
   if (string.empty())
   {
-    DebugLog("Seed value is empty, generating random\n");
+    //DebugLog("Seed value is empty, generating random\n");
     isSeedValid = false;
   }
   else
@@ -82,4 +82,13 @@ void RNG::GenerateSeedString(const std::string& str)
   ss << "0x" << std::uppercase << std::hex << Seed;
 
   _seedString = { str, ss.str() };
+}
+
+std::string RNG::GetSeedAsHex()
+{
+  std::stringstream ss;
+
+  ss << std::hex << std::uppercase << Seed;
+
+  return ss.str();
 }

@@ -17,6 +17,8 @@ class RNG : public Singleton<RNG>
     void SetSeed(size_t seed);
     void SetSeed(const std::string& string);
 
+    std::string GetSeedAsHex();
+
     int RandomRange(int min, int max);
 
     const SeedString& GetSeedString();

@@ -110,13 +110,13 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
       "................|       |........",
       "####-###-###-####       #........",
       "#               #       #........",
-      "## # # # # # # #####+#######-####",
+      "#  P P P P P P #####+#######-####",
       "#    h h h h h h        #       #",
       "+    h h h h h h        #       |",
       "#                       A   /   |",
       "+    h h h h h h        #       |",
       "#    h h h h h h        #       #",
-      "## # # # # # # #####+#######-####",
+      "#  P P P P P P #####+#######-####",
       "#               #       #........",
       "####-###-###-####       #........",
       "................|       |........",
@@ -624,6 +624,10 @@ void MapLevelTown::CreateChurch(int x, int y)
       {
         case '#':
           PlaceWall(posX, posY, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Wall");
+          break;
+
+        case 'P':
+          PlaceWall(posX, posY, '#', GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stone Pillar");
           break;
 
         case '|':

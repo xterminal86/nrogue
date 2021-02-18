@@ -325,6 +325,8 @@ void Application::WriteObituary(bool wasKilled)
 
   ss << "********** OBITUARY **********\n\n";
 
+  ss << "World seed was: 0x" << RNG::Instance().GetSeedAsHex() << "\n\n";
+
   std::string nameAndTitle = PlayerInstance.Name + " the " + PlayerInstance.GetClassName();
 
   ss << nameAndTitle << " of level " << PlayerInstance.Attrs.Lvl.Get() << '\n';
