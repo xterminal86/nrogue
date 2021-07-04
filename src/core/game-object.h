@@ -124,6 +124,8 @@ class GameObject
     size_t ComponentsSize();
 
     bool ReceiveDamage(GameObject* from, int amount, bool isMagical, const std::string& logMsgOverride = std::string());
+    bool CanMove();
+
     void FinishTurn();
     void WaitForTurn();
 
@@ -164,6 +166,7 @@ class GameObject
 
     int _healthRegenTurnsCounter = 0;
     int _manaRegenTurnsCounter = 0;
+    int _skipTurnsCounter = 0;
 
     void MoveGameObject(int dx, int dy);
     void ProcessEffects();
@@ -174,8 +177,10 @@ class GameObject
     void TryToBurnItem();
     void ProcessNaturalRegenHP();
     void ProcessNaturalRegenMP();
+    void ConsumeEnergy();
 
     bool CanRaiseAttribute(Attribute& attr);
+    bool ShouldSkipTurn();
 
     // Unique in-game id
     uint64_t _objectId = 1;

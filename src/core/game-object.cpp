@@ -199,30 +199,54 @@ bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
   return dmgSuccess;
 }
 
+bool GameObject::CanMove()
+{
+  return (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue);
+}
+
+bool GameObject::ShouldSkipTurn()
+{
+  int speed = Attrs.Spd.Get();
+
+  if (speed >= 0 || _skipTurnsCounter >= std::abs(speed))
+  {
+    return false;
+  }
+
+  return true;
+}
+
 void GameObject::WaitForTurn()
 {
-  // In order to enhance the difference between two GameObjects
-  // with slightly different stats (SPD 1 and SPD 2)
-  // and to reduce number of idle waiting cycles,
-  // we introduce a little scaling for speed incrementation.
-  int spdIncrScale = GlobalConstants::TurnTickValue / 4;
+  // +1 is because if SPD is 0 we must add TurnTickValue,
+  // but if SPD is 1 we must multiply TurnTickValue by (SPD + 1)
+  // to get different value
+  int totalSpeed = Attrs.Spd.Get() + 1;
 
-  int speedTickBase = GlobalConstants::TurnTickValue;
-  int speedAttr = Attrs.Spd.Get() * spdIncrScale;
-  int speedIncrement = speedTickBase + speedAttr;
-
-  // In impossible case that speed penalties
-  // are too great that speed increment is negative
-  speedIncrement = (speedIncrement <= 0) ? 5 : speedIncrement;
+  // If SPD is currently -1 because of modifiers, we still can get 0
+  int actionIncrement = (totalSpeed <= 0)
+                      ? GlobalConstants::TurnTickValue
+                      : totalSpeed * GlobalConstants::TurnTickValue;
 
   // In towns SPD is ignored
   if (Map::Instance().CurrentLevel->Peaceful)
   {
-    speedIncrement = 1;
-    Attrs.ActionMeter = GlobalConstants::TurnReadyValue - 1;
+    Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
   }
-
-  Attrs.ActionMeter += speedIncrement;
+  else
+  {
+    // If SPD is < 0, skip std::abs(SPD) amount of turns
+    // without gaining action meter
+    if (ShouldSkipTurn())
+    {
+      _skipTurnsCounter++;
+    }
+    else
+    {
+      _skipTurnsCounter = 0;
+      Attrs.ActionMeter += actionIncrement;
+    }
+  }
 
   if (Type != GameObjectType::PLAYER)
   {
@@ -237,13 +261,7 @@ bool GameObject::IsAlive()
 
 void GameObject::FinishTurn()
 {
-  Attrs.ActionMeter -= GlobalConstants::TurnReadyValue;
-
-  if (Attrs.ActionMeter < 0)
-  {
-    Attrs.ActionMeter = 0;
-  }
-
+  ConsumeEnergy();
   ProcessNaturalRegenHP();
   ProcessNaturalRegenMP();
 
@@ -254,6 +272,17 @@ void GameObject::FinishTurn()
   if (!IsAlive())
   {
     MarkAndCreateRemains();
+  }
+}
+
+void GameObject::ConsumeEnergy()
+{
+  Attrs.ActionMeter -= GlobalConstants::TurnReadyValue;
+
+  // Just in case
+  if (Attrs.ActionMeter < 0)
+  {
+    Attrs.ActionMeter = 0;
   }
 }
 

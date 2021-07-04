@@ -93,7 +93,7 @@ void AIModelBase::Update()
 
   if (_root)
   {
-    if (AIComponentRef->OwnerGameObject->Attrs.ActionMeter < GlobalConstants::TurnReadyValue)
+    if (!AIComponentRef->OwnerGameObject->CanMove())
     {
       AIComponentRef->OwnerGameObject->WaitForTurn();
     }
@@ -261,7 +261,7 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
   {    
     fn = [this]()
     {
-      bool res = AIComponentRef->OwnerGameObject->Attrs.ActionMeter >= GlobalConstants::TurnReadyValue;
+      bool res = AIComponentRef->OwnerGameObject->CanMove();
       return res ? BTResult::Success : BTResult::Failure;
     };
   }

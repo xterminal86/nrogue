@@ -114,7 +114,7 @@ void Map::UpdateGameObjects()
       }
     }
     // If there are extra turns available, perform them
-    while (go->Attrs.ActionMeter >= GlobalConstants::TurnReadyValue);
+    while (go->CanMove());
   }
 
   // If enemy is killed via thorns damage,
@@ -183,6 +183,8 @@ std::vector<GameObject*> Map::GetGameObjectsAtPosition(int x, int y)
     }
   }
 
+  // This was probably done to distinguish actors from game objects
+  // (actors standing in the doorway, for example).
   if (res.empty())
   {
     if (CurrentLevel->StaticMapObjects[x][y] != nullptr)

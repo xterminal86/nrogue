@@ -603,18 +603,24 @@ void TargetState::MoveCursor(int dx, int dy)
 
 void TargetState::DrawHint()
 {
+  // NOTE: for wand of piercing and the like it is probably
+  // not a good idea to draw hint line above all objects because
+  // it will reveal the wand type in case it is not identified.
+  // Same probably goes for projectile flying.
+  // In any case, let's not edit this part of code right now.
+
   Position startPoint = { _playerRef->PosX, _playerRef->PosY };
 
   int mox = Map::Instance().CurrentLevel->MapOffsetX;
   int moy = Map::Instance().CurrentLevel->MapOffsetY;
 
   Position mapSize = Map::Instance().CurrentLevel->MapSize;
-  auto& mapRef = Map::Instance().CurrentLevel->MapArray;
-  auto& staticObjRef = Map::Instance().CurrentLevel->StaticMapObjects;
 
   std::vector<Position> cellsToHighlight;
 
   auto line = Util::BresenhamLine(startPoint, _cursorPosition);
+  FillObjectsOnTheLine(line);
+
   for (auto& p : line)
   {
     if (p == startPoint)
@@ -649,6 +655,52 @@ void TargetState::DrawHint()
   for (auto& p : cellsToHighlight)
   {
     Printer::Instance().PrintFB(p.X + mox, p.Y + moy, '.', "#FF0000");
+  }
+}
+
+void TargetState::FillObjectsOnTheLine(const std::vector<Position>& line)
+{
+  Position mapSize = Map::Instance().CurrentLevel->MapSize;
+
+  Position startPoint = { _playerRef->PosX, _playerRef->PosY };
+
+  for (auto& p : line)
+  {
+    if (p == startPoint)
+    {
+      continue;
+    }
+
+    if (Util::IsInsideMap(p, mapSize))
+    {
+      // Wand of piercing always strikes through the whole
+      // targeting line ignoring any items lying on the ground
+      // until its ray is blocked or its piercing power dissipated.
+
+      auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+      if (actor != nullptr)
+      {
+        _objectsOnTheLine.emplace(actor);
+      }
+      else
+      {
+        // Assuming that actor cannot occupy same spot with static object.
+        //
+        // (this might bite me in the ass, but I can't seem to find any case
+        // that contradicts this assumption)
+        auto staticObject = Map::Instance().CurrentLevel->StaticMapObjects[p.X][p.Y].get();
+        if (staticObject != nullptr)
+        {
+          // Indestructible static objects block ray completely
+          if (staticObject->Attrs.Indestructible)
+          {
+            break;
+          }
+
+          _objectsOnTheLine.emplace(staticObject);
+        }
+      }
+    }
   }
 }
 

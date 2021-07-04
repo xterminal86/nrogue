@@ -186,7 +186,7 @@ void MapLevelTown::CreateLevel()
 
   auto bounds = r.GetBoundaryElements();
   for (auto& pos : bounds)
-  {
+  {    
     InsertStaticObject(pos.X, pos.Y, t);
   }
 
@@ -394,7 +394,7 @@ void MapLevelTown::BuildRoads()
   for (auto& c : roadMarks)
   {
     GameObjectInfo gi;
-    gi.Set(false, false, '=', "#AAAAAA", "#888888", "Path");
+    gi.Set(false, false, '.', "#AAAAAA", "#888888", "Path");
 
     MapArray[c.X][c.Y]->MakeTile(gi);
   }
@@ -409,7 +409,7 @@ void MapLevelTown::BuildRoads()
       Position c = path.top();
 
       GameObjectInfo gi;
-      gi.Set(false, false, '=', "#AAAAAA", "#888888", "Path");
+      gi.Set(false, false, '.', "#AAAAAA", "#888888", "Path");
 
       MapArray[c.X][c.Y]->MakeTile(gi);
 
@@ -567,7 +567,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
           break;
 
         case '.':
-          PlaceGroundTile(posX, posY, ' ', GlobalConstants::BlackColor, GlobalConstants::RoomFloorColor, "Wooden Floor");
+          PlaceGroundTile(posX, posY, '-', "#490E11", GlobalConstants::RoomFloorColor, "Wooden Floor");
           break;
 
         // NOTE: since ' ' (i.e. 'Space', 32 ASCII) is a transparent tile in the tileset,
@@ -592,7 +592,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
 
         case '|':
         case '-':
-          t.Set(true, false, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Window");
+          t.Set(true, false, c, GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Window");
           InsertStaticObject(posX, posY, t);
           break;
 
@@ -632,7 +632,7 @@ void MapLevelTown::CreateChurch(int x, int y)
 
         case '|':
         case '-':
-          t.Set(true, true, c, GlobalConstants::WallColor, GlobalConstants::BlackColor, "Stained Glass");
+          t.Set(true, true, c, GlobalConstants::WhiteColor, GlobalConstants::BlackColor, "Stained Glass");
           InsertStaticObject(posX, posY, t);
           break;
 
@@ -706,6 +706,7 @@ void MapLevelTown::CreateNPCs()
 {
   Rect playerHome = { 2, 2, 8, 8 };
   Rect mineEntrance = { 87, 40, 95, 48 };
+  Rect altarRoom = { 87, 21, 95, 27 };
 
   std::vector<NPCType> npcs =
   {
@@ -728,8 +729,10 @@ void MapLevelTown::CreateNPCs()
     {
       for (int y = 1; y <= MapSize.Y - 1; y++)
       {
-        // Skip area around player house and mine entrance
-        if (SkipArea({ x, y }, playerHome) || SkipArea({ x, y }, mineEntrance))
+        // Skip area around player house, altar room and mine entrance
+        if (SkipArea({ x, y }, playerHome)
+         || SkipArea({ x, y }, mineEntrance)
+         || SkipArea({ x, y }, altarRoom))
         {
           continue;
         }
@@ -926,7 +929,7 @@ void MapLevelTown::CreateTownGates()
 
   std::function<void()> fn = []()
   {
-    Printer::Instance().AddMessage("The village gates are closed");
+    Printer::Instance().AddMessage("The gates are closed");
   };
 
   gate1->Blocking = true;

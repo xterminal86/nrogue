@@ -9,6 +9,14 @@ AIMonsterBat::AIMonsterBat()
 
 void AIMonsterBat::PrepareScript()
 {
+  // TODO: implement hit-and-run tactics by improving the script
+  //
+  // 1) If player is visible, approach player
+  // 2) If there are enough moves to get to the player, hit him,
+  // and pull back, do it
+  // 3) Otherwise maintain distance until there are enough moves to do 2)
+  //
+
   _script =
 R"(
 [TREE]

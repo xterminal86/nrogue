@@ -220,7 +220,7 @@ void TraderComponent::CreateBlacksmithItems()
         break;
 
       case ItemType::REPAIR_KIT:
-        go = GameObjectsFactory::Instance().CreateRepairKit(0, 0, -1, prefixPair.first);
+        go = GameObjectsFactory::Instance().CreateRepairKit(0, 0, 30, prefixPair.first);
         break;
 
       case ItemType::ARMOR:
@@ -234,7 +234,7 @@ void TraderComponent::CreateBlacksmithItems()
       {
         int flag = RNG::Instance().RandomRange(0, 2);
         ArrowType arrowsType = (flag == 0) ? ArrowType::ARROWS : ArrowType::BOLTS;
-        int amount = RNG::Instance().RandomRange(5, 21);
+        int amount = RNG::Instance().RandomRange(10, 21);
         go = GameObjectsFactory::Instance().CreateArrows(0, 0, arrowsType, prefixPair.first, amount);
       }
       break;

@@ -112,7 +112,7 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
 
   // Replace stat name back with white color (kinda hack)
   auto str = Util::StringFormat("%s:", attrName.data());
-  Printer::Instance().PrintFB(x, y, str, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(x, y, str, Printer::kAlignLeft, "#FFFFFF");  
 }
 
 void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, RangedAttribute& attr)

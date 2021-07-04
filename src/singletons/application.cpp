@@ -62,7 +62,7 @@ void Application::Run()
   {
     Timer::Instance().MeasureStart();
 
-    if (PlayerInstance.Attrs.ActionMeter >= GlobalConstants::TurnReadyValue || !PlayerInstance.IsAlive())
+    if (PlayerInstance.CanMove() || !PlayerInstance.IsAlive())
     {
       // Since change state usually happens in HandleInput(),
       // if it's called before Update() to exit game
@@ -74,7 +74,7 @@ void Application::Run()
       //
       // Thus, this shitcode below.
       //
-      // Also we need to immediately update changes that happenned after
+      // Also we need to immediately update changes that happened after
       // user pressed some keys that affected visual representation.
       //
 

@@ -47,7 +47,7 @@ class Node
 
     Player* _playerRef;
 
-    // FirstRun and Reset shouldn't be allowed to call
+    // FirstRun and Reset shouldn't be allowed to be called
     // directly on task objects.
     // They should be visible only to
     // fundamental behaviour tree nodes only.

@@ -44,10 +44,16 @@ namespace GlobalConstants
   const int DisplayAttackDelayMs = 50;
   const size_t InventoryMaxNameLength = 20;
   const int InventoryMaxSize = 20;
-  const int TurnReadyValue = 100;
-  const int TurnTickValue = 100;
 
-  // 11 is because if ( < StarvationDamageTimeout)
+  // Character at level 20 will have his 3 star stat around 20.
+  // So for "ready" amount of energy half of that value was chosen.
+  // Tick value is 2 because it is a multiple of 10.
+  // (no special reasoning apart from that,
+  // but what if that will come in handy someday?)
+  const int TurnReadyValue = 10;
+  const int TurnTickValue  = 2;
+
+  // 11 is because if < StarvationDamageTimeout
   const int StarvationDamageTimeout = 11;
 
   const std::string BlackColor = "#000000";

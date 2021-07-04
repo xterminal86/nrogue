@@ -431,7 +431,7 @@ void Player::SetDefaultEquipment()
     ItemComponent* ic = i->GetComponent<ItemComponent>();
     ic->Equip();
 
-    auto it = Printer::Instance().Messages().begin();
+    auto it = Printer::Instance().Messages().begin();    
     Printer::Instance().Messages().erase(it);
   }
 }
@@ -870,6 +870,14 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bo
       totalDmg = 1;
     }
   }
+
+  // TODO: if STR is < 0 resulting damage is 0
+  /*
+  if (Attrs.Str.Get() < 0)
+  {
+    totalDmg = 0;
+  }
+  */
 
   return totalDmg;
 }
@@ -1389,13 +1397,7 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
 
 void Player::FinishTurn()
 {
-  Attrs.ActionMeter -= GlobalConstants::TurnReadyValue;
-
-  if (Attrs.ActionMeter < 0)
-  {
-    Attrs.ActionMeter = 0;
-  }
-
+  ConsumeEnergy();
   ProcessNaturalRegenMP();
   ProcessHunger();
   ProcessStarvation();

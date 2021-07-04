@@ -504,6 +504,18 @@ void AINPC::SetDataMartin()
     }
   };
 
+  auto& playerRef = Application::Instance().PlayerInstance;
+  if (playerRef.GetClass() == PlayerClass::ARCANIST)
+  {
+    TextLines bonusStr =
+    {
+      "You can pray at the altar of St. Nestor the Scribe here.",
+      "Just proceed past the Royal Gates behind me."
+    };
+
+    Data.GossipResponsesByMap[MapType::TOWN].push_back(bonusStr);
+  }
+
   TraderComponent* tc = AIComponentRef->OwnerGameObject->AddComponent<TraderComponent>();
   tc->NpcRef = this;
   tc->Init(TraderRole::CLERIC, 1000, 10);
@@ -574,7 +586,7 @@ void AINPC::SetDataMaya()
       "Think of my services as a gambling - you can try to buy something",
       "if you're feeling lucky and have money to spare.",
       "Also you can bring me any unidentified items and I'll buy them from you",
-      "for a higher price than if they were identified.",
+      "for a higher price than other vendors.",
       "So it's kind of a compensation for the risk, don't you think? ;-)"
     },
     {
