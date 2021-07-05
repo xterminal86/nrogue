@@ -30,6 +30,9 @@ namespace GlobalConstants
   const std::string Numbers = "0123456789";
   const std::string MoneyName = "Crowns";
 
+  int TerminalWidth  = 80;
+  int TerminalHeight = 24;
+
   const size_t OpenedByAnyone = 0;
   const size_t OpenedByNobody = 1;
 

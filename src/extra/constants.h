@@ -621,6 +621,9 @@ namespace GlobalConstants
 
   // ===============================================
 
+  extern int TerminalWidth;
+  extern int TerminalHeight;
+
   extern const std::string Base64Chars;
   extern const std::string Tileset8x16Base64;
   extern const std::string IconBase64;

@@ -34,8 +34,11 @@ class Map : public Singleton<Map>
                          const Position& to);
 
     GameObject* GetActorAtPosition(int x, int y);
+    GameObject* GetStaticGameObjectAtPosition(int x, int y);
+
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
     std::vector<GameObject*> GetActorsInRange(int range);
+
     std::pair<int, GameObject*> GetGameObjectToPickup(int x, int y);
     MapLevelBase* GetLevelRefByType(MapType type);
 

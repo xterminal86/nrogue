@@ -44,7 +44,8 @@ class TargetState : public GameState
     void ProcessHit(GameObject* hitPoint);
     void PrintThrowResult(GameObject* tileRef);
     void DirtyHack();
-    void FillObjectsOnTheLine(const std::vector<Position>& line);
+
+    std::queue<GameObject*> FillObjectsOnTheLine(const std::vector<Position>& line);
 
     std::vector<Position> GetVisiblePointsFrom(const Position& from, int range);
 
@@ -55,7 +56,7 @@ class TargetState : public GameState
 
     std::vector<GameObject*> _targets;
 
-    // For handling of piercing strikes
+    // For piercing strikes and the like
     std::queue<GameObject*> _objectsOnTheLine;
 
     size_t _lastTargetIndex = -1;

@@ -183,14 +183,16 @@ std::vector<GameObject*> Map::GetGameObjectsAtPosition(int x, int y)
     }
   }
 
-  // This was probably done to distinguish actors from game objects
-  // (actors standing in the doorway, for example).
-  if (res.empty())
+  return res;
+}
+
+GameObject* Map::GetStaticGameObjectAtPosition(int x, int y)
+{
+  GameObject* res = nullptr;
+
+  if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
   {
-    if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
-    {
-      res.push_back(CurrentLevel->StaticMapObjects[x][y].get());
-    }
+    res = CurrentLevel->StaticMapObjects[x][y].get();
   }
 
   return res;
@@ -560,15 +562,25 @@ void Map::PrintMapLayout()
         ch = '#';
       }
 
-      auto staticObjects = GetGameObjectsAtPosition(y, x);
-      if (!staticObjects.empty())
+      auto gameObjects = GetGameObjectsAtPosition(y, x);
+      if (!gameObjects.empty())
       {
-        ch = staticObjects.back()->Image;
+        ch = gameObjects.back()->Image;
 
         // Replace 'wall' objects with '#'
-        if (staticObjects.back()->Blocking
-         && staticObjects.back()->BlocksSight
+        if (gameObjects.back()->Blocking
+         && gameObjects.back()->BlocksSight
          && ch == ' ')
+        {
+          ch = '#';
+        }
+      }
+
+      auto so = GetStaticGameObjectAtPosition(y, x);
+      if (so != nullptr)
+      {
+        ch = so->Image;
+        if (so->Blocking && so->BlocksSight && ch == ' ')
         {
           ch = '#';
         }

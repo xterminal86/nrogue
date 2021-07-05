@@ -51,6 +51,11 @@ void Printer::InitForSDL()
     _tileWidth = 8;
     _tileHeight = 16;
 
+    SDL_Rect rect = Application::Instance().GetWindowSize(_tileWidth, _tileHeight);
+
+    SDL_SetWindowPosition(Application::Instance().Window, rect.x, rect.y);
+    SDL_SetWindowSize(Application::Instance().Window, rect.w, rect.h);
+
     auto res = Util::Base64_Decode(GlobalConstants::Tileset8x16Base64);
     auto bytes = Util::ConvertStringToBytes(res);
     SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());

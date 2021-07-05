@@ -105,6 +105,7 @@ void AttackState::HandleInput()
   {
     _playerRef->_attackDir = _dir;
 
+    // Check actors first
     auto res = Map::Instance().GetActorAtPosition(_cursorPosition.X, _cursorPosition.Y);
     if (res != nullptr)
     {
@@ -112,14 +113,31 @@ void AttackState::HandleInput()
     }
     else
     {
-      auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
-      if (res.size() != 0)
-      {        
+      // Check static game objects
+      auto so = Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X, _cursorPosition.Y);
+      if (so != nullptr)
+      {
         // Always hit static objects in front of you
-        _playerRef->MeleeAttack(res.back(), true);        
+        _playerRef->MeleeAttack(so, true);
       }
       else
       {
+        // FIXME: should we melee attack items lying on the ground?
+
+        /*
+        auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
+        if (res.size() != 0)
+        {
+
+          _playerRef->MeleeAttack(res.back(), true);
+        }
+        else
+        {
+          auto* cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
+          Application::Instance().DisplayAttack(cell, GlobalConstants::DisplayAttackDelayMs, "*whoosh*", "#FFFFFF");
+        }
+        */
+
         auto* cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
         Application::Instance().DisplayAttack(cell, GlobalConstants::DisplayAttackDelayMs, "*whoosh*", "#FFFFFF");
       }

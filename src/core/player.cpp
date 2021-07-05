@@ -576,10 +576,24 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
   }
   else
   {
+    // Magic attack should probably hit everything,
+    // since it's, well, magical. You can't really control it.
+
+    // Check items first
     auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
     {      
       TryToDamageObject(obj, damage, againstRes);
+    }
+
+    // If nothing is lying in the doorway, for example, damage door
+    if (mapObjs.empty())
+    {
+      auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
+      if (so != nullptr)
+      {
+        TryToDamageObject(so, damage, againstRes);
+      }
     }
   }
 }
@@ -600,6 +614,8 @@ void Player::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int cen
 
     int dmgHere = centralDamage / d;
 
+    // AoE damages everything
+
     auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
     TryToDamageObject(actor, dmgHere, againstRes);
 
@@ -607,6 +623,12 @@ void Player::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int cen
     for (auto& obj : mapObjs)
     {
       TryToDamageObject(obj, dmgHere, againstRes);
+    }
+
+    auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
+    if (so != nullptr)
+    {
+      TryToDamageObject(so, dmgHere, againstRes);
     }
 
     // Check self damage

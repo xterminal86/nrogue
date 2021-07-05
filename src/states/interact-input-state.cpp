@@ -108,7 +108,7 @@ void InteractInputState::ProcessInteraction()
     }
     else
     {
-      auto staticObject = Map::Instance().CurrentLevel->StaticMapObjects[_cursorPosition.X][_cursorPosition.Y].get();
+      auto staticObject = Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X, _cursorPosition.Y);
       if (staticObject != nullptr)
       {
         TryToInteractWithObject(staticObject);

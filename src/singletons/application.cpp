@@ -267,11 +267,10 @@ void Application::WriteObituary(bool wasKilled)
           }          
         }
 
-        // This includes checking for static objects
+        // Check items first
         auto gos = Map::Instance().GetGameObjectsAtPosition(x, y);
-        if (gos.size() != 0
-         && (curLvl->MapArray[x][y]->Visible
-          || curLvl->MapArray[x][y]->Revealed))
+        if (!gos.empty() && (curLvl->MapArray[x][y]->Visible
+                          || curLvl->MapArray[x][y]->Revealed))
         {          
           ch = gos.back()->Image;
 
@@ -281,6 +280,18 @@ void Application::WriteObituary(bool wasKilled)
           }
         }
 
+        // If there are no objects lying above static game object,
+        // draw static game object
+        if (gos.empty())
+        {
+          auto so = Map::Instance().GetStaticGameObjectAtPosition(x, y);
+          if (so != nullptr)
+          {
+            ch = so->Image;
+          }
+        }
+
+        // if actor is standing on this cell, draw him instead.
         auto actor = Map::Instance().GetActorAtPosition(x, y);
         if (actor != nullptr
          && (curLvl->MapArray[x][y]->Visible
@@ -543,10 +554,7 @@ void Application::SetIcon()
 }
 
 void Application::InitSDL()
-{  
-  int kTerminalWidth = 80;
-  int kTerminalHeight = 24;
-
+{
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
   {
     DebugLog("SDL_Init Error: %s\n", SDL_GetError());
@@ -558,36 +566,11 @@ void Application::InitSDL()
   ParseConfig();
   ProcessConfig();
 
-  int scaledW = (int)((float)TileWidth * ScaleFactor);
-  int scaledH = (int)((float)TileHeight * ScaleFactor);
-
-  // This is just a plain hack to fit
-  // graphics tileset to screen at certain resolution
-  if (scaledW == 32)
-  {
-    kTerminalWidth = 60;
-  }
-
-  if (scaledW == scaledH)
-  {
-    kTerminalHeight = 30;
-  }
-
-  int ww = kTerminalWidth * scaledW;
-  int wh = kTerminalHeight * scaledH;
-
-  WindowWidth = ww;
-  WindowHeight = wh;
-
-  SDL_DisplayMode dm;
-  SDL_GetCurrentDisplayMode(0, &dm);
-
-  int wx = dm.w / 2 - ww / 2;
-  int wy = dm.h / 2 - wh / 2;
+  SDL_Rect rect = GetWindowSize(TileWidth, TileHeight);
 
   Window = SDL_CreateWindow("nrogue",
-                            wx, wy,
-                            ww, wh,
+                            rect.x, rect.y,
+                            rect.w, rect.h,
                             SDL_WINDOW_SHOWN);
 
   int drivers = SDL_GetNumRenderDrivers();
@@ -614,8 +597,49 @@ void Application::InitSDL()
 
   Printer::Instance().Init();
 
-  Printer::TerminalWidth = kTerminalWidth;
-  Printer::TerminalHeight = kTerminalHeight;
+  Printer::TerminalWidth  = GlobalConstants::TerminalWidth;
+  Printer::TerminalHeight = GlobalConstants::TerminalHeight;
+}
+
+SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
+{
+  SDL_Rect res;
+
+  int scaledW = (int)((float)tileWidth * ScaleFactor);
+  int scaledH = (int)((float)tileHeight * ScaleFactor);
+
+  // This is just a plain hack to fit
+  // graphics tileset to screen at certain resolution
+  if (scaledW == 32)
+  {
+    GlobalConstants::TerminalWidth = 60;
+  }
+
+  // If tileset is square, make window square-like too.
+  if (tileWidth == tileHeight)
+  {
+    GlobalConstants::TerminalHeight = GlobalConstants::TerminalWidth / 2 + 8;
+  }
+
+  int ww = GlobalConstants::TerminalWidth * scaledW;
+  int wh = GlobalConstants::TerminalHeight * scaledH;
+
+  WindowWidth = ww;
+  WindowHeight = wh;
+
+  res.w = ww;
+  res.h = wh;
+
+  SDL_DisplayMode dm;
+  SDL_GetCurrentDisplayMode(0, &dm);
+
+  int wx = dm.w / 2 - ww / 2;
+  int wy = dm.h / 2 - wh / 2;
+
+  res.x = wx;
+  res.y = wy;
+
+  return res;
 }
 #endif
 

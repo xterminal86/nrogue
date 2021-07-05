@@ -60,6 +60,8 @@ class Application : public Singleton<Application>
     int WindowHeight = 0;
 
     std::string TilesetFilename;
+
+    SDL_Rect GetWindowSize(int tileWidth, int tileHeight);
     #endif
 
     unsigned int TurnsPassed = 0;

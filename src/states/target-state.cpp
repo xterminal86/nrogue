@@ -619,7 +619,8 @@ void TargetState::DrawHint()
   std::vector<Position> cellsToHighlight;
 
   auto line = Util::BresenhamLine(startPoint, _cursorPosition);
-  FillObjectsOnTheLine(line);
+
+  _objectsOnTheLine = FillObjectsOnTheLine(line);
 
   for (auto& p : line)
   {
@@ -658,8 +659,10 @@ void TargetState::DrawHint()
   }
 }
 
-void TargetState::FillObjectsOnTheLine(const std::vector<Position>& line)
+std::queue<GameObject*> TargetState::FillObjectsOnTheLine(const std::vector<Position>& line)
 {
+  std::queue<GameObject*> res;
+
   Position mapSize = Map::Instance().CurrentLevel->MapSize;
 
   Position startPoint = { _playerRef->PosX, _playerRef->PosY };
@@ -673,35 +676,29 @@ void TargetState::FillObjectsOnTheLine(const std::vector<Position>& line)
 
     if (Util::IsInsideMap(p, mapSize))
     {
-      // Wand of piercing always strikes through the whole
-      // targeting line ignoring any items lying on the ground
-      // until its ray is blocked or its piercing power dissipated.
+      // Right now the functionality of this method is based
+      // on assumption, that certain items, that use this functionality
+      // (e.g. wand of piercing), always strike through the whole
+      // targeting line, ignoring any items lying on the ground,
+      // until their ray is blocked or their piercing power dissipates.
 
       auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
       if (actor != nullptr)
       {
-        _objectsOnTheLine.emplace(actor);
+        res.emplace(actor);
       }
       else
       {
-        // Assuming that actor cannot occupy same spot with static object.
-        //
-        // (this might bite me in the ass, but I can't seem to find any case
-        // that contradicts this assumption)
-        auto staticObject = Map::Instance().CurrentLevel->StaticMapObjects[p.X][p.Y].get();
-        if (staticObject != nullptr)
+        auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
+        if (so != nullptr)
         {
-          // Indestructible static objects block ray completely
-          if (staticObject->Attrs.Indestructible)
-          {
-            break;
-          }
-
-          _objectsOnTheLine.emplace(staticObject);
+          res.emplace(so);
         }
       }
     }
   }
+
+  return res;
 }
 
 void TargetState::DrawCursor()
