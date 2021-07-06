@@ -17,8 +17,6 @@
 #include "tests.h"
 #endif
 
-// This is a test
-
 // TODO:
 //
 // - Wands

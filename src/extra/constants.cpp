@@ -413,8 +413,8 @@ namespace GlobalConstants
   const std::vector<std::string> ScrollUnidentifiedNames =
   {
     "TAMAM SHUD",
-    "ELAM EBOW",
-    "ELBIB YLOH",
+    "GACHI MUCHI",
+    "ZAWARUDO",
     "ZELGO MER",
     "LOREM IPSUM",
     "GHOTI",
