@@ -197,7 +197,7 @@ void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
 
         case '+':
         {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, "Door", 30);
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, DoorMaterials::STONE);
 
           if (Util::Rolld100(15))
           {

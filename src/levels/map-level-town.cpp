@@ -8,8 +8,8 @@
 #include "pathfinder.h"
 #include "printer.h"
 
-MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type) :
-  MapLevelBase(sizeX, sizeY, type, 0)
+MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type, int dungeonLevel) :
+  MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {  
   _layoutsForLevel =
   {

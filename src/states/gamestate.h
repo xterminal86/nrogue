@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <string>
+#include <sstream>
 #include <typeinfo>
 #include <chrono>
 

@@ -456,7 +456,7 @@ void MapLevelBase::PlaceWall(int x, int y,
 
 void MapLevelBase::PlaceDoor(int x, int y, bool isOpen, size_t openedBy, const std::string& objName)
 {
-  GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, isOpen, objName.empty() ? "Door" : objName);
+  GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, isOpen, DoorMaterials::WOOD, objName);
   if (openedBy != GlobalConstants::OpenedByAnyone)
   {
     DoorComponent* dc = door->GetComponent<DoorComponent>();

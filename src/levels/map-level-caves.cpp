@@ -113,7 +113,7 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
 
         case '+':
         {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, "Door", 30);
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false);
 
           if (Util::Rolld100(15))
           {

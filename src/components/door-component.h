@@ -24,6 +24,8 @@ class DoorComponent : public Component
 
     std::string FgColorOverride;
     std::string BgColorOverride;
+
+    DoorMaterials Material = DoorMaterials::WOOD;
 };
 
 #endif // DOORCOMPONENT_H

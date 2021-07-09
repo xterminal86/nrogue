@@ -7,10 +7,20 @@
 struct ItemBonusStruct
 {
   ItemBonusType Type = ItemBonusType::NONE;
+
+  // Usually used to add bonus to stats
   int BonusValue = 0;
+
+  // Whole duration of effect in turns
   int Duration = -1;
+
+  // Number of turns after which effect action occurs
   int Period = -1;
+
+  // Internal variable to count number of turns passed
+  // to determine whether we hit period variable above.
   int EffectCounter = 0;
+
   int MoneyCostIncrease = 0;
   bool IsCursed = false;
   bool Cumulative = false;

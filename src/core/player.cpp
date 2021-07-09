@@ -1558,7 +1558,7 @@ void Player::ProcessItemsEffects()
           {
             bonus.EffectCounter++;
 
-            if (bonus.EffectCounter % bonus.Period == 0)
+            if ((bonus.EffectCounter % bonus.Period) == 0)
             {
               bonus.EffectCounter = 0;
               ic->Data.Durability.AddMin(bonus.BonusValue);
@@ -1821,7 +1821,7 @@ void Player::SwitchPlaces(AIComponent* other)
   Printer::Instance().AddMessage("You pass by " + name);
 }
 
-void Player::AddBonusItems()
+void Player::AddExtraItems()
 {
   GameObject* go = nullptr;
   std::vector<std::string> text;

@@ -57,7 +57,7 @@ class Player : public GameObject
 
     void ApplyBonuses(ItemComponent* itemRef);
     void UnapplyBonuses(ItemComponent* itemRef);
-    void AddBonusItems();
+    void AddExtraItems();
 
     bool HasSkill(PlayerSkills skillToCheck);
     bool AreEnemiesInRange();

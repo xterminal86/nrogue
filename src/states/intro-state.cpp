@@ -57,7 +57,7 @@ void IntroState::PrepareTown()
   playerRef.SetLevelOwner(curLvl);
   playerRef.Init();
 
-  playerRef.AddBonusItems();
+  playerRef.AddExtraItems();
   playerRef.VisibilityRadius.Set(curLvl->VisibilityRadius);
 
   MapLevelTown* mlt = static_cast<MapLevelTown*>(curLvl);

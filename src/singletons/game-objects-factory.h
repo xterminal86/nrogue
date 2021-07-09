@@ -66,8 +66,9 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1, GameObjectType type = GameObjectType::HARMLESS);
     GameObject* CreateDoor(int x, int y,
                            bool isOpen,
-                           const std::string& doorName,
-                           int hitPoints = -1,
+                           DoorMaterials material = DoorMaterials::WOOD,
+                           const std::string& doorName = std::string(),
+                           int hitPoints = 10,
                            const std::string& fgOverrideColor = std::string(),
                            const std::string& bgOverrideColor = std::string());
 
@@ -87,10 +88,10 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateRandomGlass();
     GameObject* CreateGemHelper(GemType t, ItemQuality quality = ItemQuality::RANDOM);
 
-    void AdjustBonusWeightsMap(ItemComponent* itemRef, std::map<ItemBonusType, int>& bonusWeightByType);
-    void TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne = false);
-    void AddRandomBonus(ItemComponent* itemRef, ItemBonusType bonusType);
-    void AddBonus(ItemComponent* itemRef, const ItemBonusStruct& bonusData, bool forceAdd = false);
+    void AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map<ItemBonusType, int>& bonusWeightByType);
+    void TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne = false);
+    void AddRandomBonusToItem(ItemComponent* itemRef, ItemBonusType bonusType);
+    void AddBonusToItem(ItemComponent* itemRef, const ItemBonusStruct& bonusData, bool forceAdd = false);
 
     bool ProcessItemEquiption(ItemComponent* item);
     bool ProcessRingEquiption(ItemComponent* item);

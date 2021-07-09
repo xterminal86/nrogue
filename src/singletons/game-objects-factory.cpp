@@ -548,10 +548,10 @@ GameObject* GameObjectsFactory::CreateUniquePickaxe()
   ic->Data.Damage.SetMin(diceRolls);
   ic->Data.Damage.SetMax(diceSides);
 
-  AddRandomBonus(ic, ItemBonusType::SELF_REPAIR);
+  AddRandomBonusToItem(ic, ItemBonusType::SELF_REPAIR);
 
-  AddBonus(ic, { ItemBonusType::SKL, 1 });
-  AddBonus(ic, { ItemBonusType::SPD, 1 });
+  AddBonusToItem(ic, { ItemBonusType::SKL, 1 });
+  AddBonusToItem(ic, { ItemBonusType::SPD, 1 });
 
   ic->Data.Durability.Reset(30);
 
@@ -918,7 +918,7 @@ GameObject* GameObjectsFactory::CreateRandomWeapon(ItemPrefix prefixOverride)
   }
 
   ItemComponent* ic = go->GetComponent<ItemComponent>();
-  TryToAddBonuses(ic);
+  TryToAddBonusesToItem(ic);
 
   return go;
 }
@@ -933,7 +933,7 @@ GameObject* GameObjectsFactory::CreateRandomArmor(ItemPrefix prefixOverride)
   go = CreateArmor(0, 0, it->first, prefixOverride);
 
   ItemComponent* ic = go->GetComponent<ItemComponent>();
-  TryToAddBonuses(ic);
+  TryToAddBonusesToItem(ic);
 
   return go;
 }
@@ -1320,8 +1320,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::SKL, 1 });
-      AddBonus(ic, { ItemBonusType::SPD, 1 });
+      AddBonusToItem(ic, { ItemBonusType::SKL, 1 });
+      AddBonusToItem(ic, { ItemBonusType::SPD, 1 });
     }
     break;
 
@@ -1335,7 +1335,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::STR, 1 });
+      AddBonusToItem(ic, { ItemBonusType::STR, 1 });
     }
     break;
 
@@ -1349,8 +1349,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::STR, 1 });
-      AddBonus(ic, { ItemBonusType::DEF, 1 });
+      AddBonusToItem(ic, { ItemBonusType::STR, 1 });
+      AddBonusToItem(ic, { ItemBonusType::DEF, 1 });
     }
     break;
 
@@ -1364,9 +1364,9 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::STR,  2 });
-      AddBonus(ic, { ItemBonusType::DEF,  1 });
-      AddBonus(ic, { ItemBonusType::SPD, -1 });
+      AddBonusToItem(ic, { ItemBonusType::STR,  2 });
+      AddBonusToItem(ic, { ItemBonusType::DEF,  1 });
+      AddBonusToItem(ic, { ItemBonusType::SPD, -1 });
     }
     break;
 
@@ -1380,9 +1380,9 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::STR,  4 });
-      AddBonus(ic, { ItemBonusType::SKL, -2 });
-      AddBonus(ic, { ItemBonusType::SPD, -4 });
+      AddBonusToItem(ic, { ItemBonusType::STR,  4 });
+      AddBonusToItem(ic, { ItemBonusType::SKL, -2 });
+      AddBonusToItem(ic, { ItemBonusType::SPD, -4 });
     }
     break;
 
@@ -1396,8 +1396,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
-      AddBonus(ic, { ItemBonusType::DEF,  1 });
-      AddBonus(ic, { ItemBonusType::SPD, -1 });
+      AddBonusToItem(ic, { ItemBonusType::DEF,  1 });
+      AddBonusToItem(ic, { ItemBonusType::SPD, -1 });
     }
     break;
 
@@ -1416,7 +1416,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
   for (auto& b : bonuses)
   {
-    AddBonus(ic, b);
+    AddBonusToItem(ic, b);
   }
 
   avgDamage = CalculateAverageDamage(diceRolls, diceSides);
@@ -1661,7 +1661,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x,
         "Requires some skill to be used effectively."
       };
 
-      AddBonus(ic, { ItemBonusType::SKL, -1 });
+      AddBonusToItem(ic, { ItemBonusType::SKL, -1 });
     }
     break;
 
@@ -1682,7 +1682,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x,
         "Requires some skill to be used effectively."
       };
 
-      AddBonus(ic, { ItemBonusType::SKL, -2 });
+      AddBonusToItem(ic, { ItemBonusType::SKL, -2 });
     }
     break;
 
@@ -1704,7 +1704,7 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x,
         "Requires some skill to be used effectively."
       };
 
-      AddBonus(ic, { ItemBonusType::SKL, -3 });
+      AddBonusToItem(ic, { ItemBonusType::SKL, -3 });
     }
     break;
 
@@ -1726,8 +1726,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x,
         "Requires some time to reload."
       };
 
-      AddBonus(ic, { ItemBonusType::SPD, -1 });
-      AddBonus(ic, { ItemBonusType::SKL,  1 });
+      AddBonusToItem(ic, { ItemBonusType::SPD, -1 });
+      AddBonusToItem(ic, { ItemBonusType::SKL,  1 });
     }
     break;
 
@@ -1749,8 +1749,8 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x,
         "Requires some time to reload."
       };
 
-      AddBonus(ic, { ItemBonusType::SPD, -2 });
-      AddBonus(ic, { ItemBonusType::SKL,  2 });
+      AddBonusToItem(ic, { ItemBonusType::SPD, -2 });
+      AddBonusToItem(ic, { ItemBonusType::SKL,  2 });
     }
     break;
 
@@ -1772,15 +1772,15 @@ GameObject* GameObjectsFactory::CreateRangedWeapon(int x,
         "Requires some time to reload."
       };
 
-      AddBonus(ic, { ItemBonusType::SPD, -3 });
-      AddBonus(ic, { ItemBonusType::SKL,  3 });
+      AddBonusToItem(ic, { ItemBonusType::SPD, -3 });
+      AddBonusToItem(ic, { ItemBonusType::SKL,  3 });
     }
     break;
   }
 
   for (auto& b : bonuses)
   {
-    AddBonus(ic, b);
+    AddBonusToItem(ic, b);
   }
 
   //ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;
@@ -1844,7 +1844,7 @@ GameObject* GameObjectsFactory::CreateRandomAccessory(int x, int y,
 
   // TODO: should rings and amulets quality affect bonuses?
 
-  TryToAddBonuses(ic, atLeastOneBonus);
+  TryToAddBonusesToItem(ic, atLeastOneBonus);
 
   if (ic->Data.Bonuses.empty())
   {
@@ -1894,7 +1894,7 @@ GameObject* GameObjectsFactory::CreateAccessory(int x, int y,
   for (auto& b : bonuses)
   {
     bonusesRolled.push_back(b.Type);
-    AddBonus(ic, b, true);
+    AddBonusToItem(ic, b, true);
   }
 
   if (ic->Data.Bonuses.empty())
@@ -2121,7 +2121,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "It won't last long, but any armor is better than nothing."
       };
 
-      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty });
+      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty });
 
       baseDurability += 2 * (int)ic->Data.ItemQuality_;
 
@@ -2135,8 +2135,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "protection against cutting blows."
       };
 
-      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 1 });
-      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 1 });
+      AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 1 });
+      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 1 });
 
       baseDurability += 3 * (int)ic->Data.ItemQuality_;
 
@@ -2153,8 +2153,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "and is easy to repair."
       };
 
-      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 3 });
-      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 2 });
+      AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 3 });
+      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 2 });
 
       baseDurability += 4 * (int)ic->Data.ItemQuality_;
 
@@ -2167,8 +2167,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "A body vest with overlapping scales worn over a small mail shirt.",
       };
 
-      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 4 });
-      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 3 });
+      AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 4 });
+      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 3 });
 
       baseDurability += 5 * (int)ic->Data.ItemQuality_;
 
@@ -2185,8 +2185,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "all others in itself."
       };
 
-      AddBonus(ic, { ItemBonusType::RES, cursedPenalty - 6 });
-      AddBonus(ic, { ItemBonusType::SPD, cursedPenalty - 4 });
+      AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 6 });
+      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 4 });
 
       baseDurability += 6 * (int)ic->Data.ItemQuality_;
 
@@ -2212,11 +2212,36 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
 
 GameObject* GameObjectsFactory::CreateDoor(int x, int y,
                                            bool isOpen,
+                                           DoorMaterials material,
                                            const std::string& doorName,
-                                           int hitPoints,
+                                           int hitPoints,                                           
                                            const std::string& fgOverrideColor,
                                            const std::string& bgOverrideColor)
 {
+  const std::map<DoorMaterials, int> doorDefByMat =
+  {
+    { DoorMaterials::WOOD,  5  },
+    { DoorMaterials::STONE, 10 },
+    { DoorMaterials::IRON,  15 }
+  };
+
+  const std::map<DoorMaterials, std::string> doorPrefixByMat =
+  {
+    { DoorMaterials::WOOD,  "Wooden" },
+    { DoorMaterials::STONE, "Stone"  },
+    { DoorMaterials::IRON,  "Iron"   }
+  };
+
+  std::string doorNameTotal;
+  if (doorName.empty())
+  {
+    doorNameTotal = doorPrefixByMat.at(material) + " Door";
+  }
+  else
+  {
+    doorNameTotal = doorName;
+  }
+
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   go->PosX = x;
@@ -2225,11 +2250,13 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
   if (hitPoints > 0)
   {
     go->Attrs.Indestructible = false;
-    go->Attrs.HP.Reset(hitPoints);
+    go->Attrs.Def.Set(doorDefByMat.at(material));
+    go->Attrs.HP.Reset(hitPoints);    
   }
 
   DoorComponent* dc = go->AddComponent<DoorComponent>();
-  dc->IsOpen = isOpen;
+  dc->Material        = material;
+  dc->IsOpen          = isOpen;
   dc->FgColorOverride = fgOverrideColor;
   dc->BgColorOverride = bgOverrideColor;
   dc->UpdateDoorState();
@@ -2240,7 +2267,7 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
 
   //dc->OwnerGameObject->InteractionCallback = std::bind(&GameObjectsFactory::DoorUseHandler, this, dc);
   dc->OwnerGameObject->InteractionCallback = std::bind(&GameObjectsFactory::DoorUseHandler, this, dc);
-  dc->OwnerGameObject->ObjectName = doorName;
+  dc->OwnerGameObject->ObjectName = doorNameTotal;
 
   return go;
 }
@@ -3297,7 +3324,7 @@ void GameObjectsFactory::DoorUseHandler(DoorComponent* dc)
   dc->Interact();
 }
 
-void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne)
+void GameObjectsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne)
 {
   std::map<ItemBonusType, int> bonusWeightByType =
   {
@@ -3327,7 +3354,7 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne
     { ItemBonusType::TELEPATHY,       6 },
   };
 
-  AdjustBonusWeightsMap(itemRef, bonusWeightByType);
+  AdjustBonusWeightsMapForItem(itemRef, bonusWeightByType);
 
   int curDungeonLvl = Map::Instance().CurrentLevel->DungeonLevel;
 
@@ -3367,7 +3394,7 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne
       // No duplicate bonuses on a single item
       bonusesWeightCopy.erase(res.first);
 
-      AddRandomBonus(itemRef, res.first);
+      AddRandomBonusToItem(itemRef, res.first);
 
       bonusesRolled.push_back(res.first);
     }
@@ -3376,14 +3403,14 @@ void GameObjectsFactory::TryToAddBonuses(ItemComponent* itemRef, bool atLeastOne
   if (bonusesRolled.size() == 0 && atLeastOne)
   {
     auto res = Util::WeightedRandom(bonusWeightByType);
-    AddRandomBonus(itemRef, res.first);
+    AddRandomBonusToItem(itemRef, res.first);
     bonusesRolled.push_back(res.first);
   }
 
   SetMagicItemName(itemRef, bonusesRolled);
 }
 
-void GameObjectsFactory::AddBonus(ItemComponent* itemRef, const ItemBonusStruct& bonusData, bool forceAdd)
+void GameObjectsFactory::AddBonusToItem(ItemComponent* itemRef, const ItemBonusStruct& bonusData, bool forceAdd)
 {
   // If bonus doesn't modify anything,
   // (i.e. if during weapon / armor generation total value of modifier
@@ -3421,7 +3448,7 @@ void GameObjectsFactory::AddBonus(ItemComponent* itemRef, const ItemBonusStruct&
   itemRef->Data.Bonuses.push_back(copy);
 }
 
-void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bonusType)
+void GameObjectsFactory::AddRandomBonusToItem(ItemComponent* itemRef, ItemBonusType bonusType)
 {
   // No negative bonuses assumed
   int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusType);
@@ -3576,7 +3603,7 @@ void GameObjectsFactory::AddRandomBonus(ItemComponent* itemRef, ItemBonusType bo
   itemRef->Data.Bonuses.push_back(bs);
 }
 
-void GameObjectsFactory::AdjustBonusWeightsMap(ItemComponent* itemRef, std::map<ItemBonusType, int>& bonusWeightByType)
+void GameObjectsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map<ItemBonusType, int>& bonusWeightByType)
 {
   // Certain items shouldn't have certain bonuses
   // that don't make sense (kinda)

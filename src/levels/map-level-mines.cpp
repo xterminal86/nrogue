@@ -357,7 +357,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 
         case '+':
         {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, "Door", 30);
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, DoorMaterials::WOOD);
 
           if (Util::Rolld100(15))
           {
@@ -457,7 +457,7 @@ void MapLevelMines::CreateSpecialLevel()
 
         case '+':
         {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Wooden Door", 30);
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, DoorMaterials::WOOD);
 
           DoorComponent* dc = door->GetComponent<DoorComponent>();
 
@@ -470,7 +470,7 @@ void MapLevelMines::CreateSpecialLevel()
 
         case 'D':
         {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, "Iron Door", -1, GlobalConstants::BlackColor, GlobalConstants::IronColor);
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, DoorMaterials::IRON, "Iron Door", -1, GlobalConstants::BlackColor, GlobalConstants::IronColor);
 
           DoorComponent* dc = door->GetComponent<DoorComponent>();
           dc->OpenedBy = key->GetComponent<ItemComponent>()->Data.ItemTypeHash;

@@ -774,7 +774,7 @@ void MainState::DisplayStatusIcons()
   int offsetX = startPos;
   for (auto& kvp : _playerRef->Effects())
   {
-    for (auto& item : kvp.second)
+    for (const ItemBonusStruct& item : kvp.second)
     {
       auto shortName = GlobalConstants::BonusDisplayNameByType.at(item.Type);
       if (shortName == lastDisplayedEffect)
@@ -782,11 +782,13 @@ void MainState::DisplayStatusIcons()
         continue;
       }
 
+      std::string color = (item.Duration <= 3) ? GlobalConstants::GroundColor : GlobalConstants::WhiteColor;
+
       Printer::Instance().PrintFB(offsetX,
                                    th - 4,
                                    shortName,
                                    Printer::kAlignLeft,
-                                   GlobalConstants::WhiteColor);
+                                   color);
       offsetX += 4;
 
       lastDisplayedEffect = shortName;

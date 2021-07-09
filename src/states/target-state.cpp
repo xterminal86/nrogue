@@ -187,7 +187,7 @@ GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
 
   int distanceCovered = 0;
 
-  // Don't include player's position
+  // Start from 1 to exclude player's position
   for (size_t i = 1; i < line.size(); i++)
   {    
     int mx = line[i].X;
@@ -328,82 +328,64 @@ void TargetState::CheckCursorPositionBounds()
   }
 }
 
-/// It is assumed that we have valid weapon and ammunition
-/// in corresponding equipment slots
-/// (necessary checks were performed in MainState)
-void TargetState::FireWeapon(bool throwingFromInventory)
+Position TargetState::GetRandomPointAroundCursor()
 {
-  // Do not target self.
-  if (SafetyCheck())
+  Position pos = { -1, -1 };
+
+  auto rect = Util::GetEightPointsAround(_cursorPosition, Map::Instance().CurrentLevel->MapSize);
+
+  bool outOfRange = false;
+
+  // If we shoot from point blank in a corridor,
+  // we shouldn't accidentaly target ourselves
+  // due to lack of skill.
+  for (size_t i = 0; i < rect.size(); i++)
   {
-    return;
-  }
-
-  // If cursor is outside map,
-  // pick last valid point as target end point.
-  CheckCursorPositionBounds();
-
-  _lastCursorPosition = _cursorPosition;
-
-  _drawHint = false;
-
-  std::string weaponName = _weaponRef->Data.IsIdentified
-                         ? _weaponRef->OwnerGameObject->ObjectName
-                         : _weaponRef->Data.UnidentifiedName;
-
-  std::string str = throwingFromInventory ? "You throw " : "You fire ";
-  str += weaponName;
-
-  Printer::Instance().AddMessage(str);
-
-  int chance = CalculateHitChance();
-  if (!Util::Rolld100(chance))
-  {    
-    auto rect = Util::GetEightPointsAround(_cursorPosition, Map::Instance().CurrentLevel->MapSize);
-
-    bool outOfRange = false;
-
-    // If we shoot from point blank in a corridor,
-    // we shouldn't accidentaly target ourselves
-    // due to lack of skill.
-    for (size_t i = 0; i < rect.size(); i++)
+    // Do not include points above weapon's maximum range as well.
+    int d = Util::LinearDistance({ _playerRef->PosX, _playerRef->PosY }, rect[i]);
+    if (d > _weaponRef->Data.Range)
     {
-      // Do not include points above weapon's maximum range as well.
-      int d = Util::LinearDistance({ _playerRef->PosX, _playerRef->PosY }, rect[i]);
-
-      if (d > _weaponRef->Data.Range)
-      {
-        outOfRange = true;
-      }
-
-      if ((rect[i].X == _playerRef->PosX
-        && rect[i].Y == _playerRef->PosY)
-        || outOfRange)
-      {
-        rect.erase(rect.begin() + i);
-        break;
-      }
+      outOfRange = true;
     }
 
+    bool targetSelf = (rect[i].X == _playerRef->PosX
+                    && rect[i].Y == _playerRef->PosY);
+
+    if (targetSelf || outOfRange)
+    {
+      rect.erase(rect.begin() + i);
+      break;
+    }
+  }
+
+  // Just in case
+  if (!rect.empty())
+  {
     int index = RNG::Instance().RandomRange(0, rect.size());
-    _cursorPosition = rect[index];
-
-    /*
-    if (!outOfRange)
-    {
-      Printer::Instance().AddMessage("The shot goes astray");
-    }
-    */
+    pos = rect[index];
   }
 
-  GameObject* stoppedAt = nullptr;
+  /*
+  if (!outOfRange)
+  {
+    Printer::Instance().AddMessage("The shot goes astray");
+  }
+  */
+
+  return pos;
+}
+
+std::pair<char, std::string> TargetState::GetProjectileImageAndColor(bool throwingFromInventory)
+{
+  std::pair<char, std::string> res;
+
+  char projectile = ' ';
 
   std::string projColor = "#FFFFFF";
 
-  bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
+  bool isWand   = (_weaponRef->Data.ItemType_ == ItemType::WAND);
   bool isWeapon = (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON);
 
-  char projectile = ' ';
   if (throwingFromInventory)
   {
     projectile = _weaponRef->OwnerGameObject->Image;
@@ -427,8 +409,160 @@ void TargetState::FireWeapon(bool throwingFromInventory)
     }
   }
 
-  stoppedAt = LaunchProjectile(projectile, projColor);
-  ProcessHit(stoppedAt);
+  res = { projectile, projColor };
+
+  return res;
+}
+
+void TargetState::ProcessLaser()
+{
+  Position startPoint = { _playerRef->PosX, _playerRef->PosY };
+
+  // Laser stops on cursor point regarless (is it OK?)
+  Position endPoint = _cursorPosition;
+
+  auto line = Util::BresenhamLine(startPoint, endPoint);
+
+  int distanceCovered = 0;
+
+  SpellInfo* si = SpellsDatabase::Instance().GetInfo(_weaponRef->Data.SpellHeld);
+
+  int power = si->SpellBaseDamage.first + si->SpellBaseDamage.second;
+
+  bool shouldStop = false;
+
+  // Start from 1 to exclude player's position
+  for (size_t i = 1; i < line.size(); i++)
+  {
+    if (power <= 0)
+    {
+      break;
+    }
+
+    int mx = line[i].X;
+    int my = line[i].Y;
+
+    for (auto& obj : _objectsOnTheLine)
+    {
+      if (obj->PosX == mx && obj->PosY == my)
+      {
+        // Laser stops when it hits indestructible object
+        // or its power has dissipated.
+        if (obj->Attrs.Indestructible || power <= 0)
+        {
+          shouldStop = true;
+          break;
+        }
+
+        int def = obj->Attrs.Def.Get();
+        int dmgDone = power - def;
+
+        DoorComponent* dc = obj->GetComponent<DoorComponent>();
+        if (dc != nullptr)
+        {
+          switch (dc->Material)
+          {
+            case DoorMaterials::WOOD:
+              dmgDone = ((float)power * 0.7f);
+              break;
+
+            case DoorMaterials::STONE:
+              dmgDone = ((float)power * 0.5f);
+              break;
+
+            case DoorMaterials::IRON:
+              dmgDone = ((float)power * 0.3f);
+              break;
+          }
+        }
+
+        obj->ReceiveDamage(_weaponRef->OwnerGameObject, dmgDone, false);
+
+        power -= (def == 0) ? 1 : dmgDone;
+      }
+    }
+
+    if (shouldStop)
+    {
+      break;
+    }
+
+    int drawingPosX = mx + Map::Instance().CurrentLevel->MapOffsetX;
+    int drawingPosY = my + Map::Instance().CurrentLevel->MapOffsetY;
+
+    Printer::Instance().PrintFB(drawingPosX, drawingPosY, '*', "#FFFF00", "#FF0000");
+
+    distanceCovered++;
+    power--;
+  }
+
+  Printer::Instance().Render();
+  Util::Sleep(100);
+  Update(true);
+
+  _weaponRef->Data.Amount--;
+}
+
+/// It is assumed that we have valid weapon and ammunition
+/// in corresponding equipment slots
+/// (necessary checks were performed in MainState)
+void TargetState::FireWeapon(bool throwingFromInventory)
+{
+  // Do not target self.
+  if (SafetyCheck())
+  {
+    return;
+  }
+
+  // If cursor is outside map,
+  // pick last valid point as target end point.
+  CheckCursorPositionBounds();
+
+  int chance = CalculateHitChance();
+  if (Util::Rolld100(chance) == false)
+  {
+    // If skill is low and we didn't roll a hit,
+    // get random point around cursor position.
+    // Doesn't affect wands.
+    _cursorPosition = GetRandomPointAroundCursor();
+
+    // We couldn't get a valid spot for targeting.
+    // Near impossible case, unless we put player into a cell, surrounded
+    // by walls and he tries to fire AoE wand.
+    if (_cursorPosition.X == -1)
+    {
+      return;
+    }
+  }
+
+  _lastCursorPosition = _cursorPosition;
+
+  _drawHint = false;
+
+  std::string weaponName = _weaponRef->Data.IsIdentified
+                         ? _weaponRef->OwnerGameObject->ObjectName
+                         : _weaponRef->Data.UnidentifiedName;
+
+  std::string str = throwingFromInventory ? "You throw " : "You fire ";
+  str += weaponName;
+
+  Printer::Instance().AddMessage(str);
+
+  GameObject* stoppedAt = nullptr;
+
+  auto res = GetProjectileImageAndColor(throwingFromInventory);
+
+  bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
+
+  if (isWand && _weaponRef->Data.SpellHeld == SpellType::LASER)
+  {
+    ProcessLaser();
+  }
+  else
+  {
+    stoppedAt = LaunchProjectile(res.first, res.second);
+    ProcessHit(stoppedAt);
+  }
 
   _playerRef->FinishTurn();
 
@@ -474,78 +608,87 @@ void TargetState::DirtyHack()
   }
 }
 
-void TargetState::ProcessHit(GameObject* hitPoint)
+void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
 {
-  bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
+  // _weaponRef is an item to be thrown
+
+  auto& mapRef = Map::Instance().CurrentLevel->MapArray;
+
+  int x = hitPoint->PosX;
+  int y = hitPoint->PosY;
+
   bool isRangedWeapon = (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON);
+  bool isWand         = (_weaponRef->Data.ItemType_ == ItemType::WAND);
 
-  if (_throwingItemInventoryIndex != -1)
+  bool isStackable = (!isWand && !isRangedWeapon && _weaponRef->Data.IsStackable);
+
+  bool tileOk = (mapRef[x][y]->Type != GameObjectType::DEEP_WATER
+              && mapRef[x][y]->Type != GameObjectType::LAVA);
+
+  // TODO: potions break on impact, items damage monsters (not?)
+  //
+  // Throwing one item at a time from the stack of items.
+
+  if (isStackable)
   {
-    // _weaponRef is item to be thrown
+    _weaponRef->Data.Amount--;
 
-    auto& mapRef = Map::Instance().CurrentLevel->MapArray;
-
-    int x = hitPoint->PosX;
-    int y = hitPoint->PosY;
-
-    bool isStackable = (!isWand && !isRangedWeapon && _weaponRef->Data.IsStackable);
-
-    bool tileOk = (mapRef[x][y]->Type != GameObjectType::DEEP_WATER
-                && mapRef[x][y]->Type != GameObjectType::LAVA);
-
-    // TODO: potions break on impact, items damage monsters (not?)
-    // throwing one item at a time from the stack of items.
-
-    if (isStackable)
+    if (tileOk)
     {
-      _weaponRef->Data.Amount--;
+      ItemComponent* copy = GameObjectsFactory::Instance().CloneItem(_weaponRef);
+      copy->Data.Amount = 1;
 
-      if (tileOk)
-      {
-        ItemComponent* copy = GameObjectsFactory::Instance().CloneItem(_weaponRef);
-        copy->Data.Amount = 1;
+      copy->OwnerGameObject->PosX = x;
+      copy->OwnerGameObject->PosY = y;
 
-        copy->OwnerGameObject->PosX = x;
-        copy->OwnerGameObject->PosY = y;
-
-        Map::Instance().CurrentLevel->InsertGameObject(copy->OwnerGameObject);
-      }
-      else
-      {
-        PrintThrowResult(mapRef[x][y].get());
-      }
-
-      if (_weaponRef->Data.Amount == 0)
-      {
-        auto it = _playerRef->Inventory.Contents.begin();
-        _playerRef->Inventory.Contents.erase(it + _throwingItemInventoryIndex);
-      }
+      Map::Instance().CurrentLevel->InsertGameObject(copy->OwnerGameObject);
     }
     else
     {
-      if (tileOk)
-      {
-        GameObject* item = _playerRef->Inventory.Contents[_throwingItemInventoryIndex].release();
+      PrintThrowResult(mapRef[x][y].get());
+    }
 
-        // See comments in InventoryState::DropItem()
-        item->SetLevelOwner(Map::Instance().CurrentLevel);
-
-        item->PosX = x;
-        item->PosY = y;
-
-        Map::Instance().CurrentLevel->InsertGameObject(item);
-      }
-      else
-      {
-        PrintThrowResult(mapRef[x][y].get());
-      }
-
+    if (_weaponRef->Data.Amount == 0)
+    {
       auto it = _playerRef->Inventory.Contents.begin();
       _playerRef->Inventory.Contents.erase(it + _throwingItemInventoryIndex);
     }
   }
   else
   {
+    if (tileOk)
+    {
+      GameObject* item = _playerRef->Inventory.Contents[_throwingItemInventoryIndex].release();
+
+      // See comments in InventoryState::DropItem()
+      item->SetLevelOwner(Map::Instance().CurrentLevel);
+
+      item->PosX = x;
+      item->PosY = y;
+
+      Map::Instance().CurrentLevel->InsertGameObject(item);
+    }
+    else
+    {
+      PrintThrowResult(mapRef[x][y].get());
+    }
+
+    auto it = _playerRef->Inventory.Contents.begin();
+    _playerRef->Inventory.Contents.erase(it + _throwingItemInventoryIndex);
+  }
+}
+
+void TargetState::ProcessHit(GameObject* hitPoint)
+{  
+  if (_throwingItemInventoryIndex != -1)
+  {
+    ProcessHitInventoryThrownItem(hitPoint);
+  }
+  else
+  {
+    bool isWand         = (_weaponRef->Data.ItemType_ == ItemType::WAND);
+    bool isRangedWeapon = (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON);
+
     if (isWand)
     {
       _playerRef->MagicAttack(hitPoint, _weaponRef);
@@ -659,9 +802,9 @@ void TargetState::DrawHint()
   }
 }
 
-std::queue<GameObject*> TargetState::FillObjectsOnTheLine(const std::vector<Position>& line)
+std::vector<GameObject*> TargetState::FillObjectsOnTheLine(const std::vector<Position>& line)
 {
-  std::queue<GameObject*> res;
+  std::vector<GameObject*> res;
 
   Position mapSize = Map::Instance().CurrentLevel->MapSize;
 
@@ -685,14 +828,14 @@ std::queue<GameObject*> TargetState::FillObjectsOnTheLine(const std::vector<Posi
       auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
       if (actor != nullptr)
       {
-        res.emplace(actor);
+        res.push_back(actor);
       }
       else
       {
         auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
         if (so != nullptr)
         {
-          res.emplace(so);
+          res.push_back(so);
         }
       }
     }

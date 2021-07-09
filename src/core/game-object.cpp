@@ -357,6 +357,10 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
   }
 
   ApplyEffect(effectToAdd);
+
+#ifndef RELEASE_BUILD
+  DebugLog("Gained %s for %i turns (period %i)", GlobalConstants::BonusDisplayNameByType.at(effectToAdd.Type).data(), effectToAdd.Duration, effectToAdd.Period);
+#endif
 }
 
 void GameObject::ApplyEffect(const ItemBonusStruct& e)
@@ -386,6 +390,7 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
       Printer::Instance().AddMessage("You catch fire!");
 
       ItemBonusStruct eff;
+      eff.Cumulative = true;
       eff.Type = ItemBonusType::ILLUMINATED;
       eff.Duration = e.Duration;
       eff.Id = e.Id;
@@ -504,7 +509,7 @@ void GameObject::ProcessEffects()
         {
           v[j].EffectCounter++;
 
-          if (v[j].EffectCounter % v[j].Period == 0)
+          if ((v[j].EffectCounter % v[j].Period) == 0)
           {
             v[j].EffectCounter = 0;
             EffectAction(v[j]);
@@ -528,7 +533,7 @@ void GameObject::ProcessEffects()
         {
           v[j].EffectCounter++;
 
-          if (v[j].EffectCounter % v[j].Period == 0)
+          if ((v[j].EffectCounter % v[j].Period) == 0)
           {
             v[j].EffectCounter = 0;
             EffectAction(v[j]);

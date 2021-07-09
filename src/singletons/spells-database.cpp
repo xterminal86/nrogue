@@ -23,8 +23,11 @@ void SpellsDatabase::Init()
   SpellType::FIREBALL, "Fireball", "Fl", 100, { 2, 8 }, "#FFFF00"
                 });
 
+  // Wand of piercing damage is actually (min + max)
+  // and these values will be affected separately
+  // by item quality and BUC status.
   RegisterSpell({
-  SpellType::LASER, "Pierce", "P", 150, { 3, 10 }, "#FFFFFF"
+  SpellType::LASER, "Pierce", "P", 150, { 10, 10 }, "#FFFFFF"
                 });
 
   RegisterSpell({

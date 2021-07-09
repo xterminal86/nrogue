@@ -142,7 +142,7 @@ enum class MessageBoxType
 enum class MapType
 {
   NOWHERE = -1,
-  TOWN,
+  TOWN = 1,
   MINES_1,
   MINES_2,
   MINES_3,
@@ -442,6 +442,13 @@ enum class WandMaterials
   GLASS_5,
   COPPER_6,
   GOLDEN_7
+};
+
+enum class DoorMaterials
+{
+  WOOD = 0,
+  STONE,
+  IRON
 };
 
 enum class ArrowType

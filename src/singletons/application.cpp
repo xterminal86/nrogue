@@ -28,8 +28,6 @@
 #include "timer.h"
 #include "logger.h"
 
-#include <sstream>
-
 void Application::Init()
 {
   if (_initialized)

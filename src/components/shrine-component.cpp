@@ -5,6 +5,7 @@
 #include "application.h"
 #include "printer.h"
 #include "game-objects-factory.h"
+#include "map.h"
 
 ShrineComponent::ShrineComponent()
 {
@@ -35,6 +36,11 @@ void ShrineComponent::Interact()
   }
   else
   {
+    int dungLvl = Map::Instance().CurrentLevel->DungeonLevel;
+
+    _power    = dungLvl; //Timeout / 100;
+    _duration = ((float)(dungLvl * 10) * 1.25f); //Timeout / 2;
+
     Counter = 0;
     OwnerGameObject->FgColor = GlobalConstants::BlackColor;
 
@@ -280,18 +286,16 @@ void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
-  int power = Timeout / 100;
-  int dur = Timeout / 2;
-
   int effectIndex = RNG::Instance().RandomRange(0, GlobalConstants::BonusDisplayNameByType.size());
   auto it = GlobalConstants::BonusDisplayNameByType.begin();
   std::advance(it, effectIndex);
 
   ItemBonusStruct b;
-  b.Type = it->first;
-  b.BonusValue = power;
-  b.Duration= dur;
-  b.Id = OwnerGameObject->ObjectId();
+
+  b.Type       = it->first;
+  b.BonusValue = _power;
+  b.Duration   = _duration;
+  b.Id         = OwnerGameObject->ObjectId();
 
   if (b.Type == ItemBonusType::REGEN
    || b.Type == ItemBonusType::POISONED
@@ -299,12 +303,14 @@ void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
    || b.Type == ItemBonusType::BURNING)
   {
     b.Cumulative = true;
-    b.BonusValue = (b.Type == ItemBonusType::POISONED) ? -1 : 1;
-    b.Period = Timeout / 10;
+    b.BonusValue = (b.Type == ItemBonusType::POISONED
+                 || b.Type == ItemBonusType::BURNING) ? -1 : 1;
+    b.Duration   = _duration;
+    b.Period     = (b.Type == ItemBonusType::POISONED) ? 2 : 1;
   }
   else if (b.Type == ItemBonusType::BLINDNESS)
   {
-    b.BonusValue = -power;
+    b.BonusValue = -_power;
   }
 
   playerRef.AddEffect(b);
@@ -316,17 +322,15 @@ void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
-  int power = Timeout / 100;
-  int dur = Timeout / 2;
-
   int effectIndex = RNG::Instance().RandomRange(0, PositiveEffects.size());
   ItemBonusType t = PositiveEffects[effectIndex];
 
   ItemBonusStruct b;
-  b.Type = t;
-  b.BonusValue = power;
-  b.Duration = dur;
-  b.Id = OwnerGameObject->ObjectId();
+
+  b.Type       = t;
+  b.BonusValue = _power;
+  b.Duration   = _duration;
+  b.Id         = OwnerGameObject->ObjectId();
 
   if (t == ItemBonusType::MANA_SHIELD && playerRef.Attrs.MP.Max().Get() != 0)
   {
@@ -336,7 +340,7 @@ void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
   {
     b.Cumulative = true;
     b.BonusValue = 1;
-    b.Period = Timeout / 10;
+    b.Period     = 1;
   }
 
   playerRef.AddEffect(b);
@@ -348,26 +352,19 @@ void ShrineComponent::ApplyRandomNegativeEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
-  int power = Timeout / 100;
-  int dur = Timeout / 2;
-
-  int effectIndex = RNG::Instance().RandomRange(0, NegativeEffects.size());
+  int effectIndex = RNG::Instance().RandomRange(0, NegativeEffects.size());  
   ItemBonusType t = NegativeEffects[effectIndex];
 
   ItemBonusStruct b;
-  b.Type = t;
-  b.BonusValue = power;
-  b.Duration = dur;
-  b.Id = OwnerGameObject->ObjectId();
 
-  if (t == ItemBonusType::BURNING)
-  {
-    b.BonusValue = 1;
-  }
+  b.Type       = t;
+  b.BonusValue = _power;
+  b.Duration   = _duration;
+  b.Id         = OwnerGameObject->ObjectId();
 
   if (t == ItemBonusType::BLINDNESS)
   {
-    b.BonusValue = -power;
+    b.BonusValue = -_power;
   }
 
   if (t == ItemBonusType::POISONED
@@ -375,7 +372,9 @@ void ShrineComponent::ApplyRandomNegativeEffect(std::string& logMessageToWrite)
    || t == ItemBonusType::BURNING)
   {
     b.Cumulative = true;
-    b.Period = Timeout / 10;
+    b.BonusValue = (b.Type == ItemBonusType::POISONED
+                 || b.Type == ItemBonusType::BURNING) ? -1 : 1;
+    b.Period = (b.Type == ItemBonusType::POISONED) ? 2 : 1;
   }
 
   playerRef.AddEffect(b);
@@ -400,10 +399,11 @@ void ShrineComponent::ApplyTemporaryStatRaise(std::string& logMessageToWrite)
   int index = RNG::Instance().RandomRange(0, attrs.size());
 
   ItemBonusStruct bs;
-  bs.Type = attrs[index];
-  bs.Duration = Timeout / 2;
+
+  bs.Type       = attrs[index];
+  bs.Duration   = 30 + _duration;
   bs.BonusValue = 1;
-  bs.Id = OwnerGameObject->ObjectId();
+  bs.Id         = OwnerGameObject->ObjectId();
   bs.Cumulative = true;
 
   playerRef.AddEffect(bs);

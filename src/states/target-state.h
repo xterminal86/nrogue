@@ -42,12 +42,16 @@ class TargetState : public GameState
     void FindTargets();
     void CycleTargets();
     void ProcessHit(GameObject* hitPoint);
+    void ProcessHitInventoryThrownItem(GameObject* hitPoint);
+    void ProcessLaser();
     void PrintThrowResult(GameObject* tileRef);
     void DirtyHack();
 
-    std::queue<GameObject*> FillObjectsOnTheLine(const std::vector<Position>& line);
+    std::vector<GameObject*> FillObjectsOnTheLine(const std::vector<Position>& line);
 
     std::vector<Position> GetVisiblePointsFrom(const Position& from, int range);
+    Position GetRandomPointAroundCursor();
+    std::pair<char, std::string> GetProjectileImageAndColor(bool throwingFromInventory);
 
     GameObject* LaunchProjectile(char image, const std::string& color);
     GameObject* CheckHit(const Position& at, const Position& prev);
@@ -56,8 +60,10 @@ class TargetState : public GameState
 
     std::vector<GameObject*> _targets;
 
-    // For piercing strikes and the like
-    std::queue<GameObject*> _objectsOnTheLine;
+    // For piercing strikes and the like.
+    // Stores all objects on the draw hint line.
+    // Don't use queue because we'll be frequently iterating over it.
+    std::vector<GameObject*> _objectsOnTheLine;
 
     size_t _lastTargetIndex = -1;
     int _maxThrowingRange = 1;
