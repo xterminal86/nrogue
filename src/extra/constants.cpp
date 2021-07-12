@@ -381,17 +381,31 @@ namespace GlobalConstants
     { WandMaterials::GOLDEN_7, 800 }
   };
 
-  // Divide wand capacity by this value to get amount of charges
+  // Divide wand capacity by this value to get amount of charges.
+  // Total amount of charges is affected by material, BUC status and RNG god.
+  // (see GameObjectsFactory::CreateWand())
   const std::map<SpellType, int> WandSpellCapacityCostByType =
   {
-    { SpellType::LIGHT,         10  },
-    { SpellType::STRIKE,        25  },
-    { SpellType::FROST,         50  },
+    { SpellType::NONE,          100 },
+    { SpellType::LIGHT,         50  },
+    { SpellType::STRIKE,        60  },
+    { SpellType::FROST,         80  },
     { SpellType::TELEPORT,      75  },
-    { SpellType::FIREBALL,      100 },
-    { SpellType::LASER,         150 },
-    { SpellType::LIGHTNING,     100 },
-    { SpellType::MAGIC_MISSILE, 25  }
+    { SpellType::FIREBALL,      180 },
+    { SpellType::LASER,         180 },
+    { SpellType::LIGHTNING,     150 },
+    { SpellType::MAGIC_MISSILE, 70  }
+  };
+
+  const std::map<WandMaterials, int> WandRangeByMaterial =
+  {
+    { WandMaterials::YEW_1,     5 },
+    { WandMaterials::IVORY_2,  10 },
+    { WandMaterials::EBONY_3,  15 },
+    { WandMaterials::ONYX_4,   20 },
+    { WandMaterials::GLASS_5,  25 },
+    { WandMaterials::COPPER_6, 30 },
+    { WandMaterials::GOLDEN_7, 35 }
   };
 
   const std::vector<SpellType> ScrollValidSpellTypes =

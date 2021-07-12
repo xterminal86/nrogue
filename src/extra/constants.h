@@ -412,7 +412,7 @@ enum class GemType
 
 enum class SpellType
 {
-  NONE = -1,  
+  NONE = -1,       // Wand of Nothing can be imbued with spell
   STRIKE = 0,      // 1 target, DEF
   MAGIC_MISSILE,   // 1 target, RES
   FROST,           // 1 target, RES, slow
@@ -725,6 +725,7 @@ namespace GlobalConstants
   extern const std::map<GemType, std::string> GemNameByType;
   extern const std::map<GemType, int> GemCostByType;
   extern const std::map<WandMaterials, int> WandCapacityByMaterial;
+  extern const std::map<WandMaterials, int> WandRangeByMaterial;
   extern const std::map<SpellType, int> WandSpellCapacityCostByType;
   extern const std::vector<SpellType> ScrollValidSpellTypes;
   extern const std::vector<std::string> ScrollUnidentifiedNames;

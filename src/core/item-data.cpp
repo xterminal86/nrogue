@@ -34,9 +34,18 @@ int ItemData::GetCost()
     price = (IsIdentified) ? Cost : 20;
   }
 
-  if (IsStackable || IsChargeable)
+  if (ItemType_ == ItemType::WAND)
   {
-    price *= Amount;
+    int capacity = WandCapacity.Get();
+    int spellCost = SpellsDatabase::Instance().GetSpellInfoFromDatabase(SpellHeld.SpellType_)->SpellBaseCost;
+    price = capacity + spellCost * Amount;
+  }
+  else
+  {
+    if (IsStackable || IsChargeable)
+    {
+      price *= Amount;
+    }
   }
 
   if (ItemType_ == ItemType::RETURNER && !IsIdentified)
@@ -98,4 +107,9 @@ ItemBonusStruct* ItemData::GetBonus(ItemBonusType type)
   }
 
   return res;
+}
+
+bool ItemData::IsUsable()
+{
+  return (UseCallback.target_type() != typeid(void));
 }

@@ -17,7 +17,7 @@ void SpellsProcessor::ProcessWand(ItemComponent* wand)
 
   wand->Data.Amount--;
 
-  switch (wand->Data.SpellHeld)
+  switch (wand->Data.SpellHeld.SpellType_)
   {
     case SpellType::LIGHT:
       ProcessWandOfLight(wand);
@@ -39,7 +39,7 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll)
 
   Printer::Instance().AddMessage(str);
 
-  switch(scroll->Data.SpellHeld)
+  switch(scroll->Data.SpellHeld.SpellType_)
   {
     case SpellType::LIGHT:
       ProcessScrollOfLight(scroll);
@@ -280,8 +280,10 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
 void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
 {
   int playerPow = _playerRef->Attrs.Mag.Get();
-  int power = wand->Data.WandCapacity.Max().Get() / 100 + playerPow;
-  int duration = wand->Data.WandCapacity.Max().Get();
+
+  int power = wand->Data.Range + playerPow;
+
+  int duration = (wand->Data.Amount + playerPow) * 10;
 
   std::string message = "The golden light surrounds you!";
 

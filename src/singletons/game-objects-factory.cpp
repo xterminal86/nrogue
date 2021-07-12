@@ -497,10 +497,10 @@ GameObject* GameObjectsFactory::CreateHerobrine(int x, int y)
   cc->MaxCapacity = 20;
 
   GameObject* pickaxe = CreateUniquePickaxe();
-  cc->AddToInventory(pickaxe);
+  cc->Add(pickaxe);
 
   GameObject* gem = CreateGem(0, 0, GemType::ORANGE_AMBER);
-  cc->AddToInventory(gem);
+  cc->Add(gem);
 
   go->Attrs.Str.Talents = 3;
   go->Attrs.Skl.Talents = 3;
@@ -827,7 +827,12 @@ GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
   ic->Data.IsIdentified = true;
   ic->Data.Cost = 250;
 
-  ic->Data.IdentifiedDescription = { "They say drinking this will bring you to the next level.", "Whatever that means..." };
+  ic->Data.IdentifiedDescription =
+  {
+    "They say drinking this will bring you to the next level.",
+    "Whatever that means..."
+  };
+
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
@@ -1226,14 +1231,16 @@ GameObject* GameObjectsFactory::CreateRandomScroll(ItemPrefix prefix)
 
 GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix prefixOverride)
 {
-  SpellInfo* si = SpellsDatabase::Instance().GetInfo(type);
+  SpellInfo* si = SpellsDatabase::Instance().GetSpellInfoFromDatabase(type);
 
   if (std::find(GlobalConstants::ScrollValidSpellTypes.begin(),
                 GlobalConstants::ScrollValidSpellTypes.end(),
                 type) == GlobalConstants::ScrollValidSpellTypes.end())
   {
-    std::string name = si->SpellName;
-    DebugLog("[WARNING] Trying to create a scroll with invalid spell (%s)!\n", name.data());
+    auto msg = Util::StringFormat("[WARNING] Trying to create a scroll with invalid spell (%s)!\n", si->SpellName.data());
+    Printer::Instance().AddMessage(msg);
+    Logger::Instance().Print(msg, true);
+    DebugLog("%s\n", msg.data());
     return nullptr;
   }
 
@@ -1254,7 +1261,8 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
 
   ic->Data.ItemType_ = ItemType::SCROLL;
   ic->Data.IsStackable = false;
-  ic->Data.SpellHeld = type;
+
+  ic->Data.SpellHeld.SpellType_ = type;
 
   // NOTE: scrolls cost = base * 2, spellbooks = base * 10
   ic->Data.Cost = si->SpellBaseCost * 2;
@@ -1509,16 +1517,24 @@ GameObject* GameObjectsFactory::CreateGem(int x, int y, GemType type, int gemCha
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material, SpellType spellType, ItemPrefix prefixOverride)
+GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material, SpellType spellType, ItemPrefix prefixOverride, ItemQuality quality)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  SpellInfo si = *SpellsDatabase::Instance().GetSpellInfoFromDatabase(spellType);
 
-  SpellInfo* si = SpellsDatabase::Instance().GetInfo(spellType);
+  if (GlobalConstants::WandSpellCapacityCostByType.count(spellType) == 0)
+  {
+    auto str = Util::StringFormat("Wands don't support spell '%s'!", si.SpellName.data());
+    Logger::Instance().Print(str);
+    DebugLog("%s\n", str.data());
+    return nullptr;
+  }
+
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   auto wandColorPair = GlobalConstants::WandColorsByMaterial.at(material);
   std::string wandMaterialName = GlobalConstants::WandMaterialNamesByMaterial.at(material);
-  std::string spellName = si->SpellName;
-  std::string spellShortName = si->SpellShortName;
+  std::string spellName = si.SpellName;
+  std::string spellShortName = si.SpellShortName;
 
   go->PosX = x;
   go->PosY = y;
@@ -1535,38 +1551,61 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
-  ic->Data.ItemQuality_ = RollItemQuality();
+  ic->Data.ItemQuality_ = (quality == ItemQuality::RANDOM) ? RollItemQuality() : quality;
 
-  int randomness = RNG::Instance().RandomRange(0, capacity);
+  int capacityRandomness = RNG::Instance().RandomRange(0, capacity + 1);
 
-  randomness += ((capacity / 10) * (int)ic->Data.ItemQuality_);
+  int qualityModifier = (int)ic->Data.ItemQuality_;
 
-  randomness /= 2;
+  capacityRandomness += (capacity / 10) * qualityModifier;
 
-  capacity += randomness;
+  //capacityRandomness /= 2;
+
+  capacity += capacityRandomness;
 
   if (ic->Data.Prefix == ItemPrefix::BLESSED)
   {
     capacity *= 2;
+
+    si.SpellBaseDamage.first++;
+    si.SpellBaseDamage.second++;
+  }
+  else if (ic->Data.Prefix == ItemPrefix::CURSED)
+  {
+    capacity /= 2;
+
+    si.SpellBaseDamage.first--;
+    si.SpellBaseDamage.second--;
   }
 
-  ic->Data.WandCapacity.Reset(capacity);
+  ic->Data.WandCapacity.Set(capacity);
 
   int spellCost = GlobalConstants::WandSpellCapacityCostByType.at(spellType);
   int charges = capacity / spellCost;
+
+  int wandRange = GlobalConstants::WandRangeByMaterial.at(material);
+
+  if (ic->Data.Prefix == ItemPrefix::UNCURSED)
+  {
+    wandRange /= 1.5f;
+  }
+  else if (ic->Data.Prefix == ItemPrefix::CURSED)
+  {
+    wandRange /= 2;
+  }
 
   ic->Data.Amount = charges;
 
   ic->Data.IsChargeable = true;
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
   ic->Data.ItemType_ = ItemType::WAND;
-  ic->Data.SpellHeld = spellType;
-  ic->Data.Range = 20;
+  ic->Data.SpellHeld = si;
+  ic->Data.Range = wandRange;
   ic->Data.Durability.Reset(1);
   ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
 
   // Actual cost is going to be calculated in GetCost()
-  ic->Data.Cost = si->SpellBaseCost;
+  ic->Data.Cost = si.SpellBaseCost;
 
   ic->Data.UnidentifiedName = "?" + wandMaterialName + " Wand?";
   ic->Data.IdentifiedName = wandMaterialName + " Wand of " + spellName;
@@ -2327,7 +2366,10 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
   copy->BgColor             = copyFrom->BgColor;
   copy->ObjectName          = copyFrom->ObjectName;
   copy->FogOfWarName        = copyFrom->FogOfWarName;
+
+  // Not sure if this will actually work, probably not.
   copy->InteractionCallback = copyFrom->InteractionCallback;
+
   copy->Attrs               = copyFrom->Attrs;
   copy->HealthRegenTurns    = copyFrom->HealthRegenTurns;
   copy->Type                = copyFrom->Type;
@@ -2535,10 +2577,13 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
     }
     break;
 
+    // Special info is filled inside ItemComponent::GetInspectionInfo()
+    // for specific type of item.
     default:
     {
       if (itemData.Prefix == ItemPrefix::BLESSED
       && (itemData.ItemType_ != ItemType::WEAPON
+       && itemData.ItemType_ != ItemType::WAND
        && itemData.ItemType_ != ItemType::ARMOR
        && itemData.ItemType_ != ItemType::RANGED_WEAPON))
       {
@@ -2546,6 +2591,7 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
       }
       else if (itemData.Prefix == ItemPrefix::CURSED
            && (itemData.ItemType_ != ItemType::WEAPON
+            && itemData.ItemType_ != ItemType::WAND
             && itemData.ItemType_ != ItemType::ARMOR
             && itemData.ItemType_ != ItemType::RANGED_WEAPON))
       {
@@ -3693,7 +3739,7 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
 
       // If there is already such stackable item in inventory,
       // delete the game object we just created.
-      if (item != nullptr && cc->AddToInventory(item))
+      if (item != nullptr && cc->Add(item))
       {
         delete item;
       }

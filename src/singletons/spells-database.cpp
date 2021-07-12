@@ -8,6 +8,10 @@ void SpellsDatabase::Init()
   }
 
   RegisterSpell({
+  SpellType::NONE, "Nothing", "N", 0, { 0, 0 }
+                });
+
+  RegisterSpell({
   SpellType::LIGHT, "Light", "L", 10
                 });
 
@@ -86,7 +90,7 @@ void SpellsDatabase::RegisterSpell(const SpellInfo& i)
   _database.emplace(i.SpellType_, i);
 }
 
-SpellInfo* SpellsDatabase::GetInfo(SpellType t)
+SpellInfo* SpellsDatabase::GetSpellInfoFromDatabase(SpellType t)
 {
   if (_database.count(t) == 1)
   {

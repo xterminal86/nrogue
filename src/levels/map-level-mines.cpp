@@ -488,7 +488,7 @@ void MapLevelMines::CreateSpecialLevel()
           GameObject* boss = GameObjectsFactory::Instance().CreateMonster(posX, posY, GameObjectType::HEROBRINE);
 
           ContainerComponent* cc = boss->GetComponent<ContainerComponent>();
-          cc->AddToInventory(key);
+          cc->Add(key);
 
           InsertActor(boss);
         }

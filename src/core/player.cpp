@@ -365,13 +365,13 @@ void Player::SetDefaultEquipment()
     case PlayerClass::THIEF:
     {
       weapon = GameObjectsFactory::Instance().CreateRangedWeapon(0, 0, RangedWeaponType::SHORT_BOW, ItemPrefix::UNCURSED);
-      Inventory.AddToInventory(weapon);
+      Inventory.Add(weapon);
 
       GameObject* arrows = GameObjectsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::BLESSED, 60);
-      Inventory.AddToInventory(arrows);
+      Inventory.Add(arrows);
 
       GameObject* dagger = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::DAGGER, ItemPrefix::UNCURSED);
-      Inventory.AddToInventory(dagger);
+      Inventory.Add(dagger);
 
       weaponAndArmorToEquip.push_back(arrows);
       weaponAndArmorToEquip.push_back(weapon);
@@ -382,10 +382,10 @@ void Player::SetDefaultEquipment()
     case PlayerClass::SOLDIER:
     {
       weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED);
-      Inventory.AddToInventory(weapon);
+      Inventory.Add(weapon);
 
       armor = GameObjectsFactory::Instance().CreateArmor(0, 0, ArmorType::PADDING, ItemPrefix::UNCURSED);
-      Inventory.AddToInventory(armor);
+      Inventory.Add(armor);
 
       weaponAndArmorToEquip.push_back(weapon);
       weaponAndArmorToEquip.push_back(armor);
@@ -395,10 +395,10 @@ void Player::SetDefaultEquipment()
     case PlayerClass::ARCANIST:
     {
       weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::STAFF, ItemPrefix::UNCURSED);
-      Inventory.AddToInventory(weapon);
+      Inventory.Add(weapon);
 
       auto wand = GameObjectsFactory::Instance().CreateWand(0, 0, WandMaterials::EBONY_3, SpellType::MAGIC_MISSILE, ItemPrefix::BLESSED);
-      Inventory.AddToInventory(wand);
+      Inventory.Add(wand);
 
       weaponAndArmorToEquip.push_back(weapon);
     }
@@ -407,19 +407,19 @@ void Player::SetDefaultEquipment()
     case PlayerClass::CUSTOM:
     {
       weapon = GameObjectsFactory::Instance().CreateRandomWeapon();
-      Inventory.AddToInventory(weapon);
+      Inventory.Add(weapon);
 
       armor = GameObjectsFactory::Instance().CreateRandomArmor();
-      Inventory.AddToInventory(armor);
+      Inventory.Add(armor);
 
       auto acc = GameObjectsFactory::Instance().CreateRandomAccessory(0, 0);
-      Inventory.AddToInventory(acc);
+      Inventory.Add(acc);
 
       auto potion = GameObjectsFactory::Instance().CreateRandomPotion();
-      Inventory.AddToInventory(potion);
+      Inventory.Add(potion);
 
       auto gem = GameObjectsFactory::Instance().CreateGem(0, 0);
-      Inventory.AddToInventory(gem);
+      Inventory.Add(gem);
     }
     break;
   }
@@ -500,9 +500,9 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
 {
   with->Data.Amount--;
 
-  SpellInfo* si = SpellsDatabase::Instance().GetInfo(with->Data.SpellHeld);
+  SpellInfo si = with->Data.SpellHeld;
 
-  auto baseDamagePair = si->SpellBaseDamage;
+  auto baseDamagePair = si.SpellBaseDamage;
 
   int bonus = Attrs.Mag.Get();
 
@@ -512,8 +512,12 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
 
   // TODO: cursed wands side-effects?
 
-  switch (with->Data.SpellHeld)
+  switch (with->Data.SpellHeld.SpellType_)
   {
+    case SpellType::NONE:
+      Printer::Instance().AddMessage("Nothing happens");
+      break;
+
     case SpellType::STRIKE:
       ProcessMagicAttack(what, with, centralDamage, false);
       break;
@@ -557,7 +561,7 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
   if (actor != nullptr)
   {
     bool damageDone = TryToDamageObject(actor, damage, againstRes);
-    if (weapon->Data.SpellHeld == SpellType::FROST)
+    if (weapon->Data.SpellHeld.SpellType_ == SpellType::FROST)
     {
       ItemBonusStruct b;
       b.Type = ItemBonusType::FROZEN;
@@ -1597,18 +1601,18 @@ void Player::SetSoldierDefaultItems()
   ItemComponent* ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 3;
 
-  Inventory.AddToInventory(go);
+  Inventory.Add(go);
 
   go = GameObjectsFactory::Instance().CreateFood(0, 0, FoodType::IRON_RATIONS, ItemPrefix::UNCURSED);
   ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 1;
   ic->Data.IsIdentified = true;
 
-  Inventory.AddToInventory(go);
+  Inventory.Add(go);
 
   go = GameObjectsFactory::Instance().CreateRepairKit(0, 0, 30, ItemPrefix::BLESSED);
 
-  Inventory.AddToInventory(go);
+  Inventory.Add(go);
 }
 
 void Player::SetThiefDefaultItems()
@@ -1616,10 +1620,10 @@ void Player::SetThiefDefaultItems()
   Money = 500;
 
   auto go = GameObjectsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
-  Inventory.AddToInventory(go);
+  Inventory.Add(go);
 
   go = GameObjectsFactory::Instance().CreateManaPotion(ItemPrefix::UNCURSED);
-  Inventory.AddToInventory(go);  
+  Inventory.Add(go);
 }
 
 void Player::SetArcanistDefaultItems()
@@ -1631,13 +1635,13 @@ void Player::SetArcanistDefaultItems()
   ItemComponent* ic = static_cast<ItemComponent*>(c);
   ic->Data.Amount = 5;
 
-  Inventory.AddToInventory(go);
+  Inventory.Add(go);
 
   go = GameObjectsFactory::Instance().CreateReturner(0, 0, 3, ItemPrefix::UNCURSED);
-  Inventory.AddToInventory(go);
+  Inventory.Add(go);
 
   go = GameObjectsFactory::Instance().CreateScroll(0, 0, SpellType::MANA_SHIELD, ItemPrefix::BLESSED);
-  Inventory.AddToInventory(go);
+  Inventory.Add(go);
 }
 
 void Player::SetDefaultSkills()
@@ -1851,7 +1855,7 @@ void Player::AddExtraItems()
       };
 
       go = GameObjectsFactory::Instance().CreateNote("Wanted Poster", text);
-      Inventory.AddToInventory(go);
+      Inventory.Add(go);
     }
     break;
 
@@ -1872,7 +1876,7 @@ void Player::AddExtraItems()
       };
 
       go = GameObjectsFactory::Instance().CreateNote("Leave Warrant", text);
-      Inventory.AddToInventory(go);
+      Inventory.Add(go);
     }
     break;
 
@@ -1896,7 +1900,7 @@ void Player::AddExtraItems()
       };
 
       go = GameObjectsFactory::Instance().CreateNote("Orders", text);
-      Inventory.AddToInventory(go);
+      Inventory.Add(go);
     }
     break;
   }

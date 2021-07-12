@@ -3,6 +3,7 @@
 
 #include "constants.h"
 #include "attribute.h"
+#include "spells-database.h"
 
 struct ItemBonusStruct
 {
@@ -22,44 +23,49 @@ struct ItemBonusStruct
   int EffectCounter = 0;
 
   int MoneyCostIncrease = 0;
-  bool IsCursed = false;
+
+  bool IsCursed   = false;
   bool Cumulative = false;
-  bool FromItem = false;
+  bool FromItem   = false;
+
   uint64_t Id = 0;
 };
 
-// NOTE: possible god object
+// WARNING: possible god object
 struct ItemData
 {
-  ItemType ItemType_ = ItemType::DUMMY;
-  ItemPrefix Prefix = ItemPrefix::UNCURSED;
-  ItemRarity Rarity = ItemRarity::COMMON;
+  ItemType    ItemType_    = ItemType::DUMMY;
+  ItemPrefix  Prefix       = ItemPrefix::UNCURSED;
+  ItemRarity  Rarity       = ItemRarity::COMMON;
   ItemQuality ItemQuality_ = ItemQuality::NORMAL;
 
   EquipmentCategory EqCategory = EquipmentCategory::NOT_EQUIPPABLE;
 
+  Attribute WandCapacity;
+
   RangedAttribute Durability;
   RangedAttribute Damage;
-  RangedAttribute WandCapacity;
 
-  SpellType SpellHeld = SpellType::NONE;
+  SpellInfo SpellHeld;
 
   RangedWeaponType RangedWeaponType_ = RangedWeaponType::NONE;
-  ArrowType AmmoType = ArrowType::NONE;
-  WeaponType WeaponType_ = WeaponType::NONE;
+  ArrowType        AmmoType          = ArrowType::NONE;
+  WeaponType       WeaponType_       = WeaponType::NONE;
 
   std::pair<MapType, std::pair<int, int>> ReturnerPosition =
   {
     MapType::NOWHERE, { -1, -1 }
   };
 
-  bool IsUsable = false;
-  bool IsEquipped = false;
-  bool IsStackable = false;
-  bool IsIdentified = false;
+  // Not used, lol
+  bool IsUsable();
+
+  bool IsEquipped         = false;
+  bool IsStackable        = false;
+  bool IsIdentified       = false;
   bool IsPrefixDiscovered = false;
-  bool IsChargeable = false;
-  bool IsBurnable = false;
+  bool IsChargeable       = false;
+  bool IsBurnable         = false;
 
   // Can't be dropped from inventory if true
   bool IsImportant = false;
@@ -67,7 +73,7 @@ struct ItemData
   // For stackable
   int Amount = 1;
 
-  // For ranged weapons
+  // For ranged weapons and wands
   int Range = 1;
 
   // !!! Use GetCost() when cost is needed !!!

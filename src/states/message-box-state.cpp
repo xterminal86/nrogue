@@ -8,7 +8,7 @@
 
 void MessageBoxState::HandleInput()
 {
-  // Closed elswhere
+  // Closed elsewhere
   if (_type == MessageBoxType::IGNORE_INPUT)
   {
     return;

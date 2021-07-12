@@ -277,7 +277,7 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
         }
         else if (_weaponRef->Data.ItemType_ == ItemType::WAND)
         {
-          if (_weaponRef->Data.SpellHeld == SpellType::FIREBALL)
+          if (_weaponRef->Data.SpellHeld.SpellType_ == SpellType::FIREBALL)
           {
             auto prevCell = Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
             return prevCell;
@@ -396,8 +396,8 @@ std::pair<char, std::string> TargetState::GetProjectileImageAndColor(bool throwi
     {
       projectile = '*';
 
-      SpellType spell = _weaponRef->Data.SpellHeld;
-      SpellInfo* si = SpellsDatabase::Instance().GetInfo(spell);
+      SpellType spell = _weaponRef->Data.SpellHeld.SpellType_;
+      SpellInfo* si = SpellsDatabase::Instance().GetSpellInfoFromDatabase(spell);
       if (!si->SpellProjectileColor.empty())
       {
         projColor = si->SpellProjectileColor;
@@ -425,9 +425,11 @@ void TargetState::ProcessLaser()
 
   int distanceCovered = 0;
 
-  SpellInfo* si = SpellsDatabase::Instance().GetInfo(_weaponRef->Data.SpellHeld);
+  int power = _weaponRef->Data.SpellHeld.SpellBaseDamage.first + _weaponRef->Data.SpellHeld.SpellBaseDamage.second;
 
-  int power = si->SpellBaseDamage.first + si->SpellBaseDamage.second;
+  int playerMagic = _playerRef->Attrs.Mag.Get();
+
+  power += playerMagic;
 
   bool shouldStop = false;
 
@@ -554,7 +556,7 @@ void TargetState::FireWeapon(bool throwingFromInventory)
 
   bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
 
-  if (isWand && _weaponRef->Data.SpellHeld == SpellType::LASER)
+  if (isWand && _weaponRef->Data.SpellHeld.SpellType_ == SpellType::LASER)
   {
     ProcessLaser();
   }

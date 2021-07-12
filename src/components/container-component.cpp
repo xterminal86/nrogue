@@ -2,6 +2,9 @@
 #include "container-interact-state.h"
 #include "application.h"
 #include "item-component.h"
+#include "logger.h"
+#include "printer.h"
+#include "util.h"
 
 ContainerComponent::ContainerComponent()
 {
@@ -12,37 +15,47 @@ void ContainerComponent::Update()
 {
 }
 
-bool ContainerComponent::AddToInventory(GameObject* object)
+bool ContainerComponent::Add(GameObject* object)
 {  
   bool foundStack = false;
 
-  ItemComponent* itemToAdd = object->GetComponent<ItemComponent>();
-
-  if (itemToAdd->Data.IsStackable)
+  if (object != nullptr)
   {
-    for (auto& i : Contents)
+    ItemComponent* itemToAdd = object->GetComponent<ItemComponent>();
+
+    if (itemToAdd->Data.IsStackable)
     {
-      auto ic = i->GetComponent<ItemComponent>();
-      ItemComponent* inventoryItemComponent = static_cast<ItemComponent*>(ic);
-      if (itemToAdd->Data.IsIdentified && inventoryItemComponent->Data.IsIdentified
-       && inventoryItemComponent->Data.ItemTypeHash == itemToAdd->Data.ItemTypeHash)
+      for (auto& i : Contents)
       {
-        inventoryItemComponent->Data.Amount += itemToAdd->Data.Amount;
-        foundStack = true;
+        auto ic = i->GetComponent<ItemComponent>();
+        ItemComponent* inventoryItemComponent = static_cast<ItemComponent*>(ic);
+        if (itemToAdd->Data.IsIdentified && inventoryItemComponent->Data.IsIdentified
+         && inventoryItemComponent->Data.ItemTypeHash == itemToAdd->Data.ItemTypeHash)
+        {
+          inventoryItemComponent->Data.Amount += itemToAdd->Data.Amount;
+          foundStack = true;
 
-        // !!! GameObject* object should not be destroyed here !!!
+          // !!! GameObject* object should not be destroyed here !!!
 
-        break;
+          break;
+        }
       }
     }
+
+    //auto msg = Util::StringFormat("Picked up 0x%X", object);
+    //Logger::Instance().Print(msg);
+
+    if (!foundStack)
+    {
+      Contents.push_back(std::unique_ptr<GameObject>(object));
+    }
   }
-
-  //auto msg = Util::StringFormat("Picked up 0x%X", object);
-  //Logger::Instance().Print(msg);
-
-  if (!foundStack)
+  else
   {
-    Contents.push_back(std::unique_ptr<GameObject>(object));
+    std::string msg = "Trying to add nullptr to inventory!";
+    Printer::Instance().AddMessage(msg);
+    Logger::Instance().Print(msg, true);
+    DebugLog("%s\n", msg.data());
   }
 
   return foundStack;

@@ -28,7 +28,7 @@ void ItemComponent::Transfer(ContainerComponent* destination)
   }
   else
   {
-    destination->AddToInventory(OwnerGameObject);
+    destination->Add(OwnerGameObject);
   }
 }
 
@@ -67,6 +67,10 @@ std::pair<std::string, StringsArray2D> ItemComponent::GetInspectionInfo(bool ove
       else if (Data.ItemType_ == ItemType::RETURNER)
       {
         info = GetReturnerInspectionInfo();
+      }
+      else if (Data.ItemType_ == ItemType::WAND)
+      {
+        info = GetWandInspectionInfo();
       }
 
       // To avoid empty line at the bottom if there is no description.
@@ -195,6 +199,77 @@ std::vector<std::string> ItemComponent::GetReturnerInspectionInfo()
   }
 
   res.push_back(text);
+
+  return res;
+}
+
+std::vector<std::string> ItemComponent::GetWandInspectionInfo()
+{
+  std::vector<std::string> res;
+
+  std::string damage  = Util::StringFormat("Damage  : %id%i ", Data.SpellHeld.SpellBaseDamage.first, Data.SpellHeld.SpellBaseDamage.second);
+  std::string charges = Util::StringFormat("Charges : %i", Data.Amount);
+  std::string range   = Util::StringFormat("Range   : %i", Data.Range);
+
+  std::string type = "(RES)";
+
+  switch (Data.SpellHeld.SpellType_)
+  {
+    case SpellType::STRIKE:
+    case SpellType::LASER:
+    {
+      type = "(DEF)";
+    }
+    break;
+  }
+
+  damage += type;
+
+  if (Data.SpellHeld.SpellType_ == SpellType::NONE)
+  {
+    res.push_back("This wand hasn't been imbued");
+    res.push_back("with anything yet");
+    res.push_back("");
+    res.push_back(charges);
+    res.push_back(range);
+  }
+  else if (Data.SpellHeld.SpellType_ != SpellType::LIGHT)
+  {
+    // Calculate space padding to align lines relative to 'Damage'
+
+    size_t chargesPadding = damage.length() - charges.length();
+    size_t rangePadding   = damage.length() - range.length();
+
+    for (size_t i = 0; i < chargesPadding; i++)
+    {
+      charges += ' ';
+    }
+
+    for (size_t i = 0; i < rangePadding; i++)
+    {
+      range += ' ';
+    }
+
+    res.push_back(damage);
+    res.push_back(charges);
+    res.push_back(range);
+  }
+
+  if (Data.SpellHeld.SpellType_ != SpellType::LIGHT)
+  {
+    if (Data.Prefix == ItemPrefix::BLESSED)
+    {
+      res.push_back("");
+      res.push_back("This wand has higher capacity");
+      res.push_back("and is more effective due to being blessed");
+    }
+    else if (Data.Prefix == ItemPrefix::CURSED)
+    {
+      res.push_back("");
+      res.push_back("This wand has lower capacity");
+      res.push_back("and is dangerous due to being cursed");
+    }
+  }
 
   return res;
 }

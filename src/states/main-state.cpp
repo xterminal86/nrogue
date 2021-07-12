@@ -533,7 +533,7 @@ void MainState::ProcessWand(ItemComponent* wand)
   }
   else
   {    
-    switch (wand->Data.SpellHeld)
+    switch (wand->Data.SpellHeld.SpellType_)
     {
       // TODO: finish wands effects and attack
       // (e.g. wand of heal others etc.)
@@ -549,6 +549,7 @@ void MainState::ProcessWand(ItemComponent* wand)
       case SpellType::LASER:
       case SpellType::LIGHTNING:
       case SpellType::MAGIC_MISSILE:
+      case SpellType::NONE:
       {
         auto s = Application::Instance().GetGameStateRefByName(GameStates::TARGET_STATE);
         TargetState* ts = static_cast<TargetState*>(s);
@@ -586,7 +587,7 @@ void MainState::ProcessItemPickup(std::pair<int, GameObject*>& pair)
 
   auto go = Map::Instance().CurrentLevel->GameObjects[pair.first].release();
 
-  _playerRef->Inventory.AddToInventory(go);
+  _playerRef->Inventory.Add(go);
 
   std::string objName = ic->Data.IsIdentified ? go->ObjectName : ic->Data.UnidentifiedName;
 

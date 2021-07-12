@@ -245,8 +245,17 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
-  auto wand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::GOLDEN_7, SpellType::LASER, ItemPrefix::UNCURSED);
-  InsertGameObject(wand);
+  /*
+  for (size_t x = 1; x < 16; x++)
+  {
+    auto wand = GameObjectsFactory::Instance().CreateRandomWand();
+    ItemComponent* ic = wand->GetComponent<ItemComponent>();
+    ic->Data.IsIdentified = true;
+    wand->PosX = x;
+    wand->PosY = 1;
+    InsertGameObject(wand);
+  }
+  */
 
   /*
   // *** FIXME: debug

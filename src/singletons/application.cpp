@@ -157,6 +157,15 @@ void Application::ShowMessageBox(MessageBoxType type,
 {
   _previousState = _currentState;
 
+  /*
+  std::vector<std::string> totalMessage = message;
+  if (type == MessageBoxType::WAIT_FOR_INPUT)
+  {
+    totalMessage.push_back("");
+    totalMessage.push_back("'Enter' to close");
+  }
+  */
+
   auto ptr = _gameStates[GameStates::MESSAGE_BOX_STATE].get();
   MessageBoxState* mbs = static_cast<MessageBoxState*>(ptr);
   mbs->SetMessage(type, header, message, borderColor, bgColor);

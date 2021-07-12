@@ -99,7 +99,10 @@ void MapLevelBase::InsertGameObject(GameObject* goToInsert)
   if (goToInsert == nullptr)
   {
     #ifdef DEBUG_BUILD
-    Printer::Instance().AddMessage("[WARNING] tried to insert null object!");
+    std::string str = "[WARNING] tried to insert null object!";
+    Printer::Instance().AddMessage(str);
+    Logger::Instance().Print(str);
+    DebugLog("%s\n", str.data());
     #endif
 
     return;
