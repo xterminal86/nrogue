@@ -29,9 +29,6 @@ class CustomClassState : public GameState
 
     int _startY = 1;
 
-    int _hw = 0;
-    int _hh = 0;
-
     int _cursorRows = 0;
     int _cursorCols = 0;
 

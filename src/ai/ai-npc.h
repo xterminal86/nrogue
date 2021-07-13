@@ -16,6 +16,7 @@ struct NPCData
   bool IsAquainted = false;
   bool IsMale = true;
   bool CanSpeak = true;
+  ServiceType ProvidesService = ServiceType::NONE;
 
   std::string UnacquaintedDescription;
 
@@ -32,7 +33,7 @@ class AINPC : public AIModelBase
   public:
     AINPC();
 
-    void Init(NPCType type, bool immovable);
+    void Init(NPCType type, bool immovable, ServiceType serviceType);
 
     NPCData Data;
 

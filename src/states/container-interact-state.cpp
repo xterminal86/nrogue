@@ -6,10 +6,7 @@
 
 void ContainerInteractState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;  
-
-  _twHalf = Printer::TerminalWidth / 2;
-  _twQuarter = Printer::TerminalWidth / 4;
+  _playerRef = &Application::Instance().PlayerInstance;    
 }
 
 void ContainerInteractState::Cleanup()

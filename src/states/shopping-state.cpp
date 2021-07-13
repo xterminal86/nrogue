@@ -11,9 +11,6 @@
 void ShoppingState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
-
-  _tw = Printer::TerminalWidth;
-  _th = Printer::TerminalHeight;
 }
 
 void ShoppingState::Prepare()
@@ -120,7 +117,8 @@ void ShoppingState::Update(bool forceUpdate)
     auto playerMoney = Util::StringFormat("You have: %i $", _playerRef->Money);
     Printer::Instance().PrintFB(1, _th - 1, playerMoney, Printer::kAlignLeft, GlobalConstants::CoinsColor);
 
-    Printer::Instance().PrintFB(_tw, _th - 1, "'i' - inspect ", Printer::kAlignRight, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(_tw / 2 + 1, _th - 1, " 'i' - inspect ", Printer::kAlignLeft,  GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(_tw,         _th - 1, "'q' - exit ",     Printer::kAlignRight, GlobalConstants::WhiteColor);
 
     Printer::Instance().Render();
   }

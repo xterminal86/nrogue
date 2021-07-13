@@ -22,6 +22,7 @@
 #include "endgame-state.h"
 #include "attack-state.h"
 #include "target-state.h"
+#include "service-state.h"
 #include "map.h"
 #include "map-level-base.h"
 #include "printer.h"
@@ -703,6 +704,7 @@ void Application::InitGameStates()
   RegisterState<RepairState>           (GameStates::REPAIR_STATE);
   RegisterState<ExitingState>          (GameStates::EXITING_STATE);
   RegisterState<MessageBoxState>       (GameStates::MESSAGE_BOX_STATE);
+  RegisterState<ServiceState>          (GameStates::SERVICE_STATE);
   RegisterState<TargetState>           (GameStates::TARGET_STATE);
   RegisterState<EndgameState>          (GameStates::ENDGAME_STATE);
 

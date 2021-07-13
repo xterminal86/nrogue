@@ -5,8 +5,14 @@
 #include "timer.h"
 #include "util.h"
 
-GameState::GameState()
-{
+GameState::GameState() :
+  _tw(Printer::TerminalWidth),
+  _th(Printer::TerminalHeight),
+  _twHalf(_tw / 2),
+  _twQuarter(_tw / 4),
+  _thHalf(_th / 2),
+  _thQuarter(_th / 4)
+{    
 }
 
 #ifdef USE_SDL

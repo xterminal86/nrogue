@@ -37,6 +37,13 @@ class GameState
 
     void DrawHeader(const std::string& header);
 
+    const int _tw;
+    const int _th;
+    const int _twHalf;
+    const int _twQuarter;
+    const int _thHalf;
+    const int _thQuarter;
+
 #ifdef USE_SDL    
     bool ShouldShiftMap(int& key);
 

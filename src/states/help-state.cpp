@@ -85,38 +85,35 @@ void HelpState::Update(bool forceUpdate)
 
 void HelpState::DrawScrollBars()
 {
-  size_t tw = Printer::TerminalWidth;
-  size_t th = Printer::TerminalHeight;
-
   // Since we draw messages from y = 1, compensate y pos with (th - 2)
-  int scrollLimit = (_helpText.size() - 1) - (th - 2);
+  int scrollLimit = (_helpText.size() - 1) - (_th - 2);
 
-  if (_helpText.size() - 1 > th - 2)
+  if (_helpText.size() - 1 > _th - 2)
   {
     if (_scrollPosition == 0)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(tw - 1, th - 1, (int)NameCP437::DARROW_2, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, "#FFFFFF");
       #else
-      Printer::Instance().PrintFB(tw - 1, th - 1, "\\/", Printer::kAlignRight, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, "#FFFFFF");
       #endif
     }
     else if (_scrollPosition == scrollLimit)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(tw - 1, 1, (int)NameCP437::UARROW_2, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, 1, (int)NameCP437::UARROW_2, "#FFFFFF");
       #else
-      Printer::Instance().PrintFB(tw - 1, 1, "/\\", Printer::kAlignRight, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, 1, "/\\", Printer::kAlignRight, "#FFFFFF");
       #endif
     }
     else if (_scrollPosition > 0 && _scrollPosition != scrollLimit)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(tw - 1, 1, (int)NameCP437::UARROW_2, "#FFFFFF");
-      Printer::Instance().PrintFB(tw - 1, th - 1, (int)NameCP437::DARROW_2, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, 1, (int)NameCP437::UARROW_2, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, "#FFFFFF");
       #else
-      Printer::Instance().PrintFB(tw - 1, 1, "/\\", Printer::kAlignRight, "#FFFFFF");
-      Printer::Instance().PrintFB(tw - 1, th - 1, "\\/", Printer::kAlignRight, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, 1, "/\\", Printer::kAlignRight, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, "#FFFFFF");
       #endif
     }
   }

@@ -22,7 +22,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateMonster(int x, int y, GameObjectType monsterType);
 
     /// Various
-    GameObject* CreateNPC(int x, int y, NPCType npcType, bool standing = false);
+    GameObject* CreateNPC(int x, int y, NPCType npcType, bool standing = false, ServiceType serviceType = ServiceType::NONE);
     GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);
     GameObject* CreateMoney(int amount = 0);
     GameObject* CreateRemains(GameObject* from);

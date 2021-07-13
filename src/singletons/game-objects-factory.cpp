@@ -194,7 +194,7 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool standing)
+GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool standing, ServiceType serviceType)
 {
   char img = '@';
 
@@ -208,7 +208,7 @@ GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool st
 
   AIComponent* aic = go->AddComponent<AIComponent>();
   AINPC* ainpc = aic->AddModel<AINPC>();
-  ainpc->Init(npcType, standing);
+  ainpc->Init(npcType, standing, serviceType);
 
   std::string goColor = (ainpc->Data.IsMale) ? "#FFFFFF" : "#FF00FF";
   go->FgColor = goColor;

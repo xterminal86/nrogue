@@ -713,9 +713,9 @@ void MapLevelTown::CreatePlayerHouse()
 
 void MapLevelTown::CreateNPCs()
 {
-  Rect playerHome = { 2, 2, 8, 8 };
+  Rect playerHome   = {  2,  2,  8,  8 };
   Rect mineEntrance = { 87, 40, 95, 48 };
-  Rect altarRoom = { 87, 21, 95, 27 };
+  Rect altarRoom    = { 87, 21, 95, 27 };
 
   std::vector<NPCType> npcs =
   {
@@ -785,16 +785,16 @@ void MapLevelTown::CreateNPCs()
 
   // Traders
 
-  go = GameObjectsFactory::Instance().CreateNPC(83, 24, NPCType::MARTIN, true);
+  go = GameObjectsFactory::Instance().CreateNPC(83, 24, NPCType::MARTIN, true, ServiceType::RECHARGE);
   InsertActor(go);
 
   go = GameObjectsFactory::Instance().CreateNPC(9, 22, NPCType::CASEY, true);
   InsertActor(go);
 
-  go = GameObjectsFactory::Instance().CreateNPC(9, 43, NPCType::MAYA, true);
+  go = GameObjectsFactory::Instance().CreateNPC(9, 43, NPCType::MAYA, true, ServiceType::IDENTIFY);
   InsertActor(go);
 
-  go = GameObjectsFactory::Instance().CreateNPC(81, 7, NPCType::GRISWOLD, true);
+  go = GameObjectsFactory::Instance().CreateNPC(81, 7, NPCType::GRISWOLD, true, ServiceType::REPAIR);
   InsertActor(go);
 }
 

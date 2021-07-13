@@ -4,13 +4,7 @@
 #include "util.h"
 
 void MenuState::Init()
-{
-  _tw = Printer::TerminalWidth;
-  _th = Printer::TerminalHeight;
-
-  _twHalf = _tw / 2;
-  _thHalf = _th / 2;
-
+{  
   _titleX = _twHalf;
   _titleY = _thHalf / 2 - _title.size() / 2;
 

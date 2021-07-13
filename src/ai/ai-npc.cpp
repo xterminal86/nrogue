@@ -12,10 +12,12 @@ AINPC::AINPC()
   IsAgressive = false;  
 }
 
-void AINPC::Init(NPCType type, bool immovable)
+void AINPC::Init(NPCType type, bool immovable, ServiceType serviceType)
 {
   _npcType = type;
+
   Data.IsImmovable = immovable;
+  Data.ProvidesService = serviceType;
 
   // TODO: moar?
 

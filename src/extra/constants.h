@@ -126,6 +126,7 @@ enum class GameStates
   SHOPPING_STATE,
   RETURNER_STATE,
   REPAIR_STATE,
+  SERVICE_STATE,
   TARGET_STATE,
   EXITING_STATE,
   MESSAGE_BOX_STATE,
@@ -218,6 +219,14 @@ enum class TraderRole
   BLACKSMITH,
   CLERIC,
   JUNKER
+};
+
+enum class ServiceType
+{
+  NONE = 0,
+  IDENTIFY,
+  REPAIR,
+  RECHARGE
 };
 
 enum class PlayerClass

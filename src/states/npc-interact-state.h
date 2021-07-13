@@ -33,6 +33,7 @@ class NPCInteractState : public GameState
       NAME = 0,
       JOB,
       GOSSIP,
+      SERVICES,
       NONE
     };
 

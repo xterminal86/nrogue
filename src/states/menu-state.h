@@ -48,12 +48,6 @@ class MenuState : public GameState
 
   std::string _debugInfo;
 
-  int _tw = 0;
-  int _th = 0;
-
-  int _twHalf = 0;
-  int _thHalf = 0;
-
   int _titleX = 0;
   int _titleY = 0;
 };

@@ -5,6 +5,7 @@
 #include "util.h"
 #include "ai-npc.h"
 #include "ai-component.h"
+#include "service-state.h"
 #include "trader-component.h"
 #include "shopping-state.h"
 
@@ -81,6 +82,19 @@ void NPCInteractState::HandleInput()
       _blockToPrint = _npcRef->Data.GossipResponsesByMap.at(MapType::TOWN)[_gossipBlockIndex];
       _textPrinting = true;
       Prepare();
+    }
+    break;
+
+    case 's':
+    {
+      if (_npcRef->Data.ProvidesService != ServiceType::NONE)
+      {
+        TraderComponent* tc = _npcRef->AIComponentRef->OwnerGameObject->GetComponent<TraderComponent>();
+        auto s = Application::Instance().GetGameStateRefByName(GameStates::SERVICE_STATE);
+        ServiceState* ss = static_cast<ServiceState*>(s);
+        ss->Setup(tc);
+        Application::Instance().ChangeState(GameStates::SERVICE_STATE);
+      }
     }
     break;
 
@@ -207,10 +221,19 @@ void NPCInteractState::PrintFooter()
     return;
   }
 
-  size_t part = tw / 5;
-
-  Printer::Instance().PrintFB(tw / 2 - part * 2, th - 1, "'n' - name", Printer::kAlignLeft, GlobalConstants::WhiteColor);
-  Printer::Instance().PrintFB(tw / 2 - part, th - 1, "'j' - job", Printer::kAlignLeft, GlobalConstants::WhiteColor);
-  Printer::Instance().PrintFB(tw / 2 + part, th - 1, "'g' - gossip", Printer::kAlignRight, GlobalConstants::WhiteColor);
-  Printer::Instance().PrintFB(tw / 2 + part * 2, th - 1, "'q' - bye", Printer::kAlignRight, GlobalConstants::WhiteColor);
+  if (_npcRef->Data.ProvidesService != ServiceType::NONE)
+  {
+    Printer::Instance().PrintFB(1,               th - 1, "'n' - name",     Printer::kAlignLeft,   GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(tw / 2 - tw / 4, th - 1, "'j' - job",      Printer::kAlignCenter, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(tw / 2,          th - 1, "'s' - services", Printer::kAlignCenter, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(tw / 2 + tw / 4, th - 1, "'g' - gossip",   Printer::kAlignCenter, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(tw - 1,          th - 1, "'q' - bye",      Printer::kAlignRight,  GlobalConstants::WhiteColor);
+  }
+  else
+  {
+    Printer::Instance().PrintFB(1,               th - 1, "'n' - name",   Printer::kAlignLeft,   GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(tw / 2 - tw / 8, th - 1, "'j' - job",    Printer::kAlignCenter, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(tw / 2 + tw / 8, th - 1, "'g' - gossip", Printer::kAlignCenter, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(tw - 1,          th - 1, "'q' - bye",    Printer::kAlignRight,  GlobalConstants::WhiteColor);
+  }
 }
