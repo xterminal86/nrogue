@@ -622,7 +622,7 @@ namespace GlobalConstants
     { ItemBonusType::INDESTRUCTIBLE, "of Ages"        },
     { ItemBonusType::SELF_REPAIR,    "of Reliability" },
     { ItemBonusType::VISIBILITY,     "of the Sun"     },
-    { ItemBonusType::INVISIBILITY,   "of the Ghost"   },
+    { ItemBonusType::INVISIBILITY,   "of the Unseen"  },
     { ItemBonusType::DAMAGE,         "of Destruction" },
     { ItemBonusType::HUNGER,         "of Satiation"   },
     { ItemBonusType::IGNORE_DEFENCE, "of the Master"  },

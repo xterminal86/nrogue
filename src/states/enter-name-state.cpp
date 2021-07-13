@@ -87,11 +87,11 @@ void EnterNameState::HandleInput()
       // Don't include special characters
       if (_keyPressed >= 32 && _keyPressed <= 126)
       {
-        if (_inputType == InputType::NAME && _nameEntered.length() < MaxNameLength - 3)
+        if (_inputType == InputType::NAME && _nameEntered.length() < (size_t)MaxNameLength - 3)
         {
           _nameEntered += (char)_keyPressed;
         }
-        else if (_inputType == InputType::SEED_STRING && _seedEntered.length() < MaxSeedStringLength - 2)
+        else if (_inputType == InputType::SEED_STRING && _seedEntered.length() < (size_t)MaxSeedStringLength - 2)
         {
           _seedEntered += (char)_keyPressed;
 
@@ -172,7 +172,7 @@ void EnterNameState::Update(bool forceUpdate)
     #endif
 
     // Seed string hint
-    for (size_t i = 0; i < MaxSeedStringLength - 2; i++)
+    for (int i = 0; i < MaxSeedStringLength - 2; i++)
     {
       Printer::Instance().PrintFB(_x - _maxSeedHalf + 2 + i, _cursorPos + 6, '.', "#444444");
     }

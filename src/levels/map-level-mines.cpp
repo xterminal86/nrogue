@@ -513,7 +513,7 @@ void MapLevelMines::CreateSpecialLevel()
 
 void MapLevelMines::CreateRandomBarrels()
 {
-  auto curLvl = Map::Instance().CurrentLevel;
+  //auto curLvl = Map::Instance().CurrentLevel;
 
   auto emptyCellsCopy = _emptyCells;
 

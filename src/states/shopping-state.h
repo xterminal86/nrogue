@@ -19,7 +19,7 @@ class ShoppingState : public GameState
     void HandleInput() override;
 
   private:
-    const float _kPlayerSellRate = 2.5f;
+    const float _kPlayerSellRate = 2.0f;
     const int _kJunkerBuyCost = 100;
 
     Player* _playerRef;
@@ -45,8 +45,8 @@ class ShoppingState : public GameState
 
     std::string GetItemExtraInfo(ItemComponent* item);
 
-    size_t _tw = 0;
-    size_t _th = 0;
+    int _tw = 0;
+    int _th = 0;
 };
 
 #endif // SHOPPINGSTATE_H

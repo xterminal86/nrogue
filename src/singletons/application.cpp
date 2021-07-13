@@ -88,10 +88,20 @@ void Application::Run()
     }
     else
     {
-      Map::Instance().UpdateGameObjects();
-      PlayerInstance.WaitForTurn();
+      // If player has levelled up, stop updating
+      // everything until message box is closed,
+      // or we can get attack animations on top of message box.
+      if (CurrentStateIs(GameStates::MESSAGE_BOX_STATE))
+      {
+        _currentState->HandleInput();
+      }
+      else
+      {
+        Map::Instance().UpdateGameObjects();
+        PlayerInstance.WaitForTurn();
 
-      TurnsPassed++;
+        TurnsPassed++;
+      }
     }
 
     Timer::Instance().MeasureEnd();    
@@ -294,7 +304,7 @@ void Application::WriteObituary(bool wasKilled)
           auto so = Map::Instance().GetStaticGameObjectAtPosition(x, y);
           if (so != nullptr)
           {
-            ch = so->Image;
+            ch = (so->Image == ' ') ? '#' : so->Image;
           }
         }
 

@@ -389,7 +389,7 @@ void Printer::PrintFB(const int& x, const int& y,
                       const std::string& htmlColorBg)
 {
   size_t tileScaleW = (scale <= 1) ? _tileWidthScaled : _tileWidthScaled * ((scale - 1) * 3);
-  size_t tileScaleH = (scale <= 1) ? _tileHeightScaled : _tileHeightScaled * ((scale - 1) * 3);
+  //size_t tileScaleH = (scale <= 1) ? _tileHeightScaled : _tileHeightScaled * ((scale - 1) * 3);
 
   int px = x * _tileWidthScaled;
   int py = y * _tileHeightScaled;

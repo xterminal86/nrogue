@@ -75,7 +75,7 @@ void InfoState::Update(bool forceUpdate)
 
     int maxLength = FindAttrsMaxStringLength();
 
-    PrintModifiers(7 + maxLength, yPos + 3);
+    PrintModifiers(8 + maxLength, yPos + 3);
 
     // Skills
 
@@ -107,8 +107,15 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
     color = "#FF0000";
   }
 
-  std::string text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
-  Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
+  std::string attrPlaceholder = Util::StringFormat("%s:...", attrName.data());
+  Printer::Instance().PrintFB(x, y, attrPlaceholder, Printer::kAlignLeft, "#555555");
+
+  std::string text = Util::StringFormat("%i", attr.Get());
+
+  Printer::Instance().PrintFB(x + attrPlaceholder.length() - text.length(), y, text, Printer::kAlignLeft, color);
+
+  //text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
+  //Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
 
   // Replace stat name back with white color (kinda hack)
   auto str = Util::StringFormat("%s:", attrName.data());
@@ -129,8 +136,18 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
     color = "#FF0000";
   }
 
-  std::string text = Util::StringFormat("%s: %i / %i", attrName.data(), attr.Min().Get(), attr.Max().Get());
-  Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
+  std::string placeholder = Util::StringFormat("%s: ... / ...", attrName.data());
+  Printer::Instance().PrintFB(x, y, placeholder, Printer::kAlignLeft, "#555555");
+
+  //std::string text = Util::StringFormat("%s: %i / %i", attrName.data(), attr.Min().Get(), attr.Max().Get());
+  //Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
+
+  std::string minVal = Util::StringFormat("%i", attr.Min().Get());
+  std::string maxVal = Util::StringFormat("%i", attr.Max().Get());
+
+  Printer::Instance().PrintFB(x + placeholder.length() - 6 - minVal.length(), y, minVal, Printer::kAlignLeft, color);
+  Printer::Instance().PrintFB(x + placeholder.length() - 3, y, maxVal, Printer::kAlignLeft, color);
+  Printer::Instance().PrintFB(x + placeholder.length() - 5, y, '/', "#FFFFFF");
 
   // Replace stat name back with white color (kinda hack)
   auto str = Util::StringFormat("%s:", attrName.data());

@@ -109,7 +109,7 @@ ItemBonusStruct* ItemData::GetBonus(ItemBonusType type)
   return res;
 }
 
-bool ItemData::IsUsable()
+bool ItemData::CanBeUsed()
 {
   return (UseCallback.target_type() != typeid(void));
 }

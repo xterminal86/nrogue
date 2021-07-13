@@ -623,7 +623,7 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 {
   bool res = false;  
 
-  if (item->Data.UseCallback.target_type() != typeid(void))
+  if (item->Data.CanBeUsed())
   {
     return item->Data.UseCallback(item);    
   }
@@ -830,7 +830,7 @@ GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedDescription =
   {
     "They say drinking this will bring you to the next level.",
-    "Whatever that means..."
+    "Whatever it means..."
   };
 
   ic->Data.IdentifiedName = name;
@@ -1265,7 +1265,9 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
   ic->Data.SpellHeld.SpellType_ = type;
 
   // NOTE: scrolls cost = base * 2, spellbooks = base * 10
-  ic->Data.Cost = si->SpellBaseCost * 2;
+  //
+  // Too expensinve?
+  ic->Data.Cost = si->SpellBaseCost; //si->SpellBaseCost * 2;
 
   ic->Data.UnidentifiedName = "\"" + _gameScrollsMap[type].ScrollName + "\"";
   ic->Data.UnidentifiedDescription = { "Who knows what will happen if you read these words aloud..." };
@@ -1544,7 +1546,7 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
   go->FgColor = wandColorPair.first;
   go->BgColor = wandColorPair.second;
 
-  int dl = Map::Instance().CurrentLevel->DungeonLevel;
+  //int dl = Map::Instance().CurrentLevel->DungeonLevel;
 
   int capacity = GlobalConstants::WandCapacityByMaterial.at(material);
 

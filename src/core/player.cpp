@@ -1090,7 +1090,7 @@ void Player::AwardExperience(int amount)
   int amnt = amount * (Attrs.Exp.Talents + 1);
 
   // FIXME: debug
-  //amnt = 100;
+  //int amnt = 100;
 
   Attrs.Exp.AddMin(amnt);
 
@@ -1282,7 +1282,7 @@ void Player::ProcessKill(GameObject* monster)
   {
     // FIXME: exp value is too unbalanced (maybe)
 
-    int dungeonLvl = Map::Instance().CurrentLevel->DungeonLevel;
+    //int dungeonLvl = Map::Instance().CurrentLevel->DungeonLevel;
     int defaultExp = monster->Attrs.Rating() - Attrs.Rating();
 
     defaultExp = monster->Attrs.Rating();

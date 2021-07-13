@@ -43,7 +43,7 @@ void SpellsDatabase::Init()
                 });
 
   RegisterSpell({
-  SpellType::IDENTIFY, "Identify", "Id", 100
+  SpellType::IDENTIFY, "Identify", "Id", 25
                 });
 
   RegisterSpell({

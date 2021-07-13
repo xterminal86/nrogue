@@ -57,8 +57,7 @@ struct ItemData
     MapType::NOWHERE, { -1, -1 }
   };
 
-  // Not used, lol
-  bool IsUsable();
+  bool CanBeUsed();
 
   bool IsEquipped         = false;
   bool IsStackable        = false;
