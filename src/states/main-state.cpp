@@ -846,8 +846,7 @@ void MainState::DisplayScenarioInformation()
 
   ss.str("");
 
-  ss << "Seed value: " << seedString.second;
-
+  ss << "Seed value: " << seedString.second;  
   messages.push_back(ss.str());
 
   Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Scenario Information", messages);

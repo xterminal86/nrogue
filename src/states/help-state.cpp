@@ -88,7 +88,7 @@ void HelpState::DrawScrollBars()
   // Since we draw messages from y = 1, compensate y pos with (th - 2)
   int scrollLimit = (_helpText.size() - 1) - (_th - 2);
 
-  if (_helpText.size() - 1 > _th - 2)
+  if (_helpText.size() - 1 > (size_t)_th - 2)
   {
     if (_scrollPosition == 0)
     {

@@ -9,6 +9,13 @@ bool ItemData::IsWeaponOrArmor()
   return cond;
 }
 
+bool ItemData::RepairNeeded()
+{
+  bool cond = (Durability.Min().Get() < Durability.Max().Get());
+
+  return cond;
+}
+
 int ItemData::GetCost()
 {
   bool weaponOrArmor = IsWeaponOrArmor();

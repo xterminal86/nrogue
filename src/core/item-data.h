@@ -79,7 +79,9 @@ struct ItemData
   int Cost = 0;
 
   bool IsWeaponOrArmor();
+  bool RepairNeeded();
   bool HasBonus(ItemBonusType bonusType);
+
   ItemBonusStruct* GetBonus(ItemBonusType type);
 
   int GetCost();

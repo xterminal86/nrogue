@@ -73,9 +73,12 @@ void InfoState::Update(bool forceUpdate)
     PrintRangedAttribute(1, yPos + 10, "HP", playerRef.Attrs.HP);
     PrintRangedAttribute(1, yPos + 11, "MP", playerRef.Attrs.MP);
 
-    int maxLength = FindAttrsMaxStringLength();
+    // Attributes are effectively right aligned in PrintAttribute(),
+    // so no need for this hack anymore.
 
-    PrintModifiers(8 + maxLength, yPos + 3);
+    //int maxLength = FindAttrsMaxStringLength();
+
+    PrintModifiers(9, yPos + 3);
 
     // Skills
 

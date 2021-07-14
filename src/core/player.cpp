@@ -42,7 +42,8 @@ void Player::Init()
   Attrs.Exp.SetMax(100);
 
   // FIXME: debug
-  //Money = 100000;
+  //Money = 0;
+  Money = 100000;
   //Attrs.HungerRate.Set(0);
   //Attrs.HP.Set(1000);
   //Attrs.HP.Set(10);

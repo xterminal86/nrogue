@@ -241,8 +241,12 @@ void InventoryState::Update(bool forceUpdate)
 
     for (int i = itemsCount; i < GlobalConstants::InventoryMaxSize; i++)
     {
-      std::string stub(GlobalConstants::InventoryMaxNameLength, '-');
-      Printer::Instance().PrintFB(1, 2 + yPos, stub, Printer::kAlignLeft, "#FFFFFF");
+      std::string stub(GlobalConstants::InventoryMaxNameLength, '.');
+      Printer::Instance().PrintFB(1,
+                                  2 + yPos,
+                                  stub,
+                                  Printer::kAlignLeft,
+                                  GlobalConstants::InventoryEmptySlotColor);
       yPos++;
     }
 

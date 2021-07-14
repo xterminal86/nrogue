@@ -359,7 +359,7 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
   ApplyEffect(effectToAdd);
 
 #ifndef RELEASE_BUILD
-  DebugLog("Gained %s for %i turns (period %i)", GlobalConstants::BonusDisplayNameByType.at(effectToAdd.Type).data(), effectToAdd.Duration, effectToAdd.Period);
+  DebugLog("%s gained %s for %i turns (period %i)", ObjectName.data(), GlobalConstants::BonusDisplayNameByType.at(effectToAdd.Type).data(), effectToAdd.Duration, effectToAdd.Period);
 #endif
 }
 

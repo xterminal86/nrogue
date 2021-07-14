@@ -245,6 +245,11 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
+  auto w1 = GameObjectsFactory::Instance().CreateWeapon(1, 1, WeaponType::ARMING_SWORD, ItemPrefix::BLESSED);
+  ItemComponent* ic = w1->GetComponent<ItemComponent>();
+  ic->Data.Durability.Min().Set(3);
+  InsertGameObject(w1);
+
   /*
   for (size_t x = 1; x < 16; x++)
   {
@@ -785,7 +790,7 @@ void MapLevelTown::CreateNPCs()
 
   // Traders
 
-  go = GameObjectsFactory::Instance().CreateNPC(83, 24, NPCType::MARTIN, true, ServiceType::RECHARGE);
+  go = GameObjectsFactory::Instance().CreateNPC(83, 24, NPCType::MARTIN, true, ServiceType::BLESS);
   InsertActor(go);
 
   go = GameObjectsFactory::Instance().CreateNPC(9, 22, NPCType::CASEY, true);

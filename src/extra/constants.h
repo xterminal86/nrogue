@@ -103,7 +103,7 @@
 #include <functional>
 
 using StringsArray2D = std::vector<std::string>;
-using CharArray2D = std::vector<std::vector<char>>;
+using CharArray2D    = std::vector<std::vector<char>>;
 
 enum class GameStates
 {
@@ -226,7 +226,8 @@ enum class ServiceType
   NONE = 0,
   IDENTIFY,
   REPAIR,
-  RECHARGE
+  RECHARGE,
+  BLESS
 };
 
 enum class PlayerClass
@@ -655,6 +656,8 @@ namespace GlobalConstants
   extern const size_t OpenedByAnyone;
   extern const size_t OpenedByNobody;
 
+  extern const size_t InventoryMaxNameLength;
+
   extern const int HPMPBarLength;
   extern const int AttributeMinimumRaiseChance;
   extern const int AttributeIncreasedRaiseStep;
@@ -664,7 +667,6 @@ namespace GlobalConstants
   extern const int MinHitChance;
   extern const int MaxHitChance;
   extern const int DisplayAttackDelayMs;
-  extern const size_t InventoryMaxNameLength;
   extern const int InventoryMaxSize;
   extern const int TurnReadyValue;
   extern const int TurnTickValue;
@@ -707,57 +709,66 @@ namespace GlobalConstants
   extern const std::string MessageBoxRedBorderColor;
   extern const std::string MessageBoxBlueBorderColor;
   extern const std::string MessageBoxHeaderBgColor;
+  extern const std::string InventoryEmptySlotColor;
   extern const std::string ItemMagicColor;
   extern const std::string ItemRareColor;
   extern const std::string ItemUniqueColor;
   extern const std::string ItemMixedColor;
   extern const std::string ItemCursedColor;
 
-  extern const std::map<ItemQuality, std::string> QualityNameByQuality;
-  extern const std::map<PlayerSkills, std::string> SkillNameByType;
-  extern const std::map<TraderRole, std::string> ShopNameByType;
+  extern const std::map<ItemQuality,      std::string> QualityNameByQuality;
+  extern const std::map<PlayerSkills,     std::string> SkillNameByType;
+  extern const std::map<TraderRole,       std::string> ShopNameByType;
+  extern const std::map<PlayerStats,      std::string> StatNameByType;
+  extern const std::map<ItemType,         std::string> PotionNameByType;
+  extern const std::map<ItemType,         std::string> StatNameByPotionType;
+  extern const std::map<WeaponType,       std::string> WeaponNameByType;
+  extern const std::map<RangedWeaponType, std::string> RangedWeaponNameByType;
+  extern const std::map<ArrowType,        std::string> ArrowNameByType;
+  extern const std::map<ArmorType,        std::string> ArmorNameByType;
+  extern const std::map<GemType,          std::string> GemColorNameByType;
+  extern const std::map<GemType,          std::string> GemNameByType;
+  extern const std::map<ItemBonusType,    std::string> ItemBonusPrefixes;
+  extern const std::map<ItemBonusType,    std::string> ItemBonusSuffixes;
+  extern const std::map<ItemBonusType,    std::string> BonusDisplayNameByType;
+
   extern const std::map<GameObjectType, std::map<ItemType, int>> LootTable;
   extern const std::map<GameObjectType, std::map<FoodType, int>> FoodLootTable;
-  extern const std::map<ItemType, int> PotionsWeightTable;
-  extern const std::map<PlayerStats, std::string> StatNameByType;
-  extern const std::map<ItemType, std::string> PotionNameByType;
-  extern const std::map<ItemType, std::string> StatNameByPotionType;
-  extern const std::map<std::string, ItemType> PotionTypeByStatName;
-  extern const std::map<WeaponType, std::string> WeaponNameByType;
-  extern const std::map<RangedWeaponType, std::string> RangedWeaponNameByType;
-  extern const std::map<ArrowType, std::string> ArrowNameByType;
-  extern const std::map<ArmorType, std::string> ArmorNameByType;
-  extern const std::map<ArmorType, int> ArmorDurabilityByType;
-  extern const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName;
-  extern const std::map<GemType, std::pair<std::string, std::string>> GemColorByType;
-  extern const std::map<GemType, std::string> GemColorNameByType;
-  extern const std::map<GemType, std::string> GemNameByType;
-  extern const std::map<GemType, int> GemCostByType;
+
+  extern const std::map<ItemType,      int> PotionsWeightTable;
+  extern const std::map<ArmorType,     int> ArmorDurabilityByType;
+  extern const std::map<GemType,       int> GemCostByType;
   extern const std::map<WandMaterials, int> WandCapacityByMaterial;
   extern const std::map<WandMaterials, int> WandRangeByMaterial;
-  extern const std::map<SpellType, int> WandSpellCapacityCostByType;
-  extern const std::vector<SpellType> ScrollValidSpellTypes;
-  extern const std::vector<std::string> ScrollUnidentifiedNames;
-  extern const std::map<WandMaterials, std::pair<std::string, std::string>> WandColorsByMaterial;
-  extern const std::map<WandMaterials, std::string> WandMaterialNamesByMaterial;
-  extern const std::map<ShrineType, std::string> ShrineSaintByType;
-  extern const std::map<ShrineType, std::string> ShrineNameByType;
-  extern const std::map<ShrineType, std::pair<std::string, std::string>> ShrineColorsByType;
-  extern const std::map<std::string, std::vector<std::string>> PotionColorsByName;
-  extern const std::vector<std::string> RandomNames;
-  extern const std::map<MapType, std::vector<std::string>> MapLevelNames;
-  extern const std::map<ItemBonusType, std::string> ItemBonusPrefixes;
-  extern const std::map<ItemBonusType, std::string> ItemBonusSuffixes;
+  extern const std::map<SpellType,     int> WandSpellCapacityCostByType;
   extern const std::map<ItemBonusType, int> MoneyCostIncreaseByBonusType;
-  extern const std::map<ItemBonusType, std::string> BonusDisplayNameByType;
-  extern const std::vector<std::vector<std::string>> DungeonRooms;
+
+  extern const std::map<std::string, ItemType> PotionTypeByStatName;   
+
+  extern const std::map<FoodType, std::pair<std::string, int>>         FoodHungerPercentageByName;
+  extern const std::map<GemType,  std::pair<std::string, std::string>> GemColorByType;
+
+  extern const std::map<WandMaterials, std::pair<std::string, std::string>> WandColorsByMaterial;
+  extern const std::map<WandMaterials, std::string>                         WandMaterialNamesByMaterial;
+  extern const std::map<ShrineType,    std::string>                         ShrineSaintByType;
+  extern const std::map<ShrineType,    std::string>                         ShrineNameByType;
+  extern const std::map<ShrineType,    std::pair<std::string, std::string>> ShrineColorsByType;
+  extern const std::map<std::string,   std::vector<std::string>>            PotionColorsByName;
+  extern const std::map<MapType,       std::vector<std::string>>            MapLevelNames;
+  extern const std::map<ShrineType,    std::vector<StringsArray2D>>         ShrineLayoutsByType;
+
+  extern const std::vector<SpellType> ScrollValidSpellTypes;
+
+  extern const std::vector<std::string> ScrollUnidentifiedNames;
+  extern const std::vector<std::string> RandomNames;
+
+  extern const std::vector<StringsArray2D> DungeonRooms;
   extern const std::vector<StringsArray2D> ShrineLayouts;
   extern const std::vector<StringsArray2D> PondLayouts;
   extern const std::vector<StringsArray2D> FountainLayouts;
   extern const std::vector<StringsArray2D> GardenLayouts;
   extern const std::vector<StringsArray2D> PillarsLayouts;
-  extern const std::map<ShrineType, std::vector<StringsArray2D>> ShrineLayoutsByType;
-  extern const std::vector<std::vector<std::string>> SpecialRooms;
+  extern const std::vector<StringsArray2D> SpecialRooms;
 }
 
 #endif

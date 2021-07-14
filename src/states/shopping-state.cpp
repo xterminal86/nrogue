@@ -114,8 +114,11 @@ void ShoppingState::Update(bool forceUpdate)
     DisplayPlayerInventory();
     DisplayShopInventory();
 
-    auto playerMoney = Util::StringFormat("You have: %i $", _playerRef->Money);
-    Printer::Instance().PrintFB(1, _th - 1, playerMoney, Printer::kAlignLeft, GlobalConstants::CoinsColor);
+    std::string youHaveStr = "You have: ";
+    auto playerMoney = Util::StringFormat("$ %i", _playerRef->Money);
+
+    Printer::Instance().PrintFB(1, _th - 1, youHaveStr, Printer::kAlignLeft, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(1 + youHaveStr.length(), _th - 1, playerMoney, Printer::kAlignLeft, GlobalConstants::CoinsColor);
 
     Printer::Instance().PrintFB(_tw / 2 + 1, _th - 1, " 'i' - inspect ", Printer::kAlignLeft,  GlobalConstants::WhiteColor);
     Printer::Instance().PrintFB(_tw,         _th - 1, "'q' - exit ",     Printer::kAlignRight, GlobalConstants::WhiteColor);
@@ -189,12 +192,12 @@ void ShoppingState::DisplayPlayerInventory()
 
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
-    std::string stub(GlobalConstants::InventoryMaxNameLength, '-');
+    std::string stub(GlobalConstants::InventoryMaxNameLength, '.');
     Printer::Instance().PrintFB(1,
                                  yPos + index,
                                  stub,
                                  Printer::kAlignLeft,
-                                 GlobalConstants::WhiteColor);
+                                 GlobalConstants::InventoryEmptySlotColor);
     yPos++;
   }
 }
@@ -271,12 +274,12 @@ void ShoppingState::DisplayShopInventory()
 
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
-    std::string stub(GlobalConstants::InventoryMaxNameLength, '-');
+    std::string stub(GlobalConstants::InventoryMaxNameLength, '.');
     Printer::Instance().PrintFB(xPos,
                                  yPos + index,
                                  stub,
                                  Printer::kAlignRight,
-                                 GlobalConstants::WhiteColor);
+                                 GlobalConstants::InventoryEmptySlotColor);
     yPos++;
   }
 }

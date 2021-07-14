@@ -60,7 +60,9 @@ void RepairState::Update(bool forceUpdate)
       ItemComponent* ic = i->GetComponent<ItemComponent>();
       if (ic->Data.IsEquipped && ic->Data.IsWeaponOrArmor())
       {
-        std::string name = ic->Data.IsIdentified ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
+        std::string name = ic->Data.IsIdentified ?
+                           ic->Data.IdentifiedName :
+                           ic->Data.UnidentifiedName;
 
         char c = GlobalConstants::AlphabetLowercase[itemIndex];
         std::string str;

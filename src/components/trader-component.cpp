@@ -84,13 +84,13 @@ void TraderComponent::CreateClericItems()
 
   std::map<ItemPrefix, int> prefixWeights =
   {
-    { ItemPrefix::BLESSED, 1 },
+    { ItemPrefix::BLESSED,  1 },
     { ItemPrefix::UNCURSED, 6 }
   };
 
   for (int i = 0; i < _itemsToCreate; i++)
   {
-    auto itemPair = Util::WeightedRandom(itemsWeights);
+    auto itemPair   = Util::WeightedRandom(itemsWeights);
     auto prefixPair = Util::WeightedRandom(prefixWeights);
 
     GameObject* go = nullptr;
@@ -134,25 +134,25 @@ void TraderComponent::CreateCookItems()
 
   std::map<FoodType, int> itemsWeights =
   {
-    { FoodType::APPLE, 5 },
-    { FoodType::BREAD, 6 },
-    { FoodType::CHEESE, 5 },
+    { FoodType::APPLE,        5 },
+    { FoodType::BREAD,        6 },
+    { FoodType::CHEESE,       5 },
     { FoodType::IRON_RATIONS, 1 },
-    { FoodType::MEAT, 4 },
-    { FoodType::PIE, 4 },
-    { FoodType::TIN, 3 },
-    { FoodType::RATIONS, 2 }
+    { FoodType::MEAT,         4 },
+    { FoodType::PIE,          4 },
+    { FoodType::TIN,          3 },
+    { FoodType::RATIONS,      2 }
   };
 
   std::map<ItemPrefix, int> prefixWeights =
   {
-    { ItemPrefix::BLESSED, 1 },
+    { ItemPrefix::BLESSED,  1 },
     { ItemPrefix::UNCURSED, 6 }
   };
 
   for (int i = 0; i < _itemsToCreate; i++)
   {
-    auto itemPair = Util::WeightedRandom(itemsWeights);
+    auto itemPair   = Util::WeightedRandom(itemsWeights);
     auto prefixPair = Util::WeightedRandom(prefixWeights);
 
     GameObject* go = GameObjectsFactory::Instance().CreateFood(0, 0, itemPair.first, prefixPair.first, true);
@@ -208,7 +208,7 @@ void TraderComponent::CreateBlacksmithItems()
 
   for (int i = 0; i < _itemsToCreate; i++)
   {
-    auto itemPair = Util::WeightedRandom(itemsWeights);
+    auto itemPair   = Util::WeightedRandom(itemsWeights);
     auto prefixPair = Util::WeightedRandom(prefixWeights);
 
     GameObject* go = nullptr;

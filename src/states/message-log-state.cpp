@@ -65,10 +65,19 @@ void MessageLogState::Update(bool forceUpdate)
     {
       if (_scrollPosition == 0)
       {
-        Printer::Instance().PrintFB(0, 1, "=>", Printer::kAlignLeft, GlobalConstants::WhiteColor, "#666666");
+        Printer::Instance().PrintFB(0,
+                                    1,
+                                    "=>",
+                                    Printer::kAlignLeft,
+                                    GlobalConstants::WhiteColor,
+                                    GlobalConstants::InventoryEmptySlotColor);
       }
 
-      Printer::Instance().PrintFB(3, offsetY, messages[i], Printer::kAlignLeft, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(3,
+                                  offsetY,
+                                  messages[i],
+                                  Printer::kAlignLeft,
+                                  GlobalConstants::WhiteColor);
       offsetY++;
     }
 

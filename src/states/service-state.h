@@ -5,6 +5,7 @@
 
 class Player;
 class TraderComponent;
+class ItemComponent;
 
 class ServiceState : public GameState
 {
@@ -18,13 +19,46 @@ class ServiceState : public GameState
     Player* _playerRef;
     TraderComponent* _shopOwner;
 
+    void FillItemsForRepair();
+    void FillItemsForIdentify();
+    void FillItemsForBlessing();
+
+    void DisplayItems();
+
+    void ProcessItem(int key);
+
+    void ProcessRepair(int key);
+    void ProcessIdentify(int key);
+    void ProcessBlessing(int key);
+
+    const std::map<ServiceType, std::string> _displayOnEmptyItems =
+    {
+      { ServiceType::NONE,     "!!! INVALID TYPE !!!" },
+      { ServiceType::IDENTIFY, "Nothing to identify"  },
+      { ServiceType::RECHARGE, "Nothing to recharge"  },
+      { ServiceType::BLESS,    "Nothing to bless"     },
+      { ServiceType::REPAIR,   "Nothing to repair"    }
+    };
+
     const std::map<ServiceType, std::string> _serviceNameByType =
     {
-      { ServiceType::NONE,     " !INVALID TYPE! " },
-      { ServiceType::IDENTIFY, " IDENTIFY ITEMS " },
-      { ServiceType::RECHARGE, " RECHARGE WANDS " },
-      { ServiceType::REPAIR,   " REPAIR ITEMS "   }
+      { ServiceType::NONE,     " !!! INVALID TYPE !!! " },
+      { ServiceType::IDENTIFY, " IDENTIFY ITEMS "       },
+      { ServiceType::RECHARGE, " RECHARGE WANDS "       },
+      { ServiceType::BLESS,    " BLESS ITEMS "          },
+      { ServiceType::REPAIR,   " REPAIR ITEMS "         }
     };
+
+    struct ServiceInfo
+    {
+      std::string NameToDisplay;
+      ItemComponent* ItemComponentRef;
+      int ServiceCost;
+    };
+
+    std::map<char, ServiceInfo> _serviceInfoByChar;
+
+    size_t _maxStrLen;
 };
 
 #endif // SERVICESTATE_H
