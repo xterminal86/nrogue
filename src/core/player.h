@@ -174,6 +174,7 @@ class Player : public GameObject
 
     friend class SpellsProcessor;
     friend class AttackState;
+    friend class ServiceState;
 };
 
 #endif // PLAYER_H

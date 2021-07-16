@@ -422,24 +422,25 @@ enum class GemType
 
 enum class SpellType
 {
-  NONE = -1,       // Wand of Nothing can be imbued with spell
-  STRIKE = 0,      // 1 target, DEF
-  MAGIC_MISSILE,   // 1 target, RES
-  FROST,           // 1 target, RES, slow
-  FIREBALL,        // area damage, RES
-  LIGHTNING,       // chains (self-damage possible), RES
-  LASER,           // pierces through, DEF
-  LIGHT,           // increase visibility radius, temporary
+  NONE = -1,         // Wand of Nothing can be imbued with spell
+  STRIKE = 0,        // 1 target, DEF
+  MAGIC_MISSILE,     // 1 target, RES
+  FROST,             // 1 target, RES, slow
+  FIREBALL,          // area damage, RES
+  LIGHTNING,         // chains (self-damage possible), RES
+  LASER,             // pierces through, DEF
+  LIGHT,             // increase visibility radius, temporary
   IDENTIFY,
   MAGIC_MAPPING,  
-  TELEPORT,        // TODO: teleport control?
+  TELEPORT,          // TODO: teleport control?
   TOWN_PORTAL,
-  DETECT_MONSTERS, // shows monsters (not all?), temporary
+  DETECT_MONSTERS,   // shows monsters (not all?), temporary
+  ENCHANT,           // tries to create magic item from non-magic one
   REMOVE_CURSE,
   REPAIR,
   HEAL,
   NEUTRALIZE_POISON,  
-  MANA_SHIELD      // nuff said
+  MANA_SHIELD        // nuff said
 };
 
 // Number means tier

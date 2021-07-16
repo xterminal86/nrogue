@@ -51,12 +51,14 @@ class ServiceState : public GameState
 
     struct ServiceInfo
     {
+      std::string Letter;
       std::string NameToDisplay;
+      std::string Color = "#FFFFFF";
       ItemComponent* ItemComponentRef;
       int ServiceCost;
     };
 
-    std::map<char, ServiceInfo> _serviceInfoByChar;
+    std::map<char, ServiceInfo> _serviceInfoByChar;    
 
     size_t _maxStrLen;
 };

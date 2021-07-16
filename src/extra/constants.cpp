@@ -416,6 +416,7 @@ namespace GlobalConstants
     SpellType::MAGIC_MAPPING,
     SpellType::TELEPORT,
     SpellType::DETECT_MONSTERS,
+    SpellType::ENCHANT,
     SpellType::REMOVE_CURSE,
     SpellType::REPAIR,
     SpellType::TOWN_PORTAL,
@@ -424,12 +425,16 @@ namespace GlobalConstants
     SpellType::MANA_SHIELD,
   };
 
-  // Not including combat spells
+  // Not including combat spells.
+  //
+  // Two separate vectors are from the times where
+  // several unidentified names could map to the same scroll.
   const std::vector<std::string> ScrollUnidentifiedNames =
   {
     "TAMAM SHUD",
-    "GACHI MUCHI",
-    "ZAWARUDO",
+    "GACHIMUCHI",
+    "SHIRANAI",
+    "ZA WARUDO",
     "ZELGO MER",
     "LOREM IPSUM",
     "GHOTI",

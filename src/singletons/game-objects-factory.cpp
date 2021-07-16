@@ -1093,7 +1093,7 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
   }
 
   if (go != nullptr)
-  {
+  {    
     go->PosX = x;
     go->PosY = y;
   }
@@ -1306,9 +1306,9 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
   ic->Data.ItemType_ = ItemType::WEAPON;
 
-  ic->Data.Prefix = (prefix != ItemPrefix::RANDOM) ? prefix : RollItemPrefix();
-  ic->Data.IsIdentified = (prefix != ItemPrefix::RANDOM) ? true : false;
-  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
+  ic->Data.Prefix             = (prefix != ItemPrefix::RANDOM) ? prefix : RollItemPrefix();
+  ic->Data.IsIdentified       = (prefix != ItemPrefix::RANDOM) ? true : false;
+  ic->Data.ItemQuality_       = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
 
   int avgDamage = 0;
   int baseDurability = 0;

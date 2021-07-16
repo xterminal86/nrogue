@@ -461,11 +461,11 @@ void GameObject::DispelEffect(const ItemBonusType& t)
     std::advance(it, i);
 
     bool shouldErase = false;
-    for (ItemBonusStruct& item : it->second)
+    for (ItemBonusStruct& bonus : it->second)
     {
-      if (item.Type == t && !item.FromItem)
+      if (bonus.Type == t && !bonus.FromItem)
       {
-        UnapplyEffect(item);
+        UnapplyEffect(bonus);
         shouldErase = true;
       }
     }

@@ -85,6 +85,10 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll)
       ProcessScrollOfRemoveCurse(scroll);
       break;
 
+    case SpellType::ENCHANT:
+      // TODO:
+      break;
+
     default:
       Printer::Instance().AddMessage(_kNoActionText);
       break;
@@ -424,7 +428,7 @@ void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
     power *= 2;
   }
   else if (scroll->Data.Prefix == ItemPrefix::CURSED)
-  {
+  {    
     // TODO: what else to do with player?
 
     duration /= 2;
@@ -435,7 +439,7 @@ void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
 
   ItemBonusStruct b;
   b.Type = ItemBonusType::TELEPATHY;
-  b.BonusValue = power;
+  b.BonusValue = power; // TODO: power is unused in this effect (see Map::DrawActors())
   b.Duration = duration;
   b.Id = scroll->OwnerGameObject->ObjectId();
 

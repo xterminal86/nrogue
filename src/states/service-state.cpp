@@ -86,6 +86,16 @@ void ServiceState::ProcessIdentify(int key)
 
 void ServiceState::ProcessBlessing(int key)
 {
+  // TODO: check if everything works, especially with scrolls
+  // and maybe accessories (this can be tricky)
+  //
+  // FIXME: weapons and armor innate stat bonuses are calculated
+  // during item creation and they are not applied if bonus gets
+  // equal to 0 (for example, uncursed padding armor gets penalty 0
+  // so it's not applied), which leads to not finding bonus on the item
+  // and not applying blessing. BUC adjust also happens during creation
+  // so after blessing it needs to be readjusted as well.
+
   ServiceInfo& si = _serviceInfoByChar[key];
   if (_playerRef->Money < si.ServiceCost)
   {
@@ -95,12 +105,66 @@ void ServiceState::ProcessBlessing(int key)
   {
     _playerRef->Money -= si.ServiceCost;
 
-    si.ItemComponentRef->Data.Prefix = ItemPrefix::BLESSED;
-    si.ItemComponentRef->Data.IsPrefixDiscovered = true;
+    // If item wasn't identified and it was actually already blessed,
+    // nothing happens. Money is forfeit tho.
+    if (si.ItemComponentRef->Data.Prefix != ItemPrefix::BLESSED)
+    {
+      si.ItemComponentRef->Data.Prefix = ItemPrefix::BLESSED;
 
-    // TODO: recalculate blessed parameters for weapons and armor
-    // since they're created inside factory right now.
-    // Ignore already existing blessing for unidentified items.
+      bool isWeaponOrArmor = (si.ItemComponentRef->Data.ItemType_ == ItemType::WEAPON ||si.ItemComponentRef->Data.ItemType_ == ItemType::ARMOR);
+      if (isWeaponOrArmor)
+      {
+        // BUC adjust is private inside GameObjectsFactory, so we have to
+        // kinda repeat it here.
+        //
+        // Blessed / cursed items effect is handled in item use handler,
+        // so no need to do anything special here.
+        //
+        for (auto& kvp : _playerRef->_attributesRefsByBonus)
+        {
+         ItemBonusStruct* ibs = si.ItemComponentRef->Data.GetBonus(kvp.first);
+         if (ibs != nullptr && ibs->FromItem)
+         {
+           // Blessed status on weapon or armor just reduces
+           // item's innate stat penalties by 2
+           ibs->BonusValue += 2;
+
+           // Now we need to replace header BUC status name
+           // that was generated during object creation.
+           std::string header = si.ItemComponentRef->Data.IdentifiedName;
+
+           std::vector<std::string> toFind =
+           {
+             "Cursed", "Uncursed"
+           };
+
+           for (auto& s : toFind)
+           {
+             size_t pos = header.find(s);
+             if (pos != std::string::npos)
+             {
+               si.ItemComponentRef->Data.IdentifiedName = header.replace(pos, s.length(), "Blessed");
+               break;
+             }
+           }
+
+           // If item to be blessed is actually equipped, do the shuffle below.
+           auto equippedItem = _playerRef->EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
+           if (equippedItem == si.ItemComponentRef)
+           {
+             // Unequip / equip to reapply stat bonuses
+             equippedItem->Equip();
+             equippedItem->Equip();
+
+             Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
+             Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
+           }
+         }
+        }
+      }
+    }    
+
+    si.ItemComponentRef->Data.IsPrefixDiscovered = true;
 
     FillItemsForBlessing();
   }
@@ -143,7 +207,12 @@ void ServiceState::DisplayItems()
 
       std::string cost = Util::StringFormat("$%i", ri.ServiceCost);
 
-      Printer::Instance().PrintFB(1, 2 + itemIndex, ri.NameToDisplay, Printer::kAlignLeft, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(1, 2 + itemIndex, ri.NameToDisplay, Printer::kAlignLeft, ri.Color);
+
+      // Replace letter and dash with white color
+      // in case item is blessed or cursed.
+      Printer::Instance().PrintFB(1, 2 + itemIndex, ri.Letter + " - ", Printer::kAlignLeft, GlobalConstants::WhiteColor);
+
       Printer::Instance().PrintFB(1 + _maxStrLen + 1, 2 + itemIndex, cost, Printer::kAlignLeft, GlobalConstants::CoinsColor);
 
       itemIndex++;
@@ -184,8 +253,8 @@ void ServiceState::FillItemsForBlessing()
   {
     ItemComponent* ic = item->GetComponent<ItemComponent>();
 
-    bool alreadyBlessed = (ic->Data.IsPrefixDiscovered
-                        && ic->Data.Prefix == ItemPrefix::BLESSED);
+    bool alreadyBlessed = ((ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered)
+                        && (ic->Data.Prefix == ItemPrefix::BLESSED));
 
     bool isValid        = (ic->Data.ItemType_ != ItemType::DUMMY);
 
@@ -196,14 +265,20 @@ void ServiceState::FillItemsForBlessing()
 
     char c = GlobalConstants::AlphabetLowercase[itemIndex];
 
-    std::string str = Util::StringFormat("'%c' - %s", c, ic->Data.UnidentifiedName.data());
+    std::string nameToDisplay = (ic->Data.IsIdentified ? item->ObjectName : ic->Data.UnidentifiedName);
+    std::string charStr = Util::StringFormat("'%c'", c);
+    std::string str = Util::StringFormat("%s - %s", charStr.data(), nameToDisplay.data());
 
     if (_maxStrLen < str.length())
     {
       _maxStrLen = str.length();
     }
 
-    _serviceInfoByChar[c] = { str, ic, 200 };
+    auto color = Util::GetItemInventoryColor(ic->Data);
+
+    int serviceCost = ic->Data.GetCost() * 4;
+
+    _serviceInfoByChar[c] = { charStr, str, color, ic, serviceCost };
 
     itemIndex++;
   }
@@ -226,14 +301,15 @@ void ServiceState::FillItemsForIdentify()
 
     char c = GlobalConstants::AlphabetLowercase[itemIndex];
 
-    std::string str = Util::StringFormat("'%c' - %s", c, ic->Data.UnidentifiedName.data());
+    std::string charStr = Util::StringFormat("'%c'", c);
+    std::string str = Util::StringFormat("%s - %s", charStr.data(), ic->Data.UnidentifiedName.data());
 
     if (_maxStrLen < str.length())
     {
       _maxStrLen = str.length();
     }
 
-    _serviceInfoByChar[c] = { str, ic, 100 };
+    _serviceInfoByChar[c] = { charStr, str, "#FFFFFF", ic, 100 };
 
     itemIndex++;
   }
@@ -271,7 +347,8 @@ void ServiceState::FillItemsForRepair()
       dur = R"((??/??))";
     }
 
-    str = Util::StringFormat("'%c' - %s %s", c, name.data(), dur.data());
+    std::string charStr = Util::StringFormat("'%c'", c);
+    str = Util::StringFormat("%s - %s %s", charStr.data(), name.data(), dur.data());
 
     if (_maxStrLen < str.length())
     {
@@ -292,7 +369,7 @@ void ServiceState::FillItemsForRepair()
       toRepair *= 0.8f;
     }
 
-    _serviceInfoByChar[c] = { str, ic, toRepair };
+    _serviceInfoByChar[c] = { charStr, str, "#FFFFFF", ic, toRepair };
 
     itemIndex++;
   }
