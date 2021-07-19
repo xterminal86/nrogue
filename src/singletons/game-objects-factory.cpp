@@ -1305,11 +1305,11 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
-  ic->Data.ItemType_ = ItemType::WEAPON;
+  ic->Data.ItemType_  = ItemType::WEAPON;
 
-  ic->Data.Prefix             = (prefix != ItemPrefix::RANDOM) ? prefix : RollItemPrefix();
-  ic->Data.IsIdentified       = (prefix != ItemPrefix::RANDOM) ? true : false;
-  ic->Data.ItemQuality_       = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
+  ic->Data.Prefix       = (prefix != ItemPrefix::RANDOM) ? prefix : RollItemPrefix();
+  ic->Data.IsIdentified = (prefix != ItemPrefix::RANDOM) ? true : false;
+  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
 
   int avgDamage = 0;
   int baseDurability = 0;
@@ -1319,6 +1319,8 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
 
   ic->Data.WeaponType_ = type;
 
+  // NOTE: innate bonuses are hardcoded and not affected by cursed BUC status,
+  // so we don't force-add them like in armor creation case.
   switch (type)
   {
     case WeaponType::DAGGER:
@@ -2166,7 +2168,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "It won't last long, but any armor is better than nothing."
       };
 
-      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty });
+      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty }, true);
 
       baseDurability += 2 * (int)ic->Data.ItemQuality_;
 
@@ -2180,8 +2182,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "protection against cutting blows."
       };
 
-      AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 1 });
-      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 1 });
+      AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 1 }, true);
+      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 1 }, true);
 
       baseDurability += 3 * (int)ic->Data.ItemQuality_;
 
@@ -2198,8 +2200,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "and is easy to repair."
       };
 
-      AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 3 });
-      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 2 });
+      AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 3 }, true);
+      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 2 }, true);
 
       baseDurability += 4 * (int)ic->Data.ItemQuality_;
 
@@ -2212,8 +2214,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "A body vest with overlapping scales worn over a small mail shirt.",
       };
 
-      AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 4 });
-      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 3 });
+      AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 4 }, true);
+      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 3 }, true);
 
       baseDurability += 5 * (int)ic->Data.ItemQuality_;
 
@@ -2230,8 +2232,8 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
         "all others in itself."
       };
 
-      AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 6 });
-      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 4 });
+      AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 6 }, true);
+      AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 4 }, true);
 
       baseDurability += 6 * (int)ic->Data.ItemQuality_;
 
@@ -3423,11 +3425,11 @@ void GameObjectsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLe
 
   std::map<ItemQuality, int> chanceModByQ =
   {
-    { ItemQuality::DAMAGED,     -10 },
-    { ItemQuality::FLAWED,       -5 },
-    { ItemQuality::NORMAL,        0 },
-    { ItemQuality::FINE,          5 },
-    { ItemQuality::EXCEPTIONAL,  10 },
+    { ItemQuality::DAMAGED,    -10 },
+    { ItemQuality::FLAWED,      -5 },
+    { ItemQuality::NORMAL,       0 },
+    { ItemQuality::FINE,         5 },
+    { ItemQuality::EXCEPTIONAL, 10 },
   };
 
   chance += chanceModByQ[itemRef->Data.ItemQuality_];
@@ -3478,7 +3480,7 @@ void GameObjectsFactory::AddBonusToItem(ItemComponent* itemRef, const ItemBonusS
 
   int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusData.Type);
 
-  // If bonus is like mana shield that has no bonus value, count it only once
+  // If bonus is like mana shield, that has no bonus value, count it only once
   if (bonusData.BonusValue == 0)
   {
     copy.MoneyCostIncrease = moneyIncrease;

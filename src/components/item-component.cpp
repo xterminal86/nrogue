@@ -104,7 +104,7 @@ std::pair<std::string, StringsArray2D> ItemComponent::GetInspectionInfo(bool ove
 }
 
 void ItemComponent::Inspect(bool overrideDescriptions)
-{  
+{
   auto lore = GetInspectionInfo(overrideDescriptions);
   Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, lore.first, lore.second);
 }
@@ -292,7 +292,7 @@ void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
   };
 
   for (auto& kvp : _allStatNames)
-  {    
+  {
     int bonus = 0;
     for (auto& b : Data.Bonuses)
     {
@@ -333,50 +333,37 @@ void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
 }
 
 void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
-{  
-  if (!Data.Bonuses.empty())
+{
+  // Certain items give bonus to stats by default (e.g. dagger to SKL)
+  // so to avoid several lines that show increase in the same stat
+  // because of additional bonus via magic count them all beforehand.
+  //
+  // Also innate bonus is force-added, so we need to check if it's 0
+  // due to curse penalty and not include it in the info screen.
+  auto ret = CountAllStatBonuses();
+  if (_nonZeroStatBonuses != 0)
+  {
+    res.push_back("");
+
+    AppendStatBonuses(ret, res);
+  }
+
+  // If we have stat bonuses and non-stat bonuses,
+  // separate them with empty line.
+  if (_nonZeroStatBonuses != 0 && _nonStatBonusesPresent)
   {
     res.push_back("");
   }
 
-  // Certain items give bonus to stats by default (e.g. dagger to SKL)
-  // so to avoid several lines that show increase in the same stat
-  // because of additional bonus via magic, count them all beforehand.
-  CountAllStatBonuses(res);
-
   for (auto& i : Data.Bonuses)
   {
     switch (i.Type)
-    {      
-      // Shows every entry of stat bonuses, including from item itself
-      /*
-      case ItemBonusType::STR:
-      case ItemBonusType::DEF:
-      case ItemBonusType::MAG:
-      case ItemBonusType::RES:
-      case ItemBonusType::SPD:
-      case ItemBonusType::SKL:
-      case ItemBonusType::HP:
-      case ItemBonusType::MP:
-      {
-        std::string name = bonusNameByType[i.Type];
-        auto modStr = Util::StringFormat("%i", i.BonusValue);
-        if (i.BonusValue > 0)
-        {
-          modStr.insert(modStr.begin(), '+');
-        }
-
-        auto str = Util::StringFormat("%s: %s", name.data(), modStr.data());
-        res.push_back(str);
-      }
-      break;
-      */
-
+    {
       case ItemBonusType::INDESTRUCTIBLE:
         res.push_back("Does not wear out");
         break;
 
-      case ItemBonusType::SELF_REPAIR:        
+      case ItemBonusType::SELF_REPAIR:
       {
         auto str = Util::StringFormat("Repairs 1 point of durability every %i turns", i.Period);
         res.push_back(str);
@@ -465,11 +452,35 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
       }
       break;
     }
-  }  
+  }
 }
 
-void ItemComponent::CountAllStatBonuses(std::vector<std::string>& res)
+void ItemComponent::AppendStatBonuses(const std::map<ItemBonusType, int>& statBonuses, std::vector<std::string>& res)
 {
+  for (auto& kvp : statBonuses)
+  {
+    if (kvp.second == 0)
+    {
+      continue;
+    }
+
+    std::string name = _bonusNameByType[kvp.first];
+    auto modStr = Util::StringFormat("%i", kvp.second);
+    if (kvp.second > 0)
+    {
+      modStr.insert(modStr.begin(), '+');
+    }
+
+    auto str = Util::StringFormat("%s: %s", name.data(), modStr.data());
+    res.push_back(str);
+  }
+}
+
+std::map<ItemBonusType, int> ItemComponent::CountAllStatBonuses()
+{
+  _nonZeroStatBonuses = 0;
+  _nonStatBonusesPresent = false;
+
   std::map<ItemBonusType, int> allStatModifiers =
   {
     { ItemBonusType::STR, 0 },
@@ -498,6 +509,10 @@ void ItemComponent::CountAllStatBonuses(std::vector<std::string>& res)
         allStatModifiers[i.Type] += i.BonusValue;
       }
       break;
+
+      default:
+        _nonStatBonusesPresent = true;
+        break;
     }
   }
 
@@ -508,14 +523,8 @@ void ItemComponent::CountAllStatBonuses(std::vector<std::string>& res)
       continue;
     }
 
-    std::string name = _bonusNameByType[kvp.first];
-    auto modStr = Util::StringFormat("%i", kvp.second);
-    if (kvp.second > 0)
-    {
-      modStr.insert(modStr.begin(), '+');
-    }
-
-    auto str = Util::StringFormat("%s: %s", name.data(), modStr.data());
-    res.push_back(str);
+    _nonZeroStatBonuses++;
   }
+
+  return allStatModifiers;
 }

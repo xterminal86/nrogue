@@ -86,16 +86,6 @@ void ServiceState::ProcessIdentify(int key)
 
 void ServiceState::ProcessBlessing(int key)
 {
-  // TODO: check if everything works, especially with scrolls
-  // and maybe accessories (this can be tricky)
-  //
-  // FIXME: weapons and armor innate stat bonuses are calculated
-  // during item creation and they are not applied if bonus gets
-  // equal to 0 (for example, uncursed padding armor gets penalty 0
-  // so it's not applied), which results in not finding bonus on the item
-  // and not applying blessing. BUC adjust also happens during creation
-  // so after blessing it needs to be readjusted as well.
-
   ServiceInfo& si = _serviceInfoByChar[key];
   if (_playerRef->Money < si.ServiceCost)
   {
@@ -117,7 +107,7 @@ void ServiceState::ProcessBlessing(int key)
         // BUC adjust is private inside GameObjectsFactory, so we have to
         // kinda repeat it here.
         //
-        // Blessed / cursed items effect is handled in item use handler,
+        // Blessed / cursed item effects are handled in item use handler,
         // so no need to do anything special here.
         //
         for (auto& kvp : _playerRef->_attributesRefsByBonus)
@@ -125,9 +115,9 @@ void ServiceState::ProcessBlessing(int key)
          ItemBonusStruct* ibs = si.ItemComponentRef->Data.GetBonus(kvp.first);
          if (ibs != nullptr && ibs->FromItem)
          {
-           // Blessed status on weapon or armor just reduces
-           // item's innate stat penalties by 2
-           ibs->BonusValue += 2;
+           // Only +1 bonus from blessing and even then
+           // I'm not sure whether it will be OP or not
+           ibs->BonusValue += 1;
 
            // Now we need to replace header BUC status name
            // that was generated during object creation.
@@ -276,7 +266,7 @@ void ServiceState::FillItemsForBlessing()
 
     auto color = Util::GetItemInventoryColor(ic->Data);
 
-    int serviceCost = ic->Data.GetCost() * 4;
+    int serviceCost = ic->Data.GetCost() * 5;
 
     _serviceInfoByChar[c] = { charStr, str, color, ic, serviceCost };
 

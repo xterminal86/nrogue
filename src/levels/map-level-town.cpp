@@ -10,7 +10,7 @@
 
 MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type, int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)
-{  
+{
   _layoutsForLevel =
   {
     // Common houses
@@ -166,7 +166,7 @@ void MapLevelTown::PrepareMap(MapLevelBase* levelOwner)
 {
   MapLevelBase::PrepareMap(levelOwner);
 
-  CreateLevel();  
+  CreateLevel();
 }
 
 void MapLevelTown::CreateLevel()
@@ -186,7 +186,7 @@ void MapLevelTown::CreateLevel()
 
   auto bounds = r.GetBoundaryElements();
   for (auto& pos : bounds)
-  {    
+  {
     InsertStaticObject(pos.X, pos.Y, t);
   }
 
@@ -244,6 +244,17 @@ void MapLevelTown::CreateLevel()
   LevelExit.Y = 44;
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
+
+  ItemBonusStruct bs;
+  bs.Type = ItemBonusType::INDESTRUCTIBLE;
+  bs.Id = _playerRef->ObjectId();
+  bs.BonusValue = 1;
+
+  auto arm = GameObjectsFactory::Instance().CreateArmor(1, 1, ArmorType::PADDING, ItemPrefix::CURSED);
+  InsertGameObject(arm);
+
+  auto dag = GameObjectsFactory::Instance().CreateWeapon(1, 2, WeaponType::DAGGER, ItemPrefix::CURSED, ItemQuality::NORMAL, { bs });
+  InsertGameObject(dag);
 
   /*
   for (size_t x = 1; x < 16; x++)
@@ -424,7 +435,7 @@ void MapLevelTown::BuildRoads()
 
       path.pop();
     }
-  }  
+  }
 }
 
 void MapLevelTown::ReplaceGroundWithGrass()
@@ -525,7 +536,7 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
 }
 
 void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation)
-{  
+{
   int posX = x;
   int posY = y;
 
@@ -605,7 +616,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
           InsertStaticObject(posX, posY, t);
           break;
 
-        case '+':          
+        case '+':
           PlaceDoor(posX, posY);
           break;
       }
@@ -915,7 +926,7 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
         break;
 
         case 't':
-        {            
+        {
           t.Set(false, false, ' ', GlobalConstants::BlackColor, GlobalConstants::StoneColor, "Stone Tiles");
           MapArray[posX][posY]->MakeTile(t);
           MapArray[posX][posY]->Special = true;

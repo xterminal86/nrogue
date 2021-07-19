@@ -20,19 +20,23 @@ class ItemComponent : public Component
 
     std::pair<std::string, StringsArray2D> GetInspectionInfo(bool overrideDescriptions = false);
 
-    ItemData Data;    
+    ItemData Data;
 
   private:
-    std::vector<std::string> GetWeaponInspectionInfo();    
-    std::vector<std::string> GetReturnerInspectionInfo();    
+    std::vector<std::string> GetWeaponInspectionInfo();
+    std::vector<std::string> GetReturnerInspectionInfo();
     std::vector<std::string> GetArmorInspectionInfo();
     std::vector<std::string> GetAccessoryInspectionInfo();
     std::vector<std::string> GetWandInspectionInfo();
 
     void AddModifiersInfo(std::vector<std::string>& res);
     void AddBonusesInfo(std::vector<std::string>& res);
+    void AppendStatBonuses(const std::map<ItemBonusType, int>& statBonuses, std::vector<std::string>& res);
 
-    void CountAllStatBonuses(std::vector<std::string>& res);
+    std::map<ItemBonusType, int> CountAllStatBonuses();
+
+    int _nonZeroStatBonuses = 0;
+    bool _nonStatBonusesPresent = false;
 
     // std::map is sorted by key
     std::map<int, std::pair<StatsEnum, std::string>> _allStatNames =
