@@ -192,7 +192,7 @@ void ShoppingState::DisplayPlayerInventory()
 
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
-    std::string stub(GlobalConstants::InventoryMaxNameLength, '.');
+    std::string stub(GlobalConstants::InventoryMaxNameLength, GlobalConstants::InventoryEmptySlotChar);
     Printer::Instance().PrintFB(1,
                                  yPos + index,
                                  stub,
@@ -252,19 +252,19 @@ void ShoppingState::DisplayShopInventory()
     if (!_playerSide && index == _inventoryItemIndex)
     {
       Printer::Instance().PrintFB(xPos,
-                                   yPos + index,
-                                   nameInInventory,
-                                   Printer::kAlignRight,
-                                   GlobalConstants::BlackColor,
-                                   GlobalConstants::WhiteColor);
+                                  yPos + index,
+                                  nameInInventory,
+                                  Printer::kAlignRight,
+                                  GlobalConstants::BlackColor,
+                                  GlobalConstants::WhiteColor);
     }
     else
     {
       Printer::Instance().PrintFB(xPos,
-                                   yPos + index,
-                                   nameInInventory,
-                                   Printer::kAlignRight,
-                                   textColor);
+                                  yPos + index,
+                                  nameInInventory,
+                                  Printer::kAlignRight,
+                                  textColor);
     }
 
     index++;
@@ -274,7 +274,7 @@ void ShoppingState::DisplayShopInventory()
 
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
-    std::string stub(GlobalConstants::InventoryMaxNameLength, '.');
+    std::string stub(GlobalConstants::InventoryMaxNameLength, GlobalConstants::InventoryEmptySlotChar);
     Printer::Instance().PrintFB(xPos,
                                  yPos + index,
                                  stub,

@@ -30,6 +30,8 @@ namespace GlobalConstants
   const std::string Numbers = "0123456789";
   const std::string MoneyName = "Crowns";
 
+  const char InventoryEmptySlotChar = '.';
+
   int TerminalWidth  = 80;
   int TerminalHeight = 24;
 
@@ -353,7 +355,7 @@ namespace GlobalConstants
 
   const std::map<GemType, int> GemCostByType =
   {
-    { GemType::WORTHLESS_GLASS, 0    },   // 0
+    { GemType::WORTHLESS_GLASS, 0    },  // 0
     { GemType::BLACK_OBSIDIAN,  200  },  // 200
     { GemType::GREEN_JADE,      300  },  // 300
     { GemType::PURPLE_FLUORITE, 400  },  // 400

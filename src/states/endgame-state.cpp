@@ -48,7 +48,11 @@ void EndgameState::Update(bool forceUpdate)
       DisplayGameLog();
     }
 
-    Printer::Instance().PrintFB(_twHalf, 0, "Press 'q' to exit", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(_twHalf,
+                                0,
+                                "Press 'q' to exit",
+                                Printer::kAlignCenter,
+                                GlobalConstants::WhiteColor);
 
     Printer::Instance().Render();
   }
@@ -65,7 +69,7 @@ void EndgameState::DisplayGameLog()
   auto msgs = Printer::Instance().GetLastMessages();
   for (auto& m : msgs)
   {
-    Printer::Instance().PrintFB(x, y - count, m, Printer::kAlignRight, "#FFFFFF");
+    Printer::Instance().PrintFB(x, y - count, m, Printer::kAlignRight, GlobalConstants::WhiteColor);
     count++;
   }
 }
@@ -80,12 +84,22 @@ void EndgameState::DrawHPMP()
   UpdateBar(0, _th - 2, _playerRef->Attrs.HP);
 
   auto str = Util::StringFormat("%i/%i", curHp, maxHp);
-  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, _th - 2, str, Printer::kAlignCenter, "#FFFFFF", "#880000");
+  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
+                              _th - 2,
+                              str,
+                              Printer::kAlignCenter,
+                              "#FFFFFF",
+                              "#880000");
 
   UpdateBar(0, _th - 1, _playerRef->Attrs.MP);
 
   str = Util::StringFormat("%i/%i", curMp, maxMp);
-  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, _th - 1, str, Printer::kAlignCenter, "#FFFFFF", "#000088");
+  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
+                              _th - 1,
+                              str,
+                              Printer::kAlignCenter,
+                              "#FFFFFF",
+                              "#000088");
 }
 
 std::string EndgameState::UpdateBar(int x, int y, RangedAttribute& attr)
@@ -101,7 +115,7 @@ std::string EndgameState::UpdateBar(int x, int y, RangedAttribute& attr)
 
   bar += "]";
 
-  Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, GlobalConstants::WhiteColor);
 
   return bar;
 }

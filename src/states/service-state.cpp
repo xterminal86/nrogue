@@ -92,7 +92,7 @@ void ServiceState::ProcessBlessing(int key)
   // FIXME: weapons and armor innate stat bonuses are calculated
   // during item creation and they are not applied if bonus gets
   // equal to 0 (for example, uncursed padding armor gets penalty 0
-  // so it's not applied), which leads to not finding bonus on the item
+  // so it's not applied), which results in not finding bonus on the item
   // and not applying blessing. BUC adjust also happens during creation
   // so after blessing it needs to be readjusted as well.
 
@@ -105,7 +105,7 @@ void ServiceState::ProcessBlessing(int key)
   {
     _playerRef->Money -= si.ServiceCost;
 
-    // If item wasn't identified and it was actually already blessed,
+    // If item wasn't identified but was actually already blessed,
     // nothing happens. Money is forfeit tho.
     if (si.ItemComponentRef->Data.Prefix != ItemPrefix::BLESSED)
     {
@@ -162,7 +162,7 @@ void ServiceState::ProcessBlessing(int key)
          }
         }
       }
-    }    
+    }
 
     si.ItemComponentRef->Data.IsPrefixDiscovered = true;
 

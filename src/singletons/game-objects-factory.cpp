@@ -38,13 +38,13 @@ void GameObjectsFactory::Init()
 }
 
 GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
-{  
+{
   // NOTE: no random items allowed
 
   GameObject* go = nullptr;
 
   switch (objType)
-  {    
+  {
     case ItemType::COINS:
       go = CreateMoney();
       break;
@@ -78,8 +78,9 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
     {
       // The deeper you go, the more is the chance to get actual gem
       // and not worthless glass.
-      int gemChance = Map::Instance().CurrentLevel->DungeonLevel * 3;
-      go = CreateGem(x, y, GemType::RANDOM, gemChance);
+      int curLevel = Map::Instance().CurrentLevel->DungeonLevel;
+      float chance = ((float)curLevel / (float)MapType::THE_END) * 90.0f;
+      go = CreateGem(x, y, GemType::RANDOM, (int)chance);
     }
     break;
 
@@ -220,7 +221,7 @@ GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool st
 
 GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'r', GlobalConstants::MonsterColor);  
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'r', GlobalConstants::MonsterColor);
   go->ObjectName = "Feral Rat";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 30;
@@ -621,11 +622,11 @@ bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
 
 bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 {
-  bool res = false;  
+  bool res = false;
 
   if (item->Data.CanBeUsed())
   {
-    return item->Data.UseCallback(item);    
+    return item->Data.UseCallback(item);
   }
   else
   {
@@ -1093,7 +1094,7 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
   }
 
   if (go != nullptr)
-  {    
+  {
     go->PosX = x;
     go->PosY = y;
   }
@@ -1127,7 +1128,7 @@ bool GameObjectsFactory::FoodUseHandler(ItemComponent* item)
     Printer::Instance().AddMessage("Disgusting!");
 
     if (Util::Rolld100(50))
-    {      
+    {
       _playerRef->Attrs.Hunger += item->Data.Cost;
 
       Printer::Instance().AddMessage("Rotten food!");
@@ -1285,7 +1286,7 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
 }
 
 GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, ItemPrefix prefix, ItemQuality quality, const std::vector<ItemBonusStruct>& bonuses)
-{  
+{
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel * 0.5;
@@ -1321,7 +1322,7 @@ GameObject* GameObjectsFactory::CreateWeapon(int x, int y, WeaponType type, Item
   switch (type)
   {
     case WeaponType::DAGGER:
-    {      
+    {
       diceRolls = 1;
       diceSides = 3;
 
@@ -1477,7 +1478,7 @@ GameObject* GameObjectsFactory::CreateContainer(const std::string& name, const s
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateGem(int x, int y, GemType type, int gemChance)
+GameObject* GameObjectsFactory::CreateGem(int x, int y, GemType type, int actualGemChance)
 {
   GameObject* go = nullptr;
 
@@ -1485,9 +1486,12 @@ GameObject* GameObjectsFactory::CreateGem(int x, int y, GemType type, int gemCha
   {
     int rndStartingIndex = 0;
 
-    if (gemChance != -1)
-    {      
-      rndStartingIndex = 1;
+    if (actualGemChance != -1)
+    {
+      if (Util::Rolld100(actualGemChance))
+      {
+        rndStartingIndex = 1;
+      }
     }
 
     int index = RNG::Instance().RandomRange(rndStartingIndex, GlobalConstants::GemNameByType.size());
@@ -2036,7 +2040,7 @@ GameObject* GameObjectsFactory::CreateReturner(int x, int y, int charges, ItemPr
   int chargesNum = (charges == -1) ? RNG::Instance().RandomRange(1, 11) : charges;
 
   ic->Data.ItemType_ = ItemType::RETURNER;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;  
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = (prefixOverride == ItemPrefix::RANDOM) ? false : true;
   ic->Data.IsChargeable = true;
@@ -2138,7 +2142,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
   ic->Data.IsIdentified = (prefixOverride == ItemPrefix::RANDOM) ? false : true;
   ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
 
-  int baseDurability = GlobalConstants::ArmorDurabilityByType.at(type);  
+  int baseDurability = GlobalConstants::ArmorDurabilityByType.at(type);
   int cursedPenalty = 0;
 
   if (ic->Data.Prefix == ItemPrefix::CURSED)
@@ -2153,7 +2157,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
 
   switch (type)
   {
-    case ArmorType::PADDING:      
+    case ArmorType::PADDING:
       ic->Data.UnidentifiedDescription =
       {
       // ======================================================================70
@@ -2255,7 +2259,7 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
                                            bool isOpen,
                                            DoorMaterials material,
                                            const std::string& doorName,
-                                           int hitPoints,                                           
+                                           int hitPoints,
                                            const std::string& fgOverrideColor,
                                            const std::string& bgOverrideColor)
 {
@@ -2292,7 +2296,7 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
   {
     go->Attrs.Indestructible = false;
     go->Attrs.Def.Set(doorDefByMat.at(material));
-    go->Attrs.HP.Reset(hitPoints);    
+    go->Attrs.HP.Reset(hitPoints);
   }
 
   DoorComponent* dc = go->AddComponent<DoorComponent>();
@@ -2471,7 +2475,7 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
   // objName + ItemQuality + BUC = BUC_ItemQuality_objName
   //
   switch (itemData.ItemQuality_)
-  {    
+  {
     case ItemQuality::DAMAGED:
     case ItemQuality::FLAWED:
     case ItemQuality::FINE:
@@ -2485,7 +2489,7 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
   switch (itemData.Prefix)
   {
     case ItemPrefix::BLESSED:
-      itemData.IdentifiedName.insert(0, "Blessed ");      
+      itemData.IdentifiedName.insert(0, "Blessed ");
       break;
 
     case ItemPrefix::UNCURSED:
@@ -2493,7 +2497,7 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
       break;
 
     case ItemPrefix::CURSED:
-      itemData.IdentifiedName.insert(0, "Cursed ");      
+      itemData.IdentifiedName.insert(0, "Cursed ");
       break;
   }
 
@@ -2696,7 +2700,7 @@ bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
       res = false;
     }
     else
-    {      
+    {
       // If it's the same item, just unequip it
       UnequipItem(itemEquipped);
     }
@@ -3069,7 +3073,7 @@ void GameObjectsFactory::BUCQualityAdjust(ItemData& itemData)
       itemData.Damage.AddMin(1);
     }
     break;
-  }  
+  }
 
   switch (itemData.ItemQuality_)
   {
@@ -3202,7 +3206,7 @@ GameObject* GameObjectsFactory::CreateRandomGlass()
   ic->Data.UnidentifiedDescription = { "Is this valuable?" };
   ic->Data.UnidentifiedName = Util::StringFormat("?%s Gem?", colorDesc.data());
 
-  std::string lowerCase = colorDesc;  
+  std::string lowerCase = colorDesc;
   std::transform(lowerCase.begin(), lowerCase.end(), lowerCase.begin(), ::tolower);
 
   auto str = Util::StringFormat("This is a piece of %s worthless glass", lowerCase.data());
@@ -3539,7 +3543,7 @@ void GameObjectsFactory::AddRandomBonusToItem(ItemComponent* itemRef, ItemBonusT
     case ItemBonusType::SKL:
     case ItemBonusType::SPD:
     {
-      auto res = Util::WeightedRandom(statIncreaseWeightsMap);            
+      auto res = Util::WeightedRandom(statIncreaseWeightsMap);
       value = res.first;
       bs.MoneyCostIncrease = res.first * moneyIncrease;
     }

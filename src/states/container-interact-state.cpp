@@ -6,7 +6,7 @@
 
 void ContainerInteractState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;    
+  _playerRef = &Application::Instance().PlayerInstance;
 }
 
 void ContainerInteractState::Cleanup()
@@ -83,16 +83,16 @@ void ContainerInteractState::Update(bool forceUpdate)
     Printer::Instance().Clear();
 
     for (size_t y = 0; y < Printer::TerminalHeight; y++)
-    {      
-      Printer::Instance().PrintFB(_twHalf, y, ' ', "#000000", "#FFFFFF");
+    {
+      Printer::Instance().PrintFB(_twHalf, y, ' ', GlobalConstants::BlackColor, GlobalConstants::WhiteColor);
     }
 
     auto containerName = _containerToInteractWith->OwnerGameObject->ObjectName;
 
-    Printer::Instance().PrintFB(_twQuarter, 0, "Player", Printer::kAlignCenter, "#FFFFFF");
-    Printer::Instance().PrintFB(Printer::TerminalWidth - _twQuarter - 1, 0, containerName, Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(_twQuarter, 0, "Player", Printer::kAlignCenter, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(_tw - _twQuarter - 1, 0, containerName, Printer::kAlignCenter, GlobalConstants::WhiteColor);
 
-    Printer::Instance().PrintFB(1, Printer::TerminalHeight - 1, "'Enter' - exchange", Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(1, _th - 1, "'Enter' - exchange", Printer::kAlignLeft, GlobalConstants::WhiteColor);
 
     DisplayPlayerInventory();
     DisplayContainerInventory();
@@ -119,22 +119,35 @@ void ContainerInteractState::DisplayPlayerInventory()
     if (ic->Data.IsStackable)
     {
       auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
-      Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1, yPos + index, stackAmount, Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1,
+                                  yPos + index,
+                                  stackAmount,
+                                  Printer::kAlignLeft,
+                                  GlobalConstants::WhiteColor);
     }
     else if (ic->Data.IsEquipped)
     {
       auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
-      Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1, yPos + index, equipStatus, Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1,
+                                  yPos + index,
+                                  equipStatus,
+                                  Printer::kAlignLeft,
+                                  GlobalConstants::WhiteColor);
     }
 
     std::string textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (_playerSide && index == _inventoryItemIndex)
     {
-      Printer::Instance().PrintFB(1, yPos + index, nameInInventory, Printer::kAlignLeft, "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(1,
+                                  yPos + index,
+                                  nameInInventory,
+                                  Printer::kAlignLeft,
+                                  GlobalConstants::BlackColor,
+                                  GlobalConstants::WhiteColor);
     }
     else
-    {      
+    {
       Printer::Instance().PrintFB(1, yPos + index, nameInInventory, Printer::kAlignLeft, textColor);
     }
 
@@ -145,7 +158,7 @@ void ContainerInteractState::DisplayPlayerInventory()
 
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
-    std::string stub(GlobalConstants::InventoryMaxNameLength, '.');
+    std::string stub(GlobalConstants::InventoryMaxNameLength, GlobalConstants::InventoryEmptySlotChar);
     Printer::Instance().PrintFB(1,
                                 yPos + index,
                                 stub,
@@ -180,23 +193,40 @@ void ContainerInteractState::DisplayContainerInventory()
     if (ic->Data.IsStackable)
     {
       auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
-      Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1, yPos + index, stackAmount, Printer::kAlignRight, "#FFFFFF");
+      Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1,
+                                  yPos + index,
+                                  stackAmount,
+                                  Printer::kAlignRight,
+                                  GlobalConstants::WhiteColor);
     }
     else if (ic->Data.IsEquipped)
     {
       auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
-      Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1, yPos + index, equipStatus, Printer::kAlignRight, "#FFFFFF");
+      Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1,
+                                  yPos + index,
+                                  equipStatus,
+                                  Printer::kAlignRight,
+                                  GlobalConstants::WhiteColor);
     }
 
     std::string textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (!_playerSide && index == _inventoryItemIndex)
     {
-      Printer::Instance().PrintFB(xPos, yPos + index, nameInInventory, Printer::kAlignRight, "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(xPos,
+                                  yPos + index,
+                                  nameInInventory,
+                                  Printer::kAlignRight,
+                                  GlobalConstants::BlackColor,
+                                  GlobalConstants::WhiteColor);
     }
     else
     {
-      Printer::Instance().PrintFB(xPos, yPos + index, nameInInventory, Printer::kAlignRight, textColor);
+      Printer::Instance().PrintFB(xPos,
+                                  yPos + index,
+                                  nameInInventory,
+                                  Printer::kAlignRight,
+                                  textColor);
     }
 
     index++;
@@ -206,7 +236,7 @@ void ContainerInteractState::DisplayContainerInventory()
 
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
-    std::string stub(GlobalConstants::InventoryMaxNameLength, '.');
+    std::string stub(GlobalConstants::InventoryMaxNameLength, GlobalConstants::InventoryEmptySlotChar);
     Printer::Instance().PrintFB(xPos,
                                 yPos + index,
                                 stub,
@@ -216,13 +246,12 @@ void ContainerInteractState::DisplayContainerInventory()
   }
 }
 
-
 void ContainerInteractState::CheckIndexLimits()
 {
   int invSize = 0;
 
   if (_playerSide)
-  {    
+  {
     invSize = _playerRef->Inventory.Contents.size() - 1;
   }
   else
