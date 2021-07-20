@@ -53,7 +53,7 @@ void GameObject::Init(MapLevelBase* levelOwner,
   // _currentCell->Occupied is not set to true by default,
   // see game-object.h comments for Occupied field.
   _currentCell = _levelOwner->MapArray[PosX][PosY].get();
-  _previousCell = _levelOwner->MapArray[PosX][PosY].get();  
+  _previousCell = _levelOwner->MapArray[PosX][PosY].get();
 }
 
 bool GameObject::Move(int dx, int dy)
@@ -61,21 +61,21 @@ bool GameObject::Move(int dx, int dy)
   int nx = PosX + dx;
   int ny = PosY + dy;
 
-  bool isBlocked = Map::Instance().CurrentLevel->IsCellBlocking({ nx, ny });  
-  bool isOccupied = Map::Instance().CurrentLevel->MapArray[nx][ny]->Occupied;  
+  bool isBlocked = Map::Instance().CurrentLevel->IsCellBlocking({ nx, ny });
+  bool isOccupied = Map::Instance().CurrentLevel->MapArray[nx][ny]->Occupied;
   if (!isBlocked && !isOccupied)
   {
     MoveGameObject(dx, dy);
     return true;
   }
-  
+
   return false;
 }
 
 bool GameObject::MoveTo(int x, int y, bool force)
 {
   bool isBlocked = Map::Instance().CurrentLevel->IsCellBlocking({ x, y });
-  bool isOccupied = Map::Instance().CurrentLevel->MapArray[x][y]->Occupied;  
+  bool isOccupied = Map::Instance().CurrentLevel->MapArray[x][y]->Occupied;
   if ((!isBlocked && !isOccupied) || force)
   {
     // When we change level, previous position (PosX and PosY)
@@ -143,7 +143,7 @@ void GameObject::MakeTile(const GameObjectInfo& t, GameObjectType typeOverride)
 }
 
 bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, const std::string& logMsgOverride)
-{  
+{
   // TODO: isMagical for enemies' armor damage
 
   int dmgSuccess = false;
@@ -188,7 +188,7 @@ bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
     dmgSuccess = true;
   }
   else
-  {    
+  {
     if (Type != GameObjectType::GROUND)
     {
       auto str = Util::StringFormat("%s not even scratched!", objName.data());
@@ -359,20 +359,24 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
   ApplyEffect(effectToAdd);
 
 #ifndef RELEASE_BUILD
-  DebugLog("%s gained %s for %i turns (period %i)", ObjectName.data(), GlobalConstants::BonusDisplayNameByType.at(effectToAdd.Type).data(), effectToAdd.Duration, effectToAdd.Period);
+  DebugLog("%s gained %s (duration %i period %i)",
+           ObjectName.data(),
+           GlobalConstants::BonusDisplayNameByType.at(effectToAdd.Type).data(),
+           effectToAdd.Duration,
+           effectToAdd.Period);
 #endif
 }
 
 void GameObject::ApplyEffect(const ItemBonusStruct& e)
-{  
+{
   switch (e.Type)
-  {      
+  {
     case ItemBonusType::STR:
     case ItemBonusType::DEF:
     case ItemBonusType::MAG:
     case ItemBonusType::RES:
     case ItemBonusType::SPD:
-    case ItemBonusType::SKL:      
+    case ItemBonusType::SKL:
       _attributesRefsByBonus.at(e.Type).AddModifier(e.Id, e.BonusValue);
       break;
 
@@ -422,7 +426,7 @@ void GameObject::UnapplyEffect(const ItemBonusStruct& e)
 
     case ItemBonusType::FROZEN:
       Attrs.Spd.RemoveModifier(e.Id);
-      break;    
+      break;
   }
 }
 
@@ -439,7 +443,7 @@ void GameObject::RemoveEffect(const ItemBonusStruct& t)
     for (auto& item : it->second)
     {
       if (item.Id == t.Id)
-      {        
+      {
         UnapplyEffect(item);
         shouldErase = true;
         break;
@@ -447,7 +451,7 @@ void GameObject::RemoveEffect(const ItemBonusStruct& t)
     }
 
     if (shouldErase)
-    {      
+    {
       _activeEffects.erase(it);
     }
   }
@@ -478,7 +482,7 @@ void GameObject::DispelEffect(const ItemBonusType& t)
 }
 
 bool GameObject::HasEffect(const ItemBonusType& t)
-{  
+{
   for (auto& kvp : _activeEffects)
   {
     for (auto& i : kvp.second)
@@ -500,55 +504,61 @@ void GameObject::ProcessEffects()
     auto it = _activeEffects.begin();
     std::advance(it, i);
 
-    auto& v = _activeEffects[it->first];
-    for (int j = v.size() - 1; j >= 0; j--)
+    auto& ae = _activeEffects[it->first];
+    for (int j = ae.size() - 1; j >= 0; j--)
     {
-      if (v[j].Duration > 0)
+      if (ae[j].Duration > 0)
       {
-        if (v[j].Period > 0)
+        if (ae[j].Period > 0)
         {
-          v[j].EffectCounter++;
+          ae[j].EffectCounter++;
 
-          if ((v[j].EffectCounter % v[j].Period) == 0)
+          if ((ae[j].EffectCounter % ae[j].Period) == 0)
           {
-            v[j].EffectCounter = 0;
-            EffectAction(v[j]);
+            ae[j].EffectCounter = 0;
+            EffectAction(ae[j]);
           }
         }
         else
         {
-          EffectAction(v[j]);
+          EffectAction(ae[j]);
         }
 
-        v[j].Duration--;
-      }
-      else if (v[j].Duration == 0)
-      {        
-        UnapplyEffect(v[j]);
-        v.erase(v.begin() + j);
-      }
-      else if (v[j].Duration == -1)
-      {
-        if (v[j].Period > 0)
-        {
-          v[j].EffectCounter++;
+/*
+#ifndef RELEASE_BUILD
+        DebugLog("\t%s ProcessEffects() [%s] duration %i = %i - 1", ObjectName.data(), GlobalConstants::BonusDisplayNameByType.at(ae[j].Type).data(), ae[j].Duration, ae[j].Duration);
+#endif
+*/
 
-          if ((v[j].EffectCounter % v[j].Period) == 0)
+        ae[j].Duration--;
+      }
+      else if (ae[j].Duration == 0)
+      {
+        UnapplyEffect(ae[j]);
+        ae.erase(ae.begin() + j);
+      }
+      else if (ae[j].Duration == -1)
+      {
+        if (ae[j].Period > 0)
+        {
+          ae[j].EffectCounter++;
+
+          if ((ae[j].EffectCounter % ae[j].Period) == 0)
           {
-            v[j].EffectCounter = 0;
-            EffectAction(v[j]);
+            ae[j].EffectCounter = 0;
+            EffectAction(ae[j]);
           }
         }
         else
         {
-          EffectAction(v[j]);
+          EffectAction(ae[j]);
         }
       }
     }
 
-    if (v.empty())
+    if (ae.empty())
     {
-      _activeEffects.erase(it);      
+      _activeEffects.erase(it);
     }
   }
 }

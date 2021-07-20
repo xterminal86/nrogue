@@ -16,7 +16,7 @@
 #include "logger.h"
 
 void Map::Init()
-{  
+{
   if (_initialized)
   {
     return;
@@ -28,7 +28,7 @@ void Map::Init()
   _mapVisitFirstTime[MapType::DEEP_DARK_1] = false;
   _mapVisitFirstTime[MapType::ABYSS_1] = false;
   _mapVisitFirstTime[MapType::NETHER_1] = false;
-  _mapVisitFirstTime[MapType::THE_END] = false;  
+  _mapVisitFirstTime[MapType::THE_END] = false;
 
   // Shortcut variable
   _playerRef = &Application::Instance().PlayerInstance;
@@ -126,12 +126,12 @@ void Map::UpdateGameObjects()
 }
 
 void Map::InsertActor(GameObject* goToInsert)
-{  
+{
   CurrentLevel->InsertActor(goToInsert);
 }
 
 void Map::InsertGameObject(GameObject* goToInsert)
-{  
+{
   CurrentLevel->InsertGameObject(goToInsert);
 }
 
@@ -144,7 +144,7 @@ std::pair<int, GameObject*> Map::GetGameObjectToPickup(int x, int y)
 
   int index = 0;
   for (auto& go : CurrentLevel->GameObjects)
-  {    
+  {
     auto c = go->GetComponent<ItemComponent>();
     if (go.get()->PosX == x && go.get()->PosY == y && c != nullptr)
     {
@@ -264,7 +264,7 @@ void Map::RemoveDestroyed()
 }
 
 void Map::ChangeLevel(MapType levelToChange, bool goingDown)
-{  
+{
   auto& player = Application::Instance().PlayerInstance;
 
   // Unblock cell on stairs before going
@@ -308,7 +308,8 @@ void Map::TeleportToExistingLevel(MapType levelToChange, const Position& telepor
   auto& mapRef = CurrentLevel->MapArray[teleportTo.X][teleportTo.Y];
   auto& soRef = CurrentLevel->StaticMapObjects[teleportTo.X][teleportTo.Y];
 
-  bool tpToWall = (mapRef->Blocking || (soRef != nullptr && soRef->Blocking));
+  bool tpToWall = ((mapRef != nullptr && mapRef->Blocking)
+                || (soRef != nullptr && soRef->Blocking));
 
   auto actor = GetActorAtPosition(teleportTo.X, teleportTo.Y);
   bool tpOccupied = (actor != nullptr);
@@ -329,7 +330,7 @@ void Map::TeleportToExistingLevel(MapType levelToChange, const Position& telepor
     }
 
     whoToTeleport->Attrs.HP.SetMin(0);
-  }  
+  }
   else if (tpOccupied)
   {
     if (forPlayer)
@@ -392,7 +393,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
         _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(30, 30, levelName, lvlAsInt));
         break;
 
-      case MapType::MINES_5:        
+      case MapType::MINES_5:
       {
         // Map size values in the constructor here don't matter
         // since they will be overridden there for special level case.
@@ -459,7 +460,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
 
     CurrentLevel->WelcomeTextDisplayed = true;
     CurrentLevel->DisplayWelcomeText();
-  }  
+  }
 }
 
 Position Map::GetRandomEmptyCell()
@@ -553,7 +554,7 @@ void Map::PrintMapLayout()
   for (int x = 0; x < CurrentLevel->MapSize.Y; x++)
   {
     for (int y = 0; y < CurrentLevel->MapSize.X; y++)
-    {      
+    {
       char ch = CurrentLevel->MapArray[y][x]->Image;
 
       // Replace 'wall' tiles with '#'
@@ -617,13 +618,13 @@ std::vector<Position> Map::GetWalkableCellsAround(const Position& pos)
     for (int x = lx; x <= hx; x++)
     {
       for (int y = ly; y <= hy; y++)
-      {        
+      {
         if (x == pos.X && y == pos.Y)
         {
           continue;
         }
 
-        if (Util::IsInsideMap({ x, y }, CurrentLevel->MapSize)         
+        if (Util::IsInsideMap({ x, y }, CurrentLevel->MapSize)
         && (!CurrentLevel->IsCellBlocking({ x, y })
          && !CurrentLevel->MapArray[x][y]->Occupied))
         {
@@ -690,7 +691,7 @@ void Map::DrawNonVisibleMapTile(int x, int y)
 }
 
 void Map::DrawNonVisibleStaticObject(int x, int y)
-{  
+{
   if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
   {
     // Same as in method above

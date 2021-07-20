@@ -37,7 +37,7 @@
 #endif
 
 namespace Util
-{  
+{
   extern std::vector<std::string> StringSplit(const std::string& str, char delim);
 
   extern bool IsObjectInRange(const Position& posToCheckFrom,
@@ -103,6 +103,10 @@ namespace Util
 
   extern std::string GenerateName(bool allowDoubleVowels = false);
 
+  extern std::string ReplaceItemPrefix(const std::string& oldIdentifiedName,
+                                       const std::vector<std::string>& anyOf,
+                                       const std::string& replaceWith);
+
   // ===========================================================================
 
   /// Produces random pair from pairs list according to weight value:
@@ -138,7 +142,7 @@ namespace Util
     }
 
     return *weightsByType.begin();
-  }    
+  }
 
   template <typename key, typename value>
   inline std::map<value, key> FlipMap(const std::map<key, value>& src)

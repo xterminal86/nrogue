@@ -968,4 +968,23 @@ namespace Util
 
     return name;
   }
+
+  std::string ReplaceItemPrefix(const std::string& oldIdentifiedName,
+                                const std::vector<std::string>& anyOf,
+                                const std::string& replaceWith)
+  {
+    std::string newIdentifiedName = oldIdentifiedName;
+
+    for (auto& s : anyOf)
+    {
+      size_t pos = newIdentifiedName.find(s);
+      if (pos != std::string::npos)
+      {
+        newIdentifiedName = newIdentifiedName.replace(pos, s.length(), replaceWith);
+        break;
+      }
+    }
+
+    return newIdentifiedName;
+  }
 }

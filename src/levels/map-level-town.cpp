@@ -173,7 +173,7 @@ void MapLevelTown::CreateLevel()
 {
   Peaceful = true;
 
-  VisibilityRadius = 64;
+  VisibilityRadius = GlobalConstants::MaxVisibilityRadius;
 
   GameObjectInfo t;
   t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
@@ -244,17 +244,6 @@ void MapLevelTown::CreateLevel()
   LevelExit.Y = 44;
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
-
-  ItemBonusStruct bs;
-  bs.Type = ItemBonusType::INDESTRUCTIBLE;
-  bs.Id = _playerRef->ObjectId();
-  bs.BonusValue = 1;
-
-  auto arm = GameObjectsFactory::Instance().CreateArmor(1, 1, ArmorType::PADDING, ItemPrefix::CURSED);
-  InsertGameObject(arm);
-
-  auto dag = GameObjectsFactory::Instance().CreateWeapon(1, 2, WeaponType::DAGGER, ItemPrefix::CURSED, ItemQuality::NORMAL, { bs });
-  InsertGameObject(dag);
 
   /*
   for (size_t x = 1; x < 16; x++)

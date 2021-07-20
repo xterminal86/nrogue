@@ -128,7 +128,7 @@ void MainState::HandleInput()
       ProcessRangedWeapon();
       break;
 
-    case '>':      
+    case '>':
       CheckStairs('>');
 
       // FIXME: for debug, further going down won't work
@@ -186,7 +186,7 @@ void MainState::HandleInput()
 
     case 's':
       GetActorsAround();
-      break;    
+      break;
     #endif
 
     default:
@@ -200,7 +200,7 @@ void MainState::HandleInput()
 }
 
 void MainState::Update(bool forceUpdate)
-{  
+{
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();
@@ -246,7 +246,7 @@ void MainState::ProcessMovement(const Position& dirOffsets)
     _playerRef->FinishTurn();
   }
   else if (_playerRef->Move(dirOffsets.X, dirOffsets.Y))
-  {    
+  {
     // This line must be the first in order to
     // allow potential messages to show in FinishTurn()
     // (e.g. starvation damage message) after player moved.
@@ -255,8 +255,8 @@ void MainState::ProcessMovement(const Position& dirOffsets)
     Map::Instance().CurrentLevel->MapOffsetX -= dirOffsets.X;
     Map::Instance().CurrentLevel->MapOffsetY -= dirOffsets.Y;
 
-    _playerRef->FinishTurn();        
-  }  
+    _playerRef->FinishTurn();
+  }
 }
 
 void MainState::DisplayGameLog()
@@ -440,7 +440,7 @@ void MainState::PrintDebugInfo()
 }
 
 void MainState::ProcessRangedWeapon()
-{  
+{
   if (Map::Instance().CurrentLevel->Peaceful)
   {
     // NOTE: comment out all lines for debug if needed
@@ -490,7 +490,7 @@ void MainState::ProcessWeapon(ItemComponent* weapon)
       Printer::Instance().AddMessage("What are you going to shoot with?");
     }
     else
-    {      
+    {
       if ( (isBow && arrows->Data.AmmoType == ArrowType::BOLTS)
         || (isXBow && arrows->Data.AmmoType == ArrowType::ARROWS) )
       {
@@ -532,7 +532,7 @@ void MainState::ProcessWand(ItemComponent* wand)
     Printer::Instance().AddMessage("No charges left!");
   }
   else
-  {    
+  {
     switch (wand->Data.SpellHeld.SpellType_)
     {
       // TODO: finish wands effects and attack
@@ -783,7 +783,7 @@ void MainState::DisplayStatusIcons()
         continue;
       }
 
-      std::string color = (item.Duration <= 3) ? GlobalConstants::GroundColor : GlobalConstants::WhiteColor;
+      std::string color = (item.Duration <= GlobalConstants::TurnReadyValue && item.Duration != -1) ? GlobalConstants::GroundColor : GlobalConstants::WhiteColor;
 
       Printer::Instance().PrintFB(offsetX,
                                    th - 4,
@@ -846,7 +846,7 @@ void MainState::DisplayScenarioInformation()
 
   ss.str("");
 
-  ss << "Seed value: " << seedString.second;  
+  ss << "Seed value: " << seedString.second;
   messages.push_back(ss.str());
 
   Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Scenario Information", messages);

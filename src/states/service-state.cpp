@@ -112,46 +112,31 @@ void ServiceState::ProcessBlessing(int key)
         //
         for (auto& kvp : _playerRef->_attributesRefsByBonus)
         {
-         ItemBonusStruct* ibs = si.ItemComponentRef->Data.GetBonus(kvp.first);
-         if (ibs != nullptr && ibs->FromItem)
-         {
-           // Only +1 bonus from blessing and even then
-           // I'm not sure whether it will be OP or not
-           ibs->BonusValue += 1;
+          ItemBonusStruct* ibs = si.ItemComponentRef->Data.GetBonus(kvp.first);
+          if (ibs != nullptr && ibs->FromItem)
+          {
+            // Only +1 bonus from blessing and even then
+            // I'm not sure whether it will be OP or not
+            ibs->BonusValue += 1;
 
-           // Now we need to replace header BUC status name
-           // that was generated during object creation.
-           std::string header = si.ItemComponentRef->Data.IdentifiedName;
+            // If item to be blessed is actually equipped, do the shuffle below.
+            auto equippedItem = _playerRef->EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
+            if (equippedItem == si.ItemComponentRef)
+            {
+              // Unequip / equip to reapply stat bonuses
+              equippedItem->Equip();
+              equippedItem->Equip();
 
-           std::vector<std::string> toFind =
-           {
-             "Cursed", "Uncursed"
-           };
-
-           for (auto& s : toFind)
-           {
-             size_t pos = header.find(s);
-             if (pos != std::string::npos)
-             {
-               si.ItemComponentRef->Data.IdentifiedName = header.replace(pos, s.length(), "Blessed");
-               break;
-             }
-           }
-
-           // If item to be blessed is actually equipped, do the shuffle below.
-           auto equippedItem = _playerRef->EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
-           if (equippedItem == si.ItemComponentRef)
-           {
-             // Unequip / equip to reapply stat bonuses
-             equippedItem->Equip();
-             equippedItem->Equip();
-
-             Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
-             Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
-           }
-         }
+              Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
+              Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
+            }
+          }
         }
       }
+
+      // Now we need to replace header BUC status name
+      // that was generated during object creation.
+      si.ItemComponentRef->Data.IdentifiedName = Util::ReplaceItemPrefix(si.ItemComponentRef->Data.IdentifiedName, { "Cursed" , "Uncursed" }, "Blessed");
     }
 
     si.ItemComponentRef->Data.IsPrefixDiscovered = true;

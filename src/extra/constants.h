@@ -34,7 +34,7 @@
   #define VK_TAB       SDLK_TAB
 
   #define KEY_DOWN     SDLK_DOWN
-  #define KEY_UP       SDLK_UP  
+  #define KEY_UP       SDLK_UP
   #define KEY_RIGHT    SDLK_RIGHT
   #define KEY_LEFT     SDLK_LEFT
 
@@ -88,7 +88,7 @@
 
     // ********************
 
-    #define VK_BACKSPACE 8    
+    #define VK_BACKSPACE 8
 
   #endif
 
@@ -239,7 +239,7 @@ enum class PlayerClass
 };
 
 enum class PlayerSkills
-{  
+{
   RECHARGE = 0, // Use mana to recharge a wand (starting for Arcanist)
   REPAIR,       // Use repair kit to repair a weapon (starting for Soldier)
   SPELLCASTING, // Allows character to cast spells (starting for Arcanist)
@@ -279,7 +279,7 @@ enum class ItemType
 {
   NOTHING = 0,
   DUMMY,
-  COINS,  
+  COINS,
   HEALING_POTION,
   MANA_POTION,
   HUNGER_POTION,
@@ -301,7 +301,7 @@ enum class ItemType
   WAND,
   SPELLBOOK,
   REPAIR_KIT,
-  RANGED_WEAPON,  
+  RANGED_WEAPON,
   ARROWS
 };
 
@@ -387,8 +387,8 @@ enum class ItemBonusType
 enum class FoodType
 {
   FIRST_ELEMENT = 0,
-  APPLE,  
-  CHEESE,  
+  APPLE,
+  CHEESE,
   BREAD,
   FISH,
   PIE,
@@ -431,7 +431,7 @@ enum class SpellType
   LASER,             // pierces through, DEF
   LIGHT,             // increase visibility radius, temporary
   IDENTIFY,
-  MAGIC_MAPPING,  
+  MAGIC_MAPPING,
   TELEPORT,          // TODO: teleport control?
   TOWN_PORTAL,
   DETECT_MONSTERS,   // shows monsters (not all?), temporary
@@ -439,7 +439,7 @@ enum class SpellType
   REMOVE_CURSE,
   REPAIR,
   HEAL,
-  NEUTRALIZE_POISON,  
+  NEUTRALIZE_POISON,
   MANA_SHIELD        // nuff said
 };
 
@@ -673,7 +673,7 @@ namespace GlobalConstants
   extern const int InventoryMaxSize;
   extern const int TurnReadyValue;
   extern const int TurnTickValue;
-
+  extern const int MaxVisibilityRadius;
   extern const int StarvationDamageTimeout;
 
   extern const std::string BlackColor;
@@ -746,7 +746,7 @@ namespace GlobalConstants
   extern const std::map<SpellType,     int> WandSpellCapacityCostByType;
   extern const std::map<ItemBonusType, int> MoneyCostIncreaseByBonusType;
 
-  extern const std::map<std::string, ItemType> PotionTypeByStatName;   
+  extern const std::map<std::string, ItemType> PotionTypeByStatName;
 
   extern const std::map<FoodType, std::pair<std::string, int>>         FoodHungerPercentageByName;
   extern const std::map<GemType,  std::pair<std::string, std::string>> GemColorByType;

@@ -2,6 +2,7 @@
 #define SPELLSPROCESSOR_H
 
 #include "singleton.h"
+#include "constants.h"
 
 #include <string>
 
@@ -34,6 +35,12 @@ class SpellsProcessor : public Singleton<SpellsProcessor>
     Player* _playerRef = nullptr;
 
     const std::string _kNoActionText = "...but nothing happens.";
+
+    // Calculate number of WaitForTurns for player before he can act (for SPD = 0)
+    const int _kSkipsForTurn = ((float)GlobalConstants::TurnReadyValue / (float)GlobalConstants::TurnTickValue) + 1;
+
+     // Default duration is 20 effective player turns
+    const int _kDefaultDuration = _kSkipsForTurn * 20;
 };
 
 #endif // SPELLSPROCESSOR_H

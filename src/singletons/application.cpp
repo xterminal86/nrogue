@@ -78,7 +78,7 @@ void Application::Run()
       //
 
       if (_currentState != nullptr)
-      {        
+      {
         _currentState->Update();
       }
 
@@ -105,7 +105,7 @@ void Application::Run()
       }
     }
 
-    Timer::Instance().MeasureEnd();    
+    Timer::Instance().MeasureEnd();
   }
 }
 
@@ -132,12 +132,12 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   _currentState = (gameStateIndex == GameStates::EXIT_GAME) ? nullptr : _gameStates[gameStateIndex].get();
 
   if (_currentState != nullptr)
-  {    
+  {
     _currentState->Prepare();
 
     // I don't know how it worked before without this line
-    _currentState->Update(true);    
-  }  
+    _currentState->Update(true);
+  }
 }
 
 GameState* Application::GetGameStateRefByName(GameStates stateName)
@@ -282,14 +282,14 @@ void Application::WriteObituary(bool wasKilled)
            && ch == ' ')
           {
             ch = '#';
-          }          
+          }
         }
 
         // Check items first
         auto gos = Map::Instance().GetGameObjectsAtPosition(x, y);
         if (!gos.empty() && (curLvl->MapArray[x][y]->Visible
                           || curLvl->MapArray[x][y]->Revealed))
-        {          
+        {
           ch = gos.back()->Image;
 
           if (ch == ' ')
@@ -314,7 +314,7 @@ void Application::WriteObituary(bool wasKilled)
         if (actor != nullptr
          && (curLvl->MapArray[x][y]->Visible
           || curLvl->MapArray[x][y]->Revealed))
-        {          
+        {
           bool imageNonPrintable = (actor->Image < 33);
           ch = (imageNonPrintable ? '@' : actor->Image);
         }
@@ -471,7 +471,7 @@ void Application::InitGraphics()
   InitSDL();
 #else
   InitCurses();
-#endif  
+#endif
 }
 
 #ifndef USE_SDL
@@ -663,7 +663,7 @@ SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
 
 void Application::Cleanup()
 {
-#ifdef USE_SDL  
+#ifdef USE_SDL
   SDL_Quit();
 #else
   endwin();
@@ -715,7 +715,7 @@ void Application::InitGameStates()
 }
 
 uint64_t Application::GetNewId()
-{  
+{
   static uint64_t globalId = 1;
   return globalId++;
 }
