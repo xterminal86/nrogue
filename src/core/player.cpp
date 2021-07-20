@@ -169,7 +169,7 @@ void Player::PassByNPC(int dx, int dy)
 }
 
 void Player::CheckVisibility()
-{  
+{
   int tw = Printer::TerminalWidth;
   int th = Printer::TerminalHeight;
 
@@ -184,7 +184,7 @@ void Player::CheckVisibility()
   auto mapCells = Util::GetRectAroundPoint(PosX, PosY, tw / 2, th / 2, Map::Instance().CurrentLevel->MapSize);
   for (auto& cell : mapCells)
   {
-    map[cell.X][cell.Y]->Visible = false;    
+    map[cell.X][cell.Y]->Visible = false;
 
     if (staticObjects[cell.X][cell.Y] != nullptr)
     {
@@ -223,7 +223,7 @@ void Player::CheckVisibility()
 
       DiscoverCell(point.X, point.Y);
     }
-  }    
+  }
 }
 
 void Player::DiscoverCell(int x, int y)
@@ -277,7 +277,7 @@ void Player::SetAttributes()
     case PlayerClass::CUSTOM:
       SetCustomClassAttrs();
       break;
-  }  
+  }
 }
 
 void Player::SetSoldierAttrs()
@@ -313,7 +313,7 @@ void Player::SetThiefAttrs()
   Attrs.HP.Reset(15);
 
   Attrs.HungerRate.Set(2000);
-  Attrs.HungerSpeed.Set(1);  
+  Attrs.HungerSpeed.Set(1);
 
   HealthRegenTurns = 60;
 }
@@ -333,7 +333,7 @@ void Player::SetArcanistAttrs()
   Attrs.MP.Reset(30);
 
   Attrs.HungerRate.Set(3000);
-  Attrs.HungerSpeed.Set(1);  
+  Attrs.HungerSpeed.Set(1);
 
   HealthRegenTurns = 80;
 }
@@ -432,7 +432,7 @@ void Player::SetDefaultEquipment()
     ItemComponent* ic = i->GetComponent<ItemComponent>();
     ic->Equip();
 
-    auto it = Printer::Instance().Messages().begin();    
+    auto it = Printer::Instance().Messages().begin();
     Printer::Instance().Messages().erase(it);
   }
 }
@@ -567,7 +567,7 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
       ItemBonusStruct b;
       b.Type = ItemBonusType::FROZEN;
       b.BonusValue = 1;
-      b.Duration = 10;
+      b.Duration = GlobalConstants::TurnReadyValue * damage;
       b.Id = weapon->OwnerGameObject->ObjectId();
       b.Cumulative = true;
 
@@ -587,7 +587,7 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
     // Check items first
     auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
-    {      
+    {
       TryToDamageObject(obj, damage, againstRes);
     }
 
@@ -708,7 +708,7 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
     }
   }
 
-  Attrs.Hunger += Attrs.HungerSpeed.Get() * 2;  
+  Attrs.Hunger += Attrs.HungerSpeed.Get() * 2;
 }
 
 void Player::KnockBack(GameObject* go, int tiles)
@@ -748,11 +748,11 @@ void Player::KnockBack(GameObject* go, int tiles)
     {
       go->MoveTo(newPos);
     }
-  }  
+  }
 }
 
 void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict)
-{  
+{
   bool shouldTearDownWall = false;
   bool hasLeech = false;
 
@@ -871,7 +871,7 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bo
     }
   }
   else
-  {    
+  {
     // Melee attack with ranged weapon in hand fallbacks to 1d4 "punch"
     int weaponDamage = meleeAttackWithRangedWeapon
                        ? Util::RollDamage(1, 2)
@@ -989,7 +989,7 @@ std::string Player::ProcessPhysicalDamage(GameObject* from, int& amount)
 }
 
 void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool godMode, bool suppressLog)
-{  
+{
   if (godMode)
   {
     std::string msgString;
@@ -1019,19 +1019,19 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
   {
     logMsg = ProcessPhysicalDamage(from, amount);
 
-    auto thorns = GetItemsWithBonus(ItemBonusType::THORNS);    
+    auto thorns = GetItemsWithBonus(ItemBonusType::THORNS);
     for (auto& i : thorns)
     {
       auto b = i->Data.GetBonus(ItemBonusType::THORNS);
       float fract = (float)b->BonusValue * 0.01f;
       int dmg = (int)((float)amount * fract);
       dmgReturned += dmg;
-    }    
+    }
   }
 
   if (!suppressLog && !logMsg.empty())
   {
-    Printer::Instance().AddMessage(logMsg);    
+    Printer::Instance().AddMessage(logMsg);
   }
 
   if (dmgReturned != 0 && from != nullptr)
@@ -1045,7 +1045,7 @@ bool Player::DamageArmor(GameObject* from, int amount)
 {
   ItemComponent* armor = EquipmentByCategory[EquipmentCategory::TORSO][0];
   if (armor != nullptr)
-  {    
+  {
     if (armor->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE))
     {
       return false;
@@ -1136,7 +1136,7 @@ void Player::LevelUp(int baseHpOverride)
 
       auto str = Util::StringFormat("%s +1", kvp.first.data());
       Printer::Instance().AddMessage(str);
-    }    
+    }
   }
 
   // HP and MP
@@ -1173,7 +1173,7 @@ void Player::LevelUp(int baseHpOverride)
 
   auto res = GetPrettyLevelUpText();
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Level Up!", res, "#888800", "#000044");  
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Level Up!", res, "#888800", "#000044");
 }
 
 void Player::LevelDown()
@@ -1254,7 +1254,7 @@ void Player::LevelDown()
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Level DOWN!", res, "#FF0000", "#000044");
 
-  Printer::Instance().AddMessage("You have LOST a level!");  
+  Printer::Instance().AddMessage("You have LOST a level!");
 }
 
 void Player::ProcessKill(GameObject* monster)
@@ -1306,7 +1306,7 @@ void Player::ProcessKill(GameObject* monster)
 }
 
 void Player::WaitForTurn()
-{  
+{
   GameObject::WaitForTurn();
   ProcessEffectsPlayer();
   ProcessItemsEffects();
@@ -1469,7 +1469,7 @@ void Player::ProcessEffectsPlayer()
             std::string objName = ic->Data.IsIdentified ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
             auto str = Util::StringFormat("%s burns up!", objName.data());
             Printer::Instance().AddMessage(str);
-            Inventory.Contents.erase(Inventory.Contents.begin() + i);            
+            Inventory.Contents.erase(Inventory.Contents.begin() + i);
             break;
           }
         }
@@ -1712,7 +1712,7 @@ void Player::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
 
     case ItemBonusType::VISIBILITY:
       VisibilityRadius.AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.BonusValue);
-      break;    
+      break;
 
     case ItemBonusType::REGEN:
     case ItemBonusType::REFLECT:
@@ -1804,7 +1804,7 @@ void Player::BreakItem(ItemComponent* ic, bool suppressMessage)
     }
   }
 
-  EquipmentByCategory[ec][0] = nullptr;  
+  EquipmentByCategory[ec][0] = nullptr;
 }
 
 void Player::SwitchPlaces(AIComponent* other)
