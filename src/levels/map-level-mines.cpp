@@ -265,7 +265,7 @@ void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
 {
   MapLevelBase::PrepareMap(levelOwner);
 
-  CreateLevel();  
+  CreateLevel();
 }
 
 void MapLevelMines::CreateLevel()
@@ -333,7 +333,7 @@ void MapLevelMines::CreateLevel()
     // FIXME: too many items?
     //int itemsToCreate = RNG::Instance().RandomRange(1, 6 + DungeonLevel);
     int itemsToCreate = DungeonLevel + 5;
-    CreateItemsForLevel(itemsToCreate);    
+    CreateItemsForLevel(itemsToCreate);
   }
 }
 
@@ -398,7 +398,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 }
 
 void MapLevelMines::CreateSpecialLevel()
-{  
+{
   GameObject* key = GameObjectsFactory::Instance().CreateDummyObject("Iron Key",
                                                                      '1',
                                                                      GlobalConstants::IronColor,
@@ -475,7 +475,7 @@ void MapLevelMines::CreateSpecialLevel()
           DoorComponent* dc = door->GetComponent<DoorComponent>();
           dc->OpenedBy = key->GetComponent<ItemComponent>()->Data.ItemTypeHash;
 
-          InsertStaticObject(door);          
+          InsertStaticObject(door);
         }
         break;
 
@@ -535,7 +535,7 @@ void MapLevelMines::CreateRandomBarrels()
     }
 
     int index = RNG::Instance().RandomRange(0, emptyCellsCopy.size());
-    Position pos = emptyCellsCopy[index];    
+    Position pos = emptyCellsCopy[index];
     auto res = Map::Instance().GetEmptyCellsAround(pos, rangeNeeded);
     if (res.size() >= barrelsNum)
     {

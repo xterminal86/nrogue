@@ -5,7 +5,7 @@
 #include <vector>
 
 struct Attribute
-{  
+{
   void Reset();
   void Set(int value);
   void Add(int value);
@@ -38,6 +38,8 @@ struct RangedAttribute
   void AddMax(int valueToAdd);
   void CheckOverflow();
   void Restore();
+
+  bool IsFull();
 
   Attribute& Min();
   Attribute& Max();

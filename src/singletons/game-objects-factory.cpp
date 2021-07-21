@@ -7,6 +7,7 @@
 #include "ai-component.h"
 #include "ai-monster-basic.h"
 #include "ai-monster-bat.h"
+#include "ai-monster-vampire-bat.h"
 #include "ai-monster-spider.h"
 #include "ai-monster-smart.h"
 #include "ai-monster-troll.h"
@@ -121,6 +122,10 @@ GameObject* GameObjectsFactory::CreateMonster(int x, int y, GameObjectType monst
       go = CreateBat(x, y);
       break;
 
+    case GameObjectType::VAMPIRE_BAT:
+      go = CreateVampireBat(x, y);
+      break;
+
     case GameObjectType::SPIDER:
       go = CreateSpider(x, y);
       break;
@@ -204,6 +209,8 @@ GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool st
   #endif
 
   GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, "#FFFFFF");
+
+  go->IsLiving = true;
 
   go->Move(0, 0);
 
@@ -336,6 +343,50 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
     go->Attrs.Spd.Set(randomSpd);
     go->Attrs.Skl.Set(randomSkl);
     */
+  }
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateVampireBat(int x, int y, bool randomize)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'b', GlobalConstants::MonsterColor);
+  go->ObjectName = "Flying Bat";
+  go->Attrs.Indestructible = false;
+  go->HealthRegenTurns = 20;
+
+  go->IsLiving = false;
+
+  // Sets Occupied flag for _currentCell
+  go->Move(0, 0);
+
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterVampireBat* aimb = ai->AddModel<AIMonsterVampireBat>();
+  aimb->AgroRadius = 16;
+  aimb->ConstructAI();
+
+  ai->ChangeModel<AIMonsterVampireBat>();
+
+  // Set attributes
+  if (randomize)
+  {
+    int pl = _playerRef->Attrs.Lvl.Get();
+    int dl = Map::Instance().CurrentLevel->DungeonLevel;
+    int difficulty = std::max(pl, dl); //pl + dl;
+    int diffOffset = RNG::Instance().RandomRange(0, 4);
+
+    difficulty += diffOffset;
+
+    go->Attrs.Def.Talents = 3;
+    go->Attrs.Spd.Talents = 3;
+
+    for (int i = 0; i < difficulty; i++)
+    {
+      go->LevelUp();
+    }
+
+    go->Attrs.HP.Restore();
+    go->Attrs.MP.Restore();
   }
 
   return go;

@@ -36,6 +36,7 @@ class LookInputState : public GameState
       "'ENTER' - display actor stats",
       "'r' - spawn rat",
       "'b' - spawn bat",
+      "'B' - spawn vampire bat",
       "'s' - spawn spider",
       "'T' - spawn troll"
     };

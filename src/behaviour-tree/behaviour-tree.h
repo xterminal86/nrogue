@@ -22,6 +22,8 @@ enum class BTResult
 ///
 /// Base class for behaviour tree logic.
 ///
+/// [TASK p1="<TASK_TYPE>"] (behaviour is implemented inside specific classes)
+///
 class Node
 {
   public:
@@ -34,8 +36,8 @@ class Node
 
     virtual std::string ToString();
 
-  protected:    
-    void FirstRun();    
+  protected:
+    void FirstRun();
     void Reset();
 
     virtual void FirstRunSpecific();
@@ -83,6 +85,8 @@ class ControlNode : public Node
 ///
 /// Starting node of the behaviour tree.
 ///
+/// [TREE]
+///
 class Root : public Node
 {
   using Node::Node;
@@ -109,6 +113,8 @@ class Root : public Node
 ///
 /// If no condition function is specified,
 /// the result is BTResult::Undefined.
+///
+/// [COND p1="..." p2="..." ...]
 ///
 class Condition : public ControlNode
 {
@@ -142,6 +148,8 @@ class Condition : public ControlNode
 /// Don't forget to reset _firstRunFlag as well if you
 /// need to repeat FirstRun() after Reset().
 ///
+/// [FAIL]
+///
 class Failure : public Node
 {
   using Node::Node;
@@ -153,6 +161,8 @@ class Failure : public Node
 ///
 /// If child node returns BTResult::Failure,
 /// returns BTResult::Success.
+///
+/// [SUCC]
 ///
 class IgnoreFailure : public ControlNode
 {
@@ -169,6 +179,8 @@ class IgnoreFailure : public ControlNode
 /// status is returned and processing continues until either SUCCESS
 /// or FAILURE is returned from the subtask.
 ///
+/// [SEQ]
+///
 class Sequence : public ControlNode
 {
   using ControlNode::ControlNode;
@@ -183,6 +195,8 @@ class Sequence : public ControlNode
 /// status is returned.  If a subtask is still RUNNING, then a RUNNING
 /// status is returned and processing continues until either SUCCESS
 /// or FAILURE is returned from the subtask.
+///
+/// [SEL]
 ///
 class Selector : public ControlNode
 {

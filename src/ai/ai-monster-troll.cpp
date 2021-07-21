@@ -13,11 +13,11 @@ void AIMonsterTroll::PrepareScript()
 R"(
 [TREE]
   [SEL]
-    [COND p1="in_range"]
+    [COND p1="player_in_range"]
       [SEL]
         [COND p1="player_visible"]
           [SEL]
-            [COND p1="in_range" p2="1"]
+            [COND p1="player_in_range" p2="1"]
               [SEL]
                 [COND p1="hp_low"]
                   [TASK p1="move_away"]

@@ -85,6 +85,13 @@ void LookInputState::HandleInput()
     }
     break;
 
+    case 'B':
+    {
+      GameObject* bat = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::VAMPIRE_BAT);
+      Map::Instance().InsertActor(bat);
+    }
+    break;
+
     case 'r':
     {
       GameObject* rat = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::RAT);
@@ -141,10 +148,10 @@ void LookInputState::Update(bool forceUpdate)
         foundGameObject = true;
       }
       else if (tile->Visible)
-      {        
+      {
         auto actor = CheckActor();
         if (actor != nullptr)
-        {          
+        {
           AIComponent* aic = actor->GetComponent<AIComponent>();
           if (aic != nullptr)
           {
@@ -191,7 +198,7 @@ void LookInputState::Update(bool forceUpdate)
 
       // If nothing is found or area is under fog of war
       if (!foundGameObject)
-      {        
+      {
         if (!tile->Revealed)
         {
           lookStatus = "???";
@@ -319,7 +326,7 @@ void LookInputState::DisplayMonsterStats()
     msg.push_back("");
     msg.push_back(Util::StringFormat("Action Meter: %i", actor->Attrs.ActionMeter));
 
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, name, msg);    
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, name, msg);
   }
 }
 

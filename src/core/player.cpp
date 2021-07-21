@@ -20,6 +20,8 @@ void Player::Init()
 
   Image = '@';
 
+  IsLiving = true;
+
   #ifdef USE_SDL
   Image = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
   #endif

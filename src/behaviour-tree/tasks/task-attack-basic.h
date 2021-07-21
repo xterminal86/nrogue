@@ -3,6 +3,13 @@
 
 #include "behaviour-tree.h"
 
+struct AttackResult
+{
+  bool Success = false;
+  bool HasArmor = false;
+  int DamageDone = 0;
+};
+
 class TaskAttackBasic : public Node
 {
   using Node::Node;
@@ -11,9 +18,7 @@ class TaskAttackBasic : public Node
     BTResult Run() override;
 
   protected:
-
-    // first means successful hit, second means if player has armor
-    std::pair<bool, bool> _attackResultPlayerHasArmor;
+    AttackResult _attackResult;
 };
 
 #endif // TASKATTACKBASIC_H

@@ -142,6 +142,11 @@ void RangedAttribute::CheckOverflow()
   }
 }
 
+bool RangedAttribute::IsFull()
+{
+  return (_min.Get() == _max.Get());
+}
+
 // *******************************************************
 
 Attributes::Attributes()

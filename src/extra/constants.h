@@ -186,6 +186,7 @@ enum class GameObjectType
   TRAP,
   RAT,
   BAT,
+  VAMPIRE_BAT,
   SPIDER,
   TROLL,
   SKELETON,

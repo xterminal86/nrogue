@@ -31,9 +31,11 @@ BTResult TaskAttackBasic::Run()
                                    hitChance);
   Logger::Instance().Print(logMsg);
 
+  int dmg = 0;
+
   if (Util::Rolld100(hitChance))
   {
-    int dmg = _objectToControl->Attrs.Str.Get() - playerRef.Attrs.Def.Get();
+    dmg = _objectToControl->Attrs.Str.Get() - playerRef.Attrs.Def.Get();
     if (dmg <= 0)
     {
       dmg = 1;
@@ -43,7 +45,7 @@ BTResult TaskAttackBasic::Run()
 
     playerRef.ReceiveDamage(_objectToControl, dmg, false);
 
-    result = true;    
+    result = true;
   }
   else
   {
@@ -57,8 +59,9 @@ BTResult TaskAttackBasic::Run()
 
   ItemComponent* armor = playerRef.EquipmentByCategory[EquipmentCategory::TORSO][0];
 
-  _attackResultPlayerHasArmor.first = result;
-  _attackResultPlayerHasArmor.second = (armor != nullptr);
+  _attackResult.Success = result;
+  _attackResult.HasArmor = (armor != nullptr);
+  _attackResult.DamageDone = dmg;
 
   return BTResult::Success;
 }

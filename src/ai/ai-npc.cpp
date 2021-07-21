@@ -9,7 +9,7 @@ AINPC::AINPC()
 {
   _hash = typeid(*this).hash_code();
 
-  IsAgressive = false;  
+  IsAgressive = false;
 }
 
 void AINPC::Init(NPCType type, bool immovable, ServiceType serviceType)
@@ -81,6 +81,9 @@ void AINPC::Init(NPCType type, bool immovable, ServiceType serviceType)
     AIComponentRef->OwnerGameObject->LevelUp();
   }
 
+  AIComponentRef->OwnerGameObject->Attrs.HP.Restore();
+  AIComponentRef->OwnerGameObject->Attrs.MP.Restore();
+
   ConstructAI();
 }
 
@@ -90,7 +93,7 @@ void AINPC::PrepareScript()
 R"(
 [TREE]
   [SEL]
-    [TASK p1="idle"]    
+    [TASK p1="idle"]
 )";
 
   const std::string scriptMovable =
@@ -99,10 +102,10 @@ R"(
   [SEL]
     [COND p1="d100" p2="40"]
       [TASK p1="move_rnd"]
-    [TASK p1="idle"]    
+    [TASK p1="idle"]
 )";
 
-  _script = Data.IsImmovable ? scriptImmovable : scriptMovable;  
+  _script = Data.IsImmovable ? scriptImmovable : scriptMovable;
 }
 
 void AINPC::SetDataClaire()

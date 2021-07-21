@@ -18,13 +18,10 @@ BTResult TaskAttackEffect::Run()
 
   //DebugLog("\t[TaskAttackEffect]\n");
 
-  // TODO: should 'attack_effect' task have additional parameter
-  // to indicate whether an attack should ignore armor?
-
   // If basic attack didn't miss
-  if (_attackResultPlayerHasArmor.first)
+  if (_attackResult.Success)
   {
-    if (_shouldIgnoreArmor || !_attackResultPlayerHasArmor.second)
+    if (_shouldIgnoreArmor || !_attackResult.HasArmor)
     {
       _playerRef->AddEffect(_effectToApply);
     }

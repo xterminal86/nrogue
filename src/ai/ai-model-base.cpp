@@ -5,8 +5,10 @@
 #include "util.h"
 
 #include "task-idle.h"
+#include "task-debug.h"
 #include "task-random-movement.h"
 #include "task-attack-basic.h"
+#include "task-attack-special.h"
 #include "task-chase-player.h"
 #include "task-move-away-from-player.h"
 #include "task-goto-last-player-pos.h"
@@ -15,7 +17,7 @@
 
 AIModelBase::AIModelBase()
 {
-  _playerRef = &Application::Instance().PlayerInstance;  
+  _playerRef = &Application::Instance().PlayerInstance;
 }
 
 void AIModelBase::PrepareScript()
@@ -98,7 +100,7 @@ void AIModelBase::Update()
       AIComponentRef->OwnerGameObject->WaitForTurn();
     }
     else
-    {      
+    {
       if (_root->Run() == BTResult::Failure)
       {
         _root->Reset();
@@ -158,11 +160,18 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
       e.Type = ItemBonusType::POISONED;
       e.BonusValue = -AIComponentRef->OwnerGameObject->Attrs.Lvl.Get();
       e.Duration = AIComponentRef->OwnerGameObject->Attrs.Lvl.Get() * 10;
-      e.Period = 5;      
+      e.Period = 5;
       e.Cumulative = true;
     }
 
     task = new TaskAttackEffect(AIComponentRef->OwnerGameObject, e, ignoreArmor);
+  }
+  else if (taskType == "attack_special")
+  {
+    std::string attackType = data->Params.at("p2");
+    bool ignoreArmor = (data->Params.count("p3") == 1);
+
+    task = new TaskAttackSpecial(AIComponentRef->OwnerGameObject, attackType, ignoreArmor);
   }
   else if (taskType == "end")
   {
@@ -186,6 +195,129 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
 {
   std::function<BTResult()> fn;
 
+  std::string condType = data->Params.at("p1");
+
+  // Roll d100 and check against p2 percent chance
+  if (condType == "d100")
+  {
+    fn = GetD100CF(data);
+  }
+  // Player is linear distance visible
+  else if (condType == "player_visible")
+  {
+    fn = GetIsPlayerVisibleCF(data);
+  }
+  // Checks GameObject::CanMove()
+  else if (condType == "player_can_move")
+  {
+    fn = GetPlayerCanMoveCF(data);
+  }
+  // Checks if player is in square range specified by p2
+  else if (condType == "player_in_range")
+  {
+    fn = GetInRangeCF(data);
+  }
+  // Player's action meter can be queried against value
+  // of p3 and comparison function determined by p2.
+  // Supported comparers are "gt", "lt", "eq".
+  else if (condType == "player_energy")
+  {
+    fn = GetPlayerEnergyCF(data);
+  }
+  // Check if player's action meter will gain enough value
+  // to become big enough to support amount of turns
+  // specified by p2.
+  // E.g. p2="1" means check if player's next WaitForTurn()
+  // will gain enough energy for the player to be able to
+  // perform >= 1 turns.
+  else if (condType == "player_next_turn")
+  {
+    fn = GetPlayerNextTurnCF(data);
+  }
+  // Check if controlled GameObject's action meter
+  // support amount of turns specified by p2.
+  else if (condType == "turns_left")
+  {
+    fn = GetTurnsLeftCF(data);
+  }
+  // Check if actor in p2 has specific effect determined by
+  // short name of SpellType specified in p3.
+  // E.g. [COND p1="has_effect" p2="player" p3="Psd"]
+  else if (condType == "has_effect")
+  {
+    fn = GetHasEffectCF(data);
+  }
+  // Check if current object's HP is less than 30%
+  else if (condType == "hp_low")
+  {
+    fn = GetHPLowCF(data);
+  }
+
+  return fn;
+}
+
+// =============================================================================
+
+std::function<BTResult()> AIModelBase::GetPlayerEnergyCF(const ScriptNode* data)
+{
+  auto fn = [this, data]()
+  {
+    std::string compType = data->Params.at("p2");
+    int compareWith = std::stoi(data->Params.at("p3"));
+    int energy = _playerRef->Attrs.ActionMeter;
+
+    bool res = false;
+
+    if (compType == "gt")
+    {
+      res = (energy >= compareWith);
+    }
+    else if (compType == "lt")
+    {
+      res = (energy <= compareWith);
+    }
+    else if (compType == "eq")
+    {
+      res = (energy == compareWith);
+    }
+
+    return res ? BTResult::Success : BTResult::Failure;
+  };
+
+  return fn;
+}
+
+std::function<BTResult()> AIModelBase::GetPlayerNextTurnCF(const ScriptNode* data)
+{
+  auto fn = [this, data]()
+  {
+    int turns = std::stoi(data->Params.at("p2"));
+
+    int energy = _playerRef->Attrs.ActionMeter;
+    int actionIncrement = _playerRef->GetActionIncrement();
+    int energyGain = energy + actionIncrement;
+
+    bool res = (energyGain >= (turns * GlobalConstants::TurnReadyValue));
+
+    return res ? BTResult::Success : BTResult::Failure;
+  };
+
+  return fn;
+}
+
+std::function<BTResult()> AIModelBase::GetPlayerCanMoveCF(const ScriptNode* data)
+{
+  auto fn = [this]()
+  {
+    bool res = _playerRef->CanMove();
+    return res ? BTResult::Success : BTResult::Failure;
+  };
+
+  return fn;
+}
+
+std::function<BTResult()> AIModelBase::GetD100CF(const ScriptNode* data)
+{
   // "If a non-reference entity is captured by reference,
   // implicitly or explicitly, and the function call operator
   // of the closure object is invoked after the entity's
@@ -197,107 +329,129 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
   //
   // TLDR: cannot capture 'succ', 'range' et al. by reference.
 
-  std::string condType = data->Params.at("p1");
-  if (condType == "d100")
+  unsigned int succ = std::stoul(data->Params.at("p2"));
+  auto fn = [succ]()
   {
-    unsigned int succ = std::stoul(data->Params.at("p2"));
-    fn = [succ]()
-    {      
-      bool res = Util::Rolld100(succ);
-      return res ? BTResult::Success : BTResult::Failure;
-    };
-  }
-  else if (condType == "player_visible")
-  {
-    fn = [this]()
-    {
-      auto& playerRef = Application::Instance().PlayerInstance;
-
-      Position plPos = { playerRef.PosX, playerRef.PosY };
-      Position objPos = { AIComponentRef->OwnerGameObject->PosX, AIComponentRef->OwnerGameObject->PosY };
-
-      bool res = Map::Instance().IsObjectVisible(objPos, plPos);
-      if (res)
-      {        
-        std::string plX = std::to_string(plPos.X);
-        std::string plY = std::to_string(plPos.Y);
-
-        Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { "pl_x", plX });
-        Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { "pl_y", plY });
-      }
-
-      // TODO: what if monsters can see invisible?
-      if (res && playerRef.HasEffect(ItemBonusType::INVISIBILITY))
-      {
-        res = false;
-      }
-
-      return res ? BTResult::Success : BTResult::Failure;
-    };
-  }
-  else if (condType == "in_range")
-  {
-    // If range is not specified, it defaults to AgroRadius
-    unsigned int range = AgroRadius;
-
-    if (data->Params.count("p2"))
-    {
-      range = std::stoul(data->Params.at("p2"));
-    }
-
-    fn = [this, range]()
-    {
-      auto& playerRef = Application::Instance().PlayerInstance;
-
-      Position plPos = { playerRef.PosX, playerRef.PosY };
-      Position objPos = { AIComponentRef->OwnerGameObject->PosX, AIComponentRef->OwnerGameObject->PosY };
-
-      bool res = Util::IsObjectInRange(plPos, objPos, range, range);
-
-      return res ? BTResult::Success : BTResult::Failure;
-    };
-  }
-  else if (condType == "turns_left")
-  {    
-    fn = [this]()
-    {
-      bool res = AIComponentRef->OwnerGameObject->CanMove();
-      return res ? BTResult::Success : BTResult::Failure;
-    };
-  }
-  else if (condType == "has_effect")
-  {
-    std::string who = data->Params.at("p2");
-    std::string effect = data->Params.at("p3");
-
-    auto invMap = Util::FlipMap(GlobalConstants::BonusDisplayNameByType);
-
-    fn = [this, invMap, who, effect]()
-    {
-      bool res = (who == "player")
-                 ? _playerRef->HasEffect(invMap.at(effect))
-                 : AIComponentRef->OwnerGameObject->HasEffect(invMap.at(effect));
-
-      return res ? BTResult::Success : BTResult::Failure;
-    };
-  }
-  else if (condType == "hp_low")
-  {
-    fn = [this]()
-    {
-      int maxHp = AIComponentRef->OwnerGameObject->Attrs.HP.Max().OriginalValue();
-      int curHp = AIComponentRef->OwnerGameObject->Attrs.HP.Min().Get();
-
-      float perc = (float)curHp * 100.0f / (float)maxHp;
-
-      bool res = ((int)perc < 30);
-
-      return res ? BTResult::Success : BTResult::Failure;
-    };
-  }
+    bool res = Util::Rolld100(succ);
+    return res ? BTResult::Success : BTResult::Failure;
+  };
 
   return fn;
 }
+
+std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF(const ScriptNode* data)
+{
+  auto fn = [this]()
+  {
+    auto& playerRef = Application::Instance().PlayerInstance;
+
+    Position plPos = { playerRef.PosX, playerRef.PosY };
+    Position objPos = { AIComponentRef->OwnerGameObject->PosX, AIComponentRef->OwnerGameObject->PosY };
+
+    bool res = Map::Instance().IsObjectVisible(objPos, plPos);
+    if (res)
+    {
+      std::string plX = std::to_string(plPos.X);
+      std::string plY = std::to_string(plPos.Y);
+
+      Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { "pl_x", plX });
+      Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { "pl_y", plY });
+    }
+
+    // TODO: what if monsters can see invisible?
+    if (res && playerRef.HasEffect(ItemBonusType::INVISIBILITY))
+    {
+      res = false;
+    }
+
+    return res ? BTResult::Success : BTResult::Failure;
+  };
+
+  return fn;
+}
+
+std::function<BTResult()> AIModelBase::GetInRangeCF(const ScriptNode* data)
+{
+  // If range is not specified, it defaults to AgroRadius
+  unsigned int range = AgroRadius;
+
+  if (data->Params.count("p2"))
+  {
+    range = std::stoul(data->Params.at("p2"));
+  }
+
+  auto fn = [this, range]()
+  {
+    auto& playerRef = Application::Instance().PlayerInstance;
+    auto& objRef    = AIComponentRef->OwnerGameObject;
+
+    Position plPos  = { playerRef.PosX, playerRef.PosY };
+    Position objPos = { objRef->PosX,   objRef->PosY   };
+
+    //bool res = Util::IsObjectInRange(plPos, objPos, range, range);
+    bool res = Util::IsObjectInRange(objPos, plPos, range, range);
+
+    return res ? BTResult::Success : BTResult::Failure;
+  };
+
+  return fn;
+}
+
+std::function<BTResult()> AIModelBase::GetTurnsLeftCF(const ScriptNode* data)
+{
+  int turnsLeftToCheck = std::stoul(data->Params.at("p2"));
+
+  auto fn = [this, turnsLeftToCheck]()
+  {
+    int energy = AIComponentRef->OwnerGameObject->Attrs.ActionMeter;
+
+    int left = energy - GlobalConstants::TurnReadyValue * turnsLeftToCheck;
+
+    bool res = (left >= 0);
+
+    return res ? BTResult::Success : BTResult::Failure;
+  };
+
+  return fn;
+}
+
+std::function<BTResult()> AIModelBase::GetHasEffectCF(const ScriptNode* data)
+{
+  std::string who = data->Params.at("p2");
+  std::string effect = data->Params.at("p3");
+
+  auto invMap = Util::FlipMap(GlobalConstants::BonusDisplayNameByType);
+
+  auto fn = [this, invMap, who, effect]()
+  {
+    bool res = (who == "player")
+               ? _playerRef->HasEffect(invMap.at(effect))
+               : AIComponentRef->OwnerGameObject->HasEffect(invMap.at(effect));
+
+    return res ? BTResult::Success : BTResult::Failure;
+  };
+
+  return fn;
+}
+
+std::function<BTResult()> AIModelBase::GetHPLowCF(const ScriptNode* data)
+{
+  auto fn = [this]()
+  {
+    int maxHp = AIComponentRef->OwnerGameObject->Attrs.HP.Max().OriginalValue();
+    int curHp = AIComponentRef->OwnerGameObject->Attrs.HP.Min().Get();
+
+    float perc = (float)curHp * 100.0f / (float)maxHp;
+
+    bool res = ((int)perc < 30);
+
+    return res ? BTResult::Success : BTResult::Failure;
+  };
+
+  return fn;
+}
+
+// =============================================================================
 
 Node* AIModelBase::CreateConditionNode(const ScriptNode* data)
 {
@@ -340,6 +494,10 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
   {
     n = new IgnoreFailure(AIComponentRef->OwnerGameObject);
   }
+  else if (type == "FAIL")
+  {
+    n = new Failure(AIComponentRef->OwnerGameObject);
+  }
   else if (type == "COND")
   {
     n = CreateConditionNode(data);
@@ -347,6 +505,10 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
   else if (type == "TASK")
   {
     n = CreateTask(data);
+  }
+  else if (type == "DEBUG")
+  {
+    n = CreateDebugNode(data);
   }
 
   if (n == nullptr && type != "TASK")
@@ -358,6 +520,16 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
     DebugLog("[%s] no such node - %s!\n", who.data(), type.data());
     #endif
   }
+
+  return n;
+}
+
+Node* AIModelBase::CreateDebugNode(const ScriptNode* data)
+{
+  // No spaces allowed or only first word will be printed
+  std::string debugMessage = data->Params.at("p1");
+
+  TaskDebug* n = new TaskDebug(AIComponentRef->OwnerGameObject, debugMessage);
 
   return n;
 }

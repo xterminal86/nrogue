@@ -218,15 +218,7 @@ bool GameObject::ShouldSkipTurn()
 
 void GameObject::WaitForTurn()
 {
-  // +1 is because if SPD is 0 we must add TurnTickValue,
-  // but if SPD is 1 we must multiply TurnTickValue by (SPD + 1)
-  // to get different value
-  int totalSpeed = Attrs.Spd.Get() + 1;
-
-  // If SPD is currently -1 because of modifiers, we still can get 0
-  int actionIncrement = (totalSpeed <= 0)
-                      ? GlobalConstants::TurnTickValue
-                      : totalSpeed * GlobalConstants::TurnTickValue;
+  int actionIncrement = GetActionIncrement();
 
   // In towns SPD is ignored
   if (Map::Instance().CurrentLevel->Peaceful)
@@ -252,6 +244,21 @@ void GameObject::WaitForTurn()
   {
     ProcessEffects();
   }
+}
+
+int GameObject::GetActionIncrement()
+{
+  // +1 is because if SPD is 0 we must add TurnTickValue,
+  // but if SPD is 1 we must multiply TurnTickValue by (SPD + 1)
+  // to get different value
+  int totalSpeed = Attrs.Spd.Get() + 1;
+
+  // If SPD is currently -1 because of modifiers, we still can get 0
+  int actionIncrement = (totalSpeed <= 0)
+                      ? GlobalConstants::TurnTickValue
+                      : totalSpeed * GlobalConstants::TurnTickValue;
+
+  return actionIncrement;
 }
 
 bool GameObject::IsAlive()
@@ -293,7 +300,11 @@ void GameObject::ProcessNaturalRegenHP()
   if (_healthRegenTurnsCounter >= HealthRegenTurns)
   {
     _healthRegenTurnsCounter = 0;
-    Attrs.HP.AddMin(1);
+
+    if (IsLiving)
+    {
+      Attrs.HP.AddMin(1);
+    }
   }
 }
 

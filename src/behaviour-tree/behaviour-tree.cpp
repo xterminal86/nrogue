@@ -141,7 +141,7 @@ BTResult Condition::Run()
       {
         res = BTResult::Undefined;
       }
-    }    
+    }
   }
 
   return res;

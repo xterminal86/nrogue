@@ -22,7 +22,7 @@ class Node;
 
 class GameObject
 {
-  public:    
+  public:
     GameObject(MapLevelBase* levelOwner = nullptr);
     GameObject(GameObject&) = delete;
     virtual ~GameObject();
@@ -145,14 +145,16 @@ class GameObject
 
     uint64_t ObjectId();
 
-    Attributes Attrs;        
+    Attributes Attrs;
 
     int HealthRegenTurns = 0;
+
+    int GetActionIncrement();
 
     GameObjectType Type = GameObjectType::HARMLESS;
     bool IsLiving = false;
 
-  protected:    
+  protected:
     std::map<size_t, std::unique_ptr<Component>> _components;
     std::map<uint64_t, std::vector<ItemBonusStruct>> _activeEffects;
 
@@ -162,7 +164,7 @@ class GameObject
     // Level this object belongs to.
     // Needed for correct drawing on the screen.
     // (see comments in InventoryState::DropItem() for details)
-    MapLevelBase* _levelOwner = nullptr;    
+    MapLevelBase* _levelOwner = nullptr;
 
     int _healthRegenTurnsCounter = 0;
     int _manaRegenTurnsCounter = 0;
