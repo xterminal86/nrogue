@@ -65,7 +65,7 @@ class MapLevelBase
     bool Peaceful = false;
     bool ExitFound = false;
 
-    void AdjustCamera();    
+    void AdjustCamera();
 
     int RespawnCounter()
     {

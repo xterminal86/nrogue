@@ -6,7 +6,7 @@
 
 void RepairState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;  
+  _playerRef = &Application::Instance().PlayerInstance;
 }
 
 void RepairState::Prepare()
@@ -147,7 +147,7 @@ void RepairState::RepairItem(ItemComponent* itemToRepair)
 
   _playerRef->FinishTurn();
 
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);  
+  Application::Instance().ChangeState(GameStates::MAIN_STATE);
 }
 
 void RepairState::Cleanup()

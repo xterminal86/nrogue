@@ -6,7 +6,7 @@
 void InfoState::HandleInput()
 {
   _keyPressed = GetKeyDown();
-  
+
   switch (_keyPressed)
   {
     case VK_CANCEL:
@@ -15,7 +15,7 @@ void InfoState::HandleInput()
 
     default:
       break;
-  }  
+  }
 }
 
 void InfoState::Update(bool forceUpdate)
@@ -42,7 +42,7 @@ void InfoState::Update(bool forceUpdate)
     #endif
 
     for (int i = 0; i < kMaxNameUnderscoreLength; i++)
-    {      
+    {
       Printer::Instance().PrintFB(i, 1, charToPrint, "#FFFFFF");
       Printer::Instance().PrintFB(i, yPos + 12, charToPrint, "#FFFFFF");
     }
@@ -122,7 +122,7 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
 
   // Replace stat name back with white color (kinda hack)
   auto str = Util::StringFormat("%s:", attrName.data());
-  Printer::Instance().PrintFB(x, y, str, Printer::kAlignLeft, "#FFFFFF");  
+  Printer::Instance().PrintFB(x, y, str, Printer::kAlignLeft, "#FFFFFF");
 }
 
 void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, RangedAttribute& attr)

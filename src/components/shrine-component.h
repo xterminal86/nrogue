@@ -41,13 +41,13 @@ class ShrineComponent : public Component
     ShrineType Type;
 
   private:
-    void Activate();    
+    void Activate();
     void ProcessEffect();
     void ApplyRandomEffect(std::string& logMessageToWrite);
     void ApplyRandomPositiveEffect(std::string& logMessageToWrite);
     void ApplyRandomNegativeEffect(std::string& logMessageToWrite);
     void ApplyTemporaryStatRaise(std::string& logMessageToWrite);
-    void SetEffectGainMessage(std::string& logMessageToWrite, ItemBonusType e);    
+    void SetEffectGainMessage(std::string& logMessageToWrite, ItemBonusType e);
 
     int _power;
     int _duration;

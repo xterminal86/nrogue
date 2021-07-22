@@ -17,7 +17,7 @@ class MapLevelTown : public MapLevelBase
   protected:
     void CreateLevel() override;
 
-  private:    
+  private:
     void FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill);
     void CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation = false);
     void CreateChurch(int x, int y);
@@ -25,7 +25,7 @@ class MapLevelTown : public MapLevelBase
     void PlaceGarden(int x, int y);
     void PlaceMineEntrance(int x, int y);
     void PlacePortalSquare(int x, int y);
-    void CreatePlayerHouse();    
+    void CreatePlayerHouse();
     void CreateTownGates();
     void ReplaceGroundWithGrass();
     void BuildRoads();

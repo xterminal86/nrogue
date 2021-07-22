@@ -107,7 +107,7 @@ std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
   while (!openList.empty())
   {
     if (maxPathLength != 0 && closedList.size() > maxPathLength)
-    {      
+    {
       break;
     }
 
@@ -198,7 +198,7 @@ void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
   }
 
   for (auto& nodeAround : nodesAround)
-  {    
+  {
     if (IsNodePresent(nodeAround, closedList))
     {
       continue;
@@ -272,7 +272,7 @@ void Pathfinder::LookAround(MapLevelBase* mapRef,
 
     bool walkable = true;
 
-    auto& staticObj = mapRef->StaticMapObjects[coordinate.X][coordinate.Y];    
+    auto& staticObj = mapRef->StaticMapObjects[coordinate.X][coordinate.Y];
     if (staticObj != nullptr && staticObj->Blocking)
     {
       walkable = false;
@@ -348,7 +348,7 @@ int Pathfinder::FindCheapestElement(const std::vector<PathNode>& list)
     {
       f = list[i].CostF;
       index = i;
-    }    
+    }
   }
 
   return index;

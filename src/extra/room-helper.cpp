@@ -15,9 +15,9 @@ bool RoomHelper::CanAttach(const RoomHelper &r, RoomEdgeEnum side)
   std::map<RoomEdgeEnum, RoomEdgeEnum> oppositeEdgeByType =
   {
     { RoomEdgeEnum::NORTH, RoomEdgeEnum::SOUTH },
-    { RoomEdgeEnum::EAST, RoomEdgeEnum::WEST },
+    { RoomEdgeEnum::EAST,  RoomEdgeEnum::WEST  },
     { RoomEdgeEnum::SOUTH, RoomEdgeEnum::NORTH },
-    { RoomEdgeEnum::WEST, RoomEdgeEnum::EAST }
+    { RoomEdgeEnum::WEST,  RoomEdgeEnum::EAST  }
   };
 
   //bool e1 = EdgeIsAllWalls(RoomEdgesByType[side]);
@@ -89,9 +89,9 @@ void RoomHelper::ParseLayout(const RoomLayout &layout)
   }
 
   RoomEdgesByType[RoomEdgeEnum::NORTH] = NorthEdge;
-  RoomEdgesByType[RoomEdgeEnum::EAST] = EastEdge;
+  RoomEdgesByType[RoomEdgeEnum::EAST]  = EastEdge;
   RoomEdgesByType[RoomEdgeEnum::SOUTH] = SouthEdge;
-  RoomEdgesByType[RoomEdgeEnum::WEST] = WestEdge;
+  RoomEdgesByType[RoomEdgeEnum::WEST]  = WestEdge;
 
   // PrintInfo();
 }

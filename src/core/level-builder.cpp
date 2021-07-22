@@ -11,7 +11,7 @@
 #include "util.h"
 
 void LevelBuilder::FeatureRoomsMethod(const Position& mapSize,
-                                      const Position& roomSizes,                                      
+                                      const Position& roomSizes,
                                       const FeatureRoomsWeights& weightsMap,
                                       int doorPlacementChance,
                                       int maxIterations)

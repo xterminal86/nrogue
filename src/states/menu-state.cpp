@@ -4,7 +4,7 @@
 #include "util.h"
 
 void MenuState::Init()
-{  
+{
   _titleX = _twHalf;
   _titleY = _thHalf / 2 - _title.size() / 2;
 
@@ -47,14 +47,14 @@ void MenuState::Update(bool forceUpdate)
     #else
     auto border = Util::GetPerimeter(0, 0, _tw - 1, _th - 1);
     for (auto& i : border)
-    {      
+    {
       Printer::Instance().PrintFB(i.X, i.Y, ' ', GlobalConstants::WhiteColor, GlobalConstants::WhiteColor);
     }
     #endif
 
     int yOffset = 0;
     for (auto& s : _title)
-    {      
+    {
       int xAlign = s.length() / 2;
       int xOffset = 0;
       for (auto& c : s)

@@ -76,8 +76,8 @@ void ShrineComponent::ProcessEffect()
     case ShrineType::MIGHT:
     {
       if (Util::Rolld100(50))
-      {        
-        playerRef.Attrs.Str.Add(1);        
+      {
+        playerRef.Attrs.Str.Add(1);
         msg = "You feel stronger!";
       }
       else
@@ -93,7 +93,7 @@ void ShrineComponent::ProcessEffect()
     case ShrineType::SPIRIT:
     {
       if (Util::Rolld100(50))
-      {        
+      {
         playerRef.Attrs.Mag.Add(1);
         msg = "You feel strong-willed!";
       }
@@ -163,7 +163,7 @@ void ShrineComponent::ProcessEffect()
 
     // restores HP
     case ShrineType::HEALING:
-    {      
+    {
       playerRef.Attrs.HP.Restore();
       msg = "You feel better!";
     }
@@ -267,7 +267,7 @@ void ShrineComponent::ProcessEffect()
         {
           ic->Data.IsPrefixDiscovered = true;
           ic->Data.Prefix = ItemPrefix::UNCURSED;
-          success = true;          
+          success = true;
         }
       }
 
@@ -352,7 +352,7 @@ void ShrineComponent::ApplyRandomNegativeEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
-  int effectIndex = RNG::Instance().RandomRange(0, NegativeEffects.size());  
+  int effectIndex = RNG::Instance().RandomRange(0, NegativeEffects.size());
   ItemBonusType t = NegativeEffects[effectIndex];
 
   ItemBonusStruct b;

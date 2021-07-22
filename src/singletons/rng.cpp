@@ -36,7 +36,7 @@ void RNG::SetSeed(const std::string& string)
 
   if (!isSeedValid)
   {
-    Seed = std::chrono::system_clock::now().time_since_epoch().count();    
+    Seed = std::chrono::system_clock::now().time_since_epoch().count();
     GenerateSeedString("<seed was randomized>");
   }
 

@@ -36,7 +36,7 @@ class LevelBuilder
                                 int maxIterations);
 
     void FeatureRoomsMethod(const Position& mapSize,
-                            const Position& roomSizes,                            
+                            const Position& roomSizes,
                             const FeatureRoomsWeights& weightsMap,
                             int doorPlacementChance,
                             int maxIterations);

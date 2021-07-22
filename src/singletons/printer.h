@@ -38,7 +38,7 @@ struct FBPixel
 #endif
 
 /// Singleton for ncurses text printing
-class Printer : public Singleton<Printer> 
+class Printer : public Singleton<Printer>
 {
   public:
     static size_t TerminalWidth;
@@ -87,7 +87,7 @@ class Printer : public Singleton<Printer>
                   const std::string& htmlColorBg = "#000000");
 
     void PrintFB(const int& x, const int& y,
-                  const std::string& text,                  
+                  const std::string& text,
                   size_t scale,
                   int align,
                   const std::string& htmlColorFg,
@@ -159,7 +159,7 @@ class Printer : public Singleton<Printer>
     std::vector<std::vector<FBPixel>> _frameBuffer;
 #endif
 
-    std::vector<std::string> _inGameMessages;    
+    std::vector<std::string> _inGameMessages;
     std::vector<std::string> _lastMessages;
 
     int _lastMessagesToDisplay = 0;

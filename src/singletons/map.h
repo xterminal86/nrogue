@@ -42,12 +42,12 @@ class Map : public Singleton<Map>
     std::pair<int, GameObject*> GetGameObjectToPickup(int x, int y);
     MapLevelBase* GetLevelRefByType(MapType type);
 
-    std::vector<Position> GetWalkableCellsAround(const Position& pos);    
+    std::vector<Position> GetWalkableCellsAround(const Position& pos);
     std::vector<Position> GetEmptyCellsAround(const Position& pos, int range);
     std::vector<MapType> GetAllVisitedLevels();
     Position GetRandomEmptyCell();
 
-    MapLevelBase* CurrentLevel;    
+    MapLevelBase* CurrentLevel;
 
   private:
     std::map<MapType, std::unique_ptr<MapLevelBase>> _levels;
@@ -63,9 +63,9 @@ class Map : public Singleton<Map>
 
     void EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list);
 
-    Player* _playerRef;    
+    Player* _playerRef;
 
-    friend class IntroState;    
+    friend class IntroState;
 };
 
 #endif

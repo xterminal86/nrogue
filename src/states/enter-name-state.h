@@ -50,7 +50,7 @@ class EnterNameState : public GameState
       { 0, InputType::NAME        },
       { 1, InputType::SEED_STRING },
       { 2, InputType::SEED_HEX    }
-    };    
+    };
 
     void UpdateSeedAsHex();
 };

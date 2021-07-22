@@ -16,7 +16,7 @@ void ContainerComponent::Update()
 }
 
 bool ContainerComponent::Add(GameObject* object)
-{  
+{
   bool foundStack = false;
 
   if (object != nullptr)

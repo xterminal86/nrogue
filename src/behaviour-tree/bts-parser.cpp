@@ -8,7 +8,7 @@ void BTSParser::Init(GameObject* objRef)
 {
   _goRef = objRef;
 
-  Reset();  
+  Reset();
 }
 
 void BTSParser::Reset()
@@ -156,7 +156,7 @@ void BTSParser::ReadTag(const std::string& tagData, int indent)
   n.NodeName = res[0];
 
   if (res.size() > 1)
-  {    
+  {
     // Remove quotes from string. Yeah, that's how you do it in C++.
     //
     // https://en.cppreference.com/w/cpp/algorithm/remove

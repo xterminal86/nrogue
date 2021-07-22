@@ -43,7 +43,7 @@ void Rooms::Generate(const Position& mapSize,
 }
 
 void Rooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
-{  
+{
   int sx = parent.CornerStart.X;
   int sy = parent.CornerStart.Y;
 
@@ -98,7 +98,7 @@ void Rooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
   parent.Right.reset(right);
 
   Subdivide(*parent.Left.get(), splitChance1.second, splitChance1.first);
-  Subdivide(*parent.Right.get(), splitChance2.second, splitChance2.first);    
+  Subdivide(*parent.Right.get(), splitChance2.second, splitChance2.first);
 }
 
 std::pair<bool, float> Rooms::GetSplitRatio(Rect& area)
@@ -129,7 +129,7 @@ void Rooms::FillArea(const Rect& area, char ch)
     {
       _map[x][y].Image = ch;
     }
-  }  
+  }
 }
 
 bool Rooms::DoesRoomFit(Rect& area)

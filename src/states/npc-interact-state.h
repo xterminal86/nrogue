@@ -9,7 +9,7 @@
 class AINPC;
 
 class NPCInteractState : public GameState
-{  
+{
   public:
     void Prepare() override;
     void Cleanup() override;

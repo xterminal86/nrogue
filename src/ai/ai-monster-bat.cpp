@@ -10,9 +10,8 @@ AIMonsterBat::AIMonsterBat()
 void AIMonsterBat::PrepareScript()
 {
   // NOTE: maybe a little OP for slow / melee classes.
-  // At least the aggressive variant (see below).
-  // You can win only if you can corner the monster, if you're fast enough
-  // or if you have ranged weapon.
+  // You can win only if you can corner the monster,
+  // if you're fast enough or if you have ranged weapon.
 
   _script =
 R"(

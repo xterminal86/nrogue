@@ -9,7 +9,7 @@
 #include <sstream>
 
 namespace Tests
-{  
+{
   /// Test Bresenham line return vector in all directions
   inline void TestLoS(std::stringstream& ss, int x, int y, int range)
   {
@@ -28,27 +28,27 @@ namespace Tests
       for (int fy = sy; fy <= ey; fy++)
       {
         auto res = Util::BresenhamLine(x, y, fx, fy);
-    
+
         //DebugLog ("[%i;%i] -> [%i;%i]\n", x, y, fx, fy);
         ss << Util::StringFormat("[%i;%i] -> [%i;%i]\n", x, y, fx, fy);
-        
+
         for (auto& i : res)
         {
           //DebugLog("(%i %i) - ", i.X, i.Y);
           ss << Util::StringFormat("(%i %i) - ", i.X, i.Y);
         }
-        
+
         bool cond = (res[0].X == x && res[0].Y == y);
         if (!cond)
         {
           //DebugLog("*** FAILED! ***\n");
           ss << "*** FAILED! ***\n";
         }
-        
+
         //DebugLog("\n");
         ss << "\n";
       }
-    }    
+    }
   }
 
   inline void RoomTests(std::stringstream& ss)
@@ -450,7 +450,7 @@ namespace Tests
     file.close();
 
     DebugLog("Test results have been written into 'tests.txt'\n\n");
-  }  
+  }
 }
 
 #endif

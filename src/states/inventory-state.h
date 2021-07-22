@@ -11,7 +11,7 @@ class GameObject;
 
 class InventoryState : public GameState
 {
-  public:    
+  public:
     void Init() override;
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;
@@ -25,7 +25,7 @@ class InventoryState : public GameState
     void PrintFooter();
     void DestroyInventoryItem();
     void DropItem(ItemComponent* ic);
-    void DisplayEquipment();    
+    void DisplayEquipment();
     void SortInventory();
     void DrawEquipmentField(int x, int y, const std::string& fieldName, ItemComponent* eq);
     void DrawSelectionBar(int yOffset, const std::string& text, const std::string& textColor);

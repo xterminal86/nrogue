@@ -190,7 +190,7 @@ void MapLevelCaves::CreateSpecialLevel()
         }
         break;
 
-        case '#':          
+        case '#':
         {
           objName = "Cave Wall";
           t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::CaveWallColor, objName);

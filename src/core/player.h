@@ -18,7 +18,7 @@ class AIComponent;
 
 class Player : public GameObject
 {
-  public:    
+  public:
     Player() = default;
 
     void Init();
@@ -40,7 +40,7 @@ class Player : public GameObject
     void MagicAttack(GameObject* what, ItemComponent* with);
     void ReceiveDamage(GameObject* from, int amount, bool isMagical, bool godMode = false, bool suppressLog = false);
     void WaitForTurn();
-    void ProcessHunger();    
+    void ProcessHunger();
     void FinishTurn();
 
     bool IsAlive();

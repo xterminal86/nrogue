@@ -10,7 +10,7 @@
 /// if layouts in the list are not connectable.
 void FromLayouts::Generate(const std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY)
 {
-  _roomsForLevel = possibleRooms;  
+  _roomsForLevel = possibleRooms;
 
   for (int x = 0; x < mapSizeX; x++)
   {

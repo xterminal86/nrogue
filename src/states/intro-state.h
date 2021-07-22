@@ -20,7 +20,7 @@ class IntroState : public GameState
 
   private:
     std::vector<std::vector<std::string>> _introStrings =
-    {      
+    {
       {
        //********************************************************************************80//
         "Another day - another septim. Or so they say.",

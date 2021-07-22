@@ -17,7 +17,7 @@ const Ns& Timer::TimePassed()
 
 void Timer::MeasureStart()
 {
-  _measureStart = Clock::now();  
+  _measureStart = Clock::now();
   _measureEnd   = _measureStart;
 }
 

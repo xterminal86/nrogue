@@ -5,7 +5,7 @@
 #include "constants.h"
 
 class FeatureRooms : public DGBase
-{  
+{
   using RoomLayout = std::vector<std::vector<std::string>>;
 
   public:
@@ -66,7 +66,7 @@ class FeatureRooms : public DGBase
     Position _roomSizes;
 
     std::map<FeatureRoomType, int> _generatedSoFar;
-    std::map<FeatureRoomType, int> _roomWeightByType;    
+    std::map<FeatureRoomType, int> _roomWeightByType;
 
     const std::map<FeatureRoomType, std::vector<StringsArray2D>> _specialRoomLayoutByType =
     {

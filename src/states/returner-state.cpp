@@ -35,7 +35,7 @@ void ReturnerState::HandleInput()
       {
         Printer::Instance().AddMessage("You invoke the returner");
         Map::Instance().TeleportToExistingLevel(level, pos);
-        _itemRef->Data.Amount--;        
+        _itemRef->Data.Amount--;
       }
 
       Application::Instance().ChangeState(GameStates::MAIN_STATE);

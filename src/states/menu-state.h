@@ -13,7 +13,7 @@ class MenuState : public GameState
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;
 
-  private:   
+  private:
 
   const std::vector<std::string> _title =
   {

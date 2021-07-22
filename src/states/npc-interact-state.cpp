@@ -35,7 +35,7 @@ void NPCInteractState::Cleanup()
 }
 
 void NPCInteractState::HandleInput()
-{  
+{
   _keyPressed = GetKeyDown();
 
   switch (_keyPressed)
@@ -121,7 +121,7 @@ void NPCInteractState::HandleInput()
 
     default:
       break;
-  }  
+  }
 }
 
 void NPCInteractState::Update(bool forceUpdate)
@@ -134,7 +134,7 @@ void NPCInteractState::Update(bool forceUpdate)
     }
   }
   else
-  {    
+  {
     if (_keyPressed != -1 || forceUpdate)
     {
       DisplayStillText();

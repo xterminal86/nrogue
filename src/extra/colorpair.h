@@ -2,7 +2,7 @@
 #define COLORPAIR_H
 
 struct NColor
-{  
+{
   short ColorIndex;
   short R;
   short G;

@@ -37,7 +37,7 @@ void InventoryState::HandleInput()
       break;
 
     case 'i':
-    {      
+    {
       if (isInventoryEmpty)
       {
         return;
@@ -95,7 +95,7 @@ void InventoryState::HandleInput()
           {
             DestroyInventoryItem();
           }
-        }        
+        }
         else if (ic->Data.IsChargeable)
         {
           if (ic->Data.ItemType_ == ItemType::RETURNER)
@@ -131,7 +131,7 @@ void InventoryState::HandleInput()
         {
           Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
         }
-      }      
+      }
     }
     break;
 
@@ -213,7 +213,7 @@ void InventoryState::Update(bool forceUpdate)
       nameInInventory.resize(GlobalConstants::InventoryMaxNameLength, ' ');
 
       if (ic->Data.IsStackable || (ic->Data.IsChargeable && ic->Data.IsIdentified))
-      {        
+      {
         auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
         if ((ic->Data.ItemType_ == ItemType::ARROWS
           || ic->Data.ItemType_ == ItemType::WAND)
@@ -290,7 +290,7 @@ void InventoryState::DisplayEquipment()
   DrawEquipmentField(tw + 24, yPos + 3, "Accessory", eq);
 
   eq = _playerRef->EquipmentByCategory[EquipmentCategory::RING][1];
-  DrawEquipmentField(tw + 24, yPos + 6, "Accessory", eq);  
+  DrawEquipmentField(tw + 24, yPos + 6, "Accessory", eq);
 }
 
 void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldName, ItemComponent* eq)

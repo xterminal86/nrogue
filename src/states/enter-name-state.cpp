@@ -144,7 +144,7 @@ void EnterNameState::Update(bool forceUpdate)
                                    (_inputType != InputType::NAME) ? "#FFFFFF" : "#000000",
                                    (_inputType != InputType::NAME) ? GlobalConstants::MessageBoxHeaderBgColor : GlobalConstants::InventoryEmptySlotColor);
 
-    #else    
+    #else
     auto border = Util::GetPerimeter(_x - _maxNameHalf,
                                       _cursorPos - 2,
                                       MaxNameLength,
@@ -188,7 +188,7 @@ void EnterNameState::Update(bool forceUpdate)
 
     if (_inputType == InputType::NAME)
     {
-      Printer::Instance().PrintFB(_x - _maxNameHalf + 2 + _nameEntered.length(), _cursorPos, ' ', "#000000", "#FFFFFF");      
+      Printer::Instance().PrintFB(_x - _maxNameHalf + 2 + _nameEntered.length(), _cursorPos, ' ', "#000000", "#FFFFFF");
     }
     else if (_inputType == InputType::SEED_STRING)
     {

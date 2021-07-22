@@ -58,7 +58,7 @@ void DoorComponent::Interact()
 }
 
 void DoorComponent::UpdateDoorState()
-{  
+{
   OwnerGameObject->Blocking = !IsOpen;
   OwnerGameObject->BlocksSight = !IsOpen;
   OwnerGameObject->Image = IsOpen ? '_' : '+';

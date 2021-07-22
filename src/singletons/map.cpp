@@ -22,13 +22,13 @@ void Map::Init()
     return;
   }
 
-  _mapVisitFirstTime[MapType::MINES_1] = false;
-  _mapVisitFirstTime[MapType::CAVES_1] = false;
-  _mapVisitFirstTime[MapType::LOST_CITY] = false;
+  _mapVisitFirstTime[MapType::MINES_1]     = false;
+  _mapVisitFirstTime[MapType::CAVES_1]     = false;
+  _mapVisitFirstTime[MapType::LOST_CITY]   = false;
   _mapVisitFirstTime[MapType::DEEP_DARK_1] = false;
-  _mapVisitFirstTime[MapType::ABYSS_1] = false;
-  _mapVisitFirstTime[MapType::NETHER_1] = false;
-  _mapVisitFirstTime[MapType::THE_END] = false;
+  _mapVisitFirstTime[MapType::ABYSS_1]     = false;
+  _mapVisitFirstTime[MapType::NETHER_1]    = false;
+  _mapVisitFirstTime[MapType::THE_END]     = false;
 
   // Shortcut variable
   _playerRef = &Application::Instance().PlayerInstance;

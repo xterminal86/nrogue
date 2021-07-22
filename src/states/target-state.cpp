@@ -10,11 +10,11 @@
 
 void TargetState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;  
+  _playerRef = &Application::Instance().PlayerInstance;
 }
 
 void TargetState::Prepare()
-{  
+{
   _maxThrowingRange = (_playerRef->Attrs.Str.Get() <= 0) ? 4 : _playerRef->Attrs.Str.Get() + 4;
 
   _drawHint = true;
@@ -189,7 +189,7 @@ GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
 
   // Start from 1 to exclude player's position
   for (size_t i = 1; i < line.size(); i++)
-  {    
+  {
     int mx = line[i].X;
     int my = line[i].Y;
 
@@ -247,7 +247,7 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
 
   auto cell = Map::Instance().CurrentLevel->StaticMapObjects[at.X][at.Y].get();
   if (cell != nullptr)
-  {    
+  {
     // If door is open, ignore it
     DoorComponent* dc = cell->GetComponent<DoorComponent>();
     if (dc != nullptr && dc->IsOpen)
@@ -681,7 +681,7 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
 }
 
 void TargetState::ProcessHit(GameObject* hitPoint)
-{  
+{
   if (_throwingItemInventoryIndex != -1)
   {
     ProcessHitInventoryThrownItem(hitPoint);
@@ -743,7 +743,7 @@ void TargetState::MoveCursor(int dx, int dy)
                        _playerRef->PosY + hh - 2);
 
   _cursorPosition.X = nx;
-  _cursorPosition.Y = ny;  
+  _cursorPosition.Y = ny;
 }
 
 void TargetState::DrawHint()
@@ -783,7 +783,7 @@ void TargetState::DrawHint()
       int d = Util::LinearDistance(startPoint, p);
 
       bool isCellBlocking = Map::Instance().CurrentLevel->IsCellBlocking(p);
-      bool isThrowing = (_throwingItemInventoryIndex != -1);      
+      bool isThrowing = (_throwingItemInventoryIndex != -1);
       bool isThrowingOk = ((!isThrowing && d > _weaponRef->Data.Range)
                          || (isThrowing && d > _maxThrowingRange));
 

@@ -52,7 +52,7 @@ BTResult TaskGotoLastPlayerPos::Run()
       path.pop();
       _objectToControl->FinishTurn();
       return BTResult::Success;
-    }    
+    }
   }
 
   // No path can be built or MoveTo() failed

@@ -172,7 +172,7 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
     auto str = Util::StringFormat("%s is attacking!", actor->ObjectName.data());
     Printer::Instance().AddMessage(str);
     Application::Instance().ChangeState(GameStates::MAIN_STATE);
-  }  
+  }
   else
   {
     auto state = Application::Instance().GetGameStateRefByName(GameStates::NPC_INTERACT_STATE);
@@ -181,7 +181,7 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
     if (npcAi != nullptr)
     {
       nis->SetNPCRef(npcAi);
-      Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);      
+      Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);
     }
   }
 }

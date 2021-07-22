@@ -12,7 +12,7 @@ GameState::GameState() :
   _twQuarter(_tw / 4),
   _thHalf(_th / 2),
   _thQuarter(_th / 4)
-{    
+{
 }
 
 #ifdef USE_SDL
@@ -51,8 +51,8 @@ int GameState::GetKeyDown()
       {
         res = -1;
       }
-      break;      
-    }    
+      break;
+    }
   }
 
   // SDL_GetModState() must be called after all events

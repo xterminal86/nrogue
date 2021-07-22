@@ -21,7 +21,7 @@ void AIMonsterBasic::PrepareScript()
   // So to avoid infinite loop, make sure that your script
   // always has "fallback" task that returns true
   // and make controlled object finish its turn.
-  // Usually it's the last state in selector.
+  // Usually it's the last task in selector.
 
   _script =
 R"(

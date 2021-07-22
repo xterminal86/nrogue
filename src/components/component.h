@@ -15,7 +15,7 @@ class Component
     virtual ~Component() = default;
 
     // Called after player finishes his turn
-    virtual void Update() = 0;    
+    virtual void Update() = 0;
 
     size_t GetComponentHash();
 

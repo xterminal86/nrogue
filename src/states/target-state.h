@@ -68,7 +68,7 @@ class TargetState : public GameState
     size_t _lastTargetIndex = -1;
     int _maxThrowingRange = 1;
 
-    bool _drawHint = false;    
+    bool _drawHint = false;
 };
 
 #endif // TARGETSTATE_H

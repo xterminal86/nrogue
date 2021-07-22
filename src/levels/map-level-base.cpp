@@ -7,7 +7,7 @@
 #include "door-component.h"
 
 MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
-{  
+{
   MapSize.X = sizeX;
   MapSize.Y = sizeY;
   MapType_ = type;
@@ -52,7 +52,7 @@ void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
     std::vector<std::unique_ptr<GameObject>> rowStatic;
     for (int y = 0; y < MapSize.Y; y++)
     {
-      row.push_back(std::unique_ptr<GameObject>(new GameObject()));      
+      row.push_back(std::unique_ptr<GameObject>(new GameObject()));
       rowStatic.push_back(nullptr);
     }
 
@@ -141,7 +141,7 @@ void MapLevelBase::RecordEmptyCells()
   for (int x = 0; x < MapSize.X; x++)
   {
     for (int y = 0; y < MapSize.Y; y++)
-    {      
+    {
       if (!IsCellBlocking({ x, y }))
       {
         Position pos(x, y);
@@ -245,7 +245,7 @@ void MapLevelBase::PlaceStairs()
 }
 
 void MapLevelBase::CreateInitialMonsters()
-{  
+{
   MaxMonsters = std::sqrt(_emptyCells.size()) / 2;
 
   // FIXME: debug
@@ -272,7 +272,7 @@ void MapLevelBase::CreateInitialMonsters()
 }
 
 bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
-{  
+{
   return !IsCellBlocking(pos);
 }
 

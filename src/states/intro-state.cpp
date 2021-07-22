@@ -7,7 +7,7 @@
 
 void IntroState::Prepare()
 {
-  Printer::Instance().Clear();  
+  Printer::Instance().Clear();
 
   _textPositionCursor = 0;
   _textPositionX = Printer::TerminalWidth / 2;
@@ -61,7 +61,7 @@ void IntroState::PrepareTown()
   playerRef.VisibilityRadius.Set(curLvl->VisibilityRadius);
 
   MapLevelTown* mlt = static_cast<MapLevelTown*>(curLvl);
-  mlt->CreateNPCs();  
+  mlt->CreateNPCs();
 }
 
 void IntroState::Update(bool forceUpdate)
@@ -73,14 +73,14 @@ void IntroState::Update(bool forceUpdate)
                                Printer::kAlignCenter,
                                "#FFFFFF");
   if (Util::WaitForMs(10))
-  {    
+  {
     int textIndex = Application::Instance().PlayerInstance.SelectedClass;
     if (_stringIndex != _introStrings[textIndex].size())
     {
       int len = _introStrings[textIndex][_stringIndex].length();
 
       if (_textPositionCursor != _introStrings[textIndex][_stringIndex].length())
-      {        
+      {
         Printer::Instance().PrintFB(_textPositionX - len / 2, _textPositionY, _introStrings[textIndex][_stringIndex][_textPositionCursor], "#FFFFFF");
         Printer::Instance().PrintFB(_textPositionX - len / 2 + 1, _textPositionY, ' ', "#000000", "#FFFFFF");
 
@@ -106,5 +106,5 @@ void IntroState::Update(bool forceUpdate)
     }
 
     Printer::Instance().Render();
-  }  
+  }
 }

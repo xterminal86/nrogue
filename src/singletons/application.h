@@ -70,7 +70,7 @@ class Application : public Singleton<Application>
     GameState* _currentState = nullptr;
     GameState* _previousState = nullptr;
 
-    std::map<GameStates, std::unique_ptr<GameState>> _gameStates;    
+    std::map<GameStates, std::unique_ptr<GameState>> _gameStates;
 
     void ParseConfig();
     void ProcessConfig();

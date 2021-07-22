@@ -40,7 +40,7 @@ class AINPC : public AIModelBase
   protected:
     void PrepareScript() override;
 
-  private:    
+  private:
     NPCType _npcType;
 
     void SetDataClaire();
@@ -56,7 +56,7 @@ class AINPC : public AIModelBase
     void SetDataMaya();
     void SetDataGriswold();
 
-    void SetDataDefault();            
+    void SetDataDefault();
 };
 
 #endif // AINPC_H

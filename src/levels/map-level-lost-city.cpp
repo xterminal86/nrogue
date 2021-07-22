@@ -134,7 +134,7 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
           break;
       }
     }
-  }  
+  }
 }
 
 void MapLevelLostCity::CreateShrines(LevelBuilder& lb)

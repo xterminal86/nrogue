@@ -18,8 +18,8 @@ void FeatureRooms::Generate(const Position& mapSize,
                             int maxIterations)
 {
   _weightsMap = weightsMap;
-  _mapSize = mapSize;
-  _roomSizes = roomSizes;
+  _mapSize    = mapSize;
+  _roomSizes  = roomSizes;
 
   for (auto& kvp : _weightsMap)
   {
@@ -165,9 +165,9 @@ bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
       auto it = GlobalConstants::ShrineNameByType.begin();
       std::advance(it, index);
 
-      success = CreateShrine(newRoomStartPos, direction, it->first);      
+      success = CreateShrine(newRoomStartPos, direction, it->first);
     }
-    break;    
+    break;
 
     case FeatureRoomType::POND:
     case FeatureRoomType::GARDEN:
@@ -463,7 +463,7 @@ bool FeatureRooms::CreateShrine(const Position& start,
       ly++;
     }
 
-    lx++;    
+    lx++;
     ly = 0;
   }
 

@@ -44,7 +44,7 @@ class GameState
     const int _thHalf;
     const int _thQuarter;
 
-#ifdef USE_SDL    
+#ifdef USE_SDL
     bool ShouldShiftMap(int& key);
 
     std::map<SDL_Scancode, char> _charsByScancodes =
@@ -117,7 +117,7 @@ class GameState
       { SDL_SCANCODE_UP,        SDLK_UP        },
       { SDL_SCANCODE_DOWN,      SDLK_DOWN      },
       { SDL_SCANCODE_LEFT,      SDLK_LEFT      },
-      { SDL_SCANCODE_RIGHT,     SDLK_RIGHT     }      
+      { SDL_SCANCODE_RIGHT,     SDLK_RIGHT     }
     };
 
     std::map<char, char> _shiftMapping =

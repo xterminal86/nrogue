@@ -350,7 +350,7 @@ void Printer::PrintFB(const int& x, const int& y,
     case kAlignCenter:
     {
       int pixelWidth = text.length() * _tileWidthScaled;
-      px -= pixelWidth / 2;      
+      px -= pixelWidth / 2;
     }
     break;
 
@@ -513,16 +513,16 @@ NColor Printer::GetNColor(const std::string& htmlColor)
   std::string hexG = { htmlColor[3], htmlColor[4] };
   std::string hexB = { htmlColor[5], htmlColor[6] };
 
-  int valueR = strtol(hexR.data(), nullptr, 16);    
-  int valueG = strtol(hexG.data(), nullptr, 16);    
-  int valueB = strtol(hexB.data(), nullptr, 16);    
+  int valueR = strtol(hexR.data(), nullptr, 16);
+  int valueG = strtol(hexG.data(), nullptr, 16);
+  int valueB = strtol(hexB.data(), nullptr, 16);
 
   // ncurses color component has range from 0 to 1000
 
   int scaledValueR = (valueR / 255.0f) * 1000;
   int scaledValueG = (valueG / 255.0f) * 1000;
   int scaledValueB = (valueB / 255.0f) * 1000;
-  
+
   //DebugLog("%s %s %s => %i %i %i\n", hexR.data(), hexG.data(), hexB.data(), c.R, c.G, c.B);
 
   ret.R = scaledValueR;
@@ -623,7 +623,7 @@ void Printer::Print(const int& x, const int& y, const std::string& text, int ali
 
   attron(COLOR_PAIR(_colorMap[hash].PairIndex));
   mvprintw(textPos.first, textPos.second, text.data());
-  attroff(COLOR_PAIR(_colorMap[hash].PairIndex));   
+  attroff(COLOR_PAIR(_colorMap[hash].PairIndex));
 }
 
 void Printer::Print(const int& x, const int& y, const int& ch, const std::string& htmlColorFg, const std::string& htmlColorBg)
@@ -702,7 +702,7 @@ void Printer::PrintFB(const int& x, const int& y,
 }
 
 void Printer::PrintFB(const int& x, const int& y,
-                       const std::string& text,                       
+                       const std::string& text,
                        size_t scale,
                        int align,
                        const std::string& htmlColorFg,
@@ -785,7 +785,7 @@ std::vector<Position> Printer::DrawExplosion(Position pos, int aRange)
 
       if (Map::Instance().CurrentLevel->MapArray[p.X][p.Y]->Visible)
       {
-        Printer::Instance().PrintFB(drawX, drawY, 'x', "#FF0000");        
+        Printer::Instance().PrintFB(drawX, drawY, 'x', "#FF0000");
       }
     }
 

@@ -10,10 +10,10 @@ struct SpellInfo
 {
   SpellType SpellType_ = SpellType::NONE;
   std::string SpellName;
-  std::string SpellShortName;  
+  std::string SpellShortName;
   int SpellBaseCost = 0;
   std::pair<int, int> SpellBaseDamage;
-  std::string SpellProjectileColor;  
+  std::string SpellProjectileColor;
 };
 
 class SpellsDatabase : public Singleton<SpellsDatabase>
@@ -25,7 +25,7 @@ class SpellsDatabase : public Singleton<SpellsDatabase>
 
     SpellInfo* GetSpellInfoFromDatabase(SpellType t);
 
-  private:    
+  private:
     std::map<SpellType, SpellInfo> _database;
 };
 

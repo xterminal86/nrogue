@@ -46,7 +46,7 @@ void CustomClassState::HandleInput()
   {
     switch (_keyPressed)
     {
-      // NOTE: cannot use alternate keys because it clashes with '+' and '-'      
+      // NOTE: cannot use alternate keys because it clashes with '+' and '-'
       case NUMPAD_2:
       #ifdef USE_SDL
       case KEY_DOWN:
@@ -346,5 +346,5 @@ void CustomClassState::InitPlayerAttributes(Player* playerRef)
 
   // FIXME:
   playerRef->Attrs.HungerRate.Set(1750);
-  playerRef->HealthRegenTurns = 60;  
+  playerRef->HealthRegenTurns = 60;
 }

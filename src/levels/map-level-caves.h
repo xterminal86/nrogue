@@ -18,7 +18,7 @@ class MapLevelCaves : public MapLevelBase
     void ConstructFromBuilder(LevelBuilder& lb) override;
     void CreateSpecialLevel() override;
 
-  private:    
+  private:
     void CreateRivers();
 };
 

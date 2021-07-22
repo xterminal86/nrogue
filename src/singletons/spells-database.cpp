@@ -84,7 +84,7 @@ void SpellsDatabase::Init()
 
   RegisterSpell({
   SpellType::MANA_SHIELD, "Mana Shield", "MS", 200
-                });    
+                });
 
   _initialized = true;
 }

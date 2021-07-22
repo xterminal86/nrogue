@@ -41,14 +41,14 @@ void TraderComponent::Update()
   {
     RefreshStock();
     _stockResetCounter = 0;
-  }  
+  }
 }
 
 void TraderComponent::CreateItems()
 {
   switch (_traderType)
   {
-    case TraderRole::CLERIC:    
+    case TraderRole::CLERIC:
       CreateClericItems();
       break;
 

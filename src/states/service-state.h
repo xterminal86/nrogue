@@ -58,7 +58,7 @@ class ServiceState : public GameState
       int ServiceCost;
     };
 
-    std::map<char, ServiceInfo> _serviceInfoByChar;    
+    std::map<char, ServiceInfo> _serviceInfoByChar;
 
     size_t _maxStrLen;
 };
