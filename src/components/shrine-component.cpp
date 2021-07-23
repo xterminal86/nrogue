@@ -332,9 +332,13 @@ void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
   b.Duration   = _duration;
   b.Id         = OwnerGameObject->ObjectId();
 
-  if (t == ItemBonusType::MANA_SHIELD && playerRef.Attrs.MP.Max().Get() != 0)
+  bool manaShieldOk = (playerRef.Attrs.MP.Min().Get() != 0 ||
+                      (playerRef.Attrs.MP.Max().Get() != 0 &&
+                       playerRef.Attrs.Mag.Get() > 0));
+
+  if (t == ItemBonusType::MANA_SHIELD)
   {
-    b.Duration = -1;
+    b.Duration = manaShieldOk ? -1 : 0;
   }
   else if (t == ItemBonusType::REGEN)
   {

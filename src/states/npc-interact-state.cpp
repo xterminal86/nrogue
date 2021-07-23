@@ -11,8 +11,9 @@
 
 void NPCInteractState::Prepare()
 {
-  _charPos = 0;
+  _charPos = _textStartPosX;
   _currentLine = 0;
+  _textBlockCharIndex = 0;
 
   Printer::Instance().Clear();
 
@@ -28,8 +29,9 @@ void NPCInteractState::Cleanup()
   _gossipBlockIndex = 0;
   _whatKey = WhatKey::NONE;
   _textPrinting = false;
-  _charPos = 0;
+  _charPos = _textStartPosX;
   _currentLine = 0;
+  _textBlockCharIndex = 0;
   _blockToPrint.clear();
   Util::WaitForMs(0, true);
 }
@@ -150,16 +152,18 @@ void NPCInteractState::AnimateText()
   auto line = _blockToPrint[_currentLine];
 
   Printer::Instance().PrintFB(_charPos + 1, _currentLine + 2, ' ',  GlobalConstants::BlackColor, GlobalConstants::WhiteColor);
-  Printer::Instance().PrintFB(_charPos, _currentLine + 2, line[_charPos], GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(_charPos, _currentLine + 2, line[_textBlockCharIndex], GlobalConstants::WhiteColor);
 
   Printer::Instance().Render();
 
   _charPos++;
+  _textBlockCharIndex++;
 
-  if (_charPos >= line.length())
+  if (_textBlockCharIndex >= line.length())
   {
     Printer::Instance().PrintFB(_charPos, _currentLine + 2, ' ', GlobalConstants::BlackColor);
-    _charPos = 0;
+    _charPos = _textStartPosX;
+    _textBlockCharIndex = 0;
     _currentLine++;
   }
 
@@ -179,7 +183,7 @@ void NPCInteractState::DisplayStillText()
   int yPos = 2;
   for (auto& l : _blockToPrint)
   {
-    Printer::Instance().PrintFB(0, yPos, l, Printer::kAlignLeft, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(_textStartPosX, yPos, l, Printer::kAlignLeft, GlobalConstants::WhiteColor);
     yPos++;
   }
 

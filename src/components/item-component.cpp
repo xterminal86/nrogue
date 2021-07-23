@@ -147,11 +147,6 @@ std::vector<std::string> ItemComponent::GetAccessoryInspectionInfo()
 
   AddBonusesInfo(res);
 
-  if (!res.empty())
-  {
-    res.erase(res.begin());
-  }
-
   return res;
 }
 

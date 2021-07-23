@@ -45,7 +45,7 @@ void Player::Init()
 
   // FIXME: debug
   //Money = 0;
-  Money = 100000;
+  //Money = 100000;
   //Attrs.HungerRate.Set(0);
   //Attrs.HP.Set(1000);
   //Attrs.HP.Set(10);

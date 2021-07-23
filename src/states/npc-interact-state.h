@@ -41,8 +41,11 @@ class NPCInteractState : public GameState
 
     std::vector<std::string> _blockToPrint;
 
-    size_t _charPos = 0;
+    const size_t _textStartPosX = 1;
+
+    size_t _charPos = _textStartPosX;
     size_t _currentLine = 0;
+    size_t _textBlockCharIndex = 0;
 };
 
 #endif // NPCINTERACTSTATE_H

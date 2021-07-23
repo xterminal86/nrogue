@@ -20,7 +20,7 @@ BTResult TaskAttackSpecial::Run()
   {
     if (_shouldIgnoreArmor || !_attackResult.HasArmor)
     {
-      if (_attackType == "Lch")
+      if (_attackType == "hp_steal")
       {
         ProcessStealHP();
       }

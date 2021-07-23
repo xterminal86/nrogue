@@ -31,6 +31,7 @@ class SpellsProcessor : public Singleton<SpellsProcessor>
     void ProcessScrollOfTeleport(ItemComponent* scroll);
     void ProcessScrollOfManaShield(ItemComponent* scroll);
     void ProcessScrollOfRemoveCurse(ItemComponent* scroll);
+    void ProcessScrollOfEnchantment(ItemComponent* scroll);
 
     Player* _playerRef = nullptr;
 

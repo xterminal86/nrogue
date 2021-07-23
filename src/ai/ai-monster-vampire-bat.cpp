@@ -20,7 +20,7 @@ R"(
             [SEL]
               [COND p1="player_next_turn" p2="1"]
                 [TASK p1="move_away"]
-              [TASK p1="attack_special" p2="Lch"]
+              [TASK p1="attack_special" p2="hp_steal"]
           [COND p1="player_in_range" p2="2"]
             [SEL]
               [COND p1="player_next_turn" p2="1"]

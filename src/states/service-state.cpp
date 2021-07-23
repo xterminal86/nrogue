@@ -251,7 +251,13 @@ void ServiceState::FillItemsForBlessing()
 
     auto color = Util::GetItemInventoryColor(ic->Data);
 
-    int serviceCost = ic->Data.GetCost() * 5;
+    int totalCost = ic->Data.GetCost();
+    for (auto& b : ic->Data.Bonuses)
+    {
+      totalCost += b.MoneyCostIncrease;
+    }
+
+    int serviceCost = totalCost * 2;
 
     _serviceInfoByChar[c] = { charStr, str, color, ic, serviceCost };
 

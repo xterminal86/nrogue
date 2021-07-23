@@ -86,7 +86,7 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll)
       break;
 
     case SpellType::ENCHANT:
-      // TODO:
+      ProcessScrollOfEnchantment(scroll);
       break;
 
     default:
@@ -540,6 +540,16 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll)
 
 void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
 {
+  bool manaShieldOk = (_playerRef->Attrs.MP.Min().Get() != 0 ||
+                      (_playerRef->Attrs.MP.Max().Get() != 0 &&
+                       _playerRef->Attrs.Mag.Get() > 0));
+
+  if (!manaShieldOk)
+  {
+    Printer::Instance().AddMessage(_kNoActionText);
+    return;
+  }
+
   if (_playerRef->Attrs.MP.Max().Get() > 0)
   {
     if (scroll->Data.Prefix == ItemPrefix::BLESSED)
@@ -560,10 +570,6 @@ void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
     b.Id = scroll->OwnerGameObject->ObjectId();
 
     _playerRef->AddEffect(b);
-  }
-  else
-  {
-    Printer::Instance().AddMessage(_kNoActionText);
   }
 }
 
@@ -660,5 +666,22 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
     {
       Printer::Instance().AddMessage(_kNoActionText);
     }
+  }
+}
+
+void SpellsProcessor::ProcessScrollOfEnchantment(ItemComponent* scroll)
+{
+  // TODO:
+
+  switch (scroll->Data.Prefix)
+  {
+    case ItemPrefix::CURSED:
+      break;
+
+    case ItemPrefix::UNCURSED:
+      break;
+
+    case ItemPrefix::BLESSED:
+      break;
   }
 }

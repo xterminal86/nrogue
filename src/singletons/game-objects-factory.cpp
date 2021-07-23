@@ -250,6 +250,8 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   // Set attributes
   if (randomize)
   {
+    // TODO: determine proper difficulty scaling for monsters
+
     int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
     int difficulty = std::max(pl, dl); //pl + dl;
@@ -312,7 +314,7 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
   {
     int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
-    int difficulty = std::max(pl, dl); //pl + dl;
+    int difficulty = dl; //std::max(pl, dl); //pl + dl;
     int diffOffset = RNG::Instance().RandomRange(0, 4);
 
     difficulty += diffOffset;
@@ -351,7 +353,7 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
 GameObject* GameObjectsFactory::CreateVampireBat(int x, int y, bool randomize)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'b', GlobalConstants::MonsterColor);
-  go->ObjectName = "Flying Bat";
+  go->ObjectName = "Red Bat";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 20;
 
@@ -372,7 +374,7 @@ GameObject* GameObjectsFactory::CreateVampireBat(int x, int y, bool randomize)
   {
     int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
-    int difficulty = std::max(pl, dl); //pl + dl;
+    int difficulty = dl; //std::max(pl, dl); //pl + dl;
     int diffOffset = RNG::Instance().RandomRange(0, 4);
 
     difficulty += diffOffset;
@@ -501,22 +503,6 @@ GameObject* GameObjectsFactory::CreateTroll(int x, int y, bool randomize)
 
     int spd = go->Attrs.Spd.Get() / 2;
     go->Attrs.Spd.Set(spd);
-
-    /*
-    int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
-    int randomDef = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
-    int randomSkl = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
-    int randomHp = RNG::Instance().RandomRange(2 * difficulty, 6 * difficulty);
-    int randomSpd = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
-
-    go->Attrs.Lvl.Set(difficulty);
-
-    go->Attrs.Str.Set(randomStr);
-    go->Attrs.Def.Set(randomDef);
-    go->Attrs.HP.Set(randomHp);
-    go->Attrs.Spd.Set(randomSpd);
-    go->Attrs.Skl.Set(randomSkl);
-    */
   }
 
   return go;
