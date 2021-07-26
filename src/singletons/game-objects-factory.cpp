@@ -58,6 +58,10 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       go = CreateManaPotion();
       break;
 
+    case ItemType::NP_POTION:
+      go = CreateNeutralizePoisonPotion();
+      break;
+
     case ItemType::HUNGER_POTION:
       go = CreateHungerPotion();
       break;
@@ -767,6 +771,43 @@ GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
   return go;
 }
 
+GameObject* GameObjectsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  ItemType t = ItemType::NP_POTION;
+
+  std::string fgColor = _gamePotionsMap[t].FgBgColor.first;
+  std::string bgColor = _gamePotionsMap[t].FgBgColor.second;
+  std::string name    = _gamePotionsMap[t].PotionName;
+
+  go->FgColor = fgColor;
+  go->BgColor = bgColor;
+  go->Image = '!';
+  go->ObjectName = name;
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  ic->Data.ItemType_ = t;
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+  ic->Data.Amount = 1;
+  ic->Data.IsStackable = true;
+  ic->Data.IsIdentified = true;
+  ic->Data.Cost = 5;
+
+  ic->Data.IdentifiedDescription = { "Removes poison from the body" };
+  ic->Data.IdentifiedName        = name;
+  ic->Data.UnidentifiedName      = "?" + name + "?";
+
+  ic->Data.UseCallback = std::bind(&GameObjectsFactory::NeutralizePoisonPotionUseHandler, this, ic);
+
+  SetItemName(go, ic->Data);
+
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+
+  return go;
+}
+
 GameObject* GameObjectsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -936,6 +977,54 @@ GameObject* GameObjectsFactory::CreateRandomPotion()
 
   ic->Data.IsIdentified = false;
   ic->Data.UnidentifiedDescription = { "You don't know what will happen if you drink it." };
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreatePotion(ItemType type, ItemPrefix prefixOverride)
+{
+  GameObject* go = nullptr;
+
+  if (GlobalConstants::PotionsWeightTable.count(type) != 0)
+  {
+    switch (type)
+    {
+      case ItemType::HEALING_POTION:
+        go = CreateHealingPotion(prefixOverride);
+        break;
+
+      case ItemType::MANA_POTION:
+        go = CreateManaPotion(prefixOverride);
+        break;
+
+      case ItemType::NP_POTION:
+        go = CreateNeutralizePoisonPotion(prefixOverride);
+        break;
+
+      case ItemType::HUNGER_POTION:
+        go = CreateHungerPotion(prefixOverride);
+        break;
+
+      case ItemType::STR_POTION:
+      case ItemType::DEF_POTION:
+      case ItemType::MAG_POTION:
+      case ItemType::RES_POTION:
+      case ItemType::SKL_POTION:
+      case ItemType::SPD_POTION:
+        go = CreateStatPotion(GlobalConstants::StatNameByPotionType.at(type), prefixOverride);
+        break;
+
+      case ItemType::EXP_POTION:
+        go = CreateExpPotion(prefixOverride);
+        break;
+    }
+  }
+  else
+  {
+    #ifdef DEBUG_BUILD
+    DebugLog("Potion type %i not found!", (int)type);
+    #endif
+  }
 
   return go;
 }
@@ -2552,6 +2641,11 @@ void GameObjectsFactory::SetItemName(GameObject* go, ItemData& itemData)
       go->ObjectName.append(" +MP");
       break;
 
+    case ItemType::NP_POTION:
+      itemData.IdentifiedName.append(" of Cleansing");
+      go->ObjectName.append(" -Psd");
+      break;
+
     case ItemType::HUNGER_POTION:
       itemData.IdentifiedName.append(" of Satiation");
       go->ObjectName.append(" +SAT");
@@ -2931,6 +3025,50 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
   return true;
 }
 
+bool GameObjectsFactory::NeutralizePoisonPotionUseHandler(ItemComponent* item)
+{
+  std::string message = "Nothing happens";
+
+  // Blessed potion removes all poison, uncursed removes
+  // only one of the accumulated ones, if any.
+
+  if (item->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    if (_playerRef->HasEffect(ItemBonusType::POISONED))
+    {
+      _playerRef->RemoveEffectAllOf(ItemBonusType::POISONED);
+      message = "The illness is gone!";
+    }
+  }
+  else if (item->Data.Prefix == ItemPrefix::UNCURSED)
+  {
+    if (_playerRef->HasEffect(ItemBonusType::POISONED))
+    {
+      _playerRef->RemoveEffectFirstFound(ItemBonusType::POISONED);
+      message = "The illness subsides";
+    }
+  }
+  else if (item->Data.Prefix == ItemPrefix::CURSED)
+  {
+    ItemBonusStruct bs;
+    bs.BonusValue = -1;
+    bs.Period     = 10;
+    bs.Duration   = GlobalConstants::EffectDefaultDuration;
+    bs.Id         = item->OwnerGameObject->ObjectId();
+    bs.Cumulative = true;
+
+    _playerRef->AddEffect(bs);
+
+    message = "You are feeling unwell...";
+  }
+
+  Printer::Instance().AddMessage(message);
+
+  Application::Instance().ChangeState(GameStates::MAIN_STATE);
+
+  return true;
+}
+
 bool GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
 {
   int amount = 0;
@@ -3152,8 +3290,8 @@ void GameObjectsFactory::BUCQualityAdjust(ItemData& itemData)
       float durF = (float)itemData.Durability.Max().Get() * 1.5f;
       itemData.Durability.Reset((int)durF);
 
-      //int oldMin = itemData.Damage.Min().OriginalValue();
-      //itemData.Damage.SetMin(oldMin + 1);
+      int oldMin = itemData.Damage.Min().OriginalValue();
+      itemData.Damage.SetMin(oldMin + 1);
     }
     break;
 
@@ -3161,10 +3299,23 @@ void GameObjectsFactory::BUCQualityAdjust(ItemData& itemData)
     {
       int dur = itemData.Durability.Max().Get();
       itemData.Durability.Reset(dur * 2);
-      //itemData.Damage.AddMax(1);
-      //itemData.Damage.AddMin(1);
+
+      itemData.Damage.AddMax(1);
+      itemData.Damage.AddMin(1);
     }
     break;
+  }
+
+  // Just in case, since '0 dice rolls' makes no sense
+  if (itemData.Damage.Min().OriginalValue() == 0)
+  {
+    itemData.Damage.Min().Set(1);
+  }
+
+  // Just to be sure
+  if (itemData.Damage.Max().OriginalValue() == 0)
+  {
+    itemData.Damage.Max().Set(1);
   }
 }
 
@@ -3307,6 +3458,7 @@ void GameObjectsFactory::InitPotionColors()
     ItemType::HEALING_POTION,
     ItemType::MANA_POTION,
     ItemType::HUNGER_POTION,
+    ItemType::NP_POTION,
     ItemType::STR_POTION,
     ItemType::DEF_POTION,
     ItemType::MAG_POTION,

@@ -39,7 +39,7 @@ void ShrineComponent::Interact()
     int dungLvl = Map::Instance().CurrentLevel->DungeonLevel;
 
     _power    = dungLvl; //Timeout / 100;
-    _duration = ((float)(dungLvl * 10) * 1.25f); //Timeout / 2;
+    _duration = GlobalConstants::EffectDefaultDuration * _power; //Timeout / 2;
 
     Counter = 0;
     OwnerGameObject->FgColor = GlobalConstants::BlackColor;
@@ -190,6 +190,8 @@ void ShrineComponent::ProcessEffect()
         int index = RNG::Instance().RandomRange(0, itemsToCurse.size());
         itemsToCurse[index]->Data.Prefix = ItemPrefix::CURSED;
         msg = "You sense the malevolent energy";
+        auto& idName = itemsToCurse[index]->Data.IdentifiedName;
+        idName = Util::ReplaceItemPrefix(idName, { "Blessed", "Uncursed" }, "Cursed");
       }
     }
     break;
@@ -268,6 +270,7 @@ void ShrineComponent::ProcessEffect()
           ic->Data.IsPrefixDiscovered = true;
           ic->Data.Prefix = ItemPrefix::UNCURSED;
           success = true;
+          ic->Data.IdentifiedName = Util::ReplaceItemPrefix(ic->Data.IdentifiedName, { "Cursed" }, "Uncursed");
         }
       }
 
@@ -310,7 +313,7 @@ void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
   }
   else if (b.Type == ItemBonusType::BLINDNESS)
   {
-    b.BonusValue = -_power;
+    b.BonusValue = -GlobalConstants::MaxVisibilityRadius;
   }
 
   playerRef.AddEffect(b);
@@ -368,7 +371,7 @@ void ShrineComponent::ApplyRandomNegativeEffect(std::string& logMessageToWrite)
 
   if (t == ItemBonusType::BLINDNESS)
   {
-    b.BonusValue = -_power;
+    b.BonusValue = -GlobalConstants::MaxVisibilityRadius;
   }
 
   if (t == ItemBonusType::POISONED

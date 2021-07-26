@@ -217,7 +217,7 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
     b.Type = ItemBonusType::POISONED;
     b.BonusValue = -1;
     b.Period = 10;
-    b.Duration = _kDefaultDuration;
+    b.Duration = GlobalConstants::EffectDefaultDuration;
     b.Cumulative = true;
     b.Id = scroll->OwnerGameObject->ObjectId();
 
@@ -243,7 +243,7 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
       b.Type = ItemBonusType::REGEN;
       b.BonusValue = 1;
       b.Period = 10;
-      b.Duration = (playerPow <= 0) ? _kDefaultDuration : _kDefaultDuration * playerPow;
+      b.Duration = (playerPow <= 0) ? GlobalConstants::EffectDefaultDuration : GlobalConstants::EffectDefaultDuration * playerPow;
       b.Cumulative = true;
       b.Id = scroll->OwnerGameObject->ObjectId();
 
@@ -293,10 +293,10 @@ void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
 
   int power = radius + wand->Data.Range + playerPow;
 
-  int duration = playerPow * _kDefaultDuration;
+  int duration = playerPow * GlobalConstants::EffectDefaultDuration;
   if (duration == 0)
   {
-    duration = _kDefaultDuration;
+    duration = GlobalConstants::EffectDefaultDuration;
   }
 
   std::string message = "The golden light surrounds you!";
@@ -345,10 +345,10 @@ void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
 
   int power = radius + playerPow;
 
-  int duration = playerPow * _kDefaultDuration;
+  int duration = playerPow * GlobalConstants::EffectDefaultDuration;
   if (duration == 0)
   {
-    duration = _kDefaultDuration;
+    duration = GlobalConstants::EffectDefaultDuration;
   }
 
   if (scroll->Data.Prefix == ItemPrefix::BLESSED)
@@ -438,10 +438,10 @@ void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
 
   int power = 10 + playerPow * 2;
 
-  int duration = playerPow * _kDefaultDuration;
+  int duration = playerPow * GlobalConstants::EffectDefaultDuration;
   if (duration == 0)
   {
-    duration = _kDefaultDuration;
+    duration = GlobalConstants::EffectDefaultDuration;
   }
 
   if (scroll->Data.Prefix == ItemPrefix::BLESSED)

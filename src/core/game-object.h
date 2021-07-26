@@ -134,9 +134,12 @@ class GameObject
     void AddEffect(const ItemBonusStruct& effectToAdd);
 
     // Erases only effects that have ItemRef = nullptr
-    void DispelEffect(const ItemBonusType& e);
+    void DispelEffect(const ItemBonusType& type);
 
     void RemoveEffect(const ItemBonusStruct& e);
+
+    void RemoveEffectFirstFound(const ItemBonusType& type);
+    void RemoveEffectAllOf(const ItemBonusType& type);
 
     bool HasEffect(const ItemBonusType& e);
     bool IsAlive();

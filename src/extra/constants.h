@@ -284,6 +284,7 @@ enum class ItemType
   HEALING_POTION,
   MANA_POTION,
   HUNGER_POTION,
+  NP_POTION,
   STR_POTION,
   DEF_POTION,
   MAG_POTION,
@@ -676,6 +677,9 @@ namespace GlobalConstants
   extern const int TurnTickValue;
   extern const int MaxVisibilityRadius;
   extern const int StarvationDamageTimeout;
+
+  extern const int EffectDurationSkipsForTurn;
+  extern const int EffectDefaultDuration;
 
   extern const std::string BlackColor;
   extern const std::string WhiteColor;

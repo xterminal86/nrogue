@@ -451,11 +451,62 @@ void GameObject::RemoveEffect(const ItemBonusStruct& t)
     std::advance(it, i);
 
     bool shouldErase = false;
-    for (auto& item : it->second)
+    for (ItemBonusStruct& bonus : it->second)
     {
-      if (item.Id == t.Id)
+      if (bonus.Id == t.Id)
       {
-        UnapplyEffect(item);
+        UnapplyEffect(bonus);
+        shouldErase = true;
+        break;
+      }
+    }
+
+    if (shouldErase)
+    {
+      _activeEffects.erase(it);
+    }
+  }
+}
+
+void GameObject::RemoveEffectFirstFound(const ItemBonusType& type)
+{
+  for (int i = _activeEffects.size() - 1; i >= 0; i--)
+  {
+    auto it = _activeEffects.begin();
+    std::advance(it, i);
+
+    bool shouldErase = false;
+    for (ItemBonusStruct& bonus : it->second)
+    {
+      if (bonus.Type == type)
+      {
+        UnapplyEffect(bonus);
+        shouldErase = true;
+        break;
+      }
+    }
+
+    if (shouldErase)
+    {
+      _activeEffects.erase(it);
+      break;
+    }
+  }
+}
+
+void GameObject::RemoveEffectAllOf(const ItemBonusType& type)
+{
+  for (int i = _activeEffects.size() - 1; i >= 0; i--)
+  {
+    auto it = _activeEffects.begin();
+    std::advance(it, i);
+
+    bool shouldErase = false;
+    for (ItemBonusStruct& bonus : it->second)
+    {
+      if (bonus.Type == type)
+      {
+        UnapplyEffect(bonus);
         shouldErase = true;
         break;
       }

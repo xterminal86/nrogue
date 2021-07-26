@@ -27,11 +27,13 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateMoney(int amount = 0);
     GameObject* CreateRemains(GameObject* from);
     GameObject* CreateHealingPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateNeutralizePoisonPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateManaPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateHungerPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateExpPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateStatPotion(const std::string& statName, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRandomPotion();
+    GameObject* CreatePotion(ItemType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, bool isIdentified = false);
     GameObject* CreateNote(const std::string& objName, const std::vector<std::string>& text);
     GameObject* CreateDummyObject(const std::string& objName, char image, const std::string& fgColor, const std::string& bgColor, const std::vector<std::string>& descText);
@@ -103,6 +105,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void UnequipRing(ItemComponent* ring, int index);
 
     bool HealingPotionUseHandler(ItemComponent* item);
+    bool NeutralizePoisonPotionUseHandler(ItemComponent* item);
     bool ManaPotionUseHandler(ItemComponent* item);
     bool HungerPotionUseHandler(ItemComponent* item);
     bool ExpPotionUseHandler(ItemComponent* item);

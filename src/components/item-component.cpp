@@ -335,10 +335,19 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
   //
   // Also innate bonus is force-added, so we need to check if it's 0
   // due to curse penalty and not include it in the info screen.
+  //
   auto ret = CountAllStatBonuses();
   if (_nonZeroStatBonuses != 0)
   {
-    res.push_back("");
+    // Check for emptiness is needed because AddBonusesInfo() is called
+    // after potential inserting of weapon information into res,
+    // so in case of rings and amulets there is no durability and
+    // damage info, so res is actually empty, thus we don't need extra
+    // empty line that separates weapon info from bonus info.
+    if (!res.empty())
+    {
+      res.push_back("");
+    }
 
     AppendStatBonuses(ret, res);
   }

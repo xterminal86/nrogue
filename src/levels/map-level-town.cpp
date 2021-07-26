@@ -246,6 +246,19 @@ void MapLevelTown::CreateLevel()
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
   /*
+  int count = 0;
+  auto map = GlobalConstants::PotionNameByType;
+  for (auto& kvp : map)
+  {
+    auto go = GameObjectsFactory::Instance().CreatePotion(kvp.first);
+    go->PosX = 1 + count;
+    go->PosY = 1;
+    InsertGameObject(go);
+    count++;
+  }
+  */
+
+  /*
   for (size_t x = 1; x < 16; x++)
   {
     auto wand = GameObjectsFactory::Instance().CreateRandomWand();

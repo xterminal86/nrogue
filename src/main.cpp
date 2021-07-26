@@ -76,6 +76,7 @@ int main(int argc, char* argv[])
   Application::Instance().Cleanup();
 
   #ifdef RUN_TESTS
+  DebugLog("Running tests, this may take a while...\n");
   Tests::Run();
   #endif
 

@@ -66,6 +66,12 @@ namespace GlobalConstants
   // 11 is because if < StarvationDamageTimeout
   const int StarvationDamageTimeout = 11;
 
+  // Number of WaitForTurns for player before he can act (for SPD = 0)
+  const int EffectDurationSkipsForTurn = ((float)TurnReadyValue / (float)TurnTickValue) + 1;
+
+  // Default duration is 20 effective player turns
+  const int EffectDefaultDuration      = EffectDurationSkipsForTurn * 20;
+
   const std::string BlackColor                   = "#000000";
   const std::string WhiteColor                   = "#FFFFFF";
   const std::string RedColor                     = "#FF0000";
@@ -186,6 +192,7 @@ namespace GlobalConstants
   {
     { ItemType::HEALING_POTION, 50 },
     { ItemType::MANA_POTION,    50 },
+    { ItemType::NP_POTION,      50 },
     { ItemType::HUNGER_POTION,  20 },
     { ItemType::STR_POTION,     1  },
     { ItemType::DEF_POTION,     1  },
@@ -210,16 +217,17 @@ namespace GlobalConstants
 
   const std::map<ItemType, std::string> PotionNameByType =
   {
-    { ItemType::HEALING_POTION, "Healing Potion" },
-    { ItemType::MANA_POTION,    "Mana Potion"    },
-    { ItemType::HUNGER_POTION,  "Hunger Potion"  },
-    { ItemType::STR_POTION,     "STR Potion"     },
-    { ItemType::DEF_POTION,     "DEF Potion"     },
-    { ItemType::MAG_POTION,     "MAG Potion"     },
-    { ItemType::RES_POTION,     "RES Potion"     },
-    { ItemType::SKL_POTION,     "SKL Potion"     },
-    { ItemType::SPD_POTION,     "SPD Potion"     },
-    { ItemType::EXP_POTION,     "EXP Potion"     }
+    { ItemType::HEALING_POTION, "Healing Potion"    },
+    { ItemType::MANA_POTION,    "Mana Potion"       },
+    { ItemType::HUNGER_POTION,  "Hunger Potion"     },
+    { ItemType::NP_POTION,      "Neutralize Poison" },
+    { ItemType::STR_POTION,     "STR Potion"        },
+    { ItemType::DEF_POTION,     "DEF Potion"        },
+    { ItemType::MAG_POTION,     "MAG Potion"        },
+    { ItemType::RES_POTION,     "RES Potion"        },
+    { ItemType::SKL_POTION,     "SKL Potion"        },
+    { ItemType::SPD_POTION,     "SPD Potion"        },
+    { ItemType::EXP_POTION,     "EXP Potion"        }
   };
 
   const std::map<ItemType, std::string> StatNameByPotionType =
@@ -530,6 +538,7 @@ namespace GlobalConstants
     { "Clear Potion",   { "#000000", "#CCCCCC" } },
     { "Black Potion",   { "#FFFFFF", "#000000" } },
     { "Cyan Potion",    { "#FFFFFF", "#00FFFF" } },
+    { "Watery Potion",  { "#000000", "#FFFFFF" } },
     { "Magenta Potion", { "#FFFFFF", "#FF00FF" } }
   };
 

@@ -1,9 +1,9 @@
 #ifndef PATHFINDER_H
 #define PATHFINDER_H
 
-#include "util.h"
-
 #include <stack>
+
+#include "util.h"
 
 class MapLevelBase;
 
