@@ -19,7 +19,7 @@ class MapLevelMines : public MapLevelBase
     void CreateSpecialLevel() override;
 
   private:
-    void CreateRandomBarrels();
+    void CreateRandomBoxes();
 };
 
 #endif // MAPLEVELMINES_H

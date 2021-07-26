@@ -324,7 +324,7 @@ void MapLevelMines::CreateLevel()
 
     if (MapType_ == MapType::MINES_1 || MapType_ == MapType::MINES_2)
     {
-      CreateRandomBarrels();
+      CreateRandomBoxes();
       RecordEmptyCells();
     }
 
@@ -513,20 +513,20 @@ void MapLevelMines::CreateSpecialLevel()
   }
 }
 
-void MapLevelMines::CreateRandomBarrels()
+void MapLevelMines::CreateRandomBoxes()
 {
   //auto curLvl = Map::Instance().CurrentLevel;
 
   auto emptyCellsCopy = _emptyCells;
 
   int maxAttempts = 5;
-  int maxBarrels = 8;
+  int maxBoxes = 8;
 
   for (int i = 0; i < maxAttempts; i++)
   {
     // Calculate range to check needed for required amount of barrels
-    size_t barrelsNum = RNG::Instance().RandomRange(1, maxBarrels + 1);
-    int squareSideLengthRequired = (int)std::ceil(std::sqrt(barrelsNum));
+    size_t boxesNum = RNG::Instance().RandomRange(1, maxBoxes + 1);
+    int squareSideLengthRequired = (int)std::ceil(std::sqrt(boxesNum));
     int rangeNeeded = (squareSideLengthRequired % 2 == 0)
                      ? squareSideLengthRequired / 2
                     : (squareSideLengthRequired - 1) / 2;
@@ -539,7 +539,7 @@ void MapLevelMines::CreateRandomBarrels()
     int index = RNG::Instance().RandomRange(0, emptyCellsCopy.size());
     Position pos = emptyCellsCopy[index];
     auto res = Map::Instance().GetEmptyCellsAround(pos, rangeNeeded);
-    if (res.size() >= barrelsNum)
+    if (res.size() >= boxesNum)
     {
       // res.size() is a minimum required square to put numBarrels into,
       // which may be significantly larger than amount of barrels to create
@@ -548,13 +548,13 @@ void MapLevelMines::CreateRandomBarrels()
       size_t created = 0;
       for (auto& p : res)
       {
-        if (created >= barrelsNum)
+        if (created >= boxesNum)
         {
           break;
         }
 
-        GameObject* barrel = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(p.X, p.Y, 'B', "Wooden Barrel", GlobalConstants::WoodColor, GlobalConstants::BlackColor);
-        InsertStaticObject(barrel);
+        GameObject* box = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(p.X, p.Y, 'B', "Wooden Box", GlobalConstants::WoodColor, GlobalConstants::BlackColor);
+        InsertStaticObject(box);
         created++;
       }
 
