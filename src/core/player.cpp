@@ -367,13 +367,13 @@ void Player::SetDefaultEquipment()
   {
     case PlayerClass::THIEF:
     {
-      weapon = GameObjectsFactory::Instance().CreateRangedWeapon(0, 0, RangedWeaponType::SHORT_BOW, ItemPrefix::UNCURSED);
+      weapon = GameObjectsFactory::Instance().CreateRangedWeapon(0, 0, RangedWeaponType::SHORT_BOW, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
       Inventory.Add(weapon);
 
       GameObject* arrows = GameObjectsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::BLESSED, 60);
       Inventory.Add(arrows);
 
-      GameObject* dagger = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::DAGGER, ItemPrefix::UNCURSED);
+      GameObject* dagger = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
       Inventory.Add(dagger);
 
       weaponAndArmorToEquip.push_back(arrows);
@@ -384,10 +384,10 @@ void Player::SetDefaultEquipment()
 
     case PlayerClass::SOLDIER:
     {
-      weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED);
+      weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
       Inventory.Add(weapon);
 
-      armor = GameObjectsFactory::Instance().CreateArmor(0, 0, ArmorType::PADDING, ItemPrefix::UNCURSED);
+      armor = GameObjectsFactory::Instance().CreateArmor(0, 0, ArmorType::PADDING, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
       Inventory.Add(armor);
 
       weaponAndArmorToEquip.push_back(weapon);
@@ -397,10 +397,10 @@ void Player::SetDefaultEquipment()
 
     case PlayerClass::ARCANIST:
     {
-      weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::STAFF, ItemPrefix::UNCURSED);
+      weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::STAFF, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
       Inventory.Add(weapon);
 
-      auto wand = GameObjectsFactory::Instance().CreateWand(0, 0, WandMaterials::EBONY_3, SpellType::MAGIC_MISSILE, ItemPrefix::BLESSED);
+      auto wand = GameObjectsFactory::Instance().CreateWand(0, 0, WandMaterials::EBONY_3, SpellType::MAGIC_MISSILE, ItemPrefix::BLESSED, ItemQuality::NORMAL);
       Inventory.Add(wand);
 
       weaponAndArmorToEquip.push_back(weapon);

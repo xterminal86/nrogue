@@ -92,7 +92,9 @@ void MapLevelCaves::CreateLevel()
     RecordEmptyCells();
     PlaceStairs();
     CreateInitialMonsters();
-    CreateItemsForLevel(DungeonLevel + 6);
+
+    int itemsToCreate = GetEstimatedNumberOfItemsToCreate();
+    CreateItemsForLevel(itemsToCreate);
   }
 }
 

@@ -332,9 +332,7 @@ void MapLevelMines::CreateLevel()
 
     CreateInitialMonsters();
 
-    // FIXME: too many items?
-    //int itemsToCreate = RNG::Instance().RandomRange(1, 6 + DungeonLevel);
-    int itemsToCreate = DungeonLevel + 5;
+    int itemsToCreate = GetEstimatedNumberOfItemsToCreate();
     CreateItemsForLevel(itemsToCreate);
   }
 }

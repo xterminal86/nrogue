@@ -97,6 +97,8 @@ class MapLevelBase
     int _respawnCounter = 0;
     int _shrineRollChance = 50;
 
+    int GetEstimatedNumberOfItemsToCreate();
+
     virtual void CreateLevel();
     virtual void ConstructFromBuilder(LevelBuilder& lb);
     virtual void CreateSpecialLevel();

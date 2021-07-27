@@ -372,7 +372,9 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
 #ifndef RELEASE_BUILD
   DebugLog("%s gained %s (duration %i period %i)",
            ObjectName.data(),
-           GlobalConstants::BonusDisplayNameByType.at(effectToAdd.Type).data(),
+           GlobalConstants::BonusDisplayNameByType.count(effectToAdd.Type) == 1 ?
+           GlobalConstants::BonusDisplayNameByType.at(effectToAdd.Type).data() :
+           "<effect name not found>",
            effectToAdd.Duration,
            effectToAdd.Period);
 #endif

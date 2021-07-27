@@ -79,8 +79,7 @@ class Application : public Singleton<Application>
     void DrawAttackCursor(int x, int y,
                           GameObject* defender,
                           const std::string& cursorColor = "");
-
-    std::string GetStatInfo(const std::string& attrName);
+    void PrintPrettyAlignedStatInfo(std::stringstream& ss);
 
     #ifdef USE_SDL
     std::map<std::string, std::string> _config;
@@ -95,6 +94,16 @@ class Application : public Singleton<Application>
     {
       _gameStates[stateName] = std::unique_ptr<GameState>(new StateClass());
     }
+
+    struct StatInfo
+    {
+      std::string AttrName;
+      int OriginalValue;
+      int Modifier;
+      int ResultingValue;
+    };
+
+    StatInfo GetStatInfo(const std::string& attrName);
 
     friend class TargetState;
 };

@@ -245,6 +245,9 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
+  auto armor = GameObjectsFactory::Instance().CreateArmor(1, 1, ArmorType::PLATE, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+  InsertGameObject(armor);
+
   /*
   int count = 0;
   auto map = GlobalConstants::PotionNameByType;

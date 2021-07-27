@@ -1712,6 +1712,17 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
     si.SpellBaseDamage.second--;
   }
 
+  // Because 0 dice rolls makes no sense
+  if (si.SpellBaseDamage.first <= 0)
+  {
+    si.SpellBaseDamage.first = 1;
+  }
+
+  if (si.SpellBaseDamage.second <= 0)
+  {
+    si.SpellBaseDamage.second = 1;
+  }
+
   ic->Data.WandCapacity.Set(capacity);
 
   int spellCost = GlobalConstants::WandSpellCapacityCostByType.at(spellType);
@@ -3056,6 +3067,7 @@ bool GameObjectsFactory::NeutralizePoisonPotionUseHandler(ItemComponent* item)
     bs.Duration   = GlobalConstants::EffectDefaultDuration;
     bs.Id         = item->OwnerGameObject->ObjectId();
     bs.Cumulative = true;
+    bs.Type       = ItemBonusType::POISONED;
 
     _playerRef->AddEffect(bs);
 

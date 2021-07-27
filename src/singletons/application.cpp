@@ -368,12 +368,7 @@ void Application::WriteObituary(bool wasKilled)
 
   ss << '\n';
 
-  ss << GetStatInfo("STR") << '\n';
-  ss << GetStatInfo("DEF") << '\n';
-  ss << GetStatInfo("MAG") << '\n';
-  ss << GetStatInfo("RES") << '\n';
-  ss << GetStatInfo("SKL") << '\n';
-  ss << GetStatInfo("SPD") << '\n';
+  PrintPrettyAlignedStatInfo(ss);
 
   ss << '\n';
   ss << "********** POSSESSIONS **********\n\n";
@@ -427,7 +422,73 @@ void Application::WriteObituary(bool wasKilled)
   postMortem.close();
 }
 
-std::string Application::GetStatInfo(const std::string& attrName)
+void Application::PrintPrettyAlignedStatInfo(std::stringstream& ss)
+{
+  const std::vector<std::string> statNames =
+  {
+    "STR", "DEF", "MAG", "RES", "SKL", "SPD"
+  };
+
+  std::vector<std::string> statInfoStrings;
+  std::vector<StatInfo> statInfos;
+
+  auto FindLongestStatInfo = [this, &statInfoStrings]()
+  {
+    size_t res = 0;
+    for (auto& i : statInfoStrings)
+    {
+      if (i.length() > res)
+      {
+        res = i.length();
+      }
+    }
+
+    return res;
+  };
+
+  for (auto& i : statNames)
+  {
+    StatInfo statInfo = GetStatInfo(i);
+    statInfos.push_back(statInfo);
+
+    std::stringstream ss;
+    ss << statInfo.AttrName << ": "
+       << statInfo.OriginalValue
+       << " (";
+
+    if (statInfo.Modifier > 0)
+    {
+      ss << "+";
+    }
+
+    ss << statInfo.Modifier << ") ";
+
+    statInfoStrings.push_back(ss.str());
+  }
+
+  size_t statInfoLongestLength = FindLongestStatInfo();
+
+  size_t statInfoIndex = 0;
+  for (auto& i : statInfoStrings)
+  {
+    if (i.length() < statInfoLongestLength)
+    {
+      size_t spacesCount = statInfoLongestLength - i.length();
+      if (spacesCount != 0)
+      {
+        i.append(spacesCount, ' ');
+      }
+    }
+
+    ss << i;
+
+    ss << "= " << statInfos[statInfoIndex].ResultingValue << '\n';
+
+    statInfoIndex++;
+  }
+}
+
+Application::StatInfo Application::GetStatInfo(const std::string& attrName)
 {
   std::map<std::string, Attribute&> attrsByName =
   {
@@ -439,7 +500,7 @@ std::string Application::GetStatInfo(const std::string& attrName)
     { "SPD", PlayerInstance.Attrs.Spd }
   };
 
-  std::string str;
+  Application::StatInfo res;
 
   for (auto& i : attrsByName)
   {
@@ -447,6 +508,12 @@ std::string Application::GetStatInfo(const std::string& attrName)
     {
       int modifiers = i.second.GetModifiers();
 
+      res.AttrName       = attrName;
+      res.Modifier       = modifiers;
+      res.OriginalValue  = i.second.OriginalValue();
+      res.ResultingValue = i.second.Get();
+
+      /*
       std::string strMod = std::to_string(modifiers);
       if (modifiers > 0)
       {
@@ -458,11 +525,13 @@ std::string Application::GetStatInfo(const std::string& attrName)
                                i.second.OriginalValue(),
                                strMod.data(),
                                i.second.Get());
+      */
+
       break;
     }
   }
 
-  return str;
+  return res;
 }
 
 void Application::InitGraphics()

@@ -54,7 +54,7 @@ void MapLevelLostCity::CreateLevel()
 
   CreateShrines(lb);
 
-  int itemsToCreate = RNG::Instance().RandomRange(1, 3 + DungeonLevel);
+  int itemsToCreate = GetEstimatedNumberOfItemsToCreate();
   CreateItemsForLevel(itemsToCreate);
 }
 

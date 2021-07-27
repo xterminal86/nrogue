@@ -182,6 +182,17 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
   }
 }
 
+int MapLevelBase::GetEstimatedNumberOfItemsToCreate()
+{
+  // log_2(n) = log_e(n) / log_e(2)
+
+  double count = std::log(EmptyCells().size()) / std::log(2);
+  int itemsToCreate = static_cast<int>(std::ceil(count));
+  itemsToCreate = RNG::Instance().RandomRange(itemsToCreate / 2, itemsToCreate);
+
+  return itemsToCreate;
+}
+
 void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
 {
   // TODO: only certain shrine types for certain levels.
