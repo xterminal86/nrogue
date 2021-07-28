@@ -30,6 +30,8 @@ namespace GlobalConstants
   const std::string Numbers = "0123456789";
   const std::string MoneyName = "Crowns";
 
+  const std::string NoActionText = "Nothing happens";
+
   const char InventoryEmptySlotChar = '.';
 
   int TerminalWidth  = 80;

@@ -29,6 +29,52 @@ void SpellsProcessor::ProcessWand(ItemComponent* wand)
   }
 }
 
+void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
+{
+  int radius = Map::Instance().CurrentLevel->VisibilityRadius;
+
+  int playerPow = _playerRef->Attrs.Mag.Get();
+
+  int power = radius + wand->Data.Range + playerPow;
+
+  int duration = playerPow * GlobalConstants::EffectDefaultDuration;
+  if (duration == 0)
+  {
+    duration = GlobalConstants::EffectDefaultDuration;
+  }
+
+  std::string message = "The golden light surrounds you!";
+
+  if (wand->Data.Prefix == ItemPrefix::BLESSED)
+  {
+    duration *= 2;
+    power    *= 2;
+  }
+  else if (wand->Data.Prefix == ItemPrefix::CURSED)
+  {
+    power = -GlobalConstants::MaxVisibilityRadius;
+    message = "You are surrounded by darkness!";
+  }
+
+  if (!wand->Data.IsPrefixDiscovered
+   && !wand->Data.IsIdentified)
+  {
+    wand->Data.IsPrefixDiscovered = true;
+    wand->Data.IsIdentified = true;
+  }
+
+  Printer::Instance().AddMessage(message);
+
+  ItemBonusStruct b;
+
+  b.Type       = ItemBonusType::ILLUMINATED;
+  b.BonusValue = power;
+  b.Duration   = duration;
+  b.Id         = wand->OwnerGameObject->ObjectId();
+
+  _playerRef->AddEffect(b);
+}
+
 void SpellsProcessor::ProcessScroll(ItemComponent* scroll)
 {
   std::string scrollName = scroll->Data.IsIdentified ?
@@ -140,6 +186,8 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll)
       i->Data.Durability.Restore();
     }
   }
+
+  _playerRef->RememberItem(scroll, "repair");
 }
 
 void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
@@ -175,6 +223,8 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
     auto item = itemsKnown[index];
     item->Data.IsIdentified = false;
     item->Data.IsPrefixDiscovered = false;
+
+    _playerRef->RememberItem(scroll, "identify");
   }
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {
@@ -188,6 +238,8 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
 
     itemsToId[0]->Data.IsPrefixDiscovered = true;
     itemsToId[0]->Data.IsIdentified = true;
+
+    _playerRef->RememberItem(scroll, "identify");
   }
   else if (scroll->Data.Prefix == ItemPrefix::BLESSED)
   {
@@ -204,6 +256,8 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
     }
 
     Printer::Instance().AddMessage("Your possessions have been identified!");
+
+    _playerRef->RememberItem(scroll, "identify");
   }
 }
 
@@ -224,6 +278,8 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
     _playerRef->AddEffect(b);
 
     Printer::Instance().AddMessage("You feel unwell!");
+
+    _playerRef->RememberItem(scroll, "neutralize poison");
   }
   else
   {
@@ -249,6 +305,8 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
 
       _playerRef->AddEffect(b);
     }
+
+    _playerRef->RememberItem(scroll, "neutralize poison");
   }
 }
 
@@ -262,6 +320,8 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
     power = RNG::Instance().RandomRange(1, _playerRef->Attrs.HP.Min().Get() / 2);
     power = -power;
     Printer::Instance().AddMessage("You writhe in pain!");
+
+    _playerRef->RememberItem(scroll, "healing");
   }
   else
   {
@@ -283,52 +343,8 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
   }
 
   _playerRef->Attrs.HP.AddMin(power);
-}
 
-void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
-{
-  int radius = Map::Instance().CurrentLevel->VisibilityRadius;
-
-  int playerPow = _playerRef->Attrs.Mag.Get();
-
-  int power = radius + wand->Data.Range + playerPow;
-
-  int duration = playerPow * GlobalConstants::EffectDefaultDuration;
-  if (duration == 0)
-  {
-    duration = GlobalConstants::EffectDefaultDuration;
-  }
-
-  std::string message = "The golden light surrounds you!";
-
-  if (wand->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    duration *= 2;
-    power    *= 2;
-  }
-  else if (wand->Data.Prefix == ItemPrefix::CURSED)
-  {
-    power = -GlobalConstants::MaxVisibilityRadius;
-    message = "You are surrounded by darkness!";
-  }
-
-  if (!wand->Data.IsPrefixDiscovered
-   && !wand->Data.IsIdentified)
-  {
-    wand->Data.IsPrefixDiscovered = true;
-    wand->Data.IsIdentified = true;
-  }
-
-  Printer::Instance().AddMessage(message);
-
-  ItemBonusStruct b;
-
-  b.Type       = ItemBonusType::ILLUMINATED;
-  b.BonusValue = power;
-  b.Duration   = duration;
-  b.Id         = wand->OwnerGameObject->ObjectId();
-
-  _playerRef->AddEffect(b);
+  _playerRef->RememberItem(scroll, "healing");
 }
 
 void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
@@ -372,6 +388,8 @@ void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll)
   b.Id         = scroll->OwnerGameObject->ObjectId();
 
   _playerRef->AddEffect(b);
+
+  _playerRef->RememberItem(scroll, "light");
 }
 
 void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll)
@@ -426,6 +444,8 @@ void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll)
       }
     }
   }
+
+  _playerRef->RememberItem(scroll, "magic mapping");
 }
 
 void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
@@ -466,6 +486,8 @@ void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
   b.Id = scroll->OwnerGameObject->ObjectId();
 
   _playerRef->AddEffect(b);
+
+  _playerRef->RememberItem(scroll, "detect monsters");
 }
 
 void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
@@ -497,11 +519,15 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
 
     Printer::Instance().AddMessage("You're back in town all of a sudden!");
     Map::Instance().TeleportToExistingLevel(MapType::TOWN, res);
+
+    _playerRef->RememberItem(scroll, "town portal");
   }
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {
     Printer::Instance().AddMessage("You're back in town all of a sudden!");
     Map::Instance().TeleportToExistingLevel(MapType::TOWN, lvl->TownPortalPos());
+
+    _playerRef->RememberItem(scroll, "town portal");
   }
   else if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
@@ -511,6 +537,8 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
     Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos);
 
     Printer::Instance().AddMessage("You are suddenly transported elsewhere!");
+
+    // Don't remember because it can be a scroll of teleport as well
   }
 }
 
@@ -528,6 +556,8 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll)
     int index = RNG::Instance().RandomRange(0, mapRef->EmptyCells().size());
     auto pos = mapRef->EmptyCells()[index];
     Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos);
+
+    _playerRef->RememberItem(scroll, "teleport");
   }
   else if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
@@ -535,6 +565,8 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll)
     int ry = RNG::Instance().RandomRange(1, mapRef->MapSize.Y);
     Position pos = { rx, ry };
     Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos);
+
+    // Don't remember since it can be cursed scroll of TP
   }
 }
 
@@ -570,6 +602,8 @@ void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
     b.Id = scroll->OwnerGameObject->ObjectId();
 
     _playerRef->AddEffect(b);
+
+    _playerRef->RememberItem(scroll, "mana shield");
   }
 }
 
@@ -582,8 +616,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
     {
       auto c = i->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);
-      if (ic->Data.Prefix != ItemPrefix::CURSED
-       && ic->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE)
+      if (ic->Data.Prefix != ItemPrefix::CURSED)
       {
         nonCursedItems.push_back(ic);
       }
@@ -602,6 +635,8 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
       idName = Util::ReplaceItemPrefix(idName, { "Blessed", "Uncursed" }, "Cursed");
 
       Printer::Instance().AddMessage("The malevolent energy creeps in...");
+
+      _playerRef->RememberItem(scroll, "remove curse");
     }
     else
     {
@@ -615,8 +650,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
     {
       auto c = i->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);
-      if (ic->Data.Prefix == ItemPrefix::CURSED
-       && ic->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE)
+      if (ic->Data.Prefix == ItemPrefix::CURSED)
       {
         cursedItems.push_back(ic);
       }
@@ -633,6 +667,8 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
       idName = Util::ReplaceItemPrefix(idName, { "Cursed" }, "Uncursed");
 
       Printer::Instance().AddMessage("The malevolent energy disperses!");
+
+      _playerRef->RememberItem(scroll, "remove curse");
     }
     else
     {
@@ -646,8 +682,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
     {
       auto c = i->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);
-      if (ic->Data.Prefix == ItemPrefix::CURSED
-       && ic->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE)
+      if (ic->Data.Prefix == ItemPrefix::CURSED)
       {
         ic->Data.IsPrefixDiscovered = true;
         ic->Data.Prefix = ItemPrefix::UNCURSED;
@@ -661,6 +696,8 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
     if (success)
     {
       Printer::Instance().AddMessage("The malevolent energy disperses completely!");
+
+      _playerRef->RememberItem(scroll, "remove curse");
     }
     else
     {
@@ -684,4 +721,6 @@ void SpellsProcessor::ProcessScrollOfEnchantment(ItemComponent* scroll)
     case ItemPrefix::BLESSED:
       break;
   }
+
+  _playerRef->RememberItem(scroll, "enchant");
 }

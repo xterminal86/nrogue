@@ -3,12 +3,14 @@
 
 #include "gamestate.h"
 
+class Player;
 class Attribute;
 class RangedAttribute;
 
 class InfoState : public GameState
 {
   public:
+    void Prepare() override;
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;
 
@@ -22,6 +24,12 @@ class InfoState : public GameState
     std::pair<std::string, std::string> GetModifierString(int value);
 
     const int kMaxNameUnderscoreLength = 33;
+
+    size_t _scrollIndex = 0;
+
+    Player* _playerRef;
+
+    bool _scrollLimitReached = false;
 };
 
 #endif

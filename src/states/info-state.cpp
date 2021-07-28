@@ -3,12 +3,35 @@
 #include "application.h"
 #include "util.h"
 
+void InfoState::Prepare()
+{
+  _playerRef = &Application::Instance().PlayerInstance;
+  _scrollIndex = 0;
+  _scrollLimitReached = false;
+}
+
 void InfoState::HandleInput()
 {
   _keyPressed = GetKeyDown();
 
   switch (_keyPressed)
   {
+    case ALT_K2:
+    case NUMPAD_2:
+      if (!_scrollLimitReached)
+      {
+        _scrollIndex++;
+      }
+      break;
+
+    case ALT_K8:
+    case NUMPAD_8:
+      if (_scrollIndex > 0)
+      {
+        _scrollIndex--;
+      }
+      break;
+
     case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
@@ -16,6 +39,8 @@ void InfoState::HandleInput()
     default:
       break;
   }
+
+  _scrollLimitReached = ((_scrollIndex + _th) >= _playerRef->_useIdentifiedItemsByObjectName.size());
 }
 
 void InfoState::Update(bool forceUpdate)
@@ -26,11 +51,9 @@ void InfoState::Update(bool forceUpdate)
 
     int yPos = 2;
 
-    auto& playerRef = Application::Instance().PlayerInstance;
-
     std::string title = Util::StringFormat("%s the %s",
-                                           playerRef.Name.data(),
-                                           playerRef.GetClassName().data());
+                                           _playerRef->Name.data(),
+                                           _playerRef->GetClassName().data());
     Printer::Instance().PrintFB(1, 0, title, Printer::kAlignLeft, "#FFFFFF");
 
     int charToPrint = 0;
@@ -53,25 +76,24 @@ void InfoState::Update(bool forceUpdate)
     charToPrint = '|';
     #endif
 
-    int th = Printer::TerminalHeight;
-    for (int y = 0; y < th; y++)
+    for (int y = 0; y < _th; y++)
     {
       Printer::Instance().PrintFB(kMaxNameUnderscoreLength, y, charToPrint, "#FFFFFF");
     }
 
-    PrintAttribute(1, yPos, "LVL", playerRef.Attrs.Lvl);
+    PrintAttribute(1, yPos, "LVL", _playerRef->Attrs.Lvl);
     //PrintRangedAttribute(0, yPos + 1, "EXP", playerRef.Attrs.Exp);
-    PrintAttribute(1, yPos + 1, "EXP", playerRef.Attrs.Exp.Min());
+    PrintAttribute(1, yPos + 1, "EXP", _playerRef->Attrs.Exp.Min());
 
-    PrintAttribute(1, yPos + 3, "STR", playerRef.Attrs.Str);
-    PrintAttribute(1, yPos + 4, "DEF", playerRef.Attrs.Def);
-    PrintAttribute(1, yPos + 5, "MAG", playerRef.Attrs.Mag);
-    PrintAttribute(1, yPos + 6, "RES", playerRef.Attrs.Res);
-    PrintAttribute(1, yPos + 7, "SKL", playerRef.Attrs.Skl);
-    PrintAttribute(1, yPos + 8, "SPD", playerRef.Attrs.Spd);
+    PrintAttribute(1, yPos + 3, "STR", _playerRef->Attrs.Str);
+    PrintAttribute(1, yPos + 4, "DEF", _playerRef->Attrs.Def);
+    PrintAttribute(1, yPos + 5, "MAG", _playerRef->Attrs.Mag);
+    PrintAttribute(1, yPos + 6, "RES", _playerRef->Attrs.Res);
+    PrintAttribute(1, yPos + 7, "SKL", _playerRef->Attrs.Skl);
+    PrintAttribute(1, yPos + 8, "SPD", _playerRef->Attrs.Spd);
 
-    PrintRangedAttribute(1, yPos + 10, "HP", playerRef.Attrs.HP);
-    PrintRangedAttribute(1, yPos + 11, "MP", playerRef.Attrs.MP);
+    PrintRangedAttribute(1, yPos + 10, "HP", _playerRef->Attrs.HP);
+    PrintRangedAttribute(1, yPos + 11, "MP", _playerRef->Attrs.MP);
 
     // Attributes are effectively right aligned in PrintAttribute(),
     // so no need for this hack anymore.
@@ -82,14 +104,60 @@ void InfoState::Update(bool forceUpdate)
 
     // Skills
 
-    Printer::Instance().PrintFB(kMaxNameUnderscoreLength / 2, yPos + 13, "SKILLS", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(kMaxNameUnderscoreLength / 2,
+                                yPos + 13,
+                                "SKILLS",
+                                Printer::kAlignCenter,
+                                "#FFFFFF");
 
-    int i = 14;
-    for (auto& kvp : playerRef.SkillLevelBySkill)
+    int yPrintOffset = 14;
+    for (auto& kvp : _playerRef->SkillLevelBySkill)
     {
       std::string skillName = GlobalConstants::SkillNameByType.at(kvp.first);
-      Printer::Instance().PrintFB(1, yPos + i, skillName, Printer::kAlignLeft, "#FFFFFF");
-      i++;
+      Printer::Instance().PrintFB(1,
+                                  yPos + yPrintOffset,
+                                  skillName,
+                                  Printer::kAlignLeft,
+                                  "#FFFFFF");
+      yPrintOffset++;
+    }
+
+    yPrintOffset = 0;
+
+    // Display some filler text just to give player some info
+    if (_playerRef->_useIdentifiedItemsByObjectName.empty())
+    {
+      Printer::Instance().PrintFB(_twHalf + _twQuarter,
+                                  _thHalf,
+                                  "No items to recall",
+                                  Printer::kAlignCenter,
+                                  "#FFFFFF");
+    }
+
+    // Use-identified items
+    auto& items = _playerRef->_useIdentifiedItemsByObjectName;
+    for (size_t ind = _scrollIndex; ind < items.size(); ind++)
+    {
+      // Outside the screen
+      if (yPrintOffset > _th)
+      {
+        break;
+      }
+
+      auto it = items.begin();
+      std::advance(it, ind);
+      std::string str = Util::StringFormat("%s - %s", it->first.data(), it->second.data());
+      Printer::Instance().PrintFB(kMaxNameUnderscoreLength + 1, yPrintOffset, str, Printer::kAlignLeft, "#FFFFFF");
+      yPrintOffset++;
+    }
+
+    if (items.size() > (size_t)_th && !_scrollLimitReached)
+    {
+      #ifdef USE_SDL
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, GlobalConstants::WhiteColor);
+      #else
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, GlobalConstants::WhiteColor);
+      #endif
     }
 
     Printer::Instance().Render();

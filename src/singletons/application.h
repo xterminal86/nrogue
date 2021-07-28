@@ -79,7 +79,10 @@ class Application : public Singleton<Application>
     void DrawAttackCursor(int x, int y,
                           GameObject* defender,
                           const std::string& cursorColor = "");
-    void PrintPrettyAlignedStatInfo(std::stringstream& ss);
+    void SavePrettyAlignedStatInfo(std::stringstream& ss);
+    void SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled);
+
+    size_t SavePossessions(std::stringstream& ss);
 
     #ifdef USE_SDL
     std::map<std::string, std::string> _config;

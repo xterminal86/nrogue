@@ -246,107 +246,7 @@ void Application::WriteObituary(bool wasKilled)
 
   // Write part of the map with player
 
-  int px = PlayerInstance.PosX;
-  int py = PlayerInstance.PosY;
-
-  int range = 10;
-
-  int lx = PlayerInstance.PosX - range;
-  int ly = PlayerInstance.PosY - range;
-  int hx = PlayerInstance.PosX + range;
-  int hy = PlayerInstance.PosY + range;
-
-  std::vector<std::vector<char>> map;
-
-  for (int y = ly; y <= hy; y++)
-  {
-    std::vector<char> row;
-    for (int x = lx; x <= hx; x++)
-    {
-      if (!Util::IsInsideMap({ x, y }, curLvl->MapSize, false))
-      {
-        row.push_back(' ');
-      }
-      else
-      {
-        char ch = ' ';
-
-        if (curLvl->MapArray[x][y]->Visible
-         || curLvl->MapArray[x][y]->Revealed)
-        {
-          ch = curLvl->MapArray[x][y]->Image;
-
-          // If walls are ' ', display them as '#'
-          if (curLvl->MapArray[x][y]->Blocking
-           && curLvl->MapArray[x][y]->BlocksSight
-           && ch == ' ')
-          {
-            ch = '#';
-          }
-        }
-
-        // Check items first
-        auto gos = Map::Instance().GetGameObjectsAtPosition(x, y);
-        if (!gos.empty() && (curLvl->MapArray[x][y]->Visible
-                          || curLvl->MapArray[x][y]->Revealed))
-        {
-          ch = gos.back()->Image;
-
-          if (ch == ' ')
-          {
-            ch = '#';
-          }
-        }
-
-        // If there are no objects lying above static game object,
-        // draw static game object
-        if (gos.empty())
-        {
-          auto so = Map::Instance().GetStaticGameObjectAtPosition(x, y);
-          if (so != nullptr)
-          {
-            ch = (so->Image == ' ') ? '#' : so->Image;
-          }
-        }
-
-        // if actor is standing on this cell, draw him instead.
-        auto actor = Map::Instance().GetActorAtPosition(x, y);
-        if (actor != nullptr
-         && (curLvl->MapArray[x][y]->Visible
-          || curLvl->MapArray[x][y]->Revealed))
-        {
-          bool imageNonPrintable = (actor->Image < 33);
-          ch = (imageNonPrintable ? '@' : actor->Image);
-        }
-
-        // Draw player
-        if (x == px && y == py)
-        {
-          ch = wasKilled ? '%' : '@';
-        }
-
-        // If character is not printable, replace it with x
-        if (ch < 32)
-        {
-          ch = 'x';
-        }
-
-        row.push_back(ch);
-      }
-    }
-
-    map.push_back(row);
-  }
-
-  for (size_t x = 0; x < map.size(); x++)
-  {
-    for (size_t y = 0; y < map[x].size(); y++)
-    {
-      ss << map[x][y];
-    }
-
-    ss << '\n';
-  }
+  SaveMapAroundPlayer(ss, wasKilled);
 
   ss << '\n';
 
@@ -368,11 +268,31 @@ void Application::WriteObituary(bool wasKilled)
 
   ss << '\n';
 
-  PrintPrettyAlignedStatInfo(ss);
+  SavePrettyAlignedStatInfo(ss);
 
   ss << '\n';
   ss << "********** POSSESSIONS **********\n\n";
 
+  size_t stringResizeWidth = SavePossessions(ss);
+
+  ss << '\n';
+  ss << "**********    KILLS    **********\n\n";
+
+  for (auto& kvp : PlayerInstance.TotalKills)
+  {
+    std::string name = kvp.first;
+    name.resize(stringResizeWidth, ' ');
+
+    ss << name << " " << kvp.second << '\n';
+  }
+
+  postMortem << ss.str();
+
+  postMortem.close();
+}
+
+size_t Application::SavePossessions(std::stringstream& ss)
+{
   size_t stringResizeWidth = 0;
   for (auto& i : PlayerInstance.Inventory.Contents)
   {
@@ -406,23 +326,121 @@ void Application::WriteObituary(bool wasKilled)
     ss << '\n';
   }
 
-  ss << '\n';
-  ss << "********** KILLS **********\n\n";
-
-  for (auto& kvp : PlayerInstance.TotalKills)
-  {
-    std::string name = kvp.first;
-    name.resize(stringResizeWidth, ' ');
-
-    ss << name << " " << kvp.second << '\n';
-  }
-
-  postMortem << ss.str();
-
-  postMortem.close();
+  return stringResizeWidth;
 }
 
-void Application::PrintPrettyAlignedStatInfo(std::stringstream& ss)
+void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
+{
+  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+
+  int px = PlayerInstance.PosX;
+  int py = PlayerInstance.PosY;
+
+  int range = 10;
+
+  int lx = PlayerInstance.PosX - range;
+  int ly = PlayerInstance.PosY - range;
+  int hx = PlayerInstance.PosX + range;
+  int hy = PlayerInstance.PosY + range;
+
+  std::vector<std::vector<char>> map;
+
+  for (int y = ly; y <= hy; y++)
+  {
+    std::vector<char> row;
+    for (int x = lx; x <= hx; x++)
+    {
+      if (!Util::IsInsideMap({ x, y }, curLvl->MapSize, false))
+      {
+        row.push_back(' ');
+      }
+      else
+      {
+        char ch = ' ';
+
+        bool isVisibleOrRevealed = (curLvl->MapArray[x][y]->Visible
+                                 || curLvl->MapArray[x][y]->Revealed);
+
+        bool isPlayer = (x == px && y == py);
+
+        if (isVisibleOrRevealed)
+        {
+          ch = curLvl->MapArray[x][y]->Image;
+
+          // If walls are ' ', display them as '#'
+          if (curLvl->MapArray[x][y]->Blocking
+           && curLvl->MapArray[x][y]->BlocksSight
+           && ch == ' ')
+          {
+            ch = '#';
+          }
+
+          // Check items first
+          auto gos = Map::Instance().GetGameObjectsAtPosition(x, y);
+          if (!gos.empty())
+          {
+            ch = gos.back()->Image;
+
+            if (ch == ' ')
+            {
+              ch = 'o';
+            }
+          }
+
+          // If there are no objects lying above static game object,
+          // draw static game object
+          if (gos.empty())
+          {
+            auto so = Map::Instance().GetStaticGameObjectAtPosition(x, y);
+            if (so != nullptr)
+            {
+              ch = (so->Image == ' ') ? '#' : so->Image;
+            }
+          }
+
+          // if actor is standing on this cell, draw him instead.
+          auto actor = Map::Instance().GetActorAtPosition(x, y);
+          if (actor != nullptr)
+          {
+            bool imageNonPrintable = (actor->Image < 33);
+            ch = (imageNonPrintable ? '@' : actor->Image);
+          }
+
+          // If character is not printable, replace it with x
+          if (ch < 32)
+          {
+            ch = 'x';
+          }
+        }
+
+        // Draw player on top of everything
+        if (isPlayer)
+        {
+          if (x == px && y == py)
+          {
+            ch = wasKilled ? '%' : '@';
+          }
+        }
+
+        row.push_back(ch);
+      }
+    }
+
+    map.push_back(row);
+  }
+
+  for (size_t x = 0; x < map.size(); x++)
+  {
+    for (size_t y = 0; y < map[x].size(); y++)
+    {
+      ss << map[x][y];
+    }
+
+    ss << '\n';
+  }
+}
+
+void Application::SavePrettyAlignedStatInfo(std::stringstream& ss)
 {
   const std::vector<std::string> statNames =
   {
@@ -432,10 +450,10 @@ void Application::PrintPrettyAlignedStatInfo(std::stringstream& ss)
   std::vector<std::string> statInfoStrings;
   std::vector<StatInfo> statInfos;
 
-  auto FindLongestStatInfo = [this, &statInfoStrings]()
+  auto FindLongestStringLength = [](const std::vector<std::string>& list)
   {
     size_t res = 0;
-    for (auto& i : statInfoStrings)
+    for (auto& i : list)
     {
       if (i.length() > res)
       {
@@ -466,7 +484,9 @@ void Application::PrintPrettyAlignedStatInfo(std::stringstream& ss)
     statInfoStrings.push_back(ss.str());
   }
 
-  size_t statInfoLongestLength = FindLongestStatInfo();
+  size_t statInfoLongestLength = FindLongestStringLength(statInfoStrings);
+
+  std::vector<std::string> resultingValuesStringList;
 
   size_t statInfoIndex = 0;
   for (auto& i : statInfoStrings)
@@ -480,9 +500,24 @@ void Application::PrintPrettyAlignedStatInfo(std::stringstream& ss)
       }
     }
 
+    std::string str = std::to_string(statInfos[statInfoIndex].ResultingValue);
+    resultingValuesStringList.push_back(str);
+
+    statInfoIndex++;
+  }
+
+  statInfoIndex = 0;
+
+  size_t longestResultingStatLen = FindLongestStringLength(resultingValuesStringList);
+  for (auto& i : statInfoStrings)
+  {
     ss << i;
 
-    ss << "= " << statInfos[statInfoIndex].ResultingValue << '\n';
+    std::string res = std::to_string(statInfos[statInfoIndex].ResultingValue);
+    size_t origLen = res.length();
+    res.insert(0, longestResultingStatLen - origLen, ' ');
+
+    ss << "= " << res << '\n';
 
     statInfoIndex++;
   }
@@ -500,7 +535,7 @@ Application::StatInfo Application::GetStatInfo(const std::string& attrName)
     { "SPD", PlayerInstance.Attrs.Spd }
   };
 
-  Application::StatInfo res;
+  StatInfo res;
 
   for (auto& i : attrsByName)
   {
@@ -512,20 +547,6 @@ Application::StatInfo Application::GetStatInfo(const std::string& attrName)
       res.Modifier       = modifiers;
       res.OriginalValue  = i.second.OriginalValue();
       res.ResultingValue = i.second.Get();
-
-      /*
-      std::string strMod = std::to_string(modifiers);
-      if (modifiers > 0)
-      {
-        strMod.insert(strMod.begin(), '+');
-      }
-
-      str = Util::StringFormat("%s: %i (%s) = %i",
-                               attrName.data(),
-                               i.second.OriginalValue(),
-                               strMod.data(),
-                               i.second.Get());
-      */
 
       break;
     }

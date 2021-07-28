@@ -655,6 +655,7 @@ namespace GlobalConstants
   extern const std::string Consonants;
   extern const std::string Numbers;
   extern const std::string MoneyName;
+  extern const std::string NoActionText;
 
   extern const char InventoryEmptySlotChar;
 

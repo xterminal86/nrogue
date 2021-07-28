@@ -36,6 +36,7 @@ class ItemComponent : public Component
     std::map<ItemBonusType, int> CountAllStatBonuses();
 
     int _nonZeroStatBonuses = 0;
+
     bool _nonStatBonusesPresent = false;
 
     // std::map is sorted by key

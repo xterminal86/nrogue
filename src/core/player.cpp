@@ -44,6 +44,7 @@ void Player::Init()
   Attrs.Exp.SetMax(100);
 
   // FIXME: debug
+
   //Money = 0;
   //Money = 100000;
   //Attrs.HungerRate.Set(0);
@@ -518,7 +519,7 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
   switch (with->Data.SpellHeld.SpellType_)
   {
     case SpellType::NONE:
-      Printer::Instance().AddMessage("Nothing happens");
+      Printer::Instance().AddMessage(GlobalConstants::NoActionText);
       break;
 
     case SpellType::STRIKE:
@@ -783,8 +784,13 @@ void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int dama
     }
   }
 
+  // NOTE: set object type to HARMLESS during instantiation
+  // to avoid it being pickaxed away.
+  //
+  // GameObject default type is HARMLESS.
+  //
   bool canBeTearedDown = (defender->Type == GameObjectType::PICKAXEABLE);
-  bool isWallOnBorder = IsGameObjectBorder(defender);
+  bool isWallOnBorder  = IsGameObjectBorder(defender);
 
   shouldTearDownWall &= (canBeTearedDown && !isWallOnBorder);
 
@@ -1828,6 +1834,16 @@ void Player::SwitchPlaces(AIComponent* other)
   Printer::Instance().AddMessage("You pass by " + name);
 }
 
+void Player::RememberItem(ItemComponent* itemRef, const std::string& effect)
+{
+  std::string objName = itemRef->Data.UnidentifiedName;
+
+  if (_useIdentifiedItemsByObjectName.count(objName) == 0)
+  {
+    _useIdentifiedItemsByObjectName[objName] = effect;
+  }
+}
+
 void Player::AddExtraItems()
 {
   GameObject* go = nullptr;
@@ -1949,6 +1965,19 @@ bool Player::AreEnemiesInRange()
 
   return ret;
 }
+
+bool Player::RecallItem(ItemComponent* itemRef)
+{
+  auto& objName = itemRef->Data.UnidentifiedName;
+
+  if (_useIdentifiedItemsByObjectName.count(objName) == 1)
+  {
+    return true;
+  }
+
+  return false;
+}
+
 
 int Player::GetDamageAbsorbtionValue(bool magic)
 {

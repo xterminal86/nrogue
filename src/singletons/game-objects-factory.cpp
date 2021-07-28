@@ -256,9 +256,9 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   {
     // TODO: determine proper difficulty scaling for monsters
 
-    int pl = _playerRef->Attrs.Lvl.Get();
+    //int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
-    int difficulty = std::max(pl, dl); //pl + dl;
+    int difficulty = dl;
     int diffOffset = RNG::Instance().RandomRange(0, 4);
 
     difficulty += diffOffset;
@@ -316,9 +316,9 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
   // Set attributes
   if (randomize)
   {
-    int pl = _playerRef->Attrs.Lvl.Get();
+    //int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
-    int difficulty = dl; //std::max(pl, dl); //pl + dl;
+    int difficulty = dl;
     int diffOffset = RNG::Instance().RandomRange(0, 4);
 
     difficulty += diffOffset;
@@ -376,9 +376,9 @@ GameObject* GameObjectsFactory::CreateVampireBat(int x, int y, bool randomize)
   // Set attributes
   if (randomize)
   {
-    int pl = _playerRef->Attrs.Lvl.Get();
+    //int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
-    int difficulty = dl; //std::max(pl, dl); //pl + dl;
+    int difficulty = dl;
     int diffOffset = RNG::Instance().RandomRange(0, 4);
 
     difficulty += diffOffset;
@@ -420,9 +420,9 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
   // Set attributes
   if (randomize)
   {
-    int pl = _playerRef->Attrs.Lvl.Get();
+    //int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
-    int difficulty = std::max(pl, dl); //pl + dl;
+    int difficulty = dl;
     int diffOffset = RNG::Instance().RandomRange(0, 4);
 
     difficulty += diffOffset;
@@ -481,18 +481,17 @@ GameObject* GameObjectsFactory::CreateTroll(int x, int y, bool randomize)
   // Set attributes
   if (randomize)
   {
-    int pl = _playerRef->Attrs.Lvl.Get();
+    //int pl = _playerRef->Attrs.Lvl.Get();
     int dl = Map::Instance().CurrentLevel->DungeonLevel;
-    int difficulty = std::max(pl, dl); //pl + dl;
+    int difficulty = dl;
     int diffOffset = RNG::Instance().RandomRange(0, 4);
 
     difficulty += diffOffset;
 
     go->Attrs.Str.Set(4);
 
-    go->Attrs.Str.Talents = 4;
-    go->Attrs.Def.Talents = 3;
-    go->Attrs.HP.Talents = 10;
+    go->Attrs.Str.Talents = 3;
+    go->Attrs.HP.Talents  = 3;
 
     for (int i = 0; i < difficulty; i++)
     {
@@ -505,8 +504,8 @@ GameObject* GameObjectsFactory::CreateTroll(int x, int y, bool randomize)
     int str = go->Attrs.Str.Get() * 2;
     go->Attrs.Str.Set(str);
 
-    int spd = go->Attrs.Spd.Get() / 2;
-    go->Attrs.Spd.Set(spd);
+    go->Attrs.Skl.Set(0);
+    go->Attrs.Spd.Set(0);
   }
 
   return go;
@@ -1393,7 +1392,7 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
 
   // NOTE: scrolls cost = base * 2, spellbooks = base * 10
   //
-  // Too expensinve?
+  // Too expensive?
   ic->Data.Cost = si->SpellBaseCost; //si->SpellBaseCost * 2;
 
   ic->Data.UnidentifiedName = "\"" + _gameScrollsMap[type].ScrollName + "\"";
@@ -2985,7 +2984,7 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
   {
     amount = statMax;
     message = (statCur == statMax)
-              ? "Nothing happens"
+              ? GlobalConstants::NoActionText
               : "Your wounds are healed completely!";
   }
   else if (item->Data.Prefix == ItemPrefix::UNCURSED)
@@ -2993,7 +2992,7 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
     amount = statMax * scale;
     message = "You feel better";
     message = (statCur == statMax)
-              ? "Nothing happens"
+              ? GlobalConstants::NoActionText
               : "You feel better";
   }
   else if (item->Data.Prefix == ItemPrefix::CURSED)
@@ -3004,7 +3003,7 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
     if (var == 0)
     {
       message = (statCur == statMax)
-                ? "Nothing happens"
+                ? GlobalConstants::NoActionText
                 : "You feel a little better";
     }
     else if (var == 1)
@@ -3018,13 +3017,18 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
 
       ItemBonusStruct e;
       e.Type = ItemBonusType::POISONED;
-      e.Duration = 50;
+      e.Duration = GlobalConstants::EffectDefaultDuration;
       e.Period = 10;
       e.BonusValue = -1;
       e.Cumulative = true;
 
       _playerRef->AddEffect(e);
     }
+  }
+
+  if (message != GlobalConstants::NoActionText && amount > 0)
+  {
+    _playerRef->RememberItem(item, "healing potion");
   }
 
   Printer::Instance().AddMessage(message);
@@ -3038,7 +3042,7 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
 
 bool GameObjectsFactory::NeutralizePoisonPotionUseHandler(ItemComponent* item)
 {
-  std::string message = "Nothing happens";
+  std::string message = GlobalConstants::NoActionText;
 
   // Blessed potion removes all poison, uncursed removes
   // only one of the accumulated ones, if any.
@@ -3049,6 +3053,8 @@ bool GameObjectsFactory::NeutralizePoisonPotionUseHandler(ItemComponent* item)
     {
       _playerRef->RemoveEffectAllOf(ItemBonusType::POISONED);
       message = "The illness is gone!";
+
+      _playerRef->RememberItem(item, "neutralize poison");
     }
   }
   else if (item->Data.Prefix == ItemPrefix::UNCURSED)
@@ -3057,6 +3063,8 @@ bool GameObjectsFactory::NeutralizePoisonPotionUseHandler(ItemComponent* item)
     {
       _playerRef->RemoveEffectFirstFound(ItemBonusType::POISONED);
       message = "The illness subsides";
+
+      _playerRef->RememberItem(item, "neutralize poison");
     }
   }
   else if (item->Data.Prefix == ItemPrefix::CURSED)
@@ -3103,6 +3111,8 @@ bool GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
     Printer::Instance().AddMessage("Your spirit force was drained!");
   }
 
+  _playerRef->RememberItem(item, "mana potion");
+
   _playerRef->Attrs.MP.AddMin(amount);
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
@@ -3123,20 +3133,25 @@ bool GameObjectsFactory::HungerPotionUseHandler(ItemComponent* item)
   {
     amount = statMax;
     message = (statCur == statMax)
-              ? "Nothing happens"
+              ? GlobalConstants::NoActionText
               : "You feel satiated!";
   }
   else if (item->Data.Prefix == ItemPrefix::UNCURSED)
   {
     amount = statMax * 0.3f;
     message = (statCur == statMax)
-              ? "Nothing happens"
+              ? GlobalConstants::NoActionText
               : "Your hunger has abated somewhat";
   }
   else if (item->Data.Prefix == ItemPrefix::CURSED)
   {
     amount = -statMax * 0.3f;
     message = "Your feel peckish";
+  }
+
+  if (message != GlobalConstants::NoActionText)
+  {
+    _playerRef->RememberItem(item, "food potion");
   }
 
   Printer::Instance().AddMessage(message);
@@ -3170,6 +3185,8 @@ bool GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
     amount = -statMax * 0.3f;
     Printer::Instance().AddMessage("You lose some experience!");
   }
+
+  _playerRef->RememberItem(item, "potion of learning");
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
 
@@ -3224,6 +3241,16 @@ bool GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
     { ItemType::SPD_POTION, _playerRef->Attrs.Spd }
   };
 
+  const std::map<ItemType, std::string> playerMemoryTextByType =
+  {
+    { ItemType::STR_POTION, "+STR" },
+    { ItemType::DEF_POTION, "+DEF" },
+    { ItemType::MAG_POTION, "+MAG" },
+    { ItemType::RES_POTION, "+RES" },
+    { ItemType::SKL_POTION, "+SKL" },
+    { ItemType::SPD_POTION, "+SPD" }
+  };
+
   auto itemType = item->Data.ItemType_;
 
   int newValue = playerStats.at(itemType).OriginalValue() + valueToAdd;
@@ -3231,10 +3258,12 @@ bool GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
   if (newValue < 0)
   {
     newValue = 0;
-    message = "Nothing happens";
+    message = GlobalConstants::NoActionText;
   }
 
   playerStats.at(itemType).Set(newValue);
+
+  _playerRef->RememberItem(item, playerMemoryTextByType.at(itemType));
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
 

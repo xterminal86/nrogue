@@ -222,12 +222,20 @@ void InventoryState::Update(bool forceUpdate)
           stackAmount += " (E)";
         }
 
-        Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 2, 2 + yPos, stackAmount, Printer::kAlignLeft, "#FFFFFF");
+        Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 2,
+                                    2 + yPos,
+                                    stackAmount,
+                                    Printer::kAlignLeft,
+                                    "#FFFFFF");
       }
       else if (ic->Data.IsEquipped)
       {
         auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
-        Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 2, 2 + yPos, equipStatus, Printer::kAlignLeft, "#FFFFFF");
+        Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 2,
+                                    2 + yPos,
+                                    equipStatus,
+                                    Printer::kAlignLeft,
+                                    "#FFFFFF");
       }
 
       std::string textColor = Util::GetItemInventoryColor(ic->Data);
@@ -241,7 +249,9 @@ void InventoryState::Update(bool forceUpdate)
 
     for (int i = itemsCount; i < GlobalConstants::InventoryMaxSize; i++)
     {
-      std::string stub(GlobalConstants::InventoryMaxNameLength, GlobalConstants::InventoryEmptySlotChar);
+      std::string stub(GlobalConstants::InventoryMaxNameLength,
+                       GlobalConstants::InventoryEmptySlotChar);
+
       Printer::Instance().PrintFB(1,
                                   2 + yPos,
                                   stub,

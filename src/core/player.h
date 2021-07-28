@@ -57,10 +57,12 @@ class Player : public GameObject
 
     void ApplyBonuses(ItemComponent* itemRef);
     void UnapplyBonuses(ItemComponent* itemRef);
+    void RememberItem(ItemComponent* itemRef, const std::string& effect);
     void AddExtraItems();
 
     bool HasSkill(PlayerSkills skillToCheck);
     bool AreEnemiesInRange();
+    bool RecallItem(ItemComponent* itemRef);
 
     int Money = 0;
 
@@ -127,6 +129,8 @@ class Player : public GameObject
     std::string ProcessMagicalDamage(GameObject* from, int& amount);
     std::string ProcessPhysicalDamage(GameObject* from, int& amount);
 
+    std::unordered_map<std::string, std::string> _useIdentifiedItemsByObjectName;
+
     std::map<int, PlayerClass> _classesMap =
     {
       { 0, PlayerClass::SOLDIER  },
@@ -175,6 +179,7 @@ class Player : public GameObject
     friend class SpellsProcessor;
     friend class AttackState;
     friend class ServiceState;
+    friend class InfoState;
 };
 
 #endif // PLAYER_H

@@ -245,8 +245,23 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
-  auto armor = GameObjectsFactory::Instance().CreateArmor(1, 1, ArmorType::PLATE, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
-  InsertGameObject(armor);
+  // *** FIXME: debug
+
+  // All scrolls
+
+  /*
+  int count = 0;
+  for (auto& item : GlobalConstants::ScrollValidSpellTypes)
+  {
+    auto scroll = GameObjectsFactory::Instance().CreateScroll(1 + count, 1, item, ItemPrefix::UNCURSED);
+    ItemComponent* ic = scroll->GetComponent<ItemComponent>();
+    ic->Data.IsIdentified = false;
+    InsertGameObject(scroll);
+    count++;
+  }
+  */
+
+  // All potions
 
   /*
   int count = 0;
@@ -256,10 +271,14 @@ void MapLevelTown::CreateLevel()
     auto go = GameObjectsFactory::Instance().CreatePotion(kvp.first);
     go->PosX = 1 + count;
     go->PosY = 1;
+    ItemComponent* ic = go->GetComponent<ItemComponent>();
+    ic->Data.IsIdentified = false;
     InsertGameObject(go);
     count++;
   }
   */
+
+  // Random wands
 
   /*
   for (size_t x = 1; x < 16; x++)
@@ -274,8 +293,6 @@ void MapLevelTown::CreateLevel()
   */
 
   /*
-  // *** FIXME: debug
-
   // Rings
 
   ItemQuality q = ItemQuality::EXCEPTIONAL;
