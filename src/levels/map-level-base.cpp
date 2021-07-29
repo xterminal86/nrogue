@@ -257,10 +257,7 @@ void MapLevelBase::PlaceStairs()
 
 void MapLevelBase::CreateInitialMonsters()
 {
-  size_t minMonsters = (size_t)std::ceil(std::log(_emptyCells.size()));
-  size_t maxMonsters = minMonsters * 2;
-
-  MaxMonsters = RNG::Instance().RandomRange(minMonsters, maxMonsters + 1);
+  MaxMonsters = (size_t)std::ceil(std::log(_emptyCells.size()));
 
   // FIXME: debug
   //MaxMonsters = 1;

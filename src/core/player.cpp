@@ -1838,10 +1838,16 @@ void Player::RememberItem(ItemComponent* itemRef, const std::string& effect)
 {
   std::string objName = itemRef->Data.UnidentifiedName;
 
-  if (_useIdentifiedItemsByObjectName.count(objName) == 0)
+  for (auto& kvp : _useIdentifiedItemsByIndex)
   {
-    _useIdentifiedItemsByObjectName[objName] = effect;
+    if (kvp.second.first == objName)
+    {
+      return;
+    }
   }
+
+  _useIdentifiedItemsByIndex[_useIdentifiedMapCount] = { objName, effect };
+  _useIdentifiedMapCount++;
 }
 
 void Player::AddExtraItems()
@@ -1970,9 +1976,12 @@ bool Player::RecallItem(ItemComponent* itemRef)
 {
   auto& objName = itemRef->Data.UnidentifiedName;
 
-  if (_useIdentifiedItemsByObjectName.count(objName) == 1)
+  for (auto& kvp : _useIdentifiedItemsByIndex)
   {
-    return true;
+    if (kvp.second.first == objName)
+    {
+      return true;
+    }
   }
 
   return false;

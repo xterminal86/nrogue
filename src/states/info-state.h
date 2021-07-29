@@ -18,10 +18,14 @@ class InfoState : public GameState
     void PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr);
     void PrintRangedAttribute(int x, int y, const std::string& attrName, RangedAttribute& attr);
     void PrintModifiers(int x, int y);
+    void PrepareUseIdentifiedListToPrint();
+    void DrawScrollBars();
 
     int FindAttrsMaxStringLength();
 
     std::pair<std::string, std::string> GetModifierString(int value);
+
+    std::map<int, std::pair<std::string, std::string>> _useIdentifiedMapCopy;
 
     const int kMaxNameUnderscoreLength = 33;
 

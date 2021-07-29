@@ -107,6 +107,8 @@ namespace Util
                                        const std::vector<std::string>& anyOf,
                                        const std::string& replaceWith);
 
+  extern size_t FindLongestStringLength(const std::vector<std::string>& list);
+
   // ===========================================================================
 
   /// Produces random pair from pairs list according to weight value:

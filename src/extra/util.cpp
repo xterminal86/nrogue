@@ -987,4 +987,19 @@ namespace Util
 
     return newIdentifiedName;
   }
+
+  size_t FindLongestStringLength(const std::vector<std::string>& list)
+  {
+    size_t res = 0;
+
+    for (auto& i : list)
+    {
+      if (i.length() > res)
+      {
+        res = i.length();
+      }
+    }
+
+    return res;
+  }
 }

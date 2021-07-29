@@ -6,8 +6,35 @@
 void InfoState::Prepare()
 {
   _playerRef = &Application::Instance().PlayerInstance;
+
   _scrollIndex = 0;
   _scrollLimitReached = false;
+
+  PrepareUseIdentifiedListToPrint();
+}
+
+void InfoState::PrepareUseIdentifiedListToPrint()
+{
+  if (_playerRef->_useIdentifiedItemsByIndex.empty())
+  {
+    return;
+  }
+
+  _useIdentifiedMapCopy.clear();
+
+  std::vector<std::string> list;
+  for (auto& kvp : _playerRef->_useIdentifiedItemsByIndex)
+  {
+    list.push_back(kvp.second.first);
+  }
+
+  size_t longestLen = Util::FindLongestStringLength(list);
+  for (auto& kvp : _playerRef->_useIdentifiedItemsByIndex)
+  {
+    std::string key = kvp.second.first;
+    key.append(longestLen - key.length(), ' ');
+    _useIdentifiedMapCopy[kvp.first] = { key, kvp.second.second };
+  }
 }
 
 void InfoState::HandleInput()
@@ -40,7 +67,7 @@ void InfoState::HandleInput()
       break;
   }
 
-  _scrollLimitReached = ((_scrollIndex + _th) >= _playerRef->_useIdentifiedItemsByObjectName.size());
+  _scrollLimitReached = ((_scrollIndex + _th) >= _playerRef->_useIdentifiedItemsByIndex.size());
 }
 
 void InfoState::Update(bool forceUpdate)
@@ -125,7 +152,7 @@ void InfoState::Update(bool forceUpdate)
     yPrintOffset = 0;
 
     // Display some filler text just to give player some info
-    if (_playerRef->_useIdentifiedItemsByObjectName.empty())
+    if (_playerRef->_useIdentifiedItemsByIndex.empty())
     {
       Printer::Instance().PrintFB(_twHalf + _twQuarter,
                                   _thHalf,
@@ -135,7 +162,7 @@ void InfoState::Update(bool forceUpdate)
     }
 
     // Use-identified items
-    auto& items = _playerRef->_useIdentifiedItemsByObjectName;
+    auto& items = _useIdentifiedMapCopy;
     for (size_t ind = _scrollIndex; ind < items.size(); ind++)
     {
       // Outside the screen
@@ -146,12 +173,22 @@ void InfoState::Update(bool forceUpdate)
 
       auto it = items.begin();
       std::advance(it, ind);
-      std::string str = Util::StringFormat("%s - %s", it->first.data(), it->second.data());
+      std::string str = Util::StringFormat("%s - %s", it->second.first.data(), it->second.second.data());
       Printer::Instance().PrintFB(kMaxNameUnderscoreLength + 1, yPrintOffset, str, Printer::kAlignLeft, "#FFFFFF");
       yPrintOffset++;
     }
 
-    if (items.size() > (size_t)_th && !_scrollLimitReached)
+    DrawScrollBars();
+
+    Printer::Instance().Render();
+  }
+}
+
+void InfoState::DrawScrollBars()
+{
+  if (_useIdentifiedMapCopy.size() > _th)
+  {
+    if (_scrollIndex == 0)
     {
       #ifdef USE_SDL
       Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, GlobalConstants::WhiteColor);
@@ -159,8 +196,24 @@ void InfoState::Update(bool forceUpdate)
       Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, GlobalConstants::WhiteColor);
       #endif
     }
-
-    Printer::Instance().Render();
+    else if (_scrollLimitReached)
+    {
+      #ifdef USE_SDL
+      Printer::Instance().PrintFB(_tw - 1, 0, (int)NameCP437::UARROW_2, GlobalConstants::WhiteColor);
+      #else
+      Printer::Instance().PrintFB(_tw - 1, 0, "/\\", Printer::kAlignRight, GlobalConstants::WhiteColor);
+      #endif
+    }
+    else
+    {
+      #ifdef USE_SDL
+      Printer::Instance().PrintFB(_tw - 1, 0, (int)NameCP437::UARROW_2, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, GlobalConstants::WhiteColor);
+      #else
+      Printer::Instance().PrintFB(_tw - 1, 0, "/\\", Printer::kAlignRight, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, GlobalConstants::WhiteColor);
+      #endif
+    }
   }
 }
 

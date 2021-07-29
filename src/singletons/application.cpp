@@ -450,20 +450,6 @@ void Application::SavePrettyAlignedStatInfo(std::stringstream& ss)
   std::vector<std::string> statInfoStrings;
   std::vector<StatInfo> statInfos;
 
-  auto FindLongestStringLength = [](const std::vector<std::string>& list)
-  {
-    size_t res = 0;
-    for (auto& i : list)
-    {
-      if (i.length() > res)
-      {
-        res = i.length();
-      }
-    }
-
-    return res;
-  };
-
   for (auto& i : statNames)
   {
     StatInfo statInfo = GetStatInfo(i);
@@ -484,7 +470,7 @@ void Application::SavePrettyAlignedStatInfo(std::stringstream& ss)
     statInfoStrings.push_back(ss.str());
   }
 
-  size_t statInfoLongestLength = FindLongestStringLength(statInfoStrings);
+  size_t statInfoLongestLength = Util::FindLongestStringLength(statInfoStrings);
 
   std::vector<std::string> resultingValuesStringList;
 
@@ -508,7 +494,7 @@ void Application::SavePrettyAlignedStatInfo(std::stringstream& ss)
 
   statInfoIndex = 0;
 
-  size_t longestResultingStatLen = FindLongestStringLength(resultingValuesStringList);
+  size_t longestResultingStatLen = Util::FindLongestStringLength(resultingValuesStringList);
   for (auto& i : statInfoStrings)
   {
     ss << i;

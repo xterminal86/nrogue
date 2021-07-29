@@ -121,6 +121,7 @@ class Player : public GameObject
     std::vector<ItemComponent*> GetItemsWithBonus(const ItemBonusType& bonusType);
 
     int _starvingTimeout = 0;
+    int _useIdentifiedMapCount = 0;
 
     std::vector<std::string> GetPrettyLevelUpText();
 
@@ -129,7 +130,7 @@ class Player : public GameObject
     std::string ProcessMagicalDamage(GameObject* from, int& amount);
     std::string ProcessPhysicalDamage(GameObject* from, int& amount);
 
-    std::unordered_map<std::string, std::string> _useIdentifiedItemsByObjectName;
+    std::map<int, std::pair<std::string, std::string>> _useIdentifiedItemsByIndex;
 
     std::map<int, PlayerClass> _classesMap =
     {
