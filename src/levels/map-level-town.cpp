@@ -248,7 +248,6 @@ void MapLevelTown::CreateLevel()
   // *** FIXME: debug
 
   // All scrolls
-
   /*
   int count = 0;
   for (auto& item : GlobalConstants::ScrollValidSpellTypes)
@@ -262,9 +261,8 @@ void MapLevelTown::CreateLevel()
   */
 
   // All potions
-
   /*
-  int count = 0;
+  count = 0;
   auto map = GlobalConstants::PotionNameByType;
   for (auto& kvp : map)
   {

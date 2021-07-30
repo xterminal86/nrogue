@@ -1838,16 +1838,37 @@ void Player::RememberItem(ItemComponent* itemRef, const std::string& effect)
 {
   std::string objName = itemRef->Data.UnidentifiedName;
 
+  int existingIndex = -1;
   for (auto& kvp : _useIdentifiedItemsByIndex)
   {
     if (kvp.second.first == objName)
     {
-      return;
+      // If value is not '?unsure?', do nothing,
+      // the item is already use-identified.
+      if (kvp.second.second != GlobalConstants::UnidentifiedEffectText)
+      {
+        return;
+      }
+      else
+      {
+        // Otherwise break the loop and go down ahead and
+        // replace old '?unsure?' value with proper text
+        // passed in 'effect' variable here.
+        existingIndex = kvp.first;
+        break;
+      }
     }
   }
 
-  _useIdentifiedItemsByIndex[_useIdentifiedMapCount] = { objName, effect };
-  _useIdentifiedMapCount++;
+  if (existingIndex == -1)
+  {
+    _useIdentifiedItemsByIndex[_useIdentifiedMapSortingIndex] = { objName, effect };
+    _useIdentifiedMapSortingIndex++;
+  }
+  else
+  {
+    _useIdentifiedItemsByIndex[existingIndex] = { objName, effect };
+  }
 }
 
 void Player::AddExtraItems()

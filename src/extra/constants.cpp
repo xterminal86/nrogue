@@ -27,10 +27,11 @@ namespace GlobalConstants
   const std::string Vowels     = "aeiouy";
   const std::string Consonants = "bcdfghjklmnpqrstvwxz";
 
-  const std::string Numbers = "0123456789";
+  const std::string Numbers   = "0123456789";
   const std::string MoneyName = "Crowns";
 
-  const std::string NoActionText = "Nothing happens";
+  const std::string NoActionText           = "Nothing happens";
+  const std::string UnidentifiedEffectText = "?not sure?";
 
   const char InventoryEmptySlotChar = '.';
 

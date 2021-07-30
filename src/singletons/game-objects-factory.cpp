@@ -473,7 +473,7 @@ GameObject* GameObjectsFactory::CreateTroll(int x, int y, bool randomize)
 
   AIComponent* ai = go->AddComponent<AIComponent>();
   AIMonsterTroll* aims = ai->AddModel<AIMonsterTroll>();
-  aims->AgroRadius = 8;
+  aims->AgroRadius = 1;
   aims->ConstructAI();
 
   ai->ChangeModel<AIMonsterTroll>();
@@ -2971,6 +2971,8 @@ void GameObjectsFactory::UnequipRing(ItemComponent* ring, int index)
 
 bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
 {
+  _playerRef->RememberItem(item, GlobalConstants::UnidentifiedEffectText);
+
   int amount = 0;
 
   int statMax = _playerRef->Attrs.HP.Max().Get();
@@ -3042,6 +3044,8 @@ bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
 
 bool GameObjectsFactory::NeutralizePoisonPotionUseHandler(ItemComponent* item)
 {
+  _playerRef->RememberItem(item, GlobalConstants::UnidentifiedEffectText);
+
   std::string message = GlobalConstants::NoActionText;
 
   // Blessed potion removes all poison, uncursed removes
@@ -3122,6 +3126,8 @@ bool GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
 
 bool GameObjectsFactory::HungerPotionUseHandler(ItemComponent* item)
 {
+  _playerRef->RememberItem(item, GlobalConstants::UnidentifiedEffectText);
+
   int amount = 0;
 
   int statMax = _playerRef->Attrs.Hunger;

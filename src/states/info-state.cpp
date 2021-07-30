@@ -186,7 +186,7 @@ void InfoState::Update(bool forceUpdate)
 
 void InfoState::DrawScrollBars()
 {
-  if (_useIdentifiedMapCopy.size() > _th)
+  if (_useIdentifiedMapCopy.size() > (size_t)_th)
   {
     if (_scrollIndex == 0)
     {
