@@ -356,7 +356,7 @@ void ShoppingState::BuyOrSellItem()
     if (ic->Data.IsEquipped)
     {
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                              "Information",
+                                              GlobalConstants::MessageBoxInformationHeaderText,
                                               { "Unequip first!" },
                                               GlobalConstants::MessageBoxRedBorderColor);
       return;
@@ -365,7 +365,7 @@ void ShoppingState::BuyOrSellItem()
     if (ic->Data.IsImportant)
     {
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                              "Information",
+                                              GlobalConstants::MessageBoxInformationHeaderText,
                                               { "This looks important - better hold on to it" },
                                               GlobalConstants::MessageBoxBlueBorderColor);
       return;
@@ -427,12 +427,12 @@ bool ShoppingState::CanBeBought(ItemComponent *ic)
 
   if (_playerRef->Money < cost)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "Not enough money!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "Not enough money!" }, GlobalConstants::MessageBoxRedBorderColor);
     return false;
   }
   else if (_playerRef->Inventory.IsFull())
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "No room in inventory!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "No room in inventory!" }, GlobalConstants::MessageBoxRedBorderColor);
     return false;
   }
 

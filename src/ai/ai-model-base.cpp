@@ -11,6 +11,7 @@
 #include "task-attack-special.h"
 #include "task-chase-player.h"
 #include "task-move-away-from-player.h"
+#include "task-remember-player-pos.h"
 #include "task-goto-last-player-pos.h"
 #include "task-attack-effect.h"
 #include "blackboard.h"
@@ -145,6 +146,10 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   {
     task = new TaskMoveAwayFromPlayer(AIComponentRef->OwnerGameObject);
   }
+  else if (taskType == "save_player_pos")
+  {
+    task = new TaskRememberPlayerPos(AIComponentRef->OwnerGameObject);
+  }
   else if (taskType == "goto_last_player_pos")
   {
     task = new TaskGotoLastPlayerPos(AIComponentRef->OwnerGameObject);
@@ -175,7 +180,7 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   }
   else if (taskType == "end")
   {
-    task = new Failure(AIComponentRef->OwnerGameObject);
+    task = new IgnoreFailure(AIComponentRef->OwnerGameObject);
   }
 
   if (task == nullptr)

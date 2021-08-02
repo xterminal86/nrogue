@@ -33,6 +33,11 @@ namespace GlobalConstants
   const std::string NoActionText           = "Nothing happens";
   const std::string UnidentifiedEffectText = "?not sure?";
 
+  const std::string BlackboardKeyPlayerPosX = "pl_x";
+  const std::string BlackboardKeyPlayerPosY = "pl_y";
+
+  const std::string MessageBoxInformationHeaderText = "Information";
+  const std::string MessageBoxEpicFailHeaderText    = "Epic Fail!";
   const char InventoryEmptySlotChar = '.';
 
   int TerminalWidth  = 80;

@@ -635,9 +635,9 @@ enum class GraphicTiles
 
 namespace GlobalConstants
 {
-  extern std::map<GraphicTiles, int> GraphicTilesIndexByType;
+  extern std::map<GraphicTiles, int>         GraphicTilesIndexByType;
   extern std::map<RoomEdgeEnum, std::string> DirNamesByDir;
-  extern std::map<NameCP437, int> CP437IndexByType;
+  extern std::map<NameCP437, int>            CP437IndexByType;
 
   // ===============================================
 
@@ -656,7 +656,12 @@ namespace GlobalConstants
   extern const std::string Numbers;
   extern const std::string MoneyName;
   extern const std::string NoActionText;
+  extern const std::string MessageBoxInformationHeaderText;
+  extern const std::string MessageBoxEpicFailHeaderText;
   extern const std::string UnidentifiedEffectText;
+
+  extern const std::string BlackboardKeyPlayerPosX;
+  extern const std::string BlackboardKeyPlayerPosY;
 
   extern const char InventoryEmptySlotChar;
 

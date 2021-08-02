@@ -59,7 +59,7 @@ void ServiceState::ProcessRepair(int key)
   ServiceInfo& si = _serviceInfoByChar[key];
   if (_playerRef->Money < si.ServiceCost)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "You have no money, ha ha ha!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "You have no money, ha ha ha!" }, GlobalConstants::MessageBoxRedBorderColor);
   }
   else
   {
@@ -74,7 +74,7 @@ void ServiceState::ProcessIdentify(int key)
   ServiceInfo& si = _serviceInfoByChar[key];
   if (_playerRef->Money < si.ServiceCost)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "Not enough money!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "Not enough money!" }, GlobalConstants::MessageBoxRedBorderColor);
   }
   else
   {

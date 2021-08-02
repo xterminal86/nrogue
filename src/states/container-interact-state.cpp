@@ -272,7 +272,7 @@ void ContainerInteractState::TryToTransferItem()
 
   if (dst->IsFull())
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "No room in inventory!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "No room in inventory!" }, GlobalConstants::MessageBoxRedBorderColor);
     return;
   }
 
@@ -281,7 +281,7 @@ void ContainerInteractState::TryToTransferItem()
 
   if (ic->Data.IsEquipped)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unqeuip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unqeuip first!" }, GlobalConstants::MessageBoxRedBorderColor);
     return;
   }
 

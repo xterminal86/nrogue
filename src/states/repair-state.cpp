@@ -31,7 +31,10 @@ void RepairState::HandleInput()
         ItemComponent* ic = _itemRefByChar[_keyPressed];
         if (ic->Data.Durability.Min().Get() == ic->Data.Durability.Max().Get())
         {
-          Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "This item looks undamaged" }, GlobalConstants::MessageBoxDefaultBorderColor);
+          Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                                 GlobalConstants::MessageBoxInformationHeaderText,
+                                                 { "This item looks undamaged" },
+                                                 GlobalConstants::MessageBoxDefaultBorderColor);
         }
         else
         {

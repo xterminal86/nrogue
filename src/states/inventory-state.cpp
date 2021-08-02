@@ -60,13 +60,13 @@ void InventoryState::HandleInput()
 
       if (ic->Data.IsEquipped)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
         return;
       }
 
       if (ic->Data.IsImportant)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "This looks important - better hold on to it" }, GlobalConstants::MessageBoxBlueBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "This looks important - better hold on to it" }, GlobalConstants::MessageBoxBlueBorderColor);
         return;
       }
 
@@ -162,13 +162,13 @@ void InventoryState::HandleInput()
       ItemComponent* ic = go->GetComponent<ItemComponent>();
       if (ic->Data.IsEquipped)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
         return;
       }
 
       if (ic->Data.IsImportant)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "This looks important - better hold on to it" }, GlobalConstants::MessageBoxBlueBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "This looks important - better hold on to it" }, GlobalConstants::MessageBoxBlueBorderColor);
         return;
       }
 

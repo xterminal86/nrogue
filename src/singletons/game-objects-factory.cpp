@@ -243,13 +243,11 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
   go->IsLiving = true;
 
   AIComponent* ai = go->AddComponent<AIComponent>();
-  //AIMonsterSmart* aimb = ai->AddModel<AIMonsterSmart>();
   AIMonsterBasic* aimb = ai->AddModel<AIMonsterBasic>();
   aimb->AgroRadius = 8;
   aimb->ConstructAI();
 
   ai->ChangeModel<AIMonsterBasic>();
-  //ai->ChangeModel<AIMonsterSmart>();
 
   // Set attributes
   if (randomize)
@@ -642,7 +640,7 @@ bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
 
   if (item->Data.EqCategory == EquipmentCategory::NOT_EQUIPPABLE)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Can't be equipped!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Can't be equipped!" }, GlobalConstants::MessageBoxRedBorderColor);
     return res;
   }
 
@@ -666,18 +664,18 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 
   if (item->Data.CanBeUsed())
   {
-    return item->Data.UseCallback(item);
+    res = item->Data.UseCallback(item);
   }
   else
   {
     switch (item->Data.ItemType_)
     {
       case ItemType::COINS:
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "You don't 'use' money like that." }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "You don't 'use' money like that." }, GlobalConstants::MessageBoxRedBorderColor);
         break;
 
       default:
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Can't be used!" }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Can't be used!" }, GlobalConstants::MessageBoxRedBorderColor);
         break;
     }
   }
@@ -2830,7 +2828,7 @@ bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
   }
   else if (itemEquipped != item)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
     res = false;
   }
   else
@@ -2839,7 +2837,7 @@ bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
     {
       itemEquipped->Data.IsPrefixDiscovered = true;
       auto str = Util::StringFormat("You can't unequip %s - it's cursed!", itemEquipped->OwnerGameObject->ObjectName.data());
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { str }, GlobalConstants::MessageBoxRedBorderColor);
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { str }, GlobalConstants::MessageBoxRedBorderColor);
       res = false;
     }
     else
@@ -2867,7 +2865,7 @@ bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
       {
         rings[i]->Data.IsPrefixDiscovered = true;
         auto str = Util::StringFormat("You can't unequip %s - it's cursed!", rings[i]->OwnerGameObject->ObjectName.data());
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { str }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { str }, GlobalConstants::MessageBoxRedBorderColor);
         return false;
       }
 
@@ -2889,7 +2887,7 @@ bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
   // Finally, if no empty slots found, display a warning
   if (!emptySlotFound)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
   }
 
   return false;
@@ -3578,13 +3576,13 @@ bool GameObjectsFactory::ReturnerUseHandler(ItemComponent* item)
 {
   if (!item->Data.IsIdentified)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "Can't be used!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Can't be used!" }, GlobalConstants::MessageBoxRedBorderColor);
     return false;
   }
 
   if (item->Data.Amount == 0)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Information", { "You invoke the returner, but nothing happens." }, GlobalConstants::MessageBoxDefaultBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "You invoke the returner, but nothing happens." }, GlobalConstants::MessageBoxDefaultBorderColor);
     return false;
   }
 
@@ -3595,7 +3593,7 @@ bool GameObjectsFactory::RepairKitUseHandler(ItemComponent* item)
 {
   if (!_playerRef->HasSkill(PlayerSkills::REPAIR))
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail!", { "You don't possess the necessary skill!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "You don't possess the necessary skill!" }, GlobalConstants::MessageBoxRedBorderColor);
     return false;
   }
 
