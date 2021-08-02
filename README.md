@@ -10,6 +10,8 @@ seems like a perfect candidate. And what games are known to use terminal graphic
 So I decided to make a roguelike.  
 It probably should've been named **ncrogue** or something, but whatever...
 
+You can build either version, SDL2 or ncurses, check comments in main.cpp.
+
 When building with SDL2 you can use custom font image and scale it by creating
 file called "config.txt" and placing it alongside with the game's binary.
 Color key is magenta (R:255, G:0, B:255).
