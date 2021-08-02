@@ -12,9 +12,9 @@ It probably should've been named **ncrogue** or something, but whatever...
 
 You can build either version, SDL2 or ncurses, check comments in main.cpp.
 
-When building with SDL2 you can use custom font image and scale it by creating
+When running an SDL2 executable, you can use custom font image and scale it by creating
 file called "config.txt" and placing it alongside with the game's binary.
-Color key is magenta (R:255, G:0, B:255).
+Transparent color key is magenta (R:255, G:0, B:255).
 The format should be as follows (no empty lines):
 
 ```
