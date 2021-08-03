@@ -6,6 +6,7 @@
 #include "map.h"
 #include "application.h"
 #include "game-object-info.h"
+#include "ai-component.h"
 #include "blackboard.h"
 
 GameObject::GameObject(MapLevelBase* levelOwner)
@@ -30,7 +31,12 @@ GameObject::GameObject(MapLevelBase *levelOwner,
 
 GameObject::~GameObject()
 {
-  Blackboard::Instance().Remove(_objectId);
+  // Assuming walls, trees and the like don't use blackboard
+  AIComponent* ai = GetComponent<AIComponent>();
+  if (ai != nullptr)
+  {
+    Blackboard::Instance().Remove(_objectId);
+  }
 }
 
 void GameObject::Init(MapLevelBase* levelOwner,

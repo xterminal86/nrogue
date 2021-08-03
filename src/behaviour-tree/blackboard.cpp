@@ -36,8 +36,5 @@ std::string Blackboard::Get(uint64_t goId, const std::string& key)
 
 void Blackboard::Remove(uint64_t goId)
 {
-  if (_blackboard.count(goId) == 1)
-  {
-    _blackboard.erase(goId);
-  }
+  _blackboard.erase(goId);
 }
