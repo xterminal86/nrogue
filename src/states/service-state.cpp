@@ -101,7 +101,9 @@ void ServiceState::ProcessBlessing(int key)
     {
       si.ItemComponentRef->Data.Prefix = ItemPrefix::BLESSED;
 
-      bool isWeaponOrArmor = (si.ItemComponentRef->Data.ItemType_ == ItemType::WEAPON ||si.ItemComponentRef->Data.ItemType_ == ItemType::ARMOR);
+      bool isWeaponOrArmor = (si.ItemComponentRef->Data.ItemType_ == ItemType::WEAPON
+                           || si.ItemComponentRef->Data.ItemType_ == ItemType::RANGED_WEAPON
+                           || si.ItemComponentRef->Data.ItemType_ == ItemType::ARMOR);
       if (isWeaponOrArmor)
       {
         // BUC adjust is private inside GameObjectsFactory, so we have to
@@ -231,8 +233,9 @@ void ServiceState::FillItemsForBlessing()
     bool alreadyBlessed = ((ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered)
                         && (ic->Data.Prefix == ItemPrefix::BLESSED));
 
-    bool isValid        = (ic->Data.ItemType_ != ItemType::DUMMY);
+    bool isValid = (ic->Data.ItemType_ != ItemType::DUMMY);
 
+    // TODO: can accessories and items with bonuses be blessed
     if (alreadyBlessed || !isValid)
     {
       continue;

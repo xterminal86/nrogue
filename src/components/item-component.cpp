@@ -228,7 +228,8 @@ std::vector<std::string> ItemComponent::GetWandInspectionInfo()
     res.push_back(charges);
     res.push_back(range);
   }
-  else if (Data.SpellHeld.SpellType_ != SpellType::LIGHT)
+  else if (Data.SpellHeld.SpellType_ != SpellType::LIGHT
+        && Data.SpellHeld.SpellType_ != SpellType::TELEPORT)
   {
     // Calculate space padding to align lines relative to 'Damage'
 
@@ -250,7 +251,8 @@ std::vector<std::string> ItemComponent::GetWandInspectionInfo()
     res.push_back(range);
   }
 
-  if (Data.SpellHeld.SpellType_ != SpellType::LIGHT)
+  if (Data.SpellHeld.SpellType_ != SpellType::LIGHT
+   && Data.SpellHeld.SpellType_ != SpellType::TELEPORT)
   {
     if (Data.Prefix == ItemPrefix::BLESSED)
     {
@@ -354,7 +356,12 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
   // If we have stat bonuses and non-stat bonuses,
   // separate them with empty line.
-  if (_nonZeroStatBonuses != 0 && _nonStatBonusesPresent)
+  bool onlySpecialBonuses = (_nonZeroStatBonuses == 0 && _nonStatBonusesPresent);
+  bool bothPresent = (_nonZeroStatBonuses != 0 && _nonStatBonusesPresent);
+
+  // If it's an accessory with only special bonus, it's res will be empty,
+  // so no need to put another empty line.
+  if (!res.empty() && (onlySpecialBonuses || bothPresent))
   {
     res.push_back("");
   }

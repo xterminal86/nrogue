@@ -47,9 +47,8 @@ void Player::Init()
 
   //Money = 0;
   //Money = 100000;
+  //Attrs.HP.Reset(10000);
   //Attrs.HungerRate.Set(0);
-  //Attrs.HP.Set(1000);
-  //Attrs.HP.Set(10);
 }
 
 void Player::Draw()
@@ -849,13 +848,11 @@ bool Player::WasHitLanded(GameObject* defender)
 
   hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
 
-  auto logMsg = Util::StringFormat("Player (SKL %i (%i), LVL %i) attacks %s (SKL: %i (%i), LVL %i): chance = %i",
-                                   Attrs.Skl.OriginalValue(),
-                                   Attrs.Skl.GetModifiers(),
+  auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
+                                   Attrs.Skl.Get(),
                                    Attrs.Lvl.Get(),
                                    defender->ObjectName.data(),
-                                   defender->Attrs.Skl.OriginalValue(),
-                                   defender->Attrs.Skl.GetModifiers(),
+                                   defender->Attrs.Skl.Get(),
                                    defender->Attrs.Lvl.Get(),
                                    hitChance);
   Logger::Instance().Print(logMsg);
