@@ -31,6 +31,21 @@ class ServiceState : public GameState
     void ProcessIdentify(int key);
     void ProcessBlessing(int key);
 
+    struct ServiceInfo
+    {
+      std::string Letter;
+      std::string NameToDisplay;
+      std::string Color = "#FFFFFF";
+      ItemComponent* ItemComponentRef;
+      int ServiceCost;
+    };
+
+    std::map<char, ServiceInfo> _serviceInfoByChar;
+
+    int GetValidBonusesCount(ItemComponent* ic);
+
+    void BlessItem(const ServiceInfo& si);
+
     const std::map<ServiceType, std::string> _displayOnEmptyItems =
     {
       { ServiceType::NONE,     "!!! INVALID TYPE !!!" },
@@ -49,16 +64,17 @@ class ServiceState : public GameState
       { ServiceType::REPAIR,   " REPAIR ITEMS "         }
     };
 
-    struct ServiceInfo
+    // These bonuses cannot be "improved" by blessing
+    const std::vector<ItemBonusType> _invalidBonusTypes =
     {
-      std::string Letter;
-      std::string NameToDisplay;
-      std::string Color = "#FFFFFF";
-      ItemComponent* ItemComponentRef;
-      int ServiceCost;
+      ItemBonusType::INDESTRUCTIBLE,
+      ItemBonusType::VISIBILITY,
+      ItemBonusType::HUNGER,
+      ItemBonusType::IGNORE_DEFENCE,
+      ItemBonusType::MANA_SHIELD,
+      ItemBonusType::REFLECT,
+      ItemBonusType::TELEPATHY
     };
-
-    std::map<char, ServiceInfo> _serviceInfoByChar;
 
     size_t _maxStrLen;
 };

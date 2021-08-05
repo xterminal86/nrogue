@@ -3853,7 +3853,7 @@ void GameObjectsFactory::AddRandomBonusToItem(ItemComponent* itemRef, ItemBonusT
 
       // Number of turns before effect acts
       int minVal = min - 2 * multByQ[q];
-      int maxVal = max - 2 * multByQ[q];
+      int maxVal = max - 4 * multByQ[q];
       bs.Period = RNG::Instance().RandomRange(minVal, maxVal + 1);
       bs.MoneyCostIncrease = (int)(((float)max / (float)bs.Period) * (float)moneyIncrease);
     }

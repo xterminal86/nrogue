@@ -101,40 +101,7 @@ void ServiceState::ProcessBlessing(int key)
     {
       si.ItemComponentRef->Data.Prefix = ItemPrefix::BLESSED;
 
-      bool isWeaponOrArmor = (si.ItemComponentRef->Data.ItemType_ == ItemType::WEAPON
-                           || si.ItemComponentRef->Data.ItemType_ == ItemType::RANGED_WEAPON
-                           || si.ItemComponentRef->Data.ItemType_ == ItemType::ARMOR);
-      if (isWeaponOrArmor)
-      {
-        // BUC adjust is private inside GameObjectsFactory, so we have to
-        // kinda repeat it here.
-        //
-        // Blessed / cursed item effects are handled in item use handler,
-        // so no need to do anything special here.
-        //
-        for (auto& kvp : _playerRef->_attributesRefsByBonus)
-        {
-          ItemBonusStruct* ibs = si.ItemComponentRef->Data.GetBonus(kvp.first);
-          if (ibs != nullptr && ibs->FromItem)
-          {
-            // Only +1 bonus from blessing and even then
-            // I'm not sure whether it will be OP or not
-            ibs->BonusValue += 1;
-
-            // If item to be blessed is actually equipped, do the shuffle below.
-            auto equippedItem = _playerRef->EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
-            if (equippedItem == si.ItemComponentRef)
-            {
-              // Unequip / equip to reapply stat bonuses
-              equippedItem->Equip();
-              equippedItem->Equip();
-
-              Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
-              Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
-            }
-          }
-        }
-      }
+      BlessItem(si);
 
       // Now we need to replace header BUC status name
       // that was generated during object creation.
@@ -144,6 +111,89 @@ void ServiceState::ProcessBlessing(int key)
     si.ItemComponentRef->Data.IsPrefixDiscovered = true;
 
     FillItemsForBlessing();
+  }
+}
+
+void ServiceState::BlessItem(const ServiceInfo& si)
+{
+  // Blessed / cursed item effects (like potions)
+  // are handled in item use handler,
+  // so no need to do anything special here.
+
+  for (auto& bonus : si.ItemComponentRef->Data.Bonuses)
+  {
+    switch (bonus.Type)
+    {
+      case ItemBonusType::STR:
+      case ItemBonusType::DEF:
+      case ItemBonusType::MAG:
+      case ItemBonusType::RES:
+      case ItemBonusType::SKL:
+      case ItemBonusType::SPD:
+        bonus.BonusValue += 1;
+        break;
+
+      case ItemBonusType::HP:
+      case ItemBonusType::MP:
+        bonus.BonusValue += (bonus.BonusValue / 2);
+        break;
+
+      case ItemBonusType::DMG_ABSORB:
+      case ItemBonusType::MAG_ABSORB:
+        bonus.BonusValue *= 2;
+        break;
+
+      case ItemBonusType::DAMAGE:
+        bonus.BonusValue += (bonus.BonusValue / 2);
+        break;
+
+      case ItemBonusType::VISIBILITY:
+        bonus.BonusValue += (bonus.BonusValue / 2);
+        break;
+
+      case ItemBonusType::LEECH:
+      case ItemBonusType::THORNS:
+        bonus.BonusValue += (bonus.BonusValue / 2);
+        break;
+
+      case ItemBonusType::SELF_REPAIR:
+      case ItemBonusType::REGEN:
+        bonus.Period -= (bonus.BonusValue / 2);
+        break;
+
+      case ItemBonusType::KNOCKBACK:
+        bonus.BonusValue += (bonus.BonusValue / 2);
+        break;
+    }
+  }
+
+  ItemComponent* equippedItem = nullptr;
+
+  // There can be two rings
+  if (si.ItemComponentRef->Data.EqCategory == EquipmentCategory::RING)
+  {
+    auto leftHand = _playerRef->EquipmentByCategory[EquipmentCategory::RING][0];
+    auto rightHand = _playerRef->EquipmentByCategory[EquipmentCategory::RING][1];
+
+    if (leftHand == si.ItemComponentRef || rightHand == si.ItemComponentRef)
+    {
+      equippedItem = si.ItemComponentRef;
+    }
+  }
+  else
+  {
+    equippedItem = _playerRef->EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
+  }
+
+  // If item to be blessed is actually equipped, do the shuffle below.
+  if (equippedItem == si.ItemComponentRef)
+  {
+    // Unequip / equip to reapply stat bonuses
+    equippedItem->Equip();
+    equippedItem->Equip();
+
+    Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
+    Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
   }
 }
 
@@ -230,12 +280,18 @@ void ServiceState::FillItemsForBlessing()
   {
     ItemComponent* ic = item->GetComponent<ItemComponent>();
 
-    bool alreadyBlessed = ((ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered)
-                        && (ic->Data.Prefix == ItemPrefix::BLESSED));
+    bool idStatus = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered);
 
-    bool isValid = (ic->Data.ItemType_ != ItemType::DUMMY);
+    bool alreadyBlessed = (idStatus && (ic->Data.Prefix == ItemPrefix::BLESSED));
 
-    // TODO: can accessories and items with bonuses be blessed
+    int validBonuses = GetValidBonusesCount(ic);
+
+    // TODO: how to check for other objects with empty Data.Bonuses
+    // vector like potions, food, scrolls, gems, wands etc.?
+    bool isValid = (ic->Data.ItemType_ != ItemType::DUMMY) &&
+                   ((idStatus && validBonuses > 0) ||
+                    (idStatus && ic->Data.Prefix == ItemPrefix::CURSED));
+
     if (alreadyBlessed || !isValid)
     {
       continue;
@@ -257,15 +313,39 @@ void ServiceState::FillItemsForBlessing()
     int totalCost = ic->Data.GetCost();
     for (auto& b : ic->Data.Bonuses)
     {
-      totalCost += b.MoneyCostIncrease;
+      auto found = std::find(_invalidBonusTypes.begin(),
+                             _invalidBonusTypes.end(),
+                             b.Type);
+
+      bool bonusIsInvalid = (found != _invalidBonusTypes.end());
+
+      totalCost += (bonusIsInvalid ? b.MoneyCostIncrease / 2 : b.MoneyCostIncrease);
     }
 
-    int serviceCost = totalCost * 2;
+    int serviceCost = totalCost;
 
     _serviceInfoByChar[c] = { charStr, str, color, ic, serviceCost };
 
     itemIndex++;
   }
+}
+
+int ServiceState::GetValidBonusesCount(ItemComponent* ic)
+{
+  int count = 0;
+  for (auto& i : ic->Data.Bonuses)
+  {
+    auto found = std::find(_invalidBonusTypes.begin(),
+                           _invalidBonusTypes.end(),
+                           i.Type);
+
+    if (found == _invalidBonusTypes.end())
+    {
+      count++;
+    }
+  }
+
+  return count;
 }
 
 void ServiceState::FillItemsForIdentify()
