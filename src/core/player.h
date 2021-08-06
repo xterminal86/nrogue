@@ -13,6 +13,7 @@
 #include "container-component.h"
 #include "item-component.h"
 #include "position.h"
+#include "dijkstra-map.h"
 
 class AIComponent;
 
@@ -71,6 +72,8 @@ class Player : public GameObject
     std::map<PlayerSkills, int> SkillLevelBySkill;
 
     std::map<std::string, int> TotalKills;
+
+    DijkstraMap DistanceField;
 
   private:
     void DiscoverCell(int x, int y);

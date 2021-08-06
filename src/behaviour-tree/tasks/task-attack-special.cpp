@@ -16,6 +16,8 @@ BTResult TaskAttackSpecial::Run()
 {
   TaskAttackBasic::Run();
 
+  //DebugLog("\t[TaskAttackSpecial]\n");
+
   if (_attackResult.Success)
   {
     if (_shouldIgnoreArmor || !_attackResult.HasArmor)

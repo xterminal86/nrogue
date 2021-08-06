@@ -43,11 +43,13 @@ void Player::Init()
   Attrs.Exp.Reset(0);
   Attrs.Exp.SetMax(100);
 
+  DistanceField.Init(this, 3);
+
   // FIXME: debug
 
   //Money = 0;
-  //Money = 100000;
-  //Attrs.HP.Reset(10000);
+  Money = 100000;
+  Attrs.HP.Reset(10000);
   //Attrs.HungerRate.Set(0);
 }
 

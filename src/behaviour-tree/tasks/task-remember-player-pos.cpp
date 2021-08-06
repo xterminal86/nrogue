@@ -5,6 +5,8 @@
 
 BTResult TaskRememberPlayerPos::Run()
 {
+  //DebugLog("[TaskRememberPlayerPos]\n");
+
   std::string plX = std::to_string(_playerRef->PosX);
   std::string plY = std::to_string(_playerRef->PosY);
 

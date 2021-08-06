@@ -159,6 +159,14 @@ void MainState::HandleInput()
       _playerRef->LevelUp();
       break;
 
+    case 'F':
+    {
+      _playerRef->DistanceField.Emanate();
+      std::string field = _playerRef->DistanceField.GetFieldString();
+      DebugLog("\n%s", field.data());
+    }
+    break;
+
     case 'P':
       //Map::Instance().PrintMapArrayRevealedStatus();
       Map::Instance().PrintMapLayout();

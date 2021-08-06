@@ -293,18 +293,19 @@ void MapLevelMines::CreateLevel()
   {
     case MapType::MINES_1:
     case MapType::MINES_2:
-    {
       lb.RoomsMethod(MapSize, { 45, 55 }, 7);
-    }
-    break;
+      break;
 
     case MapType::MINES_3:
-    case MapType::MINES_4:
     {
       int iterations = (MapSize.X * MapSize.Y) / 2;
       lb.TunnelerMethod(MapSize, iterations, { 5, 15 });
     }
     break;
+
+    case MapType::MINES_4:
+      lb.BacktrackingTunnelerMethod(MapSize, { 5, 10 }, { 1, 1 }, true);
+      break;
 
     case MapType::MINES_5:
       CreateSpecialLevel();

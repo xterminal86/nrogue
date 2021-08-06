@@ -87,8 +87,6 @@ void Map::UpdateGameObjects()
     {
       go->Update();
 
-      // NOTE: check if this actually works.
-
       // If we have fast monster, player should be able to see its movements
       // or it may look like monster just popped out of nowhere before the player
       // since all movement updates are off-screen.
@@ -106,6 +104,17 @@ void Map::UpdateGameObjects()
         if (d <= _playerRef->VisibilityRadius.Get())
         {
           // Check if he's actually visible
+          //
+          // NOTE: condition can make it look like actor is not
+          // moving in certain cases (e.g. when monster is fast enough
+          // to perform several actions in one turn, and tries
+          // to move away from player and then go back because
+          // player is no longer visible).
+          //
+          // Without it there will be lags during movement if
+          // there are actors present in player's radius,
+          // which aren't visible.
+          //
           if (IsObjectVisible(plPos, objPos))
           {
             Application::Instance().ForceDrawMainState();

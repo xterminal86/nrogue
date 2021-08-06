@@ -102,7 +102,11 @@ void AIModelBase::Update()
     }
     else
     {
-      if (_root->Run() == BTResult::Failure)
+      auto res = _root->Run();
+
+      //DebugLog("%s AIModelBase::Update() _root->Run() = %i", AIComponentRef->OwnerGameObject->ObjectName.data(), (int)res);
+
+      if (res == BTResult::Failure)
       {
         _root->Reset();
       }
@@ -543,7 +547,8 @@ void AIModelBase::PrintBrains(Node* n, int indent)
 {
   std::string tabs(indent, '.');
 
-  DebugLog("%s0x%X - %s\n", tabs.data(), n, n->ToString().data());
+  std::string nodeName = n->ToString();
+  DebugLog("%s0x%X - %s\n", tabs.data(), n, nodeName.data());
 
   ControlNode* cn = dynamic_cast<ControlNode*>(n);
   if (cn)

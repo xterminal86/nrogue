@@ -7,8 +7,6 @@ BTResult TaskMoveAwayFromPlayer::Run()
 {
   //DebugLog("[TaskMoveAwayFromPlayer]\n");
 
-  // FIXME: rewrite to use potential field map emanating from player
-
   int px = _playerRef->PosX;
   int py = _playerRef->PosY;
 
@@ -32,6 +30,8 @@ BTResult TaskMoveAwayFromPlayer::Run()
       found = true;
     }
   }
+
+  //DebugLog("Move away found = %i { %i; %i }", found, posToWalk.X, posToWalk.Y);
 
   if (!found)
   {

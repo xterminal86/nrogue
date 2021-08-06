@@ -120,6 +120,8 @@ void ServiceState::BlessItem(const ServiceInfo& si)
   // are handled in item use handler,
   // so no need to do anything special here.
 
+  bool didNothing = si.ItemComponentRef->Data.Bonuses.empty();
+
   for (auto& bonus : si.ItemComponentRef->Data.Bonuses)
   {
     switch (bonus.Type)
@@ -164,7 +166,16 @@ void ServiceState::BlessItem(const ServiceInfo& si)
       case ItemBonusType::KNOCKBACK:
         bonus.BonusValue += (bonus.BonusValue / 2);
         break;
+
+      default:
+        didNothing = true;
+        break;
     }
+  }
+
+  if (didNothing)
+  {
+    return;
   }
 
   ItemComponent* equippedItem = nullptr;
@@ -281,18 +292,23 @@ void ServiceState::FillItemsForBlessing()
     ItemComponent* ic = item->GetComponent<ItemComponent>();
 
     bool idStatus = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered);
+    bool alreadyBlessed = (idStatus && ic->Data.Prefix == ItemPrefix::BLESSED);
 
-    bool alreadyBlessed = (idStatus && (ic->Data.Prefix == ItemPrefix::BLESSED));
+    if (alreadyBlessed)
+    {
+      continue;
+    }
 
     int validBonuses = GetValidBonusesCount(ic);
 
-    // TODO: how to check for other objects with empty Data.Bonuses
-    // vector like potions, food, scrolls, gems, wands etc.?
-    bool isValid = (ic->Data.ItemType_ != ItemType::DUMMY) &&
-                   ((idStatus && validBonuses > 0) ||
-                    (idStatus && ic->Data.Prefix == ItemPrefix::CURSED));
-
-    if (alreadyBlessed || !isValid)
+    // If it's an uncursed item that can be equipped, but it
+    // contains invalid bonuses (like uncursed ring of reflection),
+    // ignore it. Also ignore dummy items like notes.
+    if (idStatus &&
+        (ic->Data.ItemType_ == ItemType::DUMMY ||
+        (ic->Data.Prefix == ItemPrefix::UNCURSED &&
+        validBonuses == 0 &&
+        ic->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE)))
     {
       continue;
     }
