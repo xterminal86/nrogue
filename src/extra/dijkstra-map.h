@@ -27,7 +27,7 @@ class DijkstraMap
 
     std::string GetFieldString();
 
-    std::vector<Cell> GetCell(int mapX, int mapY);
+    Cell* GetCell(int mapX, int mapY);
 
     Position FieldToMapCoords(const Position& fieldIndices);
     Position MapToFieldCoords(const Position& mapPos);

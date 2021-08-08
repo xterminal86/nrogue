@@ -43,7 +43,7 @@ void Player::Init()
   Attrs.Exp.Reset(0);
   Attrs.Exp.SetMax(100);
 
-  DistanceField.Init(this, 3);
+  DistanceField.Init(this, 2);
 
   // FIXME: debug
 

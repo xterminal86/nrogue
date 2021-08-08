@@ -47,7 +47,19 @@ void DijkstraMap::Emanate()
 {
   std::vector<Position> cellsToVisit;
 
-  cellsToVisit.push_back({ _owner->PosX, _owner->PosY });
+  _fieldOrigin = { _owner->PosX, _owner->PosY };
+
+  cellsToVisit.push_back(_fieldOrigin);
+
+  int size = _fieldRadius * 2;
+  for (int x = 0; x <= size; x++)
+  {
+    for (int y = 0; y <= size; y++)
+    {
+      _field[x][y].Cost = 0;
+      _field[x][y].Visited = false;
+    }
+  }
 
   while (!cellsToVisit.empty())
   {
@@ -109,9 +121,9 @@ void DijkstraMap::LookAround(const Position& mapPos, std::vector<Position>& cell
   parent.Visited = true;
 }
 
-std::vector<DijkstraMap::Cell> DijkstraMap::GetCell(int mapX, int mapY)
+DijkstraMap::Cell* DijkstraMap::GetCell(int mapX, int mapY)
 {
-  std::vector<Cell> res;
+  Cell* res = nullptr;
 
   if (IsOutOfBounds({ mapX, mapY }))
   {
@@ -119,7 +131,7 @@ std::vector<DijkstraMap::Cell> DijkstraMap::GetCell(int mapX, int mapY)
   }
   else
   {
-    res = { _field[mapX][mapY] };
+    res = &_field[mapX][mapY];
   }
 
   return res;
@@ -183,8 +195,8 @@ Position DijkstraMap::FieldToMapCoords(const Position& fieldIndices)
     return res;
   }
 
-  res.X = _owner->PosX + (fieldIndices.X - _fieldRadius);
-  res.Y = _owner->PosY + (fieldIndices.Y - _fieldRadius);
+  res.X = _owner->PosX + (fieldIndices.Y - _fieldRadius);
+  res.Y = _owner->PosY + (fieldIndices.X - _fieldRadius);
 
   return res;
 }
@@ -199,7 +211,9 @@ std::string DijkstraMap::GetFieldString()
   {
     for (int y = 0; y <= size; y++)
     {
-      ss << "[" << _field[x][y].Cost << "]";
+      Cell& c = _field[x][y];
+      ss << "(" << c.MapPos.X << ";" << c.MapPos.Y << ")"
+         << " [" << c.Cost << "] ";
     }
 
     ss << "\n";
