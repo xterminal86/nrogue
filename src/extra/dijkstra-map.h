@@ -2,6 +2,7 @@
 #define DIJKSTRAMAP_H
 
 #include <vector>
+#include <queue>
 #include <string>
 
 #include "position.h"
@@ -43,9 +44,9 @@ class DijkstraMap
 
     GameObject* _owner;
 
-    const int _blockedCellCost = 500;
+    const int _blockedCellCost = 3000;
 
-    void LookAround(const Position& mapPos, std::vector<Position>& cellsToVisit);
+    void LookAround(const Position& mapPos, std::queue<Position>& cellsToVisit);
 
     bool IsOutOfBounds(const Position& fieldPos);
 };

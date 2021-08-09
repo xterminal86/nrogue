@@ -41,7 +41,7 @@ namespace Util
   extern std::vector<std::string> StringSplit(const std::string& str, char delim);
 
   extern bool IsObjectInRange(const Position& posToCheckFrom,
-                              const Position& objectToCheck,
+                              const Position& objectPositionToCheck,
                               int rangeX,
                               int rangeY);
 

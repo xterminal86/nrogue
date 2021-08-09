@@ -99,15 +99,17 @@ class Player : public GameObject
     void ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes);
     void ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int damage, bool againstRes);
     void ProcessTeleport(GameObject* target, ItemComponent* weapon);
+
     bool TryToDamageObject(GameObject* object, int amount, bool againstRes = true);
     bool WeaponLosesDurability();
     bool ShouldBreak(ItemComponent* ic);
+    bool PassByNPC(int dx, int dy);
+
     void BreakItem(ItemComponent* ic, bool suppressMessage = false);
 
     void ProcessEffectsPlayer();
     void ProcessItemsEffects();
 
-    void PassByNPC(int dx, int dy);
     void SwitchPlaces(AIComponent* other);
 
     int CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bool meleeAttackWithRangedWeapon);

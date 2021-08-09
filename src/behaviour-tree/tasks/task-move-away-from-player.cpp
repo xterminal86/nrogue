@@ -7,41 +7,45 @@ BTResult TaskMoveAwayFromPlayer::Run()
 {
   //DebugLog("[TaskMoveAwayFromPlayer]\n");
 
-  int px = _playerRef->PosX;
-  int py = _playerRef->PosY;
+  Position objPos    = { _objectToControl->PosX, _objectToControl->PosY };
+  Position playerPos = { _playerRef->PosX, _playerRef->PosY };
 
-  auto res = Map::Instance().GetWalkableCellsAround({ _objectToControl->PosX, _objectToControl->PosY });
+  auto res = Map::Instance().GetWalkableCellsAround(objPos);
   if (res.empty())
   {
     return BTResult::Failure;
   }
 
-  int maxDistance = 1;
-  Position posToWalk;
-
-  bool found = false;
-  for (auto& c : res)
+  if (_playerRef->DistanceField.IsDirty())
   {
-    int d = Util::BlockDistance(c.X, c.Y, px, py);
-    if (d > maxDistance)
+    _playerRef->DistanceField.Emanate();
+  }
+
+  DijkstraMap::Cell* cellFound = nullptr;
+
+  int maxCost = 0;
+  for (auto& p : res)
+  {
+    DijkstraMap::Cell* c = _playerRef->DistanceField.GetCell(p.X, p.Y);
+    if (c != nullptr && c->Cost > maxCost)
     {
-      maxDistance = d;
-      posToWalk = c;
-      found = true;
+      maxCost = c->Cost;
+      cellFound = c;
     }
   }
 
-  //DebugLog("Move away found = %i { %i; %i }", found, posToWalk.X, posToWalk.Y);
-
-  if (!found)
+  if (cellFound == nullptr)
   {
     return BTResult::Failure;
   }
 
-  //DebugLog("Found [%i %i] (%i)\n", posToWalk.X, posToWalk.Y, maxDistance);
+  bool playerCanAttackThere = Util::IsObjectInRange(cellFound->MapPos, playerPos, 1, 1);
+  if (playerCanAttackThere)
+  {
+    return BTResult::Failure;
+  }
 
-  // posToWalk cell should be empty so MoveTo() should succeed
-  _objectToControl->MoveTo(posToWalk);
+  _objectToControl->MoveTo(cellFound->MapPos);
   _objectToControl->FinishTurn();
 
   return BTResult::Success;

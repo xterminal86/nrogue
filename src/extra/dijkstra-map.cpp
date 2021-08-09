@@ -45,11 +45,11 @@ void DijkstraMap::Init(GameObject* owner, int fieldRadius)
 
 void DijkstraMap::Emanate()
 {
-  std::vector<Position> cellsToVisit;
+  std::queue<Position> cellsToVisit;
 
   _fieldOrigin = { _owner->PosX, _owner->PosY };
 
-  cellsToVisit.push_back(_fieldOrigin);
+  cellsToVisit.push(_fieldOrigin);
 
   int size = _fieldRadius * 2;
   for (int x = 0; x <= size; x++)
@@ -63,17 +63,17 @@ void DijkstraMap::Emanate()
 
   while (!cellsToVisit.empty())
   {
-    Position p = cellsToVisit[0];
+    Position p = cellsToVisit.front();
 
     LookAround(p, cellsToVisit);
 
-    cellsToVisit.erase(cellsToVisit.begin());
+    cellsToVisit.pop();
   }
 
   _isDirty = false;
 }
 
-void DijkstraMap::LookAround(const Position& mapPos, std::vector<Position>& cellsToVisit)
+void DijkstraMap::LookAround(const Position& mapPos, std::queue<Position>& cellsToVisit)
 {
   auto& curLvl = Map::Instance().CurrentLevel;
 
@@ -85,15 +85,10 @@ void DijkstraMap::LookAround(const Position& mapPos, std::vector<Position>& cell
     return;
   }
 
-  // If already visited
   Cell& parent = _field[fieldPos.X][fieldPos.Y];
-  if (parent.Visited)
-  {
-    return;
-  }
 
   // Check bounds on four points around
-  std::vector<Position> pointsToCheck =
+  const std::vector<Position> pointsToCheck =
   {
     { fieldPos.X,     fieldPos.Y - 1 },
     { fieldPos.X,     fieldPos.Y + 1 },
@@ -103,9 +98,10 @@ void DijkstraMap::LookAround(const Position& mapPos, std::vector<Position>& cell
 
   for (auto& p : pointsToCheck)
   {
-    if (!IsOutOfBounds(p))
+    if (!IsOutOfBounds(p) && !_field[p.X][p.Y].Visited)
     {
       Position mapPos = FieldToMapCoords(p);
+
       bool cellBlocked = curLvl->IsCellBlocking(mapPos);
 
       Cell& c = _field[p.X][p.Y];
@@ -113,8 +109,9 @@ void DijkstraMap::LookAround(const Position& mapPos, std::vector<Position>& cell
       c.FieldPos = p;
       c.MapPos = mapPos;
       c.Cost = cellBlocked ? _blockedCellCost : (parent.Cost + 1);
+      c.Visited = true;
 
-      cellsToVisit.push_back(mapPos);
+      cellsToVisit.push(mapPos);
     }
   }
 
@@ -125,22 +122,23 @@ DijkstraMap::Cell* DijkstraMap::GetCell(int mapX, int mapY)
 {
   Cell* res = nullptr;
 
-  if (IsOutOfBounds({ mapX, mapY }))
+  Position p = MapToFieldCoords({ mapX, mapY });
+  if (IsOutOfBounds(p))
   {
-    DebugLog("!!! Outside field map array %i %i !!!", mapX, mapY);
+    return res;
   }
-  else
-  {
-    res = &_field[mapX][mapY];
-  }
+
+  res = &_field[p.X][p.Y];
 
   return res;
 }
 
 bool DijkstraMap::IsOutOfBounds(const Position& fieldPos)
 {
-  if (fieldPos.X < 0 || fieldPos.X > _fieldRadius * 2
-   || fieldPos.Y < 0 || fieldPos.Y > _fieldRadius * 2)
+  const int size = _fieldRadius * 2;
+
+  if (fieldPos.X < 0 || fieldPos.X > size
+   || fieldPos.Y < 0 || fieldPos.Y > size)
   {
     return true;
   }
@@ -150,7 +148,11 @@ bool DijkstraMap::IsOutOfBounds(const Position& fieldPos)
 
 void DijkstraMap::SetDirty()
 {
-  _isDirty = true;
+  // Probably makes no sense in terms of optimization, but still...
+  if (!_isDirty)
+  {
+    _isDirty = true;
+  }
 }
 
 bool DijkstraMap::IsDirty()
@@ -160,40 +162,19 @@ bool DijkstraMap::IsDirty()
 
 Position DijkstraMap::MapToFieldCoords(const Position& mapPos)
 {
-  auto& curLvl = Map::Instance().CurrentLevel;
-
-  Position res;
-
-  if (mapPos.X < 0
-   || mapPos.Y < 0
-   || mapPos.X > curLvl->MapSize.X - 1
-   || mapPos.Y > curLvl->MapSize.Y - 1)
-  {
-    DebugLog("!!! Wrong map coords: %i %i !!!", mapPos.X, mapPos.Y);
-    return res;
-  }
-
   int dx = mapPos.X - _fieldOrigin.X;
   int dy = mapPos.Y - _fieldOrigin.Y;
 
   int ix = dx + _fieldRadius;
   int iy = dy + _fieldRadius;
 
-  return { ix, iy };
+  // Because (2;1) in world coordinates is (1;2) in array coordinates.
+  return { iy, ix };
 }
 
 Position DijkstraMap::FieldToMapCoords(const Position& fieldIndices)
 {
   Position res;
-
-  if (fieldIndices.X < 0
-   || fieldIndices.Y < 0
-   || fieldIndices.X > _fieldRadius * 2
-   || fieldIndices.Y > _fieldRadius * 2)
-  {
-    DebugLog("!!! Wrong index values: %i %i !!!", fieldIndices.X, fieldIndices.Y);
-    return res;
-  }
 
   res.X = _owner->PosX + (fieldIndices.Y - _fieldRadius);
   res.Y = _owner->PosY + (fieldIndices.X - _fieldRadius);

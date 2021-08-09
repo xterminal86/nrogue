@@ -342,6 +342,11 @@ void MapLevelBase::DisplayWelcomeText()
 
 bool MapLevelBase::IsCellBlocking(const Position& pos)
 {
+  if (!Util::IsInsideMap(pos, MapSize))
+  {
+    return true;
+  }
+
   bool groundBlock = MapArray[pos.X][pos.Y]->Blocking;
   bool staticBlock = false;
   if (StaticMapObjects[pos.X][pos.Y] != nullptr)

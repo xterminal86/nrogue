@@ -43,13 +43,13 @@ void Player::Init()
   Attrs.Exp.Reset(0);
   Attrs.Exp.SetMax(100);
 
-  DistanceField.Init(this, 2);
+  DistanceField.Init(this, 40);
 
   // FIXME: debug
 
   //Money = 0;
-  Money = 100000;
-  Attrs.HP.Reset(10000);
+  //Money = 100000;
+  //Attrs.HP.Reset(10000);
   //Attrs.HungerRate.Set(0);
 }
 
@@ -107,6 +107,9 @@ bool Player::Move(int dx, int dy)
   auto cell = Map::Instance().CurrentLevel->MapArray[PosX + dx][PosY + dy].get();
   auto staticObject = Map::Instance().CurrentLevel->StaticMapObjects[PosX + dx][PosY + dy].get();
 
+  bool moveOk = false;
+  bool passByNPC = false;
+
   if (!cell->Blocking)
   {
     if (staticObject != nullptr)
@@ -131,7 +134,7 @@ bool Player::Move(int dx, int dy)
       else
       {
         MoveGameObject(dx, dy);
-        return true;
+        moveOk = true;
       }
     }
     else if (cell->Occupied)
@@ -140,20 +143,27 @@ bool Player::Move(int dx, int dy)
       // MapOffsetY and MapOffsetX to be incremented in MainState,
       // but we manually call AdjustCamera() inside this method in
       // SwitchPlaces().
-      PassByNPC(dx, dy);
+      passByNPC = PassByNPC(dx, dy);
     }
     else
     {
       MoveGameObject(dx, dy);
-      return true;
+      moveOk = true;
     }
   }
 
-  return false;
+  if (moveOk || passByNPC)
+  {
+    DistanceField.SetDirty();
+  }
+
+  return moveOk;
 }
 
-void Player::PassByNPC(int dx, int dy)
+bool Player::PassByNPC(int dx, int dy)
 {
+  bool ok = true;
+
   auto actor = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
   auto c = actor->GetComponent<AIComponent>();
   AIComponent* aic = static_cast<AIComponent*>(c);
@@ -164,12 +174,15 @@ void Player::PassByNPC(int dx, int dy)
     {
       std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : "The " + actor->ObjectName;
       Printer::Instance().AddMessage(name + " won't move over");
+      ok = false;
     }
     else
     {
       SwitchPlaces(aic);
     }
   }
+
+  return ok;
 }
 
 void Player::CheckVisibility()

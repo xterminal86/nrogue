@@ -35,15 +35,15 @@ namespace Util
   }
 
   bool IsObjectInRange(const Position& posToCheckFrom,
-                        const Position& objectToCheck,
-                        int rangeX,
-                        int rangeY)
+                       const Position& objectPositionToCheck,
+                       int rangeX,
+                       int rangeY)
   {
     int px = posToCheckFrom.X;
     int py = posToCheckFrom.Y;
 
-    int x = objectToCheck.X;
-    int y = objectToCheck.Y;
+    int x = objectPositionToCheck.X;
+    int y = objectPositionToCheck.Y;
 
     int lx = x - rangeX;
     int ly = y - rangeY;
