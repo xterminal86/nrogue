@@ -38,8 +38,12 @@ class LookInputState : public GameState
       "'b' - spawn bat",
       "'B' - spawn vampire bat",
       "'S' - spawn spider",
-      "'T' - spawn troll"
+      "'T' - spawn troll",
+      "",
+      "'f' - player's potential field value here"
     };
+
+    std::string _distanceField;
     #endif
 
 };

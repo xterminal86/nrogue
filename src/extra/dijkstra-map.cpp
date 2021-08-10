@@ -56,10 +56,12 @@ void DijkstraMap::Emanate()
   {
     for (int y = 0; y <= size; y++)
     {
-      _field[x][y].Cost = 0;
+      _field[x][y].Cost = kBlockedCellCost;
       _field[x][y].Visited = false;
     }
   }
+
+  _field[_fieldRadius][_fieldRadius].Cost = 0;
 
   while (!cellsToVisit.empty())
   {
@@ -86,8 +88,11 @@ void DijkstraMap::LookAround(const Position& mapPos, std::queue<Position>& cells
   }
 
   Cell& parent = _field[fieldPos.X][fieldPos.Y];
+  if (parent.Cost == kBlockedCellCost)
+  {
+    return;
+  }
 
-  // Check bounds on four points around
   const std::vector<Position> pointsToCheck =
   {
     { fieldPos.X,     fieldPos.Y - 1 },
@@ -108,7 +113,7 @@ void DijkstraMap::LookAround(const Position& mapPos, std::queue<Position>& cells
 
       c.FieldPos = p;
       c.MapPos = mapPos;
-      c.Cost = cellBlocked ? _blockedCellCost : (parent.Cost + 1);
+      c.Cost = cellBlocked ? kBlockedCellCost : (parent.Cost + 1);
       c.Visited = true;
 
       cellsToVisit.push(mapPos);

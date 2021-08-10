@@ -4,6 +4,7 @@
 #include <vector>
 #include <queue>
 #include <string>
+#include <limits>
 
 #include "position.h"
 
@@ -33,18 +34,18 @@ class DijkstraMap
     Position FieldToMapCoords(const Position& fieldIndices);
     Position MapToFieldCoords(const Position& mapPos);
 
+    static const int kBlockedCellCost = std::numeric_limits<int>::max();
+
   private:
     std::vector<std::vector<Cell>> _field;
 
     int _fieldRadius;
 
-    bool _isDirty = false;
+    bool _isDirty = true;
 
     Position _fieldOrigin;
 
     GameObject* _owner;
-
-    const int _blockedCellCost = 3000;
 
     void LookAround(const Position& mapPos, std::queue<Position>& cellsToVisit);
 

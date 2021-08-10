@@ -8,13 +8,14 @@ BTResult TaskMoveAwayFromPlayer::Run()
   //DebugLog("[TaskMoveAwayFromPlayer]\n");
 
   Position objPos    = { _objectToControl->PosX, _objectToControl->PosY };
-  Position playerPos = { _playerRef->PosX, _playerRef->PosY };
+  Position playerPos = { _playerRef->PosX,       _playerRef->PosY       };
 
   auto res = Map::Instance().GetWalkableCellsAround(objPos);
-  if (res.empty())
-  {
-    return BTResult::Failure;
-  }
+
+  // In case when actor moved himself into a corner,
+  // corner will be the cell with maximum cost, so this
+  // prevents frantic movement from and to the corner.
+  res.push_back(objPos);
 
   if (_playerRef->DistanceField.IsDirty())
   {
@@ -27,7 +28,9 @@ BTResult TaskMoveAwayFromPlayer::Run()
   for (auto& p : res)
   {
     DijkstraMap::Cell* c = _playerRef->DistanceField.GetCell(p.X, p.Y);
-    if (c != nullptr && c->Cost > maxCost)
+    if (c != nullptr &&
+        c->Cost > maxCost &&
+        c->Cost != DijkstraMap::kBlockedCellCost)
     {
       maxCost = c->Cost;
       cellFound = c;

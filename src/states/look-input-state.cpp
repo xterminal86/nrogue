@@ -112,6 +112,20 @@ void LookInputState::HandleInput()
       Map::Instance().InsertActor(troll);
     }
     break;
+
+    case 'f':
+    {
+      if (_playerRef->DistanceField.IsDirty())
+      {
+        _playerRef->DistanceField.Emanate();
+      }
+
+      DijkstraMap::Cell* c = _playerRef->DistanceField.GetCell(_cursorPosition.X, _cursorPosition.Y);
+
+      _distanceField = (c == nullptr) ? "0x0" : Util::StringFormat("%i %i [%i]", c->MapPos.X, c->MapPos.Y, c->Cost);
+    }
+    break;
+
     #endif
 
     default:
@@ -232,15 +246,22 @@ void LookInputState::Update(bool forceUpdate)
     }
 
     Printer::Instance().PrintFB(Printer::TerminalWidth / 2, 0,
-                                  "Press 'q' to exit look mode",
-                                  Printer::kAlignCenter,
-                                  "#FFFFFF");
+                                "Press 'q' to exit look mode",
+                                Printer::kAlignCenter,
+                                GlobalConstants::WhiteColor);
+
+    std::string coords = Util::StringFormat("[%i;%i]", _cursorPosition.X, _cursorPosition.Y);
+    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
+                                Printer::TerminalHeight - 2,
+                                coords,
+                                Printer::kAlignRight,
+                                GlobalConstants::WhiteColor);
 
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
-                                  Printer::TerminalHeight - 1,
-                                  lookStatus,
-                                  Printer::kAlignRight,
-                                  "#FFFFFF");
+                                Printer::TerminalHeight - 1,
+                                lookStatus,
+                                Printer::kAlignRight,
+                                GlobalConstants::WhiteColor);
 
     #ifdef DEBUG_BUILD
     PrintDebugInfo();
@@ -340,5 +361,7 @@ void LookInputState::PrintDebugInfo()
     Printer::Instance().PrintFB(0, yStart, line, Printer::kAlignLeft, "#FFFFFF");
     yStart++;
   }
+
+  Printer::Instance().PrintFB(0, yStart + 1, _distanceField, Printer::kAlignLeft, "#FFFFFF");
 }
 #endif

@@ -702,19 +702,24 @@ void MainState::DisplayExitHint()
 
 void MainState::DisplayStatusIcons()
 {
-  int th = Printer::TerminalHeight;
-
   int startPos = 4;
 
-  // Hungry
+  DisplayHungerStatus(startPos);
+  DisplayWeaponCondition(startPos);
+  DisplayArmorCondition(startPos);
+  DisplayAmmoCondition(startPos);
+  DisplayActiveEffects(startPos);
+}
 
+void MainState::DisplayHungerStatus(const int& startPos)
+{
   if (_playerRef->IsStarving)
   {
     Printer::Instance().PrintFB(startPos,
-                                 th - 3,
-                                 '%',
-                                 GlobalConstants::WhiteColor,
-                                 GlobalConstants::RedColor);
+                                _th - 3,
+                                '%',
+                                GlobalConstants::WhiteColor,
+                                GlobalConstants::RedColor);
   }
   else
   {
@@ -722,12 +727,13 @@ void MainState::DisplayStatusIcons()
     int part = hungerMax - hungerMax * 0.25;
     if (_playerRef->Attrs.Hunger >= part)
     {
-      Printer::Instance().PrintFB(startPos, th - 3, '%', GlobalConstants::WhiteColor, "#999900");
+      Printer::Instance().PrintFB(startPos, _th - 3, '%', GlobalConstants::WhiteColor, "#999900");
     }
   }
+}
 
-  // Weapon condition
-
+void MainState::DisplayWeaponCondition(const int& startPos)
+{
   ItemComponent* weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
   if (weapon != nullptr &&
      (weapon->Data.ItemType_ == ItemType::WEAPON
@@ -738,12 +744,13 @@ void MainState::DisplayStatusIcons()
 
     if (weapon->Data.Durability.Min().Get() <= warning)
     {
-      Printer::Instance().PrintFB(startPos + 2, th - 3, ')', "#FFFF00");
+      Printer::Instance().PrintFB(startPos + 2, _th - 3, ')', "#FFFF00");
     }
   }
+}
 
-  // Armor condition
-
+void MainState::DisplayArmorCondition(const int& startPos)
+{
   ItemComponent* armor = _playerRef->EquipmentByCategory[EquipmentCategory::TORSO][0];
   if (armor != nullptr && armor->Data.ItemType_ == ItemType::ARMOR)
   {
@@ -752,48 +759,56 @@ void MainState::DisplayStatusIcons()
 
     if (armor->Data.Durability.Min().Get() <= warning)
     {
-      Printer::Instance().PrintFB(startPos + 4, th - 3, '[', "#FFFF00");
+      Printer::Instance().PrintFB(startPos + 4, _th - 3, '[', "#FFFF00");
     }
   }
+}
 
-  // Ammo condition
-
+void MainState::DisplayAmmoCondition(const int& startPos)
+{
   ItemComponent* arrows = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0];
   if (arrows != nullptr && arrows->Data.ItemType_ == ItemType::ARROWS)
   {
     int amount = arrows->Data.Amount;
     if (amount <= 3)
     {
-      Printer::Instance().PrintFB(startPos + 6, th - 3, '^', "#FFFF00");
+      Printer::Instance().PrintFB(startPos + 6, _th - 3, '^', "#FFFF00");
     }
   }
+}
 
-  // Active effects
-
-  std::string lastDisplayedEffect;
-
+void MainState::DisplayActiveEffects(const int& startPos)
+{
   int offsetX = startPos;
+
+  std::map<std::string, int> effectDurationByName;
+
   for (auto& kvp : _playerRef->Effects())
   {
     for (const ItemBonusStruct& item : kvp.second)
     {
-      auto shortName = GlobalConstants::BonusDisplayNameByType.at(item.Type);
-      if (shortName == lastDisplayedEffect)
+      std::string shortName = GlobalConstants::BonusDisplayNameByType.at(item.Type);
+      int duration = item.Duration;
+      if (duration != -1)
       {
-        continue;
+        effectDurationByName[shortName] += duration;
       }
-
-      std::string color = (item.Duration <= GlobalConstants::TurnReadyValue && item.Duration != -1) ? GlobalConstants::GroundColor : GlobalConstants::WhiteColor;
-
-      Printer::Instance().PrintFB(offsetX,
-                                   th - 4,
-                                   shortName,
-                                   Printer::kAlignLeft,
-                                   color);
-      offsetX += 4;
-
-      lastDisplayedEffect = shortName;
     }
+  }
+
+  for (auto& kvp : effectDurationByName)
+  {
+    std::string color = (kvp.second <= GlobalConstants::TurnReadyValue) ?
+                         GlobalConstants::GroundColor :
+                         GlobalConstants::WhiteColor;
+
+    Printer::Instance().PrintFB(offsetX,
+                                _th - 4,
+                                kvp.first,
+                                Printer::kAlignLeft,
+                                color);
+
+    offsetX += 4;
   }
 }
 

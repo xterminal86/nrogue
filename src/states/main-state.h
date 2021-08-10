@@ -27,6 +27,11 @@ class MainState : public GameState
     void DisplayStartHint();
     void DisplayExitHint();
     void DisplayStatusIcons();
+    void DisplayHungerStatus(const int& startPos);
+    void DisplayWeaponCondition(const int& startPos);
+    void DisplayArmorCondition(const int& startPos);
+    void DisplayAmmoCondition(const int& startPos);
+    void DisplayActiveEffects(const int& startPos);
     void DisplayGameLog();
     void DisplayScenarioInformation();
     void TryToPickupItem();

@@ -25,7 +25,6 @@ R"(
             [COND p1="hp_low"]
               [SEL]
                 [TASK p1="move_away"]
-                [TASK p1="idle"]
             [TASK p1="chase_player"]
     [TASK p1="move_rnd"]
     [TASK p1="idle"]
