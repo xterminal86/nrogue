@@ -27,12 +27,19 @@ bool ContainerComponent::Add(GameObject* object)
     {
       for (auto& i : Contents)
       {
-        auto ic = i->GetComponent<ItemComponent>();
-        ItemComponent* inventoryItemComponent = static_cast<ItemComponent*>(ic);
-        if (itemToAdd->Data.IsIdentified && inventoryItemComponent->Data.IsIdentified
-         && inventoryItemComponent->Data.ItemTypeHash == itemToAdd->Data.ItemTypeHash)
+        ItemComponent* ic = i->GetComponent<ItemComponent>();
+
+        // If item is identified and is stackable, stack it.
+        bool isIded = (ic->Data.IsIdentified && itemToAdd->Data.IsIdentified &&
+                      (ic->Data.ItemTypeHash == itemToAdd->Data.ItemTypeHash));
+
+        // If item is not identified, but came from the same stack, add it back.
+        bool fromTheSameStack = (!ic->Data.IsIdentified && !itemToAdd->Data.IsIdentified &&
+                                 (ic->OwnerGameObject->StackObjectId == itemToAdd->OwnerGameObject->StackObjectId));
+
+        if (isIded || fromTheSameStack)
         {
-          inventoryItemComponent->Data.Amount += itemToAdd->Data.Amount;
+          ic->Data.Amount += itemToAdd->Data.Amount;
           foundStack = true;
 
           // !!! GameObject* object should not be destroyed here !!!

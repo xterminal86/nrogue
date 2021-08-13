@@ -393,7 +393,6 @@ void Player::SetDefaultEquipment()
 
       weaponAndArmorToEquip.push_back(arrows);
       weaponAndArmorToEquip.push_back(weapon);
-      weaponAndArmorToEquip.push_back(dagger);
     }
     break;
 

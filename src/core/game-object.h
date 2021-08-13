@@ -148,6 +148,8 @@ class GameObject
 
     uint64_t ObjectId();
 
+    uint64_t StackObjectId = 0;
+
     Attributes Attrs;
 
     int HealthRegenTurns = 0;

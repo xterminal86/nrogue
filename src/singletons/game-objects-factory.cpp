@@ -177,6 +177,8 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
+  go->StackObjectId = go->ObjectId();
+
   return go;
 }
 
@@ -714,6 +716,7 @@ GameObject* GameObjectsFactory::CreateFood(int x, int y, FoodType type, ItemPref
   ic->Data.Cost = addsHunger;
 
   ic->Data.IsStackable = true;
+  go->StackObjectId = go->ObjectId();
 
   std::string unidName = (type == FoodType::RATIONS || type == FoodType::IRON_RATIONS) ? "Rations" : name;
   ic->Data.UnidentifiedName = "?" + unidName + "?";
@@ -755,6 +758,8 @@ GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
   ic->Data.IsIdentified = true;
   ic->Data.Cost = 25;
 
+  go->StackObjectId = go->ObjectId();
+
   ic->Data.IdentifiedDescription = { "Restores some of your health." };
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
@@ -791,6 +796,8 @@ GameObject* GameObjectsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOv
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
   ic->Data.Cost = 5;
+
+  go->StackObjectId = go->ObjectId();
 
   ic->Data.IdentifiedDescription = { "Removes poison from the body" };
   ic->Data.IdentifiedName        = name;
@@ -829,6 +836,8 @@ GameObject* GameObjectsFactory::CreateManaPotion(ItemPrefix prefixOverride)
   ic->Data.IsIdentified = true;
   ic->Data.Cost = 25;
 
+  go->StackObjectId = go->ObjectId();
+
   ic->Data.IdentifiedDescription = { "Helps you regain spiritual powers." };
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
@@ -866,6 +875,8 @@ GameObject* GameObjectsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
   ic->Data.IsIdentified = true;
   ic->Data.Cost = 15;
 
+  go->StackObjectId = go->ObjectId();
+
   ic->Data.IdentifiedDescription = { "Liquid food. Drink it if there's nothing else to eat." };
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
@@ -902,6 +913,8 @@ GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
   ic->Data.Cost = 250;
+
+  go->StackObjectId = go->ObjectId();
 
   ic->Data.IdentifiedDescription =
   {
@@ -944,6 +957,8 @@ GameObject* GameObjectsFactory::CreateStatPotion(const std::string& statName, It
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
   ic->Data.Cost = 500;
+
+  go->StackObjectId = go->ObjectId();
 
   auto str = Util::StringFormat("This will affect your %s", statName.data());
   ic->Data.IdentifiedDescription = { str };
@@ -2123,6 +2138,8 @@ GameObject* GameObjectsFactory::CreateArrows(int x, int y, ArrowType type, ItemP
   ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
   ic->Data.Cost = 1;
 
+  go->StackObjectId = go->ObjectId();
+
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
@@ -2493,29 +2510,30 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
 
   // NOTE: don't forget to copy any newly added fields
 
-  copy->VisibilityRadius    = copyFrom->VisibilityRadius;
-  copy->PosX                = copyFrom->PosX;
-  copy->PosY                = copyFrom->PosY;
-  copy->Special             = copyFrom->Special;
-  copy->Blocking            = copyFrom->Blocking;
-  copy->BlocksSight         = copyFrom->BlocksSight;
-  copy->Revealed            = copyFrom->Revealed;
-  copy->Visible             = copyFrom->Visible;
-  copy->Occupied            = copyFrom->Occupied;
-  copy->IsDestroyed         = copyFrom->IsDestroyed;
-  copy->Image               = copyFrom->Image;
-  copy->FgColor             = copyFrom->FgColor;
-  copy->BgColor             = copyFrom->BgColor;
-  copy->ObjectName          = copyFrom->ObjectName;
-  copy->FogOfWarName        = copyFrom->FogOfWarName;
+  copy->VisibilityRadius = copyFrom->VisibilityRadius;
+  copy->PosX             = copyFrom->PosX;
+  copy->PosY             = copyFrom->PosY;
+  copy->Special          = copyFrom->Special;
+  copy->Blocking         = copyFrom->Blocking;
+  copy->BlocksSight      = copyFrom->BlocksSight;
+  copy->Revealed         = copyFrom->Revealed;
+  copy->Visible          = copyFrom->Visible;
+  copy->Occupied         = copyFrom->Occupied;
+  copy->IsDestroyed      = copyFrom->IsDestroyed;
+  copy->Image            = copyFrom->Image;
+  copy->FgColor          = copyFrom->FgColor;
+  copy->BgColor          = copyFrom->BgColor;
+  copy->ObjectName       = copyFrom->ObjectName;
+  copy->FogOfWarName     = copyFrom->FogOfWarName;
 
   // Not sure if this will actually work, probably not.
   copy->InteractionCallback = copyFrom->InteractionCallback;
 
-  copy->Attrs               = copyFrom->Attrs;
-  copy->HealthRegenTurns    = copyFrom->HealthRegenTurns;
-  copy->Type                = copyFrom->Type;
-  copy->IsLiving            = copyFrom->IsLiving;
+  copy->StackObjectId    = copyFrom->StackObjectId;
+  copy->Attrs            = copyFrom->Attrs;
+  copy->HealthRegenTurns = copyFrom->HealthRegenTurns;
+  copy->Type             = copyFrom->Type;
+  copy->IsLiving         = copyFrom->IsLiving;
 
   copy->_activeEffects           = copyFrom->_activeEffects;
   copy->_previousCell            = copyFrom->_previousCell;
