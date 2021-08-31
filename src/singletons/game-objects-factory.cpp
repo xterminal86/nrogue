@@ -98,6 +98,7 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       break;
 
     default:
+      DebugLog("CreateGameObject(): object type %i is not handled!", objType);
       break;
   }
 
@@ -140,6 +141,10 @@ GameObject* GameObjectsFactory::CreateMonster(int x, int y, GameObjectType monst
 
     case GameObjectType::TROLL:
       go = CreateTroll(x, y);
+      break;
+
+    default:
+      DebugLog("CreateMonster(): monster type %i is not handled!", monsterType);
       break;
   }
 
@@ -551,7 +556,7 @@ GameObject* GameObjectsFactory::CreateHerobrine(int x, int y)
   // FIXME: debug
   //go->LevelUp();
 
-  for (int i = 1; i < 10; i++)
+  for (int i = 0; i < 5; i++)
   {
     go->LevelUp(5);
   }
@@ -1029,6 +1034,10 @@ GameObject* GameObjectsFactory::CreatePotion(ItemType type, ItemPrefix prefixOve
       case ItemType::EXP_POTION:
         go = CreateExpPotion(prefixOverride);
         break;
+
+      default:
+        DebugLog("CreatePotion(): potion type %i is not handled!", type);
+        break;
     }
   }
   else
@@ -1228,6 +1237,10 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 
     case ItemType::ACCESSORY:
       go = CreateRandomAccessory(0, 0);
+      break;
+
+    default:
+      DebugLog("CreateRandomItem(): item type %i is not handled!", res);
       break;
   }
 

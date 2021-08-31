@@ -39,6 +39,7 @@ BTResult TaskRandomMovement::Smart()
   return BTResult::Failure;
 }
 
+// Doesn't check if cell is actually can be walked into
 BTResult TaskRandomMovement::Dumb()
 {
   int dx = RNG::Instance().Random() % 2;
