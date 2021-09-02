@@ -862,6 +862,11 @@ bool Player::WasHitLanded(GameObject* defender)
 
   hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
 
+  if (HasEffect(ItemBonusType::BLINDNESS))
+  {
+    hitChance /= 2;
+  }
+
   auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
                                    Attrs.Skl.Get(),
                                    Attrs.Lvl.Get(),

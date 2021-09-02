@@ -718,7 +718,7 @@ void TargetState::PrintThrowResult(GameObject* tileRef)
   }
   else if (tile == GameObjectType::LAVA)
   {
-    verb = "burns";
+    verb = "melts";
   }
 
   if (!verb.empty())
