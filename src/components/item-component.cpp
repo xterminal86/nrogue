@@ -264,7 +264,7 @@ std::vector<std::string> ItemComponent::GetWandInspectionInfo()
     {
       res.push_back("");
       res.push_back("This wand has lower capacity");
-      res.push_back("and is dangerous due to being cursed");
+      res.push_back("and is unreliable due to being cursed");
     }
   }
 
