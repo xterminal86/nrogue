@@ -13,6 +13,7 @@
 #include "ai-monster-troll.h"
 #include "ai-monster-herobrine.h"
 #include "ai-npc.h"
+#include "item-use-callbacks.h"
 #include "stairs-component.h"
 #include "door-component.h"
 #include "go-timed-destroyer.h"
@@ -730,7 +731,7 @@ GameObject* GameObjectsFactory::CreateFood(int x, int y, FoodType type, ItemPref
   ic->Data.IdentifiedDescription = { "Looks edible." };
   ic->Data.IdentifiedName = name;
 
-  ic->Data.UseCallback = std::bind(&GameObjectsFactory::FoodUseHandler, this, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::FoodUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -769,7 +770,7 @@ GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&GameObjectsFactory::HealingPotionUseHandler, this, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::HealingPotionUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -808,7 +809,7 @@ GameObject* GameObjectsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOv
   ic->Data.IdentifiedName        = name;
   ic->Data.UnidentifiedName      = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&GameObjectsFactory::NeutralizePoisonPotionUseHandler, this, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::NeutralizePoisonPotionUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -847,7 +848,7 @@ GameObject* GameObjectsFactory::CreateManaPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&GameObjectsFactory::ManaPotionUseHandler, this, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::ManaPotionUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -886,7 +887,7 @@ GameObject* GameObjectsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&GameObjectsFactory::HungerPotionUseHandler, this, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::HungerPotionUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -930,7 +931,7 @@ GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&GameObjectsFactory::ExpPotionUseHandler, this, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::ExpPotionUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -971,7 +972,7 @@ GameObject* GameObjectsFactory::CreateStatPotion(const std::string& statName, It
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&GameObjectsFactory::StatPotionUseHandler, this, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::StatPotionUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -1267,63 +1268,6 @@ void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int
   tile->Image = image;
 }
 
-bool GameObjectsFactory::FoodUseHandler(ItemComponent* item)
-{
-  auto objName = (item->Data.IsIdentified) ? item->Data.IdentifiedName : item->Data.UnidentifiedName;
-
-  auto str = Util::StringFormat("You eat %s...", objName.data());
-  Printer::Instance().AddMessage(str);
-
-  if (item->Data.Prefix == ItemPrefix::CURSED)
-  {
-    Printer::Instance().AddMessage("Disgusting!");
-
-    if (Util::Rolld100(50))
-    {
-      _playerRef->Attrs.Hunger += item->Data.Cost;
-
-      Printer::Instance().AddMessage("Rotten food!");
-
-      // NOTE: assuming player hunger meter is in order of 1000
-      int dur = item->Data.Cost / 100;
-
-      ItemBonusStruct b;
-      b.Type = ItemBonusType::POISONED;
-      b.BonusValue = -1;
-      b.Period = 10;
-      b.Duration = dur;
-      b.Cumulative = true;
-      b.Id = item->OwnerGameObject->ObjectId();
-
-      _playerRef->AddEffect(b);
-    }
-    else
-    {
-      _playerRef->Attrs.Hunger -= item->Data.Cost * 0.5f;
-    }
-  }
-  else if (item->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    Printer::Instance().AddMessage("It's delicious!");
-
-    _playerRef->Attrs.Hunger -= item->Data.Cost;
-    _playerRef->IsStarving = false;
-  }
-  else
-  {
-    Printer::Instance().AddMessage("It tasted OK");
-
-    _playerRef->Attrs.Hunger -= item->Data.Cost * 0.75f;
-    _playerRef->IsStarving = false;
-  }
-
-  _playerRef->Attrs.Hunger = Util::Clamp(_playerRef->Attrs.Hunger, 0, _playerRef->Attrs.HungerRate.Get());
-
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
-
-  return true;
-}
-
 GameObject* GameObjectsFactory::CreateNote(const std::string& objName, const std::vector<std::string>& text)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -1429,7 +1373,7 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
 
   SetItemName(go, ic->Data);
 
-  ic->Data.UseCallback = std::bind(&GameObjectsFactory::ScrollUseHandler, this, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::ScrollUseHandler, ic);
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
@@ -2224,7 +2168,7 @@ GameObject* GameObjectsFactory::CreateReturner(int x, int y, int charges, ItemPr
   ic->Data.IdentifiedName = colorName + " Returner";
   ic->Data.UnidentifiedName = "?" + colorName + " Gem?";
 
-  ic->Data.UseCallback = std::bind(&GameObjectsFactory::ReturnerUseHandler, this, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::ReturnerUseHandler, ic);
 
   go->ObjectName = ic->Data.IdentifiedName;
 
@@ -2270,7 +2214,7 @@ GameObject* GameObjectsFactory::CreateRepairKit(int x, int y, int charges, ItemP
   ic->Data.IdentifiedName = "Repair Kit";
   ic->Data.UnidentifiedName = "?Repair Kit?";
 
-  ic->Data.UseCallback = std::bind(&GameObjectsFactory::RepairKitUseHandler, this, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::RepairKitUseHandler, ic);
 
   go->ObjectName = ic->Data.IdentifiedName;
 
@@ -2466,18 +2410,15 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
   }
 
   DoorComponent* dc = go->AddComponent<DoorComponent>();
+
   dc->Material        = material;
   dc->IsOpen          = isOpen;
   dc->FgColorOverride = fgOverrideColor;
   dc->BgColorOverride = bgOverrideColor;
+
   dc->UpdateDoorState();
 
-  // https://stackoverflow.com/questions/15264003/using-stdbind-with-member-function-use-object-pointer-or-not-for-this-argumen/15264126#15264126
-  //
-  // When using std::bind to bind a member function, the first argument is the object's this pointer.
-
-  //dc->OwnerGameObject->InteractionCallback = std::bind(&GameObjectsFactory::DoorUseHandler, this, dc);
-  dc->OwnerGameObject->InteractionCallback = std::bind(&GameObjectsFactory::DoorUseHandler, this, dc);
+  dc->OwnerGameObject->InteractionCallback = std::bind(&DoorComponent::Interact, dc);
   dc->OwnerGameObject->ObjectName = doorNameTotal;
 
   return go;
@@ -2487,16 +2428,16 @@ GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, const GameObjec
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  go->PosX = x;
-  go->PosY = y;
-  go->Image = objectInfo.Image;
-  go->ObjectName = objectInfo.ObjectName;
+  go->PosX         = x;
+  go->PosY         = y;
+  go->Image        = objectInfo.Image;
+  go->ObjectName   = objectInfo.ObjectName;
   go->FogOfWarName = objectInfo.FogOfWarName;
-  go->FgColor = objectInfo.FgColor;
-  go->BgColor = objectInfo.BgColor;
-  go->Blocking = objectInfo.IsBlocking;
-  go->BlocksSight = objectInfo.BlocksSight;
-  go->Type = type;
+  go->FgColor      = objectInfo.FgColor;
+  go->BgColor      = objectInfo.BgColor;
+  go->Blocking     = objectInfo.IsBlocking;
+  go->BlocksSight  = objectInfo.BlocksSight;
+  go->Type         = type;
 
   if (hitPoints > 0)
   {
@@ -2998,313 +2939,6 @@ void GameObjectsFactory::UnequipRing(ItemComponent* ring, int index)
   Printer::Instance().AddMessage(str);
 }
 
-bool GameObjectsFactory::HealingPotionUseHandler(ItemComponent* item)
-{
-  _playerRef->RememberItem(item, GlobalConstants::UnidentifiedEffectText);
-
-  int amount = 0;
-
-  int statMax = _playerRef->Attrs.HP.Max().Get();
-  int statCur = _playerRef->Attrs.HP.Min().Get();
-
-  std::string message;
-
-  float scale = 0.4f;
-
-  if (item->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    amount = statMax;
-    message = (statCur == statMax)
-              ? GlobalConstants::NoActionText
-              : "Your wounds are healed completely!";
-  }
-  else if (item->Data.Prefix == ItemPrefix::UNCURSED)
-  {
-    amount = statMax * scale;
-    message = "You feel better";
-    message = (statCur == statMax)
-              ? GlobalConstants::NoActionText
-              : "You feel better";
-  }
-  else if (item->Data.Prefix == ItemPrefix::CURSED)
-  {
-    amount = statMax * (scale / 2.0f);
-
-    int var = RNG::Instance().RandomRange(0, 3);
-    if (var == 0)
-    {
-      message = (statCur == statMax)
-                ? GlobalConstants::NoActionText
-                : "You feel a little better";
-    }
-    else if (var == 1)
-    {
-      amount = -amount;
-      message = "You are damaged by a cursed potion!";
-    }
-    else if (var == 2)
-    {
-      message = "You feel unwell!";
-
-      ItemBonusStruct e;
-      e.Type = ItemBonusType::POISONED;
-      e.Duration = GlobalConstants::EffectDefaultDuration;
-      e.Period = 10;
-      e.BonusValue = -1;
-      e.Cumulative = true;
-
-      _playerRef->AddEffect(e);
-    }
-  }
-
-  if (message != GlobalConstants::NoActionText && amount > 0)
-  {
-    _playerRef->RememberItem(item, "healing potion");
-  }
-
-  Printer::Instance().AddMessage(message);
-
-  _playerRef->Attrs.HP.AddMin(amount);
-
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
-
-  return true;
-}
-
-bool GameObjectsFactory::NeutralizePoisonPotionUseHandler(ItemComponent* item)
-{
-  _playerRef->RememberItem(item, GlobalConstants::UnidentifiedEffectText);
-
-  std::string message = GlobalConstants::NoActionText;
-
-  // Blessed potion removes all poison, uncursed removes
-  // only one of the accumulated ones, if any.
-
-  if (item->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    if (_playerRef->HasEffect(ItemBonusType::POISONED))
-    {
-      _playerRef->RemoveEffectAllOf(ItemBonusType::POISONED);
-      message = "The illness is gone!";
-
-      _playerRef->RememberItem(item, "neutralize poison");
-    }
-  }
-  else if (item->Data.Prefix == ItemPrefix::UNCURSED)
-  {
-    if (_playerRef->HasEffect(ItemBonusType::POISONED))
-    {
-      _playerRef->RemoveEffectFirstFound(ItemBonusType::POISONED);
-      message = "The illness subsides";
-
-      _playerRef->RememberItem(item, "neutralize poison");
-    }
-  }
-  else if (item->Data.Prefix == ItemPrefix::CURSED)
-  {
-    ItemBonusStruct bs;
-    bs.BonusValue = -1;
-    bs.Period     = 10;
-    bs.Duration   = GlobalConstants::EffectDefaultDuration;
-    bs.Id         = item->OwnerGameObject->ObjectId();
-    bs.Cumulative = true;
-    bs.Type       = ItemBonusType::POISONED;
-
-    _playerRef->AddEffect(bs);
-
-    message = "You are feeling unwell...";
-  }
-
-  Printer::Instance().AddMessage(message);
-
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
-
-  return true;
-}
-
-bool GameObjectsFactory::ManaPotionUseHandler(ItemComponent* item)
-{
-  int amount = 0;
-
-  int statMax = _playerRef->Attrs.MP.Max().Get();
-
-  if (item->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    amount = statMax;
-    Printer::Instance().AddMessage("Your spirit force was restored!");
-  }
-  else if (item->Data.Prefix == ItemPrefix::UNCURSED)
-  {
-    amount = statMax * 0.3f;
-    Printer::Instance().AddMessage("Your spirit is reinforced");
-  }
-  else if (item->Data.Prefix == ItemPrefix::CURSED)
-  {
-    amount = -statMax * 0.3f;
-    Printer::Instance().AddMessage("Your spirit force was drained!");
-  }
-
-  _playerRef->RememberItem(item, "mana potion");
-
-  _playerRef->Attrs.MP.AddMin(amount);
-
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
-
-  return true;
-}
-
-bool GameObjectsFactory::HungerPotionUseHandler(ItemComponent* item)
-{
-  _playerRef->RememberItem(item, GlobalConstants::UnidentifiedEffectText);
-
-  int amount = 0;
-
-  int statMax = _playerRef->Attrs.Hunger;
-  int& statCur = _playerRef->Attrs.Hunger;
-
-  std::string message;
-
-  if (item->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    amount = statMax;
-    message = (statCur == statMax)
-              ? GlobalConstants::NoActionText
-              : "You feel satiated!";
-  }
-  else if (item->Data.Prefix == ItemPrefix::UNCURSED)
-  {
-    amount = statMax * 0.3f;
-    message = (statCur == statMax)
-              ? GlobalConstants::NoActionText
-              : "Your hunger has abated somewhat";
-  }
-  else if (item->Data.Prefix == ItemPrefix::CURSED)
-  {
-    amount = -statMax * 0.3f;
-    message = "Your feel peckish";
-  }
-
-  if (message != GlobalConstants::NoActionText)
-  {
-    _playerRef->RememberItem(item, "food potion");
-  }
-
-  Printer::Instance().AddMessage(message);
-
-  statCur += amount;
-  statCur = Util::Clamp(statCur, 0, statMax);
-
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
-
-  return true;
-}
-
-bool GameObjectsFactory::ExpPotionUseHandler(ItemComponent* item)
-{
-  int amount = 0;
-
-  int statMax = 100;
-
-  if (item->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    amount = statMax;
-    Printer::Instance().AddMessage("You feel enlighted!");
-  }
-  else if (item->Data.Prefix == ItemPrefix::UNCURSED)
-  {
-    amount = statMax * 0.3f;
-    Printer::Instance().AddMessage("You feel more experienced");
-  }
-  else if (item->Data.Prefix == ItemPrefix::CURSED)
-  {
-    amount = -statMax * 0.3f;
-    Printer::Instance().AddMessage("You lose some experience!");
-  }
-
-  _playerRef->RememberItem(item, "potion of learning");
-
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
-
-  _playerRef->AwardExperience(amount);
-
-  return true;
-}
-
-bool GameObjectsFactory::StatPotionUseHandler(ItemComponent* item)
-{
-  ItemPrefix buc = item->Data.Prefix;
-
-  std::map<ItemType, std::string> useMessagesByType =
-  {
-    { ItemType::STR_POTION, "Your Strength has " },
-    { ItemType::DEF_POTION, "Your Defence has " },
-    { ItemType::MAG_POTION, "Your Magic has " },
-    { ItemType::RES_POTION, "Your Resistance has " },
-    { ItemType::SKL_POTION, "Your Skill has " },
-    { ItemType::SPD_POTION, "Your Speed has " }
-  };
-
-  int valueToAdd = 0;
-
-  auto message = useMessagesByType[item->Data.ItemType_];
-
-  if (buc == ItemPrefix::UNCURSED)
-  {
-    valueToAdd = 1;
-    message += "increased!";
-  }
-  else if (buc == ItemPrefix::BLESSED)
-  {
-    valueToAdd = 2;
-    message += "increased significantly!";
-  }
-  else if (buc == ItemPrefix::CURSED)
-  {
-    valueToAdd = -1;
-    message += "decreased!";
-  }
-
-  Printer::Instance().AddMessage(message);
-
-  std::map<ItemType, Attribute&> playerStats =
-  {
-    { ItemType::STR_POTION, _playerRef->Attrs.Str },
-    { ItemType::DEF_POTION, _playerRef->Attrs.Def },
-    { ItemType::MAG_POTION, _playerRef->Attrs.Mag },
-    { ItemType::RES_POTION, _playerRef->Attrs.Res },
-    { ItemType::SKL_POTION, _playerRef->Attrs.Skl },
-    { ItemType::SPD_POTION, _playerRef->Attrs.Spd }
-  };
-
-  const std::map<ItemType, std::string> playerMemoryTextByType =
-  {
-    { ItemType::STR_POTION, "+STR" },
-    { ItemType::DEF_POTION, "+DEF" },
-    { ItemType::MAG_POTION, "+MAG" },
-    { ItemType::RES_POTION, "+RES" },
-    { ItemType::SKL_POTION, "+SKL" },
-    { ItemType::SPD_POTION, "+SPD" }
-  };
-
-  auto itemType = item->Data.ItemType_;
-
-  int newValue = playerStats.at(itemType).OriginalValue() + valueToAdd;
-
-  if (newValue < 0)
-  {
-    newValue = 0;
-    message = GlobalConstants::NoActionText;
-  }
-
-  playerStats.at(itemType).Set(newValue);
-
-  _playerRef->RememberItem(item, playerMemoryTextByType.at(itemType));
-
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
-
-  return true;
-}
-
 void GameObjectsFactory::BUCQualityAdjust(ItemData& itemData)
 {
   switch (itemData.Prefix)
@@ -3601,46 +3235,6 @@ void GameObjectsFactory::InitScrolls()
     scrollNames.erase(scrollNames.begin() + scrollNameIndex);
     validSpells.erase(validSpells.begin() + spellIndex);
   }
-}
-
-bool GameObjectsFactory::ReturnerUseHandler(ItemComponent* item)
-{
-  if (!item->Data.IsIdentified)
-  {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Can't be used!" }, GlobalConstants::MessageBoxRedBorderColor);
-    return false;
-  }
-
-  if (item->Data.Amount == 0)
-  {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "You invoke the returner, but nothing happens." }, GlobalConstants::MessageBoxDefaultBorderColor);
-    return false;
-  }
-
-  return true;
-}
-
-bool GameObjectsFactory::RepairKitUseHandler(ItemComponent* item)
-{
-  if (!_playerRef->HasSkill(PlayerSkills::REPAIR))
-  {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "You don't possess the necessary skill!" }, GlobalConstants::MessageBoxRedBorderColor);
-    return false;
-  }
-
-  return true;
-}
-
-bool GameObjectsFactory::ScrollUseHandler(ItemComponent* item)
-{
-  SpellsProcessor::Instance().ProcessScroll(item);
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
-  return true;
-}
-
-void GameObjectsFactory::DoorUseHandler(DoorComponent* dc)
-{
-  dc->Interact();
 }
 
 void GameObjectsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne)

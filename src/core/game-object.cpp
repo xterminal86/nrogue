@@ -138,14 +138,14 @@ void GameObject::Update()
 
 void GameObject::MakeTile(const GameObjectInfo& t, GameObjectType typeOverride)
 {
-  Blocking = t.IsBlocking;
-  BlocksSight = t.BlocksSight;
-  Image = t.Image;
-  FgColor = t.FgColor;
-  BgColor = t.BgColor;
-  ObjectName = t.ObjectName;
+  Blocking     = t.IsBlocking;
+  BlocksSight  = t.BlocksSight;
+  Image        = t.Image;
+  FgColor      = t.FgColor;
+  BgColor      = t.BgColor;
+  ObjectName   = t.ObjectName;
   FogOfWarName = t.FogOfWarName;
-  Type = typeOverride;
+  Type         = typeOverride;
 }
 
 bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, const std::string& logMsgOverride)

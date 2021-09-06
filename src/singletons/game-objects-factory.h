@@ -104,20 +104,6 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void EquipRing(ItemComponent* ring, int index);
     void UnequipRing(ItemComponent* ring, int index);
 
-    bool HealingPotionUseHandler(ItemComponent* item);
-    bool NeutralizePoisonPotionUseHandler(ItemComponent* item);
-    bool ManaPotionUseHandler(ItemComponent* item);
-    bool HungerPotionUseHandler(ItemComponent* item);
-    bool ExpPotionUseHandler(ItemComponent* item);
-    bool StatPotionUseHandler(ItemComponent* item);
-    bool ReturnerUseHandler(ItemComponent* item);
-    bool RepairKitUseHandler(ItemComponent* item);
-    bool ScrollUseHandler(ItemComponent* item);
-
-    bool FoodUseHandler(ItemComponent* item);
-
-    void DoorUseHandler(DoorComponent* dc);
-
     void SetItemName(GameObject* go, ItemData& itemData);
     void SetMagicItemName(ItemComponent* itemRef, const std::vector<ItemBonusType>& bonusesRolled);
     void BUCQualityAdjust(ItemData& itemData);
