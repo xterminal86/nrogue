@@ -29,7 +29,7 @@ enum class FeatureRoomType
 //   }
 // }
 //
-// -1 if there is no limit to amount of rooms
+// 0 if there is no limit to amount of rooms
 using FeatureRoomsWeights = std::map<FeatureRoomType, std::pair<int, int>>;
 
 struct MapCell
@@ -38,6 +38,13 @@ struct MapCell
   char Image = '#';
   Position Coordinates;
   bool Visited = false;
+};
+
+struct RemovalParams
+{
+  int EmptyCellsAroundMin = 3;
+  int EmptyCellsAroundMax = 8;
+  int Passes = 0;
 };
 
 class DGBase
@@ -65,6 +72,7 @@ class DGBase
     void FillDeadEnds();
     void FillMapRaw();
     void CutProblemCorners();
+    void RemoveEndWalls();
     void CheckIfProblemCorner(const Position& p);
 
     int CountAround(int x, int y, char ch);
@@ -77,6 +85,7 @@ class DGBase
 
     Position _mapSize;
     Position _startingPoint;
+    RemovalParams _endWallsRemovalParams;
 };
 
 #endif

@@ -13,11 +13,13 @@
 /// 3. Backtrack to previous cell if failed.
 /// 4. Repeat until all cells are visited.
 void RecursiveBacktracker::Generate(const Position& mapSize,
-                                    const Position& startingPoint)
+                                    const Position& startingPoint,
+                                    const RemovalParams& removalParams)
 {
   std::stack<Position> openCells;
 
   _mapSize = mapSize;
+  _endWallsRemovalParams = removalParams;
 
   _map = CreateFilledMap(mapSize.X, mapSize.Y);
 
@@ -58,82 +60,9 @@ void RecursiveBacktracker::Generate(const Position& mapSize,
 
   FillDeadEnds();
   CutProblemCorners();
+  RemoveEndWalls();
 
   FillMapRaw();
-}
-
-void RecursiveBacktracker::CutProblemCorners()
-{
-  for (int x = 0; x < _mapSize.X; x++)
-  {
-    for (int y = 0; y < _mapSize.Y; y++)
-    {
-      Position p(x, y);
-      CheckIfProblemCorner(p);
-    }
-  }
-}
-
-/// If we found situation like this:
-///
-/// #.#..#
-/// #.#B.#
-/// #.A#.#
-/// #.....
-/// #.....
-///
-/// we replace random wall around A (which is '.') with empty space
-/// to disallow diagonal walking from A to B
-void RecursiveBacktracker::CheckIfProblemCorner(const Position& p)
-{
-  int lx = p.X - 1;
-  int ly = p.Y - 1;
-  int hx = p.X + 1;
-  int hy = p.Y + 1;
-
-  if (lx < 0 || ly < 0 || hx > _mapSize.X - 1 || hy > _mapSize.Y - 1)
-  {
-    return;
-  }
-
-  std::vector<Position> diagonals =
-  {
-    { lx, ly },
-    { hx, ly },
-    { lx, hy },
-    { hx, hy }
-  };
-
-  std::vector<std::vector<Position>> choices =
-  {
-    { { -1,  0 },  { 0, -1 } },
-    { {  1,  0 },  { 0, -1 } },
-    { { -1,  0 },  { 0,  1 } },
-    { {  1,  0 },  { 0,  1 } }
-  };
-
-  for (size_t i = 0; i < diagonals.size(); i++)
-  {
-    Position d = diagonals[i];
-
-    int wallX1 = p.X + choices[i][0].X;
-    int wallY1 = p.Y + choices[i][0].Y;
-    int wallX2 = p.X + choices[i][1].X;
-    int wallY2 = p.Y + choices[i][1].Y;
-
-    bool hasWalls = (_map[wallX1][wallY1].Image == '#'
-                  && _map[wallX2][wallY2].Image == '#');
-
-    if (_map[p.X][p.Y].Image == '.'
-     && _map[d.X][d.Y].Image == '.'
-     && hasWalls)
-    {
-      int rndIndex = RNG::Instance().RandomRange(0, 2);
-      Position choice = choices[i][rndIndex];
-      _map[p.X + choice.X][p.Y + choice.Y].Image = '.';
-      break;
-    }
-  }
 }
 
 std::vector<Position> RecursiveBacktracker::GetRandomCell(const Position& p)

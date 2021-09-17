@@ -366,7 +366,7 @@ void ShrineComponent::ApplyRandomNegativeEffect(std::string& logMessageToWrite)
 
   b.Type       = t;
   b.BonusValue = _power;
-  b.Duration   = _duration;
+  b.Duration   = (t == ItemBonusType::BURNING) ? 10 : _duration;
   b.Id         = OwnerGameObject->ObjectId();
 
   if (t == ItemBonusType::BLINDNESS)

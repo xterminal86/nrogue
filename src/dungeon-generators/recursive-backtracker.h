@@ -6,12 +6,11 @@
 class RecursiveBacktracker : public DGBase
 {
   public:
-    void Generate(const Position& mapSize, const Position& startingPoint);
+    void Generate(const Position& mapSize,
+                  const Position& startingPoint,
+                  const RemovalParams& removalParams = RemovalParams());
 
   private:
-    void CutProblemCorners();
-    void CheckIfProblemCorner(const Position& p);
-
     std::vector<Position> GetRandomCell(const Position& p);
 };
 

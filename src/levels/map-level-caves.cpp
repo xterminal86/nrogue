@@ -58,17 +58,29 @@ void MapLevelCaves::CreateLevel()
   switch (MapType_)
   {
     case MapType::CAVES_1:
-    case MapType::CAVES_2:
     {
       int iterations = (MapSize.X * MapSize.Y) / 2;
       lb.TunnelerMethod(MapSize, iterations, { tunnelLengthMin, tunnelLengthMax });
     }
     break;
 
-    case MapType::CAVES_3:
-    case MapType::CAVES_4:
+    case MapType::CAVES_2:
     {
       lb.RecursiveBacktrackerMethod(MapSize);
+    }
+    break;
+
+    case MapType::CAVES_3:
+    {
+      RemovalParams params = { 7, 8, 2 };
+      lb.RecursiveBacktrackerMethod(MapSize, { -1, -1 }, params);
+    }
+    break;
+
+    case MapType::CAVES_4:
+    {
+      RemovalParams params = { 8, 8, 3 };
+      lb.RecursiveBacktrackerMethod(MapSize, { -1, -1 }, params);
     }
     break;
 

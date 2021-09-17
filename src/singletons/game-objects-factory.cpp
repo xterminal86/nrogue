@@ -554,12 +554,10 @@ GameObject* GameObjectsFactory::CreateHerobrine(int x, int y)
   go->Attrs.Def.Talents = 1;
   go->Attrs.Spd.Talents = 1;
 
-  // FIXME: debug
-  //go->LevelUp();
-
-  for (int i = 0; i < 5; i++)
+  for (int i = 0; i < 8; i++)
   {
-    go->LevelUp(5);
+    int hpToAdd = RNG::Instance().RandomRange(1, 6);
+    go->LevelUp(hpToAdd);
   }
 
   go->Attrs.HP.Restore();

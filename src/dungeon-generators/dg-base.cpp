@@ -250,6 +250,47 @@ void DGBase::CutProblemCorners()
   }
 }
 
+void DGBase::RemoveEndWalls()
+{
+  bool dontDo = (_endWallsRemovalParams.Passes <= 0);
+
+  int emptyCellsMin = std::min(_endWallsRemovalParams.EmptyCellsAroundMin, _endWallsRemovalParams.EmptyCellsAroundMax);
+  int emptyCellsMax = std::max(_endWallsRemovalParams.EmptyCellsAroundMin, _endWallsRemovalParams.EmptyCellsAroundMax);
+
+  bool wrongParams = (emptyCellsMin <= 1 || emptyCellsMax > 8);
+
+  if (dontDo || wrongParams)
+  {
+    return;
+  }
+
+  std::vector<Position> marks;
+  for (int i = 0; i < _endWallsRemovalParams.Passes; i++)
+  {
+    marks.clear();
+
+    for (int x = 1; x < _mapSize.X - 1; x++)
+    {
+      for (int y = 1; y < _mapSize.Y - 1; y++)
+      {
+        if (_map[x][y].Image == '#')
+        {
+          int emptyCellsCount = CountAround(x, y, '.');
+          if (emptyCellsCount >= emptyCellsMin && emptyCellsCount <= emptyCellsMax)
+          {
+            marks.push_back({ x, y });
+          }
+        }
+      }
+    }
+
+    for (auto& i : marks)
+    {
+      _map[i.X][i.Y].Image = '.';
+    }
+  }
+}
+
 /// If we found situation like this:
 ///
 /// #.#..#

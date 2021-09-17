@@ -65,12 +65,13 @@ void LevelBuilder::TunnelerMethod(const Position& mapSize,
 }
 
 void LevelBuilder::RecursiveBacktrackerMethod(const Position& mapSize,
-                                              const Position& startingPoint)
+                                              const Position& startingPoint,
+                                              const RemovalParams& endWallsRemovalParams)
 {
   _generator.reset(new RecursiveBacktracker());
 
   RecursiveBacktracker* rb = static_cast<RecursiveBacktracker*>(_generator.get());
-  rb->Generate(mapSize, startingPoint);
+  rb->Generate(mapSize, startingPoint, endWallsRemovalParams);
 
   MapRaw = rb->MapRaw;
 }

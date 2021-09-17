@@ -70,19 +70,19 @@ void MapLevelDeepDark::CreateLevel()
   switch (MapType_)
   {
     case MapType::DEEP_DARK_1:
+    case MapType::DEEP_DARK_2:
     {
       int iterations = (MapSize.X * MapSize.Y); // / 10;
 
       FeatureRoomsWeights weights =
       {
-        { FeatureRoomType::EMPTY,    { 10, 0 }  }
+        { FeatureRoomType::EMPTY, { 10, 0 } }
       };
 
       lb.FeatureRoomsMethod(MapSize, { 1, 10 }, weights, 3, iterations);
     }
     break;
 
-    case MapType::DEEP_DARK_2:
     case MapType::DEEP_DARK_3:
     case MapType::DEEP_DARK_4:
     {
