@@ -7,6 +7,7 @@
 #include "tunneler.h"
 #include "cellular-automata.h"
 #include "from-layouts.h"
+#include "from-tiles.h"
 #include "rooms.h"
 #include "util.h"
 
@@ -105,7 +106,17 @@ void LevelBuilder::RoomsMethod(const Position& mapSize,
   MapRaw = fl->MapRaw;
 }
 
-void LevelBuilder::PlaceLayout(const Position& start,
+void LevelBuilder::FromTilesMethod(const Position& mapSize, int tileSetIndex)
+{
+  _generator.reset(new FromTiles());
+
+  FromTiles* ft = static_cast<FromTiles*>(_generator.get());
+  ft->Generate(mapSize, tileSetIndex);
+
+  MapRaw = ft->MapRaw;
+}
+
+void LevelBuilder::PlaceShrineLayout(const Position& start,
                                const StringsArray2D& layout)
 {
   int sx = start.X;

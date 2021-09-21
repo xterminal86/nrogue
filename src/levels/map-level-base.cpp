@@ -225,7 +225,7 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
   ShrineType type = it->first;
   int layoutIndex = RNG::Instance().RandomRange(0, it->second.size());
   auto l = it->second[layoutIndex];
-  lb.PlaceLayout(p, l);
+  lb.PlaceShrineLayout(p, l);
 
   auto& sbp = lb.ShrinesByPosition();
 
@@ -241,7 +241,7 @@ void MapLevelBase::PlaceStairs()
   LevelStart.Y = _emptyCells[startIndex].Y;
 
   MapType stairsDownTo = (MapType)(DungeonLevel + 1);
-  MapType stairsUpTo = (MapType)(DungeonLevel - 1);
+  MapType stairsUpTo   = (MapType)(DungeonLevel - 1);
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', stairsUpTo);
 

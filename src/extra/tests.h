@@ -4,6 +4,8 @@
 #include <sstream>
 
 class Player;
+class LevelBuilder;
+class Position;
 
 namespace Tests
 {
@@ -21,9 +23,19 @@ namespace Tests
 
   void LevelBuilderTest(std::stringstream& ss);
 
+  void Tunneler(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss);
+  void RecursiveBacktracker(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss);
+  void CellularAutomata(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss);
+  void Digger(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss);
+  void BSPRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss);
+  void FeatureRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss);
+  void FromTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss);
+  void FromLayouts(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss);
+
   void GenNamesTest(std::stringstream& ss);
 
   void Run();
+  void DisplayProgress();
 }
 
 #endif

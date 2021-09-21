@@ -32,6 +32,10 @@ enum class FeatureRoomType
 // 0 if there is no limit to amount of rooms
 using FeatureRoomsWeights = std::map<FeatureRoomType, std::pair<int, int>>;
 
+using Tile = std::vector<std::string>;
+using Tiles = std::vector<Tile>;
+using Tileset = std::vector<Tiles>;
+
 struct MapCell
 {
   int Marker = -1;
@@ -78,7 +82,7 @@ class DGBase
     int CountAround(int x, int y, char ch);
 
     std::vector<std::vector<MapCell>> CreateEmptyMap(int w, int h);
-    std::vector<std::vector<MapCell>> CreateFilledMap(int w, int h);
+    std::vector<std::vector<MapCell>> CreateFilledMap(int w, int h, char image = '#');
     std::vector<std::vector<MapCell>> CreateRandomlyFilledMap(int w, int h, int chance);
 
     std::vector<std::vector<MapCell>> _map;

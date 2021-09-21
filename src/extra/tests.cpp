@@ -278,59 +278,41 @@ namespace Tests
     }
   }
 
-  //
-  // NOTE: for non square map size dimensions must be swapped
-  // because, well, you know.
-  // Another day, same shit.
-  //
-  void LevelBuilderTest(std::stringstream& ss)
+  void Tunneler(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
-    std::string str;
+    std:: string str = "\n1) Tunneler:\n\n";
 
-    str = "\nLevel builders:\n\n";
+    Position start(1, 1);
 
-    //Logger::Instance().Print(str);
-    //DebugLog("%s", str.data());
     ss << str;
-
-    LevelBuilder lb;
-
-    Position s(1, 1);
-    //Position mapSize(24, 78); // Check comments above this method
-    Position mapSize(100, 100);
-
-    str = "\n1) Tunneler:\n\n";
-    //DebugLog("%s", str.data());
-    ss << str;
-    //Logger::Instance().Print(str);
 
     int iterations = (mapSize.X * mapSize.Y) / 2;
-    lb.TunnelerMethod(mapSize, iterations, { 5, 10 }, s);
-    lb.MapRaw[s.X][s.Y] = 'X';
-    //lb.LogPrintMapRaw();
-    //lb.PrintMapRaw();
+    lb.TunnelerMethod(mapSize, iterations, { 5, 10 }, start);
+    lb.MapRaw[start.X][start.Y] = 'X';
+
     ss << lb.GetMapRawString();
 
     str = "\n2) Tunneler (backtracking):\n\n";
-    //DebugLog("%s", str.data());
-    ss << str;
-    //Logger::Instance().Print(str);
 
-    lb.BacktrackingTunnelerMethod(mapSize, { 5, 10 }, s, true);
-    lb.MapRaw[s.X][s.Y] = 'X';
-    //lb.LogPrintMapRaw();
-    //lb.PrintMapRaw();
+    ss << str;
+
+    lb.BacktrackingTunnelerMethod(mapSize, { 5, 10 }, start, true);
+    lb.MapRaw[start.X][start.Y] = 'X';
+
     ss << lb.GetMapRawString();
+  }
 
-    str = "\n3) Recursive Backtracker:\n\n";
-    //DebugLog("%s", str.data());
+  void RecursiveBacktracker(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
+  {
+    std::string str = "\n3) Recursive Backtracker:\n\n";
+
+    Position start(1, 1);
+
     ss << str;
-    //Logger::Instance().Print(str);
 
-    lb.RecursiveBacktrackerMethod(mapSize, s);
-    lb.MapRaw[s.X][s.Y] = 'X';
-    //lb.LogPrintMapRaw();
-    //lb.PrintMapRaw();
+    lb.RecursiveBacktrackerMethod(mapSize, start);
+    lb.MapRaw[start.X][start.Y] = 'X';
+
     ss << lb.GetMapRawString();
 
     str = "\n3a) Recursive Backtracker (end walls removed):\n\n";
@@ -431,35 +413,35 @@ namespace Tests
 
       str += Util::StringFormat("[REMOVAL PARAMS] -> { %i, %i, %i }\n\n", i.EmptyCellsAroundMin, i.EmptyCellsAroundMax, i.Passes);
 
-      //DebugLog("%s", str.data());
       ss << str;
-      //Logger::Instance().Print(str);
 
-      lb.RecursiveBacktrackerMethod({ 40, 80 }, s, i);
-      lb.MapRaw[s.X][s.Y] = 'X';
-      //lb.LogPrintMapRaw();
-      //lb.PrintMapRaw();
+      lb.RecursiveBacktrackerMethod({ 40, 80 }, start, i);
+      lb.MapRaw[start.X][start.Y] = 'X';
+
       ss << lb.GetMapRawString();
 
       ss << "\n\n================================================================================\n\n";
     }
+  }
 
-    str = "\n4) Cellular Automata:\n\n";
-    //Logger::Instance().Print(str);
-    //DebugLog("%s", str.data());
+  void CellularAutomata(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
+  {
+    std::string str = "\n4) Cellular Automata:\n\n";
+
     ss << str;
 
     lb.CellularAutomataMethod(mapSize, 40, 5, 4, 12);
-    //lb.LogPrintMapRaw();
-    //lb.PrintMapRaw();
-    ss << lb.GetMapRawString();
 
-    str = "\n5) Digger:\n\n";
-    //Logger::Instance().Print(str);
-    //DebugLog("%s", str.data());
+    ss << lb.GetMapRawString();
+  }
+
+  void Digger(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
+  {
+    std::string str = "\n5) Digger:\n\n";
+
     ss << str;
 
-    iterations = (mapSize.X * mapSize.Y) / 10;
+    int iterations = (mapSize.X * mapSize.Y) / 10;
 
     FeatureRoomsWeights weights =
     {
@@ -467,26 +449,28 @@ namespace Tests
     };
 
     lb.FeatureRoomsMethod(mapSize, { 1, 10 }, weights, 3, iterations);
-    //lb.LogPrintMapRaw();
-    //lb.PrintMapRaw();
-    ss << lb.GetMapRawString();
 
-    str = "\n6) BSP rooms:\n\n";
-    //Logger::Instance().Print(str);
-    //DebugLog("%s", str.data());
+    ss << lb.GetMapRawString();
+  }
+
+  void BSPRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
+  {
+    std::string str = "\n6) BSP rooms:\n\n";
+
     ss << str;
 
     lb.RoomsMethod(mapSize, { 45, 55 }, 5);
-    //lb.LogPrintMapRaw();
-    //lb.PrintMapRaw();
-    ss << lb.GetMapRawString();
 
-    str = "\n7) Feature rooms:\n\n";
-    //Logger::Instance().Print(str);
-    //DebugLog("%s", str.data());
+    ss << lb.GetMapRawString();
+  }
+
+  void FeatureRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
+  {
+    std::string str = "\n7) Feature rooms:\n\n";
+
     ss << str;
 
-    weights =
+    FeatureRoomsWeights weights =
     {
       { FeatureRoomType::EMPTY,    { 10, 0 } },
       { FeatureRoomType::DIAMOND,  {  3, 3 } },
@@ -502,9 +486,129 @@ namespace Tests
     Position roomSize = { 1, 10 };
 
     lb.FeatureRoomsMethod(mapSize, roomSize, weights, 3, mapSize.X * mapSize.Y);
-    //lb.LogPrintMapRaw();
-    //lb.PrintMapRaw();
+
     ss << lb.GetMapRawString();
+  }
+
+  void FromTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
+  {
+    std::string str = "\n8) From tiles:\n";
+
+    ss << str;
+
+    for (int i = 0; i < 9; i++)
+    {
+      std::string title(30, ' ');
+      std::string delimiter(80, '=');
+
+      title += Util::StringFormat(">>>> Tileset %i <<<<\n", i + 1);
+
+      ss << "\n\n" << title << "\n";
+      ss << delimiter << "\n\n";
+
+      lb.FromTilesMethod({ 40, 80 }, i);
+
+      ss << lb.GetMapRawString();
+    }
+  }
+
+  void FromLayouts(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
+  {
+    std::string str = "\n8) From layouts:\n\n";
+
+    ss << str;
+
+    std::vector<RoomForLevel> rooms =
+    {
+      {
+        50,
+        {
+          "###",
+          "###",
+          "###"
+        }
+      },
+      {
+        50,
+        {
+          "#.#",
+          "...",
+          "#.#"
+        }
+      },
+      {
+        50,
+        {
+          "#.#",
+          "#..",
+          "###"
+        }
+      },
+      {
+        50,
+        {
+          "#.#",
+          "...",
+          "###"
+        }
+      },
+      {
+        50,
+        {
+          "#.#",
+          "#.#",
+          "#.#"
+        }
+      },
+    };
+
+
+    lb.BuildLevelFromLayouts(rooms, mapSize.X / 2, mapSize.Y / 2, mapSize.X, mapSize.Y);
+
+    ss << lb.GetMapRawString();
+  }
+
+  //
+  // NOTE: for non square map size dimensions must be swapped
+  // because, well, you know.
+  // Another day, same shit.
+  //
+  void LevelBuilderTest(std::stringstream& ss)
+  {
+    std::string str;
+
+    str = "\nLevel builders:\n\n";
+
+    ss << str;
+
+    LevelBuilder lb;
+
+    //Position mapSize(24, 78); // Check comments above this method
+    Position mapSize(100, 100);
+
+    DisplayProgress();
+    Tunneler(lb, mapSize, ss);
+    //
+    DisplayProgress();
+    RecursiveBacktracker(lb, mapSize, ss);
+    //
+    DisplayProgress();
+    CellularAutomata(lb, mapSize, ss);
+    //
+    DisplayProgress();
+    Digger(lb, mapSize, ss);
+    //
+    DisplayProgress();
+    BSPRooms(lb, mapSize, ss);
+    //
+    DisplayProgress();
+    FeatureRooms(lb, mapSize, ss);
+    //
+    DisplayProgress();
+    FromTiles(lb, mapSize, ss);
+    //
+    DisplayProgress();
+    FromLayouts(lb, mapSize, ss);
   }
 
   void GenNamesTest(std::stringstream& ss)
@@ -536,29 +640,46 @@ namespace Tests
 
     file.open("tests.txt");
 
+    DisplayProgress();
+
     //DebugLog("***** START TESTS *****\n\n");
     ss << "***** START TESTS *****\n\n";
 
     TestLoS(ss, 4, 4, 2);
-    //DebugLog("\n- o -\n");
     ss << "\n- o -\n";
+
+    DisplayProgress();
+
     RoomTests(ss);
-    //DebugLog("\n- o -\n"
     ss << "\n- o -\n";
+
+    DisplayProgress();
+
     RNGTests(ss);
-    //DebugLog("\n- o -\n");
     ss << "\n- o -\n";
+
+    DisplayProgress();
+
     LevelUpTests(ss);
-    //DebugLog("\n- o -\n");
     ss << "\n- o -\n";
+
+    DisplayProgress();
+
     WeightedRandomTest(ss);
-    //DebugLog("\n- o -\n");
     ss << "\n- o -\n";
+
+    DisplayProgress();
+
     LootDropTest(ss);
-    //DebugLog("\n- o -\n");
     ss << "\n- o -\n";
+
+    DisplayProgress();
+
     LevelBuilderTest(ss);
     ss << "\n- o -\n";
+
+    DisplayProgress();
+
     GenNamesTest(ss);
 
     //DebugLog("\n\n***** o *****\n");
@@ -569,5 +690,12 @@ namespace Tests
     file.close();
 
     DebugLog("Test results have been written into 'tests.txt'\n\n");
+  }
+
+  void DisplayProgress()
+  {
+    static int progress = 0;
+    DebugLog("\t\t%i\\15\n", progress);
+    progress++;
   }
 }

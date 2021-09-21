@@ -860,21 +860,21 @@ void Map::EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list)
   // from end to start.
 
   auto newBegin = std::remove_if(list.begin(),
-                                  list.end(),
-                                  [this](const std::unique_ptr<GameObject>& go)
-                                  {
-                                     if (go != nullptr && go->IsDestroyed)
-                                     {
-                                       int x = go->PosX;
-                                       int y = go->PosY;
+                                 list.end(),
+                                 [this](const std::unique_ptr<GameObject>& go)
+                                 {
+                                    if (go != nullptr && go->IsDestroyed)
+                                    {
+                                      int x = go->PosX;
+                                      int y = go->PosY;
 
-                                       CurrentLevel->MapArray[x][y]->Occupied = false;
+                                      CurrentLevel->MapArray[x][y]->Occupied = false;
 
-                                       return true;
-                                     }
+                                      return true;
+                                    }
 
-                                     return false;
-                                   });
+                                    return false;
+                                  });
 
   list.erase(newBegin, list.end());
 }

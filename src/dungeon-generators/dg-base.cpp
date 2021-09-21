@@ -112,7 +112,7 @@ std::vector<std::vector<MapCell>> DGBase::CreateEmptyMap(int w, int h)
   return map;
 }
 
-std::vector<std::vector<MapCell>> DGBase::CreateFilledMap(int w, int h)
+std::vector<std::vector<MapCell>> DGBase::CreateFilledMap(int w, int h, char image)
 {
   std::vector<std::vector<MapCell>> map;
 
@@ -124,7 +124,7 @@ std::vector<std::vector<MapCell>> DGBase::CreateFilledMap(int w, int h)
       MapCell c;
       c.Coordinates.X = x;
       c.Coordinates.Y = y;
-      c.Image = '#';
+      c.Image = image;
       c.Visited = false;
       row.push_back(c);
     }
