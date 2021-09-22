@@ -45,6 +45,7 @@ void FromTiles::Generate(const Position& mapSize, int tileSetIndex)
 
   FillBorders();
   ConnectIsolatedAreas();
+  CutProblemCorners();
 
   FillMapRaw();
 }
