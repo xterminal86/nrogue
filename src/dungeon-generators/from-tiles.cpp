@@ -44,7 +44,7 @@ void FromTiles::Generate(const Position& mapSize, int tileSetIndex)
   }
 
   FillBorders();
-  RemoveSingleEmptyCells();
+  ConnectIsolatedAreas();
 
   FillMapRaw();
 }
@@ -90,13 +90,6 @@ void FromTiles::CreateTileset()
     {
       Tile t = ConvertStringToTile(line);
       tiles.push_back(t);
-
-      /*
-      if (IsTileGood(t))
-      {
-        tiles.push_back(t);
-      }
-      */
     }
     while(std::next_permutation(line.begin(), line.end()));
 
@@ -111,46 +104,6 @@ void FromTiles::FillBorders()
     for (MapCell& c : line)
     {
       if (c.Image == ' ')
-      {
-        c.Image = '#';
-      }
-    }
-  }
-}
-
-void FromTiles::RemoveSingleEmptyCells()
-{
-  for (auto& line : _map)
-  {
-    for (MapCell& c : line)
-    {
-      if (c.Image != '.')
-      {
-        continue;
-      }
-
-      auto& coords = c.Coordinates;
-
-      Position up    = { coords.X - 1, coords.Y     };
-      Position down  = { coords.X + 1, coords.Y     };
-      Position left  = { coords.X,     coords.Y - 1 };
-      Position right = { coords.X,     coords.Y + 1 };
-
-      std::vector<Position> toCheck =
-      {
-        up, down, left, right
-      };
-
-      int total = 0;
-      for (auto& i : toCheck)
-      {
-        if (IsInsideMap(i) && _map[i.X][i.Y].Image == '#')
-        {
-          total++;
-        }
-      }
-
-      if (total == 4)
       {
         c.Image = '#';
       }
@@ -383,41 +336,6 @@ void FromTiles::AddPointsToProcess(const Position& p)
   {
     _toProcess.push(item);
   }
-}
-
-bool FromTiles::IsTileGood(const Tile& t)
-{
-  int failCount = 0;
-
-  for (int x = 0; x < 3; x++)
-  {
-    for (int y = 0; y < 3; y++)
-    {
-      int lx = x - 1;
-      int ly = y - 1;
-      int hx = x + 1;
-      int hy = y + 1;
-
-      if (lx < 0 || ly < 0 || hx > 2 || hy > 2)
-      {
-        failCount++;
-        continue;
-      }
-
-      if (t[x][y] == '.')
-      {
-        if (t[lx][y] == '#'
-         && t[hx][y] == '#'
-         && t[x][ly] == '#'
-         && t[x][hy] == '#')
-        {
-          return false;
-        }
-      }
-    }
-  }
-
-  return true;
 }
 
 bool FromTiles::IsLayoutEmpty(const Tile& layout)

@@ -76,11 +76,16 @@ void Map::UpdateGameObjects()
     //
     // That's why we should always call Update() at least once.
 
-    // Achievement unlocked:
+    //
+    //         ==========================
+    //         || ACHIEVEMENT UNLOCKED ||
+    //         ==========================
     //
     // ******************************************
+    // *                                        *
     // * Use do / while loop in the actual code *
-    // * for the first time in your life        *
+    // *    for the first time in your life     *
+    // *                                        *
     // ******************************************
     //
     do

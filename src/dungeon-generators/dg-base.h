@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <stack>
 
 #include "constants.h"
 #include "position.h"
@@ -78,6 +79,7 @@ class DGBase
     void CutProblemCorners();
     void RemoveEndWalls();
     void CheckIfProblemCorner(const Position& p);
+    void ConnectIsolatedAreas();
 
     int CountAround(int x, int y, char ch);
 
@@ -89,7 +91,30 @@ class DGBase
 
     Position _mapSize;
     Position _startingPoint;
+
     RemovalParams _endWallsRemovalParams;
+
+    //
+    // Algorithm specific data and methods, no need to expose these
+    //
+  private:
+    void AddCellToProcess(const Position& from,
+                          Direction dir,
+                          std::stack<Position>& addTo);
+
+    int MarkRegions();
+
+    void UnmarkRegions();
+
+    Position* FindNonMarkedCell();
+
+    void ConnectPoints(const Position& p1, const Position& p2);
+
+    int _marker = 0;
+
+    Position _nonMarkedCell;
+
+    std::map<int, std::vector<Position>> _areaPointsByMarker;
 };
 
 #endif

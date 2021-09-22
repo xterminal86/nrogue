@@ -17,14 +17,12 @@ class FromTiles : public DGBase
     void PlaceLayout(const Position& pos, const Tile& tile);
     void AddPointsToProcess(const Position& p);
     void FillBorders();
-    void RemoveSingleEmptyCells();
 
     std::string GetLayoutEdge(const Tile& l, const RoomEdgeEnum& along);
 
     Tile ReadLayout(const Position& p);
     Tile ConvertStringToTile(const std::string& line);
 
-    bool IsTileGood(const Tile& t);
     bool IsLayoutPresent(const Tile& layout);
     bool AreLayoutsEqual(const Tile& l1, const Tile& l2);
     bool WasVisited(const Position& p);

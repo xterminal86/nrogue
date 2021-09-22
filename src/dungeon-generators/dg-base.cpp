@@ -386,3 +386,207 @@ int DGBase::CountAround(int x, int y, char ch)
 
   return res;
 }
+
+Position* DGBase::FindNonMarkedCell()
+{
+  _nonMarkedCell = { -1, -1 };
+
+  for (int x = 0; x < _mapSize.X; x++)
+  {
+    for (int y = 0; y < _mapSize.Y; y++)
+    {
+      if (_map[x][y].Marker == -1
+       && _map[x][y].Image == '.')
+      {
+        _nonMarkedCell = { x, y };
+        return &_nonMarkedCell;
+      }
+    }
+  }
+
+  return nullptr;
+}
+
+void DGBase::AddCellToProcess(const Position& from,
+                              Direction dir,
+                              std::stack<Position>& addTo)
+{
+  const std::map<Direction, Position> newPosByLookDir =
+  {
+    { Direction::WEST,  { from.X,     from.Y - 1 } },
+    { Direction::EAST,  { from.X,     from.Y + 1 } },
+    { Direction::NORTH, { from.X - 1, from.Y     } },
+    { Direction::SOUTH, { from.X + 1, from.Y     } }
+  };
+
+  Position newPos = newPosByLookDir.at(dir);
+  if (!IsInsideMap(newPos))
+  {
+    return;
+  }
+
+  if (_map[newPos.X][newPos.Y].Image  == '.'
+   && _map[newPos.X][newPos.Y].Marker == -1)
+  {
+    addTo.push(newPos);
+  }
+}
+
+int DGBase::MarkRegions()
+{
+  _marker = 0;
+
+  _areaPointsByMarker.clear();
+
+  std::stack<Position> toProcess;
+
+  while (true)
+  {
+    Position* p = FindNonMarkedCell();
+    if (p == nullptr)
+    {
+      break;
+    }
+
+    toProcess.push(*p);
+
+    while (!toProcess.empty())
+    {
+      Position p = toProcess.top();
+      toProcess.pop();
+
+      _map[p.X][p.Y].Marker = _marker;
+
+      bool alreadyExists = false;
+      for (auto& point : _areaPointsByMarker[_marker])
+      {
+        if (point == p)
+        {
+          alreadyExists = true;
+          break;
+        }
+      }
+
+      if (!alreadyExists)
+      {
+        _areaPointsByMarker[_marker].push_back(p);
+      }
+
+      AddCellToProcess(p, Direction::WEST,  toProcess);
+      AddCellToProcess(p, Direction::EAST,  toProcess);
+      AddCellToProcess(p, Direction::NORTH, toProcess);
+      AddCellToProcess(p, Direction::SOUTH, toProcess);
+    }
+
+    _marker++;
+  }
+
+  return _marker;
+}
+
+void DGBase::ConnectPoints(const Position& p1, const Position& p2)
+{
+  int dirX = (p1.X > p2.X) ? -1 : 1;
+  int dirY = (p1.Y > p2.Y) ? -1 : 1;
+
+  Position tmp1 = p1;
+  Position tmp2 = p2;
+
+  while (tmp1.X != tmp2.X)
+  {
+    _map[tmp1.X][tmp1.Y].Image = '.';
+    tmp1.X += dirX;
+  }
+
+  while (tmp1.Y != tmp2.Y)
+  {
+    _map[tmp1.X][tmp1.Y].Image = '.';
+    tmp1.Y += dirY;
+  }
+}
+
+void DGBase::ConnectIsolatedAreas()
+{
+  const int minDistance = 3;
+
+  int regionsFound = MarkRegions();
+
+  //DebugLog("\n\nRegions found: %i\n\n", regionsFound);
+
+  // If no isolated regions found
+  if (regionsFound <= 1)
+  {
+    return;
+  }
+
+  while (regionsFound > 1)
+  {
+    std::pair<Position, Position> res;
+
+    for (int i = 0; i < _marker; i++)
+    {
+      for (auto& p1 : _areaPointsByMarker[i])
+      {
+        int minD = std::numeric_limits<int>::max();
+
+        for (auto& kvp : _areaPointsByMarker)
+        {
+          if (kvp.first == i)
+          {
+            continue;
+          }
+
+          for (auto& p2 : _areaPointsByMarker[kvp.first])
+          {
+            int bd = Util::BlockDistance(p1, p2);
+            if (bd < minD)
+            {
+              res = { p1, p2 };
+              minD = bd;
+            }
+
+            //
+            //          ==========================
+            //          || ACHIEVEMENT UNLOCKED ||
+            //          ==========================
+            //
+            // *******************************************
+            // *                                         *
+            // * Use 'goto' when it actually makes sense *
+            // *                                         *
+            // *******************************************
+            //
+            if (minD <= minDistance)
+            {
+              goto connect;
+            }
+          }
+        }
+      }
+
+  connect:
+
+      ConnectPoints(res.first, res.second);
+    }
+
+    UnmarkRegions();
+
+    regionsFound = MarkRegions();
+
+    //DebugLog("\n\n\tNew regions found: %i\n\n", regionsFound);
+  }
+}
+
+void DGBase::UnmarkRegions()
+{
+  for (int x = 0; x < _mapSize.X; x++)
+  {
+    for (int y = 0; y < _mapSize.Y; y++)
+    {
+      if (_map[x][y].Image == '.')
+      {
+        _map[x][y].Marker = -1;
+      }
+    }
+  }
+}
