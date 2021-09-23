@@ -78,6 +78,8 @@ class DGBase
     void FillMapRaw();
     void CutProblemCorners();
     void RemoveEndWalls();
+    void RemoveSingleWalls();
+    void FillSingleCells();
     void CheckIfProblemCorner(const Position& p);
     void ConnectIsolatedAreas();
 

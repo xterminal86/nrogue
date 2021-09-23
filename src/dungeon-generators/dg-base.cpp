@@ -250,6 +250,44 @@ void DGBase::CutProblemCorners()
   }
 }
 
+///
+/// ...    ...
+/// .#. -> ...
+/// ...    ...
+///
+void DGBase::RemoveSingleWalls()
+{
+  for (int x = 1; x < _mapSize.X - 1; x++)
+  {
+    for (int y = 1; y < _mapSize.Y - 1; y++)
+    {
+      if (_map[x][y].Image == '#' && CountAround(x, y, '.') == 8)
+      {
+        _map[x][y].Image = '.';
+      }
+    }
+  }
+}
+
+///
+/// ###    ###
+/// #.# -> ###
+/// ###    ###
+///
+void DGBase::FillSingleCells()
+{
+  for (int x = 1; x < _mapSize.X - 1; x++)
+  {
+    for (int y = 1; y < _mapSize.Y - 1; y++)
+    {
+      if (_map[x][y].Image == '.' && CountAround(x, y, '#') == 8)
+      {
+        _map[x][y].Image = '#';
+      }
+    }
+  }
+}
+
 void DGBase::RemoveEndWalls()
 {
   bool dontDo = (_endWallsRemovalParams.Passes <= 0);
@@ -391,9 +429,9 @@ Position* DGBase::FindNonMarkedCell()
 {
   _nonMarkedCell = { -1, -1 };
 
-  for (int x = 0; x < _mapSize.X; x++)
+  for (int x = 1; x < _mapSize.X - 1; x++)
   {
-    for (int y = 0; y < _mapSize.Y; y++)
+    for (int y = 1; y < _mapSize.Y - 1; y++)
     {
       if (_map[x][y].Marker == -1
        && _map[x][y].Image == '.')
@@ -521,54 +559,51 @@ void DGBase::ConnectIsolatedAreas()
 
   while (regionsFound > 1)
   {
-    std::pair<Position, Position> res;
+    std::pair<Position, Position> connectionPointCandidate;
 
-    for (int i = 0; i < _marker; i++)
+    std::vector<std::pair<Position, Position>> connectionPoints;
+
+    int minD = std::numeric_limits<int>::max();
+
+    //
+    // Areas are marked left to right, top to bottom.
+    //
+    // Find all possible connection points of two adjacent regions.
+    //
+    for (auto& p1 : _areaPointsByMarker[0])
     {
-      for (auto& p1 : _areaPointsByMarker[i])
+      for (auto& p2 : _areaPointsByMarker[1])
       {
-        int minD = std::numeric_limits<int>::max();
-
-        for (auto& kvp : _areaPointsByMarker)
+        int bd = Util::BlockDistance(p1, p2);
+        if (bd < minD)
         {
-          if (kvp.first == i)
-          {
-            continue;
-          }
+          connectionPointCandidate = { p1, p2 };
+          minD = bd;
+        }
 
-          for (auto& p2 : _areaPointsByMarker[kvp.first])
-          {
-            int bd = Util::BlockDistance(p1, p2);
-            if (bd < minD)
-            {
-              res = { p1, p2 };
-              minD = bd;
-            }
-
-            //
-            //          ==========================
-            //          || ACHIEVEMENT UNLOCKED ||
-            //          ==========================
-            //
-            // *******************************************
-            // *                                         *
-            // * Use 'goto' when it actually makes sense *
-            // *                                         *
-            // *******************************************
-            //
-            if (minD <= minDistance)
-            {
-              goto connect;
-            }
-          }
+        if (minD <= minDistance)
+        {
+          minD = std::numeric_limits<int>::max();
+          connectionPoints.push_back(connectionPointCandidate);
         }
       }
-
-  connect:
-
-      ConnectPoints(res.first, res.second);
     }
 
+    // If walls are too thick and nothing could be found
+    // that suits the constraint, get by with at least something.
+    if (connectionPoints.empty())
+    {
+      connectionPoints.push_back(connectionPointCandidate);
+    }
+
+    // Get random connection point from all possible variants.
+    int index = RNG::Instance().RandomRange(0, connectionPoints.size());
+    auto pointsToConnect = connectionPoints[index];
+    ConnectPoints(pointsToConnect.first, pointsToConnect.second);
+
+    //DebugLog("\t\t\tconnecting [%i;%i] -> [%i;%i]\n", pointsToConnect.first.X, pointsToConnect.first.Y, pointsToConnect.second.X, pointsToConnect.second.Y);
+
+    // Rinse and repeat
     UnmarkRegions();
 
     regionsFound = MarkRegions();

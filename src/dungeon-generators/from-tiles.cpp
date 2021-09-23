@@ -1,7 +1,10 @@
 #include "from-tiles.h"
 #include "util.h"
 
-void FromTiles::Generate(const Position& mapSize, int tileSetIndex)
+void FromTiles::Generate(const Position& mapSize,
+                         int tileSetIndex,
+                         bool postProcess,
+                         bool removeBias)
 {
   _mapSize = mapSize;
 
@@ -44,8 +47,56 @@ void FromTiles::Generate(const Position& mapSize, int tileSetIndex)
   }
 
   FillBorders();
+
+  if (postProcess)
+  {
+    FillSingleCells();
+  }
+
   ConnectIsolatedAreas();
   CutProblemCorners();
+
+  if (postProcess)
+  {
+    RemoveSingleWalls();
+  }
+
+  // Remove horizontal corridor at the top
+  // by filling borders of the map inwards.
+  if (removeBias)
+  {
+    // Unmark regions
+    for (int x = 0; x < mapSize.X; x++)
+    {
+      for (int y = 0; y < mapSize.Y; y++)
+      {
+        if (_map[x][y].Image == '.')
+        {
+          _map[x][y].Marker = -1;
+        }
+      }
+    }
+
+    for (int i = 0; i < 2; i++)
+    {
+      for (int x = 1 + i; x < mapSize.X - (i + 2); x++)
+      {
+        _map[x][1 + i].Image = '#';
+        _map[x][mapSize.Y - (i + 2)].Image = '#';
+      }
+
+      for (int y = 1 + i; y < mapSize.Y - (i + 2); y++)
+      {
+        _map[i + 1][y].Image = '#';
+        _map[mapSize.X - (i + 2)][y].Image = '#';
+      }
+    }
+
+    FillSingleCells();
+    ConnectIsolatedAreas();
+    CutProblemCorners();
+    RemoveSingleWalls();
+  }
 
   FillMapRaw();
 }

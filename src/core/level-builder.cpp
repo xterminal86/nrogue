@@ -106,12 +106,15 @@ void LevelBuilder::RoomsMethod(const Position& mapSize,
   MapRaw = fl->MapRaw;
 }
 
-void LevelBuilder::FromTilesMethod(const Position& mapSize, int tileSetIndex)
+void LevelBuilder::FromTilesMethod(const Position& mapSize,
+                                   int tileSetIndex,
+                                   bool postProcess,
+                                   bool removeBias)
 {
   _generator.reset(new FromTiles());
 
   FromTiles* ft = static_cast<FromTiles*>(_generator.get());
-  ft->Generate(mapSize, tileSetIndex);
+  ft->Generate(mapSize, tileSetIndex, postProcess, removeBias);
 
   MapRaw = ft->MapRaw;
 }

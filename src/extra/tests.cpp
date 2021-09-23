@@ -280,7 +280,7 @@ namespace Tests
 
   void Tunneler(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
-    std:: string str = "\n1) Tunneler:\n\n";
+    std:: string str = "\nTunneler:\n\n";
 
     Position start(1, 1);
 
@@ -292,7 +292,7 @@ namespace Tests
 
     ss << lb.GetMapRawString();
 
-    str = "\n2) Tunneler (backtracking):\n\n";
+    str = "\nTunneler (backtracking):\n\n";
 
     ss << str;
 
@@ -304,7 +304,7 @@ namespace Tests
 
   void RecursiveBacktracker(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
-    std::string str = "\n3) Recursive Backtracker:\n\n";
+    std::string str = "\nRecursive Backtracker:\n\n";
 
     Position start(1, 1);
 
@@ -315,7 +315,7 @@ namespace Tests
 
     ss << lb.GetMapRawString();
 
-    str = "\n3a) Recursive Backtracker (end walls removed):\n\n";
+    str = "\nRecursive Backtracker (end walls removed):\n\n";
 
     ss << str;
 
@@ -426,7 +426,7 @@ namespace Tests
 
   void CellularAutomata(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
-    std::string str = "\n4) Cellular Automata:\n\n";
+    std::string str = "\nCellular Automata:\n\n";
 
     ss << str;
 
@@ -437,7 +437,7 @@ namespace Tests
 
   void Digger(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
-    std::string str = "\n5) Digger:\n\n";
+    std::string str = "\nDigger:\n\n";
 
     ss << str;
 
@@ -455,7 +455,7 @@ namespace Tests
 
   void BSPRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
-    std::string str = "\n6) BSP rooms:\n\n";
+    std::string str = "\nBSP rooms:\n\n";
 
     ss << str;
 
@@ -466,7 +466,7 @@ namespace Tests
 
   void FeatureRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
-    std::string str = "\n7) Feature rooms:\n\n";
+    std::string str = "\nFeature rooms:\n\n";
 
     ss << str;
 
@@ -492,7 +492,7 @@ namespace Tests
 
   void FromTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
-    std::string str = "\n8) From tiles:\n";
+    std::string str = "\nFrom tiles:\n";
 
     ss << str;
 
@@ -509,12 +509,24 @@ namespace Tests
       lb.FromTilesMethod({ 40, 80 }, i);
 
       ss << lb.GetMapRawString();
+
+      // Postprocessed
+
+      std::string postProcessed(30, ' ');
+
+      postProcessed += "    (with post-processing)    \n";
+
+      ss << "\n\n" << postProcessed << "\n";
+
+      lb.FromTilesMethod({ 40, 80 }, i, true, true);
+
+      ss << lb.GetMapRawString();
     }
   }
 
   void FromLayouts(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
-    std::string str = "\n8) From layouts:\n\n";
+    std::string str = "\nFrom layouts:\n\n";
 
     ss << str;
 

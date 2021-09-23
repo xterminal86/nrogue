@@ -46,7 +46,10 @@ class LevelBuilder
                      const Position& splitRatio,
                      int minRoomSize);
 
-    void FromTilesMethod(const Position& mapSize, int tileSetIndex = -1);
+    void FromTilesMethod(const Position& mapSize,
+                         int tileSetIndex = -1,
+                         bool postProcess = false,
+                         bool removeBias = false);
 
     void PlaceShrineLayout(const Position& start,
                      const StringsArray2D& layout);

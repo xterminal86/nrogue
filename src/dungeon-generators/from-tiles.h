@@ -9,7 +9,10 @@
 class FromTiles : public DGBase
 {
   public:
-    void Generate(const Position& mspSize, int tileSetIndex = -1);
+    void Generate(const Position& mspSize,
+                  int tileSetIndex = -1,
+                  bool postProcess = false,
+                  bool removeBias = false);
 
   private:
     void CreateTileset();
