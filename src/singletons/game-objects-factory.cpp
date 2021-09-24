@@ -556,7 +556,7 @@ GameObject* GameObjectsFactory::CreateHerobrine(int x, int y)
 
   for (int i = 0; i < 8; i++)
   {
-    int hpToAdd = RNG::Instance().RandomRange(1, 6);
+    int hpToAdd = RNG::Instance().RandomRange(4, 6);
     go->LevelUp(hpToAdd);
   }
 

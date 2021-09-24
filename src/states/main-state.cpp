@@ -256,6 +256,20 @@ void MainState::ProcessMovement(const Position& dirOffsets)
     Map::Instance().CurrentLevel->MapOffsetY -= dirOffsets.Y;
 
     _playerRef->FinishTurn();
+
+    auto& px = _playerRef->PosX;
+    auto& py = _playerRef->PosY;
+
+    // Sometimes loot can drop on top of stairs
+    // which can make them hard to find on map.
+    if(Map::Instance().CurrentLevel->MapArray[px][py]->Image == '>')
+    {
+      Printer::Instance().AddMessage("There are stairs leading down here");
+    }
+    else if(Map::Instance().CurrentLevel->MapArray[px][py]->Image == '<')
+    {
+      Printer::Instance().AddMessage("There are stairs leading up here");
+    }
   }
 }
 
