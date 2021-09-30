@@ -1,0 +1,127 @@
+#!/usr/bin/python
+# coding = utf8
+
+import random;
+
+FullFill = 0xFFFFFFFF;
+LowFill  = 0x000000FF;
+HighFill = 0xFFFFFF00;
+
+CharsByIndex = {};
+IndexByChars = {};
+
+MyMap = [
+"###########",
+"#.........#",
+"#########.#",
+"#.....+.#.#",
+"#+#####.#.#",
+"#.#.+.#.#.#",
+"#.#.###.#.#",
+"#.#...+.#.#",
+"#.#######b#",
+"#...T.....#",
+"###########",
+];
+
+def EncodeChar(c):
+  indexToEncode = IndexByChars[c];
+  rndNum = random.randint(0, 4294967296);
+  rndNum = (rndNum & HighFill);  
+  rndNum = rndNum + indexToEncode;
+  return rndNum;
+      
+def EncodeNum(n):
+  rndNum = random.randint(0, 4294967296);
+  rndNum = (rndNum & HighFill);  
+  rndNum = rndNum + n;
+  return rndNum;
+  
+def DecodeNumToChar(n):
+  index = n & LowFill;  
+  return CharsByIndex[index];
+  
+def DecodeNum(n):
+  return (n & LowFill);
+        
+def CreateData():
+  for i in range(32, 128):
+    index = (i - 32);
+    IndexByChars[chr(i)] = index;
+    CharsByIndex[index] = chr(i);
+        
+def ToCppVector(oMap):  
+  decor = "*"*80;
+  print("\n{0}\n".format(decor));
+  
+  res = "std::vector<std::vector<std::pair<uint32_t, uint32_t>>> map = \n";
+  res += "{\n";
+  
+  for block in oMap:
+    res += "  {\n";
+    for pair in block:
+      ocn = pair[0];
+      occ = pair[1];      
+      res += "    { ";
+      res += "{0}, {1}".format(ocn, occ);
+      res += " },\n";
+    res += "  },\n";
+  res += "};\n";
+  print(res);
+      
+def DeobfuscateMap(map):
+  decodedMap = [];
+  for item in map:
+    line = "";
+    for pair in item:
+      oci = pair[0];
+      occ = pair[1];
+      ch = DecodeNumToChar(oci);
+      cc = DecodeNum(occ);
+      for x in range(cc):
+        line += ch;
+    decodedMap.append(line);
+  
+  for item in decodedMap:
+    print(item);
+  
+def ObfuscateMap(map):
+  blocks = [];
+  obfuscatedMap = [];
+  for item in map:
+    block = [];
+    curChar = item[0];
+    acc = 1;
+    for c in item[1:]:
+      if curChar != c:
+        block.append("{0}_{1}".format(curChar, acc));
+        curChar = c;
+        acc = 1;        
+      else:
+        acc = acc + 1;
+    block.append("{0}_{1}".format(curChar, acc));
+    blocks.append(block);
+  # print(blocks);
+  
+  oBlocks = [];
+  for line in blocks:
+    block = [];
+    for item in line:      
+      splitRes = item.split('_');
+      cn = splitRes[0];
+      cc = int(splitRes[1])
+      ocn = EncodeChar(cn);
+      occ = EncodeNum(cc);
+      pair = [ ocn, occ ];
+      block.append(pair);
+    oBlocks.append(block);
+  #print(oBlocks);    
+  ToCppVector(oBlocks);
+  DeobfuscateMap(oBlocks); 
+  
+def main():
+  CreateData();  
+  ObfuscateMap(MyMap);
+  
+if __name__ == "__main__":
+  main();

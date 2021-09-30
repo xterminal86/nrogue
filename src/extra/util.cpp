@@ -1,5 +1,6 @@
 #include "util.h"
 
+#include "application.h"
 #include "printer.h"
 #include "logger.h"
 #include "timer.h"
@@ -29,6 +30,31 @@ namespace Util
 
         break;
       }
+    }
+
+    return res;
+  }
+
+  //
+  // Makes no sense since it's open source, but anyway...
+  //
+  std::vector<std::string> DecodeMap(const CM& map)
+  {
+    std::vector<std::string> res;
+
+    for (auto& block : map)
+    {
+      std::string line;
+
+      for (auto& pair : block)
+      {
+        uint8_t charIndex = (pair.first & 0x000000FF);
+        uint8_t charCount = (pair.second & 0x000000FF);
+        char c = Application::Instance().CharByCharIndex(charIndex);
+        line.append(charCount, c);
+      }
+
+      res.push_back(line);
     }
 
     return res;

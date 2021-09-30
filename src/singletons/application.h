@@ -35,6 +35,8 @@ class Application : public Singleton<Application>
 
     static uint64_t GetNewId();
 
+    char CharByCharIndex(uint8_t index);
+
     Player PlayerInstance;
 
     /// Force redraw current state
@@ -107,6 +109,10 @@ class Application : public Singleton<Application>
     };
 
     StatInfo GetStatInfo(const std::string& attrName);
+
+    std::map<uint8_t, char> _charByCharIndex;
+
+    void PrepareChars();
 
     friend class TargetState;
 };

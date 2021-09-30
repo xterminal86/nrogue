@@ -36,6 +36,7 @@ void Application::Init()
     return;
   }
 
+  PrepareChars();
   InitGraphics();
   InitGameStates();
 
@@ -796,3 +797,15 @@ uint64_t Application::GetNewId()
   return globalId++;
 }
 
+void Application::PrepareChars()
+{
+  for (int i = 32; i < 128; i++)
+  {
+    _charByCharIndex[(i - 32)] = i;
+  }
+}
+
+char Application::CharByCharIndex(uint8_t index)
+{
+  return _charByCharIndex[index];
+}

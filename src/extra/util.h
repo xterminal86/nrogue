@@ -36,9 +36,13 @@
 #define DebugLog(format, ...) SDL_Log(format, ##__VA_ARGS__)
 #endif
 
+using CM = std::vector<std::vector<std::pair<uint32_t, uint32_t>>>;
+
 namespace Util
 {
   extern std::vector<std::string> StringSplit(const std::string& str, char delim);
+
+  extern std::vector<std::string> DecodeMap(const CM& map);
 
   extern bool IsObjectInRange(const Position& posToCheckFrom,
                               const Position& objectPositionToCheck,
