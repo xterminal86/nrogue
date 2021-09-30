@@ -781,6 +781,9 @@ namespace GlobalConstants
   extern const std::vector<std::string> ScrollUnidentifiedNames;
   extern const std::vector<std::string> RandomNames;
 
+  extern const std::vector<std::string> TownNameEndings;
+  extern const std::vector<std::string> NameEndings;
+
   extern const std::vector<StringsArray2D> DungeonRooms;
   extern const std::vector<StringsArray2D> ShrineLayouts;
   extern const std::vector<StringsArray2D> PondLayouts;

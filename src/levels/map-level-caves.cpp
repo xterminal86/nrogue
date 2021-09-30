@@ -15,11 +15,21 @@ MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _specialLevel =
       {
-        "########",
-        "#......#",
-        "#.<..>.#",
-        "#......#",
-        "########"
+        "#######################################",
+        "#....###...#.......####.......###.....#",
+        "#.##.....#.#.#.###..#...#.###.###.###.#",
+        "#..##.##.....#.####.#.#.....#.......#.#",
+        "##.##.####.#.#........#####.#.###.#.#.#",
+        "##....#....#.#####.##.........#...#.#.#",
+        "##.#....##...####...#######.###.###...#",
+        "##.#.##.####.##...<.........#.......#.#",
+        "#..#..#..#......#...###.###.#.#####.#.#",
+        "#.###.#..#.#.#####.##...............#.#",
+        "#............#.....##.#.###.#.####.##.#",
+        "#D#.###.###.##.###....#.....#.........#",
+        "#.#...#......#.###.##.#.###.#.##.####.#",
+        "#>###...####........#.........#.......#",
+        "#######################################"
       };
 
       // Note that x and y are swapped to correspond to
@@ -201,6 +211,16 @@ void MapLevelCaves::CreateSpecialLevel()
           LevelExit.Y = posY;
 
           GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, c, stairsDownTo);
+        }
+        break;
+
+        case 'D':
+        {
+          objName = "Cave Wall";
+          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::CaveWallColor, objName);
+          InsertStaticObject(posX, posY, t, -1);
+
+          // TODO: add trigger to destroy on boss death
         }
         break;
 

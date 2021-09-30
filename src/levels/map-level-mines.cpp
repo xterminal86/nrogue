@@ -156,8 +156,8 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _roomsForLevel =
       {
-        { 0,  _layoutsForLevel[0] },
-        { 60, _layoutsForLevel[1] },
+        { 0,  _layoutsForLevel[0]  },
+        { 60, _layoutsForLevel[1]  },
         { 50, _layoutsForLevel[10] },
       };
 
@@ -172,17 +172,17 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _roomsForLevel =
       {
-        { 0,  _layoutsForLevel[0] },
-        { 60, _layoutsForLevel[1] },
-        { 70, _layoutsForLevel[3] },
-        { 70, _layoutsForLevel[2] },
+        { 0,  _layoutsForLevel[0]  },
+        { 60, _layoutsForLevel[1]  },
+        { 70, _layoutsForLevel[3]  },
+        { 70, _layoutsForLevel[2]  },
         { 50, _layoutsForLevel[10] },
       };
 
       _monstersSpawnRateForThisLevel =
       {
         { GameObjectType::RAT, 10 },
-        { GameObjectType::BAT, 1  }
+        { GameObjectType::BAT,  1 }
       };
     }
     break;
@@ -200,11 +200,11 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
       _monstersSpawnRateForThisLevel =
       {
-        { GameObjectType::RAT,         8 },
-        { GameObjectType::SPIDER,      1 },
-        { GameObjectType::TROLL,       1 },
-        { GameObjectType::VAMPIRE_BAT, 1 },
-        { GameObjectType::BAT,         1 }
+        { GameObjectType::RAT,         25 },
+        { GameObjectType::SPIDER,       2 },
+        { GameObjectType::TROLL,        1 },
+        { GameObjectType::VAMPIRE_BAT,  1 },
+        { GameObjectType::BAT,          5 }
       };
     }
     break;
@@ -224,11 +224,11 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
       _monstersSpawnRateForThisLevel =
       {
-        { GameObjectType::RAT,         8 },
-        { GameObjectType::SPIDER,      4 },
-        { GameObjectType::TROLL,       1 },
-        { GameObjectType::VAMPIRE_BAT, 1 },
-        { GameObjectType::BAT,         1 }
+        { GameObjectType::RAT,         25 },
+        { GameObjectType::SPIDER,       3 },
+        { GameObjectType::TROLL,        1 },
+        { GameObjectType::VAMPIRE_BAT,  1 },
+        { GameObjectType::BAT,          5 }
       };
     }
     break;
@@ -238,17 +238,17 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
       _specialLevel =
       {
         "##############################",
-        "#...#..................#.....#",
-        "#.<.#..###.........###.#.WWW.#",
-        "#...#..###.........###.#.WWW.#",
-        "##+##..###.........###.#.WWW.#",
-        "#............###.......#.....#",
-        "#............###.....b.D...>.#",
-        "#............###.......#.....#",
-        "#......###.........###.#.WWW.#",
-        "#......###.........###.#.WWW.#",
-        "#......###.........###.#.WWW.#",
-        "#......................#.....#",
+        "#...#.....bbb..........#.....#",
+        "#.<.#..###b%bb...b.###.#.WWW.#",
+        "#...#..###bbb...bbb###.#.WWW.#",
+        "##+##..###.b...bb%b###.#.WWW.#",
+        "#bbb...bbb...###bbb....#.....#",
+        "#b%bbbbb%bb..###.b...B.D...>.#",
+        "#bbb.b%bbb..b###.......#.....#",
+        "#.b..bb###.bbb..b..###.#.WWW.#",
+        "#b....b###bb%bbbbb.###.#.WWW.#",
+        "#bb....###.bbbbb%bb###.#.WWW.#",
+        "#%bb........b..bbb.....#.....#",
         "##############################"
       };
 
@@ -480,11 +480,9 @@ void MapLevelMines::CreateSpecialLevel()
         }
         break;
 
-        case 'b':
+        case 'B':
         {
-          objName = "Ground";
-          t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, objName);
-          MapArray[posX][posY]->MakeTile(t);
+          PlaceGroundTile(posX, posY, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
 
           GameObject* boss = GameObjectsFactory::Instance().CreateMonster(posX, posY, GameObjectType::HEROBRINE);
 
@@ -494,6 +492,14 @@ void MapLevelMines::CreateSpecialLevel()
           InsertActor(boss);
         }
         break;
+
+        case 'b':
+          PlaceGroundTile(posX, posY, '.', GlobalConstants::RedColor, GlobalConstants::BlackColor, "Blood");
+          break;
+
+        case '%':
+          PlaceGroundTile(posX, posY, c, GlobalConstants::WhiteColor, GlobalConstants::RedColor, "Someone's Remains");
+          break;
 
         case 'W':
           PlaceDeepWaterTile(posX, posY);

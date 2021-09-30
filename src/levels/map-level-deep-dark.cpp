@@ -84,10 +84,16 @@ void MapLevelDeepDark::CreateLevel()
     break;
 
     case MapType::DEEP_DARK_3:
+    {
+      RemovalParams params = { 6, 7, 3 };
+      lb.RecursiveBacktrackerMethod(MapSize, { -1, -1 }, params);
+    }
+    break;
+
     case MapType::DEEP_DARK_4:
     {
-      Position start = { 1, 1 };
-      lb.BacktrackingTunnelerMethod(MapSize, { 5, 10 }, start, true);
+      RemovalParams params = { 5, 6, 3 };
+      lb.RecursiveBacktrackerMethod(MapSize, { -1, -1 }, params);
     }
     break;
 

@@ -857,30 +857,10 @@ namespace Util
     return textColor;
   }
 
-  std::string GenerateName(bool allowDoubleVowels)
+  std::string GenerateName(bool allowDoubleVowels,
+                           bool canAddEnding,
+                           const std::vector<std::string>& endings)
   {
-    const std::vector<std::string> endings =
-    {
-      "na",
-      "ia",
-      "ya",
-      "nd",
-      "nt",
-      "sh",
-      "rsh",
-      "ey",
-      "el",
-      "urgh",
-      "urg",
-      "stan",
-      "heim",
-      "town",
-      "ton",
-      "shire",
-      "pool",
-      "gow"
-    };
-
     std::string name;
 
     int maxLength = RNG::Instance().RandomRange(2, 4);
@@ -948,7 +928,7 @@ namespace Util
       name += syllable;
     }
 
-    if (addEnding == 0)
+    if (addEnding == 0 && canAddEnding && !endings.empty())
     {
       int endingIndex = RNG::Instance().RandomRange(0, endings.size());
       std::string ending = endings[endingIndex];

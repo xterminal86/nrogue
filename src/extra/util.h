@@ -101,7 +101,9 @@ namespace Util
 
   extern std::string GetItemInventoryColor(const ItemData& data);
 
-  extern std::string GenerateName(bool allowDoubleVowels = false);
+  extern std::string GenerateName(bool allowDoubleVowels = false,
+                                  bool canAddEnding = false,
+                                  const std::vector<std::string>& endings = std::vector<std::string>());
 
   extern std::string ReplaceItemPrefix(const std::string& oldIdentifiedName,
                                        const std::vector<std::string>& anyOf,
@@ -145,6 +147,41 @@ namespace Util
 
     return *weightsByType.begin();
   }
+
+  template <typename T>
+  inline std::map<T, double> WeightsToProbability(const std::map<T, int>& weightsMap)
+  {
+    std::map<T, double> res;
+
+    int totalWeight = 0;
+    for (auto& kvp : weightsMap)
+    {
+      totalWeight += kvp.second;
+    }
+
+    for (auto& kvp : weightsMap)
+    {
+      double p = static_cast<double>(kvp.second) / totalWeight;
+      res[kvp.first] = p;
+    }
+
+    return res;
+  }
+
+  template <typename T>
+  inline std::map<T, int> RollWeightsMap(const std::map<T, int>& weightsMap, int rolls)
+  {
+    std::map<T, int> res;
+
+    for (int i = 0; i < rolls; i++)
+    {
+      auto r = Util::WeightedRandom(weightsMap);
+      res[r.first] += 1;
+    }
+
+    return res;
+  }
+
 
   template <typename key, typename value>
   inline std::map<value, key> FlipMap(const std::map<key, value>& src)

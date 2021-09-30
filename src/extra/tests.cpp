@@ -11,8 +11,6 @@ namespace Tests
 {
   void TestLoS(std::stringstream& ss, int x, int y, int range)
   {
-    //DebugLog("Starting Bresenham LoS test from (%i %i) in range %i...\n", x, y, range);
-    //DebugLog("The path should always start from (%i %i)\n\n", x, y);
     ss << Util::StringFormat("Starting Bresenham LoS test from (%i %i) in range %i...\n", x, y, range);
     ss << Util::StringFormat("The path should always start from (%i %i)\n\n", x, y);
 
@@ -27,23 +25,19 @@ namespace Tests
       {
         auto res = Util::BresenhamLine(x, y, fx, fy);
 
-        //DebugLog ("[%i;%i] -> [%i;%i]\n", x, y, fx, fy);
         ss << Util::StringFormat("[%i;%i] -> [%i;%i]\n", x, y, fx, fy);
 
         for (auto& i : res)
         {
-          //DebugLog("(%i %i) - ", i.X, i.Y);
           ss << Util::StringFormat("(%i %i) - ", i.X, i.Y);
         }
 
         bool cond = (res[0].X == x && res[0].Y == y);
         if (!cond)
         {
-          //DebugLog("*** FAILED! ***\n");
           ss << "*** FAILED! ***\n";
         }
 
-        //DebugLog("\n");
         ss << "\n";
       }
     }
@@ -51,47 +45,38 @@ namespace Tests
 
   void RoomTests(std::stringstream& ss)
   {
-    //DebugLog("\nRoom layouts rotations:\n\n");
     ss << "\nRoom layouts rotations:\n\n";
 
     for (auto& room : GlobalConstants::DungeonRooms)
     {
-      //DebugLog("Layout:\n");
       ss << "Layout:\n";
 
       for (auto& row : room)
       {
-        //DebugLog("%s\n", row.data());
         ss << Util::StringFormat("%s\n", row.data());
       }
 
-      //DebugLog("CCW_90:\n");
       ss << "CCW_90:\n";
 
       auto res = Util::RotateRoomLayout(room, RoomLayoutRotation::CCW_90);
       for (auto& s : res)
       {
-        //DebugLog("\t%s\n", s.data());
         ss << Util::StringFormat("\t%s\n", s.data());
       }
 
-      //DebugLog("CCW_180:\n");
       ss << "CCW_180:\n";
 
       res = Util::RotateRoomLayout(room, RoomLayoutRotation::CCW_180);
       for (auto& s : res)
       {
-        //DebugLog("\t%s\n", s.data());
         ss << Util::StringFormat("\t%s\n", s.data());
       }
 
-      //DebugLog("CCW_270:\n");
       ss << "CCW_270:\n";
 
       res = Util::RotateRoomLayout(room, RoomLayoutRotation::CCW_270);
       for (auto& s : res)
       {
-        //DebugLog("\t%s\n", s.data());
         ss << Util::StringFormat("\t%s\n", s.data());
       }
     }
@@ -99,69 +84,92 @@ namespace Tests
 
   void RNGTests(std::stringstream& ss)
   {
-    //DebugLog("\nRNG tests:\n\n");
     ss << "\nRNG tests:\n\n";
 
-    //DebugLog("Random.Range(-10, 10):\n");
     ss << "Random.Range(-10, 10):\n";
 
     int numberOfRolls = 100;
 
     for (int i = 0; i < numberOfRolls; i++)
     {
-      //DebugLog("%i ", RNG::Instance().RandomRange(-10, 10));
       ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(-10, 10));
     }
 
-    //DebugLog("\n\nRandom.Range(0, 100):\n");
     ss << "\n\nRandom.Range(0, 100):\n";
 
     for (int i = 0; i < numberOfRolls; i++)
     {
-      //DebugLog("%i ", RNG::Instance().RandomRange(0, 100));
       ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(0, 100));
     }
 
-    //DebugLog("\n\nRandom.Range(-20, -10):\n");
     ss << "\n\nRandom.Range(-20, -10):\n";
 
     for (int i = 0; i < numberOfRolls; i++)
     {
-      //DebugLog("%i ", RNG::Instance().RandomRange(-20, -10));
       ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(-20, -10));
     }
 
-    //DebugLog("\n\nRandom.Range(100, 10):\n");
     ss << "\n\nRandom.Range(100, 10):\n";
 
     for (int i = 0; i < numberOfRolls; i++)
     {
-      //DebugLog("%i ", RNG::Instance().RandomRange(100, 10));
       ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(100, 10));
     }
 
-    //DebugLog("\n\nRandom.Range(-10, -100):\n");
     ss << "\n\nRandom.Range(-10, -100):\n";
 
     for (int i = 0; i < numberOfRolls; i++)
     {
-      //DebugLog("%i ", RNG::Instance().RandomRange(-10, -100));
       ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(-10, -100));
     }
 
-    //DebugLog("\n\nRandom.Range(10, -10):\n");
     ss << "\n\nRandom.Range(10, -10):\n";
 
     for (int i = 0; i < numberOfRolls; i++)
     {
-      //DebugLog("%i ", RNG::Instance().RandomRange(10, -10));
       ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(10, -10));
+    }
+  }
+
+  void TestWeightsMap(const std::vector<std::tuple<GameObjectType, int, std::string>>& testData,
+                      int rolls,
+                      std::stringstream& ss)
+  {
+    std::map<GameObjectType, int> toTest;
+    std::map<GameObjectType, std::string> stringNames;
+
+    size_t maxLength = 0;
+    for (auto& i : testData)
+    {
+      toTest.emplace(std::get<0>(i), std::get<1>(i));
+      stringNames.emplace(std::get<0>(i), std::get<2>(i));
+
+      if (std::get<2>(i).length() > maxLength)
+      {
+        maxLength = std::get<2>(i).length();
+      }
+    }
+
+    ss << "\nTesting on " << rolls << " rolls\n\n";
+
+    for (auto& kvp : toTest)
+    {
+      std::string spaces(maxLength - stringNames[kvp.first].length(), ' ');
+      ss << "{ " << stringNames[kvp.first] << ", " << spaces << " w = " << kvp.second << " }\n";
+    }
+
+    ss << "\n\n";
+
+    for (int i = 0; i < rolls; i++)
+    {
+      auto res = Util::WeightedRandom(toTest);
+      std::string spaces(maxLength - stringNames[res.first].length(), ' ');
+      ss << i << ") got " << stringNames[res.first] << ", " << spaces << " w = " << res.second << "\n";
     }
   }
 
   void AutoLevel(std::stringstream& ss, Player& p, int level)
   {
-    //DebugLog("Auto level to %i:\n\n", level);
     ss << Util::StringFormat("Auto level to %i:\n\n", level);
 
     std::map<int, std::pair<std::string, Attribute&>> attrsMap =
@@ -185,13 +193,9 @@ namespace Tests
     {
       auto kvp = a.second;
 
-      //DebugLog("%s: %i (* %i)\n", kvp.first.data(), kvp.second.OriginalValue(), kvp.second.Talents);
       ss << Util::StringFormat("%s: %i (* %i)\n", kvp.first.data(), kvp.second.OriginalValue(), kvp.second.Talents);
     }
 
-    //DebugLog("\n");
-    //DebugLog("HP: %i (* %i)\n", p.Attrs.HP.Max().Get(), p.Attrs.HP.Talents);
-    //DebugLog("MP: %i (* %i)\n", p.Attrs.MP.Max().Get(), p.Attrs.MP.Talents);
     ss << "\n";
     ss << Util::StringFormat("HP: %i (* %i)\n", p.Attrs.HP.Max().Get(), p.Attrs.HP.Talents);
     ss << Util::StringFormat("MP: %i (* %i)\n", p.Attrs.MP.Max().Get(), p.Attrs.MP.Talents);
@@ -199,7 +203,6 @@ namespace Tests
 
   void LevelUpTests(std::stringstream& ss)
   {
-    //DebugLog("\nAuto levelling tests:\n\n");
     ss << "\nAuto levelling tests:\n\n";
 
     Player p1;
@@ -213,52 +216,81 @@ namespace Tests
 
   void WeightedRandomTest(std::stringstream& ss)
   {
-    //DebugLog("\nWeighted random test:\n\n");
     ss << "\nWeighted random test:\n\n";
 
-    std::map<char, int> testMap =
+    std::map<GemType, int> gemsMap =
     {
-      { 'a', 8 },
-      { 'b', 1 },
-      { 'c', 2 }
+      { GemType::WORTHLESS_GLASS, 250 },
+      { GemType::BLACK_OBSIDIAN,  150 },
+      { GemType::GREEN_JADE,      100 },
+      { GemType::PURPLE_FLUORITE,  75 },
+      { GemType::PURPLE_AMETHYST,  50 },
+      { GemType::RED_GARNET,       43 },
+      { GemType::WHITE_OPAL,       37 },
+      { GemType::BLACK_JETSTONE,   35 },
+      { GemType::ORANGE_AMBER,     30 },
+      { GemType::BLUE_AQUAMARINE,  20 },
+      { GemType::YELLOW_CITRINE,   20 },
+      { GemType::GREEN_EMERALD,    12 },
+      { GemType::BLUE_SAPPHIRE,    10 },
+      { GemType::ORANGE_JACINTH,    9 },
+      { GemType::RED_RUBY,          8 },
+      { GemType::WHITE_DIAMOND,     7 },
     };
 
-    for (auto& kvp : testMap)
+    int runs = 1000;
+
+    ss << "Total scores on " << runs << " runs:\n\n";
+
+    auto totalScores = Util::RollWeightsMap(gemsMap, runs);
+    for (auto& kvp : totalScores)
     {
-      //DebugLog("key: %c, weight: %i\n", kvp.first, kvp.second);
-      ss << Util::StringFormat("key: %c, weight: %i\n", kvp.first, kvp.second);
+      ss << "[" << static_cast<int>(kvp.first) << "] = " << kvp.second << "\n";
     }
 
-    std::map<char, int> nums;
-
-    nums['a'] = 0;
-    nums['b'] = 0;
-    nums['c'] = 0;
-
-    int iterations = 10000;
-
-    //DebugLog("\n%i iterations:\n", iterations);
-    ss << Util::StringFormat("\n%i iterations:\n", iterations);
-
-    for (int i = 0; i < iterations; i++)
+    std::vector<std::tuple<GameObjectType, int, std::string>> testData =
     {
-      auto res = Util::WeightedRandom(testMap);
-      nums[res.first] += 1;
-    }
+      { GameObjectType::BAT,    20, "Bat"    },
+      { GameObjectType::SPIDER, 10, "Spider" },
+      { GameObjectType::TROLL,   1, "Troll"  }
+    };
 
-    //DebugLog("\n");
+    std::map<GameObjectType, int> t =
+    {
+      { GameObjectType::BAT,    20 },
+      { GameObjectType::SPIDER, 10 },
+      { GameObjectType::TROLL,   1 }
+    };
+
+    auto r = Util::WeightsToProbability(t);
+
     ss << "\n";
 
-    for (auto& kvp : nums)
+    ss << "Bat, Spider, Troll probabilities:\n\n";
+
+    for (auto& kvp : r)
     {
-      //DebugLog("total scores: %c = %i\n", kvp.first, kvp.second);
-      ss << Util::StringFormat("total scores: %c = %i\n", kvp.first, kvp.second);
+      ss << static_cast<int>(kvp.first) << " = " << kvp.second * 100.0 << "%\n";
     }
+
+    TestWeightsMap(testData, 10, ss);
+    TestWeightsMap(testData, 20, ss);
+    TestWeightsMap(testData, 30, ss);
+
+    testData =
+    {
+      { GameObjectType::BAT,    10, "Bat"    },
+      { GameObjectType::SPIDER, 10, "Spider" },
+      { GameObjectType::TROLL,   1, "Troll"  }
+    };
+
+    TestWeightsMap(testData, 10, ss);
+    TestWeightsMap(testData, 20, ss);
+    TestWeightsMap(testData, 30, ss);
   }
 
   void LootDropTest(std::stringstream& ss)
   {
-    //DebugLog("\nLoot drop test:\n\n");
     ss << "\nLoot drop test:\n\n";
 
     std::map<ItemType, int> scores;
@@ -273,7 +305,6 @@ namespace Tests
 
     for (auto& kvp : scores)
     {
-      //DebugLog("%i = %i\n", kvp.first, kvp.second);
       ss << Util::StringFormat("%i = %i\n", kvp.first, kvp.second);
     }
   }
@@ -625,9 +656,11 @@ namespace Tests
 
   void GenNamesTest(std::stringstream& ss)
   {
-    ss << "\nGenerating 20 'names':\n\n";
+    int number = 100;
 
-    for (int i = 0; i < 20; i++)
+    ss << "\nGenerating " << number << " 'names':\n\n";
+
+    for (int i = 0; i < number; i++)
     {
       auto n = Util::GenerateName(true);
       ss << i + 1 << ") " << n << "\n";
@@ -636,9 +669,27 @@ namespace Tests
     ss << "\n";
     ss << "no duplicate vowels:\n\n";
 
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < number; i++)
     {
       auto n = Util::GenerateName();
+      ss << i + 1 << ") " << n << "\n";
+    }
+
+    ss << "\n";
+    ss << "no duplicate vowels (with endings):\n\n";
+
+    for (int i = 0; i < number; i++)
+    {
+      auto n = Util::GenerateName(false, true, GlobalConstants::NameEndings);
+      ss << i + 1 << ") " << n << "\n";
+    }
+
+    ss << "\n";
+    ss << "'town' names:\n\n";
+
+    for (int i = 0; i < number; i++)
+    {
+      auto n = Util::GenerateName(false, true, GlobalConstants::TownNameEndings);
       ss << i + 1 << ") " << n << "\n";
     }
 
@@ -654,48 +705,48 @@ namespace Tests
 
     DisplayProgress();
 
-    //DebugLog("***** START TESTS *****\n\n");
-    ss << "***** START TESTS *****\n\n";
+    std::string padding(40, '*');
+
+    ss << padding << " START TESTS " << padding << "\n\n";
 
     TestLoS(ss, 4, 4, 2);
-    ss << "\n- o -\n";
+    ss << "\n\n" << padding << " o " << padding << "\n";
 
     DisplayProgress();
 
     RoomTests(ss);
-    ss << "\n- o -\n";
+    ss << "\n\n" << padding << " o " << padding << "\n";
 
     DisplayProgress();
 
     RNGTests(ss);
-    ss << "\n- o -\n";
+    ss << "\n\n" << padding << " o " << padding << "\n";
 
     DisplayProgress();
 
     LevelUpTests(ss);
-    ss << "\n- o -\n";
+    ss << "\n\n" << padding << " o " << padding << "\n";
 
     DisplayProgress();
 
     WeightedRandomTest(ss);
-    ss << "\n- o -\n";
+    ss << "\n\n" << padding << " o " << padding << "\n";
 
     DisplayProgress();
 
     LootDropTest(ss);
-    ss << "\n- o -\n";
+    ss << "\n\n" << padding << " o " << padding << "\n";
 
     DisplayProgress();
 
     LevelBuilderTest(ss);
-    ss << "\n- o -\n";
+    ss << "\n\n" << padding << " o " << padding << "\n";
 
     DisplayProgress();
 
     GenNamesTest(ss);
 
-    //DebugLog("\n\n***** o *****\n");
-    ss << "\n\n***** o *****\n";
+    ss << "\n\n" << padding << " o " << padding << "\n";
 
     file << ss.str();
 

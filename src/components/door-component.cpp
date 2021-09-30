@@ -32,13 +32,11 @@ void DoorComponent::Interact()
         OpenedBy = GlobalConstants::OpenedByAnyone;
         success = true;
 
-        // NOTE: what if the same "key" can open several doors?
-        //
         // Destroy "key" item from inventory since it's no longer needed
-        //ic->Data.IsImportant = false;
-        //
-        //auto it = playerPref->Inventory.Contents.begin();
-        //playerPref->Inventory.Contents.erase(it + i);
+        ic->Data.IsImportant = false;
+
+        auto it = playerPref->Inventory.Contents.begin();
+        playerPref->Inventory.Contents.erase(it + i);
 
         break;
       }

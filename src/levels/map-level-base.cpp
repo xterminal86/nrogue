@@ -27,7 +27,7 @@ MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
     bool shouldGenerate = Util::Rolld100(90);
     if (shouldGenerate)
     {
-      levelName = "Village of " + Util::GenerateName();
+      levelName = "Village of " + Util::GenerateName(false, true, GlobalConstants::TownNameEndings);
     }
     else
     {

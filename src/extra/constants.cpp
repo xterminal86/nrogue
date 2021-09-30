@@ -563,6 +563,44 @@ namespace GlobalConstants
     "Markus Persson"
   };
 
+  const std::vector<std::string> TownNameEndings =
+  {
+      "no",
+      "ow",
+      "to",
+      "nd",
+      "nt",
+      "sh",
+      "rsh",
+      "urgh",
+      "urg",
+      "stan",
+      "heim",
+      "town",
+      "ton",
+      "shire",
+      "pool",
+      "gow"
+  };
+
+  const std::vector<std::string> NameEndings =
+  {
+    "d",
+    "t",
+    "r",
+    "na",
+    "ko",
+    "ya",
+    "in",
+    "an",
+    "in",
+    "to",
+    "om",
+    "mo",
+    "mi",
+    "el"
+  };
+
   const std::map<MapType, std::vector<std::string>> MapLevelNames =
   {
     { MapType::TOWN,

@@ -174,11 +174,12 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
   int scale = Map::Instance().CurrentLevel->DungeonLevel;
 
   int money = (amount == 0) ? RNG::Instance().RandomRange(1, 11) * scale : amount;
-  ic->Data.Cost = money;
-  ic->Data.Amount = money;
-  ic->Data.IsStackable = true;
-  ic->Data.ItemType_ = ItemType::COINS;
-  ic->Data.IsIdentified = true;
+
+  ic->Data.Cost           = money;
+  ic->Data.Amount         = money;
+  ic->Data.IsStackable    = true;
+  ic->Data.ItemType_      = ItemType::COINS;
+  ic->Data.IsIdentified   = true;
   ic->Data.IdentifiedName = GlobalConstants::MoneyName;
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
@@ -1133,22 +1134,22 @@ GameObject* GameObjectsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 
   std::map<GemType, int> gemsMap =
   {
-    { GemType::WORTHLESS_GLASS, 800 },
+    { GemType::WORTHLESS_GLASS, 250 },
     { GemType::BLACK_OBSIDIAN,  150 },
-    { GemType::GREEN_JADE,      145 },
-    { GemType::PURPLE_FLUORITE, 135 },
-    { GemType::PURPLE_AMETHYST, 130 },
-    { GemType::RED_GARNET,      110 },
-    { GemType::WHITE_OPAL,      100 },
-    { GemType::BLACK_JETSTONE,  95  },
-    { GemType::ORANGE_AMBER,    75  },
-    { GemType::BLUE_AQUAMARINE, 55  },
-    { GemType::YELLOW_CITRINE,  55  },
-    { GemType::GREEN_EMERALD,   30  },
-    { GemType::BLUE_SAPPHIRE,   25  },
-    { GemType::ORANGE_JACINTH,  20  },
-    { GemType::RED_RUBY,        15  },
-    { GemType::WHITE_DIAMOND,   15  },
+    { GemType::GREEN_JADE,      100 },
+    { GemType::PURPLE_FLUORITE,  75 },
+    { GemType::PURPLE_AMETHYST,  50 },
+    { GemType::RED_GARNET,       43 },
+    { GemType::WHITE_OPAL,       37 },
+    { GemType::BLACK_JETSTONE,   35 },
+    { GemType::ORANGE_AMBER,     30 },
+    { GemType::BLUE_AQUAMARINE,  20 },
+    { GemType::YELLOW_CITRINE,   20 },
+    { GemType::GREEN_EMERALD,    12 },
+    { GemType::BLUE_SAPPHIRE,    10 },
+    { GemType::ORANGE_JACINTH,    9 },
+    { GemType::RED_RUBY,          8 },
+    { GemType::WHITE_DIAMOND,     7 },
   };
 
   std::map<ItemType, int> returnerMap =
