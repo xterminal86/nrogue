@@ -78,6 +78,24 @@ void LookInputState::HandleInput()
       break;
 
     #ifdef DEBUG_BUILD
+    case 'D':
+    {
+      auto gos = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
+      if (!gos.empty())
+      {
+        GameObject* top = gos[gos.size() - 1];
+        top->IsDestroyed = true;
+        Printer::Instance().AddMessage("Removed: " + top->ObjectName);
+        Map::Instance().RemoveDestroyed();
+        Printer::Instance().DrawExplosion(_cursorPosition, 3);
+      }
+      else
+      {
+        Printer::Instance().AddMessage("There's nothing here");
+      }
+    }
+    break;
+
     case 'b':
     {
       GameObject* bat = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::BAT);

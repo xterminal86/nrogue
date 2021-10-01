@@ -35,9 +35,12 @@ namespace Util
     return res;
   }
 
+  // ===========================================================================
   //
-  // Makes no sense since it's open source, but anyway...
+  // Makes no sense since it's open source, but anyway.
+  // At least we can cover every not-so-important stuff with a fig leaf.
   //
+  // ===========================================================================
   std::vector<std::string> DecodeMap(const CM& map)
   {
     std::vector<std::string> res;
@@ -59,6 +62,22 @@ namespace Util
 
     return res;
   }
+
+  std::string DecodeString(const CS& str)
+  {
+    std::string res;
+
+    for (auto& i : str)
+    {
+      uint8_t charIndex = (i & 0x000000FF);
+      char c = Application::Instance().CharByCharIndex(charIndex);
+      res.push_back(c);
+    }
+
+    return res;
+  }
+
+  // ===========================================================================
 
   bool IsObjectInRange(const Position& posToCheckFrom,
                        const Position& objectPositionToCheck,

@@ -7,9 +7,6 @@
 void ReturnerState::Prepare()
 {
   _playerRef = &Application::Instance().PlayerInstance;
-
-  Printer::Instance().AddMessage("What do you want to do with returner?");
-  Printer::Instance().AddMessage("(a) - attune, (u) - use, (q) - nothing");
 }
 
 void ReturnerState::HandleInput()
@@ -67,7 +64,6 @@ void ReturnerState::HandleInput()
     break;
 
     case VK_CANCEL:
-      Printer::Instance().AddMessage("Cancelled");
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
@@ -88,19 +84,15 @@ void ReturnerState::Update(bool forceUpdate)
 
     _playerRef->Draw();
 
-    auto& msgs = Printer::Instance().Messages();
-    auto msg1 = msgs.at(0);
-    auto msg2 = msgs.at(1);
-
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 1,
-                                msg1,
+                                "What do you want to do with returner?",
                                 Printer::kAlignRight,
                                 GlobalConstants::WhiteColor);
 
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 2,
-                                msg2,
+                                "(a) - attune, (u) - use, (q) - nothing",
                                 Printer::kAlignRight,
                                 GlobalConstants::WhiteColor);
 

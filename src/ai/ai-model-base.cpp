@@ -466,7 +466,7 @@ Node* AIModelBase::CreateConditionNode(const ScriptNode* data)
 {
   std::function<BTResult()> fn = GetConditionFunction(data);
 
-  if (fn.target_type() == typeid(void))
+  if (!Util::IsFunctionValid(fn))
   {
     auto str = Util::StringFormat("%s - empty COND function (%s)!", __PRETTY_FUNCTION__, data->Params.at("p1").data());
     Logger::Instance().Print(str);

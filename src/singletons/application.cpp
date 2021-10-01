@@ -799,13 +799,13 @@ uint64_t Application::GetNewId()
 
 void Application::PrepareChars()
 {
-  for (int i = 32; i < 128; i++)
+  for (int i = 0; i < 128; i++)
   {
-    _charByCharIndex[(i - 32)] = i;
+    _charByCharIndex[i] = i;
   }
 }
 
-char Application::CharByCharIndex(uint8_t index)
+const char& Application::CharByCharIndex(uint8_t index)
 {
   return _charByCharIndex[index];
 }

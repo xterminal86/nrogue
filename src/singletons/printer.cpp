@@ -434,6 +434,14 @@ TileColor Printer::ConvertHtmlToRGB(const std::string& htmlColor)
 {
   TileColor res;
 
+  if (htmlColor.empty())
+  {
+    res.R = 255;
+    res.G = 255;
+    res.B = 255;
+    return res;
+  }
+
   std::string hexR = { htmlColor[1], htmlColor[2] };
   std::string hexG = { htmlColor[3], htmlColor[4] };
   std::string hexB = { htmlColor[5], htmlColor[6] };
@@ -879,18 +887,18 @@ std::vector<Position> Printer::GetAreaDamagePointsFrom(Position from, int range)
   return res;
 }
 
-void Printer::AddMessage(const std::string& message)
+void Printer::AddMessage(const std::string& message, const std::string& textColor)
 {
   if (!_inGameMessages.empty() && (_repeatingMessage == message))
   {
     _messageRepeatCounter++;
     auto newStr = Util::StringFormat("(x%i) %s", _messageRepeatCounter, _repeatingMessage.data());
-    _inGameMessages.front() = newStr;
+    _inGameMessages.front() = { newStr, textColor };
   }
   else
   {
     _messageRepeatCounter = 1;
-    _inGameMessages.insert(_inGameMessages.begin(), message);
+    _inGameMessages.insert(_inGameMessages.begin(), { message, textColor });
     _lastMessagesToDisplay++;
   }
 
@@ -906,7 +914,7 @@ void Printer::AddMessage(const std::string& message)
   ShowLastMessage = true;
 }
 
-std::vector<std::string> Printer::GetLastMessages()
+std::vector<std::pair<std::string, std::string>> Printer::GetLastMessages()
 {
   _lastMessages.clear();
 
@@ -926,9 +934,9 @@ std::vector<std::string> Printer::GetLastMessages()
   return _lastMessages;
 }
 
-std::string Printer::GetLastMessage()
+std::pair<std::string, std::string> Printer::GetLastMessage()
 {
-  return (_inGameMessages.size() > 0) ? _inGameMessages.front() : std::string();
+  return (_inGameMessages.size() > 0) ? _inGameMessages.front() : std::pair<std::string, std::string>();
 }
 
 void Printer::ResetMessagesToDisplay()
@@ -939,7 +947,7 @@ void Printer::ResetMessagesToDisplay()
   _repeatingMessage.clear();
 }
 
-std::vector<std::string>& Printer::Messages()
+std::vector<std::pair<std::string, std::string>>& Printer::Messages()
 {
   return _inGameMessages;
 }

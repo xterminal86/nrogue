@@ -125,7 +125,7 @@ BTResult Condition::Run()
 {
   BTResult res = BTResult::Undefined;
 
-  if (_fn.target_type() != typeid(void))
+  if (Util::IsFunctionValid(_fn))
   {
     res = _fn();
 

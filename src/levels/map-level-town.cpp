@@ -5,12 +5,25 @@
 #include "game-objects-factory.h"
 #include "game-object-info.h"
 #include "door-component.h"
+#include "trigger-component.h"
+#include "trigger-handlers.h"
 #include "pathfinder.h"
 #include "printer.h"
+#include "application.h"
 
 MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type, int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
+  for (auto& kvp : _iterationMap)
+  {
+    for (auto& i : kvp.second)
+    {
+      auto l = Util::DecodeMap(i);
+      _layoutsForLevel.push_back(l);
+    }
+  }
+
+  /*
   _layoutsForLevel =
   {
     // Common houses
@@ -160,6 +173,7 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type, int dungeonLevel)
       "#######",
     }
   };
+  */
 }
 
 void MapLevelTown::PrepareMap(MapLevelBase* levelOwner)
@@ -244,6 +258,28 @@ void MapLevelTown::CreateLevel()
   LevelExit.Y = 44;
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
+
+  GameObject* trigger = GameObjectsFactory::Instance().CreateDummyObject("Trigger", MapArray[10][10]->Image, MapArray[10][10]->FgColor, MapArray[10][10]->BgColor, { "" });
+  trigger->PosX = 10;
+  trigger->PosY = 10;
+
+  TriggerComponent* tc = trigger->AddComponent<TriggerComponent>();
+  tc->Setup(TriggerType::ONE_SHOT,
+  [this, tc]()
+  {
+    if (_playerRef->PosX == 10 && _playerRef->PosY == 10)
+    {
+      tc->OwnerGameObject->FgColor = GlobalConstants::WallColor;
+      tc->OwnerGameObject->BgColor = GlobalConstants::BlackColor;
+      return true;
+    }
+
+    return false;
+  },
+  &TriggerHandlers::Report);
+
+  InsertGameObject(trigger);
+
 
   // *** FIXME: debug
 

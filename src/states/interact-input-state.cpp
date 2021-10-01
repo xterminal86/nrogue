@@ -198,11 +198,14 @@ void InteractInputState::Update(bool forceUpdate)
 
     _playerRef->Draw();
 
+    auto lastMessage = Printer::Instance().GetLastMessage();
+
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 1,
-                                Printer::Instance().GetLastMessage(),
+                                lastMessage.first,
                                 Printer::kAlignRight,
-                                "#FFFFFF");
+                                lastMessage.second,
+                                GlobalConstants::BlackColor);
 
     Printer::Instance().Render();
   }

@@ -1,9 +1,9 @@
-#ifndef ITEMUSECALLBACKS_H
-#define ITEMUSECALLBACKS_H
+#ifndef ITEMUSEHANDLERS_H
+#define ITEMUSEHANDLERS_H
 
 class ItemComponent;
 
-namespace ItemUseCallbacks
+namespace ItemUseHandlers
 {
   bool HealingPotionUseHandler(ItemComponent* item);
   bool NeutralizePoisonPotionUseHandler(ItemComponent* item);
@@ -17,4 +17,4 @@ namespace ItemUseCallbacks
   bool FoodUseHandler(ItemComponent* item);
 }
 
-#endif // ITEMUSECALLBACKS_H
+#endif // ITEMUSEHANDLERS_H

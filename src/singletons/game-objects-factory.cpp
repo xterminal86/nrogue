@@ -13,7 +13,7 @@
 #include "ai-monster-troll.h"
 #include "ai-monster-herobrine.h"
 #include "ai-npc.h"
-#include "item-use-callbacks.h"
+#include "item-use-handlers.h"
 #include "stairs-component.h"
 #include "door-component.h"
 #include "go-timed-destroyer.h"
@@ -96,6 +96,10 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
 
     case ItemType::REPAIR_KIT:
       go = CreateRepairKit(x, y);
+      break;
+
+    case ItemType::NOTHING:
+      go = CreateDummyObject("Dummy", 'O', GlobalConstants::NpcColor, GlobalConstants::BlackColor, { "" });
       break;
 
     default:
@@ -730,7 +734,7 @@ GameObject* GameObjectsFactory::CreateFood(int x, int y, FoodType type, ItemPref
   ic->Data.IdentifiedDescription = { "Looks edible." };
   ic->Data.IdentifiedName = name;
 
-  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::FoodUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::FoodUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -769,7 +773,7 @@ GameObject* GameObjectsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::HealingPotionUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::HealingPotionUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -808,7 +812,7 @@ GameObject* GameObjectsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOv
   ic->Data.IdentifiedName        = name;
   ic->Data.UnidentifiedName      = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::NeutralizePoisonPotionUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::NeutralizePoisonPotionUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -847,7 +851,7 @@ GameObject* GameObjectsFactory::CreateManaPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::ManaPotionUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::ManaPotionUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -886,7 +890,7 @@ GameObject* GameObjectsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::HungerPotionUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::HungerPotionUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -930,7 +934,7 @@ GameObject* GameObjectsFactory::CreateExpPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::ExpPotionUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::ExpPotionUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -971,7 +975,7 @@ GameObject* GameObjectsFactory::CreateStatPotion(const std::string& statName, It
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::StatPotionUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::StatPotionUseHandler, ic);
 
   SetItemName(go, ic->Data);
 
@@ -1372,7 +1376,7 @@ GameObject* GameObjectsFactory::CreateScroll(int x, int y, SpellType type, ItemP
 
   SetItemName(go, ic->Data);
 
-  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::ScrollUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::ScrollUseHandler, ic);
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
@@ -2167,7 +2171,7 @@ GameObject* GameObjectsFactory::CreateReturner(int x, int y, int charges, ItemPr
   ic->Data.IdentifiedName = colorName + " Returner";
   ic->Data.UnidentifiedName = "?" + colorName + " Gem?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::ReturnerUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::ReturnerUseHandler, ic);
 
   go->ObjectName = ic->Data.IdentifiedName;
 
@@ -2213,7 +2217,7 @@ GameObject* GameObjectsFactory::CreateRepairKit(int x, int y, int charges, ItemP
   ic->Data.IdentifiedName = "Repair Kit";
   ic->Data.UnidentifiedName = "?Repair Kit?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseCallbacks::RepairKitUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::RepairKitUseHandler, ic);
 
   go->ObjectName = ic->Data.IdentifiedName;
 

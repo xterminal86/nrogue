@@ -1,4 +1,4 @@
-#include "item-use-callbacks.h"
+#include "item-use-handlers.h"
 
 #include "item-component.h"
 #include "application.h"
@@ -8,7 +8,7 @@
 #include "rng.h"
 #include "util.h"
 
-namespace ItemUseCallbacks
+namespace ItemUseHandlers
 {
   bool HealingPotionUseHandler(ItemComponent *item)
   {

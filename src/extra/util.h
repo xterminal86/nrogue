@@ -37,12 +37,14 @@
 #endif
 
 using CM = std::vector<std::vector<std::pair<uint32_t, uint32_t>>>;
+using CS = std::vector<uint32_t>;
 
 namespace Util
 {
   extern std::vector<std::string> StringSplit(const std::string& str, char delim);
 
   extern std::vector<std::string> DecodeMap(const CM& map);
+  extern std::string DecodeString(const CS& str);
 
   extern bool IsObjectInRange(const Position& posToCheckFrom,
                               const Position& objectPositionToCheck,
@@ -213,6 +215,12 @@ namespace Util
 
     // We don't want the '\0' inside
     return std::string( buf.get(), buf.get() + size - 1 );
+  }
+
+  template <typename F>
+  inline bool IsFunctionValid(const F& fn)
+  {
+    return (fn.target_type() != typeid(void));
   }
 }
 

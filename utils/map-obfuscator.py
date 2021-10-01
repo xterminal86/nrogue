@@ -11,17 +11,13 @@ CharsByIndex = {};
 IndexByChars = {};
 
 MyMap = [
-"###########",
-"#.........#",
-"#########.#",
-"#.....+.#.#",
-"#+#####.#.#",
-"#.#.+.#.#.#",
-"#.#.###.#.#",
-"#.#...+.#.#",
-"#.#######b#",
-"#...T.....#",
-"###########",
+"#######",
+"#.....#",
+"#.#.#.#",
+"+.....#",
+"#.#.#.#",
+"#.....#",
+"#######",
 ];
 
 def EncodeChar(c):
@@ -45,8 +41,8 @@ def DecodeNum(n):
   return (n & LowFill);
         
 def CreateData():
-  for i in range(32, 128):
-    index = (i - 32);
+  for i in range(0, 128):
+    index = i;
     IndexByChars[chr(i)] = index;
     CharsByIndex[index] = chr(i);
         
@@ -94,22 +90,21 @@ def ObfuscateMap(map):
     acc = 1;
     for c in item[1:]:
       if curChar != c:
-        block.append("{0}_{1}".format(curChar, acc));
+        block.append([curChar, acc]);
         curChar = c;
         acc = 1;        
       else:
         acc = acc + 1;
-    block.append("{0}_{1}".format(curChar, acc));
+    block.append([curChar, acc]);
     blocks.append(block);
-  # print(blocks);
+  #print(blocks);
   
   oBlocks = [];
   for line in blocks:
     block = [];
-    for item in line:      
-      splitRes = item.split('_');
-      cn = splitRes[0];
-      cc = int(splitRes[1])
+    for item in line:            
+      cn = item[0];
+      cc = int(item[1])
       ocn = EncodeChar(cn);
       occ = EncodeNum(cc);
       pair = [ ocn, occ ];

@@ -67,9 +67,14 @@ void EndgameState::DisplayGameLog()
 
   int count = 0;
   auto msgs = Printer::Instance().GetLastMessages();
-  for (auto& m : msgs)
+  for (auto& pair : msgs)
   {
-    Printer::Instance().PrintFB(x, y - count, m, Printer::kAlignRight, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(x,
+                                y - count,
+                                pair.first,
+                                Printer::kAlignRight,
+                                pair.second,
+                                GlobalConstants::BlackColor);
     count++;
   }
 }

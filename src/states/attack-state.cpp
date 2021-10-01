@@ -161,11 +161,14 @@ void AttackState::Update(bool forceUpdate)
 
     _playerRef->Draw();
 
+    auto lastMsg = Printer::Instance().GetLastMessage();
+
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 1,
-                                Printer::Instance().GetLastMessage(),
+                                lastMsg.first,
                                 Printer::kAlignRight,
-                                "#FFFFFF");
+                                lastMsg.second,
+                                GlobalConstants::BlackColor);
 
     Printer::Instance().Render();
   }

@@ -124,15 +124,14 @@ class Printer : public Singleton<Printer>
 #endif
 
     /// Add message to the game log
-    void AddMessage(const std::string& message);
+    void AddMessage(const std::string& message, const std::string& textColor = "#FFFFFF");
 
-    std::string GetLastMessage();
+    std::pair<std::string, std::string> GetLastMessage();
 
     void ResetMessagesToDisplay();
 
-    std::vector<std::string> GetLastMessages();
-
-    std::vector<std::string>& Messages();
+    std::vector<std::pair<std::string, std::string>> GetLastMessages();
+    std::vector<std::pair<std::string, std::string>>& Messages();
 
     bool ShowLastMessage;
 
@@ -159,8 +158,8 @@ class Printer : public Singleton<Printer>
     std::vector<std::vector<FBPixel>> _frameBuffer;
 #endif
 
-    std::vector<std::string> _inGameMessages;
-    std::vector<std::string> _lastMessages;
+    std::vector<std::pair<std::string, std::string>> _inGameMessages;
+    std::vector<std::pair<std::string, std::string>> _lastMessages;
 
     int _lastMessagesToDisplay = 0;
 

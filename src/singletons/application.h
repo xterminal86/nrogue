@@ -35,7 +35,7 @@ class Application : public Singleton<Application>
 
     static uint64_t GetNewId();
 
-    char CharByCharIndex(uint8_t index);
+    const char& CharByCharIndex(uint8_t index);
 
     Player PlayerInstance;
 

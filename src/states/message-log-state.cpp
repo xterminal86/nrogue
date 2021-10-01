@@ -81,9 +81,10 @@ void MessageLogState::Update(bool forceUpdate)
 
       Printer::Instance().PrintFB(3,
                                   offsetY,
-                                  messages[i],
+                                  messages[i].first,
                                   Printer::kAlignLeft,
-                                  GlobalConstants::WhiteColor);
+                                  messages[i].second,
+                                  GlobalConstants::BlackColor);
       offsetY++;
     }
 

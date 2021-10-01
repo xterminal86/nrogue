@@ -283,10 +283,11 @@ void MainState::DisplayGameLog()
   for (auto& m : msgs)
   {
     Printer::Instance().PrintFB(x,
-                                 y - count,
-                                 m,
-                                 Printer::kAlignRight,
-                                 GlobalConstants::WhiteColor);
+                                y - count,
+                                m.first,
+                                Printer::kAlignRight,
+                                m.second,
+                                GlobalConstants::BlackColor);
     count++;
   }
 }

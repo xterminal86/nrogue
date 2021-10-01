@@ -669,7 +669,7 @@ bool GameObject::Interact()
   // The type_info object that corresponds to the type of the target,
   // or typeid(void) if the object is an empty function.
 
-  if (InteractionCallback.target_type() != typeid(void))
+  if (Util::IsFunctionValid(InteractionCallback))
   {
     InteractionCallback();
     return true;
