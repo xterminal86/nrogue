@@ -26,7 +26,7 @@ void Player::Init()
   Image = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
   #endif
 
-  FgColor = GlobalConstants::PlayerColor;
+  FgColor = Colors::PlayerColor;
   Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
   Inventory.MaxCapacity = GlobalConstants::InventoryMaxSize;
@@ -61,7 +61,7 @@ void Player::Draw()
   // replace it with current floor color
   std::string bgColor = BgColor;
 
-  bool cond = (BgColor == GlobalConstants::BlackColor);
+  bool cond = (BgColor == Colors::BlackColor);
   bool isOnStaticObject = (mapRef->StaticMapObjects[PosX][PosY] != nullptr);
 
   if (cond)
@@ -696,11 +696,11 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
   bool hitLanded = alwaysHit ? true : WasHitLanded(go);
   if (!hitLanded)
   {
-    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "You missed", "#FFFFFF");
+    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "You missed", Colors::WhiteColor);
   }
   else
   {
-    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "", "#FF0000");
+    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "", Colors::RedColor);
     ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
 
     bool isRanged = false;
@@ -1276,7 +1276,7 @@ void Player::LevelDown()
 
   auto res = GetPrettyLevelUpText();
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Level DOWN!", res, "#FF0000", "#000044");
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Level DOWN!", res, Colors::RedColor, "#000044");
 
   Printer::Instance().AddMessage("You have LOST a level!");
 }
@@ -1343,8 +1343,8 @@ bool Player::IsAlive()
     Attrs.HP.SetMin(0);
 
     Image = '%';
-    FgColor = GlobalConstants::PlayerColor;
-    BgColor = "#FF0000";
+    FgColor = Colors::PlayerColor;
+    BgColor = Colors::RedColor;
     IsDestroyed = true;
 
     return false;

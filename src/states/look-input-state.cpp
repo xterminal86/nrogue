@@ -266,20 +266,20 @@ void LookInputState::Update(bool forceUpdate)
     Printer::Instance().PrintFB(Printer::TerminalWidth / 2, 0,
                                 "Press 'q' to exit look mode",
                                 Printer::kAlignCenter,
-                                GlobalConstants::WhiteColor);
+                                Colors::WhiteColor);
 
     std::string coords = Util::StringFormat("[%i;%i]", _cursorPosition.X, _cursorPosition.Y);
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 2,
                                 coords,
                                 Printer::kAlignRight,
-                                GlobalConstants::WhiteColor);
+                                Colors::WhiteColor);
 
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 1,
                                 lookStatus,
                                 Printer::kAlignRight,
-                                GlobalConstants::WhiteColor);
+                                Colors::WhiteColor);
 
     #ifdef DEBUG_BUILD
     PrintDebugInfo();

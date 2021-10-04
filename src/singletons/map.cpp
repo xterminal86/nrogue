@@ -516,26 +516,26 @@ void Map::ShowLoadingText(const std::string& textOverride)
   Printer::Instance().DrawWindow({ lx - 3, th - 3 },
                                  { hx - lx + 5, 6 },
                                  "",
-                                 "#FFFFFF",
-                                 GlobalConstants::MessageBoxHeaderBgColor,
+                                 Colors::WhiteColor,
+                                 Colors::MessageBoxHeaderBgColor,
                                  "#444444");
   #else
   for (int i = lx - 3; i < hx + 3; i++)
   {
     for (int j = th - 3; j <= th + 3; j++)
     {
-      Printer::Instance().PrintFB(i, j, ' ', "#000000", "#222222");
+      Printer::Instance().PrintFB(i, j, ' ', Colors::BlackColor, "#222222");
     }
   }
 
   auto res = Util::GetPerimeter(lx - 4, th - 4, text.length() * 2 - 7, 8, true);
   for (auto& p : res)
   {
-    Printer::Instance().PrintFB(p.X, p.Y, ' ', "#000000", "#FFFFFF");
+    Printer::Instance().PrintFB(p.X, p.Y, ' ', Colors::BlackColor, Colors::WhiteColor);
   }
   #endif
 
-  Printer::Instance().PrintFB(tw, th, text, Printer::kAlignCenter, "#FFFFFF");
+  Printer::Instance().PrintFB(tw, th, text, Printer::kAlignCenter, Colors::WhiteColor);
 
   Printer::Instance().Render();
 }
@@ -695,19 +695,19 @@ void Map::DrawNonVisibleMapTile(int x, int y)
   // draw it with fog of war color,
   // otherwise use tile's color and black color as a background.
   std::string tileColor = CurrentLevel->MapArray[x][y]->Revealed ?
-                          GlobalConstants::FogOfWarColor :
-                          GlobalConstants::BlackColor;
+                          Colors::FogOfWarColor :
+                          Colors::BlackColor;
 
   // If tile's fg color is already black
   // ("block" tiles with no symbols like water, floor, walls etc.),
   // replace the background instead.
-  if (CurrentLevel->MapArray[x][y]->FgColor == GlobalConstants::BlackColor)
+  if (CurrentLevel->MapArray[x][y]->FgColor == Colors::BlackColor)
   {
-    CurrentLevel->MapArray[x][y]->Draw(GlobalConstants::BlackColor, tileColor);
+    CurrentLevel->MapArray[x][y]->Draw(Colors::BlackColor, tileColor);
   }
   else
   {
-    CurrentLevel->MapArray[x][y]->Draw(tileColor, GlobalConstants::BlackColor);
+    CurrentLevel->MapArray[x][y]->Draw(tileColor, Colors::BlackColor);
   }
 }
 
@@ -718,16 +718,16 @@ void Map::DrawNonVisibleStaticObject(int x, int y)
     // Same as in method above
 
     std::string tileColor = CurrentLevel->MapArray[x][y]->Revealed ?
-                            GlobalConstants::FogOfWarColor :
-                            GlobalConstants::BlackColor;
+                            Colors::FogOfWarColor :
+                            Colors::BlackColor;
 
-    if (CurrentLevel->StaticMapObjects[x][y]->FgColor == GlobalConstants::BlackColor)
+    if (CurrentLevel->StaticMapObjects[x][y]->FgColor == Colors::BlackColor)
     {
-      CurrentLevel->StaticMapObjects[x][y]->Draw(GlobalConstants::BlackColor, tileColor);
+      CurrentLevel->StaticMapObjects[x][y]->Draw(Colors::BlackColor, tileColor);
     }
     else
     {
-      CurrentLevel->StaticMapObjects[x][y]->Draw(tileColor, GlobalConstants::BlackColor);
+      CurrentLevel->StaticMapObjects[x][y]->Draw(tileColor, Colors::BlackColor);
     }
   }
 }
@@ -826,7 +826,7 @@ void Map::DrawActors()
       // replace it with current floor color
       std::string bgColor = go->BgColor;
 
-      bool cond = (go->BgColor == GlobalConstants::BlackColor);
+      bool cond = (go->BgColor == Colors::BlackColor);
       bool isOnStaticObject = (CurrentLevel->StaticMapObjects[x][y] != nullptr);
 
       if (cond)

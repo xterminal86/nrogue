@@ -42,7 +42,7 @@ void ShrineComponent::Interact()
     _duration = GlobalConstants::EffectDefaultDuration * _power; //Timeout / 2;
 
     Counter = 0;
-    OwnerGameObject->FgColor = GlobalConstants::BlackColor;
+    OwnerGameObject->FgColor = Colors::BlackColor;
 
     std::string shrineName = GlobalConstants::ShrineNameByType.at(Type);
     std::string message = Util::StringFormat("You touch the %s...", shrineName.data());
@@ -61,7 +61,7 @@ void ShrineComponent::Interact()
 
 void ShrineComponent::Activate()
 {
-  OwnerGameObject->FgColor = GlobalConstants::ShrineColorsByType.at(Type).first;
+  OwnerGameObject->FgColor = Colors::ShrineColorsByType.at(Type).first;
 }
 
 void ShrineComponent::ProcessEffect()

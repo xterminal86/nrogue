@@ -59,7 +59,7 @@ void ServiceState::ProcessRepair(int key)
   ServiceInfo& si = _serviceInfoByChar[key];
   if (_playerRef->Money < si.ServiceCost)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "You have no money, ha ha ha!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "You have no money, ha ha ha!" }, Colors::MessageBoxRedBorderColor);
   }
   else
   {
@@ -74,7 +74,7 @@ void ServiceState::ProcessIdentify(int key)
   ServiceInfo& si = _serviceInfoByChar[key];
   if (_playerRef->Money < si.ServiceCost)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "Not enough money!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "Not enough money!" }, Colors::MessageBoxRedBorderColor);
   }
   else
   {
@@ -89,7 +89,7 @@ void ServiceState::ProcessBlessing(int key)
   ServiceInfo& si = _serviceInfoByChar[key];
   if (_playerRef->Money < si.ServiceCost)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Damn Nation!", { "No donation - no salvation!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Damn Nation!", { "No donation - no salvation!" }, Colors::MessageBoxRedBorderColor);
   }
   else
   {
@@ -221,10 +221,10 @@ void ServiceState::Update(bool forceUpdate)
     std::string youHaveStr = "You have: ";
     auto playerMoney = Util::StringFormat("$ %i", _playerRef->Money);
 
-    Printer::Instance().PrintFB(1, _th - 1, youHaveStr, Printer::kAlignLeft, GlobalConstants::WhiteColor);
-    Printer::Instance().PrintFB(1 + youHaveStr.length(), _th - 1, playerMoney, Printer::kAlignLeft, GlobalConstants::CoinsColor);
+    Printer::Instance().PrintFB(1, _th - 1, youHaveStr, Printer::kAlignLeft, Colors::WhiteColor);
+    Printer::Instance().PrintFB(1 + youHaveStr.length(), _th - 1, playerMoney, Printer::kAlignLeft, Colors::CoinsColor);
 
-    Printer::Instance().PrintFB(_tw / 2, _th - 1, "'q' - exit ", Printer::kAlignCenter, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(_tw / 2, _th - 1, "'q' - exit ", Printer::kAlignCenter, Colors::WhiteColor);
 
     Printer::Instance().Render();
   }
@@ -234,7 +234,7 @@ void ServiceState::DisplayItems()
 {
   if (_serviceInfoByChar.empty())
   {
-    Printer::Instance().PrintFB(_twHalf, 2, _displayOnEmptyItems.at(_shopOwner->NpcRef->Data.ProvidesService), Printer::kAlignCenter, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(_twHalf, 2, _displayOnEmptyItems.at(_shopOwner->NpcRef->Data.ProvidesService), Printer::kAlignCenter, Colors::WhiteColor);
   }
   else
   {
@@ -249,9 +249,9 @@ void ServiceState::DisplayItems()
 
       // Replace letter and dash with white color
       // in case item is blessed or cursed.
-      Printer::Instance().PrintFB(1, 2 + itemIndex, ri.Letter + " - ", Printer::kAlignLeft, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(1, 2 + itemIndex, ri.Letter + " - ", Printer::kAlignLeft, Colors::WhiteColor);
 
-      Printer::Instance().PrintFB(1 + _maxStrLen + 1, 2 + itemIndex, cost, Printer::kAlignLeft, GlobalConstants::CoinsColor);
+      Printer::Instance().PrintFB(1 + _maxStrLen + 1, 2 + itemIndex, cost, Printer::kAlignLeft, Colors::CoinsColor);
 
       itemIndex++;
     }

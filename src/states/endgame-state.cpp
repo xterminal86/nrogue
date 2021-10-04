@@ -52,7 +52,7 @@ void EndgameState::Update(bool forceUpdate)
                                 0,
                                 "Press 'q' to exit",
                                 Printer::kAlignCenter,
-                                GlobalConstants::WhiteColor);
+                                Colors::WhiteColor);
 
     Printer::Instance().Render();
   }
@@ -67,14 +67,14 @@ void EndgameState::DisplayGameLog()
 
   int count = 0;
   auto msgs = Printer::Instance().GetLastMessages();
-  for (auto& pair : msgs)
+  for (GameLogMessageData& m : msgs)
   {
     Printer::Instance().PrintFB(x,
                                 y - count,
-                                pair.first,
+                                m.Message,
                                 Printer::kAlignRight,
-                                pair.second,
-                                GlobalConstants::BlackColor);
+                                m.FgColor,
+                                m.BgColor);
     count++;
   }
 }
@@ -103,7 +103,7 @@ void EndgameState::DrawHPMP()
                               _th - 1,
                               str,
                               Printer::kAlignCenter,
-                              "#FFFFFF",
+                              Colors::WhiteColor,
                               "#000088");
 }
 
@@ -120,7 +120,7 @@ std::string EndgameState::UpdateBar(int x, int y, RangedAttribute& attr)
 
   bar += "]";
 
-  Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, Colors::WhiteColor);
 
   return bar;
 }

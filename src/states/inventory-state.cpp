@@ -60,13 +60,13 @@ void InventoryState::HandleInput()
 
       if (ic->Data.IsEquipped)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, Colors::MessageBoxRedBorderColor);
         return;
       }
 
       if (ic->Data.IsImportant)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "This looks important - better hold on to it" }, GlobalConstants::MessageBoxBlueBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "This looks important - better hold on to it" }, Colors::MessageBoxBlueBorderColor);
         return;
       }
 
@@ -162,13 +162,13 @@ void InventoryState::HandleInput()
       ItemComponent* ic = go->GetComponent<ItemComponent>();
       if (ic->Data.IsEquipped)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, Colors::MessageBoxRedBorderColor);
         return;
       }
 
       if (ic->Data.IsImportant)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "This looks important - better hold on to it" }, GlobalConstants::MessageBoxBlueBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "This looks important - better hold on to it" }, Colors::MessageBoxBlueBorderColor);
         return;
       }
 
@@ -256,7 +256,7 @@ void InventoryState::Update(bool forceUpdate)
                                   2 + yPos,
                                   stub,
                                   Printer::kAlignLeft,
-                                  GlobalConstants::InventoryEmptySlotColor);
+                                  Colors::ShadesOfGrey::Six);
       yPos++;
     }
 

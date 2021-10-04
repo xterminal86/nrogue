@@ -31,7 +31,7 @@ class GameObject
                int x, int y,
                int avatar,
                const std::string& htmlColor,
-               const std::string& bgColor = "#000000");
+               const std::string& bgColor = Colors::BlackColor);
 
     void SetLevelOwner(MapLevelBase* levelOwner);
 
@@ -41,7 +41,7 @@ class GameObject
               int x, int y,
               int avatar,
               const std::string& fgColor,
-              const std::string& bgColor = "#000000");
+              const std::string& bgColor = Colors::BlackColor);
 
     /// Adds \p dx and \p dy to corresponding game object's coordinates.
     /// Use to move actors only.
@@ -114,8 +114,8 @@ class GameObject
     bool IsDestroyed = false;
 
     int Image;
-    std::string FgColor = GlobalConstants::BlackColor;
-    std::string BgColor = GlobalConstants::BlackColor;
+    std::string FgColor = Colors::BlackColor;
+    std::string BgColor = Colors::BlackColor;
     std::string ObjectName;
     std::string FogOfWarName;
 

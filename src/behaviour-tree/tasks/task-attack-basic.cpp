@@ -41,7 +41,10 @@ BTResult TaskAttackBasic::Run()
       dmg = 1;
     }
 
-    Application::Instance().DisplayAttack(&playerRef, GlobalConstants::DisplayAttackDelayMs, "", "#FF0000");
+    Application::Instance().DisplayAttack(&playerRef,
+                                          GlobalConstants::DisplayAttackDelayMs,
+                                          "",
+                                          Colors::RedColor);
 
     playerRef.ReceiveDamage(_objectToControl, dmg, false);
 
@@ -52,7 +55,10 @@ BTResult TaskAttackBasic::Run()
     result = false;
 
     auto msg = Util::StringFormat("%s missed", _objectToControl->ObjectName.data());
-    Application::Instance().DisplayAttack(&playerRef, GlobalConstants::DisplayAttackDelayMs, msg, "#FFFFFF");
+    Application::Instance().DisplayAttack(&playerRef,
+                                          GlobalConstants::DisplayAttackDelayMs,
+                                          msg,
+                                          Colors::WhiteColor);
   }
 
   _objectToControl->FinishTurn();

@@ -202,10 +202,10 @@ void InteractInputState::Update(bool forceUpdate)
 
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 1,
-                                lastMessage.first,
+                                lastMessage.Message,
                                 Printer::kAlignRight,
-                                lastMessage.second,
-                                GlobalConstants::BlackColor);
+                                lastMessage.FgColor,
+                                lastMessage.BgColor);
 
     Printer::Instance().Render();
   }

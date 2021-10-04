@@ -381,12 +381,12 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
   //if (tileChoice < 2) img = '.';
 
   //std::string flowerColor = GlobalConstants::BlackColor;
-  std::string flowerColor = GlobalConstants::GrassDotColor;
+  std::string flowerColor = Colors::GrassDotColor;
 
   int colorChoice = RNG::Instance().RandomRange(0, maxDiceRoll);
-  if      (colorChoice == 0) flowerColor = GlobalConstants::WhiteColor;
-  else if (colorChoice == 1) flowerColor = GlobalConstants::DandelionYellowColor;
-  else if (colorChoice == 2) flowerColor = GlobalConstants::RedPoppyColor;
+  if      (colorChoice == 0) flowerColor = Colors::WhiteColor;
+  else if (colorChoice == 1) flowerColor = Colors::DandelionYellowColor;
+  else if (colorChoice == 2) flowerColor = Colors::RedPoppyColor;
 
   std::map<int, std::string> flowersNameByChoice =
   {
@@ -402,7 +402,7 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
   }
 
   GameObjectInfo t;
-  t.Set(false, false, img, flowerColor, GlobalConstants::GrassColor, tileName);
+  t.Set(false, false, img, flowerColor, Colors::GrassColor, tileName);
 
   MapArray[x][y]->MakeTile(t);
 }
@@ -410,7 +410,7 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
 void MapLevelBase::PlaceShallowWaterTile(int x, int y)
 {
   GameObjectInfo t;
-  t.Set(false, false, '~', GlobalConstants::WhiteColor, GlobalConstants::ShallowWaterColor, "Shallow Water");
+  t.Set(false, false, '~', Colors::WhiteColor, Colors::ShallowWaterColor, "Shallow Water");
   MapArray[x][y]->MakeTile(t, GameObjectType::SHALLOW_WATER);
 }
 
@@ -425,14 +425,14 @@ void MapLevelBase::PlaceDeepWaterTile(int x, int y)
   #endif
 
   GameObjectInfo t;
-  t.Set(true, false, img, GlobalConstants::WhiteColor, GlobalConstants::DeepWaterColor, "Deep Water");
+  t.Set(true, false, img, Colors::WhiteColor, Colors::DeepWaterColor, "Deep Water");
   MapArray[x][y]->MakeTile(t, GameObjectType::DEEP_WATER);
 }
 
 void MapLevelBase::PlaceLavaTile(int x, int y)
 {
   GameObjectInfo t;
-  t.Set(true, false, '~', GlobalConstants::LavaWavesColor, GlobalConstants::LavaColor, "Lava");
+  t.Set(true, false, '~', Colors::LavaWavesColor, Colors::LavaColor, "Lava");
   MapArray[x][y]->MakeTile(t, GameObjectType::LAVA);
 }
 
@@ -444,7 +444,7 @@ void MapLevelBase::PlaceShrine(const Position& pos, LevelBuilder& lb)
   InsertGameObject(go);
 
   std::string description = GlobalConstants::ShrineNameByType.at(type);
-  t.Set(true, false, '/', GlobalConstants::GroundColor, GlobalConstants::BlackColor, description, "?Shrine?");
+  t.Set(true, false, '/', Colors::ShadesOfGrey::Four, Colors::BlackColor, description, "?Shrine?");
   InsertStaticObject(pos.X, pos.Y, t);
 }
 
@@ -457,7 +457,7 @@ void MapLevelBase::PlaceTree(int x, int y)
   #endif
 
   GameObjectInfo t;
-  t.Set(true, true, img, GlobalConstants::TreeColor, GlobalConstants::BlackColor, "Tree");
+  t.Set(true, true, img, Colors::GreenColor, Colors::BlackColor, "Tree");
   InsertStaticObject(x, y, t);
 }
 

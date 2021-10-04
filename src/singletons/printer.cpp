@@ -887,22 +887,41 @@ std::vector<Position> Printer::GetAreaDamagePointsFrom(Position from, int range)
   return res;
 }
 
-void Printer::AddMessage(const std::string& message, const std::string& textColor)
+void Printer::AddMessage(const std::string& message)
 {
-  if (!_inGameMessages.empty() && (_repeatingMessage == message))
+  AddMessage({ message, Colors::WhiteColor, Colors::BlackColor });
+}
+
+void Printer::AddMessage(const std::string& message,
+                         const std::string& fgColor)
+{
+  AddMessage({ message, fgColor, Colors::BlackColor });
+}
+
+void Printer::AddMessage(const std::string& message,
+                         const std::string& fgColor,
+                         const std::string& bgColor)
+{
+  AddMessage({ message, fgColor, bgColor });
+}
+
+
+void Printer::AddMessage(const GameLogMessageData& data)
+{
+  if (!_inGameMessages.empty() && (_repeatingMessage == data.Message))
   {
     _messageRepeatCounter++;
     auto newStr = Util::StringFormat("(x%i) %s", _messageRepeatCounter, _repeatingMessage.data());
-    _inGameMessages.front() = { newStr, textColor };
+    _inGameMessages.front() = { newStr, data.FgColor, data.BgColor };
   }
   else
   {
     _messageRepeatCounter = 1;
-    _inGameMessages.insert(_inGameMessages.begin(), { message, textColor });
+    _inGameMessages.insert(_inGameMessages.begin(), { data.Message, data.FgColor, data.BgColor });
     _lastMessagesToDisplay++;
   }
 
-  _repeatingMessage = message;
+  _repeatingMessage = data.Message;
 
   if (_inGameMessages.size() > kMaxGameLogMessages)
   {
@@ -914,7 +933,7 @@ void Printer::AddMessage(const std::string& message, const std::string& textColo
   ShowLastMessage = true;
 }
 
-std::vector<std::pair<std::string, std::string>> Printer::GetLastMessages()
+std::vector<GameLogMessageData> Printer::GetLastMessages()
 {
   _lastMessages.clear();
 
@@ -934,9 +953,9 @@ std::vector<std::pair<std::string, std::string>> Printer::GetLastMessages()
   return _lastMessages;
 }
 
-std::pair<std::string, std::string> Printer::GetLastMessage()
+GameLogMessageData Printer::GetLastMessage()
 {
-  return (_inGameMessages.size() > 0) ? _inGameMessages.front() : std::pair<std::string, std::string>();
+  return (_inGameMessages.size() > 0) ? _inGameMessages.front() : GameLogMessageData();
 }
 
 void Printer::ResetMessagesToDisplay()
@@ -947,7 +966,7 @@ void Printer::ResetMessagesToDisplay()
   _repeatingMessage.clear();
 }
 
-std::vector<std::pair<std::string, std::string>>& Printer::Messages()
+std::vector<GameLogMessageData>& Printer::Messages()
 {
   return _inGameMessages;
 }

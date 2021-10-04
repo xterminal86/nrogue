@@ -61,7 +61,7 @@ void MapLevelDeepDark::CreateLevel()
   //int tunnelLengthMin = tunnelLengthMax / 2;
 
   GameObjectInfo t;
-  t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Stone Wall");
+  t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Stone Wall");
 
   CreateBorders(t);
 
@@ -166,11 +166,11 @@ void MapLevelDeepDark::CreateSpecialLevel()
         break;
 
         case '#':
-          PlaceWall(posX, posY, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Stone Wall");
+          PlaceWall(posX, posY, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Stone Wall");
           break;
 
         case '.':
-          PlaceGroundTile(posX, posY, c, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          PlaceGroundTile(posX, posY, c, Colors::ShadesOfGrey::Four, Colors::BlackColor, "Ground");
           break;
       }
 
@@ -194,11 +194,11 @@ void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
       switch (image)
       {
         case '#':
-          PlaceWall(x, y, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Stone Wall");
+          PlaceWall(x, y, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Stone Wall");
           break;
 
         case '.':
-          PlaceGroundTile(x, y, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          PlaceGroundTile(x, y, image, Colors::ShadesOfGrey::Four, Colors::BlackColor, "Ground");
           break;
 
         case '+':
@@ -224,7 +224,7 @@ void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
           break;
 
         case ' ':
-          PlaceGroundTile(x, y, '.', GlobalConstants::BlackColor, GlobalConstants::StoneColor, "Stone");
+          PlaceGroundTile(x, y, '.', Colors::BlackColor, Colors::ShadesOfGrey::Ten, "Stone");
           break;
 
         case 'l':

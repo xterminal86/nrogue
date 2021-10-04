@@ -48,7 +48,7 @@ void MapLevelAbyss::CreateLevel()
   // Borders
   GameObjectInfo t;
 
-  t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
+  t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Rocks");
   CreateBorders(t);
 
   LevelBuilder lb;
@@ -94,7 +94,7 @@ void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
         case '#':
         {
           objName = "Abyss Rocks";
-          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::RedPoppyColor, objName);
+          t.Set(true, true, ' ', Colors::BlackColor, Colors::RedPoppyColor, objName);
           InsertStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
         }
         break;
@@ -114,7 +114,7 @@ void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
         break;
 
         case '.':
-          PlaceGroundTile(x, y, ' ', GlobalConstants::BlackColor, "#440000", "Abyss Floor");
+          PlaceGroundTile(x, y, ' ', Colors::BlackColor, "#440000", "Abyss Floor");
           break;
 
         case 'g':
@@ -126,7 +126,7 @@ void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
           break;
 
         case ' ':
-          PlaceGroundTile(x, y, '.', GlobalConstants::BlackColor, GlobalConstants::StoneColor, "Stone");
+          PlaceGroundTile(x, y, '.', Colors::BlackColor, Colors::ShadesOfGrey::Ten, "Stone");
           break;
 
         case 'l':

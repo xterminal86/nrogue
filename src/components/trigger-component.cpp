@@ -7,34 +7,30 @@ TriggerComponent::TriggerComponent()
   _componentHash = typeid(*this).hash_code();
 }
 
-void TriggerComponent::Setup(TriggerType type,
-                             const std::function<bool()>& condition,
-                             const std::function<void()>& handler)
+void TriggerComponent::Setup(const TriggerData& data)
 {
-  _type = type;
-  _condition = condition;
-  _handler = handler;
+  _data = data;
 }
 
 void TriggerComponent::Update()
 {
-  if (Util::IsFunctionValid(_condition))
+  if (Util::IsFunctionValid(_data.Condition))
   {
-    if (_condition())
+    if (_data.Condition())
     {
-      if (Util::IsFunctionValid(_handler))
+      if (Util::IsFunctionValid(_data.Handler))
       {
-        if (_type == TriggerType::ONE_SHOT)
+        if (_data.Type == TriggerType::ONE_SHOT)
         {
           if (!_once)
           {
-            _handler();
+            _data.Handler();
             _once = true;
           }
         }
         else
         {
-          _handler();
+          _data.Handler();
         }
       }
     }

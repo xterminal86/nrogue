@@ -34,7 +34,7 @@ void RepairState::HandleInput()
           Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
                                                  GlobalConstants::MessageBoxInformationHeaderText,
                                                  { "This item looks undamaged" },
-                                                 GlobalConstants::MessageBoxDefaultBorderColor);
+                                                 Colors::ShadesOfGrey::Six);
         }
         else
         {
@@ -83,7 +83,7 @@ void RepairState::Update(bool forceUpdate)
           str = Util::StringFormat(R"('%c' - %s (??/??))", c, name.data());
         }
 
-        Printer::Instance().PrintFB(1, 2 + itemIndex, str, Printer::kAlignLeft, GlobalConstants::WhiteColor);
+        Printer::Instance().PrintFB(1, 2 + itemIndex, str, Printer::kAlignLeft, Colors::WhiteColor);
 
         _itemRefByChar[c] = ic;
 
@@ -91,7 +91,7 @@ void RepairState::Update(bool forceUpdate)
       }
     }
 
-    Printer::Instance().PrintFB(tw / 2, th - 1, "'q' - cancel", Printer::kAlignCenter, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(tw / 2, th - 1, "'q' - cancel", Printer::kAlignCenter, Colors::WhiteColor);
 
     Printer::Instance().Render();
   }

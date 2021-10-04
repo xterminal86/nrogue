@@ -105,9 +105,9 @@ void ShoppingState::Update(bool forceUpdate)
     for (int y = 1; y < _th; y++)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw / 2, y, (int)NameCP437::VBAR_2, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(_tw / 2, y, (int)NameCP437::VBAR_2, Colors::WhiteColor);
       #else
-      Printer::Instance().PrintFB(_tw / 2, y, '|', GlobalConstants::BlackColor, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(_tw / 2, y, '|', Colors::BlackColor, Colors::WhiteColor);
       #endif
     }
 
@@ -117,11 +117,11 @@ void ShoppingState::Update(bool forceUpdate)
     std::string youHaveStr = "You have: ";
     auto playerMoney = Util::StringFormat("$ %i", _playerRef->Money);
 
-    Printer::Instance().PrintFB(1, _th - 1, youHaveStr, Printer::kAlignLeft, GlobalConstants::WhiteColor);
-    Printer::Instance().PrintFB(1 + youHaveStr.length(), _th - 1, playerMoney, Printer::kAlignLeft, GlobalConstants::CoinsColor);
+    Printer::Instance().PrintFB(1, _th - 1, youHaveStr, Printer::kAlignLeft, Colors::WhiteColor);
+    Printer::Instance().PrintFB(1 + youHaveStr.length(), _th - 1, playerMoney, Printer::kAlignLeft, Colors::CoinsColor);
 
-    Printer::Instance().PrintFB(_tw / 2 + 1, _th - 1, " 'i' - inspect ", Printer::kAlignLeft,  GlobalConstants::WhiteColor);
-    Printer::Instance().PrintFB(_tw,         _th - 1, "'q' - exit ",     Printer::kAlignRight, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(_tw / 2 + 1, _th - 1, " 'i' - inspect ", Printer::kAlignLeft,  Colors::WhiteColor);
+    Printer::Instance().PrintFB(_tw,         _th - 1, "'q' - exit ",     Printer::kAlignRight, Colors::WhiteColor);
 
     Printer::Instance().Render();
   }
@@ -153,7 +153,7 @@ void ShoppingState::DisplayPlayerInventory()
                                  yPos + index,
                                  extraInfo,
                                  Printer::kAlignLeft,
-                                 GlobalConstants::WhiteColor);
+                                 Colors::WhiteColor);
 
     int cost = GetCost(ic, true);
 
@@ -163,7 +163,7 @@ void ShoppingState::DisplayPlayerInventory()
                                  yPos + index,
                                  costString,
                                  Printer::kAlignLeft,
-                                 GlobalConstants::CoinsColor);
+                                 Colors::CoinsColor);
 
     std::string textColor = Util::GetItemInventoryColor(ic->Data);
 
@@ -173,8 +173,8 @@ void ShoppingState::DisplayPlayerInventory()
                                    yPos + index,
                                    nameInInventory,
                                    Printer::kAlignLeft,
-                                   GlobalConstants::BlackColor,
-                                   GlobalConstants::WhiteColor);
+                                   Colors::BlackColor,
+                                   Colors::WhiteColor);
     }
     else
     {
@@ -197,7 +197,7 @@ void ShoppingState::DisplayPlayerInventory()
                                  yPos + index,
                                  stub,
                                  Printer::kAlignLeft,
-                                 GlobalConstants::InventoryEmptySlotColor);
+                                 Colors::ShadesOfGrey::Six);
     yPos++;
   }
 }
@@ -237,7 +237,7 @@ void ShoppingState::DisplayShopInventory()
                                  yPos + index,
                                  extraInfo,
                                  Printer::kAlignRight,
-                                 GlobalConstants::WhiteColor);
+                                 Colors::WhiteColor);
 
     int cost = GetCost(ic, false);
 
@@ -245,7 +245,7 @@ void ShoppingState::DisplayShopInventory()
 
     int bonusStringPosX = xPos - GlobalConstants::InventoryMaxNameLength - 1;
 
-    Printer::Instance().PrintFB(bonusStringPosX - itemStringTotalLen, yPos + index, costString, Printer::kAlignRight, GlobalConstants::CoinsColor);
+    Printer::Instance().PrintFB(bonusStringPosX - itemStringTotalLen, yPos + index, costString, Printer::kAlignRight, Colors::CoinsColor);
 
     std::string textColor = Util::GetItemInventoryColor(ic->Data);
 
@@ -255,8 +255,8 @@ void ShoppingState::DisplayShopInventory()
                                   yPos + index,
                                   nameInInventory,
                                   Printer::kAlignRight,
-                                  GlobalConstants::BlackColor,
-                                  GlobalConstants::WhiteColor);
+                                  Colors::BlackColor,
+                                  Colors::WhiteColor);
     }
     else
     {
@@ -279,7 +279,7 @@ void ShoppingState::DisplayShopInventory()
                                  yPos + index,
                                  stub,
                                  Printer::kAlignRight,
-                                 GlobalConstants::InventoryEmptySlotColor);
+                                 Colors::ShadesOfGrey::Six);
     yPos++;
   }
 }
@@ -358,7 +358,7 @@ void ShoppingState::BuyOrSellItem()
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
                                               GlobalConstants::MessageBoxInformationHeaderText,
                                               { "Unequip first!" },
-                                              GlobalConstants::MessageBoxRedBorderColor);
+                                              Colors::MessageBoxRedBorderColor);
       return;
     }
 
@@ -367,7 +367,7 @@ void ShoppingState::BuyOrSellItem()
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
                                               GlobalConstants::MessageBoxInformationHeaderText,
                                               { "This looks important - better hold on to it" },
-                                              GlobalConstants::MessageBoxBlueBorderColor);
+                                              Colors::MessageBoxBlueBorderColor);
       return;
     }
 
@@ -427,12 +427,12 @@ bool ShoppingState::CanBeBought(ItemComponent *ic)
 
   if (_playerRef->Money < cost)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "Not enough money!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "Not enough money!" }, Colors::MessageBoxRedBorderColor);
     return false;
   }
   else if (_playerRef->Inventory.IsFull())
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "No room in inventory!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "No room in inventory!" }, Colors::MessageBoxRedBorderColor);
     return false;
   }
 

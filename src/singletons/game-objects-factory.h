@@ -3,6 +3,7 @@
 
 #include "singleton.h"
 #include "item-data.h"
+#include "trigger-component.h"
 
 class GameObjectInfo;
 class ItemComponent;
@@ -36,7 +37,8 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreatePotion(ItemType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, bool isIdentified = false);
     GameObject* CreateNote(const std::string& objName, const std::vector<std::string>& text);
-    GameObject* CreateDummyObject(const std::string& objName, char image, const std::string& fgColor, const std::string& bgColor, const std::vector<std::string>& descText);
+    GameObject* CreateDummyObject(int x, int y, const std::string& objName, char image, const std::string& fgColor, const std::string& bgColor);
+    GameObject* CreateDummyItem(const std::string& objName, char image, const std::string& fgColor, const std::string& bgColor, const std::vector<std::string>& descText);
     GameObject* CreateScroll(int x, int y, SpellType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRandomScroll(ItemPrefix prefix = ItemPrefix::RANDOM);
     GameObject* CreateWeapon(int x, int y, WeaponType type, ItemPrefix preifx = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM, const std::vector<ItemBonusStruct>& bonuses = std::vector<ItemBonusStruct>());
@@ -64,6 +66,11 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     bool HandleItemEquip(ItemComponent* item);
 
     void GenerateLootIfPossible(int posX, int posY, GameObjectType monsterType);
+
+    void AttachTrigger(GameObject* attachTo,
+                       TriggerType type,
+                       const std::function<bool()>& condition,
+                       const std::function<void()>& handler);
 
     GameObject* CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1, GameObjectType type = GameObjectType::HARMLESS);
     GameObject* CreateDoor(int x, int y,

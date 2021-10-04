@@ -165,10 +165,10 @@ void AttackState::Update(bool forceUpdate)
 
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 1,
-                                lastMsg.first,
+                                lastMsg.Message,
                                 Printer::kAlignRight,
-                                lastMsg.second,
-                                GlobalConstants::BlackColor);
+                                lastMsg.FgColor,
+                                lastMsg.BgColor);
 
     Printer::Instance().Render();
   }

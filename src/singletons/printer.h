@@ -14,6 +14,7 @@
 #include "singleton.h"
 #include "colorpair.h"
 #include "position.h"
+#include "constants.h"
 
 #ifdef USE_SDL
 struct TileColor
@@ -36,6 +37,13 @@ struct FBPixel
   int Character;
 };
 #endif
+
+struct GameLogMessageData
+{
+  std::string Message;
+  std::string FgColor = Colors::WhiteColor;
+  std::string BgColor = Colors::BlackColor;
+};
 
 /// Singleton for ncurses text printing
 class Printer : public Singleton<Printer>
@@ -67,71 +75,82 @@ class Printer : public Singleton<Printer>
                 const std::string& text,
                 int align,
                 const std::string& htmlColorFg,
-                const std::string& htmlColorBg = "#000000");
+                const std::string& htmlColorBg = Colors::BlackColor);
 
     void Print(const int& x, const int& y,
                 const int& ch,
                 const std::string& htmlColorFg,
-                const std::string& htmlColorBg = "#000000");
+                const std::string& htmlColorBg = Colors::BlackColor);
 
     /// Print to "framebuffer" instead of directly to the screen
     void PrintFB(const int& x, const int& y,
                   const int& ch,
                   const std::string& htmlColorFg,
-                  const std::string& htmlColorBg = "#000000");
+                  const std::string& htmlColorBg = Colors::BlackColor);
 
     void PrintFB(const int& x, const int& y,
                   const std::string& text,
                   int align,
                   const std::string& htmlColorFg,
-                  const std::string& htmlColorBg = "#000000");
+                  const std::string& htmlColorBg = Colors::BlackColor);
 
     void PrintFB(const int& x, const int& y,
                   const std::string& text,
                   size_t scale,
                   int align,
                   const std::string& htmlColorFg,
-                  const std::string& htmlColorBg = "#000000");
+                  const std::string& htmlColorBg = Colors::BlackColor);
 #else
     void PrintFB(const int& x, const int& y,
                  int image,
                  const std::string& htmlColorFg,
-                 const std::string& htmlColorBg = "#000000");
+                 const std::string& htmlColorBg = Colors::BlackColor);
 
     void PrintFB(const int& x, const int& y,
                  const std::string& text,
                  int align,
                  const std::string& htmlColorFg,
-                 const std::string& htmlColorBg = "#000000");
+                 const std::string& htmlColorBg = Colors::BlackColor);
 
     void PrintFB(const int& x, const int& y,
                  const std::string& text,
                  size_t scale,
                  int align,
                  const std::string& htmlColorFg,
-                 const std::string& htmlColorBg = "#000000");
+                 const std::string& htmlColorBg = Colors::BlackColor);
 
     void DrawImage(const int& x, const int& y, SDL_Texture* tex);
     void DrawWindow(const Position& leftCorner,
                     const Position& size,
                     const std::string& header = std::string{},
-                    const std::string& headerFgColor = "#FFFFFF",
-                    const std::string& headerBgColor = "#000000",
-                    const std::string& borderColor = "#FFFFFF",
-                    const std::string& borderBgColor = "#000000",
-                    const std::string& bgColor = "#000000");
+                    const std::string& headerFgColor = Colors::WhiteColor,
+                    const std::string& headerBgColor = Colors::BlackColor,
+                    const std::string& borderColor = Colors::WhiteColor,
+                    const std::string& borderBgColor = Colors::BlackColor,
+                    const std::string& bgColor = Colors::BlackColor);
 
 #endif
 
     /// Add message to the game log
-    void AddMessage(const std::string& message, const std::string& textColor = "#FFFFFF");
+    void AddMessage(const GameLogMessageData& data);
 
-    std::pair<std::string, std::string> GetLastMessage();
+    // Some overloads so that I don't have to edit AddMessage()
+    // all over the codebase.
+    void AddMessage(const std::string& message);
+    //
+    void AddMessage(const std::string& message,
+                    const std::string& fgColor);
+    //
+    void AddMessage(const std::string& message,
+                    const std::string& fgColor,
+                    const std::string& bgColor);
+
+    GameLogMessageData GetLastMessage();
 
     void ResetMessagesToDisplay();
 
-    std::vector<std::pair<std::string, std::string>> GetLastMessages();
-    std::vector<std::pair<std::string, std::string>>& Messages();
+    std::vector<GameLogMessageData> GetLastMessages();
+    std::vector<GameLogMessageData>& Messages();
 
     bool ShowLastMessage;
 
@@ -158,8 +177,8 @@ class Printer : public Singleton<Printer>
     std::vector<std::vector<FBPixel>> _frameBuffer;
 #endif
 
-    std::vector<std::pair<std::string, std::string>> _inGameMessages;
-    std::vector<std::pair<std::string, std::string>> _lastMessages;
+    std::vector<GameLogMessageData> _inGameMessages;
+    std::vector<GameLogMessageData> _lastMessages;
 
     int _lastMessagesToDisplay = 0;
 

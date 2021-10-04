@@ -11,23 +11,26 @@ enum class TriggerType
   CONSTANT
 };
 
+struct TriggerData
+{
+  TriggerType Type = TriggerType::ONE_SHOT;
+  std::function<bool()> Condition;
+  std::function<void()> Handler;
+};
+
 class TriggerComponent : public Component
 {
   public:
     TriggerComponent();
 
-    void Setup(TriggerType type,
-               const std::function<bool()>& condition,
-               const std::function<void()>& handler);
+    void Setup(const TriggerData& data);
 
     void Update() override;
 
   private:
-    TriggerType _type = TriggerType::ONE_SHOT;
     bool _once = false;
 
-    std::function<bool()> _condition;
-    std::function<void()> _handler;
+    TriggerData _data;
 };
 
 #endif // TRIGGERCOMPONENT_H

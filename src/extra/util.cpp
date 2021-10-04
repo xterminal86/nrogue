@@ -877,12 +877,12 @@ namespace Util
     // for the first entry found with bool key == true.
     std::map<int, std::pair<bool, std::string>> itemFirstColorToChoose =
     {
-      { 0, { isMixed,          GlobalConstants::ItemMixedColor   } },
-      { 1, { isMagic,          GlobalConstants::ItemMagicColor   } },
-      { 2, { isRare,           GlobalConstants::ItemRareColor    } },
-      { 3, { isUnique,         GlobalConstants::ItemUniqueColor  } },
-      { 4, { isBlessed,        GlobalConstants::ItemMagicColor   } },
-      { 5, { isCursed,         GlobalConstants::ItemCursedColor  } }
+      { 0, { isMixed,   Colors::ItemMixedColor   } },
+      { 1, { isMagic,   Colors::ItemMagicColor   } },
+      { 2, { isRare,    Colors::ItemRareColor    } },
+      { 3, { isUnique,  Colors::ItemUniqueColor  } },
+      { 4, { isBlessed, Colors::ItemMagicColor   } },
+      { 5, { isCursed,  Colors::ItemCursedColor  } }
     };
 
     for (auto& kvp : itemFirstColorToChoose)

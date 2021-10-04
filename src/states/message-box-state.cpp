@@ -72,13 +72,13 @@ void MessageBoxState::Update(bool forceUpdate)
     auto area = Util::GetScreenRect(x1, y1, x2, y2);
     for (auto& p : area)
     {
-      Printer::Instance().PrintFB(p.X, p.Y, ' ', GlobalConstants::BlackColor, _bgColor);
+      Printer::Instance().PrintFB(p.X, p.Y, ' ', Colors::BlackColor, _bgColor);
     }
 
     auto border = Util::GetScreenRectPerimeter(x1, y1, x2, y2);
     for (auto& b : border)
     {
-      Printer::Instance().PrintFB(b.X, b.Y, ' ', GlobalConstants::BlackColor, _borderColor);
+      Printer::Instance().PrintFB(b.X, b.Y, ' ', Colors::BlackColor, _borderColor);
     }
 
     std::string header = _header;
@@ -91,7 +91,7 @@ void MessageBoxState::Update(bool forceUpdate)
                                   y1,
                                   header,
                                   Printer::kAlignCenter,
-                                  GlobalConstants::WhiteColor,
+                                  Colors::WhiteColor,
                                   "#4444FF");
     }
 
@@ -102,24 +102,24 @@ void MessageBoxState::Update(bool forceUpdate)
                                   th / 2 - _message.size() / 2 + offset,
                                   s,
                                   Printer::kAlignCenter,
-                                  GlobalConstants::WhiteColor,
+                                  Colors::WhiteColor,
                                   _bgColor);
       offset++;
     }
     #else
 
-    std::string headerBgColor = GlobalConstants::MessageBoxHeaderBgColor;
-    if (_borderColor == GlobalConstants::MessageBoxRedBorderColor)
+    std::string headerBgColor = Colors::MessageBoxHeaderBgColor;
+    if (_borderColor == Colors::MessageBoxRedBorderColor)
     {
       headerBgColor = "#660000";
     }
 
     Printer::Instance().DrawWindow({ x1, y1 }, { x2 - x1, y2 - y1 },
                                    _header,
-                                   GlobalConstants::WhiteColor,
+                                   Colors::WhiteColor,
                                    headerBgColor,
                                    _borderColor,
-                                   GlobalConstants::BlackColor,
+                                   Colors::BlackColor,
                                    _bgColor);
 
     int offset = 0;
@@ -129,7 +129,7 @@ void MessageBoxState::Update(bool forceUpdate)
                                    th / 2 - _message.size() / 2 + offset,
                                    s,
                                    Printer::kAlignCenter,
-                                   GlobalConstants::WhiteColor,
+                                   Colors::WhiteColor,
                                    _bgColor);
       offset++;
     }

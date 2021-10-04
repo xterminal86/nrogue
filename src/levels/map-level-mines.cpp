@@ -304,13 +304,13 @@ void MapLevelMines::CreateLevel()
   MonstersRespawnTurns = 1000;
 
   GameObjectInfo t;
-  t.Set(false, false, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Dirt");
+  t.Set(false, false, '.', Colors::ShadesOfGrey::Four, Colors::BlackColor, "Dirt");
 
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
 
   // Borders
 
-  t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Rocks");
+  t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Rocks");
   CreateBorders(t);
 
   // Build level
@@ -381,7 +381,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
       switch (image)
       {
         case '#':
-          PlaceWall(x, y, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, "Mine Wall");
+          PlaceWall(x, y, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Mine Wall");
           break;
 
         case '+':
@@ -399,7 +399,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
         break;
 
         case '.':
-          PlaceGroundTile(x, y, image, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Dirt");
+          PlaceGroundTile(x, y, image, Colors::ShadesOfGrey::Four, Colors::BlackColor, "Dirt");
           break;
 
         case 'g':
@@ -411,7 +411,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
           break;
 
         case ' ':
-          PlaceGroundTile(x, y, '.', GlobalConstants::BlackColor, GlobalConstants::StoneColor, "Stone");
+          PlaceGroundTile(x, y, '.', Colors::BlackColor, Colors::ShadesOfGrey::Ten, "Stone");
           break;
 
         case 'l':
@@ -428,10 +428,10 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 
 void MapLevelMines::CreateSpecialLevel()
 {
-  GameObject* key = GameObjectsFactory::Instance().CreateDummyObject("Iron Key",
+  GameObject* key = GameObjectsFactory::Instance().CreateDummyItem("Iron Key",
                                                                      '1',
-                                                                     GlobalConstants::IronColor,
-                                                                     GlobalConstants::BlackColor,
+                                                                     Colors::IronColor,
+                                                                     Colors::BlackColor,
                                                                      {
                                                                        "A simple iron key.",
                                                                        "Now you just need to find a lock."
@@ -479,7 +479,7 @@ void MapLevelMines::CreateSpecialLevel()
         case '#':
         {
           objName = "Rocks";
-          t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::MountainsColor, objName);
+          t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, objName);
           InsertStaticObject(posX, posY, t, -1);
         }
         break;
@@ -499,7 +499,7 @@ void MapLevelMines::CreateSpecialLevel()
 
         case 'D':
         {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, DoorMaterials::IRON, "Iron Door", -1, GlobalConstants::BlackColor, GlobalConstants::IronColor);
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, DoorMaterials::IRON, "Iron Door", -1, Colors::BlackColor, Colors::IronColor);
 
           DoorComponent* dc = door->GetComponent<DoorComponent>();
           dc->OpenedBy = key->GetComponent<ItemComponent>()->Data.ItemTypeHash;
@@ -510,7 +510,7 @@ void MapLevelMines::CreateSpecialLevel()
 
         case 'B':
         {
-          PlaceGroundTile(posX, posY, '.', GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          PlaceGroundTile(posX, posY, '.', Colors::ShadesOfGrey::Four, Colors::BlackColor, "Ground");
 
           GameObject* boss = GameObjectsFactory::Instance().CreateMonster(posX, posY, GameObjectType::HEROBRINE);
 
@@ -522,11 +522,11 @@ void MapLevelMines::CreateSpecialLevel()
         break;
 
         case 'b':
-          PlaceGroundTile(posX, posY, '.', GlobalConstants::RedColor, GlobalConstants::BlackColor, "Blood");
+          PlaceGroundTile(posX, posY, '.', Colors::RedColor, Colors::BlackColor, "Blood");
           break;
 
         case '%':
-          PlaceGroundTile(posX, posY, c, GlobalConstants::WhiteColor, GlobalConstants::RedColor, "Someone's Remains");
+          PlaceGroundTile(posX, posY, c, Colors::WhiteColor, Colors::RedColor, "Someone's Remains");
           break;
 
         case 'W':
@@ -534,7 +534,7 @@ void MapLevelMines::CreateSpecialLevel()
           break;
 
         case '.':
-          PlaceGroundTile(posX, posY, c, GlobalConstants::GroundColor, GlobalConstants::BlackColor, "Ground");
+          PlaceGroundTile(posX, posY, c, Colors::ShadesOfGrey::Four, Colors::BlackColor, "Ground");
           break;
       }
 
@@ -586,7 +586,7 @@ void MapLevelMines::CreateRandomBoxes()
           break;
         }
 
-        GameObject* box = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(p.X, p.Y, 'B', "Wooden Box", GlobalConstants::WoodColor, GlobalConstants::BlackColor);
+        GameObject* box = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(p.X, p.Y, 'B', "Wooden Box", Colors::WoodColor, Colors::BlackColor);
         InsertStaticObject(box);
         created++;
       }

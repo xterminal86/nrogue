@@ -191,27 +191,27 @@ void InfoState::DrawScrollBars()
     if (_scrollIndex == 0)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, Colors::WhiteColor);
       #else
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, Colors::WhiteColor);
       #endif
     }
     else if (_scrollLimitReached)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1, 0, (int)NameCP437::UARROW_2, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, 0, (int)NameCP437::UARROW_2, Colors::WhiteColor);
       #else
-      Printer::Instance().PrintFB(_tw - 1, 0, "/\\", Printer::kAlignRight, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, 0, "/\\", Printer::kAlignRight, Colors::WhiteColor);
       #endif
     }
     else
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1, 0, (int)NameCP437::UARROW_2, GlobalConstants::WhiteColor);
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, 0, (int)NameCP437::UARROW_2, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, Colors::WhiteColor);
       #else
-      Printer::Instance().PrintFB(_tw - 1, 0, "/\\", Printer::kAlignRight, GlobalConstants::WhiteColor);
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, 0, "/\\", Printer::kAlignRight, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, Colors::WhiteColor);
       #endif
     }
   }
@@ -219,16 +219,16 @@ void InfoState::DrawScrollBars()
 
 void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr)
 {
-  std::string color = "#FFFFFF";
+  std::string color = Colors::WhiteColor;
 
   int modifiers = attr.GetModifiers();
   if (modifiers > 0)
   {
-    color = "#00FF00";
+    color = Colors::GreenColor;
   }
   else if (modifiers < 0)
   {
-    color = "#FF0000";
+    color = Colors::RedColor;
   }
 
   std::string attrPlaceholder = Util::StringFormat("%s:...", attrName.data());

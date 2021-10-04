@@ -637,6 +637,72 @@ enum class GraphicTiles
   LAST_ELEMENT
 };
 
+namespace Colors
+{
+  namespace ShadesOfGrey
+  {
+    extern const std::string One;
+    extern const std::string Two;
+    extern const std::string Three;
+    extern const std::string Four;
+    extern const std::string Five;
+    extern const std::string Six;
+    extern const std::string Seven;
+    extern const std::string Eight;
+    extern const std::string Nine;
+    extern const std::string Ten;
+    extern const std::string Eleven;
+    extern const std::string Twelve;
+    extern const std::string Thirteen;
+    extern const std::string Fourteen;
+  }
+
+  extern const std::string BlackColor;
+  extern const std::string WhiteColor;
+  extern const std::string RedColor;
+  extern const std::string GreenColor;
+  extern const std::string BlueColor;
+  extern const std::string CyanColor;
+  extern const std::string MagentaColor;
+  extern const std::string YellowColor;
+  extern const std::string DandelionYellowColor;
+  extern const std::string RedPoppyColor;
+  extern const std::string MarbleColor;
+  extern const std::string CaveWallColor;
+  extern const std::string GrassColor;
+  extern const std::string GrassDotColor;
+  extern const std::string DirtColor;
+  extern const std::string DirtDotColor;
+  extern const std::string PlayerColor;
+  extern const std::string MonsterColor;
+  extern const std::string ShallowWaterColor;
+  extern const std::string DeepWaterColor;
+  extern const std::string IronColor;
+  extern const std::string RoomFloorColor;
+  extern const std::string WoodColor;
+  extern const std::string ChestColor;
+  extern const std::string BrickColor;
+  extern const std::string LavaColor;
+  extern const std::string LavaWavesColor;
+  extern const std::string FogOfWarColor;
+  extern const std::string CoinsColor;
+  extern const std::string DoorHighlightColor;
+  extern const std::string MessageBoxRedBorderColor;
+  extern const std::string MessageBoxBlueBorderColor;
+  extern const std::string MessageBoxHeaderBgColor;
+  extern const std::string ItemMagicColor;
+  extern const std::string ItemRareColor;
+  extern const std::string ItemUniqueColor;
+  extern const std::string ItemMixedColor;
+  extern const std::string ItemCursedColor;
+
+  extern const std::map<ShrineType,    std::pair<std::string, std::string>> ShrineColorsByType;
+  extern const std::map<std::string,   std::vector<std::string>>            PotionColorsByName;
+  extern const std::map<GemType,       std::string>                         GemColorNameByType;
+  extern const std::map<WandMaterials, std::pair<std::string, std::string>> WandColorsByMaterial;
+  extern const std::map<GemType,       std::pair<std::string, std::string>> GemColorByType;
+}
+
 namespace GlobalConstants
 {
   extern std::map<GraphicTiles, int>         GraphicTilesIndexByType;
@@ -692,49 +758,6 @@ namespace GlobalConstants
   extern const int EffectDurationSkipsForTurn;
   extern const int EffectDefaultDuration;
 
-  extern const std::string BlackColor;
-  extern const std::string WhiteColor;
-  extern const std::string RedColor;
-  extern const std::string DandelionYellowColor;
-  extern const std::string RedPoppyColor;
-  extern const std::string MarbleColor;
-  extern const std::string WallColor;
-  extern const std::string CaveWallColor;
-  extern const std::string GrassColor;
-  extern const std::string GrassDotColor;
-  extern const std::string DirtColor;
-  extern const std::string DirtDotColor;
-  extern const std::string TreeColor;
-  extern const std::string PlayerColor;
-  extern const std::string MonsterColor;
-  extern const std::string ShallowWaterColor;
-  extern const std::string DeepWaterColor;
-  extern const std::string NpcColor;
-  extern const std::string GroundColor;
-  extern const std::string IronColor;
-  extern const std::string RoomFloorColor;
-  extern const std::string WoodColor;
-  extern const std::string ChestColor;
-  extern const std::string MountainsColor;
-  extern const std::string StoneColor;
-  extern const std::string BrickColor;
-  extern const std::string LavaColor;
-  extern const std::string LavaWavesColor;
-  extern const std::string FogOfWarColor;
-  extern const std::string CoinsColor;
-  extern const std::string DoorHighlightColor;
-  extern const std::string MessageBoxDefaultBgColor;
-  extern const std::string MessageBoxDefaultBorderColor;
-  extern const std::string MessageBoxRedBorderColor;
-  extern const std::string MessageBoxBlueBorderColor;
-  extern const std::string MessageBoxHeaderBgColor;
-  extern const std::string InventoryEmptySlotColor;
-  extern const std::string ItemMagicColor;
-  extern const std::string ItemRareColor;
-  extern const std::string ItemUniqueColor;
-  extern const std::string ItemMixedColor;
-  extern const std::string ItemCursedColor;
-
   extern const std::map<ItemQuality,      std::string> QualityNameByQuality;
   extern const std::map<PlayerSkills,     std::string> SkillNameByType;
   extern const std::map<TraderRole,       std::string> ShopNameByType;
@@ -745,7 +768,6 @@ namespace GlobalConstants
   extern const std::map<RangedWeaponType, std::string> RangedWeaponNameByType;
   extern const std::map<ArrowType,        std::string> ArrowNameByType;
   extern const std::map<ArmorType,        std::string> ArmorNameByType;
-  extern const std::map<GemType,          std::string> GemColorNameByType;
   extern const std::map<GemType,          std::string> GemNameByType;
   extern const std::map<ItemBonusType,    std::string> ItemBonusPrefixes;
   extern const std::map<ItemBonusType,    std::string> ItemBonusSuffixes;
@@ -765,14 +787,10 @@ namespace GlobalConstants
   extern const std::map<std::string, ItemType> PotionTypeByStatName;
 
   extern const std::map<FoodType, std::pair<std::string, int>>         FoodHungerPercentageByName;
-  extern const std::map<GemType,  std::pair<std::string, std::string>> GemColorByType;
 
-  extern const std::map<WandMaterials, std::pair<std::string, std::string>> WandColorsByMaterial;
   extern const std::map<WandMaterials, std::string>                         WandMaterialNamesByMaterial;
   extern const std::map<ShrineType,    std::string>                         ShrineSaintByType;
   extern const std::map<ShrineType,    std::string>                         ShrineNameByType;
-  extern const std::map<ShrineType,    std::pair<std::string, std::string>> ShrineColorsByType;
-  extern const std::map<std::string,   std::vector<std::string>>            PotionColorsByName;
   extern const std::map<MapType,       std::vector<std::string>>            MapLevelNames;
   extern const std::map<ShrineType,    std::vector<StringsArray2D>>         ShrineLayoutsByType;
 

@@ -109,5 +109,5 @@ void GameState::DrawHeader(const std::string& header)
     #endif
   }
 
-  Printer::Instance().PrintFB(tw / 2, 0, header, Printer::kAlignCenter, "#FFFFFF", GlobalConstants::MessageBoxHeaderBgColor);
+  Printer::Instance().PrintFB(tw / 2, 0, header, Printer::kAlignCenter, Colors::WhiteColor, Colors::MessageBoxHeaderBgColor);
 }

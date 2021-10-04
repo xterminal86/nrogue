@@ -99,7 +99,7 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       break;
 
     case ItemType::NOTHING:
-      go = CreateDummyObject("Dummy", 'O', GlobalConstants::NpcColor, GlobalConstants::BlackColor, { "" });
+      go = CreateDummyItem("Dummy", 'O', Colors::YellowColor, Colors::BlackColor, { "" });
       break;
 
     default:
@@ -169,7 +169,7 @@ GameObject* GameObjectsFactory::CreateMoney(int amount)
 
   go->ObjectName = GlobalConstants::MoneyName;
   go->Image = '$';
-  go->FgColor = GlobalConstants::CoinsColor;
+  go->FgColor = Colors::CoinsColor;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -201,8 +201,8 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
   go->PosY = y;
   go->Image = '/';
 
-  go->FgColor = GlobalConstants::ShrineColorsByType.at(type).first;
-  go->BgColor = GlobalConstants::ShrineColorsByType.at(type).second;
+  go->FgColor = Colors::ShrineColorsByType.at(type).first;
+  go->BgColor = Colors::ShrineColorsByType.at(type).second;
 
   ShrineComponent* sc = go->AddComponent<ShrineComponent>();
 
@@ -245,7 +245,7 @@ GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool st
 
 GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'r', GlobalConstants::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'r', Colors::MonsterColor);
   go->ObjectName = "Feral Rat";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 30;
@@ -307,7 +307,7 @@ GameObject* GameObjectsFactory::CreateRat(int x, int y, bool randomize)
 
 GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'b', GlobalConstants::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'b', Colors::MonsterColor);
   go->ObjectName = "Flying Bat";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 20;
@@ -367,7 +367,7 @@ GameObject* GameObjectsFactory::CreateBat(int x, int y, bool randomize)
 
 GameObject* GameObjectsFactory::CreateVampireBat(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'b', GlobalConstants::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'b', Colors::MonsterColor);
   go->ObjectName = "Red Bat";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 20;
@@ -411,7 +411,7 @@ GameObject* GameObjectsFactory::CreateVampireBat(int x, int y, bool randomize)
 
 GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 's', GlobalConstants::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 's', Colors::MonsterColor);
   go->ObjectName = "Cave Spider";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 30;
@@ -472,7 +472,7 @@ GameObject* GameObjectsFactory::CreateSpider(int x, int y, bool randomize)
 
 GameObject* GameObjectsFactory::CreateTroll(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'T', GlobalConstants::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'T', Colors::MonsterColor);
   go->ObjectName = "Troll";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 3;
@@ -530,7 +530,7 @@ GameObject* GameObjectsFactory::CreateHerobrine(int x, int y)
   img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
   #endif
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, GlobalConstants::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, Colors::MonsterColor);
   go->ObjectName = "Herobrine";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 30;
@@ -577,7 +577,7 @@ GameObject* GameObjectsFactory::CreateUniquePickaxe()
 
   go->ObjectName = "Pickaxe";
   go->Image = '(';
-  go->FgColor = GlobalConstants::ItemUniqueColor;
+  go->FgColor = Colors::ItemUniqueColor;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -651,7 +651,7 @@ bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
 
   if (item->Data.EqCategory == EquipmentCategory::NOT_EQUIPPABLE)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Can't be equipped!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Can't be equipped!" }, Colors::MessageBoxRedBorderColor);
     return res;
   }
 
@@ -682,11 +682,11 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
     switch (item->Data.ItemType_)
     {
       case ItemType::COINS:
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "You don't 'use' money like that." }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "You don't 'use' money like that." }, Colors::MessageBoxRedBorderColor);
         break;
 
       default:
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Can't be used!" }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Can't be used!" }, Colors::MessageBoxRedBorderColor);
         break;
     }
   }
@@ -707,8 +707,8 @@ GameObject* GameObjectsFactory::CreateFood(int x, int y, FoodType type, ItemPref
 
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  go->FgColor = "#FFFFFF";
-  go->BgColor = "#000000";
+  go->FgColor = Colors::WhiteColor;
+  go->BgColor = Colors::BlackColor;
   go->Image = '%';
   go->ObjectName = name;
   go->PosX = x;
@@ -1266,8 +1266,8 @@ void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int
   stairs->LeadsTo = leadsTo;
 
   tile->ObjectName = (image == '>') ? "Stairs Down" : "Stairs Up";
-  tile->FgColor = GlobalConstants::WhiteColor;
-  tile->BgColor = GlobalConstants::DoorHighlightColor;
+  tile->FgColor = Colors::WhiteColor;
+  tile->BgColor = Colors::DoorHighlightColor;
   tile->Image = image;
 }
 
@@ -1295,7 +1295,26 @@ GameObject* GameObjectsFactory::CreateNote(const std::string& objName, const std
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateDummyObject(const std::string& objName,
+GameObject* GameObjectsFactory::CreateDummyObject(int x,
+                                                  int y,
+                                                  const std::string& objName,
+                                                  char image,
+                                                  const std::string& fgColor,
+                                                  const std::string& bgColor)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->Image = image;
+  go->ObjectName = objName;
+  go->PosX = x;
+  go->PosY = y;
+  go->FgColor = fgColor;
+  go->BgColor = bgColor;
+
+  return go;
+}
+
+GameObject* GameObjectsFactory::CreateDummyItem(const std::string& objName,
                                                   char image,
                                                   const std::string& fgColor,
                                                   const std::string& bgColor,
@@ -1637,7 +1656,7 @@ GameObject* GameObjectsFactory::CreateWand(int x, int y, WandMaterials material,
 
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  auto wandColorPair = GlobalConstants::WandColorsByMaterial.at(material);
+  auto wandColorPair = Colors::WandColorsByMaterial.at(material);
   std::string wandMaterialName = GlobalConstants::WandMaterialNamesByMaterial.at(material);
   std::string spellName = si.SpellName;
   std::string spellShortName = si.SpellShortName;
@@ -2136,14 +2155,14 @@ GameObject* GameObjectsFactory::CreateReturner(int x, int y, int charges, ItemPr
 
   go->Image = '*';
 
-  int colorIndex = RNG::Instance().RandomRange(1, GlobalConstants::GemColorNameByType.size());
+  int colorIndex = RNG::Instance().RandomRange(1, Colors::GemColorNameByType.size());
 
   GemType t = (GemType)colorIndex;
 
-  std::string colorName = GlobalConstants::GemColorNameByType.at(t);
+  std::string colorName = Colors::GemColorNameByType.at(t);
 
-  std::string fgColor = GlobalConstants::GemColorByType.at(t).first;
-  std::string bgColor = GlobalConstants::GemColorByType.at(t).second;
+  std::string fgColor = Colors::GemColorByType.at(t).first;
+  std::string bgColor = Colors::GemColorByType.at(t).second;
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
@@ -2191,7 +2210,7 @@ GameObject* GameObjectsFactory::CreateRepairKit(int x, int y, int charges, ItemP
 
   go->Image = '(';
 
-  go->FgColor = GlobalConstants::WhiteColor;
+  go->FgColor = Colors::WhiteColor;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -2244,7 +2263,7 @@ GameObject* GameObjectsFactory::CreateArmor(int x, int y, ArmorType type, ItemPr
   go->ObjectName = GlobalConstants::ArmorNameByType.at(type);
   go->Image = '[';
 
-  go->FgColor = GlobalConstants::WhiteColor;
+  go->FgColor = Colors::WhiteColor;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -2803,7 +2822,7 @@ bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
   }
   else if (itemEquipped != item)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, Colors::MessageBoxRedBorderColor);
     res = false;
   }
   else
@@ -2812,7 +2831,7 @@ bool GameObjectsFactory::ProcessItemEquiption(ItemComponent* item)
     {
       itemEquipped->Data.IsPrefixDiscovered = true;
       auto str = Util::StringFormat("You can't unequip %s - it's cursed!", itemEquipped->OwnerGameObject->ObjectName.data());
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { str }, GlobalConstants::MessageBoxRedBorderColor);
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { str }, Colors::MessageBoxRedBorderColor);
       res = false;
     }
     else
@@ -2840,7 +2859,7 @@ bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
       {
         rings[i]->Data.IsPrefixDiscovered = true;
         auto str = Util::StringFormat("You can't unequip %s - it's cursed!", rings[i]->OwnerGameObject->ObjectName.data());
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { str }, GlobalConstants::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { str }, Colors::MessageBoxRedBorderColor);
         return false;
       }
 
@@ -2862,7 +2881,7 @@ bool GameObjectsFactory::ProcessRingEquiption(ItemComponent* item)
   // Finally, if no empty slots found, display a warning
   if (!emptySlotFound)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, GlobalConstants::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, Colors::MessageBoxRedBorderColor);
   }
 
   return false;
@@ -3059,6 +3078,15 @@ void GameObjectsFactory::GenerateLootIfPossible(int posX, int posY, GameObjectTy
   }
 }
 
+void GameObjectsFactory::AttachTrigger(GameObject* attachTo,
+                                       TriggerType type,
+                                       const std::function<bool ()>& condition,
+                                       const std::function<void ()>& handler)
+{
+  TriggerComponent* tc = attachTo->AddComponent<TriggerComponent>();
+  tc->Setup({ type, condition, handler });
+}
+
 void GameObjectsFactory::GenerateLoot(int posX, int posY, const std::pair<ItemType, int>& kvp, GameObjectType monsterType)
 {
   switch (kvp.first)
@@ -3091,14 +3119,14 @@ GameObject* GameObjectsFactory::CreateRandomGlass()
 
   go->Image = '*';
 
-  int colorIndex = RNG::Instance().RandomRange(1, GlobalConstants::GemColorNameByType.size());
+  int colorIndex = RNG::Instance().RandomRange(1, Colors::GemColorNameByType.size());
 
   GemType t = (GemType)colorIndex;
 
-  go->FgColor = GlobalConstants::GemColorByType.at(t).first;
-  go->BgColor = GlobalConstants::GemColorByType.at(t).second;
+  go->FgColor = Colors::GemColorByType.at(t).first;
+  go->BgColor = Colors::GemColorByType.at(t).second;
 
-  std::string colorDesc = GlobalConstants::GemColorNameByType.at(t);
+  std::string colorDesc = Colors::GemColorNameByType.at(t);
   go->ObjectName = Util::StringFormat("%s Glass", colorDesc.data());
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
@@ -3129,12 +3157,12 @@ GameObject* GameObjectsFactory::CreateGemHelper(GemType t, ItemQuality quality)
 
   go->Image = '*';
 
-  go->FgColor = GlobalConstants::GemColorByType.at(t).first;
-  go->BgColor = GlobalConstants::GemColorByType.at(t).second;
+  go->FgColor = Colors::GemColorByType.at(t).first;
+  go->BgColor = Colors::GemColorByType.at(t).second;
 
   go->ObjectName = GlobalConstants::GemNameByType.at(t);
 
-  std::string colorDesc = GlobalConstants::GemColorNameByType.at(t);
+  std::string colorDesc = Colors::GemColorNameByType.at(t);
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -3181,7 +3209,7 @@ void GameObjectsFactory::InitPotionColors()
     ItemType::EXP_POTION
   };
 
-  PotionsMap potions = GlobalConstants::PotionColorsByName;
+  PotionsMap potions = Colors::PotionColorsByName;
 
   while (potionTypes.size() != 0)
   {

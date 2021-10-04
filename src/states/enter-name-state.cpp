@@ -135,14 +135,14 @@ void EnterNameState::Update(bool forceUpdate)
     Printer::Instance().DrawWindow({ _x - _maxNameHalf, _cursorPos - 2 },
                                    { MaxNameLength + 1, 4 },
                                    kEnterNameString,
-                                   (_inputType == InputType::NAME) ? "#FFFFFF" : "#000000",
-                                   (_inputType == InputType::NAME) ? GlobalConstants::MessageBoxHeaderBgColor : GlobalConstants::InventoryEmptySlotColor);
+                                   (_inputType == InputType::NAME) ? Colors::WhiteColor : Colors::BlackColor,
+                                   (_inputType == InputType::NAME) ? Colors::MessageBoxHeaderBgColor : Colors::ShadesOfGrey::Six);
 
     Printer::Instance().DrawWindow({ _x - _maxSeedHalf, _cursorPos + 4 },
                                    { MaxSeedStringLength + 1, 6 },
                                    kEnterSeedString,
-                                   (_inputType != InputType::NAME) ? "#FFFFFF" : "#000000",
-                                   (_inputType != InputType::NAME) ? GlobalConstants::MessageBoxHeaderBgColor : GlobalConstants::InventoryEmptySlotColor);
+                                   (_inputType != InputType::NAME) ? Colors::WhiteColor : Colors::BlackColor,
+                                   (_inputType != InputType::NAME) ? Colors::MessageBoxHeaderBgColor : Colors::ShadesOfGrey::Six);
 
     #else
     auto border = Util::GetPerimeter(_x - _maxNameHalf,

@@ -121,11 +121,16 @@ bool GameObject::MoveTo(const Position &pos, bool force)
 
 void GameObject::Draw(const std::string& overrideColorFg, const std::string& overrideColorBg)
 {
+  if (FgColor.empty() && BgColor.empty())
+  {
+    return;
+  }
+
   Printer::Instance().PrintFB(PosX + _levelOwner->MapOffsetX,
                               PosY + _levelOwner->MapOffsetY,
                               Image,
-                              (overrideColorFg.length() == 0) ? FgColor : overrideColorFg,
-                              (overrideColorBg.length() == 0) ? BgColor : overrideColorBg);
+                              overrideColorFg.empty() ? FgColor : overrideColorFg,
+                              overrideColorBg.empty() ? BgColor : overrideColorBg);
 }
 
 void GameObject::Update()

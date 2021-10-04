@@ -40,15 +40,15 @@ void MenuState::Update(bool forceUpdate)
     Printer::Instance().DrawWindow({ 0, 0 },
                                    { _tw - 1, _th - 1 },
                                    "",
-                                   GlobalConstants::BlackColor,
-                                   GlobalConstants::BlackColor,
-                                   GlobalConstants::WhiteColor);
+                                   Colors::BlackColor,
+                                   Colors::BlackColor,
+                                   Colors::WhiteColor);
 
     #else
     auto border = Util::GetPerimeter(0, 0, _tw - 1, _th - 1);
     for (auto& i : border)
     {
-      Printer::Instance().PrintFB(i.X, i.Y, ' ', GlobalConstants::WhiteColor, GlobalConstants::WhiteColor);
+      Printer::Instance().PrintFB(i.X, i.Y, ' ', Colors::WhiteColor, Colors::WhiteColor);
     }
     #endif
 
@@ -62,17 +62,17 @@ void MenuState::Update(bool forceUpdate)
         if (c == '#')
         {
           Printer::Instance().PrintFB(_titleX - xAlign + xOffset,
-                                       _titleY + yOffset,
-                                       ' ',
-                                       GlobalConstants::BlackColor,
-                                       GlobalConstants::WhiteColor);
+                                      _titleY + yOffset,
+                                      ' ',
+                                      Colors::BlackColor,
+                                      Colors::WhiteColor);
         }
         else
         {
           Printer::Instance().PrintFB(_titleX - xAlign + xOffset,
-                                       _titleY + yOffset,
-                                       c,
-                                       GlobalConstants::WhiteColor);
+                                      _titleY + yOffset,
+                                      c,
+                                      Colors::WhiteColor);
         }
 
         xOffset++;
@@ -82,31 +82,31 @@ void MenuState::Update(bool forceUpdate)
     }
 
     Printer::Instance().PrintFB(_twHalf,
-                                 _thHalf + 2,
-                                 _welcome,
-                                 Printer::kAlignCenter,
-                                 GlobalConstants::WhiteColor);
+                                _thHalf + 2,
+                                _welcome,
+                                Printer::kAlignCenter,
+                                Colors::WhiteColor);
 
     for (size_t i = 0; i < _signature.size(); i++)
     {
       Printer::Instance().PrintFB(_tw - 2,
-                                   _th - 1 - (_signature.size() - i),
-                                   _signature[i],
-                                   Printer::kAlignRight,
-                                   GlobalConstants::WhiteColor);
+                                  _th - 1 - (_signature.size() - i),
+                                  _signature[i],
+                                  Printer::kAlignRight,
+                                  Colors::WhiteColor);
     }
 
     Printer::Instance().PrintFB(_twHalf,
-                                 _th - 2,
-                                 _builtWith,
-                                 Printer::kAlignCenter,
-                                 GlobalConstants::WhiteColor);
+                                _th - 2,
+                                _builtWith,
+                                Printer::kAlignCenter,
+                                Colors::WhiteColor);
 
     Printer::Instance().PrintFB(2,
-                                 _th - 2,
-                                 _debugInfo,
-                                 Printer::kAlignLeft,
-                                 GlobalConstants::WhiteColor);
+                                _th - 2,
+                                _debugInfo,
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
 
     Printer::Instance().Render();
   }

@@ -71,7 +71,7 @@ void IntroState::Update(bool forceUpdate)
                                _scenarioNameByClass.at(Application::Instance().PlayerInstance.GetClass()),
                                2,
                                Printer::kAlignCenter,
-                               "#FFFFFF");
+                               Colors::WhiteColor);
   if (Util::WaitForMs(10))
   {
     int textIndex = Application::Instance().PlayerInstance.SelectedClass;
@@ -81,8 +81,8 @@ void IntroState::Update(bool forceUpdate)
 
       if (_textPositionCursor != _introStrings[textIndex][_stringIndex].length())
       {
-        Printer::Instance().PrintFB(_textPositionX - len / 2, _textPositionY, _introStrings[textIndex][_stringIndex][_textPositionCursor], "#FFFFFF");
-        Printer::Instance().PrintFB(_textPositionX - len / 2 + 1, _textPositionY, ' ', "#000000", "#FFFFFF");
+        Printer::Instance().PrintFB(_textPositionX - len / 2, _textPositionY, _introStrings[textIndex][_stringIndex][_textPositionCursor], Colors::WhiteColor);
+        Printer::Instance().PrintFB(_textPositionX - len / 2 + 1, _textPositionY, ' ', Colors::BlackColor, Colors::WhiteColor);
 
         _textPositionX++;
 
@@ -90,7 +90,7 @@ void IntroState::Update(bool forceUpdate)
       }
       else
       {
-        Printer::Instance().PrintFB(_textPositionX - len / 2, _textPositionY, ' ', "#000000");
+        Printer::Instance().PrintFB(_textPositionX - len / 2, _textPositionY, ' ', Colors::BlackColor);
 
         _textPositionCursor = 0;
 
@@ -102,7 +102,7 @@ void IntroState::Update(bool forceUpdate)
     }
     else
     {
-      Printer::Instance().PrintFB(Printer::TerminalWidth / 2, Printer::TerminalHeight - 1, "Press 'Enter' to continue", Printer::kAlignCenter, "#FFFFFF");
+      Printer::Instance().PrintFB(Printer::TerminalWidth / 2, Printer::TerminalHeight - 1, "Press 'Enter' to continue", Printer::kAlignCenter, Colors::WhiteColor);
     }
 
     Printer::Instance().Render();

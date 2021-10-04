@@ -335,13 +335,19 @@ namespace ItemUseHandlers
   {
     if (!item->Data.IsIdentified)
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Can't be used!" }, GlobalConstants::MessageBoxRedBorderColor);
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                             GlobalConstants::MessageBoxInformationHeaderText,
+                                             { "Can't be used!" },
+                                             Colors::MessageBoxRedBorderColor);
       return false;
     }
 
     if (item->Data.Amount == 0)
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "You invoke the returner, but nothing happens." }, GlobalConstants::MessageBoxDefaultBorderColor);
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                             GlobalConstants::MessageBoxInformationHeaderText,
+                                             { "You invoke the returner, but nothing happens." },
+                                             Colors::ShadesOfGrey::Six);
       return false;
     }
 
@@ -354,7 +360,10 @@ namespace ItemUseHandlers
 
     if (!playerRef->HasSkill(PlayerSkills::REPAIR))
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { "You don't possess the necessary skill!" }, GlobalConstants::MessageBoxRedBorderColor);
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                             GlobalConstants::MessageBoxEpicFailHeaderText,
+                                             { "You don't possess the necessary skill!" },
+                                             Colors::MessageBoxRedBorderColor);
       return false;
     }
 

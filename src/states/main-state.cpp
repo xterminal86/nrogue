@@ -229,7 +229,7 @@ void MainState::Update(bool forceUpdate)
                                  0,
                                  Map::Instance().CurrentLevel->LevelName,
                                  Printer::kAlignRight,
-                                 GlobalConstants::WhiteColor);
+                                 Colors::WhiteColor);
 
     #ifdef DEBUG_BUILD
     PrintDebugInfo();
@@ -284,10 +284,10 @@ void MainState::DisplayGameLog()
   {
     Printer::Instance().PrintFB(x,
                                 y - count,
-                                m.first,
+                                m.Message,
                                 Printer::kAlignRight,
-                                m.second,
-                                GlobalConstants::BlackColor);
+                                m.FgColor,
+                                m.BgColor);
     count++;
   }
 }
@@ -305,7 +305,7 @@ void MainState::TryToPickupItem()
 
     if (_playerRef->Inventory.IsFull())
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail", { "Inventory is full!" }, GlobalConstants::MessageBoxRedBorderColor);
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail", { "Inventory is full!" }, Colors::MessageBoxRedBorderColor);
       return;
     }
 
@@ -344,13 +344,13 @@ void MainState::DrawHPMP()
                                th - 2,
                                str,
                                Printer::kAlignCenter,
-                               GlobalConstants::WhiteColor,
+                               Colors::WhiteColor,
                                "#880000");
 
   UpdateBar(0, th - 1, _playerRef->Attrs.MP);
 
   str = Util::StringFormat("%i/%i", curMp, maxMp);
-  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 1, str, Printer::kAlignCenter, "#FFFFFF", "#000088");
+  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 1, str, Printer::kAlignCenter, Colors::WhiteColor, "#000088");
 }
 
 void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
@@ -366,7 +366,7 @@ void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
 
   bar += "]";
 
-  Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, Colors::WhiteColor);
 }
 
 void MainState::CheckStairs(int stairsSymbol)
@@ -409,28 +409,28 @@ void MainState::PrintDebugInfo()
                                   _playerRef->PosY,
                                   _playerRef->Attrs.Hunger);
 
-  Printer::Instance().PrintFB(0, 1, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(0, 1, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
   _debugInfo = Util::StringFormat("Key: %i Actors: %i Respawn: %i",
                                   _keyPressed,
                                   Map::Instance().CurrentLevel->ActorGameObjects.size(),
                                   Map::Instance().CurrentLevel->RespawnCounter());
 
-  Printer::Instance().PrintFB(0, 2, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(0, 2, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
   _debugInfo = Util::StringFormat("Level Start: [%i;%i]", Map::Instance().CurrentLevel->LevelStart.X, Map::Instance().CurrentLevel->LevelStart.Y);
-  Printer::Instance().PrintFB(0, 3, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(0, 3, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
   _debugInfo = Util::StringFormat("Level Exit: [%i;%i]", Map::Instance().CurrentLevel->LevelExit.X, Map::Instance().CurrentLevel->LevelExit.Y);
-  Printer::Instance().PrintFB(0, 4, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(0, 4, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
   _debugInfo = Util::StringFormat("Colors Used: %i", Printer::Instance().ColorsUsed());
-  Printer::Instance().PrintFB(0, 5, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(0, 5, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
   _debugInfo = Util::StringFormat("Turns passed: %i", Application::Instance().TurnsPassed);
-  Printer::Instance().PrintFB(0, 6, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(0, 6, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
-  Printer::Instance().PrintFB(0, 7, "Actors watched:", Printer::kAlignLeft, GlobalConstants::WhiteColor);
+  Printer::Instance().PrintFB(0, 7, "Actors watched:", Printer::kAlignLeft, Colors::WhiteColor);
 
   int yOffset = 0;
   bool found = false;
@@ -441,7 +441,7 @@ void MainState::PrintDebugInfo()
       if (a->ObjectId() == id)
       {
         _debugInfo = Util::StringFormat("%s_%lu (%i)", a->ObjectName.data(), id, a->Attrs.ActionMeter);
-        Printer::Instance().PrintFB(0, 8 + yOffset, _debugInfo, Printer::kAlignLeft, GlobalConstants::WhiteColor);
+        Printer::Instance().PrintFB(0, 8 + yOffset, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
         yOffset++;
         found = true;
       }
@@ -450,7 +450,7 @@ void MainState::PrintDebugInfo()
 
   if (!found)
   {
-    Printer::Instance().PrintFB(0, 8, "<Press 's' to scan 1x1 around player>", Printer::kAlignLeft, GlobalConstants::WhiteColor);
+    Printer::Instance().PrintFB(0, 8, "<Press 's' to scan 1x1 around player>", Printer::kAlignLeft, Colors::WhiteColor);
   }
 }
 
@@ -629,8 +629,8 @@ void MainState::DisplayStartHint()
   Printer::Instance().PrintFB(0,
                                th - 4,
                                '<',
-                               GlobalConstants::WhiteColor,
-                               GlobalConstants::DoorHighlightColor);
+                               Colors::WhiteColor,
+                               Colors::DoorHighlightColor);
 
   auto curLvl = Map::Instance().CurrentLevel;
   int dx = curLvl->LevelStart.X - _playerRef->PosX;
@@ -660,7 +660,7 @@ void MainState::DisplayStartHint()
                                th - 4,
                                dir,
                                Printer::kAlignLeft,
-                               GlobalConstants::WhiteColor);
+                               Colors::WhiteColor);
 }
 
 void MainState::DisplayExitHint()
@@ -670,8 +670,8 @@ void MainState::DisplayExitHint()
   Printer::Instance().PrintFB(0,
                                th - 3,
                                '>',
-                               GlobalConstants::WhiteColor,
-                               GlobalConstants::DoorHighlightColor);
+                               Colors::WhiteColor,
+                               Colors::DoorHighlightColor);
 
   auto curLvl = Map::Instance().CurrentLevel;
   if (curLvl->ExitFound)
@@ -703,7 +703,7 @@ void MainState::DisplayExitHint()
                                  th - 3,
                                  dir,
                                  Printer::kAlignLeft,
-                                 GlobalConstants::WhiteColor);
+                                 Colors::WhiteColor);
   }
   else
   {
@@ -711,7 +711,7 @@ void MainState::DisplayExitHint()
                                  th - 3,
                                  "??",
                                  Printer::kAlignLeft,
-                                 GlobalConstants::WhiteColor);
+                                 Colors::WhiteColor);
   }
 }
 
@@ -733,8 +733,8 @@ void MainState::DisplayHungerStatus(const int& startPos)
     Printer::Instance().PrintFB(startPos,
                                 _th - 3,
                                 '%',
-                                GlobalConstants::WhiteColor,
-                                GlobalConstants::RedColor);
+                                Colors::WhiteColor,
+                                Colors::RedColor);
   }
   else
   {
@@ -742,7 +742,7 @@ void MainState::DisplayHungerStatus(const int& startPos)
     int part = hungerMax - hungerMax * 0.25;
     if (_playerRef->Attrs.Hunger >= part)
     {
-      Printer::Instance().PrintFB(startPos, _th - 3, '%', GlobalConstants::WhiteColor, "#999900");
+      Printer::Instance().PrintFB(startPos, _th - 3, '%', Colors::WhiteColor, "#999900");
     }
   }
 }
@@ -814,8 +814,8 @@ void MainState::DisplayActiveEffects(const int& startPos)
   for (auto& kvp : effectDurationByName)
   {
     std::string color = (kvp.second <= GlobalConstants::TurnReadyValue) ?
-                         GlobalConstants::GroundColor :
-                         GlobalConstants::WhiteColor;
+                         Colors::ShadesOfGrey::Four :
+                         Colors::WhiteColor;
 
     Printer::Instance().PrintFB(offsetX,
                                 _th - 4,

@@ -21,8 +21,8 @@ class Application : public Singleton<Application>
     void ShowMessageBox(MessageBoxType type,
                         const std::string& header,
                         const std::vector<std::string>& message,
-                        const std::string& borderColor = GlobalConstants::MessageBoxDefaultBorderColor,
-                        const std::string& bgColor = GlobalConstants::MessageBoxDefaultBgColor);
+                        const std::string& borderColor = Colors::ShadesOfGrey::Six,
+                        const std::string& bgColor = Colors::ShadesOfGrey::Two);
 
     void CloseMessageBox();
 

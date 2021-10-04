@@ -15,8 +15,8 @@ class MessageBoxState : public GameState
     void SetMessage(MessageBoxType type,
                     const std::string& header,
                     const std::vector<std::string>& message,
-                    const std::string& borderColor = GlobalConstants::MessageBoxDefaultBorderColor,
-                    const std::string& bgColor = GlobalConstants::MessageBoxDefaultBgColor);
+                    const std::string& borderColor = Colors::ShadesOfGrey::Six,
+                    const std::string& bgColor = Colors::ShadesOfGrey::Two);
 
   private:
     std::string _header;

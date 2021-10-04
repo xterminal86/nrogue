@@ -46,7 +46,7 @@ void MapLevelNether::DisplayWelcomeText()
 void MapLevelNether::CreateLevel()
 {
   GameObjectInfo t;
-  t.Set(true, true, ' ', GlobalConstants::BlackColor, GlobalConstants::CaveWallColor, "Cave Wall");
+  t.Set(true, true, ' ', Colors::BlackColor, Colors::CaveWallColor, "Cave Wall");
 
   CreateBorders(t);
 
@@ -93,7 +93,7 @@ void MapLevelNether::ConstructFromBuilder(LevelBuilder& lb)
       switch (image)
       {
         case '#':
-          PlaceWall(x, y, ' ', GlobalConstants::BlackColor, GlobalConstants::RedPoppyColor, "Hellrock");
+          PlaceWall(x, y, ' ', Colors::BlackColor, Colors::RedPoppyColor, "Hellrock");
           break;
 
         case '+':
@@ -111,7 +111,7 @@ void MapLevelNether::ConstructFromBuilder(LevelBuilder& lb)
         break;
 
         case '.':
-          PlaceGroundTile(x, y, image, "#440000", GlobalConstants::BlackColor, "Hellstone");
+          PlaceGroundTile(x, y, image, "#440000", Colors::BlackColor, "Hellstone");
           break;
 
         case 'g':
@@ -123,7 +123,7 @@ void MapLevelNether::ConstructFromBuilder(LevelBuilder& lb)
           break;
 
         case ' ':
-          PlaceGroundTile(x, y, '.', GlobalConstants::BlackColor, GlobalConstants::StoneColor, "Stone");
+          PlaceGroundTile(x, y, '.', Colors::BlackColor, Colors::ShadesOfGrey::Ten, "Stone");
           break;
 
         case 'l':
