@@ -5,6 +5,8 @@
 #include "application.h"
 #include "spells-processor.h"
 #include "game-objects-factory.h"
+#include "monsters-inc.h"
+#include "items-factory.h"
 #include "spells-database.h"
 #include "map.h"
 #include "util.h"
@@ -76,6 +78,8 @@ int main(int argc, char* argv[])
   Logger::Instance().Print(str);
 
   GameObjectsFactory::Instance().Init();
+  ItemsFactory::Instance().Init();
+  MonstersInc::Instance().Init();
 
   SpellsDatabase::Instance().Init();
   SpellsProcessor::Instance().Init();

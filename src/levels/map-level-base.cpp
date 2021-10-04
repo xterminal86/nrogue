@@ -1,6 +1,7 @@
 ﻿#include "map-level-base.h"
 #include "application.h"
 #include "game-objects-factory.h"
+#include "items-factory.h"
 #include "game-object-info.h"
 #include "printer.h"
 #include "logger.h"
@@ -173,7 +174,7 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
 
     // NOTE: Not all objects may be added to the factory yet,
     // so check against nullptr is needed.
-    auto go = GameObjectsFactory::Instance().CreateRandomItem(x, y);
+    auto go = ItemsFactory::Instance().CreateRandomItem(x, y);
     if (go != nullptr)
     {
       InsertGameObject(go);

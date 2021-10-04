@@ -4,6 +4,7 @@
 #include "printer.h"
 #include "door-component.h"
 #include "game-objects-factory.h"
+#include "items-factory.h"
 #include "ai-monster-basic.h"
 #include "ai-component.h"
 #include "ai-npc.h"
@@ -382,13 +383,13 @@ void Player::SetDefaultEquipment()
   {
     case PlayerClass::THIEF:
     {
-      weapon = GameObjectsFactory::Instance().CreateRangedWeapon(0, 0, RangedWeaponType::SHORT_BOW, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+      weapon = ItemsFactory::Instance().CreateRangedWeapon(0, 0, RangedWeaponType::SHORT_BOW, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
       Inventory.Add(weapon);
 
-      GameObject* arrows = GameObjectsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::BLESSED, 60);
+      GameObject* arrows = ItemsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::BLESSED, 60);
       Inventory.Add(arrows);
 
-      GameObject* dagger = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+      GameObject* dagger = ItemsFactory::Instance().CreateWeapon(0, 0, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
       Inventory.Add(dagger);
 
       weaponAndArmorToEquip.push_back(arrows);
@@ -398,10 +399,10 @@ void Player::SetDefaultEquipment()
 
     case PlayerClass::SOLDIER:
     {
-      weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+      weapon = ItemsFactory::Instance().CreateWeapon(0, 0, WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
       Inventory.Add(weapon);
 
-      armor = GameObjectsFactory::Instance().CreateArmor(0, 0, ArmorType::PADDING, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+      armor = ItemsFactory::Instance().CreateArmor(0, 0, ArmorType::PADDING, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
       Inventory.Add(armor);
 
       weaponAndArmorToEquip.push_back(weapon);
@@ -411,10 +412,10 @@ void Player::SetDefaultEquipment()
 
     case PlayerClass::ARCANIST:
     {
-      weapon = GameObjectsFactory::Instance().CreateWeapon(0, 0, WeaponType::STAFF, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+      weapon = ItemsFactory::Instance().CreateWeapon(0, 0, WeaponType::STAFF, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
       Inventory.Add(weapon);
 
-      auto wand = GameObjectsFactory::Instance().CreateWand(0, 0, WandMaterials::EBONY_3, SpellType::MAGIC_MISSILE, ItemPrefix::BLESSED, ItemQuality::NORMAL);
+      auto wand = ItemsFactory::Instance().CreateWand(0, 0, WandMaterials::EBONY_3, SpellType::MAGIC_MISSILE, ItemPrefix::BLESSED, ItemQuality::NORMAL);
       Inventory.Add(wand);
 
       weaponAndArmorToEquip.push_back(weapon);
@@ -423,19 +424,19 @@ void Player::SetDefaultEquipment()
 
     case PlayerClass::CUSTOM:
     {
-      weapon = GameObjectsFactory::Instance().CreateRandomWeapon();
+      weapon = ItemsFactory::Instance().CreateRandomWeapon();
       Inventory.Add(weapon);
 
-      armor = GameObjectsFactory::Instance().CreateRandomArmor();
+      armor = ItemsFactory::Instance().CreateRandomArmor();
       Inventory.Add(armor);
 
-      auto acc = GameObjectsFactory::Instance().CreateRandomAccessory(0, 0);
+      auto acc = ItemsFactory::Instance().CreateRandomAccessory(0, 0);
       Inventory.Add(acc);
 
-      auto potion = GameObjectsFactory::Instance().CreateRandomPotion();
+      auto potion = ItemsFactory::Instance().CreateRandomPotion();
       Inventory.Add(potion);
 
-      auto gem = GameObjectsFactory::Instance().CreateGem(0, 0);
+      auto gem = ItemsFactory::Instance().CreateGem(0, 0);
       Inventory.Add(gem);
     }
     break;
@@ -1622,20 +1623,20 @@ void Player::SetSoldierDefaultItems()
 {
   Money = 250;
 
-  auto go = GameObjectsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
+  auto go = ItemsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
   ItemComponent* ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 3;
 
   Inventory.Add(go);
 
-  go = GameObjectsFactory::Instance().CreateFood(0, 0, FoodType::IRON_RATIONS, ItemPrefix::UNCURSED);
+  go = ItemsFactory::Instance().CreateFood(0, 0, FoodType::IRON_RATIONS, ItemPrefix::UNCURSED);
   ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 1;
   ic->Data.IsIdentified = true;
 
   Inventory.Add(go);
 
-  go = GameObjectsFactory::Instance().CreateRepairKit(0, 0, 30, ItemPrefix::BLESSED);
+  go = ItemsFactory::Instance().CreateRepairKit(0, 0, 30, ItemPrefix::BLESSED);
 
   Inventory.Add(go);
 }
@@ -1644,10 +1645,10 @@ void Player::SetThiefDefaultItems()
 {
   Money = 500;
 
-  auto go = GameObjectsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
+  auto go = ItemsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
   Inventory.Add(go);
 
-  go = GameObjectsFactory::Instance().CreateManaPotion(ItemPrefix::UNCURSED);
+  go = ItemsFactory::Instance().CreateManaPotion(ItemPrefix::UNCURSED);
   Inventory.Add(go);
 }
 
@@ -1655,17 +1656,17 @@ void Player::SetArcanistDefaultItems()
 {
   Money = 0;
 
-  auto go = GameObjectsFactory::Instance().CreateManaPotion(ItemPrefix::BLESSED);
+  auto go = ItemsFactory::Instance().CreateManaPotion(ItemPrefix::BLESSED);
   auto c = go->GetComponent<ItemComponent>();
   ItemComponent* ic = static_cast<ItemComponent*>(c);
   ic->Data.Amount = 5;
 
   Inventory.Add(go);
 
-  go = GameObjectsFactory::Instance().CreateReturner(0, 0, 3, ItemPrefix::UNCURSED);
+  go = ItemsFactory::Instance().CreateReturner(0, 0, 3, ItemPrefix::UNCURSED);
   Inventory.Add(go);
 
-  go = GameObjectsFactory::Instance().CreateScroll(0, 0, SpellType::MANA_SHIELD, ItemPrefix::BLESSED);
+  go = ItemsFactory::Instance().CreateScroll(0, 0, SpellType::MANA_SHIELD, ItemPrefix::BLESSED);
   Inventory.Add(go);
 }
 
@@ -1916,7 +1917,7 @@ void Player::AddExtraItems()
         "21 / II / 988"
       };
 
-      go = GameObjectsFactory::Instance().CreateNote("Wanted Poster", text);
+      go = ItemsFactory::Instance().CreateNote("Wanted Poster", text);
       Inventory.Add(go);
     }
     break;
@@ -1937,7 +1938,7 @@ void Player::AddExtraItems()
         "21 / II / 988"
       };
 
-      go = GameObjectsFactory::Instance().CreateNote("Leave Warrant", text);
+      go = ItemsFactory::Instance().CreateNote("Leave Warrant", text);
       Inventory.Add(go);
     }
     break;
@@ -1961,7 +1962,7 @@ void Player::AddExtraItems()
         "+ Bishop DANIEL"
       };
 
-      go = GameObjectsFactory::Instance().CreateNote("Orders", text);
+      go = ItemsFactory::Instance().CreateNote("Orders", text);
       Inventory.Add(go);
     }
     break;

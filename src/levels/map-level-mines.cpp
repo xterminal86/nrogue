@@ -5,6 +5,7 @@
 #include "rng.h"
 #include "constants.h"
 #include "game-objects-factory.h"
+#include "items-factory.h"
 #include "game-object-info.h"
 #include "door-component.h"
 #include "container-component.h"
@@ -428,15 +429,15 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 
 void MapLevelMines::CreateSpecialLevel()
 {
-  GameObject* key = GameObjectsFactory::Instance().CreateDummyItem("Iron Key",
-                                                                     '1',
-                                                                     Colors::IronColor,
-                                                                     Colors::BlackColor,
-                                                                     {
-                                                                       "A simple iron key.",
-                                                                       "Now you just need to find a lock."
-                                                                     }
-                                                                     );
+  GameObject* key = ItemsFactory::Instance().CreateDummyItem("Iron Key",
+                                                             '1',
+                                                             Colors::IronColor,
+                                                             Colors::BlackColor,
+                                                             {
+                                                               "A simple iron key.",
+                                                               "Now you just need to find a lock."
+                                                             }
+                                                             );
 
   // Look for "NOTE:" in DoorComponent::Interact()
   key->GetComponent<ItemComponent>()->Data.IsImportant = true;

@@ -1,6 +1,6 @@
 #include "trader-component.h"
 
-#include "game-objects-factory.h"
+#include "items-factory.h"
 #include "util.h"
 #include "ai-npc.h"
 
@@ -99,31 +99,31 @@ void TraderComponent::CreateClericItems()
     switch (itemPair.first)
     {
       case ItemType::HEALING_POTION:
-        go = GameObjectsFactory::Instance().CreateHealingPotion(prefixPair.first);
+        go = ItemsFactory::Instance().CreateHealingPotion(prefixPair.first);
         break;
 
       case ItemType::MANA_POTION:
-        go = GameObjectsFactory::Instance().CreateManaPotion(prefixPair.first);
+        go = ItemsFactory::Instance().CreateManaPotion(prefixPair.first);
         break;
 
       case ItemType::NP_POTION:
-        go = GameObjectsFactory::Instance().CreateNeutralizePoisonPotion(prefixPair.first);
+        go = ItemsFactory::Instance().CreateNeutralizePoisonPotion(prefixPair.first);
         break;
 
       case ItemType::RETURNER:
-        go = GameObjectsFactory::Instance().CreateReturner(0, 0, -1, prefixPair.first);
+        go = ItemsFactory::Instance().CreateReturner(0, 0, -1, prefixPair.first);
         break;
 
       case ItemType::WAND:
-        go = GameObjectsFactory::Instance().CreateRandomWand(prefixPair.first);
+        go = ItemsFactory::Instance().CreateRandomWand(prefixPair.first);
         break;
 
       case ItemType::SCROLL:
-        go = GameObjectsFactory::Instance().CreateRandomScroll(prefixPair.first);
+        go = ItemsFactory::Instance().CreateRandomScroll(prefixPair.first);
         break;
 
       case ItemType::ACCESSORY:
-        go = GameObjectsFactory::Instance().CreateRandomAccessory(0, 0, prefixPair.first, true);
+        go = ItemsFactory::Instance().CreateRandomAccessory(0, 0, prefixPair.first, true);
         break;
     }
 
@@ -160,7 +160,7 @@ void TraderComponent::CreateCookItems()
     auto itemPair   = Util::WeightedRandom(itemsWeights);
     auto prefixPair = Util::WeightedRandom(prefixWeights);
 
-    GameObject* go = GameObjectsFactory::Instance().CreateFood(0, 0, itemPair.first, prefixPair.first, true);
+    GameObject* go = ItemsFactory::Instance().CreateFood(0, 0, itemPair.first, prefixPair.first, true);
 
     Items.push_back(std::unique_ptr<GameObject>(go));
   }
@@ -174,7 +174,7 @@ void TraderComponent::CreateJunkerItems()
 
   for (int i = 0; i < _itemsToCreate; i++)
   {
-    GameObject* go = GameObjectsFactory::Instance().CreateRandomItem(0, 0, ItemType::COINS);
+    GameObject* go = ItemsFactory::Instance().CreateRandomItem(0, 0, ItemType::COINS);
     if (go != nullptr)
     {
       Items.push_back(std::unique_ptr<GameObject>(go));
@@ -221,17 +221,17 @@ void TraderComponent::CreateBlacksmithItems()
     switch (itemPair.first)
     {
       case ItemType::WEAPON:
-        go = GameObjectsFactory::Instance().CreateRandomWeapon(prefixPair.first);
+        go = ItemsFactory::Instance().CreateRandomWeapon(prefixPair.first);
         break;
 
       case ItemType::REPAIR_KIT:
-        go = GameObjectsFactory::Instance().CreateRepairKit(0, 0, 30, prefixPair.first);
+        go = ItemsFactory::Instance().CreateRepairKit(0, 0, 30, prefixPair.first);
         break;
 
       case ItemType::ARMOR:
       {
         auto armorPair = Util::WeightedRandom(armorWeights);
-        go = GameObjectsFactory::Instance().CreateArmor(0, 0, armorPair.first, prefixPair.first);
+        go = ItemsFactory::Instance().CreateArmor(0, 0, armorPair.first, prefixPair.first);
       }
       break;
 
@@ -240,12 +240,12 @@ void TraderComponent::CreateBlacksmithItems()
         int flag = RNG::Instance().RandomRange(0, 2);
         ArrowType arrowsType = (flag == 0) ? ArrowType::ARROWS : ArrowType::BOLTS;
         int amount = RNG::Instance().RandomRange(10, 21);
-        go = GameObjectsFactory::Instance().CreateArrows(0, 0, arrowsType, prefixPair.first, amount);
+        go = ItemsFactory::Instance().CreateArrows(0, 0, arrowsType, prefixPair.first, amount);
       }
       break;
 
       case ItemType::ACCESSORY:
-        go = GameObjectsFactory::Instance().CreateRandomAccessory(0, 0, prefixPair.first, true);
+        go = ItemsFactory::Instance().CreateRandomAccessory(0, 0, prefixPair.first, true);
         break;
     }
 

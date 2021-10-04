@@ -3,6 +3,7 @@
 #include "player.h"
 #include "rect.h"
 #include "game-objects-factory.h"
+#include "items-factory.h"
 #include "game-object-info.h"
 #include "door-component.h"
 #include "trigger-component.h"
@@ -998,8 +999,8 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
 
 void MapLevelTown::CreateTownGates()
 {
-  GameObject* gate1 = GameObjectsFactory::Instance().CreateDummyItem("Village Gates", '+', Colors::WhiteColor, Colors::BlackColor, std::vector<std::string>());
-  GameObject* gate2 = GameObjectsFactory::Instance().CreateDummyItem("Village Gates", '+', Colors::WhiteColor, Colors::BlackColor, std::vector<std::string>());
+  GameObject* gate1 = ItemsFactory::Instance().CreateDummyItem("Village Gates", '+', Colors::WhiteColor, Colors::BlackColor, std::vector<std::string>());
+  GameObject* gate2 = ItemsFactory::Instance().CreateDummyItem("Village Gates", '+', Colors::WhiteColor, Colors::BlackColor, std::vector<std::string>());
 
   std::function<void()> fn = []()
   {

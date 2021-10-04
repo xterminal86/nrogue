@@ -3,6 +3,7 @@
 #include "game-object-info.h"
 #include "application.h"
 #include "game-objects-factory.h"
+#include "items-factory.h"
 #include "door-component.h"
 #include "logger.h"
 
@@ -122,7 +123,7 @@ void MapLevelDeepDark::CreateLevel()
 
 void MapLevelDeepDark::CreateSpecialLevel()
 {
-  GameObject* note = GameObjectsFactory::Instance().CreateNote("A4 paper",
+  GameObject* note = ItemsFactory::Instance().CreateNote("A4 paper",
   {
     "Sorry, but the game is not finished yet.",
     "So this is as far as you can go. :-)"
