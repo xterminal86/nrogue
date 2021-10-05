@@ -78,6 +78,23 @@ void LookInputState::HandleInput()
       break;
 
     #ifdef DEBUG_BUILD
+    case 'd':
+    {
+      GameObject* go = Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X, _cursorPosition.Y);
+      if (go != nullptr)
+      {
+        go->IsDestroyed = true;
+        Printer::Instance().AddMessage("Removed: " + go->ObjectName);
+        Map::Instance().RemoveDestroyed();
+        Printer::Instance().DrawExplosion(_cursorPosition, 3);
+      }
+      else
+      {
+        Printer::Instance().AddMessage("There's nothing here");
+      }
+    }
+    break;
+
     case 'D':
     {
       auto gos = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);

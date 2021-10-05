@@ -605,6 +605,7 @@ namespace GlobalConstants
     "d",
     "t",
     "r",
+    "rt",
     "na",
     "ko",
     "ya",

@@ -6,6 +6,7 @@
 #include "ai-component.h"
 #include "container-component.h"
 
+#include "ai-idle.h"
 #include "ai-monster-basic.h"
 #include "ai-monster-bat.h"
 #include "ai-monster-vampire-bat.h"
@@ -319,11 +320,17 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   go->MoveTo(x, y);
 
   AIComponent* ai = go->AddComponent<AIComponent>();
+
+  // ===========================================================================
   AIMonsterHerobrine* aims = ai->AddModel<AIMonsterHerobrine>();
   aims->AgroRadius = 12;
   aims->ConstructAI();
+  // ===========================================================================
+  AIIdle* aii = ai->AddModel<AIIdle>();
+  aii->ConstructAI();
+  // ===========================================================================
 
-  ai->ChangeModel<AIMonsterHerobrine>();
+  ai->ChangeModel<AIIdle>();
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
   cc->MaxCapacity = 20;

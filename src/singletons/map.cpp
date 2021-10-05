@@ -263,6 +263,9 @@ void Map::RemoveDestroyed()
   auto mapCells = Util::GetRectAroundPoint(playerX, playerY, tw / 2, th / 2, CurrentLevel->MapSize);
   for (auto& cell : mapCells)
   {
+    // Static objects are considered to be occupying the cell by the fact
+    // of their presence, i.e. if there is no static object present,
+    // cell isn't occupied.
     if (CurrentLevel->StaticMapObjects[cell.X][cell.Y] != nullptr
      && CurrentLevel->StaticMapObjects[cell.X][cell.Y]->IsDestroyed)
     {
@@ -624,6 +627,85 @@ void Map::PrintMapLayout()
   Printer::Instance().AddMessage(dbg);
 }
 
+void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes)
+{
+  auto pointsAffected = Printer::Instance().DrawExplosion({ target->PosX, target->PosY }, 3);
+
+  //Util::PrintVector("points affected", pointsAffected);
+
+  GameObject* from = (weapon == nullptr) ?
+                     nullptr :
+                     weapon->OwnerGameObject;
+
+  for (auto& p : pointsAffected)
+  {
+    int d = Util::LinearDistance({ target->PosX, target->PosY }, p);
+    if (d == 0)
+    {
+      d = 1;
+    }
+
+    int dmgHere = centralDamage / d;
+
+    // AoE damages everything
+
+    auto actor = GetActorAtPosition(p.X, p.Y);
+    TryToDamageObject(actor, from, dmgHere, againstRes);
+
+    auto mapObjs = GetGameObjectsAtPosition(p.X, p.Y);
+    for (auto& obj : mapObjs)
+    {
+      TryToDamageObject(obj, from, dmgHere, againstRes);
+    }
+
+    auto so = GetStaticGameObjectAtPosition(p.X, p.Y);
+    if (so != nullptr)
+    {
+      TryToDamageObject(so, from, dmgHere, againstRes);
+    }
+
+    // Check self damage
+    if (_playerRef->PosX == p.X && _playerRef->PosY == p.Y)
+    {
+      int dmgHere = centralDamage / d;
+      dmgHere -= _playerRef->Attrs.Res.Get();
+
+      _playerRef->ReceiveDamage(from, dmgHere, true);
+    }
+  }
+}
+
+bool Map::TryToDamageObject(GameObject* object,
+                            GameObject* from,
+                            int amount,
+                            bool againstRes)
+{
+  bool success = false;
+
+  if (object != nullptr)
+  {
+    int dmgHere = amount;
+
+    if (againstRes)
+    {
+      dmgHere -= object->Attrs.Res.Get();
+    }
+
+    if (dmgHere <= 0)
+    {
+      auto msg = Util::StringFormat("%s seems unaffected!", object->ObjectName.data());
+      Printer::Instance().AddMessage(msg);
+    }
+    else
+    {
+      object->ReceiveDamage(from, dmgHere, againstRes);
+      success = true;
+    }
+  }
+
+  return success;
+}
+
 /// Returns list of cell that can be walked upon
 std::vector<Position> Map::GetWalkableCellsAround(const Position& pos)
 {
@@ -814,34 +896,39 @@ void Map::DrawGameObjects()
 
 void Map::DrawActors()
 {
-  for (auto& go : CurrentLevel->ActorGameObjects)
+  for (auto& actor : CurrentLevel->ActorGameObjects)
   {
-    int x = go->PosX;
-    int y = go->PosY;
+    int x = actor->PosX;
+    int y = actor->PosY;
 
     if (_playerRef->HasEffect(ItemBonusType::TELEPATHY)
      || CurrentLevel->MapArray[x][y]->Visible)
     {
       // If game object has black bg color,
       // replace it with current floor color
-      std::string bgColor = go->BgColor;
+      std::string bgColor = actor->BgColor;
 
-      bool cond = (go->BgColor == Colors::BlackColor);
+      bool cond = (actor->BgColor == Colors::BlackColor);
       bool isOnStaticObject = (CurrentLevel->StaticMapObjects[x][y] != nullptr);
 
       if (cond)
       {
+        // If tile or static object's background color is the same
+        // as actor's foreground color, replace actor's background color to
+        // black to avoid merging into one square of one color.
         if (isOnStaticObject)
         {
-          bgColor = CurrentLevel->StaticMapObjects[x][y]->BgColor;
+          auto& objBgColor = CurrentLevel->StaticMapObjects[x][y]->BgColor;
+          bgColor = (objBgColor == actor->FgColor ? Colors::BlackColor : objBgColor);
         }
         else
         {
-          bgColor = CurrentLevel->MapArray[x][y]->BgColor;
+          auto& tileBgColor = CurrentLevel->MapArray[x][y]->BgColor;
+          bgColor = (tileBgColor == actor->FgColor ? Colors::BlackColor : tileBgColor);
         }
       }
 
-      go->Draw(go->FgColor, bgColor);
+      actor->Draw(actor->FgColor, bgColor);
     }
   }
 }

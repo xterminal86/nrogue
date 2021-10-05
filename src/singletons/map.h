@@ -30,8 +30,15 @@ class Map : public Singleton<Map>
     void PrintMapArrayRevealedStatus();
     void PrintMapLayout();
 
+    void ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes);
+
     bool IsObjectVisible(const Position& from,
                          const Position& to);
+
+    bool TryToDamageObject(GameObject* object,
+                           GameObject* from,
+                           int amount,
+                           bool againstRes);
 
     GameObject* GetActorAtPosition(int x, int y);
     GameObject* GetStaticGameObjectAtPosition(int x, int y);

@@ -260,26 +260,6 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
-  GameObject* triggerObject = GameObjectsFactory::Instance().CreateDummyObject(10, 10, "Grass", ' ', std::string(), std::string());
-
-  GameObjectsFactory::Instance().AttachTrigger(triggerObject,
-                                               TriggerType::ONE_SHOT,
-  [this]()
-  {
-    return (_playerRef->PosX == 10 && _playerRef->PosY == 10);
-  },
-  [triggerObject]()
-  {
-    triggerObject->FgColor = "#666666";
-    triggerObject->BgColor = Colors::BlackColor;
-    triggerObject->Image = 'x';
-    triggerObject->ObjectName = "Sprung Trap";
-
-    Printer::Instance().AddMessage("TRIGGERED!", "#FFFF00", "#FF0000");
-  });
-
-  InsertGameObject(triggerObject);
-
   // *** FIXME: debug
 
   // All scrolls

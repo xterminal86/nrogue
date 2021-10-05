@@ -50,7 +50,7 @@ void Player::Init()
 
   //Money = 0;
   //Money = 100000;
-  //Attrs.HP.Reset(10000);
+  //Attrs.HP.Reset(1);
   //Attrs.HungerRate.Set(0);
 }
 
@@ -546,7 +546,7 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
       break;
 
     case SpellType::FIREBALL:
-      ProcessAoEDamage(what, with, centralDamage, true);
+      Map::Instance().ProcessAoEDamage(what, with, centralDamage, true);
       break;
 
     case SpellType::TELEPORT:
@@ -578,7 +578,7 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
   auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
   if (actor != nullptr)
   {
-    bool damageDone = TryToDamageObject(actor, damage, againstRes);
+    bool damageDone = Map::Instance().TryToDamageObject(actor, this, damage, againstRes);
     if (weapon->Data.SpellHeld.SpellType_ == SpellType::FROST)
     {
       ItemBonusStruct b;
@@ -605,7 +605,7 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
     auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
     {
-      TryToDamageObject(obj, damage, againstRes);
+      Map::Instance().TryToDamageObject(obj, this, damage, againstRes);
     }
 
     // If nothing is lying in the doorway, for example, damage door
@@ -614,82 +614,10 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
       auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
       if (so != nullptr)
       {
-        TryToDamageObject(so, damage, againstRes);
+        Map::Instance().TryToDamageObject(so, this, damage, againstRes);
       }
     }
   }
-}
-
-void Player::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes)
-{
-  auto pointsAffected = Printer::Instance().DrawExplosion({ target->PosX, target->PosY }, 3);
-
-  //Util::PrintVector("points affected", pointsAffected);
-
-  for (auto& p : pointsAffected)
-  {
-    int d = Util::LinearDistance({ target->PosX, target->PosY }, p);
-    if (d == 0)
-    {
-      d = 1;
-    }
-
-    int dmgHere = centralDamage / d;
-
-    // AoE damages everything
-
-    auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
-    TryToDamageObject(actor, dmgHere, againstRes);
-
-    auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
-    for (auto& obj : mapObjs)
-    {
-      TryToDamageObject(obj, dmgHere, againstRes);
-    }
-
-    auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
-    if (so != nullptr)
-    {
-      TryToDamageObject(so, dmgHere, againstRes);
-    }
-
-    // Check self damage
-    if (PosX == p.X && PosY == p.Y)
-    {
-      int dmgHere = centralDamage / d;
-      dmgHere -= Attrs.Res.Get();
-
-      ReceiveDamage(this, dmgHere, true);
-    }
-  }
-}
-
-bool Player::TryToDamageObject(GameObject* object, int amount, bool againstRes)
-{
-  bool success = false;
-
-  if (object != nullptr)
-  {
-    int dmgHere = amount;
-
-    if (againstRes)
-    {
-      dmgHere -= object->Attrs.Res.Get();
-    }
-
-    if (dmgHere <= 0)
-    {
-      auto msg = Util::StringFormat("%s seems unaffected!", object->ObjectName.data());
-      Printer::Instance().AddMessage(msg);
-    }
-    else
-    {
-      object->ReceiveDamage(this, dmgHere, againstRes);
-      success = true;
-    }
-  }
-
-  return success;
 }
 
 void Player::MeleeAttack(GameObject* go, bool alwaysHit)

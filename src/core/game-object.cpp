@@ -135,9 +135,12 @@ void GameObject::Draw(const std::string& overrideColorFg, const std::string& ove
 
 void GameObject::Update()
 {
-  for (auto& c : _components)
+  for (std::pair<const size_t, std::unique_ptr<Component>>& c : _components)
   {
-    c.second.get()->Update();
+    if (c.second->IsEnabled)
+    {
+      c.second->Update();
+    }
   }
 }
 

@@ -22,6 +22,8 @@ class Component
     // Automatically assigned in GameObject::AddComponent()
     GameObject* OwnerGameObject;
 
+    bool IsEnabled = true;
+
   protected:
     size_t _componentHash;
 };

@@ -41,6 +41,7 @@ class LookInputState : public GameState
       "'T' - spawn troll",
       "",
       "'f' - player's potential field value here",
+      "'d' - destroy static object here",
       "'D' - destroy updatable game object here"
     };
 

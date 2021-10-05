@@ -16,6 +16,22 @@ void MainState::Init()
 
 void MainState::HandleInput()
 {
+  //
+  // Otherwise we could still time-in some action
+  // even after we received fatal damage.
+  //
+  // E.g. we wait a turn, spider approaches and deals fatal damage,
+  // this results in Player.IsAlive = false, but if we check IsAlive()
+  // at the end of HandleInput(), we could still issue some other command
+  // if we are quick enough before condition is checked
+  // and current state changes to ENDGAME_STATE.
+  //
+  if (!_playerRef->IsAlive())
+  {
+    Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
+    return;
+  }
+
   _keyPressed = GetKeyDown();
 
   switch (_keyPressed)
@@ -191,11 +207,6 @@ void MainState::HandleInput()
 
     default:
       break;
-  }
-
-  if (!_playerRef->IsAlive())
-  {
-    Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
   }
 }
 

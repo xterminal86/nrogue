@@ -293,8 +293,9 @@ void ServiceState::FillItemsForBlessing()
 
     bool idStatus = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered);
     bool alreadyBlessed = (idStatus && ic->Data.Prefix == ItemPrefix::BLESSED);
+    bool isUnique = (ic->Data.Rarity == ItemRarity::UNIQUE);
 
-    if (alreadyBlessed)
+    if (alreadyBlessed || isUnique)
     {
       continue;
     }

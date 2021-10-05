@@ -96,11 +96,9 @@ class Player : public GameObject
     void ProcessStarvation();
     void ProcessEffects();
     void ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict);
-    void ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes);
     void ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int damage, bool againstRes);
     void ProcessTeleport(GameObject* target, ItemComponent* weapon);
 
-    bool TryToDamageObject(GameObject* object, int amount, bool againstRes = true);
     bool WeaponLosesDurability();
     bool ShouldBreak(ItemComponent* ic);
     bool PassByNPC(int dx, int dy);

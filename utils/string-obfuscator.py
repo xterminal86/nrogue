@@ -10,13 +10,7 @@ HighFill = 0xFFFFFF00;
 CharsByIndex = {};
 IndexByChars = {};
 
-MyString = '''
-[TREE]
-  [SEL]
-    [COND p1="d100" p2="40"]
-      [TASK p1="move_rnd"]
-    [TASK p1="idle"]
-''';
+MyString = '''""''';
 
 MyStringData = [];
 ObfuscatedString = [];

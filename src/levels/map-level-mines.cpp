@@ -7,10 +7,13 @@
 #include "game-objects-factory.h"
 #include "items-factory.h"
 #include "game-object-info.h"
+#include "ai-component.h"
+#include "ai-monster-herobrine.h"
 #include "door-component.h"
 #include "container-component.h"
 #include "player.h"
 #include "logger.h"
+#include "printer.h"
 
 MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)
@@ -439,7 +442,6 @@ void MapLevelMines::CreateSpecialLevel()
                                                              }
                                                              );
 
-  // Look for "NOTE:" in DoorComponent::Interact()
   key->GetComponent<ItemComponent>()->Data.IsImportant = true;
 
   auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
@@ -487,12 +489,11 @@ void MapLevelMines::CreateSpecialLevel()
 
         case '+':
         {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, DoorMaterials::WOOD);
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, DoorMaterials::STONE);
 
           DoorComponent* dc = door->GetComponent<DoorComponent>();
 
-          // This door should be kicked out, so OpenedBy doesn't matter
-          dc->OpenedBy = GlobalConstants::OpenedByNobody;
+          dc->OpenedBy = GlobalConstants::OpenedByAnyone;
 
           InsertStaticObject(door);
         }
@@ -519,6 +520,68 @@ void MapLevelMines::CreateSpecialLevel()
           cc->Add(key);
 
           InsertActor(boss);
+
+          auto triggerObject = GameObjectsFactory::Instance().CreateDummyObject(0,
+                                                                                0,
+                                                                                MapArray[2][5]->ObjectName,
+                                                                                MapArray[2][5]->Image,
+                                                                                std::string(),
+                                                                                std::string());
+          GameObjectsFactory::Instance().AttachTrigger(triggerObject,
+                                                       TriggerType::ONE_SHOT,
+                                                       [this]()
+          {
+            // Mark area where trigger shouldn't activate ...
+            bool activate = (_playerRef->PosX >= 1 && _playerRef->PosX <= 4
+                          && _playerRef->PosY >= 1 && _playerRef->PosY <= 4);
+
+            // ... and set it to activate everywhere else!
+            return !activate;
+          },
+          [boss, triggerObject]()
+          {
+            GameObject* door = Map::Instance().GetStaticGameObjectAtPosition(2, 4);
+            if (door != nullptr)
+            {
+              DoorComponent* dc = door->GetComponent<DoorComponent>();
+              dc->IsOpen = false;
+              dc->UpdateDoorState();
+              dc->OpenedBy = GlobalConstants::OpenedByNobody;
+            }
+
+            AIComponent* aic = boss->GetComponent<AIComponent>();
+            aic->ChangeModel<AIMonsterHerobrine>();
+
+            const std::vector<std::vector<uint32_t>> phrases =
+            {
+              {
+                1213229858, 4201535321, 1152921679, 19612757, 3767896352, 2557531716, 1630884687, 807180878, 3459081511,
+                3671298644, 730052640, 1675556171, 2571035214, 2806630223, 2298130007, 2349402400, 3461353815, 2169322056,
+                3974235457, 202414932, 486150432, 1070465881, 1860540751, 2596601941, 1770402080, 1332773956, 2256168265,
+                549008964, 3432337454, 858309422, 686783022, 4289955106
+              },
+              {
+                1349546530, 2530016857, 3028347215, 1380253013, 1306811936, 810244684, 2514447429, 1740336454, 1665864276,
+                1748796704, 2019555405, 2410630981, 2133631008, 1913010760, 3887764805, 4084491858, 2223104069, 3966115360,
+                2862413652, 606298191, 3400308000, 1119918148, 3632087881, 3889731397, 4003210529, 2258919458
+              },
+              {
+                3367896354, 3690556751, 1975509838, 1559405388, 3439394905, 191928864, 650194503, 1650704207, 1774788932,
+                3471111200, 454396995, 3893791553, 3022789198, 265306400, 1436503880, 4053029445, 111928652, 4109268048,
+                3060616224, 354137433, 3384928079, 3703348565, 2952175136, 749821262, 3727966543, 2536419671, 2996813089,
+                1789173026
+              }
+            };
+
+            int index = RNG::Instance().RandomRange(0, phrases.size());
+            std::string phrase = Util::DecodeString(phrases[index]);
+
+            Printer::Instance().AddMessage(phrase, Colors::WhiteColor, "#AA0000");
+
+            triggerObject->IsDestroyed = true;
+          });
+
+          InsertGameObject(triggerObject);
         }
         break;
 

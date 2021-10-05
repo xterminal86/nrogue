@@ -86,7 +86,10 @@ void MapLevelBase::InsertActor(GameObject* actor)
   if (actor == nullptr)
   {
     #ifdef DEBUG_BUILD
-    Printer::Instance().AddMessage("[WARNING] tried to insert null actor!");
+    std::string str = "[WARNING] tried to insert null actor!";
+    Printer::Instance().AddMessage(str);
+    Logger::Instance().Print(str);
+    DebugLog("%s\n", str.data());
     #endif
 
     return;
@@ -123,7 +126,10 @@ void MapLevelBase::InsertStaticObject(GameObject* goToInsert)
   if (goToInsert == nullptr)
   {
     #ifdef DEBUG_BUILD
-    Printer::Instance().AddMessage("[WARNING] tried to insert null static object!");
+    std::string str = "[WARNING] tried to insert null static object!";
+    Printer::Instance().AddMessage(str);
+    Logger::Instance().Print(str);
+    DebugLog("%s\n", str.data());
     #endif
 
     return;
