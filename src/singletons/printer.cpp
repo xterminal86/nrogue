@@ -156,11 +156,14 @@ void Printer::DrawWindow(const Position& leftCorner,
 
   // Fill background
 
-  for (int i = x + 1; i < x + size.X; i++)
+  if (!bgColor.empty())
   {
-    for (int j = y + 1; j < y + size.Y; j++)
+    for (int i = x + 1; i < x + size.X; i++)
     {
-      PrintFB(i, j, ' ', "#000000", bgColor);
+      for (int j = y + 1; j < y + size.Y; j++)
+      {
+        PrintFB(i, j, ' ', Colors::WhiteColor, bgColor);
+      }
     }
   }
 
@@ -434,11 +437,13 @@ TileColor Printer::ConvertHtmlToRGB(const std::string& htmlColor)
 {
   TileColor res;
 
-  if (htmlColor.empty())
+  if (!IsColorStringValid(htmlColor))
   {
-    res.R = 255;
-    res.G = 255;
-    res.B = 255;
+    DebugLog("!!! Incorrect color string: '%s'\n", htmlColor.data());
+
+    res.R = 0;
+    res.G = 0;
+    res.B = 0;
     return res;
   }
 
@@ -517,9 +522,24 @@ NColor Printer::GetNColor(const std::string& htmlColor)
 {
   NColor ret;
 
-  std::string hexR = { htmlColor[1], htmlColor[2] };
-  std::string hexG = { htmlColor[3], htmlColor[4] };
-  std::string hexB = { htmlColor[5], htmlColor[6] };
+  std::string hexR;
+  std::string hexG;
+  std::string hexB;
+
+  if (!IsColorStringValid(htmlColor))
+  {
+    DebugLog("!!! Incorrect color string: '%s'\n", htmlColor.data());
+
+    hexR = "00";
+    hexG = "00";
+    hexB = "00";
+  }
+  else
+  {
+    hexR = { htmlColor[1], htmlColor[2] };
+    hexG = { htmlColor[3], htmlColor[4] };
+    hexB = { htmlColor[5], htmlColor[6] };
+  }
 
   int valueR = strtol(hexR.data(), nullptr, 16);
   int valueG = strtol(hexG.data(), nullptr, 16);
@@ -969,6 +989,34 @@ void Printer::ResetMessagesToDisplay()
 std::vector<GameLogMessageData>& Printer::Messages()
 {
   return _inGameMessages;
+}
+
+bool Printer::IsColorStringValid(const std::string& htmlColor)
+{
+  // Check if color string is empty, doesn't begin with '#'
+  // or longer than 7 characters ("#234567")
+  bool basicFails = (htmlColor.empty()
+                  || htmlColor[0] != '#'
+                  || htmlColor.length() != 7);
+
+  if (basicFails)
+  {
+    return false;
+  }
+
+  for (size_t i = 1; i < htmlColor.length(); i++)
+  {
+    auto res = std::find(GlobalConstants::HexChars.begin(),
+                         GlobalConstants::HexChars.end(),
+                         htmlColor[i]);
+
+    if (res == GlobalConstants::HexChars.end())
+    {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 int Printer::ColorsUsed()

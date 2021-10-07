@@ -6,9 +6,11 @@
 void MenuState::Init()
 {
   _titleX = _twHalf;
-  _titleY = _thHalf / 2 - _title.size() / 2;
+  _titleY = _thHalf / 2 - _title.size() / 2 - 1;
 
   _debugInfo = Util::StringFormat("terminal size: %ix%i", _tw, _th);
+
+  PrepareGrassTiles();
 }
 
 void MenuState::HandleInput()
@@ -30,11 +32,143 @@ void MenuState::HandleInput()
   }
 }
 
+void MenuState::PrepareGrassTiles()
+{
+  int sx = _twHalf - _picture[0].length() / 2;
+  int sy = _thHalf - _picture.size() / 4;
+
+  int x = 0;
+  int y = 0;
+
+  std::string flowerColor = Colors::GrassDotColor;
+
+  for (auto& line : _picture)
+  {
+    for (auto& c : line)
+    {
+      if (c == '.')
+      {
+        flowerColor = Colors::GrassDotColor;
+
+        int colorChoice = RNG::Instance().RandomRange(0, 35);
+        if      (colorChoice == 0) flowerColor = Colors::WhiteColor;
+        else if (colorChoice == 1) flowerColor = Colors::DandelionYellowColor;
+        else if (colorChoice == 2) flowerColor = Colors::RedPoppyColor;
+
+        std::pair<int, int> key = { sx + x, sy + y };
+        _grassColorByPosition.emplace(key, flowerColor);
+      }
+
+      x++;
+    }
+
+    x = 0;
+    y++;
+  }
+}
+
+void MenuState::DrawPicture()
+{
+  int sx = _twHalf - _picture[0].length() / 2;
+  int sy = _thHalf - _picture.size() / 4;
+
+  int x = 0;
+  int y = 0;
+  for (auto& line : _picture)
+  {
+    for (auto& c : line)
+    {
+      switch (c)
+      {
+        case '@':
+        {
+          char img = '@';
+
+          #ifdef USE_SDL
+          img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
+          #endif
+
+          Printer::Instance().PrintFB(sx + x,
+                                      sy + y,
+                                      img,
+                                      Colors::CyanColor,
+                                      Colors::ShadesOfGrey::Eight);
+        }
+        break;
+
+        case '#':
+        {
+          Printer::Instance().PrintFB(sx + x,
+                                      sy + y,
+                                      ' ',
+                                      Colors::BlackColor,
+                                      Colors::ShadesOfGrey::Six);
+        }
+        break;
+
+        case '.':
+        {
+          std::string& fgColor = _grassColorByPosition.at({ sx + x, sy + y });
+          Printer::Instance().PrintFB(sx + x,
+                                      sy + y,
+                                      c,
+                                      fgColor,
+                                      Colors::GrassColor);
+        }
+        break;
+
+        case 'T':
+        {
+          char img = c;
+
+          #ifdef USE_SDL
+          img = GlobalConstants::CP437IndexByType[NameCP437::CLUB];
+          #endif
+
+          Printer::Instance().PrintFB(sx + x,
+                                      sy + y,
+                                      img,
+                                      Colors::GreenColor,
+                                      Colors::BlackColor);
+        }
+        break;
+
+        case '+':
+        {
+          Printer::Instance().PrintFB(sx + x,
+                                      sy + y,
+                                      c,
+                                      Colors::WhiteColor,
+                                      Colors::BlackColor);
+        }
+        break;
+
+        case 'p':
+        {
+          Printer::Instance().PrintFB(sx + x,
+                                      sy + y,
+                                      '.',
+                                      Colors::ShadesOfGrey::Ten,
+                                      Colors::ShadesOfGrey::Eight);
+        }
+        break;
+      }
+
+      x++;
+    }
+
+    x = 0;
+    y++;
+  }
+}
+
 void MenuState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();
+
+    DrawPicture();
 
     #ifdef USE_SDL
     Printer::Instance().DrawWindow({ 0, 0 },
@@ -42,8 +176,9 @@ void MenuState::Update(bool forceUpdate)
                                    "",
                                    Colors::BlackColor,
                                    Colors::BlackColor,
-                                   Colors::WhiteColor);
-
+                                   Colors::WhiteColor,
+                                   Colors::BlackColor,
+                                   std::string());
     #else
     auto border = Util::GetPerimeter(0, 0, _tw - 1, _th - 1);
     for (auto& i : border)
@@ -67,12 +202,13 @@ void MenuState::Update(bool forceUpdate)
                                       Colors::BlackColor,
                                       Colors::WhiteColor);
         }
-        else
+        else if (c == 's')
         {
           Printer::Instance().PrintFB(_titleX - xAlign + xOffset,
                                       _titleY + yOffset,
-                                      c,
-                                      Colors::WhiteColor);
+                                      ' ',
+                                      Colors::BlackColor,
+                                      Colors::ShadesOfGrey::Three);
         }
 
         xOffset++;
@@ -82,7 +218,7 @@ void MenuState::Update(bool forceUpdate)
     }
 
     Printer::Instance().PrintFB(_twHalf,
-                                _thHalf + 2,
+                                _th - 4,
                                 _welcome,
                                 Printer::kAlignCenter,
                                 Colors::WhiteColor);

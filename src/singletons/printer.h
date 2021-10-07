@@ -158,7 +158,7 @@ class Printer : public Singleton<Printer>
     int ColorsUsed();
 
   private:
-#ifndef USE_SDL
+    #ifndef USE_SDL
     bool ContainsColorMap(size_t hashToCheck);
     bool ColorIndexExists(size_t hashToCheck);
 
@@ -175,7 +175,7 @@ class Printer : public Singleton<Printer>
     short _colorGlobalIndex = 8;
 
     std::vector<std::vector<FBPixel>> _frameBuffer;
-#endif
+    #endif
 
     std::vector<GameLogMessageData> _inGameMessages;
     std::vector<GameLogMessageData> _lastMessages;
@@ -211,8 +211,9 @@ class Printer : public Singleton<Printer>
     void DrawTile(int x, int y, int tileIndex, size_t scale);
 
     TileColor ConvertHtmlToRGB(const std::string& htmlColor);
-
     #endif
+
+    bool IsColorStringValid(const std::string& htmlColor);
 
     std::vector<Position> GetAreaDamagePointsFrom(Position from, int range);
 };

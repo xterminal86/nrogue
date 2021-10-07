@@ -14,18 +14,19 @@ class MenuState : public GameState
     void Update(bool forceUpdate = false) override;
 
   private:
+    void PrepareGrassTiles();
+    void DrawPicture();
 
   const std::vector<std::string> _title =
   {
-    { "#     #   ######     #####     #####    #     #   #######" },
-    { "#     #   #     #   #     #   #     #   #     #   #      " },
-    { "##    #   #     #   #     #   #         #     #   #      " },
-    { "# #   #   #     #   #     #   #         #     #   #      " },
-    { "#  #  #   ######    #     #   #         #     #   ####   " },
-    { "#   # #   #     #   #     #   #   ##    #     #   #      " },
-    { "#    ##   #     #   #     #   #     #   #     #   #      " },
-    { "#     #   #     #   #     #   #     #   #     #   #      " },
-    { "#     #   #     #    #####     #####     #####    #######" }
+    { "#     #   ######     #####     #####    #     #   ####### " },
+    { "##    #s  #sssss#s  #sssss#s  #sssss#s  #s    #s  #sssssss" },
+    { "#s#   #s  #s    #s  #s    #s  #s    ss  #s    #s  #s      " },
+    { "#ss#  #s  ######s   #s    #s  #s        #s    #s  ####s   " },
+    { "#s s# #s  #sssss#s  #s    #s  #s  ##    #s    #s  #ssss   " },
+    { "#s  s##s  #s    #s  #s    #s  #s  ss#s  #sssss#s  #s      " },
+    { "#s   s#s  #s    #s   #####s    #####s    #####s   #######s" },
+    { "ss    ss  ss    ss    ssss      ssss      ssss     sssssss" }
   };
 
   const std::vector<std::string> _signature =
@@ -35,6 +36,18 @@ class MenuState : public GameState
   };
 
   const std::string _welcome = "(press 'Enter' to start, 'q' to exit)";
+
+  const std::vector<std::string> _picture =
+  {
+    "...T...T...T....#   ",
+    ".T...T...T...T..#   ",
+    "...T...T...T....#   ",
+    "pppppppppppppppp+   ",
+    "pppppppppppppp@p+   ",
+    "...T...T...T....#   ",
+    ".T...T...T...T..#   ",
+    "...T...T...T....#   ",
+  };
 
   #ifdef USE_SDL
   const std::string _builtWith = "powered by SDL2";
@@ -50,6 +63,8 @@ class MenuState : public GameState
 
   int _titleX = 0;
   int _titleY = 0;
+
+  std::map<std::pair<int, int>, std::string> _grassColorByPosition;
 };
 
 #endif

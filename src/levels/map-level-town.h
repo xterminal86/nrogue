@@ -29,6 +29,8 @@ class MapLevelTown : public MapLevelBase
     void CreateTownGates();
     void ReplaceGroundWithGrass();
     void BuildRoads();
+    void DrawRoad(const std::stack<Position>& path);
+    void BuildAndDrawRoad(const Position& start, const Position& end);
 
     bool SkipArea(const Position& pos, const Rect& area);
 

@@ -410,6 +410,12 @@ void MapLevelTown::BuildRoads()
   {
     for (int y = 1; y < MapSize.Y - 1; y++)
     {
+      // Skip near town gates
+      if ((x == 1 && y == 13) || (x == 1 && y == 14))
+      {
+        continue;
+      }
+
       Position left  = { x, y - 1 };
       Position right = { x, y + 1 };
       Position up    = { x - 1, y };
@@ -449,27 +455,48 @@ void MapLevelTown::BuildRoads()
   for (auto& c : roadMarks)
   {
     GameObjectInfo gi;
-    gi.Set(false, false, '.', "#AAAAAA", "#888888", "Path");
+    gi.Set(false, false, '.', Colors::ShadesOfGrey::Ten, Colors::ShadesOfGrey::Eight, "Path");
 
     MapArray[c.X][c.Y]->MakeTile(gi);
   }
 
   for (size_t i = 0; i < roadMarks.size() - 1; i++)
   {
-    Pathfinder pf;
-    auto path = pf.BuildRoad(this, roadMarks[i], roadMarks[i + 1], { '~' });
+    BuildAndDrawRoad(roadMarks[i], roadMarks[i + 1]);
+  }
 
-    while (!path.empty())
-    {
-      Position c = path.top();
+  BuildAndDrawRoad({ 1, 13 }, { 62, 13 });
+  BuildAndDrawRoad({ 1, 14 }, { 62, 14 });
+}
 
-      GameObjectInfo gi;
-      gi.Set(false, false, '.', "#AAAAAA", "#888888", "Path");
+void MapLevelTown::BuildAndDrawRoad(const Position& start,
+                                    const Position& end)
+{
+  Pathfinder pf;
+  auto path = pf.BuildRoad(this, start, end, { '~' });
 
-      MapArray[c.X][c.Y]->MakeTile(gi);
+  GameObjectInfo gi;
+  gi.Set(false, false, '.', Colors::ShadesOfGrey::Ten, Colors::ShadesOfGrey::Eight, "Path");
 
-      path.pop();
-    }
+  MapArray[start.X][start.Y]->MakeTile(gi);
+
+  DrawRoad(path);
+}
+
+void MapLevelTown::DrawRoad(const std::stack<Position>& path)
+{
+  auto pathCopy = path;
+
+  while (!pathCopy.empty())
+  {
+    Position c = pathCopy.top();
+
+    GameObjectInfo gi;
+    gi.Set(false, false, '.', Colors::ShadesOfGrey::Ten, Colors::ShadesOfGrey::Eight, "Path");
+
+    MapArray[c.X][c.Y]->MakeTile(gi);
+
+    pathCopy.pop();
   }
 }
 
