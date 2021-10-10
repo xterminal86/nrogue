@@ -208,10 +208,10 @@ void MapLevelTown::CreateLevel()
   ReplaceGroundWithGrass();
 
   LevelStart.X = 5;
-  LevelStart.Y = 2;
+  LevelStart.Y = 8;
 
   _playerRef->PosX = 5;
-  _playerRef->PosY = 2;
+  _playerRef->PosY = 8;
 
   AdjustCamera();
 
@@ -221,10 +221,12 @@ void MapLevelTown::CreateLevel()
 
   int numHouses = 4;
 
+  auto rotatedRoom = Util::RotateRoomLayout(_layoutsForLevel[0], RoomLayoutRotation::CCW_180);
+
   int offset = 15;
   for (int i = 0; i < numHouses; i++)
   {
-    CreateRoom(18 + offset * i, 3, _layoutsForLevel[0], true);
+    CreateRoom(18 + offset * i, 3, rotatedRoom);
   }
 
   CreateBlacksmith(78, 3, _layoutsForLevel[6]);
@@ -402,6 +404,7 @@ void MapLevelTown::CreateLevel()
 
 void MapLevelTown::BuildRoads()
 {
+  /*
   std::vector<Position> roadMarks;
 
   // Build roads
@@ -464,9 +467,44 @@ void MapLevelTown::BuildRoads()
   {
     BuildAndDrawRoad(roadMarks[i], roadMarks[i + 1]);
   }
+  */
 
+  // Path from gates
   BuildAndDrawRoad({ 1, 13 }, { 62, 13 });
   BuildAndDrawRoad({ 1, 14 }, { 62, 14 });
+
+  // From player's house
+  BuildAndDrawRoad({ 5, 8 }, { 5, 13 });
+
+  // Other houses
+  BuildAndDrawRoad({ 20, 8 }, { 20, 13 });
+  BuildAndDrawRoad({ 35, 8 }, { 35, 13 });
+  BuildAndDrawRoad({ 50, 8 }, { 50, 13 });
+  BuildAndDrawRoad({ 65, 8 }, { 62, 13 });
+
+  // Blacksmith
+  BuildAndDrawRoad({ 77, 7 }, { 65, 8 });
+
+  // Villa
+  BuildAndDrawRoad({ 24, 37 }, { 24, 29 });
+  BuildAndDrawRoad({ 24, 39 }, { 24, 29 });
+
+  // Hotel
+  BuildAndDrawRoad({ 14, 36 }, { 14, 29 });
+
+  // Cook
+  BuildAndDrawRoad({ 9, 19 }, { 9, 14 });
+
+  // Church Way
+  BuildAndDrawRoad({ 14, 29 }, { 62, 29 });
+  BuildAndDrawRoad({ 62, 25 }, { 62, 29 });
+
+  // Town Hall
+  BuildAndDrawRoad({ 49, 32 }, { 49, 29 });
+
+  // Church
+  BuildAndDrawRoad({ 62, 23 }, { 62, 14 });
+  BuildAndDrawRoad({ 62, 25 }, { 62, 14 });
 }
 
 void MapLevelTown::BuildAndDrawRoad(const Position& start,
@@ -772,7 +810,8 @@ void MapLevelTown::CreateChurch(int x, int y)
 
 void MapLevelTown::CreatePlayerHouse()
 {
-  CreateRoom(3, 3, _layoutsForLevel[0]);
+  auto rot = Util::RotateRoomLayout(_layoutsForLevel[0], RoomLayoutRotation::CCW_180);
+  CreateRoom(3, 3, rot);
 
   GameObjectInfo t;
   t.Set(true, false, 'C', Colors::WhiteColor, Colors::ChestColor, "Stash");
