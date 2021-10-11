@@ -1006,7 +1006,7 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
       switch (c)
       {
         case '#':
-          PlaceWall(posX, posY, c, Colors::ShadesOfGrey::Ten, Colors::DeepWaterColor, "Stone Column");
+          PlaceWall(posX, posY, '#', Colors::MarbleColor, Colors::GrassColor, "Marble Column");
           break;
 
         case '~':
