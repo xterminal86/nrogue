@@ -36,6 +36,7 @@ void Printer::InitForSDL()
   if (surf)
   {
     SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
+
     _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
     SDL_FreeSurface(surf);
 

@@ -29,6 +29,10 @@
 #include "timer.h"
 #include "logger.h"
 
+#ifdef DEBUG_BUILD
+#include "dev-console.h"
+#endif
+
 void Application::Init()
 {
   if (_initialized)
@@ -675,7 +679,9 @@ void Application::InitSDL()
     SDL_RendererInfo info;
     SDL_GetRenderDriverInfo(i, &info);
 
+    //
     // Create double buffer by searching for SDL_RENDERER_TARGETTEXTURE
+    //
     if (info.flags & SDL_RENDERER_TARGETTEXTURE)
     {
       Renderer = SDL_CreateRenderer(Window, i, info.flags);
@@ -784,6 +790,10 @@ void Application::InitGameStates()
   RegisterState<ServiceState>          (GameStates::SERVICE_STATE);
   RegisterState<TargetState>           (GameStates::TARGET_STATE);
   RegisterState<EndgameState>          (GameStates::ENDGAME_STATE);
+
+  #ifdef DEBUG_BUILD
+  RegisterState<DevConsole>(GameStates::DEV_CONSOLE);
+  #endif
 
   for (auto& state : _gameStates)
   {

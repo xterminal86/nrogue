@@ -7,8 +7,6 @@
 #include "target-state.h"
 #include "spells-processor.h"
 
-#include <iomanip>
-
 void MainState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
@@ -171,6 +169,10 @@ void MainState::HandleInput()
       break;
 
     #ifdef DEBUG_BUILD
+    case '`':
+      Application::Instance().ChangeState(GameStates::DEV_CONSOLE);
+      break;
+
     case 'L':
       _playerRef->LevelUp();
       break;
