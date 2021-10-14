@@ -33,11 +33,11 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/dungeon-generators)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks)
 
-file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp                  
+file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/states/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/*.cpp                  
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/*.cpp
@@ -57,13 +57,19 @@ file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/*.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks/*.h)
 
+if (${CMAKE_BUILD_TYPE} MATCHES Release)
+  list(REMOVE_ITEM SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.h)
+endif()
+
 add_executable(${TARGET_NAME} ${SOURCES})
 
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD_REQUIRED 11)
 
 if (USE_SDL)
   if (WIN32)
-    find_package(SDL2 REQUIRED)    
+    find_package(SDL2 REQUIRED)
     include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(${TARGET_NAME} ${MINGW32_LIBRARY}
                                            ${SDL2MAIN_LIBRARY}

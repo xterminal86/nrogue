@@ -671,12 +671,6 @@ void GameObject::MarkAndCreateRemains()
 
 bool GameObject::Interact()
 {
-  // http://www.cplusplus.com/reference/functional/function/target_type/
-  //
-  // Return value
-  // The type_info object that corresponds to the type of the target,
-  // or typeid(void) if the object is an empty function.
-
   if (Util::IsFunctionValid(InteractionCallback))
   {
     InteractionCallback();

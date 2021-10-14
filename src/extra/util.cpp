@@ -9,24 +9,48 @@ namespace Util
 {
   std::vector<std::string> StringSplit(const std::string& str, char delim)
   {
-    std::vector<std::string> res = { str };
+    std::vector<std::string> res;
 
-    for (size_t i = 0; i < str.length(); i++)
+    std::string toSearch = str;
+
+    while (true)
     {
-      if (str[i] == delim)
+      bool found = false;
+
+      for (size_t i = 0; i < toSearch.length(); i++)
       {
-        res.clear();
-
-        std::string before = str.substr(0, i);
-        std::string after;
-
-        if (i + 1 < str.length())
+        if (toSearch[i] == delim)
         {
-          after = str.substr(i + 1, str.length() - i + 1);
-        }
+          found = true;
 
-        res.push_back(before);
-        res.push_back(after);
+          std::string before = toSearch.substr(0, i);
+
+          if (i + 1 < toSearch.length())
+          {
+            toSearch = toSearch.substr(i + 1, toSearch.length() - i + 1);
+          }
+          else
+          {
+            found = false;
+            break;
+          }
+
+          res.push_back(before);
+
+          break;
+        }
+      }
+
+      if (!found)
+      {
+        if (res.empty())
+        {
+          res = { str };
+        }
+        else
+        {
+          res.push_back(toSearch);
+        }
 
         break;
       }

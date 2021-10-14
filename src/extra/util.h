@@ -220,6 +220,12 @@ namespace Util
   template <typename F>
   inline bool IsFunctionValid(const F& fn)
   {
+    // http://www.cplusplus.com/reference/functional/function/target_type/
+    //
+    // Return value
+    // The type_info object that corresponds to the type of the target,
+    // or typeid(void) if the object is an empty function.
+
     return (fn.target_type() != typeid(void));
   }
 }

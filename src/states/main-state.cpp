@@ -173,15 +173,6 @@ void MainState::HandleInput()
       Application::Instance().ChangeState(GameStates::DEV_CONSOLE);
       break;
 
-    case 'L':
-      _playerRef->LevelUp();
-      break;
-
-    case 'P':
-      //Map::Instance().PrintMapArrayRevealedStatus();
-      Map::Instance().PrintMapLayout();
-      break;
-
     case 'T':
     {
       int exitX = Map::Instance().CurrentLevel->LevelExit.X;

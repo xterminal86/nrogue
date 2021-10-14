@@ -152,10 +152,10 @@ void BTSParser::ReadTag(const std::string& tagData, int indent)
 
   n.Indent = indent;
 
-  auto res = Util::StringSplit(tagData, ' ');
+  std::vector<std::string> res = Util::StringSplit(tagData, ' ');
   n.NodeName = res[0];
 
-  if (res.size() > 1)
+  for (size_t i = 1; i < res.size(); i++)
   {
     // Remove quotes from string. Yeah, that's how you do it in C++.
     //
@@ -163,40 +163,18 @@ void BTSParser::ReadTag(const std::string& tagData, int indent)
     //
     // ¯\_(ツ)_/¯
 
-    res[1].erase(std::remove(res[1].begin(), res[1].end(), '"'), res[1].end());
+    res[i].erase(std::remove(res[i].begin(), res[i].end(), '"'), res[i].end());
 
-    ReadParams(n, res[1]);
+    ReadParam(n, res[i]);
   }
 
   _parsedData.push_back(n);
 }
 
-void BTSParser::ReadParams(ScriptNode& nodeToFill, const std::string& paramsLine)
+void BTSParser::ReadParam(ScriptNode& nodeToFill, const std::string& paramsLine)
 {
-  std::string paramString;
-  for (auto& c : paramsLine)
-  {
-    if (c == ' ')
-    {
-      if (!paramString.empty())
-      {
-        auto res = Util::StringSplit(paramString, '=');
-        nodeToFill.Params[res[0]] = res[1];
-        paramString.clear();
-      }
-
-      continue;
-    }
-
-    paramString += c;
-  }
-
-  if (!paramString.empty())
-  {
-    auto res = Util::StringSplit(paramString, '=');
-    nodeToFill.Params[res[0]] = res[1];
-    paramString.clear();
-  }
+  auto res = Util::StringSplit(paramsLine, '=');
+  nodeToFill.Params[res[0]] = res[1];
 }
 
 const std::vector<ScriptNode>& BTSParser::ParsedData()

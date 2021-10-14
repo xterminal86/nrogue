@@ -1168,6 +1168,7 @@ void Player::LevelDown()
   if (Attrs.HP.Max().OriginalValue() <= 0)
   {
     Attrs.HP.SetMax(1);
+    Attrs.HP.Restore();
   }
 
   _statRaisesMap["HP"] = -hpToAdd;
@@ -1187,6 +1188,7 @@ void Player::LevelDown()
   if (Attrs.MP.Max().OriginalValue() < 0)
   {
     Attrs.MP.SetMax(0);
+    Attrs.MP.Restore();
   }
 
   _statRaisesMap["MP"] = -mpToAdd;

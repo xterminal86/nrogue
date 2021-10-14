@@ -38,7 +38,7 @@ class BTSParser
   private:
     void ParseLine(int indent, const std::string& line);
     void ReadTag(const std::string& tagData, int indent);
-    void ReadParams(ScriptNode& nodeToFill, const std::string& paramsLine);
+    void ReadParam(ScriptNode& nodeToFill, const std::string& paramsLine);
 
     int FindMaxIndent();
 

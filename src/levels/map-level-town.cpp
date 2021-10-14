@@ -197,7 +197,7 @@ void MapLevelTown::CreateLevel()
 
   FillArea(r.X1, r.Y1, r.X2, r.Y2, t);
 
-  t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Mountains");
+  t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Walls");
 
   auto bounds = r.GetBoundaryElements();
   for (auto& pos : bounds)

@@ -673,7 +673,6 @@ void Application::InitSDL()
                             SDL_WINDOW_SHOWN);
 
   int drivers = SDL_GetNumRenderDrivers();
-
   for (int i = 0; i < drivers; i++)
   {
     SDL_RendererInfo info;
