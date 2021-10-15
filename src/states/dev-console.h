@@ -9,16 +9,24 @@ enum class DevConsoleCommand
   CLEAR,
   HELP,
   CLOSE,
-  GET_OBJECT,
-  MOVE_OBJECT,
-  CREATE_OBJECT,
+  GET_STATIC_OBJECT,
+  GET_ACTOR,
+  GET_ITEM,
+  MOVE_STATIC_OBJECT,
+  MOVE_ACTOR,
+  MOVE_ITEM,
   REMOVE_OBJECT,
-  CREATE_ITEM,
-  CREATE_ACTOR,
-  REMOVE_ACTOR,
   LEVEL_UP,
   LEVEL_DOWN,
-  PRINT_MAP
+  PRINT_MAP,
+  INFO_HANDLES
+};
+
+enum ObjectHandleType
+{
+  STATIC = 0,
+  ITEM,
+  ACTOR
 };
 
 class MapLevelBase;
@@ -37,7 +45,8 @@ class DevConsole : public GameState
   private:
     MapLevelBase* _currentLevel;
     Player* _playerRef;
-    GameObject* _objHandle;
+
+    std::map<ObjectHandleType, GameObject*> _objectHandles;
 
     std::string _currentCommand;
 
@@ -55,9 +64,17 @@ class DevConsole : public GameState
     const std::string ErrWrongParams    = "Wrong params";
     const std::string ErrNoObjectsFound = "No objects found";
     const std::string ErrHandleNotSet   = "Handle not set";
+    const std::string ErrCannotMove     = "Cannot move, probably occupied";
 
     const std::string Ok = "Ok";
     const std::string Prompt = "> ";
+
+    const std::map<ObjectHandleType, std::string> _handleNameByType =
+    {
+      { ObjectHandleType::STATIC, "_static" },
+      { ObjectHandleType::ACTOR,  "_actor"  },
+      { ObjectHandleType::ITEM,   "_item"   }
+    };
 
     void AddToHistory(const std::string& str);
 
@@ -66,13 +83,10 @@ class DevConsole : public GameState
     void ProcessCommand(const std::string& command,
                         const std::vector<std::string>& params);
     void DisplayHelpAboutCommand(const std::vector<std::string>& params);
-    void GetObject(const std::vector<std::string>& params);
-    void MoveObject(const std::vector<std::string>& params);
-    void CreateObject(const std::vector<std::string>& params);
-    void CreateItem(const std::vector<std::string>& params);
+    void InfoHandles();
+    void GetObject(const std::vector<std::string>& params, ObjectHandleType handleType);
+    void MoveObject(const std::vector<std::string>& params, ObjectHandleType handleType);
     void RemoveObject(const std::vector<std::string>& params);
-    void CreateActor(const std::vector<std::string>& params);
-    void RemoveActor(const std::vector<std::string>& params);
 
     bool StringIsNumbers(const std::string& str);
     std::pair<int, int> CoordinateParamsToInt(const std::string& px, const std::string& py);
@@ -81,21 +95,22 @@ class DevConsole : public GameState
 
     const std::map<std::string, DevConsoleCommand> _commandTypeByName =
     {
-      { "clear", DevConsoleCommand::CLEAR           },
-      { "help",  DevConsoleCommand::HELP            },
-      { "exit",  DevConsoleCommand::CLOSE           },
-      { "q",     DevConsoleCommand::CLOSE           },
-      { "quit",  DevConsoleCommand::CLOSE           },
-      { "ogh",   DevConsoleCommand::GET_OBJECT      },
-      { "omt",   DevConsoleCommand::MOVE_OBJECT     },
-      { "wco",   DevConsoleCommand::CREATE_OBJECT   },
-      { "wro",   DevConsoleCommand::REMOVE_OBJECT   },
-      { "wci",   DevConsoleCommand::CREATE_ITEM     },
-      { "wca",   DevConsoleCommand::CREATE_ACTOR    },
-      { "wra",   DevConsoleCommand::REMOVE_ACTOR    },
-      { "plu",   DevConsoleCommand::LEVEL_UP        },
-      { "pld",   DevConsoleCommand::LEVEL_DOWN      },
-      { "gpm",   DevConsoleCommand::PRINT_MAP       },
+      { "clear",  DevConsoleCommand::CLEAR              },
+      { "help",   DevConsoleCommand::HELP               },
+      { "exit",   DevConsoleCommand::CLOSE              },
+      { "q",      DevConsoleCommand::CLOSE              },
+      { "quit",   DevConsoleCommand::CLOSE              },
+      { "info",   DevConsoleCommand::INFO_HANDLES       },
+      { "so_get", DevConsoleCommand::GET_STATIC_OBJECT  },
+      { "ao_get", DevConsoleCommand::GET_ACTOR          },
+      { "io_get", DevConsoleCommand::GET_ITEM           },
+      { "so_mov", DevConsoleCommand::MOVE_STATIC_OBJECT },
+      { "ao_mov", DevConsoleCommand::MOVE_ACTOR         },
+      { "io_mov", DevConsoleCommand::MOVE_ITEM          },
+      { "o_del",  DevConsoleCommand::REMOVE_OBJECT      },
+      { "p_lu",   DevConsoleCommand::LEVEL_UP           },
+      { "p_ld",   DevConsoleCommand::LEVEL_DOWN         },
+      { "g_pm",   DevConsoleCommand::PRINT_MAP          },
     };
 
     const std::vector<std::string> _help =
@@ -106,103 +121,36 @@ class DevConsole : public GameState
 
     const std::map<std::string, std::vector<std::string>> _helpTextByCommandName =
     {
-      {
-        "help",
-        {
-          "not funny, didn't laugh"
-        }
+      { "help",  { "not funny, didn't laugh"  } },
+      { "clear", { "clears the screen"        } },
+      { "q",     { "close the console"        } },
+      { "quit",  { "close the console"        } },
+      { "info",  { "show handlers"            } },
+      { "exit",  { "close the console"        } },
+      { "p_lu",  { "give player a level"      } },
+      { "p_ld",  { "take a level from player" } },
+      { "g_pm",  { "save current map layout to a file" } },
+      { "so_get",
+        { "so_get [X Y]", "try to get handle to static object at X Y" }
       },
-      {
-        "clear",
-        {
-          "clears the screen"
-        }
+      { "ao_get",
+        { "ao_get [X Y]", "try to get handle to actor at X Y" }
       },
-      {
-        "ogh",
-        {
-          "ogh [X Y]",
-          "get a handle to game object at [X;Y] or print info"
-        }
+      { "io_get",
+        { "io_get [X Y]", "try to get handle to item object at X Y" }
       },
-      {
-        "omt",
-        {
-          "omt X Y",
-          "try to move object via handle to [X;Y]"
-        }
+      { "so_move",
+        { "so_move X Y", "try to move static object in handle to X Y" }
       },
-      {
-        "wco",
-        {
-          "wco X Y IMAGE",
-          "create static world object at [X;Y]"
-        }
+      { "ao_move",
+        { "ao_move X Y", "try to move actor in handle to X Y" }
       },
-      {
-        "wro",
-        {
-          "wro X Y",
-          "remove any game object at [X;Y]"
-        }
+      { "io_move",
+        { "io_move X Y", "try to move item in handle to X Y" }
       },
-      {
-        "wci",
-        {
-          "wci X Y TYPE",
-          "create item at [X;Y]"
-        }
-      },
-      {
-        "wca",
-        {
-          "wca X Y TYPE",
-          "create actor at [X;Y]"
-        }
-      },
-      {
-        "wra",
-        {
-          "wca X Y",
-          "remove actor at [X;Y]"
-        }
-      },
-      {
-        "q",
-        {
-          "close the console"
-        }
-      },
-      {
-        "quit",
-        {
-          "close the console"
-        }
-      },
-      {
-        "exit",
-        {
-          "close the console"
-        }
-      },
-      {
-        "plu",
-        {
-          "give player a level"
-        }
-      },
-      {
-        "pld",
-        {
-          "take a level from player"
-        }
-      },
-      {
-        "gpm",
-        {
-          "save current map layout to a file"
-        }
-      },
+      { "o_del",
+        { "o_del X Y", "delete any object at X Y (actor -> item -> static)" }
+      }
     };
 
     friend class GameObject;

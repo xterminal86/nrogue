@@ -45,9 +45,16 @@ GameObject::~GameObject()
   #ifdef DEBUG_BUILD
   GameState* s = Application::Instance().GetGameStateRefByName(GameStates::DEV_CONSOLE);
   DevConsole* dc = static_cast<DevConsole*>(s);
-  if (dc != nullptr && dc->_objHandle == this)
+  if (dc != nullptr)
   {
-    dc->_objHandle = nullptr;
+    for (auto& kvp : dc->_objectHandles)
+    {
+      if (kvp.second == this)
+      {
+        kvp.second = nullptr;
+        break;
+      }
+    }
   }
   #endif
 }
@@ -801,6 +808,12 @@ std::vector<std::string> GameObject::DebugInfo()
   res.push_back(str);
 
   str = Util::StringFormat("  Position: { %i, %i }", PosX, PosY);
+  res.push_back(str);
+
+  str = Util::StringFormat("  FgColor: %s", FgColor.data());
+  res.push_back(str);
+
+  str = Util::StringFormat("  BgColor: %s", BgColor.data());
   res.push_back(str);
 
   str = Util::StringFormat("  Components: %zu", _components.size());

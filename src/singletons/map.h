@@ -17,6 +17,7 @@ class Map : public Singleton<Map>
 {
   public:
     void Init() override;
+    void Cleanup();
 
     void Draw();
 

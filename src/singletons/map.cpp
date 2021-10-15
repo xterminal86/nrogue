@@ -40,6 +40,11 @@ void Map::Init()
   _initialized = true;
 }
 
+void Map::Cleanup()
+{
+  _levels.clear();
+}
+
 void Map::Draw()
 {
   DrawMapTilesAroundPlayer();

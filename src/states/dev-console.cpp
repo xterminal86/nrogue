@@ -14,6 +14,10 @@ void DevConsole::Init()
   }
 
   _playerRef = &Application::Instance().PlayerInstance;
+
+  _objectHandles[ObjectHandleType::STATIC] = nullptr;
+  _objectHandles[ObjectHandleType::ACTOR] = nullptr;
+  _objectHandles[ObjectHandleType::ITEM] = nullptr;
 }
 
 void DevConsole::Prepare()
@@ -154,19 +158,19 @@ void DevConsole::Update(bool forceUpdate)
 
 bool DevConsole::ParseCommand()
 {
-  std::string entered = _currentCommand.erase(0, 2);
+  _currentCommand.erase(0, 2);
 
-  if (entered.find_first_not_of(' ') == std::string::npos)
+  if (_currentCommand.find_first_not_of(' ') == std::string::npos)
   {
-    entered.clear();
+    _currentCommand.clear();
   }
 
-  if (entered.empty())
+  if (_currentCommand.empty())
   {
     return false;
   }
 
-  std::vector<std::string> params = Util::StringSplit(entered, ' ');
+  std::vector<std::string> params = Util::StringSplit(_currentCommand, ' ');
 
   std::string commandEntered = params[0];
   for (auto& c : commandEntered)
@@ -174,7 +178,6 @@ bool DevConsole::ParseCommand()
     c = std::tolower(c);
   }
 
-  params = Util::StringSplit(entered, ' ');
   params.erase(params.begin());
 
   if (_commandTypeByName.count(commandEntered) == 0)
@@ -209,32 +212,36 @@ void DevConsole::ProcessCommand(const std::string& command,
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
-    case DevConsoleCommand::GET_OBJECT:
-      GetObject(params);
+    case DevConsoleCommand::INFO_HANDLES:
+      InfoHandles();
       break;
 
-    case DevConsoleCommand::MOVE_OBJECT:
-      MoveObject(params);
+    case DevConsoleCommand::GET_STATIC_OBJECT:
+      GetObject(params, ObjectHandleType::STATIC);
       break;
 
-    case DevConsoleCommand::CREATE_OBJECT:
-      CreateObject(params);
+    case DevConsoleCommand::GET_ITEM:
+      GetObject(params, ObjectHandleType::ITEM);
+      break;
+
+    case DevConsoleCommand::GET_ACTOR:
+      GetObject(params, ObjectHandleType::ACTOR);
+      break;
+
+    case DevConsoleCommand::MOVE_STATIC_OBJECT:
+      MoveObject(params, ObjectHandleType::STATIC);
+      break;
+
+    case DevConsoleCommand::MOVE_ACTOR:
+      MoveObject(params, ObjectHandleType::ACTOR);
+      break;
+
+    case DevConsoleCommand::MOVE_ITEM:
+      MoveObject(params, ObjectHandleType::ITEM);
       break;
 
     case DevConsoleCommand::REMOVE_OBJECT:
       RemoveObject(params);
-      break;
-
-    case DevConsoleCommand::CREATE_ACTOR:
-      CreateActor(params);
-      break;
-
-    case DevConsoleCommand::REMOVE_ACTOR:
-      RemoveActor(params);
-      break;
-
-    case DevConsoleCommand::CREATE_ITEM:
-      CreateItem(params);
       break;
 
     case DevConsoleCommand::LEVEL_UP:
@@ -249,6 +256,7 @@ void DevConsole::ProcessCommand(const std::string& command,
 
     case DevConsoleCommand::PRINT_MAP:
       Map::Instance().PrintMapLayout();
+      AddToHistory(Ok);
       break;
 
     default:
@@ -256,7 +264,26 @@ void DevConsole::ProcessCommand(const std::string& command,
   }
 }
 
-void DevConsole::GetObject(const std::vector<std::string>& params)
+void DevConsole::InfoHandles()
+{
+  size_t maxLen = 0;
+  for (auto& kvp : _handleNameByType)
+  {
+    if (kvp.second.length() > maxLen)
+    {
+      maxLen = kvp.second.length();
+    }
+  }
+
+  for (auto& kvp : _handleNameByType)
+  {
+    std::string spaces(maxLen - kvp.second.length(), ' ');
+    std::string msg = Util::StringFormat("%s%s = 0x%X", kvp.second.data(), spaces.data(), _objectHandles[kvp.first]);
+    AddToHistory(msg);
+  }
+}
+
+void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleType handleType)
 {
   if (params.size() > 0 && params.size() < 2)
   {
@@ -264,14 +291,19 @@ void DevConsole::GetObject(const std::vector<std::string>& params)
     return;
   }
 
+  auto ReportHandle = [this](ObjectHandleType handleType)
+  {
+    std::string msg = Util::StringFormat("%s = 0x%X", _handleNameByType.at(handleType).data(), _objectHandles[handleType]);
+    AddToHistory(msg);
+  };
+
   if (params.empty())
   {
-    std::string msg = Util::StringFormat("Object handle is currently set to 0x%X", _objHandle);
-    AddToHistory(msg);
+    ReportHandle(handleType);
 
-    if (_objHandle != nullptr)
+    if (_objectHandles[handleType] != nullptr)
     {
-      auto debugInfo = _objHandle->DebugInfo();
+      auto debugInfo = _objectHandles[handleType]->DebugInfo();
       for (auto& line : debugInfo)
       {
         AddToHistory(line);
@@ -295,41 +327,46 @@ void DevConsole::GetObject(const std::vector<std::string>& params)
 
   std::string msg;
 
-  GameObject* actor = Map::Instance().GetActorAtPosition(x, y);
-  if (actor != nullptr)
+  switch (handleType)
   {
-    _objHandle = actor;
-    msg = Util::StringFormat("Handle is set to actor 0x%X", _objHandle);
-    AddToHistory(msg);
-    return;
+    case ObjectHandleType::STATIC:
+    {
+      _objectHandles[handleType] = Map::Instance().GetStaticGameObjectAtPosition(x, y);
+    }
+    break;
+
+    case ObjectHandleType::ITEM:
+    {
+      auto res = Map::Instance().GetGameObjectsAtPosition(x, y);
+      if (!res.empty())
+      {
+        _objectHandles[handleType] = res.back();
+      }
+    }
+    break;
+
+    case ObjectHandleType::ACTOR:
+    {
+      _objectHandles[handleType] = Map::Instance().GetActorAtPosition(x, y);
+    }
+    break;
   }
 
-  auto res = Map::Instance().GetGameObjectsAtPosition(x, y);
-  if (!res.empty())
+  if (_objectHandles[handleType] == nullptr)
   {
-    _objHandle = res.back();
-    msg = Util::StringFormat("Handle is set to object 0x%X", _objHandle);
-    AddToHistory(msg);
-    return;
+    AddToHistory(ErrNoObjectsFound);
   }
-
-  GameObject* so = Map::Instance().GetStaticGameObjectAtPosition(x, y);
-  if (so != nullptr)
+  else
   {
-    _objHandle = so;
-    msg = Util::StringFormat("Handle is set to static object 0x%X", _objHandle);
-    AddToHistory(msg);
-    return;
+    ReportHandle(handleType);
   }
-
-  AddToHistory(ErrNoObjectsFound);
 }
 
-void DevConsole::MoveObject(const std::vector<std::string>& params)
+void DevConsole::MoveObject(const std::vector<std::string>& params, ObjectHandleType handleType)
 {
-  if (_objHandle == nullptr)
+  if (_objectHandles[handleType] == nullptr)
   {
-    AddToHistory("Handle is not set");
+    AddToHistory(ErrHandleNotSet);
     return;
   }
 
@@ -351,61 +388,50 @@ void DevConsole::MoveObject(const std::vector<std::string>& params)
   int x = r.first;
   int y = r.second;
 
-  bool res = _objHandle->MoveTo({ x, y });
-  if (!res)
+  switch (handleType)
   {
-    std::string msg = Util::StringFormat("Cannot move to [%i;%i], probably cell is occupied", x, y);
-    AddToHistory(msg);
+    case ObjectHandleType::STATIC:
+    {
+      GameObject* go = Map::Instance().GetStaticGameObjectAtPosition(x, y);
+      if (go != nullptr)
+      {
+        AddToHistory(ErrCannotMove);
+        return;
+      }
+
+      int mx = _objectHandles[handleType]->PosX;
+      int my = _objectHandles[handleType]->PosY;
+
+      GameObject* obj = _currentLevel->StaticMapObjects[mx][my].release();
+
+      _currentLevel->StaticMapObjects[x][y].reset(obj);
+
+      _currentLevel->StaticMapObjects[x][y]->PosX = x;
+      _currentLevel->StaticMapObjects[x][y]->PosY = y;
+
+      _objectHandles[handleType] = _currentLevel->StaticMapObjects[x][y].get();
+    }
+    break;
+
+    case ObjectHandleType::ITEM:
+    case ObjectHandleType::ACTOR:
+    {
+      bool succ = _objectHandles[handleType]->MoveTo({ x, y });
+      if (!succ)
+      {
+        AddToHistory(ErrCannotMove);
+        return;
+      }
+    }
+    break;
   }
-  else
-  {
-    AddToHistory(Ok);
-  }
-}
-
-void DevConsole::CreateObject(const std::vector<std::string>& params)
-{
-  if (params.size() != 3)
-  {
-    AddToHistory(ErrWrongParams);
-    return;
-  }
-
-  std::string sx = params[0];
-  std::string sy = params[1];
-
-  auto r = CoordinateParamsToInt(sx, sy);
-  if (r.first == -1 && r.second == -1)
-  {
-    return;
-  }
-
-  std::string image = params[2];
-
-  if (image.length() > 1)
-  {
-    AddToHistory("IMAGE must be a char");
-    return;
-  }
-
-  int x = r.first;
-  int y = r.second;
-
-  char img = image[0];
-
-  GameObject* go = GameObjectsFactory::Instance().CreateDummyObject(x, y, "DUMMY", img, Colors::WhiteColor, Colors::MagentaColor);
-
-  go->Blocking    = true;
-  go->BlocksSight = true;
-
-  _currentLevel->InsertStaticObject(go);
 
   AddToHistory(Ok);
 }
 
 void DevConsole::RemoveObject(const std::vector<std::string>& params)
 {
-  if (params.size() != 2)
+  if (params.size() > 0 && params.size() < 2)
   {
     AddToHistory(ErrWrongParams);
     return;
@@ -423,96 +449,33 @@ void DevConsole::RemoveObject(const std::vector<std::string>& params)
   int x = r.first;
   int y = r.second;
 
-  std::vector<GameObject*> res = Map::Instance().GetGameObjectsAtPosition(x, y);
-  if (res.empty())
+  GameObject* go = Map::Instance().GetActorAtPosition(x, y);
+  if (go == nullptr)
   {
-    GameObject* so = Map::Instance().GetStaticGameObjectAtPosition(x, y);
-    if (so == nullptr)
+    std::vector<GameObject*> res = Map::Instance().GetGameObjectsAtPosition(x, y);
+    if (res.empty())
     {
-      AddToHistory(ErrNoObjectsFound);
-      return;
+      go = Map::Instance().GetStaticGameObjectAtPosition(x, y);
+      if (go == nullptr)
+      {
+        AddToHistory(ErrNoObjectsFound);
+        return;
+      }
     }
-
-    so->IsDestroyed = true;
+    else
+    {
+      go = res.back();
+    }
   }
-  else
+
+  if (go != nullptr)
   {
-    res[0]->IsDestroyed = true;
+    go->IsDestroyed = true;
   }
 
   Map::Instance().RemoveDestroyed();
 
   AddToHistory(Ok);
-}
-
-void DevConsole::CreateActor(const std::vector<std::string>& params)
-{
-}
-
-void DevConsole::RemoveActor(const std::vector<std::string>& params)
-{
-  if (params.size() != 2)
-  {
-    AddToHistory(ErrWrongParams);
-    return;
-  }
-
-  std::string sx = params[0];
-  std::string sy = params[1];
-
-  auto r = CoordinateParamsToInt(sx, sy);
-  if (r.first == -1 || r.second == -1)
-  {
-    return;
-  }
-
-  int x = r.first;
-  int y = r.second;
-
-  GameObject* actor = Map::Instance().GetActorAtPosition(x, y);
-  if (actor == nullptr)
-  {
-    AddToHistory("No actor found");
-    return;
-  }
-
-  actor->IsDestroyed = true;
-
-  Map::Instance().RemoveDestroyed();
-
-  AddToHistory(Ok);
-}
-
-void DevConsole::CreateItem(const std::vector<std::string>& params)
-{
-  /*
-  if (params.size() != 3)
-  {
-    AddToHistory(ErrWrongParams);
-    return;
-  }
-
-  std::string sx = params[0];
-  std::string sy = params[1];
-
-  auto r = CoordinateParamsToInt(sx, sy);
-  if (r.first == -1 && r.second == -1)
-  {
-    return;
-  }
-
-  std::string type = params[2];
-
-  if (image.length() > 1)
-  {
-    AddToHistory("IMAGE must be a char");
-    return;
-  }
-
-  int x = r.first;
-  int y = r.second;
-  */
-
 }
 
 void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)

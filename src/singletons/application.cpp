@@ -753,6 +753,16 @@ void Application::Cleanup()
 
   Logger::Instance().Print("Application::Cleanup()");
 
+  //
+  // To control objects' order of destruction
+  // for dev console's object handle check.
+  // Otherwise it might be so that Application is no longer
+  // available when we check object handle in ~GameObject().
+  //
+  Map::Instance().Cleanup();
+
+  _gameStates.clear();
+
   DebugLog("Goodbye!\n");
 }
 
