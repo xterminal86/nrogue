@@ -19,8 +19,9 @@ void DevConsole::Init()
 void DevConsole::Prepare()
 {
   _currentLevel = Map::Instance().CurrentLevel;
-
   _currentCommand = Prompt;
+  _commandsHistoryIndex = _commandsHistory.size() - 1;
+  _oldIndex = 0;
 }
 
 void DevConsole::Cleanup()
@@ -39,11 +40,59 @@ void DevConsole::HandleInput()
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
+    case KEY_UP:
+    {
+      if (!_commandsHistory.empty())
+      {
+        _oldIndex = _commandsHistoryIndex;
+
+        _currentCommand = Prompt + _commandsHistory[_commandsHistoryIndex];
+
+        _commandsHistoryIndex--;
+        if (_commandsHistoryIndex < 0)
+        {
+          _commandsHistoryIndex = 0;
+        }
+      }
+    }
+    break;
+
+    case KEY_DOWN:
+    {
+      if (!_commandsHistory.empty())
+      {
+        _commandsHistoryIndex++;
+        if (_oldIndex == _commandsHistoryIndex)
+        {
+          _commandsHistoryIndex++;
+        }
+
+        if (_commandsHistoryIndex > (int)_commandsHistory.size() - 1)
+        {
+          _currentCommand = Prompt;
+          _commandsHistoryIndex = _commandsHistory.size() - 1;
+        }
+        else
+        {
+          _currentCommand = Prompt + _commandsHistory[_commandsHistoryIndex];
+        }
+      }
+    }
+    break;
+
     case VK_ENTER:
     {
       AddToHistory(_currentCommand);
 
-      ParseCommand();
+      std::string noPrompt = _currentCommand.substr(2);
+
+      bool ok = ParseCommand();
+
+      if (!noPrompt.empty() && ok)
+      {
+        _commandsHistory.push_back(_currentCommand);
+        _commandsHistoryIndex++;
+      }
 
       _currentCommand = Prompt;
       _cursorX = 1;
@@ -52,6 +101,11 @@ void DevConsole::HandleInput()
       while (_history.size() > 20)
       {
         _history.pop_back();
+      }
+
+      if (_commandsHistory.size() > 20)
+      {
+        _commandsHistory.pop_back();
       }
     }
     break;
@@ -98,12 +152,18 @@ void DevConsole::Update(bool forceUpdate)
   }
 }
 
-void DevConsole::ParseCommand()
+bool DevConsole::ParseCommand()
 {
   std::string entered = _currentCommand.erase(0, 2);
+
+  if (entered.find_first_not_of(' ') == std::string::npos)
+  {
+    entered.clear();
+  }
+
   if (entered.empty())
   {
-    return;
+    return false;
   }
 
   std::vector<std::string> params = Util::StringSplit(entered, ' ');
@@ -126,6 +186,8 @@ void DevConsole::ParseCommand()
   {
     ProcessCommand(commandEntered, params);
   }
+
+  return true;
 }
 
 void DevConsole::ProcessCommand(const std::string& command,
@@ -145,6 +207,14 @@ void DevConsole::ProcessCommand(const std::string& command,
 
     case DevConsoleCommand::CLOSE:
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      break;
+
+    case DevConsoleCommand::GET_OBJECT:
+      GetObject(params);
+      break;
+
+    case DevConsoleCommand::MOVE_OBJECT:
+      MoveObject(params);
       break;
 
     case DevConsoleCommand::CREATE_OBJECT:
@@ -183,6 +253,113 @@ void DevConsole::ProcessCommand(const std::string& command,
 
     default:
       break;
+  }
+}
+
+void DevConsole::GetObject(const std::vector<std::string>& params)
+{
+  if (params.size() > 0 && params.size() < 2)
+  {
+    AddToHistory(ErrWrongParams);
+    return;
+  }
+
+  if (params.empty())
+  {
+    std::string msg = Util::StringFormat("Object handle is currently set to 0x%X", _objHandle);
+    AddToHistory(msg);
+
+    if (_objHandle != nullptr)
+    {
+      auto debugInfo = _objHandle->DebugInfo();
+      for (auto& line : debugInfo)
+      {
+        AddToHistory(line);
+      }
+    }
+
+    return;
+  }
+
+  std::string sx = params[0];
+  std::string sy = params[1];
+
+  auto r = CoordinateParamsToInt(sx, sy);
+  if (r.first == -1 && r.second == -1)
+  {
+    return;
+  }
+
+  int x = r.first;
+  int y = r.second;
+
+  std::string msg;
+
+  GameObject* actor = Map::Instance().GetActorAtPosition(x, y);
+  if (actor != nullptr)
+  {
+    _objHandle = actor;
+    msg = Util::StringFormat("Handle is set to actor 0x%X", _objHandle);
+    AddToHistory(msg);
+    return;
+  }
+
+  auto res = Map::Instance().GetGameObjectsAtPosition(x, y);
+  if (!res.empty())
+  {
+    _objHandle = res.back();
+    msg = Util::StringFormat("Handle is set to object 0x%X", _objHandle);
+    AddToHistory(msg);
+    return;
+  }
+
+  GameObject* so = Map::Instance().GetStaticGameObjectAtPosition(x, y);
+  if (so != nullptr)
+  {
+    _objHandle = so;
+    msg = Util::StringFormat("Handle is set to static object 0x%X", _objHandle);
+    AddToHistory(msg);
+    return;
+  }
+
+  AddToHistory(ErrNoObjectsFound);
+}
+
+void DevConsole::MoveObject(const std::vector<std::string>& params)
+{
+  if (_objHandle == nullptr)
+  {
+    AddToHistory("Handle is not set");
+    return;
+  }
+
+  if (params.size() != 2)
+  {
+    AddToHistory(ErrWrongParams);
+    return;
+  }
+
+  std::string sx = params[0];
+  std::string sy = params[1];
+
+  auto r = CoordinateParamsToInt(sx, sy);
+  if (r.first == -1 && r.second == -1)
+  {
+    return;
+  }
+
+  int x = r.first;
+  int y = r.second;
+
+  bool res = _objHandle->MoveTo({ x, y });
+  if (!res)
+  {
+    std::string msg = Util::StringFormat("Cannot move to [%i;%i], probably cell is occupied", x, y);
+    AddToHistory(msg);
+  }
+  else
+  {
+    AddToHistory(Ok);
   }
 }
 
@@ -252,7 +429,7 @@ void DevConsole::RemoveObject(const std::vector<std::string>& params)
     GameObject* so = Map::Instance().GetStaticGameObjectAtPosition(x, y);
     if (so == nullptr)
     {
-      AddToHistory("No objects found");
+      AddToHistory(ErrNoObjectsFound);
       return;
     }
 

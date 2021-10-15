@@ -159,6 +159,10 @@ class GameObject
     GameObjectType Type = GameObjectType::HARMLESS;
     bool IsLiving = false;
 
+    #ifdef DEBUG_BUILD
+    std::vector<std::string> DebugInfo();
+    #endif
+
   protected:
     std::map<size_t, std::unique_ptr<Component>> _components;
     std::map<uint64_t, std::vector<ItemBonusStruct>> _activeEffects;
@@ -209,6 +213,10 @@ class GameObject
     };
 
     friend class GameObjectsFactory;
+
+    #ifdef DEBUG_BUILD
+    friend class DevConsole;
+    #endif
 };
 
 #endif

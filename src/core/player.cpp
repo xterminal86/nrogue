@@ -140,11 +140,15 @@ bool Player::Move(int dx, int dy)
     }
     else if (cell->Occupied)
     {
-      // Do not return true, since it will cause
-      // MapOffsetY and MapOffsetX to be incremented in MainState,
-      // but we manually call AdjustCamera() inside this method in
-      // SwitchPlaces().
-      passByNPC = PassByNPC(dx, dy);
+      auto actor = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
+      if (actor != nullptr)
+      {
+        // Do not return true, since it will cause
+        // MapOffsetY and MapOffsetX to be incremented in MainState,
+        // but we manually call AdjustCamera() inside this method in
+        // SwitchPlaces().
+        passByNPC = PassByNPC(actor);
+      }
     }
     else
     {
@@ -161,11 +165,10 @@ bool Player::Move(int dx, int dy)
   return moveOk;
 }
 
-bool Player::PassByNPC(int dx, int dy)
+bool Player::PassByNPC(GameObject* actor)
 {
   bool ok = true;
 
-  auto actor = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
   auto c = actor->GetComponent<AIComponent>();
   AIComponent* aic = static_cast<AIComponent*>(c);
   AINPC* npc = static_cast<AINPC*>(aic->CurrentModel);

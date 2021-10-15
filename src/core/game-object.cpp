@@ -9,6 +9,10 @@
 #include "ai-component.h"
 #include "blackboard.h"
 
+#ifdef DEBUG_BUILD
+#include "dev-console.h"
+#endif
+
 GameObject::GameObject(MapLevelBase* levelOwner)
 {
   _levelOwner = levelOwner;
@@ -37,6 +41,15 @@ GameObject::~GameObject()
   {
     Blackboard::Instance().Remove(_objectId);
   }
+
+  #ifdef DEBUG_BUILD
+  GameState* s = Application::Instance().GetGameStateRefByName(GameStates::DEV_CONSOLE);
+  DevConsole* dc = static_cast<DevConsole*>(s);
+  if (dc != nullptr && dc->_objHandle == this)
+  {
+    dc->_objHandle = nullptr;
+  }
+  #endif
 }
 
 void GameObject::Init(MapLevelBase* levelOwner,
@@ -768,3 +781,39 @@ uint64_t GameObject::ObjectId()
 {
   return _objectId;
 }
+
+#ifdef DEBUG_BUILD
+std::vector<std::string> GameObject::DebugInfo()
+{
+  std::vector<std::string> res;
+
+  std::string str = Util::StringFormat("  ObjName: %s", ObjectName.data());
+
+  res.push_back("{");
+  res.push_back(str);
+
+  str = Util::StringFormat("  ObjectId: %lu", _objectId);
+  res.push_back(str);
+
+  std::string ch = { (char)Image };
+  str = Util::StringFormat("  Image: '%s'", ch.data());
+
+  res.push_back(str);
+
+  str = Util::StringFormat("  Position: { %i, %i }", PosX, PosY);
+  res.push_back(str);
+
+  str = Util::StringFormat("  Components: %zu", _components.size());
+  res.push_back(str);
+
+  for (auto& kvp : _components)
+  {
+    str = Util::StringFormat("    %s", typeid(*kvp.second.get()).name());
+    res.push_back(str);
+  }
+
+  res.push_back("}");
+
+  return res;
+}
+#endif

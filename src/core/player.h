@@ -101,7 +101,7 @@ class Player : public GameObject
 
     bool WeaponLosesDurability();
     bool ShouldBreak(ItemComponent* ic);
-    bool PassByNPC(int dx, int dy);
+    bool PassByNPC(GameObject* actor);
 
     void BreakItem(ItemComponent* ic, bool suppressMessage = false);
 

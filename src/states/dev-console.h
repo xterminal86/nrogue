@@ -9,6 +9,8 @@ enum class DevConsoleCommand
   CLEAR,
   HELP,
   CLOSE,
+  GET_OBJECT,
+  MOVE_OBJECT,
   CREATE_OBJECT,
   REMOVE_OBJECT,
   CREATE_ITEM,
@@ -21,6 +23,7 @@ enum class DevConsoleCommand
 
 class MapLevelBase;
 class Player;
+class GameObject;
 
 class DevConsole : public GameState
 {
@@ -34,26 +37,37 @@ class DevConsole : public GameState
   private:
     MapLevelBase* _currentLevel;
     Player* _playerRef;
+    GameObject* _objHandle;
 
     std::string _currentCommand;
 
     std::vector<std::string> _history;
+    std::vector<std::string> _commandsHistory;
+
+    int _oldIndex = 0;
+    int _commandsHistoryIndex = -1;
 
     int _cursorX = 1;
     int _cursorY = 2;
 
     const std::string ErrUnknownCommand = "command not found...";
-    const std::string ErrSyntaxError = "Syntax error";
-    const std::string ErrWrongParams = "Wrong params";
+    const std::string ErrSyntaxError    = "Syntax error";
+    const std::string ErrWrongParams    = "Wrong params";
+    const std::string ErrNoObjectsFound = "No objects found";
+    const std::string ErrHandleNotSet   = "Handle not set";
+
     const std::string Ok = "Ok";
     const std::string Prompt = "> ";
 
     void AddToHistory(const std::string& str);
 
-    void ParseCommand();
+    bool ParseCommand();
+
     void ProcessCommand(const std::string& command,
                         const std::vector<std::string>& params);
     void DisplayHelpAboutCommand(const std::vector<std::string>& params);
+    void GetObject(const std::vector<std::string>& params);
+    void MoveObject(const std::vector<std::string>& params);
     void CreateObject(const std::vector<std::string>& params);
     void CreateItem(const std::vector<std::string>& params);
     void RemoveObject(const std::vector<std::string>& params);
@@ -67,19 +81,21 @@ class DevConsole : public GameState
 
     const std::map<std::string, DevConsoleCommand> _commandTypeByName =
     {
-      { "clear", DevConsoleCommand::CLEAR         },
-      { "help",  DevConsoleCommand::HELP          },
-      { "exit",  DevConsoleCommand::CLOSE         },
-      { "q",     DevConsoleCommand::CLOSE         },
-      { "quit",  DevConsoleCommand::CLOSE         },
-      { "wco",   DevConsoleCommand::CREATE_OBJECT },
-      { "wro",   DevConsoleCommand::REMOVE_OBJECT },
-      { "wci",   DevConsoleCommand::CREATE_ITEM   },
-      { "wca",   DevConsoleCommand::CREATE_ACTOR  },
-      { "wra",   DevConsoleCommand::REMOVE_ACTOR  },
-      { "plu",   DevConsoleCommand::LEVEL_UP      },
-      { "pld",   DevConsoleCommand::LEVEL_DOWN    },
-      { "gpm",   DevConsoleCommand::PRINT_MAP     },
+      { "clear", DevConsoleCommand::CLEAR           },
+      { "help",  DevConsoleCommand::HELP            },
+      { "exit",  DevConsoleCommand::CLOSE           },
+      { "q",     DevConsoleCommand::CLOSE           },
+      { "quit",  DevConsoleCommand::CLOSE           },
+      { "ogh",   DevConsoleCommand::GET_OBJECT      },
+      { "omt",   DevConsoleCommand::MOVE_OBJECT     },
+      { "wco",   DevConsoleCommand::CREATE_OBJECT   },
+      { "wro",   DevConsoleCommand::REMOVE_OBJECT   },
+      { "wci",   DevConsoleCommand::CREATE_ITEM     },
+      { "wca",   DevConsoleCommand::CREATE_ACTOR    },
+      { "wra",   DevConsoleCommand::REMOVE_ACTOR    },
+      { "plu",   DevConsoleCommand::LEVEL_UP        },
+      { "pld",   DevConsoleCommand::LEVEL_DOWN      },
+      { "gpm",   DevConsoleCommand::PRINT_MAP       },
     };
 
     const std::vector<std::string> _help =
@@ -100,6 +116,20 @@ class DevConsole : public GameState
         "clear",
         {
           "clears the screen"
+        }
+      },
+      {
+        "ogh",
+        {
+          "ogh [X Y]",
+          "get a handle to game object at [X;Y] or print info"
+        }
+      },
+      {
+        "omt",
+        {
+          "omt X Y",
+          "try to move object via handle to [X;Y]"
         }
       },
       {
@@ -174,6 +204,8 @@ class DevConsole : public GameState
         }
       },
     };
+
+    friend class GameObject;
 };
 
 #endif // DEVCONSOLE_H
