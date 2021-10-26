@@ -15,6 +15,7 @@ enum class DevConsoleCommand
   MOVE_STATIC_OBJECT,
   MOVE_ACTOR,
   MOVE_ITEM,
+  MOVE_PLAYER,
   REMOVE_OBJECT,
   LEVEL_UP,
   LEVEL_DOWN,
@@ -50,7 +51,7 @@ class DevConsole : public GameState
 
     std::string _currentCommand;
 
-    std::vector<std::string> _history;
+    std::vector<std::string> _stdout;
     std::vector<std::string> _commandsHistory;
 
     int _oldIndex = 0;
@@ -76,7 +77,7 @@ class DevConsole : public GameState
       { ObjectHandleType::ITEM,   "_item"   }
     };
 
-    void AddToHistory(const std::string& str);
+    void StdOut(const std::string& str);
 
     bool ParseCommand();
 
@@ -86,6 +87,7 @@ class DevConsole : public GameState
     void InfoHandles();
     void GetObject(const std::vector<std::string>& params, ObjectHandleType handleType);
     void MoveObject(const std::vector<std::string>& params, ObjectHandleType handleType);
+    void MovePlayer(const std::vector<std::string>& params);
     void RemoveObject(const std::vector<std::string>& params);
 
     bool StringIsNumbers(const std::string& str);
@@ -107,6 +109,7 @@ class DevConsole : public GameState
       { "so_mov", DevConsoleCommand::MOVE_STATIC_OBJECT },
       { "ao_mov", DevConsoleCommand::MOVE_ACTOR         },
       { "io_mov", DevConsoleCommand::MOVE_ITEM          },
+      { "p_mov",  DevConsoleCommand::MOVE_PLAYER        },
       { "o_del",  DevConsoleCommand::REMOVE_OBJECT      },
       { "p_lu",   DevConsoleCommand::LEVEL_UP           },
       { "p_ld",   DevConsoleCommand::LEVEL_DOWN         },
@@ -115,41 +118,44 @@ class DevConsole : public GameState
 
     const std::vector<std::string> _help =
     {
-      "help commands - displays list of all available commands",
+      "help commands  - displays list of all available commands",
       "help <command> - displays help about <command>"
     };
 
     const std::map<std::string, std::vector<std::string>> _helpTextByCommandName =
     {
-      { "help",  { "not funny, didn't laugh"  } },
-      { "clear", { "clears the screen"        } },
-      { "q",     { "close the console"        } },
-      { "quit",  { "close the console"        } },
-      { "info",  { "show handlers"            } },
-      { "exit",  { "close the console"        } },
-      { "p_lu",  { "give player a level"      } },
-      { "p_ld",  { "take a level from player" } },
-      { "g_pm",  { "save current map layout to a file" } },
+      { "help",  { "Not funny, didn't laugh"  } },
+      { "clear", { "Clears the screen"        } },
+      { "q",     { "Close the console"        } },
+      { "quit",  { "Close the console"        } },
+      { "info",  { "Show handlers"            } },
+      { "exit",  { "Close the console"        } },
+      { "p_lu",  { "Give player a level"      } },
+      { "p_ld",  { "Take a level from player" } },
+      { "g_pm",  { "Save current map layout to a file" } },
       { "so_get",
-        { "so_get [X Y]", "try to get handle to static object at X Y" }
+        { "so_get [X Y]", "Try to get handle to static object at X Y" }
       },
       { "ao_get",
-        { "ao_get [X Y]", "try to get handle to actor at X Y" }
+        { "ao_get [X Y]", "Try to get handle to actor at X Y" }
       },
       { "io_get",
-        { "io_get [X Y]", "try to get handle to item object at X Y" }
+        { "io_get [X Y]", "Try to get handle to item object at X Y" }
       },
-      { "so_move",
-        { "so_move X Y", "try to move static object in handle to X Y" }
+      { "so_mov",
+        { "so_mov X Y", "Try to move static object in handle to X Y" }
       },
-      { "ao_move",
-        { "ao_move X Y", "try to move actor in handle to X Y" }
+      { "ao_mov",
+        { "ao_mov X Y", "Try to move actor in handle to X Y" }
       },
-      { "io_move",
-        { "io_move X Y", "try to move item in handle to X Y" }
+      { "io_mov",
+        { "io_mov X Y", "Try to move item in handle to X Y" }
+      },
+      { "p_mov",
+        { "p_mov X Y", "Try to move player to X Y" }
       },
       { "o_del",
-        { "o_del X Y", "delete any object at X Y (actor -> item -> static)" }
+        { "o_del X Y", "Delete any object at X Y (actor -> item -> static)" }
       }
     };
 

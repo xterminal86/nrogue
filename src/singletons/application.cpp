@@ -751,8 +751,6 @@ void Application::Cleanup()
   endwin();
 #endif
 
-  Logger::Instance().Print("Application::Cleanup()");
-
   //
   // To control objects' order of destruction
   // for dev console's object handle check.
@@ -763,12 +761,22 @@ void Application::Cleanup()
 
   _gameStates.clear();
 
+  Logger::Instance().Print("Application::Cleanup()");
+
   DebugLog("Goodbye!\n");
 }
 
 void Application::ForceDrawMainState()
 {
   if (CurrentStateIs(GameStates::MAIN_STATE))// && PlayerInstance.AreEnemiesInRange())
+  {
+    _currentState->Update(true);
+  }
+}
+
+void Application::ForceDrawCurrentState()
+{
+  if (_currentState != nullptr)
   {
     _currentState->Update(true);
   }

@@ -475,15 +475,6 @@ void GameObjectsFactory::GenerateLootIfPossible(int posX, int posY, GameObjectTy
   }
 }
 
-void GameObjectsFactory::AttachTrigger(GameObject* attachTo,
-                                       TriggerType type,
-                                       const std::function<bool ()>& condition,
-                                       const std::function<void ()>& handler)
-{
-  TriggerComponent* tc = attachTo->AddComponent<TriggerComponent>();
-  tc->Setup({ type, condition, handler });
-}
-
 void GameObjectsFactory::GenerateLoot(int posX, int posY, const std::pair<ItemType, int>& kvp, GameObjectType monsterType)
 {
   switch (kvp.first)

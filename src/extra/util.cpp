@@ -4,6 +4,7 @@
 #include "printer.h"
 #include "logger.h"
 #include "timer.h"
+#include "map.h"
 
 namespace Util
 {
@@ -1050,5 +1051,45 @@ namespace Util
     }
 
     return res;
+  }
+
+  void LaunchProjectile(const Position& from,
+                               const Position& to,
+                               char image,
+                               const std::string& fgColor,
+                               const std::string& bgColor)
+  {
+    auto line = BresenhamLine(from, to);
+
+    int distanceCovered = 0;
+
+    // Start from 1 to exclude starting position
+    for (size_t i = 1; i < line.size(); i++)
+    {
+      int mx = line[i].X;
+      int my = line[i].Y;
+
+      Application::Instance().ForceDrawCurrentState();
+
+      int drawingPosX = mx + Map::Instance().CurrentLevel->MapOffsetX;
+      int drawingPosY = my + Map::Instance().CurrentLevel->MapOffsetY;
+
+      Printer::Instance().PrintFB(drawingPosX,
+                                  drawingPosY,
+                                  image,
+                                  fgColor,
+                                  bgColor);
+
+      Printer::Instance().Render();
+
+      // FIXME: debug
+      // Util::Sleep(100);
+
+      //#ifndef USE_SDL
+      //Util::Sleep(20);
+      //#endif
+
+      distanceCovered++;
+    }
   }
 }

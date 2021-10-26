@@ -438,7 +438,6 @@ enum class SpellType
   TELEPORT,          // TODO: teleport control?
   TOWN_PORTAL,
   DETECT_MONSTERS,   // shows monsters (not all?), temporary
-  ENCHANT,           // tries to create magic item from non-magic one
   REMOVE_CURSE,
   REPAIR,
   HEAL,

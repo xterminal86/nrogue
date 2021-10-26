@@ -348,6 +348,8 @@ Position TargetState::GetRandomPointAroundCursor()
       outOfRange = true;
     }
 
+    // If random point from lack of skill is the one
+    // we're standing on, ignore it.
     bool targetSelf = (rect[i].X == _playerRef->PosX
                     && rect[i].Y == _playerRef->PosY);
 

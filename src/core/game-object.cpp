@@ -176,7 +176,11 @@ void GameObject::MakeTile(const GameObjectInfo& t, GameObjectType typeOverride)
   Type         = typeOverride;
 }
 
-bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, const std::string& logMsgOverride)
+bool GameObject::ReceiveDamage(GameObject* from,
+                               int amount,
+                               bool isMagical,
+                               bool suppressLog,
+                               const std::string& logMsgOverride)
 {
   // TODO: isMagical for enemies' armor damage
 
@@ -191,14 +195,20 @@ bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
 
   std::string who = (from->Type == GameObjectType::PLAYER) ? "@" : from->ObjectName;
 
+  std::queue<std::string> logMessages;
+
+  std::string str;
+
+  bool messageOverride = !logMsgOverride.empty();
+
   if (!Attrs.Indestructible)
   {
     if (amount != 0)
     {
       Attrs.HP.AddMin(-amount);
 
-      auto str = Util::StringFormat("%s => %s (%i)", who.data(), objName.data(), amount);
-      Printer::Instance().AddMessage((logMsgOverride.length() == 0) ? str : logMsgOverride);
+      str = Util::StringFormat("%s => %s (%i)", who.data(), objName.data(), amount);
+      logMessages.push(messageOverride ? logMsgOverride : str);
 
       if (!IsAlive())
       {
@@ -209,14 +219,14 @@ bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
                          ? "destroyed"
                          : "killed";
 
-        auto msg = Util::StringFormat("%s was %s", objName.data(), verb.data());
-        Printer::Instance().AddMessage(msg);
+        str = Util::StringFormat("%s was %s", objName.data(), verb.data());
+        logMessages.push(messageOverride ? logMsgOverride : str);
       }
     }
     else
     {
-      auto str = Util::StringFormat("%s => %s (0)", who.data(), ObjectName.data());
-      Printer::Instance().AddMessage((logMsgOverride.length() == 0) ? str : logMsgOverride);
+      str = Util::StringFormat("%s => %s (0)", who.data(), ObjectName.data());
+      logMessages.push(messageOverride ? logMsgOverride : str);
     }
 
     dmgSuccess = true;
@@ -225,8 +235,18 @@ bool GameObject::ReceiveDamage(GameObject* from, int amount, bool isMagical, con
   {
     if (Type != GameObjectType::GROUND)
     {
-      auto str = Util::StringFormat("%s not even scratched!", objName.data());
-      Printer::Instance().AddMessage(str);
+      str = Util::StringFormat("%s not even scratched!", objName.data());
+      logMessages.push(messageOverride ? logMsgOverride : str);
+    }
+  }
+
+  if (!suppressLog)
+  {
+    while (!logMessages.empty())
+    {
+      auto msg = logMessages.front();
+      Printer::Instance().AddMessage(msg);
+      logMessages.pop();
     }
   }
 
@@ -553,6 +573,14 @@ void GameObject::RemoveEffectAllOf(const ItemBonusType& type)
       _activeEffects.erase(it);
     }
   }
+}
+
+void GameObject::AttachTrigger(TriggerType type,
+                               const std::function<bool ()>& condition,
+                               const std::function<void ()>& handler)
+{
+  TriggerComponent* tc = AddComponent<TriggerComponent>();
+  tc->Setup({ type, condition, handler });
 }
 
 void GameObject::DispelEffect(const ItemBonusType& t)

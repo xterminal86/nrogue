@@ -2,7 +2,6 @@
 #define GAMEOBJECTSFACTORY_H
 
 #include "singleton.h"
-#include "trigger-component.h"
 #include "constants.h"
 
 class GameObjectInfo;
@@ -37,11 +36,6 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     bool HandleItemEquip(ItemComponent* item);
 
     void GenerateLootIfPossible(int posX, int posY, GameObjectType monsterType);
-
-    void AttachTrigger(GameObject* attachTo,
-                       TriggerType type,
-                       const std::function<bool()>& condition,
-                       const std::function<void()>& handler);
 
     GameObject* CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1, GameObjectType type = GameObjectType::HARMLESS);
     GameObject* CreateDoor(int x, int y,

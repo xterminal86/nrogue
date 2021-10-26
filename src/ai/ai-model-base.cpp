@@ -9,6 +9,7 @@
 #include "task-random-movement.h"
 #include "task-attack-basic.h"
 #include "task-attack-special.h"
+#include "task-attack-ranged.h"
 #include "task-chase-player.h"
 #include "task-move-away-from-player.h"
 #include "task-remember-player-pos.h"
@@ -181,6 +182,15 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
     bool ignoreArmor = (data->Params.count("p3") == 1);
 
     task = new TaskAttackSpecial(AIComponentRef->OwnerGameObject, attackType, ignoreArmor);
+  }
+  else if (taskType == "attack_ranged")
+  {
+    std::string damageType = data->Params.at("p2");
+    task = new TaskAttackRanged(AIComponentRef->OwnerGameObject,
+                                damageType,
+                                '*',
+                                "#FF0000",
+                                "#000000");
   }
   else if (taskType == "end")
   {

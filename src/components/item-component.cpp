@@ -396,6 +396,10 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
         res.push_back("Makes you invisible");
         break;
 
+      case ItemBonusType::LEVITATION:
+        res.push_back("Lets you float above ground");
+        break;
+
       case ItemBonusType::DAMAGE:
       {
         auto str = Util::StringFormat("+%i to total damage", i.BonusValue);

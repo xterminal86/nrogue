@@ -30,7 +30,7 @@ void DevConsole::Prepare()
 
 void DevConsole::Cleanup()
 {
-  _history.clear();
+  _stdout.clear();
   _currentCommand.clear();
 }
 
@@ -86,7 +86,7 @@ void DevConsole::HandleInput()
 
     case VK_ENTER:
     {
-      AddToHistory(_currentCommand);
+      StdOut(_currentCommand);
 
       std::string noPrompt = _currentCommand.substr(2);
 
@@ -102,9 +102,9 @@ void DevConsole::HandleInput()
       _cursorX = 1;
       _cursorY++;
 
-      while (_history.size() > 20)
+      while (_stdout.size() > 20)
       {
-        _history.pop_back();
+        _stdout.pop_back();
       }
 
       if (_commandsHistory.size() > 20)
@@ -143,9 +143,9 @@ void DevConsole::Update(bool forceUpdate)
     DrawHeader(" DEVELOPER'S CONSOLE ");
 
     int lineCount = 0;
-    for (int i = _history.size() - 1; i >= 0; i--)
+    for (int i = _stdout.size() - 1; i >= 0; i--)
     {
-      Printer::Instance().PrintFB(1, 2 + lineCount, _history[i], Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(1, 2 + lineCount, _stdout[i], Printer::kAlignLeft, "#FFFFFF");
       lineCount++;
     }
 
@@ -170,6 +170,18 @@ bool DevConsole::ParseCommand()
     return false;
   }
 
+  while(true)
+  {
+    if (_currentCommand[_currentCommand.length() - 1] == ' ')
+    {
+      _currentCommand.pop_back();
+    }
+    else
+    {
+      break;
+    }
+  }
+
   std::vector<std::string> params = Util::StringSplit(_currentCommand, ' ');
 
   std::string commandEntered = params[0];
@@ -183,7 +195,7 @@ bool DevConsole::ParseCommand()
   if (_commandTypeByName.count(commandEntered) == 0)
   {
     std::string errMsg = Util::StringFormat("%s: %s", commandEntered.data(), ErrUnknownCommand.data());
-    AddToHistory(errMsg);
+    StdOut(errMsg);
   }
   else
   {
@@ -201,7 +213,7 @@ void DevConsole::ProcessCommand(const std::string& command,
   switch (c)
   {
     case DevConsoleCommand::CLEAR:
-      _history.clear();
+      _stdout.clear();
       break;
 
     case DevConsoleCommand::HELP:
@@ -240,23 +252,27 @@ void DevConsole::ProcessCommand(const std::string& command,
       MoveObject(params, ObjectHandleType::ITEM);
       break;
 
+    case DevConsoleCommand::MOVE_PLAYER:
+      MovePlayer(params);
+      break;
+
     case DevConsoleCommand::REMOVE_OBJECT:
       RemoveObject(params);
       break;
 
     case DevConsoleCommand::LEVEL_UP:
       _playerRef->LevelUp();
-      AddToHistory(Ok);
+      StdOut(Ok);
       break;
 
     case DevConsoleCommand::LEVEL_DOWN:
       _playerRef->LevelDown();
-      AddToHistory(Ok);
+      StdOut(Ok);
       break;
 
     case DevConsoleCommand::PRINT_MAP:
       Map::Instance().PrintMapLayout();
-      AddToHistory(Ok);
+      StdOut(Ok);
       break;
 
     default:
@@ -279,7 +295,7 @@ void DevConsole::InfoHandles()
   {
     std::string spaces(maxLen - kvp.second.length(), ' ');
     std::string msg = Util::StringFormat("%s%s = 0x%X", kvp.second.data(), spaces.data(), _objectHandles[kvp.first]);
-    AddToHistory(msg);
+    StdOut(msg);
   }
 }
 
@@ -287,14 +303,14 @@ void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleT
 {
   if (params.size() > 0 && params.size() < 2)
   {
-    AddToHistory(ErrWrongParams);
+    StdOut(ErrWrongParams);
     return;
   }
 
   auto ReportHandle = [this](ObjectHandleType handleType)
   {
     std::string msg = Util::StringFormat("%s = 0x%X", _handleNameByType.at(handleType).data(), _objectHandles[handleType]);
-    AddToHistory(msg);
+    StdOut(msg);
   };
 
   if (params.empty())
@@ -306,7 +322,7 @@ void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleT
       auto debugInfo = _objectHandles[handleType]->DebugInfo();
       for (auto& line : debugInfo)
       {
-        AddToHistory(line);
+        StdOut(line);
       }
     }
 
@@ -354,7 +370,7 @@ void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleT
 
   if (_objectHandles[handleType] == nullptr)
   {
-    AddToHistory(ErrNoObjectsFound);
+    StdOut(ErrNoObjectsFound);
   }
   else
   {
@@ -366,13 +382,13 @@ void DevConsole::MoveObject(const std::vector<std::string>& params, ObjectHandle
 {
   if (_objectHandles[handleType] == nullptr)
   {
-    AddToHistory(ErrHandleNotSet);
+    StdOut(ErrHandleNotSet);
     return;
   }
 
   if (params.size() != 2)
   {
-    AddToHistory(ErrWrongParams);
+    StdOut(ErrWrongParams);
     return;
   }
 
@@ -395,7 +411,7 @@ void DevConsole::MoveObject(const std::vector<std::string>& params, ObjectHandle
       GameObject* go = Map::Instance().GetStaticGameObjectAtPosition(x, y);
       if (go != nullptr)
       {
-        AddToHistory(ErrCannotMove);
+        StdOut(ErrCannotMove);
         return;
       }
 
@@ -419,21 +435,54 @@ void DevConsole::MoveObject(const std::vector<std::string>& params, ObjectHandle
       bool succ = _objectHandles[handleType]->MoveTo({ x, y });
       if (!succ)
       {
-        AddToHistory(ErrCannotMove);
+        StdOut(ErrCannotMove);
         return;
       }
     }
     break;
   }
 
-  AddToHistory(Ok);
+  StdOut(Ok);
+}
+
+void DevConsole::MovePlayer(const std::vector<std::string>& params)
+{
+  if (params.size() != 2)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string sx = params[0];
+  std::string sy = params[1];
+
+  auto r = CoordinateParamsToInt(sx, sy);
+  if (r.first == -1 && r.second == -1)
+  {
+    return;
+  }
+
+  int x = r.first;
+  int y = r.second;
+
+  bool succ = _playerRef->MoveTo(x, y);
+
+  if (succ)
+  {
+    StdOut(Ok);
+    _currentLevel->AdjustCamera();
+  }
+  else
+  {
+    StdOut(ErrCannotMove);
+  }
 }
 
 void DevConsole::RemoveObject(const std::vector<std::string>& params)
 {
-  if (params.size() > 0 && params.size() < 2)
+  if (params.size() != 2)
   {
-    AddToHistory(ErrWrongParams);
+    StdOut(ErrWrongParams);
     return;
   }
 
@@ -458,7 +507,7 @@ void DevConsole::RemoveObject(const std::vector<std::string>& params)
       go = Map::Instance().GetStaticGameObjectAtPosition(x, y);
       if (go == nullptr)
       {
-        AddToHistory(ErrNoObjectsFound);
+        StdOut(ErrNoObjectsFound);
         return;
       }
     }
@@ -475,7 +524,7 @@ void DevConsole::RemoveObject(const std::vector<std::string>& params)
 
   Map::Instance().RemoveDestroyed();
 
-  AddToHistory(Ok);
+  StdOut(Ok);
 }
 
 void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
@@ -484,7 +533,7 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
   {
     for (auto& line : _help)
     {
-      AddToHistory(line);
+      StdOut(line);
     }
   }
   else
@@ -493,7 +542,7 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
     {
       for (auto& line : _helpTextByCommandName.at(params[0]))
       {
-        AddToHistory(line);
+        StdOut(line);
       }
     }
     else if (params[0] == "commands")
@@ -505,7 +554,7 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
         count += (t.length() + 1);
         if (count > 79)
         {
-          AddToHistory(totalString);
+          StdOut(totalString);
           totalString.clear();
           count = 0;
         }
@@ -514,19 +563,19 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
         totalString += " ";
       }
 
-      AddToHistory(totalString);
+      StdOut(totalString);
     }
     else
     {
       std::string msg = Util::StringFormat("No help found for '%s'", params[0].data());
-      AddToHistory(msg);
+      StdOut(msg);
     }
   }
 }
 
-void DevConsole::AddToHistory(const std::string& str)
+void DevConsole::StdOut(const std::string& str)
 {
-  _history.insert(_history.begin(), str);
+  _stdout.insert(_stdout.begin(), str);
 }
 
 bool DevConsole::StringIsNumbers(const std::string& str)
@@ -552,7 +601,7 @@ std::pair<int, int> DevConsole::CoordinateParamsToInt(const std::string &px, con
 
   if (!StringIsNumbers(px) || !StringIsNumbers(py))
   {
-    AddToHistory("X and Y must be numbers");
+    StdOut("X and Y must be numbers");
     return res;
   }
 
@@ -562,7 +611,7 @@ std::pair<int, int> DevConsole::CoordinateParamsToInt(const std::string &px, con
   if (res.first < 1 || res.first > _currentLevel->MapSize.X - 1
    || res.second < 1 || res.second > _currentLevel->MapSize.Y - 1)
   {
-    AddToHistory("Out of bounds");
+    StdOut("Out of bounds");
     res = { -1, -1 };
   }
 

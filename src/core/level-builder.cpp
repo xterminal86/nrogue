@@ -195,3 +195,8 @@ std::string LevelBuilder::GetMapRawString()
 {
   return (_generator != nullptr) ? _generator->GetMapRawString() : "_generator is null\n";
 }
+
+float LevelBuilder::GetFillingRatio()
+{
+  return (_generator != nullptr) ? _generator->GetFillingRatio() : 0.0f;
+}

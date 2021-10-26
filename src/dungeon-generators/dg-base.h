@@ -60,6 +60,8 @@ class DGBase
     void PrintMapRaw();
     void LogPrintMapRaw();
 
+    float GetFillingRatio();
+
     std::vector<std::vector<char>> MapRaw;
 
     // Since we cannot specify shrine type inside text map array

@@ -245,6 +245,8 @@ void MainState::Update(bool forceUpdate)
 
 void MainState::ProcessMovement(const Position& dirOffsets)
 {
+  // TODO: levitation
+
   if (_playerRef->TryToAttack(dirOffsets.X, dirOffsets.Y))
   {
     _playerRef->FinishTurn();
@@ -812,14 +814,21 @@ void MainState::DisplayActiveEffects(const int& startPos)
       {
         effectDurationByName[shortName] += duration;
       }
+      else
+      {
+        effectDurationByName[shortName] = duration;
+      }
     }
   }
 
   for (auto& kvp : effectDurationByName)
   {
-    std::string color = (kvp.second <= GlobalConstants::TurnReadyValue) ?
-                         Colors::ShadesOfGrey::Four :
-                         Colors::WhiteColor;
+    bool isFading = (kvp.second <= GlobalConstants::TurnReadyValue
+                  && kvp.second != -1);
+
+    std::string color = isFading ?
+                        Colors::ShadesOfGrey::Four :
+                        Colors::WhiteColor;
 
     Printer::Instance().PrintFB(offsetX,
                                 _th - 4,

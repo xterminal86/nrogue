@@ -59,6 +59,8 @@ class LevelBuilder
 
     bool WasUsed();
 
+    float GetFillingRatio();
+
     std::string GetMapRawString();
 
     std::vector<std::vector<char>> MapRaw;

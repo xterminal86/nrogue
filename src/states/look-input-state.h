@@ -24,7 +24,9 @@ class LookInputState : public GameState
     GameObject* CheckActor();
     const std::vector<GameObject*> CheckGameObjects();
 
+    #ifdef DEBUG_BUILD
     void PrintDebugInfo();
+    #endif
 
     Player* _playerRef;
 

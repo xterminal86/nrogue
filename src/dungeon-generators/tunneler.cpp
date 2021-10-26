@@ -163,7 +163,8 @@ void Tunneler::Normal(const Position& mapSize,
     if (newDir.size() != 0)
     {
       int currentLength = 0;
-      int rndLength = RNG::Instance().RandomRange(tunnelLengthMinMax.X, tunnelLengthMinMax.Y);
+      int rndLength = RNG::Instance().RandomRange(tunnelLengthMinMax.X,
+                                                  tunnelLengthMinMax.Y);
 
       std::vector<Position> corridor;
 
@@ -192,6 +193,17 @@ void Tunneler::Normal(const Position& mapSize,
       mapPos = carvedPoints[index];
 
       carvedPoints.erase(carvedPoints.begin() + index);
+    }
+    else
+    {
+      // If we couldn't continue carving in the chosen direction
+      // return to starting point and try everything again.
+      // Without it we could basically fail to generate a map
+      // if starting point and carve direction were poorly chosen
+      // (e.g. near the map edge and carving towards the bound as well
+      // while carved points were deleted in such way, that the only point
+      // left was the one near the map edge).
+      mapPos = _startingPoint;
     }
 
     iterations--;

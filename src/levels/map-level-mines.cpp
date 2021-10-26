@@ -527,9 +527,8 @@ void MapLevelMines::CreateSpecialLevel()
                                                                                 MapArray[2][5]->Image,
                                                                                 std::string(),
                                                                                 std::string());
-          GameObjectsFactory::Instance().AttachTrigger(triggerObject,
-                                                       TriggerType::ONE_SHOT,
-                                                       [this]()
+          triggerObject->AttachTrigger(TriggerType::ONE_SHOT,
+                                       [this]()
           {
             // Mark area where trigger shouldn't activate ...
             bool activate = (_playerRef->PosX >= 1 && _playerRef->PosX <= 4

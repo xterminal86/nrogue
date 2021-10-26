@@ -425,6 +425,31 @@ int DGBase::CountAround(int x, int y, char ch)
   return res;
 }
 
+float DGBase::GetFillingRatio()
+{
+  int empty = 0;
+  int walls = 0;
+
+  for (int x = 0; x < _mapSize.X; x++)
+  {
+    for (int y = 0; y < _mapSize.Y; y++)
+    {
+      if (_map[x][y].Image == '.')
+      {
+        empty++;
+      }
+      else if (_map[x][y].Image == '#')
+      {
+        walls++;
+      }
+    }
+  }
+
+  float ratio = ((float)empty / (float)walls);
+
+  return ratio;
+}
+
 Position* DGBase::FindNonMarkedCell()
 {
   _nonMarkedCell = { -1, -1 };

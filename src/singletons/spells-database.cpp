@@ -63,10 +63,6 @@ void SpellsDatabase::Init()
                 });
 
   RegisterSpell({
-  SpellType::ENCHANT, "Enchant", "", 1000
-                });
-
-  RegisterSpell({
   SpellType::REMOVE_CURSE, "Remove Curse", "RC", 120
                 });
 

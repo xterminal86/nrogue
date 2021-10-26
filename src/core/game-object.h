@@ -14,6 +14,7 @@
 #include "constants.h"
 #include "attribute.h"
 #include "item-data.h"
+#include "trigger-component.h"
 
 class GameObjectInfo;
 class MapLevelBase;
@@ -123,7 +124,11 @@ class GameObject
 
     size_t ComponentsSize();
 
-    bool ReceiveDamage(GameObject* from, int amount, bool isMagical, const std::string& logMsgOverride = std::string());
+    bool ReceiveDamage(GameObject* from,
+                       int amount,
+                       bool isMagical,
+                       bool suppressLog = false,
+                       const std::string& logMsgOverride = std::string());
     bool CanMove();
 
     void FinishTurn();
@@ -140,6 +145,10 @@ class GameObject
 
     void RemoveEffectFirstFound(const ItemBonusType& type);
     void RemoveEffectAllOf(const ItemBonusType& type);
+
+    void AttachTrigger(TriggerType type,
+                       const std::function<bool()>& condition,
+                       const std::function<void()>& handler);
 
     bool HasEffect(const ItemBonusType& e);
     bool IsAlive();

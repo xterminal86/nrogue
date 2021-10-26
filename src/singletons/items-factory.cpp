@@ -1915,6 +1915,7 @@ void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map
     bonusWeightByType.erase(ItemBonusType::LEECH);
     bonusWeightByType.erase(ItemBonusType::INVISIBILITY);
     bonusWeightByType.erase(ItemBonusType::TELEPATHY);
+    bonusWeightByType.erase(ItemBonusType::LEVITATION);
   }
   else if (itemRef->Data.EqCategory == EquipmentCategory::WEAPON)
   {
@@ -1927,6 +1928,7 @@ void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map
     bonusWeightByType.erase(ItemBonusType::HUNGER);
     bonusWeightByType.erase(ItemBonusType::INVISIBILITY);
     bonusWeightByType.erase(ItemBonusType::TELEPATHY);
+    bonusWeightByType.erase(ItemBonusType::LEVITATION);
   }
   else if (itemRef->Data.EqCategory == EquipmentCategory::NECK
         || itemRef->Data.EqCategory == EquipmentCategory::RING)
@@ -1944,30 +1946,31 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
 {
   std::map<ItemBonusType, int> bonusWeightByType =
   {
-    { ItemBonusType::STR,             6 },
-    { ItemBonusType::DEF,             6 },
-    { ItemBonusType::MAG,             6 },
-    { ItemBonusType::RES,             6 },
-    { ItemBonusType::SKL,             6 },
-    { ItemBonusType::SPD,             6 },
-    { ItemBonusType::HP,             20 },
-    { ItemBonusType::MP,             20 },
-    { ItemBonusType::INDESTRUCTIBLE,  1 },
-    { ItemBonusType::SELF_REPAIR,    10 },
-    { ItemBonusType::VISIBILITY,     20 },
-    { ItemBonusType::INVISIBILITY,    4 },
-    { ItemBonusType::DAMAGE,         20 },
-    { ItemBonusType::HUNGER,         10 },
-    { ItemBonusType::IGNORE_DEFENCE, 10 },
-    { ItemBonusType::KNOCKBACK,      15 },
-    { ItemBonusType::MANA_SHIELD,     8 },
-    { ItemBonusType::REGEN,           8 },
-    { ItemBonusType::REFLECT,         8 },
-    { ItemBonusType::LEECH,           8 },
-    { ItemBonusType::DMG_ABSORB,     10 },
-    { ItemBonusType::MAG_ABSORB,     10 },
-    { ItemBonusType::THORNS,         10 },
-    { ItemBonusType::TELEPATHY,       6 },
+    { ItemBonusType::STR,             25 },
+    { ItemBonusType::DEF,             25 },
+    { ItemBonusType::MAG,             25 },
+    { ItemBonusType::RES,             25 },
+    { ItemBonusType::SKL,             25 },
+    { ItemBonusType::SPD,             25 },
+    { ItemBonusType::HP,             100 },
+    { ItemBonusType::MP,             100 },
+    { ItemBonusType::INDESTRUCTIBLE,   7 },
+    { ItemBonusType::SELF_REPAIR,     20 },
+    { ItemBonusType::VISIBILITY,      50 },
+    { ItemBonusType::INVISIBILITY,     5 },
+    { ItemBonusType::DAMAGE,          75 },
+    { ItemBonusType::HUNGER,          40 },
+    { ItemBonusType::IGNORE_DEFENCE,  10 },
+    { ItemBonusType::KNOCKBACK,       20 },
+    { ItemBonusType::MANA_SHIELD,      7 },
+    { ItemBonusType::REGEN,            7 },
+    { ItemBonusType::REFLECT,          7 },
+    { ItemBonusType::LEECH,            7 },
+    { ItemBonusType::DMG_ABSORB,      15 },
+    { ItemBonusType::MAG_ABSORB,      15 },
+    { ItemBonusType::THORNS,          15 },
+    { ItemBonusType::TELEPATHY,       35 },
+    { ItemBonusType::LEVITATION,      17 }
   };
 
   AdjustBonusWeightsMapForItem(itemRef, bonusWeightByType);
@@ -2047,11 +2050,11 @@ void ItemsFactory::AddRandomBonusToItem(ItemComponent* itemRef, ItemBonusType bo
   // Probability of stat increase values
   std::map<int, int> statIncreaseWeightsMap =
   {
-    { 1, 24 },
-    { 2, 12 },
-    { 3, 8  },
-    { 4, 8  },
-    { 5, 8  }
+    { 1, 100 },
+    { 2,  75 },
+    { 3,  50 },
+    { 4,  25 },
+    { 5,  12 }
   };
 
   // TODO: finish other bonuses
@@ -2159,6 +2162,13 @@ void ItemsFactory::AddRandomBonusToItem(ItemComponent* itemRef, ItemBonusType bo
     case ItemBonusType::TELEPATHY:
     {
       // There is no range (at least for now)
+      value = 1;
+      bs.MoneyCostIncrease = value * moneyIncrease;
+    }
+    break;
+
+    case ItemBonusType::LEVITATION:
+    {
       value = 1;
       bs.MoneyCostIncrease = value * moneyIncrease;
     }

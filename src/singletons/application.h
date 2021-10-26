@@ -46,10 +46,12 @@ class Application : public Singleton<Application>
     /// only when needed ( see Player::WaitForTurn() )
     void ForceDrawMainState();
 
+    void ForceDrawCurrentState();
+
     GameState* GetGameStateRefByName(GameStates stateName);
     bool CurrentStateIs(GameStates stateName);
 
-    #ifdef USE_SDL
+#ifdef USE_SDL
     SDL_Renderer* Renderer = nullptr;
     SDL_Window* Window = nullptr;
 
@@ -64,7 +66,7 @@ class Application : public Singleton<Application>
     std::string TilesetFilename;
 
     SDL_Rect GetWindowSize(int tileWidth, int tileHeight);
-    #endif
+#endif
 
     unsigned int TurnsPassed = 0;
 
@@ -86,13 +88,13 @@ class Application : public Singleton<Application>
 
     size_t SavePossessions(std::stringstream& ss);
 
-    #ifdef USE_SDL
+#ifdef USE_SDL
     std::map<std::string, std::string> _config;
     void InitSDL();
     void SetIcon();
-    #else
+#else
     void InitCurses();
-    #endif
+#endif
 
     template <typename StateClass>
     inline void RegisterState(GameStates stateName)

@@ -9,8 +9,6 @@ AIMonsterHerobrine::AIMonsterHerobrine()
 
 void AIMonsterHerobrine::PrepareScript()
 {
-  // TODO: improve
-
   _script =
 R"(
 [TREE]

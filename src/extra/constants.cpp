@@ -500,13 +500,12 @@ namespace GlobalConstants
     SpellType::MAGIC_MAPPING,
     SpellType::TELEPORT,
     SpellType::DETECT_MONSTERS,
-    SpellType::ENCHANT,
     SpellType::REMOVE_CURSE,
     SpellType::REPAIR,
     SpellType::TOWN_PORTAL,
     SpellType::HEAL,
     SpellType::NEUTRALIZE_POISON,
-    SpellType::MANA_SHIELD,
+    SpellType::MANA_SHIELD
   };
 
   // Not including combat spells.
@@ -517,7 +516,7 @@ namespace GlobalConstants
   {
     "TAMAM SHUD",
     "GACHIMUCHI",
-    "SHIRANAI",
+    "XYNTA",
     "ZA WARUDO",
     "ZELGO MER",
     "LOREM IPSUM",
@@ -525,7 +524,6 @@ namespace GlobalConstants
     "LALIHO",
     "SHAN DONG",
     "SUIL A RUIN",
-    "DULAMAN GAELACH",
     "KOBAYASHI MARU"
   };
 
@@ -692,7 +690,8 @@ namespace GlobalConstants
     { ItemBonusType::DMG_ABSORB,     "Protective"  },
     { ItemBonusType::MAG_ABSORB,     "Shielding"   },
     { ItemBonusType::THORNS,         "Spiked"      },
-    { ItemBonusType::TELEPATHY,      "Cautious"    }
+    { ItemBonusType::TELEPATHY,      "Cautious"    },
+    { ItemBonusType::LEVITATION,     "Celestial"   }
   };
 
   const std::map<ItemBonusType, std::string> ItemBonusSuffixes =
@@ -720,7 +719,8 @@ namespace GlobalConstants
     { ItemBonusType::DMG_ABSORB,     "of Protection"  },
     { ItemBonusType::MAG_ABSORB,     "of Shielding"   },
     { ItemBonusType::THORNS,         "of the Ivy"     },
-    { ItemBonusType::TELEPATHY,      "of the Oracle"  }
+    { ItemBonusType::TELEPATHY,      "of the Oracle"  },
+    { ItemBonusType::LEVITATION,     "of the Angel"   }
   };
 
   const std::map<ItemBonusType, int> MoneyCostIncreaseByBonusType =
@@ -749,7 +749,8 @@ namespace GlobalConstants
     { ItemBonusType::DMG_ABSORB,      450 },
     { ItemBonusType::MAG_ABSORB,      450 },
     { ItemBonusType::THORNS,           40 },
-    { ItemBonusType::TELEPATHY,       250 }
+    { ItemBonusType::TELEPATHY,       250 },
+    { ItemBonusType::LEVITATION,      500 }
   };
 
   const std::map<ItemBonusType, std::string> BonusDisplayNameByType =

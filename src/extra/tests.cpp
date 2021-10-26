@@ -186,7 +186,7 @@ namespace Tests
 
     for (int i = 0; i < maxLevel; i++)
     {
-      p.LevelUp();
+      p.LevelUpSilent();
     }
 
     for (auto& a : attrsMap)
@@ -745,7 +745,6 @@ namespace Tests
     DisplayProgress();
 
     GenNamesTest(ss);
-
     ss << "\n\n" << padding << " o " << padding << "\n";
 
     file << ss.str();

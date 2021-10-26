@@ -111,7 +111,9 @@ bool Player::Move(int dx, int dy)
   bool moveOk = false;
   bool passByNPC = false;
 
-  if (!cell->Blocking)
+  bool isFlying = HasEffect(ItemBonusType::LEVITATION);
+
+  if (!cell->Blocking || isFlying)
   {
     if (staticObject != nullptr)
     {
@@ -993,7 +995,7 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
   if (dmgReturned != 0 && from != nullptr)
   {
     auto thornsLogMsg = Util::StringFormat("@ => %s (%i)", from->ObjectName.data(), dmgReturned);
-    from->ReceiveDamage(this, dmgReturned, true, thornsLogMsg);
+    from->ReceiveDamage(this, dmgReturned, true, false, thornsLogMsg);
   }
 }
 
@@ -1064,6 +1066,11 @@ void Player::AwardExperience(int amount)
     Attrs.Exp.SetMin(0);
     LevelDown();
   }
+}
+
+void Player::LevelUpSilent()
+{
+  GameObject::LevelUp();
 }
 
 void Player::LevelUp(int baseHpOverride)
@@ -1678,6 +1685,7 @@ void Player::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
     case ItemBonusType::INVISIBILITY:
     case ItemBonusType::THORNS:
     case ItemBonusType::TELEPATHY:
+    case ItemBonusType::LEVITATION:
       AddEffect(bonus);
       break;
   }

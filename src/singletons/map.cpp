@@ -43,6 +43,8 @@ void Map::Init()
 void Map::Cleanup()
 {
   _levels.clear();
+
+  Logger::Instance().Print("Map::Cleanup()");
 }
 
 void Map::Draw()
@@ -570,6 +572,7 @@ void Map::PrintMapArrayRevealedStatus()
   Printer::Instance().AddMessage("Current map layout revealed status logged");
 }
 
+#ifdef DEBUG_BUILD
 void Map::PrintMapLayout()
 {
   std::ofstream f;
@@ -618,6 +621,12 @@ void Map::PrintMapLayout()
         }
       }
 
+      // Replace non-printable character with '?'
+      if (ch < 32 || ch > 126)
+      {
+        ch = '?';
+      }
+
       layout += ch;
     }
 
@@ -631,6 +640,7 @@ void Map::PrintMapLayout()
   auto dbg = Util::StringFormat("Layout saved to %s", fname.data());
   Printer::Instance().AddMessage(dbg);
 }
+#endif
 
 void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes)
 {

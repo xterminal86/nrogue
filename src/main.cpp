@@ -65,11 +65,11 @@ int main(int argc, char* argv[])
   Blackboard::Instance().Init();
   Timer::Instance().Init();
 
-  #ifdef RELEASE_BUILD
+#ifdef RELEASE_BUILD
   bool printLog = false;
-  #else
+#else
   bool printLog = true;
-  #endif
+#endif
 
   Logger::Instance().Init();
   Logger::Instance().Prepare(printLog);
@@ -91,10 +91,10 @@ int main(int argc, char* argv[])
   Application::Instance().Run();
   Application::Instance().Cleanup();
 
-  #ifdef RUN_TESTS
+#ifdef RUN_TESTS
   DebugLog("Running tests, this may take a while...\n");
   Tests::Run();
-  #endif
+#endif
 
   return 0;
 }

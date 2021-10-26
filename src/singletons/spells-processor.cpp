@@ -131,10 +131,6 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll)
       ProcessScrollOfRemoveCurse(scroll);
       break;
 
-    case SpellType::ENCHANT:
-      ProcessScrollOfEnchantment(scroll);
-      break;
-
     default:
       Printer::Instance().AddMessage(_kNoActionText);
       break;
@@ -720,25 +716,4 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
       Printer::Instance().AddMessage(_kNoActionText);
     }
   }
-}
-
-void SpellsProcessor::ProcessScrollOfEnchantment(ItemComponent* scroll)
-{
-  // TODO:
-
-  _playerRef->RememberItem(scroll, GlobalConstants::UnidentifiedEffectText);
-
-  switch (scroll->Data.Prefix)
-  {
-    case ItemPrefix::CURSED:
-      break;
-
-    case ItemPrefix::UNCURSED:
-      break;
-
-    case ItemPrefix::BLESSED:
-      break;
-  }
-
-  _playerRef->RememberItem(scroll, "enchant");
 }

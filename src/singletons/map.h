@@ -29,7 +29,10 @@ class Map : public Singleton<Map>
     void ChangeLevel(MapType levelToChange, bool goingDown);
     void TeleportToExistingLevel(MapType levelToChange, const Position& teleportTo, GameObject* objectToTeleport = nullptr);
     void PrintMapArrayRevealedStatus();
+
+    #ifdef DEBUG_BUILD
     void PrintMapLayout();
+    #endif
 
     void ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes);
 

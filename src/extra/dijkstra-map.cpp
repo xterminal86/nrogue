@@ -61,6 +61,7 @@ void DijkstraMap::Emanate()
     }
   }
 
+  // Center is on the actor
   _field[_fieldRadius][_fieldRadius].Cost = 0;
 
   while (!cellsToVisit.empty())
@@ -101,13 +102,33 @@ void DijkstraMap::LookAround(const Position& mapPos, std::queue<Position>& cells
     { fieldPos.X + 1, fieldPos.Y     }
   };
 
+  bool isFlying = _owner->HasEffect(ItemBonusType::LEVITATION);
+
+  auto IsCellBlocked = [this, isFlying, curLvl](const Position& pos)
+  {
+    if (!Util::IsInsideMap(pos, curLvl->MapSize))
+    {
+      return true;
+    }
+
+    bool groundBlock = (curLvl->MapArray[pos.X][pos.Y]->Blocking && !isFlying);
+
+    bool staticBlock = false;
+    if (curLvl->StaticMapObjects[pos.X][pos.Y] != nullptr)
+    {
+      staticBlock = curLvl->StaticMapObjects[pos.X][pos.Y]->Blocking;
+    }
+
+    return (groundBlock || staticBlock);
+  };
+
   for (auto& p : pointsToCheck)
   {
     if (!IsOutOfBounds(p) && !_field[p.X][p.Y].Visited)
     {
       Position mapPos = FieldToMapCoords(p);
 
-      bool cellBlocked = curLvl->IsCellBlocking(mapPos);
+      bool cellBlocked = IsCellBlocked(mapPos);
 
       Cell& c = _field[p.X][p.Y];
 

@@ -39,6 +39,8 @@
 using CM = std::vector<std::vector<std::pair<uint32_t, uint32_t>>>;
 using CS = std::vector<uint32_t>;
 
+class GameObject;
+
 namespace Util
 {
   extern std::vector<std::string> StringSplit(const std::string& str, char delim);
@@ -102,6 +104,12 @@ namespace Util
 
   extern void PrintVector(const std::string& title, const std::vector<Position>& v);
   extern void PrintLayout(const std::vector<std::string>& l);
+
+  extern void LaunchProjectile(const Position& from,
+                               const Position& to,
+                               char image,
+                               const std::string& fgColor,
+                               const std::string& bgColor);
 
   extern CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map);
 
