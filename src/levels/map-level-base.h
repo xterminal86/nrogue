@@ -134,6 +134,10 @@ class MapLevelBase
     void PlaceDoor(int x, int y, bool isOpen = false, size_t openedBy = GlobalConstants::OpenedByAnyone, const std::string& objName = std::string());
 
     Position _townPortalPos;
+
+#ifdef DEBUG_BUILD
+    friend class DevConsole;
+#endif
 };
 
 #endif // MAPLEVEL_H

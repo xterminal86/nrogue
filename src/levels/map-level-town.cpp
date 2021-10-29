@@ -262,6 +262,15 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
+  ItemBonusStruct b;
+  b.BonusValue = 1;
+  b.Period = -1;
+  b.Type = ItemBonusType::LEVITATION;
+  b.FromItem = true;
+
+  GameObject* go = ItemsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { b }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+  InsertGameObject(go);
+
   // *** FIXME: debug
 
   // All scrolls

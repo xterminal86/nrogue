@@ -108,6 +108,7 @@ class Player : public GameObject
 
     void ProcessEffectsPlayer();
     void ProcessItemsEffects();
+    void TileStandingCheck();
 
     void SwitchPlaces(AIComponent* other);
 

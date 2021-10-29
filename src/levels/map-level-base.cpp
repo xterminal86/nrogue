@@ -432,14 +432,14 @@ void MapLevelBase::PlaceDeepWaterTile(int x, int y)
   #endif
 
   GameObjectInfo t;
-  t.Set(true, false, img, Colors::WhiteColor, Colors::DeepWaterColor, "Deep Water");
+  t.Set(false, false, img, Colors::WhiteColor, Colors::DeepWaterColor, "Deep Water");
   MapArray[x][y]->MakeTile(t, GameObjectType::DEEP_WATER);
 }
 
 void MapLevelBase::PlaceLavaTile(int x, int y)
 {
   GameObjectInfo t;
-  t.Set(true, false, '~', Colors::LavaWavesColor, Colors::LavaColor, "Lava");
+  t.Set(false, false, '~', Colors::LavaWavesColor, Colors::LavaColor, "Lava");
   MapArray[x][y]->MakeTile(t, GameObjectType::LAVA);
 }
 

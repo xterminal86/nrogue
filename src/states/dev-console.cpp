@@ -5,6 +5,7 @@
 #include "game-objects-factory.h"
 #include "map.h"
 #include "util.h"
+#include "game-object-info.h"
 
 void DevConsole::Init()
 {
@@ -279,9 +280,71 @@ void DevConsole::ProcessCommand(const std::string& command,
       PrintColors();
       break;
 
+    case DevConsoleCommand::TRANSFORM_TILE:
+      TransformTile(params);
+      break;
+
     default:
       break;
   }
+}
+
+void DevConsole::TransformTile(const std::vector<std::string>& params)
+{
+  if (params.size() > 0 && params.size() < 3)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string sx = params[0];
+  std::string sy = params[1];
+
+  auto r = CoordinateParamsToInt(sx, sy);
+  if (r.first == -1 && r.second == -1)
+  {
+    return;
+  }
+
+  int x = r.first;
+  int y = r.second;
+
+  std::string tileType = params[2];
+  if (!StringIsNumbers(tileType))
+  {
+    StdOut(ErrInvalidType);
+    return;
+  }
+
+  int tileTypeInt = std::stoi(tileType);
+  GameObjectType newTileType = (GameObjectType)tileTypeInt;
+
+  if (std::find(_validTileTransformTypes.begin(),
+                _validTileTransformTypes.end(),
+                newTileType) == _validTileTransformTypes.end())
+  {
+    StdOut(ErrInvalidType);
+    return;
+  }
+
+  _currentLevel->MapArray[x][y]->Type = newTileType;
+
+  switch (newTileType)
+  {
+    case GameObjectType::GROUND:
+      _currentLevel->PlaceGroundTile(x, y, '.', Colors::BlackColor, Colors::DirtColor, "Ground");
+      break;
+
+    case GameObjectType::LAVA:
+      _currentLevel->PlaceLavaTile(x, y);
+      break;
+
+    case GameObjectType::DEEP_WATER:
+      _currentLevel->PlaceDeepWaterTile(x, y);
+      break;
+  }
+
+  StdOut(Ok);
 }
 
 void DevConsole::PrintColors()

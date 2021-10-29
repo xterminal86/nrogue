@@ -222,6 +222,8 @@ namespace GlobalConstants
   // Default duration is 20 effective player turns
   const int EffectDefaultDuration      = EffectDurationSkipsForTurn * 20;
 
+  const int LavaDamage = 30;
+
   const std::map<ItemQuality, std::string> QualityNameByQuality =
   {
     { ItemQuality::DAMAGED,     "Damaged"     },

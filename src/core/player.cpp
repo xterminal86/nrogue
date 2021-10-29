@@ -1394,6 +1394,7 @@ void Player::FinishTurn()
   ProcessStarvation();
   ProcessEffectsPlayer();
   ProcessItemsEffects();
+  TileStandingCheck();
 
   // If player killed an enemy but can still make another turn,
   // we must check and remove objects marked for deletion
@@ -1403,6 +1404,20 @@ void Player::FinishTurn()
   //
   // Probably bad design anyway but fuck it.
   Map::Instance().RemoveDestroyed();
+}
+
+void Player::TileStandingCheck()
+{
+  // TODO: deep water drowning / damage?
+
+  if (HasEffect(ItemBonusType::LEVITATION) == false)
+  {
+    if (_currentCell->Type == GameObjectType::LAVA)
+    {
+      ReceiveDamage(_currentCell, GlobalConstants::LavaDamage, false, false, true);
+      Printer::Instance().AddMessage("Lava burns!");
+    }
+  }
 }
 
 void Player::ProcessEffectsPlayer()
@@ -1732,6 +1747,7 @@ void Player::UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
     case ItemBonusType::INVISIBILITY:
     case ItemBonusType::THORNS:
     case ItemBonusType::TELEPATHY:
+    case ItemBonusType::LEVITATION:
       RemoveEffect(bonus);
       break;
   }

@@ -9,6 +9,7 @@ enum class DevConsoleCommand
   CLEAR,
   HELP,
   CLOSE,
+  TRANSFORM_TILE,
   GET_STATIC_OBJECT,
   GET_ACTOR,
   GET_ITEM,
@@ -24,7 +25,7 @@ enum class DevConsoleCommand
   INFO_HANDLES
 };
 
-enum ObjectHandleType
+enum class ObjectHandleType
 {
   STATIC = 0,
   ITEM,
@@ -67,6 +68,7 @@ class DevConsole : public GameState
     const std::string ErrNoObjectsFound = "No objects found";
     const std::string ErrHandleNotSet   = "Handle not set";
     const std::string ErrCannotMove     = "Cannot move, probably occupied";
+    const std::string ErrInvalidType    = "Invalid type";
 
     const std::string Ok = "Ok";
     const std::string Prompt = "> ";
@@ -76,6 +78,14 @@ class DevConsole : public GameState
       { ObjectHandleType::STATIC, "_static" },
       { ObjectHandleType::ACTOR,  "_actor"  },
       { ObjectHandleType::ITEM,   "_item"   }
+    };
+
+    const std::vector<GameObjectType> _validTileTransformTypes =
+    {
+      GameObjectType::GROUND,
+      GameObjectType::LAVA,
+      GameObjectType::SHALLOW_WATER,
+      GameObjectType::DEEP_WATER,
     };
 
     void StdOut(const std::string& str);
@@ -91,6 +101,7 @@ class DevConsole : public GameState
     void MovePlayer(const std::vector<std::string>& params);
     void RemoveObject(const std::vector<std::string>& params);
     void PrintColors();
+    void TransformTile(const std::vector<std::string>& params);
 
     bool StringIsNumbers(const std::string& str);
     std::pair<int, int> CoordinateParamsToInt(const std::string& px, const std::string& py);
@@ -104,6 +115,7 @@ class DevConsole : public GameState
       { "exit",   DevConsoleCommand::CLOSE              },
       { "q",      DevConsoleCommand::CLOSE              },
       { "quit",   DevConsoleCommand::CLOSE              },
+      { "m_trns", DevConsoleCommand::TRANSFORM_TILE     },
       { "info",   DevConsoleCommand::INFO_HANDLES       },
       { "so_get", DevConsoleCommand::GET_STATIC_OBJECT  },
       { "ao_get", DevConsoleCommand::GET_ACTOR          },
@@ -127,40 +139,52 @@ class DevConsole : public GameState
 
     const std::map<std::string, std::vector<std::string>> _helpTextByCommandName =
     {
-      { "help",  { "Not funny, didn't laugh"  } },
-      { "clear", { "Clears the screen"        } },
-      { "q",     { "Close the console"        } },
-      { "quit",  { "Close the console"        } },
-      { "info",  { "Show handlers"            } },
-      { "exit",  { "Close the console"        } },
-      { "p_lu",  { "Give player a level"      } },
-      { "p_ld",  { "Take a level from player" } },
-      { "g_pm",  { "Save current map layout to a file" } },
-      { "g_pc",  { "Prints colors used so far" } },
-      { "so_get",
+      { "help",   { "Not funny, didn't laugh"  } },
+      { "clear",  { "Clears the screen"        } },
+      { "q",      { "Close the console"        } },
+      { "quit",   { "Close the console"        } },
+      { "info",   { "Show handlers"            } },
+      { "exit",   { "Close the console"        } },
+      { "p_lu",   { "Give player a level"      } },
+      { "p_ld",   { "Take a level from player" } },
+      { "g_pm",   { "Save current map layout to a file" } },
+      { "g_pc",   { "Prints colors used so far" } },
+      {
+        "so_get",
         { "so_get [X Y]", "Try to get handle to static object at X Y" }
       },
-      { "ao_get",
+      {
+        "ao_get",
         { "ao_get [X Y]", "Try to get handle to actor at X Y" }
       },
-      { "io_get",
+      {
+        "io_get",
         { "io_get [X Y]", "Try to get handle to item object at X Y" }
       },
-      { "so_mov",
+      {
+        "so_mov",
         { "so_mov X Y", "Try to move static object in handle to X Y" }
       },
-      { "ao_mov",
+      {
+        "ao_mov",
         { "ao_mov X Y", "Try to move actor in handle to X Y" }
       },
-      { "io_mov",
+      {
+        "io_mov",
         { "io_mov X Y", "Try to move item in handle to X Y" }
       },
-      { "p_mov",
+      {
+        "p_mov",
         { "p_mov X Y", "Try to move player to X Y" }
       },
-      { "o_del",
+      {
+        "o_del",
         { "o_del X Y", "Delete any object at X Y (actor -> item -> static)" }
-      }
+      },
+      {
+        "m_trns",
+        { "m_trns X Y <TYPE>", "Transform tile X Y to type <TYPE>" }
+      },
     };
 
     friend class GameObject;
