@@ -129,14 +129,6 @@ int TaskAttackRanged::CalculateChance(const Position& startPoint,
                                 (distanceChanceDrop * d));
   Logger::Instance().Print(str);
 
-  /*
-  DebugLog("%s\n%i + %i - %i = %i\n", __PRETTY_FUNCTION__,
-                                     baseChance,
-                                     (attackChanceScale * skl),
-                                     (distanceChanceDrop * d),
-                                     chance);
-  */
-
   return chance;
 }
 

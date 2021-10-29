@@ -90,6 +90,7 @@ namespace Util
   extern std::vector<Position> GetPerimeterAroundPoint(int x, int y, int w, int h, bool includeCorners = true);
 
   extern std::string ChooseRandomName();
+  extern std::string NumberToHexString(int num);
 
   extern std::vector<std::string> RotateRoomLayout(const std::vector<std::string>& layout, RoomLayoutRotation r);
 

@@ -373,7 +373,6 @@ void Player::SetDefaultEquipment()
   EquipmentByCategory[EquipmentCategory::HEAD]   = { nullptr };
   EquipmentByCategory[EquipmentCategory::NECK]   = { nullptr };
   EquipmentByCategory[EquipmentCategory::TORSO]  = { nullptr };
-  EquipmentByCategory[EquipmentCategory::LEGS]   = { nullptr };
   EquipmentByCategory[EquipmentCategory::BOOTS]  = { nullptr };
   EquipmentByCategory[EquipmentCategory::WEAPON] = { nullptr };
   EquipmentByCategory[EquipmentCategory::SHIELD] = { nullptr };

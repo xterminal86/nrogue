@@ -13,7 +13,7 @@
 #include "container-component.h"
 #include "item-component.h"
 #include "position.h"
-#include "dijkstra-map.h"
+#include "potential-field.h"
 
 class AIComponent;
 
@@ -74,7 +74,7 @@ class Player : public GameObject
 
     std::map<std::string, int> TotalKills;
 
-    DijkstraMap DistanceField;
+    PotentialField DistanceField;
 
   private:
     void DiscoverCell(int x, int y);
@@ -152,11 +152,15 @@ class Player : public GameObject
       { 3, "Unknown"  }
     };
 
+    //
     // std::map automatically sorts by key, so in case of string key,
     // it's lexicographical sorting
     //
     // That's why I couldn't figure out for a while why my values in the map
     // are suddenly in the wrong order during for loop.
+    //
+    // ...yeah, I know, right?
+    //
     std::map<int, std::pair<std::string, Attribute&>> _mainAttributes =
     {
       { 0, { "STR", Attrs.Str } },

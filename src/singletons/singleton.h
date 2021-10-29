@@ -13,7 +13,7 @@ class Singleton
       return instance;
     }
 
-    virtual void Init() {}
+    virtual void Init() = 0;
 
   protected:
     Singleton() = default;

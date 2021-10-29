@@ -139,20 +139,20 @@ void Printer::DrawWindow(const Position& leftCorner,
   int urCorner = GlobalConstants::CP437IndexByType[NameCP437::URCORNER_2];
   int dlCorner = GlobalConstants::CP437IndexByType[NameCP437::DLCORNER_2];
   int drCorner = GlobalConstants::CP437IndexByType[NameCP437::DRCORNER_2];
-  int hBarU = GlobalConstants::CP437IndexByType[NameCP437::HBAR_2];
-  int hBarD = GlobalConstants::CP437IndexByType[NameCP437::HBAR_2];
-  int vBarL = GlobalConstants::CP437IndexByType[NameCP437::VBAR_2];
-  int vBarR = GlobalConstants::CP437IndexByType[NameCP437::VBAR_2];
+  int hBarU    = GlobalConstants::CP437IndexByType[NameCP437::HBAR_2];
+  int hBarD    = GlobalConstants::CP437IndexByType[NameCP437::HBAR_2];
+  int vBarL    = GlobalConstants::CP437IndexByType[NameCP437::VBAR_2];
+  int vBarR    = GlobalConstants::CP437IndexByType[NameCP437::VBAR_2];
 
   /*
   int ulCorner = GlobalConstants::CP437IndexByType[NameCP437::ULCORNER_3];
   int urCorner = GlobalConstants::CP437IndexByType[NameCP437::URCORNER_3];
   int dlCorner = GlobalConstants::CP437IndexByType[NameCP437::DLCORNER_3];
   int drCorner = GlobalConstants::CP437IndexByType[NameCP437::DRCORNER_3];
-  int hBarU = GlobalConstants::CP437IndexByType[NameCP437::HBAR_3U];
-  int hBarD = GlobalConstants::CP437IndexByType[NameCP437::HBAR_3D];
-  int vBarL = GlobalConstants::CP437IndexByType[NameCP437::VBAR_3L];
-  int vBarR = GlobalConstants::CP437IndexByType[NameCP437::VBAR_3R];
+  int hBarU    = GlobalConstants::CP437IndexByType[NameCP437::HBAR_3U];
+  int hBarD    = GlobalConstants::CP437IndexByType[NameCP437::HBAR_3D];
+  int vBarL    = GlobalConstants::CP437IndexByType[NameCP437::VBAR_3L];
+  int vBarR    = GlobalConstants::CP437IndexByType[NameCP437::VBAR_3R];
   */
 
   // Fill background
@@ -436,6 +436,11 @@ void Printer::PrintFB(const int& x, const int& y,
 
 TileColor Printer::ConvertHtmlToRGB(const std::string& htmlColor)
 {
+  if (_validColorsCache.count(htmlColor) == 1)
+  {
+    return _validColorsCache[htmlColor];
+  }
+
   TileColor res;
 
   if (!IsColorStringValid(htmlColor))
@@ -445,6 +450,7 @@ TileColor Printer::ConvertHtmlToRGB(const std::string& htmlColor)
     res.R = 0;
     res.G = 0;
     res.B = 0;
+
     return res;
   }
 
@@ -460,7 +466,14 @@ TileColor Printer::ConvertHtmlToRGB(const std::string& htmlColor)
   res.G = valueG;
   res.B = valueB;
 
+  _validColorsCache[htmlColor] = res;
+
   return res;
+}
+
+const std::unordered_map<std::string, TileColor>& Printer::GetValidColorsCache()
+{
+  return _validColorsCache;
 }
 
 #endif
@@ -493,30 +506,19 @@ void Printer::InitForCurses()
   PrepareFrameBuffer();
 }
 
+const std::unordered_map<size_t, ColorPair>& Printer::GetValidColorsCache()
+{
+  return _colorMap;
+}
+
 bool Printer::ContainsColorMap(size_t hashToCheck)
 {
-  for (auto& h : _colorMap)
-  {
-    if (h.first == hashToCheck)
-    {
-      return true;
-    }
-  }
-
-  return false;
+  return (_colorMap.count(hashToCheck) == 1);
 }
 
 bool Printer::ColorIndexExists(size_t hashToCheck)
 {
-  for (auto& h : _colorIndexMap)
-  {
-    if (h.first == hashToCheck)
-    {
-      return true;
-    }
-  }
-
-  return false;
+  return (_colorIndexMap.count(hashToCheck) == 1);
 }
 
 NColor Printer::GetNColor(const std::string& htmlColor)
@@ -1025,6 +1027,6 @@ int Printer::ColorsUsed()
   #ifndef USE_SDL
   return _colorMap.size();
   #else
-  return -1;
+  return _validColorsCache.size();
   #endif
 }

@@ -99,11 +99,11 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       break;
   }
 
-  // No check for nullptr, program will crash and
-  // thus we will know that we forgot to add object
-  // into the factory.
-  go->PosX = x;
-  go->PosY = y;
+  if (go != nullptr)
+  {
+    go->PosX = x;
+    go->PosY = y;
+  }
 
   return go;
 }
@@ -145,12 +145,12 @@ GameObject* GameObjectsFactory::CreateMonster(int x, int y, GameObjectType monst
       break;
   }
 
-  // No check for nullptr, program will crash and
-  // thus we will know that we forgot to add object
-  // into the factory.
-  go->Type = monsterType;
-  go->PosX = x;
-  go->PosY = y;
+  if (go != nullptr)
+  {
+    go->Type = monsterType;
+    go->PosX = x;
+    go->PosY = y;
+  }
 
   return go;
 }

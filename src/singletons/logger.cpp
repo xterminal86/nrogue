@@ -6,6 +6,12 @@
 
 void Logger::Init()
 {
+  if (_initialized)
+  {
+    return;
+  }
+
+  _initialized = true;
 }
 
 void Logger::Prepare(bool enabled)

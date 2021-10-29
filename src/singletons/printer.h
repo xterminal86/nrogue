@@ -2,7 +2,7 @@
 #define PRINTER_H
 
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 #ifndef USE_SDL
@@ -100,6 +100,8 @@ class Printer : public Singleton<Printer>
                   int align,
                   const std::string& htmlColorFg,
                   const std::string& htmlColorBg = Colors::BlackColor);
+
+    const std::unordered_map<size_t, ColorPair>& GetValidColorsCache();
 #else
     void PrintFB(const int& x, const int& y,
                  int image,
@@ -129,6 +131,7 @@ class Printer : public Singleton<Printer>
                     const std::string& borderBgColor = Colors::BlackColor,
                     const std::string& bgColor = Colors::BlackColor);
 
+    const std::unordered_map<std::string, TileColor>& GetValidColorsCache();
 #endif
 
     /// Add message to the game log
@@ -168,8 +171,8 @@ class Printer : public Singleton<Printer>
 
     void PrepareFrameBuffer();
 
-    std::map<size_t, ColorPair> _colorMap;
-    std::map<size_t, short> _colorIndexMap;
+    std::unordered_map<size_t, ColorPair> _colorMap;
+    std::unordered_map<size_t, short> _colorIndexMap;
 
     short _colorPairsGlobalIndex = 1;
     short _colorGlobalIndex = 8;
@@ -197,7 +200,9 @@ class Printer : public Singleton<Printer>
     int _tilesetHeight = 0;
 
     std::vector<TileInfo> _tiles;
-    std::map<char, int> _tileIndexByChar;
+    std::unordered_map<char, int> _tileIndexByChar;
+
+    std::unordered_map<std::string, TileColor> _validColorsCache;
 
     int _tileWidth = 0;
     int _tileHeight = 0;

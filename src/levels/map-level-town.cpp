@@ -262,12 +262,6 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
-  ItemBonusStruct b;
-  b.Type = ItemBonusType::LEVITATION;
-  b.BonusValue = 1;
-  b.Cumulative = true;
-  b.FromItem = true;
-
   // *** FIXME: debug
 
   // All scrolls

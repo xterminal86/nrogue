@@ -8,7 +8,14 @@
 
 void SpellsProcessor::Init()
 {
+  if (_initialized)
+  {
+    return;
+  }
+
   _playerRef = &Application::Instance().PlayerInstance;
+
+  _initialized = true;
 }
 
 void SpellsProcessor::ProcessWand(ItemComponent* wand)

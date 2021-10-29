@@ -155,7 +155,7 @@ void LookInputState::HandleInput()
         _playerRef->DistanceField.Emanate();
       }
 
-      DijkstraMap::Cell* c = _playerRef->DistanceField.GetCell(_cursorPosition.X, _cursorPosition.Y);
+      PotentialField::Cell* c = _playerRef->DistanceField.GetCell(_cursorPosition.X, _cursorPosition.Y);
 
       _distanceField = (c == nullptr) ? "0x0" : Util::StringFormat("%i %i [%i]", c->MapPos.X, c->MapPos.Y, c->Cost);
     }
@@ -280,7 +280,7 @@ void LookInputState::Update(bool forceUpdate)
       lookStatus = "???";
     }
 
-    Printer::Instance().PrintFB(Printer::TerminalWidth / 2, 0,
+    Printer::Instance().PrintFB(_twHalf, 0,
                                 "Press 'q' to exit look mode",
                                 Printer::kAlignCenter,
                                 Colors::WhiteColor);
@@ -311,8 +311,8 @@ void LookInputState::MoveCursor(int dx, int dy)
   int nx = _cursorPosition.X + dx;
   int ny = _cursorPosition.Y + dy;
 
-  int hw = Printer::TerminalWidth / 2;
-  int hh = Printer::TerminalHeight / 2;
+  int hw = _twHalf;
+  int hh = _thHalf;
 
   nx = Util::Clamp(nx, _playerRef->PosX - hw + 1,
                        _playerRef->PosX + hw - 2);

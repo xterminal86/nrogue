@@ -1,10 +1,10 @@
-#include "dijkstra-map.h"
+#include "potential-field.h"
 
 #include "map.h"
 #include "game-object.h"
 #include "util.h"
 
-void DijkstraMap::Init(GameObject* owner, int fieldRadius)
+void PotentialField::Init(GameObject* owner, int fieldRadius)
 {
   if (owner == nullptr)
   {
@@ -43,7 +43,7 @@ void DijkstraMap::Init(GameObject* owner, int fieldRadius)
   }
 }
 
-void DijkstraMap::Emanate()
+void PotentialField::Emanate()
 {
   std::queue<Position> cellsToVisit;
 
@@ -76,7 +76,7 @@ void DijkstraMap::Emanate()
   _isDirty = false;
 }
 
-void DijkstraMap::LookAround(const Position& mapPos, std::queue<Position>& cellsToVisit)
+void PotentialField::LookAround(const Position& mapPos, std::queue<Position>& cellsToVisit)
 {
   auto& curLvl = Map::Instance().CurrentLevel;
 
@@ -144,22 +144,18 @@ void DijkstraMap::LookAround(const Position& mapPos, std::queue<Position>& cells
   parent.Visited = true;
 }
 
-DijkstraMap::Cell* DijkstraMap::GetCell(int mapX, int mapY)
+PotentialField::Cell* PotentialField::GetCell(int mapX, int mapY)
 {
-  Cell* res = nullptr;
-
   Position p = MapToFieldCoords({ mapX, mapY });
   if (IsOutOfBounds(p))
   {
-    return res;
+    return nullptr;
   }
 
-  res = &_field[p.X][p.Y];
-
-  return res;
+  return &_field[p.X][p.Y];
 }
 
-bool DijkstraMap::IsOutOfBounds(const Position& fieldPos)
+bool PotentialField::IsOutOfBounds(const Position& fieldPos)
 {
   const int size = _fieldRadius * 2;
 
@@ -172,7 +168,7 @@ bool DijkstraMap::IsOutOfBounds(const Position& fieldPos)
   return false;
 }
 
-void DijkstraMap::SetDirty()
+void PotentialField::SetDirty()
 {
   // Probably makes no sense in terms of optimization, but still...
   if (!_isDirty)
@@ -181,12 +177,12 @@ void DijkstraMap::SetDirty()
   }
 }
 
-bool DijkstraMap::IsDirty()
+bool PotentialField::IsDirty()
 {
   return _isDirty;
 }
 
-Position DijkstraMap::MapToFieldCoords(const Position& mapPos)
+Position PotentialField::MapToFieldCoords(const Position& mapPos)
 {
   int dx = mapPos.X - _fieldOrigin.X;
   int dy = mapPos.Y - _fieldOrigin.Y;
@@ -198,7 +194,7 @@ Position DijkstraMap::MapToFieldCoords(const Position& mapPos)
   return { iy, ix };
 }
 
-Position DijkstraMap::FieldToMapCoords(const Position& fieldIndices)
+Position PotentialField::FieldToMapCoords(const Position& fieldIndices)
 {
   Position res;
 
@@ -208,7 +204,7 @@ Position DijkstraMap::FieldToMapCoords(const Position& fieldIndices)
   return res;
 }
 
-std::string DijkstraMap::GetFieldString()
+std::string PotentialField::GetFieldString()
 {
   std::stringstream ss;
 

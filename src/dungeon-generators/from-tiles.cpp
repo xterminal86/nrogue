@@ -1,6 +1,32 @@
 #include "from-tiles.h"
 #include "util.h"
 
+/// \brief Builds dungeon from tileset specified by tileSetIndex
+///
+/// Generates tilesets from string of length 9 (".........")
+/// by adding '#' for every tileset and calculating all permutations.
+///
+/// E.g. "#........" and all its permutations,
+/// "##......." and all its permutations and so on.
+///
+/// Then those lines are converted into 3x3 arrays and stored
+/// as tiles inside the tileset collection. After that they are
+/// used to connect each other to generate a map.
+///
+/// Additional post-processing is required to create
+/// decent looking dungeon and which has all empty cells
+/// reachable to the player.
+///
+/// Line length is hardcoded to 9, since it's the lowest
+/// possible number to create a tileset that can produce
+/// decent looking dungeon in terms of performance / size.
+/// Since we can only go in terms of square areas
+/// centered on middle point, the number series goes like this:
+/// 9 (i.e. 3x3), 25 (5x5), 49 (7x7) etc.
+///
+/// Having line length more than 9 takes too long to create a tileset
+/// and has no visible visual difference. But mostly time.
+///
 void FromTiles::Generate(const Position& mapSize,
                          int tileSetIndex,
                          bool postProcess,
@@ -61,7 +87,7 @@ void FromTiles::Generate(const Position& mapSize,
     RemoveSingleWalls();
   }
 
-  // Remove horizontal corridor at the top
+  // Remove horizontal corridor bias at the top
   // by filling borders of the map inwards.
   if (removeBias)
   {
@@ -404,21 +430,6 @@ bool FromTiles::IsLayoutEmpty(const Tile& layout)
   }
 
   return true;
-}
-
-bool FromTiles::IsLayoutPresent(const Tile& layout)
-{
-  /*
-  for (auto& l : _tileset)
-  {
-    if (AreLayoutsEqual(l, layout))
-    {
-      return true;
-    }
-  }
-  */
-
-  return false;
 }
 
 bool FromTiles::AreLayoutsEqual(const Tile& l1, const Tile& l2)

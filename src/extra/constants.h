@@ -266,7 +266,6 @@ enum class EquipmentCategory
   HEAD,
   NECK,
   TORSO,
-  LEGS,
   BOOTS,
   WEAPON,
   SHIELD,

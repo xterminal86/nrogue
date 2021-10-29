@@ -601,6 +601,23 @@ namespace Util
     return GlobalConstants::RandomNames[index];
   }
 
+  std::string NumberToHexString(int num)
+  {
+    std::string res;
+
+    std::stringstream ss;
+    ss << std::hex << std::uppercase << num;
+
+    res = ss.str();
+
+    if (res.length() == 1)
+    {
+      res.insert(res.begin(), '0');
+    }
+
+    return res;
+  }
+
   /// Rotates room text layout, provided all lines are of equal length
   std::vector<std::string> RotateRoomLayout(const std::vector<std::string>& layout, RoomLayoutRotation r)
   {

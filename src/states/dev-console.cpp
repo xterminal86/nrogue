@@ -275,9 +275,80 @@ void DevConsole::ProcessCommand(const std::string& command,
       StdOut(Ok);
       break;
 
+    case DevConsoleCommand::PRINT_COLORS:
+      PrintColors();
+      break;
+
     default:
       break;
   }
+}
+
+void DevConsole::PrintColors()
+{
+  std::string msg;
+
+  auto& cache = Printer::Instance().GetValidColorsCache();
+  for (auto& kvp : cache)
+  {
+#ifdef USE_SDL
+    std::string toAdd =  Util::StringFormat("[%s] ", kvp.first.data());
+    std::string total = msg + toAdd;
+    if (total.length() > 80)
+    {
+      StdOut(msg);
+      msg = toAdd;
+    }
+    else
+    {
+      msg += toAdd;
+    }
+#else
+    NColor fg = kvp.second.FgColor;
+    NColor bg = kvp.second.BgColor;
+
+    auto ConvertBack = [](int nColorComponent)
+    {
+      float converted = ((float)nColorComponent / 1000.0f) * 255.0f;
+
+      return (int)converted;
+    };
+
+    int cr = ConvertBack(fg.R);
+    int cg = ConvertBack(fg.G);
+    int cb = ConvertBack(fg.B);
+
+    std::string r = Util::NumberToHexString(cr);
+    std::string g = Util::NumberToHexString(cg);
+    std::string b = Util::NumberToHexString(cb);
+
+    std::string fgTotal = r + g + b;
+
+    cr = ConvertBack(bg.R);
+    cg = ConvertBack(bg.G);
+    cb = ConvertBack(bg.B);
+
+    r = Util::NumberToHexString(cr);
+    g = Util::NumberToHexString(cg);
+    b = Util::NumberToHexString(cb);
+
+    std::string bgTotal = r + g + b;
+
+    std::string toAdd =  Util::StringFormat("[%s|%s] ", fgTotal.data(), bgTotal.data());
+    std::string total = msg + toAdd;
+    if (total.length() > 80)
+    {
+      StdOut(msg);
+      msg = toAdd;
+    }
+    else
+    {
+      msg += toAdd;
+    }
+#endif
+  }
+
+  StdOut(msg);
 }
 
 void DevConsole::InfoHandles()

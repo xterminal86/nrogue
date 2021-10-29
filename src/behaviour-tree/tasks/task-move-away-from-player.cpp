@@ -22,15 +22,15 @@ BTResult TaskMoveAwayFromPlayer::Run()
     _playerRef->DistanceField.Emanate();
   }
 
-  DijkstraMap::Cell* cellFound = nullptr;
+  PotentialField::Cell* cellFound = nullptr;
 
   int maxCost = 0;
   for (auto& p : res)
   {
-    DijkstraMap::Cell* c = _playerRef->DistanceField.GetCell(p.X, p.Y);
+    PotentialField::Cell* c = _playerRef->DistanceField.GetCell(p.X, p.Y);
     if (c != nullptr &&
         c->Cost > maxCost &&
-        c->Cost != DijkstraMap::kBlockedCellCost)
+        c->Cost != PotentialField::kBlockedCellCost)
     {
       maxCost = c->Cost;
       cellFound = c;

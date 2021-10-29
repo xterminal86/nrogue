@@ -8,8 +8,8 @@ void EnterNameState::Prepare()
 {
   _inputTypeIndex = 0;
 
-  _x = Printer::TerminalWidth / 2;
-  _y = Printer::TerminalHeight / 2;
+  _x = _twHalf;
+  _y = _thHalf;
 
   _cursorPos = _y - 2;
 }
@@ -206,11 +206,11 @@ void EnterNameState::Update(bool forceUpdate)
       Printer::Instance().PrintFB(_x - _maxSeedHalf + 4, _cursorPos + 8, _seedEntered, Printer::kAlignLeft, "#FFFFFF");
     }
 
-    Printer::Instance().PrintFB(Printer::TerminalWidth / 2,
-                                 Printer::TerminalHeight - 1,
-                                 "'Tab' - change fields",
-                                 Printer::kAlignCenter,
-                                 "#FFFFFF");
+    Printer::Instance().PrintFB(_twHalf,
+                                Printer::TerminalHeight - 1,
+                                "'Tab' - change fields",
+                                Printer::kAlignCenter,
+                                Colors::WhiteColor);
 
     Printer::Instance().Render();
   }

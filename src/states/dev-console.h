@@ -20,6 +20,7 @@ enum class DevConsoleCommand
   LEVEL_UP,
   LEVEL_DOWN,
   PRINT_MAP,
+  PRINT_COLORS,
   INFO_HANDLES
 };
 
@@ -89,6 +90,7 @@ class DevConsole : public GameState
     void MoveObject(const std::vector<std::string>& params, ObjectHandleType handleType);
     void MovePlayer(const std::vector<std::string>& params);
     void RemoveObject(const std::vector<std::string>& params);
+    void PrintColors();
 
     bool StringIsNumbers(const std::string& str);
     std::pair<int, int> CoordinateParamsToInt(const std::string& px, const std::string& py);
@@ -114,6 +116,7 @@ class DevConsole : public GameState
       { "p_lu",   DevConsoleCommand::LEVEL_UP           },
       { "p_ld",   DevConsoleCommand::LEVEL_DOWN         },
       { "g_pm",   DevConsoleCommand::PRINT_MAP          },
+      { "g_pc",   DevConsoleCommand::PRINT_COLORS       }
     };
 
     const std::vector<std::string> _help =
@@ -133,6 +136,7 @@ class DevConsole : public GameState
       { "p_lu",  { "Give player a level"      } },
       { "p_ld",  { "Take a level from player" } },
       { "g_pm",  { "Save current map layout to a file" } },
+      { "g_pc",  { "Prints colors used so far" } },
       { "so_get",
         { "so_get [X Y]", "Try to get handle to static object at X Y" }
       },

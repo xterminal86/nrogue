@@ -17,11 +17,11 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
   public:
     void Init() override;
 
-    /// For random generation
+    // For random generation
     GameObject* CreateGameObject(int x, int y, ItemType objType);
     GameObject* CreateMonster(int x, int y, GameObjectType monsterType);
 
-    /// Various
+    // Various
     GameObject* CreateNPC(int x, int y, NPCType npcType, bool standing = false, ServiceType serviceType = ServiceType::NONE);
     GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);
     GameObject* CreateRemains(GameObject* from);
@@ -29,7 +29,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateContainer(const std::string& name, const std::string& bgColor, int image, int x, int y);
     GameObject* CreateBreakableObjectWithRandomLoot(int x, int y, char image, const std::string& objName, const std::string& fgColor, const std::string& bgColor);
 
-    /// Creates stairs on MapArray of current level
+    // Creates stairs on MapArray of current level
     void CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, int image, MapType leadsTo);
 
     bool HandleItemUse(ItemComponent* item);

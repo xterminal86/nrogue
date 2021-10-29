@@ -735,8 +735,8 @@ void TargetState::MoveCursor(int dx, int dy)
   int nx = _cursorPosition.X + dx;
   int ny = _cursorPosition.Y + dy;
 
-  int hw = Printer::TerminalWidth / 2;
-  int hh = Printer::TerminalHeight / 2;
+  int hw = _twHalf;
+  int hh = _thHalf;
 
   nx = Util::Clamp(nx, _playerRef->PosX - hw + 1,
                        _playerRef->PosX + hw - 2);

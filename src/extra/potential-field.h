@@ -1,5 +1,5 @@
-#ifndef DIJKSTRAMAP_H
-#define DIJKSTRAMAP_H
+#ifndef POTENTIALFIELD_H
+#define POTENTIALFIELD_H
 
 #include <vector>
 #include <queue>
@@ -10,7 +10,7 @@
 
 class GameObject;
 
-class DijkstraMap
+class PotentialField
 {
   public:
     struct Cell

@@ -292,8 +292,11 @@ void DGBase::RemoveEndWalls()
 {
   bool dontDo = (_endWallsRemovalParams.Passes <= 0);
 
-  int emptyCellsMin = std::min(_endWallsRemovalParams.EmptyCellsAroundMin, _endWallsRemovalParams.EmptyCellsAroundMax);
-  int emptyCellsMax = std::max(_endWallsRemovalParams.EmptyCellsAroundMin, _endWallsRemovalParams.EmptyCellsAroundMax);
+  int emptyCellsMin = std::min(_endWallsRemovalParams.EmptyCellsAroundMin,
+                               _endWallsRemovalParams.EmptyCellsAroundMax);
+
+  int emptyCellsMax = std::max(_endWallsRemovalParams.EmptyCellsAroundMin,
+                               _endWallsRemovalParams.EmptyCellsAroundMax);
 
   bool wrongParams = (emptyCellsMin <= 1 || emptyCellsMax > 8);
 
@@ -314,7 +317,8 @@ void DGBase::RemoveEndWalls()
         if (_map[x][y].Image == '#')
         {
           int emptyCellsCount = CountAround(x, y, '.');
-          if (emptyCellsCount >= emptyCellsMin && emptyCellsCount <= emptyCellsMax)
+          if (emptyCellsCount >= emptyCellsMin
+           && emptyCellsCount <= emptyCellsMax)
           {
             marks.push_back({ x, y });
           }
@@ -338,7 +342,8 @@ void DGBase::RemoveEndWalls()
 /// #.....
 ///
 /// we replace random wall around A (which itself is '.')
-/// with empty space to disallow diagonal walking from A to B
+/// with empty space to visually disallow walking into a corner.
+///
 void DGBase::CheckIfProblemCorner(const Position& p)
 {
   int lx = p.X - 1;

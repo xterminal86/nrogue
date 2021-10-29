@@ -1,5 +1,15 @@
 #include "timer.h"
 
+void Timer::Init()
+{
+  if (_initialized)
+  {
+    return;
+  }
+
+  _initialized = true;
+}
+
 const Ns& Timer::DeltaTime()
 {
   return _deltaTime;

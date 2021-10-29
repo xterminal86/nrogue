@@ -26,7 +26,6 @@ class FromTiles : public DGBase
     Tile ReadLayout(const Position& p);
     Tile ConvertStringToTile(const std::string& line);
 
-    bool IsLayoutPresent(const Tile& layout);
     bool AreLayoutsEqual(const Tile& l1, const Tile& l2);
     bool WasVisited(const Position& p);
     bool IsLayoutEmpty(const Tile& layout);

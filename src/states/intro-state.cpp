@@ -10,10 +10,10 @@ void IntroState::Prepare()
   Printer::Instance().Clear();
 
   _textPositionCursor = 0;
-  _textPositionX = Printer::TerminalWidth / 2;
+  _textPositionX = _twHalf;
 
   int textIndex = Application::Instance().PlayerInstance.SelectedClass;
-  _textPositionY = Printer::TerminalHeight / 2 - _introStrings[textIndex].size() / 2;
+  _textPositionY = _thHalf - _introStrings[textIndex].size() / 2;
 
   Util::WaitForMs(0, true);
 }
@@ -66,12 +66,12 @@ void IntroState::PrepareTown()
 
 void IntroState::Update(bool forceUpdate)
 {
-  Printer::Instance().PrintFB(Printer::TerminalWidth / 2,
-                               (Printer::TerminalHeight - _introStrings[Application::Instance().PlayerInstance.SelectedClass].size()) / 4,
-                               _scenarioNameByClass.at(Application::Instance().PlayerInstance.GetClass()),
-                               2,
-                               Printer::kAlignCenter,
-                               Colors::WhiteColor);
+  Printer::Instance().PrintFB(_twHalf,
+                              (Printer::TerminalHeight - _introStrings[Application::Instance().PlayerInstance.SelectedClass].size()) / 4,
+                              _scenarioNameByClass.at(Application::Instance().PlayerInstance.GetClass()),
+                              2,
+                              Printer::kAlignCenter,
+                              Colors::WhiteColor);
   if (Util::WaitForMs(10))
   {
     int textIndex = Application::Instance().PlayerInstance.SelectedClass;
@@ -94,7 +94,7 @@ void IntroState::Update(bool forceUpdate)
 
         _textPositionCursor = 0;
 
-        _textPositionX = Printer::TerminalWidth / 2;
+        _textPositionX = _twHalf;
         _textPositionY++;
 
         _stringIndex++;
@@ -102,7 +102,7 @@ void IntroState::Update(bool forceUpdate)
     }
     else
     {
-      Printer::Instance().PrintFB(Printer::TerminalWidth / 2, Printer::TerminalHeight - 1, "Press 'Enter' to continue", Printer::kAlignCenter, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_twHalf, Printer::TerminalHeight - 1, "Press 'Enter' to continue", Printer::kAlignCenter, Colors::WhiteColor);
     }
 
     Printer::Instance().Render();

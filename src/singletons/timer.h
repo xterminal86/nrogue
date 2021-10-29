@@ -13,6 +13,8 @@ using Sec = std::chrono::seconds;
 class Timer : public Singleton<Timer>
 {
   public:
+    void Init() override;
+
     const Ns& DeltaTime();
     const Ns& TimePassed();
 

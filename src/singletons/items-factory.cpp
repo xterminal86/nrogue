@@ -1906,7 +1906,6 @@ void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map
   // that don't make sense (kinda)
   if (itemRef->Data.EqCategory == EquipmentCategory::BOOTS
    || itemRef->Data.EqCategory == EquipmentCategory::HEAD
-   || itemRef->Data.EqCategory == EquipmentCategory::LEGS
    || itemRef->Data.EqCategory == EquipmentCategory::TORSO)
   {
     bonusWeightByType.erase(ItemBonusType::DAMAGE);
