@@ -98,17 +98,17 @@ namespace Colors
 
   const std::map<std::string, std::vector<std::string>> PotionColorsByName =
   {
-    { "Red Potion",     { "#FFFFFF", "#FF0000" } },
-    { "Green Potion",   { "#FFFFFF", "#00FF00" } },
-    { "Radiant Potion", { "#666666", "#FFFF88" } },
-    { "Morbid Potion",  { "#FFFFFF", "#660000" } },
-    { "Blue Potion",    { "#FFFFFF", "#0000FF" } },
-    { "Yellow Potion",  { "#000000", "#FFFF00" } },
-    { "Clear Potion",   { "#000000", "#CCCCCC" } },
-    { "Black Potion",   { "#FFFFFF", "#000000" } },
-    { "Cyan Potion",    { "#FFFFFF", "#00FFFF" } },
-    { "Watery Potion",  { "#000000", "#FFFFFF" } },
-    { "Magenta Potion", { "#FFFFFF", "#FF00FF" } }
+    { "Red Potion",     { "#FF0000", "#440000" } },
+    { "Green Potion",   { "#00FF00", "#004400" } },
+    { "Blue Potion",    { "#4444FF", "#000044" } },
+    { "Cyan Potion",    { "#00FFFF", "#004444" } },
+    { "Magenta Potion", { "#FF00FF", "#440044" } },
+    { "Yellow Potion",  { "#FFFF00", "#444400" } },
+    { "Radiant Potion", { "#FFFF88", "#777700" } },
+    { "Morbid Potion",  { "#880000", "#220000" } },
+    { "Clear Potion",   { "#FFFFFF", "#000000" } },
+    { "Black Potion",   { "#000000", "#444444" } },
+    { "Watery Potion",  { "#BBBBBB", "#000000" } }
   };
 
   const std::map<WandMaterials, std::pair<std::string, std::string>> WandColorsByMaterial =

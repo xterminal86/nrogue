@@ -90,6 +90,8 @@ class ItemsFactory : public Singleton<ItemsFactory>
     void InitPotionColors();
     void InitScrolls();
 
+    void SetPotionImage(GameObject* go);
+
     void SetItemName(GameObject* go, ItemData& itemData);
     void SetMagicItemName(ItemComponent* itemRef, const std::vector<ItemBonusType>& bonusesRolled);
     void BUCQualityAdjust(ItemData& itemData);

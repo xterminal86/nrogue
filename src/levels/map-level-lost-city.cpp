@@ -103,7 +103,7 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
           break;
 
         case ' ':
-          PlaceGroundTile(x, y, image, Colors::BlackColor, Colors::ShadesOfGrey::Ten, "Stone");
+          PlaceGroundTile(x, y, image, Colors::BlackColor, Colors::ShadesOfGrey::Ten, "Flagstone");
           break;
 
         // TODO: can step in lava and get killed / damaged?

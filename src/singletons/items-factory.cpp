@@ -104,6 +104,15 @@ void ItemsFactory::InitScrolls()
   }
 }
 
+void ItemsFactory::SetPotionImage(GameObject* go)
+{
+#ifdef USE_SDL
+    go->Image = GlobalConstants::CP437IndexByType[NameCP437::EXCL_MARK_INV];
+#else
+    go->Image = '!';
+#endif
+}
+
 GameObject* ItemsFactory::CreateMoney(int amount)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -198,7 +207,9 @@ GameObject* ItemsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
-  go->Image = '!';
+
+  SetPotionImage(go);
+
   go->ObjectName = name;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
@@ -237,7 +248,9 @@ GameObject* ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
-  go->Image = '!';
+
+  SetPotionImage(go);
+
   go->ObjectName = name;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
@@ -276,7 +289,9 @@ GameObject* ItemsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
-  go->Image = '!';
+
+  SetPotionImage(go);
+
   go->ObjectName = name;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
@@ -315,7 +330,9 @@ GameObject* ItemsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
-  go->Image = '!';
+
+  SetPotionImage(go);
+
   go->ObjectName = name;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
@@ -354,7 +371,9 @@ GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
-  go->Image = '!';
+
+  SetPotionImage(go);
+
   go->ObjectName = name;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
@@ -398,7 +417,9 @@ GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPref
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
-  go->Image = '!';
+
+  SetPotionImage(go);
+
   go->ObjectName = name;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();

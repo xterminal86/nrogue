@@ -631,7 +631,8 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
   bool isStackable = (!isWand && !isRangedWeapon && _weaponRef->Data.IsStackable);
 
   bool tileOk = (mapRef[x][y]->Type != GameObjectType::DEEP_WATER
-              && mapRef[x][y]->Type != GameObjectType::LAVA);
+              && mapRef[x][y]->Type != GameObjectType::LAVA
+              && mapRef[x][y]->Type != GameObjectType::CHASM);
 
   // TODO: potions break on impact, items damage monsters (not?)
   //
@@ -725,6 +726,10 @@ void TargetState::PrintThrowResult(GameObject* tileRef)
   else if (tile == GameObjectType::LAVA)
   {
     verb = "melts";
+  }
+  else if (tile == GameObjectType::CHASM)
+  {
+    verb = "falls down";
   }
 
   if (!verb.empty())

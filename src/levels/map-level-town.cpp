@@ -197,7 +197,7 @@ void MapLevelTown::CreateLevel()
 
   FillArea(r.X1, r.Y1, r.X2, r.Y2, t);
 
-  t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Walls");
+  t.Set(true, true, '#', Colors::ShadesOfGrey::Four, Colors::BlackColor, "Walls");
 
   auto bounds = r.GetBoundaryElements();
   for (auto& pos : bounds)
@@ -276,6 +276,7 @@ void MapLevelTown::CreateLevel()
   */
 
   // All scrolls
+
   /*
   int count = 0;
   for (auto& item : GlobalConstants::ScrollValidSpellTypes)
@@ -289,8 +290,9 @@ void MapLevelTown::CreateLevel()
   */
 
   // All potions
+
   /*
-  count = 0;
+  int count = 0;
   auto map = GlobalConstants::PotionNameByType;
   for (auto& kvp : map)
   {
@@ -473,10 +475,12 @@ void MapLevelTown::BuildAndDrawRoad(const Position& start,
   Pathfinder pf;
   auto path = pf.BuildRoad(this, start, end, { '~' });
 
-  GameObjectInfo gi;
-  gi.Set(false, false, '.', Colors::ShadesOfGrey::Ten, Colors::ShadesOfGrey::Eight, "Path");
-
-  MapArray[start.X][start.Y]->MakeTile(gi);
+  PlaceGroundTile(start.X,
+                  start.Y,
+                  '.',
+                  Colors::ShadesOfGrey::Ten,
+                  Colors::ShadesOfGrey::Eight,
+                  "Flagstone");
 
   DrawRoad(path);
 }
@@ -489,10 +493,12 @@ void MapLevelTown::DrawRoad(const std::stack<Position>& path)
   {
     Position c = pathCopy.top();
 
-    GameObjectInfo gi;
-    gi.Set(false, false, '.', Colors::ShadesOfGrey::Ten, Colors::ShadesOfGrey::Eight, "Path");
-
-    MapArray[c.X][c.Y]->MakeTile(gi);
+    PlaceGroundTile(c.X,
+                    c.Y,
+                    '.',
+                    Colors::ShadesOfGrey::Ten,
+                    Colors::ShadesOfGrey::Eight,
+                    "Flagstone");
 
     pathCopy.pop();
   }

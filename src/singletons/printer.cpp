@@ -771,7 +771,7 @@ void Printer::Clear()
   {
     for (size_t y = 0; y < TerminalHeight; y++)
     {
-      PrintFB(x, y, ' ', "#000000");
+      PrintFB(x, y, ' ', Colors::BlackColor, Colors::BlackColor);
     }
   }
 #else

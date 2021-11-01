@@ -291,7 +291,7 @@ void DevConsole::ProcessCommand(const std::string& command,
 
 void DevConsole::TransformTile(const std::vector<std::string>& params)
 {
-  if (params.size() > 0 && params.size() < 3)
+  if (params.size() >= 0 && params.size() < 3)
   {
     StdOut(ErrWrongParams);
     return;

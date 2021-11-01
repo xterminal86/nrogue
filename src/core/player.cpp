@@ -504,7 +504,8 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
     }
   }
   else if (what->Type != GameObjectType::DEEP_WATER
-        || what->Type != GameObjectType::LAVA)
+        || what->Type != GameObjectType::LAVA
+        || what->Type != GameObjectType::CHASM)
   {
     // Create arrow object on the cell where it landed
     ItemComponent* arrow = GameObjectsFactory::Instance().CloneItem(EquipmentByCategory[EquipmentCategory::SHIELD][0]);

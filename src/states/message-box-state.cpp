@@ -114,7 +114,8 @@ void MessageBoxState::Update(bool forceUpdate)
       headerBgColor = "#660000";
     }
 
-    Printer::Instance().DrawWindow({ x1, y1 }, { x2 - x1, y2 - y1 },
+    Printer::Instance().DrawWindow({ x1, y1 },
+                                   { x2 - x1, y2 - y1 },
                                    _header,
                                    Colors::WhiteColor,
                                    headerBgColor,
@@ -126,11 +127,11 @@ void MessageBoxState::Update(bool forceUpdate)
     for (auto& s : _message)
     {
       Printer::Instance().PrintFB(tw / 2,
-                                   th / 2 - _message.size() / 2 + offset,
-                                   s,
-                                   Printer::kAlignCenter,
-                                   Colors::WhiteColor,
-                                   _bgColor);
+                                  th / 2 - _message.size() / 2 + offset,
+                                  s,
+                                  Printer::kAlignCenter,
+                                  Colors::WhiteColor,
+                                  _bgColor);
       offset++;
     }
 
