@@ -128,11 +128,11 @@ namespace Util
 
   bool IsBase64(unsigned char c)
   {
-    auto res = std::find(GlobalConstants::Base64Chars.begin(),
-                         GlobalConstants::Base64Chars.end(),
+    auto res = std::find(Strings::Base64Chars.begin(),
+                         Strings::Base64Chars.end(),
                          c);
 
-    return (res != GlobalConstants::Base64Chars.end());
+    return (res != Strings::Base64Chars.end());
   }
 
   std::string Base64_Encode(unsigned char const* bytes_to_encode, unsigned int in_len)
@@ -155,7 +155,7 @@ namespace Util
 
         for(i = 0; (i < 4) ; i++)
         {
-          ret += GlobalConstants::Base64Chars[char_array_4[i]];
+          ret += Strings::Base64Chars[char_array_4[i]];
         }
 
         i = 0;
@@ -176,7 +176,7 @@ namespace Util
 
       for (j = 0; (j < i + 1); j++)
       {
-        ret += GlobalConstants::Base64Chars[char_array_4[j]];
+        ret += Strings::Base64Chars[char_array_4[j]];
       }
 
       while((i++ < 3))
@@ -204,7 +204,7 @@ namespace Util
       {
         for (i = 0; i <4; i++)
         {
-          char_array_4[i] = GlobalConstants::Base64Chars.find(char_array_4[i]);
+          char_array_4[i] = Strings::Base64Chars.find(char_array_4[i]);
         }
 
         char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
@@ -229,7 +229,7 @@ namespace Util
 
       for (j = 0; j <4; j++)
       {
-        char_array_4[j] = GlobalConstants::Base64Chars.find(char_array_4[j]);
+        char_array_4[j] = Strings::Base64Chars.find(char_array_4[j]);
       }
 
       char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
@@ -970,11 +970,11 @@ namespace Util
         {
           case 0:
           {
-            vowelIndex = RNG::Instance().RandomRange(0, GlobalConstants::Vowels.length());
-            consIndex  = RNG::Instance().RandomRange(0, GlobalConstants::Consonants.length());
+            vowelIndex = RNG::Instance().RandomRange(0, Strings::Vowels.length());
+            consIndex  = RNG::Instance().RandomRange(0, Strings::Consonants.length());
 
-            vowel = { GlobalConstants::Vowels[vowelIndex]    };
-            cons  = { GlobalConstants::Consonants[consIndex] };
+            vowel = { Strings::Vowels[vowelIndex]    };
+            cons  = { Strings::Consonants[consIndex] };
 
             syl = { cons + vowel };
           }
@@ -982,8 +982,8 @@ namespace Util
 
           case 1:
           {
-            consIndex = RNG::Instance().RandomRange(0, GlobalConstants::Consonants.length());
-            cons      = GlobalConstants::Consonants[consIndex];
+            consIndex = RNG::Instance().RandomRange(0, Strings::Consonants.length());
+            cons      = Strings::Consonants[consIndex];
 
             syl = cons;
 
@@ -991,9 +991,9 @@ namespace Util
 
             for (int i = 0; i < 2; i++)
             {
-              vowelIndex = RNG::Instance().RandomRange(0, GlobalConstants::Vowels.length());
+              vowelIndex = RNG::Instance().RandomRange(0, Strings::Vowels.length());
 
-              char v = GlobalConstants::Vowels[vowelIndex];
+              char v = Strings::Vowels[vowelIndex];
               vowel  = { v };
 
               if (allowDoubleVowels ||

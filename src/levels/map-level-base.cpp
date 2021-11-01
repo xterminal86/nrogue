@@ -443,6 +443,25 @@ void MapLevelBase::PlaceLavaTile(int x, int y)
   MapArray[x][y]->MakeTile(t, GameObjectType::LAVA);
 }
 
+void MapLevelBase::PlaceChasmTile(int x, int y)
+{
+  int img = ' ';
+
+#ifdef USE_SDL
+  img = GlobalConstants::CP437IndexByType[NameCP437::SHADING_1];
+
+  std::string fgColor = Colors::ShadesOfGrey::Three;
+  std::string bgColor = Colors::BlackColor;
+#else
+  std::string fgColor = Colors::BlackColor;
+  std::string bgColor = Colors::BlackColor;
+#endif
+
+  GameObjectInfo t;
+  t.Set(false, false, img, fgColor, bgColor, "Chasm");
+  MapArray[x][y]->MakeTile(t, GameObjectType::CHASM);
+}
+
 void MapLevelBase::PlaceShrine(const Position& pos, LevelBuilder& lb)
 {
   GameObjectInfo t;

@@ -75,7 +75,11 @@ void HelpState::Update(bool forceUpdate)
     int offsetY = 1;
     for (size_t i = _scrollPosition; i < _helpText.size(); i++)
     {
-      Printer::Instance().PrintFB(1, offsetY, _helpText[i], Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(1,
+                                  offsetY,
+                                  _helpText[i],
+                                  Printer::kAlignLeft,
+                                  Colors::WhiteColor);
       offsetY++;
     }
 
@@ -93,27 +97,27 @@ void HelpState::DrawScrollBars()
     if (_scrollPosition == 0)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, Colors::WhiteColor);
       #else
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, Colors::WhiteColor);
       #endif
     }
     else if (_scrollPosition == scrollLimit)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1, 1, (int)NameCP437::UARROW_2, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, 1, (int)NameCP437::UARROW_2, Colors::WhiteColor);
       #else
-      Printer::Instance().PrintFB(_tw - 1, 1, "/\\", Printer::kAlignRight, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, 1, "/\\", Printer::kAlignRight, Colors::WhiteColor);
       #endif
     }
     else if (_scrollPosition > 0 && _scrollPosition != scrollLimit)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1, 1, (int)NameCP437::UARROW_2, "#FFFFFF");
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, 1, (int)NameCP437::UARROW_2, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, Colors::WhiteColor);
       #else
-      Printer::Instance().PrintFB(_tw - 1, 1, "/\\", Printer::kAlignRight, "#FFFFFF");
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, "#FFFFFF");
+      Printer::Instance().PrintFB(_tw - 1, 1, "/\\", Printer::kAlignRight, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, Colors::WhiteColor);
       #endif
     }
   }

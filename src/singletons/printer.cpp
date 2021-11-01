@@ -57,7 +57,7 @@ void Printer::InitForSDL()
     SDL_SetWindowPosition(Application::Instance().Window, rect.x, rect.y);
     SDL_SetWindowSize(Application::Instance().Window, rect.w, rect.h);
 
-    auto res = Util::Base64_Decode(GlobalConstants::Tileset8x16Base64);
+    auto res = Util::Base64_Decode(Strings::Tileset8x16Base64);
     auto bytes = Util::ConvertStringToBytes(res);
     SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
     surf = SDL_LoadBMP_RW(data, 1);
@@ -1009,11 +1009,11 @@ bool Printer::IsColorStringValid(const std::string& htmlColor)
 
   for (size_t i = 1; i < htmlColor.length(); i++)
   {
-    auto res = std::find(GlobalConstants::HexChars.begin(),
-                         GlobalConstants::HexChars.end(),
+    auto res = std::find(Strings::HexChars.begin(),
+                         Strings::HexChars.end(),
                          htmlColor[i]);
 
-    if (res == GlobalConstants::HexChars.end())
+    if (res == Strings::HexChars.end())
     {
       return false;
     }

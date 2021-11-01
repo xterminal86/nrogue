@@ -158,7 +158,7 @@ void ContainerInteractState::DisplayPlayerInventory()
 
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
-    std::string stub(GlobalConstants::InventoryMaxNameLength, GlobalConstants::InventoryEmptySlotChar);
+    std::string stub(GlobalConstants::InventoryMaxNameLength, Strings::InventoryEmptySlotChar);
     Printer::Instance().PrintFB(1,
                                 yPos + index,
                                 stub,
@@ -236,7 +236,7 @@ void ContainerInteractState::DisplayContainerInventory()
 
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
-    std::string stub(GlobalConstants::InventoryMaxNameLength, GlobalConstants::InventoryEmptySlotChar);
+    std::string stub(GlobalConstants::InventoryMaxNameLength, Strings::InventoryEmptySlotChar);
     Printer::Instance().PrintFB(xPos,
                                 yPos + index,
                                 stub,
@@ -273,8 +273,8 @@ void ContainerInteractState::TryToTransferItem()
   if (dst->IsFull())
   {
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           GlobalConstants::MessageBoxEpicFailHeaderText,
-                                           { "No room in inventory!" },
+                                           Strings::MessageBoxEpicFailHeaderText,
+                                           { Strings::MsgNoRoomInInventory },
                                            Colors::MessageBoxRedBorderColor);
     return;
   }
@@ -285,8 +285,8 @@ void ContainerInteractState::TryToTransferItem()
   if (ic->Data.IsEquipped)
   {
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           GlobalConstants::MessageBoxInformationHeaderText,
-                                           { "Unqeuip first!" },
+                                           Strings::MessageBoxInformationHeaderText,
+                                           { Strings::MsgUnequipFirst },
                                            Colors::MessageBoxRedBorderColor);
     return;
   }

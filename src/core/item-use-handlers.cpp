@@ -14,7 +14,7 @@ namespace ItemUseHandlers
   {
     Player* playerRef = &Application::Instance().PlayerInstance;
 
-    playerRef->RememberItem(item, GlobalConstants::UnidentifiedEffectText);
+    playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
 
     int amount = 0;
 
@@ -29,7 +29,7 @@ namespace ItemUseHandlers
     {
       amount = statMax;
       message = (statCur == statMax)
-                ? GlobalConstants::NoActionText
+                ? Strings::NoActionText
                 : "Your wounds are healed completely!";
     }
     else if (item->Data.Prefix == ItemPrefix::UNCURSED)
@@ -37,7 +37,7 @@ namespace ItemUseHandlers
       amount = statMax * scale;
       message = "You feel better";
       message = (statCur == statMax)
-                ? GlobalConstants::NoActionText
+                ? Strings::NoActionText
                 : "You feel better";
     }
     else if (item->Data.Prefix == ItemPrefix::CURSED)
@@ -48,7 +48,7 @@ namespace ItemUseHandlers
       if (var == 0)
       {
         message = (statCur == statMax)
-                  ? GlobalConstants::NoActionText
+                  ? Strings::NoActionText
                   : "You feel a little better";
       }
       else if (var == 1)
@@ -72,7 +72,7 @@ namespace ItemUseHandlers
       }
     }
 
-    if (message != GlobalConstants::NoActionText && amount > 0)
+    if (message != Strings::NoActionText && amount > 0)
     {
       playerRef->RememberItem(item, "healing potion");
     }
@@ -123,9 +123,9 @@ namespace ItemUseHandlers
   {
     Player* playerRef = &Application::Instance().PlayerInstance;
 
-    playerRef->RememberItem(item, GlobalConstants::UnidentifiedEffectText);
+    playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
 
-    std::string message = GlobalConstants::NoActionText;
+    std::string message = Strings::NoActionText;
 
     // Blessed potion removes all poison, uncursed removes
     // only one of the accumulated ones, if any.
@@ -177,7 +177,7 @@ namespace ItemUseHandlers
   {
     Player* playerRef = &Application::Instance().PlayerInstance;
 
-    playerRef->RememberItem(item, GlobalConstants::UnidentifiedEffectText);
+    playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
 
     int amount = 0;
 
@@ -190,14 +190,14 @@ namespace ItemUseHandlers
     {
       amount = statMax;
       message = (statCur == statMax)
-                ? GlobalConstants::NoActionText
+                ? Strings::NoActionText
                 : "You feel satiated!";
     }
     else if (item->Data.Prefix == ItemPrefix::UNCURSED)
     {
       amount = statMax * 0.3f;
       message = (statCur == statMax)
-                ? GlobalConstants::NoActionText
+                ? Strings::NoActionText
                 : "Your hunger has abated somewhat";
     }
     else if (item->Data.Prefix == ItemPrefix::CURSED)
@@ -206,7 +206,7 @@ namespace ItemUseHandlers
       message = "Your feel peckish";
     }
 
-    if (message != GlobalConstants::NoActionText)
+    if (message != Strings::NoActionText)
     {
       playerRef->RememberItem(item, "food potion");
     }
@@ -319,7 +319,7 @@ namespace ItemUseHandlers
     if (newValue < 0)
     {
       newValue = 0;
-      message = GlobalConstants::NoActionText;
+      message = Strings::NoActionText;
     }
 
     playerStats.at(itemType).Set(newValue);
@@ -336,8 +336,8 @@ namespace ItemUseHandlers
     if (!item->Data.IsIdentified)
     {
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                             GlobalConstants::MessageBoxInformationHeaderText,
-                                             { "Can't be used!" },
+                                             Strings::MessageBoxInformationHeaderText,
+                                             { Strings::MsgCantBeUsed },
                                              Colors::MessageBoxRedBorderColor);
       return false;
     }
@@ -345,7 +345,7 @@ namespace ItemUseHandlers
     if (item->Data.Amount == 0)
     {
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                             GlobalConstants::MessageBoxInformationHeaderText,
+                                             Strings::MessageBoxInformationHeaderText,
                                              { "You invoke the returner, but nothing happens." },
                                              Colors::ShadesOfGrey::Six);
       return false;
@@ -361,7 +361,7 @@ namespace ItemUseHandlers
     if (!playerRef->HasSkill(PlayerSkills::REPAIR))
     {
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                             GlobalConstants::MessageBoxEpicFailHeaderText,
+                                             Strings::MessageBoxEpicFailHeaderText,
                                              { "You don't possess the necessary skill!" },
                                              Colors::MessageBoxRedBorderColor);
       return false;

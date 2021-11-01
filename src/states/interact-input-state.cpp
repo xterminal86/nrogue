@@ -18,7 +18,7 @@ void InteractInputState::Prepare()
   _cursorPosition.X = _playerRef->PosX;
   _cursorPosition.Y = _playerRef->PosY;
 
-  Printer::Instance().AddMessage("Interact in which direction?");
+  Printer::Instance().AddMessage(Strings::MsgInteractDir);
 }
 
 void InteractInputState::HandleInput()
@@ -70,7 +70,7 @@ void InteractInputState::HandleInput()
       break;
 
     case VK_CANCEL:
-      Printer::Instance().AddMessage("Cancelled");
+      Printer::Instance().AddMessage(Strings::MsgCancelled);
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
@@ -115,7 +115,7 @@ void InteractInputState::ProcessInteraction()
       }
       else
       {
-        Printer::Instance().AddMessage("There's nothing there");
+        Printer::Instance().AddMessage(Strings::MsgNothingHere);
         Application::Instance().ChangeState(GameStates::MAIN_STATE);
       }
     }

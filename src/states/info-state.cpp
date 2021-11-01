@@ -81,7 +81,7 @@ void InfoState::Update(bool forceUpdate)
     std::string title = Util::StringFormat("%s the %s",
                                            _playerRef->Name.data(),
                                            _playerRef->GetClassName().data());
-    Printer::Instance().PrintFB(1, 0, title, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(1, 0, title, Printer::kAlignLeft, Colors::WhiteColor);
 
     int charToPrint = 0;
 
@@ -93,8 +93,8 @@ void InfoState::Update(bool forceUpdate)
 
     for (int i = 0; i < kMaxNameUnderscoreLength; i++)
     {
-      Printer::Instance().PrintFB(i, 1, charToPrint, "#FFFFFF");
-      Printer::Instance().PrintFB(i, yPos + 12, charToPrint, "#FFFFFF");
+      Printer::Instance().PrintFB(i, 1, charToPrint, Colors::WhiteColor);
+      Printer::Instance().PrintFB(i, yPos + 12, charToPrint, Colors::WhiteColor);
     }
 
     #ifdef USE_SDL
@@ -105,7 +105,7 @@ void InfoState::Update(bool forceUpdate)
 
     for (int y = 0; y < _th; y++)
     {
-      Printer::Instance().PrintFB(kMaxNameUnderscoreLength, y, charToPrint, "#FFFFFF");
+      Printer::Instance().PrintFB(kMaxNameUnderscoreLength, y, charToPrint, Colors::WhiteColor);
     }
 
     PrintAttribute(1, yPos, "LVL", _playerRef->Attrs.Lvl);
@@ -135,7 +135,7 @@ void InfoState::Update(bool forceUpdate)
                                 yPos + 13,
                                 "SKILLS",
                                 Printer::kAlignCenter,
-                                "#FFFFFF");
+                                Colors::WhiteColor);
 
     int yPrintOffset = 14;
     for (auto& kvp : _playerRef->SkillLevelBySkill)
@@ -145,7 +145,7 @@ void InfoState::Update(bool forceUpdate)
                                   yPos + yPrintOffset,
                                   skillName,
                                   Printer::kAlignLeft,
-                                  "#FFFFFF");
+                                  Colors::WhiteColor);
       yPrintOffset++;
     }
 
@@ -158,7 +158,7 @@ void InfoState::Update(bool forceUpdate)
                                   _thHalf,
                                   "No items to recall",
                                   Printer::kAlignCenter,
-                                  "#FFFFFF");
+                                  Colors::WhiteColor);
     }
 
     // Use-identified items
@@ -174,7 +174,11 @@ void InfoState::Update(bool forceUpdate)
       auto it = items.begin();
       std::advance(it, ind);
       std::string str = Util::StringFormat("%s - %s", it->second.first.data(), it->second.second.data());
-      Printer::Instance().PrintFB(kMaxNameUnderscoreLength + 1, yPrintOffset, str, Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(kMaxNameUnderscoreLength + 1,
+                                  yPrintOffset,
+                                  str,
+                                  Printer::kAlignLeft,
+                                  Colors::WhiteColor);
       yPrintOffset++;
     }
 
@@ -232,7 +236,7 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
   }
 
   std::string attrPlaceholder = Util::StringFormat("%s:...", attrName.data());
-  Printer::Instance().PrintFB(x, y, attrPlaceholder, Printer::kAlignLeft, "#555555");
+  Printer::Instance().PrintFB(x, y, attrPlaceholder, Printer::kAlignLeft, Colors::ShadesOfGrey::Five);
 
   std::string text = Util::StringFormat("%i", attr.Get());
 
@@ -243,25 +247,25 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
 
   // Replace stat name back with white color (kinda hack)
   auto str = Util::StringFormat("%s:", attrName.data());
-  Printer::Instance().PrintFB(x, y, str, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(x, y, str, Printer::kAlignLeft, Colors::WhiteColor);
 }
 
 void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, RangedAttribute& attr)
 {
-  std::string color = "#FFFFFF";
+  std::string color = Colors::WhiteColor;
 
   int modifiers = attr.Max().GetModifiers();
   if (modifiers > 0)
   {
-    color = "#00FF00";
+    color = Colors::GreenColor;
   }
   else if (modifiers < 0)
   {
-    color = "#FF0000";
+    color = Colors::RedColor;
   }
 
   std::string placeholder = Util::StringFormat("%s: ... / ...", attrName.data());
-  Printer::Instance().PrintFB(x, y, placeholder, Printer::kAlignLeft, "#555555");
+  Printer::Instance().PrintFB(x, y, placeholder, Printer::kAlignLeft, Colors::ShadesOfGrey::Five);
 
   //std::string text = Util::StringFormat("%s: %i / %i", attrName.data(), attr.Min().Get(), attr.Max().Get());
   //Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
@@ -271,11 +275,11 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
 
   Printer::Instance().PrintFB(x + placeholder.length() - 6 - minVal.length(), y, minVal, Printer::kAlignLeft, color);
   Printer::Instance().PrintFB(x + placeholder.length() - 3, y, maxVal, Printer::kAlignLeft, color);
-  Printer::Instance().PrintFB(x + placeholder.length() - 5, y, '/', "#FFFFFF");
+  Printer::Instance().PrintFB(x + placeholder.length() - 5, y, '/', Colors::WhiteColor);
 
   // Replace stat name back with white color (kinda hack)
   auto str = Util::StringFormat("%s:", attrName.data());
-  Printer::Instance().PrintFB(x, y, str, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(x, y, str, Printer::kAlignLeft, Colors::WhiteColor);
 }
 
 void InfoState::PrintModifiers(int x, int y)
@@ -314,17 +318,17 @@ std::pair<std::string, std::string> InfoState::GetModifierString(int value)
 {
   std::pair<std::string, std::string> res;
 
-  std::string color = "#FFFFFF";
+  std::string color = Colors::WhiteColor;
   std::string str;
 
   if (value < 0)
   {
-    color = "#FF0000";
+    color = Colors::RedColor;
     str = Util::StringFormat("(%i)", value);
   }
   else if (value > 0)
   {
-    color = "#00FF00";
+    color = Colors::GreenColor;
     str = Util::StringFormat("(+%i)", value);
   }
   else if (value == 0)

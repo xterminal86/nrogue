@@ -10,8 +10,8 @@ BTResult TaskGotoLastPlayerPos::Run()
 {
   //DebugLog("[TaskGotoLastPlayerPos]\n");
 
-  auto sX = Blackboard::Instance().Get(_objectToControl->ObjectId(), GlobalConstants::BlackboardKeyPlayerPosX);
-  auto sY = Blackboard::Instance().Get(_objectToControl->ObjectId(), GlobalConstants::BlackboardKeyPlayerPosY);
+  auto sX = Blackboard::Instance().Get(_objectToControl->ObjectId(), Strings::BlackboardKeyPlayerPosX);
+  auto sY = Blackboard::Instance().Get(_objectToControl->ObjectId(), Strings::BlackboardKeyPlayerPosY);
 
   if (sX.empty() || sY.empty())
   {
@@ -26,8 +26,8 @@ BTResult TaskGotoLastPlayerPos::Run()
   {
     // We have arrived at the last known player position
 
-    Blackboard::Instance().Set(_objectToControl->ObjectId(), { GlobalConstants::BlackboardKeyPlayerPosX, "" });
-    Blackboard::Instance().Set(_objectToControl->ObjectId(), { GlobalConstants::BlackboardKeyPlayerPosY, "" });
+    Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPosX, "" });
+    Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPosY, "" });
 
     return BTResult::Success;
   }
@@ -56,8 +56,8 @@ BTResult TaskGotoLastPlayerPos::Run()
   }
 
   // No path can be built or MoveTo() failed
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { GlobalConstants::BlackboardKeyPlayerPosX, "" });
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { GlobalConstants::BlackboardKeyPlayerPosY, "" });
+  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPosX, "" });
+  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPosY, "" });
 
   return BTResult::Failure;
 }

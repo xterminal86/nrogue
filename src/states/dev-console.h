@@ -86,6 +86,7 @@ class DevConsole : public GameState
       GameObjectType::LAVA,
       GameObjectType::SHALLOW_WATER,
       GameObjectType::DEEP_WATER,
+      GameObjectType::CHASM
     };
 
     void StdOut(const std::string& str);

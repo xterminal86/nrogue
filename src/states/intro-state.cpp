@@ -81,7 +81,11 @@ void IntroState::Update(bool forceUpdate)
 
       if (_textPositionCursor != _introStrings[textIndex][_stringIndex].length())
       {
-        Printer::Instance().PrintFB(_textPositionX - len / 2, _textPositionY, _introStrings[textIndex][_stringIndex][_textPositionCursor], Colors::WhiteColor);
+        Printer::Instance().PrintFB(_textPositionX - len / 2,
+                                    _textPositionY,
+                                    _introStrings[textIndex][_stringIndex][_textPositionCursor],
+                                    Colors::WhiteColor);
+
         Printer::Instance().PrintFB(_textPositionX - len / 2 + 1, _textPositionY, ' ', Colors::BlackColor, Colors::WhiteColor);
 
         _textPositionX++;

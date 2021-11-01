@@ -58,7 +58,11 @@ void SelectClassState::Update(bool forceUpdate)
     int tw = Printer::TerminalWidth;
     int th = Printer::TerminalHeight;
 
-    Printer::Instance().PrintFB(tw / 2, th / 2 - 4, "Who are you?", Printer::kAlignCenter, Colors::WhiteColor);
+    Printer::Instance().PrintFB(tw / 2,
+                                th / 2 - 4,
+                                "Who are you?",
+                                Printer::kAlignCenter,
+                                Colors::WhiteColor);
 
     int offset = 0;
     int index = 0;
@@ -72,7 +76,12 @@ void SelectClassState::Update(bool forceUpdate)
                             Colors::WhiteColor :
                             Colors::BlackColor;
 
-      Printer::Instance().PrintFB(tw / 2, th / 2 + offset, i, Printer::kAlignCenter, fgColor, bgColor);
+      Printer::Instance().PrintFB(tw / 2,
+                                  th / 2 + offset,
+                                  i,
+                                  Printer::kAlignCenter,
+                                  fgColor,
+                                  bgColor);
 
       index++;
       offset++;

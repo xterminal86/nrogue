@@ -32,8 +32,8 @@ void RepairState::HandleInput()
         if (ic->Data.Durability.Min().Get() == ic->Data.Durability.Max().Get())
         {
           Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                                 GlobalConstants::MessageBoxInformationHeaderText,
-                                                 { "This item looks undamaged" },
+                                                 Strings::MessageBoxInformationHeaderText,
+                                                 { Strings::MsgItemUndamaged },
                                                  Colors::ShadesOfGrey::Six);
         }
         else
@@ -67,7 +67,7 @@ void RepairState::Update(bool forceUpdate)
                            ic->Data.IdentifiedName :
                            ic->Data.UnidentifiedName;
 
-        char c = GlobalConstants::AlphabetLowercase[itemIndex];
+        char c = Strings::AlphabetLowercase[itemIndex];
         std::string str;
 
         if (ic->Data.IsIdentified)

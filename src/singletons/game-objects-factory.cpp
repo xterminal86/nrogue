@@ -233,7 +233,10 @@ bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
 
   if (item->Data.EqCategory == EquipmentCategory::NOT_EQUIPPABLE)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Can't be equipped!" }, Colors::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                           Strings::MessageBoxInformationHeaderText,
+                                           { "Can't be equipped!" },
+                                           Colors::MessageBoxRedBorderColor);
     return res;
   }
 
@@ -264,11 +267,17 @@ bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
     switch (item->Data.ItemType_)
     {
       case ItemType::COINS:
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "You don't 'use' money like that." }, Colors::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                               Strings::MessageBoxInformationHeaderText,
+                                               { "You don't 'use' money like that." },
+                                               Colors::MessageBoxRedBorderColor);
         break;
 
       default:
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Can't be used!" }, Colors::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                               Strings::MessageBoxInformationHeaderText,
+                                               { Strings::MsgCantBeUsed },
+                                               Colors::MessageBoxRedBorderColor);
         break;
     }
   }

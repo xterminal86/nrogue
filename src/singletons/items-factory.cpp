@@ -108,7 +108,7 @@ GameObject* ItemsFactory::CreateMoney(int amount)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  go->ObjectName = GlobalConstants::MoneyName;
+  go->ObjectName = Strings::MoneyName;
   go->Image = '$';
   go->FgColor = Colors::CoinsColor;
 
@@ -125,7 +125,7 @@ GameObject* ItemsFactory::CreateMoney(int amount)
   ic->Data.IsStackable    = true;
   ic->Data.ItemType_      = ItemType::COINS;
   ic->Data.IsIdentified   = true;
-  ic->Data.IdentifiedName = GlobalConstants::MoneyName;
+  ic->Data.IdentifiedName = Strings::MoneyName;
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
@@ -2552,7 +2552,10 @@ bool ItemsFactory::ProcessItemEquiption(ItemComponent* item)
   }
   else if (itemEquipped != item)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, Colors::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                           Strings::MessageBoxInformationHeaderText,
+                                           { Strings::MsgUnequipFirst },
+                                           Colors::MessageBoxRedBorderColor);
     res = false;
   }
   else
@@ -2561,7 +2564,10 @@ bool ItemsFactory::ProcessItemEquiption(ItemComponent* item)
     {
       itemEquipped->Data.IsPrefixDiscovered = true;
       auto str = Util::StringFormat("You can't unequip %s - it's cursed!", itemEquipped->OwnerGameObject->ObjectName.data());
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { str }, Colors::MessageBoxRedBorderColor);
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                             Strings::MessageBoxEpicFailHeaderText,
+                                             { str },
+                                             Colors::MessageBoxRedBorderColor);
       res = false;
     }
     else
@@ -2589,7 +2595,10 @@ bool ItemsFactory::ProcessRingEquiption(ItemComponent* item)
       {
         rings[i]->Data.IsPrefixDiscovered = true;
         auto str = Util::StringFormat("You can't unequip %s - it's cursed!", rings[i]->OwnerGameObject->ObjectName.data());
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxEpicFailHeaderText, { str }, Colors::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                               Strings::MessageBoxEpicFailHeaderText,
+                                               { str },
+                                               Colors::MessageBoxRedBorderColor);
         return false;
       }
 
@@ -2611,7 +2620,10 @@ bool ItemsFactory::ProcessRingEquiption(ItemComponent* item)
   // Finally, if no empty slots found, display a warning
   if (!emptySlotFound)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, Colors::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                           Strings::MessageBoxInformationHeaderText,
+                                           { Strings::MsgUnequipFirst },
+                                           Colors::MessageBoxRedBorderColor);
   }
 
   return false;

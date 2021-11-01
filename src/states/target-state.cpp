@@ -167,7 +167,7 @@ void TargetState::HandleInput()
       break;
 
     case VK_CANCEL:
-      Printer::Instance().AddMessage("Cancelled");
+      Printer::Instance().AddMessage(Strings::MsgCancelled);
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
@@ -383,7 +383,7 @@ std::pair<char, std::string> TargetState::GetProjectileImageAndColor(bool throwi
 
   char projectile = ' ';
 
-  std::string projColor = "#FFFFFF";
+  std::string projColor = Colors::WhiteColor;
 
   bool isWand   = (_weaponRef->Data.ItemType_ == ItemType::WAND);
   bool isWeapon = (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON);
@@ -494,7 +494,11 @@ void TargetState::ProcessLaser()
     int drawingPosX = mx + Map::Instance().CurrentLevel->MapOffsetX;
     int drawingPosY = my + Map::Instance().CurrentLevel->MapOffsetY;
 
-    Printer::Instance().PrintFB(drawingPosX, drawingPosY, '*', "#FFFF00", "#FF0000");
+    Printer::Instance().PrintFB(drawingPosX,
+                                drawingPosY,
+                                '*',
+                                Colors::YellowColor,
+                                Colors::RedColor);
 
     distanceCovered++;
     power--;
@@ -802,7 +806,7 @@ void TargetState::DrawHint()
 
   for (auto& p : cellsToHighlight)
   {
-    Printer::Instance().PrintFB(p.X + mox, p.Y + moy, '.', "#FF0000");
+    Printer::Instance().PrintFB(p.X + mox, p.Y + moy, '.', Colors::RedColor);
   }
 }
 
@@ -855,11 +859,11 @@ void TargetState::DrawCursor()
 
   Printer::Instance().PrintFB(_cursorPosition.X + mox + 1,
                               _cursorPosition.Y + moy,
-                              ']', "#FFFFFF");
+                              ']', Colors::WhiteColor);
 
   Printer::Instance().PrintFB(_cursorPosition.X + mox - 1,
                               _cursorPosition.Y + moy,
-                              '[', "#FFFFFF");
+                              '[', Colors::WhiteColor);
 }
 
 void TargetState::Update(bool forceUpdate)
@@ -883,12 +887,12 @@ void TargetState::Update(bool forceUpdate)
     Printer::Instance().PrintFB(tw / 2, 0,
                                 "Select target then press 'f' or 'Enter' to fire",
                                 Printer::kAlignCenter,
-                                "#FFFFFF");
+                                Colors::WhiteColor);
 
     Printer::Instance().PrintFB(tw / 2, 1,
                                 "(TAB to cycle through visible ones)",
                                 Printer::kAlignCenter,
-                                "#FFFFFF");
+                                Colors::WhiteColor);
 
     Printer::Instance().Render();
   }

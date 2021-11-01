@@ -339,8 +339,16 @@ void DevConsole::TransformTile(const std::vector<std::string>& params)
       _currentLevel->PlaceLavaTile(x, y);
       break;
 
+    case GameObjectType::SHALLOW_WATER:
+      _currentLevel->PlaceShallowWaterTile(x, y);
+      break;
+
     case GameObjectType::DEEP_WATER:
       _currentLevel->PlaceDeepWaterTile(x, y);
+      break;
+
+    case GameObjectType::CHASM:
+      _currentLevel->PlaceChasmTile(x, y);
       break;
   }
 
@@ -716,11 +724,11 @@ bool DevConsole::StringIsNumbers(const std::string& str)
 {
   for (auto& c : str)
   {
-    auto res = std::find(GlobalConstants::Numbers.begin(),
-                         GlobalConstants::Numbers.end(),
+    auto res = std::find(Strings::Numbers.begin(),
+                         Strings::Numbers.end(),
                          c);
 
-    if (res == GlobalConstants::Numbers.end())
+    if (res == Strings::Numbers.end())
     {
       return false;
     }

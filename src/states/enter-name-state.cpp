@@ -174,36 +174,77 @@ void EnterNameState::Update(bool forceUpdate)
     // Seed string hint
     for (int i = 0; i < MaxSeedStringLength - 2; i++)
     {
-      Printer::Instance().PrintFB(_x - _maxSeedHalf + 2 + i, _cursorPos + 6, '.', "#444444");
+      Printer::Instance().PrintFB(_x - _maxSeedHalf + 2 + i,
+                                  _cursorPos + 6,
+                                  '.',
+                                  Colors::ShadesOfGrey::Four);
     }
 
     // Seed number hint
     for (size_t i = 0; i < sizeof(RNG::Instance().Seed) * 2; i++)
     {
-      Printer::Instance().PrintFB(_x - _maxSeedHalf + 4 + i, _cursorPos + 8, '.', "#444444");
+      Printer::Instance().PrintFB(_x - _maxSeedHalf + 4 + i,
+                                  _cursorPos + 8,
+                                  '.',
+                                  Colors::ShadesOfGrey::Four);
     }
 
-    Printer::Instance().PrintFB(_x - _maxNameHalf + 2, _cursorPos, _nameEntered, Printer::kAlignLeft, "#FFFFFF");
-    Printer::Instance().PrintFB(_x - _maxSeedHalf + 2, _cursorPos + 8, "0x", Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(_x - _maxNameHalf + 2,
+                                _cursorPos,
+                                _nameEntered,
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
+
+    Printer::Instance().PrintFB(_x - _maxSeedHalf + 2,
+                                _cursorPos + 8,
+                                "0x",
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
 
     if (_inputType == InputType::NAME)
     {
-      Printer::Instance().PrintFB(_x - _maxNameHalf + 2 + _nameEntered.length(), _cursorPos, ' ', "#000000", "#FFFFFF");
+      Printer::Instance().PrintFB(_x - _maxNameHalf + 2 + _nameEntered.length(),
+                                  _cursorPos,
+                                  ' ',
+                                  Colors::BlackColor,
+                                  Colors::WhiteColor);
     }
     else if (_inputType == InputType::SEED_STRING)
     {
-      Printer::Instance().PrintFB(_x - _maxSeedHalf + 2 + _seedEntered.length(), _cursorPos + 6, ' ', "#000000", "#FFFFFF");
-      Printer::Instance().PrintFB(_x - _maxSeedHalf + 2, _cursorPos + 6, _seedEntered, Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(_x - _maxSeedHalf + 2 + _seedEntered.length(),
+                                  _cursorPos + 6,
+                                  ' ',
+                                  Colors::BlackColor,
+                                  Colors::WhiteColor);
+
+      Printer::Instance().PrintFB(_x - _maxSeedHalf + 2,
+                                  _cursorPos + 6,
+                                  _seedEntered,
+                                  Printer::kAlignLeft,
+                                  Colors::WhiteColor);
 
       if (!_seedEntered.empty())
       {
-        Printer::Instance().PrintFB(_x - _maxSeedHalf + 4, _cursorPos + 8, _seedAsHex, Printer::kAlignLeft, "#FFFFFF");
+        Printer::Instance().PrintFB(_x - _maxSeedHalf + 4,
+                                    _cursorPos + 8,
+                                    _seedAsHex,
+                                    Printer::kAlignLeft,
+                                    Colors::WhiteColor);
       }
     }
     else if (_inputType == InputType::SEED_HEX)
     {
-      Printer::Instance().PrintFB(_x - _maxSeedHalf + 4 + _seedEntered.length(), _cursorPos + 8, ' ', "#000000", "#FFFFFF");
-      Printer::Instance().PrintFB(_x - _maxSeedHalf + 4, _cursorPos + 8, _seedEntered, Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(_x - _maxSeedHalf + 4 + _seedEntered.length(),
+                                  _cursorPos + 8,
+                                  ' ',
+                                  Colors::BlackColor,
+                                  Colors::WhiteColor);
+
+      Printer::Instance().PrintFB(_x - _maxSeedHalf + 4,
+                                  _cursorPos + 8,
+                                  _seedEntered,
+                                  Printer::kAlignLeft,
+                                  Colors::WhiteColor);
     }
 
     Printer::Instance().PrintFB(_twHalf,

@@ -27,7 +27,9 @@ class Player : public GameObject
     bool Move(int dx, int dy);
 
     void CheckVisibility();
+
     bool TryToAttack(int dx, int dy);
+    bool IsSwimming();
 
     int SelectedClass;
 

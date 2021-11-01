@@ -148,7 +148,7 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll)
 
 void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll)
 {
-  _playerRef->RememberItem(scroll, GlobalConstants::UnidentifiedEffectText);
+  _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
 
   std::vector<ItemComponent*> itemsToRepair;
   for (auto& i : _playerRef->Inventory.Contents)
@@ -199,7 +199,7 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
 {
   // TODO: identify control
 
-  _playerRef->RememberItem(scroll, GlobalConstants::UnidentifiedEffectText);
+  _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
 
   std::vector<ItemComponent*> itemsToId;
   std::vector<ItemComponent*> itemsKnown;
@@ -270,7 +270,7 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
 
 void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
 {
-  _playerRef->RememberItem(scroll, GlobalConstants::UnidentifiedEffectText);
+  _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
 
   int playerPow = _playerRef->Attrs.Mag.Get();
 
@@ -321,7 +321,7 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll)
 
 void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll)
 {
-  _playerRef->RememberItem(scroll, GlobalConstants::UnidentifiedEffectText);
+  _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
 
   int power = _playerRef->Attrs.HP.Max().Get();
   bool atFullHealth = (_playerRef->Attrs.HP.Min().Get() == _playerRef->Attrs.HP.Max().Get());
@@ -503,7 +503,7 @@ void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll)
 
 void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
 {
-  _playerRef->RememberItem(scroll, GlobalConstants::UnidentifiedEffectText);
+  _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
 
   auto lvl = Map::Instance().GetLevelRefByType(MapType::TOWN);
   if (scroll->Data.Prefix == ItemPrefix::BLESSED)
@@ -557,7 +557,7 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll)
 
 void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll)
 {
-  _playerRef->RememberItem(scroll, GlobalConstants::UnidentifiedEffectText);
+  _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
 
   Printer::Instance().AddMessage("You are suddenly transported elsewhere!");
 
@@ -587,7 +587,7 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll)
 
 void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
 {
-  _playerRef->RememberItem(scroll, GlobalConstants::UnidentifiedEffectText);
+  _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
 
   bool manaShieldOk = (_playerRef->Attrs.MP.Min().Get() != 0 ||
                       (_playerRef->Attrs.MP.Max().Get() != 0 &&
@@ -626,7 +626,7 @@ void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll)
 
 void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
 {
-  _playerRef->RememberItem(scroll, GlobalConstants::UnidentifiedEffectText);
+  _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
 
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {

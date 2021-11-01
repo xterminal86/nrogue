@@ -16,7 +16,7 @@ void SpellsDatabase::Init()
                 });
 
   RegisterSpell({
-  SpellType::STRIKE, "Strike", "S", 25, { 1, 4 }, "#FFFFFF"
+  SpellType::STRIKE, "Strike", "S", 25, { 1, 4 }, Colors::WhiteColor
                 });
 
   RegisterSpell({
@@ -24,18 +24,18 @@ void SpellsDatabase::Init()
                 });
 
   RegisterSpell({
-  SpellType::FIREBALL, "Fireball", "Fl", 100, { 2, 8 }, "#FFFF00"
+  SpellType::FIREBALL, "Fireball", "Fl", 100, { 2, 8 }, Colors::YellowColor
                 });
 
   // Wand of piercing damage is actually (min + max)
   // and these values will be affected separately
   // by item quality and BUC status.
   RegisterSpell({
-  SpellType::LASER, "Pierce", "P", 150, { 10, 10 }, "#FFFFFF"
+  SpellType::LASER, "Pierce", "P", 150, { 10, 10 }, Colors::WhiteColor
                 });
 
   RegisterSpell({
-  SpellType::LIGHTNING, "Lightning", "Lg", 100, { 2, 6 }, "#FFFFFF"
+  SpellType::LIGHTNING, "Lightning", "Lg", 100, { 2, 6 }, Colors::WhiteColor
                 });
 
   RegisterSpell({
@@ -51,7 +51,7 @@ void SpellsDatabase::Init()
                 });
 
   RegisterSpell({
-  SpellType::TELEPORT, "Teleport", "Te", 100, { 0, 0 }, "#FFFFFF"
+  SpellType::TELEPORT, "Teleport", "Te", 100, { 0, 0 }, Colors::WhiteColor
                 });
 
   RegisterSpell({

@@ -45,7 +45,7 @@ void ExitingState::Update(bool forceUpdate)
                                 Printer::TerminalHeight - 1,
                                 "Exit game? (y/q)",
                                 Printer::kAlignRight,
-                                "#FFFFFF");
+                                Colors::WhiteColor);
 
     Printer::Instance().Render();
   }

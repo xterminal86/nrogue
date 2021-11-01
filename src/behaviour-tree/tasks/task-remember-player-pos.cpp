@@ -10,8 +10,8 @@ BTResult TaskRememberPlayerPos::Run()
   std::string plX = std::to_string(_playerRef->PosX);
   std::string plY = std::to_string(_playerRef->PosY);
 
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { GlobalConstants::BlackboardKeyPlayerPosX, plX });
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { GlobalConstants::BlackboardKeyPlayerPosY, plY });
+  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPosX, plX });
+  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPosY, plY });
 
   return BTResult::Success;
 }

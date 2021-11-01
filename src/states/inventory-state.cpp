@@ -60,13 +60,19 @@ void InventoryState::HandleInput()
 
       if (ic->Data.IsEquipped)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, Colors::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                               Strings::MessageBoxInformationHeaderText,
+                                               { Strings::MsgUnequipFirst },
+                                               Colors::MessageBoxRedBorderColor);
         return;
       }
 
       if (ic->Data.IsImportant)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "This looks important - better hold on to it" }, Colors::MessageBoxBlueBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                               Strings::MessageBoxInformationHeaderText,
+                                               { Strings::MsgLooksImportant },
+                                               Colors::MessageBoxBlueBorderColor);
         return;
       }
 
@@ -162,13 +168,19 @@ void InventoryState::HandleInput()
       ItemComponent* ic = go->GetComponent<ItemComponent>();
       if (ic->Data.IsEquipped)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "Unequip first!" }, Colors::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                               Strings::MessageBoxInformationHeaderText,
+                                               { Strings::MsgUnequipFirst },
+                                               Colors::MessageBoxRedBorderColor);
         return;
       }
 
       if (ic->Data.IsImportant)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, GlobalConstants::MessageBoxInformationHeaderText, { "This looks important - better hold on to it" }, Colors::MessageBoxBlueBorderColor);
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                               Strings::MessageBoxInformationHeaderText,
+                                               { Strings::MsgLooksImportant },
+                                               Colors::MessageBoxBlueBorderColor);
         return;
       }
 
@@ -226,7 +238,7 @@ void InventoryState::Update(bool forceUpdate)
                                     2 + yPos,
                                     stackAmount,
                                     Printer::kAlignLeft,
-                                    "#FFFFFF");
+                                    Colors::WhiteColor);
       }
       else if (ic->Data.IsEquipped)
       {
@@ -235,7 +247,7 @@ void InventoryState::Update(bool forceUpdate)
                                     2 + yPos,
                                     equipStatus,
                                     Printer::kAlignLeft,
-                                    "#FFFFFF");
+                                    Colors::WhiteColor);
       }
 
       std::string textColor = Util::GetItemInventoryColor(ic->Data);
@@ -250,7 +262,7 @@ void InventoryState::Update(bool forceUpdate)
     for (int i = itemsCount; i < GlobalConstants::InventoryMaxSize; i++)
     {
       std::string stub(GlobalConstants::InventoryMaxNameLength,
-                       GlobalConstants::InventoryEmptySlotChar);
+                       Strings::InventoryEmptySlotChar);
 
       Printer::Instance().PrintFB(1,
                                   2 + yPos,
@@ -307,7 +319,7 @@ void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldNa
 {
   std::string stub(kEquipmentMaxNameLength, '-');
 
-  Printer::Instance().PrintFB(x, y, fieldName, Printer::kAlignCenter, "#FFFFFF");
+  Printer::Instance().PrintFB(x, y, fieldName, Printer::kAlignCenter, Colors::WhiteColor);
 
   if (eq != nullptr)
   {
@@ -315,7 +327,7 @@ void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldNa
     stub.resize(kEquipmentMaxNameLength, ' ');
   }
 
-  Printer::Instance().PrintFB(x, y + 1, stub, Printer::kAlignCenter, "#FFFFFF");
+  Printer::Instance().PrintFB(x, y + 1, stub, Printer::kAlignCenter, Colors::WhiteColor);
 }
 
 void InventoryState::PrintFooter()
@@ -336,7 +348,11 @@ void InventoryState::PrintFooter()
 
     additive = (counter > 0) ? 3 : 1;
 
-    Printer::Instance().PrintFB(counter * part + additive, th - 1, tmp, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(counter * part + additive,
+                                th - 1,
+                                tmp,
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
     counter++;
   }
 
@@ -356,7 +372,11 @@ void InventoryState::PrintFooter()
 
     additive = 1; //(counter < 2) ? 1 : 0;
 
-    Printer::Instance().PrintFB(tw / 2 + 1 + counter * part - additive, th - 1, tmp, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(tw / 2 + 1 + counter * part - additive,
+                                th - 1,
+                                tmp,
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
     counter++;
   }
 }
@@ -386,11 +406,11 @@ void InventoryState::DropItem(ItemComponent* ic)
   std::string message;
   if (ic->Data.IsStackable)
   {
-    message = Util::StringFormat("Dropped: %i %s", ic->Data.Amount, objName.data());
+    message = Util::StringFormat(Strings::FmtDroppedIS, ic->Data.Amount, objName.data());
   }
   else
   {
-    message = Util::StringFormat("Dropped: %s", objName.data());
+    message = Util::StringFormat(Strings::FmtDroppedS, objName.data());
   }
 
   // !!! OwnerGameObject should not be destroyed here !!!
@@ -402,11 +422,20 @@ void InventoryState::DrawSelectionBar(int yOffset, const std::string& text, cons
 {
   if (yOffset == _selectedIndex)
   {
-    Printer::Instance().PrintFB(1, 2 + yOffset, text, Printer::kAlignLeft, "#000000", "#FFFFFF");
+    Printer::Instance().PrintFB(1,
+                                2 + yOffset,
+                                text,
+                                Printer::kAlignLeft,
+                                Colors::BlackColor,
+                                Colors::WhiteColor);
   }
   else
   {
-    Printer::Instance().PrintFB(1, 2 + yOffset, text, Printer::kAlignLeft, textColor);
+    Printer::Instance().PrintFB(1,
+                                2 + yOffset,
+                                text,
+                                Printer::kAlignLeft,
+                                textColor);
   }
 }
 

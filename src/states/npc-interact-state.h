@@ -46,6 +46,12 @@ class NPCInteractState : public GameState
     size_t _charPos = _textStartPosX;
     size_t _currentLine = 0;
     size_t _textBlockCharIndex = 0;
+
+    const std::string StrName     = "'n' - name";
+    const std::string StrJob      = "'j' - job";
+    const std::string StrServices = "'s' - services";
+    const std::string StrGossip   = "'g' - gossip";
+    const std::string StrBye      = "'q' - bye";
 };
 
 #endif // NPCINTERACTSTATE_H

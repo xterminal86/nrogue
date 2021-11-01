@@ -76,7 +76,7 @@ void MainState::HandleInput()
 
     case ALT_K5:
     case NUMPAD_5:
-      Printer::Instance().AddMessage("You waited...");
+      Printer::Instance().AddMessage(Strings::MsgWait);
       _playerRef->FinishTurn();
       break;
 
@@ -85,6 +85,10 @@ void MainState::HandleInput()
       if (Map::Instance().CurrentLevel->Peaceful)
       {
         PrintNoAttackInTown();
+      }
+      else if (_playerRef->IsSwimming())
+      {
+        Printer::Instance().AddMessage(Strings::MsgNotInWater);
       }
       else
       {
@@ -95,7 +99,9 @@ void MainState::HandleInput()
 
     case '$':
     {
-      auto str = Util::StringFormat("You have %i %s", _playerRef->Money, GlobalConstants::MoneyName.data());
+      auto str = Util::StringFormat("You have %i %s",
+                                    _playerRef->Money,
+                                    Strings::MoneyName.data());
       Printer::Instance().AddMessage(str);
     }
     break;
@@ -270,11 +276,11 @@ void MainState::ProcessMovement(const Position& dirOffsets)
     // which can make them hard to find on map.
     if(Map::Instance().CurrentLevel->MapArray[px][py]->Image == '>')
     {
-      Printer::Instance().AddMessage("There are stairs leading down here");
+      Printer::Instance().AddMessage(Strings::MsgStairsDown);
     }
     else if(Map::Instance().CurrentLevel->MapArray[px][py]->Image == '<')
     {
-      Printer::Instance().AddMessage("There are stairs leading up here");
+      Printer::Instance().AddMessage(Strings::MsgStairsUp);
     }
   }
 }
@@ -311,7 +317,10 @@ void MainState::TryToPickupItem()
 
     if (_playerRef->Inventory.IsFull())
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Epic Fail", { "Inventory is full!" }, Colors::MessageBoxRedBorderColor);
+      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                             Strings::MessageBoxEpicFailHeaderText,
+                                             { Strings::MsgInventoryFull },
+                                             Colors::MessageBoxRedBorderColor);
       return;
     }
 
@@ -321,7 +330,7 @@ void MainState::TryToPickupItem()
   }
   else
   {
-    Printer::Instance().AddMessage("There's nothing here");
+    Printer::Instance().AddMessage(Strings::MsgNothingHere);
   }
 }
 
@@ -330,7 +339,7 @@ void MainState::CheckIfSomethingElseIsLyingHere(const Position& pos)
   auto res = Map::Instance().GetGameObjectToPickup(pos.X, pos.Y);
   if (res.first != -1)
   {
-    Printer::Instance().AddMessage("There's something else lying here");
+    Printer::Instance().AddMessage(Strings::MsgSomethingLying);
   }
 }
 
@@ -382,7 +391,7 @@ void MainState::CheckStairs(int stairsSymbol)
     auto tile = Map::Instance().CurrentLevel->MapArray[_playerRef->PosX][_playerRef->PosY].get();
     if (tile->Image != '>')
     {
-      Printer::Instance().AddMessage("There are no stairs leading down here");
+      Printer::Instance().AddMessage(Strings::MsgNoStairsDown);
       return;
     }
 
@@ -395,7 +404,7 @@ void MainState::CheckStairs(int stairsSymbol)
     auto tile = Map::Instance().CurrentLevel->MapArray[_playerRef->PosX][_playerRef->PosY].get();
     if (tile->Image != '<')
     {
-      Printer::Instance().AddMessage("There are no stairs leading up here");
+      Printer::Instance().AddMessage(Strings::MsgNoStairsUp);
       return;
     }
 
@@ -469,6 +478,12 @@ void MainState::ProcessRangedWeapon()
     return;
   }
 
+  if (_playerRef->IsSwimming())
+  {
+    Printer::Instance().AddMessage(Strings::MsgNotInWater);
+    return;
+  }
+
   // TODO: wands in both hands?
 
   ItemComponent* weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
@@ -484,12 +499,12 @@ void MainState::ProcessRangedWeapon()
     }
     else
     {
-      Printer::Instance().AddMessage("Not a ranged weapon!");
+      Printer::Instance().AddMessage(Strings::MsgNotRangedWeapon);
     }
   }
   else
   {
-    Printer::Instance().AddMessage("Equip a weapon first!");
+    Printer::Instance().AddMessage(Strings::MsgEquipWeapon);
   }
 }
 
@@ -508,20 +523,20 @@ void MainState::ProcessWeapon(ItemComponent* weapon)
 
     if (arrows->Data.ItemType_ != ItemType::ARROWS)
     {
-      Printer::Instance().AddMessage("What are you going to shoot with?");
+      Printer::Instance().AddMessage(Strings::MsgWhatToShoot);
     }
     else
     {
       if ( (isBow && arrows->Data.AmmoType == ArrowType::BOLTS)
         || (isXBow && arrows->Data.AmmoType == ArrowType::ARROWS) )
       {
-        Printer::Instance().AddMessage("Wrong ammunition type!");
+        Printer::Instance().AddMessage(Strings::MsgWrongAmmo);
         return;
       }
 
       if (arrows->Data.Amount == 0)
       {
-        Printer::Instance().AddMessage("No ammunition!");
+        Printer::Instance().AddMessage(Strings::MsgNoAmmo);
       }
       else
       {
@@ -534,7 +549,7 @@ void MainState::ProcessWeapon(ItemComponent* weapon)
   }
   else
   {
-    Printer::Instance().AddMessage("What are you going to shoot with?");
+    Printer::Instance().AddMessage(Strings::MsgWhatToShoot);
   }
 }
 
@@ -550,7 +565,7 @@ void MainState::ProcessWand(ItemComponent* wand)
 
   if (wand->Data.Amount == 0)
   {
-    Printer::Instance().AddMessage("No charges left!");
+    Printer::Instance().AddMessage(Strings::MsgNoCharges);
   }
   else
   {
@@ -590,7 +605,7 @@ bool MainState::ProcessMoneyPickup(std::pair<int, GameObject*>& pair)
   ItemComponent* ic = pair.second->GetComponent<ItemComponent>();
   if (ic->Data.ItemType_ == ItemType::COINS)
   {
-    auto message = Util::StringFormat("Picked up: %i %s", ic->Data.Amount, ic->OwnerGameObject->ObjectName.data());
+    auto message = Util::StringFormat(Strings::FmtPickedUpIS, ic->Data.Amount, ic->OwnerGameObject->ObjectName.data());
     Printer::Instance().AddMessage(message);
 
     _playerRef->Money += ic->Data.Amount;
@@ -615,11 +630,11 @@ void MainState::ProcessItemPickup(std::pair<int, GameObject*>& pair)
   std::string message;
   if (ic->Data.IsStackable)
   {
-    message = Util::StringFormat("Picked up: %i %s", ic->Data.Amount, objName.data());
+    message = Util::StringFormat(Strings::FmtPickedUpIS, ic->Data.Amount, objName.data());
   }
   else
   {
-    message = Util::StringFormat("Picked up: %s", objName.data());
+    message = Util::StringFormat(Strings::FmtPickedUpS, objName.data());
   }
 
   Printer::Instance().AddMessage(message);
@@ -765,7 +780,7 @@ void MainState::DisplayWeaponCondition(const int& startPos)
 
     if (weapon->Data.Durability.Min().Get() <= warning)
     {
-      Printer::Instance().PrintFB(startPos + 2, _th - 3, ')', "#FFFF00");
+      Printer::Instance().PrintFB(startPos + 2, _th - 3, ')', Colors::YellowColor);
     }
   }
 }
@@ -780,7 +795,7 @@ void MainState::DisplayArmorCondition(const int& startPos)
 
     if (armor->Data.Durability.Min().Get() <= warning)
     {
-      Printer::Instance().PrintFB(startPos + 4, _th - 3, '[', "#FFFF00");
+      Printer::Instance().PrintFB(startPos + 4, _th - 3, '[', Colors::YellowColor);
     }
   }
 }
@@ -793,7 +808,7 @@ void MainState::DisplayAmmoCondition(const int& startPos)
     int amount = arrows->Data.Amount;
     if (amount <= 3)
     {
-      Printer::Instance().PrintFB(startPos + 6, _th - 3, '^', "#FFFF00");
+      Printer::Instance().PrintFB(startPos + 6, _th - 3, '^', Colors::YellowColor);
     }
   }
 }
@@ -842,9 +857,8 @@ void MainState::DisplayActiveEffects(const int& startPos)
 
 void MainState::PrintNoAttackInTown()
 {
-  std::vector<std::string> variants = { "Not here", "Not in town" };
   int index = RNG::Instance().RandomRange(0, 2);
-  Printer::Instance().AddMessage(variants[index]);
+  Printer::Instance().AddMessage(Strings::MsgNotInTown[index]);
 }
 
 void MainState::GetActorsAround()

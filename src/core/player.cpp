@@ -85,6 +85,11 @@ bool Player::TryToAttack(int dx, int dy)
   _attackDir.X = dx;
   _attackDir.Y = dy;
 
+  if (IsSwimming())
+  {
+    return false;
+  }
+
   auto go = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
   if (go != nullptr)
   {
@@ -101,6 +106,14 @@ bool Player::TryToAttack(int dx, int dy)
   }
 
   return false;
+}
+
+bool Player::IsSwimming()
+{
+  bool isFlying   = HasEffect(ItemBonusType::LEVITATION);
+  bool isSwimming = (_currentCell->Type == GameObjectType::DEEP_WATER);
+
+  return (!isFlying && isSwimming);
 }
 
 bool Player::Move(int dx, int dy)
@@ -537,7 +550,7 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
   switch (with->Data.SpellHeld.SpellType_)
   {
     case SpellType::NONE:
-      Printer::Instance().AddMessage(GlobalConstants::NoActionText);
+      Printer::Instance().AddMessage(Strings::NoActionText);
       break;
 
     case SpellType::STRIKE:
@@ -1408,14 +1421,13 @@ void Player::FinishTurn()
 
 void Player::TileStandingCheck()
 {
-  // TODO: deep water drowning / damage?
-
   if (HasEffect(ItemBonusType::LEVITATION) == false)
   {
-    if (_currentCell->Type == GameObjectType::LAVA)
+    if (_currentCell->Type == GameObjectType::LAVA
+     || _currentCell->Type == GameObjectType::CHASM)
     {
-      ReceiveDamage(_currentCell, GlobalConstants::LavaDamage, false, false, true);
-      Printer::Instance().AddMessage("Lava burns!");
+      Attrs.HP.SetMax(0);
+      Attrs.HP.SetMin(0);
     }
   }
 }
@@ -1818,7 +1830,7 @@ void Player::RememberItem(ItemComponent* itemRef, const std::string& effect)
     {
       // If value is not '?unsure?', do nothing,
       // the item is already use-identified.
-      if (kvp.second.second != GlobalConstants::UnidentifiedEffectText)
+      if (kvp.second.second != Strings::UnidentifiedEffectText)
       {
         return;
       }

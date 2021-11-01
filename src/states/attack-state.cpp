@@ -93,7 +93,7 @@ void AttackState::HandleInput()
       break;
 
     case VK_CANCEL:
-      Printer::Instance().AddMessage("Cancelled");
+      Printer::Instance().AddMessage(Strings::MsgCancelled);
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 

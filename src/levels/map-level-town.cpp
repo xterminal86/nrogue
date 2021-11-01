@@ -262,6 +262,9 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
+  // *** FIXME: debug
+
+  /*
   ItemBonusStruct b;
   b.BonusValue = 1;
   b.Period = -1;
@@ -270,8 +273,7 @@ void MapLevelTown::CreateLevel()
 
   GameObject* go = ItemsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { b }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
   InsertGameObject(go);
-
-  // *** FIXME: debug
+  */
 
   // All scrolls
   /*
@@ -358,57 +360,6 @@ void MapLevelTown::CreateLevel()
   InsertGameObject(ring1);
   InsertGameObject(ring2);
   */
-
-  /*
-  for (int i = 0; i < 20; i++)
-  {
-    int val = RNG::Instance().RandomRange(0, 2);
-    EquipmentCategory cat = (val == 0) ? EquipmentCategory::NECK : EquipmentCategory::RING;
-    auto ring = GameObjectsFactory::Instance().CreateRandomAccessory(i + 1, 1, cat);
-    InsertGameObject(ring);
-  }
-  */
-
-  /*
-  auto scroll = GameObjectsFactory::Instance().CreateScroll(1, 1, SpellType::LIGHT, ItemPrefix::UNCURSED);
-  InsertGameObject(scroll);
-
-  ItemBonusStruct bs = { ItemBonusType::HP, 5, 0, false };
-
-  auto ring1 = GameObjectsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED);
-  InsertGameObject(ring1);
-
-  auto ring2 = GameObjectsFactory::Instance().CreateAccessory(2, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED);
-  InsertGameObject(ring2);
-
-  auto scroll = GameObjectsFactory::Instance().CreateScroll(1, 1, SpellType::MAGIC_MAPPING);
-  InsertGameObject(scroll);
-
-  auto lwand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::IVORY_2, SpellType::LIGHT, ItemPrefix::BLESSED);
-  InsertGameObject(lwand);
-
-  auto wand = GameObjectsFactory::Instance().CreateWand(1, 1, WandMaterials::GOLDEN, SpellType::FIREBALL, ItemPrefix::UNCURSED);
-  InsertGameObject(wand);
-
-  auto bow = GameObjectsFactory::Instance().CreateRangedWeapon(2, 1, RangedWeaponType::SHORT_BOW, ItemPrefix::UNCURSED);
-  InsertGameObject(bow);
-
-  auto arrows = GameObjectsFactory::Instance().CreateArrows(3, 1, ArrowType::ARROWS, ItemPrefix::UNCURSED);
-  InsertGameObject(arrows);
-
-  auto door = GameObjectsFactory::Instance().CreateDoor(4, 1, false, "Test Door", 1);
-  InsertStaticObject(door);
-
-  auto pickaxe = GameObjectsFactory::Instance().CreateWeapon(5, 1, WeaponType::PICKAXE, ItemPrefix::UNCURSED);
-  InsertGameObject(pickaxe);
-
-  auto xbow = GameObjectsFactory::Instance().CreateRangedWeapon(2, 1, RangedWeaponType::HEAVY_XBOW, ItemPrefix::BLESSED);
-  InsertGameObject(xbow);
-
-  auto bolts = GameObjectsFactory::Instance().CreateArrows(1, 3, ArrowType::BOLTS, ItemPrefix::UNCURSED, 50);
-  InsertGameObject(bolts);
-  */
-  // ***
 }
 
 void MapLevelTown::BuildRoads()

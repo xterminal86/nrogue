@@ -123,6 +123,7 @@ class MapLevelBase
     void PlaceShallowWaterTile(int x, int y);
     void PlaceDeepWaterTile(int x, int y);
     void PlaceLavaTile(int x, int y);
+    void PlaceChasmTile(int x, int y);
     void PlaceTree(int x, int y);
     void PlaceWall(int x, int y,
                    char image,

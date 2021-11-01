@@ -90,7 +90,7 @@ void LookInputState::HandleInput()
       }
       else
       {
-        Printer::Instance().AddMessage("There's nothing here");
+        Printer::Instance().AddMessage(Strings::MsgNothingHere);
       }
     }
     break;
@@ -108,7 +108,7 @@ void LookInputState::HandleInput()
       }
       else
       {
-        Printer::Instance().AddMessage("There's nothing here");
+        Printer::Instance().AddMessage(Strings::MsgNothingHere);
       }
     }
     break;
@@ -328,11 +328,11 @@ void LookInputState::DrawCursor()
 {
   Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().CurrentLevel->MapOffsetX + 1,
                               _cursorPosition.Y + Map::Instance().CurrentLevel->MapOffsetY,
-                              ']', "#FFFFFF");
+                              ']', Colors::WhiteColor);
 
   Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().CurrentLevel->MapOffsetX - 1,
                               _cursorPosition.Y + Map::Instance().CurrentLevel->MapOffsetY,
-                              '[', "#FFFFFF");
+                              '[', Colors::WhiteColor);
 }
 
 bool LookInputState::CheckPlayer()
@@ -393,10 +393,18 @@ void LookInputState::PrintDebugInfo()
 
   for (auto& line : _debugInfo)
   {
-    Printer::Instance().PrintFB(0, yStart, line, Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(0,
+                                yStart,
+                                line,
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
     yStart++;
   }
 
-  Printer::Instance().PrintFB(0, yStart + 1, _distanceField, Printer::kAlignLeft, "#FFFFFF");
+  Printer::Instance().PrintFB(0,
+                              yStart + 1,
+                              _distanceField,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor);
 }
 #endif

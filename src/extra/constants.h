@@ -183,6 +183,7 @@ enum class GameObjectType
   SHALLOW_WATER,
   DEEP_WATER,
   LAVA,
+  CHASM,
   PICKAXEABLE,
   TRAP,
   RAT,
@@ -570,6 +571,9 @@ enum class NameCP437
   LRARROW,
   UARROW_2,
   DARROW_2,
+  SHADING_1 = 176,
+  SHADING_2 = 177,
+  SHADING_3 = 178,
   ULCORNER_1 = 218,
   DLCORNER_1 = 192,
   URCORNER_1 = 191,
@@ -702,17 +706,8 @@ namespace Colors
   extern const std::map<GemType,       std::pair<std::string, std::string>> GemColorByType;
 }
 
-namespace GlobalConstants
+namespace Strings
 {
-  extern std::map<GraphicTiles, int>         GraphicTilesIndexByType;
-  extern std::map<RoomEdgeEnum, std::string> DirNamesByDir;
-  extern std::map<NameCP437, int>            CP437IndexByType;
-
-  // ===============================================
-
-  extern int TerminalWidth;
-  extern int TerminalHeight;
-
   extern const std::string Base64Chars;
   extern const std::string Tileset8x16Base64;
   extern const std::string IconBase64;
@@ -733,6 +728,50 @@ namespace GlobalConstants
   extern const std::string BlackboardKeyPlayerPosY;
 
   extern const char InventoryEmptySlotChar;
+
+  extern const std::string MsgWait;
+  extern const std::string MsgNotInWater;
+  extern const std::string MsgStairsDown;
+  extern const std::string MsgStairsUp;
+  extern const std::string MsgInventoryFull;
+  extern const std::string MsgNothingHere;
+  extern const std::string MsgSomethingLying;
+  extern const std::string MsgNoStairsDown;
+  extern const std::string MsgNoStairsUp;
+  extern const std::string MsgNotRangedWeapon;
+  extern const std::string MsgEquipWeapon;
+  extern const std::string MsgWhatToShoot;
+  extern const std::string MsgWrongAmmo;
+  extern const std::string MsgNoAmmo;
+  extern const std::string MsgNoCharges;
+  extern const std::string MsgCancelled;
+  extern const std::string MsgUnequipFirst;
+  extern const std::string MsgLooksImportant;
+  extern const std::string MsgNoRoomInInventory;
+  extern const std::string MsgNotEnoughMoney;
+  extern const std::string MsgInteractDir;
+  extern const std::string MsgItemUndamaged;
+  extern const std::string MsgCantBeUsed;
+  extern const std::string MsgNoMoney;
+
+  extern const std::string FmtPickedUpIS;
+  extern const std::string FmtPickedUpS;
+  extern const std::string FmtDroppedIS;
+  extern const std::string FmtDroppedS;
+
+  extern const std::vector<std::string> MsgNotInTown;
+}
+
+namespace GlobalConstants
+{
+  extern std::map<GraphicTiles, int>         GraphicTilesIndexByType;
+  extern std::map<RoomEdgeEnum, std::string> DirNamesByDir;
+  extern std::map<NameCP437, int>            CP437IndexByType;
+
+  // ===============================================
+
+  extern int TerminalWidth;
+  extern int TerminalHeight;
 
   extern const size_t OpenedByAnyone;
   extern const size_t OpenedByNobody;

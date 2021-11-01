@@ -93,7 +93,7 @@ void EndgameState::DrawHPMP()
                               _th - 2,
                               str,
                               Printer::kAlignCenter,
-                              "#FFFFFF",
+                              Colors::WhiteColor,
                               "#880000");
 
   UpdateBar(0, _th - 1, _playerRef->Attrs.MP);
