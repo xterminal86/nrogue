@@ -64,6 +64,9 @@ class MenuState : public GameState
   int _titleX = 0;
   int _titleY = 0;
 
+  int _pictureX = 0;
+  int _pictureY = 0;
+
   std::map<std::pair<int, int>, std::string> _grassColorByPosition;
 };
 

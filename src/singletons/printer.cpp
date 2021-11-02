@@ -671,8 +671,8 @@ void Printer::PrintFB(const int& x, const int& y,
                       const std::string& htmlColorFg,
                       const std::string& htmlColorBg)
 {
-  if (x < 0 || x > TerminalWidth - 1
-   || y < 0 || y > TerminalHeight - 1)
+  if (x < 0 || x > (int)TerminalWidth - 1
+   || y < 0 || y > (int)TerminalHeight - 1)
   {
     return;
   }

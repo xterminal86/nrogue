@@ -191,13 +191,23 @@ void MapLevelTown::CreateLevel()
   VisibilityRadius = GlobalConstants::MaxVisibilityRadius;
 
   GameObjectInfo t;
-  t.Set(false, false, '.', Colors::ShadesOfGrey::Four, Colors::BlackColor, "Ground");
+  t.Set(false,
+        false,
+        '.',
+        Colors::ShadesOfGrey::Four,
+        Colors::BlackColor,
+        "Ground");
 
   Rect r(0, 0, MapSize.X - 1, MapSize.Y - 1);
 
   FillArea(r.X1, r.Y1, r.X2, r.Y2, t);
 
-  t.Set(true, true, '#', Colors::ShadesOfGrey::Four, Colors::BlackColor, "Walls");
+  t.Set(true,
+        true,
+        '#',
+        Colors::ShadesOfGrey::Four,
+        Colors::ShadesOfGrey::Two,
+        "Walls");
 
   auto bounds = r.GetBoundaryElements();
   for (auto& pos : bounds)

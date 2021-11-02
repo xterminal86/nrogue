@@ -206,8 +206,6 @@ namespace Strings
 
 namespace GlobalConstants
 {
-  std::map<GraphicTiles, int> GraphicTilesIndexByType;
-
   std::map<RoomEdgeEnum, std::string> DirNamesByDir =
   {
     { RoomEdgeEnum::NORTH, "NORTH" },
@@ -216,7 +214,10 @@ namespace GlobalConstants
     { RoomEdgeEnum::WEST,  "WEST"  }
   };
 
+#ifdef USE_SDL
+  std::map<GraphicTiles, int> GraphicTilesIndexByType;
   std::map<NameCP437, int> CP437IndexByType;
+#endif
 
   int TerminalWidth  = 80;
   int TerminalHeight = 24;

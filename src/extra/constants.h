@@ -537,6 +537,7 @@ enum class StatsEnum
   MP
 };
 
+#ifdef USE_SDL
 enum class NameCP437
 {
   FIRST = 0,
@@ -642,6 +643,7 @@ enum class GraphicTiles
   DIRT,
   LAST_ELEMENT
 };
+#endif
 
 namespace Colors
 {
@@ -767,9 +769,12 @@ namespace Strings
 
 namespace GlobalConstants
 {
-  extern std::map<GraphicTiles, int>         GraphicTilesIndexByType;
   extern std::map<RoomEdgeEnum, std::string> DirNamesByDir;
-  extern std::map<NameCP437, int>            CP437IndexByType;
+
+#ifdef USE_SDL
+  extern std::map<GraphicTiles, int> GraphicTilesIndexByType;
+  extern std::map<NameCP437, int>    CP437IndexByType;
+#endif
 
   // ===============================================
 

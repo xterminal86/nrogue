@@ -6,7 +6,10 @@
 void MenuState::Init()
 {
   _titleX = _twHalf;
-  _titleY = _thHalf / 2 - _title.size() / 2 - 1;
+  _titleY = _thHalf / 2 - _title.size() / 2;
+
+  _pictureX = _twHalf - _picture[0].length() / 2;
+  _pictureY = _thHalf - _picture.size() / 4 + 1;;
 
   _debugInfo = Util::StringFormat("terminal size: %ix%i", _tw, _th);
 
@@ -34,8 +37,8 @@ void MenuState::HandleInput()
 
 void MenuState::PrepareGrassTiles()
 {
-  int sx = _twHalf - _picture[0].length() / 2;
-  int sy = _thHalf - _picture.size() / 4;
+  int sx = _pictureX;
+  int sy = _pictureY;
 
   int x = 0;
   int y = 0;
@@ -69,8 +72,8 @@ void MenuState::PrepareGrassTiles()
 
 void MenuState::DrawPicture()
 {
-  int sx = _twHalf - _picture[0].length() / 2;
-  int sy = _thHalf - _picture.size() / 4;
+  int sx = _pictureX;
+  int sy = _pictureY;
 
   int x = 0;
   int y = 0;
@@ -100,9 +103,9 @@ void MenuState::DrawPicture()
         {
           Printer::Instance().PrintFB(sx + x,
                                       sy + y,
-                                      ' ',
-                                      Colors::BlackColor,
-                                      Colors::ShadesOfGrey::Six);
+                                      c,
+                                      Colors::ShadesOfGrey::Four,
+                                      Colors::ShadesOfGrey::Two);
         }
         break;
 

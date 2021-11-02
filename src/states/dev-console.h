@@ -97,15 +97,18 @@ class DevConsole : public GameState
                         const std::vector<std::string>& params);
     void DisplayHelpAboutCommand(const std::vector<std::string>& params);
     void InfoHandles();
-    void GetObject(const std::vector<std::string>& params, ObjectHandleType handleType);
-    void MoveObject(const std::vector<std::string>& params, ObjectHandleType handleType);
+    void GetObject(const std::vector<std::string>& params,
+                   ObjectHandleType handleType);
+    void MoveObject(const std::vector<std::string>& params,
+                    ObjectHandleType handleType);
     void MovePlayer(const std::vector<std::string>& params);
     void RemoveObject(const std::vector<std::string>& params);
     void PrintColors();
     void TransformTile(const std::vector<std::string>& params);
 
     bool StringIsNumbers(const std::string& str);
-    std::pair<int, int> CoordinateParamsToInt(const std::string& px, const std::string& py);
+    std::pair<int, int> CoordinateParamsToInt(const std::string& px,
+                                              const std::string& py);
 
     std::vector<std::string> _allCommandsList;
 
