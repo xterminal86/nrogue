@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # coding = utf8
 
+import sys;
+
+ShouldWriteToFile = False;
+
 Script = '''
 [TREE]
   [SEL]
@@ -31,13 +35,13 @@ Nop       = 0xFE;
 Lines = [];
 
 TaskNames = [
-  "TREE", 
-  "SEL" , 
-  "SEQ" , 
-  "FAIL", 
-  "SUCC", 
-  "TASK", 
-  "COND" 
+  "TREE",
+  "SEL" ,
+  "SEQ" ,
+  "FAIL",
+  "SUCC",
+  "TASK",
+  "COND"
 ];
 
 OpcodesByName = {};
@@ -68,13 +72,13 @@ ParamNames = [
   "eq"                   ,
   "player"               ,
   "Psd"                  ,
-  "end"                  ,  
+  "end"                  ,
   "nop"
-];                  
+];
 
 Bytecode = [];
 
-def ParseLine(line):      
+def ParseLine(line):
   indentsParsed = False;
   exprStart = False;
   expr = "";
@@ -96,7 +100,7 @@ def ParseLine(line):
 
   commandLen = len(splitRes);
   opcode = OpcodesByName.get(splitRes[0], Nop);
-  
+
   if opcode != Nop:
     Bytecode.append(indent);
     Bytecode.append(opcode);
@@ -105,12 +109,12 @@ def ParseLine(line):
       for i in range(1, commandLen):
         paramParse = splitRes[i].split('=');
         key = paramParse[1];
-        key = key.strip('"');      
+        key = key.strip('"');
         Bytecode.append(ParamCodesByName[key]);
       Bytecode.append(ParamsEnd);
 
   else:
-    print("\tunknown command: {0}".format(splitRes[0]));
+    print("\tillegal opcode: {0}".format(splitRes[0]));
 
 def InitContainers():
   paramCode = 0x01;
@@ -130,18 +134,22 @@ def InitContainers():
 
   paramCode = paramCode + 1;
 
-  # conditional params 
+  # conditional params
 
   for name in ParamNames:
     ParamCodesByName[name] = paramCode;
-    paramCode = paramCode + 1; 
+    paramCode = paramCode + 1;
 
   # print(ParamCodesByName);
 
-def main():  
+def main():
+  global ShouldWriteToFile;
+
+  if len(sys.argv) != 1:
+    ShouldWriteToFile = True;
 
   InitContainers();
-  
+
   print(Script);
   print("Compiling...\n");
 
@@ -152,7 +160,7 @@ def main():
     line = line.rstrip();
 
     if len(line) == 0:
-      continue;    
+      continue;
 
     ParseLine(line);
 
@@ -160,10 +168,10 @@ def main():
 
   align = 0;
   output = "";
-  for n in Bytecode:    
+  for n in Bytecode:
     tmp = hex(n);
     output += tmp;
-    
+
     output += (' ' * (7 - len(tmp)));
 
     align = align + 1;
@@ -174,14 +182,14 @@ def main():
 
   print("Resulting bytecode (len={0}):\n".format(len(Bytecode)));
   print(output);
-  
+
   print("\nC++ container:\n");
 
   output = "std::vector<uint8_t> bytecode = { ";
-  
+
   count = len(Bytecode);
 
-  for n in Bytecode:    
+  for n in Bytecode:
     output += hex(n);
 
     if count != 1:
@@ -194,9 +202,17 @@ def main():
   print(output);
   print("");
 
-  with open("script.btc", "wb") as f:
-    ba = bytearray(Bytecode);
-    f.write(ba);
+  compression = float(len(Bytecode)) / float(len(Script)) * 100;
+
+  print("Size reduction: {:0.2f}%\n".format(100 - compression));
+
+  if ShouldWriteToFile == True:
+
+    print("Writing script.btc...");
+
+    with open("script.btc", "wb") as f:
+      ba = bytearray(Bytecode);
+      f.write(ba);
 
 if __name__ == "__main__":
   main();

@@ -28,7 +28,6 @@ struct TileInfo
 {
   int X = 0;
   int Y = 0;
-  std::string Data;
 };
 #else
 struct FBPixel

@@ -5,13 +5,13 @@ ParamsEnd = 0xFF;
 Nop       = 0xFE;
 
 TaskNames = [
-  "TREE", 
-  "SEL" , 
-  "SEQ" , 
-  "FAIL", 
-  "SUCC", 
-  "TASK", 
-  "COND" 
+  "TREE",
+  "SEL" ,
+  "SEQ" ,
+  "FAIL",
+  "SUCC",
+  "TASK",
+  "COND"
 ];
 
 OpcodesByName = {};
@@ -27,7 +27,7 @@ ParamNames = [
   "goto_last_player_pos" ,
   "attack_effect"        ,
   "attack_special"       ,
-  "arrack_ranged"        ,
+  "attack_ranged"        ,
   "d100"                 ,
   "player_visible"       ,
   "player_can_move"      ,
@@ -42,9 +42,9 @@ ParamNames = [
   "eq"                   ,
   "player"               ,
   "Psd"                  ,
-  "end"                  ,  
+  "end"                  ,
   "nop"
-];   
+];
 
 TaskByOpcode = {};
 ParamByCode  = {};
@@ -54,7 +54,7 @@ Bytecode = [ 0x0, 0x1, 0x2, 0x2, 0x4, 0x7, 0x36, 0xff, 0x6, 0x2, 0x8, 0x7, 0x34,
 def InitContainers():
   global TaskByOpcode;
   global ParamByCode;
-  
+
   paramCode = 0x01;
 
   for name in TaskNames:
@@ -72,41 +72,39 @@ def InitContainers():
 
   paramCode = paramCode + 1;
 
-  # conditional params 
+  # conditional params
 
   for name in ParamNames:
     ParamCodesByName[name] = paramCode;
-    paramCode = paramCode + 1; 
+    paramCode = paramCode + 1;
 
   TaskByOpcode = { v: k for k, v in OpcodesByName.items()    };
   ParamByCode  = { v: k for k, v in ParamCodesByName.items() };
 
-  '''
   print("Tasks:");
   print(TaskByOpcode);
   print("");
   print("Params:");
   print(ParamByCode);
   print("\n");
-  '''
 
 def Decompile():
   index = 0;
   indent = 0;
   opcode = 0;
   paramCount = 1;
-  
+
   while index != len(Bytecode):
 
     indent = Bytecode[index];
     opcode = Bytecode[index + 1];
-        
+
     taskNameVal = TaskByOpcode.get(opcode);
 
     taskName = "";
 
     if taskNameVal == None:
-      print("\tunknown opcode: {0}".format(opcode));
+      print("\tillegal opcode: {0}".format(opcode));
       opcode = Nop;
     else:
       taskName = taskNameVal;
@@ -114,7 +112,7 @@ def Decompile():
       print("{0}{1}".format(strIndent, taskName));
 
     index = index + 2;
-        
+
     if opcode == Nop:
       continue;
 
@@ -122,7 +120,7 @@ def Decompile():
       paramCount = 1;
       curByte = Bytecode[index];
 
-      while curByte != ParamsEnd:        
+      while curByte != ParamsEnd:
         paramType = ParamByCode[curByte];
         print("{0}p{1} = {2}".format(strIndent, paramCount, paramType));
         paramCount = paramCount + 1;
@@ -130,13 +128,27 @@ def Decompile():
         curByte = Bytecode[index];
 
       # skip end of params marker
-      index = index + 1;      
+      index = index + 1;
+
+  print("\n");
 
 def main():
 
   InitContainers();
-  
-  print(Bytecode);
+
+  align = 0;
+
+  bc = "\n";
+
+  for i in Bytecode:
+    bc += "0x{:02X} ".format(i);
+    align = align + 1;
+
+    if align == 8:
+      bc += "\n";
+      align = 0;
+
+  print(bc);
   print("");
 
   Decompile();
