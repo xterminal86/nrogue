@@ -126,6 +126,8 @@ namespace Util
 
   extern size_t FindLongestStringLength(const std::vector<std::string>& list);
 
+  extern std::vector<Position> GetAreaDamagePointsFrom(const Position& from, int range);
+
   // ===========================================================================
 
   /// Produces random pair from pairs list according to weight value:

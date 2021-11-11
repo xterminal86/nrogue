@@ -602,74 +602,6 @@ enum class NameCP437
   WAVES = 247,
   LAST_ELEMENT
 };
-
-enum class GraphicTiles
-{
-  BARREL = 256,
-  BED,
-  BRICKS_RED1,
-  BRICKS_RED2,
-  CHAMOMILE,
-  DANDELION,
-  FACHWERK1,
-  FACHWERK2,
-  GRASS,
-  GRAVEL1,
-  GRAVEL2,
-  GATE_IRON_CLOSED,
-  MINE_WALL1,
-  MINE_WALL2,
-  PICKAXE,
-  POPPY,
-  RING,
-  STAIRS_DOWN,
-  STAIRS_UP,
-  CHEST,
-  BRICKS_WHITE1,
-  BRICKS_WHITE2,
-  TILES_STONE,
-  SUPPORT_BEAM,
-  TILES_STONE_OLD,
-  WATER_DEEP,
-  WATER_SHALLOW,
-  WOODEN_PLANKS,
-  DOOR_WS_CLOSED,
-  DOOR_WS_OPEN,
-  DOOR_W_CLOSED,
-  DOOR_W_OPEN,
-  GATE_IRON_OPEN,
-  COBBLESTONE,
-  WINDOW,
-  DIRT,
-  GEM_BLACK,
-  GEM_BLUE,
-  GEM_GREEN,
-  GEM_ORANGE,
-  GEM_PURPLE,
-  GEM_RED,
-  GEM_YELLOW,
-  GEM_WHITE,
-  AMULET_MOON,
-  FACHWERK3,
-  FACHWERK4,
-  CHEST_GOLD,
-  STASH,
-  EARTH,
-  CRATE1,
-  POTION_YELLOW,
-  POTION_WHITE,
-  POTION_RED,
-  POTION_RADIANT,
-  POTION_MORBID,
-  POTION_MAGENTA,
-  POTION_GREEN,
-  POTION_CYAN,
-  POTION_BLUE,
-  POTION_BLACK,
-  CRATE2,
-  PICKAXE_UNIQUE,
-  LAST_ELEMENT
-};
 #endif
 
 namespace Colors
@@ -799,7 +731,6 @@ namespace GlobalConstants
   extern std::map<RoomEdgeEnum, std::string> DirNamesByDir;
 
 #ifdef USE_SDL
-  extern std::map<GraphicTiles, int> GraphicTilesIndexByType;
   extern std::map<NameCP437, int>    CP437IndexByType;
 #endif
 

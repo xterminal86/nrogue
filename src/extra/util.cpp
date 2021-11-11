@@ -1109,4 +1109,82 @@ namespace Util
       distanceCovered++;
     }
   }
+
+  std::vector<Position> GetAreaDamagePointsFrom(const Position& from, int range)
+  {
+    std::vector<Position> res;
+
+    int lx = from.X - range;
+    int ly = from.Y - range;
+    int hx = from.X + range;
+    int hy = from.Y + range;
+
+    std::vector<Position> perimeterPoints;
+
+    for (int x = lx; x <= hx; x++)
+    {
+      Position p1 = { x, ly };
+      Position p2 = { x, hy };
+
+      perimeterPoints.push_back(p1);
+      perimeterPoints.push_back(p2);
+    }
+
+    for (int y = ly + 1; y <= hy - 1; y++)
+    {
+      Position p1 = { lx, y };
+      Position p2 = { hx, y };
+
+      perimeterPoints.push_back(p1);
+      perimeterPoints.push_back(p2);
+    }
+
+    for (auto& p : perimeterPoints)
+    {
+      // Different lines can go through the same points
+      // so a check if a point was already added is needed.
+      auto line = BresenhamLine(from, p);
+      for (auto& point : line)
+      {
+        if (!IsInsideMap(point, Map::Instance().CurrentLevel->MapSize))
+        {
+          continue;
+        }
+
+        auto it = std::find_if(res.begin(), res.end(),
+                  [&point](const Position& p) ->
+                  bool { return (p == point); });
+
+        // If point was already added, skip it.
+        if (it != res.end())
+        {
+          continue;
+        }
+
+        int d = LinearDistance(from, point);
+
+        auto cell = Map::Instance().CurrentLevel->MapArray[point.X][point.Y].get();
+        auto obj  = Map::Instance().CurrentLevel->StaticMapObjects[point.X][point.Y].get();
+
+        bool cellOk = (!cell->Blocking);
+        bool objOk  = (obj == nullptr);
+
+        if (cellOk && objOk && d <= range)
+        {
+          res.push_back({ cell->PosX, cell->PosY });
+        }
+        else
+        {
+          if (obj != nullptr && !obj->Attrs.Indestructible)
+          {
+            res.push_back({ cell->PosX, cell->PosY });
+          }
+
+          break;
+        }
+      }
+    }
+
+    return res;
+  }
 }

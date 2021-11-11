@@ -107,12 +107,6 @@ void Printer::InitForSDL()
   }
 
   // Hacky way of doing it but that's C++ for you
-  for (int i = (int)GraphicTiles::BARREL; i < (int)GraphicTiles::LAST_ELEMENT; i++)
-  {
-    GraphicTiles key = static_cast<GraphicTiles>(i);
-    GlobalConstants::GraphicTilesIndexByType[key] = i;
-  }
-
   for (int i = (int)NameCP437::FIRST; i < (int)NameCP437::LAST_ELEMENT; i++)
   {
     NameCP437 key = static_cast<NameCP437>(i);
@@ -237,31 +231,6 @@ void Printer::DrawWindow(const Position& leftCorner,
       headerPosX += _tileWidthScaled;
     }
   }
-}
-
-void Printer::DrawImage(const int& x, const int& y, SDL_Texture* tex)
-{
-  int tw, th;
-  SDL_QueryTexture(tex, nullptr, nullptr, &tw, &th);
-
-  SDL_Rect src;
-  src.x = 0;
-  src.y = 0;
-  src.w = tw;
-  src.h = th;
-
-  SDL_Rect dst;
-  dst.x = x;
-  dst.y = y;
-  dst.w = tw;
-  dst.h = th;
-
-  if (SDL_GetRenderTarget(Application::Instance().Renderer) == nullptr)
-  {
-    SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
-  }
-
-  SDL_RenderCopy(Application::Instance().Renderer, tex, &src, &dst);
 }
 
 void Printer::DrawTile(int x, int y, int tileIndex)
@@ -804,11 +773,11 @@ void Printer::Render()
 
 std::vector<Position> Printer::DrawExplosion(Position pos, int aRange)
 {
-  std::vector<Position> cellsAffected = GetAreaDamagePointsFrom(pos, aRange);
+  std::vector<Position> cellsAffected = Util::GetAreaDamagePointsFrom(pos, aRange);
 
   for (int range = 1; range <= aRange; range++)
   {
-    auto res = GetAreaDamagePointsFrom(pos, range);
+    auto res = Util::GetAreaDamagePointsFrom(pos, range);
     for (auto& p : res)
     {
       int drawX = p.X + Map::Instance().CurrentLevel->MapOffsetX;
@@ -830,84 +799,6 @@ std::vector<Position> Printer::DrawExplosion(Position pos, int aRange)
   }
 
   return cellsAffected;
-}
-
-std::vector<Position> Printer::GetAreaDamagePointsFrom(Position from, int range)
-{
-  std::vector<Position> res;
-
-  int lx = from.X - range;
-  int ly = from.Y - range;
-  int hx = from.X + range;
-  int hy = from.Y + range;
-
-  std::vector<Position> perimeterPoints;
-
-  for (int x = lx; x <= hx; x++)
-  {
-    Position p1 = { x, ly };
-    Position p2 = { x, hy };
-
-    perimeterPoints.push_back(p1);
-    perimeterPoints.push_back(p2);
-  }
-
-  for (int y = ly + 1; y <= hy - 1; y++)
-  {
-    Position p1 = { lx, y };
-    Position p2 = { hx, y };
-
-    perimeterPoints.push_back(p1);
-    perimeterPoints.push_back(p2);
-  }
-
-  for (auto& p : perimeterPoints)
-  {
-    // Different lines can go through the same points
-    // so a check if a point was already added is needed.
-    auto line = Util::BresenhamLine(from, p);
-    for (auto& point : line)
-    {
-      if (!Util::IsInsideMap(point, Map::Instance().CurrentLevel->MapSize))
-      {
-        continue;
-      }
-
-      auto it = std::find_if(res.begin(), res.end(),
-                [&point](const Position& p) ->
-                bool { return (p == point); });
-
-      // If point was already added, skip it.
-      if (it != res.end())
-      {
-        continue;
-      }
-
-      int d = Util::LinearDistance(from, point);
-
-      auto cell = Map::Instance().CurrentLevel->MapArray[point.X][point.Y].get();
-      auto obj = Map::Instance().CurrentLevel->StaticMapObjects[point.X][point.Y].get();
-
-      bool cellOk = (!cell->Blocking);
-      bool objOk = (obj == nullptr);
-
-      if (cellOk && objOk && d <= range)
-      {
-        res.push_back({ cell->PosX, cell->PosY });
-      }
-      else
-      {
-        if (obj != nullptr && !obj->Attrs.Indestructible)
-        {
-          res.push_back({ cell->PosX, cell->PosY });
-        }
-
-        break;
-      }
-    }
-  }
-
-  return res;
 }
 
 void Printer::AddMessage(const std::string& message)

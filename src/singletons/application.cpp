@@ -708,18 +708,22 @@ SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
   int scaledW = (int)((float)tileWidth * ScaleFactor);
   int scaledH = (int)((float)tileHeight * ScaleFactor);
 
+  // ===========================================================================
+  //
   // This is just a plain hack to fit
   // graphics tileset to screen at certain resolution
+  //
   if (scaledW == 32)
   {
-    GlobalConstants::TerminalWidth = 60;
+    GlobalConstants::TerminalWidth = 59;
   }
 
-  // If tileset is square, make window square-like too.
   if (tileWidth == tileHeight)
   {
-    GlobalConstants::TerminalHeight = GlobalConstants::TerminalWidth / 2 + 8;
+    GlobalConstants::TerminalHeight = GlobalConstants::TerminalWidth / 2 + 2;
   }
+
+  // ===========================================================================
 
   int ww = GlobalConstants::TerminalWidth * scaledW;
   int wh = GlobalConstants::TerminalHeight * scaledH;

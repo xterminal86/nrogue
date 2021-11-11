@@ -105,7 +105,12 @@ class MapLevelBase
 
     bool IsSpotValidForSpawn(const Position& pos);
 
-    void FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill);
+    void FillArea(int ax,
+                  int ay,
+                  int aw,
+                  int ah,
+                  const GameObjectInfo& tileToFill);
+
     void CreateBorders(GameObjectInfo& t);
     void RecordEmptyCells();
     void CreateItemsForLevel(int maxItems);
@@ -114,7 +119,7 @@ class MapLevelBase
     void CreateInitialMonsters();
 
     void PlaceGroundTile(int x, int y,
-                         char image,
+                         int image,
                          const std::string& fgColor,
                          const std::string& bgColor,
                          const std::string& objName);
@@ -125,14 +130,21 @@ class MapLevelBase
     void PlaceLavaTile(int x, int y);
     void PlaceChasmTile(int x, int y);
     void PlaceTree(int x, int y);
+
     void PlaceWall(int x, int y,
-                   char image,
+                   int image,
                    const std::string& fgColor,
                    const std::string& bgColor,
                    const std::string& objName,
                    GameObjectType pickaxeable = GameObjectType::PICKAXEABLE);
+
     void PlaceShrine(const Position& pos, LevelBuilder& lb);
-    void PlaceDoor(int x, int y, bool isOpen = false, size_t openedBy = GlobalConstants::OpenedByAnyone, const std::string& objName = std::string());
+
+    void PlaceDoor(int x,
+                   int y,
+                   bool isOpen = false,
+                   size_t openedBy = GlobalConstants::OpenedByAnyone,
+                   const std::string& objName = std::string());
 
     Position _townPortalPos;
 

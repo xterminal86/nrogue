@@ -215,7 +215,9 @@ namespace GlobalConstants
   };
 
 #ifdef USE_SDL
-  std::map<GraphicTiles, int> GraphicTilesIndexByType;
+  //
+  // To avoid C-style casting from enum
+  //
   std::map<NameCP437, int> CP437IndexByType;
 #endif
 

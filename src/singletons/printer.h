@@ -120,7 +120,6 @@ class Printer : public Singleton<Printer>
                  const std::string& htmlColorFg,
                  const std::string& htmlColorBg = Colors::BlackColor);
 
-    void DrawImage(const int& x, const int& y, SDL_Texture* tex);
     void DrawWindow(const Position& leftCorner,
                     const Position& size,
                     const std::string& header = std::string{},
@@ -218,8 +217,6 @@ class Printer : public Singleton<Printer>
     #endif
 
     bool IsColorStringValid(const std::string& htmlColor);
-
-    std::vector<Position> GetAreaDamagePointsFrom(Position from, int range);
 };
 
 #endif

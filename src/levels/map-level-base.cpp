@@ -365,7 +365,7 @@ bool MapLevelBase::IsCellBlocking(const Position& pos)
 }
 
 void MapLevelBase::PlaceGroundTile(int x, int y,
-                                   char image,
+                                   int image,
                                    const std::string& fgColor,
                                    const std::string& bgColor,
                                    const std::string& objName)
@@ -488,7 +488,7 @@ void MapLevelBase::PlaceTree(int x, int y)
 }
 
 void MapLevelBase::PlaceWall(int x, int y,
-                             char image,
+                             int image,
                              const std::string& fgColor,
                              const std::string& bgColor,
                              const std::string& objName,
