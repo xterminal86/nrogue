@@ -47,6 +47,8 @@ class GameState
 #ifdef USE_SDL
     bool ShouldShiftMap(int& key);
 
+    void AdjustWindowSize(const SDL_Event& evt);
+
     std::map<SDL_Scancode, char> _charsByScancodes =
     {
       { SDL_SCANCODE_GRAVE,        '`'  },
@@ -139,6 +141,8 @@ class GameState
       { '.', '>' },
       { ',', '<' }
     };
+
+    SDL_Rect _renderDst;
 #endif
 };
 

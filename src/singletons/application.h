@@ -66,6 +66,8 @@ class Application : public Singleton<Application>
     std::string TilesetFilename;
 
     SDL_Rect GetWindowSize(int tileWidth, int tileHeight);
+
+    const std::pair<int, int>& GetDefaultWindowSize();
 #endif
 
     unsigned int TurnsPassed = 0;
@@ -89,6 +91,7 @@ class Application : public Singleton<Application>
     size_t SavePossessions(std::stringstream& ss);
 
 #ifdef USE_SDL
+    std::pair<int, int> _defaultWindowSize;
     std::map<std::string, std::string> _config;
     void InitSDL();
     void SetIcon();

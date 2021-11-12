@@ -17,6 +17,7 @@ file called "config.txt" and placing it alongside with the game's binary.
 Transparent color key is magenta (R:255, G:0, B:255).
 Scale can be a floating point number (e.g. 1.5), but it's not recommended,
 since non-integer scaling will result in distortions.
+You can resize the window though.
 The format should be as follows (no empty lines):
 
 ```

@@ -222,7 +222,7 @@ namespace GlobalConstants
 #endif
 
   int TerminalWidth  = 80;
-  int TerminalHeight = 24;
+  int TerminalHeight = 25;
 
   const size_t OpenedByAnyone = 0;
   const size_t OpenedByNobody = 1;

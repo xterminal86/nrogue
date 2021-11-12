@@ -130,6 +130,13 @@ class Printer : public Singleton<Printer>
                     const std::string& bgColor = Colors::BlackColor);
 
     const std::unordered_map<std::string, TileColor>& GetValidColorsCache();
+
+    void SetRenderDst(const SDL_Rect& dst);
+
+    float GetTileAspectRatio();
+
+    const std::pair<int, int>& GetTileWH();
+    const std::pair<int, int>& GetTileWHScaled();
 #endif
 
     /// Add message to the game log
@@ -207,6 +214,13 @@ class Printer : public Singleton<Printer>
 
     int _tileWidthScaled = 0;
     int _tileHeightScaled = 0;
+
+    float _tileAspectRatio = 0.0f;
+
+    std::pair<int, int> _tileWH;
+    std::pair<int, int> _tileWHScaled;
+
+    SDL_Rect _renderDst;
 
     void InitForSDL();
 

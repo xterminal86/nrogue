@@ -667,10 +667,12 @@ void Application::InitSDL()
 
   SDL_Rect rect = GetWindowSize(TileWidth, TileHeight);
 
+  _defaultWindowSize = { rect.w, rect.h };
+
   Window = SDL_CreateWindow("nrogue",
                             rect.x, rect.y,
                             rect.w, rect.h,
-                            SDL_WINDOW_SHOWN);
+                            SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
   int drivers = SDL_GetNumRenderDrivers();
   for (int i = 0; i < drivers; i++)
@@ -697,10 +699,21 @@ void Application::InitSDL()
 
   Printer::Instance().Init();
 
+  Printer::Instance().SetRenderDst({ 0, 0, _defaultWindowSize.first, _defaultWindowSize.second });
+
   Printer::TerminalWidth  = GlobalConstants::TerminalWidth;
   Printer::TerminalHeight = GlobalConstants::TerminalHeight;
 }
 
+const std::pair<int, int>& Application::GetDefaultWindowSize()
+{
+  return _defaultWindowSize;
+}
+
+///
+/// Returns SDL_Rect with initial window position in x, y
+/// and window size in w, h
+///
 SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
 {
   SDL_Rect res;
@@ -737,6 +750,11 @@ SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
   SDL_DisplayMode dm;
   SDL_GetCurrentDisplayMode(0, &dm);
 
+  //
+  // Subtract current display size from created window size
+  // to determine starting window position,
+  // which should be relatively centered.
+  //
   int wx = dm.w / 2 - ww / 2;
   int wy = dm.h / 2 - wh / 2;
 

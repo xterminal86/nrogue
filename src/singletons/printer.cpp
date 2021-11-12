@@ -76,6 +76,11 @@ void Printer::InitForSDL()
   _tileWidthScaled = _tileWidth * Application::Instance().ScaleFactor;
   _tileHeightScaled = _tileHeight * Application::Instance().ScaleFactor;
 
+  _tileAspectRatio = (float)_tileWidth / (float)_tileHeight;
+
+  _tileWH       = { _tileWidth,       _tileHeight       };
+  _tileWHScaled = { _tileWidthScaled, _tileHeightScaled };
+
   int w = 0, h = 0;
   SDL_QueryTexture(_tileset, nullptr, nullptr, &w, &h);
 
@@ -445,6 +450,26 @@ const std::unordered_map<std::string, TileColor>& Printer::GetValidColorsCache()
   return _validColorsCache;
 }
 
+void Printer::SetRenderDst(const SDL_Rect& dst)
+{
+  _renderDst = dst;
+}
+
+float Printer::GetTileAspectRatio()
+{
+  return _tileAspectRatio;
+}
+
+const std::pair<int, int>& Printer::GetTileWH()
+{
+  return _tileWH;
+}
+
+const std::pair<int, int>& Printer::GetTileWHScaled()
+{
+  return _tileWHScaled;
+}
+
 #endif
 
 #ifndef USE_SDL
@@ -766,7 +791,7 @@ void Printer::Render()
 #else
   SDL_SetRenderTarget(Application::Instance().Renderer, nullptr);
   SDL_RenderClear(Application::Instance().Renderer);
-  SDL_RenderCopy(Application::Instance().Renderer, _frameBuffer, nullptr, nullptr);
+  SDL_RenderCopy(Application::Instance().Renderer, _frameBuffer, nullptr, &_renderDst);
   SDL_RenderPresent(Application::Instance().Renderer);
 #endif
 }

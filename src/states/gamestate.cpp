@@ -13,6 +13,10 @@ GameState::GameState() :
   _thHalf(_th / 2),
   _thQuarter(_th / 4)
 {
+#ifdef USE_SDL
+  auto& dws = Application::Instance().GetDefaultWindowSize();
+  _renderDst = { 0, 0, dws.first, dws.second };
+#endif
 }
 
 #ifdef USE_SDL
@@ -52,6 +56,22 @@ int GameState::GetKeyDown()
         res = -1;
       }
       break;
+
+      case SDL_WINDOWEVENT:
+      {
+        switch (evt.window.event)
+        {
+          case SDL_WINDOWEVENT_SIZE_CHANGED:
+            AdjustWindowSize(evt);
+            break;
+
+          case SDL_WINDOWEVENT_RESTORED:
+          case SDL_WINDOWEVENT_EXPOSED:
+            Printer::Instance().Render();
+            break;
+        }
+      }
+      break;
     }
   }
 
@@ -78,6 +98,29 @@ int GameState::GetKeyDown()
 #endif
 
 #ifdef USE_SDL
+void GameState::AdjustWindowSize(const SDL_Event& evt)
+{
+  int ww = evt.window.data1;
+  int wh = evt.window.data2;
+
+  auto& tws = Printer::Instance().GetTileWHScaled();
+
+  bool wOk = (std::abs(ww - _renderDst.w) > tws.first);
+  bool hOk = (std::abs(wh - _renderDst.h) > tws.second);
+
+  if (wOk && hOk)
+  {
+    ww -= (ww % tws.first);
+    wh -= (wh % tws.second);
+
+    _renderDst.w = ww;
+    _renderDst.h = wh;
+
+    Printer::Instance().SetRenderDst(_renderDst);
+    Printer::Instance().Render();
+  }
+}
+
 bool GameState::ShouldShiftMap(int& key)
 {
   bool res = false;
