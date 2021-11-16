@@ -7,6 +7,7 @@
 #include "task-idle.h"
 #include "task-debug.h"
 #include "task-random-movement.h"
+#include "task-move-smart.h"
 #include "task-attack-basic.h"
 #include "task-attack-special.h"
 #include "task-attack-ranged.h"
@@ -14,7 +15,10 @@
 #include "task-move-away-from-player.h"
 #include "task-remember-player-pos.h"
 #include "task-goto-last-player-pos.h"
+#include "task-goto-last-mined-pos.h"
 #include "task-attack-effect.h"
+#include "task-mine.h"
+
 #include "blackboard.h"
 
 AIModelBase::AIModelBase()
@@ -196,6 +200,20 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   {
     task = new IgnoreFailure(AIComponentRef->OwnerGameObject);
   }
+  else if (taskType == "mine")
+  {
+    task = new TaskMine(AIComponentRef->OwnerGameObject);
+  }
+  else if (taskType == "goto_last_mined_pos")
+  {
+    task = new TaskGotoLastMinedPos(AIComponentRef->OwnerGameObject);
+  }
+  else if (taskType == "move_smart")
+  {
+    task = new TaskMoveSmart(AIComponentRef->OwnerGameObject);
+  }
+
+  // ===========================================================================
 
   if (task == nullptr)
   {

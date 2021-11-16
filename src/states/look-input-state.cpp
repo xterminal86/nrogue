@@ -77,7 +77,9 @@ void LookInputState::HandleInput()
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
-    #ifdef DEBUG_BUILD
+// =============================================================================
+
+#ifdef DEBUG_BUILD
     case 'd':
     {
       GameObject* go = Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X, _cursorPosition.Y);
@@ -161,7 +163,16 @@ void LookInputState::HandleInput()
     }
     break;
 
-    #endif
+    case 'M':
+    {
+      GameObject* mm = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::MAD_MINER);
+      Map::Instance().InsertActor(mm);
+    }
+    break;
+
+#endif
+
+// =============================================================================
 
     default:
       break;

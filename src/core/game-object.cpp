@@ -458,7 +458,10 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
 
     case ItemBonusType::BURNING:
     {
-      Printer::Instance().AddMessage("You catch fire!");
+      if (this == &Application::Instance().PlayerInstance)
+      {
+        Printer::Instance().AddMessage("You catch fire!");
+      }
 
       ItemBonusStruct eff;
       eff.Cumulative = true;

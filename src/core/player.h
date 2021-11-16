@@ -97,7 +97,6 @@ class Player : public GameObject
     void ProcessKill(GameObject* monster);
 
     void ProcessStarvation();
-    void ProcessEffects();
     void ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict);
     void ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int damage, bool againstRes);
     void ProcessTeleport(GameObject* target, ItemComponent* weapon);

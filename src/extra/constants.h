@@ -191,10 +191,11 @@ enum class GameObjectType
   VAMPIRE_BAT,
   SPIDER,
   TROLL,
+  MAD_MINER,
   SKELETON,
   ZOMBIE,
   LICH,
-  HUMAN,
+  NPC,
   KOBOLD,
   HEROBRINE
 };
@@ -690,6 +691,8 @@ namespace Strings
 
   extern const std::string BlackboardKeyPlayerPosX;
   extern const std::string BlackboardKeyPlayerPosY;
+  extern const std::string BlackboardKeyLastMinedPosX;
+  extern const std::string BlackboardKeyLastMinedPosY;
 
   extern const char InventoryEmptySlotChar;
 

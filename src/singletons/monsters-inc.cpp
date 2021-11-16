@@ -13,6 +13,7 @@
 #include "ai-monster-spider.h"
 #include "ai-monster-troll.h"
 #include "ai-monster-herobrine.h"
+#include "ai-monster-mad-miner.h"
 
 void MonstersInc::Init()
 {
@@ -49,11 +50,7 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
     // TODO: determine proper difficulty scaling for monsters
 
     //int pl = _playerRef->Attrs.Lvl.Get();
-    int dl = Map::Instance().CurrentLevel->DungeonLevel;
-    int difficulty = dl;
-    int diffOffset = RNG::Instance().RandomRange(0, 4);
-
-    difficulty += diffOffset;
+    int difficulty = GetDifficulty();
 
     go->Attrs.Str.Talents = 1;
     go->Attrs.Spd.Talents = 1;
@@ -109,11 +106,7 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
   if (randomize)
   {
     //int pl = _playerRef->Attrs.Lvl.Get();
-    int dl = Map::Instance().CurrentLevel->DungeonLevel;
-    int difficulty = dl;
-    int diffOffset = RNG::Instance().RandomRange(0, 4);
-
-    difficulty += diffOffset;
+    int difficulty = GetDifficulty();
 
     go->Attrs.Def.Talents = 3;
     go->Attrs.Spd.Talents = 3;
@@ -155,7 +148,6 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
 
   go->IsLiving = false;
 
-  // Sets Occupied flag for _currentCell
   go->Move(0, 0);
 
   AIComponent* ai = go->AddComponent<AIComponent>();
@@ -169,11 +161,7 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
   if (randomize)
   {
     //int pl = _playerRef->Attrs.Lvl.Get();
-    int dl = Map::Instance().CurrentLevel->DungeonLevel;
-    int difficulty = dl;
-    int diffOffset = RNG::Instance().RandomRange(0, 4);
-
-    difficulty += diffOffset;
+    int difficulty = GetDifficulty();
 
     go->Attrs.Def.Talents = 3;
     go->Attrs.Spd.Talents = 3;
@@ -199,13 +187,15 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
 
   go->IsLiving = true;
 
-  // Sets Occupied flag for _currentCell
   go->Move(0, 0);
 
   AIComponent* ai = go->AddComponent<AIComponent>();
+
+  // ===========================================================================
   AIMonsterSpider* aims = ai->AddModel<AIMonsterSpider>();
   aims->AgroRadius = 12;
   aims->ConstructAI();
+  // ===========================================================================
 
   ai->ChangeModel<AIMonsterSpider>();
 
@@ -213,11 +203,7 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
   if (randomize)
   {
     //int pl = _playerRef->Attrs.Lvl.Get();
-    int dl = Map::Instance().CurrentLevel->DungeonLevel;
-    int difficulty = dl;
-    int diffOffset = RNG::Instance().RandomRange(0, 4);
-
-    difficulty += diffOffset;
+    int difficulty = GetDifficulty();
 
     go->Attrs.Str.Talents = 2;
     go->Attrs.Def.Talents = 2;
@@ -260,7 +246,6 @@ GameObject* MonstersInc::CreateTroll(int x, int y, bool randomize)
 
   go->IsLiving = true;
 
-  // Sets Occupied flag for _currentCell
   go->Move(0, 0);
 
   AIComponent* ai = go->AddComponent<AIComponent>();
@@ -274,11 +259,7 @@ GameObject* MonstersInc::CreateTroll(int x, int y, bool randomize)
   if (randomize)
   {
     //int pl = _playerRef->Attrs.Lvl.Get();
-    int dl = Map::Instance().CurrentLevel->DungeonLevel;
-    int difficulty = dl;
-    int diffOffset = RNG::Instance().RandomRange(0, 4);
-
-    difficulty += diffOffset;
+    int difficulty = GetDifficulty();
 
     go->Attrs.Str.Set(4);
 
@@ -316,7 +297,6 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 30;
 
-  // Sets Occupied flag for _currentCell
   go->MoveTo(x, y);
 
   AIComponent* ai = go->AddComponent<AIComponent>();
@@ -344,7 +324,7 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   go->Attrs.Str.Talents = 3;
   go->Attrs.Skl.Talents = 3;
   go->Attrs.Def.Talents = 1;
-  go->Attrs.Spd.Talents = 1;
+  go->Attrs.Spd.Talents = 2;
 
   for (int i = 0; i < 8; i++)
   {
@@ -356,4 +336,59 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   go->Attrs.MP.Restore();
 
   return go;
+}
+
+GameObject* MonstersInc::CreateMadMiner(int x, int y)
+{
+  char img = '@';
+
+  #ifdef USE_SDL
+  img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
+  #endif
+
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, Colors::MonsterColor);
+  go->ObjectName = "Mad Miner";
+  go->Attrs.Indestructible = false;
+  go->HealthRegenTurns = 30;
+
+  go->MoveTo(x, y);
+
+  AIComponent* ai = go->AddComponent<AIComponent>();
+
+  // ===========================================================================
+  AIMonsterMadMiner* aim = ai->AddModel<AIMonsterMadMiner>();
+  aim->AgroRadius = 6;
+  aim->ConstructAI();
+  // ===========================================================================
+
+  ai->ChangeModel<AIMonsterMadMiner>();
+
+  go->Attrs.Str.Talents = 3;
+  go->Attrs.Skl.Talents = 3;
+  go->Attrs.Spd.Talents = 2;
+
+  int difficulty = GetDifficulty();
+
+  for (int i = 0; i < difficulty; i++)
+  {
+    go->LevelUp();
+  }
+
+  go->Attrs.HP.Restore();
+  go->Attrs.MP.Restore();
+
+  return go;
+}
+
+// =============================================================================
+
+int MonstersInc::GetDifficulty()
+{
+  int dl = Map::Instance().CurrentLevel->DungeonLevel;
+  int difficulty = dl;
+  int diffOffset = RNG::Instance().RandomRange(0, 4);
+
+  difficulty += diffOffset;
+
+  return difficulty;
 }

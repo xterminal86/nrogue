@@ -500,6 +500,96 @@ Position Map::GetRandomEmptyCell()
   return CurrentLevel->EmptyCells()[index];
 }
 
+int Map::CountEmptyCellsAround(int x, int y)
+{
+  int res = 0;
+
+  int lx = x - 1;
+  int ly = y - 1;
+  int hx = x + 1;
+  int hy = y + 1;
+
+  for (int i = lx; i <= hx; x++)
+  {
+    for (int j = ly; j <= hy; j++)
+    {
+      if ((i == x && j == y)
+       || !Util::IsInsideMap({ i, j }, CurrentLevel->MapSize))
+      {
+        continue;
+      }
+
+      if (!CurrentLevel->IsCellBlocking({ i, j }))
+      {
+        res++;
+      }
+    }
+  }
+
+  return res;
+}
+
+int Map::CountAroundStatic(int x, int y, GameObjectType type)
+{
+  int res = 0;
+
+  int lx = x - 1;
+  int ly = y - 1;
+  int hx = x + 1;
+  int hy = y + 1;
+
+  for (int i = lx; i <= hx; i++)
+  {
+    for (int j = ly; j <= hy; j++)
+    {
+      if ((i == x && j == y)
+       || !Util::IsInsideMap({ i, j }, CurrentLevel->MapSize))
+      {
+        continue;
+      }
+
+      if (CurrentLevel->StaticMapObjects[i][j] != nullptr
+       && CurrentLevel->StaticMapObjects[i][j]->Type == type)
+      {
+        res++;
+      }
+    }
+  }
+
+  return res;
+}
+
+int Map::CountWallsOrthogonal(int x, int y)
+{
+  int res = 0;
+
+  int lx = x - 1;
+  int ly = y - 1;
+  int hx = x + 1;
+  int hy = y + 1;
+
+  std::vector<Position> points =
+  {
+    { x, ly }, { x, hy }, { lx, y }, { hx, y }
+  };
+
+  for (auto& p: points)
+  {
+    if (!Util::IsInsideMap(p, CurrentLevel->MapSize))
+    {
+      continue;
+    }
+
+    if (CurrentLevel->StaticMapObjects[p.X][p.Y] != nullptr
+     && CurrentLevel->StaticMapObjects[p.X][p.Y]->Type == GameObjectType::PICKAXEABLE)
+    {
+      res++;
+    }
+  }
+
+  return res;
+}
+
 std::vector<MapType> Map::GetAllVisitedLevels()
 {
   std::vector<MapType> res;

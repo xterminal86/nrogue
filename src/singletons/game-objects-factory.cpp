@@ -140,6 +140,10 @@ GameObject* GameObjectsFactory::CreateMonster(int x, int y, GameObjectType monst
       go = MonstersInc::Instance().CreateTroll(x, y);
       break;
 
+    case GameObjectType::MAD_MINER:
+      go = MonstersInc::Instance().CreateMadMiner(x, y);
+      break;
+
     default:
       DebugLog("CreateMonster(): monster type %i is not handled!", monsterType);
       break;
@@ -190,6 +194,7 @@ GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool st
   GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, "#FFFFFF");
 
   go->IsLiving = true;
+  go->Type = GameObjectType::NPC;
 
   go->Move(0, 0);
 

@@ -174,7 +174,7 @@ void MainState::HandleInput()
       CheckStairs('<');
       break;
 
-    #ifdef DEBUG_BUILD
+#ifdef DEBUG_BUILD
     case '`':
       Application::Instance().ChangeState(GameStates::DEV_CONSOLE);
       break;
@@ -202,7 +202,7 @@ void MainState::HandleInput()
     case 's':
       GetActorsAround();
       break;
-    #endif
+#endif
 
     default:
       break;

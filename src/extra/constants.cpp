@@ -165,6 +165,8 @@ namespace Strings
 
   const std::string BlackboardKeyPlayerPosX = "pl_x";
   const std::string BlackboardKeyPlayerPosY = "pl_y";
+  const std::string BlackboardKeyLastMinedPosX = "last_mined_x";
+  const std::string BlackboardKeyLastMinedPosY = "last_mined_y";
 
   const std::string MessageBoxInformationHeaderText = "Information";
   const std::string MessageBoxEpicFailHeaderText    = "Epic Fail!";

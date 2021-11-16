@@ -58,6 +58,10 @@ class Map : public Singleton<Map>
     std::vector<MapType> GetAllVisitedLevels();
     Position GetRandomEmptyCell();
 
+    int CountEmptyCellsAround(int x, int y);
+    int CountAroundStatic(int x, int y, GameObjectType type);
+    int CountWallsOrthogonal(int x, int y);
+
     MapLevelBase* CurrentLevel;
 
   private:

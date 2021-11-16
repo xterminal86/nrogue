@@ -16,6 +16,8 @@ class DoorComponent : public Component
     void Interact();
     void UpdateDoorState();
 
+    bool InteractBySomeone();
+
     bool IsOpen;
 
     // Hash of item that opens this door,

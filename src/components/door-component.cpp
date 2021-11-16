@@ -14,6 +14,19 @@ void DoorComponent::Update()
 {
 }
 
+bool DoorComponent::InteractBySomeone()
+{
+  if (OpenedBy != GlobalConstants::OpenedByAnyone)
+  {
+    return false;
+  }
+
+  IsOpen = !IsOpen;
+  UpdateDoorState();
+
+  return true;
+}
+
 void DoorComponent::Interact()
 {
   if (OpenedBy != GlobalConstants::OpenedByAnyone)
