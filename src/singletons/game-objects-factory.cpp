@@ -478,43 +478,6 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
   return copy;
 }
 
-void GameObjectsFactory::GenerateLootIfPossible(int posX, int posY, GameObjectType monsterType)
-{
-  if (GlobalConstants::LootTable.count(monsterType) == 1)
-  {
-    auto weights = GlobalConstants::LootTable.at(monsterType);
-    auto kvp = Util::WeightedRandom(weights);
-
-    GenerateLoot(posX, posY, kvp, monsterType);
-  }
-}
-
-void GameObjectsFactory::GenerateLoot(int posX, int posY, const std::pair<ItemType, int>& kvp, GameObjectType monsterType)
-{
-  switch (kvp.first)
-  {
-    case ItemType::NOTHING:
-      break;
-
-    case ItemType::FOOD:
-    {
-      auto foodMap = GlobalConstants::FoodLootTable.at(monsterType);
-      auto kvp = Util::WeightedRandom(foodMap);
-
-      auto go = ItemsFactory::Instance().CreateFood(posX, posY, kvp.first);
-      Map::Instance().InsertGameObject(go);
-    }
-    break;
-
-    default:
-    {
-      auto go = CreateGameObject(posX, posY, kvp.first);
-      Map::Instance().InsertGameObject(go);
-    }
-    break;
-  }
-}
-
 GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
                                                                     int y,
                                                                     char image,

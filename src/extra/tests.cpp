@@ -295,9 +295,15 @@ namespace Tests
 
     std::map<ItemType, int> scores;
 
+    std::map<ItemType, int> lootTable =
+    {
+      { ItemType::FOOD,     4 },
+      { ItemType::NOTHING, 20 }
+    };
+
     for (int i = 0; i < 100; i++)
     {
-      auto weights = GlobalConstants::LootTable.at(GameObjectType::RAT);
+      auto weights = lootTable;
       auto kvp = Util::WeightedRandom(weights);
 
       scores[kvp.first]++;

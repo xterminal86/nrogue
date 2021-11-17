@@ -35,8 +35,6 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     bool HandleItemUse(ItemComponent* item);
     bool HandleItemEquip(ItemComponent* item);
 
-    void GenerateLootIfPossible(int posX, int posY, GameObjectType monsterType);
-
     GameObject* CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1, GameObjectType type = GameObjectType::HARMLESS);
     GameObject* CreateDoor(int x, int y,
                            bool isOpen,
@@ -51,8 +49,6 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
 
   private:
     Player* _playerRef;
-
-    void GenerateLoot(int posX, int posY, const std::pair<ItemType, int>& kvp, GameObjectType type);
 };
 
 #endif // GAMEOBJECTSFACTORY_H

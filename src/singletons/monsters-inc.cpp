@@ -5,6 +5,7 @@
 
 #include "ai-component.h"
 #include "container-component.h"
+#include "loot-generators.h"
 
 #include "ai-idle.h"
 #include "ai-monster-basic.h"
@@ -79,6 +80,8 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
     go->Attrs.Skl.Set(randomSkl);
     */
   }
+
+  go->GenerateLootFunction = std::bind(&LootGenerators::Rat, go);
 
   return go;
 }
@@ -376,6 +379,8 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
 
   go->Attrs.HP.Restore();
   go->Attrs.MP.Restore();
+
+  go->GenerateLootFunction = std::bind(&LootGenerators::MadMiner, go);
 
   return go;
 }

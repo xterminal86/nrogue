@@ -1253,7 +1253,10 @@ void Player::ProcessKill(GameObject* monster)
   }
 
   // Try to generate loot from the kill itself
-  GameObjectsFactory::Instance().GenerateLootIfPossible(monster->PosX, monster->PosY, monster->Type);
+  if (Util::IsFunctionValid(monster->GenerateLootFunction))
+  {
+    monster->GenerateLootFunction();
+  }
 
   // Do not award experience for nothing
   if (monster->Type != GameObjectType::HARMLESS

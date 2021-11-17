@@ -163,8 +163,8 @@ namespace Strings
   const std::string NoActionText           = "Nothing happens";
   const std::string UnidentifiedEffectText = "?not sure?";
 
-  const std::string BlackboardKeyPlayerPosX = "pl_x";
-  const std::string BlackboardKeyPlayerPosY = "pl_y";
+  const std::string BlackboardKeyPlayerPosX    = "pl_x";
+  const std::string BlackboardKeyPlayerPosY    = "pl_y";
   const std::string BlackboardKeyLastMinedPosX = "last_mined_x";
   const std::string BlackboardKeyLastMinedPosY = "last_mined_y";
 
@@ -198,10 +198,10 @@ namespace Strings
   const std::string MsgCantBeUsed        = "Can't be used!";
   const std::string MsgNoMoney           = "You have no money, ha ha ha!";
 
-  const std::string FmtPickedUpIS      = "Picked up: %i %s";
-  const std::string FmtPickedUpS       = "Picked up: %s";
-  const std::string FmtDroppedIS       = "Dropped: %i %s";
-  const std::string FmtDroppedS        = "Dropped: %s";
+  const std::string FmtPickedUpIS = "Picked up: %i %s";
+  const std::string FmtPickedUpS  = "Picked up: %s";
+  const std::string FmtDroppedIS  = "Dropped: %i %s";
+  const std::string FmtDroppedS   = "Dropped: %s";
 
   const std::vector<std::string> MsgNotInTown = { "Not here", "Not in town" };
 }
@@ -288,54 +288,6 @@ namespace GlobalConstants
     { TraderRole::CLERIC,     "Sanctuary" },
     { TraderRole::COOK,       "Grocery"   },
     { TraderRole::JUNKER,     "Junkyard"  }
-  };
-
-  // Weighted random
-  const std::map<GameObjectType, std::map<ItemType, int>> LootTable =
-  {
-    {
-      GameObjectType::RAT,
-      {
-        { ItemType::FOOD,     4 },
-        { ItemType::NOTHING, 20 }
-      }
-    },
-    {
-      GameObjectType::BAT,
-      {
-        { ItemType::FOOD,     4 },
-        { ItemType::NOTHING, 20 }
-      }
-    },
-    {
-      GameObjectType::SPIDER,
-      {
-        { ItemType::FOOD,     4 },
-        { ItemType::NOTHING, 20 }
-      }
-    }
-  };
-
-  const std::map<GameObjectType, std::map<FoodType, int>> FoodLootTable =
-  {
-    {
-      GameObjectType::RAT,
-      {
-        { FoodType::CHEESE, 1 }
-      }
-    },
-    {
-      GameObjectType::BAT,
-      {
-        { FoodType::MEAT, 1 }
-      }
-    },
-    {
-      GameObjectType::SPIDER,
-      {
-        { FoodType::MEAT, 1 }
-      }
-    }
   };
 
   const std::map<ItemType, int> PotionsWeightTable =

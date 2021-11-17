@@ -42,7 +42,7 @@ GameObject::~GameObject()
     Blackboard::Instance().Remove(_objectId);
   }
 
-  #ifdef DEBUG_BUILD
+#ifdef DEBUG_BUILD
   GameState* s = Application::Instance().GetGameStateRefByName(GameStates::DEV_CONSOLE);
   DevConsole* dc = static_cast<DevConsole*>(s);
   if (dc != nullptr)
@@ -56,7 +56,7 @@ GameObject::~GameObject()
       }
     }
   }
-  #endif
+#endif
 }
 
 void GameObject::Init(MapLevelBase* levelOwner,

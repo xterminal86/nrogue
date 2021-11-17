@@ -121,6 +121,7 @@ class GameObject
     std::string FogOfWarName;
 
     std::function<void()> InteractionCallback;
+    std::function<void()> GenerateLootFunction;
 
     size_t ComponentsSize();
 

@@ -781,9 +781,6 @@ namespace GlobalConstants
   extern const std::map<ItemBonusType,    std::string> ItemBonusSuffixes;
   extern const std::map<ItemBonusType,    std::string> BonusDisplayNameByType;
 
-  extern const std::map<GameObjectType, std::map<ItemType, int>> LootTable;
-  extern const std::map<GameObjectType, std::map<FoodType, int>> FoodLootTable;
-
   extern const std::map<ItemType,      int> PotionsWeightTable;
   extern const std::map<ArmorType,     int> ArmorDurabilityByType;
   extern const std::map<GemType,       int> GemCostByType;
@@ -794,13 +791,13 @@ namespace GlobalConstants
 
   extern const std::map<std::string, ItemType> PotionTypeByStatName;
 
-  extern const std::map<FoodType, std::pair<std::string, int>>         FoodHungerPercentageByName;
+  extern const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName;
 
-  extern const std::map<WandMaterials, std::string>                         WandMaterialNamesByMaterial;
-  extern const std::map<ShrineType,    std::string>                         ShrineSaintByType;
-  extern const std::map<ShrineType,    std::string>                         ShrineNameByType;
-  extern const std::map<MapType,       std::vector<std::string>>            MapLevelNames;
-  extern const std::map<ShrineType,    std::vector<StringsArray2D>>         ShrineLayoutsByType;
+  extern const std::map<WandMaterials, std::string>                 WandMaterialNamesByMaterial;
+  extern const std::map<ShrineType,    std::string>                 ShrineSaintByType;
+  extern const std::map<ShrineType,    std::string>                 ShrineNameByType;
+  extern const std::map<MapType,       std::vector<std::string>>    MapLevelNames;
+  extern const std::map<ShrineType,    std::vector<StringsArray2D>> ShrineLayoutsByType;
 
   extern const std::vector<SpellType> ScrollValidSpellTypes;
 
