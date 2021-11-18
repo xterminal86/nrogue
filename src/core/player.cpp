@@ -1237,21 +1237,6 @@ void Player::LevelDown()
 
 void Player::ProcessKill(GameObject* monster)
 {
-  // Check for monster's inventory and drop all items from there if any
-  ContainerComponent* cc = monster->GetComponent<ContainerComponent>();
-  if (cc != nullptr)
-  {
-    for (auto& i : cc->Contents)
-    {
-      GameObject* obj = i.release();
-      ItemComponent* ic = obj->GetComponent<ItemComponent>();
-      ic->OwnerGameObject->SetLevelOwner(Map::Instance().CurrentLevel);
-      ic->Transfer();
-      ic->OwnerGameObject->PosX = monster->PosX;
-      ic->OwnerGameObject->PosY = monster->PosY;
-    }
-  }
-
   // Try to generate loot from the kill itself
   if (Util::IsFunctionValid(monster->GenerateLootFunction))
   {

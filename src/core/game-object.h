@@ -199,6 +199,7 @@ class GameObject
     void ProcessNaturalRegenHP();
     void ProcessNaturalRegenMP();
     void ConsumeEnergy();
+    void DropItemsHeld();
 
     bool CanRaiseAttribute(Attribute& attr);
     bool ShouldSkipTurn();

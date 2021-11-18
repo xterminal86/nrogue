@@ -115,41 +115,6 @@ void LookInputState::HandleInput()
     }
     break;
 
-    case 'b':
-    {
-      GameObject* bat = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::BAT);
-      Map::Instance().InsertActor(bat);
-    }
-    break;
-
-    case 'B':
-    {
-      GameObject* bat = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::VAMPIRE_BAT);
-      Map::Instance().InsertActor(bat);
-    }
-    break;
-
-    case 'r':
-    {
-      GameObject* rat = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::RAT);
-      Map::Instance().InsertActor(rat);
-    }
-    break;
-
-    case 'S':
-    {
-      GameObject* spider = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::SPIDER);
-      Map::Instance().InsertActor(spider);
-    }
-    break;
-
-    case 'T':
-    {
-      GameObject* troll = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::TROLL);
-      Map::Instance().InsertActor(troll);
-    }
-    break;
-
     case 'f':
     {
       if (_playerRef->DistanceField.IsDirty())

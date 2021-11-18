@@ -193,7 +193,15 @@ bool GameObject::ReceiveDamage(GameObject* from,
     objName = (ic->Data.IsIdentified) ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
   }
 
-  std::string who = (from->Type == GameObjectType::PLAYER) ? "@" : from->ObjectName;
+  std::string who;
+  if (from == nullptr)
+  {
+    who = "God";
+  }
+  else
+  {
+    who = (from->Type == GameObjectType::PLAYER) ? "@" : from->ObjectName;
+  }
 
   std::queue<std::string> logMessages;
 
@@ -344,6 +352,24 @@ void GameObject::ConsumeEnergy()
   if (Attrs.ActionMeter < 0)
   {
     Attrs.ActionMeter = 0;
+  }
+}
+
+void GameObject::DropItemsHeld()
+{
+  // Check for monster's inventory and drop all items from there if any
+  ContainerComponent* cc = GetComponent<ContainerComponent>();
+  if (cc != nullptr)
+  {
+    for (auto& i : cc->Contents)
+    {
+      GameObject* obj = i.release();
+      ItemComponent* ic = obj->GetComponent<ItemComponent>();
+      ic->OwnerGameObject->SetLevelOwner(Map::Instance().CurrentLevel);
+      ic->Transfer();
+      ic->OwnerGameObject->PosX = PosX;
+      ic->OwnerGameObject->PosY = PosY;
+    }
   }
 }
 
@@ -716,6 +742,8 @@ void GameObject::MarkAndCreateRemains()
     auto go = GameObjectsFactory::Instance().CreateRemains(this);
     _levelOwner->InsertGameObject(go);
   }
+
+  DropItemsHeld();
 
   IsDestroyed = true;
 }

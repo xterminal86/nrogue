@@ -13,6 +13,7 @@ enum class DevConsoleCommand
   GET_STATIC_OBJECT,
   GET_ACTOR,
   GET_ITEM,
+  DAMAGE_ACTOR,
   MOVE_STATIC_OBJECT,
   MOVE_ACTOR,
   MOVE_ITEM,
@@ -22,6 +23,7 @@ enum class DevConsoleCommand
   LEVEL_DOWN,
   PRINT_MAP,
   PRINT_COLORS,
+  CREATE_MONSTER,
   INFO_HANDLES
 };
 
@@ -69,6 +71,7 @@ class DevConsole : public GameState
     const std::string ErrHandleNotSet   = "Handle not set";
     const std::string ErrCannotMove     = "Cannot move, probably occupied";
     const std::string ErrInvalidType    = "Invalid type";
+    const std::string ErrCmdNotHandled  = "Command not handled";
 
     const std::string Ok = "Ok";
     const std::string Prompt = "> ";
@@ -89,6 +92,21 @@ class DevConsole : public GameState
       GameObjectType::CHASM
     };
 
+    const std::vector<GameObjectType> _monsters =
+    {
+      GameObjectType::RAT,
+      GameObjectType::BAT,
+      GameObjectType::VAMPIRE_BAT,
+      GameObjectType::SPIDER,
+      GameObjectType::TROLL,
+      GameObjectType::MAD_MINER,
+      GameObjectType::SKELETON,
+      GameObjectType::ZOMBIE,
+      GameObjectType::LICH,
+      GameObjectType::KOBOLD,
+      GameObjectType::HEROBRINE
+    };
+
     void StdOut(const std::string& str);
 
     bool ParseCommand();
@@ -97,12 +115,14 @@ class DevConsole : public GameState
                         const std::vector<std::string>& params);
     void DisplayHelpAboutCommand(const std::vector<std::string>& params);
     void InfoHandles();
+    void CreateMonster(const std::vector<std::string>& params);
     void GetObject(const std::vector<std::string>& params,
                    ObjectHandleType handleType);
     void MoveObject(const std::vector<std::string>& params,
                     ObjectHandleType handleType);
     void MovePlayer(const std::vector<std::string>& params);
     void RemoveObject(const std::vector<std::string>& params);
+    void DamageActor(const std::vector<std::string>& params);
     void PrintColors();
     void TransformTile(const std::vector<std::string>& params);
 
@@ -126,13 +146,15 @@ class DevConsole : public GameState
       { "io_get", DevConsoleCommand::GET_ITEM           },
       { "so_mov", DevConsoleCommand::MOVE_STATIC_OBJECT },
       { "ao_mov", DevConsoleCommand::MOVE_ACTOR         },
+      { "ao_dmg", DevConsoleCommand::DAMAGE_ACTOR       },
       { "io_mov", DevConsoleCommand::MOVE_ITEM          },
       { "p_mov",  DevConsoleCommand::MOVE_PLAYER        },
       { "o_del",  DevConsoleCommand::REMOVE_OBJECT      },
       { "p_lu",   DevConsoleCommand::LEVEL_UP           },
       { "p_ld",   DevConsoleCommand::LEVEL_DOWN         },
       { "g_pm",   DevConsoleCommand::PRINT_MAP          },
-      { "g_pc",   DevConsoleCommand::PRINT_COLORS       }
+      { "g_pc",   DevConsoleCommand::PRINT_COLORS       },
+      { "g_cm",   DevConsoleCommand::CREATE_MONSTER     }
     };
 
     const std::vector<std::string> _help =
@@ -174,6 +196,10 @@ class DevConsole : public GameState
         { "ao_mov X Y", "Try to move actor in handle to X Y" }
       },
       {
+        "ao_dmg",
+        { "ao_dmg N", "Inflict N damage to actor in handle" }
+      },
+      {
         "io_mov",
         { "io_mov X Y", "Try to move item in handle to X Y" }
       },
@@ -189,6 +215,10 @@ class DevConsole : public GameState
         "m_trns",
         { "m_trns X Y <TYPE>", "Transform tile X Y to type <TYPE>" }
       },
+      {
+        "g_cm",
+        { "g_cm X Y <TYPE>", "Create monster <TYPE> at X Y" }
+      }
     };
 
     friend class GameObject;

@@ -36,11 +36,6 @@ class LookInputState : public GameState
     const StringsArray2D _debugInfo =
     {
       "'ENTER' - display actor stats",
-      "'r' - spawn rat",
-      "'b' - spawn bat",
-      "'B' - spawn vampire bat",
-      "'S' - spawn spider",
-      "'T' - spawn troll",
       "",
       "'f' - player's potential field value here",
       "'d' - destroy static object here",

@@ -284,7 +284,16 @@ void DevConsole::ProcessCommand(const std::string& command,
       TransformTile(params);
       break;
 
+    case DevConsoleCommand::CREATE_MONSTER:
+      CreateMonster(params);
+      break;
+
+    case DevConsoleCommand::DAMAGE_ACTOR:
+      DamageActor(params);
+      break;
+
     default:
+      StdOut(ErrCmdNotHandled);
       break;
   }
 }
@@ -439,6 +448,58 @@ void DevConsole::InfoHandles()
     std::string msg = Util::StringFormat("%s%s = 0x%X", kvp.second.data(), spaces.data(), _objectHandles[kvp.first]);
     StdOut(msg);
   }
+}
+
+void DevConsole::CreateMonster(const std::vector<std::string>& params)
+{
+  if (params.size() != 3)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string sx = params[0];
+  std::string sy = params[1];
+
+  auto r = CoordinateParamsToInt(sx, sy);
+  if (r.first == -1 && r.second == -1)
+  {
+    return;
+  }
+
+  int x = r.first;
+  int y = r.second;
+
+  std::string monsterIndex = params[2];
+  if (!StringIsNumbers(monsterIndex))
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  int monsterInd = std::stoi(monsterIndex);
+  GameObjectType objType = (GameObjectType)monsterInd;
+
+  auto found = std::find(_monsters.begin(), _monsters.end(), objType);
+  if (found == _monsters.end())
+  {
+    StdOut(ErrWrongParams);
+
+    std::string output = "Valid types: ";
+    for (auto& i : _monsters)
+    {
+      output += Util::StringFormat("%i ", (int)i);
+    }
+
+    StdOut(output);
+
+    return;
+  }
+
+  auto go = GameObjectsFactory::Instance().CreateMonster(x, y, objType);
+  _currentLevel->InsertActor(go);
+
+  StdOut(Ok);
 }
 
 void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleType handleType)
@@ -663,6 +724,35 @@ void DevConsole::RemoveObject(const std::vector<std::string>& params)
   {
     go->IsDestroyed = true;
   }
+
+  Map::Instance().RemoveDestroyed();
+
+  StdOut(Ok);
+}
+
+void DevConsole::DamageActor(const std::vector<std::string>& params)
+{
+  if (params.size() != 1)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  if (_objectHandles[ObjectHandleType::ACTOR] == nullptr)
+  {
+    StdOut(ErrHandleNotSet);
+    return;
+  }
+
+  std::string n = params[0];
+  if (!StringIsNumbers(n))
+  {
+    StdOut(ErrSyntaxError);
+    return;
+  }
+
+  int dmg = std::stoi(n);
+  _objectHandles[ObjectHandleType::ACTOR]->ReceiveDamage(nullptr, dmg, true);
 
   Map::Instance().RemoveDestroyed();
 
