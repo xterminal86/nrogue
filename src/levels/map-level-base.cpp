@@ -14,6 +14,11 @@ MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
   MapType_ = type;
   DungeonLevel = dungeonLevel;
 
+  for (auto& kvp : GlobalConstants::MapLevelNames)
+  {
+    _specialMonstersSpawnedByLevel[kvp.first] = false;
+  }
+
   std::string levelName;
 
   auto GetSpecialName = [this]()
@@ -276,7 +281,8 @@ void MapLevelBase::CreateInitialMonsters()
     int x = _emptyCells[index].X;
     int y = _emptyCells[index].Y;
 
-    if (IsSpotValidForSpawn({ x, y }) && !_monstersSpawnRateForThisLevel.empty())
+    bool spawnOk = IsSpotValidForSpawn({ x, y });
+    if (spawnOk && !_monstersSpawnRateForThisLevel.empty())
     {
       auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
 
@@ -291,7 +297,18 @@ void MapLevelBase::CreateInitialMonsters()
 
 bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
 {
-  return !IsCellBlocking(pos);
+  bool blocked  = IsCellBlocking(pos);
+  bool occupied = false;
+  for (auto& i : ActorGameObjects)
+  {
+    if (i->PosX == pos.X && i->PosY == pos.Y)
+    {
+      occupied = true;
+      break;
+    }
+  }
+
+  return (!blocked && !occupied);
 }
 
 void MapLevelBase::TryToSpawnMonsters()
@@ -536,4 +553,9 @@ void MapLevelBase::FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo
 void MapLevelBase::CreateSpecialLevel()
 {
   // For overriding procedural design generation
+}
+
+void MapLevelBase::CreateSpecialMonsters()
+{
+  // For creation of mini-bosses
 }

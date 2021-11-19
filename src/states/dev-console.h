@@ -98,6 +98,7 @@ class DevConsole : public GameState
       GameObjectType::BAT,
       GameObjectType::VAMPIRE_BAT,
       GameObjectType::SPIDER,
+      GameObjectType::SHELOB,
       GameObjectType::TROLL,
       GameObjectType::MAD_MINER,
       GameObjectType::SKELETON,

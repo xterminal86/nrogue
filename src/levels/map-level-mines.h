@@ -17,6 +17,7 @@ class MapLevelMines : public MapLevelBase
     void CreateLevel() override;
     void ConstructFromBuilder(LevelBuilder& lb) override;
     void CreateSpecialLevel() override;
+    void CreateSpecialMonsters() override;
 
   private:
     void CreateRandomBoxes();

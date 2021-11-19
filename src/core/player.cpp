@@ -883,6 +883,7 @@ int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bo
 std::string Player::ProcessMagicalDamage(GameObject* from, int& amount)
 {
   std::string logMsg;
+  std::string fromStr = (from == nullptr) ? "?" : from->ObjectName;
 
   if (from == this)
   {
@@ -890,7 +891,7 @@ std::string Player::ProcessMagicalDamage(GameObject* from, int& amount)
   }
   else
   {
-    logMsg = Util::StringFormat("%s => @ (%i)", from->ObjectName.data(), amount);
+    logMsg = Util::StringFormat("%s => @ (%i)", fromStr.data(), amount);
   }
 
   int abs = GetDamageAbsorbtionValue(true);
@@ -921,6 +922,7 @@ std::string Player::ProcessMagicalDamage(GameObject* from, int& amount)
 std::string Player::ProcessPhysicalDamage(GameObject* from, int& amount)
 {
   std::string logMsg;
+  std::string fromStr = (from == nullptr) ? "?" : from->ObjectName;
 
   int abs = GetDamageAbsorbtionValue(false);
   amount -= abs;
@@ -934,11 +936,11 @@ std::string Player::ProcessPhysicalDamage(GameObject* from, int& amount)
   {
     if (amount == 0)
     {
-      logMsg = Util::StringFormat("%s => @ (%i)", from->ObjectName.data(), amount);
+      logMsg = Util::StringFormat("%s => @ (%i)", fromStr.data(), amount);
     }
     else
     {
-      logMsg = Util::StringFormat("%s => @ (%i)", from->ObjectName.data(), amount);
+      logMsg = Util::StringFormat("%s => @ (%i)", fromStr.data(), amount);
     }
 
     if (HasEffect(ItemBonusType::MANA_SHIELD) && Attrs.MP.Min().Get() != 0)
@@ -1022,13 +1024,15 @@ bool Player::DamageArmor(GameObject* from, int amount)
       return false;
     }
 
+    std::string fromStr = (from == nullptr) ? "?" : from->ObjectName;
+
     int durabilityLeft = armor->Data.Durability.Min().Get();
     int armorDamage = durabilityLeft - amount;
     if (armorDamage < 0)
     {
       int hpDamage = std::abs(armorDamage);
 
-      auto str = Util::StringFormat("%s => @ (%i)", from->ObjectName.data(), hpDamage);
+      auto str = Util::StringFormat("%s => @ (%i)", fromStr.data(), hpDamage);
       Printer::Instance().AddMessage(str);
 
       Attrs.HP.AddMin(-hpDamage);
@@ -1036,7 +1040,7 @@ bool Player::DamageArmor(GameObject* from, int amount)
     }
     else
     {
-      auto str = Util::StringFormat("%s => [ (%i)", from->ObjectName.data(), amount);
+      auto str = Util::StringFormat("%s => [ (%i)", fromStr.data(), amount);
       Printer::Instance().AddMessage(str);
 
       armor->Data.Durability.AddMin(-amount);

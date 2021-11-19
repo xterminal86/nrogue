@@ -87,4 +87,8 @@ namespace LootGenerators
         break;
     }
   }
+
+  void Shelob(GameObject* go)
+  {
+  }
 }

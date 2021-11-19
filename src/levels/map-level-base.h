@@ -89,6 +89,7 @@ class MapLevelBase
     std::vector<std::vector<std::string>> _layoutsForLevel;
     std::vector<RoomForLevel> _roomsForLevel;
     std::map<GameObjectType, int> _monstersSpawnRateForThisLevel;
+    std::map<MapType, bool> _specialMonstersSpawnedByLevel;
 
     StringsArray2D _specialLevel;
 
@@ -102,6 +103,7 @@ class MapLevelBase
     virtual void CreateLevel();
     virtual void ConstructFromBuilder(LevelBuilder& lb);
     virtual void CreateSpecialLevel();
+    virtual void CreateSpecialMonsters();
 
     bool IsSpotValidForSpawn(const Position& pos);
 

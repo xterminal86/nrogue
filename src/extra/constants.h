@@ -190,6 +190,7 @@ enum class GameObjectType
   BAT,
   VAMPIRE_BAT,
   SPIDER,
+  SHELOB,
   TROLL,
   MAD_MINER,
   SKELETON,
@@ -643,6 +644,7 @@ namespace Colors
   extern const std::string DirtDotColor;
   extern const std::string PlayerColor;
   extern const std::string MonsterColor;
+  extern const std::string MonsterUniqueColor;
   extern const std::string ShallowWaterColor;
   extern const std::string DeepWaterColor;
   extern const std::string IronColor;

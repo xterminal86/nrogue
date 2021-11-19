@@ -17,6 +17,7 @@ class MonstersInc : public Singleton<MonstersInc>
     GameObject* CreateTroll(int x, int y, bool randomize = true);
     GameObject* CreateHerobrine(int x, int y);
     GameObject* CreateMadMiner(int x, int y);
+    GameObject* CreateShelob(int x, int y);
 
   private:
     int GetDifficulty();

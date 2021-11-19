@@ -38,6 +38,7 @@ namespace Colors
   const std::string DirtDotColor              = "#7B5633";
   const std::string PlayerColor               = "#00FFFF";
   const std::string MonsterColor              = "#FF0000";
+  const std::string MonsterUniqueColor        = "#FF8888";
   const std::string ShallowWaterColor         = "#9999FF";
   const std::string DeepWaterColor            = "#3333FF";
   const std::string IronColor                 = "#CBCDCD";

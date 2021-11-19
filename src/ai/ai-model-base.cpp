@@ -111,6 +111,10 @@ void AIModelBase::Update()
 
       //DebugLog("%s AIModelBase::Update() _root->Run() = %i", AIComponentRef->OwnerGameObject->ObjectName.data(), (int)res);
 
+      // TODO: should we add [RESET] node to reset behaviour when we
+      // need to perform some additional actions from last stage
+      // even after FinishTurn() has been called?
+      // Can we use currently unused BTResult::Running state?
       if (res == BTResult::Failure)
       {
         _root->Reset();
@@ -145,7 +149,8 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   }
   else if (taskType == "attack_basic")
   {
-    task = new TaskAttackBasic(AIComponentRef->OwnerGameObject);
+    bool alwaysHitOverride = (data->Params.count("p2") == 1);
+    task = new TaskAttackBasic(AIComponentRef->OwnerGameObject, alwaysHitOverride);
   }
   else if (taskType == "chase_player")
   {
@@ -189,12 +194,24 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   }
   else if (taskType == "attack_ranged")
   {
-    std::string damageType = data->Params.at("p2");
+    std::string damageType  = data->Params.at("p2");
+
+    std::string applyEffect;
+    std::string duration;
+
+    if (data->Params.count("p3") == 1)
+    {
+      applyEffect = data->Params.at("p3");
+      duration    = data->Params.at("p4");
+    }
+
     task = new TaskAttackRanged(AIComponentRef->OwnerGameObject,
                                 damageType,
                                 '*',
                                 "#FF0000",
-                                "#000000");
+                                "#000000",
+                                applyEffect,
+                                duration);
   }
   else if (taskType == "end")
   {

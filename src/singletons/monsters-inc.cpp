@@ -12,6 +12,7 @@
 #include "ai-monster-bat.h"
 #include "ai-monster-vampire-bat.h"
 #include "ai-monster-spider.h"
+#include "ai-monster-shelob.h"
 #include "ai-monster-troll.h"
 #include "ai-monster-herobrine.h"
 #include "ai-monster-mad-miner.h"
@@ -28,7 +29,12 @@ void MonstersInc::Init()
 
 GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'r', Colors::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  'r',
+                                  Colors::MonsterColor);
+
   go->ObjectName = "Feral Rat";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 30;
@@ -88,7 +94,11 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
 
 GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'b', Colors::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  'b',
+                                  Colors::MonsterColor);
   go->ObjectName = "Flying Bat";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 20;
@@ -144,7 +154,11 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
 
 GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'b', Colors::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  'b',
+                                  Colors::MonsterColor);
   go->ObjectName = "Red Bat";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 20;
@@ -183,7 +197,11 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
 
 GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 's', Colors::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  's',
+                                  Colors::MonsterColor);
   go->ObjectName = "Cave Spider";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 30;
@@ -242,7 +260,11 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
 
 GameObject* MonstersInc::CreateTroll(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, 'T', Colors::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  'T',
+                                  Colors::MonsterColor);
   go->ObjectName = "Troll";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 3;
@@ -295,7 +317,11 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
   #endif
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, Colors::MonsterColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  img,
+                                  Colors::MonsterColor);
   go->ObjectName = "Herobrine";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns = 30;
@@ -381,6 +407,48 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
   go->Attrs.MP.Restore();
 
   go->GenerateLootFunction = std::bind(&LootGenerators::MadMiner, go);
+
+  return go;
+}
+
+GameObject* MonstersInc::CreateShelob(int x, int y)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  'S',
+                                  Colors::MonsterUniqueColor);
+  go->ObjectName = "Shelob";
+  go->Attrs.Indestructible = false;
+  go->HealthRegenTurns = 15;
+
+  go->MoveTo(x, y);
+
+  AIComponent* ai = go->AddComponent<AIComponent>();
+
+  // ===========================================================================
+  AIMonsterShelob* aim = ai->AddModel<AIMonsterShelob>();
+  aim->AgroRadius = 6;
+  aim->ConstructAI();
+  // ===========================================================================
+
+  ai->ChangeModel<AIMonsterShelob>();
+
+  go->Attrs.Str.Talents = 2;
+  go->Attrs.Skl.Talents = 2;
+  go->Attrs.Spd.Talents = 2;
+
+  int difficulty = GetDifficulty();
+
+  for (int i = 0; i < difficulty; i++)
+  {
+    go->LevelUp(4);
+  }
+
+  go->Attrs.HP.Restore();
+  go->Attrs.MP.Restore();
+
+  go->GenerateLootFunction = std::bind(&LootGenerators::Shelob, go);
 
   return go;
 }

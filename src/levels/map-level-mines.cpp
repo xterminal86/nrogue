@@ -43,12 +43,12 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _monstersSpawnRateForThisLevel =
       {
-        { GameObjectType::RAT,         25 },
-        { GameObjectType::SPIDER,       3 },
-        { GameObjectType::TROLL,        1 },
-        { GameObjectType::VAMPIRE_BAT,  1 },
-        { GameObjectType::MAD_MINER,    4 },
-        { GameObjectType::BAT,          5 }
+        { GameObjectType::RAT,        100 },
+        { GameObjectType::SPIDER,      15 },
+        { GameObjectType::TROLL,       10 },
+        { GameObjectType::VAMPIRE_BAT,  5 },
+        { GameObjectType::MAD_MINER,    5 },
+        { GameObjectType::BAT,         25 }
       };
     }
     break;
@@ -57,12 +57,12 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _monstersSpawnRateForThisLevel =
       {
-        { GameObjectType::RAT,         25 },
-        { GameObjectType::SPIDER,       4 },
-        { GameObjectType::TROLL,        1 },
-        { GameObjectType::VAMPIRE_BAT,  1 },
-        { GameObjectType::MAD_MINER,    4 },
-        { GameObjectType::BAT,          5 }
+        { GameObjectType::RAT,        100 },
+        { GameObjectType::SPIDER,      15 },
+        { GameObjectType::TROLL,       10 },
+        { GameObjectType::VAMPIRE_BAT,  5 },
+        { GameObjectType::MAD_MINER,    5 },
+        { GameObjectType::BAT,         25 }
       };
     }
     break;
@@ -366,6 +366,7 @@ void MapLevelMines::CreateLevel()
     PlaceStairs();
 
     CreateInitialMonsters();
+    CreateSpecialMonsters();
 
     int itemsToCreate = GetEstimatedNumberOfItemsToCreate();
     CreateItemsForLevel(itemsToCreate);
@@ -675,3 +676,13 @@ void MapLevelMines::DisplayWelcomeText()
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Abandoned Mines", msg);
 }
 
+void MapLevelMines::CreateSpecialMonsters()
+{
+  if (MapType_ == MapType::MINES_3
+  && !_specialMonstersSpawnedByLevel[MapType_])
+  {
+    // TODO:
+  }
+
+  _specialMonstersSpawnedByLevel[MapType_] = true;
+}

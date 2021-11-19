@@ -12,13 +12,16 @@ struct AttackResult
 
 class TaskAttackBasic : public Node
 {
-  using Node::Node;
-
   public:
+    TaskAttackBasic(GameObject* objectToControl,
+                    bool alwaysHitOverride = false);
+
     BTResult Run() override;
 
   protected:
     AttackResult _attackResult;
+
+    bool _alwaysHitOverride = false;
 };
 
 #endif // TASKATTACKBASIC_H

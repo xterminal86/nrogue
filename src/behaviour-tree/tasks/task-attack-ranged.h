@@ -17,11 +17,13 @@ class TaskAttackRanged : public Node
                      const std::string& damageType,
                      char projectile,
                      const std::string& fgColor,
-                     const std::string& bgColor);
+                     const std::string& bgColor,
+                     const std::string& applyEffectStr = std::string(),
+                     const std::string& effectDurationStr = std::string());
 
     BTResult Run() override;
 
-  private:
+  protected:
     int CalculateChance(const Position& startPoint,
                         const Position& endPoint,
                         int baseChance);
@@ -32,13 +34,18 @@ class TaskAttackRanged : public Node
     RangedAttackType _attackType;
     std::string _fgColor;
     std::string _bgColor;
+    std::string _applyEffectStr;
+    std::string _effectDurationStr;
+
+    ItemBonusType _effect = ItemBonusType::NONE;
+    int _effectDuration = 0;
 
     const int kBaseChanceToHit = 50;
 
     const std::map<std::string, RangedAttackType> _attackTypeByName =
     {
-      { "str", RangedAttackType::PHYSICAL },
-      { "mag", RangedAttackType::MAGICAL  }
+      { "STR", RangedAttackType::PHYSICAL },
+      { "MAG", RangedAttackType::MAGICAL  }
     };
 };
 

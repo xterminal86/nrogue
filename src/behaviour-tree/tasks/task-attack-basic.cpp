@@ -4,6 +4,13 @@
 #include "game-object.h"
 #include "logger.h"
 
+TaskAttackBasic::TaskAttackBasic(GameObject* objectToControl,
+                                bool alwaysHitOverride)
+  : Node(objectToControl)
+{
+  _alwaysHitOverride = alwaysHitOverride;
+}
+
 BTResult TaskAttackBasic::Run()
 {
   //DebugLog("[TaskAttackBasic]\n");
