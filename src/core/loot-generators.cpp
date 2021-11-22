@@ -90,5 +90,6 @@ namespace LootGenerators
 
   void Shelob(GameObject* go)
   {
+    // TODO:
   }
 }

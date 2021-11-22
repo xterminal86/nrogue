@@ -149,30 +149,24 @@ void MainState::HandleInput()
       break;
 
     case '>':
-      CheckStairs('>');
-
-      // FIXME: for debug, further going down won't work
-      // because of this override.
-      //
-      // NOTE: Comment out CheckStairs() above to avoid pointer loop.
-      //
-      // CheckStairs() also uses Map::ChangeLevel() which in turn
-      // can display welcome text via MessageBox(), which sets
-      // previousState and currentState variables.
-      // If leave CheckStairs() uncommented, then during first visit
-      // on a level message box will be displayed.
-      // It will set previousState to MainState
-      // and then call below will "override" that previousState
-      // to MessageBoxState and now we have both previousState
-      // and currentState variables pointing to the same state,
-      // which will lead to inability to close message box.
-      //
-      //Map::Instance().ChangeLevel(MapType::MINES_5, true);
-      break;
+    {
+      auto res = CheckStairs('>');
+      if (res.first != nullptr)
+      {
+        ClimbStairs(res);
+      }
+    }
+    break;
 
     case '<':
-      CheckStairs('<');
-      break;
+    {
+      auto res = CheckStairs('<');
+      if (res.first != nullptr)
+      {
+        ClimbStairs(res);
+      }
+    }
+    break;
 
 #ifdef DEBUG_BUILD
     case '`':
@@ -384,34 +378,46 @@ void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
   Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, Colors::WhiteColor);
 }
 
-void MainState::CheckStairs(int stairsSymbol)
+std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
 {
+  GameObject* stairsTile = Map::Instance().CurrentLevel->MapArray[_playerRef->PosX][_playerRef->PosY].get();
+
   if (stairsSymbol == '>')
   {
-    auto tile = Map::Instance().CurrentLevel->MapArray[_playerRef->PosX][_playerRef->PosY].get();
-    if (tile->Image != '>')
+    if (stairsTile->Image != stairsSymbol)
     {
       Printer::Instance().AddMessage(Strings::MsgNoStairsDown);
-      return;
+      _stairsTileInfo.first = nullptr;
     }
-
-    Component* c = tile->GetComponent<StairsComponent>();
-    StairsComponent* stairs = static_cast<StairsComponent*>(c);
-    Map::Instance().ChangeLevel(stairs->LeadsTo, true);
+    else
+    {
+      _stairsTileInfo.first  = stairsTile;
+      _stairsTileInfo.second = true;
+    }
   }
   else if (stairsSymbol == '<')
   {
-    auto tile = Map::Instance().CurrentLevel->MapArray[_playerRef->PosX][_playerRef->PosY].get();
-    if (tile->Image != '<')
+    if (stairsTile->Image != stairsSymbol)
     {
       Printer::Instance().AddMessage(Strings::MsgNoStairsUp);
-      return;
+      _stairsTileInfo.first = nullptr;
     }
-
-    Component* c = tile->GetComponent<StairsComponent>();
-    StairsComponent* stairs = static_cast<StairsComponent*>(c);
-    Map::Instance().ChangeLevel(stairs->LeadsTo, false);
+    else
+    {
+      _stairsTileInfo.first  = stairsTile;
+      _stairsTileInfo.second = false;
+    }
   }
+
+  return _stairsTileInfo;
+}
+
+void MainState::ClimbStairs(const std::pair<GameObject*, bool>& stairsTileInfo)
+{
+  bool upOrDown = stairsTileInfo.second;
+  Component* c = stairsTileInfo.first->GetComponent<StairsComponent>();
+  StairsComponent* stairs = static_cast<StairsComponent*>(c);
+  Map::Instance().ChangeLevel(stairs->LeadsTo, upOrDown);
 }
 
 void MainState::PrintDebugInfo()

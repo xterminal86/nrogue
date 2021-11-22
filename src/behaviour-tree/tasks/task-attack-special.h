@@ -3,6 +3,9 @@
 
 #include "task-attack-basic.h"
 
+///
+/// \brief Additional action only if basic attack succeeds.
+///
 class TaskAttackSpecial : public TaskAttackBasic
 {
   public:

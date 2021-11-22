@@ -241,7 +241,7 @@ void BTSParser::FormTree(bool printDebug)
           std::string tabs(indent, '.');
           DebugLog("%s 0x%X %s (%s) <- 0x%X %s (%s)\n",
                    tabs.data(),
-                   &_parsedData[i],
+                  &_parsedData[i],
                    _parsedData[i].NodeName.data(),
                    addInfo1.data(),
                    parent,

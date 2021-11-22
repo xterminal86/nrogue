@@ -5,9 +5,10 @@
 #include "util.h"
 
 #include "task-idle.h"
-#include "task-debug.h"
+#include "task-print-message.h"
 #include "task-random-movement.h"
 #include "task-move-smart.h"
+#include "task-apply-effect.h"
 #include "task-attack-basic.h"
 #include "task-attack-special.h"
 #include "task-attack-ranged.h"
@@ -55,8 +56,8 @@ void AIModelBase::ConstructAI()
     Node* task = nullptr;
     Node* parent = nullptr;
 
-    std::string addInfo1 = nodeData->Params.size() != 0 ? nodeData->Params.at("p1") : "";
-    std::string addInfo2 = parentNodeData->Params.size() != 0 ? parentNodeData->Params.at("p1") : "";
+    //std::string addInfo1 = nodeData->Params.size() != 0 ? nodeData->Params.at("p1") : "";
+    //std::string addInfo2 = parentNodeData->Params.size() != 0 ? parentNodeData->Params.at("p1") : "";
 
     if (scriptNodesChecked.count(nodeData) != 1)
     {
@@ -168,6 +169,7 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   {
     task = new TaskGotoLastPlayerPos(AIComponentRef->OwnerGameObject);
   }
+  // FIXME: replace with attack / apply_effect maybe?
   else if (taskType == "attack_effect")
   {
     std::string effectType = data->Params.at("p2");
@@ -194,24 +196,12 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   }
   else if (taskType == "attack_ranged")
   {
-    std::string damageType  = data->Params.at("p2");
-
-    std::string applyEffect;
-    std::string duration;
-
-    if (data->Params.count("p3") == 1)
-    {
-      applyEffect = data->Params.at("p3");
-      duration    = data->Params.at("p4");
-    }
-
+    std::string damageType = data->Params.at("p2");
     task = new TaskAttackRanged(AIComponentRef->OwnerGameObject,
                                 damageType,
                                 '*',
                                 "#FF0000",
-                                "#000000",
-                                applyEffect,
-                                duration);
+                                "#000000");
   }
   else if (taskType == "end")
   {
@@ -228,6 +218,27 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   else if (taskType == "move_smart")
   {
     task = new TaskMoveSmart(AIComponentRef->OwnerGameObject);
+  }
+  else if (taskType == "apply_effect")
+  {
+    std::string type       = data->Params.at("p2");
+    std::string bonusValue = data->Params.at("p3");
+    std::string duration   = data->Params.at("p4");
+
+    auto invMap = Util::FlipMap(GlobalConstants::BonusDisplayNameByType);
+
+    ItemBonusStruct bs;
+    bs.Type       = invMap[type];
+    bs.BonusValue = std::stoi(bonusValue);
+    bs.Duration   = std::stoi(duration);
+    bs.Id         = AIComponentRef->OwnerGameObject->ObjectId();
+
+    task = new TaskApplyEffect(AIComponentRef->OwnerGameObject, bs);
+  }
+  else if (taskType == "print_message")
+  {
+    std::string msg = data->Params.at("p2");
+    task = new TaskPrintMessage(AIComponentRef->OwnerGameObject, msg);
   }
 
   // ===========================================================================
@@ -560,10 +571,6 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
   {
     n = CreateTask(data);
   }
-  else if (type == "DEBUG")
-  {
-    n = CreateDebugNode(data);
-  }
 
   if (n == nullptr && type != "TASK")
   {
@@ -574,16 +581,6 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
     DebugLog("[%s] no such node - %s!\n", who.data(), type.data());
     #endif
   }
-
-  return n;
-}
-
-Node* AIModelBase::CreateDebugNode(const ScriptNode* data)
-{
-  // No spaces allowed or only first word will be printed
-  std::string debugMessage = data->Params.at("p1");
-
-  TaskDebug* n = new TaskDebug(AIComponentRef->OwnerGameObject, debugMessage);
 
   return n;
 }

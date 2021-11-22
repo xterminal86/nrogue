@@ -89,7 +89,6 @@ class MapLevelBase
     std::vector<std::vector<std::string>> _layoutsForLevel;
     std::vector<RoomForLevel> _roomsForLevel;
     std::map<GameObjectType, int> _monstersSpawnRateForThisLevel;
-    std::map<MapType, bool> _specialMonstersSpawnedByLevel;
 
     StringsArray2D _specialLevel;
 

@@ -52,4 +52,4 @@ class PotentialField
     bool IsOutOfBounds(const Position& fieldPos);
 };
 
-#endif // DIJKSTRAMAP_H
+#endif // POTENTIALFIELD_H

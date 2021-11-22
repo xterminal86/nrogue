@@ -169,7 +169,7 @@ def main():
   align = 0;
   output = "";
   for n in Bytecode:
-    tmp = hex(n);
+    tmp = "0x{:02X}".format(n);
     output += tmp;
 
     output += (' ' * (7 - len(tmp)));
@@ -185,19 +185,34 @@ def main():
 
   print("\nC++ container:\n");
 
-  output = "std::vector<uint8_t> bytecode = { ";
-
+  output = "std::vector<uint8_t> bytecode =\n{\n  ";
+  
   count = len(Bytecode);
 
-  for n in Bytecode:
-    output += hex(n);
+  align = 0;
 
+  for n in Bytecode:    
+    tmp = "0x{:02X}".format(n);
+    output += tmp;
+    
     if count != 1:
       output += ', ';
 
+    output += (' ' * (4 - len(tmp)));
+
+    align = align + 1;
+
+    if align == 8:
+      output += "\n";
+
+      if count != 1:
+        output += "  ";
+
+      align = 0;
+
     count = count - 1;
 
-  output += " };";
+  output += "};";
 
   print(output);
   print("");

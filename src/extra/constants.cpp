@@ -106,7 +106,7 @@ namespace Colors
     { "Magenta Potion", { "#FF00FF", "#440044" } },
     { "Yellow Potion",  { "#FFFF00", "#444400" } },
     { "Radiant Potion", { "#FFFF88", "#777700" } },
-    { "Morbid Potion",  { "#880000", "#220000" } },
+    { "Morbid Potion",  { "#AA6622", "#880000" } },
     { "Clear Potion",   { "#FFFFFF", "#000000" } },
     { "Black Potion",   { "#000000", "#444444" } },
     { "Watery Potion",  { "#BBBBBB", "#000000" } }

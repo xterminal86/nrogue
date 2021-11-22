@@ -306,7 +306,7 @@ void MapLevelTown::CreateLevel()
   auto map = GlobalConstants::PotionNameByType;
   for (auto& kvp : map)
   {
-    auto go = GameObjectsFactory::Instance().CreatePotion(kvp.first);
+    auto go = ItemsFactory::Instance().CreatePotion(kvp.first);
     go->PosX = 1 + count;
     go->PosY = 1;
     ItemComponent* ic = go->GetComponent<ItemComponent>();

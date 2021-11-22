@@ -144,6 +144,10 @@ GameObject* GameObjectsFactory::CreateMonster(int x, int y, GameObjectType monst
       go = MonstersInc::Instance().CreateMadMiner(x, y);
       break;
 
+    case GameObjectType::SHELOB:
+      go = MonstersInc::Instance().CreateShelob(x, y);
+      break;
+
     default:
       DebugLog("CreateMonster(): monster type %i is not handled!", monsterType);
       break;

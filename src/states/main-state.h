@@ -36,7 +36,6 @@ class MainState : public GameState
     void DisplayScenarioInformation();
     void TryToPickupItem();
     void CheckIfSomethingElseIsLyingHere(const Position& pos);
-    void CheckStairs(int stairsSymbol);
     void DrawHPMP();
     void GetActorsAround();
     void PrintDebugInfo();
@@ -47,8 +46,12 @@ class MainState : public GameState
     void ProcessWeapon(ItemComponent* wand);
     void ProcessMovement(const Position& dirOffsets);
     void UpdateBar(int x, int y, RangedAttribute& attr);
+    void ClimbStairs(const std::pair<GameObject*, bool>& stairsTileInfo);
 
     bool ProcessMoneyPickup(std::pair<int, GameObject*>& pair);
+
+    std::pair<GameObject*, bool> _stairsTileInfo;
+    std::pair<GameObject*, bool> CheckStairs(int stairsSymbol);
 
     Position _cursorPosition;
 

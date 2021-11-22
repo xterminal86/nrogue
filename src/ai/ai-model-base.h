@@ -45,7 +45,6 @@ class AIModelBase
     Node* CreateNode(const ScriptNode* data);
     Node* CreateTask(const ScriptNode* data);
     Node* CreateConditionNode(const ScriptNode* data);
-    Node* CreateDebugNode(const ScriptNode* data);
 
     std::function<BTResult()> GetConditionFunction(const ScriptNode* data);
 

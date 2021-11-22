@@ -14,11 +14,6 @@ MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
   MapType_ = type;
   DungeonLevel = dungeonLevel;
 
-  for (auto& kvp : GlobalConstants::MapLevelNames)
-  {
-    _specialMonstersSpawnedByLevel[kvp.first] = false;
-  }
-
   std::string levelName;
 
   auto GetSpecialName = [this]()
@@ -293,6 +288,8 @@ void MapLevelBase::CreateInitialMonsters()
       InsertActor(monster);
     }
   }
+
+  CreateSpecialMonsters();
 }
 
 bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)

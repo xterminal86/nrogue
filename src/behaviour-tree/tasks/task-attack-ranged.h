@@ -7,9 +7,18 @@ enum class RangedAttackType
 {
   UNDEFINED = 0,
   PHYSICAL,
+  NO_DAMAGE,
   MAGICAL
 };
 
+///
+/// Ranged attack task returns success if player was hit.
+/// Otherwise it returns BTResult::Failure.
+///
+/// Please note, that ranged attack doesn't consume the turn,
+/// so you can rely on its return result status to code-in
+/// some additional logic (see shelob script).
+///
 class TaskAttackRanged : public Node
 {
   public:
@@ -17,9 +26,7 @@ class TaskAttackRanged : public Node
                      const std::string& damageType,
                      char projectile,
                      const std::string& fgColor,
-                     const std::string& bgColor,
-                     const std::string& applyEffectStr = std::string(),
-                     const std::string& effectDurationStr = std::string());
+                     const std::string& bgColor);
 
     BTResult Run() override;
 
@@ -34,18 +41,14 @@ class TaskAttackRanged : public Node
     RangedAttackType _attackType;
     std::string _fgColor;
     std::string _bgColor;
-    std::string _applyEffectStr;
-    std::string _effectDurationStr;
-
-    ItemBonusType _effect = ItemBonusType::NONE;
-    int _effectDuration = 0;
 
     const int kBaseChanceToHit = 50;
 
     const std::map<std::string, RangedAttackType> _attackTypeByName =
     {
-      { "STR", RangedAttackType::PHYSICAL },
-      { "MAG", RangedAttackType::MAGICAL  }
+      { "STR", RangedAttackType::PHYSICAL  },
+      { "MAG", RangedAttackType::MAGICAL   },
+      { "NA",  RangedAttackType::NO_DAMAGE }
     };
 };
 

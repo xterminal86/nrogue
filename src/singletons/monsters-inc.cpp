@@ -392,9 +392,9 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
 
   ai->ChangeModel<AIMonsterMadMiner>();
 
-  go->Attrs.Str.Talents = 3;
-  go->Attrs.Skl.Talents = 3;
-  go->Attrs.Spd.Talents = 2;
+  go->Attrs.Str.Talents = 1;
+  go->Attrs.Skl.Talents = 1;
+  go->Attrs.Spd.Talents = 1;
 
   int difficulty = GetDifficulty();
 

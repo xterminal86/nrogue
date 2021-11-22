@@ -3,6 +3,9 @@
 
 #include "task-attack-basic.h"
 
+///
+/// \brief Applies effect only if basic attack succeeds
+///
 class TaskAttackEffect : public TaskAttackBasic
 {
   public:

@@ -366,7 +366,6 @@ void MapLevelMines::CreateLevel()
     PlaceStairs();
 
     CreateInitialMonsters();
-    CreateSpecialMonsters();
 
     int itemsToCreate = GetEstimatedNumberOfItemsToCreate();
     CreateItemsForLevel(itemsToCreate);
@@ -678,11 +677,18 @@ void MapLevelMines::DisplayWelcomeText()
 
 void MapLevelMines::CreateSpecialMonsters()
 {
-  if (MapType_ == MapType::MINES_3
-  && !_specialMonstersSpawnedByLevel[MapType_])
+  if (MapType_ == MapType::MINES_3)
   {
-    // TODO:
+    if (Util::Rolld100(50))
+    {
+      int index = RNG::Instance().RandomRange(0, _emptyCells.size());
+      int x = _emptyCells[index].X;
+      int y = _emptyCells[index].Y;
+      if (!MapArray[x][y]->Occupied)
+      {
+        auto* m = GameObjectsFactory::Instance().CreateMonster(x, y, GameObjectType::SHELOB);
+        InsertActor(m);
+      }
+    }
   }
-
-  _specialMonstersSpawnedByLevel[MapType_] = true;
 }

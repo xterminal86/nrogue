@@ -9,18 +9,6 @@ AIMonsterShelob::AIMonsterShelob()
 
 void AIMonsterShelob::PrepareScript()
 {
-  //
-  // Ranged attack task returns success if player was hit.
-  // Otherwise it returns BTResult::Failure.
-  //
-  // By design ranged attack with applied effect shall deal 0 damage.
-  // If you also need actual damage, use two attacks inside [SEQ],
-  // one ranged with effect and one basic with "always hit" override.
-  //
-  // Please note, that ranged attack doesn't consume the turn,
-  // so you can rely on its return result status to code-in
-  // some additional logic as shown in this script below.
-  //
   _script =
 R"(
 [TREE]
@@ -32,12 +20,15 @@ R"(
             [TASK p1="save_player_pos"]
             [SEL]
               [COND p1="player_in_range" p2="1"]
-                [TASK p1="attack_basic"]
+                [TASK p1="attack_effect" p2="Psd"]
               [COND p1="has_effect" p2="player" p3="Par"]
                 [TASK p1="chase_player"]
               [COND p1="player_in_range" p2="4"]
                 [SEL]
-                  [TASK p1="attack_ranged" p2="STR" p3="Par" p4="3"]
+                  [SEQ]
+                    [TASK p1="attack_ranged" p2="NA"]
+                    [TASK p1="apply_effect" p2="Par" p3="0" p4="6"]
+                    [TASK p1="idle"]
                   [TASK p1="idle"]
         [TASK p1="goto_last_player_pos"]
     [TASK p1="move_rnd"]

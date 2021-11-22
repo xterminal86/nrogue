@@ -9,16 +9,12 @@ TaskAttackRanged::TaskAttackRanged(GameObject* objectToControl,
                                    const std::string& damageType,
                                    char projectile,
                                    const std::string& fgColor,
-                                   const std::string& bgColor,
-                                   const std::string& applyEffectStr,
-                                   const std::string& effectDurationStr)
+                                   const std::string& bgColor)
   : Node(objectToControl)
 {
   _projectile        = projectile;
   _fgColor           = fgColor;
   _bgColor           = bgColor;
-  _applyEffectStr    = applyEffectStr;
-  _effectDurationStr = effectDurationStr;
 
   if (_attackTypeByName.count(damageType) == 1)
   {
@@ -27,16 +23,6 @@ TaskAttackRanged::TaskAttackRanged(GameObject* objectToControl,
   else
   {
     _attackType = RangedAttackType::UNDEFINED;
-  }
-
-  // FIXME: hardcoded for now
-  if (!_applyEffectStr.empty())
-  {
-    if (_applyEffectStr == "Par")
-    {
-      _effect = ItemBonusType::PARALYZE;
-      _effectDuration = std::stoi(_effectDurationStr);
-    }
   }
 }
 
@@ -47,7 +33,8 @@ BTResult TaskAttackRanged::Run()
 
   int chanceToHit = 100;
 
-  if (_attackType == RangedAttackType::PHYSICAL)
+  if (_attackType == RangedAttackType::PHYSICAL
+   || _attackType == RangedAttackType::NO_DAMAGE)
   {
     chanceToHit = CalculateChance(from, to, kBaseChanceToHit);
   }
