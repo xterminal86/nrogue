@@ -25,6 +25,7 @@
 AIModelBase::AIModelBase()
 {
   _playerRef = &Application::Instance().PlayerInstance;
+  _bonusTypeByDisplayName = Util::FlipMap(GlobalConstants::BonusDisplayNameByType);
 }
 
 void AIModelBase::PrepareScript()
@@ -225,10 +226,8 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
     std::string bonusValue = data->Params.at("p3");
     std::string duration   = data->Params.at("p4");
 
-    auto invMap = Util::FlipMap(GlobalConstants::BonusDisplayNameByType);
-
     ItemBonusStruct bs;
-    bs.Type       = invMap[type];
+    bs.Type       = _bonusTypeByDisplayName[type];
     bs.BonusValue = std::stoi(bonusValue);
     bs.Duration   = std::stoi(duration);
     bs.Id         = AIComponentRef->OwnerGameObject->ObjectId();
@@ -485,13 +484,11 @@ std::function<BTResult()> AIModelBase::GetHasEffectCF(const ScriptNode* data)
   std::string who = data->Params.at("p2");
   std::string effect = data->Params.at("p3");
 
-  auto invMap = Util::FlipMap(GlobalConstants::BonusDisplayNameByType);
-
-  auto fn = [this, invMap, who, effect]()
+  auto fn = [this, who, effect]()
   {
     bool res = (who == "player")
-               ? _playerRef->HasEffect(invMap.at(effect))
-               : AIComponentRef->OwnerGameObject->HasEffect(invMap.at(effect));
+               ? _playerRef->HasEffect(_bonusTypeByDisplayName.at(effect))
+               : AIComponentRef->OwnerGameObject->HasEffect(_bonusTypeByDisplayName.at(effect));
 
     return res ? BTResult::Success : BTResult::Failure;
   };

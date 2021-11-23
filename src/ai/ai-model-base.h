@@ -42,6 +42,8 @@ class AIModelBase
 
     BTSParser _aiReader;
 
+    std::map<std::string, ItemBonusType> _bonusTypeByDisplayName;
+
     Node* CreateNode(const ScriptNode* data);
     Node* CreateTask(const ScriptNode* data);
     Node* CreateConditionNode(const ScriptNode* data);
