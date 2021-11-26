@@ -56,7 +56,7 @@ void IntroState::PrepareTown()
   // so we need to initialize player first.
   playerRef.SetLevelOwner(curLvl);
   playerRef.Init();
-  playerRef.MoveTo({ 5, 8 });
+  playerRef.MoveTo({ 1, 13 });
   playerRef.AddExtraItems();
   playerRef.VisibilityRadius.Set(curLvl->VisibilityRadius);
 
