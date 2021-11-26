@@ -654,10 +654,10 @@ void MainState::DisplayStartHint()
   int th = Printer::TerminalHeight;
 
   Printer::Instance().PrintFB(0,
-                               th - 4,
-                               '<',
-                               Colors::WhiteColor,
-                               Colors::DoorHighlightColor);
+                              th - 4,
+                              '<',
+                              Colors::WhiteColor,
+                              Colors::DoorHighlightColor);
 
   auto curLvl = Map::Instance().CurrentLevel;
   int dx = curLvl->LevelStart.X - _playerRef->PosX;
@@ -684,10 +684,10 @@ void MainState::DisplayStartHint()
   }
 
   Printer::Instance().PrintFB(1,
-                               th - 4,
-                               dir,
-                               Printer::kAlignLeft,
-                               Colors::WhiteColor);
+                              th - 4,
+                              dir,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor);
 }
 
 void MainState::DisplayExitHint()
@@ -695,10 +695,10 @@ void MainState::DisplayExitHint()
   int th = Printer::TerminalHeight;
 
   Printer::Instance().PrintFB(0,
-                               th - 3,
-                               '>',
-                               Colors::WhiteColor,
-                               Colors::DoorHighlightColor);
+                              th - 3,
+                              '>',
+                              Colors::WhiteColor,
+                              Colors::DoorHighlightColor);
 
   auto curLvl = Map::Instance().CurrentLevel;
   if (curLvl->ExitFound)
@@ -727,18 +727,18 @@ void MainState::DisplayExitHint()
     }
 
     Printer::Instance().PrintFB(1,
-                                 th - 3,
-                                 dir,
-                                 Printer::kAlignLeft,
-                                 Colors::WhiteColor);
+                                th - 3,
+                                dir,
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
   }
   else
   {
     Printer::Instance().PrintFB(1,
-                                 th - 3,
-                                 "??",
-                                 Printer::kAlignLeft,
-                                 Colors::WhiteColor);
+                                th - 3,
+                                "??",
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
   }
 }
 

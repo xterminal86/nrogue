@@ -217,13 +217,8 @@ void MapLevelTown::CreateLevel()
 
   ReplaceGroundWithGrass();
 
-  LevelStart.X = 5;
-  LevelStart.Y = 8;
-
-  _playerRef->PosX = 5;
-  _playerRef->PosY = 8;
-
-  AdjustCamera();
+  LevelStart.X = 1;
+  LevelStart.Y = 13;
 
   CreatePlayerHouse();
 

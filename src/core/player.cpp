@@ -16,9 +16,6 @@ void Player::Init()
 {
   Type = GameObjectType::PLAYER;
 
-  PosX = Map::Instance().CurrentLevel->LevelStart.X;
-  PosY = Map::Instance().CurrentLevel->LevelStart.Y;
-
   Image = '@';
 
   IsLiving = true;

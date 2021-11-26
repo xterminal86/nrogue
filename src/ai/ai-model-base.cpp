@@ -170,7 +170,6 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   {
     task = new TaskGotoLastPlayerPos(AIComponentRef->OwnerGameObject);
   }
-  // FIXME: replace with attack / apply_effect maybe?
   else if (taskType == "attack_effect")
   {
     std::string effectType = data->Params.at("p2");

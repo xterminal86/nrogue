@@ -686,7 +686,7 @@ void MapLevelMines::CreateSpecialMonsters()
       int y = _emptyCells[index].Y;
       if (!MapArray[x][y]->Occupied)
       {
-        auto* m = GameObjectsFactory::Instance().CreateMonster(x, y, GameObjectType::SHELOB);
+        GameObject* m = GameObjectsFactory::Instance().CreateMonster(x, y, GameObjectType::SHELOB);
         InsertActor(m);
       }
     }

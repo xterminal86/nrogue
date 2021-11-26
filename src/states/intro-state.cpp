@@ -56,9 +56,11 @@ void IntroState::PrepareTown()
   // so we need to initialize player first.
   playerRef.SetLevelOwner(curLvl);
   playerRef.Init();
-
+  playerRef.MoveTo({ 5, 8 });
   playerRef.AddExtraItems();
   playerRef.VisibilityRadius.Set(curLvl->VisibilityRadius);
+
+  curLvl->AdjustCamera();
 
   MapLevelTown* mlt = static_cast<MapLevelTown*>(curLvl);
   mlt->CreateNPCs();
