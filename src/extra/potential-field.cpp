@@ -4,6 +4,8 @@
 #include "game-object.h"
 #include "util.h"
 
+#include <sstream>
+
 void PotentialField::Init(GameObject* owner, int fieldRadius)
 {
   if (owner == nullptr)

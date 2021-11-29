@@ -3,6 +3,8 @@
 #include "constants.h"
 #include "util.h"
 
+#include <sstream>
+
 void RNG::Init()
 {
   if (_initialized)

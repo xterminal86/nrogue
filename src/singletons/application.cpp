@@ -105,8 +105,6 @@ void Application::Run()
       {
         Map::Instance().UpdateGameObjects();
         PlayerInstance.WaitForTurn();
-
-        TurnsPassed++;
       }
     }
 

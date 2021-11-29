@@ -1407,6 +1407,8 @@ void Player::FinishTurn()
   //
   // Probably bad design anyway but fuck it.
   Map::Instance().RemoveDestroyed();
+
+  Application::Instance().TurnsPassed++;
 }
 
 void Player::TileStandingCheck()

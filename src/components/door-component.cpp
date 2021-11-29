@@ -70,9 +70,9 @@ void DoorComponent::Interact()
 
 void DoorComponent::UpdateDoorState()
 {
-  OwnerGameObject->Blocking = !IsOpen;
+  OwnerGameObject->Blocking    = !IsOpen;
   OwnerGameObject->BlocksSight = !IsOpen;
-  OwnerGameObject->Image = IsOpen ? '_' : '+';
+  OwnerGameObject->Image   = IsOpen ? '_' : '+';
   OwnerGameObject->FgColor = IsOpen ?
                                Colors::WhiteColor :
                                 (FgColorOverride.empty() ?

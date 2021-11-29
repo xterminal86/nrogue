@@ -70,7 +70,7 @@ class Application : public Singleton<Application>
     const std::pair<int, int>& GetDefaultWindowSize();
 #endif
 
-    unsigned int TurnsPassed = 0;
+    uint64_t TurnsPassed = 0;
 
   private:
     GameState* _currentState = nullptr;
