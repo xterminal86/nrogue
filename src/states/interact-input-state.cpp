@@ -124,44 +124,22 @@ void InteractInputState::ProcessInteraction()
 
 void InteractInputState::TryToInteractWithObject(GameObject* go)
 {
-  ContainerComponent* cc = go->GetComponent<ContainerComponent>();
-  if (cc != nullptr)
+  IR ir = go->Interact();
+  if (ir.first == InteractionResult::UNDEFINED)
   {
-    // TODO: locked containers?
-    if (!cc->Interact())
-    {
-      Printer::Instance().AddMessage(go->ObjectName + " can't be opened");
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
-    }
-    else
-    {
-      Printer::Instance().AddMessage("You opened: " + go->ObjectName);
-    }
+    Printer::Instance().AddMessage("Can't interact with: " + go->ObjectName);
   }
-  else
-  {
-    if (go->Interact())
-    {
-      DoorComponent* dc = go->GetComponent<DoorComponent>();
-      if (dc != nullptr)
-      {
-        if (dc->OpenedBy == GlobalConstants::OpenedByAnyone)
-        {
-          auto str = Util::StringFormat("You %s: %s", (dc->IsOpen ? "opened" : "closed"), go->ObjectName.data());
-          Printer::Instance().AddMessage(str);
-        }
-      }
 
-      _playerRef->FinishTurn();
-      Map::Instance().UpdateGameObjects();
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
-    }
-    else
-    {
-      Printer::Instance().AddMessage("Can't interact with: " + go->ObjectName);
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
-    }
+  if (ir.first == InteractionResult::SUCCESS)
+  {
+    _playerRef->FinishTurn();
   }
+
+  GameStates changeTo = (ir.second == GameStates::UNDEIFNED) ?
+                         GameStates::MAIN_STATE :
+                         ir.second;
+
+  Application::Instance().ChangeState(changeTo);
 }
 
 void InteractInputState::TryToInteractWithActor(GameObject* actor)

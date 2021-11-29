@@ -27,7 +27,7 @@ bool DoorComponent::InteractBySomeone()
   return true;
 }
 
-void DoorComponent::Interact()
+IR DoorComponent::Interact()
 {
   if (OpenedBy != GlobalConstants::OpenedByAnyone)
   {
@@ -59,6 +59,8 @@ void DoorComponent::Interact()
     {
       auto str = Util::StringFormat("%s is locked!", OwnerGameObject->ObjectName.data());
       Printer::Instance().AddMessage(str);
+
+      return { InteractionResult::FAILURE, GameStates::MAIN_STATE };
     }
   }
   else
@@ -66,6 +68,10 @@ void DoorComponent::Interact()
     IsOpen = !IsOpen;
     UpdateDoorState();
   }
+
+  PrintInteractionMessage();
+
+  return { InteractionResult::SUCCESS, GameStates::MAIN_STATE };
 }
 
 void DoorComponent::UpdateDoorState()
@@ -83,4 +89,10 @@ void DoorComponent::UpdateDoorState()
                                 (BgColorOverride.empty() ?
                                   Colors::DoorHighlightColor :
                                   BgColorOverride);
+}
+
+void DoorComponent::PrintInteractionMessage()
+{
+  auto str = Util::StringFormat("You %s: %s", (IsOpen ? "opened" : "closed"), OwnerGameObject->ObjectName.data());
+  Printer::Instance().AddMessage(str);
 }

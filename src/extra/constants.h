@@ -105,9 +105,17 @@
 using StringsArray2D = std::vector<std::string>;
 using CharArray2D    = std::vector<std::vector<char>>;
 
+enum class InteractionResult
+{
+  SUCCESS = 0,
+  FAILURE,
+  UNDEFINED
+};
+
 enum class GameStates
 {
-  EXIT_GAME = -1,
+  UNDEIFNED = -2,
+  EXIT_GAME,
   ATTACK_STATE,
   MENU_STATE,
   MAIN_STATE,
@@ -133,6 +141,8 @@ enum class GameStates
   DEV_CONSOLE,
   ENDGAME_STATE
 };
+
+using IR = std::pair<InteractionResult, GameStates>;
 
 enum class MessageBoxType
 {

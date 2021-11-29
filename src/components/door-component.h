@@ -13,8 +13,10 @@ class DoorComponent : public Component
 
     void Update() override;
 
-    void Interact();
+    IR Interact();
+
     void UpdateDoorState();
+    void PrintInteractionMessage();
 
     bool InteractBySomeone();
 

@@ -36,7 +36,7 @@ class GameObject
 
     void SetLevelOwner(MapLevelBase* levelOwner);
 
-    bool Interact();
+    IR Interact();
 
     void Init(MapLevelBase* levelOwner,
               int x, int y,
@@ -120,7 +120,8 @@ class GameObject
     std::string ObjectName;
     std::string FogOfWarName;
 
-    std::function<void()> InteractionCallback;
+    std::function<IR()> InteractionCallback;
+
     std::function<void()> GenerateLootFunction;
 
     size_t ComponentsSize();

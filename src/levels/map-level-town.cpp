@@ -1019,9 +1019,21 @@ void MapLevelTown::CreateTownGates()
   GameObject* gate1 = ItemsFactory::Instance().CreateDummyItem("Village Gates", '+', Colors::WhiteColor, Colors::BlackColor, std::vector<std::string>());
   GameObject* gate2 = ItemsFactory::Instance().CreateDummyItem("Village Gates", '+', Colors::WhiteColor, Colors::BlackColor, std::vector<std::string>());
 
-  std::function<void()> fn = []()
+  //
+  // Have to explicitly specify trailing return type
+  // to use braced initialized list.
+  // I don't understand why, so fuck it.
+  //
+  // Quote from StackOverflow:
+  //
+  // "Lambda return type deduction uses the auto rules,
+  // which normally would have deduced std::initializer_list just fine.
+  // However, the language designers banned deduction from
+  // a braced initializer list in a return statement ([dcl.spec.auto]/7)"
+  //
+  std::function<IR()> fn = []() -> IR
   {
-    Printer::Instance().AddMessage("The gates are closed");
+    return { InteractionResult::SUCCESS, GameStates::EXITING_STATE };
   };
 
   gate1->Blocking = true;

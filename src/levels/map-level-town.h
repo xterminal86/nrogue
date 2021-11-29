@@ -984,7 +984,6 @@ class MapLevelTown : public MapLevelBase
       { 5, _portalSquare  },
       { 6, _mineEntrance  }
     };
-
 };
 
 #endif // MAPLEVELTOWN_H

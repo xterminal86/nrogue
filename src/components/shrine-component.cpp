@@ -28,11 +28,12 @@ void ShrineComponent::Update()
   }
 }
 
-void ShrineComponent::Interact()
+IR ShrineComponent::Interact()
 {
   if (Counter < Timeout)
   {
     Printer::Instance().AddMessage("Shrine is inactive");
+    return { InteractionResult::FAILURE, GameStates::MAIN_STATE };
   }
   else
   {
@@ -56,6 +57,8 @@ void ShrineComponent::Interact()
     Printer::Instance().AddMessage(message);
 
     ProcessEffect();
+
+    return { InteractionResult::SUCCESS, GameStates::MAIN_STATE };
   }
 }
 

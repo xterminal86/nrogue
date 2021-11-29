@@ -33,7 +33,7 @@ class ShrineComponent : public Component
 
     void Update() override;
 
-    void Interact();
+    IR Interact();
 
     int Timeout = -1;
     int Counter = 0;

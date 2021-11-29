@@ -19,7 +19,7 @@ class ContainerComponent : public Component
     bool IsFull();
     bool IsEmpty();
 
-    bool Interact();
+    IR Interact();
 
     std::vector<std::unique_ptr<GameObject>> Contents;
 

@@ -16,6 +16,7 @@ void ExitingState::HandleInput()
   switch (_keyPressed)
   {
     case VK_CANCEL:
+      Printer::Instance().ShowLastMessage = false;
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 

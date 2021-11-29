@@ -748,15 +748,14 @@ void GameObject::MarkAndCreateRemains()
   IsDestroyed = true;
 }
 
-bool GameObject::Interact()
+IR GameObject::Interact()
 {
   if (Util::IsFunctionValid(InteractionCallback))
   {
-    InteractionCallback();
-    return true;
+    return InteractionCallback();
   }
 
-  return false;
+  return { InteractionResult::UNDEFINED, GameStates::UNDEIFNED };
 }
 
 void GameObject::SetLevelOwner(MapLevelBase *levelOwner)

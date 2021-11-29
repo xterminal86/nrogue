@@ -114,6 +114,13 @@ void Application::Run()
 
 void Application::ChangeState(const GameStates& gameStateIndex)
 {
+  // Don't self-change
+  if (_gameStates[gameStateIndex].get() == _currentState)
+  {
+    _currentState->Update(true);
+    return;
+  }
+
   if (gameStateIndex != GameStates::EXIT_GAME)
   {
     auto str = Util::StringFormat("Changing state: %s [0x%X] => %s [0x%X]",

@@ -68,19 +68,25 @@ bool ContainerComponent::Add(GameObject* object)
   return foundStack;
 }
 
-bool ContainerComponent::Interact()
+IR ContainerComponent::Interact()
 {
+  // TODO: locked containers
+
   if (!CanBeOpened)
   {
-    return false;
+    std::string failMsg = Util::StringFormat("%s can't be opened!", OwnerGameObject->ObjectName.data());
+    Printer::Instance().AddMessage(failMsg);
+    return { InteractionResult::FAILURE, GameStates::MAIN_STATE };
   }
 
   auto s = Application::Instance().GetGameStateRefByName(GameStates::CONTAINER_INTERACT_STATE);
   ContainerInteractState* cis = static_cast<ContainerInteractState*>(s);
   cis->SetContainerRef(this);
-  Application::Instance().ChangeState(GameStates::CONTAINER_INTERACT_STATE);
 
-  return true;
+  std::string succMsg = Util::StringFormat("You open %s", OwnerGameObject->ObjectName.data());
+  Printer::Instance().AddMessage(succMsg);
+
+  return { InteractionResult::SUCCESS, GameStates::CONTAINER_INTERACT_STATE };
 }
 
 bool ContainerComponent::IsFull()
