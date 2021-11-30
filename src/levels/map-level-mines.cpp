@@ -651,9 +651,13 @@ void MapLevelMines::CreateRandomBoxes()
           break;
         }
 
-        GameObject* box = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(p.X, p.Y, 'B', "Wooden Box", Colors::WoodColor, Colors::BlackColor);
-        InsertStaticObject(box);
-        created++;
+        if (MapArray[p.X][p.Y]->Type != GameObjectType::LAVA
+         && MapArray[p.X][p.Y]->Type != GameObjectType::DEEP_WATER)
+        {
+          GameObject* box = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(p.X, p.Y, 'B', "Wooden Box", Colors::WoodColor, Colors::BlackColor);
+          InsertStaticObject(box);
+          created++;
+        }
       }
 
       emptyCellsCopy.erase(emptyCellsCopy.begin() + index);

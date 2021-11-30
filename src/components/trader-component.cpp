@@ -74,13 +74,13 @@ void TraderComponent::CreateClericItems()
 
   std::map<ItemType, int> itemsWeights =
   {
-    { ItemType::HEALING_POTION, 8 },
-    { ItemType::MANA_POTION,    8 },
-    { ItemType::NP_POTION,      8 },
-    { ItemType::WAND,           3 },
-    { ItemType::SCROLL,         3 },
-    { ItemType::ACCESSORY,      1 },
-    { ItemType::RETURNER,       1 }
+    { ItemType::HEALING_POTION, 10 },
+    { ItemType::MANA_POTION,    10 },
+    { ItemType::NP_POTION,      10 },
+    { ItemType::WAND,            5 },
+    { ItemType::SCROLL,          5 },
+    { ItemType::ACCESSORY,       3 },
+    { ItemType::RETURNER,        3 }
   };
 
   std::map<ItemPrefix, int> prefixWeights =
@@ -139,14 +139,15 @@ void TraderComponent::CreateCookItems()
 
   std::map<FoodType, int> itemsWeights =
   {
-    { FoodType::APPLE,        5 },
-    { FoodType::BREAD,        6 },
-    { FoodType::CHEESE,       5 },
-    { FoodType::IRON_RATIONS, 1 },
-    { FoodType::MEAT,         4 },
-    { FoodType::PIE,          4 },
-    { FoodType::TIN,          3 },
-    { FoodType::RATIONS,      2 }
+    { FoodType::APPLE,        10 },
+    { FoodType::CHEESE,        8 },
+    { FoodType::BREAD,         9 },
+    { FoodType::FISH,          8 },
+    { FoodType::PIE,           6 },
+    { FoodType::MEAT,          7 },
+    { FoodType::TIN,           6 },
+    { FoodType::RATIONS,       5 },
+    { FoodType::IRON_RATIONS,  3 }
   };
 
   std::map<ItemPrefix, int> prefixWeights =

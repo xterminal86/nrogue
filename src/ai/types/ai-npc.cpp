@@ -582,7 +582,7 @@ void AINPC::SetDataCasey()
 
   TraderComponent* tc = AIComponentRef->OwnerGameObject->AddComponent<TraderComponent>();
   tc->NpcRef = this;
-  tc->Init(TraderRole::COOK, 1000, 15);
+  tc->Init(TraderRole::COOK, 500, 15);
 }
 
 void AINPC::SetDataMaya()

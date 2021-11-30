@@ -994,27 +994,27 @@ GameObject* ItemsFactory::CreateRandomWand(ItemPrefix prefixOverride)
 
   std::map<WandMaterials, int> materialsDistribution =
   {
-    { WandMaterials::YEW_1,   12 },
-    { WandMaterials::IVORY_2, 10 },
-    { WandMaterials::EBONY_3,  8 },
-    { WandMaterials::ONYX_4,   6 },
-    { WandMaterials::GLASS_5,  4 },
-    { WandMaterials::COPPER_6, 2 },
-    { WandMaterials::GOLDEN_7, 1 },
+    { WandMaterials::YEW_1,    80 },
+    { WandMaterials::IVORY_2,  60 },
+    { WandMaterials::EBONY_3,  45 },
+    { WandMaterials::ONYX_4,   30 },
+    { WandMaterials::GLASS_5,  20 },
+    { WandMaterials::COPPER_6, 15 },
+    { WandMaterials::GOLDEN_7, 10 },
   };
 
   auto materialPair = Util::WeightedRandom(materialsDistribution);
 
   std::map<SpellType, int> spellsDistribution =
   {
-    { SpellType::LIGHT,         40 },
-    { SpellType::STRIKE,        30 },
-    { SpellType::FROST,         30 },
-    { SpellType::TELEPORT,      15 },
-    { SpellType::FIREBALL,       5 },
-    { SpellType::LASER,          5 },
-    { SpellType::LIGHTNING,      5 },
-    { SpellType::MAGIC_MISSILE, 30 }
+    { SpellType::LIGHT,         100 },
+    { SpellType::STRIKE,         80 },
+    { SpellType::FROST,          70 },
+    { SpellType::TELEPORT,       60 },
+    { SpellType::FIREBALL,       50 },
+    { SpellType::LASER,          25 },
+    { SpellType::LIGHTNING,      25 },
+    { SpellType::MAGIC_MISSILE,  50 }
   };
 
   auto spellPair = Util::WeightedRandom(spellsDistribution);
@@ -1663,11 +1663,11 @@ GameObject* ItemsFactory::CreateRandomItem(int x, int y, ItemType exclude)
   std::map<FoodType, int> foodMap =
   {
     { FoodType::APPLE,        1 },
-    { FoodType::BREAD,        1 },
     { FoodType::CHEESE,       1 },
+    { FoodType::BREAD,        1 },
+    { FoodType::FISH,         1 },
     { FoodType::PIE,          1 },
     { FoodType::MEAT,         1 },
-    { FoodType::FISH,         1 },
     { FoodType::TIN,          1 },
     { FoodType::RATIONS,      1 },
     { FoodType::IRON_RATIONS, 1 }
@@ -2734,25 +2734,11 @@ int ItemsFactory::CalculateAverageDamage(int numRolls, int diceSides)
 
 ItemPrefix ItemsFactory::RollItemPrefix()
 {
-  int maxLevel = (int)MapType::THE_END;
-
-  int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel;
-  if (Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
-  {
-    dungeonLevel = maxLevel / 2;
-  }
-
-  float cursedScale = 2.0f;
-  float blessedScale = 4.0f;
-
-  int cursedRate = (int)((float)(maxLevel - dungeonLevel) / cursedScale);
-  int blessedRate = (int)((float)(cursedRate + dungeonLevel) / blessedScale);
-
   std::map<ItemPrefix, int> weights =
   {
-    { ItemPrefix::UNCURSED, dungeonLevel },
-    { ItemPrefix::CURSED,   cursedRate   },
-    { ItemPrefix::BLESSED,  blessedRate  }
+    { ItemPrefix::UNCURSED,  20 },
+    { ItemPrefix::CURSED,    20 },
+    { ItemPrefix::BLESSED,    5 }
   };
 
   auto res = Util::WeightedRandom(weights);
@@ -2763,33 +2749,13 @@ ItemPrefix ItemsFactory::RollItemPrefix()
 
 ItemQuality ItemsFactory::RollItemQuality()
 {
-  int maxLevel = (int)MapType::THE_END;
-
-  int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel;
-  if (Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
-  {
-    dungeonLevel = maxLevel / 2;
-  }
-
-  int rate = dungeonLevel / 2;
-
-  float dmgdRateScale = 1.5f;
-  float flawedRateScale = 1.125f;
-
-  int fine = Util::Clamp(rate, 1, maxLevel);
-  int exceptional = Util::Clamp(rate / 2, 1, maxLevel);
-  int damaged = (int)((float)(maxLevel - dungeonLevel) * dmgdRateScale);
-  int flawed = (int)((float)(maxLevel - dungeonLevel) * flawedRateScale);
-
-  //DebugLog("%i rate: %i f: %i e: %i maxlevel: %i diff: %i\n", dungeonLevel, rate, fine, exceptional, maxLevel, maxLevel - dungeonLevel);
-
   std::map<ItemQuality, int> weights =
   {
-    { ItemQuality::DAMAGED,     damaged      },
-    { ItemQuality::FLAWED,      flawed       },
-    { ItemQuality::NORMAL,      dungeonLevel },
-    { ItemQuality::FINE,        fine         },
-    { ItemQuality::EXCEPTIONAL, exceptional  },
+    { ItemQuality::DAMAGED,     64 },
+    { ItemQuality::FLAWED,      48 },
+    { ItemQuality::NORMAL,      32 },
+    { ItemQuality::FINE,        24 },
+    { ItemQuality::EXCEPTIONAL, 16 },
   };
 
   auto res = Util::WeightedRandom(weights);
