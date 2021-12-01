@@ -1695,8 +1695,8 @@ GameObject* ItemsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 
   std::map<ItemType, int> returnerMap =
   {
-    { ItemType::RETURNER,  5 },
-    { ItemType::NOTHING,  20 }
+    { ItemType::RETURNER, 1 },
+    { ItemType::NOTHING,  4 }
   };
 
   // TODO: power of randomly created item
@@ -2736,9 +2736,9 @@ ItemPrefix ItemsFactory::RollItemPrefix()
 {
   std::map<ItemPrefix, int> weights =
   {
-    { ItemPrefix::UNCURSED,  20 },
-    { ItemPrefix::CURSED,    20 },
-    { ItemPrefix::BLESSED,    5 }
+    { ItemPrefix::UNCURSED, 4 },
+    { ItemPrefix::CURSED,   4 },
+    { ItemPrefix::BLESSED,  1 }
   };
 
   auto res = Util::WeightedRandom(weights);
@@ -2751,11 +2751,11 @@ ItemQuality ItemsFactory::RollItemQuality()
 {
   std::map<ItemQuality, int> weights =
   {
-    { ItemQuality::DAMAGED,     64 },
-    { ItemQuality::FLAWED,      48 },
-    { ItemQuality::NORMAL,      32 },
-    { ItemQuality::FINE,        24 },
-    { ItemQuality::EXCEPTIONAL, 16 },
+    { ItemQuality::DAMAGED,     8 },
+    { ItemQuality::FLAWED,      6 },
+    { ItemQuality::NORMAL,      4 },
+    { ItemQuality::FINE,        3 },
+    { ItemQuality::EXCEPTIONAL, 2 },
   };
 
   auto res = Util::WeightedRandom(weights);
