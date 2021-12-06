@@ -12,6 +12,12 @@ void EnterNameState::Prepare()
   _y = _thHalf;
 
   _cursorPos = _y - 2;
+
+#ifdef USE_SDL
+  _windowSize = { MaxNameLength + 1, 4 };
+#else
+  _windowSize = { MaxNameLength + 2, 4 };
+#endif
 }
 
 void EnterNameState::HandleInput()
@@ -131,45 +137,17 @@ void EnterNameState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    #ifdef USE_SDL
     Printer::Instance().DrawWindow({ _x - _maxNameHalf, _cursorPos - 2 },
-                                   { MaxNameLength + 1, 4 },
+                                   _windowSize,
                                    kEnterNameString,
                                    (_inputType == InputType::NAME) ? Colors::WhiteColor : Colors::BlackColor,
                                    (_inputType == InputType::NAME) ? Colors::MessageBoxHeaderBgColor : Colors::ShadesOfGrey::Six);
 
     Printer::Instance().DrawWindow({ _x - _maxSeedHalf, _cursorPos + 4 },
-                                   { MaxSeedStringLength + 1, 6 },
+                                   { MaxSeedStringLength + 2, 6 },
                                    kEnterSeedString,
                                    (_inputType != InputType::NAME) ? Colors::WhiteColor : Colors::BlackColor,
                                    (_inputType != InputType::NAME) ? Colors::MessageBoxHeaderBgColor : Colors::ShadesOfGrey::Six);
-
-    #else
-    auto border = Util::GetPerimeter(_x - _maxNameHalf,
-                                      _cursorPos - 2,
-                                      MaxNameLength,
-                                      4,
-                                      true);
-
-    for (auto& i : border)
-    {
-      Printer::Instance().PrintFB(i.X, i.Y, '*', "#FFFFFF");
-    }
-
-    border = Util::GetPerimeter(_x - _maxSeedHalf,
-                                 _cursorPos + 4,
-                                 MaxSeedStringLength + 1,
-                                 6,
-                                 true);
-
-    for (auto& i : border)
-    {
-      Printer::Instance().PrintFB(i.X, i.Y, '*', "#FFFFFF");
-    }
-
-    Printer::Instance().PrintFB(_x, _cursorPos - 2, kEnterNameString, Printer::kAlignCenter, "#000000", "#FFFFFF");
-    Printer::Instance().PrintFB(_x, _cursorPos + 4, kEnterSeedString, Printer::kAlignCenter, "#000000", "#FFFFFF");
-    #endif
 
     // Seed string hint
     for (int i = 0; i < MaxSeedStringLength - 2; i++)

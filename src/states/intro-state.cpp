@@ -43,6 +43,7 @@ void IntroState::HandleInput()
 void IntroState::PrepareTown()
 {
   Printer::Instance().Clear();
+  Printer::Instance().Render();
 
   Map::Instance().ChangeOrInstantiateLevel(MapType::TOWN);
 

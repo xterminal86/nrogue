@@ -612,28 +612,18 @@ void Map::ShowLoadingText(const std::string& textOverride)
   int lx = tw - text.length() / 2;
   int hx = tw + text.length() / 2;
 
-  #ifdef USE_SDL
+#ifdef USE_SDL
+  _windowSize = { hx - lx + 5, 6 };
+#else
+  _windowSize = { hx - lx + 6, 7 };
+#endif
+
   Printer::Instance().DrawWindow({ lx - 3, th - 3 },
-                                 { hx - lx + 5, 6 },
+                                 _windowSize,
                                  "",
                                  Colors::WhiteColor,
                                  Colors::MessageBoxHeaderBgColor,
                                  "#444444");
-  #else
-  for (int i = lx - 3; i < hx + 3; i++)
-  {
-    for (int j = th - 3; j <= th + 3; j++)
-    {
-      Printer::Instance().PrintFB(i, j, ' ', Colors::BlackColor, "#222222");
-    }
-  }
-
-  auto res = Util::GetPerimeter(lx - 4, th - 4, text.length() * 2 - 7, 8, true);
-  for (auto& p : res)
-  {
-    Printer::Instance().PrintFB(p.X, p.Y, ' ', Colors::BlackColor, Colors::WhiteColor);
-  }
-  #endif
 
   Printer::Instance().PrintFB(tw, th, text, Printer::kAlignCenter, Colors::WhiteColor);
 

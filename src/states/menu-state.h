@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "position.h"
 #include "gamestate.h"
 
 class MenuState : public GameState
@@ -66,6 +67,8 @@ class MenuState : public GameState
 
   int _pictureX = 0;
   int _pictureY = 0;
+
+  Position _borderSize;
 
   std::map<std::pair<int, int>, std::string> _grassColorByPosition;
 };

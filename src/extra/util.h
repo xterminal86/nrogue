@@ -141,7 +141,7 @@ namespace Util
   ///   { ORANGE, 10 }
   /// };
   template <typename T>
-  inline std::pair<T, int> WeightedRandom(const std::map<T, int>& weightsByType)
+  std::pair<T, int> WeightedRandom(const std::map<T, int>& weightsByType)
   {
     int sum = 0;
     for (auto& i : weightsByType)
@@ -166,7 +166,7 @@ namespace Util
   }
 
   template <typename T>
-  inline std::map<T, double> WeightsToProbability(const std::map<T, int>& weightsMap)
+  std::map<T, double> WeightsToProbability(const std::map<T, int>& weightsMap)
   {
     std::map<T, double> res;
 
@@ -186,7 +186,7 @@ namespace Util
   }
 
   template <typename T>
-  inline std::map<T, int> RollWeightsMap(const std::map<T, int>& weightsMap, int rolls)
+  std::map<T, int> RollWeightsMap(const std::map<T, int>& weightsMap, int rolls)
   {
     std::map<T, int> res;
 
@@ -201,7 +201,7 @@ namespace Util
 
 
   template <typename key, typename value>
-  inline std::map<value, key> FlipMap(const std::map<key, value>& src)
+  std::map<value, key> FlipMap(const std::map<key, value>& src)
   {
     std::map<value, key> ret;
 
@@ -217,19 +217,24 @@ namespace Util
   }
 
   template<typename ... Args>
-  inline std::string StringFormat(const std::string& format, Args ...args)
+  std::string StringFormat(const std::string& format, Args ...args)
   {
-    // Extra space for '\0'
-    size_t size = snprintf( nullptr, 0, format.c_str(), args ... ) + 1;
-    std::unique_ptr<char[]> buf( new char[ size ] );
-    snprintf( buf.get(), size, format.c_str(), args ... );
+    size_t size = snprintf(nullptr, 0, format.c_str(), args...);
+    std::string s;
 
-    // We don't want the '\0' inside
-    return std::string( buf.get(), buf.get() + size - 1 );
+    if (!size)
+    {
+      return s;
+    }
+
+    s.resize(size);
+    char *buf = (char *)s.data();
+    snprintf(buf, size + 1, format.c_str(), args...);
+    return s;
   }
 
   template <typename F>
-  inline bool IsFunctionValid(const F& fn)
+  bool IsFunctionValid(const F& fn)
   {
     // http://www.cplusplus.com/reference/functional/function/target_type/
     //

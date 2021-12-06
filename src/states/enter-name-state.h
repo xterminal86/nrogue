@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "position.h"
 #include "gamestate.h"
 
 class EnterNameState : public GameState
@@ -42,6 +43,8 @@ class EnterNameState : public GameState
     const int _maxSeedHalf = MaxSeedStringLength / 2;
 
     int _inputTypeIndex = 0;
+
+    Position _windowSize;
 
     size_t _seedHex = 0;
 

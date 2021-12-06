@@ -726,6 +726,118 @@ void Printer::PrintFB(const int& x, const int& y,
   }
 }
 
+void Printer::DrawWindow(const Position& leftCorner,
+                         const Position& size,
+                         const std::string& header,
+                         const std::string& headerFgColor,
+                         const std::string& headerBgColor,
+                         const std::string& borderColor,
+                         const std::string& borderBgColor,
+                         const std::string& bgColor)
+{
+  int x = leftCorner.X;
+  int y = leftCorner.Y;
+
+  int ulCorner = ACS_ULCORNER;
+  int urCorner = ACS_URCORNER;
+  int dlCorner = ACS_LLCORNER;
+  int drCorner = ACS_LRCORNER;
+  int hBar     = ACS_VLINE;
+  int vBar     = ACS_HLINE;
+
+  Position sizeCopy = size;
+
+  if (!header.empty() && ((size_t)size.X > header.length()))
+  {
+    bool headerDiv = (header.length() % 2 == 0);
+    bool sizeDiv   = (size.X % 2 == 0);
+
+    if (sizeDiv && !headerDiv)
+    {
+      sizeCopy.X--;
+    }
+    else if (!sizeDiv && headerDiv)
+    {
+      sizeCopy.X++;
+    }
+  }
+
+  //
+  // Total size must take into account starting point
+  //
+  // E.g.:
+  //
+  // (0, 0) - (6, 3)
+  //
+  // X:
+  //
+  // 0 1 2 3 4 5
+  //                Y:
+  // 1 2 3 4 5 6
+  // |---------| 1  0
+  // |         | 2  1
+  // |---------| 3  2
+  //
+  //
+  // But char at point (0;0) counts as 1 unit of length
+  // so we must subtract it.
+  //
+  int xTo = x + sizeCopy.X - 1;
+  int yTo = y + sizeCopy.Y - 1;
+
+  // Fill background
+
+  if (!bgColor.empty())
+  {
+    for (int i = x; i <= xTo; i++)
+    {
+      for (int j = y; j <= yTo; j++)
+      {
+        PrintFB(i, j, ' ', Colors::WhiteColor, bgColor);
+      }
+    }
+  }
+
+  // Corners
+
+  PrintFB(x,     y, ulCorner, borderColor, borderBgColor);
+  PrintFB(xTo,   y, urCorner, borderColor, borderBgColor);
+  PrintFB(x,   yTo, dlCorner, borderColor, borderBgColor);
+  PrintFB(xTo, yTo, drCorner, borderColor, borderBgColor);
+
+  // Vertical bars
+
+  for (int i = x + 1; i < xTo; i++)
+  {
+    PrintFB(i, y, vBar, borderColor, borderBgColor);
+    PrintFB(i, yTo, vBar, borderColor, borderBgColor);
+  }
+
+  // Horizontal bars
+
+  for (int i = y + 1; i < yTo; i++)
+  {
+    PrintFB(x, i, hBar, borderColor, borderBgColor);
+    PrintFB(xTo, i, hBar, borderColor, borderBgColor);
+  }
+
+  if (header.length() != 0)
+  {
+    std::string lHeader = header;
+    lHeader.insert(0, " ");
+    lHeader.append(" ");
+
+    int offset = (sizeCopy.X - lHeader.length()) / 2;
+
+    PrintFB(x + offset,
+            y,
+            lHeader,
+            Printer::kAlignLeft,
+            headerFgColor,
+            headerBgColor);
+  }
+}
+
 void Printer::PrintFB(const int& x, const int& y,
                        const std::string& text,
                        size_t scale,

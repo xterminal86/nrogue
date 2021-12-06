@@ -71,34 +71,43 @@ class Printer : public Singleton<Printer>
     /// Print text at (x, y) directly to the screen,
     /// with (0, 0) at upper left corner and y increases down
     void Print(const int& x, const int& y,
-                const std::string& text,
-                int align,
-                const std::string& htmlColorFg,
-                const std::string& htmlColorBg = Colors::BlackColor);
+               const std::string& text,
+               int align,
+               const std::string& htmlColorFg,
+               const std::string& htmlColorBg = Colors::BlackColor);
 
     void Print(const int& x, const int& y,
-                const int& ch,
-                const std::string& htmlColorFg,
-                const std::string& htmlColorBg = Colors::BlackColor);
+               const int& ch,
+               const std::string& htmlColorFg,
+               const std::string& htmlColorBg = Colors::BlackColor);
 
     /// Print to "framebuffer" instead of directly to the screen
     void PrintFB(const int& x, const int& y,
-                  const int& ch,
-                  const std::string& htmlColorFg,
-                  const std::string& htmlColorBg = Colors::BlackColor);
+                 const int& ch,
+                 const std::string& htmlColorFg,
+                 const std::string& htmlColorBg = Colors::BlackColor);
 
     void PrintFB(const int& x, const int& y,
-                  const std::string& text,
-                  int align,
-                  const std::string& htmlColorFg,
-                  const std::string& htmlColorBg = Colors::BlackColor);
+                 const std::string& text,
+                 int align,
+                 const std::string& htmlColorFg,
+                 const std::string& htmlColorBg = Colors::BlackColor);
 
     void PrintFB(const int& x, const int& y,
-                  const std::string& text,
-                  size_t scale,
-                  int align,
-                  const std::string& htmlColorFg,
-                  const std::string& htmlColorBg = Colors::BlackColor);
+                 const std::string& text,
+                 size_t scale,
+                 int align,
+                 const std::string& htmlColorFg,
+                 const std::string& htmlColorBg = Colors::BlackColor);
+
+    void DrawWindow(const Position& leftCorner,
+                    const Position& size,
+                    const std::string& header = std::string{},
+                    const std::string& headerFgColor = Colors::WhiteColor,
+                    const std::string& headerBgColor = Colors::BlackColor,
+                    const std::string& borderColor = Colors::WhiteColor,
+                    const std::string& borderBgColor = Colors::BlackColor,
+                    const std::string& bgColor = Colors::BlackColor);
 
     const std::unordered_map<size_t, ColorPair>& GetValidColorsCache();
 #else

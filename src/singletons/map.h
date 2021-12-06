@@ -80,6 +80,8 @@ class Map : public Singleton<Map>
 
     Player* _playerRef;
 
+    Position _windowSize;
+
     friend class IntroState;
 };
 

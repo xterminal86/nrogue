@@ -38,84 +38,14 @@ void MessageBoxState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    size_t len = 0;
-    for (auto& s : _message)
-    {
-      if (s.length() > len)
-      {
-        len = s.length();
-      }
-    }
-
-    // In case header is longer than message
-    if (len < _header.length())
-    {
-      len = _header.length();
-    }
-
-    // Taking into account message size (usually > 0, so as is),
-    // and that it's not actually a total count of number of rows,
-    // but addition that we must add to the y1,
-    // so 5 rows means we must add 4 if message.size = 1, 5 if 2 and so on
-    int rows = 3 + _message.size();
-
-    int tw = Printer::TerminalWidth;
-    int th = Printer::TerminalHeight;
-
-    // x padding is randomly chosen
-    int x1 = tw / 2 - len / 2 - 3;
-    int y1 = th / 2 - _message.size() / 2 - 2;
-    int x2 = x1 + len + 5;
-    int y2 = y1 + rows;
-
-    #ifndef USE_SDL
-    auto area = Util::GetScreenRect(x1, y1, x2, y2);
-    for (auto& p : area)
-    {
-      Printer::Instance().PrintFB(p.X, p.Y, ' ', Colors::BlackColor, _bgColor);
-    }
-
-    auto border = Util::GetScreenRectPerimeter(x1, y1, x2, y2);
-    for (auto& b : border)
-    {
-      Printer::Instance().PrintFB(b.X, b.Y, ' ', Colors::BlackColor, _borderColor);
-    }
-
-    std::string header = _header;
-    if (header.length() != 0)
-    {
-      header.insert(0, " ");
-      header.append(" ");
-
-      Printer::Instance().PrintFB(tw / 2,
-                                  y1,
-                                  header,
-                                  Printer::kAlignCenter,
-                                  Colors::WhiteColor,
-                                  "#4444FF");
-    }
-
-    int offset = 0;
-    for (auto& s : _message)
-    {
-      Printer::Instance().PrintFB(tw / 2,
-                                  th / 2 - _message.size() / 2 + offset,
-                                  s,
-                                  Printer::kAlignCenter,
-                                  Colors::WhiteColor,
-                                  _bgColor);
-      offset++;
-    }
-    #else
-
     std::string headerBgColor = Colors::MessageBoxHeaderBgColor;
     if (_borderColor == Colors::MessageBoxRedBorderColor)
     {
       headerBgColor = "#660000";
     }
 
-    Printer::Instance().DrawWindow({ x1, y1 },
-                                   { x2 - x1, y2 - y1 },
+    Printer::Instance().DrawWindow(_leftCorner,
+                                   _windowSize,
                                    _header,
                                    Colors::WhiteColor,
                                    headerBgColor,
@@ -126,16 +56,14 @@ void MessageBoxState::Update(bool forceUpdate)
     int offset = 0;
     for (auto& s : _message)
     {
-      Printer::Instance().PrintFB(tw / 2,
-                                  th / 2 - _message.size() / 2 + offset,
+      Printer::Instance().PrintFB(_tw / 2,
+                                  _th / 2 - _message.size() / 2 + offset,
                                   s,
                                   Printer::kAlignCenter,
                                   Colors::WhiteColor,
                                   _bgColor);
       offset++;
     }
-
-    #endif
 
     Printer::Instance().Render();
   }
@@ -152,4 +80,38 @@ void MessageBoxState::SetMessage(MessageBoxType type,
   _message = message;
   _bgColor = bgColor;
   _borderColor = borderColor;
+
+  size_t len = 0;
+  for (auto& s : _message)
+  {
+    if (s.length() > len)
+    {
+      len = s.length();
+    }
+  }
+
+  // In case header is longer than message
+  if (len < _header.length())
+  {
+    len = _header.length();
+  }
+
+  // Taking into account message size (usually > 0, so as is),
+  // and that it's not actually a total count of number of rows,
+  // but addition that we must add to the y1,
+  // so 5 rows means we must add 4 if message.size = 1, 5 if 2 and so on
+  int rows = 3 + _message.size();
+
+  int x1 = _tw / 2 - len / 2 - 3;
+  int y1 = _th / 2 - _message.size() / 2 - 2;
+  int x2 = x1 + len + 5;
+  int y2 = y1 + rows;
+
+  _leftCorner = { x1, y1 };
+
+#ifdef USE_SDL
+  _windowSize = { x2 - x1, y2 - y1 };
+#else
+  _windowSize = { x2 - x1 + 1, y2 - y1 + 1 };
+#endif
 }

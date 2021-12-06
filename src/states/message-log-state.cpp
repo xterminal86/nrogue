@@ -106,7 +106,7 @@ void MessageLogState::DrawScrollBars()
       #ifdef USE_SDL
       Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, Colors::WhiteColor);
       #else
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, ACS_DARROW, Colors::WhiteColor);
       #endif
     }
     else if (_scrollPosition == scrollLimit)
@@ -114,7 +114,7 @@ void MessageLogState::DrawScrollBars()
       #ifdef USE_SDL
       Printer::Instance().PrintFB(_tw - 1, 1, (int)NameCP437::UARROW_2, Colors::WhiteColor);
       #else
-      Printer::Instance().PrintFB(_tw - 1, 1, "/\\", Printer::kAlignRight, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, 1, ACS_UARROW, Colors::WhiteColor);
       #endif
     }
     else if (_scrollPosition > 0 && _scrollPosition != scrollLimit)
@@ -123,8 +123,8 @@ void MessageLogState::DrawScrollBars()
       Printer::Instance().PrintFB(_tw - 1, 1, (int)NameCP437::UARROW_2, Colors::WhiteColor);
       Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, Colors::WhiteColor);
       #else
-      Printer::Instance().PrintFB(_tw - 1, 1, "/\\", Printer::kAlignRight, Colors::WhiteColor);
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, 1, ACS_UARROW, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1, _th - 1, ACS_DARROW, Colors::WhiteColor);
       #endif
     }
   }

@@ -13,6 +13,12 @@ void MenuState::Init()
 
   _debugInfo = Util::StringFormat("terminal size: %ix%i", _tw, _th);
 
+#ifdef USE_SDL
+  _borderSize = { _tw - 1, _th - 1 };
+#else
+  _borderSize = { _tw, _th };
+#endif
+
   PrepareGrassTiles();
 }
 
@@ -173,22 +179,14 @@ void MenuState::Update(bool forceUpdate)
 
     DrawPicture();
 
-    #ifdef USE_SDL
     Printer::Instance().DrawWindow({ 0, 0 },
-                                   { _tw - 1, _th - 1 },
+                                   _borderSize,
                                    "",
                                    Colors::BlackColor,
                                    Colors::BlackColor,
                                    Colors::WhiteColor,
                                    Colors::BlackColor,
                                    std::string());
-    #else
-    auto border = Util::GetPerimeter(0, 0, _tw - 1, _th - 1);
-    for (auto& i : border)
-    {
-      Printer::Instance().PrintFB(i.X, i.Y, ' ', Colors::WhiteColor, Colors::WhiteColor);
-    }
-    #endif
 
     int yOffset = 0;
     for (auto& s : _title)

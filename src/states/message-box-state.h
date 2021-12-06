@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "position.h"
 #include "gamestate.h"
 
 class MessageBoxState : public GameState
@@ -24,6 +25,9 @@ class MessageBoxState : public GameState
 
     std::string _bgColor;
     std::string _borderColor;
+
+    Position _leftCorner;
+    Position _windowSize;
 
     MessageBoxType _type = MessageBoxType::ANY_KEY;
 };
