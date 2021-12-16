@@ -6,4 +6,4 @@ core.*
 *.txt
 *.out
 *.exe
-*.bmp
+/*.bmp
