@@ -1055,6 +1055,18 @@ namespace Util
     return newIdentifiedName;
   }
 
+  std::string GetCurrentDateTimeString()
+  {
+    std::stringstream ss;
+
+    time_t now = time(nullptr);
+    tm *ltm = localtime(&now);
+
+    ss << std::put_time(ltm, "%Y-%m-%d_%H-%M-%S");
+
+    return ss.str();
+  }
+
   size_t FindLongestStringLength(const std::vector<std::string>& list)
   {
     size_t res = 0;

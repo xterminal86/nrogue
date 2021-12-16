@@ -346,7 +346,7 @@ void MainState::DrawHPMP()
 
   int th = Printer::TerminalHeight;
 
-  UpdateBar(0, th - 2, _playerRef->Attrs.HP);
+  UpdateBar(1, th - 2, _playerRef->Attrs.HP);
 
   auto str = Util::StringFormat("%i/%i", curHp, maxHp);
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
@@ -356,7 +356,7 @@ void MainState::DrawHPMP()
                                Colors::WhiteColor,
                                "#880000");
 
-  UpdateBar(0, th - 1, _playerRef->Attrs.MP);
+  UpdateBar(1, th - 1, _playerRef->Attrs.MP);
 
   str = Util::StringFormat("%i/%i", curMp, maxMp);
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 1, str, Printer::kAlignCenter, Colors::WhiteColor, "#000088");
@@ -430,28 +430,28 @@ void MainState::PrintDebugInfo()
                                   _playerRef->PosY,
                                   _playerRef->Attrs.Hunger);
 
-  Printer::Instance().PrintFB(0, 1, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(1, 1, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
   _debugInfo = Util::StringFormat("Key: %i Actors: %i Respawn: %i",
                                   _keyPressed,
                                   Map::Instance().CurrentLevel->ActorGameObjects.size(),
                                   Map::Instance().CurrentLevel->RespawnCounter());
 
-  Printer::Instance().PrintFB(0, 2, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(1, 2, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
   _debugInfo = Util::StringFormat("Level Start: [%i;%i]", Map::Instance().CurrentLevel->LevelStart.X, Map::Instance().CurrentLevel->LevelStart.Y);
-  Printer::Instance().PrintFB(0, 3, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(1, 3, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
   _debugInfo = Util::StringFormat("Level Exit: [%i;%i]", Map::Instance().CurrentLevel->LevelExit.X, Map::Instance().CurrentLevel->LevelExit.Y);
-  Printer::Instance().PrintFB(0, 4, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(1, 4, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
   _debugInfo = Util::StringFormat("Colors Used: %i", Printer::Instance().ColorsUsed());
-  Printer::Instance().PrintFB(0, 5, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(1, 5, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
   _debugInfo = Util::StringFormat("Turns passed: %i", Application::Instance().TurnsPassed);
-  Printer::Instance().PrintFB(0, 6, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(1, 6, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
-  Printer::Instance().PrintFB(0, 7, "Actors watched:", Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(1, 7, "Actors watched:", Printer::kAlignLeft, Colors::WhiteColor);
 
   int yOffset = 0;
   bool found = false;
@@ -462,7 +462,7 @@ void MainState::PrintDebugInfo()
       if (a->ObjectId() == id)
       {
         _debugInfo = Util::StringFormat("%s_%lu (%i)", a->ObjectName.data(), id, a->Attrs.ActionMeter);
-        Printer::Instance().PrintFB(0, 8 + yOffset, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
+        Printer::Instance().PrintFB(1, 8 + yOffset, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
         yOffset++;
         found = true;
       }
@@ -471,7 +471,7 @@ void MainState::PrintDebugInfo()
 
   if (!found)
   {
-    Printer::Instance().PrintFB(0, 8, "<Press 's' to scan 1x1 around player>", Printer::kAlignLeft, Colors::WhiteColor);
+    Printer::Instance().PrintFB(1, 8, "<Press 's' to scan 1x1 around player>", Printer::kAlignLeft, Colors::WhiteColor);
   }
 }
 
@@ -653,7 +653,7 @@ void MainState::DisplayStartHint()
 {
   int th = Printer::TerminalHeight;
 
-  Printer::Instance().PrintFB(0,
+  Printer::Instance().PrintFB(1,
                               th - 4,
                               '<',
                               Colors::WhiteColor,
@@ -683,7 +683,7 @@ void MainState::DisplayStartHint()
     dir += "W";
   }
 
-  Printer::Instance().PrintFB(1,
+  Printer::Instance().PrintFB(2,
                               th - 4,
                               dir,
                               Printer::kAlignLeft,
@@ -694,19 +694,19 @@ void MainState::DisplayExitHint()
 {
   int th = Printer::TerminalHeight;
 
-  Printer::Instance().PrintFB(0,
+  Printer::Instance().PrintFB(1,
                               th - 3,
                               '>',
                               Colors::WhiteColor,
                               Colors::DoorHighlightColor);
+
+  std::string dir;
 
   auto curLvl = Map::Instance().CurrentLevel;
   if (curLvl->ExitFound)
   {
     int dx = curLvl->LevelExit.X - _playerRef->PosX;
     int dy = curLvl->LevelExit.Y - _playerRef->PosY;
-
-    std::string dir;
 
     if (dy > 0)
     {
@@ -725,21 +725,13 @@ void MainState::DisplayExitHint()
     {
       dir += "W";
     }
+  }
 
-    Printer::Instance().PrintFB(1,
-                                th - 3,
-                                dir,
-                                Printer::kAlignLeft,
-                                Colors::WhiteColor);
-  }
-  else
-  {
-    Printer::Instance().PrintFB(1,
-                                th - 3,
-                                "??",
-                                Printer::kAlignLeft,
-                                Colors::WhiteColor);
-  }
+  Printer::Instance().PrintFB(2,
+                              th - 3,
+                              curLvl->ExitFound ? dir : "??",
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor);
 }
 
 void MainState::DisplayStatusIcons()

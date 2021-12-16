@@ -15,13 +15,23 @@ class SelectClassState : public GameState
   private:
     int _menuIndex = 0;
 
+#ifdef USE_SDL
     std::vector<std::string> _menuItems =
     {
-      " Soldier  ",
-      "  Thief   ",
-      " Arcanist ",
+      "  Soldier  ",
+      "   Thief   ",
+      "  Arcanist  ",
       "  No one  "
     };
+#else
+    std::vector<std::string> _menuItems =
+    {
+      "  Soldier  ",
+      "   Thief   ",
+      "  Arcanist ",
+      "   No one  "
+    };
+#endif
 };
 
 #endif // SELECTCLASSSTATE_H

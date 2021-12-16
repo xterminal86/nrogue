@@ -6,6 +6,7 @@
 #include <memory>
 #include <algorithm>
 #include <climits>
+#include <iomanip>
 
 #include "rng.h"
 #include "position.h"
@@ -123,6 +124,8 @@ namespace Util
   extern std::string ReplaceItemPrefix(const std::string& oldIdentifiedName,
                                        const std::vector<std::string>& anyOf,
                                        const std::string& replaceWith);
+
+  extern std::string GetCurrentDateTimeString();
 
   extern size_t FindLongestStringLength(const std::vector<std::string>& list);
 

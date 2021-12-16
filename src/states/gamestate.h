@@ -47,6 +47,8 @@ class GameState
 #ifdef USE_SDL
     bool ShouldShiftMap(int& key);
 
+    void TakeScreenshot();
+
     void AdjustWindowSize(const SDL_Event& evt);
 
     std::map<SDL_Scancode, char> _charsByScancodes =

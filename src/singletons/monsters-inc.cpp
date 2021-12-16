@@ -122,7 +122,7 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
     int difficulty = GetDifficulty();
 
     go->Attrs.Def.Talents = 3;
-    go->Attrs.Spd.Talents = 3;
+    go->Attrs.Spd.Talents = 1;
 
     for (int i = 0; i < difficulty; i++)
     {
@@ -181,7 +181,7 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
     int difficulty = GetDifficulty();
 
     go->Attrs.Def.Talents = 3;
-    go->Attrs.Spd.Talents = 3;
+    go->Attrs.Spd.Talents = 1;
 
     for (int i = 0; i < difficulty; i++)
     {
@@ -436,7 +436,7 @@ GameObject* MonstersInc::CreateShelob(int x, int y)
 
   go->Attrs.Str.Talents = 2;
   go->Attrs.Skl.Talents = 2;
-  go->Attrs.Spd.Talents = 2;
+  go->Attrs.Spd.Talents = 3;
 
   int difficulty = GetDifficulty();
 

@@ -48,6 +48,11 @@ int GameState::GetKeyDown()
         {
           res = _specialKeysByScancode[sc];
         }
+
+        if (sc == SDL_SCANCODE_F9)
+        {
+          TakeScreenshot();
+        }
       }
       break;
 
@@ -136,6 +141,31 @@ bool GameState::ShouldShiftMap(int& key)
   }
 
   return res;
+}
+
+void GameState::TakeScreenshot()
+{
+  auto& app = Application::Instance();
+  auto r = Application::Instance().Renderer;
+  auto ws = app.GetDefaultWindowSize();
+  SDL_Surface* sshot = SDL_CreateRGBSurface(0,
+                                            ws.first,
+                                            ws.second,
+                                            32,
+                                            0x00FF0000,
+                                            0x0000FF00,
+                                            0x000000FF,
+                                            0xFF000000);
+  SDL_RenderReadPixels(r,
+                       nullptr,
+                       SDL_PIXELFORMAT_ARGB8888,
+                       sshot->pixels,
+                       sshot->pitch);
+  std::string time = Util::GetCurrentDateTimeString();
+  std::string fname = Util::StringFormat("s_%s.bmp", time.data());
+  SDL_SaveBMP(sshot, fname.data());
+  SDL_FreeSurface(sshot);
+  DebugLog("Wrote %s", fname.data());
 }
 #endif
 
