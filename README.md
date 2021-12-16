@@ -1,7 +1,7 @@
 # NROGUE
 *ncurses roguelike challenge*
 
-![screenshot](https://user-images.githubusercontent.com/11379604/108273698-f7167d00-7184-11eb-9946-0b7a9b0f6ed9.png)
+![](resources/github-front/title.bmp)
 
 I decided to challenge myself by making a game with minimal requirements possible.  
 Just like in old times, when all you had was just one binary file.  
