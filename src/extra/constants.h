@@ -778,6 +778,9 @@ namespace GlobalConstants
   extern const int EffectDurationSkipsForTurn;
   extern const int EffectDefaultDuration;
 
+  extern const std::map<int, std::pair<StatsEnum, std::string>> AllStatNames;
+  extern const std::map<ItemBonusType, std::string> BonusNameByType;
+
   extern const std::map<ItemQuality,      std::string> QualityNameByQuality;
   extern const std::map<PlayerSkills,     std::string> SkillNameByType;
   extern const std::map<TraderRole,       std::string> ShopNameByType;

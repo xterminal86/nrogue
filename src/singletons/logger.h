@@ -11,9 +11,11 @@ class Logger : public Singleton<Logger>
   public:
     virtual ~Logger();
 
-    void Init() override;
     void Prepare(bool enabled);
     void Print(const std::string& stringToPrint, bool error = false);
+
+  protected:
+    void InitSpecific() override;
 
   private:
     std::ofstream _logFile;

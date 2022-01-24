@@ -19,16 +19,9 @@
 #include "game-object-info.h"
 #include "go-timed-destroyer.h"
 
-void GameObjectsFactory::Init()
+void GameObjectsFactory::InitSpecific()
 {
-  if (_initialized)
-  {
-    return;
-  }
-
   _playerRef = &Application::Instance().PlayerInstance;
-
-  _initialized = true;
 }
 
 GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
@@ -464,7 +457,6 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
   copy->ObjectName       = copyFrom->ObjectName;
   copy->FogOfWarName     = copyFrom->FogOfWarName;
 
-  // Not sure if this will actually work, probably not.
   copy->InteractionCallback = copyFrom->InteractionCallback;
 
   copy->StackObjectId    = copyFrom->StackObjectId;

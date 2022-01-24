@@ -266,6 +266,29 @@ namespace GlobalConstants
 
   const int LavaDamage = 30;
 
+  // std::map is sorted by key
+  const std::map<int, std::pair<StatsEnum, std::string>> AllStatNames =
+  {
+    { 0, { StatsEnum::STR, "STR" } },
+    { 1, { StatsEnum::DEF, "DEF" } },
+    { 2, { StatsEnum::MAG, "MAG" } },
+    { 3, { StatsEnum::RES, "RES" } },
+    { 4, { StatsEnum::SKL, "SKL" } },
+    { 5, { StatsEnum::SPD, "SPD" } }
+  };
+
+  const std::map<ItemBonusType, std::string> BonusNameByType =
+  {
+    { ItemBonusType::STR, "STR" },
+    { ItemBonusType::DEF, "DEF" },
+    { ItemBonusType::MAG, "MAG" },
+    { ItemBonusType::RES, "RES" },
+    { ItemBonusType::SPD, "SPD" },
+    { ItemBonusType::SKL, "SKL" },
+    { ItemBonusType::HP,  "HP"  },
+    { ItemBonusType::MP,  "MP"  }
+  };
+
   const std::map<ItemQuality, std::string> QualityNameByQuality =
   {
     { ItemQuality::DAMAGED,     "Damaged"     },

@@ -249,16 +249,6 @@ void MapLevelCaves::CreateSpecialLevel()
   }
 }
 
-void MapLevelCaves::DisplayWelcomeText()
-{
-  std::vector<std::string> msg =
-  {
-    "Caves level description goes here"
-  };
-
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Caves of Circe", msg);
-}
-
 void MapLevelCaves::CreateRivers()
 {
   int num = RNG::Instance().RandomRange(10, 21);
@@ -297,4 +287,15 @@ void MapLevelCaves::CreateRivers()
       }
     }
   }
+}
+
+void MapLevelCaves::DisplayWelcomeText()
+{
+  std::vector<std::string> msg =
+  {
+  // ======================================== <- 40
+    "Caves level description goes here"
+  };
+
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Caves of Circe", msg);
 }

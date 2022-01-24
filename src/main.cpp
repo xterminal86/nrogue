@@ -1,7 +1,3 @@
-#ifndef USE_SDL
-#include <ncurses.h>
-#endif
-
 #include "application.h"
 #include "spells-processor.h"
 #include "game-objects-factory.h"

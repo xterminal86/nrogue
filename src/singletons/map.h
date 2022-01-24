@@ -16,7 +16,6 @@ class GameObject;
 class Map : public Singleton<Map>
 {
   public:
-    void Init() override;
     void Cleanup();
 
     void Draw();
@@ -63,6 +62,9 @@ class Map : public Singleton<Map>
     int CountWallsOrthogonal(int x, int y);
 
     MapLevelBase* CurrentLevel;
+
+  protected:
+    void InitSpecific() override;
 
   private:
     std::map<MapType, std::unique_ptr<MapLevelBase>> _levels;

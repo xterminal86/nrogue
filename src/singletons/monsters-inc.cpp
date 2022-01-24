@@ -17,14 +17,8 @@
 #include "ai-monster-herobrine.h"
 #include "ai-monster-mad-miner.h"
 
-void MonstersInc::Init()
+void MonstersInc::InitSpecific()
 {
-  if (_initialized)
-  {
-    return;
-  }
-
-  _initialized = true;
 }
 
 GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)

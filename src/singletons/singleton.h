@@ -11,11 +11,23 @@ class Singleton
       return instance;
     }
 
-    virtual void Init() = 0;
+    void Init()
+    {
+      if (_initialized)
+      {
+        return;
+      }
+
+      InitSpecific();
+
+      _initialized = true;
+    }
 
   protected:
     Singleton() = default;
     virtual ~Singleton() = default;
+
+    virtual void InitSpecific() = 0;
 
     bool _initialized = false;
 };

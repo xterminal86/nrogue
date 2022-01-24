@@ -18,11 +18,12 @@ using SSPair = std::pair<std::string, std::string>;
 class Blackboard : public Singleton<Blackboard>
 {
   public:
-    void Init() override;
-
     void Set(uint64_t goId, const SSPair& data);
     std::string Get(uint64_t goId, const std::string& key);
     void Remove(uint64_t goId);
+
+  protected:
+    void InitSpecific() override;
 
   private:
     std::unordered_map<uint64_t, SSMap> _blackboard;

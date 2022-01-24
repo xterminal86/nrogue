@@ -1,6 +1,6 @@
 #include "blackboard.h"
 
-void Blackboard::Init()
+void Blackboard::InitSpecific()
 {
 }
 

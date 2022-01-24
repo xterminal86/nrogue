@@ -17,8 +17,8 @@ void DevConsole::Init()
   _playerRef = &Application::Instance().PlayerInstance;
 
   _objectHandles[ObjectHandleType::STATIC] = nullptr;
-  _objectHandles[ObjectHandleType::ACTOR] = nullptr;
-  _objectHandles[ObjectHandleType::ITEM] = nullptr;
+  _objectHandles[ObjectHandleType::ACTOR]  = nullptr;
+  _objectHandles[ObjectHandleType::ITEM]   = nullptr;
 }
 
 void DevConsole::Prepare()

@@ -669,6 +669,7 @@ void MapLevelMines::DisplayWelcomeText()
 {
   std::vector<std::string> msg =
   {
+  // ======================================== <- 40
     "These mines once were a place of",
     "work and income for this village.",
     "Now it's just crumbling tunnels",

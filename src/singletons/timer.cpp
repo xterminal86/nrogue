@@ -1,13 +1,7 @@
 #include "timer.h"
 
-void Timer::Init()
+void Timer::InitSpecific()
 {
-  if (_initialized)
-  {
-    return;
-  }
-
-  _initialized = true;
 }
 
 const Ns& Timer::DeltaTime()

@@ -15,13 +15,8 @@
 #include "map-level-endgame.h"
 #include "logger.h"
 
-void Map::Init()
+void Map::InitSpecific()
 {
-  if (_initialized)
-  {
-    return;
-  }
-
   _mapVisitFirstTime[MapType::MINES_1]     = false;
   _mapVisitFirstTime[MapType::CAVES_1]     = false;
   _mapVisitFirstTime[MapType::LOST_CITY]   = false;
@@ -36,8 +31,6 @@ void Map::Init()
   // In order to prevent Map::UpdateGameObjects()
   // condition branch in Application::Run() on nullptr level.
   _playerRef->Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
-
-  _initialized = true;
 }
 
 void Map::Cleanup()

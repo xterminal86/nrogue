@@ -736,7 +736,7 @@ void MainState::DisplayExitHint()
 
 void MainState::DisplayStatusIcons()
 {
-  int startPos = 4;
+  int startPos = 5;
 
   DisplayHungerStatus(startPos);
   DisplayWeaponCondition(startPos);

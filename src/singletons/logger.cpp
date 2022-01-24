@@ -4,14 +4,8 @@
 
 #include "util.h"
 
-void Logger::Init()
+void Logger::InitSpecific()
 {
-  if (_initialized)
-  {
-    return;
-  }
-
-  _initialized = true;
 }
 
 void Logger::Prepare(bool enabled)

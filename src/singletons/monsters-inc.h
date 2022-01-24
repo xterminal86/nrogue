@@ -8,8 +8,6 @@ class GameObject;
 class MonstersInc : public Singleton<MonstersInc>
 {
   public:
-    void Init() override;
-
     GameObject* CreateRat(int x, int y, bool randomize = true);
     GameObject* CreateBat(int x, int y, bool randomize = true);
     GameObject* CreateVampireBat(int x, int y, bool randomize = true);
@@ -18,6 +16,9 @@ class MonstersInc : public Singleton<MonstersInc>
     GameObject* CreateHerobrine(int x, int y);
     GameObject* CreateMadMiner(int x, int y);
     GameObject* CreateShelob(int x, int y);
+
+  protected:
+    void InitSpecific() override;
 
   private:
     int GetDifficulty();

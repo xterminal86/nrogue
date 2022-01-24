@@ -12,8 +12,6 @@ class Player;
 class ItemsFactory : public Singleton<ItemsFactory>
 {
   public:
-    void Init() override;
-
     GameObject* CreateDummyItem(const std::string& objName, char image, const std::string& fgColor, const std::string& bgColor, const std::vector<std::string>& descText);
     //
     // *************************************************************************
@@ -77,6 +75,9 @@ class ItemsFactory : public Singleton<ItemsFactory>
     GameObject* CreateRandomItem(int x, int y, ItemType exclude = ItemType::NOTHING);
 
     GameObject* CreateUniquePickaxe();
+
+  protected:
+    void InitSpecific() override;
 
   private:
     GameObject* CreateRandomGlass();

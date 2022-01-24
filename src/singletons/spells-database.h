@@ -19,11 +19,12 @@ struct SpellInfo
 class SpellsDatabase : public Singleton<SpellsDatabase>
 {
   public:
-    void Init() override;
-
     void RegisterSpell(const SpellInfo& i);
 
     SpellInfo* GetSpellInfoFromDatabase(SpellType t);
+
+  protected:
+    void InitSpecific() override;
 
   private:
     std::map<SpellType, SpellInfo> _database;

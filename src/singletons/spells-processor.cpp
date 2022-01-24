@@ -6,16 +6,9 @@
 #include "town-portal-component.h"
 #include "game-objects-factory.h"
 
-void SpellsProcessor::Init()
+void SpellsProcessor::InitSpecific()
 {
-  if (_initialized)
-  {
-    return;
-  }
-
   _playerRef = &Application::Instance().PlayerInstance;
-
-  _initialized = true;
 }
 
 void SpellsProcessor::ProcessWand(ItemComponent* wand)

@@ -13,7 +13,6 @@
 class Application : public Singleton<Application>
 {
   public:
-    void Init() override;
     void Run();
     void Cleanup();
     void ChangeState(const GameStates& gameStateIndex);
@@ -71,6 +70,9 @@ class Application : public Singleton<Application>
 #endif
 
     uint64_t TurnsPassed = 0;
+
+  protected:
+    void InitSpecific() override;
 
   private:
     GameState* _currentState = nullptr;

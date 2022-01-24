@@ -55,8 +55,6 @@ class Printer : public Singleton<Printer>
     static const int kAlignCenter = 1;
     static const int kAlignRight = 2;
 
-    void Init() override;
-
     std::vector<Position> DrawExplosion(Position pos, int range);
 
     /// Clears framebuffer (ncurses) or renderer (SDL)
@@ -173,6 +171,9 @@ class Printer : public Singleton<Printer>
 
     // NOTE: for debugging purposes
     int ColorsUsed();
+
+  protected:
+    void InitSpecific() override;
 
   private:
     #ifndef USE_SDL

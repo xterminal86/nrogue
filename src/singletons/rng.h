@@ -12,8 +12,6 @@ using SeedString = std::pair<std::string, std::string>;
 class RNG : public Singleton<RNG>
 {
   public:
-    void Init() override;
-
     void SetSeed(size_t seed);
     void SetSeed(const std::string& string);
 
@@ -26,6 +24,9 @@ class RNG : public Singleton<RNG>
     std::mt19937_64 Random;
 
     size_t Seed;
+
+  protected:
+    void InitSpecific() override;
 
   private:
     std::hash<std::string> _hasher;

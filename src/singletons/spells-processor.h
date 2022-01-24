@@ -12,10 +12,11 @@ class ItemComponent;
 class SpellsProcessor : public Singleton<SpellsProcessor>
 {
   public:
-    void Init() override;
-
     void ProcessWand(ItemComponent* wand);
     void ProcessScroll(ItemComponent* scroll);
+
+  protected:
+    void InitSpecific() override;
 
   private:
     void ProcessWandOfLight(ItemComponent* wand);

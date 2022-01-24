@@ -273,10 +273,7 @@ std::vector<std::string> ItemComponent::GetWandInspectionInfo()
 
 void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
 {
-  if (!_allStatNames.empty())
-  {
-    res.push_back("");
-  }
+  res.push_back("");
 
   std::map<StatsEnum, ItemBonusType> bonusByStat =
   {
@@ -288,7 +285,7 @@ void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
     { StatsEnum::SPD, ItemBonusType::SPD }
   };
 
-  for (auto& kvp : _allStatNames)
+  for (auto& kvp : GlobalConstants::AllStatNames)
   {
     int bonus = 0;
     for (auto& b : Data.Bonuses)
@@ -479,7 +476,7 @@ void ItemComponent::AppendStatBonuses(const std::map<ItemBonusType, int>& statBo
       continue;
     }
 
-    std::string name = _bonusNameByType[kvp.first];
+    std::string name = GlobalConstants::BonusNameByType.at(kvp.first);
     auto modStr = Util::StringFormat("%i", kvp.second);
     if (kvp.second > 0)
     {

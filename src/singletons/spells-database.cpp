@@ -1,12 +1,7 @@
 #include "spells-database.h"
 
-void SpellsDatabase::Init()
+void SpellsDatabase::InitSpecific()
 {
-  if (_initialized)
-  {
-    return;
-  }
-
   RegisterSpell({
   SpellType::NONE, "Nothing", "N", 0, { 0, 0 }
                 });
@@ -81,8 +76,6 @@ void SpellsDatabase::Init()
   RegisterSpell({
   SpellType::MANA_SHIELD, "Mana Shield", "MS", 200
                 });
-
-  _initialized = true;
 }
 
 void SpellsDatabase::RegisterSpell(const SpellInfo& i)

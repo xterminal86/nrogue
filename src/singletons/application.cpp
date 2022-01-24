@@ -33,13 +33,8 @@
 #include "dev-console.h"
 #endif
 
-void Application::Init()
+void Application::InitSpecific()
 {
-  if (_initialized)
-  {
-    return;
-  }
-
   PrepareChars();
   InitGraphics();
   InitGameStates();
@@ -56,8 +51,6 @@ void Application::Init()
 
   Printer::Instance().AddMessage("You begin your quest");
   Printer::Instance().AddMessage("Press 'h' for help");
-
-  _initialized = true;
 }
 
 void Application::Run()

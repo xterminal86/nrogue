@@ -9,19 +9,12 @@
 #include "item-component.h"
 #include "item-use-handlers.h"
 
-void ItemsFactory::Init()
+void ItemsFactory::InitSpecific()
 {
-  if (_initialized)
-  {
-    return;
-  }
-
   InitPotionColors();
   InitScrolls();
 
   _playerRef = &Application::Instance().PlayerInstance;
-
-  _initialized = true;
 }
 
 void ItemsFactory::InitPotionColors()

@@ -15,8 +15,6 @@ class DoorComponent;
 class GameObjectsFactory : public Singleton<GameObjectsFactory>
 {
   public:
-    void Init() override;
-
     // For random generation
     GameObject* CreateGameObject(int x, int y, ItemType objType);
     GameObject* CreateMonster(int x, int y, GameObjectType monsterType);
@@ -46,6 +44,9 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
 
     ItemComponent* CloneItem(ItemComponent* copyFrom);
     GameObject* CloneObject(GameObject* copyFrom);
+
+  protected:
+    void InitSpecific() override;
 
   private:
     Player* _playerRef;

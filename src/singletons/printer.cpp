@@ -8,20 +8,13 @@
 size_t Printer::TerminalWidth = 0;
 size_t Printer::TerminalHeight = 0;
 
-void Printer::Init()
+void Printer::InitSpecific()
 {
-  if (_initialized)
-  {
-    return;
-  }
-
 #ifdef USE_SDL
   InitForSDL();
 #else
   InitForCurses();
 #endif
-
-  _initialized = true;
 }
 
 #ifdef USE_SDL

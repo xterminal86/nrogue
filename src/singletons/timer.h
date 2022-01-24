@@ -13,8 +13,6 @@ using Sec = std::chrono::seconds;
 class Timer : public Singleton<Timer>
 {
   public:
-    void Init() override;
-
     const Ns& DeltaTime();
     const Ns& TimePassed();
 
@@ -22,6 +20,9 @@ class Timer : public Singleton<Timer>
 
     void MeasureStart();
     void MeasureEnd();
+
+  protected:
+    void InitSpecific() override;
 
   private:
     // chrono clock now() uses
