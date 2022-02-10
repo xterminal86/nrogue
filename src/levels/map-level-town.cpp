@@ -267,6 +267,14 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
+  ItemBonusStruct bs;
+  bs.BonusValue = 2;
+  bs.Type = ItemBonusType::KNOCKBACK;
+  bs.FromItem = true;
+
+  GameObject* go = ItemsFactory::Instance().CreateWeapon(1, 1, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL, { bs });
+  InsertGameObject(go);
+
   // *** FIXME: debug
 
   /*
@@ -371,71 +379,6 @@ void MapLevelTown::CreateLevel()
 
 void MapLevelTown::BuildRoads()
 {
-  /*
-  std::vector<Position> roadMarks;
-
-  // Build roads
-
-  for (int x = 1; x < MapSize.X - 1; x++)
-  {
-    for (int y = 1; y < MapSize.Y - 1; y++)
-    {
-      // Skip near town gates
-      if ((x == 1 && y == 13) || (x == 1 && y == 14))
-      {
-        continue;
-      }
-
-      Position left  = { x, y - 1 };
-      Position right = { x, y + 1 };
-      Position up    = { x - 1, y };
-      Position down  = { x + 1, y };
-
-      std::vector<Position> tilesToCheck =
-      {
-        left, right, up, down
-      };
-
-      if (StaticMapObjects[x][y] == nullptr && MapArray[x][y]->Image == '.')
-      {
-        for (auto& c : tilesToCheck)
-        {
-          if (StaticMapObjects[c.X][c.Y] != nullptr
-           && StaticMapObjects[c.X][c.Y]->Image == '+')
-          {
-            roadMarks.push_back({ x, y });
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  roadMarks.push_back({ 62, 25 });
-
-  std::sort(roadMarks.begin(),
-            roadMarks.end(),
-            [](const Position& a, const Position& b)
-            {
-              return (a.X <= b.X && a.Y <= b.Y);
-            });
-
-  // Draw roads
-
-  for (auto& c : roadMarks)
-  {
-    GameObjectInfo gi;
-    gi.Set(false, false, '.', Colors::ShadesOfGrey::Ten, Colors::ShadesOfGrey::Eight, "Path");
-
-    MapArray[c.X][c.Y]->MakeTile(gi);
-  }
-
-  for (size_t i = 0; i < roadMarks.size() - 1; i++)
-  {
-    BuildAndDrawRoad(roadMarks[i], roadMarks[i + 1]);
-  }
-  */
-
   // Path from gates
   BuildAndDrawRoad({ 1, 13 }, { 62, 13 });
   BuildAndDrawRoad({ 1, 14 }, { 62, 14 });

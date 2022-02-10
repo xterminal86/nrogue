@@ -28,19 +28,11 @@ MapLevelNether::MapLevelNether(int sizeX, int sizeY, MapType type, int dungeonLe
 
 void MapLevelNether::PrepareMap(MapLevelBase* levelOwner)
 {
+  MysteriousForcePresent = true;
+
   MapLevelBase::PrepareMap(levelOwner);
 
   CreateLevel();
-}
-
-void MapLevelNether::DisplayWelcomeText()
-{
-  std::vector<std::string> msg =
-  {
-    "Nether level description goes here"
-  };
-
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Nether", msg);
 }
 
 void MapLevelNether::CreateLevel()
@@ -136,4 +128,19 @@ void MapLevelNether::ConstructFromBuilder(LevelBuilder& lb)
       }
     }
   }
+}
+
+void MapLevelNether::DisplayWelcomeText()
+{
+  std::vector<std::string> msg =
+  {
+  // ======================================== <- 40
+    "You've been descending for so long now,",
+    "you feel very tired and you fear that",
+    "your mind may be slowly slipping away."
+    "Only one question is left inside your head:",
+    "Will it ever end?..."
+  };
+
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Nether", msg);
 }

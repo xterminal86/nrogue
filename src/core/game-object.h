@@ -53,6 +53,8 @@ class GameObject
     bool MoveTo(int x, int y, bool force = false);
     bool MoveTo(const Position& pos, bool force = false);
 
+    bool CanMoveTo(const Position& pos);
+
     void Draw(const std::string& overrideFgColor = std::string(),
               const std::string& overrideBgColor = std::string());
 
@@ -131,7 +133,7 @@ class GameObject
                        bool isMagical,
                        bool suppressLog = false,
                        const std::string& logMsgOverride = std::string());
-    bool CanMove();
+    bool CanAct();
 
     void FinishTurn();
     void WaitForTurn();
@@ -201,6 +203,7 @@ class GameObject
     void ProcessNaturalRegenMP();
     void ConsumeEnergy();
     void DropItemsHeld();
+    void TileStandingCheck();
 
     bool CanRaiseAttribute(Attribute& attr);
     bool ShouldSkipTurn();

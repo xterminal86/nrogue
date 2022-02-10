@@ -24,6 +24,8 @@ MapLevelEndgame::MapLevelEndgame(int sizeX, int sizeY, MapType type, int dungeon
 
 void MapLevelEndgame::PrepareMap(MapLevelBase* levelOwner)
 {
+  MysteriousForcePresent = true;
+
   MapLevelBase::PrepareMap(levelOwner);
 
   CreateLevel();

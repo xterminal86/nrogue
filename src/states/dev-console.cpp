@@ -292,6 +292,10 @@ void DevConsole::ProcessCommand(const std::string& command,
       DamageActor(params);
       break;
 
+    case DevConsoleCommand::POISON_ACTOR:
+      PoisonActor(params);
+      break;
+
     default:
       StdOut(ErrCmdNotHandled);
       break;
@@ -328,9 +332,9 @@ void DevConsole::TransformTile(const std::vector<std::string>& params)
   int tileTypeInt = std::stoi(tileType);
   GameObjectType newTileType = (GameObjectType)tileTypeInt;
 
-  if (std::find(_validTileTransformTypes.begin(),
-                _validTileTransformTypes.end(),
-                newTileType) == _validTileTransformTypes.end())
+  bool found = (_validTileTransformTypes.count(newTileType) == 1);
+
+  if (!found)
   {
     StdOut(ErrInvalidType);
     return;
@@ -445,7 +449,10 @@ void DevConsole::InfoHandles()
   for (auto& kvp : _handleNameByType)
   {
     std::string spaces(maxLen - kvp.second.length(), ' ');
-    std::string msg = Util::StringFormat("%s%s = 0x%X", kvp.second.data(), spaces.data(), _objectHandles[kvp.first]);
+    std::string msg = Util::StringFormat("%s%s = 0x%X",
+                                         kvp.second.data(),
+                                         spaces.data(),
+                                         _objectHandles[kvp.first]);
     StdOut(msg);
   }
 }
@@ -480,19 +487,10 @@ void DevConsole::CreateMonster(const std::vector<std::string>& params)
   int monsterInd = std::stoi(monsterIndex);
   GameObjectType objType = (GameObjectType)monsterInd;
 
-  auto found = std::find(_monsters.begin(), _monsters.end(), objType);
-  if (found == _monsters.end())
+  bool found = (_monsters.count(objType) == 1);
+  if (!found)
   {
     StdOut(ErrWrongParams);
-
-    std::string output = "Valid types: ";
-    for (auto& i : _monsters)
-    {
-      output += Util::StringFormat("%i ", (int)i);
-    }
-
-    StdOut(output);
-
     return;
   }
 
@@ -759,6 +757,33 @@ void DevConsole::DamageActor(const std::vector<std::string>& params)
   StdOut(Ok);
 }
 
+void DevConsole::PoisonActor(const std::vector<std::string>& params)
+{
+  if (_objectHandles[ObjectHandleType::ACTOR] == nullptr)
+  {
+    StdOut(ErrHandleNotSet);
+    return;
+  }
+
+  std::string n = params[0];
+  if (!StringIsNumbers(n))
+  {
+    StdOut(ErrSyntaxError);
+    return;
+  }
+
+  ItemBonusStruct ibs;
+
+  ibs.Type       = ItemBonusType::POISONED;
+  ibs.Cumulative = true;
+  ibs.BonusValue = -1;
+  ibs.Duration   = -1;
+
+  _objectHandles[ObjectHandleType::ACTOR]->AddEffect(ibs);
+
+  StdOut(Ok);
+}
+
 void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
 {
   if (params.empty())
@@ -776,6 +801,8 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
       {
         StdOut(line);
       }
+
+      PrintAdditionalHelp(_commandTypeByName.at(params[0]));
     }
     else if (params[0] == "commands")
     {
@@ -802,6 +829,20 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
       std::string msg = Util::StringFormat("No help found for '%s'", params[0].data());
       StdOut(msg);
     }
+  }
+}
+
+void DevConsole::PrintAdditionalHelp(DevConsoleCommand command)
+{
+  switch (command)
+  {
+    case DevConsoleCommand::CREATE_MONSTER:
+      PrintMap(_monsters);
+      break;
+
+    case DevConsoleCommand::TRANSFORM_TILE:
+      PrintMap(_validTileTransformTypes);
+      break;
   }
 }
 

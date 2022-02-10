@@ -9,7 +9,12 @@ struct ItemBonusStruct
 {
   ItemBonusType Type = ItemBonusType::NONE;
 
-  // Usually used to add bonus to stats
+  //
+  // Usually used to add bonus to stats.
+  //
+  // In case of lingering damage (like poison or burn),
+  // value must be negative.
+  //
   int BonusValue = 0;
 
   // Whole duration of effect in turns
@@ -22,13 +27,26 @@ struct ItemBonusStruct
   // to determine whether we hit period variable above.
   int EffectCounter = 0;
 
+  // How much certain bonus affects item's cost in shop
   int MoneyCostIncrease = 0;
 
-  bool IsCursed   = false;
-  bool Cumulative = false;
-  bool FromItem   = false;
+  // Unused
+  bool IsCursed = false;
 
+  // Can be stacked if true
+  bool Cumulative = false;
+
+  // Effect is gained from some sort of equipped item
+  // (ring or pendant and such)
+  bool FromItem = false;
+
+  //
+  // We shall use this to monitor active effects and remove them
+  // if necessary (e.g. if item is unequipped, effect must go away)
+  //
   uint64_t Id = 0;
+
+  std::vector<std::string> ToStrings();
 };
 
 // WARNING: possible god object

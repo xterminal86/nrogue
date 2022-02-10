@@ -128,7 +128,7 @@ void Map::UpdateGameObjects()
       }
     }
     // If there are extra turns available, perform them
-    while (go->CanMove());
+    while (go->CanAct());
   }
 
   // If enemy is killed via thorns damage,
@@ -792,6 +792,15 @@ bool Map::TryToDamageObject(GameObject* object,
   }
 
   return success;
+}
+
+bool Map::IsTileDangerous(const Position& pos)
+{
+  GameObjectType tileType = CurrentLevel->MapArray[pos.X][pos.Y]->Type;
+
+  return (tileType == GameObjectType::CHASM
+       || tileType == GameObjectType::DEEP_WATER
+       || tileType == GameObjectType::LAVA);
 }
 
 /// Returns list of cell that can be walked upon

@@ -294,7 +294,11 @@ void MapLevelCaves::DisplayWelcomeText()
   std::vector<std::string> msg =
   {
   // ======================================== <- 40
-    "Caves level description goes here"
+    "It seems there is a complex network of ",
+    "caves located deep down under the mines",
+    "some of which look like catacombs.     ",
+    "Did miners accidentally stubmled upon  ",
+    "them during their mining operations?   "
   };
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Caves of Circe", msg);

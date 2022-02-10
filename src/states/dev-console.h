@@ -2,6 +2,7 @@
 #define DEVCONSOLE_H
 
 #include "gamestate.h"
+#include "util.h"
 
 enum class DevConsoleCommand
 {
@@ -13,6 +14,7 @@ enum class DevConsoleCommand
   GET_STATIC_OBJECT,
   GET_ACTOR,
   GET_ITEM,
+  POISON_ACTOR,
   DAMAGE_ACTOR,
   MOVE_STATIC_OBJECT,
   MOVE_ACTOR,
@@ -83,29 +85,29 @@ class DevConsole : public GameState
       { ObjectHandleType::ITEM,   "_item"   }
     };
 
-    const std::vector<GameObjectType> _validTileTransformTypes =
+    const std::map<GameObjectType, std::string> _validTileTransformTypes =
     {
-      GameObjectType::GROUND,
-      GameObjectType::LAVA,
-      GameObjectType::SHALLOW_WATER,
-      GameObjectType::DEEP_WATER,
-      GameObjectType::CHASM
+      { GameObjectType::GROUND,        "Ground"        },
+      { GameObjectType::LAVA,          "Lava"          },
+      { GameObjectType::SHALLOW_WATER, "Shallow Water" },
+      { GameObjectType::DEEP_WATER,    "Deep Water"    },
+      { GameObjectType::CHASM,         "Chasm"         }
     };
 
-    const std::vector<GameObjectType> _monsters =
+    const std::map<GameObjectType, std::string> _monsters =
     {
-      GameObjectType::RAT,
-      GameObjectType::BAT,
-      GameObjectType::VAMPIRE_BAT,
-      GameObjectType::SPIDER,
-      GameObjectType::SHELOB,
-      GameObjectType::TROLL,
-      GameObjectType::MAD_MINER,
-      GameObjectType::SKELETON,
-      GameObjectType::ZOMBIE,
-      GameObjectType::LICH,
-      GameObjectType::KOBOLD,
-      GameObjectType::HEROBRINE
+      { GameObjectType::RAT,         "Rat"         },
+      { GameObjectType::BAT,         "Bat"         },
+      { GameObjectType::VAMPIRE_BAT, "Vampire Bat" },
+      { GameObjectType::SPIDER,      "Cave Spider" },
+      { GameObjectType::SHELOB,      "Shelob"      },
+      { GameObjectType::TROLL,       "Troll"       },
+      { GameObjectType::MAD_MINER,   "Mad Miner"   },
+      { GameObjectType::SKELETON,    "Skeleton"    },
+      { GameObjectType::ZOMBIE,      "Zombie"      },
+      { GameObjectType::LICH,        "Lich"        },
+      { GameObjectType::KOBOLD,      "Kobold"      },
+      { GameObjectType::HEROBRINE,   "Herobrine"   }
     };
 
     void StdOut(const std::string& str);
@@ -115,6 +117,7 @@ class DevConsole : public GameState
     void ProcessCommand(const std::string& command,
                         const std::vector<std::string>& params);
     void DisplayHelpAboutCommand(const std::vector<std::string>& params);
+    void PrintAdditionalHelp(DevConsoleCommand command);
     void InfoHandles();
     void CreateMonster(const std::vector<std::string>& params);
     void GetObject(const std::vector<std::string>& params,
@@ -124,12 +127,24 @@ class DevConsole : public GameState
     void MovePlayer(const std::vector<std::string>& params);
     void RemoveObject(const std::vector<std::string>& params);
     void DamageActor(const std::vector<std::string>& params);
+    void PoisonActor(const std::vector<std::string>& params);
     void PrintColors();
     void TransformTile(const std::vector<std::string>& params);
 
     bool StringIsNumbers(const std::string& str);
     std::pair<int, int> CoordinateParamsToInt(const std::string& px,
                                               const std::string& py);
+
+    template <typename Map>
+    void PrintMap(const Map& map)
+    {
+      StdOut("Valid types:");
+      for (auto& kvp : map)
+      {
+        std::string str = Util::StringFormat("%i = %s", (int)kvp.first, kvp.second.data());
+        StdOut(str);
+      }
+    }
 
     std::vector<std::string> _allCommandsList;
 
@@ -147,6 +162,7 @@ class DevConsole : public GameState
       { "io_get", DevConsoleCommand::GET_ITEM           },
       { "so_mov", DevConsoleCommand::MOVE_STATIC_OBJECT },
       { "ao_mov", DevConsoleCommand::MOVE_ACTOR         },
+      { "ao_psn", DevConsoleCommand::POISON_ACTOR       },
       { "ao_dmg", DevConsoleCommand::DAMAGE_ACTOR       },
       { "io_mov", DevConsoleCommand::MOVE_ITEM          },
       { "p_mov",  DevConsoleCommand::MOVE_PLAYER        },
@@ -176,6 +192,7 @@ class DevConsole : public GameState
       { "p_ld",   { "Take a level from player" } },
       { "g_pm",   { "Save current map layout to a file" } },
       { "g_pc",   { "Prints colors used so far" } },
+      { "ao_psn", { "Add lingering damage to actor in handle" } },
       {
         "so_get",
         { "so_get [X Y]", "Try to get handle to static object at X Y" }

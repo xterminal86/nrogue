@@ -87,9 +87,8 @@ bool GameObject::Move(int dx, int dy)
   int nx = PosX + dx;
   int ny = PosY + dy;
 
-  bool isBlocked = Map::Instance().CurrentLevel->IsCellBlocking({ nx, ny });
-  bool isOccupied = Map::Instance().CurrentLevel->MapArray[nx][ny]->Occupied;
-  if (!isBlocked && !isOccupied)
+  bool canMoveTo = CanMoveTo({ nx, ny });
+  if (canMoveTo)
   {
     MoveGameObject(dx, dy);
     return true;
@@ -100,9 +99,8 @@ bool GameObject::Move(int dx, int dy)
 
 bool GameObject::MoveTo(int x, int y, bool force)
 {
-  bool isBlocked = Map::Instance().CurrentLevel->IsCellBlocking({ x, y });
-  bool isOccupied = Map::Instance().CurrentLevel->MapArray[x][y]->Occupied;
-  if ((!isBlocked && !isOccupied) || force)
+  bool canMoveTo = CanMoveTo({ x, y });
+  if (canMoveTo || force)
   {
     // When we change level, previous position (PosX and PosY)
     // is pointing to the stairs down on previous level,
@@ -137,6 +135,36 @@ bool GameObject::MoveTo(const Position &pos, bool force)
 {
   //DebugLog("MoveTo(%i;%i)\n\n", pos.X, pos.Y);
   return MoveTo(pos.X, pos.Y, force);
+}
+
+bool GameObject::CanMoveTo(const Position& pos)
+{
+  bool res = true;
+
+  auto curLvl = Map::Instance().CurrentLevel;
+
+  bool isBlocked  = curLvl->IsCellBlocking(pos);
+  bool isOccupied = curLvl->MapArray[pos.X][pos.Y]->Occupied;
+
+  res = (!isBlocked && !isOccupied);
+
+  if (!isBlocked && !isOccupied)
+  {
+    //
+    // Check whether we still can move by levitating over the tile.
+    //
+    auto tileType = curLvl->MapArray[pos.X][pos.Y]->Type;
+
+    bool isDangerous = (tileType == GameObjectType::DEEP_WATER
+                     || tileType == GameObjectType::CHASM
+                     || tileType == GameObjectType::LAVA);
+
+    bool levitating = HasEffect(ItemBonusType::LEVITATION);
+
+    res = (!isDangerous || levitating);
+  }
+
+  return res;
 }
 
 void GameObject::Draw(const std::string& overrideColorFg, const std::string& overrideColorBg)
@@ -248,7 +276,9 @@ bool GameObject::ReceiveDamage(GameObject* from,
     }
   }
 
-  if (!suppressLog)
+  bool tileVisible = Map::Instance().CurrentLevel->MapArray[PosX][PosY]->Visible;
+
+  if (!suppressLog && tileVisible)
   {
     while (!logMessages.empty())
     {
@@ -261,7 +291,7 @@ bool GameObject::ReceiveDamage(GameObject* from,
   return dmgSuccess;
 }
 
-bool GameObject::CanMove()
+bool GameObject::CanAct()
 {
   return (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue);
 }
@@ -323,6 +353,20 @@ int GameObject::GetActionIncrement()
   return actionIncrement;
 }
 
+void GameObject::TileStandingCheck()
+{
+  if (HasEffect(ItemBonusType::LEVITATION) == false)
+  {
+    if (_currentCell->Type == GameObjectType::LAVA
+     || _currentCell->Type == GameObjectType::DEEP_WATER
+     || _currentCell->Type == GameObjectType::CHASM)
+    {
+      Attrs.HP.SetMax(0);
+      Attrs.HP.SetMin(0);
+    }
+  }
+}
+
 bool GameObject::IsAlive()
 {
   return (Attrs.HP.Min().Get() > 0);
@@ -333,6 +377,7 @@ void GameObject::FinishTurn()
   ConsumeEnergy();
   ProcessNaturalRegenHP();
   ProcessNaturalRegenMP();
+  TileStandingCheck();
 
   // Moved to WaitForTurn for GameObjects because otherwise effects processing
   // will be done only once after player has finished his turn.
@@ -743,7 +788,11 @@ void GameObject::MarkAndCreateRemains()
     _levelOwner->InsertGameObject(go);
   }
 
-  DropItemsHeld();
+  bool tileDangerous = Map::Instance().IsTileDangerous({ PosX, PosY });
+  if (!tileDangerous)
+  {
+    DropItemsHeld();
+  }
 
   IsDestroyed = true;
 }
@@ -881,6 +930,21 @@ std::vector<std::string> GameObject::DebugInfo()
   {
     str = Util::StringFormat("    %s", typeid(*kvp.second.get()).name());
     res.push_back(str);
+  }
+
+  str = Util::StringFormat("  Effects: %zu", _activeEffects.size());
+  res.push_back(str);
+
+  for (auto& kvp : _activeEffects)
+  {
+    str = Util::StringFormat("    %lu (%zu):", kvp.first, kvp.second.size());
+    res.push_back(str);
+
+    for (ItemBonusStruct& i : kvp.second)
+    {
+      auto lines = i.ToStrings();
+      res.push_back("      " + lines[0]);
+    }
   }
 
   res.push_back("}");

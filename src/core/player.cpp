@@ -651,9 +651,6 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
                || weapon->Data.ItemType_ == ItemType::WAND);
     }
 
-    int dmg = CalculateDamageValue(weapon, go, isRanged);
-    ProcessAttack(weapon, go, dmg);
-
     AIComponent* aic = go->GetComponent<AIComponent>();
 
     if (aic != nullptr
@@ -662,6 +659,12 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
     {
       int tiles = weapon->Data.GetBonus(ItemBonusType::KNOCKBACK)->BonusValue;
       KnockBack(go, tiles);
+    }
+
+    if (go->IsAlive())
+    {
+      int dmg = CalculateDamageValue(weapon, go, isRanged);
+      ProcessAttack(weapon, go, dmg);
     }
   }
 
@@ -675,37 +678,33 @@ void Player::KnockBack(GameObject* go, int tiles)
 
   Position newPos = { go->PosX, go->PosY };
 
-  bool canBeMoved = false;
-
   for (int i = 1; i <= tiles; i++)
   {
     newPos.X += _attackDir.X;
     newPos.Y += _attackDir.Y;
 
-    if (mapRef[newPos.X][newPos.Y]->Occupied || curLvl->IsCellBlocking(newPos))
+    if (mapRef[newPos.X][newPos.Y]->Occupied
+     || curLvl->IsCellBlocking(newPos))
     {
       break;
     }
 
-    canBeMoved = true;
-  }
+    go->MoveTo(newPos, true);
 
-  if (canBeMoved)
-  {
-    ItemBonusStruct bs;
-    bs.Type = ItemBonusType::PARALYZE;
-    bs.BonusValue = 1;
-    bs.Duration = 1;
-    bs.Id = ObjectId();
-
-    go->AddEffect(bs);
-    go->FinishTurn();
-
-    if (go->IsAlive())
+    if (Map::Instance().IsTileDangerous({ go->PosX, go->PosY }))
     {
-      go->MoveTo(newPos);
+      break;
     }
   }
+
+  ItemBonusStruct bs;
+  bs.Type = ItemBonusType::PARALYZE;
+  bs.BonusValue = 1;
+  bs.Duration = 1;
+  bs.Id = ObjectId();
+
+  go->AddEffect(bs);
+  go->FinishTurn();
 }
 
 void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict)
@@ -1396,6 +1395,7 @@ void Player::FinishTurn()
   ProcessItemsEffects();
   TileStandingCheck();
 
+  //
   // If player killed an enemy but can still make another turn,
   // we must check and remove objects marked for deletion
   // or Application::DrawCurrentState() won't reflect that visually,
@@ -1403,22 +1403,10 @@ void Player::FinishTurn()
   // that should've already been destroyed, as well.
   //
   // Probably bad design anyway but fuck it.
+  //
   Map::Instance().RemoveDestroyed();
 
   Application::Instance().TurnsPassed++;
-}
-
-void Player::TileStandingCheck()
-{
-  if (HasEffect(ItemBonusType::LEVITATION) == false)
-  {
-    if (_currentCell->Type == GameObjectType::LAVA
-     || _currentCell->Type == GameObjectType::CHASM)
-    {
-      Attrs.HP.SetMax(0);
-      Attrs.HP.SetMin(0);
-    }
-  }
 }
 
 void Player::ProcessEffectsPlayer()

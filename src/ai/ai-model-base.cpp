@@ -103,7 +103,7 @@ void AIModelBase::Update()
 
   if (_root)
   {
-    if (!AIComponentRef->OwnerGameObject->CanMove())
+    if (!AIComponentRef->OwnerGameObject->CanAct())
     {
       AIComponentRef->OwnerGameObject->WaitForTurn();
     }
@@ -372,7 +372,7 @@ std::function<BTResult()> AIModelBase::GetPlayerCanMoveCF(const ScriptNode* data
 {
   auto fn = [this]()
   {
-    bool res = _playerRef->CanMove();
+    bool res = _playerRef->CanAct();
     return res ? BTResult::Success : BTResult::Failure;
   };
 

@@ -28,19 +28,11 @@ MapLevelAbyss::MapLevelAbyss(int sizeX, int sizeY, MapType type, int dungeonLeve
 
 void MapLevelAbyss::PrepareMap(MapLevelBase* levelOwner)
 {
+  MysteriousForcePresent = true;
+
   MapLevelBase::PrepareMap(levelOwner);
 
   CreateLevel();
-}
-
-void MapLevelAbyss::DisplayWelcomeText()
-{
-  std::vector<std::string> msg =
-  {
-    "Abyss level description goes here"
-  };
-
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Abyss", msg);
 }
 
 void MapLevelAbyss::CreateLevel()
@@ -139,4 +131,22 @@ void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
       }
     }
   }
+}
+
+void MapLevelAbyss::DisplayWelcomeText()
+{
+  std::vector<std::string> msg =
+  {
+  // ======================================== <- 40
+    "You don't believe your eyes.",
+    "The very image of Hell that lives inside",
+    "the head of any commoner is materialized",
+    "before you.",
+    "Pools of lava, fire and heat, creatures",
+    "of various shapes and sizes that nobody",
+    "ever imagined...",
+    "It doesn't make sense."
+  };
+
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Abyss", msg);
 }

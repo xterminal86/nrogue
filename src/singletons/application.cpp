@@ -59,7 +59,7 @@ void Application::Run()
   {
     Timer::Instance().MeasureStart();
 
-    if (PlayerInstance.CanMove() || !PlayerInstance.IsAlive())
+    if (PlayerInstance.CanAct() || !PlayerInstance.IsAlive())
     {
       // Since change state usually happens in HandleInput(),
       // if it's called before Update() to exit game

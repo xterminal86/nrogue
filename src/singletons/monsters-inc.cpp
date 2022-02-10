@@ -143,6 +143,13 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
     */
   }
 
+  ItemBonusStruct ibs;
+
+  ibs.Type = ItemBonusType::LEVITATION;
+  ibs.Id = go->ObjectId();
+
+  go->AddEffect(ibs);
+
   return go;
 }
 

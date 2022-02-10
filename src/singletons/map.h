@@ -43,6 +43,8 @@ class Map : public Singleton<Map>
                            int amount,
                            bool againstRes);
 
+    bool IsTileDangerous(const Position& pos);
+
     GameObject* GetActorAtPosition(int x, int y);
     GameObject* GetStaticGameObjectAtPosition(int x, int y);
 

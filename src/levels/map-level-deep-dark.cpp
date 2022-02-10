@@ -41,16 +41,6 @@ void MapLevelDeepDark::PrepareMap(MapLevelBase* levelOwner)
   CreateLevel();
 }
 
-void MapLevelDeepDark::DisplayWelcomeText()
-{
-  std::vector<std::string> msg =
-  {
-    "Deep Dark level description goes here"
-  };
-
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Deep Dark", msg);
-}
-
 void MapLevelDeepDark::CreateLevel()
 {
   VisibilityRadius = 3;
@@ -239,3 +229,18 @@ void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
     }
   }
 }
+
+void MapLevelDeepDark::DisplayWelcomeText()
+{
+  std::vector<std::string> msg =
+  {
+  // ======================================== <- 40
+    "This is really surprizing, but it looks",
+    "like Lost City itself continues even",
+    "further deep into the ground.",
+    "The thought makes you feel uneasy though..."
+  };
+
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Deep Dark", msg);
+}
+

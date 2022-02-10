@@ -64,6 +64,7 @@ class MapLevelBase
     bool WelcomeTextDisplayed = false;
     bool Peaceful = false;
     bool ExitFound = false;
+    bool MysteriousForcePresent = false;
 
     void AdjustCamera();
 

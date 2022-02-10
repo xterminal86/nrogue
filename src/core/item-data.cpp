@@ -1,5 +1,7 @@
 #include "item-data.h"
 
+#include "util.h"
+
 bool ItemData::IsWeaponOrArmor()
 {
   bool cond = (ItemType_ == ItemType::WEAPON
@@ -119,4 +121,22 @@ ItemBonusStruct* ItemData::GetBonus(ItemBonusType type)
 bool ItemData::CanBeUsed()
 {
   return (UseCallback.target_type() != typeid(void));
+}
+
+std::vector<std::string> ItemBonusStruct::ToStrings()
+{
+  std::vector<std::string> res;
+
+  res.push_back(Util::StringFormat("Type              = %i", (int)Type));
+  res.push_back(Util::StringFormat("BonusValue        = %i", BonusValue));
+  res.push_back(Util::StringFormat("Duration          = %i", Duration));
+  res.push_back(Util::StringFormat("Period            = %i", Period));
+  res.push_back(Util::StringFormat("EffectCounter     = %i", EffectCounter));
+  res.push_back(Util::StringFormat("MoneyCostIncrease = %i", MoneyCostIncrease));
+  res.push_back(Util::StringFormat("IsCursed          = %i", IsCursed));
+  res.push_back(Util::StringFormat("Cumulative        = %i", Cumulative));
+  res.push_back(Util::StringFormat("FromItem          = %i", FromItem));
+  res.push_back(Util::StringFormat("Id                = %i", Id));
+
+  return res;
 }

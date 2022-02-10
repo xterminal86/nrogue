@@ -670,10 +670,10 @@ void MapLevelMines::DisplayWelcomeText()
   std::vector<std::string> msg =
   {
   // ======================================== <- 40
-    "These mines once were a place of",
-    "work and income for this village.",
-    "Now it's just crumbling tunnels",
-    "with occasional trails and marks here and there",
+    "These mines once were a place of work ",
+    "and income for this village. Now it's ",
+    "just crumbling tunnels with occasional",
+    "signs and markings here and there     ",
     "suggesting human presence in the past."
   };
 
