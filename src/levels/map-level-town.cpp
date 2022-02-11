@@ -269,6 +269,7 @@ void MapLevelTown::CreateLevel()
 
   // *** FIXME: debug
 
+  /*
   ItemBonusStruct bs;
   bs.BonusValue = 2;
   bs.Type = ItemBonusType::KNOCKBACK;
@@ -285,6 +286,7 @@ void MapLevelTown::CreateLevel()
 
   GameObject* dag = ItemsFactory::Instance().CreateWeapon(1, 1, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL, { bs });
   InsertGameObject(dag);
+  */
 
   /*
   ItemBonusStruct b;

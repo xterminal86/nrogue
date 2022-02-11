@@ -381,6 +381,7 @@ std::function<BTResult()> AIModelBase::GetPlayerCanMoveCF(const ScriptNode* data
 
 std::function<BTResult()> AIModelBase::GetD100CF(const ScriptNode* data)
 {
+  //
   // "If a non-reference entity is captured by reference,
   // implicitly or explicitly, and the function call operator
   // of the closure object is invoked after the entity's
@@ -391,7 +392,7 @@ std::function<BTResult()> AIModelBase::GetD100CF(const ScriptNode* data)
   // this pointer."
   //
   // TLDR: cannot capture 'succ', 'range' et al. by reference.
-
+  //
   unsigned int succ = std::stoul(data->Params.at("p2"));
   auto fn = [succ]()
   {

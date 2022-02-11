@@ -378,6 +378,11 @@ bool GameObject::IsOnDangerousTile()
   return res;
 }
 
+bool GameObject::IsOnTile(GameObjectType tileType)
+{
+  return (_currentCell->Type == tileType);
+}
+
 bool GameObject::IsAlive()
 {
   return (Attrs.HP.Min().Get() > 0);

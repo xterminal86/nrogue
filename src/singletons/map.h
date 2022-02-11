@@ -11,7 +11,7 @@
 #include "position.h"
 #include "map-level-base.h"
 
-enum class GameObjectCollection
+enum class GameObjectCollectionType
 {
   STATIC_OBJECTS = 0,
   ITEM_OBJECTS,
@@ -30,7 +30,7 @@ class Map : public Singleton<Map>
 
     void InsertActor(GameObject* actor);
     void InsertGameObject(GameObject* goToInsert);
-    void RemoveDestroyed(GameObjectCollection c = GameObjectCollection::ALL);
+    void RemoveDestroyed(GameObjectCollectionType c = GameObjectCollectionType::ALL);
     void UpdateGameObjects();
 
     void ChangeLevel(MapType levelToChange, bool goingDown);

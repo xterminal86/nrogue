@@ -462,7 +462,7 @@ void MapLevelBase::PlaceChasmTile(int x, int y)
   int img = ' ';
 
 #ifdef USE_SDL
-  img = GlobalConstants::CP437IndexByType[NameCP437::SHADING_1];
+  img = GlobalConstants::CP437IndexByType[NameCP437::SHADING_3];
 
   std::string fgColor = Colors::ShadesOfGrey::Three;
   std::string bgColor = Colors::BlackColor;

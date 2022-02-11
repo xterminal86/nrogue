@@ -1377,7 +1377,15 @@ void Player::FinishTurn()
   ProcessStarvation();
   ProcessEffectsPlayer();
   ProcessItemsEffects();
-  TileStandingCheck();
+
+  //
+  // TODO: can fall through chasms?
+  //
+  if (IsOnTile(GameObjectType::CHASM)
+   || IsOnTile(GameObjectType::LAVA))
+  {
+    Attrs.HP.Reset(0);
+  }
 
   //
   // If player killed an enemy but can still make another turn,

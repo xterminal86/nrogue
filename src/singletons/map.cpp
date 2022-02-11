@@ -250,29 +250,28 @@ MapLevelBase* Map::GetLevelRefByType(MapType type)
   return nullptr;
 }
 
-void Map::RemoveDestroyed(GameObjectCollection c)
+void Map::RemoveDestroyed(GameObjectCollectionType c)
 {
   switch (c)
   {
-    case GameObjectCollection::STATIC_OBJECTS:
+    case GameObjectCollectionType::STATIC_OBJECTS:
       RemoveStaticObjects();
       break;
 
-    case GameObjectCollection::ITEM_OBJECTS:
+    case GameObjectCollectionType::ITEM_OBJECTS:
       EraseFromCollection(CurrentLevel->GameObjects);
       break;
 
-    case GameObjectCollection::ACTORS:
+    case GameObjectCollectionType::ACTORS:
       EraseFromCollection(CurrentLevel->ActorGameObjects);
       break;
 
-    case GameObjectCollection::ALL:
+    case GameObjectCollectionType::ALL:
       RemoveStaticObjects();
       EraseFromCollection(CurrentLevel->GameObjects);
       EraseFromCollection(CurrentLevel->ActorGameObjects);
       break;
   }
-
 }
 
 void Map::RemoveStaticObjects()
