@@ -267,15 +267,24 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
+  // *** FIXME: debug
+
   ItemBonusStruct bs;
   bs.BonusValue = 2;
   bs.Type = ItemBonusType::KNOCKBACK;
   bs.FromItem = true;
 
-  GameObject* go = ItemsFactory::Instance().CreateWeapon(1, 1, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL, { bs });
+  GameObject* go = ItemsFactory::Instance().CreateRangedWeapon(1, 1, RangedWeaponType::XBOW, ItemPrefix::UNCURSED, ItemQuality::NORMAL, { bs });
+  ItemComponent* ic = go->GetComponent<ItemComponent>();
+  ic->Data.Damage.SetMin(1);
+  ic->Data.Damage.SetMax(1);
   InsertGameObject(go);
 
-  // *** FIXME: debug
+  GameObject* bolts = ItemsFactory::Instance().CreateArrows(1, 1, ArrowType::BOLTS, ItemPrefix::UNCURSED, 10);
+  InsertGameObject(bolts);
+
+  GameObject* dag = ItemsFactory::Instance().CreateWeapon(1, 1, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL, { bs });
+  InsertGameObject(dag);
 
   /*
   ItemBonusStruct b;

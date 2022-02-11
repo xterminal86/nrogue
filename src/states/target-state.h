@@ -46,6 +46,7 @@ class TargetState : public GameState
     void ProcessLaser();
     void PrintThrowResult(GameObject* tileRef);
     void DirtyHack();
+    void UpdatePlayerPossibleKnockbackDir();
 
     std::vector<GameObject*> FillObjectsOnTheLine(const std::vector<Position>& line);
 

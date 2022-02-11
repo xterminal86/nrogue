@@ -543,6 +543,8 @@ void TargetState::FireWeapon(bool throwingFromInventory)
     }
   }
 
+  UpdatePlayerPossibleKnockbackDir();
+
   _lastCursorPosition = _cursorPosition;
 
   _drawHint = false;
@@ -575,6 +577,26 @@ void TargetState::FireWeapon(bool throwingFromInventory)
   _playerRef->FinishTurn();
 
   DirtyHack();
+}
+
+void TargetState::UpdatePlayerPossibleKnockbackDir()
+{
+  Position startPoint = { _playerRef->PosX, _playerRef->PosY };
+
+  auto line = Util::BresenhamLine(startPoint, _cursorPosition);
+  if (!line.empty())
+  {
+    auto& last       = line[line.size() - 1];
+    auto& beforeLast = line[line.size() - 2];
+
+    Position dir =
+    {
+      last.X - beforeLast.X,
+      last.Y - beforeLast.Y
+    };
+
+    _playerRef->SetKnockBackDir(dir);
+  }
 }
 
 void TargetState::DirtyHack()

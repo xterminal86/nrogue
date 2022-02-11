@@ -11,9 +11,6 @@ class TimedDestroyerComponent : public Component
     void Update() override;
 
     int Time;
-
-  private:
-    bool _dangerFlag = false;
 };
 
 #endif // GOTIMEDDESTROYER_H

@@ -103,7 +103,7 @@ void AttackState::HandleInput()
 
   if (dirSet)
   {
-    _playerRef->_attackDir = _dir;
+    _playerRef->SetAttackDir(_dir);
 
     // Check actors first
     auto res = Map::Instance().GetActorAtPosition(_cursorPosition.X, _cursorPosition.Y);

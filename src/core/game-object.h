@@ -154,8 +154,11 @@ class GameObject
                        const std::function<bool()>& condition,
                        const std::function<void()>& handler);
 
+    void CheckPerish();
+
     bool HasEffect(const ItemBonusType& e);
     bool IsAlive();
+    bool IsOnDangerousTile();
 
     const std::map<uint64_t, std::vector<ItemBonusStruct>>& Effects();
 

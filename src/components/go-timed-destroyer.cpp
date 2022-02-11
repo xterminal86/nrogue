@@ -16,23 +16,4 @@ void TimedDestroyerComponent::Update()
   {
     OwnerGameObject->IsDestroyed = true;
   }
-
-  // FIXME: doesn't show, check RemoveDestroyed() calls
-  //
-  //
-  // Show remains on dangerous tile
-  // for 1 update for visual cue in case of knock back to lava.
-  //
-  bool danger = Map::Instance().IsTileDangerous({ OwnerGameObject->PosX, OwnerGameObject->PosY });
-  if (danger)
-  {
-    if (!_dangerFlag)
-    {
-      _dangerFlag = true;
-    }
-    else
-    {
-      OwnerGameObject->IsDestroyed = true;
-    }
-  }
 }

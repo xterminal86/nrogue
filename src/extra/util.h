@@ -113,6 +113,11 @@ namespace Util
                                const std::string& fgColor,
                                const std::string& bgColor);
 
+  extern void KnockBack(GameObject* sender,
+                        GameObject* receiver,
+                        const Position& attackDir,
+                        int tiles);
+
   extern CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map);
 
   extern std::string GetItemInventoryColor(const ItemData& data);
@@ -130,6 +135,8 @@ namespace Util
   extern size_t FindLongestStringLength(const std::vector<std::string>& list);
 
   extern std::vector<Position> GetAreaDamagePointsFrom(const Position& from, int range);
+
+  extern Position InvertDirection(const Position& dir);
 
   // ===========================================================================
 

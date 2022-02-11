@@ -15,6 +15,9 @@ struct ItemBonusStruct
   // In case of lingering damage (like poison or burn),
   // value must be negative.
   //
+  // Must not be 0 or bonus won't be added unless 'force' flag
+  // is true in ItemsFactory::AddBonusToItem().
+  //
   int BonusValue = 0;
 
   // Whole duration of effect in turns
@@ -23,8 +26,10 @@ struct ItemBonusStruct
   // Number of turns after which effect action occurs
   int Period = -1;
 
+  //
   // Internal variable to count number of turns passed
   // to determine whether we hit period variable above.
+  //
   int EffectCounter = 0;
 
   // How much certain bonus affects item's cost in shop
@@ -36,8 +41,10 @@ struct ItemBonusStruct
   // Can be stacked if true
   bool Cumulative = false;
 
+  //
   // Effect is gained from some sort of equipped item
   // (ring or pendant and such)
+  //
   bool FromItem = false;
 
   //

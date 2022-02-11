@@ -64,6 +64,9 @@ class Player : public GameObject
     void RememberItem(ItemComponent* itemRef, const std::string& effect);
     void AddExtraItems();
 
+    void SetAttackDir(const Position& dir);
+    void SetKnockBackDir(const Position& dir);
+
     bool HasSkill(PlayerSkills skillToCheck);
     bool AreEnemiesInRange();
     bool RecallItem(ItemComponent* itemRef);
@@ -97,7 +100,7 @@ class Player : public GameObject
     void ProcessKill(GameObject* monster);
 
     void ProcessStarvation();
-    void ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict);
+    void ProcessMeleeAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict);
     void ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int damage, bool againstRes);
     void ProcessTeleport(GameObject* target, ItemComponent* weapon);
 
@@ -129,8 +132,6 @@ class Player : public GameObject
     int _useIdentifiedMapSortingIndex = 0;
 
     std::vector<std::string> GetPrettyLevelUpText();
-
-    void KnockBack(GameObject* go, int tiles);
 
     std::string ProcessMagicalDamage(GameObject* from, int& amount);
     std::string ProcessPhysicalDamage(GameObject* from, int& amount);
@@ -185,9 +186,9 @@ class Player : public GameObject
     };
 
     Position _attackDir;
+    Position _knockBackDir;
 
     friend class SpellsProcessor;
-    friend class AttackState;
     friend class ServiceState;
     friend class InfoState;
 };

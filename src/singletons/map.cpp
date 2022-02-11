@@ -250,10 +250,33 @@ MapLevelBase* Map::GetLevelRefByType(MapType type)
   return nullptr;
 }
 
-void Map::RemoveDestroyed()
+void Map::RemoveDestroyed(GameObjectCollection c)
 {
-  // Check if static objects need to be destroyed
+  switch (c)
+  {
+    case GameObjectCollection::STATIC_OBJECTS:
+      RemoveStaticObjects();
+      break;
 
+    case GameObjectCollection::ITEM_OBJECTS:
+      EraseFromCollection(CurrentLevel->GameObjects);
+      break;
+
+    case GameObjectCollection::ACTORS:
+      EraseFromCollection(CurrentLevel->ActorGameObjects);
+      break;
+
+    case GameObjectCollection::ALL:
+      RemoveStaticObjects();
+      EraseFromCollection(CurrentLevel->GameObjects);
+      EraseFromCollection(CurrentLevel->ActorGameObjects);
+      break;
+  }
+
+}
+
+void Map::RemoveStaticObjects()
+{
   int playerX = Application::Instance().PlayerInstance.PosX;
   int playerY = Application::Instance().PlayerInstance.PosY;
 
@@ -272,12 +295,6 @@ void Map::RemoveDestroyed()
       CurrentLevel->StaticMapObjects[cell.X][cell.Y].reset(nullptr);
     }
   }
-
-  // Check if globally updated objects need to be destroyed
-  EraseFromCollection(CurrentLevel->GameObjects);
-
-  // Check if actors need to be destroyed
-  EraseFromCollection(CurrentLevel->ActorGameObjects);
 }
 
 void Map::ChangeLevel(MapType levelToChange, bool goingDown)

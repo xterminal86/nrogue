@@ -355,21 +355,40 @@ int GameObject::GetActionIncrement()
 
 void GameObject::TileStandingCheck()
 {
+  if (IsOnDangerousTile())
+  {
+    Attrs.HP.Reset(0);
+  }
+}
+
+bool GameObject::IsOnDangerousTile()
+{
+  bool res = false;
+
   if (HasEffect(ItemBonusType::LEVITATION) == false)
   {
     if (_currentCell->Type == GameObjectType::LAVA
      || _currentCell->Type == GameObjectType::DEEP_WATER
      || _currentCell->Type == GameObjectType::CHASM)
     {
-      Attrs.HP.SetMax(0);
-      Attrs.HP.SetMin(0);
+      res = true;
     }
   }
+
+  return res;
 }
 
 bool GameObject::IsAlive()
 {
   return (Attrs.HP.Min().Get() > 0);
+}
+
+void GameObject::CheckPerish()
+{
+  if (!IsAlive())
+  {
+    MarkAndCreateRemains();
+  }
 }
 
 void GameObject::FinishTurn()
@@ -383,10 +402,7 @@ void GameObject::FinishTurn()
   // will be done only once after player has finished his turn.
   //ProcessEffects();
 
-  if (!IsAlive())
-  {
-    MarkAndCreateRemains();
-  }
+  CheckPerish();
 }
 
 void GameObject::ConsumeEnergy()
@@ -781,16 +797,19 @@ void GameObject::EffectAction(const ItemBonusStruct& e)
 
 void GameObject::MarkAndCreateRemains()
 {
-  // Destroying remains should not spawn another remains.
-  if (Type != GameObjectType::REMAINS)
-  {
-    auto go = GameObjectsFactory::Instance().CreateRemains(this);
-    _levelOwner->InsertGameObject(go);
-  }
-
+  //
+  // Loot is not created on dangerous tiles
+  //
   bool tileDangerous = Map::Instance().IsTileDangerous({ PosX, PosY });
   if (!tileDangerous)
   {
+    // Destroying remains should not spawn another remains.
+    if (Type != GameObjectType::REMAINS)
+    {
+      auto go = GameObjectsFactory::Instance().CreateRemains(this);
+      _levelOwner->InsertGameObject(go);
+    }
+
     DropItemsHeld();
   }
 

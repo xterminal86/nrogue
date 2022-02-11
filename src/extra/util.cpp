@@ -124,8 +124,9 @@ namespace Util
          && py >= ly && py <= hy);
   }
 
-  // *** https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c
-
+  //
+  // https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c
+  //
   bool IsBase64(unsigned char c)
   {
     auto res = std::find(Strings::Base64Chars.begin(),
@@ -1122,6 +1123,73 @@ namespace Util
     }
   }
 
+  void KnockBack(GameObject* sender,
+                 GameObject* receiver,
+                 const Position& attackDir,
+                 int tiles)
+  {
+    auto& mapRef = Map::Instance().CurrentLevel->MapArray;
+    auto curLvl = Map::Instance().CurrentLevel;
+
+    Position newPos = { receiver->PosX, receiver->PosY };
+
+    int attackDirClampedX = Clamp(attackDir.X, -1, 1);
+    int attackDirClampedY = Clamp(attackDir.Y, -1, 1);
+
+    for (int i = 1; i <= tiles; i++)
+    {
+      //
+      // If attack dir is not defined for some reason,
+      // don't do any movement.
+      //
+      if (attackDirClampedX == 0
+       && attackDirClampedY == 0)
+      {
+        DebugLog("Knockback direction is zero!");
+        break;
+      }
+
+      newPos.X += attackDirClampedX;
+      newPos.Y += attackDirClampedY;
+
+      if (mapRef[newPos.X][newPos.Y]->Occupied
+       || curLvl->IsCellBlocking(newPos))
+      {
+        break;
+      }
+
+      receiver->MoveTo(newPos, true);
+
+      Application::Instance().ForceDrawCurrentState();
+
+      //
+      // Ground units should perish on dangerous tiles.
+      //
+      bool isFlying = receiver->HasEffect(ItemBonusType::LEVITATION);
+      bool danger   = Map::Instance().IsTileDangerous({ receiver->PosX, receiver->PosY });
+      if (!isFlying && danger)
+      {
+        Application::Instance().DisplayAttack(receiver, GlobalConstants::DisplayAttackDelayMs, std::string());
+        receiver->Attrs.HP.Reset(0);
+        break;
+      }
+    }
+
+    //
+    // Knocked back units are stunned
+    //
+
+    ItemBonusStruct bs;
+
+    bs.Type       = ItemBonusType::PARALYZE;
+    bs.BonusValue = 1;
+    bs.Duration   = tiles * 2;
+    bs.Id         = sender->ObjectId();
+
+    receiver->AddEffect(bs);
+    receiver->CheckPerish();
+  }
+
   std::vector<Position> GetAreaDamagePointsFrom(const Position& from, int range)
   {
     std::vector<Position> res;
@@ -1198,5 +1266,10 @@ namespace Util
     }
 
     return res;
+  }
+
+  Position InvertDirection(const Position& dir)
+  {
+    return { -dir.X, -dir.Y };
   }
 }

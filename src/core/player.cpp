@@ -375,6 +375,16 @@ void Player::SetCustomClassAttrs()
   ccs->InitPlayerAttributes(this);
 }
 
+void Player::SetAttackDir(const Position& dir)
+{
+  _attackDir = dir;
+}
+
+void Player::SetKnockBackDir(const Position& dir)
+{
+  _knockBackDir = dir;
+}
+
 void Player::SetDefaultEquipment()
 {
   EquipmentByCategory[EquipmentCategory::HEAD]   = { nullptr };
@@ -476,12 +486,6 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   // If it's not the ground GameObject
   if (what->Type != GameObjectType::GROUND)
   {
-    bool succ = what->ReceiveDamage(this, dmg, false);
-    if (succ && weapon->Data.HasBonus(ItemBonusType::LEECH) && what->IsLiving)
-    {
-      Attrs.HP.AddMin(dmg);
-    }
-
     AIComponent* aic = what->GetComponent<AIComponent>();
 
     if (aic != nullptr
@@ -489,12 +493,26 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
      && weapon->Data.HasBonus(ItemBonusType::KNOCKBACK))
     {
       int tiles = weapon->Data.GetBonus(ItemBonusType::KNOCKBACK)->BonusValue;
-      KnockBack(what, tiles);
+      Util::KnockBack(this, what, _knockBackDir, tiles);
     }
 
-    if (what->IsDestroyed)
+    //
+    // KnockBack() could set receiver HP to 0
+    //
+    if (what->IsAlive())
     {
-      ProcessKill(what);
+      bool succ = what->ReceiveDamage(this, dmg, false);
+      if (succ
+       && weapon->Data.HasBonus(ItemBonusType::LEECH)
+       && what->IsLiving)
+      {
+        Attrs.HP.AddMin(dmg);
+      }
+
+      if (what->IsDestroyed)
+      {
+        ProcessKill(what);
+      }
     }
   }
   else if (what->Type != GameObjectType::DEEP_WATER
@@ -657,57 +675,25 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
      && weapon != nullptr
      && weapon->Data.HasBonus(ItemBonusType::KNOCKBACK))
     {
+      _knockBackDir = _attackDir;
       int tiles = weapon->Data.GetBonus(ItemBonusType::KNOCKBACK)->BonusValue;
-      KnockBack(go, tiles);
+      Util::KnockBack(this, go, _knockBackDir, tiles);
     }
 
+    //
+    // KnockBack() could set receiver HP to 0
+    //
     if (go->IsAlive())
     {
       int dmg = CalculateDamageValue(weapon, go, isRanged);
-      ProcessAttack(weapon, go, dmg);
+      ProcessMeleeAttack(weapon, go, dmg);
     }
   }
 
   Attrs.Hunger += Attrs.HungerSpeed.Get() * 2;
 }
 
-void Player::KnockBack(GameObject* go, int tiles)
-{
-  auto& mapRef = Map::Instance().CurrentLevel->MapArray;
-  auto curLvl = Map::Instance().CurrentLevel;
-
-  Position newPos = { go->PosX, go->PosY };
-
-  for (int i = 1; i <= tiles; i++)
-  {
-    newPos.X += _attackDir.X;
-    newPos.Y += _attackDir.Y;
-
-    if (mapRef[newPos.X][newPos.Y]->Occupied
-     || curLvl->IsCellBlocking(newPos))
-    {
-      break;
-    }
-
-    go->MoveTo(newPos, true);
-
-    if (Map::Instance().IsTileDangerous({ go->PosX, go->PosY }))
-    {
-      break;
-    }
-  }
-
-  ItemBonusStruct bs;
-  bs.Type = ItemBonusType::PARALYZE;
-  bs.BonusValue = 1;
-  bs.Duration = 1;
-  bs.Id = ObjectId();
-
-  go->AddEffect(bs);
-  go->FinishTurn();
-}
-
-void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict)
+void Player::ProcessMeleeAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict)
 {
   bool shouldTearDownWall = false;
   bool hasLeech = false;
@@ -737,10 +723,8 @@ void Player::ProcessAttack(ItemComponent* weapon, GameObject* defender, int dama
     }
   }
 
-  // NOTE: set object type to HARMLESS during instantiation
-  // to avoid it being pickaxed away.
   //
-  // GameObject default type is HARMLESS.
+  // GameObject default type is HARMLESS to avoid it being pickaxed away.
   //
   bool canBeTearedDown = (defender->Type == GameObjectType::PICKAXEABLE);
   bool isWallOnBorder  = IsGameObjectBorder(defender);

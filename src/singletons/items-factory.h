@@ -83,10 +83,18 @@ class ItemsFactory : public Singleton<ItemsFactory>
     GameObject* CreateRandomGlass();
     GameObject* CreateGemHelper(GemType t, ItemQuality quality = ItemQuality::RANDOM);
 
-    void AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map<ItemBonusType, int>& bonusWeightByType);
-    void TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne = false);
-    void AddRandomBonusToItem(ItemComponent* itemRef, ItemBonusType bonusType);
-    void AddBonusToItem(ItemComponent* itemRef, const ItemBonusStruct& bonusData, bool forceAdd = false);
+    void AdjustBonusWeightsMapForItem(ItemComponent* itemRef,
+                                      std::map<ItemBonusType, int>& bonusWeightByType);
+
+    void TryToAddBonusesToItem(ItemComponent* itemRef,
+                               bool atLeastOne = false);
+
+    void AddRandomBonusToItem(ItemComponent* itemRef,
+                              ItemBonusType bonusType);
+
+    void AddBonusToItem(ItemComponent* itemRef,
+                        const ItemBonusStruct& bonusData,
+                        bool forceAdd = false);
 
     void InitPotionColors();
     void InitScrolls();
@@ -94,7 +102,10 @@ class ItemsFactory : public Singleton<ItemsFactory>
     void SetPotionImage(GameObject* go);
 
     void SetItemName(GameObject* go, ItemData& itemData);
-    void SetMagicItemName(ItemComponent* itemRef, const std::vector<ItemBonusType>& bonusesRolled);
+
+    void SetMagicItemName(ItemComponent* itemRef,
+                          const std::vector<ItemBonusType>& bonusesRolled);
+
     void BUCQualityAdjust(ItemData& itemData);
 
     bool ProcessItemEquiption(ItemComponent* item);
