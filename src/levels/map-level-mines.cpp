@@ -394,7 +394,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
         {
           GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, DoorMaterials::WOOD);
 
-          if (Util::Rolld100(15))
+          if (Util::Rolld100(10))
           {
             DoorComponent* dc = door->GetComponent<DoorComponent>();
             dc->OpenedBy = GlobalConstants::OpenedByNobody;

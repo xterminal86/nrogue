@@ -138,14 +138,11 @@ void MapLevelAbyss::DisplayWelcomeText()
   std::vector<std::string> msg =
   {
   // ======================================== <- 40
-    "You don't believe your eyes.",
-    "The very image of Hell that lives inside",
-    "the head of any commoner is materialized",
-    "before you.",
-    "Pools of lava, fire and heat, creatures",
-    "of various shapes and sizes that nobody",
-    "ever imagined...",
-    "It doesn't make sense."
+    "Now your surroundings are changed into  ",
+    "shades of grey. Spacious chambers with  ",
+    "darkness for the ceiling, ashen floors  ",
+    "and walls incur feelings of sorrow,     ",
+    "despair and oblivion.                   "
   };
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Abyss", msg);

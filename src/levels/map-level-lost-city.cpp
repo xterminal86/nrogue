@@ -159,18 +159,18 @@ void MapLevelLostCity::DisplayWelcomeText()
 {
   std::vector<std::string> msg =
   {
-  // ============================================ <- 44
-    "You certainly heard rumors about a city that",
-    "was buried somewhere deep underground upon  ",
-    "which current City is built.                ",
-    "Some even say that back in the past it was  ",
-    "all one giant city, but then for some reason",
-    "part of it was abandoned and over time sunk ",
-    "into the ground. Since nobody knows whether ",
-    "it had a name or whether it even existed,   ",
-    "people refer to it as just 'Lost City'.     ",
-    "Nobody took its existence seriously,        ",
-    "but here you are, standing in its halls.    "
+  // =============================================== <- 47
+    "You certainly heard rumors about a settlement  ",
+    "that was buried somewhere deep underground upon",
+    "which current City is built. Some even say that",
+    "back in the past it was all one giant residence",
+    "but then for some reason parts of it were      ",
+    "abandoned and over time sunk into the ground.  ",
+    "Since nobody knows whether it had a name or    ",
+    "whether it even existed, people refer to it    ",
+    "as just 'Lost City'.                           ",
+    "Nobody took its existence seriously,           ",
+    "but here you are, standing in its halls.       "
   };
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Lost City", msg);

@@ -135,11 +135,13 @@ void MapLevelNether::DisplayWelcomeText()
   std::vector<std::string> msg =
   {
   // ======================================== <- 40
-    "You've been descending for so long now,",
-    "you feel very tired and you fear that",
-    "your mind may be slowly slipping away."
-    "Only one question is left inside your head:",
-    "Will it ever end?..."
+    "You don't believe your eyes.             ",
+    "The very image of Hell that lives inside ",
+    "the head of any commoner is materialized ",
+    "before you. Pools of lava, fire and heat,",
+    "creatures of various shapes and sizes    ",
+    "that nobody ever imagined...             ",
+    "What is this place?"
   };
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Nether", msg);

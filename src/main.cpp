@@ -71,6 +71,7 @@ int main(int argc, char* argv[])
   Logger::Instance().Prepare(printLog);
 
   auto str = Util::StringFormat("World seed is %lu", RNG::Instance().Seed);
+  DebugLog("%s", str.data());
   Logger::Instance().Print(str);
 
   GameObjectsFactory::Instance().Init();

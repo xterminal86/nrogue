@@ -535,7 +535,7 @@ namespace GlobalConstants
   {
     "TAMAM SHUD",
     "GACHIMUCHI",
-    "XYNTA",
+    "XYETA",
     "ZA WARUDO",
     "ZELGO MER",
     "LOREM IPSUM",

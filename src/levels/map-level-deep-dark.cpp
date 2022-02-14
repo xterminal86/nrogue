@@ -235,10 +235,13 @@ void MapLevelDeepDark::DisplayWelcomeText()
   std::vector<std::string> msg =
   {
   // ======================================== <- 40
-    "This is really surprizing, but it looks",
-    "like Lost City itself continues even",
-    "further deep into the ground.",
-    "The thought makes you feel uneasy though..."
+    "This is really surprizing, but it looks   ",
+    "like Lost City itself continues even      ",
+    "further deep into the ground.             ",
+    "The thought makes you feel uneasy though, ",
+    "as if history is repeating itself with    ",
+    "the miners town above, preparing for it   ",
+    "the same fate as befallen the Lost City..."
   };
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Deep Dark", msg);
