@@ -57,13 +57,16 @@ bool ContainerComponent::Add(GameObject* object)
       Contents.push_back(std::unique_ptr<GameObject>(object));
     }
   }
-  else
+
+#ifdef DEBUG_BUILD
+  if (object == nullptr)
   {
     std::string msg = "Trying to add nullptr to inventory!";
     Printer::Instance().AddMessage(msg);
     Logger::Instance().Print(msg, true);
     DebugLog("%s\n", msg.data());
   }
+#endif
 
   return foundStack;
 }

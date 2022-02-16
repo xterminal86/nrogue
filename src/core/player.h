@@ -52,15 +52,11 @@ class Player : public GameObject
 
     std::string Name = "Nameless One";
 
-    std::map<EquipmentCategory, std::vector<ItemComponent*>> EquipmentByCategory;
-
     void AwardExperience(int amount);
     void LevelUpSilent();
     void LevelUp(int baseHpOverride = -1) override;
     void LevelDown();
 
-    void ApplyBonuses(ItemComponent* itemRef);
-    void UnapplyBonuses(ItemComponent* itemRef);
     void RememberItem(ItemComponent* itemRef, const std::string& effect);
     void AddExtraItems();
 
@@ -121,9 +117,6 @@ class Player : public GameObject
     bool IsGameObjectBorder(GameObject* go);
 
     bool DamageArmor(GameObject* from, int amount);
-
-    void ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
-    void UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
 
     int GetDamageAbsorbtionValue(bool magic);
     std::vector<ItemComponent*> GetItemsWithBonus(const ItemBonusType& bonusType);

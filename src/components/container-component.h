@@ -23,9 +23,9 @@ class ContainerComponent : public Component
 
     std::vector<std::unique_ptr<GameObject>> Contents;
 
-    size_t MaxCapacity = 0;
-
     bool CanBeOpened = true;
+
+    size_t MaxCapacity = 0;
 };
 
 #endif // CONTAINERCOMPONENT_H

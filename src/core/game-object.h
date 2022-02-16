@@ -95,6 +95,12 @@ class GameObject
 
     void Update();
 
+    void ApplyBonuses(ItemComponent* itemRef);
+    void UnapplyBonuses(ItemComponent* itemRef);
+
+    void ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
+    void UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
+
     Attribute VisibilityRadius;
 
     int PosX = 0;
@@ -162,6 +168,8 @@ class GameObject
     bool IsOnTile(GameObjectType tileType);
 
     const std::map<uint64_t, std::vector<ItemBonusStruct>>& Effects();
+
+    std::map<EquipmentCategory, std::vector<ItemComponent*>> EquipmentByCategory;
 
     uint64_t ObjectId();
 

@@ -6,6 +6,7 @@
 #include "printer.h"
 #include "logger.h"
 #include "door-component.h"
+#include "map.h"
 
 MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
 {
@@ -173,10 +174,17 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
 
   while (itemsCreated < maxItems)
   {
+    itemsCreated++;
+
     int index = RNG::Instance().RandomRange(0, _emptyCells.size());
 
     int x = _emptyCells[index].X;
     int y = _emptyCells[index].Y;
+
+    if (!IsSpotValidForSpawn({ x, y }))
+    {
+      continue;
+    }
 
     // NOTE: Not all objects may be added to the factory yet,
     // so check against nullptr is needed.
@@ -184,7 +192,6 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
     if (go != nullptr)
     {
       InsertGameObject(go);
-      itemsCreated++;
     }
   }
 }
@@ -296,6 +303,8 @@ bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
 {
   bool blocked  = IsCellBlocking(pos);
   bool occupied = false;
+  bool danger   = Map::Instance().IsTileDangerous(pos);
+
   for (auto& i : ActorGameObjects)
   {
     if (i->PosX == pos.X && i->PosY == pos.Y)
@@ -305,7 +314,7 @@ bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
     }
   }
 
-  return (!blocked && !occupied);
+  return (!blocked && !occupied && !danger);
 }
 
 void MapLevelBase::TryToSpawnMonsters()
@@ -325,7 +334,7 @@ void MapLevelBase::TryToSpawnMonsters()
 
   std::vector<Position> positions;
 
-  int attempts = 20;
+  int attempts = 3;
 
   for (int i = 0; i < attempts; i++)
   {
@@ -340,8 +349,7 @@ void MapLevelBase::TryToSpawnMonsters()
 
     // Spawn monsters on cells invisible to the player
     if (!MapArray[cx][cy]->Visible
-     && !MapArray[cx][cy]->Occupied
-     && !MapArray[cx][cy]->Blocking)
+     && IsSpotValidForSpawn({ cx, cy }))
     {
       auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
       auto monster = GameObjectsFactory::Instance().CreateMonster(cx, cy, res.first);
