@@ -492,7 +492,7 @@ void MainState::ProcessRangedWeapon()
 
   // TODO: wands in both hands?
 
-  ItemComponent* weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  ItemComponent* weapon = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::WEAPON][0];
   if (weapon != nullptr)
   {
     if (weapon->Data.ItemType_ == ItemType::WAND)
@@ -516,7 +516,7 @@ void MainState::ProcessRangedWeapon()
 
 void MainState::ProcessWeapon(ItemComponent* weapon)
 {
-  ItemComponent* arrows = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+  ItemComponent* arrows = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::SHIELD][0];
   if (arrows != nullptr)
   {
     bool isBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::SHORT_BOW
@@ -768,7 +768,7 @@ void MainState::DisplayHungerStatus(const int& startPos)
 
 void MainState::DisplayWeaponCondition(const int& startPos)
 {
-  ItemComponent* weapon = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  ItemComponent* weapon = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::WEAPON][0];
   if (weapon != nullptr &&
      (weapon->Data.ItemType_ == ItemType::WEAPON
    || weapon->Data.ItemType_ == ItemType::RANGED_WEAPON))
@@ -785,7 +785,7 @@ void MainState::DisplayWeaponCondition(const int& startPos)
 
 void MainState::DisplayArmorCondition(const int& startPos)
 {
-  ItemComponent* armor = _playerRef->EquipmentByCategory[EquipmentCategory::TORSO][0];
+  ItemComponent* armor = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::TORSO][0];
   if (armor != nullptr && armor->Data.ItemType_ == ItemType::ARMOR)
   {
     int maxDur = armor->Data.Durability.Max().Get();
@@ -800,7 +800,7 @@ void MainState::DisplayArmorCondition(const int& startPos)
 
 void MainState::DisplayAmmoCondition(const int& startPos)
 {
-  ItemComponent* arrows = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+  ItemComponent* arrows = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::SHIELD][0];
   if (arrows != nullptr && arrows->Data.ItemType_ == ItemType::ARROWS)
   {
     int amount = arrows->Data.Amount;

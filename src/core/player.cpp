@@ -387,14 +387,6 @@ void Player::SetKnockBackDir(const Position& dir)
 
 void Player::SetDefaultEquipment()
 {
-  EquipmentByCategory[EquipmentCategory::HEAD]   = { nullptr };
-  EquipmentByCategory[EquipmentCategory::NECK]   = { nullptr };
-  EquipmentByCategory[EquipmentCategory::TORSO]  = { nullptr };
-  EquipmentByCategory[EquipmentCategory::BOOTS]  = { nullptr };
-  EquipmentByCategory[EquipmentCategory::WEAPON] = { nullptr };
-  EquipmentByCategory[EquipmentCategory::SHIELD] = { nullptr };
-  EquipmentByCategory[EquipmentCategory::RING]   = { nullptr, nullptr };
-
   std::vector<GameObject*> weaponAndArmorToEquip;
 
   GameObject* weapon = nullptr;
@@ -478,8 +470,8 @@ void Player::SetDefaultEquipment()
 /// 'what' is either actor or GameObject, 'with' is a weapon (i.e. arrow)
 void Player::RangedAttack(GameObject* what, ItemComponent* with)
 {
-  ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
-  ItemComponent* arrows = EquipmentByCategory[EquipmentCategory::SHIELD][0];
+  ItemComponent* weapon = Equipment.EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  ItemComponent* arrows = Equipment.EquipmentByCategory[EquipmentCategory::SHIELD][0];
 
   int dmg = CalculateDamageValue(with, what, false);
 
@@ -520,7 +512,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
         || what->Type != GameObjectType::CHASM)
   {
     // Create arrow object on the cell where it landed
-    ItemComponent* arrow = GameObjectsFactory::Instance().CloneItem(EquipmentByCategory[EquipmentCategory::SHIELD][0]);
+    ItemComponent* arrow = GameObjectsFactory::Instance().CloneItem(Equipment.EquipmentByCategory[EquipmentCategory::SHIELD][0]);
     arrow->OwnerGameObject->PosX = what->PosX;
     arrow->OwnerGameObject->PosY = what->PosY;
     arrow->Data.Amount = 1;
@@ -660,7 +652,7 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
   else
   {
     Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "", Colors::RedColor);
-    ItemComponent* weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
+    ItemComponent* weapon = Equipment.EquipmentByCategory[EquipmentCategory::WEAPON][0];
 
     bool isRanged = false;
     if (weapon != nullptr)
@@ -993,7 +985,7 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
 
 bool Player::DamageArmor(GameObject* from, int amount)
 {
-  ItemComponent* armor = EquipmentByCategory[EquipmentCategory::TORSO][0];
+  ItemComponent* armor = Equipment.EquipmentByCategory[EquipmentCategory::TORSO][0];
   if (armor != nullptr)
   {
     if (armor->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE))
@@ -1471,9 +1463,9 @@ void Player::ProcessHunger()
   // Check only rings and amulet
   std::vector<ItemComponent*> ringsAndAmuletRefs =
   {
-    EquipmentByCategory[EquipmentCategory::RING][0],
-    EquipmentByCategory[EquipmentCategory::RING][1],
-    EquipmentByCategory[EquipmentCategory::NECK][0],
+    Equipment.EquipmentByCategory[EquipmentCategory::RING][0],
+    Equipment.EquipmentByCategory[EquipmentCategory::RING][1],
+    Equipment.EquipmentByCategory[EquipmentCategory::NECK][0],
   };
 
   for (auto& ref : ringsAndAmuletRefs)
@@ -1626,7 +1618,7 @@ void Player::SetDefaultSkills()
 
 bool Player::WeaponLosesDurability()
 {
-  auto weapon = EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  auto weapon = Equipment.EquipmentByCategory[EquipmentCategory::WEAPON][0];
 
   if (weapon->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE))
   {
@@ -1670,7 +1662,7 @@ void Player::BreakItem(ItemComponent* ic, bool suppressMessage)
     }
   }
 
-  EquipmentByCategory[ec][0] = nullptr;
+  Equipment.EquipmentByCategory[ec][0] = nullptr;
 }
 
 void Player::SwitchPlaces(AIComponent* other)
@@ -1873,7 +1865,7 @@ int Player::GetDamageAbsorbtionValue(bool magic)
 
   ItemBonusType t = magic ? ItemBonusType::MAG_ABSORB : ItemBonusType::DMG_ABSORB;
 
-  for (auto& kvp : EquipmentByCategory)
+  for (auto& kvp : Equipment.EquipmentByCategory)
   {
     for (ItemComponent* item : kvp.second)
     {
@@ -1892,7 +1884,7 @@ std::vector<ItemComponent*> Player::GetItemsWithBonus(const ItemBonusType& bonus
 {
   std::vector<ItemComponent*> res;
 
-  for (auto& item : EquipmentByCategory)
+  for (auto& item : Equipment.EquipmentByCategory)
   {
     for (auto& e : item.second)
     {

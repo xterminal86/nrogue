@@ -61,8 +61,10 @@ class GameObject
     template <typename T>
     inline T* AddComponent()
     {
-      // NOTE: No check for component already added.
-      // Do we need one?
+      if (_components.count(typeid(T).hash_code()) == 1)
+      {
+        return static_cast<T*>(_components[typeid(T).hash_code()].get());
+      }
 
       std::unique_ptr<T> cp = std::make_unique<T>();
 
@@ -71,9 +73,7 @@ class GameObject
       // cp is null after std::move
       _components[typeid(T).hash_code()] = std::move(cp);
 
-      auto pointer = _components[typeid(T).hash_code()].get();
-
-      return static_cast<T*>(pointer);
+      return static_cast<T*>(_components[typeid(T).hash_code()].get());
     }
 
     template <typename T>
@@ -83,8 +83,7 @@ class GameObject
       {
         if (c.second.get()->GetComponentHash() == typeid(T).hash_code())
         {
-          auto pointer = c.second.get();
-          return static_cast<T*>(pointer);
+          return static_cast<T*>(c.second.get());
         }
       }
 
@@ -168,8 +167,6 @@ class GameObject
     bool IsOnTile(GameObjectType tileType);
 
     const std::map<uint64_t, std::vector<ItemBonusStruct>>& Effects();
-
-    std::map<EquipmentCategory, std::vector<ItemComponent*>> EquipmentByCategory;
 
     uint64_t ObjectId();
 

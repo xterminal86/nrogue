@@ -192,8 +192,8 @@ void ServiceState::BlessItem(const ServiceInfo& si)
   // There can be two rings
   if (si.ItemComponentRef->Data.EqCategory == EquipmentCategory::RING)
   {
-    auto leftHand = _playerRef->EquipmentByCategory[EquipmentCategory::RING][0];
-    auto rightHand = _playerRef->EquipmentByCategory[EquipmentCategory::RING][1];
+    auto leftHand = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::RING][0];
+    auto rightHand = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::RING][1];
 
     if (leftHand == si.ItemComponentRef || rightHand == si.ItemComponentRef)
     {
@@ -202,7 +202,7 @@ void ServiceState::BlessItem(const ServiceInfo& si)
   }
   else
   {
-    equippedItem = _playerRef->EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
+    equippedItem = _playerRef->Equipment.EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
   }
 
   // If item to be blessed is actually equipped, do the shuffle below.

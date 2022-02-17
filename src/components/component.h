@@ -17,7 +17,7 @@ class Component
     // Called after player finishes his turn
     virtual void Update() = 0;
 
-    size_t GetComponentHash();
+    const size_t& GetComponentHash();
 
     // Automatically assigned in GameObject::AddComponent()
     GameObject* OwnerGameObject;

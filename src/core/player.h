@@ -11,6 +11,7 @@
 #include "constants.h"
 #include "game-object.h"
 #include "container-component.h"
+#include "equipment-component.h"
 #include "item-component.h"
 #include "position.h"
 #include "potential-field.h"
@@ -48,7 +49,12 @@ class Player : public GameObject
 
     bool IsAlive();
 
+    //
+    // These are always present on Player,
+    // so just instantiate them without AddComponent()
+    //
     ContainerComponent Inventory;
+    EquipmentComponent Equipment;
 
     std::string Name = "Nameless One";
 

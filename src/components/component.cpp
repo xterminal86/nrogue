@@ -7,7 +7,7 @@ Component::Component()
   _componentHash = typeid(*this).hash_code();
 }
 
-size_t Component::GetComponentHash()
+const size_t& Component::GetComponentHash()
 {
   return _componentHash;
 }

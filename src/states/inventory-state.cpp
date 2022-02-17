@@ -290,28 +290,28 @@ void InventoryState::DisplayEquipment()
 
   ItemComponent* eq = nullptr;
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::HEAD][0];
+  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::HEAD][0];
   DrawEquipmentField(tw + 10, yPos, "Head", eq);
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::NECK][0];
+  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::NECK][0];
   DrawEquipmentField(tw + 24, yPos, "Neck", eq);
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::TORSO][0];
+  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::TORSO][0];
   DrawEquipmentField(tw + 10, yPos + 3, "Armor", eq);
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::BOOTS][0];
+  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::BOOTS][0];
   DrawEquipmentField(tw + 10, yPos + 6, "Boots", eq);
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::WEAPON][0];
   DrawEquipmentField(tw - 4, yPos + 3, "Hand", eq);
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::SHIELD][0];
   DrawEquipmentField(tw - 4, yPos + 6, "Hand", eq);
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::RING][0];
+  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::RING][0];
   DrawEquipmentField(tw + 24, yPos + 3, "Accessory", eq);
 
-  eq = _playerRef->EquipmentByCategory[EquipmentCategory::RING][1];
+  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::RING][1];
   DrawEquipmentField(tw + 24, yPos + 6, "Accessory", eq);
 }
 

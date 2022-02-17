@@ -531,6 +531,32 @@ void GameObject::DropItemsHeld()
       ic->Transfer();
       ic->OwnerGameObject->PosX = PosX;
       ic->OwnerGameObject->PosY = PosY;
+
+      /*
+      //
+      // If item was equipped, remove reference to it.
+      //
+      // If object is to be destroyed, we (theoretically)
+      // don't need to access its equipment slots and it will
+      // be destroyed without problems during Map::RemoveDestroyed()
+      // since EquipmentCategory just stores pointers
+      // without owning them, but better be safe than sorry.
+      //
+      if (ic->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE)
+      {
+        if (EquipmentByCategory.count(ic->Data.EqCategory) == 1)
+        {
+          for (auto& slot : EquipmentByCategory[ic->Data.EqCategory])
+          {
+            if (slot == ic)
+            {
+              slot = nullptr;
+              break;
+            }
+          }
+        }
+      }
+      */
     }
   }
 }

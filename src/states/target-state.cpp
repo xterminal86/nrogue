@@ -962,7 +962,7 @@ int TargetState::CalculateHitChance()
 
     chance = CalculateChance(startPoint, endPoint, baseChance);
 
-    ItemPrefix ammoPrefix = _playerRef->EquipmentByCategory[EquipmentCategory::SHIELD][0]->Data.Prefix;
+    ItemPrefix ammoPrefix = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::SHIELD][0]->Data.Prefix;
     switch (ammoPrefix)
     {
       case ItemPrefix::BLESSED:
