@@ -49,10 +49,6 @@ class Player : public GameObject
 
     bool IsAlive();
 
-    //
-    // These are always present on Player,
-    // so just instantiate them without AddComponent()
-    //
     ContainerComponent* Inventory;
     EquipmentComponent* Equipment;
 
