@@ -297,7 +297,7 @@ void Application::WriteObituary(bool wasKilled)
 size_t Application::SavePossessions(std::stringstream& ss)
 {
   size_t stringResizeWidth = 0;
-  for (auto& i : PlayerInstance.Inventory.Contents)
+  for (auto& i : PlayerInstance.Inventory->Contents)
   {
     ItemComponent* ic = i->GetComponent<ItemComponent>();
     std::string name = ic->Data.IdentifiedName;
@@ -307,7 +307,7 @@ size_t Application::SavePossessions(std::stringstream& ss)
     }
   }
 
-  for (auto& i : PlayerInstance.Inventory.Contents)
+  for (auto& i : PlayerInstance.Inventory->Contents)
   {
     ItemComponent* ic = i->GetComponent<ItemComponent>();
 

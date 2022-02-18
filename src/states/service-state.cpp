@@ -192,8 +192,8 @@ void ServiceState::BlessItem(const ServiceInfo& si)
   // There can be two rings
   if (si.ItemComponentRef->Data.EqCategory == EquipmentCategory::RING)
   {
-    auto leftHand = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::RING][0];
-    auto rightHand = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::RING][1];
+    auto leftHand = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][0];
+    auto rightHand = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][1];
 
     if (leftHand == si.ItemComponentRef || rightHand == si.ItemComponentRef)
     {
@@ -202,7 +202,7 @@ void ServiceState::BlessItem(const ServiceInfo& si)
   }
   else
   {
-    equippedItem = _playerRef->Equipment.EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
+    equippedItem = _playerRef->Equipment->EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
   }
 
   // If item to be blessed is actually equipped, do the shuffle below.
@@ -325,7 +325,7 @@ void ServiceState::FillItemsForBlessing()
   _serviceInfoByChar.clear();
 
   int itemIndex = 0;
-  for (auto& item : _playerRef->Inventory.Contents)
+  for (auto& item : _playerRef->Inventory->Contents)
   {
     ItemComponent* ic = item->GetComponent<ItemComponent>();
 
@@ -410,7 +410,7 @@ void ServiceState::FillItemsForIdentify()
   _serviceInfoByChar.clear();
 
   int itemIndex = 0;
-  for (auto& item : _playerRef->Inventory.Contents)
+  for (auto& item : _playerRef->Inventory->Contents)
   {
     ItemComponent* ic = item->GetComponent<ItemComponent>();
     if (ic->Data.IsIdentified)
@@ -441,7 +441,7 @@ void ServiceState::FillItemsForRepair()
   _serviceInfoByChar.clear();
 
   int itemIndex = 0;
-  for (auto& item : _playerRef->Inventory.Contents)
+  for (auto& item : _playerRef->Inventory->Contents)
   {
     ItemComponent* ic = item->GetComponent<ItemComponent>();
     if (!ic->Data.IsWeaponOrArmor() || !ic->Data.RepairNeeded())

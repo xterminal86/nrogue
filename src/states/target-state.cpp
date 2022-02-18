@@ -681,15 +681,15 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
 
     if (_weaponRef->Data.Amount == 0)
     {
-      auto it = _playerRef->Inventory.Contents.begin();
-      _playerRef->Inventory.Contents.erase(it + _throwingItemInventoryIndex);
+      auto it = _playerRef->Inventory->Contents.begin();
+      _playerRef->Inventory->Contents.erase(it + _throwingItemInventoryIndex);
     }
   }
   else
   {
     if (tileOk)
     {
-      GameObject* item = _playerRef->Inventory.Contents[_throwingItemInventoryIndex].release();
+      GameObject* item = _playerRef->Inventory->Contents[_throwingItemInventoryIndex].release();
 
       // See comments in InventoryState::DropItem()
       item->SetLevelOwner(Map::Instance().CurrentLevel);
@@ -704,8 +704,8 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
       PrintThrowResult(mapRef[x][y].get());
     }
 
-    auto it = _playerRef->Inventory.Contents.begin();
-    _playerRef->Inventory.Contents.erase(it + _throwingItemInventoryIndex);
+    auto it = _playerRef->Inventory->Contents.begin();
+    _playerRef->Inventory->Contents.erase(it + _throwingItemInventoryIndex);
   }
 }
 
@@ -962,7 +962,7 @@ int TargetState::CalculateHitChance()
 
     chance = CalculateChance(startPoint, endPoint, baseChance);
 
-    ItemPrefix ammoPrefix = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::SHIELD][0]->Data.Prefix;
+    ItemPrefix ammoPrefix = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0]->Data.Prefix;
     switch (ammoPrefix)
     {
       case ItemPrefix::BLESSED:

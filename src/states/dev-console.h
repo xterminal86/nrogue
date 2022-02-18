@@ -21,6 +21,7 @@ enum class DevConsoleCommand
   MOVE_ACTOR,
   MOVE_ITEM,
   MOVE_PLAYER,
+  REPORT_PLAYER,
   REMOVE_OBJECT,
   LEVEL_UP,
   LEVEL_DOWN,
@@ -67,6 +68,8 @@ class DevConsole : public GameState
 
     int _cursorX = 1;
     int _cursorY = 2;
+
+    bool _closedByCommand = false;
 
     const size_t _maxHistory = 20;
 
@@ -136,7 +139,8 @@ class DevConsole : public GameState
     void PrintColors();
     void TransformTile(const std::vector<std::string>& params);
     void GetObjectByAddress(const std::vector<std::string>& params);
-    void PrintDebugInfo(ObjectHandleType type);
+    void ReportHandleDebugInfo(ObjectHandleType type);
+    void PrintDebugInfo(const std::vector<std::string>& debugInfo);
 
     bool StringIsNumbers(const std::string& str);
     std::pair<int, int> CoordinateParamsToInt(const std::string& px,
@@ -178,6 +182,7 @@ class DevConsole : public GameState
       { "o_del",  DevConsoleCommand::REMOVE_OBJECT      },
       { "p_lu",   DevConsoleCommand::LEVEL_UP           },
       { "p_ld",   DevConsoleCommand::LEVEL_DOWN         },
+      { "p_info", DevConsoleCommand::REPORT_PLAYER      },
       { "g_pm",   DevConsoleCommand::PRINT_MAP          },
       { "g_pc",   DevConsoleCommand::PRINT_COLORS       },
       { "g_cm",   DevConsoleCommand::CREATE_MONSTER     },
@@ -200,6 +205,7 @@ class DevConsole : public GameState
       { "exit",   { "Close the console"        } },
       { "p_lu",   { "Give player a level"      } },
       { "p_ld",   { "Take a level from player" } },
+      { "p_info", { "Print debug info about player" } },
       { "g_pm",   { "Save current map layout to a file" } },
       { "g_pc",   { "Prints colors used so far" } },
       { "g_go",   { "g_go 0x%X", "Get game object by address (slow!)" } },

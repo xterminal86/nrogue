@@ -16,7 +16,7 @@ void ShoppingState::Init()
 void ShoppingState::Prepare()
 {
   _inventoryItemIndex = 0;
-  _playerSide = (!_playerRef->Inventory.IsEmpty());
+  _playerSide = (!_playerRef->Inventory->IsEmpty());
 }
 
 void ShoppingState::PassShopOwner(TraderComponent* tc)
@@ -47,7 +47,7 @@ void ShoppingState::HandleInput()
     case ALT_K4:
     case NUMPAD_4:
     {
-      if (!_playerRef->Inventory.IsEmpty())
+      if (!_playerRef->Inventory->IsEmpty())
       {
         _playerSide = true;
       }
@@ -154,9 +154,9 @@ void ShoppingState::DisplayPlayerInventory()
 
   std::string costString;
 
-  int itemStringTotalLen = GetItemStringTotalLen(_playerRef->Inventory.Contents);
+  int itemStringTotalLen = GetItemStringTotalLen(_playerRef->Inventory->Contents);
 
-  for (auto& item : _playerRef->Inventory.Contents)
+  for (auto& item : _playerRef->Inventory->Contents)
   {
     ItemComponent* ic = item->GetComponent<ItemComponent>();
 
@@ -312,7 +312,7 @@ void ShoppingState::CheckIndexLimits()
 
   if (_playerSide)
   {
-    invSize = _playerRef->Inventory.Contents.size() - 1;
+    invSize = _playerRef->Inventory->Contents.size() - 1;
   }
   else
   {
@@ -364,7 +364,7 @@ std::string ShoppingState::GetItemExtraInfo(ItemComponent* item)
 
 void ShoppingState::BuyOrSellItem()
 {
-  if (_playerRef->Inventory.IsEmpty()
+  if (_playerRef->Inventory->IsEmpty()
    && _shopOwner->Items.empty())
   {
     return;
@@ -372,7 +372,7 @@ void ShoppingState::BuyOrSellItem()
 
   if (_playerSide)
   {
-    auto go = _playerRef->Inventory.Contents[_inventoryItemIndex].get();
+    auto go = _playerRef->Inventory->Contents[_inventoryItemIndex].get();
     ItemComponent* ic = go->GetComponent<ItemComponent>();
 
     if (ic->Data.IsEquipped)
@@ -397,8 +397,8 @@ void ShoppingState::BuyOrSellItem()
 
     _playerRef->Money += cost;
 
-    auto it = _playerRef->Inventory.Contents.begin();
-    _playerRef->Inventory.Contents.erase(it + _inventoryItemIndex);
+    auto it = _playerRef->Inventory->Contents.begin();
+    _playerRef->Inventory->Contents.erase(it + _inventoryItemIndex);
   }
   else
   {
@@ -422,7 +422,7 @@ void ShoppingState::BuyOrSellItem()
       ic->Data.IsIdentified = true;
     }
 
-    ic->Transfer(&_playerRef->Inventory);
+    ic->Transfer(_playerRef->Inventory);
 
     auto it = _shopOwner->Items.begin();
     _shopOwner->Items.erase(it + _inventoryItemIndex);
@@ -433,7 +433,7 @@ void ShoppingState::BuyOrSellItem()
 
 void ShoppingState::CheckSide()
 {
-  if (_playerSide && _playerRef->Inventory.IsEmpty())
+  if (_playerSide && _playerRef->Inventory->IsEmpty())
   {
     _playerSide = false;
   }
@@ -455,7 +455,7 @@ bool ShoppingState::CanBeBought(ItemComponent *ic)
                                            Colors::MessageBoxRedBorderColor);
     return false;
   }
-  else if (_playerRef->Inventory.IsFull())
+  else if (_playerRef->Inventory->IsFull())
   {
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
                                            Strings::MessageBoxEpicFailHeaderText,
@@ -502,7 +502,7 @@ int ShoppingState::GetCost(ItemComponent* ic, bool playerSide)
 
 void ShoppingState::ShowItemInfo()
 {
-  if (_playerRef->Inventory.IsEmpty()
+  if (_playerRef->Inventory->IsEmpty()
    && _shopOwner->Items.empty())
   {
     return;
@@ -512,7 +512,7 @@ void ShoppingState::ShowItemInfo()
 
   if (_playerSide)
   {
-    auto go = _playerRef->Inventory.Contents[_inventoryItemIndex].get();
+    auto go = _playerRef->Inventory->Contents[_inventoryItemIndex].get();
     ic = go->GetComponent<ItemComponent>();
   }
   else

@@ -70,7 +70,7 @@ BTResult TaskAttackBasic::Run()
 
   _objectToControl->FinishTurn();
 
-  ItemComponent* armor = playerRef.Equipment.EquipmentByCategory[EquipmentCategory::TORSO][0];
+  ItemComponent* armor = playerRef.Equipment->EquipmentByCategory[EquipmentCategory::TORSO][0];
 
   _attackResult.Success = result;
   _attackResult.HasArmor = (armor != nullptr);

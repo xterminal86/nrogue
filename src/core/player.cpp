@@ -27,7 +27,10 @@ void Player::Init()
   FgColor = Colors::PlayerColor;
   Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
-  Inventory.MaxCapacity = GlobalConstants::InventoryMaxSize;
+  Inventory = AddComponent<ContainerComponent>();
+  Equipment = AddComponent<EquipmentComponent>();
+
+  Inventory->MaxCapacity = GlobalConstants::InventoryMaxSize;
 
   SetAttributes();
   SetDefaultItems();
@@ -397,13 +400,13 @@ void Player::SetDefaultEquipment()
     case PlayerClass::THIEF:
     {
       weapon = ItemsFactory::Instance().CreateRangedWeapon(0, 0, RangedWeaponType::SHORT_BOW, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
-      Inventory.Add(weapon);
+      Inventory->Add(weapon);
 
       GameObject* arrows = ItemsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::BLESSED, 60);
-      Inventory.Add(arrows);
+      Inventory->Add(arrows);
 
       GameObject* dagger = ItemsFactory::Instance().CreateWeapon(0, 0, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
-      Inventory.Add(dagger);
+      Inventory->Add(dagger);
 
       weaponAndArmorToEquip.push_back(arrows);
       weaponAndArmorToEquip.push_back(weapon);
@@ -413,10 +416,10 @@ void Player::SetDefaultEquipment()
     case PlayerClass::SOLDIER:
     {
       weapon = ItemsFactory::Instance().CreateWeapon(0, 0, WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
-      Inventory.Add(weapon);
+      Inventory->Add(weapon);
 
       armor = ItemsFactory::Instance().CreateArmor(0, 0, ArmorType::PADDING, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
-      Inventory.Add(armor);
+      Inventory->Add(armor);
 
       weaponAndArmorToEquip.push_back(weapon);
       weaponAndArmorToEquip.push_back(armor);
@@ -426,10 +429,10 @@ void Player::SetDefaultEquipment()
     case PlayerClass::ARCANIST:
     {
       weapon = ItemsFactory::Instance().CreateWeapon(0, 0, WeaponType::STAFF, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
-      Inventory.Add(weapon);
+      Inventory->Add(weapon);
 
       auto wand = ItemsFactory::Instance().CreateWand(0, 0, WandMaterials::EBONY_3, SpellType::MAGIC_MISSILE, ItemPrefix::BLESSED, ItemQuality::NORMAL);
-      Inventory.Add(wand);
+      Inventory->Add(wand);
 
       weaponAndArmorToEquip.push_back(weapon);
     }
@@ -438,19 +441,19 @@ void Player::SetDefaultEquipment()
     case PlayerClass::CUSTOM:
     {
       weapon = ItemsFactory::Instance().CreateRandomWeapon();
-      Inventory.Add(weapon);
+      Inventory->Add(weapon);
 
       armor = ItemsFactory::Instance().CreateRandomArmor();
-      Inventory.Add(armor);
+      Inventory->Add(armor);
 
       auto acc = ItemsFactory::Instance().CreateRandomAccessory(0, 0);
-      Inventory.Add(acc);
+      Inventory->Add(acc);
 
       auto potion = ItemsFactory::Instance().CreateRandomPotion();
-      Inventory.Add(potion);
+      Inventory->Add(potion);
 
       auto gem = ItemsFactory::Instance().CreateGem(0, 0);
-      Inventory.Add(gem);
+      Inventory->Add(gem);
     }
     break;
   }
@@ -470,8 +473,8 @@ void Player::SetDefaultEquipment()
 /// 'what' is either actor or GameObject, 'with' is a weapon (i.e. arrow)
 void Player::RangedAttack(GameObject* what, ItemComponent* with)
 {
-  ItemComponent* weapon = Equipment.EquipmentByCategory[EquipmentCategory::WEAPON][0];
-  ItemComponent* arrows = Equipment.EquipmentByCategory[EquipmentCategory::SHIELD][0];
+  ItemComponent* weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  ItemComponent* arrows = Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0];
 
   int dmg = CalculateDamageValue(with, what, false);
 
@@ -512,7 +515,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
         || what->Type != GameObjectType::CHASM)
   {
     // Create arrow object on the cell where it landed
-    ItemComponent* arrow = GameObjectsFactory::Instance().CloneItem(Equipment.EquipmentByCategory[EquipmentCategory::SHIELD][0]);
+    ItemComponent* arrow = GameObjectsFactory::Instance().CloneItem(Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0]);
     arrow->OwnerGameObject->PosX = what->PosX;
     arrow->OwnerGameObject->PosY = what->PosY;
     arrow->Data.Amount = 1;
@@ -652,7 +655,7 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
   else
   {
     Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "", Colors::RedColor);
-    ItemComponent* weapon = Equipment.EquipmentByCategory[EquipmentCategory::WEAPON][0];
+    ItemComponent* weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
 
     bool isRanged = false;
     if (weapon != nullptr)
@@ -985,7 +988,7 @@ void Player::ReceiveDamage(GameObject* from, int amount, bool isMagical, bool go
 
 bool Player::DamageArmor(GameObject* from, int amount)
 {
-  ItemComponent* armor = Equipment.EquipmentByCategory[EquipmentCategory::TORSO][0];
+  ItemComponent* armor = Equipment->EquipmentByCategory[EquipmentCategory::TORSO][0];
   if (armor != nullptr)
   {
     if (armor->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE))
@@ -1411,9 +1414,9 @@ void Player::ProcessEffectsPlayer()
     if (Util::Rolld100(50))
     {
       // One-time deletion, can leave "forward" loop iteration
-      for (size_t i = 0; i < Inventory.Contents.size(); i++)
+      for (size_t i = 0; i < Inventory->Contents.size(); i++)
       {
-        ItemComponent* ic = Inventory.Contents[i]->GetComponent<ItemComponent>();
+        ItemComponent* ic = Inventory->Contents[i]->GetComponent<ItemComponent>();
         if (ic != nullptr)
         {
           if (ic->Data.IsBurnable)
@@ -1421,7 +1424,7 @@ void Player::ProcessEffectsPlayer()
             std::string objName = ic->Data.IsIdentified ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
             auto str = Util::StringFormat("%s burns up!", objName.data());
             Printer::Instance().AddMessage(str);
-            Inventory.Contents.erase(Inventory.Contents.begin() + i);
+            Inventory->Contents.erase(Inventory->Contents.begin() + i);
             break;
           }
         }
@@ -1463,9 +1466,9 @@ void Player::ProcessHunger()
   // Check only rings and amulet
   std::vector<ItemComponent*> ringsAndAmuletRefs =
   {
-    Equipment.EquipmentByCategory[EquipmentCategory::RING][0],
-    Equipment.EquipmentByCategory[EquipmentCategory::RING][1],
-    Equipment.EquipmentByCategory[EquipmentCategory::NECK][0],
+    Equipment->EquipmentByCategory[EquipmentCategory::RING][0],
+    Equipment->EquipmentByCategory[EquipmentCategory::RING][1],
+    Equipment->EquipmentByCategory[EquipmentCategory::NECK][0],
   };
 
   for (auto& ref : ringsAndAmuletRefs)
@@ -1502,7 +1505,7 @@ void Player::ProcessHunger()
 
 void Player::ProcessItemsEffects()
 {
-  for (auto& item : Inventory.Contents)
+  for (auto& item : Inventory->Contents)
   {
     ItemComponent* ic = item->GetComponent<ItemComponent>();
     if (ic != nullptr)
@@ -1554,18 +1557,18 @@ void Player::SetSoldierDefaultItems()
   ItemComponent* ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 3;
 
-  Inventory.Add(go);
+  Inventory->Add(go);
 
   go = ItemsFactory::Instance().CreateFood(0, 0, FoodType::IRON_RATIONS, ItemPrefix::UNCURSED);
   ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 1;
   ic->Data.IsIdentified = true;
 
-  Inventory.Add(go);
+  Inventory->Add(go);
 
   go = ItemsFactory::Instance().CreateRepairKit(0, 0, 30, ItemPrefix::BLESSED);
 
-  Inventory.Add(go);
+  Inventory->Add(go);
 }
 
 void Player::SetThiefDefaultItems()
@@ -1573,10 +1576,10 @@ void Player::SetThiefDefaultItems()
   Money = 500;
 
   auto go = ItemsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
-  Inventory.Add(go);
+  Inventory->Add(go);
 
   go = ItemsFactory::Instance().CreateManaPotion(ItemPrefix::UNCURSED);
-  Inventory.Add(go);
+  Inventory->Add(go);
 }
 
 void Player::SetArcanistDefaultItems()
@@ -1588,13 +1591,13 @@ void Player::SetArcanistDefaultItems()
   ItemComponent* ic = static_cast<ItemComponent*>(c);
   ic->Data.Amount = 5;
 
-  Inventory.Add(go);
+  Inventory->Add(go);
 
   go = ItemsFactory::Instance().CreateReturner(0, 0, 3, ItemPrefix::UNCURSED);
-  Inventory.Add(go);
+  Inventory->Add(go);
 
   go = ItemsFactory::Instance().CreateScroll(0, 0, SpellType::MANA_SHIELD, ItemPrefix::BLESSED);
-  Inventory.Add(go);
+  Inventory->Add(go);
 }
 
 void Player::SetDefaultSkills()
@@ -1618,7 +1621,7 @@ void Player::SetDefaultSkills()
 
 bool Player::WeaponLosesDurability()
 {
-  auto weapon = Equipment.EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  auto weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
 
   if (weapon->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE))
   {
@@ -1649,20 +1652,20 @@ void Player::BreakItem(ItemComponent* ic, bool suppressMessage)
   EquipmentCategory ec = ic->Data.EqCategory;
 
   // One-time deletion, can leave "forward" loop iteration
-  for (size_t i = 0; i < Inventory.Contents.size(); i++)
+  for (size_t i = 0; i < Inventory->Contents.size(); i++)
   {
-    auto c = Inventory.Contents[i]->GetComponent<ItemComponent>();
+    auto c = Inventory->Contents[i]->GetComponent<ItemComponent>();
     ItemComponent* ic = static_cast<ItemComponent*>(c);
 
     if (ic->Data.ItemTypeHash == typeHash && ic->Data.IsEquipped)
     {
       UnapplyBonuses(ic);
-      Inventory.Contents.erase(Inventory.Contents.begin() + i);
+      Inventory->Contents.erase(Inventory->Contents.begin() + i);
       break;
     }
   }
 
-  Equipment.EquipmentByCategory[ec][0] = nullptr;
+  Equipment->EquipmentByCategory[ec][0] = nullptr;
 }
 
 void Player::SwitchPlaces(AIComponent* other)
@@ -1751,7 +1754,7 @@ void Player::AddExtraItems()
       };
 
       go = ItemsFactory::Instance().CreateNote("Wanted Poster", text);
-      Inventory.Add(go);
+      Inventory->Add(go);
     }
     break;
 
@@ -1772,7 +1775,7 @@ void Player::AddExtraItems()
       };
 
       go = ItemsFactory::Instance().CreateNote("Leave Warrant", text);
-      Inventory.Add(go);
+      Inventory->Add(go);
     }
     break;
 
@@ -1796,7 +1799,7 @@ void Player::AddExtraItems()
       };
 
       go = ItemsFactory::Instance().CreateNote("Orders", text);
-      Inventory.Add(go);
+      Inventory->Add(go);
     }
     break;
   }
@@ -1865,7 +1868,7 @@ int Player::GetDamageAbsorbtionValue(bool magic)
 
   ItemBonusType t = magic ? ItemBonusType::MAG_ABSORB : ItemBonusType::DMG_ABSORB;
 
-  for (auto& kvp : Equipment.EquipmentByCategory)
+  for (auto& kvp : Equipment->EquipmentByCategory)
   {
     for (ItemComponent* item : kvp.second)
     {
@@ -1884,7 +1887,7 @@ std::vector<ItemComponent*> Player::GetItemsWithBonus(const ItemBonusType& bonus
 {
   std::vector<ItemComponent*> res;
 
-  for (auto& item : Equipment.EquipmentByCategory)
+  for (auto& item : Equipment->EquipmentByCategory)
   {
     for (auto& e : item.second)
     {

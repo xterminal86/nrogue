@@ -2557,7 +2557,7 @@ bool ItemsFactory::ProcessItemEquiption(ItemComponent* item)
 {
   bool res = true;
 
-  auto itemEquipped = _playerRef->Equipment.EquipmentByCategory[item->Data.EqCategory][0];
+  auto itemEquipped = _playerRef->Equipment->EquipmentByCategory[item->Data.EqCategory][0];
 
   if (itemEquipped == nullptr)
   {
@@ -2598,7 +2598,7 @@ bool ItemsFactory::ProcessRingEquiption(ItemComponent* item)
 {
   bool emptySlotFound = false;
 
-  auto& rings = _playerRef->Equipment.EquipmentByCategory[item->Data.EqCategory];
+  auto& rings = _playerRef->Equipment->EquipmentByCategory[item->Data.EqCategory];
 
   // First, search if this ring is already equipped
   for (size_t i = 0; i < rings.size(); i++)
@@ -2646,7 +2646,7 @@ bool ItemsFactory::ProcessRingEquiption(ItemComponent* item)
 void ItemsFactory::EquipItem(ItemComponent* item)
 {
   item->Data.IsEquipped = true;
-  _playerRef->Equipment.EquipmentByCategory[item->Data.EqCategory][0] = item;
+  _playerRef->Equipment->EquipmentByCategory[item->Data.EqCategory][0] = item;
 
   std::string verb;
 
@@ -2670,7 +2670,7 @@ void ItemsFactory::EquipItem(ItemComponent* item)
 void ItemsFactory::UnequipItem(ItemComponent* item)
 {
   item->Data.IsEquipped = false;
-  _playerRef->Equipment.EquipmentByCategory[item->Data.EqCategory][0] = nullptr;
+  _playerRef->Equipment->EquipmentByCategory[item->Data.EqCategory][0] = nullptr;
 
   std::string verb;
 
@@ -2694,7 +2694,7 @@ void ItemsFactory::UnequipItem(ItemComponent* item)
 void ItemsFactory::EquipRing(ItemComponent* ring, int index)
 {
   ring->Data.IsEquipped = true;
-  _playerRef->Equipment.EquipmentByCategory[ring->Data.EqCategory][index] = ring;
+  _playerRef->Equipment->EquipmentByCategory[ring->Data.EqCategory][index] = ring;
 
   _playerRef->ApplyBonuses(ring);
 
@@ -2707,7 +2707,7 @@ void ItemsFactory::EquipRing(ItemComponent* ring, int index)
 void ItemsFactory::UnequipRing(ItemComponent* ring, int index)
 {
   ring->Data.IsEquipped = false;
-  _playerRef->Equipment.EquipmentByCategory[ring->Data.EqCategory][index] = nullptr;
+  _playerRef->Equipment->EquipmentByCategory[ring->Data.EqCategory][index] = nullptr;
 
   _playerRef->UnapplyBonuses(ring);
 

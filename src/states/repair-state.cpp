@@ -58,7 +58,7 @@ void RepairState::Update(bool forceUpdate)
     DrawHeader(_header);
 
     int itemIndex = 0;
-    for (auto& i : _playerRef->Inventory.Contents)
+    for (auto& i : _playerRef->Inventory->Contents)
     {
       ItemComponent* ic = i->GetComponent<ItemComponent>();
       if (ic->Data.IsEquipped && ic->Data.IsWeaponOrArmor())
@@ -157,8 +157,8 @@ void RepairState::Cleanup()
 {
   if (_repairKit->Data.Amount == 0)
   {
-    auto it = _playerRef->Inventory.Contents.begin();
-    _playerRef->Inventory.Contents.erase(it + _inventoryIndex);
+    auto it = _playerRef->Inventory->Contents.begin();
+    _playerRef->Inventory->Contents.erase(it + _inventoryIndex);
     Printer::Instance().AddMessage("Repair kit has been used up!");
   }
 }

@@ -124,7 +124,7 @@ void ShrineComponent::ProcessEffect()
     case ShrineType::KNOWLEDGE:
     {
       bool success = false;
-      for (auto& i : playerRef.Inventory.Contents)
+      for (auto& i : playerRef.Inventory->Contents)
       {
         auto c = i->GetComponent<ItemComponent>();
         ItemComponent* ic = static_cast<ItemComponent*>(c);
@@ -146,7 +146,7 @@ void ShrineComponent::ProcessEffect()
     case ShrineType::PERCEPTION:
     {
       bool success = false;
-      for (auto& i : playerRef.Inventory.Contents)
+      for (auto& i : playerRef.Inventory->Contents)
       {
         auto c = i->GetComponent<ItemComponent>();
         ItemComponent* ic = static_cast<ItemComponent*>(c);
@@ -178,7 +178,7 @@ void ShrineComponent::ProcessEffect()
       ApplyRandomEffect(msg);
 
       std::vector<ItemComponent*> itemsToCurse;
-      for (auto& i : playerRef.Inventory.Contents)
+      for (auto& i : playerRef.Inventory->Contents)
       {
         auto c = i->GetComponent<ItemComponent>();
         ItemComponent* ic = static_cast<ItemComponent*>(c);
@@ -264,7 +264,7 @@ void ShrineComponent::ProcessEffect()
     case ShrineType::HOLY:
     {
       bool success = false;
-      for (auto& i : playerRef.Inventory.Contents)
+      for (auto& i : playerRef.Inventory->Contents)
       {
         auto c = i->GetComponent<ItemComponent>();
         ItemComponent* ic = static_cast<ItemComponent*>(c);

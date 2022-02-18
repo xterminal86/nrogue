@@ -17,7 +17,7 @@ void ContainerInteractState::Cleanup()
 void ContainerInteractState::Prepare()
 {
   _inventoryItemIndex = 0;
-  _playerSide = (!_playerRef->Inventory.IsEmpty());
+  _playerSide = (!_playerRef->Inventory->IsEmpty());
 }
 
 void ContainerInteractState::SetContainerRef(ContainerComponent* c)
@@ -44,7 +44,7 @@ void ContainerInteractState::HandleInput()
     case ALT_K4:
     case NUMPAD_4:
     {
-      if (!_playerRef->Inventory.IsEmpty())
+      if (!_playerRef->Inventory->IsEmpty())
       {
         _playerSide = true;
       }
@@ -108,7 +108,7 @@ void ContainerInteractState::DisplayPlayerInventory()
   int yPos = 2;
   int index = 0;
 
-  for (auto& item : _playerRef->Inventory.Contents)
+  for (auto& item : _playerRef->Inventory->Contents)
   {
     auto c = item->GetComponent<ItemComponent>();
     ItemComponent* ic = static_cast<ItemComponent*>(c);
@@ -252,7 +252,7 @@ void ContainerInteractState::CheckIndexLimits()
 
   if (_playerSide)
   {
-    invSize = _playerRef->Inventory.Contents.size() - 1;
+    invSize = _playerRef->Inventory->Contents.size() - 1;
   }
   else
   {
@@ -267,8 +267,8 @@ void ContainerInteractState::CheckIndexLimits()
 
 void ContainerInteractState::TryToTransferItem()
 {
-  ContainerComponent* src = _playerSide ? &_playerRef->Inventory : _containerToInteractWith;
-  ContainerComponent* dst = _playerSide ? _containerToInteractWith : &_playerRef->Inventory;
+  ContainerComponent* src = _playerSide ? _playerRef->Inventory : _containerToInteractWith;
+  ContainerComponent* dst = _playerSide ? _containerToInteractWith : _playerRef->Inventory;
 
   if (dst->IsFull())
   {
@@ -299,7 +299,7 @@ void ContainerInteractState::TryToTransferItem()
   auto it = src->Contents.begin();
   src->Contents.erase(it + _inventoryItemIndex);
 
-  if (_playerSide && _playerRef->Inventory.IsEmpty())
+  if (_playerSide && _playerRef->Inventory->IsEmpty())
   {
     _playerSide = false;
   }

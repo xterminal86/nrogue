@@ -34,9 +34,9 @@ IR DoorComponent::Interact()
     bool success = false;
 
     auto playerPref = &Application::Instance().PlayerInstance;
-    for (size_t i = 0; i < playerPref->Inventory.Contents.size(); i++)
+    for (size_t i = 0; i < playerPref->Inventory->Contents.size(); i++)
     {
-      auto& itemRef = playerPref->Inventory.Contents[i];
+      auto& itemRef = playerPref->Inventory->Contents[i];
       ItemComponent* ic = itemRef->GetComponent<ItemComponent>();
       if (ic->Data.ItemTypeHash == OpenedBy)
       {
@@ -48,8 +48,8 @@ IR DoorComponent::Interact()
         // Destroy "key" item from inventory since it's no longer needed
         ic->Data.IsImportant = false;
 
-        auto it = playerPref->Inventory.Contents.begin();
-        playerPref->Inventory.Contents.erase(it + i);
+        auto it = playerPref->Inventory->Contents.begin();
+        playerPref->Inventory->Contents.erase(it + i);
 
         break;
       }

@@ -53,8 +53,8 @@ class Player : public GameObject
     // These are always present on Player,
     // so just instantiate them without AddComponent()
     //
-    ContainerComponent Inventory;
-    EquipmentComponent Equipment;
+    ContainerComponent* Inventory;
+    EquipmentComponent* Equipment;
 
     std::string Name = "Nameless One";
 

@@ -1055,9 +1055,12 @@ std::vector<std::string> GameObject::DebugInfo()
 {
   std::vector<std::string> res;
 
-  std::string str = Util::StringFormat("  ObjName: %s", ObjectName.data());
-
   res.push_back("{");
+
+  std::string str = Util::StringFormat("  [0x%X]", this);
+  res.push_back(str);
+
+  str = Util::StringFormat("  ObjName: %s", ObjectName.data());
   res.push_back(str);
 
   str = Util::StringFormat("  ObjectId: %lu", _objectId);

@@ -22,7 +22,7 @@ void InventoryState::HandleInput()
 {
   _keyPressed = GetKeyDown();
 
-  bool isInventoryEmpty = (_playerRef->Inventory.IsEmpty());
+  bool isInventoryEmpty = (_playerRef->Inventory->IsEmpty());
 
   switch(_keyPressed)
   {
@@ -43,7 +43,7 @@ void InventoryState::HandleInput()
         return;
       }
 
-      ItemComponent* c = _playerRef->Inventory.Contents[_selectedIndex]->GetComponent<ItemComponent>();
+      ItemComponent* c = _playerRef->Inventory->Contents[_selectedIndex]->GetComponent<ItemComponent>();
       c->Inspect();
     }
     break;
@@ -55,7 +55,7 @@ void InventoryState::HandleInput()
         return;
       }
 
-      auto go = _playerRef->Inventory.Contents[_selectedIndex].get();
+      auto go = _playerRef->Inventory->Contents[_selectedIndex].get();
       ItemComponent* ic = go->GetComponent<ItemComponent>();
 
       if (ic->Data.IsEquipped)
@@ -88,7 +88,7 @@ void InventoryState::HandleInput()
         return;
       }
 
-      auto go = _playerRef->Inventory.Contents[_selectedIndex].get();
+      auto go = _playerRef->Inventory->Contents[_selectedIndex].get();
       ItemComponent* ic = go->GetComponent<ItemComponent>();
 
       if (ic->Use())
@@ -143,7 +143,7 @@ void InventoryState::HandleInput()
 
     case 'e':
     {
-      auto go = _playerRef->Inventory.Contents[_selectedIndex].get();
+      auto go = _playerRef->Inventory->Contents[_selectedIndex].get();
       ItemComponent* ic = go->GetComponent<ItemComponent>();
       if (ic->Equip())
       {
@@ -164,7 +164,7 @@ void InventoryState::HandleInput()
         return;
       }
 
-      auto go = _playerRef->Inventory.Contents[_selectedIndex].get();
+      auto go = _playerRef->Inventory->Contents[_selectedIndex].get();
       ItemComponent* ic = go->GetComponent<ItemComponent>();
       if (ic->Data.IsEquipped)
       {
@@ -199,7 +199,7 @@ void InventoryState::HandleInput()
       break;
   }
 
-  int inventorySize = _playerRef->Inventory.Contents.size();
+  int inventorySize = _playerRef->Inventory->Contents.size();
   _selectedIndex = Util::Clamp(_selectedIndex, 0, inventorySize - 1);
 }
 
@@ -213,7 +213,7 @@ void InventoryState::Update(bool forceUpdate)
 
     int itemsCount = 0;
     int yPos = 0;
-    for (auto& item : _playerRef->Inventory.Contents)
+    for (auto& item : _playerRef->Inventory->Contents)
     {
       auto c = item->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);
@@ -290,28 +290,28 @@ void InventoryState::DisplayEquipment()
 
   ItemComponent* eq = nullptr;
 
-  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::HEAD][0];
+  eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::HEAD][0];
   DrawEquipmentField(tw + 10, yPos, "Head", eq);
 
-  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::NECK][0];
+  eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::NECK][0];
   DrawEquipmentField(tw + 24, yPos, "Neck", eq);
 
-  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::TORSO][0];
+  eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::TORSO][0];
   DrawEquipmentField(tw + 10, yPos + 3, "Armor", eq);
 
-  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::BOOTS][0];
+  eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::BOOTS][0];
   DrawEquipmentField(tw + 10, yPos + 6, "Boots", eq);
 
-  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
   DrawEquipmentField(tw - 4, yPos + 3, "Hand", eq);
 
-  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::SHIELD][0];
+  eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0];
   DrawEquipmentField(tw - 4, yPos + 6, "Hand", eq);
 
-  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::RING][0];
+  eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][0];
   DrawEquipmentField(tw + 24, yPos + 3, "Accessory", eq);
 
-  eq = _playerRef->Equipment.EquipmentByCategory[EquipmentCategory::RING][1];
+  eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][1];
   DrawEquipmentField(tw + 24, yPos + 6, "Accessory", eq);
 }
 
@@ -383,13 +383,13 @@ void InventoryState::PrintFooter()
 
 void InventoryState::DestroyInventoryItem()
 {
-  auto it = _playerRef->Inventory.Contents.begin();
-  _playerRef->Inventory.Contents.erase(it + _selectedIndex);
+  auto it = _playerRef->Inventory->Contents.begin();
+  _playerRef->Inventory->Contents.erase(it + _selectedIndex);
 }
 
 void InventoryState::DropItem(ItemComponent* ic)
 {
-  auto go = _playerRef->Inventory.Contents[_selectedIndex].release();
+  auto go = _playerRef->Inventory->Contents[_selectedIndex].release();
 
   // Player may drop item on a different dungeon level,
   // so reference to the level where object was originally
@@ -441,7 +441,7 @@ void InventoryState::DrawSelectionBar(int yOffset, const std::string& text, cons
 
 void InventoryState::SortInventory()
 {
-  std::vector<std::unique_ptr<GameObject>>& inventory = _playerRef->Inventory.Contents;
+  std::vector<std::unique_ptr<GameObject>>& inventory = _playerRef->Inventory->Contents;
 
   for (size_t i = 0; i < inventory.size(); i++)
   {

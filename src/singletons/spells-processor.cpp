@@ -144,7 +144,7 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll)
   _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
 
   std::vector<ItemComponent*> itemsToRepair;
-  for (auto& i : _playerRef->Inventory.Contents)
+  for (auto& i : _playerRef->Inventory->Contents)
   {
     ItemComponent* ic = i->GetComponent<ItemComponent>();
     if ((ic->Data.ItemType_ == ItemType::WEAPON
@@ -196,7 +196,7 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll)
 
   std::vector<ItemComponent*> itemsToId;
   std::vector<ItemComponent*> itemsKnown;
-  for (auto& i : _playerRef->Inventory.Contents)
+  for (auto& i : _playerRef->Inventory->Contents)
   {
     ItemComponent* ic = i->GetComponent<ItemComponent>();
     if (!ic->Data.IsIdentified)
@@ -624,7 +624,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
     std::vector<ItemComponent*> nonCursedItems;
-    for (auto& i : _playerRef->Inventory.Contents)
+    for (auto& i : _playerRef->Inventory->Contents)
     {
       auto c = i->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);
@@ -658,7 +658,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {
     std::vector<ItemComponent*> cursedItems;
-    for (auto& i : _playerRef->Inventory.Contents)
+    for (auto& i : _playerRef->Inventory->Contents)
     {
       auto c = i->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);
@@ -690,7 +690,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll)
   else if (scroll->Data.Prefix == ItemPrefix::BLESSED)
   {
     bool success = false;
-    for (auto& i : _playerRef->Inventory.Contents)
+    for (auto& i : _playerRef->Inventory->Contents)
     {
       auto c = i->GetComponent<ItemComponent>();
       ItemComponent* ic = static_cast<ItemComponent*>(c);

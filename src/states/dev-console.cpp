@@ -24,6 +24,7 @@ void DevConsole::Init()
 
 void DevConsole::Prepare()
 {
+  _closedByCommand = false;
   _currentLevel = Map::Instance().CurrentLevel;
   _currentCommand = Prompt;
   _commandsHistoryIndex = _commandsHistory.size() - 1;
@@ -93,6 +94,17 @@ void DevConsole::HandleInput()
       std::string noPrompt = _currentCommand.substr(2);
 
       bool ok = ParseCommand();
+
+      //
+      // Don't add console closing command to history
+      // because it will in fact be added as empty string
+      // due to indirect calling of Cleanup() via ChangeState()
+      // inside ProcessCommand().
+      //
+      if (_closedByCommand)
+      {
+        return;
+      }
 
       if (!noPrompt.empty() && ok)
       {
@@ -224,8 +236,11 @@ void DevConsole::ProcessCommand(const std::string& command,
       break;
 
     case DevConsoleCommand::CLOSE:
+    {
+      _closedByCommand = true;
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
-      break;
+    }
+    break;
 
     case DevConsoleCommand::INFO_HANDLES:
       InfoHandles();
@@ -286,6 +301,13 @@ void DevConsole::ProcessCommand(const std::string& command,
       PrintColors();
       break;
 
+    case DevConsoleCommand::REPORT_PLAYER:
+    {
+      auto lines = _playerRef->DebugInfo();
+      PrintDebugInfo(lines);
+    }
+    break;
+
     case DevConsoleCommand::TRANSFORM_TILE:
       TransformTile(params);
       break;
@@ -322,7 +344,7 @@ void DevConsole::GetObjectByAddress(const std::vector<std::string>& params)
 
     if (_objectHandles[ObjectHandleType::ANY] != nullptr)
     {
-      PrintDebugInfo(ObjectHandleType::ANY);
+      ReportHandleDebugInfo(ObjectHandleType::ANY);
     }
 
     return;
@@ -366,15 +388,20 @@ void DevConsole::GetObjectByAddress(const std::vector<std::string>& params)
   ReportHandle(ObjectHandleType::ANY);
 }
 
-void DevConsole::PrintDebugInfo(ObjectHandleType type)
+void DevConsole::ReportHandleDebugInfo(ObjectHandleType type)
 {
   if (_objectHandles[type] != nullptr)
   {
     auto lines = _objectHandles[type]->DebugInfo();
-    for (auto& l : lines)
-    {
-      StdOut(l);
-    }
+    PrintDebugInfo(lines);
+  }
+}
+
+void DevConsole::PrintDebugInfo(const std::vector<std::string>& debugInfo)
+{
+  for (auto& l : debugInfo)
+  {
+    StdOut(l);
   }
 }
 
@@ -587,7 +614,7 @@ void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleT
   if (params.empty())
   {
     ReportHandle(handleType);
-    PrintDebugInfo(handleType);
+    ReportHandleDebugInfo(handleType);
     return;
   }
 
