@@ -27,10 +27,8 @@ void Player::Init()
   FgColor = Colors::PlayerColor;
   Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
-  Inventory = AddComponent<ContainerComponent>();
+  Inventory = AddComponent<ContainerComponent>(GlobalConstants::InventoryMaxSize);
   Equipment = AddComponent<EquipmentComponent>();
-
-  Inventory->MaxCapacity = GlobalConstants::InventoryMaxSize;
 
   SetAttributes();
   SetDefaultItems();

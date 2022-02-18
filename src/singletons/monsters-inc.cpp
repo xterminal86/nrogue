@@ -342,8 +342,7 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
 
   ai->ChangeModel<AIIdle>();
 
-  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
-  cc->MaxCapacity = 20;
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>(GlobalConstants::InventoryMaxSize);
 
   GameObject* pickaxe = ItemsFactory::Instance().CreateUniquePickaxe();
   cc->Add(pickaxe);

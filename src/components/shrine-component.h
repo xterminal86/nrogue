@@ -29,16 +29,11 @@ static const std::vector<ItemBonusType> NegativeEffects =
 class ShrineComponent : public Component
 {
   public:
-    ShrineComponent();
+    ShrineComponent(ShrineType shrineType, int timeout, int counter);
 
     void Update() override;
 
     IR Interact();
-
-    int Timeout = -1;
-    int Counter = 0;
-
-    ShrineType Type;
 
   private:
     void Activate();
@@ -51,6 +46,11 @@ class ShrineComponent : public Component
 
     int _power;
     int _duration;
+
+    int _timeout = -1;
+    int _counter = 0;
+
+    ShrineType _type;
 };
 
 #endif // SHRINECOMPONENT_H

@@ -10,7 +10,7 @@
 class ContainerComponent : public Component
 {
   public:
-    ContainerComponent();
+    ContainerComponent(size_t maxCapacity);
 
     void Update() override;
 
@@ -19,13 +19,16 @@ class ContainerComponent : public Component
     bool IsFull();
     bool IsEmpty();
 
+    const size_t& MaxCapacity();
+
     IR Interact();
 
     std::vector<std::unique_ptr<GameObject>> Contents;
 
     bool CanBeOpened = true;
 
-    size_t MaxCapacity = 0;
+  private:
+    size_t _maxCapacity = 0;
 };
 
 #endif // CONTAINERCOMPONENT_H

@@ -7,22 +7,27 @@
 #include "game-objects-factory.h"
 #include "map.h"
 
-ShrineComponent::ShrineComponent()
+ShrineComponent::ShrineComponent(ShrineType shrineType, int timeout, int counter)
 {
   _componentHash = typeid(*this).hash_code();
+
+  _timeout = timeout;
+  _counter = counter;
+
+  _type = shrineType;
 }
 
 void ShrineComponent::Update()
 {
-  if (Counter < Timeout)
+  if (_counter < _timeout)
   {
-    Counter++;
+    _counter++;
   }
 
-  if (Counter == Timeout)
+  if (_counter == _timeout)
   {
     // So that we won't go into this block again
-    Counter++;
+    _counter++;
 
     Activate();
   }
@@ -30,7 +35,7 @@ void ShrineComponent::Update()
 
 IR ShrineComponent::Interact()
 {
-  if (Counter < Timeout)
+  if (_counter < _timeout)
   {
     Printer::Instance().AddMessage("Shrine is inactive");
     return { InteractionResult::FAILURE, GameStates::MAIN_STATE };
@@ -42,15 +47,15 @@ IR ShrineComponent::Interact()
     _power    = dungLvl; //Timeout / 100;
     _duration = GlobalConstants::EffectDefaultDuration * _power; //Timeout / 2;
 
-    Counter = 0;
+    _counter = 0;
     OwnerGameObject->FgColor = Colors::BlackColor;
 
-    std::string shrineName = GlobalConstants::ShrineNameByType.at(Type);
+    std::string shrineName = GlobalConstants::ShrineNameByType.at(_type);
     std::string message = Util::StringFormat("You touch the %s...", shrineName.data());
 
-    if (GlobalConstants::ShrineSaintByType.count(Type) == 1)
+    if (GlobalConstants::ShrineSaintByType.count(_type) == 1)
     {
-      std::string saint = GlobalConstants::ShrineSaintByType.at(Type);
+      std::string saint = GlobalConstants::ShrineSaintByType.at(_type);
       message = Util::StringFormat("You pray to %s...", saint.data());
     }
 
@@ -64,7 +69,7 @@ IR ShrineComponent::Interact()
 
 void ShrineComponent::Activate()
 {
-  OwnerGameObject->FgColor = Colors::ShrineColorsByType.at(Type).first;
+  OwnerGameObject->FgColor = Colors::ShrineColorsByType.at(_type).first;
 }
 
 void ShrineComponent::ProcessEffect()
@@ -73,7 +78,7 @@ void ShrineComponent::ProcessEffect()
 
   std::string msg = "...but nothing happens";
 
-  switch (Type)
+  switch (_type)
   {
     // raises STR or HP
     case ShrineType::MIGHT:

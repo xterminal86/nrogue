@@ -3,16 +3,18 @@
 #include "game-object.h"
 #include "map.h"
 
-TimedDestroyerComponent::TimedDestroyerComponent()
+TimedDestroyerComponent::TimedDestroyerComponent(int delay)
 {
   _componentHash = typeid(*this).hash_code();
+
+  _time = delay;
 }
 
 void TimedDestroyerComponent::Update()
 {
-  Time--;
+  _time--;
 
-  if (Time <= 0)
+  if (_time <= 0)
   {
     OwnerGameObject->IsDestroyed = true;
   }

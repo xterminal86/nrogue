@@ -59,8 +59,8 @@ class GameObject
     void Draw(const std::string& overrideFgColor = std::string(),
               const std::string& overrideBgColor = std::string());
 
-    template <typename T>
-    inline T* AddComponent()
+    template <typename T, typename ... Args>
+    inline T* AddComponent(Args ... args)
     {
       if (_components.count(typeid(T).hash_code()) == 1)
       {
@@ -72,7 +72,7 @@ class GameObject
         return static_cast<T*>(_components[typeid(T).hash_code()].get());
       }
 
-      std::unique_ptr<T> cp = std::make_unique<T>();
+      std::unique_ptr<T> cp = std::make_unique<T>(args ...);
 
       cp.get()->OwnerGameObject = this;
 

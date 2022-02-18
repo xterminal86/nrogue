@@ -167,11 +167,7 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
   go->FgColor = Colors::ShrineColorsByType.at(type).first;
   go->BgColor = Colors::ShrineColorsByType.at(type).second;
 
-  ShrineComponent* sc = go->AddComponent<ShrineComponent>();
-
-  sc->Type = type;
-  sc->Counter = timeout;
-  sc->Timeout = timeout;
+  ShrineComponent* sc = go->AddComponent<ShrineComponent>(type, timeout, timeout);
 
   go->ObjectName = GlobalConstants::ShrineNameByType.at(type);
   go->FogOfWarName = "?Shrine?";
@@ -216,8 +212,8 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
   // Living creatures leave decomposable corpses
   if (from->IsLiving)
   {
-    TimedDestroyerComponent* td = go->AddComponent<TimedDestroyerComponent>();
-    td->Time = 200; //from->Attrs.HP.OriginalValue * 2;
+    //from->Attrs.HP.OriginalValue * 2;
+    go->AddComponent<TimedDestroyerComponent>(200);
   }
 
   auto str = Util::StringFormat("%s's remains", from->ObjectName.data());
@@ -333,9 +329,7 @@ GameObject* GameObjectsFactory::CreateContainer(const std::string& name, const s
   go->Blocking = true;
   go->BlocksSight = true;
 
-  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
-
-  cc->MaxCapacity = GlobalConstants::InventoryMaxSize;
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>(GlobalConstants::InventoryMaxSize);
 
   go->InteractionCallback = std::bind(&ContainerComponent::Interact, cc);
 
@@ -498,9 +492,8 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
   int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel;
   int maxLevel = (int)MapType::THE_END;
 
-  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>(maxLevel + 1);
   cc->CanBeOpened = false;
-  cc->MaxCapacity = maxLevel + 1;
 
   int maxItems = maxLevel;
 

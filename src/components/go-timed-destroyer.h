@@ -6,11 +6,12 @@
 class TimedDestroyerComponent : public Component
 {
   public:
-    TimedDestroyerComponent();
+    TimedDestroyerComponent(int delay);
 
     void Update() override;
 
-    int Time;
+  private:
+    int _time;
 };
 
 #endif // GOTIMEDDESTROYER_H

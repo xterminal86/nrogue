@@ -21,9 +21,9 @@ struct TriggerData
 class TriggerComponent : public Component
 {
   public:
-    TriggerComponent();
-
-    void Setup(const TriggerData& data);
+    TriggerComponent(TriggerType type,
+                     const std::function<bool()>& condition,
+                     const std::function<void()>& handler);
 
     void Update() override;
 

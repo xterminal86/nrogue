@@ -2,14 +2,15 @@
 
 #include "util.h"
 
-TriggerComponent::TriggerComponent()
+TriggerComponent::TriggerComponent(TriggerType type,
+                                   const std::function<bool()>& condition,
+                                   const std::function<void()>& handler)
 {
   _componentHash = typeid(*this).hash_code();
-}
 
-void TriggerComponent::Setup(const TriggerData& data)
-{
-  _data = data;
+  _data.Type      = type;
+  _data.Condition = condition;
+  _data.Handler   = handler;
 }
 
 void TriggerComponent::Update()

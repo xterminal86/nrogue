@@ -6,9 +6,11 @@
 #include "printer.h"
 #include "util.h"
 
-ContainerComponent::ContainerComponent()
+ContainerComponent::ContainerComponent(size_t maxCapacity)
 {
   _componentHash = typeid(*this).hash_code();
+
+  _maxCapacity = maxCapacity;
 }
 
 void ContainerComponent::Update()
@@ -94,10 +96,15 @@ IR ContainerComponent::Interact()
 
 bool ContainerComponent::IsFull()
 {
-  return (Contents.size() >= MaxCapacity);
+  return (Contents.size() >= _maxCapacity);
 }
 
 bool ContainerComponent::IsEmpty()
 {
   return (Contents.size() == 0);
+}
+
+const size_t& ContainerComponent::MaxCapacity()
+{
+  return _maxCapacity;
 }

@@ -804,8 +804,7 @@ void GameObject::AttachTrigger(TriggerType type,
                                const std::function<bool ()>& condition,
                                const std::function<void ()>& handler)
 {
-  TriggerComponent* tc = AddComponent<TriggerComponent>();
-  tc->Setup({ type, condition, handler });
+  AddComponent<TriggerComponent>(type, condition, handler);
 }
 
 void GameObject::DispelEffect(const ItemBonusType& t)
