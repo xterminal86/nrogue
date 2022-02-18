@@ -8,6 +8,7 @@
 #include "component.h"
 
 class ItemComponent;
+class ContainerComponent;
 
 class EquipmentComponent : public Component
 {
@@ -17,6 +18,9 @@ class EquipmentComponent : public Component
     void Update() override;
 
     std::map<EquipmentCategory, std::vector<ItemComponent*>> EquipmentByCategory;
+
+  private:
+    ContainerComponent* _inventory;
 };
 
 #endif // EQUIPMENTCOMPONENT_H

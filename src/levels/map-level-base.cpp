@@ -82,6 +82,42 @@ void MapLevelBase::AdjustCamera()
   MapOffsetY = th / 2 - _playerRef->PosY;
 }
 
+const int& MapLevelBase::RespawnCounter()
+{
+  return _respawnCounter;
+}
+
+const Position& MapLevelBase::TownPortalPos()
+{
+  return _townPortalPos;
+}
+
+const std::vector<Position>& MapLevelBase::EmptyCells()
+{
+  return _emptyCells;
+}
+
+#ifdef DEBUG_BUILD
+GameObject* MapLevelBase::FindObjectByAddress(const std::string& addressString)
+{
+  GameObject* res = FindInVV(MapArray, addressString);
+  if (res == nullptr)
+  {
+    res = FindInVV(StaticMapObjects, addressString);
+    if (res == nullptr)
+    {
+      res = FindInV(GameObjects, addressString);
+      if (res == nullptr)
+      {
+        res = FindInV(ActorGameObjects, addressString);
+      }
+    }
+  }
+
+  return res;
+}
+#endif
+
 void MapLevelBase::InsertActor(GameObject* actor)
 {
   if (actor == nullptr)

@@ -15,6 +15,7 @@
 #include "attribute.h"
 #include "item-data.h"
 #include "trigger-component.h"
+#include "util.h"
 
 class GameObjectInfo;
 class MapLevelBase;
@@ -63,6 +64,11 @@ class GameObject
     {
       if (_components.count(typeid(T).hash_code()) == 1)
       {
+        DebugLog("[WAR] trying to add existing component %s on game object [0x%X] - returning existing 0x%X",
+                 typeid(T).name(),
+                 this,
+                 _components[typeid(T).hash_code()].get());
+
         return static_cast<T*>(_components[typeid(T).hash_code()].get());
       }
 
@@ -108,9 +114,9 @@ class GameObject
     // e.g. to disallow walking into a tile for NPC
     bool Special = false;
 
-    bool Blocking = false;
+    bool Blocking    = false;
     bool BlocksSight = false;
-    bool Revealed = false;
+    bool Revealed    = false;
 
     // Determines if objects on the map tile should be drawn
     bool Visible = false;
@@ -181,9 +187,10 @@ class GameObject
     GameObjectType Type = GameObjectType::HARMLESS;
     bool IsLiving = false;
 
-    #ifdef DEBUG_BUILD
+#ifdef DEBUG_BUILD
     std::vector<std::string> DebugInfo();
-    #endif
+    std::string HexAddressString;
+#endif
 
   protected:
     std::map<size_t, std::unique_ptr<Component>> _components;
@@ -192,9 +199,11 @@ class GameObject
     GameObject* _previousCell = nullptr;
     GameObject* _currentCell = nullptr;
 
+    //
     // Level this object belongs to.
     // Needed for correct drawing on the screen.
     // (see comments in InventoryState::DropItem() for details)
+    //
     MapLevelBase* _levelOwner = nullptr;
 
     int _healthRegenTurnsCounter = 0;
@@ -238,9 +247,9 @@ class GameObject
 
     friend class GameObjectsFactory;
 
-    #ifdef DEBUG_BUILD
+#ifdef DEBUG_BUILD
     friend class DevConsole;
-    #endif
+#endif
 };
 
 #endif

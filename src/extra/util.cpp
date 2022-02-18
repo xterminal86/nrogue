@@ -765,26 +765,6 @@ namespace Util
     return res;
   }
 
-  bool Rolld100(int successChance)
-  {
-    int dice = RNG::Instance().RandomRange(1, 101);
-
-    auto logMsg = StringFormat("\t%s: %i <= %i - %s",
-                               __PRETTY_FUNCTION__,
-                                dice,
-                               successChance,
-                               (dice <= successChance) ? "passed" : "failed");
-
-    Logger::Instance().Print(logMsg);
-
-    if (dice <= successChance)
-    {
-      return true;
-    }
-
-    return false;
-  }
-
   int RollDamage(int numRolls, int diceSides)
   {
     int totalDamage = 0;
@@ -806,6 +786,34 @@ namespace Util
     Logger::Instance().Print(str);
 
     return dice;
+  }
+
+  bool Rolld100(int successChance)
+  {
+    int dice = RNG::Instance().RandomRange(1, 101);
+
+    #if DEBUG_BUILD
+    std::string diceStr = std::to_string(dice);
+    std::string succStr = std::to_string(successChance);
+    std::string spaces1(3 - diceStr.length(), ' ');
+    std::string spaces2(3 - succStr.length(), ' ');
+    auto logMsg = StringFormat("\t%s: %i %s<= %i %s- %s",
+                               __PRETTY_FUNCTION__,
+                                dice,
+                               spaces1.data(),
+                               successChance,
+                               spaces2.data(),
+                               (dice <= successChance) ? "passed" : "failed");
+
+    Logger::Instance().Print(logMsg);
+    #endif
+
+    if (dice <= successChance)
+    {
+      return true;
+    }
+
+    return false;
   }
 
   void Sleep(int delayMs)

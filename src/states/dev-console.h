@@ -14,6 +14,7 @@ enum class DevConsoleCommand
   GET_STATIC_OBJECT,
   GET_ACTOR,
   GET_ITEM,
+  GET_BY_ADDRESS,
   POISON_ACTOR,
   DAMAGE_ACTOR,
   MOVE_STATIC_OBJECT,
@@ -33,7 +34,8 @@ enum class ObjectHandleType
 {
   STATIC = 0,
   ITEM,
-  ACTOR
+  ACTOR,
+  ANY
 };
 
 class MapLevelBase;
@@ -66,6 +68,8 @@ class DevConsole : public GameState
     int _cursorX = 1;
     int _cursorY = 2;
 
+    const size_t _maxHistory = 20;
+
     const std::string ErrUnknownCommand = "command not found...";
     const std::string ErrSyntaxError    = "Syntax error";
     const std::string ErrWrongParams    = "Wrong params";
@@ -82,7 +86,8 @@ class DevConsole : public GameState
     {
       { ObjectHandleType::STATIC, "_static" },
       { ObjectHandleType::ACTOR,  "_actor"  },
-      { ObjectHandleType::ITEM,   "_item"   }
+      { ObjectHandleType::ITEM,   "_item"   },
+      { ObjectHandleType::ANY,    "_any"    }
     };
 
     const std::map<GameObjectType, std::string> _validTileTransformTypes =
@@ -130,10 +135,14 @@ class DevConsole : public GameState
     void PoisonActor(const std::vector<std::string>& params);
     void PrintColors();
     void TransformTile(const std::vector<std::string>& params);
+    void GetObjectByAddress(const std::vector<std::string>& params);
+    void PrintDebugInfo(ObjectHandleType type);
 
     bool StringIsNumbers(const std::string& str);
     std::pair<int, int> CoordinateParamsToInt(const std::string& px,
                                               const std::string& py);
+
+    void ReportHandle(ObjectHandleType handleType);
 
     template <typename Map>
     void PrintMap(const Map& map)
@@ -171,7 +180,8 @@ class DevConsole : public GameState
       { "p_ld",   DevConsoleCommand::LEVEL_DOWN         },
       { "g_pm",   DevConsoleCommand::PRINT_MAP          },
       { "g_pc",   DevConsoleCommand::PRINT_COLORS       },
-      { "g_cm",   DevConsoleCommand::CREATE_MONSTER     }
+      { "g_cm",   DevConsoleCommand::CREATE_MONSTER     },
+      { "g_go",   DevConsoleCommand::GET_BY_ADDRESS     }
     };
 
     const std::vector<std::string> _help =
@@ -192,6 +202,7 @@ class DevConsole : public GameState
       { "p_ld",   { "Take a level from player" } },
       { "g_pm",   { "Save current map layout to a file" } },
       { "g_pc",   { "Prints colors used so far" } },
+      { "g_go",   { "g_go 0x%X", "Get game object by address (slow!)" } },
       { "ao_psn", { "Add lingering damage to actor in handle" } },
       {
         "so_get",

@@ -19,6 +19,10 @@ GameObject::GameObject(MapLevelBase* levelOwner)
   VisibilityRadius.Set(0);
 
   _objectId = Application::GetNewId();
+
+#ifdef DEBUG_BUILD
+  HexAddressString = Util::StringFormat("0x%X", this);
+#endif
 }
 
 GameObject::GameObject(MapLevelBase *levelOwner,
@@ -31,6 +35,10 @@ GameObject::GameObject(MapLevelBase *levelOwner,
   _objectId = Application::GetNewId();
 
   Init(levelOwner, x, y, avatar, htmlColor, bgColor);
+
+#ifdef DEBUG_BUILD
+  HexAddressString = Util::StringFormat("0x%X", this);
+#endif
 }
 
 GameObject::~GameObject()
@@ -1074,7 +1082,9 @@ std::vector<std::string> GameObject::DebugInfo()
 
   for (auto& kvp : _components)
   {
-    str = Util::StringFormat("    %s", typeid(*kvp.second.get()).name());
+    str = Util::StringFormat("    %s [0x%X]",
+                             typeid(*kvp.second.get()).name(),
+                             kvp.second.get());
     res.push_back(str);
   }
 

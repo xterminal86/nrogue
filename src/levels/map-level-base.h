@@ -72,22 +72,15 @@ class MapLevelBase
 
     void AdjustCamera();
 
-    int RespawnCounter()
-    {
-      return _respawnCounter;
-    }
-
-    const Position& TownPortalPos()
-    {
-      return _townPortalPos;
-    }
-
-    const std::vector<Position>& EmptyCells()
-    {
-      return _emptyCells;
-    }
+    const int& RespawnCounter();
+    const Position& TownPortalPos();
+    const std::vector<Position>& EmptyCells();
 
     bool IsCellBlocking(const Position& pos);
+
+#ifdef DEBUG_BUILD
+    GameObject* FindObjectByAddress(const std::string& addressString);
+#endif
 
   protected:
     std::vector<Position> _emptyCells;
@@ -153,6 +146,41 @@ class MapLevelBase
                    const std::string& objName = std::string());
 
     Position _townPortalPos;
+
+#ifdef DEBUG_BUILD
+    template <typename Collection>
+    GameObject* FindInVV(const Collection& c,
+                         const std::string& addrStr)
+    {
+      for (auto& i : c)
+      {
+        for (auto& o : i)
+        {
+          if (o.get() != nullptr && o.get()->HexAddressString == addrStr)
+          {
+            return o.get();
+          }
+        }
+      }
+
+      return nullptr;
+    }
+
+    template <typename Collection>
+    GameObject* FindInV(const Collection& c,
+                        const std::string& addrStr)
+    {
+      for (auto& o : c)
+      {
+        if (o.get() != nullptr && o.get()->HexAddressString == addrStr)
+        {
+          return o.get();
+        }
+      }
+
+      return nullptr;
+    }
+#endif
 
 #ifdef DEBUG_BUILD
     friend class DevConsole;

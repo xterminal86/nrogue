@@ -19,6 +19,7 @@ void DevConsole::Init()
   _objectHandles[ObjectHandleType::STATIC] = nullptr;
   _objectHandles[ObjectHandleType::ACTOR]  = nullptr;
   _objectHandles[ObjectHandleType::ITEM]   = nullptr;
+  _objectHandles[ObjectHandleType::ANY]    = nullptr;
 }
 
 void DevConsole::Prepare()
@@ -96,19 +97,20 @@ void DevConsole::HandleInput()
       if (!noPrompt.empty() && ok)
       {
         _commandsHistory.push_back(_currentCommand);
-        _commandsHistoryIndex++;
+        _commandsHistoryIndex = _commandsHistory.size() - 1;
+        _oldIndex = 0;
       }
 
       _currentCommand = Prompt;
       _cursorX = 1;
       _cursorY++;
 
-      while (_stdout.size() > 20)
+      while (_stdout.size() > _maxHistory)
       {
         _stdout.pop_back();
       }
 
-      if (_commandsHistory.size() > 20)
+      if (_commandsHistory.size() > _maxHistory)
       {
         _commandsHistory.pop_back();
       }
@@ -229,6 +231,10 @@ void DevConsole::ProcessCommand(const std::string& command,
       InfoHandles();
       break;
 
+    case DevConsoleCommand::GET_BY_ADDRESS:
+      GetObjectByAddress(params);
+      break;
+
     case DevConsoleCommand::GET_STATIC_OBJECT:
       GetObject(params, ObjectHandleType::STATIC);
       break;
@@ -299,6 +305,76 @@ void DevConsole::ProcessCommand(const std::string& command,
     default:
       StdOut(ErrCmdNotHandled);
       break;
+  }
+}
+
+void DevConsole::GetObjectByAddress(const std::vector<std::string>& params)
+{
+  if (params.size() > 1)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  if (params.size() == 0)
+  {
+    ReportHandle(ObjectHandleType::ANY);
+
+    if (_objectHandles[ObjectHandleType::ANY] != nullptr)
+    {
+      PrintDebugInfo(ObjectHandleType::ANY);
+    }
+
+    return;
+  }
+
+  std::string str = params[0];
+
+  auto res = Util::StringSplit(str, 'x');
+  if (res.size() == 1 || res.size() > 2)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string addr = res[1];
+  std::transform(addr.begin(),
+                 addr.end(),
+                 addr.begin(),
+                 [](unsigned char c)
+                 {
+                   return std::toupper(c);
+                 });
+
+  for (auto& c : addr)
+  {
+    auto found = std::find(Strings::HexChars.begin(),
+                           Strings::HexChars.end(),
+                           c);
+
+    if (found == Strings::HexChars.end())
+    {
+      StdOut(ErrWrongParams);
+      return;
+    }
+  }
+
+  std::string hexAddr = "0x" + addr;
+
+  _objectHandles[ObjectHandleType::ANY] = _currentLevel->FindObjectByAddress(hexAddr);
+
+  ReportHandle(ObjectHandleType::ANY);
+}
+
+void DevConsole::PrintDebugInfo(ObjectHandleType type)
+{
+  if (_objectHandles[type] != nullptr)
+  {
+    auto lines = _objectHandles[type]->DebugInfo();
+    for (auto& l : lines)
+    {
+      StdOut(l);
+    }
   }
 }
 
@@ -508,25 +584,10 @@ void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleT
     return;
   }
 
-  auto ReportHandle = [this](ObjectHandleType handleType)
-  {
-    std::string msg = Util::StringFormat("%s = 0x%X", _handleNameByType.at(handleType).data(), _objectHandles[handleType]);
-    StdOut(msg);
-  };
-
   if (params.empty())
   {
     ReportHandle(handleType);
-
-    if (_objectHandles[handleType] != nullptr)
-    {
-      auto debugInfo = _objectHandles[handleType]->DebugInfo();
-      for (auto& line : debugInfo)
-      {
-        StdOut(line);
-      }
-    }
-
+    PrintDebugInfo(handleType);
     return;
   }
 
@@ -889,4 +950,12 @@ std::pair<int, int> DevConsole::CoordinateParamsToInt(const std::string &px, con
   }
 
   return res;
+}
+
+void DevConsole::ReportHandle(ObjectHandleType handleType)
+{
+  std::string msg = Util::StringFormat("%s = 0x%X",
+                                       _handleNameByType.at(handleType).data(),
+                                       _objectHandles[handleType]);
+  StdOut(msg);
 }

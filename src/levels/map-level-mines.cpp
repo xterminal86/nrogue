@@ -618,7 +618,7 @@ void MapLevelMines::CreateRandomBoxes()
   auto emptyCellsCopy = _emptyCells;
 
   int maxAttempts = 5;
-  int maxBoxes = 8;
+  int maxBoxes = 4;
 
   for (int i = 0; i < maxAttempts; i++)
   {
@@ -639,10 +639,12 @@ void MapLevelMines::CreateRandomBoxes()
     auto res = Map::Instance().GetEmptyCellsAround(pos, rangeNeeded);
     if (res.size() >= boxesNum)
     {
+      //
       // res.size() is a minimum required square to put numBarrels into,
       // which may be significantly larger than amount of barrels to create
       // (e.g. 10 barrels can only fit in 5x5=25 square area around point),
       // so we need to check the number of barrels created so far separately.
+      //
       size_t created = 0;
       for (auto& p : res)
       {
