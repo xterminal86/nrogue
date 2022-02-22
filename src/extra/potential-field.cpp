@@ -28,9 +28,15 @@ void PotentialField::Init(GameObject* owner, int fieldRadius)
   _fieldOrigin = { _owner->PosX, _owner->PosY };
 
   int size = _fieldRadius * 2;
+
+  _field.reserve(size + 1);
+
   for (int x = 0; x <= size; x++)
   {
     std::vector<Cell> row;
+
+    row.reserve(size + 1);
+
     for (int y = 0; y <= size; y++)
     {
       Cell c;

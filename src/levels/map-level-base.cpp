@@ -48,10 +48,20 @@ MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
 
 void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
 {
+  MapArray.reserve(MapSize.X);
+  StaticMapObjects.reserve(MapSize.X);
+
+  GameObjects.reserve(100);
+  ActorGameObjects.reserve(100);
+
   for (int x = 0; x < MapSize.X; x++)
   {
     std::vector<std::unique_ptr<GameObject>> row;
     std::vector<std::unique_ptr<GameObject>> rowStatic;
+
+    row.reserve(MapSize.Y);
+    rowStatic.reserve(MapSize.Y);
+
     for (int y = 0; y < MapSize.Y; y++)
     {
       row.push_back(std::unique_ptr<GameObject>(new GameObject()));
@@ -100,7 +110,14 @@ const std::vector<Position>& MapLevelBase::EmptyCells()
 #ifdef DEBUG_BUILD
 GameObject* MapLevelBase::FindObjectByAddress(const std::string& addressString)
 {
-  GameObject* res = FindInVV(MapArray, addressString);
+  GameObject* res = nullptr;
+
+  if (_playerRef->HexAddressString == addressString)
+  {
+    return _playerRef;
+  }
+
+  res = FindInVV(MapArray, addressString);
   if (res == nullptr)
   {
     res = FindInVV(StaticMapObjects, addressString);

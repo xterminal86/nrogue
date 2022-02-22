@@ -37,7 +37,10 @@
 #define DebugLog(format, ...) SDL_Log(format, ##__VA_ARGS__)
 #endif
 
+// Coded Map
 using CM = std::vector<std::vector<std::pair<uint32_t, uint32_t>>>;
+
+// Coded String
 using CS = std::vector<uint32_t>;
 
 class GameObject;
