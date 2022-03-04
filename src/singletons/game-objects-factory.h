@@ -31,7 +31,6 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, int image, MapType leadsTo);
 
     bool HandleItemUse(ItemComponent* item);
-    bool HandleItemEquip(ItemComponent* item);
 
     GameObject* CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1, GameObjectType type = GameObjectType::HARMLESS);
     GameObject* CreateDoor(int x, int y,

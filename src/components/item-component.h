@@ -16,7 +16,6 @@ class ItemComponent : public Component
     bool Use();
     void Transfer(ContainerComponent* destination = nullptr);
     void Inspect(bool overrideDescriptions = false);
-    bool Equip();
 
     std::pair<std::string, StringsArray2D> GetInspectionInfo(bool overrideDescriptions = false);
 

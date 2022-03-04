@@ -225,33 +225,6 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
   return go;
 }
 
-bool GameObjectsFactory::HandleItemEquip(ItemComponent* item)
-{
-  bool res = false;
-
-  if (item->Data.EqCategory == EquipmentCategory::NOT_EQUIPPABLE)
-  {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           Strings::MessageBoxInformationHeaderText,
-                                           { "Can't be equipped!" },
-                                           Colors::MessageBoxRedBorderColor);
-    return res;
-  }
-
-  auto category = item->Data.EqCategory;
-
-  if (category == EquipmentCategory::RING)
-  {
-    res = ItemsFactory::Instance().ProcessRingEquiption(item);
-  }
-  else
-  {
-    res = ItemsFactory::Instance().ProcessItemEquiption(item);
-  }
-
-  return res;
-}
-
 bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
 {
   bool res = false;

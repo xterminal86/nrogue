@@ -28,7 +28,7 @@ void Player::Init()
   Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
   Inventory = AddComponent<ContainerComponent>(GlobalConstants::InventoryMaxSize);
-  Equipment = AddComponent<EquipmentComponent>();
+  Equipment = AddComponent<EquipmentComponent>(Inventory);
 
   SetAttributes();
   SetDefaultItems();
@@ -461,7 +461,8 @@ void Player::SetDefaultEquipment()
   for (auto& i : weaponAndArmorToEquip)
   {
     ItemComponent* ic = i->GetComponent<ItemComponent>();
-    ic->Equip();
+    Equipment->Equip(ic);
+    //ic->Equip();
 
     auto it = Printer::Instance().Messages().begin();
     Printer::Instance().Messages().erase(it);

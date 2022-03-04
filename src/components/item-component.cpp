@@ -32,11 +32,6 @@ void ItemComponent::Transfer(ContainerComponent* destination)
   }
 }
 
-bool ItemComponent::Equip()
-{
-  return GameObjectsFactory::Instance().HandleItemEquip(this);
-}
-
 std::pair<std::string, StringsArray2D> ItemComponent::GetInspectionInfo(bool overrideDescriptions)
 {
   std::pair<std::string, StringsArray2D> res;

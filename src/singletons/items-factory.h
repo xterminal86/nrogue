@@ -108,14 +108,6 @@ class ItemsFactory : public Singleton<ItemsFactory>
 
     void BUCQualityAdjust(ItemData& itemData);
 
-    bool ProcessItemEquiption(ItemComponent* item);
-    bool ProcessRingEquiption(ItemComponent* item);
-
-    void EquipItem(ItemComponent* item);
-    void UnequipItem(ItemComponent* item);
-    void EquipRing(ItemComponent* ring, int index);
-    void UnequipRing(ItemComponent* ring, int index);
-
     int CalculateAverageDamage(int numRolls, int diceSides);
 
     ItemPrefix RollItemPrefix();

@@ -124,7 +124,6 @@ struct ItemData
   std::vector<ItemBonusStruct> Bonuses;
 
   std::function<bool(void*)> UseCallback;
-  std::function<void(void*)> EquipCallback;
 
   size_t ItemTypeHash;
 };

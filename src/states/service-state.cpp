@@ -209,8 +209,8 @@ void ServiceState::BlessItem(const ServiceInfo& si)
   if (equippedItem == si.ItemComponentRef)
   {
     // Unequip / equip to reapply stat bonuses
-    equippedItem->Equip();
-    equippedItem->Equip();
+    _playerRef->Equipment->Equip(equippedItem);
+    _playerRef->Equipment->Equip(equippedItem);
 
     Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
     Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
