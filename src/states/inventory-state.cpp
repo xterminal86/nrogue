@@ -150,16 +150,6 @@ void InventoryState::HandleInput()
         _playerRef->FinishTurn();
         Application::Instance().ChangeState(GameStates::MAIN_STATE);
       }
-
-      /*
-      auto go = _playerRef->Inventory->Contents[_selectedIndex].get();
-      ItemComponent* ic = go->GetComponent<ItemComponent>();
-      if (ic->Equip())
-      {
-        _playerRef->FinishTurn();
-        Application::Instance().ChangeState(GameStates::MAIN_STATE);
-      }
-      */
     }
     break;
 

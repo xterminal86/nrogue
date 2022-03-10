@@ -11,6 +11,11 @@ class ItemComponent;
 class ContainerComponent;
 class Player;
 
+//
+// Not every GameObject can be equipped, so in order
+// not to overload already overloaded GameObject class,
+// functionality is moved to separate component.
+//
 class EquipmentComponent : public Component
 {
   public:

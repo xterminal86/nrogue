@@ -462,7 +462,6 @@ void Player::SetDefaultEquipment()
   {
     ItemComponent* ic = i->GetComponent<ItemComponent>();
     Equipment->Equip(ic);
-    //ic->Equip();
 
     auto it = Printer::Instance().Messages().begin();
     Printer::Instance().Messages().erase(it);
