@@ -30,8 +30,6 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     // Creates stairs on MapArray of current level
     void CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, int image, MapType leadsTo);
 
-    bool HandleItemUse(ItemComponent* item);
-
     GameObject* CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints = -1, GameObjectType type = GameObjectType::HARMLESS);
     GameObject* CreateDoor(int x, int y,
                            bool isOpen,

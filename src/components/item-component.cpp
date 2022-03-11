@@ -104,9 +104,14 @@ void ItemComponent::Inspect(bool overrideDescriptions)
   Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, lore.first, lore.second);
 }
 
-bool ItemComponent::Use()
+UseResult ItemComponent::Use(GameObject* user)
 {
-  return GameObjectsFactory::Instance().HandleItemUse(this);
+  if (!Data.CanBeUsed())
+  {
+    return UseResult::UNUSABLE;
+  }
+
+  return Data.UseCallback(this, user);
 }
 
 // ************************** PRIVATE METHODS ************************** //

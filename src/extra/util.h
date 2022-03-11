@@ -141,6 +141,8 @@ namespace Util
 
   extern Position InvertDirection(const Position& dir);
 
+  extern bool IsPlayer(GameObject* obj);
+
   // ===========================================================================
 
   /// Produces random pair from pairs list according to weight value:

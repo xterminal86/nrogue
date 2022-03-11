@@ -1,20 +1,23 @@
 #ifndef ITEMUSEHANDLERS_H
 #define ITEMUSEHANDLERS_H
 
+#include "enumerations.h"
+
 class ItemComponent;
+class GameObject;
 
 namespace ItemUseHandlers
 {
-  bool HealingPotionUseHandler(ItemComponent* item);
-  bool NeutralizePoisonPotionUseHandler(ItemComponent* item);
-  bool ManaPotionUseHandler(ItemComponent* item);
-  bool HungerPotionUseHandler(ItemComponent* item);
-  bool ExpPotionUseHandler(ItemComponent* item);
-  bool StatPotionUseHandler(ItemComponent* item);
-  bool ReturnerUseHandler(ItemComponent* item);
-  bool RepairKitUseHandler(ItemComponent* item);
-  bool ScrollUseHandler(ItemComponent* item);
-  bool FoodUseHandler(ItemComponent* item);
+  UseResult HealingPotionUseHandler(ItemComponent* item, GameObject* user);
+  UseResult NeutralizePoisonPotionUseHandler(ItemComponent* item, GameObject* user);
+  UseResult ManaPotionUseHandler(ItemComponent* item, GameObject* user);
+  UseResult HungerPotionUseHandler(ItemComponent* item, GameObject* user);
+  UseResult ExpPotionUseHandler(ItemComponent* item, GameObject* user);
+  UseResult StatPotionUseHandler(ItemComponent* item, GameObject* user);
+  UseResult ReturnerUseHandler(ItemComponent* item, GameObject* user);
+  UseResult RepairKitUseHandler(ItemComponent* item, GameObject* user);
+  UseResult ScrollUseHandler(ItemComponent* item, GameObject* user);
+  UseResult FoodUseHandler(ItemComponent* item, GameObject* user);
 }
 
 #endif // ITEMUSEHANDLERS_H

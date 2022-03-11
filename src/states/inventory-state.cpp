@@ -91,7 +91,9 @@ void InventoryState::HandleInput()
       auto go = _playerRef->Inventory->Contents[_selectedIndex].get();
       ItemComponent* ic = go->GetComponent<ItemComponent>();
 
-      if (ic->Use())
+      UseResult r = ic->Use(_playerRef);
+
+      if (r == UseResult::SUCCESS)
       {
         if (ic->Data.IsStackable)
         {
@@ -101,6 +103,8 @@ void InventoryState::HandleInput()
           {
             DestroyInventoryItem();
           }
+
+          Application::Instance().ChangeState(GameStates::MAIN_STATE);
         }
         else if (ic->Data.IsChargeable)
         {
@@ -122,6 +126,7 @@ void InventoryState::HandleInput()
         else
         {
           DestroyInventoryItem();
+          Application::Instance().ChangeState(GameStates::MAIN_STATE);
         }
 
         // Turn is finished in corresponding states
@@ -137,6 +142,13 @@ void InventoryState::HandleInput()
         {
           Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
         }
+      }
+      else if (r == UseResult::UNUSABLE)
+      {
+        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                               Strings::MessageBoxInformationHeaderText,
+                                               { Strings::MsgCantBeUsed },
+                                               Colors::MessageBoxRedBorderColor);
       }
     }
     break;

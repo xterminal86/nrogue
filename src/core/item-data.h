@@ -5,6 +5,8 @@
 #include "attribute.h"
 #include "spells-database.h"
 
+class GameObject;
+
 struct ItemBonusStruct
 {
   ItemBonusType Type = ItemBonusType::NONE;
@@ -123,7 +125,7 @@ struct ItemData
 
   std::vector<ItemBonusStruct> Bonuses;
 
-  std::function<bool(void*)> UseCallback;
+  std::function<UseResult(ItemComponent*,GameObject*)> UseCallback;
 
   size_t ItemTypeHash;
 };

@@ -13,7 +13,7 @@ class ItemComponent : public Component
 
     void Update() override;
 
-    bool Use();
+    UseResult Use(GameObject* user);
     void Transfer(ContainerComponent* destination = nullptr);
     void Inspect(bool overrideDescriptions = false);
 

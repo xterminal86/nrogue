@@ -10,16 +10,12 @@
 
 namespace ItemUseHandlers
 {
-  bool HealingPotionUseHandler(ItemComponent *item)
+  UseResult HealingPotionUseHandler(ItemComponent *item, GameObject* user)
   {
-    Player* playerRef = &Application::Instance().PlayerInstance;
-
-    playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
-
     int amount = 0;
 
-    int statMax = playerRef->Attrs.HP.Max().Get();
-    int statCur = playerRef->Attrs.HP.Min().Get();
+    int statMax = user->Attrs.HP.Max().Get();
+    int statCur = user->Attrs.HP.Min().Get();
 
     std::string message;
 
@@ -38,7 +34,7 @@ namespace ItemUseHandlers
       message = "You feel better";
       message = (statCur == statMax)
                 ? Strings::NoActionText
-                : "You feel better";
+                : message;
     }
     else if (item->Data.Prefix == ItemPrefix::CURSED)
     {
@@ -68,63 +64,83 @@ namespace ItemUseHandlers
         e.BonusValue = -1;
         e.Cumulative = true;
 
-        playerRef->AddEffect(e);
+        user->AddEffect(e);
       }
     }
 
-    if (message != Strings::NoActionText && amount > 0)
+    if (Util::IsPlayer(user))
     {
-      playerRef->RememberItem(item, "healing potion");
+      Player* playerRef = &Application::Instance().PlayerInstance;
+      playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
+
+      Printer::Instance().AddMessage(message);
+
+      //
+      // Potion that deals damage is not necessarily
+      // a cursed healing potion, thus check for amount > 0.
+      //
+      if(message != Strings::NoActionText && amount > 0)
+      {
+        playerRef->RememberItem(item, "healing potion");
+      }
     }
 
-    Printer::Instance().AddMessage(message);
+    user->Attrs.HP.AddMin(amount);
 
-    playerRef->Attrs.HP.AddMin(amount);
-
-    Application::Instance().ChangeState(GameStates::MAIN_STATE);
-
-    return true;
+    return UseResult::SUCCESS;
   }
 
-  bool ManaPotionUseHandler(ItemComponent* item)
+  UseResult ManaPotionUseHandler(ItemComponent* item, GameObject* user)
   {
-    Player* playerRef = &Application::Instance().PlayerInstance;
-
     int amount = 0;
 
-    int statMax = playerRef->Attrs.MP.Max().Get();
+    int statCur = user->Attrs.MP.Min().Get();
+    int statMax = user->Attrs.MP.Max().Get();
+
+    std::string message;
 
     if (item->Data.Prefix == ItemPrefix::BLESSED)
     {
       amount = statMax;
-      Printer::Instance().AddMessage("Your spirit force was restored!");
+      message = "Your spirit force was restored!";
+      message = (statCur == statMax)
+                ? Strings::NoActionText
+                : message;
     }
     else if (item->Data.Prefix == ItemPrefix::UNCURSED)
     {
       amount = statMax * 0.3f;
-      Printer::Instance().AddMessage("Your spirit is reinforced");
+      message = "Your spirit is reinforced";
+      message = (statCur == statMax)
+                ? Strings::NoActionText
+                : message;
     }
     else if (item->Data.Prefix == ItemPrefix::CURSED)
     {
       amount = -statMax * 0.3f;
-      Printer::Instance().AddMessage("Your spirit force was drained!");
+      message = "Your spirit force was drained!";
     }
 
-    playerRef->RememberItem(item, "mana potion");
+    user->Attrs.MP.AddMin(amount);
 
-    playerRef->Attrs.MP.AddMin(amount);
+    if (Util::IsPlayer(user))
+    {
+      Player* playerRef = &Application::Instance().PlayerInstance;
+      playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
 
-    Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Printer::Instance().AddMessage(message);
 
-    return true;
+      if (message != Strings::NoActionText && amount > 0)
+      {
+        playerRef->RememberItem(item, "mana potion");
+      }
+    }
+
+    return UseResult::SUCCESS;
   }
 
-  bool NeutralizePoisonPotionUseHandler(ItemComponent* item)
+  UseResult NeutralizePoisonPotionUseHandler(ItemComponent* item, GameObject* user)
   {
-    Player* playerRef = &Application::Instance().PlayerInstance;
-
-    playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
-
     std::string message = Strings::NoActionText;
 
     // Blessed potion removes all poison, uncursed removes
@@ -132,22 +148,18 @@ namespace ItemUseHandlers
 
     if (item->Data.Prefix == ItemPrefix::BLESSED)
     {
-      if (playerRef->HasEffect(ItemBonusType::POISONED))
+      if (user->HasEffect(ItemBonusType::POISONED))
       {
-        playerRef->RemoveEffectAllOf(ItemBonusType::POISONED);
+        user->RemoveEffectAllOf(ItemBonusType::POISONED);
         message = "The illness is gone!";
-
-        playerRef->RememberItem(item, "neutralize poison");
       }
     }
     else if (item->Data.Prefix == ItemPrefix::UNCURSED)
     {
-      if (playerRef->HasEffect(ItemBonusType::POISONED))
+      if (user->HasEffect(ItemBonusType::POISONED))
       {
-        playerRef->RemoveEffectFirstFound(ItemBonusType::POISONED);
+        user->RemoveEffectFirstFound(ItemBonusType::POISONED);
         message = "The illness subsides";
-
-        playerRef->RememberItem(item, "neutralize poison");
       }
     }
     else if (item->Data.Prefix == ItemPrefix::CURSED)
@@ -161,28 +173,33 @@ namespace ItemUseHandlers
       bs.Cumulative = true;
       bs.Type       = ItemBonusType::POISONED;
 
-      playerRef->AddEffect(bs);
+      user->AddEffect(bs);
 
       message = "You are feeling unwell...";
     }
 
-    Printer::Instance().AddMessage(message);
+    if (Util::IsPlayer(user))
+    {
+      Player* playerRef = &Application::Instance().PlayerInstance;
+      playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
 
-    Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Printer::Instance().AddMessage(message);
 
-    return true;
+      if (message != Strings::NoActionText)
+      {
+        playerRef->RememberItem(item, "neutralize poison");
+      }
+    }
+
+    return UseResult::SUCCESS;
   }
 
-  bool HungerPotionUseHandler(ItemComponent* item)
+  UseResult HungerPotionUseHandler(ItemComponent* item, GameObject* user)
   {
-    Player* playerRef = &Application::Instance().PlayerInstance;
-
-    playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
-
     int amount = 0;
 
-    int statMax = playerRef->Attrs.Hunger;
-    int& statCur = playerRef->Attrs.Hunger;
+    int statMax = user->Attrs.Hunger;
+    int& statCur = user->Attrs.Hunger;
 
     std::string message;
 
@@ -206,68 +223,75 @@ namespace ItemUseHandlers
       message = "Your feel peckish";
     }
 
-    if (message != Strings::NoActionText)
-    {
-      playerRef->RememberItem(item, "food potion");
-    }
-
-    Printer::Instance().AddMessage(message);
-
     statCur += amount;
     statCur = Util::Clamp(statCur, 0, statMax);
 
-    Application::Instance().ChangeState(GameStates::MAIN_STATE);
+    if (Util::IsPlayer(user))
+    {
+      Player* playerRef = &Application::Instance().PlayerInstance;
+      playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
 
-    return true;
+      Printer::Instance().AddMessage(message);
+
+      if (message != Strings::NoActionText)
+      {
+        playerRef->RememberItem(item, "food potion");
+      }
+    }
+
+    return UseResult::SUCCESS;
   }
 
-  bool ExpPotionUseHandler(ItemComponent* item)
+  UseResult ExpPotionUseHandler(ItemComponent* item, GameObject* user)
   {
-    Player* playerRef = &Application::Instance().PlayerInstance;
-
     int amount = 0;
 
     int statMax = 100;
 
+    std::string message;
+
     if (item->Data.Prefix == ItemPrefix::BLESSED)
     {
       amount = statMax;
-      Printer::Instance().AddMessage("You feel enlighted!");
+      message = "You feel enlighted!";
     }
     else if (item->Data.Prefix == ItemPrefix::UNCURSED)
     {
       amount = statMax * 0.3f;
-      Printer::Instance().AddMessage("You feel more experienced");
+      message = "You feel more experienced";
     }
     else if (item->Data.Prefix == ItemPrefix::CURSED)
     {
       amount = -statMax * 0.3f;
-      Printer::Instance().AddMessage("You lose some experience!");
+      message = "You lose some experience!";
     }
 
-    playerRef->RememberItem(item, "potion of learning");
+    // FIXME:
+    //user->AwardExperience(amount);
 
-    Application::Instance().ChangeState(GameStates::MAIN_STATE);
+    if (Util::IsPlayer(user))
+    {
+      Printer::Instance().AddMessage(message);
 
-    playerRef->AwardExperience(amount);
+      Player* playerRef = &Application::Instance().PlayerInstance;
+      playerRef->RememberItem(item, "potion of learning");
+    }
 
-    return true;
+    return UseResult::SUCCESS;
   }
 
-  bool StatPotionUseHandler(ItemComponent* item)
+  UseResult StatPotionUseHandler(ItemComponent* item, GameObject* user)
   {
-    Player* playerRef = &Application::Instance().PlayerInstance;
-
     ItemPrefix buc = item->Data.Prefix;
 
     std::map<ItemType, std::string> useMessagesByType =
     {
-      { ItemType::STR_POTION, "Your Strength has " },
-      { ItemType::DEF_POTION, "Your Defence has " },
-      { ItemType::MAG_POTION, "Your Magic has " },
+      { ItemType::STR_POTION, "Your Strength has "   },
+      { ItemType::DEF_POTION, "Your Defence has "    },
+      { ItemType::MAG_POTION, "Your Magic has "      },
       { ItemType::RES_POTION, "Your Resistance has " },
-      { ItemType::SKL_POTION, "Your Skill has " },
-      { ItemType::SPD_POTION, "Your Speed has " }
+      { ItemType::SKL_POTION, "Your Skill has "      },
+      { ItemType::SPD_POTION, "Your Speed has "      }
     };
 
     int valueToAdd = 0;
@@ -290,16 +314,14 @@ namespace ItemUseHandlers
       message += "decreased!";
     }
 
-    Printer::Instance().AddMessage(message);
-
-    std::map<ItemType, Attribute&> playerStats =
+    std::map<ItemType, Attribute&> userStats =
     {
-      { ItemType::STR_POTION, playerRef->Attrs.Str },
-      { ItemType::DEF_POTION, playerRef->Attrs.Def },
-      { ItemType::MAG_POTION, playerRef->Attrs.Mag },
-      { ItemType::RES_POTION, playerRef->Attrs.Res },
-      { ItemType::SKL_POTION, playerRef->Attrs.Skl },
-      { ItemType::SPD_POTION, playerRef->Attrs.Spd }
+      { ItemType::STR_POTION, user->Attrs.Str },
+      { ItemType::DEF_POTION, user->Attrs.Def },
+      { ItemType::MAG_POTION, user->Attrs.Mag },
+      { ItemType::RES_POTION, user->Attrs.Res },
+      { ItemType::SKL_POTION, user->Attrs.Skl },
+      { ItemType::SPD_POTION, user->Attrs.Spd }
     };
 
     const std::map<ItemType, std::string> playerMemoryTextByType =
@@ -314,7 +336,7 @@ namespace ItemUseHandlers
 
     auto itemType = item->Data.ItemType_;
 
-    int newValue = playerStats.at(itemType).OriginalValue() + valueToAdd;
+    int newValue = userStats.at(itemType).OriginalValue() + valueToAdd;
 
     if (newValue < 0)
     {
@@ -322,24 +344,27 @@ namespace ItemUseHandlers
       message = Strings::NoActionText;
     }
 
-    playerStats.at(itemType).Set(newValue);
+    userStats.at(itemType).Set(newValue);
 
-    playerRef->RememberItem(item, playerMemoryTextByType.at(itemType));
+    if (Util::IsPlayer(user))
+    {
+      Printer::Instance().AddMessage(message);
 
-    Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      if (message != Strings::NoActionText)
+      {
+        Player* playerRef = &Application::Instance().PlayerInstance;
+        playerRef->RememberItem(item, playerMemoryTextByType.at(itemType));
+      }
+    }
 
-    return true;
+    return UseResult::SUCCESS;
   }
 
-  bool ReturnerUseHandler(ItemComponent* item)
+  UseResult ReturnerUseHandler(ItemComponent* item, GameObject* user)
   {
     if (!item->Data.IsIdentified)
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                             Strings::MessageBoxInformationHeaderText,
-                                             { Strings::MsgCantBeUsed },
-                                             Colors::MessageBoxRedBorderColor);
-      return false;
+      return UseResult::UNUSABLE;
     }
 
     if (item->Data.Amount == 0)
@@ -348,13 +373,13 @@ namespace ItemUseHandlers
                                              Strings::MessageBoxInformationHeaderText,
                                              { "You invoke the returner, but nothing happens." },
                                              Colors::ShadesOfGrey::Six);
-      return false;
+      return UseResult::FAILURE;
     }
 
-    return true;
+    return UseResult::SUCCESS;
   }
 
-  bool RepairKitUseHandler(ItemComponent* item)
+  UseResult RepairKitUseHandler(ItemComponent* item, GameObject* user)
   {
     Player* playerRef = &Application::Instance().PlayerInstance;
 
@@ -364,39 +389,38 @@ namespace ItemUseHandlers
                                              Strings::MessageBoxEpicFailHeaderText,
                                              { "You don't possess the necessary skill!" },
                                              Colors::MessageBoxRedBorderColor);
-      return false;
+      return UseResult::FAILURE;
     }
 
-    return true;
+    return UseResult::SUCCESS;
   }
 
-  bool ScrollUseHandler(ItemComponent* item)
+  UseResult ScrollUseHandler(ItemComponent* item, GameObject* user)
   {
+    // FIXME: modify accordingly
     SpellsProcessor::Instance().ProcessScroll(item);
-    Application::Instance().ChangeState(GameStates::MAIN_STATE);
-    return true;
+    return UseResult::SUCCESS;
   }
 
-  bool FoodUseHandler(ItemComponent* item)
+  UseResult FoodUseHandler(ItemComponent* item, GameObject* user)
   {
-    Player* playerRef = &Application::Instance().PlayerInstance;
-
     auto objName = (item->Data.IsIdentified) ?
                     item->Data.IdentifiedName :
                     item->Data.UnidentifiedName;
 
-    auto str = Util::StringFormat("You eat %s...", objName.data());
-    Printer::Instance().AddMessage(str);
+    std::vector<std::string> eatMessages;
+
+    eatMessages.push_back(Util::StringFormat("You eat %s...", objName.data()));
 
     if (item->Data.Prefix == ItemPrefix::CURSED)
     {
-      Printer::Instance().AddMessage("Disgusting!");
+      eatMessages.push_back("Disgusting!");
 
       if (Util::Rolld100(50))
       {
-        playerRef->Attrs.Hunger += item->Data.Cost;
+        user->Attrs.Hunger += item->Data.Cost;
 
-        Printer::Instance().AddMessage("Rotten food!");
+        eatMessages.push_back("Rotten food!");
 
         // NOTE: assuming player hunger meter is in order of 1000
         int dur = item->Data.Cost / 100;
@@ -409,32 +433,45 @@ namespace ItemUseHandlers
         b.Cumulative = true;
         b.Id = item->OwnerGameObject->ObjectId();
 
-        playerRef->AddEffect(b);
+        user->AddEffect(b);
       }
       else
       {
-        playerRef->Attrs.Hunger -= item->Data.Cost * 0.5f;
+        user->Attrs.Hunger -= item->Data.Cost * 0.5f;
       }
     }
     else if (item->Data.Prefix == ItemPrefix::BLESSED)
     {
-      Printer::Instance().AddMessage("It's delicious!");
-
-      playerRef->Attrs.Hunger -= item->Data.Cost;
-      playerRef->IsStarving = false;
+      eatMessages.push_back("It's delicious!");
+      user->Attrs.Hunger -= item->Data.Cost;
     }
     else
     {
-      Printer::Instance().AddMessage("It tasted OK");
-
-      playerRef->Attrs.Hunger -= item->Data.Cost * 0.75f;
-      playerRef->IsStarving = false;
+      eatMessages.push_back("It tasted OK");
+      user->Attrs.Hunger -= item->Data.Cost * 0.75f;
     }
 
-    playerRef->Attrs.Hunger = Util::Clamp(playerRef->Attrs.Hunger, 0, playerRef->Attrs.HungerRate.Get());
+    user->Attrs.Hunger = Util::Clamp(user->Attrs.Hunger,
+                                     0,
+                                     user->Attrs.HungerRate.Get());
 
-    Application::Instance().ChangeState(GameStates::MAIN_STATE);
+    if (Util::IsPlayer(user))
+    {
+      for (auto& msg : eatMessages)
+      {
+        Printer::Instance().AddMessage(msg);
+      }
 
-    return true;
+      Player* playerRef = &Application::Instance().PlayerInstance;
+
+      int maxHunger = playerRef->Attrs.HungerRate.Get();
+
+      if (playerRef->Attrs.Hunger < maxHunger)
+      {
+        playerRef->IsStarving = false;
+      }
+    }
+
+    return UseResult::SUCCESS;
   }
 }

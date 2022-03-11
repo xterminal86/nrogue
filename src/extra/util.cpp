@@ -1280,4 +1280,9 @@ namespace Util
   {
     return { -dir.X, -dir.Y };
   }
+
+  bool IsPlayer(GameObject* obj)
+  {
+    return (obj == &Application::Instance().PlayerInstance);
+  }
 }

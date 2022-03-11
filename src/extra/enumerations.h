@@ -8,6 +8,13 @@ enum class InteractionResult
   UNDEFINED
 };
 
+enum class UseResult
+{
+  SUCCESS = 0,
+  FAILURE,
+  UNUSABLE
+};
+
 enum class GameStates
 {
   UNDEIFNED = -2,

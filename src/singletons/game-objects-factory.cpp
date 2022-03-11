@@ -225,37 +225,6 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
   return go;
 }
 
-bool GameObjectsFactory::HandleItemUse(ItemComponent* item)
-{
-  bool res = false;
-
-  if (item->Data.CanBeUsed())
-  {
-    res = item->Data.UseCallback(item);
-  }
-  else
-  {
-    switch (item->Data.ItemType_)
-    {
-      case ItemType::COINS:
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                               Strings::MessageBoxInformationHeaderText,
-                                               { "You don't 'use' money like that." },
-                                               Colors::MessageBoxRedBorderColor);
-        break;
-
-      default:
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                               Strings::MessageBoxInformationHeaderText,
-                                               { Strings::MsgCantBeUsed },
-                                               Colors::MessageBoxRedBorderColor);
-        break;
-    }
-  }
-
-  return res;
-}
-
 void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, int image, MapType leadsTo)
 {
   auto tile = levelWhereCreate->MapArray[x][y].get();

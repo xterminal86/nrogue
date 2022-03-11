@@ -9,6 +9,8 @@
 #include "item-component.h"
 #include "item-use-handlers.h"
 
+using namespace std::placeholders;
+
 void ItemsFactory::InitSpecific()
 {
   InitPotionColors();
@@ -220,7 +222,9 @@ GameObject* ItemsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseHandlers::HealingPotionUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::HealingPotionUseHandler,
+                                   _1,
+                                   _2);
 
   SetItemName(go, ic->Data);
 
@@ -261,7 +265,9 @@ GameObject* ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride
   ic->Data.IdentifiedName        = name;
   ic->Data.UnidentifiedName      = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseHandlers::NeutralizePoisonPotionUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::NeutralizePoisonPotionUseHandler,
+                                   _1,
+                                   _2);
 
   SetItemName(go, ic->Data);
 
@@ -302,7 +308,9 @@ GameObject* ItemsFactory::CreateManaPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseHandlers::ManaPotionUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::ManaPotionUseHandler,
+                                   _1,
+                                   _2);
 
   SetItemName(go, ic->Data);
 
@@ -343,7 +351,9 @@ GameObject* ItemsFactory::CreateHungerPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseHandlers::HungerPotionUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::HungerPotionUseHandler,
+                                   _1,
+                                   _2);
 
   SetItemName(go, ic->Data);
 
@@ -389,7 +399,9 @@ GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseHandlers::ExpPotionUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::ExpPotionUseHandler,
+                                   _1,
+                                   _2);
 
   SetItemName(go, ic->Data);
 
@@ -432,7 +444,9 @@ GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPref
   ic->Data.IdentifiedName = name;
   ic->Data.UnidentifiedName = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseHandlers::StatPotionUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::StatPotionUseHandler,
+                                   _1,
+                                   _2);
 
   SetItemName(go, ic->Data);
 
@@ -500,7 +514,9 @@ GameObject* ItemsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix pre
   ic->Data.IdentifiedDescription = { "Looks edible." };
   ic->Data.IdentifiedName = name;
 
-  ic->Data.UseCallback = std::bind(&ItemUseHandlers::FoodUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::FoodUseHandler,
+                                   _1,
+                                   _2);
 
   SetItemName(go, ic->Data);
 
@@ -607,7 +623,9 @@ GameObject* ItemsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix 
 
   SetItemName(go, ic->Data);
 
-  ic->Data.UseCallback = std::bind(&ItemUseHandlers::ScrollUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::ScrollUseHandler,
+                                   _1,
+                                   _2);
 
   ic->Data.ItemTypeHash = CalculateItemHash(ic);
 
@@ -1061,7 +1079,9 @@ GameObject* ItemsFactory::CreateReturner(int x, int y, int charges, ItemPrefix p
   ic->Data.IdentifiedName = colorName + " Returner";
   ic->Data.UnidentifiedName = "?" + colorName + " Gem?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseHandlers::ReturnerUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::ReturnerUseHandler,
+                                   _1,
+                                   _2);
 
   go->ObjectName = ic->Data.IdentifiedName;
 
@@ -1107,7 +1127,9 @@ GameObject* ItemsFactory::CreateRepairKit(int x, int y, int charges, ItemPrefix 
   ic->Data.IdentifiedName = "Repair Kit";
   ic->Data.UnidentifiedName = "?Repair Kit?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseHandlers::RepairKitUseHandler, ic);
+  ic->Data.UseCallback = std::bind(&ItemUseHandlers::RepairKitUseHandler,
+                                   _1,
+                                   _2);
 
   go->ObjectName = ic->Data.IdentifiedName;
 
