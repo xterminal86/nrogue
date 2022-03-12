@@ -54,10 +54,10 @@ class Player : public GameObject
 
     std::string Name = "Nameless One";
 
-    void AwardExperience(int amount);
+    void AwardExperience(int amount) override;
     void LevelUpSilent();
     void LevelUp(int baseHpOverride = -1) override;
-    void LevelDown();
+    void LevelDown() override;
 
     void RememberItem(ItemComponent* itemRef, const std::string& effect);
     void AddExtraItems();

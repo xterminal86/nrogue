@@ -150,7 +150,9 @@ class GameObject
     void FinishTurn();
     void WaitForTurn();
 
+    virtual void AwardExperience(int amount);
     virtual void LevelUp(int baseHpOverride = -1);
+    virtual void LevelDown();
 
     void AddEffect(const ItemBonusStruct& effectToAdd);
 

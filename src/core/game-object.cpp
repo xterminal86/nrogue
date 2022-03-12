@@ -970,6 +970,27 @@ size_t GameObject::ComponentsSize()
   return _components.size();
 }
 
+void GameObject::AwardExperience(int amount)
+{
+  int amnt = amount * (Attrs.Exp.Talents + 1);
+
+  // FIXME: debug
+  //int amnt = 100;
+
+  Attrs.Exp.AddMin(amnt);
+
+  if (Attrs.Exp.Min().Get() >= Attrs.Exp.Max().Get())
+  {
+    Attrs.Exp.SetMin(0);
+    LevelUp();
+  }
+  else if (amnt < 0 && Attrs.Exp.Min().Get() <= 0)
+  {
+    Attrs.Exp.SetMin(0);
+    LevelDown();
+  }
+}
+
 void GameObject::LevelUp(int baseHpOverride)
 {
   std::map<int, std::pair<std::string, Attribute&>> mainAttributes =
@@ -1015,6 +1036,67 @@ void GameObject::LevelUp(int baseHpOverride)
   Attrs.MP.AddMax(mpToAdd);
 
   Attrs.Lvl.Add(1);
+}
+
+void GameObject::LevelDown()
+{
+  std::map<int, std::pair<std::string, Attribute&>> mainAttributes =
+  {
+    { 0, { "STR", Attrs.Str } },
+    { 1, { "DEF", Attrs.Def } },
+    { 2, { "MAG", Attrs.Mag } },
+    { 3, { "RES", Attrs.Res } },
+    { 4, { "SKL", Attrs.Skl } },
+    { 5, { "SPD", Attrs.Spd } }
+  };
+
+  // Try to raise main stats
+
+  for (auto& i : mainAttributes)
+  {
+    auto kvp = i.second;
+
+    if (CanRaiseAttribute(kvp.second))
+    {
+      kvp.second.Add(-1);
+      if (kvp.second.OriginalValue() < 0)
+      {
+        kvp.second.Set(0);
+      }
+    }
+  }
+
+  // HP and MP
+
+  int minRndHp = (Attrs.HP.Talents + 1);
+  int maxRndHp = 2 * (Attrs.HP.Talents + 1);
+
+  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp + 1);
+  Attrs.HP.AddMax(-hpToAdd);
+
+  if (Attrs.HP.Max().OriginalValue() <= 0)
+  {
+    Attrs.HP.SetMax(1);
+    Attrs.HP.Restore();
+  }
+
+  int minRndMp = Attrs.Mag.OriginalValue();
+  int maxRndMp = Attrs.Mag.OriginalValue() + Attrs.MP.Talents;
+
+  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp + 1);
+  Attrs.MP.AddMax(-mpToAdd);
+
+  if (Attrs.MP.Max().OriginalValue() < 0)
+  {
+    Attrs.MP.SetMax(0);
+    Attrs.MP.Restore();
+  }
+
+  Attrs.Lvl.Add(-1);
+  if (Attrs.Lvl.OriginalValue() <= 1)
+  {
+    Attrs.Lvl.Set(1);
+  }
 }
 
 bool GameObject::CanRaiseAttribute(Attribute& attr)

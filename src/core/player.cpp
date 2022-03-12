@@ -1033,15 +1033,15 @@ bool Player::ShouldBreak(ItemComponent *ic)
 
 void Player::AwardExperience(int amount)
 {
+  auto msg = Util::StringFormat("+%i EXP", amount);
+  Printer::Instance().AddMessage(msg);
+
   int amnt = amount * (Attrs.Exp.Talents + 1);
 
   // FIXME: debug
   //int amnt = 100;
 
   Attrs.Exp.AddMin(amnt);
-
-  auto msg = Util::StringFormat("+%i EXP", amnt);
-  Printer::Instance().AddMessage(msg);
 
   if (Attrs.Exp.Min().Get() >= Attrs.Exp.Max().Get())
   {
@@ -1067,7 +1067,9 @@ void Player::LevelUp(int baseHpOverride)
     kvp.second = 0;
   }
 
-  Printer::Instance().AddMessage("You have gained a level!");
+  std::vector<std::string> messages;
+
+  messages.push_back("You have gained a level!");
 
   // Try to raise main stats
 
@@ -1075,8 +1077,10 @@ void Player::LevelUp(int baseHpOverride)
   {
     auto kvp = i.second;
 
+    #ifdef DEBUG_BUILD
     auto log = Util::StringFormat("Raising %s", kvp.first.data());
     Logger::Instance().Print(log);
+    #endif
 
     if (CanRaiseAttribute(kvp.second))
     {
@@ -1084,8 +1088,7 @@ void Player::LevelUp(int baseHpOverride)
 
       kvp.second.Add(1);
 
-      auto str = Util::StringFormat("%s +1", kvp.first.data());
-      Printer::Instance().AddMessage(str);
+      messages.push_back(Util::StringFormat("%s +1", kvp.first.data()));
     }
   }
 
@@ -1101,8 +1104,7 @@ void Player::LevelUp(int baseHpOverride)
 
   if (hpToAdd > 0)
   {
-    auto str = Util::StringFormat("HP +%i", hpToAdd);
-    Printer::Instance().AddMessage(str);
+    messages.push_back(Util::StringFormat("HP +%i", hpToAdd));
   }
 
   int minRndMp = Attrs.Mag.OriginalValue();
@@ -1115,15 +1117,22 @@ void Player::LevelUp(int baseHpOverride)
 
   if (mpToAdd > 0)
   {
-    auto str = Util::StringFormat("MP +%i", mpToAdd);
-    Printer::Instance().AddMessage(str);
+    messages.push_back(Util::StringFormat("MP +%i", mpToAdd));
   }
 
   Attrs.Lvl.Add(1);
 
-  auto res = GetPrettyLevelUpText();
+  for (auto& msg : messages)
+  {
+    Printer::Instance().AddMessage(msg);
+  }
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Level Up!", res, "#888800", "#000044");
+  auto res = GetPrettyLevelUpText();
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                                         "Level Up!",
+                                         res,
+                                         "#888800",
+                                         "#000044");
 }
 
 void Player::LevelDown()
@@ -1132,6 +1141,8 @@ void Player::LevelDown()
   {
     kvp.second = 0;
   }
+
+  std::vector<std::string> messages;
 
   // Try to raise main stats
 
@@ -1149,8 +1160,7 @@ void Player::LevelDown()
         kvp.second.Set(0);
       }
 
-      auto str = Util::StringFormat("%s -1", kvp.first.data());
-      Printer::Instance().AddMessage(str);
+      messages.push_back(Util::StringFormat("%s -1", kvp.first.data()));
     }
   }
 
@@ -1172,8 +1182,7 @@ void Player::LevelDown()
 
   if (hpToAdd > 0)
   {
-    auto str = Util::StringFormat("HP -%i", hpToAdd);
-    Printer::Instance().AddMessage(str);
+    messages.push_back(Util::StringFormat("HP -%i", hpToAdd));
   }
 
   int minRndMp = Attrs.Mag.OriginalValue();
@@ -1192,8 +1201,7 @@ void Player::LevelDown()
 
   if (mpToAdd > 0)
   {
-    auto str = Util::StringFormat("MP -%i", mpToAdd);
-    Printer::Instance().AddMessage(str);
+    messages.push_back(Util::StringFormat("MP -%i", mpToAdd));
   }
 
   Attrs.Lvl.Add(-1);
@@ -1202,9 +1210,18 @@ void Player::LevelDown()
     Attrs.Lvl.Set(1);
   }
 
+  for (auto& msg : messages)
+  {
+    Printer::Instance().AddMessage(msg);
+  }
+
   auto res = GetPrettyLevelUpText();
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Level DOWN!", res, Colors::RedColor, "#000044");
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                                         "Level DOWN!",
+                                         res,
+                                         Colors::RedColor,
+                                         "#000044");
 
   Printer::Instance().AddMessage("You have LOST a level!");
 }

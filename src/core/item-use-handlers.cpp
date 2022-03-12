@@ -266,8 +266,7 @@ namespace ItemUseHandlers
       message = "You lose some experience!";
     }
 
-    // FIXME:
-    //user->AwardExperience(amount);
+    user->AwardExperience(amount);
 
     if (Util::IsPlayer(user))
     {
