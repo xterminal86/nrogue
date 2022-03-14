@@ -26,8 +26,6 @@ class AIModelBase
 
     bool IsAgressive = false;
 
-    int AgroRadius = 0;
-
   protected:
     size_t _hash;
     Player* _playerRef = nullptr;

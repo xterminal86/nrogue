@@ -339,10 +339,7 @@ void CustomClassState::InitPlayerAttributes(Player* playerRef)
 
   playerRef->Attrs.HungerSpeed.Set(1);
 
-  // TODO:
-  // HungerRate
-  // HealthRegenTurns
-  // Skills
+  // TODO: HungerRate, HealthRegenTurns, Skills
 
   // FIXME:
   playerRef->Attrs.HungerRate.Set(1750);

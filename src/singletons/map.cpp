@@ -314,9 +314,11 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
   CurrentLevel->AdjustCamera();
 }
 
-void Map::TeleportToExistingLevel(MapType levelToChange, const Position& teleportTo, GameObject* objectToTeleport)
+void Map::TeleportToExistingLevel(MapType levelToChange,
+                                  const Position& teleportTo,
+                                  GameObject* objectToTeleport)
 {
-  bool forPlayer = false;
+  bool forPlayer = Util::IsPlayer(objectToTeleport);
 
   GameObject* whoToTeleport = nullptr;
   if (objectToTeleport == nullptr)

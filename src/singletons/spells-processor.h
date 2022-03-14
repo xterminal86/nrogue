@@ -8,12 +8,13 @@
 
 class Player;
 class ItemComponent;
+class GameObject;
 
 class SpellsProcessor : public Singleton<SpellsProcessor>
 {
   public:
     void ProcessWand(ItemComponent* wand);
-    void ProcessScroll(ItemComponent* scroll);
+    void ProcessScroll(ItemComponent* scroll, GameObject* user);
 
   protected:
     void InitSpecific() override;
@@ -21,21 +22,25 @@ class SpellsProcessor : public Singleton<SpellsProcessor>
   private:
     void ProcessWandOfLight(ItemComponent* wand);
 
-    void ProcessScrollOfLight(ItemComponent* scroll);
-    void ProcessScrollOfMM(ItemComponent* scroll);
-    void ProcessScrollOfHealing(ItemComponent* scroll);
-    void ProcessScrollOfNeutralizePoison(ItemComponent* scroll);
-    void ProcessScrollOfIdentify(ItemComponent* scroll);
-    void ProcessScrollOfRepair(ItemComponent* scroll);
-    void ProcessScrollOfDetectMonsters(ItemComponent* scroll);
-    void ProcessScrollOfTownPortal(ItemComponent* scroll);
-    void ProcessScrollOfTeleport(ItemComponent* scroll);
-    void ProcessScrollOfManaShield(ItemComponent* scroll);
-    void ProcessScrollOfRemoveCurse(ItemComponent* scroll);
+    void ProcessScrollOfLight(ItemComponent* scroll, GameObject* user);
+    void ProcessScrollOfMM(ItemComponent* scroll, GameObject* user);
+    void ProcessScrollOfHealing(ItemComponent* scroll, GameObject* user);
+    void ProcessScrollOfNeutralizePoison(ItemComponent* scroll, GameObject* user);
+    void ProcessScrollOfIdentify(ItemComponent* scroll, GameObject* user);
+    void ProcessScrollOfRepair(ItemComponent* scroll, GameObject* user);
+    void ProcessScrollOfDetectMonsters(ItemComponent* scroll, GameObject* user);
+    void ProcessScrollOfTownPortal(ItemComponent* scroll, GameObject* user);
+    void ProcessScrollOfTeleport(ItemComponent* scroll, GameObject* user);
+    void ProcessScrollOfManaShield(ItemComponent* scroll, GameObject* user);
+    void ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObject* user);
+
+    void PrintUsageResult(ItemComponent* scroll, GameObject* user);
 
     Player* _playerRef = nullptr;
 
     const std::string _kNoActionText = "...but nothing happens.";
+
+    std::vector<std::string> _scrollUseMessages;
 };
 
 #endif // SPELLSPROCESSOR_H

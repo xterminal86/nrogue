@@ -436,8 +436,10 @@ std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF(const ScriptNode* da
 
 std::function<BTResult()> AIModelBase::GetInRangeCF(const ScriptNode* data)
 {
-  // If range is not specified, it defaults to AgroRadius
-  unsigned int range = AgroRadius;
+  // If range is not specified, it defaults to VisibilityRadius
+  Attribute vr = AIComponentRef->OwnerGameObject->VisibilityRadius;
+
+  unsigned int range = vr.Get();
 
   if (data->Params.count("p2"))
   {

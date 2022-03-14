@@ -34,7 +34,9 @@ class Map : public Singleton<Map>
     void UpdateGameObjects();
 
     void ChangeLevel(MapType levelToChange, bool goingDown);
-    void TeleportToExistingLevel(MapType levelToChange, const Position& teleportTo, GameObject* objectToTeleport = nullptr);
+    void TeleportToExistingLevel(MapType levelToChange,
+                                 const Position& teleportTo,
+                                 GameObject* objectToTeleport = nullptr);
     void PrintMapArrayRevealedStatus();
 
     #ifdef DEBUG_BUILD

@@ -180,21 +180,19 @@ void LookInputState::Update(bool forceUpdate)
           AIComponent* aic = actor->GetComponent<AIComponent>();
           if (aic != nullptr)
           {
-            AIModelBase* model = dynamic_cast<AINPC*>(aic->CurrentModel);
-            if (model != nullptr)
+            if (aic->CurrentModel != nullptr)
             {
-              AINPC* ainpc = static_cast<AINPC*>(model);
-              std::string name = ainpc->Data.Name;
-              std::string title = ainpc->Data.Job;
-              std::string unidStr = ainpc->Data.UnacquaintedDescription;
-              auto idStr = Util::StringFormat("You see %s the %s", name.data(), title.data());
-              lookStatus = (ainpc->Data.IsAquainted) ? idStr : unidStr;
-              foundGameObject = true;
-            }
-            else
-            {
-              model = dynamic_cast<AIModelBase*>(aic->CurrentModel);
+              AINPC* model = dynamic_cast<AINPC*>(aic->CurrentModel);
               if (model != nullptr)
+              {
+                std::string name = model->Data.Name;
+                std::string title = model->Data.Job;
+                std::string unidStr = model->Data.UnacquaintedDescription;
+                auto idStr = Util::StringFormat("You see %s the %s", name.data(), title.data());
+                lookStatus = (model->Data.IsAquainted) ? idStr : unidStr;
+                foundGameObject = true;
+              }
+              else
               {
                 lookStatus = aic->OwnerGameObject->ObjectName;
                 foundGameObject = true;

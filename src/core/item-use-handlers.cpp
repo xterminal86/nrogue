@@ -396,8 +396,7 @@ namespace ItemUseHandlers
 
   UseResult ScrollUseHandler(ItemComponent* item, GameObject* user)
   {
-    // FIXME: modify accordingly
-    SpellsProcessor::Instance().ProcessScroll(item);
+    SpellsProcessor::Instance().ProcessScroll(item, user);
     return UseResult::SUCCESS;
   }
 

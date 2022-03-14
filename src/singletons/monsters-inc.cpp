@@ -40,7 +40,7 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
 
   AIComponent* ai = go->AddComponent<AIComponent>();
   AIMonsterBasic* aimb = ai->AddModel<AIMonsterBasic>();
-  aimb->AgroRadius = 8;
+  aimb->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(8);
   aimb->ConstructAI();
 
   ai->ChangeModel<AIMonsterBasic>();
@@ -104,7 +104,7 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
 
   AIComponent* ai = go->AddComponent<AIComponent>();
   AIMonsterBat* aimb = ai->AddModel<AIMonsterBat>();
-  aimb->AgroRadius = 16;
+  aimb->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(16);
   aimb->ConstructAI();
 
   ai->ChangeModel<AIMonsterBat>();
@@ -170,7 +170,7 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
 
   AIComponent* ai = go->AddComponent<AIComponent>();
   AIMonsterVampireBat* aimb = ai->AddModel<AIMonsterVampireBat>();
-  aimb->AgroRadius = 16;
+  aimb->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(16);
   aimb->ConstructAI();
 
   ai->ChangeModel<AIMonsterVampireBat>();
@@ -215,7 +215,7 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
 
   // ===========================================================================
   AIMonsterSpider* aims = ai->AddModel<AIMonsterSpider>();
-  aims->AgroRadius = 12;
+  aims->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(12);
   aims->ConstructAI();
   // ===========================================================================
 
@@ -276,7 +276,7 @@ GameObject* MonstersInc::CreateTroll(int x, int y, bool randomize)
 
   AIComponent* ai = go->AddComponent<AIComponent>();
   AIMonsterTroll* aims = ai->AddModel<AIMonsterTroll>();
-  aims->AgroRadius = 1;
+  aims->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(1);
   aims->ConstructAI();
 
   ai->ChangeModel<AIMonsterTroll>();
@@ -333,7 +333,7 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
 
   // ===========================================================================
   AIMonsterHerobrine* aims = ai->AddModel<AIMonsterHerobrine>();
-  aims->AgroRadius = 12;
+  aims->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(12);
   aims->ConstructAI();
   // ===========================================================================
   AIIdle* aii = ai->AddModel<AIIdle>();
@@ -386,7 +386,7 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
 
   // ===========================================================================
   AIMonsterMadMiner* aim = ai->AddModel<AIMonsterMadMiner>();
-  aim->AgroRadius = 6;
+  aim->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(6);
   aim->ConstructAI();
   // ===========================================================================
 
@@ -428,7 +428,7 @@ GameObject* MonstersInc::CreateShelob(int x, int y)
 
   // ===========================================================================
   AIMonsterShelob* aim = ai->AddModel<AIMonsterShelob>();
-  aim->AgroRadius = 6;
+  aim->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(6);
   aim->ConstructAI();
   // ===========================================================================
 
