@@ -104,6 +104,66 @@ void ItemComponent::Inspect(bool overrideDescriptions)
   Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, lore.first, lore.second);
 }
 
+void ItemComponent::Break(GameObject* itemOwner)
+{
+  //
+  // If no owner specified,
+  // assume it's a simple object lying on the ground.
+  //
+  if (itemOwner == nullptr)
+  {
+    OwnerGameObject->IsDestroyed = true;
+    return;
+  }
+
+  ContainerComponent* cc = itemOwner->GetComponent<ContainerComponent>();
+  EquipmentComponent* ec = itemOwner->GetComponent<EquipmentComponent>();
+
+  //
+  // Kinda impossible case where owner has an item,
+  // but there is no container for it.
+  //
+  if (cc == nullptr)
+  {
+    OwnerGameObject->IsDestroyed = true;
+  }
+  else
+  {
+    //
+    // Equipment cannot be without container, but the reverse is OK.
+    //
+    if (ec == nullptr)
+    {
+      for (size_t i = 0; i < cc->Contents.size(); i++)
+      {
+        if (cc->Contents[i].get() == OwnerGameObject)
+        {
+          cc->Contents.erase(cc->Contents.begin() + i);
+          break;
+        }
+      }
+    }
+    else
+    {
+      for (size_t i = 0; i < cc->Contents.size(); i++)
+      {
+        auto c = cc->Contents[i]->GetComponent<ItemComponent>();
+        ItemComponent* ic = static_cast<ItemComponent*>(c);
+
+        if (ic->Data.ItemTypeHash == Data.ItemTypeHash
+         && ic->Data.IsEquipped)
+        {
+          itemOwner->UnapplyBonuses(ic);
+          cc->Contents.erase(cc->Contents.begin() + i);
+          break;
+        }
+      }
+
+      ec->EquipmentByCategory[Data.EqCategory][0] = nullptr;
+    }
+  }
+}
+
 UseResult ItemComponent::Use(GameObject* user)
 {
   if (!Data.CanBeUsed())

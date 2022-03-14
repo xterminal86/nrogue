@@ -36,8 +36,9 @@ bool ContainerComponent::Add(GameObject* object)
                       (ic->Data.ItemTypeHash == itemToAdd->Data.ItemTypeHash));
 
         // If item is not identified, but came from the same stack, add it back.
-        bool fromTheSameStack = (!ic->Data.IsIdentified && !itemToAdd->Data.IsIdentified &&
-                                 (ic->OwnerGameObject->StackObjectId == itemToAdd->OwnerGameObject->StackObjectId));
+        bool fromTheSameStack = (!ic->Data.IsIdentified
+                              && !itemToAdd->Data.IsIdentified
+                              && (ic->OwnerGameObject->StackObjectId == itemToAdd->OwnerGameObject->StackObjectId));
 
         if (isIded || fromTheSameStack)
         {

@@ -16,6 +16,7 @@ class ItemComponent : public Component
     UseResult Use(GameObject* user);
     void Transfer(ContainerComponent* destination = nullptr);
     void Inspect(bool overrideDescriptions = false);
+    void Break(GameObject* itemOwner);
 
     std::pair<std::string, StringsArray2D> GetInspectionInfo(bool overrideDescriptions = false);
 

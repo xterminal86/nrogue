@@ -1082,6 +1082,15 @@ void Map::EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list)
                                       int x = go->PosX;
                                       int y = go->PosY;
 
+                                      //
+                                      // GameObjects vector may contain just items
+                                      // or blocking objects with logic like shrines.
+                                      // So to handle both cases, we just set Occupied
+                                      // flag to false, since if it was a simple
+                                      // item it wasn't blocking in the first place,
+                                      // but if it was something blocking, the cell
+                                      // should become unblocked now.
+                                      //
                                       CurrentLevel->MapArray[x][y]->Occupied = false;
 
                                       return true;

@@ -674,9 +674,14 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
     }
 
     //
-    // KnockBack() could set receiver HP to 0
+    // KnockBack() could set receiver HP to 0,
+    // so to prevent double kill and double loot roll
+    // check IsAlive().
     //
-    if (go->IsAlive())
+    // Check for Type is for ability to attack walls
+    // (with a pickaxe to mine, for example)
+    //
+    if ((go->Type == GameObjectType::PICKAXEABLE) || go->IsAlive())
     {
       int dmg = CalculateDamageValue(weapon, go, isRanged);
       ProcessMeleeAttack(weapon, go, dmg);
@@ -1662,25 +1667,7 @@ void Player::BreakItem(ItemComponent* ic, bool suppressMessage)
     Printer::Instance().AddMessage(str);
   }
 
-  auto typeHash = ic->Data.ItemTypeHash;
-
-  EquipmentCategory ec = ic->Data.EqCategory;
-
-  // One-time deletion, can leave "forward" loop iteration
-  for (size_t i = 0; i < Inventory->Contents.size(); i++)
-  {
-    auto c = Inventory->Contents[i]->GetComponent<ItemComponent>();
-    ItemComponent* ic = static_cast<ItemComponent*>(c);
-
-    if (ic->Data.ItemTypeHash == typeHash && ic->Data.IsEquipped)
-    {
-      UnapplyBonuses(ic);
-      Inventory->Contents.erase(Inventory->Contents.begin() + i);
-      break;
-    }
-  }
-
-  Equipment->EquipmentByCategory[ec][0] = nullptr;
+  ic->Break(this);
 }
 
 void Player::SwitchPlaces(AIComponent* other)
