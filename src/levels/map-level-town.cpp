@@ -177,6 +177,11 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type, int dungeonLevel)
   */
 }
 
+const Position& MapLevelTown::TownPortalPos()
+{
+  return _townPortalPos;
+}
+
 void MapLevelTown::PrepareMap(MapLevelBase* levelOwner)
 {
   MapLevelBase::PrepareMap(levelOwner);

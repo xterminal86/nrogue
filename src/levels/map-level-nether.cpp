@@ -37,6 +37,9 @@ void MapLevelNether::PrepareMap(MapLevelBase* levelOwner)
 
 void MapLevelNether::CreateLevel()
 {
+  VisibilityRadius = 20;
+  MonstersRespawnTurns = 1000;
+
   GameObjectInfo t;
   t.Set(true, true, ' ', Colors::BlackColor, Colors::CaveWallColor, "Cave Wall");
 

@@ -32,7 +32,7 @@ class Application : public Singleton<Application>
 
     void WriteObituary(bool wasKilled = true);
 
-    static uint64_t GetNewId();
+    static uint64_t GetNewGlobalId();
 
     const char& CharByCharIndex(uint8_t index);
 

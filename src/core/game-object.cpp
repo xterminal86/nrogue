@@ -18,7 +18,7 @@ GameObject::GameObject(MapLevelBase* levelOwner)
   _levelOwner = levelOwner;
   VisibilityRadius.Set(0);
 
-  _objectId = Application::GetNewId();
+  _objectId = Application::GetNewGlobalId();
 
 #ifdef DEBUG_BUILD
   HexAddressString = Util::StringFormat("0x%X", this);
@@ -32,7 +32,7 @@ GameObject::GameObject(MapLevelBase *levelOwner,
                        const std::string &htmlColor,
                        const std::string &bgColor)
 {
-  _objectId = Application::GetNewId();
+  _objectId = Application::GetNewGlobalId();
 
   Init(levelOwner, x, y, avatar, htmlColor, bgColor);
 

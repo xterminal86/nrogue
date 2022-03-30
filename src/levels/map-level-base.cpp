@@ -79,8 +79,6 @@ void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
       MapArray[x][y]->Init(levelOwner, x, y, '.', "#000000", "#000000");
     }
   }
-
-  IsInitialized = true;
 }
 
 void MapLevelBase::AdjustCamera()
@@ -95,11 +93,6 @@ void MapLevelBase::AdjustCamera()
 const int& MapLevelBase::RespawnCounter()
 {
   return _respawnCounter;
-}
-
-const Position& MapLevelBase::TownPortalPos()
-{
-  return _townPortalPos;
 }
 
 const std::vector<Position>& MapLevelBase::EmptyCells()

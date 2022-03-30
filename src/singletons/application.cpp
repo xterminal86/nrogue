@@ -838,7 +838,18 @@ void Application::InitGameStates()
   }
 }
 
-uint64_t Application::GetNewId()
+//
+// NOTE: save last generated global id
+// when implementing savegame data or effects
+// application will be fucked up after loading
+// since "who applied" is determined by object's global id.
+//
+// In order to avoid potential BS with generation of player's object id
+// inside Player's ctor because Player is statically instantiated
+// inside Application, this method is static, so to save
+// last generated global id we'll have to do (GetNewGlobalId() - 1).
+//
+uint64_t Application::GetNewGlobalId()
 {
   static uint64_t globalId = 1;
   return globalId++;

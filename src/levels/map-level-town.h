@@ -12,6 +12,8 @@ class MapLevelTown : public MapLevelBase
 
     void PrepareMap(MapLevelBase* levelOwner) override;
 
+    const Position& TownPortalPos();
+
     void CreateNPCs();
 
   protected:
@@ -35,6 +37,8 @@ class MapLevelTown : public MapLevelBase
     bool SkipArea(const Position& pos, const Rect& area);
 
     const int FlowersFrequency = 25;
+
+    Position _townPortalPos;
 
     std::vector<CM> _commonHouses =
     {

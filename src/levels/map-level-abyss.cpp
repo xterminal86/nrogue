@@ -37,6 +37,9 @@ void MapLevelAbyss::PrepareMap(MapLevelBase* levelOwner)
 
 void MapLevelAbyss::CreateLevel()
 {
+  VisibilityRadius = 40;
+  MonstersRespawnTurns = 1000;
+
   // Borders
   GameObjectInfo t;
 

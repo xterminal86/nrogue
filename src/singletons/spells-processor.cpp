@@ -3,6 +3,7 @@
 #include "application.h"
 #include "printer.h"
 #include "map.h"
+#include "map-level-town.h"
 #include "town-portal-component.h"
 #include "game-objects-factory.h"
 
@@ -579,16 +580,17 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
 
   _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
 
-  auto lvl = Map::Instance().GetLevelRefByType(MapType::TOWN);
+  auto p = Map::Instance().GetLevelRefByType(MapType::TOWN);
+  MapLevelTown* lvl = static_cast<MapLevelTown*>(p);
   if (scroll->Data.Prefix == ItemPrefix::BLESSED)
   {
-    Position tpPos = lvl->TownPortalPos();
+    auto tpPos = lvl->TownPortalPos();
     std::vector<Position> posToAppear =
     {
-      { tpPos.X - 1, tpPos.Y },
-      { tpPos.X + 1, tpPos.Y },
-      { tpPos.X, tpPos.Y - 1 },
-      { tpPos.X, tpPos.Y + 1 },
+      { tpPos.X - 1, tpPos.Y     },
+      { tpPos.X + 1, tpPos.Y     },
+      { tpPos.X,     tpPos.Y - 1 },
+      { tpPos.X,     tpPos.Y + 1 },
     };
 
     int index = RNG::Instance().RandomRange(0, posToAppear.size());

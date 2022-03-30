@@ -64,7 +64,6 @@ class MapLevelBase
     int DungeonLevel;
     int VisibilityRadius;
 
-    bool IsInitialized = false;
     bool WelcomeTextDisplayed = false;
     bool Peaceful = false;
     bool ExitFound = false;
@@ -73,7 +72,6 @@ class MapLevelBase
     void AdjustCamera();
 
     const int& RespawnCounter();
-    const Position& TownPortalPos();
     const std::vector<Position>& EmptyCells();
 
     bool IsCellBlocking(const Position& pos);
@@ -93,7 +91,8 @@ class MapLevelBase
     Player* _playerRef;
 
     int _respawnCounter = 0;
-    int _shrineRollChance = 50;
+
+    const int _shrineRollChance = 50;
 
     int GetEstimatedNumberOfItemsToCreate();
 
@@ -144,8 +143,6 @@ class MapLevelBase
                    bool isOpen = false,
                    size_t openedBy = GlobalConstants::OpenedByAnyone,
                    const std::string& objName = std::string());
-
-    Position _townPortalPos;
 
 #ifdef DEBUG_BUILD
     template <typename Collection>
