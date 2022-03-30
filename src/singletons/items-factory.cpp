@@ -773,7 +773,10 @@ GameObject* ItemsFactory::CreateWeapon(int x, int y, WeaponType type, ItemPrefix
       diceRolls = 1;
       diceSides = 6;
 
-      baseDurability = 10 + 2 * (int)ic->Data.ItemQuality_;
+      int rndDur = RNG::Instance().RandomRange(20, 30);
+      int spread = RNG::Instance().RandomRange(1, 5);
+
+      baseDurability = rndDur + spread * (int)ic->Data.ItemQuality_;
 
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);

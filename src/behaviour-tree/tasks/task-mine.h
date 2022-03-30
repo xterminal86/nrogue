@@ -3,12 +3,17 @@
 
 #include "behaviour-tree.h"
 
+class EquipmentComponent;
+
 class TaskMine : public Node
 {
-  using Node::Node;
-
   public:
+    TaskMine(GameObject* objectToControl);
+
     BTResult Run() override;
+
+  private:
+    EquipmentComponent* _equipment = nullptr;
 };
 
 #endif // TASKMINE_H

@@ -4,7 +4,9 @@
 #include "items-factory.h"
 
 #include "ai-component.h"
+#include "equipment-component.h"
 #include "container-component.h"
+#include "item-component.h"
 #include "loot-generators.h"
 
 #include "ai-idle.h"
@@ -342,7 +344,7 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
 
   ai->ChangeModel<AIIdle>();
 
-  ContainerComponent* cc = go->AddComponent<ContainerComponent>(GlobalConstants::InventoryMaxSize);
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
 
   GameObject* pickaxe = ItemsFactory::Instance().CreateUniquePickaxe();
   cc->Add(pickaxe);
@@ -391,6 +393,15 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
   // ===========================================================================
 
   ai->ChangeModel<AIMonsterMadMiner>();
+
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
+  GameObject* pick = ItemsFactory::Instance().CreateWeapon(1, 1, WeaponType::PICKAXE);
+  ItemComponent* ic = pick->GetComponent<ItemComponent>();
+
+  cc->Add(pick);
+
+  EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
+  ec->Equip(ic);
 
   go->Attrs.Str.Talents = 1;
   go->Attrs.Skl.Talents = 1;

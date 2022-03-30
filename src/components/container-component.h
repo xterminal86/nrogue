@@ -10,7 +10,7 @@
 class ContainerComponent : public Component
 {
   public:
-    ContainerComponent(size_t maxCapacity);
+    ContainerComponent(size_t maxCapacity = GlobalConstants::InventoryMaxSize);
 
     void Update() override;
 

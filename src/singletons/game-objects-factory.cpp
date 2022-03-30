@@ -271,7 +271,7 @@ GameObject* GameObjectsFactory::CreateContainer(const std::string& name, const s
   go->Blocking = true;
   go->BlocksSight = true;
 
-  ContainerComponent* cc = go->AddComponent<ContainerComponent>(GlobalConstants::InventoryMaxSize);
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
 
   go->InteractionCallback = std::bind(&ContainerComponent::Interact, cc);
 
