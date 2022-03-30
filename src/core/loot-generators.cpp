@@ -71,7 +71,7 @@ namespace LootGenerators
 
       case ItemType::WEAPON:
       {
-        auto w = ItemsFactory::Instance().CreateWeapon(go->PosX, go->PosY, WeaponType::PICKAXE);
+        auto w = ItemsFactory::Instance().CreateMeleeWeapon(go->PosX, go->PosY, WeaponType::PICKAXE);
         Map::Instance().InsertGameObject(w);
       }
       break;

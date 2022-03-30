@@ -403,7 +403,7 @@ void Player::SetDefaultEquipment()
       GameObject* arrows = ItemsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::BLESSED, 60);
       Inventory->Add(arrows);
 
-      GameObject* dagger = ItemsFactory::Instance().CreateWeapon(0, 0, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+      GameObject* dagger = ItemsFactory::Instance().CreateMeleeWeapon(0, 0, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
       Inventory->Add(dagger);
 
       weaponAndArmorToEquip.push_back(arrows);
@@ -413,7 +413,7 @@ void Player::SetDefaultEquipment()
 
     case PlayerClass::SOLDIER:
     {
-      weapon = ItemsFactory::Instance().CreateWeapon(0, 0, WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+      weapon = ItemsFactory::Instance().CreateMeleeWeapon(0, 0, WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
       Inventory->Add(weapon);
 
       armor = ItemsFactory::Instance().CreateArmor(0, 0, ArmorType::PADDING, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
@@ -426,7 +426,7 @@ void Player::SetDefaultEquipment()
 
     case PlayerClass::ARCANIST:
     {
-      weapon = ItemsFactory::Instance().CreateWeapon(0, 0, WeaponType::STAFF, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+      weapon = ItemsFactory::Instance().CreateMeleeWeapon(0, 0, WeaponType::STAFF, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
       Inventory->Add(weapon);
 
       auto wand = ItemsFactory::Instance().CreateWand(0, 0, WandMaterials::EBONY_3, SpellType::MAGIC_MISSILE, ItemPrefix::BLESSED, ItemQuality::NORMAL);

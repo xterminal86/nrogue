@@ -274,6 +274,19 @@ void MapLevelTown::CreateLevel()
 
   // *** FIXME: debug
 
+  // ========================= CREATE 20 RANDOM MELEE WEAPONS ==================
+  /*
+  for (int i = 0; i < 20; i++)
+  {
+    GameObject* go = ItemsFactory::Instance().CreateRandomMeleeWeapon();
+    go->PosX = 1 + i;
+    go->PosY = 1;
+    InsertGameObject(go);
+  }
+  */
+
+  // ============================ CREATE ITEM WITH BONUS =======================
+
   /*
   ItemBonusStruct bs;
   bs.BonusValue = 2;
@@ -304,7 +317,7 @@ void MapLevelTown::CreateLevel()
   InsertGameObject(go);
   */
 
-  // All scrolls
+  // ================================== CREATE ALL SCROLLS =====================
 
   /*
   int count = 0;
@@ -318,7 +331,7 @@ void MapLevelTown::CreateLevel()
   }
   */
 
-  // All potions
+  // =================================== CREATE ALL POTIONS ====================
 
   /*
   int count = 0;
@@ -335,7 +348,7 @@ void MapLevelTown::CreateLevel()
   }
   */
 
-  // Random wands
+  // =================================== RANDOM WANDS ==========================
 
   /*
   for (size_t x = 1; x < 16; x++)
@@ -349,9 +362,9 @@ void MapLevelTown::CreateLevel()
   }
   */
 
-  /*
-  // Rings
+  // =================================== RINGS =================================
 
+  /*
   ItemQuality q = ItemQuality::EXCEPTIONAL;
 
   std::map<ItemQuality, int> multByQ =

@@ -41,9 +41,11 @@ class ItemsFactory : public Singleton<ItemsFactory>
     //
     // *************************************************************************
     //
-    GameObject* CreateWeapon(int x, int y, WeaponType type, ItemPrefix preifx = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM, const std::vector<ItemBonusStruct>& bonuses = std::vector<ItemBonusStruct>());
+    GameObject* CreateMeleeWeapon(int x, int y, WeaponType type, ItemPrefix preifx = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM, const std::vector<ItemBonusStruct>& bonuses = std::vector<ItemBonusStruct>());
     GameObject* CreateRangedWeapon(int x, int y, RangedWeaponType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM, const std::vector<ItemBonusStruct>& bonuses = std::vector<ItemBonusStruct>());
     GameObject* CreateArrows(int x, int y, ArrowType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, int amount = -1);
+    GameObject* CreateRandomMeleeWeapon(WeaponType type = WeaponType::NONE, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateRandomRangedWeapon(RangedWeaponType type = RangedWeaponType::NONE, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRandomWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     //
     // *************************************************************************
@@ -82,6 +84,8 @@ class ItemsFactory : public Singleton<ItemsFactory>
   private:
     GameObject* CreateRandomGlass();
     GameObject* CreateGemHelper(GemType t, ItemQuality quality = ItemQuality::RANDOM);
+    GameObject* ChooseRandomMeleeWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* ChooseRandomRangedWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
 
     void AdjustBonusWeightsMapForItem(ItemComponent* itemRef,
                                       std::map<ItemBonusType, int>& bonusWeightByType);

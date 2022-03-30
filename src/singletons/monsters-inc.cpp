@@ -395,7 +395,7 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
   ai->ChangeModel<AIMonsterMadMiner>();
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
-  GameObject* pick = ItemsFactory::Instance().CreateWeapon(1, 1, WeaponType::PICKAXE);
+  GameObject* pick = ItemsFactory::Instance().CreateRandomMeleeWeapon(WeaponType::PICKAXE);
   ItemComponent* ic = pick->GetComponent<ItemComponent>();
 
   cc->Add(pick);

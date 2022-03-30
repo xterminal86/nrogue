@@ -639,7 +639,7 @@ GameObject* ItemsFactory::CreateRandomScroll(ItemPrefix prefix)
   return CreateScroll(0, 0, type, prefix);
 }
 
-GameObject* ItemsFactory::CreateWeapon(int x, int y, WeaponType type, ItemPrefix prefix, ItemQuality quality, const std::vector<ItemBonusStruct>& bonuses)
+GameObject* ItemsFactory::CreateMeleeWeapon(int x, int y, WeaponType type, ItemPrefix prefix, ItemQuality quality, const std::vector<ItemBonusStruct>& bonuses)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -815,6 +815,60 @@ GameObject* ItemsFactory::CreateWeapon(int x, int y, WeaponType type, ItemPrefix
   return go;
 }
 
+GameObject* ItemsFactory::ChooseRandomMeleeWeapon(ItemPrefix prefixOverride)
+{
+  int index = RNG::Instance().RandomRange(0, GlobalConstants::WeaponNameByType.size());
+  auto it = GlobalConstants::WeaponNameByType.begin();
+  std::advance(it, index);
+  return CreateMeleeWeapon(0, 0, it->first, prefixOverride);
+}
+
+GameObject* ItemsFactory::ChooseRandomRangedWeapon(ItemPrefix prefixOverride)
+{
+  int index = RNG::Instance().RandomRange(0, GlobalConstants::RangedWeaponNameByType.size());
+  auto it = GlobalConstants::RangedWeaponNameByType.begin();
+  std::advance(it, index);
+  return CreateRangedWeapon(0, 0, it->first, prefixOverride);
+}
+
+GameObject* ItemsFactory::CreateRandomMeleeWeapon(WeaponType type, ItemPrefix prefixOverride)
+{
+  GameObject* go = nullptr;
+
+  if (type != WeaponType::NONE)
+  {
+    go = CreateMeleeWeapon(0, 0, type, prefixOverride);
+  }
+  else
+  {
+    go = ChooseRandomMeleeWeapon(prefixOverride);
+  }
+
+  ItemComponent* ic = go->GetComponent<ItemComponent>();
+  TryToAddBonusesToItem(ic);
+
+  return go;
+}
+
+GameObject* ItemsFactory::CreateRandomRangedWeapon(RangedWeaponType type, ItemPrefix prefixOverride)
+{
+  GameObject* go = nullptr;
+
+  if (type != RangedWeaponType::NONE)
+  {
+    go = CreateRangedWeapon(0, 0, type, prefixOverride);
+  }
+  else
+  {
+    go = ChooseRandomRangedWeapon(prefixOverride);
+  }
+
+  ItemComponent* ic = go->GetComponent<ItemComponent>();
+  TryToAddBonusesToItem(ic);
+
+  return go;
+}
+
 GameObject* ItemsFactory::CreateRandomWeapon(ItemPrefix prefixOverride)
 {
   GameObject* go = nullptr;
@@ -822,17 +876,11 @@ GameObject* ItemsFactory::CreateRandomWeapon(ItemPrefix prefixOverride)
   int isMelee = RNG::Instance().RandomRange(0, 2);
   if (isMelee == 0)
   {
-    int index = RNG::Instance().RandomRange(0, GlobalConstants::WeaponNameByType.size());
-    auto it = GlobalConstants::WeaponNameByType.begin();
-    std::advance(it, index);
-    go = CreateWeapon(0, 0, it->first, prefixOverride);
+    go = ChooseRandomMeleeWeapon(prefixOverride);
   }
   else
   {
-    int index = RNG::Instance().RandomRange(0, GlobalConstants::RangedWeaponNameByType.size());
-    auto it = GlobalConstants::RangedWeaponNameByType.begin();
-    std::advance(it, index);
-    go = CreateRangedWeapon(0, 0, it->first, prefixOverride);
+    go = ChooseRandomRangedWeapon(prefixOverride);
   }
 
   ItemComponent* ic = go->GetComponent<ItemComponent>();
