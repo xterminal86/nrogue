@@ -24,7 +24,7 @@ R"(
               [TASK p1="chase_player"]
         [TASK p1="goto_last_player_pos"]
     [COND p1="d100" p2="50"]
-      [TASK p1="mine"]
+      [TASK p1="mine_tunnel"]
     [TASK p1="goto_last_mined_pos"]
     [SEL]
       [TASK p1="move_smart"]

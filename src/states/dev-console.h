@@ -15,6 +15,7 @@ enum class DevConsoleCommand
   GET_ACTOR,
   GET_ITEM,
   GET_BY_ADDRESS,
+  GIVE_MONEY,
   POISON_ACTOR,
   DAMAGE_ACTOR,
   MOVE_STATIC_OBJECT,
@@ -141,6 +142,7 @@ class DevConsole : public GameState
     void GetObjectByAddress(const std::vector<std::string>& params);
     void ReportHandleDebugInfo(ObjectHandleType type);
     void PrintDebugInfo(const std::vector<std::string>& debugInfo);
+    void GiveMoney(const std::vector<std::string>& params);
 
     bool StringIsNumbers(const std::string& str);
     std::pair<int, int> CoordinateParamsToInt(const std::string& px,
@@ -186,7 +188,8 @@ class DevConsole : public GameState
       { "g_pm",   DevConsoleCommand::PRINT_MAP          },
       { "g_pc",   DevConsoleCommand::PRINT_COLORS       },
       { "g_cm",   DevConsoleCommand::CREATE_MONSTER     },
-      { "g_go",   DevConsoleCommand::GET_BY_ADDRESS     }
+      { "g_go",   DevConsoleCommand::GET_BY_ADDRESS     },
+      { "g_gm",   DevConsoleCommand::GIVE_MONEY         }
     };
 
     const std::vector<std::string> _help =
@@ -253,6 +256,10 @@ class DevConsole : public GameState
       {
         "g_cm",
         { "g_cm X Y <TYPE>", "Create monster <TYPE> at X Y" }
+      },
+      {
+        "g_gm",
+        { "g_gm <AMOUNT>", "Give player <AMOUNT> money" }
       }
     };
 

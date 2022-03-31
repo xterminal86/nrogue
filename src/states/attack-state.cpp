@@ -122,22 +122,6 @@ void AttackState::HandleInput()
       }
       else
       {
-        // FIXME: should we melee attack items lying on the ground?
-
-        /*
-        auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
-        if (res.size() != 0)
-        {
-
-          _playerRef->MeleeAttack(res.back(), true);
-        }
-        else
-        {
-          auto* cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
-          Application::Instance().DisplayAttack(cell, GlobalConstants::DisplayAttackDelayMs, "*whoosh*", "#FFFFFF");
-        }
-        */
-
         auto* cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
         Application::Instance().DisplayAttack(cell, GlobalConstants::DisplayAttackDelayMs, "*whoosh*", "#FFFFFF");
       }

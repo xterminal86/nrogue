@@ -22,7 +22,10 @@ struct ItemBonusStruct
   //
   int BonusValue = 0;
 
-  // Whole duration of effect in turns
+  //
+  // Whole duration of effect in turns.
+  // -1 for infinite duration.
+  //
   int Duration = -1;
 
   // Number of turns after which effect action occurs

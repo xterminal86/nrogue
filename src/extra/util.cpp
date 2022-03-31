@@ -1198,6 +1198,144 @@ namespace Util
     receiver->CheckPerish();
   }
 
+  bool TryToDamageEquipment(GameObject* actor,
+                            EquipmentCategory cat,
+                            int damage)
+  {
+    if (cat == EquipmentCategory::NOT_EQUIPPABLE)
+    {
+      DebugLog("[WAR] TryToDamageEquipment() category is NOT_EQUIPPABLE!");
+      return false;
+    }
+
+    if (actor == nullptr)
+    {
+      DebugLog("[WAR] TryToDamageEquipment() actor is null!");
+      return false;
+    }
+
+    EquipmentComponent* ec = actor->GetComponent<EquipmentComponent>();
+    if (ec != nullptr)
+    {
+      ItemComponent* ic = ec->EquipmentByCategory[cat][0];
+      return TryToDamageEquipment(actor, ic, damage);
+    }
+    else
+    {
+      DebugLog("[WAR] TryToDamageEquipment() equipment is null on %s!", actor->ObjectName.data());
+    }
+
+    return false;
+  }
+
+  bool TryToDamageEquipment(GameObject* actor,
+                            ItemComponent* item,
+                            int damage)
+  {
+    if (actor == nullptr)
+    {
+      DebugLog("[WAR] TryToDamageEquipment() actor is null!");
+      return false;
+    }
+
+    //
+    // NOTE: item can be legitimately null
+    // if actor is a monster like a rat, for example.
+    //
+
+    if (item == nullptr)
+    {
+      //DebugLog("[WAR] TryToDamageEquipment() item is null on %s!", actor->ObjectName.data());
+      return false;
+    }
+
+    item->Data.Durability.AddMin(damage);
+
+    if (item->Data.Durability.Min().Get() < 0)
+    {
+      item->Break(actor);
+      return true;
+    }
+
+    return false;
+  }
+
+  int CalculateDamageValue(GameObject* attacker,
+                           GameObject* defender,
+                           ItemComponent* weapon,
+                           bool meleeAttackWithRangedWeapon)
+  {
+    int totalDmg = 0;
+
+    // Unarmed strike
+    if (weapon == nullptr)
+    {
+      totalDmg = Util::RollDamage(1, 2);
+      totalDmg += attacker->Attrs.Str.Get() - defender->Attrs.Def.Get();
+
+      if (totalDmg <= 0)
+      {
+        totalDmg = 1;
+      }
+    }
+    else
+    {
+      // Melee attack with ranged weapon in hand fallbacks to 1d4 "punch"
+      int weaponDamage = meleeAttackWithRangedWeapon
+                         ? Util::RollDamage(1, 2)
+                         : Util::RollDamage(weapon->Data.Damage.Min().Get(),
+                                            weapon->Data.Damage.Max().Get());
+
+      totalDmg = weaponDamage;
+
+      int targetDef = weapon->Data.HasBonus(ItemBonusType::IGNORE_DEFENCE)
+                    ? 0
+                    : defender->Attrs.Def.Get();
+
+      ItemBonusStruct* res = weapon->Data.GetBonus(ItemBonusType::DAMAGE);
+      if (res != nullptr)
+      {
+        totalDmg += res->BonusValue;
+      }
+
+      totalDmg += attacker->Attrs.Str.Get() - targetDef;
+
+      if (totalDmg <= 0)
+      {
+        totalDmg = 1;
+      }
+    }
+
+    return totalDmg;
+  }
+
+  int CalculateHitChance(GameObject* attacker,
+                         GameObject* defender)
+  {
+    // Amount of addition to hit chance
+    // times SKL difference of attacker and defender
+    int attackChanceScale = 3;
+
+    int defaultHitChance = 50;
+    int hitChance = defaultHitChance;
+
+    int skillDiff = attacker->Attrs.Skl.Get() - defender->Attrs.Skl.Get();
+    int difficulty = (skillDiff * attackChanceScale);
+
+    hitChance += difficulty;
+
+    hitChance = Util::Clamp(hitChance,
+                            GlobalConstants::MinHitChance,
+                            GlobalConstants::MaxHitChance);
+
+    if (attacker->HasEffect(ItemBonusType::BLINDNESS))
+    {
+      hitChance /= 2;
+    }
+
+    return hitChance;
+  }
+
   std::vector<Position> GetAreaDamagePointsFrom(const Position& from, int range)
   {
     std::vector<Position> res;

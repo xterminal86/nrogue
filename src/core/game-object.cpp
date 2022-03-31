@@ -824,6 +824,24 @@ bool GameObject::HasEffect(const ItemBonusType& t)
 
 void GameObject::ProcessEffects()
 {
+  auto ProcessEffect = [this](ItemBonusStruct& ibs)
+  {
+    if (ibs.Period > 0)
+    {
+      ibs.EffectCounter++;
+
+      if ((ibs.EffectCounter % ibs.Period) == 0)
+      {
+        ibs.EffectCounter = 0;
+        EffectAction(ibs);
+      }
+    }
+    else
+    {
+      EffectAction(ibs);
+    }
+  };
+
   for (int i = _activeEffects.size() - 1; i >= 0; i--)
   {
     auto it = _activeEffects.begin();
@@ -834,26 +852,13 @@ void GameObject::ProcessEffects()
     {
       if (ae[j].Duration > 0)
       {
-        if (ae[j].Period > 0)
-        {
-          ae[j].EffectCounter++;
+        ProcessEffect(ae[j]);
 
-          if ((ae[j].EffectCounter % ae[j].Period) == 0)
-          {
-            ae[j].EffectCounter = 0;
-            EffectAction(ae[j]);
-          }
-        }
-        else
-        {
-          EffectAction(ae[j]);
-        }
-
-/*
-#ifndef RELEASE_BUILD
+        /*
+        #ifndef RELEASE_BUILD
         DebugLog("\t%s ProcessEffects() [%s] duration %i = %i - 1", ObjectName.data(), GlobalConstants::BonusDisplayNameByType.at(ae[j].Type).data(), ae[j].Duration, ae[j].Duration);
-#endif
-*/
+        #endif
+        */
 
         ae[j].Duration--;
       }
@@ -864,20 +869,7 @@ void GameObject::ProcessEffects()
       }
       else if (ae[j].Duration == -1)
       {
-        if (ae[j].Period > 0)
-        {
-          ae[j].EffectCounter++;
-
-          if ((ae[j].EffectCounter % ae[j].Period) == 0)
-          {
-            ae[j].EffectCounter = 0;
-            EffectAction(ae[j]);
-          }
-        }
-        else
-        {
-          EffectAction(ae[j]);
-        }
+        ProcessEffect(ae[j]);
       }
     }
 

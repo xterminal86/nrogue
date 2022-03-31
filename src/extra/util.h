@@ -121,6 +121,22 @@ namespace Util
                         const Position& attackDir,
                         int tiles);
 
+  extern bool TryToDamageEquipment(GameObject* actor,
+                                   EquipmentCategory cat,
+                                   int damage);
+
+  extern bool TryToDamageEquipment(GameObject* actor,
+                                   ItemComponent* item,
+                                   int damage);
+
+  extern int CalculateDamageValue(GameObject* attacker,
+                                  GameObject* defender,
+                                  ItemComponent* weapon,
+                                  bool meleeAttackWithRangedWeapon);
+
+  extern int CalculateHitChance(GameObject* attacker,
+                                GameObject* defender);
+
   extern CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map);
 
   extern std::string GetItemInventoryColor(const ItemData& data);

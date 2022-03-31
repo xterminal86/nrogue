@@ -474,7 +474,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   ItemComponent* weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
   ItemComponent* arrows = Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0];
 
-  int dmg = CalculateDamageValue(with, what, false);
+  int dmg = Util::CalculateDamageValue(this, what, with, false);
 
   // If it's not the ground GameObject
   if (what->Type != GameObjectType::GROUND)
@@ -683,7 +683,7 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
     //
     if ((go->Type == GameObjectType::PICKAXEABLE) || go->IsAlive())
     {
-      int dmg = CalculateDamageValue(weapon, go, isRanged);
+      int dmg = Util::CalculateDamageValue(this, go, weapon, isRanged);
       ProcessMeleeAttack(weapon, go, dmg);
     }
   }
@@ -770,24 +770,7 @@ bool Player::IsGameObjectBorder(GameObject* go)
 
 bool Player::WasHitLanded(GameObject* defender)
 {
-  // Amount of addition to hit chance
-  // times SKL difference of attacker and defender
-  int attackChanceScale = 3;
-
-  int defaultHitChance = 50;
-  int hitChance = defaultHitChance;
-
-  int skillDiff = Attrs.Skl.Get() - defender->Attrs.Skl.Get();
-  int difficulty = (skillDiff * attackChanceScale);
-
-  hitChance += difficulty;
-
-  hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
-
-  if (HasEffect(ItemBonusType::BLINDNESS))
-  {
-    hitChance /= 2;
-  }
+  int hitChance = Util::CalculateHitChance(this, defender);
 
   auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
                                    Attrs.Skl.Get(),
@@ -799,60 +782,6 @@ bool Player::WasHitLanded(GameObject* defender)
   Logger::Instance().Print(logMsg);
 
   return Util::Rolld100(hitChance);
-}
-
-int Player::CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bool meleeAttackWithRangedWeapon)
-{
-  int totalDmg = 0;
-
-  // Unarmed strike
-  if (weapon == nullptr)
-  {
-    totalDmg = Util::RollDamage(1, 2);
-    totalDmg += Attrs.Str.Get() - defender->Attrs.Def.Get();
-
-    if (totalDmg <= 0)
-    {
-      totalDmg = 1;
-    }
-  }
-  else
-  {
-    // Melee attack with ranged weapon in hand fallbacks to 1d4 "punch"
-    int weaponDamage = meleeAttackWithRangedWeapon
-                       ? Util::RollDamage(1, 2)
-                       : Util::RollDamage(weapon->Data.Damage.Min().Get(),
-                                          weapon->Data.Damage.Max().Get());
-
-    totalDmg = weaponDamage;
-
-    int targetDef = weapon->Data.HasBonus(ItemBonusType::IGNORE_DEFENCE)
-                  ? 0
-                  : defender->Attrs.Def.Get();
-
-    ItemBonusStruct* res = weapon->Data.GetBonus(ItemBonusType::DAMAGE);
-    if (res != nullptr)
-    {
-      totalDmg += res->BonusValue;
-    }
-
-    totalDmg += Attrs.Str.Get() - targetDef;
-
-    if (totalDmg <= 0)
-    {
-      totalDmg = 1;
-    }
-  }
-
-  // TODO: if STR is < 0 resulting damage is 0
-  /*
-  if (Attrs.Str.Get() < 0)
-  {
-    totalDmg = 0;
-  }
-  */
-
-  return totalDmg;
 }
 
 std::string Player::ProcessMagicalDamage(GameObject* from, int& amount)

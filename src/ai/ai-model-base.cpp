@@ -18,7 +18,8 @@
 #include "task-goto-last-player-pos.h"
 #include "task-goto-last-mined-pos.h"
 #include "task-attack-effect.h"
-#include "task-mine.h"
+#include "task-mine-tunnel.h"
+#include "task-mine-block.h"
 
 #include "blackboard.h"
 
@@ -140,103 +141,133 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
 {
   Node* task = nullptr;
 
-  std::string taskType = data->Params.at("p1");
-  if (taskType == "move_rnd")
-  {
-    task = new TaskRandomMovement(AIComponentRef->OwnerGameObject);
-  }
-  else if (taskType == "idle")
-  {
-    task = new TaskIdle(AIComponentRef->OwnerGameObject);
-  }
-  else if (taskType == "attack_basic")
-  {
-    bool alwaysHitOverride = (data->Params.count("p2") == 1);
-    task = new TaskAttackBasic(AIComponentRef->OwnerGameObject, alwaysHitOverride);
-  }
-  else if (taskType == "chase_player")
-  {
-    task = new TaskChasePlayer(AIComponentRef->OwnerGameObject);
-  }
-  else if (taskType == "move_away")
-  {
-    task = new TaskMoveAwayFromPlayer(AIComponentRef->OwnerGameObject);
-  }
-  else if (taskType == "save_player_pos")
-  {
-    task = new TaskRememberPlayerPos(AIComponentRef->OwnerGameObject);
-  }
-  else if (taskType == "goto_last_player_pos")
-  {
-    task = new TaskGotoLastPlayerPos(AIComponentRef->OwnerGameObject);
-  }
-  else if (taskType == "attack_effect")
-  {
-    std::string effectType = data->Params.at("p2");
-    bool ignoreArmor = (data->Params.count("p3") == 1);
+  std::string taskName = data->Params.at("p1");
 
-    ItemBonusStruct e;
-    if (effectType == "Psd")
+  AITasks taskType = AITasks::NONE;
+
+  if (_aiTasksByName.count(taskName) == 1)
+  {
+    taskType = _aiTasksByName.at(taskName);
+  }
+
+  switch (taskType)
+  {
+    case AITasks::IDLE:
+      task = new TaskIdle(AIComponentRef->OwnerGameObject);
+      break;
+
+    case AITasks::MOVE_RND:
+      task = new TaskRandomMovement(AIComponentRef->OwnerGameObject);
+      break;
+
+    case AITasks::MOVE_SMART:
+      task = new TaskMoveSmart(AIComponentRef->OwnerGameObject);
+      break;
+
+    case AITasks::MOVE_AWAY:
+      task = new TaskMoveAwayFromPlayer(AIComponentRef->OwnerGameObject);
+      break;
+
+    case AITasks::ATTACK_BASIC:
     {
-      e.Type = ItemBonusType::POISONED;
-      e.BonusValue = -AIComponentRef->OwnerGameObject->Attrs.Lvl.Get();
-      e.Duration = AIComponentRef->OwnerGameObject->Attrs.Lvl.Get() * GlobalConstants::EffectDefaultDuration;
-      e.Period = 5;
-      e.Cumulative = true;
+      bool alwaysHitOverride = (data->Params.count("p2") == 1);
+      task = new TaskAttackBasic(AIComponentRef->OwnerGameObject, alwaysHitOverride);
     }
+    break;
 
-    task = new TaskAttackEffect(AIComponentRef->OwnerGameObject, e, ignoreArmor);
-  }
-  else if (taskType == "attack_special")
-  {
-    std::string attackType = data->Params.at("p2");
-    bool ignoreArmor = (data->Params.count("p3") == 1);
+    case AITasks::ATTACK_EFFECT:
+    {
+      std::string effectType = data->Params.at("p2");
+      bool ignoreArmor = (data->Params.count("p3") == 1);
 
-    task = new TaskAttackSpecial(AIComponentRef->OwnerGameObject, attackType, ignoreArmor);
-  }
-  else if (taskType == "attack_ranged")
-  {
-    std::string damageType = data->Params.at("p2");
-    task = new TaskAttackRanged(AIComponentRef->OwnerGameObject,
-                                damageType,
-                                '*',
-                                "#FF0000",
-                                "#000000");
-  }
-  else if (taskType == "end")
-  {
-    task = new IgnoreFailure(AIComponentRef->OwnerGameObject);
-  }
-  else if (taskType == "mine")
-  {
-    task = new TaskMine(AIComponentRef->OwnerGameObject);
-  }
-  else if (taskType == "goto_last_mined_pos")
-  {
-    task = new TaskGotoLastMinedPos(AIComponentRef->OwnerGameObject);
-  }
-  else if (taskType == "move_smart")
-  {
-    task = new TaskMoveSmart(AIComponentRef->OwnerGameObject);
-  }
-  else if (taskType == "apply_effect")
-  {
-    std::string type       = data->Params.at("p2");
-    std::string bonusValue = data->Params.at("p3");
-    std::string duration   = data->Params.at("p4");
+      ItemBonusStruct e;
+      if (effectType == "Psd")
+      {
+        e.Type = ItemBonusType::POISONED;
+        e.BonusValue = -AIComponentRef->OwnerGameObject->Attrs.Lvl.Get();
+        e.Duration = AIComponentRef->OwnerGameObject->Attrs.Lvl.Get() * GlobalConstants::EffectDefaultDuration;
+        e.Period = 5;
+        e.Cumulative = true;
+      }
 
-    ItemBonusStruct bs;
-    bs.Type       = _bonusTypeByDisplayName[type];
-    bs.BonusValue = std::stoi(bonusValue);
-    bs.Duration   = std::stoi(duration);
-    bs.Id         = AIComponentRef->OwnerGameObject->ObjectId();
+      task = new TaskAttackEffect(AIComponentRef->OwnerGameObject, e, ignoreArmor);
+    }
+    break;
 
-    task = new TaskApplyEffect(AIComponentRef->OwnerGameObject, bs);
-  }
-  else if (taskType == "print_message")
-  {
-    std::string msg = data->Params.at("p2");
-    task = new TaskPrintMessage(AIComponentRef->OwnerGameObject, msg);
+    case AITasks::ATTACK_SPECIAL:
+    {
+      std::string attackType = data->Params.at("p2");
+      bool ignoreArmor = (data->Params.count("p3") == 1);
+
+      task = new TaskAttackSpecial(AIComponentRef->OwnerGameObject, attackType, ignoreArmor);
+    }
+    break;
+
+    case AITasks::ATTACK_RANGED:
+    {
+      std::string damageType = data->Params.at("p2");
+      task = new TaskAttackRanged(AIComponentRef->OwnerGameObject,
+                                  damageType,
+                                  '*',
+                                  "#FF0000",
+                                  "#000000");
+    }
+    break;
+
+    case AITasks::CHASE_PLAYER:
+      task = new TaskChasePlayer(AIComponentRef->OwnerGameObject);
+      break;
+
+    case AITasks::SAVE_PLAYER_POS:
+      task = new TaskRememberPlayerPos(AIComponentRef->OwnerGameObject);
+      break;
+
+    case AITasks::GOTO_LAST_PLAYER_POS:
+      task = new TaskGotoLastPlayerPos(AIComponentRef->OwnerGameObject);
+      break;
+
+    case AITasks::GOTO_LAST_MINED_POS:
+      task = new TaskGotoLastMinedPos(AIComponentRef->OwnerGameObject);
+      break;
+
+    case AITasks::MINE_TUNNEL:
+      task = new TaskMineTunnel(AIComponentRef->OwnerGameObject);
+      break;
+
+    case AITasks::MINE_BLOCK:
+      task = new TaskMineBlock(AIComponentRef->OwnerGameObject);
+      break;
+
+    case AITasks::APPLY_EFFECT:
+    {
+      std::string type       = data->Params.at("p2");
+      std::string bonusValue = data->Params.at("p3");
+      std::string duration   = data->Params.at("p4");
+
+      ItemBonusStruct bs;
+      bs.Type       = _bonusTypeByDisplayName[type];
+      bs.BonusValue = std::stoi(bonusValue);
+      bs.Duration   = std::stoi(duration);
+      bs.Id         = AIComponentRef->OwnerGameObject->ObjectId();
+
+      task = new TaskApplyEffect(AIComponentRef->OwnerGameObject, bs);
+    }
+    break;
+
+    case AITasks::PRINT_MESSAGE:
+    {
+      std::string msg = data->Params.at("p2");
+      task = new TaskPrintMessage(AIComponentRef->OwnerGameObject, msg);
+    }
+    break;
+
+    case AITasks::END:
+      task = new IgnoreFailure(AIComponentRef->OwnerGameObject);
+      break;
+
+    default:
+      task = nullptr;
+      break;
   }
 
   // ===========================================================================
@@ -247,7 +278,7 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
     Logger::Instance().Print(who, true);
 
     #ifdef DEBUG_BUILD
-    DebugLog("\t[%s] no such task - %s!\n", who.data(), taskType.data());
+    DebugLog("\t[%s] no such task - %s!\n", who.data(), taskName.data());
     #endif
   }
 
@@ -260,60 +291,69 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
 
   std::string condType = data->Params.at("p1");
 
-  // Roll d100 and check against p2 percent chance
-  if (condType == "d100")
+  AIConditionFunctions cf = AIConditionFunctions::NONE;
+
+  if (_cfByName.count(condType) == 1)
   {
-    fn = GetD100CF(data);
+    cf = _cfByName.at(condType);
   }
-  // Player is linear distance visible
-  else if (condType == "player_visible")
+
+  switch (cf)
   {
-    fn = GetIsPlayerVisibleCF(data);
-  }
-  // Checks GameObject::CanMove()
-  else if (condType == "player_can_move")
-  {
-    fn = GetPlayerCanMoveCF(data);
-  }
-  // Checks if player is in square range specified by p2
-  else if (condType == "player_in_range")
-  {
-    fn = GetInRangeCF(data);
-  }
-  // Player's action meter can be queried against value
-  // of p3 and comparison function determined by p2.
-  // Supported comparers are "gt", "lt", "eq".
-  else if (condType == "player_energy")
-  {
-    fn = GetPlayerEnergyCF(data);
-  }
-  // Check if player's action meter will gain enough value
-  // to become big enough to support amount of turns
-  // specified by p2.
-  // E.g. p2="1" means check if player's next WaitForTurn()
-  // will gain enough energy for the player to be able to
-  // perform >= 1 turns.
-  else if (condType == "player_next_turn")
-  {
-    fn = GetPlayerNextTurnCF(data);
-  }
-  // Check if controlled GameObject's action meter
-  // support amount of turns specified by p2.
-  else if (condType == "turns_left")
-  {
-    fn = GetTurnsLeftCF(data);
-  }
-  // Check if actor in p2 has specific effect determined by
-  // short name of SpellType specified in p3.
-  // E.g. [COND p1="has_effect" p2="player" p3="Psd"]
-  else if (condType == "has_effect")
-  {
-    fn = GetHasEffectCF(data);
-  }
-  // Check if current object's HP is less than 30%
-  else if (condType == "hp_low")
-  {
-    fn = GetHPLowCF(data);
+    // Roll d100 and check against p2 percent chance
+    case AIConditionFunctions::D100:
+      fn = GetD100CF(data);
+      break;
+
+    // Player is linear distance visible
+    case AIConditionFunctions::PLAYER_VISIBLE:
+      fn = GetIsPlayerVisibleCF(data);
+      break;
+
+    // Checks GameObject::CanMove()
+    case AIConditionFunctions::PLAYER_CAN_MOVE:
+      fn = GetPlayerCanMoveCF(data);
+      break;
+
+    // Checks if player is in square range specified by p2
+    case AIConditionFunctions::PLAYER_IN_RANGE:
+      fn = GetInRangeCF(data);
+      break;
+
+    // Player's action meter can be queried against value
+    // of p3 and comparison function determined by p2.
+    // Supported comparers are "gt", "lt", "eq".
+    case AIConditionFunctions::PLAYER_ENERGY:
+      fn = GetPlayerEnergyCF(data);
+      break;
+
+    // Check if player's action meter will gain enough value
+    // to become big enough to support amount of turns
+    // specified by p2.
+    // E.g. p2="1" means check if player's next WaitForTurn()
+    // will gain enough energy for the player to be able to
+    // perform >= 1 turns.
+    case AIConditionFunctions::PLAYER_NEXT_TURN:
+      fn = GetPlayerNextTurnCF(data);
+      break;
+
+    // Check if controlled GameObject's action meter
+    // support amount of turns specified by p2.
+    case AIConditionFunctions::TURNS_LEFT:
+      fn = GetTurnsLeftCF(data);
+      break;
+
+    // Check if actor in p2 has specific effect determined by
+    // short name of SpellType specified in p3.
+    // E.g. [COND p1="has_effect" p2="player" p3="Psd"]
+    case AIConditionFunctions::HAS_EFFECT:
+      fn = GetHasEffectCF(data);
+      break;
+
+    // Check if current object's HP is less than 30%
+    case AIConditionFunctions::HP_LOW:
+      fn = GetHPLowCF(data);
+      break;
   }
 
   return fn;
@@ -540,44 +580,53 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
 {
   Node* n = nullptr;
 
-  std::string type = data->NodeName;
+  std::string nodeName = data->NodeName;
 
-  if (type == "TREE")
+  BTNodeType nodeType = BTNodeType::NONE;
+
+  if (_btNodeTypeByName.count(nodeName) == 1)
   {
-    n = new Root(AIComponentRef->OwnerGameObject);
-  }
-  else if (type == "SEQ")
-  {
-    n = new Sequence(AIComponentRef->OwnerGameObject);
-  }
-  else if (type == "SEL")
-  {
-    n = new Selector(AIComponentRef->OwnerGameObject);
-  }
-  else if (type == "SUCC")
-  {
-    n = new IgnoreFailure(AIComponentRef->OwnerGameObject);
-  }
-  else if (type == "FAIL")
-  {
-    n = new Failure(AIComponentRef->OwnerGameObject);
-  }
-  else if (type == "COND")
-  {
-    n = CreateConditionNode(data);
-  }
-  else if (type == "TASK")
-  {
-    n = CreateTask(data);
+    nodeType = _btNodeTypeByName.at(nodeName);
   }
 
-  if (n == nullptr && type != "TASK")
+  switch (nodeType)
+  {
+    case BTNodeType::TREE:
+      n = new Root(AIComponentRef->OwnerGameObject);
+      break;
+
+    case BTNodeType::SEQ:
+      n = new Sequence(AIComponentRef->OwnerGameObject);
+      break;
+
+    case BTNodeType::SEL:
+      n = new Selector(AIComponentRef->OwnerGameObject);
+      break;
+
+    case BTNodeType::SUCC:
+      n = new IgnoreFailure(AIComponentRef->OwnerGameObject);
+      break;
+
+    case BTNodeType::FAIL:
+      n = new Failure(AIComponentRef->OwnerGameObject);
+      break;
+
+    case BTNodeType::COND:
+      n = CreateConditionNode(data);
+      break;
+
+    case BTNodeType::TASK:
+      n = CreateTask(data);
+      break;
+  }
+
+  if (n == nullptr && nodeType != BTNodeType::TASK)
   {
     auto who = Util::StringFormat("%s_%u", AIComponentRef->OwnerGameObject->ObjectName.data(), AIComponentRef->OwnerGameObject->ObjectId());
     Logger::Instance().Print(who);
 
     #ifdef DEBUG_BUILD
-    DebugLog("[%s] no such node - %s!\n", who.data(), type.data());
+    DebugLog("[%s] no such node - %s!\n", who.data(), nodeName.data());
     #endif
   }
 

@@ -9,6 +9,54 @@
 #include "behaviour-tree.h"
 #include "bts-parser.h"
 
+enum class BTNodeType
+{
+  NONE = -1,
+  TREE,
+  SEQ,
+  SEL,
+  SUCC,
+  FAIL,
+  COND,
+  TASK
+};
+
+enum class AITasks
+{
+  NONE = -1,
+  IDLE,
+  MOVE_RND,
+  MOVE_SMART,
+  MOVE_AWAY,
+  ATTACK_BASIC,
+  ATTACK_EFFECT,
+  ATTACK_SPECIAL,
+  ATTACK_RANGED,
+  CHASE_PLAYER,
+  SAVE_PLAYER_POS,
+  GOTO_LAST_PLAYER_POS,
+  GOTO_LAST_MINED_POS,
+  MINE_TUNNEL,
+  MINE_BLOCK,
+  APPLY_EFFECT,
+  PRINT_MESSAGE,
+  END
+};
+
+enum class AIConditionFunctions
+{
+  NONE = -1,
+  D100,
+  PLAYER_VISIBLE,
+  PLAYER_CAN_MOVE,
+  PLAYER_IN_RANGE,
+  PLAYER_ENERGY,
+  PLAYER_NEXT_TURN,
+  TURNS_LEFT,
+  HAS_EFFECT,
+  HP_LOW
+};
+
 class AIComponent;
 class Player;
 
@@ -61,6 +109,51 @@ class AIModelBase
     virtual void PrepareScript();
 
     void PrintBrains(Node* n, int indent);
+
+    const std::map<std::string, BTNodeType> _btNodeTypeByName =
+    {
+      { "TREE", BTNodeType::TREE },
+      { "SEQ",  BTNodeType::SEQ  },
+      { "SEL",  BTNodeType::SEL  },
+      { "SUCC", BTNodeType::SUCC },
+      { "FAIL", BTNodeType::FAIL },
+      { "COND", BTNodeType::COND },
+      { "TASK", BTNodeType::TASK },
+    };
+
+    const std::map<std::string, AITasks> _aiTasksByName =
+    {
+      { "idle",                 AITasks::IDLE                 },
+      { "move_rnd",             AITasks::MOVE_RND             },
+      { "move_smart",           AITasks::MOVE_SMART           },
+      { "move_away",            AITasks::MOVE_AWAY            },
+      { "attack_basic",         AITasks::ATTACK_BASIC         },
+      { "attack_effect",        AITasks::ATTACK_EFFECT        },
+      { "attack_special",       AITasks::ATTACK_SPECIAL       },
+      { "attack_ranged",        AITasks::ATTACK_RANGED        },
+      { "chase_player",         AITasks::CHASE_PLAYER         },
+      { "save_player_pos",      AITasks::SAVE_PLAYER_POS      },
+      { "goto_last_player_pos", AITasks::GOTO_LAST_PLAYER_POS },
+      { "goto_last_mined_pos",  AITasks::GOTO_LAST_MINED_POS  },
+      { "mine_tunnel",          AITasks::MINE_TUNNEL          },
+      { "mine_block",           AITasks::MINE_BLOCK           },
+      { "apply_effect",         AITasks::APPLY_EFFECT         },
+      { "print_message",        AITasks::PRINT_MESSAGE        },
+      { "end",                  AITasks::END                  }
+    };
+
+    const std::map<std::string, AIConditionFunctions> _cfByName =
+    {
+      { "d100",             AIConditionFunctions::D100             },
+      { "player_visible",   AIConditionFunctions::PLAYER_VISIBLE   },
+      { "player_can_move",  AIConditionFunctions::PLAYER_CAN_MOVE  },
+      { "player_in_range",  AIConditionFunctions::PLAYER_IN_RANGE  },
+      { "player_energy",    AIConditionFunctions::PLAYER_ENERGY    },
+      { "player_next_turn", AIConditionFunctions::PLAYER_NEXT_TURN },
+      { "turns_left",       AIConditionFunctions::TURNS_LEFT       },
+      { "has_effect",       AIConditionFunctions::HAS_EFFECT       },
+      { "hp_low",           AIConditionFunctions::HP_LOW           }
+    };
 };
 
 #endif

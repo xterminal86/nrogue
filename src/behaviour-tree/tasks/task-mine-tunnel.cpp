@@ -1,4 +1,4 @@
-#include "task-mine.h"
+#include "task-mine-tunnel.h"
 
 #include "game-object.h"
 #include "map.h"
@@ -6,23 +6,23 @@
 #include "equipment-component.h"
 #include "item-component.h"
 
-TaskMine::TaskMine(GameObject* objectToControl)
+TaskMineTunnel::TaskMineTunnel(GameObject* objectToControl)
   : Node(objectToControl)
 {
   _equipment = _objectToControl->GetComponent<EquipmentComponent>();
 }
 
-BTResult TaskMine::Run()
+BTResult TaskMineTunnel::Run()
 {
   //DebugLog("[TaskMine]\n");
 
   int x = _objectToControl->PosX;
   int y = _objectToControl->PosY;
 
-  int lx = _objectToControl->PosX - 1;
-  int ly = _objectToControl->PosY - 1;
-  int hx = _objectToControl->PosX + 1;
-  int hy = _objectToControl->PosY + 1;
+  int lx = x - 1;
+  int ly = y - 1;
+  int hx = x + 1;
+  int hy = y + 1;
 
   std::vector<Position> toCheck =
   {
@@ -46,7 +46,7 @@ BTResult TaskMine::Run()
   }
 
   //
-  // Find that empty spot behide the character facing the wall
+  // Find that empty spot behind the character facing the wall
   // we need to tunnel into
   //
   //      .##
@@ -88,27 +88,7 @@ BTResult TaskMine::Run()
     return BTResult::Failure;
   }
 
-  //
-  // We can reuse this task for some digging-type monster
-  // who don't have any equipment. But if present, check accordingly.
-  //
-  // NOTE: this task is specialized to digging tunnels, but maybe
-  // it's better to create base mining task that tries to dig one block
-  // and any other specialized tasks separately?
-  //
-  if (_equipment != nullptr)
-  {
-    ItemComponent* pick = _equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
-    if (pick != nullptr && pick->Data.WeaponType_ == WeaponType::PICKAXE)
-    {
-      pick->Data.Durability.AddMin(-1);
-
-      if (pick->Data.Durability.Min().Get() < 0)
-      {
-        pick->Break(_objectToControl);
-      }
-    }
-  }
+  Util::TryToDamageEquipment(_objectToControl, EquipmentCategory::WEAPON, -1);
 
   Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y]->Attrs.HP.SetMin(0);
   Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y]->IsDestroyed = true;

@@ -1,14 +1,14 @@
-#ifndef TASKMINE_H
-#define TASKMINE_H
+#ifndef TASKMINEBLOCK_H
+#define TASKMINEBLOCK_H
 
 #include "behaviour-tree.h"
 
 class EquipmentComponent;
 
-class TaskMine : public Node
+class TaskMineBlock : public Node
 {
   public:
-    TaskMine(GameObject* objectToControl);
+    TaskMineBlock(GameObject* objectToControl);
 
     BTResult Run() override;
 
@@ -16,4 +16,4 @@ class TaskMine : public Node
     EquipmentComponent* _equipment = nullptr;
 };
 
-#endif // TASKMINE_H
+#endif // TASKMINEBLOCK_H

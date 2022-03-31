@@ -324,6 +324,10 @@ void DevConsole::ProcessCommand(const std::string& command,
       PoisonActor(params);
       break;
 
+    case DevConsoleCommand::GIVE_MONEY:
+      GiveMoney(params);
+      break;
+
     default:
       StdOut(ErrCmdNotHandled);
       break;
@@ -853,13 +857,6 @@ void DevConsole::PoisonActor(const std::vector<std::string>& params)
     return;
   }
 
-  std::string n = params[0];
-  if (!StringIsNumbers(n))
-  {
-    StdOut(ErrSyntaxError);
-    return;
-  }
-
   ItemBonusStruct ibs;
 
   ibs.Type       = ItemBonusType::POISONED;
@@ -868,6 +865,27 @@ void DevConsole::PoisonActor(const std::vector<std::string>& params)
   ibs.Duration   = -1;
 
   _objectHandles[ObjectHandleType::ACTOR]->AddEffect(ibs);
+
+  StdOut(Ok);
+}
+
+void DevConsole::GiveMoney(const std::vector<std::string>& params)
+{
+  if (params.size() != 1)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string n = params[0];
+  if (!StringIsNumbers(n))
+  {
+    StdOut(ErrSyntaxError);
+    return;
+  }
+
+  int amount = std::stoi(n);
+  _playerRef->Money += amount;
 
   StdOut(Ok);
 }

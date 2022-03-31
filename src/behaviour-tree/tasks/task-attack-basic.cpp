@@ -17,17 +17,17 @@ BTResult TaskAttackBasic::Run()
 
   bool result = false;
 
-  int attackChanceScale = 2;
-  int defaultHitChance = 50;
-  int hitChance = defaultHitChance;
-
   auto& playerRef = Application::Instance().PlayerInstance;
 
-  int d = _objectToControl->Attrs.Skl.Get() - playerRef.Attrs.Skl.Get();
+  ItemComponent* weapon = nullptr;
 
-  hitChance += (d * attackChanceScale);
+  EquipmentComponent* ec = _objectToControl->GetComponent<EquipmentComponent>();
+  if (ec != nullptr)
+  {
+    weapon = ec->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  }
 
-  hitChance = Util::Clamp(hitChance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
+  int hitChance = Util::CalculateHitChance(_objectToControl, &playerRef);
 
   auto logMsg = Util::StringFormat("%s (SKL %i, LVL %i) attacks Player (SKL: %i, LVL %i): chance = %i",
                                    _objectToControl->ObjectName.data(),
@@ -42,11 +42,10 @@ BTResult TaskAttackBasic::Run()
 
   if (Util::Rolld100(hitChance))
   {
-    dmg = _objectToControl->Attrs.Str.Get() - playerRef.Attrs.Def.Get();
-    if (dmg <= 0)
-    {
-      dmg = 1;
-    }
+    dmg = Util::CalculateDamageValue(_objectToControl,
+                                     &playerRef,
+                                     weapon,
+                                     false);
 
     Application::Instance().DisplayAttack(&playerRef,
                                           GlobalConstants::DisplayAttackDelayMs,
@@ -54,6 +53,8 @@ BTResult TaskAttackBasic::Run()
                                           Colors::RedColor);
 
     playerRef.ReceiveDamage(_objectToControl, dmg, false);
+
+    Util::TryToDamageEquipment(_objectToControl, weapon, -1);
 
     result = true;
   }

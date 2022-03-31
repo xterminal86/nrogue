@@ -113,7 +113,6 @@ class Player : public GameObject
 
     void SwitchPlaces(AIComponent* other);
 
-    int CalculateDamageValue(ItemComponent* weapon, GameObject* defender, bool meleeAttackWithRangedWeapon);
     bool WasHitLanded(GameObject* defender);
 
     bool IsGameObjectBorder(GameObject* go);
