@@ -329,6 +329,9 @@ void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
   SetEffectGainMessage(logMessageToWrite, b.Type);
 }
 
+//
+// TODO: unused method?! (not found in "Find References")
+//
 void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;

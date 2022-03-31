@@ -1091,14 +1091,17 @@ namespace Util
     }
     else
     {
-      #ifdef USE_SDL
-      if (!obj->ObjectName.empty())
+      if (obj->Image >= 32 && obj->Image < 128)
       {
-        res = { obj->ObjectName[0] };
+        res = { (char)obj->Image };
       }
-      #else
-      res = { (char)obj->Image };
-      #endif
+      else
+      {
+        if (!obj->ObjectName.empty())
+        {
+          res = { obj->ObjectName[0] };
+        }
+      }
     }
 
     return res;
@@ -1570,10 +1573,13 @@ namespace Util
         }
 
         int durabilityLeft = armor->Data.Durability.Min().Get();
-        int armorDamage = durabilityLeft - amount;
-        if (armorDamage < 0)
+        int overkill = durabilityLeft - amount;
+
+        armor->Data.Durability.AddMin(-amount);
+
+        if (overkill < 0)
         {
-          int hpDamage = std::abs(armorDamage);
+          int hpDamage = std::abs(overkill);
 
           logMsg = StringFormat("%s => %s (%i)",
                                 fromStr.data(),
@@ -1589,17 +1595,16 @@ namespace Util
           }
 
           who->Attrs.HP.AddMin(-hpDamage);
-          armor->Break(who);
         }
         else
         {
           logMsg = StringFormat("%s => [ (%i)", fromStr.data(), amount);
+        }
 
-          armor->Data.Durability.AddMin(-amount);
-          if (armor->Data.Durability.Min().Get() <= 0)
-          {
-            armor->Break(who);
-          }
+        if (armor->Data.Durability.Min().Get() <= 0)
+        {
+          logMsg = StringFormat("%s breaks!", armor->OwnerGameObject->ObjectName.data());
+          armor->Break(who);
         }
       }
     }
