@@ -42,7 +42,12 @@ class Player : public GameObject
     void MeleeAttack(GameObject* go, bool alwaysHit = false);
     void RangedAttack(GameObject* what, ItemComponent* with);
     void MagicAttack(GameObject* what, ItemComponent* with);
-    void ReceiveDamage(GameObject* from, int amount, bool isMagical, bool godMode = false, bool suppressLog = false);
+    void ReceiveDamage(GameObject* from,
+                       int amount,
+                       bool isMagical,
+                       bool directDamage = false,
+                       bool godMode = false,
+                       bool suppressLog = false);
     void WaitForTurn();
     void ProcessHunger();
     void FinishTurn();
@@ -117,17 +122,10 @@ class Player : public GameObject
 
     bool IsGameObjectBorder(GameObject* go);
 
-    bool DamageArmor(GameObject* from, int amount);
-
-    std::vector<ItemComponent*> GetItemsWithBonus(const ItemBonusType& bonusType);
-
     int _starvingTimeout = 0;
     int _useIdentifiedMapSortingIndex = 0;
 
     std::vector<std::string> GetPrettyLevelUpText();
-
-    std::string ProcessMagicalDamage(GameObject* from, int& amount);
-    std::string ProcessPhysicalDamage(GameObject* from, int& amount);
 
     std::map<int, std::pair<std::string, std::string>> _useIdentifiedItemsByIndex;
 

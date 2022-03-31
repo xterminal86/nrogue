@@ -139,6 +139,24 @@ namespace Util
 
   extern int GetTotalDamageAbsorptionValue(GameObject* who, bool magic);
 
+  extern std::string ProcessPhysicalDamage(GameObject* who,
+                                           GameObject* from,
+                                           int& amount);
+
+  extern std::string ProcessMagicalDamage(GameObject* who,
+                                          GameObject* from,
+                                          int& amount);
+
+  extern void ProcessManaShield(GameObject* who,
+                                int amount);
+
+  extern int ProcessThorns(GameObject* who,
+                           int damageReceived);
+
+  extern std::string DamageArmor(GameObject* who,
+                                 GameObject* from,
+                                 int amount);
+
   extern CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map);
 
   extern std::string GetItemInventoryColor(const ItemData& data);
@@ -156,6 +174,9 @@ namespace Util
   extern size_t FindLongestStringLength(const std::vector<std::string>& list);
 
   extern std::vector<Position> GetAreaDamagePointsFrom(const Position& from, int range);
+
+  extern std::vector<ItemComponent*> GetItemsWithBonus(GameObject* actor,
+                                                       ItemBonusType bonus);
 
   extern Position InvertDirection(const Position& dir);
 

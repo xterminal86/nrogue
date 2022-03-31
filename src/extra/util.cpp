@@ -1270,7 +1270,7 @@ namespace Util
     // Unarmed strike
     if (weapon == nullptr)
     {
-      totalDmg = Util::RollDamage(1, 2);
+      totalDmg = RollDamage(1, 2);
       totalDmg += attacker->Attrs.Str.Get() - defender->Attrs.Def.Get();
 
       if (totalDmg <= 0)
@@ -1282,9 +1282,9 @@ namespace Util
     {
       // Melee attack with ranged weapon in hand fallbacks to 1d4 "punch"
       int weaponDamage = meleeAttackWithRangedWeapon
-                         ? Util::RollDamage(1, 2)
-                         : Util::RollDamage(weapon->Data.Damage.Min().Get(),
-                                            weapon->Data.Damage.Max().Get());
+                         ? RollDamage(1, 2)
+                         : RollDamage(weapon->Data.Damage.Min().Get(),
+                                      weapon->Data.Damage.Max().Get());
 
       totalDmg = weaponDamage;
 
@@ -1324,9 +1324,9 @@ namespace Util
 
     hitChance += difficulty;
 
-    hitChance = Util::Clamp(hitChance,
-                            GlobalConstants::MinHitChance,
-                            GlobalConstants::MaxHitChance);
+    hitChance = Clamp(hitChance,
+                      GlobalConstants::MinHitChance,
+                      GlobalConstants::MaxHitChance);
 
     if (attacker->HasEffect(ItemBonusType::BLINDNESS))
     {
@@ -1376,6 +1376,196 @@ namespace Util
     }
 
     return res;
+  }
+
+  std::string ProcessPhysicalDamage(GameObject* who,
+                                    GameObject* from,
+                                    int& amount)
+  {
+    if (who == nullptr)
+    {
+      DebugLog("[WAR] ProcessMagicalDamage() who is null!");
+      return std::string();
+    }
+
+    int abs = GetTotalDamageAbsorptionValue(who, false);
+
+    amount -= abs;
+
+    if (amount < 0)
+    {
+      amount = 0;
+    }
+
+    std::string logMsg = DamageArmor(who, from, amount);
+
+    //
+    // If no armor present
+    //
+    if (logMsg.empty())
+    {
+      if (who->HasEffect(ItemBonusType::MANA_SHIELD))
+      {
+        ProcessManaShield(who, amount);
+      }
+      else
+      {
+        who->Attrs.HP.AddMin(-amount);
+      }
+
+      logMsg = StringFormat("%s => @ (%i)",
+                            (from == nullptr)
+                            ? "?"
+                            : from->ObjectName.data(),
+                            amount);
+    }
+
+    return logMsg;
+  }
+
+  std::string ProcessMagicalDamage(GameObject* who,
+                                   GameObject* from,
+                                   int& amount)
+  {
+    if (who == nullptr)
+    {
+      DebugLog("[WAR] ProcessMagicalDamage() who is null!");
+      return std::string();
+    }
+
+    std::string logMsg;
+    std::string fromStr = (from == nullptr) ? "?" : from->ObjectName;
+
+    if (IsPlayer(who) && IsPlayer(from))
+    {
+      logMsg = StringFormat("You hit yourself for %i damage!", amount);
+    }
+    else
+    {
+      logMsg = StringFormat("%s => @ (%i)", fromStr.data(), amount);
+    }
+
+    int abs = GetTotalDamageAbsorptionValue(who, true);
+
+    amount -= abs;
+
+    if (amount < 0)
+    {
+      amount = 0;
+    }
+
+    if (who->HasEffect(ItemBonusType::MANA_SHIELD))
+    {
+      ProcessManaShield(who, amount);
+    }
+    else
+    {
+      who->Attrs.HP.AddMin(-amount);
+    }
+
+    return logMsg;
+  }
+
+  void ProcessManaShield(GameObject* who,
+                         int amount)
+  {
+    if (who == nullptr)
+    {
+      DebugLog("[WAR] ProcessManaShield() who is null!");
+      return;
+    }
+
+    if (amount == 0)
+    {
+      return;
+    }
+
+    int overkill = who->Attrs.MP.Min().Get() - amount;
+
+    who->Attrs.MP.AddMin(-amount);
+
+    if (overkill <= 0)
+    {
+      who->DispelEffect(ItemBonusType::MANA_SHIELD);
+      who->Attrs.HP.AddMin(overkill);
+    }
+  }
+
+  int ProcessThorns(GameObject* who,
+                    int damageReceived)
+  {
+    int dmgReturned = 0;
+
+    auto thorns = GetItemsWithBonus(who, ItemBonusType::THORNS);
+    for (auto& i : thorns)
+    {
+      auto b = i->Data.GetBonus(ItemBonusType::THORNS);
+      float fract = (float)b->BonusValue * 0.01f;
+      int dmg = (int)((float)damageReceived * fract);
+      dmgReturned += dmg;
+    }
+
+    return dmgReturned;
+  }
+
+  std::string DamageArmor(GameObject* who,
+                          GameObject* from,
+                          int amount)
+  {
+    std::string logMsg;
+
+    if (who == nullptr)
+    {
+      DebugLog("[WAR] DamageArmor() who is null!");
+      return logMsg;
+    }
+
+    std::string fromStr = (from == nullptr) ? "?" : from->ObjectName;
+
+    EquipmentComponent* ec = who->GetComponent<EquipmentComponent>();
+    if (ec != nullptr)
+    {
+      ItemComponent* armor = ec->EquipmentByCategory[EquipmentCategory::TORSO][0];
+      if (armor != nullptr)
+      {
+        if (armor->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE) || amount == 0)
+        {
+          return logMsg;
+        }
+
+        int durabilityLeft = armor->Data.Durability.Min().Get();
+        int armorDamage = durabilityLeft - amount;
+        if (armorDamage < 0)
+        {
+          int hpDamage = std::abs(armorDamage);
+
+          logMsg = StringFormat("%s => @ (%i)", fromStr.data(), hpDamage);
+
+          int absorb = GetTotalDamageAbsorptionValue(who, false);
+          hpDamage -= absorb;
+
+          if (hpDamage < 0)
+          {
+            hpDamage = 0;
+          }
+
+          who->Attrs.HP.AddMin(-hpDamage);
+          armor->Break(who);
+        }
+        else
+        {
+          logMsg = StringFormat("%s => [ (%i)", fromStr.data(), amount);
+
+          armor->Data.Durability.AddMin(-amount);
+          if (armor->Data.Durability.Min().Get() <= 0)
+          {
+            armor->Break(who);
+          }
+        }
+      }
+    }
+
+    return logMsg;
   }
 
   std::vector<Position> GetAreaDamagePointsFrom(const Position& from, int range)
@@ -1449,6 +1639,35 @@ namespace Util
           }
 
           break;
+        }
+      }
+    }
+
+    return res;
+  }
+
+  std::vector<ItemComponent*> GetItemsWithBonus(GameObject* actor,
+                                                ItemBonusType bonus)
+  {
+    std::vector<ItemComponent*> res;
+
+    if (actor == nullptr)
+    {
+      DebugLog("[WAR] GetItemsWithBonus() actor is null!");
+      return res;
+    }
+
+    EquipmentComponent* ec = actor->GetComponent<EquipmentComponent>();
+    if (ec != nullptr)
+    {
+      for (auto& item : ec->EquipmentByCategory)
+      {
+        for (auto& e : item.second)
+        {
+          if (e != nullptr && e->Data.HasBonus(bonus))
+          {
+            res.push_back(e);
+          }
         }
       }
     }

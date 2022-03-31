@@ -314,8 +314,6 @@ bool GameObject::ReceiveDamage(GameObject* from,
                                bool suppressLog,
                                const std::string& logMsgOverride)
 {
-  // TODO: isMagical for enemies' armor damage
-
   int dmgSuccess = false;
 
   std::string objName = ObjectName;
