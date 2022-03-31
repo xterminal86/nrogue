@@ -3,6 +3,7 @@
 #include "player.h"
 #include "rect.h"
 #include "game-objects-factory.h"
+#include "monsters-inc.h"
 #include "items-factory.h"
 #include "game-object-info.h"
 #include "door-component.h"
@@ -827,7 +828,7 @@ void MapLevelTown::CreateNPCs()
 
     int index = RNG::Instance().RandomRange(0, emptyCells.size());
 
-    auto go = GameObjectsFactory::Instance().CreateNPC(emptyCells[index].X, emptyCells[index].Y, npc);
+    auto go = MonstersInc::Instance().CreateNPC(emptyCells[index].X, emptyCells[index].Y, npc);
     InsertActor(go);
 
     visited.push_back(Position(emptyCells[index].X, emptyCells[index].Y));
@@ -835,21 +836,21 @@ void MapLevelTown::CreateNPCs()
 
   GameObject* go = nullptr;
 
-  go = GameObjectsFactory::Instance().CreateNPC(73, 24, NPCType::TIGRA);
+  go = MonstersInc::Instance().CreateNPC(73, 24, NPCType::TIGRA);
   InsertActor(go);
 
   // Traders
 
-  go = GameObjectsFactory::Instance().CreateNPC(83, 24, NPCType::MARTIN, true, ServiceType::BLESS);
+  go = MonstersInc::Instance().CreateNPC(83, 24, NPCType::MARTIN, true, ServiceType::BLESS);
   InsertActor(go);
 
-  go = GameObjectsFactory::Instance().CreateNPC(9, 22, NPCType::CASEY, true);
+  go = MonstersInc::Instance().CreateNPC(9, 22, NPCType::CASEY, true);
   InsertActor(go);
 
-  go = GameObjectsFactory::Instance().CreateNPC(9, 43, NPCType::MAYA, true, ServiceType::IDENTIFY);
+  go = MonstersInc::Instance().CreateNPC(9, 43, NPCType::MAYA, true, ServiceType::IDENTIFY);
   InsertActor(go);
 
-  go = GameObjectsFactory::Instance().CreateNPC(81, 7, NPCType::GRISWOLD, true, ServiceType::REPAIR);
+  go = MonstersInc::Instance().CreateNPC(81, 7, NPCType::GRISWOLD, true, ServiceType::REPAIR);
   InsertActor(go);
 }
 

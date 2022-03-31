@@ -1,6 +1,7 @@
 ﻿#include "map-level-base.h"
 #include "application.h"
 #include "game-objects-factory.h"
+#include "monsters-inc.h"
 #include "items-factory.h"
 #include "game-object-info.h"
 #include "printer.h"
@@ -337,7 +338,7 @@ void MapLevelBase::CreateInitialMonsters()
       // FIXME: debug
       //res = { GameObjectType::SPIDER, 1 };
 
-      auto monster = GameObjectsFactory::Instance().CreateMonster(x, y, res.first);
+      auto monster = MonstersInc::Instance().CreateMonster(x, y, res.first);
       InsertActor(monster);
     }
   }
@@ -398,7 +399,7 @@ void MapLevelBase::TryToSpawnMonsters()
      && IsSpotValidForSpawn({ cx, cy }))
     {
       auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
-      auto monster = GameObjectsFactory::Instance().CreateMonster(cx, cy, res.first);
+      auto monster = MonstersInc::Instance().CreateMonster(cx, cy, res.first);
       InsertActor(monster);
       break;
     }

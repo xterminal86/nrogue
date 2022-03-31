@@ -311,60 +311,91 @@ void GameObject::MakeTile(const GameObjectInfo& t, GameObjectType typeOverride)
 bool GameObject::ReceiveDamage(GameObject* from,
                                int amount,
                                bool isMagical,
-                               bool suppressLog,
-                               const std::string& logMsgOverride)
+                               bool directDamage,
+                               bool suppressLog)
 {
+  if (directDamage)
+  {
+    Attrs.HP.AddMin(-amount);
+    return true;
+  }
+
   int dmgSuccess = false;
 
+  //
+  // Static objects should display their object's name
+  //
   std::string objName = ObjectName;
+
+  //
+  // Items should display their ID-dependent name
+  //
   ItemComponent* ic = GetComponent<ItemComponent>();
   if (ic != nullptr)
   {
-    objName = (ic->Data.IsIdentified) ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
+    objName = (ic->Data.IsIdentified)
+             ? ic->Data.IdentifiedName
+             : ic->Data.UnidentifiedName;
   }
 
-  std::string who;
-  if (from == nullptr)
+  //
+  // Actors should display their avatar
+  //
+  AIComponent* aic = GetComponent<AIComponent>();
+  if (aic != nullptr)
   {
-    who = "God";
-  }
-  else
-  {
-    who = (from->Type == GameObjectType::PLAYER) ? "@" : from->ObjectName;
+    objName = Util::GetGameObjectDisplayCharacter(this);
   }
 
   std::queue<std::string> logMessages;
 
   std::string str;
 
-  bool messageOverride = !logMsgOverride.empty();
+  int dmgReturned = 0;
 
   if (!Attrs.Indestructible)
   {
-    if (amount != 0)
+    if (isMagical)
     {
-      Attrs.HP.AddMin(-amount);
-
-      str = Util::StringFormat("%s => %s (%i)", who.data(), objName.data(), amount);
-      logMessages.push(messageOverride ? logMsgOverride : str);
-
-      if (!IsAlive())
-      {
-        MarkAndCreateRemains();
-
-        std::string verb = (Type == GameObjectType::HARMLESS
-                         || Type == GameObjectType::REMAINS)
-                         ? "destroyed"
-                         : "killed";
-
-        str = Util::StringFormat("%s was %s", objName.data(), verb.data());
-        logMessages.push(messageOverride ? logMsgOverride : str);
-      }
+      str = Util::ProcessMagicalDamage(this, from, amount);
     }
     else
     {
-      str = Util::StringFormat("%s => %s (0)", who.data(), ObjectName.data());
-      logMessages.push(messageOverride ? logMsgOverride : str);
+      str = Util::ProcessPhysicalDamage(this, from, amount);
+      dmgReturned = Util::ProcessThorns(this, amount);
+
+      if (dmgReturned != 0)
+      {
+        if (Util::IsPlayer(from))
+        {
+          static_cast<Player*>(from)->ReceiveDamage(this,
+                                                    dmgReturned,
+                                                    true,
+                                                    true);
+        }
+        else
+        {
+          from->ReceiveDamage(this, dmgReturned, true, true, true);
+        }
+      }
+    }
+
+    if (!str.empty())
+    {
+      logMessages.push(str);
+    }
+
+    if (!IsAlive())
+    {
+      MarkAndCreateRemains();
+
+      std::string verb = (Type == GameObjectType::HARMLESS
+                       || Type == GameObjectType::REMAINS)
+                       ? "destroyed"
+                       : "killed";
+
+      str = Util::StringFormat("%s was %s", objName.data(), verb.data());
+      logMessages.push(str);
     }
 
     dmgSuccess = true;
@@ -374,7 +405,7 @@ bool GameObject::ReceiveDamage(GameObject* from,
     if (Type != GameObjectType::GROUND)
     {
       str = Util::StringFormat("%s not even scratched!", objName.data());
-      logMessages.push(messageOverride ? logMsgOverride : str);
+      logMessages.push(str);
     }
   }
 

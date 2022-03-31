@@ -62,7 +62,7 @@ BTResult TaskAttackBasic::Run()
   {
     result = false;
 
-    auto msg = Util::StringFormat("%s missed", _objectToControl->ObjectName.data());
+    auto msg = Util::StringFormat("%s missed", Util::GetGameObjectDisplayCharacter(_objectToControl).data());
     Application::Instance().DisplayAttack(&playerRef,
                                           GlobalConstants::DisplayAttackDelayMs,
                                           msg,

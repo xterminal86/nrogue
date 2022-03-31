@@ -5,6 +5,7 @@
 #include "rng.h"
 #include "constants.h"
 #include "game-objects-factory.h"
+#include "monsters-inc.h"
 #include "items-factory.h"
 #include "game-object-info.h"
 #include "ai-component.h"
@@ -516,7 +517,7 @@ void MapLevelMines::CreateSpecialLevel()
         {
           PlaceGroundTile(posX, posY, '.', Colors::ShadesOfGrey::Four, Colors::BlackColor, "Ground");
 
-          GameObject* boss = GameObjectsFactory::Instance().CreateMonster(posX, posY, GameObjectType::HEROBRINE);
+          GameObject* boss = MonstersInc::Instance().CreateMonster(posX, posY, GameObjectType::HEROBRINE);
 
           ContainerComponent* cc = boss->GetComponent<ContainerComponent>();
           cc->Add(key);
@@ -693,7 +694,7 @@ void MapLevelMines::CreateSpecialMonsters()
       int y = _emptyCells[index].Y;
       if (!MapArray[x][y]->Occupied)
       {
-        GameObject* m = GameObjectsFactory::Instance().CreateMonster(x, y, GameObjectType::SHELOB);
+        GameObject* m = MonstersInc::Instance().CreateMonster(x, y, GameObjectType::SHELOB);
         InsertActor(m);
       }
     }

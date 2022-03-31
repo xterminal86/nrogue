@@ -17,10 +17,8 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
   public:
     // For random generation
     GameObject* CreateGameObject(int x, int y, ItemType objType);
-    GameObject* CreateMonster(int x, int y, GameObjectType monsterType);
 
     // Various
-    GameObject* CreateNPC(int x, int y, NPCType npcType, bool standing = false, ServiceType serviceType = ServiceType::NONE);
     GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);
     GameObject* CreateRemains(GameObject* from);
     GameObject* CreateDummyObject(int x, int y, const std::string& objName, char image, const std::string& fgColor, const std::string& bgColor);

@@ -3,6 +3,7 @@
 #include "application.h"
 #include "printer.h"
 #include "game-objects-factory.h"
+#include "monsters-inc.h"
 #include "map.h"
 #include "util.h"
 #include "game-object-info.h"
@@ -601,7 +602,7 @@ void DevConsole::CreateMonster(const std::vector<std::string>& params)
     return;
   }
 
-  auto go = GameObjectsFactory::Instance().CreateMonster(x, y, objType);
+  auto go = MonstersInc::Instance().CreateMonster(x, y, objType);
   _currentLevel->InsertActor(go);
 
   StdOut(Ok);
@@ -841,8 +842,14 @@ void DevConsole::DamageActor(const std::vector<std::string>& params)
     return;
   }
 
+  bool isDirect = false;
+  if (params.size() == 2)
+  {
+    isDirect = params[1].empty();
+  }
+
   int dmg = std::stoi(n);
-  _objectHandles[ObjectHandleType::ACTOR]->ReceiveDamage(nullptr, dmg, true);
+  _objectHandles[ObjectHandleType::ACTOR]->ReceiveDamage(nullptr, dmg, true, isDirect);
 
   Map::Instance().RemoveDestroyed();
 

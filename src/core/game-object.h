@@ -143,8 +143,8 @@ class GameObject
     bool ReceiveDamage(GameObject* from,
                        int amount,
                        bool isMagical,
-                       bool suppressLog = false,
-                       const std::string& logMsgOverride = std::string());
+                       bool directDamage,
+                       bool suppressLog = false);
     bool CanAct();
 
     void FinishTurn();

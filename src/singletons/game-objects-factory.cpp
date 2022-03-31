@@ -9,9 +9,6 @@
 #include "monsters-inc.h"
 #include "items-factory.h"
 
-#include "ai-component.h"
-#include "ai-npc.h"
-
 #include "shrine-component.h"
 #include "stairs-component.h"
 #include "door-component.h"
@@ -101,61 +98,6 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateMonster(int x, int y, GameObjectType monsterType)
-{
-  // FIXME: monsters stats are too unbalanced: they become too op very fast.
-  // Change them to talents based, like player?
-  GameObject* go = nullptr;
-
-  switch (monsterType)
-  {
-    case GameObjectType::RAT:
-      go = MonstersInc::Instance().CreateRat(x, y);
-      break;
-
-    case GameObjectType::BAT:
-      go = MonstersInc::Instance().CreateBat(x, y);
-      break;
-
-    case GameObjectType::VAMPIRE_BAT:
-      go = MonstersInc::Instance().CreateVampireBat(x, y);
-      break;
-
-    case GameObjectType::SPIDER:
-      go = MonstersInc::Instance().CreateSpider(x, y);
-      break;
-
-    case GameObjectType::HEROBRINE:
-      go = MonstersInc::Instance().CreateHerobrine(x, y);
-      break;
-
-    case GameObjectType::TROLL:
-      go = MonstersInc::Instance().CreateTroll(x, y);
-      break;
-
-    case GameObjectType::MAD_MINER:
-      go = MonstersInc::Instance().CreateMadMiner(x, y);
-      break;
-
-    case GameObjectType::SHELOB:
-      go = MonstersInc::Instance().CreateShelob(x, y);
-      break;
-
-    default:
-      DebugLog("CreateMonster(): monster type %i is not handled!", monsterType);
-      break;
-  }
-
-  if (go != nullptr)
-  {
-    go->Type = monsterType;
-    go->PosX = x;
-    go->PosY = y;
-  }
-
-  return go;
-}
-
 GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int timeout)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -172,33 +114,6 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
   go->ObjectName = GlobalConstants::ShrineNameByType.at(type);
   go->FogOfWarName = "?Shrine?";
   go->InteractionCallback = std::bind(&ShrineComponent::Interact, sc);
-
-  return go;
-}
-
-GameObject* GameObjectsFactory::CreateNPC(int x, int y, NPCType npcType, bool standing, ServiceType serviceType)
-{
-  char img = '@';
-
-  #ifdef USE_SDL
-  img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
-  #endif
-
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, "#FFFFFF");
-
-  go->IsLiving = true;
-  go->Type = GameObjectType::NPC;
-
-  go->Move(0, 0);
-
-  AIComponent* aic = go->AddComponent<AIComponent>();
-  AINPC* ainpc = aic->AddModel<AINPC>();
-  ainpc->Init(npcType, standing, serviceType);
-
-  std::string goColor = (ainpc->Data.IsMale) ? "#FFFFFF" : "#FF00FF";
-  go->FgColor = goColor;
-
-  aic->ChangeModel<AINPC>();
 
   return go;
 }

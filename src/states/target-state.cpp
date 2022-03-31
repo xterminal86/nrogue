@@ -480,7 +480,7 @@ void TargetState::ProcessLaser()
           }
         }
 
-        obj->ReceiveDamage(_weaponRef->OwnerGameObject, dmgDone, false);
+        obj->ReceiveDamage(_weaponRef->OwnerGameObject, dmgDone, false, false);
 
         power -= (def == 0) ? 1 : dmgDone;
       }

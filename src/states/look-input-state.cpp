@@ -9,6 +9,7 @@
 
 #ifdef DEBUG_BUILD
 #include "game-objects-factory.h"
+#include "monsters-inc.h"
 #endif
 
 void LookInputState::Init()
@@ -130,7 +131,7 @@ void LookInputState::HandleInput()
 
     case 'M':
     {
-      GameObject* mm = GameObjectsFactory::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::MAD_MINER);
+      GameObject* mm = MonstersInc::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::MAD_MINER);
       Map::Instance().InsertActor(mm);
     }
     break;

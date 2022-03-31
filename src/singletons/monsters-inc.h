@@ -2,12 +2,21 @@
 #define MONSTERSINC_H
 
 #include "singleton.h"
+#include "enumerations.h"
 
 class GameObject;
 
 class MonstersInc : public Singleton<MonstersInc>
 {
   public:
+    GameObject* CreateMonster(int x, int y, GameObjectType monsterType);
+
+    GameObject* CreateNPC(int x,
+                          int y,
+                          NPCType npcType,
+                          bool standing = false,
+                          ServiceType serviceType = ServiceType::NONE);
+
     GameObject* CreateRat(int x, int y, bool randomize = true);
     GameObject* CreateBat(int x, int y, bool randomize = true);
     GameObject* CreateVampireBat(int x, int y, bool randomize = true);

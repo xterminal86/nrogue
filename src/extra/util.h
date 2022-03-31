@@ -171,6 +171,8 @@ namespace Util
 
   extern std::string GetCurrentDateTimeString();
 
+  extern std::string GetGameObjectDisplayCharacter(GameObject* obj);
+
   extern size_t FindLongestStringLength(const std::vector<std::string>& list);
 
   extern std::vector<Position> GetAreaDamagePointsFrom(const Position& from, int range);

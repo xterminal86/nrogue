@@ -494,7 +494,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
     //
     if (what->IsAlive())
     {
-      bool succ = what->ReceiveDamage(this, dmg, false);
+      bool succ = what->ReceiveDamage(this, dmg, false, false);
       if (succ
        && weapon->Data.HasBonus(ItemBonusType::LEECH)
        && what->IsLiving)
@@ -539,6 +539,8 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
 /// 'what' is either actor or GameObject, 'with' is a wand
 void Player::MagicAttack(GameObject* what, ItemComponent* with)
 {
+  // TODO: refactor with respect to Util methods
+
   with->Data.Amount--;
 
   SpellInfo si = with->Data.SpellHeld;
@@ -594,7 +596,10 @@ void Player::ProcessTeleport(GameObject* target, ItemComponent* weapon)
   }
 }
 
-void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int damage, bool againstRes)
+void Player::ProcessMagicAttack(GameObject* target,
+                                ItemComponent* weapon,
+                                int damage,
+                                bool againstRes)
 {
   Position p = { target->PosX, target->PosY };
 
@@ -643,16 +648,18 @@ void Player::ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int d
   }
 }
 
-void Player::MeleeAttack(GameObject* go, bool alwaysHit)
+void Player::MeleeAttack(GameObject* what, bool alwaysHit)
 {
-  bool hitLanded = alwaysHit ? true : WasHitLanded(go);
+  // FIXME: refactor with respect to Util methods
+
+  bool hitLanded = alwaysHit ? true : WasHitLanded(what);
   if (!hitLanded)
   {
-    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "You missed", Colors::WhiteColor);
+    Application::Instance().DisplayAttack(what, GlobalConstants::DisplayAttackDelayMs, "You missed", Colors::WhiteColor);
   }
   else
   {
-    Application::Instance().DisplayAttack(go, GlobalConstants::DisplayAttackDelayMs, "", Colors::RedColor);
+    Application::Instance().DisplayAttack(what, GlobalConstants::DisplayAttackDelayMs, "", Colors::RedColor);
     ItemComponent* weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
 
     bool isRanged = false;
@@ -662,7 +669,7 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
                || weapon->Data.ItemType_ == ItemType::WAND);
     }
 
-    AIComponent* aic = go->GetComponent<AIComponent>();
+    AIComponent* aic = what->GetComponent<AIComponent>();
 
     if (aic != nullptr
      && weapon != nullptr
@@ -670,7 +677,7 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
     {
       _knockBackDir = _attackDir;
       int tiles = weapon->Data.GetBonus(ItemBonusType::KNOCKBACK)->BonusValue;
-      Util::KnockBack(this, go, _knockBackDir, tiles);
+      Util::KnockBack(this, what, _knockBackDir, tiles);
     }
 
     //
@@ -681,10 +688,10 @@ void Player::MeleeAttack(GameObject* go, bool alwaysHit)
     // Check for Type is for ability to attack walls
     // (with a pickaxe to mine, for example)
     //
-    if ((go->Type == GameObjectType::PICKAXEABLE) || go->IsAlive())
+    if ((what->Type == GameObjectType::PICKAXEABLE) || what->IsAlive())
     {
-      int dmg = Util::CalculateDamageValue(this, go, weapon, isRanged);
-      ProcessMeleeAttack(weapon, go, dmg);
+      int dmg = Util::CalculateDamageValue(this, what, weapon, isRanged);
+      ProcessMeleeAttack(weapon, what, dmg);
     }
   }
 
@@ -739,7 +746,7 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon, GameObject* defender, int
   }
   else
   {
-    bool succ = defender->ReceiveDamage(this, damageToInflict, false);
+    bool succ = defender->ReceiveDamage(this, damageToInflict, false, false);
     if (succ && hasLeech && defender->IsLiving)
     {
       auto b = weapon->Data.GetBonus(ItemBonusType::LEECH);
@@ -835,8 +842,13 @@ void Player::ReceiveDamage(GameObject* from,
 
   if (dmgReturned != 0 && from != nullptr)
   {
-    auto thornsLogMsg = Util::StringFormat("@ => %s (%i)", from->ObjectName.data(), dmgReturned);
-    from->ReceiveDamage(this, dmgReturned, true, false, thornsLogMsg);
+    auto thornsLogMsg = Util::StringFormat("@ => %s (%i)",
+                                           Util::GetGameObjectDisplayCharacter(from).data(),
+                                           dmgReturned);
+
+    Printer::Instance().AddMessage(thornsLogMsg);
+
+    from->ReceiveDamage(this, dmgReturned, true, true);
   }
 }
 

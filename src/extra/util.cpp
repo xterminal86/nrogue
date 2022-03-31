@@ -1076,6 +1076,34 @@ namespace Util
     return ss.str();
   }
 
+  std::string GetGameObjectDisplayCharacter(GameObject* obj)
+  {
+    std::string res = "?";
+
+    if (obj == nullptr)
+    {
+      return res;
+    }
+
+    if (IsPlayer(obj))
+    {
+      res = "@";
+    }
+    else
+    {
+      #ifdef USE_SDL
+      if (!obj->ObjectName.empty())
+      {
+        res = { obj->ObjectName[0] };
+      }
+      #else
+      res = { (char)obj->Image };
+      #endif
+    }
+
+    return res;
+  }
+
   size_t FindLongestStringLength(const std::vector<std::string>& list)
   {
     size_t res = 0;
@@ -1399,6 +1427,9 @@ namespace Util
 
     std::string logMsg = DamageArmor(who, from, amount);
 
+    std::string whoImg  = GetGameObjectDisplayCharacter(who);
+    std::string fromImg = GetGameObjectDisplayCharacter(from);
+
     //
     // If no armor present
     //
@@ -1413,10 +1444,9 @@ namespace Util
         who->Attrs.HP.AddMin(-amount);
       }
 
-      logMsg = StringFormat("%s => @ (%i)",
-                            (from == nullptr)
-                            ? "?"
-                            : from->ObjectName.data(),
+      logMsg = StringFormat("%s => %s (%i)",
+                            fromImg.data(),
+                            whoImg.data(),
                             amount);
     }
 
@@ -1434,7 +1464,9 @@ namespace Util
     }
 
     std::string logMsg;
-    std::string fromStr = (from == nullptr) ? "?" : from->ObjectName;
+
+    std::string whoImg  = GetGameObjectDisplayCharacter(who);
+    std::string fromImg = GetGameObjectDisplayCharacter(from);
 
     if (IsPlayer(who) && IsPlayer(from))
     {
@@ -1442,7 +1474,10 @@ namespace Util
     }
     else
     {
-      logMsg = StringFormat("%s => @ (%i)", fromStr.data(), amount);
+      logMsg = StringFormat("%s => %s (%i)",
+                            fromImg.data(),
+                            whoImg.data(),
+                            amount);
     }
 
     int abs = GetTotalDamageAbsorptionValue(who, true);
@@ -1520,7 +1555,8 @@ namespace Util
       return logMsg;
     }
 
-    std::string fromStr = (from == nullptr) ? "?" : from->ObjectName;
+    std::string whoStr  = GetGameObjectDisplayCharacter(who);
+    std::string fromStr = GetGameObjectDisplayCharacter(from);
 
     EquipmentComponent* ec = who->GetComponent<EquipmentComponent>();
     if (ec != nullptr)
@@ -1539,7 +1575,10 @@ namespace Util
         {
           int hpDamage = std::abs(armorDamage);
 
-          logMsg = StringFormat("%s => @ (%i)", fromStr.data(), hpDamage);
+          logMsg = StringFormat("%s => %s (%i)",
+                                fromStr.data(),
+                                whoStr.data(),
+                                hpDamage);
 
           int absorb = GetTotalDamageAbsorptionValue(who, false);
           hpDamage -= absorb;

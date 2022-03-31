@@ -235,7 +235,7 @@ class DevConsole : public GameState
       },
       {
         "ao_dmg",
-        { "ao_dmg N", "Inflict N damage to actor in handle" }
+        { "ao_dmg N <DIRECT>", "Inflict N damage to actor in handle" }
       },
       {
         "io_mov",

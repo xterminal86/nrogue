@@ -39,7 +39,7 @@ class Player : public GameObject
     std::string& GetClassName();
 
     void Draw();
-    void MeleeAttack(GameObject* go, bool alwaysHit = false);
+    void MeleeAttack(GameObject* what, bool alwaysHit = false);
     void RangedAttack(GameObject* what, ItemComponent* with);
     void MagicAttack(GameObject* what, ItemComponent* with);
     void ReceiveDamage(GameObject* from,

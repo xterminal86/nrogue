@@ -4,6 +4,7 @@
 #include "items-factory.h"
 
 #include "ai-component.h"
+#include "ai-npc.h"
 #include "equipment-component.h"
 #include "container-component.h"
 #include "item-component.h"
@@ -21,6 +22,92 @@
 
 void MonstersInc::InitSpecific()
 {
+}
+
+GameObject* MonstersInc::CreateMonster(int x, int y, GameObjectType monsterType)
+{
+  // FIXME: monsters stats are too unbalanced: they become too op very fast.
+  // Change them to talents based, like player?
+  GameObject* go = nullptr;
+
+  switch (monsterType)
+  {
+    case GameObjectType::RAT:
+      go = CreateRat(x, y);
+      break;
+
+    case GameObjectType::BAT:
+      go = CreateBat(x, y);
+      break;
+
+    case GameObjectType::VAMPIRE_BAT:
+      go = CreateVampireBat(x, y);
+      break;
+
+    case GameObjectType::SPIDER:
+      go = CreateSpider(x, y);
+      break;
+
+    case GameObjectType::HEROBRINE:
+      go = CreateHerobrine(x, y);
+      break;
+
+    case GameObjectType::TROLL:
+      go = CreateTroll(x, y);
+      break;
+
+    case GameObjectType::MAD_MINER:
+      go = CreateMadMiner(x, y);
+      break;
+
+    case GameObjectType::SHELOB:
+      go = CreateShelob(x, y);
+      break;
+
+    default:
+      DebugLog("CreateMonster(): monster type %i is not handled!", monsterType);
+      break;
+  }
+
+  if (go != nullptr)
+  {
+    go->Type = monsterType;
+    go->PosX = x;
+    go->PosY = y;
+  }
+
+  return go;
+}
+
+GameObject* MonstersInc::CreateNPC(int x,
+                                   int y,
+                                   NPCType npcType,
+                                   bool standing,
+                                   ServiceType serviceType)
+{
+  char img = '@';
+
+  #ifdef USE_SDL
+  img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
+  #endif
+
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, "#FFFFFF");
+
+  go->IsLiving = true;
+  go->Type = GameObjectType::NPC;
+
+  go->Move(0, 0);
+
+  AIComponent* aic = go->AddComponent<AIComponent>();
+  AINPC* ainpc = aic->AddModel<AINPC>();
+  ainpc->Init(npcType, standing, serviceType);
+
+  std::string goColor = (ainpc->Data.IsMale) ? "#FFFFFF" : "#FF00FF";
+  go->FgColor = goColor;
+
+  aic->ChangeModel<AINPC>();
+
+  return go;
 }
 
 GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)

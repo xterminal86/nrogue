@@ -804,7 +804,7 @@ bool Map::TryToDamageObject(GameObject* object,
     }
     else
     {
-      object->ReceiveDamage(from, dmgHere, againstRes);
+      object->ReceiveDamage(from, dmgHere, againstRes, false);
       success = true;
     }
   }
