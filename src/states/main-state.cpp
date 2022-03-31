@@ -817,7 +817,7 @@ void MainState::DisplayActiveEffects(const int& startPos)
 
   std::map<std::string, int> effectDurationByName;
 
-  for (auto& kvp : _playerRef->Effects())
+  for (auto& kvp : _playerRef->GetActiveEffects())
   {
     for (const ItemBonusStruct& item : kvp.second)
     {

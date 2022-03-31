@@ -137,6 +137,8 @@ namespace Util
   extern int CalculateHitChance(GameObject* attacker,
                                 GameObject* defender);
 
+  extern int GetTotalDamageAbsorptionValue(GameObject* who, bool magic);
+
   extern CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map);
 
   extern std::string GetItemInventoryColor(const ItemData& data);

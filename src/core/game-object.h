@@ -175,7 +175,7 @@ class GameObject
     bool IsOnDangerousTile();
     bool IsOnTile(GameObjectType tileType);
 
-    const std::map<uint64_t, std::vector<ItemBonusStruct>>& Effects();
+    const std::map<uint64_t, std::vector<ItemBonusStruct>>& GetActiveEffects();
 
     uint64_t ObjectId();
 

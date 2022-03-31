@@ -119,7 +119,6 @@ class Player : public GameObject
 
     bool DamageArmor(GameObject* from, int amount);
 
-    int GetDamageAbsorbtionValue(bool magic);
     std::vector<ItemComponent*> GetItemsWithBonus(const ItemBonusType& bonusType);
 
     int _starvingTimeout = 0;

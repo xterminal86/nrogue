@@ -1088,7 +1088,7 @@ bool GameObject::CanRaiseAttribute(Attribute& attr)
   return Util::Rolld100(chance);
 }
 
-const std::map<uint64_t, std::vector<ItemBonusStruct>>& GameObject::Effects()
+const std::map<uint64_t, std::vector<ItemBonusStruct>>& GameObject::GetActiveEffects()
 {
   return _activeEffects;
 }

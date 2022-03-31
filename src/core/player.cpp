@@ -798,7 +798,8 @@ std::string Player::ProcessMagicalDamage(GameObject* from, int& amount)
     logMsg = Util::StringFormat("%s => @ (%i)", fromStr.data(), amount);
   }
 
-  int abs = GetDamageAbsorbtionValue(true);
+  int abs = Util::GetTotalDamageAbsorptionValue(this, true);
+
   amount -= abs;
 
   if (amount < 0)
@@ -828,7 +829,8 @@ std::string Player::ProcessPhysicalDamage(GameObject* from, int& amount)
   std::string logMsg;
   std::string fromStr = (from == nullptr) ? "?" : from->ObjectName;
 
-  int abs = GetDamageAbsorbtionValue(false);
+  int abs = Util::GetTotalDamageAbsorptionValue(this, false);
+
   amount -= abs;
 
   if (amount < 0)
@@ -1790,28 +1792,6 @@ bool Player::RecallItem(ItemComponent* itemRef)
   }
 
   return false;
-}
-
-
-int Player::GetDamageAbsorbtionValue(bool magic)
-{
-  int res = 0;
-
-  ItemBonusType t = magic ? ItemBonusType::MAG_ABSORB : ItemBonusType::DMG_ABSORB;
-
-  for (auto& kvp : Equipment->EquipmentByCategory)
-  {
-    for (ItemComponent* item : kvp.second)
-    {
-      if (item != nullptr && item->Data.HasBonus(t))
-      {
-        ItemBonusStruct* ibs = item->Data.GetBonus(t);
-        res += ibs->BonusValue;
-      }
-    }
-  }
-
-  return res;
 }
 
 std::vector<ItemComponent*> Player::GetItemsWithBonus(const ItemBonusType& bonusType)

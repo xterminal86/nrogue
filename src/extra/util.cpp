@@ -1336,6 +1336,48 @@ namespace Util
     return hitChance;
   }
 
+  int GetTotalDamageAbsorptionValue(GameObject* who, bool magic)
+  {
+    int res = 0;
+
+    ItemBonusType t = magic ? ItemBonusType::MAG_ABSORB : ItemBonusType::DMG_ABSORB;
+
+    if (who != nullptr)
+    {
+      //
+      // Check for inherent absorption
+      //
+      for (auto& kvp : who->GetActiveEffects())
+      {
+        for (const ItemBonusStruct& e : kvp.second)
+        {
+          if (e.Type == t)
+          {
+            res += e.BonusValue;
+          }
+        }
+      }
+
+      EquipmentComponent* ec = who->GetComponent<EquipmentComponent>();
+      if (ec != nullptr)
+      {
+        for (auto& kvp : ec->EquipmentByCategory)
+        {
+          for (ItemComponent* item : kvp.second)
+          {
+            if (item != nullptr && item->Data.HasBonus(t))
+            {
+              ItemBonusStruct* ibs = item->Data.GetBonus(t);
+              res += ibs->BonusValue;
+            }
+          }
+        }
+      }
+    }
+
+    return res;
+  }
+
   std::vector<Position> GetAreaDamagePointsFrom(const Position& from, int range)
   {
     std::vector<Position> res;
