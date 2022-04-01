@@ -358,10 +358,19 @@ bool GameObject::ReceiveDamage(GameObject* from,
     if (isMagical)
     {
       str = Util::ProcessMagicalDamage(this, from, amount);
+      if (!str.empty())
+      {
+        logMessages.push(str);
+      }
     }
     else
     {
-      str = Util::ProcessPhysicalDamage(this, from, amount);
+      auto msgs = Util::ProcessPhysicalDamage(this, from, amount);
+      for (auto& m : msgs)
+      {
+        logMessages.push(m);
+      }
+
       dmgReturned = Util::ProcessThorns(this, amount);
 
       if (dmgReturned != 0)
@@ -380,11 +389,6 @@ bool GameObject::ReceiveDamage(GameObject* from,
       }
     }
 
-    if (!str.empty())
-    {
-      logMessages.push(str);
-    }
-
     if (!IsAlive())
     {
       MarkAndCreateRemains();
@@ -394,8 +398,7 @@ bool GameObject::ReceiveDamage(GameObject* from,
                        ? "destroyed"
                        : "killed";
 
-      str = Util::StringFormat("%s was %s", objName.data(), verb.data());
-      logMessages.push(str);
+      logMessages.push(Util::StringFormat("%s was %s", objName.data(), verb.data()));
     }
 
     dmgSuccess = true;
@@ -404,8 +407,7 @@ bool GameObject::ReceiveDamage(GameObject* from,
   {
     if (Type != GameObjectType::GROUND)
     {
-      str = Util::StringFormat("%s not even scratched!", objName.data());
-      logMessages.push(str);
+      logMessages.push(Util::StringFormat("%s not even scratched!", objName.data()));
     }
   }
 

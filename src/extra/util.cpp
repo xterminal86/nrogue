@@ -1409,14 +1409,16 @@ namespace Util
     return res;
   }
 
-  std::string ProcessPhysicalDamage(GameObject* who,
-                                    GameObject* from,
-                                    int& amount)
+  std::vector<std::string> ProcessPhysicalDamage(GameObject* who,
+                                                 GameObject* from,
+                                                 int& amount)
   {
+    std::vector<std::string> res;
+
     if (who == nullptr)
     {
       DebugLog("[WAR] ProcessMagicalDamage() who is null!");
-      return std::string();
+      return res;
     }
 
     int abs = GetTotalDamageAbsorptionValue(who, false);
@@ -1428,7 +1430,7 @@ namespace Util
       amount = 0;
     }
 
-    std::string logMsg = DamageArmor(who, from, amount);
+    auto armorMsgs = DamageArmor(who, from, amount);
 
     std::string whoImg  = GetGameObjectDisplayCharacter(who);
     std::string fromImg = GetGameObjectDisplayCharacter(from);
@@ -1436,7 +1438,7 @@ namespace Util
     //
     // If no armor present
     //
-    if (logMsg.empty())
+    if (armorMsgs.empty())
     {
       if (who->HasEffect(ItemBonusType::MANA_SHIELD))
       {
@@ -1447,13 +1449,20 @@ namespace Util
         who->Attrs.HP.AddMin(-amount);
       }
 
-      logMsg = StringFormat("%s => %s (%i)",
-                            fromImg.data(),
-                            whoImg.data(),
-                            amount);
+      res.push_back(StringFormat("%s => %s (%i)",
+                                 fromImg.data(),
+                                 whoImg.data(),
+                                 amount));
+    }
+    else
+    {
+      for (auto& m : armorMsgs)
+      {
+        res.push_back(m);
+      }
     }
 
-    return logMsg;
+    return res;
   }
 
   std::string ProcessMagicalDamage(GameObject* who,
@@ -1546,16 +1555,19 @@ namespace Util
     return dmgReturned;
   }
 
-  std::string DamageArmor(GameObject* who,
-                          GameObject* from,
-                          int amount)
+  std::vector<std::string> DamageArmor(GameObject* who,
+                                       GameObject* from,
+                                       int amount)
   {
-    std::string logMsg;
+    std::vector<std::string> logMsgs;
+    std::vector<std::string> logMsgsRec;
 
     if (who == nullptr)
     {
-      DebugLog("[WAR] DamageArmor() who is null!");
-      return logMsg;
+      std::string err = "[WAR] DamageArmor() who is null!";
+      DebugLog("%s", err.data());
+      logMsgs.push_back(err);
+      return logMsgs;
     }
 
     std::string whoStr  = GetGameObjectDisplayCharacter(who);
@@ -1567,9 +1579,12 @@ namespace Util
       ItemComponent* armor = ec->EquipmentByCategory[EquipmentCategory::TORSO][0];
       if (armor != nullptr)
       {
-        if (armor->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE) || amount == 0)
+        logMsgs.push_back(StringFormat("%s => [ (%i)", fromStr.data(), amount));
+
+        if (armor->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE)
+         || amount == 0)
         {
-          return logMsg;
+          return logMsgs;
         }
 
         int durabilityLeft = armor->Data.Durability.Min().Get();
@@ -1577,39 +1592,32 @@ namespace Util
 
         armor->Data.Durability.AddMin(-amount);
 
+        if (armor->Data.Durability.Min().Get() <= 0)
+        {
+          if (IsPlayer(who))
+          {
+            logMsgs.push_back(StringFormat("%s breaks!", armor->OwnerGameObject->ObjectName.data()));
+          }
+
+          armor->Break(who);
+        }
+
         if (overkill < 0)
         {
           int hpDamage = std::abs(overkill);
 
-          logMsg = StringFormat("%s => %s (%i)",
-                                fromStr.data(),
-                                whoStr.data(),
-                                hpDamage);
-
-          int absorb = GetTotalDamageAbsorptionValue(who, false);
-          hpDamage -= absorb;
-
-          if (hpDamage < 0)
-          {
-            hpDamage = 0;
-          }
-
-          who->Attrs.HP.AddMin(-hpDamage);
-        }
-        else
-        {
-          logMsg = StringFormat("%s => [ (%i)", fromStr.data(), amount);
-        }
-
-        if (armor->Data.Durability.Min().Get() <= 0)
-        {
-          logMsg = StringFormat("%s breaks!", armor->OwnerGameObject->ObjectName.data());
-          armor->Break(who);
+          // Recursion in production code, yay!
+          logMsgsRec = ProcessPhysicalDamage(who, from, hpDamage);
         }
       }
     }
 
-    return logMsg;
+    for (auto& msg : logMsgsRec)
+    {
+      logMsgs.push_back(msg);
+    }
+
+    return logMsgs;
   }
 
   std::vector<Position> GetAreaDamagePointsFrom(const Position& from, int range)

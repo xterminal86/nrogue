@@ -821,23 +821,30 @@ void Player::ReceiveDamage(GameObject* from,
     return;
   }
 
-  std::string logMsg;
+  std::vector<std::string> logMsgs;
 
   int dmgReturned = 0;
 
   if (isMagical)
   {
-    logMsg = Util::ProcessMagicalDamage(this, from, amount);
+    auto str = Util::ProcessMagicalDamage(this, from, amount);
+    if (!str.empty())
+    {
+      logMsgs.push_back(str);
+    }
   }
   else
   {
-    logMsg = Util::ProcessPhysicalDamage(this, from, amount);
+    logMsgs = Util::ProcessPhysicalDamage(this, from, amount);
     dmgReturned = Util::ProcessThorns(this, amount);
   }
 
-  if (!suppressLog && !logMsg.empty())
+  if (!suppressLog && !logMsgs.empty())
   {
-    Printer::Instance().AddMessage(logMsg);
+    for (auto& m : logMsgs)
+    {
+      Printer::Instance().AddMessage(m);
+    }
   }
 
   if (dmgReturned != 0 && from != nullptr)

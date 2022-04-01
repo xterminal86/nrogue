@@ -308,25 +308,46 @@ void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
   b.Duration   = _duration;
   b.Id         = OwnerGameObject->ObjectId();
 
-  if (b.Type == ItemBonusType::REGEN
-   || b.Type == ItemBonusType::POISONED
-   || b.Type == ItemBonusType::PARALYZE
-   || b.Type == ItemBonusType::BURNING)
+  switch (b.Type)
   {
-    b.Cumulative = true;
-    b.BonusValue = (b.Type == ItemBonusType::POISONED
-                 || b.Type == ItemBonusType::BURNING) ? -1 : 1;
-    b.Duration   = _duration;
-    b.Period     = (b.Type == ItemBonusType::POISONED) ? 2 : 1;
-  }
-  else if (b.Type == ItemBonusType::BLINDNESS)
-  {
-    b.BonusValue = -GlobalConstants::MaxVisibilityRadius;
+    case ItemBonusType::REGEN:
+    case ItemBonusType::POISONED:
+    case ItemBonusType::PARALYZE:
+    case ItemBonusType::BURNING:
+    {
+      b.Cumulative = true;
+      b.BonusValue = (b.Type == ItemBonusType::POISONED
+                   || b.Type == ItemBonusType::BURNING) ? -1 : 1;
+      b.Duration   = _duration;
+      b.Period     = (b.Type == ItemBonusType::POISONED) ? 2 : 1;
+    }
+    break;
+
+    case ItemBonusType::BLINDNESS:
+    {
+      b.BonusValue = -GlobalConstants::MaxVisibilityRadius;
+    }
+    break;
+
+    case ItemBonusType::MANA_SHIELD:
+    {
+      if (playerRef.Attrs.MP.Min().Get() == 0)
+      {
+        b.Type = ItemBonusType::NONE;
+      }
+    }
+    break;
   }
 
-  playerRef.AddEffect(b);
-
-  SetEffectGainMessage(logMessageToWrite, b.Type);
+  if (b.Type != ItemBonusType::NONE)
+  {
+    playerRef.AddEffect(b);
+    SetEffectGainMessage(logMessageToWrite, b.Type);
+  }
+  else
+  {
+    Printer::Instance().AddMessage(Strings::NoActionText);
+  }
 }
 
 //
@@ -352,7 +373,14 @@ void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
 
   if (t == ItemBonusType::MANA_SHIELD)
   {
-    b.Duration = manaShieldOk ? -1 : 0;
+    if (playerRef.Attrs.MP.Min().Get() > 0)
+    {
+      b.Duration = manaShieldOk ? -1 : 0;
+    }
+    else
+    {
+      b.Type = ItemBonusType::NONE;
+    }
   }
   else if (t == ItemBonusType::REGEN)
   {
@@ -361,9 +389,15 @@ void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
     b.Period     = 1;
   }
 
-  playerRef.AddEffect(b);
-
-  SetEffectGainMessage(logMessageToWrite, b.Type);
+  if (b.Type != ItemBonusType::NONE)
+  {
+    playerRef.AddEffect(b);
+    SetEffectGainMessage(logMessageToWrite, b.Type);
+  }
+  else
+  {
+    Printer::Instance().AddMessage(Strings::NoActionText);
+  }
 }
 
 void ShrineComponent::ApplyRandomNegativeEffect(std::string& logMessageToWrite)

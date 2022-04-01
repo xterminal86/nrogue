@@ -139,9 +139,9 @@ namespace Util
 
   extern int GetTotalDamageAbsorptionValue(GameObject* who, bool magic);
 
-  extern std::string ProcessPhysicalDamage(GameObject* who,
-                                           GameObject* from,
-                                           int& amount);
+  extern std::vector<std::string> ProcessPhysicalDamage(GameObject* who,
+                                                        GameObject* from,
+                                                        int& amount);
 
   extern std::string ProcessMagicalDamage(GameObject* who,
                                           GameObject* from,
@@ -153,9 +153,9 @@ namespace Util
   extern int ProcessThorns(GameObject* who,
                            int damageReceived);
 
-  extern std::string DamageArmor(GameObject* who,
-                                 GameObject* from,
-                                 int amount);
+  extern std::vector<std::string> DamageArmor(GameObject* who,
+                                              GameObject* from,
+                                              int amount);
 
   extern CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map);
 
