@@ -121,13 +121,15 @@ namespace Util
                         const Position& attackDir,
                         int tiles);
 
-  extern bool TryToDamageEquipment(GameObject* actor,
-                                   EquipmentCategory cat,
-                                   int damage);
+  // ===========================================================================
 
-  extern bool TryToDamageEquipment(GameObject* actor,
-                                   ItemComponent* item,
-                                   int damage);
+  extern std::string TryToDamageEquipment(GameObject* actor,
+                                          EquipmentCategory cat,
+                                          int damage);
+
+  extern std::string TryToDamageEquipment(GameObject* actor,
+                                          ItemComponent* item,
+                                          int damage);
 
   extern int CalculateDamageValue(GameObject* attacker,
                                   GameObject* defender,
@@ -136,6 +138,12 @@ namespace Util
 
   extern int CalculateHitChance(GameObject* attacker,
                                 GameObject* defender);
+
+  extern int CalculateHitChanceRanged(const Position& start,
+                                      const Position& end,
+                                      GameObject* user,
+                                      ItemComponent* weapon,
+                                      bool isThrowing);
 
   extern int GetTotalDamageAbsorptionValue(GameObject* who, bool magic);
 
@@ -156,6 +164,12 @@ namespace Util
   extern std::vector<std::string> DamageArmor(GameObject* who,
                                               GameObject* from,
                                               int amount);
+
+  extern Position GetRandomPointAround(GameObject* user,
+                                       ItemComponent* weapon,
+                                       const Position& aroundThis);
+
+  // ===========================================================================
 
   extern CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map);
 

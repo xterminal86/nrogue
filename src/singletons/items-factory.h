@@ -76,6 +76,14 @@ class ItemsFactory : public Singleton<ItemsFactory>
     //
     GameObject* CreateRandomItem(int x, int y, ItemType exclude = ItemType::NOTHING);
 
+    // **************************** Uniques ************************************
+    //
+    // DAGGER,
+    GameObject* CreateUniqueShortSword();
+    // ARMING_SWORD,
+    // LONG_SWORD,
+    // GREAT_SWORD,
+    // STAFF,
     GameObject* CreateUniquePickaxe();
 
   protected:
@@ -93,8 +101,8 @@ class ItemsFactory : public Singleton<ItemsFactory>
     void TryToAddBonusesToItem(ItemComponent* itemRef,
                                bool atLeastOne = false);
 
-    void AddRandomBonusToItem(ItemComponent* itemRef,
-                              ItemBonusType bonusType);
+    void AddRandomValueBonusToItem(ItemComponent* itemRef,
+                                   ItemBonusType bonusType);
 
     void AddBonusToItem(ItemComponent* itemRef,
                         const ItemBonusStruct& bonusData,

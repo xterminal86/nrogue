@@ -190,7 +190,7 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll, GameObject* u
     int index = RNG::Instance().RandomRange(0, itemsToRepair.size());
     ItemComponent* item = itemsToRepair[index];
 
-    _playerRef->BreakItem(item);
+    item->Break(_playerRef);
   }
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {

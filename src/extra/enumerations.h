@@ -296,7 +296,7 @@ enum class ItemBonusType
   BLINDNESS,      // anti-visibility (-100500 to LightRadius)
   FROZEN,         // SPD penalty
   BURNING,        // inflicts fire damage over several turns + gives illuminated
-  ILLUMINATED,    // + to light radius
+  ILLUMINATED,    // monsters can see you further away (?) (not implemented)
   POISONED        // anti-regen
 };
 

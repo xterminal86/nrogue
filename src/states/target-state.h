@@ -30,8 +30,6 @@ class TargetState : public GameState
     Position _cursorPosition;
     Position _lastCursorPosition;
 
-    int CalculateHitChance();
-
     bool SafetyCheck();
     void CheckCursorPositionBounds();
 
@@ -50,14 +48,10 @@ class TargetState : public GameState
 
     std::vector<GameObject*> FillObjectsOnTheLine(const std::vector<Position>& line);
 
-    std::vector<Position> GetVisiblePointsFrom(const Position& from, int range);
-    Position GetRandomPointAroundCursor();
     std::pair<char, std::string> GetProjectileImageAndColor(bool throwingFromInventory);
 
     GameObject* LaunchProjectile(char image, const std::string& color);
     GameObject* CheckHit(const Position& at, const Position& prev);
-
-    int CalculateChance(const Position& startPoint, const Position& endPoint, int baseChance);
 
     std::vector<GameObject*> _targets;
 

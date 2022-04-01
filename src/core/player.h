@@ -29,7 +29,7 @@ class Player : public GameObject
 
     void CheckVisibility();
 
-    bool TryToAttack(int dx, int dy);
+    bool TryToMeleeAttack(int dx, int dy);
     bool IsSwimming();
 
     int SelectedClass;
@@ -107,18 +107,12 @@ class Player : public GameObject
     void ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int damage, bool againstRes);
     void ProcessTeleport(GameObject* target, ItemComponent* weapon);
 
-    bool WeaponLosesDurability();
-    bool ShouldBreak(ItemComponent* ic);
     bool PassByNPC(GameObject* actor);
-
-    void BreakItem(ItemComponent* ic, bool suppressMessage = false);
 
     void ProcessEffectsPlayer();
     void ProcessItemsEffects();
 
     void SwitchPlaces(AIComponent* other);
-
-    bool WasHitLanded(GameObject* defender);
 
     bool IsGameObjectBorder(GameObject* go);
 

@@ -78,7 +78,7 @@ void Player::Draw()
   GameObject::Draw(FgColor, bgColor);
 }
 
-bool Player::TryToAttack(int dx, int dy)
+bool Player::TryToMeleeAttack(int dx, int dy)
 {
   _attackDir.X = dx;
   _attackDir.Y = dy;
@@ -525,22 +525,19 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
 
   if (arrows->Data.Amount <= 0)
   {
-    BreakItem(arrows, true);
+    arrows->Break(this);
   }
 
-  WeaponLosesDurability();
-
-  if (ShouldBreak(weapon))
+  std::string logMsg = Util::TryToDamageEquipment(this, weapon, -1);
+  if (!logMsg.empty())
   {
-    BreakItem(weapon);
+    Printer::Instance().AddMessage(logMsg);
   }
 }
 
 /// 'what' is either actor or GameObject, 'with' is a wand
 void Player::MagicAttack(GameObject* what, ItemComponent* with)
 {
-  // TODO: refactor with respect to Util methods
-
   with->Data.Amount--;
 
   SpellInfo si = with->Data.SpellHeld;
@@ -650,9 +647,19 @@ void Player::ProcessMagicAttack(GameObject* target,
 
 void Player::MeleeAttack(GameObject* what, bool alwaysHit)
 {
-  // FIXME: refactor with respect to Util methods
+  int hitChance = Util::CalculateHitChance(this, what);
 
-  bool hitLanded = alwaysHit ? true : WasHitLanded(what);
+  auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
+                                   Attrs.Skl.Get(),
+                                   Attrs.Lvl.Get(),
+                                   what->ObjectName.data(),
+                                   what->Attrs.Skl.Get(),
+                                   what->Attrs.Lvl.Get(),
+                                   hitChance);
+
+  Logger::Instance().Print(logMsg);
+
+  bool hitLanded = alwaysHit ? true : Util::Rolld100(hitChance);
   if (!hitLanded)
   {
     Application::Instance().DisplayAttack(what, GlobalConstants::DisplayAttackDelayMs, "You missed", Colors::WhiteColor);
@@ -698,7 +705,9 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
   Attrs.Hunger += Attrs.HungerSpeed.Get() * 2;
 }
 
-void Player::ProcessMeleeAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict)
+void Player::ProcessMeleeAttack(ItemComponent* weapon,
+                                GameObject* defender,
+                                int damageToInflict)
 {
   bool shouldTearDownWall = false;
   bool hasLeech = false;
@@ -714,17 +723,16 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon, GameObject* defender, int
 
     if (!isRanged)
     {
-      WeaponLosesDurability();
-    }
+      if (weapon->Data.HasBonus(ItemBonusType::LEECH))
+      {
+        hasLeech = true;
+      }
 
-    if (weapon->Data.HasBonus(ItemBonusType::LEECH))
-    {
-      hasLeech = true;
-    }
-
-    if (ShouldBreak(weapon))
-    {
-      BreakItem(weapon);
+      std::string logMsg = Util::TryToDamageEquipment(this, weapon, -1);
+      if (!logMsg.empty())
+      {
+        Printer::Instance().AddMessage(logMsg);
+      }
     }
   }
 
@@ -773,22 +781,6 @@ bool Player::IsGameObjectBorder(GameObject* go)
        || go->PosY == 0
        || go->PosX == lvl->MapSize.X - 2
        || go->PosY == lvl->MapSize.Y - 2);
-}
-
-bool Player::WasHitLanded(GameObject* defender)
-{
-  int hitChance = Util::CalculateHitChance(this, defender);
-
-  auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
-                                   Attrs.Skl.Get(),
-                                   Attrs.Lvl.Get(),
-                                   defender->ObjectName.data(),
-                                   defender->Attrs.Skl.Get(),
-                                   defender->Attrs.Lvl.Get(),
-                                   hitChance);
-  Logger::Instance().Print(logMsg);
-
-  return Util::Rolld100(hitChance);
 }
 
 void Player::ReceiveDamage(GameObject* from,
@@ -857,11 +849,6 @@ void Player::ReceiveDamage(GameObject* from,
 
     from->ReceiveDamage(this, dmgReturned, true, true);
   }
-}
-
-bool Player::ShouldBreak(ItemComponent *ic)
-{
-  return (ic->Data.Durability.Min().Get() <= 0);
 }
 
 void Player::AwardExperience(int amount)
@@ -1465,37 +1452,6 @@ void Player::SetDefaultSkills()
       SkillLevelBySkill[PlayerSkills::AWARENESS] = 1;
       break;
   }
-}
-
-bool Player::WeaponLosesDurability()
-{
-  auto weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
-
-  if (weapon->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE))
-  {
-    return false;
-  }
-
-  weapon->Data.Durability.AddMin(-1);
-
-  return true;
-}
-
-void Player::BreakItem(ItemComponent* ic, bool suppressMessage)
-{
-  if (!suppressMessage)
-  {
-    auto objName = ic->OwnerGameObject->ObjectName;
-
-    std::string breakStr = (ic->Data.ItemType_ == ItemType::ARMOR)
-                          ? "is destroyed!"
-                          : "breaks!";
-
-    auto str = Util::StringFormat("%s %s", objName.data(), breakStr.data());
-    Printer::Instance().AddMessage(str);
-  }
-
-  ic->Break(this);
 }
 
 void Player::SwitchPlaces(AIComponent* other)

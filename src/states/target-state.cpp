@@ -176,6 +176,86 @@ void TargetState::HandleInput()
   }
 }
 
+/// It is assumed that we have valid weapon and ammunition
+/// in corresponding equipment slots
+/// (necessary checks were performed in MainState)
+void TargetState::FireWeapon(bool throwingFromInventory)
+{
+  // Do not target self.
+  if (SafetyCheck())
+  {
+    return;
+  }
+
+  // If cursor is outside map,
+  // pick last valid point as target end point.
+  CheckCursorPositionBounds();
+
+  Position startPoint = { _playerRef->PosX, _playerRef->PosY };
+  Position endPoint   = _cursorPosition;
+
+  bool isThrowing = (_throwingItemInventoryIndex != -1);
+
+  int chance = Util::CalculateHitChanceRanged(startPoint,
+                                              endPoint,
+                                              _playerRef,
+                                              _weaponRef,
+                                              isThrowing);
+  if (Util::Rolld100(chance))
+  {
+    // If skill is low and we didn't roll a hit,
+    // get random point around cursor position.
+    // Doesn't affect wands.
+    _cursorPosition = Util::GetRandomPointAround(_playerRef,
+                                                 _weaponRef,
+                                                 _cursorPosition);
+
+    // We couldn't get a valid spot for targeting.
+    // Near impossible case, unless we put player into a cell, surrounded
+    // by walls and he tries to fire AoE wand.
+    if (_cursorPosition.X == -1
+     && _cursorPosition.Y == -1)
+    {
+      return;
+    }
+  }
+
+  UpdatePlayerPossibleKnockbackDir();
+
+  _lastCursorPosition = _cursorPosition;
+
+  _drawHint = false;
+
+  std::string weaponName = _weaponRef->Data.IsIdentified
+                         ? _weaponRef->OwnerGameObject->ObjectName
+                         : _weaponRef->Data.UnidentifiedName;
+
+  std::string str = throwingFromInventory ? "You throw " : "You fire ";
+  str += weaponName;
+
+  Printer::Instance().AddMessage(str);
+
+  GameObject* stoppedAt = nullptr;
+
+  auto res = GetProjectileImageAndColor(throwingFromInventory);
+
+  bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
+
+  if (isWand && _weaponRef->Data.SpellHeld.SpellType_ == SpellType::LASER)
+  {
+    ProcessLaser();
+  }
+  else
+  {
+    stoppedAt = LaunchProjectile(res.first, res.second);
+    ProcessHit(stoppedAt);
+  }
+
+  _playerRef->FinishTurn();
+
+  DirtyHack();
+}
+
 GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
 {
   GameObject* stoppedAt = nullptr;
@@ -328,55 +408,6 @@ void TargetState::CheckCursorPositionBounds()
   }
 }
 
-Position TargetState::GetRandomPointAroundCursor()
-{
-  Position pos = { -1, -1 };
-
-  auto rect = Util::GetEightPointsAround(_cursorPosition, Map::Instance().CurrentLevel->MapSize);
-
-  bool outOfRange = false;
-
-  // If we shoot from point blank in a corridor,
-  // we shouldn't accidentaly target ourselves
-  // due to lack of skill.
-  for (size_t i = 0; i < rect.size(); i++)
-  {
-    // Do not include points above weapon's maximum range as well.
-    int d = Util::LinearDistance({ _playerRef->PosX, _playerRef->PosY }, rect[i]);
-    if (d > _weaponRef->Data.Range)
-    {
-      outOfRange = true;
-    }
-
-    // If random point from lack of skill is the one
-    // we're standing on, ignore it.
-    bool targetSelf = (rect[i].X == _playerRef->PosX
-                    && rect[i].Y == _playerRef->PosY);
-
-    if (targetSelf || outOfRange)
-    {
-      rect.erase(rect.begin() + i);
-      break;
-    }
-  }
-
-  // Just in case
-  if (!rect.empty())
-  {
-    int index = RNG::Instance().RandomRange(0, rect.size());
-    pos = rect[index];
-  }
-
-  /*
-  if (!outOfRange)
-  {
-    Printer::Instance().AddMessage("The shot goes astray");
-  }
-  */
-
-  return pos;
-}
-
 std::pair<char, std::string> TargetState::GetProjectileImageAndColor(bool throwingFromInventory)
 {
   std::pair<char, std::string> res;
@@ -480,7 +511,10 @@ void TargetState::ProcessLaser()
           }
         }
 
-        obj->ReceiveDamage(_weaponRef->OwnerGameObject, dmgDone, false, false);
+        obj->ReceiveDamage(_weaponRef->OwnerGameObject,
+                           dmgDone,
+                           false,
+                           false);
 
         power -= (def == 0) ? 1 : dmgDone;
       }
@@ -509,74 +543,6 @@ void TargetState::ProcessLaser()
   Update(true);
 
   _weaponRef->Data.Amount--;
-}
-
-/// It is assumed that we have valid weapon and ammunition
-/// in corresponding equipment slots
-/// (necessary checks were performed in MainState)
-void TargetState::FireWeapon(bool throwingFromInventory)
-{
-  // Do not target self.
-  if (SafetyCheck())
-  {
-    return;
-  }
-
-  // If cursor is outside map,
-  // pick last valid point as target end point.
-  CheckCursorPositionBounds();
-
-  int chance = CalculateHitChance();
-  if (Util::Rolld100(chance) == false)
-  {
-    // If skill is low and we didn't roll a hit,
-    // get random point around cursor position.
-    // Doesn't affect wands.
-    _cursorPosition = GetRandomPointAroundCursor();
-
-    // We couldn't get a valid spot for targeting.
-    // Near impossible case, unless we put player into a cell, surrounded
-    // by walls and he tries to fire AoE wand.
-    if (_cursorPosition.X == -1)
-    {
-      return;
-    }
-  }
-
-  UpdatePlayerPossibleKnockbackDir();
-
-  _lastCursorPosition = _cursorPosition;
-
-  _drawHint = false;
-
-  std::string weaponName = _weaponRef->Data.IsIdentified
-                         ? _weaponRef->OwnerGameObject->ObjectName
-                         : _weaponRef->Data.UnidentifiedName;
-
-  std::string str = throwingFromInventory ? "You throw " : "You fire ";
-  str += weaponName;
-
-  Printer::Instance().AddMessage(str);
-
-  GameObject* stoppedAt = nullptr;
-
-  auto res = GetProjectileImageAndColor(throwingFromInventory);
-
-  bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
-
-  if (isWand && _weaponRef->Data.SpellHeld.SpellType_ == SpellType::LASER)
-  {
-    ProcessLaser();
-  }
-  else
-  {
-    stoppedAt = LaunchProjectile(res.first, res.second);
-    ProcessHit(stoppedAt);
-  }
-
-  _playerRef->FinishTurn();
-
-  DirtyHack();
 }
 
 void TargetState::UpdatePlayerPossibleKnockbackDir()
@@ -934,85 +900,4 @@ void TargetState::SetupForThrowing(ItemComponent* itemToThrow, int throwingItemI
 {
   _throwingItemInventoryIndex = throwingItemInventoryIndex;
   _weaponRef = itemToThrow;
-}
-
-int TargetState::CalculateHitChance()
-{
-  int baseChance = 50;
-  int chance = 0;
-
-  Position startPoint = { _playerRef->PosX, _playerRef->PosY };
-  Position endPoint = _cursorPosition;
-
-  if (_weaponRef->Data.ItemType_ == ItemType::WAND
-   || _throwingItemInventoryIndex != -1)
-  {
-    //chance = CalculateChance(startPoint, endPoint, baseChance);
-
-    // TODO: too OP for wands?
-    chance = 100;
-  }
-  else
-  {
-    bool isXBow = (_weaponRef->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_XBOW
-                || _weaponRef->Data.RangedWeaponType_ == RangedWeaponType::XBOW
-                || _weaponRef->Data.RangedWeaponType_ == RangedWeaponType::HEAVY_XBOW);
-
-    baseChance = isXBow ? (baseChance + 15) : baseChance;
-
-    chance = CalculateChance(startPoint, endPoint, baseChance);
-
-    ItemPrefix ammoPrefix = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0]->Data.Prefix;
-    switch (ammoPrefix)
-    {
-      case ItemPrefix::BLESSED:
-        chance *= 2;
-        break;
-
-      case ItemPrefix::CURSED:
-        chance /= 2;
-        break;
-    }
-  }
-
-  auto str = Util::StringFormat("Total unclamped hit chance: %i", chance);
-  Logger::Instance().Print(str);
-
-  //DebugLog("%s", str.data());
-
-  chance = Util::Clamp(chance, GlobalConstants::MinHitChance, GlobalConstants::MaxHitChance);
-
-  return chance;
-}
-
-int TargetState::CalculateChance(const Position& startPoint, const Position& endPoint, int baseChance)
-{
-  int attackChanceScale = 5;
-
-  int chance = baseChance;
-
-  int skl = _playerRef->Attrs.Skl.Get();
-  chance += (attackChanceScale * skl);
-
-  int distanceChanceDrop = 2;
-
-  int d = (int)Util::LinearDistance(startPoint, endPoint);
-  chance -= (distanceChanceDrop * d);
-
-  auto str = Util::StringFormat("Calculated hit chance: %i (SKL: %i, SKL bonus: %i, distance: -%i)",
-                                chance,
-                                skl,
-                                (attackChanceScale * skl),
-                                (distanceChanceDrop * d));
-  Logger::Instance().Print(str);
-
-  /*
-  DebugLog("%s\n%i + %i - %i = %i\n", __PRETTY_FUNCTION__,
-                                     baseChance,
-                                     (attackChanceScale * skl),
-                                     (distanceChanceDrop * d),
-                                     chance);
-  */
-
-  return chance;
 }

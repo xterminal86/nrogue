@@ -52,6 +52,8 @@ BTResult TaskAttackBasic::Run()
                                           "",
                                           Colors::RedColor);
 
+    // TODO: process weapon damage bonuses (life leech etc.)
+
     playerRef.ReceiveDamage(_objectToControl, dmg, false);
 
     Util::TryToDamageEquipment(_objectToControl, weapon, -1);

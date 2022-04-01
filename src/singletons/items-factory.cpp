@@ -1634,7 +1634,7 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
 
   if (ic->Data.Bonuses.empty())
   {
-    ic->Data.IdentifiedName += " of the Bauble";
+    ic->Data.IdentifiedName += " of Adornment";
     ic->Data.Cost = 50 + (int)ic->Data.ItemQuality_ * 10;
   }
 
@@ -1685,7 +1685,7 @@ GameObject* ItemsFactory::CreateAccessory(int x, int y,
 
   if (ic->Data.Bonuses.empty())
   {
-    ic->Data.IdentifiedName += " of the Bauble";
+    ic->Data.IdentifiedName += " of Adornment";
     ic->Data.Cost = 50 + (int)ic->Data.ItemQuality_ * 10;
   }
   else
@@ -1860,6 +1860,62 @@ GameObject* ItemsFactory::CreateRandomItem(int x, int y, ItemType exclude)
   return go;
 }
 
+// =============================================================================
+
+GameObject* ItemsFactory::CreateUniqueShortSword()
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->ObjectName = "Short Sword";
+  go->Image = '(';
+  go->FgColor = Colors::ItemUniqueColor;
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  ic->Data.EqCategory = EquipmentCategory::WEAPON;
+  ic->Data.ItemType_ = ItemType::WEAPON;
+  ic->Data.Rarity = ItemRarity::UNIQUE;
+
+  ic->Data.Prefix = ItemPrefix::BLESSED;
+  ic->Data.IsIdentified = false;
+
+  int diceRolls = 1;
+  int diceSides = 6;
+
+  ic->Data.WeaponType_ = WeaponType::SHORT_SWORD;
+
+  int avgDamage = CalculateAverageDamage(diceRolls, diceSides);
+
+  ic->Data.Damage.SetMin(diceRolls);
+  ic->Data.Damage.SetMax(diceSides);
+
+  AddRandomValueBonusToItem(ic, ItemBonusType::IGNORE_DEFENCE);
+
+  AddBonusToItem(ic, { ItemBonusType::SKL, RNG::Instance().RandomRange(0, 3) });
+  AddBonusToItem(ic, { ItemBonusType::SPD, RNG::Instance().RandomRange(2, 5) });
+
+  ic->Data.Durability.Reset(RNG::Instance().RandomRange(30, 40));
+
+  ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
+  ic->Data.IdentifiedName = "Needle";
+
+  auto str = Util::StringFormat("You think it'll do %d damage on average.", avgDamage);
+  ic->Data.UnidentifiedDescription = { str, "You can't tell anything else." };
+
+  ic->Data.IdentifiedDescription =
+  {
+   //=========1=========2=========3=========4=========5=========6=========7=========8
+    "A small and elegant looking sword,",
+    "it feels very light and easy to handle.",
+    "Surprisingly, there are no signs",
+    "of the blade ever being used."
+  };
+
+  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+
+  return go;
+}
+
 GameObject* ItemsFactory::CreateUniquePickaxe()
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -1887,7 +1943,7 @@ GameObject* ItemsFactory::CreateUniquePickaxe()
   ic->Data.Damage.SetMin(diceRolls);
   ic->Data.Damage.SetMax(diceSides);
 
-  AddRandomBonusToItem(ic, ItemBonusType::SELF_REPAIR);
+  AddRandomValueBonusToItem(ic, ItemBonusType::SELF_REPAIR);
 
   AddBonusToItem(ic, { ItemBonusType::SKL, 1 });
   AddBonusToItem(ic, { ItemBonusType::SPD, 1 });
@@ -1902,6 +1958,7 @@ GameObject* ItemsFactory::CreateUniquePickaxe()
 
   ic->Data.IdentifiedDescription =
   {
+   //=========1=========2=========3=========4=========5=========6=========7=========8
     "This is quite an old but sturdy looking pickaxe,",
     "yet you can't shake the uneasy feeling about it.",
     "There are traces of blood on its head."
@@ -1911,6 +1968,8 @@ GameObject* ItemsFactory::CreateUniquePickaxe()
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateRandomGlass()
 {
@@ -2099,7 +2158,7 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
       // No duplicate bonuses on a single item
       bonusesWeightCopy.erase(res.first);
 
-      AddRandomBonusToItem(itemRef, res.first);
+      AddRandomValueBonusToItem(itemRef, res.first);
 
       bonusesRolled.push_back(res.first);
     }
@@ -2108,14 +2167,14 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
   if (bonusesRolled.size() == 0 && atLeastOne)
   {
     auto res = Util::WeightedRandom(bonusWeightByType);
-    AddRandomBonusToItem(itemRef, res.first);
+    AddRandomValueBonusToItem(itemRef, res.first);
     bonusesRolled.push_back(res.first);
   }
 
   SetMagicItemName(itemRef, bonusesRolled);
 }
 
-void ItemsFactory::AddRandomBonusToItem(ItemComponent* itemRef, ItemBonusType bonusType)
+void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusType bonusType)
 {
   // No negative bonuses assumed
   int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusType);
@@ -2246,29 +2305,19 @@ void ItemsFactory::AddRandomBonusToItem(ItemComponent* itemRef, ItemBonusType bo
     break;
 
     case ItemBonusType::TELEPATHY:
-    {
-      // There is no range (at least for now)
-      value = 1;
-      bs.MoneyCostIncrease = value * moneyIncrease;
-    }
-    break;
-
     case ItemBonusType::LEVITATION:
+    case ItemBonusType::IGNORE_DEFENCE:
     {
+      // There is no range for telepathy (at least for now)
       value = 1;
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
     break;
+
+    default:
+      DebugLog("[WAR] bonus %i not handled", (int)bonusType);
+      break;
   }
-
-  // TODO: should there be cursed magic / rare items or fuck it?
-  //
-  // If item is cursed, there's 50% chance
-  // that we'll get penalty instead of a bonus
-  //bool fuckupChance = Util::Rolld100(50);
-
-  //bs.IsCursed = fuckupChance;
-  //bs.Value = (itemRef->Data.Prefix == ItemPrefix::CURSED && fuckupChance) ? -value : value;
 
   bs.BonusValue = value;
   bs.Id = itemRef->OwnerGameObject->ObjectId();

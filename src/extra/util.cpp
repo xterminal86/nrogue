@@ -1229,20 +1229,24 @@ namespace Util
     receiver->CheckPerish();
   }
 
-  bool TryToDamageEquipment(GameObject* actor,
+  // ===========================================================================
+
+  std::string TryToDamageEquipment(GameObject* actor,
                             EquipmentCategory cat,
                             int damage)
   {
+    std::string msg;
+
     if (cat == EquipmentCategory::NOT_EQUIPPABLE)
     {
       DebugLog("[WAR] TryToDamageEquipment() category is NOT_EQUIPPABLE!");
-      return false;
+      return msg;
     }
 
     if (actor == nullptr)
     {
       DebugLog("[WAR] TryToDamageEquipment() actor is null!");
-      return false;
+      return msg;
     }
 
     EquipmentComponent* ec = actor->GetComponent<EquipmentComponent>();
@@ -1256,17 +1260,19 @@ namespace Util
       DebugLog("[WAR] TryToDamageEquipment() equipment is null on %s!", actor->ObjectName.data());
     }
 
-    return false;
+    return msg;
   }
 
-  bool TryToDamageEquipment(GameObject* actor,
-                            ItemComponent* item,
-                            int damage)
+  std::string TryToDamageEquipment(GameObject* actor,
+                                   ItemComponent* item,
+                                   int damage)
   {
+    std::string msg;
+
     if (actor == nullptr)
     {
       DebugLog("[WAR] TryToDamageEquipment() actor is null!");
-      return false;
+      return msg;
     }
 
     //
@@ -1277,18 +1283,23 @@ namespace Util
     if (item == nullptr)
     {
       //DebugLog("[WAR] TryToDamageEquipment() item is null on %s!", actor->ObjectName.data());
-      return false;
+      return msg;
+    }
+
+    if (item->Data.HasBonus(ItemBonusType::INDESTRUCTIBLE))
+    {
+      return msg;
     }
 
     item->Data.Durability.AddMin(damage);
 
     if (item->Data.Durability.Min().Get() < 0)
     {
+      msg = StringFormat("%s breaks!", item->OwnerGameObject->ObjectName.data());
       item->Break(actor);
-      return true;
     }
 
-    return false;
+    return msg;
   }
 
   int CalculateDamageValue(GameObject* attacker,
@@ -1365,6 +1376,95 @@ namespace Util
     }
 
     return hitChance;
+  }
+
+  int CalculateHitChanceRanged(const Position& start,
+                               const Position& end,
+                               GameObject* user,
+                               ItemComponent* weapon,
+                               bool isThrowing)
+  {
+    int baseChance = 50;
+    int chance = 0;
+
+    if (weapon->Data.ItemType_ == ItemType::WAND || isThrowing)
+    {
+      // TODO: too OP for wands?
+      chance = 100;
+    }
+    else
+    {
+      bool isXBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_XBOW
+                  || weapon->Data.RangedWeaponType_ == RangedWeaponType::XBOW
+                  || weapon->Data.RangedWeaponType_ == RangedWeaponType::HEAVY_XBOW);
+
+      baseChance = isXBow ? (baseChance + 15) : baseChance;
+
+      int attackChanceScale = 5;
+
+      chance = baseChance;
+
+      int skl = user->Attrs.Skl.Get();
+      chance += (attackChanceScale * skl);
+
+      int distanceChanceDrop = 2;
+
+      int d = (int)LinearDistance(start, end);
+      chance -= (distanceChanceDrop * d);
+
+      auto str = StringFormat("Calculated hit chance: %i (SKL: %i, SKL bonus: %i, distance: -%i)",
+                              chance,
+                              skl,
+                              (attackChanceScale * skl),
+                              (distanceChanceDrop * d));
+
+      Logger::Instance().Print(str);
+
+      DebugLog("%s\n%i + %i - %i = %i\n", __PRETTY_FUNCTION__,
+                                          baseChance,
+                                          (attackChanceScale * skl),
+                                          (distanceChanceDrop * d),
+                                          chance);
+
+      EquipmentComponent* ec = user->GetComponent<EquipmentComponent>();
+      if (ec != nullptr)
+      {
+        //
+        // Assuming valid projectiles are already equipped
+        //
+        ItemComponent* arrows = ec->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+        if (arrows != nullptr)
+        {
+          if (arrows->Data.ItemType_ != ItemType::ARROWS)
+          {
+            DebugLog("[WAR] off-hand slot is not arrows!");
+          }
+
+          ItemPrefix ammoPrefix = ec->EquipmentByCategory[EquipmentCategory::SHIELD][0]->Data.Prefix;
+          switch (ammoPrefix)
+          {
+            case ItemPrefix::BLESSED:
+              chance *= 2;
+              break;
+
+            case ItemPrefix::CURSED:
+              chance /= 2;
+              break;
+          }
+        }
+      }
+    }
+
+    auto str = StringFormat("Total unclamped hit chance: %i", chance);
+    Logger::Instance().Print(str);
+
+    //DebugLog("%s", str.data());
+
+    chance = Clamp(chance,
+                   GlobalConstants::MinHitChance,
+                   GlobalConstants::MaxHitChance);
+
+    return chance;
   }
 
   int GetTotalDamageAbsorptionValue(GameObject* who, bool magic)
@@ -1619,6 +1719,53 @@ namespace Util
 
     return logMsgs;
   }
+
+  Position GetRandomPointAround(GameObject* user,
+                                ItemComponent* weapon,
+                                const Position& aroundThis)
+  {
+    Position pos = { -1, -1 };
+
+    auto rect = GetEightPointsAround(aroundThis,
+                                     Map::Instance().CurrentLevel->MapSize);
+
+    bool outOfRange = false;
+
+    // If we shoot from point blank in a corridor,
+    // we shouldn't accidentaly target ourselves
+    // due to lack of skill.
+    for (size_t i = 0; i < rect.size(); i++)
+    {
+      // Do not include points above weapon's maximum range as well.
+      int d = LinearDistance({ user->PosX, user->PosY }, rect[i]);
+      if (weapon != nullptr && d > weapon->Data.Range)
+      {
+        outOfRange = true;
+      }
+
+      // If random point from lack of skill is the one
+      // we're standing on, ignore it.
+      bool targetSelf = (rect[i].X == user->PosX
+                      && rect[i].Y == user->PosY);
+
+      if (targetSelf || outOfRange)
+      {
+        rect.erase(rect.begin() + i);
+        break;
+      }
+    }
+
+    // Just in case
+    if (!rect.empty())
+    {
+      int index = RNG::Instance().RandomRange(0, rect.size());
+      pos = rect[index];
+    }
+
+    return pos;
+  }
+
+  // ===========================================================================
 
   std::vector<Position> GetAreaDamagePointsFrom(const Position& from, int range)
   {
