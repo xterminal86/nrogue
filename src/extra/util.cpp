@@ -1123,10 +1123,10 @@ namespace Util
   }
 
   void LaunchProjectile(const Position& from,
-                               const Position& to,
-                               char image,
-                               const std::string& fgColor,
-                               const std::string& bgColor)
+                        const Position& to,
+                        char image,
+                        const std::string& fgColor,
+                        const std::string& bgColor)
   {
     auto line = BresenhamLine(from, to);
 

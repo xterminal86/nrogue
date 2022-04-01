@@ -474,7 +474,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   ItemComponent* weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
   ItemComponent* arrows = Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0];
 
-  int dmg = Util::CalculateDamageValue(this, what, with, false);
+  int dmg = Util::CalculateDamageValue(this, what, weapon, false);
 
   // If it's not the ground GameObject
   if (what->Type != GameObjectType::GROUND)
