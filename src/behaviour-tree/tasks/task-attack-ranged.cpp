@@ -31,17 +31,28 @@ BTResult TaskAttackRanged::Run()
   Position from = { _objectToControl->PosX, _objectToControl->PosY };
   Position to   = { _playerRef->PosX, _playerRef->PosY };
 
-  int chanceToHit = 100;
+  EquipmentComponent* ec = _objectToControl->GetComponent<EquipmentComponent>();
+  ItemComponent* weapon = nullptr;
+  if (ec != nullptr)
+  {
+    weapon = ec->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  }
+
+  int chanceToHit = 0;
 
   if (_attackType == RangedAttackType::PHYSICAL
    || _attackType == RangedAttackType::NO_DAMAGE)
   {
-    chanceToHit = CalculateChance(from, to, kBaseChanceToHit);
+    chanceToHit = Util::CalculateHitChanceRanged(from,
+                                                 to,
+                                                 _objectToControl,
+                                                 weapon,
+                                                 false);
   }
 
   if (Util::Rolld100(chanceToHit) == false)
   {
-    to = GetRandomPointAround(to);
+    to = Util::GetRandomPointAround(_objectToControl, weapon, to);
   }
 
   GameObject* hit = nullptr;
@@ -79,6 +90,8 @@ BTResult TaskAttackRanged::Run()
     to = { hit->PosX, hit->PosY };
   }
 
+  // FIXME: wand of laser or single projectile
+
   Util::LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
 
   // FIXME: damage should come from enemy weapon or magic
@@ -103,60 +116,6 @@ BTResult TaskAttackRanged::Run()
   }
 
   // Not calling FinishTurn() so that AI update through the tree can continue
-
-  return res;
-}
-
-int TaskAttackRanged::CalculateChance(const Position& startPoint,
-                                      const Position& endPoint,
-                                      int baseChance)
-{
-  int attackChanceScale = 5;
-
-  int chance = baseChance;
-
-  int skl = _objectToControl->Attrs.Skl.Get();
-  chance += (attackChanceScale * skl);
-
-  int distanceChanceDrop = 2;
-
-  int d = (int)Util::LinearDistance(startPoint, endPoint);
-  chance -= (distanceChanceDrop * d);
-
-  auto str = Util::StringFormat("%s %s - Calculated hit chance: %i (SKL: %i, SKL bonus: %i, distance: -%i)",
-                                _objectToControl->ObjectName.data(),
-                                __PRETTY_FUNCTION__,
-                                chance,
-                                skl,
-                                (attackChanceScale * skl),
-                                (distanceChanceDrop * d));
-  Logger::Instance().Print(str);
-
-  return chance;
-}
-
-Position TaskAttackRanged::GetRandomPointAround(const Position& from)
-{
-  Position res = { 0, 0 };
-
-  auto rect = Util::GetEightPointsAround(from, Map::Instance().CurrentLevel->MapSize);
-  for (size_t i = 0; i < rect.size(); i++)
-  {
-    bool targetSelf = (rect[i].X == _objectToControl->PosX
-                    && rect[i].Y == _objectToControl->PosY);
-
-    if (targetSelf)
-    {
-      rect.erase(rect.begin() + i);
-      break;
-    }
-  }
-
-  if (!rect.empty())
-  {
-    int index = RNG::Instance().RandomRange(0, rect.size());
-    res = rect[index];
-  }
 
   return res;
 }

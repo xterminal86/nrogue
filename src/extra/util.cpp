@@ -1130,8 +1130,6 @@ namespace Util
   {
     auto line = BresenhamLine(from, to);
 
-    int distanceCovered = 0;
-
     // Start from 1 to exclude starting position
     for (size_t i = 1; i < line.size(); i++)
     {
@@ -1150,15 +1148,6 @@ namespace Util
                                   bgColor);
 
       Printer::Instance().Render();
-
-      // FIXME: debug
-      // Util::Sleep(100);
-
-      //#ifndef USE_SDL
-      //Util::Sleep(20);
-      //#endif
-
-      distanceCovered++;
     }
   }
 
@@ -1385,80 +1374,91 @@ namespace Util
                                bool isThrowing)
   {
     int baseChance = 50;
-    int chance = 0;
+    int chance = 100;
+    int attackChanceScale = 5;
+    int distanceChanceDrop = 2;
+    int skl = user->Attrs.Skl.Get();
+    int d = (int)LinearDistance(start, end);
 
-    if (weapon->Data.ItemType_ == ItemType::WAND || isThrowing)
+    auto GetSkillBasedChance = [&](int baseChance)
     {
-      // TODO: too OP for wands?
-      chance = 100;
+      int ch = baseChance;
+
+      ch += (attackChanceScale * skl);
+      ch -= (distanceChanceDrop * d);
+
+      return ch;
+    };
+
+    if (weapon == nullptr)
+    {
+      chance = GetSkillBasedChance(baseChance);
     }
     else
     {
-      bool isXBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_XBOW
-                  || weapon->Data.RangedWeaponType_ == RangedWeaponType::XBOW
-                  || weapon->Data.RangedWeaponType_ == RangedWeaponType::HEAVY_XBOW);
-
-      baseChance = isXBow ? (baseChance + 15) : baseChance;
-
-      int attackChanceScale = 5;
-
-      chance = baseChance;
-
-      int skl = user->Attrs.Skl.Get();
-      chance += (attackChanceScale * skl);
-
-      int distanceChanceDrop = 2;
-
-      int d = (int)LinearDistance(start, end);
-      chance -= (distanceChanceDrop * d);
-
-      auto str = StringFormat("Calculated hit chance: %i (SKL: %i, SKL bonus: %i, distance: -%i)",
-                              chance,
-                              skl,
-                              (attackChanceScale * skl),
-                              (distanceChanceDrop * d));
-
-      Logger::Instance().Print(str);
-
-      DebugLog("%s\n%i + %i - %i = %i\n", __PRETTY_FUNCTION__,
-                                          baseChance,
-                                          (attackChanceScale * skl),
-                                          (distanceChanceDrop * d),
-                                          chance);
-
-      EquipmentComponent* ec = user->GetComponent<EquipmentComponent>();
-      if (ec != nullptr)
+      if (weapon->Data.ItemType_ == ItemType::WAND || isThrowing)
       {
-        //
-        // Assuming valid projectiles are already equipped
-        //
-        ItemComponent* arrows = ec->EquipmentByCategory[EquipmentCategory::SHIELD][0];
-        if (arrows != nullptr)
+        // TODO: too OP for wands?
+        chance = 100;
+      }
+      else
+      {
+        bool isXBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_XBOW
+                    || weapon->Data.RangedWeaponType_ == RangedWeaponType::XBOW
+                    || weapon->Data.RangedWeaponType_ == RangedWeaponType::HEAVY_XBOW);
+
+        baseChance = isXBow ? (baseChance + 15) : baseChance;
+
+        chance = GetSkillBasedChance(baseChance);
+
+        EquipmentComponent* ec = user->GetComponent<EquipmentComponent>();
+        if (ec != nullptr)
         {
-          if (arrows->Data.ItemType_ != ItemType::ARROWS)
+          //
+          // Assuming valid projectiles are already equipped
+          //
+          ItemComponent* arrows = ec->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+          if (arrows != nullptr)
           {
-            DebugLog("[WAR] off-hand slot is not arrows!");
-          }
+            if (arrows->Data.ItemType_ != ItemType::ARROWS)
+            {
+              DebugLog("[WAR] off-hand slot is not arrows!");
+            }
 
-          ItemPrefix ammoPrefix = ec->EquipmentByCategory[EquipmentCategory::SHIELD][0]->Data.Prefix;
-          switch (ammoPrefix)
-          {
-            case ItemPrefix::BLESSED:
-              chance *= 2;
-              break;
+            ItemPrefix ammoPrefix = ec->EquipmentByCategory[EquipmentCategory::SHIELD][0]->Data.Prefix;
+            switch (ammoPrefix)
+            {
+              case ItemPrefix::BLESSED:
+                chance *= 2;
+                break;
 
-            case ItemPrefix::CURSED:
-              chance /= 2;
-              break;
+              case ItemPrefix::CURSED:
+                chance /= 2;
+                break;
+            }
           }
         }
       }
     }
 
-    auto str = StringFormat("Total unclamped hit chance: %i", chance);
+    auto str = StringFormat("Calculated hit chance: %i (SKL: %i, SKL bonus: %i, distance: -%i)",
+                            chance,
+                            skl,
+                            (attackChanceScale * skl),
+                            (distanceChanceDrop * d));
+
     Logger::Instance().Print(str);
 
-    //DebugLog("%s", str.data());
+    DebugLog("%s\n%i + %i - %i = %i\n", __PRETTY_FUNCTION__,
+                                        baseChance,
+                                        (attackChanceScale * skl),
+                                        (distanceChanceDrop * d),
+                                        chance);
+
+    str = StringFormat("Total unclamped hit chance: %i", chance);
+    Logger::Instance().Print(str);
+
+    DebugLog("%s", str.data());
 
     chance = Clamp(chance,
                    GlobalConstants::MinHitChance,
