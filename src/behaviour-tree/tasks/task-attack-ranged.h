@@ -31,6 +31,8 @@ class TaskAttackRanged : public Node
     BTResult Run() override;
 
   protected:
+    BTResult CheckRangedWeaponValidity(ItemComponent* weapon, ItemComponent* arrows);
+
     char _projectile;
     RangedAttackType _attackType;
     std::string _fgColor;
@@ -38,7 +40,7 @@ class TaskAttackRanged : public Node
 
     const std::map<std::string, RangedAttackType> _attackTypeByName =
     {
-      { "STR", RangedAttackType::PHYSICAL  },
+      { "DEF", RangedAttackType::PHYSICAL  },
       { "MAG", RangedAttackType::MAGICAL   },
       { "NA",  RangedAttackType::NO_DAMAGE }
     };

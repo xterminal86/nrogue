@@ -33,12 +33,24 @@ BTResult TaskAttackRanged::Run()
 
   EquipmentComponent* ec = _objectToControl->GetComponent<EquipmentComponent>();
   ItemComponent* weapon = nullptr;
+  ItemComponent* arrows = nullptr;
   if (ec != nullptr)
   {
     weapon = ec->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+    arrows = ec->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+  }
+
+  //
+  // Check if bow has arrows, wand has charges etc.
+  //
+  BTResult r = CheckRangedWeaponValidity(weapon, arrows);
+  if (r == BTResult::Failure)
+  {
+    return r;
   }
 
   int chanceToHit = 0;
+  int damageDone = 1;
 
   if (_attackType == RangedAttackType::PHYSICAL
    || _attackType == RangedAttackType::NO_DAMAGE)
@@ -102,7 +114,6 @@ BTResult TaskAttackRanged::Run()
 
   if (hit != nullptr)
   {
-    int damageDone = 1;
     if (_attackType == RangedAttackType::PHYSICAL)
     {
       damageDone += _objectToControl->Attrs.Str.Get();
@@ -118,4 +129,65 @@ BTResult TaskAttackRanged::Run()
   // Not calling FinishTurn() so that AI update through the tree can continue
 
   return res;
+}
+
+BTResult TaskAttackRanged::CheckRangedWeaponValidity(ItemComponent* weapon,
+                                       ItemComponent* arrows)
+{
+  //
+  // Assuming if weapon is null, it's a magic attack
+  //
+  if (weapon != nullptr)
+  {
+    switch (weapon->Data.ItemType_)
+    {
+      case ItemType::WAND:
+      {
+        if (weapon->Data.Amount == 0)
+        {
+          return BTResult::Failure;
+        }
+      }
+      break;
+
+      case ItemType::RANGED_WEAPON:
+      {
+        bool isBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::SHORT_BOW
+                   || weapon->Data.RangedWeaponType_ == RangedWeaponType::LONGBOW
+                   || weapon->Data.RangedWeaponType_ == RangedWeaponType::WAR_BOW);
+
+        bool isXBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_XBOW
+                    || weapon->Data.RangedWeaponType_ == RangedWeaponType::XBOW
+                    || weapon->Data.RangedWeaponType_ == RangedWeaponType::HEAVY_XBOW);
+
+        bool noArrows = (arrows == nullptr ||
+                         (arrows != nullptr
+                       && arrows->Data.ItemType_ != ItemType::ARROWS));
+
+        if ((isBow || isXBow) && noArrows)
+        {
+          return BTResult::Failure;
+        }
+
+        bool notArrows = (arrows != nullptr
+                       && arrows->Data.AmmoType != ArrowType::ARROWS);
+
+        if (isBow && notArrows)
+        {
+          return BTResult::Failure;
+        }
+
+        bool notBolts = (arrows != nullptr
+                      && arrows->Data.AmmoType != ArrowType::BOLTS);
+
+        if (isXBow && notBolts)
+        {
+          return BTResult::Failure;
+        }
+      }
+      break;
+    }
+  }
+
+  return BTResult::Success;
 }
