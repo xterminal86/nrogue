@@ -203,18 +203,21 @@ void TargetState::FireWeapon(bool throwingFromInventory)
                                               _playerRef,
                                               _weaponRef,
                                               isThrowing);
-  if (Util::Rolld100(chance))
+  if (!Util::Rolld100(chance))
   {
+    //
     // If skill is low and we didn't roll a hit,
     // get random point around cursor position.
-    // Doesn't affect wands.
+    //
     _cursorPosition = Util::GetRandomPointAround(_playerRef,
                                                  _weaponRef,
                                                  _cursorPosition);
 
+    //
     // We couldn't get a valid spot for targeting.
     // Near impossible case, unless we put player into a cell, surrounded
     // by walls and he tries to fire AoE wand.
+    //
     if (_cursorPosition.X == -1
      && _cursorPosition.Y == -1)
     {
@@ -239,13 +242,13 @@ void TargetState::FireWeapon(bool throwingFromInventory)
 
   GameObject* stoppedAt = nullptr;
 
-  auto res = GetProjectileImageAndColor(throwingFromInventory);
+  auto res = Util::GetProjectileImageAndColor(_weaponRef, throwingFromInventory);
 
   bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
 
   if (isWand && _weaponRef->Data.SpellHeld.SpellType_ == SpellType::LASER)
   {
-    ProcessLaser();
+    Util::ProcessLaserAttack(_playerRef, _weaponRef, _cursorPosition);
   }
   else
   {
@@ -408,143 +411,6 @@ void TargetState::CheckCursorPositionBounds()
   {
     _cursorPosition = lastPositionInsideMap;
   }
-}
-
-std::pair<char, std::string> TargetState::GetProjectileImageAndColor(bool throwingFromInventory)
-{
-  std::pair<char, std::string> res;
-
-  char projectile = ' ';
-
-  std::string projColor = Colors::WhiteColor;
-
-  bool isWand   = (_weaponRef->Data.ItemType_ == ItemType::WAND);
-  bool isWeapon = (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON);
-
-  if (throwingFromInventory)
-  {
-    projectile = _weaponRef->OwnerGameObject->Image;
-  }
-  else
-  {
-    if (isWand)
-    {
-      projectile = '*';
-
-      SpellType spell = _weaponRef->Data.SpellHeld.SpellType_;
-      SpellInfo* si = SpellsDatabase::Instance().GetSpellInfoFromDatabase(spell);
-      if (!si->SpellProjectileColor.empty())
-      {
-        projColor = si->SpellProjectileColor;
-      }
-    }
-    else if (isWeapon)
-    {
-      projectile = '+';
-    }
-  }
-
-  res = { projectile, projColor };
-
-  return res;
-}
-
-void TargetState::ProcessLaser()
-{
-  Position startPoint = { _playerRef->PosX, _playerRef->PosY };
-
-  // Laser stops on cursor point regarless (is it OK?)
-  Position endPoint = _cursorPosition;
-
-  auto line = Util::BresenhamLine(startPoint, endPoint);
-
-  int distanceCovered = 0;
-
-  int power = _weaponRef->Data.SpellHeld.SpellBaseDamage.first + _weaponRef->Data.SpellHeld.SpellBaseDamage.second;
-
-  int playerMagic = _playerRef->Attrs.Mag.Get();
-
-  power += playerMagic;
-
-  bool shouldStop = false;
-
-  // Start from 1 to exclude player's position
-  for (size_t i = 1; i < line.size(); i++)
-  {
-    if (power <= 0)
-    {
-      break;
-    }
-
-    int mx = line[i].X;
-    int my = line[i].Y;
-
-    for (auto& obj : _objectsOnTheLine)
-    {
-      if (obj->PosX == mx && obj->PosY == my)
-      {
-        // Laser stops when it hits indestructible object
-        // or its power has dissipated.
-        if (obj->Attrs.Indestructible || power <= 0)
-        {
-          shouldStop = true;
-          break;
-        }
-
-        int def = obj->Attrs.Def.Get();
-        int dmgDone = power - def;
-
-        DoorComponent* dc = obj->GetComponent<DoorComponent>();
-        if (dc != nullptr)
-        {
-          switch (dc->Material)
-          {
-            case DoorMaterials::WOOD:
-              dmgDone = ((float)power * 0.7f);
-              break;
-
-            case DoorMaterials::STONE:
-              dmgDone = ((float)power * 0.5f);
-              break;
-
-            case DoorMaterials::IRON:
-              dmgDone = ((float)power * 0.3f);
-              break;
-          }
-        }
-
-        obj->ReceiveDamage(_weaponRef->OwnerGameObject,
-                           dmgDone,
-                           false,
-                           false);
-
-        power -= (def == 0) ? 1 : dmgDone;
-      }
-    }
-
-    if (shouldStop)
-    {
-      break;
-    }
-
-    int drawingPosX = mx + Map::Instance().CurrentLevel->MapOffsetX;
-    int drawingPosY = my + Map::Instance().CurrentLevel->MapOffsetY;
-
-    Printer::Instance().PrintFB(drawingPosX,
-                                drawingPosY,
-                                '*',
-                                Colors::YellowColor,
-                                Colors::RedColor);
-
-    distanceCovered++;
-    power--;
-  }
-
-  Printer::Instance().Render();
-  Util::Sleep(100);
-  Update(true);
-
-  _weaponRef->Data.Amount--;
 }
 
 void TargetState::UpdatePlayerPossibleKnockbackDir()
@@ -766,8 +632,6 @@ void TargetState::DrawHint()
 
   auto line = Util::BresenhamLine(startPoint, _cursorPosition);
 
-  _objectsOnTheLine = FillObjectsOnTheLine(line);
-
   for (auto& p : line)
   {
     if (p == startPoint)
@@ -803,48 +667,6 @@ void TargetState::DrawHint()
   {
     Printer::Instance().PrintFB(p.X + mox, p.Y + moy, '.', Colors::RedColor);
   }
-}
-
-std::vector<GameObject*> TargetState::FillObjectsOnTheLine(const std::vector<Position>& line)
-{
-  std::vector<GameObject*> res;
-
-  Position mapSize = Map::Instance().CurrentLevel->MapSize;
-
-  Position startPoint = { _playerRef->PosX, _playerRef->PosY };
-
-  for (auto& p : line)
-  {
-    if (p == startPoint)
-    {
-      continue;
-    }
-
-    if (Util::IsInsideMap(p, mapSize))
-    {
-      // Right now the functionality of this method is based
-      // on assumption, that certain items, that use this functionality
-      // (e.g. wand of piercing), always strike through the whole
-      // targeting line, ignoring any items lying on the ground,
-      // until their ray is blocked or their piercing power dissipates.
-
-      auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
-      if (actor != nullptr)
-      {
-        res.push_back(actor);
-      }
-      else
-      {
-        auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
-        if (so != nullptr)
-        {
-          res.push_back(so);
-        }
-      }
-    }
-  }
-
-  return res;
 }
 
 void TargetState::DrawCursor()

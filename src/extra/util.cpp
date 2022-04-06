@@ -1218,6 +1218,93 @@ namespace Util
     receiver->CheckPerish();
   }
 
+  std::pair<char, std::string> GetProjectileImageAndColor(ItemComponent* weapon,
+                                                          bool throwingFromInventory)
+  {
+    std::pair<char, std::string> res;
+
+    char projectile = ' ';
+
+    std::string projColor = Colors::WhiteColor;
+
+    if (weapon == nullptr)
+    {
+      DebugLog("[WAR] GetProjectileImageAndColor() weapon is null!");
+      res = { projectile, projColor };
+      return res;
+    }
+
+    bool isWand   = (weapon->Data.ItemType_ == ItemType::WAND);
+    bool isWeapon = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON);
+
+    if (throwingFromInventory)
+    {
+      projectile = weapon->OwnerGameObject->Image;
+    }
+    else
+    {
+      if (isWand)
+      {
+        projectile = '*';
+
+        SpellType spell = weapon->Data.SpellHeld.SpellType_;
+        SpellInfo* si = SpellsDatabase::Instance().GetSpellInfoFromDatabase(spell);
+        if (!si->SpellProjectileColor.empty())
+        {
+          projColor = si->SpellProjectileColor;
+        }
+      }
+      else if (isWeapon)
+      {
+        projectile = '+';
+      }
+    }
+
+    res = { projectile, projColor };
+
+    return res;
+  }
+
+  std::vector<GameObject*> GetObjectsOnTheLine(const std::vector<Position>& line)
+  {
+    std::vector<GameObject*> res;
+
+    Position mapSize = Map::Instance().CurrentLevel->MapSize;
+
+    //
+    // Do not include object on starting point
+    //
+    for (size_t i = 1; i < line.size(); i++)
+    {
+      auto& p = line[i];
+
+      if (IsInsideMap(p, mapSize))
+      {
+        // Right now the functionality of this method is based
+        // on assumption, that certain items, that use this functionality
+        // (e.g. wand of piercing), always strike through the whole
+        // targeting line, ignoring any items lying on the ground,
+        // until their ray is blocked or their piercing power dissipates.
+
+        auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+        if (actor != nullptr)
+        {
+          res.push_back(actor);
+        }
+        else
+        {
+          auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
+          if (so != nullptr)
+          {
+            res.push_back(so);
+          }
+        }
+      }
+    }
+
+    return res;
+  }
+
   // ===========================================================================
 
   std::string TryToDamageEquipment(GameObject* actor,
@@ -1298,24 +1385,38 @@ namespace Util
   {
     int totalDmg = 0;
 
+    auto GetUnarmedDamage = [&]()
+    {
+      int dmg = RollDamage(1, 2);
+      dmg += attacker->Attrs.Str.Get() - defender->Attrs.Def.Get();
+
+      if (dmg <= 0)
+      {
+        dmg = 1;
+      }
+
+      return dmg;
+    };
+
     // Unarmed strike
     if (weapon == nullptr)
     {
-      totalDmg = RollDamage(1, 2);
-      totalDmg += attacker->Attrs.Str.Get() - defender->Attrs.Def.Get();
-
-      if (totalDmg <= 0)
-      {
-        totalDmg = 1;
-      }
+      totalDmg = GetUnarmedDamage();
     }
     else
     {
-      // Melee attack with ranged weapon in hand fallbacks to 1d4 "punch"
-      int weaponDamage = meleeAttackWithRangedWeapon
-                         ? RollDamage(1, 2)
-                         : RollDamage(weapon->Data.Damage.Min().Get(),
-                                      weapon->Data.Damage.Max().Get());
+      //
+      // Melee attack with ranged weapon in hand
+      // fallbacks to unarmed attack
+      //
+      if (meleeAttackWithRangedWeapon)
+      {
+        totalDmg = GetUnarmedDamage();
+        return totalDmg;
+      }
+
+      int weaponDamage = RollDamage(weapon->Data.Damage.Min().Get(),
+                                    weapon->Data.Damage.Max().Get());
 
       totalDmg = weaponDamage;
 
@@ -1398,7 +1499,6 @@ namespace Util
     {
       if (weapon->Data.ItemType_ == ItemType::WAND || isThrowing)
       {
-        // TODO: too OP for wands?
         chance = 100;
       }
       else
@@ -1438,6 +1538,10 @@ namespace Util
             }
           }
         }
+
+        chance = Clamp(chance,
+                       GlobalConstants::MinHitChance,
+                       GlobalConstants::MaxHitChance);
       }
     }
 
@@ -1455,14 +1559,10 @@ namespace Util
                                         (distanceChanceDrop * d),
                                         chance);
 
-    str = StringFormat("Total unclamped hit chance: %i", chance);
+    str = StringFormat("Total chance: %i", chance);
     Logger::Instance().Print(str);
 
     DebugLog("%s", str.data());
-
-    chance = Clamp(chance,
-                   GlobalConstants::MinHitChance,
-                   GlobalConstants::MaxHitChance);
 
     return chance;
   }
@@ -1763,6 +1863,126 @@ namespace Util
     }
 
     return pos;
+  }
+
+  int ProcessLaserAttack(GameObject* user,
+                         ItemComponent* weapon,
+                         const Position& end)
+  {
+    if (user == nullptr)
+    {
+      DebugLog("[WAR] ProcessLaserAttack() user is nullptr!");
+      return -1;
+    }
+
+    if (weapon == nullptr)
+    {
+      DebugLog("[WAR] ProcessLaserAttack() weapon is nullptr!");
+      return -1;
+    }
+
+    if (weapon->Data.Amount <= 0)
+    {
+      return -1;
+    }
+
+    int minDmg = weapon->Data.SpellHeld.SpellBaseDamage.first;
+    int maxDmg = weapon->Data.SpellHeld.SpellBaseDamage.second;
+
+    int distanceCovered = ProcessLaserAttack(user, { minDmg, maxDmg }, end);
+
+    weapon->Data.Amount--;
+
+    return distanceCovered;
+  }
+
+  int ProcessLaserAttack(GameObject* user,
+                         const std::pair<int, int>& damageRange,
+                         const Position& end)
+  {
+    if (user == nullptr)
+    {
+      DebugLog("[WAR] ProcessLaserAttack() user is nullptr!");
+      return -1;
+    }
+
+    Position startPoint = { user->PosX, user->PosY };
+    Position endPoint   = end;
+
+    auto line = BresenhamLine(startPoint, endPoint);
+    auto objects = GetObjectsOnTheLine(line);
+
+    int distanceCovered = 0;
+
+    int minDmg = damageRange.first;
+    int maxDmg = damageRange.second;
+
+    int power = minDmg + maxDmg;
+
+    int userMagic = user->Attrs.Mag.Get();
+
+    power += userMagic;
+
+    bool shouldStop = false;
+
+    // Start from 1 to exclude user's position
+    for (size_t i = 1; i < line.size(); i++)
+    {
+      if (power <= 0)
+      {
+        break;
+      }
+
+      int mx = line[i].X;
+      int my = line[i].Y;
+
+      for (auto& obj : objects)
+      {
+        if (obj->PosX == mx && obj->PosY == my)
+        {
+          // Laser stops when it hits indestructible object
+          // or its power has dissipated.
+          if (obj->Attrs.Indestructible || power <= 0)
+          {
+            shouldStop = true;
+            break;
+          }
+
+          int def = obj->Attrs.Def.Get();
+          int dmgDone = power - def;
+
+          obj->ReceiveDamage(user,
+                             dmgDone,
+                             false,
+                             false);
+
+          power -= (def == 0) ? 1 : dmgDone;
+        }
+      }
+
+      int drawingPosX = mx + Map::Instance().CurrentLevel->MapOffsetX;
+      int drawingPosY = my + Map::Instance().CurrentLevel->MapOffsetY;
+
+      Printer::Instance().PrintFB(drawingPosX,
+                                  drawingPosY,
+                                  '*',
+                                  Colors::YellowColor,
+                                  Colors::RedColor);
+
+      if (shouldStop)
+      {
+        break;
+      }
+
+      distanceCovered++;
+      power--;
+    }
+
+    Printer::Instance().Render();
+    Sleep(100);
+    Application::Instance().ForceDrawMainState();
+
+    return distanceCovered;
   }
 
   // ===========================================================================

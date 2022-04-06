@@ -121,6 +121,11 @@ namespace Util
                         const Position& attackDir,
                         int tiles);
 
+  extern std::pair<char, std::string> GetProjectileImageAndColor(ItemComponent* weapon,
+                                                                 bool throwingFromInventory);
+
+  extern std::vector<GameObject*> GetObjectsOnTheLine(const std::vector<Position>& line);
+
   // ===========================================================================
 
   extern std::string TryToDamageEquipment(GameObject* actor,
@@ -168,6 +173,14 @@ namespace Util
   extern Position GetRandomPointAround(GameObject* user,
                                        ItemComponent* weapon,
                                        const Position& aroundThis);
+
+  extern int ProcessLaserAttack(GameObject* user,
+                                const std::pair<int, int>& damageRange,
+                                const Position& end);
+
+  extern int ProcessLaserAttack(GameObject* user,
+                                ItemComponent* weapon,
+                                const Position& end);
 
   // ===========================================================================
 

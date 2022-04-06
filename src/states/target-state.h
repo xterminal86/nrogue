@@ -41,24 +41,14 @@ class TargetState : public GameState
     void CycleTargets();
     void ProcessHit(GameObject* hitPoint);
     void ProcessHitInventoryThrownItem(GameObject* hitPoint);
-    void ProcessLaser();
     void PrintThrowResult(GameObject* tileRef);
     void DirtyHack();
     void UpdatePlayerPossibleKnockbackDir();
-
-    std::vector<GameObject*> FillObjectsOnTheLine(const std::vector<Position>& line);
-
-    std::pair<char, std::string> GetProjectileImageAndColor(bool throwingFromInventory);
 
     GameObject* LaunchProjectile(char image, const std::string& color);
     GameObject* CheckHit(const Position& at, const Position& prev);
 
     std::vector<GameObject*> _targets;
-
-    // For piercing strikes and the like.
-    // Stores all objects on the draw hint line.
-    // Don't use queue because we'll be frequently iterating over it.
-    std::vector<GameObject*> _objectsOnTheLine;
 
     size_t _lastTargetIndex = -1;
     int _maxThrowingRange = 1;

@@ -273,6 +273,9 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
+  auto go = ItemsFactory::Instance().CreateWand(1, 1, WandMaterials::GOLDEN_7, SpellType::LASER, ItemPrefix::UNCURSED);
+  InsertGameObject(go);
+
   // *** FIXME: debug
 
   // ========================= CREATE 20 RANDOM MELEE WEAPONS ==================

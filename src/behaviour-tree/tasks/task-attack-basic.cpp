@@ -56,7 +56,14 @@ BTResult TaskAttackBasic::Run()
 
     playerRef.ReceiveDamage(_objectToControl, dmg, false);
 
-    Util::TryToDamageEquipment(_objectToControl, weapon, -1);
+    //
+    // Melee attack with ranged weapon shouldn't damage it
+    //
+    if (weapon != nullptr
+     && weapon->Data.ItemType_ != ItemType::RANGED_WEAPON)
+    {
+      Util::TryToDamageEquipment(_objectToControl, weapon, -1);
+    }
 
     result = true;
   }
