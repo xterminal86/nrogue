@@ -233,7 +233,7 @@ enum class ItemQuality
 
 enum class WeaponType
 {
-  NONE = 0,
+  RANDOM = 0,
   DAGGER,
   SHORT_SWORD,
   ARMING_SWORD,
@@ -245,7 +245,7 @@ enum class WeaponType
 
 enum class RangedWeaponType
 {
-  NONE = 0,
+  RANDOM = 0,
   SHORT_BOW,
   LONGBOW,
   WAR_BOW,
@@ -256,7 +256,7 @@ enum class RangedWeaponType
 
 enum class ArmorType
 {
-  NONE = 0,
+  RANDOM = 0,
   PADDING,
   LEATHER,
   MAIL,

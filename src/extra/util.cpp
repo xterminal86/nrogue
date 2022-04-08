@@ -1914,10 +1914,10 @@ namespace Util
 
     int distanceCovered = 0;
 
-    int minDmg = damageRange.first;
-    int maxDmg = damageRange.second;
+    int numRolls  = damageRange.first;
+    int diceSides = damageRange.second;
 
-    int power = minDmg + maxDmg;
+    int power = RollDamage(numRolls, diceSides);
 
     int userMagic = user->Attrs.Mag.Get();
 
@@ -1956,7 +1956,7 @@ namespace Util
                              false,
                              false);
 
-          power -= (def == 0) ? 1 : dmgDone;
+          power -= (def <= 0) ? 1 : def;
         }
       }
 
@@ -1975,7 +1975,8 @@ namespace Util
       }
 
       distanceCovered++;
-      power--;
+
+      power -= distanceCovered;
     }
 
     Printer::Instance().Render();

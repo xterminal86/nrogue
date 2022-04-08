@@ -835,7 +835,7 @@ GameObject* ItemsFactory::CreateRandomMeleeWeapon(WeaponType type, ItemPrefix pr
 {
   GameObject* go = nullptr;
 
-  if (type != WeaponType::NONE)
+  if (type != WeaponType::RANDOM)
   {
     go = CreateMeleeWeapon(0, 0, type, prefixOverride);
   }
@@ -854,7 +854,7 @@ GameObject* ItemsFactory::CreateRandomRangedWeapon(RangedWeaponType type, ItemPr
 {
   GameObject* go = nullptr;
 
-  if (type != RangedWeaponType::NONE)
+  if (type != RangedWeaponType::RANDOM)
   {
     go = CreateRangedWeapon(0, 0, type, prefixOverride);
   }
@@ -897,6 +897,9 @@ GameObject* ItemsFactory::CreateGem(int x, int y, GemType type, int actualGemCha
   {
     int rndStartingIndex = 0;
 
+    //
+    // Will worthless glass participate in random roll
+    //
     if (actualGemChance != -1)
     {
       if (Util::Rolld100(actualGemChance))
@@ -1331,14 +1334,21 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
   return go;
 }
 
-GameObject* ItemsFactory::CreateRandomArmor(ItemPrefix prefixOverride)
+GameObject* ItemsFactory::CreateRandomArmor(ArmorType type, ItemPrefix prefixOverride)
 {
   GameObject* go = nullptr;
 
-  int index = RNG::Instance().RandomRange(0, GlobalConstants::ArmorNameByType.size());
-  auto it = GlobalConstants::ArmorNameByType.begin();
-  std::advance(it, index);
-  go = CreateArmor(0, 0, it->first, prefixOverride);
+  if (type != ArmorType::RANDOM)
+  {
+    go = CreateArmor(0, 0, type, prefixOverride);
+  }
+  else
+  {
+    int index = RNG::Instance().RandomRange(0, GlobalConstants::ArmorNameByType.size());
+    auto it = GlobalConstants::ArmorNameByType.begin();
+    std::advance(it, index);
+    go = CreateArmor(0, 0, it->first, prefixOverride);
+  }
 
   ItemComponent* ic = go->GetComponent<ItemComponent>();
   TryToAddBonusesToItem(ic);

@@ -61,7 +61,7 @@ void TargetState::FindTargets()
 {
   _targets.clear();
 
-  int r = _playerRef->VisibilityRadius.Get();
+  int r  = _playerRef->VisibilityRadius.Get();
   int px = _playerRef->PosX;
   int py = _playerRef->PosY;
 
@@ -178,19 +178,25 @@ void TargetState::HandleInput()
   }
 }
 
+///
 /// It is assumed that we have valid weapon and ammunition
 /// in corresponding equipment slots
 /// (necessary checks were performed in MainState)
+///
 void TargetState::FireWeapon(bool throwingFromInventory)
 {
+  //
   // Do not target self.
+  //
   if (SafetyCheck())
   {
     return;
   }
 
+  //
   // If cursor is outside map,
   // pick last valid point as target end point.
+  //
   CheckCursorPositionBounds();
 
   Position startPoint = { _playerRef->PosX, _playerRef->PosY };
@@ -203,7 +209,7 @@ void TargetState::FireWeapon(bool throwingFromInventory)
                                               _playerRef,
                                               _weaponRef,
                                               isThrowing);
-  if (!Util::Rolld100(chance))
+  if (Util::Rolld100(chance) == false)
   {
     //
     // If skill is low and we didn't roll a hit,
@@ -275,25 +281,9 @@ GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
   // Start from 1 to exclude player's position
   for (size_t i = 1; i < line.size(); i++)
   {
-    int mx = line[i].X;
-    int my = line[i].Y;
+    endPoint = line[i];
 
-    Update(true);
-
-    int drawingPosX = mx + Map::Instance().CurrentLevel->MapOffsetX;
-    int drawingPosY = my + Map::Instance().CurrentLevel->MapOffsetY;
-
-    Printer::Instance().PrintFB(drawingPosX, drawingPosY, image, color);
-    Printer::Instance().Render();
-
-    // FIXME: debug
-    // Util::Sleep(100);
-
-    //#ifndef USE_SDL
-    //Util::Sleep(20);
-    //#endif
-
-    stoppedAt = CheckHit({ mx, my }, { line[i - 1].X, line[i - 1].Y });
+    stoppedAt = CheckHit(line[i], line[i - 1]);
 
     distanceCovered++;
 
@@ -307,10 +297,11 @@ GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
     else if ((!isThrowing && distanceCovered >= _weaponRef->Data.Range)
            || (isThrowing && distanceCovered >= _maxThrowingRange))
     {
-      endPoint.Set(mx, my);
       break;
     }
   }
+
+  Util::LaunchProjectile(startPoint, endPoint, image, color);
 
   // Projectile reached end point without hitting anyone
   if (stoppedAt == nullptr)
@@ -615,12 +606,14 @@ void TargetState::MoveCursor(int dx, int dy)
 
 void TargetState::DrawHint()
 {
+  //
   // NOTE: for wand of piercing and the like it is probably
   // not a good idea to draw hint line above all objects because
   // it will reveal the wand type in case it is not identified.
   // Same probably goes for projectile flying.
+  //
   // In any case, let's not edit this part of code right now.
-
+  //
   Position startPoint = { _playerRef->PosX, _playerRef->PosY };
 
   int mox = Map::Instance().CurrentLevel->MapOffsetX;

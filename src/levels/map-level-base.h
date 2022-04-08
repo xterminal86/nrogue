@@ -149,9 +149,9 @@ class MapLevelBase
     GameObject* FindInVV(const Collection& c,
                          const std::string& addrStr)
     {
-      for (auto& i : c)
+      for (auto& line : c)
       {
-        for (auto& o : i)
+        for (auto& o : line)
         {
           if (o.get() != nullptr && o.get()->HexAddressString == addrStr)
           {

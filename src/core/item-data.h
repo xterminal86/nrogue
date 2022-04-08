@@ -78,9 +78,9 @@ struct ItemData
 
   SpellInfo SpellHeld;
 
-  RangedWeaponType RangedWeaponType_ = RangedWeaponType::NONE;
+  RangedWeaponType RangedWeaponType_ = RangedWeaponType::RANDOM;
   ArrowType        AmmoType          = ArrowType::NONE;
-  WeaponType       WeaponType_       = WeaponType::NONE;
+  WeaponType       WeaponType_       = WeaponType::RANDOM;
 
   std::pair<MapType, std::pair<int, int>> ReturnerPosition =
   {

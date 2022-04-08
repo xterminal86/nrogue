@@ -432,12 +432,35 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   ai->ChangeModel<AIIdle>();
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
+  EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
   GameObject* pickaxe = ItemsFactory::Instance().CreateUniquePickaxe();
-  cc->Add(pickaxe);
+  GameObject* armor = ItemsFactory::Instance().CreateRandomArmor(ArmorType::PADDING);
 
-  GameObject* gem = ItemsFactory::Instance().CreateGem(0, 0, GemType::ORANGE_AMBER);
+  //
+  // First, add objects to inventory so that we aquire the naked pointer
+  //
+  cc->Add(pickaxe);
+  cc->Add(armor);
+
+  ItemComponent* pickIC = pickaxe->GetComponent<ItemComponent>();
+  ItemComponent* armorIC = armor->GetComponent<ItemComponent>();
+
+  //
+  // Then equip them
+  //
+  ec->Equip(pickIC);
+  ec->Equip(armorIC);
+
+  //
+  // Everything else in inventory will be dropped on kill
+  //
+  GameObject* gem = ItemsFactory::Instance().CreateGem(0, 0, GemType::RANDOM, 100);
   cc->Add(gem);
+
+  //
+  // TODO: add some more plot-related dummy items
+  //
 
   go->Attrs.Str.Talents = 3;
   go->Attrs.Skl.Talents = 3;
@@ -482,13 +505,19 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
   ai->ChangeModel<AIMonsterMadMiner>();
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
+  EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
+
   GameObject* pick = ItemsFactory::Instance().CreateRandomMeleeWeapon(WeaponType::PICKAXE);
-  ItemComponent* ic = pick->GetComponent<ItemComponent>();
+  GameObject* armor = ItemsFactory::Instance().CreateRandomArmor(ArmorType::PADDING);
 
   cc->Add(pick);
+  cc->Add(armor);
 
-  EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
-  ec->Equip(ic);
+  ItemComponent* pickIC = pick->GetComponent<ItemComponent>();
+  ItemComponent* armorIC = armor->GetComponent<ItemComponent>();
+
+  ec->Equip(pickIC);
+  ec->Equip(armorIC);
 
   go->Attrs.Str.Talents = 1;
   go->Attrs.Skl.Talents = 1;

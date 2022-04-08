@@ -114,7 +114,7 @@ namespace Util
                                const Position& to,
                                char image,
                                const std::string& fgColor,
-                               const std::string& bgColor);
+                               const std::string& bgColor = Colors::BlackColor);
 
   extern void KnockBack(GameObject* sender,
                         GameObject* receiver,

@@ -5,6 +5,20 @@
 #include "player.h"
 #include "logger.h"
 
+//
+// NOTE:
+//
+// It is probably better to kinda duplicate code for throwing,
+// using ranged weapons, and using wands and magic for
+// monsters instead of trying to make all of this functionality
+// general purpose, since we will have to move lots of stuff
+// into already overloaded Util class and do lots of message
+// related shitcoding.
+//
+// We still need to create additional AI task types to handle all
+// of this, so having player related checks to be in one place
+// and monster related in another kinda beats it.
+//
 TaskAttackRanged::TaskAttackRanged(GameObject* objectToControl,
                                    const std::string& damageType,
                                    char projectile,
