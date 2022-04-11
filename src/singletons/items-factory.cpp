@@ -2325,7 +2325,9 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
     break;
 
     default:
-      DebugLog("[WAR] bonus %i not handled", (int)bonusType);
+      DebugLog("[WAR] bonus %i not handled on item %s",
+               (int)bonusType,
+               itemRef->Data.IdentifiedName.data());
       break;
   }
 

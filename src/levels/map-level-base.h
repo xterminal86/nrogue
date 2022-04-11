@@ -15,10 +15,10 @@ class MapLevelBase
     MapLevelBase(const MapLevelBase&) = delete;
     virtual ~MapLevelBase() = default;
 
-    void InsertActor(GameObject* actor);
-    void InsertGameObject(GameObject* goToInsert);
-    void InsertStaticObject(GameObject* goToInsert);
-    void InsertStaticObject(int x,
+    void PlaceActor(GameObject* actor);
+    void PlaceGameObject(GameObject* goToInsert);
+    void PlaceStaticObject(GameObject* goToInsert);
+    void PlaceStaticObject(int x,
                             int y,
                             const GameObjectInfo& objectInfo,
                             int hitPoints = -1,

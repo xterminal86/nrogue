@@ -145,7 +145,7 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
             dc->OpenedBy = GlobalConstants::OpenedByNobody;
           }
 
-          InsertStaticObject(door);
+          PlaceStaticObject(door);
         }
         break;
 
@@ -218,7 +218,7 @@ void MapLevelCaves::CreateSpecialLevel()
         {
           objName = "Cave Wall";
           t.Set(true, true, ' ', Colors::BlackColor, Colors::CaveWallColor, objName);
-          InsertStaticObject(posX, posY, t, -1);
+          PlaceStaticObject(posX, posY, t, -1);
 
           // TODO: add trigger to destroy on boss death
         }
@@ -228,7 +228,7 @@ void MapLevelCaves::CreateSpecialLevel()
         {
           objName = "Cave Wall";
           t.Set(true, true, ' ', Colors::BlackColor, Colors::CaveWallColor, objName);
-          InsertStaticObject(posX, posY, t, -1);
+          PlaceStaticObject(posX, posY, t, -1);
         }
         break;
 

@@ -306,6 +306,8 @@ namespace GlobalConstants
   extern const std::map<MapType,       std::vector<std::string>>    MapLevelNames;
   extern const std::map<ShrineType,    std::vector<StringsArray2D>> ShrineLayoutsByType;
 
+  extern const std::map<SpellType, std::string> SpellShortNameByType;
+
   extern const std::vector<SpellType> ScrollValidSpellTypes;
 
   extern const std::vector<std::string> ScrollUnidentifiedNames;

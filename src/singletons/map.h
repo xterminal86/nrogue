@@ -28,8 +28,8 @@ class Map : public Singleton<Map>
 
     void Draw();
 
-    void InsertActor(GameObject* actor);
-    void InsertGameObject(GameObject* goToInsert);
+    void PlaceActor(GameObject* actor);
+    void PlaceGameObject(GameObject* goToInsert);
     void RemoveDestroyed(GameObjectCollectionType c = GameObjectCollectionType::ALL);
     void UpdateGameObjects();
 
@@ -43,15 +43,13 @@ class Map : public Singleton<Map>
     void PrintMapLayout();
     #endif
 
-    void ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes);
+    void ProcessAoEDamage(GameObject* target,
+                          ItemComponent* weapon,
+                          int centralDamage,
+                          bool againstRes);
 
     bool IsObjectVisible(const Position& from,
                          const Position& to);
-
-    bool TryToDamageObject(GameObject* object,
-                           GameObject* from,
-                           int amount,
-                           bool againstRes);
 
     bool IsTileDangerous(const Position& pos);
 

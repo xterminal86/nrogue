@@ -101,7 +101,7 @@ void MapLevelNether::ConstructFromBuilder(LevelBuilder& lb)
             dc->OpenedBy = GlobalConstants::OpenedByNobody;
           }
 
-          InsertStaticObject(door);
+          PlaceStaticObject(door);
         }
         break;
 

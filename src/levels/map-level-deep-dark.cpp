@@ -122,7 +122,7 @@ void MapLevelDeepDark::CreateSpecialLevel()
   note->PosX = 5;
   note->PosY = 2;
 
-  InsertGameObject(note);
+  PlaceGameObject(note);
 
   auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
 
@@ -202,7 +202,7 @@ void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
             dc->OpenedBy = GlobalConstants::OpenedByNobody;
           }
 
-          InsertStaticObject(door);
+          PlaceStaticObject(door);
         }
         break;
 

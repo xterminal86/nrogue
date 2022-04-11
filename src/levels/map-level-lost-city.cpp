@@ -90,7 +90,7 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
 
           objName = "Withered Tree";
           t.Set(true, true, img, Colors::DirtColor, Colors::BlackColor, objName);
-          InsertStaticObject(x, y, t);
+          PlaceStaticObject(x, y, t);
         }
         break;
 
@@ -126,7 +126,7 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
 
         case 'F':
           t.Set(true, false, image, Colors::WhiteColor, Colors::DeepWaterColor, "Fountain");
-          InsertStaticObject(x, y, t);
+          PlaceStaticObject(x, y, t);
           break;
 
         case 'g':
@@ -148,10 +148,10 @@ void MapLevelLostCity::CreateShrines(LevelBuilder& lb)
 
     GameObjectInfo t;
     t.Set(true, false, '/', shrineColor.first, shrineColor.second, description, "?Shrine?");
-    InsertStaticObject(kvp.first.X, kvp.first.Y, t);
+    PlaceStaticObject(kvp.first.X, kvp.first.Y, t);
 
     auto go = GameObjectsFactory::Instance().CreateShrine(kvp.first.X, kvp.first.Y, shrineType, 1000);
-    InsertGameObject(go);
+    PlaceGameObject(go);
   }
 }
 

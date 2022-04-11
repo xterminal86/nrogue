@@ -129,7 +129,7 @@ GameObject* MapLevelBase::FindObjectByAddress(const std::string& addressString)
 }
 #endif
 
-void MapLevelBase::InsertActor(GameObject* actor)
+void MapLevelBase::PlaceActor(GameObject* actor)
 {
   if (actor == nullptr)
   {
@@ -146,7 +146,7 @@ void MapLevelBase::InsertActor(GameObject* actor)
   ActorGameObjects.push_back(std::unique_ptr<GameObject>(actor));
 }
 
-void MapLevelBase::InsertGameObject(GameObject* goToInsert)
+void MapLevelBase::PlaceGameObject(GameObject* goToInsert)
 {
   if (goToInsert == nullptr)
   {
@@ -163,13 +163,13 @@ void MapLevelBase::InsertGameObject(GameObject* goToInsert)
   GameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
 }
 
-void MapLevelBase::InsertStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints, GameObjectType type)
+void MapLevelBase::PlaceStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints, GameObjectType type)
 {
   GameObject* go = GameObjectsFactory::Instance().CreateStaticObject(x, y, objectInfo, hitPoints, type);
-  InsertStaticObject(go);
+  PlaceStaticObject(go);
 }
 
-void MapLevelBase::InsertStaticObject(GameObject* goToInsert)
+void MapLevelBase::PlaceStaticObject(GameObject* goToInsert)
 {
   if (goToInsert == nullptr)
   {
@@ -211,7 +211,7 @@ void MapLevelBase::CreateBorders(GameObjectInfo& t)
   auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
   for (auto& i : bounds)
   {
-    InsertStaticObject(i.X, i.Y, t);
+    PlaceStaticObject(i.X, i.Y, t);
   }
 }
 
@@ -238,7 +238,7 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
     auto go = ItemsFactory::Instance().CreateRandomItem(x, y);
     if (go != nullptr)
     {
-      InsertGameObject(go);
+      PlaceGameObject(go);
     }
   }
 }
@@ -339,7 +339,7 @@ void MapLevelBase::CreateInitialMonsters()
       //res = { GameObjectType::SPIDER, 1 };
 
       auto monster = MonstersInc::Instance().CreateMonster(x, y, res.first);
-      InsertActor(monster);
+      PlaceActor(monster);
     }
   }
 
@@ -400,7 +400,7 @@ void MapLevelBase::TryToSpawnMonsters()
     {
       auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
       auto monster = MonstersInc::Instance().CreateMonster(cx, cy, res.first);
-      InsertActor(monster);
+      PlaceActor(monster);
       break;
     }
   }
@@ -536,11 +536,11 @@ void MapLevelBase::PlaceShrine(const Position& pos, LevelBuilder& lb)
   GameObjectInfo t;
   ShrineType type = lb.ShrinesByPosition().at(pos);
   auto go = GameObjectsFactory::Instance().CreateShrine(pos.X, pos.Y, type, 1000);
-  InsertGameObject(go);
+  PlaceGameObject(go);
 
   std::string description = GlobalConstants::ShrineNameByType.at(type);
   t.Set(true, false, '/', Colors::ShadesOfGrey::Four, Colors::BlackColor, description, "?Shrine?");
-  InsertStaticObject(pos.X, pos.Y, t);
+  PlaceStaticObject(pos.X, pos.Y, t);
 }
 
 void MapLevelBase::PlaceTree(int x, int y)
@@ -553,7 +553,7 @@ void MapLevelBase::PlaceTree(int x, int y)
 
   GameObjectInfo t;
   t.Set(true, true, img, Colors::GreenColor, Colors::BlackColor, "Tree");
-  InsertStaticObject(x, y, t);
+  PlaceStaticObject(x, y, t);
 }
 
 void MapLevelBase::PlaceWall(int x, int y,
@@ -565,7 +565,7 @@ void MapLevelBase::PlaceWall(int x, int y,
 {
   GameObjectInfo t;
   t.Set(true, true, image, fgColor, bgColor, objName);
-  InsertStaticObject(x, y, t, -1, pickaxeable);
+  PlaceStaticObject(x, y, t, -1, pickaxeable);
 }
 
 void MapLevelBase::PlaceDoor(int x, int y, bool isOpen, size_t openedBy, const std::string& objName)
@@ -576,7 +576,7 @@ void MapLevelBase::PlaceDoor(int x, int y, bool isOpen, size_t openedBy, const s
     DoorComponent* dc = door->GetComponent<DoorComponent>();
     dc->OpenedBy = openedBy;
   }
-  InsertStaticObject(door);
+  PlaceStaticObject(door);
 }
 
 void MapLevelBase::CreateLevel()

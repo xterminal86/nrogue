@@ -468,7 +468,9 @@ void Player::SetDefaultEquipment()
   }
 }
 
+///
 /// 'what' is either actor or GameObject, 'with' is a weapon (i.e. arrow)
+///
 void Player::RangedAttack(GameObject* what, ItemComponent* with)
 {
   ItemComponent* weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
@@ -476,7 +478,9 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
 
   int dmg = Util::CalculateDamageValue(this, what, weapon, false);
 
+  //
   // If it's not the ground GameObject
+  //
   if (what->Type != GameObjectType::GROUND)
   {
     AIComponent* aic = what->GetComponent<AIComponent>();
@@ -518,7 +522,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
     arrow->OwnerGameObject->PosY = what->PosY;
     arrow->Data.Amount = 1;
     arrow->Data.IsEquipped = false;
-    Map::Instance().InsertGameObject(arrow->OwnerGameObject);
+    Map::Instance().PlaceGameObject(arrow->OwnerGameObject);
   }
 
   arrows->Data.Amount--;
@@ -572,24 +576,11 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
       break;
 
     case SpellType::TELEPORT:
-      ProcessTeleport(what, with);
-      break;
-  }
-}
-
-void Player::ProcessTeleport(GameObject* target, ItemComponent* weapon)
-{
-  Position p = { target->PosX, target->PosY };
-
-  auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
-  if (actor != nullptr)
-  {
-    auto pos = Map::Instance().GetRandomEmptyCell();
-    MapType mt = Map::Instance().CurrentLevel->MapType_;
-    Map::Instance().TeleportToExistingLevel(mt, pos, actor);
-
-    auto str = Util::StringFormat("%s suddenly disappears!", actor->ObjectName.data());
-    Printer::Instance().AddMessage(str);
+    {
+      std::string msg = Util::ProcessTeleport(what);
+      Printer::Instance().AddMessage(msg);
+    }
+    break;
   }
 }
 
@@ -603,7 +594,7 @@ void Player::ProcessMagicAttack(GameObject* target,
   auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
   if (actor != nullptr)
   {
-    bool damageDone = Map::Instance().TryToDamageObject(actor, this, damage, againstRes);
+    bool damageDone = Util::TryToDamageObject(actor, this, damage, againstRes).first;
     if (weapon->Data.SpellHeld.SpellType_ == SpellType::FROST)
     {
       ItemBonusStruct b;
@@ -630,7 +621,7 @@ void Player::ProcessMagicAttack(GameObject* target,
     auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
     {
-      Map::Instance().TryToDamageObject(obj, this, damage, againstRes);
+      Util::TryToDamageObject(obj, this, damage, againstRes);
     }
 
     // If nothing is lying in the doorway, for example, damage door
@@ -639,7 +630,7 @@ void Player::ProcessMagicAttack(GameObject* target,
       auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
       if (so != nullptr)
       {
-        Map::Instance().TryToDamageObject(so, this, damage, againstRes);
+        Util::TryToDamageObject(so, this, damage, againstRes);
       }
     }
   }
@@ -647,7 +638,7 @@ void Player::ProcessMagicAttack(GameObject* target,
 
 void Player::MeleeAttack(GameObject* what, bool alwaysHit)
 {
-  int hitChance = Util::CalculateHitChance(this, what);
+  int hitChance = Util::CalculateHitChanceMelee(this, what);
 
   auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
                                    Attrs.Skl.Get(),

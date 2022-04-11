@@ -497,7 +497,7 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
       copy->OwnerGameObject->PosX = x;
       copy->OwnerGameObject->PosY = y;
 
-      Map::Instance().CurrentLevel->InsertGameObject(copy->OwnerGameObject);
+      Map::Instance().CurrentLevel->PlaceGameObject(copy->OwnerGameObject);
     }
     else
     {
@@ -522,7 +522,7 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
       item->PosX = x;
       item->PosY = y;
 
-      Map::Instance().CurrentLevel->InsertGameObject(item);
+      Map::Instance().CurrentLevel->PlaceGameObject(item);
     }
     else
     {

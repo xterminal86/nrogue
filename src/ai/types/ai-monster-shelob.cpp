@@ -26,7 +26,7 @@ R"(
               [COND p1="player_in_range" p2="4"]
                 [SEL]
                   [SEQ]
-                    [TASK p1="attack_ranged" p2="NA"]
+                    [TASK p1="attack_ranged" p2="MAG" p3="-"]
                     [TASK p1="apply_effect" p2="Par" p3="0" p4="6"]
                     [TASK p1="idle"]
                   [TASK p1="idle"]

@@ -604,7 +604,7 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
     TownPortalComponent* tpc = portal->AddComponent<TownPortalComponent>();
     tpc->SavePosition(Map::Instance().CurrentLevel->MapType_, { _playerRef->PosX, _playerRef->PosY });
 
-    lvl->InsertGameObject(portal);
+    lvl->PlaceGameObject(portal);
 
     _scrollUseMessages.push_back("You're back in town all of a sudden!");
     Map::Instance().TeleportToExistingLevel(MapType::TOWN, res);

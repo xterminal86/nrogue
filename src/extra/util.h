@@ -116,17 +116,30 @@ namespace Util
                                const std::string& fgColor,
                                const std::string& bgColor = Colors::BlackColor);
 
+  extern void LaunchProjectile(const std::vector<Position>& line,
+                               char image,
+                               const std::string& fgColor,
+                               const std::string& bgColor = Colors::BlackColor);
+
   extern void KnockBack(GameObject* sender,
                         GameObject* receiver,
                         const Position& attackDir,
                         int tiles);
 
+  extern std::string ProcessTeleport(GameObject* target);
+
   extern std::pair<char, std::string> GetProjectileImageAndColor(ItemComponent* weapon,
                                                                  bool throwingFromInventory);
 
   extern std::vector<GameObject*> GetObjectsOnTheLine(const std::vector<Position>& line);
+  extern GameObject* GetFirstObjectOnTheLine(const std::vector<Position>& line);
 
   // ===========================================================================
+
+  extern std::pair<bool, std::string> TryToDamageObject(GameObject* object,
+                                                        GameObject* from,
+                                                        int amount,
+                                                        bool againstRes);
 
   extern std::string TryToDamageEquipment(GameObject* actor,
                                           EquipmentCategory cat,
@@ -141,8 +154,8 @@ namespace Util
                                   ItemComponent* weapon,
                                   bool meleeAttackWithRangedWeapon);
 
-  extern int CalculateHitChance(GameObject* attacker,
-                                GameObject* defender);
+  extern int CalculateHitChanceMelee(GameObject* attacker,
+                                     GameObject* defender);
 
   extern int CalculateHitChanceRanged(const Position& start,
                                       const Position& end,
@@ -174,13 +187,15 @@ namespace Util
                                        ItemComponent* weapon,
                                        const Position& aroundThis);
 
-  extern int ProcessLaserAttack(GameObject* user,
-                                const std::pair<int, int>& damageRange,
-                                const Position& end);
+  extern std::vector<Position> ProcessLaserAttack(GameObject* user,
+                                                  const std::pair<int, int>& damageRange,
+                                                  const Position& end);
 
-  extern int ProcessLaserAttack(GameObject* user,
-                                ItemComponent* weapon,
-                                const Position& end);
+  extern std::vector<Position> ProcessLaserAttack(GameObject* user,
+                                                  ItemComponent* weapon,
+                                                  const Position& end);
+
+  extern void DrawLaserAttack(const std::vector<Position>& line);
 
   // ===========================================================================
 

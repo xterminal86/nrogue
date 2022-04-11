@@ -6,9 +6,8 @@
 enum class RangedAttackType
 {
   UNDEFINED = 0,
-  PHYSICAL,
-  NO_DAMAGE,
-  MAGICAL
+  WEAPON,
+  MAGIC
 };
 
 ///
@@ -23,7 +22,8 @@ class TaskAttackRanged : public Node
 {
   public:
     TaskAttackRanged(GameObject* objectToControl,
-                     const std::string& damageType,
+                     const std::string& attackType,
+                     const std::string& spellType,
                      char projectile,
                      const std::string& fgColor,
                      const std::string& bgColor);
@@ -32,17 +32,36 @@ class TaskAttackRanged : public Node
 
   protected:
     BTResult CheckRangedWeaponValidity(ItemComponent* weapon, ItemComponent* arrows);
+    BTResult ProcessWeaponAttack();
+    BTResult ProcessSpellAttack();
+
+    void ProcessBows(ItemComponent* weapon,
+                     ItemComponent* arrows,
+                     GameObject* what);
+
+    void ProcessWand(ItemComponent* wand,
+                     GameObject* what);
+
+    void ProcessAoEDamage(GameObject* target,
+                          ItemComponent* weapon,
+                          int centralDamage,
+                          bool againstRes);
+
+    void ProcessWandDamage(GameObject* target,
+                           ItemComponent* weapon,
+                           int damage,
+                           bool againstRes);
 
     char _projectile;
     RangedAttackType _attackType;
+    SpellType _spellType;
     std::string _fgColor;
     std::string _bgColor;
 
     const std::map<std::string, RangedAttackType> _attackTypeByName =
     {
-      { "DEF", RangedAttackType::PHYSICAL  },
-      { "MAG", RangedAttackType::MAGICAL   },
-      { "NA",  RangedAttackType::NO_DAMAGE }
+      { "WPN", RangedAttackType::WEAPON },
+      { "MAG", RangedAttackType::MAGIC  }
     };
 };
 

@@ -218,7 +218,7 @@ void MapLevelTown::CreateLevel()
   auto bounds = r.GetBoundaryElements();
   for (auto& pos : bounds)
   {
-    InsertStaticObject(pos.X, pos.Y, t);
+    PlaceStaticObject(pos.X, pos.Y, t);
   }
 
   ReplaceGroundWithGrass();
@@ -273,6 +273,12 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
+  ItemBonusStruct bs;
+  bs.Type = ItemBonusType::REFLECT;
+
+  auto go = ItemsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+  PlaceGameObject(go);
+
   // *** FIXME: debug
 
   // ========================= CREATE 20 RANDOM MELEE WEAPONS ==================
@@ -282,7 +288,7 @@ void MapLevelTown::CreateLevel()
     GameObject* go = ItemsFactory::Instance().CreateRandomMeleeWeapon();
     go->PosX = 1 + i;
     go->PosY = 1;
-    InsertGameObject(go);
+    PlaceGameObject(go);
   }
   */
 
@@ -298,13 +304,13 @@ void MapLevelTown::CreateLevel()
   ItemComponent* ic = go->GetComponent<ItemComponent>();
   ic->Data.Damage.SetMin(1);
   ic->Data.Damage.SetMax(1);
-  InsertGameObject(go);
+  PlaceGameObject(go);
 
   GameObject* bolts = ItemsFactory::Instance().CreateArrows(1, 1, ArrowType::BOLTS, ItemPrefix::UNCURSED, 10);
-  InsertGameObject(bolts);
+  PlaceGameObject(bolts);
 
   GameObject* dag = ItemsFactory::Instance().CreateWeapon(1, 1, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL, { bs });
-  InsertGameObject(dag);
+  PlaceGameObject(dag);
   */
 
   /*
@@ -315,7 +321,7 @@ void MapLevelTown::CreateLevel()
   b.FromItem = true;
 
   GameObject* go = ItemsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { b }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
-  InsertGameObject(go);
+  PlaceGameObject(go);
   */
 
   // ================================== CREATE ALL SCROLLS =====================
@@ -327,7 +333,7 @@ void MapLevelTown::CreateLevel()
     auto scroll = GameObjectsFactory::Instance().CreateScroll(1 + count, 1, item, ItemPrefix::UNCURSED);
     ItemComponent* ic = scroll->GetComponent<ItemComponent>();
     ic->Data.IsIdentified = false;
-    InsertGameObject(scroll);
+    PlaceGameObject(scroll);
     count++;
   }
   */
@@ -344,7 +350,7 @@ void MapLevelTown::CreateLevel()
     go->PosY = 1;
     ItemComponent* ic = go->GetComponent<ItemComponent>();
     ic->Data.IsIdentified = false;
-    InsertGameObject(go);
+    PlaceGameObject(go);
     count++;
   }
   */
@@ -359,7 +365,7 @@ void MapLevelTown::CreateLevel()
     ic->Data.IsIdentified = true;
     wand->PosX = x;
     wand->PosY = 1;
-    InsertGameObject(wand);
+    PlaceGameObject(wand);
   }
   */
 
@@ -390,7 +396,7 @@ void MapLevelTown::CreateLevel()
     bs.BonusValue = percentage;
 
     auto ring = GameObjectsFactory::Instance().CreateAccessory(1 + i, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, q);
-    InsertGameObject(ring);
+    PlaceGameObject(ring);
   }
   */
 
@@ -402,8 +408,8 @@ void MapLevelTown::CreateLevel()
 
   auto ring1 = GameObjectsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
   auto ring2 = GameObjectsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
-  InsertGameObject(ring1);
-  InsertGameObject(ring2);
+  PlaceGameObject(ring1);
+  PlaceGameObject(ring2);
   */
 }
 
@@ -542,12 +548,12 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
 
         case 'T':
           t.Set(true, false, c, Colors::IronColor, Colors::BlackColor, "Workbench");
-          InsertStaticObject(posX, posY, t);
+          PlaceStaticObject(posX, posY, t);
           break;
 
         case 'B':
           t.Set(true, false, c, Colors::WhiteColor, Colors::BlackColor, "Bed");
-          InsertStaticObject(posX, posY, t);
+          PlaceStaticObject(posX, posY, t);
           break;
 
         case '.':
@@ -562,7 +568,7 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
         case ' ':
         {
           t.Set(true, true, c, Colors::WhiteColor, Colors::BlackColor, "Forge");
-          InsertStaticObject(posX, posY, t);
+          PlaceStaticObject(posX, posY, t);
         }
         break;
 
@@ -618,7 +624,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
 
         case 'F':
           t.Set(true, false, c, Colors::WhiteColor, Colors::DeepWaterColor, "Fountain");
-          InsertStaticObject(posX, posY, t);
+          PlaceStaticObject(posX, posY, t);
           break;
 
         case 'T':
@@ -627,7 +633,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
 
         case 'B':
           t.Set(true, false, c, Colors::WhiteColor, Colors::BlackColor, "Bed");
-          InsertStaticObject(posX, posY, t);
+          PlaceStaticObject(posX, posY, t);
           break;
 
         case '.':
@@ -647,7 +653,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
 
         case 'm':
           t.Set(true, false, '#', Colors::MarbleColor, Colors::GrassColor, "Marble Fence");
-          InsertStaticObject(posX, posY, t);
+          PlaceStaticObject(posX, posY, t);
           break;
 
         case '~':
@@ -657,7 +663,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
         case '|':
         case '-':
           t.Set(true, false, c, Colors::WhiteColor, Colors::BlackColor, "Window");
-          InsertStaticObject(posX, posY, t);
+          PlaceStaticObject(posX, posY, t);
           break;
 
         case '+':
@@ -697,7 +703,7 @@ void MapLevelTown::CreateChurch(int x, int y)
         case '|':
         case '-':
           t.Set(true, true, c, Colors::WhiteColor, Colors::BlackColor, "Stained Glass");
-          InsertStaticObject(posX, posY, t);
+          PlaceStaticObject(posX, posY, t);
           break;
 
         // Check out important comments in CreateRoom()
@@ -720,7 +726,7 @@ void MapLevelTown::CreateChurch(int x, int y)
 
         case 'h':
           t.Set(false, false, c, Colors::WoodColor, Colors::BlackColor, "Wooden Bench", "?Bench?");
-          InsertStaticObject(posX, posY, t);
+          PlaceStaticObject(posX, posY, t);
           break;
 
         case '/':
@@ -732,14 +738,14 @@ void MapLevelTown::CreateChurch(int x, int y)
           ShrineType shrineType = ShrineType::KNOWLEDGE;
           std::string description = GlobalConstants::ShrineNameByType.at(shrineType);
           t.Set(true, false, '/', Colors::ShadesOfGrey::Four, Colors::BlackColor, description, "?Shrine?");
-          InsertStaticObject(posX, posY, t);
+          PlaceStaticObject(posX, posY, t);
 
           // Tiles are updated only around player.
           // Shrine has some logic (buff and timeout count), thus
           // we must make it a global game object so it could be updated
           // every turn no matter where the player is.
           auto go = GameObjectsFactory::Instance().CreateShrine(posX, posY, shrineType, 100);
-          InsertGameObject(go);
+          PlaceGameObject(go);
         }
         break;
       }
@@ -761,10 +767,10 @@ void MapLevelTown::CreatePlayerHouse()
   t.Set(true, false, 'C', Colors::WhiteColor, Colors::ChestColor, "Stash");
 
   Position cp(6, 6);
-  InsertStaticObject(6, 6, t);
+  PlaceStaticObject(6, 6, t);
 
   auto stash = GameObjectsFactory::Instance().CreateContainer("Stash", Colors::ChestColor, 'C', cp.X, cp.Y);
-  InsertGameObject(stash);
+  PlaceGameObject(stash);
 }
 
 void MapLevelTown::CreateNPCs()
@@ -829,7 +835,7 @@ void MapLevelTown::CreateNPCs()
     int index = RNG::Instance().RandomRange(0, emptyCells.size());
 
     auto go = MonstersInc::Instance().CreateNPC(emptyCells[index].X, emptyCells[index].Y, npc);
-    InsertActor(go);
+    PlaceActor(go);
 
     visited.push_back(Position(emptyCells[index].X, emptyCells[index].Y));
   }
@@ -837,21 +843,21 @@ void MapLevelTown::CreateNPCs()
   GameObject* go = nullptr;
 
   go = MonstersInc::Instance().CreateNPC(73, 24, NPCType::TIGRA);
-  InsertActor(go);
+  PlaceActor(go);
 
   // Traders
 
   go = MonstersInc::Instance().CreateNPC(83, 24, NPCType::MARTIN, true, ServiceType::BLESS);
-  InsertActor(go);
+  PlaceActor(go);
 
   go = MonstersInc::Instance().CreateNPC(9, 22, NPCType::CASEY, true);
-  InsertActor(go);
+  PlaceActor(go);
 
   go = MonstersInc::Instance().CreateNPC(9, 43, NPCType::MAYA, true, ServiceType::IDENTIFY);
-  InsertActor(go);
+  PlaceActor(go);
 
   go = MonstersInc::Instance().CreateNPC(81, 7, NPCType::GRISWOLD, true, ServiceType::REPAIR);
-  InsertActor(go);
+  PlaceActor(go);
 }
 
 void MapLevelTown::PlaceMineEntrance(int x, int y)
@@ -903,7 +909,7 @@ void MapLevelTown::PlaceGarden(int x, int y)
       {
         case '#':
           t.Set(true, false, '#', Colors::MarbleColor, Colors::GrassColor, "Marble Fence");
-          InsertStaticObject(posX, posY, t);
+          PlaceStaticObject(posX, posY, t);
           break;
 
         case '.':
@@ -924,7 +930,7 @@ void MapLevelTown::PlaceGarden(int x, int y)
 
         case 'F':
           t.Set(true, false, c, Colors::WhiteColor, Colors::DeepWaterColor, "Fountain");
-          InsertStaticObject(posX, posY, t);
+          PlaceStaticObject(posX, posY, t);
           break;
       }
 
@@ -1024,8 +1030,8 @@ void MapLevelTown::CreateTownGates()
   gate1->InteractionCallback = fn;
   gate2->InteractionCallback = fn;
 
-  InsertStaticObject(gate1);
-  InsertStaticObject(gate2);
+  PlaceStaticObject(gate1);
+  PlaceStaticObject(gate2);
 }
 
 bool MapLevelTown::SkipArea(const Position& pos, const Rect& area)

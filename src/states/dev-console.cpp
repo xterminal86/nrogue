@@ -603,7 +603,7 @@ void DevConsole::CreateMonster(const std::vector<std::string>& params)
   }
 
   auto go = MonstersInc::Instance().CreateMonster(x, y, objType);
-  _currentLevel->InsertActor(go);
+  _currentLevel->PlaceActor(go);
 
   StdOut(Ok);
 }

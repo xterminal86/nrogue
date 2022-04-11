@@ -24,7 +24,7 @@ void ItemComponent::Transfer(ContainerComponent* destination)
     OwnerGameObject->PosX = Application::Instance().PlayerInstance.PosX;
     OwnerGameObject->PosY = Application::Instance().PlayerInstance.PosY;
 
-    Map::Instance().InsertGameObject(OwnerGameObject);
+    Map::Instance().PlaceGameObject(OwnerGameObject);
   }
   else
   {

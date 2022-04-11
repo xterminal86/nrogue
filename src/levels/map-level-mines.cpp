@@ -401,7 +401,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
             dc->OpenedBy = GlobalConstants::OpenedByNobody;
           }
 
-          InsertStaticObject(door);
+          PlaceStaticObject(door);
         }
         break;
 
@@ -486,7 +486,7 @@ void MapLevelMines::CreateSpecialLevel()
         {
           objName = "Rocks";
           t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, objName);
-          InsertStaticObject(posX, posY, t, -1);
+          PlaceStaticObject(posX, posY, t, -1);
         }
         break;
 
@@ -498,7 +498,7 @@ void MapLevelMines::CreateSpecialLevel()
 
           dc->OpenedBy = GlobalConstants::OpenedByAnyone;
 
-          InsertStaticObject(door);
+          PlaceStaticObject(door);
         }
         break;
 
@@ -509,7 +509,7 @@ void MapLevelMines::CreateSpecialLevel()
           DoorComponent* dc = door->GetComponent<DoorComponent>();
           dc->OpenedBy = key->GetComponent<ItemComponent>()->Data.ItemTypeHash;
 
-          InsertStaticObject(door);
+          PlaceStaticObject(door);
         }
         break;
 
@@ -522,7 +522,7 @@ void MapLevelMines::CreateSpecialLevel()
           ContainerComponent* cc = boss->GetComponent<ContainerComponent>();
           cc->Add(key);
 
-          InsertActor(boss);
+          PlaceActor(boss);
 
           auto triggerObject = GameObjectsFactory::Instance().CreateDummyObject(0,
                                                                                 0,
@@ -583,7 +583,7 @@ void MapLevelMines::CreateSpecialLevel()
             triggerObject->IsDestroyed = true;
           });
 
-          InsertGameObject(triggerObject);
+          PlaceGameObject(triggerObject);
         }
         break;
 
@@ -658,7 +658,7 @@ void MapLevelMines::CreateRandomBoxes()
          && MapArray[p.X][p.Y]->Type != GameObjectType::DEEP_WATER)
         {
           GameObject* box = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(p.X, p.Y, 'B', "Wooden Box", Colors::WoodColor, Colors::BlackColor);
-          InsertStaticObject(box);
+          PlaceStaticObject(box);
           created++;
         }
       }
@@ -695,7 +695,7 @@ void MapLevelMines::CreateSpecialMonsters()
       if (!MapArray[x][y]->Occupied)
       {
         GameObject* m = MonstersInc::Instance().CreateMonster(x, y, GameObjectType::SHELOB);
-        InsertActor(m);
+        PlaceActor(m);
       }
     }
   }

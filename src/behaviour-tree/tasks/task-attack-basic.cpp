@@ -27,7 +27,7 @@ BTResult TaskAttackBasic::Run()
     weapon = ec->EquipmentByCategory[EquipmentCategory::WEAPON][0];
   }
 
-  int hitChance = Util::CalculateHitChance(_objectToControl, &playerRef);
+  int hitChance = Util::CalculateHitChanceMelee(_objectToControl, &playerRef);
 
   auto logMsg = Util::StringFormat("%s (SKL %i, LVL %i) attacks Player (SKL: %i, LVL %i): chance = %i",
                                    _objectToControl->ObjectName.data(),

@@ -546,6 +546,28 @@ namespace GlobalConstants
     "KOBAYASHI MARU"
   };
 
+  const std::map<SpellType, std::string> SpellShortNameByType =
+  {
+    { SpellType::NONE,              "-"  },
+    { SpellType::LIGHT,             "L"  },
+    { SpellType::STRIKE,            "S"  },
+    { SpellType::FROST,             "F"  },
+    { SpellType::FIREBALL,          "Fl" },
+    { SpellType::LASER,             "P"  },
+    { SpellType::LIGHTNING,         "Lg" },
+    { SpellType::MAGIC_MISSILE,     "Mg" },
+    { SpellType::IDENTIFY,          "Id" },
+    { SpellType::MAGIC_MAPPING,     "MM" },
+    { SpellType::TELEPORT,          "Te" },
+    { SpellType::TOWN_PORTAL,       "TP" },
+    { SpellType::DETECT_MONSTERS,   "DM" },
+    { SpellType::REMOVE_CURSE,      "RC" },
+    { SpellType::REPAIR,            "R"  },
+    { SpellType::HEAL,              "H"  },
+    { SpellType::NEUTRALIZE_POISON, "NP" },
+    { SpellType::MANA_SHIELD,       "MS" }
+  };
+
   const std::map<WandMaterials, std::string> WandMaterialNamesByMaterial =
   {
     { WandMaterials::YEW_1,    "Yew"    },

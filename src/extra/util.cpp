@@ -1122,14 +1122,11 @@ namespace Util
     return res;
   }
 
-  void LaunchProjectile(const Position& from,
-                        const Position& to,
+  void LaunchProjectile(const std::vector<Position>& line,
                         char image,
                         const std::string& fgColor,
                         const std::string& bgColor)
   {
-    auto line = BresenhamLine(from, to);
-
     // Start from 1 to exclude starting position
     for (size_t i = 1; i < line.size(); i++)
     {
@@ -1149,6 +1146,18 @@ namespace Util
 
       Printer::Instance().Render();
     }
+  }
+
+
+  void LaunchProjectile(const Position& from,
+                        const Position& to,
+                        char image,
+                        const std::string& fgColor,
+                        const std::string& bgColor)
+  {
+    auto line = BresenhamLine(from, to);
+
+    LaunchProjectile(line, image, fgColor, bgColor);
   }
 
   void KnockBack(GameObject* sender,
@@ -1218,6 +1227,25 @@ namespace Util
     receiver->CheckPerish();
   }
 
+  std::string ProcessTeleport(GameObject* target)
+  {
+    std::string msg;
+
+    Position p = { target->PosX, target->PosY };
+
+    auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+    if (actor != nullptr)
+    {
+      auto pos = Map::Instance().GetRandomEmptyCell();
+      MapType mt = Map::Instance().CurrentLevel->MapType_;
+      Map::Instance().TeleportToExistingLevel(mt, pos, actor);
+
+      msg = Util::StringFormat("%s suddenly disappears!", actor->ObjectName.data());
+    }
+
+    return msg;
+  }
+
   std::pair<char, std::string> GetProjectileImageAndColor(ItemComponent* weapon,
                                                           bool throwingFromInventory)
   {
@@ -1269,6 +1297,8 @@ namespace Util
   {
     std::vector<GameObject*> res;
 
+    auto player = &Application::Instance().PlayerInstance;
+
     Position mapSize = Map::Instance().CurrentLevel->MapSize;
 
     //
@@ -1280,11 +1310,17 @@ namespace Util
 
       if (IsInsideMap(p, mapSize))
       {
+        //
         // Right now the functionality of this method is based
         // on assumption, that certain items, that use this functionality
         // (e.g. wand of piercing), always strike through the whole
         // targeting line, ignoring any items lying on the ground,
         // until their ray is blocked or their piercing power dissipates.
+        //
+        if (player->PosX == p.X && player->PosY == p.Y)
+        {
+          res.push_back(player);
+        }
 
         auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
         if (actor != nullptr)
@@ -1305,11 +1341,85 @@ namespace Util
     return res;
   }
 
+  GameObject* GetFirstObjectOnTheLine(const std::vector<Position>& line)
+  {
+    GameObject* res = nullptr;
+
+    auto player = &Application::Instance().PlayerInstance;
+
+    Position mapSize = Map::Instance().CurrentLevel->MapSize;
+
+    for (size_t i = 1; i < line.size(); i++)
+    {
+      auto& p = line[i];
+
+      if (IsInsideMap(p, mapSize))
+      {
+        if (player->PosX == p.X
+         && player->PosY == p.Y)
+        {
+          res = player;
+          break;
+        }
+
+        auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+        if (actor != nullptr)
+        {
+          res = actor;
+          break;
+        }
+        else
+        {
+          auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
+          if (so != nullptr)
+          {
+            res = so;
+            break;
+          }
+        }
+      }
+    }
+
+    return res;
+  }
+
   // ===========================================================================
 
+  std::pair<bool, std::string> TryToDamageObject(GameObject* object,
+                                                 GameObject* from,
+                                                 int amount,
+                                                 bool againstRes)
+  {
+    std::pair<bool, std::string> res;
+
+    res.first = false;
+
+    if (object != nullptr)
+    {
+      int dmgHere = amount;
+
+      if (againstRes)
+      {
+        dmgHere -= object->Attrs.Res.Get();
+      }
+
+      if (dmgHere <= 0)
+      {
+        res.second = Util::StringFormat("%s seems unaffected!", object->ObjectName.data());;
+      }
+      else
+      {
+        object->ReceiveDamage(from, dmgHere, againstRes, false, !IsPlayer(from));
+        res.first = true;
+      }
+    }
+
+    return res;
+  }
+
   std::string TryToDamageEquipment(GameObject* actor,
-                            EquipmentCategory cat,
-                            int damage)
+                                   EquipmentCategory cat,
+                                   int damage)
   {
     std::string msg;
 
@@ -1441,8 +1551,8 @@ namespace Util
     return totalDmg;
   }
 
-  int CalculateHitChance(GameObject* attacker,
-                         GameObject* defender)
+  int CalculateHitChanceMelee(GameObject* attacker,
+                              GameObject* defender)
   {
     // Amount of addition to hit chance
     // times SKL difference of attacker and defender
@@ -1545,6 +1655,8 @@ namespace Util
       }
     }
 
+    #ifdef DEBUG_BUILD
+
     auto str = StringFormat("Calculated hit chance: %i (SKL: %i, SKL bonus: %i, distance: -%i)",
                             chance,
                             skl,
@@ -1563,6 +1675,8 @@ namespace Util
     Logger::Instance().Print(str);
 
     DebugLog("%s", str.data());
+
+    #endif
 
     return chance;
   }
@@ -1865,45 +1979,49 @@ namespace Util
     return pos;
   }
 
-  int ProcessLaserAttack(GameObject* user,
-                         ItemComponent* weapon,
-                         const Position& end)
+  std::vector<Position> ProcessLaserAttack(GameObject* user,
+                                           ItemComponent* weapon,
+                                           const Position& end)
   {
+    std::vector<Position> line;
+
     if (user == nullptr)
     {
       DebugLog("[WAR] ProcessLaserAttack() user is nullptr!");
-      return -1;
+      return line;
     }
 
     if (weapon == nullptr)
     {
       DebugLog("[WAR] ProcessLaserAttack() weapon is nullptr!");
-      return -1;
+      return line;
     }
 
     if (weapon->Data.Amount <= 0)
     {
-      return -1;
+      return line;
     }
 
     int minDmg = weapon->Data.SpellHeld.SpellBaseDamage.first;
     int maxDmg = weapon->Data.SpellHeld.SpellBaseDamage.second;
 
-    int distanceCovered = ProcessLaserAttack(user, { minDmg, maxDmg }, end);
+    line = ProcessLaserAttack(user, { minDmg, maxDmg }, end);
 
     weapon->Data.Amount--;
 
-    return distanceCovered;
+    return line;
   }
 
-  int ProcessLaserAttack(GameObject* user,
-                         const std::pair<int, int>& damageRange,
-                         const Position& end)
+  std::vector<Position> ProcessLaserAttack(GameObject* user,
+                                           const std::pair<int, int>& damageRange,
+                                           const Position& end)
   {
+    std::vector<Position> lineRes;
+
     if (user == nullptr)
     {
       DebugLog("[WAR] ProcessLaserAttack() user is nullptr!");
-      return -1;
+      return lineRes;
     }
 
     Position startPoint = { user->PosX, user->PosY };
@@ -1963,11 +2081,7 @@ namespace Util
       int drawingPosX = mx + Map::Instance().CurrentLevel->MapOffsetX;
       int drawingPosY = my + Map::Instance().CurrentLevel->MapOffsetY;
 
-      Printer::Instance().PrintFB(drawingPosX,
-                                  drawingPosY,
-                                  '*',
-                                  Colors::YellowColor,
-                                  Colors::RedColor);
+      lineRes.push_back({ drawingPosX, drawingPosY });
 
       if (shouldStop)
       {
@@ -1979,11 +2093,23 @@ namespace Util
       power -= distanceCovered;
     }
 
+    return lineRes;
+  }
+
+  void DrawLaserAttack(const std::vector<Position>& line)
+  {
+    for (auto& p : line)
+    {
+      Printer::Instance().PrintFB(p.X,
+                                  p.Y,
+                                  '*',
+                                  Colors::YellowColor,
+                                  Colors::RedColor);
+    }
+
     Printer::Instance().Render();
     Sleep(100);
     Application::Instance().ForceDrawMainState();
-
-    return distanceCovered;
   }
 
   // ===========================================================================

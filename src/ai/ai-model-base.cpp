@@ -206,8 +206,10 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
     case AITasks::ATTACK_RANGED:
     {
       std::string damageType = data->Params.at("p2");
+      std::string spellType  = data->Params.at("p3");
       task = new TaskAttackRanged(AIComponentRef->OwnerGameObject,
                                   damageType,
+                                  spellType,
                                   '*',
                                   "#FF0000",
                                   "#000000");

@@ -939,7 +939,7 @@ void GameObject::MarkAndCreateRemains()
     if (Type != GameObjectType::REMAINS)
     {
       auto go = GameObjectsFactory::Instance().CreateRemains(this);
-      _levelOwner->InsertGameObject(go);
+      _levelOwner->PlaceGameObject(go);
     }
 
     DropItemsHeld();

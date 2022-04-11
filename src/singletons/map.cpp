@@ -139,14 +139,14 @@ void Map::UpdateGameObjects()
   RemoveDestroyed();
 }
 
-void Map::InsertActor(GameObject* goToInsert)
+void Map::PlaceActor(GameObject* goToInsert)
 {
-  CurrentLevel->InsertActor(goToInsert);
+  CurrentLevel->PlaceActor(goToInsert);
 }
 
-void Map::InsertGameObject(GameObject* goToInsert)
+void Map::PlaceGameObject(GameObject* goToInsert)
 {
-  CurrentLevel->InsertGameObject(goToInsert);
+  CurrentLevel->PlaceGameObject(goToInsert);
 }
 
 std::pair<int, GameObject*> Map::GetGameObjectToPickup(int x, int y)
@@ -756,18 +756,18 @@ void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centra
     // AoE damages everything
 
     auto actor = GetActorAtPosition(p.X, p.Y);
-    TryToDamageObject(actor, from, dmgHere, againstRes);
+    Util::TryToDamageObject(actor, from, dmgHere, againstRes);
 
     auto mapObjs = GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
     {
-      TryToDamageObject(obj, from, dmgHere, againstRes);
+      Util::TryToDamageObject(obj, from, dmgHere, againstRes);
     }
 
     auto so = GetStaticGameObjectAtPosition(p.X, p.Y);
     if (so != nullptr)
     {
-      TryToDamageObject(so, from, dmgHere, againstRes);
+      Util::TryToDamageObject(so, from, dmgHere, againstRes);
     }
 
     // Check self damage
@@ -779,37 +779,6 @@ void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centra
       _playerRef->ReceiveDamage(from, dmgHere, true);
     }
   }
-}
-
-bool Map::TryToDamageObject(GameObject* object,
-                            GameObject* from,
-                            int amount,
-                            bool againstRes)
-{
-  bool success = false;
-
-  if (object != nullptr)
-  {
-    int dmgHere = amount;
-
-    if (againstRes)
-    {
-      dmgHere -= object->Attrs.Res.Get();
-    }
-
-    if (dmgHere <= 0)
-    {
-      auto msg = Util::StringFormat("%s seems unaffected!", object->ObjectName.data());
-      Printer::Instance().AddMessage(msg);
-    }
-    else
-    {
-      object->ReceiveDamage(from, dmgHere, againstRes, false);
-      success = true;
-    }
-  }
-
-  return success;
 }
 
 bool Map::IsTileDangerous(const Position& pos)

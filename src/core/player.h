@@ -105,7 +105,6 @@ class Player : public GameObject
     void ProcessStarvation();
     void ProcessMeleeAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict);
     void ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int damage, bool againstRes);
-    void ProcessTeleport(GameObject* target, ItemComponent* weapon);
 
     bool PassByNPC(GameObject* actor);
 

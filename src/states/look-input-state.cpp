@@ -132,7 +132,7 @@ void LookInputState::HandleInput()
     case 'M':
     {
       GameObject* mm = MonstersInc::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::MAD_MINER);
-      Map::Instance().InsertActor(mm);
+      Map::Instance().PlaceActor(mm);
     }
     break;
 

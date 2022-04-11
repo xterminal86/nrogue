@@ -90,7 +90,7 @@ void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
         {
           objName = "Abyss Rocks";
           t.Set(true, true, ' ', Colors::BlackColor, Colors::RedPoppyColor, objName);
-          InsertStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
+          PlaceStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
         }
         break;
 
@@ -104,7 +104,7 @@ void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
             dc->OpenedBy = GlobalConstants::OpenedByNobody;
           }
 
-          InsertStaticObject(door);
+          PlaceStaticObject(door);
         }
         break;
 
