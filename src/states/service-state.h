@@ -30,6 +30,7 @@ class ServiceState : public GameState
     void ProcessRepair(int key);
     void ProcessIdentify(int key);
     void ProcessBlessing(int key);
+    void ProcessBonuses(ItemComponent* item);
 
     struct ServiceInfo
     {

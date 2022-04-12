@@ -78,6 +78,8 @@ struct ItemData
 
   SpellInfo SpellHeld;
 
+  WandMaterials WandMaterial = WandMaterials::NONE;
+
   RangedWeaponType RangedWeaponType_ = RangedWeaponType::RANDOM;
   ArrowType        AmmoType          = ArrowType::NONE;
   WeaponType       WeaponType_       = WeaponType::RANDOM;

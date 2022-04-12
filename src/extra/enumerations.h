@@ -361,7 +361,8 @@ enum class SpellType
 // Number means tier
 enum class WandMaterials
 {
-  YEW_1 = 0,
+  NONE = -1,
+  YEW_1,
   IVORY_2,
   EBONY_3,
   ONYX_4,

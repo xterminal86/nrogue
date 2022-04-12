@@ -778,6 +778,106 @@ namespace Util
     return totalDamage;
   }
 
+  void RecalculateWandStats(ItemComponent* wand)
+  {
+    if (wand == nullptr)
+    {
+      DebugLog("[WAR] RecalculateWandStats() wand is null!");
+      return;
+    }
+
+    auto spellType = wand->Data.SpellHeld.SpellType_;
+
+    SpellInfo* sip = SpellsDatabase::Instance().GetSpellInfoFromDatabase(spellType);
+    if (sip == nullptr)
+    {
+      DebugLog("[WAR] RecalculateWandStats() no such spell %i in database!", (int)spellType);
+      return;
+    }
+
+    SpellInfo si = *sip;
+
+    auto material = wand->Data.WandMaterial;
+
+    int capacity = GlobalConstants::WandCapacityByMaterial.at(material);
+
+    int capacityRandomness = RNG::Instance().RandomRange(0, capacity + 1);
+
+    int qualityModifier = (int)wand->Data.ItemQuality_;
+
+    capacityRandomness += (capacity / 10) * qualityModifier;
+
+    capacity += capacityRandomness;
+
+    wand->Data.WandCapacity.Set(capacity);
+
+    int spellCost = GlobalConstants::WandSpellCapacityCostByType.at(spellType);
+    int charges = capacity / spellCost;
+
+    int wandRange = GlobalConstants::WandRangeByMaterial.at(material);
+    int wrh = wandRange / 2;
+    int rangeRandomness = RNG::Instance().RandomRange(-wrh, wrh + 1);
+
+    wandRange += rangeRandomness;
+
+    switch (wand->Data.Prefix)
+    {
+      case ItemPrefix::BLESSED:
+      {
+        capacity *= 2;
+
+        si.SpellBaseDamage.first++;
+        si.SpellBaseDamage.second++;
+      }
+      break;
+
+      case ItemPrefix::UNCURSED:
+      {
+        wandRange /= 1.5f;
+      }
+      break;
+
+      case ItemPrefix::CURSED:
+      {
+        wandRange /= 2;
+
+        capacity /= 2;
+
+        si.SpellBaseDamage.first--;
+        si.SpellBaseDamage.second--;
+      }
+      break;
+    }
+
+    if (wandRange <= 0)
+    {
+      wandRange = 1;
+    }
+
+    //
+    // Because 0 dice rolls makes no sense
+    //
+    if (si.SpellBaseDamage.first <= 0)
+    {
+      si.SpellBaseDamage.first = 1;
+    }
+
+    if (si.SpellBaseDamage.second <= 0)
+    {
+      si.SpellBaseDamage.second = 1;
+    }
+
+    wand->Data.SpellHeld = si;
+    wand->Data.Range = wandRange;
+    wand->Data.WandCapacity.Set(capacity);
+    wand->Data.Amount = charges;
+
+    //
+    // Actual cost is going to be calculated in GetCost()
+    //
+    wand->Data.Cost = si.SpellBaseCost;
+  }
+
   int Rolld100()
   {
     int dice = RNG::Instance().RandomRange(1, 101);

@@ -937,7 +937,12 @@ GameObject* ItemsFactory::CreateGem(int x, int y, GemType type, int actualGemCha
   return go;
 }
 
-GameObject* ItemsFactory::CreateWand(int x, int y, WandMaterials material, SpellType spellType, ItemPrefix prefixOverride, ItemQuality quality)
+GameObject* ItemsFactory::CreateWand(int x,
+                                     int y,
+                                     WandMaterials material,
+                                     SpellType spellType,
+                                     ItemPrefix prefixOverride,
+                                     ItemQuality quality)
 {
   SpellInfo si = *SpellsDatabase::Instance().GetSpellInfoFromDatabase(spellType);
 
@@ -964,79 +969,20 @@ GameObject* ItemsFactory::CreateWand(int x, int y, WandMaterials material, Spell
   go->FgColor = wandColorPair.first;
   go->BgColor = wandColorPair.second;
 
-  //int dl = Map::Instance().CurrentLevel->DungeonLevel;
-
-  int capacity = GlobalConstants::WandCapacityByMaterial.at(material);
-
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.ItemQuality_ = (quality == ItemQuality::RANDOM) ? RollItemQuality() : quality;
+  ic->Data.WandMaterial = material;
+  ic->Data.SpellHeld = si;
 
-  int capacityRandomness = RNG::Instance().RandomRange(0, capacity + 1);
-
-  int qualityModifier = (int)ic->Data.ItemQuality_;
-
-  capacityRandomness += (capacity / 10) * qualityModifier;
-
-  //capacityRandomness /= 2;
-
-  capacity += capacityRandomness;
-
-  if (ic->Data.Prefix == ItemPrefix::BLESSED)
-  {
-    capacity *= 2;
-
-    si.SpellBaseDamage.first++;
-    si.SpellBaseDamage.second++;
-  }
-  else if (ic->Data.Prefix == ItemPrefix::CURSED)
-  {
-    capacity /= 2;
-
-    si.SpellBaseDamage.first--;
-    si.SpellBaseDamage.second--;
-  }
-
-  // Because 0 dice rolls makes no sense
-  if (si.SpellBaseDamage.first <= 0)
-  {
-    si.SpellBaseDamage.first = 1;
-  }
-
-  if (si.SpellBaseDamage.second <= 0)
-  {
-    si.SpellBaseDamage.second = 1;
-  }
-
-  ic->Data.WandCapacity.Set(capacity);
-
-  int spellCost = GlobalConstants::WandSpellCapacityCostByType.at(spellType);
-  int charges = capacity / spellCost;
-
-  int wandRange = GlobalConstants::WandRangeByMaterial.at(material);
-
-  if (ic->Data.Prefix == ItemPrefix::UNCURSED)
-  {
-    wandRange /= 1.5f;
-  }
-  else if (ic->Data.Prefix == ItemPrefix::CURSED)
-  {
-    wandRange /= 2;
-  }
-
-  ic->Data.Amount = charges;
+  Util::RecalculateWandStats(ic);
 
   ic->Data.IsChargeable = true;
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
   ic->Data.ItemType_ = ItemType::WAND;
-  ic->Data.SpellHeld = si;
-  ic->Data.Range = wandRange;
   ic->Data.Durability.Reset(1);
   ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
-
-  // Actual cost is going to be calculated in GetCost()
-  ic->Data.Cost = si.SpellBaseCost;
 
   ic->Data.UnidentifiedName = "?" + wandMaterialName + " Wand?";
   ic->Data.IdentifiedName = wandMaterialName + " Wand of " + spellName;

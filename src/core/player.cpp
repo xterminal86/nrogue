@@ -56,8 +56,10 @@ void Player::Draw()
 {
   auto& mapRef = Map::Instance().CurrentLevel;
 
+  //
   // If game object has black bg color,
   // replace it with current floor color
+  //
   std::string bgColor = BgColor;
 
   bool cond = (BgColor == Colors::BlackColor);

@@ -354,7 +354,7 @@ void MapLevelTown::CreateLevel()
   /*
   for (size_t x = 1; x < 16; x++)
   {
-    auto wand = GameObjectsFactory::Instance().CreateRandomWand();
+    auto wand = ItemsFactory::Instance().CreateRandomWand();
     ItemComponent* ic = wand->GetComponent<ItemComponent>();
     ic->Data.IsIdentified = true;
     wand->PosX = x;

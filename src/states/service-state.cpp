@@ -104,16 +104,20 @@ void ServiceState::ProcessBlessing(int key)
   {
     _playerRef->Money -= si.ServiceCost;
 
+    //
     // If item wasn't identified but was actually already blessed,
     // nothing happens. Money is forfeit tho.
+    //
     if (si.ItemComponentRef->Data.Prefix != ItemPrefix::BLESSED)
     {
       si.ItemComponentRef->Data.Prefix = ItemPrefix::BLESSED;
 
       BlessItem(si);
 
+      //
       // Now we need to replace header BUC status name
       // that was generated during object creation.
+      //
       si.ItemComponentRef->Data.IdentifiedName = Util::ReplaceItemPrefix(si.ItemComponentRef->Data.IdentifiedName, { "Cursed" , "Uncursed" }, "Blessed");
     }
 
@@ -125,13 +129,62 @@ void ServiceState::ProcessBlessing(int key)
 
 void ServiceState::BlessItem(const ServiceInfo& si)
 {
+  //
   // Blessed / cursed item effects (like potions)
   // are handled in item use handler,
   // so no need to do anything special here.
+  //
+  if (!si.ItemComponentRef->Data.Bonuses.empty())
+  {
+    ProcessBonuses(si.ItemComponentRef);
+  }
+  else
+  {
+    if (si.ItemComponentRef->Data.ItemType_ == ItemType::WAND)
+    {
+      Util::RecalculateWandStats(si.ItemComponentRef);
+    }
+  }
 
-  bool didNothing = si.ItemComponentRef->Data.Bonuses.empty();
+  ItemComponent* equippedItem = nullptr;
 
-  for (auto& bonus : si.ItemComponentRef->Data.Bonuses)
+  //
+  // There can be two rings
+  //
+  if (si.ItemComponentRef->Data.EqCategory == EquipmentCategory::RING)
+  {
+    auto leftHand = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][0];
+    auto rightHand = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][1];
+
+    if (leftHand == si.ItemComponentRef || rightHand == si.ItemComponentRef)
+    {
+      equippedItem = si.ItemComponentRef;
+    }
+  }
+  else
+  {
+    equippedItem = _playerRef->Equipment->EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
+  }
+
+  //
+  // If item to be blessed is actually equipped, do the shuffle below.
+  //
+  if (equippedItem == si.ItemComponentRef)
+  {
+    //
+    // Unequip / equip to reapply stat bonuses
+    //
+    _playerRef->Equipment->Equip(equippedItem);
+    _playerRef->Equipment->Equip(equippedItem);
+
+    Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
+    Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
+  }
+}
+
+void ServiceState::ProcessBonuses(ItemComponent* item)
+{
+  for (auto& bonus : item->Data.Bonuses)
   {
     switch (bonus.Type)
     {
@@ -177,43 +230,9 @@ void ServiceState::BlessItem(const ServiceInfo& si)
         break;
 
       default:
-        didNothing = true;
+        DebugLog("[WAR] ServiceState::ProcessBonuses() bonus type %i not handled!", (int)bonus.Type);
         break;
     }
-  }
-
-  if (didNothing)
-  {
-    return;
-  }
-
-  ItemComponent* equippedItem = nullptr;
-
-  // There can be two rings
-  if (si.ItemComponentRef->Data.EqCategory == EquipmentCategory::RING)
-  {
-    auto leftHand = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][0];
-    auto rightHand = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][1];
-
-    if (leftHand == si.ItemComponentRef || rightHand == si.ItemComponentRef)
-    {
-      equippedItem = si.ItemComponentRef;
-    }
-  }
-  else
-  {
-    equippedItem = _playerRef->Equipment->EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
-  }
-
-  // If item to be blessed is actually equipped, do the shuffle below.
-  if (equippedItem == si.ItemComponentRef)
-  {
-    // Unequip / equip to reapply stat bonuses
-    _playerRef->Equipment->Equip(equippedItem);
-    _playerRef->Equipment->Equip(equippedItem);
-
-    Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
-    Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
   }
 }
 
@@ -277,8 +296,10 @@ void ServiceState::DisplayItems()
                                   Printer::kAlignLeft,
                                   ri.Color);
 
+      //
       // Replace letter and dash with white color
       // in case item is blessed or cursed.
+      //
       Printer::Instance().PrintFB(1,
                                   2 + itemIndex,
                                   ri.Letter + " - ",
@@ -329,9 +350,9 @@ void ServiceState::FillItemsForBlessing()
   {
     ItemComponent* ic = item->GetComponent<ItemComponent>();
 
-    bool idStatus = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered);
-    bool alreadyBlessed = (idStatus && ic->Data.Prefix == ItemPrefix::BLESSED);
-    bool isUnique = (ic->Data.Rarity == ItemRarity::UNIQUE);
+    bool alreadyKnown   = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered);
+    bool alreadyBlessed = (alreadyKnown && ic->Data.Prefix == ItemPrefix::BLESSED);
+    bool isUnique       = (ic->Data.Rarity == ItemRarity::UNIQUE);
 
     if (alreadyBlessed || isUnique)
     {
@@ -340,14 +361,21 @@ void ServiceState::FillItemsForBlessing()
 
     int validBonuses = GetValidBonusesCount(ic);
 
+    bool noValidBonuses = (validBonuses == 0);
+    bool isDummy        = (ic->Data.ItemType_ == ItemType::DUMMY);
+    bool isUncursed     = (ic->Data.Prefix == ItemPrefix::UNCURSED);
+    bool isEquippable   = (ic->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE);
+
+    bool canBeEquippedButInvalid = (isEquippable
+                                 && isUncursed
+                                 && noValidBonuses);
+
+    //
     // If it's an uncursed item that can be equipped, but it
     // contains invalid bonuses (like uncursed ring of reflection),
     // ignore it. Also ignore dummy items like notes.
-    if (idStatus &&
-        (ic->Data.ItemType_ == ItemType::DUMMY ||
-        (ic->Data.Prefix == ItemPrefix::UNCURSED &&
-        validBonuses == 0 &&
-        ic->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE)))
+    //
+    if (alreadyKnown && (isDummy || canBeEquippedButInvalid))
     {
       continue;
     }

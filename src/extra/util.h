@@ -103,6 +103,8 @@ namespace Util
 
   extern int RollDamage(int numRolls, int diceSides);
 
+  extern void RecalculateWandStats(ItemComponent* wand);
+
   extern void Sleep(int delayMs);
 
   extern bool WaitForMs(uint64_t delayMs, bool reset = false);
