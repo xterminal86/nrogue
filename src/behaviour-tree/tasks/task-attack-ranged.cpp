@@ -67,115 +67,6 @@ BTResult TaskAttackRanged::Run()
   }
 
   return res;
-
-#if 0
-  Position from = { _objectToControl->PosX, _objectToControl->PosY };
-  Position to   = { _playerRef->PosX, _playerRef->PosY };
-
-  EquipmentComponent* ec = _objectToControl->GetComponent<EquipmentComponent>();
-  ItemComponent* weapon = nullptr;
-  ItemComponent* arrows = nullptr;
-  if (ec != nullptr)
-  {
-    weapon = ec->EquipmentByCategory[EquipmentCategory::WEAPON][0];
-    arrows = ec->EquipmentByCategory[EquipmentCategory::SHIELD][0];
-  }
-
-  //
-  // Check if bow has arrows, wand has charges etc.
-  //
-  BTResult r = CheckRangedWeaponValidity(weapon, arrows);
-  if (r == BTResult::Failure)
-  {
-    return r;
-  }
-
-  int chanceToHit = 0;
-  int damageDone = 1;
-
-  chanceToHit = Util::CalculateHitChanceRanged(from,
-                                               to,
-                                               _objectToControl,
-                                               weapon,
-                                               false);
-
-  if (Util::Rolld100(chanceToHit) == false)
-  {
-    to = Util::GetRandomPointAround(_objectToControl, weapon, to);
-  }
-
-  GameObject* hit = nullptr;
-
-  auto line = Util::BresenhamLine(from, to);
-
-  bool isLaser = (weapon != nullptr
-               && weapon->Data.SpellHeld.SpellType_ == SpellType::LASER);
-
-  std::vector<Position> laserLine;
-
-  if (weapon != nullptr)
-  {
-    switch (weapon->Data.ItemType_)
-    {
-      case ItemType::WAND:
-      {
-        switch (weapon->Data.SpellHeld.SpellType_)
-        {
-          case SpellType::LASER:
-            laserLine = Util::ProcessLaserAttack(_objectToControl, weapon, to);
-            break;
-        }
-      }
-      break;
-
-      case ItemType::RANGED_WEAPON:
-      {
-        hit = Util::GetFirstObjectOnTheLine(line);
-      }
-      break;
-    }
-  }
-  else
-  {
-    hit = Util::GetFirstObjectOnTheLine(line);
-  }
-
-  if (hit != nullptr)
-  {
-    to = { hit->PosX, hit->PosY };
-  }
-
-  if (!isLaser)
-  {
-    Util::LaunchProjectile(line, _projectile, _fgColor, _bgColor);
-  }
-  else
-  {
-    Util::DrawLaserAttack(laserLine);
-  }
-
-  /*
-  auto line = Util::BresenhamLine(from, to);
-  hit = Util::GetFirstObjectOnTheLine(line);
-
-  if (hit != nullptr)
-  {
-    to = { hit->PosX, hit->PosY };
-  }
-
-  // FIXME: wand of laser or single projectile
-
-  Util::LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
-
-  // FIXME: damage should come from enemy weapon or magic
-  */
-
-  // Not calling FinishTurn() so that AI update through the tree can continue
-
-  BTResult res = (hit == _playerRef) ? BTResult::Success : BTResult::Failure;
-
-  return res;
-#endif
 }
 
 BTResult TaskAttackRanged::ProcessSpellAttack()
@@ -189,16 +80,70 @@ BTResult TaskAttackRanged::ProcessSpellAttack()
                                                    nullptr,
                                                    false);
 
-  // TODO: spell range?
-
   if (Util::Rolld100(chanceToHit) == false)
   {
     to = Util::GetRandomPointAround(_objectToControl, nullptr, to);
   }
 
-  // TODO: handle spell
+  auto line = Util::BresenhamLine(from, to);
+  GameObject* hit = Util::GetFirstObjectOnTheLine(line);
 
-  return BTResult::Success;
+  if (hit != nullptr)
+  {
+    to = { hit->PosX, hit->PosY };
+  }
+  else
+  {
+    hit = Map::Instance().CurrentLevel->MapArray[to.X][to.Y].get();
+  }
+
+  SpellInfo* si = SpellsDatabase::Instance().GetSpellInfoFromDatabase(_spellType);
+  if (si == nullptr)
+  {
+    DebugLog("[WAR] TaskAttackRanged::ProcessSpellAttack() no spell info for spell %i!", (int)_spellType);
+    return BTResult::Failure;
+  }
+
+  auto baseDamagePair = si->SpellBaseDamage;
+
+  int bonus = _objectToControl->Attrs.Mag.Get();
+
+  int centralDamage = Util::RollDamage(baseDamagePair.first,
+                                       baseDamagePair.second);
+
+  centralDamage += bonus;
+
+  switch (_spellType)
+  {
+    case SpellType::LASER:
+    {
+      Util::DrawLaserAttack(line);
+      Util::ProcessLaserAttack(_objectToControl, baseDamagePair, to);
+    }
+    break;
+
+    case SpellType::FIREBALL:
+    {
+      Util::LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
+      ProcessAoEDamage(hit, nullptr, centralDamage, true);
+    }
+    break;
+
+    case SpellType::NONE:
+    {
+      Util::LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
+    }
+    break;
+
+    default:
+    {
+      Util::LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
+      Util::ProcessMagicalDamage(hit, _objectToControl, centralDamage);
+    }
+    break;
+  }
+
+  return Util::IsPlayer(hit) ? BTResult::Success : BTResult::Failure;
 }
 
 BTResult TaskAttackRanged::ProcessWeaponAttack()
@@ -253,7 +198,7 @@ BTResult TaskAttackRanged::ProcessWeaponAttack()
   else
   {
     //
-    // Otherwise to the cursor position
+    // Otherwise to the cursor position (i.e. player position)
     //
     hit = Map::Instance().CurrentLevel->MapArray[to.X][to.Y].get();
   }
@@ -268,13 +213,13 @@ BTResult TaskAttackRanged::ProcessWeaponAttack()
     if (weapon->Data.SpellHeld.SpellType_ == SpellType::LASER)
     {
       Util::DrawLaserAttack(line);
+      Util::ProcessLaserAttack(_objectToControl, weapon, to);
     }
     else
     {
       Util::LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
+      ProcessWand(weapon, hit);
     }
-
-    ProcessWand(weapon, hit);
   }
 
   return Util::IsPlayer(hit) ? BTResult::Success : BTResult::Failure;
@@ -296,12 +241,16 @@ void TaskAttackRanged::ProcessBows(ItemComponent* weapon,
   {
     if (what->IsAlive())
     {
-      bool succ = what->ReceiveDamage(_objectToControl, dmg, false, false);
+      bool succ = what->ReceiveDamage(_objectToControl,
+                                      dmg,
+                                      false,
+                                      false,
+                                      true);
       if (succ
        && weapon->Data.HasBonus(ItemBonusType::LEECH)
        && what->IsLiving)
       {
-        what->Attrs.HP.AddMin(dmg);
+        _objectToControl->Attrs.HP.AddMin(dmg);
       }
     }
   }
@@ -362,6 +311,13 @@ void TaskAttackRanged::ProcessWand(ItemComponent* wand, GameObject* what)
 
     case SpellType::TELEPORT:
       Util::ProcessTeleport(what);
+      break;
+
+    case SpellType::NONE:
+      break;
+
+    default:
+      DebugLog("[WAR] TaskAttackRanged::ProcessWand() spell %i not handled!", (int)wand->Data.SpellHeld.SpellType_);
       break;
   }
 }
@@ -441,11 +397,9 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
 {
   auto pointsAffected = Printer::Instance().DrawExplosion({ target->PosX, target->PosY }, 3);
 
-  //Util::PrintVector("points affected", pointsAffected);
-
-  GameObject* from = (weapon == nullptr) ?
-                     nullptr :
-                     weapon->OwnerGameObject;
+  GameObject* from = (weapon != nullptr) ?
+                     weapon->OwnerGameObject :
+                     _objectToControl;
 
   for (auto& p : pointsAffected)
   {
@@ -457,7 +411,13 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
 
     int dmgHere = centralDamage / d;
 
+    //
     // AoE damages everything
+    //
+    if (_playerRef->PosX == p.X && _playerRef->PosY == p.Y)
+    {
+      Util::TryToDamageObject(_playerRef, from, dmgHere, againstRes);
+    }
 
     auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
     Util::TryToDamageObject(actor, from, dmgHere, againstRes);
@@ -474,13 +434,19 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
       Util::TryToDamageObject(so, from, dmgHere, againstRes);
     }
 
+    //
     // Check self damage
-    if (_playerRef->PosX == p.X && _playerRef->PosY == p.Y)
+    //
+    if (_objectToControl->PosX == p.X && _objectToControl->PosY == p.Y)
     {
       int dmgHere = centralDamage / d;
-      dmgHere -= _playerRef->Attrs.Res.Get();
+      dmgHere -= _objectToControl->Attrs.Res.Get();
 
-      _playerRef->ReceiveDamage(from, dmgHere, true);
+      _objectToControl->ReceiveDamage(from,
+                                      dmgHere,
+                                      againstRes,
+                                      dmgHere,
+                                      true);
     }
   }
 }

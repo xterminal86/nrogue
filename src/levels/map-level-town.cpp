@@ -273,12 +273,6 @@ void MapLevelTown::CreateLevel()
 
   GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
 
-  ItemBonusStruct bs;
-  bs.Type = ItemBonusType::REFLECT;
-
-  auto go = ItemsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
-  PlaceGameObject(go);
-
   // *** FIXME: debug
 
   // ========================= CREATE 20 RANDOM MELEE WEAPONS ==================

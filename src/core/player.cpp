@@ -581,6 +581,10 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
       Printer::Instance().AddMessage(msg);
     }
     break;
+
+    default:
+      DebugLog("[WAR] Player::MagicAttack() spell %i not handled!", (int)with->Data.SpellHeld.SpellType_);
+      break;
   }
 }
 
@@ -774,34 +778,16 @@ bool Player::IsGameObjectBorder(GameObject* go)
        || go->PosY == lvl->MapSize.Y - 2);
 }
 
-void Player::ReceiveDamage(GameObject* from,
+bool Player::ReceiveDamage(GameObject* from,
                            int amount,
                            bool isMagical,
                            bool directDamage,
-                           bool godMode,
                            bool suppressLog)
 {
-  if (godMode)
-  {
-    std::string msgString;
-    if (from != nullptr)
-    {
-      msgString = Util::StringFormat("You laugh at the face of %s!", from->ObjectName.data());
-    }
-    else
-    {
-      msgString = Util::StringFormat("God => @ (%i)", amount);
-    }
-
-    Printer::Instance().AddMessage(msgString);
-
-    return;
-  }
-
   if (directDamage)
   {
     Attrs.HP.AddMin(-amount);
-    return;
+    return true;
   }
 
   std::vector<std::string> logMsgs;
@@ -840,6 +826,8 @@ void Player::ReceiveDamage(GameObject* from,
 
     from->ReceiveDamage(this, dmgReturned, true, true);
   }
+
+  return true;
 }
 
 void Player::AwardExperience(int amount)

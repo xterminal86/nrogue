@@ -1233,7 +1233,12 @@ namespace Util
 
     Position p = { target->PosX, target->PosY };
 
-    auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+    GameObject* actor = nullptr;
+    if (!Util::IsPlayer(target))
+    {
+      actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+    }
+
     if (actor != nullptr)
     {
       auto pos = Map::Instance().GetRandomEmptyCell();

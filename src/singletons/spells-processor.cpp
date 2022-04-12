@@ -127,6 +127,7 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll, GameObject* user)
       break;
 
     default:
+      DebugLog("[WAR] SpellsProcessor::ProcessScroll() spell %i not handled!", (int)scroll->Data.SpellHeld.SpellType_);
       _scrollUseMessages.push_back(_kNoActionText);
       break;
   }

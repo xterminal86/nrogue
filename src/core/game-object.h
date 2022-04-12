@@ -140,11 +140,11 @@ class GameObject
 
     size_t ComponentsSize();
 
-    bool ReceiveDamage(GameObject* from,
-                       int amount,
-                       bool isMagical,
-                       bool directDamage,
-                       bool suppressLog = false);
+    virtual bool ReceiveDamage(GameObject* from,
+                               int amount,
+                               bool isMagical,
+                               bool directDamage,
+                               bool suppressLog = false);
     bool CanAct();
 
     void FinishTurn();

@@ -42,12 +42,11 @@ class Player : public GameObject
     void MeleeAttack(GameObject* what, bool alwaysHit = false);
     void RangedAttack(GameObject* what, ItemComponent* with);
     void MagicAttack(GameObject* what, ItemComponent* with);
-    void ReceiveDamage(GameObject* from,
+    bool ReceiveDamage(GameObject* from,
                        int amount,
                        bool isMagical,
                        bool directDamage = false,
-                       bool godMode = false,
-                       bool suppressLog = false);
+                       bool suppressLog = false) override;
     void WaitForTurn();
     void ProcessHunger();
     void FinishTurn();
