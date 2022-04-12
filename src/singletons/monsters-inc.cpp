@@ -132,13 +132,6 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
 
   go->IsLiving = true;
 
-  AIComponent* ai = go->AddComponent<AIComponent>();
-  AIMonsterBasic* aimb = ai->AddModel<AIMonsterBasic>();
-  aimb->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(8);
-  aimb->ConstructAI();
-
-  ai->ChangeModel<AIMonsterBasic>();
-
   // Set attributes
   if (randomize)
   {
@@ -175,6 +168,14 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
     */
   }
 
+  // ===========================================================================
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterBasic* aimb = ai->AddModel<AIMonsterBasic>();
+  aimb->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(8);
+  aimb->ConstructAI();
+  ai->ChangeModel<AIMonsterBasic>();
+  // ===========================================================================
+
   go->GenerateLootFunction = std::bind(&LootGenerators::Rat, go);
 
   return go;
@@ -195,13 +196,6 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
 
   // Sets Occupied flag for _currentCell
   go->Move(0, 0);
-
-  AIComponent* ai = go->AddComponent<AIComponent>();
-  AIMonsterBat* aimb = ai->AddModel<AIMonsterBat>();
-  aimb->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(16);
-  aimb->ConstructAI();
-
-  ai->ChangeModel<AIMonsterBat>();
 
   // Set attributes
   if (randomize)
@@ -244,6 +238,14 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
 
   go->AddEffect(ibs);
 
+  // ===========================================================================
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterBat* aimb = ai->AddModel<AIMonsterBat>();
+  aimb->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(16);
+  aimb->ConstructAI();
+  ai->ChangeModel<AIMonsterBat>();
+  // ===========================================================================
+
   return go;
 }
 
@@ -261,13 +263,6 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
   go->IsLiving = false;
 
   go->Move(0, 0);
-
-  AIComponent* ai = go->AddComponent<AIComponent>();
-  AIMonsterVampireBat* aimb = ai->AddModel<AIMonsterVampireBat>();
-  aimb->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(16);
-  aimb->ConstructAI();
-
-  ai->ChangeModel<AIMonsterVampireBat>();
 
   // Set attributes
   if (randomize)
@@ -287,6 +282,14 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
     go->Attrs.MP.Restore();
   }
 
+  // ===========================================================================
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterVampireBat* aimb = ai->AddModel<AIMonsterVampireBat>();
+  aimb->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(16);
+  aimb->ConstructAI();
+  ai->ChangeModel<AIMonsterVampireBat>();
+  // ===========================================================================
+
   return go;
 }
 
@@ -304,16 +307,6 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
   go->IsLiving = true;
 
   go->Move(0, 0);
-
-  AIComponent* ai = go->AddComponent<AIComponent>();
-
-  // ===========================================================================
-  AIMonsterSpider* aims = ai->AddModel<AIMonsterSpider>();
-  aims->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(12);
-  aims->ConstructAI();
-  // ===========================================================================
-
-  ai->ChangeModel<AIMonsterSpider>();
 
   // Set attributes
   if (randomize)
@@ -350,6 +343,14 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
     */
   }
 
+  // ===========================================================================
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterSpider* aims = ai->AddModel<AIMonsterSpider>();
+  aims->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(12);
+  aims->ConstructAI();
+  ai->ChangeModel<AIMonsterSpider>();
+  // ===========================================================================
+
   return go;
 }
 
@@ -367,13 +368,6 @@ GameObject* MonstersInc::CreateTroll(int x, int y, bool randomize)
   go->IsLiving = true;
 
   go->Move(0, 0);
-
-  AIComponent* ai = go->AddComponent<AIComponent>();
-  AIMonsterTroll* aims = ai->AddModel<AIMonsterTroll>();
-  aims->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(1);
-  aims->ConstructAI();
-
-  ai->ChangeModel<AIMonsterTroll>();
 
   // Set attributes
   if (randomize)
@@ -401,6 +395,14 @@ GameObject* MonstersInc::CreateTroll(int x, int y, bool randomize)
     go->Attrs.Spd.Set(0);
   }
 
+  // ===========================================================================
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterTroll* aims = ai->AddModel<AIMonsterTroll>();
+  aims->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(1);
+  aims->ConstructAI();
+  ai->ChangeModel<AIMonsterTroll>();
+  // ===========================================================================
+
   return go;
 }
 
@@ -422,19 +424,6 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   go->HealthRegenTurns = 30;
 
   go->MoveTo(x, y);
-
-  AIComponent* ai = go->AddComponent<AIComponent>();
-
-  // ===========================================================================
-  AIMonsterHerobrine* aims = ai->AddModel<AIMonsterHerobrine>();
-  aims->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(12);
-  aims->ConstructAI();
-  // ===========================================================================
-  AIIdle* aii = ai->AddModel<AIIdle>();
-  aii->ConstructAI();
-  // ===========================================================================
-
-  ai->ChangeModel<AIIdle>();
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
@@ -480,6 +469,19 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
 
   go->Attrs.HP.Restore();
   go->Attrs.MP.Restore();
+
+  // ===========================================================================
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  ai->OwnerGameObject->VisibilityRadius.Set(12);
+  // ---------------------------------------------------------------------------
+  AIMonsterHerobrine* aims = ai->AddModel<AIMonsterHerobrine>();
+  aims->ConstructAI();
+  // ---------------------------------------------------------------------------
+  AIIdle* aii = ai->AddModel<AIIdle>();
+  aii->ConstructAI();
+  // ---------------------------------------------------------------------------
+  ai->ChangeModel<AIIdle>();
+  // ===========================================================================
 
   return go;
 }
@@ -617,16 +619,6 @@ GameObject* MonstersInc::CreateShelob(int x, int y)
 
   go->MoveTo(x, y);
 
-  AIComponent* ai = go->AddComponent<AIComponent>();
-
-  // ===========================================================================
-  AIMonsterShelob* aim = ai->AddModel<AIMonsterShelob>();
-  aim->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(6);
-  aim->ConstructAI();
-  // ===========================================================================
-
-  ai->ChangeModel<AIMonsterShelob>();
-
   go->Attrs.Str.Talents = 2;
   go->Attrs.Skl.Talents = 2;
   go->Attrs.Spd.Talents = 3;
@@ -640,6 +632,14 @@ GameObject* MonstersInc::CreateShelob(int x, int y)
 
   go->Attrs.HP.Restore();
   go->Attrs.MP.Restore();
+
+  // ===========================================================================
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterShelob* aim = ai->AddModel<AIMonsterShelob>();
+  aim->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(6);
+  aim->ConstructAI();
+  ai->ChangeModel<AIMonsterShelob>();
+  // ===========================================================================
 
   go->GenerateLootFunction = std::bind(&LootGenerators::Shelob, go);
 
