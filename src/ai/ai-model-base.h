@@ -39,6 +39,7 @@ enum class AITasks
   MINE_TUNNEL,
   MINE_BLOCK,
   APPLY_EFFECT,
+  DRINK_POTION,
   PRINT_MESSAGE,
   END
 };
@@ -52,6 +53,7 @@ enum class AIConditionFunctions
   PLAYER_IN_RANGE,
   PLAYER_ENERGY,
   PLAYER_NEXT_TURN,
+  HAS_EQUIPPED,
   TURNS_LEFT,
   HAS_EFFECT,
   HP_LOW
@@ -105,6 +107,7 @@ class AIModelBase
     std::function<BTResult()> GetTurnsLeftCF(const ScriptNode* data);
     std::function<BTResult()> GetHasEffectCF(const ScriptNode* data);
     std::function<BTResult()> GetHPLowCF(const ScriptNode* data);
+    std::function<BTResult()> GetHasEquippedCF(const ScriptNode* data);
 
     virtual void PrepareScript();
 
@@ -138,6 +141,7 @@ class AIModelBase
       { "mine_tunnel",          AITasks::MINE_TUNNEL          },
       { "mine_block",           AITasks::MINE_BLOCK           },
       { "apply_effect",         AITasks::APPLY_EFFECT         },
+      { "drink_potion",         AITasks::DRINK_POTION         },
       { "print_message",        AITasks::PRINT_MESSAGE        },
       { "end",                  AITasks::END                  }
     };
@@ -152,7 +156,19 @@ class AIModelBase
       { "player_next_turn", AIConditionFunctions::PLAYER_NEXT_TURN },
       { "turns_left",       AIConditionFunctions::TURNS_LEFT       },
       { "has_effect",       AIConditionFunctions::HAS_EFFECT       },
+      { "has_equipped",     AIConditionFunctions::HAS_EQUIPPED     },
       { "hp_low",           AIConditionFunctions::HP_LOW           }
+    };
+
+    const std::map<std::string, EquipmentCategory> _eqCategoryByName =
+    {
+      { "HEA", EquipmentCategory::HEAD   },
+      { "NCK", EquipmentCategory::NECK   },
+      { "TRS", EquipmentCategory::TORSO  },
+      { "BTS", EquipmentCategory::BOOTS  },
+      { "WPN", EquipmentCategory::WEAPON },
+      { "SLD", EquipmentCategory::SHIELD },
+      { "RNG", EquipmentCategory::RING   }
     };
 };
 

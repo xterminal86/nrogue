@@ -1373,6 +1373,8 @@ void Player::SetSoldierDefaultItems()
   ItemComponent* ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 3;
 
+  RememberItem(ic, "healing potion");
+
   Inventory->Add(go);
 
   go = ItemsFactory::Instance().CreateFood(0, 0, FoodType::IRON_RATIONS, ItemPrefix::UNCURSED);
@@ -1392,10 +1394,16 @@ void Player::SetThiefDefaultItems()
   Money = 500;
 
   auto go = ItemsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
+  ItemComponent* ic = go->GetComponent<ItemComponent>();
   Inventory->Add(go);
 
+  RememberItem(ic, "healing potion");
+
   go = ItemsFactory::Instance().CreateManaPotion(ItemPrefix::UNCURSED);
+  ic = go->GetComponent<ItemComponent>();
   Inventory->Add(go);
+
+  RememberItem(ic, "mana potion");
 }
 
 void Player::SetArcanistDefaultItems()
@@ -1403,9 +1411,10 @@ void Player::SetArcanistDefaultItems()
   Money = 0;
 
   auto go = ItemsFactory::Instance().CreateManaPotion(ItemPrefix::BLESSED);
-  auto c = go->GetComponent<ItemComponent>();
-  ItemComponent* ic = static_cast<ItemComponent*>(c);
+  ItemComponent* ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 5;
+
+  RememberItem(ic, "mana potion");
 
   Inventory->Add(go);
 
@@ -1413,7 +1422,10 @@ void Player::SetArcanistDefaultItems()
   Inventory->Add(go);
 
   go = ItemsFactory::Instance().CreateScroll(0, 0, SpellType::MANA_SHIELD, ItemPrefix::BLESSED);
+  ic = go->GetComponent<ItemComponent>();
   Inventory->Add(go);
+
+  RememberItem(ic, "mana shield");
 }
 
 void Player::SetDefaultSkills()
@@ -1613,7 +1625,7 @@ bool Player::AreEnemiesInRange()
   return ret;
 }
 
-bool Player::RecallItem(ItemComponent* itemRef)
+std::string Player::RecallItem(ItemComponent* itemRef)
 {
   auto& objName = itemRef->Data.UnidentifiedName;
 
@@ -1621,9 +1633,9 @@ bool Player::RecallItem(ItemComponent* itemRef)
   {
     if (kvp.second.first == objName)
     {
-      return true;
+      return kvp.second.second;
     }
   }
 
-  return false;
+  return std::string();
 }

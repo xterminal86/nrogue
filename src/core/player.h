@@ -71,7 +71,8 @@ class Player : public GameObject
 
     bool HasSkill(PlayerSkills skillToCheck);
     bool AreEnemiesInRange();
-    bool RecallItem(ItemComponent* itemRef);
+
+    std::string RecallItem(ItemComponent* itemRef);
 
     int Money = 0;
 

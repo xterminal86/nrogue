@@ -95,8 +95,9 @@ BTResult TaskMineTunnel::Run()
 
   _objectToControl->FinishTurn();
 
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPosX, std::to_string(found.X) });
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPosY, std::to_string(found.Y) });
+  auto minedPos = Util::StringFormat("%i,%i", found.X, found.Y);
+
+  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPos, minedPos });
 
   return BTResult::Success;
 }

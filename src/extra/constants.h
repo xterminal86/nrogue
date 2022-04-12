@@ -193,10 +193,9 @@ namespace Strings
   extern const std::string MessageBoxEpicFailHeaderText;
   extern const std::string UnidentifiedEffectText;
 
-  extern const std::string BlackboardKeyPlayerPosX;
-  extern const std::string BlackboardKeyPlayerPosY;
-  extern const std::string BlackboardKeyLastMinedPosX;
-  extern const std::string BlackboardKeyLastMinedPosY;
+  extern const std::string BlackboardKeyPlayerPos;
+  extern const std::string BlackboardKeyLastMinedPos;
+  extern const std::string BlackboardKeyObjectId;
 
   extern const char InventoryEmptySlotChar;
 

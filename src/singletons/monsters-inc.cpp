@@ -19,6 +19,7 @@
 #include "ai-monster-troll.h"
 #include "ai-monster-herobrine.h"
 #include "ai-monster-mad-miner.h"
+#include "ai-monster-kobold.h"
 
 void MonstersInc::InitSpecific()
 {
@@ -62,6 +63,10 @@ GameObject* MonstersInc::CreateMonster(int x, int y, GameObjectType monsterType)
 
     case GameObjectType::SHELOB:
       go = CreateShelob(x, y);
+      break;
+
+    case GameObjectType::KOBOLD:
+      go = CreateKobold(x, y);
       break;
 
     default:
@@ -494,15 +499,6 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
 
   go->MoveTo(x, y);
 
-  AIComponent* ai = go->AddComponent<AIComponent>();
-
-  // ===========================================================================
-  AIMonsterMadMiner* aim = ai->AddModel<AIMonsterMadMiner>();
-  aim->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(6);
-  aim->ConstructAI();
-  // ===========================================================================
-
-  ai->ChangeModel<AIMonsterMadMiner>();
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
@@ -533,7 +529,77 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
   go->Attrs.HP.Restore();
   go->Attrs.MP.Restore();
 
+  // ===========================================================================
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterMadMiner* aim = ai->AddModel<AIMonsterMadMiner>();
+  aim->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(6);
+  aim->ConstructAI();
+  ai->ChangeModel<AIMonsterMadMiner>();
+  // ===========================================================================
+
   go->GenerateLootFunction = std::bind(&LootGenerators::MadMiner, go);
+
+  return go;
+}
+
+GameObject* MonstersInc::CreateKobold(int x, int y)
+{
+  char img = 'k';
+
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, Colors::MonsterColor);
+  go->ObjectName = "Kobold";
+  go->Attrs.Indestructible = false;
+  go->HealthRegenTurns = 30;
+
+  go->MoveTo(x, y);
+
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
+  EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
+
+  auto weaponType = Util::Rolld100(50) ?
+                    WeaponType::DAGGER :
+                    WeaponType::SHORT_SWORD;
+
+  GameObject* sword = ItemsFactory::Instance().CreateRandomMeleeWeapon(weaponType);
+
+  if (Util::Rolld100(30))
+  {
+    ItemPrefix prefix = Util::Rolld100(25)
+                      ? ItemPrefix::BLESSED
+                      : ItemPrefix::UNCURSED;
+
+    GameObject* potion = ItemsFactory::Instance().CreateHealingPotion(prefix);
+    cc->Add(potion);
+  }
+
+  cc->Add(sword);
+
+  ItemComponent* swordIC = sword->GetComponent<ItemComponent>();
+
+  ec->Equip(swordIC);
+
+  go->Attrs.Skl.Talents = 1;
+  go->Attrs.Spd.Talents = 2;
+
+  int difficulty = GetDifficulty();
+
+  for (int i = 0; i < difficulty; i++)
+  {
+    go->LevelUp();
+  }
+
+  go->Attrs.HP.Restore();
+  go->Attrs.MP.Restore();
+
+  // ===========================================================================
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterKobold* aim = ai->AddModel<AIMonsterKobold>();
+  aim->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(8);
+  aim->ConstructAI();
+  ai->ChangeModel<AIMonsterKobold>();
+  // ===========================================================================
+
+  go->GenerateLootFunction = std::bind(&LootGenerators::Kobold, go);
 
   return go;
 }

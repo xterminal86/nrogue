@@ -10,24 +10,24 @@ BTResult TaskGotoLastPlayerPos::Run()
 {
   //DebugLog("[TaskGotoLastPlayerPos]\n");
 
-  auto sX = Blackboard::Instance().Get(_objectToControl->ObjectId(), Strings::BlackboardKeyPlayerPosX);
-  auto sY = Blackboard::Instance().Get(_objectToControl->ObjectId(), Strings::BlackboardKeyPlayerPosY);
+  auto plPos = Blackboard::Instance().Get(_objectToControl->ObjectId(), Strings::BlackboardKeyPlayerPos);
 
-  if (sX.empty() || sY.empty())
+  if (plPos.empty())
   {
     return BTResult::Failure;
   }
 
-  int plX = std::stoi(sX);
-  int plY = std::stoi(sY);
+  auto split = Util::StringSplit(plPos, ',');
+
+  int plX = std::stoi(split[0]);
+  int plY = std::stoi(split[1]);
 
   if (_objectToControl->PosX == plX
    && _objectToControl->PosY == plY)
   {
     // We have arrived at the last known player position
 
-    Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPosX, "" });
-    Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPosY, "" });
+    Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPos, "" });
 
     return BTResult::Success;
   }
@@ -56,8 +56,7 @@ BTResult TaskGotoLastPlayerPos::Run()
   }
 
   // No path can be built or MoveTo() failed
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPosX, "" });
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPosY, "" });
+  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPos, "" });
 
   return BTResult::Failure;
 }

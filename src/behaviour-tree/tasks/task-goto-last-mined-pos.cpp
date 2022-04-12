@@ -7,22 +7,22 @@ BTResult TaskGotoLastMinedPos::Run()
 {
   //DebugLog("[TaskGotoLastMinedPos]\n");
 
-  auto sX = Blackboard::Instance().Get(_objectToControl->ObjectId(), Strings::BlackboardKeyLastMinedPosX);
-  auto sY = Blackboard::Instance().Get(_objectToControl->ObjectId(), Strings::BlackboardKeyLastMinedPosY);
+  auto minedPos = Blackboard::Instance().Get(_objectToControl->ObjectId(), Strings::BlackboardKeyLastMinedPos);
 
-  if (sX.empty() || sY.empty())
+  if (minedPos.empty())
   {
     return BTResult::Failure;
   }
 
-  int mX = std::stoi(sX);
-  int mY = std::stoi(sY);
+  auto split = Util::StringSplit(minedPos, ',');
+
+  int mX = std::stoi(split[0]);
+  int mY = std::stoi(split[1]);
 
   if (_objectToControl->PosX == mX
    && _objectToControl->PosY == mY)
   {
-    Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPosX, "" });
-    Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPosY, "" });
+    Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPos, "" });
 
     return BTResult::Failure;
   }
@@ -30,8 +30,7 @@ BTResult TaskGotoLastMinedPos::Run()
   _objectToControl->MoveTo({ mX, mY });
   _objectToControl->FinishTurn();
 
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPosX, "" });
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPosY, "" });
+  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPos, "" });
 
   return BTResult::Success;
 }

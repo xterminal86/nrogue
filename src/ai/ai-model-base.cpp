@@ -18,6 +18,7 @@
 #include "task-goto-last-player-pos.h"
 #include "task-goto-last-mined-pos.h"
 #include "task-attack-effect.h"
+#include "task-drink-potion.h"
 #include "task-mine-tunnel.h"
 #include "task-mine-block.h"
 
@@ -256,6 +257,13 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
     }
     break;
 
+    case AITasks::DRINK_POTION:
+    {
+      std::string type = data->Params.at("p2");
+      task = new TaskDrinkPotion(AIComponentRef->OwnerGameObject, type);
+    }
+    break;
+
     case AITasks::PRINT_MESSAGE:
     {
       std::string msg = data->Params.at("p2");
@@ -355,6 +363,10 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
     // Check if current object's HP is less than 30%
     case AIConditionFunctions::HP_LOW:
       fn = GetHPLowCF(data);
+      break;
+
+    case AIConditionFunctions::HAS_EQUIPPED:
+      fn = GetHasEquippedCF(data);
       break;
   }
 
@@ -549,9 +561,55 @@ std::function<BTResult()> AIModelBase::GetHPLowCF(const ScriptNode* data)
 
     float perc = (float)curHp * 100.0f / (float)maxHp;
 
-    bool res = ((int)perc < 30);
+    bool res = ((int)perc <= 25);
 
     return res ? BTResult::Success : BTResult::Failure;
+  };
+
+  return fn;
+}
+
+std::function<BTResult()> AIModelBase::GetHasEquippedCF(const ScriptNode* data)
+{
+  std::string eqType = data->Params.at("p2");
+  auto fn = [this, eqType]()
+  {
+    if (_eqCategoryByName.count(eqType) == 0)
+    {
+      return BTResult::Failure;
+    }
+
+    auto cat = _eqCategoryByName.at(eqType);
+
+    EquipmentComponent* ec = AIComponentRef->OwnerGameObject->GetComponent<EquipmentComponent>();
+    if (ec == nullptr)
+    {
+      return BTResult::Failure;
+    }
+
+    ItemComponent* item = nullptr;
+
+    if (cat == EquipmentCategory::RING)
+    {
+      for (auto& r : ec->EquipmentByCategory[cat])
+      {
+        if (r != nullptr)
+        {
+          item = r;
+          break;
+        }
+      }
+    }
+    else
+    {
+      item = ec->EquipmentByCategory[cat][0];
+    }
+
+    //
+    // Do not check for specific type of weapon (wand or sword),
+    // check existence only.
+    //
+    return (item != nullptr) ? BTResult::Success : BTResult::Failure;
   };
 
   return fn;

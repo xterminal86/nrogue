@@ -92,4 +92,9 @@ namespace LootGenerators
   {
     // TODO:
   }
+
+  void Kobold(GameObject* go)
+  {
+    // TODO:
+  }
 }
