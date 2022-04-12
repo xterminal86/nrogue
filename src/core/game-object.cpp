@@ -1124,7 +1124,7 @@ const std::map<uint64_t, std::vector<ItemBonusStruct>>& GameObject::GetActiveEff
   return _activeEffects;
 }
 
-uint64_t GameObject::ObjectId()
+const uint64_t& GameObject::ObjectId()
 {
   return _objectId;
 }

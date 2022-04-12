@@ -2107,6 +2107,11 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
 
   for (int i = 0; i < 3; i++)
   {
+    if (bonusesWeightCopy.empty())
+    {
+      break;
+    }
+
     if (Util::Rolld100(chance))
     {
       auto res = Util::WeightedRandom(bonusesWeightCopy);

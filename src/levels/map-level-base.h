@@ -28,20 +28,28 @@ class MapLevelBase
     virtual void PrepareMap(MapLevelBase* levelOwner);
     virtual void DisplayWelcomeText();
 
+    //
     // Map ground tiles (floor, water, ground etc.).
     // Drawn under fog of war.
+    //
     std::vector<std::vector<std::unique_ptr<GameObject>>> MapArray;
 
+    //
     // Static map objects without global update (walls, doors etc.)
     // Drawn under fog of war.
+    //
     std::vector<std::vector<std::unique_ptr<GameObject>>> StaticMapObjects;
 
+    //
     // Globally updated objects (traps with timers, shrines, etc.)
     // or objects that can be picked up (e.g. items).
     // Updated every frame. Aren't drawn under fog of war.
+    //
     std::vector<std::unique_ptr<GameObject>> GameObjects;
 
+    //
     // NPCs, drawn last. Aren't drawn under fog of war.
+    //
     std::vector<std::unique_ptr<GameObject>> ActorGameObjects;
 
     MapType MapType_;
@@ -56,9 +64,11 @@ class MapLevelBase
 
     size_t MaxMonsters = 0;
 
+    //
     // This depends heavily on player's speed,
     // values can be big since several turns
     // can pass before player turn is ready.
+    //
     int MonstersRespawnTurns = -1;
 
     int DungeonLevel;

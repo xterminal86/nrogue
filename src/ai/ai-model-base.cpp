@@ -469,11 +469,9 @@ std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF(const ScriptNode* da
     bool res = Map::Instance().IsObjectVisible(objPos, plPos);
     if (res)
     {
-      std::string plX = std::to_string(plPos.X);
-      std::string plY = std::to_string(plPos.Y);
+      std::string plPosStr = Util::StringFormat("%i,%i", plPos.X, plPos.Y);
 
-      Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { "pl_x", plX });
-      Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { "pl_y", plY });
+      Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { Strings::BlackboardKeyPlayerPos, plPosStr });
     }
 
     // TODO: what if monsters can see invisible?

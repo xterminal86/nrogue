@@ -104,6 +104,22 @@ namespace Util
 
   // ===========================================================================
 
+  bool IsObjectInRange(GameObject* checker,
+                        GameObject* checked,
+                        int range)
+  {
+    if (checker == nullptr || checked == nullptr)
+    {
+      DebugLog("[WAR] IsObjectInRange() checker: [0x%X] checked: [0x%X]", checker, checked);
+      return false;
+    }
+
+    return IsObjectInRange({ checker->PosX, checker->PosY },
+                             { checked->PosX, checked->PosY },
+                             range,
+                             range);
+  }
+
   bool IsObjectInRange(const Position& posToCheckFrom,
                        const Position& objectPositionToCheck,
                        int rangeX,
@@ -122,6 +138,51 @@ namespace Util
 
     return (px >= lx && px <= hx
          && py >= ly && py <= hy);
+  }
+
+  std::vector<GameObject*> FindObjectsInRange(GameObject* aroundWho,
+                                               const std::vector<std::unique_ptr<GameObject>>& where,
+                                               int range)
+  {
+    std::vector<GameObject*> res;
+
+    if (aroundWho == nullptr)
+    {
+      return res;
+    }
+
+    auto& mapSize = Map::Instance().CurrentLevel->MapSize;
+
+    int lx = aroundWho->PosX - range;
+    int hx = aroundWho->PosX + range;
+    int ly = aroundWho->PosY - range;
+    int hy = aroundWho->PosY + range;
+
+    for (int x = lx; x <= hx; x++)
+    {
+      for (int y = ly; y <= hy; y++)
+      {
+        if (!IsInsideMap({ x, y}, mapSize))
+        {
+          continue;
+        }
+
+        if (x == aroundWho->PosX && y == aroundWho->PosY)
+        {
+          continue;
+        }
+
+        for (auto& i : where)
+        {
+          if (i->PosX == x && i->PosY == y)
+          {
+            res.push_back(i.get());
+          }
+        }
+      }
+    }
+
+    return res;
   }
 
   //

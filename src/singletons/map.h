@@ -56,6 +56,9 @@ class Map : public Singleton<Map>
     GameObject* GetActorAtPosition(int x, int y);
     GameObject* GetStaticGameObjectAtPosition(int x, int y);
 
+    GameObject* FindGameObjectById(const uint64_t& objId);
+    GameObject* FindActorById(const uint64_t& objId);
+
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
     std::vector<GameObject*> GetActorsInRange(int range);
 

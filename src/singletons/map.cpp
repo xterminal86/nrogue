@@ -212,6 +212,38 @@ GameObject* Map::GetStaticGameObjectAtPosition(int x, int y)
   return res;
 }
 
+GameObject* Map::FindGameObjectById(const uint64_t& objId)
+{
+  GameObject* res = nullptr;
+
+  for (auto& i : CurrentLevel->GameObjects)
+  {
+    if (i->ObjectId() == objId)
+    {
+      res = i.get();
+      break;
+    }
+  }
+
+  return res;
+}
+
+GameObject* Map::FindActorById(const uint64_t& objId)
+{
+  GameObject* res = nullptr;
+
+  for (auto& i : CurrentLevel->ActorGameObjects)
+  {
+    if (i->ObjectId() == objId)
+    {
+      res = i.get();
+      break;
+    }
+  }
+
+  return res;
+}
+
 std::vector<GameObject*> Map::GetActorsInRange(int range)
 {
   std::vector<GameObject*> res;

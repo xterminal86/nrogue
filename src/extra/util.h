@@ -52,10 +52,18 @@ namespace Util
   extern std::vector<std::string> DecodeMap(const CM& map);
   extern std::string DecodeString(const CS& str);
 
+  extern bool IsObjectInRange(GameObject* checker,
+                                GameObject* checked,
+                                int range);
+
   extern bool IsObjectInRange(const Position& posToCheckFrom,
                               const Position& objectPositionToCheck,
                               int rangeX,
                               int rangeY);
+
+  extern std::vector<GameObject*> FindObjectsInRange(GameObject* aroundWho,
+                                                       const std::vector<std::unique_ptr<GameObject>>& where,
+                                                       int range);
 
   extern bool IsBase64(unsigned char c);
   extern std::string Base64_Encode(unsigned char const* bytes_to_encode,

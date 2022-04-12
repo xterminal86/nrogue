@@ -53,6 +53,8 @@ BTResult TaskDrinkPotion::Run()
 
   UsePotion(itemIndex);
 
+  _objectToControl->FinishTurn();
+
   return BTResult::Success;
 }
 
