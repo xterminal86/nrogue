@@ -434,7 +434,7 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
-  GameObject* pickaxe = ItemsFactory::Instance().CreateUniquePickaxe();
+  GameObject* pickaxe = ItemsFactory::Instance().CreateBlockBreakerPickaxe();
   GameObject* armor = ItemsFactory::Instance().CreateRandomArmor(ArmorType::PADDING);
 
   //

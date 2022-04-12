@@ -78,13 +78,15 @@ class ItemsFactory : public Singleton<ItemsFactory>
 
     // **************************** Uniques ************************************
     //
+    // TODO:
+    //
     // DAGGER,
-    GameObject* CreateUniqueShortSword();
+    GameObject* CreateNeedleShortSword();
     // ARMING_SWORD,
     // LONG_SWORD,
     // GREAT_SWORD,
     // STAFF,
-    GameObject* CreateUniquePickaxe();
+    GameObject* CreateBlockBreakerPickaxe();
 
   protected:
     void InitSpecific() override;

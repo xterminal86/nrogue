@@ -1818,7 +1818,7 @@ GameObject* ItemsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateUniqueShortSword()
+GameObject* ItemsFactory::CreateNeedleShortSword()
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1872,7 +1872,7 @@ GameObject* ItemsFactory::CreateUniqueShortSword()
   return go;
 }
 
-GameObject* ItemsFactory::CreateUniquePickaxe()
+GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
