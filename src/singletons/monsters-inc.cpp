@@ -555,7 +555,7 @@ GameObject* MonstersInc::CreateKobold(int x, int y)
 
   go->MoveTo(x, y);
 
-  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>(6);
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
   auto weaponType = Util::Rolld100(50) ?
