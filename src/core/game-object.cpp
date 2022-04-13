@@ -2,6 +2,7 @@
 
 #include "printer.h"
 #include "game-objects-factory.h"
+#include "items-factory.h"
 #include "map-level-base.h"
 #include "map.h"
 #include "application.h"
@@ -566,7 +567,9 @@ void GameObject::ConsumeEnergy()
 
 void GameObject::DropItemsHeld()
 {
+  //
   // Check for monster's inventory and drop all items from there if any
+  //
   ContainerComponent* cc = GetComponent<ContainerComponent>();
   if (cc != nullptr)
   {
@@ -580,6 +583,17 @@ void GameObject::DropItemsHeld()
       ic->OwnerGameObject->PosY = PosY;
       ic->Data.IsEquipped = false;
     }
+  }
+
+  //
+  // Money as well
+  //
+  if (Money > 0)
+  {
+    auto money = ItemsFactory::Instance().CreateMoney(Money);
+    money->PosX = PosX;
+    money->PosY = PosY;
+    Map::Instance().CurrentLevel->PlaceGameObject(money);
   }
 }
 

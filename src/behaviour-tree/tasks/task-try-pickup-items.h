@@ -3,6 +3,10 @@
 
 #include "behaviour-tree.h"
 
+using Item   = std::pair<int, GameObject*>;
+using Items  = std::vector<Item>;
+using Filter = std::vector<ItemType>;
+
 class ContainerComponent;
 
 class TaskTryPickupItems : public Node
@@ -14,6 +18,11 @@ class TaskTryPickupItems : public Node
 
   private:
     ContainerComponent* _inventoryRef;
+
+    bool FilterItem(const Item& item,
+                    const Filter& filter);
+
+    void Pickup(const Item& item);
 };
 
 
