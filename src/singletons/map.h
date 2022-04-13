@@ -64,6 +64,8 @@ class Map : public Singleton<Map>
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
 
     std::pair<int, GameObject*> GetGameObjectToPickup(int x, int y);
+    std::vector<std::pair<int, GameObject*>> GetGameObjectsToPickup(int x, int y);
+
     MapLevelBase* GetLevelRefByType(MapType type);
 
     std::vector<Position> GetWalkableCellsAround(const Position& pos);

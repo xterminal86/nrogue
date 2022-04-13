@@ -107,7 +107,11 @@ class GameObject
     void ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
     void UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
 
+    const Position& GetPosition();
+
     Attribute VisibilityRadius;
+
+    int Money = 0;
 
     int PosX = 0;
     int PosY = 0;
@@ -201,6 +205,8 @@ class GameObject
 
     GameObject* _previousCell = nullptr;
     GameObject* _currentCell = nullptr;
+
+    Position _position;
 
     //
     // Level this object belongs to.

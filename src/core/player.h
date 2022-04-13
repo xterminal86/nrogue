@@ -73,8 +73,6 @@ class Player : public GameObject
 
     std::string RecallItem(ItemComponent* itemRef);
 
-    int Money = 0;
-
     bool IsStarving = false;
 
     std::map<PlayerSkills, int> SkillLevelBySkill;

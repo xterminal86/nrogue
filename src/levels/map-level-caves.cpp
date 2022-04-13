@@ -11,6 +11,15 @@ MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLeve
 {
   switch (MapType_)
   {
+    case MapType::CAVES_1:
+    {
+      _monstersSpawnRateForThisLevel =
+      {
+        { GameObjectType::KOBOLD, 1 }
+      };
+    }
+    break;
+
     case MapType::CAVES_5:
     {
       _specialLevel =

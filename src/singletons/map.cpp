@@ -131,11 +131,13 @@ void Map::UpdateGameObjects()
     while (go->CanAct());
   }
 
+  //
   // If enemy is killed via thorns damage,
   // it happens inside go->Update() (i.e. AI of enemy doing attack),
   // so we must check for destroyed objects after all game logic updates,
   // or we will end up with object that is not alive,
   // but can still be attacked on player turn, killed and gained EXP for it.
+  //
   RemoveDestroyed();
 }
 
@@ -160,10 +162,29 @@ std::pair<int, GameObject*> Map::GetGameObjectToPickup(int x, int y)
   for (auto& go : CurrentLevel->GameObjects)
   {
     auto c = go->GetComponent<ItemComponent>();
-    if (go.get()->PosX == x && go.get()->PosY == y && c != nullptr)
+    if (c != nullptr && go.get()->PosX == x && go.get()->PosY == y)
     {
       res.first = index;
       res.second = go.get();
+    }
+
+    index++;
+  }
+
+  return res;
+}
+
+std::vector<std::pair<int, GameObject*>> Map::GetGameObjectsToPickup(int x, int y)
+{
+  std::vector<std::pair<int, GameObject*>> res;
+
+  int index = 0;
+  for (auto& go : CurrentLevel->GameObjects)
+  {
+    auto c = go->GetComponent<ItemComponent>();
+    if (c != nullptr && go.get()->PosX == x && go.get()->PosY == y)
+    {
+      res.push_back({ index, go.get() });
     }
 
     index++;

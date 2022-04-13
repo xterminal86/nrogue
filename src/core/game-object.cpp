@@ -296,6 +296,14 @@ void GameObject::UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bon
   }
 }
 
+const Position& GameObject::GetPosition()
+{
+  _position.X = PosX;
+  _position.Y = PosY;
+
+  return _position;
+}
+
 void GameObject::MakeTile(const GameObjectInfo& t, GameObjectType typeOverride)
 {
   Blocking     = t.IsBlocking;

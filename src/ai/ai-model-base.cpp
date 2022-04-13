@@ -19,6 +19,7 @@
 #include "task-goto-last-mined-pos.h"
 #include "task-find-and-destroy-container.h"
 #include "task-attack-effect.h"
+#include "task-try-pickup-items.h"
 #include "task-drink-potion.h"
 #include "task-mine-tunnel.h"
 #include "task-mine-block.h"
@@ -220,6 +221,10 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
 
     case AITasks::BREAK_STUFF:
       task = new TaskFindAndDestroyContainer(AIComponentRef->OwnerGameObject);
+      break;
+
+    case AITasks::PICK_ITEMS:
+      task = new TaskTryPickupItems(AIComponentRef->OwnerGameObject);
       break;
 
     case AITasks::CHASE_PLAYER:
