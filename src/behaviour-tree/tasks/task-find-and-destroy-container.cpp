@@ -4,75 +4,128 @@
 #include "container-component.h"
 #include "equipment-component.h"
 #include "blackboard.h"
+#include "pathfinder.h"
 #include "map.h"
 
 BTResult TaskFindAndDestroyContainer::Run()
 {
+  BTResult res = BTResult::Failure;
+
   std::string objId = Blackboard::Instance().Get(_objectToControl->ObjectId(), Strings::BlackboardKeyObjectId);
   if (!objId.empty())
   {
     uint64_t objIdInt = std::stoull(objId);
-    GameObject* object = Map::Instance().FindGameObjectById(objIdInt);
+    //
+    // If our saved object no longer exists, erase it from blackboard
+    // so that new container could be found on next iteration
+    //
+    GameObject* object = Map::Instance().FindGameObjectById(objIdInt, GameObjectCollectionType::STATIC_OBJECTS);
     if (object == nullptr)
     {
-      return BTResult::Failure;
+      Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyObjectId, std::string() });
     }
-
-    // TODO: finish
-
-    if (Util::IsObjectInRange(_objectToControl,
-                               object,
-                               1))
+    else
     {
-      ItemComponent* weapon = nullptr;
-      EquipmentComponent* ec = _objectToControl->GetComponent<EquipmentComponent>();
-      if (ec != nullptr)
-      {
-        weapon = ec->EquipmentByCategory[EquipmentCategory::WEAPON][0];
-      }
-
-      int dmg = Util::CalculateDamageValue(_objectToControl,
-                                             object,
-                                             weapon,
-                                             false);
-
-      Util::TryToDamageEquipment(_objectToControl, weapon, -1);
-
-      object->ReceiveDamage(_objectToControl, dmg, false, false, true);
+      res = ProcessExistingObject(object);
+    }
+  }
+  else
+  {
+    GameObject* container = FindContainer();
+    if (container != nullptr)
+    {
+      Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyObjectId, std::to_string(container->ObjectId()) });
+      res = ProcessExistingObject(container);
     }
   }
 
-  _objectToControl->FinishTurn();
+  if (res == BTResult::Success)
+  {
+    _objectToControl->FinishTurn();
+  }
 
-  return BTResult::Success;
+  return res;
 }
 
 GameObject* TaskFindAndDestroyContainer::FindContainer()
 {
   GameObject* res = nullptr;
 
-  auto& collection = Map::Instance().CurrentLevel->GameObjects;
   int r = _objectToControl->VisibilityRadius.Get();
 
-  auto items = Util::FindObjectsInRange(_objectToControl,
-                                          collection,
-                                          r);
+  Position objPos = { _objectToControl->PosX, _objectToControl->PosY };
 
-  std::vector<int> itemsIndices;
-  for (size_t i = 0; i < items.size(); i++)
+  auto containersFound = Util::GetContainersInRange(_objectToControl, r);
+  if (!containersFound.empty())
   {
-    ContainerComponent* cc = items[i]->GetComponent<ContainerComponent>();
-    if (cc != nullptr)
+    std::vector<int> indices;
+    for (size_t i = 0; i < containersFound.size(); i++)
     {
-      itemsIndices.push_back(i);
+      Position to = { containersFound[i]->PosX, containersFound[i]->PosY };
+
+      if (Map::Instance().IsObjectVisible(objPos, to, true))
+      {
+        indices.push_back(i);
+      }
+    }
+
+    if (!indices.empty())
+    {
+      int index = RNG::Instance().RandomRange(0, indices.size());
+      res = containersFound[index];
     }
   }
 
-  if (!itemsIndices.empty())
+  return res;
+}
+
+BTResult TaskFindAndDestroyContainer::ProcessExistingObject(GameObject* container)
+{
+  if (Util::IsObjectInRange(_objectToControl,
+                            container,
+                            1))
   {
-    int index = RNG::Instance().RandomRange(0, itemsIndices.size());
-    res = items[index];
+    ItemComponent* weapon = nullptr;
+    EquipmentComponent* ec = _objectToControl->GetComponent<EquipmentComponent>();
+    if (ec != nullptr)
+    {
+      weapon = ec->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+    }
+
+    int dmg = Util::CalculateDamageValue(_objectToControl,
+                                         container,
+                                         weapon,
+                                         false);
+
+    Util::TryToDamageEquipment(_objectToControl, weapon, -1);
+
+    container->ReceiveDamage(_objectToControl, dmg, false, false, true);
+  }
+  else
+  {
+    Pathfinder pf;
+
+    Position objPos = { container->PosX, container->PosY };
+    Position from   = { _objectToControl->PosX, _objectToControl->PosY };
+
+    auto path = pf.BuildRoad(Map::Instance().CurrentLevel,
+                             from,
+                             objPos,
+                             std::vector<char>(),
+                             false,
+                             true);
+
+    if (path.empty())
+    {
+      return BTResult::Failure;
+    }
+
+    auto moveTo = path.top();
+    if (!_objectToControl->MoveTo(moveTo))
+    {
+      return BTResult::Failure;
+    }
   }
 
-  return res;
+  return BTResult::Success;
 }

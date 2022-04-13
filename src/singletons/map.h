@@ -14,8 +14,9 @@
 enum class GameObjectCollectionType
 {
   STATIC_OBJECTS = 0,
-  ITEM_OBJECTS,
+  GAME_OBJECTS,
   ACTORS,
+  MAP_ARRAY,
   ALL
 };
 
@@ -49,18 +50,18 @@ class Map : public Singleton<Map>
                           bool againstRes);
 
     bool IsObjectVisible(const Position& from,
-                         const Position& to);
+                         const Position& to,
+                         bool excludeEnd = false);
 
     bool IsTileDangerous(const Position& pos);
 
     GameObject* GetActorAtPosition(int x, int y);
     GameObject* GetStaticGameObjectAtPosition(int x, int y);
 
-    GameObject* FindGameObjectById(const uint64_t& objId);
-    GameObject* FindActorById(const uint64_t& objId);
+    GameObject* FindGameObjectById(const uint64_t& objId,
+                                   GameObjectCollectionType collectionType);
 
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
-    std::vector<GameObject*> GetActorsInRange(int range);
 
     std::pair<int, GameObject*> GetGameObjectToPickup(int x, int y);
     MapLevelBase* GetLevelRefByType(MapType type);
@@ -75,6 +76,39 @@ class Map : public Singleton<Map>
     int CountWallsOrthogonal(int x, int y);
 
     MapLevelBase* CurrentLevel;
+
+    template <typename Collection>
+    GameObject* FindInVV(const Collection& c,
+                         const uint64_t& objId)
+    {
+      for (auto& line : c)
+      {
+        for (auto& o : line)
+        {
+          if (o.get() != nullptr && o.get()->ObjectId() == objId)
+          {
+            return o.get();
+          }
+        }
+      }
+
+      return nullptr;
+    }
+
+    template <typename Collection>
+    GameObject* FindInV(const Collection& c,
+                        const uint64_t& objId)
+    {
+      for (auto& o : c)
+      {
+        if (o.get() != nullptr && o.get()->ObjectId() == objId)
+        {
+          return o.get();
+        }
+      }
+
+      return nullptr;
+    }
 
   protected:
     void InitSpecific() override;

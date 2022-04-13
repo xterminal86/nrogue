@@ -215,6 +215,18 @@ void Player::CheckVisibility()
   int radius = (map[PosX][PosY]->ObjectName == "Tree") ? VisibilityRadius.Get() / 4 : VisibilityRadius.Get();
 
   auto mapCells = Util::GetRectAroundPoint(PosX, PosY, tw / 2, th / 2, Map::Instance().CurrentLevel->MapSize);
+
+#ifdef DEBUG_BUILD
+  for (auto& cell : mapCells)
+  {
+    map[cell.X][cell.Y]->Visible = ToggleFogOfWar;
+
+    if (staticObjects[cell.X][cell.Y] != nullptr)
+    {
+      staticObjects[cell.X][cell.Y]->Visible = ToggleFogOfWar;
+    }
+  }
+#else
   for (auto& cell : mapCells)
   {
     map[cell.X][cell.Y]->Visible = false;
@@ -224,6 +236,7 @@ void Player::CheckVisibility()
       staticObjects[cell.X][cell.Y]->Visible = false;
     }
   }
+#endif
 
   // Update visibility around player
 
@@ -1597,32 +1610,6 @@ std::string& Player::GetClassName()
 bool Player::HasSkill(PlayerSkills skillToCheck)
 {
   return (SkillLevelBySkill.count(skillToCheck) == 1);
-}
-
-// NOTE: unused for now
-bool Player::AreEnemiesInRange()
-{
-  bool ret = false;
-
-  auto res = Map::Instance().GetActorsInRange(VisibilityRadius.Get());
-  for (auto& i : res)
-  {
-    AIComponent* aic = i->GetComponent<AIComponent>();
-    if (aic != nullptr)
-    {
-      if (aic->CurrentModel != nullptr && aic->CurrentModel->IsAgressive)
-      {
-        bool visible = Map::Instance().IsObjectVisible({ PosX, PosY }, { i->PosX, i->PosY });
-        if (visible)
-        {
-          ret = true;
-          break;
-        }
-      }
-    }
-  }
-
-  return ret;
 }
 
 std::string Player::RecallItem(ItemComponent* itemRef)

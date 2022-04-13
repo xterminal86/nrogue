@@ -24,6 +24,7 @@ enum class DevConsoleCommand
   MOVE_PLAYER,
   REPORT_PLAYER,
   REMOVE_OBJECT,
+  SHOW_MAP,
   LEVEL_UP,
   LEVEL_DOWN,
   PRINT_MAP,
@@ -143,6 +144,7 @@ class DevConsole : public GameState
     void ReportHandleDebugInfo(ObjectHandleType type);
     void PrintDebugInfo(const std::vector<std::string>& debugInfo);
     void GiveMoney(const std::vector<std::string>& params);
+    void ToggleFogOfWar(const std::vector<std::string>& params);
 
     bool StringIsNumbers(const std::string& str);
     std::pair<int, int> CoordinateParamsToInt(const std::string& px,
@@ -171,6 +173,7 @@ class DevConsole : public GameState
       { "q",      DevConsoleCommand::CLOSE              },
       { "quit",   DevConsoleCommand::CLOSE              },
       { "m_trns", DevConsoleCommand::TRANSFORM_TILE     },
+      { "m_show", DevConsoleCommand::SHOW_MAP           },
       { "info",   DevConsoleCommand::INFO_HANDLES       },
       { "so_get", DevConsoleCommand::GET_STATIC_OBJECT  },
       { "ao_get", DevConsoleCommand::GET_ACTOR          },
@@ -213,6 +216,7 @@ class DevConsole : public GameState
       { "g_pc",   { "Prints colors used so far" } },
       { "g_go",   { "g_go 0x%X", "Get game object by address (slow!)" } },
       { "ao_psn", { "Add lingering damage to actor in handle" } },
+      { "m_show", { "Toggle fog of war" } },
       {
         "so_get",
         { "so_get [X Y]", "Try to get handle to static object at X Y" }

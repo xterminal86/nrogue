@@ -21,18 +21,6 @@ BTResult TaskChasePlayer::Run()
                            false,
                            true);
 
-  /*
-  auto copy = path;
-  while (!copy.empty())
-  {
-    auto pos = copy.top();
-    DebugLog("[%i %i] ", pos.X, pos.Y);
-    copy.pop();
-  }
-
-  DebugLog("\n");
-  */
-
   if (path.empty())
   {
     return BTResult::Failure;

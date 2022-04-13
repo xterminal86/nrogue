@@ -12,6 +12,8 @@ class TaskFindAndDestroyContainer : public Node
 
   private:
     GameObject* FindContainer();
+
+    BTResult ProcessExistingObject(GameObject* container);
 };
 
 #endif // TASKFINDANDDESTROYCONTAINER_H

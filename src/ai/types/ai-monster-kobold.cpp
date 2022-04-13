@@ -30,6 +30,7 @@ R"(
           [TASK p1="move_away"]
     [COND p1="hp_low"]
       [TASK p1="drink_potion" p2="HP"]
+    [TASK p1="break_stuff"]
     [TASK p1="move_smart"]
     [TASK p1="move_rnd"]
     [TASK p1="idle"]

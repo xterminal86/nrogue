@@ -212,61 +212,46 @@ GameObject* Map::GetStaticGameObjectAtPosition(int x, int y)
   return res;
 }
 
-GameObject* Map::FindGameObjectById(const uint64_t& objId)
+GameObject* Map::FindGameObjectById(const uint64_t& objId,
+                                    GameObjectCollectionType collectionType)
 {
   GameObject* res = nullptr;
 
-  for (auto& i : CurrentLevel->GameObjects)
+  switch (collectionType)
   {
-    if (i->ObjectId() == objId)
-    {
-      res = i.get();
+    case GameObjectCollectionType::MAP_ARRAY:
+      res = FindInVV(CurrentLevel->MapArray, objId);
       break;
-    }
-  }
 
-  return res;
-}
-
-GameObject* Map::FindActorById(const uint64_t& objId)
-{
-  GameObject* res = nullptr;
-
-  for (auto& i : CurrentLevel->ActorGameObjects)
-  {
-    if (i->ObjectId() == objId)
-    {
-      res = i.get();
+    case GameObjectCollectionType::STATIC_OBJECTS:
+      res = FindInVV(CurrentLevel->StaticMapObjects, objId);
       break;
-    }
-  }
 
-  return res;
-}
+    case GameObjectCollectionType::GAME_OBJECTS:
+      res = FindInV(CurrentLevel->GameObjects, objId);
+      break;
 
-std::vector<GameObject*> Map::GetActorsInRange(int range)
-{
-  std::vector<GameObject*> res;
+    case GameObjectCollectionType::ACTORS:
+      res = FindInV(CurrentLevel->ActorGameObjects, objId);
+      break;
 
-  auto& playerRef = Application::Instance().PlayerInstance;
-
-  int lx = playerRef.PosX - range;
-  int ly = playerRef.PosY - range;
-  int hx = playerRef.PosX + range;
-  int hy = playerRef.PosY + range;
-
-  if (CurrentLevel != nullptr)
-  {
-    for (auto& a : CurrentLevel->ActorGameObjects)
+    case GameObjectCollectionType::ALL:
     {
-      if (a->PosX >= lx &&
-          a->PosY >= ly &&
-          a->PosX <= hx &&
-          a->PosY <= hy)
+      res = FindInV(CurrentLevel->ActorGameObjects, objId);
+      if (res == nullptr)
       {
-        res.push_back(a.get());
+        res = FindInV(CurrentLevel->GameObjects, objId);
+        if (res == nullptr)
+        {
+          res = FindInVV(CurrentLevel->StaticMapObjects, objId);
+          if (res == nullptr)
+          {
+            res = FindInVV(CurrentLevel->MapArray, objId);
+          }
+        }
       }
     }
+    break;
   }
 
   return res;
@@ -290,7 +275,7 @@ void Map::RemoveDestroyed(GameObjectCollectionType c)
       RemoveStaticObjects();
       break;
 
-    case GameObjectCollectionType::ITEM_OBJECTS:
+    case GameObjectCollectionType::GAME_OBJECTS:
       EraseFromCollection(CurrentLevel->GameObjects);
       break;
 
@@ -930,9 +915,22 @@ void Map::DrawNonVisibleStaticObject(int x, int y)
   }
 }
 
-bool Map::IsObjectVisible(const Position &from, const Position &to)
+bool Map::IsObjectVisible(const Position &from,
+                          const Position &to,
+                          bool excludeEnd)
 {
   auto line = Util::BresenhamLine(from, to);
+
+  //
+  // If we need to check if certain wall or static object is visible
+  // it will fail on itself on the last point of the line,
+  // so to prevent it we can use tis flag.
+  //
+  if (excludeEnd && !line.empty())
+  {
+    line.pop_back();
+  }
+
   for (auto& c : line)
   {
     if (!Util::IsInsideMap(c, CurrentLevel->MapSize))

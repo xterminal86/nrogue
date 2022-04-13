@@ -329,6 +329,10 @@ void DevConsole::ProcessCommand(const std::string& command,
       GiveMoney(params);
       break;
 
+    case DevConsoleCommand::SHOW_MAP:
+      ToggleFogOfWar(params);
+      break;
+
     default:
       StdOut(ErrCmdNotHandled);
       break;
@@ -895,6 +899,18 @@ void DevConsole::GiveMoney(const std::vector<std::string>& params)
   _playerRef->Money += amount;
 
   StdOut(Ok);
+}
+
+void DevConsole::ToggleFogOfWar(const std::vector<std::string>& params)
+{
+  _playerRef->ToggleFogOfWar = !_playerRef->ToggleFogOfWar;
+
+  auto state = Application::Instance().GetGameStateRefByName(GameStates::MAIN_STATE);
+  state->Update(true);
+
+  auto str = Util::StringFormat("For of war %s", _playerRef->ToggleFogOfWar ? "off" : "on");
+
+  StdOut(str);
 }
 
 void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)

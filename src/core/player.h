@@ -70,7 +70,6 @@ class Player : public GameObject
     void SetKnockBackDir(const Position& dir);
 
     bool HasSkill(PlayerSkills skillToCheck);
-    bool AreEnemiesInRange();
 
     std::string RecallItem(ItemComponent* itemRef);
 
@@ -83,6 +82,10 @@ class Player : public GameObject
     std::map<std::string, int> TotalKills;
 
     PotentialField DistanceField;
+
+    #ifdef DEBUG_BUILD
+    bool ToggleFogOfWar = false;
+    #endif
 
   private:
     void DiscoverCell(int x, int y);

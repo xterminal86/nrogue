@@ -788,7 +788,7 @@ void Application::Cleanup()
 
 void Application::ForceDrawMainState()
 {
-  if (CurrentStateIs(GameStates::MAIN_STATE))// && PlayerInstance.AreEnemiesInRange())
+  if (CurrentStateIs(GameStates::MAIN_STATE))
   {
     _currentState->Update(true);
   }

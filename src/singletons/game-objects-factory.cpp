@@ -342,6 +342,7 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
   go->Image = image;
   go->ObjectName = objName;
   go->Blocking = true;
+  go->BlocksSight = true;
 
   go->Attrs.Indestructible = false;
   go->Attrs.HP.Reset(1);

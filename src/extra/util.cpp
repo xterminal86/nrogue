@@ -141,8 +141,51 @@ namespace Util
   }
 
   std::vector<GameObject*> FindObjectsInRange(GameObject* aroundWho,
-                                               const std::vector<std::unique_ptr<GameObject>>& where,
+                                               const std::vector<std::vector<std::unique_ptr<GameObject>>>& where,
                                                int range)
+  {
+    std::vector<GameObject*> res;
+
+    if (aroundWho == nullptr)
+    {
+      return res;
+    }
+
+    auto& mapSize = Map::Instance().CurrentLevel->MapSize;
+
+    int lx = aroundWho->PosX - range;
+    int hx = aroundWho->PosX + range;
+    int ly = aroundWho->PosY - range;
+    int hy = aroundWho->PosY + range;
+
+    for (int x = lx; x <= hx; x++)
+    {
+      for (int y = ly; y <= hy; y++)
+      {
+        if (!IsInsideMap({ x, y}, mapSize))
+        {
+          continue;
+        }
+
+        if (x == aroundWho->PosX && y == aroundWho->PosY)
+        {
+          continue;
+        }
+
+        auto go = where[x][y].get();
+        if (go != nullptr && go->PosX == x && go->PosY == y)
+        {
+          res.push_back(go);
+        }
+      }
+    }
+
+    return res;
+  }
+
+  std::vector<GameObject*> FindObjectsInRange(GameObject* aroundWho,
+                                              const std::vector<std::unique_ptr<GameObject>>& where,
+                                              int range)
   {
     std::vector<GameObject*> res;
 
@@ -655,6 +698,90 @@ namespace Util
   std::vector<Position> GetPerimeterAroundPoint(int x, int y, int w, int h, bool includeCorners)
   {
     return GetPerimeter(x - w, y - h, w * 2, h * 2, includeCorners);
+  }
+
+  std::vector<GameObject*> GetActorsInRange(GameObject* from, int range)
+  {
+    std::vector<GameObject*> res;
+
+    if (from == nullptr)
+    {
+      DebugLog("[WAR] Util::GetActorsInRange() from is null!");
+      return res;
+    }
+
+    auto curLvl = Map::Instance().CurrentLevel;
+
+    if (curLvl == nullptr)
+    {
+      DebugLog("[WAR] Util::GetActorsInRange() curLvl is null!");
+      return res;
+    }
+
+    int lx = from->PosX - range;
+    int ly = from->PosY - range;
+    int hx = from->PosX + range;
+    int hy = from->PosY + range;
+
+    for (auto& a : curLvl->ActorGameObjects)
+    {
+      if (a->PosX >= lx &&
+          a->PosY >= ly &&
+          a->PosX <= hx &&
+          a->PosY <= hy)
+      {
+        res.push_back(a.get());
+      }
+    }
+
+    return res;
+  }
+
+  std::vector<GameObject*> GetContainersInRange(GameObject* from, int range)
+  {
+    std::vector<GameObject*> res;
+
+    if (from == nullptr)
+    {
+      DebugLog("[WAR] Util::GetActorsInRange() from is null!");
+      return res;
+    }
+
+    auto curLvl = Map::Instance().CurrentLevel;
+
+    if (curLvl == nullptr)
+    {
+      DebugLog("[WAR] Util::GetActorsInRange() curLvl is null!");
+      return res;
+    }
+
+    int lx = from->PosX - range;
+    int ly = from->PosY - range;
+    int hx = from->PosX + range;
+    int hy = from->PosY + range;
+
+    for (int x = lx; x <= hx; x++)
+    {
+      for (int y = ly; y <= hy; y++)
+      {
+        if (!IsInsideMap({ x, y }, curLvl->MapSize))
+        {
+          continue;
+        }
+
+        auto so = curLvl->StaticMapObjects[x][y].get();
+        if (so != nullptr)
+        {
+          ContainerComponent* cc = so->GetComponent<ContainerComponent>();
+          if (cc != nullptr)
+          {
+            res.push_back(so);
+          }
+        }
+      }
+    }
+
+    return res;
   }
 
   std::string ChooseRandomName()

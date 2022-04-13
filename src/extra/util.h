@@ -62,8 +62,12 @@ namespace Util
                               int rangeY);
 
   extern std::vector<GameObject*> FindObjectsInRange(GameObject* aroundWho,
-                                                       const std::vector<std::unique_ptr<GameObject>>& where,
-                                                       int range);
+                                                     const std::vector<std::vector<std::unique_ptr<GameObject>>>& where,
+                                                     int range);
+
+  extern std::vector<GameObject*> FindObjectsInRange(GameObject* aroundWho,
+                                                     const std::vector<std::unique_ptr<GameObject>>& where,
+                                                     int range);
 
   extern bool IsBase64(unsigned char c);
   extern std::string Base64_Encode(unsigned char const* bytes_to_encode,
@@ -100,6 +104,8 @@ namespace Util
 
   extern std::vector<Position> GetPerimeter(int x, int y, int w, int h, bool includeCorners = true);
   extern std::vector<Position> GetPerimeterAroundPoint(int x, int y, int w, int h, bool includeCorners = true);
+  extern std::vector<GameObject*> GetActorsInRange(GameObject* from, int range);
+  extern std::vector<GameObject*> GetContainersInRange(GameObject* from, int range);
 
   extern std::string ChooseRandomName();
   extern std::string NumberToHexString(int num);
