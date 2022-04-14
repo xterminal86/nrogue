@@ -7,6 +7,8 @@
 void RepairState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
+
+  _headerText = " REPAIR ITEMS ";
 }
 
 void RepairState::Prepare()
@@ -14,10 +16,8 @@ void RepairState::Prepare()
   _itemRefByChar.clear();
 }
 
-void RepairState::HandleInput()
+void RepairState::ProcessInput()
 {
-  _keyPressed = GetKeyDown();
-
   switch (_keyPressed)
   {
     case VK_CANCEL:
@@ -46,54 +46,40 @@ void RepairState::HandleInput()
   }
 }
 
-void RepairState::Update(bool forceUpdate)
+void RepairState::DrawSpecific()
 {
-  if (_keyPressed != -1 || forceUpdate)
+  int itemIndex = 0;
+  for (auto& i : _playerRef->Inventory->Contents)
   {
-    Printer::Instance().Clear();
-
-    int tw = Printer::TerminalWidth;
-    int th = Printer::TerminalHeight;
-
-    DrawHeader(_header);
-
-    int itemIndex = 0;
-    for (auto& i : _playerRef->Inventory->Contents)
+    ItemComponent* ic = i->GetComponent<ItemComponent>();
+    if (ic->Data.IsEquipped && ic->Data.IsWeaponOrArmor())
     {
-      ItemComponent* ic = i->GetComponent<ItemComponent>();
-      if (ic->Data.IsEquipped && ic->Data.IsWeaponOrArmor())
+      std::string name = ic->Data.IsIdentified ?
+                         ic->Data.IdentifiedName :
+                         ic->Data.UnidentifiedName;
+
+      char c = Strings::AlphabetLowercase[itemIndex];
+      std::string str;
+
+      if (ic->Data.IsIdentified)
       {
-        std::string name = ic->Data.IsIdentified ?
-                           ic->Data.IdentifiedName :
-                           ic->Data.UnidentifiedName;
-
-        char c = Strings::AlphabetLowercase[itemIndex];
-        std::string str;
-
-        if (ic->Data.IsIdentified)
-        {
-          str = Util::StringFormat("'%c' - %s (%i/%i)",
-                                   c,
-                                   name.data(),
-                                   ic->Data.Durability.Min().Get(),
-                                   ic->Data.Durability.Max().Get());
-        }
-        else
-        {
-          str = Util::StringFormat(R"('%c' - %s (??/??))", c, name.data());
-        }
-
-        Printer::Instance().PrintFB(1, 2 + itemIndex, str, Printer::kAlignLeft, Colors::WhiteColor);
-
-        _itemRefByChar[c] = ic;
-
-        itemIndex++;
+        str = Util::StringFormat("'%c' - %s (%i/%i)",
+                                 c,
+                                 name.data(),
+                                 ic->Data.Durability.Min().Get(),
+                                 ic->Data.Durability.Max().Get());
       }
+      else
+      {
+        str = Util::StringFormat(R"('%c' - %s (??/??))", c, name.data());
+      }
+
+      Printer::Instance().PrintFB(1, 2 + itemIndex, str, Printer::kAlignLeft, Colors::WhiteColor);
+
+      _itemRefByChar[c] = ic;
+
+      itemIndex++;
     }
-
-    Printer::Instance().PrintFB(tw / 2, th - 1, "'q' - cancel", Printer::kAlignCenter, Colors::WhiteColor);
-
-    Printer::Instance().Render();
   }
 }
 

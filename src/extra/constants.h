@@ -205,6 +205,7 @@ namespace Strings
   extern const std::string MsgStairsUp;
   extern const std::string MsgInventoryFull;
   extern const std::string MsgNothingHere;
+  extern const std::string MsgItemsLyingHere;
   extern const std::string MsgSomethingLying;
   extern const std::string MsgNoStairsDown;
   extern const std::string MsgNoStairsUp;

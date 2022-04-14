@@ -1,19 +1,21 @@
 #ifndef SERVICESTATE_H
 #define SERVICESTATE_H
 
-#include "gamestate.h"
+#include "select-item-state-base.h"
 
 class Player;
 class TraderComponent;
 class ItemComponent;
 
-class ServiceState : public GameState
+class ServiceState : public SelectItemStateBase
 {
   public:
     void Prepare() override;
-    void HandleInput() override;
-    void Update(bool forceUpdate = false) override;
     void Setup(TraderComponent* shopOwner);
+
+  protected:
+    void ProcessInput() final;
+    void DrawSpecific() final;
 
   private:
     Player* _playerRef;

@@ -34,8 +34,9 @@ class MainState : public GameState
     void DisplayActiveEffects(const int& startPos);
     void DisplayGameLog();
     void DisplayScenarioInformation();
-    void TryToPickupItem();
-    void CheckIfSomethingElseIsLyingHere(const Position& pos);
+    void CheckItemsOnGround();
+    void TryToPickupItems();
+    void PickupSingleItem(std::pair<int, GameObject*>& item);
     void DrawHPMP();
     void GetActorsAround();
     void PrintDebugInfo();

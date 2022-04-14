@@ -36,7 +36,6 @@ namespace LootGenerators
     {
       { ItemType::FOOD,    15 },
       { ItemType::COINS,   15 },
-      { ItemType::WEAPON,  10 },
       { ItemType::GEM,      5 },
       { ItemType::NOTHING, 45 }
     };
@@ -66,13 +65,6 @@ namespace LootGenerators
         coins->PosX = go->PosX;
         coins->PosY = go->PosY;
         Map::Instance().PlaceGameObject(coins);
-      }
-      break;
-
-      case ItemType::WEAPON:
-      {
-        auto w = ItemsFactory::Instance().CreateMeleeWeapon(go->PosX, go->PosY, WeaponType::PICKAXE);
-        Map::Instance().PlaceGameObject(w);
       }
       break;
 

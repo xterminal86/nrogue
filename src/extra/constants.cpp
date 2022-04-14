@@ -180,6 +180,7 @@ namespace Strings
   const std::string MsgInventoryFull     = "Inventory is full!";
   const std::string MsgNothingHere       = "There's nothing here";
   const std::string MsgSomethingLying    = "There's something else lying here";
+  const std::string MsgItemsLyingHere    = "There are several items lying here";
   const std::string MsgNoStairsDown      = "There are no stairs leading down here";
   const std::string MsgNoStairsUp        = "There are no stairs leading up here";
   const std::string MsgNotRangedWeapon   = "Not a ranged weapon!";

@@ -19,8 +19,8 @@ class TaskTryPickupItems : public Node
   private:
     ContainerComponent* _inventoryRef;
 
-    bool FilterItem(const Item& item,
-                    const Filter& filter);
+    bool FilterItems(const Items& items,
+                     const Filter& filter);
 
     void Pickup(const Item& item);
 };

@@ -8,12 +8,11 @@
 void ServiceState::Prepare()
 {
   _playerRef = &Application::Instance().PlayerInstance;
+  _headerText = _serviceNameByType.at(_shopOwner->NpcRef->Data.ProvidesService);
 }
 
-void ServiceState::HandleInput()
+void ServiceState::ProcessInput()
 {
-  _keyPressed = GetKeyDown();
-
   switch (_keyPressed)
   {
     case VK_CANCEL:
@@ -163,6 +162,7 @@ void ServiceState::BlessItem(const ServiceInfo& si)
   }
   else
   {
+    // FIXME: blessing is broken (segfault)
     equippedItem = _playerRef->Equipment->EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
   }
 
@@ -236,39 +236,24 @@ void ServiceState::ProcessBonuses(ItemComponent* item)
   }
 }
 
-void ServiceState::Update(bool forceUpdate)
+void ServiceState::DrawSpecific()
 {
-  if (_keyPressed != -1 || forceUpdate)
-  {
-    Printer::Instance().Clear();
+  DisplayItems();
 
-    DrawHeader(_serviceNameByType.at(_shopOwner->NpcRef->Data.ProvidesService));
+  std::string youHaveStr = "You have: ";
+  auto playerMoney = Util::StringFormat("$ %i", _playerRef->Money);
 
-    DisplayItems();
+  Printer::Instance().PrintFB(1,
+                              _th - 1,
+                              youHaveStr,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor);
 
-    std::string youHaveStr = "You have: ";
-    auto playerMoney = Util::StringFormat("$ %i", _playerRef->Money);
-
-    Printer::Instance().PrintFB(1,
-                                _th - 1,
-                                youHaveStr,
-                                Printer::kAlignLeft,
-                                Colors::WhiteColor);
-
-    Printer::Instance().PrintFB(1 + youHaveStr.length(),
-                                _th - 1,
-                                playerMoney,
-                                Printer::kAlignLeft,
-                                Colors::CoinsColor);
-
-    Printer::Instance().PrintFB(_tw / 2,
-                                _th - 1,
-                                "'q' - exit ",
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor);
-
-    Printer::Instance().Render();
-  }
+  Printer::Instance().PrintFB(1 + youHaveStr.length(),
+                              _th - 1,
+                              playerMoney,
+                              Printer::kAlignLeft,
+                              Colors::CoinsColor);
 }
 
 void ServiceState::DisplayItems()

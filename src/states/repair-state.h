@@ -1,21 +1,23 @@
 #ifndef REPAIRSTATE_H
 #define REPAIRSTATE_H
 
-#include "gamestate.h"
+#include "select-item-state-base.h"
 
 class Player;
 class ItemComponent;
 
-class RepairState : public GameState
+class RepairState : public SelectItemStateBase
 {
   public:
     void Init() override;
-    void HandleInput() override;
-    void Update(bool forceUpdate = false) override;
     void Cleanup() override;
     void Prepare() override;
 
     void SetRepairKitRef(ItemComponent* item, int inventoryIndex);
+
+  protected:
+    void DrawSpecific() final;
+    void ProcessInput() final;
 
   private:
     Player* _playerRef;
@@ -26,8 +28,6 @@ class RepairState : public GameState
     std::map<char, ItemComponent*> _itemRefByChar;
 
     void RepairItem(ItemComponent* itemToRepair);
-
-    const std::string _header = " REPAIR ITEMS ";
 };
 
 

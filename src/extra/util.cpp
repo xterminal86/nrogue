@@ -1772,7 +1772,7 @@ namespace Util
 
     item->Data.Durability.AddMin(damage);
 
-    if (item->Data.Durability.Min().Get() < 0)
+    if (item->Data.Durability.Min().Get() <= 0)
     {
       msg = StringFormat("%s breaks!", item->OwnerGameObject->ObjectName.data());
       item->Break(actor);

@@ -6,6 +6,7 @@
 #include "stairs-component.h"
 #include "target-state.h"
 #include "spells-processor.h"
+#include "pickup-item-state.h"
 
 void MainState::Init()
 {
@@ -127,7 +128,7 @@ void MainState::HandleInput()
       break;
 
     case 'g':
-      TryToPickupItem();
+      TryToPickupItems();
       break;
 
     case '@':
@@ -258,6 +259,8 @@ void MainState::ProcessMovement(const Position& dirOffsets)
     // (e.g. starvation damage message) after player moved.
     Printer::Instance().ShowLastMessage = false;
 
+    CheckItemsOnGround();
+
     Map::Instance().CurrentLevel->MapOffsetX -= dirOffsets.X;
     Map::Instance().CurrentLevel->MapOffsetY -= dirOffsets.Y;
 
@@ -276,6 +279,15 @@ void MainState::ProcessMovement(const Position& dirOffsets)
     {
       Printer::Instance().AddMessage(Strings::MsgStairsUp);
     }
+  }
+}
+
+void MainState::CheckItemsOnGround()
+{
+  auto items = Map::Instance().GetGameObjectsToPickup(_playerRef->PosX, _playerRef->PosY);
+  if (items.size() > 1)
+  {
+    Printer::Instance().AddMessage(Strings::MsgItemsLyingHere);
   }
 }
 
@@ -298,29 +310,22 @@ void MainState::DisplayGameLog()
   }
 }
 
-void MainState::TryToPickupItem()
+void MainState::TryToPickupItems()
 {
-  auto res = Map::Instance().GetGameObjectToPickup(_playerRef->PosX, _playerRef->PosY);
-  if (res.first != -1)
+  auto items = Map::Instance().GetGameObjectsToPickup(_playerRef->PosX, _playerRef->PosY);
+  if (!items.empty())
   {
-    if (ProcessMoneyPickup(res))
+    if (items.size() == 1)
     {
-      CheckIfSomethingElseIsLyingHere(_playerRef->GetPosition());
-      return;
+      PickupSingleItem(items[0]);
     }
-
-    if (_playerRef->Inventory->IsFull())
+    else
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                             Strings::MessageBoxEpicFailHeaderText,
-                                             { Strings::MsgInventoryFull },
-                                             Colors::MessageBoxRedBorderColor);
-      return;
+      auto gs = Application::Instance().GetGameStateRefByName(GameStates::PICKUP_ITEM_STATE);
+      PickupItemState* pis = static_cast<PickupItemState*>(gs);
+      pis->Setup(items);
+      Application::Instance().ChangeState(GameStates::PICKUP_ITEM_STATE);
     }
-
-    ProcessItemPickup(res);
-
-    CheckIfSomethingElseIsLyingHere(_playerRef->GetPosition());
   }
   else
   {
@@ -328,13 +333,23 @@ void MainState::TryToPickupItem()
   }
 }
 
-void MainState::CheckIfSomethingElseIsLyingHere(const Position& pos)
+void MainState::PickupSingleItem(std::pair<int, GameObject *>& item)
 {
-  auto res = Map::Instance().GetGameObjectToPickup(pos.X, pos.Y);
-  if (res.first != -1)
+  if (ProcessMoneyPickup(item))
   {
-    Printer::Instance().AddMessage(Strings::MsgSomethingLying);
+    return;
   }
+
+  if (_playerRef->Inventory->IsFull())
+  {
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                           Strings::MessageBoxEpicFailHeaderText,
+                                           { Strings::MsgInventoryFull },
+                                           Colors::MessageBoxRedBorderColor);
+    return;
+  }
+
+  ProcessItemPickup(item);
 }
 
 void MainState::DrawHPMP()
@@ -631,12 +646,16 @@ void MainState::ProcessItemPickup(std::pair<int, GameObject*>& pair)
 
   _playerRef->Inventory->Add(go);
 
-  std::string objName = ic->Data.IsIdentified ? go->ObjectName : ic->Data.UnidentifiedName;
+  std::string objName = ic->Data.IsIdentified
+                      ? go->ObjectName
+                      : ic->Data.UnidentifiedName;
 
   std::string message;
   if (ic->Data.IsStackable)
   {
-    message = Util::StringFormat(Strings::FmtPickedUpIS, ic->Data.Amount, objName.data());
+    message = Util::StringFormat(Strings::FmtPickedUpIS,
+                                 ic->Data.Amount,
+                                 objName.data());
   }
   else
   {

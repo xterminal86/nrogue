@@ -22,6 +22,7 @@
 #include "endgame-state.h"
 #include "attack-state.h"
 #include "target-state.h"
+#include "pickup-item-state.h"
 #include "service-state.h"
 #include "map.h"
 #include "map-level-base.h"
@@ -822,6 +823,7 @@ void Application::InitGameStates()
   RegisterState<ShoppingState>         (GameStates::SHOPPING_STATE);
   RegisterState<ReturnerState>         (GameStates::RETURNER_STATE);
   RegisterState<RepairState>           (GameStates::REPAIR_STATE);
+  RegisterState<PickupItemState>       (GameStates::PICKUP_ITEM_STATE);
   RegisterState<ExitingState>          (GameStates::EXITING_STATE);
   RegisterState<MessageBoxState>       (GameStates::MESSAGE_BOX_STATE);
   RegisterState<ServiceState>          (GameStates::SERVICE_STATE);

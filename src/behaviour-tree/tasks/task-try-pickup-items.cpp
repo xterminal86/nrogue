@@ -12,6 +12,9 @@ TaskTryPickupItems::TaskTryPickupItems(GameObject* objectToControl)
 
 BTResult TaskTryPickupItems::Run()
 {
+  //
+  // No separate money filter for AI, because I'm lazy
+  //
   if (_inventoryRef->IsFull())
   {
     return BTResult::Failure;
@@ -25,18 +28,16 @@ BTResult TaskTryPickupItems::Run()
     return BTResult::Failure;
   }
 
-  auto topItem = items.back();
-
   bool succ = true;
 
   switch (_objectToControl->Type)
   {
     case GameObjectType::MAD_MINER:
-      succ = FilterItem(topItem, { ItemType::GEM, ItemType::RETURNER });
+      succ = FilterItems(items, { ItemType::GEM, ItemType::RETURNER });
       break;
 
     default:
-      Pickup(topItem);
+      FilterItems(items, Filter());
       break;
   }
 
@@ -50,26 +51,36 @@ BTResult TaskTryPickupItems::Run()
   return BTResult::Success;
 }
 
-bool TaskTryPickupItems::FilterItem(const Item& item,
-                                    const Filter& filter)
+bool TaskTryPickupItems::FilterItems(const Items& items,
+                                     const Filter& filter)
 {
-  bool succ = false;
-
-  ItemComponent* ic = item.second->GetComponent<ItemComponent>();
-  if (ic == nullptr)
+  if (filter.empty())
   {
-    DebugLog("[WAR] TaskTryPickupItems::FilterItem() no ItemComponent found on %s!", item.second->ObjectName.data());
-    return succ;
+    auto topItem = items.back();
+    Pickup(topItem);
+    return true;
   }
 
-  auto found = std::find(filter.begin(), filter.end(), ic->Data.ItemType_);
-  if (found != filter.end())
+  bool found = false;
+  for (auto& i : items)
   {
-    Pickup(item);
-    succ = true;
+    ItemComponent* ic = i.second->GetComponent<ItemComponent>();
+    if (ic == nullptr)
+    {
+      DebugLog("[WAR] TaskTryPickupItems::FilterItem() no ItemComponent found on %s!", i.second->ObjectName.data());
+      continue;
+    }
+
+    auto res = std::find(filter.begin(), filter.end(), ic->Data.ItemType_);
+    if (res != filter.end())
+    {
+      Pickup(i);
+      found = true;
+      break;
+    }
   }
 
-  return succ;
+  return found;
 }
 
 void TaskTryPickupItems::Pickup(const Item& item)

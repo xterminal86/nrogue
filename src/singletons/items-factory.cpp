@@ -773,7 +773,7 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x, int y, WeaponType type, ItemP
       diceRolls = 1;
       diceSides = 6;
 
-      int rndDur = RNG::Instance().RandomRange(20, 30);
+      int rndDur = RNG::Instance().RandomRange(20, 31);
       int spread = RNG::Instance().RandomRange(1, 5);
 
       baseDurability = rndDur + spread * (int)ic->Data.ItemQuality_;
