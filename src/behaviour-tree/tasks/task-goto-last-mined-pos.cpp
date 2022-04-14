@@ -22,7 +22,7 @@ BTResult TaskGotoLastMinedPos::Run()
   if (_objectToControl->PosX == mX
    && _objectToControl->PosY == mY)
   {
-    Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPos, "" });
+    Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPos, std::string() });
 
     return BTResult::Failure;
   }
@@ -30,7 +30,7 @@ BTResult TaskGotoLastMinedPos::Run()
   _objectToControl->MoveTo({ mX, mY });
   _objectToControl->FinishTurn();
 
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPos, "" });
+  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPos, std::string() });
 
   return BTResult::Success;
 }

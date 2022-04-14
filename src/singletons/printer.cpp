@@ -10,6 +10,9 @@ size_t Printer::TerminalHeight = 0;
 
 void Printer::InitSpecific()
 {
+  _inGameMessages.reserve(kMaxGameLogMessages);
+  _lastMessages.reserve(5);
+
 #ifdef USE_SDL
   InitForSDL();
 #else
@@ -901,7 +904,7 @@ void Printer::Render()
 #endif
 }
 
-std::vector<Position> Printer::DrawExplosion(Position pos, int aRange)
+std::vector<Position> Printer::DrawExplosion(const Position& pos, int aRange)
 {
   std::vector<Position> cellsAffected = Util::GetAreaDamagePointsFrom(pos, aRange);
 

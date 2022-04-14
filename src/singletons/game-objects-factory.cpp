@@ -81,7 +81,7 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       break;
 
     case ItemType::NOTHING:
-      go = ItemsFactory::Instance().CreateDummyItem("Dummy", 'O', Colors::YellowColor, Colors::BlackColor, { "" });
+      go = ItemsFactory::Instance().CreateDummyItem("Dummy", 'O', Colors::YellowColor, Colors::BlackColor, { std::string() });
       break;
 
     default:

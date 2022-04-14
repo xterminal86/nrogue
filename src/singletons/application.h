@@ -28,7 +28,7 @@ class Application : public Singleton<Application>
     void DisplayAttack(GameObject* defender,
                        int delayMs,
                        const std::string& messageToPrint,
-                       const std::string& cursorColor = "");
+                       const std::string& cursorColor = std::string());
 
     void WriteObituary(bool wasKilled = true);
 
@@ -86,7 +86,7 @@ class Application : public Singleton<Application>
     void InitGameStates();
     void DrawAttackCursor(int x, int y,
                           GameObject* defender,
-                          const std::string& cursorColor = "");
+                          const std::string& cursorColor = std::string());
     void SavePrettyAlignedStatInfo(std::stringstream& ss);
     void SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled);
 

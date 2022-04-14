@@ -608,7 +608,7 @@ void Player::ProcessMagicAttack(GameObject* target,
                                 int damage,
                                 bool againstRes)
 {
-  Position p = { target->PosX, target->PosY };
+  Position p = target->GetPosition();
 
   auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
   if (actor != nullptr)
@@ -676,7 +676,7 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
   }
   else
   {
-    Application::Instance().DisplayAttack(what, GlobalConstants::DisplayAttackDelayMs, "", Colors::RedColor);
+    Application::Instance().DisplayAttack(what, GlobalConstants::DisplayAttackDelayMs, std::string(), Colors::RedColor);
     ItemComponent* weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
 
     bool isRanged = false;

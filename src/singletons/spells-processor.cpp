@@ -603,7 +603,7 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
     portal->ObjectName = "Town Portal";
 
     TownPortalComponent* tpc = portal->AddComponent<TownPortalComponent>();
-    tpc->SavePosition(Map::Instance().CurrentLevel->MapType_, { _playerRef->PosX, _playerRef->PosY });
+    tpc->SavePosition(Map::Instance().CurrentLevel->MapType_, _playerRef->GetPosition());
 
     lvl->PlaceGameObject(portal);
 

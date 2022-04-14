@@ -199,7 +199,7 @@ void TargetState::FireWeapon(bool throwingFromInventory)
   //
   CheckCursorPositionBounds();
 
-  Position startPoint = { _playerRef->PosX, _playerRef->PosY };
+  Position startPoint = _playerRef->GetPosition();
   Position endPoint   = _cursorPosition;
 
   bool isThrowing = (_throwingItemInventoryIndex != -1);
@@ -271,8 +271,8 @@ GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
 {
   GameObject* stoppedAt = nullptr;
 
-  Position startPoint = { _playerRef->PosX, _playerRef->PosY };
-  Position endPoint = _cursorPosition;
+  Position startPoint = _playerRef->GetPosition();
+  Position endPoint   = _cursorPosition;
 
   auto line = Util::BresenhamLine(startPoint, endPoint);
 
@@ -386,7 +386,7 @@ void TargetState::CheckCursorPositionBounds()
 {
   Position lastPositionInsideMap;
   bool isOutsideMap = false;
-  auto line = Util::BresenhamLine({ _playerRef->PosX, _playerRef->PosY }, _cursorPosition);
+  auto line = Util::BresenhamLine(_playerRef->GetPosition(), _cursorPosition);
   for (auto& p : line)
   {
     if (!Util::IsInsideMap(p, Map::Instance().CurrentLevel->MapSize, false))
@@ -406,7 +406,7 @@ void TargetState::CheckCursorPositionBounds()
 
 void TargetState::UpdatePlayerPossibleKnockbackDir()
 {
-  Position startPoint = { _playerRef->PosX, _playerRef->PosY };
+  Position startPoint = _playerRef->GetPosition();
 
   auto line = Util::BresenhamLine(startPoint, _cursorPosition);
   if (!line.empty())
@@ -614,7 +614,7 @@ void TargetState::DrawHint()
   //
   // In any case, let's not edit this part of code right now.
   //
-  Position startPoint = { _playerRef->PosX, _playerRef->PosY };
+  Position startPoint = _playerRef->GetPosition();
 
   int mox = Map::Instance().CurrentLevel->MapOffsetX;
   int moy = Map::Instance().CurrentLevel->MapOffsetY;

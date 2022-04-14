@@ -27,7 +27,7 @@ BTResult TaskGotoLastPlayerPos::Run()
   {
     // We have arrived at the last known player position
 
-    Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPos, "" });
+    Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPos, std::string() });
 
     return BTResult::Success;
   }
@@ -35,11 +35,9 @@ BTResult TaskGotoLastPlayerPos::Run()
   //DebugLog("\tplX: %i plY: %i\n\n", plX, plY);
 
   Pathfinder pf;
-  Position objPos = { _objectToControl->PosX, _objectToControl->PosY };
-  Position playerPos = { plX, plY };
   auto path = pf.BuildRoad(Map::Instance().CurrentLevel,
-                           objPos,
-                           playerPos,
+                           _objectToControl->GetPosition(),
+                           _playerRef->GetPosition(),
                            std::vector<char>(),
                            false,
                            true);
@@ -56,7 +54,7 @@ BTResult TaskGotoLastPlayerPos::Run()
   }
 
   // No path can be built or MoveTo() failed
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPos, "" });
+  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPos, std::string() });
 
   return BTResult::Failure;
 }

@@ -3,7 +3,9 @@
 
 #include <string>
 
+///
 /// Helper struct to reduce the amount of writing when creating objects
+///
 struct GameObjectInfo
 {
   void Set(bool isBlocking,
@@ -12,7 +14,7 @@ struct GameObjectInfo
            const std::string& fgColor,
            const std::string& bgColor,
            const std::string& objectName,
-           const std::string& fowName = "");
+           const std::string& fowName = std::string());
 
   bool IsBlocking;
   bool BlocksSight;

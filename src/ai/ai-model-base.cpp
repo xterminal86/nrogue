@@ -473,8 +473,8 @@ std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF(const ScriptNode* da
   {
     auto& playerRef = Application::Instance().PlayerInstance;
 
-    Position plPos = { playerRef.PosX, playerRef.PosY };
-    Position objPos = { AIComponentRef->OwnerGameObject->PosX, AIComponentRef->OwnerGameObject->PosY };
+    Position plPos  = playerRef.GetPosition();
+    Position objPos = AIComponentRef->OwnerGameObject->GetPosition();
 
     bool res = Map::Instance().IsObjectVisible(objPos, plPos);
     if (res)
@@ -513,11 +513,11 @@ std::function<BTResult()> AIModelBase::GetInRangeCF(const ScriptNode* data)
     auto& playerRef = Application::Instance().PlayerInstance;
     auto& objRef    = AIComponentRef->OwnerGameObject;
 
-    Position plPos  = { playerRef.PosX, playerRef.PosY };
-    Position objPos = { objRef->PosX,   objRef->PosY   };
-
     //bool res = Util::IsObjectInRange(plPos, objPos, range, range);
-    bool res = Util::IsObjectInRange(objPos, plPos, range, range);
+    bool res = Util::IsObjectInRange(objRef->GetPosition(),
+                                     playerRef.GetPosition(),
+                                     range,
+                                     range);
 
     return res ? BTResult::Success : BTResult::Failure;
   };

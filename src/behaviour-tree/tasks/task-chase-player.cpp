@@ -9,14 +9,11 @@ BTResult TaskChasePlayer::Run()
 {
   //DebugLog("[TaskChasePlayer]\n");
 
-  Position playerPos = { _playerRef->PosX, _playerRef->PosY };
-  Position objPos = { _objectToControl->PosX, _objectToControl->PosY };
-
   Pathfinder pf;
 
   auto path = pf.BuildRoad(Map::Instance().CurrentLevel,
-                           objPos,
-                           playerPos,
+                           _objectToControl->GetPosition(),
+                           _playerRef->GetPosition(),
                            std::vector<char>(),
                            false,
                            true);

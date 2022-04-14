@@ -25,7 +25,7 @@ void PotentialField::Init(GameObject* owner, int fieldRadius)
   _owner = owner;
   _fieldRadius = fieldRadius;
 
-  _fieldOrigin = { _owner->PosX, _owner->PosY };
+  _fieldOrigin = _owner->GetPosition();
 
   int size = _fieldRadius * 2;
 
@@ -55,7 +55,7 @@ void PotentialField::Emanate()
 {
   std::queue<Position> cellsToVisit;
 
-  _fieldOrigin = { _owner->PosX, _owner->PosY };
+  _fieldOrigin = _owner->GetPosition();
 
   cellsToVisit.push(_fieldOrigin);
 

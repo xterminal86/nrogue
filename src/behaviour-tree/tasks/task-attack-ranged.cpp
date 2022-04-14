@@ -71,8 +71,8 @@ BTResult TaskAttackRanged::Run()
 
 BTResult TaskAttackRanged::ProcessSpellAttack()
 {
-  Position from = { _objectToControl->PosX, _objectToControl->PosY };
-  Position to   = { _playerRef->PosX, _playerRef->PosY };
+  Position from = _objectToControl->GetPosition();
+  Position to   = _playerRef->GetPosition();
 
   int chanceToHit = Util::CalculateHitChanceRanged(from,
                                                    to,
@@ -90,7 +90,7 @@ BTResult TaskAttackRanged::ProcessSpellAttack()
 
   if (hit != nullptr)
   {
-    to = { hit->PosX, hit->PosY };
+    to = hit->GetPosition();
   }
   else
   {
@@ -148,8 +148,8 @@ BTResult TaskAttackRanged::ProcessSpellAttack()
 
 BTResult TaskAttackRanged::ProcessWeaponAttack()
 {
-  Position from = { _objectToControl->PosX, _objectToControl->PosY };
-  Position to   = { _playerRef->PosX, _playerRef->PosY };
+  Position from = _objectToControl->GetPosition();
+  Position to   = _playerRef->GetPosition();
 
   EquipmentComponent* ec = _objectToControl->GetComponent<EquipmentComponent>();
   ItemComponent* weapon = nullptr;
@@ -193,7 +193,7 @@ BTResult TaskAttackRanged::ProcessWeaponAttack()
   //
   if (hit != nullptr)
   {
-    to = { hit->PosX, hit->PosY };
+    to = hit->GetPosition();
   }
   else
   {
@@ -327,11 +327,10 @@ void TaskAttackRanged::ProcessWandDamage(GameObject* target,
                                          int damage,
                                          bool againstRes)
 {
-  Position p = { target->PosX, target->PosY };
+  Position p = target->GetPosition();
 
   GameObject* actor = nullptr;
-  if (_playerRef->PosX == p.X
-   && _playerRef->PosY == p.Y)
+  if (_playerRef->GetPosition() == p)
   {
     actor = _playerRef;
   }
@@ -395,7 +394,7 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
                                         int centralDamage,
                                         bool againstRes)
 {
-  auto pointsAffected = Printer::Instance().DrawExplosion({ target->PosX, target->PosY }, 3);
+  auto pointsAffected = Printer::Instance().DrawExplosion(target->GetPosition(), 3);
 
   GameObject* from = (weapon != nullptr) ?
                      weapon->OwnerGameObject :
@@ -403,7 +402,7 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
 
   for (auto& p : pointsAffected)
   {
-    int d = Util::LinearDistance({ target->PosX, target->PosY }, p);
+    int d = Util::LinearDistance(target->GetPosition(), p);
     if (d == 0)
     {
       d = 1;
@@ -414,7 +413,7 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
     //
     // AoE damages everything
     //
-    if (_playerRef->PosX == p.X && _playerRef->PosY == p.Y)
+    if (_playerRef->GetPosition() == p)
     {
       Util::TryToDamageObject(_playerRef, from, dmgHere, againstRes);
     }
@@ -437,7 +436,7 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
     //
     // Check self damage
     //
-    if (_objectToControl->PosX == p.X && _objectToControl->PosY == p.Y)
+    if (_objectToControl->GetPosition() == p)
     {
       int dmgHere = centralDamage / d;
       dmgHere -= _objectToControl->Attrs.Res.Get();

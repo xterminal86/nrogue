@@ -14,8 +14,7 @@ BTResult TaskRandomMovement::Run()
 
 BTResult TaskRandomMovement::Smart()
 {
-  Position objPos = { _objectToControl->PosX, _objectToControl->PosY };
-  auto cells = Util::GetEightPointsAround(objPos, Map::Instance().CurrentLevel->MapSize);
+  auto cells = Util::GetEightPointsAround(_objectToControl->GetPosition(), Map::Instance().CurrentLevel->MapSize);
   std::vector<Position> cellsToMove;
   for (auto& c : cells)
   {

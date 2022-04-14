@@ -7,8 +7,8 @@ BTResult TaskMoveAwayFromPlayer::Run()
 {
   //DebugLog("[TaskMoveAwayFromPlayer]\n");
 
-  Position objPos    = { _objectToControl->PosX, _objectToControl->PosY };
-  Position playerPos = { _playerRef->PosX,       _playerRef->PosY       };
+  Position objPos    = _objectToControl->GetPosition();
+  Position playerPos = _playerRef->GetPosition();
 
   auto res = Map::Instance().GetWalkableCellsAround(objPos);
 

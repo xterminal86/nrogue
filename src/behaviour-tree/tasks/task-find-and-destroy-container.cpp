@@ -53,7 +53,7 @@ GameObject* TaskFindAndDestroyContainer::FindContainer()
 
   int r = _objectToControl->VisibilityRadius.Get();
 
-  Position objPos = { _objectToControl->PosX, _objectToControl->PosY };
+  Position objPos = _objectToControl->GetPosition();
 
   auto containersFound = Util::GetContainersInRange(_objectToControl, r);
   if (!containersFound.empty())
@@ -61,9 +61,9 @@ GameObject* TaskFindAndDestroyContainer::FindContainer()
     std::vector<int> indices;
     for (size_t i = 0; i < containersFound.size(); i++)
     {
-      Position to = { containersFound[i]->PosX, containersFound[i]->PosY };
-
-      if (Map::Instance().IsObjectVisible(objPos, to, true))
+      if (Map::Instance().IsObjectVisible(objPos,
+                                          containersFound[i]->GetPosition(),
+                                          true))
       {
         indices.push_back(i);
       }
@@ -105,12 +105,9 @@ BTResult TaskFindAndDestroyContainer::ProcessExistingObject(GameObject* containe
   {
     Pathfinder pf;
 
-    Position objPos = { container->PosX, container->PosY };
-    Position from   = { _objectToControl->PosX, _objectToControl->PosY };
-
     auto path = pf.BuildRoad(Map::Instance().CurrentLevel,
-                             from,
-                             objPos,
+                             _objectToControl->GetPosition(),
+                             container->GetPosition(),
                              std::vector<char>(),
                              false,
                              true);

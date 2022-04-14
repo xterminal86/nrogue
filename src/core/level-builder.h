@@ -52,7 +52,7 @@ class LevelBuilder
                          bool removeBias = false);
 
     void PlaceShrineLayout(const Position& start,
-                     const StringsArray2D& layout);
+                           const StringsArray2D& layout);
 
     void LogPrintMapRaw();
     void PrintMapRaw();

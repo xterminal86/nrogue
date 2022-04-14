@@ -11,7 +11,11 @@
 class FromLayouts : public DGBase
 {
   public:
-    void Generate(const std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY);
+    void Generate(const std::vector<RoomForLevel>& possibleRooms,
+                  int startX,
+                  int startY,
+                  int mapSizeX,
+                  int mapSizeY);
 
     std::vector<RoomHelper> MapChunks;
 

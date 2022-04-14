@@ -338,23 +338,26 @@ void LookInputState::DisplayMonsterStats()
   if (actor != nullptr)
   {
     std::vector<std::string> msg;
+
+    msg.reserve(20);
+
     std::string name = Util::StringFormat("%s_%lu", actor->ObjectName.data(), actor->ObjectId());
 
     msg.push_back(Util::StringFormat("Rating: %i", actor->Attrs.Rating()));
-    msg.push_back("");
+    msg.push_back(std::string());
     msg.push_back(Util::StringFormat("LVL: %i", actor->Attrs.Lvl.Get()));
     msg.push_back(Util::StringFormat("EXP: %i", actor->Attrs.Exp.Min().Get()));
-    msg.push_back("");
+    msg.push_back(std::string());
     msg.push_back(Util::StringFormat("STR: %i", actor->Attrs.Str.Get()));
     msg.push_back(Util::StringFormat("DEF: %i", actor->Attrs.Def.Get()));
     msg.push_back(Util::StringFormat("MAG: %i", actor->Attrs.Mag.Get()));
     msg.push_back(Util::StringFormat("RES: %i", actor->Attrs.Res.Get()));
     msg.push_back(Util::StringFormat("SKL: %i", actor->Attrs.Skl.Get()));
     msg.push_back(Util::StringFormat("SPD: %i", actor->Attrs.Spd.Get()));
-    msg.push_back("");
+    msg.push_back(std::string());
     msg.push_back(Util::StringFormat("HP: %i/%i", actor->Attrs.HP.Min().Get(), actor->Attrs.HP.Max().Get()));
     msg.push_back(Util::StringFormat("MP: %i/%i", actor->Attrs.MP.Min().Get(), actor->Attrs.MP.Max().Get()));
-    msg.push_back("");
+    msg.push_back(std::string());
     msg.push_back(Util::StringFormat("Action Meter: %i", actor->Attrs.ActionMeter));
 
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, name, msg);

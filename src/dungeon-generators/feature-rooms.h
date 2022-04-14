@@ -70,8 +70,8 @@ class FeatureRooms : public DGBase
 
     const std::map<FeatureRoomType, std::vector<StringsArray2D>> _specialRoomLayoutByType =
     {
-      { FeatureRoomType::GARDEN, GlobalConstants::GardenLayouts },
-      { FeatureRoomType::POND, GlobalConstants::PondLayouts },
+      { FeatureRoomType::GARDEN,   GlobalConstants::GardenLayouts   },
+      { FeatureRoomType::POND,     GlobalConstants::PondLayouts     },
       { FeatureRoomType::FOUNTAIN, GlobalConstants::FountainLayouts }
     };
 };

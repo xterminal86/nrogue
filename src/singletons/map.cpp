@@ -101,8 +101,8 @@ void Map::UpdateGameObjects()
       // in levels where player cannot attack anyway.
       if (CurrentLevel->MapType_ != MapType::TOWN)
       {
-        Position plPos = { _playerRef->PosX, _playerRef->PosY };
-        Position objPos = { go->PosX, go->PosY };
+        Position plPos = _playerRef->GetPosition();
+        Position objPos = go->GetPosition();
 
         // Check if object is in visibility radius
         int d = (int)Util::LinearDistance(plPos, objPos);
@@ -669,7 +669,7 @@ void Map::ShowLoadingText(const std::string& textOverride)
 
   Printer::Instance().DrawWindow({ lx - 3, th - 3 },
                                  _windowSize,
-                                 "",
+                                 std::string(),
                                  Colors::WhiteColor,
                                  Colors::MessageBoxHeaderBgColor,
                                  "#444444");
@@ -773,7 +773,7 @@ void Map::PrintMapLayout()
 
 void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes)
 {
-  auto pointsAffected = Printer::Instance().DrawExplosion({ target->PosX, target->PosY }, 3);
+  auto pointsAffected = Printer::Instance().DrawExplosion(target->GetPosition(), 3);
 
   //Util::PrintVector("points affected", pointsAffected);
 
@@ -783,7 +783,7 @@ void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centra
 
   for (auto& p : pointsAffected)
   {
-    int d = Util::LinearDistance({ target->PosX, target->PosY }, p);
+    int d = Util::LinearDistance(target->GetPosition(), p);
     if (d == 0)
     {
       d = 1;

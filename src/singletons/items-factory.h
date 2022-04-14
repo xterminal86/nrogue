@@ -12,7 +12,11 @@ class Player;
 class ItemsFactory : public Singleton<ItemsFactory>
 {
   public:
-    GameObject* CreateDummyItem(const std::string& objName, char image, const std::string& fgColor, const std::string& bgColor, const std::vector<std::string>& descText);
+    GameObject* CreateDummyItem(const std::string& objName,
+                                char image,
+                                const std::string& fgColor,
+                                const std::string& bgColor,
+                                const std::vector<std::string>& descText);
     //
     // *************************************************************************
     //

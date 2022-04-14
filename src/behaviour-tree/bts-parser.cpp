@@ -204,7 +204,7 @@ void BTSParser::FormTree(bool printDebug)
     if (printDebug)
     {
       std::string tabs(i.Indent, '.');
-      std::string addInfo = (i.Params.size() != 0 ? i.Params["p1"].data() : "");
+      std::string addInfo = (i.Params.size() != 0 ? i.Params["p1"].data() : std::string());
       DebugLog("%s 0x%X %s (%s)\n", tabs.data(), &i, i.NodeName.data(), addInfo.data());
     }
   }
@@ -235,8 +235,8 @@ void BTSParser::FormTree(bool printDebug)
 
         if (printDebug)
         {
-          std::string addInfo1 = (_parsedData[i].Params.size() != 0 ? _parsedData[i].Params["p1"].data() : "");
-          std::string addInfo2 = (parent->Params.size() != 0 ? parent->Params.at("p1").data() : "");
+          std::string addInfo1 = (_parsedData[i].Params.size() != 0 ? _parsedData[i].Params["p1"].data() : std::string());
+          std::string addInfo2 = (parent->Params.size() != 0 ? parent->Params.at("p1").data() : std::string());
 
           std::string tabs(indent, '.');
           DebugLog("%s 0x%X %s (%s) <- 0x%X %s (%s)\n",

@@ -305,7 +305,7 @@ void MainState::TryToPickupItem()
   {
     if (ProcessMoneyPickup(res))
     {
-      CheckIfSomethingElseIsLyingHere({ _playerRef->PosX, _playerRef->PosY });
+      CheckIfSomethingElseIsLyingHere(_playerRef->GetPosition());
       return;
     }
 
@@ -320,7 +320,7 @@ void MainState::TryToPickupItem()
 
     ProcessItemPickup(res);
 
-    CheckIfSomethingElseIsLyingHere({ _playerRef->PosX, _playerRef->PosY });
+    CheckIfSomethingElseIsLyingHere(_playerRef->GetPosition());
   }
   else
   {

@@ -105,8 +105,8 @@ namespace Util
   // ===========================================================================
 
   bool IsObjectInRange(GameObject* checker,
-                        GameObject* checked,
-                        int range)
+                       GameObject* checked,
+                       int range)
   {
     if (checker == nullptr || checked == nullptr)
     {
@@ -114,10 +114,10 @@ namespace Util
       return false;
     }
 
-    return IsObjectInRange({ checker->PosX, checker->PosY },
-                             { checked->PosX, checked->PosY },
-                             range,
-                             range);
+    return IsObjectInRange(checker->GetPosition(),
+                           checked->GetPosition(),
+                           range,
+                           range);
   }
 
   bool IsObjectInRange(const Position& posToCheckFrom,
@@ -1456,7 +1456,7 @@ namespace Util
     auto& mapRef = Map::Instance().CurrentLevel->MapArray;
     auto curLvl = Map::Instance().CurrentLevel;
 
-    Position newPos = { receiver->PosX, receiver->PosY };
+    Position newPos = receiver->GetPosition();
 
     int attackDirClampedX = Clamp(attackDir.X, -1, 1);
     int attackDirClampedY = Clamp(attackDir.Y, -1, 1);
@@ -1491,7 +1491,7 @@ namespace Util
       // Ground units should perish on dangerous tiles.
       //
       bool isFlying = receiver->HasEffect(ItemBonusType::LEVITATION);
-      bool danger   = Map::Instance().IsTileDangerous({ receiver->PosX, receiver->PosY });
+      bool danger   = Map::Instance().IsTileDangerous(receiver->GetPosition());
       if (!isFlying && danger)
       {
         Application::Instance().DisplayAttack(receiver, GlobalConstants::DisplayAttackDelayMs, std::string());
@@ -1519,7 +1519,7 @@ namespace Util
   {
     std::string msg;
 
-    Position p = { target->PosX, target->PosY };
+    Position p = target->GetPosition();
 
     GameObject* actor = nullptr;
     if (!Util::IsPlayer(target))
@@ -2244,7 +2244,7 @@ namespace Util
     for (size_t i = 0; i < rect.size(); i++)
     {
       // Do not include points above weapon's maximum range as well.
-      int d = LinearDistance({ user->PosX, user->PosY }, rect[i]);
+      int d = LinearDistance(user->GetPosition(), rect[i]);
       if (weapon != nullptr && d > weapon->Data.Range)
       {
         outOfRange = true;
@@ -2317,7 +2317,7 @@ namespace Util
       return lineRes;
     }
 
-    Position startPoint = { user->PosX, user->PosY };
+    Position startPoint = user->GetPosition();
     Position endPoint   = end;
 
     auto line = BresenhamLine(startPoint, endPoint);
@@ -2468,13 +2468,13 @@ namespace Util
 
         if (cellOk && objOk && d <= range)
         {
-          res.push_back({ cell->PosX, cell->PosY });
+          res.push_back(cell->GetPosition());
         }
         else
         {
           if (obj != nullptr && !obj->Attrs.Indestructible)
           {
-            res.push_back({ cell->PosX, cell->PosY });
+            res.push_back(cell->GetPosition());
           }
 
           break;

@@ -49,7 +49,7 @@ BTResult TaskAttackBasic::Run()
 
     Application::Instance().DisplayAttack(&playerRef,
                                           GlobalConstants::DisplayAttackDelayMs,
-                                          "",
+                                          std::string(),
                                           Colors::RedColor);
 
     // TODO: process weapon damage bonuses (life leech etc.)

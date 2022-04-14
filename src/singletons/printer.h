@@ -55,7 +55,7 @@ class Printer : public Singleton<Printer>
     static const int kAlignCenter = 1;
     static const int kAlignRight = 2;
 
-    std::vector<Position> DrawExplosion(Position pos, int range);
+    std::vector<Position> DrawExplosion(const Position& pos, int range);
 
     /// Clears framebuffer (ncurses) or renderer (SDL)
     /// Use this before all PrintFB calls
