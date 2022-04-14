@@ -33,11 +33,11 @@ BTResult TaskTryPickupItems::Run()
   switch (_objectToControl->Type)
   {
     case GameObjectType::MAD_MINER:
-      succ = FilterItems(items, { ItemType::GEM, ItemType::RETURNER });
+      succ = PickupItems(items, { ItemType::GEM, ItemType::RETURNER });
       break;
 
     default:
-      FilterItems(items, Filter());
+      PickupItems(items, Filter());
       break;
   }
 
@@ -51,7 +51,7 @@ BTResult TaskTryPickupItems::Run()
   return BTResult::Success;
 }
 
-bool TaskTryPickupItems::FilterItems(const Items& items,
+bool TaskTryPickupItems::PickupItems(const Items& items,
                                      const Filter& filter)
 {
   if (filter.empty())

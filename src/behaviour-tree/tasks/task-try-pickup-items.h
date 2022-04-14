@@ -19,7 +19,7 @@ class TaskTryPickupItems : public Node
   private:
     ContainerComponent* _inventoryRef;
 
-    bool FilterItems(const Items& items,
+    bool PickupItems(const Items& items,
                      const Filter& filter);
 
     void Pickup(const Item& item);

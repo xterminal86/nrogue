@@ -41,7 +41,12 @@ void PickupItemState::ProcessInput()
           bool ok = PickupItem(item);
           if (ok)
           {
-            _itemsListIndexByChar.erase(_keyPressed);
+            //
+            // NOTE: possible items shuffle due to reaquiring list of items
+            // in the pile in case of a big pile and
+            // separate pickup from it.
+            //
+            _itemsList = Map::Instance().GetGameObjectsToPickup(_playerRef->PosX, _playerRef->PosY);
             RebuildDisplayList();
           }
         }

@@ -137,7 +137,7 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll, GameObject* user)
 
 void SpellsProcessor::PrintUsageResult(ItemComponent* scroll, GameObject* user)
 {
-  if (user == _playerRef)
+  if (Util::IsPlayer(user))
   {
     std::string scrollName = scroll->Data.IsIdentified ?
                              scroll->Data.IdentifiedName :
@@ -190,6 +190,9 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll, GameObject* u
   {
     int index = RNG::Instance().RandomRange(0, itemsToRepair.size());
     ItemComponent* item = itemsToRepair[index];
+
+    auto str = Util::StringFormat("Your %s disintegrates!", item->OwnerGameObject->ObjectName.data());
+    _scrollUseMessages.push_back(str);
 
     item->Break(_playerRef);
   }

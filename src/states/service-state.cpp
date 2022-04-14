@@ -160,9 +160,8 @@ void ServiceState::BlessItem(const ServiceInfo& si)
       equippedItem = si.ItemComponentRef;
     }
   }
-  else
+  else if (si.ItemComponentRef->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE)
   {
-    // FIXME: blessing is broken (segfault)
     equippedItem = _playerRef->Equipment->EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
   }
 
@@ -261,7 +260,7 @@ void ServiceState::DisplayItems()
   if (_serviceInfoByChar.empty())
   {
     Printer::Instance().PrintFB(_twHalf,
-                                2,
+                                _thHalf,
                                 _displayOnEmptyItems.at(_shopOwner->NpcRef->Data.ProvidesService),
                                 Printer::kAlignCenter,
                                 Colors::WhiteColor);

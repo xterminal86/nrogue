@@ -19,7 +19,7 @@ void SelectItemStateBase::Update(bool forceUpdate)
 
     DrawSpecific();
 
-    Printer::Instance().PrintFB(_twHalf, _th - 1, "'q' - cancel", Printer::kAlignCenter, Colors::WhiteColor);
+    Printer::Instance().PrintFB(_twHalf, _th - 1, "'q' - exit", Printer::kAlignCenter, Colors::WhiteColor);
     Printer::Instance().Render();
   }
 }

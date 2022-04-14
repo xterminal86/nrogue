@@ -61,7 +61,9 @@ struct ItemBonusStruct
   std::vector<std::string> ToStrings();
 };
 
+//
 // WARNING: possible god object
+//
 struct ItemData
 {
   ItemType    ItemType_    = ItemType::DUMMY;

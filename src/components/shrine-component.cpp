@@ -351,7 +351,7 @@ void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
 }
 
 //
-// TODO: unused method?! (not found in "Find References")
+// WARNING: unused method?! (not found in "Find References")
 //
 void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
 {
