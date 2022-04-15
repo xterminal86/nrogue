@@ -45,11 +45,9 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
       _monstersSpawnRateForThisLevel =
       {
         { GameObjectType::RAT,         20 },
+        { GameObjectType::BAT,          5 },
         { GameObjectType::SPIDER,       3 },
-        { GameObjectType::TROLL,        2 },
-        { GameObjectType::VAMPIRE_BAT,  1 },
-        { GameObjectType::MAD_MINER,    1 },
-        { GameObjectType::BAT,          5 }
+        { GameObjectType::MAD_MINER,    2 }
       };
     }
     break;
@@ -59,11 +57,10 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
       _monstersSpawnRateForThisLevel =
       {
         { GameObjectType::RAT,         20 },
+        { GameObjectType::BAT,          5 },
         { GameObjectType::SPIDER,       3 },
-        { GameObjectType::TROLL,        2 },
+        { GameObjectType::MAD_MINER,    2 },
         { GameObjectType::VAMPIRE_BAT,  1 },
-        { GameObjectType::MAD_MINER,    1 },
-        { GameObjectType::BAT,          5 }
       };
     }
     break;

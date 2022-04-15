@@ -15,7 +15,9 @@ MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _monstersSpawnRateForThisLevel =
       {
-        { GameObjectType::KOBOLD, 1 }
+        { GameObjectType::KOBOLD, 10 },
+        { GameObjectType::SPIDER, 2  },
+        { GameObjectType::TROLL,  1  }
       };
     }
     break;

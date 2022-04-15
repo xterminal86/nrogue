@@ -200,21 +200,31 @@ void Application::DisplayAttack(GameObject* defender,
                                 const std::string& messageToPrint,
                                 const std::string& cursorColor)
 {
-  int posX = defender->PosX + Map::Instance().CurrentLevel->MapOffsetX;
-  int posY = defender->PosY + Map::Instance().CurrentLevel->MapOffsetY;
-
-  DrawAttackCursor(posX, posY, defender, cursorColor);
-
-  Util::Sleep(delayMs);
-
-  if (messageToPrint.length() != 0)
+  if (FastCombat)
   {
-    Printer::Instance().AddMessage(messageToPrint);
+    if (messageToPrint.length() != 0)
+    {
+      Printer::Instance().AddMessage(messageToPrint);
+    }
   }
+  else
+  {
+    int posX = defender->PosX + Map::Instance().CurrentLevel->MapOffsetX;
+    int posY = defender->PosY + Map::Instance().CurrentLevel->MapOffsetY;
 
-  DrawAttackCursor(posX, posY, defender);
+    DrawAttackCursor(posX, posY, defender, cursorColor);
 
-  Util::Sleep(delayMs);
+    Util::Sleep(delayMs);
+
+    if (messageToPrint.length() != 0)
+    {
+      Printer::Instance().AddMessage(messageToPrint);
+    }
+
+    DrawAttackCursor(posX, posY, defender);
+
+    Util::Sleep(delayMs);
+  }
 }
 
 void Application::DrawAttackCursor(int x, int y,
@@ -602,27 +612,37 @@ void Application::ParseConfig()
 void Application::ProcessConfig()
 {
   // Trying to get values from config map
-  if (_config.count("FILE") != 0)
+  if (_config.count(kConfigKeyFile) == 1)
   {
-    TilesetFilename = _config["FILE"];
+    TilesetFilename = _config[kConfigKeyFile];
   }
 
-  if (_config.count("TILE_W") != 0
-   && _config.count("TILE_H") != 0)
+  if (_config.count(kConfigKeyTileW) == 1
+   && _config.count(kConfigKeyTileH) == 1)
   {
-    TileWidth = std::stoi(_config["TILE_W"]);
-    TileHeight = std::stoi(_config["TILE_H"]);
+    TileWidth = std::stoi(_config[kConfigKeyTileW]);
+    TileHeight = std::stoi(_config[kConfigKeyTileH]);
   }
 
-  if (_config.count("SCALE") != 0)
+  if (_config.count(kConfigKeyScale) == 1)
   {
-    ScaleFactor = std::stof(_config["SCALE"]);
+    ScaleFactor = std::stof(_config[kConfigKeyScale]);
+  }
+
+  if (_config.count(kConfigKeyFastCombat) == 1)
+  {
+    FastCombat = (_config[kConfigKeyFastCombat] == "ON");
+  }
+
+  if (_config.count(kConfigKeyFastMonsterMovement) == 1)
+  {
+    FastMonsterMovement = (_config[kConfigKeyFastMonsterMovement] == "ON");
   }
 
   // If tileset file can't be opened,
   // fallback to default '8x16' scaled window size.
   // Scale can still be read.
-  std::ifstream tileset(_config["FILE"]);
+  std::ifstream tileset(_config[kConfigKeyFile]);
   if (!tileset.is_open())
   {
     TileWidth = 8;

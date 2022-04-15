@@ -463,8 +463,10 @@ void GameObject::WaitForTurn()
   }
   else
   {
+    //
     // If SPD is < 0, skip std::abs(SPD) amount of turns
     // without gaining action meter
+    //
     if (ShouldSkipTurn())
     {
       _skipTurnsCounter++;
@@ -484,12 +486,16 @@ void GameObject::WaitForTurn()
 
 int GameObject::GetActionIncrement()
 {
+  //
   // +1 is because if SPD is 0 we must add TurnTickValue,
   // but if SPD is 1 we must multiply TurnTickValue by (SPD + 1)
   // to get different value
+  //
   int totalSpeed = Attrs.Spd.Get() + 1;
 
+  //
   // If SPD is currently -1 because of modifiers, we still can get 0
+  //
   int actionIncrement = (totalSpeed <= 0)
                       ? GlobalConstants::TurnTickValue
                       : totalSpeed * GlobalConstants::TurnTickValue;

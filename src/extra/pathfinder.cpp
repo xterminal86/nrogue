@@ -127,7 +127,13 @@ std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
       break;
     }
 
-    LookAround(mapRef, openList[index], openList, closedList, mapTilesToIgnore, ignoreActors, eightDirs);
+    LookAround(mapRef,
+               openList[index],
+               openList,
+               closedList,
+               mapTilesToIgnore,
+               ignoreActors,
+               eightDirs);
 
     openList.erase(openList.begin() + index);
   }

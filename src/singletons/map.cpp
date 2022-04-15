@@ -25,11 +25,15 @@ void Map::InitSpecific()
   _mapVisitFirstTime[MapType::NETHER_1]    = false;
   _mapVisitFirstTime[MapType::THE_END]     = false;
 
+  //
   // Shortcut variable
+  //
   _playerRef = &Application::Instance().PlayerInstance;
 
+  //
   // In order to prevent Map::UpdateGameObjects()
   // condition branch in Application::Run() on nullptr level.
+  //
   _playerRef->Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 }
 
@@ -69,6 +73,7 @@ void Map::UpdateGameObjects()
 
   for (auto& go : CurrentLevel->ActorGameObjects)
   {
+    //
     // Update does the action meter increment as well
     // so if object had action meter 0 at start,
     // it needs to increment it in its component logic class
@@ -92,6 +97,7 @@ void Map::UpdateGameObjects()
     {
       go->Update();
 
+      //
       // If we have fast monster, player should be able to see its movements
       // or it may look like monster just popped out of nowhere before the player
       // since all movement updates are off-screen.
@@ -99,7 +105,9 @@ void Map::UpdateGameObjects()
       // monster is attacking from distance.
       // Check against specific level is needed to avoid update lag
       // in levels where player cannot attack anyway.
-      if (CurrentLevel->MapType_ != MapType::TOWN)
+      //
+      if (Application::Instance().FastMonsterMovement == false
+       && CurrentLevel->Peaceful == false)
       {
         Position plPos = _playerRef->GetPosition();
         Position objPos = go->GetPosition();
@@ -108,6 +116,7 @@ void Map::UpdateGameObjects()
         int d = (int)Util::LinearDistance(plPos, objPos);
         if (d <= _playerRef->VisibilityRadius.Get())
         {
+          //
           // Check if he's actually visible
           //
           // NOTE: condition can make it look like actor is not

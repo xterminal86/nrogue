@@ -38,11 +38,13 @@ class Application : public Singleton<Application>
 
     Player PlayerInstance;
 
+    ///
     /// Force redraw current state
     ///
     /// Assuming that _currentState is MainState,
     /// call this to force redraw screen in that state
     /// only when needed ( see Player::WaitForTurn() )
+    ///
     void ForceDrawMainState();
 
     void ForceDrawCurrentState();
@@ -61,6 +63,21 @@ class Application : public Singleton<Application>
 
     int WindowWidth = 0;
     int WindowHeight = 0;
+
+    //
+    // Disables attack display animation thus reducing gameplay lag
+    //
+    bool FastCombat = false;
+
+    //
+    // Disables force draw update after each visible monster update
+    // thus reducing gameplay lag even more, but potentially
+    // confusing the player in case of when very fast monster
+    // walks around the wall, it will appear as if the monster
+    // just spawned in front of player, or even instakilled him
+    // in case of very fast attacking.
+    //
+    bool FastMonsterMovement = false;
 
     std::string TilesetFilename;
 
@@ -120,6 +137,13 @@ class Application : public Singleton<Application>
     std::map<uint8_t, char> _charByCharIndex;
 
     void PrepareChars();
+
+    const std::string kConfigKeyFile                = "FILE";
+    const std::string kConfigKeyTileW               = "TILE_W";
+    const std::string kConfigKeyTileH               = "TILE_H";
+    const std::string kConfigKeyScale               = "SCALE";
+    const std::string kConfigKeyFastCombat          = "FAST_COMBAT";
+    const std::string kConfigKeyFastMonsterMovement = "FAST_MONSTER_MOVEMENT";
 
     friend class TargetState;
 };

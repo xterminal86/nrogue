@@ -621,7 +621,7 @@ GameObject* MonstersInc::CreateShelob(int x, int y)
 
   go->Attrs.Str.Talents = 2;
   go->Attrs.Skl.Talents = 2;
-  go->Attrs.Spd.Talents = 3;
+  go->Attrs.Spd.Talents = 1;
 
   int difficulty = GetDifficulty();
 
