@@ -63,7 +63,9 @@ file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 if (${CMAKE_BUILD_TYPE} MATCHES Release)
   list(REMOVE_ITEM SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.h)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/tests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/tests.h)
 endif()
 
 add_executable(${TARGET_NAME} ${SOURCES})

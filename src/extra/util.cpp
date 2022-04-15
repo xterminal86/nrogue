@@ -110,7 +110,7 @@ namespace Util
   {
     if (checker == nullptr || checked == nullptr)
     {
-      DebugLog("[WAR] IsObjectInRange() checker: [0x%X] checked: [0x%X]", checker, checked);
+      DebugLog("[WAR] Util::IsObjectInRange() checker: [0x%X] checked: [0x%X]", checker, checked);
       return false;
     }
 
@@ -970,7 +970,7 @@ namespace Util
   {
     if (wand == nullptr)
     {
-      DebugLog("[WAR] RecalculateWandStats() wand is null!");
+      DebugLog("[WAR] Util::RecalculateWandStats() wand is null!");
       return;
     }
 
@@ -979,7 +979,7 @@ namespace Util
     SpellInfo* sip = SpellsDatabase::Instance().GetSpellInfoFromDatabase(spellType);
     if (sip == nullptr)
     {
-      DebugLog("[WAR] RecalculateWandStats() no such spell %i in database!", (int)spellType);
+      DebugLog("[WAR] Util::RecalculateWandStats() no such spell %i in database!", (int)spellType);
       return;
     }
 
@@ -1064,6 +1064,66 @@ namespace Util
     // Actual cost is going to be calculated in GetCost()
     //
     wand->Data.Cost = si.SpellBaseCost;
+  }
+
+  void BlessItem(ItemComponent* item)
+  {
+    if (item == nullptr)
+    {
+      DebugLog("[WAR] Util::BlessItem() item is null!");
+      return;
+    }
+
+    for (auto& bonus : item->Data.Bonuses)
+    {
+      switch (bonus.Type)
+      {
+        case ItemBonusType::STR:
+        case ItemBonusType::DEF:
+        case ItemBonusType::MAG:
+        case ItemBonusType::RES:
+        case ItemBonusType::SKL:
+        case ItemBonusType::SPD:
+          bonus.BonusValue += 1;
+          break;
+
+        case ItemBonusType::HP:
+        case ItemBonusType::MP:
+          bonus.BonusValue += (bonus.BonusValue / 2);
+          break;
+
+        case ItemBonusType::DMG_ABSORB:
+        case ItemBonusType::MAG_ABSORB:
+          bonus.BonusValue *= 2;
+          break;
+
+        case ItemBonusType::DAMAGE:
+          bonus.BonusValue += (bonus.BonusValue / 2);
+          break;
+
+        case ItemBonusType::VISIBILITY:
+          bonus.BonusValue += (bonus.BonusValue / 2);
+          break;
+
+        case ItemBonusType::LEECH:
+        case ItemBonusType::THORNS:
+          bonus.BonusValue += (bonus.BonusValue / 2);
+          break;
+
+        case ItemBonusType::SELF_REPAIR:
+        case ItemBonusType::REGEN:
+          bonus.Period -= (bonus.BonusValue / 2);
+          break;
+
+        case ItemBonusType::KNOCKBACK:
+          bonus.BonusValue += (bonus.BonusValue / 2);
+          break;
+
+        default:
+          DebugLog("[WAR] Util::BlessItem() bonus type %i not handled!", (int)bonus.Type);
+          break;
+      }
+    }
   }
 
   int Rolld100()
@@ -1550,7 +1610,7 @@ namespace Util
 
     if (weapon == nullptr)
     {
-      DebugLog("[WAR] GetProjectileImageAndColor() weapon is null!");
+      DebugLog("[WAR] Util::GetProjectileImageAndColor() weapon is null!");
       res = { projectile, projColor };
       return res;
     }
@@ -1718,13 +1778,13 @@ namespace Util
 
     if (cat == EquipmentCategory::NOT_EQUIPPABLE)
     {
-      DebugLog("[WAR] TryToDamageEquipment() category is NOT_EQUIPPABLE!");
+      DebugLog("[WAR] Util::TryToDamageEquipment() category is NOT_EQUIPPABLE!");
       return msg;
     }
 
     if (actor == nullptr)
     {
-      DebugLog("[WAR] TryToDamageEquipment() actor is null!");
+      DebugLog("[WAR] Util::TryToDamageEquipment() actor is null!");
       return msg;
     }
 
@@ -1736,7 +1796,7 @@ namespace Util
     }
     else
     {
-      DebugLog("[WAR] TryToDamageEquipment() equipment is null on %s!", actor->ObjectName.data());
+      DebugLog("[WAR] Util::TryToDamageEquipment() equipment is null on %s!", actor->ObjectName.data());
     }
 
     return msg;
@@ -1750,7 +1810,7 @@ namespace Util
 
     if (actor == nullptr)
     {
-      DebugLog("[WAR] TryToDamageEquipment() actor is null!");
+      DebugLog("[WAR] Util::TryToDamageEquipment() actor is null!");
       return msg;
     }
 
@@ -1761,7 +1821,7 @@ namespace Util
 
     if (item == nullptr)
     {
-      //DebugLog("[WAR] TryToDamageEquipment() item is null on %s!", actor->ObjectName.data());
+      //DebugLog("[WAR] Util::TryToDamageEquipment() item is null on %s!", actor->ObjectName.data());
       return msg;
     }
 
@@ -2024,7 +2084,7 @@ namespace Util
 
     if (who == nullptr)
     {
-      DebugLog("[WAR] ProcessMagicalDamage() who is null!");
+      DebugLog("[WAR] Util::ProcessMagicalDamage() who is null!");
       return res;
     }
 
@@ -2078,7 +2138,7 @@ namespace Util
   {
     if (who == nullptr)
     {
-      DebugLog("[WAR] ProcessMagicalDamage() who is null!");
+      DebugLog("[WAR] Util::ProcessMagicalDamage() who is null!");
       return std::string();
     }
 
@@ -2125,7 +2185,7 @@ namespace Util
   {
     if (who == nullptr)
     {
-      DebugLog("[WAR] ProcessManaShield() who is null!");
+      DebugLog("[WAR] Util::ProcessManaShield() who is null!");
       return;
     }
 
@@ -2171,7 +2231,7 @@ namespace Util
 
     if (who == nullptr)
     {
-      std::string err = "[WAR] DamageArmor() who is null!";
+      std::string err = "[WAR] Util::DamageArmor() who is null!";
       DebugLog("%s", err.data());
       logMsgs.push_back(err);
       return logMsgs;
@@ -2280,13 +2340,13 @@ namespace Util
 
     if (user == nullptr)
     {
-      DebugLog("[WAR] ProcessLaserAttack() user is nullptr!");
+      DebugLog("[WAR] Util::ProcessLaserAttack() user is nullptr!");
       return line;
     }
 
     if (weapon == nullptr)
     {
-      DebugLog("[WAR] ProcessLaserAttack() weapon is nullptr!");
+      DebugLog("[WAR] Util::ProcessLaserAttack() weapon is nullptr!");
       return line;
     }
 
@@ -2313,7 +2373,7 @@ namespace Util
 
     if (user == nullptr)
     {
-      DebugLog("[WAR] ProcessLaserAttack() user is nullptr!");
+      DebugLog("[WAR] Util::ProcessLaserAttack() user is nullptr!");
       return lineRes;
     }
 
@@ -2492,7 +2552,7 @@ namespace Util
 
     if (actor == nullptr)
     {
-      DebugLog("[WAR] GetItemsWithBonus() actor is null!");
+      DebugLog("[WAR] Util::GetItemsWithBonus() actor is null!");
       return res;
     }
 

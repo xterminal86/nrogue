@@ -135,7 +135,7 @@ void ServiceState::BlessItem(const ServiceInfo& si)
   //
   if (!si.ItemComponentRef->Data.Bonuses.empty())
   {
-    ProcessBonuses(si.ItemComponentRef);
+    Util::BlessItem(si.ItemComponentRef);
   }
   else
   {
@@ -147,90 +147,42 @@ void ServiceState::BlessItem(const ServiceInfo& si)
 
   ItemComponent* equippedItem = nullptr;
 
-  //
-  // There can be two rings
-  //
-  if (si.ItemComponentRef->Data.EqCategory == EquipmentCategory::RING)
+  if (si.ItemComponentRef->Data.IsEquipped)
   {
-    auto leftHand = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][0];
-    auto rightHand = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][1];
+    auto& cat = si.ItemComponentRef->Data.EqCategory;
 
-    if (leftHand == si.ItemComponentRef || rightHand == si.ItemComponentRef)
+    //
+    // There can be two rings
+    //
+    if (cat == EquipmentCategory::RING)
     {
-      equippedItem = si.ItemComponentRef;
+      auto leftHand  = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][0];
+      auto rightHand = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][1];
+
+      if (leftHand == si.ItemComponentRef
+       || rightHand == si.ItemComponentRef)
+      {
+        equippedItem = si.ItemComponentRef;
+      }
     }
-  }
-  else if (si.ItemComponentRef->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE)
-  {
-    equippedItem = _playerRef->Equipment->EquipmentByCategory[si.ItemComponentRef->Data.EqCategory][0];
-  }
-
-  //
-  // If item to be blessed is actually equipped, do the shuffle below.
-  //
-  if (equippedItem == si.ItemComponentRef)
-  {
-    //
-    // Unequip / equip to reapply stat bonuses
-    //
-    _playerRef->Equipment->Equip(equippedItem);
-    _playerRef->Equipment->Equip(equippedItem);
-
-    Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
-    Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
-  }
-}
-
-void ServiceState::ProcessBonuses(ItemComponent* item)
-{
-  for (auto& bonus : item->Data.Bonuses)
-  {
-    switch (bonus.Type)
+    else if (cat != EquipmentCategory::NOT_EQUIPPABLE)
     {
-      case ItemBonusType::STR:
-      case ItemBonusType::DEF:
-      case ItemBonusType::MAG:
-      case ItemBonusType::RES:
-      case ItemBonusType::SKL:
-      case ItemBonusType::SPD:
-        bonus.BonusValue += 1;
-        break;
+      equippedItem = _playerRef->Equipment->EquipmentByCategory[cat][0];
+    }
 
-      case ItemBonusType::HP:
-      case ItemBonusType::MP:
-        bonus.BonusValue += (bonus.BonusValue / 2);
-        break;
+    //
+    // If item to be blessed is actually equipped, do the shuffle below.
+    //
+    if (equippedItem == si.ItemComponentRef)
+    {
+      //
+      // Unequip / equip to reapply stat bonuses
+      //
+      _playerRef->Equipment->Equip(equippedItem);
+      _playerRef->Equipment->Equip(equippedItem);
 
-      case ItemBonusType::DMG_ABSORB:
-      case ItemBonusType::MAG_ABSORB:
-        bonus.BonusValue *= 2;
-        break;
-
-      case ItemBonusType::DAMAGE:
-        bonus.BonusValue += (bonus.BonusValue / 2);
-        break;
-
-      case ItemBonusType::VISIBILITY:
-        bonus.BonusValue += (bonus.BonusValue / 2);
-        break;
-
-      case ItemBonusType::LEECH:
-      case ItemBonusType::THORNS:
-        bonus.BonusValue += (bonus.BonusValue / 2);
-        break;
-
-      case ItemBonusType::SELF_REPAIR:
-      case ItemBonusType::REGEN:
-        bonus.Period -= (bonus.BonusValue / 2);
-        break;
-
-      case ItemBonusType::KNOCKBACK:
-        bonus.BonusValue += (bonus.BonusValue / 2);
-        break;
-
-      default:
-        DebugLog("[WAR] ServiceState::ProcessBonuses() bonus type %i not handled!", (int)bonus.Type);
-        break;
+      Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
+      Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
     }
   }
 }
@@ -386,7 +338,9 @@ void ServiceState::FillItemsForBlessing()
 
       bool bonusIsInvalid = (found != _invalidBonusTypes.end());
 
-      totalCost += (bonusIsInvalid ? b.MoneyCostIncrease / 2 : b.MoneyCostIncrease);
+      totalCost += (bonusIsInvalid
+                 ? (b.MoneyCostIncrease / 2)
+                 : b.MoneyCostIncrease);
     }
 
     int serviceCost = totalCost;

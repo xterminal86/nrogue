@@ -118,6 +118,7 @@ namespace Util
   extern int RollDamage(int numRolls, int diceSides);
 
   extern void RecalculateWandStats(ItemComponent* wand);
+  extern void BlessItem(ItemComponent* item);
 
   extern void Sleep(int delayMs);
 
