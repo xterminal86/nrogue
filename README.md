@@ -29,8 +29,8 @@ FAST_COMBAT=OFF
 FAST_MONSTER_MOVEMENT=OFF
 ```
 
-Two last lines are optional, they're off by default.
-FAST_COMBAT disables visual attack display and FAST_MONSTER_MOVEMENT doesn't force redraw after each visible monster's turn.
+Two last lines are optional, they're off by default.  
+FAST_COMBAT disables visual attack display and FAST_MONSTER_MOVEMENT doesn't force redraw after each visible monster's turn.  
 Both of these options reduce gameplay lag, although with FAST_MONSTER_MOVEMENT=ON it may sometimes look as if
 enemy just spawned before player if said monster had much larger SPD than player, which allowed it to perform several
 turns that were not force redrawn.
