@@ -4,6 +4,7 @@ CMakeLists.txt.user*
 nrogue
 core.*
 *.txt
+!config-template.txt
 *.out
 *.exe
 /*.bmp
