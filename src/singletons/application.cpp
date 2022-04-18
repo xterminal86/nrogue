@@ -200,7 +200,7 @@ void Application::DisplayAttack(GameObject* defender,
                                 const std::string& messageToPrint,
                                 const std::string& cursorColor)
 {
-  if (FastCombat)
+  if (GameConfig.FastCombat)
   {
     if (messageToPrint.length() != 0)
     {
@@ -575,6 +575,9 @@ void Application::InitCurses()
 
   start_color();
 
+  ParseConfig();
+  SetConfig();
+
   Printer::Instance().Init();
 }
 #endif
@@ -582,75 +585,6 @@ void Application::InitCurses()
 #ifdef USE_SDL
 
 #include <SDL2/SDL.h>
-
-void Application::ParseConfig()
-{
-  std::ifstream configFile("config.txt");
-  if (configFile.is_open())
-  {
-    std::string line;
-    while (std::getline(configFile, line))
-    {
-      auto res = Util::StringSplit(line, '=');
-      if (res.size() > 1)
-      {
-        _config.emplace(res[0], res[1]);
-      }
-    }
-
-    configFile.close();
-  }
-
-  /*
-  for (auto& kvp : _config)
-  {
-    DebugLog("%s = %s\n", kvp.first.data(), kvp.second.data());
-  }
-  */
-}
-
-void Application::ProcessConfig()
-{
-  // Trying to get values from config map
-  if (_config.count(kConfigKeyFile) == 1)
-  {
-    TilesetFilename = _config[kConfigKeyFile];
-  }
-
-  if (_config.count(kConfigKeyTileW) == 1
-   && _config.count(kConfigKeyTileH) == 1)
-  {
-    TileWidth = std::stoi(_config[kConfigKeyTileW]);
-    TileHeight = std::stoi(_config[kConfigKeyTileH]);
-  }
-
-  if (_config.count(kConfigKeyScale) == 1)
-  {
-    ScaleFactor = std::stof(_config[kConfigKeyScale]);
-  }
-
-  if (_config.count(kConfigKeyFastCombat) == 1)
-  {
-    FastCombat = (_config[kConfigKeyFastCombat] == "ON");
-  }
-
-  if (_config.count(kConfigKeyFastMonsterMovement) == 1)
-  {
-    FastMonsterMovement = (_config[kConfigKeyFastMonsterMovement] == "ON");
-  }
-
-  // If tileset file can't be opened,
-  // fallback to default '8x16' scaled window size.
-  // Scale can still be read.
-  std::ifstream tileset(_config[kConfigKeyFile]);
-  if (!tileset.is_open())
-  {
-    TileWidth = 8;
-    TileHeight = 16;
-  }
-
-  tileset.close();
-}
 
 void Application::SetIcon()
 {
@@ -682,9 +616,10 @@ void Application::InitSDL()
   SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
 
   ParseConfig();
-  ProcessConfig();
+  SetConfig();
 
-  SDL_Rect rect = GetWindowSize(TileWidth, TileHeight);
+  SDL_Rect rect = GetWindowSize(GameConfig.TileWidth,
+                                GameConfig.TileHeight);
 
   _defaultWindowSize = { rect.w, rect.h };
 
@@ -737,8 +672,8 @@ SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
 {
   SDL_Rect res;
 
-  int scaledW = (int)((float)tileWidth * ScaleFactor);
-  int scaledH = (int)((float)tileHeight * ScaleFactor);
+  int scaledW = (int)((float)tileWidth * GameConfig.ScaleFactor);
+  int scaledH = (int)((float)tileHeight * GameConfig.ScaleFactor);
 
   // ===========================================================================
   //
@@ -760,8 +695,8 @@ SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
   int ww = GlobalConstants::TerminalWidth * scaledW;
   int wh = GlobalConstants::TerminalHeight * scaledH;
 
-  WindowWidth = ww;
-  WindowHeight = wh;
+  GameConfig.WindowWidth = ww;
+  GameConfig.WindowHeight = wh;
 
   res.w = ww;
   res.h = wh;
@@ -783,6 +718,72 @@ SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
   return res;
 }
 #endif
+
+void Application::ParseConfig()
+{
+  std::ifstream configFile("config.txt");
+  if (configFile.is_open())
+  {
+    std::string line;
+    while (std::getline(configFile, line))
+    {
+      auto res = Util::StringSplit(line, '=');
+      if (res.size() > 1)
+      {
+        _config.emplace(res[0], res[1]);
+      }
+    }
+
+    configFile.close();
+  }
+}
+
+void Application::SetConfig()
+{
+  //
+  // Trying to get values from config map
+  //
+  if (_config.count(kConfigKeyFile) == 1)
+  {
+    GameConfig.TilesetFilename = _config[kConfigKeyFile];
+  }
+
+  if (_config.count(kConfigKeyTileW) == 1
+   && _config.count(kConfigKeyTileH) == 1)
+  {
+    GameConfig.TileWidth = std::stoi(_config[kConfigKeyTileW]);
+    GameConfig.TileHeight = std::stoi(_config[kConfigKeyTileH]);
+  }
+
+  if (_config.count(kConfigKeyScale) == 1)
+  {
+    GameConfig.ScaleFactor = std::stof(_config[kConfigKeyScale]);
+  }
+
+  if (_config.count(kConfigKeyFastCombat) == 1)
+  {
+    GameConfig.FastCombat = (_config[kConfigKeyFastCombat] == "ON");
+  }
+
+  if (_config.count(kConfigKeyFastMonsterMovement) == 1)
+  {
+    GameConfig.FastMonsterMovement = (_config[kConfigKeyFastMonsterMovement] == "ON");
+  }
+
+  //
+  // If tileset file can't be opened,
+  // fallback to default '8x16' scaled window size.
+  // Scale can still be read.
+  //
+  std::ifstream tileset(_config[kConfigKeyFile]);
+  if (!tileset.is_open())
+  {
+    GameConfig.TileWidth = 8;
+    GameConfig.TileHeight = 16;
+  }
+
+  tileset.close();
+}
 
 void Application::Cleanup()
 {

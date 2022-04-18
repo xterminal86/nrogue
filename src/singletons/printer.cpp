@@ -23,7 +23,9 @@ void Printer::InitSpecific()
 #ifdef USE_SDL
 void Printer::InitForSDL()
 {
-  std::string tilesetFile = Application::Instance().TilesetFilename;
+  auto& gameConfig = Application::Instance().GameConfig;
+
+  std::string tilesetFile = gameConfig.TilesetFilename;
 
   _tileWidth = 0;
   _tileHeight = 0;
@@ -36,8 +38,8 @@ void Printer::InitForSDL()
     _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
     SDL_FreeSurface(surf);
 
-    _tileWidth = Application::Instance().TileWidth;
-    _tileHeight = Application::Instance().TileHeight;
+    _tileWidth  = gameConfig.TileWidth;
+    _tileHeight = gameConfig.TileHeight;
   }
   else
   {
@@ -69,8 +71,8 @@ void Printer::InitForSDL()
     SDL_FreeSurface(surf);
   }
 
-  _tileWidthScaled = _tileWidth * Application::Instance().ScaleFactor;
-  _tileHeightScaled = _tileHeight * Application::Instance().ScaleFactor;
+  _tileWidthScaled = _tileWidth * gameConfig.ScaleFactor;
+  _tileHeightScaled = _tileHeight * gameConfig.ScaleFactor;
 
   _tileAspectRatio = (float)_tileWidth / (float)_tileHeight;
 
@@ -86,8 +88,8 @@ void Printer::InitForSDL()
   _frameBuffer = SDL_CreateTexture(Application::Instance().Renderer,
                                    SDL_PIXELFORMAT_RGBA32,
                                    SDL_TEXTUREACCESS_TARGET,
-                                   Application::Instance().WindowWidth,
-                                   Application::Instance().WindowHeight);
+                                   gameConfig.WindowWidth,
+                                   gameConfig.WindowHeight);
 
   char asciiIndex = 0;
   int tileIndex = 0;
@@ -107,7 +109,9 @@ void Printer::InitForSDL()
     }
   }
 
+  //
   // Hacky way of doing it but that's C++ for you
+  //
   for (int i = (int)NameCP437::FIRST; i < (int)NameCP437::LAST_ELEMENT; i++)
   {
     NameCP437 key = static_cast<NameCP437>(i);

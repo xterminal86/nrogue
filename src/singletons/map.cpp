@@ -106,7 +106,7 @@ void Map::UpdateGameObjects()
       // Check against specific level is needed to avoid update lag
       // in levels where player cannot attack anyway.
       //
-      if (Application::Instance().FastMonsterMovement == false
+      if (Application::Instance().GameConfig.FastMonsterMovement == false
        && CurrentLevel->Peaceful == false)
       {
         Position plPos = _playerRef->GetPosition();

@@ -38,6 +38,36 @@ class Application : public Singleton<Application>
 
     Player PlayerInstance;
 
+    struct Config
+    {
+      float ScaleFactor = 1.0f;
+
+      int TileWidth = 0;
+      int TileHeight = 0;
+
+      int WindowWidth = 0;
+      int WindowHeight = 0;
+
+      //
+      // Disables attack display animation thus reducing gameplay lag
+      //
+      bool FastCombat = false;
+
+      //
+      // Disables force draw update after each visible monster update
+      // thus reducing gameplay lag even more, but potentially
+      // confusing the player in case of when very fast monster
+      // walks around the wall, it will appear as if the monster
+      // just spawned in front of player, or even instakilled him
+      // in case of very fast attacking.
+      //
+      bool FastMonsterMovement = false;
+
+      std::string TilesetFilename;
+    };
+
+    Config GameConfig;
+
     ///
     /// Force redraw current state
     ///
@@ -56,31 +86,6 @@ class Application : public Singleton<Application>
     SDL_Renderer* Renderer = nullptr;
     SDL_Window* Window = nullptr;
 
-    float ScaleFactor = 1.0f;
-
-    int TileWidth = 0;
-    int TileHeight = 0;
-
-    int WindowWidth = 0;
-    int WindowHeight = 0;
-
-    //
-    // Disables attack display animation thus reducing gameplay lag
-    //
-    bool FastCombat = false;
-
-    //
-    // Disables force draw update after each visible monster update
-    // thus reducing gameplay lag even more, but potentially
-    // confusing the player in case of when very fast monster
-    // walks around the wall, it will appear as if the monster
-    // just spawned in front of player, or even instakilled him
-    // in case of very fast attacking.
-    //
-    bool FastMonsterMovement = false;
-
-    std::string TilesetFilename;
-
     SDL_Rect GetWindowSize(int tileWidth, int tileHeight);
 
     const std::pair<int, int>& GetDefaultWindowSize();
@@ -97,8 +102,10 @@ class Application : public Singleton<Application>
 
     std::map<GameStates, std::unique_ptr<GameState>> _gameStates;
 
+    std::map<std::string, std::string> _config;
+
     void ParseConfig();
-    void ProcessConfig();
+    void SetConfig();
     void InitGraphics();
     void InitGameStates();
     void DrawAttackCursor(int x, int y,
@@ -111,7 +118,6 @@ class Application : public Singleton<Application>
 
 #ifdef USE_SDL
     std::pair<int, int> _defaultWindowSize;
-    std::map<std::string, std::string> _config;
     void InitSDL();
     void SetIcon();
 #else
