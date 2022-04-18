@@ -464,12 +464,16 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
       }
       break;
 
-      case ItemBonusType::HUNGER:
+      case ItemBonusType::REMOVE_HUNGER:
         res.push_back("Removes need for food");
         break;
 
       case ItemBonusType::IGNORE_DEFENCE:
         res.push_back("Ignores target's DEF");
+        break;
+
+      case ItemBonusType::IGNORE_ARMOR:
+        res.push_back("Ignores target's armor");
         break;
 
       case ItemBonusType::KNOCKBACK:

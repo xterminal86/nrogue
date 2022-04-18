@@ -52,6 +52,22 @@ bool EquipmentComponent::Equip(ItemComponent* item)
   return res;
 }
 
+bool EquipmentComponent::HasBonus(ItemBonusType type)
+{
+  for (auto& kvp : EquipmentByCategory)
+  {
+    for (ItemComponent* i : kvp.second)
+    {
+      if (i != nullptr && i->Data.HasBonus(type))
+      {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 // ================================= RING ======================================
 
 bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)

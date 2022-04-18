@@ -1112,7 +1112,7 @@ namespace Util
 
         case ItemBonusType::SELF_REPAIR:
         case ItemBonusType::REGEN:
-          bonus.Period -= (bonus.BonusValue / 2);
+          bonus.Period -= (bonus.Period / 2);
           break;
 
         case ItemBonusType::KNOCKBACK:
@@ -2097,7 +2097,8 @@ namespace Util
       amount = 0;
     }
 
-    auto armorMsgs = DamageArmor(who, from, amount);
+    std::vector<std::string> armorMsgs;
+    armorMsgs = DamageArmor(who, from, amount);
 
     std::string whoImg  = GetGameObjectDisplayCharacter(who);
     std::string fromImg = GetGameObjectDisplayCharacter(from);

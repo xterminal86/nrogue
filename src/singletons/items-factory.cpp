@@ -1846,6 +1846,7 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
   ic->Data.Damage.SetMax(diceSides);
 
   AddRandomValueBonusToItem(ic, ItemBonusType::IGNORE_DEFENCE);
+  AddRandomValueBonusToItem(ic, ItemBonusType::IGNORE_ARMOR);
 
   AddBonusToItem(ic, { ItemBonusType::SKL, RNG::Instance().RandomRange(0, 3) });
   AddBonusToItem(ic, { ItemBonusType::SPD, RNG::Instance().RandomRange(2, 5) });
@@ -2012,6 +2013,7 @@ void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map
   {
     bonusWeightByType.erase(ItemBonusType::DAMAGE);
     bonusWeightByType.erase(ItemBonusType::IGNORE_DEFENCE);
+    bonusWeightByType.erase(ItemBonusType::IGNORE_ARMOR);
     bonusWeightByType.erase(ItemBonusType::KNOCKBACK);
     bonusWeightByType.erase(ItemBonusType::LEECH);
     bonusWeightByType.erase(ItemBonusType::INVISIBILITY);
@@ -2026,7 +2028,7 @@ void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map
     bonusWeightByType.erase(ItemBonusType::DMG_ABSORB);
     bonusWeightByType.erase(ItemBonusType::MAG_ABSORB);
     bonusWeightByType.erase(ItemBonusType::THORNS);
-    bonusWeightByType.erase(ItemBonusType::HUNGER);
+    bonusWeightByType.erase(ItemBonusType::REMOVE_HUNGER);
     bonusWeightByType.erase(ItemBonusType::INVISIBILITY);
     bonusWeightByType.erase(ItemBonusType::TELEPATHY);
     bonusWeightByType.erase(ItemBonusType::LEVITATION);
@@ -2039,6 +2041,7 @@ void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map
     bonusWeightByType.erase(ItemBonusType::KNOCKBACK);
     bonusWeightByType.erase(ItemBonusType::DAMAGE);
     bonusWeightByType.erase(ItemBonusType::IGNORE_DEFENCE);
+    bonusWeightByType.erase(ItemBonusType::IGNORE_ARMOR);
     bonusWeightByType.erase(ItemBonusType::LEECH);
   }
 }
@@ -2060,8 +2063,9 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
     { ItemBonusType::VISIBILITY,      50 },
     { ItemBonusType::INVISIBILITY,     5 },
     { ItemBonusType::DAMAGE,          75 },
-    { ItemBonusType::HUNGER,          40 },
+    { ItemBonusType::REMOVE_HUNGER,          40 },
     { ItemBonusType::IGNORE_DEFENCE,  10 },
+    { ItemBonusType::IGNORE_ARMOR,    10 },
     { ItemBonusType::KNOCKBACK,       20 },
     { ItemBonusType::MANA_SHIELD,      7 },
     { ItemBonusType::REGEN,            7 },
@@ -2268,6 +2272,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
     case ItemBonusType::TELEPATHY:
     case ItemBonusType::LEVITATION:
     case ItemBonusType::IGNORE_DEFENCE:
+    case ItemBonusType::IGNORE_ARMOR:
     {
       // There is no range for telepathy (at least for now)
       value = 1;

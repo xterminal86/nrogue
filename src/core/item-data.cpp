@@ -118,6 +118,21 @@ ItemBonusStruct* ItemData::GetBonus(ItemBonusType type)
   return res;
 }
 
+int ItemData::GetTotalBonusValue(ItemBonusType type)
+{
+  int res = 0;
+
+  for (auto& i : Bonuses)
+  {
+    if (i.Type == type)
+    {
+      res += i.BonusValue;
+    }
+  }
+
+  return res;
+}
+
 bool ItemData::CanBeUsed()
 {
   return (UseCallback.target_type() != typeid(void));

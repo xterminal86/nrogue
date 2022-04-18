@@ -166,6 +166,7 @@ namespace Util
                                           ItemComponent* item,
                                           int damage);
 
+  // TODO: handle ignore armor damage
   extern int CalculateDamageValue(GameObject* attacker,
                                   GameObject* defender,
                                   ItemComponent* weapon,

@@ -73,6 +73,7 @@ class Player : public GameObject
 
     std::string RecallItem(ItemComponent* itemRef);
 
+    // TODO: apply stat penalties when starving
     bool IsStarving = false;
 
     std::map<PlayerSkills, int> SkillLevelBySkill;

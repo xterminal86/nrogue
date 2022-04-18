@@ -1292,20 +1292,11 @@ void Player::ProcessHunger()
     return;
   }
 
-  // Check only rings and amulet
-  std::vector<ItemComponent*> ringsAndAmuletRefs =
-  {
-    Equipment->EquipmentByCategory[EquipmentCategory::RING][0],
-    Equipment->EquipmentByCategory[EquipmentCategory::RING][1],
-    Equipment->EquipmentByCategory[EquipmentCategory::NECK][0],
-  };
+  bool noHunger = Equipment->HasBonus(ItemBonusType::REMOVE_HUNGER);
 
-  for (auto& ref : ringsAndAmuletRefs)
+  if (noHunger && !IsStarving)
   {
-    if (ref != nullptr && ref->Data.HasBonus(ItemBonusType::HUNGER))
-    {
-      return;
-    }
+    return;
   }
 
   Attrs.Hunger += Attrs.HungerSpeed.Get();

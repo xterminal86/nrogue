@@ -703,6 +703,13 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
       _attributesRefsByBonus.at(e.Type).AddModifier(e.Id, e.BonusValue);
       break;
 
+    //
+    // REGEN is 1 HP in a period
+    //
+    case ItemBonusType::REGEN:
+      Attrs.HungerSpeed.AddModifier(e.Id, e.BonusValue * 5);
+      break;
+
     case ItemBonusType::BLINDNESS:
     case ItemBonusType::ILLUMINATED:
       VisibilityRadius.AddModifier(e.Id, e.BonusValue);

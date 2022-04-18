@@ -118,6 +118,7 @@ struct ItemData
 
   ItemBonusStruct* GetBonus(ItemBonusType type);
 
+  int GetTotalBonusValue(ItemBonusType type);
   int GetCost();
 
   // BUC status + object name [+ suffix]

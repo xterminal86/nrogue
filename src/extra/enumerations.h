@@ -283,8 +283,9 @@ enum class ItemBonusType
   VISIBILITY,     // increases visibility radius
   INVISIBILITY,   // monsters can't see you (unless they can)
   DAMAGE,         // adds to total damage
-  HUNGER,         // stops hunger counter
+  REMOVE_HUNGER,  // stops hunger counter
   IGNORE_DEFENCE, // ignores DEF for damage calculation
+  IGNORE_ARMOR,   // deals damage straight to HP, ignoring any armor
   KNOCKBACK,
   MANA_SHIELD,
   REGEN,

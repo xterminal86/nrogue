@@ -24,6 +24,7 @@ class EquipmentComponent : public Component
     void Update() override;
 
     bool Equip(ItemComponent* item);
+    bool HasBonus(ItemBonusType type);
 
     std::map<EquipmentCategory, std::vector<ItemComponent*>> EquipmentByCategory;
 
