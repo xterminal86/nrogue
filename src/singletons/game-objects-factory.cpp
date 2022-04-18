@@ -109,7 +109,9 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
   go->FgColor = Colors::ShrineColorsByType.at(type).first;
   go->BgColor = Colors::ShrineColorsByType.at(type).second;
 
-  ShrineComponent* sc = go->AddComponent<ShrineComponent>(type, timeout, timeout);
+  bool oneTimeUse = (type != ShrineType::POTENTIAL);
+
+  ShrineComponent* sc = go->AddComponent<ShrineComponent>(type, timeout, oneTimeUse);
 
   go->ObjectName = GlobalConstants::ShrineNameByType.at(type);
   go->FogOfWarName = "?Shrine?";

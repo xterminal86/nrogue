@@ -7,12 +7,18 @@
 #include "game-objects-factory.h"
 #include "map.h"
 
-ShrineComponent::ShrineComponent(ShrineType shrineType, int timeout, int counter)
+ShrineComponent::ShrineComponent(ShrineType shrineType, int timeout, bool oneTimeUse)
 {
   _componentHash = typeid(*this).hash_code();
 
   _timeout = timeout;
-  _counter = counter;
+
+  //
+  // So that shrine can activate on Update()
+  //
+  _counter = timeout;
+
+  _oneTimeUse = oneTimeUse;
 
   _type = shrineType;
 }
@@ -26,7 +32,9 @@ void ShrineComponent::Update()
 
   if (_counter == _timeout)
   {
+    //
     // So that we won't go into this block again
+    //
     _counter++;
 
     Activate();
@@ -35,7 +43,7 @@ void ShrineComponent::Update()
 
 IR ShrineComponent::Interact()
 {
-  if (_counter < _timeout)
+  if (_timeout == -1 || _counter < _timeout)
   {
     Printer::Instance().AddMessage("Shrine is inactive");
     return { InteractionResult::FAILURE, GameStates::MAIN_STATE };
@@ -44,8 +52,8 @@ IR ShrineComponent::Interact()
   {
     int dungLvl = Map::Instance().CurrentLevel->DungeonLevel;
 
-    _power    = dungLvl; //Timeout / 100;
-    _duration = GlobalConstants::EffectDefaultDuration * _power; //Timeout / 2;
+    _power    = dungLvl;
+    _duration = GlobalConstants::EffectDefaultDuration * _power;
 
     _counter = 0;
     OwnerGameObject->FgColor = Colors::BlackColor;
@@ -62,6 +70,11 @@ IR ShrineComponent::Interact()
     Printer::Instance().AddMessage(message);
 
     ProcessEffect();
+
+    if (_oneTimeUse)
+    {
+      _timeout = -1;
+    }
 
     return { InteractionResult::SUCCESS, GameStates::MAIN_STATE };
   }
@@ -319,7 +332,9 @@ void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
       b.BonusValue = (b.Type == ItemBonusType::POISONED
                    || b.Type == ItemBonusType::BURNING) ? -1 : 1;
       b.Duration   = _duration;
-      b.Period     = (b.Type == ItemBonusType::POISONED) ? 2 : 1;
+      b.Period     = (b.Type == ItemBonusType::POISONED)
+                     ? GlobalConstants::EffectDurationSkipsForTurn * 2
+                     : 1;
     }
     break;
 

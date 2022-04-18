@@ -29,7 +29,7 @@ static const std::vector<ItemBonusType> NegativeEffects =
 class ShrineComponent : public Component
 {
   public:
-    ShrineComponent(ShrineType shrineType, int timeout, int counter);
+    ShrineComponent(ShrineType shrineType, int timeout, bool oneTimeUse = true);
 
     void Update() override;
 
@@ -49,6 +49,8 @@ class ShrineComponent : public Component
 
     int _timeout = -1;
     int _counter = 0;
+
+    bool _oneTimeUse = true;
 
     ShrineType _type;
 };

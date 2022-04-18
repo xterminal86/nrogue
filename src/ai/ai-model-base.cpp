@@ -186,10 +186,10 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
       ItemBonusStruct e;
       if (effectType == "Psd")
       {
-        e.Type = ItemBonusType::POISONED;
-        e.BonusValue = -AIComponentRef->OwnerGameObject->Attrs.Lvl.Get();
-        e.Duration = GlobalConstants::EffectDefaultDuration;
-        e.Period = 5;
+        e.Type       = ItemBonusType::POISONED;
+        e.BonusValue = -1;
+        e.Duration   = GlobalConstants::EffectDefaultDuration;
+        e.Period     = GlobalConstants::EffectDurationSkipsForTurn * 2;
         e.Cumulative = true;
       }
 

@@ -456,12 +456,11 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   // TODO: add some more plot-related dummy items
   //
 
-  go->Attrs.Str.Talents = 3;
-  go->Attrs.Skl.Talents = 3;
-  go->Attrs.Def.Talents = 1;
-  go->Attrs.Spd.Talents = 2;
+  go->Attrs.Str.Talents = 2;
+  go->Attrs.Skl.Talents = 1;
+  go->Attrs.Spd.Talents = 1;
 
-  for (int i = 0; i < 8; i++)
+  for (int i = 0; i <= 5; i++)
   {
     int hpToAdd = RNG::Instance().RandomRange(4, 6);
     go->LevelUp(hpToAdd);
