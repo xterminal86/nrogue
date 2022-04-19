@@ -171,18 +171,12 @@ void ServiceState::BlessItem(const ServiceInfo& si)
     }
 
     //
-    // If item to be blessed is actually equipped, do the shuffle below.
+    // NOTE: old code used double Equip() call to reapply bonuses.
+    // Think on why, maybe there is some special case I forgot about.
     //
     if (equippedItem == si.ItemComponentRef)
     {
-      //
-      // Unequip / equip to reapply stat bonuses
-      //
-      _playerRef->Equipment->Equip(equippedItem);
-      _playerRef->Equipment->Equip(equippedItem);
-
-      Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
-      Printer::Instance().Messages().erase(Printer::Instance().Messages().begin());
+      Util::ReapplyBonuses(_playerRef, equippedItem);
     }
   }
 }

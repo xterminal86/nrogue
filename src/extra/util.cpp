@@ -1575,6 +1575,12 @@ namespace Util
     receiver->CheckPerish();
   }
 
+  void ReapplyBonuses(GameObject* onWho, ItemComponent* item)
+  {
+    onWho->UnapplyBonuses(item);
+    onWho->ApplyBonuses(item);
+  }
+
   std::string ProcessTeleport(GameObject* target)
   {
     std::string msg;

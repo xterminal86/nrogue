@@ -143,6 +143,8 @@ namespace Util
                         const Position& attackDir,
                         int tiles);
 
+  extern void ReapplyBonuses(GameObject* onWho, ItemComponent* item);
+
   extern std::string ProcessTeleport(GameObject* target);
 
   extern std::pair<char, std::string> GetProjectileImageAndColor(ItemComponent* weapon,

@@ -42,7 +42,8 @@ void PickupItemState::ProcessInput()
           if (ok)
           {
             //
-            // NOTE: possible items shuffle due to reaquiring list of items
+            // NOTE: may be possible items shuffle
+            // due to reaquiring list of items
             // in the pile in case of a big pile and
             // separate pickup from it.
             //
