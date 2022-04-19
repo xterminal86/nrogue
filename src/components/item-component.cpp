@@ -428,7 +428,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
     switch (i.Type)
     {
       case ItemBonusType::INDESTRUCTIBLE:
-        res.push_back("Does not wear out");
+        res.push_back("Indestructible");
         break;
 
       case ItemBonusType::SELF_REPAIR:

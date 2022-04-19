@@ -820,10 +820,7 @@ void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centra
     // Check self damage
     if (_playerRef->PosX == p.X && _playerRef->PosY == p.Y)
     {
-      int dmgHere = centralDamage / d;
-      dmgHere -= _playerRef->Attrs.Res.Get();
-
-      _playerRef->ReceiveDamage(from, dmgHere, true);
+      Util::TryToDamageObject(_playerRef, _playerRef, dmgHere, againstRes);
     }
   }
 }

@@ -241,9 +241,11 @@ void TaskAttackRanged::ProcessBows(ItemComponent* weapon,
   {
     if (what->IsAlive())
     {
+      bool ignoreArmor = weapon->Data.HasBonus(ItemBonusType::IGNORE_ARMOR);
       bool succ = what->ReceiveDamage(_objectToControl,
                                       dmg,
                                       false,
+                                      ignoreArmor,
                                       false,
                                       true);
       if (succ
@@ -438,14 +440,10 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
     //
     if (_objectToControl->GetPosition() == p)
     {
-      int dmgHere = centralDamage / d;
-      dmgHere -= _objectToControl->Attrs.Res.Get();
-
-      _objectToControl->ReceiveDamage(from,
-                                      dmgHere,
-                                      againstRes,
-                                      dmgHere,
-                                      true);
+      Util::TryToDamageObject(_objectToControl,
+                              _objectToControl,
+                              dmgHere,
+                              againstRes);
     }
   }
 }

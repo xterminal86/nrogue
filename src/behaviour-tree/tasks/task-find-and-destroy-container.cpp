@@ -99,7 +99,7 @@ BTResult TaskFindAndDestroyContainer::ProcessExistingObject(GameObject* containe
 
     Util::TryToDamageEquipment(_objectToControl, weapon, -1);
 
-    container->ReceiveDamage(_objectToControl, dmg, false, false, true);
+    container->ReceiveDamage(_objectToControl, dmg, false, false, false, true);
   }
   else
   {

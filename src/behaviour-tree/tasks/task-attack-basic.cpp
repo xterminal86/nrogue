@@ -27,6 +27,12 @@ BTResult TaskAttackBasic::Run()
     weapon = ec->EquipmentByCategory[EquipmentCategory::WEAPON][0];
   }
 
+  bool ignoreArmor = false;
+  if (weapon != nullptr)
+  {
+    ignoreArmor = weapon->Data.HasBonus(ItemBonusType::IGNORE_ARMOR);
+  }
+
   int hitChance = Util::CalculateHitChanceMelee(_objectToControl, &playerRef);
 
   auto logMsg = Util::StringFormat("%s (SKL %i, LVL %i) attacks Player (SKL: %i, LVL %i): chance = %i",
@@ -54,7 +60,12 @@ BTResult TaskAttackBasic::Run()
 
     // TODO: process weapon damage bonuses (life leech etc.)
 
-    playerRef.ReceiveDamage(_objectToControl, dmg, false);
+    playerRef.ReceiveDamage(_objectToControl,
+                            dmg,
+                            false,
+                            ignoreArmor,
+                            false,
+                            false);
 
     //
     // Melee attack with ranged weapon shouldn't damage it
@@ -83,7 +94,7 @@ BTResult TaskAttackBasic::Run()
   ItemComponent* armor = playerRef.Equipment->EquipmentByCategory[EquipmentCategory::TORSO][0];
 
   _attackResult.Success = result;
-  _attackResult.HasArmor = (armor != nullptr);
+  _attackResult.HasArmor = (armor != nullptr && !ignoreArmor);
   _attackResult.DamageDone = dmg;
 
   return BTResult::Success;

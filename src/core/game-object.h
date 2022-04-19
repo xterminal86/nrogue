@@ -147,8 +147,9 @@ class GameObject
     virtual bool ReceiveDamage(GameObject* from,
                                int amount,
                                bool isMagical,
+                               bool ignoreArmor,
                                bool directDamage,
-                               bool suppressLog = false);
+                               bool suppressLog);
     bool CanAct();
 
     void FinishTurn();

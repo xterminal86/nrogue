@@ -320,6 +320,7 @@ void GameObject::MakeTile(const GameObjectInfo& t, GameObjectType typeOverride)
 bool GameObject::ReceiveDamage(GameObject* from,
                                int amount,
                                bool isMagical,
+                               bool ignoreArmor,
                                bool directDamage,
                                bool suppressLog)
 {
@@ -374,7 +375,7 @@ bool GameObject::ReceiveDamage(GameObject* from,
     }
     else
     {
-      auto msgs = Util::ProcessPhysicalDamage(this, from, amount);
+      auto msgs = Util::ProcessPhysicalDamage(this, from, amount, ignoreArmor);
       for (auto& m : msgs)
       {
         logMessages.push(m);
@@ -389,11 +390,13 @@ bool GameObject::ReceiveDamage(GameObject* from,
           static_cast<Player*>(from)->ReceiveDamage(this,
                                                     dmgReturned,
                                                     true,
-                                                    true);
+                                                    true,
+                                                    true,
+                                                    false);
         }
         else
         {
-          from->ReceiveDamage(this, dmgReturned, true, true, true);
+          from->ReceiveDamage(this, dmgReturned, true, true, true, true);
         }
       }
     }

@@ -1762,7 +1762,7 @@ namespace Util
       }
       else
       {
-        object->ReceiveDamage(from, dmgHere, againstRes, false, !IsPlayer(from));
+        object->ReceiveDamage(from, dmgHere, againstRes, false, false, !IsPlayer(from));
         res.first = true;
       }
     }
@@ -2078,13 +2078,14 @@ namespace Util
 
   std::vector<std::string> ProcessPhysicalDamage(GameObject* who,
                                                  GameObject* from,
-                                                 int& amount)
+                                                 int& amount,
+                                                 bool ignoreArmor)
   {
     std::vector<std::string> res;
 
     if (who == nullptr)
     {
-      DebugLog("[WAR] Util::ProcessMagicalDamage() who is null!");
+      DebugLog("[WAR] Util::ProcessPhysicalDamage() who is null!");
       return res;
     }
 
@@ -2098,7 +2099,11 @@ namespace Util
     }
 
     std::vector<std::string> armorMsgs;
-    armorMsgs = DamageArmor(who, from, amount);
+
+    if (!ignoreArmor)
+    {
+      armorMsgs = DamageArmor(who, from, amount);
+    }
 
     std::string whoImg  = GetGameObjectDisplayCharacter(who);
     std::string fromImg = GetGameObjectDisplayCharacter(from);
@@ -2275,7 +2280,7 @@ namespace Util
           int hpDamage = std::abs(overkill);
 
           // Recursion in production code, yay!
-          logMsgsRec = ProcessPhysicalDamage(who, from, hpDamage);
+          logMsgsRec = ProcessPhysicalDamage(who, from, hpDamage, true);
         }
       }
     }
@@ -2425,6 +2430,8 @@ namespace Util
 
           obj->ReceiveDamage(user,
                              dmgDone,
+                             false,
+                             false,
                              false,
                              false);
 

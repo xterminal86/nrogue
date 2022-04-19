@@ -459,15 +459,6 @@ namespace ItemUseHandlers
       {
         Printer::Instance().AddMessage(msg);
       }
-
-      Player* playerRef = &Application::Instance().PlayerInstance;
-
-      int maxHunger = playerRef->Attrs.HungerRate.Get();
-
-      if (playerRef->Attrs.Hunger < maxHunger)
-      {
-        playerRef->IsStarving = false;
-      }
     }
 
     return UseResult::SUCCESS;

@@ -853,7 +853,7 @@ void DevConsole::DamageActor(const std::vector<std::string>& params)
   }
 
   int dmg = std::stoi(n);
-  _objectHandles[ObjectHandleType::ACTOR]->ReceiveDamage(nullptr, dmg, true, isDirect);
+  _objectHandles[ObjectHandleType::ACTOR]->ReceiveDamage(nullptr, dmg, true, true, isDirect, false);
 
   Map::Instance().RemoveDestroyed();
 

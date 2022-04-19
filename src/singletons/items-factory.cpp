@@ -1727,7 +1727,9 @@ GameObject* ItemsFactory::CreateRandomItem(int x, int y, ItemType exclude)
 
   ItemType res = possibleItems[index];
 
+  //
   // TODO: add cases for all item types after they are decided
+  //
   switch (res)
   {
     case ItemType::COINS:
@@ -1854,7 +1856,7 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
   ic->Data.Durability.Reset(RNG::Instance().RandomRange(30, 40));
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
-  ic->Data.IdentifiedName = "Needle";
+  ic->Data.IdentifiedName = "The Needle";
 
   auto str = Util::StringFormat("You think it'll do %d damage on average.", avgDamage);
   ic->Data.UnidentifiedDescription = { str, "You can't tell anything else." };
@@ -2063,7 +2065,7 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
     { ItemBonusType::VISIBILITY,      50 },
     { ItemBonusType::INVISIBILITY,     5 },
     { ItemBonusType::DAMAGE,          75 },
-    { ItemBonusType::REMOVE_HUNGER,          40 },
+    { ItemBonusType::REMOVE_HUNGER,   40 },
     { ItemBonusType::IGNORE_DEFENCE,  10 },
     { ItemBonusType::IGNORE_ARMOR,    10 },
     { ItemBonusType::KNOCKBACK,       20 },
@@ -2269,19 +2271,26 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
     }
     break;
 
+    //
+    // There is no range for telepathy (at least for now)
+    //
     case ItemBonusType::TELEPATHY:
     case ItemBonusType::LEVITATION:
+    case ItemBonusType::INVISIBILITY:
     case ItemBonusType::IGNORE_DEFENCE:
     case ItemBonusType::IGNORE_ARMOR:
+    case ItemBonusType::REMOVE_HUNGER:
+    case ItemBonusType::INDESTRUCTIBLE:
+    case ItemBonusType::REFLECT:
+    case ItemBonusType::MANA_SHIELD:
     {
-      // There is no range for telepathy (at least for now)
       value = 1;
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
     break;
 
     default:
-      DebugLog("[WAR] bonus %i not handled on item %s",
+      DebugLog("[WAR] ItemsFactory::AddRandomValueBonusToItem() bonus %i not handled on item %s",
                (int)bonusType,
                itemRef->Data.IdentifiedName.data());
       break;

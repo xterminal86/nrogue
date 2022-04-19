@@ -166,7 +166,6 @@ namespace Util
                                           ItemComponent* item,
                                           int damage);
 
-  // TODO: handle ignore armor damage
   extern int CalculateDamageValue(GameObject* attacker,
                                   GameObject* defender,
                                   ItemComponent* weapon,
@@ -185,7 +184,8 @@ namespace Util
 
   extern std::vector<std::string> ProcessPhysicalDamage(GameObject* who,
                                                         GameObject* from,
-                                                        int& amount);
+                                                        int& amount,
+                                                        bool ignoreArmor);
 
   extern std::string ProcessMagicalDamage(GameObject* who,
                                           GameObject* from,

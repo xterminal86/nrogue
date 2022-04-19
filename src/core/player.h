@@ -45,8 +45,9 @@ class Player : public GameObject
     bool ReceiveDamage(GameObject* from,
                        int amount,
                        bool isMagical,
-                       bool directDamage = false,
-                       bool suppressLog = false) override;
+                       bool ignoreArmor,
+                       bool directDamage,
+                       bool suppressLog) override;
     void WaitForTurn();
     void ProcessHunger();
     void FinishTurn();
@@ -73,7 +74,6 @@ class Player : public GameObject
 
     std::string RecallItem(ItemComponent* itemRef);
 
-    // TODO: apply stat penalties when starving
     bool IsStarving = false;
 
     std::map<PlayerSkills, int> SkillLevelBySkill;
@@ -115,7 +115,12 @@ class Player : public GameObject
 
     void SwitchPlaces(AIComponent* other);
 
+    void ApplyStarvingPenalties();
+    void UnapplyStarvingPenalties();
+
     bool IsGameObjectBorder(GameObject* go);
+
+    bool _starvingPenaltiesApplied = false;
 
     int _starvingTimeout = 0;
     int _useIdentifiedMapSortingIndex = 0;
@@ -149,7 +154,7 @@ class Player : public GameObject
     //
     // ...yeah, I know, right?
     //
-    std::map<int, std::pair<std::string, Attribute&>> _mainAttributes =
+    const std::map<int, std::pair<std::string, Attribute&>> _mainAttributes =
     {
       { 0, { "STR", Attrs.Str } },
       { 1, { "DEF", Attrs.Def } },
@@ -157,6 +162,14 @@ class Player : public GameObject
       { 3, { "RES", Attrs.Res } },
       { 4, { "SKL", Attrs.Skl } },
       { 5, { "SPD", Attrs.Spd } }
+    };
+
+    const std::map<int, Attribute&> _starvingPenaltyStats =
+    {
+      { 0, Attrs.Str },
+      { 1, Attrs.Def },
+      { 2, Attrs.Skl },
+      { 3, Attrs.Spd }
     };
 
     std::map<std::string, int> _statRaisesMap =

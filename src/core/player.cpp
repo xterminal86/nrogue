@@ -513,8 +513,12 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
     //
     if (what->IsAlive())
     {
-      bool succ = what->ReceiveDamage(this, dmg, false, false);
+      bool ignoreArmor = (weapon != nullptr && weapon->Data.HasBonus(ItemBonusType::IGNORE_ARMOR));
+
+      bool succ = what->ReceiveDamage(this, dmg, false, ignoreArmor, false, false);
+
       if (succ
+       && weapon != nullptr
        && weapon->Data.HasBonus(ItemBonusType::LEECH)
        && what->IsLiving)
       {
@@ -554,7 +558,9 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   }
 }
 
+///
 /// 'what' is either actor or GameObject, 'with' is a wand
+///
 void Player::MagicAttack(GameObject* what, ItemComponent* with)
 {
   with->Data.Amount--;
@@ -569,8 +575,9 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
 
   centralDamage += bonus;
 
+  //
   // TODO: cursed wands side-effects?
-
+  //
   switch (with->Data.SpellHeld.SpellType_)
   {
     case SpellType::NONE:
@@ -721,13 +728,18 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
 {
   bool shouldTearDownWall = false;
   bool hasLeech = false;
+  bool ignoreArmor = false;
 
   if (weapon != nullptr)
   {
+    //
     // Melee attack with ranged weapon in hand ignores durability,
     // since it is considered a punch
+    //
     bool isRanged = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON
                   || weapon->Data.ItemType_ == ItemType::WAND);
+
+    ignoreArmor = weapon->Data.HasBonus(ItemBonusType::IGNORE_ARMOR);
 
     shouldTearDownWall = (weapon->Data.WeaponType_ == WeaponType::PICKAXE);
 
@@ -764,7 +776,13 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
   }
   else
   {
-    bool succ = defender->ReceiveDamage(this, damageToInflict, false, false);
+    bool succ = defender->ReceiveDamage(this,
+                                        damageToInflict,
+                                        false,
+                                        ignoreArmor,
+                                        false,
+                                        false);
+
     if (succ && hasLeech && defender->IsLiving)
     {
       auto b = weapon->Data.GetBonus(ItemBonusType::LEECH);
@@ -796,6 +814,7 @@ bool Player::IsGameObjectBorder(GameObject* go)
 bool Player::ReceiveDamage(GameObject* from,
                            int amount,
                            bool isMagical,
+                           bool ignoreArmor,
                            bool directDamage,
                            bool suppressLog)
 {
@@ -819,7 +838,7 @@ bool Player::ReceiveDamage(GameObject* from,
   }
   else
   {
-    logMsgs = Util::ProcessPhysicalDamage(this, from, amount);
+    logMsgs = Util::ProcessPhysicalDamage(this, from, amount, ignoreArmor);
     dmgReturned = Util::ProcessThorns(this, amount);
   }
 
@@ -839,7 +858,7 @@ bool Player::ReceiveDamage(GameObject* from,
 
     Printer::Instance().AddMessage(thornsLogMsg);
 
-    from->ReceiveDamage(this, dmgReturned, true, true);
+    from->ReceiveDamage(this, dmgReturned, true, true, true, false);
   }
 
   return true;
@@ -1286,7 +1305,9 @@ void Player::ProcessStarvation()
 
 void Player::ProcessHunger()
 {
+  //
   // No starving in town
+  //
   if (Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
   {
     return;
@@ -1301,13 +1322,17 @@ void Player::ProcessHunger()
 
   Attrs.Hunger += Attrs.HungerSpeed.Get();
 
+  //
   // HungerRate's CurrentValue is equal to OriginalValue
+  //
   int maxHunger = Attrs.HungerRate.Get();
 
   Attrs.Hunger = Util::Clamp(Attrs.Hunger, 0, maxHunger);
 
   if (Attrs.Hunger == maxHunger)
   {
+    ApplyStarvingPenalties();
+
     if (_starvingTimeout > GlobalConstants::StarvationDamageTimeout - 1)
     {
       Printer::Instance().AddMessage("You are starving!");
@@ -1318,8 +1343,44 @@ void Player::ProcessHunger()
   }
   else
   {
+    UnapplyStarvingPenalties();
+
     _starvingTimeout = 0;
     IsStarving = false;
+  }
+}
+
+void Player::ApplyStarvingPenalties()
+{
+  if (!_starvingPenaltiesApplied)
+  {
+    for (auto& kvp : _starvingPenaltyStats)
+    {
+      int penalty = kvp.second.OriginalValue() / 2;
+      if (penalty == 0)
+      {
+        penalty = 1;
+      }
+
+      kvp.second.AddModifier(_objectId, -penalty);
+    }
+
+    Printer::Instance().AddMessage("You feel weak from hunger");
+
+    _starvingPenaltiesApplied = true;
+  }
+}
+
+void Player::UnapplyStarvingPenalties()
+{
+  if (_starvingPenaltiesApplied)
+  {
+    for (auto& kvp : _starvingPenaltyStats)
+    {
+      kvp.second.RemoveModifier(_objectId);
+    }
+
+    _starvingPenaltiesApplied = false;
   }
 }
 

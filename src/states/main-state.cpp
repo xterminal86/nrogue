@@ -592,9 +592,10 @@ void MainState::ProcessWand(ItemComponent* wand)
   {
     switch (wand->Data.SpellHeld.SpellType_)
     {
+      //
       // TODO: finish wands effects and attack
       // (e.g. wand of heal others etc.)
-
+      //
       case SpellType::LIGHT:
         SpellsProcessor::Instance().ProcessWand(wand);
         break;
