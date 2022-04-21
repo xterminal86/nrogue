@@ -244,12 +244,18 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
       break;
 
     case AITasks::MINE_TUNNEL:
-      task = new TaskMineTunnel(AIComponentRef->OwnerGameObject);
-      break;
+    {
+      bool ignorePickaxe = (data->Params.count("p2") == 1);
+      task = new TaskMineTunnel(AIComponentRef->OwnerGameObject, ignorePickaxe);
+    }
+    break;
 
     case AITasks::MINE_BLOCK:
-      task = new TaskMineBlock(AIComponentRef->OwnerGameObject);
-      break;
+    {
+      bool ignorePickaxe = (data->Params.count("p2") == 1);
+      task = new TaskMineBlock(AIComponentRef->OwnerGameObject, ignorePickaxe);
+    }
+    break;
 
     case AITasks::APPLY_EFFECT:
     {

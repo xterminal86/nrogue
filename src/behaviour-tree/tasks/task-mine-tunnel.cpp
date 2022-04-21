@@ -6,18 +6,21 @@
 #include "equipment-component.h"
 #include "item-component.h"
 
-TaskMineTunnel::TaskMineTunnel(GameObject* objectToControl)
+TaskMineTunnel::TaskMineTunnel(GameObject* objectToControl, bool ignorePickaxe)
   : Node(objectToControl)
 {
   _equipment = _objectToControl->GetComponent<EquipmentComponent>();
+  _ignorePickaxe = ignorePickaxe;
 }
 
 BTResult TaskMineTunnel::Run()
 {
   //DebugLog("[TaskMine]\n");
 
-  if (_equipment == nullptr
-   || _equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0] == nullptr)
+  bool equipFail = (_equipment == nullptr
+                 || _equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0] == nullptr);
+
+  if (!_ignorePickaxe && equipFail)
   {
     return BTResult::Failure;
   }
@@ -94,7 +97,10 @@ BTResult TaskMineTunnel::Run()
     return BTResult::Failure;
   }
 
-  Util::TryToDamageEquipment(_objectToControl, EquipmentCategory::WEAPON, -1);
+  if (!_ignorePickaxe)
+  {
+    Util::TryToDamageEquipment(_objectToControl, EquipmentCategory::WEAPON, -1);
+  }
 
   Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y]->Attrs.HP.SetMin(0);
   Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y]->IsDestroyed = true;

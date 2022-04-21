@@ -72,7 +72,7 @@ int GameState::GetKeyDown()
 
           case SDL_WINDOWEVENT_RESTORED:
           case SDL_WINDOWEVENT_EXPOSED:
-            Printer::Instance().Render();
+            Application::Instance().ForceDrawCurrentState();
             break;
         }
       }
@@ -122,7 +122,7 @@ void GameState::AdjustWindowSize(const SDL_Event& evt)
     _renderDst.h = wh;
 
     Printer::Instance().SetRenderDst(_renderDst);
-    Printer::Instance().Render();
+    Application::Instance().ForceDrawCurrentState();
   }
 }
 

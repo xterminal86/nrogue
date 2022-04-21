@@ -8,12 +8,14 @@ class EquipmentComponent;
 class TaskMineBlock : public Node
 {
   public:
-    TaskMineBlock(GameObject* objectToControl);
+    TaskMineBlock(GameObject* objectToControl, bool ignorePickaxe);
 
     BTResult Run() override;
 
   private:
     EquipmentComponent* _equipment = nullptr;
+
+    bool _ignorePickaxe = false;
 };
 
 #endif // TASKMINEBLOCK_H

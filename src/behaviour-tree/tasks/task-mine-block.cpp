@@ -7,15 +7,24 @@
 #include "equipment-component.h"
 #include "item-component.h"
 
-TaskMineBlock::TaskMineBlock(GameObject* objectToControl)
+TaskMineBlock::TaskMineBlock(GameObject* objectToControl, bool ignorePickaxe)
   : Node(objectToControl)
 {
   _equipment = _objectToControl->GetComponent<EquipmentComponent>();
+  _ignorePickaxe = ignorePickaxe;
 }
 
 BTResult TaskMineBlock::Run()
 {
   //DebugLog("[TaskMineBlock]\n");
+
+  bool equipFail = (_equipment == nullptr
+                 || _equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0] == nullptr);
+
+  if (!_ignorePickaxe && equipFail)
+  {
+    return BTResult::Failure;
+  }
 
   int x = _objectToControl->PosX;
   int y = _objectToControl->PosY;
@@ -51,7 +60,10 @@ BTResult TaskMineBlock::Run()
 
   Position found = candidates[ind];
 
-  Util::TryToDamageEquipment(_objectToControl, EquipmentCategory::WEAPON, -1);
+  if (!_ignorePickaxe)
+  {
+    Util::TryToDamageEquipment(_objectToControl, EquipmentCategory::WEAPON, -1);
+  }
 
   Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y]->Attrs.HP.SetMin(0);
   Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y]->IsDestroyed = true;
