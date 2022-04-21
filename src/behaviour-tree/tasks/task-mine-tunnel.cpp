@@ -16,6 +16,12 @@ BTResult TaskMineTunnel::Run()
 {
   //DebugLog("[TaskMine]\n");
 
+  if (_equipment == nullptr
+   || _equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0] == nullptr)
+  {
+    return BTResult::Failure;
+  }
+
   int x = _objectToControl->PosX;
   int y = _objectToControl->PosY;
 
