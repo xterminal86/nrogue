@@ -18,10 +18,10 @@ BTResult TaskMineBlock::Run()
 {
   //DebugLog("[TaskMineBlock]\n");
 
-  bool equipFail = (_equipment == nullptr
-                 || _equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0] == nullptr);
+  bool equipmentFail = (_equipment == nullptr
+                     || _equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0] == nullptr);
 
-  if (!_ignorePickaxe && equipFail)
+  if (!_ignorePickaxe && equipmentFail)
   {
     return BTResult::Failure;
   }

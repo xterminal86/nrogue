@@ -17,10 +17,10 @@ BTResult TaskMineTunnel::Run()
 {
   //DebugLog("[TaskMine]\n");
 
-  bool equipFail = (_equipment == nullptr
-                 || _equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0] == nullptr);
+  bool equipmentFail = (_equipment == nullptr
+                     || _equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0] == nullptr);
 
-  if (!_ignorePickaxe && equipFail)
+  if (!_ignorePickaxe && equipmentFail)
   {
     return BTResult::Failure;
   }
@@ -38,6 +38,7 @@ BTResult TaskMineTunnel::Run()
     { lx, y }, { hx, y }, { x, ly }, { x, hy }
   };
 
+  //
   // Searching for any kind of
   //
   // ##
