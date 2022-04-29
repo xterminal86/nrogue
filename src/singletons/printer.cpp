@@ -4,6 +4,7 @@
 #include "map.h"
 #include "util.h"
 #include "logger.h"
+#include "base64-strings.h"
 
 size_t Printer::TerminalWidth = 0;
 size_t Printer::TerminalHeight = 0;
@@ -55,7 +56,7 @@ void Printer::InitForSDL()
     SDL_SetWindowPosition(Application::Instance().Window, rect.x, rect.y);
     SDL_SetWindowSize(Application::Instance().Window, rect.w, rect.h);
 
-    auto res = Util::Base64_Decode(Strings::Tileset8x16Base64);
+    auto res = Util::Base64_Decode(Base64Strings::Tileset8x16Base64);
     auto bytes = Util::ConvertStringToBytes(res);
     SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
     surf = SDL_LoadBMP_RW(data, 1);

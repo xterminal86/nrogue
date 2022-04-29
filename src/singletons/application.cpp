@@ -586,9 +586,11 @@ void Application::InitCurses()
 
 #include <SDL2/SDL.h>
 
+#include "base64-strings.h"
+
 void Application::SetIcon()
 {
-  auto res = Util::Base64_Decode(Strings::IconBase64);
+  auto res = Util::Base64_Decode(Base64Strings::IconBase64);
   auto bytes = Util::ConvertStringToBytes(res);
   SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
   SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);

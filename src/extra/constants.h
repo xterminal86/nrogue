@@ -180,11 +180,6 @@ namespace Strings
   extern const std::string HexChars;
   extern const std::string Base64Chars;
 
-  #ifdef USE_SDL
-  extern const std::string Tileset8x16Base64;
-  extern const std::string IconBase64;
-  #endif
-
   extern const std::string AlphabetUppercase;
   extern const std::string AlphabetLowercase;
   extern const std::string Vowels;
