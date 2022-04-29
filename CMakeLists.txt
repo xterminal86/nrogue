@@ -3,7 +3,7 @@ set (TARGET_NAME nrogue)
 project (${TARGET_NAME})
 
 if (MSVC)
-  add_compile_options(/W3)
+  add_compile_options(/W1)
   add_definitions(-D__PRETTY_FUNCTION__=__FUNCSIG__)
 else()
   add_compile_options(-Wall -Wno-switch -Wno-format -Werror=return-type -Wfatal-errors)
