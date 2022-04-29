@@ -3,7 +3,7 @@ set (TARGET_NAME nrogue)
 project (${TARGET_NAME})
 
 if (MSVC)
-  add_compile_options(/Wall)
+  add_compile_options(/W3)
 else()
   add_compile_options(-Wall -Wno-switch -Wno-format -Werror=return-type -Wfatal-errors)
 endif()
