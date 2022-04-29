@@ -2,7 +2,12 @@ cmake_minimum_required(VERSION 2.9)
 set (TARGET_NAME nrogue)
 project (${TARGET_NAME})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-switch -Wno-format -Werror=return-type -Wfatal-errors")
+if (MSVC)
+  add_compile_options(/W4 /WX)
+else()
+  # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-switch -Wno-format -Werror=return-type -Wfatal-errors")
+  add_compile_options(-Wall -Wno-switch -Wno-format -Werror=return-type -Wfatal-errors)
+endif()
 
 option(USE_SDL "Build with SDL2" false)
 option(RUN_TESTS "Run some tests" false)

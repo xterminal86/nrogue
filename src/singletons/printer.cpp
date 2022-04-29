@@ -688,11 +688,11 @@ void Printer::PrintFB(const int& x, const int& y,
   else if (htmlColorBg != "#000000")
   {
     tmpFg = "#000000";
-    tmpBg = (htmlColorBg == GlobalConstants::FogOfWarColor) ? GlobalConstants::FogOfWarColor : "#FFFFFF";
+    tmpBg = (htmlColorBg == Colors::FogOfWarColor) ? Colors::FogOfWarColor : "#FFFFFF";
   }
   else
   {
-    tmpFg = (htmlColorFg == GlobalConstants::FogOfWarColor) ? GlobalConstants::FogOfWarColor : "#FFFFFF";
+    tmpFg = (htmlColorFg == Colors::FogOfWarColor) ? Colors::FogOfWarColor : "#FFFFFF";
     tmpBg = "#000000";
   }
 
