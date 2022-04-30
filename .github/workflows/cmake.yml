@@ -20,6 +20,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
+    - run: echo "Current directory:"
+    - run: pwd
+    - run: echo "github workspace:"; echo ${{github.workspace}}
     - run: mkdir build-latest
     - run: cp ${{github.workspace}}/../*.dll build/
     - run: cp ${{github.workspace}}/../config-template.txt build/
