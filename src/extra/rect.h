@@ -3,7 +3,11 @@
 
 #include <vector>
 
+#ifdef MSVC_COMPILER
 #include "position.h"
+#else
+class Position;
+#endif
 
 class Rect
 {

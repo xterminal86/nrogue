@@ -4,6 +4,7 @@ project (${TARGET_NAME})
 
 if (MSVC)
   add_compile_options(/W1)
+  add_definitions(-DMSVC_COMPILER)
   add_definitions(-D__PRETTY_FUNCTION__=__FUNCSIG__)
 else()
   add_compile_options(-Wall -Wno-switch -Wno-format -Werror=return-type -Wfatal-errors)
@@ -76,6 +77,10 @@ endif()
 add_executable(${TARGET_NAME} ${SOURCES})
 
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD_REQUIRED 11)
+
+if (WIN32)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
 
 if (USE_SDL)
   if (WIN32)
