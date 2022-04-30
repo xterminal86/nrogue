@@ -60,9 +60,4 @@ jobs:
         # Destination path
         path: ${{github.workspace}}/build-latest    
     
-    - name: Release & Assets  
-      uses: Hs1r1us/Release-AIO@v1.0
-      with:        
-        release_name: build-latest            
-        asset_files: ./build-latest.zip
-      
+    
