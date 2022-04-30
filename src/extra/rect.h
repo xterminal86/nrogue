@@ -3,6 +3,11 @@
 
 #include <vector>
 
+//
+// Microsoft Visual Studio compiler fails to build
+// with this particular forward declaration
+// on github actions pipeline.
+//
 #ifdef MSVC_COMPILER
 #include "position.h"
 #else
