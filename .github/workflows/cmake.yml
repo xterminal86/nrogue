@@ -38,7 +38,7 @@ jobs:
     - name: Prepare artifact
       run: |
            mkdir build-latest
-           cp ${{github.workspace}}/nrogue.exe build-latest/
+           cp ${{github.workspace}}/build/Release/nrogue.exe build-latest/
            cp ${{github.workspace}}/*.dll build-latest/
            cp ${{github.workspace}}/config-template.txt build-latest/           
     
