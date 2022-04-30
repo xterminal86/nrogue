@@ -11,9 +11,9 @@
 // so we're fixing that "old-school" way with this define.
 //
 #ifdef MSVC_COMPILER
-  #define PROPER_MAIN int main()
+  #define PROPER_MAIN int __cdecl main()
 #else
-  #define PROPER_MAIN int __cdecl main(int argc, char* argv[])
+  #define PROPER_MAIN int main(int argc, char* argv[])
 #endif
 
 #include "application.h"
