@@ -61,10 +61,11 @@ jobs:
            ls ../
     
     - name: PACK LATEST BUILD
-      run: |
-           zip build-latest.zip ${{github.workspace}}/build-latest
+      uses: montudor/action-zip@v1
+      with:
+        args: zip -qq -r build-latest.zip ${{github.workspace}}/build-latest
            
-    - name: GET build-latest RELEASE INFO
+    - name: GET 'build-latest' RELEASE INFO
       id: latest-release-info
       uses: cardinalby/git-get-release-action@v1
       env:
