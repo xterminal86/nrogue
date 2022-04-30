@@ -10,11 +10,15 @@
 // Also, there is some linking issue with MSVC,
 // so we're fixing that "old-school" way with this define.
 //
+/*
 #ifdef MSVC_COMPILER
   #define PROPER_MAIN int main()
 #else
   #define PROPER_MAIN int main(int argc, char* argv[])
 #endif
+*/
+
+#define PROPER_MAIN int main(int argc, char* argv[])
 
 #include "application.h"
 #include "spells-processor.h"
