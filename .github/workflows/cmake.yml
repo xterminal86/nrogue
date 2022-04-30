@@ -24,8 +24,8 @@ jobs:
     - run: pwd
     - run: echo "github workspace:"; echo ${{github.workspace}}
     - run: mkdir build-latest
-    - run: cp ${{github.workspace}}/../*.dll build/
-    - run: cp ${{github.workspace}}/../config-template.txt build/
+    - run: cp ${{github.workspace}}/*.dll build/
+    - run: cp ${{github.workspace}}/config-template.txt build/
     
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
