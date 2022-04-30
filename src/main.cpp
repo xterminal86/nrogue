@@ -13,7 +13,7 @@
 #ifdef MSVC_COMPILER
   #define PROPER_MAIN int main()
 #else
-  #define PROPER_MAIN int main(int argc, char* argv[])
+  #define PROPER_MAIN int __cdecl main(int argc, char* argv[])
 #endif
 
 #include "application.h"
