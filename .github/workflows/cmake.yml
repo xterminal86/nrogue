@@ -60,10 +60,27 @@ jobs:
         # Destination path
         path: ${{github.workspace}}/build-latest    
     
-    - name: Publish latest build
+    - name: Create latest release
+      id: create-new-release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: build-latest
         release_name: build-latest
+        
+    - name: Publish release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create-new-release.outputs.upload_url }}
+        asset_path: ./build-latest.zip
+        asset_name: build-latest-${{ github.run_number }}.zip
+        asset_content_type: application/zip
+        
+        
+      
+      
+      
+      
