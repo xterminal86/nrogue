@@ -19,7 +19,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
+    
+    - run: mkdir build-latest
+    
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
@@ -33,7 +35,8 @@ jobs:
       uses: actions/upload-artifact@v3.0.0
       with:
         # Artifact name
-        name: nrogue.exe
+        name: latest-build-artifact
+        path: build-latest/
         # A file, directory or wildcard pattern that describes what to upload        
         retention-days: 1
     
@@ -41,7 +44,7 @@ jobs:
       uses: actions/download-artifact@v3.0.0
       with:
         # Artifact name
-        name: nrogue.exe
+        name: latest-build-download
         # Destination path
         path: build-latest
     
