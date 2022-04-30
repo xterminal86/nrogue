@@ -53,18 +53,20 @@ jobs:
         # Destination path
         path: ${{github.workspace}}/build-latest    
     
+    - name: PACK LATEST BUILD
+      uses: thedoctor0/zip-release@master
+      with:
+        type: 'zip'
+        filename: 'build-latest.zip'
+        directory: ${{github.workspace}}/build-latest
+    
     - name: DEBUG INFO
       run: |
            ls
            ls build
            ls build-latest
            ls ../
-    
-    - name: PACK LATEST BUILD
-      uses: montudor/action-zip@v1
-      with:
-        args: zip -qq -r build-latest.zip ${{github.workspace}}/build-latest
-           
+        
     - name: GET 'build-latest' RELEASE INFO
       id: latest-release-info
       uses: cardinalby/git-get-release-action@v1
