@@ -21,6 +21,8 @@ jobs:
     - uses: actions/checkout@v3
     
     - run: mkdir build-latest
+    - run: cp ${{github.workspace}}/*.dll build-latest/
+    - run: cp ${{github.workspace}}/config-template.txt build-latest/
     
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -36,7 +38,7 @@ jobs:
       with:
         # Artifact name
         name: latest-build-artifact
-        path: build-latest/
+        path: ${{github.workspace}}/build/
         # A file, directory or wildcard pattern that describes what to upload        
         retention-days: 1
     
@@ -46,7 +48,7 @@ jobs:
         # Artifact name
         name: latest-build-download
         # Destination path
-        path: build-latest
+        path: ${{github.workspace}}/build-latest
     
     - name: Test
       working-directory: ${{github.workspace}}/build
