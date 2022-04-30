@@ -1,3 +1,4 @@
+[![CMake](https://github.com/xterminal86/nrogue/actions/workflows/cmake.yml/badge.svg?branch=master)](https://github.com/xterminal86/nrogue/actions/workflows/cmake.yml)
 # NROGUE
 *ncurses roguelike challenge*
 
