@@ -79,11 +79,6 @@ add_executable(${TARGET_NAME} ${SOURCES})
 
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD_REQUIRED 11)
 
-#if (WIN32)
-#  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Release>:Release>")
-#  message(STATUS, "Linker flags: ${CMAKE_EXE_LINKER_FLAGS}")
-#endif()
-
 if (USE_SDL)
   if (WIN32)
     find_package(SDL2 REQUIRED)
