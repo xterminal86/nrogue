@@ -1,25 +1,3 @@
-//
-// NOTE: When building with SDL2 in Windows,
-// main() must have "full" signature,
-// i.e. 'int main (int argc, char* agrv[])'
-// or you'll get "undefined reference to SDLmain"
-// because SDL wraps main() under the hood,
-// so the signature must match.
-// By the way, IINM, it should be exactly 'char* argv[]',
-// not 'char**' or anything.
-// Also, there is some linking issue with MSVC,
-// so we're fixing that "old-school" way with this define.
-//
-/*
-#ifdef MSVC_COMPILER
-  #define PROPER_MAIN int main()
-#else
-  #define PROPER_MAIN int main(int argc, char* argv[])
-#endif
-*/
-
-#define PROPER_MAIN int main(int argc, char* argv[])
-
 #include "application.h"
 #include "spells-processor.h"
 #include "game-objects-factory.h"
@@ -38,7 +16,18 @@
 #endif
 
 //
-// You need to manually "Add" -> "File" in "Projects" tab of QT Creator's
+// NOTE: When building with SDL2 in Windows,
+// main() must have "full" signature,
+// i.e. 'int main (int argc, char* agrv[])'
+// or you'll get "undefined reference to SDLmain"
+// because SDL wraps main() under the hood,
+// so the signature must match.
+// By the way, IINM, it should be exactly 'char* argv[]',
+// not 'char**' or anything.
+// Also, there is some linking issue with MSVC,
+// so we're fixing that "old-school" way with this define.
+//
+// Also you need to manually "Add" -> "File" in "Projects" tab of QT Creator's
 // cmake config window called SDL2_LIBRARY and point it to libSDL2.dll.a file.
 //
 // Or, as it seems nowadays, there is an 'sdl2-config.cmake' provided with
@@ -64,7 +53,7 @@
 //
 // TODO: obfuscate every important stuff when development is finished (lol)
 //
-PROPER_MAIN
+int main(int argc, char* argv[])
 {
   RNG::Instance().Init();
   //RNG::Instance().SetSeed("Hello World!");
