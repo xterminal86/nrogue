@@ -60,4 +60,25 @@ jobs:
         # Destination path
         path: ${{github.workspace}}/build-latest    
     
+    - name: Get latest release info
+      id: latest-release-info
+      uses: cardinalby/git-get-release-action@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        releaseName: "build-latest"   
+        
+    - name: Uploade laest build
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.latest-release-info.outputs.upload_url }}
+        asset_path: ./build-latest.zip
+        asset_name: ./build-latest-${{ github.run_number }}.zip
+        asset_content_type: application/zip
+        
+        
+        
+      
     
