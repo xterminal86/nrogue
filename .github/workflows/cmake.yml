@@ -53,8 +53,10 @@ jobs:
         # Destination path
         path: ${{github.workspace}}/build-latest    
     
-    - run: |
+    - name: Printf Debugging
+      run: |
            ls
+           ls build
            ls build-latest
            ls ../
     
