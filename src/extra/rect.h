@@ -3,7 +3,7 @@
 
 #include <vector>
 
-class Position;
+#include "position.h"
 
 class Rect
 {
