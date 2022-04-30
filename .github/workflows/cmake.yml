@@ -60,3 +60,10 @@ jobs:
         # Destination path
         path: ${{github.workspace}}/build-latest    
     
+    - name: Publish latest build
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: build-latest
+        release_name: build-latest
