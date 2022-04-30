@@ -60,6 +60,12 @@ jobs:
         # Destination path
         path: ${{github.workspace}}/build-latest    
     
+    - name: Delete old version of latest release
+      uses: larryjoelane/delete-release-action@master
+      with:
+        release_name: build-latest
+        token: ${{ secrets.GITHUB_TOKEN }}
+     
     - name: Create latest release
       id: create-new-release
       uses: actions/create-release@v1
