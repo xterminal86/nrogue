@@ -66,7 +66,14 @@ jobs:
            ls build
            ls build-latest
            ls ../
-        
+           
+    - name: DELETE OLD ZIP
+      uses: mknejp/delete-release-assets@v1
+      with:
+          token: ${{ github.token }}
+          tag: build-latest          
+          assets: '*.zip'
+            
     - name: GET 'build-latest' RELEASE INFO
       id: latest-release-info
       uses: cardinalby/git-get-release-action@v1
