@@ -36,28 +36,26 @@ jobs:
            cp ${{github.workspace}}/*.dll build-latest/
            cp ${{github.workspace}}/config-template.txt build-latest/           
     
-    - name: UPLOAD ARTIFACT
-      uses: actions/upload-artifact@v3.0.0
-      with:
-        # Artifact name
-        name: build-latest
-        # Upload the whole build/ directory
-        path: ${{github.workspace}}/build-latest/        
-        retention-days: 1
-        
-    - name: PACK LATEST BUILD
+    - name: PACK ARTIFACT
       uses: thedoctor0/zip-release@master
       with:
         type: 'zip'
         filename: 'build-latest.zip'
         directory: ${{github.workspace}}/build-latest
-    
+        
+    - name: UPLOAD ARTIFACT
+      uses: actions/upload-artifact@v3.0.0
+      with:        
+        name: build-latest        
+        # path: ${{github.workspace}}/build-latest/        
+        path: ${{github.workspace}}/build-latest.zip
+        retention-days: 1
+        
     - name: DEBUG INFO
       run: |
            ls
            ls build
-           ls build-latest
-           ls ../
+           ls build-latest           
            
     - name: CHECK IF RELEASE EXISTS
       id: checkIfLatestReleaseExists
@@ -98,11 +96,10 @@ jobs:
     
       - name: DOWNLOAD ARTIFACT
         uses: actions/download-artifact@v3.0.0
-        with:
-          # Artifact name
-          name: build-latest
-          # Destination path
-          path: ${{github.workspace}}/build-latest    
+        with:          
+          name: build-latest          
+          # Destination directory, defaults to current
+          path: ${{github.workspace}}/build-latest.zip    
 
       - name: GET 'build-latest' RELEASE INFO
         id: latest-release-info
@@ -118,7 +115,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.latest-release-info.outputs.upload_url }}
-          asset_path: ${{github.workspace}}/build-latest/build-latest.zip
+          asset_path: ${{github.workspace}}/build-latest.zip
           asset_name: build-latest-${{ github.run_number }}.zip
           asset_content_type: application/zip
     
