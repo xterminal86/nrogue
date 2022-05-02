@@ -44,15 +44,7 @@ jobs:
         # Upload the whole build/ directory
         path: ${{github.workspace}}/build-latest/        
         retention-days: 1
-    
-    - name: DOWNLOAD ARTIFACT
-      uses: actions/download-artifact@v3.0.0
-      with:
-        # Artifact name
-        name: build-latest
-        # Destination path
-        path: ${{github.workspace}}/build-latest    
-    
+        
     - name: PACK LATEST BUILD
       uses: thedoctor0/zip-release@master
       with:
@@ -96,27 +88,37 @@ jobs:
                 
                 May be unstable and / or broken.  
           draft: false
-          prerelease: false
-          
-    - name: GET 'build-latest' RELEASE INFO
-      id: latest-release-info
-      uses: cardinalby/git-get-release-action@v1
-      env:
+          prerelease: false          
+    
+  publish:
+    needs: build
+    runs-on: windows-latest    
+    steps:
+      - uses: actions/checkout@v3
+    
+      - name: DOWNLOAD ARTIFACT
+        uses: actions/download-artifact@v3.0.0
+        with:
+          # Artifact name
+          name: build-latest
+          # Destination path
+          path: ${{github.workspace}}/build-latest    
+
+      - name: GET 'build-latest' RELEASE INFO
+        id: latest-release-info
+        uses: cardinalby/git-get-release-action@v1
+        env:
+            GITHUB_TOKEN: ${{ github.token }}
+        with:
+            tag: build-latest
+
+      - name: UPLOAD LATEST RELEASE ZIP
+        uses: actions/upload-release-asset@v1
+        env:
           GITHUB_TOKEN: ${{ github.token }}
-      with:
-          tag: build-latest
-        
-    - name: UPLOAD LATEST RELEASE ZIP
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      with:
-        upload_url: ${{ steps.latest-release-info.outputs.upload_url }}
-        asset_path: ${{github.workspace}}/build-latest/build-latest.zip
-        asset_name: build-latest-${{ github.run_number }}.zip
-        asset_content_type: application/zip
-        
-        
-        
-      
+        with:
+          upload_url: ${{ steps.latest-release-info.outputs.upload_url }}
+          asset_path: ${{github.workspace}}/build-latest/build-latest.zip
+          asset_name: build-latest-${{ github.run_number }}.zip
+          asset_content_type: application/zip
     
