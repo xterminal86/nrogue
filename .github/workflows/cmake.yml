@@ -67,6 +67,20 @@ jobs:
            ls build-latest
            ls ../
            
+    - name: CHECK IF RELEASE EXISTS
+      id: checkIfExists
+      uses: mukunku/tag-exists-action@v1.0.0
+      with:
+          tag: "build-latest"
+      env:
+          GITHUB_TOKEN: ${{ github.token }}    
+    
+    - name: DELETE OLD RELEASE (test)
+      if: ${{ steps.checkIfExists.outputs.exists }} == "true"
+      run: |
+           echo "Checking whether 'build-latest' exists..."
+           echo ${{ steps.checkIfExists.outputs.exists }}
+    
     - name: DELETE OLD ZIP
       uses: mknejp/delete-release-assets@v1
       with:
