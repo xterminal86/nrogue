@@ -68,7 +68,7 @@ jobs:
            ls ../
            
     - name: CHECK IF RELEASE EXISTS
-      id: checkIfExists
+      id: checkIfLatestReleaseExists
       uses: mukunku/tag-exists-action@v1.0.0
       with:
           tag: "build-latest"
@@ -76,11 +76,13 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}    
      
     - name: DELETE OLD RELEASE
-      if: ${{ steps.checkIfExists.outputs.exists }} == "true"
-      uses: larryjoelane/delete-release-action@master
+      if: ${{ steps.checkIfLatestReleaseExists.outputs.exists }} == "true"      
+      uses: dev-drprasad/delete-tag-and-release@v0.2.0
       with:
-        release_name: build-latest
-        token: ${{ secrets.GITHUB_TOKEN }}    
+          delete_release: true
+          tag_name: build-latest
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     #- name: DELETE OLD ZIP
     #  uses: mknejp/delete-release-assets@v1
@@ -89,7 +91,7 @@ jobs:
     #      tag: build-latest          
     #      assets: '*.zip'
     
-    - name: Create Release        
+    - name: CREATE 'build-latest' RELEASE
       uses: actions/create-release@v1
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
