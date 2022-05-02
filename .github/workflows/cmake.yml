@@ -74,20 +74,34 @@ jobs:
           tag: "build-latest"
       env:
           GITHUB_TOKEN: ${{ github.token }}    
-    
-    - name: DELETE OLD RELEASE (test)
+     
+    - name: DELETE OLD RELEASE
       if: ${{ steps.checkIfExists.outputs.exists }} == "true"
-      run: |
-           echo "Checking whether 'build-latest' exists..."
-           echo ${{ steps.checkIfExists.outputs.exists }}
-    
-    - name: DELETE OLD ZIP
-      uses: mknejp/delete-release-assets@v1
+      uses: larryjoelane/delete-release-action@master
       with:
-          token: ${{ github.token }}
-          tag: build-latest          
-          assets: '*.zip'
-            
+        release_name: build-latest
+        token: ${{ secrets.GITHUB_TOKEN }}    
+    
+    #- name: DELETE OLD ZIP
+    #  uses: mknejp/delete-release-assets@v1
+    #  with:
+    #      token: ${{ github.token }}
+    #      tag: build-latest          
+    #      assets: '*.zip'
+    
+    - name: Create Release        
+      uses: actions/create-release@v1
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+          tag_name: build-latest
+          release_name: build-latest
+          body: |
+                Builds automatically on every new commit.
+                May be unstable and / or broken.  
+          draft: false
+          prerelease: false
+          
     - name: GET 'build-latest' RELEASE INFO
       id: latest-release-info
       uses: cardinalby/git-get-release-action@v1
