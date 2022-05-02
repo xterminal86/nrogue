@@ -41,14 +41,14 @@ jobs:
       with:
         type: 'zip'
         filename: 'build-latest.zip'
+        # Archive will be placed inside the specified directory
         directory: ${{github.workspace}}/build-latest
         
     - name: UPLOAD ARTIFACT
       uses: actions/upload-artifact@v3.0.0
       with:        
-        name: build-latest        
-        # path: ${{github.workspace}}/build-latest/        
-        path: ${{github.workspace}}/build-latest.zip
+        name: build-latest
+        path: ${{github.workspace}}/build-latest/build-latest.zip
         retention-days: 1
         
     - name: DEBUG INFO
@@ -99,7 +99,7 @@ jobs:
         with:          
           name: build-latest          
           # Destination directory, defaults to current
-          path: ${{github.workspace}}/build-latest.zip    
+          path: ${{github.workspace}}/build-latest/build-latest.zip
 
       - name: GET 'build-latest' RELEASE INFO
         id: latest-release-info
@@ -115,7 +115,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.latest-release-info.outputs.upload_url }}
-          asset_path: ${{github.workspace}}/build-latest.zip
+          asset_path: ${{github.workspace}}/build-latest/build-latest.zip
           asset_name: build-latest-${{ github.run_number }}.zip
           asset_content_type: application/zip
     
