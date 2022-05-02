@@ -83,14 +83,7 @@ jobs:
           tag_name: build-latest
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-    #- name: DELETE OLD ZIP
-    #  uses: mknejp/delete-release-assets@v1
-    #  with:
-    #      token: ${{ github.token }}
-    #      tag: build-latest          
-    #      assets: '*.zip'
-    
+        
     - name: CREATE 'build-latest' RELEASE
       uses: actions/create-release@v1
       env:
@@ -100,6 +93,7 @@ jobs:
           release_name: build-latest
           body: |
                 Builds automatically on every new commit.
+                
                 May be unstable and / or broken.  
           draft: false
           prerelease: false
@@ -108,9 +102,9 @@ jobs:
       id: latest-release-info
       uses: cardinalby/git-get-release-action@v1
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
       with:
-        releaseName: "build-latest"   
+          tag: build-latest
         
     - name: UPLOAD LATEST RELEASE ZIP
       uses: actions/upload-release-asset@v1
