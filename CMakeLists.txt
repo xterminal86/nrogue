@@ -73,11 +73,15 @@ if (${CMAKE_BUILD_TYPE} MATCHES Release)
     ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/tests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/tests.h)
+else()
+  if (NOT RUN_TESTS)
+    list(REMOVE_ITEM SOURCES
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/tests.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/tests.h)
+  endif()
 endif()
 
 add_executable(${TARGET_NAME} ${SOURCES})
-
-set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD_REQUIRED 11)
 
 if (USE_SDL)
   if (WIN32)
