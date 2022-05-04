@@ -589,7 +589,7 @@ void MapLevelMines::CreateSpecialLevel()
           break;
 
         case '%':
-          PlaceGroundTile(posX, posY, c, Colors::WhiteColor, Colors::RedColor, "Someone's Remains");
+          PlaceGroundTile(posX, posY, c, Colors::WhiteColor, Colors::RedColor, "Someone's remains...");
           break;
 
         case 'W':
