@@ -173,7 +173,7 @@ void CustomClassState::Update(bool forceUpdate)
     Printer::Instance().PrintFB(_twHalf, Printer::TerminalHeight - 2, "'.' or ',' to modify", Printer::kAlignCenter, "#FFFFFF");
     Printer::Instance().PrintFB(_twHalf, Printer::TerminalHeight - 1, "Hold [SHIFT] for 5% step", Printer::kAlignCenter, "#FFFFFF");
 
-    Printer::Instance().PrintFB(0, Printer::TerminalHeight - 1, "'q' - go back", Printer::kAlignLeft, "#FFFFFF");
+    Printer::Instance().PrintFB(1, Printer::TerminalHeight - 1, "'q' - go back", Printer::kAlignLeft, "#FFFFFF");
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1, Printer::TerminalHeight - 1, "'Enter' - accept", Printer::kAlignRight, "#FFFFFF");
 
     Printer::Instance().Render();

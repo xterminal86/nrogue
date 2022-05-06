@@ -63,8 +63,6 @@ void EndgameState::DisplayGameLog()
   int x = Printer::TerminalWidth - 1;
   int y = Printer::TerminalHeight - 1;
 
-  //Printer::Instance().PrintFB(x, y, Printer::Instance().GetLastMessage(), Printer::kAlignRight, "#FFFFFF");
-
   int count = 0;
   auto msgs = Printer::Instance().GetLastMessages();
   for (GameLogMessageData& m : msgs)

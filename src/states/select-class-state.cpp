@@ -55,11 +55,8 @@ void SelectClassState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    int tw = Printer::TerminalWidth;
-    int th = Printer::TerminalHeight;
-
-    Printer::Instance().PrintFB(tw / 2,
-                                th / 2 - 4,
+    Printer::Instance().PrintFB(_twHalf,
+                                _thHalf - 4,
                                 "Who are you?",
                                 Printer::kAlignCenter,
                                 Colors::WhiteColor);
@@ -76,8 +73,8 @@ void SelectClassState::Update(bool forceUpdate)
                             Colors::WhiteColor :
                             Colors::BlackColor;
 
-      Printer::Instance().PrintFB(tw / 2,
-                                  th / 2 + offset,
+      Printer::Instance().PrintFB(_twHalf,
+                                  _thHalf + offset,
                                   i,
                                   Printer::kAlignCenter,
                                   fgColor,
@@ -86,6 +83,13 @@ void SelectClassState::Update(bool forceUpdate)
       index++;
       offset++;
     }
+
+    Printer::Instance().PrintFB(_twHalf,
+                                _th - 1,
+                                "WARNING: not fully implemented yet!",
+                                Printer::kAlignCenter,
+                                Colors::YellowColor,
+                                Colors::BlackColor);
 
     Printer::Instance().Render();
   }
