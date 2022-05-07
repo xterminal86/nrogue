@@ -9,7 +9,8 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-
+  BUILD_VERSION_TEXT: build-${{ github.run_number }} 
+  
 jobs:
   build:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
@@ -25,7 +26,7 @@ jobs:
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >
           cmake -B ${{github.workspace}}/build 
-          -DBUILD_VERSION_TEXT=build-${{ github.run_number }} 
+          -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }}
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
           -DRUN_TESTS=OFF 
           -DUSE_SDL=ON 
