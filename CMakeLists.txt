@@ -13,6 +13,8 @@ endif()
 
 if (NOT DEFINED BUILD_VERSION_TEXT)
   add_definitions(-DBUILD_VERSION_TEXT="build-local")
+else()
+  add_definitions(-DBUILD_VERSION_TEXT)
 endif()
 
 option(USE_SDL "Build with SDL2" false)
