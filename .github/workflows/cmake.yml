@@ -26,6 +26,7 @@ jobs:
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >
           cmake -B ${{github.workspace}}/build 
+          -DBUILD_VERSION_ON=ON 
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }}
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
           -DRUN_TESTS=OFF 
