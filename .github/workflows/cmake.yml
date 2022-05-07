@@ -37,7 +37,7 @@ jobs:
 
     - name: BUILD
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -- j2
+      run: cmake -j2 --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: PREPARE ARTIFACT
       run: |
