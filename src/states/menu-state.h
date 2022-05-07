@@ -62,6 +62,10 @@ class MenuState : public GameState
     #endif
   #endif
 
+  #ifndef BUILD_VERSION_TEXT
+  #define BUILD_VERSION_TEXT "build-dev"
+  #endif
+
   const std::string _buildVersionText = BUILD_VERSION_TEXT;
 
   std::string _terminalSize;

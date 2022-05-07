@@ -2,14 +2,20 @@ cmake_minimum_required(VERSION 2.9)
 set (TARGET_NAME nrogue)
 project (${TARGET_NAME})
 
+# ==============================================================================
 if (MSVC)
   add_compile_options(/W1)
   add_definitions(-DMSVC_COMPILER)
   add_definitions(-D__PRETTY_FUNCTION__=__FUNCSIG__)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
 else()
-  add_compile_options(-Wall -Wno-switch -Wno-format -Werror=return-type -Wfatal-errors)
+  add_compile_options(-Wall
+                      -Wno-switch
+                      -Wno-format
+                      -Werror=return-type
+                      -Wfatal-errors)
 endif()
+# ==============================================================================
 
 option(USE_SDL "Build with SDL2" false)
 option(RUN_TESTS "Run some tests" false)
@@ -28,19 +34,12 @@ if (RUN_TESTS)
   add_definitions(-DRUN_TESTS)
 endif()
 
-option(BUILD_VERSION_ON "Enable build version text" ON)
-if (BUILD_VERSION_ON)
-  set(BUILD_VERSION_VAR ${BUILD_VERSION_VAR})
-endif()
-
-option (BUILD_VERSION_ON "Enable build version text" ON)
-if (BUILD_VERSION_ON)
-  set(BUILD_VERSION_TEXT ${BUILD_VERSION_TEXT})
-endif()
-
+# ==============================================================================
+set(BUILD_VERSION_TEXT ${BUILD_VERSION_TEXT})
 configure_file(version-config.h.in
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/version-config.h
                 @ONLY)
+# ==============================================================================
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/components)
@@ -94,6 +93,8 @@ else()
       ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/tests.h)
   endif()
 endif()
+
+# ==============================================================================
 
 add_executable(${TARGET_NAME} ${SOURCES})
 

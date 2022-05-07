@@ -1,2 +1,1 @@
-#cmakedefine BUILD_VERSION_ON
 #cmakedefine BUILD_VERSION_TEXT "@BUILD_VERSION_TEXT@"
