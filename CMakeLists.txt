@@ -11,6 +11,10 @@ else()
   add_compile_options(-Wall -Wno-switch -Wno-format -Werror=return-type -Wfatal-errors)
 endif()
 
+if (NOT DEFINED BUILD_VERSION_TEXT)
+  add_definitions(-DBUILD_VERSION_TEXT="build-local")
+endif()
+
 option(USE_SDL "Build with SDL2" false)
 option(RUN_TESTS "Run some tests" false)
 

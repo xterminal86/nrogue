@@ -30,7 +30,7 @@ class MenuState : public GameState
     { "ss    ss  ss    ss    ssss      ssss      ssss     sssssss" }
   };
 
-  const std::vector<std::string> _signature =
+  std::vector<std::string> _signature =
   {
     "by xterminal86",
     "(c) 2018-2022"
@@ -60,7 +60,9 @@ class MenuState : public GameState
     #endif
   #endif
 
-  std::string _debugInfo;
+  const std::string _buildVersionText = BUILD_VERSION_TEXT;
+
+  std::string _terminalSize;
 
   int _titleX = 0;
   int _titleY = 0;
