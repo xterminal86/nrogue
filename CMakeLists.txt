@@ -14,9 +14,6 @@ endif()
 option(USE_SDL "Build with SDL2" false)
 option(RUN_TESTS "Run some tests" false)
 
-set(BUILD_VERSION_TEXT ${BUILD_VERSION_TEXT})
-add_definitions(-DBUILD_VERSION_DEF=${BUILD_VERSION_TEXT})
-
 if (${CMAKE_BUILD_TYPE} MATCHES Release)
   add_definitions(-DRELEASE_BUILD)
 else()
@@ -30,6 +27,20 @@ endif()
 if (RUN_TESTS)
   add_definitions(-DRUN_TESTS)
 endif()
+
+option(BUILD_VERSION_ON "Enable build version text" ON)
+if (BUILD_VERSION_ON)
+  set(BUILD_VERSION_VAR ${BUILD_VERSION_VAR})
+endif()
+
+option (BUILD_VERSION_ON "Enable build version text" ON)
+if (BUILD_VERSION_ON)
+  set(BUILD_VERSION_TEXT ${BUILD_VERSION_TEXT})
+endif()
+
+configure_file(version-config.h.in
+                ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/version-config.h
+                @ONLY)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/components)

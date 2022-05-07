@@ -1,0 +1,2 @@
+#define BUILD_VERSION_ON
+/* #undef BUILD_VERSION_TEXT */

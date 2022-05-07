@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "version-config.h"
+
 #include "position.h"
 #include "gamestate.h"
 
@@ -60,7 +62,7 @@ class MenuState : public GameState
     #endif
   #endif
 
-  const std::string _buildVersionText = BUILD_VERSION_DEF;
+  const std::string _buildVersionText = BUILD_VERSION_TEXT;
 
   std::string _terminalSize;
 
