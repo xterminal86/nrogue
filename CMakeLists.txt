@@ -14,6 +14,7 @@ endif()
 option(USE_SDL "Build with SDL2" false)
 option(RUN_TESTS "Run some tests" false)
 
+set(BUILD_VERSION_TEXT ${BUILD_VERSION_TEXT})
 add_definitions(-DBUILD_VERSION_DEF=${BUILD_VERSION_TEXT})
 
 if (${CMAKE_BUILD_TYPE} MATCHES Release)
