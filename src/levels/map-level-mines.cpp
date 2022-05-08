@@ -305,7 +305,7 @@ void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
 void MapLevelMines::CreateLevel()
 {
   VisibilityRadius = 8;
-  MonstersRespawnTurns = 1000;
+  MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
   GameObjectInfo t;
   t.Set(false, false, '.', Colors::ShadesOfGrey::Four, Colors::BlackColor, "Dirt");
@@ -432,6 +432,8 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 
 void MapLevelMines::CreateSpecialLevel()
 {
+  MysteriousForcePresent = true;
+
   GameObject* key = ItemsFactory::Instance().CreateDummyItem("Iron Key",
                                                              '1',
                                                              Colors::IronColor,
@@ -537,8 +539,16 @@ void MapLevelMines::CreateSpecialLevel()
             // ... and set it to activate everywhere else!
             return !activate;
           },
-          [boss, triggerObject]()
+          [this, boss, triggerObject]()
           {
+            // Place cave-in
+            for (int i = 1; i <= 3; i++)
+            {
+              PlaceWall(i, 3, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Mine Wall");
+            }
+
+            Printer::Instance().AddMessage("The tunnel collapses!");
+
             GameObject* door = Map::Instance().GetStaticGameObjectAtPosition(2, 4);
             if (door != nullptr)
             {

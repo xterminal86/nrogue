@@ -348,9 +348,67 @@ void MapLevelBase::CreateInitialMonsters()
 
 bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
 {
-  bool blocked  = IsCellBlocking(pos);
-  bool occupied = false;
-  bool danger   = Map::Instance().IsTileDangerous(pos);
+  bool blocked   = IsCellBlocking(pos);
+  bool occupied  = false;
+  bool danger    = Map::Instance().IsTileDangerous(pos);
+  bool farEnough = false;
+
+  int distanceToPlayer = Util::BlockDistance(_playerRef->GetPosition(), pos);
+
+  int spawnPointMinDistance = 20;
+
+  //
+  // If map size is greater than spawnPointMinDistance
+  // in block direction of 80x25 terminal, potential spawn points
+  // distance should be greater than this value.
+  //
+  // Otherwise take minimum of MapSize values,
+  // halve it and compare with that.
+  //
+  int mapMinSize = std::min(MapSize.X, MapSize.Y);
+  if (mapMinSize < spawnPointMinDistance)
+  {
+    spawnPointMinDistance = mapMinSize / 2;
+
+    //
+    // Add certain remainder after each dimension increase since 2x2
+    // to get maximum available block distance for the square map
+    // of that dimension.
+    //
+    // E.g.:
+    //
+    //  12
+    // S--
+    // ..|3
+    // ..E4
+    //
+    //  123
+    // S---
+    // ...|4
+    // ...|5
+    // ...E6
+    //
+    //  1234
+    // S----
+    // ....|5
+    // ....|6
+    // ....|7
+    // ....E8
+    //
+    // 3x3 have maximum block distance of 3 + (3 - 2) = 4
+    // 4x4 -> 4 + (4 - 2) = 6
+    // 5x5 -> 5 + (5 - 2) = 8
+    // and so on
+    //
+    spawnPointMinDistance += (spawnPointMinDistance - 2);
+  }
+
+  farEnough = (distanceToPlayer >= spawnPointMinDistance);
+
+  if (!farEnough)
+  {
+    return false;
+  }
 
   for (auto& i : ActorGameObjects)
   {
@@ -368,41 +426,36 @@ void MapLevelBase::TryToSpawnMonsters()
 {
   if (_respawnCounter < MonstersRespawnTurns)
   {
-    _respawnCounter++;
+    //
+    // To average out monsters' respawning speed,
+    // adjust respawn counter with regards to player's SPD.
+    //
+    _respawnCounter += (_playerRef->Attrs.Spd.Get() <= 0)
+                       ? 1
+                       : (_playerRef->Attrs.Spd.Get() * GlobalConstants::TurnTickValue);
     return;
   }
 
   _respawnCounter = 0;
 
-  if (_monstersSpawnRateForThisLevel.empty())
+  if (_monstersSpawnRateForThisLevel.empty()
+    || (ActorGameObjects.size() >= MaxMonsters))
   {
     return;
   }
 
-  std::vector<Position> positions;
+  int index = RNG::Instance().RandomRange(0, _emptyCells.size());
 
-  int attempts = 3;
+  int cx = _emptyCells[index].X;
+  int cy = _emptyCells[index].Y;
 
-  for (int i = 0; i < attempts; i++)
+  // Spawn monsters on cells invisible to the player
+  if (!MapArray[cx][cy]->Visible
+   && IsSpotValidForSpawn({ cx, cy }))
   {
-    if (ActorGameObjects.size() >= MaxMonsters)
-    {
-      break;
-    }
-
-    int index = RNG::Instance().RandomRange(0, _emptyCells.size());
-    int cx = _emptyCells[index].X;
-    int cy = _emptyCells[index].Y;
-
-    // Spawn monsters on cells invisible to the player
-    if (!MapArray[cx][cy]->Visible
-     && IsSpotValidForSpawn({ cx, cy }))
-    {
-      auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
-      auto monster = MonstersInc::Instance().CreateMonster(cx, cy, res.first);
-      PlaceActor(monster);
-      break;
-    }
+    auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
+    auto monster = MonstersInc::Instance().CreateMonster(cx, cy, res.first);
+    PlaceActor(monster);
   }
 }
 

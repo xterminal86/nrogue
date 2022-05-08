@@ -20,7 +20,7 @@ void MapLevelLostCity::PrepareMap(MapLevelBase* levelOwner)
 void MapLevelLostCity::CreateLevel()
 {
   VisibilityRadius = 20;
-  MonstersRespawnTurns = 1000;
+  MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
   LevelBuilder lb;
 

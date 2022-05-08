@@ -255,13 +255,16 @@ namespace GlobalConstants
   // 11 is because if < StarvationDamageTimeout
   const int StarvationDamageTimeout = 11;
 
-  // Number of WaitForTurns for player before he can act (for SPD = 0)
+  // Default number of turn passes
+  // after which monster is attepmted to be spawned.
+  const int MonstersRespawnTimeout = 1000;
+
+  // Also the number of action increments (end turns)
+  // for player before he can act (for SPD = 0)
   const int EffectDurationSkipsForTurn = ((float)TurnReadyValue / (float)TurnTickValue) + 1;
 
-  // Default duration is 20 effective player turns
-  const int EffectDefaultDuration      = EffectDurationSkipsForTurn * 20;
-
-  const int LavaDamage = 30;
+  // Default duration is 20 SPD=0 player end turns
+  const int EffectDefaultDuration = EffectDurationSkipsForTurn * 20;
 
   // std::map is sorted by key
   const std::map<int, std::pair<StatsEnum, std::string>> AllStatNames =

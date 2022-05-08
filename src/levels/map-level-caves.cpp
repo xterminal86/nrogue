@@ -65,7 +65,7 @@ void MapLevelCaves::PrepareMap(MapLevelBase* levelOwner)
 void MapLevelCaves::CreateLevel()
 {
   VisibilityRadius = 6;
-  MonstersRespawnTurns = 1000;
+  MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
   int tunnelLengthMax = MapSize.X / 10;
   int tunnelLengthMin = tunnelLengthMax / 2;
@@ -191,6 +191,8 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
 
 void MapLevelCaves::CreateSpecialLevel()
 {
+  MysteriousForcePresent = true;
+
   auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
 
   MapType stairsDownTo = (MapType)(DungeonLevel + 1);

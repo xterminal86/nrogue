@@ -44,7 +44,7 @@ void MapLevelDeepDark::PrepareMap(MapLevelBase* levelOwner)
 void MapLevelDeepDark::CreateLevel()
 {
   VisibilityRadius = 3;
-  MonstersRespawnTurns = 1000;
+  MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
   // NOTE: find out what was planned to do with these
 
@@ -113,6 +113,8 @@ void MapLevelDeepDark::CreateLevel()
 
 void MapLevelDeepDark::CreateSpecialLevel()
 {
+  MysteriousForcePresent = true;
+
   GameObject* note = ItemsFactory::Instance().CreateNote("A4 paper",
   {
     "Sorry, but the game is not finished yet.",

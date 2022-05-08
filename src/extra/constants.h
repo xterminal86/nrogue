@@ -263,7 +263,7 @@ namespace GlobalConstants
   extern const int TurnTickValue;
   extern const int MaxVisibilityRadius;
   extern const int StarvationDamageTimeout;
-  extern const int LavaDamage;
+  extern const int MonstersRespawnTimeout;
 
   extern const int EffectDurationSkipsForTurn;
   extern const int EffectDefaultDuration;

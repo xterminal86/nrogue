@@ -218,6 +218,9 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll, GameObject* u
 
 void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll, GameObject* user)
 {
+  //
+  // Monsters dont't use this
+  //
   if (!Util::IsPlayer(user))
   {
     return;
@@ -471,7 +474,7 @@ void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll, GameObject* user)
     return;
   }
 
-  // NOTE: blessed scroll reveals traps as well
+  // NOTE: blessed scroll reveals traps as well (level explored percentage?)
 
   auto& mapRef = Map::Instance().CurrentLevel;
 
@@ -577,8 +580,17 @@ void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll, GameO
 
 void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObject* user)
 {
+  //
+  // Monsters dont't use this
+  //
   if (!Util::IsPlayer(user))
   {
+    return;
+  }
+
+  if (Map::Instance().CurrentLevel->MysteriousForcePresent)
+  {
+    _scrollUseMessages.push_back(_kNoActionText);
     return;
   }
 
@@ -637,6 +649,16 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
 
 void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll, GameObject* user)
 {
+  if (Map::Instance().CurrentLevel->MysteriousForcePresent)
+  {
+    if (Util::IsPlayer(user))
+    {
+      _scrollUseMessages.push_back(_kNoActionText);
+    }
+
+    return;
+  }
+
   if (Util::IsPlayer(user))
   {
     _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);

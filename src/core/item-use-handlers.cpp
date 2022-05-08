@@ -2,6 +2,7 @@
 
 #include "item-component.h"
 #include "application.h"
+#include "map.h"
 #include "player.h"
 #include "printer.h"
 #include "spells-processor.h"
@@ -366,7 +367,8 @@ namespace ItemUseHandlers
       return UseResult::UNUSABLE;
     }
 
-    if (item->Data.Amount == 0)
+    if (item->Data.Amount == 0
+     || Map::Instance().CurrentLevel->MysteriousForcePresent)
     {
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
                                              Strings::MessageBoxInformationHeaderText,
