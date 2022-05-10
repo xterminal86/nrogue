@@ -191,8 +191,8 @@ void ShoppingState::DisplayPlayerInventory()
                                    yPos + index,
                                    nameInInventory,
                                    Printer::kAlignLeft,
-                                   Colors::BlackColor,
-                                   Colors::WhiteColor);
+                                   textColor,
+                                   Colors::ShadesOfGrey::Four);
     }
     else
     {
@@ -275,8 +275,8 @@ void ShoppingState::DisplayShopInventory()
                                   yPos + index,
                                   nameInInventory,
                                   Printer::kAlignRight,
-                                  Colors::BlackColor,
-                                  Colors::WhiteColor);
+                                  textColor,
+                                  Colors::ShadesOfGrey::Four);
     }
     else
     {

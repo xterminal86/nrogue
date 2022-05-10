@@ -5,6 +5,7 @@
 #include <string>
 
 #include "singleton.h"
+#include "util.h"
 
 class Logger : public Singleton<Logger>
 {
@@ -13,6 +14,13 @@ class Logger : public Singleton<Logger>
 
     void Prepare(bool enabled);
     void Print(const std::string& stringToPrint, bool error = false);
+
+    template <typename ... Args>
+    void Printf(const std::string& format, Args ... args)
+    {
+      std::string str = Util::StringFormat(format, args ...);
+      Print(str);
+    }
 
   protected:
     void InitSpecific() override;

@@ -143,12 +143,16 @@ void ContainerInteractState::DisplayPlayerInventory()
                                   yPos + index,
                                   nameInInventory,
                                   Printer::kAlignLeft,
-                                  Colors::BlackColor,
-                                  Colors::WhiteColor);
+                                  textColor,
+                                  Colors::ShadesOfGrey::Four);
     }
     else
     {
-      Printer::Instance().PrintFB(1, yPos + index, nameInInventory, Printer::kAlignLeft, textColor);
+      Printer::Instance().PrintFB(1,
+                                  yPos + index,
+                                  nameInInventory,
+                                  Printer::kAlignLeft,
+                                  textColor);
     }
 
     index++;
@@ -217,8 +221,8 @@ void ContainerInteractState::DisplayContainerInventory()
                                   yPos + index,
                                   nameInInventory,
                                   Printer::kAlignRight,
-                                  Colors::BlackColor,
-                                  Colors::WhiteColor);
+                                  textColor,
+                                  Colors::ShadesOfGrey::Four);
     }
     else
     {

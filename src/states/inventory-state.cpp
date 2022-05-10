@@ -382,7 +382,7 @@ void InventoryState::PrintFooter()
       tmp.insert(0, " ");
     }
 
-    additive = 1; //(counter < 2) ? 1 : 0;
+    additive = 1;
 
     Printer::Instance().PrintFB(tw / 2 + 1 + counter * part - additive,
                                 th - 1,
@@ -440,8 +440,8 @@ void InventoryState::DrawSelectionBar(int yOffset, const std::string& text, cons
                                 2 + yOffset,
                                 text,
                                 Printer::kAlignLeft,
-                                Colors::BlackColor,
-                                Colors::WhiteColor);
+                                textColor,
+                                Colors::ShadesOfGrey::Four);
   }
   else
   {

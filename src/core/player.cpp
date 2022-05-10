@@ -599,8 +599,15 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
 
     case SpellType::TELEPORT:
     {
-      std::string msg = Util::ProcessTeleport(what);
-      Printer::Instance().AddMessage(msg);
+      if (!Map::Instance().CurrentLevel->MysteriousForcePresent)
+      {
+        std::string msg = Util::ProcessTeleport(what);
+        Printer::Instance().AddMessage(msg);
+      }
+      else
+      {
+        Printer::Instance().AddMessage(Strings::NoActionText);
+      }
     }
     break;
 
