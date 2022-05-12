@@ -9,6 +9,12 @@ ItemComponent::ItemComponent()
   _componentHash = typeid(*this).hash_code();
 }
 
+void ItemComponent::PrepareAdditional()
+{
+  OwnerGameObject->Attrs.Indestructible = false;
+  OwnerGameObject->Attrs.HP.Reset(1);
+}
+
 void ItemComponent::Update()
 {
 }
@@ -466,6 +472,14 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::REMOVE_HUNGER:
         res.push_back("Removes need for food");
+        break;
+
+      case ItemBonusType::POISON_IMMUNE:
+        res.push_back("Cannot be poisoned");
+        break;
+
+      case ItemBonusType::FREE_ACTION:
+        res.push_back("Cannot be paralyzed");
         break;
 
       case ItemBonusType::IGNORE_DEFENCE:

@@ -74,7 +74,7 @@ class GameObject
 
       std::unique_ptr<T> cp = std::make_unique<T>(args ...);
 
-      cp.get()->OwnerGameObject = this;
+      cp->Prepare(this);
 
       // cp is null after std::move
       _components[typeid(T).hash_code()] = std::move(cp);
@@ -141,6 +141,7 @@ class GameObject
     std::function<IR()> InteractionCallback;
 
     std::function<void()> GenerateLootFunction;
+    std::function<void()> OnDestroy;
 
     size_t ComponentsSize();
 
@@ -235,6 +236,7 @@ class GameObject
 
     bool CanRaiseAttribute(Attribute& attr);
     bool ShouldSkipTurn();
+    bool IsImmune(const ItemBonusStruct& effectToAdd);
 
     // Unique in-game id
     uint64_t _objectId = 1;

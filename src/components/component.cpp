@@ -7,6 +7,17 @@ Component::Component()
   _componentHash = typeid(*this).hash_code();
 }
 
+void Component::Prepare(GameObject* owner)
+{
+  OwnerGameObject = owner;
+
+  PrepareAdditional();
+}
+
+void Component::PrepareAdditional()
+{
+}
+
 const size_t& Component::GetComponentHash()
 {
   return _componentHash;

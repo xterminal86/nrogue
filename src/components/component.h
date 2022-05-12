@@ -14,6 +14,8 @@ class Component
 
     virtual ~Component() = default;
 
+    void Prepare(GameObject* owner);
+
     virtual void Update() = 0;
 
     const size_t& GetComponentHash();
@@ -24,6 +26,8 @@ class Component
     bool IsEnabled = true;
 
   protected:
+    virtual void PrepareAdditional();
+
     size_t _componentHash;
 };
 

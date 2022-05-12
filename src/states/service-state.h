@@ -72,6 +72,8 @@ class ServiceState : public SelectItemStateBase
       ItemBonusType::INDESTRUCTIBLE,
       ItemBonusType::VISIBILITY,
       ItemBonusType::REMOVE_HUNGER,
+      ItemBonusType::POISON_IMMUNE,
+      ItemBonusType::FREE_ACTION,
       ItemBonusType::IGNORE_DEFENCE,
       ItemBonusType::IGNORE_ARMOR,
       ItemBonusType::MANA_SHIELD,

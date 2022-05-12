@@ -462,9 +462,6 @@ GameObject* ItemsFactory::CreateRandomPotion()
   auto weights = Util::WeightedRandom(GlobalConstants::PotionsWeightTable);
   go = GameObjectsFactory::Instance().CreateGameObject(0, 0, weights.first);
 
-  go->Attrs.Indestructible = false;
-  go->Attrs.HP.Reset(1);
-
   ItemComponent* ic = go->GetComponent<ItemComponent>();
 
   ic->Data.IsIdentified = false;
@@ -2021,6 +2018,8 @@ void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map
     bonusWeightByType.erase(ItemBonusType::INVISIBILITY);
     bonusWeightByType.erase(ItemBonusType::TELEPATHY);
     bonusWeightByType.erase(ItemBonusType::LEVITATION);
+    bonusWeightByType.erase(ItemBonusType::FREE_ACTION);
+    bonusWeightByType.erase(ItemBonusType::POISON_IMMUNE);
   }
   else if (itemRef->Data.EqCategory == EquipmentCategory::WEAPON)
   {
@@ -2031,6 +2030,8 @@ void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map
     bonusWeightByType.erase(ItemBonusType::MAG_ABSORB);
     bonusWeightByType.erase(ItemBonusType::THORNS);
     bonusWeightByType.erase(ItemBonusType::REMOVE_HUNGER);
+    bonusWeightByType.erase(ItemBonusType::FREE_ACTION);
+    bonusWeightByType.erase(ItemBonusType::POISON_IMMUNE);
     bonusWeightByType.erase(ItemBonusType::INVISIBILITY);
     bonusWeightByType.erase(ItemBonusType::TELEPATHY);
     bonusWeightByType.erase(ItemBonusType::LEVITATION);
@@ -2066,6 +2067,8 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
     { ItemBonusType::INVISIBILITY,     5 },
     { ItemBonusType::DAMAGE,          75 },
     { ItemBonusType::REMOVE_HUNGER,   40 },
+    { ItemBonusType::POISON_IMMUNE,   15 },
+    { ItemBonusType::FREE_ACTION,     15 },
     { ItemBonusType::IGNORE_DEFENCE,  10 },
     { ItemBonusType::IGNORE_ARMOR,    10 },
     { ItemBonusType::KNOCKBACK,       20 },
@@ -2280,6 +2283,8 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
     case ItemBonusType::IGNORE_DEFENCE:
     case ItemBonusType::IGNORE_ARMOR:
     case ItemBonusType::REMOVE_HUNGER:
+    case ItemBonusType::POISON_IMMUNE:
+    case ItemBonusType::FREE_ACTION:
     case ItemBonusType::INDESTRUCTIBLE:
     case ItemBonusType::REFLECT:
     case ItemBonusType::MANA_SHIELD:

@@ -51,6 +51,11 @@ GameObject::~GameObject()
     Blackboard::Instance().Remove(_objectId);
   }
 
+  if (Util::IsFunctionValid(OnDestroy))
+  {
+    OnDestroy();
+  }
+
 #ifdef DEBUG_BUILD
   GameState* s = Application::Instance().GetGameStateRefByName(GameStates::DEV_CONSOLE);
   DevConsole* dc = static_cast<DevConsole*>(s);
@@ -661,6 +666,11 @@ void GameObject::MoveGameObject(int dx, int dy)
 
 void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
 {
+  if (IsImmune(effectToAdd))
+  {
+    return;
+  }
+
   uint64_t id = effectToAdd.Id;
 
   if (effectToAdd.Cumulative)
@@ -691,6 +701,24 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
                              effectToAdd.Duration,
                              effectToAdd.Period);
   #endif
+}
+
+bool GameObject::IsImmune(const ItemBonusStruct& effectToAdd)
+{
+  bool res = false;
+
+  switch (effectToAdd.Type)
+  {
+    case ItemBonusType::POISONED:
+      res = HasEffect(ItemBonusType::POISON_IMMUNE);
+      break;
+
+    case ItemBonusType::PARALYZE:
+      res = HasEffect(ItemBonusType::FREE_ACTION);
+      break;
+  }
+
+  return res;
 }
 
 void GameObject::ApplyEffect(const ItemBonusStruct& e)
@@ -724,7 +752,7 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
 
     case ItemBonusType::BURNING:
     {
-      if (this == &Application::Instance().PlayerInstance)
+      if (Util::IsPlayer(this))
       {
         Printer::Instance().AddMessage("You catch fire!");
       }
@@ -737,6 +765,34 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
       eff.BonusValue = 10;
 
       AddEffect(eff);
+    }
+    break;
+
+    case ItemBonusType::POISON_IMMUNE:
+    {
+      if (HasEffect(ItemBonusType::POISONED))
+      {
+        if (Util::IsPlayer(this))
+        {
+          Printer::Instance().AddMessage("The poison disperses!");
+        }
+
+        RemoveEffectAllOf(ItemBonusType::POISONED);
+      }
+    }
+    break;
+
+    case ItemBonusType::FREE_ACTION:
+    {
+      if (HasEffect(ItemBonusType::PARALYZE))
+      {
+        if (Util::IsPlayer(this))
+        {
+          Printer::Instance().AddMessage("You can move again!");
+        }
+
+        RemoveEffectAllOf(ItemBonusType::PARALYZE);
+      }
     }
     break;
   }

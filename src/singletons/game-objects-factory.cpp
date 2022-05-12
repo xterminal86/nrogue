@@ -133,7 +133,17 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
     go->AddComponent<TimedDestroyerComponent>(200);
   }
 
-  auto str = Util::StringFormat("%s's remains", from->ObjectName.data());
+  std::string objName = from->ObjectName;
+
+  ItemComponent* ic = from->GetComponent<ItemComponent>();
+  if (ic != nullptr)
+  {
+    objName = (!ic->Data.IsIdentified)
+              ? ic->Data.UnidentifiedName
+              : from->ObjectName;
+  }
+
+  auto str = Util::StringFormat("%s's remains", objName.data());
   go->ObjectName = str;
 
   go->Attrs.Indestructible = false;

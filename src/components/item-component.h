@@ -22,6 +22,9 @@ class ItemComponent : public Component
 
     ItemData Data;
 
+  protected:
+    void PrepareAdditional() override;
+
   private:
     std::vector<std::string> GetWeaponInspectionInfo();
     std::vector<std::string> GetReturnerInspectionInfo();

@@ -91,6 +91,7 @@ enum class GameObjectType
   HARMLESS = 0,
   REMAINS,
   PLAYER,
+  NPC,
   GROUND,
   SHALLOW_WATER,
   DEEP_WATER,
@@ -98,6 +99,7 @@ enum class GameObjectType
   CHASM,
   PICKAXEABLE,
   TRAP,
+  // ===========================================================================
   RAT,
   BAT,
   VAMPIRE_BAT,
@@ -106,11 +108,23 @@ enum class GameObjectType
   TROLL,
   MAD_MINER,
   SKELETON,
-  ZOMBIE,
+  ZOMBIE,           // has a chance to reanimate itself when slain
   LICH,
-  NPC,
   KOBOLD,
-  HEROBRINE
+  HEROBRINE,
+  INVISIBLE_STALKER,
+  FIRE_MAGE,        // fire magic + wanders with fire elemental
+  WATER_MAGE,       // -=-=-=-=-
+  AIR_MAGE,         // -=-=-=-=-
+  EARTH_MAGE,       // -=-=-=-=-
+  ROGUE_WIZARD,     // casts random magic
+  FIRE_ELEMENTAL,
+  WATER_ELEMENTAL,
+  AIR_ELEMENTAL,
+  EARTH_ELEMENTAL,
+  LOOTER,
+  ARCHER,
+  FENCER            // has ignore defence and / or ignore armor sword
 };
 
 enum class NPCType
@@ -284,6 +298,8 @@ enum class ItemBonusType
   INVISIBILITY,   // monsters can't see you (unless they can)
   DAMAGE,         // adds to total damage
   REMOVE_HUNGER,  // stops hunger counter
+  FREE_ACTION,    // immune to paralysis
+  POISON_IMMUNE,
   IGNORE_DEFENCE, // ignores DEF for damage calculation
   IGNORE_ARMOR,   // deals damage straight to HP, ignoring any armor
   KNOCKBACK,
