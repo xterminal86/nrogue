@@ -24,8 +24,6 @@
 // so the signature must match.
 // By the way, IINM, it should be exactly 'char* argv[]',
 // not 'char**' or anything.
-// Also, there is some linking issue with MSVC,
-// so we're fixing that "old-school" way with this define.
 //
 // Also you need to manually "Add" -> "File" in "Projects" tab of QT Creator's
 // cmake config window called SDL2_LIBRARY and point it to libSDL2.dll.a file.
