@@ -71,7 +71,7 @@ void MapLevelCaves::CreateLevel()
   int tunnelLengthMin = tunnelLengthMax / 2;
 
   GameObjectInfo t;
-  t.Set(true, true, ' ', Colors::BlackColor, Colors::CaveWallColor, "Cave Wall");
+  t.Set(true, true, ' ', Colors::BlackColor, Colors::CaveWallColor, Strings::TileNames::CaveWallText);
 
   CreateBorders(t);
 
@@ -144,7 +144,12 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
       switch (image)
       {
         case '#':
-          PlaceWall(x, y, ' ', Colors::BlackColor, Colors::CaveWallColor, "Cave Wall");
+          PlaceWall(x,
+                    y,
+                    ' ',
+                    Colors::BlackColor,
+                    Colors::CaveWallColor,
+                    Strings::TileNames::CaveWallText);
           break;
 
         case '+':
@@ -162,7 +167,12 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
         break;
 
         case '.':
-          PlaceGroundTile(x, y, image, Colors::ShadesOfGrey::Four, Colors::BlackColor, "Stone Floor");
+          PlaceGroundTile(x,
+                          y,
+                          image,
+                          Colors::ShadesOfGrey::Four,
+                          Colors::BlackColor,
+                          Strings::TileNames::StoneFloorText);
           break;
 
         case 'g':
@@ -174,7 +184,12 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
           break;
 
         case ' ':
-          PlaceGroundTile(x, y, '.', Colors::BlackColor, Colors::ShadesOfGrey::Ten, "Stone");
+          PlaceGroundTile(x,
+                          y,
+                          '.',
+                          Colors::BlackColor,
+                          Colors::ShadesOfGrey::Ten,
+                          Strings::TileNames::StoneText);
           break;
 
         case 'l':
@@ -230,8 +245,13 @@ void MapLevelCaves::CreateSpecialLevel()
 
         case 'D':
         {
-          objName = "Cave Wall";
-          t.Set(true, true, ' ', Colors::BlackColor, Colors::CaveWallColor, objName);
+          objName = Strings::TileNames::ObsidianWallText;
+          t.Set(true,
+                true,
+                '#',
+                Colors::ObsidianColorHigh,
+                Colors::ObsidianColorLow,
+                objName);
           PlaceStaticObject(posX, posY, t, -1);
 
           // TODO: add trigger to destroy on boss death
@@ -240,8 +260,13 @@ void MapLevelCaves::CreateSpecialLevel()
 
         case '#':
         {
-          objName = "Cave Wall";
-          t.Set(true, true, ' ', Colors::BlackColor, Colors::CaveWallColor, objName);
+          objName = Strings::TileNames::ObsidianWallText;
+          t.Set(true,
+                true,
+                c,
+                Colors::ObsidianColorHigh,
+                Colors::ObsidianColorLow,
+                objName);
           PlaceStaticObject(posX, posY, t, -1);
         }
         break;
@@ -251,7 +276,12 @@ void MapLevelCaves::CreateSpecialLevel()
           break;
 
         case '.':
-          PlaceGroundTile(posX, posY, c, Colors::ShadesOfGrey::Four, Colors::BlackColor, "Ground");
+          PlaceGroundTile(posX,
+                          posY,
+                          c,
+                          Colors::ShadesOfGrey::Four,
+                          Colors::BlackColor,
+                          Strings::TileNames::GroundText);
           break;
       }
 
@@ -295,8 +325,13 @@ void MapLevelCaves::CreateRivers()
       if (MapArray[p.X][p.Y]->Image == '.')
       {
         GameObjectInfo t;
-        std::string objName = "Shallow Water";
-        t.Set(false, false, '~', Colors::WhiteColor, Colors::ShallowWaterColor, objName);
+        std::string objName = Strings::TileNames::ShallowWaterText;
+        t.Set(false,
+              false,
+              '~',
+              Colors::WhiteColor,
+              Colors::ShallowWaterColor,
+              objName);
         MapArray[p.X][p.Y]->MakeTile(t, GameObjectType::SHALLOW_WATER);
       }
     }

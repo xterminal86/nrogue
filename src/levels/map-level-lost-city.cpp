@@ -44,7 +44,12 @@ void MapLevelLostCity::CreateLevel()
   ConstructFromBuilder(lb);
 
   GameObjectInfo t;
-  t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Rocks");
+  t.Set(true,
+        true,
+        ' ',
+        Colors::BlackColor,
+        Colors::ShadesOfGrey::Six,
+        Strings::TileNames::RocksText);
 
   CreateBorders(t);
 
@@ -73,7 +78,12 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
       switch (image)
       {
         case '#':
-          PlaceWall(x, y, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Rocks");
+          PlaceWall(x,
+                    y,
+                    ' ',
+                    Colors::BlackColor,
+                    Colors::ShadesOfGrey::Six,
+                    Strings::TileNames::RocksText);
           break;
 
         case '+':
@@ -88,8 +98,13 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
           img = GlobalConstants::CP437IndexByType[NameCP437::CLUB];
           #endif
 
-          objName = "Withered Tree";
-          t.Set(true, true, img, Colors::DirtColor, Colors::BlackColor, objName);
+          objName = Strings::TileNames::WitheredTreeText;
+          t.Set(true,
+                true,
+                img,
+                Colors::DirtColor,
+                Colors::BlackColor,
+                objName);
           PlaceStaticObject(x, y, t);
         }
         break;
@@ -99,11 +114,21 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
           break;
 
         case '.':
-          PlaceGroundTile(x, y, image, Colors::ShadesOfGrey::Four, Colors::BlackColor, "Ground");
+          PlaceGroundTile(x,
+                          y,
+                          image,
+                          Colors::ShadesOfGrey::Four,
+                          Colors::BlackColor,
+                          Strings::TileNames::GroundText);
           break;
 
         case ' ':
-          PlaceGroundTile(x, y, image, Colors::BlackColor, Colors::ShadesOfGrey::Ten, "Flagstone");
+          PlaceGroundTile(x,
+                          y,
+                          image,
+                          Colors::BlackColor,
+                          Colors::ShadesOfGrey::Ten,
+                          Strings::TileNames::FlagstoneText);
           break;
 
         // TODO: can step in lava and get killed / damaged?
@@ -121,11 +146,21 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
           break;
 
         case 'd':
-          PlaceGroundTile(x, y, '.', Colors::DirtDotColor, Colors::DirtColor, "Dirt");
+          PlaceGroundTile(x,
+                          y,
+                          '.',
+                          Colors::DirtDotColor,
+                          Colors::DirtColor,
+                          Strings::TileNames::DirtText);
           break;
 
         case 'F':
-          t.Set(true, false, image, Colors::WhiteColor, Colors::DeepWaterColor, "Fountain");
+          t.Set(true,
+                false,
+                image,
+                Colors::WhiteColor,
+                Colors::DeepWaterColor,
+                Strings::TileNames::FountainText);
           PlaceStaticObject(x, y, t);
           break;
 
@@ -147,7 +182,13 @@ void MapLevelLostCity::CreateShrines(LevelBuilder& lb)
     auto shrineColor = Colors::ShrineColorsByType.at(shrineType);
 
     GameObjectInfo t;
-    t.Set(true, false, '/', shrineColor.first, shrineColor.second, description, "?Shrine?");
+    t.Set(true,
+          false,
+          '/',
+          shrineColor.first,
+          shrineColor.second,
+          description,
+          "?Shrine?");
     PlaceStaticObject(kvp.first.X, kvp.first.Y, t);
 
     auto go = GameObjectsFactory::Instance().CreateShrine(kvp.first.X, kvp.first.Y, shrineType, 1000);

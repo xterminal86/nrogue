@@ -33,6 +33,8 @@ namespace Colors
   const std::string RedPoppyColor             = "#E42F0C";
   const std::string MarbleColor               = "#FFE0E0";
   const std::string CaveWallColor             = "#964B00";
+  const std::string ObsidianColorHigh         = "#5B4965";
+  const std::string ObsidianColorLow          = "#3D354B";
   const std::string GrassColor                = "#006600";
   const std::string GrassDotColor             = "#009900";
   const std::string DirtColor                 = "#9B7653";
@@ -146,8 +148,8 @@ namespace Colors
 
 namespace Strings
 {
-  const std::string HexChars          = "0123456789ABCDEF";
-  const std::string Base64Chars       = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  const std::string HexChars    = "0123456789ABCDEF";
+  const std::string Base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
   const std::string AlphabetUppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const std::string AlphabetLowercase = "abcdefghijklmnopqrstuvwxyz";
@@ -202,6 +204,49 @@ namespace Strings
   const std::string FmtDroppedS   = "Dropped: %s";
 
   const std::vector<std::string> MsgNotInTown = { "Not here", "Not in town" };
+
+  namespace TileNames
+  {
+    const std::string MineWallText     = "Mine Wall";
+    const std::string CaveWallText     = "Cave Wall";
+    const std::string ObsidianWallText = "Obsidian Wall";
+    const std::string GroundText       = "Ground";
+    const std::string WallsText        = "Walls";
+    const std::string FlagstoneText    = "Flagstone";
+    const std::string StoneText        = "Stone";
+    const std::string StoneFloorText   = "Stone Floor";
+    const std::string StoneWallText    = "Stone Wall";
+    const std::string StoneTilesText   = "Stone Tiles";
+    const std::string StonePillarText  = "Stone Pillar";
+    const std::string StainedGlassText = "Stained Glass";
+    const std::string WoodenFloorText  = "Wooden Floor";
+    const std::string BrickWallText    = "Brick Wall";
+    const std::string WorkbenchText    = "Workbench";
+    const std::string ForgeText        = "Forge";
+    const std::string BedText          = "Bed";
+    const std::string FountainText     = "Fountain";
+    const std::string DirtText         = "Dirt";
+    const std::string RocksText        = "Rocks";
+    const std::string AbyssalRocksText = "Abyssal Rocks";
+    const std::string AbyssalFloorText = "Abyssal Floor";
+    const std::string MarbleFenceText  = "Marble Fence";
+    const std::string MarbleColumnText = "Marble Column";
+    const std::string DeepWaterText    = "Deep Water";
+    const std::string ShallowWaterText = "Shallow Water";
+    const std::string LavaText         = "Lava";
+    const std::string ChasmText        = "Chasm";
+    const std::string GatesText        = "Gates";
+    const std::string StashText        = "Stash";
+    const std::string WindowText       = "Window";
+    const std::string WoodenBenchText  = "Wooden Bench";
+    const std::string RoyalGateText    = "Royal Gate";
+    const std::string TreeText         = "Tree";
+    const std::string WitheredTreeText = "Withered Tree";
+    const std::string GrassText        = "Grass";
+    const std::string BloodText        = "Blood";
+    const std::string HellrockText     = "Hellrock";
+    const std::string HellstoneText    = "Hellstone";
+  }
 }
 
 namespace GlobalConstants
@@ -320,13 +365,13 @@ namespace GlobalConstants
     { ItemType::MANA_POTION,    50 },
     { ItemType::NP_POTION,      50 },
     { ItemType::HUNGER_POTION,  20 },
-    { ItemType::STR_POTION,     1  },
-    { ItemType::DEF_POTION,     1  },
-    { ItemType::MAG_POTION,     1  },
-    { ItemType::RES_POTION,     1  },
-    { ItemType::SKL_POTION,     1  },
-    { ItemType::SPD_POTION,     1  },
-    { ItemType::EXP_POTION,     5  }
+    { ItemType::STR_POTION,      1 },
+    { ItemType::DEF_POTION,      1 },
+    { ItemType::MAG_POTION,      1 },
+    { ItemType::RES_POTION,      1 },
+    { ItemType::SKL_POTION,      1 },
+    { ItemType::SPD_POTION,      1 },
+    { ItemType::EXP_POTION,      5 }
   };
 
   const std::map<PlayerStats, std::string> StatNameByType =
@@ -423,14 +468,14 @@ namespace GlobalConstants
 
   const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =
   {
-    { FoodType::APPLE,        { "Apple",        10  } },
-    { FoodType::BREAD,        { "Bread",        20  } },
-    { FoodType::FISH,         { "Fish",         20  } },
-    { FoodType::CHEESE,       { "Cheese",       30  } },
-    { FoodType::PIE,          { "Cream Pie",    40  } },
-    { FoodType::MEAT,         { "Meat",         50  } },
-    { FoodType::TIN,          { "Canned Food",  60  } },
-    { FoodType::RATIONS,      { "Rations",      75  } },
+    { FoodType::APPLE,        { "Apple",         10 } },
+    { FoodType::BREAD,        { "Bread",         20 } },
+    { FoodType::FISH,         { "Fish",          20 } },
+    { FoodType::CHEESE,       { "Cheese",        30 } },
+    { FoodType::PIE,          { "Cream Pie",     40 } },
+    { FoodType::MEAT,         { "Meat",          50 } },
+    { FoodType::TIN,          { "Canned Food",   60 } },
+    { FoodType::RATIONS,      { "Rations",       75 } },
     { FoodType::IRON_RATIONS, { "Iron Rations", 100 } }
   };
 
@@ -456,14 +501,14 @@ namespace GlobalConstants
 
   const std::map<GemType, int> GemCostByType =
   {
-    { GemType::WORTHLESS_GLASS, 0    },  // 0
-    { GemType::BLACK_OBSIDIAN,  200  },  // 200
-    { GemType::GREEN_JADE,      300  },  // 300
-    { GemType::PURPLE_FLUORITE, 400  },  // 400
-    { GemType::PURPLE_AMETHYST, 600  },  // 600
-    { GemType::RED_GARNET,      700  },  // 700
-    { GemType::WHITE_OPAL,      800  },  // 800
-    { GemType::BLACK_JETSTONE,  850  },  // 850
+    { GemType::WORTHLESS_GLASS,    0 },  // 0
+    { GemType::BLACK_OBSIDIAN,   200 },  // 200
+    { GemType::GREEN_JADE,       300 },  // 300
+    { GemType::PURPLE_FLUORITE,  400 },  // 400
+    { GemType::PURPLE_AMETHYST,  600 },  // 600
+    { GemType::RED_GARNET,       700 },  // 700
+    { GemType::WHITE_OPAL,       800 },  // 800
+    { GemType::BLACK_JETSTONE,   850 },  // 850
     { GemType::ORANGE_AMBER,    1000 },  // 1000
     { GemType::YELLOW_CITRINE,  1500 },  // 1500
     { GemType::BLUE_AQUAMARINE, 1500 },  // 1500

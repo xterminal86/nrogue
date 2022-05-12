@@ -308,13 +308,24 @@ void MapLevelMines::CreateLevel()
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
   GameObjectInfo t;
-  t.Set(false, false, '.', Colors::ShadesOfGrey::Four, Colors::BlackColor, "Dirt");
+  t.Set(false,
+        false,
+        '.',
+        Colors::ShadesOfGrey::Four,
+        Colors::BlackColor,
+        Strings::TileNames::DirtText);
 
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
 
   // Borders
 
-  t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Rocks");
+  t.Set(true,
+        true,
+        ' ',
+        Colors::BlackColor,
+        Colors::ShadesOfGrey::Six,
+        Strings::TileNames::RocksText);
+
   CreateBorders(t);
 
   // Build level
@@ -385,7 +396,12 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
       switch (image)
       {
         case '#':
-          PlaceWall(x, y, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Mine Wall");
+          PlaceWall(x,
+                    y,
+                    ' ',
+                    Colors::BlackColor,
+                    Colors::ShadesOfGrey::Six,
+                    Strings::TileNames::MineWallText);
           break;
 
         case '+':
@@ -403,7 +419,12 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
         break;
 
         case '.':
-          PlaceGroundTile(x, y, image, Colors::ShadesOfGrey::Four, Colors::BlackColor, "Dirt");
+          PlaceGroundTile(x,
+                          y,
+                          image,
+                          Colors::ShadesOfGrey::Four,
+                          Colors::BlackColor,
+                          Strings::TileNames::DirtText);
           break;
 
         case 'g':
@@ -415,7 +436,12 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
           break;
 
         case ' ':
-          PlaceGroundTile(x, y, '.', Colors::BlackColor, Colors::ShadesOfGrey::Ten, "Stone");
+          PlaceGroundTile(x,
+                          y,
+                          '.',
+                          Colors::BlackColor,
+                          Colors::ShadesOfGrey::Ten,
+                          Strings::TileNames::StoneText);
           break;
 
         case 'l':
@@ -483,9 +509,15 @@ void MapLevelMines::CreateSpecialLevel()
 
         case '#':
         {
-          objName = "Rocks";
-          t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, objName);
-          PlaceStaticObject(posX, posY, t, -1);
+          PlaceWall(posX,
+                    posY,
+                    ' ',
+                    Colors::BlackColor,
+                    Colors::ShadesOfGrey::Six,
+                    Strings::TileNames::MineWallText);
+          //objName = Strings::TileNames::RocksText;
+          //t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, objName);
+          //PlaceStaticObject(posX, posY, t, -1);
         }
         break;
 
@@ -514,7 +546,12 @@ void MapLevelMines::CreateSpecialLevel()
 
         case 'B':
         {
-          PlaceGroundTile(posX, posY, '.', Colors::ShadesOfGrey::Four, Colors::BlackColor, "Ground");
+          PlaceGroundTile(posX,
+                          posY,
+                          '.',
+                          Colors::ShadesOfGrey::Four,
+                          Colors::BlackColor,
+                          Strings::TileNames::GroundText);
 
           GameObject* boss = MonstersInc::Instance().CreateMonster(posX, posY, GameObjectType::HEROBRINE);
 
@@ -542,9 +579,22 @@ void MapLevelMines::CreateSpecialLevel()
           [this, boss, triggerObject]()
           {
             // Place cave-in
-            for (int i = 1; i <= 3; i++)
+            for (int x = 1; x <= 3; x++)
             {
-              PlaceWall(i, 3, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Mine Wall");
+              for (int y = 1; y <= 3; y++)
+              {
+                if (x == 2 && y == 2)
+                {
+                  continue;
+                }
+
+                PlaceWall(x,
+                          y,
+                          ' ',
+                          Colors::BlackColor,
+                          Colors::ShadesOfGrey::Six,
+                          Strings::TileNames::MineWallText);
+              }
             }
 
             Printer::Instance().AddMessage("The tunnel collapses!");
@@ -595,11 +645,21 @@ void MapLevelMines::CreateSpecialLevel()
         break;
 
         case 'b':
-          PlaceGroundTile(posX, posY, '.', Colors::RedColor, Colors::BlackColor, "Blood");
+          PlaceGroundTile(posX,
+                          posY,
+                          '.',
+                          Colors::RedColor,
+                          Colors::BlackColor,
+                          Strings::TileNames::BloodText);
           break;
 
         case '%':
-          PlaceGroundTile(posX, posY, c, Colors::WhiteColor, Colors::RedColor, "Someone's remains...");
+          PlaceGroundTile(posX,
+                          posY,
+                          c,
+                          Colors::WhiteColor,
+                          Colors::RedColor,
+                          "Someone's remains...");
           break;
 
         case 'W':
@@ -607,7 +667,12 @@ void MapLevelMines::CreateSpecialLevel()
           break;
 
         case '.':
-          PlaceGroundTile(posX, posY, c, Colors::ShadesOfGrey::Four, Colors::BlackColor, "Ground");
+          PlaceGroundTile(posX,
+                          posY,
+                          c,
+                          Colors::ShadesOfGrey::Four,
+                          Colors::BlackColor,
+                          Strings::TileNames::GroundText);
           break;
       }
 

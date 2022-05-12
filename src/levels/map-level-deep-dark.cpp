@@ -52,7 +52,7 @@ void MapLevelDeepDark::CreateLevel()
   //int tunnelLengthMin = tunnelLengthMax / 2;
 
   GameObjectInfo t;
-  t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Stone Wall");
+  t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, Strings::TileNames::StoneWallText);
 
   CreateBorders(t);
 
@@ -159,11 +159,21 @@ void MapLevelDeepDark::CreateSpecialLevel()
         break;
 
         case '#':
-          PlaceWall(posX, posY, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Stone Wall");
+          PlaceWall(posX,
+                    posY,
+                    ' ',
+                    Colors::BlackColor,
+                    Colors::ShadesOfGrey::Six,
+                    Strings::TileNames::StoneWallText);
           break;
 
         case '.':
-          PlaceGroundTile(posX, posY, c, Colors::ShadesOfGrey::Four, Colors::BlackColor, "Ground");
+          PlaceGroundTile(posX,
+                          posY,
+                          c,
+                          Colors::ShadesOfGrey::Four,
+                          Colors::BlackColor,
+                          Strings::TileNames::GroundText);
           break;
       }
 
@@ -187,11 +197,21 @@ void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
       switch (image)
       {
         case '#':
-          PlaceWall(x, y, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, "Stone Wall");
+          PlaceWall(x,
+                    y,
+                    ' ',
+                    Colors::BlackColor,
+                    Colors::ShadesOfGrey::Six,
+                    Strings::TileNames::StoneWallText);
           break;
 
         case '.':
-          PlaceGroundTile(x, y, image, Colors::ShadesOfGrey::Four, Colors::BlackColor, "Ground");
+          PlaceGroundTile(x,
+                          y,
+                          image,
+                          Colors::ShadesOfGrey::Four,
+                          Colors::BlackColor,
+                          Strings::TileNames::GroundText);
           break;
 
         case '+':
@@ -217,7 +237,12 @@ void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
           break;
 
         case ' ':
-          PlaceGroundTile(x, y, '.', Colors::BlackColor, Colors::ShadesOfGrey::Ten, "Stone");
+          PlaceGroundTile(x,
+                          y,
+                          '.',
+                          Colors::BlackColor,
+                          Colors::ShadesOfGrey::Ten,
+                          Strings::TileNames::StoneText);
           break;
 
         case 'l':

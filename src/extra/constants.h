@@ -140,6 +140,8 @@ namespace Colors
   extern const std::string RedPoppyColor;
   extern const std::string MarbleColor;
   extern const std::string CaveWallColor;
+  extern const std::string ObsidianColorHigh;
+  extern const std::string ObsidianColorLow;
   extern const std::string GrassColor;
   extern const std::string GrassDotColor;
   extern const std::string DirtColor;
@@ -229,6 +231,49 @@ namespace Strings
   extern const std::string FmtDroppedS;
 
   extern const std::vector<std::string> MsgNotInTown;
+
+  namespace TileNames
+  {
+    extern const std::string MineWallText;
+    extern const std::string CaveWallText;
+    extern const std::string ObsidianWallText;
+    extern const std::string GroundText;
+    extern const std::string WallsText;
+    extern const std::string FlagstoneText;
+    extern const std::string StoneText;
+    extern const std::string StoneFloorText;
+    extern const std::string StoneWallText;
+    extern const std::string StoneTilesText;
+    extern const std::string StonePillarText;
+    extern const std::string StainedGlassText;
+    extern const std::string WoodenFloorText;
+    extern const std::string BrickWallText;
+    extern const std::string WorkbenchText;
+    extern const std::string ForgeText;
+    extern const std::string BedText;
+    extern const std::string FountainText;
+    extern const std::string DirtText;
+    extern const std::string RocksText;
+    extern const std::string AbyssalRocksText;
+    extern const std::string AbyssalFloorText;
+    extern const std::string MarbleFenceText;
+    extern const std::string MarbleColumnText;
+    extern const std::string DeepWaterText;
+    extern const std::string ShallowWaterText;
+    extern const std::string LavaText;
+    extern const std::string ChasmText;
+    extern const std::string GatesText;
+    extern const std::string StashText;
+    extern const std::string WindowText;
+    extern const std::string WoodenBenchText;
+    extern const std::string RoyalGateText;
+    extern const std::string TreeText;
+    extern const std::string WitheredTreeText;
+    extern const std::string GrassText;
+    extern const std::string BloodText;
+    extern const std::string HellrockText;
+    extern const std::string HellstoneText;
+  }
 }
 
 namespace GlobalConstants
@@ -236,7 +281,7 @@ namespace GlobalConstants
   extern std::map<RoomEdgeEnum, std::string> DirNamesByDir;
 
 #ifdef USE_SDL
-  extern std::map<NameCP437, int>    CP437IndexByType;
+  extern std::map<NameCP437, int> CP437IndexByType;
 #endif
 
   // ===============================================

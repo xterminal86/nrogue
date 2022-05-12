@@ -41,7 +41,12 @@ void MapLevelNether::CreateLevel()
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
   GameObjectInfo t;
-  t.Set(true, true, ' ', Colors::BlackColor, Colors::CaveWallColor, "Cave Wall");
+  t.Set(true,
+        true,
+        ' ',
+        Colors::BlackColor,
+        Colors::CaveWallColor,
+        Strings::TileNames::CaveWallText);
 
   CreateBorders(t);
 
@@ -88,7 +93,12 @@ void MapLevelNether::ConstructFromBuilder(LevelBuilder& lb)
       switch (image)
       {
         case '#':
-          PlaceWall(x, y, ' ', Colors::BlackColor, Colors::RedPoppyColor, "Hellrock");
+          PlaceWall(x,
+                    y,
+                    ' ',
+                    Colors::BlackColor,
+                    Colors::RedPoppyColor,
+                    Strings::TileNames::HellrockText);
           break;
 
         case '+':
@@ -106,7 +116,12 @@ void MapLevelNether::ConstructFromBuilder(LevelBuilder& lb)
         break;
 
         case '.':
-          PlaceGroundTile(x, y, image, "#440000", Colors::BlackColor, "Hellstone");
+          PlaceGroundTile(x,
+                          y,
+                          image,
+                          "#440000",
+                          Colors::BlackColor,
+                          Strings::TileNames::HellstoneText);
           break;
 
         case 'g':
@@ -118,7 +133,12 @@ void MapLevelNether::ConstructFromBuilder(LevelBuilder& lb)
           break;
 
         case ' ':
-          PlaceGroundTile(x, y, '.', Colors::BlackColor, Colors::ShadesOfGrey::Ten, "Stone");
+          PlaceGroundTile(x,
+                          y,
+                          '.',
+                          Colors::BlackColor,
+                          Colors::ShadesOfGrey::Ten,
+                          Strings::TileNames::StoneText);
           break;
 
         case 'l':

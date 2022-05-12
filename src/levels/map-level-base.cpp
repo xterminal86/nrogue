@@ -524,7 +524,7 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
     { 2, "Poppy"     }
   };
 
-  std::string tileName = "Grass";
+  std::string tileName = Strings::TileNames::GrassText;
   if (flowersNameByChoice.count(colorChoice) == 1)
   {
     tileName = flowersNameByChoice[colorChoice];
@@ -539,7 +539,12 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
 void MapLevelBase::PlaceShallowWaterTile(int x, int y)
 {
   GameObjectInfo t;
-  t.Set(false, false, '~', Colors::WhiteColor, Colors::ShallowWaterColor, "Shallow Water");
+  t.Set(false,
+        false,
+        '~',
+        Colors::WhiteColor,
+        Colors::ShallowWaterColor,
+        Strings::TileNames::ShallowWaterText);
   MapArray[x][y]->MakeTile(t, GameObjectType::SHALLOW_WATER);
 }
 
@@ -554,14 +559,24 @@ void MapLevelBase::PlaceDeepWaterTile(int x, int y)
   #endif
 
   GameObjectInfo t;
-  t.Set(false, false, img, Colors::WhiteColor, Colors::DeepWaterColor, "Deep Water");
+  t.Set(false,
+        false,
+        img,
+        Colors::WhiteColor,
+        Colors::DeepWaterColor,
+        Strings::TileNames::DeepWaterText);
   MapArray[x][y]->MakeTile(t, GameObjectType::DEEP_WATER);
 }
 
 void MapLevelBase::PlaceLavaTile(int x, int y)
 {
   GameObjectInfo t;
-  t.Set(false, false, '~', Colors::LavaWavesColor, Colors::LavaColor, "Lava");
+  t.Set(false,
+        false,
+        '~',
+        Colors::LavaWavesColor,
+        Colors::LavaColor,
+        Strings::TileNames::LavaText);
   MapArray[x][y]->MakeTile(t, GameObjectType::LAVA);
 }
 
@@ -580,7 +595,12 @@ void MapLevelBase::PlaceChasmTile(int x, int y)
 #endif
 
   GameObjectInfo t;
-  t.Set(false, false, img, fgColor, bgColor, "Chasm");
+  t.Set(false,
+        false,
+        img,
+        fgColor,
+        bgColor,
+        Strings::TileNames::ChasmText);
   MapArray[x][y]->MakeTile(t, GameObjectType::CHASM);
 }
 
@@ -592,7 +612,13 @@ void MapLevelBase::PlaceShrine(const Position& pos, LevelBuilder& lb)
   PlaceGameObject(go);
 
   std::string description = GlobalConstants::ShrineNameByType.at(type);
-  t.Set(true, false, '/', Colors::ShadesOfGrey::Four, Colors::BlackColor, description, "?Shrine?");
+  t.Set(true,
+        false,
+        '/',
+        Colors::ShadesOfGrey::Four,
+        Colors::BlackColor,
+        description,
+        "?Shrine?");
   PlaceStaticObject(pos.X, pos.Y, t);
 }
 
@@ -605,7 +631,7 @@ void MapLevelBase::PlaceTree(int x, int y)
   #endif
 
   GameObjectInfo t;
-  t.Set(true, true, img, Colors::GreenColor, Colors::BlackColor, "Tree");
+  t.Set(true, true, img, Colors::GreenColor, Colors::BlackColor, Strings::TileNames::TreeText);
   PlaceStaticObject(x, y, t);
 }
 
