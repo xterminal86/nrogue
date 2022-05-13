@@ -121,6 +121,10 @@ GameObject* MapLevelBase::FindObjectByAddress(const std::string& addressString)
       if (res == nullptr)
       {
         res = FindInV(ActorGameObjects, addressString);
+        if (res == nullptr)
+        {
+          res = FindInV(FinishTurnTriggers, addressString);
+        }
       }
     }
   }
@@ -187,6 +191,31 @@ void MapLevelBase::PlaceStaticObject(GameObject* goToInsert)
   int y = goToInsert->PosY;
 
   StaticMapObjects[x][y].reset(goToInsert);
+}
+
+void MapLevelBase::PlaceTrigger(GameObject* trigger, TriggerUpdateType updateType)
+{
+  if (trigger == nullptr)
+  {
+    #ifdef DEBUG_BUILD
+    std::string str = "[WARNING] tried to insert null trigger object!";
+    Printer::Instance().AddMessage(str);
+    Logger::Instance().Print(str);
+    DebugLog("%s\n", str.data());
+    #endif
+    return;
+  }
+
+  switch (updateType)
+  {
+    case TriggerUpdateType::FINISH_TURN:
+      FinishTurnTriggers.push_back(std::unique_ptr<GameObject>(trigger));
+      break;
+
+    case TriggerUpdateType::GLOBAL:
+      GlobalTriggers.push_back(std::unique_ptr<GameObject>(trigger));
+      break;
+  }
 }
 
 void MapLevelBase::RecordEmptyCells()

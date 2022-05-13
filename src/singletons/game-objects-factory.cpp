@@ -400,3 +400,13 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
 
   return go;
 }
+
+void GameObjectsFactory::CreateTrigger(TriggerType triggerType,
+                                       TriggerUpdateType updateType,
+                                       const std::function<bool ()>& condition,
+                                       const std::function<void ()>& handler)
+{
+  GameObject* triggerObject = new GameObject(Map::Instance().CurrentLevel);
+  triggerObject->AttachTrigger(triggerType, condition, handler);
+  Map::Instance().CurrentLevel->PlaceTrigger(triggerObject, updateType);
+}

@@ -560,14 +560,9 @@ void MapLevelMines::CreateSpecialLevel()
 
           PlaceActor(boss);
 
-          auto triggerObject = GameObjectsFactory::Instance().CreateDummyObject(0,
-                                                                                0,
-                                                                                MapArray[2][5]->ObjectName,
-                                                                                MapArray[2][5]->Image,
-                                                                                std::string(),
-                                                                                std::string());
-          triggerObject->AttachTrigger(TriggerType::ONE_SHOT,
-                                       [this]()
+          GameObjectsFactory::Instance().CreateTrigger(TriggerType::ONE_SHOT,
+                                                       TriggerUpdateType::FINISH_TURN,
+          [this]()
           {
             // Mark area where trigger shouldn't activate ...
             bool activate = (_playerRef->PosX >= 1 && _playerRef->PosX <= 4
@@ -576,18 +571,13 @@ void MapLevelMines::CreateSpecialLevel()
             // ... and set it to activate everywhere else!
             return !activate;
           },
-          [this, boss, triggerObject]()
+          [this, boss]()
           {
             // Place cave-in
             for (int x = 1; x <= 3; x++)
             {
               for (int y = 1; y <= 3; y++)
               {
-                if (x == 2 && y == 2)
-                {
-                  continue;
-                }
-
                 PlaceWall(x,
                           y,
                           ' ',
@@ -636,11 +626,7 @@ void MapLevelMines::CreateSpecialLevel()
             std::string phrase = Util::DecodeString(phrases[index]);
 
             Printer::Instance().AddMessage(phrase, Colors::WhiteColor, "#AA0000");
-
-            triggerObject->IsDestroyed = true;
           });
-
-          PlaceGameObject(triggerObject);
         }
         break;
 

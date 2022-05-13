@@ -11,10 +11,12 @@ enum class DevConsoleCommand
   HELP,
   CLOSE,
   TRANSFORM_TILE,
+  PLACE_WALL,
   GET_STATIC_OBJECT,
   GET_ACTOR,
   GET_ITEM,
   GET_BY_ADDRESS,
+  LIST_TRIGGERS,
   GIVE_MONEY,
   POISON_ACTOR,
   DAMAGE_ACTOR,
@@ -140,11 +142,13 @@ class DevConsole : public GameState
     void PoisonActor(const std::vector<std::string>& params);
     void PrintColors();
     void TransformTile(const std::vector<std::string>& params);
+    void PlaceWall(const std::vector<std::string>& params);
     void GetObjectByAddress(const std::vector<std::string>& params);
     void ReportHandleDebugInfo(ObjectHandleType type);
     void PrintDebugInfo(const std::vector<std::string>& debugInfo);
     void GiveMoney(const std::vector<std::string>& params);
-    void ToggleFogOfWar(const std::vector<std::string>& params);
+    void ToggleFogOfWar();
+    void PrintTriggers();
 
     bool StringIsNumbers(const std::string& str);
     std::pair<int, int> CoordinateParamsToInt(const std::string& px,
@@ -173,8 +177,10 @@ class DevConsole : public GameState
       { "q",      DevConsoleCommand::CLOSE              },
       { "quit",   DevConsoleCommand::CLOSE              },
       { "m_trns", DevConsoleCommand::TRANSFORM_TILE     },
+      { "m_pw",   DevConsoleCommand::PLACE_WALL         },
       { "m_show", DevConsoleCommand::SHOW_MAP           },
       { "info",   DevConsoleCommand::INFO_HANDLES       },
+      { "i_trig", DevConsoleCommand::LIST_TRIGGERS      },
       { "so_get", DevConsoleCommand::GET_STATIC_OBJECT  },
       { "ao_get", DevConsoleCommand::GET_ACTOR          },
       { "io_get", DevConsoleCommand::GET_ITEM           },
@@ -217,6 +223,7 @@ class DevConsole : public GameState
       { "g_go",   { "g_go 0x%X", "Get game object by address (slow!)" } },
       { "ao_psn", { "Add lingering damage to actor in handle" } },
       { "m_show", { "Toggle fog of war" } },
+      { "i_trig", { "Print current level triggers" } },
       {
         "so_get",
         { "so_get [X Y]", "Try to get handle to static object at X Y" }
@@ -256,6 +263,10 @@ class DevConsole : public GameState
       {
         "m_trns",
         { "m_trns X Y <TYPE>", "Transform tile X Y to type <TYPE>" }
+      },
+      {
+        "m_pw",
+        { "m_pw X Y", "Places generic wall at X Y" }
       },
       {
         "g_cm",

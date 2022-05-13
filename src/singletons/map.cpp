@@ -51,7 +51,7 @@ void Map::Draw()
   DrawActors();
 }
 
-void Map::UpdateGameObjects()
+void Map::Update()
 {
   if (CurrentLevel == nullptr)
   {
@@ -66,11 +66,31 @@ void Map::UpdateGameObjects()
 
   CurrentLevel->TryToSpawnMonsters();
 
+  UpdateGameObjects();
+  UpdateActors();
+
+  UpdateTriggers(TriggerUpdateType::GLOBAL);
+
+  //
+  // If enemy is killed via thorns damage,
+  // it happens inside go->Update() (i.e. AI of enemy doing attack),
+  // so we must check for destroyed objects after all game logic updates,
+  // or we will end up with object that is not alive,
+  // but can still be attacked on player turn, killed and gained EXP for it.
+  //
+  RemoveDestroyed();
+}
+
+void Map::UpdateGameObjects()
+{
   for (auto& go : CurrentLevel->GameObjects)
   {
     go->Update();
   }
+}
 
+void Map::UpdateActors()
+{
   for (auto& go : CurrentLevel->ActorGameObjects)
   {
     //
@@ -136,18 +156,35 @@ void Map::UpdateGameObjects()
         }
       }
     }
-    // If there are extra turns available, perform them
+    //
+    // If there are extra turns available, perform them.
+    //
     while (go->CanAct());
   }
+}
 
-  //
-  // If enemy is killed via thorns damage,
-  // it happens inside go->Update() (i.e. AI of enemy doing attack),
-  // so we must check for destroyed objects after all game logic updates,
-  // or we will end up with object that is not alive,
-  // but can still be attacked on player turn, killed and gained EXP for it.
-  //
-  RemoveDestroyed();
+void Map::UpdateTriggers(TriggerUpdateType updateType)
+{
+  switch (updateType)
+  {
+    case TriggerUpdateType::GLOBAL:
+    {
+      for (auto& i : CurrentLevel->GlobalTriggers)
+      {
+        i->Update();
+      }
+    }
+    break;
+
+    case TriggerUpdateType::FINISH_TURN:
+    {
+      for (auto& i : CurrentLevel->FinishTurnTriggers)
+      {
+        i->Update();
+      }
+    }
+    break;
+  }
 }
 
 void Map::PlaceActor(GameObject* goToInsert)
@@ -313,12 +350,40 @@ void Map::RemoveDestroyed(GameObjectCollectionType c)
       EraseFromCollection(CurrentLevel->ActorGameObjects);
       break;
 
+    case GameObjectCollectionType::TRIGGERS:
+      RemoveTriggers();
+      break;
+
     case GameObjectCollectionType::ALL:
       RemoveStaticObjects();
       EraseFromCollection(CurrentLevel->GameObjects);
       EraseFromCollection(CurrentLevel->ActorGameObjects);
+      RemoveTriggers();
       break;
   }
+}
+
+void Map::RemoveTriggers()
+{
+  auto RemoveFromCollecton = [this](std::vector<std::unique_ptr<GameObject>>& collection)
+  {
+    auto newBegin = std::remove_if(collection.begin(),
+                                   collection.end(),
+    [this](const std::unique_ptr<GameObject>& go)
+    {
+      if (go != nullptr && go->IsDestroyed)
+      {
+        return true;
+      }
+
+      return false;
+    });
+
+    collection.erase(newBegin, collection.end());
+  };
+
+  RemoveFromCollecton(CurrentLevel->FinishTurnTriggers);
+  RemoveFromCollecton(CurrentLevel->GlobalTriggers);
 }
 
 void Map::RemoveStaticObjects()

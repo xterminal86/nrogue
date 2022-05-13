@@ -313,6 +313,10 @@ void DevConsole::ProcessCommand(const std::string& command,
       TransformTile(params);
       break;
 
+    case DevConsoleCommand::PLACE_WALL:
+      PlaceWall(params);
+      break;
+
     case DevConsoleCommand::CREATE_MONSTER:
       CreateMonster(params);
       break;
@@ -330,7 +334,11 @@ void DevConsole::ProcessCommand(const std::string& command,
       break;
 
     case DevConsoleCommand::SHOW_MAP:
-      ToggleFogOfWar(params);
+      ToggleFogOfWar();
+      break;
+
+    case DevConsoleCommand::LIST_TRIGGERS:
+      PrintTriggers();
       break;
 
     default:
@@ -428,6 +436,7 @@ void DevConsole::TransformTile(const std::vector<std::string>& params)
   auto r = CoordinateParamsToInt(sx, sy);
   if (r.first == -1 && r.second == -1)
   {
+    StdOut(ErrWrongParams);
     return;
   }
 
@@ -476,6 +485,37 @@ void DevConsole::TransformTile(const std::vector<std::string>& params)
       _currentLevel->PlaceChasmTile(x, y);
       break;
   }
+
+  StdOut(Ok);
+}
+
+void DevConsole::PlaceWall(const std::vector<std::string>& params)
+{
+  if (params.size() >= 0 && params.size() < 2)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string sx = params[0];
+  std::string sy = params[1];
+
+  auto r = CoordinateParamsToInt(sx, sy);
+  if (r.first == -1 && r.second == -1)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  int x = r.first;
+  int y = r.second;
+
+  GameObject* wall = new GameObject(_currentLevel, x, y, '#', Colors::WhiteColor, Colors::MagentaColor);
+  wall->ObjectName = "Dev Wall";
+  wall->Blocking = true;
+  wall->BlocksSight = true;
+  wall->Type = GameObjectType::PICKAXEABLE;
+  _currentLevel->PlaceStaticObject(wall);
 
   StdOut(Ok);
 }
@@ -901,7 +941,7 @@ void DevConsole::GiveMoney(const std::vector<std::string>& params)
   StdOut(Ok);
 }
 
-void DevConsole::ToggleFogOfWar(const std::vector<std::string>& params)
+void DevConsole::ToggleFogOfWar()
 {
   _playerRef->ToggleFogOfWar = !_playerRef->ToggleFogOfWar;
 
@@ -911,6 +951,18 @@ void DevConsole::ToggleFogOfWar(const std::vector<std::string>& params)
   auto str = Util::StringFormat("For of war %s", _playerRef->ToggleFogOfWar ? "off" : "on");
 
   StdOut(str);
+}
+
+void DevConsole::PrintTriggers()
+{
+  auto out = Util::StringFormat("Triggers on this level: %u", _currentLevel->FinishTurnTriggers.size());
+  StdOut(out);
+
+  for (auto& t : _currentLevel->FinishTurnTriggers)
+  {
+    auto str = Util::StringFormat("0x%X at %i %i", t.get(), t->PosX, t->PosY);
+    StdOut(str);
+  }
 }
 
 void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
@@ -944,7 +996,7 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
         {
           StdOut(totalString);
           totalString.clear();
-          count = 0;
+          count = (t.length() + 1);
         }
 
         totalString += t;

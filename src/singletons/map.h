@@ -17,6 +17,7 @@ enum class GameObjectCollectionType
   GAME_OBJECTS,
   ACTORS,
   MAP_ARRAY,
+  TRIGGERS,
   ALL
 };
 
@@ -32,7 +33,8 @@ class Map : public Singleton<Map>
     void PlaceActor(GameObject* actor);
     void PlaceGameObject(GameObject* goToInsert);
     void RemoveDestroyed(GameObjectCollectionType c = GameObjectCollectionType::ALL);
-    void UpdateGameObjects();
+    void Update();
+    void UpdateTriggers(TriggerUpdateType updateType);
 
     void ChangeLevel(MapType levelToChange, bool goingDown);
     void TeleportToExistingLevel(MapType levelToChange,
@@ -127,6 +129,10 @@ class Map : public Singleton<Map>
     void DrawGameObjects();
     void DrawActors();
 
+    void UpdateGameObjects();
+    void UpdateActors();
+
+    void RemoveTriggers();
     void RemoveStaticObjects();
     void EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list);
 

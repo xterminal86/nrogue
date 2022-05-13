@@ -463,7 +463,7 @@ void MainState::PrintDebugInfo()
   _debugInfo = Util::StringFormat("Colors Used: %i", Printer::Instance().ColorsUsed());
   Printer::Instance().PrintFB(1, 5, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
-  _debugInfo = Util::StringFormat("Turns passed: %i", Application::Instance().TurnsPassed);
+  _debugInfo = Util::StringFormat("PT: %lu MU: %lu", Application::Instance().PlayerTurnsPassed, Application::Instance().MapUpdateCyclesPassed);
   Printer::Instance().PrintFB(1, 6, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
   Printer::Instance().PrintFB(1, 7, "Actors watched:", Printer::kAlignLeft, Colors::WhiteColor);

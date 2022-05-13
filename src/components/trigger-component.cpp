@@ -1,5 +1,6 @@
 #include "trigger-component.h"
 
+#include "game-object.h"
 #include "util.h"
 
 TriggerComponent::TriggerComponent(TriggerType type,
@@ -27,6 +28,7 @@ void TriggerComponent::Update()
           {
             _data.Handler();
             _once = true;
+            OwnerGameObject->IsDestroyed = true;
           }
         }
         else

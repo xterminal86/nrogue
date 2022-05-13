@@ -23,6 +23,7 @@ class MapLevelBase
                             const GameObjectInfo& objectInfo,
                             int hitPoints = -1,
                             GameObjectType type = GameObjectType::HARMLESS);
+    void PlaceTrigger(GameObject* trigger, TriggerUpdateType updateType);
     void TryToSpawnMonsters();
 
     virtual void PrepareMap(MapLevelBase* levelOwner);
@@ -51,6 +52,16 @@ class MapLevelBase
     // NPCs, drawn last. Aren't drawn under fog of war.
     //
     std::vector<std::unique_ptr<GameObject>> ActorGameObjects;
+
+    //
+    // In-game events that are checked on GameObject::FinishTurn()
+    //
+    std::vector<std::unique_ptr<GameObject>> FinishTurnTriggers;
+
+    //
+    // In-game events that are checked on every Map::Update()
+    //
+    std::vector<std::unique_ptr<GameObject>> GlobalTriggers;
 
     MapType MapType_;
     Position MapSize;

@@ -5,6 +5,12 @@
 
 #include <functional>
 
+enum class TriggerUpdateType
+{
+  GLOBAL = 0,
+  FINISH_TURN
+};
+
 enum class TriggerType
 {
   ONE_SHOT = 0,

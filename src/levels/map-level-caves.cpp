@@ -5,6 +5,7 @@
 #include "game-object-info.h"
 #include "door-component.h"
 #include "logger.h"
+#include "printer.h"
 
 MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)
@@ -27,21 +28,23 @@ MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _specialLevel =
       {
-        "#######################################",
-        "#....###...#.......####.......###.....#",
-        "#.##.....#.#.#.###..#...#.###.###.###.#",
-        "#..##.##.....#.####.#.#.....#.......#.#",
-        "##.##.####.#.#........#####.#.###.#.#.#",
-        "##....#....#.#####.##.........#...#.#.#",
-        "##.#....##...####...#######.###.###...#",
-        "##.#.##.####.##...<.........#.......#.#",
-        "#..#..#..#......#...###.###.#.#####.#.#",
-        "#.###.#..#.#.#####.##...............#.#",
-        "#............#.....##.#.###.#.####.##.#",
-        "#D#.###.###.##.###....#.....#.........#",
-        "#.#...#......#.###.##.#.###.#.##.####.#",
-        "#>###...####........#.........#.......#",
-        "#######################################"
+        "#####################################",
+        "#....###...#.......####.......#.....#",
+        "#.##.....#.#.#.###..#...#.###.#.###.#",
+        "#..##.##.....#.####.#.#.....#...#...#",
+        "##.##.####.#.#........##.##.#.###.#.#",
+        "##....#....#....##.##.....#.......#.#",
+        "##.#....##...##.#...#.###.#.##.#.##.#",
+        "##.#.##.####.##...<...#.....#.......#",
+        "#..#..#..#......#...#.#.###.#.##.####",
+        "#.###.#..#.#.##.##.##..............##",
+        "#............##....##.#.###.#.####.##",
+        "#.#.###.###.##..##....#.....#....#..#",
+        "#.#...#......#.###.#..#..##.#.##.##.#",
+        "#...#...####.......##...###.........#",
+        "#D###################################",
+        "#>###################################",
+        "#####################################"
       };
 
       // Note that x and y are swapped to correspond to
@@ -215,6 +218,29 @@ void MapLevelCaves::CreateSpecialLevel()
 
   int posX = 0;
   int posY = 0;
+
+  const int startX = 18;
+  const int startY = 7;
+
+  GameObjectsFactory::Instance().CreateTrigger(TriggerType::ONE_SHOT,
+                                               TriggerUpdateType::FINISH_TURN,
+  [this, startX, startY]()
+  {
+    return !(_playerRef->PosX == startX
+          && _playerRef->PosY == startY);
+  },
+  [this, startX, startY]()
+  {
+    GameObjectInfo t;
+    t.Set(true,
+          true,
+          '#',
+          Colors::ObsidianColorHigh,
+          Colors::ObsidianColorLow,
+          Strings::TileNames::ObsidianWallText);
+    PlaceStaticObject(startX, startY, t, -1);
+    Printer::Instance().AddMessage("Suddenly the stairs slide up!");
+  });
 
   for (auto& row : convLevel)
   {

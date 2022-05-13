@@ -42,10 +42,12 @@ void Application::InitSpecific()
 
   _currentState = _gameStates[GameStates::MENU_STATE].get();
 
+  //
   // In SDL build GetKeyDown() will return -1 on application
   // start resulting in white screen during to not
   // redundantly drawing the "scene"
   // because no key has been pressed yet.
+  //
   _currentState->Update(true);
 
   PlayerInstance.Attrs.Indestructible = false;
@@ -60,6 +62,11 @@ void Application::Run()
   {
     Timer::Instance().MeasureStart();
 
+    //
+    // If player is not alive, it is assumed,
+    // that we are now in EndgameState,
+    // which needs to be processed.
+    //
     if (PlayerInstance.CanAct() || !PlayerInstance.IsAlive())
     {
       // Since change state usually happens in HandleInput(),
@@ -75,7 +82,6 @@ void Application::Run()
       // Also we need to immediately update changes that happened after
       // user pressed some keys that affected visual representation.
       //
-
       if (_currentState != nullptr)
       {
         _currentState->Update();
@@ -88,17 +94,21 @@ void Application::Run()
     }
     else
     {
+      //
       // If player has levelled up, stop updating
       // everything until message box is closed,
       // or we can get attack animations on top of message box.
+      //
       if (CurrentStateIs(GameStates::MESSAGE_BOX_STATE))
       {
         _currentState->HandleInput();
       }
       else
       {
-        Map::Instance().UpdateGameObjects();
+        Map::Instance().Update();
         PlayerInstance.WaitForTurn();
+
+        MapUpdateCyclesPassed++;
       }
     }
 
@@ -277,7 +287,7 @@ void Application::WriteObituary(bool wasKilled)
   ss << nameAndTitle << " of level " << PlayerInstance.Attrs.Lvl.Get() << '\n';
   ss << playerEndCause << curLvl->LevelName << "\n\n";
 
-  ss << "He survived " << TurnsPassed << " turns\n\n";
+  ss << "He survived " << PlayerTurnsPassed << " turns\n\n";
 
   ss << "HP " << PlayerInstance.Attrs.HP.Min().Get() << " / " << PlayerInstance.Attrs.HP.Max().Get() << '\n';
   ss << "MP " << PlayerInstance.Attrs.MP.Min().Get() << " / " << PlayerInstance.Attrs.MP.Max().Get() << '\n';

@@ -52,7 +52,7 @@ class Player : public GameObject
     void ProcessHunger();
     void FinishTurn();
 
-    bool IsAlive();
+    void SetDestroyed();
 
     ContainerComponent* Inventory;
     EquipmentComponent* Equipment;

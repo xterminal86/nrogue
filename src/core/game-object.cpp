@@ -408,6 +408,14 @@ bool GameObject::ReceiveDamage(GameObject* from,
 
     if (!IsAlive())
     {
+      //
+      // Actors will display their full name on death
+      //
+      if (aic != nullptr)
+      {
+        objName = ObjectName;
+      }
+
       MarkAndCreateRemains();
 
       std::string verb = (Type == GameObjectType::HARMLESS
@@ -445,7 +453,14 @@ bool GameObject::ReceiveDamage(GameObject* from,
 
 bool GameObject::CanAct()
 {
-  return (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue);
+  //
+  // If actor was killed by a trigger (e.g. mine trap or something),
+  // and actor could make several turns because of high SPD,
+  // its update should end prematurely.
+  //
+  // ( see Map::UpdateAll() )
+  //
+  return (IsAlive() && (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue));
 }
 
 bool GameObject::ShouldSkipTurn()
@@ -561,9 +576,17 @@ void GameObject::FinishTurn()
   ProcessNaturalRegenMP();
   TileStandingCheck();
 
-  // Moved to WaitForTurn for GameObjects because otherwise effects processing
+  // Moved to WaitForTurn for GameObjects
+  // because otherwise effects processing
   // will be done only once after player has finished his turn.
   //ProcessEffects();
+
+  //
+  // If actor's SPD is high, it can make several turns
+  // and skip trigger position related activation,
+  // so we have to check triggers every turn.
+  //
+  Map::Instance().UpdateTriggers(TriggerUpdateType::FINISH_TURN);
 
   CheckPerish();
 }

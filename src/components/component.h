@@ -20,7 +20,6 @@ class Component
 
     const size_t& GetComponentHash();
 
-    // Automatically assigned in GameObject::AddComponent()
     GameObject* OwnerGameObject;
 
     bool IsEnabled = true;

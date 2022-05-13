@@ -1111,21 +1111,12 @@ void Player::WaitForTurn()
   ProcessItemsEffects();
 }
 
-bool Player::IsAlive()
+void Player::SetDestroyed()
 {
-  if (Attrs.HP.Min().Get() <= 0)
-  {
-    Attrs.HP.SetMin(0);
-
-    Image = '%';
-    FgColor = Colors::PlayerColor;
-    BgColor = Colors::RedColor;
-    IsDestroyed = true;
-
-    return false;
-  }
-
-  return true;
+  Image = '%';
+  FgColor = Colors::PlayerColor;
+  BgColor = Colors::RedColor;
+  IsDestroyed = true;
 }
 
 std::vector<std::string> Player::GetPrettyLevelUpText()
@@ -1230,14 +1221,17 @@ void Player::FinishTurn()
   ProcessEffectsPlayer();
   ProcessItemsEffects();
 
-  //
-  // TODO: can fall through chasms?
-  //
   if (IsOnTile(GameObjectType::CHASM)
    || IsOnTile(GameObjectType::LAVA))
   {
     Attrs.HP.Reset(0);
   }
+
+  //
+  // So that triggers condition check happens
+  // regardless of player's SPD.
+  //
+  Map::Instance().UpdateTriggers(TriggerUpdateType::FINISH_TURN);
 
   //
   // If player killed an enemy but can still make another turn,
@@ -1246,11 +1240,13 @@ void Player::FinishTurn()
   // and we might also still attack / interact with objects,
   // that should've already been destroyed, as well.
   //
+  // Also removes dead triggers.
+  //
   // Probably bad design anyway but fuck it.
   //
   Map::Instance().RemoveDestroyed();
 
-  Application::Instance().TurnsPassed++;
+  Application::Instance().PlayerTurnsPassed++;
 }
 
 void Player::ProcessEffectsPlayer()

@@ -91,7 +91,12 @@ class Application : public Singleton<Application>
     const std::pair<int, int>& GetDefaultWindowSize();
 #endif
 
-    uint64_t TurnsPassed = 0;
+    //
+    // Can be used to time global triggers
+    //
+    uint64_t MapUpdateCyclesPassed = 0;
+
+    uint64_t PlayerTurnsPassed = 0;
 
   protected:
     void InitSpecific() override;

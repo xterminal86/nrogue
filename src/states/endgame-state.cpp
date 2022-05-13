@@ -11,6 +11,8 @@ void EndgameState::Init()
 
 void EndgameState::Prepare()
 {
+  _playerRef->SetDestroyed();
+
   Printer::Instance().AddMessage("You are dead. Not big surprise.");
 
   Application::Instance().WriteObituary();

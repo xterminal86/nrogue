@@ -3,6 +3,7 @@
 
 #include "singleton.h"
 #include "constants.h"
+#include "trigger-component.h"
 
 class GameObjectInfo;
 class ItemComponent;
@@ -24,6 +25,12 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     GameObject* CreateDummyObject(int x, int y, const std::string& objName, char image, const std::string& fgColor, const std::string& bgColor);
     GameObject* CreateContainer(const std::string& name, const std::string& bgColor, int image, int x, int y);
     GameObject* CreateBreakableObjectWithRandomLoot(int x, int y, char image, const std::string& objName, const std::string& fgColor, const std::string& bgColor);
+
+    // Create invisible trigger object
+    void CreateTrigger(TriggerType triggerType,
+                       TriggerUpdateType updateType,
+                       const std::function<bool ()>& condition,
+                       const std::function<void ()>& handler);
 
     // Creates stairs on MapArray of current level
     void CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, int image, MapType leadsTo);
