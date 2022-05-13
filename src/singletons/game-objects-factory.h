@@ -3,7 +3,6 @@
 
 #include "singleton.h"
 #include "constants.h"
-#include "trigger-component.h"
 
 class GameObjectInfo;
 class ItemComponent;

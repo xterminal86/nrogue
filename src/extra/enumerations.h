@@ -15,6 +15,18 @@ enum class UseResult
   UNUSABLE
 };
 
+enum class TriggerUpdateType
+{
+  GLOBAL = 0,
+  FINISH_TURN
+};
+
+enum class TriggerType
+{
+  ONE_SHOT = 0,
+  CONSTANT
+};
+
 enum class GameStates
 {
   UNDEIFNED = -2,

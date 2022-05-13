@@ -1,21 +1,10 @@
 #ifndef TRIGGERCOMPONENT_H
 #define TRIGGERCOMPONENT_H
 
-#include "component.h"
-
 #include <functional>
 
-enum class TriggerUpdateType
-{
-  GLOBAL = 0,
-  FINISH_TURN
-};
-
-enum class TriggerType
-{
-  ONE_SHOT = 0,
-  CONSTANT
-};
+#include "component.h"
+#include "enumerations.h"
 
 struct TriggerData
 {

@@ -12,9 +12,9 @@
 
 #include "component.h"
 #include "constants.h"
+#include "enumerations.h"
 #include "attribute.h"
 #include "item-data.h"
-#include "trigger-component.h"
 #include "util.h"
 
 class GameObjectInfo;

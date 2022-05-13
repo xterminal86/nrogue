@@ -8,6 +8,7 @@
 #include "application.h"
 #include "game-object-info.h"
 #include "ai-component.h"
+#include "trigger-component.h"
 #include "blackboard.h"
 
 #ifdef DEBUG_BUILD
