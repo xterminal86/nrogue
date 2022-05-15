@@ -97,6 +97,12 @@ class GameObject
       return nullptr;
     }
 
+    template <typename T>
+    inline bool HasComponent()
+    {
+      return (GetComponent<T>() != nullptr);
+    }
+
     void MakeTile(const GameObjectInfo& t, GameObjectType typeOverride = GameObjectType::GROUND);
 
     void Update();

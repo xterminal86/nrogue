@@ -65,6 +65,10 @@ GameObject* MonstersInc::CreateMonster(int x, int y, GameObjectType monsterType)
       go = CreateShelob(x, y);
       break;
 
+    case GameObjectType::ZOMBIE:
+      go = CreateZombie(x, y);
+      break;
+
     case GameObjectType::KOBOLD:
       go = CreateKobold(x, y);
       break;
@@ -641,6 +645,50 @@ GameObject* MonstersInc::CreateShelob(int x, int y)
   // ===========================================================================
 
   go->GenerateLootFunction = std::bind(&LootGenerators::Shelob, go);
+
+  return go;
+}
+
+GameObject* MonstersInc::CreateZombie(int x, int y)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  'Z',
+                                  Colors::MonsterColor);
+
+  go->ObjectName = "Zombie";
+  go->Attrs.Indestructible = false;
+  go->IsLiving = false;
+
+  go->MoveTo(x, y);
+
+  go->Attrs.Str.Talents = 4;
+  go->Attrs.HP.Talents  = 3;
+
+  int difficulty = GetDifficulty();
+
+  for (int i = 0; i < difficulty; i++)
+  {
+    go->LevelUp();
+  }
+
+  go->Attrs.HP.Restore();
+  go->Attrs.MP.Restore();
+
+  // TODO: create proper AI model
+
+  // ===========================================================================
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIIdle* aim = ai->AddModel<AIIdle>();
+  aim->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(10);
+  aim->ConstructAI();
+  ai->ChangeModel<AIIdle>();
+  // ===========================================================================
+
+  // TODO: will zombies drop loot?
+
+  // go->GenerateLootFunction = std::bind(&LootGenerators::Shelob, go);
 
   return go;
 }

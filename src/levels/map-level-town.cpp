@@ -451,7 +451,7 @@ void MapLevelTown::BuildAndDrawRoad(const Position& start,
                                     const Position& end)
 {
   Pathfinder pf;
-  auto path = pf.BuildRoad(this, start, end, { '~' });
+  auto path = pf.BuildRoad(this, start, end, { '~' }, true, false, 0);
 
   PlaceGroundTile(start.X,
                   start.Y,

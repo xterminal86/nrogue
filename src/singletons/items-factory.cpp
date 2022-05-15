@@ -1580,6 +1580,10 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
   ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
+  ic->Data.UnidentifiedDescription =
+  {
+    "Could be magical or just a trinket."
+  };
 
   // TODO: should rings and amulets quality affect bonuses?
 
@@ -1596,6 +1600,9 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
   return go;
 }
 
+///
+/// Utility method, used for debug creation of items.
+///
 GameObject* ItemsFactory::CreateAccessory(int x, int y,
                                           EquipmentCategory category,
                                           const std::vector<ItemBonusStruct>& bonuses,
@@ -1628,6 +1635,10 @@ GameObject* ItemsFactory::CreateAccessory(int x, int y,
   ic->Data.IsIdentified = (prefix != ItemPrefix::RANDOM) ? true : false;
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
+  ic->Data.UnidentifiedDescription =
+  {
+    "Could be magical or just a trinket."
+  };
 
   std::vector<ItemBonusType> bonusesRolled;
   for (auto& b : bonuses)
