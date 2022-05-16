@@ -722,11 +722,13 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
     {
       bool isDifferent = true;
 
-      for (auto& i : _activeEffects[id])
+      size_t ind = 0;
+      for (size_t i = 0; i < _activeEffects[id].size(); i++)
       {
-        if (i.Type == effectToAdd.Type)
+        if (_activeEffects[id][i].Type == effectToAdd.Type)
         {
           isDifferent = false;
+          ind = i;
           break;
         }
       }
@@ -743,7 +745,7 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
         //
         // Otherwise there can be only one.
         //
-        _activeEffects[id][0] = effectToAdd;
+        _activeEffects[id][ind] = effectToAdd;
       }
     }
   }
