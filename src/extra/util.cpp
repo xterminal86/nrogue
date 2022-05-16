@@ -953,7 +953,7 @@ namespace Util
     return res;
   }
 
-  int RollDamage(int numRolls, int diceSides)
+  int RollDices(int numRolls, int diceSides)
   {
     int totalDamage = 0;
 
@@ -1856,7 +1856,7 @@ namespace Util
 
     auto GetUnarmedDamage = [&]()
     {
-      int dmg = RollDamage(1, 2);
+      int dmg = RollDices(1, 2);
       dmg += attacker->Attrs.Str.Get() - defender->Attrs.Def.Get();
 
       if (dmg <= 0)
@@ -1884,8 +1884,8 @@ namespace Util
         return totalDmg;
       }
 
-      int weaponDamage = RollDamage(weapon->Data.Damage.Min().Get(),
-                                    weapon->Data.Damage.Max().Get());
+      int weaponDamage = RollDices(weapon->Data.Damage.Min().Get(),
+                                   weapon->Data.Damage.Max().Get());
 
       totalDmg = weaponDamage;
 
@@ -2400,7 +2400,7 @@ namespace Util
     int numRolls  = damageRange.first;
     int diceSides = damageRange.second;
 
-    int power = RollDamage(numRolls, diceSides);
+    int power = RollDices(numRolls, diceSides);
 
     int userMagic = user->Attrs.Mag.Get();
 

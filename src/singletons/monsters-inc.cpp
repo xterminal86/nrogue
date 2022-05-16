@@ -9,6 +9,7 @@
 #include "container-component.h"
 #include "item-component.h"
 #include "loot-generators.h"
+#include "timed-destroyer-component.h"
 
 #include "ai-idle.h"
 #include "ai-monster-basic.h"
@@ -65,12 +66,16 @@ GameObject* MonstersInc::CreateMonster(int x, int y, GameObjectType monsterType)
       go = CreateShelob(x, y);
       break;
 
+    case GameObjectType::KOBOLD:
+      go = CreateKobold(x, y);
+      break;
+
     case GameObjectType::ZOMBIE:
       go = CreateZombie(x, y);
       break;
 
-    case GameObjectType::KOBOLD:
-      go = CreateKobold(x, y);
+    case GameObjectType::SKELETON:
+      go = CreateSkeleton(x, y);
       break;
 
     default:
@@ -152,7 +157,12 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
       go->LevelUp(2);
     }
 
+    //
+    // If HP is not set to > 0,
+    // game object update and melee attack will fail.
+    //
     go->Attrs.HP.Restore();
+
     go->Attrs.MP.Restore();
 
     /*
@@ -614,7 +624,7 @@ GameObject* MonstersInc::CreateShelob(int x, int y)
   GameObject* go = new GameObject(Map::Instance().CurrentLevel,
                                   x,
                                   y,
-                                  'S',
+                                  's',
                                   Colors::MonsterUniqueColor);
   go->ObjectName = "Shelob";
   go->Attrs.Indestructible = false;
@@ -663,7 +673,7 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
 
   go->MoveTo(x, y);
 
-  go->Attrs.Str.Talents = 4;
+  go->Attrs.Str.Talents = 3;
   go->Attrs.HP.Talents  = 3;
 
   int difficulty = GetDifficulty();
@@ -673,27 +683,118 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
     go->LevelUp();
   }
 
-  go->Attrs.HP.Restore();
-  go->Attrs.MP.Restore();
+  int hp = go->Attrs.HP.Max().OriginalValue();
+  go->Attrs.HP.Reset(hp * 2);
 
-  // TODO: create proper AI model
+  go->OnDestroy = [this](GameObject* go)
+  {
+    //
+    // This lambda is called in go's destructor, so we can't
+    // capture go's address anywhere, because it could become
+    // invalid due to relocation after subsequent PlaceActor() into
+    // CurrentLevel->ActorGameObjects, and we can't capture
+    // go for TimedDestroyedComponent, because it will be deleted
+    // after this lambda.
+    //
+    if (Util::Rolld100(80))
+    {
+      GameObject* remains = nullptr;
+      auto pos = go->GetPosition();
+      auto objs = Map::Instance().GetGameObjectsAtPosition(pos.X, pos.Y);
+      for (auto& i : objs)
+      {
+        if (i->RemainsOf == go->ObjectId())
+        {
+          remains = i;
+          break;
+        }
+      }
+
+      if (remains != nullptr)
+      {
+        int timeout = go->Attrs.HP.Max().OriginalValue() * 10;
+        Position pos = go->GetPosition();
+        Attributes attrs = go->Attrs;
+        remains->AddComponent<TimedDestroyerComponent>(timeout,
+        [this, pos, attrs]()
+        {
+          GameObject* reanimated = CreateZombie(pos.X, pos.Y);
+          reanimated->Attrs = attrs;
+          reanimated->Attrs.HP.Reset(reanimated->Attrs.HP.Max().OriginalValue());
+          Map::Instance().PlaceActor(reanimated);
+        });
+      }
+    }
+  };
 
   // ===========================================================================
   AIComponent* ai = go->AddComponent<AIComponent>();
-  AIIdle* aim = ai->AddModel<AIIdle>();
+  AIMonsterBasic* aim = ai->AddModel<AIMonsterBasic>();
   aim->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(10);
   aim->ConstructAI();
-  ai->ChangeModel<AIIdle>();
+  ai->ChangeModel<AIMonsterBasic>();
   // ===========================================================================
-
-  // TODO: will zombies drop loot?
-
-  // go->GenerateLootFunction = std::bind(&LootGenerators::Shelob, go);
 
   return go;
 }
 
-// =============================================================================
+GameObject* MonstersInc::CreateSkeleton(int x, int y)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  'S',
+                                  Colors::MonsterColor);
+
+  go->ObjectName = "Skeleton";
+  go->Attrs.Indestructible = false;
+  go->IsLiving = false;
+
+  go->MoveTo(x, y);
+
+  go->Attrs.Spd.Talents = 1;
+  go->Attrs.Skl.Talents = 3;
+
+  int difficulty = GetDifficulty();
+
+  for (int i = 0; i < difficulty; i++)
+  {
+    go->LevelUp(1);
+  }
+
+  go->Attrs.HP.Restore();
+
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
+  EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
+
+  WeaponType weaponType = Util::Rolld100(50)
+                        ? WeaponType::SHORT_SWORD
+                        : WeaponType::ARMING_SWORD;
+
+  GameObject* weapon = ItemsFactory::Instance().CreateRandomMeleeWeapon(weaponType);
+  GameObject* armor  = ItemsFactory::Instance().CreateRandomArmor();
+
+  cc->Add(weapon);
+  cc->Add(armor);
+
+  ItemComponent* weaponIC = weapon->GetComponent<ItemComponent>();
+  ItemComponent* armorIC  = armor->GetComponent<ItemComponent>();
+
+  ec->Equip(weaponIC);
+  ec->Equip(armorIC);
+
+  // ===========================================================================
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterBasic* aim = ai->AddModel<AIMonsterBasic>();
+  aim->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(6);
+  aim->ConstructAI();
+  ai->ChangeModel<AIMonsterBasic>();
+  // ===========================================================================
+
+  return go;
+}
+
+// *****************************************************************************
 
 int MonstersInc::GetDifficulty()
 {

@@ -9,6 +9,7 @@ AIMonsterBasic::AIMonsterBasic()
 
 void AIMonsterBasic::PrepareScript()
 {
+  //
   // NOTE: fail status of the child node
   // will propagate to the topmost control tag.
   //
@@ -22,7 +23,7 @@ void AIMonsterBasic::PrepareScript()
   // always has "fallback" task that returns true
   // and make controlled object finish its turn.
   // Usually it's the last task in selector.
-
+  //
   _script =
 R"(
 [TREE]

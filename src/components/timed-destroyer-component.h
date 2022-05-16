@@ -1,5 +1,5 @@
-#ifndef GOTIMEDDESTROYER_H
-#define GOTIMEDDESTROYER_H
+#ifndef TIMEDDESTROYERCOMPONENT_H
+#define TIMEDDESTROYERCOMPONENT_H
 
 #include <functional>
 
@@ -18,4 +18,4 @@ class TimedDestroyerComponent : public Component
     std::function<void()> _onDecay;
 };
 
-#endif // GOTIMEDDESTROYER_H
+#endif // TIMEDDESTROYERCOMPONENT_H

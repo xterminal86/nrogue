@@ -147,7 +147,7 @@ class GameObject
     std::function<IR()> InteractionCallback;
 
     std::function<void()> GenerateLootFunction;
-    std::function<void()> OnDestroy;
+    std::function<void(GameObject*)> OnDestroy;
 
     size_t ComponentsSize();
 
@@ -200,6 +200,14 @@ class GameObject
     int GetActionIncrement();
 
     GameObjectType Type = GameObjectType::HARMLESS;
+
+    //
+    // For handling of reanimation of monsters, we need to
+    // check what object created current remains game object
+    // in case of multiple remains on one cell.
+    //
+    uint64_t RemainsOf = 0;
+
     bool IsLiving = false;
 
 #ifdef DEBUG_BUILD

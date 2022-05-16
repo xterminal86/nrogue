@@ -14,7 +14,7 @@
 #include "door-component.h"
 
 #include "game-object-info.h"
-#include "go-timed-destroyer.h"
+#include "timed-destroyer-component.h"
 
 void GameObjectsFactory::InitSpecific()
 {
@@ -126,10 +126,12 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 
   go->Type = GameObjectType::REMAINS;
 
+  go->RemainsOf = from->ObjectId();
+
   // Living creatures leave decomposable corpses
   if (from->IsLiving)
   {
-    //from->Attrs.HP.OriginalValue * 2;
+    //int timeout = from->Attrs.HP.Max().Get() * 10;
     go->AddComponent<TimedDestroyerComponent>(200);
   }
 

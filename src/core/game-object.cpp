@@ -54,7 +54,7 @@ GameObject::~GameObject()
 
   if (Util::IsFunctionValid(OnDestroy))
   {
-    OnDestroy();
+    OnDestroy(this);
   }
 
 #ifdef DEBUG_BUILD

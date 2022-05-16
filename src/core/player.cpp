@@ -573,7 +573,8 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
 
   int bonus = Attrs.Mag.Get();
 
-  int centralDamage = Util::RollDamage(baseDamagePair.first, baseDamagePair.second);
+  int centralDamage = Util::RollDices(baseDamagePair.first,
+                                      baseDamagePair.second);
 
   centralDamage += bonus;
 

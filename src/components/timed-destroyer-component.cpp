@@ -1,4 +1,4 @@
-#include "go-timed-destroyer.h"
+#include "timed-destroyer-component.h"
 
 #include "game-object.h"
 #include "map.h"

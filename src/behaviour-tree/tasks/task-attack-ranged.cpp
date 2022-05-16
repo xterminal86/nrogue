@@ -108,8 +108,8 @@ BTResult TaskAttackRanged::ProcessSpellAttack()
 
   int bonus = _objectToControl->Attrs.Mag.Get();
 
-  int centralDamage = Util::RollDamage(baseDamagePair.first,
-                                       baseDamagePair.second);
+  int centralDamage = Util::RollDices(baseDamagePair.first,
+                                      baseDamagePair.second);
 
   centralDamage += bonus;
 
@@ -291,8 +291,8 @@ void TaskAttackRanged::ProcessWand(ItemComponent* wand, GameObject* what)
 
   int bonus = _objectToControl->Attrs.Mag.Get();
 
-  int centralDamage = Util::RollDamage(baseDamagePair.first,
-                                       baseDamagePair.second);
+  int centralDamage = Util::RollDices(baseDamagePair.first,
+                                      baseDamagePair.second);
 
   centralDamage += bonus;
 

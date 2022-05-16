@@ -113,9 +113,10 @@ namespace Util
   extern std::vector<std::string> RotateRoomLayout(const std::vector<std::string>& layout, RoomLayoutRotation r);
 
   extern int Rolld100();
+
   extern bool Rolld100(int successChance);
 
-  extern int RollDamage(int numRolls, int diceSides);
+  extern int RollDices(int numRolls, int diceSides);
 
   extern void RecalculateWandStats(ItemComponent* wand);
   extern void BlessItem(ItemComponent* item);

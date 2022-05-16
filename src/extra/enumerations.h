@@ -100,7 +100,8 @@ enum class MapType
 
 enum class GameObjectType
 {
-  HARMLESS = 0,
+  NONE = -1,
+  HARMLESS,
   REMAINS,
   PLAYER,
   NPC,

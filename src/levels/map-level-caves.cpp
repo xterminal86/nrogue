@@ -24,6 +24,29 @@ MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLeve
     }
     break;
 
+    case MapType::CAVES_2:
+    {
+      _monstersSpawnRateForThisLevel =
+      {
+        { GameObjectType::KOBOLD,    10 },
+        { GameObjectType::ZOMBIE,    5  },
+        { GameObjectType::SPIDER,    1  },
+        { GameObjectType::SKELETON,  5  }
+      };
+    }
+    break;
+
+    case MapType::CAVES_3:
+    {
+      _monstersSpawnRateForThisLevel =
+      {
+        { GameObjectType::KOBOLD,    5  },
+        { GameObjectType::ZOMBIE,    10 },
+        { GameObjectType::SKELETON,  10 }
+      };
+    }
+    break;
+
     case MapType::CAVES_5:
     {
       _specialLevel =

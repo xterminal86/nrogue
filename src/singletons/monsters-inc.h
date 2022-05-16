@@ -27,6 +27,7 @@ class MonstersInc : public Singleton<MonstersInc>
     GameObject* CreateKobold(int x, int y);
     GameObject* CreateShelob(int x, int y);
     GameObject* CreateZombie(int x, int y);
+    GameObject* CreateSkeleton(int x, int y);
 
   protected:
     void InitSpecific() override;
