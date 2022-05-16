@@ -119,6 +119,7 @@ class DevConsole : public GameState
       { GameObjectType::ZOMBIE,      "Zombie"      },
       { GameObjectType::LICH,        "Lich"        },
       { GameObjectType::KOBOLD,      "Kobold"      },
+      { GameObjectType::WRAITH,      "Wraith"      },
       { GameObjectType::HEROBRINE,   "Herobrine"   }
     };
 

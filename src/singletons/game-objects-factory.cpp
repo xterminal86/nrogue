@@ -313,6 +313,7 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
   copy->Blocking         = copyFrom->Blocking;
   copy->BlocksSight      = copyFrom->BlocksSight;
   copy->Revealed         = copyFrom->Revealed;
+  copy->Corporeal        = copyFrom->Corporeal;
   copy->Visible          = copyFrom->Visible;
   copy->Occupied         = copyFrom->Occupied;
   copy->IsDestroyed      = copyFrom->IsDestroyed;

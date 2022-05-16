@@ -479,8 +479,9 @@ std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF(const ScriptNode* da
   {
     auto& playerRef = Application::Instance().PlayerInstance;
 
+    auto ogo = AIComponentRef->OwnerGameObject;
     Position plPos  = playerRef.GetPosition();
-    Position objPos = AIComponentRef->OwnerGameObject->GetPosition();
+    Position objPos = ogo->GetPosition();
 
     bool res = Map::Instance().IsObjectVisible(objPos, plPos);
     if (res)
@@ -490,8 +491,13 @@ std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF(const ScriptNode* da
       Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { Strings::BlackboardKeyPlayerPos, plPosStr });
     }
 
-    // TODO: what if monsters can see invisible?
-    if (res && playerRef.HasEffect(ItemBonusType::INVISIBILITY))
+    //
+    // If there is line of sight and player is invisible
+    // and we don't have telepathy - fail.
+    //
+    if (res
+    && (_playerRef->HasEffect(ItemBonusType::INVISIBILITY)
+     && !ogo->HasEffect(ItemBonusType::TELEPATHY)))
     {
       res = false;
     }

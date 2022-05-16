@@ -184,7 +184,12 @@ bool GameObject::CanMoveTo(const Position& pos)
 
 void GameObject::Draw(const std::string& overrideColorFg, const std::string& overrideColorBg)
 {
-  if (FgColor.empty() && BgColor.empty())
+  bool dontDraw = (FgColor.empty()
+                && BgColor.empty()
+                && overrideColorFg.empty()
+                && overrideColorBg.empty());
+
+  if (dontDraw)
   {
     return;
   }
@@ -697,33 +702,64 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
 
   uint64_t id = effectToAdd.Id;
 
-  if (effectToAdd.Cumulative)
+  //
+  // If there are no effects so far, add it.
+  //
+  if (_activeEffects[id].empty())
   {
     _activeEffects[id].push_back(effectToAdd);
   }
   else
   {
-    if (_activeEffects[id].empty())
+    //
+    // Cumulative effect should be added regardless.
+    //
+    if (effectToAdd.Cumulative)
     {
       _activeEffects[id].push_back(effectToAdd);
     }
     else
     {
-      // There can be only one.
-      _activeEffects[id][0] = effectToAdd;
+      bool isDifferent = true;
+
+      for (auto& i : _activeEffects[id])
+      {
+        if (i.Type == effectToAdd.Type)
+        {
+          isDifferent = false;
+          break;
+        }
+      }
+
+      //
+      // If this is a different type of effect, it should be added.
+      //
+      if (isDifferent)
+      {
+        _activeEffects[id].push_back(effectToAdd);
+      }
+      else
+      {
+        //
+        // Otherwise there can be only one.
+        //
+        _activeEffects[id][0] = effectToAdd;
+      }
     }
   }
 
   ApplyEffect(effectToAdd);
 
   #ifdef DEBUG_BUILD
-  Logger::Instance().Printf("%s gained %s (duration %i period %i)",
-                             ObjectName.data(),
-                             GlobalConstants::BonusDisplayNameByType.count(effectToAdd.Type) == 1 ?
-                             GlobalConstants::BonusDisplayNameByType.at(effectToAdd.Type).data() :
-                             "<effect name not found>",
-                             effectToAdd.Duration,
-                             effectToAdd.Period);
+  auto str = Util::StringFormat("%s gained %s (duration %i period %i)",
+                                ObjectName.data(),
+                                GlobalConstants::BonusDisplayNameByType.count(effectToAdd.Type) == 1 ?
+                                GlobalConstants::BonusDisplayNameByType.at(effectToAdd.Type).data() :
+                                "<effect name not found>",
+                                effectToAdd.Duration,
+                                effectToAdd.Period);
+  Logger::Instance().Print(str);
+  DebugLog(str.data());
   #endif
 }
 
@@ -1048,10 +1084,14 @@ void GameObject::EffectAction(const ItemBonusStruct& e)
 void GameObject::MarkAndCreateRemains()
 {
   //
-  // Loot is not created on dangerous tiles
+  // Loot is not created on dangerous tiles.
   //
   bool tileDangerous = Map::Instance().IsTileDangerous({ PosX, PosY });
-  if (!tileDangerous)
+
+  //
+  // Incorporeal monsters don't leave remains.
+  //
+  if (!tileDangerous && Corporeal)
   {
     // Destroying remains should not spawn another remains.
     if (Type != GameObjectType::REMAINS)

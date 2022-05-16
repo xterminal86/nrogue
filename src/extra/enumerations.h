@@ -125,7 +125,7 @@ enum class GameObjectType
   LICH,
   KOBOLD,
   HEROBRINE,
-  INVISIBLE_STALKER,
+  WRAITH,
   FIRE_MAGE,        // fire magic + wanders with fire elemental
   WATER_MAGE,       // -=-=-=-=-
   AIR_MAGE,         // -=-=-=-=-
@@ -210,7 +210,7 @@ enum class EquipmentCategory
   TORSO,
   BOOTS,
   WEAPON,
-  SHIELD,
+  SHIELD,   // TODO: add shields
   RING
 };
 

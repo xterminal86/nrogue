@@ -1428,7 +1428,7 @@ namespace Util
   {
     std::string res = "?";
 
-    if (obj == nullptr)
+    if (obj == nullptr || !obj->Corporeal)
     {
       return res;
     }

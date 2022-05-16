@@ -129,6 +129,8 @@ class GameObject
     bool BlocksSight = false;
     bool Revealed    = false;
 
+    bool Corporeal = true;
+
     // Determines if objects on the map tile should be drawn
     bool Visible = false;
 

@@ -1114,6 +1114,8 @@ void Map::DrawActors()
       // replace it with current floor color
       std::string bgColor = actor->BgColor;
 
+      std::string fgColor = actor->FgColor;
+
       bool cond = (actor->BgColor == Colors::BlackColor);
       bool isOnStaticObject = (CurrentLevel->StaticMapObjects[x][y] != nullptr);
 
@@ -1134,7 +1136,20 @@ void Map::DrawActors()
         }
       }
 
-      actor->Draw(actor->FgColor, bgColor);
+      if (actor->HasEffect(ItemBonusType::INVISIBILITY))
+      {
+        if (_playerRef->HasEffect(ItemBonusType::TELEPATHY))
+        {
+          fgColor = Colors::ShadesOfGrey::Six;
+        }
+        else
+        {
+          fgColor = std::string();
+          bgColor = std::string();
+        }
+      }
+
+      actor->Draw(fgColor, bgColor);
     }
   }
 }

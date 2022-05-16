@@ -241,10 +241,13 @@ void Application::DrawAttackCursor(int x, int y,
                                    GameObject* defender,
                                    const std::string& cursorColor)
 {
-  if (cursorColor.length() == 0)
+  if (cursorColor.empty())
   {
-    Printer::Instance().PrintFB(x, y, defender->Image, defender->FgColor, defender->BgColor);
-    Printer::Instance().Render();
+    if (!defender->FgColor.empty() && !defender->BgColor.empty())
+    {
+      Printer::Instance().PrintFB(x, y, defender->Image, defender->FgColor, defender->BgColor);
+      Printer::Instance().Render();
+    }
   }
   else
   {

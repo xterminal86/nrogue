@@ -725,6 +725,14 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
     if ((what->Type == GameObjectType::PICKAXEABLE) || what->IsAlive())
     {
       int dmg = Util::CalculateDamageValue(this, what, weapon, isRanged);
+
+      if (what->Corporeal == false
+       && weapon != nullptr
+       && weapon->Data.Rarity == ItemRarity::COMMON)
+      {
+        dmg = 0;
+      }
+
       ProcessMeleeAttack(weapon, what, dmg);
     }
   }

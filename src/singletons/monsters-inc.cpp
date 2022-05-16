@@ -26,6 +26,9 @@ void MonstersInc::InitSpecific()
 {
 }
 
+//
+// TODO: determine proper difficulty scaling for monsters
+//
 GameObject* MonstersInc::CreateMonster(int x, int y, GameObjectType monsterType)
 {
   // FIXME: monsters stats are too unbalanced: they become too op very fast.
@@ -76,6 +79,10 @@ GameObject* MonstersInc::CreateMonster(int x, int y, GameObjectType monsterType)
 
     case GameObjectType::SKELETON:
       go = CreateSkeleton(x, y);
+      break;
+
+    case GameObjectType::WRAITH:
+      go = CreateWraith(x, y);
       break;
 
     default:
@@ -144,8 +151,6 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
   // Set attributes
   if (randomize)
   {
-    // TODO: determine proper difficulty scaling for monsters
-
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
@@ -158,28 +163,12 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
     }
 
     //
-    // If HP is not set to > 0,
+    // NOTE: if HP is not set to > 0,
     // game object update and melee attack will fail.
     //
     go->Attrs.HP.Restore();
 
     go->Attrs.MP.Restore();
-
-    /*
-    int randomStr = RNG::Instance().RandomRange(0 * difficulty, 1 * difficulty);
-    int randomDef = RNG::Instance().RandomRange(0, 1 * difficulty);
-    int randomSkl = RNG::Instance().RandomRange(0, 1 * difficulty);
-    int randomHp = RNG::Instance().RandomRange(1 * difficulty, 5 * difficulty);
-    int randomSpd = RNG::Instance().RandomRange(0, 2 * difficulty);
-
-    go->Attrs.Lvl.Set(difficulty);
-
-    go->Attrs.Str.Set(randomStr);
-    go->Attrs.Def.Set(randomDef);
-    go->Attrs.HP.Set(randomHp);
-    go->Attrs.Spd.Set(randomSpd);
-    go->Attrs.Skl.Set(randomSkl);
-    */
   }
 
   // ===========================================================================
@@ -793,6 +782,65 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
 
   return go;
 }
+
+GameObject* MonstersInc::CreateWraith(int x, int y)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  'W',
+                                  std::string(),
+                                  std::string());
+
+  go->ObjectName = "Wraith";
+  go->Attrs.Indestructible = false;
+  go->IsLiving = false;
+  go->Corporeal = false;
+
+  go->MoveTo(x, y);
+
+  go->Attrs.Spd.Talents = 1;
+  go->Attrs.Skl.Talents = 3;
+
+  int difficulty = GetDifficulty();
+
+  for (int i = 0; i < difficulty; i++)
+  {
+    go->LevelUp(1);
+  }
+
+  go->Attrs.Str.Reset();
+
+  go->Attrs.HP.Reset(1);
+
+  ItemBonusStruct inv;
+  inv.BonusValue = 1;
+  inv.Duration = -1;
+  inv.Type = ItemBonusType::INVISIBILITY;
+  inv.Id = go->ObjectId();
+
+  ItemBonusStruct fly;
+  fly.BonusValue = 1;
+  fly.Duration = -1;
+  fly.Type = ItemBonusType::LEVITATION;
+  fly.Id = go->ObjectId();
+
+  go->AddEffect(inv);
+  go->AddEffect(fly);
+
+  // TODO: add proper AI model
+
+  // ===========================================================================
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterBasic* aim = ai->AddModel<AIMonsterBasic>();
+  aim->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(20);
+  aim->ConstructAI();
+  ai->ChangeModel<AIMonsterBasic>();
+  // ===========================================================================
+
+  return go;
+}
+
 
 // *****************************************************************************
 

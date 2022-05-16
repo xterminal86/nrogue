@@ -195,7 +195,16 @@ void LookInputState::Update(bool forceUpdate)
               }
               else
               {
-                lookStatus = aic->OwnerGameObject->ObjectName;
+                std::string objName = aic->OwnerGameObject->ObjectName;
+
+                if (!aic->OwnerGameObject->Corporeal)
+                {
+                  objName = _playerRef->HasEffect(ItemBonusType::TELEPATHY)
+                          ? aic->OwnerGameObject->ObjectName
+                          : "?";
+                }
+
+                lookStatus = objName;
                 foundGameObject = true;
               }
             }
