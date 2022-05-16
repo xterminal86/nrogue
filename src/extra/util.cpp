@@ -1428,7 +1428,9 @@ namespace Util
   {
     std::string res = "?";
 
-    if (obj == nullptr || !obj->Corporeal)
+    if (obj == nullptr ||
+       (obj->HasEffect(ItemBonusType::INVISIBILITY)
+     && !Application::Instance().PlayerInstance.HasEffect(ItemBonusType::TELEPATHY)))
     {
       return res;
     }

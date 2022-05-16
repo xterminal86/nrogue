@@ -197,7 +197,7 @@ void LookInputState::Update(bool forceUpdate)
               {
                 std::string objName = aic->OwnerGameObject->ObjectName;
 
-                if (!aic->OwnerGameObject->Corporeal)
+                if (aic->OwnerGameObject->HasEffect(ItemBonusType::INVISIBILITY))
                 {
                   objName = _playerRef->HasEffect(ItemBonusType::TELEPATHY)
                           ? aic->OwnerGameObject->ObjectName
