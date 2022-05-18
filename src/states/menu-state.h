@@ -22,7 +22,7 @@ class MenuState : public GameState
 
   const std::vector<std::string> _title =
   {
-    { "#     #   ######     #####     #####    #     #   #######s" },
+    { "#     #   ######     #####     #####    #     #   ####### " },
     { "##    #s  #sssss#s  #sssss#s  #sssss#s  #s    #s  #sssssss" },
     { "#s#   #s  #s    #s  #s    #s  #s    ss  #s    #s  #s      " },
     { "#ss#  #s  ######s   #s    #s  #s        #s    #s  ####s   " },
