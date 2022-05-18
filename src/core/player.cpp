@@ -728,7 +728,7 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
 
       if (what->Corporeal == false
        && weapon != nullptr
-       && weapon->Data.Rarity == ItemRarity::COMMON)
+       && weapon->Data.Prefix != ItemPrefix::BLESSED)
       {
         dmg = 0;
       }
