@@ -9,8 +9,7 @@
 #include "task-random-movement.h"
 #include "task-move-smart.h"
 #include "task-apply-effect.h"
-#include "task-attack-basic.h"
-#include "task-attack-special.h"
+#include "task-attack.h"
 #include "task-attack-ranged.h"
 #include "task-chase-player.h"
 #include "task-move-away-from-player.h"
@@ -18,7 +17,6 @@
 #include "task-goto-last-player-pos.h"
 #include "task-goto-last-mined-pos.h"
 #include "task-find-and-destroy-container.h"
-#include "task-attack-effect.h"
 #include "task-try-pickup-items.h"
 #include "task-drink-potion.h"
 #include "task-mine-tunnel.h"
@@ -171,38 +169,10 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
       task = new TaskMoveAwayFromPlayer(AIComponentRef->OwnerGameObject);
       break;
 
-    case AITasks::ATTACK_BASIC:
+    case AITasks::ATTACK:
     {
       bool alwaysHitOverride = (data->Params.count("p2") == 1);
-      task = new TaskAttackBasic(AIComponentRef->OwnerGameObject, alwaysHitOverride);
-    }
-    break;
-
-    case AITasks::ATTACK_EFFECT:
-    {
-      std::string effectType = data->Params.at("p2");
-      bool ignoreArmor = (data->Params.count("p3") == 1);
-
-      ItemBonusStruct e;
-      if (effectType == "Psd")
-      {
-        e.Type       = ItemBonusType::POISONED;
-        e.BonusValue = -1;
-        e.Duration   = GlobalConstants::EffectDefaultDuration;
-        e.Period     = GlobalConstants::EffectDurationSkipsForTurn * 2;
-        e.Cumulative = true;
-      }
-
-      task = new TaskAttackEffect(AIComponentRef->OwnerGameObject, e, ignoreArmor);
-    }
-    break;
-
-    case AITasks::ATTACK_SPECIAL:
-    {
-      std::string attackType = data->Params.at("p2");
-      bool ignoreArmor = (data->Params.count("p3") == 1);
-
-      task = new TaskAttackSpecial(AIComponentRef->OwnerGameObject, attackType, ignoreArmor);
+      task = new TaskAttack(AIComponentRef->OwnerGameObject, alwaysHitOverride);
     }
     break;
 
@@ -214,8 +184,8 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
                                   damageType,
                                   spellType,
                                   '*',
-                                  "#FF0000",
-                                  "#000000");
+                                  Colors::RedColor,
+                                  Colors::BlackColor);
     }
     break;
 

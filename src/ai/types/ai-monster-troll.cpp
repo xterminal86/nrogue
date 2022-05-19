@@ -21,7 +21,7 @@ R"(
               [SEL]
                 [COND p1="hp_low"]
                   [TASK p1="move_away"]
-                [TASK p1="attack_basic"]
+                [TASK p1="attack"]
             [COND p1="hp_low"]
               [SEL]
                 [TASK p1="move_away"]

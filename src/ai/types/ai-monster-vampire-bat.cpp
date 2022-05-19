@@ -12,7 +12,7 @@ void AIMonsterVampireBat::PrepareScript()
   _script =
 R"(
 [TREE]
-  [SEL]r
+  [SEL]
     [COND p1="player_in_range"]
       [COND p1="player_visible"]
         [SEL]
@@ -20,15 +20,13 @@ R"(
             [SEL]
               [COND p1="player_next_turn" p2="1"]
                 [TASK p1="move_away"]
-              [TASK p1="attack_special" p2="hp_steal"]
+              [TASK p1="attack"]
           [COND p1="player_in_range" p2="2"]
             [SEL]
               [COND p1="player_next_turn" p2="1"]
                 [TASK p1="idle"]
               [TASK p1="chase_player"]
-          [TASK p1="chase_player"]
     [TASK p1="move_rnd"]
     [TASK p1="idle"]
 )";
-
 }

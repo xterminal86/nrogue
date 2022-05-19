@@ -229,6 +229,7 @@ namespace Strings
   extern const std::string FmtPickedUpS;
   extern const std::string FmtDroppedIS;
   extern const std::string FmtDroppedS;
+  extern const std::string FmtSMissed;
 
   extern const std::vector<std::string> MsgNotInTown;
 

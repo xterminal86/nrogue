@@ -21,6 +21,7 @@
 #include "ai-monster-herobrine.h"
 #include "ai-monster-mad-miner.h"
 #include "ai-monster-kobold.h"
+#include "ai-monster-wraith.h"
 
 void MonstersInc::InitSpecific()
 {
@@ -832,10 +833,10 @@ GameObject* MonstersInc::CreateWraith(int x, int y)
 
   // ===========================================================================
   AIComponent* ai = go->AddComponent<AIComponent>();
-  AIMonsterBasic* aim = ai->AddModel<AIMonsterBasic>();
+  AIMonsterWraith* aim = ai->AddModel<AIMonsterWraith>();
   aim->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(20);
   aim->ConstructAI();
-  ai->ChangeModel<AIMonsterBasic>();
+  ai->ChangeModel<AIMonsterWraith>();
   // ===========================================================================
 
   return go;

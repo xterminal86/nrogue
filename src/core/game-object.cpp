@@ -1130,7 +1130,12 @@ size_t GameObject::ComponentsSize()
 
 void GameObject::AwardExperience(int amount)
 {
-  int amnt = amount * (Attrs.Exp.Talents + 1);
+  int amnt = amount;
+
+  if (amount > 0)
+  {
+    amnt = amount * (Attrs.Exp.Talents + 1);
+  }
 
   // FIXME: debug
   //int amnt = 100;
@@ -1139,13 +1144,20 @@ void GameObject::AwardExperience(int amount)
 
   if (Attrs.Exp.Min().Get() >= Attrs.Exp.Max().Get())
   {
-    Attrs.Exp.SetMin(0);
     LevelUp();
-  }
-  else if (amnt < 0 && Attrs.Exp.Min().Get() <= 0)
-  {
     Attrs.Exp.SetMin(0);
+  }
+  else if (amnt < 0
+        && Attrs.Lvl.Get() != 1
+        && Attrs.Exp.Min().Get() <= 0)
+  {
     LevelDown();
+
+    int diff = 100 + amnt;
+
+    diff = Util::Clamp(diff, 0, 99);
+
+    Attrs.Exp.SetMin(diff);
   }
 }
 

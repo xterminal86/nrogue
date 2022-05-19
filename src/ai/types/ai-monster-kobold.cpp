@@ -20,7 +20,7 @@ R"(
             [SEL]
               [COND p1="hp_low"]
                 [TASK p1="drink_potion" p2="HP"]
-              [TASK p1="attack_basic"]
+              [TASK p1="attack"]
           [COND p1="hp_low"]
             [SEL]
               [TASK p1="drink_potion" p2="HP"]

@@ -676,6 +676,7 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
 {
   int hitChance = Util::CalculateHitChanceMelee(this, what);
 
+  #ifdef DEBUG_BUILD
   auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
                                    Attrs.Skl.Get(),
                                    Attrs.Lvl.Get(),
@@ -685,6 +686,7 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
                                    hitChance);
 
   Logger::Instance().Print(logMsg);
+  #endif
 
   bool hitLanded = alwaysHit ? true : Util::Rolld100(hitChance);
   if (!hitLanded)
@@ -884,10 +886,21 @@ bool Player::ReceiveDamage(GameObject* from,
 
 void Player::AwardExperience(int amount)
 {
-  auto msg = Util::StringFormat("+%i EXP", amount);
-  Printer::Instance().AddMessage(msg);
+  int amnt = amount;
 
-  int amnt = amount * (Attrs.Exp.Talents + 1);
+  std::string msg;
+
+  if (amount > 0)
+  {
+    amnt = amount * (Attrs.Exp.Talents + 1);
+    msg = Util::StringFormat("+%i EXP", amount);
+  }
+  else
+  {
+    msg = Util::StringFormat("%i EXP", amount);
+  }
+
+  Printer::Instance().AddMessage(msg);
 
   // FIXME: debug
   //int amnt = 100;
@@ -896,13 +909,20 @@ void Player::AwardExperience(int amount)
 
   if (Attrs.Exp.Min().Get() >= Attrs.Exp.Max().Get())
   {
-    Attrs.Exp.SetMin(0);
     LevelUp();
-  }
-  else if (amnt < 0 && Attrs.Exp.Min().Get() <= 0)
-  {
     Attrs.Exp.SetMin(0);
+  }
+  else if (amnt < 0
+        && Attrs.Lvl.Get() != 1
+        && Attrs.Exp.Min().Get() <= 0)
+  {
     LevelDown();
+
+    int diff = 100 + amnt;
+
+    diff = Util::Clamp(diff, 0, 99);
+
+    Attrs.Exp.SetMin(diff);
   }
 }
 

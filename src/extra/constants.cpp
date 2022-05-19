@@ -202,6 +202,7 @@ namespace Strings
   const std::string FmtPickedUpS  = "Picked up: %s";
   const std::string FmtDroppedIS  = "Dropped: %i %s";
   const std::string FmtDroppedS   = "Dropped: %s";
+  const std::string FmtSMissed    = "%s missed";
 
   const std::vector<std::string> MsgNotInTown = { "Not here", "Not in town" };
 

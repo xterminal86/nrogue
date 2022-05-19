@@ -20,7 +20,7 @@ R"(
             [TASK p1="save_player_pos"]
             [SEL]
               [COND p1="player_in_range" p2="1"]
-                [TASK p1="attack_basic"]
+                [TASK p1="attack"]
               [TASK p1="chase_player"]
         [TASK p1="goto_last_player_pos"]
     [COND p1="d100" p2="50"]
