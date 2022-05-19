@@ -48,7 +48,8 @@ jobs:
     
     - name: PACK ARTIFACT
       run: |
-           tar -cZf build-latest.zip ${{github.workspace}}/build-latest
+           tar -czf build-latest.zip ${{github.workspace}}/build-latest/nrogue.exe ${{github.workspace}}/build-latest/SDL2.dll ${{github.workspace}}/build-latest/config-template.txt
+           
     #  uses: thedoctor0/zip-release@master
     #  with:
     #    type: 'zip'
