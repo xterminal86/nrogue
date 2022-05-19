@@ -35,3 +35,17 @@ FAST_COMBAT disables visual attack display and FAST_MONSTER_MOVEMENT doesn't for
 Both of these options reduce gameplay lag, although with FAST_MONSTER_MOVEMENT=ON it may sometimes look as if
 enemy just spawned before player if said monster had much larger SPD than player, which allowed it to perform several
 turns that were not force redrawn.
+
+<TABLE>
+  <TR>
+    <TD colspan="2" align="center"><B>SCREENSHOTS</B></TD>
+  </TR>
+  <TR>
+    <TD><IMG src="resources/github-front/in-game.png" title="in-game"></IMG></TD>
+    <TD><IMG src="resources/github-front/in-game-battle.png" title="battle"></IMG></TD>
+  </TR>
+  <TR>
+    <TD><IMG src="resources/github-front/in-game-charsheet.png" title="charsheet"></IMG></TD>
+    <TD><IMG src="resources/github-front/in-game-shop.png" title="shop"></IMG></TD>
+  </TR>      
+</TABLE>
