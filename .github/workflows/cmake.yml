@@ -48,14 +48,9 @@ jobs:
     
     - name: PACK ARTIFACT
       run: |
-           7z a -tzip build-latest.zip ./build-latest/*
-           
-    #  uses: thedoctor0/zip-release@master
-    #  with:
-    #    type: 'zip'
-    #    filename: 'build-latest.zip'
-    #    # Archive will be placed inside the specified directory
-    #    directory: ${{github.workspace}}/build-latest
+           cd build-latest
+           7z a -tzip build-latest.zip *
+           mv build-latest.zip ../
         
     - name: UPLOAD ARTIFACT
       uses: actions/upload-artifact@v3.0.0
