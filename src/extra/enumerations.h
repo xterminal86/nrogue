@@ -484,6 +484,82 @@ enum class StatsEnum
   MP
 };
 
+enum class ScriptTaskNames
+{
+  NONE = 0,
+  TREE,
+  SEL,
+  SEQ,
+  FAIL,
+  SUCC,
+  TASK,
+  COND
+};
+
+enum class ScriptParamNames
+{
+  IDLE = 101,
+  MOVE_RND,
+  MOVE_SMART,
+  MOVE_AWAY,
+  ATTACK,
+  ATTACK_RANGED,
+  BREAK_STUFF,
+  PICK_ITEMS,
+  CHASE_PLAYER,
+  SAVE_PLAYER_POS,
+  GOTO_LAST_PLAYER_POS,
+  GOTO_LAST_MINED_POS,
+  MINE_TUNNEL,
+  MINE_BLOCK,
+  APPLY_EFFECT,
+  DRINK_POTION,
+  PRINT_MESSAGE,
+  END,
+  D100,
+  PLAYER_VISIBLE,
+  PLAYER_CAN_MOVE,
+  PLAYER_IN_RANGE,
+  PLAYER_ENERGY,
+  PLAYER_NEXT_TURN,
+  TURNS_LEFT,
+  HAS_EFFECT,
+  HAS_EQUIPPED,
+  HP_LOW,
+  EQ,
+  GT,
+  LT,
+  PLAYER,
+  SELF,
+  HEA,
+  NCK,
+  TRS,
+  BTS,
+  MAG,
+  WPN,
+  SLD,
+  RNG,
+  ANY,
+  HP,
+  MP,
+  HID,
+  SHI,
+  REG,
+  REF,
+  PAB,
+  MAB,
+  THS,
+  PAR,
+  TEL,
+  FLY,
+  BLI,
+  FRZ,
+  BUR,
+  LGT,
+  PSD,
+  NOP
+};
+
 #ifdef USE_SDL
 enum class NameCP437
 {

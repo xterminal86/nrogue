@@ -23,6 +23,7 @@
 #include "task-mine-block.h"
 
 #include "blackboard.h"
+#include "bts-decompiler.h"
 
 AIModelBase::AIModelBase()
 {
@@ -38,9 +39,17 @@ void AIModelBase::ConstructAI()
 {
   PrepareScript();
 
+  if (!_scriptCompiled.empty())
+  {
+    _scriptAsText = BTSDecompiler::Instance().Decompile(_scriptCompiled);
+  }
+
   _aiReader.Init(AIComponentRef->OwnerGameObject);
-  _aiReader.ParseFromString(_script);
+  _aiReader.ParseFromString(_scriptAsText);
   _aiReader.FormTree();
+
+  _scriptCompiled = std::vector<uint8_t>();
+  _scriptAsText = std::string();
 
   std::map<const ScriptNode*, bool> scriptNodesChecked;
   std::map<const ScriptNode*, Node*> behaviourNodesCreated;
@@ -144,39 +153,39 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
 
   std::string taskName = data->Params.at("p1");
 
-  AITasks taskType = AITasks::NONE;
+  ScriptParamNames taskType = ScriptParamNames::ANY;
 
-  if (_aiTasksByName.count(taskName) == 1)
+  if (GlobalConstants::BTSParamNamesByName.count(taskName) == 1)
   {
-    taskType = _aiTasksByName.at(taskName);
+    taskType = GlobalConstants::BTSParamNamesByName.at(taskName);
   }
 
   switch (taskType)
   {
-    case AITasks::IDLE:
+    case ScriptParamNames::IDLE:
       task = new TaskIdle(AIComponentRef->OwnerGameObject);
       break;
 
-    case AITasks::MOVE_RND:
+    case ScriptParamNames::MOVE_RND:
       task = new TaskRandomMovement(AIComponentRef->OwnerGameObject);
       break;
 
-    case AITasks::MOVE_SMART:
+    case ScriptParamNames::MOVE_SMART:
       task = new TaskMoveSmart(AIComponentRef->OwnerGameObject);
       break;
 
-    case AITasks::MOVE_AWAY:
+    case ScriptParamNames::MOVE_AWAY:
       task = new TaskMoveAwayFromPlayer(AIComponentRef->OwnerGameObject);
       break;
 
-    case AITasks::ATTACK:
+    case ScriptParamNames::ATTACK:
     {
       bool alwaysHitOverride = (data->Params.count("p2") == 1);
       task = new TaskAttack(AIComponentRef->OwnerGameObject, alwaysHitOverride);
     }
     break;
 
-    case AITasks::ATTACK_RANGED:
+    case ScriptParamNames::ATTACK_RANGED:
     {
       std::string damageType = data->Params.at("p2");
       std::string spellType  = data->Params.at("p3");
@@ -189,45 +198,45 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
     }
     break;
 
-    case AITasks::BREAK_STUFF:
+    case ScriptParamNames::BREAK_STUFF:
       task = new TaskFindAndDestroyContainer(AIComponentRef->OwnerGameObject);
       break;
 
-    case AITasks::PICK_ITEMS:
+    case ScriptParamNames::PICK_ITEMS:
       task = new TaskTryPickupItems(AIComponentRef->OwnerGameObject);
       break;
 
-    case AITasks::CHASE_PLAYER:
+    case ScriptParamNames::CHASE_PLAYER:
       task = new TaskChasePlayer(AIComponentRef->OwnerGameObject);
       break;
 
-    case AITasks::SAVE_PLAYER_POS:
+    case ScriptParamNames::SAVE_PLAYER_POS:
       task = new TaskRememberPlayerPos(AIComponentRef->OwnerGameObject);
       break;
 
-    case AITasks::GOTO_LAST_PLAYER_POS:
+    case ScriptParamNames::GOTO_LAST_PLAYER_POS:
       task = new TaskGotoLastPlayerPos(AIComponentRef->OwnerGameObject);
       break;
 
-    case AITasks::GOTO_LAST_MINED_POS:
+    case ScriptParamNames::GOTO_LAST_MINED_POS:
       task = new TaskGotoLastMinedPos(AIComponentRef->OwnerGameObject);
       break;
 
-    case AITasks::MINE_TUNNEL:
+    case ScriptParamNames::MINE_TUNNEL:
     {
       bool ignorePickaxe = (data->Params.count("p2") == 1);
       task = new TaskMineTunnel(AIComponentRef->OwnerGameObject, ignorePickaxe);
     }
     break;
 
-    case AITasks::MINE_BLOCK:
+    case ScriptParamNames::MINE_BLOCK:
     {
       bool ignorePickaxe = (data->Params.count("p2") == 1);
       task = new TaskMineBlock(AIComponentRef->OwnerGameObject, ignorePickaxe);
     }
     break;
 
-    case AITasks::APPLY_EFFECT:
+    case ScriptParamNames::APPLY_EFFECT:
     {
       std::string type       = data->Params.at("p2");
       std::string bonusValue = data->Params.at("p3");
@@ -243,28 +252,28 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
     }
     break;
 
-    case AITasks::DRINK_POTION:
+    case ScriptParamNames::DRINK_POTION:
     {
       std::string type = data->Params.at("p2");
 
-      PotionPreference ref = PotionPreference::ANY;
-      if (_potionPrefByName.count(type) == 1)
+      ScriptParamNames ref = ScriptParamNames::ANY;
+      if (GlobalConstants::BTSParamNamesByName.count(type) == 1)
       {
-        ref = _potionPrefByName.at(type);
+        ref = GlobalConstants::BTSParamNamesByName.at(type);
       }
 
       task = new TaskDrinkPotion(AIComponentRef->OwnerGameObject, ref);
     }
     break;
 
-    case AITasks::PRINT_MESSAGE:
+    case ScriptParamNames::PRINT_MESSAGE:
     {
       std::string msg = data->Params.at("p2");
       task = new TaskPrintMessage(AIComponentRef->OwnerGameObject, msg);
     }
     break;
 
-    case AITasks::END:
+    case ScriptParamNames::END:
       task = new IgnoreFailure(AIComponentRef->OwnerGameObject);
       break;
 
@@ -294,39 +303,39 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
 
   std::string condType = data->Params.at("p1");
 
-  AIConditionFunctions cf = AIConditionFunctions::NONE;
+  ScriptParamNames cf = ScriptParamNames::ANY;
 
-  if (_cfByName.count(condType) == 1)
+  if (GlobalConstants::BTSParamNamesByName.count(condType) == 1)
   {
-    cf = _cfByName.at(condType);
+    cf = GlobalConstants::BTSParamNamesByName.at(condType);
   }
 
   switch (cf)
   {
     // Roll d100 and check against p2 percent chance
-    case AIConditionFunctions::D100:
+    case ScriptParamNames::D100:
       fn = GetD100CF(data);
       break;
 
     // Player is linear distance visible
-    case AIConditionFunctions::PLAYER_VISIBLE:
+    case ScriptParamNames::PLAYER_VISIBLE:
       fn = GetIsPlayerVisibleCF(data);
       break;
 
     // Checks GameObject::CanMove()
-    case AIConditionFunctions::PLAYER_CAN_MOVE:
+    case ScriptParamNames::PLAYER_CAN_MOVE:
       fn = GetPlayerCanMoveCF(data);
       break;
 
     // Checks if player is in square range specified by p2
-    case AIConditionFunctions::PLAYER_IN_RANGE:
+    case ScriptParamNames::PLAYER_IN_RANGE:
       fn = GetInRangeCF(data);
       break;
 
     // Player's action meter can be queried against value
     // of p3 and comparison function determined by p2.
     // Supported comparers are "gt", "lt", "eq".
-    case AIConditionFunctions::PLAYER_ENERGY:
+    case ScriptParamNames::PLAYER_ENERGY:
       fn = GetPlayerEnergyCF(data);
       break;
 
@@ -336,29 +345,29 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
     // E.g. p2="1" means check if player's next WaitForTurn()
     // will gain enough energy for the player to be able to
     // perform >= 1 turns.
-    case AIConditionFunctions::PLAYER_NEXT_TURN:
+    case ScriptParamNames::PLAYER_NEXT_TURN:
       fn = GetPlayerNextTurnCF(data);
       break;
 
     // Check if controlled GameObject's action meter
     // support amount of turns specified by p2.
-    case AIConditionFunctions::TURNS_LEFT:
+    case ScriptParamNames::TURNS_LEFT:
       fn = GetTurnsLeftCF(data);
       break;
 
     // Check if actor in p2 has specific effect determined by
     // short name of SpellType specified in p3.
     // E.g. [COND p1="has_effect" p2="player" p3="Psd"]
-    case AIConditionFunctions::HAS_EFFECT:
+    case ScriptParamNames::HAS_EFFECT:
       fn = GetHasEffectCF(data);
       break;
 
     // Check if current object's HP is less than 30%
-    case AIConditionFunctions::HP_LOW:
+    case ScriptParamNames::HP_LOW:
       fn = GetHPLowCF(data);
       break;
 
-    case AIConditionFunctions::HAS_EQUIPPED:
+    case ScriptParamNames::HAS_EQUIPPED:
       fn = GetHasEquippedCF(data);
       break;
   }
@@ -378,24 +387,24 @@ std::function<BTResult()> AIModelBase::GetPlayerEnergyCF(const ScriptNode* data)
 
     bool res = false;
 
-    Comparers comp = Comparers::NONE;
+    ScriptParamNames comp = ScriptParamNames::ANY;
 
-    if (_comparersByName.count(compType) == 1)
+    if (GlobalConstants::BTSParamNamesByName.count(compType) == 1)
     {
-      comp = _comparersByName.at(compType);
+      comp = GlobalConstants::BTSParamNamesByName.at(compType);
     }
 
     switch (comp)
     {
-      case Comparers::GREATER_THAN:
+      case ScriptParamNames::GT:
         res = (energy >= compareWith);
         break;
 
-      case Comparers::LESS_THAN:
+      case ScriptParamNames::LT:
         res = (energy <= compareWith);
         break;
 
-      case Comparers::EQUAL:
+      case ScriptParamNames::EQ:
         res = (energy == compareWith);
         break;
     }
@@ -546,13 +555,13 @@ std::function<BTResult()> AIModelBase::GetHasEffectCF(const ScriptNode* data)
   std::string who = data->Params.at("p2");
   std::string effect = data->Params.at("p3");
 
-  ActorType at = (who == "player")
-                ? ActorType::PLAYER
-                : ActorType::SELF;
+  ScriptParamNames at = (who == "player")
+                        ? ScriptParamNames::PLAYER
+                        : ScriptParamNames::SELF;
 
   auto fn = [this, at, effect]()
   {
-    bool res = (at == ActorType::PLAYER)
+    bool res = (at == ScriptParamNames::PLAYER)
                ? _playerRef->HasEffect(_bonusTypeByDisplayName.at(effect))
                : AIComponentRef->OwnerGameObject->HasEffect(_bonusTypeByDisplayName.at(effect));
 
@@ -582,14 +591,37 @@ std::function<BTResult()> AIModelBase::GetHPLowCF(const ScriptNode* data)
 std::function<BTResult()> AIModelBase::GetHasEquippedCF(const ScriptNode* data)
 {
   std::string eqType = data->Params.at("p2");
-  auto fn = [this, eqType]()
+
+  EquipmentCategory eqCat = EquipmentCategory::NOT_EQUIPPABLE;
+  ScriptParamNames paramName = ScriptParamNames::ANY;
+
+  if (GlobalConstants::BTSParamNamesByName.count(eqType) == 1)
   {
-    if (_eqCategoryByName.count(eqType) == 0)
+    paramName = GlobalConstants::BTSParamNamesByName.at(eqType);
+  }
+
+  const std::map<ScriptParamNames, EquipmentCategory> eqCats =
+  {
+    { ScriptParamNames::HEA, EquipmentCategory::HEAD   },
+    { ScriptParamNames::NCK, EquipmentCategory::NECK   },
+    { ScriptParamNames::TRS, EquipmentCategory::TORSO  },
+    { ScriptParamNames::BTS, EquipmentCategory::BOOTS  },
+    { ScriptParamNames::WPN, EquipmentCategory::WEAPON },
+    { ScriptParamNames::SLD, EquipmentCategory::SHIELD },
+    { ScriptParamNames::RNG, EquipmentCategory::RING   }
+  };
+
+  if (eqCats.count(paramName) == 1)
+  {
+    eqCat = eqCats.at(paramName);
+  }
+
+  auto fn = [this, eqCat]()
+  {
+    if (eqCat == EquipmentCategory::NOT_EQUIPPABLE)
     {
       return BTResult::Failure;
     }
-
-    auto cat = _eqCategoryByName.at(eqType);
 
     EquipmentComponent* ec = AIComponentRef->OwnerGameObject->GetComponent<EquipmentComponent>();
     if (ec == nullptr)
@@ -599,9 +631,9 @@ std::function<BTResult()> AIModelBase::GetHasEquippedCF(const ScriptNode* data)
 
     ItemComponent* item = nullptr;
 
-    if (cat == EquipmentCategory::RING)
+    if (eqCat == EquipmentCategory::RING)
     {
-      for (auto& r : ec->EquipmentByCategory[cat])
+      for (auto& r : ec->EquipmentByCategory[eqCat])
       {
         if (r != nullptr)
         {
@@ -612,7 +644,7 @@ std::function<BTResult()> AIModelBase::GetHasEquippedCF(const ScriptNode* data)
     }
     else
     {
-      item = ec->EquipmentByCategory[cat][0];
+      item = ec->EquipmentByCategory[eqCat][0];
     }
 
     //
@@ -652,45 +684,45 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
 
   std::string nodeName = data->NodeName;
 
-  BTNodeType nodeType = BTNodeType::NONE;
+  ScriptTaskNames nodeType = ScriptTaskNames::NONE;
 
-  if (_btNodeTypeByName.count(nodeName) == 1)
+  if (GlobalConstants::BTSTaskNamesByName.count(nodeName) == 1)
   {
-    nodeType = _btNodeTypeByName.at(nodeName);
+    nodeType = GlobalConstants::BTSTaskNamesByName.at(nodeName);
   }
 
   switch (nodeType)
   {
-    case BTNodeType::TREE:
+    case ScriptTaskNames::TREE:
       n = new Root(AIComponentRef->OwnerGameObject);
       break;
 
-    case BTNodeType::SEQ:
+    case ScriptTaskNames::SEQ:
       n = new Sequence(AIComponentRef->OwnerGameObject);
       break;
 
-    case BTNodeType::SEL:
+    case ScriptTaskNames::SEL:
       n = new Selector(AIComponentRef->OwnerGameObject);
       break;
 
-    case BTNodeType::SUCC:
+    case ScriptTaskNames::SUCC:
       n = new IgnoreFailure(AIComponentRef->OwnerGameObject);
       break;
 
-    case BTNodeType::FAIL:
+    case ScriptTaskNames::FAIL:
       n = new Failure(AIComponentRef->OwnerGameObject);
       break;
 
-    case BTNodeType::COND:
+    case ScriptTaskNames::COND:
       n = CreateConditionNode(data);
       break;
 
-    case BTNodeType::TASK:
+    case ScriptTaskNames::TASK:
       n = CreateTask(data);
       break;
   }
 
-  if (n == nullptr && nodeType != BTNodeType::TASK)
+  if (n == nullptr && nodeType != ScriptTaskNames::TASK)
   {
     auto who = Util::StringFormat("%s_%u", AIComponentRef->OwnerGameObject->ObjectName.data(), AIComponentRef->OwnerGameObject->ObjectId());
     Logger::Instance().Print(who);

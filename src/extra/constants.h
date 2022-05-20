@@ -332,6 +332,9 @@ namespace GlobalConstants
   extern const std::map<ItemBonusType,    std::string> ItemBonusSuffixes;
   extern const std::map<ItemBonusType,    std::string> BonusDisplayNameByType;
 
+  extern const std::map<std::string, ScriptTaskNames>  BTSTaskNamesByName;
+  extern const std::map<std::string, ScriptParamNames> BTSParamNamesByName;
+
   extern const std::map<ItemType,      int> PotionsWeightTable;
   extern const std::map<ArmorType,     int> ArmorDurabilityByType;
   extern const std::map<GemType,       int> GemCostByType;

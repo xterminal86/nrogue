@@ -9,7 +9,7 @@ class TaskDrinkPotion : public Node
 {
   public:
     TaskDrinkPotion(GameObject* objectToControl,
-                    PotionPreference ref);
+                    ScriptParamNames ref);
 
     BTResult Run() override;
 
@@ -24,7 +24,7 @@ class TaskDrinkPotion : public Node
 
     void PrintLogIfNeeded(ItemComponent* ic);
 
-    PotionPreference _potionPref = PotionPreference::ANY;
+    ScriptParamNames _potionPref = ScriptParamNames::ANY;
 };
 
 #endif // TASKDRINKPOTION_H

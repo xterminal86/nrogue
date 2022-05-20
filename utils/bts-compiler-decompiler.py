@@ -29,8 +29,7 @@ ParamCodesByName = {};
 # Look this up in ai-model-base.h
 # and Constants::BonusDisplayNameByType
 ParamNames = [
-  # tasks
-  "idle"                ,  # 0
+  "idle"                ,
   "move_rnd"            ,
   "move_smart"          ,
   "move_away"           ,
@@ -40,7 +39,7 @@ ParamNames = [
   "pick_items"          ,
   "chase_player"        ,
   "save_player_pos"     ,
-  "goto_last_player_pos",  # 10
+  "goto_last_player_pos",
   "goto_last_mined_pos" ,
   "mine_tunnel"         ,
   "mine_block"          ,
@@ -48,10 +47,9 @@ ParamNames = [
   "drink_potion"        ,
   "print_message"       ,
   "end"                 ,
-  # condition functions
   "d100"                ,
   "player_visible"      ,
-  "player_can_move"     ,  # 20
+  "player_can_move"     ,
   "player_in_range"     ,
   "player_energy"       ,
   "player_next_turn"    ,
@@ -59,24 +57,22 @@ ParamNames = [
   "has_effect"          ,
   "has_equipped"        ,
   "hp_low"              ,
-  # various params
   "eq"                  ,
   "gt"                  ,
-  "lt"                  ,  # 30
+  "lt"                  ,
   "player"              ,
   "self"                ,
   "HEA"                 ,
   "NCK"                 ,
   "TRS"                 ,
   "BTS"                 ,
+  "MAG"                 ,
   "WPN"                 ,
   "SLD"                 ,
   "RNG"                 ,
-  "-"                   ,  # 40
+  "-"                   ,
   "HP"                  ,
   "MP"                  ,
-  # Constants::BonusDisplayNameByType
-  # =================================
   "Hid"                 ,
   "Shi"                 ,
   "Reg"                 ,
@@ -84,12 +80,12 @@ ParamNames = [
   "PAb"                 ,
   "MAb"                 ,
   "Ths"                 ,
-  "Par"                 ,  # 50
+  "Par"                 ,
   "Tel"                 ,
   "Fly"                 ,
   "Bli"                 ,
   "Frz"                 ,
-  "Buf"                 ,
+  "Bur"                 ,
   "Lgt"                 ,
   "Psd"                 ,
   # =================================
@@ -150,7 +146,9 @@ def InitContainers():
 
   # number value params
 
-  for i in range(1, 41):
+  maxParams = 100;
+
+  for i in range(0, maxParams + 1):
     paramStr = str(i);
     ParamCodesByName[paramStr] = i;
     paramCode = i;
@@ -269,6 +267,8 @@ def Decompile():
 
   print("Decompiling...\n");
 
+  decompiled = "";
+
   while index != len(Bytecode):
 
     indent = Bytecode[index];
@@ -284,7 +284,7 @@ def Decompile():
     else:
       taskName = taskNameVal;
       strIndent = (' ' * indent);
-      print("{0}{1}".format(strIndent, taskName));
+      decompiled += "{0}[{1}".format(strIndent, taskName);
 
     index = index + 2;
 
@@ -297,7 +297,7 @@ def Decompile():
 
       while curByte != ParamsEnd:
         paramType = paramByCode[curByte];
-        print("{0}p{1} = {2}".format(strIndent, paramCount, paramType));
+        decompiled += " p{0}=\"{1}\"".format(paramCount, paramType);
         paramCount = paramCount + 1;
         index = index + 1;
         curByte = Bytecode[index];
@@ -305,7 +305,9 @@ def Decompile():
       # skip end of params marker
       index = index + 1;
 
-  print("\n");
+    decompiled += "]\n";
+
+  print(decompiled);
 
 # ******************************************************************************
 

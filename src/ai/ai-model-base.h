@@ -9,78 +9,6 @@
 #include "behaviour-tree.h"
 #include "bts-parser.h"
 
-enum class BTNodeType
-{
-  NONE = -1,
-  TREE,
-  SEL,
-  SEQ,
-  FAIL,
-  SUCC,
-  TASK,
-  COND
-};
-
-enum class AITasks
-{
-  NONE = -1,
-  IDLE,
-  MOVE_RND,
-  MOVE_SMART,
-  MOVE_AWAY,
-  ATTACK,
-  ATTACK_RANGED,
-  BREAK_STUFF,
-  PICK_ITEMS,
-  CHASE_PLAYER,
-  SAVE_PLAYER_POS,
-  GOTO_LAST_PLAYER_POS,
-  GOTO_LAST_MINED_POS,
-  MINE_TUNNEL,
-  MINE_BLOCK,
-  APPLY_EFFECT,
-  DRINK_POTION,
-  PRINT_MESSAGE,
-  END
-};
-
-enum class AIConditionFunctions
-{
-  NONE = -1,
-  D100,
-  PLAYER_VISIBLE,
-  PLAYER_CAN_MOVE,
-  PLAYER_IN_RANGE,
-  PLAYER_ENERGY,
-  PLAYER_NEXT_TURN,
-  HAS_EQUIPPED,
-  TURNS_LEFT,
-  HAS_EFFECT,
-  HP_LOW
-};
-
-enum class Comparers
-{
-  NONE = -1,
-  EQUAL,
-  GREATER_THAN,
-  LESS_THAN
-};
-
-enum class ActorType
-{
-  NONE = -1,
-  PLAYER,
-  SELF
-};
-
-enum class PotionPreference
-{
-  ANY = 0,
-  HP,
-  MP
-};
-
 class AIComponent;
 class Player;
 
@@ -108,7 +36,9 @@ class AIModelBase
     //
     // It will be traversed starting from root node
     // every AIModel::Update() call.
-    std::string _script;
+    std::string _scriptAsText;
+
+    std::vector<uint8_t> _scriptCompiled;
 
     BTSParser _aiReader;
 
@@ -134,84 +64,6 @@ class AIModelBase
     virtual void PrepareScript();
 
     void PrintBrains(Node* n, int indent);
-
-    const std::map<std::string, BTNodeType> _btNodeTypeByName =
-    {
-      { "TREE", BTNodeType::TREE },
-      { "SEQ",  BTNodeType::SEQ  },
-      { "SEL",  BTNodeType::SEL  },
-      { "SUCC", BTNodeType::SUCC },
-      { "FAIL", BTNodeType::FAIL },
-      { "COND", BTNodeType::COND },
-      { "TASK", BTNodeType::TASK },
-    };
-
-    const std::map<std::string, AITasks> _aiTasksByName =
-    {
-      { "idle",                 AITasks::IDLE                 },
-      { "move_rnd",             AITasks::MOVE_RND             },
-      { "move_smart",           AITasks::MOVE_SMART           },
-      { "move_away",            AITasks::MOVE_AWAY            },
-      { "attack",               AITasks::ATTACK               },
-      { "attack_ranged",        AITasks::ATTACK_RANGED        },
-      { "break_stuff",          AITasks::BREAK_STUFF          },
-      { "pick_items",           AITasks::PICK_ITEMS           },
-      { "chase_player",         AITasks::CHASE_PLAYER         },
-      { "save_player_pos",      AITasks::SAVE_PLAYER_POS      },
-      { "goto_last_player_pos", AITasks::GOTO_LAST_PLAYER_POS },
-      { "goto_last_mined_pos",  AITasks::GOTO_LAST_MINED_POS  },
-      { "mine_tunnel",          AITasks::MINE_TUNNEL          },
-      { "mine_block",           AITasks::MINE_BLOCK           },
-      { "apply_effect",         AITasks::APPLY_EFFECT         },
-      { "drink_potion",         AITasks::DRINK_POTION         },
-      { "print_message",        AITasks::PRINT_MESSAGE        },
-      { "end",                  AITasks::END                  }
-    };
-
-    const std::map<std::string, AIConditionFunctions> _cfByName =
-    {
-      { "d100",             AIConditionFunctions::D100             },
-      { "player_visible",   AIConditionFunctions::PLAYER_VISIBLE   },
-      { "player_can_move",  AIConditionFunctions::PLAYER_CAN_MOVE  },
-      { "player_in_range",  AIConditionFunctions::PLAYER_IN_RANGE  },
-      { "player_energy",    AIConditionFunctions::PLAYER_ENERGY    },
-      { "player_next_turn", AIConditionFunctions::PLAYER_NEXT_TURN },
-      { "turns_left",       AIConditionFunctions::TURNS_LEFT       },
-      { "has_effect",       AIConditionFunctions::HAS_EFFECT       },
-      { "has_equipped",     AIConditionFunctions::HAS_EQUIPPED     },
-      { "hp_low",           AIConditionFunctions::HP_LOW           }
-    };
-
-    const std::map<std::string, Comparers> _comparersByName =
-    {
-      { "eq", Comparers::EQUAL        },
-      { "gt", Comparers::GREATER_THAN },
-      { "lt", Comparers::LESS_THAN    }
-    };
-
-    const std::map<std::string, ActorType> _actorTypeByName =
-    {
-      { "player", ActorType::PLAYER },
-      { "self",   ActorType::SELF   }
-    };
-
-    const std::map<std::string, EquipmentCategory> _eqCategoryByName =
-    {
-      { "HEA", EquipmentCategory::HEAD   },
-      { "NCK", EquipmentCategory::NECK   },
-      { "TRS", EquipmentCategory::TORSO  },
-      { "BTS", EquipmentCategory::BOOTS  },
-      { "WPN", EquipmentCategory::WEAPON },
-      { "SLD", EquipmentCategory::SHIELD },
-      { "RNG", EquipmentCategory::RING   }
-    };
-
-    const std::map<std::string, PotionPreference> _potionPrefByName =
-    {
-      { "-",  PotionPreference::ANY },
-      { "HP", PotionPreference::HP  },
-      { "MP", PotionPreference::MP  }
-    };
 };
 
 #endif

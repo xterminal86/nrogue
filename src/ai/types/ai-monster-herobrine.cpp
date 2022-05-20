@@ -9,7 +9,8 @@ AIMonsterHerobrine::AIMonsterHerobrine()
 
 void AIMonsterHerobrine::PrepareScript()
 {
-  _script =
+  /*
+  _scriptAsText =
 R"(
 [TREE]
   [SEL]
@@ -18,4 +19,12 @@ R"(
     [TASK p1="chase_player"]
     [TASK p1="idle"]
 )";
+  */
+
+  _scriptCompiled =
+  {
+    0x00, 0x01, 0x02, 0x02, 0x04, 0x07, 0x7A, 0x01,
+    0xFF, 0x06, 0x06, 0x69, 0xFF, 0x04, 0x06, 0x6D,
+    0xFF, 0x04, 0x06, 0x65, 0xFF
+  };
 }

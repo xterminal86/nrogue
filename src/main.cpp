@@ -1,4 +1,5 @@
 #include "application.h"
+#include "bts-decompiler.h"
 #include "spells-processor.h"
 #include "game-objects-factory.h"
 #include "monsters-inc.h"
@@ -74,9 +75,13 @@ int main(int argc, char* argv[])
   Logger::Instance().Init();
   Logger::Instance().Prepare(printLog);
 
-  auto str = Util::StringFormat("World seed is %lu", RNG::Instance().Seed);
+#ifdef DEBUG_BUILD
+  auto str = Util::StringFormat("World seed is 0x%lX", RNG::Instance().Seed);
   DebugLog("%s\n\n", str.data());
   Logger::Instance().Print(str);
+#endif
+
+  BTSDecompiler::Instance().Init();
 
   GameObjectsFactory::Instance().Init();
   ItemsFactory::Instance().Init();

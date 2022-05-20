@@ -7,7 +7,7 @@
 #include "player.h"
 
 TaskDrinkPotion::TaskDrinkPotion(GameObject* objectToControl,
-                                 PotionPreference ref)
+                                 ScriptParamNames ref)
   : Node(objectToControl)
 {
   _potionPref = ref;
@@ -25,15 +25,15 @@ BTResult TaskDrinkPotion::Run()
 
   switch (_potionPref)
   {
-    case PotionPreference::HP:
+    case ScriptParamNames::HP:
       itemIndex = FindPotionHP();
       break;
 
-    case PotionPreference::MP:
+    case ScriptParamNames::MP:
       itemIndex = FindPotionMP();
       break;
 
-    case PotionPreference::ANY:
+    case ScriptParamNames::ANY:
       itemIndex = FindPotionAny();
       break;
   }

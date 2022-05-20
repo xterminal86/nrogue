@@ -874,6 +874,81 @@ namespace GlobalConstants
     { ItemBonusType::POISONED,     "Psd" }
   };
 
+  const std::map<std::string, ScriptTaskNames> BTSTaskNamesByName =
+  {
+    { "TREE", ScriptTaskNames::TREE },
+    { "SEL",  ScriptTaskNames::SEL  },
+    { "SEQ",  ScriptTaskNames::SEQ  },
+    { "FAIL", ScriptTaskNames::FAIL },
+    { "SUCC", ScriptTaskNames::SUCC },
+    { "TASK", ScriptTaskNames::TASK },
+    { "COND", ScriptTaskNames::COND }
+  };
+
+  const std::map<std::string, ScriptParamNames> BTSParamNamesByName =
+  {
+    { "idle",                 ScriptParamNames::IDLE                 },
+    { "move_rnd",             ScriptParamNames::MOVE_RND             },
+    { "move_smart",           ScriptParamNames::MOVE_SMART           },
+    { "move_away",            ScriptParamNames::MOVE_AWAY            },
+    { "attack",               ScriptParamNames::ATTACK               },
+    { "attack_ranged",        ScriptParamNames::ATTACK_RANGED        },
+    { "break_stuff",          ScriptParamNames::BREAK_STUFF          },
+    { "pick_items",           ScriptParamNames::PICK_ITEMS           },
+    { "chase_player",         ScriptParamNames::CHASE_PLAYER         },
+    { "save_player_pos",      ScriptParamNames::SAVE_PLAYER_POS      },
+    { "goto_last_player_pos", ScriptParamNames::GOTO_LAST_PLAYER_POS },
+    { "goto_last_mined_pos",  ScriptParamNames::GOTO_LAST_MINED_POS  },
+    { "mine_tunnel",          ScriptParamNames::MINE_TUNNEL          },
+    { "mine_block",           ScriptParamNames::MINE_BLOCK           },
+    { "apply_effect",         ScriptParamNames::APPLY_EFFECT         },
+    { "drink_potion",         ScriptParamNames::DRINK_POTION         },
+    { "print_message",        ScriptParamNames::PRINT_MESSAGE        },
+    { "end",                  ScriptParamNames::END                  },
+    { "d100",                 ScriptParamNames::D100                 },
+    { "player_visible",       ScriptParamNames::PLAYER_VISIBLE       },
+    { "player_can_move",      ScriptParamNames::PLAYER_CAN_MOVE      },
+    { "player_in_range",      ScriptParamNames::PLAYER_IN_RANGE      },
+    { "player_energy",        ScriptParamNames::PLAYER_ENERGY        },
+    { "player_next_turn",     ScriptParamNames::PLAYER_NEXT_TURN     },
+    { "turns_left",           ScriptParamNames::TURNS_LEFT           },
+    { "has_effect",           ScriptParamNames::HAS_EFFECT           },
+    { "has_equipped",         ScriptParamNames::HAS_EQUIPPED         },
+    { "hp_low",               ScriptParamNames::HP_LOW               },
+    { "eq",                   ScriptParamNames::EQ                   },
+    { "gt",                   ScriptParamNames::GT                   },
+    { "lt",                   ScriptParamNames::LT                   },
+    { "player",               ScriptParamNames::PLAYER               },
+    { "self",                 ScriptParamNames::SELF                 },
+    { "HEA",                  ScriptParamNames::HEA                  },
+    { "NCK",                  ScriptParamNames::NCK                  },
+    { "TRS",                  ScriptParamNames::TRS                  },
+    { "BTS",                  ScriptParamNames::BTS                  },
+    { "MAG",                  ScriptParamNames::MAG                  },
+    { "WPN",                  ScriptParamNames::WPN                  },
+    { "SLD",                  ScriptParamNames::SLD                  },
+    { "RNG",                  ScriptParamNames::RNG                  },
+    { "-",                    ScriptParamNames::ANY                  },
+    { "HP",                   ScriptParamNames::HP                   },
+    { "MP",                   ScriptParamNames::MP                   },
+    { "Hid",                  ScriptParamNames::HID                  },
+    { "Shi",                  ScriptParamNames::SHI                  },
+    { "Reg",                  ScriptParamNames::REG                  },
+    { "Ref",                  ScriptParamNames::REF                  },
+    { "PAb",                  ScriptParamNames::PAB                  },
+    { "MAb",                  ScriptParamNames::MAB                  },
+    { "Ths",                  ScriptParamNames::THS                  },
+    { "Par",                  ScriptParamNames::PAR                  },
+    { "Tel",                  ScriptParamNames::TEL                  },
+    { "Fly",                  ScriptParamNames::FLY                  },
+    { "Bli",                  ScriptParamNames::BLI                  },
+    { "Frz",                  ScriptParamNames::FRZ                  },
+    { "Bur",                  ScriptParamNames::BUR                  },
+    { "Lgt",                  ScriptParamNames::LGT                  },
+    { "Psd",                  ScriptParamNames::PSD                  },
+    { "nop",                  ScriptParamNames::NOP                  },
+  };
+
   const std::vector<std::vector<std::string>> DungeonRooms =
   {
     // 0
