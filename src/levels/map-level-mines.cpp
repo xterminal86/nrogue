@@ -555,6 +555,11 @@ void MapLevelMines::CreateSpecialLevel()
 
           GameObject* boss = MonstersInc::Instance().CreateMonster(posX, posY, GameObjectType::HEROBRINE);
 
+          boss->OnDestroy = [this](GameObject* go)
+          {
+            StaticMapObjects[2][2].reset();
+          };
+
           ContainerComponent* cc = boss->GetComponent<ContainerComponent>();
           cc->Add(key);
 

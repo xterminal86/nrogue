@@ -274,11 +274,9 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
 
 int MapLevelBase::GetEstimatedNumberOfItemsToCreate()
 {
-  // log_2(n) = log_e(n) / log_e(2)
-
-  double count = std::log(EmptyCells().size()) / std::log(2);
+  double count = Util::Log2(EmptyCells().size());
   int itemsToCreate = static_cast<int>(std::ceil(count));
-  itemsToCreate = RNG::Instance().RandomRange(itemsToCreate / 2, itemsToCreate);
+  itemsToCreate = RNG::Instance().RandomRange(1, (itemsToCreate / 2) + 1);
 
   return itemsToCreate;
 }
@@ -347,7 +345,7 @@ void MapLevelBase::PlaceStairs()
 
 void MapLevelBase::CreateInitialMonsters()
 {
-  MaxMonsters = (size_t)std::ceil(std::log(_emptyCells.size()));
+  MaxMonsters = (size_t)std::ceil(Util::Log2(_emptyCells.size()));
 
   // FIXME: debug
   //MaxMonsters = 1;

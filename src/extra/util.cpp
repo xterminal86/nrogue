@@ -500,6 +500,14 @@ namespace Util
     return LinearDistance(s.X, s.Y, e.X, e.Y);
   }
 
+  double Log2(uint64_t n)
+  {
+    //
+    // log_2(n) = log_e(n) / log_e(2)
+    //
+    return (std::log(n) / std::log(2));
+  }
+
   std::vector<Position> GetEightPointsAround(const Position& pos, const Position& mapSize)
   {
     std::vector<Position> result;
