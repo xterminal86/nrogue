@@ -246,7 +246,14 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
     case AITasks::DRINK_POTION:
     {
       std::string type = data->Params.at("p2");
-      task = new TaskDrinkPotion(AIComponentRef->OwnerGameObject, type);
+
+      PotionPreference ref = PotionPreference::ANY;
+      if (_potionPrefByName.count(type) == 1)
+      {
+        ref = _potionPrefByName.at(type);
+      }
+
+      task = new TaskDrinkPotion(AIComponentRef->OwnerGameObject, ref);
     }
     break;
 
@@ -371,17 +378,26 @@ std::function<BTResult()> AIModelBase::GetPlayerEnergyCF(const ScriptNode* data)
 
     bool res = false;
 
-    if (compType == "gt")
+    Comparers comp = Comparers::NONE;
+
+    if (_comparersByName.count(compType) == 1)
     {
-      res = (energy >= compareWith);
+      comp = _comparersByName.at(compType);
     }
-    else if (compType == "lt")
+
+    switch (comp)
     {
-      res = (energy <= compareWith);
-    }
-    else if (compType == "eq")
-    {
-      res = (energy == compareWith);
+      case Comparers::GREATER_THAN:
+        res = (energy >= compareWith);
+        break;
+
+      case Comparers::LESS_THAN:
+        res = (energy <= compareWith);
+        break;
+
+      case Comparers::EQUAL:
+        res = (energy == compareWith);
+        break;
     }
 
     return res ? BTResult::Success : BTResult::Failure;
@@ -530,9 +546,13 @@ std::function<BTResult()> AIModelBase::GetHasEffectCF(const ScriptNode* data)
   std::string who = data->Params.at("p2");
   std::string effect = data->Params.at("p3");
 
-  auto fn = [this, who, effect]()
+  ActorType at = (who == "player")
+                ? ActorType::PLAYER
+                : ActorType::SELF;
+
+  auto fn = [this, at, effect]()
   {
-    bool res = (who == "player")
+    bool res = (at == ActorType::PLAYER)
                ? _playerRef->HasEffect(_bonusTypeByDisplayName.at(effect))
                : AIComponentRef->OwnerGameObject->HasEffect(_bonusTypeByDisplayName.at(effect));
 

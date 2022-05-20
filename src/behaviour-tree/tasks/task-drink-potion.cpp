@@ -7,18 +7,10 @@
 #include "player.h"
 
 TaskDrinkPotion::TaskDrinkPotion(GameObject* objectToControl,
-                                 const std::string& potionPref)
+                                 PotionPreference ref)
   : Node(objectToControl)
 {
-  if (_potionPrefByName.count(potionPref) == 0)
-  {
-    _potionPref = PotionPreference::ANY;
-  }
-  else
-  {
-    _potionPref = _potionPrefByName.at(potionPref);
-  }
-
+  _potionPref = ref;
   _inventoryRef = _objectToControl->GetComponent<ContainerComponent>();
 }
 

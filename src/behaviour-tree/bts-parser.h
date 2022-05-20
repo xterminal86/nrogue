@@ -27,6 +27,7 @@ class BTSParser
     void Reset();
     void ParseFromString(const std::string& script);
     void ParseFromFile(const std::string& filename);
+    void Decompile(const std::vector<uint8_t>& script);
     void Print();
 
     const std::vector<ScriptNode>& ParsedData();
@@ -52,6 +53,8 @@ class BTSParser
     ConstructionOrder _constructionOrder;
 
     GameObject* _goRef;
+
+    std::map<std::string, uint8_t> _paramCodesByName;
 };
 
 #endif // BTSPARSER_H

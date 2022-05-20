@@ -13,12 +13,12 @@ enum class BTNodeType
 {
   NONE = -1,
   TREE,
-  SEQ,
   SEL,
-  SUCC,
+  SEQ,
   FAIL,
-  COND,
-  TASK
+  SUCC,
+  TASK,
+  COND
 };
 
 enum class AITasks
@@ -57,6 +57,28 @@ enum class AIConditionFunctions
   TURNS_LEFT,
   HAS_EFFECT,
   HP_LOW
+};
+
+enum class Comparers
+{
+  NONE = -1,
+  EQUAL,
+  GREATER_THAN,
+  LESS_THAN
+};
+
+enum class ActorType
+{
+  NONE = -1,
+  PLAYER,
+  SELF
+};
+
+enum class PotionPreference
+{
+  ANY = 0,
+  HP,
+  MP
 };
 
 class AIComponent;
@@ -160,6 +182,19 @@ class AIModelBase
       { "hp_low",           AIConditionFunctions::HP_LOW           }
     };
 
+    const std::map<std::string, Comparers> _comparersByName =
+    {
+      { "eq", Comparers::EQUAL        },
+      { "gt", Comparers::GREATER_THAN },
+      { "lt", Comparers::LESS_THAN    }
+    };
+
+    const std::map<std::string, ActorType> _actorTypeByName =
+    {
+      { "player", ActorType::PLAYER },
+      { "self",   ActorType::SELF   }
+    };
+
     const std::map<std::string, EquipmentCategory> _eqCategoryByName =
     {
       { "HEA", EquipmentCategory::HEAD   },
@@ -169,6 +204,13 @@ class AIModelBase
       { "WPN", EquipmentCategory::WEAPON },
       { "SLD", EquipmentCategory::SHIELD },
       { "RNG", EquipmentCategory::RING   }
+    };
+
+    const std::map<std::string, PotionPreference> _potionPrefByName =
+    {
+      { "-",  PotionPreference::ANY },
+      { "HP", PotionPreference::HP  },
+      { "MP", PotionPreference::MP  }
     };
 };
 
