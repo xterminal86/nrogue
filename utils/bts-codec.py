@@ -1,6 +1,11 @@
 #!/usr/bin/python
 # coding = utf8
 
+#
+# BTS scripts compiler / decompiler
+#
+# by xterminal86 21.05.2022
+#
 import sys;
 
 ShouldWriteToFile = False;
@@ -26,8 +31,8 @@ TaskNames = [
 OpcodesByName = {};
 ParamCodesByName = {};
 
-# Look this up in ai-model-base.h
-# and Constants::BonusDisplayNameByType
+# Look this up in constants.cpp
+# (BTSTaskNamesByName and BTSParamNamesByName)
 ParamNames = [
   "idle"                ,
   "move_rnd"            ,
@@ -312,7 +317,7 @@ def Decompile():
 # ******************************************************************************
 
 def PrintUsage(progName):
-  print("Usage: {0} c|d [WRITE_TO_FILE] < INPUTFILE".format(progName));
+  print("Usage: {0} c|d [WRITE_TO_FILE] < stdin".format(progName));
 
 if __name__ == "__main__":
   if len(sys.argv) < 2:
