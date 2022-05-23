@@ -32,8 +32,6 @@ void MonstersInc::InitSpecific()
 //
 GameObject* MonstersInc::CreateMonster(int x, int y, GameObjectType monsterType)
 {
-  // FIXME: monsters stats are too unbalanced: they become too op very fast.
-  // Change them to talents based, like player?
   GameObject* go = nullptr;
 
   switch (monsterType)
@@ -800,17 +798,14 @@ GameObject* MonstersInc::CreateWraith(int x, int y)
 
   go->MoveTo(x, y);
 
-  go->Attrs.Spd.Talents = 1;
-  go->Attrs.Skl.Talents = 3;
-
   int difficulty = GetDifficulty();
 
   for (int i = 0; i < difficulty; i++)
   {
-    go->LevelUp(1);
+    go->LevelUp();
   }
 
-  go->Attrs.Str.Reset();
+  go->Attrs.ResetStats();
 
   go->Attrs.HP.Reset(1);
 
@@ -828,8 +823,6 @@ GameObject* MonstersInc::CreateWraith(int x, int y)
 
   go->AddEffect(inv);
   go->AddEffect(fly);
-
-  // TODO: add proper AI model
 
   // ===========================================================================
   AIComponent* ai = go->AddComponent<AIComponent>();

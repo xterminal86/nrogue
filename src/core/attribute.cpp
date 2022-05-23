@@ -63,7 +63,7 @@ void Attribute::Add(int value)
   _originalValue += value;
 }
 
-// *******************************************************
+// *****************************************************************************
 
 void RangedAttribute::Reset(int initialValue)
 {
@@ -147,7 +147,7 @@ bool RangedAttribute::IsFull()
   return (_min.Get() == _max.Get());
 }
 
-// *******************************************************
+// *****************************************************************************
 
 Attributes::Attributes()
 {
@@ -166,4 +166,12 @@ int Attributes::Rating()
   rating += Spd.Get();
 
   return rating;
+}
+
+void Attributes::ResetStats()
+{
+  for (auto& kvp : _attrsMap)
+  {
+    kvp.second.Reset();
+  }
 }

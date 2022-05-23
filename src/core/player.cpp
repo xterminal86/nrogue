@@ -1325,6 +1325,14 @@ void Player::ProcessEffectsPlayer()
 
 void Player::ProcessStarvation()
 {
+  //
+  // No starving in town
+  //
+  if (Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
+  {
+    return;
+  }
+
   if (IsStarving)
   {
     _starvingTimeout++;

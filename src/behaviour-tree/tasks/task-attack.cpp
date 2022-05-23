@@ -105,6 +105,7 @@ BTResult TaskAttack::Run()
       auto attRes = AttackUnarmed({ 2, 4 });
       if (attRes.first)
       {
+        Printer::Instance().AddMessage("Your lifeforce is being drained!");
         _playerRef->AwardExperience(-attRes.second);
       }
     }

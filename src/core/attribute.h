@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <vector>
 #include <cstdint>
+#include <map>
 
 struct Attribute
 {
@@ -80,6 +81,19 @@ struct Attributes
   bool Indestructible = true;
 
   int Rating();
+
+  void ResetStats();
+
+  private:
+    std::map<int, Attribute&> _attrsMap =
+    {
+      { 1, Str },
+      { 2, Def },
+      { 3, Mag },
+      { 4, Res },
+      { 5, Skl },
+      { 6, Spd },
+    };
 };
 
 #endif // ATTRIBUTE_H
