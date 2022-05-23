@@ -22,7 +22,7 @@ class InteractInputState : public GameState
 
     bool SetDir(const Position& dir);
 
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 
     Position _cursorPosition;
 };

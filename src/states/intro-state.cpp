@@ -89,7 +89,11 @@ void IntroState::Update(bool forceUpdate)
                                     _introStrings[textIndex][_stringIndex][_textPositionCursor],
                                     Colors::WhiteColor);
 
-        Printer::Instance().PrintFB(_textPositionX - len / 2 + 1, _textPositionY, ' ', Colors::BlackColor, Colors::WhiteColor);
+        Printer::Instance().PrintFB(_textPositionX - len / 2 + 1,
+                                    _textPositionY,
+                                    ' ',
+                                    Colors::BlackColor,
+                                    Colors::WhiteColor);
 
         _textPositionX++;
 
@@ -97,7 +101,10 @@ void IntroState::Update(bool forceUpdate)
       }
       else
       {
-        Printer::Instance().PrintFB(_textPositionX - len / 2, _textPositionY, ' ', Colors::BlackColor);
+        Printer::Instance().PrintFB(_textPositionX - len / 2,
+                                    _textPositionY,
+                                    ' ',
+                                    Colors::BlackColor);
 
         _textPositionCursor = 0;
 
@@ -109,7 +116,11 @@ void IntroState::Update(bool forceUpdate)
     }
     else
     {
-      Printer::Instance().PrintFB(_twHalf, Printer::TerminalHeight - 1, "Press 'Enter' to continue", Printer::kAlignCenter, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_twHalf,
+                                  Printer::TerminalHeight - 1,
+                                  "Press 'Enter' to continue",
+                                  Printer::kAlignCenter,
+                                  Colors::WhiteColor);
     }
 
     Printer::Instance().Render();

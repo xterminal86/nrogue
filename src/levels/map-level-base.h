@@ -109,7 +109,7 @@ class MapLevelBase
 
     StringsArray2D _specialLevel;
 
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 
     int _respawnCounter = 0;
 

@@ -42,13 +42,13 @@ void AIModelBase::ConstructAI()
   if (!_scriptCompiled.empty())
   {
     _scriptAsText = BTSDecompiler::Instance().Decompile(_scriptCompiled);
+    _scriptCompiled = std::vector<uint8_t>();
   }
 
   _aiReader.Init(AIComponentRef->OwnerGameObject);
   _aiReader.ParseFromString(_scriptAsText);
   _aiReader.FormTree();
 
-  _scriptCompiled = std::vector<uint8_t>();
   _scriptAsText = std::string();
 
   std::map<const ScriptNode*, bool> scriptNodesChecked;

@@ -40,9 +40,9 @@ class EquipmentComponent : public Component
 
     bool IsThisPlayer();
 
-    ContainerComponent* _inventory;
+    ContainerComponent* _inventory = nullptr;
 
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 };
 
 #endif // EQUIPMENTCOMPONENT_H

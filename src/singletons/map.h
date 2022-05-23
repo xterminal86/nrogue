@@ -79,7 +79,7 @@ class Map : public Singleton<Map>
     int CountAroundStatic(int x, int y, GameObjectType type);
     int CountWallsOrthogonal(int x, int y);
 
-    MapLevelBase* CurrentLevel;
+    MapLevelBase* CurrentLevel = nullptr;
 
     template <typename Collection>
     GameObject* FindInVV(const Collection& c,
@@ -136,7 +136,7 @@ class Map : public Singleton<Map>
     void RemoveStaticObjects();
     void EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list);
 
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 
     Position _windowSize;
 

@@ -9,7 +9,6 @@ AIMonsterShelob::AIMonsterShelob()
 
 void AIMonsterShelob::PrepareScript()
 {
-  /*
   _scriptAsText =
 R"(
 [TREE]
@@ -35,8 +34,8 @@ R"(
     [TASK p1="move_rnd"]
     [TASK p1="idle"]
 )";
-  */
 
+  /*
   _scriptCompiled =
   {
     0x00, 0x01, 0x02, 0x02, 0x04, 0x07, 0x7A, 0xFF,
@@ -51,4 +50,5 @@ R"(
     0x06, 0x6F, 0xFF, 0x04, 0x06, 0x66, 0xFF, 0x04,
     0x06, 0x65, 0xFF
   };
+  */
 }

@@ -120,7 +120,11 @@ std::string EndgameState::UpdateBar(int x, int y, RangedAttribute& attr)
 
   bar += "]";
 
-  Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(x,
+                              y,
+                              bar,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor);
 
   return bar;
 }

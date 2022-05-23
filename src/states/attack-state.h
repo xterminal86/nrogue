@@ -15,7 +15,7 @@ class AttackState : public GameState
     void Update(bool forceUpdate = false) override;
 
   private:
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 
     Position _cursorPosition;
     Position _dir;

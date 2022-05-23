@@ -25,7 +25,7 @@ class PickupItemState : public SelectItemStateBase
 
     void RebuildDisplayList();
 
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 
     Items _itemsList;
 

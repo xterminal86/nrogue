@@ -50,7 +50,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     void InitSpecific() override;
 
   private:
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 };
 
 #endif // GAMEOBJECTSFACTORY_H

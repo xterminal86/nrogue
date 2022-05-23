@@ -151,8 +151,16 @@ void NPCInteractState::AnimateText()
 
   auto line = _blockToPrint[_currentLine];
 
-  Printer::Instance().PrintFB(_charPos + 1, _currentLine + 2, ' ',  Colors::BlackColor, Colors::WhiteColor);
-  Printer::Instance().PrintFB(_charPos, _currentLine + 2, line[_textBlockCharIndex], Colors::WhiteColor);
+  Printer::Instance().PrintFB(_charPos + 1,
+                              _currentLine + 2,
+                              ' ',
+                              Colors::BlackColor,
+                              Colors::WhiteColor);
+
+  Printer::Instance().PrintFB(_charPos,
+                              _currentLine + 2,
+                              line[_textBlockCharIndex],
+                              Colors::WhiteColor);
 
   Printer::Instance().Render();
 
@@ -161,7 +169,10 @@ void NPCInteractState::AnimateText()
 
   if (_textBlockCharIndex >= line.length())
   {
-    Printer::Instance().PrintFB(_charPos, _currentLine + 2, ' ', Colors::BlackColor);
+    Printer::Instance().PrintFB(_charPos,
+                                _currentLine + 2,
+                                ' ',
+                                Colors::BlackColor);
     _charPos = _textStartPosX;
     _textBlockCharIndex = 0;
     _currentLine++;
@@ -183,7 +194,11 @@ void NPCInteractState::DisplayStillText()
   int yPos = 2;
   for (auto& l : _blockToPrint)
   {
-    Printer::Instance().PrintFB(_textStartPosX, yPos, l, Printer::kAlignLeft, Colors::WhiteColor);
+    Printer::Instance().PrintFB(_textStartPosX,
+                                yPos,
+                                l,
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
     yPos++;
   }
 
@@ -221,7 +236,11 @@ void NPCInteractState::PrintFooter()
 
   if (_textPrinting)
   {
-    Printer::Instance().PrintFB(tw / 2, th - 1, "Listening...", Printer::kAlignCenter, Colors::WhiteColor);
+    Printer::Instance().PrintFB(tw / 2,
+                                th - 1,
+                                "Listening...",
+                                Printer::kAlignCenter,
+                                Colors::WhiteColor);
     return;
   }
 

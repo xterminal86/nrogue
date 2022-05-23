@@ -1662,7 +1662,9 @@ GameObject* ItemsFactory::CreateAccessory(int x, int y,
   return go;
 }
 
-GameObject* ItemsFactory::CreateRandomItem(int x, int y, ItemType exclude)
+GameObject* ItemsFactory::CreateRandomItem(int x,
+                                           int y,
+                                           const std::vector<ItemType>& itemsToExclude)
 {
   GameObject* go = nullptr;
 
@@ -1683,11 +1685,14 @@ GameObject* ItemsFactory::CreateRandomItem(int x, int y, ItemType exclude)
     ItemType::SPELLBOOK
   };
 
-  auto findRes = std::find(possibleItems.begin(), possibleItems.end(), exclude);
-
-  if (findRes != possibleItems.end())
+  for (auto& item : itemsToExclude)
   {
-    possibleItems.erase(findRes);
+    auto findRes = std::find(possibleItems.begin(), possibleItems.end(), item);
+
+    if (findRes != possibleItems.end())
+    {
+      possibleItems.erase(findRes);
+    }
   }
 
   std::map<FoodType, int> foodMap =

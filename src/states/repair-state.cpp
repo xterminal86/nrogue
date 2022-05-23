@@ -74,7 +74,11 @@ void RepairState::DrawSpecific()
         str = Util::StringFormat(R"('%c' - %s (??/??))", c, name.data());
       }
 
-      Printer::Instance().PrintFB(1, 2 + itemIndex, str, Printer::kAlignLeft, Colors::WhiteColor);
+      Printer::Instance().PrintFB(1,
+                                  2 + itemIndex,
+                                  str,
+                                  Printer::kAlignLeft,
+                                  Colors::WhiteColor);
 
       _itemRefByChar[c] = ic;
 

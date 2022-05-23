@@ -81,7 +81,11 @@ void InfoState::Update(bool forceUpdate)
     std::string title = Util::StringFormat("%s the %s",
                                            _playerRef->Name.data(),
                                            _playerRef->GetClassName().data());
-    Printer::Instance().PrintFB(1, 0, title, Printer::kAlignLeft, Colors::WhiteColor);
+    Printer::Instance().PrintFB(1,
+                                0,
+                                title,
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
 
     int charToPrint = 0;
 
@@ -93,8 +97,15 @@ void InfoState::Update(bool forceUpdate)
 
     for (int i = 0; i < kMaxNameUnderscoreLength; i++)
     {
-      Printer::Instance().PrintFB(i, 1, charToPrint, Colors::WhiteColor);
-      Printer::Instance().PrintFB(i, yPos + 12, charToPrint, Colors::WhiteColor);
+      Printer::Instance().PrintFB(i,
+                                  1,
+                                  charToPrint,
+                                  Colors::WhiteColor);
+
+      Printer::Instance().PrintFB(i,
+                                  yPos + 12,
+                                  charToPrint,
+                                  Colors::WhiteColor);
     }
 
     #ifdef USE_SDL
@@ -105,7 +116,10 @@ void InfoState::Update(bool forceUpdate)
 
     for (int y = 0; y < _th; y++)
     {
-      Printer::Instance().PrintFB(kMaxNameUnderscoreLength, y, charToPrint, Colors::WhiteColor);
+      Printer::Instance().PrintFB(kMaxNameUnderscoreLength,
+                                  y,
+                                  charToPrint,
+                                  Colors::WhiteColor);
     }
 
     PrintAttribute(1, yPos, "LVL", _playerRef->Attrs.Lvl);
@@ -195,27 +209,57 @@ void InfoState::DrawScrollBars()
     if (_scrollIndex == 0)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1,
+                                  _th - 1,
+                                  (int)NameCP437::DARROW_2,
+                                  Colors::WhiteColor);
       #else
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1,
+                                  _th - 1,
+                                  "\\/",
+                                  Printer::kAlignRight,
+                                  Colors::WhiteColor);
       #endif
     }
     else if (_scrollLimitReached)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1, 0, (int)NameCP437::UARROW_2, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1,
+                                  0,
+                                  (int)NameCP437::UARROW_2,
+                                  Colors::WhiteColor);
       #else
-      Printer::Instance().PrintFB(_tw - 1, 0, "/\\", Printer::kAlignRight, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1,
+                                  0,
+                                  "/\\",
+                                  Printer::kAlignRight,
+                                  Colors::WhiteColor);
       #endif
     }
     else
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1, 0, (int)NameCP437::UARROW_2, Colors::WhiteColor);
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, (int)NameCP437::DARROW_2, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1,
+                                  0,
+                                  (int)NameCP437::UARROW_2,
+                                  Colors::WhiteColor);
+
+      Printer::Instance().PrintFB(_tw - 1,
+                                  _th - 1,
+                                  (int)NameCP437::DARROW_2,
+                                  Colors::WhiteColor);
       #else
-      Printer::Instance().PrintFB(_tw - 1, 0, "/\\", Printer::kAlignRight, Colors::WhiteColor);
-      Printer::Instance().PrintFB(_tw - 1, _th - 1, "\\/", Printer::kAlignRight, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw - 1,
+                                  0,
+                                  "/\\",
+                                  Printer::kAlignRight,
+                                  Colors::WhiteColor);
+
+      Printer::Instance().PrintFB(_tw - 1,
+                                  _th - 1,
+                                  "\\/",
+                                  Printer::kAlignRight,
+                                  Colors::WhiteColor);
       #endif
     }
   }
@@ -236,18 +280,32 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
   }
 
   std::string attrPlaceholder = Util::StringFormat("%s:...", attrName.data());
-  Printer::Instance().PrintFB(x, y, attrPlaceholder, Printer::kAlignLeft, Colors::ShadesOfGrey::Five);
+  Printer::Instance().PrintFB(x,
+                              y,
+                              attrPlaceholder,
+                              Printer::kAlignLeft,
+                              Colors::ShadesOfGrey::Five);
 
   std::string text = Util::StringFormat("%i", attr.Get());
 
-  Printer::Instance().PrintFB(x + attrPlaceholder.length() - text.length(), y, text, Printer::kAlignLeft, color);
+  Printer::Instance().PrintFB(x + attrPlaceholder.length() - text.length(),
+                              y,
+                              text,
+                              Printer::kAlignLeft,
+                              color);
 
   //text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
   //Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
 
+  //
   // Replace stat name back with white color (kinda hack)
+  //
   auto str = Util::StringFormat("%s:", attrName.data());
-  Printer::Instance().PrintFB(x, y, str, Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(x,
+                              y,
+                              str,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor);
 }
 
 void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, RangedAttribute& attr)
@@ -265,7 +323,11 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
   }
 
   std::string placeholder = Util::StringFormat("%s: ... / ...", attrName.data());
-  Printer::Instance().PrintFB(x, y, placeholder, Printer::kAlignLeft, Colors::ShadesOfGrey::Five);
+  Printer::Instance().PrintFB(x,
+                              y,
+                              placeholder,
+                              Printer::kAlignLeft,
+                              Colors::ShadesOfGrey::Five);
 
   //std::string text = Util::StringFormat("%s: %i / %i", attrName.data(), attr.Min().Get(), attr.Max().Get());
   //Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
@@ -273,13 +335,31 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
   std::string minVal = Util::StringFormat("%i", attr.Min().Get());
   std::string maxVal = Util::StringFormat("%i", attr.Max().Get());
 
-  Printer::Instance().PrintFB(x + placeholder.length() - 6 - minVal.length(), y, minVal, Printer::kAlignLeft, color);
-  Printer::Instance().PrintFB(x + placeholder.length() - 3, y, maxVal, Printer::kAlignLeft, color);
-  Printer::Instance().PrintFB(x + placeholder.length() - 5, y, '/', Colors::WhiteColor);
+  int xPos = x + placeholder.length() - 6 - minVal.length();
+  Printer::Instance().PrintFB(xPos,
+                              y,
+                              minVal,
+                              Printer::kAlignLeft,
+                              color);
+
+  Printer::Instance().PrintFB(x + placeholder.length() - 3,
+                              y,
+                              maxVal,
+                              Printer::kAlignLeft,
+                              color);
+
+  Printer::Instance().PrintFB(x + placeholder.length() - 5,
+                              y,
+                              '/',
+                              Colors::WhiteColor);
 
   // Replace stat name back with white color (kinda hack)
   auto str = Util::StringFormat("%s:", attrName.data());
-  Printer::Instance().PrintFB(x, y, str, Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(x,
+                              y,
+                              str,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor);
 }
 
 void InfoState::PrintModifiers(int x, int y)
@@ -296,22 +376,46 @@ void InfoState::PrintModifiers(int x, int y)
   std::pair<std::string, std::string> res;
 
   res = GetModifierString(strMod);
-  Printer::Instance().PrintFB(x, y, res.second, Printer::kAlignLeft, res.first);
+  Printer::Instance().PrintFB(x,
+                              y,
+                              res.second,
+                              Printer::kAlignLeft,
+                              res.first);
 
   res = GetModifierString(defMod);
-  Printer::Instance().PrintFB(x, y + 1, res.second, Printer::kAlignLeft, res.first);
+  Printer::Instance().PrintFB(x,
+                              y + 1,
+                              res.second,
+                              Printer::kAlignLeft,
+                              res.first);
 
   res = GetModifierString(magMod);
-  Printer::Instance().PrintFB(x, y + 2, res.second, Printer::kAlignLeft, res.first);
+  Printer::Instance().PrintFB(x,
+                              y + 2,
+                              res.second,
+                              Printer::kAlignLeft,
+                              res.first);
 
   res = GetModifierString(resMod);
-  Printer::Instance().PrintFB(x, y + 3, res.second, Printer::kAlignLeft, res.first);
+  Printer::Instance().PrintFB(x,
+                              y + 3,
+                              res.second,
+                              Printer::kAlignLeft,
+                              res.first);
 
   res = GetModifierString(sklMod);
-  Printer::Instance().PrintFB(x, y + 4, res.second, Printer::kAlignLeft, res.first);
+  Printer::Instance().PrintFB(x,
+                              y + 4,
+                              res.second,
+                              Printer::kAlignLeft,
+                              res.first);
 
   res = GetModifierString(spdMod);
-  Printer::Instance().PrintFB(x, y + 5, res.second, Printer::kAlignLeft, res.first);
+  Printer::Instance().PrintFB(x,
+                              y + 5,
+                              res.second,
+                              Printer::kAlignLeft,
+                              res.first);
 }
 
 std::pair<std::string, std::string> InfoState::GetModifierString(int value)

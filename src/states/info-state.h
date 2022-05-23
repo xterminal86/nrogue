@@ -31,7 +31,7 @@ class InfoState : public GameState
 
     size_t _scrollIndex = 0;
 
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 
     bool _scrollLimitReached = false;
 };

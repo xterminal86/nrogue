@@ -45,7 +45,7 @@ class PotentialField
 
     Position _fieldOrigin;
 
-    GameObject* _owner;
+    GameObject* _owner = nullptr;
 
     void LookAround(const Position& mapPos, std::queue<Position>& cellsToVisit);
 

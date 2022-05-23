@@ -53,8 +53,8 @@ class TaskAttackRanged : public Node
                            bool againstRes);
 
     char _projectile;
-    RangedAttackType _attackType;
-    SpellType _spellType;
+    RangedAttackType _attackType = RangedAttackType::UNDEFINED;
+    SpellType _spellType = SpellType::NONE;
     std::string _fgColor;
     std::string _bgColor;
 

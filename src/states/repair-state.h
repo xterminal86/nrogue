@@ -20,7 +20,7 @@ class RepairState : public SelectItemStateBase
     void ProcessInput() final;
 
   private:
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 
     ItemComponent* _repairKit;
     int _inventoryIndex = 0;

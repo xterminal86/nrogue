@@ -20,7 +20,7 @@ class InventoryState : public GameState
     const int kEquipmentMaxNameLength = 10;
 
   private:
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 
     void PrintFooter();
     void DestroyInventoryItem();

@@ -231,10 +231,10 @@ void MainState::Update(bool forceUpdate)
     }
 
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
-                                 0,
-                                 Map::Instance().CurrentLevel->LevelName,
-                                 Printer::kAlignRight,
-                                 Colors::WhiteColor);
+                                0,
+                                Map::Instance().CurrentLevel->LevelName,
+                                Printer::kAlignRight,
+                                Colors::WhiteColor);
 
     #ifdef DEBUG_BUILD
     PrintDebugInfo();
@@ -365,16 +365,21 @@ void MainState::DrawHPMP()
 
   auto str = Util::StringFormat("%i/%i", curHp, maxHp);
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
-                               th - 2,
-                               str,
-                               Printer::kAlignCenter,
-                               Colors::WhiteColor,
-                               "#880000");
+                              th - 2,
+                              str,
+                              Printer::kAlignCenter,
+                              Colors::WhiteColor,
+                              "#880000");
 
   UpdateBar(1, th - 1, _playerRef->Attrs.MP);
 
   str = Util::StringFormat("%i/%i", curMp, maxMp);
-  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2, th - 1, str, Printer::kAlignCenter, Colors::WhiteColor, "#000088");
+  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
+                              th - 1,
+                              str,
+                              Printer::kAlignCenter,
+                              Colors::WhiteColor,
+                              "#000088");
 }
 
 void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
@@ -390,7 +395,11 @@ void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
 
   bar += "]";
 
-  Printer::Instance().PrintFB(x, y, bar, Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(x,
+                              y,
+                              bar,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor);
 }
 
 std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
@@ -781,7 +790,11 @@ void MainState::DisplayHungerStatus(const int& startPos)
     int part = hungerMax - hungerMax * 0.25;
     if (_playerRef->Attrs.Hunger >= part)
     {
-      Printer::Instance().PrintFB(startPos, _th - 3, '%', Colors::WhiteColor, "#999900");
+      Printer::Instance().PrintFB(startPos,
+                                  _th - 3,
+                                  '%',
+                                  Colors::WhiteColor,
+                                  "#999900");
     }
   }
 }
@@ -798,7 +811,10 @@ void MainState::DisplayWeaponCondition(const int& startPos)
 
     if (weapon->Data.Durability.Min().Get() <= warning)
     {
-      Printer::Instance().PrintFB(startPos + 2, _th - 3, ')', Colors::YellowColor);
+      Printer::Instance().PrintFB(startPos + 2,
+                                  _th - 3,
+                                  ')',
+                                  Colors::YellowColor);
     }
   }
 }
@@ -813,7 +829,10 @@ void MainState::DisplayArmorCondition(const int& startPos)
 
     if (armor->Data.Durability.Min().Get() <= warning)
     {
-      Printer::Instance().PrintFB(startPos + 4, _th - 3, '[', Colors::YellowColor);
+      Printer::Instance().PrintFB(startPos + 4,
+                                  _th - 3,
+                                  '[',
+                                  Colors::YellowColor);
     }
   }
 }
@@ -826,7 +845,10 @@ void MainState::DisplayAmmoCondition(const int& startPos)
     int amount = arrows->Data.Amount;
     if (amount <= 3)
     {
-      Printer::Instance().PrintFB(startPos + 6, _th - 3, '^', Colors::YellowColor);
+      Printer::Instance().PrintFB(startPos + 6,
+                                  _th - 3,
+                                  '^',
+                                  Colors::YellowColor);
     }
   }
 }

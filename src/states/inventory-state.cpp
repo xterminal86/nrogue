@@ -61,7 +61,7 @@ void InventoryState::HandleInput()
       if (ic->Data.IsEquipped)
       {
         Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                               Strings::MessageBoxInformationHeaderText,
+                                               Strings::MessageBoxEpicFailHeaderText,
                                                { Strings::MsgUnequipFirst },
                                                Colors::MessageBoxRedBorderColor);
         return;
@@ -146,7 +146,7 @@ void InventoryState::HandleInput()
       else if (r == UseResult::UNUSABLE)
       {
         Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                               Strings::MessageBoxInformationHeaderText,
+                                               Strings::MessageBoxEpicFailHeaderText,
                                                { Strings::MsgCantBeUsed },
                                                Colors::MessageBoxRedBorderColor);
       }
@@ -181,7 +181,7 @@ void InventoryState::HandleInput()
       if (ic->Data.IsEquipped)
       {
         Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                               Strings::MessageBoxInformationHeaderText,
+                                               Strings::MessageBoxEpicFailHeaderText,
                                                { Strings::MsgUnequipFirst },
                                                Colors::MessageBoxRedBorderColor);
         return;
@@ -331,7 +331,11 @@ void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldNa
 {
   std::string stub(kEquipmentMaxNameLength, '-');
 
-  Printer::Instance().PrintFB(x, y, fieldName, Printer::kAlignCenter, Colors::WhiteColor);
+  Printer::Instance().PrintFB(x,
+                              y,
+                              fieldName,
+                              Printer::kAlignCenter,
+                              Colors::WhiteColor);
 
   if (eq != nullptr)
   {
@@ -339,7 +343,11 @@ void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldNa
     stub.resize(kEquipmentMaxNameLength, ' ');
   }
 
-  Printer::Instance().PrintFB(x, y + 1, stub, Printer::kAlignCenter, Colors::WhiteColor);
+  Printer::Instance().PrintFB(x,
+                              y + 1,
+                              stub,
+                              Printer::kAlignCenter,
+                              Colors::WhiteColor);
 }
 
 void InventoryState::PrintFooter()

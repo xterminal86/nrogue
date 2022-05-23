@@ -41,7 +41,7 @@ class AINPC : public AIModelBase
     void PrepareScript() override;
 
   private:
-    NPCType _npcType;
+    NPCType _npcType = NPCType::UNDEFINED;
 
     void SetDataClaire();
     void SetDataCloud();

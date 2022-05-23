@@ -142,7 +142,8 @@ enum class GameObjectType
 
 enum class NPCType
 {
-  CLAIRE = 0,
+  UNDEFINED = -1,
+  CLAIRE,
   CLOUD,
   PHOENIX,
   MILES,
@@ -420,20 +421,21 @@ enum class ArrowType
 
 enum class ShrineType
 {
-  MIGHT = 0,    // raises STR or HP
-  SPIRIT,       // raises MAG or MP
-  TRANQUILITY,  // restores MP
-  KNOWLEDGE,    // identifies items
-  PERCEPTION,   // reveals BUC status
-  HEALING,      // restores HP
-  DESECRATED,   // random effect + receive curse
-  RUINED,       // random effect + low chance to receive negative effect
-  DISTURBING,   // random effect + high chance to receive negative effect
-  ABYSSAL,      // random stat raise + negative effect
-  FORGOTTEN,    // random effect
-  POTENTIAL,    // temporary raises stats
-  HIDDEN,       // random effect
-  HOLY          // removes curse
+  NONE = -1,
+  MIGHT,       // raises STR or HP
+  SPIRIT,      // raises MAG or MP
+  TRANQUILITY, // restores MP
+  KNOWLEDGE,   // identifies items
+  PERCEPTION,  // reveals BUC status
+  HEALING,     // restores HP
+  DESECRATED,  // random effect + receive curse
+  RUINED,      // random effect + low chance to receive negative effect
+  DISTURBING,  // random effect + high chance to receive negative effect
+  ABYSSAL,     // random stat raise + negative effect
+  FORGOTTEN,   // random effect
+  POTENTIAL,   // temporary raises stats
+  HIDDEN,      // random effect
+  HOLY         // removes curse
 };
 
 enum class RoomLayoutRotation

@@ -28,7 +28,7 @@ class LookInputState : public GameState
     void PrintDebugInfo();
     #endif
 
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 
     Position _cursorPosition;
 

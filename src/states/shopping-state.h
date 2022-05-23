@@ -20,10 +20,10 @@ class ShoppingState : public GameState
 
   private:
     const float _kPlayerSellRate = 2.0f;
-    const int _kJunkerBuyCost = 100;
+    const int _kJunkerBuyCost = 500;
 
-    Player* _playerRef;
-    TraderComponent* _shopOwner;
+    Player* _playerRef = nullptr;
+    TraderComponent* _shopOwner = nullptr;
 
     std::string _shopTitle;
 

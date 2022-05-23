@@ -175,7 +175,7 @@ void TraderComponent::CreateJunkerItems()
 
   for (int i = 0; i < _itemsToCreate; i++)
   {
-    GameObject* go = ItemsFactory::Instance().CreateRandomItem(0, 0, ItemType::COINS);
+    GameObject* go = ItemsFactory::Instance().CreateRandomItem(0, 0, { ItemType::COINS, ItemType::FOOD });
     if (go != nullptr)
     {
       Items.push_back(std::unique_ptr<GameObject>(go));

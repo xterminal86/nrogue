@@ -164,7 +164,6 @@ int Attributes::Rating()
   rating += Res.Get();
   rating += Skl.Get();
   rating += Spd.Get();
-  rating += Lvl.Get();
 
   return rating;
 }

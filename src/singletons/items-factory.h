@@ -78,7 +78,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
     //
     // *************************************************************************
     //
-    GameObject* CreateRandomItem(int x, int y, ItemType exclude = ItemType::NOTHING);
+    GameObject* CreateRandomItem(int x, int y, const std::vector<ItemType>& itemsToExclude = std::vector<ItemType>());
 
     // **************************** Uniques ************************************
     //
@@ -149,7 +149,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
     std::map<ItemType, PotionInfo> _gamePotionsMap;
     std::map<SpellType, ScrollInfo> _gameScrollsMap;
 
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 
     friend class GameObjectsFactory;
 };

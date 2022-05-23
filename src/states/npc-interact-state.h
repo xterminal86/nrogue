@@ -21,7 +21,7 @@ class NPCInteractState : public GameState
     bool _textPrinting = false;
     int _gossipBlockIndex = 0;
 
-    AINPC* _npcRef;
+    AINPC* _npcRef = nullptr;
 
     void DisplayStillText();
     void AnimateText();

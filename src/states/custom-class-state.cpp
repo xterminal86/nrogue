@@ -131,7 +131,11 @@ void CustomClassState::Update(bool forceUpdate)
     Printer::Instance().Clear();
 
     std::string pointsStr = Util::StringFormat("POINTS: %i", _points);
-    Printer::Instance().PrintFB(_twHalf, _startY, pointsStr, Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(_twHalf,
+                                _startY,
+                                pointsStr,
+                                Printer::kAlignCenter,
+                                "#FFFFFF");
 
     if (_cursorRows >= 6)
     {
@@ -150,8 +154,17 @@ void CustomClassState::Update(bool forceUpdate)
     int count = 0;
     for (auto& kvp : _statStringByType)
     {
-      Printer::Instance().PrintFB(_twHalf - 7, _startY + 2 + count, kvp.second.first.data(), Printer::kAlignLeft, "#FFFFFF");
-      Printer::Instance().PrintFB(_twHalf + 2, _startY + 2 + count, kvp.second.second.data(), Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(_twHalf - 7,
+                                  _startY + 2 + count,
+                                  kvp.second.first.data(),
+                                  Printer::kAlignLeft,
+                                  "#FFFFFF");
+
+      Printer::Instance().PrintFB(_twHalf + 2,
+                                  _startY + 2 + count,
+                                  kvp.second.second.data(),
+                                  Printer::kAlignLeft,
+                                  "#FFFFFF");
       count++;
 
       // Additional space between base stats and HP MP
@@ -163,18 +176,53 @@ void CustomClassState::Update(bool forceUpdate)
 
     if (_displayWarning)
     {
-      Printer::Instance().PrintFB(_twHalf, Printer::TerminalHeight - 8, "[WARNING] unused points remaining", Printer::kAlignCenter, "#FFFF00");
-      Printer::Instance().PrintFB(_twHalf, Printer::TerminalHeight - 7, "Press 'Enter' if that's OK", Printer::kAlignCenter, "#FFFFFF");
+      Printer::Instance().PrintFB(_twHalf,
+                                  Printer::TerminalHeight - 8,
+                                  "[WARNING] unused points remaining",
+                                  Printer::kAlignCenter,
+                                  "#FFFF00");
+
+      Printer::Instance().PrintFB(_twHalf,
+                                  Printer::TerminalHeight - 7,
+                                  "Press 'Enter' if that's OK",
+                                  Printer::kAlignCenter,
+                                  "#FFFFFF");
     }
 
-    Printer::Instance().PrintFB(_twHalf - 9 + 10 * _cursorCols, _startY + 2 + _cursorY, _cursorImage, "#FFFFFF");
+    Printer::Instance().PrintFB(_twHalf - 9 + 10 * _cursorCols,
+                                _startY + 2 + _cursorY,
+                                _cursorImage,
+                                "#FFFFFF");
 
-    Printer::Instance().PrintFB(_twHalf, Printer::TerminalHeight - 3, "Arrow keys to navigate", Printer::kAlignCenter, "#FFFFFF");
-    Printer::Instance().PrintFB(_twHalf, Printer::TerminalHeight - 2, "'.' or ',' to modify", Printer::kAlignCenter, "#FFFFFF");
-    Printer::Instance().PrintFB(_twHalf, Printer::TerminalHeight - 1, "Hold [SHIFT] for 5% step", Printer::kAlignCenter, "#FFFFFF");
+    Printer::Instance().PrintFB(_twHalf,
+                                Printer::TerminalHeight - 3,
+                                "Arrow keys to navigate",
+                                Printer::kAlignCenter,
+                                "#FFFFFF");
 
-    Printer::Instance().PrintFB(1, Printer::TerminalHeight - 1, "'q' - go back", Printer::kAlignLeft, "#FFFFFF");
-    Printer::Instance().PrintFB(Printer::TerminalWidth - 1, Printer::TerminalHeight - 1, "'Enter' - accept", Printer::kAlignRight, "#FFFFFF");
+    Printer::Instance().PrintFB(_twHalf,
+                                Printer::TerminalHeight - 2,
+                                "'.' or ',' to modify",
+                                Printer::kAlignCenter,
+                                "#FFFFFF");
+
+    Printer::Instance().PrintFB(_twHalf,
+                                Printer::TerminalHeight - 1,
+                                "Hold [SHIFT] for 5% step",
+                                Printer::kAlignCenter,
+                                "#FFFFFF");
+
+    Printer::Instance().PrintFB(1,
+                                Printer::TerminalHeight - 1,
+                                "'q' - go back",
+                                Printer::kAlignLeft,
+                                "#FFFFFF");
+
+    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
+                                Printer::TerminalHeight - 1,
+                                "'Enter' - accept",
+                                Printer::kAlignRight,
+                                "#FFFFFF");
 
     Printer::Instance().Render();
   }

@@ -23,8 +23,8 @@ class TargetState : public GameState
     void SetupForThrowing(ItemComponent* itemToThrow, int inventoryIndex);
 
   private:
-    Player* _playerRef;
-    ItemComponent* _weaponRef;
+    Player* _playerRef = nullptr;
+    ItemComponent* _weaponRef = nullptr;
     int _throwingItemInventoryIndex = -1;
 
     Position _cursorPosition;

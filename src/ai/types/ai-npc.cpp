@@ -89,16 +89,13 @@ void AINPC::Init(NPCType type, bool immovable, ServiceType serviceType)
 
 void AINPC::PrepareScript()
 {
-  /*
   const std::string scriptImmovable =
 R"(
 [TREE]
   [SEL]
     [TASK p1="idle"]
 )";
-  */
 
-  /*
   const std::string scriptMovable =
 R"(
 [TREE]
@@ -107,10 +104,10 @@ R"(
       [TASK p1="move_rnd"]
     [TASK p1="idle"]
 )";
-  */
 
-  //_scriptAsText = Data.IsImmovable ? Util::DecodeString(scriptImmovable) : Util::DecodeString(scriptMovable);
+  _scriptAsText = Data.IsImmovable ? scriptImmovable : scriptMovable;
 
+  /*
   const std::vector<uint8_t> scriptImmovable =
   {
     0x00, 0x01, 0x02, 0x02, 0x04, 0x06, 0x65, 0xFF
@@ -124,6 +121,7 @@ R"(
   };
 
   _scriptCompiled = Data.IsImmovable ? scriptImmovable : scriptMovable;
+  */
 }
 
 void AINPC::SetDataClaire()

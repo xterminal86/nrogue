@@ -18,8 +18,8 @@ class ServiceState : public SelectItemStateBase
     void DrawSpecific() final;
 
   private:
-    Player* _playerRef;
-    TraderComponent* _shopOwner;
+    Player* _playerRef = nullptr;
+    TraderComponent* _shopOwner = nullptr;
 
     void FillItemsForRepair();
     void FillItemsForIdentify();

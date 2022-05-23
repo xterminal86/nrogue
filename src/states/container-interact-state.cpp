@@ -84,15 +84,32 @@ void ContainerInteractState::Update(bool forceUpdate)
 
     for (size_t y = 0; y < Printer::TerminalHeight; y++)
     {
-      Printer::Instance().PrintFB(_twHalf, y, ' ', Colors::BlackColor, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_twHalf,
+                                  y,
+                                  ' ',
+                                  Colors::BlackColor,
+                                  Colors::WhiteColor);
     }
 
     auto containerName = _containerToInteractWith->OwnerGameObject->ObjectName;
 
-    Printer::Instance().PrintFB(_twQuarter, 0, "Player", Printer::kAlignCenter, Colors::WhiteColor);
-    Printer::Instance().PrintFB(_tw - _twQuarter - 1, 0, containerName, Printer::kAlignCenter, Colors::WhiteColor);
+    Printer::Instance().PrintFB(_twQuarter,
+                                0,
+                                "Player",
+                                Printer::kAlignCenter,
+                                Colors::WhiteColor);
 
-    Printer::Instance().PrintFB(1, _th - 1, "'Enter' - exchange", Printer::kAlignLeft, Colors::WhiteColor);
+    Printer::Instance().PrintFB(_tw - _twQuarter - 1,
+                                0,
+                                containerName,
+                                Printer::kAlignCenter,
+                                Colors::WhiteColor);
+
+    Printer::Instance().PrintFB(1,
+                                _th - 1,
+                                "'Enter' - exchange",
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
 
     DisplayPlayerInventory();
     DisplayContainerInventory();
@@ -289,7 +306,7 @@ void ContainerInteractState::TryToTransferItem()
   if (ic->Data.IsEquipped)
   {
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           Strings::MessageBoxInformationHeaderText,
+                                           Strings::MessageBoxEpicFailHeaderText,
                                            { Strings::MsgUnequipFirst },
                                            Colors::MessageBoxRedBorderColor);
     return;

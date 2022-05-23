@@ -13,7 +13,7 @@ class ExitingState : public GameState
     void Update(bool forceUpdate = false) override;
 
   private:
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 };
 
 #endif // EXITINGSTATE_H

@@ -20,7 +20,7 @@ class MainState : public GameState
     void Update(bool forceUpdate = false) override;
 
   private:
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 
     std::string _debugInfo;
 

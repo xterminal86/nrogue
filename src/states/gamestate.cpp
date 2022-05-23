@@ -176,9 +176,15 @@ void GameState::DrawHeader(const std::string& header)
   for (int x = 0; x < tw; x++)
   {
     #ifdef USE_SDL
-    Printer::Instance().PrintFB(x, 0, (int)NameCP437::HBAR_2, Colors::WhiteColor);
+    Printer::Instance().PrintFB(x,
+                                0,
+                                (int)NameCP437::HBAR_2,
+                                Colors::WhiteColor);
     #else
-    Printer::Instance().PrintFB(x, 0, ACS_HLINE, Colors::WhiteColor);
+    Printer::Instance().PrintFB(x,
+                                0,
+                                ACS_HLINE,
+                                Colors::WhiteColor);
     #endif
   }
 

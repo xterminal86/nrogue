@@ -1099,26 +1099,29 @@ void Player::LevelDown()
 
 void Player::ProcessKill(GameObject* monster)
 {
+  //
   // Try to generate loot from the kill itself
+  //
   if (Util::IsFunctionValid(monster->GenerateLootFunction))
   {
     monster->GenerateLootFunction();
   }
 
-  // Do not award experience for nothing
+  //
+  // Do not award experience for nothing.
+  //
   if (monster->Type != GameObjectType::HARMLESS
    && monster->Type != GameObjectType::REMAINS)
   {
-    // FIXME: exp value is too unbalanced (maybe)
+    int dungeonLvl = Map::Instance().CurrentLevel->DungeonLevel;
+    int ratingDiff = monster->Attrs.Rating() - Attrs.Rating();
+    ratingDiff = Util::Clamp(ratingDiff, 1, GlobalConstants::AwardedExpMax);
 
-    //int dungeonLvl = Map::Instance().CurrentLevel->DungeonLevel;
-    int defaultExp = monster->Attrs.Rating() - Attrs.Rating();
-
-    defaultExp = monster->Attrs.Rating();
-    defaultExp = Util::Clamp(defaultExp, 1, GlobalConstants::AwardedExpMax);
-
-    //int exp = defaultExp * dungeonLvl; // + dungeonLvl
-    int exp = defaultExp;
+    //
+    // If player is too OP, get at least 1 plus current dungeon level.
+    // TOWN is dungeon level 1, thus (dungeonLvl - 1).
+    //
+    int exp = ratingDiff + (dungeonLvl - 1);
 
     AwardExperience(exp);
 

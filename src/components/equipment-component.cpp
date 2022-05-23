@@ -30,7 +30,7 @@ bool EquipmentComponent::Equip(ItemComponent* item)
     if (IsThisPlayer())
     {
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                             Strings::MessageBoxInformationHeaderText,
+                                             Strings::MessageBoxEpicFailHeaderText,
                                              { "Can't be equipped!" },
                                              Colors::MessageBoxRedBorderColor);
     }
@@ -116,7 +116,7 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
   if (!emptySlotFound && IsThisPlayer())
   {
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           Strings::MessageBoxInformationHeaderText,
+                                           Strings::MessageBoxEpicFailHeaderText,
                                            { Strings::MsgUnequipFirst },
                                            Colors::MessageBoxRedBorderColor);
   }
@@ -178,7 +178,7 @@ bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item)
     if (IsThisPlayer())
     {
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                             Strings::MessageBoxInformationHeaderText,
+                                             Strings::MessageBoxEpicFailHeaderText,
                                              { Strings::MsgUnequipFirst },
                                              Colors::MessageBoxRedBorderColor);
     }

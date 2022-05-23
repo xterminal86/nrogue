@@ -19,9 +19,9 @@ class ReturnerState : public GameState
   private:
     Position GetRandomPositionAroundPlayer();
 
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 
-    ItemComponent* _itemRef;
+    ItemComponent* _itemRef = nullptr;
 };
 
 #endif // RETURNERSTATE_H

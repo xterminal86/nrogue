@@ -168,39 +168,39 @@ void ShoppingState::DisplayPlayerInventory()
     std::string extraInfo = GetItemExtraInfo(ic);
 
     Printer::Instance().PrintFB(extraInfoStringPosX + 1,
-                                 yPos + index,
-                                 extraInfo,
-                                 Printer::kAlignLeft,
-                                 Colors::WhiteColor);
+                                yPos + index,
+                                extraInfo,
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
 
     int cost = GetCost(ic, true);
 
     costString = Util::StringFormat(" $ %i", cost);
 
     Printer::Instance().PrintFB(extraInfoStringPosX + itemStringTotalLen + 1,
-                                 yPos + index,
-                                 costString,
-                                 Printer::kAlignLeft,
-                                 Colors::CoinsColor);
+                                yPos + index,
+                                costString,
+                                Printer::kAlignLeft,
+                                Colors::CoinsColor);
 
     std::string textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (_playerSide && index == _inventoryItemIndex)
     {
       Printer::Instance().PrintFB(1,
-                                   yPos + index,
-                                   nameInInventory,
-                                   Printer::kAlignLeft,
-                                   textColor,
-                                   Colors::ShadesOfGrey::Four);
+                                  yPos + index,
+                                  nameInInventory,
+                                  Printer::kAlignLeft,
+                                  textColor,
+                                  Colors::ShadesOfGrey::Four);
     }
     else
     {
       Printer::Instance().PrintFB(1,
-                                   yPos + index,
-                                   nameInInventory,
-                                   Printer::kAlignLeft,
-                                   textColor);
+                                  yPos + index,
+                                  nameInInventory,
+                                  Printer::kAlignLeft,
+                                  textColor);
     }
 
     index++;
@@ -214,10 +214,10 @@ void ShoppingState::DisplayPlayerInventory()
                      Strings::InventoryEmptySlotChar);
 
     Printer::Instance().PrintFB(1,
-                                 yPos + index,
-                                 stub,
-                                 Printer::kAlignLeft,
-                                 Colors::ShadesOfGrey::Six);
+                                yPos + index,
+                                stub,
+                                Printer::kAlignLeft,
+                                Colors::ShadesOfGrey::Six);
     yPos++;
   }
 }
@@ -254,10 +254,10 @@ void ShoppingState::DisplayShopInventory()
     std::string extraInfo = GetItemExtraInfo(ic);
 
     Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1,
-                                 yPos + index,
-                                 extraInfo,
-                                 Printer::kAlignRight,
-                                 Colors::WhiteColor);
+                                yPos + index,
+                                extraInfo,
+                                Printer::kAlignRight,
+                                Colors::WhiteColor);
 
     int cost = GetCost(ic, false);
 
@@ -265,7 +265,11 @@ void ShoppingState::DisplayShopInventory()
 
     int bonusStringPosX = xPos - GlobalConstants::InventoryMaxNameLength - 1;
 
-    Printer::Instance().PrintFB(bonusStringPosX - itemStringTotalLen, yPos + index, costString, Printer::kAlignRight, Colors::CoinsColor);
+    Printer::Instance().PrintFB(bonusStringPosX - itemStringTotalLen,
+                                yPos + index,
+                                costString,
+                                Printer::kAlignRight,
+                                Colors::CoinsColor);
 
     std::string textColor = Util::GetItemInventoryColor(ic->Data);
 
@@ -298,10 +302,10 @@ void ShoppingState::DisplayShopInventory()
                      Strings::InventoryEmptySlotChar);
 
     Printer::Instance().PrintFB(xPos,
-                                 yPos + index,
-                                 stub,
-                                 Printer::kAlignRight,
-                                 Colors::ShadesOfGrey::Six);
+                                yPos + index,
+                                stub,
+                                Printer::kAlignRight,
+                                Colors::ShadesOfGrey::Six);
     yPos++;
   }
 }
@@ -378,7 +382,7 @@ void ShoppingState::BuyOrSellItem()
     if (ic->Data.IsEquipped)
     {
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                              Strings::MessageBoxInformationHeaderText,
+                                              Strings::MessageBoxEpicFailHeaderText,
                                               { Strings::MsgUnequipFirst },
                                               Colors::MessageBoxRedBorderColor);
       return;
@@ -478,11 +482,13 @@ int ShoppingState::GetCost(ItemComponent* ic, bool playerSide)
 
   if (!playerSide)
   {
-    cost *= 2;
-
     if (_shopOwner->Type() == TraderRole::JUNKER)
     {
       cost = _kJunkerBuyCost;
+    }
+    else
+    {
+      cost *= 2;
     }
   }
   else

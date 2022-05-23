@@ -312,11 +312,13 @@ void LookInputState::DrawCursor()
 {
   Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().CurrentLevel->MapOffsetX + 1,
                               _cursorPosition.Y + Map::Instance().CurrentLevel->MapOffsetY,
-                              ']', Colors::WhiteColor);
+                              ']',
+                              Colors::WhiteColor);
 
   Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().CurrentLevel->MapOffsetX - 1,
                               _cursorPosition.Y + Map::Instance().CurrentLevel->MapOffsetY,
-                              '[', Colors::WhiteColor);
+                              '[',
+                              Colors::WhiteColor);
 }
 
 bool LookInputState::CheckPlayer()

@@ -17,7 +17,7 @@ class ContainerInteractState : public GameState
     void SetContainerRef(ContainerComponent* c);
 
   private:
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
     ContainerComponent* _containerToInteractWith = nullptr;
 
     int _inventoryItemIndex = 0;

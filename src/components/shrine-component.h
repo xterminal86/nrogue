@@ -52,7 +52,7 @@ class ShrineComponent : public Component
 
     bool _oneTimeUse = true;
 
-    ShrineType _type;
+    ShrineType _type = ShrineType::NONE;
 };
 
 #endif // SHRINECOMPONENT_H
