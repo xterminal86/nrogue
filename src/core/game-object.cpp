@@ -868,7 +868,7 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
           penalty = 1;
         }
 
-        kvp.second.AddModifier(_objectId, -penalty);
+        kvp.second.AddModifier(e.Id, -penalty);
       }
 
       if (Util::IsPlayer(this))
@@ -906,7 +906,7 @@ void GameObject::UnapplyEffect(const ItemBonusStruct& e)
     {
       for (auto& kvp : _weaknessPenaltyStats)
       {
-        kvp.second.RemoveModifier(_objectId);
+        kvp.second.RemoveModifier(e.Id);
       }
     }
     break;
