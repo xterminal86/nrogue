@@ -331,7 +331,8 @@ enum class ItemBonusType
   FROZEN,         // SPD penalty
   BURNING,        // inflicts fire damage over several turns + gives illuminated
   ILLUMINATED,    // monsters can see you further away (?) (not implemented)
-  POISONED        // anti-regen
+  POISONED,       // anti-regen
+  WEAKNESS        // penalties to STR, DEF, SKL and SPD
 };
 
 enum class FoodType

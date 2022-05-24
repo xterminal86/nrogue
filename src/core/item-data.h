@@ -54,7 +54,7 @@ struct ItemBonusStruct
 
   //
   // We shall use this to monitor active effects and remove them
-  // if necessary (e.g. if item is unequipped, effect must go away)
+  // if necessary (e.g. if item is unequipped, effect must go away).
   //
   uint64_t Id = 0;
 
@@ -100,16 +100,24 @@ struct ItemData
   bool IsChargeable       = false;
   bool IsBurnable         = false;
 
+  //
   // Can't be dropped from inventory if true
+  //
   bool IsImportant = false;
 
+  //
   // For stackable
+  //
   int Amount = 1;
 
+  //
   // For ranged weapons and wands
+  //
   int Range = 1;
 
+  //
   // !!! Use GetCost() when cost is needed !!!
+  //
   int Cost = 0;
 
   bool IsWeaponOrArmor();
@@ -121,11 +129,15 @@ struct ItemData
   int GetTotalBonusValue(ItemBonusType type);
   int GetCost();
 
+  //
   // BUC status + object name [+ suffix]
   // Used in inspection window
+  //
   std::string IdentifiedName;
 
+  //
   // ? + GameObject::ObjectName + ?
+  //
   std::string UnidentifiedName;
 
   std::vector<std::string> UnidentifiedDescription;

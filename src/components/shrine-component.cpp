@@ -554,5 +554,9 @@ void ShrineComponent::SetEffectGainMessage(std::string& logMessageToWrite,
     case ItemBonusType::INVISIBILITY:
       logMessageToWrite = "You can see through yourself!";
       break;
+
+    case ItemBonusType::WEAKNESS:
+      logMessageToWrite = "You feel weak!";
+      break;
   }
 }

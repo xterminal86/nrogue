@@ -875,7 +875,8 @@ namespace GlobalConstants
     { ItemBonusType::FROZEN,       "Frz" },
     { ItemBonusType::BURNING,      "Bur" },
     { ItemBonusType::ILLUMINATED,  "Lgt" },
-    { ItemBonusType::POISONED,     "Psd" }
+    { ItemBonusType::POISONED,     "Psd" },
+    { ItemBonusType::WEAKNESS,     "Wea" }
   };
 
   const std::map<std::string, ScriptTaskNames> BTSTaskNamesByName =

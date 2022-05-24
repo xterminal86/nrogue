@@ -933,70 +933,14 @@ void Player::LevelUpSilent()
 
 void Player::LevelUp(int baseHpOverride)
 {
+  GameObject::LevelUp();
+
   for (auto& kvp : _statRaisesMap)
   {
-    kvp.second = 0;
+    kvp.second.second = 0;
   }
 
-  std::vector<std::string> messages;
-
-  messages.push_back("You have gained a level!");
-
-  // Try to raise main stats
-
-  for (auto& i : _mainAttributes)
-  {
-    auto kvp = i.second;
-
-    #ifdef DEBUG_BUILD
-    auto log = Util::StringFormat("Raising %s", kvp.first.data());
-    Logger::Instance().Print(log);
-    #endif
-
-    if (CanRaiseAttribute(kvp.second))
-    {
-      _statRaisesMap[kvp.first] = 1;
-
-      kvp.second.Add(1);
-
-      messages.push_back(Util::StringFormat("%s +1", kvp.first.data()));
-    }
-  }
-
-  // HP and MP
-
-  int minRndHp = (Attrs.HP.Talents + 1);
-  int maxRndHp = 2 * (Attrs.HP.Talents + 1);
-
-  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp + 1);
-  Attrs.HP.AddMax(hpToAdd);
-
-  _statRaisesMap["HP"] = hpToAdd;
-
-  if (hpToAdd > 0)
-  {
-    messages.push_back(Util::StringFormat("HP +%i", hpToAdd));
-  }
-
-  int minRndMp = Attrs.Mag.OriginalValue();
-  int maxRndMp = Attrs.Mag.OriginalValue() + Attrs.MP.Talents;
-
-  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp + 1);
-  Attrs.MP.AddMax(mpToAdd);
-
-  _statRaisesMap["MP"] = mpToAdd;
-
-  if (mpToAdd > 0)
-  {
-    messages.push_back(Util::StringFormat("MP +%i", mpToAdd));
-  }
-
-  Attrs.Lvl.Add(1);
-
-  for (auto& msg : messages)
-  {
-    Printer::Instance().AddMessage(msg);
-  }
+  PrintLevelUpResultsToLog(true);
 
   auto res = GetPrettyLevelUpText();
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
@@ -1008,77 +952,77 @@ void Player::LevelUp(int baseHpOverride)
 
 void Player::LevelDown()
 {
-  for (auto& kvp : _statRaisesMap)
-  {
-    kvp.second = 0;
-  }
+  GameObject::LevelDown();
+
+  PrintLevelUpResultsToLog(false);
+
+  auto res = GetPrettyLevelUpText();
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                                         "Level DOWN!",
+                                         res,
+                                         Colors::RedColor,
+                                         "#000044");
+}
+
+void Player::PrintLevelUpResultsToLog(bool reallyUp)
+{
+  int getDataFrom = reallyUp
+                  ? Attrs.Lvl.Get()
+                  : (Attrs.Lvl.Get() + 1);
+
+  auto& data = _levelUpHistory[getDataFrom];
+
+  _statRaisesMap[PlayerStats::STR].second = reallyUp
+                        ? data[PlayerStats::STR]
+                        : -data[PlayerStats::STR];
+
+  _statRaisesMap[PlayerStats::DEF].second = reallyUp
+                        ? data[PlayerStats::DEF]
+                        : -data[PlayerStats::DEF];
+
+  _statRaisesMap[PlayerStats::MAG].second = reallyUp
+                        ? data[PlayerStats::MAG]
+                        : -data[PlayerStats::MAG];
+
+  _statRaisesMap[PlayerStats::RES].second = reallyUp
+                        ? data[PlayerStats::RES]
+                        : -data[PlayerStats::RES];
+
+  _statRaisesMap[PlayerStats::SPD].second = reallyUp
+                        ? data[PlayerStats::SPD]
+                        : -data[PlayerStats::SPD];
+
+  _statRaisesMap[PlayerStats::SKL].second = reallyUp
+                        ? data[PlayerStats::SKL]
+                        : -data[PlayerStats::SKL];
+
+  _statRaisesMap[PlayerStats::HP].second = reallyUp
+                        ? data[PlayerStats::HP]
+                        : -data[PlayerStats::HP];
+
+  _statRaisesMap[PlayerStats::MP].second = reallyUp
+                        ? data[PlayerStats::MP]
+                        : -data[PlayerStats::MP];
 
   std::vector<std::string> messages;
 
-  // Try to raise main stats
+  messages.reserve(10);
 
-  for (auto& i : _mainAttributes)
+  if (reallyUp)
   {
-    auto kvp = i.second;
+    messages.push_back("You have gained a level!");
+  }
 
-    if (CanRaiseAttribute(kvp.second))
+  for (auto& kvp : _statRaisesMap)
+  {
+    if (kvp.second.second != 0)
     {
-      _statRaisesMap[kvp.first] = -1;
+      std::string num = (kvp.second.second > 0)
+                       ? Util::StringFormat("+%i", kvp.second.second)
+                       : Util::StringFormat("%i", kvp.second.second);
 
-      kvp.second.Add(-1);
-      if (kvp.second.OriginalValue() < 0)
-      {
-        kvp.second.Set(0);
-      }
-
-      messages.push_back(Util::StringFormat("%s -1", kvp.first.data()));
+      messages.push_back(Util::StringFormat("%s %s", kvp.second.first.data(), num.data()));
     }
-  }
-
-  // HP and MP
-
-  int minRndHp = (Attrs.HP.Talents + 1);
-  int maxRndHp = 2 * (Attrs.HP.Talents + 1);
-
-  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp + 1);
-  Attrs.HP.AddMax(-hpToAdd);
-
-  if (Attrs.HP.Max().OriginalValue() <= 0)
-  {
-    Attrs.HP.SetMax(1);
-    Attrs.HP.Restore();
-  }
-
-  _statRaisesMap["HP"] = -hpToAdd;
-
-  if (hpToAdd > 0)
-  {
-    messages.push_back(Util::StringFormat("HP -%i", hpToAdd));
-  }
-
-  int minRndMp = Attrs.Mag.OriginalValue();
-  int maxRndMp = Attrs.Mag.OriginalValue() + Attrs.MP.Talents;
-
-  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp + 1);
-  Attrs.MP.AddMax(-mpToAdd);
-
-  if (Attrs.MP.Max().OriginalValue() < 0)
-  {
-    Attrs.MP.SetMax(0);
-    Attrs.MP.Restore();
-  }
-
-  _statRaisesMap["MP"] = -mpToAdd;
-
-  if (mpToAdd > 0)
-  {
-    messages.push_back(Util::StringFormat("MP -%i", mpToAdd));
-  }
-
-  Attrs.Lvl.Add(-1);
-  if (Attrs.Lvl.OriginalValue() <= 1)
-  {
-    Attrs.Lvl.Set(1);
   }
 
   for (auto& msg : messages)
@@ -1086,15 +1030,10 @@ void Player::LevelDown()
     Printer::Instance().AddMessage(msg);
   }
 
-  auto res = GetPrettyLevelUpText();
-
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                                         "Level DOWN!",
-                                         res,
-                                         Colors::RedColor,
-                                         "#000044");
-
-  Printer::Instance().AddMessage("You have LOST a level!");
+  if (!reallyUp)
+  {
+    Printer::Instance().AddMessage("You have LOST a level!");
+  }
 }
 
 void Player::ProcessKill(GameObject* monster)
@@ -1200,13 +1139,14 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
     auto kvp = i.second;
 
     std::string addition;
-    if (_statRaisesMap[kvp.first] >= 0)
+
+    if (_statRaisesMap[i.first].second >= 0)
     {
-      addition = Util::StringFormat("  +%i", _statRaisesMap[kvp.first]);
+      addition = Util::StringFormat("  +%i", _statRaisesMap[i.first].second);
     }
     else
     {
-      addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap[kvp.first]));
+      addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap[i.first].second));
     }
 
     levelUpResults[index] += addition;
@@ -1217,25 +1157,26 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
   index++;
 
   std::string addition;
-  if (_statRaisesMap["HP"] >= 0)
+
+  if (_statRaisesMap[PlayerStats::HP].second >= 0)
   {
-    addition = Util::StringFormat("  +%i", _statRaisesMap["HP"]);
+    addition = Util::StringFormat("  +%i", _statRaisesMap[PlayerStats::HP].second);
   }
   else
   {
-    addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap["HP"]));
+    addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap[PlayerStats::HP].second));
   }
 
   levelUpResults[index] += addition;
   index++;
 
-  if (_statRaisesMap["MP"] >= 0)
+  if (_statRaisesMap[PlayerStats::MP].second >= 0)
   {
-    addition = Util::StringFormat("  +%i", _statRaisesMap["MP"]);
+    addition = Util::StringFormat("  +%i", _statRaisesMap[PlayerStats::MP].second);
   }
   else
   {
-    addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap["MP"]));
+    addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap[PlayerStats::MP].second));
   }
 
   levelUpResults[index] += addition;
@@ -1397,36 +1338,22 @@ void Player::ProcessHunger()
 
 void Player::ApplyStarvingPenalties()
 {
-  if (!_starvingPenaltiesApplied)
+  if (!HasEffect(ItemBonusType::WEAKNESS))
   {
-    for (auto& kvp : _starvingPenaltyStats)
-    {
-      int penalty = kvp.second.OriginalValue() / 2;
-      if (penalty == 0)
-      {
-        penalty = 1;
-      }
+    ItemBonusStruct bs;
 
-      kvp.second.AddModifier(_objectId, -penalty);
-    }
+    bs.Type     = ItemBonusType::WEAKNESS;
+    bs.Id       = _objectId;
+    bs.Duration = -1;
+    bs.Period   = -1;
 
-    Printer::Instance().AddMessage("You feel weak from hunger");
-
-    _starvingPenaltiesApplied = true;
+    AddEffect(bs);
   }
 }
 
 void Player::UnapplyStarvingPenalties()
 {
-  if (_starvingPenaltiesApplied)
-  {
-    for (auto& kvp : _starvingPenaltyStats)
-    {
-      kvp.second.RemoveModifier(_objectId);
-    }
-
-    _starvingPenaltiesApplied = false;
-  }
+  RemoveEffect(ItemBonusType::WEAKNESS, _objectId);
 }
 
 void Player::ProcessItemsEffects()

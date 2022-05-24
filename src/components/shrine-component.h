@@ -23,7 +23,8 @@ static const std::vector<ItemBonusType> NegativeEffects =
   ItemBonusType::POISONED,
   ItemBonusType::BURNING,
   ItemBonusType::FROZEN,
-  ItemBonusType::BLINDNESS
+  ItemBonusType::BLINDNESS,
+  ItemBonusType::WEAKNESS
 };
 
 class ShrineComponent : public Component

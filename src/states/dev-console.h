@@ -32,6 +32,7 @@ enum class DevConsoleCommand
   PRINT_MAP,
   PRINT_COLORS,
   CREATE_MONSTER,
+  DISPEL_EFFECTS,
   INFO_HANDLES
 };
 
@@ -150,6 +151,7 @@ class DevConsole : public GameState
     void GiveMoney(const std::vector<std::string>& params);
     void ToggleFogOfWar();
     void PrintTriggers();
+    void DispelEffects();
 
     bool StringIsNumbers(const std::string& str);
     std::pair<int, int> CoordinateParamsToInt(const std::string& px,
@@ -191,6 +193,7 @@ class DevConsole : public GameState
       { "ao_dmg", DevConsoleCommand::DAMAGE_ACTOR       },
       { "io_mov", DevConsoleCommand::MOVE_ITEM          },
       { "p_mov",  DevConsoleCommand::MOVE_PLAYER        },
+      { "p_de",   DevConsoleCommand::DISPEL_EFFECTS     },
       { "o_del",  DevConsoleCommand::REMOVE_OBJECT      },
       { "p_lu",   DevConsoleCommand::LEVEL_UP           },
       { "p_ld",   DevConsoleCommand::LEVEL_DOWN         },
@@ -225,6 +228,7 @@ class DevConsole : public GameState
       { "ao_psn", { "Add lingering damage to actor in handle" } },
       { "m_show", { "Toggle fog of war" } },
       { "i_trig", { "Print current level triggers" } },
+      { "p_de",   { "Dispel effects from player" } },
       {
         "so_get",
         { "so_get [X Y]", "Try to get handle to static object at X Y" }

@@ -338,7 +338,7 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll, Gam
       return;
     }
 
-    user->DispelEffect(ItemBonusType::POISONED);
+    user->DispelEffectFirstFound(ItemBonusType::POISONED);
 
     _scrollUseMessages.push_back("You feel better");
 

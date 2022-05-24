@@ -254,9 +254,11 @@ void MainState::ProcessMovement(const Position& dirOffsets)
   }
   else if (_playerRef->Move(dirOffsets.X, dirOffsets.Y))
   {
+    //
     // This line must be the first in order to
     // allow potential messages to show in FinishTurn()
     // (e.g. starvation damage message) after player moved.
+    //
     Printer::Instance().ShowLastMessage = false;
 
     CheckItemsOnGround();

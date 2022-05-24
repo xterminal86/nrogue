@@ -341,6 +341,10 @@ void DevConsole::ProcessCommand(const std::string& command,
       PrintTriggers();
       break;
 
+    case DevConsoleCommand::DISPEL_EFFECTS:
+      DispelEffects();
+      break;
+
     default:
       StdOut(ErrCmdNotHandled);
       break;
@@ -963,6 +967,12 @@ void DevConsole::PrintTriggers()
     auto str = Util::StringFormat("0x%X at %i %i", t.get(), t->PosX, t->PosY);
     StdOut(str);
   }
+}
+
+void DevConsole::DispelEffects()
+{
+  _playerRef->DispelEffects();
+  StdOut(Ok);
 }
 
 void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)

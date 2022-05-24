@@ -107,11 +107,17 @@ class GameObject
 
     void Update();
 
+    // =======================================
+    //
+    // Item imposed effects and stat modifiers
+    //
     void ApplyBonuses(ItemComponent* itemRef);
     void UnapplyBonuses(ItemComponent* itemRef);
 
     void ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
     void UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
+
+    // =======================================
 
     const Position& GetPosition();
 
@@ -131,11 +137,15 @@ class GameObject
 
     bool Corporeal = true;
 
+    //
     // Determines if objects on the map tile should be drawn
+    //
     bool Visible = false;
 
+    //
     // NOTE: set manually for NPCs during creation via GameObject::Move(),
     // because some game objects can be stepped on (e.g. bench, money etc)
+    //
     bool Occupied = false;
 
     bool IsDestroyed = false;
@@ -170,13 +180,18 @@ class GameObject
 
     void AddEffect(const ItemBonusStruct& effectToAdd);
 
-    // Erases only effects that have ItemRef = nullptr
-    void DispelEffect(const ItemBonusType& type);
+    //
+    // Erases only effects
+    // that are not connected to any equipped items.
+    //
+    void DispelEffectFirstFound(const ItemBonusType& type);
+    void DispelEffectsAllOf(const ItemBonusType& type);
+    void DispelEffects();
 
-    void RemoveEffect(const ItemBonusStruct& e);
-
-    void RemoveEffectFirstFound(const ItemBonusType& type);
-    void RemoveEffectAllOf(const ItemBonusType& type);
+    //
+    // Removes effects imposed by items or objects.
+    //
+    void RemoveEffect(const ItemBonusType& type, const uint64_t& causer);
 
     void AttachTrigger(TriggerType type,
                        const std::function<bool()>& condition,
@@ -254,23 +269,64 @@ class GameObject
     bool ShouldSkipTurn();
     bool IsImmune(const ItemBonusStruct& effectToAdd);
 
+    void LevelUpFromHistory(int gainedLevel, bool positive);
+    void LevelUpNatural(int gainedLevel, int baseHpOverride);
+
     // Unique in-game id
     uint64_t _objectId = 1;
 
-    std::map<ItemBonusType, Attribute&> _attributesRefsByBonus =
+    const std::map<ItemBonusType, Attribute&> _attributesRefsByBonus =
     {
       { ItemBonusType::STR, Attrs.Str },
       { ItemBonusType::DEF, Attrs.Def },
       { ItemBonusType::MAG, Attrs.Mag },
       { ItemBonusType::RES, Attrs.Res },
-      { ItemBonusType::SPD, Attrs.Spd },
-      { ItemBonusType::SKL, Attrs.Skl }
+      { ItemBonusType::SKL, Attrs.Skl },
+      { ItemBonusType::SPD, Attrs.Spd }
     };
 
-    std::map<ItemBonusType, RangedAttribute&> _rangedAttributesRefsByBonus =
+    const std::map<ItemBonusType, RangedAttribute&> _rangedAttributesRefsByBonus =
     {
       { ItemBonusType::HP, Attrs.HP },
       { ItemBonusType::MP, Attrs.MP }
+    };
+
+    const std::map<int, std::pair<PlayerStats, Attribute&>> _mainAttributes =
+    {
+      { 0, { PlayerStats::STR, Attrs.Str } },
+      { 1, { PlayerStats::DEF, Attrs.Def } },
+      { 2, { PlayerStats::MAG, Attrs.Mag } },
+      { 3, { PlayerStats::RES, Attrs.Res } },
+      { 4, { PlayerStats::SKL, Attrs.Skl } },
+      { 5, { PlayerStats::SPD, Attrs.Spd } }
+    };
+
+    const std::map<int, Attribute&> _weaknessPenaltyStats =
+    {
+      { 0, Attrs.Str },
+      { 1, Attrs.Def },
+      { 2, Attrs.Skl },
+      { 3, Attrs.Spd }
+    };
+
+    //
+    // Stats increases by gained level
+    //
+    std::map<int, std::map<PlayerStats, int>> _levelUpHistory =
+    {
+      {
+        1,
+        {
+          { PlayerStats::STR, 0 },
+          { PlayerStats::DEF, 0 },
+          { PlayerStats::MAG, 0 },
+          { PlayerStats::RES, 0 },
+          { PlayerStats::SKL, 0 },
+          { PlayerStats::SPD, 0 },
+          { PlayerStats::HP,  0 },
+          { PlayerStats::MP,  0 }
+        }
+      }
     };
 
     friend class GameObjectsFactory;

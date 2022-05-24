@@ -151,7 +151,7 @@ namespace ItemUseHandlers
     {
       if (user->HasEffect(ItemBonusType::POISONED))
       {
-        user->RemoveEffectAllOf(ItemBonusType::POISONED);
+        user->DispelEffectsAllOf(ItemBonusType::POISONED);
         message = "The illness is gone!";
       }
     }
@@ -159,7 +159,7 @@ namespace ItemUseHandlers
     {
       if (user->HasEffect(ItemBonusType::POISONED))
       {
-        user->RemoveEffectFirstFound(ItemBonusType::POISONED);
+        user->DispelEffectFirstFound(ItemBonusType::POISONED);
         message = "The illness subsides";
       }
     }

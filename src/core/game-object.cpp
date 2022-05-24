@@ -303,7 +303,7 @@ void GameObject::UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bon
     case ItemBonusType::THORNS:
     case ItemBonusType::TELEPATHY:
     case ItemBonusType::LEVITATION:
-      RemoveEffect(bonus);
+      RemoveEffect(bonus.Type, bonus.Id);
       break;
   }
 }
@@ -839,7 +839,7 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
           Printer::Instance().AddMessage("The poison disperses!");
         }
 
-        RemoveEffectAllOf(ItemBonusType::POISONED);
+        DispelEffectsAllOf(ItemBonusType::POISONED);
       }
     }
     break;
@@ -853,7 +853,27 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
           Printer::Instance().AddMessage("You can move again!");
         }
 
-        RemoveEffectAllOf(ItemBonusType::PARALYZE);
+        DispelEffectsAllOf(ItemBonusType::PARALYZE);
+      }
+    }
+    break;
+
+    case ItemBonusType::WEAKNESS:
+    {
+      for (auto& kvp : _weaknessPenaltyStats)
+      {
+        int penalty = kvp.second.OriginalValue() / 2;
+        if (penalty == 0)
+        {
+          penalty = 1;
+        }
+
+        kvp.second.AddModifier(_objectId, -penalty);
+      }
+
+      if (Util::IsPlayer(this))
+      {
+        Printer::Instance().AddMessage("You feel weak!");
       }
     }
     break;
@@ -881,13 +901,24 @@ void GameObject::UnapplyEffect(const ItemBonusStruct& e)
     case ItemBonusType::FROZEN:
       Attrs.Spd.RemoveModifier(e.Id);
       break;
+
+    case ItemBonusType::WEAKNESS:
+    {
+      for (auto& kvp : _weaknessPenaltyStats)
+      {
+        kvp.second.RemoveModifier(_objectId);
+      }
+    }
+    break;
   }
 }
 
-void GameObject::RemoveEffect(const ItemBonusStruct& t)
+void GameObject::RemoveEffect(const ItemBonusType& type, const uint64_t& causer)
 {
+  //
   // Loop goes from end to start to avoid potential skipping
   // during erasing when there are adjacent elements.
+  //
   for (int i = _activeEffects.size() - 1; i >= 0; i--)
   {
     auto it = _activeEffects.begin();
@@ -896,58 +927,7 @@ void GameObject::RemoveEffect(const ItemBonusStruct& t)
     bool shouldErase = false;
     for (ItemBonusStruct& bonus : it->second)
     {
-      if (bonus.Id == t.Id)
-      {
-        UnapplyEffect(bonus);
-        shouldErase = true;
-        break;
-      }
-    }
-
-    if (shouldErase)
-    {
-      _activeEffects.erase(it);
-    }
-  }
-}
-
-void GameObject::RemoveEffectFirstFound(const ItemBonusType& type)
-{
-  for (int i = _activeEffects.size() - 1; i >= 0; i--)
-  {
-    auto it = _activeEffects.begin();
-    std::advance(it, i);
-
-    bool shouldErase = false;
-    for (ItemBonusStruct& bonus : it->second)
-    {
-      if (bonus.Type == type)
-      {
-        UnapplyEffect(bonus);
-        shouldErase = true;
-        break;
-      }
-    }
-
-    if (shouldErase)
-    {
-      _activeEffects.erase(it);
-      break;
-    }
-  }
-}
-
-void GameObject::RemoveEffectAllOf(const ItemBonusType& type)
-{
-  for (int i = _activeEffects.size() - 1; i >= 0; i--)
-  {
-    auto it = _activeEffects.begin();
-    std::advance(it, i);
-
-    bool shouldErase = false;
-    for (ItemBonusStruct& bonus : it->second)
-    {
-      if (bonus.Type == type)
+      if (bonus.Type == type && bonus.Id == causer)
       {
         UnapplyEffect(bonus);
         shouldErase = true;
@@ -969,7 +949,7 @@ void GameObject::AttachTrigger(TriggerType type,
   AddComponent<TriggerComponent>(type, condition, handler);
 }
 
-void GameObject::DispelEffect(const ItemBonusType& t)
+void GameObject::DispelEffectFirstFound(const ItemBonusType& t)
 {
   for (int i = _activeEffects.size() - 1; i >= 0; i--)
   {
@@ -983,6 +963,58 @@ void GameObject::DispelEffect(const ItemBonusType& t)
       {
         UnapplyEffect(bonus);
         shouldErase = true;
+        break;
+      }
+    }
+
+    if (shouldErase)
+    {
+      _activeEffects.erase(it);
+      break;
+    }
+  }
+}
+
+void GameObject::DispelEffectsAllOf(const ItemBonusType& type)
+{
+  for (int i = _activeEffects.size() - 1; i >= 0; i--)
+  {
+    auto it = _activeEffects.begin();
+    std::advance(it, i);
+
+    bool shouldErase = false;
+    for (ItemBonusStruct& bonus : it->second)
+    {
+      if (bonus.Type == type && !bonus.FromItem)
+      {
+        UnapplyEffect(bonus);
+        shouldErase = true;
+        break;
+      }
+    }
+
+    if (shouldErase)
+    {
+      _activeEffects.erase(it);
+    }
+  }
+}
+
+void GameObject::DispelEffects()
+{
+  for (int i = _activeEffects.size() - 1; i >= 0; i--)
+  {
+    auto it = _activeEffects.begin();
+    std::advance(it, i);
+
+    bool shouldErase = false;
+    for (ItemBonusStruct& bonus : it->second)
+    {
+      if (!bonus.FromItem)
+      {
+        UnapplyEffect(bonus);
+        shouldErase = true;
+        break;
       }
     }
 
@@ -1163,23 +1195,87 @@ void GameObject::AwardExperience(int amount)
 
 void GameObject::LevelUp(int baseHpOverride)
 {
-  std::map<int, std::pair<std::string, Attribute&>> mainAttributes =
+  int gainedLevel = Attrs.Lvl.Get() + 1;
+
+  if (_levelUpHistory.count(gainedLevel) == 1)
   {
-    { 0, { "STR", Attrs.Str } },
-    { 1, { "DEF", Attrs.Def } },
-    { 2, { "MAG", Attrs.Mag } },
-    { 3, { "RES", Attrs.Res } },
-    { 4, { "SKL", Attrs.Skl } },
-    { 5, { "SPD", Attrs.Spd } }
+    LevelUpFromHistory(gainedLevel, true);
+  }
+  else
+  {
+    LevelUpNatural(gainedLevel, baseHpOverride);
+  }
+
+  Attrs.Lvl.Add(1);
+}
+
+void GameObject::LevelDown()
+{
+  int levelFrom = Attrs.Lvl.Get();
+
+  LevelUpFromHistory(levelFrom, false);
+
+  Attrs.Lvl.Add(-1);
+  if (Attrs.Lvl.OriginalValue() <= 1)
+  {
+    Attrs.Lvl.Set(1);
+  }
+}
+
+void GameObject::LevelUpFromHistory(int gainedLevel, bool positive)
+{
+  auto& data = _levelUpHistory[gainedLevel];
+
+  const std::map<PlayerStats, Attribute&> mainAttrs =
+  {
+    { PlayerStats::STR, Attrs.Str },
+    { PlayerStats::DEF, Attrs.Def },
+    { PlayerStats::MAG, Attrs.Mag },
+    { PlayerStats::RES, Attrs.Res },
+    { PlayerStats::SKL, Attrs.Skl },
+    { PlayerStats::SPD, Attrs.Spd }
   };
 
-  for (auto& i : mainAttributes)
+  for (auto& kvp : data)
+  {
+    if (mainAttrs.count(kvp.first) == 1)
+    {
+      int toAdd = positive ? kvp.second : -kvp.second;
+      mainAttrs.at(kvp.first).Add(toAdd);
+    }
+  }
+
+  Attrs.HP.AddMax(positive
+                ? data[PlayerStats::HP]
+               : -data[PlayerStats::HP]);
+
+  Attrs.MP.AddMax(positive
+                ? data[PlayerStats::MP]
+               : -data[PlayerStats::MP]);
+}
+
+void GameObject::LevelUpNatural(int gainedLevel, int baseHpOverride)
+{
+  _levelUpHistory[gainedLevel] =
+  {
+    { PlayerStats::STR, 0 },
+    { PlayerStats::DEF, 0 },
+    { PlayerStats::MAG, 0 },
+    { PlayerStats::RES, 0 },
+    { PlayerStats::SKL, 0 },
+    { PlayerStats::SPD, 0 },
+    { PlayerStats::HP,  0 },
+    { PlayerStats::MP,  0 }
+  };
+
+  for (auto& i : _mainAttributes)
   {
     auto kvp = i.second;
 
     if (CanRaiseAttribute(kvp.second))
     {
       kvp.second.Add(1);
+      _levelUpHistory[gainedLevel][kvp.first] = 1;
     }
   }
 
@@ -1192,12 +1288,12 @@ void GameObject::LevelUp(int baseHpOverride)
 
   if (baseHpOverride != -1)
   {
-    Attrs.HP.AddMax(baseHpOverride);
+    hpToAdd = baseHpOverride;
   }
-  else
-  {
-    Attrs.HP.AddMax(hpToAdd);
-  }
+
+  Attrs.HP.AddMax(hpToAdd);
+
+  _levelUpHistory[gainedLevel][PlayerStats::HP] = hpToAdd;
 
   int minRndMp = Attrs.Mag.OriginalValue();
   int maxRndMp = Attrs.Mag.OriginalValue() + Attrs.MP.Talents;
@@ -1205,68 +1301,7 @@ void GameObject::LevelUp(int baseHpOverride)
   int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp + 1);
   Attrs.MP.AddMax(mpToAdd);
 
-  Attrs.Lvl.Add(1);
-}
-
-void GameObject::LevelDown()
-{
-  std::map<int, std::pair<std::string, Attribute&>> mainAttributes =
-  {
-    { 0, { "STR", Attrs.Str } },
-    { 1, { "DEF", Attrs.Def } },
-    { 2, { "MAG", Attrs.Mag } },
-    { 3, { "RES", Attrs.Res } },
-    { 4, { "SKL", Attrs.Skl } },
-    { 5, { "SPD", Attrs.Spd } }
-  };
-
-  // Try to raise main stats
-
-  for (auto& i : mainAttributes)
-  {
-    auto kvp = i.second;
-
-    if (CanRaiseAttribute(kvp.second))
-    {
-      kvp.second.Add(-1);
-      if (kvp.second.OriginalValue() < 0)
-      {
-        kvp.second.Set(0);
-      }
-    }
-  }
-
-  // HP and MP
-
-  int minRndHp = (Attrs.HP.Talents + 1);
-  int maxRndHp = 2 * (Attrs.HP.Talents + 1);
-
-  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp + 1);
-  Attrs.HP.AddMax(-hpToAdd);
-
-  if (Attrs.HP.Max().OriginalValue() <= 0)
-  {
-    Attrs.HP.SetMax(1);
-    Attrs.HP.Restore();
-  }
-
-  int minRndMp = Attrs.Mag.OriginalValue();
-  int maxRndMp = Attrs.Mag.OriginalValue() + Attrs.MP.Talents;
-
-  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp + 1);
-  Attrs.MP.AddMax(-mpToAdd);
-
-  if (Attrs.MP.Max().OriginalValue() < 0)
-  {
-    Attrs.MP.SetMax(0);
-    Attrs.MP.Restore();
-  }
-
-  Attrs.Lvl.Add(-1);
-  if (Attrs.Lvl.OriginalValue() <= 1)
-  {
-    Attrs.Lvl.Set(1);
-  }
+  _levelUpHistory[gainedLevel][PlayerStats::MP] = mpToAdd;
 }
 
 bool GameObject::CanRaiseAttribute(Attribute& attr)

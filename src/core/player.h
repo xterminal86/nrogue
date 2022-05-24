@@ -120,7 +120,7 @@ class Player : public GameObject
 
     bool IsGameObjectBorder(GameObject* go);
 
-    bool _starvingPenaltiesApplied = false;
+    void PrintLevelUpResultsToLog(bool reallyUp);
 
     int _starvingTimeout = 0;
     int _useIdentifiedMapSortingIndex = 0;
@@ -154,34 +154,26 @@ class Player : public GameObject
     //
     // ...yeah, I know, right?
     //
-    const std::map<int, std::pair<std::string, Attribute&>> _mainAttributes =
+    const std::map<PlayerStats, std::pair<std::string, Attribute&>> _mainAttributes =
     {
-      { 0, { "STR", Attrs.Str } },
-      { 1, { "DEF", Attrs.Def } },
-      { 2, { "MAG", Attrs.Mag } },
-      { 3, { "RES", Attrs.Res } },
-      { 4, { "SKL", Attrs.Skl } },
-      { 5, { "SPD", Attrs.Spd } }
+      { PlayerStats::STR, { "STR", Attrs.Str } },
+      { PlayerStats::DEF, { "DEF", Attrs.Def } },
+      { PlayerStats::MAG, { "MAG", Attrs.Mag } },
+      { PlayerStats::RES, { "RES", Attrs.Res } },
+      { PlayerStats::SKL, { "SKL", Attrs.Skl } },
+      { PlayerStats::SPD, { "SPD", Attrs.Spd } }
     };
 
-    const std::map<int, Attribute&> _starvingPenaltyStats =
+    std::map<PlayerStats, std::pair<std::string, int>> _statRaisesMap =
     {
-      { 0, Attrs.Str },
-      { 1, Attrs.Def },
-      { 2, Attrs.Skl },
-      { 3, Attrs.Spd }
-    };
-
-    std::map<std::string, int> _statRaisesMap =
-    {
-      { "STR", 0 },
-      { "DEF", 0 },
-      { "MAG", 0 },
-      { "RES", 0 },
-      { "SKL", 0 },
-      { "SPD", 0 },
-      { "HP",  0 },
-      { "MP",  0 }
+      { PlayerStats::STR, { "STR", 0 } },
+      { PlayerStats::DEF, { "DEF", 0 } },
+      { PlayerStats::MAG, { "MAG", 0 } },
+      { PlayerStats::RES, { "RES", 0 } },
+      { PlayerStats::SKL, { "SKL", 0 } },
+      { PlayerStats::SPD, { "SPD", 0 } },
+      { PlayerStats::HP,  { "HP",  0 } },
+      { PlayerStats::MP,  { "MP",  0 } }
     };
 
     Position _attackDir;

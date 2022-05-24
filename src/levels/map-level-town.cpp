@@ -679,6 +679,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
                           Strings::TileNames::WoodenFloorText);
           break;
 
+        //
         // NOTE: since ' ' (i.e. 'Space', 32 ASCII) is a transparent tile in the tileset,
         // you must use bg color to color it, because colored tile for background
         // is made from tile 219, which is a white block. So basically for ' ' tile
@@ -686,6 +687,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
         //
         // To allow fog of war to cover floor made of
         // background colored ' ', set FgColor to black.
+        //
         case ' ':
           PlaceGroundTile(posX,
                           posY,

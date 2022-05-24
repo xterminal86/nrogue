@@ -25,6 +25,9 @@ void ItemsFactory::InitPotionColors()
 
   _gamePotionsMap.clear();
 
+  // TODO: potion of cure weakness and restore ability,
+  // allow repeatable colors
+
   std::vector<ItemType> potionTypes =
   {
     ItemType::HEALING_POTION,
@@ -2364,6 +2367,7 @@ void ItemsFactory::AddBonusToItem(ItemComponent* itemRef, const ItemBonusStruct&
 
 void ItemsFactory::SetItemName(GameObject* go, ItemData& itemData)
 {
+  //
   // Insertion to front goes in stack-like order:
   // objName + ItemQuality + BUC = BUC_ItemQuality_objName
   //
@@ -2481,8 +2485,10 @@ void ItemsFactory::SetItemName(GameObject* go, ItemData& itemData)
     }
     break;
 
+    //
     // Special info is filled inside ItemComponent::GetInspectionInfo()
     // for specific type of item.
+    //
     default:
     {
       if (itemData.Prefix == ItemPrefix::BLESSED

@@ -2222,7 +2222,7 @@ namespace Util
 
     if (overkill <= 0)
     {
-      who->DispelEffect(ItemBonusType::MANA_SHIELD);
+      who->DispelEffectFirstFound(ItemBonusType::MANA_SHIELD);
       who->Attrs.HP.AddMin(overkill);
     }
   }
