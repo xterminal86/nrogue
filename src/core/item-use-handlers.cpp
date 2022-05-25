@@ -22,51 +22,59 @@ namespace ItemUseHandlers
 
     float scale = 0.4f;
 
-    if (item->Data.Prefix == ItemPrefix::BLESSED)
+    switch (item->Data.Prefix)
     {
-      amount = statMax;
-      message = (statCur == statMax)
-                ? Strings::NoActionText
-                : "Your wounds are healed completely!";
-    }
-    else if (item->Data.Prefix == ItemPrefix::UNCURSED)
-    {
-      amount = statMax * scale;
-      message = "You feel better";
-      message = (statCur == statMax)
-                ? Strings::NoActionText
-                : message;
-    }
-    else if (item->Data.Prefix == ItemPrefix::CURSED)
-    {
-      amount = statMax * (scale / 2.0f);
-
-      int var = RNG::Instance().RandomRange(0, 3);
-      if (var == 0)
+      case ItemPrefix::BLESSED:
       {
+        amount = statMax;
         message = (statCur == statMax)
                   ? Strings::NoActionText
-                  : "You feel a little better";
+                  : "Your wounds are healed completely!";
       }
-      else if (var == 1)
+      break;
+
+      case ItemPrefix::UNCURSED:
       {
-        amount = -amount;
-        message = "You are damaged by a cursed potion!";
+        amount = statMax * scale;
+        message = "You feel better";
+        message = (statCur == statMax)
+                  ? Strings::NoActionText
+                  : message;
       }
-      else if (var == 2)
+      break;
+
+      case ItemPrefix::CURSED:
       {
-        message = "You feel unwell!";
+        amount = statMax * (scale / 2.0f);
 
-        ItemBonusStruct e;
+        int var = RNG::Instance().RandomRange(0, 3);
+        if (var == 0)
+        {
+          message = (statCur == statMax)
+                    ? Strings::NoActionText
+                    : "You feel a little better";
+        }
+        else if (var == 1)
+        {
+          amount = -amount;
+          message = "You are damaged by a cursed potion!";
+        }
+        else if (var == 2)
+        {
+          message = "You feel unwell!";
 
-        e.Type       = ItemBonusType::POISONED;
-        e.Duration   = GlobalConstants::EffectDefaultDuration;
-        e.Period     = 10;
-        e.BonusValue = -1;
-        e.Cumulative = true;
+          ItemBonusStruct e;
 
-        user->AddEffect(e);
+          e.Type       = ItemBonusType::POISONED;
+          e.Duration   = GlobalConstants::EffectDefaultDuration;
+          e.Period     = 10;
+          e.BonusValue = -1;
+          e.Cumulative = true;
+
+          user->AddEffect(e);
+        }
       }
+      break;
     }
 
     if (Util::IsPlayer(user))
@@ -100,26 +108,34 @@ namespace ItemUseHandlers
 
     std::string message;
 
-    if (item->Data.Prefix == ItemPrefix::BLESSED)
+    switch (item->Data.Prefix)
     {
-      amount = statMax;
-      message = "Your spirit force was restored!";
-      message = (statCur == statMax)
-                ? Strings::NoActionText
-                : message;
-    }
-    else if (item->Data.Prefix == ItemPrefix::UNCURSED)
-    {
-      amount = statMax * 0.3f;
-      message = "Your spirit is reinforced";
-      message = (statCur == statMax)
-                ? Strings::NoActionText
-                : message;
-    }
-    else if (item->Data.Prefix == ItemPrefix::CURSED)
-    {
-      amount = -statMax * 0.3f;
-      message = "Your spirit force was drained!";
+      case ItemPrefix::BLESSED:
+      {
+        amount = statMax;
+        message = "Your spirit force was restored!";
+        message = (statCur == statMax)
+                  ? Strings::NoActionText
+                  : message;
+      }
+      break;
+
+      case ItemPrefix::UNCURSED:
+      {
+        amount = statMax * 0.3f;
+        message = "Your spirit is reinforced";
+        message = (statCur == statMax)
+                  ? Strings::NoActionText
+                  : message;
+      }
+      break;
+
+      case ItemPrefix::CURSED:
+      {
+        amount = -statMax * 0.3f;
+        message = "Your spirit force was drained!";
+      }
+      break;
     }
 
     user->Attrs.MP.AddMin(amount);
@@ -144,39 +160,48 @@ namespace ItemUseHandlers
   {
     std::string message = Strings::NoActionText;
 
+    //
     // Blessed potion removes all poison, uncursed removes
     // only one of the accumulated ones, if any.
-
-    if (item->Data.Prefix == ItemPrefix::BLESSED)
+    //
+    switch (item->Data.Prefix)
     {
-      if (user->HasEffect(ItemBonusType::POISONED))
+      case ItemPrefix::BLESSED:
       {
-        user->DispelEffectsAllOf(ItemBonusType::POISONED);
-        message = "The illness is gone!";
+        if (user->HasEffect(ItemBonusType::POISONED))
+        {
+          user->DispelEffectsAllOf(ItemBonusType::POISONED);
+          message = "The illness is gone!";
+        }
       }
-    }
-    else if (item->Data.Prefix == ItemPrefix::UNCURSED)
-    {
-      if (user->HasEffect(ItemBonusType::POISONED))
+      break;
+
+      case ItemPrefix::UNCURSED:
       {
-        user->DispelEffectFirstFound(ItemBonusType::POISONED);
-        message = "The illness subsides";
+        if (user->HasEffect(ItemBonusType::POISONED))
+        {
+          user->DispelEffectFirstFound(ItemBonusType::POISONED);
+          message = "The illness subsides";
+        }
       }
-    }
-    else if (item->Data.Prefix == ItemPrefix::CURSED)
-    {
-      ItemBonusStruct bs;
+      break;
 
-      bs.BonusValue = -1;
-      bs.Period     = 10;
-      bs.Duration   = GlobalConstants::EffectDefaultDuration;
-      bs.Id         = item->OwnerGameObject->ObjectId();
-      bs.Cumulative = true;
-      bs.Type       = ItemBonusType::POISONED;
+      case ItemPrefix::CURSED:
+      {
+        ItemBonusStruct bs;
 
-      user->AddEffect(bs);
+        bs.BonusValue = -1;
+        bs.Period     = 10;
+        bs.Duration   = GlobalConstants::EffectDefaultDuration;
+        bs.Id         = item->OwnerGameObject->ObjectId();
+        bs.Cumulative = true;
+        bs.Type       = ItemBonusType::POISONED;
 
-      message = "You are feeling unwell...";
+        user->AddEffect(bs);
+
+        message = "You are feeling unwell...";
+      }
+      break;
     }
 
     if (Util::IsPlayer(user))
@@ -204,24 +229,32 @@ namespace ItemUseHandlers
 
     std::string message;
 
-    if (item->Data.Prefix == ItemPrefix::BLESSED)
+    switch (item->Data.Prefix)
     {
-      amount = statMax * 0.6f;
-      message = (statCur == statMax)
-                ? Strings::NoActionText
-                : "Delicious fruit juice!";
-    }
-    else if (item->Data.Prefix == ItemPrefix::UNCURSED)
-    {
-      amount = statMax * 0.3f;
-      message = (statCur == statMax)
-                ? Strings::NoActionText
-                : "Tasted like fruit juice";
-    }
-    else if (item->Data.Prefix == ItemPrefix::CURSED)
-    {
-      amount = -statMax * 0.3f;
-      message = "Your feel peckish";
+      case ItemPrefix::BLESSED:
+      {
+        amount = statMax * 0.6f;
+        message = (statCur == statMax)
+                  ? Strings::NoActionText
+                  : "Delicious fruit juice!";
+      }
+      break;
+
+      case ItemPrefix::UNCURSED:
+      {
+        amount = statMax * 0.3f;
+        message = (statCur == statMax)
+                  ? Strings::NoActionText
+                  : "Tasted like fruit juice";
+      }
+      break;
+
+      case ItemPrefix::CURSED:
+      {
+        amount = -statMax * 0.3f;
+        message = "Your feel peckish";
+      }
+      break;
     }
 
     statCur += amount;
@@ -247,40 +280,48 @@ namespace ItemUseHandlers
   {
     std::string message = Strings::NoActionText;
 
-    if (item->Data.Prefix == ItemPrefix::BLESSED)
+    switch (item->Data.Prefix)
     {
-      bool fail = (user->Attrs.HP.IsFull() && !user->HasEffect(ItemBonusType::WEAKNESS));
-
-      if (!fail)
+      case ItemPrefix::BLESSED:
       {
-        user->DispelEffectsAllOf(ItemBonusType::WEAKNESS);
-        user->Attrs.HP.Restore();
+        bool fail = (user->Attrs.HP.IsFull() && !user->HasEffect(ItemBonusType::WEAKNESS));
 
-        message = "You feel great!";
+        if (!fail)
+        {
+          user->DispelEffectsAllOf(ItemBonusType::WEAKNESS);
+          user->Attrs.HP.Restore();
+
+          message = "You feel great!";
+        }
       }
-    }
-    else if (item->Data.Prefix == ItemPrefix::UNCURSED)
-    {
-      if (user->HasEffect(ItemBonusType::WEAKNESS))
+      break;
+
+      case ItemPrefix::UNCURSED:
       {
-        user->DispelEffectsAllOf(ItemBonusType::WEAKNESS);
-        message = "The weakness is gone!";
+        if (user->HasEffect(ItemBonusType::WEAKNESS))
+        {
+          user->DispelEffectsAllOf(ItemBonusType::WEAKNESS);
+          message = "The weakness is gone!";
+        }
       }
-    }
-    else if (item->Data.Prefix == ItemPrefix::CURSED)
-    {
-      ItemBonusStruct bs;
+      break;
 
-      bs.Type       = ItemBonusType::POISONED;
-      bs.BonusValue = -1;
-      bs.Duration   = GlobalConstants::EffectDefaultDuration;
-      bs.Period     = GlobalConstants::EffectDurationSkipsForTurn * 2;
-      bs.Cumulative = true;
-      bs.Id         = item->OwnerGameObject->ObjectId();
+      case ItemPrefix::CURSED:
+      {
+        ItemBonusStruct bs;
 
-      user->AddEffect(bs);
+        bs.Type       = ItemBonusType::POISONED;
+        bs.BonusValue = -1;
+        bs.Duration   = GlobalConstants::EffectDefaultDuration;
+        bs.Period     = GlobalConstants::EffectDurationSkipsForTurn * 2;
+        bs.Cumulative = true;
+        bs.Id         = item->OwnerGameObject->ObjectId();
 
-      message = "You feel unwell...";
+        user->AddEffect(bs);
+
+        message = "You feel unwell...";
+      }
+      break;
     }
 
     if (Util::IsPlayer(user))
@@ -309,12 +350,33 @@ namespace ItemUseHandlers
     std::advance(it, lastInd);
     int lostLevel = it->first;
 
-    if (item->Data.Prefix == ItemPrefix::BLESSED)
+    switch (item->Data.Prefix)
     {
-      if (user->Attrs.Lvl.Get() < lostLevel)
+      case ItemPrefix::BLESSED:
       {
-        int iterations = lostLevel - user->Attrs.Lvl.Get();
-        for (int i = 0; i < iterations; i++)
+        if (user->Attrs.Lvl.Get() < lostLevel)
+        {
+          int iterations = lostLevel - user->Attrs.Lvl.Get();
+          for (int i = 0; i < iterations; i++)
+          {
+            if (Util::IsPlayer(user))
+            {
+              static_cast<Player*>(user)->LevelUpSilent();
+            }
+            else
+            {
+              user->LevelUp();
+            }
+          }
+
+          message = "You regained lost experience!";
+        }
+      }
+      break;
+
+      case ItemPrefix::UNCURSED:
+      {
+        if (user->Attrs.Lvl.Get() < lostLevel)
         {
           if (Util::IsPlayer(user))
           {
@@ -324,42 +386,29 @@ namespace ItemUseHandlers
           {
             user->LevelUp();
           }
-        }
 
-        message = "You regained lost experience!";
+          message = "You regain some of your loss back";
+        }
       }
-    }
-    else if (item->Data.Prefix == ItemPrefix::UNCURSED)
-    {
-      if (user->Attrs.Lvl.Get() < lostLevel)
+      break;
+
+      case ItemPrefix::CURSED:
       {
-        if (Util::IsPlayer(user))
+        if (user->Attrs.Lvl.Get() != 1)
         {
-          static_cast<Player*>(user)->LevelUpSilent();
-        }
-        else
-        {
-          user->LevelUp();
-        }
+          if (Util::IsPlayer(user))
+          {
+            static_cast<Player*>(user)->LevelDownSilent();
+          }
+          else
+          {
+            user->LevelDown();
+          }
 
-        message = "You regain some of your loss back";
-      }
-    }
-    else if (item->Data.Prefix == ItemPrefix::CURSED)
-    {
-      if (user->Attrs.Lvl.Get() != 1)
-      {
-        if (Util::IsPlayer(user))
-        {
-          static_cast<Player*>(user)->LevelDownSilent();
+          message = "You feel less confident...";
         }
-        else
-        {
-          user->LevelDown();
-        }
-
-        message = "You feel less confident...";
       }
+      break;
     }
 
     if (Util::IsPlayer(user))
@@ -386,20 +435,28 @@ namespace ItemUseHandlers
 
     std::string message;
 
-    if (item->Data.Prefix == ItemPrefix::BLESSED)
+    switch (item->Data.Prefix)
     {
-      amount = statMax;
-      message = "You feel enlighted!";
-    }
-    else if (item->Data.Prefix == ItemPrefix::UNCURSED)
-    {
-      amount = statMax * 0.3f;
-      message = "You feel more experienced";
-    }
-    else if (item->Data.Prefix == ItemPrefix::CURSED)
-    {
-      amount = -statMax * 0.3f;
-      message = "You lose some experience!";
+      case ItemPrefix::BLESSED:
+      {
+        amount = statMax;
+        message = "You feel enlightened!";
+      }
+      break;
+
+      case ItemPrefix::UNCURSED:
+      {
+        amount = statMax * 0.3f;
+        message = "You feel more experienced";
+      }
+      break;
+
+      case ItemPrefix::CURSED:
+      {
+        amount = -statMax * 0.3f;
+        message = "You lose some experience!";
+      }
+      break;
     }
 
     user->AwardExperience(amount);
@@ -433,20 +490,28 @@ namespace ItemUseHandlers
 
     auto message = useMessagesByType[item->Data.ItemType_];
 
-    if (buc == ItemPrefix::UNCURSED)
+    switch (buc)
     {
-      valueToAdd = 1;
-      message += "increased!";
-    }
-    else if (buc == ItemPrefix::BLESSED)
-    {
-      valueToAdd = 2;
-      message += "increased significantly!";
-    }
-    else if (buc == ItemPrefix::CURSED)
-    {
-      valueToAdd = -1;
-      message += "decreased!";
+      case ItemPrefix::UNCURSED:
+      {
+        valueToAdd = 1;
+        message += "increased!";
+      }
+      break;
+
+      case ItemPrefix::BLESSED:
+      {
+        valueToAdd = 2;
+        message += "increased significantly!";
+      }
+      break;
+
+      case ItemPrefix::CURSED:
+      {
+        valueToAdd = -1;
+        message += "decreased!";
+      }
+      break;
     }
 
     std::map<ItemType, Attribute&> userStats =
@@ -547,43 +612,51 @@ namespace ItemUseHandlers
 
     eatMessages.push_back(Util::StringFormat("You eat %s...", objName.data()));
 
-    if (item->Data.Prefix == ItemPrefix::CURSED)
+    switch (item->Data.Prefix)
     {
-      eatMessages.push_back("Disgusting!");
-
-      if (Util::Rolld100(50))
+      case ItemPrefix::UNCURSED:
       {
-        user->Attrs.Hunger += item->Data.Cost;
-
-        eatMessages.push_back("Rotten food!");
-
-        // NOTE: assuming player hunger meter is in order of 1000
-        int dur = item->Data.Cost / 100;
-
-        ItemBonusStruct b;
-        b.Type = ItemBonusType::POISONED;
-        b.BonusValue = -1;
-        b.Period = 10;
-        b.Duration = dur;
-        b.Cumulative = true;
-        b.Id = item->OwnerGameObject->ObjectId();
-
-        user->AddEffect(b);
+        eatMessages.push_back("It tasted OK");
+        user->Attrs.Hunger -= item->Data.Cost * 0.75f;
       }
-      else
+      break;
+
+      case ItemPrefix::BLESSED:
       {
-        user->Attrs.Hunger -= item->Data.Cost * 0.5f;
+        eatMessages.push_back("It's delicious!");
+        user->Attrs.Hunger -= item->Data.Cost;
       }
-    }
-    else if (item->Data.Prefix == ItemPrefix::BLESSED)
-    {
-      eatMessages.push_back("It's delicious!");
-      user->Attrs.Hunger -= item->Data.Cost;
-    }
-    else
-    {
-      eatMessages.push_back("It tasted OK");
-      user->Attrs.Hunger -= item->Data.Cost * 0.75f;
+      break;
+
+      case ItemPrefix::CURSED:
+      {
+        eatMessages.push_back("Disgusting!");
+
+        if (Util::Rolld100(50))
+        {
+          user->Attrs.Hunger += item->Data.Cost;
+
+          eatMessages.push_back("Rotten food!");
+
+          // NOTE: assuming player hunger meter is in order of 1000
+          int dur = item->Data.Cost / 100;
+
+          ItemBonusStruct b;
+          b.Type = ItemBonusType::POISONED;
+          b.BonusValue = -1;
+          b.Period = 10;
+          b.Duration = dur;
+          b.Cumulative = true;
+          b.Id = item->OwnerGameObject->ObjectId();
+
+          user->AddEffect(b);
+        }
+        else
+        {
+          user->Attrs.Hunger -= item->Data.Cost * 0.5f;
+        }
+      }
+      break;
     }
 
     user->Attrs.Hunger = Util::Clamp(user->Attrs.Hunger,
