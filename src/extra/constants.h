@@ -343,8 +343,6 @@ namespace GlobalConstants
   extern const std::map<SpellType,     int> WandSpellCapacityCostByType;
   extern const std::map<ItemBonusType, int> MoneyCostIncreaseByBonusType;
 
-  extern const std::map<std::string, ItemType> PotionTypeByStatName;
-
   extern const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName;
 
   extern const std::map<WandMaterials, std::string>                 WandMaterialNamesByMaterial;

@@ -195,7 +195,7 @@ namespace ItemUseHandlers
     return UseResult::SUCCESS;
   }
 
-  UseResult HungerPotionUseHandler(ItemComponent* item, GameObject* user)
+  UseResult JuicePotionUseHandler(ItemComponent* item, GameObject* user)
   {
     int amount = 0;
 
@@ -206,17 +206,17 @@ namespace ItemUseHandlers
 
     if (item->Data.Prefix == ItemPrefix::BLESSED)
     {
-      amount = statMax;
+      amount = statMax * 0.6f;
       message = (statCur == statMax)
                 ? Strings::NoActionText
-                : "You feel satiated!";
+                : "Delicious fruit juice!";
     }
     else if (item->Data.Prefix == ItemPrefix::UNCURSED)
     {
       amount = statMax * 0.3f;
       message = (statCur == statMax)
                 ? Strings::NoActionText
-                : "Your hunger has abated somewhat";
+                : "Tasted like fruit juice";
     }
     else if (item->Data.Prefix == ItemPrefix::CURSED)
     {
@@ -237,6 +237,141 @@ namespace ItemUseHandlers
       if (message != Strings::NoActionText)
       {
         playerRef->RememberItem(item, "food potion");
+      }
+    }
+
+    return UseResult::SUCCESS;
+  }
+
+  UseResult CWPotionUseHandler(ItemComponent* item, GameObject* user)
+  {
+    std::string message = Strings::NoActionText;
+
+    if (item->Data.Prefix == ItemPrefix::BLESSED)
+    {
+      bool fail = (user->Attrs.HP.IsFull() && !user->HasEffect(ItemBonusType::WEAKNESS));
+
+      if (!fail)
+      {
+        user->DispelEffectsAllOf(ItemBonusType::WEAKNESS);
+        user->Attrs.HP.Restore();
+
+        message = "You feel great!";
+      }
+    }
+    else if (item->Data.Prefix == ItemPrefix::UNCURSED)
+    {
+      if (user->HasEffect(ItemBonusType::WEAKNESS))
+      {
+        user->DispelEffectsAllOf(ItemBonusType::WEAKNESS);
+        message = "The weakness is gone!";
+      }
+    }
+    else if (item->Data.Prefix == ItemPrefix::CURSED)
+    {
+      ItemBonusStruct bs;
+
+      bs.Type       = ItemBonusType::POISONED;
+      bs.BonusValue = -1;
+      bs.Duration   = GlobalConstants::EffectDefaultDuration;
+      bs.Period     = GlobalConstants::EffectDurationSkipsForTurn * 2;
+      bs.Cumulative = true;
+      bs.Id         = item->OwnerGameObject->ObjectId();
+
+      user->AddEffect(bs);
+
+      message = "You feel unwell...";
+    }
+
+    if (Util::IsPlayer(user))
+    {
+      Player* playerRef = &Application::Instance().PlayerInstance;
+      playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
+
+      Printer::Instance().AddMessage(message);
+
+      if (message != Strings::NoActionText)
+      {
+        playerRef->RememberItem(item, "cure weakness");
+      }
+    }
+
+    return UseResult::SUCCESS;
+  }
+
+  UseResult RAPotionUseHandler(ItemComponent* item, GameObject* user)
+  {
+    std::string message = Strings::NoActionText;
+
+    auto& luh = user->GetLevelUpHistory();
+    int lastInd = luh.size() - 1;
+    auto it = luh.begin();
+    std::advance(it, lastInd);
+    int lostLevel = it->first;
+
+    if (item->Data.Prefix == ItemPrefix::BLESSED)
+    {
+      if (user->Attrs.Lvl.Get() < lostLevel)
+      {
+        int iterations = lostLevel - user->Attrs.Lvl.Get();
+        for (int i = 0; i < iterations; i++)
+        {
+          if (Util::IsPlayer(user))
+          {
+            static_cast<Player*>(user)->LevelUpSilent();
+          }
+          else
+          {
+            user->LevelUp();
+          }
+        }
+
+        message = "You regained lost experience!";
+      }
+    }
+    else if (item->Data.Prefix == ItemPrefix::UNCURSED)
+    {
+      if (user->Attrs.Lvl.Get() < lostLevel)
+      {
+        if (Util::IsPlayer(user))
+        {
+          static_cast<Player*>(user)->LevelUpSilent();
+        }
+        else
+        {
+          user->LevelUp();
+        }
+
+        message = "You regain some of your loss back";
+      }
+    }
+    else if (item->Data.Prefix == ItemPrefix::CURSED)
+    {
+      if (user->Attrs.Lvl.Get() != 1)
+      {
+        if (Util::IsPlayer(user))
+        {
+          static_cast<Player*>(user)->LevelDownSilent();
+        }
+        else
+        {
+          user->LevelDown();
+        }
+
+        message = "You feel less confident...";
+      }
+    }
+
+    if (Util::IsPlayer(user))
+    {
+      Player* playerRef = &Application::Instance().PlayerInstance;
+      playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
+
+      Printer::Instance().AddMessage(message);
+
+      if (message != Strings::NoActionText)
+      {
+        playerRef->RememberItem(item, "restore ability");
       }
     }
 

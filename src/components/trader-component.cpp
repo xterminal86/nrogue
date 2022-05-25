@@ -77,16 +77,18 @@ void TraderComponent::CreateClericItems()
     { ItemType::HEALING_POTION, 10 },
     { ItemType::MANA_POTION,    10 },
     { ItemType::NP_POTION,      10 },
-    { ItemType::WAND,            5 },
-    { ItemType::SCROLL,          5 },
+    { ItemType::RA_POTION,       3 },
+    { ItemType::CW_POTION,       3 },
+    { ItemType::WAND,            4 },
+    { ItemType::SCROLL,          4 },
     { ItemType::ACCESSORY,       3 },
     { ItemType::RETURNER,        3 }
   };
 
   std::map<ItemPrefix, int> prefixWeights =
   {
-    { ItemPrefix::BLESSED,  1 },
-    { ItemPrefix::UNCURSED, 6 }
+    { ItemPrefix::BLESSED,  3 },
+    { ItemPrefix::UNCURSED, 7 }
   };
 
   for (int i = 0; i < _itemsToCreate; i++)
@@ -108,6 +110,14 @@ void TraderComponent::CreateClericItems()
 
       case ItemType::NP_POTION:
         go = ItemsFactory::Instance().CreateNeutralizePoisonPotion(prefixPair.first);
+        break;
+
+      case ItemType::CW_POTION:
+        go = ItemsFactory::Instance().CreateCWPotion(prefixPair.first);
+        break;
+
+      case ItemType::RA_POTION:
+        go = ItemsFactory::Instance().CreateRAPotion(prefixPair.first);
         break;
 
       case ItemType::RETURNER:

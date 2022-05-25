@@ -63,6 +63,7 @@ class Player : public GameObject
     void LevelUpSilent();
     void LevelUp(int baseHpOverride = -1) override;
     void LevelDown() override;
+    void LevelDownSilent();
 
     void RememberItem(ItemComponent* itemRef, const std::string& effect);
     void AddExtraItems();

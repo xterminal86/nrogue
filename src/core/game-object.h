@@ -205,6 +205,7 @@ class GameObject
     bool IsOnTile(GameObjectType tileType);
 
     const std::map<uint64_t, std::vector<ItemBonusStruct>>& GetActiveEffects();
+    const std::map<int, std::map<PlayerStats, int>>& GetLevelUpHistory();
 
     const uint64_t& ObjectId();
 

@@ -369,14 +369,16 @@ namespace GlobalConstants
     { ItemType::HEALING_POTION, 50 },
     { ItemType::MANA_POTION,    50 },
     { ItemType::NP_POTION,      50 },
-    { ItemType::HUNGER_POTION,  20 },
+    { ItemType::JUICE_POTION,   20 },
     { ItemType::STR_POTION,      1 },
     { ItemType::DEF_POTION,      1 },
     { ItemType::MAG_POTION,      1 },
     { ItemType::RES_POTION,      1 },
     { ItemType::SKL_POTION,      1 },
     { ItemType::SPD_POTION,      1 },
-    { ItemType::EXP_POTION,      5 }
+    { ItemType::EXP_POTION,      5 },
+    { ItemType::CW_POTION,       5 },
+    { ItemType::RA_POTION,       5 }
   };
 
   const std::map<PlayerStats, std::string> StatNameByType =
@@ -395,7 +397,7 @@ namespace GlobalConstants
   {
     { ItemType::HEALING_POTION, "Healing Potion"    },
     { ItemType::MANA_POTION,    "Mana Potion"       },
-    { ItemType::HUNGER_POTION,  "Hunger Potion"     },
+    { ItemType::JUICE_POTION,   "Fruit Juice"       },
     { ItemType::NP_POTION,      "Neutralize Poison" },
     { ItemType::STR_POTION,     "STR Potion"        },
     { ItemType::DEF_POTION,     "DEF Potion"        },
@@ -403,7 +405,9 @@ namespace GlobalConstants
     { ItemType::RES_POTION,     "RES Potion"        },
     { ItemType::SKL_POTION,     "SKL Potion"        },
     { ItemType::SPD_POTION,     "SPD Potion"        },
-    { ItemType::EXP_POTION,     "EXP Potion"        }
+    { ItemType::EXP_POTION,     "EXP Potion"        },
+    { ItemType::RA_POTION,      "Restore Ability"   },
+    { ItemType::CW_POTION,      "Cure Weakness"     }
   };
 
   const std::map<ItemType, std::string> StatNameByPotionType =
@@ -414,16 +418,6 @@ namespace GlobalConstants
     { ItemType::RES_POTION, "RES" },
     { ItemType::SKL_POTION, "SKL" },
     { ItemType::SPD_POTION, "SPD" },
-  };
-
-  const std::map<std::string, ItemType> PotionTypeByStatName =
-  {
-    { "STR", ItemType::STR_POTION },
-    { "DEF", ItemType::DEF_POTION },
-    { "MAG", ItemType::MAG_POTION },
-    { "RES", ItemType::RES_POTION },
-    { "SKL", ItemType::SKL_POTION },
-    { "SPD", ItemType::SPD_POTION }
   };
 
   const std::map<WeaponType, std::string> WeaponNameByType =

@@ -86,6 +86,7 @@ class DevConsole : public GameState
     const std::string ErrCannotMove     = "Cannot move, probably occupied";
     const std::string ErrInvalidType    = "Invalid type";
     const std::string ErrCmdNotHandled  = "Command not handled";
+    const std::string ErrCantLevelDown  = "Error: current level is 1";
 
     const std::string Ok = "Ok";
     const std::string Prompt = "> ";

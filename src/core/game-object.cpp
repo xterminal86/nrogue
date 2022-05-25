@@ -1331,6 +1331,11 @@ const std::map<uint64_t, std::vector<ItemBonusStruct>>& GameObject::GetActiveEff
   return _activeEffects;
 }
 
+const std::map<int, std::map<PlayerStats, int>>& GameObject::GetLevelUpHistory()
+{
+  return _levelUpHistory;
+}
+
 const uint64_t& GameObject::ObjectId()
 {
   return _objectId;

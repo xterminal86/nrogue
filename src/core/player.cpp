@@ -964,6 +964,11 @@ void Player::LevelDown()
                                          "#000044");
 }
 
+void Player::LevelDownSilent()
+{
+  GameObject::LevelDown();
+}
+
 void Player::PrintLevelUpResultsToLog(bool reallyUp)
 {
   int getDataFrom = reallyUp

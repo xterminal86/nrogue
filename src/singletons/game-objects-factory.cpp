@@ -45,12 +45,20 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       go = ItemsFactory::Instance().CreateNeutralizePoisonPotion();
       break;
 
-    case ItemType::HUNGER_POTION:
-      go = ItemsFactory::Instance().CreateHungerPotion();
+    case ItemType::JUICE_POTION:
+      go = ItemsFactory::Instance().CreateJuicePotion();
       break;
 
     case ItemType::EXP_POTION:
       go = ItemsFactory::Instance().CreateExpPotion();
+      break;
+
+    case ItemType::CW_POTION:
+      go = ItemsFactory::Instance().CreateCWPotion();
+      break;
+
+    case ItemType::RA_POTION:
+      go = ItemsFactory::Instance().CreateRAPotion();
       break;
 
     case ItemType::STR_POTION:

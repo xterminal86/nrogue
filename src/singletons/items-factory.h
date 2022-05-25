@@ -28,9 +28,11 @@ class ItemsFactory : public Singleton<ItemsFactory>
     GameObject* CreateHealingPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateNeutralizePoisonPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateManaPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
-    GameObject* CreateHungerPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateJuicePotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateExpPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateStatPotion(const std::string& statName, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateCWPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateRAPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRandomPotion();
     //
     // *************************************************************************

@@ -289,9 +289,18 @@ void DevConsole::ProcessCommand(const std::string& command,
       break;
 
     case DevConsoleCommand::LEVEL_DOWN:
-      _playerRef->LevelDown();
-      StdOut(Ok);
-      break;
+    {
+      if (_playerRef->Attrs.Lvl.Get() == 1)
+      {
+        StdOut(ErrCantLevelDown);
+      }
+      else
+      {
+        _playerRef->LevelDown();
+        StdOut(Ok);
+      }
+    }
+    break;
 
     case DevConsoleCommand::PRINT_MAP:
       Map::Instance().PrintMapLayout();
