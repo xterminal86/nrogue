@@ -1268,7 +1268,7 @@ void GameObject::LevelUpNatural(int gainedLevel, int baseHpOverride)
     { PlayerStats::MP,  0 }
   };
 
-  for (auto& i : _mainAttributes)
+  for (auto& i : _mainAttributesByIndex)
   {
     auto kvp = i.second;
 

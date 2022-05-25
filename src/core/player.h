@@ -152,7 +152,7 @@ class Player : public GameObject
     //
     // ...yeah, I know, right?
     //
-    const std::map<PlayerStats, std::pair<std::string, Attribute&>> _mainAttributes =
+    const std::map<PlayerStats, std::pair<std::string, Attribute&>> _mainAttributesByStatName =
     {
       { PlayerStats::STR, { "STR", Attrs.Str } },
       { PlayerStats::DEF, { "DEF", Attrs.Def } },

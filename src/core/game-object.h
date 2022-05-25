@@ -292,7 +292,7 @@ class GameObject
       { ItemBonusType::MP, Attrs.MP }
     };
 
-    const std::map<int, std::pair<PlayerStats, Attribute&>> _mainAttributes =
+    const std::map<int, std::pair<PlayerStats, Attribute&>> _mainAttributesByIndex =
     {
       { 0, { PlayerStats::STR, Attrs.Str } },
       { 1, { PlayerStats::DEF, Attrs.Def } },

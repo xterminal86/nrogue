@@ -1100,7 +1100,7 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
   std::vector<std::string> levelUpResults;
 
   std::string mbStr;
-  for (auto& i : _mainAttributes)
+  for (auto& i : _mainAttributesByStatName)
   {
     auto kvp = i.second;
 
@@ -1139,7 +1139,7 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
   }
 
   int index = 0;
-  for (auto& i : _mainAttributes)
+  for (auto& i : _mainAttributesByStatName)
   {
     auto kvp = i.second;
 
