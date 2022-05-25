@@ -12,6 +12,8 @@ enum class DevConsoleCommand
   CLOSE,
   TRANSFORM_TILE,
   PLACE_WALL,
+  CREATE_ALL_POTIONS,
+  CREATE_ALL_SCROLLS,
   GET_STATIC_OBJECT,
   GET_ACTOR,
   GET_ITEM,
@@ -135,6 +137,8 @@ class DevConsole : public GameState
     void PrintAdditionalHelp(DevConsoleCommand command);
     void InfoHandles();
     void CreateMonster(const std::vector<std::string>& params);
+    void CreateAllPotions();
+    void CreateAllScrolls();
     void GetObject(const std::vector<std::string>& params,
                    ObjectHandleType handleType);
     void MoveObject(const std::vector<std::string>& params,
@@ -196,6 +200,7 @@ class DevConsole : public GameState
       { "p_mov",  DevConsoleCommand::MOVE_PLAYER        },
       { "p_de",   DevConsoleCommand::DISPEL_EFFECTS     },
       { "o_del",  DevConsoleCommand::REMOVE_OBJECT      },
+      { "p_gm",   DevConsoleCommand::GIVE_MONEY         },
       { "p_lu",   DevConsoleCommand::LEVEL_UP           },
       { "p_ld",   DevConsoleCommand::LEVEL_DOWN         },
       { "p_info", DevConsoleCommand::REPORT_PLAYER      },
@@ -203,7 +208,8 @@ class DevConsole : public GameState
       { "g_pc",   DevConsoleCommand::PRINT_COLORS       },
       { "g_cm",   DevConsoleCommand::CREATE_MONSTER     },
       { "g_go",   DevConsoleCommand::GET_BY_ADDRESS     },
-      { "g_gm",   DevConsoleCommand::GIVE_MONEY         }
+      { "g_cap",  DevConsoleCommand::CREATE_ALL_POTIONS },
+      { "g_cas",  DevConsoleCommand::CREATE_ALL_SCROLLS }
     };
 
     const std::vector<std::string> _help =
@@ -230,6 +236,8 @@ class DevConsole : public GameState
       { "m_show", { "Toggle fog of war" } },
       { "i_trig", { "Print current level triggers" } },
       { "p_de",   { "Dispel effects from player" } },
+      { "g_cap",  { "Create all potions and place them in town" } },
+      { "g_cas",  { "Create all scrolls and place them in town" } },
       {
         "so_get",
         { "so_get [X Y]", "Try to get handle to static object at X Y" }
@@ -279,8 +287,8 @@ class DevConsole : public GameState
         { "g_cm X Y <TYPE>", "Create monster <TYPE> at X Y" }
       },
       {
-        "g_gm",
-        { "g_gm <AMOUNT>", "Give player <AMOUNT> money" }
+        "p_gm",
+        { "p_gm <AMOUNT>", "Give player <AMOUNT> money" }
       }
     };
 

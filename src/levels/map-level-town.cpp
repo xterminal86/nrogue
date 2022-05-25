@@ -318,37 +318,6 @@ void MapLevelTown::CreateLevel()
   PlaceGameObject(go);
   */
 
-  // ================================== CREATE ALL SCROLLS =====================
-
-  /*
-  int count = 0;
-  for (auto& item : GlobalConstants::ScrollValidSpellTypes)
-  {
-    auto scroll = GameObjectsFactory::Instance().CreateScroll(1 + count, 1, item, ItemPrefix::UNCURSED);
-    ItemComponent* ic = scroll->GetComponent<ItemComponent>();
-    ic->Data.IsIdentified = false;
-    PlaceGameObject(scroll);
-    count++;
-  }
-  */
-
-  // =================================== CREATE ALL POTIONS ====================
-
-  /*
-  int count = 0;
-  auto map = GlobalConstants::PotionNameByType;
-  for (auto& kvp : map)
-  {
-    auto go = ItemsFactory::Instance().CreatePotion(kvp.first);
-    go->PosX = 1 + count;
-    go->PosY = 1;
-    ItemComponent* ic = go->GetComponent<ItemComponent>();
-    ic->Data.IsIdentified = false;
-    PlaceGameObject(go);
-    count++;
-  }
-  */
-
   // =================================== RANDOM WANDS ==========================
 
   /*

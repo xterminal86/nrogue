@@ -25,7 +25,7 @@ class InfoState : public GameState
 
     std::pair<std::string, std::string> GetModifierString(int value);
 
-    std::map<int, std::pair<std::string, std::string>> _useIdentifiedMapCopy;
+    std::map<std::string, std::vector<std::string>> _useIdentifiedMapCopy;
 
     const int kMaxNameUnderscoreLength = 33;
 

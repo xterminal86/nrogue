@@ -15,7 +15,7 @@ void InfoState::Prepare()
 
 void InfoState::PrepareUseIdentifiedListToPrint()
 {
-  if (_playerRef->_useIdentifiedItemsByIndex.empty())
+  if (_playerRef->_useIdentifiedItemsByName.empty())
   {
     return;
   }
@@ -23,17 +23,17 @@ void InfoState::PrepareUseIdentifiedListToPrint()
   _useIdentifiedMapCopy.clear();
 
   std::vector<std::string> list;
-  for (auto& kvp : _playerRef->_useIdentifiedItemsByIndex)
+  for (auto& kvp : _playerRef->_useIdentifiedItemsByName)
   {
-    list.push_back(kvp.second.first);
+    list.push_back(kvp.first);
   }
 
   size_t longestLen = Util::FindLongestStringLength(list);
-  for (auto& kvp : _playerRef->_useIdentifiedItemsByIndex)
+  for (auto& kvp : _playerRef->_useIdentifiedItemsByName)
   {
-    std::string key = kvp.second.first;
+    std::string key = kvp.first;
     key.append(longestLen - key.length(), ' ');
-    _useIdentifiedMapCopy[kvp.first] = { key, kvp.second.second };
+    _useIdentifiedMapCopy[kvp.first] = kvp.second;
   }
 }
 
@@ -67,7 +67,7 @@ void InfoState::HandleInput()
       break;
   }
 
-  _scrollLimitReached = ((_scrollIndex + _th) >= _playerRef->_useIdentifiedItemsByIndex.size());
+  _scrollLimitReached = ((_scrollIndex + _th) >= _playerRef->_useIdentifiedItemsByName.size());
 }
 
 void InfoState::Update(bool forceUpdate)
@@ -166,7 +166,7 @@ void InfoState::Update(bool forceUpdate)
     yPrintOffset = 0;
 
     // Display some filler text just to give player some info
-    if (_playerRef->_useIdentifiedItemsByIndex.empty())
+    if (_playerRef->_useIdentifiedItemsByName.empty())
     {
       Printer::Instance().PrintFB(_twHalf + _twQuarter,
                                   _thHalf,
@@ -187,13 +187,21 @@ void InfoState::Update(bool forceUpdate)
 
       auto it = items.begin();
       std::advance(it, ind);
-      std::string str = Util::StringFormat("%s - %s", it->second.first.data(), it->second.second.data());
-      Printer::Instance().PrintFB(kMaxNameUnderscoreLength + 1,
-                                  yPrintOffset,
-                                  str,
-                                  Printer::kAlignLeft,
-                                  Colors::WhiteColor);
-      yPrintOffset++;
+
+      for (auto& i : it->second)
+      {
+        std::string str = Util::StringFormat("%s - %s",
+                                             it->first.data(),
+                                             i.data());
+
+        Printer::Instance().PrintFB(kMaxNameUnderscoreLength + 1,
+                                    yPrintOffset,
+                                    str,
+                                    Printer::kAlignLeft,
+                                    Colors::WhiteColor);
+
+        yPrintOffset++;
+      }
     }
 
     DrawScrollBars();

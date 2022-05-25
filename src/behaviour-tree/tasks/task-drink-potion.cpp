@@ -89,16 +89,9 @@ void TaskDrinkPotion::PrintLogIfNeeded(ItemComponent* ic)
 
   if (curTile->Visible)
   {
-    std::string objName = ic->Data.UnidentifiedName;
-
-    if (_playerRef->RecallItem(ic) != Strings::UnidentifiedEffectText)
-    {
-      objName = ic->OwnerGameObject->ObjectName;
-    }
-
     auto msg = Util::StringFormat("%s drinks %s",
                                   _objectToControl->ObjectName.data(),
-                                  objName.data());
+                                  ic->Data.UnidentifiedName.data());
 
     Printer::Instance().AddMessage(msg);
   }

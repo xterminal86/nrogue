@@ -3,6 +3,7 @@
 #include "application.h"
 #include "printer.h"
 #include "game-objects-factory.h"
+#include "items-factory.h"
 #include "monsters-inc.h"
 #include "map.h"
 #include "util.h"
@@ -328,6 +329,14 @@ void DevConsole::ProcessCommand(const std::string& command,
 
     case DevConsoleCommand::CREATE_MONSTER:
       CreateMonster(params);
+      break;
+
+    case DevConsoleCommand::CREATE_ALL_POTIONS:
+      CreateAllPotions();
+      break;
+
+    case DevConsoleCommand::CREATE_ALL_SCROLLS:
+      CreateAllScrolls();
       break;
 
     case DevConsoleCommand::DAMAGE_ACTOR:
@@ -661,6 +670,39 @@ void DevConsole::CreateMonster(const std::vector<std::string>& params)
 
   auto go = MonstersInc::Instance().CreateMonster(x, y, objType);
   _currentLevel->PlaceActor(go);
+
+  StdOut(Ok);
+}
+
+void DevConsole::CreateAllPotions()
+{
+  int count = 0;
+  auto map = GlobalConstants::PotionNameByType;
+  for (auto& kvp : map)
+  {
+    auto go = ItemsFactory::Instance().CreatePotion(kvp.first);
+    go->PosX = 1 + count;
+    go->PosY = 1;
+    ItemComponent* ic = go->GetComponent<ItemComponent>();
+    ic->Data.IsIdentified = false;
+    _currentLevel->PlaceGameObject(go);
+    count++;
+  }
+
+  StdOut(Ok);
+}
+
+void DevConsole::CreateAllScrolls()
+{
+  int count = 0;
+  for (auto& item : GlobalConstants::ScrollValidSpellTypes)
+  {
+    auto scroll = ItemsFactory::Instance().CreateScroll(1 + count, 1, item, ItemPrefix::UNCURSED);
+    ItemComponent* ic = scroll->GetComponent<ItemComponent>();
+    ic->Data.IsIdentified = false;
+    _currentLevel->PlaceGameObject(scroll);
+    count++;
+  }
 
   StdOut(Ok);
 }
@@ -1011,7 +1053,7 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
       for (auto& t : _allCommandsList)
       {
         count += (t.length() + 1);
-        if (count > 79)
+        if (count > 78)
         {
           StdOut(totalString);
           totalString.clear();

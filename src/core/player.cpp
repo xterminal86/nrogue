@@ -1510,38 +1510,49 @@ void Player::SwitchPlaces(AIComponent* other)
 
 void Player::RememberItem(ItemComponent* itemRef, const std::string& effect)
 {
+  //
+  // NOTE: ?unsure? will be added only once.
+  // Potions of the same color with different potential results
+  // that are drank unidentified will not be tracked because of
+  // too much complexity and shitcode.
+  //
   std::string objName = itemRef->Data.UnidentifiedName;
 
-  int existingIndex = -1;
-  for (auto& kvp : _useIdentifiedItemsByIndex)
+  if (_useIdentifiedItemsByName.count(objName) == 1)
   {
-    if (kvp.second.first == objName)
+    auto& shortcut = _useIdentifiedItemsByName[objName];
+
+    //
+    // If item is recalled but effect is not yet known,
+    // and incoming effect is different, replace.
+    //
+    auto found = std::find(shortcut.begin(),
+                           shortcut.end(),
+                           Strings::UnidentifiedEffectText);
+
+    if (found != shortcut.end() && effect != Strings::UnidentifiedEffectText)
     {
-      // If value is not '?unsure?', do nothing,
-      // the item is already use-identified.
-      if (kvp.second.second != Strings::UnidentifiedEffectText)
+      *found = effect;
+    }
+    else if (found == shortcut.end())
+    {
+      //
+      // Check if existing known effect is different from incoming.
+      // If so, then add incoming.
+      //
+      auto f = std::find(shortcut.begin(),
+                         shortcut.end(),
+                         effect);
+
+      if (f == shortcut.end() && effect != Strings::UnidentifiedEffectText)
       {
-        return;
-      }
-      else
-      {
-        // Otherwise break the loop and go down ahead and
-        // replace old '?unsure?' value with proper text
-        // passed in 'effect' variable here.
-        existingIndex = kvp.first;
-        break;
+        shortcut.push_back(effect);
       }
     }
   }
-
-  if (existingIndex == -1)
-  {
-    _useIdentifiedItemsByIndex[_useIdentifiedMapSortingIndex] = { objName, effect };
-    _useIdentifiedMapSortingIndex++;
-  }
   else
   {
-    _useIdentifiedItemsByIndex[existingIndex] = { objName, effect };
+    _useIdentifiedItemsByName[objName] = { effect };
   }
 }
 
@@ -1639,19 +1650,4 @@ std::string& Player::GetClassName()
 bool Player::HasSkill(PlayerSkills skillToCheck)
 {
   return (SkillLevelBySkill.count(skillToCheck) == 1);
-}
-
-std::string Player::RecallItem(ItemComponent* itemRef)
-{
-  auto& objName = itemRef->Data.UnidentifiedName;
-
-  for (auto& kvp : _useIdentifiedItemsByIndex)
-  {
-    if (kvp.second.first == objName)
-    {
-      return kvp.second.second;
-    }
-  }
-
-  return std::string();
 }

@@ -73,8 +73,6 @@ class Player : public GameObject
 
     bool HasSkill(PlayerSkills skillToCheck);
 
-    std::string RecallItem(ItemComponent* itemRef);
-
     bool IsStarving = false;
 
     std::map<PlayerSkills, int> SkillLevelBySkill;
@@ -124,11 +122,10 @@ class Player : public GameObject
     void PrintLevelUpResultsToLog(bool reallyUp);
 
     int _starvingTimeout = 0;
-    int _useIdentifiedMapSortingIndex = 0;
 
     std::vector<std::string> GetPrettyLevelUpText();
 
-    std::map<int, std::pair<std::string, std::string>> _useIdentifiedItemsByIndex;
+    std::map<std::string, std::vector<std::string>> _useIdentifiedItemsByName;
 
     std::map<int, PlayerClass> _classesMap =
     {
