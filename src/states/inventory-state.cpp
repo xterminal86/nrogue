@@ -463,7 +463,9 @@ void InventoryState::DrawSelectionBar(int yOffset, const std::string& text, cons
 
 void InventoryState::SortInventory()
 {
-  std::vector<std::unique_ptr<GameObject>>& inventory = _playerRef->Inventory->Contents;
+  auto& inventory = _playerRef->Inventory->Contents;
+
+  bool shouldCleanup = false;
 
   for (size_t i = 0; i < inventory.size(); i++)
   {
@@ -481,10 +483,28 @@ void InventoryState::SortInventory()
          && nextItem->Data.IsStackable
          && currentItem->Data.ItemTypeHash == nextItem->Data.ItemTypeHash)
         {
-          currentItem->Data.Amount++;
-          inventory.erase(inventory.begin() + j);
+          currentItem->Data.Amount += nextItem->Data.Amount;
+          go2->IsDestroyed = true;
+          shouldCleanup = true;
         }
       }
     }
+  }
+
+  if (shouldCleanup)
+  {
+    auto newBegin = std::remove_if(inventory.begin(),
+                                   inventory.end(),
+    [this](const std::unique_ptr<GameObject>& go)
+    {
+      if (go != nullptr && go->IsDestroyed)
+      {
+        return true;
+      }
+
+      return false;
+    });
+
+    inventory.erase(newBegin, inventory.end());
   }
 }

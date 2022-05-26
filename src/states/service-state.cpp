@@ -118,6 +118,7 @@ void ServiceState::ProcessBlessing(int key)
       // that was generated during object creation.
       //
       si.ItemComponentRef->Data.IdentifiedName = Util::ReplaceItemPrefix(si.ItemComponentRef->Data.IdentifiedName, { "Cursed" , "Uncursed" }, "Blessed");
+      si.ItemComponentRef->Data.ItemTypeHash = Util::CalculateItemHash(si.ItemComponentRef);
     }
 
     si.ItemComponentRef->Data.IsPrefixDiscovered = true;

@@ -83,7 +83,7 @@ void TargetState::FindTargets()
 
       if (Util::IsInsideMap({ x, y }, Map::Instance().CurrentLevel->MapSize)
        && Map::Instance().CurrentLevel->MapArray[x][y]->Visible
-       && (int)d <= r)
+       && (int)d <= r && (int)d < _twHalf)
       {
         auto actor = Map::Instance().GetActorAtPosition(x, y);
         if (actor != nullptr)

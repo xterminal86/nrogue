@@ -249,6 +249,8 @@ namespace Util
 
   extern bool IsPlayer(GameObject* obj);
 
+  extern size_t CalculateItemHash(ItemComponent* item);
+
   // ===========================================================================
 
   /// Produces random pair from pairs list according to weight value:

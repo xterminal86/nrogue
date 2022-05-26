@@ -133,8 +133,6 @@ class ItemsFactory : public Singleton<ItemsFactory>
     ItemPrefix RollItemPrefix();
     ItemQuality RollItemQuality();
 
-    size_t CalculateItemHash(ItemComponent* item);
-
     struct PotionInfo
     {
       ItemType PotionType = ItemType::DUMMY;

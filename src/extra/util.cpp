@@ -2607,4 +2607,17 @@ namespace Util
   {
     return (obj == &Application::Instance().PlayerInstance);
   }
+
+  size_t CalculateItemHash(ItemComponent* item)
+  {
+    if (item == nullptr)
+    {
+      DebugLog("[WAR] CalculateItemHash() - item is null!");
+      return 0;
+    }
+
+    std::hash<std::string> hasher;
+    std::string str = std::to_string((int)item->Data.Prefix) + item->OwnerGameObject->ObjectName;
+    return hasher(str);
+  }
 }

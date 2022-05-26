@@ -129,7 +129,7 @@ GameObject* ItemsFactory::CreateMoney(int amount)
   ic->Data.IsIdentified   = true;
   ic->Data.IdentifiedName = Strings::MoneyName;
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   go->StackObjectId = go->ObjectId();
 
@@ -234,7 +234,7 @@ GameObject* ItemsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -277,7 +277,7 @@ GameObject* ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -320,7 +320,7 @@ GameObject* ItemsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -363,7 +363,7 @@ GameObject* ItemsFactory::CreateJuicePotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -411,7 +411,7 @@ GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -458,7 +458,7 @@ GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPref
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -507,7 +507,7 @@ GameObject* ItemsFactory::CreateCWPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -555,7 +555,7 @@ GameObject* ItemsFactory::CreateRAPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -622,7 +622,7 @@ GameObject* ItemsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix pre
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -646,7 +646,7 @@ GameObject* ItemsFactory::CreateNote(const std::string& objName, const std::vect
   ic->Data.IdentifiedDescription = text;
   ic->Data.IdentifiedName = objName;
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -672,7 +672,7 @@ GameObject* ItemsFactory::CreateDummyItem(const std::string& objName,
   ic->Data.IdentifiedName = objName;
   ic->Data.IdentifiedDescription = descText;
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -729,7 +729,7 @@ GameObject* ItemsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix 
                                    _1,
                                    _2);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -912,7 +912,7 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x, int y, WeaponType type, ItemP
   BUCQualityAdjust(ic->Data);
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -1096,7 +1096,7 @@ GameObject* ItemsFactory::CreateWand(int x,
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -1189,7 +1189,7 @@ GameObject* ItemsFactory::CreateReturner(int x, int y, int charges, ItemPrefix p
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -1237,7 +1237,7 @@ GameObject* ItemsFactory::CreateRepairKit(int x, int y, int charges, ItemPrefix 
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -1377,7 +1377,7 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -1458,7 +1458,7 @@ GameObject* ItemsFactory::CreateArrows(int x, int y, ArrowType type, ItemPrefix 
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -1644,7 +1644,7 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
   BUCQualityAdjust(ic->Data);
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -1700,7 +1700,7 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
     ic->Data.Cost = 50 + (int)ic->Data.ItemQuality_ * 10;
   }
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -1762,7 +1762,7 @@ GameObject* ItemsFactory::CreateAccessory(int x, int y,
     SetMagicItemName(ic, bonusesRolled);
   }
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -1988,7 +1988,7 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
     "of the blade ever being used."
   };
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -2041,7 +2041,7 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
     "There are traces of blood on its head."
   };
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -2081,7 +2081,7 @@ GameObject* ItemsFactory::CreateRandomGlass()
   ic->Data.IdentifiedName = Util::StringFormat("%s worthless glass", colorDesc.data());
   ic->Data.Cost = 0;
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -2118,7 +2118,7 @@ GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
   return go;
 }
@@ -2829,12 +2829,4 @@ ItemQuality ItemsFactory::RollItemQuality()
   ItemQuality quality = res.first;
 
   return quality;
-}
-
-size_t ItemsFactory::CalculateItemHash(ItemComponent* item)
-{
-  auto strToHash = std::to_string((int)item->Data.Prefix) + item->OwnerGameObject->ObjectName;
-  std::hash<std::string> hasher;
-
-  return hasher(strToHash);
 }

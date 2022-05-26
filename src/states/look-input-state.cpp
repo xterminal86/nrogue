@@ -162,7 +162,7 @@ void LookInputState::Update(bool forceUpdate)
     int mapSizeX = Map::Instance().CurrentLevel->MapSize.X;
     int mapSizeY = Map::Instance().CurrentLevel->MapSize.Y;
 
-    if (Util::CheckLimits(_cursorPosition, Position(mapSizeX, mapSizeY)))
+    if (Util::CheckLimits(_cursorPosition, { mapSizeX, mapSizeY }))
     {
       auto tile = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
 
@@ -298,11 +298,14 @@ void LookInputState::MoveCursor(int dx, int dy)
   int hw = _twHalf;
   int hh = _thHalf;
 
+  //
+  // To compensate for cursor image
+  //
   nx = Util::Clamp(nx, _playerRef->PosX - hw + 1,
                        _playerRef->PosX + hw - 2);
 
-  ny = Util::Clamp(ny, _playerRef->PosY - hh + 1,
-                       _playerRef->PosY + hh - 2);
+  ny = Util::Clamp(ny, _playerRef->PosY - hh,
+                       _playerRef->PosY + hh);
 
   _cursorPosition.X = nx;
   _cursorPosition.Y = ny;
