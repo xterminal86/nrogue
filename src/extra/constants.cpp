@@ -307,7 +307,7 @@ namespace GlobalConstants
 
   // Default number of turn passes
   // after which monster is attepmted to be spawned.
-  const int MonstersRespawnTimeout = 500;
+  const int MonstersRespawnTimeout = 250;
 
   // Also the number of action increments (end turns)
   // for player before he can act (for SPD = 0)

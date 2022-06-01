@@ -204,7 +204,9 @@ void ContainerInteractState::DisplayContainerInventory()
   {
     ItemComponent* ic = item->GetComponent<ItemComponent>();
 
-    std::string nameInInventory = ic->Data.IsIdentified ? item->ObjectName : ic->Data.UnidentifiedName;
+    std::string nameInInventory = ic->Data.IsIdentified
+                                ? item->ObjectName
+                                : ic->Data.UnidentifiedName;
 
     std::string tmpName = nameInInventory;
     nameInInventory.insert(0, GlobalConstants::InventoryMaxNameLength - tmpName.length(), ' ');
@@ -288,8 +290,13 @@ void ContainerInteractState::CheckIndexLimits()
 
 void ContainerInteractState::TryToTransferItem()
 {
-  ContainerComponent* src = _playerSide ? _playerRef->Inventory : _containerToInteractWith;
-  ContainerComponent* dst = _playerSide ? _containerToInteractWith : _playerRef->Inventory;
+  ContainerComponent* src = _playerSide
+                          ? _playerRef->Inventory
+                          : _containerToInteractWith;
+
+  ContainerComponent* dst = _playerSide
+                          ? _containerToInteractWith
+                          : _playerRef->Inventory;
 
   if (dst->IsFull())
   {
