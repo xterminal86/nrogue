@@ -924,6 +924,15 @@ void Player::AwardExperience(int amount)
 
     Attrs.Exp.SetMin(diff);
   }
+  //
+  // Player becomes ghost himself.
+  //
+  else if (amnt < 0
+        && Attrs.Lvl.Get() == 1
+        && Attrs.Exp.Min().Get() == 0)
+  {
+    Attrs.HP.Reset(0);
+  }
 }
 
 void Player::LevelUpSilent()

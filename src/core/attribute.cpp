@@ -165,6 +165,14 @@ int Attributes::Rating()
   rating += Skl.Get();
   rating += Spd.Get();
 
+  //
+  // If stats are debuffed, clamp rating to 0 minimum
+  //
+  if (rating < 0)
+  {
+    rating = 0;
+  }
+
   return rating;
 }
 
