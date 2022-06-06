@@ -363,6 +363,10 @@ void DevConsole::ProcessCommand(const std::string& command,
       DispelEffects();
       break;
 
+    case DevConsoleCommand::DISPEL_EFFECTS_ACTOR:
+      DispelEffectsActor();
+      break;
+
     default:
       StdOut(ErrCmdNotHandled);
       break;
@@ -1026,6 +1030,18 @@ void DevConsole::DispelEffects()
   StdOut(Ok);
 }
 
+void DevConsole::DispelEffectsActor()
+{
+  if (_objectHandles[ObjectHandleType::ACTOR] == nullptr)
+  {
+    StdOut(ErrHandleNotSet);
+    return;
+  }
+
+  _objectHandles[ObjectHandleType::ACTOR]->DispelEffects();
+  StdOut(Ok);
+}
+
 void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
 {
   if (params.empty())
@@ -1123,7 +1139,7 @@ std::pair<int, int> DevConsole::CoordinateParamsToInt(const std::string &px, con
   res.first  = std::stoi(px);
   res.second = std::stoi(py);
 
-  if (res.first < 1 || res.first > _currentLevel->MapSize.X - 1
+  if (res.first  < 1 || res.first  > _currentLevel->MapSize.X - 1
    || res.second < 1 || res.second > _currentLevel->MapSize.Y - 1)
   {
     StdOut("Out of bounds");

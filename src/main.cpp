@@ -55,14 +55,6 @@
 int main(int argc, char* argv[])
 {
   RNG::Instance().Init();
-  //RNG::Instance().SetSeed("Hello World!");
-  //RNG::Instance().SetSeed("DEADBEEF");
-  //RNG::Instance().SetSeed(1547020537474375167);
-  //RNG::Instance().SetSeed(1);
-  //RNG::Instance().SetSeed(1544714037606745311);
-  //RNG::Instance().SetSeed(1545127588351497486);
-  //RNG::Instance().SetSeed(1555423752080957420);
-
   Blackboard::Instance().Init();
   Timer::Instance().Init();
 

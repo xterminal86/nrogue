@@ -84,6 +84,10 @@ GameObject* MonstersInc::CreateMonster(int x, int y, GameObjectType monsterType)
       go = CreateWraith(x, y);
       break;
 
+    case GameObjectType::STALKER:
+      go = CreateStalker(x, y);
+      break;
+
     default:
       DebugLog("CreateMonster(): monster type %i is not handled!", monsterType);
       break;
@@ -235,8 +239,9 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
 
   ItemBonusStruct ibs;
 
-  ibs.Type = ItemBonusType::LEVITATION;
-  ibs.Id = go->ObjectId();
+  ibs.Type       = ItemBonusType::LEVITATION;
+  ibs.Id         = go->ObjectId();
+  ibs.Persistent = true;
 
   go->AddEffect(ibs);
 
@@ -283,6 +288,14 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
     go->Attrs.HP.Restore();
     go->Attrs.MP.Restore();
   }
+
+  ItemBonusStruct ibs;
+
+  ibs.Type       = ItemBonusType::LEVITATION;
+  ibs.Id         = go->ObjectId();
+  ibs.Persistent = true;
+
+  go->AddEffect(ibs);
 
   // ===========================================================================
   AIComponent* ai = go->AddComponent<AIComponent>();
@@ -814,12 +827,14 @@ GameObject* MonstersInc::CreateWraith(int x, int y)
   inv.Duration = -1;
   inv.Type = ItemBonusType::INVISIBILITY;
   inv.Id = go->ObjectId();
+  inv.Persistent = true;
 
   ItemBonusStruct fly;
   fly.BonusValue = 1;
   fly.Duration = -1;
   fly.Type = ItemBonusType::LEVITATION;
   fly.Id = go->ObjectId();
+  fly.Persistent = true;
 
   go->AddEffect(inv);
   go->AddEffect(fly);
@@ -835,6 +850,56 @@ GameObject* MonstersInc::CreateWraith(int x, int y)
   return go;
 }
 
+GameObject* MonstersInc::CreateStalker(int x, int y)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  'G',
+                                  Colors::MonsterColor);
+
+  go->ObjectName = "Gollum";
+  go->Attrs.Indestructible = false;
+  go->IsLiving = true;
+
+  go->MoveTo(x, y);
+
+  int difficulty = GetDifficulty();
+
+  for (int i = 0; i < difficulty; i++)
+  {
+    go->LevelUp();
+  }
+
+  go->Attrs.HP.Restore();
+
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
+  EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
+
+  GameObject* weapon = ItemsFactory::Instance().CreateRandomMeleeWeapon(WeaponType::DAGGER, ItemPrefix::CURSED);
+  GameObject* ring = ItemsFactory::Instance().CreateOneRing();
+
+  cc->Add(weapon);
+  cc->Add(ring);
+
+  ItemComponent* weaponIC = weapon->GetComponent<ItemComponent>();
+  ItemComponent* ringIC = ring->GetComponent<ItemComponent>();
+
+  ec->Equip(weaponIC);
+  ec->Equip(ringIC);
+
+  // FIXME: proper AI
+
+  // ===========================================================================
+  AIComponent* ai = go->AddComponent<AIComponent>();
+  AIMonsterBasic* aim = ai->AddModel<AIMonsterBasic>();
+  aim->AIComponentRef->OwnerGameObject->VisibilityRadius.Set(6);
+  aim->ConstructAI();
+  ai->ChangeModel<AIMonsterBasic>();
+  // ===========================================================================
+
+  return go;
+}
 
 // *****************************************************************************
 

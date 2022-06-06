@@ -22,6 +22,7 @@ enum class FeatureRoomType
   FOUNTAIN
 };
 
+//
 // {
 //   <room type>,
 //   {
@@ -30,7 +31,8 @@ enum class FeatureRoomType
 //   }
 // }
 //
-// 0 if there is no limit to amount of rooms
+// 0 if there is no limit to the amount of rooms
+//
 using FeatureRoomsWeights = std::map<FeatureRoomType, std::pair<int, int>>;
 
 using Tile = std::vector<std::string>;

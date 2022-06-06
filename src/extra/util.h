@@ -37,6 +37,8 @@
 #define DebugLog(format, ...) SDL_Log(format, ##__VA_ARGS__)
 #endif
 
+#define STRINGIFY(ARG) #ARG
+
 // Coded Map
 using CM = std::vector<std::vector<std::pair<uint32_t, uint32_t>>>;
 
@@ -359,12 +361,13 @@ namespace Util
   template <typename F>
   bool IsFunctionValid(const F& fn)
   {
+    //
     // http://www.cplusplus.com/reference/functional/function/target_type/
     //
     // Return value
     // The type_info object that corresponds to the type of the target,
     // or typeid(void) if the object is an empty function.
-
+    //
     return (fn.target_type() != typeid(void));
   }
 }

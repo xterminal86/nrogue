@@ -14,6 +14,8 @@ enum class DevConsoleCommand
   PLACE_WALL,
   CREATE_ALL_POTIONS,
   CREATE_ALL_SCROLLS,
+  DISPEL_EFFECTS,
+  DISPEL_EFFECTS_ACTOR,
   GET_STATIC_OBJECT,
   GET_ACTOR,
   GET_ITEM,
@@ -34,7 +36,6 @@ enum class DevConsoleCommand
   PRINT_MAP,
   PRINT_COLORS,
   CREATE_MONSTER,
-  DISPEL_EFFECTS,
   INFO_HANDLES
 };
 
@@ -124,7 +125,8 @@ class DevConsole : public GameState
       { GameObjectType::LICH,        "Lich"        },
       { GameObjectType::KOBOLD,      "Kobold"      },
       { GameObjectType::WRAITH,      "Wraith"      },
-      { GameObjectType::HEROBRINE,   "Herobrine"   }
+      { GameObjectType::HEROBRINE,   "Herobrine"   },
+      { GameObjectType::STALKER,     "Gollum"      }
     };
 
     void StdOut(const std::string& str);
@@ -157,6 +159,7 @@ class DevConsole : public GameState
     void ToggleFogOfWar();
     void PrintTriggers();
     void DispelEffects();
+    void DispelEffectsActor();
 
     bool StringIsNumbers(const std::string& str);
     std::pair<int, int> CoordinateParamsToInt(const std::string& px,
@@ -179,37 +182,38 @@ class DevConsole : public GameState
 
     const std::map<std::string, DevConsoleCommand> _commandTypeByName =
     {
-      { "clear",  DevConsoleCommand::CLEAR              },
-      { "help",   DevConsoleCommand::HELP               },
-      { "exit",   DevConsoleCommand::CLOSE              },
-      { "q",      DevConsoleCommand::CLOSE              },
-      { "quit",   DevConsoleCommand::CLOSE              },
-      { "m_trns", DevConsoleCommand::TRANSFORM_TILE     },
-      { "m_pw",   DevConsoleCommand::PLACE_WALL         },
-      { "m_show", DevConsoleCommand::SHOW_MAP           },
-      { "info",   DevConsoleCommand::INFO_HANDLES       },
-      { "i_trig", DevConsoleCommand::LIST_TRIGGERS      },
-      { "so_get", DevConsoleCommand::GET_STATIC_OBJECT  },
-      { "ao_get", DevConsoleCommand::GET_ACTOR          },
-      { "io_get", DevConsoleCommand::GET_ITEM           },
-      { "so_mov", DevConsoleCommand::MOVE_STATIC_OBJECT },
-      { "ao_mov", DevConsoleCommand::MOVE_ACTOR         },
-      { "ao_psn", DevConsoleCommand::POISON_ACTOR       },
-      { "ao_dmg", DevConsoleCommand::DAMAGE_ACTOR       },
-      { "io_mov", DevConsoleCommand::MOVE_ITEM          },
-      { "p_mov",  DevConsoleCommand::MOVE_PLAYER        },
-      { "p_de",   DevConsoleCommand::DISPEL_EFFECTS     },
-      { "o_del",  DevConsoleCommand::REMOVE_OBJECT      },
-      { "p_gm",   DevConsoleCommand::GIVE_MONEY         },
-      { "p_lu",   DevConsoleCommand::LEVEL_UP           },
-      { "p_ld",   DevConsoleCommand::LEVEL_DOWN         },
-      { "p_info", DevConsoleCommand::REPORT_PLAYER      },
-      { "g_pm",   DevConsoleCommand::PRINT_MAP          },
-      { "g_pc",   DevConsoleCommand::PRINT_COLORS       },
-      { "g_cm",   DevConsoleCommand::CREATE_MONSTER     },
-      { "g_go",   DevConsoleCommand::GET_BY_ADDRESS     },
-      { "g_cap",  DevConsoleCommand::CREATE_ALL_POTIONS },
-      { "g_cas",  DevConsoleCommand::CREATE_ALL_SCROLLS }
+      { "clear",  DevConsoleCommand::CLEAR                },
+      { "help",   DevConsoleCommand::HELP                 },
+      { "exit",   DevConsoleCommand::CLOSE                },
+      { "q",      DevConsoleCommand::CLOSE                },
+      { "quit",   DevConsoleCommand::CLOSE                },
+      { "m_trns", DevConsoleCommand::TRANSFORM_TILE       },
+      { "m_pw",   DevConsoleCommand::PLACE_WALL           },
+      { "m_show", DevConsoleCommand::SHOW_MAP             },
+      { "info",   DevConsoleCommand::INFO_HANDLES         },
+      { "i_trig", DevConsoleCommand::LIST_TRIGGERS        },
+      { "so_get", DevConsoleCommand::GET_STATIC_OBJECT    },
+      { "ao_get", DevConsoleCommand::GET_ACTOR            },
+      { "io_get", DevConsoleCommand::GET_ITEM             },
+      { "so_mov", DevConsoleCommand::MOVE_STATIC_OBJECT   },
+      { "ao_mov", DevConsoleCommand::MOVE_ACTOR           },
+      { "ao_de",  DevConsoleCommand::DISPEL_EFFECTS_ACTOR },
+      { "ao_psn", DevConsoleCommand::POISON_ACTOR         },
+      { "ao_dmg", DevConsoleCommand::DAMAGE_ACTOR         },
+      { "io_mov", DevConsoleCommand::MOVE_ITEM            },
+      { "p_mov",  DevConsoleCommand::MOVE_PLAYER          },
+      { "p_de",   DevConsoleCommand::DISPEL_EFFECTS       },
+      { "o_del",  DevConsoleCommand::REMOVE_OBJECT        },
+      { "p_gm",   DevConsoleCommand::GIVE_MONEY           },
+      { "p_lu",   DevConsoleCommand::LEVEL_UP             },
+      { "p_ld",   DevConsoleCommand::LEVEL_DOWN           },
+      { "p_info", DevConsoleCommand::REPORT_PLAYER        },
+      { "g_pm",   DevConsoleCommand::PRINT_MAP            },
+      { "g_pc",   DevConsoleCommand::PRINT_COLORS         },
+      { "g_cm",   DevConsoleCommand::CREATE_MONSTER       },
+      { "g_go",   DevConsoleCommand::GET_BY_ADDRESS       },
+      { "g_cap",  DevConsoleCommand::CREATE_ALL_POTIONS   },
+      { "g_cas",  DevConsoleCommand::CREATE_ALL_SCROLLS   }
     };
 
     const std::vector<std::string> _help =
@@ -238,6 +242,7 @@ class DevConsole : public GameState
       { "p_de",   { "Dispel effects from player" } },
       { "g_cap",  { "Create all potions and place them in town" } },
       { "g_cas",  { "Create all scrolls and place them in town" } },
+      { "ao_de",  { "Dispel all effects from actor in handle" } },
       {
         "so_get",
         { "so_get [X Y]", "Try to get handle to static object at X Y" }

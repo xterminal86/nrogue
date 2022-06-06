@@ -93,6 +93,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
     // GREAT_SWORD,
     // STAFF,
     GameObject* CreateBlockBreakerPickaxe();
+    GameObject* CreateOneRing();
 
   protected:
     void InitSpecific() override;

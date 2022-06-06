@@ -399,7 +399,7 @@ GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
   ic->Data.IdentifiedDescription =
   {
     "They say drinking this will bring you to the next level.",
-    "Whatever it means..."
+    "Whatever that means..."
   };
 
   ic->Data.IdentifiedName = name;
@@ -741,7 +741,12 @@ GameObject* ItemsFactory::CreateRandomScroll(ItemPrefix prefix)
   return CreateScroll(0, 0, type, prefix);
 }
 
-GameObject* ItemsFactory::CreateMeleeWeapon(int x, int y, WeaponType type, ItemPrefix prefix, ItemQuality quality, const std::vector<ItemBonusStruct>& bonuses)
+GameObject* ItemsFactory::CreateMeleeWeapon(int x,
+                                            int y,
+                                            WeaponType type,
+                                            ItemPrefix prefix,
+                                            ItemQuality quality,
+                                            const std::vector<ItemBonusStruct>& bonuses)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -901,8 +906,8 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x, int y, WeaponType type, ItemP
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
 
-  auto str = Util::StringFormat("You think it'll do %d damage on average.", avgDamage);
-  ic->Data.UnidentifiedDescription = { str, "You can't tell anything else." };
+  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
+  ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
 
   // *** !!!
   // Identified description for weapon is
@@ -1176,7 +1181,7 @@ GameObject* ItemsFactory::CreateReturner(int x, int y, int charges, ItemPrefix p
     ic->Data.Amount = chargesNum * 2;
   }
 
-  ic->Data.UnidentifiedDescription = { "Is this valuable?" };
+  ic->Data.UnidentifiedDescription = { Strings::ItemDefaultDescGem };
 
   ic->Data.IdentifiedName = colorName + " Returner";
   ic->Data.UnidentifiedName = "?" + colorName + " Gem?";
@@ -1687,7 +1692,7 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
   ic->Data.IdentifiedName = go->ObjectName;
   ic->Data.UnidentifiedDescription =
   {
-    "Could be magical or just a trinket."
+    Strings::ItemDefaultDescAccessory
   };
 
   // TODO: should rings and amulets quality affect bonuses?
@@ -1742,7 +1747,7 @@ GameObject* ItemsFactory::CreateAccessory(int x, int y,
   ic->Data.IdentifiedName = go->ObjectName;
   ic->Data.UnidentifiedDescription =
   {
-    "Could be magical or just a trinket."
+    Strings::ItemDefaultDescAccessory
   };
 
   std::vector<ItemBonusType> bonusesRolled;
@@ -1949,8 +1954,8 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
-  ic->Data.ItemType_ = ItemType::WEAPON;
-  ic->Data.Rarity = ItemRarity::UNIQUE;
+  ic->Data.ItemType_  = ItemType::WEAPON;
+  ic->Data.Rarity     = ItemRarity::UNIQUE;
 
   ic->Data.Prefix = ItemPrefix::BLESSED;
   ic->Data.IsIdentified = false;
@@ -1976,8 +1981,8 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = "The Needle";
 
-  auto str = Util::StringFormat("You think it'll do %d damage on average.", avgDamage);
-  ic->Data.UnidentifiedDescription = { str, "You can't tell anything else." };
+  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
+  ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
 
   ic->Data.IdentifiedDescription =
   {
@@ -2004,8 +2009,8 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
-  ic->Data.ItemType_ = ItemType::WEAPON;
-  ic->Data.Rarity = ItemRarity::UNIQUE;
+  ic->Data.ItemType_  = ItemType::WEAPON;
+  ic->Data.Rarity     = ItemRarity::UNIQUE;
 
   ic->Data.Prefix = ItemPrefix::CURSED;
   ic->Data.IsIdentified = false;
@@ -2030,8 +2035,8 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = "Block Breaker";
 
-  auto str = Util::StringFormat("You think it'll do %d damage on average.", avgDamage);
-  ic->Data.UnidentifiedDescription = { str, "You can't tell anything else." };
+  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
+  ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
 
   ic->Data.IdentifiedDescription =
   {
@@ -2039,6 +2044,47 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
     "This is quite an old but sturdy looking pickaxe,",
     "yet you can't shake the uneasy feeling about it.",
     "There are traces of blood on its head."
+  };
+
+  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+
+  return go;
+}
+
+GameObject* ItemsFactory::CreateOneRing()
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->ObjectName = "Ring";
+  go->Image = '=';
+  go->FgColor = Colors::ItemUniqueColor;
+
+  ItemComponent* ic = go->AddComponent<ItemComponent>();
+
+  ic->Data.EqCategory = EquipmentCategory::RING;
+  ic->Data.ItemType_  = ItemType::ACCESSORY;
+  ic->Data.Rarity     = ItemRarity::UNIQUE;
+
+  ic->Data.Prefix = ItemPrefix::CURSED;
+  ic->Data.IsIdentified = false;
+
+  AddBonusToItem(ic, { ItemBonusType::INVISIBILITY, 1 });
+  AddBonusToItem(ic, { ItemBonusType::TELEPATHY,    1 });
+
+  ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
+  ic->Data.IdentifiedName = "The One Ring";
+  ic->Data.UnidentifiedDescription =
+  {
+    Strings::ItemDefaultDescAccessory
+  };
+
+  ic->Data.IdentifiedDescription =
+  {
+   //=========1=========2=========3=========4=========5=========6=========7=========8
+    "This looks like a simple golden ring.",
+    "There are strange inscriptions running along the side of it.",
+    "Maybe letters, but then from a language you don't recognize.",
+    "For some reason you have a strange urge to put this ring on..."
   };
 
   ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
@@ -2069,7 +2115,7 @@ GameObject* ItemsFactory::CreateRandomGlass()
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = false;
 
-  ic->Data.UnidentifiedDescription = { "Is this valuable?" };
+  ic->Data.UnidentifiedDescription = { Strings::ItemDefaultDescGem };
   ic->Data.UnidentifiedName = Util::StringFormat("?%s Gem?", colorDesc.data());
 
   std::string lowerCase = colorDesc;
@@ -2105,7 +2151,7 @@ GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = false;
 
-  ic->Data.UnidentifiedDescription = { "Is this valuable?" };
+  ic->Data.UnidentifiedDescription = { Strings::ItemDefaultDescGem };
   ic->Data.UnidentifiedName = Util::StringFormat("?%s Gem?", colorDesc.data());
 
   auto str = Util::StringFormat("%s description goes here", GlobalConstants::GemNameByType.at(t).data());
@@ -2424,7 +2470,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
 
   bs.BonusValue = value;
   bs.Id = itemRef->OwnerGameObject->ObjectId();
-  bs.FromItem = true;
+  bs.Persistent = true;
 
   itemRef->Data.Bonuses.push_back(bs);
 }
@@ -2462,7 +2508,7 @@ void ItemsFactory::AddBonusToItem(ItemComponent* itemRef, const ItemBonusStruct&
   }
 
   copy.Id = itemRef->OwnerGameObject->ObjectId();
-  copy.FromItem = true;
+  copy.Persistent = true;
 
   itemRef->Data.Bonuses.push_back(copy);
 }

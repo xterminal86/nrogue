@@ -184,10 +184,15 @@ bool GameObject::CanMoveTo(const Position& pos)
 
 void GameObject::Draw(const std::string& overrideColorFg, const std::string& overrideColorBg)
 {
-  bool dontDraw = (FgColor.empty()
-                && BgColor.empty()
-                && overrideColorFg.empty()
-                && overrideColorBg.empty());
+  bool noColor = (FgColor.empty()
+                  && BgColor.empty()
+                  && overrideColorFg.empty()
+                  && overrideColorBg.empty());
+
+  bool cantSee = (HasEffect(ItemBonusType::INVISIBILITY)
+              && !Application::Instance().PlayerInstance.HasEffect(ItemBonusType::TELEPATHY));
+
+  bool dontDraw = noColor || cantSee;
 
   if (dontDraw)
   {
@@ -225,6 +230,11 @@ void GameObject::ApplyBonuses(ItemComponent* itemRef)
   }
 }
 
+//
+// It is implied, that ApplyBonus() / UnapplyBonus() methods
+// give effects from items only, which is reflected by
+// ItemComponent* argument.
+//
 void GameObject::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
 {
   switch (bonus.Type)
@@ -783,6 +793,10 @@ bool GameObject::IsImmune(const ItemBonusStruct& effectToAdd)
   return res;
 }
 
+//
+// "Effect"-type methods are implied to be dealing with externally
+// applied effects only (e.g. being affected by a spell or a shrine).
+//
 void GameObject::ApplyEffect(const ItemBonusStruct& e)
 {
   switch (e.Type)
@@ -959,7 +973,7 @@ void GameObject::DispelEffectFirstFound(const ItemBonusType& t)
     bool shouldErase = false;
     for (ItemBonusStruct& bonus : it->second)
     {
-      if (bonus.Type == t && !bonus.FromItem)
+      if (bonus.Type == t && !bonus.Persistent)
       {
         UnapplyEffect(bonus);
         shouldErase = true;
@@ -985,7 +999,7 @@ void GameObject::DispelEffectsAllOf(const ItemBonusType& type)
     bool shouldErase = false;
     for (ItemBonusStruct& bonus : it->second)
     {
-      if (bonus.Type == type && !bonus.FromItem)
+      if (bonus.Type == type && !bonus.Persistent)
       {
         UnapplyEffect(bonus);
         shouldErase = true;
@@ -1010,7 +1024,7 @@ void GameObject::DispelEffects()
     bool shouldErase = false;
     for (ItemBonusStruct& bonus : it->second)
     {
-      if (!bonus.FromItem)
+      if (!bonus.Persistent)
       {
         UnapplyEffect(bonus);
         shouldErase = true;

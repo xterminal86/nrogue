@@ -148,9 +148,8 @@ std::vector<std::string> ItemBonusStruct::ToStrings()
   res.push_back(Util::StringFormat("Period            = %i", Period));
   res.push_back(Util::StringFormat("EffectCounter     = %i", EffectCounter));
   res.push_back(Util::StringFormat("MoneyCostIncrease = %i", MoneyCostIncrease));
-  res.push_back(Util::StringFormat("IsCursed          = %i", IsCursed));
   res.push_back(Util::StringFormat("Cumulative        = %i", Cumulative));
-  res.push_back(Util::StringFormat("FromItem          = %i", FromItem));
+  res.push_back(Util::StringFormat("Persistent        = %i", Persistent));
   res.push_back(Util::StringFormat("Id                = %i", Id));
 
   return res;

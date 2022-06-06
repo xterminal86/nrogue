@@ -169,9 +169,14 @@ namespace Strings
 
   const std::string MessageBoxInformationHeaderText = "Information";
   const std::string MessageBoxEpicFailHeaderText    = "Epic Fail!";
-
+  // ===========================================================================
   const char InventoryEmptySlotChar = '.';
-
+  // ===========================================================================
+  const std::string ItemDefaultDescAccessory = "Could be magical or just a trinket.";
+  const std::string ItemDefaultDescGem       = "Is this valuable?";
+  const std::string ItemDefaultDescWeaponDmg = "You think it'll do %d damage on average.";
+  const std::string ItemDefaultDescWeaponEnd = "You can't tell anything else.";
+  // ===========================================================================
   const std::string MsgWait              = "You waited...";
   const std::string MsgNotInWater        = "You're swimming!";
   const std::string MsgStairsDown        = "There are stairs leading down here";
@@ -197,15 +202,15 @@ namespace Strings
   const std::string MsgItemUndamaged     = "This item looks undamaged";
   const std::string MsgCantBeUsed        = "Can't be used!";
   const std::string MsgNoMoney           = "You have no money, ha ha ha!";
-
+  // ===========================================================================
   const std::string FmtPickedUpIS = "Picked up: %i %s";
   const std::string FmtPickedUpS  = "Picked up: %s";
   const std::string FmtDroppedIS  = "Dropped: %i %s";
   const std::string FmtDroppedS   = "Dropped: %s";
   const std::string FmtSMissed    = "%s missed";
-
+  // ===========================================================================
   const std::vector<std::string> MsgNotInTown = { "Not here", "Not in town" };
-
+  // ===========================================================================
   namespace TileNames
   {
     const std::string MineWallText     = "Mine Wall";

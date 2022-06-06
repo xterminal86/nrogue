@@ -37,6 +37,7 @@ MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLeve
     break;
 
     case MapType::CAVES_3:
+    case MapType::CAVES_4:
     {
       _monstersSpawnRateForThisLevel =
       {

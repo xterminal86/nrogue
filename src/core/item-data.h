@@ -28,7 +28,9 @@ struct ItemBonusStruct
   //
   int Duration = -1;
 
-  // Number of turns after which effect action occurs
+  //
+  // Number of turns after which effect action occurs.
+  //
   int Period = -1;
 
   //
@@ -37,20 +39,22 @@ struct ItemBonusStruct
   //
   int EffectCounter = 0;
 
-  // How much certain bonus affects item's cost in shop
+  //
+  // How much certain bonus affects item's cost in shop.
+  //
   int MoneyCostIncrease = 0;
 
-  // Unused
-  bool IsCursed = false;
-
-  // Can be stacked if true
+  //
+  // Can be stacked if true.
+  //
   bool Cumulative = false;
 
   //
   // Effect is gained from some sort of equipped item
-  // (ring or pendant and such)
+  // (ring or pendant and such) or immanent to monster,
+  // i.e. cannot be removed by calling DispelEffects().
   //
-  bool FromItem = false;
+  bool Persistent = false;
 
   //
   // We shall use this to monitor active effects and remove them

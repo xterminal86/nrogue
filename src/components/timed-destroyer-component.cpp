@@ -3,12 +3,12 @@
 #include "game-object.h"
 #include "map.h"
 
-TimedDestroyerComponent::TimedDestroyerComponent(int delay, const std::function<void()>& onDecay)
+TimedDestroyerComponent::TimedDestroyerComponent(int delay, const std::function<void()>& onTimerEnd)
 {
   _componentHash = typeid(*this).hash_code();
 
   _time = delay;
-  _onDecay = onDecay;
+  _onTimerEnd = onTimerEnd;
 }
 
 void TimedDestroyerComponent::Update()
@@ -17,9 +17,9 @@ void TimedDestroyerComponent::Update()
 
   if (_time <= 0)
   {
-    if (Util::IsFunctionValid(_onDecay))
+    if (Util::IsFunctionValid(_onTimerEnd))
     {
-      _onDecay();
+      _onTimerEnd();
     }
 
     OwnerGameObject->IsDestroyed = true;

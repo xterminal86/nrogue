@@ -8,14 +8,14 @@
 class TimedDestroyerComponent : public Component
 {
   public:
-    TimedDestroyerComponent(int delay, const std::function<void()>& onDecay = std::function<void()>());
+    TimedDestroyerComponent(int delay, const std::function<void()>& onTimerEnd = std::function<void()>());
 
     void Update() override;
 
   private:
     int _time;
 
-    std::function<void()> _onDecay;
+    std::function<void()> _onTimerEnd;
 };
 
 #endif // TIMEDDESTROYERCOMPONENT_H

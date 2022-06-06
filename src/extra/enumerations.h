@@ -126,6 +126,7 @@ enum class GameObjectType
   KOBOLD,
   HEROBRINE,
   WRAITH,
+  STALKER,
   FIRE_MAGE,        // fire magic + wanders with fire elemental
   WATER_MAGE,       // -=-=-=-=-
   AIR_MAGE,         // -=-=-=-=-
@@ -137,7 +138,8 @@ enum class GameObjectType
   EARTH_ELEMENTAL,
   LOOTER,
   ARCHER,
-  FENCER            // has ignore defence and / or ignore armor sword
+  FENCER,           // has ignore defence and / or ignore armor sword
+  ENUM_END
 };
 
 enum class NPCType
@@ -375,6 +377,8 @@ enum class GemType
 
 enum class SpellType
 {
+  // TODO: dispel magic?
+
   NONE = -1,         // Wand of Nothing can be imbued with spell
   STRIKE = 0,        // 1 target, DEF
   MAGIC_MISSILE,     // 1 target, RES
