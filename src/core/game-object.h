@@ -226,6 +226,9 @@ class GameObject
     //
     uint64_t RemainsOf = 0;
 
+    //
+    // Undead or not.
+    //
     bool IsLiving = false;
 
 #ifdef DEBUG_BUILD

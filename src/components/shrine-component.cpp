@@ -527,6 +527,10 @@ void ShrineComponent::SetEffectGainMessage(std::string& logMessageToWrite,
       logMessageToWrite = "You can sense others";
       break;
 
+    case ItemBonusType::TRUE_SEEING:
+      logMessageToWrite = "You can see hidden things";
+      break;
+
     case ItemBonusType::LEVITATION:
       logMessageToWrite = "You float above ground!";
       break;

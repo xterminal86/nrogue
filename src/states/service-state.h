@@ -78,7 +78,8 @@ class ServiceState : public SelectItemStateBase
       ItemBonusType::IGNORE_ARMOR,
       ItemBonusType::MANA_SHIELD,
       ItemBonusType::REFLECT,
-      ItemBonusType::TELEPATHY
+      ItemBonusType::TELEPATHY,
+      ItemBonusType::TRUE_SEEING
     };
 
     size_t _maxStrLen;

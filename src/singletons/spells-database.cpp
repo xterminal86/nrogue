@@ -111,6 +111,14 @@ void SpellsDatabase::InitSpecific()
                 });
 
   RegisterSpell({
+                  SpellType::TRUE_SEEING,
+                  "True Seeing",
+                  sn.at(SpellType::TRUE_SEEING),
+                  120
+                });
+
+
+  RegisterSpell({
                   SpellType::REMOVE_CURSE,
                   "Remove Curse",
                   sn.at(SpellType::REMOVE_CURSE),

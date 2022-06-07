@@ -18,9 +18,7 @@ void AIComponent::Update()
     auto str = Util::StringFormat("%s (%s) no AI model set!", __PRETTY_FUNCTION__, OwnerGameObject->ObjectName.data());
     Logger::Instance().Print(str, true);
 
-    #ifdef DEBUG_BUILD
     DebugLog("%s\n", str.data());
-    #endif
 
     OwnerGameObject->FinishTurn();
   }

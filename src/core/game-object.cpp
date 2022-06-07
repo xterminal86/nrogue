@@ -182,17 +182,13 @@ bool GameObject::CanMoveTo(const Position& pos)
   return res;
 }
 
-void GameObject::Draw(const std::string& overrideColorFg, const std::string& overrideColorBg)
+void GameObject::Draw(const std::string& overrideColorFg,
+                      const std::string& overrideColorBg)
 {
-  bool noColor = (FgColor.empty()
-                  && BgColor.empty()
-                  && overrideColorFg.empty()
-                  && overrideColorBg.empty());
-
-  bool cantSee = (HasEffect(ItemBonusType::INVISIBILITY)
-              && !Application::Instance().PlayerInstance.HasEffect(ItemBonusType::TELEPATHY));
-
-  bool dontDraw = noColor || cantSee;
+  bool dontDraw = (FgColor.empty()
+                && BgColor.empty()
+                && overrideColorFg.empty()
+                && overrideColorBg.empty());
 
   if (dontDraw)
   {
@@ -264,6 +260,7 @@ void GameObject::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus
     case ItemBonusType::INVISIBILITY:
     case ItemBonusType::THORNS:
     case ItemBonusType::TELEPATHY:
+    case ItemBonusType::TRUE_SEEING:
     case ItemBonusType::LEVITATION:
       AddEffect(bonus);
       break;
@@ -312,6 +309,7 @@ void GameObject::UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bon
     case ItemBonusType::INVISIBILITY:
     case ItemBonusType::THORNS:
     case ItemBonusType::TELEPATHY:
+    case ItemBonusType::TRUE_SEEING:
     case ItemBonusType::LEVITATION:
       RemoveEffect(bonus.Type, bonus.Id);
       break;

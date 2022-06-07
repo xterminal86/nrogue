@@ -561,6 +561,10 @@ namespace GlobalConstants
     { WandMaterials::GOLDEN_7, 35 }
   };
 
+  //
+  // Don't forget to add a new entry in the
+  // ScrollUnidentifiedNames vector for each new spell.
+  //
   const std::vector<SpellType> ScrollValidSpellTypes =
   {
     SpellType::LIGHT,
@@ -568,6 +572,7 @@ namespace GlobalConstants
     SpellType::MAGIC_MAPPING,
     SpellType::TELEPORT,
     SpellType::DETECT_MONSTERS,
+    SpellType::TRUE_SEEING,
     SpellType::REMOVE_CURSE,
     SpellType::REPAIR,
     SpellType::TOWN_PORTAL,
@@ -576,10 +581,12 @@ namespace GlobalConstants
     SpellType::MANA_SHIELD
   };
 
+  //
   // Not including combat spells.
   //
-  // Two separate vectors are from the times where
-  // several unidentified names could map to the same scroll.
+  // Two separate vectors are because unidentified names
+  // can be different scroll every time you run the game.
+  //
   const std::vector<std::string> ScrollUnidentifiedNames =
   {
     "TAMAM SHUD",
@@ -592,7 +599,8 @@ namespace GlobalConstants
     "LALIHO",
     "SHAN DONG",
     "SUIL A RUIN",
-    "KOBAYASHI MARU"
+    "KOBAYASHI MARU",
+    "LLORCS"
   };
 
   const std::map<SpellType, std::string> SpellShortNameByType =
@@ -610,6 +618,7 @@ namespace GlobalConstants
     { SpellType::TELEPORT,          "Te" },
     { SpellType::TOWN_PORTAL,       "TP" },
     { SpellType::DETECT_MONSTERS,   "DM" },
+    { SpellType::TRUE_SEEING,       "TS" },
     { SpellType::REMOVE_CURSE,      "RC" },
     { SpellType::REPAIR,            "R"  },
     { SpellType::HEAL,              "H"  },
@@ -784,6 +793,7 @@ namespace GlobalConstants
     { ItemBonusType::MAG_ABSORB,     "Shielding"   },
     { ItemBonusType::THORNS,         "Spiked"      },
     { ItemBonusType::TELEPATHY,      "Cautious"    },
+    { ItemBonusType::TRUE_SEEING,    "Clear"       },
     { ItemBonusType::LEVITATION,     "Celestial"   }
   };
 
@@ -816,6 +826,7 @@ namespace GlobalConstants
     { ItemBonusType::MAG_ABSORB,     "of Shielding"   },
     { ItemBonusType::THORNS,         "of the Ivy"     },
     { ItemBonusType::TELEPATHY,      "of the Oracle"  },
+    { ItemBonusType::TRUE_SEEING,    "of True Seeing" },
     { ItemBonusType::LEVITATION,     "of the Angel"   }
   };
 
@@ -849,33 +860,35 @@ namespace GlobalConstants
     { ItemBonusType::MAG_ABSORB,      450 },
     { ItemBonusType::THORNS,           40 },
     { ItemBonusType::TELEPATHY,       250 },
+    { ItemBonusType::TRUE_SEEING,     350 },
     { ItemBonusType::LEVITATION,      500 }
   };
 
   const std::map<ItemBonusType, std::string> BonusDisplayNameByType =
   {
-    { ItemBonusType::STR,          "+ST" },
-    { ItemBonusType::DEF,          "+DF" },
-    { ItemBonusType::MAG,          "+MG" },
-    { ItemBonusType::RES,          "+RS" },
-    { ItemBonusType::SKL,          "+SK" },
-    { ItemBonusType::SPD,          "+SP" },
-    { ItemBonusType::INVISIBILITY, "Hid" },
-    { ItemBonusType::MANA_SHIELD,  "Shi" },
-    { ItemBonusType::REGEN,        "Reg" },
-    { ItemBonusType::REFLECT,      "Ref" },
-    { ItemBonusType::DMG_ABSORB,   "PAb" },
-    { ItemBonusType::MAG_ABSORB,   "MAb" },
-    { ItemBonusType::THORNS,       "Ths" },
-    { ItemBonusType::PARALYZE,     "Par" },
-    { ItemBonusType::TELEPATHY,    "Tel" },
-    { ItemBonusType::LEVITATION,   "Fly" },
-    { ItemBonusType::BLINDNESS,    "Bli" },
-    { ItemBonusType::FROZEN,       "Frz" },
-    { ItemBonusType::BURNING,      "Bur" },
-    { ItemBonusType::ILLUMINATED,  "Lgt" },
-    { ItemBonusType::POISONED,     "Psd" },
-    { ItemBonusType::WEAKNESS,     "Wea" }
+    { ItemBonusType::STR,           "+ST" },
+    { ItemBonusType::DEF,           "+DF" },
+    { ItemBonusType::MAG,           "+MG" },
+    { ItemBonusType::RES,           "+RS" },
+    { ItemBonusType::SKL,           "+SK" },
+    { ItemBonusType::SPD,           "+SP" },
+    { ItemBonusType::INVISIBILITY,  "Hid" },
+    { ItemBonusType::MANA_SHIELD,   "Shi" },
+    { ItemBonusType::REGEN,         "Reg" },
+    { ItemBonusType::REFLECT,       "Ref" },
+    { ItemBonusType::DMG_ABSORB,    "PAb" },
+    { ItemBonusType::MAG_ABSORB,    "MAb" },
+    { ItemBonusType::THORNS,        "Ths" },
+    { ItemBonusType::PARALYZE,      "Par" },
+    { ItemBonusType::TELEPATHY,     "Tel" },
+    { ItemBonusType::TRUE_SEEING,   "See" },
+    { ItemBonusType::LEVITATION,    "Fly" },
+    { ItemBonusType::BLINDNESS,     "Bli" },
+    { ItemBonusType::FROZEN,        "Frz" },
+    { ItemBonusType::BURNING,       "Bur" },
+    { ItemBonusType::ILLUMINATED,   "Lgt" },
+    { ItemBonusType::POISONED,      "Psd" },
+    { ItemBonusType::WEAKNESS,      "Wea" }
   };
 
   const std::map<std::string, ScriptTaskNames> BTSTaskNamesByName =

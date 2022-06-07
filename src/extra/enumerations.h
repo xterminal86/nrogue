@@ -329,7 +329,8 @@ enum class ItemBonusType
   MAG_ABSORB,
   THORNS,         // damages enemy if player was hit
   PARALYZE,
-  TELEPATHY,      // See monsters
+  TRUE_SEEING,    // See anything invisible
+  TELEPATHY,      // See monsters (with brains)
   LEVITATION,
   BLINDNESS,      // anti-visibility (-100500 to LightRadius)
   FROZEN,         // SPD penalty
@@ -391,7 +392,8 @@ enum class SpellType
   MAGIC_MAPPING,
   TELEPORT,          // TODO: teleport control?
   TOWN_PORTAL,
-  DETECT_MONSTERS,   // shows monsters (not all?), temporary
+  DETECT_MONSTERS,   // shows living monsters (not all?), temporary
+  TRUE_SEEING,       // shows anything invisible
   REMOVE_CURSE,
   REPAIR,
   HEAL,

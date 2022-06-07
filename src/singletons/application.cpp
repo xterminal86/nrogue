@@ -203,6 +203,7 @@ void Application::ShowMessageBox(MessageBoxType type,
 void Application::CloseMessageBox()
 {
   _currentState = _previousState;
+  _currentState->Update(true);
 }
 
 void Application::DisplayAttack(GameObject* defender,

@@ -1102,56 +1102,94 @@ void Map::DrawGameObjects()
 
 void Map::DrawActors()
 {
+  bool playerHasTele    = _playerRef->HasEffect(ItemBonusType::TELEPATHY);
+  bool playerHasTrueSee = _playerRef->HasEffect(ItemBonusType::TRUE_SEEING);
+
   for (auto& actor : CurrentLevel->ActorGameObjects)
   {
     int x = actor->PosX;
     int y = actor->PosY;
 
-    if (_playerRef->HasEffect(ItemBonusType::TELEPATHY)
-     || CurrentLevel->MapArray[x][y]->Visible)
+    auto colors = GetActorColors(actor.get());
+
+    if (CurrentLevel->MapArray[x][y]->Visible)
     {
-      // If game object has black bg color,
-      // replace it with current floor color
-      std::string bgColor = actor->BgColor;
-
-      std::string fgColor = actor->FgColor;
-
-      bool cond = (actor->BgColor == Colors::BlackColor);
-      bool isOnStaticObject = (CurrentLevel->StaticMapObjects[x][y] != nullptr);
-
-      if (cond)
-      {
-        // If tile or static object's background color is the same
-        // as actor's foreground color, replace actor's background color to
-        // black to avoid merging into one square of one color.
-        if (isOnStaticObject)
-        {
-          auto& objBgColor = CurrentLevel->StaticMapObjects[x][y]->BgColor;
-          bgColor = (objBgColor == actor->FgColor ? Colors::BlackColor : objBgColor);
-        }
-        else
-        {
-          auto& tileBgColor = CurrentLevel->MapArray[x][y]->BgColor;
-          bgColor = (tileBgColor == actor->FgColor ? Colors::BlackColor : tileBgColor);
-        }
-      }
-
       if (actor->HasEffect(ItemBonusType::INVISIBILITY))
       {
-        if (_playerRef->HasEffect(ItemBonusType::TELEPATHY))
+        //
+        // If monster is on the line of sight and invisible,
+        // there are two cases where we can see him:
+        //
+        // 1) If it's living, then we can telepate or see invisible.
+        // 2) If it's undead, then see invisible only.
+        //
+        if ((actor->IsLiving && (playerHasTele || playerHasTrueSee))
+        || (!actor->IsLiving && playerHasTrueSee))
         {
-          fgColor = Colors::ShadesOfGrey::Six;
+          colors.first  = Colors::ShadesOfGrey::Six;
+          colors.second = std::string();
         }
         else
         {
-          fgColor = std::string();
-          bgColor = std::string();
+          colors.first  = std::string();
+          colors.second = std::string();
         }
       }
 
-      actor->Draw(fgColor, bgColor);
+      if (!colors.first.empty() || !colors.second.empty())
+      {
+        actor->Draw(colors.first, colors.second);
+      }
+    }
+    else
+    {
+      //
+      // If monster is not on the line of sight,
+      // we can only detect it via telepathy,
+      // which means only when it's not undead.
+      //
+      if (actor->IsLiving && playerHasTele)
+      {
+        actor->Draw(colors.first, std::string());
+      }
     }
   }
+}
+
+std::pair<std::string, std::string> Map::GetActorColors(GameObject* actor)
+{
+  int x = actor->PosX;
+  int y = actor->PosY;
+
+  //
+  // If game object has black bg color,
+  // replace it with current floor color
+  //
+  std::string bgColor = actor->BgColor;
+
+  std::string fgColor = actor->FgColor;
+
+  bool cond = (actor->BgColor == Colors::BlackColor);
+  bool isOnStaticObject = (CurrentLevel->StaticMapObjects[x][y] != nullptr);
+
+  if (cond)
+  {
+    // If tile or static object's background color is the same
+    // as actor's foreground color, replace actor's background color to
+    // black to avoid merging into one square of one color.
+    if (isOnStaticObject)
+    {
+      auto& objBgColor = CurrentLevel->StaticMapObjects[x][y]->BgColor;
+      bgColor = (objBgColor == actor->FgColor ? Colors::BlackColor : objBgColor);
+    }
+    else
+    {
+      auto& tileBgColor = CurrentLevel->MapArray[x][y]->BgColor;
+      bgColor = (tileBgColor == actor->FgColor ? Colors::BlackColor : tileBgColor);
+    }
+  }
+
+  return { fgColor, bgColor };
 }
 
 void Map::EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list)

@@ -199,7 +199,15 @@ void LookInputState::Update(bool forceUpdate)
 
                 if (aic->OwnerGameObject->HasEffect(ItemBonusType::INVISIBILITY))
                 {
-                  objName = _playerRef->HasEffect(ItemBonusType::TELEPATHY)
+                  bool hasTele = _playerRef->HasEffect(ItemBonusType::TELEPATHY);
+                  bool hasTS   = _playerRef->HasEffect(ItemBonusType::TRUE_SEEING);
+
+                  bool objIsLiving = aic->OwnerGameObject->IsLiving;
+
+                  bool detectLiving = ((hasTele || hasTS) && objIsLiving);
+                  bool detectHidden = (hasTS && !objIsLiving);
+
+                  objName = (detectHidden || detectLiving)
                           ? aic->OwnerGameObject->ObjectName
                           : "?";
                 }

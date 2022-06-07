@@ -107,7 +107,11 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll, GameObject* user)
       break;
 
     case SpellType::DETECT_MONSTERS:
-      ProcessScrollOfDetectMonsters(scroll, user);
+      ProcessScrollOfHiddenDetection(scroll, user, ItemBonusType::TELEPATHY);
+      break;
+
+    case SpellType::TRUE_SEEING:
+      ProcessScrollOfHiddenDetection(scroll, user, ItemBonusType::TRUE_SEEING);
       break;
 
     case SpellType::TOWN_PORTAL:
@@ -528,7 +532,9 @@ void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll, GameObject* user)
   _playerRef->RememberItem(scroll, "magic mapping");
 }
 
-void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll, GameObject* user)
+void SpellsProcessor::ProcessScrollOfHiddenDetection(ItemComponent* scroll,
+                                                     GameObject* user,
+                                                     ItemBonusType type)
 {
   //
   // TODO: possible application for monsters?
@@ -536,6 +542,15 @@ void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll, GameO
   if (!Util::IsPlayer(user))
   {
     return;
+  }
+
+  bool isValidType = (type == ItemBonusType::TELEPATHY
+                   || type == ItemBonusType::TRUE_SEEING);
+
+  if (!isValidType)
+  {
+    DebugLog("[WAR] ProcessScrollOfDetectMonsters() type is wrong: %i!", (int)type);
+    type = ItemBonusType::TELEPATHY;
   }
 
   int playerPow = _playerRef->Attrs.Mag.Get();
@@ -568,7 +583,7 @@ void SpellsProcessor::ProcessScrollOfDetectMonsters(ItemComponent* scroll, GameO
   _scrollUseMessages.push_back("You can sense nearby creatures");
 
   ItemBonusStruct b;
-  b.Type = ItemBonusType::TELEPATHY;
+  b.Type = type;
   b.BonusValue = power; // TODO: power is unused in this effect (see Map::DrawActors())
   b.Duration = duration;
   b.Id = scroll->OwnerGameObject->ObjectId();

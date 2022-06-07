@@ -452,7 +452,11 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
       break;
 
       case ItemBonusType::TELEPATHY:
-        res.push_back("You can sense nearby monsters");
+        res.push_back("You can sense living creatures");
+        break;
+
+      case ItemBonusType::TRUE_SEEING:
+        res.push_back("Allows you to see invisible");
         break;
 
       case ItemBonusType::INVISIBILITY:

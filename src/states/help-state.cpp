@@ -6,16 +6,19 @@
 
 HelpState::HelpState()
 {
-  // NOTE: Kinda hack but fuck it
-
   std::string s = Util::StringFormat("'%c' '%c' '%c'", ALT_K7, ALT_K8, ALT_K9);
-  _helpText[15] = s;
+  _keymap[0] = s;
 
   s = Util::StringFormat("'%c' '%c' '%c' or numpad for movement", ALT_K4, ALT_K5, ALT_K6);
-  _helpText[17] = s;
+  _keymap[2] = s;
 
   s = Util::StringFormat("'%c' '%c' '%c'", ALT_K1, ALT_K2, ALT_K3);
-  _helpText[19] = s;
+  _keymap[4] = s;
+
+  for (auto& line : _keymap)
+  {
+    _helpText.push_back(line);
+  }
 }
 
 void HelpState::Prepare()

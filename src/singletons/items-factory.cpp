@@ -188,9 +188,7 @@ GameObject* ItemsFactory::CreatePotion(ItemType type, ItemPrefix prefixOverride)
   }
   else
   {
-    #ifdef DEBUG_BUILD
     DebugLog("Potion type %i not found!", (int)type);
-    #endif
   }
 
   return go;
@@ -2184,6 +2182,7 @@ void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map
     bonusWeightByType.erase(ItemBonusType::LEECH);
     bonusWeightByType.erase(ItemBonusType::INVISIBILITY);
     bonusWeightByType.erase(ItemBonusType::TELEPATHY);
+    bonusWeightByType.erase(ItemBonusType::TRUE_SEEING);
     bonusWeightByType.erase(ItemBonusType::LEVITATION);
     bonusWeightByType.erase(ItemBonusType::FREE_ACTION);
     bonusWeightByType.erase(ItemBonusType::POISON_IMMUNE);
@@ -2201,6 +2200,7 @@ void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map
     bonusWeightByType.erase(ItemBonusType::POISON_IMMUNE);
     bonusWeightByType.erase(ItemBonusType::INVISIBILITY);
     bonusWeightByType.erase(ItemBonusType::TELEPATHY);
+    bonusWeightByType.erase(ItemBonusType::TRUE_SEEING);
     bonusWeightByType.erase(ItemBonusType::LEVITATION);
   }
   else if (itemRef->Data.EqCategory == EquipmentCategory::NECK
@@ -2247,6 +2247,7 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
     { ItemBonusType::MAG_ABSORB,      15 },
     { ItemBonusType::THORNS,          15 },
     { ItemBonusType::TELEPATHY,       35 },
+    { ItemBonusType::TRUE_SEEING,   25 },
     { ItemBonusType::LEVITATION,      17 }
   };
 
@@ -2445,6 +2446,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
     // There is no range for telepathy (at least for now)
     //
     case ItemBonusType::TELEPATHY:
+    case ItemBonusType::TRUE_SEEING:
     case ItemBonusType::LEVITATION:
     case ItemBonusType::INVISIBILITY:
     case ItemBonusType::IGNORE_DEFENCE:

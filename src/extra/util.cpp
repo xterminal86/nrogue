@@ -1225,10 +1225,12 @@ namespace Util
   {
     DebugLog("Vector of '%s' (size %u)\n", title.data(), v.size());
 
+    #ifdef DEBUG_BUILD
     for (auto& p : v)
     {
       DebugLog("[%i;%i] ", p.X, p.Y);
     }
+    #endif
 
     DebugLog("\n");
   }

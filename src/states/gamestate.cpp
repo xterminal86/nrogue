@@ -165,6 +165,10 @@ void GameState::TakeScreenshot()
   std::string fname = Util::StringFormat("s_%s.bmp", time.data());
   SDL_SaveBMP(sshot, fname.data());
   SDL_FreeSurface(sshot);
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                                         "Screenshot Taken",
+                                         { fname },
+                                         Colors::MessageBoxBlueBorderColor);
   DebugLog("Wrote %s", fname.data());
 }
 #endif

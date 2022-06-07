@@ -13,6 +13,7 @@ static const std::vector<ItemBonusType> PositiveEffects =
   ItemBonusType::REGEN,
   ItemBonusType::REFLECT,
   ItemBonusType::TELEPATHY,
+  ItemBonusType::TRUE_SEEING,
   ItemBonusType::INVISIBILITY,
   ItemBonusType::LEVITATION
 };

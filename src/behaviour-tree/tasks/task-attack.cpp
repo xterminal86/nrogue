@@ -111,11 +111,9 @@ BTResult TaskAttack::Run()
     }
     break;
 
-    #ifdef DEBUG_BUILD
     default:
       DebugLog("[WAR] %s - attack not defined!", _objectToControl->ObjectName.data());
       break;
-    #endif
   }
 
   _objectToControl->FinishTurn();

@@ -8,17 +8,6 @@
 
 void MessageBoxState::HandleInput()
 {
-  // Closed elsewhere
-  //
-  // Looks like unused and can lead to endless loop in Application::Run()
-  // due to if() check on MessageBoxState.
-  /*
-  if (_type == MessageBoxType::IGNORE_INPUT)
-  {
-    return;
-  }
-  */
-
   _keyPressed = GetKeyDown();
 
   if (_keyPressed != -1)

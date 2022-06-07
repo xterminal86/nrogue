@@ -26,6 +26,9 @@ class HelpState : public GameState
       R"('i' - Interact                )",
       R"('I' - Scenario information    )",
       R"('l' - Look around             )",
+      #ifdef USE_SDL
+      R"('F9' - Take screenshot        )",
+      #endif
       R"('m' - Message log             )",
       R"('@' - Character sheet         )",
       R"('e' - Inventory               )",
@@ -34,7 +37,11 @@ class HelpState : public GameState
       R"('>' - Go down the stairs      )",
       R"('<' - Go up the stairs        )",
       R"('Q' - Exit game               )",
-      R"()",
+      R"()"
+    };
+
+    StringsArray2D _keymap =
+    {
       R"('q' 'w' 'e' )",
       R"(   \ | /    )",
       R"('a'-'x'-'d' or numpad for movement)",

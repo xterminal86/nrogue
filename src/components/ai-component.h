@@ -56,9 +56,7 @@ class AIComponent : public Component
         auto str = Util::StringFormat("%s no such AI model - %s!", __PRETTY_FUNCTION__, typeid(T).name());
         Logger::Instance().Print(str, true);
 
-        #ifdef DEBUG_BUILD
         DebugLog("%s\n", str.data());
-        #endif
       }
     }
 

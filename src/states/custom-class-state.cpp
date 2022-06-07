@@ -75,7 +75,9 @@ void CustomClassState::HandleInput()
         _cursorRows--;
         break;
 
+      //
       // Shift & '+' and '-'
+      //
       case '>':
         ModifyStat(true, true);
         break;
@@ -84,7 +86,9 @@ void CustomClassState::HandleInput()
         ModifyStat(false, true);
         break;
 
+      //
       // '+' and '-'
+      //
       case '.':
         ModifyStat(true, false);
         break;
@@ -167,7 +171,9 @@ void CustomClassState::Update(bool forceUpdate)
                                   "#FFFFFF");
       count++;
 
+      //
       // Additional space between base stats and HP MP
+      //
       if (kvp.first == PlayerStats::SPD)
       {
         count++;

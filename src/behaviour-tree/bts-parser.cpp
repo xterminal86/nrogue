@@ -58,9 +58,7 @@ void BTSParser::ParseFromString(const std::string& script)
     auto str = Util::StringFormat("%s: script on %s is empty!", __PRETTY_FUNCTION__, objName.data());
     Logger::Instance().Print(str, true);
 
-    #ifdef DEBUG_BUILD
     DebugLog("%s\n", str.data());
-    #endif
 
     return;
   }
@@ -289,10 +287,13 @@ void ScriptNode::Print()
   DebugLog("%sIndent  : %i\n", tabs.data(), Indent);
   DebugLog("%sParams:\n", tabs.data());
   DebugLog("%s{\n", tabs.data());
+
+  #ifdef DEBUG_BUILD
   for (auto& kvp : Params)
   {
     DebugLog("%s\t%s : %s\n", tabs.data(), kvp.first.data(), kvp.second.data());
   }
+  #endif
 
   DebugLog("%s}\n", tabs.data());
 }

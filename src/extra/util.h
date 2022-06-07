@@ -27,14 +27,22 @@
 // statement with ; at the end of } brace, which will invalidate
 // the syntax of 'if...else' form.
 #ifndef USE_SDL
-#define DebugLog(format, ...)        \
-  do {                               \
-  printf(format, ##__VA_ARGS__);     \
-  fflush(stdout);                    \
-  } while (false)
+  #ifdef DEBUG_BUILD
+    #define DebugLog(format, ...)        \
+      do {                               \
+      printf(format, ##__VA_ARGS__);     \
+      fflush(stdout);                    \
+      } while (false)
+  #else
+    #define DebugLog(format, ...)
+  #endif
 #else
 #include "SDL2/SDL.h"
-#define DebugLog(format, ...) SDL_Log(format, ##__VA_ARGS__)
+  #ifdef DEBUG_BUILD
+    #define DebugLog(format, ...) SDL_Log(format, ##__VA_ARGS__)
+  #else
+    #define DebugLog(format, ...)
+  #endif
 #endif
 
 #define STRINGIFY(ARG) #ARG

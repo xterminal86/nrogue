@@ -13,9 +13,7 @@ BTResult TaskPrintMessage::Run()
 {
   Printer::Instance().AddMessage(_message);
 
-#ifdef DEBUG_BUILD
   DebugLog("%s", _message.data());
-#endif
 
   return BTResult::Success;
 }
