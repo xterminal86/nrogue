@@ -21,15 +21,39 @@ class GameState
 {
   public:
     GameState();
-
     virtual ~GameState() = default;
 
+    //
+    // Called once during registration of states.
+    //
     virtual void Init() {}
+
+    //
+    // Called on current state right before
+    // state change is going to be performed.
+    //
     virtual void Cleanup() {}
+
+    //
+    // Called on new state right after
+    // state change has been performed.
+    //
     virtual void Prepare() {}
+
+    //
+    // Basically called every frame (see Application::Run()).
+    //
     virtual void HandleInput() = 0;
+
+    //
+    // Redraws current state after user presses anything on a keyboard.
+    // Override flag to force redraw.
+    //
     virtual void Update(bool forceUpdate = false) = 0;
 
+    //
+    // Driven by corresponding backend (ncurses or SDL2).
+    //
     int GetKeyDown();
 
   protected:

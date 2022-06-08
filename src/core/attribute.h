@@ -71,7 +71,9 @@ struct Attributes
   RangedAttribute HP;
   RangedAttribute MP;
 
-  // number of turns before player becomes starving
+  //
+  // Number of turns before player becomes starving
+  //
   Attribute HungerRate;
 
   Attribute HungerSpeed;
@@ -81,6 +83,11 @@ struct Attributes
 
   int Hunger = 0;
   int ActionMeter = 0;
+
+  //
+  // Additional value for rating.
+  //
+  int ChallengeRating = 0;
 
   bool Indestructible = true;
 

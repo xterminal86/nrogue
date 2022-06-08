@@ -32,6 +32,8 @@ class LookInputState : public GameState
 
     Position _cursorPosition;
 
+    std::vector<std::string> _monsterStatsInfo;
+
     #ifdef DEBUG_BUILD
     const StringsArray2D _debugInfo =
     {

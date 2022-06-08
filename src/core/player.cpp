@@ -1066,17 +1066,13 @@ void Player::ProcessKill(GameObject* monster)
   if (monster->Type != GameObjectType::HARMLESS
    && monster->Type != GameObjectType::REMAINS)
   {
-    int dungeonLvl = Map::Instance().CurrentLevel->DungeonLevel;
-    int ratingDiff = monster->Attrs.Rating() - Attrs.Rating();
-    ratingDiff = Util::Clamp(ratingDiff, 1, GlobalConstants::AwardedExpMax);
+    int exp = monster->Attrs.Rating() - Attrs.Rating();
+    exp = Util::Clamp(exp, 0, GlobalConstants::AwardedExpMax);
 
-    //
-    // If player is too OP, get at least 1 plus current dungeon level.
-    // TOWN is dungeon level 1, thus (dungeonLvl - 1).
-    //
-    int exp = ratingDiff + (dungeonLvl - 1);
-
-    AwardExperience(exp);
+    if (exp != 0)
+    {
+      AwardExperience(exp);
+    }
 
     if (TotalKills.count(monster->ObjectName))
     {

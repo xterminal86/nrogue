@@ -158,6 +158,8 @@ int Attributes::Rating()
 {
   int rating = 0;
 
+  rating += ChallengeRating;
+
   rating += Str.Get();
   rating += Def.Get();
   rating += Mag.Get();

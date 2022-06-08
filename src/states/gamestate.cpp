@@ -26,13 +26,17 @@ int GameState::GetKeyDown()
 
   SDL_Event evt;
 
-  // SDL_WaitEvent() cannot be used because we have animations
+  //
+  // SDL_WaitEvent() cannot be used because we have animations (we do, lol)
+  //
   while (SDL_PollEvent(&evt))
   {
     switch(evt.type)
     {
-      // To allow application closing by clicking 'X'
-      // on window frame
+      //
+      // To allow application to be closed by clicking 'X'
+      // on a window frame
+      //
       case SDL_QUIT:
         Application::Instance().ChangeState(GameStates::EXIT_GAME);
         break;
@@ -80,8 +84,11 @@ int GameState::GetKeyDown()
     }
   }
 
+  //
   // SDL_GetModState() must be called after all events
-  // have been polled
+  // have been polled.
+  // (I guess I read it somewhere, SDL2 documentation says nothing...)
+  //
   SDL_Keymod keyMod = SDL_GetModState();
   bool shiftPressed = (keyMod & KMOD_LSHIFT || keyMod & KMOD_RSHIFT);
 
