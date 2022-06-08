@@ -746,7 +746,7 @@ void Map::ShowLoadingText(const std::string& textOverride)
                                  std::string(),
                                  Colors::WhiteColor,
                                  Colors::MessageBoxHeaderBgColor,
-                                 "#444444");
+                                 Colors::ShadesOfGrey::Four);
 
   Printer::Instance().PrintFB(tw, th, text, Printer::kAlignCenter, Colors::WhiteColor);
 
@@ -966,16 +966,20 @@ std::vector<Position> Map::GetEmptyCellsAround(const Position& pos, int range)
 
 void Map::DrawNonVisibleMapTile(int x, int y)
 {
+  //
   // If map tile has already been seen (revealed),
   // draw it with fog of war color,
   // otherwise use tile's color and black color as a background.
-  std::string tileColor = CurrentLevel->MapArray[x][y]->Revealed ?
-                          Colors::FogOfWarColor :
-                          Colors::BlackColor;
+  //
+  uint32_t tileColor = CurrentLevel->MapArray[x][y]->Revealed
+                       ? Colors::FogOfWarColor
+                       : Colors::BlackColor;
 
+  //
   // If tile's fg color is already black
   // ("block" tiles with no symbols like water, floor, walls etc.),
   // replace the background instead.
+  //
   if (CurrentLevel->MapArray[x][y]->FgColor == Colors::BlackColor)
   {
     CurrentLevel->MapArray[x][y]->Draw(Colors::BlackColor, tileColor);
@@ -990,11 +994,12 @@ void Map::DrawNonVisibleStaticObject(int x, int y)
 {
   if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
   {
+    //
     // Same as in method above
-
-    std::string tileColor = CurrentLevel->MapArray[x][y]->Revealed ?
-                            Colors::FogOfWarColor :
-                            Colors::BlackColor;
+    //
+    uint32_t tileColor = CurrentLevel->MapArray[x][y]->Revealed
+                         ? Colors::FogOfWarColor
+                         : Colors::BlackColor;
 
     if (CurrentLevel->StaticMapObjects[x][y]->FgColor == Colors::BlackColor)
     {
@@ -1127,16 +1132,16 @@ void Map::DrawActors()
         || (!actor->IsLiving && playerHasTrueSee))
         {
           colors.first  = Colors::ShadesOfGrey::Six;
-          colors.second = std::string();
+          colors.second = Colors::None;
         }
         else
         {
-          colors.first  = std::string();
-          colors.second = std::string();
+          colors.first  = Colors::None;
+          colors.second = Colors::None;
         }
       }
 
-      if (!colors.first.empty() || !colors.second.empty())
+      if (colors.first != Colors::None || colors.second != Colors::None)
       {
         actor->Draw(colors.first, colors.second);
       }
@@ -1150,13 +1155,13 @@ void Map::DrawActors()
       //
       if (actor->IsLiving && playerHasTele)
       {
-        actor->Draw(colors.first, std::string());
+        actor->Draw(colors.first, Colors::None);
       }
     }
   }
 }
 
-std::pair<std::string, std::string> Map::GetActorColors(GameObject* actor)
+std::pair<uint32_t, uint32_t> Map::GetActorColors(GameObject* actor)
 {
   int x = actor->PosX;
   int y = actor->PosY;
@@ -1165,18 +1170,19 @@ std::pair<std::string, std::string> Map::GetActorColors(GameObject* actor)
   // If game object has black bg color,
   // replace it with current floor color
   //
-  std::string bgColor = actor->BgColor;
-
-  std::string fgColor = actor->FgColor;
+  uint32_t bgColor = actor->BgColor;
+  uint32_t fgColor = actor->FgColor;
 
   bool cond = (actor->BgColor == Colors::BlackColor);
   bool isOnStaticObject = (CurrentLevel->StaticMapObjects[x][y] != nullptr);
 
   if (cond)
   {
+    //
     // If tile or static object's background color is the same
     // as actor's foreground color, replace actor's background color to
     // black to avoid merging into one square of one color.
+    //
     if (isOnStaticObject)
     {
       auto& objBgColor = CurrentLevel->StaticMapObjects[x][y]->BgColor;

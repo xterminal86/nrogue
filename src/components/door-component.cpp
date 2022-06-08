@@ -81,12 +81,12 @@ void DoorComponent::UpdateDoorState()
   OwnerGameObject->Image   = IsOpen ? '_' : '+';
   OwnerGameObject->FgColor = IsOpen ?
                                Colors::WhiteColor :
-                                (FgColorOverride.empty() ?
+                                (FgColorOverride == Colors::None ?
                                  Colors::WhiteColor :
                                  FgColorOverride);
   OwnerGameObject->BgColor = IsOpen ?
                                Colors::BlackColor :
-                                (BgColorOverride.empty() ?
+                                (BgColorOverride == Colors::None ?
                                   Colors::DoorHighlightColor :
                                   BgColorOverride);
 }

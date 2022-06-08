@@ -20,15 +20,15 @@ class Application : public Singleton<Application>
     void ShowMessageBox(MessageBoxType type,
                         const std::string& header,
                         const std::vector<std::string>& message,
-                        const std::string& borderColor = Colors::ShadesOfGrey::Six,
-                        const std::string& bgColor = Colors::ShadesOfGrey::Two);
+                        const uint32_t& borderColor = Colors::ShadesOfGrey::Six,
+                        const uint32_t& bgColor = Colors::ShadesOfGrey::Two);
 
     void CloseMessageBox();
 
     void DisplayAttack(GameObject* defender,
                        int delayMs,
                        const std::string& messageToPrint,
-                       const std::string& cursorColor = std::string());
+                       const uint32_t& cursorColor = Colors::None);
 
     void WriteObituary(bool wasKilled = true);
 
@@ -115,7 +115,7 @@ class Application : public Singleton<Application>
     void InitGameStates();
     void DrawAttackCursor(int x, int y,
                           GameObject* defender,
-                          const std::string& cursorColor = std::string());
+                          const uint32_t& cursorColor = Colors::None);
     void SavePrettyAlignedStatInfo(std::stringstream& ss);
     void SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled);
 

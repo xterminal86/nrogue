@@ -643,7 +643,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
           PlaceGroundTile(posX,
                           posY,
                           '-',
-                          "#490E11",
+                          0x490E11,
                           Colors::RoomFloorColor,
                           Strings::TileNames::WoodenFloorText);
           break;
@@ -834,7 +834,11 @@ void MapLevelTown::CreatePlayerHouse()
   Position cp(6, 6);
   PlaceStaticObject(6, 6, t);
 
-  auto stash = GameObjectsFactory::Instance().CreateContainer(Strings::TileNames::StashText, Colors::ChestColor, 'C', cp.X, cp.Y);
+  auto stash = GameObjectsFactory::Instance().CreateContainer(cp.X,
+                                                              cp.Y,
+                                                              'C',
+                                                              Strings::TileNames::StashText,
+                                                              Colors::ChestColor);
   PlaceGameObject(stash);
 }
 

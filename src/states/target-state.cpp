@@ -267,7 +267,7 @@ void TargetState::FireWeapon(bool throwingFromInventory)
   DirtyHack();
 }
 
-GameObject* TargetState::LaunchProjectile(char image, const std::string& color)
+GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
 {
   GameObject* stoppedAt = nullptr;
 

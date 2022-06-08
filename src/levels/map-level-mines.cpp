@@ -630,7 +630,7 @@ void MapLevelMines::CreateSpecialLevel()
             int index = RNG::Instance().RandomRange(0, phrases.size());
             std::string phrase = Util::DecodeString(phrases[index]);
 
-            Printer::Instance().AddMessage(phrase, Colors::WhiteColor, "#AA0000");
+            Printer::Instance().AddMessage(phrase, Colors::WhiteColor, 0xAA0000);
           });
         }
         break;

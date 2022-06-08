@@ -23,7 +23,7 @@ class InfoState : public GameState
 
     int FindAttrsMaxStringLength();
 
-    std::pair<std::string, std::string> GetModifierString(int value);
+    std::pair<uint32_t, std::string> GetModifierString(int value);
 
     std::map<std::string, std::vector<std::string>> _useIdentifiedMapCopy;
 

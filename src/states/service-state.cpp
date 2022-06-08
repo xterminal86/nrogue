@@ -389,7 +389,7 @@ void ServiceState::FillItemsForIdentify()
       _maxStrLen = str.length();
     }
 
-    _serviceInfoByChar[c] = { charStr, str, "#FFFFFF", ic, 100 };
+    _serviceInfoByChar[c] = { charStr, str, Colors::WhiteColor, ic, 100 };
 
     itemIndex++;
   }

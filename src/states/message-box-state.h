@@ -16,15 +16,15 @@ class MessageBoxState : public GameState
     void SetMessage(MessageBoxType type,
                     const std::string& header,
                     const std::vector<std::string>& message,
-                    const std::string& borderColor = Colors::ShadesOfGrey::Six,
-                    const std::string& bgColor = Colors::ShadesOfGrey::Two);
+                    const uint32_t& borderColor = Colors::ShadesOfGrey::Six,
+                    const uint32_t& bgColor = Colors::ShadesOfGrey::Two);
 
   private:
     std::string _header;
     std::vector<std::string> _message;
 
-    std::string _bgColor;
-    std::string _borderColor;
+    uint32_t _bgColor;
+    uint32_t _borderColor;
 
     Position _leftCorner;
     Position _windowSize;

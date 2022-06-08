@@ -1271,9 +1271,9 @@ namespace Util
     return res;
   }
 
-  std::string GetItemInventoryColor(const ItemData& data)
+  uint32_t GetItemInventoryColor(const ItemData& data)
   {
-    std::string textColor = "#FFFFFF";
+    uint32_t textColor = Colors::WhiteColor;
 
     bool isBlessed = (data.Prefix == ItemPrefix::BLESSED);
     bool isCursed  = (data.Prefix == ItemPrefix::CURSED);
@@ -1284,7 +1284,7 @@ namespace Util
 
     // Iterate over this map and select color
     // for the first entry found with bool key == true.
-    std::map<int, std::pair<bool, std::string>> itemFirstColorToChoose =
+    std::map<int, std::pair<bool, uint32_t>> itemFirstColorToChoose =
     {
       { 0, { isMixed,   Colors::ItemMixedColor   } },
       { 1, { isMagic,   Colors::ItemMagicColor   } },
@@ -1305,7 +1305,7 @@ namespace Util
 
     if (!data.IsIdentified && !data.IsPrefixDiscovered)
     {
-      textColor = "#FFFFFF";
+      textColor = Colors::WhiteColor;
     }
 
     return textColor;
@@ -1484,8 +1484,8 @@ namespace Util
 
   void LaunchProjectile(const std::vector<Position>& line,
                         char image,
-                        const std::string& fgColor,
-                        const std::string& bgColor)
+                        const uint32_t& fgColor,
+                        const uint32_t& bgColor)
   {
     // Start from 1 to exclude starting position
     for (size_t i = 1; i < line.size(); i++)
@@ -1512,8 +1512,8 @@ namespace Util
   void LaunchProjectile(const Position& from,
                         const Position& to,
                         char image,
-                        const std::string& fgColor,
-                        const std::string& bgColor)
+                        const uint32_t& fgColor,
+                        const uint32_t& bgColor)
   {
     auto line = BresenhamLine(from, to);
 
@@ -1617,14 +1617,14 @@ namespace Util
     return msg;
   }
 
-  std::pair<char, std::string> GetProjectileImageAndColor(ItemComponent* weapon,
-                                                          bool throwingFromInventory)
+  std::pair<char, uint32_t> GetProjectileImageAndColor(ItemComponent* weapon,
+                                                       bool throwingFromInventory)
   {
-    std::pair<char, std::string> res;
+    std::pair<char, uint32_t> res;
 
     char projectile = ' ';
 
-    std::string projColor = Colors::WhiteColor;
+    uint32_t projColor = Colors::WhiteColor;
 
     if (weapon == nullptr)
     {
@@ -1648,7 +1648,7 @@ namespace Util
 
         SpellType spell = weapon->Data.SpellHeld.SpellType_;
         SpellInfo* si = SpellsDatabase::Instance().GetSpellInfoFromDatabase(spell);
-        if (!si->SpellProjectileColor.empty())
+        if (si->SpellProjectileColor != Colors::None)
         {
           projColor = si->SpellProjectileColor;
         }

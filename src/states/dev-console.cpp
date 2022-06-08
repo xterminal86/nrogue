@@ -162,12 +162,12 @@ void DevConsole::Update(bool forceUpdate)
     int lineCount = 0;
     for (int i = _stdout.size() - 1; i >= 0; i--)
     {
-      Printer::Instance().PrintFB(1, 2 + lineCount, _stdout[i], Printer::kAlignLeft, "#FFFFFF");
+      Printer::Instance().PrintFB(1, 2 + lineCount, _stdout[i], Printer::kAlignLeft, Colors::WhiteColor);
       lineCount++;
     }
 
-    Printer::Instance().PrintFB(1, 2 + lineCount, _currentCommand, Printer::kAlignLeft, "#FFFFFF");
-    Printer::Instance().PrintFB(1 + _currentCommand.length(), 2 + lineCount, ' ', "#000000", "#FFFFFF");
+    Printer::Instance().PrintFB(1, 2 + lineCount, _currentCommand, Printer::kAlignLeft, Colors::WhiteColor);
+    Printer::Instance().PrintFB(1 + _currentCommand.length(), 2 + lineCount, ' ', Colors::BlackColor, Colors::WhiteColor);
 
     Printer::Instance().Render();
   }
@@ -554,7 +554,7 @@ void DevConsole::PrintColors()
   for (auto& kvp : cache)
   {
 #ifdef USE_SDL
-    std::string toAdd =  Util::StringFormat("[%s] ", kvp.first.data());
+    std::string toAdd =  Util::StringFormat("[%06X] ", kvp.first);
     std::string total = msg + toAdd;
     if (total.length() > 80)
     {

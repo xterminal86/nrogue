@@ -45,7 +45,7 @@ class TargetState : public GameState
     void DirtyHack();
     void UpdatePlayerPossibleKnockbackDir();
 
-    GameObject* LaunchProjectile(char image, const std::string& color);
+    GameObject* LaunchProjectile(char image, const uint32_t& color);
     GameObject* CheckHit(const Position& at, const Position& prev);
 
     std::vector<GameObject*> _targets;

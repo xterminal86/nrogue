@@ -19,9 +19,9 @@
 #ifdef USE_SDL
 struct TileColor
 {
-  int R = 0;
-  int G = 0;
-  int B = 0;
+  uint32_t R = 0;
+  uint32_t G = 0;
+  uint32_t B = 0;
 };
 
 struct TileInfo
@@ -40,8 +40,9 @@ struct FBPixel
 struct GameLogMessageData
 {
   std::string Message;
-  std::string FgColor = Colors::WhiteColor;
-  std::string BgColor = Colors::BlackColor;
+
+  uint32_t FgColor = Colors::WhiteColor;
+  uint32_t BgColor = Colors::BlackColor;
 };
 
 /// Singleton for ncurses text printing
@@ -71,72 +72,72 @@ class Printer : public Singleton<Printer>
     void Print(const int& x, const int& y,
                const std::string& text,
                int align,
-               const std::string& htmlColorFg,
-               const std::string& htmlColorBg = Colors::BlackColor);
+               const uint32_t& htmlColorFg,
+               const uint32_t& htmlColorBg = Colors::BlackColor);
 
     void Print(const int& x, const int& y,
                const int& ch,
-               const std::string& htmlColorFg,
-               const std::string& htmlColorBg = Colors::BlackColor);
+               const uint32_t& htmlColorFg,
+               const uint32_t& htmlColorBg = Colors::BlackColor);
 
     /// Print to "framebuffer" instead of directly to the screen
     void PrintFB(const int& x, const int& y,
                  const int& ch,
-                 const std::string& htmlColorFg,
-                 const std::string& htmlColorBg = Colors::BlackColor);
+                 const uint32_t& htmlColorFg,
+                 const uint32_t& htmlColorBg = Colors::BlackColor);
 
     void PrintFB(const int& x, const int& y,
                  const std::string& text,
                  int align,
-                 const std::string& htmlColorFg,
-                 const std::string& htmlColorBg = Colors::BlackColor);
+                 const uint32_t& htmlColorFg,
+                 const uint32_t& htmlColorBg = Colors::BlackColor);
 
     void PrintFB(const int& x, const int& y,
                  const std::string& text,
                  size_t scale,
                  int align,
-                 const std::string& htmlColorFg,
-                 const std::string& htmlColorBg = Colors::BlackColor);
+                 const uint32_t& htmlColorFg,
+                 const uint32_t& htmlColorBg = Colors::BlackColor);
 
     void DrawWindow(const Position& leftCorner,
                     const Position& size,
                     const std::string& header = std::string{},
-                    const std::string& headerFgColor = Colors::WhiteColor,
-                    const std::string& headerBgColor = Colors::BlackColor,
-                    const std::string& borderColor = Colors::WhiteColor,
-                    const std::string& borderBgColor = Colors::BlackColor,
-                    const std::string& bgColor = Colors::BlackColor);
+                    const uint32_t& headerFgColor = Colors::WhiteColor,
+                    const uint32_t& headerBgColor = Colors::BlackColor,
+                    const uint32_t& borderColor = Colors::WhiteColor,
+                    const uint32_t& borderBgColor = Colors::BlackColor,
+                    const uint32_t& bgColor = Colors::BlackColor);
 
     const std::unordered_map<size_t, ColorPair>& GetValidColorsCache();
 #else
     void PrintFB(const int& x, const int& y,
                  int image,
-                 const std::string& htmlColorFg,
-                 const std::string& htmlColorBg = Colors::BlackColor);
+                 const uint32_t& htmlColorFg,
+                 const uint32_t& htmlColorBg = Colors::BlackColor);
 
     void PrintFB(const int& x, const int& y,
                  const std::string& text,
                  int align,
-                 const std::string& htmlColorFg,
-                 const std::string& htmlColorBg = Colors::BlackColor);
+                 const uint32_t& htmlColorFg,
+                 const uint32_t& htmlColorBg = Colors::BlackColor);
 
     void PrintFB(const int& x, const int& y,
                  const std::string& text,
                  size_t scale,
                  int align,
-                 const std::string& htmlColorFg,
-                 const std::string& htmlColorBg = Colors::BlackColor);
+                 const uint32_t& htmlColorFg,
+                 const uint32_t& htmlColorBg = Colors::BlackColor);
 
     void DrawWindow(const Position& leftCorner,
                     const Position& size,
                     const std::string& header = std::string{},
-                    const std::string& headerFgColor = Colors::WhiteColor,
-                    const std::string& headerBgColor = Colors::BlackColor,
-                    const std::string& borderColor = Colors::WhiteColor,
-                    const std::string& borderBgColor = Colors::BlackColor,
-                    const std::string& bgColor = Colors::BlackColor);
+                    const uint32_t& headerFgColor = Colors::WhiteColor,
+                    const uint32_t& headerBgColor = Colors::BlackColor,
+                    const uint32_t& borderColor = Colors::WhiteColor,
+                    const uint32_t& borderBgColor = Colors::BlackColor,
+                    const uint32_t& bgColor = Colors::BlackColor);
 
-    const std::unordered_map<std::string, TileColor>& GetValidColorsCache();
+    const std::unordered_map<uint32_t, TileColor>& GetValidColorsCache();
 
     void SetRenderDst(const SDL_Rect& dst);
 
@@ -154,11 +155,11 @@ class Printer : public Singleton<Printer>
     void AddMessage(const std::string& message);
     //
     void AddMessage(const std::string& message,
-                    const std::string& fgColor);
+                    const uint32_t& fgColor);
     //
     void AddMessage(const std::string& message,
-                    const std::string& fgColor,
-                    const std::string& bgColor);
+                    const uint32_t& fgColor,
+                    const uint32_t& bgColor);
 
     GameLogMessageData GetLastMessage();
 
@@ -180,8 +181,9 @@ class Printer : public Singleton<Printer>
     bool ContainsColorMap(size_t hashToCheck);
     bool ColorIndexExists(size_t hashToCheck);
 
-    NColor GetNColor(const std::string& htmlColor);
-    size_t GetOrSetColor(const std::string& htmlColorFg, const std::string& htmlColorBg);
+    NColor GetNColor(const uint32_t& htmlColor);
+    size_t GetOrSetColor(const uint32_t& htmlColorFg,
+                         const uint32_t& htmlColorBg);
     std::pair<int, int> AlignText(int x, int y, int align, const std::string& text);
 
     void PrepareFrameBuffer();
@@ -217,7 +219,7 @@ class Printer : public Singleton<Printer>
     std::vector<TileInfo> _tiles;
     std::unordered_map<char, int> _tileIndexByChar;
 
-    std::unordered_map<std::string, TileColor> _validColorsCache;
+    std::unordered_map<uint32_t, TileColor> _validColorsCache;
 
     int _tileWidth = 0;
     int _tileHeight = 0;
@@ -230,6 +232,9 @@ class Printer : public Singleton<Printer>
     std::pair<int, int> _tileWH;
     std::pair<int, int> _tileWHScaled;
 
+    SDL_Rect _drawSrc;
+    SDL_Rect _drawDst;
+
     SDL_Rect _renderDst;
 
     void InitForSDL();
@@ -237,10 +242,17 @@ class Printer : public Singleton<Printer>
     void DrawTile(int x, int y, int tileIndex);
     void DrawTile(int x, int y, int tileIndex, size_t scale);
 
-    TileColor ConvertHtmlToRGB(const std::string& htmlColor);
+    //
+    // Here lies data after last ConvertHtmlToRGB() call.
+    //
+    TileColor _convertedHtml;
+
+    void ConvertHtmlToRGB(const uint32_t& htmlColor);
     #endif
 
-    bool IsColorStringValid(const std::string& htmlColor);
+    const uint32_t _maskR = 0x00FF0000;
+    const uint32_t _maskG = 0x0000FF00;
+    const uint32_t _maskB = 0x000000FF;
 };
 
 #endif

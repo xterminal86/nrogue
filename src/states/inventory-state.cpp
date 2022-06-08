@@ -262,7 +262,7 @@ void InventoryState::Update(bool forceUpdate)
                                     Colors::WhiteColor);
       }
 
-      std::string textColor = Util::GetItemInventoryColor(ic->Data);
+      uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
       DrawSelectionBar(yPos, nameInInventory, textColor);
 
@@ -440,7 +440,7 @@ void InventoryState::DropItem(ItemComponent* ic)
   Printer::Instance().AddMessage(message);
 }
 
-void InventoryState::DrawSelectionBar(int yOffset, const std::string& text, const std::string& textColor)
+void InventoryState::DrawSelectionBar(int yOffset, const std::string& text, const uint32_t& textColor)
 {
   if (yOffset == _selectedIndex)
   {

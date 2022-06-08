@@ -109,7 +109,7 @@ void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
         break;
 
         case '.':
-          PlaceGroundTile(x, y, ' ', Colors::BlackColor, "#440000", Strings::TileNames::AbyssalFloorText);
+          PlaceGroundTile(x, y, ' ', Colors::BlackColor, 0x440000, Strings::TileNames::AbyssalFloorText);
           break;
 
         case 'g':

@@ -119,7 +119,7 @@ void MapLevelNether::ConstructFromBuilder(LevelBuilder& lb)
           PlaceGroundTile(x,
                           y,
                           image,
-                          "#440000",
+                          0x440000,
                           Colors::BlackColor,
                           Strings::TileNames::HellstoneText);
           break;

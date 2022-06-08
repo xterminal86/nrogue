@@ -200,8 +200,9 @@ GameObject* ItemsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 
   ItemType t = ItemType::HEALING_POTION;
 
-  std::string fgColor = _gamePotionsMap[t].FgBgColor.first;
-  std::string bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+
   std::string name = _gamePotionsMap[t].PotionName;
 
   go->FgColor = fgColor;
@@ -243,8 +244,9 @@ GameObject* ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride
 
   ItemType t = ItemType::NP_POTION;
 
-  std::string fgColor = _gamePotionsMap[t].FgBgColor.first;
-  std::string bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+
   std::string name    = _gamePotionsMap[t].PotionName;
 
   go->FgColor = fgColor;
@@ -286,8 +288,9 @@ GameObject* ItemsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 
   ItemType t = ItemType::MANA_POTION;
 
-  std::string fgColor = _gamePotionsMap[t].FgBgColor.first;
-  std::string bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+
   std::string name = _gamePotionsMap[t].PotionName;
 
   go->FgColor = fgColor;
@@ -329,8 +332,9 @@ GameObject* ItemsFactory::CreateJuicePotion(ItemPrefix prefixOverride)
 
   ItemType t = ItemType::JUICE_POTION;
 
-  std::string fgColor = _gamePotionsMap[t].FgBgColor.first;
-  std::string bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+
   std::string name = _gamePotionsMap[t].PotionName;
 
   go->FgColor = fgColor;
@@ -372,8 +376,9 @@ GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 
   ItemType t = ItemType::EXP_POTION;
 
-  std::string fgColor = _gamePotionsMap[t].FgBgColor.first;
-  std::string bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+
   std::string name = _gamePotionsMap[t].PotionName;
 
   go->FgColor = fgColor;
@@ -422,8 +427,9 @@ GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPref
 
   ItemType t = m.at(statName);
 
-  std::string fgColor = _gamePotionsMap[t].FgBgColor.first;
-  std::string bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+
   std::string name    = _gamePotionsMap[t].PotionName;
 
   go->FgColor = fgColor;
@@ -467,8 +473,9 @@ GameObject* ItemsFactory::CreateCWPotion(ItemPrefix prefixOverride)
 
   ItemType t = ItemType::CW_POTION;
 
-  std::string fgColor = _gamePotionsMap[t].FgBgColor.first;
-  std::string bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+
   std::string name    = _gamePotionsMap[t].PotionName;
 
   go->FgColor = fgColor;
@@ -516,8 +523,9 @@ GameObject* ItemsFactory::CreateRAPotion(ItemPrefix prefixOverride)
 
   ItemType t = ItemType::RA_POTION;
 
-  std::string fgColor = _gamePotionsMap[t].FgBgColor.first;
-  std::string bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+
   std::string name    = _gamePotionsMap[t].PotionName;
 
   go->FgColor = fgColor;
@@ -629,8 +637,8 @@ GameObject* ItemsFactory::CreateNote(const std::string& objName, const std::vect
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  go->FgColor = "#000000";
-  go->BgColor = "#FFFFFF";
+  go->FgColor = Colors::BlackColor;
+  go->BgColor = Colors::WhiteColor;
   go->Image = '?';
   go->ObjectName = objName;
 
@@ -651,8 +659,8 @@ GameObject* ItemsFactory::CreateNote(const std::string& objName, const std::vect
 
 GameObject* ItemsFactory::CreateDummyItem(const std::string& objName,
                                           char image,
-                                          const std::string& fgColor,
-                                          const std::string& bgColor,
+                                          const uint32_t& fgColor,
+                                          const uint32_t& bgColor,
                                           const std::vector<std::string>& descText)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -694,8 +702,8 @@ GameObject* ItemsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix 
 
   go->PosX = x;
   go->PosY = y;
-  go->FgColor = "#000000";
-  go->BgColor = "#FFFFFF";
+  go->FgColor = Colors::BlackColor;
+  go->BgColor = Colors::WhiteColor;
   go->Image = '?';
   go->ObjectName = "\"" + si->SpellName + "\"";
 
@@ -759,7 +767,7 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
 
   go->ObjectName = GlobalConstants::WeaponNameByType.at(type);
   go->Image = ')';
-  go->FgColor = "#FFFFFF";
+  go->FgColor = Colors::WhiteColor;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -1155,8 +1163,8 @@ GameObject* ItemsFactory::CreateReturner(int x, int y, int charges, ItemPrefix p
 
   std::string colorName = Colors::GemColorNameByType.at(t);
 
-  std::string fgColor = Colors::GemColorByType.at(t).first;
-  std::string bgColor = Colors::GemColorByType.at(t).second;
+  uint32_t fgColor = Colors::GemColorByType.at(t).first;
+  uint32_t bgColor = Colors::GemColorByType.at(t).second;
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
@@ -1415,7 +1423,7 @@ GameObject* ItemsFactory::CreateArrows(int x, int y, ArrowType type, ItemPrefix 
   go->PosY = y;
 
   go->Image = '^';
-  go->FgColor = "#FFFFFF";
+  go->FgColor = Colors::WhiteColor;
 
   go->ObjectName = GlobalConstants::ArrowNameByType.at(type);
 
@@ -1479,7 +1487,7 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
   go->PosY = y;
 
   go->Image = ')';
-  go->FgColor = "#FFFFFF";
+  go->FgColor = Colors::WhiteColor;
 
   go->ObjectName = GlobalConstants::RangedWeaponNameByType.at(type);
 
@@ -1679,7 +1687,7 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
   go->PosX = x;
   go->PosY = y;
 
-  go->FgColor = "#FFFFFF";
+  go->FgColor = Colors::WhiteColor;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
@@ -1733,7 +1741,7 @@ GameObject* ItemsFactory::CreateAccessory(int x, int y,
   go->PosX = x;
   go->PosY = y;
 
-  go->FgColor = "#FFFFFF";
+  go->FgColor = Colors::WhiteColor;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
   ic->Data.Prefix = (prefix == ItemPrefix::RANDOM) ? RollItemPrefix() : prefix;

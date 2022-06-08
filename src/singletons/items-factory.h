@@ -14,8 +14,8 @@ class ItemsFactory : public Singleton<ItemsFactory>
   public:
     GameObject* CreateDummyItem(const std::string& objName,
                                 char image,
-                                const std::string& fgColor,
-                                const std::string& bgColor,
+                                const uint32_t& fgColor,
+                                const uint32_t& bgColor,
                                 const std::vector<std::string>& descText);
     //
     // *************************************************************************
@@ -138,7 +138,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
     {
       ItemType PotionType = ItemType::DUMMY;
       std::string PotionName;
-      std::pair<std::string, std::string> FgBgColor;
+      std::pair<uint32_t, uint32_t> FgBgColor;
     };
 
     struct ScrollInfo

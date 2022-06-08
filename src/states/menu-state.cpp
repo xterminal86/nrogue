@@ -49,7 +49,7 @@ void MenuState::PrepareGrassTiles()
   int x = 0;
   int y = 0;
 
-  std::string flowerColor = Colors::GrassDotColor;
+  uint32_t flowerColor = Colors::GrassDotColor;
 
   for (auto& line : _picture)
   {
@@ -117,7 +117,7 @@ void MenuState::DrawPicture()
 
         case '.':
         {
-          std::string& fgColor = _grassColorByPosition.at({ sx + x, sy + y });
+          uint32_t& fgColor = _grassColorByPosition.at({ sx + x, sy + y });
           Printer::Instance().PrintFB(sx + x,
                                       sy + y,
                                       c,
@@ -186,7 +186,7 @@ void MenuState::Update(bool forceUpdate)
                                    Colors::BlackColor,
                                    Colors::WhiteColor,
                                    Colors::BlackColor,
-                                   std::string());
+                                   Colors::None);
 
     int yOffset = 0;
     for (auto& s : _title)

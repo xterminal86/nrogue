@@ -77,7 +77,7 @@ void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
   {
     for (int y = 0; y < MapSize.Y; y++)
     {
-      MapArray[x][y]->Init(levelOwner, x, y, '.', "#000000", "#000000");
+      MapArray[x][y]->Init(levelOwner, x, y, '.', Colors::BlackColor, Colors::BlackColor);
     }
   }
 }
@@ -515,8 +515,8 @@ bool MapLevelBase::IsCellBlocking(const Position& pos)
 
 void MapLevelBase::PlaceGroundTile(int x, int y,
                                    int image,
-                                   const std::string& fgColor,
-                                   const std::string& bgColor,
+                                   const uint32_t& fgColor,
+                                   const uint32_t& bgColor,
                                    const std::string& objName)
 {
   GameObjectInfo t;
@@ -536,8 +536,8 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
   //int tileChoice = RNG::Instance().RandomRange(0, 10);
   //if (tileChoice < 2) img = '.';
 
-  //std::string flowerColor = GlobalConstants::BlackColor;
-  std::string flowerColor = Colors::GrassDotColor;
+  //uint32_t flowerColor = GlobalConstants::BlackColor;
+  uint32_t flowerColor = Colors::GrassDotColor;
 
   int colorChoice = RNG::Instance().RandomRange(0, maxDiceRoll);
   if      (colorChoice == 0) flowerColor = Colors::WhiteColor;
@@ -614,11 +614,11 @@ void MapLevelBase::PlaceChasmTile(int x, int y)
 #ifdef USE_SDL
   img = GlobalConstants::CP437IndexByType[NameCP437::SHADING_3];
 
-  std::string fgColor = Colors::ShadesOfGrey::Three;
-  std::string bgColor = Colors::BlackColor;
+  uint32_t fgColor = Colors::ShadesOfGrey::Three;
+  uint32_t bgColor = Colors::BlackColor;
 #else
-  std::string fgColor = Colors::BlackColor;
-  std::string bgColor = Colors::BlackColor;
+  uint32_t fgColor = Colors::BlackColor;
+  uint32_t bgColor = Colors::BlackColor;
 #endif
 
   GameObjectInfo t;
@@ -664,8 +664,8 @@ void MapLevelBase::PlaceTree(int x, int y)
 
 void MapLevelBase::PlaceWall(int x, int y,
                              int image,
-                             const std::string& fgColor,
-                             const std::string& bgColor,
+                             const uint32_t& fgColor,
+                             const uint32_t& bgColor,
                              const std::string& objName,
                              GameObjectType pickaxeable)
 {

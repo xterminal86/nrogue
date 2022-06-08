@@ -5,125 +5,134 @@ namespace Colors
 {
   namespace ShadesOfGrey
   {
-    const std::string One      = "#111111";
-    const std::string Two      = "#222222";
-    const std::string Three    = "#333333";
-    const std::string Four     = "#444444";
-    const std::string Five     = "#555555";
-    const std::string Six      = "#666666";
-    const std::string Seven    = "#777777";
-    const std::string Eight    = "#888888";
-    const std::string Nine     = "#999999";
-    const std::string Ten      = "#AAAAAA";
-    const std::string Eleven   = "#BBBBBB";
-    const std::string Twelve   = "#CCCCCC";
-    const std::string Thirteen = "#DDDDDD";
-    const std::string Fourteen = "#EEEEEE";
+    const uint32_t One      = 0x111111;
+    const uint32_t Two      = 0x222222;
+    const uint32_t Three    = 0x333333;
+    const uint32_t Four     = 0x444444;
+    const uint32_t Five     = 0x555555;
+    const uint32_t Six      = 0x666666;
+    const uint32_t Seven    = 0x777777;
+    const uint32_t Eight    = 0x888888;
+    const uint32_t Nine     = 0x999999;
+    const uint32_t Ten      = 0xAAAAAA;
+    const uint32_t Eleven   = 0xBBBBBB;
+    const uint32_t Twelve   = 0xCCCCCC;
+    const uint32_t Thirteen = 0xDDDDDD;
+    const uint32_t Fourteen = 0xEEEEEE;
   }
 
-  const std::string BlackColor                = "#000000";
-  const std::string WhiteColor                = "#FFFFFF";
-  const std::string RedColor                  = "#FF0000";
-  const std::string GreenColor                = "#00FF00";
-  const std::string BlueColor                 = "#0000FF";
-  const std::string CyanColor                 = "#00FFFF";
-  const std::string MagentaColor              = "#FF00FF";
-  const std::string YellowColor               = "#FFFF00";
-  const std::string DandelionYellowColor      = "#F0E130";
-  const std::string RedPoppyColor             = "#E42F0C";
-  const std::string MarbleColor               = "#FFE0E0";
-  const std::string CaveWallColor             = "#964B00";
-  const std::string ObsidianColorHigh         = "#5B4965";
-  const std::string ObsidianColorLow          = "#3D354B";
-  const std::string GrassColor                = "#006600";
-  const std::string GrassDotColor             = "#009900";
-  const std::string DirtColor                 = "#9B7653";
-  const std::string DirtDotColor              = "#7B5633";
-  const std::string PlayerColor               = "#00FFFF";
-  const std::string MonsterColor              = "#FF0000";
-  const std::string MonsterUniqueColor        = "#FF8888";
-  const std::string ShallowWaterColor         = "#9999FF";
-  const std::string DeepWaterColor            = "#3333FF";
-  const std::string IronColor                 = "#CBCDCD";
-  const std::string RoomFloorColor            = "#692E11";
-  const std::string WoodColor                 = "#DCB579";
-  const std::string ChestColor                = "#A0793D";
-  const std::string BrickColor                = "#DC5539";
-  const std::string LavaColor                 = "#E36517";
-  const std::string LavaWavesColor            = "#E3A917";
-  const std::string FogOfWarColor             = "#202020";
-  const std::string CoinsColor                = "#FFD700";
-  const std::string DoorHighlightColor        = "#666600";
-  const std::string MessageBoxRedBorderColor  = "#880000";
-  const std::string MessageBoxBlueBorderColor = "#8888FF";
-  const std::string MessageBoxHeaderBgColor   = "#4444AA";
-  const std::string ItemMagicColor            = "#4169E1";
-  const std::string ItemRareColor             = "#EEEE52";
-  const std::string ItemUniqueColor           = "#A59263";
-  const std::string ItemMixedColor            = "#AA7700";
-  const std::string ItemCursedColor           = "#AA0000";
+  //
+  // Special value to determine whether we should draw an object or not.
+  //
+  const uint32_t None = 0xFFFFFFFF;
 
-  const std::map<GemType, std::pair<std::string, std::string>> GemColorByType =
+  //
+  // Mouse over commented string to get corresponding
+  // color sample in QT Creator.
+  //
+  const uint32_t BlackColor                = 0x000000; // "#000000";
+  const uint32_t WhiteColor                = 0xFFFFFF; // "#FFFFFF";
+  const uint32_t RedColor                  = 0xFF0000; // "#FF0000";
+  const uint32_t GreenColor                = 0x00FF00; // "#00FF00";
+  const uint32_t BlueColor                 = 0x0000FF; // "#0000FF";
+  const uint32_t CyanColor                 = 0x00FFFF; // "#00FFFF";
+  const uint32_t MagentaColor              = 0xFF00FF; // "#FF00FF";
+  const uint32_t YellowColor               = 0xFFFF00; // "#FFFF00";
+  const uint32_t DandelionYellowColor      = 0xF0E130; // "#F0E130";
+  const uint32_t RedPoppyColor             = 0xE42F0C; // "#E42F0C";
+  const uint32_t MarbleColor               = 0xFFE0E0; // "#FFE0E0";
+  const uint32_t CaveWallColor             = 0x964B00; // "#964B00";
+  const uint32_t ObsidianColorHigh         = 0x5B4965; // "#5B4965";
+  const uint32_t ObsidianColorLow          = 0x3D354B; // "#3D354B";
+  const uint32_t GrassColor                = 0x006600; // "#006600";
+  const uint32_t GrassDotColor             = 0x009900; // "#009900";
+  const uint32_t DirtColor                 = 0x9B7653; // "#9B7653";
+  const uint32_t DirtDotColor              = 0x7B5633; // "#7B5633";
+  const uint32_t PlayerColor               = 0x00FFFF; // "#00FFFF";
+  const uint32_t MonsterColor              = 0xFF0000; // "#FF0000";
+  const uint32_t MonsterUniqueColor        = 0xFF8888; // "#FF8888";
+  const uint32_t ShallowWaterColor         = 0x9999FF; // "#9999FF";
+  const uint32_t DeepWaterColor            = 0x3333FF; // "#3333FF";
+  const uint32_t IronColor                 = 0xCBCDCD; // "#CBCDCD";
+  const uint32_t RoomFloorColor            = 0x692E11; // "#692E11";
+  const uint32_t WoodColor                 = 0xDCB579; // "#DCB579";
+  const uint32_t ChestColor                = 0xA0793D; // "#A0793D";
+  const uint32_t BrickColor                = 0xDC5539; // "#DC5539";
+  const uint32_t LavaColor                 = 0xE36517; // "#E36517";
+  const uint32_t LavaWavesColor            = 0xE3A917; // "#E3A917";
+  const uint32_t FogOfWarColor             = 0x202020; // "#202020";
+  const uint32_t CoinsColor                = 0xFFD700; // "#FFD700";
+  const uint32_t DoorHighlightColor        = 0x666600; // "#666600";
+  const uint32_t MessageBoxRedBorderColor  = 0x880000; // "#880000";
+  const uint32_t MessageBoxBlueBorderColor = 0x8888FF; // "#8888FF";
+  const uint32_t MessageBoxHeaderBgColor   = 0x4444AA; // "#4444AA";
+  const uint32_t ItemMagicColor            = 0x4169E1; // "#4169E1";
+  const uint32_t ItemRareColor             = 0xEEEE52; // "#EEEE52";
+  const uint32_t ItemUniqueColor           = 0xA59263; // "#A59263";
+  const uint32_t ItemMixedColor            = 0xAA7700; // "#AA7700";
+  const uint32_t ItemCursedColor           = 0xAA0000; // "#AA0000";
+
+  const std::map<GemType, std::pair<uint32_t, uint32_t>> GemColorByType =
   {
-    { GemType::BLACK_JETSTONE,  { "#FFFFFF", "#000000" } },
-    { GemType::BLACK_OBSIDIAN,  { "#FFFFFF", "#000000" } },
-    { GemType::BLUE_AQUAMARINE, { "#FFFFFF", "#0000FF" } },
-    { GemType::BLUE_SAPPHIRE,   { "#FFFFFF", "#0000FF" } },
-    { GemType::GREEN_EMERALD,   { "#FFFFFF", "#008800" } },
-    { GemType::GREEN_JADE,      { "#FFFFFF", "#008800" } },
-    { GemType::ORANGE_AMBER,    { "#000000", "#FF9900" } },
-    { GemType::ORANGE_JACINTH,  { "#000000", "#FF9900" } },
-    { GemType::PURPLE_AMETHYST, { "#FFFFFF", "#800080" } },
-    { GemType::PURPLE_FLUORITE, { "#FFFFFF", "#800080" } },
-    { GemType::RED_GARNET,      { "#FFFFFF", "#AA0000" } },
-    { GemType::RED_RUBY,        { "#FFFFFF", "#AA0000" } },
-    { GemType::WHITE_DIAMOND,   { "#000000", "#FFFFFF" } },
-    { GemType::WHITE_OPAL,      { "#000000", "#FFFFFF" } },
-    { GemType::YELLOW_CITRINE,  { "#000000", "#FFFF00" } }
+    { GemType::BLACK_JETSTONE,  { 0xFFFFFF, 0x000000 } },
+    { GemType::BLACK_OBSIDIAN,  { 0xFFFFFF, 0x000000 } },
+    { GemType::BLUE_AQUAMARINE, { 0xFFFFFF, 0x0000FF } },
+    { GemType::BLUE_SAPPHIRE,   { 0xFFFFFF, 0x0000FF } },
+    { GemType::GREEN_EMERALD,   { 0xFFFFFF, 0x008800 } },
+    { GemType::GREEN_JADE,      { 0xFFFFFF, 0x008800 } },
+    { GemType::ORANGE_AMBER,    { 0x000000, 0xFF9900 } },
+    { GemType::ORANGE_JACINTH,  { 0x000000, 0xFF9900 } },
+    { GemType::PURPLE_AMETHYST, { 0xFFFFFF, 0x800080 } },
+    { GemType::PURPLE_FLUORITE, { 0xFFFFFF, 0x800080 } },
+    { GemType::RED_GARNET,      { 0xFFFFFF, 0xAA0000 } },
+    { GemType::RED_RUBY,        { 0xFFFFFF, 0xAA0000 } },
+    { GemType::WHITE_DIAMOND,   { 0x000000, 0xFFFFFF } },
+    { GemType::WHITE_OPAL,      { 0x000000, 0xFFFFFF } },
+    { GemType::YELLOW_CITRINE,  { 0x000000, 0xFFFF00 } }
   };
 
-  const std::map<ShrineType, std::pair<std::string, std::string>> ShrineColorsByType =
+  const std::map<ShrineType, std::pair<uint32_t, uint32_t>> ShrineColorsByType =
   {
-    { ShrineType::MIGHT,       { "#FF0000", "#888888" } },
-    { ShrineType::SPIRIT,      { "#0088FF", "#888888" } },
-    { ShrineType::TRANQUILITY, { "#0088FF", "#888888" } },
-    { ShrineType::KNOWLEDGE,   { "#44FF44", "#888888" } },
-    { ShrineType::PERCEPTION,  { "#FFFFFF", "#888888" } },
-    { ShrineType::HEALING,     { "#FF0000", "#888888" } },
-    { ShrineType::FORGOTTEN,   { "#FFFFFF", "#888888" } },
-    { ShrineType::ABYSSAL,     { "#FF8000", "#880000" } },
-    { ShrineType::DESECRATED,  { "#888800", "#440000" } },
-    { ShrineType::DISTURBING,  { "#660000", "#888888" } },
-    { ShrineType::RUINED,      { "#666666", "#000000" } },
-    { ShrineType::POTENTIAL,   { "#FF0000", "#888888" } },
-    { ShrineType::HIDDEN,      { "#888888", "#333333" } },
-    { ShrineType::HOLY,        { "#FFFF00", "#888888" } },
+    { ShrineType::MIGHT,       { 0xFF0000, 0x888888 } },
+    { ShrineType::SPIRIT,      { 0x0088FF, 0x888888 } },
+    { ShrineType::TRANQUILITY, { 0x0088FF, 0x888888 } },
+    { ShrineType::KNOWLEDGE,   { 0x44FF44, 0x888888 } },
+    { ShrineType::PERCEPTION,  { 0xFFFFFF, 0x888888 } },
+    { ShrineType::HEALING,     { 0xFF0000, 0x888888 } },
+    { ShrineType::FORGOTTEN,   { 0xFFFFFF, 0x888888 } },
+    { ShrineType::ABYSSAL,     { 0xFF8000, 0x880000 } },
+    { ShrineType::DESECRATED,  { 0x888800, 0x440000 } },
+    { ShrineType::DISTURBING,  { 0x660000, 0x888888 } },
+    { ShrineType::RUINED,      { 0x666666, 0x000000 } },
+    { ShrineType::POTENTIAL,   { 0xFF0000, 0x888888 } },
+    { ShrineType::HIDDEN,      { 0x888888, 0x333333 } },
+    { ShrineType::HOLY,        { 0xFFFF00, 0x888888 } },
   };
 
-  const std::map<std::string, std::vector<std::string>> PotionColorsByName =
+  const std::map<std::string, std::vector<uint32_t>> PotionColorsByName =
   {
-    { "Red Potion",     { "#FF0000", "#440000" } },
-    { "Green Potion",   { "#00FF00", "#004400" } },
-    { "Blue Potion",    { "#4444FF", "#000044" } },
-    { "Cyan Potion",    { "#00FFFF", "#004444" } },
-    { "Magenta Potion", { "#FF00FF", "#440044" } },
-    { "Yellow Potion",  { "#FFFF00", "#444400" } },
-    { "Radiant Potion", { "#FFFF88", "#777700" } },
-    { "Morbid Potion",  { "#AA6622", "#880000" } },
-    { "Clear Potion",   { "#FFFFFF", "#000000" } },
-    { "Black Potion",   { "#000000", "#444444" } },
-    { "Watery Potion",  { "#BBBBBB", "#000000" } }
+    { "Red Potion",     { 0xFF0000, 0x440000 } },
+    { "Green Potion",   { 0x00FF00, 0x004400 } },
+    { "Blue Potion",    { 0x4444FF, 0x000044 } },
+    { "Cyan Potion",    { 0x00FFFF, 0x004444 } },
+    { "Magenta Potion", { 0xFF00FF, 0x440044 } },
+    { "Yellow Potion",  { 0xFFFF00, 0x444400 } },
+    { "Radiant Potion", { 0xFFFF88, 0x777700 } },
+    { "Morbid Potion",  { 0xAA6622, 0x880000 } },
+    { "Clear Potion",   { 0xFFFFFF, 0x000000 } },
+    { "Black Potion",   { 0x000000, 0x444444 } },
+    { "Watery Potion",  { 0xBBBBBB, 0x000000 } }
   };
 
-  const std::map<WandMaterials, std::pair<std::string, std::string>> WandColorsByMaterial =
+  const std::map<WandMaterials, std::pair<uint32_t, uint32_t>> WandColorsByMaterial =
   {
-    { WandMaterials::YEW_1,    { "#D2AB7C", "#8A8B5C" } },
-    { WandMaterials::IVORY_2,  { "#FFFFFF", "#9A9A9A" } },
-    { WandMaterials::EBONY_3,  { "#888888", "#555D50" } },
-    { WandMaterials::ONYX_4,   { "#666666", "#2F2F2F" } },
-    { WandMaterials::GLASS_5,  { "#000000", "#FFFFFF" } },
-    { WandMaterials::COPPER_6, { "#FF8C00", "#B87333" } },
-    { WandMaterials::GOLDEN_7, { "#FFFF00", "#AAA700" } }
+    { WandMaterials::YEW_1,    { 0xD2AB7C, 0x8A8B5C } },
+    { WandMaterials::IVORY_2,  { 0xFFFFFF, 0x9A9A9A } },
+    { WandMaterials::EBONY_3,  { 0x888888, 0x555D50 } },
+    { WandMaterials::ONYX_4,   { 0x666666, 0x2F2F2F } },
+    { WandMaterials::GLASS_5,  { 0x000000, 0xFFFFFF } },
+    { WandMaterials::COPPER_6, { 0xFF8C00, 0xB87333 } },
+    { WandMaterials::GOLDEN_7, { 0xFFFF00, 0xAAA700 } }
   };
 
   const std::map<GemType, std::string> GemColorNameByType =

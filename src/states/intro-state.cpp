@@ -74,7 +74,8 @@ void IntroState::Update(bool forceUpdate)
                               _scenarioNameByClass.at(Application::Instance().PlayerInstance.GetClass()),
                               2,
                               Printer::kAlignCenter,
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
   if (Util::WaitForMs(10))
   {
     int textIndex = Application::Instance().PlayerInstance.SelectedClass;

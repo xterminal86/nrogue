@@ -139,8 +139,8 @@ class MapLevelBase
 
     void PlaceGroundTile(int x, int y,
                          int image,
-                         const std::string& fgColor,
-                         const std::string& bgColor,
+                         const uint32_t& fgColor,
+                         const uint32_t& bgColor,
                          const std::string& objName);
 
     void PlaceGrassTile(int x, int y, int maxDiceRoll = 10);
@@ -152,8 +152,8 @@ class MapLevelBase
 
     void PlaceWall(int x, int y,
                    int image,
-                   const std::string& fgColor,
-                   const std::string& bgColor,
+                   const uint32_t& fgColor,
+                   const uint32_t& bgColor,
                    const std::string& objName,
                    GameObjectType pickaxeable = GameObjectType::PICKAXEABLE);
 

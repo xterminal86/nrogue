@@ -27,10 +27,10 @@ void MessageBoxState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    std::string headerBgColor = Colors::MessageBoxHeaderBgColor;
+    uint32_t headerBgColor = Colors::MessageBoxHeaderBgColor;
     if (_borderColor == Colors::MessageBoxRedBorderColor)
     {
-      headerBgColor = "#660000";
+      headerBgColor = 0x660000;
     }
 
     Printer::Instance().DrawWindow(_leftCorner,
@@ -61,8 +61,8 @@ void MessageBoxState::Update(bool forceUpdate)
 void MessageBoxState::SetMessage(MessageBoxType type,
                                  const std::string& header,
                                  const std::vector<std::string>& message,
-                                 const std::string& borderColor,
-                                 const std::string& bgColor)
+                                 const uint32_t& borderColor,
+                                 const uint32_t& bgColor)
 {
   _type = type;
   _header = header;

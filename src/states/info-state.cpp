@@ -275,7 +275,7 @@ void InfoState::DrawScrollBars()
 
 void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr)
 {
-  std::string color = Colors::WhiteColor;
+  uint32_t color = Colors::WhiteColor;
 
   int modifiers = attr.GetModifiers();
   if (modifiers > 0)
@@ -318,7 +318,7 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
 
 void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, RangedAttribute& attr)
 {
-  std::string color = Colors::WhiteColor;
+  uint32_t color = Colors::WhiteColor;
 
   int modifiers = attr.Max().GetModifiers();
   if (modifiers > 0)
@@ -381,7 +381,7 @@ void InfoState::PrintModifiers(int x, int y)
   int sklMod = playerRef.Attrs.Skl.GetModifiers();
   int spdMod = playerRef.Attrs.Spd.GetModifiers();
 
-  std::pair<std::string, std::string> res;
+  std::pair<uint32_t, std::string> res;
 
   res = GetModifierString(strMod);
   Printer::Instance().PrintFB(x,
@@ -426,11 +426,11 @@ void InfoState::PrintModifiers(int x, int y)
                               res.first);
 }
 
-std::pair<std::string, std::string> InfoState::GetModifierString(int value)
+std::pair<uint32_t, std::string> InfoState::GetModifierString(int value)
 {
-  std::pair<std::string, std::string> res;
+  std::pair<uint32_t, std::string> res;
 
-  std::string color = Colors::WhiteColor;
+  uint32_t color = Colors::WhiteColor;
   std::string str;
 
   if (value < 0)

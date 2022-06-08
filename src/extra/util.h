@@ -143,13 +143,13 @@ namespace Util
   extern void LaunchProjectile(const Position& from,
                                const Position& to,
                                char image,
-                               const std::string& fgColor,
-                               const std::string& bgColor = Colors::BlackColor);
+                               const uint32_t& fgColor,
+                               const uint32_t& bgColor = Colors::BlackColor);
 
   extern void LaunchProjectile(const std::vector<Position>& line,
                                char image,
-                               const std::string& fgColor,
-                               const std::string& bgColor = Colors::BlackColor);
+                               const uint32_t& fgColor,
+                               const uint32_t& bgColor = Colors::BlackColor);
 
   extern void KnockBack(GameObject* sender,
                         GameObject* receiver,
@@ -160,8 +160,8 @@ namespace Util
 
   extern std::string ProcessTeleport(GameObject* target);
 
-  extern std::pair<char, std::string> GetProjectileImageAndColor(ItemComponent* weapon,
-                                                                 bool throwingFromInventory);
+  extern std::pair<char, uint32_t> GetProjectileImageAndColor(ItemComponent* weapon,
+                                                              bool throwingFromInventory);
 
   extern std::vector<GameObject*> GetObjectsOnTheLine(const std::vector<Position>& line);
   extern GameObject* GetFirstObjectOnTheLine(const std::vector<Position>& line);
@@ -234,7 +234,7 @@ namespace Util
 
   extern CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map);
 
-  extern std::string GetItemInventoryColor(const ItemData& data);
+  extern uint32_t GetItemInventoryColor(const ItemData& data);
 
   extern std::string GenerateName(bool allowDoubleVowels = false,
                                   bool canAddEnding = false,

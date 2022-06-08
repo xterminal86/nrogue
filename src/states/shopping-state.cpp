@@ -183,7 +183,7 @@ void ShoppingState::DisplayPlayerInventory()
                                 Printer::kAlignLeft,
                                 Colors::CoinsColor);
 
-    std::string textColor = Util::GetItemInventoryColor(ic->Data);
+    uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (_playerSide && index == _inventoryItemIndex)
     {
@@ -271,7 +271,7 @@ void ShoppingState::DisplayShopInventory()
                                 Printer::kAlignRight,
                                 Colors::CoinsColor);
 
-    std::string textColor = Util::GetItemInventoryColor(ic->Data);
+    uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (!_playerSide && index == _inventoryItemIndex)
     {

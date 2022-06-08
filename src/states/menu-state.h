@@ -78,7 +78,7 @@ class MenuState : public GameState
 
   Position _borderSize;
 
-  std::map<std::pair<int, int>, std::string> _grassColorByPosition;
+  std::map<std::pair<int, int>, uint32_t> _grassColorByPosition;
 };
 
 #endif

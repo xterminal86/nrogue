@@ -371,7 +371,7 @@ void MainState::DrawHPMP()
                               str,
                               Printer::kAlignCenter,
                               Colors::WhiteColor,
-                              "#880000");
+                              0x880000);
 
   UpdateBar(1, th - 1, _playerRef->Attrs.MP);
 
@@ -381,7 +381,7 @@ void MainState::DrawHPMP()
                               str,
                               Printer::kAlignCenter,
                               Colors::WhiteColor,
-                              "#000088");
+                              0x000088);
 }
 
 void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
@@ -796,7 +796,7 @@ void MainState::DisplayHungerStatus(const int& startPos)
                                   _th - 3,
                                   '%',
                                   Colors::WhiteColor,
-                                  "#999900");
+                                  0x999900);
     }
   }
 }
@@ -883,9 +883,9 @@ void MainState::DisplayActiveEffects(const int& startPos)
     bool isFading = (kvp.second <= GlobalConstants::TurnReadyValue
                   && kvp.second != -1);
 
-    std::string color = isFading ?
-                        Colors::ShadesOfGrey::Four :
-                        Colors::WhiteColor;
+    uint32_t color = isFading ?
+                     Colors::ShadesOfGrey::Four :
+                     Colors::WhiteColor;
 
     Printer::Instance().PrintFB(offsetX,
                                 _th - 4,

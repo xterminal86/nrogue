@@ -177,8 +177,8 @@ bool Application::CurrentStateIs(GameStates stateName)
 void Application::ShowMessageBox(MessageBoxType type,
                                  const std::string& header,
                                  const std::vector<std::string>& message,
-                                 const std::string& borderColor,
-                                 const std::string& bgColor)
+                                 const uint32_t& borderColor,
+                                 const uint32_t& bgColor)
 {
   _previousState = _currentState;
 
@@ -209,7 +209,7 @@ void Application::CloseMessageBox()
 void Application::DisplayAttack(GameObject* defender,
                                 int delayMs,
                                 const std::string& messageToPrint,
-                                const std::string& cursorColor)
+                                const uint32_t& cursorColor)
 {
   if (GameConfig.FastCombat)
   {
@@ -240,11 +240,12 @@ void Application::DisplayAttack(GameObject* defender,
 
 void Application::DrawAttackCursor(int x, int y,
                                    GameObject* defender,
-                                   const std::string& cursorColor)
+                                   const uint32_t& cursorColor)
 {
-  if (cursorColor.empty())
+  if (cursorColor == Colors::None)
   {
-    if (!defender->FgColor.empty() && !defender->BgColor.empty())
+    if (defender->FgColor != Colors::None
+     && defender->BgColor != Colors::None)
     {
       Printer::Instance().PrintFB(x, y, defender->Image, defender->FgColor, defender->BgColor);
       Printer::Instance().Render();
@@ -252,7 +253,7 @@ void Application::DrawAttackCursor(int x, int y,
   }
   else
   {
-    Printer::Instance().PrintFB(x, y, ' ', "#000000", cursorColor);
+    Printer::Instance().PrintFB(x, y, ' ', Colors::BlackColor, cursorColor);
     Printer::Instance().Render();
   }
 }

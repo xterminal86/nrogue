@@ -65,9 +65,9 @@ void SelectClassState::Update(bool forceUpdate)
     int index = 0;
     for (auto& i : _menuItems)
     {
-      std::string bgColor = (index == _menuIndex)
-                          ? Colors::ShadesOfGrey::Four
-                          : Colors::BlackColor;
+      uint32_t bgColor = (index == _menuIndex)
+                        ? Colors::ShadesOfGrey::Four
+                        : Colors::BlackColor;
 
       Printer::Instance().PrintFB(_twHalf,
                                   _thHalf + offset,

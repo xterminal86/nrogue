@@ -32,8 +32,8 @@ class GameObject
     GameObject(MapLevelBase* levelOwner,
                int x, int y,
                int avatar,
-               const std::string& htmlColor,
-               const std::string& bgColor = Colors::BlackColor);
+               const uint32_t& htmlColor,
+               const uint32_t& bgColor = Colors::BlackColor);
 
     void SetLevelOwner(MapLevelBase* levelOwner);
 
@@ -42,8 +42,8 @@ class GameObject
     void Init(MapLevelBase* levelOwner,
               int x, int y,
               int avatar,
-              const std::string& fgColor,
-              const std::string& bgColor = Colors::BlackColor);
+              const uint32_t& fgColor,
+              const uint32_t& bgColor = Colors::BlackColor);
 
     /// Adds \p dx and \p dy to corresponding game object's coordinates.
     /// Use to move actors only.
@@ -56,8 +56,8 @@ class GameObject
 
     bool CanMoveTo(const Position& pos);
 
-    void Draw(const std::string& overrideFgColor = std::string(),
-              const std::string& overrideBgColor = std::string());
+    void Draw(const uint32_t& overrideFgColor = Colors::None,
+              const uint32_t& overrideBgColor = Colors::None);
 
     template <typename T, typename ... Args>
     inline T* AddComponent(Args ... args)
@@ -103,7 +103,8 @@ class GameObject
       return (GetComponent<T>() != nullptr);
     }
 
-    void MakeTile(const GameObjectInfo& t, GameObjectType typeOverride = GameObjectType::GROUND);
+    void MakeTile(const GameObjectInfo& t,
+                  GameObjectType typeOverride = GameObjectType::GROUND);
 
     void Update();
 
@@ -151,8 +152,10 @@ class GameObject
     bool IsDestroyed = false;
 
     int Image;
-    std::string FgColor = Colors::BlackColor;
-    std::string BgColor = Colors::BlackColor;
+
+    uint32_t FgColor = Colors::BlackColor;
+    uint32_t BgColor = Colors::BlackColor;
+
     std::string ObjectName;
     std::string FogOfWarName;
 

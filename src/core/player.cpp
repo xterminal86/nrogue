@@ -60,7 +60,7 @@ void Player::Draw()
   // If game object has black bg color,
   // replace it with current floor color
   //
-  std::string bgColor = BgColor;
+  uint32_t bgColor = BgColor;
 
   bool cond = (BgColor == Colors::BlackColor);
   bool isOnStaticObject = (mapRef->StaticMapObjects[PosX][PosY] != nullptr);
@@ -955,8 +955,8 @@ void Player::LevelUp(int baseHpOverride)
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
                                          "Level Up!",
                                          res,
-                                         "#888800",
-                                         "#000044");
+                                         0x888800,
+                                         0x000044);
 }
 
 void Player::LevelDown()
@@ -970,7 +970,7 @@ void Player::LevelDown()
                                          "Level DOWN!",
                                          res,
                                          Colors::RedColor,
-                                         "#000044");
+                                         0x000044);
 }
 
 void Player::LevelDownSilent()

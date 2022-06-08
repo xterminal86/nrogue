@@ -11,8 +11,8 @@ struct GameObjectInfo
   void Set(bool isBlocking,
            bool blocksSight,
            int image,
-           const std::string& fgColor,
-           const std::string& bgColor,
+           const uint32_t& fgColor,
+           const uint32_t& bgColor,
            const std::string& objectName,
            const std::string& fowName = std::string());
 
@@ -20,8 +20,8 @@ struct GameObjectInfo
   bool BlocksSight;
   int Image;
 
-  std::string FgColor;
-  std::string BgColor;
+  uint32_t FgColor;
+  uint32_t BgColor;
 
   std::string ObjectName;
   std::string FogOfWarName;

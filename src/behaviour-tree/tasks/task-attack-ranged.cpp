@@ -25,8 +25,8 @@ TaskAttackRanged::TaskAttackRanged(GameObject* objectToControl,
                                    const std::string& attackType,
                                    const std::string& spellType,
                                    char projectile,
-                                   const std::string& fgColor,
-                                   const std::string& bgColor)
+                                   const uint32_t& fgColor,
+                                   const uint32_t& bgColor)
   : Node(objectToControl)
 {
   _projectile = projectile;

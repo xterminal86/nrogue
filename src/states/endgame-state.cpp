@@ -94,7 +94,7 @@ void EndgameState::DrawHPMP()
                               str,
                               Printer::kAlignCenter,
                               Colors::WhiteColor,
-                              "#880000");
+                              0x880000);
 
   UpdateBar(0, _th - 1, _playerRef->Attrs.MP);
 
@@ -104,7 +104,7 @@ void EndgameState::DrawHPMP()
                               str,
                               Printer::kAlignCenter,
                               Colors::WhiteColor,
-                              "#000088");
+                              0x000088);
 }
 
 std::string EndgameState::UpdateBar(int x, int y, RangedAttribute& attr)

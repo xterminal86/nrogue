@@ -180,8 +180,8 @@ GameObject* GameObjectsFactory::CreateDummyObject(int x,
                                                   int y,
                                                   const std::string& objName,
                                                   char image,
-                                                  const std::string& fgColor,
-                                                  const std::string& bgColor)
+                                                  const uint32_t& fgColor,
+                                                  const uint32_t& bgColor)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -195,7 +195,11 @@ GameObject* GameObjectsFactory::CreateDummyObject(int x,
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateContainer(const std::string& name, const std::string& bgColor, int image, int x, int y)
+GameObject* GameObjectsFactory::CreateContainer(int x,
+                                                int y,
+                                                int image,
+                                                const std::string& name,
+                                                const uint32_t& bgColor)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -203,7 +207,7 @@ GameObject* GameObjectsFactory::CreateContainer(const std::string& name, const s
   go->PosX = x;
   go->PosY = y;
   go->Image = image;
-  go->FgColor = "#FFFFFF";
+  go->FgColor = Colors::WhiteColor;
   go->BgColor = bgColor;
   go->Blocking = true;
   go->BlocksSight = true;
@@ -220,8 +224,8 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
                                            DoorMaterials material,
                                            const std::string& doorName,
                                            int hitPoints,
-                                           const std::string& fgOverrideColor,
-                                           const std::string& bgOverrideColor)
+                                           const uint32_t& fgOverrideColor,
+                                           const uint32_t& bgOverrideColor)
 {
   const std::map<DoorMaterials, int> doorDefByMat =
   {
@@ -274,7 +278,11 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints, GameObjectType type)
+GameObject* GameObjectsFactory::CreateStaticObject(int x,
+                                                   int y,
+                                                   const GameObjectInfo& objectInfo,
+                                                   int hitPoints,
+                                                   GameObjectType type)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -352,8 +360,8 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
                                                                     int y,
                                                                     char image,
                                                                     const std::string& objName,
-                                                                    const std::string& fgColor,
-                                                                    const std::string& bgColor)
+                                                                    const uint32_t& fgColor,
+                                                                    const uint32_t& bgColor)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 

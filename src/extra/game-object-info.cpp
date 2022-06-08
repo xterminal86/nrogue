@@ -3,8 +3,8 @@
 void GameObjectInfo::Set(bool isBlocking,
                          bool blocksSight,
                          int image,
-                         const std::string &fgColor,
-                         const std::string &bgColor,
+                         const uint32_t& fgColor,
+                         const uint32_t& bgColor,
                          const std::string &objectName,
                          const std::string &fowName)
 {

@@ -31,8 +31,8 @@ GameObject::GameObject(MapLevelBase *levelOwner,
                        int x,
                        int y,
                        int avatar,
-                       const std::string &htmlColor,
-                       const std::string &bgColor)
+                       const uint32_t& htmlColor,
+                       const uint32_t& bgColor)
 {
   _objectId = Application::GetNewGlobalId();
 
@@ -78,8 +78,8 @@ void GameObject::Init(MapLevelBase* levelOwner,
                       int x,
                       int y,
                       int avatar,
-                      const std::string& fgColor,
-                      const std::string& bgColor)
+                      const uint32_t& fgColor,
+                      const uint32_t& bgColor)
 {
   PosX = x;
   PosY = y;
@@ -91,9 +91,11 @@ void GameObject::Init(MapLevelBase* levelOwner,
 
   _levelOwner = levelOwner;
 
+  //
   // _currentCell->Occupied is not set to true by default,
   // see game-object.h comments for Occupied field.
-  _currentCell = _levelOwner->MapArray[PosX][PosY].get();
+  //
+  _currentCell  = _levelOwner->MapArray[PosX][PosY].get();
   _previousCell = _levelOwner->MapArray[PosX][PosY].get();
 }
 
@@ -117,6 +119,7 @@ bool GameObject::MoveTo(int x, int y, bool force)
   bool canMoveTo = CanMoveTo({ x, y });
   if (canMoveTo || force)
   {
+    //
     // When we change level, previous position (PosX and PosY)
     // is pointing to the stairs down on previous level,
     // which may not have the same dimensions as the level
@@ -125,7 +128,7 @@ bool GameObject::MoveTo(int x, int y, bool force)
     //
     // Unblocking of stairs in such case is done directly in ChangeLevel(),
     // so we just skip this case here.
-
+    //
     if (PosX < _levelOwner->MapSize.X && PosY < _levelOwner->MapSize.Y)
     {
       _previousCell = _levelOwner->MapArray[PosX][PosY].get();
@@ -146,7 +149,7 @@ bool GameObject::MoveTo(int x, int y, bool force)
   return false;
 }
 
-bool GameObject::MoveTo(const Position &pos, bool force)
+bool GameObject::MoveTo(const Position& pos, bool force)
 {
   //DebugLog("MoveTo(%i;%i)\n\n", pos.X, pos.Y);
   return MoveTo(pos.X, pos.Y, force);
@@ -182,13 +185,13 @@ bool GameObject::CanMoveTo(const Position& pos)
   return res;
 }
 
-void GameObject::Draw(const std::string& overrideColorFg,
-                      const std::string& overrideColorBg)
+void GameObject::Draw(const uint32_t& overrideColorFg,
+                      const uint32_t& overrideColorBg)
 {
-  bool dontDraw = (FgColor.empty()
-                && BgColor.empty()
-                && overrideColorFg.empty()
-                && overrideColorBg.empty());
+  bool dontDraw = (FgColor == Colors::None
+                && BgColor == Colors::None
+                && overrideColorFg == Colors::None
+                && overrideColorBg == Colors::None);
 
   if (dontDraw)
   {
@@ -198,8 +201,12 @@ void GameObject::Draw(const std::string& overrideColorFg,
   Printer::Instance().PrintFB(PosX + _levelOwner->MapOffsetX,
                               PosY + _levelOwner->MapOffsetY,
                               Image,
-                              overrideColorFg.empty() ? FgColor : overrideColorFg,
-                              overrideColorBg.empty() ? BgColor : overrideColorBg);
+                              overrideColorFg == Colors::None
+                              ? FgColor
+                              : overrideColorFg,
+                              overrideColorBg == Colors::None
+                              ? BgColor
+                              : overrideColorBg);
 }
 
 void GameObject::Update()
@@ -231,7 +238,8 @@ void GameObject::ApplyBonuses(ItemComponent* itemRef)
 // give effects from items only, which is reflected by
 // ItemComponent* argument.
 //
-void GameObject::ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
+void GameObject::ApplyBonus(ItemComponent* itemRef,
+                            const ItemBonusStruct& bonus)
 {
   switch (bonus.Type)
   {
@@ -280,7 +288,8 @@ void GameObject::UnapplyBonuses(ItemComponent* itemRef)
   }
 }
 
-void GameObject::UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus)
+void GameObject::UnapplyBonus(ItemComponent* itemRef,
+                              const ItemBonusStruct& bonus)
 {
   switch (bonus.Type)
   {
@@ -324,7 +333,8 @@ const Position& GameObject::GetPosition()
   return _position;
 }
 
-void GameObject::MakeTile(const GameObjectInfo& t, GameObjectType typeOverride)
+void GameObject::MakeTile(const GameObjectInfo& t,
+                          GameObjectType typeOverride)
 {
   Blocking     = t.IsBlocking;
   BlocksSight  = t.BlocksSight;
@@ -1377,10 +1387,10 @@ std::vector<std::string> GameObject::DebugInfo()
   str = Util::StringFormat("  Position: { %i, %i }", PosX, PosY);
   res.push_back(str);
 
-  str = Util::StringFormat("  FgColor: %s", FgColor.data());
+  str = Util::StringFormat("  FgColor: %06X", FgColor);
   res.push_back(str);
 
-  str = Util::StringFormat("  BgColor: %s", BgColor.data());
+  str = Util::StringFormat("  BgColor: %06X", BgColor);
   res.push_back(str);
 
   str = Util::StringFormat("  Components: %zu", _components.size());

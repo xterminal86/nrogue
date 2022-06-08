@@ -34,7 +34,7 @@ void SpellsDatabase::InitSpecific()
                   sn.at(SpellType::FROST),
                   50,
                   { 1, 4 },
-                  "#4444FF"
+                  0x4444FF
                 });
 
   RegisterSpell({
@@ -70,7 +70,7 @@ void SpellsDatabase::InitSpecific()
                   sn.at(SpellType::MAGIC_MISSILE),
                   25,
                   { 2, 8 },
-                  "#AAAAFF"
+                  0xAAAAFF
                 });
 
   RegisterSpell({

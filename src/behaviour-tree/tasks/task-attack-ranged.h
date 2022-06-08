@@ -25,8 +25,8 @@ class TaskAttackRanged : public Node
                      const std::string& attackType,
                      const std::string& spellType,
                      char projectile,
-                     const std::string& fgColor,
-                     const std::string& bgColor);
+                     const uint32_t& fgColor,
+                     const uint32_t& bgColor);
 
     BTResult Run() override;
 
@@ -55,8 +55,8 @@ class TaskAttackRanged : public Node
     char _projectile;
     RangedAttackType _attackType = RangedAttackType::UNDEFINED;
     SpellType _spellType = SpellType::NONE;
-    std::string _fgColor;
-    std::string _bgColor;
+    uint32_t _fgColor;
+    uint32_t _bgColor;
 
     const std::map<std::string, RangedAttackType> _attackTypeByName =
     {

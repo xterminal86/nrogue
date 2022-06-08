@@ -152,7 +152,7 @@ void ContainerInteractState::DisplayPlayerInventory()
                                   Colors::WhiteColor);
     }
 
-    std::string textColor = Util::GetItemInventoryColor(ic->Data);
+    uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (_playerSide && index == _inventoryItemIndex)
     {
@@ -232,7 +232,7 @@ void ContainerInteractState::DisplayContainerInventory()
                                   Colors::WhiteColor);
     }
 
-    std::string textColor = Util::GetItemInventoryColor(ic->Data);
+    uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (!_playerSide && index == _inventoryItemIndex)
     {

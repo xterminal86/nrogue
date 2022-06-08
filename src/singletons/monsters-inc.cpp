@@ -115,7 +115,7 @@ GameObject* MonstersInc::CreateNPC(int x,
   img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
   #endif
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, "#FFFFFF");
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, Colors::WhiteColor);
 
   go->IsLiving = true;
   go->Type = GameObjectType::NPC;
@@ -126,7 +126,10 @@ GameObject* MonstersInc::CreateNPC(int x,
   AINPC* ainpc = aic->AddModel<AINPC>();
   ainpc->Init(npcType, standing, serviceType);
 
-  std::string goColor = (ainpc->Data.IsMale) ? "#FFFFFF" : "#FF00FF";
+  uint32_t goColor = (ainpc->Data.IsMale)
+                    ? Colors::WhiteColor
+                    : Colors::MagentaColor;
+
   go->FgColor = goColor;
 
   aic->ChangeModel<AINPC>();
@@ -801,8 +804,8 @@ GameObject* MonstersInc::CreateWraith(int x, int y)
                                   x,
                                   y,
                                   'W',
-                                  std::string(),
-                                  std::string());
+                                  Colors::None,
+                                  Colors::None);
 
   go->ObjectName = "Wraith";
   go->Attrs.Indestructible = false;
