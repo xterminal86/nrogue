@@ -5,6 +5,7 @@ nrogue
 core.*
 *.txt
 !config-template.txt
+!SDL2-QT-config.txt
 *.out
 *.exe
 /*.bmp

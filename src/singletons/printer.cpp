@@ -668,25 +668,30 @@ void Printer::PrintFB(const int& x, const int& y,
 
   #if !(defined(__unix__) || defined(__linux__))
 
-  std::string tmpFg;
-  std::string tmpBg;
+  uint32_t tmpFg;
+  uint32_t tmpBg;
 
-  if (htmlColorFg == "#000000" && htmlColorBg == "#000000")
+  if (htmlColorFg == Colors::BlackColor
+   && htmlColorBg == Colors::BlackColor)
   {
     // For invisible and not discovered tiles
 
-    tmpFg = "#000000";
-    tmpBg = "#000000";
+    tmpFg = Colors::BlackColor;
+    tmpBg = Colors::BlackColor;
   }
-  else if (htmlColorBg != "#000000")
+  else if (htmlColorBg != Colors::BlackColor)
   {
-    tmpFg = "#000000";
-    tmpBg = (htmlColorBg == Colors::FogOfWarColor) ? Colors::FogOfWarColor : "#FFFFFF";
+    tmpFg = Colors::BlackColor;
+    tmpBg = (htmlColorBg == Colors::FogOfWarColor)
+            ? Colors::FogOfWarColor
+            : Colors::WhiteColor;
   }
   else
   {
-    tmpFg = (htmlColorFg == Colors::FogOfWarColor) ? Colors::FogOfWarColor : "#FFFFFF";
-    tmpBg = "#000000";
+    tmpFg = (htmlColorFg == Colors::FogOfWarColor)
+            ? Colors::FogOfWarColor
+            : Colors::WhiteColor;
+    tmpBg = Colors::BlackColor;
   }
 
   size_t hash = GetOrSetColor(tmpFg, tmpBg);
