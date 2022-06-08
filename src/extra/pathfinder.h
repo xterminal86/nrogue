@@ -16,22 +16,32 @@ struct PathNode
 
   PathNode(const Position& coord, const Position& parentNodePos);
 
+  //
   // Map coordinate of this node
+  //
   Position Coordinate;
 
+  //
   // Can't use PathNode* here, beacuse it's not C# and .NET
   // and we can't just assign "reference to previous node"
   // and assume it will stay there no matter the containers.
+  //
   Position ParentNodePosition = { -1, -1 };
 
+  //
   // Total cost
+  //
   int CostF = 0;
 
+  //
   // Cost of traversal here from the starting point
   // with regard to already traversed path
+  //
   int CostG = 0;
 
+  //
   // Heuristic cost
+  //
   int CostH = 0;
 };
 

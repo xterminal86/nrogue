@@ -79,19 +79,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Player* playerRef = &Application::Instance().PlayerInstance;
-      playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
-
       Printer::Instance().AddMessage(message);
-
-      //
-      // Potion that deals damage is not necessarily
-      // a cursed healing potion, thus check for amount > 0.
-      //
-      if(message != Strings::NoActionText && amount > 0)
-      {
-        playerRef->RememberItem(item, "healing potion");
-      }
     }
 
     user->Attrs.HP.AddMin(amount);
@@ -142,15 +130,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Player* playerRef = &Application::Instance().PlayerInstance;
-      playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
-
       Printer::Instance().AddMessage(message);
-
-      if (message != Strings::NoActionText && amount > 0)
-      {
-        playerRef->RememberItem(item, "mana potion");
-      }
     }
 
     return UseResult::SUCCESS;
@@ -206,15 +186,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Player* playerRef = &Application::Instance().PlayerInstance;
-      playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
-
       Printer::Instance().AddMessage(message);
-
-      if (message != Strings::NoActionText)
-      {
-        playerRef->RememberItem(item, "neutralize poison");
-      }
     }
 
     return UseResult::SUCCESS;
@@ -262,15 +234,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Player* playerRef = &Application::Instance().PlayerInstance;
-      playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
-
       Printer::Instance().AddMessage(message);
-
-      if (message != Strings::NoActionText)
-      {
-        playerRef->RememberItem(item, "food potion");
-      }
     }
 
     return UseResult::SUCCESS;
@@ -326,15 +290,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Player* playerRef = &Application::Instance().PlayerInstance;
-      playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
-
       Printer::Instance().AddMessage(message);
-
-      if (message != Strings::NoActionText)
-      {
-        playerRef->RememberItem(item, "cure weakness");
-      }
     }
 
     return UseResult::SUCCESS;
@@ -413,15 +369,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Player* playerRef = &Application::Instance().PlayerInstance;
-      playerRef->RememberItem(item, Strings::UnidentifiedEffectText);
-
       Printer::Instance().AddMessage(message);
-
-      if (message != Strings::NoActionText)
-      {
-        playerRef->RememberItem(item, "restore ability");
-      }
     }
 
     return UseResult::SUCCESS;
@@ -464,9 +412,6 @@ namespace ItemUseHandlers
     if (Util::IsPlayer(user))
     {
       Printer::Instance().AddMessage(message);
-
-      Player* playerRef = &Application::Instance().PlayerInstance;
-      playerRef->RememberItem(item, "potion of learning");
     }
 
     return UseResult::SUCCESS;
@@ -549,12 +494,6 @@ namespace ItemUseHandlers
     if (Util::IsPlayer(user))
     {
       Printer::Instance().AddMessage(message);
-
-      if (message != Strings::NoActionText)
-      {
-        Player* playerRef = &Application::Instance().PlayerInstance;
-        playerRef->RememberItem(item, playerMemoryTextByType.at(itemType));
-      }
     }
 
     return UseResult::SUCCESS;

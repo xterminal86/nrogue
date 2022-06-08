@@ -45,12 +45,16 @@ class GameObject
               const uint32_t& fgColor,
               const uint32_t& bgColor = Colors::BlackColor);
 
+    ///
     /// Adds \p dx and \p dy to corresponding game object's coordinates.
     /// Use to move actors only.
+    ///
     bool Move(int dx, int dy);
 
+    ///
     /// Sets game object's coordinates to \p x and \p y.
     /// Use to move actors only.
+    ///
     bool MoveTo(int x, int y, bool force = false);
     bool MoveTo(const Position& pos, bool force = false);
 

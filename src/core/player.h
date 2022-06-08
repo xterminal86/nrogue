@@ -65,7 +65,6 @@ class Player : public GameObject
     void LevelDown() override;
     void LevelDownSilent();
 
-    void RememberItem(ItemComponent* itemRef, const std::string& effect);
     void AddExtraItems();
 
     void SetAttackDir(const Position& dir);
@@ -124,8 +123,6 @@ class Player : public GameObject
     int _starvingTimeout = 0;
 
     std::vector<std::string> GetPrettyLevelUpText();
-
-    std::map<std::string, std::vector<std::string>> _useIdentifiedItemsByName;
 
     std::map<int, PlayerClass> _classesMap =
     {

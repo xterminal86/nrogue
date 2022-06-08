@@ -6,35 +6,6 @@
 void InfoState::Prepare()
 {
   _playerRef = &Application::Instance().PlayerInstance;
-
-  _scrollIndex = 0;
-  _scrollLimitReached = false;
-
-  PrepareUseIdentifiedListToPrint();
-}
-
-void InfoState::PrepareUseIdentifiedListToPrint()
-{
-  if (_playerRef->_useIdentifiedItemsByName.empty())
-  {
-    return;
-  }
-
-  _useIdentifiedMapCopy.clear();
-
-  std::vector<std::string> list;
-  for (auto& kvp : _playerRef->_useIdentifiedItemsByName)
-  {
-    list.push_back(kvp.first);
-  }
-
-  size_t longestLen = Util::FindLongestStringLength(list);
-  for (auto& kvp : _playerRef->_useIdentifiedItemsByName)
-  {
-    std::string key = kvp.first;
-    key.append(longestLen - key.length(), ' ');
-    _useIdentifiedMapCopy[kvp.first] = kvp.second;
-  }
 }
 
 void InfoState::HandleInput()
@@ -43,31 +14,10 @@ void InfoState::HandleInput()
 
   switch (_keyPressed)
   {
-    case ALT_K2:
-    case NUMPAD_2:
-      if (!_scrollLimitReached)
-      {
-        _scrollIndex++;
-      }
-      break;
-
-    case ALT_K8:
-    case NUMPAD_8:
-      if (_scrollIndex > 0)
-      {
-        _scrollIndex--;
-      }
-      break;
-
     case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
-
-    default:
-      break;
   }
-
-  _scrollLimitReached = ((_scrollIndex + _th) >= _playerRef->_useIdentifiedItemsByName.size());
 }
 
 void InfoState::Update(bool forceUpdate)
@@ -165,111 +115,7 @@ void InfoState::Update(bool forceUpdate)
 
     yPrintOffset = 0;
 
-    // Display some filler text just to give player some info
-    if (_playerRef->_useIdentifiedItemsByName.empty())
-    {
-      Printer::Instance().PrintFB(_twHalf + _twQuarter,
-                                  _thHalf,
-                                  "No items to recall",
-                                  Printer::kAlignCenter,
-                                  Colors::WhiteColor);
-    }
-
-    // Use-identified items
-    auto& items = _useIdentifiedMapCopy;
-    for (size_t ind = _scrollIndex; ind < items.size(); ind++)
-    {
-      // Outside the screen
-      if (yPrintOffset > _th)
-      {
-        break;
-      }
-
-      auto it = items.begin();
-      std::advance(it, ind);
-
-      for (auto& i : it->second)
-      {
-        std::string str = Util::StringFormat("%s - %s",
-                                             it->first.data(),
-                                             i.data());
-
-        Printer::Instance().PrintFB(kMaxNameUnderscoreLength + 1,
-                                    yPrintOffset,
-                                    str,
-                                    Printer::kAlignLeft,
-                                    Colors::WhiteColor);
-
-        yPrintOffset++;
-      }
-    }
-
-    DrawScrollBars();
-
     Printer::Instance().Render();
-  }
-}
-
-void InfoState::DrawScrollBars()
-{
-  if (_useIdentifiedMapCopy.size() > (size_t)_th)
-  {
-    if (_scrollIndex == 0)
-    {
-      #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1,
-                                  _th - 1,
-                                  (int)NameCP437::DARROW_2,
-                                  Colors::WhiteColor);
-      #else
-      Printer::Instance().PrintFB(_tw - 1,
-                                  _th - 1,
-                                  "\\/",
-                                  Printer::kAlignRight,
-                                  Colors::WhiteColor);
-      #endif
-    }
-    else if (_scrollLimitReached)
-    {
-      #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1,
-                                  0,
-                                  (int)NameCP437::UARROW_2,
-                                  Colors::WhiteColor);
-      #else
-      Printer::Instance().PrintFB(_tw - 1,
-                                  0,
-                                  "/\\",
-                                  Printer::kAlignRight,
-                                  Colors::WhiteColor);
-      #endif
-    }
-    else
-    {
-      #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1,
-                                  0,
-                                  (int)NameCP437::UARROW_2,
-                                  Colors::WhiteColor);
-
-      Printer::Instance().PrintFB(_tw - 1,
-                                  _th - 1,
-                                  (int)NameCP437::DARROW_2,
-                                  Colors::WhiteColor);
-      #else
-      Printer::Instance().PrintFB(_tw - 1,
-                                  0,
-                                  "/\\",
-                                  Printer::kAlignRight,
-                                  Colors::WhiteColor);
-
-      Printer::Instance().PrintFB(_tw - 1,
-                                  _th - 1,
-                                  "\\/",
-                                  Printer::kAlignRight,
-                                  Colors::WhiteColor);
-      #endif
-    }
   }
 }
 

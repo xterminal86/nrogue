@@ -170,8 +170,6 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll, GameObject* u
     return;
   }
 
-  _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
-
   std::vector<ItemComponent*> itemsToRepair;
   for (auto& i : _playerRef->Inventory->Contents)
   {
@@ -216,8 +214,6 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll, GameObject* u
       i->Data.Durability.Restore();
     }
   }
-
-  _playerRef->RememberItem(scroll, "repair");
 }
 
 void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll, GameObject* user)
@@ -229,10 +225,6 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll, GameObject*
   {
     return;
   }
-
-  // TODO: identify control
-
-  _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
 
   std::vector<ItemComponent*> itemsToId;
   std::vector<ItemComponent*> itemsKnown;
@@ -263,8 +255,6 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll, GameObject*
     auto item = itemsKnown[index];
     item->Data.IsIdentified = false;
     item->Data.IsPrefixDiscovered = false;
-
-    _playerRef->RememberItem(scroll, "identify");
   }
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {
@@ -278,8 +268,6 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll, GameObject*
 
     itemsToId[0]->Data.IsPrefixDiscovered = true;
     itemsToId[0]->Data.IsIdentified = true;
-
-    _playerRef->RememberItem(scroll, "identify");
   }
   else if (scroll->Data.Prefix == ItemPrefix::BLESSED)
   {
@@ -296,26 +284,11 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll, GameObject*
     }
 
     _scrollUseMessages.push_back("Your possessions have been identified!");
-
-    _playerRef->RememberItem(scroll, "identify");
   }
 }
 
 void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll, GameObject* user)
 {
-  if (Util::IsPlayer(user))
-  {
-    _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
-  }
-
-  auto RememberScroll = [this, user, scroll]()
-  {
-    if (Util::IsPlayer(user))
-    {
-      _playerRef->RememberItem(scroll, "neutralize poison");
-    }
-  };
-
   int userPow = user->Attrs.Mag.Get();
 
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
@@ -331,8 +304,6 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll, Gam
     user->AddEffect(b);
 
     _scrollUseMessages.push_back("You feel unwell!");
-
-    RememberScroll();
   }
   else
   {
@@ -360,26 +331,11 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll, Gam
 
       user->AddEffect(b);
     }
-
-    RememberScroll();
   }
 }
 
 void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll, GameObject* user)
 {
-  if (Util::IsPlayer(user))
-  {
-    _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
-  }
-
-  auto RememberScroll = [this, user, scroll]()
-  {
-    if (Util::IsPlayer(user))
-    {
-      _playerRef->RememberItem(scroll, "healing");
-    }
-  };
-
   int power = user->Attrs.HP.Max().Get();
   bool atFullHealth = (user->Attrs.HP.Min().Get() == user->Attrs.HP.Max().Get());
 
@@ -388,8 +344,6 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll, GameObject* 
     power = RNG::Instance().RandomRange(1, user->Attrs.HP.Min().Get() / 2);
     power = -power;
     _scrollUseMessages.push_back("You writhe in pain!");
-
-    RememberScroll();
   }
   else
   {
@@ -411,20 +365,10 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll, GameObject* 
   }
 
   user->Attrs.HP.AddMin(power);
-
-  RememberScroll();
 }
 
 void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll, GameObject* user)
 {
-  auto RememberScroll = [this, scroll, user]()
-  {
-    if (Util::IsPlayer(user))
-    {
-      _playerRef->RememberItem(scroll, "light");
-    }
-  };
-
   int radius = Map::Instance().CurrentLevel->VisibilityRadius;
 
   int playerPow = user->Attrs.Mag.Get();
@@ -464,8 +408,6 @@ void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll, GameObject* us
   b.Id         = scroll->OwnerGameObject->ObjectId();
 
   user->AddEffect(b);
-
-  RememberScroll();
 }
 
 void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll, GameObject* user)
@@ -528,8 +470,6 @@ void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll, GameObject* user)
       }
     }
   }
-
-  _playerRef->RememberItem(scroll, "magic mapping");
 }
 
 void SpellsProcessor::ProcessScrollOfHiddenDetection(ItemComponent* scroll,
@@ -589,8 +529,6 @@ void SpellsProcessor::ProcessScrollOfHiddenDetection(ItemComponent* scroll,
   b.Id = scroll->OwnerGameObject->ObjectId();
 
   _playerRef->AddEffect(b);
-
-  _playerRef->RememberItem(scroll, "detect monsters");
 }
 
 void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObject* user)
@@ -608,8 +546,6 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
     _scrollUseMessages.push_back(_kNoActionText);
     return;
   }
-
-  _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
 
   auto p = Map::Instance().GetLevelRefByType(MapType::TOWN);
   MapLevelTown* lvl = static_cast<MapLevelTown*>(p);
@@ -639,15 +575,11 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
 
     _scrollUseMessages.push_back("You're back in town all of a sudden!");
     Map::Instance().TeleportToExistingLevel(MapType::TOWN, res);
-
-    _playerRef->RememberItem(scroll, "town portal");
   }
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {
     _scrollUseMessages.push_back("You're back in town all of a sudden!");
     Map::Instance().TeleportToExistingLevel(MapType::TOWN, lvl->TownPortalPos());
-
-    _playerRef->RememberItem(scroll, "town portal");
   }
   else if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
@@ -674,19 +606,6 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll, GameObject*
     return;
   }
 
-  if (Util::IsPlayer(user))
-  {
-    _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
-  }
-
-  auto RememberScroll = [this, user, scroll]()
-  {
-    if (Util::IsPlayer(user))
-    {
-      _playerRef->RememberItem(scroll, "teleport");
-    }
-  };
-
   _scrollUseMessages.push_back("You are suddenly transported elsewhere!");
 
   auto& mapRef = Map::Instance().CurrentLevel;
@@ -699,8 +618,6 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll, GameObject*
     int index = RNG::Instance().RandomRange(0, mapRef->EmptyCells().size());
     auto pos = mapRef->EmptyCells()[index];
     Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos, user);
-
-    RememberScroll();
   }
   else if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
@@ -708,26 +625,11 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll, GameObject*
     int ry = RNG::Instance().RandomRange(1, mapRef->MapSize.Y);
     Position pos = { rx, ry };
     Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos, user);
-
-    // Don't remember since it can be cursed scroll of TP
   }
 }
 
 void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll, GameObject* user)
 {
-  if (Util::IsPlayer(user))
-  {
-    _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
-  }
-
-  auto RememberScroll = [this, user, scroll]()
-  {
-    if (Util::IsPlayer(user))
-    {
-      _playerRef->RememberItem(scroll, "mana shield");
-    }
-  };
-
   bool manaShieldOk = (user->Attrs.MP.Min().Get() != 0 ||
                       (user->Attrs.MP.Max().Get() != 0 &&
                        user->Attrs.Mag.Get() > 0));
@@ -758,8 +660,6 @@ void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll, GameObjec
     b.Id = scroll->OwnerGameObject->ObjectId();
 
     user->AddEffect(b);
-
-    RememberScroll();
   }
 }
 
@@ -769,8 +669,6 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObje
   {
     return;
   }
-
-  _playerRef->RememberItem(scroll, Strings::UnidentifiedEffectText);
 
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
@@ -798,8 +696,6 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObje
       idName = Util::ReplaceItemPrefix(idName, { "Blessed", "Uncursed" }, "Cursed");
 
       _scrollUseMessages.push_back("The malevolent energy creeps in...");
-
-      _playerRef->RememberItem(scroll, "remove curse");
     }
     else
     {
@@ -830,8 +726,6 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObje
       idName = Util::ReplaceItemPrefix(idName, { "Cursed" }, "Uncursed");
 
       _scrollUseMessages.push_back("The malevolent energy disperses!");
-
-      _playerRef->RememberItem(scroll, "remove curse");
     }
     else
     {
@@ -859,8 +753,6 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObje
     if (success)
     {
       _scrollUseMessages.push_back("The malevolent energy disperses completely!");
-
-      _playerRef->RememberItem(scroll, "remove curse");
     }
     else
     {

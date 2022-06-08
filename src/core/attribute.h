@@ -20,7 +20,9 @@ struct Attribute
 
   int Talents = 0;
 
+  //
   // For "custom" class, percentage of stat raise during level up
+  //
   int RaiseProbability = -1;
 
   private:

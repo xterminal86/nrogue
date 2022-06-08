@@ -1424,8 +1424,6 @@ void Player::SetSoldierDefaultItems()
   ItemComponent* ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 3;
 
-  RememberItem(ic, "healing potion");
-
   Inventory->Add(go);
 
   go = ItemsFactory::Instance().CreateFood(0, 0, FoodType::IRON_RATIONS, ItemPrefix::UNCURSED);
@@ -1445,16 +1443,10 @@ void Player::SetThiefDefaultItems()
   Money = 500;
 
   auto go = ItemsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
-  ItemComponent* ic = go->GetComponent<ItemComponent>();
   Inventory->Add(go);
-
-  RememberItem(ic, "healing potion");
 
   go = ItemsFactory::Instance().CreateManaPotion(ItemPrefix::UNCURSED);
-  ic = go->GetComponent<ItemComponent>();
   Inventory->Add(go);
-
-  RememberItem(ic, "mana potion");
 }
 
 void Player::SetArcanistDefaultItems()
@@ -1465,18 +1457,13 @@ void Player::SetArcanistDefaultItems()
   ItemComponent* ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 5;
 
-  RememberItem(ic, "mana potion");
-
   Inventory->Add(go);
 
   go = ItemsFactory::Instance().CreateReturner(0, 0, 3, ItemPrefix::UNCURSED);
   Inventory->Add(go);
 
   go = ItemsFactory::Instance().CreateScroll(0, 0, SpellType::MANA_SHIELD, ItemPrefix::BLESSED);
-  ic = go->GetComponent<ItemComponent>();
   Inventory->Add(go);
-
-  RememberItem(ic, "mana shield");
 }
 
 void Player::SetDefaultSkills()
@@ -1515,54 +1502,6 @@ void Player::SwitchPlaces(AIComponent* other)
   AINPC* npc = static_cast<AINPC*>(other->CurrentModel);
   std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : "the " + other->OwnerGameObject->ObjectName;
   Printer::Instance().AddMessage("You pass by " + name);
-}
-
-void Player::RememberItem(ItemComponent* itemRef, const std::string& effect)
-{
-  //
-  // NOTE: ?unsure? will be added only once.
-  // Potions of the same color with different potential results
-  // that are drank unidentified will not be tracked because of
-  // too much complexity and shitcode.
-  //
-  std::string objName = itemRef->Data.UnidentifiedName;
-
-  if (_useIdentifiedItemsByName.count(objName) == 1)
-  {
-    auto& shortcut = _useIdentifiedItemsByName[objName];
-
-    //
-    // If item is recalled but effect is not yet known,
-    // and incoming effect is different, replace.
-    //
-    auto found = std::find(shortcut.begin(),
-                           shortcut.end(),
-                           Strings::UnidentifiedEffectText);
-
-    if (found != shortcut.end() && effect != Strings::UnidentifiedEffectText)
-    {
-      *found = effect;
-    }
-    else if (found == shortcut.end())
-    {
-      //
-      // Check if existing known effect is different from incoming.
-      // If so, then add incoming.
-      //
-      auto f = std::find(shortcut.begin(),
-                         shortcut.end(),
-                         effect);
-
-      if (f == shortcut.end() && effect != Strings::UnidentifiedEffectText)
-      {
-        shortcut.push_back(effect);
-      }
-    }
-  }
-  else
-  {
-    _useIdentifiedItemsByName[objName] = { effect };
-  }
 }
 
 void Player::AddExtraItems()

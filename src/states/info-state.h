@@ -18,22 +18,14 @@ class InfoState : public GameState
     void PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr);
     void PrintRangedAttribute(int x, int y, const std::string& attrName, RangedAttribute& attr);
     void PrintModifiers(int x, int y);
-    void PrepareUseIdentifiedListToPrint();
-    void DrawScrollBars();
 
     int FindAttrsMaxStringLength();
 
     std::pair<uint32_t, std::string> GetModifierString(int value);
 
-    std::map<std::string, std::vector<std::string>> _useIdentifiedMapCopy;
-
     const int kMaxNameUnderscoreLength = 33;
 
-    size_t _scrollIndex = 0;
-
     Player* _playerRef = nullptr;
-
-    bool _scrollLimitReached = false;
 };
 
 #endif

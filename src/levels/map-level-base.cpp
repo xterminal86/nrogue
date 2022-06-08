@@ -290,7 +290,11 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
   {
     for (int y = 1; y < MapSize.Y - 7; y++)
     {
-      if (lb.MapRaw[x][y] == '.')
+      auto& cell = lb.MapRaw[x][y];
+
+      bool startOk = (Util::BlockDistance(_laddersPositionByImage['<'], { x, y }) >= 30);
+
+      if (cell == '.' && startOk)
       {
         possibleSpots.push_back({ x, y });
       }
@@ -331,7 +335,11 @@ void MapLevelBase::PlaceStairs()
   MapType stairsDownTo = (MapType)(DungeonLevel + 1);
   MapType stairsUpTo   = (MapType)(DungeonLevel - 1);
 
-  GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, '<', stairsUpTo);
+  GameObjectsFactory::Instance().CreateStairs(this,
+                                              LevelStart.X,
+                                              LevelStart.Y,
+                                              '<',
+                                              stairsUpTo);
 
   _emptyCells.erase(_emptyCells.begin() + startIndex);
 
@@ -340,7 +348,14 @@ void MapLevelBase::PlaceStairs()
   LevelExit.X = _emptyCells[endIndex].X;
   LevelExit.Y = _emptyCells[endIndex].Y;
 
-  GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', stairsDownTo);
+  GameObjectsFactory::Instance().CreateStairs(this,
+                                              LevelExit.X,
+                                              LevelExit.Y,
+                                              '>',
+                                              stairsDownTo);
+
+  _laddersPositionByImage['<'] = LevelStart;
+  _laddersPositionByImage['>'] = LevelExit;
 }
 
 void MapLevelBase::CreateInitialMonsters()

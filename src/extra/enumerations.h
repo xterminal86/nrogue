@@ -633,8 +633,9 @@ enum class NameCP437
   VBAR_3L = 222,
   VBAR_3R = 221,
   BLOCK = 219,
+  TRIPLE_HBARS = 240,
   WAVES = 247,
-  LAST_ELEMENT
+  LAST_ELEMENT = 255
 };
 #endif
 

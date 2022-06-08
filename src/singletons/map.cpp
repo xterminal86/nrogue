@@ -542,8 +542,10 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
 
       case MapType::MINES_5:
       {
+        //
         // Map size values in the constructor here don't matter
         // since they will be overridden there for special level case.
+        //
         _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(30, 30, levelName, lvlAsInt));
       }
       break;

@@ -66,9 +66,11 @@ class DGBase
 
     std::vector<std::vector<char>> MapRaw;
 
+    //
     // Since we cannot specify shrine type inside text map array
     // during generation, we save all shrines into this map and
     // use it at level instantiation stage.
+    //
     std::map<Position, ShrineType> ShrinesByPosition;
 
     std::string GetMapRawString();

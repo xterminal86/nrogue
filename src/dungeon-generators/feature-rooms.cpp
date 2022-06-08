@@ -431,8 +431,10 @@ bool FeatureRooms::CreateShrine(const Position& start,
   int index = RNG::Instance().RandomRange(0, layouts.size());
   auto layout = layouts[index];
 
+  //
   // layout.size() is 5
   // Center room entrance along the dir.
+  //
   auto res = CenterRoomAlongDir(start, layout.size(), dir);
 
   int sx = res.first.X;

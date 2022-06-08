@@ -107,6 +107,12 @@ class MapLevelBase
     std::vector<RoomForLevel> _roomsForLevel;
     std::map<GameObjectType, int> _monstersSpawnRateForThisLevel;
 
+    std::map<char, Position> _laddersPositionByImage =
+    {
+      { '<', Position() },
+      { '>', Position() }
+    };
+
     StringsArray2D _specialLevel;
 
     Player* _playerRef = nullptr;
