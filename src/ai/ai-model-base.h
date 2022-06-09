@@ -51,14 +51,14 @@ class AIModelBase
     std::function<BTResult()> GetConditionFunction(const ScriptNode* data);
 
     std::function<BTResult()> GetD100CF(const ScriptNode* data);
-    std::function<BTResult()> GetIsPlayerVisibleCF(const ScriptNode* data);
-    std::function<BTResult()> GetPlayerCanMoveCF(const ScriptNode* data);
+    std::function<BTResult()> GetIsPlayerVisibleCF();
+    std::function<BTResult()> GetPlayerCanMoveCF();
     std::function<BTResult()> GetPlayerEnergyCF(const ScriptNode* data);
     std::function<BTResult()> GetPlayerNextTurnCF(const ScriptNode* data);
     std::function<BTResult()> GetInRangeCF(const ScriptNode* data);
     std::function<BTResult()> GetTurnsLeftCF(const ScriptNode* data);
     std::function<BTResult()> GetHasEffectCF(const ScriptNode* data);
-    std::function<BTResult()> GetHPLowCF(const ScriptNode* data);
+    std::function<BTResult()> GetHPLowCF();
     std::function<BTResult()> GetHasEquippedCF(const ScriptNode* data);
 
     virtual void PrepareScript();

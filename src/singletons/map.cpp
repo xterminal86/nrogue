@@ -397,9 +397,11 @@ void Map::RemoveStaticObjects()
   auto mapCells = Util::GetRectAroundPoint(playerX, playerY, tw / 2, th / 2, CurrentLevel->MapSize);
   for (auto& cell : mapCells)
   {
+    //
     // Static objects are considered to be occupying the cell by the fact
     // of their presence, i.e. if there is no static object present,
     // cell isn't occupied.
+    //
     if (CurrentLevel->StaticMapObjects[cell.X][cell.Y] != nullptr
      && CurrentLevel->StaticMapObjects[cell.X][cell.Y]->IsDestroyed)
     {
@@ -412,7 +414,9 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
 {
   auto& player = Application::Instance().PlayerInstance;
 
+  //
   // Unblock cell on stairs before going
+  //
   CurrentLevel->MapArray[player.PosX][player.PosY]->Occupied = false;
 
   ChangeOrInstantiateLevel(levelToChange);

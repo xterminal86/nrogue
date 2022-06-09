@@ -8,15 +8,6 @@ PathNode::PathNode(const Position &coord)
   Coordinate.Y = coord.Y;
 }
 
-PathNode::PathNode(const PathNode &rhs)
-{
-  Coordinate = rhs.Coordinate;
-  ParentNodePosition = rhs.ParentNodePosition;
-  CostF = rhs.CostF;
-  CostG = rhs.CostG;
-  CostH = rhs.CostH;
-}
-
 PathNode::PathNode(const Position &coord, const Position &parentNodePos)
 {
   Coordinate.X = coord.X;

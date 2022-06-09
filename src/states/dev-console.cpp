@@ -344,7 +344,7 @@ void DevConsole::ProcessCommand(const std::string& command,
       break;
 
     case DevConsoleCommand::POISON_ACTOR:
-      PoisonActor(params);
+      PoisonActor();
       break;
 
     case DevConsoleCommand::GIVE_MONEY:
@@ -450,7 +450,7 @@ void DevConsole::PrintDebugInfo(const std::vector<std::string>& debugInfo)
 
 void DevConsole::TransformTile(const std::vector<std::string>& params)
 {
-  if (params.size() >= 0 && params.size() < 3)
+  if (params.size() < 3)
   {
     StdOut(ErrWrongParams);
     return;
@@ -517,7 +517,7 @@ void DevConsole::TransformTile(const std::vector<std::string>& params)
 
 void DevConsole::PlaceWall(const std::vector<std::string>& params)
 {
-  if (params.size() >= 0 && params.size() < 2)
+  if (params.size() < 2)
   {
     StdOut(ErrWrongParams);
     return;
@@ -959,7 +959,7 @@ void DevConsole::DamageActor(const std::vector<std::string>& params)
   StdOut(Ok);
 }
 
-void DevConsole::PoisonActor(const std::vector<std::string>& params)
+void DevConsole::PoisonActor()
 {
   if (_objectHandles[ObjectHandleType::ACTOR] == nullptr)
   {

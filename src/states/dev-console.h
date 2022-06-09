@@ -148,7 +148,7 @@ class DevConsole : public GameState
     void MovePlayer(const std::vector<std::string>& params);
     void RemoveObject(const std::vector<std::string>& params);
     void DamageActor(const std::vector<std::string>& params);
-    void PoisonActor(const std::vector<std::string>& params);
+    void PoisonActor();
     void PrintColors();
     void TransformTile(const std::vector<std::string>& params);
     void PlaceWall(const std::vector<std::string>& params);

@@ -16,12 +16,6 @@ Position::Position(int x, int y)
   Y = y;
 }
 
-Position::Position(const Position &from)
-{
-  X = from.X;
-  Y = from.Y;
-}
-
 void Position::Set(int x, int y)
 {
   X = x;

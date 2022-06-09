@@ -1066,7 +1066,11 @@ void Player::ProcessKill(GameObject* monster)
   if (monster->Type != GameObjectType::HARMLESS
    && monster->Type != GameObjectType::REMAINS)
   {
-    int exp = monster->Attrs.Rating() - Attrs.Rating();
+    int mr = monster->Attrs.Rating();
+    int pr = Attrs.Rating();
+    int d  = mr - pr;
+
+    int exp = mr + d;
     exp = Util::Clamp(exp, 0, GlobalConstants::AwardedExpMax);
 
     if (exp != 0)

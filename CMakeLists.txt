@@ -10,6 +10,7 @@ if (MSVC)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
 else()
   add_compile_options(-Wall
+                      #-Wextra
                       -Wno-switch
                       -Wno-format
                       -Werror=return-type
@@ -117,5 +118,3 @@ else()
     target_link_libraries(${TARGET_NAME} ncurses)
   endif()
 endif()
-
-

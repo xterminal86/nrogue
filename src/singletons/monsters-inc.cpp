@@ -160,6 +160,8 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
+    difficulty = Util::Clamp(difficulty, 1, 3);
+
     go->Attrs.Str.Talents = 1;
     go->Attrs.Spd.Talents = 1;
 
@@ -212,6 +214,8 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
+    difficulty = Util::Clamp(difficulty, 1, 5);
+
     go->Attrs.Def.Talents = 3;
     go->Attrs.Spd.Talents = 1;
 
@@ -222,22 +226,6 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
 
     go->Attrs.HP.Restore();
     go->Attrs.MP.Restore();
-
-    /*
-    int randomStr = RNG::Instance().RandomRange(0 * difficulty, 1 * difficulty);
-    int randomDef = RNG::Instance().RandomRange(0, 1 * difficulty);
-    int randomSkl = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
-    int randomHp = RNG::Instance().RandomRange(1 * difficulty, 3 * difficulty);
-    int randomSpd = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
-
-    go->Attrs.Lvl.Set(difficulty);
-
-    go->Attrs.Str.Set(randomStr);
-    go->Attrs.Def.Set(randomDef);
-    go->Attrs.HP.Set(randomHp);
-    go->Attrs.Spd.Set(randomSpd);
-    go->Attrs.Skl.Set(randomSkl);
-    */
   }
 
   ItemBonusStruct ibs;
@@ -274,11 +262,15 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
 
   go->Move(0, 0);
 
+  go->Attrs.ChallengeRating = 10;
+
   // Set attributes
   if (randomize)
   {
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
+
+    difficulty = Util::Clamp(difficulty, 1, 5);
 
     go->Attrs.Def.Talents = 3;
     go->Attrs.Spd.Talents = 1;
@@ -332,6 +324,8 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
+    difficulty = Util::Clamp(difficulty, 1, 7);
+
     go->Attrs.Str.Talents = 2;
     go->Attrs.Def.Talents = 2;
     go->Attrs.Spd.Talents = 1;
@@ -343,22 +337,6 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
 
     go->Attrs.HP.Restore();
     go->Attrs.MP.Restore();
-
-    /*
-    int randomStr = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
-    int randomDef = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
-    int randomSkl = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
-    int randomHp = RNG::Instance().RandomRange(2 * difficulty, 6 * difficulty);
-    int randomSpd = RNG::Instance().RandomRange(1 * difficulty, 2 * difficulty);
-
-    go->Attrs.Lvl.Set(difficulty);
-
-    go->Attrs.Str.Set(randomStr);
-    go->Attrs.Def.Set(randomDef);
-    go->Attrs.HP.Set(randomHp);
-    go->Attrs.Spd.Set(randomSpd);
-    go->Attrs.Skl.Set(randomSkl);
-    */
   }
 
   // ===========================================================================
@@ -387,11 +365,15 @@ GameObject* MonstersInc::CreateTroll(int x, int y, bool randomize)
 
   go->Move(0, 0);
 
+  go->Attrs.ChallengeRating = 30;
+
   // Set attributes
   if (randomize)
   {
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
+
+    difficulty = Util::Clamp(difficulty, 1, 10);
 
     go->Attrs.Str.Set(4);
 
@@ -474,8 +456,10 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   // TODO: add some more plot-related dummy items
   //
 
-  go->Attrs.Str.Talents = 2;
-  go->Attrs.Skl.Talents = 1;
+  go->Attrs.ChallengeRating = 15;
+
+  go->Attrs.Str.Talents = 3;
+  go->Attrs.Skl.Talents = 2;
   go->Attrs.Spd.Talents = 1;
 
   for (int i = 0; i <= 5; i++)
@@ -540,6 +524,8 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
 
   int difficulty = GetDifficulty();
 
+  difficulty = Util::Clamp(difficulty, 1, 10);
+
   for (int i = 0; i < difficulty; i++)
   {
     go->LevelUp();
@@ -602,6 +588,8 @@ GameObject* MonstersInc::CreateKobold(int x, int y)
 
   int difficulty = GetDifficulty();
 
+  difficulty = Util::Clamp(difficulty, 1, 10);
+
   for (int i = 0; i < difficulty; i++)
   {
     go->LevelUp();
@@ -639,6 +627,8 @@ GameObject* MonstersInc::CreateShelob(int x, int y)
   go->Attrs.Str.Talents = 2;
   go->Attrs.Skl.Talents = 2;
   go->Attrs.Spd.Talents = 1;
+
+  go->Attrs.ChallengeRating = 10;
 
   int difficulty = GetDifficulty();
 
@@ -681,6 +671,8 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
   go->Attrs.HP.Talents  = 3;
 
   int difficulty = GetDifficulty();
+
+  difficulty = Util::Clamp(difficulty, 1, 10);
 
   for (int i = 0; i < difficulty; i++)
   {
@@ -761,6 +753,8 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
 
   int difficulty = GetDifficulty();
 
+  difficulty = Util::Clamp(difficulty, 1, 12);
+
   for (int i = 0; i < difficulty; i++)
   {
     go->LevelUp(1);
@@ -814,6 +808,8 @@ GameObject* MonstersInc::CreateWraith(int x, int y)
 
   go->MoveTo(x, y);
 
+  go->Attrs.ChallengeRating = 50;
+
   int difficulty = GetDifficulty();
 
   for (int i = 0; i < difficulty; i++)
@@ -866,6 +862,8 @@ GameObject* MonstersInc::CreateStalker(int x, int y)
   go->IsLiving = true;
 
   go->MoveTo(x, y);
+
+  go->Attrs.ChallengeRating = 25;
 
   int difficulty = GetDifficulty();
 

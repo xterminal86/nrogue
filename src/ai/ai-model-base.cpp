@@ -315,12 +315,12 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
 
     // Player is linear distance visible
     case ScriptParamNames::PLAYER_VISIBLE:
-      fn = GetIsPlayerVisibleCF(data);
+      fn = GetIsPlayerVisibleCF();
       break;
 
     // Checks GameObject::CanMove()
     case ScriptParamNames::PLAYER_CAN_MOVE:
-      fn = GetPlayerCanMoveCF(data);
+      fn = GetPlayerCanMoveCF();
       break;
 
     // Checks if player is in square range specified by p2
@@ -360,7 +360,7 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
 
     // Check if current object's HP is less than 30%
     case ScriptParamNames::HP_LOW:
-      fn = GetHPLowCF(data);
+      fn = GetHPLowCF();
       break;
 
     case ScriptParamNames::HAS_EQUIPPED:
@@ -429,7 +429,7 @@ std::function<BTResult()> AIModelBase::GetPlayerNextTurnCF(const ScriptNode* dat
   return fn;
 }
 
-std::function<BTResult()> AIModelBase::GetPlayerCanMoveCF(const ScriptNode* data)
+std::function<BTResult()> AIModelBase::GetPlayerCanMoveCF()
 {
   auto fn = [this]()
   {
@@ -464,7 +464,7 @@ std::function<BTResult()> AIModelBase::GetD100CF(const ScriptNode* data)
   return fn;
 }
 
-std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF(const ScriptNode* data)
+std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF()
 {
   auto fn = [this]()
   {
@@ -567,7 +567,7 @@ std::function<BTResult()> AIModelBase::GetHasEffectCF(const ScriptNode* data)
   return fn;
 }
 
-std::function<BTResult()> AIModelBase::GetHPLowCF(const ScriptNode* data)
+std::function<BTResult()> AIModelBase::GetHPLowCF()
 {
   auto fn = [this]()
   {

@@ -345,8 +345,10 @@ std::vector<Position> FeatureRooms::GetValidCellsToCarveFrom()
   {
     for (int y = 0; y < _mapSize.Y; y++)
     {
+      //
       // Because IsDeadEnd() checks neighbours, allow
       // cells only inside >= 1 < mapSize.X - 1
+      //
       if (IsInsideMap({ x, y })
        && IsDeadEnd({ x, y })
        && _map[x][y].Image == '#')
@@ -416,7 +418,7 @@ bool FeatureRooms::CreateEmptyRoom(const Position& start,
   {
     for (int y = sy; y < ey; y++)
     {
-      _map[x][y].Image = '.';
+      _map[x][y].Image = ground;
     }
   }
 

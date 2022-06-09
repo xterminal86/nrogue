@@ -248,7 +248,8 @@ namespace ItemUseHandlers
     {
       case ItemPrefix::BLESSED:
       {
-        bool fail = (user->Attrs.HP.IsFull() && !user->HasEffect(ItemBonusType::WEAKNESS));
+        bool fail = (user->Attrs.HP.IsFull()
+                 && !user->HasEffect(ItemBonusType::WEAKNESS));
 
         if (!fail)
         {
@@ -501,6 +502,9 @@ namespace ItemUseHandlers
 
   UseResult ReturnerUseHandler(ItemComponent* item, GameObject* user)
   {
+    //
+    // TODO: monsters usage?
+    //
     if (!item->Data.IsIdentified)
     {
       return UseResult::UNUSABLE;
@@ -521,6 +525,9 @@ namespace ItemUseHandlers
 
   UseResult RepairKitUseHandler(ItemComponent* item, GameObject* user)
   {
+    //
+    // TODO: monsters usage?
+    //
     Player* playerRef = &Application::Instance().PlayerInstance;
 
     if (!playerRef->HasSkill(PlayerSkills::REPAIR))

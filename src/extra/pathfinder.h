@@ -10,10 +10,7 @@ class MapLevelBase;
 struct PathNode
 {
   PathNode() = default;
-
   PathNode(const Position& coord);
-  PathNode(const PathNode& rhs);
-
   PathNode(const Position& coord, const Position& parentNodePos);
 
   //

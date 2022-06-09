@@ -476,7 +476,7 @@ GameObject* ItemsFactory::CreateCWPotion(ItemPrefix prefixOverride)
   uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
   uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
 
-  std::string name    = _gamePotionsMap[t].PotionName;
+  std::string name = _gamePotionsMap[t].PotionName;
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
