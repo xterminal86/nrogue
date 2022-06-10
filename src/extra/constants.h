@@ -305,7 +305,8 @@ namespace GlobalConstants
   extern const int AttributeMinimumRaiseChance;
   extern const int AttributeIncreasedRaiseStep;
   extern const int AwardedExperienceStep;
-  extern const int AwardedExpDefault;
+  extern const int AwardedExpMiniboss;
+  extern const int AwardedExpBoss;
   extern const int AwardedExpMax;
   extern const int MinHitChance;
   extern const int MaxHitChance;

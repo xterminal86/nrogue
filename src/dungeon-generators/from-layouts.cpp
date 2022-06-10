@@ -3,11 +3,13 @@
 #include "rng.h"
 #include "util.h"
 
+///
 /// \brief Build dungeon by attaching random rooms to each other from
 /// possibleRooms list.
 ///
 /// May result in imperfect and/or impassable dungeon
 /// if layouts in the list are not connectable.
+///
 void FromLayouts::Generate(const std::vector<RoomForLevel>& possibleRooms, int startX, int startY, int mapSizeX, int mapSizeY)
 {
   _roomsForLevel = possibleRooms;

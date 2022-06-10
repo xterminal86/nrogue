@@ -292,9 +292,7 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
     {
       auto& cell = lb.MapRaw[x][y];
 
-      bool startOk = (Util::BlockDistance(_laddersPositionByImage['<'], { x, y }) >= 30);
-
-      if (cell == '.' && startOk)
+      if (cell == '.')
       {
         possibleSpots.push_back({ x, y });
       }
@@ -353,9 +351,6 @@ void MapLevelBase::PlaceStairs()
                                               LevelExit.Y,
                                               '>',
                                               stairsDownTo);
-
-  _laddersPositionByImage['<'] = LevelStart;
-  _laddersPositionByImage['>'] = LevelExit;
 }
 
 void MapLevelBase::CreateInitialMonsters()

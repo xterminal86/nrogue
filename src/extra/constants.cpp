@@ -293,7 +293,8 @@ namespace GlobalConstants
   const int AttributeMinimumRaiseChance = 5;
   const int AttributeIncreasedRaiseStep = 25;
   const int AwardedExperienceStep       = 5;
-  const int AwardedExpDefault           = 20;
+  const int AwardedExpMiniboss          = 10;
+  const int AwardedExpBoss              = 20;
   const int AwardedExpMax               = 40;
   const int MinHitChance                = 5;
   const int MaxHitChance                = 95;

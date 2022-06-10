@@ -974,6 +974,12 @@ namespace Util
     return totalDamage;
   }
 
+  int GetExpForNextLevel(int curLvl)
+  {
+    float p = std::pow(1.2f, curLvl)*50;
+    return (int)p;
+  }
+
   void RecalculateWandStats(ItemComponent* wand)
   {
     if (wand == nullptr)

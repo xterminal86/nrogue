@@ -353,6 +353,21 @@ const std::vector<GameObject*> LookInputState::CheckGameObjects()
 
 void LookInputState::DisplayMonsterStats()
 {
+  auto GetPrettyPrint =
+  [this](Attribute& attr, const std::string& attrName)
+  {
+    int val = attr.Get();
+    int mod = attr.GetModifiers();
+
+    std::string txt = (mod < 0)
+                      ? Util::StringFormat("(-%i)", mod)
+                      : Util::StringFormat("(+%i)", mod);
+
+    std::string total = Util::StringFormat("%s: %i %s", attrName.data(), val, txt.data());
+
+    return total;
+  };
+
   auto actor = CheckActor();
   if (actor == nullptr && CheckPlayer())
   {
@@ -368,12 +383,12 @@ void LookInputState::DisplayMonsterStats()
     _monsterStatsInfo.push_back(Util::StringFormat("LVL: %i", actor->Attrs.Lvl.Get()));
     _monsterStatsInfo.push_back(Util::StringFormat("EXP: %i", actor->Attrs.Exp.Min().Get()));
     _monsterStatsInfo.push_back(std::string());
-    _monsterStatsInfo.push_back(Util::StringFormat("STR: %i", actor->Attrs.Str.Get()));
-    _monsterStatsInfo.push_back(Util::StringFormat("DEF: %i", actor->Attrs.Def.Get()));
-    _monsterStatsInfo.push_back(Util::StringFormat("MAG: %i", actor->Attrs.Mag.Get()));
-    _monsterStatsInfo.push_back(Util::StringFormat("RES: %i", actor->Attrs.Res.Get()));
-    _monsterStatsInfo.push_back(Util::StringFormat("SKL: %i", actor->Attrs.Skl.Get()));
-    _monsterStatsInfo.push_back(Util::StringFormat("SPD: %i", actor->Attrs.Spd.Get()));
+    _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Str, "STR"));
+    _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Def, "DEF"));
+    _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Mag, "MAG"));
+    _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Res, "RES"));
+    _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Skl, "SKL"));
+    _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Spd, "SPD"));
     _monsterStatsInfo.push_back(std::string());
     _monsterStatsInfo.push_back(Util::StringFormat("Rating: %i", actor->Attrs.Rating()));
     _monsterStatsInfo.push_back(Util::StringFormat("(CR: %i)", actor->Attrs.ChallengeRating));

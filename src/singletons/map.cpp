@@ -615,11 +615,13 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
     CurrentLevel->DisplayWelcomeText();
   }
 
+  //
   // Check comments in MainState::ProcessMovement().
   //
   // When we descend or ascend the stairs we don't want
   // previous message to remain on the screen so that it
   // won't confuse the player.
+  //
   Printer::Instance().ShowLastMessage = false;
 }
 

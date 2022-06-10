@@ -285,9 +285,12 @@ void DevConsole::ProcessCommand(const std::string& command,
       break;
 
     case DevConsoleCommand::LEVEL_UP:
-      _playerRef->LevelUp();
+    {
+      int expToGive = _playerRef->Attrs.Exp.Max().Get() - _playerRef->Attrs.Exp.Min().Get();
+      _playerRef->AwardExperience(expToGive);
       StdOut(Ok);
-      break;
+    }
+    break;
 
     case DevConsoleCommand::LEVEL_DOWN:
     {
@@ -297,7 +300,8 @@ void DevConsole::ProcessCommand(const std::string& command,
       }
       else
       {
-        _playerRef->LevelDown();
+        int expToTake = _playerRef->Attrs.Exp.Min().Get() + 1;
+        _playerRef->AwardExperience(-expToTake);
         StdOut(Ok);
       }
     }

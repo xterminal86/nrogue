@@ -262,8 +262,6 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
 
   go->Move(0, 0);
 
-  go->Attrs.ChallengeRating = 10;
-
   // Set attributes
   if (randomize)
   {
@@ -365,8 +363,6 @@ GameObject* MonstersInc::CreateTroll(int x, int y, bool randomize)
 
   go->Move(0, 0);
 
-  go->Attrs.ChallengeRating = 30;
-
   // Set attributes
   if (randomize)
   {
@@ -456,7 +452,7 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   // TODO: add some more plot-related dummy items
   //
 
-  go->Attrs.ChallengeRating = 15;
+  go->Attrs.ChallengeRating = GlobalConstants::AwardedExpBoss;
 
   go->Attrs.Str.Talents = 3;
   go->Attrs.Skl.Talents = 2;
@@ -628,7 +624,7 @@ GameObject* MonstersInc::CreateShelob(int x, int y)
   go->Attrs.Skl.Talents = 2;
   go->Attrs.Spd.Talents = 1;
 
-  go->Attrs.ChallengeRating = 10;
+  go->Attrs.ChallengeRating = GlobalConstants::AwardedExpMiniboss;
 
   int difficulty = GetDifficulty();
 
@@ -808,8 +804,6 @@ GameObject* MonstersInc::CreateWraith(int x, int y)
 
   go->MoveTo(x, y);
 
-  go->Attrs.ChallengeRating = 50;
-
   int difficulty = GetDifficulty();
 
   for (int i = 0; i < difficulty; i++)
@@ -863,7 +857,7 @@ GameObject* MonstersInc::CreateStalker(int x, int y)
 
   go->MoveTo(x, y);
 
-  go->Attrs.ChallengeRating = 25;
+  go->Attrs.ChallengeRating = GlobalConstants::AwardedExpBoss;
 
   int difficulty = GetDifficulty();
 

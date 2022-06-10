@@ -160,12 +160,12 @@ int Attributes::Rating()
 
   rating += ChallengeRating;
 
-  rating += Str.Get();
-  rating += Def.Get();
-  rating += Mag.Get();
-  rating += Res.Get();
-  rating += Skl.Get();
-  rating += Spd.Get();
+  rating += Str.OriginalValue();
+  rating += Def.OriginalValue();
+  rating += Mag.OriginalValue();
+  rating += Res.OriginalValue();
+  rating += Skl.OriginalValue();
+  rating += Spd.OriginalValue();
 
   //
   // If stats are debuffed, clamp rating to 0 minimum

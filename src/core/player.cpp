@@ -39,8 +39,10 @@ void Player::Init()
   _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell->Occupied = true;
 
+  int expToLvlUp = Util::GetExpForNextLevel(Attrs.Lvl.Get());
+
   Attrs.Exp.Reset(0);
-  Attrs.Exp.SetMax(100);
+  Attrs.Exp.SetMax(expToLvlUp);
 
   DistanceField.Init(this, 40);
 
@@ -155,10 +157,12 @@ bool Player::Move(int dx, int dy)
       auto actor = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
       if (actor != nullptr)
       {
+        //
         // Do not return true, since it will cause
         // MapOffsetY and MapOffsetX to be incremented in MainState,
         // but we manually call AdjustCamera() inside this method in
         // SwitchPlaces().
+        //
         passByNPC = PassByNPC(actor);
       }
     }
@@ -350,12 +354,12 @@ void Player::SetSoldierAttrs()
 void Player::SetThiefAttrs()
 {
   Attrs.Spd.Talents = 3;
-  Attrs.Skl.Talents = 2;
+  Attrs.Skl.Talents = 3;
   Attrs.Def.Talents = 1;
   Attrs.HP.Talents = 1;
 
   Attrs.Def.Set(1);
-  Attrs.Skl.Set(2);
+  Attrs.Skl.Set(3);
   Attrs.Spd.Set(3);
 
   Attrs.HP.Reset(15);
@@ -369,13 +373,11 @@ void Player::SetThiefAttrs()
 void Player::SetArcanistAttrs()
 {
   Attrs.Mag.Talents = 3;
-  Attrs.Res.Talents = 2;
-  Attrs.Spd.Talents = 1;
+  Attrs.Res.Talents = 3;
   Attrs.MP.Talents = 3;
 
   Attrs.Mag.Set(3);
-  Attrs.Res.Set(2);
-  Attrs.Spd.Set(1);
+  Attrs.Res.Set(3);
 
   Attrs.HP.Reset(5);
   Attrs.MP.Reset(30);
@@ -902,15 +904,20 @@ void Player::AwardExperience(int amount)
 
   Printer::Instance().AddMessage(msg);
 
-  // FIXME: debug
-  //int amnt = 100;
-
   Attrs.Exp.AddMin(amnt);
 
   if (Attrs.Exp.Min().Get() >= Attrs.Exp.Max().Get())
   {
+    int overflow = amnt - Attrs.Exp.Max().Get();
+
     LevelUp();
-    Attrs.Exp.SetMin(0);
+
+    int expToLvlUp = Util::GetExpForNextLevel(Attrs.Lvl.Get());
+
+    overflow = Util::Clamp(overflow, 0, expToLvlUp - 1);
+
+    Attrs.Exp.SetMin(overflow);
+    Attrs.Exp.SetMax(expToLvlUp);
   }
   else if (amnt < 0
         && Attrs.Lvl.Get() != 1
@@ -918,11 +925,14 @@ void Player::AwardExperience(int amount)
   {
     LevelDown();
 
-    int diff = 100 + amnt;
+    int expToLvlUp = Util::GetExpForNextLevel(Attrs.Lvl.Get());
 
-    diff = Util::Clamp(diff, 0, 99);
+    int underflow = expToLvlUp + amnt;
 
-    Attrs.Exp.SetMin(diff);
+    underflow = Util::Clamp(underflow, 0, expToLvlUp - 1);
+
+    Attrs.Exp.SetMin(underflow);
+    Attrs.Exp.SetMax(expToLvlUp);
   }
   //
   // Player becomes ghost himself.
@@ -1066,11 +1076,7 @@ void Player::ProcessKill(GameObject* monster)
   if (monster->Type != GameObjectType::HARMLESS
    && monster->Type != GameObjectType::REMAINS)
   {
-    int mr = monster->Attrs.Rating();
-    int pr = Attrs.Rating();
-    int d  = mr - pr;
-
-    int exp = mr + d;
+    int exp = monster->Attrs.Rating();
     exp = Util::Clamp(exp, 0, GlobalConstants::AwardedExpMax);
 
     if (exp != 0)

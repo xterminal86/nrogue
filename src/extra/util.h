@@ -130,6 +130,8 @@ namespace Util
 
   extern int RollDices(int numRolls, int diceSides);
 
+  extern int GetExpForNextLevel(int curLvl);
+
   extern void RecalculateWandStats(ItemComponent* wand);
   extern void BlessItem(ItemComponent* item);
 

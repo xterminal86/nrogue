@@ -128,7 +128,7 @@ void AINPC::SetDataClaire()
 {
   AIComponentRef->OwnerGameObject->Attrs.Str.Talents = 3;
   AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 2;
-  AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 1;
+  AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 2;
   AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 3;
 
   AIComponentRef->OwnerGameObject->ObjectName = "woman";

@@ -15,6 +15,7 @@ class InfoState : public GameState
     void Update(bool forceUpdate = false) override;
 
   private:
+    void PrintExp(int x, int y);
     void PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr);
     void PrintRangedAttribute(int x, int y, const std::string& attrName, RangedAttribute& attr);
     void PrintModifiers(int x, int y);

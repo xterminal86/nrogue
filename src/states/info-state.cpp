@@ -73,8 +73,7 @@ void InfoState::Update(bool forceUpdate)
     }
 
     PrintAttribute(1, yPos, "LVL", _playerRef->Attrs.Lvl);
-    //PrintRangedAttribute(0, yPos + 1, "EXP", playerRef.Attrs.Exp);
-    PrintAttribute(1, yPos + 1, "EXP", _playerRef->Attrs.Exp.Min());
+    PrintExp(1, yPos + 1);
 
     PrintAttribute(1, yPos + 3, "STR", _playerRef->Attrs.Str);
     PrintAttribute(1, yPos + 4, "DEF", _playerRef->Attrs.Def);
@@ -119,6 +118,36 @@ void InfoState::Update(bool forceUpdate)
   }
 }
 
+void InfoState::PrintExp(int x, int y)
+{
+  size_t digits = std::to_string(_playerRef->Attrs.Exp.Max().Get()).length();
+
+  std::string dots(digits, ' ');
+  std::string placeholder = Util::StringFormat("EXP: %s / %s", dots.data(), dots.data());
+
+  Printer::Instance().PrintFB(x,
+                              y,
+                              placeholder,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor);
+
+  std::string minVal = Util::StringFormat("%i", _playerRef->Attrs.Exp.Min().Get());
+  std::string maxVal = Util::StringFormat("%i", _playerRef->Attrs.Exp.Max().Get());
+
+  int xPos = x + placeholder.length() - digits - minVal.length() - 3;
+  Printer::Instance().PrintFB(xPos,
+                              y,
+                              minVal,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor);
+
+  Printer::Instance().PrintFB(x + placeholder.length() - digits,
+                              y,
+                              maxVal,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor);
+}
+
 void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr)
 {
   uint32_t color = Colors::WhiteColor;
@@ -133,7 +162,7 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
     color = Colors::RedColor;
   }
 
-  std::string attrPlaceholder = Util::StringFormat("%s:...", attrName.data());
+  std::string attrPlaceholder = Util::StringFormat("%s:   ", attrName.data());
   Printer::Instance().PrintFB(x,
                               y,
                               attrPlaceholder,
@@ -176,7 +205,7 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
     color = Colors::RedColor;
   }
 
-  std::string placeholder = Util::StringFormat("%s: ... / ...", attrName.data());
+  std::string placeholder = Util::StringFormat("%s:     /    ", attrName.data());
   Printer::Instance().PrintFB(x,
                               y,
                               placeholder,
