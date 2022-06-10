@@ -976,7 +976,7 @@ namespace Util
 
   int GetExpForNextLevel(int curLvl)
   {
-    float p = std::pow(1.2f, curLvl)*50;
+    float p = std::pow(1.3f, curLvl)*20;
     return (int)p;
   }
 

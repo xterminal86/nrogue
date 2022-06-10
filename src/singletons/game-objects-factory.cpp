@@ -368,11 +368,11 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
   go->PosX = x;
   go->PosY = y;
 
-  go->FgColor = fgColor;
-  go->BgColor = bgColor;
-  go->Image = image;
-  go->ObjectName = objName;
-  go->Blocking = true;
+  go->FgColor     = fgColor;
+  go->BgColor     = bgColor;
+  go->Image       = image;
+  go->ObjectName  = objName;
+  go->Blocking    = true;
   go->BlocksSight = true;
 
   go->Attrs.Indestructible = false;
@@ -384,9 +384,9 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
   ContainerComponent* cc = go->AddComponent<ContainerComponent>(maxLevel + 1);
   cc->CanBeOpened = false;
 
-  int maxItems = maxLevel;
+  int maxItems = RNG::Instance().RandomRange(1, 10);
 
-  int nothingChance = maxLevel - dungeonLevel;
+  int nothingChance   = (int)((float)maxLevel * 1.25f);
   int somethingChance = dungeonLevel;
 
   float failScale = 1.25f;
@@ -404,8 +404,10 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
     {
       auto item = ItemsFactory::Instance().CreateRandomItem(0, 0);
 
+      //
       // If there is already such stackable item in inventory,
       // delete the game object we just created.
+      //
       if (item != nullptr && cc->Add(item))
       {
         delete item;
