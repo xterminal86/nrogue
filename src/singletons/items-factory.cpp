@@ -1787,18 +1787,18 @@ GameObject* ItemsFactory::CreateRandomItem(int x,
   std::vector<ItemType> possibleItems =
   {
     ItemType::COINS,
-    ItemType::WEAPON,
-    ItemType::ARMOR,
     ItemType::POTION,
     ItemType::FOOD,
+    ItemType::SCROLL,
     ItemType::GEM,
     ItemType::RETURNER,
-    ItemType::REPAIR_KIT,
-    ItemType::WAND,
-    ItemType::SCROLL,
-    ItemType::ARROWS,
+    ItemType::WEAPON,
+    ItemType::ARMOR,
     ItemType::ACCESSORY,
-    ItemType::SPELLBOOK
+    ItemType::WAND,
+    ItemType::SPELLBOOK,
+    ItemType::REPAIR_KIT,
+    ItemType::ARROWS
   };
 
   for (auto& item : itemsToExclude)

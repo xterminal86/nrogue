@@ -647,6 +647,8 @@ void Application::InitSDL()
                             rect.w, rect.h,
                             SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
+  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+
   int drivers = SDL_GetNumRenderDrivers();
   for (int i = 0; i < drivers; i++)
   {

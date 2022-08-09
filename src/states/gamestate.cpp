@@ -55,6 +55,11 @@ int GameState::GetKeyDown()
 
         if (sc == SDL_SCANCODE_F9)
         {
+          if (Application::Instance().CurrentStateIs(GameStates::MESSAGE_BOX_STATE))
+          {
+            Application::Instance().CloseMessageBox();
+          }
+
           TakeScreenshot();
         }
       }
