@@ -72,53 +72,43 @@ void TraderComponent::CreateClericItems()
   std::string npcName = NpcRef->Data.Name;
   ShopTitle = Util::StringFormat(" %s's %s ", npcName.data(), shopName.data());
 
-  std::map<ItemType, int> itemsWeights =
-  {
-    { ItemType::HEALING_POTION, 10 },
-    { ItemType::MANA_POTION,    10 },
-    { ItemType::NP_POTION,      10 },
-    { ItemType::RA_POTION,       3 },
-    { ItemType::CW_POTION,       3 },
-    { ItemType::WAND,            4 },
-    { ItemType::SCROLL,          4 },
-    { ItemType::ACCESSORY,       3 },
-    { ItemType::RETURNER,        3 }
-  };
-
-  std::map<ItemPrefix, int> prefixWeights =
-  {
-    { ItemPrefix::BLESSED,  3 },
-    { ItemPrefix::UNCURSED, 7 }
-  };
-
   for (int i = 0; i < _itemsToCreate; i++)
   {
-    auto itemPair   = Util::WeightedRandom(itemsWeights);
-    auto prefixPair = Util::WeightedRandom(prefixWeights);
+    auto itemPair   = Util::WeightedRandom(_clericItemsWeights);
+    auto prefixPair = Util::WeightedRandom(_clericPrefixWeights);
 
     GameObject* go = nullptr;
 
     switch (itemPair.first)
     {
-      case ItemType::HEALING_POTION:
-        go = ItemsFactory::Instance().CreateHealingPotion(prefixPair.first);
-        break;
+      case ItemType::POTION:
+      {
+        auto potionPair = Util::WeightedRandom(_clericPotionWeights);
+        switch (potionPair.first)
+        {
+          case PotionType::HEALING_POTION:
+            go = ItemsFactory::Instance().CreateHealingPotion(prefixPair.first);
+            break;
 
-      case ItemType::MANA_POTION:
-        go = ItemsFactory::Instance().CreateManaPotion(prefixPair.first);
-        break;
+          case PotionType::MANA_POTION:
+            go = ItemsFactory::Instance().CreateManaPotion(prefixPair.first);
+            break;
 
-      case ItemType::NP_POTION:
-        go = ItemsFactory::Instance().CreateNeutralizePoisonPotion(prefixPair.first);
-        break;
+          case PotionType::NP_POTION:
+            go = ItemsFactory::Instance().CreateNeutralizePoisonPotion(prefixPair.first);
+            break;
 
-      case ItemType::CW_POTION:
-        go = ItemsFactory::Instance().CreateCWPotion(prefixPair.first);
-        break;
+          case PotionType::CW_POTION:
+            go = ItemsFactory::Instance().CreateCWPotion(prefixPair.first);
+            break;
 
-      case ItemType::RA_POTION:
-        go = ItemsFactory::Instance().CreateRAPotion(prefixPair.first);
-        break;
+          case PotionType::RA_POTION:
+            go = ItemsFactory::Instance().CreateRAPotion(prefixPair.first);
+            break;
+        }
+      }
+      break;
+
 
       case ItemType::RETURNER:
         go = ItemsFactory::Instance().CreateReturner(0, 0, -1, prefixPair.first);
@@ -147,29 +137,10 @@ void TraderComponent::CreateCookItems()
   std::string npcName = NpcRef->Data.Name;
   ShopTitle = Util::StringFormat(" %s's %s ", npcName.data(), shopName.data());
 
-  std::map<FoodType, int> itemsWeights =
-  {
-    { FoodType::APPLE,        10 },
-    { FoodType::CHEESE,        8 },
-    { FoodType::BREAD,         9 },
-    { FoodType::FISH,          8 },
-    { FoodType::PIE,           6 },
-    { FoodType::MEAT,          7 },
-    { FoodType::TIN,           6 },
-    { FoodType::RATIONS,       5 },
-    { FoodType::IRON_RATIONS,  3 }
-  };
-
-  std::map<ItemPrefix, int> prefixWeights =
-  {
-    { ItemPrefix::BLESSED,  1 },
-    { ItemPrefix::UNCURSED, 6 }
-  };
-
   for (int i = 0; i < _itemsToCreate; i++)
   {
-    auto itemPair   = Util::WeightedRandom(itemsWeights);
-    auto prefixPair = Util::WeightedRandom(prefixWeights);
+    auto itemPair   = Util::WeightedRandom(_cookItemsWeights);
+    auto prefixPair = Util::WeightedRandom(_cookPrefixWeights);
 
     GameObject* go = ItemsFactory::Instance().CreateFood(0, 0, itemPair.first, prefixPair.first, true);
 
@@ -199,33 +170,10 @@ void TraderComponent::CreateBlacksmithItems()
   std::string npcName = NpcRef->Data.Name;
   ShopTitle = Util::StringFormat(" %s's %s ", npcName.data(), shopName.data());
 
-  std::map<ItemType, int> itemsWeights =
-  {
-    { ItemType::WEAPON,     5 },
-    { ItemType::ARROWS,     3 },
-    { ItemType::ARMOR,      5 },
-    { ItemType::REPAIR_KIT, 2 },
-    { ItemType::ACCESSORY,  1 }
-  };
-
-  std::map<ArmorType, int> armorWeights =
-  {
-    { ArmorType::PADDING, 6 },
-    { ArmorType::LEATHER, 5 },
-    { ArmorType::MAIL,    3 },
-    { ArmorType::PLATE,   1 }
-  };
-
-  std::map<ItemPrefix, int> prefixWeights =
-  {
-    { ItemPrefix::BLESSED,  1 },
-    { ItemPrefix::UNCURSED, 6 }
-  };
-
   for (int i = 0; i < _itemsToCreate; i++)
   {
-    auto itemPair   = Util::WeightedRandom(itemsWeights);
-    auto prefixPair = Util::WeightedRandom(prefixWeights);
+    auto itemPair   = Util::WeightedRandom(_blacksmithItemsWeights);
+    auto prefixPair = Util::WeightedRandom(_blacksmithPrefixWeights);
 
     GameObject* go = nullptr;
 
@@ -241,7 +189,7 @@ void TraderComponent::CreateBlacksmithItems()
 
       case ItemType::ARMOR:
       {
-        auto armorPair = Util::WeightedRandom(armorWeights);
+        auto armorPair = Util::WeightedRandom(_blacksmithArmorWeights);
         go = ItemsFactory::Instance().CreateArmor(0, 0, armorPair.first, prefixPair.first);
       }
       break;

@@ -379,21 +379,21 @@ namespace GlobalConstants
     { TraderRole::JUNKER,     "Junkyard"  }
   };
 
-  const std::map<ItemType, int> PotionsWeightTable =
+  const std::map<PotionType, int> PotionsWeightTable =
   {
-    { ItemType::HEALING_POTION, 50 },
-    { ItemType::MANA_POTION,    50 },
-    { ItemType::NP_POTION,      50 },
-    { ItemType::JUICE_POTION,   20 },
-    { ItemType::STR_POTION,      1 },
-    { ItemType::DEF_POTION,      1 },
-    { ItemType::MAG_POTION,      1 },
-    { ItemType::RES_POTION,      1 },
-    { ItemType::SKL_POTION,      1 },
-    { ItemType::SPD_POTION,      1 },
-    { ItemType::EXP_POTION,      5 },
-    { ItemType::CW_POTION,       5 },
-    { ItemType::RA_POTION,       5 }
+    { PotionType::HEALING_POTION, 50 },
+    { PotionType::MANA_POTION,    50 },
+    { PotionType::NP_POTION,      50 },
+    { PotionType::JUICE_POTION,   20 },
+    { PotionType::STR_POTION,      1 },
+    { PotionType::DEF_POTION,      1 },
+    { PotionType::MAG_POTION,      1 },
+    { PotionType::RES_POTION,      1 },
+    { PotionType::SKL_POTION,      1 },
+    { PotionType::SPD_POTION,      1 },
+    { PotionType::EXP_POTION,      5 },
+    { PotionType::CW_POTION,       5 },
+    { PotionType::RA_POTION,       5 }
   };
 
   const std::map<PlayerStats, std::string> StatNameByType =
@@ -408,31 +408,31 @@ namespace GlobalConstants
     { PlayerStats::MP,  "MP"  }
   };
 
-  const std::map<ItemType, std::string> PotionNameByType =
+  const std::map<PotionType, std::string> PotionNameByType =
   {
-    { ItemType::HEALING_POTION, "Healing Potion"    },
-    { ItemType::MANA_POTION,    "Mana Potion"       },
-    { ItemType::JUICE_POTION,   "Fruit Juice"       },
-    { ItemType::NP_POTION,      "Neutralize Poison" },
-    { ItemType::STR_POTION,     "STR Potion"        },
-    { ItemType::DEF_POTION,     "DEF Potion"        },
-    { ItemType::MAG_POTION,     "MAG Potion"        },
-    { ItemType::RES_POTION,     "RES Potion"        },
-    { ItemType::SKL_POTION,     "SKL Potion"        },
-    { ItemType::SPD_POTION,     "SPD Potion"        },
-    { ItemType::EXP_POTION,     "EXP Potion"        },
-    { ItemType::RA_POTION,      "Restore Ability"   },
-    { ItemType::CW_POTION,      "Cure Weakness"     }
+    { PotionType::HEALING_POTION, "Healing Potion"    },
+    { PotionType::MANA_POTION,    "Mana Potion"       },
+    { PotionType::JUICE_POTION,   "Fruit Juice"       },
+    { PotionType::NP_POTION,      "Neutralize Poison" },
+    { PotionType::STR_POTION,     "STR Potion"        },
+    { PotionType::DEF_POTION,     "DEF Potion"        },
+    { PotionType::MAG_POTION,     "MAG Potion"        },
+    { PotionType::RES_POTION,     "RES Potion"        },
+    { PotionType::SKL_POTION,     "SKL Potion"        },
+    { PotionType::SPD_POTION,     "SPD Potion"        },
+    { PotionType::EXP_POTION,     "EXP Potion"        },
+    { PotionType::RA_POTION,      "Restore Ability"   },
+    { PotionType::CW_POTION,      "Cure Weakness"     }
   };
 
-  const std::map<ItemType, std::string> StatNameByPotionType =
+  const std::map<PotionType, std::string> StatNameByPotionType =
   {
-    { ItemType::STR_POTION, "STR" },
-    { ItemType::DEF_POTION, "DEF" },
-    { ItemType::MAG_POTION, "MAG" },
-    { ItemType::RES_POTION, "RES" },
-    { ItemType::SKL_POTION, "SKL" },
-    { ItemType::SPD_POTION, "SPD" },
+    { PotionType::STR_POTION, "STR" },
+    { PotionType::DEF_POTION, "DEF" },
+    { PotionType::MAG_POTION, "MAG" },
+    { PotionType::RES_POTION, "RES" },
+    { PotionType::SKL_POTION, "SKL" },
+    { PotionType::SPD_POTION, "SPD" },
   };
 
   const std::map<WeaponType, std::string> WeaponNameByType =

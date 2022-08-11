@@ -422,19 +422,19 @@ namespace ItemUseHandlers
   {
     ItemPrefix buc = item->Data.Prefix;
 
-    std::map<ItemType, std::string> useMessagesByType =
+    std::map<PotionType, std::string> useMessagesByType =
     {
-      { ItemType::STR_POTION, "Your Strength has "   },
-      { ItemType::DEF_POTION, "Your Defence has "    },
-      { ItemType::MAG_POTION, "Your Magic has "      },
-      { ItemType::RES_POTION, "Your Resistance has " },
-      { ItemType::SKL_POTION, "Your Skill has "      },
-      { ItemType::SPD_POTION, "Your Speed has "      }
+      { PotionType::STR_POTION, "Your Strength has "   },
+      { PotionType::DEF_POTION, "Your Defence has "    },
+      { PotionType::MAG_POTION, "Your Magic has "      },
+      { PotionType::RES_POTION, "Your Resistance has " },
+      { PotionType::SKL_POTION, "Your Skill has "      },
+      { PotionType::SPD_POTION, "Your Speed has "      }
     };
 
     int valueToAdd = 0;
 
-    auto message = useMessagesByType[item->Data.ItemType_];
+    auto message = useMessagesByType[item->Data.PotionType_];
 
     switch (buc)
     {
@@ -460,29 +460,17 @@ namespace ItemUseHandlers
       break;
     }
 
-    std::map<ItemType, Attribute&> userStats =
+    std::map<PotionType, Attribute&> userStats =
     {
-      { ItemType::STR_POTION, user->Attrs.Str },
-      { ItemType::DEF_POTION, user->Attrs.Def },
-      { ItemType::MAG_POTION, user->Attrs.Mag },
-      { ItemType::RES_POTION, user->Attrs.Res },
-      { ItemType::SKL_POTION, user->Attrs.Skl },
-      { ItemType::SPD_POTION, user->Attrs.Spd }
+      { PotionType::STR_POTION, user->Attrs.Str },
+      { PotionType::DEF_POTION, user->Attrs.Def },
+      { PotionType::MAG_POTION, user->Attrs.Mag },
+      { PotionType::RES_POTION, user->Attrs.Res },
+      { PotionType::SKL_POTION, user->Attrs.Skl },
+      { PotionType::SPD_POTION, user->Attrs.Spd }
     };
 
-    const std::map<ItemType, std::string> playerMemoryTextByType =
-    {
-      { ItemType::STR_POTION, "+STR" },
-      { ItemType::DEF_POTION, "+DEF" },
-      { ItemType::MAG_POTION, "+MAG" },
-      { ItemType::RES_POTION, "+RES" },
-      { ItemType::SKL_POTION, "+SKL" },
-      { ItemType::SPD_POTION, "+SPD" }
-    };
-
-    auto itemType = item->Data.ItemType_;
-
-    int newValue = userStats.at(itemType).OriginalValue() + valueToAdd;
+    int newValue = userStats.at(item->Data.PotionType_).OriginalValue() + valueToAdd;
 
     if (newValue < 0)
     {
@@ -490,7 +478,7 @@ namespace ItemUseHandlers
       message = Strings::NoActionText;
     }
 
-    userStats.at(itemType).Set(newValue);
+    userStats.at(item->Data.PotionType_).Set(newValue);
 
     if (Util::IsPlayer(user))
     {

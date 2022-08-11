@@ -23,8 +23,6 @@ void GameObjectsFactory::InitSpecific()
 
 GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
 {
-  // NOTE: no random items allowed
-
   GameObject* go = nullptr;
 
   switch (objType)
@@ -33,41 +31,8 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       go = ItemsFactory::Instance().CreateMoney();
       break;
 
-    case ItemType::HEALING_POTION:
-      go = ItemsFactory::Instance().CreateHealingPotion();
-      break;
-
-    case ItemType::MANA_POTION:
-      go = ItemsFactory::Instance().CreateManaPotion();
-      break;
-
-    case ItemType::NP_POTION:
-      go = ItemsFactory::Instance().CreateNeutralizePoisonPotion();
-      break;
-
-    case ItemType::JUICE_POTION:
-      go = ItemsFactory::Instance().CreateJuicePotion();
-      break;
-
-    case ItemType::EXP_POTION:
-      go = ItemsFactory::Instance().CreateExpPotion();
-      break;
-
-    case ItemType::CW_POTION:
-      go = ItemsFactory::Instance().CreateCWPotion();
-      break;
-
-    case ItemType::RA_POTION:
-      go = ItemsFactory::Instance().CreateRAPotion();
-      break;
-
-    case ItemType::STR_POTION:
-    case ItemType::DEF_POTION:
-    case ItemType::MAG_POTION:
-    case ItemType::RES_POTION:
-    case ItemType::SKL_POTION:
-    case ItemType::SPD_POTION:
-      go = ItemsFactory::Instance().CreateStatPotion(GlobalConstants::StatNameByPotionType.at(objType));
+    case ItemType::POTION:
+      go = ItemsFactory::Instance().CreateRandomPotion();
       break;
 
     case ItemType::GEM:

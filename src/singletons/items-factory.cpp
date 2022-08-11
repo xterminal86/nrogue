@@ -23,21 +23,24 @@ void ItemsFactory::InitPotionColors()
 {
   _gamePotionsMap.clear();
 
-  std::vector<ItemType> potionTypes =
+  //
+  // Is modified, cannot move inside class and make const
+  //
+  std::vector<PotionType> potionTypes =
   {
-    ItemType::HEALING_POTION,
-    ItemType::MANA_POTION,
-    ItemType::JUICE_POTION,
-    ItemType::NP_POTION,
-    ItemType::STR_POTION,
-    ItemType::DEF_POTION,
-    ItemType::MAG_POTION,
-    ItemType::RES_POTION,
-    ItemType::SKL_POTION,
-    ItemType::SPD_POTION,
-    ItemType::EXP_POTION,
-    ItemType::CW_POTION,
-    ItemType::RA_POTION
+    PotionType::HEALING_POTION,
+    PotionType::MANA_POTION,
+    PotionType::JUICE_POTION,
+    PotionType::NP_POTION,
+    PotionType::STR_POTION,
+    PotionType::DEF_POTION,
+    PotionType::MAG_POTION,
+    PotionType::RES_POTION,
+    PotionType::SKL_POTION,
+    PotionType::SPD_POTION,
+    PotionType::EXP_POTION,
+    PotionType::CW_POTION,
+    PotionType::RA_POTION
   };
 
   std::shuffle(potionTypes.begin(),
@@ -53,9 +56,9 @@ void ItemsFactory::InitPotionColors()
 
     PotionInfo pi;
 
-    pi.PotionType = potionTypes[i];
-    pi.FgBgColor  = { it->second[0], it->second[1] };
-    pi.PotionName = it->first;
+    pi.PotionType_ = potionTypes[i];
+    pi.FgBgColor   = { it->second[0], it->second[1] };
+    pi.PotionName  = it->first;
 
     _gamePotionsMap[potionTypes[i]] = pi;
 
@@ -136,7 +139,7 @@ GameObject* ItemsFactory::CreateMoney(int amount)
   return go;
 }
 
-GameObject* ItemsFactory::CreatePotion(ItemType type, ItemPrefix prefixOverride)
+GameObject* ItemsFactory::CreatePotion(PotionType type, ItemPrefix prefixOverride)
 {
   GameObject* go = nullptr;
 
@@ -144,40 +147,40 @@ GameObject* ItemsFactory::CreatePotion(ItemType type, ItemPrefix prefixOverride)
   {
     switch (type)
     {
-      case ItemType::HEALING_POTION:
+      case PotionType::HEALING_POTION:
         go = CreateHealingPotion(prefixOverride);
         break;
 
-      case ItemType::MANA_POTION:
+      case PotionType::MANA_POTION:
         go = CreateManaPotion(prefixOverride);
         break;
 
-      case ItemType::NP_POTION:
+      case PotionType::NP_POTION:
         go = CreateNeutralizePoisonPotion(prefixOverride);
         break;
 
-      case ItemType::JUICE_POTION:
+      case PotionType::JUICE_POTION:
         go = CreateJuicePotion(prefixOverride);
         break;
 
-      case ItemType::STR_POTION:
-      case ItemType::DEF_POTION:
-      case ItemType::MAG_POTION:
-      case ItemType::RES_POTION:
-      case ItemType::SKL_POTION:
-      case ItemType::SPD_POTION:
+      case PotionType::STR_POTION:
+      case PotionType::DEF_POTION:
+      case PotionType::MAG_POTION:
+      case PotionType::RES_POTION:
+      case PotionType::SKL_POTION:
+      case PotionType::SPD_POTION:
         go = CreateStatPotion(GlobalConstants::StatNameByPotionType.at(type), prefixOverride);
         break;
 
-      case ItemType::EXP_POTION:
+      case PotionType::EXP_POTION:
         go = CreateExpPotion(prefixOverride);
         break;
 
-      case ItemType::CW_POTION:
+      case PotionType::CW_POTION:
         go = CreateCWPotion(prefixOverride);
         break;
 
-      case ItemType::RA_POTION:
+      case PotionType::RA_POTION:
         go = CreateRAPotion(prefixOverride);
         break;
 
@@ -198,12 +201,12 @@ GameObject* ItemsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  ItemType t = ItemType::HEALING_POTION;
+  PotionType pt = PotionType::HEALING_POTION;
 
-  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
-  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[pt].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[pt].FgBgColor.second;
 
-  std::string name = _gamePotionsMap[t].PotionName;
+  std::string name = _gamePotionsMap[pt].PotionName;
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
@@ -214,7 +217,8 @@ GameObject* ItemsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.ItemType_ = t;
+  ic->Data.ItemType_ = ItemType::POTION;
+  ic->Data.PotionType_ = pt;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
@@ -242,12 +246,12 @@ GameObject* ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  ItemType t = ItemType::NP_POTION;
+  PotionType pt = PotionType::NP_POTION;
 
-  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
-  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[pt].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[pt].FgBgColor.second;
 
-  std::string name    = _gamePotionsMap[t].PotionName;
+  std::string name    = _gamePotionsMap[pt].PotionName;
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
@@ -258,7 +262,8 @@ GameObject* ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.ItemType_ = t;
+  ic->Data.ItemType_   = ItemType::POTION;
+  ic->Data.PotionType_ = pt;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
@@ -286,12 +291,12 @@ GameObject* ItemsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  ItemType t = ItemType::MANA_POTION;
+  PotionType pt = PotionType::MANA_POTION;
 
-  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
-  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[pt].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[pt].FgBgColor.second;
 
-  std::string name = _gamePotionsMap[t].PotionName;
+  std::string name = _gamePotionsMap[pt].PotionName;
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
@@ -302,7 +307,8 @@ GameObject* ItemsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.ItemType_ = t;
+  ic->Data.ItemType_   = ItemType::POTION;
+  ic->Data.PotionType_ = pt;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
@@ -330,12 +336,12 @@ GameObject* ItemsFactory::CreateJuicePotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  ItemType t = ItemType::JUICE_POTION;
+  PotionType pt = PotionType::JUICE_POTION;
 
-  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
-  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[pt].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[pt].FgBgColor.second;
 
-  std::string name = _gamePotionsMap[t].PotionName;
+  std::string name = _gamePotionsMap[pt].PotionName;
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
@@ -346,7 +352,8 @@ GameObject* ItemsFactory::CreateJuicePotion(ItemPrefix prefixOverride)
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.ItemType_ = t;
+  ic->Data.ItemType_   = ItemType::POTION;
+  ic->Data.PotionType_ = pt;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
@@ -374,12 +381,12 @@ GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  ItemType t = ItemType::EXP_POTION;
+  PotionType pt = PotionType::EXP_POTION;
 
-  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
-  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[pt].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[pt].FgBgColor.second;
 
-  std::string name = _gamePotionsMap[t].PotionName;
+  std::string name = _gamePotionsMap[pt].PotionName;
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
@@ -390,7 +397,8 @@ GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.ItemType_ = t;
+  ic->Data.ItemType_   = ItemType::POTION;
+  ic->Data.PotionType_ = pt;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
@@ -425,12 +433,12 @@ GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPref
 
   auto m = Util::FlipMap(GlobalConstants::StatNameByPotionType);
 
-  ItemType t = m.at(statName);
+  PotionType pt = m.at(statName);
 
-  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
-  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[pt].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[pt].FgBgColor.second;
 
-  std::string name    = _gamePotionsMap[t].PotionName;
+  std::string name    = _gamePotionsMap[pt].PotionName;
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
@@ -441,7 +449,8 @@ GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPref
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.ItemType_ = t;
+  ic->Data.ItemType_   = ItemType::POTION;
+  ic->Data.PotionType_ = pt;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
@@ -471,12 +480,12 @@ GameObject* ItemsFactory::CreateCWPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  ItemType t = ItemType::CW_POTION;
+  PotionType pt = PotionType::CW_POTION;
 
-  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
-  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[pt].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[pt].FgBgColor.second;
 
-  std::string name = _gamePotionsMap[t].PotionName;
+  std::string name = _gamePotionsMap[pt].PotionName;
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
@@ -487,7 +496,8 @@ GameObject* ItemsFactory::CreateCWPotion(ItemPrefix prefixOverride)
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.ItemType_ = t;
+  ic->Data.ItemType_   = ItemType::POTION;
+  ic->Data.PotionType_ = pt;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
@@ -521,12 +531,12 @@ GameObject* ItemsFactory::CreateRAPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  ItemType t = ItemType::RA_POTION;
+  PotionType pt = PotionType::RA_POTION;
 
-  uint32_t fgColor = _gamePotionsMap[t].FgBgColor.first;
-  uint32_t bgColor = _gamePotionsMap[t].FgBgColor.second;
+  uint32_t fgColor = _gamePotionsMap[pt].FgBgColor.first;
+  uint32_t bgColor = _gamePotionsMap[pt].FgBgColor.second;
 
-  std::string name = _gamePotionsMap[t].PotionName;
+  std::string name = _gamePotionsMap[pt].PotionName;
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
@@ -537,7 +547,8 @@ GameObject* ItemsFactory::CreateRAPotion(ItemPrefix prefixOverride)
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.ItemType_ = t;
+  ic->Data.ItemType_   = ItemType::POTION;
+  ic->Data.PotionType_ = pt;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
@@ -571,7 +582,46 @@ GameObject* ItemsFactory::CreateRandomPotion()
   GameObject* go = nullptr;
 
   auto weights = Util::WeightedRandom(GlobalConstants::PotionsWeightTable);
-  go = GameObjectsFactory::Instance().CreateGameObject(0, 0, weights.first);
+
+  switch (weights.first)
+  {
+    case PotionType::HEALING_POTION:
+      go = CreateHealingPotion();
+      break;
+
+    case PotionType::MANA_POTION:
+      go = CreateManaPotion();
+      break;
+
+    case PotionType::NP_POTION:
+      go = CreateNeutralizePoisonPotion();
+      break;
+
+    case PotionType::JUICE_POTION:
+      go = CreateJuicePotion();
+      break;
+
+    case PotionType::EXP_POTION:
+      go = CreateExpPotion();
+      break;
+
+    case PotionType::CW_POTION:
+      go = CreateCWPotion();
+      break;
+
+    case PotionType::RA_POTION:
+      go = CreateRAPotion();
+      break;
+
+    case PotionType::STR_POTION:
+    case PotionType::DEF_POTION:
+    case PotionType::MAG_POTION:
+    case PotionType::RES_POTION:
+    case PotionType::SKL_POTION:
+    case PotionType::SPD_POTION:
+      go = CreateStatPotion(GlobalConstants::StatNameByPotionType.at(weights.first));
+      break;
+  }
 
   ItemComponent* ic = go->GetComponent<ItemComponent>();
 
@@ -2467,70 +2517,78 @@ void ItemsFactory::SetItemName(GameObject* go, ItemData& itemData)
 
   switch (itemData.ItemType_)
   {
-    case ItemType::HEALING_POTION:
-      itemData.IdentifiedName.append(" of Healing");
-      go->ObjectName.append(" +HP");
-      break;
+    case ItemType::POTION:
+    {
+      switch (itemData.PotionType_)
+      {
+        case PotionType::HEALING_POTION:
+          itemData.IdentifiedName.append(" of Healing");
+          go->ObjectName.append(" +HP");
+          break;
 
-    case ItemType::MANA_POTION:
-      itemData.IdentifiedName.append(" of Mana");
-      go->ObjectName.append(" +MP");
-      break;
+        case PotionType::MANA_POTION:
+          itemData.IdentifiedName.append(" of Mana");
+          go->ObjectName.append(" +MP");
+          break;
 
-    case ItemType::NP_POTION:
-      itemData.IdentifiedName.append(" of Cleansing");
-      go->ObjectName.append(" -Psd");
-      break;
+        case PotionType::NP_POTION:
+          itemData.IdentifiedName.append(" of Cleansing");
+          go->ObjectName.append(" -Psd");
+          break;
 
-    case ItemType::JUICE_POTION:
-      itemData.IdentifiedName.append(" of Fruit Juice");
-      go->ObjectName.append(" +SAT");
-      break;
+        case PotionType::JUICE_POTION:
+          itemData.IdentifiedName.append(" of Fruit Juice");
+          go->ObjectName.append(" +SAT");
+          break;
 
-    case ItemType::EXP_POTION:
-      itemData.IdentifiedName.append(" of Enlightenment");
-      go->ObjectName.append(" +EXP");
-      break;
+        case PotionType::EXP_POTION:
+          itemData.IdentifiedName.append(" of Enlightenment");
+          go->ObjectName.append(" +EXP");
+          break;
 
-    case ItemType::STR_POTION:
-      itemData.IdentifiedName.append(" of Strength");
-      go->ObjectName.append(" +STR");
-      break;
+        case PotionType::STR_POTION:
+          itemData.IdentifiedName.append(" of Strength");
+          go->ObjectName.append(" +STR");
+          break;
 
-    case ItemType::DEF_POTION:
-      itemData.IdentifiedName.append(" of Defence");
-      go->ObjectName.append(" +DEF");
-      break;
+        case PotionType::DEF_POTION:
+          itemData.IdentifiedName.append(" of Defence");
+          go->ObjectName.append(" +DEF");
+          break;
 
-    case ItemType::MAG_POTION:
-      itemData.IdentifiedName.append(" of Magic");
-      go->ObjectName.append(" +MAG");
-      break;
+        case PotionType::MAG_POTION:
+          itemData.IdentifiedName.append(" of Magic");
+          go->ObjectName.append(" +MAG");
+          break;
 
-    case ItemType::RES_POTION:
-      itemData.IdentifiedName.append(" of Resistance");
-      go->ObjectName.append(" +RES");
-      break;
+        case PotionType::RES_POTION:
+          itemData.IdentifiedName.append(" of Resistance");
+          go->ObjectName.append(" +RES");
+          break;
 
-    case ItemType::SKL_POTION:
-      itemData.IdentifiedName.append(" of Skill");
-      go->ObjectName.append(" +SKL");
-      break;
+        case PotionType::SKL_POTION:
+          itemData.IdentifiedName.append(" of Skill");
+          go->ObjectName.append(" +SKL");
+          break;
 
-    case ItemType::SPD_POTION:
-      itemData.IdentifiedName.append(" of Speed");
-      go->ObjectName.append(" +SPD");
-      break;
+        case PotionType::SPD_POTION:
+          itemData.IdentifiedName.append(" of Speed");
+          go->ObjectName.append(" +SPD");
+          break;
 
-    case ItemType::CW_POTION:
-      itemData.IdentifiedName.append(" of Cure Weakness");
-      go->ObjectName.append(" -Wea");
-      break;
+        case PotionType::CW_POTION:
+          itemData.IdentifiedName.append(" of Cure Weakness");
+          go->ObjectName.append(" -Wea");
+          break;
 
-    case ItemType::RA_POTION:
-      itemData.IdentifiedName.append(" of Restore Ability");
-      go->ObjectName.append(" +Lvl");
+        case PotionType::RA_POTION:
+          itemData.IdentifiedName.append(" of Restore Ability");
+          go->ObjectName.append(" +Lvl");
+          break;
+      }
       break;
+    }
+    break;
 
     case ItemType::REPAIR_KIT:
     {

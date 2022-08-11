@@ -104,7 +104,8 @@ int TaskDrinkPotion::FindPotionHP()
   for (size_t i = 0; i < _inventoryRef->Contents.size(); i++)
   {
     ItemComponent* ic = _inventoryRef->Contents[i]->GetComponent<ItemComponent>();
-    if (ic->Data.ItemType_ == ItemType::HEALING_POTION
+    if (ic->Data.ItemType_ == ItemType::POTION
+     && ic->Data.PotionType_ == PotionType::HEALING_POTION
      && ic->Data.IsIdentified)
     {
       itemIndex = i;
@@ -122,7 +123,8 @@ int TaskDrinkPotion::FindPotionMP()
   for (size_t i = 0; i < _inventoryRef->Contents.size(); i++)
   {
     ItemComponent* ic = _inventoryRef->Contents[i]->GetComponent<ItemComponent>();
-    if (ic->Data.ItemType_ == ItemType::MANA_POTION
+    if (ic->Data.ItemType_ == ItemType::POTION
+     && ic->Data.PotionType_ == PotionType::MANA_POTION
      && ic->Data.IsIdentified)
     {
       itemIndex = i;

@@ -328,8 +328,8 @@ namespace GlobalConstants
   extern const std::map<PlayerSkills,     std::string> SkillNameByType;
   extern const std::map<TraderRole,       std::string> ShopNameByType;
   extern const std::map<PlayerStats,      std::string> StatNameByType;
-  extern const std::map<ItemType,         std::string> PotionNameByType;
-  extern const std::map<ItemType,         std::string> StatNameByPotionType;
+  extern const std::map<PotionType,       std::string> PotionNameByType;
+  extern const std::map<PotionType,       std::string> StatNameByPotionType;
   extern const std::map<WeaponType,       std::string> WeaponNameByType;
   extern const std::map<RangedWeaponType, std::string> RangedWeaponNameByType;
   extern const std::map<ArrowType,        std::string> ArrowNameByType;
@@ -342,7 +342,7 @@ namespace GlobalConstants
   extern const std::map<std::string, ScriptTaskNames>  BTSTaskNamesByName;
   extern const std::map<std::string, ScriptParamNames> BTSParamNamesByName;
 
-  extern const std::map<ItemType,      int> PotionsWeightTable;
+  extern const std::map<PotionType,    int> PotionsWeightTable;
   extern const std::map<ArmorType,     int> ArmorDurabilityByType;
   extern const std::map<GemType,       int> GemCostByType;
   extern const std::map<WandMaterials, int> WandCapacityByMaterial;

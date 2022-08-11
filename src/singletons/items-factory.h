@@ -24,7 +24,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
     //
     // *************************************************************************
     //
-    GameObject* CreatePotion(ItemType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreatePotion(PotionType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateHealingPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateNeutralizePoisonPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateManaPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
@@ -136,7 +136,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
 
     struct PotionInfo
     {
-      ItemType PotionType = ItemType::DUMMY;
+      PotionType PotionType_ = PotionType::RANDOM;
       std::string PotionName;
       std::pair<uint32_t, uint32_t> FgBgColor;
     };
@@ -147,8 +147,8 @@ class ItemsFactory : public Singleton<ItemsFactory>
       std::string ScrollName;
     };
 
-    std::map<ItemType, PotionInfo> _gamePotionsMap;
-    std::map<SpellType, ScrollInfo> _gameScrollsMap;
+    std::map<PotionType, PotionInfo> _gamePotionsMap;
+    std::map<SpellType, ScrollInfo>  _gameScrollsMap;
 
     Player* _playerRef = nullptr;
 

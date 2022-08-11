@@ -278,7 +278,9 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
 
   int distanceCovered = 0;
 
+  //
   // Start from 1 to exclude player's position
+  //
   for (size_t i = 1; i < line.size(); i++)
   {
     endPoint = line[i];
@@ -289,7 +291,9 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
 
     bool isThrowing = (_throwingItemInventoryIndex != -1);
 
+    //
     // Hit object or max shooting distance reached
+    //
     if (stoppedAt != nullptr)
     {
       break;
@@ -303,7 +307,9 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
 
   Util::LaunchProjectile(startPoint, endPoint, image, color);
 
+  //
   // Projectile reached end point without hitting anyone
+  //
   if (stoppedAt == nullptr)
   {
     auto cell = Map::Instance().CurrentLevel->MapArray[endPoint.X][endPoint.Y].get();
@@ -324,7 +330,9 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
   auto cell = Map::Instance().CurrentLevel->StaticMapObjects[at.X][at.Y].get();
   if (cell != nullptr)
   {
+    //
     // If door is open, ignore it
+    //
     DoorComponent* dc = cell->GetComponent<DoorComponent>();
     if (dc != nullptr && dc->IsOpen)
     {
@@ -426,6 +434,7 @@ void TargetState::UpdatePlayerPossibleKnockbackDir()
 
 void TargetState::DirtyHack()
 {
+  //
   // In case player gained a level after firing a ranged weapon,
   // message box state will be overridden by one of the
   // ChangeState() calls below.
@@ -434,12 +443,14 @@ void TargetState::DirtyHack()
   //
   // Check if player accidentally killed himself
   // (e.g. after firing fireball close to the wall)
+  //
   if (!_playerRef->IsAlive())
   {
     Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
   }
   else
   {
+    //
     // NOTE: OK, so dirty hack it is, because I don't have time
     // to refactor all this bullshit.
     //
@@ -452,6 +463,7 @@ void TargetState::DirtyHack()
     // "change state" to MainState.
     // Looks safe (haha) since we don't have
     // any Cleanup() or Prepare() to do in this case.
+    //
     if (Application::Instance().CurrentStateIs(GameStates::MESSAGE_BOX_STATE))
     {
       Application::Instance()._previousState = Application::Instance().GetGameStateRefByName(GameStates::MAIN_STATE);
@@ -465,8 +477,9 @@ void TargetState::DirtyHack()
 
 void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
 {
+  //
   // _weaponRef is an item to be thrown
-
+  //
   auto& mapRef = Map::Instance().CurrentLevel->MapArray;
 
   int x = hitPoint->PosX;
@@ -481,10 +494,11 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
               && mapRef[x][y]->Type != GameObjectType::LAVA
               && mapRef[x][y]->Type != GameObjectType::CHASM);
 
+  //
   // TODO: potions break on impact, items damage monsters (not?)
   //
   // Throwing one item at a time from the stack of items.
-
+  //
   if (isStackable)
   {
     _weaponRef->Data.Amount--;
@@ -516,7 +530,9 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
     {
       GameObject* item = _playerRef->Inventory->Contents[_throwingItemInventoryIndex].release();
 
+      //
       // See comments in InventoryState::DropItem()
+      //
       item->SetLevelOwner(Map::Instance().CurrentLevel);
 
       item->PosX = x;

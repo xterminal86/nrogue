@@ -9,10 +9,15 @@ AIMonsterBat::AIMonsterBat()
 
 void AIMonsterBat::PrepareScript()
 {
+  //
   // NOTE: maybe a little OP for slow / melee classes.
   // You can win only if you can corner the monster,
   // if you're fast enough or if you have ranged weapon.
-
+  //
+  // BUG: looks like if SPD is equal to player's,
+  // monster's behvaiour is not as expected - it doesn't
+  // accumulate turns or take into account number of player turns.
+  //
   _scriptAsText =
 R"(
 [TREE]
