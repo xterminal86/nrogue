@@ -1116,32 +1116,8 @@ GameObject* ItemsFactory::CreateRandomWand(ItemPrefix prefixOverride)
 {
   GameObject* go = nullptr;
 
-  std::map<WandMaterials, int> materialsDistribution =
-  {
-    { WandMaterials::YEW_1,    80 },
-    { WandMaterials::IVORY_2,  60 },
-    { WandMaterials::EBONY_3,  45 },
-    { WandMaterials::ONYX_4,   30 },
-    { WandMaterials::GLASS_5,  20 },
-    { WandMaterials::COPPER_6, 15 },
-    { WandMaterials::GOLDEN_7, 10 },
-  };
-
-  auto materialPair = Util::WeightedRandom(materialsDistribution);
-
-  std::map<SpellType, int> spellsDistribution =
-  {
-    { SpellType::LIGHT,         100 },
-    { SpellType::STRIKE,         80 },
-    { SpellType::FROST,          70 },
-    { SpellType::TELEPORT,       60 },
-    { SpellType::FIREBALL,       50 },
-    { SpellType::LASER,          25 },
-    { SpellType::LIGHTNING,      25 },
-    { SpellType::MAGIC_MISSILE,  50 }
-  };
-
-  auto spellPair = Util::WeightedRandom(spellsDistribution);
+  auto materialPair = Util::WeightedRandom(_wandMaterialsDistribution);
+  auto spellPair    = Util::WeightedRandom(_spellsDistribution);
 
   go = CreateWand(0, 0, materialPair.first, spellPair.first, prefixOverride);
 
@@ -1811,45 +1787,6 @@ GameObject* ItemsFactory::CreateRandomItem(int x,
     }
   }
 
-  std::map<FoodType, int> foodMap =
-  {
-    { FoodType::APPLE,        1 },
-    { FoodType::CHEESE,       1 },
-    { FoodType::BREAD,        1 },
-    { FoodType::FISH,         1 },
-    { FoodType::PIE,          1 },
-    { FoodType::MEAT,         1 },
-    { FoodType::TIN,          1 },
-    { FoodType::RATIONS,      1 },
-    { FoodType::IRON_RATIONS, 1 }
-  };
-
-  std::map<GemType, int> gemsMap =
-  {
-    { GemType::WORTHLESS_GLASS, 250 },
-    { GemType::BLACK_OBSIDIAN,  150 },
-    { GemType::GREEN_JADE,      100 },
-    { GemType::PURPLE_FLUORITE,  75 },
-    { GemType::PURPLE_AMETHYST,  50 },
-    { GemType::RED_GARNET,       43 },
-    { GemType::WHITE_OPAL,       37 },
-    { GemType::BLACK_JETSTONE,   35 },
-    { GemType::ORANGE_AMBER,     30 },
-    { GemType::BLUE_AQUAMARINE,  20 },
-    { GemType::YELLOW_CITRINE,   20 },
-    { GemType::GREEN_EMERALD,    12 },
-    { GemType::BLUE_SAPPHIRE,    10 },
-    { GemType::ORANGE_JACINTH,    9 },
-    { GemType::RED_RUBY,          8 },
-    { GemType::WHITE_DIAMOND,     7 },
-  };
-
-  std::map<ItemType, int> returnerMap =
-  {
-    { ItemType::RETURNER, 1 },
-    { ItemType::NOTHING,  4 }
-  };
-
   // TODO: power of randomly created item
   // should scale with dungeon level.
   int index = RNG::Instance().RandomRange(0, possibleItems.size());
@@ -1879,21 +1816,21 @@ GameObject* ItemsFactory::CreateRandomItem(int x,
 
     case ItemType::FOOD:
     {
-      auto pair = Util::WeightedRandom(foodMap);
+      auto pair = Util::WeightedRandom(_foodMap);
       go = CreateFood(0, 0, pair.first);
     }
     break;
 
     case ItemType::GEM:
     {
-      auto pair = Util::WeightedRandom(gemsMap);
+      auto pair = Util::WeightedRandom(_gemsMap);
       go = CreateGem(0, 0, pair.first);
     }
     break;
 
     case ItemType::RETURNER:
     {
-      auto pair = Util::WeightedRandom(returnerMap);
+      auto pair = Util::WeightedRandom(_returnerMap);
       if (pair.first == ItemType::RETURNER)
       {
         go = CreateReturner(0, 0);
@@ -2255,7 +2192,7 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
     { ItemBonusType::MAG_ABSORB,      15 },
     { ItemBonusType::THORNS,          15 },
     { ItemBonusType::TELEPATHY,       35 },
-    { ItemBonusType::TRUE_SEEING,   25 },
+    { ItemBonusType::TRUE_SEEING,     25 },
     { ItemBonusType::LEVITATION,      17 }
   };
 
@@ -2274,16 +2211,7 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
   float curSucc = minSucc * curDungeonLvl;
   int chance = (int)(curSucc * 100);
 
-  std::map<ItemQuality, int> chanceModByQ =
-  {
-    { ItemQuality::DAMAGED,    -10 },
-    { ItemQuality::FLAWED,      -5 },
-    { ItemQuality::NORMAL,       0 },
-    { ItemQuality::FINE,         5 },
-    { ItemQuality::EXCEPTIONAL, 10 },
-  };
-
-  chance += chanceModByQ[itemRef->Data.ItemQuality_];
+  chance += _chanceModByQ.at(itemRef->Data.ItemQuality_);
 
   chance = Util::Clamp(chance, 1, 100);
 
@@ -2329,25 +2257,6 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
   bs.Type = bonusType;
   bs.MoneyCostIncrease = (itemRef->Data.Prefix == ItemPrefix::CURSED) ? moneyIncrease / 2 : moneyIncrease;
 
-  std::map<ItemQuality, int> multByQ =
-  {
-    { ItemQuality::DAMAGED,      1 },
-    { ItemQuality::FLAWED,       2 },
-    { ItemQuality::NORMAL,       3 },
-    { ItemQuality::FINE,         4 },
-    { ItemQuality::EXCEPTIONAL,  5 },
-  };
-
-  // Probability of stat increase values
-  std::map<int, int> statIncreaseWeightsMap =
-  {
-    { 1, 100 },
-    { 2,  75 },
-    { 3,  50 },
-    { 4,  25 },
-    { 5,  12 }
-  };
-
   // TODO: finish other bonuses
 
   int value = 0;
@@ -2363,7 +2272,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
     case ItemBonusType::SKL:
     case ItemBonusType::SPD:
     {
-      auto res = Util::WeightedRandom(statIncreaseWeightsMap);
+      auto res = Util::WeightedRandom(_statIncreaseWeightsMap);
       value = res.first;
       bs.MoneyCostIncrease = res.first * moneyIncrease;
     }
@@ -2372,8 +2281,8 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
     case ItemBonusType::HP:
     case ItemBonusType::MP:
     {
-      int min = 1 + multByQ[q];
-      int max = 10 + multByQ[q] * 2;
+      int min = 1 + _multByQ.at(q);
+      int max = 10 + _multByQ.at(q) * 2;
       value = RNG::Instance().RandomRange(min, max);
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
@@ -2383,7 +2292,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
     case ItemBonusType::MAG_ABSORB:
     {
       int min = 1;
-      int max = multByQ[q];
+      int max = _multByQ.at(q);
       value = RNG::Instance().RandomRange(min, max + 1);
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
@@ -2391,8 +2300,8 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
 
     case ItemBonusType::DAMAGE:
     {
-      int min = multByQ[q];
-      int max = multByQ[q] * 2;
+      int min = _multByQ.at(q);
+      int max = _multByQ.at(q) * 2;
       value = RNG::Instance().RandomRange(min, max + 1);
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
@@ -2400,8 +2309,8 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
 
     case ItemBonusType::VISIBILITY:
     {
-      int min = multByQ[q];
-      int max = multByQ[q] * 3;
+      int min = _multByQ.at(q);
+      int max = _multByQ.at(q) * 3;
       value = RNG::Instance().RandomRange(min, max + 1);
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
@@ -2409,8 +2318,8 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
 
     case ItemBonusType::THORNS:
     {
-      int min = 20 + 5 * (multByQ[q] - 1);
-      int max = 21 + 20 * multByQ[q];
+      int min = 20 + 5 * (_multByQ.at(q) - 1);
+      int max = 21 + 20 * _multByQ.at(q);
       int percentage = RNG::Instance().RandomRange(min, max);
       value = percentage;
       bs.MoneyCostIncrease = value * moneyIncrease;
@@ -2419,8 +2328,8 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
 
     case ItemBonusType::LEECH:
     {
-      int min = 20 + 5 * (multByQ[q] - 1);
-      int max = 21 + 15 * multByQ[q];
+      int min = 20 + 5 * (_multByQ.at(q) - 1);
+      int max = 21 + 15 * _multByQ.at(q);
       int percentage = RNG::Instance().RandomRange(min, max);
       value = percentage;
       bs.MoneyCostIncrease = value * moneyIncrease;
@@ -2436,8 +2345,8 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
       int max = 40;
 
       // Number of turns before effect acts
-      int minVal = min - 2 * multByQ[q];
-      int maxVal = max - 4 * multByQ[q];
+      int minVal = min - 2 * _multByQ.at(q);
+      int maxVal = max - 4 * _multByQ.at(q);
       bs.Period = RNG::Instance().RandomRange(minVal, maxVal + 1);
       bs.MoneyCostIncrease = (int)(((float)max / (float)bs.Period) * (float)moneyIncrease);
     }
@@ -2857,32 +2766,12 @@ int ItemsFactory::CalculateAverageDamage(int numRolls, int diceSides)
 
 ItemPrefix ItemsFactory::RollItemPrefix()
 {
-  std::map<ItemPrefix, int> weights =
-  {
-    { ItemPrefix::UNCURSED, 4 },
-    { ItemPrefix::CURSED,   4 },
-    { ItemPrefix::BLESSED,  1 }
-  };
-
-  auto res = Util::WeightedRandom(weights);
-  ItemPrefix prefix = res.first;
-
-  return prefix;
+  auto res = Util::WeightedRandom(_bucDistr);
+  return res.first;
 }
 
 ItemQuality ItemsFactory::RollItemQuality()
 {
-  std::map<ItemQuality, int> weights =
-  {
-    { ItemQuality::DAMAGED,     8 },
-    { ItemQuality::FLAWED,      6 },
-    { ItemQuality::NORMAL,      4 },
-    { ItemQuality::FINE,        3 },
-    { ItemQuality::EXCEPTIONAL, 2 },
-  };
-
-  auto res = Util::WeightedRandom(weights);
-  ItemQuality quality = res.first;
-
-  return quality;
+  auto res = Util::WeightedRandom(_qualityDistr);
+  return res.first;
 }

@@ -227,24 +227,10 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
                                            const uint32_t& fgOverrideColor,
                                            const uint32_t& bgOverrideColor)
 {
-  const std::map<DoorMaterials, int> doorDefByMat =
-  {
-    { DoorMaterials::WOOD,  5  },
-    { DoorMaterials::STONE, 10 },
-    { DoorMaterials::IRON,  15 }
-  };
-
-  const std::map<DoorMaterials, std::string> doorPrefixByMat =
-  {
-    { DoorMaterials::WOOD,  "Wooden" },
-    { DoorMaterials::STONE, "Stone"  },
-    { DoorMaterials::IRON,  "Iron"   }
-  };
-
   std::string doorNameTotal;
   if (doorName.empty())
   {
-    doorNameTotal = doorPrefixByMat.at(material) + " Door";
+    doorNameTotal = _doorPrefixByMat.at(material) + " Door";
   }
   else
   {
@@ -259,7 +245,7 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
   if (hitPoints > 0)
   {
     go->Attrs.Indestructible = false;
-    go->Attrs.Def.Set(doorDefByMat.at(material));
+    go->Attrs.Def.Set(_doorDefByMat.at(material));
     go->Attrs.HP.Reset(hitPoints);
   }
 
@@ -391,7 +377,7 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
 
   float failScale = 1.25f;
 
-  std::map<ItemType, int> weights =
+  const std::map<ItemType, int> weights =
   {
     { ItemType::NOTHING, nothingChance },
     { ItemType::DUMMY, somethingChance }

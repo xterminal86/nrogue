@@ -152,6 +152,116 @@ class ItemsFactory : public Singleton<ItemsFactory>
 
     Player* _playerRef = nullptr;
 
+    // =========================================================================
+
+    const std::map<WandMaterials, int> _wandMaterialsDistribution =
+    {
+      { WandMaterials::YEW_1,    80 },
+      { WandMaterials::IVORY_2,  60 },
+      { WandMaterials::EBONY_3,  45 },
+      { WandMaterials::ONYX_4,   30 },
+      { WandMaterials::GLASS_5,  20 },
+      { WandMaterials::COPPER_6, 15 },
+      { WandMaterials::GOLDEN_7, 10 },
+    };
+
+    const std::map<SpellType, int> _spellsDistribution =
+    {
+      { SpellType::LIGHT,         100 },
+      { SpellType::STRIKE,         80 },
+      { SpellType::FROST,          70 },
+      { SpellType::TELEPORT,       60 },
+      { SpellType::FIREBALL,       50 },
+      { SpellType::LASER,          25 },
+      { SpellType::LIGHTNING,      25 },
+      { SpellType::MAGIC_MISSILE,  50 }
+    };
+
+    const std::map<FoodType, int> _foodMap =
+    {
+      { FoodType::APPLE,        1 },
+      { FoodType::CHEESE,       1 },
+      { FoodType::BREAD,        1 },
+      { FoodType::FISH,         1 },
+      { FoodType::PIE,          1 },
+      { FoodType::MEAT,         1 },
+      { FoodType::TIN,          1 },
+      { FoodType::RATIONS,      1 },
+      { FoodType::IRON_RATIONS, 1 }
+    };
+
+    const std::map<GemType, int> _gemsMap =
+    {
+      { GemType::WORTHLESS_GLASS, 250 },
+      { GemType::BLACK_OBSIDIAN,  150 },
+      { GemType::GREEN_JADE,      100 },
+      { GemType::PURPLE_FLUORITE,  75 },
+      { GemType::PURPLE_AMETHYST,  50 },
+      { GemType::RED_GARNET,       43 },
+      { GemType::WHITE_OPAL,       37 },
+      { GemType::BLACK_JETSTONE,   35 },
+      { GemType::ORANGE_AMBER,     30 },
+      { GemType::BLUE_AQUAMARINE,  20 },
+      { GemType::YELLOW_CITRINE,   20 },
+      { GemType::GREEN_EMERALD,    12 },
+      { GemType::BLUE_SAPPHIRE,    10 },
+      { GemType::ORANGE_JACINTH,    9 },
+      { GemType::RED_RUBY,          8 },
+      { GemType::WHITE_DIAMOND,     7 },
+    };
+
+    const std::map<ItemType, int> _returnerMap =
+    {
+      { ItemType::RETURNER, 1 },
+      { ItemType::NOTHING,  4 }
+    };
+
+    const std::map<ItemQuality, int> _chanceModByQ =
+    {
+      { ItemQuality::DAMAGED,    -10 },
+      { ItemQuality::FLAWED,      -5 },
+      { ItemQuality::NORMAL,       0 },
+      { ItemQuality::FINE,         5 },
+      { ItemQuality::EXCEPTIONAL, 10 },
+    };
+
+    const std::map<ItemQuality, int> _multByQ =
+    {
+      { ItemQuality::DAMAGED,      1 },
+      { ItemQuality::FLAWED,       2 },
+      { ItemQuality::NORMAL,       3 },
+      { ItemQuality::FINE,         4 },
+      { ItemQuality::EXCEPTIONAL,  5 },
+    };
+
+    // Probability of stat increase values
+    const std::map<int, int> _statIncreaseWeightsMap =
+    {
+      { 1, 100 },
+      { 2,  75 },
+      { 3,  50 },
+      { 4,  25 },
+      { 5,  12 }
+    };
+
+    const std::map<ItemPrefix, int> _bucDistr =
+    {
+      { ItemPrefix::UNCURSED, 4 },
+      { ItemPrefix::CURSED,   4 },
+      { ItemPrefix::BLESSED,  1 }
+    };
+
+    const std::map<ItemQuality, int> _qualityDistr =
+    {
+      { ItemQuality::DAMAGED,     8 },
+      { ItemQuality::FLAWED,      6 },
+      { ItemQuality::NORMAL,      4 },
+      { ItemQuality::FINE,        3 },
+      { ItemQuality::EXCEPTIONAL, 2 },
+    };
+
+    // =========================================================================
+
     friend class GameObjectsFactory;
 };
 
