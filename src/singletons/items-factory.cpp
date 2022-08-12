@@ -850,6 +850,8 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
+      ic->Data.GeneratedAfter = MapType::MINES_3;
+
       AddBonusToItem(ic, { ItemBonusType::SKL, 1 });
       AddBonusToItem(ic, { ItemBonusType::SPD, 1 });
     }
@@ -865,6 +867,8 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
+      ic->Data.GeneratedAfter = MapType::CAVES_1;
+
       AddBonusToItem(ic, { ItemBonusType::STR, 1 });
     }
     break;
@@ -878,6 +882,8 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
 
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
+
+      ic->Data.GeneratedAfter = MapType::LOST_CITY;
 
       AddBonusToItem(ic, { ItemBonusType::STR, 1 });
       AddBonusToItem(ic, { ItemBonusType::DEF, 1 });
@@ -894,6 +900,8 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
 
+      ic->Data.GeneratedAfter = MapType::LOST_CITY;
+
       AddBonusToItem(ic, { ItemBonusType::STR,  2 });
       AddBonusToItem(ic, { ItemBonusType::DEF,  1 });
       AddBonusToItem(ic, { ItemBonusType::SPD, -1 });
@@ -909,6 +917,8 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
 
       ic->Data.Damage.SetMin(diceRolls);
       ic->Data.Damage.SetMax(diceSides);
+
+      ic->Data.GeneratedAfter = MapType::LOST_CITY;
 
       AddBonusToItem(ic, { ItemBonusType::STR,  4 });
       AddBonusToItem(ic, { ItemBonusType::SKL, -2 });
@@ -1344,6 +1354,8 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
         "protection against cutting blows."
       };
 
+      ic->Data.GeneratedAfter = MapType::MINES_3;
+
       AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 1 }, true);
       AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 1 }, true);
 
@@ -1362,6 +1374,8 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
         "and is easy to repair."
       };
 
+      ic->Data.GeneratedAfter = MapType::CAVES_3;
+
       AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 3 }, true);
       AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 2 }, true);
 
@@ -1375,6 +1389,8 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
       // ======================================================================70
         "A body vest with overlapping scales worn over a small mail shirt.",
       };
+
+      ic->Data.GeneratedAfter = MapType::LOST_CITY;
 
       AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 4 }, true);
       AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 3 }, true);
@@ -1393,6 +1409,8 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
         "nobles and knights, this armor pretty much combines",
         "all others in itself."
       };
+
+      ic->Data.GeneratedAfter = MapType::DEEP_DARK_3;
 
       AddBonusToItem(ic, { ItemBonusType::RES, cursedPenalty - 6 }, true);
       AddBonusToItem(ic, { ItemBonusType::SPD, cursedPenalty - 4 }, true);
@@ -1542,6 +1560,8 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
         "Requires some skill to be used effectively."
       };
 
+      ic->Data.GeneratedAfter = MapType::MINES_3;
+
       AddBonusToItem(ic, { ItemBonusType::SKL, -1 });
     }
     break;
@@ -1562,6 +1582,8 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
         "A wooden bow for hunting animals and the like with medium range.",
         "Requires some skill to be used effectively."
       };
+
+      ic->Data.GeneratedAfter = MapType::CAVES_3;
 
       AddBonusToItem(ic, { ItemBonusType::SKL, -2 });
     }
@@ -1585,6 +1607,8 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
         "Requires some skill to be used effectively."
       };
 
+      ic->Data.GeneratedAfter = MapType::LOST_CITY;
+
       AddBonusToItem(ic, { ItemBonusType::SKL, -3 });
     }
     break;
@@ -1606,6 +1630,8 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
         "but has more punch and is easier to aim with.",
         "Requires some time to reload."
       };
+
+      ic->Data.GeneratedAfter = MapType::CAVES_1;
 
       AddBonusToItem(ic, { ItemBonusType::SPD, -1 });
       AddBonusToItem(ic, { ItemBonusType::SKL,  1 });
@@ -1630,6 +1656,8 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
         "Requires some time to reload."
       };
 
+      ic->Data.GeneratedAfter = MapType::LOST_CITY;
+
       AddBonusToItem(ic, { ItemBonusType::SPD, -2 });
       AddBonusToItem(ic, { ItemBonusType::SKL,  2 });
     }
@@ -1652,6 +1680,8 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
         "but doesn't have that much range than its bow counterpart.",
         "Requires some time to reload."
       };
+
+      ic->Data.GeneratedAfter = MapType::LOST_CITY;
 
       AddBonusToItem(ic, { ItemBonusType::SPD, -3 });
       AddBonusToItem(ic, { ItemBonusType::SKL,  3 });
@@ -1837,8 +1867,10 @@ GameObject* ItemsFactory::CreateRandomItem(int x,
     }
   }
 
+  //
   // TODO: power of randomly created item
   // should scale with dungeon level.
+  //
   int index = RNG::Instance().RandomRange(0, possibleItems.size());
 
   ItemType res = possibleItems[index];

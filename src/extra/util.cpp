@@ -2616,6 +2616,17 @@ namespace Util
     return (obj == &Application::Instance().PlayerInstance);
   }
 
+  bool CanBeSpawned(ItemComponent* ic)
+  {
+    int lvl = (int)Map::Instance().CurrentLevel->MapType_;
+    if (ic != nullptr)
+    {
+      return (lvl >= (int)ic->Data.GeneratedAfter);
+    }
+
+    return false;
+  }
+
   size_t CalculateItemHash(ItemComponent* item)
   {
     if (item == nullptr)

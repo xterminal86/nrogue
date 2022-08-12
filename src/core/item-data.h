@@ -96,6 +96,8 @@ struct ItemData
     MapType::NOWHERE, { -1, -1 }
   };
 
+  MapType GeneratedAfter = MapType::TOWN;
+
   bool CanBeUsed();
 
   bool IsEquipped         = false;

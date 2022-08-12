@@ -262,12 +262,22 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
       continue;
     }
 
-    // NOTE: Not all objects may be added to the factory yet,
-    // so check against nullptr is needed.
+    //
+    // NOTE: Not all objects may have been added
+    // to the factory yet, so check against nullptr is needed.
+    //
     auto go = ItemsFactory::Instance().CreateRandomItem(x, y);
     if (go != nullptr)
     {
-      PlaceGameObject(go);
+      ItemComponent* ic = go->GetComponent<ItemComponent>();
+      if (Util::CanBeSpawned(ic))
+      {
+        PlaceGameObject(go);
+      }
+      else
+      {
+        delete go;
+      }
     }
   }
 }

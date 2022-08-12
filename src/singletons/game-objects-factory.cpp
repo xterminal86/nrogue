@@ -337,7 +337,7 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
 
   int maxItems = RNG::Instance().RandomRange(1, 10);
 
-  int nothingChance   = (int)((float)maxLevel * 1.25f);
+  int nothingChance   = (int)((float)maxLevel * 0.4f);
   int somethingChance = dungeonLevel;
 
   float failScale = 1.25f;
@@ -353,15 +353,29 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
     auto res = Util::WeightedRandom(weights);
     if (res.first != ItemType::NOTHING)
     {
+      //
+      // NOTE: Not all objects may have been added
+      // to the factory yet, so check against nullptr is needed.
+      //
       auto item = ItemsFactory::Instance().CreateRandomItem(0, 0);
-
-      //
-      // If there is already such stackable item in inventory,
-      // delete the game object we just created.
-      //
-      if (item != nullptr && cc->Add(item))
+      if (item != nullptr)
       {
-        delete item;
+        ItemComponent* ic = item->GetComponent<ItemComponent>();
+        if (!Util::CanBeSpawned(ic))
+        {
+          //
+          // Yes, we're deleting the object we've just created.
+          //
+          delete item;
+        }
+        else
+        {
+          bool foundStack = (item != nullptr && cc->Add(item));
+          if (foundStack)
+          {
+            delete item;
+          }
+        }
       }
     }
     else

@@ -261,6 +261,8 @@ namespace Util
 
   extern bool IsPlayer(GameObject* obj);
 
+  extern bool CanBeSpawned(ItemComponent* ic);
+
   extern size_t CalculateItemHash(ItemComponent* item);
 
   // ===========================================================================
