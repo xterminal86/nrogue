@@ -1,4 +1,4 @@
-#include "service-state.h"
+﻿#include "service-state.h"
 #include "printer.h"
 #include "application.h"
 #include "npc-interact-state.h"
@@ -284,8 +284,10 @@ void ServiceState::FillItemsForBlessing()
     bool alreadyKnown   = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered);
     bool alreadyBlessed = (alreadyKnown && ic->Data.Prefix == ItemPrefix::BLESSED);
     bool isUnique       = (ic->Data.Rarity == ItemRarity::UNIQUE);
+    bool cantBeBlessed  = (ic->Data.ItemType_ == ItemType::GEM
+                        || ic->Data.ItemType_ == ItemType::RETURNER);
 
-    if (alreadyBlessed || isUnique)
+    if (cantBeBlessed || alreadyBlessed || isUnique)
     {
       continue;
     }
