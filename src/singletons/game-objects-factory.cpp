@@ -361,20 +361,12 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
       if (item != nullptr)
       {
         ItemComponent* ic = item->GetComponent<ItemComponent>();
-        if (!Util::CanBeSpawned(ic))
+        if (!Util::CanBeSpawned(ic) || cc->Add(item))
         {
           //
           // Yes, we're deleting the object we've just created.
           //
           delete item;
-        }
-        else
-        {
-          bool foundStack = (item != nullptr && cc->Add(item));
-          if (foundStack)
-          {
-            delete item;
-          }
         }
       }
     }
