@@ -18,6 +18,9 @@ void AIMonsterBat::PrepareScript()
   // monster's behvaiour is not as expected - it doesn't
   // accumulate turns or take into account number of player turns.
   //
+  // Most likely because "idle" task forces to FinishTurn()
+  // which in turn (no pun intended) reduces ActionMeter.
+  //
   _scriptAsText =
 R"(
 [TREE]
