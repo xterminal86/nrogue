@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.9)
 set (TARGET_NAME nrogue)
+set (CMAKE_CXX_STANDARD 14)
 project (${TARGET_NAME})
 
 # ==============================================================================
