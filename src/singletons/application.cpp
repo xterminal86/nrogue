@@ -473,15 +473,10 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
 
 void Application::SavePrettyAlignedStatInfo(std::stringstream& ss)
 {
-  const std::vector<std::string> statNames =
-  {
-    "STR", "DEF", "MAG", "RES", "SKL", "SPD"
-  };
-
   std::vector<std::string> statInfoStrings;
   std::vector<StatInfo> statInfos;
 
-  for (auto& i : statNames)
+  for (auto& i : _statNames)
   {
     StatInfo statInfo = GetStatInfo(i);
     statInfos.push_back(statInfo);
@@ -542,19 +537,9 @@ void Application::SavePrettyAlignedStatInfo(std::stringstream& ss)
 
 Application::StatInfo Application::GetStatInfo(const std::string& attrName)
 {
-  std::map<std::string, Attribute&> attrsByName =
-  {
-    { "STR", PlayerInstance.Attrs.Str },
-    { "DEF", PlayerInstance.Attrs.Def },
-    { "MAG", PlayerInstance.Attrs.Mag },
-    { "RES", PlayerInstance.Attrs.Res },
-    { "SKL", PlayerInstance.Attrs.Skl },
-    { "SPD", PlayerInstance.Attrs.Spd }
-  };
-
   StatInfo res;
 
-  for (auto& i : attrsByName)
+  for (auto& i : _attrsByName)
   {
     if (i.first == attrName)
     {

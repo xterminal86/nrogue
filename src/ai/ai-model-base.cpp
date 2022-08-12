@@ -596,20 +596,9 @@ std::function<BTResult()> AIModelBase::GetHasEquippedCF(const ScriptNode* data)
     paramName = GlobalConstants::BTSParamNamesByName.at(eqType);
   }
 
-  const std::map<ScriptParamNames, EquipmentCategory> eqCats =
+  if (_eqCats.count(paramName) == 1)
   {
-    { ScriptParamNames::HEA, EquipmentCategory::HEAD   },
-    { ScriptParamNames::NCK, EquipmentCategory::NECK   },
-    { ScriptParamNames::TRS, EquipmentCategory::TORSO  },
-    { ScriptParamNames::BTS, EquipmentCategory::BOOTS  },
-    { ScriptParamNames::WPN, EquipmentCategory::WEAPON },
-    { ScriptParamNames::SLD, EquipmentCategory::SHIELD },
-    { ScriptParamNames::RNG, EquipmentCategory::RING   }
-  };
-
-  if (eqCats.count(paramName) == 1)
-  {
-    eqCat = eqCats.at(paramName);
+    eqCat = _eqCats.at(paramName);
   }
 
   auto fn = [this, eqCat]()

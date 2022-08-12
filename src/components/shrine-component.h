@@ -5,29 +5,6 @@
 
 #include "component.h"
 
-// TODO: moar?
-static const std::vector<ItemBonusType> PositiveEffects =
-{
-  ItemBonusType::MANA_SHIELD,
-  ItemBonusType::ILLUMINATED,
-  ItemBonusType::REGEN,
-  ItemBonusType::REFLECT,
-  ItemBonusType::TELEPATHY,
-  ItemBonusType::TRUE_SEEING,
-  ItemBonusType::INVISIBILITY,
-  ItemBonusType::LEVITATION
-};
-
-static const std::vector<ItemBonusType> NegativeEffects =
-{
-  ItemBonusType::PARALYZE,
-  ItemBonusType::POISONED,
-  ItemBonusType::BURNING,
-  ItemBonusType::FROZEN,
-  ItemBonusType::BLINDNESS,
-  ItemBonusType::WEAKNESS
-};
-
 class ShrineComponent : public Component
 {
   public:
@@ -55,6 +32,41 @@ class ShrineComponent : public Component
     bool _oneTimeUse = true;
 
     ShrineType _type = ShrineType::NONE;
+
+    // =========================================================================
+
+    const std::vector<ItemBonusType> _attrs =
+    {
+      { ItemBonusType::STR },
+      { ItemBonusType::DEF },
+      { ItemBonusType::MAG },
+      { ItemBonusType::RES },
+      { ItemBonusType::SPD },
+      { ItemBonusType::SKL }
+    };
+
+    // TODO: moar?
+    const std::vector<ItemBonusType> _positiveEffects =
+    {
+      ItemBonusType::MANA_SHIELD,
+      ItemBonusType::ILLUMINATED,
+      ItemBonusType::REGEN,
+      ItemBonusType::REFLECT,
+      ItemBonusType::TELEPATHY,
+      ItemBonusType::TRUE_SEEING,
+      ItemBonusType::INVISIBILITY,
+      ItemBonusType::LEVITATION
+    };
+
+    const std::vector<ItemBonusType> _negativeEffects =
+    {
+      ItemBonusType::PARALYZE,
+      ItemBonusType::POISONED,
+      ItemBonusType::BURNING,
+      ItemBonusType::FROZEN,
+      ItemBonusType::BLINDNESS,
+      ItemBonusType::WEAKNESS
+    };
 };
 
 #endif // SHRINECOMPONENT_H

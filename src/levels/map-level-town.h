@@ -988,6 +988,27 @@ class MapLevelTown : public MapLevelBase
       { 5, _portalSquare  },
       { 6, _mineEntrance  }
     };
+
+    // =========================================================================
+
+    const std::vector<RoomLayoutRotation> _rotations =
+    {
+      RoomLayoutRotation::NONE,
+      RoomLayoutRotation::CCW_90,
+      RoomLayoutRotation::CCW_180,
+      RoomLayoutRotation::CCW_270
+    };
+
+    const std::vector<NPCType> _npcs =
+    {
+      NPCType::CLAIRE,
+      NPCType::CLOUD,
+      NPCType::IARSPIDER,
+      NPCType::MILES,
+      NPCType::PHOENIX,
+      NPCType::STEVE,
+      NPCType::GIMLEY
+    };
 };
 
 #endif // MAPLEVELTOWN_H

@@ -64,6 +64,19 @@ class AIModelBase
     virtual void PrepareScript();
 
     void PrintBrains(Node* n, int indent);
+
+    // =========================================================================
+
+    const std::map<ScriptParamNames, EquipmentCategory> _eqCats =
+    {
+      { ScriptParamNames::HEA, EquipmentCategory::HEAD   },
+      { ScriptParamNames::NCK, EquipmentCategory::NECK   },
+      { ScriptParamNames::TRS, EquipmentCategory::TORSO  },
+      { ScriptParamNames::BTS, EquipmentCategory::BOOTS  },
+      { ScriptParamNames::WPN, EquipmentCategory::WEAPON },
+      { ScriptParamNames::SLD, EquipmentCategory::SHIELD },
+      { ScriptParamNames::RNG, EquipmentCategory::RING   }
+    };
 };
 
 #endif

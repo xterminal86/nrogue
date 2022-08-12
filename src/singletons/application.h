@@ -156,6 +156,23 @@ class Application : public Singleton<Application>
     const std::string kConfigKeyFastCombat          = "FAST_COMBAT";
     const std::string kConfigKeyFastMonsterMovement = "FAST_MONSTER_MOVEMENT";
 
+    // =========================================================================
+
+    const std::vector<std::string> _statNames =
+    {
+      "STR", "DEF", "MAG", "RES", "SKL", "SPD"
+    };
+
+    const std::map<std::string, Attribute&> _attrsByName =
+    {
+      { "STR", PlayerInstance.Attrs.Str },
+      { "DEF", PlayerInstance.Attrs.Def },
+      { "MAG", PlayerInstance.Attrs.Mag },
+      { "RES", PlayerInstance.Attrs.Res },
+      { "SKL", PlayerInstance.Attrs.Skl },
+      { "SPD", PlayerInstance.Attrs.Spd }
+    };
+
     friend class TargetState;
 };
 

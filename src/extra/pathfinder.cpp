@@ -139,32 +139,7 @@ void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
                             const std::vector<char>& mapTilesToIgnore,
                             bool eightDirs)
 {
-  std::vector<Position> directions;
-
-  if (eightDirs)
-  {
-    directions =
-    {
-      { -1, -1 },
-      { -1,  0 },
-      { -1,  1 },
-      {  0, -1 },
-      {  0,  1 },
-      {  1, -1 },
-      {  1,  0 },
-      {  1,  1 }
-    };
-  }
-  else
-  {
-    directions =
-    {
-      { -1,  0 },
-      {  0, -1 },
-      {  0,  1 },
-      {  1,  0 }
-    };
-  }
+  auto& directions = eightDirs ? _eightDirs : _fourDirs;
 
   std::vector<PathNode> nodesAround;
 
@@ -231,32 +206,7 @@ void Pathfinder::LookAround(MapLevelBase* mapRef,
                             bool ignoreActors,
                             bool eightDirs)
 {
-  std::vector<Position> directions;
-
-  if (eightDirs)
-  {
-    directions =
-    {
-      { -1, -1 },
-      { -1,  0 },
-      { -1,  1 },
-      {  0, -1 },
-      {  0,  1 },
-      {  1, -1 },
-      {  1,  0 },
-      {  1,  1 }
-    };
-  }
-  else
-  {
-    directions =
-    {
-      { -1,  0 },
-      {  0, -1 },
-      {  0,  1 },
-      {  1,  0 }
-    };
-  }
+  auto& directions = eightDirs ? _eightDirs : _fourDirs;
 
   std::vector<PathNode> nodesAround;
 

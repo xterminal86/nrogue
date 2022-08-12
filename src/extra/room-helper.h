@@ -45,6 +45,16 @@ struct RoomHelper
   void ParseLayout(const RoomLayout& layout);
 
   void PrintInfo();
+
+  // ===========================================================================
+  private:
+    const std::map<RoomEdgeEnum, RoomEdgeEnum> _oppositeEdgeByType =
+    {
+      { RoomEdgeEnum::NORTH, RoomEdgeEnum::SOUTH },
+      { RoomEdgeEnum::EAST,  RoomEdgeEnum::WEST  },
+      { RoomEdgeEnum::SOUTH, RoomEdgeEnum::NORTH },
+      { RoomEdgeEnum::WEST,  RoomEdgeEnum::EAST  }
+    };
 };
 
 #endif // ROOMHELPER_H

@@ -73,16 +73,20 @@ int ItemData::GetCost()
       price *= 0.5f;
     }
 
-    std::map<ItemQuality, float> costModByQ =
+    //
+    // Putting this inside header file deletes operator =
+    // for some fucking reason.
+    //
+    const std::map<ItemQuality, float> costModByQ =
     {
-      { ItemQuality::DAMAGED,      2.0f },
-      { ItemQuality::FLAWED,       1.5f },
-      { ItemQuality::NORMAL,       1.0f },
-      { ItemQuality::FINE,         0.8f },
-      { ItemQuality::EXCEPTIONAL,  0.6f }
+      { ItemQuality::DAMAGED,     2.0f },
+      { ItemQuality::FLAWED,      1.5f },
+      { ItemQuality::NORMAL,      1.0f },
+      { ItemQuality::FINE,        0.8f },
+      { ItemQuality::EXCEPTIONAL, 0.6f }
     };
 
-    float newCost = (float)price / costModByQ[ItemQuality_];
+    float newCost = (float)price / costModByQ.at(ItemQuality_);
     price = (int)newCost;
   }
 

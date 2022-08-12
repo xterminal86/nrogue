@@ -41,6 +41,18 @@ class ItemComponent : public Component
     int _nonZeroStatBonuses = 0;
 
     bool _nonStatBonusesPresent = false;
+
+    // =========================================================================
+
+    const std::map<StatsEnum, ItemBonusType> _bonusByStat =
+    {
+      { StatsEnum::STR, ItemBonusType::STR },
+      { StatsEnum::DEF, ItemBonusType::DEF },
+      { StatsEnum::MAG, ItemBonusType::MAG },
+      { StatsEnum::RES, ItemBonusType::RES },
+      { StatsEnum::SKL, ItemBonusType::SKL },
+      { StatsEnum::SPD, ItemBonusType::SPD }
+    };
 };
 
 #endif // ITEMCOMPONENT_H

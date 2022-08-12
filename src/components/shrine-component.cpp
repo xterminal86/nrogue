@@ -372,8 +372,8 @@ void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
-  int effectIndex = RNG::Instance().RandomRange(0, PositiveEffects.size());
-  ItemBonusType t = PositiveEffects[effectIndex];
+  int effectIndex = RNG::Instance().RandomRange(0, _positiveEffects.size());
+  ItemBonusType t = _positiveEffects[effectIndex];
 
   ItemBonusStruct b;
 
@@ -419,8 +419,8 @@ void ShrineComponent::ApplyRandomNegativeEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
-  int effectIndex = RNG::Instance().RandomRange(0, NegativeEffects.size());
-  ItemBonusType t = NegativeEffects[effectIndex];
+  int effectIndex = RNG::Instance().RandomRange(0, _negativeEffects.size());
+  ItemBonusType t = _negativeEffects[effectIndex];
 
   ItemBonusStruct b;
 
@@ -453,21 +453,11 @@ void ShrineComponent::ApplyTemporaryStatRaise(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
-  std::vector<ItemBonusType> attrs =
-  {
-    { ItemBonusType::STR },
-    { ItemBonusType::DEF },
-    { ItemBonusType::MAG },
-    { ItemBonusType::RES },
-    { ItemBonusType::SPD },
-    { ItemBonusType::SKL }
-  };
-
-  int index = RNG::Instance().RandomRange(0, attrs.size());
+  int index = RNG::Instance().RandomRange(0, _attrs.size());
 
   ItemBonusStruct bs;
 
-  bs.Type       = attrs[index];
+  bs.Type       = _attrs[index];
   bs.Duration   = 30 + _duration;
   bs.BonusValue = 1;
   bs.Id         = OwnerGameObject->ObjectId();

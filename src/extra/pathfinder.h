@@ -93,6 +93,26 @@ class Pathfinder
     bool IsInsideMap(const Position& c);
 
     PathNode FindNodeWithPosition(const std::vector<PathNode>& list, const Position& p);
+
+    const std::vector<Position> _eightDirs =
+    {
+      { -1, -1 },
+      { -1,  0 },
+      { -1,  1 },
+      {  0, -1 },
+      {  0,  1 },
+      {  1, -1 },
+      {  1,  0 },
+      {  1,  1 }
+    };
+
+    const std::vector<Position> _fourDirs =
+    {
+      { -1,  0 },
+      {  0, -1 },
+      {  0,  1 },
+      {  1,  0 }
+    };
 };
 
 #endif // PATHFINDER_H

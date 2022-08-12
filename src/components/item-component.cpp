@@ -341,22 +341,12 @@ void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
 {
   res.push_back("");
 
-  std::map<StatsEnum, ItemBonusType> bonusByStat =
-  {
-    { StatsEnum::STR, ItemBonusType::STR },
-    { StatsEnum::DEF, ItemBonusType::DEF },
-    { StatsEnum::MAG, ItemBonusType::MAG },
-    { StatsEnum::RES, ItemBonusType::RES },
-    { StatsEnum::SKL, ItemBonusType::SKL },
-    { StatsEnum::SPD, ItemBonusType::SPD }
-  };
-
   for (auto& kvp : GlobalConstants::AllStatNames)
   {
     int bonus = 0;
     for (auto& b : Data.Bonuses)
     {
-      if (b.Type == bonusByStat[kvp.second.first])
+      if (b.Type == _bonusByStat.at(kvp.second.first))
       {
         bonus = b.BonusValue;
         break;

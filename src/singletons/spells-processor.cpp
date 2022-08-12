@@ -589,8 +589,6 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
     Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos);
 
     _scrollUseMessages.push_back("You are suddenly transported elsewhere!");
-
-    // Don't remember because it can be a scroll of teleport as well
   }
 }
 

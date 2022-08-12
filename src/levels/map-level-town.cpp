@@ -485,18 +485,10 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
 
   std::vector<std::string> newLayout = layout;
 
-  std::vector<RoomLayoutRotation> rotations =
-  {
-    RoomLayoutRotation::NONE,
-    RoomLayoutRotation::CCW_90,
-    RoomLayoutRotation::CCW_180,
-    RoomLayoutRotation::CCW_270
-  };
-
   if (randomizeOrientation)
   {
-    int index = RNG::Instance().Random() % rotations.size();
-    newLayout = Util::RotateRoomLayout(layout, rotations[index]);
+    int index = RNG::Instance().Random() % _rotations.size();
+    newLayout = Util::RotateRoomLayout(layout, _rotations[index]);
   }
 
   for (auto& row : newLayout)
@@ -580,18 +572,10 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
 
   std::vector<std::string> newLayout = layout;
 
-  std::vector<RoomLayoutRotation> rotations =
-  {
-    RoomLayoutRotation::NONE,
-    RoomLayoutRotation::CCW_90,
-    RoomLayoutRotation::CCW_180,
-    RoomLayoutRotation::CCW_270
-  };
-
   if (randomizeOrientation)
   {
-    int index = RNG::Instance().Random() % rotations.size();
-    newLayout = Util::RotateRoomLayout(layout, rotations[index]);
+    int index = RNG::Instance().Random() % _rotations.size();
+    newLayout = Util::RotateRoomLayout(layout, _rotations[index]);
   }
 
   for (auto& row : newLayout)
@@ -848,20 +832,9 @@ void MapLevelTown::CreateNPCs()
   Rect mineEntrance = { 87, 40, 95, 48 };
   Rect altarRoom    = { 87, 21, 95, 27 };
 
-  std::vector<NPCType> npcs =
-  {
-    NPCType::CLAIRE,
-    NPCType::CLOUD,
-    NPCType::IARSPIDER,
-    NPCType::MILES,
-    NPCType::PHOENIX,
-    NPCType::STEVE,
-    NPCType::GIMLEY
-  };
-
   std::vector<Position> visited;
 
-  for (auto& npc : npcs)
+  for (auto& npc : _npcs)
   {
     std::vector<Position> emptyCells;
 

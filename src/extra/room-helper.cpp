@@ -12,18 +12,11 @@ RoomForLevel::RoomForLevel(int chance, const RoomLayout& l)
 
 bool RoomHelper::CanAttach(const RoomHelper &r, RoomEdgeEnum side)
 {
-  std::map<RoomEdgeEnum, RoomEdgeEnum> oppositeEdgeByType =
-  {
-    { RoomEdgeEnum::NORTH, RoomEdgeEnum::SOUTH },
-    { RoomEdgeEnum::EAST,  RoomEdgeEnum::WEST  },
-    { RoomEdgeEnum::SOUTH, RoomEdgeEnum::NORTH },
-    { RoomEdgeEnum::WEST,  RoomEdgeEnum::EAST  }
-  };
-
   //bool e1 = EdgeIsAllWalls(RoomEdgesByType[side]);
   //bool e2 = EdgeIsAllWalls(r.RoomEdgesByType[oppositeEdgeByType[side]]);
 
-  bool res = CanBeTraversed(RoomEdgesByType.at(side), r.RoomEdgesByType.at(oppositeEdgeByType[side]));
+  bool res = CanBeTraversed(RoomEdgesByType.at(side),
+                            r.RoomEdgesByType.at(_oppositeEdgeByType.at(side)));
 
   //return ( (e1 == true && e2 == true) || res);
   return res;
