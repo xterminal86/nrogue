@@ -228,6 +228,9 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
     go->Attrs.MP.Restore();
   }
 
+  // FIXME: debug
+  go->Attrs.Spd.Set(0);
+
   ItemBonusStruct ibs;
 
   ibs.Type       = ItemBonusType::LEVITATION;

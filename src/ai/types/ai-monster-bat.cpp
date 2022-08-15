@@ -14,12 +14,14 @@ void AIMonsterBat::PrepareScript()
   // You can win only if you can corner the monster,
   // if you're fast enough or if you have ranged weapon.
   //
-  // BUG: looks like if SPD is equal to player's,
-  // monster's behvaiour is not as expected - it doesn't
-  // accumulate turns or take into account number of player turns.
-  //
-  // Most likely because "idle" task forces to FinishTurn()
-  // which in turn (no pun intended) reduces ActionMeter.
+  // BUG: "chase_player" in second branch loops into
+  // "move_away" of the first branch, thus reproducing
+  // sometimes detected bug when monster moved to the player
+  // but then immediately moved away without attacking.
+  // This happens because "player_next_turn" is checked twice
+  // so in second branch it fails, thus monster approaches
+  // the player, but on the next turn same check passes
+  // in the first branch, thus monster moves away from the player.
   //
   _scriptAsText =
 R"(

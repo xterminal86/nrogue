@@ -308,57 +308,75 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
 
   switch (cf)
   {
+    //
     // Roll d100 and check against p2 percent chance
+    //
     case ScriptParamNames::D100:
       fn = GetD100CF(data);
       break;
 
+    //
     // Player is linear distance visible
+    //
     case ScriptParamNames::PLAYER_VISIBLE:
       fn = GetIsPlayerVisibleCF();
       break;
 
+    //
     // Checks GameObject::CanMove()
+    //
     case ScriptParamNames::PLAYER_CAN_MOVE:
       fn = GetPlayerCanMoveCF();
       break;
 
+    //
     // Checks if player is in square range specified by p2
+    //
     case ScriptParamNames::PLAYER_IN_RANGE:
       fn = GetInRangeCF(data);
       break;
 
+    //
     // Player's action meter can be queried against value
     // of p3 and comparison function determined by p2.
     // Supported comparers are "gt", "lt", "eq".
+    //
     case ScriptParamNames::PLAYER_ENERGY:
       fn = GetPlayerEnergyCF(data);
       break;
 
+    //
     // Check if player's action meter will gain enough value
     // to become big enough to support amount of turns
     // specified by p2.
     // E.g. p2="1" means check if player's next WaitForTurn()
     // will gain enough energy for the player to be able to
     // perform >= 1 turns.
+    //
     case ScriptParamNames::PLAYER_NEXT_TURN:
       fn = GetPlayerNextTurnCF(data);
       break;
 
+    //
     // Check if controlled GameObject's action meter
     // support amount of turns specified by p2.
+    //
     case ScriptParamNames::TURNS_LEFT:
       fn = GetTurnsLeftCF(data);
       break;
 
+    //
     // Check if actor in p2 has specific effect determined by
     // short name of SpellType specified in p3.
     // E.g. [COND p1="has_effect" p2="player" p3="Psd"]
+    //
     case ScriptParamNames::HAS_EFFECT:
       fn = GetHasEffectCF(data);
       break;
 
+    //
     // Check if current object's HP is less than 30%
+    //
     case ScriptParamNames::HP_LOW:
       fn = GetHPLowCF();
       break;
@@ -413,15 +431,67 @@ std::function<BTResult()> AIModelBase::GetPlayerEnergyCF(const ScriptNode* data)
 
 std::function<BTResult()> AIModelBase::GetPlayerNextTurnCF(const ScriptNode* data)
 {
+  //
+  // NOTE: when implementing "hit and run" tactics
+  // we cannot rely on this CF to determine if player can move
+  // on next turn, because if SPDs are equal there might be
+  // a situation like this:
+  //
+  // PLAYER:
+  // 0 2 4 6 8 10
+  //           ^
+  //
+  // MONSTER:
+  // 0 2 4 6 8 10
+  //         ^
+  //
+  // So, after player finished his turn:
+  //
+  // PLAYER:
+  // 0 2 4 6 8 10
+  // ^
+  //
+  // MONSTER:
+  // 0 2 4 6 8 10
+  //           ^
+  //
+  // Monster processes its AI script:
+  //
+  // PLAYER:
+  // 0 2 4 6 8 10
+  //   ^
+  //
+  // MONSTER:
+  // 0 2 4 6 8 10
+  // ^
+  //
+  // which will eventually, after all turn increments are processed,
+  // loop into the first situation.
+  // Meaning that from monster's point of view
+  // it will look like it's OK to perform attack,
+  // because player seems to be unable to catch,
+  // but he actually does.
+  //
+  // UpdateActors() checks CanAct() on each actor, so in cases
+  // when actor can perform two or more turns in a row
+  // player's energy gain will be the same,
+  // but sometimes actor must wait for its turn, which can
+  // still arrive faster than player's (if actor's SPD > plauer's),
+  // but during this time player also incremented his ActionMeter,
+  // which now contains different value and may also be closer
+  // to TurnReadyValue, thus resulting in different result of this
+  // condition function check.
+  //
   auto fn = [this, data]()
   {
-    int turns = std::stoi(data->Params.at("p2"));
+    int turns       = std::stoi(data->Params.at("p2"));
+    int turnsEnergy = (turns * GlobalConstants::TurnReadyValue);
 
-    int energy = _playerRef->Attrs.ActionMeter;
-    int actionIncrement = _playerRef->GetActionIncrement();
-    int energyGain = energy + actionIncrement;
+    int plEnergy     = _playerRef->Attrs.ActionMeter;
+    int plGain       = _playerRef->GetActionIncrement();
+    int plEnergyGain = plEnergy + plGain;
 
-    bool res = (energyGain >= (turns * GlobalConstants::TurnReadyValue));
+    bool res = (plEnergyGain >= turnsEnergy);
 
     return res ? BTResult::Success : BTResult::Failure;
   };
@@ -516,7 +586,6 @@ std::function<BTResult()> AIModelBase::GetInRangeCF(const ScriptNode* data)
     auto& playerRef = Application::Instance().PlayerInstance;
     auto& objRef    = AIComponentRef->OwnerGameObject;
 
-    //bool res = Util::IsObjectInRange(plPos, objPos, range, range);
     bool res = Util::IsObjectInRange(objRef->GetPosition(),
                                      playerRef.GetPosition(),
                                      range,

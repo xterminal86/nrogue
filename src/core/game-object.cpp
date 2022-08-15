@@ -503,7 +503,9 @@ void GameObject::WaitForTurn()
 {
   int actionIncrement = GetActionIncrement();
 
+  //
   // In towns SPD is ignored
+  //
   if (Map::Instance().CurrentLevel->Peaceful)
   {
     Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
