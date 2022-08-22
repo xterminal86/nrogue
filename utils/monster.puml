@@ -1,0 +1,72 @@
+state s0 as "TREE"
+
+state s1 as "SEL"
+
+state s2 as "COND"
+s2 : p1="player_in_range"
+
+state s3 as "SEL"
+
+state s4 as "COND"
+s4 : p1="player_visible"
+
+state s5 as "SEQ"
+
+state s6 as "TASK"
+s6 : p1="save_player_pos"
+
+state s7 as "SEL"
+
+state s8 as "COND"
+s8 : p1="player_in_range"
+
+state s9 as "TASK"
+s9 : p1="attack"
+
+state s10 as "TASK"
+s10 : p1="chase_player"
+
+state s11 as "TASK"
+s11 : p1="goto_last_player_pos"
+
+state s12 as "COND"
+s12 : p1="d100"
+
+state s13 as "TASK"
+s13 : p1="mine_tunnel"
+
+state s14 as "TASK"
+s14 : p1="goto_last_mined_pos"
+
+state s15 as "TASK"
+s15 : p1="pick_items"
+
+state s16 as "TASK"
+s16 : p1="move_smart"
+
+state s17 as "TASK"
+s17 : p1="move_rnd"
+
+state s18 as "TASK"
+s18 : p1="idle"
+
+
+s8 ---> s9
+s7 ---> s8
+s7 ---> s10
+s5 ---> s6
+s5 ---> s7
+s4 ---> s5
+s3 ---> s4
+s3 ---> s11
+s2 ---> s3
+s12 ---> s13
+s1 ---> s2
+s1 ---> s12
+s1 ---> s14
+s1 ---> s15
+s1 ---> s16
+s1 ---> s17
+s1 ---> s18
+s0 ---> s1
+

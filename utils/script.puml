@@ -1,0 +1,36 @@
+skinparam linetype ortho
+
+state s0 as "TREE"
+
+state s1 as "SEL"
+
+state s2 as "COND"
+s2 : p1="player_in_range"
+
+state s3 as "SEL"
+
+state s4 as "COND"
+s4 : p1="player_in_range"
+
+state s5 as "TASK"
+s5 : p1="attack"
+
+state s6 as "TASK"
+s6 : p1="chase_player"
+
+state s7 as "TASK"
+s7 : p1="move_rnd"
+
+state s8 as "TASK"
+s8 : p1="idle"
+
+
+s4 ---> s5
+s3 ---> s4
+s3 ---> s6
+s2 ---> s3
+s1 ---> s2
+s1 ---> s7
+s1 ---> s8
+s0 ---> s1
+
