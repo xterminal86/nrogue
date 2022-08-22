@@ -4,10 +4,10 @@ import sys;
 
 Script = "";
 
-ToParse = [];
-Order   = [];
+ToParse   = [];
+Order     = [];
 NodesById = {};
-UmlData = [];
+UmlData   = [];
 
 def FindMaxIndent():
   indent = 0;
@@ -27,10 +27,18 @@ def GetNodeType(data):
 def GetNodeData(data):
   spl = data.split(' ');
 
-  if len(spl) > 1:
-    return spl[1];
+  result = [];
+  
+  for i in range(len(spl)):
+    if i == 0:
+      continue;
+      
+    result.append(spl[i]);
 
-  return None;
+  if len(result) == 0:
+    result = None;
+    
+  return result;
 
 def GenerateUmlDefinitions():
   output = "";
@@ -48,10 +56,10 @@ def GenerateUmlDefinitions():
   output += "\n\n";
 
   for item in Order:
-    id = item["data"]["id"];
+    id   = item["data"]["id"];
     data = item["data"]["data"];
 
-    pId = item["parent"]["id"];
+    pId   = item["parent"]["id"];
     pData = item["parent"]["data"];
 
     output += "s{} ---> s{}\n".format(pId, id);
@@ -84,7 +92,12 @@ def main():
       nodeData = GetNodeData(data["data"]);
       umlDesc = None;
       if nodeData != None:
-        umlDesc = "{} : {}".format(nodeName, nodeData);
+        params = "";
+        for item in nodeData:
+          params += item;
+          params += " ";
+          
+        umlDesc = "{} : {}".format(nodeName, params);
       UmlData.append({ "id" : id, "nodeData" : [ umlData, umlDesc ] });
       ToParse.append(data);
       NodesById[id] = data;

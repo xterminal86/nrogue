@@ -1,0 +1,65 @@
+
+state s0 as "TREE"
+
+state s1 as "SEL"
+
+state s2 as "COND"
+s2 : p1="player_in_range" 
+
+state s3 as "COND"
+s3 : p1="player_visible" 
+
+state s4 as "SEL"
+
+state s5 as "COND"
+s5 : p1="player_in_range" p2="1" 
+
+state s6 as "SEL"
+
+state s7 as "COND"
+s7 : p1="player_next_turn" p2="1" 
+
+state s8 as "TASK"
+s8 : p1="move_away" 
+
+state s9 as "TASK"
+s9 : p1="attack" 
+
+state s10 as "COND"
+s10 : p1="player_in_range" p2="2" 
+
+state s11 as "SEL"
+
+state s12 as "COND"
+s12 : p1="player_next_turn" p2="1" 
+
+state s13 as "TASK"
+s13 : p1="idle" 
+
+state s14 as "TASK"
+s14 : p1="chase_player" 
+
+state s15 as "TASK"
+s15 : p1="move_rnd" 
+
+state s16 as "TASK"
+s16 : p1="idle" 
+
+
+s7 ---> s8
+s12 ---> s13
+s6 ---> s7
+s6 ---> s9
+s11 ---> s12
+s11 ---> s14
+s5 ---> s6
+s10 ---> s11
+s4 ---> s5
+s4 ---> s10
+s3 ---> s4
+s2 ---> s3
+s1 ---> s2
+s1 ---> s15
+s1 ---> s16
+s0 ---> s1
+
