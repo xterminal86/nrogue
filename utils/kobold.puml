@@ -1,0 +1,93 @@
+
+state s0 as "TREE"
+
+state s1 as "SEL"
+
+state s2 as "COND"
+s2 : p1="player_in_range" 
+
+state s3 as "COND"
+s3 : p1="player_visible" 
+
+state s4 as "SEL"
+
+state s5 as "COND"
+s5 : p1="player_in_range" p2="1" 
+
+state s6 as "SEL"
+
+state s7 as "COND"
+s7 : p1="hp_low" 
+
+state s8 as "TASK"
+s8 : p1="drink_potion" p2="HP" 
+
+state s9 as "TASK"
+s9 : p1="attack" 
+
+state s10 as "COND"
+s10 : p1="hp_low" 
+
+state s11 as "SEL"
+
+state s12 as "TASK"
+s12 : p1="drink_potion" p2="HP" 
+
+state s13 as "TASK"
+s13 : p1="move_away" 
+
+state s14 as "COND"
+s14 : p1="has_equipped" p2="WPN" 
+
+state s15 as "TASK"
+s15 : p1="chase_player" 
+
+state s16 as "TASK"
+s16 : p1="move_away" 
+
+state s17 as "COND"
+s17 : p1="hp_low" 
+
+state s18 as "TASK"
+s18 : p1="drink_potion" p2="HP" 
+
+state s19 as "TASK"
+s19 : p1="break_stuff" 
+
+state s20 as "TASK"
+s20 : p1="pick_items" 
+
+state s21 as "TASK"
+s21 : p1="move_smart" 
+
+state s22 as "TASK"
+s22 : p1="move_rnd" 
+
+state s23 as "TASK"
+s23 : p1="idle" 
+
+
+s7 ---> s8
+s6 ---> s7
+s6 ---> s9
+s11 ---> s12
+s11 ---> s13
+s5 ---> s6
+s10 ---> s11
+s14 ---> s15
+s4 ---> s5
+s4 ---> s10
+s4 ---> s14
+s4 ---> s16
+s3 ---> s4
+s2 ---> s3
+s17 ---> s18
+s1 ---> s2
+s1 ---> s17
+s1 ---> s19
+s1 ---> s20
+s1 ---> s21
+s1 ---> s22
+s1 ---> s23
+s0 ---> s1
+

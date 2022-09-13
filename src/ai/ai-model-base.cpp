@@ -110,7 +110,7 @@ void AIModelBase::ConstructAI()
 
 void AIModelBase::Update()
 {
-  // NOTE: Multiple turns are checked in Map::UpdateGameObjects()
+  // NOTE: Multiple turns are checked in Map::UpdateActors()
 
   if (_root)
   {
@@ -432,7 +432,7 @@ std::function<BTResult()> AIModelBase::GetPlayerEnergyCF(const ScriptNode* data)
 std::function<BTResult()> AIModelBase::GetPlayerNextTurnCF(const ScriptNode* data)
 {
   //
-  // NOTE: when implementing "hit and run" tactics
+  // FIXME: when implementing "hit and run" tactics
   // we cannot rely on this CF to determine if player can move
   // on next turn, because if SPDs are equal there might be
   // a situation like this:
@@ -476,11 +476,53 @@ std::function<BTResult()> AIModelBase::GetPlayerNextTurnCF(const ScriptNode* dat
   // when actor can perform two or more turns in a row
   // player's energy gain will be the same,
   // but sometimes actor must wait for its turn, which can
-  // still arrive faster than player's (if actor's SPD > plauer's),
+  // still arrive faster than player's (if actor's SPD > player's),
   // but during this time player also incremented his ActionMeter,
   // which now contains different value and may also be closer
-  // to TurnReadyValue, thus resulting in different result of this
+  // to TurnReadyValue, thus resulting in different outcome of this
   // condition function check.
+  //
+  // So when monster is greatly faster than player
+  // (I'd estimate SPD > 3), there probably won't be any problems,
+  // but if SPDs are more or less close, we'll get weird AI patterns.
+  //
+  // What this basically means is that sometimes monsters can exhibit
+  // weird behavioural pattern, like come to melee range at the player
+  // on one turn and then immediately move away on another,
+  // not attacking player at all, while player just stands there,
+  // skipping his turns.
+  //
+  // For example, if monster gains 4 action meter per turn,
+  // and player gains only 2, the situation can be like this:
+  //
+  // Monster AM: 0, Player AM: 0
+  //
+  // WaitForTurn():
+  //
+  // M: 4 - 8 - 12 => monster now acts
+  // P: 2 - 4 - 6  => player can't act yet
+  //
+  // Monster may see this situation as if player has no chance
+  // to retaliate at hit-and-run and decides to come to melee range.
+  // Thus, monster spends his turn moving one tile (12 - 10 = 2).
+  //
+  // Now we have this:
+  //
+  // Monster AM: 2, Player AM: 6
+  //
+  // WaitForTurn():
+  //
+  // M: 6 - 10 => monster now acts
+  // P: 8 - 10 => player can now act too, but since WaitForTurn()
+  //              of actors happens before player's in
+  //              Application::Run(), they will Update() first.
+  //
+  // So now monster sees "oh, shit, I'm gonna get fucked" and
+  // moves away.
+  //
+  // Now if player just skips his turn by waiting,
+  // we'll return to the beginning of this example
+  // and the circle repeats.
   //
   auto fn = [this, data]()
   {
