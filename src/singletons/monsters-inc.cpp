@@ -228,9 +228,6 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
     go->Attrs.MP.Restore();
   }
 
-  // FIXME: debug
-  go->Attrs.Spd.Set(0);
-
   ItemBonusStruct ibs;
 
   ibs.Type       = ItemBonusType::LEVITATION;
@@ -274,7 +271,7 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
     difficulty = Util::Clamp(difficulty, 1, 5);
 
     go->Attrs.Def.Talents = 3;
-    go->Attrs.Spd.Talents = 1;
+    go->Attrs.Spd.Talents = 3;
 
     for (int i = 0; i < difficulty; i++)
     {

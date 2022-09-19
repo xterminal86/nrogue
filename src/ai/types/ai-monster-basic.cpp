@@ -24,6 +24,11 @@ void AIMonsterBasic::PrepareScript()
   // and make controlled object finish its turn.
   // Usually it's the last task in selector.
   //
+  // "player_in_range" checks if player is specified number of
+  // tiles away or closer, so if you need to perform different
+  // tasks at different ranges, put check of the closest range
+  // first in the tree.
+  //
   _scriptAsText =
 R"(
 [TREE]

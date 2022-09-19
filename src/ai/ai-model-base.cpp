@@ -366,6 +366,14 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
       break;
 
     //
+    // Checks if action meter is enough to support number of turns
+    // (specified in p2) greater or less than (specified in p3)
+    //
+    case ScriptParamNames::TURNS_CHECK:
+      fn = GetTurnsCheckCF(data);
+      break;
+
+    //
     // Check if actor in p2 has specific effect determined by
     // short name of SpellType specified in p3.
     // E.g. [COND p1="has_effect" p2="player" p3="Psd"]
@@ -383,6 +391,10 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
 
     case ScriptParamNames::HAS_EQUIPPED:
       fn = GetHasEquippedCF(data);
+      break;
+
+    default:
+      DebugLog("no such condition function - %i", (int)cf);
       break;
   }
 
@@ -432,7 +444,7 @@ std::function<BTResult()> AIModelBase::GetPlayerEnergyCF(const ScriptNode* data)
 std::function<BTResult()> AIModelBase::GetPlayerNextTurnCF(const ScriptNode* data)
 {
   //
-  // FIXME: when implementing "hit and run" tactics
+  // NOTE: when implementing "hit and run" tactics
   // we cannot rely on this CF to determine if player can move
   // on next turn, because if SPDs are equal there might be
   // a situation like this:
@@ -469,7 +481,7 @@ std::function<BTResult()> AIModelBase::GetPlayerNextTurnCF(const ScriptNode* dat
   // loop into the first situation.
   // Meaning that from monster's point of view
   // it will look like it's OK to perform attack,
-  // because player seems to be unable to catch,
+  // because player seems to be unable to catch up,
   // but he actually does.
   //
   // UpdateActors() checks CanAct() on each actor, so in cases
@@ -643,13 +655,60 @@ std::function<BTResult()> AIModelBase::GetTurnsLeftCF(const ScriptNode* data)
 {
   int turnsLeftToCheck = std::stoul(data->Params.at("p2"));
 
-  auto fn = [this, turnsLeftToCheck]()
+  int meterL = turnsLeftToCheck * GlobalConstants::TurnReadyValue;
+  int meterH = (turnsLeftToCheck + 1) * GlobalConstants::TurnReadyValue;
+
+  auto fn = [this, meterL, meterH]()
   {
     int energy = AIComponentRef->OwnerGameObject->Attrs.ActionMeter;
 
-    int left = energy - GlobalConstants::TurnReadyValue * turnsLeftToCheck;
+    //
+    // Turns left = 1 is action meter >= 10 and < 20
+    //
+    bool res = (energy >= meterL && energy < meterH);
 
-    bool res = (left >= 0);
+    return res ? BTResult::Success : BTResult::Failure;
+  };
+
+  return fn;
+}
+
+std::function<BTResult()> AIModelBase::GetTurnsCheckCF(const ScriptNode* data)
+{
+  int turnsToCheck = std::stoul(data->Params.at("p2"));
+  std::string cond = data->Params.at("p3");
+
+  ScriptParamNames p = GlobalConstants::BTSParamNamesByName.at(cond);
+
+  auto fn = [this, turnsToCheck, p]()
+  {
+    int energyToComp = turnsToCheck * GlobalConstants::TurnReadyValue;
+    int energy = AIComponentRef->OwnerGameObject->Attrs.ActionMeter;
+
+    bool res = false;
+
+    switch (p)
+    {
+      case ScriptParamNames::LE:
+        res = (energy <= energyToComp);
+        break;
+
+      case ScriptParamNames::GE:
+        res = (energy >= energyToComp);
+        break;
+
+      case ScriptParamNames::LT:
+        res = (energy < energyToComp);
+        break;
+
+      case ScriptParamNames::GT:
+        res = (energy > energyToComp);
+        break;
+
+      default:
+        DebugLog("unknown condition type: %i", (int)p);
+        break;
+    }
 
     return res ? BTResult::Success : BTResult::Failure;
   };
