@@ -169,6 +169,8 @@ class GameState
     };
 
     SDL_Rect _renderDst;
+
+    std::pair<int, int> _resizedWindowSize;
 #endif
 };
 
