@@ -89,7 +89,7 @@ GameObject* MonstersInc::CreateMonster(int x, int y, GameObjectType monsterType)
       break;
 
     default:
-      DebugLog("CreateMonster(): monster type %i is not handled!", monsterType);
+      DebugLog("CreateMonster(): monster type %i is not implemented!", monsterType);
       break;
   }
 

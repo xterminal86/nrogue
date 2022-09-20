@@ -634,7 +634,11 @@ void Application::InitSDL()
                             rect.w, rect.h,
                             SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
+#ifdef MSVC_COMPILER
+  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d");
+#else
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+#endif
 
   int drivers = SDL_GetNumRenderDrivers();
   for (int i = 0; i < drivers; i++)

@@ -122,7 +122,7 @@ enum class GameObjectType
   MAD_MINER,
   SKELETON,
   ZOMBIE,           // has a chance to reanimate itself when slain
-  LICH,
+  NECROMANCER,      // resurrects dead monsters
   KOBOLD,
   HEROBRINE,
   WRAITH,

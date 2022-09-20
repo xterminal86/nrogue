@@ -122,7 +122,7 @@ class DevConsole : public GameState
       { GameObjectType::MAD_MINER,   "Mad Miner"   },
       { GameObjectType::SKELETON,    "Skeleton"    },
       { GameObjectType::ZOMBIE,      "Zombie"      },
-      { GameObjectType::LICH,        "Lich"        },
+      { GameObjectType::NECROMANCER, "Necromancer" },
       { GameObjectType::KOBOLD,      "Kobold"      },
       { GameObjectType::WRAITH,      "Wraith"      },
       { GameObjectType::HEROBRINE,   "Herobrine"   },
