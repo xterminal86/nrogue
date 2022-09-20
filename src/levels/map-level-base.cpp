@@ -55,6 +55,9 @@ void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
   GameObjects.reserve(100);
   ActorGameObjects.reserve(100);
 
+  FinishTurnTriggers.reserve(100);
+  GlobalTriggers.reserve(100);
+
   for (int x = 0; x < MapSize.X; x++)
   {
     std::vector<std::unique_ptr<GameObject>> row;

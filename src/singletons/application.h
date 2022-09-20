@@ -89,6 +89,7 @@ class Application : public Singleton<Application>
     SDL_Rect GetWindowSize(int tileWidth, int tileHeight);
 
     const std::pair<int, int>& GetDefaultWindowSize();
+    std::pair<int, int>& GetResizedWindowSize();
 #endif
 
     //
@@ -123,6 +124,7 @@ class Application : public Singleton<Application>
 
 #ifdef USE_SDL
     std::pair<int, int> _defaultWindowSize;
+    std::pair<int, int> _resizedWindowSize;
     void InitSDL();
     void SetIcon();
 #else

@@ -627,6 +627,8 @@ void Application::InitSDL()
 
   _defaultWindowSize = { rect.w, rect.h };
 
+  _resizedWindowSize = _defaultWindowSize;
+
   Window = SDL_CreateWindow("nrogue",
                             rect.x, rect.y,
                             rect.w, rect.h,
@@ -668,6 +670,11 @@ void Application::InitSDL()
 const std::pair<int, int>& Application::GetDefaultWindowSize()
 {
   return _defaultWindowSize;
+}
+
+std::pair<int, int>& Application::GetResizedWindowSize()
+{
+  return _resizedWindowSize;
 }
 
 ///

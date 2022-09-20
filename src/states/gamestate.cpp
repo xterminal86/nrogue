@@ -16,7 +16,6 @@ GameState::GameState() :
 #ifdef USE_SDL
   auto& dws = Application::Instance().GetDefaultWindowSize();
   _renderDst = { 0, 0, dws.first, dws.second };
-  _resizedWindowSize = { dws.first, dws.second };
 #endif
 }
 
@@ -121,7 +120,7 @@ void GameState::AdjustWindowSize(const SDL_Event& evt)
   int ww = evt.window.data1;
   int wh = evt.window.data2;
 
-  _resizedWindowSize = { ww, wh };
+  Application::Instance().GetResizedWindowSize() = { ww, wh };
 
   auto& tws = Printer::Instance().GetTileWHScaled();
 
@@ -162,8 +161,8 @@ void GameState::TakeScreenshot()
 {
   auto r = Application::Instance().Renderer;
   SDL_Surface* sshot = SDL_CreateRGBSurface(0,
-                                            _resizedWindowSize.first,
-                                            _resizedWindowSize.second,
+                                            Application::Instance().GetResizedWindowSize().first,
+                                            Application::Instance().GetResizedWindowSize().second,
                                             32,
                                             0x00FF0000,
                                             0x0000FF00,
