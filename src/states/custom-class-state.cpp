@@ -270,9 +270,12 @@ void CustomClassState::ModifyStat(bool isIncreasing, bool shiftPressed)
 
   bool isHpMp = (statFromCursor == PlayerStats::HP || statFromCursor == PlayerStats::MP);
 
-  // NOTE: for now this is kinda hardcoded since we don't have anything else right now,
+  //
+  // NOTE: for now this is kinda hardcoded
+  // since we don't have anything else right now,
   // but this might change in the future with addition of another columns
   // like skills, equipment etc.
+  //
   bool isGrowthRate = (_cursorCols == 1);
 
   if (isIncreasing)

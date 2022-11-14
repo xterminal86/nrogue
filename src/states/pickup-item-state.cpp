@@ -42,10 +42,9 @@ void PickupItemState::ProcessInput()
           if (ok)
           {
             //
-            // NOTE: may be possible items shuffle
-            // due to reaquiring list of items
-            // in the pile in case of a big pile and
-            // separate pickup from it.
+            // NOTE: list of items may be different on second interaction
+            // if the pile was big enough and item was removed
+            // from around the middle on first interaction.
             //
             _itemsList = Map::Instance().GetGameObjectsToPickup(_playerRef->PosX, _playerRef->PosY);
             RebuildDisplayList();

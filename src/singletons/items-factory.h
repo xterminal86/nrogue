@@ -94,6 +94,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
     // STAFF,
     GameObject* CreateBlockBreakerPickaxe();
     GameObject* CreateOneRing();
+    // ARMORS
 
   protected:
     void InitSpecific() override;

@@ -7,7 +7,9 @@
 
 #include "room-helper.h"
 
-// NOTE: don't use
+//
+// NOTE: don't use this
+//
 class FromLayouts : public DGBase
 {
   public:

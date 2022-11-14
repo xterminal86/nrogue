@@ -155,6 +155,19 @@ struct ItemData
   std::function<UseResult(ItemComponent*,GameObject*)> UseCallback;
 
   size_t ItemTypeHash;
+
+  //
+  // Cannot be const because we use assignment
+  // in GameObjectsFactory::CloneItem()
+  //
+  std::map<ItemQuality, float> _costModByQ =
+  {
+    { ItemQuality::DAMAGED,     2.0f },
+    { ItemQuality::FLAWED,      1.5f },
+    { ItemQuality::NORMAL,      1.0f },
+    { ItemQuality::FINE,        0.8f },
+    { ItemQuality::EXCEPTIONAL, 0.6f }
+  };
 };
 
 #endif // ITEMDATA_H

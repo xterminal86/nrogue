@@ -1840,7 +1840,8 @@ namespace Util
 
     //
     // NOTE: item can be legitimately null
-    // if actor is a monster like a rat, for example.
+    // if actor is a monster like a rat, for example,
+    // who doesn't have equipped items.
     //
 
     if (item == nullptr)

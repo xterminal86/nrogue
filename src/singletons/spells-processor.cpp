@@ -523,10 +523,13 @@ void SpellsProcessor::ProcessScrollOfHiddenDetection(ItemComponent* scroll,
   _scrollUseMessages.push_back("You can sense nearby creatures");
 
   ItemBonusStruct b;
-  b.Type = type;
-  b.BonusValue = power; // TODO: power is unused in this effect (see Map::DrawActors())
-  b.Duration = duration;
-  b.Id = scroll->OwnerGameObject->ObjectId();
+  b.Type       = type;
+
+  // TODO: power is unused in this effect (see Map::DrawActors())
+  b.BonusValue = power;
+
+  b.Duration   = duration;
+  b.Id         = scroll->OwnerGameObject->ObjectId();
 
   _playerRef->AddEffect(b);
 }
@@ -608,7 +611,7 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll, GameObject*
 
   auto& mapRef = Map::Instance().CurrentLevel;
 
-  // TODO: blessed scroll of teleport - what to do?
+  // TODO: blessed scroll of teleport - what positive effect for player?
 
   if (scroll->Data.Prefix == ItemPrefix::UNCURSED
    || scroll->Data.Prefix == ItemPrefix::BLESSED)

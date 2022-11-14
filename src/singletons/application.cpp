@@ -884,10 +884,8 @@ void Application::InitGameStates()
 // application will be fucked up after loading
 // since "who applied" is determined by object's global id.
 //
-// In order to avoid potential BS with generation of player's object id
-// inside Player's ctor because Player is statically instantiated
-// inside Application, this method is static, so to save
-// last generated global id we'll have to do (GetNewGlobalId() - 1).
+// In order to avoid potential BS with generation of player's object id,
+// to save last generated global id we'll have to do (GetNewGlobalId() - 1).
 //
 uint64_t Application::GetNewGlobalId()
 {

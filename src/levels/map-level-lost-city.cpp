@@ -131,7 +131,11 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
                           Strings::TileNames::FlagstoneText);
           break;
 
+        //
         // TODO: can step in lava and get killed / damaged?
+        // Or maybe with some item equipped walk in lava?
+        // Right now it's instakill.
+        //
 
         case 'l':
           PlaceLavaTile(x, y);

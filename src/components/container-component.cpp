@@ -78,7 +78,7 @@ bool ContainerComponent::Add(GameObject* object)
 
 IR ContainerComponent::Interact()
 {
-  // TODO: locked containers
+  // TODO: locked containers (lockpicking maybe?)
 
   if (!CanBeOpened)
   {

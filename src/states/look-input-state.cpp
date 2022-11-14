@@ -72,7 +72,7 @@ void LookInputState::HandleInput()
       break;
 
     case VK_ENTER:
-      // FIXME: remove afterwards, implement as skill
+      // FIXME: remove afterwards, implement as skill or whatever
       DisplayMonsterStats();
       break;
 

@@ -246,8 +246,6 @@ void MainState::Update(bool forceUpdate)
 
 void MainState::ProcessMovement(const Position& dirOffsets)
 {
-  // TODO: levitation
-
   if (_playerRef->TryToMeleeAttack(dirOffsets.X, dirOffsets.Y))
   {
     _playerRef->FinishTurn();

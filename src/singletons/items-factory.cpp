@@ -836,8 +836,10 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
 
   ic->Data.WeaponType_ = type;
 
+  //
   // NOTE: innate bonuses are hardcoded and not affected by cursed BUC status,
   // so we don't force-add them like in armor creation case.
+  //
   switch (type)
   {
     case WeaponType::DAGGER:
@@ -1757,7 +1759,7 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
     Strings::ItemDefaultDescAccessory
   };
 
-  // TODO: should rings and amulets quality affect bonuses?
+  // TODO: should rings and amulets quality affect bonus / curse strength?
 
   TryToAddBonusesToItem(ic, atLeastOneBonus);
 
