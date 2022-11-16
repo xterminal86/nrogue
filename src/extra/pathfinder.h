@@ -94,6 +94,12 @@ class Pathfinder
 
     PathNode FindNodeWithPosition(const std::vector<PathNode>& list, const Position& p);
 
+    std::vector<PathNode> _openList;
+    std::vector<PathNode> _closedList;
+
+    std::vector<Position> _pathVector;
+    std::stack<Position>  _pathStack;
+
     const std::vector<Position> _eightDirs =
     {
       { -1, -1 },

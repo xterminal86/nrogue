@@ -13,10 +13,12 @@ void CellularAutomata::Generate(const Position& mapSize,
 
   _map = CreateRandomlyFilledMap(mapSize.X, mapSize.Y, initialWallChance);
 
+  //
   // If we change data in-place we would mix old and
   // new results, so we should perform check on initial map
   // and store results in temporary one and copy them after
   // whole initial map was scanned.
+  //
   auto tmp = CreateEmptyMap(mapSize.X, mapSize.Y);
 
   for (int i = 0; i < maxIterations; i++)

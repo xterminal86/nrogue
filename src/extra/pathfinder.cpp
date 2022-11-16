@@ -30,45 +30,45 @@ std::vector<Position> Pathfinder::BuildRoad(const std::vector<std::vector<char>>
   _start = start;
   _end = end;
 
-  std::vector<Position> path;
+  _pathVector.clear();
 
-  std::vector<PathNode> openList;
-  std::vector<PathNode> closedList;
+  _openList.clear();
+  _closedList.clear();
 
   PathNode node(start);
   node.CostH = Util::BlockDistance(start, end);
   node.CostF = node.CostG + node.CostH;
 
-  openList.push_back(node);
+  _openList.push_back(node);
 
-  while (!openList.empty())
+  while (!_openList.empty())
   {
-    int index = FindCheapestElement(openList);
+    int index = FindCheapestElement(_openList);
 
-    closedList.push_back(openList[index]);
+    _closedList.push_back(_openList[index]);
 
-    if (openList[index].Coordinate == end)
+    if (_openList[index].Coordinate == end)
     {
-      PathNode n = FindNodeWithPosition(closedList, end);
+      PathNode n = FindNodeWithPosition(_closedList, end);
       while (n.ParentNodePosition.X != -1 && n.ParentNodePosition.Y != -1)
       {
-        path.push_back(n.Coordinate);
-        n = FindNodeWithPosition(closedList, n.ParentNodePosition);
+        _pathVector.push_back(n.Coordinate);
+        n = FindNodeWithPosition(_closedList, n.ParentNodePosition);
       }
 
-      path.push_back(start);
+      _pathVector.push_back(start);
 
-      std::reverse(path.begin(), path.end());
+      std::reverse(_pathVector.begin(), _pathVector.end());
 
       break;
     }
 
-    LookAround(map, openList[index], openList, closedList, obstacles, eightDirs);
+    LookAround(map, _openList[index], _openList, _closedList, obstacles, eightDirs);
 
-    openList.erase(openList.begin() + index);
+    _openList.erase(_openList.begin() + index);
   }
 
-  return path;
+  return _pathVector;
 }
 
 std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
@@ -84,52 +84,52 @@ std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
   _start = start;
   _end = end;
 
-  std::stack<Position> path;
+  _pathStack = std::stack<Position>();
 
-  std::vector<PathNode> openList;
-  std::vector<PathNode> closedList;
+  _openList.clear();
+  _closedList.clear();
 
   PathNode node(start);
   node.CostH = Util::BlockDistance(start, end);
   node.CostF = node.CostG + node.CostH;
 
-  openList.push_back(node);
+  _openList.push_back(node);
 
-  while (!openList.empty())
+  while (!_openList.empty())
   {
-    if (maxPathLength != 0 && closedList.size() > maxPathLength)
+    if (maxPathLength != 0 && _closedList.size() > maxPathLength)
     {
       break;
     }
 
-    int index = FindCheapestElement(openList);
+    int index = FindCheapestElement(_openList);
 
-    closedList.push_back(openList[index]);
+    _closedList.push_back(_openList[index]);
 
-    if (openList[index].Coordinate == end)
+    if (_openList[index].Coordinate == end)
     {
-      PathNode n = FindNodeWithPosition(closedList, end);
+      PathNode n = FindNodeWithPosition(_closedList, end);
       while (n.ParentNodePosition.X != -1 && n.ParentNodePosition.Y != -1)
       {
-        path.push(n.Coordinate);
-        n = FindNodeWithPosition(closedList, n.ParentNodePosition);
+        _pathStack.push(n.Coordinate);
+        n = FindNodeWithPosition(_closedList, n.ParentNodePosition);
       }
 
       break;
     }
 
     LookAround(mapRef,
-               openList[index],
-               openList,
-               closedList,
+               _openList[index],
+               _openList,
+               _closedList,
                mapTilesToIgnore,
                ignoreActors,
                eightDirs);
 
-    openList.erase(openList.begin() + index);
+    _openList.erase(_openList.begin() + index);
   }
 
-  return path;
+  return _pathStack;
 }
 
 void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
