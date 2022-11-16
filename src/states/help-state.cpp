@@ -6,13 +6,13 @@
 
 HelpState::HelpState()
 {
-  std::string s = Util::Instance().StringFormat("'%c' '%c' '%c'", ALT_K7, ALT_K8, ALT_K9);
+  std::string s = Util::StringFormat("'%c' '%c' '%c'", ALT_K7, ALT_K8, ALT_K9);
   _keymap[0] = s;
 
-  s = Util::Instance().StringFormat("'%c' '%c' '%c' or numpad for movement", ALT_K4, ALT_K5, ALT_K6);
+  s = Util::StringFormat("'%c' '%c' '%c' or numpad for movement", ALT_K4, ALT_K5, ALT_K6);
   _keymap[2] = s;
 
-  s = Util::Instance().StringFormat("'%c' '%c' '%c'", ALT_K1, ALT_K2, ALT_K3);
+  s = Util::StringFormat("'%c' '%c' '%c'", ALT_K1, ALT_K2, ALT_K3);
   _keymap[4] = s;
 
   for (auto& line : _keymap)
@@ -62,7 +62,7 @@ void HelpState::HandleInput()
       break;
   }
 
-  _scrollPosition = Util::Instance().Clamp(_scrollPosition, 0, scrollLimit);
+  _scrollPosition = Util::Clamp(_scrollPosition, 0, scrollLimit);
 }
 
 void HelpState::Update(bool forceUpdate)

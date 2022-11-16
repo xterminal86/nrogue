@@ -36,7 +36,7 @@ std::vector<Position> Pathfinder::BuildRoad(const std::vector<std::vector<char>>
   _closedList.clear();
 
   PathNode node(start);
-  node.CostH = Util::Instance().BlockDistance(start, end);
+  node.CostH = Util::BlockDistance(start, end);
   node.CostF = node.CostG + node.CostH;
 
   _openList.push_back(node);
@@ -90,7 +90,7 @@ std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
   _closedList.clear();
 
   PathNode node(start);
-  node.CostH = Util::Instance().BlockDistance(start, end);
+  node.CostH = Util::BlockDistance(start, end);
   node.CostF = node.CostG + node.CostH;
 
   _openList.push_back(node);
@@ -182,7 +182,7 @@ void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
       if (newG < nodeAround.CostG)
       {
         nodeAround.CostG = newG;
-        nodeAround.CostH = Util::Instance().BlockDistance(nodeAround.Coordinate, _end);
+        nodeAround.CostH = Util::BlockDistance(nodeAround.Coordinate, _end);
         nodeAround.CostF = nodeAround.CostG + nodeAround.CostH;
         nodeAround.ParentNodePosition = currentNode.Coordinate;
       }
@@ -190,7 +190,7 @@ void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
     else
     {
       nodeAround.CostG = currentNode.CostG + TraverseCost(currentNode.Coordinate, nodeAround.Coordinate);
-      nodeAround.CostH = Util::Instance().BlockDistance(nodeAround.Coordinate, _end);
+      nodeAround.CostH = Util::BlockDistance(nodeAround.Coordinate, _end);
       nodeAround.CostF = nodeAround.CostG + nodeAround.CostH;
 
       openList.push_back(nodeAround);
@@ -268,7 +268,7 @@ void Pathfinder::LookAround(MapLevelBase* mapRef,
       if (newG < nodeAround.CostG)
       {
         nodeAround.CostG = newG;
-        nodeAround.CostH = Util::Instance().BlockDistance(nodeAround.Coordinate, _end);
+        nodeAround.CostH = Util::BlockDistance(nodeAround.Coordinate, _end);
         nodeAround.CostF = nodeAround.CostG + nodeAround.CostH;
         nodeAround.ParentNodePosition = currentNode.Coordinate;
       }
@@ -276,7 +276,7 @@ void Pathfinder::LookAround(MapLevelBase* mapRef,
     else
     {
       nodeAround.CostG = currentNode.CostG + TraverseCost(currentNode.Coordinate, nodeAround.Coordinate);
-      nodeAround.CostH = Util::Instance().BlockDistance(nodeAround.Coordinate, _end);
+      nodeAround.CostH = Util::BlockDistance(nodeAround.Coordinate, _end);
       nodeAround.CostF = nodeAround.CostG + nodeAround.CostH;
 
       openList.push_back(nodeAround);

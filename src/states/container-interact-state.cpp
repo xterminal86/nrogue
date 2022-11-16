@@ -135,7 +135,7 @@ void ContainerInteractState::DisplayPlayerInventory()
 
     if (ic->Data.IsStackable)
     {
-      auto stackAmount = Util::Instance().StringFormat("(%i)", ic->Data.Amount);
+      auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
       Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1,
                                   yPos + index,
                                   stackAmount,
@@ -144,7 +144,7 @@ void ContainerInteractState::DisplayPlayerInventory()
     }
     else if (ic->Data.IsEquipped)
     {
-      auto equipStatus = Util::Instance().StringFormat("E", ic->Data.Amount);
+      auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
       Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1,
                                   yPos + index,
                                   equipStatus,
@@ -152,7 +152,7 @@ void ContainerInteractState::DisplayPlayerInventory()
                                   Colors::WhiteColor);
     }
 
-    uint32_t textColor = Util::Instance().GetItemInventoryColor(ic->Data);
+    uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (_playerSide && index == _inventoryItemIndex)
     {
@@ -215,7 +215,7 @@ void ContainerInteractState::DisplayContainerInventory()
 
     if (ic->Data.IsStackable)
     {
-      auto stackAmount = Util::Instance().StringFormat("(%i)", ic->Data.Amount);
+      auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
       Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1,
                                   yPos + index,
                                   stackAmount,
@@ -224,7 +224,7 @@ void ContainerInteractState::DisplayContainerInventory()
     }
     else if (ic->Data.IsEquipped)
     {
-      auto equipStatus = Util::Instance().StringFormat("E", ic->Data.Amount);
+      auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
       Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1,
                                   yPos + index,
                                   equipStatus,
@@ -232,7 +232,7 @@ void ContainerInteractState::DisplayContainerInventory()
                                   Colors::WhiteColor);
     }
 
-    uint32_t textColor = Util::Instance().GetItemInventoryColor(ic->Data);
+    uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (!_playerSide && index == _inventoryItemIndex)
     {
@@ -285,7 +285,7 @@ void ContainerInteractState::CheckIndexLimits()
     }
   }
 
-  _inventoryItemIndex = Util::Instance().Clamp(_inventoryItemIndex, 0, invSize);
+  _inventoryItemIndex = Util::Clamp(_inventoryItemIndex, 0, invSize);
 }
 
 void ContainerInteractState::TryToTransferItem()

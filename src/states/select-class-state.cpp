@@ -44,7 +44,7 @@ void SelectClassState::HandleInput()
       break;
   }
 
-  _menuIndex = Util::Instance().Clamp(_menuIndex, 0, _menuItems.size() - 1);
+  _menuIndex = Util::Clamp(_menuIndex, 0, _menuItems.size() - 1);
 
   Application::Instance().PlayerInstance.SelectedClass = _menuIndex;
 }

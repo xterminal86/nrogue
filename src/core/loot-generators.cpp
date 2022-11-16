@@ -15,7 +15,7 @@ namespace LootGenerators
       { ItemType::NOTHING, 20 }
     };
 
-    auto kvp = Util::Instance().WeightedRandom(lootTable);
+    auto kvp = Util::WeightedRandom(lootTable);
     switch (kvp.first)
     {
       case ItemType::FOOD:
@@ -40,7 +40,7 @@ namespace LootGenerators
       { ItemType::NOTHING, 45 }
     };
 
-    auto kvp = Util::Instance().WeightedRandom(lootTable);
+    auto kvp = Util::WeightedRandom(lootTable);
     switch (kvp.first)
     {
       case ItemType::FOOD:
@@ -52,7 +52,7 @@ namespace LootGenerators
           { FoodType::RATIONS, 5 },
           { FoodType::MEAT,    8 },
         };
-        auto f = Util::Instance().WeightedRandom(foodTable);
+        auto f = Util::WeightedRandom(foodTable);
 
         auto food = ItemsFactory::Instance().CreateFood(go->PosX, go->PosY, f.first);
         Map::Instance().PlaceGameObject(food);

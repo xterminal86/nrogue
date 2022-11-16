@@ -2,7 +2,6 @@
 #define TASKTRYPICKUPITEMS_H
 
 #include "behaviour-tree.h"
-#include "enumerations.h"
 
 using Item   = std::pair<int, GameObject*>;
 using Items  = std::vector<Item>;

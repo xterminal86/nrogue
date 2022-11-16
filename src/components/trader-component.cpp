@@ -70,12 +70,12 @@ void TraderComponent::CreateClericItems()
 {
   std::string shopName = GlobalConstants::ShopNameByType.at(_traderType);
   std::string npcName = NpcRef->Data.Name;
-  ShopTitle = Util::Instance().StringFormat(" %s's %s ", npcName.data(), shopName.data());
+  ShopTitle = Util::StringFormat(" %s's %s ", npcName.data(), shopName.data());
 
   for (int i = 0; i < _itemsToCreate; i++)
   {
-    auto itemPair   = Util::Instance().WeightedRandom(_clericItemsWeights);
-    auto prefixPair = Util::Instance().WeightedRandom(_clericPrefixWeights);
+    auto itemPair   = Util::WeightedRandom(_clericItemsWeights);
+    auto prefixPair = Util::WeightedRandom(_clericPrefixWeights);
 
     GameObject* go = nullptr;
 
@@ -83,7 +83,7 @@ void TraderComponent::CreateClericItems()
     {
       case ItemType::POTION:
       {
-        auto potionPair = Util::Instance().WeightedRandom(_clericPotionWeights);
+        auto potionPair = Util::WeightedRandom(_clericPotionWeights);
         switch (potionPair.first)
         {
           case PotionType::HEALING_POTION:
@@ -135,12 +135,12 @@ void TraderComponent::CreateCookItems()
 {
   std::string shopName = GlobalConstants::ShopNameByType.at(_traderType);
   std::string npcName = NpcRef->Data.Name;
-  ShopTitle = Util::Instance().StringFormat(" %s's %s ", npcName.data(), shopName.data());
+  ShopTitle = Util::StringFormat(" %s's %s ", npcName.data(), shopName.data());
 
   for (int i = 0; i < _itemsToCreate; i++)
   {
-    auto itemPair   = Util::Instance().WeightedRandom(_cookItemsWeights);
-    auto prefixPair = Util::Instance().WeightedRandom(_cookPrefixWeights);
+    auto itemPair   = Util::WeightedRandom(_cookItemsWeights);
+    auto prefixPair = Util::WeightedRandom(_cookPrefixWeights);
 
     GameObject* go = ItemsFactory::Instance().CreateFood(0, 0, itemPair.first, prefixPair.first, true);
 
@@ -152,7 +152,7 @@ void TraderComponent::CreateJunkerItems()
 {
   std::string shopName = GlobalConstants::ShopNameByType.at(_traderType);
   std::string npcName = NpcRef->Data.Name;
-  ShopTitle = Util::Instance().StringFormat(" %s's %s ", npcName.data(), shopName.data());
+  ShopTitle = Util::StringFormat(" %s's %s ", npcName.data(), shopName.data());
 
   for (int i = 0; i < _itemsToCreate; i++)
   {
@@ -168,12 +168,12 @@ void TraderComponent::CreateBlacksmithItems()
 {
   std::string shopName = GlobalConstants::ShopNameByType.at(_traderType);
   std::string npcName = NpcRef->Data.Name;
-  ShopTitle = Util::Instance().StringFormat(" %s's %s ", npcName.data(), shopName.data());
+  ShopTitle = Util::StringFormat(" %s's %s ", npcName.data(), shopName.data());
 
   for (int i = 0; i < _itemsToCreate; i++)
   {
-    auto itemPair   = Util::Instance().WeightedRandom(_blacksmithItemsWeights);
-    auto prefixPair = Util::Instance().WeightedRandom(_blacksmithPrefixWeights);
+    auto itemPair   = Util::WeightedRandom(_blacksmithItemsWeights);
+    auto prefixPair = Util::WeightedRandom(_blacksmithPrefixWeights);
 
     GameObject* go = nullptr;
 
@@ -189,7 +189,7 @@ void TraderComponent::CreateBlacksmithItems()
 
       case ItemType::ARMOR:
       {
-        auto armorPair = Util::Instance().WeightedRandom(_blacksmithArmorWeights);
+        auto armorPair = Util::WeightedRandom(_blacksmithArmorWeights);
         go = ItemsFactory::Instance().CreateArmor(0, 0, armorPair.first, prefixPair.first);
       }
       break;

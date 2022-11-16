@@ -28,8 +28,8 @@ void BTSDecompiler::InitSpecific()
     taskParamsByName.insert({ kvp.first, opcode });
   }
 
-  _taskByOpcode  = Util::Instance().FlipMap(opcodesByName);
-  _paramByOpcode = Util::Instance().FlipMap(taskParamsByName);
+  _taskByOpcode  = Util::FlipMap(opcodesByName);
+  _paramByOpcode = Util::FlipMap(taskParamsByName);
 }
 
 std::string BTSDecompiler::Decompile(const std::vector<uint8_t>& bytecode)
@@ -66,7 +66,7 @@ std::string BTSDecompiler::Decompile(const std::vector<uint8_t>& bytecode)
     {
       taskName = taskNameVal;
       strIndent = std::string(indent, ' ');
-      script += Util::Instance().StringFormat("%s[%s", strIndent.data(), taskName.data());
+      script += Util::StringFormat("%s[%s", strIndent.data(), taskName.data());
     }
 
     index += 2;
@@ -84,7 +84,7 @@ std::string BTSDecompiler::Decompile(const std::vector<uint8_t>& bytecode)
       while (curByte != ParamsEnd)
       {
         std::string paramType = _paramByOpcode[curByte];
-        script += Util::Instance().StringFormat(" p%i=\"%s\"", paramCount, paramType.data());
+        script += Util::StringFormat(" p%i=\"%s\"", paramCount, paramType.data());
         paramCount++;
         index++;
         curByte = bytecode[index];

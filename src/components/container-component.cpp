@@ -54,7 +54,7 @@ bool ContainerComponent::Add(GameObject* object)
       }
     }
 
-    //auto msg = Util::Instance().StringFormat("Picked up 0x%X", object);
+    //auto msg = Util::StringFormat("Picked up 0x%X", object);
     //Logger::Instance().Print(msg);
 
     if (!foundStack)
@@ -82,7 +82,7 @@ IR ContainerComponent::Interact()
 
   if (!CanBeOpened)
   {
-    std::string failMsg = Util::Instance().StringFormat("%s can't be opened!", OwnerGameObject->ObjectName.data());
+    std::string failMsg = Util::StringFormat("%s can't be opened!", OwnerGameObject->ObjectName.data());
     Printer::Instance().AddMessage(failMsg);
     return { InteractionResult::FAILURE, GameStates::MAIN_STATE };
   }
@@ -91,7 +91,7 @@ IR ContainerComponent::Interact()
   ContainerInteractState* cis = static_cast<ContainerInteractState*>(s);
   cis->SetContainerRef(this);
 
-  std::string succMsg = Util::Instance().StringFormat("You open %s", OwnerGameObject->ObjectName.data());
+  std::string succMsg = Util::StringFormat("You open %s", OwnerGameObject->ObjectName.data());
   Printer::Instance().AddMessage(succMsg);
 
   return { InteractionResult::SUCCESS, GameStates::CONTAINER_INTERACT_STATE };

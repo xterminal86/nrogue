@@ -77,7 +77,7 @@ namespace ItemUseHandlers
       break;
     }
 
-    if (Util::Instance().IsPlayer(user))
+    if (Util::IsPlayer(user))
     {
       Printer::Instance().AddMessage(message);
     }
@@ -128,7 +128,7 @@ namespace ItemUseHandlers
 
     user->Attrs.MP.AddMin(amount);
 
-    if (Util::Instance().IsPlayer(user))
+    if (Util::IsPlayer(user))
     {
       Printer::Instance().AddMessage(message);
     }
@@ -184,7 +184,7 @@ namespace ItemUseHandlers
       break;
     }
 
-    if (Util::Instance().IsPlayer(user))
+    if (Util::IsPlayer(user))
     {
       Printer::Instance().AddMessage(message);
     }
@@ -230,9 +230,9 @@ namespace ItemUseHandlers
     }
 
     statCur += amount;
-    statCur = Util::Instance().Clamp(statCur, 0, statMax);
+    statCur = Util::Clamp(statCur, 0, statMax);
 
-    if (Util::Instance().IsPlayer(user))
+    if (Util::IsPlayer(user))
     {
       Printer::Instance().AddMessage(message);
     }
@@ -289,7 +289,7 @@ namespace ItemUseHandlers
       break;
     }
 
-    if (Util::Instance().IsPlayer(user))
+    if (Util::IsPlayer(user))
     {
       Printer::Instance().AddMessage(message);
     }
@@ -316,7 +316,7 @@ namespace ItemUseHandlers
           int iterations = lostLevel - user->Attrs.Lvl.Get();
           for (int i = 0; i < iterations; i++)
           {
-            if (Util::Instance().IsPlayer(user))
+            if (Util::IsPlayer(user))
             {
               static_cast<Player*>(user)->LevelUpSilent();
             }
@@ -335,7 +335,7 @@ namespace ItemUseHandlers
       {
         if (user->Attrs.Lvl.Get() < lostLevel)
         {
-          if (Util::Instance().IsPlayer(user))
+          if (Util::IsPlayer(user))
           {
             static_cast<Player*>(user)->LevelUpSilent();
           }
@@ -353,7 +353,7 @@ namespace ItemUseHandlers
       {
         if (user->Attrs.Lvl.Get() != 1)
         {
-          if (Util::Instance().IsPlayer(user))
+          if (Util::IsPlayer(user))
           {
             static_cast<Player*>(user)->LevelDownSilent();
           }
@@ -368,7 +368,7 @@ namespace ItemUseHandlers
       break;
     }
 
-    if (Util::Instance().IsPlayer(user))
+    if (Util::IsPlayer(user))
     {
       Printer::Instance().AddMessage(message);
     }
@@ -410,7 +410,7 @@ namespace ItemUseHandlers
 
     user->AwardExperience(amount);
 
-    if (Util::Instance().IsPlayer(user))
+    if (Util::IsPlayer(user))
     {
       Printer::Instance().AddMessage(message);
     }
@@ -480,7 +480,7 @@ namespace ItemUseHandlers
 
     userStats.at(item->Data.PotionType_).Set(newValue);
 
-    if (Util::Instance().IsPlayer(user))
+    if (Util::IsPlayer(user))
     {
       Printer::Instance().AddMessage(message);
     }
@@ -544,7 +544,7 @@ namespace ItemUseHandlers
 
     std::vector<std::string> eatMessages;
 
-    eatMessages.push_back(Util::Instance().StringFormat("You eat %s...", objName.data()));
+    eatMessages.push_back(Util::StringFormat("You eat %s...", objName.data()));
 
     switch (item->Data.Prefix)
     {
@@ -566,7 +566,7 @@ namespace ItemUseHandlers
       {
         eatMessages.push_back("Disgusting!");
 
-        if (Util::Instance().Rolld100(50))
+        if (Util::Rolld100(50))
         {
           user->Attrs.Hunger += item->Data.Cost;
 
@@ -593,11 +593,11 @@ namespace ItemUseHandlers
       break;
     }
 
-    user->Attrs.Hunger = Util::Instance().Clamp(user->Attrs.Hunger,
+    user->Attrs.Hunger = Util::Clamp(user->Attrs.Hunger,
                                      0,
                                      user->Attrs.HungerRate.Get());
 
-    if (Util::Instance().IsPlayer(user))
+    if (Util::IsPlayer(user))
     {
       for (auto& msg : eatMessages)
       {

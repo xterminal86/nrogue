@@ -18,7 +18,7 @@ class Logger : public Singleton<Logger>
     template <typename ... Args>
     void Printf(const std::string& format, Args ... args)
     {
-      std::string str = Util::Instance().StringFormat(format, args ...);
+      std::string str = Util::StringFormat(format, args ...);
       Print(str);
     }
 

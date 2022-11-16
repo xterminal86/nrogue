@@ -115,8 +115,8 @@ void CustomClassState::HandleInput()
       break;
     }
 
-    _cursorCols = Util::Instance().Clamp(_cursorCols, 0, 1);
-    _cursorRows = Util::Instance().Clamp(_cursorRows, 0, _playerStatByCursorRows.size() - 1);
+    _cursorCols = Util::Clamp(_cursorCols, 0, 1);
+    _cursorRows = Util::Clamp(_cursorRows, 0, _playerStatByCursorRows.size() - 1);
 
     if (_playerStatByCursorRows[_cursorRows] == PlayerStats::HP
      || _playerStatByCursorRows[_cursorRows] == PlayerStats::MP)
@@ -134,7 +134,7 @@ void CustomClassState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    std::string pointsStr = Util::Instance().StringFormat("POINTS: %i", _points);
+    std::string pointsStr = Util::StringFormat("POINTS: %i", _points);
     Printer::Instance().PrintFB(_twHalf,
                                 _startY,
                                 pointsStr,
@@ -242,8 +242,8 @@ sspair CustomClassState::GetStringsForStat(PlayerStats statType)
 
   if (statType != PlayerStats::HP && statType != PlayerStats::MP)
   {
-    res.first  = Util::Instance().StringFormat("%s:  %i  ", statName.data(), _statDataByType[statType].first);
-    res.second = Util::Instance().StringFormat("(%i%)", _statDataByType[statType].second);
+    res.first  = Util::StringFormat("%s:  %i  ", statName.data(), _statDataByType[statType].first);
+    res.second = Util::StringFormat("(%i%)", _statDataByType[statType].second);
   }
   else
   {
@@ -253,8 +253,8 @@ sspair CustomClassState::GetStringsForStat(PlayerStats statType)
       stars[i] = '*';
     }
 
-    res.first = Util::Instance().StringFormat("%s:  %i  ", statName.data(), _statDataByType[statType].first);
-    res.second = Util::Instance().StringFormat("(%s)", stars.data());
+    res.first = Util::StringFormat("%s:  %i  ", statName.data(), _statDataByType[statType].first);
+    res.second = Util::StringFormat("(%s)", stars.data());
   }
 
   return res;

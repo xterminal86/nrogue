@@ -11,7 +11,7 @@ void MenuState::Init()
   _pictureX = _twHalf - _picture[0].length() / 2;
   _pictureY = _thHalf - _picture.size() / 4 + 1;;
 
-  _terminalSize = Util::Instance().StringFormat("terminal size: %ix%i", _tw, _th);
+  _terminalSize = Util::StringFormat("terminal size: %ix%i", _tw, _th);
 
 #ifdef USE_SDL
   _borderSize = { _tw - 1, _th - 1 };

@@ -23,7 +23,7 @@ void Logger::Print(const std::string &stringToPrint, bool error)
 {
   if (_enabled)
   {
-    auto str = Util::Instance().GetCurrentDateTimeString();
+    auto str = Util::GetCurrentDateTimeString();
     _logFile << str << (error ? " !!! " : " *** ");
 
     _logFile << stringToPrint << "\n";

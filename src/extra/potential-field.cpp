@@ -114,7 +114,7 @@ void PotentialField::LookAround(const Position& mapPos, std::queue<Position>& ce
 
   auto IsCellBlocked = [this, isFlying, curLvl](const Position& pos)
   {
-    if (!Util::Instance().IsInsideMap(pos, curLvl->MapSize))
+    if (!Util::IsInsideMap(pos, curLvl->MapSize))
     {
       return true;
     }

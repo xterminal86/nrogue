@@ -6,7 +6,6 @@
 #include "player.h"
 #include "logger.h"
 #include "printer.h"
-#include "util.h"
 
 //
 // NOTE:
@@ -43,7 +42,7 @@ TaskAttackRanged::TaskAttackRanged(GameObject* objectToControl,
     _attackType = RangedAttackType::UNDEFINED;
   }
 
-  auto f = Util::Instance().FlipMap(GlobalConstants::SpellShortNameByType);
+  auto f = Util::FlipMap(GlobalConstants::SpellShortNameByType);
   if (f.count(spellType) == 1)
   {
     _spellType = f.at(spellType);
@@ -75,19 +74,19 @@ BTResult TaskAttackRanged::ProcessSpellAttack()
   Position from = _objectToControl->GetPosition();
   Position to   = _playerRef->GetPosition();
 
-  int chanceToHit = Util::Instance().CalculateHitChanceRanged(from,
-                                                                to,
-                                                                _objectToControl,
-                                                                nullptr,
-                                                                false);
+  int chanceToHit = Util::CalculateHitChanceRanged(from,
+                                                   to,
+                                                   _objectToControl,
+                                                   nullptr,
+                                                   false);
 
-  if (Util::Instance().Rolld100(chanceToHit) == false)
+  if (Util::Rolld100(chanceToHit) == false)
   {
-    to = Util::Instance().GetRandomPointAround(_objectToControl, nullptr, to);
+    to = Util::GetRandomPointAround(_objectToControl, nullptr, to);
   }
 
-  auto line = Util::Instance().BresenhamLine(from, to);
-  GameObject* hit = Util::Instance().GetFirstObjectOnTheLine(line);
+  auto line = Util::BresenhamLine(from, to);
+  GameObject* hit = Util::GetFirstObjectOnTheLine(line);
 
   if (hit != nullptr)
   {
@@ -109,8 +108,8 @@ BTResult TaskAttackRanged::ProcessSpellAttack()
 
   int bonus = _objectToControl->Attrs.Mag.Get();
 
-  int centralDamage = Util::Instance().RollDices(baseDamagePair.first,
-                                                  baseDamagePair.second);
+  int centralDamage = Util::RollDices(baseDamagePair.first,
+                                      baseDamagePair.second);
 
   centralDamage += bonus;
 
@@ -118,33 +117,33 @@ BTResult TaskAttackRanged::ProcessSpellAttack()
   {
     case SpellType::LASER:
     {
-      Util::Instance().DrawLaserAttack(line);
-      Util::Instance().ProcessLaserAttack(_objectToControl, baseDamagePair, to);
+      Util::DrawLaserAttack(line);
+      Util::ProcessLaserAttack(_objectToControl, baseDamagePair, to);
     }
     break;
 
     case SpellType::FIREBALL:
     {
-      Util::Instance().LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
+      Util::LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
       ProcessAoEDamage(hit, nullptr, centralDamage, true);
     }
     break;
 
     case SpellType::NONE:
     {
-      Util::Instance().LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
+      Util::LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
     }
     break;
 
     default:
     {
-      Util::Instance().LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
-      Util::Instance().ProcessMagicalDamage(hit, _objectToControl, centralDamage);
+      Util::LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
+      Util::ProcessMagicalDamage(hit, _objectToControl, centralDamage);
     }
     break;
   }
 
-  return Util::Instance().IsPlayer(hit) ? BTResult::Success : BTResult::Failure;
+  return Util::IsPlayer(hit) ? BTResult::Success : BTResult::Failure;
 }
 
 BTResult TaskAttackRanged::ProcessWeaponAttack()
@@ -175,19 +174,19 @@ BTResult TaskAttackRanged::ProcessWeaponAttack()
     return r;
   }
 
-  int chanceToHit = Util::Instance().CalculateHitChanceRanged(from,
-                                                                 to,
-                                                                 _objectToControl,
-                                                                 weapon,
-                                                                 false);
+  int chanceToHit = Util::CalculateHitChanceRanged(from,
+                                                   to,
+                                                   _objectToControl,
+                                                   weapon,
+                                                   false);
 
-  if (Util::Instance().Rolld100(chanceToHit) == false)
+  if (Util::Rolld100(chanceToHit) == false)
   {
-    to = Util::Instance().GetRandomPointAround(_objectToControl, weapon, to);
+    to = Util::GetRandomPointAround(_objectToControl, weapon, to);
   }
 
-  auto line = Util::Instance().BresenhamLine(from, to);
-  GameObject* hit = Util::Instance().GetFirstObjectOnTheLine(line);
+  auto line = Util::BresenhamLine(from, to);
+  GameObject* hit = Util::GetFirstObjectOnTheLine(line);
 
   //
   // If something is hit, launch projectile up to this point
@@ -206,31 +205,31 @@ BTResult TaskAttackRanged::ProcessWeaponAttack()
 
   if (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON)
   {
-    Util::Instance().LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
+    Util::LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
     ProcessBows(weapon, arrows, hit);
   }
   else if (weapon->Data.ItemType_ == ItemType::WAND)
   {
     if (weapon->Data.SpellHeld.SpellType_ == SpellType::LASER)
     {
-      Util::Instance().DrawLaserAttack(line);
-      Util::Instance().ProcessLaserAttack(_objectToControl, weapon, to);
+      Util::DrawLaserAttack(line);
+      Util::ProcessLaserAttack(_objectToControl, weapon, to);
     }
     else
     {
-      Util::Instance().LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
+      Util::LaunchProjectile(from, to, _projectile, _fgColor, _bgColor);
       ProcessWand(weapon, hit);
     }
   }
 
-  return Util::Instance().IsPlayer(hit) ? BTResult::Success : BTResult::Failure;
+  return Util::IsPlayer(hit) ? BTResult::Success : BTResult::Failure;
 }
 
 void TaskAttackRanged::ProcessBows(ItemComponent* weapon,
                                    ItemComponent* arrows,
                                    GameObject* what)
 {
-  int dmg = Util::Instance().CalculateDamageValue(_objectToControl,
+  int dmg = Util::CalculateDamageValue(_objectToControl,
                                        what,
                                        weapon,
                                        false);
@@ -279,7 +278,7 @@ void TaskAttackRanged::ProcessBows(ItemComponent* weapon,
     arrows->Break(_objectToControl);
   }
 
-  Util::Instance().TryToDamageEquipment(_objectToControl, weapon, -1);
+  Util::TryToDamageEquipment(_objectToControl, weapon, -1);
 }
 
 void TaskAttackRanged::ProcessWand(ItemComponent* wand, GameObject* what)
@@ -292,7 +291,7 @@ void TaskAttackRanged::ProcessWand(ItemComponent* wand, GameObject* what)
 
   int bonus = _objectToControl->Attrs.Mag.Get();
 
-  int centralDamage = Util::Instance().RollDices(baseDamagePair.first,
+  int centralDamage = Util::RollDices(baseDamagePair.first,
                                       baseDamagePair.second);
 
   centralDamage += bonus;
@@ -313,7 +312,7 @@ void TaskAttackRanged::ProcessWand(ItemComponent* wand, GameObject* what)
       break;
 
     case SpellType::TELEPORT:
-      Util::Instance().ProcessTeleport(what);
+      Util::ProcessTeleport(what);
       break;
 
     case SpellType::NONE:
@@ -345,7 +344,7 @@ void TaskAttackRanged::ProcessWandDamage(GameObject* target,
 
   if (actor != nullptr)
   {
-    auto ret = Util::Instance().TryToDamageObject(actor,
+    auto ret = Util::TryToDamageObject(actor,
                                        _objectToControl,
                                        damage,
                                        againstRes);
@@ -371,7 +370,7 @@ void TaskAttackRanged::ProcessWandDamage(GameObject* target,
     auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
     {
-      Util::Instance().TryToDamageObject(obj,
+      Util::TryToDamageObject(obj,
                               _objectToControl,
                               damage,
                               againstRes);
@@ -383,7 +382,7 @@ void TaskAttackRanged::ProcessWandDamage(GameObject* target,
       auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
       if (so != nullptr)
       {
-        Util::Instance().TryToDamageObject(so,
+        Util::TryToDamageObject(so,
                                 _objectToControl,
                                 damage,
                                 againstRes);
@@ -405,7 +404,7 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
 
   for (auto& p : pointsAffected)
   {
-    int d = Util::Instance().LinearDistance(target->GetPosition(), p);
+    int d = Util::LinearDistance(target->GetPosition(), p);
     if (d == 0)
     {
       d = 1;
@@ -418,22 +417,22 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
     //
     if (_playerRef->GetPosition() == p)
     {
-      Util::Instance().TryToDamageObject(_playerRef, from, dmgHere, againstRes);
+      Util::TryToDamageObject(_playerRef, from, dmgHere, againstRes);
     }
 
     auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
-    Util::Instance().TryToDamageObject(actor, from, dmgHere, againstRes);
+    Util::TryToDamageObject(actor, from, dmgHere, againstRes);
 
     auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
     {
-      Util::Instance().TryToDamageObject(obj, from, dmgHere, againstRes);
+      Util::TryToDamageObject(obj, from, dmgHere, againstRes);
     }
 
     auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
     if (so != nullptr)
     {
-      Util::Instance().TryToDamageObject(so, from, dmgHere, againstRes);
+      Util::TryToDamageObject(so, from, dmgHere, againstRes);
     }
 
     //
@@ -441,7 +440,7 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
     //
     if (_objectToControl->GetPosition() == p)
     {
-      Util::Instance().TryToDamageObject(_objectToControl,
+      Util::TryToDamageObject(_objectToControl,
                               _objectToControl,
                               dmgHere,
                               againstRes);

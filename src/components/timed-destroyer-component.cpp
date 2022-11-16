@@ -17,7 +17,7 @@ void TimedDestroyerComponent::Update()
 
   if (_time <= 0)
   {
-    if (Util::Instance().IsFunctionValid(_onTimerEnd))
+    if (Util::IsFunctionValid(_onTimerEnd))
     {
       _onTimerEnd();
     }

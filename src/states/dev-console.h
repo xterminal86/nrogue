@@ -173,7 +173,7 @@ class DevConsole : public GameState
       StdOut("Valid types:");
       for (auto& kvp : map)
       {
-        std::string str = Util::Instance().StringFormat("%i = %s", (int)kvp.first, kvp.second.data());
+        std::string str = Util::StringFormat("%i = %s", (int)kvp.first, kvp.second.data());
         StdOut(str);
       }
     }

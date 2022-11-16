@@ -64,7 +64,7 @@ void MapLevelNether::CreateLevel()
 
   if (MapType_ != MapType::NETHER_5)
   {
-    if (Util::Instance().Rolld100(_shrineRollChance))
+    if (Util::Rolld100(_shrineRollChance))
     {
       PlaceRandomShrine(lb);
     }
@@ -105,7 +105,7 @@ void MapLevelNether::ConstructFromBuilder(LevelBuilder& lb)
         {
           GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, DoorMaterials::STONE);
 
-          if (Util::Instance().Rolld100(15))
+          if (Util::Rolld100(15))
           {
             DoorComponent* dc = door->GetComponent<DoorComponent>();
             dc->OpenedBy = GlobalConstants::OpenedByNobody;

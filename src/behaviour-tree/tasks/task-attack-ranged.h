@@ -2,9 +2,6 @@
 #define TASKATTACKRANGED_H
 
 #include "behaviour-tree.h"
-#include "enumerations.h"
-
-class ItemComponent;
 
 enum class RangedAttackType
 {

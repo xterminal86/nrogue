@@ -212,7 +212,7 @@ void InventoryState::HandleInput()
   }
 
   int inventorySize = _playerRef->Inventory->Contents.size();
-  _selectedIndex = Util::Instance().Clamp(_selectedIndex, 0, inventorySize - 1);
+  _selectedIndex = Util::Clamp(_selectedIndex, 0, inventorySize - 1);
 }
 
 void InventoryState::Update(bool forceUpdate)
@@ -238,7 +238,7 @@ void InventoryState::Update(bool forceUpdate)
 
       if (ic->Data.IsStackable || (ic->Data.IsChargeable && ic->Data.IsIdentified))
       {
-        auto stackAmount = Util::Instance().StringFormat("(%i)", ic->Data.Amount);
+        auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
         if ((ic->Data.ItemType_ == ItemType::ARROWS
           || ic->Data.ItemType_ == ItemType::WAND)
             && ic->Data.IsEquipped)
@@ -254,7 +254,7 @@ void InventoryState::Update(bool forceUpdate)
       }
       else if (ic->Data.IsEquipped)
       {
-        auto equipStatus = Util::Instance().StringFormat("E", ic->Data.Amount);
+        auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
         Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 2,
                                     2 + yPos,
                                     equipStatus,
@@ -262,7 +262,7 @@ void InventoryState::Update(bool forceUpdate)
                                     Colors::WhiteColor);
       }
 
-      uint32_t textColor = Util::Instance().GetItemInventoryColor(ic->Data);
+      uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
       DrawSelectionBar(yPos, nameInInventory, textColor);
 
@@ -428,11 +428,11 @@ void InventoryState::DropItem(ItemComponent* ic)
   std::string message;
   if (ic->Data.IsStackable)
   {
-    message = Util::Instance().StringFormat(Strings::FmtDroppedIS, ic->Data.Amount, objName.data());
+    message = Util::StringFormat(Strings::FmtDroppedIS, ic->Data.Amount, objName.data());
   }
   else
   {
-    message = Util::Instance().StringFormat(Strings::FmtDroppedS, objName.data());
+    message = Util::StringFormat(Strings::FmtDroppedS, objName.data());
   }
 
   // !!! OwnerGameObject should not be destroyed here !!!

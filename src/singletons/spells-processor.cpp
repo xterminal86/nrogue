@@ -141,13 +141,13 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll, GameObject* user)
 
 void SpellsProcessor::PrintUsageResult(ItemComponent* scroll, GameObject* user)
 {
-  if (Util::Instance().IsPlayer(user))
+  if (Util::IsPlayer(user))
   {
     std::string scrollName = scroll->Data.IsIdentified ?
                              scroll->Data.IdentifiedName :
                              scroll->Data.UnidentifiedName;
 
-    auto str = Util::Instance().StringFormat("You read the scroll %s...", scrollName.data());
+    auto str = Util::StringFormat("You read the scroll %s...", scrollName.data());
 
     Printer::Instance().AddMessage(str);
 
@@ -165,7 +165,7 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll, GameObject* u
   //
   // TODO: should monsters be able to use this?
   //
-  if (!Util::Instance().IsPlayer(user))
+  if (!Util::IsPlayer(user))
   {
     return;
   }
@@ -193,14 +193,14 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll, GameObject* u
     int index = RNG::Instance().RandomRange(0, itemsToRepair.size());
     ItemComponent* item = itemsToRepair[index];
 
-    auto str = Util::Instance().StringFormat("Your %s disintegrates!", item->OwnerGameObject->ObjectName.data());
+    auto str = Util::StringFormat("Your %s disintegrates!", item->OwnerGameObject->ObjectName.data());
     _scrollUseMessages.push_back(str);
 
     item->Break(_playerRef);
   }
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {
-    auto str = Util::Instance().StringFormat("Your %s is repaired!", itemsToRepair[0]->OwnerGameObject->ObjectName.data());
+    auto str = Util::StringFormat("Your %s is repaired!", itemsToRepair[0]->OwnerGameObject->ObjectName.data());
     _scrollUseMessages.push_back(str);
 
     itemsToRepair[0]->Data.Durability.Restore();
@@ -221,7 +221,7 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll, GameObject*
   //
   // Monsters dont't use this
   //
-  if (!Util::Instance().IsPlayer(user))
+  if (!Util::IsPlayer(user))
   {
     return;
   }
@@ -415,7 +415,7 @@ void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll, GameObject* user)
   //
   // Pointless for anyone but the player
   //
-  if (!Util::Instance().IsPlayer(user))
+  if (!Util::IsPlayer(user))
   {
     return;
   }
@@ -460,7 +460,7 @@ void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll, GameObject* user)
 
       for (auto& actor : mapRef->ActorGameObjects)
       {
-        std::string str = Util::Instance().StringFormat("You sense: %s (danger %i)", actor->ObjectName.data(), actor->Attrs.Rating());
+        std::string str = Util::StringFormat("You sense: %s (danger %i)", actor->ObjectName.data(), actor->Attrs.Rating());
         monstersOnLevel.push_back(str);
       }
 
@@ -479,7 +479,7 @@ void SpellsProcessor::ProcessScrollOfHiddenDetection(ItemComponent* scroll,
   //
   // TODO: possible application for monsters?
   //
-  if (!Util::Instance().IsPlayer(user))
+  if (!Util::IsPlayer(user))
   {
     return;
   }
@@ -539,7 +539,7 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
   //
   // Monsters dont't use this
   //
-  if (!Util::Instance().IsPlayer(user))
+  if (!Util::IsPlayer(user))
   {
     return;
   }
@@ -599,7 +599,7 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll, GameObject*
 {
   if (Map::Instance().CurrentLevel->MysteriousForcePresent)
   {
-    if (Util::Instance().IsPlayer(user))
+    if (Util::IsPlayer(user))
     {
       _scrollUseMessages.push_back(_kNoActionText);
     }
@@ -666,7 +666,7 @@ void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll, GameObjec
 
 void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObject* user)
 {
-  if (!Util::Instance().IsPlayer(user))
+  if (!Util::IsPlayer(user))
   {
     return;
   }
@@ -694,7 +694,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObje
       // No additional stat penalties, just can't uneqip
 
       auto& idName = item->Data.IdentifiedName;
-      idName = Util::Instance().ReplaceItemPrefix(idName, { "Blessed", "Uncursed" }, "Cursed");
+      idName = Util::ReplaceItemPrefix(idName, { "Blessed", "Uncursed" }, "Cursed");
 
       _scrollUseMessages.push_back("The malevolent energy creeps in...");
     }
@@ -724,7 +724,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObje
       item->Data.Prefix = ItemPrefix::UNCURSED;
 
       auto& idName = item->Data.IdentifiedName;
-      idName = Util::Instance().ReplaceItemPrefix(idName, { "Cursed" }, "Uncursed");
+      idName = Util::ReplaceItemPrefix(idName, { "Cursed" }, "Uncursed");
 
       _scrollUseMessages.push_back("The malevolent energy disperses!");
     }
@@ -747,7 +747,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObje
         success = true;
 
         auto& idName = ic->Data.IdentifiedName;
-        idName = Util::Instance().ReplaceItemPrefix(idName, { "Cursed" }, "Uncursed");
+        idName = Util::ReplaceItemPrefix(idName, { "Cursed" }, "Uncursed");
       }
     }
 

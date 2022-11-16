@@ -48,7 +48,7 @@ void EnterNameState::HandleInput()
 
       if (_nameEntered.length() == 0)
       {
-        _nameEntered = Util::Instance().ChooseRandomName();
+        _nameEntered = Util::ChooseRandomName();
       }
 
       if (_seedHex != 0)

@@ -2,7 +2,6 @@
 #define TASKAPPLYEFFECT_H
 
 #include "behaviour-tree.h"
-#include "item-data.h"
 
 class TaskApplyEffect : public Node
 {

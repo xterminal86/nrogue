@@ -28,7 +28,7 @@ void InfoState::Update(bool forceUpdate)
 
     int yPos = 2;
 
-    std::string title = Util::Instance().StringFormat("%s the %s",
+    std::string title = Util::StringFormat("%s the %s",
                                            _playerRef->Name.data(),
                                            _playerRef->GetClassName().data());
     Printer::Instance().PrintFB(1,
@@ -123,7 +123,7 @@ void InfoState::PrintExp(int x, int y)
   size_t digits = std::to_string(_playerRef->Attrs.Exp.Max().Get()).length();
 
   std::string dots(digits, ' ');
-  std::string placeholder = Util::Instance().StringFormat("EXP: %s / %s", dots.data(), dots.data());
+  std::string placeholder = Util::StringFormat("EXP: %s / %s", dots.data(), dots.data());
 
   Printer::Instance().PrintFB(x,
                               y,
@@ -131,8 +131,8 @@ void InfoState::PrintExp(int x, int y)
                               Printer::kAlignLeft,
                               Colors::WhiteColor);
 
-  std::string minVal = Util::Instance().StringFormat("%i", _playerRef->Attrs.Exp.Min().Get());
-  std::string maxVal = Util::Instance().StringFormat("%i", _playerRef->Attrs.Exp.Max().Get());
+  std::string minVal = Util::StringFormat("%i", _playerRef->Attrs.Exp.Min().Get());
+  std::string maxVal = Util::StringFormat("%i", _playerRef->Attrs.Exp.Max().Get());
 
   int xPos = x + placeholder.length() - digits - minVal.length() - 3;
   Printer::Instance().PrintFB(xPos,
@@ -162,14 +162,14 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
     color = Colors::RedColor;
   }
 
-  std::string attrPlaceholder = Util::Instance().StringFormat("%s:   ", attrName.data());
+  std::string attrPlaceholder = Util::StringFormat("%s:   ", attrName.data());
   Printer::Instance().PrintFB(x,
                               y,
                               attrPlaceholder,
                               Printer::kAlignLeft,
                               Colors::ShadesOfGrey::Five);
 
-  std::string text = Util::Instance().StringFormat("%i", attr.Get());
+  std::string text = Util::StringFormat("%i", attr.Get());
 
   Printer::Instance().PrintFB(x + attrPlaceholder.length() - text.length(),
                               y,
@@ -177,13 +177,13 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
                               Printer::kAlignLeft,
                               color);
 
-  //text = Util::Instance().StringFormat("%s: %i", attrName.data(), attr.Get());
+  //text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
   //Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
 
   //
   // Replace stat name back with white color (kinda hack)
   //
-  auto str = Util::Instance().StringFormat("%s:", attrName.data());
+  auto str = Util::StringFormat("%s:", attrName.data());
   Printer::Instance().PrintFB(x,
                               y,
                               str,
@@ -205,18 +205,18 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
     color = Colors::RedColor;
   }
 
-  std::string placeholder = Util::Instance().StringFormat("%s:     /    ", attrName.data());
+  std::string placeholder = Util::StringFormat("%s:     /    ", attrName.data());
   Printer::Instance().PrintFB(x,
                               y,
                               placeholder,
                               Printer::kAlignLeft,
                               Colors::ShadesOfGrey::Five);
 
-  //std::string text = Util::Instance().StringFormat("%s: %i / %i", attrName.data(), attr.Min().Get(), attr.Max().Get());
+  //std::string text = Util::StringFormat("%s: %i / %i", attrName.data(), attr.Min().Get(), attr.Max().Get());
   //Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
 
-  std::string minVal = Util::Instance().StringFormat("%i", attr.Min().Get());
-  std::string maxVal = Util::Instance().StringFormat("%i", attr.Max().Get());
+  std::string minVal = Util::StringFormat("%i", attr.Min().Get());
+  std::string maxVal = Util::StringFormat("%i", attr.Max().Get());
 
   int xPos = x + placeholder.length() - 6 - minVal.length();
   Printer::Instance().PrintFB(xPos,
@@ -237,7 +237,7 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
                               Colors::WhiteColor);
 
   // Replace stat name back with white color (kinda hack)
-  auto str = Util::Instance().StringFormat("%s:", attrName.data());
+  auto str = Util::StringFormat("%s:", attrName.data());
   Printer::Instance().PrintFB(x,
                               y,
                               str,
@@ -311,16 +311,16 @@ std::pair<uint32_t, std::string> InfoState::GetModifierString(int value)
   if (value < 0)
   {
     color = Colors::RedColor;
-    str = Util::Instance().StringFormat("(%i)", value);
+    str = Util::StringFormat("(%i)", value);
   }
   else if (value > 0)
   {
     color = Colors::GreenColor;
-    str = Util::Instance().StringFormat("(+%i)", value);
+    str = Util::StringFormat("(+%i)", value);
   }
   else if (value == 0)
   {
-    str = Util::Instance().StringFormat("(+%i)", value);
+    str = Util::StringFormat("(+%i)", value);
   }
 
   res.first = color;

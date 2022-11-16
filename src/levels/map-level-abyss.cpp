@@ -60,7 +60,7 @@ void MapLevelAbyss::CreateLevel()
 
   if (MapType_ != MapType::ABYSS_5)
   {
-    if (Util::Instance().Rolld100(_shrineRollChance))
+    if (Util::Rolld100(_shrineRollChance))
     {
       PlaceRandomShrine(lb);
     }
@@ -98,7 +98,7 @@ void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
         {
           GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false);
 
-          if (Util::Instance().Rolld100(15))
+          if (Util::Rolld100(15))
           {
             DoorComponent* dc = door->GetComponent<DoorComponent>();
             dc->OpenedBy = GlobalConstants::OpenedByNobody;

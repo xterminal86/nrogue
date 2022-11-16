@@ -11,8 +11,8 @@ namespace Tests
 {
   void TestLoS(std::stringstream& ss, int x, int y, int range)
   {
-    ss << Util::Instance().StringFormat("Starting Bresenham LoS test from (%i %i) in range %i...\n", x, y, range);
-    ss << Util::Instance().StringFormat("The path should always start from (%i %i)\n\n", x, y);
+    ss << Util::StringFormat("Starting Bresenham LoS test from (%i %i) in range %i...\n", x, y, range);
+    ss << Util::StringFormat("The path should always start from (%i %i)\n\n", x, y);
 
     int sx = x - range;
     int sy = y - range;
@@ -23,13 +23,13 @@ namespace Tests
     {
       for (int fy = sy; fy <= ey; fy++)
       {
-        auto res = Util::Instance().BresenhamLine(x, y, fx, fy);
+        auto res = Util::BresenhamLine(x, y, fx, fy);
 
-        ss << Util::Instance().StringFormat("[%i;%i] -> [%i;%i]\n", x, y, fx, fy);
+        ss << Util::StringFormat("[%i;%i] -> [%i;%i]\n", x, y, fx, fy);
 
         for (auto& i : res)
         {
-          ss << Util::Instance().StringFormat("(%i %i) - ", i.X, i.Y);
+          ss << Util::StringFormat("(%i %i) - ", i.X, i.Y);
         }
 
         bool cond = (res[0].X == x && res[0].Y == y);
@@ -53,31 +53,31 @@ namespace Tests
 
       for (auto& row : room)
       {
-        ss << Util::Instance().StringFormat("%s\n", row.data());
+        ss << Util::StringFormat("%s\n", row.data());
       }
 
       ss << "CCW_90:\n";
 
-      auto res = Util::Instance().RotateRoomLayout(room, RoomLayoutRotation::CCW_90);
+      auto res = Util::RotateRoomLayout(room, RoomLayoutRotation::CCW_90);
       for (auto& s : res)
       {
-        ss << Util::Instance().StringFormat("\t%s\n", s.data());
+        ss << Util::StringFormat("\t%s\n", s.data());
       }
 
       ss << "CCW_180:\n";
 
-      res = Util::Instance().RotateRoomLayout(room, RoomLayoutRotation::CCW_180);
+      res = Util::RotateRoomLayout(room, RoomLayoutRotation::CCW_180);
       for (auto& s : res)
       {
-        ss << Util::Instance().StringFormat("\t%s\n", s.data());
+        ss << Util::StringFormat("\t%s\n", s.data());
       }
 
       ss << "CCW_270:\n";
 
-      res = Util::Instance().RotateRoomLayout(room, RoomLayoutRotation::CCW_270);
+      res = Util::RotateRoomLayout(room, RoomLayoutRotation::CCW_270);
       for (auto& s : res)
       {
-        ss << Util::Instance().StringFormat("\t%s\n", s.data());
+        ss << Util::StringFormat("\t%s\n", s.data());
       }
     }
   }
@@ -92,42 +92,42 @@ namespace Tests
 
     for (int i = 0; i < numberOfRolls; i++)
     {
-      ss << Util::Instance().StringFormat("%i ", RNG::Instance().RandomRange(-10, 10));
+      ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(-10, 10));
     }
 
     ss << "\n\nRandom.Range(0, 100):\n";
 
     for (int i = 0; i < numberOfRolls; i++)
     {
-      ss << Util::Instance().StringFormat("%i ", RNG::Instance().RandomRange(0, 100));
+      ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(0, 100));
     }
 
     ss << "\n\nRandom.Range(-20, -10):\n";
 
     for (int i = 0; i < numberOfRolls; i++)
     {
-      ss << Util::Instance().StringFormat("%i ", RNG::Instance().RandomRange(-20, -10));
+      ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(-20, -10));
     }
 
     ss << "\n\nRandom.Range(100, 10):\n";
 
     for (int i = 0; i < numberOfRolls; i++)
     {
-      ss << Util::Instance().StringFormat("%i ", RNG::Instance().RandomRange(100, 10));
+      ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(100, 10));
     }
 
     ss << "\n\nRandom.Range(-10, -100):\n";
 
     for (int i = 0; i < numberOfRolls; i++)
     {
-      ss << Util::Instance().StringFormat("%i ", RNG::Instance().RandomRange(-10, -100));
+      ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(-10, -100));
     }
 
     ss << "\n\nRandom.Range(10, -10):\n";
 
     for (int i = 0; i < numberOfRolls; i++)
     {
-      ss << Util::Instance().StringFormat("%i ", RNG::Instance().RandomRange(10, -10));
+      ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(10, -10));
     }
   }
 
@@ -162,7 +162,7 @@ namespace Tests
 
     for (int i = 0; i < rolls; i++)
     {
-      auto res = Util::Instance().WeightedRandom(toTest);
+      auto res = Util::WeightedRandom(toTest);
       std::string spaces(maxLength - stringNames[res.first].length(), ' ');
       ss << i << ") got " << stringNames[res.first] << ", " << spaces << " w = " << res.second << "\n";
     }
@@ -170,7 +170,7 @@ namespace Tests
 
   void AutoLevel(std::stringstream& ss, Player& p, int level)
   {
-    ss << Util::Instance().StringFormat("Auto level to %i:\n\n", level);
+    ss << Util::StringFormat("Auto level to %i:\n\n", level);
 
     std::map<int, std::pair<std::string, Attribute&>> attrsMap =
     {
@@ -193,12 +193,12 @@ namespace Tests
     {
       auto kvp = a.second;
 
-      ss << Util::Instance().StringFormat("%s: %i (* %i)\n", kvp.first.data(), kvp.second.OriginalValue(), kvp.second.Talents);
+      ss << Util::StringFormat("%s: %i (* %i)\n", kvp.first.data(), kvp.second.OriginalValue(), kvp.second.Talents);
     }
 
     ss << "\n";
-    ss << Util::Instance().StringFormat("HP: %i (* %i)\n", p.Attrs.HP.Max().Get(), p.Attrs.HP.Talents);
-    ss << Util::Instance().StringFormat("MP: %i (* %i)\n", p.Attrs.MP.Max().Get(), p.Attrs.MP.Talents);
+    ss << Util::StringFormat("HP: %i (* %i)\n", p.Attrs.HP.Max().Get(), p.Attrs.HP.Talents);
+    ss << Util::StringFormat("MP: %i (* %i)\n", p.Attrs.MP.Max().Get(), p.Attrs.MP.Talents);
   }
 
   void LevelUpTests(std::stringstream& ss)
@@ -242,7 +242,7 @@ namespace Tests
 
     ss << "Total scores on " << runs << " runs:\n\n";
 
-    auto totalScores = Util::Instance().RollWeightsMap(gemsMap, runs);
+    auto totalScores = Util::RollWeightsMap(gemsMap, runs);
     for (auto& kvp : totalScores)
     {
       ss << "[" << static_cast<int>(kvp.first) << "] = " << kvp.second << "\n";
@@ -262,7 +262,7 @@ namespace Tests
       { GameObjectType::TROLL,   1 }
     };
 
-    auto r = Util::Instance().WeightsToProbability(t);
+    auto r = Util::WeightsToProbability(t);
 
     ss << "\n";
 
@@ -304,14 +304,14 @@ namespace Tests
     for (int i = 0; i < 100; i++)
     {
       auto weights = lootTable;
-      auto kvp = Util::Instance().WeightedRandom(weights);
+      auto kvp = Util::WeightedRandom(weights);
 
       scores[kvp.first]++;
     }
 
     for (auto& kvp : scores)
     {
-      ss << Util::Instance().StringFormat("%i = %i\n", kvp.first, kvp.second);
+      ss << Util::StringFormat("%i = %i\n", kvp.first, kvp.second);
     }
   }
 
@@ -448,7 +448,7 @@ namespace Tests
         str += " ";
       }
 
-      str += Util::Instance().StringFormat("[REMOVAL PARAMS] -> { %i, %i, %i }\n\n", i.EmptyCellsAroundMin, i.EmptyCellsAroundMax, i.Passes);
+      str += Util::StringFormat("[REMOVAL PARAMS] -> { %i, %i, %i }\n\n", i.EmptyCellsAroundMin, i.EmptyCellsAroundMax, i.Passes);
 
       ss << str;
 
@@ -538,7 +538,7 @@ namespace Tests
       std::string title(30, ' ');
       std::string delimiter(80, '=');
 
-      title += Util::Instance().StringFormat(">>>> Tileset %i <<<<\n", i + 1);
+      title += Util::StringFormat(">>>> Tileset %i <<<<\n", i + 1);
 
       ss << "\n\n" << title << "\n";
       ss << delimiter << "\n\n";
@@ -668,7 +668,7 @@ namespace Tests
 
     for (int i = 0; i < number; i++)
     {
-      auto n = Util::Instance().GenerateName(true);
+      auto n = Util::GenerateName(true);
       ss << i + 1 << ") " << n << "\n";
     }
 
@@ -677,7 +677,7 @@ namespace Tests
 
     for (int i = 0; i < number; i++)
     {
-      auto n = Util::Instance().GenerateName();
+      auto n = Util::GenerateName();
       ss << i + 1 << ") " << n << "\n";
     }
 
@@ -686,7 +686,7 @@ namespace Tests
 
     for (int i = 0; i < number; i++)
     {
-      auto n = Util::Instance().GenerateName(false, true, GlobalConstants::NameEndings);
+      auto n = Util::GenerateName(false, true, GlobalConstants::NameEndings);
       ss << i + 1 << ") " << n << "\n";
     }
 
@@ -695,7 +695,7 @@ namespace Tests
 
     for (int i = 0; i < number; i++)
     {
-      auto n = Util::Instance().GenerateName(false, true, GlobalConstants::TownNameEndings);
+      auto n = Util::GenerateName(false, true, GlobalConstants::TownNameEndings);
       ss << i + 1 << ") " << n << "\n";
     }
 

@@ -4,7 +4,6 @@
 #include "game-object.h"
 #include "printer.h"
 #include "logger.h"
-#include "util.h"
 
 TaskAttack::TaskAttack(GameObject* objectToControl,
                        bool alwaysHitOverride)
@@ -140,28 +139,28 @@ bool TaskAttack::AttackWithWeapon()
     ignoreArmor = weapon->Data.HasBonus(ItemBonusType::IGNORE_ARMOR);
   }
 
-  int hitChance = Util::Instance().CalculateHitChanceMelee(_objectToControl,
-                                                           _playerRef);
+  int hitChance = Util::CalculateHitChanceMelee(_objectToControl,
+                                                _playerRef);
 
   #ifdef DEBUG_BUILD
-  auto logMsg = Util::Instance().StringFormat("%s (SKL %i, LVL %i) attacks Player (SKL: %i, LVL %i): chance = %i",
-                                              _objectToControl->ObjectName.data(),
-                                              _objectToControl->Attrs.Skl.Get(),
-                                              _objectToControl->Attrs.Lvl.Get(),
-                                              _playerRef->Attrs.Skl.Get(),
-                                              _playerRef->Attrs.Lvl.Get(),
-                                              hitChance);
+  auto logMsg = Util::StringFormat("%s (SKL %i, LVL %i) attacks Player (SKL: %i, LVL %i): chance = %i",
+                                   _objectToControl->ObjectName.data(),
+                                   _objectToControl->Attrs.Skl.Get(),
+                                   _objectToControl->Attrs.Lvl.Get(),
+                                   _playerRef->Attrs.Skl.Get(),
+                                   _playerRef->Attrs.Lvl.Get(),
+                                   hitChance);
   Logger::Instance().Print(logMsg);
   #endif
 
   int dmg = 0;
 
-  if (_alwaysHitOverride || Util::Instance().Rolld100(hitChance))
+  if (_alwaysHitOverride || Util::Rolld100(hitChance))
   {
-    dmg = Util::Instance().CalculateDamageValue(_objectToControl,
-                                                  _playerRef,
-                                                  weapon,
-                                                  false);
+    dmg = Util::CalculateDamageValue(_objectToControl,
+                                     _playerRef,
+                                     weapon,
+                                     false);
 
     Application::Instance().DisplayAttack(_playerRef,
                                           GlobalConstants::DisplayAttackDelayMs,
@@ -183,14 +182,14 @@ bool TaskAttack::AttackWithWeapon()
     if (weapon != nullptr
      && weapon->Data.ItemType_ != ItemType::RANGED_WEAPON)
     {
-      Util::Instance().TryToDamageEquipment(_objectToControl, weapon, -1);
+      Util::TryToDamageEquipment(_objectToControl, weapon, -1);
     }
 
     result = true;
   }
   else
   {
-    auto msg = Util::Instance().StringFormat(Strings::FmtSMissed, Util::Instance().GetGameObjectDisplayCharacter(_objectToControl).data());
+    auto msg = Util::StringFormat(Strings::FmtSMissed, Util::GetGameObjectDisplayCharacter(_objectToControl).data());
     Application::Instance().DisplayAttack(_playerRef,
                                           GlobalConstants::DisplayAttackDelayMs,
                                           msg,
@@ -206,26 +205,26 @@ AttackResult TaskAttack::AttackUnarmed(const DamageRoll& damageRoll)
 {
   AttackResult res;
 
-  int hitChance = Util::Instance().CalculateHitChanceMelee(_objectToControl,
-                                                             _playerRef);
+  int hitChance = Util::CalculateHitChanceMelee(_objectToControl,
+                                                _playerRef);
 
   int dmg = 0;
 
-  if (_alwaysHitOverride || Util::Instance().Rolld100(hitChance))
+  if (_alwaysHitOverride || Util::Rolld100(hitChance))
   {
     Application::Instance().DisplayAttack(_playerRef,
                                           GlobalConstants::DisplayAttackDelayMs,
                                           std::string(),
                                           Colors::RedColor);
 
-    dmg = Util::Instance().CalculateDamageValue(_objectToControl,
-                                                  _playerRef,
-                                                  nullptr,
-                                                  false);
+    dmg = Util::CalculateDamageValue(_objectToControl,
+                                     _playerRef,
+                                     nullptr,
+                                     false);
 
     if (damageRoll.first != 0 && damageRoll.second != 0)
     {
-      dmg += Util::Instance().RollDices(damageRoll.first, damageRoll.second);
+      dmg += Util::RollDices(damageRoll.first, damageRoll.second);
     }
 
     res.first = true;
@@ -233,7 +232,7 @@ AttackResult TaskAttack::AttackUnarmed(const DamageRoll& damageRoll)
   }
   else
   {
-    auto msg = Util::Instance().StringFormat(Strings::FmtSMissed, Util::Instance().GetGameObjectDisplayCharacter(_objectToControl).data());
+    auto msg = Util::StringFormat(Strings::FmtSMissed, Util::GetGameObjectDisplayCharacter(_objectToControl).data());
     Application::Instance().DisplayAttack(_playerRef,
                                           GlobalConstants::DisplayAttackDelayMs,
                                           msg,

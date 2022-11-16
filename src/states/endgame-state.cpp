@@ -88,7 +88,7 @@ void EndgameState::DrawHPMP()
 
   UpdateBar(0, _th - 2, _playerRef->Attrs.HP);
 
-  auto str = Util::Instance().StringFormat("%i/%i", curHp, maxHp);
+  auto str = Util::StringFormat("%i/%i", curHp, maxHp);
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
                               _th - 2,
                               str,
@@ -98,7 +98,7 @@ void EndgameState::DrawHPMP()
 
   UpdateBar(0, _th - 1, _playerRef->Attrs.MP);
 
-  str = Util::Instance().StringFormat("%i/%i", curMp, maxMp);
+  str = Util::StringFormat("%i/%i", curMp, maxMp);
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
                               _th - 1,
                               str,

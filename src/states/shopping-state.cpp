@@ -115,7 +115,7 @@ void ShoppingState::Update(bool forceUpdate)
     DisplayShopInventory();
 
     std::string youHaveStr = "You have: ";
-    auto playerMoney = Util::Instance().StringFormat("$ %i", _playerRef->Money);
+    auto playerMoney = Util::StringFormat("$ %i", _playerRef->Money);
 
     Printer::Instance().PrintFB(1,
                                 _th - 1,
@@ -175,7 +175,7 @@ void ShoppingState::DisplayPlayerInventory()
 
     int cost = GetCost(ic, true);
 
-    costString = Util::Instance().StringFormat(" $ %i", cost);
+    costString = Util::StringFormat(" $ %i", cost);
 
     Printer::Instance().PrintFB(extraInfoStringPosX + itemStringTotalLen + 1,
                                 yPos + index,
@@ -183,7 +183,7 @@ void ShoppingState::DisplayPlayerInventory()
                                 Printer::kAlignLeft,
                                 Colors::CoinsColor);
 
-    uint32_t textColor = Util::Instance().GetItemInventoryColor(ic->Data);
+    uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (_playerSide && index == _inventoryItemIndex)
     {
@@ -261,7 +261,7 @@ void ShoppingState::DisplayShopInventory()
 
     int cost = GetCost(ic, false);
 
-    std::string costString = Util::Instance().StringFormat("%i $ ", cost);
+    std::string costString = Util::StringFormat("%i $ ", cost);
 
     int bonusStringPosX = xPos - GlobalConstants::InventoryMaxNameLength - 1;
 
@@ -271,7 +271,7 @@ void ShoppingState::DisplayShopInventory()
                                 Printer::kAlignRight,
                                 Colors::CoinsColor);
 
-    uint32_t textColor = Util::Instance().GetItemInventoryColor(ic->Data);
+    uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (!_playerSide && index == _inventoryItemIndex)
     {
@@ -326,7 +326,7 @@ void ShoppingState::CheckIndexLimits()
     }
   }
 
-  _inventoryItemIndex = Util::Instance().Clamp(_inventoryItemIndex, 0, invSize);
+  _inventoryItemIndex = Util::Clamp(_inventoryItemIndex, 0, invSize);
 }
 
 size_t ShoppingState::GetItemStringTotalLen(std::vector<std::unique_ptr<GameObject>>& container)
@@ -356,7 +356,7 @@ std::string ShoppingState::GetItemExtraInfo(ItemComponent* item)
   if (item->Data.IsIdentified
   && (stackCond || item->Data.IsChargeable))
   {
-    extraInfo = Util::Instance().StringFormat("(%i)", item->Data.Amount);
+    extraInfo = Util::StringFormat("(%i)", item->Data.Amount);
   }
   else if (item->Data.IsEquipped)
   {

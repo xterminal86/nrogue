@@ -127,7 +127,7 @@ void Application::ChangeState(const GameStates& gameStateIndex)
 
   if (gameStateIndex != GameStates::EXIT_GAME)
   {
-    auto str = Util::Instance().StringFormat("Changing state: %s [0x%X] => %s [0x%X]",
+    auto str = Util::StringFormat("Changing state: %s [0x%X] => %s [0x%X]",
                                   typeid(*_currentState).name(), _currentState,
                                   typeid(*_gameStates[gameStateIndex].get()).name(),
                                   _gameStates[gameStateIndex].get());
@@ -136,7 +136,7 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   }
   else
   {
-    auto str = Util::Instance().StringFormat("Changing state: %s [0x%X] => EXIT_GAME [0x0]", typeid(*_currentState).name(), _currentState);
+    auto str = Util::StringFormat("Changing state: %s [0x%X] => EXIT_GAME [0x0]", typeid(*_currentState).name(), _currentState);
     Logger::Instance().Print(str);
     //DebugLog("%s\n", str.data());
   }
@@ -225,7 +225,7 @@ void Application::DisplayAttack(GameObject* defender,
 
     DrawAttackCursor(posX, posY, defender, cursorColor);
 
-    Util::Instance().Sleep(delayMs);
+    Util::Sleep(delayMs);
 
     if (messageToPrint.length() != 0)
     {
@@ -234,7 +234,7 @@ void Application::DisplayAttack(GameObject* defender,
 
     DrawAttackCursor(posX, posY, defender);
 
-    Util::Instance().Sleep(delayMs);
+    Util::Sleep(delayMs);
   }
 }
 
@@ -381,7 +381,7 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
     std::vector<char> row;
     for (int x = lx; x <= hx; x++)
     {
-      if (!Util::Instance().IsInsideMap({ x, y }, curLvl->MapSize, false))
+      if (!Util::IsInsideMap({ x, y }, curLvl->MapSize, false))
       {
         row.push_back(' ');
       }
@@ -496,7 +496,7 @@ void Application::SavePrettyAlignedStatInfo(std::stringstream& ss)
     statInfoStrings.push_back(ss.str());
   }
 
-  size_t statInfoLongestLength = Util::Instance().FindLongestStringLength(statInfoStrings);
+  size_t statInfoLongestLength = Util::FindLongestStringLength(statInfoStrings);
 
   std::vector<std::string> resultingValuesStringList;
 
@@ -520,7 +520,7 @@ void Application::SavePrettyAlignedStatInfo(std::stringstream& ss)
 
   statInfoIndex = 0;
 
-  size_t longestResultingStatLen = Util::Instance().FindLongestStringLength(resultingValuesStringList);
+  size_t longestResultingStatLen = Util::FindLongestStringLength(resultingValuesStringList);
   for (auto& i : statInfoStrings)
   {
     ss << i;
@@ -592,13 +592,13 @@ void Application::InitCurses()
 
 void Application::SetIcon()
 {
-  auto res = Util::Instance().Base64_Decode(Base64Strings::IconBase64);
-  auto bytes = Util::Instance().ConvertStringToBytes(res);
+  auto res = Util::Base64_Decode(Base64Strings::IconBase64);
+  auto bytes = Util::ConvertStringToBytes(res);
   SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
   SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);
   if (!surf)
   {
-    auto str = Util::Instance().StringFormat("***** Could not load from memory: %s *****\n", SDL_GetError());
+    auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", SDL_GetError());
     Logger::Instance().Print(str);
     DebugLog("%s\n", str.data());
     return;
@@ -744,7 +744,7 @@ void Application::ParseConfig()
     std::string line;
     while (std::getline(configFile, line))
     {
-      auto res = Util::Instance().StringSplit(line, '=');
+      auto res = Util::StringSplit(line, '=');
       if (res.size() > 1)
       {
         _config.emplace(res[0], res[1]);

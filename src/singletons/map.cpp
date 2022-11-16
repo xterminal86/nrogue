@@ -133,7 +133,7 @@ void Map::UpdateActors()
         Position objPos = go->GetPosition();
 
         // Check if object is in visibility radius
-        int d = (int)Util::Instance().LinearDistance(plPos, objPos);
+        int d = (int)Util::LinearDistance(plPos, objPos);
         if (d <= _playerRef->VisibilityRadius.Get())
         {
           //
@@ -394,7 +394,7 @@ void Map::RemoveStaticObjects()
   int tw = Printer::TerminalWidth;
   int th = Printer::TerminalHeight;
 
-  auto mapCells = Util::Instance().GetRectAroundPoint(playerX, playerY, tw / 2, th / 2, CurrentLevel->MapSize);
+  auto mapCells = Util::GetRectAroundPoint(playerX, playerY, tw / 2, th / 2, CurrentLevel->MapSize);
   for (auto& cell : mapCells)
   {
     //
@@ -434,7 +434,7 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
                                   const Position& teleportTo,
                                   GameObject* objectToTeleport)
 {
-  bool forPlayer = Util::Instance().IsPlayer(objectToTeleport);
+  bool forPlayer = Util::IsPlayer(objectToTeleport);
 
   GameObject* whoToTeleport = nullptr;
   if (objectToTeleport == nullptr)
@@ -476,7 +476,7 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
 
     if (forPlayer)
     {
-      auto str = Util::Instance().StringFormat("You teleported into %s!", tpTo.data());
+      auto str = Util::StringFormat("You teleported into %s!", tpTo.data());
       Printer::Instance().AddMessage(str);
     }
 
@@ -489,13 +489,13 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
       // Assume that if some NPC occupied returner destination,
       // he can be moved at least to his 'previous' position
       // (thus, any empty cell around him).
-      auto str = Util::Instance().StringFormat("You bump into %s!", actor->ObjectName.data());
+      auto str = Util::StringFormat("You bump into %s!", actor->ObjectName.data());
       Printer::Instance().AddMessage(str);
     }
 
     Position tp = teleportTo;
 
-    auto points = Util::Instance().GetEightPointsAround(teleportTo, CurrentLevel->MapSize);
+    auto points = Util::GetEightPointsAround(teleportTo, CurrentLevel->MapSize);
     for (auto& p : points)
     {
       if (!CurrentLevel->IsCellBlocking(p))
@@ -645,7 +645,7 @@ int Map::CountEmptyCellsAround(int x, int y)
     for (int j = ly; j <= hy; j++)
     {
       if ((i == x && j == y)
-       || !Util::Instance().IsInsideMap({ i, j }, CurrentLevel->MapSize))
+       || !Util::IsInsideMap({ i, j }, CurrentLevel->MapSize))
       {
         continue;
       }
@@ -674,7 +674,7 @@ int Map::CountAroundStatic(int x, int y, GameObjectType type)
     for (int j = ly; j <= hy; j++)
     {
       if ((i == x && j == y)
-       || !Util::Instance().IsInsideMap({ i, j }, CurrentLevel->MapSize))
+       || !Util::IsInsideMap({ i, j }, CurrentLevel->MapSize))
       {
         continue;
       }
@@ -706,7 +706,7 @@ int Map::CountWallsOrthogonal(int x, int y)
 
   for (auto& p: points)
   {
-    if (!Util::Instance().IsInsideMap(p, CurrentLevel->MapSize))
+    if (!Util::IsInsideMap(p, CurrentLevel->MapSize))
     {
       continue;
     }
@@ -769,7 +769,7 @@ void Map::PrintMapArrayRevealedStatus()
     std::string row;
     for (int y = 0; y < CurrentLevel->MapSize.Y; y++)
     {
-      auto str = Util::Instance().StringFormat("%i", CurrentLevel->MapArray[x][y]->Revealed);
+      auto str = Util::StringFormat("%i", CurrentLevel->MapArray[x][y]->Revealed);
       row += str;
     }
     dbg.push_back(row);
@@ -788,7 +788,7 @@ void Map::PrintMapLayout()
 {
   std::ofstream f;
 
-  std::string fname = Util::Instance().StringFormat("DBG_%s.txt", CurrentLevel->LevelName.data());
+  std::string fname = Util::StringFormat("DBG_%s.txt", CurrentLevel->LevelName.data());
 
   f.open(fname);
 
@@ -848,7 +848,7 @@ void Map::PrintMapLayout()
 
   f.close();
 
-  auto dbg = Util::Instance().StringFormat("Layout saved to %s", fname.data());
+  auto dbg = Util::StringFormat("Layout saved to %s", fname.data());
   Printer::Instance().AddMessage(dbg);
 }
 #endif
@@ -857,7 +857,7 @@ void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centra
 {
   auto pointsAffected = Printer::Instance().DrawExplosion(target->GetPosition(), 3);
 
-  //Util::Instance().PrintVector("points affected", pointsAffected);
+  //Util::PrintVector("points affected", pointsAffected);
 
   GameObject* from = (weapon == nullptr) ?
                      nullptr :
@@ -865,7 +865,7 @@ void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centra
 
   for (auto& p : pointsAffected)
   {
-    int d = Util::Instance().LinearDistance(target->GetPosition(), p);
+    int d = Util::LinearDistance(target->GetPosition(), p);
     if (d == 0)
     {
       d = 1;
@@ -876,24 +876,24 @@ void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centra
     // AoE damages everything
 
     auto actor = GetActorAtPosition(p.X, p.Y);
-    Util::Instance().TryToDamageObject(actor, from, dmgHere, againstRes);
+    Util::TryToDamageObject(actor, from, dmgHere, againstRes);
 
     auto mapObjs = GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
     {
-      Util::Instance().TryToDamageObject(obj, from, dmgHere, againstRes);
+      Util::TryToDamageObject(obj, from, dmgHere, againstRes);
     }
 
     auto so = GetStaticGameObjectAtPosition(p.X, p.Y);
     if (so != nullptr)
     {
-      Util::Instance().TryToDamageObject(so, from, dmgHere, againstRes);
+      Util::TryToDamageObject(so, from, dmgHere, againstRes);
     }
 
     // Check self damage
     if (_playerRef->PosX == p.X && _playerRef->PosY == p.Y)
     {
-      Util::Instance().TryToDamageObject(_playerRef, _playerRef, dmgHere, againstRes);
+      Util::TryToDamageObject(_playerRef, _playerRef, dmgHere, againstRes);
     }
   }
 }
@@ -928,7 +928,7 @@ std::vector<Position> Map::GetWalkableCellsAround(const Position& pos)
           continue;
         }
 
-        if (Util::Instance().IsInsideMap({ x, y }, CurrentLevel->MapSize)
+        if (Util::IsInsideMap({ x, y }, CurrentLevel->MapSize)
         && (!CurrentLevel->IsCellBlocking({ x, y })
          && !CurrentLevel->MapArray[x][y]->Occupied))
         {
@@ -956,7 +956,7 @@ std::vector<Position> Map::GetEmptyCellsAround(const Position& pos, int range)
     {
       for (int y = ly; y <= hy; y++)
       {
-        if (!Util::Instance().IsInsideMap({ x, y }, CurrentLevel->MapSize))
+        if (!Util::IsInsideMap({ x, y }, CurrentLevel->MapSize))
         {
           continue;
         }
@@ -1024,7 +1024,7 @@ bool Map::IsObjectVisible(const Position &from,
                           const Position &to,
                           bool excludeEnd)
 {
-  auto line = Util::Instance().BresenhamLine(from, to);
+  auto line = Util::BresenhamLine(from, to);
 
   //
   // If we need to check if certain wall or static object is visible
@@ -1038,7 +1038,7 @@ bool Map::IsObjectVisible(const Position &from,
 
   for (auto& c : line)
   {
-    if (!Util::Instance().IsInsideMap(c, CurrentLevel->MapSize))
+    if (!Util::IsInsideMap(c, CurrentLevel->MapSize))
     {
       return false;
     }
@@ -1068,7 +1068,7 @@ void Map::DrawMapTilesAroundPlayer()
   int tw = Printer::TerminalWidth;
   int th = Printer::TerminalHeight;
 
-  auto mapCells = Util::Instance().GetRectAroundPoint(_playerRef->PosX, _playerRef->PosY, tw / 2, th / 2, CurrentLevel->MapSize);
+  auto mapCells = Util::GetRectAroundPoint(_playerRef->PosX, _playerRef->PosY, tw / 2, th / 2, CurrentLevel->MapSize);
   for (auto& cell : mapCells)
   {
     int x = cell.X;

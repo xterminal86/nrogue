@@ -45,7 +45,7 @@ void MessageLogState::HandleInput()
       break;
   }
 
-  _scrollPosition = Util::Instance().Clamp(_scrollPosition, 0, scrollLimit);
+  _scrollPosition = Util::Clamp(_scrollPosition, 0, scrollLimit);
 }
 
 void MessageLogState::Update(bool forceUpdate)

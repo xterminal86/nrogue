@@ -118,7 +118,7 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
               : from->ObjectName;
   }
 
-  auto str = Util::Instance().StringFormat("%s's remains", objName.data());
+  auto str = Util::StringFormat("%s's remains", objName.data());
   go->ObjectName = str;
 
   go->Attrs.Indestructible = false;
@@ -350,7 +350,7 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
 
   for (int i = 0; i < maxItems; i++)
   {
-    auto res = Util::Instance().WeightedRandom(weights);
+    auto res = Util::WeightedRandom(weights);
     if (res.first != ItemType::NOTHING)
     {
       //
@@ -361,7 +361,7 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
       if (item != nullptr)
       {
         ItemComponent* ic = item->GetComponent<ItemComponent>();
-        if (!Util::Instance().CanBeSpawned(ic) || cc->Add(item))
+        if (!Util::CanBeSpawned(ic) || cc->Add(item))
         {
           //
           // Yes, we're deleting the object we've just created.

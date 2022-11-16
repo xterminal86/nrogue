@@ -144,7 +144,7 @@ std::vector<std::vector<MapCell>> DGBase::CreateRandomlyFilledMap(int w, int h, 
     std::vector<MapCell> row;
     for (int y = 0; y < h; y++)
     {
-      bool isWall = Util::Instance().Rolld100(chance);
+      bool isWall = Util::Rolld100(chance);
 
       MapCell c;
       c.Coordinates.X = x;
@@ -604,7 +604,7 @@ void DGBase::ConnectIsolatedAreas()
     {
       for (auto& p2 : _areaPointsByMarker[1])
       {
-        int bd = Util::Instance().BlockDistance(p1, p2);
+        int bd = Util::BlockDistance(p1, p2);
         if (bd < minD)
         {
           connectionPointCandidate = { p1, p2 };

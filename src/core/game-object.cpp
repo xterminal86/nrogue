@@ -23,7 +23,7 @@ GameObject::GameObject(MapLevelBase* levelOwner)
   _objectId = Application::GetNewGlobalId();
 
 #ifdef DEBUG_BUILD
-  HexAddressString = Util::Instance().StringFormat("0x%X", this);
+  HexAddressString = Util::StringFormat("0x%X", this);
 #endif
 }
 
@@ -39,7 +39,7 @@ GameObject::GameObject(MapLevelBase *levelOwner,
   Init(levelOwner, x, y, avatar, htmlColor, bgColor);
 
 #ifdef DEBUG_BUILD
-  HexAddressString = Util::Instance().StringFormat("0x%X", this);
+  HexAddressString = Util::StringFormat("0x%X", this);
 #endif
 }
 
@@ -52,7 +52,7 @@ GameObject::~GameObject()
     Blackboard::Instance().Remove(_objectId);
   }
 
-  if (Util::Instance().IsFunctionValid(OnDestroy))
+  if (Util::IsFunctionValid(OnDestroy))
   {
     OnDestroy(this);
   }
@@ -383,7 +383,7 @@ bool GameObject::ReceiveDamage(GameObject* from,
   AIComponent* aic = GetComponent<AIComponent>();
   if (aic != nullptr)
   {
-    objName = Util::Instance().GetGameObjectDisplayCharacter(this);
+    objName = Util::GetGameObjectDisplayCharacter(this);
   }
 
   std::queue<std::string> logMessages;
@@ -396,7 +396,7 @@ bool GameObject::ReceiveDamage(GameObject* from,
   {
     if (isMagical)
     {
-      str = Util::Instance().ProcessMagicalDamage(this, from, amount);
+      str = Util::ProcessMagicalDamage(this, from, amount);
       if (!str.empty())
       {
         logMessages.push(str);
@@ -404,17 +404,17 @@ bool GameObject::ReceiveDamage(GameObject* from,
     }
     else
     {
-      auto msgs = Util::Instance().ProcessPhysicalDamage(this, from, amount, ignoreArmor);
+      auto msgs = Util::ProcessPhysicalDamage(this, from, amount, ignoreArmor);
       for (auto& m : msgs)
       {
         logMessages.push(m);
       }
 
-      dmgReturned = Util::Instance().ProcessThorns(this, amount);
+      dmgReturned = Util::ProcessThorns(this, amount);
 
       if (dmgReturned != 0)
       {
-        if (Util::Instance().IsPlayer(from))
+        if (Util::IsPlayer(from))
         {
           static_cast<Player*>(from)->ReceiveDamage(this,
                                                     dmgReturned,
@@ -447,7 +447,7 @@ bool GameObject::ReceiveDamage(GameObject* from,
                        ? "destroyed"
                        : "killed";
 
-      logMessages.push(Util::Instance().StringFormat("%s was %s", objName.data(), verb.data()));
+      logMessages.push(Util::StringFormat("%s was %s", objName.data(), verb.data()));
     }
 
     dmgSuccess = true;
@@ -456,7 +456,7 @@ bool GameObject::ReceiveDamage(GameObject* from,
   {
     if (Type != GameObjectType::GROUND)
     {
-      logMessages.push(Util::Instance().StringFormat("%s not even scratched!", objName.data()));
+      logMessages.push(Util::StringFormat("%s not even scratched!", objName.data()));
     }
   }
 
@@ -773,7 +773,7 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
   ApplyEffect(effectToAdd);
 
   #ifdef DEBUG_BUILD
-  auto str = Util::Instance().StringFormat("%s gained %s (duration %i period %i)",
+  auto str = Util::StringFormat("%s gained %s (duration %i period %i)",
                                 ObjectName.data(),
                                 GlobalConstants::BonusDisplayNameByType.count(effectToAdd.Type) == 1 ?
                                 GlobalConstants::BonusDisplayNameByType.at(effectToAdd.Type).data() :
@@ -838,7 +838,7 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
 
     case ItemBonusType::BURNING:
     {
-      if (Util::Instance().IsPlayer(this))
+      if (Util::IsPlayer(this))
       {
         Printer::Instance().AddMessage("You catch fire!");
       }
@@ -858,7 +858,7 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
     {
       if (HasEffect(ItemBonusType::POISONED))
       {
-        if (Util::Instance().IsPlayer(this))
+        if (Util::IsPlayer(this))
         {
           Printer::Instance().AddMessage("The poison disperses!");
         }
@@ -872,7 +872,7 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
     {
       if (HasEffect(ItemBonusType::PARALYZE))
       {
-        if (Util::Instance().IsPlayer(this))
+        if (Util::IsPlayer(this))
         {
           Printer::Instance().AddMessage("You can move again!");
         }
@@ -895,7 +895,7 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
         kvp.second.AddModifier(e.Id, -penalty);
       }
 
-      if (Util::Instance().IsPlayer(this))
+      if (Util::IsPlayer(this))
       {
         Printer::Instance().AddMessage("You feel weak!");
       }
@@ -1166,7 +1166,7 @@ void GameObject::MarkAndCreateRemains()
 
 IR GameObject::Interact()
 {
-  if (Util::Instance().IsFunctionValid(InteractionCallback))
+  if (Util::IsFunctionValid(InteractionCallback))
   {
     return InteractionCallback();
   }
@@ -1201,9 +1201,9 @@ void GameObject::AwardExperience(int amount)
 
     LevelUp();
 
-    int expToLvlUp = Util::Instance().GetExpForNextLevel(Attrs.Lvl.Get());
+    int expToLvlUp = Util::GetExpForNextLevel(Attrs.Lvl.Get());
 
-    overflow = Util::Instance().Clamp(overflow, 0, expToLvlUp - 1);
+    overflow = Util::Clamp(overflow, 0, expToLvlUp - 1);
 
     Attrs.Exp.SetMin(overflow);
     Attrs.Exp.SetMax(expToLvlUp);
@@ -1214,14 +1214,14 @@ void GameObject::AwardExperience(int amount)
   {
     LevelDown();
 
-    int expToLvlUp = Util::Instance().GetExpForNextLevel(Attrs.Lvl.Get());
+    int expToLvlUp = Util::GetExpForNextLevel(Attrs.Lvl.Get());
 
     //
     // Actual subtraction since amnt < 0
     //
     int underflow = expToLvlUp + amnt;
 
-    underflow = Util::Instance().Clamp(underflow, 0, expToLvlUp - 1);
+    underflow = Util::Clamp(underflow, 0, expToLvlUp - 1);
 
     Attrs.Exp.SetMin(underflow);
     Attrs.Exp.SetMax(expToLvlUp);
@@ -1349,7 +1349,7 @@ bool GameObject::CanRaiseAttribute(Attribute& attr)
     int iterations = attr.Talents;
     for (int i = 0; i < iterations; i++)
     {
-      if (Util::Instance().Rolld100(chance))
+      if (Util::Rolld100(chance))
       {
         return true;
       }
@@ -1358,7 +1358,7 @@ bool GameObject::CanRaiseAttribute(Attribute& attr)
     }
   }
 
-  return Util::Instance().Rolld100(chance);
+  return Util::Rolld100(chance);
 }
 
 const std::map<uint64_t, std::vector<ItemBonusStruct>>& GameObject::GetActiveEffects()
@@ -1383,46 +1383,46 @@ std::vector<std::string> GameObject::DebugInfo()
 
   res.push_back("{");
 
-  std::string str = Util::Instance().StringFormat("  [0x%X]", this);
+  std::string str = Util::StringFormat("  [0x%X]", this);
   res.push_back(str);
 
-  str = Util::Instance().StringFormat("  ObjName: %s", ObjectName.data());
+  str = Util::StringFormat("  ObjName: %s", ObjectName.data());
   res.push_back(str);
 
-  str = Util::Instance().StringFormat("  ObjectId: %lu", _objectId);
+  str = Util::StringFormat("  ObjectId: %lu", _objectId);
   res.push_back(str);
 
   std::string ch = { (char)Image };
-  str = Util::Instance().StringFormat("  Image: '%s'", ch.data());
+  str = Util::StringFormat("  Image: '%s'", ch.data());
 
   res.push_back(str);
 
-  str = Util::Instance().StringFormat("  Position: { %i, %i }", PosX, PosY);
+  str = Util::StringFormat("  Position: { %i, %i }", PosX, PosY);
   res.push_back(str);
 
-  str = Util::Instance().StringFormat("  FgColor: %06X", FgColor);
+  str = Util::StringFormat("  FgColor: %06X", FgColor);
   res.push_back(str);
 
-  str = Util::Instance().StringFormat("  BgColor: %06X", BgColor);
+  str = Util::StringFormat("  BgColor: %06X", BgColor);
   res.push_back(str);
 
-  str = Util::Instance().StringFormat("  Components: %zu", _components.size());
+  str = Util::StringFormat("  Components: %zu", _components.size());
   res.push_back(str);
 
   for (auto& kvp : _components)
   {
-    str = Util::Instance().StringFormat("    %s [0x%X]",
+    str = Util::StringFormat("    %s [0x%X]",
                              typeid(*kvp.second.get()).name(),
                              kvp.second.get());
     res.push_back(str);
   }
 
-  str = Util::Instance().StringFormat("  Effects: %zu", _activeEffects.size());
+  str = Util::StringFormat("  Effects: %zu", _activeEffects.size());
   res.push_back(str);
 
   for (auto& kvp : _activeEffects)
   {
-    str = Util::Instance().StringFormat("    %lu (%zu):", kvp.first, kvp.second.size());
+    str = Util::StringFormat("    %lu (%zu):", kvp.first, kvp.second.size());
     res.push_back(str);
 
     for (ItemBonusStruct& i : kvp.second)

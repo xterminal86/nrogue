@@ -186,8 +186,8 @@ std::vector<std::string> ItemComponent::GetWeaponInspectionInfo()
 {
   std::vector<std::string> res =
   {
-    { Util::Instance().StringFormat("DMG: %id%i", Data.Damage.Min().Get(), Data.Damage.Max().Get()) },
-    { Util::Instance().StringFormat("%i / %i", Data.Durability.Min().Get(), Data.Durability.Max().Get()) }
+    { Util::StringFormat("DMG: %id%i", Data.Damage.Min().Get(), Data.Damage.Max().Get()) },
+    { Util::StringFormat("%i / %i", Data.Durability.Min().Get(), Data.Durability.Max().Get()) }
   };
 
   AddBonusesInfo(res);
@@ -199,7 +199,7 @@ std::vector<std::string> ItemComponent::GetArmorInspectionInfo()
 {
   std::vector<std::string> res =
   {
-    { Util::Instance().StringFormat("%i / %i", Data.Durability.Min().Get(), Data.Durability.Max().Get()) }
+    { Util::StringFormat("%i / %i", Data.Durability.Min().Get(), Data.Durability.Max().Get()) }
   };
 
   AddBonusesInfo(res);
@@ -236,7 +236,7 @@ std::vector<std::string> ItemComponent::GetReturnerInspectionInfo()
     else
     {
       auto levelName = Map::Instance().GetLevelRefByType(mt)->LevelName;
-      text = Util::Instance().StringFormat("Set to %s at [%i;%i]", levelName.data(), pos.X, pos.Y);
+      text = Util::StringFormat("Set to %s at [%i;%i]", levelName.data(), pos.X, pos.Y);
     }
   }
   else
@@ -268,9 +268,9 @@ std::vector<std::string> ItemComponent::GetWandInspectionInfo()
 {
   std::vector<std::string> res;
 
-  std::string damage  = Util::Instance().StringFormat("Damage  : %id%i ", Data.SpellHeld.SpellBaseDamage.first, Data.SpellHeld.SpellBaseDamage.second);
-  std::string charges = Util::Instance().StringFormat("Charges : %i", Data.Amount);
-  std::string range   = Util::Instance().StringFormat("Range   : %i", Data.Range);
+  std::string damage  = Util::StringFormat("Damage  : %id%i ", Data.SpellHeld.SpellBaseDamage.first, Data.SpellHeld.SpellBaseDamage.second);
+  std::string charges = Util::StringFormat("Charges : %i", Data.Amount);
+  std::string range   = Util::StringFormat("Range   : %i", Data.Range);
 
   std::string type = "(RES)";
 
@@ -377,7 +377,7 @@ void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
       bonus2 = bonusStr[1];
     }
 
-    auto str = Util::Instance().StringFormat("%s: %c%c%c", statName.data(), prefix, bonus1, bonus2);
+    auto str = Util::StringFormat("%s: %c%c%c", statName.data(), prefix, bonus1, bonus2);
     res.push_back(str);
   }
 }
@@ -429,14 +429,14 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::SELF_REPAIR:
       {
-        auto str = Util::Instance().StringFormat("Repairs 1 point of durability every %i turns", i.Period);
+        auto str = Util::StringFormat("Repairs 1 point of durability every %i turns", i.Period);
         res.push_back(str);
       }
       break;
 
       case ItemBonusType::VISIBILITY:
       {
-        auto str = Util::Instance().StringFormat("+%i to light radius", i.BonusValue);
+        auto str = Util::StringFormat("+%i to light radius", i.BonusValue);
         res.push_back(str);
       }
       break;
@@ -459,7 +459,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::DAMAGE:
       {
-        auto str = Util::Instance().StringFormat("+%i to total damage", i.BonusValue);
+        auto str = Util::StringFormat("+%i to total damage", i.BonusValue);
         res.push_back(str);
       }
       break;
@@ -488,7 +488,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
       {
         int tiles = i.BonusValue;
         std::string tilesStr = (tiles == 1) ? "tile" : "tiles";
-        auto str = Util::Instance().StringFormat("Knocks enemy %i %s back", tiles, tilesStr.data());
+        auto str = Util::StringFormat("Knocks enemy %i %s back", tiles, tilesStr.data());
         res.push_back(str);
       }
       break;
@@ -499,7 +499,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::REGEN:
       {
-        auto str = Util::Instance().StringFormat("Regenerates 1 HP every %i turns", i.Period);
+        auto str = Util::StringFormat("Regenerates 1 HP every %i turns", i.Period);
         res.push_back(str);
       }
       break;
@@ -510,28 +510,28 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::LEECH:
       {
-        auto str = Util::Instance().StringFormat("%i%c of the inflicted physical damage goes to HP", i.BonusValue, '%');
+        auto str = Util::StringFormat("%i%c of the inflicted physical damage goes to HP", i.BonusValue, '%');
         res.push_back(str);
       }
       break;
 
       case ItemBonusType::DMG_ABSORB:
       {
-        auto str = Util::Instance().StringFormat("Absorbs %i physical damage", i.BonusValue);
+        auto str = Util::StringFormat("Absorbs %i physical damage", i.BonusValue);
         res.push_back(str);
       }
       break;
 
       case ItemBonusType::MAG_ABSORB:
       {
-        auto str = Util::Instance().StringFormat("Absorbs %i magical damage", i.BonusValue);
+        auto str = Util::StringFormat("Absorbs %i magical damage", i.BonusValue);
         res.push_back(str);
       }
       break;
 
       case ItemBonusType::THORNS:
       {
-        auto str = Util::Instance().StringFormat("Returns %i%c of the received physical damage", i.BonusValue, '%');
+        auto str = Util::StringFormat("Returns %i%c of the received physical damage", i.BonusValue, '%');
         res.push_back(str);
       }
       break;
@@ -549,13 +549,13 @@ void ItemComponent::AppendStatBonuses(const std::map<ItemBonusType, int>& statBo
     }
 
     std::string name = GlobalConstants::BonusNameByType.at(kvp.first);
-    auto modStr = Util::Instance().StringFormat("%i", kvp.second);
+    auto modStr = Util::StringFormat("%i", kvp.second);
     if (kvp.second > 0)
     {
       modStr.insert(modStr.begin(), '+');
     }
 
-    auto str = Util::Instance().StringFormat("%s: %s", name.data(), modStr.data());
+    auto str = Util::StringFormat("%s: %s", name.data(), modStr.data());
     res.push_back(str);
   }
 }

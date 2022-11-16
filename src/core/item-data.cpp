@@ -133,15 +133,15 @@ std::vector<std::string> ItemBonusStruct::ToStrings()
 {
   std::vector<std::string> res;
 
-  res.push_back(Util::Instance().StringFormat("Type              = %i", (int)Type));
-  res.push_back(Util::Instance().StringFormat("BonusValue        = %i", BonusValue));
-  res.push_back(Util::Instance().StringFormat("Duration          = %i", Duration));
-  res.push_back(Util::Instance().StringFormat("Period            = %i", Period));
-  res.push_back(Util::Instance().StringFormat("EffectCounter     = %i", EffectCounter));
-  res.push_back(Util::Instance().StringFormat("MoneyCostIncrease = %i", MoneyCostIncrease));
-  res.push_back(Util::Instance().StringFormat("Cumulative        = %i", Cumulative));
-  res.push_back(Util::Instance().StringFormat("Persistent        = %i", Persistent));
-  res.push_back(Util::Instance().StringFormat("Id                = %i", Id));
+  res.push_back(Util::StringFormat("Type              = %i", (int)Type));
+  res.push_back(Util::StringFormat("BonusValue        = %i", BonusValue));
+  res.push_back(Util::StringFormat("Duration          = %i", Duration));
+  res.push_back(Util::StringFormat("Period            = %i", Period));
+  res.push_back(Util::StringFormat("EffectCounter     = %i", EffectCounter));
+  res.push_back(Util::StringFormat("MoneyCostIncrease = %i", MoneyCostIncrease));
+  res.push_back(Util::StringFormat("Cumulative        = %i", Cumulative));
+  res.push_back(Util::StringFormat("Persistent        = %i", Persistent));
+  res.push_back(Util::StringFormat("Id                = %i", Id));
 
   return res;
 }

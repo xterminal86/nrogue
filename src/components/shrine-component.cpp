@@ -59,12 +59,12 @@ IR ShrineComponent::Interact()
     OwnerGameObject->FgColor = Colors::BlackColor;
 
     std::string shrineName = GlobalConstants::ShrineNameByType.at(_type);
-    std::string message = Util::Instance().StringFormat("You touch the %s...", shrineName.data());
+    std::string message = Util::StringFormat("You touch the %s...", shrineName.data());
 
     if (GlobalConstants::ShrineSaintByType.count(_type) == 1)
     {
       std::string saint = GlobalConstants::ShrineSaintByType.at(_type);
-      message = Util::Instance().StringFormat("You pray to %s...", saint.data());
+      message = Util::StringFormat("You pray to %s...", saint.data());
     }
 
     Printer::Instance().AddMessage(message);
@@ -96,7 +96,7 @@ void ShrineComponent::ProcessEffect()
     // raises STR or HP
     case ShrineType::MIGHT:
     {
-      if (Util::Instance().Rolld100(50))
+      if (Util::Rolld100(50))
       {
         playerRef.Attrs.Str.Add(1);
         msg = "You feel stronger!";
@@ -113,7 +113,7 @@ void ShrineComponent::ProcessEffect()
     // raises MAG or MP
     case ShrineType::SPIRIT:
     {
-      if (Util::Instance().Rolld100(50))
+      if (Util::Rolld100(50))
       {
         playerRef.Attrs.Mag.Add(1);
         msg = "You feel strong-willed!";
@@ -212,7 +212,7 @@ void ShrineComponent::ProcessEffect()
         itemsToCurse[index]->Data.Prefix = ItemPrefix::CURSED;
         msg = "You sense the malevolent energy";
         auto& idName = itemsToCurse[index]->Data.IdentifiedName;
-        idName = Util::Instance().ReplaceItemPrefix(idName, { "Blessed", "Uncursed" }, "Cursed");
+        idName = Util::ReplaceItemPrefix(idName, { "Blessed", "Uncursed" }, "Cursed");
       }
     }
     break;
@@ -222,7 +222,7 @@ void ShrineComponent::ProcessEffect()
     {
       ApplyRandomEffect(msg);
 
-      if (Util::Instance().Rolld100(25))
+      if (Util::Rolld100(25))
       {
         ApplyRandomNegativeEffect(msg);
       }
@@ -234,7 +234,7 @@ void ShrineComponent::ProcessEffect()
     {
       ApplyRandomEffect(msg);
 
-      if (Util::Instance().Rolld100(75))
+      if (Util::Rolld100(75))
       {
         ApplyRandomNegativeEffect(msg);
       }
@@ -291,7 +291,7 @@ void ShrineComponent::ProcessEffect()
           ic->Data.IsPrefixDiscovered = true;
           ic->Data.Prefix = ItemPrefix::UNCURSED;
           success = true;
-          ic->Data.IdentifiedName = Util::Instance().ReplaceItemPrefix(ic->Data.IdentifiedName, { "Cursed" }, "Uncursed");
+          ic->Data.IdentifiedName = Util::ReplaceItemPrefix(ic->Data.IdentifiedName, { "Cursed" }, "Uncursed");
         }
       }
 

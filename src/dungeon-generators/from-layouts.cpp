@@ -38,7 +38,7 @@ void FromLayouts::Generate(const std::vector<RoomForLevel>& possibleRooms, int s
   int randomRotation = RNG::Instance().RandomRange(0, 4);
 
   auto layout = SelectRoom();
-  layout = Util::Instance().RotateRoomLayout(layout, (RoomLayoutRotation)randomRotation);
+  layout = Util::RotateRoomLayout(layout, (RoomLayoutRotation)randomRotation);
 
   RoomHelper start;
   start.ParseLayout(layout);
@@ -65,7 +65,7 @@ void FromLayouts::Generate(const std::vector<RoomForLevel>& possibleRooms, int s
 
 RoomLayout FromLayouts::SelectRoom()
 {
-  int dice = Util::Instance().Rolld100();
+  int dice = Util::Rolld100();
 
   std::vector<RoomLayout> rooms;
 
@@ -175,7 +175,7 @@ void FromLayouts::VisitCells(const RoomHelper& room)
     }
   }
 
-  //auto str = Util::Instance().StringFormat("\t\tMarked area lx: %i ly: %i hx: %i hy: %i", lx, ly, hx, hy);
+  //auto str = Util::StringFormat("\t\tMarked area lx: %i ly: %i hx: %i hy: %i", lx, ly, hx, hy);
   //Logger::Instance().Print(str);
 }
 
@@ -217,10 +217,10 @@ bool FromLayouts::IsAreaVisited(const Position& start, int roomSize)
   int hy = ly + roomSize;
 
   /*
-  lx = Util::Instance().Clamp(lx, 0, _mapSize.X - 1);
-  ly = Util::Instance().Clamp(ly, 0, _mapSize.Y - 1);
-  hx = Util::Instance().Clamp(hx, 0, _mapSize.X - 1);
-  hy = Util::Instance().Clamp(hy, 0, _mapSize.Y - 1);
+  lx = Util::Clamp(lx, 0, _mapSize.X - 1);
+  ly = Util::Clamp(ly, 0, _mapSize.Y - 1);
+  hx = Util::Clamp(hx, 0, _mapSize.X - 1);
+  hy = Util::Clamp(hy, 0, _mapSize.Y - 1);
   */
 
   for (int x = lx; x <= hx; x++)
@@ -229,7 +229,7 @@ bool FromLayouts::IsAreaVisited(const Position& start, int roomSize)
     {
       if (_visitedCells[x][y].Visited)
       {
-        //auto dbg = Util::Instance().StringFormat("\t\tCell [%i;%i] is already occupied!", x, y);
+        //auto dbg = Util::StringFormat("\t\tCell [%i;%i] is already occupied!", x, y);
         //Logger::Instance().Print(dbg);
         return true;
       }
@@ -247,7 +247,7 @@ std::vector<RoomHelper> FromLayouts::GetRoomsForLayout(const RoomLayout& layout,
   currentRoom.ParseLayout(layout);
 
   //Logger::Instance().Print("Processing:");
-  //Util::Instance().PrintLayout(currentRoom.Layout);
+  //Util::PrintLayout(currentRoom.Layout);
 
   auto rooms = SelectRooms();
 
@@ -255,13 +255,13 @@ std::vector<RoomHelper> FromLayouts::GetRoomsForLayout(const RoomLayout& layout,
   {
     for (auto& angle : _allDegrees)
     {
-      auto newLayout = Util::Instance().RotateRoomLayout(r, angle);
+      auto newLayout = Util::RotateRoomLayout(r, angle);
 
       RoomHelper rh;
       rh.ParseLayout(newLayout);
 
       //Logger::Instance().Print("Trying to attach:");
-      //Util::Instance().PrintLayout(rh.Layout);
+      //Util::PrintLayout(rh.Layout);
 
       if (currentRoom.CanAttach(rh, side))
       {
@@ -270,7 +270,7 @@ std::vector<RoomHelper> FromLayouts::GetRoomsForLayout(const RoomLayout& layout,
       else
       {
         //Logger::Instance().Print("Can't attach:");
-        //Util::Instance().PrintLayout(rh.Layout);
+        //Util::PrintLayout(rh.Layout);
       }
     }
   }
@@ -280,16 +280,16 @@ std::vector<RoomHelper> FromLayouts::GetRoomsForLayout(const RoomLayout& layout,
 
 std::vector<RoomLayout> FromLayouts::SelectRooms()
 {
-  int dice = Util::Instance().Rolld100();
+  int dice = Util::Rolld100();
 
-  //auto dbg = Util::Instance().StringFormat("\t\tRolled: %i", dice);
+  //auto dbg = Util::StringFormat("\t\tRolled: %i", dice);
   //Logger::Instance().Print(dbg);
 
   std::vector<RoomLayout> rooms;
 
   for (auto& r : _roomsForLevel)
   {
-    //dbg = Util::Instance().StringFormat("\t\tChance: %i", r.Chance);
+    //dbg = Util::StringFormat("\t\tChance: %i", r.Chance);
     //Logger::Instance().Print(dbg);
 
     if (dice <= r.Chance)

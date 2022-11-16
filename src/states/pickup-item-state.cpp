@@ -61,7 +61,7 @@ bool PickupItemState::PickupItem(const Item& item)
   ItemComponent* ic = item.second->GetComponent<ItemComponent>();
   if (ic->Data.ItemType_ == ItemType::COINS)
   {
-    auto message = Util::Instance().StringFormat(Strings::FmtPickedUpIS, ic->Data.Amount, ic->OwnerGameObject->ObjectName.data());
+    auto message = Util::StringFormat(Strings::FmtPickedUpIS, ic->Data.Amount, ic->OwnerGameObject->ObjectName.data());
     Printer::Instance().AddMessage(message);
 
     _playerRef->Money += ic->Data.Amount;
@@ -94,13 +94,13 @@ bool PickupItemState::PickupItem(const Item& item)
     std::string message;
     if (ic->Data.IsStackable)
     {
-      message = Util::Instance().StringFormat(Strings::FmtPickedUpIS,
+      message = Util::StringFormat(Strings::FmtPickedUpIS,
                                    ic->Data.Amount,
                                    objName.data());
     }
     else
     {
-      message = Util::Instance().StringFormat(Strings::FmtPickedUpS, objName.data());
+      message = Util::StringFormat(Strings::FmtPickedUpS, objName.data());
     }
 
     Printer::Instance().AddMessage(message);
@@ -155,7 +155,7 @@ void PickupItemState::RebuildDisplayList()
 
     char c = Strings::AlphabetLowercase[lineIndex];
 
-    std::string str = Util::Instance().StringFormat("'%c' - %s", c, objName.data());
+    std::string str = Util::StringFormat("'%c' - %s", c, objName.data());
     _displayLines.push_back(str);
 
     _itemsListIndexByChar[c] = lineIndex;

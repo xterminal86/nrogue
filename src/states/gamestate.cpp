@@ -173,8 +173,8 @@ void GameState::TakeScreenshot()
                        SDL_PIXELFORMAT_ARGB8888,
                        sshot->pixels,
                        sshot->pitch);
-  std::string time = Util::Instance().GetCurrentDateTimeString();
-  std::string fname = Util::Instance().StringFormat("s_%s.bmp", time.data());
+  std::string time = Util::GetCurrentDateTimeString();
+  std::string fname = Util::StringFormat("s_%s.bmp", time.data());
   SDL_SaveBMP(sshot, fname.data());
   SDL_FreeSurface(sshot);
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,

@@ -127,7 +127,7 @@ void LookInputState::HandleInput()
 
       PotentialField::Cell* c = _playerRef->DistanceField.GetCell(_cursorPosition.X, _cursorPosition.Y);
 
-      _distanceField = (c == nullptr) ? "0x0" : Util::Instance().StringFormat("%i %i [%i]", c->MapPos.X, c->MapPos.Y, c->Cost);
+      _distanceField = (c == nullptr) ? "0x0" : Util::StringFormat("%i %i [%i]", c->MapPos.X, c->MapPos.Y, c->Cost);
     }
     break;
 
@@ -164,7 +164,7 @@ void LookInputState::Update(bool forceUpdate)
     int mapSizeX = Map::Instance().CurrentLevel->MapSize.X;
     int mapSizeY = Map::Instance().CurrentLevel->MapSize.Y;
 
-    if (Util::Instance().CheckLimits(_cursorPosition, { mapSizeX, mapSizeY }))
+    if (Util::CheckLimits(_cursorPosition, { mapSizeX, mapSizeY }))
     {
       auto tile = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
 
@@ -191,7 +191,7 @@ void LookInputState::Update(bool forceUpdate)
                 std::string name = model->Data.Name;
                 std::string title = model->Data.Job;
                 std::string unidStr = model->Data.UnacquaintedDescription;
-                auto idStr = Util::Instance().StringFormat("You see %s the %s", name.data(), title.data());
+                auto idStr = Util::StringFormat("You see %s the %s", name.data(), title.data());
                 lookStatus = (model->Data.IsAquainted) ? idStr : unidStr;
                 foundGameObject = true;
               }
@@ -279,7 +279,7 @@ void LookInputState::Update(bool forceUpdate)
                                 Printer::kAlignCenter,
                                 Colors::WhiteColor);
 
-    std::string coords = Util::Instance().StringFormat("[%i;%i]", _cursorPosition.X, _cursorPosition.Y);
+    std::string coords = Util::StringFormat("[%i;%i]", _cursorPosition.X, _cursorPosition.Y);
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 2,
                                 coords,
@@ -311,10 +311,10 @@ void LookInputState::MoveCursor(int dx, int dy)
   //
   // To compensate for cursor image
   //
-  nx = Util::Instance().Clamp(nx, _playerRef->PosX - hw + 1,
+  nx = Util::Clamp(nx, _playerRef->PosX - hw + 1,
                        _playerRef->PosX + hw - 2);
 
-  ny = Util::Instance().Clamp(ny, _playerRef->PosY - hh,
+  ny = Util::Clamp(ny, _playerRef->PosY - hh,
                        _playerRef->PosY + hh);
 
   _cursorPosition.X = nx;
@@ -360,10 +360,10 @@ void LookInputState::DisplayMonsterStats()
     int mod = attr.GetModifiers();
 
     std::string txt = (mod < 0)
-                      ? Util::Instance().StringFormat("(-%i)", mod)
-                      : Util::Instance().StringFormat("(+%i)", mod);
+                      ? Util::StringFormat("(-%i)", mod)
+                      : Util::StringFormat("(+%i)", mod);
 
-    std::string total = Util::Instance().StringFormat("%s: %i %s", attrName.data(), val, txt.data());
+    std::string total = Util::StringFormat("%s: %i %s", attrName.data(), val, txt.data());
 
     return total;
   };
@@ -378,10 +378,10 @@ void LookInputState::DisplayMonsterStats()
   {
     _monsterStatsInfo.clear();
 
-    std::string name = Util::Instance().StringFormat("%s_%lu", actor->ObjectName.data(), actor->ObjectId());
+    std::string name = Util::StringFormat("%s_%lu", actor->ObjectName.data(), actor->ObjectId());
 
-    _monsterStatsInfo.push_back(Util::Instance().StringFormat("LVL: %i", actor->Attrs.Lvl.Get()));
-    _monsterStatsInfo.push_back(Util::Instance().StringFormat("EXP: %i", actor->Attrs.Exp.Min().Get()));
+    _monsterStatsInfo.push_back(Util::StringFormat("LVL: %i", actor->Attrs.Lvl.Get()));
+    _monsterStatsInfo.push_back(Util::StringFormat("EXP: %i", actor->Attrs.Exp.Min().Get()));
     _monsterStatsInfo.push_back(std::string());
     _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Str, "STR"));
     _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Def, "DEF"));
@@ -390,13 +390,13 @@ void LookInputState::DisplayMonsterStats()
     _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Skl, "SKL"));
     _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Spd, "SPD"));
     _monsterStatsInfo.push_back(std::string());
-    _monsterStatsInfo.push_back(Util::Instance().StringFormat("Rating: %i", actor->Attrs.Rating()));
-    _monsterStatsInfo.push_back(Util::Instance().StringFormat("(CR: %i)", actor->Attrs.ChallengeRating));
+    _monsterStatsInfo.push_back(Util::StringFormat("Rating: %i", actor->Attrs.Rating()));
+    _monsterStatsInfo.push_back(Util::StringFormat("(CR: %i)", actor->Attrs.ChallengeRating));
     _monsterStatsInfo.push_back(std::string());
-    _monsterStatsInfo.push_back(Util::Instance().StringFormat("HP: %i/%i", actor->Attrs.HP.Min().Get(), actor->Attrs.HP.Max().Get()));
-    _monsterStatsInfo.push_back(Util::Instance().StringFormat("MP: %i/%i", actor->Attrs.MP.Min().Get(), actor->Attrs.MP.Max().Get()));
+    _monsterStatsInfo.push_back(Util::StringFormat("HP: %i/%i", actor->Attrs.HP.Min().Get(), actor->Attrs.HP.Max().Get()));
+    _monsterStatsInfo.push_back(Util::StringFormat("MP: %i/%i", actor->Attrs.MP.Min().Get(), actor->Attrs.MP.Max().Get()));
     _monsterStatsInfo.push_back(std::string());
-    _monsterStatsInfo.push_back(Util::Instance().StringFormat("Action Meter: %i", actor->Attrs.ActionMeter));
+    _monsterStatsInfo.push_back(Util::StringFormat("Action Meter: %i", actor->Attrs.ActionMeter));
 
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, name, _monsterStatsInfo);
   }

@@ -6,7 +6,6 @@
 #include "behaviour-tree.h"
 #include "equipment-component.h"
 #include "item-component.h"
-#include "util.h"
 
 TaskMineBlock::TaskMineBlock(GameObject* objectToControl, bool ignorePickaxe)
   : Node(objectToControl)
@@ -43,7 +42,7 @@ BTResult TaskMineBlock::Run()
   std::vector<Position> candidates;
   for (auto& p : toCheck)
   {
-    bool insideMap = Util::Instance().IsInsideMap(p, Map::Instance().CurrentLevel->MapSize);
+    bool insideMap = Util::IsInsideMap(p, Map::Instance().CurrentLevel->MapSize);
     auto& so = Map::Instance().CurrentLevel->StaticMapObjects[p.X][p.Y];
 
     if (insideMap && so != nullptr && so->Type == GameObjectType::PICKAXEABLE)
@@ -63,7 +62,7 @@ BTResult TaskMineBlock::Run()
 
   if (!_ignorePickaxe)
   {
-    Util::Instance().TryToDamageEquipment(_objectToControl, EquipmentCategory::WEAPON, -1);
+    Util::TryToDamageEquipment(_objectToControl, EquipmentCategory::WEAPON, -1);
   }
 
   Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y]->Attrs.HP.SetMin(0);
