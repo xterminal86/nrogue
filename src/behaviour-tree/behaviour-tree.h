@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <functional>
+#include <string>
 
 class GameObject;
 class Player;
