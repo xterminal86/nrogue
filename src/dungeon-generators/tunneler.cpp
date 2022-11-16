@@ -88,7 +88,7 @@ void Tunneler::Backtracking(const Position& mapSize,
 
     if (wasBuilt)
     {
-      //auto str = Util::StringFormat("\tFinished building, adding node point %i %i dir %i %i", x, y, dir.X, dir.Y);
+      //auto str = Util::Instance().StringFormat("\tFinished building, adding node point %i %i dir %i %i", x, y, dir.X, dir.Y);
       //Logger::Instance().Print(str);
 
       nodePoints.push({ { x, y }, dir });
@@ -266,7 +266,7 @@ std::vector<Position> Tunneler::TryToGetPerpendicularDir(const Position& pos, co
 
   std::vector<Position> selectedPair;
 
-  //auto str = Util::StringFormat("Trying to get perpendicular dir to %i %i", lastDir.X, lastDir.Y);
+  //auto str = Util::Instance().StringFormat("Trying to get perpendicular dir to %i %i", lastDir.X, lastDir.Y);
   //Logger::Instance().Print(str);
 
   for (size_t i = 0; i < directions.size(); i++)
@@ -280,7 +280,7 @@ std::vector<Position> Tunneler::TryToGetPerpendicularDir(const Position& pos, co
 
       for (auto& i : selectedPair)
       {
-        auto str = Util::StringFormat("\t%i %i", i.X, i.Y);
+        auto str = Util::Instance().StringFormat("\t%i %i", i.X, i.Y);
         Logger::Instance().Print(str);
       }
       */
@@ -296,17 +296,17 @@ std::vector<Position> Tunneler::TryToGetPerpendicularDir(const Position& pos, co
     int x = pos.X + selectedPair[index].X;
     int y = pos.Y + selectedPair[index].Y;
 
-    //auto str = Util::StringFormat("\t Checking %i %i...", x, y);
+    //auto str = Util::Instance().StringFormat("\t Checking %i %i...", x, y);
     //Logger::Instance().Print(str);
 
-    //str = Util::StringFormat("\t Index %i", index);
+    //str = Util::Instance().StringFormat("\t Index %i", index);
     //Logger::Instance().Print(str);
 
     if (IsInsideMap({ x, y })
      && IsDeadEnd({ x, y })
      && !_map[x][y].Visited)
     {
-      //auto str = Util::StringFormat("\t Selected dir %i %i", selectedPair[index].X, selectedPair[index].Y);
+      //auto str = Util::Instance().StringFormat("\t Selected dir %i %i", selectedPair[index].X, selectedPair[index].Y);
       //Logger::Instance().Print(str);
 
       res.push_back(selectedPair[index]);

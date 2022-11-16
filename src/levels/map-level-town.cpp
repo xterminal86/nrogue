@@ -20,7 +20,7 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type, int dungeonLevel)
   {
     for (auto& i : kvp.second)
     {
-      auto l = Util::DecodeMap(i);
+      auto l = Util::Instance().DecodeMap(i);
       _layoutsForLevel.push_back(l);
     }
   }
@@ -232,7 +232,7 @@ void MapLevelTown::CreateLevel()
 
   int numHouses = 4;
 
-  auto rotatedRoom = Util::RotateRoomLayout(_layoutsForLevel[0], RoomLayoutRotation::CCW_180);
+  auto rotatedRoom = Util::Instance().RotateRoomLayout(_layoutsForLevel[0], RoomLayoutRotation::CCW_180);
 
   int offset = 15;
   for (int i = 0; i < numHouses; i++)
@@ -246,7 +246,7 @@ void MapLevelTown::CreateLevel()
 
   CreateRoom(5, 20, _layoutsForLevel[3]);
 
-  auto room = Util::RotateRoomLayout(_layoutsForLevel[3], RoomLayoutRotation::CCW_270);
+  auto room = Util::Instance().RotateRoomLayout(_layoutsForLevel[3], RoomLayoutRotation::CCW_270);
   CreateRoom(5, 32, room);
 
   CreateRoom(25, 30, _layoutsForLevel[4]);
@@ -488,7 +488,7 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
   if (randomizeOrientation)
   {
     int index = RNG::Instance().Random() % _rotations.size();
-    newLayout = Util::RotateRoomLayout(layout, _rotations[index]);
+    newLayout = Util::Instance().RotateRoomLayout(layout, _rotations[index]);
   }
 
   for (auto& row : newLayout)
@@ -575,7 +575,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
   if (randomizeOrientation)
   {
     int index = RNG::Instance().Random() % _rotations.size();
-    newLayout = Util::RotateRoomLayout(layout, _rotations[index]);
+    newLayout = Util::Instance().RotateRoomLayout(layout, _rotations[index]);
   }
 
   for (auto& row : newLayout)
@@ -804,7 +804,7 @@ void MapLevelTown::CreateChurch(int x, int y)
 
 void MapLevelTown::CreatePlayerHouse()
 {
-  auto rot = Util::RotateRoomLayout(_layoutsForLevel[0], RoomLayoutRotation::CCW_180);
+  auto rot = Util::Instance().RotateRoomLayout(_layoutsForLevel[0], RoomLayoutRotation::CCW_180);
   CreateRoom(3, 3, rot);
 
   GameObjectInfo t;

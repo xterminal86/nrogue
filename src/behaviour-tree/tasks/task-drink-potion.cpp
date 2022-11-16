@@ -89,7 +89,7 @@ void TaskDrinkPotion::PrintLogIfNeeded(ItemComponent* ic)
 
   if (curTile->Visible)
   {
-    auto msg = Util::StringFormat("%s drinks %s",
+    auto msg = Util::Instance().StringFormat("%s drinks %s",
                                   _objectToControl->ObjectName.data(),
                                   ic->Data.UnidentifiedName.data());
 

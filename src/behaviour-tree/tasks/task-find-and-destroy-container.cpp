@@ -6,6 +6,7 @@
 #include "blackboard.h"
 #include "pathfinder.h"
 #include "map.h"
+#include "util.h"
 
 BTResult TaskFindAndDestroyContainer::Run()
 {
@@ -55,7 +56,7 @@ GameObject* TaskFindAndDestroyContainer::FindContainer()
 
   Position objPos = _objectToControl->GetPosition();
 
-  auto containersFound = Util::GetContainersInRange(_objectToControl, r);
+  auto containersFound = Util::Instance().GetContainersInRange(_objectToControl, r);
   if (!containersFound.empty())
   {
     std::vector<int> indices;
@@ -81,9 +82,9 @@ GameObject* TaskFindAndDestroyContainer::FindContainer()
 
 BTResult TaskFindAndDestroyContainer::ProcessExistingObject(GameObject* container)
 {
-  if (Util::IsObjectInRange(_objectToControl,
-                            container,
-                            1))
+  if (Util::Instance().IsObjectInRange(_objectToControl,
+                                         container,
+                                         1))
   {
     ItemComponent* weapon = nullptr;
     EquipmentComponent* ec = _objectToControl->GetComponent<EquipmentComponent>();
@@ -92,12 +93,12 @@ BTResult TaskFindAndDestroyContainer::ProcessExistingObject(GameObject* containe
       weapon = ec->EquipmentByCategory[EquipmentCategory::WEAPON][0];
     }
 
-    int dmg = Util::CalculateDamageValue(_objectToControl,
+    int dmg = Util::Instance().CalculateDamageValue(_objectToControl,
                                          container,
                                          weapon,
                                          false);
 
-    Util::TryToDamageEquipment(_objectToControl, weapon, -1);
+    Util::Instance().TryToDamageEquipment(_objectToControl, weapon, -1);
 
     container->ReceiveDamage(_objectToControl, dmg, false, false, false, true);
   }

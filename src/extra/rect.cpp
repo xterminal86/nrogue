@@ -78,7 +78,7 @@ void Rect::Print()
 
 void Rect::LogPrint()
 {
-  auto str = Util::StringFormat("[%i; %i] -> [%i %i]\n", X1, Y1, X2, Y2);
+  auto str = Util::Instance().StringFormat("[%i; %i] -> [%i %i]\n", X1, Y1, X2, Y2);
   Logger::Instance().Print(str);
 }
 

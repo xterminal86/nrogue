@@ -61,7 +61,7 @@ void FeatureRooms::Generate(const Position& mapSize,
     newRoomStartPos.X = doorPos.X + carveOffsets.X;
     newRoomStartPos.Y = doorPos.Y + carveOffsets.Y;
 
-    auto res = Util::WeightedRandom(_roomWeightByType);
+    auto res = Util::Instance().WeightedRandom(_roomWeightByType);
 
     FeatureRoomType typeRolled = res.first;
     std::pair<int, int> weightAndMax = _weightsMap[res.first];
@@ -234,7 +234,7 @@ bool FeatureRooms::CreateRoundRoom(const Position& start,
   {
     for (int y = ly; y <= hy; y++)
     {
-      float d = Util::LinearDistance({ x, y }, { sx, sy });
+      float d = Util::Instance().LinearDistance({ x, y }, { sx, sy });
       if (d < radius)
       {
         if (!IsCellValid({ x, y }))

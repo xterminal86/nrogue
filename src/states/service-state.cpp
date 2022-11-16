@@ -117,8 +117,8 @@ void ServiceState::ProcessBlessing(int key)
       // Now we need to replace header BUC status name
       // that was generated during object creation.
       //
-      si.ItemComponentRef->Data.IdentifiedName = Util::ReplaceItemPrefix(si.ItemComponentRef->Data.IdentifiedName, { "Cursed" , "Uncursed" }, "Blessed");
-      si.ItemComponentRef->Data.ItemTypeHash = Util::CalculateItemHash(si.ItemComponentRef);
+      si.ItemComponentRef->Data.IdentifiedName = Util::Instance().ReplaceItemPrefix(si.ItemComponentRef->Data.IdentifiedName, { "Cursed" , "Uncursed" }, "Blessed");
+      si.ItemComponentRef->Data.ItemTypeHash = Util::Instance().CalculateItemHash(si.ItemComponentRef);
     }
 
     si.ItemComponentRef->Data.IsPrefixDiscovered = true;
@@ -136,13 +136,13 @@ void ServiceState::BlessItem(const ServiceInfo& si)
   //
   if (!si.ItemComponentRef->Data.Bonuses.empty())
   {
-    Util::BlessItem(si.ItemComponentRef);
+    Util::Instance().BlessItem(si.ItemComponentRef);
   }
   else
   {
     if (si.ItemComponentRef->Data.ItemType_ == ItemType::WAND)
     {
-      Util::RecalculateWandStats(si.ItemComponentRef);
+      Util::Instance().RecalculateWandStats(si.ItemComponentRef);
     }
   }
 
@@ -177,7 +177,7 @@ void ServiceState::BlessItem(const ServiceInfo& si)
     //
     if (equippedItem == si.ItemComponentRef)
     {
-      Util::ReapplyBonuses(_playerRef, equippedItem);
+      Util::Instance().ReapplyBonuses(_playerRef, equippedItem);
     }
   }
 }
@@ -187,7 +187,7 @@ void ServiceState::DrawSpecific()
   DisplayItems();
 
   std::string youHaveStr = "You have: ";
-  auto playerMoney = Util::StringFormat("$ %i", _playerRef->Money);
+  auto playerMoney = Util::Instance().StringFormat("$ %i", _playerRef->Money);
 
   Printer::Instance().PrintFB(1,
                               _th - 1,
@@ -219,7 +219,7 @@ void ServiceState::DisplayItems()
     {
       ServiceInfo& ri = kvp.second;
 
-      std::string cost = Util::StringFormat("$%i", ri.ServiceCost);
+      std::string cost = Util::Instance().StringFormat("$%i", ri.ServiceCost);
 
       Printer::Instance().PrintFB(1,
                                   2 + itemIndex,
@@ -316,15 +316,15 @@ void ServiceState::FillItemsForBlessing()
     char c = Strings::AlphabetLowercase[itemIndex];
 
     std::string nameToDisplay = (ic->Data.IsIdentified ? item->ObjectName : ic->Data.UnidentifiedName);
-    std::string charStr = Util::StringFormat("'%c'", c);
-    std::string str = Util::StringFormat("%s - %s", charStr.data(), nameToDisplay.data());
+    std::string charStr = Util::Instance().StringFormat("'%c'", c);
+    std::string str = Util::Instance().StringFormat("%s - %s", charStr.data(), nameToDisplay.data());
 
     if (_maxStrLen < str.length())
     {
       _maxStrLen = str.length();
     }
 
-    auto color = Util::GetItemInventoryColor(ic->Data);
+    auto color = Util::Instance().GetItemInventoryColor(ic->Data);
 
     int totalCost = ic->Data.GetCost();
     for (auto& b : ic->Data.Bonuses)
@@ -383,8 +383,8 @@ void ServiceState::FillItemsForIdentify()
 
     char c = Strings::AlphabetLowercase[itemIndex];
 
-    std::string charStr = Util::StringFormat("'%c'", c);
-    std::string str = Util::StringFormat("%s - %s", charStr.data(), ic->Data.UnidentifiedName.data());
+    std::string charStr = Util::Instance().StringFormat("'%c'", c);
+    std::string str = Util::Instance().StringFormat("%s - %s", charStr.data(), ic->Data.UnidentifiedName.data());
 
     if (_maxStrLen < str.length())
     {
@@ -422,15 +422,15 @@ void ServiceState::FillItemsForRepair()
 
     if (ic->Data.IsIdentified)
     {
-      dur = Util::StringFormat("(%i/%i)", ic->Data.Durability.Min().Get(), ic->Data.Durability.Max().Get());
+      dur = Util::Instance().StringFormat("(%i/%i)", ic->Data.Durability.Min().Get(), ic->Data.Durability.Max().Get());
     }
     else
     {
       dur = R"((??/??))";
     }
 
-    std::string charStr = Util::StringFormat("'%c'", c);
-    str = Util::StringFormat("%s - %s %s", charStr.data(), name.data(), dur.data());
+    std::string charStr = Util::Instance().StringFormat("'%c'", c);
+    str = Util::Instance().StringFormat("%s - %s %s", charStr.data(), name.data(), dur.data());
 
     if (_maxStrLen < str.length())
     {

@@ -87,7 +87,7 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
 
         if (IsThisPlayer())
         {
-          auto str = Util::StringFormat("You can't unequip %s - it's cursed!", rings[i]->OwnerGameObject->ObjectName.data());
+          auto str = Util::Instance().StringFormat("You can't unequip %s - it's cursed!", rings[i]->OwnerGameObject->ObjectName.data());
           Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
                                                  Strings::MessageBoxEpicFailHeaderText,
                                                  { str },
@@ -137,7 +137,7 @@ void EquipmentComponent::EquipRing(ItemComponent* ring, int index)
                           ring->OwnerGameObject->ObjectName :
                           ring->Data.UnidentifiedName;
 
-    auto str = Util::StringFormat("You put on %s", objName.data());
+    auto str = Util::Instance().StringFormat("You put on %s", objName.data());
     Printer::Instance().AddMessage(str);
   }
 }
@@ -155,7 +155,7 @@ void EquipmentComponent::UnequipRing(ItemComponent* ring, int index)
                           ring->OwnerGameObject->ObjectName :
                           ring->Data.UnidentifiedName;
 
-    auto str = Util::StringFormat("You take off %s", objName.data());
+    auto str = Util::Instance().StringFormat("You take off %s", objName.data());
     Printer::Instance().AddMessage(str);
   }
 }
@@ -193,7 +193,7 @@ bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item)
 
       if (IsThisPlayer())
       {
-        auto str = Util::StringFormat("You can't unequip %s - it's cursed!", itemEquipped->OwnerGameObject->ObjectName.data());
+        auto str = Util::Instance().StringFormat("You can't unequip %s - it's cursed!", itemEquipped->OwnerGameObject->ObjectName.data());
         Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
                                                Strings::MessageBoxEpicFailHeaderText,
                                                { str },
@@ -236,7 +236,7 @@ void EquipmentComponent::EquipItem(ItemComponent* item)
                           item->OwnerGameObject->ObjectName :
                           item->Data.UnidentifiedName;
 
-    auto message = Util::StringFormat("You %s %s", verb.data(), objName.data());
+    auto message = Util::Instance().StringFormat("You %s %s", verb.data(), objName.data());
     Printer::Instance().AddMessage(message);
   }
 }
@@ -263,7 +263,7 @@ void EquipmentComponent::UnequipItem(ItemComponent* item)
 
     std::string objName = item->Data.IsIdentified ? item->OwnerGameObject->ObjectName : item->Data.UnidentifiedName;
 
-    auto message = Util::StringFormat("You %s %s", verb.data(), objName.data());
+    auto message = Util::Instance().StringFormat("You %s %s", verb.data(), objName.data());
     Printer::Instance().AddMessage(message);
   }
 }

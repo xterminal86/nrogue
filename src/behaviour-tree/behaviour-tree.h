@@ -6,8 +6,6 @@
 #include <map>
 #include <functional>
 
-#include "util.h"
-
 class GameObject;
 class Player;
 

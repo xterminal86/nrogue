@@ -33,7 +33,7 @@ void NPCInteractState::Cleanup()
   _currentLine = 0;
   _textBlockCharIndex = 0;
   _blockToPrint.clear();
-  Util::WaitForMs(0, true);
+  Util::Instance().WaitForMs(0, true);
 }
 
 void NPCInteractState::HandleInput()
@@ -108,12 +108,12 @@ void NPCInteractState::HandleInput()
         auto name = _npcRef->Data.Name;
         auto title = _npcRef->Data.Job;
 
-        msg = Util::StringFormat("You finished speaking with %s the %s", name.data(), title.data());
+        msg = Util::Instance().StringFormat("You finished speaking with %s the %s", name.data(), title.data());
       }
       else
       {
         auto name = _npcRef->AIComponentRef->OwnerGameObject->ObjectName;
-        msg = Util::StringFormat("You finished speaking with %s", name.data());
+        msg = Util::Instance().StringFormat("You finished speaking with %s", name.data());
       }
 
       Printer::Instance().AddMessage(msg);
@@ -130,7 +130,7 @@ void NPCInteractState::Update(bool forceUpdate)
 {
   if (_textPrinting)
   {
-    if (Util::WaitForMs(10))
+    if (Util::Instance().WaitForMs(10))
     {
       AnimateText();
     }
@@ -218,7 +218,7 @@ void NPCInteractState::PrintHeader()
 
   if (_npcRef->Data.IsAquainted)
   {
-    auto str = Util::StringFormat(" %s the %s ", _npcRef->Data.Name.data(), _npcRef->Data.Job.data());
+    auto str = Util::Instance().StringFormat(" %s the %s ", _npcRef->Data.Name.data(), _npcRef->Data.Job.data());
     desc = str;
   }
   else

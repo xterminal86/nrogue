@@ -15,7 +15,7 @@ void IntroState::Prepare()
   int textIndex = Application::Instance().PlayerInstance.SelectedClass;
   _textPositionY = _thHalf - _introStrings[textIndex].size() / 2;
 
-  Util::WaitForMs(0, true);
+  Util::Instance().WaitForMs(0, true);
 }
 
 void IntroState::HandleInput()
@@ -78,7 +78,7 @@ void IntroState::Update(bool forceUpdate)
                               Printer::kAlignCenter,
                               Colors::WhiteColor,
                               Colors::BlackColor);
-  if (Util::WaitForMs(10))
+  if (Util::Instance().WaitForMs(10))
   {
     int textIndex = Application::Instance().PlayerInstance.SelectedClass;
     if (_stringIndex != _introStrings[textIndex].size())

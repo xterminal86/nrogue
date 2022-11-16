@@ -16,11 +16,11 @@ TriggerComponent::TriggerComponent(TriggerType type,
 
 void TriggerComponent::Update()
 {
-  if (Util::IsFunctionValid(_data.Condition))
+  if (Util::Instance().IsFunctionValid(_data.Condition))
   {
     if (_data.Condition())
     {
-      if (Util::IsFunctionValid(_data.Handler))
+      if (Util::Instance().IsFunctionValid(_data.Handler))
       {
         if (_data.Type == TriggerType::ONE_SHOT)
         {

@@ -28,7 +28,7 @@
 AIModelBase::AIModelBase()
 {
   _playerRef = &Application::Instance().PlayerInstance;
-  _bonusTypeByDisplayName = Util::FlipMap(GlobalConstants::BonusDisplayNameByType);
+  _bonusTypeByDisplayName = Util::Instance().FlipMap(GlobalConstants::BonusDisplayNameByType);
 }
 
 void AIModelBase::PrepareScript()
@@ -136,7 +136,7 @@ void AIModelBase::Update()
   }
   else
   {
-    auto str = Util::StringFormat("No AI on this object: %s!", AIComponentRef->OwnerGameObject->ObjectName.data());
+    auto str = Util::Instance().StringFormat("No AI on this object: %s!", AIComponentRef->OwnerGameObject->ObjectName.data());
     Logger::Instance().Print(str, true);
 
     DebugLog("%s\n", str.data());
@@ -284,7 +284,7 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
 
   if (task == nullptr)
   {
-    auto who = Util::StringFormat("%s_%u", AIComponentRef->OwnerGameObject->ObjectName.data(), AIComponentRef->OwnerGameObject->ObjectId());
+    auto who = Util::Instance().StringFormat("%s_%u", AIComponentRef->OwnerGameObject->ObjectName.data(), AIComponentRef->OwnerGameObject->ObjectId());
     Logger::Instance().Print(who, true);
 
     DebugLog("\t[%s] no such task - %s!\n", who.data(), taskName.data());
@@ -581,7 +581,7 @@ std::function<BTResult()> AIModelBase::GetD100CF(const ScriptNode* data)
   unsigned int succ = std::stoul(data->Params.at("p2"));
   auto fn = [succ]()
   {
-    bool res = Util::Rolld100(succ);
+    bool res = Util::Instance().Rolld100(succ);
     return res ? BTResult::Success : BTResult::Failure;
   };
 
@@ -601,7 +601,7 @@ std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF()
     bool res = Map::Instance().IsObjectVisible(objPos, plPos);
     if (res)
     {
-      std::string plPosStr = Util::StringFormat("%i,%i", plPos.X, plPos.Y);
+      std::string plPosStr = Util::Instance().StringFormat("%i,%i", plPos.X, plPos.Y);
 
       Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { Strings::BlackboardKeyPlayerPos, plPosStr });
     }
@@ -640,7 +640,7 @@ std::function<BTResult()> AIModelBase::GetInRangeCF(const ScriptNode* data)
     auto& playerRef = Application::Instance().PlayerInstance;
     auto& objRef    = AIComponentRef->OwnerGameObject;
 
-    bool res = Util::IsObjectInRange(objRef->GetPosition(),
+    bool res = Util::Instance().IsObjectInRange(objRef->GetPosition(),
                                      playerRef.GetPosition(),
                                      range,
                                      range);
@@ -818,9 +818,9 @@ Node* AIModelBase::CreateConditionNode(const ScriptNode* data)
 {
   std::function<BTResult()> fn = GetConditionFunction(data);
 
-  if (!Util::IsFunctionValid(fn))
+  if (!Util::Instance().IsFunctionValid(fn))
   {
-    auto str = Util::StringFormat("%s - empty COND function (%s)!", __PRETTY_FUNCTION__, data->Params.at("p1").data());
+    auto str = Util::Instance().StringFormat("%s - empty COND function (%s)!", __PRETTY_FUNCTION__, data->Params.at("p1").data());
     Logger::Instance().Print(str);
 
     DebugLog("%s\n", str.data());
@@ -877,7 +877,7 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
 
   if (n == nullptr && nodeType != ScriptTaskNames::TASK)
   {
-    auto who = Util::StringFormat("%s_%u", AIComponentRef->OwnerGameObject->ObjectName.data(), AIComponentRef->OwnerGameObject->ObjectId());
+    auto who = Util::Instance().StringFormat("%s_%u", AIComponentRef->OwnerGameObject->ObjectName.data(), AIComponentRef->OwnerGameObject->ObjectId());
     Logger::Instance().Print(who);
 
     DebugLog("[%s] no such node - %s!\n", who.data(), nodeName.data());

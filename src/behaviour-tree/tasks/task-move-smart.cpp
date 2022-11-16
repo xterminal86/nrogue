@@ -7,7 +7,7 @@ BTResult TaskMoveSmart::Run()
 {
   //DebugLog("[TaskMoveSmart]\n");
 
-  auto cells = Util::GetEightPointsAround(_objectToControl->GetPosition(),
+  auto cells = Util::Instance().GetEightPointsAround(_objectToControl->GetPosition(),
                                           Map::Instance().CurrentLevel->MapSize);
   std::vector<Position> cellsToMove;
   for (auto& c : cells)

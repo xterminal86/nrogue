@@ -142,7 +142,7 @@ void MapLevelCaves::CreateLevel()
 
   if (MapType_ != MapType::CAVES_5)
   {
-    if (Util::Rolld100(_shrineRollChance))
+    if (Util::Instance().Rolld100(_shrineRollChance))
     {
       PlaceRandomShrine(lb);
     }
@@ -183,7 +183,7 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
         {
           GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false);
 
-          if (Util::Rolld100(15))
+          if (Util::Instance().Rolld100(15))
           {
             DoorComponent* dc = door->GetComponent<DoorComponent>();
             dc->OpenedBy = GlobalConstants::OpenedByNobody;
@@ -235,7 +235,7 @@ void MapLevelCaves::CreateSpecialLevel()
 {
   MysteriousForcePresent = true;
 
-  auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
+  auto convLevel = Util::Instance().StringsArray2DToCharArray2D(_specialLevel);
 
   MapType stairsDownTo = (MapType)(DungeonLevel + 1);
   MapType stairsUpTo = (MapType)(DungeonLevel - 1);
@@ -369,7 +369,7 @@ void MapLevelCaves::CreateRivers()
       end.Set(y2, MapSize.X - 1);
     }
 
-    auto line = Util::BresenhamLine(start, end);
+    auto line = Util::Instance().BresenhamLine(start, end);
     for (auto& p : line)
     {
       if (MapArray[p.X][p.Y]->Image == '.')

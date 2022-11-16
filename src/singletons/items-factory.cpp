@@ -90,7 +90,7 @@ void ItemsFactory::InitScrolls()
 
     _gameScrollsMap[spell] = si;
 
-    //auto str = Util::StringFormat("%s = %s", GlobalConstants::SpellNameByType.at(si.SpellType_).data(), si.ScrollName.data());
+    //auto str = Util::Instance().StringFormat("%s = %s", GlobalConstants::SpellNameByType.at(si.SpellType_).data(), si.ScrollName.data());
     //Logger::Instance().Print(str);
 
     // DebugLog("%s = %s\n", GlobalConstants::SpellNameByType.at(si.SpellType_).data(), si.ScrollName.data());
@@ -132,7 +132,7 @@ GameObject* ItemsFactory::CreateMoney(int amount)
   ic->Data.IsIdentified   = true;
   ic->Data.IdentifiedName = Strings::MoneyName;
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   go->StackObjectId = go->ObjectId();
 
@@ -237,7 +237,7 @@ GameObject* ItemsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -282,7 +282,7 @@ GameObject* ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -327,7 +327,7 @@ GameObject* ItemsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -372,7 +372,7 @@ GameObject* ItemsFactory::CreateJuicePotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -422,7 +422,7 @@ GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -431,7 +431,7 @@ GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPref
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  auto m = Util::FlipMap(GlobalConstants::StatNameByPotionType);
+  auto m = Util::Instance().FlipMap(GlobalConstants::StatNameByPotionType);
 
   PotionType pt = m.at(statName);
 
@@ -459,7 +459,7 @@ GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPref
 
   go->StackObjectId = go->ObjectId();
 
-  auto str = Util::StringFormat("This will affect your %s", statName.data());
+  auto str = Util::Instance().StringFormat("This will affect your %s", statName.data());
   ic->Data.IdentifiedDescription = { str };
 
   ic->Data.IdentifiedName = name;
@@ -471,7 +471,7 @@ GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPref
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -522,7 +522,7 @@ GameObject* ItemsFactory::CreateCWPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -572,7 +572,7 @@ GameObject* ItemsFactory::CreateRAPotion(ItemPrefix prefixOverride)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -581,7 +581,7 @@ GameObject* ItemsFactory::CreateRandomPotion()
 {
   GameObject* go = nullptr;
 
-  auto weights = Util::WeightedRandom(GlobalConstants::PotionsWeightTable);
+  auto weights = Util::Instance().WeightedRandom(GlobalConstants::PotionsWeightTable);
 
   switch (weights.first)
   {
@@ -678,7 +678,7 @@ GameObject* ItemsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix pre
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -702,7 +702,7 @@ GameObject* ItemsFactory::CreateNote(const std::string& objName, const std::vect
   ic->Data.IdentifiedDescription = text;
   ic->Data.IdentifiedName = objName;
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -728,7 +728,7 @@ GameObject* ItemsFactory::CreateDummyItem(const std::string& objName,
   ic->Data.IdentifiedName = objName;
   ic->Data.IdentifiedDescription = descText;
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -741,7 +741,7 @@ GameObject* ItemsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix 
                 GlobalConstants::ScrollValidSpellTypes.end(),
                 type) == GlobalConstants::ScrollValidSpellTypes.end())
   {
-    auto msg = Util::StringFormat("[WARNING] Trying to create a scroll with invalid spell (%s)!\n", si->SpellName.data());
+    auto msg = Util::Instance().StringFormat("[WARNING] Trying to create a scroll with invalid spell (%s)!\n", si->SpellName.data());
     Printer::Instance().AddMessage(msg);
     Logger::Instance().Print(msg, true);
     DebugLog("%s\n", msg.data());
@@ -785,7 +785,7 @@ GameObject* ItemsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix 
                                    _1,
                                    _2);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -974,7 +974,7 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
 
-  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
+  auto str = Util::Instance().StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
   ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
 
   // *** !!!
@@ -985,7 +985,7 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
   BUCQualityAdjust(ic->Data);
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -1077,7 +1077,7 @@ GameObject* ItemsFactory::CreateGem(int x, int y, GemType type, int actualGemCha
     //
     if (actualGemChance != -1)
     {
-      if (Util::Rolld100(actualGemChance))
+      if (Util::Instance().Rolld100(actualGemChance))
       {
         rndStartingIndex = 1;
       }
@@ -1123,7 +1123,7 @@ GameObject* ItemsFactory::CreateWand(int x,
 
   if (GlobalConstants::WandSpellCapacityCostByType.count(spellType) == 0)
   {
-    auto str = Util::StringFormat("Wands don't support spell '%s'!", si.SpellName.data());
+    auto str = Util::Instance().StringFormat("Wands don't support spell '%s'!", si.SpellName.data());
     Logger::Instance().Print(str);
     DebugLog("%s\n", str.data());
     return nullptr;
@@ -1151,7 +1151,7 @@ GameObject* ItemsFactory::CreateWand(int x,
   ic->Data.WandMaterial = material;
   ic->Data.SpellHeld = si;
 
-  Util::RecalculateWandStats(ic);
+  Util::Instance().RecalculateWandStats(ic);
 
   ic->Data.IsChargeable = true;
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
@@ -1164,12 +1164,12 @@ GameObject* ItemsFactory::CreateWand(int x,
 
   ic->Data.UnidentifiedDescription = { "You don't know what it can do" };
 
-  auto str = Util::StringFormat("%s Wand (%s)", wandMaterialName.data(), spellShortName.data());
+  auto str = Util::Instance().StringFormat("%s Wand (%s)", wandMaterialName.data(), spellShortName.data());
   go->ObjectName = str;
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -1178,8 +1178,8 @@ GameObject* ItemsFactory::CreateRandomWand(ItemPrefix prefixOverride)
 {
   GameObject* go = nullptr;
 
-  auto materialPair = Util::WeightedRandom(_wandMaterialsDistribution);
-  auto spellPair    = Util::WeightedRandom(_spellsDistribution);
+  auto materialPair = Util::Instance().WeightedRandom(_wandMaterialsDistribution);
+  auto spellPair    = Util::Instance().WeightedRandom(_spellsDistribution);
 
   go = CreateWand(0, 0, materialPair.first, spellPair.first, prefixOverride);
 
@@ -1238,7 +1238,7 @@ GameObject* ItemsFactory::CreateReturner(int x, int y, int charges, ItemPrefix p
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -1286,7 +1286,7 @@ GameObject* ItemsFactory::CreateRepairKit(int x, int y, int charges, ItemPrefix 
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -1434,7 +1434,7 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -1515,7 +1515,7 @@ GameObject* ItemsFactory::CreateArrows(int x, int y, ArrowType type, ItemPrefix 
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -1713,7 +1713,7 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
   BUCQualityAdjust(ic->Data);
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -1769,7 +1769,7 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
     ic->Data.Cost = 50 + (int)ic->Data.ItemQuality_ * 10;
   }
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -1831,7 +1831,7 @@ GameObject* ItemsFactory::CreateAccessory(int x, int y,
     SetMagicItemName(ic, bonusesRolled);
   }
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -1900,21 +1900,21 @@ GameObject* ItemsFactory::CreateRandomItem(int x,
 
     case ItemType::FOOD:
     {
-      auto pair = Util::WeightedRandom(_foodMap);
+      auto pair = Util::Instance().WeightedRandom(_foodMap);
       go = CreateFood(0, 0, pair.first);
     }
     break;
 
     case ItemType::GEM:
     {
-      auto pair = Util::WeightedRandom(_gemsMap);
+      auto pair = Util::Instance().WeightedRandom(_gemsMap);
       go = CreateGem(0, 0, pair.first);
     }
     break;
 
     case ItemType::RETURNER:
     {
-      auto pair = Util::WeightedRandom(_returnerMap);
+      auto pair = Util::Instance().WeightedRandom(_returnerMap);
       if (pair.first == ItemType::RETURNER)
       {
         go = CreateReturner(0, 0);
@@ -2008,7 +2008,7 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = "The Needle";
 
-  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
+  auto str = Util::Instance().StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
   ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
 
   ic->Data.IdentifiedDescription =
@@ -2020,7 +2020,7 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
     "of the blade ever being used."
   };
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -2062,7 +2062,7 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = "Block Breaker";
 
-  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
+  auto str = Util::Instance().StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
   ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
 
   ic->Data.IdentifiedDescription =
@@ -2073,7 +2073,7 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
     "There are traces of blood on its head."
   };
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -2114,7 +2114,7 @@ GameObject* ItemsFactory::CreateOneRing()
     "For some reason you have a strange urge to put this ring on..."
   };
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -2135,7 +2135,7 @@ GameObject* ItemsFactory::CreateRandomGlass()
   go->BgColor = Colors::GemColorByType.at(t).second;
 
   std::string colorDesc = Colors::GemColorNameByType.at(t);
-  go->ObjectName = Util::StringFormat("%s Glass", colorDesc.data());
+  go->ObjectName = Util::Instance().StringFormat("%s Glass", colorDesc.data());
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
   ic->Data.ItemType_ = ItemType::GEM;
@@ -2143,18 +2143,18 @@ GameObject* ItemsFactory::CreateRandomGlass()
   ic->Data.IsIdentified = false;
 
   ic->Data.UnidentifiedDescription = { Strings::ItemDefaultDescGem };
-  ic->Data.UnidentifiedName = Util::StringFormat("?%s Gem?", colorDesc.data());
+  ic->Data.UnidentifiedName = Util::Instance().StringFormat("?%s Gem?", colorDesc.data());
 
   std::string lowerCase = colorDesc;
   std::transform(lowerCase.begin(), lowerCase.end(), lowerCase.begin(), ::tolower);
 
-  auto str = Util::StringFormat("This is a piece of %s worthless glass", lowerCase.data());
+  auto str = Util::Instance().StringFormat("This is a piece of %s worthless glass", lowerCase.data());
   ic->Data.IdentifiedDescription = { str };
 
-  ic->Data.IdentifiedName = Util::StringFormat("%s worthless glass", colorDesc.data());
+  ic->Data.IdentifiedName = Util::Instance().StringFormat("%s worthless glass", colorDesc.data());
   ic->Data.Cost = 0;
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -2179,9 +2179,9 @@ GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
   ic->Data.IsIdentified = false;
 
   ic->Data.UnidentifiedDescription = { Strings::ItemDefaultDescGem };
-  ic->Data.UnidentifiedName = Util::StringFormat("?%s Gem?", colorDesc.data());
+  ic->Data.UnidentifiedName = Util::Instance().StringFormat("?%s Gem?", colorDesc.data());
 
-  auto str = Util::StringFormat("%s description goes here", GlobalConstants::GemNameByType.at(t).data());
+  auto str = Util::Instance().StringFormat("%s description goes here", GlobalConstants::GemNameByType.at(t).data());
   ic->Data.IdentifiedDescription = { str };
 
   ic->Data.IdentifiedName = GlobalConstants::GemNameByType.at(t);
@@ -2191,7 +2191,7 @@ GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
 
   SetItemName(go, ic->Data);
 
-  ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+  ic->Data.ItemTypeHash = Util::Instance().CalculateItemHash(ic);
 
   return go;
 }
@@ -2297,7 +2297,7 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
 
   chance += _chanceModByQ.at(itemRef->Data.ItemQuality_);
 
-  chance = Util::Clamp(chance, 1, 100);
+  chance = Util::Instance().Clamp(chance, 1, 100);
 
   std::vector<ItemBonusType> bonusesRolled;
   auto bonusesWeightCopy = bonusWeightByType;
@@ -2309,9 +2309,9 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
       break;
     }
 
-    if (Util::Rolld100(chance))
+    if (Util::Instance().Rolld100(chance))
     {
-      auto res = Util::WeightedRandom(bonusesWeightCopy);
+      auto res = Util::Instance().WeightedRandom(bonusesWeightCopy);
 
       // No duplicate bonuses on a single item
       bonusesWeightCopy.erase(res.first);
@@ -2324,7 +2324,7 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
 
   if (bonusesRolled.size() == 0 && atLeastOne)
   {
-    auto res = Util::WeightedRandom(bonusWeightByType);
+    auto res = Util::Instance().WeightedRandom(bonusWeightByType);
     AddRandomValueBonusToItem(itemRef, res.first);
     bonusesRolled.push_back(res.first);
   }
@@ -2356,7 +2356,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
     case ItemBonusType::SKL:
     case ItemBonusType::SPD:
     {
-      auto res = Util::WeightedRandom(_statIncreaseWeightsMap);
+      auto res = Util::Instance().WeightedRandom(_statIncreaseWeightsMap);
       value = res.first;
       bs.MoneyCostIncrease = res.first * moneyIncrease;
     }
@@ -2858,12 +2858,12 @@ int ItemsFactory::CalculateAverageDamage(int numRolls, int diceSides)
 
 ItemPrefix ItemsFactory::RollItemPrefix()
 {
-  auto res = Util::WeightedRandom(_bucDistr);
+  auto res = Util::Instance().WeightedRandom(_bucDistr);
   return res.first;
 }
 
 ItemQuality ItemsFactory::RollItemQuality()
 {
-  auto res = Util::WeightedRandom(_qualityDistr);
+  auto res = Util::Instance().WeightedRandom(_qualityDistr);
   return res.first;
 }

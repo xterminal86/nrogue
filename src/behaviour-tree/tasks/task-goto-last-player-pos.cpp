@@ -17,7 +17,7 @@ BTResult TaskGotoLastPlayerPos::Run()
     return BTResult::Failure;
   }
 
-  auto split = Util::StringSplit(plPos, ',');
+  auto split = Util::Instance().StringSplit(plPos, ',');
 
   int plX = std::stoi(split[0]);
   int plY = std::stoi(split[1]);

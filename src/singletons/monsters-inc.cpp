@@ -160,7 +160,7 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
-    difficulty = Util::Clamp(difficulty, 1, 3);
+    difficulty = Util::Instance().Clamp(difficulty, 1, 3);
 
     go->Attrs.Str.Talents = 1;
     go->Attrs.Spd.Talents = 1;
@@ -214,7 +214,7 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
-    difficulty = Util::Clamp(difficulty, 1, 5);
+    difficulty = Util::Instance().Clamp(difficulty, 1, 5);
 
     go->Attrs.Def.Talents = 3;
     go->Attrs.Spd.Talents = 1;
@@ -268,7 +268,7 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
-    difficulty = Util::Clamp(difficulty, 1, 5);
+    difficulty = Util::Instance().Clamp(difficulty, 1, 5);
 
     go->Attrs.Def.Talents = 3;
     go->Attrs.Spd.Talents = 3;
@@ -322,7 +322,7 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
-    difficulty = Util::Clamp(difficulty, 1, 7);
+    difficulty = Util::Instance().Clamp(difficulty, 1, 7);
 
     go->Attrs.Str.Talents = 2;
     go->Attrs.Def.Talents = 2;
@@ -369,7 +369,7 @@ GameObject* MonstersInc::CreateTroll(int x, int y, bool randomize)
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
-    difficulty = Util::Clamp(difficulty, 1, 10);
+    difficulty = Util::Instance().Clamp(difficulty, 1, 10);
 
     go->Attrs.Str.Set(4);
 
@@ -520,7 +520,7 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
 
   int difficulty = GetDifficulty();
 
-  difficulty = Util::Clamp(difficulty, 1, 10);
+  difficulty = Util::Instance().Clamp(difficulty, 1, 10);
 
   for (int i = 0; i < difficulty; i++)
   {
@@ -557,15 +557,15 @@ GameObject* MonstersInc::CreateKobold(int x, int y)
   ContainerComponent* cc = go->AddComponent<ContainerComponent>(6);
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
-  auto weaponType = Util::Rolld100(50) ?
+  auto weaponType = Util::Instance().Rolld100(50) ?
                     WeaponType::DAGGER :
                     WeaponType::SHORT_SWORD;
 
   GameObject* sword = ItemsFactory::Instance().CreateRandomMeleeWeapon(weaponType);
 
-  if (Util::Rolld100(30))
+  if (Util::Instance().Rolld100(30))
   {
-    ItemPrefix prefix = Util::Rolld100(25)
+    ItemPrefix prefix = Util::Instance().Rolld100(25)
                       ? ItemPrefix::BLESSED
                       : ItemPrefix::UNCURSED;
 
@@ -584,7 +584,7 @@ GameObject* MonstersInc::CreateKobold(int x, int y)
 
   int difficulty = GetDifficulty();
 
-  difficulty = Util::Clamp(difficulty, 1, 10);
+  difficulty = Util::Instance().Clamp(difficulty, 1, 10);
 
   for (int i = 0; i < difficulty; i++)
   {
@@ -668,7 +668,7 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
 
   int difficulty = GetDifficulty();
 
-  difficulty = Util::Clamp(difficulty, 1, 10);
+  difficulty = Util::Instance().Clamp(difficulty, 1, 10);
 
   for (int i = 0; i < difficulty; i++)
   {
@@ -688,7 +688,7 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
     // go for TimedDestroyedComponent, because it will be deleted
     // after this lambda.
     //
-    if (Util::Rolld100(80))
+    if (Util::Instance().Rolld100(80))
     {
       GameObject* remains = nullptr;
       auto pos = go->GetPosition();
@@ -749,7 +749,7 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
 
   int difficulty = GetDifficulty();
 
-  difficulty = Util::Clamp(difficulty, 1, 12);
+  difficulty = Util::Instance().Clamp(difficulty, 1, 12);
 
   for (int i = 0; i < difficulty; i++)
   {
@@ -761,7 +761,7 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
-  WeaponType weaponType = Util::Rolld100(50)
+  WeaponType weaponType = Util::Instance().Rolld100(50)
                         ? WeaponType::SHORT_SWORD
                         : WeaponType::ARMING_SWORD;
 

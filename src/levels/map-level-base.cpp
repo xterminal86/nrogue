@@ -27,10 +27,10 @@ MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
 
   if (MapType_ == MapType::TOWN)
   {
-    bool shouldGenerate = Util::Rolld100(90);
+    bool shouldGenerate = Util::Instance().Rolld100(90);
     if (shouldGenerate)
     {
-      levelName = "Village of " + Util::GenerateName(false, true, GlobalConstants::TownNameEndings);
+      levelName = "Village of " + Util::Instance().GenerateName(false, true, GlobalConstants::TownNameEndings);
     }
     else
     {
@@ -240,7 +240,7 @@ void MapLevelBase::RecordEmptyCells()
 
 void MapLevelBase::CreateBorders(GameObjectInfo& t)
 {
-  auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
+  auto bounds = Util::Instance().GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
   for (auto& i : bounds)
   {
     PlaceStaticObject(i.X, i.Y, t);
@@ -273,7 +273,7 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
     if (go != nullptr)
     {
       ItemComponent* ic = go->GetComponent<ItemComponent>();
-      if (Util::CanBeSpawned(ic))
+      if (Util::Instance().CanBeSpawned(ic))
       {
         PlaceGameObject(go);
       }
@@ -287,7 +287,7 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
 
 int MapLevelBase::GetEstimatedNumberOfItemsToCreate()
 {
-  double count = Util::Log2(EmptyCells().size());
+  double count = Util::Instance().Log2(EmptyCells().size());
   int itemsToCreate = static_cast<int>(std::ceil(count));
   itemsToCreate = RNG::Instance().RandomRange(1, (itemsToCreate / 2) + 1);
 
@@ -368,7 +368,7 @@ void MapLevelBase::PlaceStairs()
 
 void MapLevelBase::CreateInitialMonsters()
 {
-  MaxMonsters = (size_t)std::ceil(Util::Log2(_emptyCells.size()));
+  MaxMonsters = (size_t)std::ceil(Util::Instance().Log2(_emptyCells.size()));
 
   // FIXME: debug
   //MaxMonsters = 1;
@@ -383,7 +383,7 @@ void MapLevelBase::CreateInitialMonsters()
     bool spawnOk = IsSpotValidForSpawn({ x, y });
     if (spawnOk && !_monstersSpawnRateForThisLevel.empty())
     {
-      auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
+      auto res = Util::Instance().WeightedRandom(_monstersSpawnRateForThisLevel);
 
       // FIXME: debug
       //res = { GameObjectType::SPIDER, 1 };
@@ -403,7 +403,7 @@ bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
   bool danger    = Map::Instance().IsTileDangerous(pos);
   bool farEnough = false;
 
-  int distanceToPlayer = Util::BlockDistance(_playerRef->GetPosition(), pos);
+  int distanceToPlayer = Util::Instance().BlockDistance(_playerRef->GetPosition(), pos);
 
   int spawnPointMinDistance = 20;
 
@@ -503,7 +503,7 @@ void MapLevelBase::TryToSpawnMonsters()
   if (!MapArray[cx][cy]->Visible
    && IsSpotValidForSpawn({ cx, cy }))
   {
-    auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
+    auto res = Util::Instance().WeightedRandom(_monstersSpawnRateForThisLevel);
     auto monster = MonstersInc::Instance().CreateMonster(cx, cy, res.first);
     PlaceActor(monster);
   }
@@ -521,7 +521,7 @@ void MapLevelBase::DisplayWelcomeText()
 
 bool MapLevelBase::IsCellBlocking(const Position& pos)
 {
-  if (!Util::IsInsideMap(pos, MapSize))
+  if (!Util::Instance().IsInsideMap(pos, MapSize))
   {
     return true;
   }
@@ -710,13 +710,13 @@ void MapLevelBase::PlaceDoor(int x, int y, bool isOpen, size_t openedBy, const s
 
 void MapLevelBase::CreateLevel()
 {
-  auto str = Util::StringFormat("%s, %s - no level was created!", __PRETTY_FUNCTION__, LevelName.data());
+  auto str = Util::Instance().StringFormat("%s, %s - no level was created!", __PRETTY_FUNCTION__, LevelName.data());
   Logger::Instance().Print(str, true);
 }
 
 void MapLevelBase::ConstructFromBuilder(LevelBuilder& lb)
 {
-  auto str = Util::StringFormat("%s, %s - calling base ConstructFromBuilder()!", __PRETTY_FUNCTION__, LevelName.data());
+  auto str = Util::Instance().StringFormat("%s, %s - calling base ConstructFromBuilder()!", __PRETTY_FUNCTION__, LevelName.data());
   Logger::Instance().Print(str, true);
 }
 

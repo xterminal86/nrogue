@@ -79,9 +79,9 @@ void TargetState::FindTargets()
         continue;
       }
 
-      float d = Util::LinearDistance(px, py, x, y);
+      float d = Util::Instance().LinearDistance(px, py, x, y);
 
-      if (Util::IsInsideMap({ x, y }, Map::Instance().CurrentLevel->MapSize)
+      if (Util::Instance().IsInsideMap({ x, y }, Map::Instance().CurrentLevel->MapSize)
        && Map::Instance().CurrentLevel->MapArray[x][y]->Visible
        && (int)d <= r && (int)d < _twHalf)
       {
@@ -204,18 +204,18 @@ void TargetState::FireWeapon(bool throwingFromInventory)
 
   bool isThrowing = (_throwingItemInventoryIndex != -1);
 
-  int chance = Util::CalculateHitChanceRanged(startPoint,
+  int chance = Util::Instance().CalculateHitChanceRanged(startPoint,
                                               endPoint,
                                               _playerRef,
                                               _weaponRef,
                                               isThrowing);
-  if (Util::Rolld100(chance) == false)
+  if (Util::Instance().Rolld100(chance) == false)
   {
     //
     // If skill is low and we didn't roll a hit,
     // get random point around cursor position.
     //
-    _cursorPosition = Util::GetRandomPointAround(_playerRef,
+    _cursorPosition = Util::Instance().GetRandomPointAround(_playerRef,
                                                  _weaponRef,
                                                  _cursorPosition);
 
@@ -248,13 +248,13 @@ void TargetState::FireWeapon(bool throwingFromInventory)
 
   GameObject* stoppedAt = nullptr;
 
-  auto res = Util::GetProjectileImageAndColor(_weaponRef, throwingFromInventory);
+  auto res = Util::Instance().GetProjectileImageAndColor(_weaponRef, throwingFromInventory);
 
   bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
 
   if (isWand && _weaponRef->Data.SpellHeld.SpellType_ == SpellType::LASER)
   {
-    Util::ProcessLaserAttack(_playerRef, _weaponRef, _cursorPosition);
+    Util::Instance().ProcessLaserAttack(_playerRef, _weaponRef, _cursorPosition);
   }
   else
   {
@@ -274,7 +274,7 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
   Position startPoint = _playerRef->GetPosition();
   Position endPoint   = _cursorPosition;
 
-  auto line = Util::BresenhamLine(startPoint, endPoint);
+  auto line = Util::Instance().BresenhamLine(startPoint, endPoint);
 
   int distanceCovered = 0;
 
@@ -305,7 +305,7 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
     }
   }
 
-  Util::LaunchProjectile(startPoint, endPoint, image, color);
+  Util::Instance().LaunchProjectile(startPoint, endPoint, image, color);
 
   //
   // Projectile reached end point without hitting anyone
@@ -394,10 +394,10 @@ void TargetState::CheckCursorPositionBounds()
 {
   Position lastPositionInsideMap;
   bool isOutsideMap = false;
-  auto line = Util::BresenhamLine(_playerRef->GetPosition(), _cursorPosition);
+  auto line = Util::Instance().BresenhamLine(_playerRef->GetPosition(), _cursorPosition);
   for (auto& p : line)
   {
-    if (!Util::IsInsideMap(p, Map::Instance().CurrentLevel->MapSize, false))
+    if (!Util::Instance().IsInsideMap(p, Map::Instance().CurrentLevel->MapSize, false))
     {
       isOutsideMap = true;
       break;
@@ -416,7 +416,7 @@ void TargetState::UpdatePlayerPossibleKnockbackDir()
 {
   Position startPoint = _playerRef->GetPosition();
 
-  auto line = Util::BresenhamLine(startPoint, _cursorPosition);
+  auto line = Util::Instance().BresenhamLine(startPoint, _cursorPosition);
   if (!line.empty())
   {
     auto& last       = line[line.size() - 1];
@@ -597,7 +597,7 @@ void TargetState::PrintThrowResult(GameObject* tileRef)
 
   if (!verb.empty())
   {
-    auto str = Util::StringFormat("%s %s in %s!", objName.data(), verb.data(), tileName.data());
+    auto str = Util::Instance().StringFormat("%s %s in %s!", objName.data(), verb.data(), tileName.data());
     Printer::Instance().AddMessage(str);
   }
 }
@@ -610,10 +610,10 @@ void TargetState::MoveCursor(int dx, int dy)
   int hw = _twHalf;
   int hh = _thHalf;
 
-  nx = Util::Clamp(nx, _playerRef->PosX - hw + 1,
+  nx = Util::Instance().Clamp(nx, _playerRef->PosX - hw + 1,
                        _playerRef->PosX + hw - 2);
 
-  ny = Util::Clamp(ny, _playerRef->PosY - hh + 1,
+  ny = Util::Instance().Clamp(ny, _playerRef->PosY - hh + 1,
                        _playerRef->PosY + hh - 2);
 
   _cursorPosition.X = nx;
@@ -639,7 +639,7 @@ void TargetState::DrawHint()
 
   std::vector<Position> cellsToHighlight;
 
-  auto line = Util::BresenhamLine(startPoint, _cursorPosition);
+  auto line = Util::Instance().BresenhamLine(startPoint, _cursorPosition);
 
   for (auto& p : line)
   {
@@ -648,13 +648,13 @@ void TargetState::DrawHint()
       continue;
     }
 
-    if (Util::IsInsideMap(p, mapSize))
+    if (Util::Instance().IsInsideMap(p, mapSize))
     {
       auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
 
       bool actorPresent = (actor != nullptr);
 
-      int d = Util::LinearDistance(startPoint, p);
+      int d = Util::Instance().LinearDistance(startPoint, p);
 
       bool isCellBlocking = Map::Instance().CurrentLevel->IsCellBlocking(p);
       bool isThrowing = (_throwingItemInventoryIndex != -1);

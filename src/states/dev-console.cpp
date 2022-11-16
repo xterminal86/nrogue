@@ -199,7 +199,7 @@ bool DevConsole::ParseCommand()
     }
   }
 
-  std::vector<std::string> params = Util::StringSplit(_currentCommand, ' ');
+  std::vector<std::string> params = Util::Instance().StringSplit(_currentCommand, ' ');
 
   std::string commandEntered = params[0];
   for (auto& c : commandEntered)
@@ -211,7 +211,7 @@ bool DevConsole::ParseCommand()
 
   if (_commandTypeByName.count(commandEntered) == 0)
   {
-    std::string errMsg = Util::StringFormat("%s: %s", commandEntered.data(), ErrUnknownCommand.data());
+    std::string errMsg = Util::Instance().StringFormat("%s: %s", commandEntered.data(), ErrUnknownCommand.data());
     StdOut(errMsg);
   }
   else
@@ -399,7 +399,7 @@ void DevConsole::GetObjectByAddress(const std::vector<std::string>& params)
 
   std::string str = params[0];
 
-  auto res = Util::StringSplit(str, 'x');
+  auto res = Util::Instance().StringSplit(str, 'x');
   if (res.size() == 1 || res.size() > 2)
   {
     StdOut(ErrWrongParams);
@@ -558,7 +558,7 @@ void DevConsole::PrintColors()
   for (auto& kvp : cache)
   {
 #ifdef USE_SDL
-    std::string toAdd =  Util::StringFormat("[%06X] ", kvp.first);
+    std::string toAdd =  Util::Instance().StringFormat("[%06X] ", kvp.first);
     std::string total = msg + toAdd;
     if (total.length() > 80)
     {
@@ -584,9 +584,9 @@ void DevConsole::PrintColors()
     int cg = ConvertBack(fg.G);
     int cb = ConvertBack(fg.B);
 
-    std::string r = Util::NumberToHexString(cr);
-    std::string g = Util::NumberToHexString(cg);
-    std::string b = Util::NumberToHexString(cb);
+    std::string r = Util::Instance().NumberToHexString(cr);
+    std::string g = Util::Instance().NumberToHexString(cg);
+    std::string b = Util::Instance().NumberToHexString(cb);
 
     std::string fgTotal = r + g + b;
 
@@ -594,13 +594,13 @@ void DevConsole::PrintColors()
     cg = ConvertBack(bg.G);
     cb = ConvertBack(bg.B);
 
-    r = Util::NumberToHexString(cr);
-    g = Util::NumberToHexString(cg);
-    b = Util::NumberToHexString(cb);
+    r = Util::Instance().NumberToHexString(cr);
+    g = Util::Instance().NumberToHexString(cg);
+    b = Util::Instance().NumberToHexString(cb);
 
     std::string bgTotal = r + g + b;
 
-    std::string toAdd =  Util::StringFormat("[%s|%s] ", fgTotal.data(), bgTotal.data());
+    std::string toAdd =  Util::Instance().StringFormat("[%s|%s] ", fgTotal.data(), bgTotal.data());
     std::string total = msg + toAdd;
     if (total.length() > 80)
     {
@@ -631,7 +631,7 @@ void DevConsole::InfoHandles()
   for (auto& kvp : _handleNameByType)
   {
     std::string spaces(maxLen - kvp.second.length(), ' ');
-    std::string msg = Util::StringFormat("%s%s = 0x%X",
+    std::string msg = Util::Instance().StringFormat("%s%s = 0x%X",
                                          kvp.second.data(),
                                          spaces.data(),
                                          _objectHandles[kvp.first]);
@@ -1011,19 +1011,19 @@ void DevConsole::ToggleFogOfWar()
   auto state = Application::Instance().GetGameStateRefByName(GameStates::MAIN_STATE);
   state->Update(true);
 
-  auto str = Util::StringFormat("For of war %s", _playerRef->ToggleFogOfWar ? "off" : "on");
+  auto str = Util::Instance().StringFormat("For of war %s", _playerRef->ToggleFogOfWar ? "off" : "on");
 
   StdOut(str);
 }
 
 void DevConsole::PrintTriggers()
 {
-  auto out = Util::StringFormat("Triggers on this level: %u", _currentLevel->FinishTurnTriggers.size());
+  auto out = Util::Instance().StringFormat("Triggers on this level: %u", _currentLevel->FinishTurnTriggers.size());
   StdOut(out);
 
   for (auto& t : _currentLevel->FinishTurnTriggers)
   {
-    auto str = Util::StringFormat("0x%X at %i %i", t.get(), t->PosX, t->PosY);
+    auto str = Util::Instance().StringFormat("0x%X at %i %i", t.get(), t->PosX, t->PosY);
     StdOut(str);
   }
 }
@@ -1088,7 +1088,7 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
     }
     else
     {
-      std::string msg = Util::StringFormat("No help found for '%s'", params[0].data());
+      std::string msg = Util::Instance().StringFormat("No help found for '%s'", params[0].data());
       StdOut(msg);
     }
   }
@@ -1155,7 +1155,7 @@ std::pair<int, int> DevConsole::CoordinateParamsToInt(const std::string &px, con
 
 void DevConsole::ReportHandle(ObjectHandleType handleType)
 {
-  std::string msg = Util::StringFormat("%s = 0x%X",
+  std::string msg = Util::Instance().StringFormat("%s = 0x%X",
                                        _handleNameByType.at(handleType).data(),
                                        _objectHandles[handleType]);
   StdOut(msg);

@@ -55,7 +55,7 @@ void BTSParser::ParseFromString(const std::string& script)
   if (script.empty())
   {
     std::string objName = (_goRef != nullptr) ? _goRef->ObjectName : "<nullptr>";
-    auto str = Util::StringFormat("%s: script on %s is empty!", __PRETTY_FUNCTION__, objName.data());
+    auto str = Util::Instance().StringFormat("%s: script on %s is empty!", __PRETTY_FUNCTION__, objName.data());
     Logger::Instance().Print(str, true);
 
     DebugLog("%s\n", str.data());
@@ -150,7 +150,7 @@ void BTSParser::ReadTag(const std::string& tagData, int indent)
 
   n.Indent = indent;
 
-  std::vector<std::string> res = Util::StringSplit(tagData, ' ');
+  std::vector<std::string> res = Util::Instance().StringSplit(tagData, ' ');
   n.NodeName = res[0];
 
   for (size_t i = 1; i < res.size(); i++)
@@ -171,7 +171,7 @@ void BTSParser::ReadTag(const std::string& tagData, int indent)
 
 void BTSParser::ReadParam(ScriptNode& nodeToFill, const std::string& paramsLine)
 {
-  auto res = Util::StringSplit(paramsLine, '=');
+  auto res = Util::Instance().StringSplit(paramsLine, '=');
   nodeToFill.Params[res[0]] = res[1];
 }
 

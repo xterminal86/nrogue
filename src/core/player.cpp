@@ -39,7 +39,7 @@ void Player::Init()
   _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell->Occupied = true;
 
-  int expToLvlUp = Util::GetExpForNextLevel(Attrs.Lvl.Get());
+  int expToLvlUp = Util::Instance().GetExpForNextLevel(Attrs.Lvl.Get());
 
   Attrs.Exp.Reset(0);
   Attrs.Exp.SetMax(expToLvlUp);
@@ -220,7 +220,7 @@ void Player::CheckVisibility()
               ? VisibilityRadius.Get() / 4
               : VisibilityRadius.Get();
 
-  auto mapCells = Util::GetRectAroundPoint(PosX, PosY, tw / 2, th / 2, Map::Instance().CurrentLevel->MapSize);
+  auto mapCells = Util::Instance().GetRectAroundPoint(PosX, PosY, tw / 2, th / 2, Map::Instance().CurrentLevel->MapSize);
 
 #ifdef DEBUG_BUILD
   for (auto& cell : mapCells)
@@ -248,7 +248,7 @@ void Player::CheckVisibility()
 
   for (auto& cell : mapCells)
   {
-    float d = Util::LinearDistance(PosX, PosY, cell.X, cell.Y);
+    float d = Util::Instance().LinearDistance(PosX, PosY, cell.X, cell.Y);
 
     if (d > (float)radius)
     {
@@ -257,7 +257,7 @@ void Player::CheckVisibility()
 
     // Bresenham FoV
 
-    auto line = Util::BresenhamLine(PosX, PosY, cell.X, cell.Y);
+    auto line = Util::Instance().BresenhamLine(PosX, PosY, cell.X, cell.Y);
     for (auto& point : line)
     {
       if (point.X == PosX && point.Y == PosY)
@@ -495,7 +495,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   ItemComponent* weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
   ItemComponent* arrows = Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0];
 
-  int dmg = Util::CalculateDamageValue(this, what, weapon, false);
+  int dmg = Util::Instance().CalculateDamageValue(this, what, weapon, false);
 
   //
   // If it's not the ground GameObject
@@ -509,7 +509,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
      && weapon->Data.HasBonus(ItemBonusType::KNOCKBACK))
     {
       int tiles = weapon->Data.GetBonus(ItemBonusType::KNOCKBACK)->BonusValue;
-      Util::KnockBack(this, what, _knockBackDir, tiles);
+      Util::Instance().KnockBack(this, what, _knockBackDir, tiles);
     }
 
     //
@@ -555,7 +555,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
     arrows->Break(this);
   }
 
-  std::string logMsg = Util::TryToDamageEquipment(this, weapon, -1);
+  std::string logMsg = Util::Instance().TryToDamageEquipment(this, weapon, -1);
   if (!logMsg.empty())
   {
     Printer::Instance().AddMessage(logMsg);
@@ -575,7 +575,7 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
 
   int bonus = Attrs.Mag.Get();
 
-  int centralDamage = Util::RollDices(baseDamagePair.first,
+  int centralDamage = Util::Instance().RollDices(baseDamagePair.first,
                                       baseDamagePair.second);
 
   centralDamage += bonus;
@@ -606,7 +606,7 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
     {
       if (!Map::Instance().CurrentLevel->MysteriousForcePresent)
       {
-        std::string msg = Util::ProcessTeleport(what);
+        std::string msg = Util::Instance().ProcessTeleport(what);
         Printer::Instance().AddMessage(msg);
       }
       else
@@ -632,7 +632,7 @@ void Player::ProcessMagicAttack(GameObject* target,
   auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
   if (actor != nullptr)
   {
-    bool damageDone = Util::TryToDamageObject(actor, this, damage, againstRes).first;
+    bool damageDone = Util::Instance().TryToDamageObject(actor, this, damage, againstRes).first;
     if (weapon->Data.SpellHeld.SpellType_ == SpellType::FROST)
     {
       ItemBonusStruct b;
@@ -659,7 +659,7 @@ void Player::ProcessMagicAttack(GameObject* target,
     auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
     {
-      Util::TryToDamageObject(obj, this, damage, againstRes);
+      Util::Instance().TryToDamageObject(obj, this, damage, againstRes);
     }
 
     // If nothing is lying in the doorway, for example, damage door
@@ -668,7 +668,7 @@ void Player::ProcessMagicAttack(GameObject* target,
       auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
       if (so != nullptr)
       {
-        Util::TryToDamageObject(so, this, damage, againstRes);
+        Util::Instance().TryToDamageObject(so, this, damage, againstRes);
       }
     }
   }
@@ -676,10 +676,10 @@ void Player::ProcessMagicAttack(GameObject* target,
 
 void Player::MeleeAttack(GameObject* what, bool alwaysHit)
 {
-  int hitChance = Util::CalculateHitChanceMelee(this, what);
+  int hitChance = Util::Instance().CalculateHitChanceMelee(this, what);
 
   #ifdef DEBUG_BUILD
-  auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
+  auto logMsg = Util::Instance().StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
                                    Attrs.Skl.Get(),
                                    Attrs.Lvl.Get(),
                                    what->ObjectName.data(),
@@ -690,7 +690,7 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
   Logger::Instance().Print(logMsg);
   #endif
 
-  bool hitLanded = alwaysHit ? true : Util::Rolld100(hitChance);
+  bool hitLanded = alwaysHit ? true : Util::Instance().Rolld100(hitChance);
   if (!hitLanded)
   {
     Application::Instance().DisplayAttack(what, GlobalConstants::DisplayAttackDelayMs, "You missed", Colors::WhiteColor);
@@ -715,7 +715,7 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
     {
       _knockBackDir = _attackDir;
       int tiles = weapon->Data.GetBonus(ItemBonusType::KNOCKBACK)->BonusValue;
-      Util::KnockBack(this, what, _knockBackDir, tiles);
+      Util::Instance().KnockBack(this, what, _knockBackDir, tiles);
     }
 
     //
@@ -728,7 +728,7 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
     //
     if ((what->Type == GameObjectType::PICKAXEABLE) || what->IsAlive())
     {
-      int dmg = Util::CalculateDamageValue(this, what, weapon, isRanged);
+      int dmg = Util::Instance().CalculateDamageValue(this, what, weapon, isRanged);
 
       if (what->Corporeal == false
        && weapon != nullptr
@@ -772,7 +772,7 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
         hasLeech = true;
       }
 
-      std::string logMsg = Util::TryToDamageEquipment(this, weapon, -1);
+      std::string logMsg = Util::Instance().TryToDamageEquipment(this, weapon, -1);
       if (!logMsg.empty())
       {
         Printer::Instance().AddMessage(logMsg);
@@ -793,7 +793,7 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
     defender->Attrs.HP.SetMin(0);
     defender->IsDestroyed = true;
 
-    auto msg = Util::StringFormat("You tear down the %s", defender->ObjectName.data());
+    auto msg = Util::Instance().StringFormat("You tear down the %s", defender->ObjectName.data());
     Printer::Instance().AddMessage(msg);
   }
   else
@@ -852,7 +852,7 @@ bool Player::ReceiveDamage(GameObject* from,
 
   if (isMagical)
   {
-    auto str = Util::ProcessMagicalDamage(this, from, amount);
+    auto str = Util::Instance().ProcessMagicalDamage(this, from, amount);
     if (!str.empty())
     {
       logMsgs.push_back(str);
@@ -860,8 +860,8 @@ bool Player::ReceiveDamage(GameObject* from,
   }
   else
   {
-    logMsgs = Util::ProcessPhysicalDamage(this, from, amount, ignoreArmor);
-    dmgReturned = Util::ProcessThorns(this, amount);
+    logMsgs = Util::Instance().ProcessPhysicalDamage(this, from, amount, ignoreArmor);
+    dmgReturned = Util::Instance().ProcessThorns(this, amount);
   }
 
   if (!suppressLog && !logMsgs.empty())
@@ -874,8 +874,8 @@ bool Player::ReceiveDamage(GameObject* from,
 
   if (dmgReturned != 0 && from != nullptr)
   {
-    auto thornsLogMsg = Util::StringFormat("@ => %s (%i)",
-                                           Util::GetGameObjectDisplayCharacter(from).data(),
+    auto thornsLogMsg = Util::Instance().StringFormat("@ => %s (%i)",
+                                           Util::Instance().GetGameObjectDisplayCharacter(from).data(),
                                            dmgReturned);
 
     Printer::Instance().AddMessage(thornsLogMsg);
@@ -895,11 +895,11 @@ void Player::AwardExperience(int amount)
   if (amount > 0)
   {
     amnt = amount * (Attrs.Exp.Talents + 1);
-    msg = Util::StringFormat("+%i EXP", amount);
+    msg = Util::Instance().StringFormat("+%i EXP", amount);
   }
   else
   {
-    msg = Util::StringFormat("%i EXP", amount);
+    msg = Util::Instance().StringFormat("%i EXP", amount);
   }
 
   Printer::Instance().AddMessage(msg);
@@ -912,9 +912,9 @@ void Player::AwardExperience(int amount)
 
     LevelUp();
 
-    int expToLvlUp = Util::GetExpForNextLevel(Attrs.Lvl.Get());
+    int expToLvlUp = Util::Instance().GetExpForNextLevel(Attrs.Lvl.Get());
 
-    overflow = Util::Clamp(overflow, 0, expToLvlUp - 1);
+    overflow = Util::Instance().Clamp(overflow, 0, expToLvlUp - 1);
 
     Attrs.Exp.SetMin(overflow);
     Attrs.Exp.SetMax(expToLvlUp);
@@ -925,11 +925,11 @@ void Player::AwardExperience(int amount)
   {
     LevelDown();
 
-    int expToLvlUp = Util::GetExpForNextLevel(Attrs.Lvl.Get());
+    int expToLvlUp = Util::Instance().GetExpForNextLevel(Attrs.Lvl.Get());
 
     int underflow = expToLvlUp + amnt;
 
-    underflow = Util::Clamp(underflow, 0, expToLvlUp - 1);
+    underflow = Util::Instance().Clamp(underflow, 0, expToLvlUp - 1);
 
     Attrs.Exp.SetMin(underflow);
     Attrs.Exp.SetMax(expToLvlUp);
@@ -1042,10 +1042,10 @@ void Player::PrintLevelUpResultsToLog(bool reallyUp)
     if (kvp.second.second != 0)
     {
       std::string num = (kvp.second.second > 0)
-                       ? Util::StringFormat("+%i", kvp.second.second)
-                       : Util::StringFormat("%i", kvp.second.second);
+                       ? Util::Instance().StringFormat("+%i", kvp.second.second)
+                       : Util::Instance().StringFormat("%i", kvp.second.second);
 
-      messages.push_back(Util::StringFormat("%s %s", kvp.second.first.data(), num.data()));
+      messages.push_back(Util::Instance().StringFormat("%s %s", kvp.second.first.data(), num.data()));
     }
   }
 
@@ -1065,7 +1065,7 @@ void Player::ProcessKill(GameObject* monster)
   //
   // Try to generate loot from the kill itself
   //
-  if (Util::IsFunctionValid(monster->GenerateLootFunction))
+  if (Util::Instance().IsFunctionValid(monster->GenerateLootFunction))
   {
     monster->GenerateLootFunction();
   }
@@ -1077,7 +1077,7 @@ void Player::ProcessKill(GameObject* monster)
    && monster->Type != GameObjectType::REMAINS)
   {
     int exp = monster->Attrs.Rating();
-    exp = Util::Clamp(exp, 0, GlobalConstants::AwardedExpMax);
+    exp = Util::Instance().Clamp(exp, 0, GlobalConstants::AwardedExpMax);
 
     if (exp != 0)
     {
@@ -1119,16 +1119,16 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
   {
     auto kvp = i.second;
 
-    mbStr = Util::StringFormat("%s: %i", kvp.first.data(), kvp.second.OriginalValue());
+    mbStr = Util::Instance().StringFormat("%s: %i", kvp.first.data(), kvp.second.OriginalValue());
     levelUpResults.push_back(mbStr);
   }
 
   levelUpResults.push_back("");
 
-  mbStr = Util::StringFormat("HP:  %i", Attrs.HP.Max().OriginalValue());
+  mbStr = Util::Instance().StringFormat("HP:  %i", Attrs.HP.Max().OriginalValue());
   levelUpResults.push_back(mbStr);
 
-  mbStr = Util::StringFormat("MP:  %i", Attrs.MP.Max().OriginalValue());
+  mbStr = Util::Instance().StringFormat("MP:  %i", Attrs.MP.Max().OriginalValue());
   levelUpResults.push_back(mbStr);
 
   // Try to make everything look pretty
@@ -1162,11 +1162,11 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
 
     if (_statRaisesMap[i.first].second >= 0)
     {
-      addition = Util::StringFormat("  +%i", _statRaisesMap[i.first].second);
+      addition = Util::Instance().StringFormat("  +%i", _statRaisesMap[i.first].second);
     }
     else
     {
-      addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap[i.first].second));
+      addition = Util::Instance().StringFormat("  -%i", std::abs(_statRaisesMap[i.first].second));
     }
 
     levelUpResults[index] += addition;
@@ -1180,11 +1180,11 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
 
   if (_statRaisesMap[PlayerStats::HP].second >= 0)
   {
-    addition = Util::StringFormat("  +%i", _statRaisesMap[PlayerStats::HP].second);
+    addition = Util::Instance().StringFormat("  +%i", _statRaisesMap[PlayerStats::HP].second);
   }
   else
   {
-    addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap[PlayerStats::HP].second));
+    addition = Util::Instance().StringFormat("  -%i", std::abs(_statRaisesMap[PlayerStats::HP].second));
   }
 
   levelUpResults[index] += addition;
@@ -1192,11 +1192,11 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
 
   if (_statRaisesMap[PlayerStats::MP].second >= 0)
   {
-    addition = Util::StringFormat("  +%i", _statRaisesMap[PlayerStats::MP].second);
+    addition = Util::Instance().StringFormat("  +%i", _statRaisesMap[PlayerStats::MP].second);
   }
   else
   {
-    addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap[PlayerStats::MP].second));
+    addition = Util::Instance().StringFormat("  -%i", std::abs(_statRaisesMap[PlayerStats::MP].second));
   }
 
   levelUpResults[index] += addition;
@@ -1250,14 +1250,14 @@ void Player::ProcessEffectsPlayer()
 
   if (HasEffect(ItemBonusType::PARALYZE))
   {
-    //Util::Sleep(100);
+    //Util::Instance().Sleep(100);
     Printer::Instance().AddMessage("You can't move!");
     shouldRedraw = true;
   }
 
   if (HasEffect(ItemBonusType::BURNING))
   {
-    if (Util::Rolld100(50))
+    if (Util::Instance().Rolld100(50))
     {
       // One-time deletion, can leave "forward" loop iteration
       for (size_t i = 0; i < Inventory->Contents.size(); i++)
@@ -1268,7 +1268,7 @@ void Player::ProcessEffectsPlayer()
           if (ic->Data.IsBurnable)
           {
             std::string objName = ic->Data.IsIdentified ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
-            auto str = Util::StringFormat("%s burns up!", objName.data());
+            auto str = Util::Instance().StringFormat("%s burns up!", objName.data());
             Printer::Instance().AddMessage(str);
             Inventory->Contents.erase(Inventory->Contents.begin() + i);
             break;
@@ -1333,7 +1333,7 @@ void Player::ProcessHunger()
   //
   int maxHunger = Attrs.HungerRate.Get();
 
-  Attrs.Hunger = Util::Clamp(Attrs.Hunger, 0, maxHunger);
+  Attrs.Hunger = Util::Instance().Clamp(Attrs.Hunger, 0, maxHunger);
 
   if (Attrs.Hunger == maxHunger)
   {

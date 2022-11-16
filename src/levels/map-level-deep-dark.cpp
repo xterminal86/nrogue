@@ -97,7 +97,7 @@ void MapLevelDeepDark::CreateLevel()
 
   if (MapType_ != MapType::DEEP_DARK_5)
   {
-    if (Util::Rolld100(_shrineRollChance))
+    if (Util::Instance().Rolld100(_shrineRollChance))
     {
       PlaceRandomShrine(lb);
     }
@@ -126,7 +126,7 @@ void MapLevelDeepDark::CreateSpecialLevel()
 
   PlaceGameObject(note);
 
-  auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
+  auto convLevel = Util::Instance().StringsArray2DToCharArray2D(_specialLevel);
 
   MapType stairsDownTo = (MapType)(DungeonLevel + 1);
   MapType stairsUpTo = (MapType)(DungeonLevel - 1);
@@ -218,7 +218,7 @@ void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
         {
           GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, DoorMaterials::STONE);
 
-          if (Util::Rolld100(15))
+          if (Util::Instance().Rolld100(15))
           {
             DoorComponent* dc = door->GetComponent<DoorComponent>();
             dc->OpenedBy = GlobalConstants::OpenedByNobody;

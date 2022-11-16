@@ -44,7 +44,7 @@ void Printer::InitForSDL()
   }
   else
   {
-    auto str = Util::StringFormat("***** Could not load tileset: %s! *****\nFalling back to embedded.\n", SDL_GetError());
+    auto str = Util::Instance().StringFormat("***** Could not load tileset: %s! *****\nFalling back to embedded.\n", SDL_GetError());
     DebugLog("%s\n", str.data());
     Logger::Instance().Print(str, true);
 
@@ -56,13 +56,13 @@ void Printer::InitForSDL()
     SDL_SetWindowPosition(Application::Instance().Window, rect.x, rect.y);
     SDL_SetWindowSize(Application::Instance().Window, rect.w, rect.h);
 
-    auto res = Util::Base64_Decode(Base64Strings::Tileset8x16Base64);
-    auto bytes = Util::ConvertStringToBytes(res);
+    auto res = Util::Instance().Base64_Decode(Base64Strings::Tileset8x16Base64);
+    auto bytes = Util::Instance().ConvertStringToBytes(res);
     SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
     surf = SDL_LoadBMP_RW(data, 1);
     if (!surf)
     {
-      auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", SDL_GetError());
+      auto str = Util::Instance().StringFormat("***** Could not load from memory: %s *****\n", SDL_GetError());
       DebugLog("%s\n", str.data());
       Logger::Instance().Print(str, true);
     }
@@ -129,7 +129,7 @@ void Printer::DrawWindow(const Position& leftCorner,
                          const uint32_t& borderBgColor,
                          const uint32_t& bgColor)
 {
-  auto res = Util::GetPerimeter(leftCorner.X, leftCorner.Y,
+  auto res = Util::Instance().GetPerimeter(leftCorner.X, leftCorner.Y,
                                 size.X, size.Y, true);
 
   int x = leftCorner.X;
@@ -537,8 +537,8 @@ NColor Printer::GetNColor(const uint32_t& htmlColor)
 size_t Printer::GetOrSetColor(const uint32_t& htmlColorFg,
                               const uint32_t& htmlColorBg)
 {
-  std::string fgColorStr = Util::StringFormat("#%06X", htmlColorFg);
-  std::string bgColorStr = Util::StringFormat("#%06X", htmlColorBg);
+  std::string fgColorStr = Util::Instance().StringFormat("#%06X", htmlColorFg);
+  std::string bgColorStr = Util::Instance().StringFormat("#%06X", htmlColorBg);
 
   std::string composition = fgColorStr + bgColorStr;
 
@@ -910,11 +910,11 @@ void Printer::Render()
 
 std::vector<Position> Printer::DrawExplosion(const Position& pos, int aRange)
 {
-  std::vector<Position> cellsAffected = Util::GetAreaDamagePointsFrom(pos, aRange);
+  std::vector<Position> cellsAffected = Util::Instance().GetAreaDamagePointsFrom(pos, aRange);
 
   for (int range = 1; range <= aRange; range++)
   {
-    auto res = Util::GetAreaDamagePointsFrom(pos, range);
+    auto res = Util::Instance().GetAreaDamagePointsFrom(pos, range);
     for (auto& p : res)
     {
       int drawX = p.X + Map::Instance().CurrentLevel->MapOffsetX;
@@ -929,7 +929,7 @@ std::vector<Position> Printer::DrawExplosion(const Position& pos, int aRange)
     Printer::Instance().Render();
 
     //#ifndef USE_SDL
-    Util::Sleep(20);
+    Util::Instance().Sleep(20);
     //#endif
 
     Application::Instance().ForceDrawMainState();
@@ -962,7 +962,7 @@ void Printer::AddMessage(const GameLogMessageData& data)
   if (!_inGameMessages.empty() && (_repeatingMessage == data.Message))
   {
     _messageRepeatCounter++;
-    auto newStr = Util::StringFormat("(x%i) %s", _messageRepeatCounter, _repeatingMessage.data());
+    auto newStr = Util::Instance().StringFormat("(x%i) %s", _messageRepeatCounter, _repeatingMessage.data());
     _inGameMessages.front() = { newStr, data.FgColor, data.BgColor };
   }
   else
@@ -979,7 +979,7 @@ void Printer::AddMessage(const GameLogMessageData& data)
     _inGameMessages.pop_back();
   }
 
-  _lastMessagesToDisplay = Util::Clamp(_lastMessagesToDisplay, 0, 5);
+  _lastMessagesToDisplay = Util::Instance().Clamp(_lastMessagesToDisplay, 0, 5);
 
   ShowLastMessage = true;
 }

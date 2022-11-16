@@ -2,6 +2,7 @@
 
 #include "blackboard.h"
 #include "game-object.h"
+#include "util.h"
 
 BTResult TaskGotoLastMinedPos::Run()
 {
@@ -14,7 +15,7 @@ BTResult TaskGotoLastMinedPos::Run()
     return BTResult::Failure;
   }
 
-  auto split = Util::StringSplit(minedPos, ',');
+  auto split = Util::Instance().StringSplit(minedPos, ',');
 
   int mX = std::stoi(split[0]);
   int mY = std::stoi(split[1]);

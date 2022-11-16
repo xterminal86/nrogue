@@ -54,6 +54,7 @@
 //
 int main(int argc, char* argv[])
 {
+  Util::Instance().Init();
   RNG::Instance().Init();
   Blackboard::Instance().Init();
   Timer::Instance().Init();
@@ -68,7 +69,7 @@ int main(int argc, char* argv[])
   Logger::Instance().Prepare(printLog);
 
 #ifdef DEBUG_BUILD
-  auto str = Util::StringFormat("World seed is 0x%lX", RNG::Instance().Seed);
+  auto str = Util::Instance().StringFormat("World seed is 0x%lX", RNG::Instance().Seed);
   DebugLog("%s\n\n", str.data());
   Logger::Instance().Print(str);
 #endif

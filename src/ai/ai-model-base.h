@@ -8,6 +8,7 @@
 
 #include "behaviour-tree.h"
 #include "bts-parser.h"
+#include "enumerations.h"
 
 class AIComponent;
 class Player;

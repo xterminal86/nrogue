@@ -2,6 +2,7 @@
 
 #include "game-object.h"
 #include "application.h"
+#include "util.h"
 
 //
 // ***** Node *****
@@ -49,7 +50,7 @@ void Node::AddNode(Node* node)
 
 std::string Node::ToString()
 {
-  std::string res = Util::StringFormat("[%s]", typeid(*this).name());
+  std::string res = Util::Instance().StringFormat("[%s]", typeid(*this).name());
   return res;
 }
 //
@@ -125,7 +126,7 @@ BTResult Condition::Run()
 {
   BTResult res = BTResult::Undefined;
 
-  if (Util::IsFunctionValid(_fn))
+  if (Util::Instance().IsFunctionValid(_fn))
   {
     res = _fn();
 

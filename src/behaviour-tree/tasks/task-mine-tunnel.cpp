@@ -5,6 +5,7 @@
 #include "blackboard.h"
 #include "equipment-component.h"
 #include "item-component.h"
+#include "util.h"
 
 TaskMineTunnel::TaskMineTunnel(GameObject* objectToControl, bool ignorePickaxe)
   : Node(objectToControl)
@@ -88,7 +89,7 @@ BTResult TaskMineTunnel::Run()
 
   auto& so = Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y];
 
-  if (!Util::IsInsideMap(found, Map::Instance().CurrentLevel->MapSize) || so == nullptr)
+  if (!Util::Instance().IsInsideMap(found, Map::Instance().CurrentLevel->MapSize) || so == nullptr)
   {
     return BTResult::Failure;
   }
@@ -100,7 +101,7 @@ BTResult TaskMineTunnel::Run()
 
   if (!_ignorePickaxe)
   {
-    Util::TryToDamageEquipment(_objectToControl, EquipmentCategory::WEAPON, -1);
+    Util::Instance().TryToDamageEquipment(_objectToControl, EquipmentCategory::WEAPON, -1);
   }
 
   Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y]->Attrs.HP.SetMin(0);
@@ -108,7 +109,7 @@ BTResult TaskMineTunnel::Run()
 
   _objectToControl->FinishTurn();
 
-  auto minedPos = Util::StringFormat("%i,%i", found.X, found.Y);
+  auto minedPos = Util::Instance().StringFormat("%i,%i", found.X, found.Y);
 
   Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPos, minedPos });
 

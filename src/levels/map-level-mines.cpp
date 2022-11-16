@@ -282,7 +282,7 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
         },
       };
 
-      _specialLevel = Util::DecodeMap(enc);
+      _specialLevel = Util::Instance().DecodeMap(enc);
 
       // Note that x and y are swapped to correspond to
       // "world" dimensions.
@@ -357,7 +357,7 @@ void MapLevelMines::CreateLevel()
 
   if (MapType_ != MapType::MINES_5)
   {
-    if (Util::Rolld100(_shrineRollChance))
+    if (Util::Instance().Rolld100(_shrineRollChance))
     {
       PlaceRandomShrine(lb);
     }
@@ -408,7 +408,7 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
         {
           GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, DoorMaterials::WOOD);
 
-          if (Util::Rolld100(10))
+          if (Util::Instance().Rolld100(10))
           {
             DoorComponent* dc = door->GetComponent<DoorComponent>();
             dc->OpenedBy = GlobalConstants::OpenedByNobody;
@@ -472,7 +472,7 @@ void MapLevelMines::CreateSpecialLevel()
 
   key->GetComponent<ItemComponent>()->Data.IsImportant = true;
 
-  auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
+  auto convLevel = Util::Instance().StringsArray2DToCharArray2D(_specialLevel);
 
   MapType stairsDownTo = (MapType)(DungeonLevel + 1);
   MapType stairsUpTo = (MapType)(DungeonLevel - 1);
@@ -628,7 +628,7 @@ void MapLevelMines::CreateSpecialLevel()
             };
 
             int index = RNG::Instance().RandomRange(0, phrases.size());
-            std::string phrase = Util::DecodeString(phrases[index]);
+            std::string phrase = Util::Instance().DecodeString(phrases[index]);
 
             Printer::Instance().AddMessage(phrase, Colors::WhiteColor, 0xAA0000);
           });
@@ -750,7 +750,7 @@ void MapLevelMines::CreateSpecialMonsters()
 {
   if (MapType_ == MapType::MINES_3)
   {
-    if (Util::Rolld100(50))
+    if (Util::Instance().Rolld100(50))
     {
       int index = RNG::Instance().RandomRange(0, _emptyCells.size());
       int x = _emptyCells[index].X;

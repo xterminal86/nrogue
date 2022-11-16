@@ -50,7 +50,7 @@ void FromTiles::Generate(const Position& mapSize,
   }
   else
   {
-    tsIndex = Util::Clamp(tileSetIndex, 0, _tileset.size() - 1);
+    tsIndex = Util::Instance().Clamp(tileSetIndex, 0, _tileset.size() - 1);
   }
 
   // Start from center to have all 4 directions to develop

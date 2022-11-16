@@ -15,8 +15,8 @@ void Rooms::Generate(const Position& mapSize,
 
   _splitRatio = splitRatio;
 
-  _splitRatio.X = Util::Clamp(_splitRatio.X, 10, 90);
-  _splitRatio.Y = Util::Clamp(_splitRatio.Y, 10, 90);
+  _splitRatio.X = Util::Instance().Clamp(_splitRatio.X, 10, 90);
+  _splitRatio.Y = Util::Instance().Clamp(_splitRatio.Y, 10, 90);
 
   _map = CreateFilledMap(mapSize.X, mapSize.Y);
 
@@ -318,7 +318,7 @@ bool Rooms::IsSpotValidForDoor(const Position& p)
   {
     for (auto& angle : angles)
     {
-      auto layout = Util::RotateRoomLayout(pattern, angle);
+      auto layout = Util::Instance().RotateRoomLayout(pattern, angle);
       if (!ComparePatterns(layout, patternToCheck))
       {
         continue;

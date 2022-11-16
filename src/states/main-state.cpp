@@ -100,7 +100,7 @@ void MainState::HandleInput()
 
     case '$':
     {
-      auto str = Util::StringFormat("You have %i %s",
+      auto str = Util::Instance().StringFormat("You have %i %s",
                                     _playerRef->Money,
                                     Strings::MoneyName.data());
       Printer::Instance().AddMessage(str);
@@ -187,7 +187,7 @@ void MainState::HandleInput()
       }
       else
       {
-        auto str = Util::StringFormat("[%i;%i] is occupied!", exitX, exitY);
+        auto str = Util::Instance().StringFormat("[%i;%i] is occupied!", exitX, exitY);
         Printer::Instance().AddMessage(str);
         DebugLog("%s\n", str.data());
       }
@@ -363,7 +363,7 @@ void MainState::DrawHPMP()
 
   UpdateBar(1, th - 2, _playerRef->Attrs.HP);
 
-  auto str = Util::StringFormat("%i/%i", curHp, maxHp);
+  auto str = Util::Instance().StringFormat("%i/%i", curHp, maxHp);
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
                               th - 2,
                               str,
@@ -373,7 +373,7 @@ void MainState::DrawHPMP()
 
   UpdateBar(1, th - 1, _playerRef->Attrs.MP);
 
-  str = Util::StringFormat("%i/%i", curMp, maxMp);
+  str = Util::Instance().StringFormat("%i/%i", curMp, maxMp);
   Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
                               th - 1,
                               str,
@@ -446,7 +446,7 @@ void MainState::ClimbStairs(const std::pair<GameObject*, bool>& stairsTileInfo)
 
 void MainState::PrintDebugInfo()
 {
-  _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i: Plr: [%i;%i] Hunger: %i",
+  _debugInfo = Util::Instance().StringFormat("Act: %i Ofst: %i %i: Plr: [%i;%i] Hunger: %i",
                                   _playerRef->Attrs.ActionMeter,
                                   Map::Instance().CurrentLevel->MapOffsetX,
                                   Map::Instance().CurrentLevel->MapOffsetY,
@@ -456,23 +456,23 @@ void MainState::PrintDebugInfo()
 
   Printer::Instance().PrintFB(1, 1, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
-  _debugInfo = Util::StringFormat("Key: %i Actors: %i Respawn: %i",
+  _debugInfo = Util::Instance().StringFormat("Key: %i Actors: %i Respawn: %i",
                                   _keyPressed,
                                   Map::Instance().CurrentLevel->ActorGameObjects.size(),
                                   Map::Instance().CurrentLevel->RespawnCounter());
 
   Printer::Instance().PrintFB(1, 2, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
-  _debugInfo = Util::StringFormat("Level Start: [%i;%i]", Map::Instance().CurrentLevel->LevelStart.X, Map::Instance().CurrentLevel->LevelStart.Y);
+  _debugInfo = Util::Instance().StringFormat("Level Start: [%i;%i]", Map::Instance().CurrentLevel->LevelStart.X, Map::Instance().CurrentLevel->LevelStart.Y);
   Printer::Instance().PrintFB(1, 3, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
-  _debugInfo = Util::StringFormat("Level Exit: [%i;%i]", Map::Instance().CurrentLevel->LevelExit.X, Map::Instance().CurrentLevel->LevelExit.Y);
+  _debugInfo = Util::Instance().StringFormat("Level Exit: [%i;%i]", Map::Instance().CurrentLevel->LevelExit.X, Map::Instance().CurrentLevel->LevelExit.Y);
   Printer::Instance().PrintFB(1, 4, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
-  _debugInfo = Util::StringFormat("Colors Used: %i", Printer::Instance().ColorsUsed());
+  _debugInfo = Util::Instance().StringFormat("Colors Used: %i", Printer::Instance().ColorsUsed());
   Printer::Instance().PrintFB(1, 5, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
-  _debugInfo = Util::StringFormat("PT: %lu MU: %lu", Application::Instance().PlayerTurnsPassed, Application::Instance().MapUpdateCyclesPassed);
+  _debugInfo = Util::Instance().StringFormat("PT: %lu MU: %lu", Application::Instance().PlayerTurnsPassed, Application::Instance().MapUpdateCyclesPassed);
   Printer::Instance().PrintFB(1, 6, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
   Printer::Instance().PrintFB(1, 7, "Actors watched:", Printer::kAlignLeft, Colors::WhiteColor);
@@ -485,7 +485,7 @@ void MainState::PrintDebugInfo()
     {
       if (a->ObjectId() == id)
       {
-        _debugInfo = Util::StringFormat("%s_%lu (%i)", a->ObjectName.data(), id, a->Attrs.ActionMeter);
+        _debugInfo = Util::Instance().StringFormat("%s_%lu (%i)", a->ObjectName.data(), id, a->Attrs.ActionMeter);
         Printer::Instance().PrintFB(1, 8 + yOffset, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
         yOffset++;
         found = true;
@@ -636,7 +636,7 @@ bool MainState::ProcessMoneyPickup(std::pair<int, GameObject*>& pair)
   ItemComponent* ic = pair.second->GetComponent<ItemComponent>();
   if (ic->Data.ItemType_ == ItemType::COINS)
   {
-    auto message = Util::StringFormat(Strings::FmtPickedUpIS, ic->Data.Amount, ic->OwnerGameObject->ObjectName.data());
+    auto message = Util::Instance().StringFormat(Strings::FmtPickedUpIS, ic->Data.Amount, ic->OwnerGameObject->ObjectName.data());
     Printer::Instance().AddMessage(message);
 
     _playerRef->Money += ic->Data.Amount;
@@ -663,13 +663,13 @@ void MainState::ProcessItemPickup(std::pair<int, GameObject*>& pair)
   std::string message;
   if (ic->Data.IsStackable)
   {
-    message = Util::StringFormat(Strings::FmtPickedUpIS,
+    message = Util::Instance().StringFormat(Strings::FmtPickedUpIS,
                                  ic->Data.Amount,
                                  objName.data());
   }
   else
   {
-    message = Util::StringFormat(Strings::FmtPickedUpS, objName.data());
+    message = Util::Instance().StringFormat(Strings::FmtPickedUpS, objName.data());
   }
 
   Printer::Instance().AddMessage(message);

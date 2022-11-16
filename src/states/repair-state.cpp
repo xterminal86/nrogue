@@ -63,7 +63,7 @@ void RepairState::DrawSpecific()
 
       if (ic->Data.IsIdentified)
       {
-        str = Util::StringFormat("'%c' - %s (%i/%i)",
+        str = Util::Instance().StringFormat("'%c' - %s (%i/%i)",
                                  c,
                                  name.data(),
                                  ic->Data.Durability.Min().Get(),
@@ -71,7 +71,7 @@ void RepairState::DrawSpecific()
       }
       else
       {
-        str = Util::StringFormat(R"('%c' - %s (??/??))", c, name.data());
+        str = Util::Instance().StringFormat(R"('%c' - %s (??/??))", c, name.data());
       }
 
       Printer::Instance().PrintFB(1,
@@ -135,7 +135,7 @@ void RepairState::RepairItem(ItemComponent* itemToRepair)
     _repairKit->Data.Amount = 0;
   }
 
-  auto str = Util::StringFormat("You've repaired %i durability", repaired);
+  auto str = Util::Instance().StringFormat("You've repaired %i durability", repaired);
   Printer::Instance().AddMessage(str);
 
   _playerRef->FinishTurn();
