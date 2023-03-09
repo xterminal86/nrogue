@@ -359,8 +359,8 @@ void LookInputState::DisplayMonsterStats()
     int val = attr.Get();
     int mod = attr.GetModifiers();
 
-    std::string txt = (mod < 0)
-                      ? Util::StringFormat("(-%i)", mod)
+    std::string txt = (mod <= 0)
+                      ? Util::StringFormat("(%i)", mod)
                       : Util::StringFormat("(+%i)", mod);
 
     std::string total = Util::StringFormat("%s: %i %s", attrName.data(), val, txt.data());

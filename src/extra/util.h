@@ -126,7 +126,7 @@ namespace Util
 
   extern int Rolld100();
 
-  extern bool Rolld100(int successChance);
+  extern bool Rolld100(int successChance, bool twoRN = false);
 
   extern int RollDices(int numRolls, int diceSides);
 

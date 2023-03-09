@@ -143,14 +143,7 @@ bool TaskAttack::AttackWithWeapon()
                                                 _playerRef);
 
   #ifdef DEBUG_BUILD
-  auto logMsg = Util::StringFormat("%s (SKL %i, LVL %i) attacks Player (SKL: %i, LVL %i): chance = %i",
-                                   _objectToControl->ObjectName.data(),
-                                   _objectToControl->Attrs.Skl.Get(),
-                                   _objectToControl->Attrs.Lvl.Get(),
-                                   _playerRef->Attrs.Skl.Get(),
-                                   _playerRef->Attrs.Lvl.Get(),
-                                   hitChance);
-  Logger::Instance().Print(logMsg);
+  LogAttackData(hitChance);
   #endif
 
   int dmg = 0;
@@ -208,6 +201,10 @@ AttackResult TaskAttack::AttackUnarmed(const DamageRoll& damageRoll)
   int hitChance = Util::CalculateHitChanceMelee(_objectToControl,
                                                 _playerRef);
 
+  #if DEBUG_BUILD
+  LogAttackData(hitChance);
+  #endif
+
   int dmg = 0;
 
   if (_alwaysHitOverride || Util::Rolld100(hitChance))
@@ -249,3 +246,17 @@ bool TaskAttack::PlayerHasArmor()
   ItemComponent* armor = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::TORSO][0];
   return (armor != nullptr);
 }
+
+#if DEBUG_BUILD
+void TaskAttack::LogAttackData(int hitChance)
+{
+  auto logMsg = Util::StringFormat("%s (SKL %i, LVL %i) attacks Player (SKL: %i, LVL %i): chance = %i",
+                                   _objectToControl->ObjectName.data(),
+                                   _objectToControl->Attrs.Skl.Get(),
+                                   _objectToControl->Attrs.Lvl.Get(),
+                                   _playerRef->Attrs.Skl.Get(),
+                                   _playerRef->Attrs.Lvl.Get(),
+                                   hitChance);
+  Logger::Instance().Print(logMsg);
+}
+#endif

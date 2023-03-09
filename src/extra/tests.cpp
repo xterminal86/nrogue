@@ -129,6 +129,48 @@ namespace Tests
     {
       ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(10, -10));
     }
+
+    const int d100 = 100;
+    const int iterations = 1000;
+
+    ss << Util::StringFormat("\n\n1RN and 2RN tests on %i iterations\n\n", iterations);
+    ss << "For i < 100\n";
+    ss << "  roll 1d100 'iterations' of times and check if result is less than i\n";
+    ss << "\n";
+
+    std::map<int, int> results1RN;
+    std::map<int, int> results2RN;
+
+    for (int i = 0; i < d100; i++)
+    {
+      results1RN[i] = 0;
+      results2RN[i] = 0;
+    }
+
+    for (int i = 0; i < d100; i++)
+    {
+      for (int j = 0; j < iterations; j++)
+      {
+        bool res1RN = Util::Rolld100(i);
+        bool res2RN = Util::Rolld100(i, true);
+
+        results1RN[i] += res1RN ? 1 : 0;
+        results2RN[i] += res2RN ? 1 : 0;
+      }
+    }
+
+    for (int i = 0; i < d100; i++)
+    {
+      auto it1 = results1RN.begin();
+      auto it2 = results2RN.begin();
+
+      std::advance(it1, i);
+      std::advance(it2, i);
+
+      ss << Util::StringFormat("1RN[%d] = %d\n", it1->first, it1->second);
+      ss << Util::StringFormat("2RN[%d] = %d\n", it2->first, it2->second);
+      ss << "\n";
+    }
   }
 
   void TestWeightsMap(const std::vector<std::tuple<GameObjectType, int, std::string>>& testData,

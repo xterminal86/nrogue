@@ -1150,32 +1150,54 @@ namespace Util
     return dice;
   }
 
-  bool Rolld100(int successChance)
+  bool Rolld100(int successChance, bool twoRN)
   {
-    int dice = RNG::Instance().RandomRange(1, 101);
+    #if DEBUG_BUILD
+    std::string roll;
+    #endif
+
+    bool success = false;
+
+    if (twoRN)
+    {
+      int rn1 = RNG::Instance().RandomRange(0, 100);
+      int rn2 = RNG::Instance().RandomRange(0, 100);
+
+      double avg = (double)(rn1 + rn2) / 2.0;
+
+      success = (avg < successChance);
+
+      #if DEBUG_BUILD
+      roll = StringFormat("%.2f", avg);
+      #endif
+    }
+    else
+    {
+      int result = RNG::Instance().RandomRange(0, 100);
+
+      success = (result < successChance);
+
+      #if DEBUG_BUILD
+      roll = StringFormat("%d", result);
+      #endif
+    }
 
     #if DEBUG_BUILD
-    std::string diceStr = std::to_string(dice);
-    std::string succStr = std::to_string(successChance);
-    std::string spaces1(3 - diceStr.length(), ' ');
-    std::string spaces2(3 - succStr.length(), ' ');
-    auto logMsg = StringFormat("\t%s: %i %s<= %i %s- %s",
+    std::string succStr   = std::to_string(successChance);
+    std::string spaces1(6 - roll.length(), ' ');
+    std::string spaces2(6 - succStr.length(), ' ');
+    auto logMsg = StringFormat("\t%s: %s %s< %i %s- %s",
                                __PRETTY_FUNCTION__,
-                                dice,
+                               roll.data(),
                                spaces1.data(),
                                successChance,
                                spaces2.data(),
-                               (dice <= successChance) ? "passed" : "failed");
+                               success ? "passed" : "failed");
 
     Logger::Instance().Print(logMsg);
     #endif
 
-    if (dice <= successChance)
-    {
-      return true;
-    }
-
-    return false;
+    return success;
   }
 
   void Sleep(int delayMs)
