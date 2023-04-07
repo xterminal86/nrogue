@@ -1142,7 +1142,7 @@ namespace Util
 
   int Rolld100()
   {
-    int dice = RNG::Instance().RandomRange(1, 101);
+    int dice = RNG::Instance().RandomRange(0, 100);
 
     auto str = StringFormat("\t%s: rolled = %i", __PRETTY_FUNCTION__, dice);
     Logger::Instance().Print(str);

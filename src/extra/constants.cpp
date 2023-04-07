@@ -296,8 +296,8 @@ namespace GlobalConstants
   const int AwardedExpMiniboss          = 10;
   const int AwardedExpBoss              = 20;
   const int AwardedExpMax               = 40;
-  const int MinHitChance                = 5;
-  const int MaxHitChance                = 95;
+  const int MinHitChance                = 1;
+  const int MaxHitChance                = 99;
   const int DisplayAttackDelayMs        = 50;
   const int InventoryMaxSize            = 20;
 
