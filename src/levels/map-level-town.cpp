@@ -753,7 +753,7 @@ void MapLevelTown::CreateChurch(int x, int y)
                     posY,
                     false,
                     openedBy,
-                    Strings::TileNames::RoyalGateText);
+                    Strings::TileNames::RoyalGatesText);
         }
         break;
 

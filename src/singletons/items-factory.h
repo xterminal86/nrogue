@@ -92,9 +92,12 @@ class ItemsFactory : public Singleton<ItemsFactory>
     // LONG_SWORD,
     // GREAT_SWORD,
     // STAFF,
+    // BOW
+    // XBOW (or firearm?)
     GameObject* CreateBlockBreakerPickaxe();
     GameObject* CreateOneRing();
     // ARMORS
+    // GEM(S?)
 
   protected:
     void InitSpecific() override;

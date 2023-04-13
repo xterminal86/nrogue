@@ -20,8 +20,8 @@ class SelectClassState : public GameState
     {
       "  Soldier  ",
       "   Thief   ",
-      "  Arcanist  ",
-      "  No one  "
+      "  Arcanist ",
+      "   No one  "
     };
 #else
     std::vector<std::string> _menuItems =

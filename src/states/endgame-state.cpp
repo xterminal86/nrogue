@@ -107,24 +107,22 @@ void EndgameState::DrawHPMP()
                               0x000088);
 }
 
-std::string EndgameState::UpdateBar(int x, int y, RangedAttribute& attr)
+void EndgameState::UpdateBar(int x, int y, RangedAttribute& attr)
 {
   float ratio = ((float)attr.Min().Get() / (float)attr.Max().Get());
   int len = ratio * GlobalConstants::HPMPBarLength;
 
-  std::string bar = "[";
+  _bar = "[";
   for (int i = 0; i < GlobalConstants::HPMPBarLength; i++)
   {
-    bar += (i < len) ? "=" : " ";
+    _bar += (i < len) ? "=" : " ";
   }
 
-  bar += "]";
+  _bar += "]";
 
   Printer::Instance().PrintFB(x,
                               y,
-                              bar,
+                              _bar,
                               Printer::kAlignLeft,
                               Colors::WhiteColor);
-
-  return bar;
 }

@@ -57,7 +57,7 @@ IR DoorComponent::Interact()
 
     if (!success)
     {
-      auto str = Util::StringFormat("%s is locked!", OwnerGameObject->ObjectName.data());
+      auto str = Util::StringFormat("%s - locked!", OwnerGameObject->ObjectName.data());
       Printer::Instance().AddMessage(str);
 
       return { InteractionResult::FAILURE, GameStates::MAIN_STATE };

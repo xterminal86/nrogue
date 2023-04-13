@@ -1175,6 +1175,10 @@ namespace Util
     {
       int result = RNG::Instance().RandomRange(0, 100);
 
+      //
+      // In case of clamping by MaxHitChance,
+      // 99 is not less than 99, so it's OK.
+      //
       success = (result < successChance);
 
       #if DEBUG_BUILD

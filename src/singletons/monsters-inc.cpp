@@ -878,7 +878,7 @@ GameObject* MonstersInc::CreateStalker(int x, int y)
   cc->Add(ring);
 
   ItemComponent* weaponIC = weapon->GetComponent<ItemComponent>();
-  ItemComponent* ringIC = ring->GetComponent<ItemComponent>();
+  ItemComponent* ringIC   = ring->GetComponent<ItemComponent>();
 
   ec->Equip(weaponIC);
   ec->Equip(ringIC);

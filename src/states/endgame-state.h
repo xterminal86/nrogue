@@ -17,9 +17,11 @@ class EndgameState : public GameState
   private:
     void DisplayGameLog();
     void DrawHPMP();
-    std::string UpdateBar(int x, int y, RangedAttribute& attr);
+    void UpdateBar(int x, int y, RangedAttribute& attr);
 
     Player* _playerRef = nullptr;
+
+    std::string _bar;
 };
 
 #endif // ENDGAMESTATE_H

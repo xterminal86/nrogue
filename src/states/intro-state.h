@@ -57,6 +57,7 @@ class IntroState : public GameState
         "inside your head, you continue onward..."
       },
       {
+       //********************************************************************************80//
         "Custom class description goes here"
       }
     };

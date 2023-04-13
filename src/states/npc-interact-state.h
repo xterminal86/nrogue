@@ -43,8 +43,8 @@ class NPCInteractState : public GameState
 
     const size_t _textStartPosX = 1;
 
-    size_t _charPos = _textStartPosX;
-    size_t _currentLine = 0;
+    size_t _charPos            = _textStartPosX;
+    size_t _currentLine        = 0;
     size_t _textBlockCharIndex = 0;
 
     const std::string StrName     = "'n' - name";

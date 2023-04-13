@@ -273,7 +273,7 @@ namespace Strings
     extern const std::string StashText;
     extern const std::string WindowText;
     extern const std::string WoodenBenchText;
-    extern const std::string RoyalGateText;
+    extern const std::string RoyalGatesText;
     extern const std::string TreeText;
     extern const std::string WitheredTreeText;
     extern const std::string GrassText;

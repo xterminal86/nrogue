@@ -254,7 +254,7 @@ namespace Strings
     const std::string StashText        = "Stash";
     const std::string WindowText       = "Window";
     const std::string WoodenBenchText  = "Wooden Bench";
-    const std::string RoyalGateText    = "Royal Gate";
+    const std::string RoyalGatesText   = "Royal Gates";
     const std::string TreeText         = "Tree";
     const std::string WitheredTreeText = "Withered Tree";
     const std::string GrassText        = "Grass";

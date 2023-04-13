@@ -2095,8 +2095,11 @@ GameObject* ItemsFactory::CreateOneRing()
   ic->Data.Prefix = ItemPrefix::CURSED;
   ic->Data.IsIdentified = false;
 
+  int rndStr = RNG::Instance().RandomRange(1, 5);
+
   AddBonusToItem(ic, { ItemBonusType::INVISIBILITY, 1 });
   AddBonusToItem(ic, { ItemBonusType::TELEPATHY,    1 });
+  AddBonusToItem(ic, { ItemBonusType::STR,     rndStr });
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = "The One Ring";
