@@ -35,7 +35,7 @@ void DevConsole::Prepare()
 
 void DevConsole::Cleanup()
 {
-  _stdout.clear();
+  //_stdout.clear();
   _currentCommand.clear();
 }
 
@@ -1072,17 +1072,19 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
       std::string totalString;
       for (auto& t : _allCommandsList)
       {
-        count += (t.length() + 1);
+        count += (t.length() + _commandsDelimiter.length());
         if (count > 78)
         {
           StdOut(totalString);
           totalString.clear();
-          count = (t.length() + 1);
+          count = (t.length() + _commandsDelimiter.length());
         }
 
         totalString += t;
-        totalString += " ";
+        totalString += _commandsDelimiter;
       }
+
+      totalString.pop_back();
 
       StdOut(totalString);
     }

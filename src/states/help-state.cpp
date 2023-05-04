@@ -86,6 +86,14 @@ void HelpState::Update(bool forceUpdate)
       offsetY++;
     }
 
+    #ifdef USE_SDL
+    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
+                                1,
+                                _specialText,
+                                Printer::kAlignRight,
+                                Colors::WhiteColor);
+    #endif
+
     Printer::Instance().Render();
   }
 }

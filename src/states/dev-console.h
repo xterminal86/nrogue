@@ -180,6 +180,8 @@ class DevConsole : public GameState
 
     std::vector<std::string> _allCommandsList;
 
+    const std::string _commandsDelimiter = " | ";
+
     const std::map<std::string, DevConsoleCommand> _commandTypeByName =
     {
       { "clear",  DevConsoleCommand::CLEAR                },

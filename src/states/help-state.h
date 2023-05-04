@@ -26,9 +26,6 @@ class HelpState : public GameState
       R"('i' - Interact                )",
       R"('I' - Scenario information    )",
       R"('l' - Look around             )",
-      #ifdef USE_SDL
-      R"('F9' - Take screenshot        )",
-      #endif
       R"('m' - Message log             )",
       R"('@' - Character sheet         )",
       R"('e' - Inventory               )",
@@ -48,6 +45,10 @@ class HelpState : public GameState
       R"(   / | \    )",
       R"('z' 's' 'c' )",
     };
+
+    #ifdef USE_SDL
+    const std::string _specialText = "'F9' - Take screenshot";
+    #endif
 };
 
 #endif // HELPSTATE_H
