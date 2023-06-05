@@ -82,6 +82,8 @@ class Application : public Singleton<Application>
     GameState* GetGameStateRefByName(GameStates stateName);
     bool CurrentStateIs(GameStates stateName);
 
+    bool AppReady();
+
 #ifdef USE_SDL
     SDL_Renderer* Renderer = nullptr;
     SDL_Window* Window = nullptr;
@@ -103,6 +105,8 @@ class Application : public Singleton<Application>
     void InitSpecific() override;
 
   private:
+    bool _appReady = false;
+
     GameState* _currentState = nullptr;
     GameState* _previousState = nullptr;
 
@@ -112,7 +116,7 @@ class Application : public Singleton<Application>
 
     void ParseConfig();
     void SetConfig();
-    void InitGraphics();
+    bool InitGraphics();
     void InitGameStates();
     void DrawAttackCursor(int x, int y,
                           GameObject* defender,
@@ -125,10 +129,10 @@ class Application : public Singleton<Application>
 #ifdef USE_SDL
     std::pair<int, int> _defaultWindowSize;
     std::pair<int, int> _resizedWindowSize;
-    void InitSDL();
+    bool InitSDL();
     void SetIcon();
 #else
-    void InitCurses();
+    bool InitCurses();
 #endif
 
     template <typename StateClass>

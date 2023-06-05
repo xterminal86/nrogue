@@ -245,9 +245,9 @@ void Printer::DrawWindow(const Position& leftCorner,
   }
 }
 
-void Printer::DrawLine(int x1, int y1,
+void Printer::DrawRect(int x1, int y1,
                        int x2, int y2,
-                       uint32_t color, uint8_t width)
+                       uint32_t color)
 {
   if (SDL_GetRenderTarget(Application::Instance().Renderer) == nullptr)
   {

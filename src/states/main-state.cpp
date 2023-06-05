@@ -392,7 +392,7 @@ void MainState::DrawHPMP()
   xPos2 = xPos1 + (int)(((double)expCur / (double)expMax) * (double)xPos2);
   int yPos = (th - 1) * tws.second;
 
-  Printer::Instance().DrawLine(xPos1, yPos - 1, xPos2, yPos + 1, 0xFFFF00);
+  Printer::Instance().DrawRect(xPos1, yPos - 1, xPos2, yPos + 1, 0xFFFF00);
 #endif
 }
 

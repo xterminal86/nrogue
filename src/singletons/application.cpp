@@ -37,7 +37,11 @@
 void Application::InitSpecific()
 {
   PrepareChars();
-  InitGraphics();
+  if (!InitGraphics())
+  {
+    return;
+  }
+
   InitGameStates();
 
   _currentState = _gameStates[GameStates::MENU_STATE].get();
@@ -54,6 +58,8 @@ void Application::InitSpecific()
 
   Printer::Instance().AddMessage("You begin your quest");
   Printer::Instance().AddMessage("Press 'h' for help");
+
+  _appReady = true;
 }
 
 void Application::Run()
@@ -162,6 +168,11 @@ GameState* Application::GetGameStateRefByName(GameStates stateName)
   }
 
   return nullptr;
+}
+
+bool Application::AppReady()
+{
+  return _appReady;
 }
 
 bool Application::CurrentStateIs(GameStates stateName)
@@ -557,17 +568,17 @@ Application::StatInfo Application::GetStatInfo(const std::string& attrName)
   return res;
 }
 
-void Application::InitGraphics()
+bool Application::InitGraphics()
 {
 #ifdef USE_SDL
-  InitSDL();
+  return InitSDL();
 #else
-  InitCurses();
+  return InitCurses();
 #endif
 }
 
 #ifndef USE_SDL
-void Application::InitCurses()
+bool Application::InitCurses()
 {
   initscr();
   nodelay(stdscr, true);     // non-blocking getch()
@@ -581,6 +592,8 @@ void Application::InitCurses()
   SetConfig();
 
   Printer::Instance().Init();
+
+  return true;
 }
 #endif
 
@@ -609,12 +622,12 @@ void Application::SetIcon()
   SDL_FreeSurface(surf);
 }
 
-void Application::InitSDL()
+bool Application::InitSDL()
 {
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
   {
     DebugLog("SDL_Init Error: %s\n", SDL_GetError());
-    return;
+    return false;
   }
 
   SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
@@ -634,28 +647,29 @@ void Application::InitSDL()
                             rect.w, rect.h,
                             SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
+  if (Window == nullptr)
+  {
+    DebugLog("SDL_CreateWindow fail: %s", SDL_GetError());
+    return false;
+  }
+
 #ifdef MSVC_COMPILER
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d");
 #else
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 #endif
 
-  int drivers = SDL_GetNumRenderDrivers();
-  for (int i = 0; i < drivers; i++)
+  Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+  if (Renderer == nullptr)
   {
-    SDL_RendererInfo info;
-    SDL_GetRenderDriverInfo(i, &info);
+    DebugLog("SDL_CreateRenderer() fail: %s", SDL_GetError());
+    DebugLog("Trying software mode...");
 
-    //
-    // Create double buffer by searching for SDL_RENDERER_TARGETTEXTURE
-    //
-    if (info.flags & SDL_RENDERER_TARGETTEXTURE)
+    Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_SOFTWARE | SDL_RENDERER_TARGETTEXTURE);
+    if (Renderer == nullptr)
     {
-      Renderer = SDL_CreateRenderer(Window, i, info.flags);
-      if (Renderer != nullptr)
-      {
-        break;
-      }
+      DebugLog("SDL_CreateRenderer() fail: %s", SDL_GetError());
+      return false;
     }
   }
 
@@ -669,6 +683,8 @@ void Application::InitSDL()
 
   Printer::TerminalWidth  = GlobalConstants::TerminalWidth;
   Printer::TerminalHeight = GlobalConstants::TerminalHeight;
+
+  return true;
 }
 
 const std::pair<int, int>& Application::GetDefaultWindowSize()

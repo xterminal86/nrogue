@@ -137,9 +137,9 @@ class Printer : public Singleton<Printer>
                     const uint32_t& borderBgColor = Colors::BlackColor,
                     const uint32_t& bgColor = Colors::BlackColor);
 
-    void DrawLine(int x1, int y1,
+    void DrawRect(int x1, int y1,
                   int x2, int y2,
-                  uint32_t color, uint8_t width = 1);
+                  uint32_t color);
 
     const std::unordered_map<uint32_t, TileColor>& GetValidColorsCache();
 
