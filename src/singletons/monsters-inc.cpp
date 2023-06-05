@@ -2,6 +2,7 @@
 
 #include "map.h"
 #include "items-factory.h"
+#include "application.h"
 
 #include "ai-component.h"
 #include "ai-npc.h"
@@ -710,10 +711,14 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
         remains->AddComponent<TimedDestroyerComponent>(timeout,
         [this, pos, attrs]()
         {
-          GameObject* reanimated = CreateZombie(pos.X, pos.Y);
-          reanimated->Attrs = attrs;
-          reanimated->Attrs.HP.Reset(reanimated->Attrs.HP.Max().OriginalValue());
-          Map::Instance().PlaceActor(reanimated);
+          Player& playerRef = Application::Instance().PlayerInstance;
+          if (playerRef.PosX != pos.X && playerRef.PosY != pos.Y)
+          {
+            GameObject* reanimated = CreateZombie(pos.X, pos.Y);
+            reanimated->Attrs = attrs;
+            reanimated->Attrs.HP.Reset(reanimated->Attrs.HP.Max().OriginalValue());
+            Map::Instance().PlaceActor(reanimated);
+          }
         });
       }
     }

@@ -22,6 +22,8 @@ BTResult TaskAttack::Run()
     case GameObjectType::RAT:
     case GameObjectType::BAT:
     case GameObjectType::TROLL:
+    case GameObjectType::SKELETON:
+    case GameObjectType::STALKER:
     {
       auto attRes = AttackUnarmed();
       if (attRes.first)
@@ -65,6 +67,7 @@ BTResult TaskAttack::Run()
 
     case GameObjectType::SPIDER:
     case GameObjectType::SHELOB:
+    case GameObjectType::ZOMBIE:
     {
       auto attRes = AttackUnarmed();
       if (attRes.first)
@@ -86,7 +89,15 @@ BTResult TaskAttack::Run()
           e.Period     = GlobalConstants::EffectDurationSkipsForTurn * 2;
           e.Cumulative = true;
 
-          _playerRef->AddEffect(e);
+          if (_objectToControl->Type == GameObjectType::ZOMBIE
+           && Util::Rolld100(50))
+          {
+            _playerRef->AddEffect(e);
+          }
+          else
+          {
+            _playerRef->AddEffect(e);
+          }
         }
       }
     }
@@ -95,10 +106,8 @@ BTResult TaskAttack::Run()
     case GameObjectType::KOBOLD:
     case GameObjectType::HEROBRINE:
     case GameObjectType::MAD_MINER:
-    {
       AttackWithWeapon();
-    }
-    break;
+      break;
 
     case GameObjectType::WRAITH:
     {

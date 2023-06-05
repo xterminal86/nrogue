@@ -245,6 +245,36 @@ void Printer::DrawWindow(const Position& leftCorner,
   }
 }
 
+void Printer::DrawLine(int x1, int y1,
+                       int x2, int y2,
+                       uint32_t color, uint8_t width)
+{
+  if (SDL_GetRenderTarget(Application::Instance().Renderer) == nullptr)
+  {
+    SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
+  }
+
+  TileInfo& ti = _tiles[219];
+
+  _drawSrc.x = ti.X;
+  _drawSrc.y = ti.Y;
+  _drawSrc.w = _tileWidth;
+  _drawSrc.h = _tileHeight;
+
+  _drawDst.x = x1;
+  _drawDst.y = y1;
+  _drawDst.w = std::abs(x2 - x1);
+  _drawDst.h = std::abs(y2 - y1);
+
+  ConvertHtmlToRGB(color);
+  SDL_SetTextureColorMod(_tileset,
+                         _convertedHtml.R,
+                         _convertedHtml.G,
+                         _convertedHtml.B);
+
+  SDL_RenderCopy(Application::Instance().Renderer, _tileset, &_drawSrc, &_drawDst);
+}
+
 void Printer::DrawTile(int x, int y, int tileIndex)
 {
   TileInfo& tile = _tiles[tileIndex];

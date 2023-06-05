@@ -840,6 +840,13 @@ bool Player::ReceiveDamage(GameObject* from,
                            bool directDamage,
                            bool suppressLog)
 {
+#ifdef DEBUG_BUILD
+  if (GodMode)
+  {
+    return false;
+  }
+#endif
+
   if (directDamage)
   {
     Attrs.HP.AddMin(-amount);
@@ -1230,8 +1237,8 @@ void Player::FinishTurn()
   // If player killed an enemy but can still make another turn,
   // we must check and remove objects marked for deletion
   // or Application::DrawCurrentState() won't reflect that visually,
-  // and we might also still attack / interact with objects,
-  // that should've already been destroyed, as well.
+  // and we might also still attack / interact with objects
+  // that should've already been destroyed, which is a bug.
   //
   // Also removes dead triggers.
   //
@@ -1311,6 +1318,13 @@ void Player::ProcessStarvation()
 
 void Player::ProcessHunger()
 {
+#ifdef DEBUG_BUILD
+  if (GodMode)
+  {
+    return;
+  }
+#endif
+
   //
   // No starving in town
   //

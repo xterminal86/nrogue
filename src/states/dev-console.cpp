@@ -292,6 +292,10 @@ void DevConsole::ProcessCommand(const std::string& command,
     }
     break;
 
+    case DevConsoleCommand::AWARD_EXP:
+      AwardExperience(params);
+      break;
+
     case DevConsoleCommand::LEVEL_DOWN:
     {
       if (_playerRef->Attrs.Lvl.Get() == 1)
@@ -359,8 +363,16 @@ void DevConsole::ProcessCommand(const std::string& command,
       ToggleFogOfWar();
       break;
 
-    case DevConsoleCommand::LIST_TRIGGERS:
+    case DevConsoleCommand::GOD_MODE:
+      ToggleGodMode();
+      break;
+
+    case DevConsoleCommand::PRINT_TRIGGERS:
       PrintTriggers();
+      break;
+
+    case DevConsoleCommand::PRINT_ACTORS:
+      PrintActors();
       break;
 
     case DevConsoleCommand::DISPEL_EFFECTS:
@@ -433,6 +445,7 @@ void DevConsole::GetObjectByAddress(const std::vector<std::string>& params)
   _objectHandles[ObjectHandleType::ANY] = _currentLevel->FindObjectByAddress(hexAddr);
 
   ReportHandle(ObjectHandleType::ANY);
+  ReportHandleDebugInfo(ObjectHandleType::ANY);
 }
 
 void DevConsole::ReportHandleDebugInfo(ObjectHandleType type)
@@ -983,6 +996,26 @@ void DevConsole::PoisonActor()
   StdOut(Ok);
 }
 
+void DevConsole::AwardExperience(const std::vector<std::string>& params)
+{
+  if (params.size() != 1)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string expStr = params[0];
+  if (!StringIsNumbers(expStr))
+  {
+    return;
+  }
+
+  int exp = std::stoi(expStr);
+  _playerRef->AwardExperience(exp);
+
+  StdOut(Ok);
+}
+
 void DevConsole::GiveMoney(const std::vector<std::string>& params)
 {
   if (params.size() != 1)
@@ -1016,6 +1049,14 @@ void DevConsole::ToggleFogOfWar()
   StdOut(str);
 }
 
+void DevConsole::ToggleGodMode()
+{
+  _playerRef->GodMode = !_playerRef->GodMode;
+
+  auto str = Util::StringFormat("God mode %s", _playerRef->GodMode ? "on" : "off");
+  StdOut(str);
+}
+
 void DevConsole::PrintTriggers()
 {
   auto out = Util::StringFormat("Triggers on this level: %u", _currentLevel->FinishTurnTriggers.size());
@@ -1024,6 +1065,18 @@ void DevConsole::PrintTriggers()
   for (auto& t : _currentLevel->FinishTurnTriggers)
   {
     auto str = Util::StringFormat("0x%X at %i %i", t.get(), t->PosX, t->PosY);
+    StdOut(str);
+  }
+}
+
+void DevConsole::PrintActors()
+{
+  auto out = Util::StringFormat("Actors on this level: %u:", _currentLevel->ActorGameObjects.size());
+  StdOut(out);
+
+  for (auto& a : _currentLevel->ActorGameObjects)
+  {
+    auto str = Util::StringFormat("0x%X at %i %i", a.get(), a->PosX, a->PosY);
     StdOut(str);
   }
 }

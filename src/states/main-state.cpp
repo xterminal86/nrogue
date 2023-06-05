@@ -380,6 +380,20 @@ void MainState::DrawHPMP()
                               Printer::kAlignCenter,
                               Colors::WhiteColor,
                               0x000088);
+
+#ifdef USE_SDL
+  int expCur = _playerRef->Attrs.Exp.Min().Get();
+  int expMax = _playerRef->Attrs.Exp.Max().Get();
+
+  auto tws = Printer::Instance().GetTileWHScaled();
+
+  int xPos1 = tws.first * 2;
+  int xPos2 = GlobalConstants::HPMPBarLength * tws.first;
+  xPos2 = xPos1 + (int)(((double)expCur / (double)expMax) * (double)xPos2);
+  int yPos = (th - 1) * tws.second;
+
+  Printer::Instance().DrawLine(xPos1, yPos - 1, xPos2, yPos + 1, 0xFFFF00);
+#endif
 }
 
 void MainState::UpdateBar(int x, int y, RangedAttribute& attr)

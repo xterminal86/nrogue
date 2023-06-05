@@ -478,10 +478,9 @@ std::function<BTResult()> AIModelBase::GetPlayerNextTurnCF(const ScriptNode* dat
   // ^
   //
   // which will eventually, after all turn increments are processed,
-  // loop into the first situation.
-  // Meaning that from monster's point of view
-  // it will look like it's OK to perform attack,
-  // because player seems to be unable to catch up,
+  // loop back into the first situation.
+  // Meaning that from monster's point of view it will look like it's OK to
+  // perform an attack, because player seems to be unable to catch up,
   // but he actually does.
   //
   // UpdateActors() checks CanAct() on each actor, so in cases
@@ -532,9 +531,8 @@ std::function<BTResult()> AIModelBase::GetPlayerNextTurnCF(const ScriptNode* dat
   // So now monster sees "oh, shit, I'm gonna get fucked" and
   // moves away.
   //
-  // Now if player just skips his turn by waiting,
-  // we'll return to the beginning of this example
-  // and the circle repeats.
+  // Now if player just skips his turn by waiting, we'll return to the beginning
+  // of this example and the circle repeats.
   //
   auto fn = [this, data]()
   {

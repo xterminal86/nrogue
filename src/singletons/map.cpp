@@ -39,6 +39,13 @@ void Map::InitSpecific()
 
 void Map::Cleanup()
 {
+  for (int i = _levels.size() - 1; i >= 0; i--)
+  {
+    auto it = _levels.begin();
+    std::advance(it, i);
+    it->second.reset();
+  }
+
   _levels.clear();
 
   Logger::Instance().Print("Map::Cleanup()");
@@ -1208,6 +1215,7 @@ std::pair<uint32_t, uint32_t> Map::GetActorColors(GameObject* actor)
 
 void Map::EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list)
 {
+  //
   // It's dangerous to iterate over collection from start to end using plain for loop
   // to remove elements that satisfy certain condition, because it is possible to skip
   // some of them if such elements happen to be adjacent. E.g.:
@@ -1228,9 +1236,8 @@ void Map::EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list)
   //
   // The recommended way is to use so-called "erase-remove" idiom by utilizing
   // STL algorithms.
-  // Or use ye olde C-style way by iterating over collection
-  // from end to start.
-
+  // Or use ye olde C-style way by iterating over collection backwards.
+  //
   auto newBegin = std::remove_if(list.begin(),
                                  list.end(),
                                  [this](const std::unique_ptr<GameObject>& go)

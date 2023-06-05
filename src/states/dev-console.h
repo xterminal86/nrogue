@@ -20,7 +20,9 @@ enum class DevConsoleCommand
   GET_ACTOR,
   GET_ITEM,
   GET_BY_ADDRESS,
-  LIST_TRIGGERS,
+  GOD_MODE,
+  PRINT_TRIGGERS,
+  PRINT_ACTORS,
   GIVE_MONEY,
   POISON_ACTOR,
   DAMAGE_ACTOR,
@@ -31,6 +33,7 @@ enum class DevConsoleCommand
   REPORT_PLAYER,
   REMOVE_OBJECT,
   SHOW_MAP,
+  AWARD_EXP,
   LEVEL_UP,
   LEVEL_DOWN,
   PRINT_MAP,
@@ -156,8 +159,11 @@ class DevConsole : public GameState
     void ReportHandleDebugInfo(ObjectHandleType type);
     void PrintDebugInfo(const std::vector<std::string>& debugInfo);
     void GiveMoney(const std::vector<std::string>& params);
+    void AwardExperience(const std::vector<std::string>& params);
     void ToggleFogOfWar();
+    void ToggleGodMode();
     void PrintTriggers();
+    void PrintActors();
     void DispelEffects();
     void DispelEffectsActor();
 
@@ -193,7 +199,8 @@ class DevConsole : public GameState
       { "m_pw",   DevConsoleCommand::PLACE_WALL           },
       { "m_show", DevConsoleCommand::SHOW_MAP             },
       { "info",   DevConsoleCommand::INFO_HANDLES         },
-      { "i_trig", DevConsoleCommand::LIST_TRIGGERS        },
+      { "i_trig", DevConsoleCommand::PRINT_TRIGGERS        },
+      { "i_act",  DevConsoleCommand::PRINT_ACTORS          },
       { "so_get", DevConsoleCommand::GET_STATIC_OBJECT    },
       { "ao_get", DevConsoleCommand::GET_ACTOR            },
       { "io_get", DevConsoleCommand::GET_ITEM             },
@@ -207,8 +214,10 @@ class DevConsole : public GameState
       { "p_de",   DevConsoleCommand::DISPEL_EFFECTS       },
       { "o_del",  DevConsoleCommand::REMOVE_OBJECT        },
       { "p_gm",   DevConsoleCommand::GIVE_MONEY           },
+      { "p_ae",   DevConsoleCommand::AWARD_EXP            },
       { "p_lu",   DevConsoleCommand::LEVEL_UP             },
       { "p_ld",   DevConsoleCommand::LEVEL_DOWN           },
+      { "p_god",  DevConsoleCommand::GOD_MODE             },
       { "p_info", DevConsoleCommand::REPORT_PLAYER        },
       { "g_pm",   DevConsoleCommand::PRINT_MAP            },
       { "g_pc",   DevConsoleCommand::PRINT_COLORS         },
@@ -235,16 +244,22 @@ class DevConsole : public GameState
       { "p_lu",   { "Give player a level"      } },
       { "p_ld",   { "Take a level from player" } },
       { "p_info", { "Print debug info about player" } },
+      { "p_god",  { "Toggles player's invulnerability" } },
       { "g_pm",   { "Save current map layout to a file" } },
       { "g_pc",   { "Prints colors used so far" } },
       { "g_go",   { "g_go 0x%X", "Get game object by address (slow!)" } },
       { "ao_psn", { "Add lingering damage to actor in handle" } },
       { "m_show", { "Toggle fog of war" } },
       { "i_trig", { "Print current level triggers" } },
+      { "i_act",  { "Print current level actors" } },
       { "p_de",   { "Dispel effects from player" } },
       { "g_cap",  { "Create all potions and place them in town" } },
       { "g_cas",  { "Create all scrolls and place them in town" } },
       { "ao_de",  { "Dispel all effects from actor in handle" } },
+      {
+        "p_ae",
+        { "p_ae <AMOUNT>", "Give <AMOUNT> experience to player" }
+      },
       {
         "so_get",
         { "so_get [X Y]", "Try to get handle to static object at X Y" }

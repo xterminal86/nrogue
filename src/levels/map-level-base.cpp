@@ -47,6 +47,16 @@ MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+MapLevelBase::~MapLevelBase()
+{
+  GlobalTriggers.clear();
+  FinishTurnTriggers.clear();
+  ActorGameObjects.clear();
+  GameObjects.clear();
+  StaticMapObjects.clear();
+  MapArray.clear();
+}
+
 void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
 {
   MapArray.reserve(MapSize.X);

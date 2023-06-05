@@ -233,6 +233,8 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
 
 void MapLevelCaves::CreateSpecialLevel()
 {
+  // TODO: create boss
+
   MysteriousForcePresent = true;
 
   auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
