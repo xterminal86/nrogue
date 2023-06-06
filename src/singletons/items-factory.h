@@ -47,12 +47,27 @@ class ItemsFactory : public Singleton<ItemsFactory>
     //
     // *************************************************************************
     //
-    GameObject* CreateMeleeWeapon(int x, int y, WeaponType type, ItemPrefix preifx = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM, const std::vector<ItemBonusStruct>& bonuses = std::vector<ItemBonusStruct>());
-    GameObject* CreateRangedWeapon(int x, int y, RangedWeaponType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM, const std::vector<ItemBonusStruct>& bonuses = std::vector<ItemBonusStruct>());
-    GameObject* CreateArrows(int x, int y, ArrowType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, int amount = -1);
-    GameObject* CreateRandomMeleeWeapon(WeaponType type = WeaponType::RANDOM, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
-    GameObject* CreateRandomRangedWeapon(RangedWeaponType type = RangedWeaponType::RANDOM, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
-    GameObject* CreateRandomWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateMeleeWeapon(int x, int y,
+                                  WeaponType type,
+                                  ItemPrefix preifx = ItemPrefix::RANDOM,
+                                  ItemQuality quality = ItemQuality::RANDOM,
+                                  const std::vector<ItemBonusStruct>& bonuses = std::vector<ItemBonusStruct>());
+    GameObject* CreateRangedWeapon(int x, int y,
+                                   RangedWeaponType type,
+                                   ItemPrefix prefixOverride = ItemPrefix::RANDOM,
+                                   ItemQuality quality = ItemQuality::RANDOM,
+                                   const std::vector<ItemBonusStruct>& bonuses = std::vector<ItemBonusStruct>());
+    GameObject* CreateArrows(int x, int y,
+                             ArrowType type,
+                             ItemPrefix prefixOverride = ItemPrefix::RANDOM,
+                             int amount = -1);
+    GameObject* CreateRandomMeleeWeapon(WeaponType type = WeaponType::RANDOM,
+                                        ItemPrefix prefixOverride = ItemPrefix::RANDOM,
+                                        ItemQuality qualityOverride = ItemQuality::RANDOM);
+    GameObject* CreateRandomRangedWeapon(RangedWeaponType type = RangedWeaponType::RANDOM,
+                                         ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateRandomWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM,
+                                   ItemQuality quality = ItemQuality::RANDOM);
     //
     // *************************************************************************
     //
@@ -70,8 +85,12 @@ class ItemsFactory : public Singleton<ItemsFactory>
     //
     // *************************************************************************
     //
-    GameObject* CreateArmor(int x, int y, ArmorType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM);
-    GameObject* CreateRandomArmor(ArmorType type = ArmorType::RANDOM, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateArmor(int x, int y, ArmorType type,
+                            ItemPrefix prefixOverride = ItemPrefix::RANDOM,
+                            ItemQuality quality = ItemQuality::RANDOM);
+    GameObject* CreateRandomArmor(ArmorType type = ArmorType::RANDOM,
+                                  ItemPrefix prefixOverride = ItemPrefix::RANDOM,
+                                  ItemQuality qualityOverride = ItemQuality::RANDOM);
     //
     // *************************************************************************
     //
@@ -105,8 +124,10 @@ class ItemsFactory : public Singleton<ItemsFactory>
   private:
     GameObject* CreateRandomGlass();
     GameObject* CreateGemHelper(GemType t, ItemQuality quality = ItemQuality::RANDOM);
-    GameObject* ChooseRandomMeleeWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
-    GameObject* ChooseRandomRangedWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* ChooseRandomMeleeWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM,
+                                        ItemQuality qualityOverride = ItemQuality::RANDOM);
+    GameObject* ChooseRandomRangedWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM,
+                                         ItemQuality qualityOverride = ItemQuality::RANDOM);
 
     void AdjustBonusWeightsMapForItem(ItemComponent* itemRef,
                                       std::map<ItemBonusType, int>& bonusWeightByType);

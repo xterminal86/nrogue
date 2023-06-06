@@ -263,6 +263,14 @@ void GameObject::ApplyBonus(ItemComponent* itemRef,
       break;
 
     case ItemBonusType::REGEN:
+    {
+      if (IsLiving)
+      {
+        AddEffect(bonus);
+      }
+    }
+    break;
+
     case ItemBonusType::REFLECT:
     case ItemBonusType::MANA_SHIELD:
     case ItemBonusType::INVISIBILITY:
@@ -772,6 +780,7 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
 
   ApplyEffect(effectToAdd);
 
+  /*
   #ifdef DEBUG_BUILD
   auto str = Util::StringFormat("%s gained %s (duration %i period %i)",
                                 ObjectName.data(),
@@ -783,6 +792,7 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
   Logger::Instance().Print(str);
   DebugLog(str.data());
   #endif
+  */
 }
 
 bool GameObject::IsImmune(const ItemBonusStruct& effectToAdd)

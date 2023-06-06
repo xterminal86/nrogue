@@ -766,12 +766,35 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
-  WeaponType weaponType = Util::Rolld100(50)
-                        ? WeaponType::SHORT_SWORD
-                        : WeaponType::ARMING_SWORD;
+  std::map<WeaponType, int> possibleWeapons =
+  {
+    { WeaponType::DAGGER,       3 },
+    { WeaponType::SHORT_SWORD,  2 },
+    { WeaponType::ARMING_SWORD, 1 }
+  };
 
-  GameObject* weapon = ItemsFactory::Instance().CreateRandomMeleeWeapon(weaponType);
-  GameObject* armor  = ItemsFactory::Instance().CreateRandomArmor();
+  std::map<ArmorType, int> possibleArmor =
+  {
+    { ArmorType::PADDING, 5 },
+    { ArmorType::LEATHER, 3 },
+    { ArmorType::SCALE,   1 }
+  };
+
+  std::map<ItemQuality, int> possibleQuality =
+  {
+    { ItemQuality::DAMAGED, 10 },
+    { ItemQuality::FLAWED,   7 },
+    { ItemQuality::NORMAL,   3 }
+  };
+
+  WeaponType  wt = Util::WeightedRandom(possibleWeapons).first;
+  ItemQuality iq = Util::WeightedRandom(possibleQuality).first;
+  ItemPrefix  ip = Util::Rolld100(25) ? ItemPrefix::UNCURSED
+                                      : ItemPrefix::CURSED;
+  ArmorType at   = Util::WeightedRandom(possibleArmor).first;
+
+  GameObject* weapon = ItemsFactory::Instance().CreateRandomMeleeWeapon(wt, ip, iq);
+  GameObject* armor  = ItemsFactory::Instance().CreateRandomArmor(at, ip, iq);
 
   cc->Add(weapon);
   cc->Add(armor);
@@ -907,7 +930,7 @@ int MonstersInc::GetDifficulty()
 {
   int dl = Map::Instance().CurrentLevel->DungeonLevel;
   int difficulty = dl;
-  int diffOffset = RNG::Instance().RandomRange(0, 4);
+  int diffOffset = RNG::Instance().RandomRange(0, 3);
 
   difficulty += diffOffset;
 

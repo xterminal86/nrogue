@@ -2059,8 +2059,8 @@ namespace Util
       }
     }
 
+    /*
     #ifdef DEBUG_BUILD
-
     auto str = StringFormat("Calculated hit chance: %i (SKL: %i, SKL bonus: %i, distance: -%i)",
                             chance,
                             skl,
@@ -2079,8 +2079,8 @@ namespace Util
     Logger::Instance().Print(str);
 
     DebugLog("%s", str.data());
-
     #endif
+    */
 
     return chance;
   }

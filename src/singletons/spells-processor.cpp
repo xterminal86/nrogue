@@ -544,7 +544,8 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
     return;
   }
 
-  if (Map::Instance().CurrentLevel->MysteriousForcePresent)
+  if (Map::Instance().CurrentLevel->MysteriousForcePresent
+   || Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
   {
     _scrollUseMessages.push_back(_kNoActionText);
     return;
@@ -552,6 +553,24 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
 
   auto p = Map::Instance().GetLevelRefByType(MapType::TOWN);
   MapLevelTown* lvl = static_cast<MapLevelTown*>(p);
+
+  int ind = -1;
+
+  for (size_t i = 0; i < lvl->GameObjects.size(); i++)
+  {
+    TownPortalComponent* tpc = lvl->GameObjects[i]->GetComponent<TownPortalComponent>();
+    if (tpc != nullptr)
+    {
+      ind = i;
+      break;
+    }
+  }
+
+  if (ind != -1)
+  {
+    lvl->GameObjects.erase(lvl->GameObjects.begin() + ind);
+  }
+
   if (scroll->Data.Prefix == ItemPrefix::BLESSED)
   {
     auto tpPos = lvl->TownPortalPos();

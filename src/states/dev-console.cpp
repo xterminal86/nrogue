@@ -715,14 +715,27 @@ void DevConsole::CreateAllPotions()
 
 void DevConsole::CreateAllScrolls()
 {
-  int count = 0;
-  for (auto& item : GlobalConstants::ScrollValidSpellTypes)
+  std::vector<ItemPrefix> prefixes =
   {
-    auto scroll = ItemsFactory::Instance().CreateScroll(1 + count, 1, item, ItemPrefix::UNCURSED);
-    ItemComponent* ic = scroll->GetComponent<ItemComponent>();
-    ic->Data.IsIdentified = false;
-    _currentLevel->PlaceGameObject(scroll);
-    count++;
+    ItemPrefix::CURSED,
+    ItemPrefix::UNCURSED,
+    ItemPrefix::BLESSED
+  };
+
+  for (int i = 0; i < 3; i++)
+  {
+    ItemPrefix p = prefixes[i];
+
+    int xOffset = 0;
+
+    for (auto& item : GlobalConstants::ScrollValidSpellTypes)
+    {
+      auto scroll = ItemsFactory::Instance().CreateScroll(1 + xOffset, 10 + i, item, p);
+      ItemComponent* ic = scroll->GetComponent<ItemComponent>();
+      ic->Data.IsIdentified = true;
+      _currentLevel->PlaceGameObject(scroll);
+      xOffset++;
+    }
   }
 
   StdOut(Ok);

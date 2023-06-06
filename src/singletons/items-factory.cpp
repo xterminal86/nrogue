@@ -990,33 +990,37 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
   return go;
 }
 
-GameObject* ItemsFactory::ChooseRandomMeleeWeapon(ItemPrefix prefixOverride)
+GameObject* ItemsFactory::ChooseRandomMeleeWeapon(ItemPrefix prefixOverride,
+                                                  ItemQuality qualityOverride)
 {
   int index = RNG::Instance().RandomRange(0, GlobalConstants::WeaponNameByType.size());
   auto it = GlobalConstants::WeaponNameByType.begin();
   std::advance(it, index);
-  return CreateMeleeWeapon(0, 0, it->first, prefixOverride);
+  return CreateMeleeWeapon(0, 0, it->first, prefixOverride, qualityOverride);
 }
 
-GameObject* ItemsFactory::ChooseRandomRangedWeapon(ItemPrefix prefixOverride)
+GameObject* ItemsFactory::ChooseRandomRangedWeapon(ItemPrefix prefixOverride,
+                                                   ItemQuality qualityOverride)
 {
   int index = RNG::Instance().RandomRange(0, GlobalConstants::RangedWeaponNameByType.size());
   auto it = GlobalConstants::RangedWeaponNameByType.begin();
   std::advance(it, index);
-  return CreateRangedWeapon(0, 0, it->first, prefixOverride);
+  return CreateRangedWeapon(0, 0, it->first, prefixOverride, qualityOverride);
 }
 
-GameObject* ItemsFactory::CreateRandomMeleeWeapon(WeaponType type, ItemPrefix prefixOverride)
+GameObject* ItemsFactory::CreateRandomMeleeWeapon(WeaponType type,
+                                                  ItemPrefix prefixOverride,
+                                                  ItemQuality qualityOverride)
 {
   GameObject* go = nullptr;
 
   if (type != WeaponType::RANDOM)
   {
-    go = CreateMeleeWeapon(0, 0, type, prefixOverride);
+    go = CreateMeleeWeapon(0, 0, type, prefixOverride, qualityOverride);
   }
   else
   {
-    go = ChooseRandomMeleeWeapon(prefixOverride);
+    go = ChooseRandomMeleeWeapon(prefixOverride, qualityOverride);
   }
 
   ItemComponent* ic = go->GetComponent<ItemComponent>();
@@ -1044,18 +1048,19 @@ GameObject* ItemsFactory::CreateRandomRangedWeapon(RangedWeaponType type, ItemPr
   return go;
 }
 
-GameObject* ItemsFactory::CreateRandomWeapon(ItemPrefix prefixOverride)
+GameObject* ItemsFactory::CreateRandomWeapon(ItemPrefix prefixOverride,
+                                             ItemQuality qualityOverride)
 {
   GameObject* go = nullptr;
 
   int isMelee = RNG::Instance().RandomRange(0, 2);
   if (isMelee == 0)
   {
-    go = ChooseRandomMeleeWeapon(prefixOverride);
+    go = ChooseRandomMeleeWeapon(prefixOverride, qualityOverride);
   }
   else
   {
-    go = ChooseRandomRangedWeapon(prefixOverride);
+    go = ChooseRandomRangedWeapon(prefixOverride, qualityOverride);
   }
 
   ItemComponent* ic = go->GetComponent<ItemComponent>();
@@ -1439,20 +1444,22 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
   return go;
 }
 
-GameObject* ItemsFactory::CreateRandomArmor(ArmorType type, ItemPrefix prefixOverride)
+GameObject* ItemsFactory::CreateRandomArmor(ArmorType type,
+                                            ItemPrefix prefixOverride,
+                                            ItemQuality qualityOverride)
 {
   GameObject* go = nullptr;
 
   if (type != ArmorType::RANDOM)
   {
-    go = CreateArmor(0, 0, type, prefixOverride);
+    go = CreateArmor(0, 0, type, prefixOverride, qualityOverride);
   }
   else
   {
     int index = RNG::Instance().RandomRange(0, GlobalConstants::ArmorNameByType.size());
     auto it = GlobalConstants::ArmorNameByType.begin();
     std::advance(it, index);
-    go = CreateArmor(0, 0, it->first, prefixOverride);
+    go = CreateArmor(0, 0, it->first, prefixOverride, qualityOverride);
   }
 
   ItemComponent* ic = go->GetComponent<ItemComponent>();
