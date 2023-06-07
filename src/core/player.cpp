@@ -215,7 +215,9 @@ void Player::CheckVisibility()
   auto& map = Map::Instance().CurrentLevel->MapArray;
   auto& staticObjects = Map::Instance().CurrentLevel->StaticMapObjects;
 
+  //
   // FIXME: some objects can modify visibility radius
+  //
   int radius = (map[PosX][PosY]->ObjectName == Strings::TileNames::TreeText)
               ? VisibilityRadius.Get() / 4
               : VisibilityRadius.Get();

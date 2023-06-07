@@ -16,7 +16,7 @@ struct BSPNode
   std::unique_ptr<BSPNode> Right;
 };
 
-class Rooms : public DGBase
+class BSPRooms : public DGBase
 {
   public:
     void Generate(const Position& mapSize,

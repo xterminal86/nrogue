@@ -1,10 +1,10 @@
-#include "rooms.h"
+#include "bsp-rooms.h"
 
 #include "pathfinder.h"
 
 /// \brief Use BSP to split area into big "cells"
 /// and place randomly sized rooms inside them.
-void Rooms::Generate(const Position& mapSize,
+void BSPRooms::Generate(const Position& mapSize,
                      const Position& splitRatio,
                      int minRoomSize)
 {
@@ -42,7 +42,7 @@ void Rooms::Generate(const Position& mapSize,
   FillMapRaw();
 }
 
-void Rooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
+void BSPRooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
 {
   int sx = parent.CornerStart.X;
   int sy = parent.CornerStart.Y;
@@ -58,6 +58,10 @@ void Rooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
   if (splitX)
   {
     int add = ratio * h;
+    if (add == 0)
+    {
+      return;
+    }
 
     leaf1 = { { sx, sy }, { sx + add, ey } };
     leaf2 = { { sx + add, sy }, { ex, ey } };
@@ -68,6 +72,10 @@ void Rooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
   else
   {
     int add = ratio * w;
+    if (add == 0)
+    {
+      return;
+    }
 
     leaf1 = { { sx, sy }, { ex, sy + add } };
     leaf2 = { { sx, sy + add }, { ex, ey } };
@@ -101,7 +109,7 @@ void Rooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
   Subdivide(*parent.Right.get(), splitChance2.second, splitChance2.first);
 }
 
-std::pair<bool, float> Rooms::GetSplitRatio(Rect& area)
+std::pair<bool, float> BSPRooms::GetSplitRatio(Rect& area)
 {
   std::pair<bool, float> res;
 
@@ -121,7 +129,7 @@ std::pair<bool, float> Rooms::GetSplitRatio(Rect& area)
   return res;
 }
 
-void Rooms::FillArea(const Rect& area, char ch)
+void BSPRooms::FillArea(const Rect& area, char ch)
 {
   for (int x = area.X1 + 1; x <= area.X2 - 1; x++)
   {
@@ -132,7 +140,7 @@ void Rooms::FillArea(const Rect& area, char ch)
   }
 }
 
-bool Rooms::DoesRoomFit(Rect& area)
+bool BSPRooms::DoesRoomFit(Rect& area)
 {
   int w = area.Dimensions().X;
   int h = area.Dimensions().Y;
@@ -140,7 +148,7 @@ bool Rooms::DoesRoomFit(Rect& area)
   return (w > _minRoomSize && h > _minRoomSize);
 }
 
-bool Rooms::WasFilled(const Rect& area)
+bool BSPRooms::WasFilled(const Rect& area)
 {
   for (int x = area.X1 + 1; x <= area.X2 - 1; x++)
   {
@@ -156,7 +164,7 @@ bool Rooms::WasFilled(const Rect& area)
   return false;
 }
 
-void Rooms::Traverse(BSPNode* node, int depth)
+void BSPRooms::Traverse(BSPNode* node, int depth)
 {
   if (node->Left && node->Right)
   {
@@ -193,7 +201,7 @@ void Rooms::Traverse(BSPNode* node, int depth)
   }
 }
 
-void Rooms::ConnectPoints(const Position& p1, const Position& p2)
+void BSPRooms::ConnectPoints(const Position& p1, const Position& p2)
 {
   int dirX = (p1.X > p2.X) ? -1 : 1;
   int dirY = (p1.Y > p2.Y) ? -1 : 1;
@@ -214,7 +222,7 @@ void Rooms::ConnectPoints(const Position& p1, const Position& p2)
   }
 }
 
-void Rooms::PlaceDoors()
+void BSPRooms::PlaceDoors()
 {
   auto spotFound = FindPlaceForDoor();
   while (spotFound.size() != 0)
@@ -229,7 +237,7 @@ void Rooms::PlaceDoors()
   }
 }
 
-std::vector<Position> Rooms::FindPlaceForDoor()
+std::vector<Position> BSPRooms::FindPlaceForDoor()
 {
   std::vector<Position> res;
 
@@ -248,7 +256,7 @@ std::vector<Position> Rooms::FindPlaceForDoor()
   return res;
 }
 
-bool Rooms::IsSpotValidForDoor(const Position& p)
+bool BSPRooms::IsSpotValidForDoor(const Position& p)
 {
   using Pattern = std::vector<std::string>;
 
@@ -333,7 +341,7 @@ bool Rooms::IsSpotValidForDoor(const Position& p)
   return spotValid;
 }
 
-bool Rooms::ComparePatterns(std::vector<std::string>& p1,
+bool BSPRooms::ComparePatterns(std::vector<std::string>& p1,
                              std::vector<std::string>& p2)
 {
   for (size_t row = 0; row < p1.size(); row++)

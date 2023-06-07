@@ -8,7 +8,7 @@
 #include "cellular-automata.h"
 #include "from-layouts.h"
 #include "from-tiles.h"
-#include "rooms.h"
+#include "bsp-rooms.h"
 #include "util.h"
 
 void LevelBuilder::FeatureRoomsMethod(const Position& mapSize,
@@ -96,13 +96,13 @@ void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRoom
   MapRaw = fl->MapRaw;
 }
 
-void LevelBuilder::RoomsMethod(const Position& mapSize,
-                               const Position& splitRatio,
-                               int minRoomSize)
+void LevelBuilder::BSPRoomsMethod(const Position& mapSize,
+                                  const Position& splitRatio,
+                                  int minRoomSize)
 {
-  _generator.reset(new Rooms());
+  _generator.reset(new BSPRooms());
 
-  Rooms* fl = static_cast<Rooms*>(_generator.get());
+  BSPRooms* fl = static_cast<BSPRooms*>(_generator.get());
   fl->Generate(mapSize, splitRatio, minRoomSize);
 
   MapRaw = fl->MapRaw;

@@ -368,6 +368,8 @@ void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
 //
 // WARNING: unused method?! (not found in "Find References")
 //
+// Maybe was prepared to be used but not used yet?
+//
 void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;

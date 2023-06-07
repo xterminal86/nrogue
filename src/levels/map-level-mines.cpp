@@ -336,7 +336,7 @@ void MapLevelMines::CreateLevel()
   {
     case MapType::MINES_1:
     case MapType::MINES_2:
-      lb.RoomsMethod(MapSize, { 45, 55 }, 7);
+      lb.BSPRoomsMethod(MapSize, { 45, 55 }, 7);
       break;
 
     case MapType::MINES_3:

@@ -1206,6 +1206,7 @@ namespace Util
 
   void Sleep(int delayMs)
   {
+    //
     // NOTE: Application can freeze on SDL_Delay().
     //
     // At least on Windows if you listen through a long NPC text
@@ -1213,7 +1214,7 @@ namespace Util
     // this one, text (and the whole window) will freeze and then "unfreeze"
     // possibly after specified delay passes in "background".
     // It seems there's no difference in whether you use SDL_Delay() or C++ chrono library.
-
+    //
     #ifdef USE_SDL
     SDL_Delay(delayMs);
     #else

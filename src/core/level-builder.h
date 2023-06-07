@@ -42,9 +42,9 @@ class LevelBuilder
                             int doorPlacementChance,
                             int maxIterations);
 
-    void RoomsMethod(const Position& mapSize,
-                     const Position& splitRatio,
-                     int minRoomSize);
+    void BSPRoomsMethod(const Position& mapSize,
+                        const Position& splitRatio,
+                        int minRoomSize);
 
     void FromTilesMethod(const Position& mapSize,
                          int tileSetIndex = -1,

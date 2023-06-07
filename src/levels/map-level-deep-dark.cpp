@@ -63,7 +63,7 @@ void MapLevelDeepDark::CreateLevel()
     case MapType::DEEP_DARK_1:
     case MapType::DEEP_DARK_2:
     {
-      int iterations = (MapSize.X * MapSize.Y); // / 10;
+      int iterations = (MapSize.X * MapSize.Y);
 
       FeatureRoomsWeights weights =
       {

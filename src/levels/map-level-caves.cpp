@@ -115,20 +115,21 @@ void MapLevelCaves::CreateLevel()
 
     case MapType::CAVES_2:
     {
-      lb.RecursiveBacktrackerMethod(MapSize);
+      RemovalParams params = { 6, 8, 1 };
+      lb.RecursiveBacktrackerMethod(MapSize, { -1, -1 }, params);
     }
     break;
 
     case MapType::CAVES_3:
     {
-      RemovalParams params = { 7, 8, 2 };
+      RemovalParams params = { 6, 8, 2 };
       lb.RecursiveBacktrackerMethod(MapSize, { -1, -1 }, params);
     }
     break;
 
     case MapType::CAVES_4:
     {
-      RemovalParams params = { 8, 8, 3 };
+      RemovalParams params = { 6, 7, 3 };
       lb.RecursiveBacktrackerMethod(MapSize, { -1, -1 }, params);
     }
     break;

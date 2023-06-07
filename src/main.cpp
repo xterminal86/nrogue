@@ -41,7 +41,7 @@
 // and what kind of (i.e. directory for SDL2_DIR, file for SDL2_LIBRARY etc).
 //
 // Well, anyway, I don't think it will be much of a problem,
-// since even such generic person such as myself managed to figure it out.
+// since even such simpleminded person such as myself managed to figure it out.
 // You'll figure it out too.
 //
 // In Linux everything should configure and build out of the box,

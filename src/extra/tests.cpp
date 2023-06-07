@@ -538,9 +538,31 @@ namespace Tests
 
     ss << str;
 
-    lb.RoomsMethod(mapSize, { 45, 55 }, 5);
+    auto GenerateMap = [&lb, &ss, mapSize](const Position& splitRatio, int roomSize)
+    {
+      ss << "\nSplit ratio: "
+         << splitRatio.X << "x" << splitRatio.Y
+         << " room size: " << roomSize
+         << "\n\n";
 
-    ss << lb.GetMapRawString();
+      DebugLog("  split ratio: %ix%i, room size = %d\n", splitRatio.X, splitRatio.Y, roomSize);
+
+      lb.BSPRoomsMethod(mapSize, splitRatio , roomSize);
+
+      ss << lb.GetMapRawString();
+    };
+
+    for (int i = 0; i < 18; i++)
+    {
+      Position splitRatio = { 5 * (i + 1), 100 - 5 * (i + 1) };
+      GenerateMap(splitRatio, 5);
+    }
+
+    for (int i = 0; i < 18; i++)
+    {
+      Position splitRatio = { 5 * (i + 1), 100 - 5 * (i + 1) };
+      GenerateMap(splitRatio, 7);
+    }
   }
 
   void FeatureRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
@@ -690,7 +712,7 @@ namespace Tests
     Digger(lb, mapSize, ss);
     //
     DisplayProgress();
-    BSPRooms(lb, mapSize, ss);
+    BSPRooms(lb, { 50, 50 }, ss);
     //
     DisplayProgress();
     FeatureRooms(lb, mapSize, ss);
