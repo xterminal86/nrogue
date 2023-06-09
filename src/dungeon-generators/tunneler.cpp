@@ -105,11 +105,13 @@ void Tunneler::Backtracking(const Position& mapSize,
     }
   }
 
-  // Starting point might become wall on printout
+  //
+  // NOTE: starting point might become wall on printout
   // if it was near the corner.
   //
   // Dead ends are filled to avoid accidental making of new
   // problem corners during cutting of problem corners.
+  //
   if (additionalTweaks)
   {
     FillDeadEnds();

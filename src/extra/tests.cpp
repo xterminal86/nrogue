@@ -9,8 +9,14 @@
 
 namespace Tests
 {
+  const std::string Spaces30(30, ' ');
+
+  // ###########################################################################
+
   void TestLoS(std::stringstream& ss, int x, int y, int range)
   {
+    DebugLog("%s", __func__);
+
     ss << Util::StringFormat("Starting Bresenham LoS test from (%i %i) in range %i...\n", x, y, range);
     ss << Util::StringFormat("The path should always start from (%i %i)\n\n", x, y);
 
@@ -43,8 +49,12 @@ namespace Tests
     }
   }
 
+  // ###########################################################################
+
   void RoomTests(std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     ss << "\nRoom layouts rotations:\n\n";
 
     for (auto& room : GlobalConstants::DungeonRooms)
@@ -82,8 +92,12 @@ namespace Tests
     }
   }
 
+  // ###########################################################################
+
   void RNGTests(std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     ss << "\nRNG tests:\n\n";
 
     ss << "Random.Range(-10, 10):\n";
@@ -173,10 +187,14 @@ namespace Tests
     }
   }
 
+  // ###########################################################################
+
   void TestWeightsMap(const std::vector<std::tuple<GameObjectType, int, std::string>>& testData,
                       int rolls,
                       std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     std::map<GameObjectType, int> toTest;
     std::map<GameObjectType, std::string> stringNames;
 
@@ -210,8 +228,12 @@ namespace Tests
     }
   }
 
+  // ###########################################################################
+
   void AutoLevel(std::stringstream& ss, Player& p, int level)
   {
+    DebugLog("%s", __func__);
+
     ss << Util::StringFormat("Auto level to %i:\n\n", level);
 
     std::map<int, std::pair<std::string, Attribute&>> attrsMap =
@@ -243,8 +265,12 @@ namespace Tests
     ss << Util::StringFormat("MP: %i (* %i)\n", p.Attrs.MP.Max().Get(), p.Attrs.MP.Talents);
   }
 
+  // ###########################################################################
+
   void LevelUpTests(std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     ss << "\nAuto levelling tests:\n\n";
 
     Player p1;
@@ -256,8 +282,12 @@ namespace Tests
     AutoLevel(ss, p1, 20);
   }
 
+  // ###########################################################################
+
   void WeightedRandomTest(std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     ss << "\nWeighted random test:\n\n";
 
     std::map<GemType, int> gemsMap =
@@ -331,8 +361,12 @@ namespace Tests
     TestWeightsMap(testData, 30, ss);
   }
 
+  // ###########################################################################
+
   void LootDropTest(std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     ss << "\nLoot drop test:\n\n";
 
     std::map<ItemType, int> scores;
@@ -357,37 +391,104 @@ namespace Tests
     }
   }
 
+  // ###########################################################################
+
   void Tunneler(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
-    std:: string str = "\nTunneler:\n\n";
+    DebugLog("%s", __func__);
 
     Position start(1, 1);
 
-    ss << str;
-
     int iterations = (mapSize.X * mapSize.Y) / 2;
-    lb.TunnelerMethod(mapSize, iterations, { 5, 10 }, start);
-    lb.MapRaw[start.X][start.Y] = 'X';
 
-    ss << lb.GetMapRawString();
+    auto RunTunneler =
+    [iterations, &ss, &lb, &mapSize](const Position& tunnelLengthVariation)
+    {
+      lb.TunnelerMethod(mapSize, iterations, tunnelLengthVariation, { 1, 1 });
+      lb.MapRaw[1][1] = 'X';
+      ss << Spaces30
+         << "Tunnel min / max variance: "
+         << tunnelLengthVariation.X << " : " << tunnelLengthVariation.Y
+         << "\n\n";
+      ss << lb.GetMapRawString();
+      ss << "\n";
+    };
 
-    str = "\nTunneler (backtracking):\n\n";
+    auto RunTunnelerBT =
+        [iterations, &ss, &lb, &mapSize](const Position& tunnelLengthVariation)
+    {
+      lb.BacktrackingTunnelerMethod(mapSize, tunnelLengthVariation, { 1, 1 }, true);
+      lb.MapRaw[1][1] = 'X';
+      ss << Spaces30
+         << "Tunnel min / max variance: "
+         << tunnelLengthVariation.X << " : " << tunnelLengthVariation.Y
+         << "\n\n";
+      ss << lb.GetMapRawString();
+      ss << "\n";
+    };
 
-    ss << str;
+    ss << Spaces30 << "Tunneler:\n\n";
 
-    lb.BacktrackingTunnelerMethod(mapSize, { 5, 10 }, start, true);
-    lb.MapRaw[start.X][start.Y] = 'X';
+    for (int i = 2; i <= 10; i++)
+    {
+      Position minMax = { 1, i };
+      DebugLog("  minMax = %i %i\n", minMax.X, minMax.Y);
+      RunTunneler(minMax);
+    }
 
-    ss << lb.GetMapRawString();
+    for (int i = 2; i <= 9; i++)
+    {
+      Position minMax = { i, 10 };
+      DebugLog("  minMax = %i %i\n", minMax.X, minMax.Y);
+      RunTunneler(minMax);
+    }
+
+    for (int i = 1; i <= 10; i++)
+    {
+      Position minMax = { i, i };
+      DebugLog("  minMax = %i %i\n", minMax.X, minMax.Y);
+      RunTunneler(minMax);
+    }
+
+    DebugLog("Tunneler (backtracking)\n");
+
+    // -------------------------------------------------------------------------
+
+    ss << Spaces30 << "Tunneler (backtracking):\n\n";
+
+    for (int i = 2; i <= 10; i++)
+    {
+      Position minMax = { 1, i };
+      DebugLog("  minMax = %i %i\n", minMax.X, minMax.Y);
+      RunTunnelerBT(minMax);
+    }
+
+    for (int i = 2; i <= 9; i++)
+    {
+      Position minMax = { i, 10 };
+      DebugLog("  minMax = %i %i\n", minMax.X, minMax.Y);
+      RunTunnelerBT(minMax);
+    }
+
+    for (int i = 1; i <= 10; i++)
+    {
+      Position minMax = { i, i };
+      DebugLog("  minMax = %i %i\n", minMax.X, minMax.Y);
+      RunTunnelerBT(minMax);
+    }
   }
+
+  // ###########################################################################
 
   void RecursiveBacktracker(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
-    std::string str = "\nRecursive Backtracker:\n\n";
+    DebugLog("%s", __func__);
+
+    std::string str = "Recursive Backtracker:\n\n";
 
     Position start(1, 1);
 
-    ss << str;
+    ss << Spaces30 << str;
 
     lb.RecursiveBacktrackerMethod(mapSize, start);
     lb.MapRaw[start.X][start.Y] = 'X';
@@ -483,12 +584,7 @@ namespace Tests
 
     for (auto i : removalParams)
     {
-      str = "";
-
-      for (size_t i = 0; i < 30; i++)
-      {
-        str += " ";
-      }
+      str = Spaces30;
 
       str += Util::StringFormat("[REMOVAL PARAMS] -> { %i, %i, %i }\n\n", i.EmptyCellsAroundMin, i.EmptyCellsAroundMax, i.Passes);
 
@@ -503,8 +599,12 @@ namespace Tests
     }
   }
 
+  // ###########################################################################
+
   void CellularAutomata(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     std::string str = "\nCellular Automata:\n\n";
 
     ss << str;
@@ -514,8 +614,12 @@ namespace Tests
     ss << lb.GetMapRawString();
   }
 
+  // ###########################################################################
+
   void Digger(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     std::string str = "\nDigger:\n\n";
 
     ss << str;
@@ -532,8 +636,12 @@ namespace Tests
     ss << lb.GetMapRawString();
   }
 
+  // ###########################################################################
+
   void BSPRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     std::string str = "\nBSP rooms:\n\n";
 
     ss << str;
@@ -565,8 +673,12 @@ namespace Tests
     }
   }
 
+  // ###########################################################################
+
   void FeatureRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     std::string str = "\nFeature rooms:\n\n";
 
     ss << str;
@@ -591,8 +703,12 @@ namespace Tests
     ss << lb.GetMapRawString();
   }
 
+  // ###########################################################################
+
   void FromTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     std::string str = "\nFrom tiles:\n";
 
     ss << str;
@@ -625,8 +741,12 @@ namespace Tests
     }
   }
 
+  // ###########################################################################
+
   void FromLayouts(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     std::string str = "\nFrom layouts:\n\n";
 
     ss << str;
@@ -681,6 +801,8 @@ namespace Tests
     ss << lb.GetMapRawString();
   }
 
+  // ###########################################################################
+
   //
   // NOTE: for non square map size dimensions must be swapped
   // because, well, you know.
@@ -688,11 +810,11 @@ namespace Tests
   //
   void LevelBuilderTest(std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     std::string str;
 
-    str = "\nLevel builders:\n\n";
-
-    ss << str;
+    ss << "\nLevel builders:\n\n";
 
     LevelBuilder lb;
 
@@ -724,8 +846,12 @@ namespace Tests
     FromLayouts(lb, mapSize, ss);
   }
 
+  // ###########################################################################
+
   void GenNamesTest(std::stringstream& ss)
   {
+    DebugLog("%s", __func__);
+
     int number = 100;
 
     ss << "\nGenerating " << number << " 'names':\n\n";
@@ -765,6 +891,8 @@ namespace Tests
 
     ss << "\n";
   }
+
+  // ###########################################################################
 
   void Run()
   {
@@ -824,10 +952,12 @@ namespace Tests
     DebugLog("Test results have been written into 'tests.txt'\n\n");
   }
 
+  // ###########################################################################
+
   void DisplayProgress()
   {
     static int progress = 0;
-    DebugLog("\t\t%i\\15\n", progress);
+    DebugLog("\t\tRunning test no. %i\n", progress);
     progress++;
   }
 }

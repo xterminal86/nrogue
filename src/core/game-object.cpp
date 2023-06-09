@@ -1327,7 +1327,7 @@ void GameObject::LevelUpNatural(int gainedLevel, int baseHpOverride)
   // HP and MP
 
   int minRndHp = (Attrs.HP.Talents + 1);
-  int maxRndHp = 2 * (Attrs.HP.Talents + 1);
+  int maxRndHp = 2 * minRndHp;
 
   int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp + 1);
 

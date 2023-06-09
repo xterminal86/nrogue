@@ -332,11 +332,22 @@ void MapLevelMines::CreateLevel()
 
   LevelBuilder lb;
 
+  const std::vector<Position> splitRatios =
+  {
+    { 30, 70 },
+    { 70, 30 },
+    { 45, 55 },
+    { 60, 40 },
+    { 40, 60 }
+  };
+
+  int ind = RNG::Instance().RandomRange(0, splitRatios.size());
+
   switch (MapType_)
   {
     case MapType::MINES_1:
     case MapType::MINES_2:
-      lb.BSPRoomsMethod(MapSize, { 45, 55 }, 7);
+      lb.BSPRoomsMethod(MapSize, splitRatios[ind], 7);
       break;
 
     case MapType::MINES_3:
