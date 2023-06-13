@@ -15,16 +15,16 @@ void Printer::InitSpecific()
   _lastMessages.reserve(5);
 
 #ifdef USE_SDL
-  InitForSDL();
+  _ok = InitForSDL();
 #else
-  InitForCurses();
+  _ok = InitForCurses();
 #endif
 }
 
 // =============================================================================
 
 #ifdef USE_SDL
-void Printer::InitForSDL()
+bool Printer::InitForSDL()
 {
   auto& gameConfig = Application::Instance().GameConfig;
 
@@ -39,6 +39,12 @@ void Printer::InitForSDL()
     SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
 
     _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
+    if (_tileset == nullptr)
+    {
+      DebugLog("SDL_CreateTextureFromSurface() fail: %s\n", SDL_GetError());
+      return false;
+    }
+
     SDL_FreeSurface(surf);
 
     _tileWidth  = gameConfig.TileWidth;
@@ -67,10 +73,17 @@ void Printer::InitForSDL()
       auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", SDL_GetError());
       DebugLog("%s\n", str.data());
       Logger::Instance().Print(str, true);
+      return false;
     }
 
     SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
     _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
+    if (_tileset == nullptr)
+    {
+      DebugLog("SDL_CreateTextureFromSurface() fail: %s\n", SDL_GetError());
+      return false;
+    }
+
     SDL_FreeSurface(surf);
   }
 
@@ -93,6 +106,12 @@ void Printer::InitForSDL()
                                    SDL_TEXTUREACCESS_TARGET,
                                    gameConfig.WindowWidth,
                                    gameConfig.WindowHeight);
+
+  if (_frameBuffer == nullptr)
+  {
+    DebugLog("SDL_CreateTexture() fail: %s\n", SDL_GetError());
+    return false;
+  }
 
   char asciiIndex = 0;
   int tileIndex = 0;
@@ -120,6 +139,8 @@ void Printer::InitForSDL()
     NameCP437 key = static_cast<NameCP437>(i);
     GlobalConstants::CP437IndexByType[key] = i;
   }
+
+  return true;
 }
 
 // =============================================================================
@@ -527,7 +548,7 @@ const std::pair<int, int>& Printer::GetTileWHScaled()
 #endif
 
 #ifndef USE_SDL
-void Printer::InitForCurses()
+bool Printer::InitForCurses()
 {
   int mx = 0;
   int my = 0;
@@ -553,6 +574,8 @@ void Printer::InitForCurses()
   init_color(COLOR_YELLOW,  1000, 1000, 0);
 
   PrepareFrameBuffer();
+
+  return true;
 }
 
 // =============================================================================
@@ -1136,4 +1159,11 @@ int Printer::ColorsUsed()
   #else
   return _validColorsCache.size();
   #endif
+}
+
+// =============================================================================
+
+bool Printer::OK()
+{
+  return _ok;
 }

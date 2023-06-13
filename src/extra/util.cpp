@@ -367,9 +367,9 @@ namespace Util
 
   // ===========================================================================
 
-  std::vector<unsigned char> ConvertStringToBytes(const std::string& encodedStr)
+  std::vector<uint8_t> ConvertStringToBytes(const std::string& encodedStr)
   {
-    std::vector<unsigned char> byteArray;
+    std::vector<uint8_t> byteArray;
     for (auto& c : encodedStr)
     {
         byteArray.push_back(c);

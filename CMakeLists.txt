@@ -20,7 +20,7 @@ endif()
 # ==============================================================================
 
 option(USE_SDL "Build with SDL2" false)
-option(RUN_TESTS "Run some tests" false)
+option(BUILD_TESTS "Build executable with various tests" false)
 
 if (${CMAKE_BUILD_TYPE} MATCHES Release)
   add_definitions(-DRELEASE_BUILD)
@@ -32,8 +32,8 @@ if (USE_SDL)
   add_definitions(-DUSE_SDL)
 endif()
 
-if (RUN_TESTS)
-  add_definitions(-DRUN_TESTS)
+if (BUILD_TESTS)
+  add_definitions(-DBUILD_TESTS)
 endif()
 
 # ==============================================================================
@@ -93,7 +93,7 @@ endif()
 
 # ==============================================================================
 
-if (RUN_TESTS)
+if (BUILD_TESTS)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/tests)
 endif()
 

@@ -739,11 +739,18 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
   bool hitLanded = alwaysHit ? true : Util::Rolld100(hitChance);
   if (!hitLanded)
   {
-    Application::Instance().DisplayAttack(what, GlobalConstants::DisplayAttackDelayMs, "You missed", Colors::WhiteColor);
+    Application::Instance().DisplayAttack(what,
+                                          GlobalConstants::DisplayAttackDelayMs,
+                                          "You missed",
+                                          Colors::WhiteColor);
   }
   else
   {
-    Application::Instance().DisplayAttack(what, GlobalConstants::DisplayAttackDelayMs, std::string(), Colors::RedColor);
+    Application::Instance().DisplayAttack(what,
+                                          GlobalConstants::DisplayAttackDelayMs,
+                                          std::string(),
+                                          Colors::RedColor);
+
     ItemComponent* weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
 
     bool isRanged = false;

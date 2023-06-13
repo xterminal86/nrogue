@@ -39,7 +39,14 @@ file(GLOB SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/../ai/types/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../dungeon-generators/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../behaviour-tree/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../behaviour-tree/tasks/*.h)
+  ${CMAKE_CURRENT_SOURCE_DIR}/../behaviour-tree/tasks/*.h
+)
+
+if (${CMAKE_BUILD_TYPE} MATCHES Release)
+  list(REMOVE_ITEM SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/../states/dev-console.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../states/dev-console.h)
+endif()
 
 add_executable(${TARGET_NAME} ${SOURCES})
 

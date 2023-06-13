@@ -174,8 +174,12 @@ class Printer : public Singleton<Printer>
 
     bool ShowLastMessage;
 
-    // NOTE: for debugging purposes
+    //
+    // NOTE: for debugging purposes.
+    //
     int ColorsUsed();
+
+    bool OK();
 
   protected:
     void InitSpecific() override;
@@ -201,6 +205,8 @@ class Printer : public Singleton<Printer>
     std::vector<std::vector<FBPixel>> _frameBuffer;
     #endif
 
+    bool _ok = false;
+
     std::vector<GameLogMessageData> _inGameMessages;
     std::vector<GameLogMessageData> _lastMessages;
 
@@ -212,7 +218,7 @@ class Printer : public Singleton<Printer>
     std::string _repeatingMessage;
 
     #ifndef USE_SDL
-    void InitForCurses();
+    bool InitForCurses();
     #else
     SDL_Texture* _tileset = nullptr;
     SDL_Texture* _frameBuffer = nullptr;
@@ -241,7 +247,7 @@ class Printer : public Singleton<Printer>
 
     SDL_Rect _renderDst;
 
-    void InitForSDL();
+    bool InitForSDL();
 
     void DrawTile(int x, int y, int tileIndex);
     void DrawTile(int x, int y, int tileIndex, size_t scale);

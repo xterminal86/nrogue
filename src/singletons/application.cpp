@@ -257,6 +257,9 @@ void Application::DisplayAttack(GameObject* defender,
 
     DrawAttackCursor(posX, posY, defender, cursorColor);
 
+    //
+    // NOTE: adaptive delay based on delta time?
+    //
     Util::Sleep(delayMs);
 
     if (messageToPrint.length() != 0)
@@ -694,7 +697,7 @@ bool Application::InitSDL()
     return false;
   }
 
-#if defined(MSVC_COMPILER) ||defined(__WIN64__) || defined(__WIN32__)
+#if defined(MSVC_COMPILER) || defined(__WIN64__) || defined(__WIN32__)
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d11");
 #else
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
@@ -719,6 +722,12 @@ bool Application::InitSDL()
   SetIcon();
 
   Printer::Instance().Init();
+
+  if (!Printer::Instance().OK())
+  {
+    DebugLog("Printer failed to initialize!");
+    return false;
+  }
 
   Printer::Instance().SetRenderDst({ 0, 0, _defaultWindowSize.first, _defaultWindowSize.second });
 

@@ -28,7 +28,7 @@ jobs:
           cmake -B ${{github.workspace}}/build         
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
-          -DRUN_TESTS=OFF 
+          -DBUILD_TESTS=OFF 
           -DUSE_SDL=ON 
           -DSDL2_DIR=${{github.workspace}}/SDL2 
           -DSDL2_INCLUDE_DIR=${{github.workspace}}/SDL2/x86_64-w64-mingw32/include 
