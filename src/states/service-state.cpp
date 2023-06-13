@@ -11,6 +11,8 @@ void ServiceState::Prepare()
   _headerText = _serviceNameByType.at(_shopOwner->NpcRef->Data.ProvidesService);
 }
 
+// =============================================================================
+
 void ServiceState::ProcessInput()
 {
   switch (_keyPressed)
@@ -35,6 +37,8 @@ void ServiceState::ProcessInput()
   }
 }
 
+// =============================================================================
+
 void ServiceState::ProcessItem(int key)
 {
   switch (_shopOwner->NpcRef->Data.ProvidesService)
@@ -52,6 +56,8 @@ void ServiceState::ProcessItem(int key)
       break;
   }
 }
+
+// =============================================================================
 
 void ServiceState::ProcessRepair(int key)
 {
@@ -71,6 +77,8 @@ void ServiceState::ProcessRepair(int key)
   }
 }
 
+// =============================================================================
+
 void ServiceState::ProcessIdentify(int key)
 {
   ServiceInfo& si = _serviceInfoByChar[key];
@@ -88,6 +96,8 @@ void ServiceState::ProcessIdentify(int key)
     FillItemsForIdentify();
   }
 }
+
+// =============================================================================
 
 void ServiceState::ProcessBlessing(int key)
 {
@@ -127,6 +137,8 @@ void ServiceState::ProcessBlessing(int key)
   }
 }
 
+// =============================================================================
+
 void ServiceState::BlessItem(const ServiceInfo& si)
 {
   //
@@ -153,7 +165,7 @@ void ServiceState::BlessItem(const ServiceInfo& si)
     auto& cat = si.ItemComponentRef->Data.EqCategory;
 
     //
-    // There can be two rings
+    // There can be two rings.
     //
     if (cat == EquipmentCategory::RING)
     {
@@ -182,6 +194,8 @@ void ServiceState::BlessItem(const ServiceInfo& si)
   }
 }
 
+// =============================================================================
+
 void ServiceState::DrawSpecific()
 {
   DisplayItems();
@@ -201,6 +215,8 @@ void ServiceState::DrawSpecific()
                               Printer::kAlignLeft,
                               Colors::CoinsColor);
 }
+
+// =============================================================================
 
 void ServiceState::DisplayItems()
 {
@@ -248,6 +264,8 @@ void ServiceState::DisplayItems()
   }
 }
 
+// =============================================================================
+
 void ServiceState::Setup(TraderComponent* shopOwner)
 {
   _playerRef = &Application::Instance().PlayerInstance;
@@ -269,6 +287,8 @@ void ServiceState::Setup(TraderComponent* shopOwner)
       break;
   }
 }
+
+// =============================================================================
 
 void ServiceState::FillItemsForBlessing()
 {
@@ -348,6 +368,8 @@ void ServiceState::FillItemsForBlessing()
   }
 }
 
+// =============================================================================
+
 int ServiceState::GetValidBonusesCount(ItemComponent* ic)
 {
   int count = 0;
@@ -365,6 +387,8 @@ int ServiceState::GetValidBonusesCount(ItemComponent* ic)
 
   return count;
 }
+
+// =============================================================================
 
 void ServiceState::FillItemsForIdentify()
 {
@@ -396,6 +420,8 @@ void ServiceState::FillItemsForIdentify()
     itemIndex++;
   }
 }
+
+// =============================================================================
 
 void ServiceState::FillItemsForRepair()
 {

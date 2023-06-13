@@ -9,10 +9,14 @@ void ContainerInteractState::Init()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 void ContainerInteractState::Cleanup()
 {
   _containerToInteractWith = nullptr;
 }
+
+// =============================================================================
 
 void ContainerInteractState::Prepare()
 {
@@ -20,10 +24,14 @@ void ContainerInteractState::Prepare()
   _playerSide = (!_playerRef->Inventory->IsEmpty());
 }
 
+// =============================================================================
+
 void ContainerInteractState::SetContainerRef(ContainerComponent* c)
 {
   _containerToInteractWith = c;
 }
+
+// =============================================================================
 
 void ContainerInteractState::HandleInput()
 {
@@ -76,6 +84,8 @@ void ContainerInteractState::HandleInput()
   CheckIndexLimits();
 }
 
+// =============================================================================
+
 void ContainerInteractState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
@@ -117,6 +127,8 @@ void ContainerInteractState::Update(bool forceUpdate)
     Printer::Instance().Render();
   }
 }
+
+// =============================================================================
 
 void ContainerInteractState::DisplayPlayerInventory()
 {
@@ -188,6 +200,8 @@ void ContainerInteractState::DisplayPlayerInventory()
     yPos++;
   }
 }
+
+// =============================================================================
 
 void ContainerInteractState::DisplayContainerInventory()
 {
@@ -269,6 +283,8 @@ void ContainerInteractState::DisplayContainerInventory()
   }
 }
 
+// =============================================================================
+
 void ContainerInteractState::CheckIndexLimits()
 {
   int invSize = 0;
@@ -287,6 +303,8 @@ void ContainerInteractState::CheckIndexLimits()
 
   _inventoryItemIndex = Util::Clamp(_inventoryItemIndex, 0, invSize);
 }
+
+// =============================================================================
 
 void ContainerInteractState::TryToTransferItem()
 {

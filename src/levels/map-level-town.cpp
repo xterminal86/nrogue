@@ -178,10 +178,14 @@ MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type, int dungeonLevel)
   */
 }
 
+// =============================================================================
+
 const Position& MapLevelTown::TownPortalPos()
 {
   return _townPortalPos;
 }
+
+// =============================================================================
 
 void MapLevelTown::PrepareMap(MapLevelBase* levelOwner)
 {
@@ -189,6 +193,8 @@ void MapLevelTown::PrepareMap(MapLevelBase* levelOwner)
 
   CreateLevel();
 }
+
+// =============================================================================
 
 void MapLevelTown::CreateLevel()
 {
@@ -376,6 +382,8 @@ void MapLevelTown::CreateLevel()
   */
 }
 
+// =============================================================================
+
 void MapLevelTown::BuildRoads()
 {
   // Path from gates
@@ -416,6 +424,8 @@ void MapLevelTown::BuildRoads()
   BuildAndDrawRoad({ 62, 25 }, { 62, 14 });
 }
 
+// =============================================================================
+
 void MapLevelTown::BuildAndDrawRoad(const Position& start,
                                     const Position& end)
 {
@@ -431,6 +441,8 @@ void MapLevelTown::BuildAndDrawRoad(const Position& start,
 
   DrawRoad(path);
 }
+
+// =============================================================================
 
 void MapLevelTown::DrawRoad(const std::stack<Position>& path)
 {
@@ -451,6 +463,8 @@ void MapLevelTown::DrawRoad(const std::stack<Position>& path)
   }
 }
 
+// =============================================================================
+
 void MapLevelTown::ReplaceGroundWithGrass()
 {
   for (int x = 1; x < MapSize.X - 1; x++)
@@ -465,6 +479,8 @@ void MapLevelTown::ReplaceGroundWithGrass()
   }
 }
 
+// =============================================================================
+
 void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill)
 {
   for (int x = ax; x <= ax + aw; x++)
@@ -475,6 +491,8 @@ void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo
     }
   }
 }
+
+// =============================================================================
 
 void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation)
 {
@@ -564,6 +582,8 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
     posY++;
   }
 }
+
+// =============================================================================
 
 void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation)
 {
@@ -688,6 +708,8 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
   }
 }
 
+// =============================================================================
+
 void MapLevelTown::CreateChurch(int x, int y)
 {
   int posX = x;
@@ -770,10 +792,12 @@ void MapLevelTown::CreateChurch(int x, int y)
 
         case '/':
         {
+          //
           // Globally updated game objects are not shown under
           // fog of war by default,
           // so sometimes we must "adjust" tiles if we want
           // certain objects to be shown, like in this case.
+          //
           ShrineType shrineType = ShrineType::KNOWLEDGE;
           std::string description = GlobalConstants::ShrineNameByType.at(shrineType);
           t.Set(true,
@@ -784,10 +808,12 @@ void MapLevelTown::CreateChurch(int x, int y)
                 "?Shrine?");
           PlaceStaticObject(posX, posY, t);
 
+          //
           // Tiles are updated only around player.
           // Shrine has some logic (buff and timeout count), thus
           // we must make it a global game object so it could be updated
           // every turn no matter where the player is.
+          //
           auto go = GameObjectsFactory::Instance().CreateShrine(posX, posY, shrineType, 100);
           PlaceGameObject(go);
         }
@@ -801,6 +827,8 @@ void MapLevelTown::CreateChurch(int x, int y)
     posY++;
   }
 }
+
+// =============================================================================
 
 void MapLevelTown::CreatePlayerHouse()
 {
@@ -826,6 +854,8 @@ void MapLevelTown::CreatePlayerHouse()
   PlaceGameObject(stash);
 }
 
+// =============================================================================
+
 void MapLevelTown::CreateNPCs()
 {
   Rect playerHome   = {  2,  2,  8,  8 };
@@ -842,7 +872,9 @@ void MapLevelTown::CreateNPCs()
     {
       for (int y = 1; y <= MapSize.Y - 1; y++)
       {
-        // Skip area around player house, altar room and mine entrance
+        //
+        // Skip area around player house, altar room and mine entrance.
+        //
         if (SkipArea({ x, y }, playerHome)
          || SkipArea({ x, y }, mineEntrance)
          || SkipArea({ x, y }, altarRoom))
@@ -864,8 +896,10 @@ void MapLevelTown::CreateNPCs()
         bool isBlocking = IsCellBlocking({ x, y });
         bool isSpecial = MapArray[x][y]->Special;
 
+        //
         // Also avoid shallow water tiles
         // or NPC may spawn inside walled fountain.
+        //
         if (!alreadyAdded && !isBlocking
          && !isSpecial && MapArray[x][y]->Image != '~')
         {
@@ -901,6 +935,8 @@ void MapLevelTown::CreateNPCs()
   go = MonstersInc::Instance().CreateNPC(81, 7, NPCType::GRISWOLD, true, ServiceType::REPAIR);
   PlaceActor(go);
 }
+
+// =============================================================================
 
 void MapLevelTown::PlaceMineEntrance(int x, int y)
 {
@@ -945,6 +981,8 @@ void MapLevelTown::PlaceMineEntrance(int x, int y)
     posY++;
   }
 }
+
+// =============================================================================
 
 void MapLevelTown::PlaceGarden(int x, int y)
 {
@@ -1003,6 +1041,8 @@ void MapLevelTown::PlaceGarden(int x, int y)
     posY++;
   }
 }
+
+// =============================================================================
 
 void MapLevelTown::PlacePortalSquare(int x, int y)
 {
@@ -1070,6 +1110,8 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
   }
 }
 
+// =============================================================================
+
 void MapLevelTown::CreateTownGates()
 {
   GameObject* gate1 = ItemsFactory::Instance().CreateDummyItem(Strings::TileNames::GatesText, '+', Colors::WhiteColor, Colors::BlackColor, std::vector<std::string>());
@@ -1110,6 +1152,8 @@ void MapLevelTown::CreateTownGates()
   PlaceStaticObject(gate1);
   PlaceStaticObject(gate2);
 }
+
+// =============================================================================
 
 bool MapLevelTown::SkipArea(const Position& pos, const Rect& area)
 {

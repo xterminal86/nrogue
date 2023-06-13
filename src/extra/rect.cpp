@@ -11,6 +11,8 @@ Rect::Rect(const Position &p1, const Position &p2)
   Y2 = p2.Y;
 }
 
+// =============================================================================
+
 Rect::Rect(int x, int y, int w, int h)
 {
   X1 = x;
@@ -18,6 +20,8 @@ Rect::Rect(int x, int y, int w, int h)
   X2 = x + w;
   Y2 = y + h;
 }
+
+// =============================================================================
 
 Position Rect::Dimensions()
 {
@@ -27,6 +31,8 @@ Position Rect::Dimensions()
 
   return res;
 }
+
+// =============================================================================
 
 std::vector<Position> Rect::GetBoundaryElements(bool excludeCorners)
 {
@@ -57,6 +63,8 @@ std::vector<Position> Rect::GetBoundaryElements(bool excludeCorners)
   return res;
 }
 
+// =============================================================================
+
 std::pair<int, int> Rect::Center()
 {
   int cx = (X1 + X2) / 2;
@@ -65,20 +73,25 @@ std::pair<int, int> Rect::Center()
   return std::pair<int, int>(cx, cy);
 }
 
+// =============================================================================
+
 bool Rect::Intersects(const Rect &other)
 {
   return (X1 <= other.X2 && X2 >= other.X1 &&
           Y1 <= other.Y2 && Y2 >= other.Y1);
 }
 
+// =============================================================================
+
 void Rect::Print()
 {
   DebugLog("[%i; %i] -> [%i %i]\n", X1, Y1, X2, Y2);
 }
+
+// =============================================================================
 
 void Rect::LogPrint()
 {
   auto str = Util::StringFormat("[%i; %i] -> [%i %i]\n", X1, Y1, X2, Y2);
   Logger::Instance().Print(str);
 }
-

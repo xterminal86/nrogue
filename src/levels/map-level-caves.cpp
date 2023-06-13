@@ -82,12 +82,16 @@ MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLeve
   }
 }
 
+// =============================================================================
+
 void MapLevelCaves::PrepareMap(MapLevelBase* levelOwner)
 {
   MapLevelBase::PrepareMap(levelOwner);
 
   CreateLevel();
 }
+
+// =============================================================================
 
 void MapLevelCaves::CreateLevel()
 {
@@ -160,6 +164,8 @@ void MapLevelCaves::CreateLevel()
   }
 }
 
+// =============================================================================
+
 void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
 {
   Logger::Instance().Print("********** INSTANTIATING LAYOUT **********");
@@ -231,6 +237,8 @@ void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
     }
   }
 }
+
+// =============================================================================
 
 void MapLevelCaves::CreateSpecialLevel()
 {
@@ -346,6 +354,8 @@ void MapLevelCaves::CreateSpecialLevel()
   }
 }
 
+// =============================================================================
+
 void MapLevelCaves::CreateRivers()
 {
   int num = RNG::Instance().RandomRange(10, 21);
@@ -390,6 +400,8 @@ void MapLevelCaves::CreateRivers()
     }
   }
 }
+
+// =============================================================================
 
 void MapLevelCaves::DisplayWelcomeText()
 {

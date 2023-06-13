@@ -8,6 +8,8 @@ void CustomClassState::Init()
 {
 }
 
+// =============================================================================
+
 void CustomClassState::Prepare()
 {
   _points = kStartingPoints;
@@ -34,9 +36,13 @@ void CustomClassState::Prepare()
   }
 }
 
+// =============================================================================
+
 void CustomClassState::Cleanup()
 {
 }
+
+// =============================================================================
 
 void CustomClassState::HandleInput()
 {
@@ -127,6 +133,8 @@ void CustomClassState::HandleInput()
 
   _warning = (_points > 0);
 }
+
+// =============================================================================
 
 void CustomClassState::Update(bool forceUpdate)
 {
@@ -234,6 +242,8 @@ void CustomClassState::Update(bool forceUpdate)
   }
 }
 
+// =============================================================================
+
 sspair CustomClassState::GetStringsForStat(PlayerStats statType)
 {
   sspair res;
@@ -259,6 +269,8 @@ sspair CustomClassState::GetStringsForStat(PlayerStats statType)
 
   return res;
 }
+
+// =============================================================================
 
 void CustomClassState::ModifyStat(bool isIncreasing, bool shiftPressed)
 {
@@ -354,10 +366,14 @@ void CustomClassState::ModifyStat(bool isIncreasing, bool shiftPressed)
   _statDataByType[PlayerStats::MP].first = mp;
 }
 
+// =============================================================================
+
 int CustomClassState::GetHp()
 {
   return (3 + 4 * (_statDataByType[PlayerStats::HP].second + 1));
 }
+
+// =============================================================================
 
 int CustomClassState::GetMp()
 {
@@ -369,6 +385,8 @@ int CustomClassState::GetMp()
 
   return mp;
 }
+
+// =============================================================================
 
 void CustomClassState::InitPlayerAttributes(Player* playerRef)
 {

@@ -14,6 +14,8 @@ TaskMineBlock::TaskMineBlock(GameObject* objectToControl, bool ignorePickaxe)
   _ignorePickaxe = ignorePickaxe;
 }
 
+// =============================================================================
+
 BTResult TaskMineBlock::Run()
 {
   //DebugLog("[TaskMineBlock]\n");

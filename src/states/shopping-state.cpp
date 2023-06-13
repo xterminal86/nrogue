@@ -13,11 +13,15 @@ void ShoppingState::Init()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 void ShoppingState::Prepare()
 {
   _inventoryItemIndex = 0;
   _playerSide = (!_playerRef->Inventory->IsEmpty());
 }
+
+// =============================================================================
 
 void ShoppingState::PassShopOwner(TraderComponent* tc)
 {
@@ -27,6 +31,8 @@ void ShoppingState::PassShopOwner(TraderComponent* tc)
 
   tc->NpcRef->Data.IsAquainted = true;
 }
+
+// =============================================================================
 
 void ShoppingState::HandleInput()
 {
@@ -94,6 +100,8 @@ void ShoppingState::HandleInput()
   CheckIndexLimits();
 }
 
+// =============================================================================
+
 void ShoppingState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
@@ -144,6 +152,8 @@ void ShoppingState::Update(bool forceUpdate)
     Printer::Instance().Render();
   }
 }
+
+// =============================================================================
 
 void ShoppingState::DisplayPlayerInventory()
 {
@@ -230,6 +240,8 @@ void ShoppingState::DisplayPlayerInventory()
     yPos++;
   }
 }
+
+// =============================================================================
 
 void ShoppingState::DisplayShopInventory()
 {
@@ -319,6 +331,8 @@ void ShoppingState::DisplayShopInventory()
   }
 }
 
+// =============================================================================
+
 void ShoppingState::CheckIndexLimits()
 {
   int invSize = 0;
@@ -337,6 +351,8 @@ void ShoppingState::CheckIndexLimits()
 
   _inventoryItemIndex = Util::Clamp(_inventoryItemIndex, 0, invSize);
 }
+
+// =============================================================================
 
 size_t ShoppingState::GetItemStringTotalLen(std::vector<std::unique_ptr<GameObject>>& container)
 {
@@ -357,6 +373,8 @@ size_t ShoppingState::GetItemStringTotalLen(std::vector<std::unique_ptr<GameObje
   return maxLen;
 }
 
+// =============================================================================
+
 std::string ShoppingState::GetItemExtraInfo(ItemComponent* item)
 {
   std::string extraInfo;
@@ -374,6 +392,8 @@ std::string ShoppingState::GetItemExtraInfo(ItemComponent* item)
 
   return extraInfo;
 }
+
+// =============================================================================
 
 void ShoppingState::BuyOrSellItem()
 {
@@ -444,6 +464,8 @@ void ShoppingState::BuyOrSellItem()
   CheckSide();
 }
 
+// =============================================================================
+
 void ShoppingState::CheckSide()
 {
   if (_playerSide && _playerRef->Inventory->IsEmpty())
@@ -455,6 +477,8 @@ void ShoppingState::CheckSide()
     _playerSide = true;
   }
 }
+
+// =============================================================================
 
 bool ShoppingState::CanBeBought(ItemComponent *ic)
 {
@@ -479,6 +503,8 @@ bool ShoppingState::CanBeBought(ItemComponent *ic)
 
   return true;
 }
+
+// =============================================================================
 
 int ShoppingState::GetCost(ItemComponent* ic, bool playerSide)
 {
@@ -514,6 +540,8 @@ int ShoppingState::GetCost(ItemComponent* ic, bool playerSide)
 
   return cost;
 }
+
+// =============================================================================
 
 void ShoppingState::ShowItemInfo()
 {

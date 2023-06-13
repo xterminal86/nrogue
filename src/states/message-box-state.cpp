@@ -23,6 +23,8 @@ void MessageBoxState::HandleInput()
   }
 }
 
+// =============================================================================
+
 void MessageBoxState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
@@ -58,6 +60,8 @@ void MessageBoxState::Update(bool forceUpdate)
   }
 }
 
+// =============================================================================
+
 void MessageBoxState::SetMessage(MessageBoxType type,
                                  const std::string& header,
                                  const std::vector<std::string>& message,
@@ -79,16 +83,20 @@ void MessageBoxState::SetMessage(MessageBoxType type,
     }
   }
 
-  // In case header is longer than message
+  //
+  // In case header is longer than message.
+  //
   if (len < _header.length())
   {
     len = _header.length();
   }
 
+  //
   // Taking into account message size (usually > 0, so as is),
   // and that it's not actually a total count of number of rows,
   // but addition that we must add to the y1,
-  // so 5 rows means we must add 4 if message.size = 1, 5 if 2 and so on
+  // so 5 rows means we must add 4 if message.size = 1, 5 if 2 and so on.
+  //
   int rows = 3 + _message.size();
 
   int x1 = _tw / 2 - len / 2 - 3;

@@ -127,6 +127,8 @@ void FromTiles::Generate(const Position& mapSize,
   FillMapRaw();
 }
 
+// =============================================================================
+
 Tile FromTiles::ConvertStringToTile(const std::string& line)
 {
   Tile res;
@@ -150,6 +152,8 @@ Tile FromTiles::ConvertStringToTile(const std::string& line)
 
   return res;
 }
+
+// =============================================================================
 
 void FromTiles::CreateTileset()
 {
@@ -175,6 +179,8 @@ void FromTiles::CreateTileset()
   }
 }
 
+// =============================================================================
+
 void FromTiles::FillBorders()
 {
   for (auto& line : _map)
@@ -188,6 +194,8 @@ void FromTiles::FillBorders()
     }
   }
 }
+
+// =============================================================================
 
 void FromTiles::TryToPlaceLayout(const Position& p)
 {
@@ -247,6 +255,8 @@ void FromTiles::TryToPlaceLayout(const Position& p)
   }
 }
 
+// =============================================================================
+
 bool FromTiles::CanBeConnected(const Tile& l1,
                                const Tile& l2,
                                const RoomEdgeEnum& along)
@@ -277,6 +287,8 @@ bool FromTiles::CanBeConnected(const Tile& l1,
 
   return false;
 }
+
+// =============================================================================
 
 std::string FromTiles::GetLayoutEdge(const Tile& l, const RoomEdgeEnum& along)
 {
@@ -323,6 +335,8 @@ std::string FromTiles::GetLayoutEdge(const Tile& l, const RoomEdgeEnum& along)
 
   return edge;
 }
+
+// =============================================================================
 
 Tile FromTiles::ReadLayout(const Position& p)
 {
@@ -372,6 +386,8 @@ Tile FromTiles::ReadLayout(const Position& p)
   return res;
 }
 
+// =============================================================================
+
 void FromTiles::PlaceLayout(const Position& pos, const Tile& tile)
 {
   int lx = pos.X - 1;
@@ -400,6 +416,8 @@ void FromTiles::PlaceLayout(const Position& pos, const Tile& tile)
   }
 }
 
+// =============================================================================
+
 void FromTiles::AddPointsToProcess(const Position& p)
 {
   std::vector<Position> positions =
@@ -415,6 +433,8 @@ void FromTiles::AddPointsToProcess(const Position& p)
     _toProcess.push(item);
   }
 }
+
+// =============================================================================
 
 bool FromTiles::IsLayoutEmpty(const Tile& layout)
 {
@@ -432,6 +452,8 @@ bool FromTiles::IsLayoutEmpty(const Tile& layout)
   return true;
 }
 
+// =============================================================================
+
 bool FromTiles::AreLayoutsEqual(const Tile& l1, const Tile& l2)
 {
   for (size_t i = 0; i < l1.size(); i++)
@@ -444,6 +466,8 @@ bool FromTiles::AreLayoutsEqual(const Tile& l1, const Tile& l2)
 
   return true;
 }
+
+// =============================================================================
 
 bool FromTiles::WasVisited(const Position& p)
 {

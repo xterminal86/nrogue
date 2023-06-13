@@ -61,11 +61,11 @@ namespace Util
   }
 
   // ===========================================================================
+
   //
   // Makes no sense since it's open source, but anyway.
   // At least we can cover every not-so-important stuff with a fig leaf.
   //
-  // ===========================================================================
   std::vector<std::string> DecodeMap(const CM& map)
   {
     std::vector<std::string> res;
@@ -87,6 +87,8 @@ namespace Util
 
     return res;
   }
+
+  // ===========================================================================
 
   std::string DecodeString(const CS& str)
   {
@@ -120,6 +122,8 @@ namespace Util
                            range);
   }
 
+  // ===========================================================================
+
   bool IsObjectInRange(const Position& posToCheckFrom,
                        const Position& objectPositionToCheck,
                        int rangeX,
@@ -139,6 +143,8 @@ namespace Util
     return (px >= lx && px <= hx
          && py >= ly && py <= hy);
   }
+
+  // ===========================================================================
 
   std::vector<GameObject*> FindObjectsInRange(GameObject* aroundWho,
                                                const std::vector<std::vector<std::unique_ptr<GameObject>>>& where,
@@ -182,6 +188,8 @@ namespace Util
 
     return res;
   }
+
+  // ===========================================================================
 
   std::vector<GameObject*> FindObjectsInRange(GameObject* aroundWho,
                                               const std::vector<std::unique_ptr<GameObject>>& where,
@@ -228,6 +236,8 @@ namespace Util
     return res;
   }
 
+  // ===========================================================================
+
   //
   // https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c
   //
@@ -240,7 +250,10 @@ namespace Util
     return (res != Strings::Base64Chars.end());
   }
 
-  std::string Base64_Encode(unsigned char const* bytes_to_encode, unsigned int in_len)
+  // ===========================================================================
+
+  std::string Base64_Encode(unsigned char const* bytes_to_encode,
+                            unsigned int in_len)
   {
     std::string ret;
     int i = 0;
@@ -292,6 +305,8 @@ namespace Util
 
     return ret;
   }
+
+  // ===========================================================================
 
   std::string Base64_Decode(const std::string& encoded_string)
   {
@@ -363,6 +378,8 @@ namespace Util
     return byteArray;
   }
 
+  // ===========================================================================
+
   bool CheckLimits(const Position& posToCheck, const Position& limits)
   {
     if (posToCheck.X >= 0 && posToCheck.X < limits.X
@@ -374,7 +391,11 @@ namespace Util
     return false;
   }
 
-  /// Bresenham line including end point
+  // ===========================================================================
+
+  //
+  // Bresenham line including end point.
+  //
   std::vector<Position> BresenhamLine(int sx, int sy, int ex, int ey)
   {
     int x1 = sx;
@@ -384,7 +405,6 @@ namespace Util
 
     std::vector<Position> result;
 
-    // Bresenham's line algorithm
     const bool steep = (fabs(y2 - y1) > fabs(x2 - x1));
 
     if(steep)
@@ -446,7 +466,7 @@ namespace Util
 
     result.push_back(pos);
 
-    // Ensure that line always goes from source point
+    // Ensure that line always goes from source point.
 
     bool cond = (result[0].X == sx && result[0].Y == sy);
     if (!cond)
@@ -459,12 +479,19 @@ namespace Util
     return result;
   }
 
-  std::vector<Position> BresenhamLine(const Position& start, const Position& end)
+  // ===========================================================================
+
+  std::vector<Position> BresenhamLine(const Position& start,
+                                      const Position& end)
   {
     return BresenhamLine(start.X, start.Y, end.X, end.Y);
   }
 
-  bool IsInsideMap(const Position& pos, const Position& mapSize, bool leaveBorders)
+  // ===========================================================================
+
+  bool IsInsideMap(const Position& pos,
+                   const Position& mapSize,
+                   bool leaveBorders)
   {
     int offset = leaveBorders ? 1 : 0;
 
@@ -474,20 +501,28 @@ namespace Util
          && pos.Y < mapSize.Y - offset);
   }
 
+  // ===========================================================================
+
   int Clamp(int value, int min, int max)
   {
     return std::max(min, std::min(value, max));
   }
+
+  // ===========================================================================
 
   int BlockDistance(int x1, int y1, int x2, int y2)
   {
      return abs(y2 - y1) + abs(x2 - x1);
   }
 
+  // ===========================================================================
+
   int BlockDistance(const Position& from, const Position& to)
   {
      return abs(to.Y - from.Y) + abs(to.X - from.X);
   }
+
+  // ===========================================================================
 
   double LinearDistance(int x1, int y1, int x2, int y2)
   {
@@ -495,10 +530,14 @@ namespace Util
     return d;
   }
 
+  // ===========================================================================
+
   double LinearDistance(const Position& s, const Position& e)
   {
     return LinearDistance(s.X, s.Y, e.X, e.Y);
   }
+
+  // ===========================================================================
 
   double Log2(uint64_t n)
   {
@@ -508,7 +547,10 @@ namespace Util
     return (std::log(n) / std::log(2));
   }
 
-  std::vector<Position> GetEightPointsAround(const Position& pos, const Position& mapSize)
+  // ===========================================================================
+
+  std::vector<Position> GetEightPointsAround(const Position& pos,
+                                             const Position& mapSize)
   {
     std::vector<Position> result;
 
@@ -537,6 +579,8 @@ namespace Util
 
     return result;
   }
+
+  // ===========================================================================
 
   std::vector<Position> GetScreenRect(int x1, int y1, int x2, int y2)
   {
@@ -567,7 +611,11 @@ namespace Util
     return result;
   }
 
-  std::vector<Position> GetScreenRectPerimeter(int x1, int y1, int x2, int y2, bool includeCorners)
+  // ===========================================================================
+
+  std::vector<Position> GetScreenRectPerimeter(int x1, int y1,
+                                               int x2, int y2,
+                                               bool includeCorners)
   {
     std::vector<Position> res;
 
@@ -609,9 +657,14 @@ namespace Util
     return res;
   }
 
-  /// Clamps values against terminal size,
-  /// useful for drawing GUI related stuff and everything.
-  std::vector<Position> GetScreenRectAroundPoint(int pointX, int pointY, int rangeX, int rangeY)
+  // ===========================================================================
+
+  //
+  // Clamps values against terminal size,
+  // useful for drawing GUI related stuff and everything.
+  //
+  std::vector<Position> GetScreenRectAroundPoint(int pointX, int pointY,
+                                                 int rangeX, int rangeY)
   {
     std::vector<Position> result;
 
@@ -640,7 +693,11 @@ namespace Util
     return result;
   }
 
-  std::vector<Position> GetRectAroundPoint(int pointX, int pointY, int rangeX, int rangeY, const Position& mapSize)
+  // ===========================================================================
+
+  std::vector<Position> GetRectAroundPoint(int pointX, int pointY,
+                                           int rangeX, int rangeY,
+                                           const Position& mapSize)
   {
     std::vector<Position> result;
 
@@ -669,7 +726,11 @@ namespace Util
     return result;
   }
 
-  std::vector<Position> GetPerimeter(int x, int y, int w, int h, bool includeCorners)
+  // ===========================================================================
+
+  std::vector<Position> GetPerimeter(int x, int y,
+                                     int w, int h,
+                                     bool includeCorners)
   {
     std::vector<Position> res;
 
@@ -703,10 +764,16 @@ namespace Util
     return res;
   }
 
-  std::vector<Position> GetPerimeterAroundPoint(int x, int y, int w, int h, bool includeCorners)
+  // ===========================================================================
+
+  std::vector<Position> GetPerimeterAroundPoint(int x, int y,
+                                                int w, int h,
+                                                bool includeCorners)
   {
     return GetPerimeter(x - w, y - h, w * 2, h * 2, includeCorners);
   }
+
+  // ===========================================================================
 
   std::vector<GameObject*> GetActorsInRange(GameObject* from, int range)
   {
@@ -744,6 +811,8 @@ namespace Util
 
     return res;
   }
+
+  // ===========================================================================
 
   std::vector<GameObject*> GetContainersInRange(GameObject* from, int range)
   {
@@ -792,11 +861,15 @@ namespace Util
     return res;
   }
 
+  // ===========================================================================
+
   std::string ChooseRandomName()
   {
     int index = RNG::Instance().Random() % GlobalConstants::RandomNames.size();
     return GlobalConstants::RandomNames[index];
   }
+
+  // ===========================================================================
 
   std::string NumberToHexString(int num)
   {
@@ -815,7 +888,11 @@ namespace Util
     return res;
   }
 
-  /// Rotates room text layout, provided all lines are of equal length
+  // ===========================================================================
+
+  //
+  // Rotates room text layout, provided all lines are of equal length.
+  //
   std::vector<std::string> RotateRoomLayout(const std::vector<std::string>& layout, RoomLayoutRotation r)
   {
     std::vector<std::string> res;
@@ -824,7 +901,9 @@ namespace Util
     {
       case RoomLayoutRotation::CCW_90:
       {
-        // Swap dimensions
+        //
+        // Swap dimensions.
+        //
         int lineLen = layout[0].length();
 
         for (int i = 0; i < lineLen; i++)
@@ -884,7 +963,9 @@ namespace Util
 
         int maxY = res[0].length() - 1;
 
-        // Swap columns then rows
+        //
+        // Swap columns then rows.
+        //
         for (size_t x = 0; x < layout.size(); x++)
         {
           for (size_t y = 0; y < layout[x].length(); y++)
@@ -899,7 +980,9 @@ namespace Util
 
       case RoomLayoutRotation::CCW_270:
       {
-        // Swap dimensions
+        //
+        // Swap dimensions.
+        //
         int lineLen = layout[0].length();
 
         for (int i = 0; i < lineLen; i++)
@@ -961,6 +1044,8 @@ namespace Util
     return res;
   }
 
+  // ===========================================================================
+
   int RollDices(int numRolls, int diceSides)
   {
     int totalDamage = 0;
@@ -974,11 +1059,15 @@ namespace Util
     return totalDamage;
   }
 
+  // ===========================================================================
+
   int GetExpForNextLevel(int curLvl)
   {
     double p = std::pow(1.3, curLvl) * 20;
     return (int)p;
   }
+
+  // ===========================================================================
 
   void RecalculateWandStats(ItemComponent* wand)
   {
@@ -1057,7 +1146,7 @@ namespace Util
     }
 
     //
-    // Because 0 dice rolls makes no sense
+    // Because 0 dice rolls makes no sense.
     //
     if (si.SpellBaseDamage.first <= 0)
     {
@@ -1079,6 +1168,8 @@ namespace Util
     //
     wand->Data.Cost = si.SpellBaseCost;
   }
+
+  // ===========================================================================
 
   void BlessItem(ItemComponent* item)
   {
@@ -1140,6 +1231,8 @@ namespace Util
     }
   }
 
+  // ===========================================================================
+
   int Rolld100()
   {
     int dice = RNG::Instance().RandomRange(0, 100);
@@ -1149,6 +1242,8 @@ namespace Util
 
     return dice;
   }
+
+  // ===========================================================================
 
   bool Rolld100(int successChance, bool twoRN)
   {
@@ -1204,6 +1299,8 @@ namespace Util
     return success;
   }
 
+  // ===========================================================================
+
   void Sleep(int delayMs)
   {
     //
@@ -1227,18 +1324,22 @@ namespace Util
     #endif
   }
 
+  // ===========================================================================
+
   bool WaitForMs(uint64_t delayMs, bool reset)
   {
     auto timePassed = Timer::Instance().TimePassed();
     Ms s = std::chrono::duration_cast<Ms>(timePassed);
     static uint64_t prevMs = s.count();
 
+    //
     // If WaitForMs() hasn't been called for some time,
     // wthout this check the condition will immediately
     // succeed since s.count() - prevMs will be a very big value,
     // thus the first "run" of this function in some animation
     // loop, for example, will yield wrong result, since
     // at first run there won't be any 'delayMs' waiting.
+    //
     if (reset)
     {
       prevMs = s.count();
@@ -1254,6 +1355,8 @@ namespace Util
     return false;
   }
 
+  // ===========================================================================
+
   void PrintVector(const std::string& title, const std::vector<Position>& v)
   {
     DebugLog("Vector of '%s' (size %u)\n", title.data(), v.size());
@@ -1267,6 +1370,8 @@ namespace Util
 
     DebugLog("\n");
   }
+
+  // ===========================================================================
 
   void PrintLayout(const std::vector<std::string>& l)
   {
@@ -1284,6 +1389,8 @@ namespace Util
 
     Logger::Instance().Print(dbg);
   }
+
+  // ===========================================================================
 
   CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map)
   {
@@ -1304,6 +1411,8 @@ namespace Util
     return res;
   }
 
+  // ===========================================================================
+
   uint32_t GetItemInventoryColor(const ItemData& data)
   {
     uint32_t textColor = Colors::WhiteColor;
@@ -1315,8 +1424,10 @@ namespace Util
     bool isUnique  = (data.Rarity == ItemRarity::UNIQUE);
     bool isMixed   = (isCursed && (isMagic || isRare));
 
+    //
     // Iterate over this map and select color
     // for the first entry found with bool key == true.
+    //
     std::map<int, std::pair<bool, uint32_t>> itemFirstColorToChoose =
     {
       { 0, { isMixed,   Colors::ItemMixedColor   } },
@@ -1343,6 +1454,8 @@ namespace Util
 
     return textColor;
   }
+
+  // ===========================================================================
 
   std::string GenerateName(bool allowDoubleVowels,
                            bool canAddEnding,
@@ -1436,6 +1549,8 @@ namespace Util
     return name;
   }
 
+  // ===========================================================================
+
   std::string ReplaceItemPrefix(const std::string& oldIdentifiedName,
                                 const std::vector<std::string>& anyOf,
                                 const std::string& replaceWith)
@@ -1455,6 +1570,8 @@ namespace Util
     return newIdentifiedName;
   }
 
+  // ===========================================================================
+
   std::string GetCurrentDateTimeString()
   {
     std::stringstream ss;
@@ -1466,6 +1583,8 @@ namespace Util
 
     return ss.str();
   }
+
+  // ===========================================================================
 
   std::string GetGameObjectDisplayCharacter(GameObject* obj)
   {
@@ -1500,6 +1619,8 @@ namespace Util
     return res;
   }
 
+  // ===========================================================================
+
   size_t FindLongestStringLength(const std::vector<std::string>& list)
   {
     size_t res = 0;
@@ -1515,12 +1636,16 @@ namespace Util
     return res;
   }
 
+  // ===========================================================================
+
   void LaunchProjectile(const std::vector<Position>& line,
                         char image,
                         const uint32_t& fgColor,
                         const uint32_t& bgColor)
   {
-    // Start from 1 to exclude starting position
+    //
+    // Start from 1 to exclude starting position.
+    //
     for (size_t i = 1; i < line.size(); i++)
     {
       int mx = line[i].X;
@@ -1541,6 +1666,7 @@ namespace Util
     }
   }
 
+  // ===========================================================================
 
   void LaunchProjectile(const Position& from,
                         const Position& to,
@@ -1552,6 +1678,8 @@ namespace Util
 
     LaunchProjectile(line, image, fgColor, bgColor);
   }
+
+  // ===========================================================================
 
   void KnockBack(GameObject* sender,
                  GameObject* receiver,
@@ -1606,9 +1734,8 @@ namespace Util
     }
 
     //
-    // Knocked back units are stunned
+    // Knocked back units are stunned.
     //
-
     ItemBonusStruct bs;
 
     bs.Type       = ItemBonusType::PARALYZE;
@@ -1620,11 +1747,15 @@ namespace Util
     receiver->CheckPerish();
   }
 
+  // ===========================================================================
+
   void ReapplyBonuses(GameObject* onWho, ItemComponent* item)
   {
     onWho->UnapplyBonuses(item);
     onWho->ApplyBonuses(item);
   }
+
+  // ===========================================================================
 
   std::string ProcessTeleport(GameObject* target)
   {
@@ -1649,6 +1780,8 @@ namespace Util
 
     return msg;
   }
+
+  // ===========================================================================
 
   std::pair<char, uint32_t> GetProjectileImageAndColor(ItemComponent* weapon,
                                                        bool throwingFromInventory)
@@ -1697,6 +1830,8 @@ namespace Util
     return res;
   }
 
+  // ===========================================================================
+
   std::vector<GameObject*> GetObjectsOnTheLine(const std::vector<Position>& line)
   {
     std::vector<GameObject*> res;
@@ -1706,7 +1841,7 @@ namespace Util
     Position mapSize = Map::Instance().CurrentLevel->MapSize;
 
     //
-    // Do not include object on starting point
+    // Do not include object on starting point.
     //
     for (size_t i = 1; i < line.size(); i++)
     {
@@ -1744,6 +1879,8 @@ namespace Util
 
     return res;
   }
+
+  // ===========================================================================
 
   GameObject* GetFirstObjectOnTheLine(const std::vector<Position>& line)
   {
@@ -1821,6 +1958,8 @@ namespace Util
     return res;
   }
 
+  // ===========================================================================
+
   std::string TryToDamageEquipment(GameObject* actor,
                                    EquipmentCategory cat,
                                    int damage)
@@ -1852,6 +1991,8 @@ namespace Util
 
     return msg;
   }
+
+  // ===========================================================================
 
   std::string TryToDamageEquipment(GameObject* actor,
                                    ItemComponent* item,
@@ -1893,6 +2034,8 @@ namespace Util
     return msg;
   }
 
+  // ===========================================================================
+
   int CalculateDamageValue(GameObject* attacker,
                            GameObject* defender,
                            ItemComponent* weapon,
@@ -1913,7 +2056,9 @@ namespace Util
       return dmg;
     };
 
-    // Unarmed strike
+    //
+    // Unarmed strike.
+    //
     if (weapon == nullptr)
     {
       totalDmg = GetUnarmedDamage();
@@ -1922,7 +2067,7 @@ namespace Util
     {
       //
       // Melee attack with ranged weapon in hand
-      // fallbacks to unarmed attack
+      // fallbacks to unarmed attack.
       //
       if (meleeAttackWithRangedWeapon)
       {
@@ -1956,11 +2101,15 @@ namespace Util
     return totalDmg;
   }
 
+  // ===========================================================================
+
   int CalculateHitChanceMelee(GameObject* attacker,
                               GameObject* defender)
   {
+    //
     // Amount of addition to hit chance
-    // times SKL difference of attacker and defender
+    // times SKL difference of attacker and defender.
+    //
     int attackChanceScale = 3;
 
     int defaultHitChance = 50;
@@ -1982,6 +2131,8 @@ namespace Util
 
     return hitChance;
   }
+
+  // ===========================================================================
 
   int CalculateHitChanceRanged(const Position& start,
                                const Position& end,
@@ -2030,7 +2181,7 @@ namespace Util
         if (ec != nullptr)
         {
           //
-          // Assuming valid projectiles are already equipped
+          // Assuming valid projectiles are already equipped.
           //
           ItemComponent* arrows = ec->EquipmentByCategory[EquipmentCategory::SHIELD][0];
           if (arrows != nullptr)
@@ -2086,6 +2237,8 @@ namespace Util
     return chance;
   }
 
+  // ===========================================================================
+
   int GetTotalDamageAbsorptionValue(GameObject* who, bool magic)
   {
     int res = 0;
@@ -2095,7 +2248,7 @@ namespace Util
     if (who != nullptr)
     {
       //
-      // Check for inherent absorption
+      // Check for inherent absorption.
       //
       for (auto& kvp : who->GetActiveEffects())
       {
@@ -2127,6 +2280,8 @@ namespace Util
 
     return res;
   }
+
+  // ===========================================================================
 
   std::vector<std::string> ProcessPhysicalDamage(GameObject* who,
                                                  GameObject* from,
@@ -2161,7 +2316,7 @@ namespace Util
     std::string fromImg = GetGameObjectDisplayCharacter(from);
 
     //
-    // If no armor present
+    // If no armor present.
     //
     if (armorMsgs.empty())
     {
@@ -2189,6 +2344,8 @@ namespace Util
 
     return res;
   }
+
+  // ===========================================================================
 
   std::string ProcessMagicalDamage(GameObject* who,
                                    GameObject* from,
@@ -2238,6 +2395,8 @@ namespace Util
     return logMsg;
   }
 
+  // ===========================================================================
+
   void ProcessManaShield(GameObject* who,
                          int amount)
   {
@@ -2263,6 +2422,8 @@ namespace Util
     }
   }
 
+  // ===========================================================================
+
   int ProcessThorns(GameObject* who,
                     int damageReceived)
   {
@@ -2279,6 +2440,8 @@ namespace Util
 
     return dmgReturned;
   }
+
+  // ===========================================================================
 
   std::vector<std::string> DamageArmor(GameObject* who,
                                        GameObject* from,
@@ -2331,7 +2494,9 @@ namespace Util
         {
           int hpDamage = std::abs(overkill);
 
+          //
           // Recursion in production code, yay!
+          //
           logMsgsRec = ProcessPhysicalDamage(who, from, hpDamage, true);
         }
       }
@@ -2344,6 +2509,8 @@ namespace Util
 
     return logMsgs;
   }
+
+  // ===========================================================================
 
   Position GetRandomPointAround(GameObject* user,
                                 ItemComponent* weapon,
@@ -2380,7 +2547,9 @@ namespace Util
       }
     }
 
-    // Just in case
+    //
+    // Just in case.
+    //
     if (!rect.empty())
     {
       int index = RNG::Instance().RandomRange(0, rect.size());
@@ -2389,6 +2558,8 @@ namespace Util
 
     return pos;
   }
+
+  // ===========================================================================
 
   std::vector<Position> ProcessLaserAttack(GameObject* user,
                                            ItemComponent* weapon,
@@ -2423,6 +2594,8 @@ namespace Util
     return line;
   }
 
+  // ===========================================================================
+
   std::vector<Position> ProcessLaserAttack(GameObject* user,
                                            const std::pair<int, int>& damageRange,
                                            const Position& end)
@@ -2454,7 +2627,9 @@ namespace Util
 
     bool shouldStop = false;
 
-    // Start from 1 to exclude user's position
+    //
+    // Start from 1 to exclude user's position.
+    //
     for (size_t i = 1; i < line.size(); i++)
     {
       if (power <= 0)
@@ -2469,8 +2644,10 @@ namespace Util
       {
         if (obj->PosX == mx && obj->PosY == my)
         {
+          //
           // Laser stops when it hits indestructible object
           // or its power has dissipated.
+          //
           if (obj->Attrs.Indestructible || power <= 0)
           {
             shouldStop = true;
@@ -2508,6 +2685,8 @@ namespace Util
 
     return lineRes;
   }
+
+  // ===========================================================================
 
   void DrawLaserAttack(const std::vector<Position>& line)
   {
@@ -2558,8 +2737,10 @@ namespace Util
 
     for (auto& p : perimeterPoints)
     {
+      //
       // Different lines can go through the same points
       // so a check if a point was already added is needed.
+      //
       auto line = BresenhamLine(from, p);
       for (auto& point : line)
       {
@@ -2572,7 +2753,9 @@ namespace Util
                   [&point](const Position& p) ->
                   bool { return (p == point); });
 
+        //
         // If point was already added, skip it.
+        //
         if (it != res.end())
         {
           continue;
@@ -2605,6 +2788,8 @@ namespace Util
     return res;
   }
 
+  // ===========================================================================
+
   std::vector<ItemComponent*> GetItemsWithBonus(GameObject* actor,
                                                 ItemBonusType bonus)
   {
@@ -2634,15 +2819,21 @@ namespace Util
     return res;
   }
 
+  // ===========================================================================
+
   Position InvertDirection(const Position& dir)
   {
     return { -dir.X, -dir.Y };
   }
 
+  // ===========================================================================
+
   bool IsPlayer(GameObject* obj)
   {
     return (obj == &Application::Instance().PlayerInstance);
   }
+
+  // ===========================================================================
 
   bool CanBeSpawned(ItemComponent* ic)
   {
@@ -2654,6 +2845,8 @@ namespace Util
 
     return false;
   }
+
+  // ===========================================================================
 
   size_t CalculateItemHash(ItemComponent* item)
   {

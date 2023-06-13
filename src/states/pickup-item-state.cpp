@@ -11,15 +11,21 @@ void PickupItemState::Init()
   _headerText = " PICKUP ITEMS ";
 }
 
+// =============================================================================
+
 void PickupItemState::Prepare()
 {
   RebuildDisplayList();
 }
 
+// =============================================================================
+
 void PickupItemState::Setup(const Items& items)
 {
   _itemsList = items;
 }
+
+// =============================================================================
 
 void PickupItemState::ProcessInput()
 {
@@ -55,6 +61,8 @@ void PickupItemState::ProcessInput()
     break;
   }
 }
+
+// =============================================================================
 
 bool PickupItemState::PickupItem(const Item& item)
 {
@@ -114,6 +122,8 @@ bool PickupItemState::PickupItem(const Item& item)
   return false;
 }
 
+// =============================================================================
+
 void PickupItemState::DrawSpecific()
 {
   if (_displayLines.empty())
@@ -138,6 +148,8 @@ void PickupItemState::DrawSpecific()
     }
   }
 }
+
+// =============================================================================
 
 void PickupItemState::RebuildDisplayList()
 {

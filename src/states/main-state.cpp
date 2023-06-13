@@ -13,6 +13,8 @@ void MainState::Init()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 void MainState::HandleInput()
 {
   //
@@ -204,6 +206,8 @@ void MainState::HandleInput()
   }
 }
 
+// =============================================================================
+
 void MainState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
@@ -244,6 +248,8 @@ void MainState::Update(bool forceUpdate)
   }
 }
 
+// =============================================================================
+
 void MainState::ProcessMovement(const Position& dirOffsets)
 {
   if (_playerRef->TryToMeleeAttack(dirOffsets.X, dirOffsets.Y))
@@ -282,6 +288,8 @@ void MainState::ProcessMovement(const Position& dirOffsets)
   }
 }
 
+// =============================================================================
+
 void MainState::CheckItemsOnGround()
 {
   auto items = Map::Instance().GetGameObjectsToPickup(_playerRef->PosX, _playerRef->PosY);
@@ -290,6 +298,8 @@ void MainState::CheckItemsOnGround()
     Printer::Instance().AddMessage(Strings::MsgItemsLyingHere);
   }
 }
+
+// =============================================================================
 
 void MainState::DisplayGameLog()
 {
@@ -309,6 +319,8 @@ void MainState::DisplayGameLog()
     count++;
   }
 }
+
+// =============================================================================
 
 void MainState::TryToPickupItems()
 {
@@ -333,6 +345,8 @@ void MainState::TryToPickupItems()
   }
 }
 
+// =============================================================================
+
 void MainState::PickupSingleItem(std::pair<int, GameObject *>& item)
 {
   if (ProcessMoneyPickup(item))
@@ -351,6 +365,8 @@ void MainState::PickupSingleItem(std::pair<int, GameObject *>& item)
 
   ProcessItemPickup(item);
 }
+
+// =============================================================================
 
 void MainState::DrawHPMP()
 {
@@ -396,6 +412,8 @@ void MainState::DrawHPMP()
 #endif
 }
 
+// =============================================================================
+
 void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
 {
   double ratio = ((double)attr.Min().Get() / (double)attr.Max().Get());
@@ -415,6 +433,8 @@ void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
                               Printer::kAlignLeft,
                               Colors::WhiteColor);
 }
+
+// =============================================================================
 
 std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
 {
@@ -450,6 +470,8 @@ std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
   return _stairsTileInfo;
 }
 
+// =============================================================================
+
 void MainState::ClimbStairs(const std::pair<GameObject*, bool>& stairsTileInfo)
 {
   bool upOrDown = stairsTileInfo.second;
@@ -457,6 +479,8 @@ void MainState::ClimbStairs(const std::pair<GameObject*, bool>& stairsTileInfo)
   StairsComponent* stairs = static_cast<StairsComponent*>(c);
   Map::Instance().ChangeLevel(stairs->LeadsTo, upOrDown);
 }
+
+// =============================================================================
 
 void MainState::PrintDebugInfo()
 {
@@ -513,6 +537,8 @@ void MainState::PrintDebugInfo()
   }
 }
 
+// =============================================================================
+
 void MainState::ProcessRangedWeapon()
 {
   if (Map::Instance().CurrentLevel->Peaceful)
@@ -551,6 +577,8 @@ void MainState::ProcessRangedWeapon()
     Printer::Instance().AddMessage(Strings::MsgEquipWeapon);
   }
 }
+
+// =============================================================================
 
 void MainState::ProcessWeapon(ItemComponent* weapon)
 {
@@ -597,8 +625,11 @@ void MainState::ProcessWeapon(ItemComponent* weapon)
   }
 }
 
+// =============================================================================
+
 void MainState::ProcessWand(ItemComponent* wand)
 {
+  //
   // NOTE: amount of charges should be subtracted
   // separately in corresponding methods
   // (i.e. EffectsProcessor or inside TargetState),
@@ -606,7 +637,7 @@ void MainState::ProcessWand(ItemComponent* wand)
   // which is checked against out of bounds,
   // and only after it's OK and player hits "fire",
   // the actual firing takes place.
-
+  //
   if (wand->Data.Amount == 0)
   {
     Printer::Instance().AddMessage(Strings::MsgNoCharges);
@@ -645,6 +676,8 @@ void MainState::ProcessWand(ItemComponent* wand)
   }
 }
 
+// =============================================================================
+
 bool MainState::ProcessMoneyPickup(std::pair<int, GameObject*>& pair)
 {
   ItemComponent* ic = pair.second->GetComponent<ItemComponent>();
@@ -661,6 +694,8 @@ bool MainState::ProcessMoneyPickup(std::pair<int, GameObject*>& pair)
 
   return false;
 }
+
+// =============================================================================
 
 void MainState::ProcessItemPickup(std::pair<int, GameObject*>& pair)
 {
@@ -691,6 +726,8 @@ void MainState::ProcessItemPickup(std::pair<int, GameObject*>& pair)
   auto it = Map::Instance().CurrentLevel->GameObjects.begin();
   Map::Instance().CurrentLevel->GameObjects.erase(it + pair.first);
 }
+
+// =============================================================================
 
 void MainState::DisplayStartHint()
 {
@@ -732,6 +769,8 @@ void MainState::DisplayStartHint()
                               Printer::kAlignLeft,
                               Colors::WhiteColor);
 }
+
+// =============================================================================
 
 void MainState::DisplayExitHint()
 {
@@ -777,6 +816,8 @@ void MainState::DisplayExitHint()
                               Colors::WhiteColor);
 }
 
+// =============================================================================
+
 void MainState::DisplayStatusIcons()
 {
   int startPos = 5;
@@ -787,6 +828,8 @@ void MainState::DisplayStatusIcons()
   DisplayAmmoCondition(startPos);
   DisplayActiveEffects(startPos);
 }
+
+// =============================================================================
 
 void MainState::DisplayHungerStatus(const int& startPos)
 {
@@ -813,6 +856,8 @@ void MainState::DisplayHungerStatus(const int& startPos)
   }
 }
 
+// =============================================================================
+
 void MainState::DisplayWeaponCondition(const int& startPos)
 {
   ItemComponent* weapon = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
@@ -833,6 +878,8 @@ void MainState::DisplayWeaponCondition(const int& startPos)
   }
 }
 
+// =============================================================================
+
 void MainState::DisplayArmorCondition(const int& startPos)
 {
   ItemComponent* armor = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::TORSO][0];
@@ -851,6 +898,8 @@ void MainState::DisplayArmorCondition(const int& startPos)
   }
 }
 
+// =============================================================================
+
 void MainState::DisplayAmmoCondition(const int& startPos)
 {
   ItemComponent* arrows = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0];
@@ -866,6 +915,8 @@ void MainState::DisplayAmmoCondition(const int& startPos)
     }
   }
 }
+
+// =============================================================================
 
 void MainState::DisplayActiveEffects(const int& startPos)
 {
@@ -909,11 +960,15 @@ void MainState::DisplayActiveEffects(const int& startPos)
   }
 }
 
+// =============================================================================
+
 void MainState::PrintNoAttackInTown()
 {
   int index = RNG::Instance().RandomRange(0, 2);
   Printer::Instance().AddMessage(Strings::MsgNotInTown[index]);
 }
+
+// =============================================================================
 
 void MainState::GetActorsAround()
 {
@@ -943,6 +998,8 @@ void MainState::GetActorsAround()
     }
   }
 }
+
+// =============================================================================
 
 void MainState::DisplayScenarioInformation()
 {

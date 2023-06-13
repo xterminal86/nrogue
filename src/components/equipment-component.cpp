@@ -21,6 +21,8 @@ EquipmentComponent::EquipmentComponent(ContainerComponent* inventoryRef)
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 bool EquipmentComponent::Equip(ItemComponent* item)
 {
   bool res = false;
@@ -52,6 +54,8 @@ bool EquipmentComponent::Equip(ItemComponent* item)
   return res;
 }
 
+// =============================================================================
+
 bool EquipmentComponent::HasBonus(ItemBonusType type)
 {
   for (auto& kvp : EquipmentByCategory)
@@ -68,7 +72,7 @@ bool EquipmentComponent::HasBonus(ItemBonusType type)
   return false;
 }
 
-// ================================= RING ======================================
+// --------------------------------- RING --------------------------------------
 
 bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
 {
@@ -76,7 +80,9 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
 
   auto& rings = EquipmentByCategory[item->Data.EqCategory];
 
-  // First, search if this ring is already equipped
+  //
+  // First, search if this ring is already equipped.
+  //
   for (size_t i = 0; i < rings.size(); i++)
   {
     if (rings[i] == item)
@@ -102,7 +108,9 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
     }
   }
 
-  // Second, if it's different item, try to find empty slot for it
+  //
+  // Second, if it's different item, try to find empty slot for it.
+  //
   for (size_t i = 0; i < rings.size(); i++)
   {
     if (rings[i] == nullptr)
@@ -112,7 +120,9 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
     }
   }
 
-  // Finally, if no empty slots found, display a warning
+  //
+  // Finally, if no empty slots found, display a warning.
+  //
   if (!emptySlotFound && IsThisPlayer())
   {
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
@@ -123,6 +133,8 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
 
   return false;
 }
+
+// =============================================================================
 
 void EquipmentComponent::EquipRing(ItemComponent* ring, int index)
 {
@@ -142,6 +154,8 @@ void EquipmentComponent::EquipRing(ItemComponent* ring, int index)
   }
 }
 
+// =============================================================================
+
 void EquipmentComponent::UnequipRing(ItemComponent* ring, int index)
 {
   ring->Data.IsEquipped = false;
@@ -160,7 +174,7 @@ void EquipmentComponent::UnequipRing(ItemComponent* ring, int index)
   }
 }
 
-// ================================= ITEM ======================================
+// --------------------------------- ITEM --------------------------------------
 
 bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item)
 {
@@ -170,7 +184,9 @@ bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item)
 
   if (itemEquipped == nullptr)
   {
-    // If nothing was equipped, equip item
+    //
+    // If nothing was equipped, equip item.
+    //
     EquipItem(item);
   }
   else if (itemEquipped != item)
@@ -204,13 +220,17 @@ bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item)
     }
     else
     {
-      // If it's the same item, just unequip it
+      //
+      // If it's the same item, just unequip it.
+      //
       UnequipItem(itemEquipped);
     }
   }
 
   return res;
 }
+
+// =============================================================================
 
 void EquipmentComponent::EquipItem(ItemComponent* item)
 {
@@ -241,6 +261,8 @@ void EquipmentComponent::EquipItem(ItemComponent* item)
   }
 }
 
+// =============================================================================
+
 void EquipmentComponent::UnequipItem(ItemComponent* item)
 {
   item->Data.IsEquipped = false;
@@ -261,7 +283,9 @@ void EquipmentComponent::UnequipItem(ItemComponent* item)
       verb = "take off";
     }
 
-    std::string objName = item->Data.IsIdentified ? item->OwnerGameObject->ObjectName : item->Data.UnidentifiedName;
+    std::string objName = item->Data.IsIdentified
+                        ? item->OwnerGameObject->ObjectName
+                        : item->Data.UnidentifiedName;
 
     auto message = Util::StringFormat("You %s %s", verb.data(), objName.data());
     Printer::Instance().AddMessage(message);
@@ -274,6 +298,8 @@ bool EquipmentComponent::IsThisPlayer()
 {
   return (OwnerGameObject == _playerRef);
 }
+
+// =============================================================================
 
 void EquipmentComponent::Update()
 {

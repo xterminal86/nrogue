@@ -30,6 +30,8 @@ namespace LootGenerators
     }
   }
 
+  // ===========================================================================
+
   void MadMiner(GameObject* go)
   {
     const std::map<ItemType, int> lootTable =
@@ -80,10 +82,14 @@ namespace LootGenerators
     }
   }
 
+  // ===========================================================================
+
   void Shelob(GameObject* go)
   {
     // TODO:
   }
+
+  // ===========================================================================
 
   void Kobold(GameObject* go)
   {

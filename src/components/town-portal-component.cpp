@@ -8,6 +8,8 @@ TownPortalComponent::TownPortalComponent()
   _componentHash = typeid(*this).hash_code();
 }
 
+// =============================================================================
+
 void TownPortalComponent::Update()
 {
   auto& playerRef = Application::Instance().PlayerInstance;
@@ -18,15 +20,19 @@ void TownPortalComponent::Update()
   }
 }
 
+// =============================================================================
+
 void TownPortalComponent::SavePosition(MapType mapToReturn, const Position& posToReturn)
 {
   _posToReturn.first  = mapToReturn;
   _posToReturn.second = posToReturn;
 }
 
+// =============================================================================
+
 void TownPortalComponent::TeleportBack()
 {
-  Printer::Instance().AddMessage("The blue portal disappears!");
+  Printer::Instance().AddMessage("The blue portal disappears behind you!");
 
   OwnerGameObject->IsDestroyed = true;
 

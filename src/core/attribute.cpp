@@ -8,20 +8,28 @@ void Attribute::Reset()
   Talents = 0;
 }
 
+// =============================================================================
+
 void Attribute::Set(int value)
 {
   _originalValue = value;
 }
+
+// =============================================================================
 
 void Attribute::AddModifier(int64_t who, int value)
 {
   _modifiersByGoId[who].push_back(value);
 }
 
+// =============================================================================
+
 void Attribute::RemoveModifier(int64_t who)
 {
   _modifiersByGoId.erase(who);
 }
+
+// =============================================================================
 
 int Attribute::Get()
 {
@@ -38,6 +46,8 @@ int Attribute::Get()
   return res;
 }
 
+// =============================================================================
+
 int Attribute::GetModifiers()
 {
   int res = 0;
@@ -53,17 +63,21 @@ int Attribute::GetModifiers()
   return res;
 }
 
+// =============================================================================
+
 int Attribute::OriginalValue()
 {
   return _originalValue;
 }
+
+// =============================================================================
 
 void Attribute::Add(int value)
 {
   _originalValue += value;
 }
 
-// *****************************************************************************
+// -----------------------------------------------------------------------------
 
 void RangedAttribute::Reset(int initialValue)
 {
@@ -76,15 +90,21 @@ void RangedAttribute::Reset(int initialValue)
   Restore();
 }
 
+// =============================================================================
+
 void RangedAttribute::SetMin(int valueToSet)
 {
   _min.Set(valueToSet);
 }
 
+// =============================================================================
+
 void RangedAttribute::SetMax(int valueToSet)
 {
   _max.Set(valueToSet);
 }
+
+// =============================================================================
 
 void RangedAttribute::AddMin(int valueToAdd)
 {
@@ -101,6 +121,8 @@ void RangedAttribute::AddMin(int valueToAdd)
   _min.Set(res);
 }
 
+// =============================================================================
+
 void RangedAttribute::AddMax(int valueToAdd)
 {
   int res = _max.OriginalValue() + valueToAdd;
@@ -111,28 +133,38 @@ void RangedAttribute::AddMax(int valueToAdd)
 
   _max.Set(res);
 
+  //
   // If max value is dropped because of modifier,
   // adjust min value accordingly.
+  //
   if (_min.OriginalValue() > _max.Get())
   {
     _min.Set(_max.Get());
   }
 }
 
+// =============================================================================
+
 void RangedAttribute::Restore()
 {
   _min.Set(_max.Get());
 }
+
+// =============================================================================
 
 Attribute& RangedAttribute::Min()
 {
   return _min;
 }
 
+// =============================================================================
+
 Attribute& RangedAttribute::Max()
 {
   return _max;
 }
+
+// =============================================================================
 
 void RangedAttribute::CheckOverflow()
 {
@@ -142,17 +174,21 @@ void RangedAttribute::CheckOverflow()
   }
 }
 
+// =============================================================================
+
 bool RangedAttribute::IsFull()
 {
   return (_min.Get() == _max.Get());
 }
 
-// *****************************************************************************
+// -----------------------------------------------------------------------------
 
 Attributes::Attributes()
 {
   Lvl.Set(1);
 }
+
+// =============================================================================
 
 int Attributes::Rating()
 {
@@ -168,7 +204,7 @@ int Attributes::Rating()
   rating += Spd.OriginalValue();
 
   //
-  // If stats are debuffed, clamp rating to 0 minimum
+  // If stats are debuffed, clamp rating to 0 minimum.
   //
   if (rating < 0)
   {
@@ -177,6 +213,8 @@ int Attributes::Rating()
 
   return rating;
 }
+
+// =============================================================================
 
 void Attributes::ResetStats()
 {

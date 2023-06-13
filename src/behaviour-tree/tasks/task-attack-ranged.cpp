@@ -53,6 +53,8 @@ TaskAttackRanged::TaskAttackRanged(GameObject* objectToControl,
   }
 }
 
+// =============================================================================
+
 BTResult TaskAttackRanged::Run()
 {
   BTResult res = BTResult::Failure;
@@ -68,6 +70,8 @@ BTResult TaskAttackRanged::Run()
 
   return res;
 }
+
+// =============================================================================
 
 BTResult TaskAttackRanged::ProcessSpellAttack()
 {
@@ -146,6 +150,8 @@ BTResult TaskAttackRanged::ProcessSpellAttack()
   return Util::IsPlayer(hit) ? BTResult::Success : BTResult::Failure;
 }
 
+// =============================================================================
+
 BTResult TaskAttackRanged::ProcessWeaponAttack()
 {
   Position from = _objectToControl->GetPosition();
@@ -189,7 +195,7 @@ BTResult TaskAttackRanged::ProcessWeaponAttack()
   GameObject* hit = Util::GetFirstObjectOnTheLine(line);
 
   //
-  // If something is hit, launch projectile up to this point
+  // If something is hit, launch projectile up to this point.
   //
   if (hit != nullptr)
   {
@@ -224,6 +230,8 @@ BTResult TaskAttackRanged::ProcessWeaponAttack()
 
   return Util::IsPlayer(hit) ? BTResult::Success : BTResult::Failure;
 }
+
+// =============================================================================
 
 void TaskAttackRanged::ProcessBows(ItemComponent* weapon,
                                    ItemComponent* arrows,
@@ -281,6 +289,8 @@ void TaskAttackRanged::ProcessBows(ItemComponent* weapon,
   Util::TryToDamageEquipment(_objectToControl, weapon, -1);
 }
 
+// =============================================================================
+
 void TaskAttackRanged::ProcessWand(ItemComponent* wand, GameObject* what)
 {
   wand->Data.Amount--;
@@ -324,6 +334,8 @@ void TaskAttackRanged::ProcessWand(ItemComponent* wand, GameObject* what)
   }
 }
 
+// =============================================================================
+
 void TaskAttackRanged::ProcessWandDamage(GameObject* target,
                                          ItemComponent* weapon,
                                          int damage,
@@ -363,10 +375,12 @@ void TaskAttackRanged::ProcessWandDamage(GameObject* target,
   }
   else
   {
+    //
     // Magic attack should probably hit everything,
     // since it's, well, magical. You can't really control it.
-
-    // Check items first
+    //
+    // Check items first.
+    //
     auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
     {
@@ -376,7 +390,9 @@ void TaskAttackRanged::ProcessWandDamage(GameObject* target,
                               againstRes);
     }
 
-    // If nothing is lying in the doorway, for example, damage door
+    //
+    // If nothing is lying in the doorway, for example, damage door.
+    //
     if (mapObjs.empty())
     {
       auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
@@ -390,6 +406,8 @@ void TaskAttackRanged::ProcessWandDamage(GameObject* target,
     }
   }
 }
+
+// =============================================================================
 
 void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
                                         ItemComponent* weapon,
@@ -413,7 +431,7 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
     int dmgHere = centralDamage / d;
 
     //
-    // AoE damages everything
+    // AoE damages everything.
     //
     if (_playerRef->GetPosition() == p)
     {
@@ -436,7 +454,7 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
     }
 
     //
-    // Check self damage
+    // Check self damage.
     //
     if (_objectToControl->GetPosition() == p)
     {
@@ -447,6 +465,8 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
     }
   }
 }
+
+// =============================================================================
 
 BTResult TaskAttackRanged::CheckRangedWeaponValidity(ItemComponent* weapon,
                                                      ItemComponent* arrows)

@@ -42,6 +42,8 @@ void BSPRooms::Generate(const Position& mapSize,
   FillMapRaw();
 }
 
+// =============================================================================
+
 void BSPRooms::Subdivide(BSPNode& parent, double ratio, bool splitX)
 {
   int sx = parent.CornerStart.X;
@@ -109,6 +111,8 @@ void BSPRooms::Subdivide(BSPNode& parent, double ratio, bool splitX)
   Subdivide(*parent.Right.get(), splitChance2.second, splitChance2.first);
 }
 
+// =============================================================================
+
 std::pair<bool, double> BSPRooms::GetSplitRatio(Rect& area)
 {
   std::pair<bool, double> res;
@@ -129,6 +133,8 @@ std::pair<bool, double> BSPRooms::GetSplitRatio(Rect& area)
   return res;
 }
 
+// =============================================================================
+
 void BSPRooms::FillArea(const Rect& area, char ch)
 {
   for (int x = area.X1 + 1; x <= area.X2 - 1; x++)
@@ -140,6 +146,8 @@ void BSPRooms::FillArea(const Rect& area, char ch)
   }
 }
 
+// =============================================================================
+
 bool BSPRooms::DoesRoomFit(Rect& area)
 {
   int w = area.Dimensions().X;
@@ -147,6 +155,8 @@ bool BSPRooms::DoesRoomFit(Rect& area)
 
   return (w > _minRoomSize && h > _minRoomSize);
 }
+
+// =============================================================================
 
 bool BSPRooms::WasFilled(const Rect& area)
 {
@@ -164,6 +174,8 @@ bool BSPRooms::WasFilled(const Rect& area)
   return false;
 }
 
+// =============================================================================
+
 void BSPRooms::Traverse(BSPNode* node, int depth)
 {
   if (node->Left && node->Right)
@@ -176,10 +188,12 @@ void BSPRooms::Traverse(BSPNode* node, int depth)
     Rect roomArea(node->CornerStart, node->CornerEnd);
     if (DoesRoomFit(roomArea))
     {
-      // Randomize room size inside valid cells
+      //
+      // Randomize room size inside valid cells.
       // Start from 4 because FillArea fills
       // [X + 1, Y + 1] to [X - 1; Y - 1]
-      // + 1 at the end because RandomRange traditionally excludes last number
+      // + 1 at the end because RandomRange traditionally excludes last number.
+      //
       int roomW = RNG::Instance().RandomRange(4, roomArea.Dimensions().X + 1);
       int roomH = RNG::Instance().RandomRange(4, roomArea.Dimensions().Y + 1);
 
@@ -200,6 +214,8 @@ void BSPRooms::Traverse(BSPNode* node, int depth)
     }
   }
 }
+
+// =============================================================================
 
 void BSPRooms::ConnectPoints(const Position& p1, const Position& p2)
 {
@@ -222,6 +238,8 @@ void BSPRooms::ConnectPoints(const Position& p1, const Position& p2)
   }
 }
 
+// =============================================================================
+
 void BSPRooms::PlaceDoors()
 {
   auto spotFound = FindPlaceForDoor();
@@ -236,6 +254,8 @@ void BSPRooms::PlaceDoors()
     spotFound = FindPlaceForDoor();
   }
 }
+
+// =============================================================================
 
 std::vector<Position> BSPRooms::FindPlaceForDoor()
 {
@@ -255,6 +275,8 @@ std::vector<Position> BSPRooms::FindPlaceForDoor()
 
   return res;
 }
+
+// =============================================================================
 
 bool BSPRooms::IsSpotValidForDoor(const Position& p)
 {
@@ -340,6 +362,8 @@ bool BSPRooms::IsSpotValidForDoor(const Position& p)
 
   return spotValid;
 }
+
+// =============================================================================
 
 bool BSPRooms::ComparePatterns(std::vector<std::string>& p1,
                              std::vector<std::string>& p2)

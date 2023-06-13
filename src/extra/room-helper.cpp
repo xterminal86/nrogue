@@ -8,7 +8,7 @@ RoomForLevel::RoomForLevel(int chance, const RoomLayout& l)
   Layout = l;
 }
 
-// *********************************
+// =============================================================================
 
 bool RoomHelper::CanAttach(const RoomHelper &r, RoomEdgeEnum side)
 {
@@ -21,6 +21,8 @@ bool RoomHelper::CanAttach(const RoomHelper &r, RoomEdgeEnum side)
   //return ( (e1 == true && e2 == true) || res);
   return res;
 }
+
+// =============================================================================
 
 bool RoomHelper::CanBeTraversed(const std::vector<int> &e1,
                                 const std::vector<int> &e2)
@@ -38,6 +40,8 @@ bool RoomHelper::CanBeTraversed(const std::vector<int> &e1,
   return false;
 }
 
+// =============================================================================
+
 bool RoomHelper::EdgeIsAllWalls(const std::vector<int> &edge)
 {
   for (size_t i = 0; i < edge.size(); i++)
@@ -51,10 +55,13 @@ bool RoomHelper::EdgeIsAllWalls(const std::vector<int> &edge)
   return true;
 }
 
+// =============================================================================
+
 void RoomHelper::ParseLayout(const RoomLayout &layout)
 {
-  // Assuming rooms are square
-
+  //
+  // Assuming rooms are square.
+  //
   RoomSize = layout.size();
 
   Layout = layout;
@@ -88,6 +95,8 @@ void RoomHelper::ParseLayout(const RoomLayout &layout)
 
   // PrintInfo();
 }
+
+// =============================================================================
 
 void RoomHelper::PrintInfo()
 {

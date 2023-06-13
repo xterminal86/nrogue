@@ -15,9 +15,13 @@ ContainerComponent::ContainerComponent(size_t maxCapacity)
   Contents.reserve(_maxCapacity);
 }
 
+// =============================================================================
+
 void ContainerComponent::Update()
 {
 }
+
+// =============================================================================
 
 bool ContainerComponent::Add(GameObject* object)
 {
@@ -76,6 +80,8 @@ bool ContainerComponent::Add(GameObject* object)
   return foundStack;
 }
 
+// =============================================================================
+
 IR ContainerComponent::Interact()
 {
   // TODO: locked containers (lockpicking maybe?)
@@ -97,15 +103,21 @@ IR ContainerComponent::Interact()
   return { InteractionResult::SUCCESS, GameStates::CONTAINER_INTERACT_STATE };
 }
 
+// =============================================================================
+
 bool ContainerComponent::IsFull()
 {
   return (Contents.size() >= _maxCapacity);
 }
 
+// =============================================================================
+
 bool ContainerComponent::IsEmpty()
 {
   return (Contents.size() == 0);
 }
+
+// =============================================================================
 
 const size_t& ContainerComponent::MaxCapacity()
 {

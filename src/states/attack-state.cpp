@@ -8,6 +8,8 @@ void AttackState::Init()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 void AttackState::Prepare()
 {
   _cursorPosition.X = _playerRef->PosX;
@@ -15,6 +17,8 @@ void AttackState::Prepare()
 
   Printer::Instance().AddMessage("Attack in which direction?");
 }
+
+// =============================================================================
 
 void AttackState::HandleInput()
 {
@@ -132,6 +136,8 @@ void AttackState::HandleInput()
     Application::Instance().ChangeState(GameStates::MAIN_STATE);
   }
 }
+
+// =============================================================================
 
 void AttackState::Update(bool forceUpdate)
 {

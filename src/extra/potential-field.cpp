@@ -51,6 +51,8 @@ void PotentialField::Init(GameObject* owner, int fieldRadius)
   }
 }
 
+// =============================================================================
+
 void PotentialField::Emanate()
 {
   std::queue<Position> cellsToVisit;
@@ -69,7 +71,9 @@ void PotentialField::Emanate()
     }
   }
 
-  // Center is on the actor
+  //
+  // Center is on the actor.
+  //
   _field[_fieldRadius][_fieldRadius].Cost = 0;
 
   while (!cellsToVisit.empty())
@@ -84,13 +88,17 @@ void PotentialField::Emanate()
   _isDirty = false;
 }
 
+// =============================================================================
+
 void PotentialField::LookAround(const Position& mapPos, std::queue<Position>& cellsToVisit)
 {
   auto& curLvl = Map::Instance().CurrentLevel;
 
   Position fieldPos = MapToFieldCoords(mapPos);
 
-  // Check bounds on point
+  //
+  // Check bounds on point.
+  //
   if (IsOutOfBounds(fieldPos))
   {
     return;
@@ -152,6 +160,8 @@ void PotentialField::LookAround(const Position& mapPos, std::queue<Position>& ce
   parent.Visited = true;
 }
 
+// =============================================================================
+
 PotentialField::Cell* PotentialField::GetCell(int mapX, int mapY)
 {
   Position p = MapToFieldCoords({ mapX, mapY });
@@ -162,6 +172,8 @@ PotentialField::Cell* PotentialField::GetCell(int mapX, int mapY)
 
   return &_field[p.X][p.Y];
 }
+
+// =============================================================================
 
 bool PotentialField::IsOutOfBounds(const Position& fieldPos)
 {
@@ -176,19 +188,27 @@ bool PotentialField::IsOutOfBounds(const Position& fieldPos)
   return false;
 }
 
+// =============================================================================
+
 void PotentialField::SetDirty()
 {
+  //
   // Probably makes no sense in terms of optimization, but still...
+  //
   if (!_isDirty)
   {
     _isDirty = true;
   }
 }
 
+// =============================================================================
+
 bool PotentialField::IsDirty()
 {
   return _isDirty;
 }
+
+// =============================================================================
 
 Position PotentialField::MapToFieldCoords(const Position& mapPos)
 {
@@ -198,9 +218,13 @@ Position PotentialField::MapToFieldCoords(const Position& mapPos)
   int ix = dx + _fieldRadius;
   int iy = dy + _fieldRadius;
 
+  //
   // Because (2;1) in world coordinates is (1;2) in array coordinates.
+  //
   return { iy, ix };
 }
+
+// =============================================================================
 
 Position PotentialField::FieldToMapCoords(const Position& fieldIndices)
 {
@@ -211,6 +235,8 @@ Position PotentialField::FieldToMapCoords(const Position& fieldIndices)
 
   return res;
 }
+
+// =============================================================================
 
 std::string PotentialField::GetFieldString()
 {

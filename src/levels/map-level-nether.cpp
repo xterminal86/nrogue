@@ -26,6 +26,8 @@ MapLevelNether::MapLevelNether(int sizeX, int sizeY, MapType type, int dungeonLe
   MapSize.Set(sx, sy);
 }
 
+// =============================================================================
+
 void MapLevelNether::PrepareMap(MapLevelBase* levelOwner)
 {
   MysteriousForcePresent = true;
@@ -34,6 +36,8 @@ void MapLevelNether::PrepareMap(MapLevelBase* levelOwner)
 
   CreateLevel();
 }
+
+// =============================================================================
 
 void MapLevelNether::CreateLevel()
 {
@@ -77,6 +81,8 @@ void MapLevelNether::CreateLevel()
     CreateInitialMonsters();
   }
 }
+
+// =============================================================================
 
 void MapLevelNether::ConstructFromBuilder(LevelBuilder& lb)
 {
@@ -152,6 +158,8 @@ void MapLevelNether::ConstructFromBuilder(LevelBuilder& lb)
     }
   }
 }
+
+// =============================================================================
 
 void MapLevelNether::DisplayWelcomeText()
 {

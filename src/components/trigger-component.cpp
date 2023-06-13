@@ -14,6 +14,8 @@ TriggerComponent::TriggerComponent(TriggerType type,
   _data.Handler   = handler;
 }
 
+// =============================================================================
+
 void TriggerComponent::Update()
 {
   if (Util::IsFunctionValid(_data.Condition))

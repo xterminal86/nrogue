@@ -9,6 +9,8 @@ void EndgameState::Init()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 void EndgameState::Prepare()
 {
   _playerRef->SetDestroyed();
@@ -17,6 +19,8 @@ void EndgameState::Prepare()
 
   Application::Instance().WriteObituary();
 }
+
+// =============================================================================
 
 void EndgameState::HandleInput()
 {
@@ -32,6 +36,8 @@ void EndgameState::HandleInput()
       break;
   }
 }
+
+// =============================================================================
 
 void EndgameState::Update(bool forceUpdate)
 {
@@ -60,6 +66,8 @@ void EndgameState::Update(bool forceUpdate)
   }
 }
 
+// =============================================================================
+
 void EndgameState::DisplayGameLog()
 {
   int x = Printer::TerminalWidth - 1;
@@ -78,6 +86,8 @@ void EndgameState::DisplayGameLog()
     count++;
   }
 }
+
+// =============================================================================
 
 void EndgameState::DrawHPMP()
 {
@@ -106,6 +116,8 @@ void EndgameState::DrawHPMP()
                               Colors::WhiteColor,
                               0x000088);
 }
+
+// =============================================================================
 
 void EndgameState::UpdateBar(int x, int y, RangedAttribute& attr)
 {

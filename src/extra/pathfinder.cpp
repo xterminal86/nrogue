@@ -8,6 +8,8 @@ PathNode::PathNode(const Position &coord)
   Coordinate.Y = coord.Y;
 }
 
+// =============================================================================
+
 PathNode::PathNode(const Position &coord, const Position &parentNodePos)
 {
   Coordinate.X = coord.X;
@@ -16,7 +18,7 @@ PathNode::PathNode(const Position &coord, const Position &parentNodePos)
   ParentNodePosition = parentNodePos;
 }
 
-// ***********************************************
+// =============================================================================
 
 std::vector<Position> Pathfinder::BuildRoad(const std::vector<std::vector<char>>& map,
                                             const Position& mapSize,
@@ -70,6 +72,8 @@ std::vector<Position> Pathfinder::BuildRoad(const std::vector<std::vector<char>>
 
   return _pathVector;
 }
+
+// =============================================================================
 
 std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
                                            const Position& start,
@@ -131,6 +135,8 @@ std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
 
   return _pathStack;
 }
+
+// =============================================================================
 
 void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
                             const PathNode& currentNode,
@@ -197,6 +203,8 @@ void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
     }
   }
 }
+
+// =============================================================================
 
 void Pathfinder::LookAround(MapLevelBase* mapRef,
                             const PathNode& currentNode,
@@ -284,6 +292,8 @@ void Pathfinder::LookAround(MapLevelBase* mapRef,
   }
 }
 
+// =============================================================================
+
 int Pathfinder::FindCheapestElement(const std::vector<PathNode>& list)
 {
   int f = INT_MAX;
@@ -301,6 +311,8 @@ int Pathfinder::FindCheapestElement(const std::vector<PathNode>& list)
   return index;
 }
 
+// =============================================================================
+
 int Pathfinder::TraverseCost(const Position& p1, const Position& p2)
 {
   if (p1.X == p2.X || p1.Y == p2.Y)
@@ -310,6 +322,8 @@ int Pathfinder::TraverseCost(const Position& p1, const Position& p2)
 
   return _diagonalCost;
 }
+
+// =============================================================================
 
 bool Pathfinder::IsNodePresent(const PathNode& n, const std::vector<PathNode>& list)
 {
@@ -325,6 +339,8 @@ bool Pathfinder::IsNodePresent(const PathNode& n, const std::vector<PathNode>& l
   return false;
 }
 
+// =============================================================================
+
 bool Pathfinder::IsInsideMap(const Position& c)
 {
   bool cond = (c.X >= 1
@@ -334,6 +350,8 @@ bool Pathfinder::IsInsideMap(const Position& c)
 
   return cond;
 }
+
+// =============================================================================
 
 PathNode Pathfinder::FindNodeWithPosition(const std::vector<PathNode>& list, const Position& p)
 {

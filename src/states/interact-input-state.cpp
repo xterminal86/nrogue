@@ -13,6 +13,8 @@ void InteractInputState::Init()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 void InteractInputState::Prepare()
 {
   _cursorPosition.X = _playerRef->PosX;
@@ -20,6 +22,8 @@ void InteractInputState::Prepare()
 
   Printer::Instance().AddMessage(Strings::MsgInteractDir);
 }
+
+// =============================================================================
 
 void InteractInputState::HandleInput()
 {
@@ -84,6 +88,8 @@ void InteractInputState::HandleInput()
   }
 }
 
+// =============================================================================
+
 bool InteractInputState::SetDir(const Position& dir)
 {
   _cursorPosition.X += dir.X;
@@ -91,6 +97,8 @@ bool InteractInputState::SetDir(const Position& dir)
 
   return true;
 }
+
+// =============================================================================
 
 void InteractInputState::ProcessInteraction()
 {
@@ -122,6 +130,8 @@ void InteractInputState::ProcessInteraction()
   }
 }
 
+// =============================================================================
+
 void InteractInputState::TryToInteractWithObject(GameObject* go)
 {
   IR ir = go->Interact();
@@ -141,6 +151,8 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
 
   Application::Instance().ChangeState(changeTo);
 }
+
+// =============================================================================
 
 void InteractInputState::TryToInteractWithActor(GameObject* actor)
 {
@@ -163,6 +175,8 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
     }
   }
 }
+
+// =============================================================================
 
 void InteractInputState::Update(bool forceUpdate)
 {

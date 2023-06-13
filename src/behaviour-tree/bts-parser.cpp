@@ -11,6 +11,8 @@ void BTSParser::Init(GameObject* objRef)
   Reset();
 }
 
+// =============================================================================
+
 void BTSParser::Reset()
 {
   _parsedData.clear();
@@ -20,6 +22,8 @@ void BTSParser::Reset()
 
   _maxIndent = 0;
 }
+
+// =============================================================================
 
 void BTSParser::ParseFromFile(const std::string& filename)
 {
@@ -47,6 +51,8 @@ void BTSParser::ParseFromFile(const std::string& filename)
 
   //DebugLog("%s\n", _rawText.data());
 }
+
+// =============================================================================
 
 void BTSParser::ParseFromString(const std::string& script)
 {
@@ -99,6 +105,8 @@ void BTSParser::ParseFromString(const std::string& script)
   }
 }
 
+// =============================================================================
+
 void BTSParser::Print()
 {
   for (auto& i : _parsedData)
@@ -108,6 +116,8 @@ void BTSParser::Print()
 
   DebugLog("Max indent: %i\n", _maxIndent);
 }
+
+// =============================================================================
 
 void BTSParser::ParseLine(int indent, const std::string& line)
 {
@@ -144,6 +154,8 @@ void BTSParser::ParseLine(int indent, const std::string& line)
   //DebugLog("indent: %i, %s\n", indent, line.data());
 }
 
+// =============================================================================
+
 void BTSParser::ReadTag(const std::string& tagData, int indent)
 {
   ScriptNode n;
@@ -169,16 +181,22 @@ void BTSParser::ReadTag(const std::string& tagData, int indent)
   _parsedData.push_back(n);
 }
 
+// =============================================================================
+
 void BTSParser::ReadParam(ScriptNode& nodeToFill, const std::string& paramsLine)
 {
   auto res = Util::StringSplit(paramsLine, '=');
   nodeToFill.Params[res[0]] = res[1];
 }
 
+// =============================================================================
+
 const std::vector<ScriptNode>& BTSParser::ParsedData()
 {
   return _parsedData;
 }
+
+// =============================================================================
 
 void BTSParser::FormTree(bool printDebug)
 {
@@ -258,6 +276,8 @@ void BTSParser::FormTree(bool printDebug)
   }
 }
 
+// =============================================================================
+
 int BTSParser::FindMaxIndent()
 {
   int indent = 0;
@@ -273,10 +293,14 @@ int BTSParser::FindMaxIndent()
   return indent;
 }
 
+// =============================================================================
+
 const ConstructionOrder& BTSParser::GetConstructionOrder()
 {
   return _constructionOrder;
 }
+
+// =============================================================================
 
 void ScriptNode::Print()
 {

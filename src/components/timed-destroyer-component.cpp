@@ -11,6 +11,8 @@ TimedDestroyerComponent::TimedDestroyerComponent(int delay, const std::function<
   _onTimerEnd = onTimerEnd;
 }
 
+// =============================================================================
+
 void TimedDestroyerComponent::Update()
 {
   _time--;

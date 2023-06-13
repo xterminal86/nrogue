@@ -22,6 +22,8 @@ MapLevelEndgame::MapLevelEndgame(int sizeX, int sizeY, MapType type, int dungeon
   MapSize.Set(sx, sy);
 }
 
+// =============================================================================
+
 void MapLevelEndgame::PrepareMap(MapLevelBase* levelOwner)
 {
   MysteriousForcePresent = true;
@@ -30,6 +32,8 @@ void MapLevelEndgame::PrepareMap(MapLevelBase* levelOwner)
 
   CreateLevel();
 }
+
+// =============================================================================
 
 void MapLevelEndgame::DisplayWelcomeText()
 {
@@ -41,6 +45,8 @@ void MapLevelEndgame::DisplayWelcomeText()
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "???", msg);
 }
+
+// =============================================================================
 
 void MapLevelEndgame::CreateLevel()
 {

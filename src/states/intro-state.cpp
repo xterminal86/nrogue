@@ -18,6 +18,8 @@ void IntroState::Prepare()
   Util::WaitForMs(0, true);
 }
 
+// =============================================================================
+
 void IntroState::HandleInput()
 {
   _keyPressed = GetKeyDown();
@@ -39,6 +41,8 @@ void IntroState::HandleInput()
       break;
   }
 }
+
+// =============================================================================
 
 void IntroState::PrepareTown()
 {
@@ -68,6 +72,8 @@ void IntroState::PrepareTown()
   MapLevelTown* mlt = static_cast<MapLevelTown*>(curLvl);
   mlt->CreateNPCs();
 }
+
+// =============================================================================
 
 void IntroState::Update(bool forceUpdate)
 {

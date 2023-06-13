@@ -8,6 +8,8 @@ void InfoState::Prepare()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 void InfoState::HandleInput()
 {
   _keyPressed = GetKeyDown();
@@ -19,6 +21,8 @@ void InfoState::HandleInput()
       break;
   }
 }
+
+// =============================================================================
 
 void InfoState::Update(bool forceUpdate)
 {
@@ -85,8 +89,10 @@ void InfoState::Update(bool forceUpdate)
     PrintRangedAttribute(1, yPos + 10, "HP", _playerRef->Attrs.HP);
     PrintRangedAttribute(1, yPos + 11, "MP", _playerRef->Attrs.MP);
 
+    //
     // Attributes are effectively right aligned in PrintAttribute(),
     // so no need for this hack anymore.
+    //
 
     //int maxLength = FindAttrsMaxStringLength();
 
@@ -118,6 +124,8 @@ void InfoState::Update(bool forceUpdate)
   }
 }
 
+// =============================================================================
+
 void InfoState::PrintExp(int x, int y)
 {
   size_t digits = std::to_string(_playerRef->Attrs.Exp.Max().Get()).length();
@@ -147,6 +155,8 @@ void InfoState::PrintExp(int x, int y)
                               Printer::kAlignLeft,
                               Colors::WhiteColor);
 }
+
+// =============================================================================
 
 void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr)
 {
@@ -190,6 +200,8 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
                               Printer::kAlignLeft,
                               Colors::WhiteColor);
 }
+
+// =============================================================================
 
 void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, RangedAttribute& attr)
 {
@@ -236,7 +248,9 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
                               '/',
                               Colors::WhiteColor);
 
+  //
   // Replace stat name back with white color (kinda hack)
+  //
   auto str = Util::StringFormat("%s:", attrName.data());
   Printer::Instance().PrintFB(x,
                               y,
@@ -244,6 +258,8 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
                               Printer::kAlignLeft,
                               Colors::WhiteColor);
 }
+
+// =============================================================================
 
 void InfoState::PrintModifiers(int x, int y)
 {
@@ -301,6 +317,8 @@ void InfoState::PrintModifiers(int x, int y)
                               res.first);
 }
 
+// =============================================================================
+
 std::pair<uint32_t, std::string> InfoState::GetModifierString(int value)
 {
   std::pair<uint32_t, std::string> res;
@@ -328,6 +346,8 @@ std::pair<uint32_t, std::string> InfoState::GetModifierString(int value)
 
   return res;
 }
+
+// =============================================================================
 
 int InfoState::FindAttrsMaxStringLength()
 {

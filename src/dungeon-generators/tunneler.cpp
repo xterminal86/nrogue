@@ -121,10 +121,14 @@ void Tunneler::Backtracking(const Position& mapSize,
   FillMapRaw();
 }
 
-/// Builds tunnels in random directions until maxIterations.
-/// Does not cross already carved tunnel.
-/// maxIterations is empirically chosen but should be around
-/// (mapSize.X * mapSize.Y) / 2 to cover all map area.
+// =============================================================================
+
+//
+// Builds tunnels in random directions until maxIterations.
+// Does not cross already carved tunnel.
+// maxIterations is empirically chosen but should be around
+// (mapSize.X * mapSize.Y) / 2 to cover all map area.
+//
 void Tunneler::Normal(const Position& mapSize,
                       const Position& tunnelLengthMinMax,
                       const Position& start,
@@ -198,6 +202,7 @@ void Tunneler::Normal(const Position& mapSize,
     }
     else
     {
+      //
       // If we couldn't continue carving in the chosen direction
       // return to starting point and try everything again.
       // Without it we could basically fail to generate a map
@@ -205,6 +210,7 @@ void Tunneler::Normal(const Position& mapSize,
       // (e.g. near the map edge and carving towards the bound as well
       // while carved points were deleted in such way, that the only point
       // left was the one near the map edge).
+      //
       mapPos = _startingPoint;
     }
 
@@ -219,6 +225,8 @@ void Tunneler::Normal(const Position& mapSize,
 
   FillMapRaw();
 }
+
+// =============================================================================
 
 std::vector<Position> Tunneler::GetRandomDir(const Position& pos)
 {
@@ -248,6 +256,8 @@ std::vector<Position> Tunneler::GetRandomDir(const Position& pos)
 
   return res;
 }
+
+// =============================================================================
 
 std::vector<Position> Tunneler::TryToGetPerpendicularDir(const Position& pos, const Position& lastDir)
 {
@@ -321,6 +331,8 @@ std::vector<Position> Tunneler::TryToGetPerpendicularDir(const Position& pos, co
   return res;
 }
 
+// =============================================================================
+
 Position Tunneler::GetRandomPerpendicularDir(const Position& dir)
 {
   Position res;
@@ -351,6 +363,8 @@ Position Tunneler::GetRandomPerpendicularDir(const Position& dir)
   return res;
 }
 
+// =============================================================================
+
 bool Tunneler::IsDirectionValid(const Position& pos, const Position& dir)
 {
   Position newPos;
@@ -365,6 +379,8 @@ bool Tunneler::IsDirectionValid(const Position& pos, const Position& dir)
 
   return false;
 }
+
+// =============================================================================
 
 std::vector<Position> Tunneler::GetCorridorDir(const Position& pos)
 {

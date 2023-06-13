@@ -23,7 +23,6 @@ void CellularAutomata::Generate(const Position& mapSize,
 
   for (int i = 0; i < maxIterations; i++)
   {
-    // copy original map contents to temp
     for (int x = 0; x < mapSize.X; x++)
     {
       for (int y = 0; y < mapSize.Y; y++)
@@ -53,7 +52,6 @@ void CellularAutomata::Generate(const Position& mapSize,
       }
     }
 
-    // copy temp array to original map
     for (int x = 0; x < mapSize.X; x++)
     {
       for (int y = 0; y < mapSize.Y; y++)

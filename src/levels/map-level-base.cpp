@@ -47,6 +47,8 @@ MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 MapLevelBase::~MapLevelBase()
 {
   GlobalTriggers.clear();
@@ -56,6 +58,8 @@ MapLevelBase::~MapLevelBase()
   StaticMapObjects.clear();
   MapArray.clear();
 }
+
+// =============================================================================
 
 void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
 {
@@ -95,6 +99,8 @@ void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
   }
 }
 
+// =============================================================================
+
 void MapLevelBase::AdjustCamera()
 {
   int tw = Printer::TerminalWidth;
@@ -104,15 +110,21 @@ void MapLevelBase::AdjustCamera()
   MapOffsetY = th / 2 - _playerRef->PosY;
 }
 
+// =============================================================================
+
 const int& MapLevelBase::RespawnCounter()
 {
   return _respawnCounter;
 }
 
+// =============================================================================
+
 const std::vector<Position>& MapLevelBase::EmptyCells()
 {
   return _emptyCells;
 }
+
+// =============================================================================
 
 #ifdef DEBUG_BUILD
 GameObject* MapLevelBase::FindObjectByAddress(const std::string& addressString)
@@ -146,6 +158,8 @@ GameObject* MapLevelBase::FindObjectByAddress(const std::string& addressString)
 }
 #endif
 
+// =============================================================================
+
 void MapLevelBase::PlaceActor(GameObject* actor)
 {
   if (actor == nullptr)
@@ -162,6 +176,8 @@ void MapLevelBase::PlaceActor(GameObject* actor)
 
   ActorGameObjects.push_back(std::unique_ptr<GameObject>(actor));
 }
+
+// =============================================================================
 
 void MapLevelBase::PlaceGameObject(GameObject* goToInsert)
 {
@@ -180,11 +196,15 @@ void MapLevelBase::PlaceGameObject(GameObject* goToInsert)
   GameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
 }
 
+// =============================================================================
+
 void MapLevelBase::PlaceStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints, GameObjectType type)
 {
   GameObject* go = GameObjectsFactory::Instance().CreateStaticObject(x, y, objectInfo, hitPoints, type);
   PlaceStaticObject(go);
 }
+
+// =============================================================================
 
 void MapLevelBase::PlaceStaticObject(GameObject* goToInsert)
 {
@@ -205,6 +225,8 @@ void MapLevelBase::PlaceStaticObject(GameObject* goToInsert)
 
   StaticMapObjects[x][y].reset(goToInsert);
 }
+
+// =============================================================================
 
 void MapLevelBase::PlaceTrigger(GameObject* trigger, TriggerUpdateType updateType)
 {
@@ -231,6 +253,8 @@ void MapLevelBase::PlaceTrigger(GameObject* trigger, TriggerUpdateType updateTyp
   }
 }
 
+// =============================================================================
+
 void MapLevelBase::RecordEmptyCells()
 {
   _emptyCells.clear();
@@ -248,6 +272,8 @@ void MapLevelBase::RecordEmptyCells()
   }
 }
 
+// =============================================================================
+
 void MapLevelBase::CreateBorders(GameObjectInfo& t)
 {
   auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
@@ -256,6 +282,8 @@ void MapLevelBase::CreateBorders(GameObjectInfo& t)
     PlaceStaticObject(i.X, i.Y, t);
   }
 }
+
+// =============================================================================
 
 void MapLevelBase::CreateItemsForLevel(int maxItems)
 {
@@ -295,6 +323,8 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
   }
 }
 
+// =============================================================================
+
 int MapLevelBase::GetEstimatedNumberOfItemsToCreate()
 {
   double count = Util::Log2(EmptyCells().size());
@@ -303,6 +333,8 @@ int MapLevelBase::GetEstimatedNumberOfItemsToCreate()
 
   return itemsToCreate;
 }
+
+// =============================================================================
 
 void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
 {
@@ -322,7 +354,9 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
     }
   }
 
-  // Just in case
+  //
+  // Just in case...
+  //
   if (possibleSpots.empty())
   {
     //DebugLog("couldn't find possible spots!\n");
@@ -342,9 +376,13 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
 
   auto& sbp = lb.ShrinesByPosition();
 
-  // Shrine position is always assumed to be in the center of the layout
+  //
+  // Shrine position is always assumed to be in the center of the layout.
+  //
   sbp[{ p.X + 2, p.Y + 2 }] = type;
 }
+
+// =============================================================================
 
 void MapLevelBase::PlaceStairs()
 {
@@ -376,6 +414,8 @@ void MapLevelBase::PlaceStairs()
                                               stairsDownTo);
 }
 
+// =============================================================================
+
 void MapLevelBase::CreateInitialMonsters()
 {
   MaxMonsters = (size_t)std::ceil(Util::Log2(_emptyCells.size()));
@@ -405,6 +445,8 @@ void MapLevelBase::CreateInitialMonsters()
 
   CreateSpecialMonsters();
 }
+
+// =============================================================================
 
 bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
 {
@@ -482,6 +524,8 @@ bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
   return (!blocked && !occupied && !danger);
 }
 
+// =============================================================================
+
 void MapLevelBase::TryToSpawnMonsters()
 {
   if (_respawnCounter < MonstersRespawnTurns)
@@ -509,7 +553,9 @@ void MapLevelBase::TryToSpawnMonsters()
   int cx = _emptyCells[index].X;
   int cy = _emptyCells[index].Y;
 
-  // Spawn monsters on cells invisible to the player
+  //
+  // Spawn monsters on cells invisible to the player.
+  //
   if (!MapArray[cx][cy]->Visible
    && IsSpotValidForSpawn({ cx, cy }))
   {
@@ -518,6 +564,8 @@ void MapLevelBase::TryToSpawnMonsters()
     PlaceActor(monster);
   }
 }
+
+// =============================================================================
 
 void MapLevelBase::DisplayWelcomeText()
 {
@@ -528,6 +576,8 @@ void MapLevelBase::DisplayWelcomeText()
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "MapLevelBase", msg);
 }
+
+// =============================================================================
 
 bool MapLevelBase::IsCellBlocking(const Position& pos)
 {
@@ -546,6 +596,8 @@ bool MapLevelBase::IsCellBlocking(const Position& pos)
   return (groundBlock || staticBlock);
 }
 
+// =============================================================================
+
 void MapLevelBase::PlaceGroundTile(int x, int y,
                                    int image,
                                    const uint32_t& fgColor,
@@ -557,10 +609,13 @@ void MapLevelBase::PlaceGroundTile(int x, int y,
   MapArray[x][y]->MakeTile(t);
 }
 
+// =============================================================================
 
-/// Places grass tile at [x; y], maxDiceRoll serves as a
-/// "frequency" modifier - the more its value, the less is the chance
-/// for flowers to appear.
+//
+// Places grass tile at [x; y], maxDiceRoll serves as a
+// "frequency" modifier - the more its value, the less is the chance
+// for flowers to appear.
+//
 void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
 {
   char img = '.';
@@ -596,6 +651,8 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
   MapArray[x][y]->MakeTile(t);
 }
 
+// =============================================================================
+
 void MapLevelBase::PlaceShallowWaterTile(int x, int y)
 {
   GameObjectInfo t;
@@ -608,10 +665,14 @@ void MapLevelBase::PlaceShallowWaterTile(int x, int y)
   MapArray[x][y]->MakeTile(t, GameObjectType::SHALLOW_WATER);
 }
 
+// =============================================================================
+
 void MapLevelBase::PlaceDeepWaterTile(int x, int y)
 {
+  //
   // int type is to avoid truncation
   // in case of CP437 image which is 247
+  //
   int img = '~';
 
   #ifdef USE_SDL
@@ -628,6 +689,8 @@ void MapLevelBase::PlaceDeepWaterTile(int x, int y)
   MapArray[x][y]->MakeTile(t, GameObjectType::DEEP_WATER);
 }
 
+// =============================================================================
+
 void MapLevelBase::PlaceLavaTile(int x, int y)
 {
   GameObjectInfo t;
@@ -639,6 +702,8 @@ void MapLevelBase::PlaceLavaTile(int x, int y)
         Strings::TileNames::LavaText);
   MapArray[x][y]->MakeTile(t, GameObjectType::LAVA);
 }
+
+// =============================================================================
 
 void MapLevelBase::PlaceChasmTile(int x, int y)
 {
@@ -664,6 +729,8 @@ void MapLevelBase::PlaceChasmTile(int x, int y)
   MapArray[x][y]->MakeTile(t, GameObjectType::CHASM);
 }
 
+// =============================================================================
+
 void MapLevelBase::PlaceShrine(const Position& pos, LevelBuilder& lb)
 {
   GameObjectInfo t;
@@ -682,6 +749,8 @@ void MapLevelBase::PlaceShrine(const Position& pos, LevelBuilder& lb)
   PlaceStaticObject(pos.X, pos.Y, t);
 }
 
+// =============================================================================
+
 void MapLevelBase::PlaceTree(int x, int y)
 {
   char img = 'T';
@@ -695,6 +764,8 @@ void MapLevelBase::PlaceTree(int x, int y)
   PlaceStaticObject(x, y, t);
 }
 
+// =============================================================================
+
 void MapLevelBase::PlaceWall(int x, int y,
                              int image,
                              const uint32_t& fgColor,
@@ -707,6 +778,8 @@ void MapLevelBase::PlaceWall(int x, int y,
   PlaceStaticObject(x, y, t, -1, pickaxeable);
 }
 
+// =============================================================================
+
 void MapLevelBase::PlaceDoor(int x, int y, bool isOpen, size_t openedBy, const std::string& objName)
 {
   GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, isOpen, DoorMaterials::WOOD, objName);
@@ -718,17 +791,23 @@ void MapLevelBase::PlaceDoor(int x, int y, bool isOpen, size_t openedBy, const s
   PlaceStaticObject(door);
 }
 
+// =============================================================================
+
 void MapLevelBase::CreateLevel()
 {
   auto str = Util::StringFormat("%s, %s - no level was created!", __PRETTY_FUNCTION__, LevelName.data());
   Logger::Instance().Print(str, true);
 }
 
+// =============================================================================
+
 void MapLevelBase::ConstructFromBuilder(LevelBuilder& lb)
 {
   auto str = Util::StringFormat("%s, %s - calling base ConstructFromBuilder()!", __PRETTY_FUNCTION__, LevelName.data());
   Logger::Instance().Print(str, true);
 }
+
+// =============================================================================
 
 void MapLevelBase::FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill)
 {
@@ -740,6 +819,8 @@ void MapLevelBase::FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo
     }
   }
 }
+
+// =============================================================================
 
 void MapLevelBase::CreateSpecialLevel()
 {

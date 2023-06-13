@@ -10,11 +10,15 @@ Position::Position()
   Y = 0;
 }
 
+// =============================================================================
+
 Position::Position(int x, int y)
 {
   X = x;
   Y = y;
 }
+
+// =============================================================================
 
 void Position::Set(int x, int y)
 {
@@ -22,26 +26,36 @@ void Position::Set(int x, int y)
   Y = y;
 }
 
+// =============================================================================
+
 void Position::Set(const Position &from)
 {
   X = from.X;
   Y = from.Y;
 }
 
+// =============================================================================
+
 bool Position::operator< (const Position& rhs) const
 {
   return (X < rhs.X || Y < rhs.Y);
 }
+
+// =============================================================================
 
 bool Position::operator== (const Position& rhs) const
 {
   return (X == rhs.X && Y == rhs.Y);
 }
 
+// =============================================================================
+
 bool Position::operator!= (const Position& rhs) const
 {
   return (X != rhs.X || Y != rhs.Y);
 }
+
+// =============================================================================
 
 void Position::Print()
 {

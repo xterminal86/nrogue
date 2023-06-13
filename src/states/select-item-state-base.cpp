@@ -9,6 +9,8 @@ void SelectItemStateBase::HandleInput()
   ProcessInput();
 }
 
+// =============================================================================
+
 void SelectItemStateBase::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)

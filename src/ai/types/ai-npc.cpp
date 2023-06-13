@@ -12,6 +12,8 @@ AINPC::AINPC()
   IsAgressive = false;
 }
 
+// =============================================================================
+
 void AINPC::Init(NPCType type, bool immovable, ServiceType serviceType)
 {
   _npcType = type;
@@ -87,6 +89,8 @@ void AINPC::Init(NPCType type, bool immovable, ServiceType serviceType)
   ConstructAI();
 }
 
+// =============================================================================
+
 void AINPC::PrepareScript()
 {
   const std::string scriptImmovable =
@@ -124,6 +128,8 @@ R"(
   */
 }
 
+// =============================================================================
+
 void AINPC::SetDataClaire()
 {
   AIComponentRef->OwnerGameObject->Attrs.Str.Talents = 3;
@@ -144,7 +150,6 @@ void AINPC::SetDataClaire()
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      // ================================================================================ 80
       "I took a vacation only to arrive in a place",
       "with some evil lurking underground.",
       "Worst vacation ever."
@@ -175,6 +180,8 @@ void AINPC::SetDataClaire()
   }
 }
 
+// =============================================================================
+
 void AINPC::SetDataCloud()
 {
   AIComponentRef->OwnerGameObject->Attrs.Str.Talents = 3;
@@ -193,7 +200,6 @@ void AINPC::SetDataCloud()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // ================================================================================ 80
     {
       "I'm not a \"soldier\" like those in your City.",
       "I'm from the East actually.",
@@ -229,6 +235,8 @@ void AINPC::SetDataCloud()
   }
 }
 
+// =============================================================================
+
 void AINPC::SetDataIan()
 {
   AIComponentRef->OwnerGameObject->Attrs.Spd.Talents = 3;
@@ -247,7 +255,6 @@ void AINPC::SetDataIan()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // ================================================================================ 80
     {
       "The Great Eye is watching you."
     },
@@ -259,6 +266,8 @@ void AINPC::SetDataIan()
     }
   };
 }
+
+// =============================================================================
 
 void AINPC::SetDataMiles()
 {
@@ -273,7 +282,6 @@ void AINPC::SetDataMiles()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // ================================================================================ 80
     {
       "I'm here to investigate rumors concerning the murder of a local miner.",
       "But, as ill luck would have it, this excuse for a lawyer,",
@@ -293,6 +301,8 @@ void AINPC::SetDataMiles()
   };
 }
 
+// =============================================================================
+
 void AINPC::SetDataPhoenix()
 {
   AIComponentRef->OwnerGameObject->ObjectName = "man";
@@ -306,7 +316,6 @@ void AINPC::SetDataPhoenix()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // ================================================================================ 80
     {
       "Miles may act as if he doesn't know me,",
       "but we actually studied law together at the Academy.",
@@ -323,6 +332,8 @@ void AINPC::SetDataPhoenix()
   };
 }
 
+// =============================================================================
+
 void AINPC::SetDataTigra()
 {
   AIComponentRef->OwnerGameObject->ObjectName = "girl";
@@ -337,7 +348,6 @@ void AINPC::SetDataTigra()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // ================================================================================ 80
     {
       "Welcome to our small neighbourhood!",
       "It wasn't always this gloomy, just so you know..."
@@ -360,6 +370,8 @@ void AINPC::SetDataTigra()
   };
 }
 
+// =============================================================================
+
 void AINPC::SetDataSteve()
 {
   AIComponentRef->OwnerGameObject->Attrs.Spd.Talents = 1;
@@ -378,7 +390,6 @@ void AINPC::SetDataSteve()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // ================================================================================ 80
     {
       "Emeralds are green, diamonds are blue,",
       "Redstone is red and this is all true!",
@@ -436,6 +447,8 @@ void AINPC::SetDataSteve()
   };
 }
 
+// =============================================================================
+
 void AINPC::SetDataGimley()
 {
   AIComponentRef->OwnerGameObject->Attrs.Str.Talents = 3;
@@ -453,7 +466,6 @@ void AINPC::SetDataGimley()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // ================================================================================ 80
     {
       "(humming)",
       "Far over the misty mountains cold,",
@@ -485,6 +497,8 @@ void AINPC::SetDataGimley()
   };
 }
 
+// =============================================================================
+
 void AINPC::SetDataMartin()
 {
   AIComponentRef->OwnerGameObject->Attrs.Mag.Talents = 3;
@@ -502,7 +516,6 @@ void AINPC::SetDataMartin()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // ================================================================================ 80
     {
       "All money you spend buying my wares are going straight to charity."
     },
@@ -556,6 +569,8 @@ void AINPC::SetDataMartin()
   tc->Init(TraderRole::CLERIC, 1000, 10);
 }
 
+// =============================================================================
+
 void AINPC::SetDataCasey()
 {
   AIComponentRef->OwnerGameObject->Attrs.Spd.Talents = 3;
@@ -573,7 +588,6 @@ void AINPC::SetDataCasey()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // ================================================================================ 80
     {
       "I used to be a cook in the Navy.",
       "One day we were boarded by the enemy, on our very own ship!",
@@ -591,6 +605,8 @@ void AINPC::SetDataCasey()
   tc->NpcRef = this;
   tc->Init(TraderRole::COOK, 500, 15);
 }
+
+// =============================================================================
 
 void AINPC::SetDataMaya()
 {
@@ -610,7 +626,6 @@ void AINPC::SetDataMaya()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // ================================================================================ 80
     {
       "We, the Junkers, collect discarded and abandoned items.",
       "Our culture revolves around it - we believe that every item is usable",
@@ -650,6 +665,8 @@ void AINPC::SetDataMaya()
   tc->Init(TraderRole::JUNKER, 1000, 8);
 }
 
+// =============================================================================
+
 void AINPC::SetDataDefault()
 {
   int gender = RNG::Instance().RandomRange(0, 2);
@@ -661,6 +678,8 @@ void AINPC::SetDataDefault()
 
   Data.UnacquaintedDescription = "You see a " + AIComponentRef->OwnerGameObject->ObjectName;
 }
+
+// =============================================================================
 
 void AINPC::SetDataGriswold()
 {
@@ -680,7 +699,6 @@ void AINPC::SetDataGriswold()
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
-    // ================================================================================ 80
     {
       "Well, what kin I do fer ya?"
     }

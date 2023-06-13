@@ -13,6 +13,8 @@ TaskMineTunnel::TaskMineTunnel(GameObject* objectToControl, bool ignorePickaxe)
   _ignorePickaxe = ignorePickaxe;
 }
 
+// =============================================================================
+
 BTResult TaskMineTunnel::Run()
 {
   //DebugLog("[TaskMine]\n");

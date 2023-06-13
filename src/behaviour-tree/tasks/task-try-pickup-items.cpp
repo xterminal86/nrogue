@@ -10,6 +10,8 @@ TaskTryPickupItems::TaskTryPickupItems(GameObject* objectToControl)
   _inventoryRef = _objectToControl->GetComponent<ContainerComponent>();
 }
 
+// =============================================================================
+
 BTResult TaskTryPickupItems::Run()
 {
   //
@@ -51,6 +53,8 @@ BTResult TaskTryPickupItems::Run()
   return BTResult::Success;
 }
 
+// =============================================================================
+
 bool TaskTryPickupItems::PickupItems(const Items& items,
                                      const Filter& filter)
 {
@@ -82,6 +86,8 @@ bool TaskTryPickupItems::PickupItems(const Items& items,
 
   return found;
 }
+
+// =============================================================================
 
 void TaskTryPickupItems::Pickup(const Item& item)
 {

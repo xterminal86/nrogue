@@ -9,6 +9,8 @@ void ExitingState::Init()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 void ExitingState::HandleInput()
 {
   _keyPressed = GetKeyDown();
@@ -29,6 +31,8 @@ void ExitingState::HandleInput()
       break;
   }
 }
+
+// =============================================================================
 
 void ExitingState::Update(bool forceUpdate)
 {

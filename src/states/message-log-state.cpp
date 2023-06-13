@@ -9,6 +9,8 @@ void MessageLogState::Prepare()
   _scrollPosition = 0;
 }
 
+// =============================================================================
+
 void MessageLogState::HandleInput()
 {
   _keyPressed = GetKeyDown();
@@ -16,7 +18,9 @@ void MessageLogState::HandleInput()
   int msgSize = Printer::Instance().Messages().size();
   int th = Printer::TerminalHeight;
 
+  //
   // Since we draw messages from y = 1, compensate with (th - 2)
+  //
   int scrollLimit = (msgSize - 1) - (th - 2);
 
   switch (_keyPressed)
@@ -48,6 +52,8 @@ void MessageLogState::HandleInput()
   _scrollPosition = Util::Clamp(_scrollPosition, 0, scrollLimit);
 }
 
+// =============================================================================
+
 void MessageLogState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
@@ -63,7 +69,9 @@ void MessageLogState::Update(bool forceUpdate)
     int offsetY = 1;
     for (size_t i = _scrollPosition; i < messages.size(); i++)
     {
-      // No need to draw outside the screen
+      //
+      // No need to draw outside the screen.
+      //
       if (offsetY > _th)
       {
         break;
@@ -92,11 +100,15 @@ void MessageLogState::Update(bool forceUpdate)
   }
 }
 
+// =============================================================================
+
 void MessageLogState::DrawScrollBars()
 {
   auto messages = Printer::Instance().Messages();
 
+  //
   // Since we draw messages from y = 1, compensate y pos with (th - 2)
+  //
   int scrollLimit = (messages.size() - 1) - (_th - 2);
 
   if (messages.size() - 1 > (size_t)_th - 2)

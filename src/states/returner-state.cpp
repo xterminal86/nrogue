@@ -9,6 +9,8 @@ void ReturnerState::Prepare()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 void ReturnerState::HandleInput()
 {
   _keyPressed = GetKeyDown();
@@ -72,6 +74,8 @@ void ReturnerState::HandleInput()
   }
 }
 
+// =============================================================================
+
 void ReturnerState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
@@ -100,10 +104,14 @@ void ReturnerState::Update(bool forceUpdate)
   }
 }
 
+// =============================================================================
+
 void ReturnerState::SetItemComponentRef(ItemComponent* item)
 {
   _itemRef = item;
 }
+
+// =============================================================================
 
 Position ReturnerState::GetRandomPositionAroundPlayer()
 {

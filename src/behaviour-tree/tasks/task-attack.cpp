@@ -13,6 +13,8 @@ TaskAttack::TaskAttack(GameObject* objectToControl,
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 BTResult TaskAttack::Run()
 {
   //DebugLog("[TaskAttack]\n");
@@ -130,6 +132,8 @@ BTResult TaskAttack::Run()
   return BTResult::Success;
 }
 
+// =============================================================================
+
 bool TaskAttack::AttackWithWeapon()
 {
   bool result = false;
@@ -179,7 +183,7 @@ bool TaskAttack::AttackWithWeapon()
                               false);
 
     //
-    // Melee attack with ranged weapon shouldn't damage it
+    // Melee attack with ranged weapon shouldn't damage it.
     //
     if (weapon != nullptr
      && weapon->Data.ItemType_ != ItemType::RANGED_WEAPON)
@@ -202,6 +206,8 @@ bool TaskAttack::AttackWithWeapon()
 
   return result;
 }
+
+// =============================================================================
 
 AttackResult TaskAttack::AttackUnarmed(const DamageRoll& damageRoll)
 {
@@ -250,11 +256,15 @@ AttackResult TaskAttack::AttackUnarmed(const DamageRoll& damageRoll)
   return res;
 }
 
+// =============================================================================
+
 bool TaskAttack::PlayerHasArmor()
 {
   ItemComponent* armor = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::TORSO][0];
   return (armor != nullptr);
 }
+
+// =============================================================================
 
 #if DEBUG_BUILD
 void TaskAttack::LogAttackData(int hitChance)

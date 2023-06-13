@@ -13,6 +13,8 @@ void TargetState::Init()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 void TargetState::Prepare()
 {
   _maxThrowingRange = (_playerRef->Attrs.Str.Get() <= 0)
@@ -51,11 +53,15 @@ void TargetState::Prepare()
   }
 }
 
+// =============================================================================
+
 void TargetState::Cleanup()
 {
   _throwingItemInventoryIndex = -1;
   _weaponRef = nullptr;
 }
+
+// =============================================================================
 
 void TargetState::FindTargets()
 {
@@ -95,6 +101,8 @@ void TargetState::FindTargets()
   }
 }
 
+// =============================================================================
+
 void TargetState::CycleTargets()
 {
   if (!_targets.empty())
@@ -112,6 +120,8 @@ void TargetState::CycleTargets()
     _cursorPosition.Set(x, y);
   }
 }
+
+// =============================================================================
 
 void TargetState::HandleInput()
 {
@@ -178,11 +188,13 @@ void TargetState::HandleInput()
   }
 }
 
-///
-/// It is assumed that we have valid weapon and ammunition
-/// in corresponding equipment slots
-/// (necessary checks were performed in MainState)
-///
+// =============================================================================
+
+//
+// It is assumed that we have valid weapon and ammunition
+// in corresponding equipment slots
+// (necessary checks were performed in MainState)
+//
 void TargetState::FireWeapon(bool throwingFromInventory)
 {
   //
@@ -267,6 +279,8 @@ void TargetState::FireWeapon(bool throwingFromInventory)
   DirtyHack();
 }
 
+// =============================================================================
+
 GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
 {
   GameObject* stoppedAt = nullptr;
@@ -279,7 +293,7 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
   int distanceCovered = 0;
 
   //
-  // Start from 1 to exclude player's position
+  // Start from 1 to exclude player's position.
   //
   for (size_t i = 1; i < line.size(); i++)
   {
@@ -292,7 +306,7 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
     bool isThrowing = (_throwingItemInventoryIndex != -1);
 
     //
-    // Hit object or max shooting distance reached
+    // Hit object or max shooting distance reached.
     //
     if (stoppedAt != nullptr)
     {
@@ -308,7 +322,7 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
   Util::LaunchProjectile(startPoint, endPoint, image, color);
 
   //
-  // Projectile reached end point without hitting anyone
+  // Projectile reached end point without hitting anyone.
   //
   if (stoppedAt == nullptr)
   {
@@ -318,6 +332,8 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
 
   return stoppedAt;
 }
+
+// =============================================================================
 
 GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
 {
@@ -331,7 +347,7 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
   if (cell != nullptr)
   {
     //
-    // If door is open, ignore it
+    // If door is open, ignore it.
     //
     DoorComponent* dc = cell->GetComponent<DoorComponent>();
     if (dc != nullptr && dc->IsOpen)
@@ -382,6 +398,8 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
   return nullptr;
 }
 
+// =============================================================================
+
 bool TargetState::SafetyCheck()
 {
   bool posCheck = (_cursorPosition.X == _playerRef->PosX
@@ -389,6 +407,8 @@ bool TargetState::SafetyCheck()
 
   return posCheck;
 }
+
+// =============================================================================
 
 void TargetState::CheckCursorPositionBounds()
 {
@@ -412,6 +432,8 @@ void TargetState::CheckCursorPositionBounds()
   }
 }
 
+// =============================================================================
+
 void TargetState::UpdatePlayerPossibleKnockbackDir()
 {
   Position startPoint = _playerRef->GetPosition();
@@ -431,6 +453,8 @@ void TargetState::UpdatePlayerPossibleKnockbackDir()
     _playerRef->SetKnockBackDir(dir);
   }
 }
+
+// =============================================================================
 
 void TargetState::DirtyHack()
 {
@@ -475,10 +499,12 @@ void TargetState::DirtyHack()
   }
 }
 
+// =============================================================================
+
 void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
 {
   //
-  // _weaponRef is an item to be thrown
+  // _weaponRef is an item to be thrown.
   //
   auto& mapRef = Map::Instance().CurrentLevel->MapArray;
 
@@ -550,6 +576,8 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
   }
 }
 
+// =============================================================================
+
 void TargetState::ProcessHit(GameObject* hitPoint)
 {
   if (_throwingItemInventoryIndex != -1)
@@ -571,6 +599,8 @@ void TargetState::ProcessHit(GameObject* hitPoint)
     }
   }
 }
+
+// =============================================================================
 
 void TargetState::PrintThrowResult(GameObject* tileRef)
 {
@@ -602,6 +632,8 @@ void TargetState::PrintThrowResult(GameObject* tileRef)
   }
 }
 
+// =============================================================================
+
 void TargetState::MoveCursor(int dx, int dy)
 {
   int nx = _cursorPosition.X + dx;
@@ -619,6 +651,8 @@ void TargetState::MoveCursor(int dx, int dy)
   _cursorPosition.X = nx;
   _cursorPosition.Y = ny;
 }
+
+// =============================================================================
 
 void TargetState::DrawHint()
 {
@@ -678,6 +712,8 @@ void TargetState::DrawHint()
   }
 }
 
+// =============================================================================
+
 void TargetState::DrawCursor()
 {
   int mox = Map::Instance().CurrentLevel->MapOffsetX;
@@ -691,6 +727,8 @@ void TargetState::DrawCursor()
                               _cursorPosition.Y + moy,
                               '[', Colors::WhiteColor);
 }
+
+// =============================================================================
 
 void TargetState::Update(bool forceUpdate)
 {
@@ -724,10 +762,14 @@ void TargetState::Update(bool forceUpdate)
   }
 }
 
+// =============================================================================
+
 void TargetState::Setup(ItemComponent* weapon)
 {
   _weaponRef = weapon;
 }
+
+// =============================================================================
 
 void TargetState::SetupForThrowing(ItemComponent* itemToThrow, int throwingItemInventoryIndex)
 {

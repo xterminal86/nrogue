@@ -335,12 +335,12 @@ namespace GlobalConstants
   const int EffectDurationSkipsForTurn = ((double)TurnReadyValue / (double)TurnTickValue) + 1;
 
   //
-  // Default duration is 20 SPD=0 player end turns
+  // Default duration is 20 SPD=0 player end turns.
   //
   const int EffectDefaultDuration = EffectDurationSkipsForTurn * 20;
 
   //
-  // std::map is sorted by key
+  // std::map is sorted by key.
   //
   const std::map<int, std::pair<StatsEnum, std::string>> AllStatNames =
   {

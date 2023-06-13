@@ -4,6 +4,8 @@ void Blackboard::InitSpecific()
 {
 }
 
+// =============================================================================
+
 void Blackboard::Set(uint64_t goId, const SSPair& data)
 {
   if (_blackboard.count(goId) == 0)
@@ -16,6 +18,8 @@ void Blackboard::Set(uint64_t goId, const SSPair& data)
 
   mapVal[data.first] = data.second;
 }
+
+// =============================================================================
 
 std::string Blackboard::Get(uint64_t goId, const std::string& key)
 {
@@ -33,6 +37,8 @@ std::string Blackboard::Get(uint64_t goId, const std::string& key)
 
   return res;
 }
+
+// =============================================================================
 
 void Blackboard::Remove(uint64_t goId)
 {

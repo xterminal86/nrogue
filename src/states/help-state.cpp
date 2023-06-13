@@ -21,10 +21,14 @@ HelpState::HelpState()
   }
 }
 
+// =============================================================================
+
 void HelpState::Prepare()
 {
   _scrollPosition = 0;
 }
+
+// =============================================================================
 
 void HelpState::HandleInput()
 {
@@ -33,7 +37,9 @@ void HelpState::HandleInput()
   int msgSize = _helpText.size();
   int th = Printer::TerminalHeight;
 
+  //
   // Since we draw messages from y = 1, compensate with (th - 2)
+  //
   int scrollLimit = (msgSize - 1) - (th - 2);
 
   switch (_keyPressed)
@@ -64,6 +70,8 @@ void HelpState::HandleInput()
 
   _scrollPosition = Util::Clamp(_scrollPosition, 0, scrollLimit);
 }
+
+// =============================================================================
 
 void HelpState::Update(bool forceUpdate)
 {
@@ -98,9 +106,13 @@ void HelpState::Update(bool forceUpdate)
   }
 }
 
+// =============================================================================
+
 void HelpState::DrawScrollBars()
 {
+  //
   // Since we draw messages from y = 1, compensate y pos with (th - 2)
+  //
   int scrollLimit = (_helpText.size() - 1) - (_th - 2);
 
   if (_helpText.size() - 1 > (size_t)_th - 2)

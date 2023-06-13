@@ -12,6 +12,8 @@ BTResult TaskRandomMovement::Run()
   //return Dumb();
 }
 
+// =============================================================================
+
 BTResult TaskRandomMovement::Smart()
 {
   auto cells = Util::GetEightPointsAround(_objectToControl->GetPosition(), Map::Instance().CurrentLevel->MapSize);
@@ -38,8 +40,10 @@ BTResult TaskRandomMovement::Smart()
   return BTResult::Failure;
 }
 
+// =============================================================================
+
 //
-// Doesn't check if cell is actually can be walked into
+// Doesn't check if cell is actually can be walked into.
 //
 BTResult TaskRandomMovement::Dumb()
 {

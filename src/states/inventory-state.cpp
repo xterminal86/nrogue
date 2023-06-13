@@ -13,10 +13,14 @@ void InventoryState::Init()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 void InventoryState::Prepare()
 {
   _selectedIndex = 0;
 }
+
+// =============================================================================
 
 void InventoryState::HandleInput()
 {
@@ -129,15 +133,19 @@ void InventoryState::HandleInput()
           Application::Instance().ChangeState(GameStates::MAIN_STATE);
         }
 
-        // Turn is finished in corresponding states
+        //
+        // Turn is finished in corresponding states.
+        //
         if (ic->Data.ItemType_ != ItemType::REPAIR_KIT
          && ic->Data.ItemType_ != ItemType::RETURNER)
         {
           _playerRef->FinishTurn();
         }
 
+        //
         // Check if player was killed
         // after using something (e.g. cursed potion, teleported into wall)
+        //
         if (!_playerRef->IsAlive())
         {
           Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
@@ -214,6 +222,8 @@ void InventoryState::HandleInput()
   int inventorySize = _playerRef->Inventory->Contents.size();
   _selectedIndex = Util::Clamp(_selectedIndex, 0, inventorySize - 1);
 }
+
+// =============================================================================
 
 void InventoryState::Update(bool forceUpdate)
 {
@@ -298,6 +308,8 @@ void InventoryState::Update(bool forceUpdate)
   }
 }
 
+// =============================================================================
+
 void InventoryState::DisplayEquipment()
 {
   int tw = Printer::TerminalWidth;
@@ -333,6 +345,8 @@ void InventoryState::DisplayEquipment()
   DrawEquipmentField(tw + 24, yPos + 6, "Accessory", eq);
 }
 
+// =============================================================================
+
 void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldName, ItemComponent* eq)
 {
   std::string stub(kEquipmentMaxNameLength, '-');
@@ -356,6 +370,8 @@ void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldNa
                               Colors::WhiteColor);
 }
 
+// =============================================================================
+
 void InventoryState::PrintFooter()
 {
   int tw = Printer::TerminalWidth;
@@ -366,7 +382,9 @@ void InventoryState::PrintFooter()
   int additive = 0;
   int counter = 0;
 
-  // Left part
+  //
+  // Left part.
+  //
   for (int i = 0; i < 3; i++)
   {
     std::string tmp = _footer[i];
@@ -385,7 +403,9 @@ void InventoryState::PrintFooter()
   counter = 0;
   additive = 0;
 
-  // Right part
+  //
+  // Right part.
+  //
   for (size_t i = 3; i < _footer.size(); i++)
   {
     int d = part - _footer[i].length();
@@ -407,11 +427,15 @@ void InventoryState::PrintFooter()
   }
 }
 
+// =============================================================================
+
 void InventoryState::DestroyInventoryItem()
 {
   auto it = _playerRef->Inventory->Contents.begin();
   _playerRef->Inventory->Contents.erase(it + _selectedIndex);
 }
+
+// =============================================================================
 
 void InventoryState::DropItem(ItemComponent* ic)
 {
@@ -446,6 +470,8 @@ void InventoryState::DropItem(ItemComponent* ic)
   Printer::Instance().AddMessage(message);
 }
 
+// =============================================================================
+
 void InventoryState::DrawSelectionBar(int yOffset, const std::string& text, const uint32_t& textColor)
 {
   if (yOffset == _selectedIndex)
@@ -466,6 +492,8 @@ void InventoryState::DrawSelectionBar(int yOffset, const std::string& text, cons
                                 textColor);
   }
 }
+
+// =============================================================================
 
 void InventoryState::SortInventory()
 {

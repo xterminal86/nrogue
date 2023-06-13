@@ -19,11 +19,15 @@ void LookInputState::Init()
   _monsterStatsInfo.reserve(32);
 }
 
+// =============================================================================
+
 void LookInputState::Prepare()
 {
   _cursorPosition.X = _playerRef->PosX;
   _cursorPosition.Y = _playerRef->PosY;
 }
+
+// =============================================================================
 
 void LookInputState::HandleInput()
 {
@@ -80,8 +84,6 @@ void LookInputState::HandleInput()
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
-// =============================================================================
-
 #ifdef DEBUG_BUILD
     case 'd':
     {
@@ -137,15 +139,14 @@ void LookInputState::HandleInput()
       Map::Instance().PlaceActor(mm);
     }
     break;
-
 #endif
-
-// =============================================================================
 
     default:
       break;
   }
 }
+
+// =============================================================================
 
 void LookInputState::Update(bool forceUpdate)
 {
@@ -239,7 +240,9 @@ void LookInputState::Update(bool forceUpdate)
         }
       }
 
-      // If nothing is found or area is under fog of war
+      //
+      // If nothing is found or area is under fog of war.
+      //
       if (!foundGameObject)
       {
         if (!tile->Revealed)
@@ -270,7 +273,9 @@ void LookInputState::Update(bool forceUpdate)
     }
     else
     {
-      // If cursor is outside map boundaries
+      //
+      // If cursor is outside map boundaries.
+      //
       lookStatus = "???";
     }
 
@@ -300,6 +305,8 @@ void LookInputState::Update(bool forceUpdate)
   }
 }
 
+// =============================================================================
+
 void LookInputState::MoveCursor(int dx, int dy)
 {
   int nx = _cursorPosition.X + dx;
@@ -309,7 +316,7 @@ void LookInputState::MoveCursor(int dx, int dy)
   int hh = _thHalf;
 
   //
-  // To compensate for cursor image
+  // To compensate for cursor image.
   //
   nx = Util::Clamp(nx, _playerRef->PosX - hw + 1,
                        _playerRef->PosX + hw - 2);
@@ -320,6 +327,8 @@ void LookInputState::MoveCursor(int dx, int dy)
   _cursorPosition.X = nx;
   _cursorPosition.Y = ny;
 }
+
+// =============================================================================
 
 void LookInputState::DrawCursor()
 {
@@ -334,11 +343,15 @@ void LookInputState::DrawCursor()
                               Colors::WhiteColor);
 }
 
+// =============================================================================
+
 bool LookInputState::CheckPlayer()
 {
   return (_cursorPosition.X == _playerRef->PosX
        && _cursorPosition.Y == _playerRef->PosY);
 }
+
+// =============================================================================
 
 GameObject* LookInputState::CheckActor()
 {
@@ -346,10 +359,14 @@ GameObject* LookInputState::CheckActor()
   return actor;
 }
 
+// =============================================================================
+
 const std::vector<GameObject*> LookInputState::CheckGameObjects()
 {
   return Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
 }
+
+// =============================================================================
 
 void LookInputState::DisplayMonsterStats()
 {
@@ -401,6 +418,8 @@ void LookInputState::DisplayMonsterStats()
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, name, _monsterStatsInfo);
   }
 }
+
+// =============================================================================
 
 #ifdef DEBUG_BUILD
 void LookInputState::PrintDebugInfo()

@@ -11,10 +11,14 @@ void RepairState::Init()
   _headerText = " REPAIR ITEMS ";
 }
 
+// =============================================================================
+
 void RepairState::Prepare()
 {
   _itemRefByChar.clear();
 }
+
+// =============================================================================
 
 void RepairState::ProcessInput()
 {
@@ -45,6 +49,8 @@ void RepairState::ProcessInput()
     break;
   }
 }
+
+// =============================================================================
 
 void RepairState::DrawSpecific()
 {
@@ -87,11 +93,15 @@ void RepairState::DrawSpecific()
   }
 }
 
+// =============================================================================
+
 void RepairState::SetRepairKitRef(ItemComponent* item, int inventoryIndex)
 {
   _repairKit = item;
   _inventoryIndex = inventoryIndex;
 }
+
+// =============================================================================
 
 void RepairState::RepairItem(ItemComponent* itemToRepair)
 {
@@ -142,6 +152,8 @@ void RepairState::RepairItem(ItemComponent* itemToRepair)
 
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
 }
+
+// =============================================================================
 
 void RepairState::Cleanup()
 {

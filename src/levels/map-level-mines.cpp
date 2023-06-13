@@ -295,12 +295,16 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
   }
 }
 
+// =============================================================================
+
 void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
 {
   MapLevelBase::PrepareMap(levelOwner);
 
   CreateLevel();
 }
+
+// =============================================================================
 
 void MapLevelMines::CreateLevel()
 {
@@ -392,6 +396,8 @@ void MapLevelMines::CreateLevel()
   }
 }
 
+// =============================================================================
+
 void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 {
   Logger::Instance().Print("********** INSTANTIATING LAYOUT **********");
@@ -466,6 +472,8 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
     }
   }
 }
+
+// =============================================================================
 
 void MapLevelMines::CreateSpecialLevel()
 {
@@ -686,6 +694,8 @@ void MapLevelMines::CreateSpecialLevel()
   }
 }
 
+// =============================================================================
+
 void MapLevelMines::CreateRandomBoxes()
 {
   //auto curLvl = Map::Instance().CurrentLevel;
@@ -742,6 +752,8 @@ void MapLevelMines::CreateRandomBoxes()
   }
 }
 
+// =============================================================================
+
 void MapLevelMines::DisplayWelcomeText()
 {
   std::vector<std::string> msg =
@@ -756,6 +768,8 @@ void MapLevelMines::DisplayWelcomeText()
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Abandoned Mines", msg);
 }
+
+// =============================================================================
 
 void MapLevelMines::CreateSpecialMonsters()
 {

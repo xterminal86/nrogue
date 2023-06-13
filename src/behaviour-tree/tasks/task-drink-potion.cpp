@@ -14,6 +14,8 @@ TaskDrinkPotion::TaskDrinkPotion(GameObject* objectToControl,
   _inventoryRef = _objectToControl->GetComponent<ContainerComponent>();
 }
 
+// =============================================================================
+
 BTResult TaskDrinkPotion::Run()
 {
   if (_inventoryRef == nullptr)
@@ -50,6 +52,8 @@ BTResult TaskDrinkPotion::Run()
   return BTResult::Success;
 }
 
+// =============================================================================
+
 void TaskDrinkPotion::UsePotion(int inventoryIndex)
 {
   auto DestroyItem = [this, inventoryIndex]()
@@ -82,6 +86,8 @@ void TaskDrinkPotion::UsePotion(int inventoryIndex)
   }
 }
 
+// =============================================================================
+
 void TaskDrinkPotion::PrintLogIfNeeded(ItemComponent* ic)
 {
   auto curLvl = Map::Instance().CurrentLevel;
@@ -96,6 +102,8 @@ void TaskDrinkPotion::PrintLogIfNeeded(ItemComponent* ic)
     Printer::Instance().AddMessage(msg);
   }
 }
+
+// =============================================================================
 
 int TaskDrinkPotion::FindPotionHP()
 {
@@ -116,6 +124,8 @@ int TaskDrinkPotion::FindPotionHP()
   return itemIndex;
 }
 
+// =============================================================================
+
 int TaskDrinkPotion::FindPotionMP()
 {
   int itemIndex = -1;
@@ -134,6 +144,8 @@ int TaskDrinkPotion::FindPotionMP()
 
   return itemIndex;
 }
+
+// =============================================================================
 
 int TaskDrinkPotion::FindPotionAny()
 {

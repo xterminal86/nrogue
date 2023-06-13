@@ -10,12 +10,16 @@ MapLevelLostCity::MapLevelLostCity(int sizeX, int sizeY, MapType type, int dunge
 {
 }
 
+// =============================================================================
+
 void MapLevelLostCity::PrepareMap(MapLevelBase* levelOwner)
 {
   MapLevelBase::PrepareMap(levelOwner);
 
   CreateLevel();
 }
+
+// =============================================================================
 
 void MapLevelLostCity::CreateLevel()
 {
@@ -62,6 +66,8 @@ void MapLevelLostCity::CreateLevel()
   int itemsToCreate = GetEstimatedNumberOfItemsToCreate();
   CreateItemsForLevel(itemsToCreate);
 }
+
+// =============================================================================
 
 void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
 {
@@ -176,6 +182,8 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
   }
 }
 
+// =============================================================================
+
 void MapLevelLostCity::CreateShrines(LevelBuilder& lb)
 {
   auto allShrines = lb.ShrinesByPosition();
@@ -199,6 +207,8 @@ void MapLevelLostCity::CreateShrines(LevelBuilder& lb)
     PlaceGameObject(go);
   }
 }
+
+// =============================================================================
 
 void MapLevelLostCity::DisplayWelcomeText()
 {

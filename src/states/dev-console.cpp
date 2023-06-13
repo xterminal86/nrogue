@@ -24,6 +24,8 @@ void DevConsole::Init()
   _objectHandles[ObjectHandleType::ANY]    = nullptr;
 }
 
+// =============================================================================
+
 void DevConsole::Prepare()
 {
   _closedByCommand = false;
@@ -33,11 +35,15 @@ void DevConsole::Prepare()
   _oldIndex = 0;
 }
 
+// =============================================================================
+
 void DevConsole::Cleanup()
 {
   //_stdout.clear();
   _currentCommand.clear();
 }
+
+// =============================================================================
 
 void DevConsole::HandleInput()
 {
@@ -151,6 +157,8 @@ void DevConsole::HandleInput()
   }
 }
 
+// =============================================================================
+
 void DevConsole::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
@@ -172,6 +180,8 @@ void DevConsole::Update(bool forceUpdate)
     Printer::Instance().Render();
   }
 }
+
+// =============================================================================
 
 bool DevConsole::ParseCommand()
 {
@@ -221,6 +231,8 @@ bool DevConsole::ParseCommand()
 
   return true;
 }
+
+// =============================================================================
 
 void DevConsole::ProcessCommand(const std::string& command,
                                 const std::vector<std::string>& params)
@@ -393,6 +405,8 @@ void DevConsole::ProcessCommand(const std::string& command,
   }
 }
 
+// =============================================================================
+
 void DevConsole::GetObjectByAddress(const std::vector<std::string>& params)
 {
   if (params.size() > 1)
@@ -452,6 +466,8 @@ void DevConsole::GetObjectByAddress(const std::vector<std::string>& params)
   ReportHandleDebugInfo(ObjectHandleType::ANY);
 }
 
+// =============================================================================
+
 void DevConsole::ReportHandleDebugInfo(ObjectHandleType type)
 {
   if (_objectHandles[type] != nullptr)
@@ -461,6 +477,8 @@ void DevConsole::ReportHandleDebugInfo(ObjectHandleType type)
   }
 }
 
+// =============================================================================
+
 void DevConsole::PrintDebugInfo(const std::vector<std::string>& debugInfo)
 {
   for (auto& l : debugInfo)
@@ -468,6 +486,8 @@ void DevConsole::PrintDebugInfo(const std::vector<std::string>& debugInfo)
     StdOut(l);
   }
 }
+
+// =============================================================================
 
 void DevConsole::TransformTile(const std::vector<std::string>& params)
 {
@@ -536,6 +556,8 @@ void DevConsole::TransformTile(const std::vector<std::string>& params)
   StdOut(Ok);
 }
 
+// =============================================================================
+
 void DevConsole::PlaceWall(const std::vector<std::string>& params)
 {
   if (params.size() < 2)
@@ -566,6 +588,8 @@ void DevConsole::PlaceWall(const std::vector<std::string>& params)
 
   StdOut(Ok);
 }
+
+// =============================================================================
 
 void DevConsole::PrintColors()
 {
@@ -634,6 +658,8 @@ void DevConsole::PrintColors()
   StdOut(msg);
 }
 
+// =============================================================================
+
 void DevConsole::InfoHandles()
 {
   size_t maxLen = 0;
@@ -655,6 +681,8 @@ void DevConsole::InfoHandles()
     StdOut(msg);
   }
 }
+
+// =============================================================================
 
 void DevConsole::CreateMonster(const std::vector<std::string>& params)
 {
@@ -699,6 +727,8 @@ void DevConsole::CreateMonster(const std::vector<std::string>& params)
   StdOut(Ok);
 }
 
+// =============================================================================
+
 void DevConsole::CreateAllGems()
 {
   int count = 0;
@@ -717,6 +747,8 @@ void DevConsole::CreateAllGems()
   StdOut(Ok);
 }
 
+// =============================================================================
+
 void DevConsole::CreateAllPotions()
 {
   int count = 0;
@@ -734,6 +766,8 @@ void DevConsole::CreateAllPotions()
 
   StdOut(Ok);
 }
+
+// =============================================================================
 
 void DevConsole::CreateAllScrolls()
 {
@@ -762,6 +796,8 @@ void DevConsole::CreateAllScrolls()
 
   StdOut(Ok);
 }
+
+// =============================================================================
 
 void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleType handleType)
 {
@@ -826,6 +862,8 @@ void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleT
     ReportHandle(handleType);
   }
 }
+
+// =============================================================================
 
 void DevConsole::MoveObject(const std::vector<std::string>& params, ObjectHandleType handleType)
 {
@@ -894,6 +932,8 @@ void DevConsole::MoveObject(const std::vector<std::string>& params, ObjectHandle
   StdOut(Ok);
 }
 
+// =============================================================================
+
 void DevConsole::MovePlayer(const std::vector<std::string>& params)
 {
   if (params.size() != 2)
@@ -926,6 +966,8 @@ void DevConsole::MovePlayer(const std::vector<std::string>& params)
     StdOut(ErrCannotMove);
   }
 }
+
+// =============================================================================
 
 void DevConsole::RemoveObject(const std::vector<std::string>& params)
 {
@@ -976,6 +1018,8 @@ void DevConsole::RemoveObject(const std::vector<std::string>& params)
   StdOut(Ok);
 }
 
+// =============================================================================
+
 void DevConsole::DamageActor(const std::vector<std::string>& params)
 {
   if (params.size() != 1)
@@ -1011,6 +1055,8 @@ void DevConsole::DamageActor(const std::vector<std::string>& params)
   StdOut(Ok);
 }
 
+// =============================================================================
+
 void DevConsole::PoisonActor()
 {
   if (_objectHandles[ObjectHandleType::ACTOR] == nullptr)
@@ -1031,6 +1077,8 @@ void DevConsole::PoisonActor()
   StdOut(Ok);
 }
 
+// =============================================================================
+
 void DevConsole::AwardExperience(const std::vector<std::string>& params)
 {
   if (params.size() != 1)
@@ -1050,6 +1098,8 @@ void DevConsole::AwardExperience(const std::vector<std::string>& params)
 
   StdOut(Ok);
 }
+
+// =============================================================================
 
 void DevConsole::GiveMoney(const std::vector<std::string>& params)
 {
@@ -1072,6 +1122,8 @@ void DevConsole::GiveMoney(const std::vector<std::string>& params)
   StdOut(Ok);
 }
 
+// =============================================================================
+
 void DevConsole::ToggleFogOfWar()
 {
   _playerRef->ToggleFogOfWar = !_playerRef->ToggleFogOfWar;
@@ -1084,6 +1136,8 @@ void DevConsole::ToggleFogOfWar()
   StdOut(str);
 }
 
+// =============================================================================
+
 void DevConsole::ToggleGodMode()
 {
   _playerRef->GodMode = !_playerRef->GodMode;
@@ -1091,6 +1145,8 @@ void DevConsole::ToggleGodMode()
   auto str = Util::StringFormat("God mode %s", _playerRef->GodMode ? "on" : "off");
   StdOut(str);
 }
+
+// =============================================================================
 
 void DevConsole::PrintTriggers()
 {
@@ -1104,6 +1160,8 @@ void DevConsole::PrintTriggers()
   }
 }
 
+// =============================================================================
+
 void DevConsole::PrintActors()
 {
   auto out = Util::StringFormat("Actors on this level: %u:", _currentLevel->ActorGameObjects.size());
@@ -1116,11 +1174,15 @@ void DevConsole::PrintActors()
   }
 }
 
+// =============================================================================
+
 void DevConsole::DispelEffects()
 {
   _playerRef->DispelEffects();
   StdOut(Ok);
 }
+
+// =============================================================================
 
 void DevConsole::DispelEffectsActor()
 {
@@ -1133,6 +1195,8 @@ void DevConsole::DispelEffectsActor()
   _objectHandles[ObjectHandleType::ACTOR]->DispelEffects();
   StdOut(Ok);
 }
+
+// =============================================================================
 
 void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
 {
@@ -1184,6 +1248,8 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
   }
 }
 
+// =============================================================================
+
 void DevConsole::PrintAdditionalHelp(DevConsoleCommand command)
 {
   switch (command)
@@ -1198,10 +1264,14 @@ void DevConsole::PrintAdditionalHelp(DevConsoleCommand command)
   }
 }
 
+// =============================================================================
+
 void DevConsole::StdOut(const std::string& str)
 {
   _stdout.insert(_stdout.begin(), str);
 }
+
+// =============================================================================
 
 bool DevConsole::StringIsNumbers(const std::string& str)
 {
@@ -1219,6 +1289,8 @@ bool DevConsole::StringIsNumbers(const std::string& str)
 
   return true;
 }
+
+// =============================================================================
 
 std::pair<int, int> DevConsole::CoordinateParamsToInt(const std::string &px, const std::string &py)
 {
@@ -1242,6 +1314,8 @@ std::pair<int, int> DevConsole::CoordinateParamsToInt(const std::string &px, con
 
   return res;
 }
+
+// =============================================================================
 
 void DevConsole::ReportHandle(ObjectHandleType handleType)
 {

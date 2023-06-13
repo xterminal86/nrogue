@@ -63,6 +63,8 @@ void FromLayouts::Generate(const std::vector<RoomForLevel>& possibleRooms, int s
   ConvertChunksToMapRaw();
 }
 
+// =============================================================================
+
 RoomLayout FromLayouts::SelectRoom()
 {
   int dice = Util::Rolld100();
@@ -77,8 +79,9 @@ RoomLayout FromLayouts::SelectRoom()
     }
   }
 
-  // If we were unlucky with dice,
-  // just select random room
+  //
+  // If we were unlucky with dice, just select random room.
+  //
   if (rooms.size() == 0)
   {
     int index = RNG::Instance().RandomRange(0, _roomsForLevel.size());
@@ -91,11 +94,15 @@ RoomLayout FromLayouts::SelectRoom()
   return rooms[index];
 }
 
+// =============================================================================
+
 void FromLayouts::TryToAddRoomTo(const RoomHelper& currentRoom, RoomEdgeEnum side)
 {
   int offset = currentRoom.RoomSize + 1;
 
-  // Offsets are swapped to correspond to map coordinates
+  //
+  // Offsets are swapped to correspond to map coordinates.
+  //
   std::map<RoomEdgeEnum, Position> cursorAddsByType =
   {
     { RoomEdgeEnum::NORTH, Position(0, -offset) },
@@ -118,8 +125,10 @@ void FromLayouts::TryToAddRoomTo(const RoomHelper& currentRoom, RoomEdgeEnum sid
     return;
   }
 
-  // It is possible to get 0 rooms
+  //
+  // It is possible to get 0 rooms.
   // (e.g. trying to add open area to full wall side)
+  //
   auto rooms = GetRoomsForLayout(currentRoom.Layout, side);
   if (rooms.size() != 0)
   {
@@ -135,8 +144,9 @@ void FromLayouts::TryToAddRoomTo(const RoomHelper& currentRoom, RoomEdgeEnum sid
   {
     // FIXME: may result in walled room
 
-    // If no rooms could be added,
-    // element 0 is assumed to be fallback layout
+    //
+    // If no rooms could be added, element 0 is assumed to be fallback layout.
+    //
     auto fallback = _roomsForLevel[0];
 
     //auto fallback = CreateSquareLayout(fallback.Layout.size(), '.');
@@ -158,6 +168,8 @@ void FromLayouts::TryToAddRoomTo(const RoomHelper& currentRoom, RoomEdgeEnum sid
   _roomsCount++;
 }
 
+// =============================================================================
+
 void FromLayouts::VisitCells(const RoomHelper& room)
 {
   int size = room.Layout.size();
@@ -178,6 +190,8 @@ void FromLayouts::VisitCells(const RoomHelper& room)
   //auto str = Util::StringFormat("\t\tMarked area lx: %i ly: %i hx: %i hy: %i", lx, ly, hx, hy);
   //Logger::Instance().Print(str);
 }
+
+// =============================================================================
 
 void FromLayouts::ConvertChunksToMapRaw()
 {
@@ -209,6 +223,8 @@ void FromLayouts::ConvertChunksToMapRaw()
   }
 }
 
+// =============================================================================
+
 bool FromLayouts::IsAreaVisited(const Position& start, int roomSize)
 {
   int lx = start.X;
@@ -238,6 +254,8 @@ bool FromLayouts::IsAreaVisited(const Position& start, int roomSize)
 
   return false;
 }
+
+// =============================================================================
 
 std::vector<RoomHelper> FromLayouts::GetRoomsForLayout(const RoomLayout& layout, RoomEdgeEnum side)
 {
@@ -277,6 +295,8 @@ std::vector<RoomHelper> FromLayouts::GetRoomsForLayout(const RoomLayout& layout,
 
   return roomsVector;
 }
+
+// =============================================================================
 
 std::vector<RoomLayout> FromLayouts::SelectRooms()
 {

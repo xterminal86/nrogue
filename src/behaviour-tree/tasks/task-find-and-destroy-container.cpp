@@ -47,6 +47,8 @@ BTResult TaskFindAndDestroyContainer::Run()
   return res;
 }
 
+// =============================================================================
+
 GameObject* TaskFindAndDestroyContainer::FindContainer()
 {
   GameObject* res = nullptr;
@@ -78,6 +80,8 @@ GameObject* TaskFindAndDestroyContainer::FindContainer()
 
   return res;
 }
+
+// =============================================================================
 
 BTResult TaskFindAndDestroyContainer::ProcessExistingObject(GameObject* container)
 {

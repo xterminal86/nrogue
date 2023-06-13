@@ -19,6 +19,8 @@ GameState::GameState() :
 #endif
 }
 
+// =============================================================================
+
 #ifdef USE_SDL
 int GameState::GetKeyDown()
 {
@@ -114,6 +116,8 @@ int GameState::GetKeyDown()
 }
 #endif
 
+// =============================================================================
+
 #ifdef USE_SDL
 void GameState::AdjustWindowSize(const SDL_Event& evt)
 {
@@ -140,6 +144,8 @@ void GameState::AdjustWindowSize(const SDL_Event& evt)
   }
 }
 
+// =============================================================================
+
 bool GameState::ShouldShiftMap(int& key)
 {
   bool res = false;
@@ -156,6 +162,8 @@ bool GameState::ShouldShiftMap(int& key)
 
   return res;
 }
+
+// =============================================================================
 
 void GameState::TakeScreenshot()
 {
@@ -184,6 +192,8 @@ void GameState::TakeScreenshot()
   DebugLog("Wrote %s", fname.data());
 }
 #endif
+
+// =============================================================================
 
 void GameState::DrawHeader(const std::string& header)
 {

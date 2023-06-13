@@ -10,9 +10,13 @@ DoorComponent::DoorComponent()
   _componentHash = typeid(*this).hash_code();
 }
 
+// =============================================================================
+
 void DoorComponent::Update()
 {
 }
+
+// =============================================================================
 
 bool DoorComponent::InteractBySomeone()
 {
@@ -26,6 +30,8 @@ bool DoorComponent::InteractBySomeone()
 
   return true;
 }
+
+// =============================================================================
 
 IR DoorComponent::Interact()
 {
@@ -74,6 +80,8 @@ IR DoorComponent::Interact()
   return { InteractionResult::SUCCESS, GameStates::MAIN_STATE };
 }
 
+// =============================================================================
+
 void DoorComponent::UpdateDoorState()
 {
   OwnerGameObject->Blocking    = !IsOpen;
@@ -90,6 +98,8 @@ void DoorComponent::UpdateDoorState()
                                   Colors::DoorHighlightColor :
                                   BgColorOverride);
 }
+
+// =============================================================================
 
 void DoorComponent::PrintInteractionMessage()
 {

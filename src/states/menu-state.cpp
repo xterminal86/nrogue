@@ -22,6 +22,8 @@ void MenuState::Init()
   PrepareGrassTiles();
 }
 
+// =============================================================================
+
 void MenuState::HandleInput()
 {
   _keyPressed = GetKeyDown();
@@ -40,6 +42,8 @@ void MenuState::HandleInput()
       break;
   }
 }
+
+// =============================================================================
 
 void MenuState::PrepareGrassTiles()
 {
@@ -75,6 +79,8 @@ void MenuState::PrepareGrassTiles()
     y++;
   }
 }
+
+// =============================================================================
 
 void MenuState::DrawPicture()
 {
@@ -170,6 +176,8 @@ void MenuState::DrawPicture()
     y++;
   }
 }
+
+// =============================================================================
 
 void MenuState::Update(bool forceUpdate)
 {

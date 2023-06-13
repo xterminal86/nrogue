@@ -65,6 +65,8 @@ void RecursiveBacktracker::Generate(const Position& mapSize,
   FillMapRaw();
 }
 
+// =============================================================================
+
 std::vector<Position> RecursiveBacktracker::GetRandomCell(const Position& p)
 {
   std::vector<Position> res;

@@ -31,9 +31,13 @@ AIModelBase::AIModelBase()
   _bonusTypeByDisplayName = Util::FlipMap(GlobalConstants::BonusDisplayNameByType);
 }
 
+// =============================================================================
+
 void AIModelBase::PrepareScript()
 {
 }
+
+// =============================================================================
 
 void AIModelBase::ConstructAI()
 {
@@ -108,6 +112,8 @@ void AIModelBase::ConstructAI()
   */
 }
 
+// =============================================================================
+
 void AIModelBase::Update()
 {
   // NOTE: Multiple turns are checked in Map::UpdateActors()
@@ -144,6 +150,8 @@ void AIModelBase::Update()
     AIComponentRef->OwnerGameObject->FinishTurn();
   }
 }
+
+// =============================================================================
 
 Node* AIModelBase::CreateTask(const ScriptNode* data)
 {
@@ -280,7 +288,7 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
       break;
   }
 
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
 
   if (task == nullptr)
   {
@@ -292,6 +300,8 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
 
   return task;
 }
+
+// =============================================================================
 
 std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* data)
 {
@@ -309,14 +319,14 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
   switch (cf)
   {
     //
-    // Roll d100 and check against p2 percent chance
+    // Roll d100 and check against p2 percent chance.
     //
     case ScriptParamNames::D100:
       fn = GetD100CF(data);
       break;
 
     //
-    // Player is linear distance visible
+    // Player is linear distance visible.
     //
     case ScriptParamNames::PLAYER_VISIBLE:
       fn = GetIsPlayerVisibleCF();
@@ -441,6 +451,8 @@ std::function<BTResult()> AIModelBase::GetPlayerEnergyCF(const ScriptNode* data)
   return fn;
 }
 
+// =============================================================================
+
 std::function<BTResult()> AIModelBase::GetPlayerNextTurnCF(const ScriptNode* data)
 {
   //
@@ -551,6 +563,8 @@ std::function<BTResult()> AIModelBase::GetPlayerNextTurnCF(const ScriptNode* dat
   return fn;
 }
 
+// =============================================================================
+
 std::function<BTResult()> AIModelBase::GetPlayerCanMoveCF()
 {
   auto fn = [this]()
@@ -561,6 +575,8 @@ std::function<BTResult()> AIModelBase::GetPlayerCanMoveCF()
 
   return fn;
 }
+
+// =============================================================================
 
 std::function<BTResult()> AIModelBase::GetD100CF(const ScriptNode* data)
 {
@@ -585,6 +601,8 @@ std::function<BTResult()> AIModelBase::GetD100CF(const ScriptNode* data)
 
   return fn;
 }
+
+// =============================================================================
 
 std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF()
 {
@@ -621,6 +639,8 @@ std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF()
   return fn;
 }
 
+// =============================================================================
+
 std::function<BTResult()> AIModelBase::GetInRangeCF(const ScriptNode* data)
 {
   // If range is not specified, it defaults to VisibilityRadius
@@ -649,6 +669,8 @@ std::function<BTResult()> AIModelBase::GetInRangeCF(const ScriptNode* data)
   return fn;
 }
 
+// =============================================================================
+
 std::function<BTResult()> AIModelBase::GetTurnsLeftCF(const ScriptNode* data)
 {
   int turnsLeftToCheck = std::stoul(data->Params.at("p2"));
@@ -670,6 +692,8 @@ std::function<BTResult()> AIModelBase::GetTurnsLeftCF(const ScriptNode* data)
 
   return fn;
 }
+
+// =============================================================================
 
 std::function<BTResult()> AIModelBase::GetTurnsCheckCF(const ScriptNode* data)
 {
@@ -714,6 +738,8 @@ std::function<BTResult()> AIModelBase::GetTurnsCheckCF(const ScriptNode* data)
   return fn;
 }
 
+// =============================================================================
+
 std::function<BTResult()> AIModelBase::GetHasEffectCF(const ScriptNode* data)
 {
   std::string who = data->Params.at("p2");
@@ -735,6 +761,8 @@ std::function<BTResult()> AIModelBase::GetHasEffectCF(const ScriptNode* data)
   return fn;
 }
 
+// =============================================================================
+
 std::function<BTResult()> AIModelBase::GetHPLowCF()
 {
   auto fn = [this]()
@@ -751,6 +779,8 @@ std::function<BTResult()> AIModelBase::GetHPLowCF()
 
   return fn;
 }
+
+// =============================================================================
 
 std::function<BTResult()> AIModelBase::GetHasEquippedCF(const ScriptNode* data)
 {
@@ -829,6 +859,8 @@ Node* AIModelBase::CreateConditionNode(const ScriptNode* data)
   return node;
 }
 
+// =============================================================================
+
 Node* AIModelBase::CreateNode(const ScriptNode* data)
 {
   Node* n = nullptr;
@@ -883,6 +915,8 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
 
   return n;
 }
+
+// =============================================================================
 
 void AIModelBase::PrintBrains(Node* n, int indent)
 {

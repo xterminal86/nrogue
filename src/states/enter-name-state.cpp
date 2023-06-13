@@ -20,6 +20,8 @@ void EnterNameState::Prepare()
 #endif
 }
 
+// =============================================================================
+
 void EnterNameState::HandleInput()
 {
   _keyPressed = GetKeyDown();
@@ -131,6 +133,8 @@ void EnterNameState::HandleInput()
   }
 }
 
+// =============================================================================
+
 void EnterNameState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
@@ -234,6 +238,8 @@ void EnterNameState::Update(bool forceUpdate)
     Printer::Instance().Render();
   }
 }
+
+// =============================================================================
 
 void EnterNameState::UpdateSeedAsHex()
 {

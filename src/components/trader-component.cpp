@@ -9,6 +9,8 @@ TraderComponent::TraderComponent()
   _componentHash = typeid(*this).hash_code();
 }
 
+// =============================================================================
+
 void TraderComponent::Init(TraderRole traderType, int stockRefreshTurns, int maxItems)
 {
   _traderType = traderType;
@@ -17,6 +19,8 @@ void TraderComponent::Init(TraderRole traderType, int stockRefreshTurns, int max
 
   RefreshStock();
 }
+
+// =============================================================================
 
 void TraderComponent::RefreshStock()
 {
@@ -33,6 +37,8 @@ void TraderComponent::RefreshStock()
   CreateItems();
 }
 
+// =============================================================================
+
 void TraderComponent::Update()
 {
   _stockResetCounter++;
@@ -43,6 +49,8 @@ void TraderComponent::Update()
     _stockResetCounter = 0;
   }
 }
+
+// =============================================================================
 
 void TraderComponent::CreateItems()
 {
@@ -65,6 +73,8 @@ void TraderComponent::CreateItems()
       break;
   }
 }
+
+// =============================================================================
 
 void TraderComponent::CreateClericItems()
 {
@@ -131,6 +141,8 @@ void TraderComponent::CreateClericItems()
   }
 }
 
+// =============================================================================
+
 void TraderComponent::CreateCookItems()
 {
   std::string shopName = GlobalConstants::ShopNameByType.at(_traderType);
@@ -148,6 +160,8 @@ void TraderComponent::CreateCookItems()
   }
 }
 
+// =============================================================================
+
 void TraderComponent::CreateJunkerItems()
 {
   std::string shopName = GlobalConstants::ShopNameByType.at(_traderType);
@@ -163,6 +177,8 @@ void TraderComponent::CreateJunkerItems()
     }
   }
 }
+
+// =============================================================================
 
 void TraderComponent::CreateBlacksmithItems()
 {
@@ -214,6 +230,8 @@ void TraderComponent::CreateBlacksmithItems()
     }
   }
 }
+
+// =============================================================================
 
 TraderRole TraderComponent::Type()
 {

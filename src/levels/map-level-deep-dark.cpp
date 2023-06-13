@@ -34,12 +34,16 @@ MapLevelDeepDark::MapLevelDeepDark(int sizeX, int sizeY, MapType type, int dunge
   }
 }
 
+// =============================================================================
+
 void MapLevelDeepDark::PrepareMap(MapLevelBase* levelOwner)
 {
   MapLevelBase::PrepareMap(levelOwner);
 
   CreateLevel();
 }
+
+// =============================================================================
 
 void MapLevelDeepDark::CreateLevel()
 {
@@ -110,6 +114,8 @@ void MapLevelDeepDark::CreateLevel()
     CreateItemsForLevel(DungeonLevel + 6);
   }
 }
+
+// =============================================================================
 
 void MapLevelDeepDark::CreateSpecialLevel()
 {
@@ -185,6 +191,8 @@ void MapLevelDeepDark::CreateSpecialLevel()
   }
 }
 
+// =============================================================================
+
 void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
 {
   Logger::Instance().Print("********** INSTANTIATING LAYOUT **********");
@@ -256,6 +264,8 @@ void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
     }
   }
 }
+
+// =============================================================================
 
 void MapLevelDeepDark::DisplayWelcomeText()
 {

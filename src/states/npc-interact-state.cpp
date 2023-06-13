@@ -11,8 +11,8 @@
 
 void NPCInteractState::Prepare()
 {
-  _charPos = _textStartPosX;
-  _currentLine = 0;
+  _charPos            = _textStartPosX;
+  _currentLine        = 0;
   _textBlockCharIndex = 0;
 
   Printer::Instance().Clear();
@@ -23,18 +23,24 @@ void NPCInteractState::Prepare()
   Printer::Instance().Render();
 }
 
+// =============================================================================
+
 void NPCInteractState::Cleanup()
 {
-  _npcRef = nullptr;
-  _gossipBlockIndex = 0;
-  _whatKey = WhatKey::NONE;
-  _textPrinting = false;
-  _charPos = _textStartPosX;
-  _currentLine = 0;
+  _npcRef             = nullptr;
+  _gossipBlockIndex   = 0;
+  _whatKey            = WhatKey::NONE;
+  _textPrinting       = false;
+  _charPos            = _textStartPosX;
+  _currentLine        = 0;
   _textBlockCharIndex = 0;
+
   _blockToPrint.clear();
+
   Util::WaitForMs(0, true);
 }
+
+// =============================================================================
 
 void NPCInteractState::HandleInput()
 {
@@ -126,6 +132,8 @@ void NPCInteractState::HandleInput()
   }
 }
 
+// =============================================================================
+
 void NPCInteractState::Update(bool forceUpdate)
 {
   if (_textPrinting)
@@ -144,9 +152,13 @@ void NPCInteractState::Update(bool forceUpdate)
   }
 }
 
+// =============================================================================
+
 void NPCInteractState::AnimateText()
 {
-  // To print 'Listening...' during animation
+  //
+  // To print 'Listening...' during animation.
+  //
   PrintFooter();
 
   auto line = _blockToPrint[_currentLine];
@@ -185,6 +197,8 @@ void NPCInteractState::AnimateText()
   }
 }
 
+// =============================================================================
+
 void NPCInteractState::DisplayStillText()
 {
   Printer::Instance().Clear();
@@ -207,10 +221,14 @@ void NPCInteractState::DisplayStillText()
   Printer::Instance().Render();
 }
 
+// =============================================================================
+
 void NPCInteractState::SetNPCRef(AINPC* npcRef)
 {
   _npcRef = npcRef;
 }
+
+// =============================================================================
 
 void NPCInteractState::PrintHeader()
 {
@@ -228,6 +246,8 @@ void NPCInteractState::PrintHeader()
 
   DrawHeader(desc);
 }
+
+// =============================================================================
 
 void NPCInteractState::PrintFooter()
 {

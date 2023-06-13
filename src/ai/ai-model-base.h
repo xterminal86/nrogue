@@ -32,10 +32,12 @@ class AIModelBase
 
     std::unique_ptr<Root> _root;
 
+    //
     // Behaviour tree script for AI management.
     //
     // It will be traversed starting from root node
     // every AIModel::Update() call.
+    //
     std::string _scriptAsText;
 
     std::vector<uint8_t> _scriptCompiled;
@@ -66,7 +68,7 @@ class AIModelBase
 
     void PrintBrains(Node* n, int indent);
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
 
     const std::map<ScriptParamNames, EquipmentCategory> _eqCats =
     {

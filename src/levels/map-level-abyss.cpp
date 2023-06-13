@@ -18,13 +18,17 @@ MapLevelAbyss::MapLevelAbyss(int sizeX, int sizeY, MapType type, int dungeonLeve
     "########"
   };
 
+  //
   // Note that x and y are swapped to correspond to
   // "world" dimensions.
+  //
   int sx = _specialLevel[0].length();
   int sy = _specialLevel.size();
 
   MapSize.Set(sx, sy);
 }
+
+// =============================================================================
 
 void MapLevelAbyss::PrepareMap(MapLevelBase* levelOwner)
 {
@@ -34,6 +38,8 @@ void MapLevelAbyss::PrepareMap(MapLevelBase* levelOwner)
 
   CreateLevel();
 }
+
+// =============================================================================
 
 void MapLevelAbyss::CreateLevel()
 {
@@ -71,6 +77,8 @@ void MapLevelAbyss::CreateLevel()
     PlaceStairs();
   }
 }
+
+// =============================================================================
 
 void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
 {
@@ -135,6 +143,8 @@ void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
     }
   }
 }
+
+// =============================================================================
 
 void MapLevelAbyss::DisplayWelcomeText()
 {
