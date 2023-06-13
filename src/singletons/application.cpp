@@ -654,7 +654,7 @@ bool Application::InitSDL()
   }
 
 #ifdef MSVC_COMPILER
-  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d");
+  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d11");
 #else
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 #endif

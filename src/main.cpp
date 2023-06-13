@@ -12,10 +12,6 @@
 #include "logger.h"
 #include "timer.h"
 
-#ifdef RUN_TESTS
-#include "tests.h"
-#endif
-
 //
 // NOTE: When building with SDL2 in Windows,
 // main() must have "full" signature,
@@ -94,11 +90,6 @@ int main(int argc, char* argv[])
 
   Application::Instance().Run();
   Application::Instance().Cleanup();
-
-#ifdef RUN_TESTS
-  DebugLog("Running tests, this may take a while...\n");
-  Tests::Run();
-#endif
 
   return 0;
 }

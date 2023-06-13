@@ -56,47 +56,46 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/dungeon-generators)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks)
 
-file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/states/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/types/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/dungeon-generators/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks/*.cpp
+file(GLOB SOURCES
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/states/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/types/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/dungeon-generators/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks/*.cpp
 
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/states/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/types/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/dungeon-generators/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/*.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks/*.h)
+  # ============================================================================
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/states/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/types/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/dungeon-generators/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks/*.h)
 
 if (${CMAKE_BUILD_TYPE} MATCHES Release)
   list(REMOVE_ITEM SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/tests.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/tests.h)
-else()
-  if (NOT RUN_TESTS)
-    list(REMOVE_ITEM SOURCES
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/tests.cpp
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/tests.h)
-  endif()
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.h)
 endif()
 
 # ==============================================================================
+
+if (RUN_TESTS)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/tests)
+endif()
 
 add_executable(${TARGET_NAME} ${SOURCES})
 
