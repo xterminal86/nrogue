@@ -9,11 +9,15 @@ void DGBase::PrintMapRaw()
   DebugLog("%s\n", raw.data());
 }
 
+// =============================================================================
+
 void DGBase::LogPrintMapRaw()
 {
   auto raw = GetMapRawString();
   Logger::Instance().Print(raw);
 }
+
+// =============================================================================
 
 void DGBase::FillMapRaw()
 {
@@ -30,6 +34,8 @@ void DGBase::FillMapRaw()
     MapRaw.push_back(row);
   }
 }
+
+// =============================================================================
 
 std::string DGBase::GetMapRawString()
 {
@@ -89,6 +95,8 @@ std::string DGBase::GetMapRawString()
   return result;
 }
 
+// =============================================================================
+
 std::vector<std::vector<MapCell>> DGBase::CreateEmptyMap(int w, int h)
 {
   std::vector<std::vector<MapCell>> map;
@@ -112,6 +120,8 @@ std::vector<std::vector<MapCell>> DGBase::CreateEmptyMap(int w, int h)
   return map;
 }
 
+// =============================================================================
+
 std::vector<std::vector<MapCell>> DGBase::CreateFilledMap(int w, int h, char image)
 {
   std::vector<std::vector<MapCell>> map;
@@ -134,6 +144,8 @@ std::vector<std::vector<MapCell>> DGBase::CreateFilledMap(int w, int h, char ima
 
   return map;
 }
+
+// =============================================================================
 
 std::vector<std::vector<MapCell>> DGBase::CreateRandomlyFilledMap(int w, int h, int chance)
 {
@@ -160,6 +172,8 @@ std::vector<std::vector<MapCell>> DGBase::CreateRandomlyFilledMap(int w, int h, 
   return map;
 }
 
+// =============================================================================
+
 bool DGBase::CheckLimits(const Position& start, int roomSize)
 {
   int lx = start.X;
@@ -178,6 +192,8 @@ bool DGBase::CheckLimits(const Position& start, int roomSize)
   return true;
 }
 
+// =============================================================================
+
 bool DGBase::IsInsideMap(const Position& pos)
 {
   return (pos.X >= 1
@@ -186,7 +202,11 @@ bool DGBase::IsInsideMap(const Position& pos)
        && pos.Y < _mapSize.Y - 1);
 }
 
-// Cell is "valid" if it touches only one floor tile
+// =============================================================================
+
+//
+// Cell is "valid" if it touches only one floor tile.
+//
 bool DGBase::IsDeadEnd(const Position& p)
 {
   int lx = p.X - 1;
@@ -224,6 +244,8 @@ bool DGBase::IsDeadEnd(const Position& p)
   return (count == 1);
 }
 
+// =============================================================================
+
 void DGBase::FillDeadEnds()
 {
   for (int x = 0; x < _mapSize.X; x++)
@@ -238,6 +260,8 @@ void DGBase::FillDeadEnds()
   }
 }
 
+// =============================================================================
+
 void DGBase::CutProblemCorners()
 {
   for (int x = 0; x < _mapSize.X; x++)
@@ -250,11 +274,13 @@ void DGBase::CutProblemCorners()
   }
 }
 
-///
-/// ...    ...
-/// .#. -> ...
-/// ...    ...
-///
+// =============================================================================
+
+//
+// ...    ...
+// .#. -> ...
+// ...    ...
+//
 void DGBase::RemoveSingleWalls()
 {
   for (int x = 1; x < _mapSize.X - 1; x++)
@@ -269,11 +295,13 @@ void DGBase::RemoveSingleWalls()
   }
 }
 
-///
-/// ###    ###
-/// #.# -> ###
-/// ###    ###
-///
+// =============================================================================
+
+//
+// ###    ###
+// #.# -> ###
+// ###    ###
+//
 void DGBase::FillSingleCells()
 {
   for (int x = 1; x < _mapSize.X - 1; x++)
@@ -287,6 +315,8 @@ void DGBase::FillSingleCells()
     }
   }
 }
+
+// =============================================================================
 
 void DGBase::RemoveEndWalls()
 {
@@ -333,17 +363,20 @@ void DGBase::RemoveEndWalls()
   }
 }
 
-/// If we found situation like this:
-///
-/// #.#..#
-/// #.#B.#
-/// #.A#.#
-/// #.....
-/// #.....
-///
-/// we replace random wall around A (which itself is '.')
-/// with empty space to visually disallow walking into a corner.
-///
+// =============================================================================
+
+//
+// If we found situation like this:
+//
+// #.#..#
+// #.#B.#
+// #.A#.#
+// #.....
+// #.....
+//
+// we replace random wall around A (which itself is '.')
+// with empty space to visually disallow walking into a corner.
+//
 void DGBase::CheckIfProblemCorner(const Position& p)
 {
   int lx = p.X - 1;
@@ -396,6 +429,8 @@ void DGBase::CheckIfProblemCorner(const Position& p)
   }
 }
 
+// =============================================================================
+
 int DGBase::CountAround(int x, int y, char ch)
 {
   int lx = x - 1;
@@ -430,7 +465,9 @@ int DGBase::CountAround(int x, int y, char ch)
   return res;
 }
 
-float DGBase::GetFillingRatio()
+// =============================================================================
+
+double DGBase::GetFillingRatio()
 {
   int empty = 0;
   int walls = 0;
@@ -450,10 +487,10 @@ float DGBase::GetFillingRatio()
     }
   }
 
-  float ratio = ((float)empty / (float)walls);
-
-  return ratio;
+  return ((double)empty / (double)walls);
 }
+
+// =============================================================================
 
 Position* DGBase::FindNonMarkedCell()
 {
@@ -474,6 +511,8 @@ Position* DGBase::FindNonMarkedCell()
 
   return nullptr;
 }
+
+// =============================================================================
 
 void DGBase::AddCellToProcess(const Position& from,
                               Direction dir,
@@ -499,6 +538,8 @@ void DGBase::AddCellToProcess(const Position& from,
     addTo.push(newPos);
   }
 }
+
+// =============================================================================
 
 int DGBase::MarkRegions()
 {
@@ -552,6 +593,8 @@ int DGBase::MarkRegions()
   return _marker;
 }
 
+// =============================================================================
+
 void DGBase::ConnectPoints(const Position& p1, const Position& p2)
 {
   int dirX = (p1.X > p2.X) ? -1 : 1;
@@ -573,6 +616,8 @@ void DGBase::ConnectPoints(const Position& p1, const Position& p2)
   }
 }
 
+// =============================================================================
+
 void DGBase::ConnectIsolatedAreas()
 {
   const int minDistance = 3;
@@ -581,7 +626,9 @@ void DGBase::ConnectIsolatedAreas()
 
   //DebugLog("\n\nRegions found: %i\n\n", regionsFound);
 
-  // If no isolated regions found
+  //
+  // If no isolated regions found.
+  //
   if (regionsFound <= 1)
   {
     return;
@@ -619,21 +666,27 @@ void DGBase::ConnectIsolatedAreas()
       }
     }
 
+    //
     // If walls are too thick and nothing could be found
     // that suits the constraint, get by with at least something.
+    //
     if (connectionPoints.empty())
     {
       connectionPoints.push_back(connectionPointCandidate);
     }
 
+    //
     // Get random connection point from all possible variants.
+    //
     int index = RNG::Instance().RandomRange(0, connectionPoints.size());
     auto pointsToConnect = connectionPoints[index];
     ConnectPoints(pointsToConnect.first, pointsToConnect.second);
 
     //DebugLog("\t\t\tconnecting [%i;%i] -> [%i;%i]\n", pointsToConnect.first.X, pointsToConnect.first.Y, pointsToConnect.second.X, pointsToConnect.second.Y);
 
-    // Rinse and repeat
+    //
+    // Rinse and repeat.
+    //
     UnmarkRegions();
 
     regionsFound = MarkRegions();
@@ -641,6 +694,8 @@ void DGBase::ConnectIsolatedAreas()
     //DebugLog("\n\n\tNew regions found: %i\n\n", regionsFound);
   }
 }
+
+// =============================================================================
 
 void DGBase::UnmarkRegions()
 {

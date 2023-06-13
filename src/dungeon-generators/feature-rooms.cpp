@@ -234,7 +234,7 @@ bool FeatureRooms::CreateRoundRoom(const Position& start,
   {
     for (int y = ly; y <= hy; y++)
     {
-      float d = Util::LinearDistance({ x, y }, { sx, sy });
+      double d = Util::LinearDistance({ x, y }, { sx, sy });
       if (d < radius)
       {
         if (!IsCellValid({ x, y }))

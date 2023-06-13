@@ -18,34 +18,42 @@ class ItemsFactory : public Singleton<ItemsFactory>
                                 const uint32_t& bgColor,
                                 const std::vector<std::string>& descText);
     //
-    // *************************************************************************
+    // -------------------------------------------------------------------------
     //
     GameObject* CreateMoney(int amount = 0);
     //
-    // *************************************************************************
+    // -------------------------------------------------------------------------
     //
-    GameObject* CreatePotion(PotionType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreatePotion(PotionType type,
+                             ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateHealingPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateNeutralizePoisonPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateManaPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateJuicePotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateExpPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
-    GameObject* CreateStatPotion(const std::string& statName, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateStatPotion(const std::string& statName,
+                                 ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateCWPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRAPotion(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRandomPotion();
     //
-    // *************************************************************************
+    // -------------------------------------------------------------------------
     //
-    GameObject* CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM, bool isIdentified = false);
+    GameObject* CreateFood(int x, int y,
+                           FoodType type,
+                           ItemPrefix prefixOverride = ItemPrefix::RANDOM,
+                           bool isIdentified = false);
     //
-    // *************************************************************************
+    // -------------------------------------------------------------------------
     //
-    GameObject* CreateNote(const std::string& objName, const std::vector<std::string>& text);
-    GameObject* CreateScroll(int x, int y, SpellType type, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateNote(const std::string& objName,
+                           const std::vector<std::string>& text);
+    GameObject* CreateScroll(int x, int y,
+                             SpellType type,
+                             ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     GameObject* CreateRandomScroll(ItemPrefix prefix = ItemPrefix::RANDOM);
     //
-    // *************************************************************************
+    // -------------------------------------------------------------------------
     //
     GameObject* CreateMeleeWeapon(int x, int y,
                                   WeaponType type,
@@ -69,21 +77,32 @@ class ItemsFactory : public Singleton<ItemsFactory>
     GameObject* CreateRandomWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM,
                                    ItemQuality quality = ItemQuality::RANDOM);
     //
-    // *************************************************************************
+    // -------------------------------------------------------------------------
     //
-    GameObject* CreateWand(int x, int y, WandMaterials material, SpellType spellType, ItemPrefix prefixOverride = ItemPrefix::RANDOM, ItemQuality quality = ItemQuality::RANDOM);
+    GameObject* CreateWand(int x, int y,
+                           WandMaterials material,
+                           SpellType spellType,
+                           ItemPrefix prefixOverride = ItemPrefix::RANDOM,
+                           ItemQuality quality = ItemQuality::RANDOM);
     GameObject* CreateRandomWand(ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     //
-    // *************************************************************************
+    // -------------------------------------------------------------------------
     //
-    GameObject* CreateGem(int x, int y, GemType type = GemType::RANDOM, int actualGemChance = -1);
-    GameObject* CreateReturner(int x, int y, int charges = -1, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateGem(int x, int y,
+                          GemType type = GemType::RANDOM,
+                          int actualGemChance = -1,
+                          ItemQuality qualityOverride = ItemQuality::RANDOM);
+    GameObject* CreateReturner(int x, int y,
+                               int charges = -1,
+                               ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     //
-    // *************************************************************************
+    // -------------------------------------------------------------------------
     //
-    GameObject* CreateRepairKit(int x, int y, int charges = -1, ItemPrefix prefixOverride = ItemPrefix::RANDOM);
+    GameObject* CreateRepairKit(int x, int y,
+                                int charges = -1,
+                                ItemPrefix prefixOverride = ItemPrefix::RANDOM);
     //
-    // *************************************************************************
+    // -------------------------------------------------------------------------
     //
     GameObject* CreateArmor(int x, int y, ArmorType type,
                             ItemPrefix prefixOverride = ItemPrefix::RANDOM,
@@ -92,14 +111,21 @@ class ItemsFactory : public Singleton<ItemsFactory>
                                   ItemPrefix prefixOverride = ItemPrefix::RANDOM,
                                   ItemQuality qualityOverride = ItemQuality::RANDOM);
     //
-    // *************************************************************************
+    // -------------------------------------------------------------------------
     //
-    GameObject* CreateAccessory(int x, int y, EquipmentCategory category, const std::vector<ItemBonusStruct>& bonuses, ItemPrefix prefix, ItemQuality quality);
-    GameObject* CreateRandomAccessory(int x, int y, ItemPrefix prefixOverride = ItemPrefix::RANDOM, bool atLeastOneBonus = false);
+    GameObject* CreateAccessory(int x, int y,
+                                EquipmentCategory category,
+                                const std::vector<ItemBonusStruct>& bonuses,
+                                ItemPrefix prefix,
+                                ItemQuality quality);
+    GameObject* CreateRandomAccessory(int x, int y,
+                                      ItemPrefix prefixOverride = ItemPrefix::RANDOM,
+                                      bool atLeastOneBonus = false);
     //
-    // *************************************************************************
+    // -------------------------------------------------------------------------
     //
-    GameObject* CreateRandomItem(int x, int y, const std::vector<ItemType>& itemsToExclude = std::vector<ItemType>());
+    GameObject* CreateRandomItem(int x, int y,
+                                 const std::vector<ItemType>& itemsToExclude = std::vector<ItemType>());
 
     // **************************** Uniques ************************************
     //
@@ -177,7 +203,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
 
     Player* _playerRef = nullptr;
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
 
     const std::map<WandMaterials, int> _wandMaterialsDistribution =
     {
@@ -285,7 +311,16 @@ class ItemsFactory : public Singleton<ItemsFactory>
       { ItemQuality::EXCEPTIONAL, 2 },
     };
 
-    // =========================================================================
+    const std::map<ItemQuality, double> _costMultByQuality =
+    {
+      { ItemQuality::DAMAGED,     0.5  },
+      { ItemQuality::FLAWED,      0.75 },
+      { ItemQuality::NORMAL,      1.0  },
+      { ItemQuality::FINE,        1.1  },
+      { ItemQuality::EXCEPTIONAL, 1.25 },
+    };
+
+    // -------------------------------------------------------------------------
 
     friend class GameObjectsFactory;
 };

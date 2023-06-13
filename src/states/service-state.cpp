@@ -448,7 +448,7 @@ void ServiceState::FillItemsForRepair()
     }
     else if (ic->Data.Prefix == ItemPrefix::CURSED)
     {
-      toRepair *= 0.8f;
+      toRepair *= 0.8;
     }
 
     _serviceInfoByChar[c] = { charStr, str, Colors::WhiteColor, ic, toRepair };

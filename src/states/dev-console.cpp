@@ -339,6 +339,10 @@ void DevConsole::ProcessCommand(const std::string& command,
       CreateMonster(params);
       break;
 
+    case DevConsoleCommand::CREATE_ALL_GEMS:
+      CreateAllGems();
+      break;
+
     case DevConsoleCommand::CREATE_ALL_POTIONS:
       CreateAllPotions();
       break;
@@ -588,7 +592,7 @@ void DevConsole::PrintColors()
 
     auto ConvertBack = [](int nColorComponent)
     {
-      float converted = ((float)nColorComponent / 1000.0f) * 255.0f;
+      double converted = ((double)nColorComponent / 1000.0) * 255.0;
 
       return (int)converted;
     };
@@ -691,6 +695,24 @@ void DevConsole::CreateMonster(const std::vector<std::string>& params)
 
   auto go = MonstersInc::Instance().CreateMonster(x, y, objType);
   _currentLevel->PlaceActor(go);
+
+  StdOut(Ok);
+}
+
+void DevConsole::CreateAllGems()
+{
+  int count = 0;
+  auto map = GlobalConstants::GemNameByType;
+  for (auto& kvp : map)
+  {
+    auto go = ItemsFactory::Instance().CreateGem(1 + count, 9, kvp.first,
+                                                 100,
+                                                 ItemQuality::RANDOM);
+    ItemComponent* ic = go->GetComponent<ItemComponent>();
+    ic->Data.IsIdentified = true;
+    _currentLevel->PlaceGameObject(go);
+    count++;
+  }
 
   StdOut(Ok);
 }

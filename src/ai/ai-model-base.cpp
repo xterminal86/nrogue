@@ -742,7 +742,7 @@ std::function<BTResult()> AIModelBase::GetHPLowCF()
     int maxHp = AIComponentRef->OwnerGameObject->Attrs.HP.Max().OriginalValue();
     int curHp = AIComponentRef->OwnerGameObject->Attrs.HP.Min().Get();
 
-    float perc = (float)curHp * 100.0f / (float)maxHp;
+    double perc = (double)curHp * 100.0 / (double)maxHp;
 
     bool res = ((int)perc <= 25);
 

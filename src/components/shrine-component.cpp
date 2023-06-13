@@ -23,6 +23,8 @@ ShrineComponent::ShrineComponent(ShrineType shrineType, int timeout, bool oneTim
   _type = shrineType;
 }
 
+// =============================================================================
+
 void ShrineComponent::Update()
 {
   if (_counter < _timeout)
@@ -40,6 +42,8 @@ void ShrineComponent::Update()
     Activate();
   }
 }
+
+// =============================================================================
 
 IR ShrineComponent::Interact()
 {
@@ -80,10 +84,14 @@ IR ShrineComponent::Interact()
   }
 }
 
+// =============================================================================
+
 void ShrineComponent::Activate()
 {
   OwnerGameObject->FgColor = Colors::ShrineColorsByType.at(_type).first;
 }
+
+// =============================================================================
 
 void ShrineComponent::ProcessEffect()
 {
@@ -306,6 +314,8 @@ void ShrineComponent::ProcessEffect()
   Printer::Instance().AddMessage(msg);
 }
 
+// =============================================================================
+
 void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
@@ -365,6 +375,8 @@ void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
   }
 }
 
+// =============================================================================
+
 //
 // WARNING: unused method?! (not found in "Find References")
 //
@@ -417,6 +429,8 @@ void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
   }
 }
 
+// =============================================================================
+
 void ShrineComponent::ApplyRandomNegativeEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
@@ -451,6 +465,8 @@ void ShrineComponent::ApplyRandomNegativeEffect(std::string& logMessageToWrite)
   SetEffectGainMessage(logMessageToWrite, b.Type);
 }
 
+// =============================================================================
+
 void ShrineComponent::ApplyTemporaryStatRaise(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
@@ -469,6 +485,8 @@ void ShrineComponent::ApplyTemporaryStatRaise(std::string& logMessageToWrite)
 
   SetEffectGainMessage(logMessageToWrite, bs.Type);
 }
+
+// =============================================================================
 
 void ShrineComponent::SetEffectGainMessage(std::string& logMessageToWrite,
                                            ItemBonusType e)

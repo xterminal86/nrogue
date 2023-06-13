@@ -59,7 +59,7 @@ class LevelBuilder
 
     bool WasUsed();
 
-    float GetFillingRatio();
+    double GetFillingRatio();
 
     std::string GetMapRawString();
 

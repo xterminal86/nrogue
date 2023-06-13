@@ -160,7 +160,16 @@ void ShoppingState::DisplayPlayerInventory()
   {
     ItemComponent* ic = item->GetComponent<ItemComponent>();
 
-    std::string nameInInventory = ic->Data.IsIdentified ? item->ObjectName : ic->Data.UnidentifiedName;
+    std::string nameInInventory = ic->Data.IsIdentified
+                                ? item->ObjectName
+                                : ic->Data.UnidentifiedName;
+
+    if (ic->Data.IsIdentified && ic->Data.ItemType_ == ItemType::GEM)
+    {
+      ItemQuality q = ic->Data.ItemQuality_;
+      nameInInventory.append(GlobalConstants::GemRatingByQuality.at(q));
+    }
+
     nameInInventory.resize(GlobalConstants::InventoryMaxNameLength, ' ');
 
     int extraInfoStringPosX = GlobalConstants::InventoryMaxNameLength + 1;
@@ -493,7 +502,7 @@ int ShoppingState::GetCost(ItemComponent* ic, bool playerSide)
   }
   else
   {
-    float tmp = (float)cost / _kPlayerSellRate;
+    double tmp = (double)cost / _kPlayerSellRate;
     cost = (int)tmp;
 
     if (!ic->Data.IsIdentified

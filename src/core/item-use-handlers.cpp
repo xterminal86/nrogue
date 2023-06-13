@@ -20,7 +20,7 @@ namespace ItemUseHandlers
 
     std::string message;
 
-    float scale = 0.4f;
+    double scale = 0.4;
 
     switch (item->Data.Prefix)
     {
@@ -45,7 +45,7 @@ namespace ItemUseHandlers
 
       case ItemPrefix::CURSED:
       {
-        amount = statMax * (scale / 2.0f);
+        amount = statMax * (scale / 2.0);
 
         int var = RNG::Instance().RandomRange(0, 3);
         if (var == 0)
@@ -87,6 +87,8 @@ namespace ItemUseHandlers
     return UseResult::SUCCESS;
   }
 
+  // ===========================================================================
+
   UseResult ManaPotionUseHandler(ItemComponent* item, GameObject* user)
   {
     int amount = 0;
@@ -110,7 +112,7 @@ namespace ItemUseHandlers
 
       case ItemPrefix::UNCURSED:
       {
-        amount = statMax * 0.3f;
+        amount = statMax * 0.3;
         message = "Your spirit is reinforced";
         message = (statCur == statMax)
                   ? Strings::NoActionText
@@ -120,7 +122,7 @@ namespace ItemUseHandlers
 
       case ItemPrefix::CURSED:
       {
-        amount = -statMax * 0.3f;
+        amount = -statMax * 0.3;
         message = "Your spirit force was drained!";
       }
       break;
@@ -135,6 +137,8 @@ namespace ItemUseHandlers
 
     return UseResult::SUCCESS;
   }
+
+  // ===========================================================================
 
   UseResult NeutralizePoisonPotionUseHandler(ItemComponent* item, GameObject* user)
   {
@@ -192,6 +196,8 @@ namespace ItemUseHandlers
     return UseResult::SUCCESS;
   }
 
+  // ===========================================================================
+
   UseResult JuicePotionUseHandler(ItemComponent* item, GameObject* user)
   {
     int amount = 0;
@@ -205,7 +211,7 @@ namespace ItemUseHandlers
     {
       case ItemPrefix::BLESSED:
       {
-        amount = statMax * 0.6f;
+        amount = statMax * 0.6;
         message = (statCur == statMax)
                   ? Strings::NoActionText
                   : "Delicious fruit juice!";
@@ -214,7 +220,7 @@ namespace ItemUseHandlers
 
       case ItemPrefix::UNCURSED:
       {
-        amount = statMax * 0.3f;
+        amount = statMax * 0.3;
         message = (statCur == statMax)
                   ? Strings::NoActionText
                   : "Tasted like fruit juice";
@@ -223,7 +229,7 @@ namespace ItemUseHandlers
 
       case ItemPrefix::CURSED:
       {
-        amount = -statMax * 0.3f;
+        amount = -statMax * 0.3;
         message = "Your feel peckish";
       }
       break;
@@ -239,6 +245,8 @@ namespace ItemUseHandlers
 
     return UseResult::SUCCESS;
   }
+
+  // ===========================================================================
 
   UseResult CWPotionUseHandler(ItemComponent* item, GameObject* user)
   {
@@ -296,6 +304,8 @@ namespace ItemUseHandlers
 
     return UseResult::SUCCESS;
   }
+
+  // ===========================================================================
 
   UseResult RAPotionUseHandler(ItemComponent* item, GameObject* user)
   {
@@ -376,6 +386,8 @@ namespace ItemUseHandlers
     return UseResult::SUCCESS;
   }
 
+  // ===========================================================================
+
   UseResult ExpPotionUseHandler(ItemComponent* item, GameObject* user)
   {
     int amount = 0;
@@ -395,14 +407,14 @@ namespace ItemUseHandlers
 
       case ItemPrefix::UNCURSED:
       {
-        amount = statMax * 0.3f;
+        amount = statMax * 0.3;
         message = "You feel more experienced";
       }
       break;
 
       case ItemPrefix::CURSED:
       {
-        amount = -statMax * 0.3f;
+        amount = -statMax * 0.3;
         message = "You lose some experience!";
       }
       break;
@@ -417,6 +429,8 @@ namespace ItemUseHandlers
 
     return UseResult::SUCCESS;
   }
+
+  // ===========================================================================
 
   UseResult StatPotionUseHandler(ItemComponent* item, GameObject* user)
   {
@@ -488,6 +502,8 @@ namespace ItemUseHandlers
     return UseResult::SUCCESS;
   }
 
+  // ===========================================================================
+
   UseResult ReturnerUseHandler(ItemComponent* item, GameObject* user)
   {
     //
@@ -511,6 +527,8 @@ namespace ItemUseHandlers
     return UseResult::SUCCESS;
   }
 
+  // ===========================================================================
+
   UseResult RepairKitUseHandler(ItemComponent* item, GameObject* user)
   {
     //
@@ -530,11 +548,15 @@ namespace ItemUseHandlers
     return UseResult::SUCCESS;
   }
 
+  // ===========================================================================
+
   UseResult ScrollUseHandler(ItemComponent* item, GameObject* user)
   {
     SpellsProcessor::Instance().ProcessScroll(item, user);
     return UseResult::SUCCESS;
   }
+
+  // ===========================================================================
 
   UseResult FoodUseHandler(ItemComponent* item, GameObject* user)
   {
@@ -551,7 +573,7 @@ namespace ItemUseHandlers
       case ItemPrefix::UNCURSED:
       {
         eatMessages.push_back("It tasted OK");
-        user->Attrs.Hunger -= item->Data.Cost * 0.75f;
+        user->Attrs.Hunger -= item->Data.Cost * 0.75;
       }
       break;
 
@@ -587,7 +609,7 @@ namespace ItemUseHandlers
         }
         else
         {
-          user->Attrs.Hunger -= item->Data.Cost * 0.5f;
+          user->Attrs.Hunger -= item->Data.Cost * 0.5;
         }
       }
       break;

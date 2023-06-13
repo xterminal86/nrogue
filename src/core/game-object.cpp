@@ -27,6 +27,8 @@ GameObject::GameObject(MapLevelBase* levelOwner)
 #endif
 }
 
+// =============================================================================
+
 GameObject::GameObject(MapLevelBase *levelOwner,
                        int x,
                        int y,
@@ -42,6 +44,8 @@ GameObject::GameObject(MapLevelBase *levelOwner,
   HexAddressString = Util::StringFormat("0x%X", this);
 #endif
 }
+
+// =============================================================================
 
 GameObject::~GameObject()
 {
@@ -74,6 +78,8 @@ GameObject::~GameObject()
 #endif
 }
 
+// =============================================================================
+
 void GameObject::Init(MapLevelBase* levelOwner,
                       int x,
                       int y,
@@ -99,6 +105,8 @@ void GameObject::Init(MapLevelBase* levelOwner,
   _previousCell = _levelOwner->MapArray[PosX][PosY].get();
 }
 
+// =============================================================================
+
 bool GameObject::Move(int dx, int dy)
 {
   int nx = PosX + dx;
@@ -113,6 +121,8 @@ bool GameObject::Move(int dx, int dy)
 
   return false;
 }
+
+// =============================================================================
 
 bool GameObject::MoveTo(int x, int y, bool force)
 {
@@ -149,11 +159,15 @@ bool GameObject::MoveTo(int x, int y, bool force)
   return false;
 }
 
+// =============================================================================
+
 bool GameObject::MoveTo(const Position& pos, bool force)
 {
   //DebugLog("MoveTo(%i;%i)\n\n", pos.X, pos.Y);
   return MoveTo(pos.X, pos.Y, force);
 }
+
+// =============================================================================
 
 bool GameObject::CanMoveTo(const Position& pos)
 {
@@ -185,6 +199,8 @@ bool GameObject::CanMoveTo(const Position& pos)
   return res;
 }
 
+// =============================================================================
+
 void GameObject::Draw(const uint32_t& overrideColorFg,
                       const uint32_t& overrideColorBg)
 {
@@ -209,6 +225,8 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
                               : overrideColorBg);
 }
 
+// =============================================================================
+
 void GameObject::Update()
 {
   for (std::pair<const size_t, std::unique_ptr<Component>>& c : _components)
@@ -219,6 +237,8 @@ void GameObject::Update()
     }
   }
 }
+
+// =============================================================================
 
 void GameObject::ApplyBonuses(ItemComponent* itemRef)
 {
@@ -232,6 +252,8 @@ void GameObject::ApplyBonuses(ItemComponent* itemRef)
     ApplyBonus(itemRef, i);
   }
 }
+
+// =============================================================================
 
 //
 // It is implied, that ApplyBonus() / UnapplyBonus() methods
@@ -283,6 +305,8 @@ void GameObject::ApplyBonus(ItemComponent* itemRef,
   }
 }
 
+// =============================================================================
+
 void GameObject::UnapplyBonuses(ItemComponent* itemRef)
 {
   for (auto& i : itemRef->Data.Bonuses)
@@ -295,6 +319,8 @@ void GameObject::UnapplyBonuses(ItemComponent* itemRef)
     UnapplyBonus(itemRef, i);
   }
 }
+
+// =============================================================================
 
 void GameObject::UnapplyBonus(ItemComponent* itemRef,
                               const ItemBonusStruct& bonus)
@@ -333,6 +359,8 @@ void GameObject::UnapplyBonus(ItemComponent* itemRef,
   }
 }
 
+// =============================================================================
+
 const Position& GameObject::GetPosition()
 {
   _position.X = PosX;
@@ -340,6 +368,8 @@ const Position& GameObject::GetPosition()
 
   return _position;
 }
+
+// =============================================================================
 
 void GameObject::MakeTile(const GameObjectInfo& t,
                           GameObjectType typeOverride)
@@ -353,6 +383,8 @@ void GameObject::MakeTile(const GameObjectInfo& t,
   FogOfWarName = t.FogOfWarName;
   Type         = typeOverride;
 }
+
+// =============================================================================
 
 bool GameObject::ReceiveDamage(GameObject* from,
                                int amount,
@@ -370,12 +402,12 @@ bool GameObject::ReceiveDamage(GameObject* from,
   int dmgSuccess = false;
 
   //
-  // Static objects should display their object's name
+  // Static objects should display their object's name.
   //
   std::string objName = ObjectName;
 
   //
-  // Items should display their ID-dependent name
+  // Items should display their ID-dependent name.
   //
   ItemComponent* ic = GetComponent<ItemComponent>();
   if (ic != nullptr)
@@ -386,7 +418,7 @@ bool GameObject::ReceiveDamage(GameObject* from,
   }
 
   //
-  // Actors should display their avatar
+  // Actors should display their avatar.
   //
   AIComponent* aic = GetComponent<AIComponent>();
   if (aic != nullptr)
@@ -441,7 +473,7 @@ bool GameObject::ReceiveDamage(GameObject* from,
     if (!IsAlive())
     {
       //
-      // Actors will display their full name on death
+      // Actors will display their full name on death.
       //
       if (aic != nullptr)
       {
@@ -483,6 +515,8 @@ bool GameObject::ReceiveDamage(GameObject* from,
   return dmgSuccess;
 }
 
+// =============================================================================
+
 bool GameObject::CanAct()
 {
   //
@@ -494,6 +528,8 @@ bool GameObject::CanAct()
   //
   return (IsAlive() && (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue));
 }
+
+// =============================================================================
 
 bool GameObject::ShouldSkipTurn()
 {
@@ -507,12 +543,14 @@ bool GameObject::ShouldSkipTurn()
   return true;
 }
 
+// =============================================================================
+
 void GameObject::WaitForTurn()
 {
   int actionIncrement = GetActionIncrement();
 
   //
-  // In towns SPD is ignored
+  // In towns SPD is ignored.
   //
   if (Map::Instance().CurrentLevel->Peaceful)
   {
@@ -522,7 +560,7 @@ void GameObject::WaitForTurn()
   {
     //
     // If SPD is < 0, skip std::abs(SPD) amount of turns
-    // without gaining action meter
+    // without gaining action meter.
     //
     if (ShouldSkipTurn())
     {
@@ -541,12 +579,14 @@ void GameObject::WaitForTurn()
   }
 }
 
+// =============================================================================
+
 int GameObject::GetActionIncrement()
 {
   //
   // +1 is because if SPD is 0 we must add TurnTickValue,
   // but if SPD is 1 we must multiply TurnTickValue by (SPD + 1)
-  // to get different value
+  // to get different value.
   //
   int totalSpeed = Attrs.Spd.Get() + 1;
 
@@ -560,6 +600,8 @@ int GameObject::GetActionIncrement()
   return actionIncrement;
 }
 
+// =============================================================================
+
 void GameObject::TileStandingCheck()
 {
   if (IsOnDangerousTile())
@@ -567,6 +609,8 @@ void GameObject::TileStandingCheck()
     Attrs.HP.Reset(0);
   }
 }
+
+// =============================================================================
 
 bool GameObject::IsOnDangerousTile()
 {
@@ -585,15 +629,21 @@ bool GameObject::IsOnDangerousTile()
   return res;
 }
 
+// =============================================================================
+
 bool GameObject::IsOnTile(GameObjectType tileType)
 {
   return (_currentCell->Type == tileType);
 }
 
+// =============================================================================
+
 bool GameObject::IsAlive()
 {
   return (Attrs.HP.Min().Get() > 0);
 }
+
+// =============================================================================
 
 void GameObject::CheckPerish()
 {
@@ -603,6 +653,8 @@ void GameObject::CheckPerish()
   }
 }
 
+// =============================================================================
+
 void GameObject::FinishTurn()
 {
   ConsumeEnergy();
@@ -610,9 +662,11 @@ void GameObject::FinishTurn()
   ProcessNaturalRegenMP();
   TileStandingCheck();
 
+  //
   // Moved to WaitForTurn for GameObjects
   // because otherwise effects processing
   // will be done only once after player has finished his turn.
+  //
   //ProcessEffects();
 
   //
@@ -625,21 +679,27 @@ void GameObject::FinishTurn()
   CheckPerish();
 }
 
+// =============================================================================
+
 void GameObject::ConsumeEnergy()
 {
   Attrs.ActionMeter -= GlobalConstants::TurnReadyValue;
 
-  // Just in case
+  //
+  // Just in case...
+  //
   if (Attrs.ActionMeter < 0)
   {
     Attrs.ActionMeter = 0;
   }
 }
 
+// =============================================================================
+
 void GameObject::DropItemsHeld()
 {
   //
-  // Check for monster's inventory and drop all items from there if any
+  // Check for monster's inventory and drop all items from there if any.
   //
   ContainerComponent* cc = GetComponent<ContainerComponent>();
   if (cc != nullptr)
@@ -657,7 +717,7 @@ void GameObject::DropItemsHeld()
   }
 
   //
-  // Money as well
+  // Money as well.
   //
   if (Money > 0)
   {
@@ -667,6 +727,8 @@ void GameObject::DropItemsHeld()
     Map::Instance().CurrentLevel->PlaceGameObject(money);
   }
 }
+
+// =============================================================================
 
 void GameObject::ProcessNaturalRegenHP()
 {
@@ -683,19 +745,21 @@ void GameObject::ProcessNaturalRegenHP()
   }
 }
 
+// =============================================================================
+
 void GameObject::ProcessNaturalRegenMP()
 {
   _manaRegenTurnsCounter++;
 
-  float turnsManaRegen = 0.0f;
+  double turnsManaRegen = 0.0;
   if (Attrs.Mag.Get() <= 0)
   {
     _manaRegenTurnsCounter = 0;
   }
   else
   {
-    turnsManaRegen = 1.0f / (float)Attrs.Mag.Get();
-    int turnsInt = (int)(turnsManaRegen * 100.0f);
+    turnsManaRegen = 1.0 / (double)Attrs.Mag.Get();
+    int turnsInt = (int)(turnsManaRegen * 100.0);
     if (turnsInt < 5)
     {
       turnsInt = 5;
@@ -709,6 +773,8 @@ void GameObject::ProcessNaturalRegenMP()
   }
 }
 
+// =============================================================================
+
 void GameObject::MoveGameObject(int dx, int dy)
 {
   _previousCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
@@ -720,6 +786,8 @@ void GameObject::MoveGameObject(int dx, int dy)
   _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell->Occupied = true;
 }
+
+// =============================================================================
 
 void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
 {
@@ -795,6 +863,8 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
   */
 }
 
+// =============================================================================
+
 bool GameObject::IsImmune(const ItemBonusStruct& effectToAdd)
 {
   bool res = false;
@@ -812,6 +882,8 @@ bool GameObject::IsImmune(const ItemBonusStruct& effectToAdd)
 
   return res;
 }
+
+// =============================================================================
 
 //
 // "Effect"-type methods are implied to be dealing with externally
@@ -831,7 +903,7 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
       break;
 
     //
-    // REGEN is 1 HP in a period
+    // REGEN is 1 HP in a period.
     //
     case ItemBonusType::REGEN:
       Attrs.HungerSpeed.AddModifier(e.Id, e.BonusValue * 5);
@@ -914,6 +986,8 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
   }
 }
 
+// =============================================================================
+
 void GameObject::UnapplyEffect(const ItemBonusStruct& e)
 {
   switch (e.Type)
@@ -947,6 +1021,8 @@ void GameObject::UnapplyEffect(const ItemBonusStruct& e)
   }
 }
 
+// =============================================================================
+
 void GameObject::RemoveEffect(const ItemBonusType& type, const uint64_t& causer)
 {
   //
@@ -976,12 +1052,16 @@ void GameObject::RemoveEffect(const ItemBonusType& type, const uint64_t& causer)
   }
 }
 
+// =============================================================================
+
 void GameObject::AttachTrigger(TriggerType type,
                                const std::function<bool ()>& condition,
                                const std::function<void ()>& handler)
 {
   AddComponent<TriggerComponent>(type, condition, handler);
 }
+
+// =============================================================================
 
 void GameObject::DispelEffectFirstFound(const ItemBonusType& t)
 {
@@ -1009,6 +1089,8 @@ void GameObject::DispelEffectFirstFound(const ItemBonusType& t)
   }
 }
 
+// =============================================================================
+
 void GameObject::DispelEffectsAllOf(const ItemBonusType& type)
 {
   for (int i = _activeEffects.size() - 1; i >= 0; i--)
@@ -1033,6 +1115,8 @@ void GameObject::DispelEffectsAllOf(const ItemBonusType& type)
     }
   }
 }
+
+// =============================================================================
 
 void GameObject::DispelEffects()
 {
@@ -1059,6 +1143,8 @@ void GameObject::DispelEffects()
   }
 }
 
+// =============================================================================
+
 bool GameObject::HasEffect(const ItemBonusType& t)
 {
   for (auto& kvp : _activeEffects)
@@ -1074,6 +1160,8 @@ bool GameObject::HasEffect(const ItemBonusType& t)
 
   return false;
 }
+
+// =============================================================================
 
 void GameObject::ProcessEffects()
 {
@@ -1133,6 +1221,8 @@ void GameObject::ProcessEffects()
   }
 }
 
+// =============================================================================
+
 void GameObject::EffectAction(const ItemBonusStruct& e)
 {
   switch (e.Type)
@@ -1148,6 +1238,8 @@ void GameObject::EffectAction(const ItemBonusStruct& e)
       break;
   }
 }
+
+// =============================================================================
 
 void GameObject::MarkAndCreateRemains()
 {
@@ -1174,6 +1266,8 @@ void GameObject::MarkAndCreateRemains()
   IsDestroyed = true;
 }
 
+// =============================================================================
+
 IR GameObject::Interact()
 {
   if (Util::IsFunctionValid(InteractionCallback))
@@ -1184,15 +1278,21 @@ IR GameObject::Interact()
   return { InteractionResult::UNDEFINED, GameStates::UNDEIFNED };
 }
 
+// =============================================================================
+
 void GameObject::SetLevelOwner(MapLevelBase *levelOwner)
 {
   _levelOwner = levelOwner;
 }
 
+// =============================================================================
+
 size_t GameObject::ComponentsSize()
 {
   return _components.size();
 }
+
+// =============================================================================
 
 void GameObject::AwardExperience(int amount)
 {
@@ -1238,6 +1338,8 @@ void GameObject::AwardExperience(int amount)
   }
 }
 
+// =============================================================================
+
 void GameObject::LevelUp(int baseHpOverride)
 {
   int gainedLevel = Attrs.Lvl.Get() + 1;
@@ -1254,6 +1356,8 @@ void GameObject::LevelUp(int baseHpOverride)
   Attrs.Lvl.Add(1);
 }
 
+// =============================================================================
+
 void GameObject::LevelDown()
 {
   int levelFrom = Attrs.Lvl.Get();
@@ -1266,6 +1370,8 @@ void GameObject::LevelDown()
     Attrs.Lvl.Set(1);
   }
 }
+
+// =============================================================================
 
 void GameObject::LevelUpFromHistory(int gainedLevel, bool positive)
 {
@@ -1298,6 +1404,8 @@ void GameObject::LevelUpFromHistory(int gainedLevel, bool positive)
                 ? data[PlayerStats::MP]
                : -data[PlayerStats::MP]);
 }
+
+// =============================================================================
 
 void GameObject::LevelUpNatural(int gainedLevel, int baseHpOverride)
 {
@@ -1349,6 +1457,8 @@ void GameObject::LevelUpNatural(int gainedLevel, int baseHpOverride)
   _levelUpHistory[gainedLevel][PlayerStats::MP] = mpToAdd;
 }
 
+// =============================================================================
+
 bool GameObject::CanRaiseAttribute(Attribute& attr)
 {
   bool customChance = (attr.RaiseProbability >= 0);
@@ -1371,20 +1481,28 @@ bool GameObject::CanRaiseAttribute(Attribute& attr)
   return Util::Rolld100(chance);
 }
 
+// =============================================================================
+
 const std::map<uint64_t, std::vector<ItemBonusStruct>>& GameObject::GetActiveEffects()
 {
   return _activeEffects;
 }
+
+// =============================================================================
 
 const std::map<int, std::map<PlayerStats, int>>& GameObject::GetLevelUpHistory()
 {
   return _levelUpHistory;
 }
 
+// =============================================================================
+
 const uint64_t& GameObject::ObjectId()
 {
   return _objectId;
 }
+
+// =============================================================================
 
 #ifdef DEBUG_BUILD
 std::vector<std::string> GameObject::DebugInfo()

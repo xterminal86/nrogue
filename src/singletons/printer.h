@@ -145,7 +145,7 @@ class Printer : public Singleton<Printer>
 
     void SetRenderDst(const SDL_Rect& dst);
 
-    float GetTileAspectRatio();
+    double GetTileAspectRatio();
 
     const std::pair<int, int>& GetTileWH();
     const std::pair<int, int>& GetTileWHScaled();
@@ -231,7 +231,7 @@ class Printer : public Singleton<Printer>
     int _tileWidthScaled = 0;
     int _tileHeightScaled = 0;
 
-    float _tileAspectRatio = 0.0f;
+    double _tileAspectRatio = 0.0;
 
     std::pair<int, int> _tileWH;
     std::pair<int, int> _tileWHScaled;

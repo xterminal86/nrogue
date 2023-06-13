@@ -21,6 +21,8 @@ void Printer::InitSpecific()
 #endif
 }
 
+// =============================================================================
+
 #ifdef USE_SDL
 void Printer::InitForSDL()
 {
@@ -75,7 +77,7 @@ void Printer::InitForSDL()
   _tileWidthScaled = _tileWidth * gameConfig.ScaleFactor;
   _tileHeightScaled = _tileHeight * gameConfig.ScaleFactor;
 
-  _tileAspectRatio = (float)_tileWidth / (float)_tileHeight;
+  _tileAspectRatio = (double)_tileWidth / (double)_tileHeight;
 
   _tileWH       = { _tileWidth,       _tileHeight       };
   _tileWHScaled = { _tileWidthScaled, _tileHeightScaled };
@@ -111,7 +113,7 @@ void Printer::InitForSDL()
   }
 
   //
-  // Hacky way of doing it but that's C++ for you
+  // Hacky way of doing it but that's C++ for you.
   //
   for (int i = (int)NameCP437::FIRST; i < (int)NameCP437::LAST_ELEMENT; i++)
   {
@@ -119,6 +121,8 @@ void Printer::InitForSDL()
     GlobalConstants::CP437IndexByType[key] = i;
   }
 }
+
+// =============================================================================
 
 void Printer::DrawWindow(const Position& leftCorner,
                          const Position& size,
@@ -245,6 +249,8 @@ void Printer::DrawWindow(const Position& leftCorner,
   }
 }
 
+// =============================================================================
+
 void Printer::DrawRect(int x1, int y1,
                        int x2, int y2,
                        uint32_t color)
@@ -275,6 +281,8 @@ void Printer::DrawRect(int x1, int y1,
   SDL_RenderCopy(Application::Instance().Renderer, _tileset, &_drawSrc, &_drawDst);
 }
 
+// =============================================================================
+
 void Printer::DrawTile(int x, int y, int tileIndex)
 {
   TileInfo& tile = _tiles[tileIndex];
@@ -296,6 +304,8 @@ void Printer::DrawTile(int x, int y, int tileIndex)
 
   SDL_RenderCopy(Application::Instance().Renderer, _tileset, &_drawSrc, &_drawDst);
 }
+
+// =============================================================================
 
 void Printer::DrawTile(int x, int y, int tileIndex, size_t scale)
 {
@@ -325,6 +335,8 @@ void Printer::DrawTile(int x, int y, int tileIndex, size_t scale)
   SDL_RenderCopy(Application::Instance().Renderer, _tileset, &_drawSrc, &_drawDst);
 }
 
+// =============================================================================
+
 void Printer::PrintFB(const int& x, const int& y,
                       int image,
                       const uint32_t& htmlColorFg,
@@ -350,6 +362,8 @@ void Printer::PrintFB(const int& x, const int& y,
                          _convertedHtml.B);
   DrawTile(posX, posY, image);
 }
+
+// =============================================================================
 
 void Printer::PrintFB(const int& x, const int& y,
                       const std::string& text,
@@ -399,6 +413,8 @@ void Printer::PrintFB(const int& x, const int& y,
     px += _tileWidthScaled;
   }
 }
+
+// =============================================================================
 
 void Printer::PrintFB(const int& x,
                       const int& y,
@@ -456,6 +472,8 @@ void Printer::PrintFB(const int& x,
   }
 }
 
+// =============================================================================
+
 void Printer::ConvertHtmlToRGB(const uint32_t& htmlColor)
 {
   if (_validColorsCache.count(htmlColor) == 1)
@@ -471,25 +489,35 @@ void Printer::ConvertHtmlToRGB(const uint32_t& htmlColor)
   _validColorsCache[htmlColor] = _convertedHtml;
 }
 
+// =============================================================================
+
 const std::unordered_map<uint32_t, TileColor>& Printer::GetValidColorsCache()
 {
   return _validColorsCache;
 }
+
+// =============================================================================
 
 void Printer::SetRenderDst(const SDL_Rect& dst)
 {
   _renderDst = dst;
 }
 
-float Printer::GetTileAspectRatio()
+// =============================================================================
+
+double Printer::GetTileAspectRatio()
 {
   return _tileAspectRatio;
 }
+
+// =============================================================================
 
 const std::pair<int, int>& Printer::GetTileWH()
 {
   return _tileWH;
 }
+
+// =============================================================================
 
 const std::pair<int, int>& Printer::GetTileWHScaled()
 {
@@ -527,20 +555,28 @@ void Printer::InitForCurses()
   PrepareFrameBuffer();
 }
 
+// =============================================================================
+
 const std::unordered_map<size_t, ColorPair>& Printer::GetValidColorsCache()
 {
   return _colorMap;
 }
+
+// =============================================================================
 
 bool Printer::ContainsColorMap(size_t hashToCheck)
 {
   return (_colorMap.count(hashToCheck) == 1);
 }
 
+// =============================================================================
+
 bool Printer::ColorIndexExists(size_t hashToCheck)
 {
   return (_colorIndexMap.count(hashToCheck) == 1);
 }
+
+// =============================================================================
 
 NColor Printer::GetNColor(const uint32_t& htmlColor)
 {
@@ -553,9 +589,9 @@ NColor Printer::GetNColor(const uint32_t& htmlColor)
   //
   // ncurses color component has range from 0 to 1000
   //
-  int scaledValueR = (valueR / 255.0f) * 1000;
-  int scaledValueG = (valueG / 255.0f) * 1000;
-  int scaledValueB = (valueB / 255.0f) * 1000;
+  int scaledValueR = (valueR / 255.0) * 1000;
+  int scaledValueG = (valueG / 255.0) * 1000;
+  int scaledValueB = (valueB / 255.0) * 1000;
 
   ret.R = scaledValueR;
   ret.G = scaledValueG;
@@ -563,6 +599,8 @@ NColor Printer::GetNColor(const uint32_t& htmlColor)
 
   return ret;
 }
+
+// =============================================================================
 
 size_t Printer::GetOrSetColor(const uint32_t& htmlColorFg,
                               const uint32_t& htmlColorBg)
@@ -615,6 +653,8 @@ size_t Printer::GetOrSetColor(const uint32_t& htmlColorFg,
   return hash;
 }
 
+// =============================================================================
+
 std::pair<int, int> Printer::AlignText(int x, int y, int align, const std::string& text)
 {
   std::pair<int, int> res;
@@ -655,6 +695,8 @@ std::pair<int, int> Printer::AlignText(int x, int y, int align, const std::strin
   return res;
 }
 
+// =============================================================================
+
 void Printer::Print(const int& x,
                     const int& y,
                     const std::string& text,
@@ -670,6 +712,8 @@ void Printer::Print(const int& x,
   attroff(COLOR_PAIR(_colorMap[hash].PairIndex));
 }
 
+// =============================================================================
+
 void Printer::Print(const int& x,
                     const int& y,
                     const int& ch,
@@ -682,6 +726,8 @@ void Printer::Print(const int& x,
   mvaddch(y, x, ch);
   attroff(COLOR_PAIR(_colorMap[hash].PairIndex));
 }
+
+// =============================================================================
 
 void Printer::PrintFB(const int& x, const int& y,
                       const int& ch,
@@ -736,6 +782,8 @@ void Printer::PrintFB(const int& x, const int& y,
   _frameBuffer[x][y].ColorPairHash = hash;
 }
 
+// =============================================================================
+
 void Printer::PrintFB(const int& x, const int& y,
                        const std::string& text,
                        int align,
@@ -753,6 +801,8 @@ void Printer::PrintFB(const int& x, const int& y,
     xOffset++;
   }
 }
+
+// =============================================================================
 
 void Printer::DrawWindow(const Position& leftCorner,
                          const Position& size,
@@ -866,6 +916,8 @@ void Printer::DrawWindow(const Position& leftCorner,
   }
 }
 
+// =============================================================================
+
 void Printer::PrintFB(const int& x, const int& y,
                       const std::string& text,
                       size_t scale,
@@ -878,6 +930,8 @@ void Printer::PrintFB(const int& x, const int& y,
   //
   PrintFB(x, y, text, align, htmlColorFg, htmlColorBg);
 }
+
+// =============================================================================
 
 void Printer::PrepareFrameBuffer()
 {
@@ -900,6 +954,8 @@ void Printer::PrepareFrameBuffer()
 }
 #endif
 
+// =============================================================================
+
 void Printer::Clear()
 {
 #ifndef USE_SDL
@@ -915,6 +971,8 @@ void Printer::Clear()
   SDL_RenderClear(Application::Instance().Renderer);
 #endif
 }
+
+// =============================================================================
 
 void Printer::Render()
 {
@@ -937,6 +995,8 @@ void Printer::Render()
   SDL_RenderPresent(Application::Instance().Renderer);
 #endif
 }
+
+// =============================================================================
 
 std::vector<Position> Printer::DrawExplosion(const Position& pos, int aRange)
 {
@@ -968,16 +1028,22 @@ std::vector<Position> Printer::DrawExplosion(const Position& pos, int aRange)
   return cellsAffected;
 }
 
+// =============================================================================
+
 void Printer::AddMessage(const std::string& message)
 {
   AddMessage(GameLogMessageData{ message, Colors::WhiteColor, Colors::BlackColor });
 }
+
+// =============================================================================
 
 void Printer::AddMessage(const std::string& message,
                          const uint32_t& fgColor)
 {
   AddMessage(GameLogMessageData{ message, fgColor, Colors::BlackColor });
 }
+
+// =============================================================================
 
 void Printer::AddMessage(const std::string& message,
                          const uint32_t& fgColor,
@@ -986,6 +1052,7 @@ void Printer::AddMessage(const std::string& message,
   AddMessage(GameLogMessageData{ message, fgColor, bgColor });
 }
 
+// =============================================================================
 
 void Printer::AddMessage(const GameLogMessageData& data)
 {
@@ -1014,6 +1081,8 @@ void Printer::AddMessage(const GameLogMessageData& data)
   ShowLastMessage = true;
 }
 
+// =============================================================================
+
 std::vector<GameLogMessageData> Printer::GetLastMessages()
 {
   _lastMessages.clear();
@@ -1034,10 +1103,14 @@ std::vector<GameLogMessageData> Printer::GetLastMessages()
   return _lastMessages;
 }
 
+// =============================================================================
+
 GameLogMessageData Printer::GetLastMessage()
 {
   return (_inGameMessages.size() > 0) ? _inGameMessages.front() : GameLogMessageData();
 }
+
+// =============================================================================
 
 void Printer::ResetMessagesToDisplay()
 {
@@ -1047,10 +1120,14 @@ void Printer::ResetMessagesToDisplay()
   _repeatingMessage.clear();
 }
 
+// =============================================================================
+
 std::vector<GameLogMessageData>& Printer::Messages()
 {
   return _inGameMessages;
 }
+
+// =============================================================================
 
 int Printer::ColorsUsed()
 {

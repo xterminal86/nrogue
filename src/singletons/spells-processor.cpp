@@ -12,6 +12,8 @@ void SpellsProcessor::InitSpecific()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 void SpellsProcessor::ProcessWand(ItemComponent* wand)
 {
   Printer::Instance().AddMessage("You invoke the wand...");
@@ -29,6 +31,8 @@ void SpellsProcessor::ProcessWand(ItemComponent* wand)
       break;
   }
 }
+
+// =============================================================================
 
 void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
 {
@@ -75,6 +79,8 @@ void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
 
   _playerRef->AddEffect(b);
 }
+
+// =============================================================================
 
 void SpellsProcessor::ProcessScroll(ItemComponent* scroll, GameObject* user)
 {
@@ -139,6 +145,8 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll, GameObject* user)
   PrintUsageResult(scroll, user);
 }
 
+// =============================================================================
+
 void SpellsProcessor::PrintUsageResult(ItemComponent* scroll, GameObject* user)
 {
   if (Util::IsPlayer(user))
@@ -159,6 +167,8 @@ void SpellsProcessor::PrintUsageResult(ItemComponent* scroll, GameObject* user)
     Printer::Instance().AddMessage("The scroll crumbles to dust");
   }
 }
+
+// =============================================================================
 
 void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll, GameObject* user)
 {
@@ -215,6 +225,8 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll, GameObject* u
     }
   }
 }
+
+// =============================================================================
 
 void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll, GameObject* user)
 {
@@ -287,6 +299,8 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll, GameObject*
   }
 }
 
+// =============================================================================
+
 void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll, GameObject* user)
 {
   int userPow = user->Attrs.Mag.Get();
@@ -334,6 +348,8 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll, Gam
   }
 }
 
+// =============================================================================
+
 void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll, GameObject* user)
 {
   int power = user->Attrs.HP.Max().Get();
@@ -366,6 +382,8 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll, GameObject* 
 
   user->Attrs.HP.AddMin(power);
 }
+
+// =============================================================================
 
 void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll, GameObject* user)
 {
@@ -410,10 +428,12 @@ void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll, GameObject* us
   user->AddEffect(b);
 }
 
+// =============================================================================
+
 void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll, GameObject* user)
 {
   //
-  // Pointless for anyone but the player
+  // Pointless for anyone but the player.
   //
   if (!Util::IsPlayer(user))
   {
@@ -471,6 +491,8 @@ void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll, GameObject* user)
     }
   }
 }
+
+// =============================================================================
 
 void SpellsProcessor::ProcessScrollOfHiddenDetection(ItemComponent* scroll,
                                                      GameObject* user,
@@ -533,6 +555,8 @@ void SpellsProcessor::ProcessScrollOfHiddenDetection(ItemComponent* scroll,
 
   _playerRef->AddEffect(b);
 }
+
+// =============================================================================
 
 void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObject* user)
 {
@@ -614,6 +638,8 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
   }
 }
 
+// =============================================================================
+
 void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll, GameObject* user)
 {
   if (Map::Instance().CurrentLevel->MysteriousForcePresent)
@@ -647,6 +673,8 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll, GameObject*
     Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos, user);
   }
 }
+
+// =============================================================================
 
 void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll, GameObject* user)
 {
@@ -682,6 +710,8 @@ void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll, GameObjec
     user->AddEffect(b);
   }
 }
+
+// =============================================================================
 
 void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObject* user)
 {

@@ -40,7 +40,7 @@ class Application : public Singleton<Application>
 
     struct Config
     {
-      float ScaleFactor = 1.0f;
+      double ScaleFactor = 1.0;
 
       int TileWidth = 0;
       int TileHeight = 0;
@@ -49,7 +49,7 @@ class Application : public Singleton<Application>
       int WindowHeight = 0;
 
       //
-      // Disables attack display animation thus reducing gameplay lag
+      // Disables attack display animation thus reducing gameplay lag.
       //
       bool FastCombat = false;
 
@@ -68,13 +68,13 @@ class Application : public Singleton<Application>
 
     Config GameConfig;
 
-    ///
-    /// Force redraw current state
-    ///
-    /// Assuming that _currentState is MainState,
-    /// call this to force redraw screen in that state
-    /// only when needed ( see Player::WaitForTurn() )
-    ///
+    //
+    // Force redraw current state
+    //
+    // Assuming that _currentState is MainState,
+    // call this to force redraw screen in that state
+    // only when needed ( see Player::WaitForTurn() )
+    //
     void ForceDrawMainState();
 
     void ForceDrawCurrentState();

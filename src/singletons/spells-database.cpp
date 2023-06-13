@@ -154,10 +154,14 @@ void SpellsDatabase::InitSpecific()
                 });
 }
 
+// =============================================================================
+
 void SpellsDatabase::RegisterSpell(const SpellInfo& i)
 {
   _database.emplace(i.SpellType_, i);
 }
+
+// =============================================================================
 
 SpellInfo* SpellsDatabase::GetSpellInfoFromDatabase(SpellType t)
 {

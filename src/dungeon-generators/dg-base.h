@@ -62,7 +62,7 @@ class DGBase
     void PrintMapRaw();
     void LogPrintMapRaw();
 
-    float GetFillingRatio();
+    double GetFillingRatio();
 
     std::vector<std::vector<char>> MapRaw;
 

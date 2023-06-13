@@ -8,6 +8,8 @@ void Logger::InitSpecific()
 {
 }
 
+// =============================================================================
+
 void Logger::Prepare(bool enabled)
 {
   _enabled = enabled;
@@ -18,6 +20,8 @@ void Logger::Prepare(bool enabled)
     Print("Log started");
   }
 }
+
+// =============================================================================
 
 void Logger::Print(const std::string &stringToPrint, bool error)
 {
@@ -31,6 +35,8 @@ void Logger::Print(const std::string &stringToPrint, bool error)
     _logFile.flush();
   }
 }
+
+// =============================================================================
 
 Logger::~Logger()
 {

@@ -234,16 +234,22 @@ void InventoryState::Update(bool forceUpdate)
                                     item->ObjectName :
                                     ic->Data.UnidentifiedName;
 
+      if (ic->Data.ItemType_ == ItemType::GEM)
+      {
+        ItemQuality q = ic->Data.ItemQuality_;
+        nameInInventory.append(GlobalConstants::GemRatingByQuality.at(q));
+      }
+
       nameInInventory.resize(GlobalConstants::InventoryMaxNameLength, ' ');
 
       if (ic->Data.IsStackable || (ic->Data.IsChargeable && ic->Data.IsIdentified))
       {
-        auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
+        std::string stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
         if ((ic->Data.ItemType_ == ItemType::ARROWS
           || ic->Data.ItemType_ == ItemType::WAND)
             && ic->Data.IsEquipped)
         {
-          stackAmount += " (E)";
+          stackAmount.append(" (E)");
         }
 
         Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 2,

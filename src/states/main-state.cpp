@@ -398,7 +398,7 @@ void MainState::DrawHPMP()
 
 void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
 {
-  float ratio = ((float)attr.Min().Get() / (float)attr.Max().Get());
+  double ratio = ((double)attr.Min().Get() / (double)attr.Max().Get());
   int len = ratio * GlobalConstants::HPMPBarLength;
 
   std::string bar = "[";
@@ -821,7 +821,7 @@ void MainState::DisplayWeaponCondition(const int& startPos)
    || weapon->Data.ItemType_ == ItemType::RANGED_WEAPON))
   {
     int maxDur = weapon->Data.Durability.Max().Get();
-    int warning = maxDur * 0.3f;
+    int warning = maxDur * 0.3;
 
     if (weapon->Data.Durability.Min().Get() <= warning)
     {
@@ -839,7 +839,7 @@ void MainState::DisplayArmorCondition(const int& startPos)
   if (armor != nullptr && armor->Data.ItemType_ == ItemType::ARMOR)
   {
     int maxDur = armor->Data.Durability.Max().Get();
-    int warning = maxDur * 0.3f;
+    int warning = maxDur * 0.3;
 
     if (armor->Data.Durability.Min().Get() <= warning)
     {

@@ -26,7 +26,7 @@ void Map::InitSpecific()
   _mapVisitFirstTime[MapType::THE_END]     = false;
 
   //
-  // Shortcut variable
+  // Shortcut variable.
   //
   _playerRef = &Application::Instance().PlayerInstance;
 
@@ -36,6 +36,8 @@ void Map::InitSpecific()
   //
   _playerRef->Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 }
+
+// =============================================================================
 
 void Map::Cleanup()
 {
@@ -51,12 +53,16 @@ void Map::Cleanup()
   Logger::Instance().Print("Map::Cleanup()");
 }
 
+// =============================================================================
+
 void Map::Draw()
 {
   DrawMapTilesAroundPlayer();
   DrawGameObjects();
   DrawActors();
 }
+
+// =============================================================================
 
 void Map::Update()
 {
@@ -88,6 +94,8 @@ void Map::Update()
   RemoveDestroyed();
 }
 
+// =============================================================================
+
 void Map::UpdateGameObjects()
 {
   for (auto& go : CurrentLevel->GameObjects)
@@ -95,6 +103,8 @@ void Map::UpdateGameObjects()
     go->Update();
   }
 }
+
+// =============================================================================
 
 void Map::UpdateActors()
 {
@@ -113,12 +123,12 @@ void Map::UpdateActors()
     //         || ACHIEVEMENT UNLOCKED ||
     //         ==========================
     //
-    // ******************************************
-    // *                                        *
-    // * Use do / while loop in the actual code *
-    // *    for the first time in your life     *
-    // *                                        *
-    // ******************************************
+    // +----------------------------------------+
+    // |                                        |
+    // | Use do / while loop in the actual code |
+    // |    for the first time in your life     |
+    // |                                        |
+    // +----------------------------------------+
     //
     do
     {
@@ -170,6 +180,8 @@ void Map::UpdateActors()
   }
 }
 
+// =============================================================================
+
 void Map::UpdateTriggers(TriggerUpdateType updateType)
 {
   switch (updateType)
@@ -194,15 +206,21 @@ void Map::UpdateTriggers(TriggerUpdateType updateType)
   }
 }
 
+// =============================================================================
+
 void Map::PlaceActor(GameObject* goToInsert)
 {
   CurrentLevel->PlaceActor(goToInsert);
 }
 
+// =============================================================================
+
 void Map::PlaceGameObject(GameObject* goToInsert)
 {
   CurrentLevel->PlaceGameObject(goToInsert);
 }
+
+// =============================================================================
 
 std::pair<int, GameObject*> Map::GetGameObjectToPickup(int x, int y)
 {
@@ -227,6 +245,8 @@ std::pair<int, GameObject*> Map::GetGameObjectToPickup(int x, int y)
   return res;
 }
 
+// =============================================================================
+
 std::vector<std::pair<int, GameObject*>> Map::GetGameObjectsToPickup(int x, int y)
 {
   std::vector<std::pair<int, GameObject*>> res;
@@ -246,6 +266,8 @@ std::vector<std::pair<int, GameObject*>> Map::GetGameObjectsToPickup(int x, int 
   return res;
 }
 
+// =============================================================================
+
 GameObject* Map::GetActorAtPosition(int x, int y)
 {
   for (auto& go : CurrentLevel->ActorGameObjects)
@@ -258,6 +280,8 @@ GameObject* Map::GetActorAtPosition(int x, int y)
 
   return nullptr;
 }
+
+// =============================================================================
 
 std::vector<GameObject*> Map::GetGameObjectsAtPosition(int x, int y)
 {
@@ -274,6 +298,8 @@ std::vector<GameObject*> Map::GetGameObjectsAtPosition(int x, int y)
   return res;
 }
 
+// =============================================================================
+
 GameObject* Map::GetStaticGameObjectAtPosition(int x, int y)
 {
   GameObject* res = nullptr;
@@ -285,6 +311,8 @@ GameObject* Map::GetStaticGameObjectAtPosition(int x, int y)
 
   return res;
 }
+
+// =============================================================================
 
 GameObject* Map::FindGameObjectById(const uint64_t& objId,
                                     GameObjectCollectionType collectionType)
@@ -331,6 +359,8 @@ GameObject* Map::FindGameObjectById(const uint64_t& objId,
   return res;
 }
 
+// =============================================================================
+
 MapLevelBase* Map::GetLevelRefByType(MapType type)
 {
   if (_levels.count(type) != 0)
@@ -340,6 +370,8 @@ MapLevelBase* Map::GetLevelRefByType(MapType type)
 
   return nullptr;
 }
+
+// =============================================================================
 
 void Map::RemoveDestroyed(GameObjectCollectionType c)
 {
@@ -370,6 +402,8 @@ void Map::RemoveDestroyed(GameObjectCollectionType c)
   }
 }
 
+// =============================================================================
+
 void Map::RemoveTriggers()
 {
   auto RemoveFromCollecton = [this](std::vector<std::unique_ptr<GameObject>>& collection)
@@ -392,6 +426,8 @@ void Map::RemoveTriggers()
   RemoveFromCollecton(CurrentLevel->FinishTurnTriggers);
   RemoveFromCollecton(CurrentLevel->GlobalTriggers);
 }
+
+// =============================================================================
 
 void Map::RemoveStaticObjects()
 {
@@ -417,12 +453,14 @@ void Map::RemoveStaticObjects()
   }
 }
 
+// =============================================================================
+
 void Map::ChangeLevel(MapType levelToChange, bool goingDown)
 {
   auto& player = Application::Instance().PlayerInstance;
 
   //
-  // Unblock cell on stairs before going
+  // Unblock cell on stairs before going.
   //
   CurrentLevel->MapArray[player.PosX][player.PosY]->Occupied = false;
 
@@ -436,6 +474,8 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
 
   CurrentLevel->AdjustCamera();
 }
+
+// =============================================================================
 
 void Map::TeleportToExistingLevel(MapType levelToChange,
                                   const Position& teleportTo,
@@ -454,11 +494,13 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
     whoToTeleport = objectToTeleport;
   }
 
+  //
   // Unblock cell before teleporting.
   //
   // MoveTo() does the unblocking as well, but if we switch places with actor,
   // we must manually unblock player's cell first
   // or MoveTo() for actor won't work.
+  //
   CurrentLevel->MapArray[whoToTeleport->PosX][whoToTeleport->PosY]->Occupied = false;
 
   CurrentLevel = _levels[levelToChange].get();
@@ -493,9 +535,11 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
   {
     if (forPlayer)
     {
+      //
       // Assume that if some NPC occupied returner destination,
       // he can be moved at least to his 'previous' position
       // (thus, any empty cell around him).
+      //
       auto str = Util::StringFormat("You bump into %s!", actor->ObjectName.data());
       Printer::Instance().AddMessage(str);
     }
@@ -512,7 +556,9 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
       }
     }
 
-    // Read the first comment from the beginning of the method
+    //
+    // Read the first comment from the beginning of the method.
+    //
     actor->MoveTo(tp);
   }
 
@@ -526,6 +572,8 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
 
   CurrentLevel->AdjustCamera();
 }
+
+// =============================================================================
 
 void Map::ChangeOrInstantiateLevel(MapType levelName)
 {
@@ -602,7 +650,9 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
         break;
     }
 
-    // Now GameObjectsFactory inside PrepareMap can reference correct level
+    //
+    // Now GameObjectsFactory inside PrepareMap can reference correct level.
+    //
     CurrentLevel = _levels[levelName].get();
 
     _levels[levelName]->PrepareMap(CurrentLevel);
@@ -632,11 +682,15 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
   Printer::Instance().ShowLastMessage = false;
 }
 
+// =============================================================================
+
 Position Map::GetRandomEmptyCell()
 {
   int index = RNG::Instance().RandomRange(0, CurrentLevel->EmptyCells().size());
   return CurrentLevel->EmptyCells()[index];
 }
+
+// =============================================================================
 
 int Map::CountEmptyCellsAround(int x, int y)
 {
@@ -667,6 +721,8 @@ int Map::CountEmptyCellsAround(int x, int y)
   return res;
 }
 
+// =============================================================================
+
 int Map::CountAroundStatic(int x, int y, GameObjectType type)
 {
   int res = 0;
@@ -696,6 +752,8 @@ int Map::CountAroundStatic(int x, int y, GameObjectType type)
 
   return res;
 }
+
+// =============================================================================
 
 int Map::CountWallsOrthogonal(int x, int y)
 {
@@ -728,6 +786,8 @@ int Map::CountWallsOrthogonal(int x, int y)
   return res;
 }
 
+// =============================================================================
+
 std::vector<MapType> Map::GetAllVisitedLevels()
 {
   std::vector<MapType> res;
@@ -739,6 +799,8 @@ std::vector<MapType> Map::GetAllVisitedLevels()
 
   return res;
 }
+
+// =============================================================================
 
 void Map::ShowLoadingText(const std::string& textOverride)
 {
@@ -768,6 +830,8 @@ void Map::ShowLoadingText(const std::string& textOverride)
   Printer::Instance().Render();
 }
 
+// =============================================================================
+
 void Map::PrintMapArrayRevealedStatus()
 {
   std::vector<std::string> dbg;
@@ -789,6 +853,8 @@ void Map::PrintMapArrayRevealedStatus()
 
   Printer::Instance().AddMessage("Current map layout revealed status logged");
 }
+
+// =============================================================================
 
 #ifdef DEBUG_BUILD
 void Map::PrintMapLayout()
@@ -860,6 +926,8 @@ void Map::PrintMapLayout()
 }
 #endif
 
+// =============================================================================
+
 void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes)
 {
   auto pointsAffected = Printer::Instance().DrawExplosion(target->GetPosition(), 3);
@@ -905,6 +973,8 @@ void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centra
   }
 }
 
+// =============================================================================
+
 bool Map::IsTileDangerous(const Position& pos)
 {
   GameObjectType tileType = CurrentLevel->MapArray[pos.X][pos.Y]->Type;
@@ -914,7 +984,11 @@ bool Map::IsTileDangerous(const Position& pos)
        || tileType == GameObjectType::LAVA);
 }
 
-/// Returns list of cell that can be walked upon
+// =============================================================================
+
+//
+// Returns list of cell that can be walked upon.
+//
 std::vector<Position> Map::GetWalkableCellsAround(const Position& pos)
 {
   std::vector<Position> res;
@@ -948,6 +1022,8 @@ std::vector<Position> Map::GetWalkableCellsAround(const Position& pos)
   return res;
 }
 
+// =============================================================================
+
 std::vector<Position> Map::GetEmptyCellsAround(const Position& pos, int range)
 {
   std::vector<Position> res;
@@ -979,6 +1055,8 @@ std::vector<Position> Map::GetEmptyCellsAround(const Position& pos, int range)
   return res;
 }
 
+// =============================================================================
+
 void Map::DrawNonVisibleMapTile(int x, int y)
 {
   //
@@ -1005,12 +1083,14 @@ void Map::DrawNonVisibleMapTile(int x, int y)
   }
 }
 
+// =============================================================================
+
 void Map::DrawNonVisibleStaticObject(int x, int y)
 {
   if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
   {
     //
-    // Same as in method above
+    // Same as in method above.
     //
     uint32_t tileColor = CurrentLevel->MapArray[x][y]->Revealed
                          ? Colors::FogOfWarColor
@@ -1026,6 +1106,8 @@ void Map::DrawNonVisibleStaticObject(int x, int y)
     }
   }
 }
+
+// =============================================================================
 
 bool Map::IsObjectVisible(const Position &from,
                           const Position &to,
@@ -1050,9 +1132,10 @@ bool Map::IsObjectVisible(const Position &from,
       return false;
     }
 
+    //
     // Object can be blocking but not blocking the sight (e.g. lava, chasm)
     // so check against BlocksSight only is needed.
-
+    //
     bool groundBlock = CurrentLevel->MapArray[c.X][c.Y]->BlocksSight;
     bool staticBlock = false;
 
@@ -1070,6 +1153,8 @@ bool Map::IsObjectVisible(const Position &from,
   return true;
 }
 
+// =============================================================================
+
 void Map::DrawMapTilesAroundPlayer()
 {
   int tw = Printer::TerminalWidth;
@@ -1085,7 +1170,9 @@ void Map::DrawMapTilesAroundPlayer()
     {
       CurrentLevel->MapArray[x][y]->Draw();
 
-      // Draw static object on top if present
+      //
+      // Draw static object on top if present.
+      //
       if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
       {
         CurrentLevel->StaticMapObjects[x][y]->Draw();
@@ -1098,6 +1185,8 @@ void Map::DrawMapTilesAroundPlayer()
     }
   }
 }
+
+// =============================================================================
 
 void Map::DrawGameObjects()
 {
@@ -1119,6 +1208,8 @@ void Map::DrawGameObjects()
     }
   }
 }
+
+// =============================================================================
 
 void Map::DrawActors()
 {
@@ -1176,6 +1267,8 @@ void Map::DrawActors()
   }
 }
 
+// =============================================================================
+
 std::pair<uint32_t, uint32_t> Map::GetActorColors(GameObject* actor)
 {
   int x = actor->PosX;
@@ -1183,7 +1276,7 @@ std::pair<uint32_t, uint32_t> Map::GetActorColors(GameObject* actor)
 
   //
   // If game object has black bg color,
-  // replace it with current floor color
+  // replace it with current floor color.
   //
   uint32_t bgColor = actor->BgColor;
   uint32_t fgColor = actor->FgColor;
@@ -1212,6 +1305,8 @@ std::pair<uint32_t, uint32_t> Map::GetActorColors(GameObject* actor)
 
   return { fgColor, bgColor };
 }
+
+// =============================================================================
 
 void Map::EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list)
 {

@@ -42,7 +42,7 @@ void BSPRooms::Generate(const Position& mapSize,
   FillMapRaw();
 }
 
-void BSPRooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
+void BSPRooms::Subdivide(BSPNode& parent, double ratio, bool splitX)
 {
   int sx = parent.CornerStart.X;
   int sy = parent.CornerStart.Y;
@@ -109,13 +109,13 @@ void BSPRooms::Subdivide(BSPNode& parent, float ratio, bool splitX)
   Subdivide(*parent.Right.get(), splitChance2.second, splitChance2.first);
 }
 
-std::pair<bool, float> BSPRooms::GetSplitRatio(Rect& area)
+std::pair<bool, double> BSPRooms::GetSplitRatio(Rect& area)
 {
-  std::pair<bool, float> res;
+  std::pair<bool, double> res;
 
   int r = RNG::Instance().RandomRange(_splitRatio.X, _splitRatio.Y + 1);
 
-  float ratio = (float)r / 100.0f;
+  double ratio = (double)r / 100.0;
 
   if (area.Dimensions().X >= area.Dimensions().Y)
   {

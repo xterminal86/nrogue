@@ -25,6 +25,8 @@ void LevelBuilder::FeatureRoomsMethod(const Position& mapSize,
   MapRaw = fr->MapRaw;
 }
 
+// =============================================================================
+
 void LevelBuilder::CellularAutomataMethod(const Position& mapSize,
                                           int initialWallChance,
                                           int birthThreshold,
@@ -39,6 +41,8 @@ void LevelBuilder::CellularAutomataMethod(const Position& mapSize,
   MapRaw = ca->MapRaw;
 }
 
+// =============================================================================
+
 void LevelBuilder::BacktrackingTunnelerMethod(const Position& mapSize,
                                               const Position& tunnelMinMax,
                                               const Position& start,
@@ -51,6 +55,8 @@ void LevelBuilder::BacktrackingTunnelerMethod(const Position& mapSize,
 
   MapRaw = t->MapRaw;
 }
+
+// =============================================================================
 
 void LevelBuilder::TunnelerMethod(const Position& mapSize,
                                   int maxIterations,
@@ -65,6 +71,8 @@ void LevelBuilder::TunnelerMethod(const Position& mapSize,
   MapRaw = t->MapRaw;
 }
 
+// =============================================================================
+
 void LevelBuilder::RecursiveBacktrackerMethod(const Position& mapSize,
                                               const Position& startingPoint,
                                               const RemovalParams& endWallsRemovalParams)
@@ -76,6 +84,8 @@ void LevelBuilder::RecursiveBacktrackerMethod(const Position& mapSize,
 
   MapRaw = rb->MapRaw;
 }
+
+// =============================================================================
 
 //
 // FIXME: build from layouts needs improvements
@@ -96,6 +106,8 @@ void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRoom
   MapRaw = fl->MapRaw;
 }
 
+// =============================================================================
+
 void LevelBuilder::BSPRoomsMethod(const Position& mapSize,
                                   const Position& splitRatio,
                                   int minRoomSize)
@@ -107,6 +119,8 @@ void LevelBuilder::BSPRoomsMethod(const Position& mapSize,
 
   MapRaw = fl->MapRaw;
 }
+
+// =============================================================================
 
 void LevelBuilder::FromTilesMethod(const Position& mapSize,
                                    int tileSetIndex,
@@ -120,6 +134,8 @@ void LevelBuilder::FromTilesMethod(const Position& mapSize,
 
   MapRaw = ft->MapRaw;
 }
+
+// =============================================================================
 
 void LevelBuilder::PlaceShrineLayout(const Position& start,
                                const StringsArray2D& layout)
@@ -147,6 +163,7 @@ void LevelBuilder::PlaceShrineLayout(const Position& start,
     ly = 0;
   }
 
+  //
   // Ensure shrine is always accessible
   // by constructing perimeter of empty cells around it.
   //
@@ -154,6 +171,7 @@ void LevelBuilder::PlaceShrineLayout(const Position& start,
   // to the generated level design but I don't want
   // to mull over other methods and it's better than
   // accidental blocking of level paths.
+  //
   for (int x = sx - 1; x < ex + 1; x++)
   {
     MapRaw[x][sy - 1] = '.';
@@ -167,6 +185,8 @@ void LevelBuilder::PlaceShrineLayout(const Position& start,
   }
 }
 
+// =============================================================================
+
 void LevelBuilder::PrintMapRaw()
 {
   if (_generator)
@@ -174,6 +194,8 @@ void LevelBuilder::PrintMapRaw()
     _generator->PrintMapRaw();
   }
 }
+
+// =============================================================================
 
 void LevelBuilder::LogPrintMapRaw()
 {
@@ -183,22 +205,30 @@ void LevelBuilder::LogPrintMapRaw()
   }
 }
 
+// =============================================================================
+
 std::map<Position, ShrineType>& LevelBuilder::ShrinesByPosition()
 {
   return _generator->ShrinesByPosition;
 }
+
+// =============================================================================
 
 bool LevelBuilder::WasUsed()
 {
   return (_generator != nullptr);
 }
 
+// =============================================================================
+
 std::string LevelBuilder::GetMapRawString()
 {
   return (_generator != nullptr) ? _generator->GetMapRawString() : "_generator is null\n";
 }
 
-float LevelBuilder::GetFillingRatio()
+// =============================================================================
+
+double LevelBuilder::GetFillingRatio()
 {
-  return (_generator != nullptr) ? _generator->GetFillingRatio() : 0.0f;
+  return (_generator != nullptr) ? _generator->GetFillingRatio() : 0.0;
 }

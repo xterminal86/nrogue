@@ -54,6 +54,8 @@ void Player::Init()
   //Attrs.HungerRate.Set(0);
 }
 
+// =============================================================================
+
 void Player::Draw()
 {
   auto& mapRef = Map::Instance().CurrentLevel;
@@ -81,6 +83,8 @@ void Player::Draw()
 
   GameObject::Draw(FgColor, bgColor);
 }
+
+// =============================================================================
 
 bool Player::TryToMeleeAttack(int dx, int dy)
 {
@@ -110,6 +114,8 @@ bool Player::TryToMeleeAttack(int dx, int dy)
   return false;
 }
 
+// =============================================================================
+
 bool Player::IsSwimming()
 {
   bool isFlying   = HasEffect(ItemBonusType::LEVITATION);
@@ -117,6 +123,8 @@ bool Player::IsSwimming()
 
   return (!isFlying && isSwimming);
 }
+
+// =============================================================================
 
 bool Player::Move(int dx, int dy)
 {
@@ -181,6 +189,8 @@ bool Player::Move(int dx, int dy)
   return moveOk;
 }
 
+// =============================================================================
+
 bool Player::PassByNPC(GameObject* actor)
 {
   bool ok = true;
@@ -204,6 +214,8 @@ bool Player::PassByNPC(GameObject* actor)
 
   return ok;
 }
+
+// =============================================================================
 
 void Player::CheckVisibility()
 {
@@ -250,9 +262,9 @@ void Player::CheckVisibility()
 
   for (auto& cell : mapCells)
   {
-    float d = Util::LinearDistance(PosX, PosY, cell.X, cell.Y);
+    double d = Util::LinearDistance(PosX, PosY, cell.X, cell.Y);
 
-    if (d > (float)radius)
+    if (d > (double)radius)
     {
       continue;
     }
@@ -279,6 +291,8 @@ void Player::CheckVisibility()
     }
   }
 }
+
+// =============================================================================
 
 void Player::DiscoverCell(int x, int y)
 {
@@ -312,6 +326,8 @@ void Player::DiscoverCell(int x, int y)
   }
 }
 
+// =============================================================================
+
 void Player::SetAttributes()
 {
   switch (GetClass())
@@ -334,6 +350,8 @@ void Player::SetAttributes()
   }
 }
 
+// =============================================================================
+
 void Player::SetSoldierAttrs()
 {
   Attrs.Str.Talents = 3;
@@ -352,6 +370,8 @@ void Player::SetSoldierAttrs()
 
   HealthRegenTurns = 40;
 }
+
+// =============================================================================
 
 void Player::SetThiefAttrs()
 {
@@ -372,6 +392,8 @@ void Player::SetThiefAttrs()
   HealthRegenTurns = 60;
 }
 
+// =============================================================================
+
 void Player::SetArcanistAttrs()
 {
   Attrs.Mag.Talents = 3;
@@ -390,6 +412,8 @@ void Player::SetArcanistAttrs()
   HealthRegenTurns = 80;
 }
 
+// =============================================================================
+
 void Player::SetCustomClassAttrs()
 {
   GameState* stateRef = Application::Instance().GetGameStateRefByName(GameStates::CUSTOM_CLASS_STATE);
@@ -397,15 +421,21 @@ void Player::SetCustomClassAttrs()
   ccs->InitPlayerAttributes(this);
 }
 
+// =============================================================================
+
 void Player::SetAttackDir(const Position& dir)
 {
   _attackDir = dir;
 }
 
+// =============================================================================
+
 void Player::SetKnockBackDir(const Position& dir)
 {
   _knockBackDir = dir;
 }
+
+// =============================================================================
 
 void Player::SetDefaultEquipment()
 {
@@ -489,9 +519,11 @@ void Player::SetDefaultEquipment()
   }
 }
 
-///
-/// 'what' is either actor or GameObject, 'with' is a weapon (i.e. arrow)
-///
+// =============================================================================
+
+//
+// 'what' is either actor or GameObject, 'with' is a weapon (i.e. arrow)
+//
 void Player::RangedAttack(GameObject* what, ItemComponent* with)
 {
   ItemComponent* weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
@@ -564,9 +596,11 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   }
 }
 
-///
-/// 'what' is either actor or GameObject, 'with' is a wand
-///
+// =============================================================================
+
+//
+// 'what' is either actor or GameObject, 'with' is a wand
+//
 void Player::MagicAttack(GameObject* what, ItemComponent* with)
 {
   with->Data.Amount--;
@@ -624,6 +658,8 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
   }
 }
 
+// =============================================================================
+
 void Player::ProcessMagicAttack(GameObject* target,
                                 ItemComponent* weapon,
                                 int damage,
@@ -654,17 +690,23 @@ void Player::ProcessMagicAttack(GameObject* target,
   }
   else
   {
+    //
     // Magic attack should probably hit everything,
     // since it's, well, magical. You can't really control it.
+    //
 
-    // Check items first
+    //
+    // Check items first.
+    //
     auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
     {
       Util::TryToDamageObject(obj, this, damage, againstRes);
     }
 
-    // If nothing is lying in the doorway, for example, damage door
+    //
+    // If nothing is lying in the doorway, for example, damage door.
+    //
     if (mapObjs.empty())
     {
       auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
@@ -675,6 +717,8 @@ void Player::ProcessMagicAttack(GameObject* target,
     }
   }
 }
+
+// =============================================================================
 
 void Player::MeleeAttack(GameObject* what, bool alwaysHit)
 {
@@ -746,6 +790,8 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
   Attrs.Hunger += Attrs.HungerSpeed.Get() * 2;
 }
 
+// =============================================================================
+
 void Player::ProcessMeleeAttack(ItemComponent* weapon,
                                 GameObject* defender,
                                 int damageToInflict)
@@ -810,8 +856,8 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
     if (succ && hasLeech && defender->IsLiving)
     {
       auto b = weapon->Data.GetBonus(ItemBonusType::LEECH);
-      float fract = (float)b->BonusValue * 0.01f;
-      int dmgToHp = (int)((float)damageToInflict * fract);
+      double fract = (double)b->BonusValue * 0.01;
+      int dmgToHp = (int)((double)damageToInflict * fract);
       if (dmgToHp != 0)
       {
         Attrs.HP.AddMin(dmgToHp);
@@ -825,6 +871,8 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
   }
 }
 
+// =============================================================================
+
 bool Player::IsGameObjectBorder(GameObject* go)
 {
   auto& lvl = Map::Instance().CurrentLevel;
@@ -834,6 +882,8 @@ bool Player::IsGameObjectBorder(GameObject* go)
        || go->PosX == lvl->MapSize.X - 2
        || go->PosY == lvl->MapSize.Y - 2);
 }
+
+// =============================================================================
 
 bool Player::ReceiveDamage(GameObject* from,
                            int amount,
@@ -895,6 +945,8 @@ bool Player::ReceiveDamage(GameObject* from,
   return true;
 }
 
+// =============================================================================
+
 void Player::AwardExperience(int amount)
 {
   int amnt = amount;
@@ -954,10 +1006,14 @@ void Player::AwardExperience(int amount)
   }
 }
 
+// =============================================================================
+
 void Player::LevelUpSilent()
 {
   GameObject::LevelUp();
 }
+
+// =============================================================================
 
 void Player::LevelUp(int baseHpOverride)
 {
@@ -978,6 +1034,8 @@ void Player::LevelUp(int baseHpOverride)
                                          0x000044);
 }
 
+// =============================================================================
+
 void Player::LevelDown()
 {
   GameObject::LevelDown();
@@ -992,10 +1050,14 @@ void Player::LevelDown()
                                          0x000044);
 }
 
+// =============================================================================
+
 void Player::LevelDownSilent()
 {
   GameObject::LevelDown();
 }
+
+// =============================================================================
 
 void Player::PrintLevelUpResultsToLog(bool reallyUp)
 {
@@ -1069,10 +1131,12 @@ void Player::PrintLevelUpResultsToLog(bool reallyUp)
   }
 }
 
+// =============================================================================
+
 void Player::ProcessKill(GameObject* monster)
 {
   //
-  // Try to generate loot from the kill itself
+  // Try to generate loot from the kill itself.
   //
   if (Util::IsFunctionValid(monster->GenerateLootFunction))
   {
@@ -1104,12 +1168,16 @@ void Player::ProcessKill(GameObject* monster)
   }
 }
 
+// =============================================================================
+
 void Player::WaitForTurn()
 {
   GameObject::WaitForTurn();
   ProcessEffectsPlayer();
   ProcessItemsEffects();
 }
+
+// =============================================================================
 
 void Player::SetDestroyed()
 {
@@ -1118,6 +1186,8 @@ void Player::SetDestroyed()
   BgColor = Colors::RedColor;
   IsDestroyed = true;
 }
+
+// =============================================================================
 
 std::vector<std::string> Player::GetPrettyLevelUpText()
 {
@@ -1140,9 +1210,11 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
   mbStr = Util::StringFormat("MP:  %i", Attrs.MP.Max().OriginalValue());
   levelUpResults.push_back(mbStr);
 
+  //
   // Try to make everything look pretty
   //
   // NOTE: probably lots of shitcode anyway
+  //
 
   size_t maxLen = 0;
   for (auto& s : levelUpResults)
@@ -1182,7 +1254,9 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
     index++;
   }
 
-  // Take into account empty string between stats and hitpoints
+  //
+  // Take into account empty string between stats and hitpoints.
+  //
   index++;
 
   std::string addition;
@@ -1213,6 +1287,8 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
 
   return levelUpResults;
 }
+
+// =============================================================================
 
 void Player::FinishTurn()
 {
@@ -1250,6 +1326,8 @@ void Player::FinishTurn()
 
   Application::Instance().PlayerTurnsPassed++;
 }
+
+// =============================================================================
 
 void Player::ProcessEffectsPlayer()
 {
@@ -1293,10 +1371,12 @@ void Player::ProcessEffectsPlayer()
   }
 }
 
+// =============================================================================
+
 void Player::ProcessStarvation()
 {
   //
-  // No starving in town
+  // No starving in town.
   //
   if (Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
   {
@@ -1318,6 +1398,8 @@ void Player::ProcessStarvation()
   }
 }
 
+// =============================================================================
+
 void Player::ProcessHunger()
 {
 #ifdef DEBUG_BUILD
@@ -1328,7 +1410,7 @@ void Player::ProcessHunger()
 #endif
 
   //
-  // No starving in town
+  // No starving in town.
   //
   if (Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
   {
@@ -1372,6 +1454,8 @@ void Player::ProcessHunger()
   }
 }
 
+// =============================================================================
+
 void Player::ApplyStarvingPenalties()
 {
   if (!HasEffect(ItemBonusType::WEAKNESS))
@@ -1387,10 +1471,14 @@ void Player::ApplyStarvingPenalties()
   }
 }
 
+// =============================================================================
+
 void Player::UnapplyStarvingPenalties()
 {
   RemoveEffect(ItemBonusType::WEAKNESS, _objectId);
 }
+
+// =============================================================================
 
 void Player::ProcessItemsEffects()
 {
@@ -1420,6 +1508,8 @@ void Player::ProcessItemsEffects()
   }
 }
 
+// =============================================================================
+
 void Player::SetDefaultItems()
 {
   switch (GetClass())
@@ -1437,6 +1527,8 @@ void Player::SetDefaultItems()
       break;
   }
 }
+
+// =============================================================================
 
 void Player::SetSoldierDefaultItems()
 {
@@ -1460,6 +1552,8 @@ void Player::SetSoldierDefaultItems()
   Inventory->Add(go);
 }
 
+// =============================================================================
+
 void Player::SetThiefDefaultItems()
 {
   Money = 500;
@@ -1470,6 +1564,8 @@ void Player::SetThiefDefaultItems()
   go = ItemsFactory::Instance().CreateManaPotion(ItemPrefix::UNCURSED);
   Inventory->Add(go);
 }
+
+// =============================================================================
 
 void Player::SetArcanistDefaultItems()
 {
@@ -1487,6 +1583,8 @@ void Player::SetArcanistDefaultItems()
   go = ItemsFactory::Instance().CreateScroll(0, 0, SpellType::MANA_SHIELD, ItemPrefix::BLESSED);
   Inventory->Add(go);
 }
+
+// =============================================================================
 
 void Player::SetDefaultSkills()
 {
@@ -1507,6 +1605,8 @@ void Player::SetDefaultSkills()
   }
 }
 
+// =============================================================================
+
 void Player::SwitchPlaces(AIComponent* other)
 {
   int dxPlayer = other->OwnerGameObject->PosX - PosX;
@@ -1525,6 +1625,8 @@ void Player::SwitchPlaces(AIComponent* other)
   std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : "the " + other->OwnerGameObject->ObjectName;
   Printer::Instance().AddMessage("You pass by " + name);
 }
+
+// =============================================================================
 
 void Player::AddExtraItems()
 {
@@ -1607,15 +1709,21 @@ void Player::AddExtraItems()
   }
 }
 
+// =============================================================================
+
 PlayerClass Player::GetClass()
 {
   return _classesMap[SelectedClass];
 }
 
+// =============================================================================
+
 std::string& Player::GetClassName()
 {
   return _classesName[SelectedClass];
 }
+
+// =============================================================================
 
 bool Player::HasSkill(PlayerSkills skillToCheck)
 {

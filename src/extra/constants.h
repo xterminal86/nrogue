@@ -335,6 +335,8 @@ namespace GlobalConstants
   extern const std::map<ArrowType,        std::string> ArrowNameByType;
   extern const std::map<ArmorType,        std::string> ArmorNameByType;
   extern const std::map<GemType,          std::string> GemNameByType;
+  extern const std::map<GemType,       StringsArray2D> GemDescriptionByType;
+  extern const std::map<ItemQuality,      std::string> GemRatingByQuality;
   extern const std::map<ItemBonusType,    std::string> ItemBonusPrefixes;
   extern const std::map<ItemBonusType,    std::string> ItemBonusSuffixes;
   extern const std::map<ItemBonusType,    std::string> BonusDisplayNameByType;

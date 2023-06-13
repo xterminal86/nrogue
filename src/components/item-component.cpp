@@ -9,18 +9,26 @@ ItemComponent::ItemComponent()
   _componentHash = typeid(*this).hash_code();
 }
 
+// =============================================================================
+
 void ItemComponent::PrepareAdditional()
 {
   OwnerGameObject->Attrs.Indestructible = false;
   OwnerGameObject->Attrs.HP.Reset(1);
 }
 
+// =============================================================================
+
 void ItemComponent::Update()
 {
 }
 
-/// Transfers GameObject to the destination,
-/// or tile occupied by player if destination = nullptr
+// =============================================================================
+
+//
+// Transfers GameObject to the destination,
+// or tile occupied by player if destination = nullptr
+//
 void ItemComponent::Transfer(ContainerComponent* destination)
 {
   // OwnerGameObject should be in released state
@@ -37,6 +45,8 @@ void ItemComponent::Transfer(ContainerComponent* destination)
     destination->Add(OwnerGameObject);
   }
 }
+
+// =============================================================================
 
 std::pair<std::string, StringsArray2D> ItemComponent::GetInspectionInfo(bool overrideDescriptions)
 {
@@ -104,11 +114,15 @@ std::pair<std::string, StringsArray2D> ItemComponent::GetInspectionInfo(bool ove
   return res;
 }
 
+// =============================================================================
+
 void ItemComponent::Inspect(bool overrideDescriptions)
 {
   auto lore = GetInspectionInfo(overrideDescriptions);
   Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, lore.first, lore.second);
 }
+
+// =============================================================================
 
 void ItemComponent::Break(GameObject* itemOwner)
 {
@@ -170,6 +184,8 @@ void ItemComponent::Break(GameObject* itemOwner)
   }
 }
 
+// =============================================================================
+
 UseResult ItemComponent::Use(GameObject* user)
 {
   if (!Data.CanBeUsed())
@@ -180,7 +196,7 @@ UseResult ItemComponent::Use(GameObject* user)
   return Data.UseCallback(this, user);
 }
 
-// ************************** PRIVATE METHODS ************************** //
+// =============================================================================
 
 std::vector<std::string> ItemComponent::GetWeaponInspectionInfo()
 {
@@ -195,6 +211,8 @@ std::vector<std::string> ItemComponent::GetWeaponInspectionInfo()
   return res;
 }
 
+// =============================================================================
+
 std::vector<std::string> ItemComponent::GetArmorInspectionInfo()
 {
   std::vector<std::string> res =
@@ -207,6 +225,8 @@ std::vector<std::string> ItemComponent::GetArmorInspectionInfo()
   return res;
 }
 
+// =============================================================================
+
 std::vector<std::string> ItemComponent::GetAccessoryInspectionInfo()
 {
   std::vector<std::string> res;
@@ -215,6 +235,8 @@ std::vector<std::string> ItemComponent::GetAccessoryInspectionInfo()
 
   return res;
 }
+
+// =============================================================================
 
 std::vector<std::string> ItemComponent::GetReturnerInspectionInfo()
 {
@@ -263,6 +285,8 @@ std::vector<std::string> ItemComponent::GetReturnerInspectionInfo()
 
   return res;
 }
+
+// =============================================================================
 
 std::vector<std::string> ItemComponent::GetWandInspectionInfo()
 {
@@ -337,6 +361,8 @@ std::vector<std::string> ItemComponent::GetWandInspectionInfo()
   return res;
 }
 
+// =============================================================================
+
 void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
 {
   res.push_back("");
@@ -382,8 +408,11 @@ void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
   }
 }
 
+// =============================================================================
+
 void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 {
+  //
   // Certain items give bonus to stats by default (e.g. dagger to SKL)
   // so to avoid several lines that show increase in the same stat
   // because of additional bonus via magic count them all beforehand.
@@ -394,11 +423,13 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
   auto ret = CountAllStatBonuses();
   if (_nonZeroStatBonuses != 0)
   {
+    //
     // Check for emptiness is needed because AddBonusesInfo() is called
     // after potential inserting of weapon information into res,
     // so in case of rings and amulets there is no durability and
     // damage info, so res is actually empty, thus we don't need extra
     // empty line that separates weapon info from bonus info.
+    //
     if (!res.empty())
     {
       res.push_back("");
@@ -407,13 +438,17 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
     AppendStatBonuses(ret, res);
   }
 
+  //
   // If we have stat bonuses and non-stat bonuses,
   // separate them with empty line.
+  //
   bool onlySpecialBonuses = (_nonZeroStatBonuses == 0 && _nonStatBonusesPresent);
   bool bothPresent = (_nonZeroStatBonuses != 0 && _nonStatBonusesPresent);
 
+  //
   // If it's an accessory with only special bonus, it's res will be empty,
   // so no need to put another empty line.
+  //
   if (!res.empty() && (onlySpecialBonuses || bothPresent))
   {
     res.push_back("");
@@ -539,6 +574,8 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
   }
 }
 
+// =============================================================================
+
 void ItemComponent::AppendStatBonuses(const std::map<ItemBonusType, int>& statBonuses, std::vector<std::string>& res)
 {
   for (auto& kvp : statBonuses)
@@ -559,6 +596,8 @@ void ItemComponent::AppendStatBonuses(const std::map<ItemBonusType, int>& statBo
     res.push_back(str);
   }
 }
+
+// =============================================================================
 
 std::map<ItemBonusType, int> ItemComponent::CountAllStatBonuses()
 {

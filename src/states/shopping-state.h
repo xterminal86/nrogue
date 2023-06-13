@@ -19,7 +19,7 @@ class ShoppingState : public GameState
     void HandleInput() override;
 
   private:
-    const float _kPlayerSellRate = 2.0f;
+    const double _kPlayerSellRate = 2.0;
     const int _kJunkerBuyCost = 500;
 
     Player* _playerRef = nullptr;

@@ -11,12 +11,16 @@ bool ItemData::IsWeaponOrArmor()
   return cond;
 }
 
+// =============================================================================
+
 bool ItemData::RepairNeeded()
 {
   bool cond = (Durability.Min().Get() < Durability.Max().Get());
 
   return cond;
 }
+
+// =============================================================================
 
 int ItemData::GetCost()
 {
@@ -35,7 +39,7 @@ int ItemData::GetCost()
 
   if (ItemType_ == ItemType::FOOD)
   {
-    price *= 0.05f;
+    price *= 0.05;
   }
 
   if (ItemType_ == ItemType::GEM)
@@ -70,15 +74,17 @@ int ItemData::GetCost()
     }
     else if (Prefix == ItemPrefix::CURSED)
     {
-      price *= 0.5f;
+      price *= 0.5;
     }
 
-    float newCost = (float)price / _costModByQ.at(ItemQuality_);
+    double newCost = (double)price / _costModByQ.at(ItemQuality_);
     price = (int)newCost;
   }
 
   return price;
 }
+
+// =============================================================================
 
 bool ItemData::HasBonus(ItemBonusType bonusType)
 {
@@ -92,6 +98,8 @@ bool ItemData::HasBonus(ItemBonusType bonusType)
 
   return false;
 }
+
+// =============================================================================
 
 ItemBonusStruct* ItemData::GetBonus(ItemBonusType type)
 {
@@ -109,6 +117,8 @@ ItemBonusStruct* ItemData::GetBonus(ItemBonusType type)
   return res;
 }
 
+// =============================================================================
+
 int ItemData::GetTotalBonusValue(ItemBonusType type)
 {
   int res = 0;
@@ -124,10 +134,14 @@ int ItemData::GetTotalBonusValue(ItemBonusType type)
   return res;
 }
 
+// =============================================================================
+
 bool ItemData::CanBeUsed()
 {
   return (UseCallback.target_type() != typeid(void));
 }
+
+// =============================================================================
 
 std::vector<std::string> ItemBonusStruct::ToStrings()
 {

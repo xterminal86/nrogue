@@ -21,7 +21,10 @@ void GameObjectsFactory::InitSpecific()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
-GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
+// =============================================================================
+
+GameObject* GameObjectsFactory::CreateGameObject(int x, int y,
+                                                 ItemType objType)
 {
   GameObject* go = nullptr;
 
@@ -40,7 +43,7 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
       // The deeper you go, the more is the chance to get actual gem
       // and not worthless glass.
       int curLevel = Map::Instance().CurrentLevel->DungeonLevel;
-      float chance = ((float)curLevel / (float)MapType::THE_END) * 90.0f;
+      double chance = ((double)curLevel / (double)MapType::THE_END) * 90.0;
       go = ItemsFactory::Instance().CreateGem(x, y, GemType::RANDOM, (int)chance);
     }
     break;
@@ -71,7 +74,11 @@ GameObject* GameObjectsFactory::CreateGameObject(int x, int y, ItemType objType)
   return go;
 }
 
-GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int timeout)
+// =============================================================================
+
+GameObject* GameObjectsFactory::CreateShrine(int x, int y,
+                                             ShrineType type,
+                                             int timeout)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -92,6 +99,8 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y, ShrineType type, int 
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 {
@@ -127,7 +136,12 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
   return go;
 }
 
-void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int y, int image, MapType leadsTo)
+// =============================================================================
+
+void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate,
+                                      int x, int y,
+                                      int image,
+                                      MapType leadsTo)
 {
   auto tile = levelWhereCreate->MapArray[x][y].get();
 
@@ -140,6 +154,8 @@ void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate, int x, int
   tile->BgColor = Colors::DoorHighlightColor;
   tile->Image = image;
 }
+
+// =============================================================================
 
 GameObject* GameObjectsFactory::CreateDummyObject(int x,
                                                   int y,
@@ -159,6 +175,8 @@ GameObject* GameObjectsFactory::CreateDummyObject(int x,
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* GameObjectsFactory::CreateContainer(int x,
                                                 int y,
@@ -183,6 +201,8 @@ GameObject* GameObjectsFactory::CreateContainer(int x,
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* GameObjectsFactory::CreateDoor(int x, int y,
                                            bool isOpen,
@@ -229,6 +249,8 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
   return go;
 }
 
+// =============================================================================
+
 GameObject* GameObjectsFactory::CreateStaticObject(int x,
                                                    int y,
                                                    const GameObjectInfo& objectInfo,
@@ -257,6 +279,8 @@ GameObject* GameObjectsFactory::CreateStaticObject(int x,
   return go;
 }
 
+// =============================================================================
+
 ItemComponent* GameObjectsFactory::CloneItem(ItemComponent* copyFrom)
 {
   GameObject* copy = CloneObject(copyFrom->OwnerGameObject);
@@ -266,6 +290,8 @@ ItemComponent* GameObjectsFactory::CloneItem(ItemComponent* copyFrom)
 
   return ic;
 }
+
+// =============================================================================
 
 GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
 {
@@ -307,6 +333,8 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
   return copy;
 }
 
+// =============================================================================
+
 GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
                                                                     int y,
                                                                     char image,
@@ -337,10 +365,10 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
 
   int maxItems = RNG::Instance().RandomRange(1, 10);
 
-  int nothingChance   = (int)((float)maxLevel * 0.4f);
+  int nothingChance   = (int)((double)maxLevel * 0.4);
   int somethingChance = dungeonLevel;
 
-  float failScale = 1.25f;
+  double failScale = 1.25;
 
   const std::map<ItemType, int> weights =
   {
@@ -372,12 +400,14 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
     }
     else
     {
-      maxItems = (int)((float)maxItems / failScale);
+      maxItems = (int)((double)maxItems / failScale);
     }
   }
 
   return go;
 }
+
+// =============================================================================
 
 void GameObjectsFactory::CreateTrigger(TriggerType triggerType,
                                        TriggerUpdateType updateType,

@@ -19,12 +19,14 @@ void ItemsFactory::InitSpecific()
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
+// =============================================================================
+
 void ItemsFactory::InitPotionColors()
 {
   _gamePotionsMap.clear();
 
   //
-  // Is modified, cannot move inside class and make const
+  // Is modified, cannot move inside class and make const.
   //
   std::vector<PotionType> potionTypes =
   {
@@ -68,6 +70,8 @@ void ItemsFactory::InitPotionColors()
   }
 }
 
+// =============================================================================
+
 void ItemsFactory::InitScrolls()
 {
   _gameScrollsMap.clear();
@@ -100,6 +104,8 @@ void ItemsFactory::InitScrolls()
   }
 }
 
+// =============================================================================
+
 void ItemsFactory::SetPotionImage(GameObject* go)
 {
 #ifdef USE_SDL
@@ -108,6 +114,8 @@ void ItemsFactory::SetPotionImage(GameObject* go)
     go->Image = '!';
 #endif
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateMoney(int amount)
 {
@@ -138,6 +146,8 @@ GameObject* ItemsFactory::CreateMoney(int amount)
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreatePotion(PotionType type, ItemPrefix prefixOverride)
 {
@@ -197,6 +207,8 @@ GameObject* ItemsFactory::CreatePotion(PotionType type, ItemPrefix prefixOverrid
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -241,6 +253,8 @@ GameObject* ItemsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride)
 {
@@ -287,6 +301,8 @@ GameObject* ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -332,6 +348,8 @@ GameObject* ItemsFactory::CreateManaPotion(ItemPrefix prefixOverride)
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateJuicePotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -376,6 +394,8 @@ GameObject* ItemsFactory::CreateJuicePotion(ItemPrefix prefixOverride)
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 {
@@ -427,6 +447,8 @@ GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -475,6 +497,8 @@ GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPref
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateCWPotion(ItemPrefix prefixOverride)
 {
@@ -527,6 +551,8 @@ GameObject* ItemsFactory::CreateCWPotion(ItemPrefix prefixOverride)
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateRAPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -576,6 +602,8 @@ GameObject* ItemsFactory::CreateRAPotion(ItemPrefix prefixOverride)
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateRandomPotion()
 {
@@ -631,6 +659,8 @@ GameObject* ItemsFactory::CreateRandomPotion()
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride, bool isIdentified)
 {
   std::string name;
@@ -639,7 +669,7 @@ GameObject* ItemsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix pre
   name = GlobalConstants::FoodHungerPercentageByName.at(type).first;
   int percentage = GlobalConstants::FoodHungerPercentageByName.at(type).second;
   int hungerMax = _playerRef->Attrs.HungerRate.Get();
-  int hungerToAdd = ((float)hungerMax * ((float)percentage / 100.0f));
+  int hungerToAdd = ((double)hungerMax * ((double)percentage / 100.0));
 
   addsHunger = hungerToAdd;
 
@@ -683,6 +713,8 @@ GameObject* ItemsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix pre
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateNote(const std::string& objName, const std::vector<std::string>& text)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -706,6 +738,8 @@ GameObject* ItemsFactory::CreateNote(const std::string& objName, const std::vect
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateDummyItem(const std::string& objName,
                                           char image,
@@ -732,6 +766,8 @@ GameObject* ItemsFactory::CreateDummyItem(const std::string& objName,
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix prefixOverride)
 {
@@ -790,12 +826,16 @@ GameObject* ItemsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix 
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateRandomScroll(ItemPrefix prefix)
 {
   int index = RNG::Instance().RandomRange(0, GlobalConstants::ScrollValidSpellTypes.size());
   SpellType type = GlobalConstants::ScrollValidSpellTypes.at(index);
   return CreateScroll(0, 0, type, prefix);
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateMeleeWeapon(int x,
                                             int y,
@@ -966,7 +1006,7 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
 
   avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-  int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1f) + dungeonLevel;
+  int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1) + dungeonLevel;
 
   int durability = baseDurability + randomDurAdd;
   ic->Data.Durability.Reset(durability);
@@ -990,6 +1030,8 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::ChooseRandomMeleeWeapon(ItemPrefix prefixOverride,
                                                   ItemQuality qualityOverride)
 {
@@ -999,6 +1041,8 @@ GameObject* ItemsFactory::ChooseRandomMeleeWeapon(ItemPrefix prefixOverride,
   return CreateMeleeWeapon(0, 0, it->first, prefixOverride, qualityOverride);
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::ChooseRandomRangedWeapon(ItemPrefix prefixOverride,
                                                    ItemQuality qualityOverride)
 {
@@ -1007,6 +1051,8 @@ GameObject* ItemsFactory::ChooseRandomRangedWeapon(ItemPrefix prefixOverride,
   std::advance(it, index);
   return CreateRangedWeapon(0, 0, it->first, prefixOverride, qualityOverride);
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateRandomMeleeWeapon(WeaponType type,
                                                   ItemPrefix prefixOverride,
@@ -1029,6 +1075,8 @@ GameObject* ItemsFactory::CreateRandomMeleeWeapon(WeaponType type,
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateRandomRangedWeapon(RangedWeaponType type, ItemPrefix prefixOverride)
 {
   GameObject* go = nullptr;
@@ -1047,6 +1095,8 @@ GameObject* ItemsFactory::CreateRandomRangedWeapon(RangedWeaponType type, ItemPr
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateRandomWeapon(ItemPrefix prefixOverride,
                                              ItemQuality qualityOverride)
@@ -1069,7 +1119,12 @@ GameObject* ItemsFactory::CreateRandomWeapon(ItemPrefix prefixOverride,
   return go;
 }
 
-GameObject* ItemsFactory::CreateGem(int x, int y, GemType type, int actualGemChance)
+// =============================================================================
+
+GameObject* ItemsFactory::CreateGem(int x, int y,
+                                    GemType type,
+                                    int actualGemChance,
+                                    ItemQuality qualityOverride)
 {
   GameObject* go = nullptr;
 
@@ -1078,7 +1133,7 @@ GameObject* ItemsFactory::CreateGem(int x, int y, GemType type, int actualGemCha
     int rndStartingIndex = 0;
 
     //
-    // Will worthless glass participate in random roll
+    // Will worthless glass participate in random roll.
     //
     if (actualGemChance != -1)
     {
@@ -1096,7 +1151,7 @@ GameObject* ItemsFactory::CreateGem(int x, int y, GemType type, int actualGemCha
     }
     else
     {
-      go = CreateGemHelper(t);
+      go = CreateGemHelper(t, qualityOverride);
     }
   }
   else
@@ -1107,7 +1162,7 @@ GameObject* ItemsFactory::CreateGem(int x, int y, GemType type, int actualGemCha
     }
     else
     {
-      go = CreateGemHelper(type);
+      go = CreateGemHelper(type, qualityOverride);
     }
   }
 
@@ -1116,6 +1171,8 @@ GameObject* ItemsFactory::CreateGem(int x, int y, GemType type, int actualGemCha
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateWand(int x,
                                      int y,
@@ -1179,6 +1236,8 @@ GameObject* ItemsFactory::CreateWand(int x,
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateRandomWand(ItemPrefix prefixOverride)
 {
   GameObject* go = nullptr;
@@ -1190,6 +1249,8 @@ GameObject* ItemsFactory::CreateRandomWand(ItemPrefix prefixOverride)
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateReturner(int x, int y, int charges, ItemPrefix prefixOverride)
 {
@@ -1248,6 +1309,8 @@ GameObject* ItemsFactory::CreateReturner(int x, int y, int charges, ItemPrefix p
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateRepairKit(int x, int y, int charges, ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -1296,6 +1359,8 @@ GameObject* ItemsFactory::CreateRepairKit(int x, int y, int charges, ItemPrefix 
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix prefixOverride, ItemQuality quality)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -1341,7 +1406,7 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
     case ArmorType::PADDING:
       ic->Data.UnidentifiedDescription =
       {
-      // ======================================================================70
+      // ----------------------------------------------------------------------70
         "A thick coat with straw or horsehair filling",
         "to soften incoming blows.",
         "It won't last long, but any armor is better than nothing."
@@ -1356,7 +1421,7 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
     case ArmorType::LEATHER:
       ic->Data.UnidentifiedDescription =
       {
-      // ======================================================================70
+      // ----------------------------------------------------------------------70
         "Jacket made of tanned leather provides decent",
         "protection against cutting blows."
       };
@@ -1373,7 +1438,7 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
     case ArmorType::MAIL:
       ic->Data.UnidentifiedDescription =
       {
-      // ======================================================================70
+      // ----------------------------------------------------------------------70
         "A shirt made of metal rings",
         "is a popular outfit among common soldiers.",
         "It takes a while to adjust to its weight,",
@@ -1393,7 +1458,7 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
     case ArmorType::SCALE:
       ic->Data.UnidentifiedDescription =
       {
-      // ======================================================================70
+      // ----------------------------------------------------------------------70
         "A body vest with overlapping scales worn over a small mail shirt.",
       };
 
@@ -1409,7 +1474,7 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
     case ArmorType::PLATE:
       ic->Data.UnidentifiedDescription =
       {
-      // ======================================================================70
+      // ----------------------------------------------------------------------70
         "A thick layer of padding, then a layer of a strong mail",
         "with metal plates riveted on top.",
         "The best protection you can find, usually worn by",
@@ -1429,7 +1494,7 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
 
   //ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;
 
-  int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1f) + dungeonLevel;
+  int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1) + dungeonLevel;
 
   int durability = baseDurability + randomDurAdd;
   ic->Data.Durability.Reset(durability);
@@ -1443,6 +1508,8 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateRandomArmor(ArmorType type,
                                             ItemPrefix prefixOverride,
@@ -1467,6 +1534,8 @@ GameObject* ItemsFactory::CreateRandomArmor(ArmorType type,
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateArrows(int x, int y, ArrowType type, ItemPrefix prefixOverride, int amount)
 {
@@ -1527,6 +1596,8 @@ GameObject* ItemsFactory::CreateArrows(int x, int y, ArrowType type, ItemPrefix 
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateRangedWeapon(int x,
                                              int y,
                                              RangedWeaponType type,
@@ -1562,9 +1633,9 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
       ic->Data.Range = 6;
       ic->Data.Durability.Reset(40 + 4 * (int)ic->Data.ItemQuality_);
 
-      // ======================================================================70
       ic->Data.UnidentifiedDescription =
       {
+      // ----------------------------------------------------------------------70
         "A simple wooden short bow with short range.",
         "Requires some skill to be used effectively."
       };
@@ -1585,9 +1656,9 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
       ic->Data.Range = 8;
       ic->Data.Durability.Reset(60 + 6 * (int)ic->Data.ItemQuality_);
 
-      // ======================================================================70
       ic->Data.UnidentifiedDescription =
       {
+      // ----------------------------------------------------------------------70
         "A wooden bow for hunting animals and the like with medium range.",
         "Requires some skill to be used effectively."
       };
@@ -1632,9 +1703,9 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
       ic->Data.Range = 4;
       ic->Data.Durability.Reset(30 + 5 * (int)ic->Data.ItemQuality_);
 
-      // ======================================================================70
       ic->Data.UnidentifiedDescription =
       {
+      // ----------------------------------------------------------------------70
         "A light crossbow has shorter range than its bow counterpart",
         "but has more punch and is easier to aim with.",
         "Requires some time to reload."
@@ -1657,9 +1728,9 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
       ic->Data.Range = 6;
       ic->Data.Durability.Reset(45 + 8 * (int)ic->Data.ItemQuality_);
 
-      // ======================================================================70
       ic->Data.UnidentifiedDescription =
       {
+      // ----------------------------------------------------------------------70
         "A crossbow has shorter range than its bow counterpart",
         "but has more punch and is easier to aim with.",
         "Requires some time to reload."
@@ -1682,9 +1753,9 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
       ic->Data.Range = 8;
       ic->Data.Durability.Reset(70 + 12 * (int)ic->Data.ItemQuality_);
 
-      // ======================================================================70
       ic->Data.UnidentifiedDescription =
       {
+      // ----------------------------------------------------------------------70
         "This heavy crossbow can deal some serious damage,",
         "but doesn't have that much range than its bow counterpart.",
         "Requires some time to reload."
@@ -1724,6 +1795,8 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
                                                 ItemPrefix prefixOverride,
@@ -1781,9 +1854,11 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
   return go;
 }
 
-///
-/// Utility method, used for debug creation of items.
-///
+// =============================================================================
+
+//
+// Utility method, used for debug creation of items.
+//
 GameObject* ItemsFactory::CreateAccessory(int x, int y,
                                           EquipmentCategory category,
                                           const std::vector<ItemBonusStruct>& bonuses,
@@ -1842,6 +1917,8 @@ GameObject* ItemsFactory::CreateAccessory(int x, int y,
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateRandomItem(int x,
                                            int y,
@@ -2020,7 +2097,7 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
 
   ic->Data.IdentifiedDescription =
   {
-   //=========1=========2=========3=========4=========5=========6=========7=========8
+   //---------1---------2---------3---------4---------5---------6---------7---------8
     "A small and elegant looking sword,",
     "it feels very light and easy to handle.",
     "Surprisingly, there are no signs",
@@ -2031,6 +2108,8 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
 {
@@ -2074,7 +2153,7 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
 
   ic->Data.IdentifiedDescription =
   {
-   //=========1=========2=========3=========4=========5=========6=========7=========8
+   //---------1---------2---------3---------4---------5---------6---------7---------8
     "This is quite an old but sturdy looking pickaxe,",
     "yet you can't shake the uneasy feeling about it.",
     "There are traces of blood on its head."
@@ -2084,6 +2163,8 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
 
   return go;
 }
+
+// =============================================================================
 
 GameObject* ItemsFactory::CreateOneRing()
 {
@@ -2117,7 +2198,7 @@ GameObject* ItemsFactory::CreateOneRing()
 
   ic->Data.IdentifiedDescription =
   {
-   //=========1=========2=========3=========4=========5=========6=========7=========8
+   //---------1---------2---------3---------4---------5---------6---------7---------8
     "This looks like a simple golden ring.",
     "There are strange inscriptions running along the side of it.",
     "Maybe letters, but then from a language you don't recognize.",
@@ -2169,6 +2250,8 @@ GameObject* ItemsFactory::CreateRandomGlass()
   return go;
 }
 
+// =============================================================================
+
 GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
@@ -2191,13 +2274,46 @@ GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
   ic->Data.UnidentifiedDescription = { Strings::ItemDefaultDescGem };
   ic->Data.UnidentifiedName = Util::StringFormat("?%s Gem?", colorDesc.data());
 
-  auto str = Util::StringFormat("%s description goes here", GlobalConstants::GemNameByType.at(t).data());
-  ic->Data.IdentifiedDescription = { str };
-
-  ic->Data.IdentifiedName = GlobalConstants::GemNameByType.at(t);
-  ic->Data.Cost = GlobalConstants::GemCostByType.at(t);
+  if (GlobalConstants::GemDescriptionByType.count(t) == 1)
+  {
+    ic->Data.IdentifiedDescription = GlobalConstants::GemDescriptionByType.at(t);
+  }
+  else
+  {
+    std::string str = Util::StringFormat("%s description goes here", GlobalConstants::GemNameByType.at(t).data());
+    ic->Data.IdentifiedDescription = { str };
+  }
 
   ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
+
+  int additionalCost = 0;
+
+  ItemQuality q = ic->Data.ItemQuality_;
+
+  double baseCost = (double)GlobalConstants::GemCostByType.at(t) * _costMultByQuality.at(q);
+  double upperBound = baseCost / 2.0;
+  int range = RNG::Instance().RandomRange(0, (int)upperBound);
+
+  switch (q)
+  {
+    case ItemQuality::DAMAGED:
+    case ItemQuality::FLAWED:
+      additionalCost = -range;
+      break;
+
+    case ItemQuality::NORMAL:
+      additionalCost = 0;
+      break;
+
+    case ItemQuality::FINE:
+    case ItemQuality::EXCEPTIONAL:
+      additionalCost = range;
+      break;
+  }
+
+  ic->Data.IdentifiedName = GlobalConstants::GemNameByType.at(t);
+
+  ic->Data.Cost = (int)baseCost + additionalCost;
 
   SetItemName(go, ic->Data);
 
@@ -2206,10 +2322,14 @@ GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
   return go;
 }
 
+// =============================================================================
+
 void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map<ItemBonusType, int>& bonusWeightByType)
 {
+  //
   // Certain items shouldn't have certain bonuses
-  // that don't make sense (kinda)
+  // that don't make sense (kinda).
+  //
   if (itemRef->Data.EqCategory == EquipmentCategory::BOOTS
    || itemRef->Data.EqCategory == EquipmentCategory::HEAD
    || itemRef->Data.EqCategory == EquipmentCategory::TORSO)
@@ -2254,6 +2374,8 @@ void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map
     bonusWeightByType.erase(ItemBonusType::LEECH);
   }
 }
+
+// =============================================================================
 
 void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne)
 {
@@ -2300,9 +2422,9 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
     curDungeonLvl = (int)MapType::THE_END / 2;
   }
 
-  const float scale = 1.25f;
-  float minSucc = 1.0f / ((float)MapType::THE_END * scale);
-  float curSucc = minSucc * curDungeonLvl;
+  const double scale = 1.25;
+  double minSucc = 1.0 / ((double)MapType::THE_END * scale);
+  double curSucc = minSucc * curDungeonLvl;
   int chance = (int)(curSucc * 100);
 
   chance += _chanceModByQ.at(itemRef->Data.ItemQuality_);
@@ -2341,6 +2463,8 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
 
   SetMagicItemName(itemRef, bonusesRolled);
 }
+
+// =============================================================================
 
 void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusType bonusType)
 {
@@ -2442,7 +2566,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
       int minVal = min - 2 * _multByQ.at(q);
       int maxVal = max - 4 * _multByQ.at(q);
       bs.Period = RNG::Instance().RandomRange(minVal, maxVal + 1);
-      bs.MoneyCostIncrease = (int)(((float)max / (float)bs.Period) * (float)moneyIncrease);
+      bs.MoneyCostIncrease = (int)(((double)max / (double)bs.Period) * (double)moneyIncrease);
     }
     break;
 
@@ -2488,6 +2612,8 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
   itemRef->Data.Bonuses.push_back(bs);
 }
 
+// =============================================================================
+
 void ItemsFactory::AddBonusToItem(ItemComponent* itemRef, const ItemBonusStruct& bonusData, bool forceAdd)
 {
   // If bonus doesn't modify anything,
@@ -2525,6 +2651,8 @@ void ItemsFactory::AddBonusToItem(ItemComponent* itemRef, const ItemBonusStruct&
 
   itemRef->Data.Bonuses.push_back(copy);
 }
+
+// =============================================================================
 
 void ItemsFactory::SetItemName(GameObject* go, ItemData& itemData)
 {
@@ -2691,6 +2819,8 @@ void ItemsFactory::SetItemName(GameObject* go, ItemData& itemData)
   }
 }
 
+// =============================================================================
+
 void ItemsFactory::SetMagicItemName(ItemComponent* itemRef, const std::vector<ItemBonusType>& bonusesRolled)
 {
   std::string prefix;
@@ -2768,6 +2898,8 @@ void ItemsFactory::SetMagicItemName(ItemComponent* itemRef, const std::vector<It
   itemRef->Data.IdentifiedName = itemName;
 }
 
+// =============================================================================
+
 void ItemsFactory::BUCQualityAdjust(ItemData& itemData)
 {
   switch (itemData.Prefix)
@@ -2809,7 +2941,7 @@ void ItemsFactory::BUCQualityAdjust(ItemData& itemData)
 
     case ItemQuality::FLAWED:
     {
-      float durF = (float)itemData.Durability.Max().Get() / 1.5f;
+      double durF = (double)itemData.Durability.Max().Get() / 1.5;
       itemData.Durability.Reset((int)durF);
 
       int oldMin = itemData.Damage.Min().OriginalValue();
@@ -2826,7 +2958,7 @@ void ItemsFactory::BUCQualityAdjust(ItemData& itemData)
 
     case ItemQuality::FINE:
     {
-      float durF = (float)itemData.Durability.Max().Get() * 1.5f;
+      double durF = (double)itemData.Durability.Max().Get() * 1.5;
       itemData.Durability.Reset((int)durF);
 
       int oldMin = itemData.Damage.Min().OriginalValue();
@@ -2858,6 +2990,8 @@ void ItemsFactory::BUCQualityAdjust(ItemData& itemData)
   }
 }
 
+// =============================================================================
+
 int ItemsFactory::CalculateAverageDamage(int numRolls, int diceSides)
 {
   int minDmg = (numRolls == 1) ? 0 : numRolls;
@@ -2866,11 +3000,15 @@ int ItemsFactory::CalculateAverageDamage(int numRolls, int diceSides)
   return (maxDmg - minDmg) / 2;
 }
 
+// =============================================================================
+
 ItemPrefix ItemsFactory::RollItemPrefix()
 {
   auto res = Util::WeightedRandom(_bucDistr);
   return res.first;
 }
+
+// =============================================================================
 
 ItemQuality ItemsFactory::RollItemQuality()
 {

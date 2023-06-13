@@ -31,9 +31,9 @@ class BSPRooms : public DGBase
 
     std::vector<Position> _connectionPoints;
 
-    std::pair<bool, float> GetSplitRatio(Rect& area);
+    std::pair<bool, double> GetSplitRatio(Rect& area);
 
-    void Subdivide(BSPNode& parent, float ratio, bool splitX);
+    void Subdivide(BSPNode& parent, double ratio, bool splitX);
     void FillArea(const Rect& area, char ch = '.');
 
     bool DoesRoomFit(Rect& area);

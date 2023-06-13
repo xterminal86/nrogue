@@ -101,8 +101,8 @@ namespace Util
   extern int BlockDistance(int x1, int y1, int x2, int y2);
   extern int BlockDistance(const Position& from, const Position& to);
 
-  extern float LinearDistance(int x1, int y1, int x2, int y2);
-  extern float LinearDistance(const Position& s, const Position& e);
+  extern double LinearDistance(int x1, int y1, int x2, int y2);
+  extern double LinearDistance(const Position& s, const Position& e);
 
   extern double Log2(uint64_t n);
 

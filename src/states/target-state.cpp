@@ -79,7 +79,7 @@ void TargetState::FindTargets()
         continue;
       }
 
-      float d = Util::LinearDistance(px, py, x, y);
+      double d = Util::LinearDistance(px, py, x, y);
 
       if (Util::IsInsideMap({ x, y }, Map::Instance().CurrentLevel->MapSize)
        && Map::Instance().CurrentLevel->MapArray[x][y]->Visible

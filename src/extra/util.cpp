@@ -399,10 +399,10 @@ namespace Util
       std::swap(y1, y2);
     }
 
-    const float dx = x2 - x1;
-    const float dy = fabs(y2 - y1);
+    const double dx = x2 - x1;
+    const double dy = fabs(y2 - y1);
 
-    float error = dx / 2.0f;
+    double error = dx / 2.0;
     const int ystep = (y1 < y2) ? 1 : -1;
     int y = (int)y1;
 
@@ -489,13 +489,13 @@ namespace Util
      return abs(to.Y - from.Y) + abs(to.X - from.X);
   }
 
-  float LinearDistance(int x1, int y1, int x2, int y2)
+  double LinearDistance(int x1, int y1, int x2, int y2)
   {
-    float d = std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2));
+    double d = std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2));
     return d;
   }
 
-  float LinearDistance(const Position& s, const Position& e)
+  double LinearDistance(const Position& s, const Position& e)
   {
     return LinearDistance(s.X, s.Y, e.X, e.Y);
   }
@@ -976,7 +976,7 @@ namespace Util
 
   int GetExpForNextLevel(int curLvl)
   {
-    float p = std::pow(1.3f, curLvl)*20;
+    double p = std::pow(1.3, curLvl) * 20;
     return (int)p;
   }
 
@@ -1035,7 +1035,7 @@ namespace Util
 
       case ItemPrefix::UNCURSED:
       {
-        wandRange /= 1.5f;
+        wandRange /= 1.5;
       }
       break;
 
@@ -2272,8 +2272,8 @@ namespace Util
     for (auto& i : thorns)
     {
       auto b = i->Data.GetBonus(ItemBonusType::THORNS);
-      float fract = (float)b->BonusValue * 0.01f;
-      int dmg = (int)((float)damageReceived * fract);
+      double fract = (double)b->BonusValue * 0.01;
+      int dmg = (int)((double)damageReceived * fract);
       dmgReturned += dmg;
     }
 

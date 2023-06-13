@@ -14,6 +14,8 @@ void RNG::InitSpecific()
   GenerateSeedString("<seed was randomized>");
 }
 
+// =============================================================================
+
 void RNG::SetSeed(const std::string& string)
 {
   bool isSeedValid = true;
@@ -38,6 +40,8 @@ void RNG::SetSeed(const std::string& string)
   Random.seed(Seed);
 }
 
+// =============================================================================
+
 void RNG::SetSeed(size_t seed)
 {
   Seed = seed;
@@ -45,6 +49,8 @@ void RNG::SetSeed(size_t seed)
 
   GenerateSeedString("<seed was set by value>");
 }
+
+// =============================================================================
 
 int RNG::RandomRange(int min, int max)
 {
@@ -68,10 +74,14 @@ int RNG::RandomRange(int min, int max)
   return trueMin + random;
 }
 
+// =============================================================================
+
 const SeedString& RNG::GetSeedString()
 {
   return _seedString;
 }
+
+// =============================================================================
 
 void RNG::GenerateSeedString(const std::string& str)
 {
@@ -81,6 +91,8 @@ void RNG::GenerateSeedString(const std::string& str)
 
   _seedString = { str, ss.str() };
 }
+
+// =============================================================================
 
 std::string RNG::GetSeedAsHex()
 {

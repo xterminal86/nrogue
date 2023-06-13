@@ -76,15 +76,15 @@ namespace Colors
   {
     { GemType::BLACK_JETSTONE,  { 0xFFFFFF, 0x000000 } },
     { GemType::BLACK_OBSIDIAN,  { 0xFFFFFF, 0x000000 } },
-    { GemType::BLUE_AQUAMARINE, { 0xFFFFFF, 0x0000FF } },
+    { GemType::BLUE_AQUAMARINE, { 0x000000, 0x0000FF } }, // "#88FFFF"
     { GemType::BLUE_SAPPHIRE,   { 0xFFFFFF, 0x0000FF } },
-    { GemType::GREEN_EMERALD,   { 0xFFFFFF, 0x008800 } },
-    { GemType::GREEN_JADE,      { 0xFFFFFF, 0x008800 } },
-    { GemType::ORANGE_AMBER,    { 0x000000, 0xFF9900 } },
+    { GemType::GREEN_EMERALD,   { 0xFFFFFF, 0x88CC88 } }, // "#88CC88"
+    { GemType::GREEN_JADE,      { 0xFFFFFF, 0x88CC88 } },
+    { GemType::ORANGE_AMBER,    { 0x000000, 0xFF9900 } }, // "#FF9900"
     { GemType::ORANGE_JACINTH,  { 0x000000, 0xFF9900 } },
-    { GemType::PURPLE_AMETHYST, { 0xFFFFFF, 0x800080 } },
-    { GemType::PURPLE_FLUORITE, { 0xFFFFFF, 0x800080 } },
-    { GemType::RED_GARNET,      { 0xFFFFFF, 0xAA0000 } },
+    { GemType::PURPLE_AMETHYST, { 0xFFFFFF, 0xA000A0 } }, // "#A000A0"
+    { GemType::PURPLE_FLUORITE, { 0xFFFFFF, 0xA000A0 } },
+    { GemType::RED_GARNET,      { 0xFFFFFF, 0xAA0000 } }, // "#AA0000"
     { GemType::RED_RUBY,        { 0xFFFFFF, 0xAA0000 } },
     { GemType::WHITE_DIAMOND,   { 0x000000, 0xFFFFFF } },
     { GemType::WHITE_OPAL,      { 0x000000, 0xFFFFFF } },
@@ -178,14 +178,14 @@ namespace Strings
 
   const std::string MessageBoxInformationHeaderText = "Information";
   const std::string MessageBoxEpicFailHeaderText    = "Epic Fail!";
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   const char InventoryEmptySlotChar = '.';
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   const std::string ItemDefaultDescAccessory = "Could be magical or just a trinket.";
   const std::string ItemDefaultDescGem       = "Is this valuable?";
   const std::string ItemDefaultDescWeaponDmg = "You think it'll do %d damage on average.";
   const std::string ItemDefaultDescWeaponEnd = "You can't tell anything else.";
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   const std::string MsgWait              = "You waited...";
   const std::string MsgNotInWater        = "You're swimming!";
   const std::string MsgStairsDown        = "There are stairs leading down here";
@@ -211,15 +211,15 @@ namespace Strings
   const std::string MsgItemUndamaged     = "This item looks undamaged";
   const std::string MsgCantBeUsed        = "Can't be used!";
   const std::string MsgNoMoney           = "You have no money, ha ha ha!";
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   const std::string FmtPickedUpIS = "Picked up: %i %s";
   const std::string FmtPickedUpS  = "Picked up: %s";
   const std::string FmtDroppedIS  = "Dropped: %i %s";
   const std::string FmtDroppedS   = "Dropped: %s";
   const std::string FmtSMissed    = "%s missed";
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   const std::vector<std::string> MsgNotInTown = { "Not here", "Not in town" };
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   namespace TileNames
   {
     const std::string MineWallText     = "Mine Wall";
@@ -332,7 +332,7 @@ namespace GlobalConstants
   // Also the number of action increments (end turns)
   // for player before he can act (for SPD = 0)
   //
-  const int EffectDurationSkipsForTurn = ((float)TurnReadyValue / (float)TurnTickValue) + 1;
+  const int EffectDurationSkipsForTurn = ((double)TurnReadyValue / (double)TurnTickValue) + 1;
 
   //
   // Default duration is 20 SPD=0 player end turns
@@ -523,24 +523,185 @@ namespace GlobalConstants
     { GemType::YELLOW_CITRINE,  "Citrine"         }
   };
 
+  const std::map<GemType, StringsArray2D> GemDescriptionByType =
+  {
+    {
+      GemType::BLACK_JETSTONE,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "Jetstone is an organic rock created ",
+        "when pieces of woody material are buried,",
+        "compacted, and then go through organic degradation.",
+        "It can be easily cut or carved, and it has a uniform texture",
+        "that makes it possible to carve with accuracy.",
+      }
+    },
+    {
+      GemType::BLACK_OBSIDIAN,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "Obsidian is a naturally occurring volcanic glass",
+        "formed when lava extruded from a volcano cools rapidly",
+        "with minimal crystal growth. It is an igneous rock."
+      }
+    },
+    {
+      GemType::BLUE_AQUAMARINE,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "Aquamarine is a pale-blue to light-green variety of beryl.",
+        "The color of aquamarine can be changed by heat."
+      }
+    },
+    {
+      GemType::BLUE_SAPPHIRE,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "Sapphire is a gemstone associated with royalty.",
+        "It is said to be the wisdom stone,",
+        "stimulating concentration, enhancing creativity",
+        "and promoting purity and depth of thought."
+      }
+    },
+    {
+      GemType::GREEN_EMERALD,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "Emerald is the bluish green to green variety of beryl,",
+        "a mineral species that includes aquamarine.",
+        "Highly saturated green color defines high quality emerald."
+      }
+    },
+    {
+      GemType::GREEN_JADE,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "Jade is a type of gemstone that refers to",
+        "two different mineral stones that are typically tough,",
+        "durable, compact, and green. Both jadeite and nephrite",
+        "have inspired beautiful works of art and a rich body of lore."
+      }
+    },
+    {
+      GemType::ORANGE_AMBER,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "Amber is considered a gem because it glows and glistens",
+        "when polished, but it is not actually a gemstone.",
+        "It is the hardened resin of certain types of ancient trees",
+        "that have been fossilized over millennia."
+      }
+    },
+    {
+      GemType::ORANGE_JACINTH,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "Jacinth gemstone, often known as hyacinth, is a semi-precious stone.",
+        "It is a gleaming orange-yellow, orange-red, or yellow-brown zircon.",
+        "Jacinth is beneficial in the treatment of insomnia.",
+        "Encourages spiritual awareness and comprehension."
+      }
+    },
+    {
+      GemType::PURPLE_AMETHYST,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "Amethyst is a violet variety of quartz.",
+        "Cross-culturally, this popular gemstone was used",
+        "as a symbol of peace and unification."
+      }
+    },
+    {
+      GemType::PURPLE_FLUORITE,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "Purple Fluorite is a light to very dark grape-purple crystal",
+        "ranging from translucent to opaque. It has a glassy luster",
+        "and often forms as isometric cubes, nodules, or clusters.",
+        "Purple Fluorite enhances intuition and brings order out of chaos."
+      }
+    },
+    {
+      GemType::RED_GARNET,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "Garnets come in a variety of colors and have many different varieties.",
+        "However, the most widely-known color of Garnet gemstones is dark red.",
+        "Red Garnet Gems have always been associated with journeys",
+        "and were carried by travelers, traders and journeymen."
+      }
+    },
+    {
+      GemType::RED_RUBY,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "A ruby is a pinkish red to blood-red colored gemstone,",
+        "a variety of the mineral corundum.",
+        "Ruby is one of the most popular traditional jewelry gems",
+        "and is very durable. Other varieties of gem-quality corundum",
+        "are called sapphires."
+      }
+    },
+    {
+      GemType::WHITE_DIAMOND,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "Diamond, a mineral composed of pure carbon.",
+        "It is the hardest naturally occurring substance known.",
+        "It is also the most popular gemstone.",
+        "Because of their extreme hardness, ",
+        "diamonds have a number of important industrial applications."
+      }
+    },
+    {
+      GemType::WHITE_OPAL,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "An amorphous non-crystalline gem mineral",
+        "solidified from gelatinous or liquid silica",
+        "deposited in cracks and cavities left by",
+        "decaying vegetation, wood, crustaceans and bones."
+      }
+    },
+    {
+      GemType::YELLOW_CITRINE,
+      {
+      // ---------1---------2---------3---------4---------5---------6---------7---------8
+        "Citrine is a semiprecious gem that is valued for its yellow",
+        "to brownish colour and its resemblance to the rarer topaz.",
+        "It is a popular gemstone that has been used for centuries",
+        "as an adornment and symbol of wealth due to its association with gold."
+      }
+    }
+  };
+
   const std::map<GemType, int> GemCostByType =
   {
-    { GemType::WORTHLESS_GLASS,    0 },  // 0
-    { GemType::BLACK_OBSIDIAN,   200 },  // 200
-    { GemType::GREEN_JADE,       300 },  // 300
-    { GemType::PURPLE_FLUORITE,  400 },  // 400
-    { GemType::PURPLE_AMETHYST,  600 },  // 600
-    { GemType::RED_GARNET,       700 },  // 700
-    { GemType::WHITE_OPAL,       800 },  // 800
-    { GemType::BLACK_JETSTONE,   850 },  // 850
-    { GemType::ORANGE_AMBER,    1000 },  // 1000
-    { GemType::YELLOW_CITRINE,  1500 },  // 1500
-    { GemType::BLUE_AQUAMARINE, 1500 },  // 1500
-    { GemType::GREEN_EMERALD,   2500 },  // 2500
-    { GemType::BLUE_SAPPHIRE,   3000 },  // 3000
-    { GemType::ORANGE_JACINTH,  3250 },  // 3250
-    { GemType::RED_RUBY,        3500 },  // 3500
-    { GemType::WHITE_DIAMOND,   4000 }   // 4000
+    { GemType::WORTHLESS_GLASS,    0 },
+    { GemType::BLACK_OBSIDIAN,   100 },
+    { GemType::BLACK_JETSTONE,   125 },
+    { GemType::YELLOW_CITRINE,   150 },
+    { GemType::ORANGE_AMBER,     200 },
+    { GemType::PURPLE_AMETHYST,  225 },
+    { GemType::RED_GARNET,       250 },
+    { GemType::GREEN_JADE,       400 },
+    { GemType::BLUE_AQUAMARINE,  425 },
+    { GemType::PURPLE_FLUORITE,  450 },
+    { GemType::BLUE_SAPPHIRE,    800 },
+    { GemType::GREEN_EMERALD,    825 },
+    { GemType::WHITE_OPAL,       850 },
+    { GemType::ORANGE_JACINTH,  1000 },
+    { GemType::RED_RUBY,        1250 },
+    { GemType::WHITE_DIAMOND,   1500 }
+  };
+
+  const std::map<ItemQuality, std::string> GemRatingByQuality =
+  {
+    { ItemQuality::DAMAGED,     "--" },
+    { ItemQuality::FLAWED,      "-"  },
+    { ItemQuality::NORMAL,      ""   },
+    { ItemQuality::FINE,        "+"  },
+    { ItemQuality::EXCEPTIONAL, "++" },
   };
 
   const std::map<WandMaterials, int> WandCapacityByMaterial =

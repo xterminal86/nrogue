@@ -32,6 +32,8 @@ void BTSDecompiler::InitSpecific()
   _paramByOpcode = Util::FlipMap(taskParamsByName);
 }
 
+// =============================================================================
+
 std::string BTSDecompiler::Decompile(const std::vector<uint8_t>& bytecode)
 {
   std::string script;

@@ -109,7 +109,7 @@ void EndgameState::DrawHPMP()
 
 void EndgameState::UpdateBar(int x, int y, RangedAttribute& attr)
 {
-  float ratio = ((float)attr.Min().Get() / (float)attr.Max().Get());
+  double ratio = ((double)attr.Min().Get() / (double)attr.Max().Get());
   int len = ratio * GlobalConstants::HPMPBarLength;
 
   _bar = "[";

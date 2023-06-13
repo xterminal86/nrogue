@@ -13,6 +13,7 @@ enum class DevConsoleCommand
   TRANSFORM_TILE,
   PLACE_WALL,
   CREATE_ALL_POTIONS,
+  CREATE_ALL_GEMS,
   CREATE_ALL_SCROLLS,
   DISPEL_EFFECTS,
   DISPEL_EFFECTS_ACTOR,
@@ -142,6 +143,7 @@ class DevConsole : public GameState
     void PrintAdditionalHelp(DevConsoleCommand command);
     void InfoHandles();
     void CreateMonster(const std::vector<std::string>& params);
+    void CreateAllGems();
     void CreateAllPotions();
     void CreateAllScrolls();
     void GetObject(const std::vector<std::string>& params,
@@ -223,6 +225,7 @@ class DevConsole : public GameState
       { "g_pc",   DevConsoleCommand::PRINT_COLORS         },
       { "g_cm",   DevConsoleCommand::CREATE_MONSTER       },
       { "g_go",   DevConsoleCommand::GET_BY_ADDRESS       },
+      { "g_cag",  DevConsoleCommand::CREATE_ALL_GEMS      },
       { "g_cap",  DevConsoleCommand::CREATE_ALL_POTIONS   },
       { "g_cas",  DevConsoleCommand::CREATE_ALL_SCROLLS   }
     };
@@ -253,6 +256,7 @@ class DevConsole : public GameState
       { "i_trig", { "Print current level triggers" } },
       { "i_act",  { "Print current level actors" } },
       { "p_de",   { "Dispel effects from player" } },
+      { "g_cag",  { "Create all gems and place them in town" } },
       { "g_cap",  { "Create all potions and place them in town" } },
       { "g_cas",  { "Create all scrolls and place them in town" } },
       { "ao_de",  { "Dispel all effects from actor in handle" } },

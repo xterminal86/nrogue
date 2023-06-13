@@ -15,10 +15,14 @@ class DoorComponent;
 class GameObjectsFactory : public Singleton<GameObjectsFactory>
 {
   public:
+    //
     // For random generation
+    //
     GameObject* CreateGameObject(int x, int y, ItemType objType);
 
+    //
     // Various
+    //
     GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);
     GameObject* CreateRemains(GameObject* from);
 
@@ -42,13 +46,17 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
                                                     const uint32_t& fgColor,
                                                     const uint32_t& bgColor);
 
+    //
     // Create invisible trigger object
+    //
     void CreateTrigger(TriggerType triggerType,
                        TriggerUpdateType updateType,
                        const std::function<bool ()>& condition,
                        const std::function<void ()>& handler);
 
+    //
     // Creates stairs on MapArray of current level
+    //
     void CreateStairs(MapLevelBase* levelWhereCreate,
                       int x,
                       int y,
@@ -78,7 +86,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
   private:
     Player* _playerRef = nullptr;
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
 
     const std::map<DoorMaterials, int> _doorDefByMat =
     {
@@ -94,7 +102,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
       { DoorMaterials::IRON,  "Iron"   }
     };
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
 };
 
 #endif // GAMEOBJECTSFACTORY_H

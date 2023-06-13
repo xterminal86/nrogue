@@ -62,6 +62,8 @@ void Application::InitSpecific()
   _appReady = true;
 }
 
+// =============================================================================
+
 void Application::Run()
 {
   while (_currentState != nullptr)
@@ -75,6 +77,7 @@ void Application::Run()
     //
     if (PlayerInstance.CanAct() || !PlayerInstance.IsAlive())
     {
+      //
       // Since change state usually happens in HandleInput(),
       // if it's called before Update() to exit game
       // (change state to nullptr), we'll get segfault because
@@ -122,9 +125,13 @@ void Application::Run()
   }
 }
 
+// =============================================================================
+
 void Application::ChangeState(const GameStates& gameStateIndex)
 {
-  // Don't self-change
+  //
+  // Don't self-change.
+  //
   if (_gameStates[gameStateIndex].get() == _currentState)
   {
     _currentState->Update(true);
@@ -155,10 +162,14 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   {
     _currentState->Prepare();
 
-    // I don't know how it worked before without this line
+    //
+    // I don't know how it worked before without this line.
+    //
     _currentState->Update(true);
   }
 }
+
+// =============================================================================
 
 GameState* Application::GetGameStateRefByName(GameStates stateName)
 {
@@ -170,10 +181,14 @@ GameState* Application::GetGameStateRefByName(GameStates stateName)
   return nullptr;
 }
 
+// =============================================================================
+
 bool Application::AppReady()
 {
   return _appReady;
 }
+
+// =============================================================================
 
 bool Application::CurrentStateIs(GameStates stateName)
 {
@@ -184,6 +199,8 @@ bool Application::CurrentStateIs(GameStates stateName)
 
   return false;
 }
+
+// =============================================================================
 
 void Application::ShowMessageBox(MessageBoxType type,
                                  const std::string& header,
@@ -211,11 +228,15 @@ void Application::ShowMessageBox(MessageBoxType type,
   _currentState->Update(true);
 }
 
+// =============================================================================
+
 void Application::CloseMessageBox()
 {
   _currentState = _previousState;
   _currentState->Update(true);
 }
+
+// =============================================================================
 
 void Application::DisplayAttack(GameObject* defender,
                                 int delayMs,
@@ -249,6 +270,8 @@ void Application::DisplayAttack(GameObject* defender,
   }
 }
 
+// =============================================================================
+
 void Application::DrawAttackCursor(int x, int y,
                                    GameObject* defender,
                                    const uint32_t& cursorColor)
@@ -268,6 +291,8 @@ void Application::DrawAttackCursor(int x, int y,
     Printer::Instance().Render();
   }
 }
+
+// =============================================================================
 
 void Application::WriteObituary(bool wasKilled)
 {
@@ -333,6 +358,8 @@ void Application::WriteObituary(bool wasKilled)
   postMortem.close();
 }
 
+// =============================================================================
+
 size_t Application::SavePossessions(std::stringstream& ss)
 {
   size_t stringResizeWidth = 0;
@@ -370,6 +397,8 @@ size_t Application::SavePossessions(std::stringstream& ss)
 
   return stringResizeWidth;
 }
+
+// =============================================================================
 
 void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
 {
@@ -482,6 +511,8 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
   }
 }
 
+// =============================================================================
+
 void Application::SavePrettyAlignedStatInfo(std::stringstream& ss)
 {
   std::vector<std::string> statInfoStrings;
@@ -546,6 +577,8 @@ void Application::SavePrettyAlignedStatInfo(std::stringstream& ss)
   }
 }
 
+// =============================================================================
+
 Application::StatInfo Application::GetStatInfo(const std::string& attrName)
 {
   StatInfo res;
@@ -568,6 +601,8 @@ Application::StatInfo Application::GetStatInfo(const std::string& attrName)
   return res;
 }
 
+// =============================================================================
+
 bool Application::InitGraphics()
 {
 #ifdef USE_SDL
@@ -576,6 +611,8 @@ bool Application::InitGraphics()
   return InitCurses();
 #endif
 }
+
+// =============================================================================
 
 #ifndef USE_SDL
 bool Application::InitCurses()
@@ -596,6 +633,8 @@ bool Application::InitCurses()
   return true;
 }
 #endif
+
+// =============================================================================
 
 #ifdef USE_SDL
 
@@ -621,6 +660,8 @@ void Application::SetIcon()
   SDL_SetWindowIcon(Window, surf);
   SDL_FreeSurface(surf);
 }
+
+// =============================================================================
 
 bool Application::InitSDL()
 {
@@ -653,7 +694,7 @@ bool Application::InitSDL()
     return false;
   }
 
-#ifdef MSVC_COMPILER
+#if defined(MSVC_COMPILER) ||defined(__WIN64__) || defined(__WIN32__)
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d11");
 #else
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
@@ -687,28 +728,34 @@ bool Application::InitSDL()
   return true;
 }
 
+// =============================================================================
+
 const std::pair<int, int>& Application::GetDefaultWindowSize()
 {
   return _defaultWindowSize;
 }
+
+// =============================================================================
 
 std::pair<int, int>& Application::GetResizedWindowSize()
 {
   return _resizedWindowSize;
 }
 
-///
-/// Returns SDL_Rect with initial window position in x, y
-/// and window size in w, h
-///
+// =============================================================================
+
+//
+// Returns SDL_Rect with initial window position in x, y
+// and window size in w, h
+//
 SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
 {
   SDL_Rect res;
 
-  int scaledW = (int)((float)tileWidth * GameConfig.ScaleFactor);
-  int scaledH = (int)((float)tileHeight * GameConfig.ScaleFactor);
+  int scaledW = (int)((double)tileWidth * GameConfig.ScaleFactor);
+  int scaledH = (int)((double)tileHeight * GameConfig.ScaleFactor);
 
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   //
   // This is just a plain hack to fit
   // graphics tileset to screen at certain resolution
@@ -723,7 +770,7 @@ SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
     GlobalConstants::TerminalHeight = GlobalConstants::TerminalWidth / 2 + 2;
   }
 
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
 
   int ww = GlobalConstants::TerminalWidth * scaledW;
   int wh = GlobalConstants::TerminalHeight * scaledH;
@@ -752,6 +799,8 @@ SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
 }
 #endif
 
+// =============================================================================
+
 void Application::ParseConfig()
 {
   std::ifstream configFile("config.txt");
@@ -771,10 +820,12 @@ void Application::ParseConfig()
   }
 }
 
+// =============================================================================
+
 void Application::SetConfig()
 {
   //
-  // Trying to get values from config map
+  // Trying to get values from config map.
   //
   if (_config.count(kConfigKeyFile) == 1)
   {
@@ -790,7 +841,7 @@ void Application::SetConfig()
 
   if (_config.count(kConfigKeyScale) == 1)
   {
-    GameConfig.ScaleFactor = std::stof(_config[kConfigKeyScale]);
+    GameConfig.ScaleFactor = std::stod(_config[kConfigKeyScale]);
   }
 
   if (_config.count(kConfigKeyFastCombat) == 1)
@@ -818,6 +869,8 @@ void Application::SetConfig()
   tileset.close();
 }
 
+// =============================================================================
+
 void Application::Cleanup()
 {
 #ifdef USE_SDL
@@ -841,6 +894,8 @@ void Application::Cleanup()
   DebugLog("Goodbye!\n");
 }
 
+// =============================================================================
+
 void Application::ForceDrawMainState()
 {
   if (CurrentStateIs(GameStates::MAIN_STATE))
@@ -849,6 +904,8 @@ void Application::ForceDrawMainState()
   }
 }
 
+// =============================================================================
+
 void Application::ForceDrawCurrentState()
 {
   if (_currentState != nullptr)
@@ -856,6 +913,8 @@ void Application::ForceDrawCurrentState()
     _currentState->Update(true);
   }
 }
+
+// =============================================================================
 
 void Application::InitGameStates()
 {
@@ -894,6 +953,8 @@ void Application::InitGameStates()
   }
 }
 
+// =============================================================================
+
 //
 // NOTE: save last generated global id
 // when implementing savegame data or effects
@@ -909,6 +970,8 @@ uint64_t Application::GetNewGlobalId()
   return globalId++;
 }
 
+// =============================================================================
+
 void Application::PrepareChars()
 {
   for (int i = 0; i < 128; i++)
@@ -916,6 +979,8 @@ void Application::PrepareChars()
     _charByCharIndex[i] = i;
   }
 }
+
+// =============================================================================
 
 const char& Application::CharByCharIndex(uint8_t index)
 {
