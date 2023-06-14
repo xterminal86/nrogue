@@ -1041,9 +1041,7 @@ std::vector<Position> Printer::DrawExplosion(const Position& pos, int aRange)
 
     Printer::Instance().Render();
 
-    //#ifndef USE_SDL
     Util::Sleep(20);
-    //#endif
 
     Application::Instance().ForceDrawMainState();
   }
@@ -1163,7 +1161,7 @@ int Printer::ColorsUsed()
 
 // =============================================================================
 
-bool Printer::OK()
+bool Printer::IsReady()
 {
   return _ok;
 }

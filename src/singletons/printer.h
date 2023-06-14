@@ -179,7 +179,7 @@ class Printer : public Singleton<Printer>
     //
     int ColorsUsed();
 
-    bool OK();
+    bool IsReady();
 
   protected:
     void InitSpecific() override;

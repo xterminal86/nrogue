@@ -135,7 +135,7 @@ namespace Util
   extern void RecalculateWandStats(ItemComponent* wand);
   extern void BlessItem(ItemComponent* item);
 
-  extern void Sleep(int delayMs);
+  extern void Sleep(uint32_t delayMs);
 
   extern bool WaitForMs(uint64_t delayMs, bool reset = false);
 

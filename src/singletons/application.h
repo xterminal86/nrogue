@@ -26,7 +26,7 @@ class Application : public Singleton<Application>
     void CloseMessageBox();
 
     void DisplayAttack(GameObject* defender,
-                       int delayMs,
+                       uint32_t delayMs,
                        const std::string& messageToPrint,
                        const uint32_t& cursorColor = Colors::None);
 

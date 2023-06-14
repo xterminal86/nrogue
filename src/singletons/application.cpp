@@ -239,7 +239,7 @@ void Application::CloseMessageBox()
 // =============================================================================
 
 void Application::DisplayAttack(GameObject* defender,
-                                int delayMs,
+                                uint32_t delayMs,
                                 const std::string& messageToPrint,
                                 const uint32_t& cursorColor)
 {
@@ -260,6 +260,7 @@ void Application::DisplayAttack(GameObject* defender,
     //
     // NOTE: adaptive delay based on delta time?
     //
+
     Util::Sleep(delayMs);
 
     if (messageToPrint.length() != 0)
@@ -723,7 +724,7 @@ bool Application::InitSDL()
 
   Printer::Instance().Init();
 
-  if (!Printer::Instance().OK())
+  if (!Printer::Instance().IsReady())
   {
     DebugLog("Printer failed to initialize!");
     return false;
