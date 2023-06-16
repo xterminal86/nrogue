@@ -4,6 +4,7 @@ set (CMAKE_CXX_STANDARD 14)
 project (${TARGET_NAME})
 
 # ==============================================================================
+
 if (MSVC)
   add_compile_options(/W1)
   add_definitions(-DMSVC_COMPILER)
@@ -17,6 +18,7 @@ else()
                       -Werror=return-type
                       -Wfatal-errors)
 endif()
+
 # ==============================================================================
 
 option(USE_SDL "Build with SDL2" false)
@@ -37,10 +39,12 @@ if (BUILD_TESTS)
 endif()
 
 # ==============================================================================
+
 set(BUILD_VERSION_TEXT ${BUILD_VERSION_TEXT})
 configure_file(version-config.h.in
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/version-config.h
                 @ONLY)
+
 # ==============================================================================
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -70,7 +74,7 @@ file(GLOB SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/*.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks/*.cpp
 
-  # ============================================================================
+  # ----------------------------------------------------------------------------
 
   ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.h
@@ -94,27 +98,32 @@ endif()
 # ==============================================================================
 
 if (BUILD_TESTS)
-  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/tests)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
 endif()
+
+# ==============================================================================
 
 add_executable(${TARGET_NAME} ${SOURCES})
 
 if (USE_SDL)
+  find_package(SDL2 REQUIRED)
+  include_directories(${SDL2_INCLUDE_DIRS})
+
   if (WIN32)
-    find_package(SDL2 REQUIRED)
-    include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(${TARGET_NAME} ${MINGW32_LIBRARY}
-                                           ${SDL2MAIN_LIBRARY}
-                                            ${SDL2_LIBRARY})
+                                         ${SDL2MAIN_LIBRARY}
+                                         ${SDL2_LIBRARY})
   else()
-    find_package(SDL2 REQUIRED)
-    include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(${TARGET_NAME} SDL2)
   endif()
+
 else()
+  find_package(Curses REQUIRED)
+
   if (WIN32)
     target_link_libraries(${TARGET_NAME} pdcurses)
   else()
     target_link_libraries(${TARGET_NAME} ncurses)
   endif()
+
 endif()
