@@ -12,7 +12,14 @@ def main():
 
   fname = sys.argv[1];
 
-  output = "const std::string Tileset8x16Base64 = \n";
+  varName = fname.split(".");
+
+  if len(varName) > 1:
+    varName = f"{ varName[0] }-{ varName[1] }";
+  else:
+    varName = varName[0];
+
+  output = f"const std::string { varName } = \n";
   output += "\"";
 
   with open(fname, "rb") as f:

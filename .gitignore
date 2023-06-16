@@ -1,5 +1,7 @@
 build*/
 obj/
+dumb-compile/build/
+dumb-compile/CMakeFiles/
 CMakeLists.txt.user*
 nrogue
 core.*

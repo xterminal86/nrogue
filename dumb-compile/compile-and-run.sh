@@ -53,16 +53,11 @@ if [ ! -d $build_dir ]; then
   mkdir $build_dir
 fi
 
-cmake_command="cmake";
+cmake_command="cmake3";
 
 if ! command -v $cmake_command &> /dev/null
 then
-  cmake_command="cmake3";
-fi
-
-if ! command -v $cmake_command &> /dev/null
-then
-  echo "No cmake or cmake3 found!";
+  echo "No cmake found!";
   exit 1;
 fi
 
