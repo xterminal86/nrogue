@@ -13,10 +13,9 @@ using Sec = std::chrono::seconds;
 class Timer : public Singleton<Timer>
 {
   public:
-    const Ns& DeltaTime();
     const Ns& TimePassed();
 
-    const double& DT();
+    double DeltaTime();
 
     void MeasureStart();
     void MeasureEnd();
@@ -25,9 +24,11 @@ class Timer : public Singleton<Timer>
     void InitSpecific() override;
 
   private:
+    //
     // chrono clock now() uses
     // nanoseconds as internal duration period
     // (see time_point struct declaration)
+    //
     Ns _deltaTime  = Ns{0};
     Ns _timePassed = Ns{0};
 

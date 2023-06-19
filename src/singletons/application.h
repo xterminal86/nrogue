@@ -69,7 +69,7 @@ class Application : public Singleton<Application>
     Config GameConfig;
 
     //
-    // Force redraw current state
+    // Force redraw current state.
     //
     // Assuming that _currentState is MainState,
     // call this to force redraw screen in that state
@@ -95,7 +95,7 @@ class Application : public Singleton<Application>
 #endif
 
     //
-    // Can be used to time global triggers
+    // Can be used to time global triggers.
     //
     uint64_t MapUpdateCyclesPassed = 0;
 

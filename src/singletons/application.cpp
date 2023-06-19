@@ -1,7 +1,10 @@
 #include "application.h"
 
+// -----------------------------------------------------------------------------
+
 #include "main-state.h"
 #include "info-state.h"
+#include "attack-state.h"
 #include "menu-state.h"
 #include "select-class-state.h"
 #include "custom-class-state.h"
@@ -17,13 +20,16 @@
 #include "shopping-state.h"
 #include "returner-state.h"
 #include "repair-state.h"
+#include "pickup-item-state.h"
 #include "exiting-state.h"
 #include "message-box-state.h"
-#include "endgame-state.h"
-#include "attack-state.h"
-#include "target-state.h"
-#include "pickup-item-state.h"
 #include "service-state.h"
+#include "target-state.h"
+#include "endgame-state.h"
+#include "delay-state.h"
+
+// -----------------------------------------------------------------------------
+
 #include "map.h"
 #include "map-level-base.h"
 #include "printer.h"
@@ -156,7 +162,9 @@ void Application::ChangeState(const GameStates& gameStateIndex)
 
   _currentState->Cleanup();
 
-  _currentState = (gameStateIndex == GameStates::EXIT_GAME) ? nullptr : _gameStates[gameStateIndex].get();
+  _currentState = (gameStateIndex == GameStates::EXIT_GAME)
+                  ? nullptr
+                  : _gameStates[gameStateIndex].get();
 
   if (_currentState != nullptr)
   {
@@ -952,6 +960,7 @@ void Application::InitGameStates()
   RegisterState<ServiceState>          (GameStates::SERVICE_STATE);
   RegisterState<TargetState>           (GameStates::TARGET_STATE);
   RegisterState<EndgameState>          (GameStates::ENDGAME_STATE);
+  RegisterState<DelayState>            (GameStates::DELAY_STATE);
 
   #ifdef DEBUG_BUILD
   RegisterState<DevConsole>(GameStates::DEV_CONSOLE);

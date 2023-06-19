@@ -6,16 +6,9 @@ void Timer::InitSpecific()
 
 // =============================================================================
 
-const Ns& Timer::DeltaTime()
+double Timer::DeltaTime()
 {
-  return _deltaTime;
-}
-
-// =============================================================================
-
-const double& Timer::DT()
-{
-  return _dt;
+  return (_dt * 1000.0);
 }
 
 // =============================================================================
@@ -37,8 +30,8 @@ void Timer::MeasureStart()
 
 void Timer::MeasureEnd()
 {
-  _measureEnd  = Clock::now();
-  _deltaTime   = _measureEnd - _measureStart;
+  _measureEnd = Clock::now();
+  _deltaTime  = _measureEnd - _measureStart;
 
   _dt = std::chrono::duration<double>(_measureEnd - _measureStart).count();
 

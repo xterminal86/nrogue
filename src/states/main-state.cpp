@@ -8,6 +8,10 @@
 #include "spells-processor.h"
 #include "pickup-item-state.h"
 
+#ifdef DEBUG_BUILD
+#include "delay-state.h"
+#endif
+
 void MainState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
@@ -199,6 +203,19 @@ void MainState::HandleInput()
     case 's':
       GetActorsAround();
       break;
+
+    case 'z':
+    {
+      GameState* gs = Application::Instance().GetGameStateRefByName(GameStates::DELAY_STATE);
+      if (gs != nullptr)
+      {
+        DelayState* ds = static_cast<DelayState*>(gs);
+        ds->Setup(GameStates::MAIN_STATE, 3000);
+      }
+
+      Application::Instance().ChangeState(GameStates::DELAY_STATE);
+    }
+    break;
 #endif
 
     default:

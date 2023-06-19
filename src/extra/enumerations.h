@@ -55,6 +55,7 @@ enum class GameStates
   EXITING_STATE,
   MESSAGE_BOX_STATE,
   DEV_CONSOLE,
+  DELAY_STATE,
   ENDGAME_STATE
 };
 
