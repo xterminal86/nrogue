@@ -71,7 +71,7 @@ void Map::Update()
     return;
   }
 
-  if (!_playerRef->IsAlive())
+  if (!_playerRef->HasNonZeroHP())
   {
     Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
     return;
@@ -659,7 +659,11 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
   }
   else
   {
+    MapType from = CurrentLevel->MapType_;
+
     CurrentLevel = _levels[levelName].get();
+
+    CurrentLevel->OnLevelChanged(from);
   }
 
   if (_mapVisitFirstTime.count(levelName) == 1

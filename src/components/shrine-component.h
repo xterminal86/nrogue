@@ -33,7 +33,7 @@ class ShrineComponent : public Component
 
     ShrineType _type = ShrineType::NONE;
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
 
     const std::vector<ItemBonusType> _attrs =
     {

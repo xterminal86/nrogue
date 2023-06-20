@@ -731,17 +731,23 @@ void DevConsole::CreateMonster(const std::vector<std::string>& params)
 
 void DevConsole::CreateAllGems()
 {
-  int count = 0;
   auto map = GlobalConstants::GemNameByType;
-  for (auto& kvp : map)
+  for (int i = 0; i < 2; i++)
   {
-    auto go = ItemsFactory::Instance().CreateGem(1 + count, 9, kvp.first,
-                                                 100,
-                                                 ItemQuality::RANDOM);
-    ItemComponent* ic = go->GetComponent<ItemComponent>();
-    ic->Data.IsIdentified = true;
-    _currentLevel->PlaceGameObject(go);
-    count++;
+    int count = 0;
+    for (auto& kvp : map)
+    {
+      int yOffset = (i == 0) ? 0 : 1;
+
+      auto go = ItemsFactory::Instance().CreateGem(1 + count, 9 + yOffset,
+                                                   kvp.first,
+                                                   100,
+                                                   ItemQuality::RANDOM);
+      ItemComponent* ic = go->GetComponent<ItemComponent>();
+      ic->Data.IsIdentified = (i == 0) ? true : false;
+      _currentLevel->PlaceGameObject(go);
+      count++;
+    }
   }
 
   StdOut(Ok);
@@ -1164,12 +1170,14 @@ void DevConsole::PrintTriggers()
 
 void DevConsole::PrintActors()
 {
-  auto out = Util::StringFormat("Actors on this level: %u:", _currentLevel->ActorGameObjects.size());
+  auto out = Util::StringFormat("Actors on this level: %u",
+                                _currentLevel->ActorGameObjects.size());
   StdOut(out);
 
   for (auto& a : _currentLevel->ActorGameObjects)
   {
-    auto str = Util::StringFormat("0x%X at %i %i", a.get(), a->PosX, a->PosY);
+    auto str = Util::StringFormat("0x%X at %i %i",
+                                  a.get(), a->PosX, a->PosY);
     StdOut(str);
   }
 }

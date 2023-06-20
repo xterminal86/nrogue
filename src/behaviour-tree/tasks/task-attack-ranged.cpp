@@ -247,7 +247,7 @@ void TaskAttackRanged::ProcessBows(ItemComponent* weapon,
   //
   if (what->Type != GameObjectType::GROUND)
   {
-    if (what->IsAlive())
+    if (what->HasNonZeroHP())
     {
       bool ignoreArmor = weapon->Data.HasBonus(ItemBonusType::IGNORE_ARMOR);
       bool succ = what->ReceiveDamage(_objectToControl,

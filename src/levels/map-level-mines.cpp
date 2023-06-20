@@ -407,7 +407,6 @@ void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
     for (int y = 0; y < MapSize.Y; y++)
     {
       GameObjectInfo t;
-      std::string objName;
 
       char image = lb.MapRaw[x][y];
       switch (image)
@@ -504,7 +503,6 @@ void MapLevelMines::CreateSpecialLevel()
     for (auto& c : row)
     {
       GameObjectInfo t;
-      std::string objName;
 
       switch (c)
       {
@@ -534,9 +532,6 @@ void MapLevelMines::CreateSpecialLevel()
                     Colors::BlackColor,
                     Colors::ShadesOfGrey::Six,
                     Strings::TileNames::MineWallText);
-          //objName = Strings::TileNames::RocksText;
-          //t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, objName);
-          //PlaceStaticObject(posX, posY, t, -1);
         }
         break;
 
@@ -573,11 +568,6 @@ void MapLevelMines::CreateSpecialLevel()
                           Strings::TileNames::GroundText);
 
           GameObject* boss = MonstersInc::Instance().CreateMonster(posX, posY, GameObjectType::HEROBRINE);
-
-          boss->OnDestroy = [this](GameObject* go)
-          {
-            StaticMapObjects[2][2].reset();
-          };
 
           ContainerComponent* cc = boss->GetComponent<ContainerComponent>();
           cc->Add(key);
@@ -748,6 +738,25 @@ void MapLevelMines::CreateRandomBoxes()
       }
 
       emptyCellsCopy.erase(emptyCellsCopy.begin() + index);
+    }
+  }
+}
+
+// =============================================================================
+
+void MapLevelMines::OnLevelChanged(MapType from)
+{
+  //
+  // If we descended from from previous floor into boss room
+  // remove wall on top of the stairs (if it's still there).
+  // E.g., we defeated the boss, descended to the next dungeon floor,
+  // then teleported back to town and went all the way to this level by stairs.
+  //
+  if (from == MapType::MINES_4 && MapType_ == MapType::MINES_5)
+  {
+    if (StaticMapObjects[2][2] != nullptr)
+    {
+      StaticMapObjects[2][2].reset();
     }
   }
 }

@@ -12,6 +12,7 @@ class MapLevelMines : public MapLevelBase
 
     void PrepareMap(MapLevelBase* levelOwner) override;
     void DisplayWelcomeText() override;
+    void OnLevelChanged(MapType from) override;
 
   protected:
     void CreateLevel() override;

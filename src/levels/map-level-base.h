@@ -27,6 +27,7 @@ class MapLevelBase
 
     virtual void PrepareMap(MapLevelBase* levelOwner);
     virtual void DisplayWelcomeText();
+    virtual void OnLevelChanged(MapType from);
 
     //
     // Map ground tiles (floor, water, ground etc.).

@@ -584,6 +584,12 @@ void MapLevelBase::DisplayWelcomeText()
 
 // =============================================================================
 
+void MapLevelBase::OnLevelChanged(MapType from)
+{
+}
+
+// =============================================================================
+
 bool MapLevelBase::IsCellBlocking(const Position& pos)
 {
   if (!Util::IsInsideMap(pos, MapSize))

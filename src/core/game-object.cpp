@@ -470,7 +470,7 @@ bool GameObject::ReceiveDamage(GameObject* from,
       }
     }
 
-    if (!IsAlive())
+    if (!HasNonZeroHP())
     {
       //
       // Actors will display their full name on death.
@@ -526,7 +526,7 @@ bool GameObject::CanAct()
   //
   // ( see Map::UpdateAll() )
   //
-  return (IsAlive() && (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue));
+  return (HasNonZeroHP() && (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue));
 }
 
 // =============================================================================
@@ -638,7 +638,7 @@ bool GameObject::IsOnTile(GameObjectType tileType)
 
 // =============================================================================
 
-bool GameObject::IsAlive()
+bool GameObject::HasNonZeroHP()
 {
   return (Attrs.HP.Min().Get() > 0);
 }
@@ -647,7 +647,7 @@ bool GameObject::IsAlive()
 
 void GameObject::CheckPerish()
 {
-  if (!IsAlive())
+  if (!HasNonZeroHP())
   {
     MarkAndCreateRemains();
   }

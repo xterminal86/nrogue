@@ -80,7 +80,7 @@ void Application::Run()
     // that we are now in EndgameState,
     // which needs to be processed.
     //
-    if (PlayerInstance.CanAct() || !PlayerInstance.IsAlive())
+    if (PlayerInstance.CanAct() || !PlayerInstance.HasNonZeroHP())
     {
       //
       // Since change state usually happens in HandleInput(),

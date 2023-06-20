@@ -112,7 +112,7 @@ class GameObject
 
     void Update();
 
-    // =======================================
+    // ---------------------------------------
     //
     // Item imposed effects and stat modifiers
     //
@@ -122,7 +122,7 @@ class GameObject
     void ApplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
     void UnapplyBonus(ItemComponent* itemRef, const ItemBonusStruct& bonus);
 
-    // =======================================
+    // ---------------------------------------
 
     const Position& GetPosition();
 
@@ -133,7 +133,9 @@ class GameObject
     int PosX = 0;
     int PosY = 0;
 
-    // e.g. to disallow walking into a tile for NPC
+    //
+    // E.g. to disallow walking into a tile for NPC
+    //
     bool Special = false;
 
     bool Blocking    = false;
@@ -143,7 +145,7 @@ class GameObject
     bool Corporeal = true;
 
     //
-    // Determines if objects on the map tile should be drawn
+    // Determines if objects on the map tile should be drawn.
     //
     bool Visible = false;
 
@@ -207,7 +209,7 @@ class GameObject
     void CheckPerish();
 
     bool HasEffect(const ItemBonusType& e);
-    bool IsAlive();
+    bool HasNonZeroHP();
     bool IsOnDangerousTile();
     bool IsOnTile(GameObjectType tileType);
 

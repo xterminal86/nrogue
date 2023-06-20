@@ -51,7 +51,11 @@ class MainState : public GameState
 
     bool ProcessMoneyPickup(std::pair<int, GameObject*>& pair);
 
+    //
+    // <StairsTile, goDown>
+    //
     std::pair<GameObject*, bool> _stairsTileInfo;
+
     std::pair<GameObject*, bool> CheckStairs(int stairsSymbol);
 
     Position _cursorPosition;

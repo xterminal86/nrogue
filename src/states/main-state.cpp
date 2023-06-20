@@ -27,7 +27,7 @@ void MainState::HandleInput()
   // if we are quick enough before condition is checked
   // and current state changes to ENDGAME_STATE.
   //
-  if (!_playerRef->IsAlive())
+  if (!_playerRef->HasNonZeroHP())
   {
     Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
     return;
@@ -272,29 +272,29 @@ void MainState::ProcessMovement(const Position& dirOffsets)
 
     _playerRef->FinishTurn();
 
+    //
+    // Sometimes loot can drop on top of stairs which can obscure them.
+    // Also, it is possible for stairs to become camouflaged
+    // or somehow else become inactive (via level map design, for example).
+    //
+    // Stairs are part of floor map tiles, so they are not updated.
+    // That's why we need to check for stairs in main state.
+    //
+
     auto& px = _playerRef->PosX;
     auto& py = _playerRef->PosY;
 
-    //
-    // Sometimes loot can drop on top of stairs
-    // which can make them hard to find on map.
-    //
-    if(Map::Instance().CurrentLevel->MapArray[px][py]->Image == '>')
+    GameObject* tile = Map::Instance().CurrentLevel->MapArray[px][py].get();
+
+    bool stairsHere = (tile->Image == '>' || tile->Image == '<');
+    if (stairsHere)
     {
-      GameObject* go = Map::Instance().CurrentLevel->MapArray[px][py].get();
-      StairsComponent* sc = go->GetComponent<StairsComponent>();
+      StairsComponent* sc = tile->GetComponent<StairsComponent>();
       if (sc->IsEnabled)
       {
-        Printer::Instance().AddMessage(Strings::MsgStairsDown);
-      }
-    }
-    else if(Map::Instance().CurrentLevel->MapArray[px][py]->Image == '<')
-    {
-      GameObject* go = Map::Instance().CurrentLevel->MapArray[px][py].get();
-      StairsComponent* sc = go->GetComponent<StairsComponent>();
-      if (sc->IsEnabled)
-      {
-        Printer::Instance().AddMessage(Strings::MsgStairsUp);
+        Printer::Instance().AddMessage((tile->Image == '>')
+                                       ? Strings::MsgStairsDown
+                                       : Strings::MsgStairsUp);
       }
     }
   }
@@ -452,48 +452,30 @@ std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
 {
   GameObject* stairsTile = Map::Instance().CurrentLevel->MapArray[_playerRef->PosX][_playerRef->PosY].get();
 
-  if (stairsSymbol == '>')
+  //
+  // We're relying here on stairsSymbol to be exactly '>' or '<'
+  //
+  if (stairsTile->Image != stairsSymbol)
   {
-    if (stairsTile->Image != stairsSymbol)
-    {
-      Printer::Instance().AddMessage(Strings::MsgNoStairsDown);
-      _stairsTileInfo.first = nullptr;
-    }
-    else
-    {
-      StairsComponent* sc = stairsTile->GetComponent<StairsComponent>();
-      if (!sc->IsEnabled)
-      {
-        Printer::Instance().AddMessage(Strings::MsgNoStairsDown);
-        _stairsTileInfo.first = nullptr;
-      }
-      else
-      {
-        _stairsTileInfo.first  = stairsTile;
-        _stairsTileInfo.second = true;
-      }
-    }
+    Printer::Instance().AddMessage((stairsSymbol == '>')
+                                  ? Strings::MsgNoStairsDown
+                                  : Strings::MsgNoStairsUp);
+    _stairsTileInfo.first = nullptr;
   }
-  else if (stairsSymbol == '<')
+  else
   {
-    if (stairsTile->Image != stairsSymbol)
+    StairsComponent* sc = stairsTile->GetComponent<StairsComponent>();
+    if (!sc->IsEnabled)
     {
-      Printer::Instance().AddMessage(Strings::MsgNoStairsUp);
+      Printer::Instance().AddMessage((stairsSymbol == '>')
+                                    ? Strings::MsgNoStairsDown
+                                    : Strings::MsgNoStairsUp);
       _stairsTileInfo.first = nullptr;
     }
     else
     {
-      StairsComponent* sc = stairsTile->GetComponent<StairsComponent>();
-      if (!sc->IsEnabled)
-      {
-        Printer::Instance().AddMessage(Strings::MsgNoStairsUp);
-        _stairsTileInfo.first = nullptr;
-      }
-      else
-      {
-        _stairsTileInfo.first  = stairsTile;
-        _stairsTileInfo.second = false;
-      }
+      _stairsTileInfo.first  = stairsTile;
+      _stairsTileInfo.second = (stairsSymbol == '>');
     }
   }
 
@@ -504,11 +486,11 @@ std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
 
 void MainState::ClimbStairs(const std::pair<GameObject*, bool>& stairsTileInfo)
 {
-  bool upOrDown = stairsTileInfo.second;
+  bool shouldGoDown = stairsTileInfo.second;
   StairsComponent* stairs = stairsTileInfo.first->GetComponent<StairsComponent>();
   if (stairs->IsEnabled)
   {
-    Map::Instance().ChangeLevel(stairs->LeadsTo, upOrDown);
+    Map::Instance().ChangeLevel(stairs->LeadsTo, shouldGoDown);
   }
 }
 

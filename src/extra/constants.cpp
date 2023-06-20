@@ -697,11 +697,11 @@ namespace GlobalConstants
 
   const std::map<ItemQuality, std::string> GemRatingByQuality =
   {
-    { ItemQuality::DAMAGED,     "--" },
-    { ItemQuality::FLAWED,      "-"  },
-    { ItemQuality::NORMAL,      ""   },
-    { ItemQuality::FINE,        "+"  },
-    { ItemQuality::EXCEPTIONAL, "++" },
+    { ItemQuality::DAMAGED,     " --" },
+    { ItemQuality::FLAWED,      " -"  },
+    { ItemQuality::NORMAL,      ""    },
+    { ItemQuality::FINE,        " +"  },
+    { ItemQuality::EXCEPTIONAL, " ++" },
   };
 
   const std::map<WandMaterials, int> WandCapacityByMaterial =

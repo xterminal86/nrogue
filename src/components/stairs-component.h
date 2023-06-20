@@ -2,7 +2,7 @@
 #define STAIRSCOMPONENT_H
 
 #include "component.h"
-#include "constants.h"
+#include "enumerations.h"
 
 class StairsComponent : public Component
 {

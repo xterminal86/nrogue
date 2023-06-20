@@ -549,7 +549,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
     //
     // KnockBack() could set receiver HP to 0
     //
-    if (what->IsAlive())
+    if (what->HasNonZeroHP())
     {
       bool ignoreArmor = (weapon != nullptr && weapon->Data.HasBonus(ItemBonusType::IGNORE_ARMOR));
 
@@ -779,7 +779,7 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
     // Check for Type is for ability to attack walls
     // (with a pickaxe to mine, for example).
     //
-    if ((what->Type == GameObjectType::PICKAXEABLE) || what->IsAlive())
+    if ((what->Type == GameObjectType::PICKAXEABLE) || what->HasNonZeroHP())
     {
       int dmg = Util::CalculateDamageValue(this, what, weapon, isRanged);
 
