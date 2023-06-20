@@ -198,9 +198,15 @@ void MapLevelBase::PlaceGameObject(GameObject* goToInsert)
 
 // =============================================================================
 
-void MapLevelBase::PlaceStaticObject(int x, int y, const GameObjectInfo& objectInfo, int hitPoints, GameObjectType type)
+void MapLevelBase::PlaceStaticObject(int x, int y,
+                                     const GameObjectInfo& objectInfo,
+                                     int hitPoints,
+                                     GameObjectType type)
 {
-  GameObject* go = GameObjectsFactory::Instance().CreateStaticObject(x, y, objectInfo, hitPoints, type);
+  GameObject* go = GameObjectsFactory::Instance().CreateStaticObject(x, y,
+                                                                     objectInfo,
+                                                                     hitPoints,
+                                                                     type);
   PlaceStaticObject(go);
 }
 
@@ -216,7 +222,6 @@ void MapLevelBase::PlaceStaticObject(GameObject* goToInsert)
     Logger::Instance().Print(str);
     DebugLog("%s\n", str.data());
     #endif
-
     return;
   }
 
@@ -770,12 +775,11 @@ void MapLevelBase::PlaceWall(int x, int y,
                              int image,
                              const uint32_t& fgColor,
                              const uint32_t& bgColor,
-                             const std::string& objName,
-                             GameObjectType pickaxeable)
+                             const std::string& objName)
 {
   GameObjectInfo t;
   t.Set(true, true, image, fgColor, bgColor, objName);
-  PlaceStaticObject(x, y, t, -1, pickaxeable);
+  PlaceStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
 }
 
 // =============================================================================

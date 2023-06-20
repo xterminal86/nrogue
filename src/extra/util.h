@@ -168,7 +168,7 @@ namespace Util
   extern std::vector<GameObject*> GetObjectsOnTheLine(const std::vector<Position>& line);
   extern GameObject* GetFirstObjectOnTheLine(const std::vector<Position>& line);
 
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
 
   extern std::pair<bool, std::string> TryToDamageObject(GameObject* object,
                                                         GameObject* from,
@@ -232,7 +232,7 @@ namespace Util
 
   extern void DrawLaserAttack(const std::vector<Position>& line);
 
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
 
   extern CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map);
 
@@ -265,18 +265,21 @@ namespace Util
 
   extern size_t CalculateItemHash(ItemComponent* item);
 
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
 
-  /// Produces random pair from pairs list according to weight value:
-  /// the greater the number, the more likely item will appear as a result.
-  /// Returns result in the form of a pair of value type rolled
-  /// and its weight in the list. Example list follows:
-  /// weightsByType =
-  /// {
-  ///   { APPLE,   1 },
-  ///   { BANANA,  3 },
-  ///   { ORANGE, 10 }
-  /// };
+  //
+  // Produces random pair from pairs list according to weight value:
+  // the greater the number, the more likely item will appear as a result.
+  // Returns result in the form of a pair of value type rolled
+  // and its weight in the list. Example list follows:
+  //
+  // weightsByType =
+  // {
+  //   { APPLE,   1 },
+  //   { BANANA,  3 },
+  //   { ORANGE, 10 }
+  // };
+  //
   template <typename T>
   std::pair<T, int> WeightedRandom(const std::map<T, int>& weightsByType)
   {

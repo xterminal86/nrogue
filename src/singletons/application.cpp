@@ -26,7 +26,6 @@
 #include "service-state.h"
 #include "target-state.h"
 #include "endgame-state.h"
-#include "delay-state.h"
 
 // -----------------------------------------------------------------------------
 
@@ -264,10 +263,6 @@ void Application::DisplayAttack(GameObject* defender,
     int posY = defender->PosY + Map::Instance().CurrentLevel->MapOffsetY;
 
     DrawAttackCursor(posX, posY, defender, cursorColor);
-
-    //
-    // NOTE: adaptive delay based on delta time?
-    //
 
     Util::Sleep(delayMs);
 
@@ -960,7 +955,6 @@ void Application::InitGameStates()
   RegisterState<ServiceState>          (GameStates::SERVICE_STATE);
   RegisterState<TargetState>           (GameStates::TARGET_STATE);
   RegisterState<EndgameState>          (GameStates::ENDGAME_STATE);
-  RegisterState<DelayState>            (GameStates::DELAY_STATE);
 
   #ifdef DEBUG_BUILD
   RegisterState<DevConsole>(GameStates::DEV_CONSOLE);

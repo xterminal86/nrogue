@@ -1304,42 +1304,15 @@ namespace Util
   void Sleep(uint32_t delayMs)
   {
     //
-    // NOTE: Application can freeze on SDL_Delay().
-    //
-    // At least on Windows if you listen through a long NPC text
-    // and at the same time click on other window to lose focus of
-    // this one, text (and the whole window) will freeze and then "unfreeze"
-    // possibly after specified delay passes in "background".
-    // It seems there's no difference in whether you use SDL_Delay() or C++ chrono library.
-    //
-    // NOTE: Doesn't seem to reproduce anymore.
-    //
-
-    /*
-    #ifdef USE_SDL
-    SDL_Delay(delayMs);
-    #else
-    auto tp1 = std::chrono::steady_clock::now();
-    auto tp2 = tp1;
-    while (std::chrono::duration_cast<Ms>(tp1 - tp2).count() < delayMs)
-    {
-      tp1 = std::chrono::steady_clock::now();
-    }
-    #endif
-    */
-
-    //
     // It looks like SDL_Delay sometimes ignores delay if its value gets
     // too small, so let's try to use steady_clock since it's claimed to be
     // increasing at a uniform rate.
     //
-    // NOTE: move delay to separate game state?
-    //
-    auto tp1 = std::chrono::steady_clock::now();
+    auto tp1 = Clock::now();
     auto tp2 = tp1;
-    while (std::chrono::duration_cast<Ms>(tp1 - tp2).count() < delayMs)
+    while (std::chrono::duration_cast<Ms>(tp2 - tp1).count() < delayMs)
     {
-      tp1 = std::chrono::steady_clock::now();
+      tp2 = Clock::now();
     }
   }
 

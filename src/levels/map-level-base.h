@@ -18,11 +18,10 @@ class MapLevelBase
     void PlaceActor(GameObject* actor);
     void PlaceGameObject(GameObject* goToInsert);
     void PlaceStaticObject(GameObject* goToInsert);
-    void PlaceStaticObject(int x,
-                            int y,
-                            const GameObjectInfo& objectInfo,
-                            int hitPoints = -1,
-                            GameObjectType type = GameObjectType::HARMLESS);
+    void PlaceStaticObject(int x, int y,
+                           const GameObjectInfo& objectInfo,
+                           int hitPoints = -1,
+                           GameObjectType type = GameObjectType::HARMLESS);
     void PlaceTrigger(GameObject* trigger, TriggerUpdateType updateType);
     void TryToSpawnMonsters();
 
@@ -154,8 +153,7 @@ class MapLevelBase
                    int image,
                    const uint32_t& fgColor,
                    const uint32_t& bgColor,
-                   const std::string& objName,
-                   GameObjectType pickaxeable = GameObjectType::PICKAXEABLE);
+                   const std::string& objName);
 
     void PlaceShrine(const Position& pos, LevelBuilder& lb);
 

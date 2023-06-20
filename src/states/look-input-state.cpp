@@ -255,7 +255,7 @@ void LookInputState::Update(bool forceUpdate)
 
           if (staticObj != nullptr)
           {
-            auto nameHidden = (staticObj->FogOfWarName.length() == 0) ?
+            auto nameHidden = (staticObj->FogOfWarName.empty()) ?
                               "?" + staticObj->ObjectName + "?" :
                               staticObj->FogOfWarName;
 
@@ -263,7 +263,7 @@ void LookInputState::Update(bool forceUpdate)
           }
           else
           {
-            auto nameHidden = (tile->FogOfWarName.length() == 0) ?
+            auto nameHidden = (tile->FogOfWarName.empty()) ?
                               "?" + tile->ObjectName + "?" :
                               tile->FogOfWarName;
             lookStatus = tile->Visible ? tile->ObjectName : nameHidden;

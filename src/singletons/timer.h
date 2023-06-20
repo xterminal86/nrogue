@@ -6,9 +6,9 @@
 #include <chrono>
 
 using Clock = std::chrono::steady_clock;
-using Ms = std::chrono::milliseconds;
-using Ns = std::chrono::nanoseconds;
-using Sec = std::chrono::seconds;
+using Ms    = std::chrono::milliseconds;
+using Ns    = std::chrono::nanoseconds;
+using Sec   = std::chrono::seconds;
 
 class Timer : public Singleton<Timer>
 {

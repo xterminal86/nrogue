@@ -8,10 +8,6 @@
 #include "spells-processor.h"
 #include "pickup-item-state.h"
 
-#ifdef DEBUG_BUILD
-#include "delay-state.h"
-#endif
-
 void MainState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
@@ -203,19 +199,6 @@ void MainState::HandleInput()
     case 's':
       GetActorsAround();
       break;
-
-    case 'z':
-    {
-      GameState* gs = Application::Instance().GetGameStateRefByName(GameStates::DELAY_STATE);
-      if (gs != nullptr)
-      {
-        DelayState* ds = static_cast<DelayState*>(gs);
-        ds->Setup(GameStates::MAIN_STATE, 3000);
-      }
-
-      Application::Instance().ChangeState(GameStates::DELAY_STATE);
-    }
-    break;
 #endif
 
     default:
@@ -292,15 +275,27 @@ void MainState::ProcessMovement(const Position& dirOffsets)
     auto& px = _playerRef->PosX;
     auto& py = _playerRef->PosY;
 
+    //
     // Sometimes loot can drop on top of stairs
     // which can make them hard to find on map.
+    //
     if(Map::Instance().CurrentLevel->MapArray[px][py]->Image == '>')
     {
-      Printer::Instance().AddMessage(Strings::MsgStairsDown);
+      GameObject* go = Map::Instance().CurrentLevel->MapArray[px][py].get();
+      StairsComponent* sc = go->GetComponent<StairsComponent>();
+      if (sc->IsEnabled)
+      {
+        Printer::Instance().AddMessage(Strings::MsgStairsDown);
+      }
     }
     else if(Map::Instance().CurrentLevel->MapArray[px][py]->Image == '<')
     {
-      Printer::Instance().AddMessage(Strings::MsgStairsUp);
+      GameObject* go = Map::Instance().CurrentLevel->MapArray[px][py].get();
+      StairsComponent* sc = go->GetComponent<StairsComponent>();
+      if (sc->IsEnabled)
+      {
+        Printer::Instance().AddMessage(Strings::MsgStairsUp);
+      }
     }
   }
 }
@@ -466,8 +461,17 @@ std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
     }
     else
     {
-      _stairsTileInfo.first  = stairsTile;
-      _stairsTileInfo.second = true;
+      StairsComponent* sc = stairsTile->GetComponent<StairsComponent>();
+      if (!sc->IsEnabled)
+      {
+        Printer::Instance().AddMessage(Strings::MsgNoStairsDown);
+        _stairsTileInfo.first = nullptr;
+      }
+      else
+      {
+        _stairsTileInfo.first  = stairsTile;
+        _stairsTileInfo.second = true;
+      }
     }
   }
   else if (stairsSymbol == '<')
@@ -479,8 +483,17 @@ std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
     }
     else
     {
-      _stairsTileInfo.first  = stairsTile;
-      _stairsTileInfo.second = false;
+      StairsComponent* sc = stairsTile->GetComponent<StairsComponent>();
+      if (!sc->IsEnabled)
+      {
+        Printer::Instance().AddMessage(Strings::MsgNoStairsUp);
+        _stairsTileInfo.first = nullptr;
+      }
+      else
+      {
+        _stairsTileInfo.first  = stairsTile;
+        _stairsTileInfo.second = false;
+      }
     }
   }
 
@@ -492,9 +505,11 @@ std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
 void MainState::ClimbStairs(const std::pair<GameObject*, bool>& stairsTileInfo)
 {
   bool upOrDown = stairsTileInfo.second;
-  Component* c = stairsTileInfo.first->GetComponent<StairsComponent>();
-  StairsComponent* stairs = static_cast<StairsComponent*>(c);
-  Map::Instance().ChangeLevel(stairs->LeadsTo, upOrDown);
+  StairsComponent* stairs = stairsTileInfo.first->GetComponent<StairsComponent>();
+  if (stairs->IsEnabled)
+  {
+    Map::Instance().ChangeLevel(stairs->LeadsTo, upOrDown);
+  }
 }
 
 // =============================================================================

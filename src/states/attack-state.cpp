@@ -109,7 +109,9 @@ void AttackState::HandleInput()
   {
     _playerRef->SetAttackDir(_dir);
 
-    // Check actors first
+    //
+    // Check actors first.
+    //
     auto res = Map::Instance().GetActorAtPosition(_cursorPosition.X, _cursorPosition.Y);
     if (res != nullptr)
     {
@@ -117,17 +119,24 @@ void AttackState::HandleInput()
     }
     else
     {
-      // Check static game objects
+      //
+      // Check static game objects.
+      //
       auto so = Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X, _cursorPosition.Y);
       if (so != nullptr)
       {
-        // Always hit static objects in front of you
+        //
+        // Always hit static objects in front of you.
+        //
         _playerRef->MeleeAttack(so, true);
       }
       else
       {
         auto* cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
-        Application::Instance().DisplayAttack(cell, GlobalConstants::DisplayAttackDelayMs, "*whoosh*", Colors::WhiteColor);
+        Application::Instance().DisplayAttack(cell,
+                                              GlobalConstants::DisplayAttackDelayMs,
+                                              "*whoosh*",
+                                              Colors::WhiteColor);
       }
     }
 

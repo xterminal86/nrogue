@@ -777,7 +777,7 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
     // check IsAlive().
     //
     // Check for Type is for ability to attack walls
-    // (with a pickaxe to mine, for example)
+    // (with a pickaxe to mine, for example).
     //
     if ((what->Type == GameObjectType::PICKAXEABLE) || what->IsAlive())
     {
@@ -806,6 +806,7 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
   bool shouldTearDownWall = false;
   bool hasLeech = false;
   bool ignoreArmor = false;
+  bool pickaxeEquipped = false;
 
   if (weapon != nullptr)
   {
@@ -818,7 +819,7 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
 
     ignoreArmor = weapon->Data.HasBonus(ItemBonusType::IGNORE_ARMOR);
 
-    shouldTearDownWall = (weapon->Data.WeaponType_ == WeaponType::PICKAXE);
+    pickaxeEquipped = (weapon->Data.WeaponType_ == WeaponType::PICKAXE);
 
     if (!isRanged)
     {
@@ -841,7 +842,9 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
   bool canBeTearedDown = (defender->Type == GameObjectType::PICKAXEABLE);
   bool isWallOnBorder  = IsGameObjectBorder(defender);
 
-  shouldTearDownWall &= (canBeTearedDown && !isWallOnBorder);
+  shouldTearDownWall = (pickaxeEquipped
+                     && canBeTearedDown
+                     && !isWallOnBorder);
 
   if (shouldTearDownWall)
   {

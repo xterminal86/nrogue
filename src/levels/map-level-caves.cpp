@@ -4,6 +4,7 @@
 #include "game-objects-factory.h"
 #include "game-object-info.h"
 #include "door-component.h"
+#include "stairs-component.h"
 #include "logger.h"
 #include "printer.h"
 
@@ -71,8 +72,10 @@ MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLeve
         "#####################################"
       };
 
+      //
       // Note that x and y are swapped to correspond to
       // "world" dimensions.
+      //
       int sx = _specialLevel[0].length();
       int sy = _specialLevel.size();
 
@@ -266,14 +269,16 @@ void MapLevelCaves::CreateSpecialLevel()
   },
   [this, startX, startY]()
   {
-    GameObjectInfo t;
-    t.Set(true,
-          true,
-          '#',
-          Colors::ObsidianColorHigh,
-          Colors::ObsidianColorLow,
-          Strings::TileNames::ObsidianWallText);
-    PlaceStaticObject(startX, startY, t, -1);
+    //
+    // TODO: restore back after boss death.
+    //
+    StairsComponent* sc = MapArray[startX][startY]->GetComponent<StairsComponent>();
+    sc->OwnerGameObject->Image = '.';
+    sc->OwnerGameObject->FgColor = Colors::ShadesOfGrey::Four;
+    sc->OwnerGameObject->BgColor = Colors::BlackColor;
+    sc->OwnerGameObject->ObjectName = Strings::TileNames::GroundText;
+    sc->IsEnabled = false;
+
     Printer::Instance().AddMessage("Suddenly the stairs slide up!");
   });
 
@@ -304,31 +309,34 @@ void MapLevelCaves::CreateSpecialLevel()
         }
         break;
 
+        //
+        // Door to next level stairs.
+        //
         case 'D':
         {
-          objName = Strings::TileNames::ObsidianWallText;
+          GameObjectInfo t;
           t.Set(true,
                 true,
                 '#',
                 Colors::ObsidianColorHigh,
                 Colors::ObsidianColorLow,
-                objName);
-          PlaceStaticObject(posX, posY, t, -1);
+                Strings::TileNames::ObsidianWallText);
+          PlaceStaticObject(posX, posY, t, -1, GameObjectType::PICKAXEABLE);
 
-          // TODO: add trigger to destroy on boss death
+          // TODO: add trigger to destroy on boss death and restore stairs up.
         }
         break;
 
         case '#':
         {
-          objName = Strings::TileNames::ObsidianWallText;
+          GameObjectInfo t;
           t.Set(true,
                 true,
                 c,
                 Colors::ObsidianColorHigh,
                 Colors::ObsidianColorLow,
-                objName);
-          PlaceStaticObject(posX, posY, t, -1);
+                Strings::TileNames::ObsidianWallText);
+          PlaceStaticObject(posX, posY, t, -1, GameObjectType::HARMLESS);
         }
         break;
 
