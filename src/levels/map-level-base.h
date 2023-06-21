@@ -154,7 +154,8 @@ class MapLevelBase
                    int image,
                    const uint32_t& fgColor,
                    const uint32_t& bgColor,
-                   const std::string& objName);
+                   const std::string& objName,
+                   bool cannotBePickaxed = false);
 
     void PlaceShrine(const Position& pos, LevelBuilder& lb);
 

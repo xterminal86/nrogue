@@ -417,6 +417,8 @@ void MapLevelBase::PlaceStairs()
                                               LevelExit.Y,
                                               '>',
                                               stairsDownTo);
+
+  _emptyCells.erase(_emptyCells.begin() + endIndex);
 }
 
 // =============================================================================
@@ -781,11 +783,22 @@ void MapLevelBase::PlaceWall(int x, int y,
                              int image,
                              const uint32_t& fgColor,
                              const uint32_t& bgColor,
-                             const std::string& objName)
+                             const std::string& objName,
+                             bool cannotBePickaxed)
 {
   GameObjectInfo t;
   t.Set(true, true, image, fgColor, bgColor, objName);
-  PlaceStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
+
+  //
+  // HP is hardcoded to 1 to set Attrs.Indestructible flag to false,
+  // but at the same time GameObjectType::PICKAXEABLE will be checked
+  // in GameObject::ReceiveDamage() to prevent destruction of walls
+  // by not wielding a pickaxe.
+  // Attrs.Indestructible = false will allow us to go into shouldTearDownWall
+  // branch in Player::ProcessMeleeAttack() to allow walls to be destroyed
+  // using pickaxe.
+  //
+  PlaceStaticObject(x, y, t, cannotBePickaxed ? -1 : 1, GameObjectType::PICKAXEABLE);
 }
 
 // =============================================================================

@@ -244,7 +244,7 @@ void InventoryState::Update(bool forceUpdate)
                                     item->ObjectName :
                                     ic->Data.UnidentifiedName;
 
-      if (ic->Data.ItemType_ == ItemType::GEM)
+      if (ic->Data.IsIdentified && ic->Data.ItemType_ == ItemType::GEM)
       {
         ItemQuality q = ic->Data.ItemQuality_;
         nameInInventory.append(GlobalConstants::GemRatingByQuality.at(q));

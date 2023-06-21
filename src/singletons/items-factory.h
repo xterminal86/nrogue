@@ -148,7 +148,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
     void InitSpecific() override;
 
   private:
-    GameObject* CreateRandomGlass();
+    GameObject* CreateRandomGlass(ItemQuality quality = ItemQuality::RANDOM);
     GameObject* CreateGemHelper(GemType t, ItemQuality quality = ItemQuality::RANDOM);
     GameObject* ChooseRandomMeleeWeapon(ItemPrefix prefixOverride = ItemPrefix::RANDOM,
                                         ItemQuality qualityOverride = ItemQuality::RANDOM);

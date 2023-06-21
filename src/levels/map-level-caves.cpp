@@ -115,8 +115,15 @@ void MapLevelCaves::CreateLevel()
   {
     case MapType::CAVES_1:
     {
+      //
+      // To avoid possible degenerate case where start position happened
+      // to be at the corner and direction to carve was chosen towards
+      // the edge of the map, thus failing to generate anything.
+      //
       int iterations = (MapSize.X * MapSize.Y) / 2;
-      lb.TunnelerMethod(MapSize, iterations, { tunnelLengthMin, tunnelLengthMax });
+      Position params = { tunnelLengthMin, tunnelLengthMax };
+      Position start = { MapSize.X / 2, MapSize.Y / 2 };
+      lb.TunnelerMethod(MapSize, iterations, params, start);
     }
     break;
 
@@ -314,14 +321,13 @@ void MapLevelCaves::CreateSpecialLevel()
         //
         case 'D':
         {
-          GameObjectInfo t;
-          t.Set(true,
-                true,
-                '#',
-                Colors::ObsidianColorHigh,
-                Colors::ObsidianColorLow,
-                Strings::TileNames::ObsidianWallText);
-          PlaceStaticObject(posX, posY, t, -1, GameObjectType::PICKAXEABLE);
+          PlaceWall(posX,
+                    posY,
+                    '#',
+                    Colors::ObsidianColorHigh,
+                    Colors::ObsidianColorLow,
+                    Strings::TileNames::ObsidianWallText,
+                    true);
 
           // TODO: add trigger to destroy on boss death and restore stairs up.
         }
@@ -329,14 +335,13 @@ void MapLevelCaves::CreateSpecialLevel()
 
         case '#':
         {
-          GameObjectInfo t;
-          t.Set(true,
-                true,
-                c,
-                Colors::ObsidianColorHigh,
-                Colors::ObsidianColorLow,
-                Strings::TileNames::ObsidianWallText);
-          PlaceStaticObject(posX, posY, t, -1, GameObjectType::HARMLESS);
+          PlaceWall(posX,
+                    posY,
+                    c,
+                    Colors::ObsidianColorHigh,
+                    Colors::ObsidianColorLow,
+                    Strings::TileNames::ObsidianWallText,
+                    true);
         }
         break;
 

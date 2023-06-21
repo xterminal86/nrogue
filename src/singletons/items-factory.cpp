@@ -1147,7 +1147,7 @@ GameObject* ItemsFactory::CreateGem(int x, int y,
     GemType t = (GemType)index;
     if (t == GemType::WORTHLESS_GLASS)
     {
-      go = CreateRandomGlass();
+      go = CreateRandomGlass(qualityOverride);
     }
     else
     {
@@ -1158,7 +1158,7 @@ GameObject* ItemsFactory::CreateGem(int x, int y,
   {
     if (type == GemType::WORTHLESS_GLASS)
     {
-      go = CreateRandomGlass();
+      go = CreateRandomGlass(qualityOverride);
     }
     else
     {
@@ -1275,7 +1275,9 @@ GameObject* ItemsFactory::CreateReturner(int x, int y, int charges, ItemPrefix p
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  int chargesNum = (charges == -1) ? RNG::Instance().RandomRange(1, 11) : charges;
+  int chargesNum = (charges == -1)
+                  ? RNG::Instance().RandomRange(1, 6)
+                  : charges;
 
   ic->Data.ItemType_ = ItemType::RETURNER;
   ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
@@ -2212,7 +2214,7 @@ GameObject* ItemsFactory::CreateOneRing()
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateRandomGlass()
+GameObject* ItemsFactory::CreateRandomGlass(ItemQuality quality)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -2233,17 +2235,25 @@ GameObject* ItemsFactory::CreateRandomGlass()
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = false;
 
+  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
+
   ic->Data.UnidentifiedDescription = { Strings::ItemDefaultDescGem };
   ic->Data.UnidentifiedName = Util::StringFormat("?%s Gem?", colorDesc.data());
 
   std::string lowerCase = colorDesc;
-  std::transform(lowerCase.begin(), lowerCase.end(), lowerCase.begin(), ::tolower);
+  std::transform(lowerCase.begin(),
+                 lowerCase.end(),
+                 lowerCase.begin(),
+                 ::tolower);
 
   auto str = Util::StringFormat("This is a piece of %s worthless glass", lowerCase.data());
   ic->Data.IdentifiedDescription = { str };
 
-  ic->Data.IdentifiedName = Util::StringFormat("%s worthless glass", colorDesc.data());
-  ic->Data.Cost = 0;
+  ic->Data.IdentifiedName = go->ObjectName;
+
+  ic->Data.Cost = 10 * _costMultByQuality.at(ic->Data.ItemQuality_);
+
+  SetItemName(go, ic->Data);
 
   ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
 
@@ -2640,9 +2650,11 @@ void ItemsFactory::AddBonusToItem(ItemComponent* itemRef, const ItemBonusStruct&
   {
     int total = bonusData.BonusValue * moneyIncrease;
 
+    //
     // MoneyCostIncrease is used to calculate total cost of the item
     // in ShoppingState by accumulating all these
     // values into one resulting variable.
+    //
     copy.MoneyCostIncrease = total;
   }
 

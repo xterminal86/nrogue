@@ -182,7 +182,7 @@ namespace Strings
 {
   extern const std::string HexChars;
   extern const std::string Base64Chars;
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   extern const std::string AlphabetUppercase;
   extern const std::string AlphabetLowercase;
   extern const std::string Vowels;
@@ -193,18 +193,18 @@ namespace Strings
   extern const std::string MessageBoxInformationHeaderText;
   extern const std::string MessageBoxEpicFailHeaderText;
   extern const std::string UnidentifiedEffectText;
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   extern const std::string BlackboardKeyPlayerPos;
   extern const std::string BlackboardKeyLastMinedPos;
   extern const std::string BlackboardKeyObjectId;
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   extern const char InventoryEmptySlotChar;
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   extern const std::string ItemDefaultDescAccessory;
   extern const std::string ItemDefaultDescGem;
   extern const std::string ItemDefaultDescWeaponDmg;
   extern const std::string ItemDefaultDescWeaponEnd;
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   extern const std::string MsgWait;
   extern const std::string MsgNotInWater;
   extern const std::string MsgStairsDown;
@@ -230,15 +230,16 @@ namespace Strings
   extern const std::string MsgItemUndamaged;
   extern const std::string MsgCantBeUsed;
   extern const std::string MsgNoMoney;
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   extern const std::string FmtPickedUpIS;
   extern const std::string FmtPickedUpS;
   extern const std::string FmtDroppedIS;
   extern const std::string FmtDroppedS;
   extern const std::string FmtSMissed;
-  // ===========================================================================
+  extern const std::string FmtSNotEvenScratched;
+  // ---------------------------------------------------------------------------
   extern const std::vector<std::string> MsgNotInTown;
-  // ===========================================================================
+  // ---------------------------------------------------------------------------
   namespace TileNames
   {
     extern const std::string MineWallText;
@@ -290,8 +291,6 @@ namespace GlobalConstants
 #ifdef USE_SDL
   extern std::map<NameCP437, int> CP437IndexByType;
 #endif
-
-  // ===============================================
 
   extern int TerminalWidth;
   extern int TerminalHeight;

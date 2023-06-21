@@ -145,8 +145,17 @@ void Tunneler::Normal(const Position& mapSize,
 
   if (start.X == -1 || start.Y == -1)
   {
-    sx = RNG::Instance().RandomRange(1, mapSize.X - 1);
-    sy = RNG::Instance().RandomRange(1, mapSize.Y - 1);
+    //
+    // If min coord happens to be 1, we might end up in situation where
+    // we started from corner, chose direction to the edge of the map,
+    // and failed to generate anything because of that.
+    // So let's add some extra room for additional success chance.
+    //
+    int minStartX = (double)mapSize.X * 0.1;
+    int minStartY = (double)mapSize.Y * 0.1;
+
+    sx = RNG::Instance().RandomRange(minStartX, mapSize.X - 1);
+    sy = RNG::Instance().RandomRange(minStartY, mapSize.Y - 1);
   }
   else
   {

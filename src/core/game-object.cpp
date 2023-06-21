@@ -432,7 +432,10 @@ bool GameObject::ReceiveDamage(GameObject* from,
 
   int dmgReturned = 0;
 
-  if (!Attrs.Indestructible)
+  //
+  // See comments in MapLevelBase::PlaceWall()
+  //
+  if (!Attrs.Indestructible && Type != GameObjectType::PICKAXEABLE)
   {
     if (isMagical)
     {
@@ -496,7 +499,8 @@ bool GameObject::ReceiveDamage(GameObject* from,
   {
     if (Type != GameObjectType::GROUND)
     {
-      logMessages.push(Util::StringFormat("%s not even scratched!", objName.data()));
+      logMessages.push(Util::StringFormat(Strings::FmtSNotEvenScratched,
+                                          objName.data()));
     }
   }
 

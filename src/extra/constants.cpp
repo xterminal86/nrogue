@@ -76,7 +76,7 @@ namespace Colors
   {
     { GemType::BLACK_JETSTONE,  { 0xFFFFFF, 0x000000 } },
     { GemType::BLACK_OBSIDIAN,  { 0xFFFFFF, 0x000000 } },
-    { GemType::BLUE_AQUAMARINE, { 0x000000, 0x0000FF } }, // "#88FFFF"
+    { GemType::BLUE_AQUAMARINE, { 0xFFFFFF, 0x0000FF } }, // "#88FFFF"
     { GemType::BLUE_SAPPHIRE,   { 0xFFFFFF, 0x0000FF } },
     { GemType::GREEN_EMERALD,   { 0xFFFFFF, 0x88CC88 } }, // "#88CC88"
     { GemType::GREEN_JADE,      { 0xFFFFFF, 0x88CC88 } },
@@ -212,11 +212,12 @@ namespace Strings
   const std::string MsgCantBeUsed        = "Can't be used!";
   const std::string MsgNoMoney           = "You have no money, ha ha ha!";
   // ---------------------------------------------------------------------------
-  const std::string FmtPickedUpIS = "Picked up: %i %s";
-  const std::string FmtPickedUpS  = "Picked up: %s";
-  const std::string FmtDroppedIS  = "Dropped: %i %s";
-  const std::string FmtDroppedS   = "Dropped: %s";
-  const std::string FmtSMissed    = "%s missed";
+  const std::string FmtPickedUpIS        = "Picked up: %i %s";
+  const std::string FmtPickedUpS         = "Picked up: %s";
+  const std::string FmtDroppedIS         = "Dropped: %i %s";
+  const std::string FmtDroppedS          = "Dropped: %s";
+  const std::string FmtSMissed           = "%s missed";
+  const std::string FmtSNotEvenScratched = "%s not even scratched!";
   // ---------------------------------------------------------------------------
   const std::vector<std::string> MsgNotInTown = { "Not here", "Not in town" };
   // ---------------------------------------------------------------------------

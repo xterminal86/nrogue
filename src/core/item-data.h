@@ -52,13 +52,13 @@ struct ItemBonusStruct
   //
   // Effect is gained from some sort of equipped item
   // (ring or pendant and such) or immanent to monster,
-  // i.e. cannot be removed by calling DispelEffects().
+  // i.e. cannot be removed by calling DispelEffects()
   //
   bool Persistent = false;
 
   //
   // We shall use this to monitor active effects and remove them
-  // if necessary (e.g. if item is unequipped, effect must go away).
+  // if necessary (e.g. if item is unequipped, effect must go away)
   //
   uint64_t Id = 0;
 
@@ -66,7 +66,7 @@ struct ItemBonusStruct
 };
 
 //
-// WARNING: possible god object
+// WARNING: possible god object.
 //
 struct ItemData
 {
@@ -108,17 +108,17 @@ struct ItemData
   bool IsBurnable         = false;
 
   //
-  // Can't be dropped from inventory if true
+  // Can't be dropped from inventory if true.
   //
   bool IsImportant = false;
 
   //
-  // For stackable
+  // For stackable.
   //
   int Amount = 1;
 
   //
-  // For ranged weapons and wands
+  // For ranged weapons and wands.
   //
   int Range = 1;
 
@@ -138,7 +138,7 @@ struct ItemData
 
   //
   // BUC status + object name [+ suffix]
-  // Used in inspection window
+  // Used in inspection window.
   //
   std::string IdentifiedName;
 

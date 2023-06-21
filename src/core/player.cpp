@@ -812,7 +812,7 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
   {
     //
     // Melee attack with ranged weapon in hand ignores durability,
-    // since it is considered a punch
+    // since it is considered a punch.
     //
     bool isRanged = (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON
                   || weapon->Data.ItemType_ == ItemType::WAND);
@@ -839,12 +839,13 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
   //
   // GameObject default type is HARMLESS to avoid it being pickaxed away.
   //
-  bool canBeTearedDown = (defender->Type == GameObjectType::PICKAXEABLE);
+  bool isPickaxeable = (defender->Type == GameObjectType::PICKAXEABLE);
   bool isWallOnBorder  = IsGameObjectBorder(defender);
 
   shouldTearDownWall = (pickaxeEquipped
-                     && canBeTearedDown
-                     && !isWallOnBorder);
+                     && isPickaxeable
+                     && !isWallOnBorder
+                     && !defender->Attrs.Indestructible);
 
   if (shouldTearDownWall)
   {
