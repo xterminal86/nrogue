@@ -25,9 +25,11 @@ class Tunneler : public DGBase
 
     Position GetRandomPerpendicularDir(const Position& dir);
 
-    std::vector<Position> GetCorridorDir(const Position& pos);
+    Position* GetCorridorDir(const Position& pos);
 
     bool IsDirectionValid(const Position& pos, const Position& dir);
+
+    Position _corridorDir;
 };
 
 #endif // TUNNELER_H

@@ -6,12 +6,14 @@
 #include <stack>
 #include <map>
 
+///
 /// \brief Everybody's favourite
 ///
 /// 1. Get random direction.
 /// 2. Try to replace wall with empty space.
 /// 3. Backtrack to previous cell if failed.
 /// 4. Repeat until all cells are visited.
+///
 void RecursiveBacktracker::Generate(const Position& mapSize,
                                     const Position& startingPoint,
                                     const RemovalParams& removalParams)

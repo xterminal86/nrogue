@@ -1,6 +1,7 @@
 #include "from-tiles.h"
 #include "util.h"
 
+///
 /// \brief Builds dungeon from tileset specified by tileSetIndex
 ///
 /// Generates tilesets from string of length 9 (".........")

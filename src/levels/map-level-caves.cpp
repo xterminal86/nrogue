@@ -122,8 +122,7 @@ void MapLevelCaves::CreateLevel()
       //
       int iterations = (MapSize.X * MapSize.Y) / 2;
       Position params = { tunnelLengthMin, tunnelLengthMax };
-      Position start = { MapSize.X / 2, MapSize.Y / 2 };
-      lb.TunnelerMethod(MapSize, iterations, params, start);
+      lb.TunnelerMethod(MapSize, iterations, params);
     }
     break;
 

@@ -2,6 +2,7 @@
 
 #include "rng.h"
 
+///
 /// \brief Builds tunnels perpendicular to previous direction,
 /// backtracks to previous position if failed.
 ///
@@ -11,6 +12,7 @@
 /// .#B.
 /// ....
 /// situations
+///
 void Tunneler::Backtracking(const Position& mapSize,
                             const Position& tunnelLengthMinMax,
                             const Position& start,
@@ -107,7 +109,7 @@ void Tunneler::Backtracking(const Position& mapSize,
 
   //
   // NOTE: starting point might become wall on printout
-  // if it was near the corner.
+  // if it was near the corner or was filled during post-processing.
   //
   // Dead ends are filled to avoid accidental making of new
   // problem corners during cutting of problem corners.
@@ -123,12 +125,12 @@ void Tunneler::Backtracking(const Position& mapSize,
 
 // =============================================================================
 
-//
-// Builds tunnels in random directions until maxIterations.
-// Does not cross already carved tunnel.
-// maxIterations is empirically chosen but should be around
-// (mapSize.X * mapSize.Y) / 2 to cover all map area.
-//
+///
+/// Builds tunnels in random directions until maxIterations.
+/// Does not cross already carved tunnel.
+/// maxIterations is empirically chosen but should be around
+/// (mapSize.X * mapSize.Y) / 2 to cover all map area.
+///
 void Tunneler::Normal(const Position& mapSize,
                       const Position& tunnelLengthMinMax,
                       const Position& start,
@@ -146,16 +148,15 @@ void Tunneler::Normal(const Position& mapSize,
   if (start.X == -1 || start.Y == -1)
   {
     //
-    // If min coord happens to be 1, we might end up in situation where
-    // we started from corner, chose direction to the edge of the map,
+    // If starting position was poorly chosen (to be [1;1] for example),
+    // we might end up in situation where we started from corner,
+    // chose direction towards the edge of the map,
     // and failed to generate anything because of that.
-    // So let's add some extra room for additional success chance.
+    // Also post-processing can fill back carved corridors,
+    // so let's start from center for good measure.
     //
-    int minStartX = (double)mapSize.X * 0.1;
-    int minStartY = (double)mapSize.Y * 0.1;
-
-    sx = RNG::Instance().RandomRange(minStartX, mapSize.X - 1);
-    sy = RNG::Instance().RandomRange(minStartY, mapSize.Y - 1);
+    sx = mapSize.X / 2;
+    sy = mapSize.Y / 2;
   }
   else
   {
@@ -173,9 +174,9 @@ void Tunneler::Normal(const Position& mapSize,
 
   while (iterations > 0)
   {
-    auto newDir = GetCorridorDir(mapPos);
+    Position* newDir = GetCorridorDir(mapPos);
 
-    if (newDir.size() != 0)
+    if (newDir != nullptr)
     {
       int currentLength = 0;
       int rndLength = RNG::Instance().RandomRange(tunnelLengthMinMax.X,
@@ -183,8 +184,8 @@ void Tunneler::Normal(const Position& mapSize,
 
       std::vector<Position> corridor;
 
-      mapPos.X += newDir[0].X;
-      mapPos.Y += newDir[0].Y;
+      mapPos.X += newDir->X;
+      mapPos.Y += newDir->Y;
 
       while (currentLength <= rndLength
           && IsInsideMap(mapPos)
@@ -195,8 +196,8 @@ void Tunneler::Normal(const Position& mapSize,
 
         _map[mapPos.X][mapPos.Y].Image = '.';
 
-        mapPos.X += newDir[0].X;
-        mapPos.Y += newDir[0].Y;
+        mapPos.X += newDir->X;
+        mapPos.Y += newDir->Y;
 
         currentLength++;
       }
@@ -391,9 +392,9 @@ bool Tunneler::IsDirectionValid(const Position& pos, const Position& dir)
 
 // =============================================================================
 
-std::vector<Position> Tunneler::GetCorridorDir(const Position& pos)
+Position* Tunneler::GetCorridorDir(const Position& pos)
 {
-  std::vector<Position> res;
+  Position* res = nullptr;
 
   std::vector<Position> directions =
   {
@@ -413,8 +414,8 @@ std::vector<Position> Tunneler::GetCorridorDir(const Position& pos)
   if (validDirs.size() != 0)
   {
     int index = RNG::Instance().RandomRange(0, validDirs.size());
-    Position dir = validDirs[index];
-    res.push_back(dir);
+    _corridorDir = validDirs[index];
+    res = &_corridorDir;
   }
 
   return res;

@@ -3,6 +3,7 @@
 #include "rng.h"
 #include "util.h"
 
+///
 /// \brief Builds dungeon by attaching new rooms to existing ones.
 ///
 /// 'doorPlacementChance' is a value from 0 to 10 with higher
@@ -11,6 +12,7 @@
 /// it depends on roomSizes.
 /// Generally set 'maxIterations' to (mapSize.X * mapSize.Y)
 /// to maximize the effect, but be aware of computational time.
+///
 void FeatureRooms::Generate(const Position& mapSize,
                             const Position& roomSizes,
                             const FeatureRoomsWeights& weightsMap,

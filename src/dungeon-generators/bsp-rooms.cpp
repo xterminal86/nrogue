@@ -2,8 +2,10 @@
 
 #include "pathfinder.h"
 
+///
 /// \brief Use BSP to split area into big "cells"
 /// and place randomly sized rooms inside them.
+///
 void BSPRooms::Generate(const Position& mapSize,
                      const Position& splitRatio,
                      int minRoomSize)
