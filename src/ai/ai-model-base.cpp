@@ -143,7 +143,7 @@ void AIModelBase::Update()
   else
   {
     auto str = Util::StringFormat("No AI on this object: %s!", AIComponentRef->OwnerGameObject->ObjectName.data());
-    Logger::Instance().Print(str, true);
+    LogPrint(str, true);
 
     DebugLog("%s\n", str.data());
 
@@ -293,7 +293,7 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
   if (task == nullptr)
   {
     auto who = Util::StringFormat("%s_%u", AIComponentRef->OwnerGameObject->ObjectName.data(), AIComponentRef->OwnerGameObject->ObjectId());
-    Logger::Instance().Print(who, true);
+    LogPrint(who, true);
 
     DebugLog("\t[%s] no such task - %s!\n", who.data(), taskName.data());
   }
@@ -849,7 +849,7 @@ Node* AIModelBase::CreateConditionNode(const ScriptNode* data)
   if (!Util::IsFunctionValid(fn))
   {
     auto str = Util::StringFormat("%s - empty COND function (%s)!", __PRETTY_FUNCTION__, data->Params.at("p1").data());
-    Logger::Instance().Print(str);
+    LogPrint(str);
 
     DebugLog("%s\n", str.data());
   }
@@ -908,7 +908,7 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
   if (n == nullptr && nodeType != ScriptTaskNames::TASK)
   {
     auto who = Util::StringFormat("%s_%u", AIComponentRef->OwnerGameObject->ObjectName.data(), AIComponentRef->OwnerGameObject->ObjectId());
-    Logger::Instance().Print(who);
+    LogPrint(who);
 
     DebugLog("[%s] no such node - %s!\n", who.data(), nodeName.data());
   }

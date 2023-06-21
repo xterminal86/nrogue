@@ -2,9 +2,12 @@
 #include "container-interact-state.h"
 #include "application.h"
 #include "item-component.h"
-#include "logger.h"
 #include "printer.h"
 #include "util.h"
+
+#ifdef DEBUG_BUILD
+#include "logger.h"
+#endif
 
 ContainerComponent::ContainerComponent(size_t maxCapacity)
 {

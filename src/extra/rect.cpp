@@ -1,7 +1,10 @@
 #include "rect.h"
 
 #include "util.h"
+
+#ifdef DEBUG_BUILD
 #include "logger.h"
+#endif
 
 Rect::Rect(const Position &p1, const Position &p2)
 {
@@ -90,8 +93,8 @@ void Rect::Print()
 
 // =============================================================================
 
-void Rect::LogPrint()
+void Rect::PrintToLog()
 {
   auto str = Util::StringFormat("[%i; %i] -> [%i %i]\n", X1, Y1, X2, Y2);
-  Logger::Instance().Print(str);
+  LogPrint(str);
 }

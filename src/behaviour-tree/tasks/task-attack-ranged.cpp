@@ -4,8 +4,11 @@
 #include "game-objects-factory.h"
 #include "map.h"
 #include "player.h"
-#include "logger.h"
 #include "printer.h"
+
+#ifdef DEBUG_BUILD
+#include "logger.h"
+#endif
 
 //
 // NOTE:

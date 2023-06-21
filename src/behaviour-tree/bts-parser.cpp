@@ -2,7 +2,10 @@
 
 #include "util.h"
 #include "game-object.h"
+
+#ifdef DEBUG_BUILD
 #include "logger.h"
+#endif
 
 void BTSParser::Init(GameObject* objRef)
 {
@@ -62,7 +65,7 @@ void BTSParser::ParseFromString(const std::string& script)
   {
     std::string objName = (_goRef != nullptr) ? _goRef->ObjectName : "<nullptr>";
     auto str = Util::StringFormat("%s: script on %s is empty!", __PRETTY_FUNCTION__, objName.data());
-    Logger::Instance().Print(str, true);
+    LogPrint(str, true);
 
     DebugLog("%s\n", str.data());
 

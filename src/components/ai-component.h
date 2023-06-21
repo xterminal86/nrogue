@@ -6,7 +6,10 @@
 
 #include "component.h"
 #include "ai-model-base.h"
+
+#ifdef DEBUG_BUILD
 #include "logger.h"
+#endif
 
 class AIComponent : public Component
 {
@@ -54,7 +57,7 @@ class AIComponent : public Component
       else
       {
         auto str = Util::StringFormat("%s no such AI model - %s!", __PRETTY_FUNCTION__, typeid(T).name());
-        Logger::Instance().Print(str, true);
+        LogPrint(str, true);
 
         DebugLog("%s\n", str.data());
       }

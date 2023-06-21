@@ -3,7 +3,10 @@
 #include "game-objects-factory.h"
 #include "game-object-info.h"
 #include "application.h"
+
+#ifdef DEBUG_BUILD
 #include "logger.h"
+#endif
 
 MapLevelLostCity::MapLevelLostCity(int sizeX, int sizeY, MapType type, int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)
@@ -71,7 +74,7 @@ void MapLevelLostCity::CreateLevel()
 
 void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
 {
-  Logger::Instance().Print("********** INSTANTIATING LAYOUT **********");
+  LogPrint("********** INSTANTIATING LAYOUT **********");
 
   for (int x = 0; x < MapSize.X; x++)
   {

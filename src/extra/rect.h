@@ -31,7 +31,7 @@ class Rect
 
     void Print();
 
-    void LogPrint();
+    void PrintToLog();
 
     int X1;
     int Y1;

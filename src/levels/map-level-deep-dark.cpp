@@ -5,7 +5,10 @@
 #include "game-objects-factory.h"
 #include "items-factory.h"
 #include "door-component.h"
+
+#ifdef DEBUG_BUILD
 #include "logger.h"
+#endif
 
 MapLevelDeepDark::MapLevelDeepDark(int sizeX, int sizeY, MapType type, int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)
@@ -195,7 +198,7 @@ void MapLevelDeepDark::CreateSpecialLevel()
 
 void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
 {
-  Logger::Instance().Print("********** INSTANTIATING LAYOUT **********");
+  LogPrint("********** INSTANTIATING LAYOUT **********");
 
   for (int x = 0; x < MapSize.X; x++)
   {

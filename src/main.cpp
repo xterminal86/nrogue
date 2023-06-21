@@ -9,8 +9,11 @@
 #include "util.h"
 #include "rng.h"
 #include "blackboard.h"
-#include "logger.h"
 #include "timer.h"
+
+#ifdef DEBUG_BUILD
+#include "logger.h"
+#endif
 
 //
 // NOTE: When building with SDL2 in Windows,
@@ -54,19 +57,13 @@ int main(int argc, char* argv[])
   Blackboard::Instance().Init();
   Timer::Instance().Init();
 
-#ifdef RELEASE_BUILD
-  bool printLog = false;
-#else
-  bool printLog = true;
-#endif
-
-  Logger::Instance().Init();
-  Logger::Instance().Prepare(printLog);
-
 #ifdef DEBUG_BUILD
+  Logger::Instance().Init();
+  Logger::Instance().Prepare(true);
+
   auto str = Util::StringFormat("World seed is 0x%lX", RNG::Instance().Seed);
   DebugLog("%s\n\n", str.data());
-  Logger::Instance().Print(str);
+  LogPrint(str);
 #endif
 
   BTSDecompiler::Instance().Init();

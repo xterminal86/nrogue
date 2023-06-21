@@ -3,8 +3,11 @@
 #include "application.h"
 #include "map.h"
 #include "util.h"
-#include "logger.h"
 #include "base64-strings.h"
+
+#ifdef DEBUG_BUILD
+#include "logger.h"
+#endif
 
 size_t Printer::TerminalWidth = 0;
 size_t Printer::TerminalHeight = 0;
@@ -54,7 +57,7 @@ bool Printer::InitForSDL()
   {
     auto str = Util::StringFormat("***** Could not load tileset: %s! *****\nFalling back to embedded.\n", SDL_GetError());
     DebugLog("%s\n", str.data());
-    Logger::Instance().Print(str, true);
+    LogPrint(str, true);
 
     _tileWidth = 8;
     _tileHeight = 16;
@@ -72,7 +75,7 @@ bool Printer::InitForSDL()
     {
       auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", SDL_GetError());
       DebugLog("%s\n", str.data());
-      Logger::Instance().Print(str, true);
+      LogPrint(str, true);
       return false;
     }
 

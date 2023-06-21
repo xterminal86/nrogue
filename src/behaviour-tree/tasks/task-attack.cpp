@@ -3,7 +3,10 @@
 #include "application.h"
 #include "game-object.h"
 #include "printer.h"
+
+#ifdef DEBUG_BUILD
 #include "logger.h"
+#endif
 
 TaskAttack::TaskAttack(GameObject* objectToControl,
                        bool alwaysHitOverride)

@@ -50,6 +50,12 @@ file(GLOB SOURCES
 
 # ==============================================================================
 
+list(REMOVE_ITEM SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../src/states/dev-console.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../src/states/dev-console.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../src/singletons/logger.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../src/singletons/logger.h)
+
 add_executable(${TARGET_NAME} ${SOURCES})
 
 # ==============================================================================
@@ -68,11 +74,10 @@ if (USE_SDL)
 
 else()
 
-  find_package(Curses REQUIRED)
-
   if (WIN32)
     target_link_libraries(${TARGET_NAME} pdcurses)
   else()
+    find_package(Curses REQUIRED)
     target_link_libraries(${TARGET_NAME} ncurses)
   endif()
 

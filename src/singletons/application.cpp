@@ -33,11 +33,13 @@
 #include "map-level-base.h"
 #include "printer.h"
 #include "timer.h"
-#include "logger.h"
 
 #ifdef DEBUG_BUILD
+#include "logger.h"
 #include "dev-console.h"
 #endif
+
+#include <fstream>
 
 void Application::InitSpecific()
 {
@@ -149,13 +151,13 @@ void Application::ChangeState(const GameStates& gameStateIndex)
                                   typeid(*_currentState).name(), _currentState,
                                   typeid(*_gameStates[gameStateIndex].get()).name(),
                                   _gameStates[gameStateIndex].get());
-    Logger::Instance().Print(str);
+    LogPrint(str);
     //DebugLog("%s\n", str.data());
   }
   else
   {
     auto str = Util::StringFormat("Changing state: %s [0x%X] => EXIT_GAME [0x0]", typeid(*_currentState).name(), _currentState);
-    Logger::Instance().Print(str);
+    LogPrint(str);
     //DebugLog("%s\n", str.data());
   }
 
@@ -658,7 +660,7 @@ void Application::SetIcon()
   if (!surf)
   {
     auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", SDL_GetError());
-    Logger::Instance().Print(str);
+    LogPrint(str);
     DebugLog("%s\n", str.data());
     return;
   }
@@ -701,8 +703,19 @@ bool Application::InitSDL()
     return false;
   }
 
+  //
+  // NOTE: it looks like "direct3d" is Direct3D 9 (which is kinda slow
+  // and reports some weird error / warning in stdout after maximizing
+  // the window).
+  // "direct3d11" works OK, but produces another weird behaviour:
+  // when monster attacks player, attack animation displays every other time
+  // while player's attack animation works fine.
+  // "direct3d12" seems to have no such issues, but WTF is this?!
+  // What the hell is one supposed to choose?!
+  //
+
 #if defined(MSVC_COMPILER) || defined(__WIN64__) || defined(__WIN32__)
-  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d11");
+  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d12");
 #else
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 #endif
@@ -902,9 +915,14 @@ void Application::Cleanup()
 
   _gameStates.clear();
 
-  Logger::Instance().Print("Application::Cleanup()");
+  LogPrint("Application::Cleanup()");
 
-  DebugLog("Goodbye!\n");
+#ifdef USE_SDL
+  SDL_Log("Goodbye!\n");
+#else
+  printf("Goodbye!\n");
+  fflush(stdout);
+#endif
 }
 
 // =============================================================================

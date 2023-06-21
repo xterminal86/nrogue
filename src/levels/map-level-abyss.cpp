@@ -4,7 +4,10 @@
 #include "game-object-info.h"
 #include "game-objects-factory.h"
 #include "door-component.h"
+
+#ifdef DEBUG_BUILD
 #include "logger.h"
+#endif
 
 MapLevelAbyss::MapLevelAbyss(int sizeX, int sizeY, MapType type, int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)
@@ -82,7 +85,7 @@ void MapLevelAbyss::CreateLevel()
 
 void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
 {
-  Logger::Instance().Print("********** INSTANTIATING LAYOUT **********");
+  LogPrint("********** INSTANTIATING LAYOUT **********");
 
   for (int x = 0; x < MapSize.X; x++)
   {

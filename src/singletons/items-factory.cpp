@@ -4,7 +4,10 @@
 #include "map.h"
 #include "game-objects-factory.h"
 #include "printer.h"
+
+#ifdef DEBUG_BUILD
 #include "logger.h"
+#endif
 
 #include "item-component.h"
 #include "item-use-handlers.h"
@@ -779,7 +782,7 @@ GameObject* ItemsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix 
   {
     auto msg = Util::StringFormat("[WARNING] Trying to create a scroll with invalid spell (%s)!\n", si->SpellName.data());
     Printer::Instance().AddMessage(msg);
-    Logger::Instance().Print(msg, true);
+    LogPrint(msg, true);
     DebugLog("%s\n", msg.data());
     return nullptr;
   }
@@ -1186,7 +1189,7 @@ GameObject* ItemsFactory::CreateWand(int x,
   if (GlobalConstants::WandSpellCapacityCostByType.count(spellType) == 0)
   {
     auto str = Util::StringFormat("Wands don't support spell '%s'!", si.SpellName.data());
-    Logger::Instance().Print(str);
+    LogPrint(str);
     DebugLog("%s\n", str.data());
     return nullptr;
   }

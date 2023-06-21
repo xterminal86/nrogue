@@ -2,9 +2,12 @@
 
 #include "application.h"
 #include "printer.h"
-#include "logger.h"
 #include "timer.h"
 #include "map.h"
+
+#ifdef DEBUG_BUILD
+#include "logger.h"
+#endif
 
 namespace Util
 {
@@ -1238,7 +1241,7 @@ namespace Util
     int dice = RNG::Instance().RandomRange(0, 100);
 
     auto str = StringFormat("\t%s: rolled = %i", __PRETTY_FUNCTION__, dice);
-    Logger::Instance().Print(str);
+    LogPrint(str);
 
     return dice;
   }
@@ -1379,7 +1382,7 @@ namespace Util
       dbg += "\n";
     }
 
-    Logger::Instance().Print(dbg);
+    LogPrint(dbg);
   }
 
   // ===========================================================================

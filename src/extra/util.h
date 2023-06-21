@@ -13,6 +13,7 @@
 #include "room-helper.h"
 #include "item-data.h"
 
+//
 // We surround statements with one-shot 'do ... while' loop
 // to prevent accidental bugs due to unexpected execution
 // after macro expansion.
@@ -26,6 +27,7 @@
 // won't compile, because it will be unfolded into compound
 // statement with ; at the end of } brace, which will invalidate
 // the syntax of 'if...else' form.
+//
 #ifndef USE_SDL
   #ifdef DEBUG_BUILD
     #define DebugLog(format, ...)        \
@@ -46,6 +48,12 @@
 #endif
 
 #define STRINGIFY(ARG) #ARG
+
+#ifdef DEBUG_BUILD
+    #define LogPrint(str, ...) Logger::Instance().Print(str, ##__VA_ARGS__)
+  #else
+    #define LogPrint(str, ...)
+#endif
 
 // Coded Map
 using CM = std::vector<std::vector<std::pair<uint32_t, uint32_t>>>;

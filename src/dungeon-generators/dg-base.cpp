@@ -1,7 +1,10 @@
 #include "dg-base.h"
 
-#include "logger.h"
 #include "util.h"
+
+#ifdef DEBUG_BUILD
+#include "logger.h"
+#endif
 
 void DGBase::PrintMapRaw()
 {
@@ -14,7 +17,7 @@ void DGBase::PrintMapRaw()
 void DGBase::LogPrintMapRaw()
 {
   auto raw = GetMapRawString();
-  Logger::Instance().Print(raw);
+  LogPrint(raw);
 }
 
 // =============================================================================

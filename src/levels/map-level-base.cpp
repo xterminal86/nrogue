@@ -5,9 +5,12 @@
 #include "items-factory.h"
 #include "game-object-info.h"
 #include "printer.h"
-#include "logger.h"
 #include "door-component.h"
 #include "map.h"
+
+#ifdef DEBUG_BUILD
+#include "logger.h"
+#endif
 
 MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
 {
@@ -819,7 +822,7 @@ void MapLevelBase::PlaceDoor(int x, int y, bool isOpen, size_t openedBy, const s
 void MapLevelBase::CreateLevel()
 {
   auto str = Util::StringFormat("%s, %s - no level was created!", __PRETTY_FUNCTION__, LevelName.data());
-  Logger::Instance().Print(str, true);
+  LogPrint(str, true);
 }
 
 // =============================================================================
@@ -827,7 +830,7 @@ void MapLevelBase::CreateLevel()
 void MapLevelBase::ConstructFromBuilder(LevelBuilder& lb)
 {
   auto str = Util::StringFormat("%s, %s - calling base ConstructFromBuilder()!", __PRETTY_FUNCTION__, LevelName.data());
-  Logger::Instance().Print(str, true);
+  LogPrint(str, true);
 }
 
 // =============================================================================

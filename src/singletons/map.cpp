@@ -13,7 +13,10 @@
 #include "map-level-abyss.h"
 #include "map-level-nether.h"
 #include "map-level-endgame.h"
+
+#ifdef DEBUG_BUILD
 #include "logger.h"
+#endif
 
 void Map::InitSpecific()
 {
@@ -50,7 +53,7 @@ void Map::Cleanup()
 
   _levels.clear();
 
-  Logger::Instance().Print("Map::Cleanup()");
+  LogPrint("Map::Cleanup()");
 }
 
 // =============================================================================
@@ -852,7 +855,7 @@ void Map::PrintMapArrayRevealedStatus()
 
   for (auto& s : dbg)
   {
-    Logger::Instance().Print(s);
+    LogPrint(s);
   }
 
   Printer::Instance().AddMessage("Current map layout revealed status logged");

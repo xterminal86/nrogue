@@ -5,8 +5,11 @@
 #include "game-object-info.h"
 #include "door-component.h"
 #include "stairs-component.h"
-#include "logger.h"
 #include "printer.h"
+
+#ifdef DEBUG_BUILD
+#include "logger.h"
+#endif
 
 MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)
@@ -177,7 +180,7 @@ void MapLevelCaves::CreateLevel()
 
 void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
 {
-  Logger::Instance().Print("********** INSTANTIATING LAYOUT **********");
+  LogPrint("********** INSTANTIATING LAYOUT **********");
 
   for (int x = 0; x < MapSize.X; x++)
   {

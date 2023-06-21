@@ -13,8 +13,11 @@
 #include "door-component.h"
 #include "container-component.h"
 #include "player.h"
-#include "logger.h"
 #include "printer.h"
+
+#ifdef DEBUG_BUILD
+#include "logger.h"
+#endif
 
 MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)
@@ -400,7 +403,7 @@ void MapLevelMines::CreateLevel()
 
 void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 {
-  Logger::Instance().Print("********** INSTANTIATING LAYOUT **********");
+  LogPrint("********** INSTANTIATING LAYOUT **********");
 
   for (int x = 0; x < MapSize.X; x++)
   {
