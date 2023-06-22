@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.9)
-set (TARGET_NAME dg-tunneler)
+set (TARGET_NAME dg-cellular)
 set (CMAKE_CXX_STANDARD 14)
 project (${TARGET_NAME})
 

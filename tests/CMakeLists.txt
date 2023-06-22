@@ -1,3 +1,7 @@
 add_subdirectory(all)
 add_subdirectory(dg-tunneler)
 add_subdirectory(dg-tunneler-bt)
+add_subdirectory(dg-recbt)
+add_subdirectory(dg-cellular)
+add_subdirectory(dg-layouts)
+add_subdirectory(dg-bsp)

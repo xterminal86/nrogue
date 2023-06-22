@@ -11,7 +11,9 @@ class RecursiveBacktracker : public DGBase
                   const RemovalParams& removalParams = RemovalParams());
 
   private:
-    std::vector<Position> GetRandomCell(const Position& p);
+    Position* GetRandomCell(const Position& p);
+
+    Position _randomCell;
 };
 
 #endif // RECURSIVEBACKTRACKER_H

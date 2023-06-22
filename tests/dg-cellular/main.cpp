@@ -3,32 +3,33 @@
 
 int main(int argc, char* argv[])
 {
-  if (argc < 8)
+  if (argc < 7)
   {
     printf("Usage: %s "
            "<map_x> <map_y> "
-           "<iterations> "
-           "<tunnel_min> <tunnel_max> "
-           "<start_x> <start_y>\n", argv[0]);
+           "<wall_chance> "
+           "<birth_threshold> "
+           "<death_threshold> "
+           "<iterations>\n", argv[0]);
     return 1;
   }
 
   RNG::Instance().Init();
 
   Position mapSize;
+  int wallChance;
+  int threshold;
+  int deathThreshold;
   int iterations;
-  Position tunnelMinMax;
-  Position start;
 
   std::vector<int*> params =
   {
     &mapSize.X,
     &mapSize.Y,
-    &iterations,
-    &tunnelMinMax.X,
-    &tunnelMinMax.Y,
-    &start.X,
-    &start.Y
+    &wallChance,
+    &threshold,
+    &deathThreshold,
+    &iterations
   };
 
   int cnt = 1;
@@ -41,7 +42,11 @@ int main(int argc, char* argv[])
 
   LevelBuilder lb;
 
-  lb.TunnelerMethod(mapSize, iterations, tunnelMinMax, start);
+  lb.CellularAutomataMethod(mapSize,
+                            wallChance,
+                            threshold,
+                            deathThreshold,
+                            iterations);
 
   std::string mapRaw = lb.GetMapRawString();
 

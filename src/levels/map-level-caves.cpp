@@ -104,8 +104,8 @@ void MapLevelCaves::CreateLevel()
   VisibilityRadius = 6;
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
-  int tunnelLengthMax = MapSize.X / 10;
-  int tunnelLengthMin = tunnelLengthMax / 2;
+  int tunnelLengthMax = 5; //MapSize.X / 10;
+  int tunnelLengthMin = 1; //tunnelLengthMax / 2;
 
   GameObjectInfo t;
   t.Set(true, true, ' ', Colors::BlackColor, Colors::CaveWallColor, Strings::TileNames::CaveWallText);

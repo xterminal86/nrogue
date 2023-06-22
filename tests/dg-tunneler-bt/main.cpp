@@ -5,7 +5,8 @@ int main(int argc, char* argv[])
 {
   if (argc < 8)
   {
-    printf("Usage: %s <map_x> <map_y> "
+    printf("Usage: %s "
+           "<map_x> <map_y> "
            "<tunnel_min> <tunnel_max> "
            "<start_x> <start_y> "
            "<post_process_flag>\n", argv[0]);
@@ -45,7 +46,7 @@ int main(int argc, char* argv[])
   std::string mapRaw = lb.GetMapRawString();
 
   printf("%s\n", mapRaw.data());
-  printf("empty / walls = %.2f%%\n", lb.GetFillingRatio() * 100.0);
+  printf("empty / total = %.2f\n", lb.GetEmptyPercent() * 100.0);
 
   return 0;
 }

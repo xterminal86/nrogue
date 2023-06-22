@@ -50,12 +50,6 @@ file(GLOB SOURCES
 
 # ==============================================================================
 
-list(REMOVE_ITEM SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../src/states/dev-console.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../src/states/dev-console.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../src/singletons/logger.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../src/singletons/logger.h)
-
 add_executable(${TARGET_NAME} ${SOURCES})
 
 # ==============================================================================

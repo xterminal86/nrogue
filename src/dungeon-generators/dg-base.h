@@ -62,7 +62,8 @@ class DGBase
     void PrintMapRaw();
     void LogPrintMapRaw();
 
-    double GetFillingRatio();
+    double GetEmptyOverWallsRatio();
+    double GetEmptyPercent();
 
     std::vector<std::vector<char>> MapRaw;
 

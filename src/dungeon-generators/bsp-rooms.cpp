@@ -155,7 +155,7 @@ bool BSPRooms::DoesRoomFit(Rect& area)
   int w = area.Dimensions().X;
   int h = area.Dimensions().Y;
 
-  return (w > _minRoomSize && h > _minRoomSize);
+  return (w > _minRoomSize) && (h > _minRoomSize);
 }
 
 // =============================================================================

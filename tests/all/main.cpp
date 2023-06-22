@@ -800,7 +800,11 @@ void FromLayouts(LevelBuilder& lb, const Position& mapSize, std::stringstream& s
   };
 
 
-  lb.BuildLevelFromLayouts(rooms, mapSize.X / 2, mapSize.Y / 2, mapSize.X, mapSize.Y);
+  lb.BuildLevelFromLayouts(rooms,
+                           mapSize.X / 2,
+                           mapSize.Y / 2,
+                           mapSize.X,
+                           mapSize.Y);
 
   ss << lb.GetMapRawString();
 }

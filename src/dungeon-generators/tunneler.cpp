@@ -43,9 +43,9 @@ void Tunneler::Backtracking(const Position& mapSize,
   // Contains corridor start position and direction
   std::stack<std::pair<Position, Position>> nodePoints;
 
-  Position rndDir = GetRandomDir(_startingPoint)[0];
+  Position* rndDir = GetRandomDir(_startingPoint);
 
-  nodePoints.push({ _startingPoint, rndDir });
+  nodePoints.push({ _startingPoint, (rndDir == nullptr) ? Position() : *rndDir });
 
   while (!nodePoints.empty())
   {
@@ -96,14 +96,14 @@ void Tunneler::Backtracking(const Position& mapSize,
       nodePoints.push({ { x, y }, dir });
     }
 
-    auto res = TryToGetPerpendicularDir({ x, y }, dir);
-    if (res.size() == 0)
+    Position* res = TryToGetPerpendicularDir({ x, y }, dir);
+    if (res == nullptr)
     {
       nodePoints.pop();
     }
     else
     {
-      nodePoints.push({ { x, y }, res[0] });
+      nodePoints.push({ { x, y }, *res });
     }
   }
 
@@ -238,9 +238,9 @@ void Tunneler::Normal(const Position& mapSize,
 
 // =============================================================================
 
-std::vector<Position> Tunneler::GetRandomDir(const Position& pos)
+Position* Tunneler::GetRandomDir(const Position& pos)
 {
-  std::vector<Position> res;
+  Position* res = nullptr;
 
   std::vector<Position> directions =
   {
@@ -257,7 +257,8 @@ std::vector<Position> Tunneler::GetRandomDir(const Position& pos)
     if (IsInsideMap({ nx, ny })
      && IsDeadEnd({ nx, ny }))
     {
-      res.push_back(newDir);
+      _randomDir = newDir;
+      res = &_randomDir;
       break;
     }
 
@@ -269,9 +270,9 @@ std::vector<Position> Tunneler::GetRandomDir(const Position& pos)
 
 // =============================================================================
 
-std::vector<Position> Tunneler::TryToGetPerpendicularDir(const Position& pos, const Position& lastDir)
+Position* Tunneler::TryToGetPerpendicularDir(const Position& pos, const Position& lastDir)
 {
-  std::vector<Position> res;
+  Position* res = nullptr;
 
   std::vector<Position> directions =
   {
@@ -331,7 +332,8 @@ std::vector<Position> Tunneler::TryToGetPerpendicularDir(const Position& pos, co
       //auto str = Util::StringFormat("\t Selected dir %i %i", selectedPair[index].X, selectedPair[index].Y);
       //Logger::Instance().Print(str);
 
-      res.push_back(selectedPair[index]);
+      _perpendicularDir = selectedPair[index];
+      res = &_perpendicularDir;
       break;
     }
 

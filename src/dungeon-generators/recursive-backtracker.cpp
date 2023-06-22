@@ -49,10 +49,10 @@ void RecursiveBacktracker::Generate(const Position& mapSize,
   while (!openCells.empty())
   {
     auto np = openCells.top();
-    auto res = GetRandomCell(np);
-    if (res.size() != 0)
+    Position* res = GetRandomCell(np);
+    if (res != nullptr)
     {
-      openCells.push(res[0]);
+      openCells.push(*res);
     }
     else
     {
@@ -69,9 +69,9 @@ void RecursiveBacktracker::Generate(const Position& mapSize,
 
 // =============================================================================
 
-std::vector<Position> RecursiveBacktracker::GetRandomCell(const Position& p)
+Position* RecursiveBacktracker::GetRandomCell(const Position& p)
 {
-  std::vector<Position> res;
+  Position* res = nullptr;
 
   std::map<RoomEdgeEnum, Position> offsetsBySide =
   {
@@ -103,7 +103,8 @@ std::vector<Position> RecursiveBacktracker::GetRandomCell(const Position& p)
     Position cp = candidates[index];
     _map[cp.X][cp.Y].Visited = true;
     _map[cp.X][cp.Y].Image = '.';
-    res.push_back(cp);
+    _randomCell = cp;
+    res = &_randomCell;
   }
 
   return res;

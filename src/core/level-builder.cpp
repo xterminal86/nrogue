@@ -223,12 +223,25 @@ bool LevelBuilder::WasUsed()
 
 std::string LevelBuilder::GetMapRawString()
 {
-  return (_generator != nullptr) ? _generator->GetMapRawString() : "_generator is null\n";
+  return (_generator != nullptr)
+      ? _generator->GetMapRawString()
+      : "_generator is null\n";
 }
 
 // =============================================================================
 
-double LevelBuilder::GetFillingRatio()
+double LevelBuilder::GetEmptyPercent()
 {
-  return (_generator != nullptr) ? _generator->GetFillingRatio() : 0.0;
+  return (_generator != nullptr)
+      ? _generator->GetEmptyPercent()
+      : 0.0;
+}
+
+// =============================================================================
+
+double LevelBuilder::GetEmptyOverWallsRatio()
+{
+  return (_generator.get() != nullptr)
+      ? _generator->GetEmptyPercent()
+      : 0.0;
 }

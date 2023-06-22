@@ -59,7 +59,8 @@ class LevelBuilder
 
     bool WasUsed();
 
-    double GetFillingRatio();
+    double GetEmptyPercent();
+    double GetEmptyOverWallsRatio();
 
     std::string GetMapRawString();
 

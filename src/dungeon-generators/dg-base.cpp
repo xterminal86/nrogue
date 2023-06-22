@@ -470,10 +470,32 @@ int DGBase::CountAround(int x, int y, char ch)
 
 // =============================================================================
 
-double DGBase::GetFillingRatio()
+double DGBase::GetEmptyPercent()
+{
+  int total = _mapSize.X * _mapSize.Y;
+
+  int empty = 0;
+
+  for (int x = 0; x < _mapSize.X; x++)
+  {
+    for (int y = 0; y < _mapSize.Y; y++)
+    {
+      if (_map[x][y].Image == '.')
+      {
+        empty++;
+      }
+    }
+  }
+
+  return ((double)empty / (double)total);
+}
+
+// =============================================================================
+
+double DGBase::GetEmptyOverWallsRatio()
 {
   int empty = 0;
-  int walls = 0;
+  int walls = 1;
 
   for (int x = 0; x < _mapSize.X; x++)
   {

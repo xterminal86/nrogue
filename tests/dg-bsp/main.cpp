@@ -3,32 +3,29 @@
 
 int main(int argc, char* argv[])
 {
-  if (argc < 8)
+  if (argc < 6)
   {
     printf("Usage: %s "
            "<map_x> <map_y> "
-           "<iterations> "
-           "<tunnel_min> <tunnel_max> "
-           "<start_x> <start_y>\n", argv[0]);
+           "<split_x> <split_y> "
+           "<min_room_size>\n",
+           argv[0]);
     return 1;
   }
 
   RNG::Instance().Init();
 
   Position mapSize;
-  int iterations;
-  Position tunnelMinMax;
-  Position start;
+  Position splitRatio;
+  int minRoomSize;
 
   std::vector<int*> params =
   {
     &mapSize.X,
     &mapSize.Y,
-    &iterations,
-    &tunnelMinMax.X,
-    &tunnelMinMax.Y,
-    &start.X,
-    &start.Y
+    &splitRatio.X,
+    &splitRatio.Y,
+    &minRoomSize
   };
 
   int cnt = 1;
@@ -41,7 +38,7 @@ int main(int argc, char* argv[])
 
   LevelBuilder lb;
 
-  lb.TunnelerMethod(mapSize, iterations, tunnelMinMax, start);
+  lb.BSPRoomsMethod(mapSize, splitRatio, minRoomSize);
 
   std::string mapRaw = lb.GetMapRawString();
 

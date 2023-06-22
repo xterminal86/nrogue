@@ -7,28 +7,27 @@ int main(int argc, char* argv[])
   {
     printf("Usage: %s "
            "<map_x> <map_y> "
-           "<iterations> "
-           "<tunnel_min> <tunnel_max> "
-           "<start_x> <start_y>\n", argv[0]);
+           "<start_x> <start_y> "
+           "<empty_cells_min> <empty_cells_max> "
+           "<passes>\n", argv[0]);
     return 1;
   }
 
   RNG::Instance().Init();
 
   Position mapSize;
-  int iterations;
-  Position tunnelMinMax;
   Position start;
+  RemovalParams removalParams;
 
   std::vector<int*> params =
   {
     &mapSize.X,
     &mapSize.Y,
-    &iterations,
-    &tunnelMinMax.X,
-    &tunnelMinMax.Y,
     &start.X,
-    &start.Y
+    &start.Y,
+    &removalParams.EmptyCellsAroundMin,
+    &removalParams.EmptyCellsAroundMax,
+    &removalParams.Passes
   };
 
   int cnt = 1;
@@ -41,7 +40,7 @@ int main(int argc, char* argv[])
 
   LevelBuilder lb;
 
-  lb.TunnelerMethod(mapSize, iterations, tunnelMinMax, start);
+  lb.RecursiveBacktrackerMethod(mapSize, start, removalParams);
 
   std::string mapRaw = lb.GetMapRawString();
 

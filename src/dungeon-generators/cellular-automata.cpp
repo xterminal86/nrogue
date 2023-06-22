@@ -4,6 +4,21 @@
 
 ///
 /// \brief Use cellular automata to generate cave-like area.
+/// \param initialWallChance
+/// \parblock
+/// 1d100 of whether there will be '#' instead of '.'
+/// on randomly filled map.
+/// \endparblock
+/// \param birthThreshold
+/// \parblock
+/// number of empty cells around '#' greater than this value
+/// to transform it into '.'
+/// \endparblock
+/// \param deathThreshold
+/// \parblock
+/// number of empty cells around '.' less than this value
+/// to transform it into '#'
+/// \endparblock
 ///
 void CellularAutomata::Generate(const Position& mapSize,
                                 int initialWallChance,
