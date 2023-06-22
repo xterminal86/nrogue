@@ -1185,7 +1185,6 @@ void Player::WaitForTurn()
 {
   GameObject::WaitForTurn();
   ProcessEffectsPlayer();
-  ProcessItemsEffects();
 }
 
 // =============================================================================
