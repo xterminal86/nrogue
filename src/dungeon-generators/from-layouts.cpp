@@ -18,6 +18,8 @@ void FromLayouts::Generate(const std::vector<RoomForLevel>& possibleRooms,
 {
   _roomsForLevel = possibleRooms;
 
+  _map = CreateFilledMap(mapSizeX, mapSizeY, '.');
+
   for (int x = 0; x < mapSizeX; x++)
   {
     std::vector<MapCell> row;
@@ -102,7 +104,8 @@ RoomLayout FromLayouts::SelectRoom()
 
 void FromLayouts::TryToAddRoomTo(const RoomHelper& currentRoom, RoomEdgeEnum side)
 {
-  int offset = currentRoom.RoomSize + 1;
+  //int offset = currentRoom.RoomSize + 1;
+  int offset = currentRoom.RoomSize;
 
   //
   // Offsets are swapped to correspond to map coordinates.
@@ -110,9 +113,9 @@ void FromLayouts::TryToAddRoomTo(const RoomHelper& currentRoom, RoomEdgeEnum sid
   std::map<RoomEdgeEnum, Position> cursorAddsByType =
   {
     { RoomEdgeEnum::NORTH, Position(0, -offset) },
-    { RoomEdgeEnum::EAST, Position(offset, 0) },
-    { RoomEdgeEnum::SOUTH, Position(0, offset) },
-    { RoomEdgeEnum::WEST, Position(-offset, 0) },
+    { RoomEdgeEnum::EAST , Position(offset, 0)  },
+    { RoomEdgeEnum::SOUTH, Position(0, offset)  },
+    { RoomEdgeEnum::WEST,  Position(-offset, 0) },
   };
 
   Position newAreaStart;
@@ -146,8 +149,6 @@ void FromLayouts::TryToAddRoomTo(const RoomHelper& currentRoom, RoomEdgeEnum sid
   }
   else
   {
-    // FIXME: may result in walled room
-
     //
     // If no rooms could be added, element 0 is assumed to be fallback layout.
     //

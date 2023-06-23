@@ -14,8 +14,8 @@ size_t Printer::TerminalHeight = 0;
 
 void Printer::InitSpecific()
 {
-  _inGameMessages.reserve(kMaxGameLogMessages);
-  _lastMessages.reserve(5);
+  _inGameMessages.reserve(kMaxGameLogMessages * 2);
+  _lastMessages.reserve(10);
 
 #ifdef USE_SDL
   _ok = InitForSDL();
@@ -1131,7 +1131,9 @@ std::vector<GameLogMessageData> Printer::GetLastMessages()
 
 GameLogMessageData Printer::GetLastMessage()
 {
-  return (_inGameMessages.size() > 0) ? _inGameMessages.front() : GameLogMessageData();
+  return (_inGameMessages.size() > 0)
+      ? _inGameMessages.front()
+      : GameLogMessageData();
 }
 
 // =============================================================================

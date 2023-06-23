@@ -92,7 +92,6 @@ class DGBase
 
     int CountAround(int x, int y, char ch);
 
-    std::vector<std::vector<MapCell>> CreateEmptyMap(int w, int h);
     std::vector<std::vector<MapCell>> CreateFilledMap(int w, int h, char image = '#');
     std::vector<std::vector<MapCell>> CreateRandomlyFilledMap(int w, int h, int chance);
 

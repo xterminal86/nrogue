@@ -31,7 +31,8 @@ bool RoomHelper::CanBeTraversed(const std::vector<int> &e1,
 
   for (int i = 0; i < size; i++)
   {
-    if (e1[i] == 1 && e2[i] == 1)
+    //if (e1[i] == 1 && e2[i] == 1)
+    if (e1[i] == e2[i])
     {
       return true;
     }

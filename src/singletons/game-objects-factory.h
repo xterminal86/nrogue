@@ -15,14 +15,6 @@ class DoorComponent;
 class GameObjectsFactory : public Singleton<GameObjectsFactory>
 {
   public:
-    //
-    // For random generation
-    //
-    GameObject* CreateGameObject(int x, int y, ItemType objType);
-
-    //
-    // Various
-    //
     GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);
     GameObject* CreateRemains(GameObject* from);
 

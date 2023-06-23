@@ -407,7 +407,9 @@ enum class SpellType
   MANA_SHIELD        // nuff said
 };
 
-// Number means tier
+//
+// Number means tier.
+//
 enum class WandMaterials
 {
   NONE = -1,

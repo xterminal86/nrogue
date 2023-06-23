@@ -267,6 +267,7 @@ class GameObject
 
     void MoveGameObject(int dx, int dy);
     void ProcessEffects();
+    void ProcessItemsEffects();
     void ApplyEffect(const ItemBonusStruct& e);
     void UnapplyEffect(const ItemBonusStruct& e);
     void EffectAction(const ItemBonusStruct& e);

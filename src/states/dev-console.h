@@ -15,6 +15,7 @@ enum class DevConsoleCommand
   CREATE_ALL_POTIONS,
   CREATE_ALL_GEMS,
   CREATE_ALL_SCROLLS,
+  CREATE_ITEM,
   DISPEL_EFFECTS,
   DISPEL_EFFECTS_ACTOR,
   GET_STATIC_OBJECT,
@@ -146,6 +147,7 @@ class DevConsole : public GameState
     void CreateAllGems();
     void CreateAllPotions();
     void CreateAllScrolls();
+    void CreateItem(const std::vector<std::string>& params);
     void GetObject(const std::vector<std::string>& params,
                    ObjectHandleType handleType);
     void MoveObject(const std::vector<std::string>& params,
@@ -227,7 +229,8 @@ class DevConsole : public GameState
       { "g_go",   DevConsoleCommand::GET_BY_ADDRESS       },
       { "g_cag",  DevConsoleCommand::CREATE_ALL_GEMS      },
       { "g_cap",  DevConsoleCommand::CREATE_ALL_POTIONS   },
-      { "g_cas",  DevConsoleCommand::CREATE_ALL_SCROLLS   }
+      { "g_cas",  DevConsoleCommand::CREATE_ALL_SCROLLS   },
+      { "g_ci",   DevConsoleCommand::CREATE_ITEM          }
     };
 
     const std::vector<std::string> _help =
@@ -315,6 +318,10 @@ class DevConsole : public GameState
       {
         "p_gm",
         { "p_gm <AMOUNT>", "Give player <AMOUNT> money" }
+      },
+      {
+        "g_ci",
+        { "g_ci X Y", "Create random item at X Y" }
       }
     };
 

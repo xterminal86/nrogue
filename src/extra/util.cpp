@@ -1423,28 +1423,32 @@ namespace Util
     // Iterate over this map and select color
     // for the first entry found with bool key == true.
     //
-    std::map<int, std::pair<bool, uint32_t>> itemFirstColorToChoose =
+    std::vector<std::pair<bool, uint32_t>> itemFirstColorToChoose =
     {
-      { 0, { isMixed,   Colors::ItemMixedColor   } },
-      { 1, { isMagic,   Colors::ItemMagicColor   } },
-      { 2, { isRare,    Colors::ItemRareColor    } },
-      { 3, { isUnique,  Colors::ItemUniqueColor  } },
-      { 4, { isBlessed, Colors::ItemMagicColor   } },
-      { 5, { isCursed,  Colors::ItemCursedColor  } }
+      { isMixed,   Colors::ItemMixedColor  },
+      { isMagic,   Colors::ItemMagicColor  },
+      { isRare,    Colors::ItemRareColor   },
+      { isUnique,  Colors::ItemUniqueColor },
+      { isBlessed, Colors::ItemMagicColor  },
+      { isCursed,  Colors::ItemCursedColor },
     };
 
-    for (auto& kvp : itemFirstColorToChoose)
+    for (auto& pair : itemFirstColorToChoose)
     {
-      if (kvp.second.first)
+      if (pair.first)
       {
-        textColor = kvp.second.second;
+        textColor = pair.second;
         break;
       }
     }
 
-    if (!data.IsIdentified && !data.IsPrefixDiscovered)
+    //
+    // Special handling for unidentified situation.
+    //
+    if (!data.IsIdentified)
     {
-      textColor = Colors::WhiteColor;
+      bool isCursed = (data.IsPrefixDiscovered && data.Prefix == ItemPrefix::CURSED);
+      textColor = isCursed ? Colors::ItemCursedColor : Colors::WhiteColor;
     }
 
     return textColor;

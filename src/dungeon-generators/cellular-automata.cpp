@@ -36,7 +36,7 @@ void CellularAutomata::Generate(const Position& mapSize,
   // and store results in temporary one and copy them after
   // whole initial map was scanned.
   //
-  auto tmp = CreateEmptyMap(mapSize.X, mapSize.Y);
+  auto tmp = CreateFilledMap(mapSize.X, mapSize.Y, '.');
 
   for (int i = 0; i < maxIterations; i++)
   {

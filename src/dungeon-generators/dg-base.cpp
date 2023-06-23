@@ -100,31 +100,6 @@ std::string DGBase::GetMapRawString()
 
 // =============================================================================
 
-std::vector<std::vector<MapCell>> DGBase::CreateEmptyMap(int w, int h)
-{
-  std::vector<std::vector<MapCell>> map;
-
-  for (int x = 0; x < w; x++)
-  {
-    std::vector<MapCell> row;
-    for (int y = 0; y < h; y++)
-    {
-      MapCell c;
-      c.Coordinates.X = x;
-      c.Coordinates.Y = y;
-      c.Image = '.';
-      c.Visited = false;
-      row.push_back(c);
-    }
-
-    map.push_back(row);
-  }
-
-  return map;
-}
-
-// =============================================================================
-
 std::vector<std::vector<MapCell>> DGBase::CreateFilledMap(int w, int h, char image)
 {
   std::vector<std::vector<MapCell>> map;

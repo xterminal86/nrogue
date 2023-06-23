@@ -23,59 +23,6 @@ void GameObjectsFactory::InitSpecific()
 
 // =============================================================================
 
-GameObject* GameObjectsFactory::CreateGameObject(int x, int y,
-                                                 ItemType objType)
-{
-  GameObject* go = nullptr;
-
-  switch (objType)
-  {
-    case ItemType::COINS:
-      go = ItemsFactory::Instance().CreateMoney();
-      break;
-
-    case ItemType::POTION:
-      go = ItemsFactory::Instance().CreateRandomPotion();
-      break;
-
-    case ItemType::GEM:
-    {
-      // The deeper you go, the more is the chance to get actual gem
-      // and not worthless glass.
-      int curLevel = Map::Instance().CurrentLevel->DungeonLevel;
-      double chance = ((double)curLevel / (double)MapType::THE_END) * 90.0;
-      go = ItemsFactory::Instance().CreateGem(x, y, GemType::RANDOM, (int)chance);
-    }
-    break;
-
-    case ItemType::RETURNER:
-      go = ItemsFactory::Instance().CreateReturner(x, y);
-      break;
-
-    case ItemType::REPAIR_KIT:
-      go = ItemsFactory::Instance().CreateRepairKit(x, y);
-      break;
-
-    case ItemType::NOTHING:
-      go = ItemsFactory::Instance().CreateDummyItem("Dummy", 'O', Colors::YellowColor, Colors::BlackColor, { std::string() });
-      break;
-
-    default:
-      DebugLog("CreateGameObject(): object type %i is not handled!", objType);
-      break;
-  }
-
-  if (go != nullptr)
-  {
-    go->PosX = x;
-    go->PosY = y;
-  }
-
-  return go;
-}
-
-// =============================================================================
-
 GameObject* GameObjectsFactory::CreateShrine(int x, int y,
                                              ShrineType type,
                                              int timeout)

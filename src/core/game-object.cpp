@@ -673,6 +673,8 @@ void GameObject::FinishTurn()
   //
   //ProcessEffects();
 
+  ProcessItemsEffects();
+
   //
   // If actor's SPD is high, it can make several turns
   // and skip trigger position related activation,
@@ -1221,6 +1223,40 @@ void GameObject::ProcessEffects()
     if (ae.empty())
     {
       _activeEffects.erase(it);
+    }
+  }
+}
+
+// =============================================================================
+
+void GameObject::ProcessItemsEffects()
+{
+  ContainerComponent* inventory = GetComponent<ContainerComponent>();
+  if (inventory != nullptr)
+  {
+    for (auto& item : inventory->Contents)
+    {
+      ItemComponent* ic = item->GetComponent<ItemComponent>();
+      if (ic != nullptr)
+      {
+        for (auto& bonus : ic->Data.Bonuses)
+        {
+          switch (bonus.Type)
+          {
+            case ItemBonusType::SELF_REPAIR:
+            {
+              bonus.EffectCounter++;
+
+              if ((bonus.EffectCounter % bonus.Period) == 0)
+              {
+                bonus.EffectCounter = 0;
+                ic->Data.Durability.AddMin(bonus.BonusValue);
+              }
+            }
+            break;
+          }
+        }
+      }
     }
   }
 }

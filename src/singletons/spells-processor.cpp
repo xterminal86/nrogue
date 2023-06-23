@@ -740,8 +740,9 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObje
       item->Data.IsPrefixDiscovered = true;
       item->Data.Prefix = ItemPrefix::CURSED;
 
-      // No additional stat penalties, just can't uneqip
-
+      //
+      // No additional stat penalties, just can't uneqip.
+      //
       auto& idName = item->Data.IdentifiedName;
       idName = Util::ReplaceItemPrefix(idName, { "Blessed", "Uncursed" }, "Cursed");
 

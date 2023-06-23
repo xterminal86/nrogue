@@ -363,6 +363,10 @@ void DevConsole::ProcessCommand(const std::string& command,
       CreateAllScrolls();
       break;
 
+    case DevConsoleCommand::CREATE_ITEM:
+      CreateItem(params);
+      break;
+
     case DevConsoleCommand::DAMAGE_ACTOR:
       DamageActor(params);
       break;
@@ -799,6 +803,40 @@ void DevConsole::CreateAllScrolls()
       xOffset++;
     }
   }
+
+  StdOut(Ok);
+}
+
+// =============================================================================
+
+void DevConsole::CreateItem(const std::vector<std::string>& params)
+{
+  if (params.size() != 2)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string sx = params[0];
+  std::string sy = params[1];
+
+  auto r = CoordinateParamsToInt(sx, sy);
+  if (r.first == -1 && r.second == -1)
+  {
+    return;
+  }
+
+  int x = r.first;
+  int y = r.second;
+
+  GameObject* go = ItemsFactory::Instance().CreateRandomItem(x, y);
+  if (go == nullptr)
+  {
+    StdOut("Generated object type is not implemented yet!");
+    return;
+  }
+
+  _currentLevel->PlaceGameObject(go);
 
   StdOut(Ok);
 }

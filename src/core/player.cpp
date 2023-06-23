@@ -1490,36 +1490,6 @@ void Player::UnapplyStarvingPenalties()
 
 // =============================================================================
 
-void Player::ProcessItemsEffects()
-{
-  for (auto& item : Inventory->Contents)
-  {
-    ItemComponent* ic = item->GetComponent<ItemComponent>();
-    if (ic != nullptr)
-    {
-      for (auto& bonus : ic->Data.Bonuses)
-      {
-        switch (bonus.Type)
-        {
-          case ItemBonusType::SELF_REPAIR:
-          {
-            bonus.EffectCounter++;
-
-            if ((bonus.EffectCounter % bonus.Period) == 0)
-            {
-              bonus.EffectCounter = 0;
-              ic->Data.Durability.AddMin(bonus.BonusValue);
-            }
-          }
-          break;
-        }
-      }
-    }
-  }
-}
-
-// =============================================================================
-
 void Player::SetDefaultItems()
 {
   switch (GetClass())

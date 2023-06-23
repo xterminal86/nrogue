@@ -110,7 +110,6 @@ class Player : public GameObject
     bool PassByNPC(GameObject* actor);
 
     void ProcessEffectsPlayer();
-    void ProcessItemsEffects();
 
     void SwitchPlaces(AIComponent* other);
 
