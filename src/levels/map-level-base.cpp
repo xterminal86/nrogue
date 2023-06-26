@@ -206,6 +206,11 @@ void MapLevelBase::PlaceStaticObject(int x, int y,
                                      int hitPoints,
                                      GameObjectType type)
 {
+  if (IsOutOfBounds(x, y))
+  {
+    return;
+  }
+
   GameObject* go = GameObjectsFactory::Instance().CreateStaticObject(x, y,
                                                                      objectInfo,
                                                                      hitPoints,
@@ -284,10 +289,21 @@ void MapLevelBase::RecordEmptyCells()
 
 void MapLevelBase::CreateBorders(GameObjectInfo& t)
 {
+  using GOF = GameObjectsFactory;
+
   auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
   for (auto& i : bounds)
   {
-    PlaceStaticObject(i.X, i.Y, t);
+    //
+    // Borders are to ignore IsOutOfBounds() check, so pasting contents
+    // of PlaceStaticObject(int, int, const GameObjectInfo, int, GameObjectType)
+    // directly.
+    //
+    GameObject* go = GOF::Instance().CreateStaticObject(i.X, i.Y,
+                                                          t,
+                                                         -1,
+                                                          GameObjectType::PICKAXEABLE);
+    PlaceStaticObject(go);
   }
 }
 
@@ -458,6 +474,13 @@ void MapLevelBase::CreateInitialMonsters()
 
 // =============================================================================
 
+bool MapLevelBase::IsOutOfBounds(int x, int y)
+{
+  return !Util::IsInsideMap({ x, y }, MapSize);
+}
+
+// =============================================================================
+
 bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
 {
   bool blocked   = IsCellBlocking(pos);
@@ -620,6 +643,11 @@ void MapLevelBase::PlaceGroundTile(int x, int y,
                                    const uint32_t& bgColor,
                                    const std::string& objName)
 {
+  if (IsOutOfBounds(x, y))
+  {
+    return;
+  }
+
   GameObjectInfo t;
   t.Set(false, false, image, fgColor, bgColor, objName);
   MapArray[x][y]->MakeTile(t);
@@ -634,6 +662,11 @@ void MapLevelBase::PlaceGroundTile(int x, int y,
 //
 void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
 {
+  if (IsOutOfBounds(x, y))
+  {
+    return;
+  }
+
   char img = '.';
 
   // Create 'flowers'
@@ -671,6 +704,11 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
 
 void MapLevelBase::PlaceShallowWaterTile(int x, int y)
 {
+  if (IsOutOfBounds(x, y))
+  {
+    return;
+  }
+
   GameObjectInfo t;
   t.Set(false,
         false,
@@ -685,6 +723,11 @@ void MapLevelBase::PlaceShallowWaterTile(int x, int y)
 
 void MapLevelBase::PlaceDeepWaterTile(int x, int y)
 {
+  if (IsOutOfBounds(x, y))
+  {
+    return;
+  }
+
   //
   // int type is to avoid truncation
   // in case of CP437 image which is 247
@@ -709,6 +752,11 @@ void MapLevelBase::PlaceDeepWaterTile(int x, int y)
 
 void MapLevelBase::PlaceLavaTile(int x, int y)
 {
+  if (IsOutOfBounds(x, y))
+  {
+    return;
+  }
+
   GameObjectInfo t;
   t.Set(false,
         false,
@@ -723,6 +771,11 @@ void MapLevelBase::PlaceLavaTile(int x, int y)
 
 void MapLevelBase::PlaceChasmTile(int x, int y)
 {
+  if (IsOutOfBounds(x, y))
+  {
+    return;
+  }
+
   int img = ' ';
 
 #ifdef USE_SDL
@@ -749,6 +802,11 @@ void MapLevelBase::PlaceChasmTile(int x, int y)
 
 void MapLevelBase::PlaceShrine(const Position& pos, LevelBuilder& lb)
 {
+  if (IsOutOfBounds(pos.X, pos.Y))
+  {
+    return;
+  }
+
   GameObjectInfo t;
   ShrineType type = lb.ShrinesByPosition().at(pos);
   auto go = GameObjectsFactory::Instance().CreateShrine(pos.X, pos.Y, type, 1000);
@@ -769,6 +827,11 @@ void MapLevelBase::PlaceShrine(const Position& pos, LevelBuilder& lb)
 
 void MapLevelBase::PlaceTree(int x, int y)
 {
+  if (IsOutOfBounds(x, y))
+  {
+    return;
+  }
+
   char img = 'T';
 
   #ifdef USE_SDL
@@ -789,6 +852,11 @@ void MapLevelBase::PlaceWall(int x, int y,
                              const std::string& objName,
                              bool cannotBePickaxed)
 {
+  if (IsOutOfBounds(x, y))
+  {
+    return;
+  }
+
   GameObjectInfo t;
   t.Set(true, true, image, fgColor, bgColor, objName);
 
@@ -808,6 +876,11 @@ void MapLevelBase::PlaceWall(int x, int y,
 
 void MapLevelBase::PlaceDoor(int x, int y, bool isOpen, size_t openedBy, const std::string& objName)
 {
+  if (IsOutOfBounds(x, y))
+  {
+    return;
+  }
+
   GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, isOpen, DoorMaterials::WOOD, objName);
   if (openedBy != GlobalConstants::OpenedByAnyone)
   {

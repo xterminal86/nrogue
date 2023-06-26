@@ -47,16 +47,6 @@ void MapLevelNether::CreateLevel()
   VisibilityRadius = 20;
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
-  GameObjectInfo t;
-  t.Set(true,
-        true,
-        ' ',
-        Colors::BlackColor,
-        Colors::CaveWallColor,
-        Strings::TileNames::CaveWallText);
-
-  CreateBorders(t);
-
   LevelBuilder lb;
   switch (MapType_)
   {
@@ -68,6 +58,16 @@ void MapLevelNether::CreateLevel()
       lb.CellularAutomataMethod(MapSize, 40, 5, 4, 12);
       break;
   }
+
+  GameObjectInfo t;
+  t.Set(true,
+        true,
+        ' ',
+        Colors::BlackColor,
+        Colors::CaveWallColor,
+        Strings::TileNames::CaveWallText);
+
+  CreateBorders(t);
 
   if (MapType_ != MapType::NETHER_5)
   {

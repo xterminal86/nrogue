@@ -123,6 +123,7 @@ class MapLevelBase
     virtual void CreateSpecialMonsters();
 
     bool IsSpotValidForSpawn(const Position& pos);
+    bool IsOutOfBounds(int x, int y);
 
     void FillArea(int ax,
                   int ay,

@@ -324,17 +324,6 @@ void MapLevelMines::CreateLevel()
 
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
 
-  // Borders
-
-  t.Set(true,
-        true,
-        ' ',
-        Colors::BlackColor,
-        Colors::ShadesOfGrey::Six,
-        Strings::TileNames::RocksText);
-
-  CreateBorders(t);
-
   // Build level
 
   LevelBuilder lb;
@@ -372,6 +361,17 @@ void MapLevelMines::CreateLevel()
       CreateSpecialLevel();
       break;
   }
+
+  // Borders
+
+  t.Set(true,
+        true,
+        ' ',
+        Colors::BlackColor,
+        Colors::ShadesOfGrey::Six,
+        Strings::TileNames::RocksText);
+
+  CreateBorders(t);
 
   if (MapType_ != MapType::MINES_5)
   {

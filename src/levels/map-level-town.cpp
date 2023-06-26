@@ -210,22 +210,7 @@ void MapLevelTown::CreateLevel()
         Colors::BlackColor,
         Strings::TileNames::GroundText);
 
-  Rect r(0, 0, MapSize.X - 1, MapSize.Y - 1);
-
-  FillArea(r.X1, r.Y1, r.X2, r.Y2, t);
-
-  t.Set(true,
-        true,
-        '#',
-        Colors::ShadesOfGrey::Four,
-        Colors::ShadesOfGrey::Two,
-        Strings::TileNames::WallsText);
-
-  auto bounds = r.GetBoundaryElements();
-  for (auto& pos : bounds)
-  {
-    PlaceStaticObject(pos.X, pos.Y, t);
-  }
+  FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
 
   ReplaceGroundWithGrass();
 
@@ -268,9 +253,17 @@ void MapLevelTown::CreateLevel()
 
   PlaceMineEntrance(88, 41);
 
-  CreateTownGates();
-
   BuildRoads();
+
+  t.Set(true,
+        true,
+        '#',
+        Colors::ShadesOfGrey::Four,
+        Colors::ShadesOfGrey::Two,
+        Strings::TileNames::WallsText);
+
+  CreateBorders(t);
+  CreateTownGates();
 
   RecordEmptyCells();
 
@@ -475,19 +468,6 @@ void MapLevelTown::ReplaceGroundWithGrass()
       {
         PlaceGrassTile(x, y, FlowersFrequency);
       }
-    }
-  }
-}
-
-// =============================================================================
-
-void MapLevelTown::FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill)
-{
-  for (int x = ax; x <= ax + aw; x++)
-  {
-    for (int y = ay; y <= ay + ah; y++)
-    {
-      MapArray[x][y]->MakeTile(tileToFill);
     }
   }
 }

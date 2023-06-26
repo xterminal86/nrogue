@@ -92,13 +92,20 @@ void ContainerInteractState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    for (size_t y = 0; y < Printer::TerminalHeight; y++)
+    for (int y = 0; y < _th; y++)
     {
+      #ifdef USE_SDL
       Printer::Instance().PrintFB(_twHalf,
                                   y,
-                                  ' ',
+                                  (int)NameCP437::VBAR_2,
+                                  Colors::WhiteColor);
+      #else
+      Printer::Instance().PrintFB(_twHalf,
+                                  y,
+                                  '|',
                                   Colors::BlackColor,
                                   Colors::WhiteColor);
+      #endif
     }
 
     auto containerName = _containerToInteractWith->OwnerGameObject->ObjectName;

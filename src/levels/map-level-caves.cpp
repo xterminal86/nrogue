@@ -107,11 +107,6 @@ void MapLevelCaves::CreateLevel()
   int tunnelLengthMax = 5; //MapSize.X / 10;
   int tunnelLengthMin = 1; //tunnelLengthMax / 2;
 
-  GameObjectInfo t;
-  t.Set(true, true, ' ', Colors::BlackColor, Colors::CaveWallColor, Strings::TileNames::CaveWallText);
-
-  CreateBorders(t);
-
   LevelBuilder lb;
 
   switch (MapType_)
@@ -156,6 +151,16 @@ void MapLevelCaves::CreateLevel()
     }
     break;
   }
+
+  GameObjectInfo t;
+  t.Set(true,
+        true,
+        ' ',
+        Colors::BlackColor,
+        Colors::CaveWallColor,
+        Strings::TileNames::CaveWallText);
+
+  CreateBorders(t);
 
   if (MapType_ != MapType::CAVES_5)
   {

@@ -853,10 +853,12 @@ void Map::PrintMapArrayRevealedStatus()
     dbg.push_back(row);
   }
 
+  #ifdef DEBUG_BUILD
   for (auto& s : dbg)
   {
     LogPrint(s);
   }
+  #endif
 
   Printer::Instance().AddMessage("Current map layout revealed status logged");
 }

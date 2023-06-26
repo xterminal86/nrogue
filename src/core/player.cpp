@@ -619,6 +619,10 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
   //
   // TODO: cursed wands side-effects?
   //
+  // NOTE: double-check with spells list in MainState::ProcessWand()
+  // so that nothing was accidentally forgotten to be added
+  // for handling here.
+  //
   switch (with->Data.SpellHeld.SpellType_)
   {
     case SpellType::NONE:
@@ -631,6 +635,7 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
 
     case SpellType::MAGIC_MISSILE:
     case SpellType::FROST:
+    case SpellType::LIGHTNING:
       ProcessMagicAttack(what, with, centralDamage, true);
       break;
 

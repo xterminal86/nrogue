@@ -49,12 +49,6 @@ void MapLevelAbyss::CreateLevel()
   VisibilityRadius = 40;
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
-  // Borders
-  GameObjectInfo t;
-
-  t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, Strings::TileNames::AbyssalRocksText);
-  CreateBorders(t);
-
   LevelBuilder lb;
   switch (MapType_)
   {
@@ -66,6 +60,17 @@ void MapLevelAbyss::CreateLevel()
       lb.CellularAutomataMethod(MapSize, 40, 5, 4, 12);
       break;
   }
+
+  // Borders
+  GameObjectInfo t;
+  t.Set(true,
+        true,
+        ' ',
+        Colors::BlackColor,
+        Colors::ShadesOfGrey::Six,
+        Strings::TileNames::AbyssalRocksText);
+
+  CreateBorders(t);
 
   if (MapType_ != MapType::ABYSS_5)
   {

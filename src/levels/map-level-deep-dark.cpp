@@ -58,11 +58,6 @@ void MapLevelDeepDark::CreateLevel()
   //int tunnelLengthMax = MapSize.X / 10;
   //int tunnelLengthMin = tunnelLengthMax / 2;
 
-  GameObjectInfo t;
-  t.Set(true, true, ' ', Colors::BlackColor, Colors::ShadesOfGrey::Six, Strings::TileNames::StoneWallText);
-
-  CreateBorders(t);
-
   LevelBuilder lb;
 
   switch (MapType_)
@@ -101,6 +96,16 @@ void MapLevelDeepDark::CreateLevel()
     }
     break;
   }
+
+  GameObjectInfo t;
+  t.Set(true,
+        true,
+        ' ',
+        Colors::BlackColor,
+        Colors::ShadesOfGrey::Six,
+        Strings::TileNames::StoneWallText);
+
+  CreateBorders(t);
 
   if (MapType_ != MapType::DEEP_DARK_5)
   {
