@@ -1,4 +1,4 @@
-#include "from-tiles.h"
+#include "from-permutation-tiles.h"
 #include "util.h"
 
 ///
@@ -28,7 +28,7 @@
 /// Having line length more than 9 takes too long to create a tileset
 /// and has no visible visual difference. But mostly time.
 ///
-void FromTiles::Generate(const Position& mapSize,
+void FromPermutationTiles::Generate(const Position& mapSize,
                          int tileSetIndex,
                          bool postProcess,
                          bool removeBias)
@@ -88,11 +88,15 @@ void FromTiles::Generate(const Position& mapSize,
     RemoveSingleWalls();
   }
 
+  //
   // Remove horizontal corridor bias at the top
   // by filling borders of the map inwards.
+  //
   if (removeBias)
   {
-    // Unmark regions
+    //
+    // Unmark regions.
+    //
     for (int x = 0; x < mapSize.X; x++)
     {
       for (int y = 0; y < mapSize.Y; y++)
@@ -130,7 +134,7 @@ void FromTiles::Generate(const Position& mapSize,
 
 // =============================================================================
 
-Tile FromTiles::ConvertStringToTile(const std::string& line)
+Tile FromPermutationTiles::ConvertStringToTile(const std::string& line)
 {
   Tile res;
 
@@ -156,7 +160,7 @@ Tile FromTiles::ConvertStringToTile(const std::string& line)
 
 // =============================================================================
 
-void FromTiles::CreateTileset()
+void FromPermutationTiles::CreateTileset()
 {
   for (int i = 1; i < _tileArea; i++)
   {
@@ -182,7 +186,7 @@ void FromTiles::CreateTileset()
 
 // =============================================================================
 
-void FromTiles::FillBorders()
+void FromPermutationTiles::FillBorders()
 {
   for (auto& line : _map)
   {
@@ -198,7 +202,7 @@ void FromTiles::FillBorders()
 
 // =============================================================================
 
-void FromTiles::TryToPlaceLayout(const Position& p)
+void FromPermutationTiles::TryToPlaceLayout(const Position& p)
 {
   if (!IsInsideMap(p) || WasVisited(p))
   {
@@ -258,7 +262,7 @@ void FromTiles::TryToPlaceLayout(const Position& p)
 
 // =============================================================================
 
-bool FromTiles::CanBeConnected(const Tile& l1,
+bool FromPermutationTiles::CanBeConnected(const Tile& l1,
                                const Tile& l2,
                                const RoomEdgeEnum& along)
 {
@@ -291,7 +295,7 @@ bool FromTiles::CanBeConnected(const Tile& l1,
 
 // =============================================================================
 
-std::string FromTiles::GetLayoutEdge(const Tile& l, const RoomEdgeEnum& along)
+std::string FromPermutationTiles::GetLayoutEdge(const Tile& l, const RoomEdgeEnum& along)
 {
   std::string edge;
 
@@ -339,7 +343,7 @@ std::string FromTiles::GetLayoutEdge(const Tile& l, const RoomEdgeEnum& along)
 
 // =============================================================================
 
-Tile FromTiles::ReadLayout(const Position& p)
+Tile FromPermutationTiles::ReadLayout(const Position& p)
 {
   Tile res;
 
@@ -389,7 +393,7 @@ Tile FromTiles::ReadLayout(const Position& p)
 
 // =============================================================================
 
-void FromTiles::PlaceLayout(const Position& pos, const Tile& tile)
+void FromPermutationTiles::PlaceLayout(const Position& pos, const Tile& tile)
 {
   int lx = pos.X - 1;
   int ly = pos.Y - 1;
@@ -419,7 +423,7 @@ void FromTiles::PlaceLayout(const Position& pos, const Tile& tile)
 
 // =============================================================================
 
-void FromTiles::AddPointsToProcess(const Position& p)
+void FromPermutationTiles::AddPointsToProcess(const Position& p)
 {
   std::vector<Position> positions =
   {
@@ -437,7 +441,7 @@ void FromTiles::AddPointsToProcess(const Position& p)
 
 // =============================================================================
 
-bool FromTiles::IsLayoutEmpty(const Tile& layout)
+bool FromPermutationTiles::IsLayoutEmpty(const Tile& layout)
 {
   for (auto& line : layout)
   {
@@ -455,7 +459,7 @@ bool FromTiles::IsLayoutEmpty(const Tile& layout)
 
 // =============================================================================
 
-bool FromTiles::AreLayoutsEqual(const Tile& l1, const Tile& l2)
+bool FromPermutationTiles::AreLayoutsEqual(const Tile& l1, const Tile& l2)
 {
   for (size_t i = 0; i < l1.size(); i++)
   {
@@ -470,7 +474,7 @@ bool FromTiles::AreLayoutsEqual(const Tile& l1, const Tile& l2)
 
 // =============================================================================
 
-bool FromTiles::WasVisited(const Position& p)
+bool FromPermutationTiles::WasVisited(const Position& p)
 {
   for (auto& p2 : _visited)
   {

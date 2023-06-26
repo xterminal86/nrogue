@@ -6,8 +6,8 @@
 #include "recursive-backtracker.h"
 #include "tunneler.h"
 #include "cellular-automata.h"
-#include "from-layouts.h"
-#include "from-tiles.h"
+#include "blob-tiles.h"
+#include "from-permutation-tiles.h"
 #include "bsp-rooms.h"
 #include "util.h"
 
@@ -87,23 +87,14 @@ void LevelBuilder::RecursiveBacktrackerMethod(const Position& mapSize,
 
 // =============================================================================
 
-//
-// FIXME: build from layouts needs improvements
-// (see comments in Generate() method)
-// Use carefully, better avoid using altogether.
-//
-void LevelBuilder::BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRooms,
-                                         int startX,
-                                         int startY,
-                                         int mapSizeX,
-                                         int mapSizeY)
+void LevelBuilder::FromBlobTiles(int mapSizeX, int mapSizeY)
 {
-  _generator.reset(new FromLayouts());
+  _generator.reset(new BlobTiles());
 
-  FromLayouts* fl = static_cast<FromLayouts*>(_generator.get());
-  fl->Generate(possibleRooms, startX, startY, mapSizeX, mapSizeY);
+  BlobTiles* bt = static_cast<BlobTiles*>(_generator.get());
+  bt->Generate(mapSizeX, mapSizeY);
 
-  MapRaw = fl->MapRaw;
+  MapRaw = bt->MapRaw;
 }
 
 // =============================================================================
@@ -122,14 +113,14 @@ void LevelBuilder::BSPRoomsMethod(const Position& mapSize,
 
 // =============================================================================
 
-void LevelBuilder::FromTilesMethod(const Position& mapSize,
-                                   int tileSetIndex,
-                                   bool postProcess,
-                                   bool removeBias)
+void LevelBuilder::FromPermutationTilesMethod(const Position& mapSize,
+                                              int tileSetIndex,
+                                              bool postProcess,
+                                              bool removeBias)
 {
-  _generator.reset(new FromTiles());
+  _generator.reset(new FromPermutationTiles());
 
-  FromTiles* ft = static_cast<FromTiles*>(_generator.get());
+  FromPermutationTiles* ft = static_cast<FromPermutationTiles*>(_generator.get());
   ft->Generate(mapSize, tileSetIndex, postProcess, removeBias);
 
   MapRaw = ft->MapRaw;
@@ -226,6 +217,16 @@ std::string LevelBuilder::GetMapRawString()
   return (_generator != nullptr)
       ? _generator->GetMapRawString()
       : "_generator is null\n";
+}
+
+// =============================================================================
+
+void LevelBuilder::PrintCustomDebugStuff()
+{
+  if (_generator)
+  {
+    _generator->ForCustomDebugStuff();
+  }
 }
 
 // =============================================================================

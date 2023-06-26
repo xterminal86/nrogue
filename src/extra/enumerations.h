@@ -471,8 +471,10 @@ enum class RoomEdgeEnum
   WEST
 };
 
+//
 // In certain algorithms it is more suitable
 // to call the same type by another name.
+//
 using Direction = RoomEdgeEnum;
 
 enum class ItemPrefix

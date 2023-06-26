@@ -12,9 +12,7 @@
 class LevelBuilder
 {
   public:
-    void BuildLevelFromLayouts(std::vector<RoomForLevel>& possibleRooms,
-                               int startX, int startY,
-                               int mapSizeX, int mapSizeY);
+    void FromBlobTiles(int mapSizeX, int mapSizeY);
 
     void RecursiveBacktrackerMethod(const Position& mapSize,
                                     const Position& startingPoint = { -1, -1 },
@@ -46,10 +44,10 @@ class LevelBuilder
                         const Position& splitRatio,
                         int minRoomSize);
 
-    void FromTilesMethod(const Position& mapSize,
-                         int tileSetIndex = -1,
-                         bool postProcess = false,
-                         bool removeBias = false);
+    void FromPermutationTilesMethod(const Position& mapSize,
+                                    int tileSetIndex = -1,
+                                    bool postProcess = false,
+                                    bool removeBias = false);
 
     void PlaceShrineLayout(const Position& start,
                            const StringsArray2D& layout);
@@ -63,6 +61,8 @@ class LevelBuilder
     double GetEmptyOverWallsRatio();
 
     std::string GetMapRawString();
+
+    void PrintCustomDebugStuff();
 
     std::vector<std::vector<char>> MapRaw;
 

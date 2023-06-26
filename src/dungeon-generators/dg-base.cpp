@@ -100,6 +100,15 @@ std::string DGBase::GetMapRawString()
 
 // =============================================================================
 
+void DGBase::ForCustomDebugStuff()
+{
+  //
+  // Override this for custom printf debugging and stuff inside generator class.
+  //
+}
+
+// =============================================================================
+
 std::vector<std::vector<MapCell>> DGBase::CreateFilledMap(int w, int h, char image)
 {
   std::vector<std::vector<MapCell>> map;

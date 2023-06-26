@@ -6,7 +6,7 @@
 #include <stack>
 #include <sstream>
 
-class FromTiles : public DGBase
+class FromPermutationTiles : public DGBase
 {
   public:
     void Generate(const Position& mspSize,

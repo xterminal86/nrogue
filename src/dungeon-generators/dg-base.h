@@ -76,6 +76,8 @@ class DGBase
 
     std::string GetMapRawString();
 
+    virtual void ForCustomDebugStuff();
+
   protected:
     bool CheckLimits(const Position& start, int roomSize);
     bool IsInsideMap(const Position& pos);

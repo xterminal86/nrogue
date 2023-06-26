@@ -709,7 +709,7 @@ void FeatureRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& 
 
 // =============================================================================
 
-void FromTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
+void FromPermutationTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
   DebugLog("%s", __func__);
 
@@ -727,7 +727,7 @@ void FromTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
     ss << "\n\n" << title << "\n";
     ss << delimiter << "\n\n";
 
-    lb.FromTilesMethod({ 40, 80 }, i);
+    lb.FromPermutationTilesMethod({ 40, 80 }, i);
 
     ss << lb.GetMapRawString();
 
@@ -739,7 +739,7 @@ void FromTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 
     ss << "\n\n" << postProcessed << "\n";
 
-    lb.FromTilesMethod({ 40, 80 }, i, true, true);
+    lb.FromPermutationTilesMethod({ 40, 80 }, i, true, true);
 
     ss << lb.GetMapRawString();
   }
@@ -749,6 +749,7 @@ void FromTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 
 void FromLayouts(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
+  /*
   DebugLog("%s", __func__);
 
   std::string str = "\nFrom layouts:\n\n";
@@ -807,6 +808,7 @@ void FromLayouts(LevelBuilder& lb, const Position& mapSize, std::stringstream& s
                            mapSize.Y);
 
   ss << lb.GetMapRawString();
+  */
 }
 
 // =============================================================================
@@ -848,7 +850,7 @@ void LevelBuilderTest(std::stringstream& ss)
   FeatureRooms(lb, mapSize, ss);
   //
   DisplayProgress();
-  FromTiles(lb, mapSize, ss);
+  FromPermutationTiles(lb, mapSize, ss);
   //
   DisplayProgress();
   FromLayouts(lb, mapSize, ss);
