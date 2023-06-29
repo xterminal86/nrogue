@@ -113,9 +113,14 @@ std::vector<std::vector<MapCell>> DGBase::CreateFilledMap(int w, int h, char ima
 {
   std::vector<std::vector<MapCell>> map;
 
+  map.reserve(w);
+
   for (int x = 0; x < w; x++)
   {
     std::vector<MapCell> row;
+
+    row.reserve(h);
+
     for (int y = 0; y < h; y++)
     {
       MapCell c;
@@ -138,9 +143,14 @@ std::vector<std::vector<MapCell>> DGBase::CreateRandomlyFilledMap(int w, int h, 
 {
   std::vector<std::vector<MapCell>> map;
 
+  map.reserve(w);
+
   for (int x = 0; x < w; x++)
   {
     std::vector<MapCell> row;
+
+    row.reserve(h);
+
     for (int y = 0; y < h; y++)
     {
       bool isWall = Util::Rolld100(chance);
@@ -702,6 +712,44 @@ void DGBase::ConnectIsolatedAreas()
 
     //DebugLog("\n\n\tNew regions found: %i\n\n", regionsFound);
   }
+}
+
+// =============================================================================
+
+void DGBase::AddRow(const MapCell& cell)
+{
+  std::vector<MapCell> row;
+
+  row.reserve(_mapSize.Y);
+
+  for (int y = 0; y < _mapSize.Y; y++)
+  {
+    MapCell toAdd;
+    toAdd.Coordinates = { _mapSize.X, y };
+    toAdd.Image = cell.Image;
+
+    row.push_back(toAdd);
+  }
+
+  _map.push_back(row);
+
+  _mapSize.X++;
+}
+
+// =============================================================================
+
+void DGBase::AddColumn(const MapCell& cell)
+{
+  for (int x = 0; x < _mapSize.X; x++)
+  {
+    MapCell toAdd;
+    toAdd.Coordinates = { x, _mapSize.Y };
+    toAdd.Image = cell.Image;
+
+    _map[x].push_back(toAdd);
+  }
+
+  _mapSize.Y++;
 }
 
 // =============================================================================

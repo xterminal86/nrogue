@@ -68,18 +68,8 @@ void BlobTiles::Generate(int mapSizeX, int mapSizeY)
 
   for (int x = 1; x < _mapSize.X; x += _tileSize)
   {
-    if (x + _tileSize >= _mapSize.X - 1)
-    {
-      break;
-    }
-
     for (int y = 1; y < _mapSize.Y; y += _tileSize)
     {
-      if (y + _tileSize >= _mapSize.Y - 1)
-      {
-        break;
-      }
-
       roomsToChoose.clear();
 
       for (auto& items : _tilesetToUse)
@@ -95,17 +85,24 @@ void BlobTiles::Generate(int mapSizeX, int mapSizeY)
         }
       }
 
-      int ind = RNG::Instance().RandomRange(0, roomsToChoose.size());
-      if (ind != 0)
+      if (!roomsToChoose.empty())
       {
+        int ind = RNG::Instance().RandomRange(0, roomsToChoose.size());
         PlaceTile(x, y, roomsToChoose[ind]);
       }
-
-      #ifdef DEBUG_BUILD
-      PrintMap(x, y);
-      #endif
     }
   }
+
+  MapCell empty;
+  empty.Image = '.';
+
+  //
+  // Generator works from 1,1 to the map size, but since map size is a multiple
+  // of _tileSize, we need additional row and column for subsequent map borders
+  // after map generation finishes.
+  //
+  AddRow(empty);
+  AddColumn(empty);
 
   FillMapRaw();
 }
@@ -119,19 +116,51 @@ void BlobTiles::PrintMap(int curX, int curY)
 
   ss << curX << " ; " << curY << "\n\n";
 
+  int out = 0;
+
+  for (int i = 0; i < _mapSize.X; i++)
+  {
+    out = i % 10;
+    ss << std::to_string(out);
+  }
+
+  ss << "\n";
+
   for (int x = 0; x < _mapSize.X; x++)
   {
+    out = x % 10;
+
     std::string line;
     for (int y = 0; y < _mapSize.Y; y++)
     {
       line += _map[x][y].Image;
     }
 
+    line += std::to_string(out);
+
     ss << line << "\n";
   }
 
   printf("%s\n\n", ss.str().data());
 }
+
+void BlobTiles::PrintTile(const StringsArray2D& tile)
+{
+  std::stringstream ss;
+
+  for (auto& line : tile)
+  {
+    for (auto& c : line)
+    {
+      ss << c;
+    }
+
+    ss << "\n";
+  }
+
+  printf("\n%s\n", ss.str().data());
+}
+
 #endif
 
 // =============================================================================
@@ -159,18 +188,18 @@ bool BlobTiles::CheckEdge(int x, int y,
   //
   // Out of bounds left or up is considered valid tile to attach to.
   //
-  if (lx < _tileSize || ly < _tileSize)
+  if ((edge == RoomEdgeEnum::WEST  && ly < 1)
+   || (edge == RoomEdgeEnum::NORTH && lx < 1))
   {
     return true;
   }
-
-  StringsArray2D lw = GetMapChunkAround(lx, y);
-  StringsArray2D ln = GetMapChunkAround(x, ly);
 
   switch (edge)
   {
     case RoomEdgeEnum::WEST:
     {
+      StringsArray2D lw = GetMapChunkAround(x, ly);
+
       for (int i = 0; i < _tileSize; i++)
       {
         //
@@ -186,6 +215,8 @@ bool BlobTiles::CheckEdge(int x, int y,
 
     case RoomEdgeEnum::NORTH:
     {
+      StringsArray2D ln = GetMapChunkAround(lx, y);
+
       for (int i = 0; i < _tileSize; i++)
       {
         //

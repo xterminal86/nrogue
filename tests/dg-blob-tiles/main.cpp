@@ -10,6 +10,7 @@ int main(int argc, char* argv[])
   }
 
   RNG::Instance().Init();
+  //RNG::Instance().SetSeed(1);
 
   Position mapSize;
 

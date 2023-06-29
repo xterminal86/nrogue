@@ -127,6 +127,7 @@ class BlobTiles : public DGBase
 
     #ifdef DEBUG_BUILD
     void PrintMap(int curX, int curY);
+    void PrintTile(const StringsArray2D& tile);
     #endif
 };
 

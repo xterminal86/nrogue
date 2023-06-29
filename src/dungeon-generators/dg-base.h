@@ -91,6 +91,8 @@ class DGBase
     void FillSingleCells();
     void CheckIfProblemCorner(const Position& p);
     void ConnectIsolatedAreas();
+    void AddRow(const MapCell& cell);
+    void AddColumn(const MapCell& cell);
 
     int CountAround(int x, int y, char ch);
 
