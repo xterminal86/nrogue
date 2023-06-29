@@ -64,7 +64,7 @@ void BlobTiles::Generate(int mapSizeX, int mapSizeY)
 
   _map = CreateFilledMap(_mapSize.X, _mapSize.Y, '.');
 
-  std::vector<StringsArray2D> roomsToChoose;
+  std::vector<StringV> roomsToChoose;
 
   for (int x = 1; x < _mapSize.X; x += _tileSize)
   {
@@ -165,7 +165,7 @@ void BlobTiles::PrintTile(const StringsArray2D& tile)
 
 // =============================================================================
 
-void BlobTiles::PlaceTile(int x, int y, const StringsArray2D& tile)
+void BlobTiles::PlaceTile(int x, int y, const StringV& tile)
 {
   for (int i = 0; i < _tileSize; i++)
   {
@@ -180,7 +180,7 @@ void BlobTiles::PlaceTile(int x, int y, const StringsArray2D& tile)
 
 bool BlobTiles::CheckEdge(int x, int y,
                           RoomEdgeEnum edge,
-                          const StringsArray2D& tileToCheck)
+                          const StringV& tileToCheck)
 {
   int lx = x - _tileSize;
   int ly = y - _tileSize;
@@ -198,7 +198,7 @@ bool BlobTiles::CheckEdge(int x, int y,
   {
     case RoomEdgeEnum::WEST:
     {
-      StringsArray2D lw = GetMapChunkAround(x, ly);
+      StringV lw = GetMapChunkAround(x, ly);
 
       for (int i = 0; i < _tileSize; i++)
       {
@@ -215,7 +215,7 @@ bool BlobTiles::CheckEdge(int x, int y,
 
     case RoomEdgeEnum::NORTH:
     {
-      StringsArray2D ln = GetMapChunkAround(lx, y);
+      StringV ln = GetMapChunkAround(lx, y);
 
       for (int i = 0; i < _tileSize; i++)
       {
@@ -236,9 +236,9 @@ bool BlobTiles::CheckEdge(int x, int y,
 
 // =============================================================================
 
-StringsArray2D BlobTiles::GetMapChunkAround(int x, int y)
+StringV BlobTiles::GetMapChunkAround(int x, int y)
 {
-  StringsArray2D chunk;
+  StringV chunk;
 
   for (int i = x; i < x + _tileSize; i++)
   {
@@ -270,7 +270,7 @@ void BlobTiles::PrintTiles()
   std::stringstream ss;
 
   //
-  // Must be 47 in the end.
+  // Must be exactly 47 in the end.
   //
   int index = 1;
 

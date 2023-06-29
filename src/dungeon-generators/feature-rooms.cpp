@@ -449,7 +449,7 @@ bool FeatureRooms::CreateShrine(const Position& start,
                                 RoomEdgeEnum dir,
                                 ShrineType type)
 {
-  std::vector<StringsArray2D> layouts = GlobalConstants::ShrineLayoutsByType.at(type);
+  std::vector<StringV> layouts = GlobalConstants::ShrineLayoutsByType.at(type);
   int index = RNG::Instance().RandomRange(0, layouts.size());
   auto layout = layouts[index];
 
@@ -496,7 +496,7 @@ bool FeatureRooms::CreateShrine(const Position& start,
 
 // =============================================================================
 
-void FeatureRooms::DemonizeLayout(StringsArray2D& layout)
+void FeatureRooms::DemonizeLayout(StringV& layout)
 {
   for (size_t x = 0; x < layout.size(); x++)
   {
@@ -529,7 +529,7 @@ void FeatureRooms::DemonizeLayout(StringsArray2D& layout)
 // =============================================================================
 
 bool FeatureRooms::PlaceLayout(const Position& start,
-                               StringsArray2D& layout,
+                               StringV& layout,
                                RoomEdgeEnum dir,
                                bool demonize)
 {

@@ -11,9 +11,9 @@
 
 namespace Util
 {
-  std::vector<std::string> StringSplit(const std::string& str, char delim)
+  StringV StringSplit(const std::string& str, char delim)
   {
-    std::vector<std::string> res;
+    StringV res;
 
     std::string toSearch = str;
 
@@ -69,9 +69,9 @@ namespace Util
   // Makes no sense since it's open source, but anyway.
   // At least we can cover every not-so-important stuff with a fig leaf.
   //
-  std::vector<std::string> DecodeMap(const CM& map)
+  StringV DecodeMap(const CM& map)
   {
-    std::vector<std::string> res;
+    StringV res;
 
     for (auto& block : map)
     {
@@ -469,8 +469,9 @@ namespace Util
 
     result.push_back(pos);
 
+    //
     // Ensure that line always goes from source point.
-
+    //
     bool cond = (result[0].X == sx && result[0].Y == sy);
     if (!cond)
     {
@@ -896,9 +897,9 @@ namespace Util
   //
   // Rotates room text layout, provided all lines are of equal length.
   //
-  std::vector<std::string> RotateRoomLayout(const std::vector<std::string>& layout, RoomLayoutRotation r)
+  StringV RotateRoomLayout(const StringV& layout, RoomLayoutRotation r)
   {
-    std::vector<std::string> res;
+    StringV res;
 
     switch (r)
     {
@@ -1306,11 +1307,6 @@ namespace Util
 
   void Sleep(uint32_t delayMs)
   {
-    //
-    // It looks like SDL_Delay sometimes ignores delay if its value gets
-    // too small, so let's try to use steady_clock since it's claimed to be
-    // increasing at a uniform rate.
-    //
     auto tp1 = Clock::now();
     auto tp2 = tp1;
     while (std::chrono::duration_cast<Ms>(tp2 - tp1).count() < delayMs)
@@ -1368,7 +1364,7 @@ namespace Util
 
   // ===========================================================================
 
-  void PrintLayout(const std::vector<std::string>& l)
+  void PrintLayout(const StringV& l)
   {
     std::string dbg = "\n";
 
@@ -1383,27 +1379,6 @@ namespace Util
     }
 
     LogPrint(dbg);
-  }
-
-  // ===========================================================================
-
-  CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map)
-  {
-    CharArray2D res;
-
-    for (auto& row : map)
-    {
-      std::vector<char> r;
-
-      for (auto& c : row)
-      {
-        r.push_back(c);
-      }
-
-      res.push_back(r);
-    }
-
-    return res;
   }
 
   // ===========================================================================
@@ -1458,7 +1433,7 @@ namespace Util
 
   std::string GenerateName(bool allowDoubleVowels,
                            bool canAddEnding,
-                           const std::vector<std::string>& endings)
+                           const StringV& endings)
   {
     std::string name;
 
@@ -1551,7 +1526,7 @@ namespace Util
   // ===========================================================================
 
   std::string ReplaceItemPrefix(const std::string& oldIdentifiedName,
-                                const std::vector<std::string>& anyOf,
+                                const StringV& anyOf,
                                 const std::string& replaceWith)
   {
     std::string newIdentifiedName = oldIdentifiedName;
@@ -1620,7 +1595,7 @@ namespace Util
 
   // ===========================================================================
 
-  size_t FindLongestStringLength(const std::vector<std::string>& list)
+  size_t FindLongestStringLength(const StringV& list)
   {
     size_t res = 0;
 
@@ -2282,12 +2257,12 @@ namespace Util
 
   // ===========================================================================
 
-  std::vector<std::string> ProcessPhysicalDamage(GameObject* who,
-                                                 GameObject* from,
-                                                 int& amount,
-                                                 bool ignoreArmor)
+  StringV ProcessPhysicalDamage(GameObject* who,
+                                 GameObject* from,
+                                 int& amount,
+                                 bool ignoreArmor)
   {
-    std::vector<std::string> res;
+    StringV res;
 
     if (who == nullptr)
     {
@@ -2304,7 +2279,7 @@ namespace Util
       amount = 0;
     }
 
-    std::vector<std::string> armorMsgs;
+    StringV armorMsgs;
 
     if (!ignoreArmor)
     {
@@ -2442,12 +2417,12 @@ namespace Util
 
   // ===========================================================================
 
-  std::vector<std::string> DamageArmor(GameObject* who,
-                                       GameObject* from,
-                                       int amount)
+  StringV DamageArmor(GameObject* who,
+                       GameObject* from,
+                       int amount)
   {
-    std::vector<std::string> logMsgs;
-    std::vector<std::string> logMsgsRec;
+    StringV logMsgs;
+    StringV logMsgsRec;
 
     if (who == nullptr)
     {

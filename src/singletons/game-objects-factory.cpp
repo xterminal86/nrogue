@@ -57,7 +57,9 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 
   go->RemainsOf = from->ObjectId();
 
-  // Living creatures leave decomposable corpses
+  //
+  // Living creatures leave decomposable corpses.
+  //
   if (from->IsLiving)
   {
     //int timeout = from->Attrs.HP.Max().Get() * 10;
@@ -336,6 +338,11 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
       if (item != nullptr)
       {
         ItemComponent* ic = item->GetComponent<ItemComponent>();
+        //
+        // If cc->Add() is true that means 'item' is a stackable object
+        // and appropriate stack to merge into was found
+        // inside the 'cc' container.
+        //
         if (!Util::CanBeSpawned(ic) || cc->Add(item))
         {
           //

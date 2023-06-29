@@ -10,7 +10,6 @@
 
 #include "rng.h"
 #include "position.h"
-#include "room-helper.h"
 #include "item-data.h"
 
 //
@@ -65,9 +64,9 @@ class GameObject;
 
 namespace Util
 {
-  extern std::vector<std::string> StringSplit(const std::string& str, char delim);
+  extern StringV StringSplit(const std::string& str, char delim);
 
-  extern std::vector<std::string> DecodeMap(const CM& map);
+  extern StringV DecodeMap(const CM& map);
   extern std::string DecodeString(const CS& str);
 
   extern bool IsObjectInRange(GameObject* checker,
@@ -130,7 +129,7 @@ namespace Util
   extern std::string ChooseRandomName();
   extern std::string NumberToHexString(int num);
 
-  extern std::vector<std::string> RotateRoomLayout(const std::vector<std::string>& layout, RoomLayoutRotation r);
+  extern StringV RotateRoomLayout(const StringV& layout, RoomLayoutRotation r);
 
   extern int Rolld100();
 
@@ -148,7 +147,7 @@ namespace Util
   extern bool WaitForMs(uint64_t delayMs, bool reset = false);
 
   extern void PrintVector(const std::string& title, const std::vector<Position>& v);
-  extern void PrintLayout(const std::vector<std::string>& l);
+  extern void PrintLayout(const StringV& l);
 
   extern void LaunchProjectile(const Position& from,
                                const Position& to,
@@ -207,10 +206,10 @@ namespace Util
 
   extern int GetTotalDamageAbsorptionValue(GameObject* who, bool magic);
 
-  extern std::vector<std::string> ProcessPhysicalDamage(GameObject* who,
-                                                        GameObject* from,
-                                                        int& amount,
-                                                        bool ignoreArmor);
+  extern StringV ProcessPhysicalDamage(GameObject* who,
+                                         GameObject* from,
+                                         int& amount,
+                                         bool ignoreArmor);
 
   extern std::string ProcessMagicalDamage(GameObject* who,
                                           GameObject* from,
@@ -222,9 +221,9 @@ namespace Util
   extern int ProcessThorns(GameObject* who,
                            int damageReceived);
 
-  extern std::vector<std::string> DamageArmor(GameObject* who,
-                                              GameObject* from,
-                                              int amount);
+  extern StringV DamageArmor(GameObject* who,
+                              GameObject* from,
+                              int amount);
 
   extern Position GetRandomPointAround(GameObject* user,
                                        ItemComponent* weapon,
@@ -242,25 +241,24 @@ namespace Util
 
   // ---------------------------------------------------------------------------
 
-  extern CharArray2D StringsArray2DToCharArray2D(const StringsArray2D& map);
-
   extern uint32_t GetItemInventoryColor(const ItemData& data);
 
   extern std::string GenerateName(bool allowDoubleVowels = false,
                                   bool canAddEnding = false,
-                                  const std::vector<std::string>& endings = std::vector<std::string>());
+                                  const StringV& endings = StringV());
 
   extern std::string ReplaceItemPrefix(const std::string& oldIdentifiedName,
-                                       const std::vector<std::string>& anyOf,
+                                       const StringV& anyOf,
                                        const std::string& replaceWith);
 
   extern std::string GetCurrentDateTimeString();
 
   extern std::string GetGameObjectDisplayCharacter(GameObject* obj);
 
-  extern size_t FindLongestStringLength(const std::vector<std::string>& list);
+  extern size_t FindLongestStringLength(const StringV& list);
 
-  extern std::vector<Position> GetAreaDamagePointsFrom(const Position& from, int range);
+  extern std::vector<Position> GetAreaDamagePointsFrom(const Position& from,
+                                                         int range);
 
   extern std::vector<ItemComponent*> GetItemsWithBonus(GameObject* actor,
                                                        ItemBonusType bonus);

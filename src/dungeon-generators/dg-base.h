@@ -65,7 +65,7 @@ class DGBase
     double GetEmptyOverWallsRatio();
     double GetEmptyPercent();
 
-    std::vector<std::vector<char>> MapRaw;
+    CharV2 MapRaw;
 
     //
     // Since we cannot specify shrine type inside text map array

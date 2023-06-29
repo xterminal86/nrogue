@@ -154,8 +154,10 @@ class Printer : public Singleton<Printer>
     /// Add message to the game log
     void AddMessage(const GameLogMessageData& data);
 
+    //
     // Some overloads so that I don't have to edit AddMessage()
     // all over the codebase.
+    //
     void AddMessage(const std::string& message);
     //
     void AddMessage(const std::string& message,

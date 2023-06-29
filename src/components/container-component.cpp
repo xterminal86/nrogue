@@ -40,11 +40,15 @@ bool ContainerComponent::Add(GameObject* object)
       {
         ItemComponent* ic = i->GetComponent<ItemComponent>();
 
+        //
         // If item is identified and is stackable, stack it.
+        //
         bool isIded = (ic->Data.IsIdentified && itemToAdd->Data.IsIdentified &&
                       (ic->Data.ItemTypeHash == itemToAdd->Data.ItemTypeHash));
 
+        //
         // If item is not identified, but came from the same stack, add it back.
+        //
         bool fromTheSameStack = (!ic->Data.IsIdentified
                               && !itemToAdd->Data.IsIdentified
                               && (ic->OwnerGameObject->StackObjectId == itemToAdd->OwnerGameObject->StackObjectId));

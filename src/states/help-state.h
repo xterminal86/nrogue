@@ -18,7 +18,7 @@ class HelpState : public GameState
 
     int _scrollPosition = 0;
 
-    StringsArray2D _helpText =
+    StringV _helpText =
     {
       R"('q' - Cancel / Close menu     )",
       R"('a' - Attack                  )",
@@ -37,7 +37,7 @@ class HelpState : public GameState
       R"()"
     };
 
-    StringsArray2D _keymap =
+    StringV _keymap =
     {
       R"('q' 'w' 'e' )",
       R"(   \ | /    )",

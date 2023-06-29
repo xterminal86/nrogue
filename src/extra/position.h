@@ -1,6 +1,9 @@
 #ifndef POSITION_H
 #define POSITION_H
 
+///
+/// Because no project is considered serious unless you reinvent the wheel.
+///
 struct Position
 {
   Position();
@@ -9,7 +12,9 @@ struct Position
   void Set(int x, int y);
   void Set(const Position& from);
 
-  // For use inside std::map as a key
+  //
+  // For use inside std::map as a key.
+  //
   bool operator< (const Position& rhs) const;
   bool operator== (const Position& rhs) const;
   bool operator!= (const Position& rhs) const;

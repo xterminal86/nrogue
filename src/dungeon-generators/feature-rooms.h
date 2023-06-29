@@ -41,7 +41,7 @@ class FeatureRooms : public DGBase
                          RoomEdgeEnum dir);
 
     bool PlaceLayout(const Position& start,
-                     StringsArray2D& layout,
+                     StringV& layout,
                      RoomEdgeEnum dir,
                      bool demonize = false);
 
@@ -57,7 +57,7 @@ class FeatureRooms : public DGBase
                          RoomEdgeEnum direction,
                          FeatureRoomType roomType);
 
-    void DemonizeLayout(StringsArray2D& layout);
+    void DemonizeLayout(StringV& layout);
 
     std::pair<Position, Position> CenterRoomAlongDir(const Position& start, int size, RoomEdgeEnum dir);
 
@@ -68,7 +68,7 @@ class FeatureRooms : public DGBase
     std::map<FeatureRoomType, int> _generatedSoFar;
     std::map<FeatureRoomType, int> _roomWeightByType;
 
-    const std::map<FeatureRoomType, std::vector<StringsArray2D>> _specialRoomLayoutByType =
+    const std::map<FeatureRoomType, std::vector<StringV>> _specialRoomLayoutByType =
     {
       { FeatureRoomType::GARDEN,   GlobalConstants::GardenLayouts   },
       { FeatureRoomType::POND,     GlobalConstants::PondLayouts     },

@@ -3,7 +3,6 @@
 
 #include "util.h"
 #include "game-object.h"
-#include "room-helper.h"
 #include "level-builder.h"
 
 class Player;
@@ -103,11 +102,10 @@ class MapLevelBase
 
   protected:
     std::vector<Position> _emptyCells;
-    std::vector<std::vector<std::string>> _layoutsForLevel;
-    std::vector<RoomForLevel> _roomsForLevel;
+    std::vector<StringV> _layoutsForLevel;
     std::map<GameObjectType, int> _monstersSpawnRateForThisLevel;
 
-    StringsArray2D _specialLevel;
+    StringV _specialLevel;
 
     Player* _playerRef = nullptr;
 

@@ -111,9 +111,9 @@ void Application::Run()
     else
     {
       //
-      // If player has levelled up, stop updating
-      // everything until message box is closed,
-      // or we can get attack animations on top of message box.
+      // If player has levelled up, stop updating everything
+      // until message box is closed, or we can get attack animations
+      // on top of message box.
       //
       if (CurrentStateIs(GameStates::MESSAGE_BOX_STATE))
       {
@@ -316,15 +316,20 @@ void Application::WriteObituary(bool wasKilled)
 
   MapLevelBase* curLvl = Map::Instance().CurrentLevel;
 
-  std::string playerEndCause = wasKilled ? "has perished at " : "has quit at ";
+  std::string playerEndCause = wasKilled
+                            ? "has perished at "
+                            : "has quit at ";
 
-  // Write part of the map with player
-
+  //
+  // Write part of the map with player.
+  //
   SaveMapAroundPlayer(ss, wasKilled);
 
   ss << '\n';
 
-  // Form obituary
+  //
+  // Form obituary.
+  //
 
   ss << "********** OBITUARY **********\n\n";
 
@@ -332,15 +337,20 @@ void Application::WriteObituary(bool wasKilled)
      << " (" << RNG::Instance().GetSeedString().first << ")"
      << "\n\n";
 
-  std::string nameAndTitle = PlayerInstance.Name + " the " + PlayerInstance.GetClassName();
+  auto nameAndTitle = Util::StringFormat("%s the %s",
+                                          PlayerInstance.Name.data(),
+                                          PlayerInstance.GetClassName().data());
 
   ss << nameAndTitle << " of level " << PlayerInstance.Attrs.Lvl.Get() << '\n';
   ss << playerEndCause << curLvl->LevelName << "\n\n";
 
   ss << "He survived " << PlayerTurnsPassed << " turns\n\n";
 
-  ss << "HP " << PlayerInstance.Attrs.HP.Min().Get() << " / " << PlayerInstance.Attrs.HP.Max().Get() << '\n';
-  ss << "MP " << PlayerInstance.Attrs.MP.Min().Get() << " / " << PlayerInstance.Attrs.MP.Max().Get() << '\n';
+  ss << "HP " << PlayerInstance.Attrs.HP.Min().Get()
+     << " / " << PlayerInstance.Attrs.HP.Max().Get() << '\n';
+
+  ss << "MP " << PlayerInstance.Attrs.MP.Min().Get()
+     << " / " << PlayerInstance.Attrs.MP.Max().Get() << '\n';
 
   ss << '\n';
 
@@ -423,7 +433,7 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
   int hx = PlayerInstance.PosX + range;
   int hy = PlayerInstance.PosY + range;
 
-  std::vector<std::vector<char>> map;
+  CharV2 map;
 
   for (int y = ly; y <= hy; y++)
   {
@@ -447,7 +457,9 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
         {
           ch = curLvl->MapArray[x][y]->Image;
 
+          //
           // If walls are ' ', display them as '#'
+          //
           if (curLvl->MapArray[x][y]->Blocking
            && curLvl->MapArray[x][y]->BlocksSight
            && ch == ' ')
@@ -455,7 +467,9 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
             ch = '#';
           }
 
-          // Check items first
+          //
+          // Check items first.
+          //
           auto gos = Map::Instance().GetGameObjectsAtPosition(x, y);
           if (!gos.empty())
           {
@@ -467,8 +481,10 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
             }
           }
 
+          //
           // If there are no objects lying above static game object,
-          // draw static game object
+          // draw static game object.
+          //
           if (gos.empty())
           {
             auto so = Map::Instance().GetStaticGameObjectAtPosition(x, y);
@@ -478,7 +494,9 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
             }
           }
 
-          // if actor is standing on this cell, draw him instead.
+          //
+          // If actor is standing on this cell, draw him instead.
+          //
           auto actor = Map::Instance().GetActorAtPosition(x, y);
           if (actor != nullptr)
           {
@@ -486,14 +504,18 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
             ch = (imageNonPrintable ? '@' : actor->Image);
           }
 
-          // If character is not printable, replace it with x
+          //
+          // If character is not printable, replace it with 'x' character.
+          //
           if (ch < 32)
           {
             ch = 'x';
           }
         }
 
-        // Draw player on top of everything
+        //
+        // Draw player on top of everything.
+        //
         if (isPlayer)
         {
           if (x == px && y == py)
@@ -987,9 +1009,8 @@ void Application::InitGameStates()
 // =============================================================================
 
 //
-// NOTE: save last generated global id
-// when implementing savegame data or effects
-// application will be fucked up after loading
+// TODO: save last generated global id when implementing savegame data
+// or application of effects will be fucked up after loading
 // since "who applied" is determined by object's global id.
 //
 // In order to avoid potential BS with generation of player's object id,

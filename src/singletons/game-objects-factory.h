@@ -39,7 +39,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
                                                     const uint32_t& bgColor);
 
     //
-    // Create invisible trigger object
+    // Create invisible trigger object.
     //
     void CreateTrigger(TriggerType triggerType,
                        TriggerUpdateType updateType,
@@ -47,7 +47,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
                        const std::function<void ()>& handler);
 
     //
-    // Creates stairs on MapArray of current level
+    // Creates stairs on MapArray of current level.
     //
     void CreateStairs(MapLevelBase* levelWhereCreate,
                       int x,

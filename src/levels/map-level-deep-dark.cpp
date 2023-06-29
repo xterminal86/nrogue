@@ -26,8 +26,9 @@ MapLevelDeepDark::MapLevelDeepDark(int sizeX, int sizeY, MapType type, int dunge
         "########"
       };
 
-      // Note that x and y are swapped to correspond to
-      // "world" dimensions.
+      //
+      // Note that x and y are swapped to correspond to "world" dimensions.
+      //
       int sx = _specialLevel[0].length();
       int sy = _specialLevel.size();
 
@@ -140,17 +141,15 @@ void MapLevelDeepDark::CreateSpecialLevel()
 
   PlaceGameObject(note);
 
-  auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
-
   MapType stairsDownTo = (MapType)(DungeonLevel + 1);
   MapType stairsUpTo = (MapType)(DungeonLevel - 1);
 
   int posX = 0;
   int posY = 0;
 
-  for (auto& row : convLevel)
+  for (auto& line : _specialLevel)
   {
-    for (auto& c : row)
+    for (auto& c : line)
     {
       switch (c)
       {
@@ -203,8 +202,6 @@ void MapLevelDeepDark::CreateSpecialLevel()
 
 void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
 {
-  LogPrint("********** INSTANTIATING LAYOUT **********");
-
   for (int x = 0; x < MapSize.X; x++)
   {
     for (int y = 0; y < MapSize.Y; y++)

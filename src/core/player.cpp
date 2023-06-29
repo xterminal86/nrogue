@@ -62,7 +62,7 @@ void Player::Draw()
 
   //
   // If game object has black bg color,
-  // replace it with current floor color
+  // replace it with current floor color.
   //
   uint32_t bgColor = BgColor;
 
@@ -222,8 +222,9 @@ void Player::CheckVisibility()
   int tw = Printer::TerminalWidth;
   int th = Printer::TerminalHeight;
 
-  // Update map around player
-
+  //
+  // Update map around player.
+  //
   auto& map = Map::Instance().CurrentLevel->MapArray;
   auto& staticObjects = Map::Instance().CurrentLevel->StaticMapObjects;
 
@@ -258,8 +259,9 @@ void Player::CheckVisibility()
   }
 #endif
 
-  // Update visibility around player
-
+  //
+  // Update visibility around player.
+  //
   for (auto& cell : mapCells)
   {
     double d = Util::LinearDistance(PosX, PosY, cell.X, cell.Y);
@@ -269,8 +271,12 @@ void Player::CheckVisibility()
       continue;
     }
 
-    // Bresenham FoV
-
+    //
+    // Bresenham driven Field of Vision
+    //
+    // From what I understand it's considered most shitty implementation of one,
+    // but it'll do for now.
+    //
     auto line = Util::BresenhamLine(PosX, PosY, cell.X, cell.Y);
     for (auto& point : line)
     {

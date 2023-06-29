@@ -524,7 +524,7 @@ namespace GlobalConstants
     { GemType::YELLOW_CITRINE,  "Citrine"         }
   };
 
-  const std::map<GemType, StringsArray2D> GemDescriptionByType =
+  const std::map<GemType, StringV> GemDescriptionByType =
   {
     {
       GemType::BLACK_JETSTONE,
@@ -898,7 +898,7 @@ namespace GlobalConstants
     "el"
   };
 
-  const std::map<MapType, std::vector<std::string>> MapLevelNames =
+  const std::map<MapType, StringV> MapLevelNames =
   {
     { MapType::TOWN,
       {
@@ -1151,136 +1151,17 @@ namespace GlobalConstants
     { "nop",                  ScriptParamNames::NOP                  },
   };
 
-  const std::vector<std::vector<std::string>> DungeonRooms =
-  {
-    // 0
-    {
-      "##.##",
-      "#...#",
-      "..#..",
-      "#...#",
-      "##.##"
-    },
-    // 1
-    {
-      "##.##",
-      "#...#",
-      "..#..",
-      "#...#",
-      "#####"
-    },
-    // 2
-    {
-      "#.#.#",
-      ".....",
-      "#.#.#",
-      ".....",
-      "#.#.#"
-    },
-    // 3
-    {
-      "###.#",
-      ".....",
-      "#.#.#",
-      "..#..",
-      "#.#.#"
-    },
-    // 4
-    {
-      "#.###",
-      ".....",
-      "###.#",
-      "..#..",
-      "#.#.#"
-    },
-    // 5
-    {
-      "#.#.#",
-      "#...#",
-      "###.#",
-      ".....",
-      "#.#.#"
-    },
-    // 6
-    {
-      "###.#",
-      ".....",
-      "#.#.#",
-      "#...#",
-      "#.#.#"
-    },
-    // 7
-    {
-      "#####",
-      "....#",
-      "###.#",
-      "..#.#",
-      "..#.#"
-    },
-    // 8
-    {
-      "#####",
-      "#...#",
-      "#.#.#",
-      "#.#.#",
-      "#.#.#"
-    },
-    // 9
-    {
-      "#####",
-      "#####",
-      ".....",
-      "#####",
-      "#####"
-    },
-    // 10
-    {
-      "#.###",
-      "#.#..",
-      "#.#.#",
-      "#...#",
-      "#####"
-    },
-    // 11
-    {
-      "##.##",
-      "#...#",
-      "#.#.#",
-      ".....",
-      "##.##"
-    },
-    // 12
-    {
-      ".....",
-      ".###.",
-      ".###.",
-      ".###.",
-      "....."
-    },
-    // 13
-    {
-      ".....",
-      "..#..",
-      ".###.",
-      "..#..",
-      "....."
-    },
-    // 14
-    {
-      ".....",
-      ".....",
-      ".....",
-      ".....",
-      "....."
-    }
-  };
-
+  //
   // Different game levels may create different themed
   // tiles in place of '.' or ' '
-  const std::vector<StringsArray2D> ShrineLayouts =
+  //
+  const std::vector<StringV> ShrineLayouts =
   {
     // 0
-    // Might, Spirit, Knowledge, Holy, Healing, Potential, Tranquility, Perception
+    //
+    // Might, Spirit, Knowledge, Holy,
+    // Healing, Potential, Tranquility, Perception
+    //
     {
       "##.##",
       "#...#",
@@ -1289,7 +1170,9 @@ namespace GlobalConstants
       "##.##"
     },
     // 1
+    //
     // Holy, Healing, Potential, Tranquility, Perception
+    //
     {
       "wg gw",
       "gg gg",
@@ -1298,7 +1181,9 @@ namespace GlobalConstants
       "wg gw"
     },
     // 2
+    //
     // Holy, Healing, Potential, Tranquility, Perception
+    //
     {
       "ww ww",
       "w   w",
@@ -1307,7 +1192,9 @@ namespace GlobalConstants
       "ww ww"
     },
     // 3
+    //
     // Forgotten, Hidden, Ruined, Desecrated, Disturbing
+    //
     {
       ".#+.#",
       ".   #",
@@ -1316,7 +1203,9 @@ namespace GlobalConstants
       "##..#"
     },
     // 4
+    //
     // Abyssal
+    //
     {
       "ll ll",
       "l   l",
@@ -1326,7 +1215,7 @@ namespace GlobalConstants
     }
   };
 
-  const std::vector<StringsArray2D> PondLayouts =
+  const std::vector<StringV> PondLayouts =
   {
     {
       "         ",
@@ -1363,7 +1252,7 @@ namespace GlobalConstants
     }
   };
 
-  const std::vector<StringsArray2D> FountainLayouts =
+  const std::vector<StringV> FountainLayouts =
   {
     {
       ".... ....",
@@ -1389,7 +1278,7 @@ namespace GlobalConstants
     }
   };
 
-  const std::vector<StringsArray2D> GardenLayouts =
+  const std::vector<StringV> GardenLayouts =
   {
     {
       "ggggggggg",
@@ -1430,7 +1319,7 @@ namespace GlobalConstants
     }
   };
 
-  const std::vector<StringsArray2D> PillarsLayouts =
+  const std::vector<StringV> PillarsLayouts =
   {
     {
       "...........",
@@ -1491,7 +1380,7 @@ namespace GlobalConstants
     }
   };
 
-  const std::map<ShrineType, std::vector<StringsArray2D>> ShrineLayoutsByType =
+  const std::map<ShrineType, std::vector<StringV>> ShrineLayoutsByType =
   {
     {
       ShrineType::MIGHT,       { ShrineLayouts[0] }
@@ -1547,6 +1436,9 @@ namespace GlobalConstants
     }
   };
 
+  //
+  // NOTE: for future use (maybe).
+  //
   const std::vector<std::vector<std::string>> SpecialRooms =
   {
     // Castle

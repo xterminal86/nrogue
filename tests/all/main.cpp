@@ -61,7 +61,131 @@ void RoomTests(std::stringstream& ss)
 
   ss << "\nRoom layouts rotations:\n\n";
 
-  for (auto& room : GlobalConstants::DungeonRooms)
+  const std::vector<std::vector<std::string>> dungeonRooms =
+  {
+    // 0
+    {
+      "##.##",
+      "#...#",
+      "..#..",
+      "#...#",
+      "##.##"
+    },
+    // 1
+    {
+      "##.##",
+      "#...#",
+      "..#..",
+      "#...#",
+      "#####"
+    },
+    // 2
+    {
+      "#.#.#",
+      ".....",
+      "#.#.#",
+      ".....",
+      "#.#.#"
+    },
+    // 3
+    {
+      "###.#",
+      ".....",
+      "#.#.#",
+      "..#..",
+      "#.#.#"
+    },
+    // 4
+    {
+      "#.###",
+      ".....",
+      "###.#",
+      "..#..",
+      "#.#.#"
+    },
+    // 5
+    {
+      "#.#.#",
+      "#...#",
+      "###.#",
+      ".....",
+      "#.#.#"
+    },
+    // 6
+    {
+      "###.#",
+      ".....",
+      "#.#.#",
+      "#...#",
+      "#.#.#"
+    },
+    // 7
+    {
+      "#####",
+      "....#",
+      "###.#",
+      "..#.#",
+      "..#.#"
+    },
+    // 8
+    {
+      "#####",
+      "#...#",
+      "#.#.#",
+      "#.#.#",
+      "#.#.#"
+    },
+    // 9
+    {
+      "#####",
+      "#####",
+      ".....",
+      "#####",
+      "#####"
+    },
+    // 10
+    {
+      "#.###",
+      "#.#..",
+      "#.#.#",
+      "#...#",
+      "#####"
+    },
+    // 11
+    {
+      "##.##",
+      "#...#",
+      "#.#.#",
+      ".....",
+      "##.##"
+    },
+    // 12
+    {
+      ".....",
+      ".###.",
+      ".###.",
+      ".###.",
+      "....."
+    },
+    // 13
+    {
+      ".....",
+      "..#..",
+      ".###.",
+      "..#..",
+      "....."
+    },
+    // 14
+    {
+      ".....",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    }
+  };
+
+  for (auto& room : dungeonRooms)
   {
     ss << "Layout:\n";
 
@@ -747,68 +871,17 @@ void FromPermutationTiles(LevelBuilder& lb, const Position& mapSize, std::string
 
 // =============================================================================
 
-void FromLayouts(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
+void BlobTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
-  /*
   DebugLog("%s", __func__);
 
   std::string str = "\nFrom layouts:\n\n";
 
   ss << str;
 
-  std::vector<RoomForLevel> rooms =
-  {
-    {
-      50,
-      {
-        "###",
-        "###",
-        "###"
-      }
-    },
-    {
-      50,
-      {
-        "#.#",
-        "...",
-        "#.#"
-      }
-    },
-    {
-      50,
-      {
-        "#.#",
-        "#..",
-        "###"
-      }
-    },
-    {
-      50,
-      {
-        "#.#",
-        "...",
-        "###"
-      }
-    },
-    {
-      50,
-      {
-        "#.#",
-        "#.#",
-        "#.#"
-      }
-    },
-  };
-
-
-  lb.BuildLevelFromLayouts(rooms,
-                           mapSize.X / 2,
-                           mapSize.Y / 2,
-                           mapSize.X,
-                           mapSize.Y);
+  lb.FromBlobTiles(mapSize.X, mapSize.Y);
 
   ss << lb.GetMapRawString();
-  */
 }
 
 // =============================================================================
@@ -816,7 +889,7 @@ void FromLayouts(LevelBuilder& lb, const Position& mapSize, std::stringstream& s
 //
 // NOTE: for non square map size dimensions must be swapped
 // because, well, you know.
-// Another day, same shit.
+// Another day - same shit.
 //
 void LevelBuilderTest(std::stringstream& ss)
 {
@@ -853,7 +926,7 @@ void LevelBuilderTest(std::stringstream& ss)
   FromPermutationTiles(lb, mapSize, ss);
   //
   DisplayProgress();
-  FromLayouts(lb, mapSize, ss);
+  BlobTiles(lb, mapSize, ss);
 }
 
 // =============================================================================

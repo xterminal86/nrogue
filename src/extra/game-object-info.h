@@ -4,7 +4,7 @@
 #include <string>
 
 ///
-/// Helper struct to reduce the amount of writing when creating objects
+/// Helper struct to reduce the amount of writing when creating objects.
 ///
 struct GameObjectInfo
 {

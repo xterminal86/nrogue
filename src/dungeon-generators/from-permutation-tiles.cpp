@@ -7,8 +7,11 @@
 /// Generates tilesets from string of length 9 (".........")
 /// by adding '#' for every tileset and calculating all permutations.
 ///
-/// E.g. "#........" and all its permutations,
-/// "##......." and all its permutations and so on.
+/// E.g.:
+///
+/// "#........" and all its permutations,
+/// "##......." and all its permutations
+/// nd so on.
 ///
 /// Then those lines are converted into 3x3 arrays and stored
 /// as tiles inside the tileset collection. After that they are
@@ -54,7 +57,9 @@ void FromPermutationTiles::Generate(const Position& mapSize,
     tsIndex = Util::Clamp(tileSetIndex, 0, _tileset.size() - 1);
   }
 
-  // Start from center to have all 4 directions to develop
+  //
+  // Start from center to have all 4 directions to develop.
+  //
   int cx = (mapSize.X - 1) / 2;
   int cy = (mapSize.Y - 1) / 2;
 

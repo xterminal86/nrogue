@@ -20,7 +20,7 @@ PathNode::PathNode(const Position &coord, const Position &parentNodePos)
 
 // =============================================================================
 
-std::vector<Position> Pathfinder::BuildRoad(const std::vector<std::vector<char>>& map,
+std::vector<Position> Pathfinder::BuildRoad(const CharV2& map,
                                             const Position& mapSize,
                                             const Position& start,
                                             const Position& end,
@@ -138,7 +138,7 @@ std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
 
 // =============================================================================
 
-void Pathfinder::LookAround(const std::vector<std::vector<char>>& map,
+void Pathfinder::LookAround(const CharV2& map,
                             const PathNode& currentNode,
                             std::vector<PathNode>& openList,
                             std::vector<PathNode>& closedList,

@@ -142,7 +142,7 @@ class Player : public GameObject
 
     //
     // std::map automatically sorts by key, so in case of string key,
-    // it's lexicographical sorting
+    // it's lexicographical sorting.
     //
     // That's why I couldn't figure out for a while why my values in the map
     // are suddenly in the wrong order during for loop.

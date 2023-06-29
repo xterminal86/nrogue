@@ -90,8 +90,6 @@ void MapLevelAbyss::CreateLevel()
 
 void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
 {
-  LogPrint("********** INSTANTIATING LAYOUT **********");
-
   for (int x = 0; x < MapSize.X; x++)
   {
     for (int y = 0; y < MapSize.Y; y++)

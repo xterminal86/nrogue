@@ -18,7 +18,7 @@ class ItemComponent : public Component
     void Inspect(bool overrideDescriptions = false);
     void Break(GameObject* itemOwner);
 
-    std::pair<std::string, StringsArray2D> GetInspectionInfo(bool overrideDescriptions = false);
+    std::pair<std::string, StringV> GetInspectionInfo(bool overrideDescriptions = false);
 
     ItemData Data;
 

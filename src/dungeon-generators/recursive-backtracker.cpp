@@ -75,10 +75,10 @@ Position* RecursiveBacktracker::GetRandomCell(const Position& p)
 
   std::map<RoomEdgeEnum, Position> offsetsBySide =
   {
-    { RoomEdgeEnum::NORTH, { -1, 0 } },
-    { RoomEdgeEnum::SOUTH, { 1, 0 }  },
-    { RoomEdgeEnum::EAST,  { 0, 1 }  },
-    { RoomEdgeEnum::WEST,  { 0, -1 } }
+    { RoomEdgeEnum::NORTH, { -1,  0 } },
+    { RoomEdgeEnum::SOUTH, {  1,  0 } },
+    { RoomEdgeEnum::EAST,  {  0,  1 } },
+    { RoomEdgeEnum::WEST,  {  0, -1 } }
   };
 
   std::vector<Position> candidates;

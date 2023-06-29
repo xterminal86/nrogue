@@ -104,9 +104,9 @@
 
 #include "enumerations.h"
 
-using StringsArray2D = std::vector<std::string>;
-using CharArray2D    = std::vector<std::vector<char>>;
-using IR             = std::pair<InteractionResult, GameStates>;
+using StringV = std::vector<std::string>;
+using CharV2  = std::vector<std::vector<char>>;
+using IR      = std::pair<InteractionResult, GameStates>;
 
 namespace Colors
 {
@@ -334,7 +334,7 @@ namespace GlobalConstants
   extern const std::map<ArrowType,        std::string> ArrowNameByType;
   extern const std::map<ArmorType,        std::string> ArmorNameByType;
   extern const std::map<GemType,          std::string> GemNameByType;
-  extern const std::map<GemType,       StringsArray2D> GemDescriptionByType;
+  extern const std::map<GemType,              StringV> GemDescriptionByType;
   extern const std::map<ItemQuality,      std::string> GemRatingByQuality;
   extern const std::map<ItemBonusType,    std::string> ItemBonusPrefixes;
   extern const std::map<ItemBonusType,    std::string> ItemBonusSuffixes;
@@ -353,11 +353,11 @@ namespace GlobalConstants
 
   extern const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName;
 
-  extern const std::map<WandMaterials, std::string>                 WandMaterialNamesByMaterial;
-  extern const std::map<ShrineType,    std::string>                 ShrineSaintByType;
-  extern const std::map<ShrineType,    std::string>                 ShrineNameByType;
-  extern const std::map<MapType,       std::vector<std::string>>    MapLevelNames;
-  extern const std::map<ShrineType,    std::vector<StringsArray2D>> ShrineLayoutsByType;
+  extern const std::map<WandMaterials, std::string>          WandMaterialNamesByMaterial;
+  extern const std::map<ShrineType,    std::string>          ShrineSaintByType;
+  extern const std::map<ShrineType,    std::string>          ShrineNameByType;
+  extern const std::map<MapType,           StringV>          MapLevelNames;
+  extern const std::map<ShrineType,    std::vector<StringV>> ShrineLayoutsByType;
 
   extern const std::map<SpellType, std::string> SpellShortNameByType;
 
@@ -369,13 +369,12 @@ namespace GlobalConstants
   extern const std::vector<std::string> TownNameEndings;
   extern const std::vector<std::string> NameEndings;
 
-  extern const std::vector<StringsArray2D> DungeonRooms;
-  extern const std::vector<StringsArray2D> ShrineLayouts;
-  extern const std::vector<StringsArray2D> PondLayouts;
-  extern const std::vector<StringsArray2D> FountainLayouts;
-  extern const std::vector<StringsArray2D> GardenLayouts;
-  extern const std::vector<StringsArray2D> PillarsLayouts;
-  extern const std::vector<StringsArray2D> SpecialRooms;
+  extern const std::vector<StringV> ShrineLayouts;
+  extern const std::vector<StringV> PondLayouts;
+  extern const std::vector<StringV> FountainLayouts;
+  extern const std::vector<StringV> GardenLayouts;
+  extern const std::vector<StringV> PillarsLayouts;
+  extern const std::vector<StringV> SpecialRooms;
 }
 
 #endif

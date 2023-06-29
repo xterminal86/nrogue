@@ -5,8 +5,6 @@
 
 #include "dg-base.h"
 
-#include "room-helper.h"
-
 class BlobTiles : public DGBase
 {
   public:
@@ -15,9 +13,9 @@ class BlobTiles : public DGBase
     void ForCustomDebugStuff() override;
 
   private:
-    std::vector<std::vector<StringsArray2D>> _tilesetToUse;
+    std::vector<std::vector<StringV>> _tilesetToUse;
 
-    const std::vector<StringsArray2D> _tilesetBase =
+    const std::vector<StringV> _tilesetBase =
     {
       // 0
       {
@@ -117,13 +115,13 @@ class BlobTiles : public DGBase
     const int _tileSize = _tilesetBase[0].size();
 
     void PrintTiles();
-    void PlaceTile(int x, int y, const StringsArray2D& tile);
+    void PlaceTile(int x, int y, const StringV& tile);
 
     bool CheckEdge(int x, int y,
                    RoomEdgeEnum edge,
-                   const StringsArray2D& tileToCheck);
+                   const StringV& tileToCheck);
 
-    StringsArray2D GetMapChunkAround(int x, int y);
+    StringV GetMapChunkAround(int x, int y);
 
     #ifdef DEBUG_BUILD
     void PrintMap(int curX, int curY);

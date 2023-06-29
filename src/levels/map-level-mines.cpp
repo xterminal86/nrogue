@@ -403,8 +403,6 @@ void MapLevelMines::CreateLevel()
 
 void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
 {
-  LogPrint("********** INSTANTIATING LAYOUT **********");
-
   for (int x = 0; x < MapSize.X; x++)
   {
     for (int y = 0; y < MapSize.Y; y++)
@@ -493,17 +491,15 @@ void MapLevelMines::CreateSpecialLevel()
 
   key->GetComponent<ItemComponent>()->Data.IsImportant = true;
 
-  auto convLevel = Util::StringsArray2DToCharArray2D(_specialLevel);
-
   MapType stairsDownTo = (MapType)(DungeonLevel + 1);
   MapType stairsUpTo = (MapType)(DungeonLevel - 1);
 
   int posX = 0;
   int posY = 0;
 
-  for (auto& row : convLevel)
+  for (auto& line : _specialLevel)
   {
-    for (auto& c : row)
+    for (auto& c : line)
     {
       GameObjectInfo t;
 

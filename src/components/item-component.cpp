@@ -48,13 +48,19 @@ void ItemComponent::Transfer(ContainerComponent* destination)
 
 // =============================================================================
 
-std::pair<std::string, StringsArray2D> ItemComponent::GetInspectionInfo(bool overrideDescriptions)
+std::pair<std::string, StringV> ItemComponent::GetInspectionInfo(bool overrideDescriptions)
 {
-  std::pair<std::string, StringsArray2D> res;
+  std::pair<std::string, StringV> res;
 
-  std::string header = Data.IsIdentified ? Data.IdentifiedName : Data.UnidentifiedName;
-  StringsArray2D lore = Data.IsIdentified ? Data.IdentifiedDescription : Data.UnidentifiedDescription;
-  //StringsArray2D lore;
+  std::string header = Data.IsIdentified
+                     ? Data.IdentifiedName
+                     : Data.UnidentifiedName;
+
+  StringV lore = Data.IsIdentified
+               ? Data.IdentifiedDescription
+               : Data.UnidentifiedDescription;
+
+  //StringV lore;
 
   if (!overrideDescriptions)
   {
@@ -84,7 +90,9 @@ std::pair<std::string, StringsArray2D> ItemComponent::GetInspectionInfo(bool ove
         info = GetWandInspectionInfo();
       }
 
+      //
       // To avoid empty line at the bottom if there is no description.
+      //
       if (!lore.empty() && !info.empty())
       {
         lore.push_back("");

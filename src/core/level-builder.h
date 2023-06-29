@@ -5,8 +5,6 @@
 #include <queue>
 #include <memory>
 
-#include "room-helper.h"
-
 #include "dg-base.h"
 
 class LevelBuilder
@@ -50,7 +48,7 @@ class LevelBuilder
                                     bool removeBias = false);
 
     void PlaceShrineLayout(const Position& start,
-                           const StringsArray2D& layout);
+                           const StringV& layout);
 
     void LogPrintMapRaw();
     void PrintMapRaw();
@@ -64,7 +62,7 @@ class LevelBuilder
 
     void PrintCustomDebugStuff();
 
-    std::vector<std::vector<char>> MapRaw;
+    CharV2 MapRaw;
 
     std::map<Position, ShrineType>& ShrinesByPosition();
 

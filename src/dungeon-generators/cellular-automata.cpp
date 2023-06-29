@@ -20,6 +20,8 @@
 /// to transform it into '#'
 /// \endparblock
 ///
+/// Example params for 100x100 map: 40, 5, 4, 12
+///
 void CellularAutomata::Generate(const Position& mapSize,
                                 int initialWallChance,
                                 int birthThreshold,

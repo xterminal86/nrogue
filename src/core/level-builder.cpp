@@ -129,7 +129,7 @@ void LevelBuilder::FromPermutationTilesMethod(const Position& mapSize,
 // =============================================================================
 
 void LevelBuilder::PlaceShrineLayout(const Position& start,
-                               const StringsArray2D& layout)
+                               const StringV& layout)
 {
   int sx = start.X;
   int sy = start.Y;

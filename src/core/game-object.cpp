@@ -49,7 +49,9 @@ GameObject::GameObject(MapLevelBase *levelOwner,
 
 GameObject::~GameObject()
 {
-  // Assuming walls, trees and the like don't use blackboard
+  //
+  // Assuming walls, trees and the like don't use blackboard.
+  //
   AIComponent* ai = GetComponent<AIComponent>();
   if (ai != nullptr)
   {

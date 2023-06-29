@@ -17,7 +17,7 @@ BTResult TaskFindAndDestroyContainer::Run()
     uint64_t objIdInt = std::stoull(objId);
     //
     // If our saved object no longer exists, erase it from blackboard
-    // so that new container could be found on next iteration
+    // so that new container could be found on next iteration.
     //
     GameObject* object = Map::Instance().FindGameObjectById(objIdInt, GameObjectCollectionType::STATIC_OBJECTS);
     if (object == nullptr)

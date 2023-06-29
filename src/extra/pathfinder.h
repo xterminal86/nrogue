@@ -14,7 +14,7 @@ struct PathNode
   PathNode(const Position& coord, const Position& parentNodePos);
 
   //
-  // Map coordinate of this node
+  // Map coordinate of this node.
   //
   Position Coordinate;
 
@@ -26,28 +26,28 @@ struct PathNode
   Position ParentNodePosition = { -1, -1 };
 
   //
-  // Total cost
+  // Total cost.
   //
   int CostF = 0;
 
   //
   // Cost of traversal here from the starting point
-  // with regard to already traversed path
+  // with regard to already traversed path.
   //
   int CostG = 0;
 
   //
-  // Heuristic cost
+  // Heuristic cost.
   //
   int CostH = 0;
 };
 
-// ***********************************************
+// =============================================================================
 
 class Pathfinder
 {
   public:
-    std::vector<Position> BuildRoad(const std::vector<std::vector<char>>& map,
+    std::vector<Position> BuildRoad(const CharV2& map,
                                     const Position& mapSize,
                                     const Position& start,
                                     const Position& end,
@@ -74,7 +74,7 @@ class Pathfinder
     int FindCheapestElement(const std::vector<PathNode>& list);
     int TraverseCost(const Position& p1, const Position& p2);
 
-    void LookAround(const std::vector<std::vector<char>>& map,
+    void LookAround(const CharV2& map,
                     const PathNode& node,
                     std::vector<PathNode>& openList,
                     std::vector<PathNode>& closedList,
