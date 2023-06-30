@@ -15,16 +15,17 @@
 /// AKA "Blob Tiles".
 ///
 /// tileSizeFactor - number from 1 to N which determines square tile size.
-///                  For example, for tileSizeFactor of 1,
+///                  For example, for 'tileSizeFactor' of 1,
 ///                  tile size will become 2 * 1 + 1 = 3.
 ///                  For 2 -> 2 * 2 + 1 = 5
 ///                  For 3 -> 2 * 3 + 1 = 7
 ///                  and so on.
 ///
-/// wallsSizeFactor - number from 1 to tileSizeFactor (clamped) which determines
-///                   amount of walls extension towards the center of a tile.
+/// wallsSizeFactor - number from 1 to 'tileSizeFactor' (clamped)
+///                   which determines amount of walls extension
+///                   towards the center of a tile.
 ///                   Works from tile sizes greater than or equal to 5,
-///                   so tileSizeFactor must be >= 2.
+///                   so 'tileSizeFactor' must be >= 2.
 ///                   For example, consider tile with tileSizeFactor = 2:
 ///
 ///                   #...#
@@ -42,9 +43,9 @@
 ///                   #####
 ///                   #####
 ///
-/// postProcess - flag (on by default) that requests for additional
-///               removal of lone square sized blocks of walls
-///               with size wallsSizeFactor by wallsSizeFactor
+/// postProcess - flag that requests for additional postprocessing to be done:
+///               namely, removal of lone square sized blocks of walls
+///               with size of 'wallsSizeFactor' by 'wallsSizeFactor'
 ///               which become quite numerous
 ///               after algorithm fininshes map generation.
 ///
