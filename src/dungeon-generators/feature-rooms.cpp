@@ -59,7 +59,9 @@ void FeatureRooms::Generate(const Position& mapSize,
 
     Position carveOffsets = GetOffsetsForDirection(carveDir);
 
-    // Go to next cell behind the door position in corresponding direction
+    //
+    // Go to next cell behind the door position in corresponding direction.
+    //
     newRoomStartPos.X = doorPos.X + carveOffsets.X;
     newRoomStartPos.Y = doorPos.Y + carveOffsets.Y;
 

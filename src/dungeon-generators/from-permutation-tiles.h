@@ -19,7 +19,7 @@ class FromPermutationTiles : public DGBase
     void TryToPlaceLayout(const Position& p);
     void PlaceLayout(const Position& pos, const Tile& tile);
     void AddPointsToProcess(const Position& p);
-    void FillBorders();
+    void ReplaceSpacesWithWalls();
 
     std::string GetLayoutEdge(const Tile& l, const RoomEdgeEnum& along);
 

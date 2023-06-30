@@ -10,7 +10,10 @@
 class LevelBuilder
 {
   public:
-    void FromBlobTiles(int mapSizeX, int mapSizeY);
+    void FromBlobTiles(int mapSizeX, int mapSizeY,
+                       int tileSizeFactor,
+                       int wallsSizeFactor,
+                       bool postProcess = false);
 
     void RecursiveBacktrackerMethod(const Position& mapSize,
                                     const Position& startingPoint = { -1, -1 },

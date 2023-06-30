@@ -35,7 +35,7 @@ class LookInputState : public GameState
     std::vector<std::string> _monsterStatsInfo;
 
     #ifdef DEBUG_BUILD
-    const StringsArray2D _debugInfo =
+    const StringV _debugInfo =
     {
       "'ENTER' - display actor stats",
       "",

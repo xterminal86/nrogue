@@ -87,12 +87,15 @@ void LevelBuilder::RecursiveBacktrackerMethod(const Position& mapSize,
 
 // =============================================================================
 
-void LevelBuilder::FromBlobTiles(int mapSizeX, int mapSizeY)
+void LevelBuilder::FromBlobTiles(int mapSizeX, int mapSizeY,
+                                 int tileSizeFactor,
+                                 int wallsSizeFactor,
+                                 bool postProcess)
 {
   _generator.reset(new BlobTiles());
 
   BlobTiles* bt = static_cast<BlobTiles*>(_generator.get());
-  bt->Generate(mapSizeX, mapSizeY);
+  bt->Generate(mapSizeX, mapSizeY, tileSizeFactor, wallsSizeFactor, postProcess);
 
   MapRaw = bt->MapRaw;
 }

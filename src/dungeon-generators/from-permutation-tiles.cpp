@@ -78,7 +78,7 @@ void FromPermutationTiles::Generate(const Position& mapSize,
     TryToPlaceLayout(p);
   }
 
-  FillBorders();
+  ReplaceSpacesWithWalls();
 
   if (postProcess)
   {
@@ -191,7 +191,7 @@ void FromPermutationTiles::CreateTileset()
 
 // =============================================================================
 
-void FromPermutationTiles::FillBorders()
+void FromPermutationTiles::ReplaceSpacesWithWalls()
 {
   for (auto& line : _map)
   {

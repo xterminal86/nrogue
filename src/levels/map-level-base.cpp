@@ -296,8 +296,7 @@ void MapLevelBase::CreateBorders(GameObjectInfo& t)
   {
     //
     // Borders are to ignore IsOutOfBounds() check, so pasting contents
-    // of PlaceStaticObject(int, int, const GameObjectInfo, int, GameObjectType)
-    // directly.
+    // of PlaceStaticObject() method directly.
     //
     GameObject* go = GOF::Instance().CreateStaticObject(i.X, i.Y,
                                                           t,

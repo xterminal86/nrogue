@@ -8,12 +8,17 @@
 class BlobTiles : public DGBase
 {
   public:
-    void Generate(int mapSizeX, int mapSizeY);
+    void Generate(int mapSizeX, int mapSizeY,
+                  int tileSizeFactor,
+                  int wallsSizeFactor,
+                  bool postProcess = true);
 
     void ForCustomDebugStuff() override;
 
   private:
     std::vector<std::vector<StringV>> _tilesetToUse;
+
+    std::vector<StringV> _tilesetBaseAdjusted;
 
     const std::vector<StringV> _tilesetBase =
     {
@@ -112,10 +117,21 @@ class BlobTiles : public DGBase
     //
     // Might be customizable in the future.
     //
-    const int _tileSize = _tilesetBase[0].size();
+    //const int _tileSize = _tilesetBase[0].size();
+    int _tileSize = 3;
 
+    int _wallsSizeFactor = 1;
+    int _tileSizeFactor  = 1;
+
+    bool _postProcess = false;
+
+    void PrepareBaseTiles();
     void PrintTiles();
     void PlaceTile(int x, int y, const StringV& tile);
+    void EnlargeTile(StringV& tile);
+    void ExtendWalls(StringV& tile);
+    void PostProcess();
+    void TryToRemoveBias(int x, int y, int biasSize);
 
     bool CheckEdge(int x, int y,
                    RoomEdgeEnum edge,
@@ -123,9 +139,17 @@ class BlobTiles : public DGBase
 
     StringV GetMapChunkAround(int x, int y);
 
+    struct TileCell
+    {
+      int X = 0;
+      int Y = 0;
+      int Counter = 0;
+      char Image = '.';
+    };
+
     #ifdef DEBUG_BUILD
     void PrintMap(int curX, int curY);
-    void PrintTile(const StringsArray2D& tile);
+    void PrintTile(const StringV& tile);
     #endif
 };
 

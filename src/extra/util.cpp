@@ -737,6 +737,7 @@ namespace Util
                                      bool includeCorners)
   {
     std::vector<Position> res;
+    res.reserve(w * h);
 
     int x1 = x;
     int x2 = x + w;

@@ -3,9 +3,12 @@
 
 int main(int argc, char* argv[])
 {
-  if (argc < 3)
+  if (argc < 5)
   {
-    printf("Usage: %s <map_x> <map_y>\n", argv[0]);
+    printf("Usage: %s <map_x> <map_y> "
+           "<tile_size_factor> "
+           "<wall_size_factor> "
+           "[<post_process>]\n", argv[0]);
     return 1;
   }
 
@@ -13,24 +16,32 @@ int main(int argc, char* argv[])
   //RNG::Instance().SetSeed(1);
 
   Position mapSize;
+  int tileSizeFactor;
+  int wallSizeFactor;
+  int postProcess = 0;
 
   std::vector<int*> params =
   {
     &mapSize.X,
     &mapSize.Y,
+    &tileSizeFactor,
+    &wallSizeFactor,
+    &postProcess
   };
 
-  int cnt = 1;
+  int paramsCnt = (argc > 6) ? 6 : argc;
 
-  for (int* item : params)
+  for (int i = 1; i < paramsCnt; i++)
   {
-    *item = std::stoi(argv[cnt]);
-    cnt++;
+    *params[i - 1] = std::stoi(argv[i]);
   }
 
   LevelBuilder lb;
 
-  lb.FromBlobTiles(mapSize.X, mapSize.Y);
+  lb.FromBlobTiles(mapSize.X, mapSize.Y,
+                   tileSizeFactor,
+                   wallSizeFactor,
+                   (postProcess != 0));
 
   std::string mapRaw = lb.GetMapRawString();
 

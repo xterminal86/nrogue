@@ -754,6 +754,18 @@ void DGBase::AddColumn(const MapCell& cell)
 
 // =============================================================================
 
+void DGBase::CreateMapBorders()
+{
+  auto pts = Util::GetPerimeter(0, 0, _mapSize.X - 1, _mapSize.Y - 1);
+
+  for (auto& p : pts)
+  {
+    _map[p.X][p.Y].Image = '#';
+  }
+}
+
+// =============================================================================
+
 void DGBase::UnmarkRegions()
 {
   for (int x = 0; x < _mapSize.X; x++)

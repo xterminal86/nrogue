@@ -93,6 +93,7 @@ class DGBase
     void ConnectIsolatedAreas();
     void AddRow(const MapCell& cell);
     void AddColumn(const MapCell& cell);
+    void CreateMapBorders();
 
     int CountAround(int x, int y, char ch);
 
