@@ -8,7 +8,7 @@ class RecursiveBacktracker : public DGBase
   public:
     void Generate(const Position& mapSize,
                   const Position& startingPoint,
-                  const RemovalParams& removalParams = RemovalParams());
+                  const RemovalParams& removalParams);
 
   private:
     Position* GetRandomCell(const Position& p);

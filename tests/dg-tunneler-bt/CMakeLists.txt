@@ -5,58 +5,7 @@ project (${TARGET_NAME})
 
 # ==============================================================================
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/components)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/levels)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/states)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/singletons)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/extra)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/core)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/ai)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/ai/types)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/dungeon-generators)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/behaviour-tree)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/behaviour-tree/tasks)
-
-# ==============================================================================
-
-file(GLOB SOURCES
-  ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/components/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/levels/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/states/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/singletons/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/core/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/extra/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/ai/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/ai/types/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/dungeon-generators/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/behaviour-tree/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/behaviour-tree/tasks/*.cpp
-
-  # ----------------------------------------------------------------------------
-
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/components/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/levels/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/states/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/singletons/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/core/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/extra/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/ai/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/ai/types/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/dungeon-generators/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/behaviour-tree/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/behaviour-tree/tasks/*.h
-)
-
-# ==============================================================================
-
-if (${CMAKE_BUILD_TYPE} MATCHES Release)
-  list(REMOVE_ITEM SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../src/states/dev-console.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../src/states/dev-console.h)
-endif()
-
-add_executable(${TARGET_NAME} ${SOURCES})
+add_executable(${TARGET_NAME} main.cpp ${OBJLIB_LINK_NAME})
 
 # ==============================================================================
 

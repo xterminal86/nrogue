@@ -42,10 +42,11 @@
 ///                   #####
 ///                   #####
 ///
-/// postProcess - flag (on by default) that request for removal of lone square
-///               sized blocks of walls with size wallsSizeFactor by
-///               wallsSizeFactor which become quite numerous after algorithm
-///               fininshes map generation.
+/// postProcess - flag (on by default) that requests for additional
+///               removal of lone square sized blocks of walls
+///               with size wallsSizeFactor by wallsSizeFactor
+///               which become quite numerous
+///               after algorithm fininshes map generation.
 ///
 void BlobTiles::Generate(int mapSizeX, int mapSizeY,
                          int tileSizeFactor,

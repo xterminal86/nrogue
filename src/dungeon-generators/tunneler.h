@@ -10,14 +10,14 @@ class Tunneler : public DGBase
   public:
     void Backtracking(const Position& mapSize,
                       const Position& tunnelLengthMinMax,
-                      const Position& start = { -1, -1 },
-                      bool additionalTweaks = false);
+                      const Position& start,
+                      bool additionalTweaks);
 
     void Normal(const Position& mapSize,
                 const Position& tunnelLengthMinMax,
                 const Position& start,
                 int maxIterations,
-                bool additionalTweaks = false);
+                bool additionalTweaks);
 
   private:
     Position* GetRandomDir(const Position& pos);

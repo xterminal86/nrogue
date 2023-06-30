@@ -9,6 +9,7 @@ core.*
 !config-template.txt
 !SDL2-QT-config.txt
 !CMakeLists.txt
+!tests/README.txt
 *.out
 *.exe
 /*.bmp

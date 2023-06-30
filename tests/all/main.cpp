@@ -875,11 +875,11 @@ void BlobTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
   DebugLog("%s", __func__);
 
-  std::string str = "\nFrom layouts:\n\n";
+  std::string str = "\nFrom blob tiles:\n\n";
 
   ss << str;
 
-  lb.FromBlobTiles(mapSize.X, mapSize.Y);
+  lb.FromBlobTiles(mapSize.X, mapSize.Y, 1, 1, true);
 
   ss << lb.GetMapRawString();
 }

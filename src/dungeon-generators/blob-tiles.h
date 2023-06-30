@@ -11,7 +11,7 @@ class BlobTiles : public DGBase
     void Generate(int mapSizeX, int mapSizeY,
                   int tileSizeFactor,
                   int wallsSizeFactor,
-                  bool postProcess = true);
+                  bool postProcess);
 
     void ForCustomDebugStuff() override;
 
@@ -138,14 +138,6 @@ class BlobTiles : public DGBase
                    const StringV& tileToCheck);
 
     StringV GetMapChunkAround(int x, int y);
-
-    struct TileCell
-    {
-      int X = 0;
-      int Y = 0;
-      int Counter = 0;
-      char Image = '.';
-    };
 
     #ifdef DEBUG_BUILD
     void PrintMap(int curX, int curY);

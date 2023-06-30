@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.9)
 set (TARGET_NAME nrogue)
+set (OBJECT_LIB_NAME ${TARGET_NAME}-objlib)
+set (OBJLIB_LINK_NAME $<TARGET_OBJECTS:${OBJECT_LIB_NAME}>)
 set (CMAKE_CXX_STANDARD 14)
 project (${TARGET_NAME})
 
@@ -22,7 +24,7 @@ endif()
 # ==============================================================================
 
 option(USE_SDL "Build with SDL2" false)
-option(BUILD_TESTS "Build executable with various tests" false)
+option(BUILD_TESTS "Allow various test executables appear in targets list" false)
 
 if (${CMAKE_BUILD_TYPE} MATCHES Release)
   add_definitions(-DRELEASE_BUILD)
@@ -47,7 +49,6 @@ configure_file(version-config.h.in
 
 # ==============================================================================
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/components)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/levels)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/states)
@@ -61,7 +62,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks)
 
 file(GLOB SOURCES
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/*.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/states/*.cpp
@@ -76,7 +76,6 @@ file(GLOB SOURCES
 
   # ----------------------------------------------------------------------------
 
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/src/states/*.h
@@ -97,6 +96,11 @@ if (${CMAKE_BUILD_TYPE} MATCHES Release)
     ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/logger.h)
 endif()
 
+#
+# To allow sharing of object files since it's all the same shit anyway.
+#
+add_library(${OBJECT_LIB_NAME} OBJECT ${SOURCES})
+
 # ==============================================================================
 
 if (BUILD_TESTS)
@@ -105,7 +109,9 @@ endif()
 
 # ==============================================================================
 
-add_executable(${TARGET_NAME} ${SOURCES})
+add_executable(${TARGET_NAME}
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+  ${OBJLIB_LINK_NAME})
 
 if (USE_SDL)
   find_package(SDL2 REQUIRED)
