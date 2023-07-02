@@ -81,6 +81,7 @@ class DGBase
   protected:
     bool CheckLimits(const Position& start, int roomSize);
     bool IsInsideMap(const Position& pos);
+    bool IsInBounds(int x, int y);
     bool IsDeadEnd(const Position& p);
 
     void FillDeadEnds();
@@ -97,6 +98,9 @@ class DGBase
 
     int CountAround(int x, int y, char ch);
 
+    const StringV& ExtractMapChunk(int x, int y, int w, int h);
+    bool FillMapChunk(int x, int y, int w, int h, char with);
+
     std::vector<std::vector<MapCell>> CreateFilledMap(int w, int h, char image = '#');
     std::vector<std::vector<MapCell>> CreateRandomlyFilledMap(int w, int h, int chance);
 
@@ -106,6 +110,8 @@ class DGBase
     Position _startingPoint;
 
     RemovalParams _endWallsRemovalParams;
+
+    StringV _mapChunk;
 
     //
     // Algorithm specific data and methods, no need to expose these

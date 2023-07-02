@@ -114,10 +114,6 @@ class BlobTiles : public DGBase
       },
     };
 
-    //
-    // Might be customizable in the future.
-    //
-    //const int _tileSize = _tilesetBase[0].size();
     int _tileSize = 3;
 
     int _wallsSizeFactor = 1;
@@ -130,12 +126,14 @@ class BlobTiles : public DGBase
     void PlaceTile(int x, int y, const StringV& tile);
     void EnlargeTile(StringV& tile);
     void ExtendWalls(StringV& tile);
-    void PostProcess();
-    void TryToRemoveBias(int x, int y, int biasSize);
+    void TryToRemoveLoneBlocks();
+    void TryToRemoveDeadEndCorridors();
 
     bool CheckEdge(int x, int y,
                    RoomEdgeEnum edge,
                    const StringV& tileToCheck);
+
+    bool AreChunksEqual(const StringV& chunk1, const StringV& chunk2);
 
     StringV GetMapChunkAround(int x, int y);
 

@@ -201,6 +201,16 @@ bool DGBase::IsInsideMap(const Position& pos)
 
 // =============================================================================
 
+bool DGBase::IsInBounds(int x, int y)
+{
+  bool outOfBounds = (x < 0 || x > _mapSize.X - 1
+                   || y < 0 || y > _mapSize.Y - 1);
+
+  return !outOfBounds;
+}
+
+// =============================================================================
+
 //
 // Cell is "valid" if it touches only one floor tile.
 //
@@ -460,6 +470,57 @@ int DGBase::CountAround(int x, int y, char ch)
   }
 
   return res;
+}
+
+// =============================================================================
+
+const StringV& DGBase::ExtractMapChunk(int x, int y, int w, int h)
+{
+  _mapChunk.clear();
+
+  int hx = x + w;
+  int hy = y + h;
+
+  if (!IsInBounds(x, y) || !IsInBounds(hx, hy))
+  {
+    return _mapChunk;
+  }
+
+  for (int i = x; i <= hx; i++)
+  {
+    std::string line;
+    for (int j = y; j <= hy; j++)
+    {
+      line.append(1, _map[i][j].Image);
+    }
+
+    _mapChunk.push_back(line);
+  }
+
+  return _mapChunk;
+}
+
+// =============================================================================
+
+bool DGBase::FillMapChunk(int x, int y, int w, int h, char with)
+{
+  int hx = x + w;
+  int hy = y + h;
+
+  if (!IsInBounds(x, y) || !IsInBounds(hx, hy))
+  {
+    return false;
+  }
+
+  for (int i = x; i <= hx; i++)
+  {
+    for (int j = y; j <= hy; j++)
+    {
+      _map[i][j].Image = with;
+    }
+  }
+
+  return true;
 }
 
 // =============================================================================

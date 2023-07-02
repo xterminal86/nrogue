@@ -49,15 +49,18 @@
 ///               which become quite numerous
 ///               after algorithm fininshes map generation.
 ///
+///
+/// For example: 120 240 4 3 1 produces quite decent results.
+///
 void BlobTiles::Generate(int mapSizeX, int mapSizeY,
                          int tileSizeFactor,
                          int wallsSizeFactor,
                          bool postProcess)
 {
-  _tileSizeFactor = tileSizeFactor;
+  _tileSizeFactor  = tileSizeFactor;
   _wallsSizeFactor = wallsSizeFactor;
 
-  _tileSizeFactor  = Util::Clamp(_tileSizeFactor, 1, tileSizeFactor);
+  _tileSizeFactor  = Util::Clamp(_tileSizeFactor,  1, tileSizeFactor);
   _wallsSizeFactor = Util::Clamp(_wallsSizeFactor, 1, _tileSizeFactor);
 
   //
@@ -148,11 +151,11 @@ void BlobTiles::Generate(int mapSizeX, int mapSizeY,
 
   if (_postProcess)
   {
-    PostProcess();
+    TryToRemoveLoneBlocks();
   }
 
   //
-  // Generator works from 1,1 to the map size, but since map size is a multiple
+  // Generator works from [1;1] to map size, but since map size is a multiple
   // of _tileSize, we need additional row and column for subsequent map borders
   // after map generation finishes.
   //
@@ -163,6 +166,12 @@ void BlobTiles::Generate(int mapSizeX, int mapSizeY,
   AddColumn(empty);
 
   CreateMapBorders();
+
+  if (_postProcess)
+  {
+    TryToRemoveDeadEndCorridors();
+  }
+
   ConnectIsolatedAreas();
 
   FillMapRaw();
@@ -430,81 +439,231 @@ StringV BlobTiles::GetMapChunkAround(int x, int y)
 
 // =============================================================================
 
-void BlobTiles::PostProcess()
+void BlobTiles::TryToRemoveDeadEndCorridors()
 {
   //
-  // Determined experimentally.
+  // Remove dead ends leading to map edges.
+  // Their size and length depends on _tileSizeFactor and _wallsSizeFactor.
   //
-  int biasSize = _wallsSizeFactor * 2;
+  int deadEndLength = _wallsSizeFactor;
 
-  for (int x = 0; x < _mapSize.X; x++)
+  //
+  // This determines only the size of subarea with empty cells.
+  //
+  int deadEndSize = 2 * (_tileSizeFactor - _wallsSizeFactor) + 1;
+
+  //
+  // Size of the whole biased layout with walls.
+  //
+  deadEndSize += 2;
+
+  //
+  // Forming layout like:
+  //
+  // ### -
+  // #.#  |
+  // #.#  | deadEndLength
+  // #.#  |
+  // #.# -
+  //
+  // | |
+  //  -
+  //   deadEndSize
+  //
+  // which we'll rotate in 4 directions and then apply its filled version
+  // to all appropriate positions on the map.
+  //
+  StringV biasedLayout;
+  biasedLayout.reserve(deadEndLength + 1);
+
+  for (int i = 0; i <= deadEndLength; i++)
   {
-    for (int y = 0; y < _mapSize.Y; y++)
+    std::string line(deadEndSize, '#');
+
+    if (i != 0)
     {
-      TryToRemoveBias(x, y, biasSize);
+      for (int j = 1; j < deadEndSize - 1; j++)
+      {
+        line[j] = '.';
+      }
     }
+
+    biasedLayout.push_back(line);
+  }
+
+  std::vector<StringV> biases;
+  biases.reserve(4);
+
+  for (int angle = 0; angle <= (int)RoomLayoutRotation::CCW_270; angle++)
+  {
+    auto lr = Util::RotateRoomLayout(biasedLayout,
+                                     (RoomLayoutRotation)angle);
+    biases.push_back(lr);
+  }
+
+  //
+  // Since every replacement changes map layout which in turn might introduce
+  // new unexpected layouts to replace, we should adjust scanning to match
+  // layout's orientation that we are searching for.
+  // I.e. go from left to right (or right to left) top to bottom for 0,
+  // strictly left to right and whatever vertically from top to bottom for 90,
+  // but then bottom to top and whatever for 180,
+  // and finally bottom to top and either way horizontally for 270.
+  // Basically we should respect vertical orientation for 0 and 180 degrees
+  // and horizontal for 90 and 270.
+  //
+  int angle = 0;
+  for (auto& bias : biases)
+  {
+    int sx = 0;
+    int sy = 0;
+    int ex = _mapSize.X - bias.size();
+    int ey = _mapSize.Y - bias[0].length();
+    int xStep = 1;
+    int yStep = 1;
+
+    switch(angle)
+    {
+      case (int)RoomLayoutRotation::CCW_180:
+      {
+        sx = _mapSize.X - bias.size();
+        ex = 0;
+        xStep = -1;
+      }
+      break;
+
+      case (int)RoomLayoutRotation::CCW_270:
+      {
+        sy = _mapSize.Y - bias[0].length();
+        ey = 0;
+        yStep = -1;
+      }
+      break;
+    }
+
+    for (int x = sx;
+         (angle == (int)RoomLayoutRotation::CCW_180) ? x >= 0 : x <= ex;
+         x += xStep)
+    {
+      for (int y = sy;
+           (angle == (int)RoomLayoutRotation::CCW_270) ? y >= 0 : y <= ey;
+           y += yStep)
+      {
+        auto& chunk = ExtractMapChunk(x, y,
+                                      bias.size() - 1,
+                                      bias[0].length() - 1);
+
+        if (AreChunksEqual(chunk, bias))
+        {
+          FillMapChunk(x, y,
+                       bias.size() - 1,
+                       bias[0].length() - 1,
+                       '#');
+        }
+      }
+    }
+
+    angle++;
   }
 }
 
 // =============================================================================
 
-void BlobTiles::TryToRemoveBias(int x, int y, int biasSize)
+bool BlobTiles::AreChunksEqual(const StringV &chunk1, const StringV &chunk2)
 {
-  int lx = x - 1;
-  int ly = y - 1;
-  int hx = lx + biasSize + 1;
-  int hy = ly + biasSize + 1;
-
-  bool outOfBounds = (lx < 0 || ly < 0
-                    || hx > _mapSize.X - 1 || hy > _mapSize.Y - 1);
-
-  if (outOfBounds)
+  //
+  // Assuming dimensions are equal.
+  //
+  if ( (chunk1.size() != chunk2.size())
+    || (chunk1[0].length() != chunk2[0].length()) )
   {
-    return;
+    return false;
   }
 
-  //
-  // Try to remove blocks of walls _wallsSizeFactor by _wallsSizeFactor size.
-  //
-  // For that we first scan the area in question, determine that it's all walls
-  // and then make sure that it's surrounded by empty cells.
-  // Only then we can remove it.
-  //
-  auto points = Util::GetPerimeter(lx, ly, biasSize + 1, biasSize + 1);
-
-  //
-  // If points around area in question are not empty cells, forget it.
-  //
-  for (auto& p : points)
+  for (size_t i = 0; i < chunk1.size(); i++)
   {
-    if (_map[p.X][p.Y].Image != '.')
+    for (size_t j = 0; j < chunk1[0].length(); j++)
     {
-      return;
-    }
-  }
-
-  //
-  // Now all that's left is to check if area in question is all walls...
-  //
-  for (int i = x; i < x + biasSize; i++)
-  {
-    for (int j = y; j < y + biasSize; j++)
-    {
-      if (_map[i][j].Image != '#')
+      if (chunk1[i][j] != chunk2[i][j])
       {
-        return;
+        return false;
       }
     }
   }
 
+  return true;
+}
+
+// =============================================================================
+
+void BlobTiles::TryToRemoveLoneBlocks()
+{
   //
-  // ...and replace it with empty blocks.
+  // This generator tends to produce lone blocks of the following pattern:
   //
-  for (int i = x; i < x + biasSize; i++)
+  // _wallsSizeFactor = 1
+  //
+  // .... -
+  // .##.  |
+  // .##.  | blockArea
+  // .... -
+  //
+  // |  |
+  //  --
+  //   blockArea
+  //
+  // size of which depends on _wallsSizeFactor.
+  //
+  // To remove it, we first construct this pattern in question and then just go
+  // over the whole map with sliding window and replace it with empty space
+  // if found.
+  //
+  int blockArea = (_wallsSizeFactor + 1) * 2;
+
+  StringV blockToSearch;
+  blockToSearch.reserve(blockArea);
+
+  //
+  // First just fill the whole pattern with empty space.
+  //
+  for (int i = 0; i < blockArea; i++)
   {
-    for (int j = y; j < y + biasSize; j++)
+    std::string line(blockArea, '.');
+    blockToSearch.push_back(line);
+  }
+
+  //
+  // Then fill the inner subarea with walls.
+  //
+  for (int x = 1; x < blockArea - 1; x++)
+  {
+    for (int y = 1; y < blockArea - 1; y++)
     {
-      _map[i][j].Image = '.';
+      blockToSearch[x][y] = '#';
+    }
+  }
+
+  //
+  // Find and replace.
+  //
+  for (int x = 0; x < _mapSize.X; x++)
+  {
+    for (int y = 0; y < _mapSize.Y; y++)
+    {
+      auto chunk = ExtractMapChunk(x, y, blockArea - 1, blockArea - 1);
+
+      //
+      // Empty chunk is returned when we go out of bounds.
+      //
+      if (chunk.empty())
+      {
+        continue;
+      }
+
+      if (AreChunksEqual(blockToSearch, chunk))
+      {
+        FillMapChunk(x, y, blockArea - 1, blockArea - 1, '.');
+      }
     }
   }
 }
