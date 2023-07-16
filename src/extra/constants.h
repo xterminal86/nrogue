@@ -281,6 +281,7 @@ namespace Strings
     extern const std::string BloodText;
     extern const std::string HellrockText;
     extern const std::string HellstoneText;
+    extern const std::string TiledFloorText;
   }
 }
 

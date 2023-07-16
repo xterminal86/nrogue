@@ -108,7 +108,7 @@ void FromPermutationTiles::Generate(const Position& mapSize,
       {
         if (_map[x][y].Image == '.')
         {
-          _map[x][y].Marker = -1;
+          _map[x][y].AreaMarker = -1;
         }
       }
     }

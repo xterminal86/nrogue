@@ -262,6 +262,21 @@ void MapLevelDeepDark::ConstructFromBuilder(LevelBuilder& lb)
           PlaceLavaTile(x, y);
           break;
 
+        //
+        // Shrine b/w tiles.
+        //
+        case '1':
+        case '2':
+          PlaceGroundTile(x,
+                          y,
+                          ' ',
+                          Colors::BlackColor,
+                          (image == '1')
+                        ? Colors::ShadesOfGrey::Four
+                        : Colors::ShadesOfGrey::Twelve,
+                          Strings::TileNames::TiledFloorText);
+          break;
+
         case '/':
           PlaceShrine({ x, y }, lb);
           break;

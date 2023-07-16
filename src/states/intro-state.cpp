@@ -105,7 +105,6 @@ void IntroState::Update(bool forceUpdate)
                                     Colors::WhiteColor);
 
         _textPositionX++;
-
         _textPositionCursor++;
       }
       else

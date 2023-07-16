@@ -14,6 +14,7 @@ int main(int argc, char* argv[])
   }
 
   RNG::Instance().Init();
+  RNG::Instance().SetSeed(1);
 
   Position mapSize;
   Position splitRatio;
@@ -39,6 +40,18 @@ int main(int argc, char* argv[])
   LevelBuilder lb;
 
   lb.BSPRoomsMethod(mapSize, splitRatio, minRoomSize);
+
+  auto rooms = lb.GetEmptyRooms();
+
+  if (!rooms.empty())
+  {
+    printf("Found %lu rooms:\n\n", rooms.size());
+
+    for (auto& i : rooms)
+    {
+      printf("[%i;%i] - [%i;%i]\n", i.first.X, i.first.Y, i.second.X, i.second.Y);
+    }
+  }
 
   std::string mapRaw = lb.GetMapRawString();
 

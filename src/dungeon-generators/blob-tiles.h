@@ -133,8 +133,6 @@ class BlobTiles : public DGBase
                    RoomEdgeEnum edge,
                    const StringV& tileToCheck);
 
-    bool AreChunksEqual(const StringV& chunk1, const StringV& chunk2);
-
     StringV GetMapChunkAround(int x, int y);
 
     #ifdef DEBUG_BUILD

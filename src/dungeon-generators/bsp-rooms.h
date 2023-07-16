@@ -41,13 +41,6 @@ class BSPRooms : public DGBase
 
     void Traverse(BSPNode* node, int depth);
     void ConnectPoints(const Position& p1, const Position& p2);
-    void PlaceDoors();
-
-    bool IsSpotValidForDoor(const Position& p);
-    bool ComparePatterns(std::vector<std::string>& p1,
-                         std::vector<std::string>& p2);
-
-    std::vector<Position> FindPlaceForDoor();
 };
 
 #endif // ROOMS_H

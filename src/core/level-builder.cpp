@@ -224,6 +224,32 @@ std::string LevelBuilder::GetMapRawString()
 
 // =============================================================================
 
+MapCell* LevelBuilder::GetMapCell(int x, int y)
+{
+  MapCell* res = nullptr;
+
+  if (_generator)
+  {
+    res = _generator->GetCell(x, y);
+  }
+
+  return res;
+}
+
+// =============================================================================
+
+const std::vector<EmptyRoom>& LevelBuilder::GetEmptyRooms()
+{
+  if (_generator)
+  {
+    return _generator->GetEmptyRooms();
+  }
+
+  return _emptyRoomsStub;
+}
+
+// =============================================================================
+
 void LevelBuilder::PrintCustomDebugStuff()
 {
   if (_generator)

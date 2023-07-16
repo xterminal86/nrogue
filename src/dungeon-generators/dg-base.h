@@ -22,6 +22,14 @@ enum class FeatureRoomType
   FOUNTAIN
 };
 
+enum class CornerType
+{
+  UL = 0,
+  UR,
+  DL,
+  DR
+};
+
 //
 // {
 //   <room type>,
@@ -39,9 +47,23 @@ using Tile = std::vector<std::string>;
 using Tiles = std::vector<Tile>;
 using Tileset = std::vector<Tiles>;
 
+//
+// Coordinates of upper left and bottom right corner.
+//
+using EmptyRoom = std::pair<Position, Position>;
+
 struct MapCell
 {
-  int Marker = -1;
+  //
+  // Used in connecting isolated regions during maze creation.
+  //
+  int AreaMarker = -1;
+
+  //
+  // For storing additional meta information for a cell.
+  //
+  int ZoneMarker = -1;
+
   char Image = '#';
   Position Coordinates;
   bool Visited = false;
@@ -64,6 +86,10 @@ class DGBase
 
     double GetEmptyOverWallsRatio();
     double GetEmptyPercent();
+
+    MapCell* GetCell(int x, int y);
+
+    const std::vector<EmptyRoom>& GetEmptyRooms();
 
     CharV2 MapRaw;
 
@@ -100,11 +126,21 @@ class DGBase
 
     const StringV& ExtractMapChunk(int x, int y, int w, int h);
     bool FillMapChunk(int x, int y, int w, int h, char with);
+    bool AreChunksEqual(const StringV& chunk1, const StringV& chunk2);
+    bool IsCorner(int x, int y, CornerType cornerType);
+    bool IsAreaEmpty(int x1, int y1, int x2, int y2);
+    Position* FindCorner(int x, int y, CornerType cornerToFind);
 
     std::vector<std::vector<MapCell>> CreateFilledMap(int w, int h, char image = '#');
     std::vector<std::vector<MapCell>> CreateRandomlyFilledMap(int w, int h, int chance);
 
+    void PlaceDoors();
+    bool IsSpotValidForDoor(const Position& p);
+    std::vector<Position> FindPlaceForDoor();
+
     std::vector<std::vector<MapCell>> _map;
+
+    std::vector<EmptyRoom> _emptyRooms;
 
     Position _mapSize;
     Position _startingPoint;
@@ -123,15 +159,15 @@ class DGBase
 
     int MarkRegions();
 
+    void MarkZone(int x1, int y1, int x2, int y2, int zoneMarker);
     void UnmarkRegions();
 
     Position* FindNonMarkedCell();
 
     void ConnectPoints(const Position& p1, const Position& p2);
 
-    int _marker = 0;
-
     Position _nonMarkedCell;
+    Position _cornerPos;
 
     std::map<int, std::vector<Position>> _areaPointsByMarker;
 };

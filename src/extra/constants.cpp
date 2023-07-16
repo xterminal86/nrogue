@@ -262,6 +262,7 @@ namespace Strings
     const std::string BloodText        = "Blood";
     const std::string HellrockText     = "Hellrock";
     const std::string HellstoneText    = "Hellstone";
+    const std::string TiledFloorText   = "Tiled Floor";
   }
 }
 
@@ -1185,11 +1186,11 @@ namespace GlobalConstants
     // Holy, Healing, Potential, Tranquility, Perception
     //
     {
-      "ww ww",
-      "w   w",
-      "  /  ",
-      "w   w",
-      "ww ww"
+      "ww1ww",
+      "w121w",
+      "12/21",
+      "w121w",
+      "ww1ww"
     },
     // 3
     //
@@ -1227,6 +1228,28 @@ namespace GlobalConstants
       " wgg ggw ",
       " www www ",
       "         "
+    },
+    {
+      "121212121",
+      "2ww121ww2",
+      "1w12121w1",
+      "212WWW212",
+      "121WWW121",
+      "212WWW212",
+      "1w12121w1",
+      "2ww121ww2",
+      "121212121"
+    },
+    {
+      "121212121",
+      "2www2www2",
+      "1wWw1wWw1",
+      "2www2www2",
+      "121212121",
+      "2www2www2",
+      "1wWw1wWw1",
+      "2www2www2",
+      "121212121"
     },
     {
       "ggggggggg",

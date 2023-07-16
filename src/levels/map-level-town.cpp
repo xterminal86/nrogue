@@ -602,7 +602,7 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
         case 'F':
           t.Set(true,
                 false,
-                c,
+                'T',
                 Colors::WhiteColor,
                 Colors::DeepWaterColor,
                 Strings::TileNames::FountainText);
@@ -1006,7 +1006,7 @@ void MapLevelTown::PlaceGarden(int x, int y)
         case 'F':
           t.Set(true,
                 false,
-                c,
+                'T',
                 Colors::WhiteColor,
                 Colors::DeepWaterColor,
                 Strings::TileNames::FountainText);

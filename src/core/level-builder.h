@@ -63,6 +63,10 @@ class LevelBuilder
 
     std::string GetMapRawString();
 
+    MapCell* GetMapCell(int x, int y);
+
+    const std::vector<EmptyRoom>& GetEmptyRooms();
+
     void PrintCustomDebugStuff();
 
     CharV2 MapRaw;
@@ -71,6 +75,10 @@ class LevelBuilder
 
   private:
     std::unique_ptr<DGBase> _generator;
+
+    MapCell _cellInfo;
+
+    std::vector<EmptyRoom> _emptyRoomsStub;
 };
 
 #endif // LEVELBUILDER_H

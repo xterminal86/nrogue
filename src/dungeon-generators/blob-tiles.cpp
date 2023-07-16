@@ -569,33 +569,6 @@ void BlobTiles::TryToRemoveDeadEndCorridors()
 
 // =============================================================================
 
-bool BlobTiles::AreChunksEqual(const StringV &chunk1, const StringV &chunk2)
-{
-  //
-  // Assuming dimensions are equal.
-  //
-  if ( (chunk1.size() != chunk2.size())
-    || (chunk1[0].length() != chunk2[0].length()) )
-  {
-    return false;
-  }
-
-  for (size_t i = 0; i < chunk1.size(); i++)
-  {
-    for (size_t j = 0; j < chunk1[0].length(); j++)
-    {
-      if (chunk1[i][j] != chunk2[i][j])
-      {
-        return false;
-      }
-    }
-  }
-
-  return true;
-}
-
-// =============================================================================
-
 void BlobTiles::TryToRemoveLoneBlocks()
 {
   //

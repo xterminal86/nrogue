@@ -321,53 +321,60 @@ void InventoryState::DisplayEquipment()
   ItemComponent* eq = nullptr;
 
   eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::HEAD][0];
-  DrawEquipmentField(tw + 10, yPos, "Head", eq);
+  DrawEquipmentField(tw + 10, yPos, "[Head]", eq);
 
   eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::NECK][0];
-  DrawEquipmentField(tw + 24, yPos, "Neck", eq);
+  DrawEquipmentField(tw + 24, yPos, "[Neck]", eq);
 
   eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::TORSO][0];
-  DrawEquipmentField(tw + 10, yPos + 3, "Armor", eq);
+  DrawEquipmentField(tw + 10, yPos + 3, "[Armor]", eq);
 
   eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::BOOTS][0];
-  DrawEquipmentField(tw + 10, yPos + 6, "Boots", eq);
+  DrawEquipmentField(tw + 10, yPos + 6, "[Boots]", eq);
 
   eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
-  DrawEquipmentField(tw - 4, yPos + 3, "Hand", eq);
+  DrawEquipmentField(tw - 4, yPos + 3, "[Hand]", eq);
 
   eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0];
-  DrawEquipmentField(tw - 4, yPos + 6, "Hand", eq);
+  DrawEquipmentField(tw - 4, yPos + 6, "[Hand]", eq);
 
   eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][0];
-  DrawEquipmentField(tw + 24, yPos + 3, "Accessory", eq);
+  DrawEquipmentField(tw + 24, yPos + 3, "[Accessory]", eq);
 
   eq = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][1];
-  DrawEquipmentField(tw + 24, yPos + 6, "Accessory", eq);
+  DrawEquipmentField(tw + 24, yPos + 6, "[Accessory]", eq);
 }
 
 // =============================================================================
 
 void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldName, ItemComponent* eq)
 {
-  std::string stub(kEquipmentMaxNameLength, '-');
+  std::string stub(kEquipmentMaxNameLength, Strings::InventoryEmptySlotChar);
 
   Printer::Instance().PrintFB(x,
                               y,
                               fieldName,
                               Printer::kAlignCenter,
-                              Colors::WhiteColor);
+                              Colors::ShadesOfGrey::Ten);
+
+  uint32_t itemColor = Colors::WhiteColor;
 
   if (eq != nullptr)
   {
-    stub = eq->Data.IsIdentified ? eq->OwnerGameObject->ObjectName : eq->Data.UnidentifiedName;
+    stub = eq->Data.IsIdentified
+         ? eq->OwnerGameObject->ObjectName
+         : eq->Data.UnidentifiedName;
     stub.resize(kEquipmentMaxNameLength, ' ');
+    itemColor = Util::GetItemInventoryColor(eq->Data);
   }
 
   Printer::Instance().PrintFB(x,
                               y + 1,
                               stub,
                               Printer::kAlignCenter,
-                              Colors::WhiteColor);
+                              (eq != nullptr)
+                            ? itemColor
+                            : Colors::ShadesOfGrey::Six);
 }
 
 // =============================================================================

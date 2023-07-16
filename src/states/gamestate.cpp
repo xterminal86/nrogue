@@ -29,9 +29,10 @@ int GameState::GetKeyDown()
   SDL_Event evt;
 
   //
-  // SDL_WaitEvent() cannot be used because we have animations (we do, lol)
+  // SDL_WaitEvent() cannot be used because we have animations (we do, lol).
   //
   while (SDL_PollEvent(&evt))
+  //if (SDL_WaitEvent(&evt))
   {
     switch(evt.type)
     {

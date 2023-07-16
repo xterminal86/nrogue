@@ -525,6 +525,33 @@ bool DGBase::FillMapChunk(int x, int y, int w, int h, char with)
 
 // =============================================================================
 
+bool DGBase::AreChunksEqual(const StringV& chunk1, const StringV& chunk2)
+{
+  //
+  // Assuming dimensions are equal.
+  //
+  if ( (chunk1.size() != chunk2.size())
+    || (chunk1[0].length() != chunk2[0].length()) )
+  {
+    return false;
+  }
+
+  for (size_t i = 0; i < chunk1.size(); i++)
+  {
+    for (size_t j = 0; j < chunk1[0].length(); j++)
+    {
+      if (chunk1[i][j] != chunk2[i][j])
+      {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+// =============================================================================
+
 double DGBase::GetEmptyPercent()
 {
   int total = _mapSize.X * _mapSize.Y;
@@ -543,6 +570,227 @@ double DGBase::GetEmptyPercent()
   }
 
   return ((double)empty / (double)total);
+}
+
+// =============================================================================
+
+MapCell* DGBase::GetCell(int x, int y)
+{
+  MapCell* res = nullptr;
+
+  if (IsInBounds(x, y))
+  {
+    res = &_map[x][y];
+  }
+
+  return res;
+}
+
+// =============================================================================
+
+bool DGBase::IsCorner(int x, int y, CornerType cornerType)
+{
+  switch (cornerType)
+  {
+    case CornerType::UL:
+    {
+      //
+      // #?
+      // ?.
+      //
+      return (_map[x][y].Image == '#'
+            && _map[x + 1][y].Image != '.'
+            && _map[x][y + 1].Image != '.'
+            && _map[x + 1][y + 1].Image == '.');
+    }
+    break;
+
+    case CornerType::UR:
+    {
+      //
+      // ?#
+      // .?
+      //
+      return (_map[x][y].Image == '#'
+            && _map[x + 1][y].Image != '.'
+            && _map[x][y - 1].Image != '.'
+            && _map[x + 1][y - 1].Image == '.');
+    }
+    break;
+
+    case CornerType::DL:
+    {
+      //
+      // ?.
+      // #?
+      //
+      return (_map[x][y].Image == '#'
+            && _map[x - 1][y].Image != '.'
+            && _map[x][y + 1].Image != '.'
+            && _map[x - 1][y + 1].Image == '.');
+    }
+    break;
+
+    case CornerType::DR:
+    {
+      //
+      // .?
+      // ?#
+      //
+      return (_map[x][y].Image == '#'
+            && _map[x - 1][y].Image != '.'
+            && _map[x][y - 1].Image != '.'
+            && _map[x - 1][y - 1].Image == '.');
+    }
+    break;
+  }
+
+  return false;
+}
+
+// =============================================================================
+
+Position* DGBase::FindCorner(int x, int y, CornerType cornerToFind)
+{
+  Position* res = nullptr;
+
+  switch (cornerToFind)
+  {
+    case CornerType::UR:
+    {
+      for (int i = y; i < _mapSize.Y; i++)
+      {
+        if (IsCorner(x, i, CornerType::UR))
+        {
+          _cornerPos = { x, i };
+          res = &_cornerPos;
+          break;
+        }
+      }
+    }
+    break;
+
+    case CornerType::DR:
+    {
+      for (int i = x; i < _mapSize.X; i++)
+      {
+        if (IsCorner(i, y, CornerType::DR))
+        {
+          _cornerPos = { i, y };
+          res = &_cornerPos;
+          break;
+        }
+      }
+    }
+    break;
+
+    case CornerType::DL:
+    {
+      for (int i = y; i >= 0; i--)
+      {
+        if (IsCorner(x, i, CornerType::DL))
+        {
+          _cornerPos = { x, i };
+          res = &_cornerPos;
+          break;
+        }
+      }
+    }
+    break;
+
+    case CornerType::UL:
+    {
+      for (int i = x; i >= 0; i--)
+      {
+        if (IsCorner(i, y, CornerType::UL))
+        {
+          _cornerPos = { i, y };
+          res = &_cornerPos;
+          break;
+        }
+      }
+    }
+    break;
+  }
+
+  return res;
+}
+
+// =============================================================================
+
+bool DGBase::IsAreaEmpty(int x1, int y1, int x2, int y2)
+{
+  for (int x = x1; x <= x2; x++)
+  {
+    for (int y = y1; y <= y2; y++)
+    {
+      if (_map[x][y].Image != '.' || _map[x][y].ZoneMarker != -1)
+      {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+// =============================================================================
+
+const std::vector<EmptyRoom>& DGBase::GetEmptyRooms()
+{
+  _emptyRooms.clear();
+
+  //
+  // 1. Try to find left corner of a potential room.
+  // 2. If found, draw line to the right until you find upper right corner.
+  // 3. Draw down to find lower right corner.
+  // 4. Draw left to find lower left corner.
+  // 5. Check if found area is actually empty.
+  //
+  for (int x = 0; x < _mapSize.X - 1; x++)
+  {
+    for (int y = 0; y < _mapSize.Y - 1; y++)
+    {
+      if (IsCorner(x, y, CornerType::UL))
+      {
+        Position* ul = nullptr;
+        Position* ur = nullptr;
+        Position* dr = nullptr;
+        Position* dl = nullptr;
+
+        ur = FindCorner(x, y + 1, CornerType::UR);
+        if (ur != nullptr)
+        {
+          dr = FindCorner(ur->X + 1, ur->Y, CornerType::DR);
+          if (dr != nullptr)
+          {
+            dl = FindCorner(dr->X, dr->Y - 1, CornerType::DL);
+            if (dl != nullptr && dl->Y == y)
+            {
+              ul = FindCorner(dl->X - 1, dl->Y, CornerType::UL);
+              if (ul != nullptr)
+              {
+                if (IsAreaEmpty(x + 1, y + 1, dr->X - 1, dr->Y - 1))
+                {
+                  MarkZone(x + 1, y + 1, dr->X - 1, dr->Y - 1, 1);
+
+                  EmptyRoom er =
+                  {
+                    { x + 1,     y + 1     },
+                    { dr->X - 1, dr->Y - 1 }
+                  };
+
+                  _emptyRooms.push_back(er);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return _emptyRooms;
 }
 
 // =============================================================================
@@ -580,7 +828,7 @@ Position* DGBase::FindNonMarkedCell()
   {
     for (int y = 1; y < _mapSize.Y - 1; y++)
     {
-      if (_map[x][y].Marker == -1
+      if (_map[x][y].AreaMarker == -1
        && _map[x][y].Image == '.')
       {
         _nonMarkedCell = { x, y };
@@ -613,7 +861,7 @@ void DGBase::AddCellToProcess(const Position& from,
   }
 
   if (_map[newPos.X][newPos.Y].Image  == '.'
-   && _map[newPos.X][newPos.Y].Marker == -1)
+   && _map[newPos.X][newPos.Y].AreaMarker == -1)
   {
     addTo.push(newPos);
   }
@@ -623,7 +871,7 @@ void DGBase::AddCellToProcess(const Position& from,
 
 int DGBase::MarkRegions()
 {
-  _marker = 0;
+  int marker = 0;
 
   _areaPointsByMarker.clear();
 
@@ -644,10 +892,10 @@ int DGBase::MarkRegions()
       Position p = toProcess.top();
       toProcess.pop();
 
-      _map[p.X][p.Y].Marker = _marker;
+      _map[p.X][p.Y].AreaMarker = marker;
 
       bool alreadyExists = false;
-      for (auto& point : _areaPointsByMarker[_marker])
+      for (auto& point : _areaPointsByMarker[marker])
       {
         if (point == p)
         {
@@ -658,7 +906,7 @@ int DGBase::MarkRegions()
 
       if (!alreadyExists)
       {
-        _areaPointsByMarker[_marker].push_back(p);
+        _areaPointsByMarker[marker].push_back(p);
       }
 
       AddCellToProcess(p, Direction::WEST,  toProcess);
@@ -667,10 +915,23 @@ int DGBase::MarkRegions()
       AddCellToProcess(p, Direction::SOUTH, toProcess);
     }
 
-    _marker++;
+    marker++;
   }
 
-  return _marker;
+  return marker;
+}
+
+// =============================================================================
+
+void DGBase::MarkZone(int x1, int y1, int x2, int y2, int zoneMarker)
+{
+  for (int x = x1; x <= x2; x++)
+  {
+    for (int y = y1; y <= y2; y++)
+    {
+      _map[x][y].ZoneMarker = zoneMarker;
+    }
+  }
 }
 
 // =============================================================================
@@ -835,8 +1096,123 @@ void DGBase::UnmarkRegions()
     {
       if (_map[x][y].Image == '.')
       {
-        _map[x][y].Marker = -1;
+        _map[x][y].AreaMarker = -1;
       }
     }
   }
+}
+
+// =============================================================================
+
+void DGBase::PlaceDoors()
+{
+  auto spotFound = FindPlaceForDoor();
+  while (spotFound.size() != 0)
+  {
+    if (spotFound.size() != 0)
+    {
+      Position p = spotFound[0];
+      _map[p.X][p.Y].Image = '+';
+    }
+
+    spotFound = FindPlaceForDoor();
+  }
+}
+
+// =============================================================================
+
+std::vector<Position> DGBase::FindPlaceForDoor()
+{
+  std::vector<Position> res;
+
+  for (int x = 1; x < _mapSize.X - 1; x++)
+  {
+    for (int y = 1; y < _mapSize.Y - 1; y++)
+    {
+      if (IsSpotValidForDoor({ x, y }))
+      {
+        res.push_back({ x, y });
+        return res;
+      }
+    }
+  }
+
+  return res;
+}
+
+// =============================================================================
+
+bool DGBase::IsSpotValidForDoor(const Position& p)
+{
+  using Pattern = std::vector<std::string>;
+
+  std::vector<Pattern> validPatterns =
+  {
+    {
+      "...",
+      "#.#",
+      "#.#"
+    },
+    {
+      "...",
+      "#.#",
+      "..."
+    },
+    {
+      "#..",
+      "#.#",
+      "..."
+    },
+    {
+      "..#",
+      "#.#",
+      "..."
+    },
+    //
+    // Tends to produce doors in L shaped corridors.
+    //
+    /*
+    {
+      "#.#",
+      "#.#",
+      "#.."
+    },
+      */
+    {
+      "#..",
+      "#.#",
+      "#.."
+    }
+  };
+
+  auto angles =
+  {
+    RoomLayoutRotation::NONE,
+    RoomLayoutRotation::CCW_90,
+    RoomLayoutRotation::CCW_180,
+    RoomLayoutRotation::CCW_270
+  };
+
+  int lx = p.X - 1;
+  int ly = p.Y - 1;
+
+  auto patternToCheck = ExtractMapChunk(lx, ly, 2, 2);
+
+  for (auto& pattern : validPatterns)
+  {
+    for (auto& angle : angles)
+    {
+      auto layout = Util::RotateRoomLayout(pattern, angle);
+      if (!AreChunksEqual(layout, patternToCheck))
+      {
+        continue;
+      }
+      else
+      {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }

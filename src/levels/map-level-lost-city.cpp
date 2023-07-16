@@ -141,7 +141,7 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
         //
         // TODO: can step in lava and get killed / damaged?
         // Or maybe with some item equipped walk in lava?
-        // Right now it's instakill.
+        // Right now it's an instakill.
         //
 
         case 'l':
@@ -168,7 +168,7 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
         case 'F':
           t.Set(true,
                 false,
-                image,
+                'T',
                 Colors::WhiteColor,
                 Colors::DeepWaterColor,
                 Strings::TileNames::FountainText);
@@ -177,6 +177,21 @@ void MapLevelLostCity::ConstructFromBuilder(LevelBuilder& lb)
 
         case 'g':
           PlaceGrassTile(x, y);
+          break;
+
+        //
+        // Shrine b/w tiles.
+        //
+        case '1':
+        case '2':
+          PlaceGroundTile(x,
+                          y,
+                          ' ',
+                          Colors::BlackColor,
+                          (image == '1')
+                        ? Colors::ShadesOfGrey::Four
+                        : Colors::ShadesOfGrey::Twelve,
+                          Strings::TileNames::TiledFloorText);
           break;
       }
     }
