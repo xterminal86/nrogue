@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "position.h"
+
 //
 // Microsoft Visual Studio compiler fails to build
 // with this particular forward declaration
@@ -18,10 +20,14 @@ class Rect
 {
   public:
     Rect() = default;
+    Rect(int x1, int y1, int x2, int y2);
     Rect(const Position& p1, const Position& p2);
-    Rect(int x, int y, int w, int h);
 
-    Position Dimensions();
+    const Position& Dimensions();
+    int Perimeter();
+    int Area();
+    int Width();
+    int Height();
 
     std::vector<Position> GetBoundaryElements(bool excludeCorners = false);
 
@@ -37,6 +43,9 @@ class Rect
     int Y1;
     int X2;
     int Y2;
+
+  private:
+    Position _dim;
 };
 
 #endif

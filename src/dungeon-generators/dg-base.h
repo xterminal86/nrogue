@@ -8,6 +8,7 @@
 
 #include "constants.h"
 #include "position.h"
+#include "rect.h"
 
 enum class FeatureRoomType
 {
@@ -47,11 +48,6 @@ using Tile = std::vector<std::string>;
 using Tiles = std::vector<Tile>;
 using Tileset = std::vector<Tiles>;
 
-//
-// Coordinates of upper left and bottom right corner.
-//
-using EmptyRoom = std::pair<Position, Position>;
-
 struct MapCell
 {
   //
@@ -89,7 +85,7 @@ class DGBase
 
     MapCell* GetCell(int x, int y);
 
-    const std::vector<EmptyRoom>& GetEmptyRooms();
+    const std::vector<Rect>& GetEmptyRooms();
 
     CharV2 MapRaw;
 
@@ -140,7 +136,7 @@ class DGBase
 
     std::vector<std::vector<MapCell>> _map;
 
-    std::vector<EmptyRoom> _emptyRooms;
+    std::vector<Rect> _emptyRooms;
 
     Position _mapSize;
     Position _startingPoint;
@@ -159,7 +155,6 @@ class DGBase
 
     int MarkRegions();
 
-    void MarkZone(int x1, int y1, int x2, int y2, int zoneMarker);
     void UnmarkRegions();
 
     Position* FindNonMarkedCell();

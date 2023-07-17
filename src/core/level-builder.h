@@ -56,8 +56,6 @@ class LevelBuilder
     void LogPrintMapRaw();
     void PrintMapRaw();
 
-    bool WasUsed();
-
     double GetEmptyPercent();
     double GetEmptyOverWallsRatio();
 
@@ -65,7 +63,7 @@ class LevelBuilder
 
     MapCell* GetMapCell(int x, int y);
 
-    const std::vector<EmptyRoom>& GetEmptyRooms();
+    const std::vector<Rect>& GetEmptyRooms();
 
     void PrintCustomDebugStuff();
 
@@ -78,7 +76,7 @@ class LevelBuilder
 
     MapCell _cellInfo;
 
-    std::vector<EmptyRoom> _emptyRoomsStub;
+    std::vector<Rect> _emptyRoomsStub;
 };
 
 #endif // LEVELBUILDER_H

@@ -736,16 +736,32 @@ bool DGBase::IsAreaEmpty(int x1, int y1, int x2, int y2)
 
 // =============================================================================
 
-const std::vector<EmptyRoom>& DGBase::GetEmptyRooms()
+const std::vector<Rect>& DGBase::GetEmptyRooms()
 {
   _emptyRooms.clear();
 
   //
-  // 1. Try to find left corner of a potential room.
+  // Try to find empty rooms by encircling clockwise from starting corner.
+  //
+  // 1. Try to find upper left corner of a potential room.
   // 2. If found, draw line to the right until you find upper right corner.
   // 3. Draw down to find lower right corner.
   // 4. Draw left to find lower left corner.
-  // 5. Check if found area is actually empty.
+  // 5. Check if found area is actually empty and Y coordinate
+  //    of lower left corner coincides with upper left corner.
+  //    so that we won't mistakenly detect situation like this:
+  //
+  //      Problem
+  //     /
+  //    ##
+  //    #.
+  //    # UL    UR
+  //    #.#######
+  //    #.#.....#
+  //    #.#.....#
+  //    #.......#
+  //    #########
+  //    DL      DR
   //
   for (int x = 0; x < _mapSize.X - 1; x++)
   {
@@ -753,34 +769,42 @@ const std::vector<EmptyRoom>& DGBase::GetEmptyRooms()
     {
       if (IsCorner(x, y, CornerType::UL))
       {
-        Position* ul = nullptr;
-        Position* ur = nullptr;
-        Position* dr = nullptr;
-        Position* dl = nullptr;
-
-        ur = FindCorner(x, y + 1, CornerType::UR);
-        if (ur != nullptr)
+        Position* p = FindCorner(x, y + 1, CornerType::UR);
+        if (p != nullptr)
         {
-          dr = FindCorner(ur->X + 1, ur->Y, CornerType::DR);
-          if (dr != nullptr)
+          Position ur = *p;
+
+          p = FindCorner(ur.X + 1, ur.Y, CornerType::DR);
+          if (p != nullptr)
           {
-            dl = FindCorner(dr->X, dr->Y - 1, CornerType::DL);
-            if (dl != nullptr && dl->Y == y)
+            Position dr = *p;
+
+            p = FindCorner(dr.X, dr.Y - 1, CornerType::DL);
+            if (p != nullptr && p->Y == y)
             {
-              ul = FindCorner(dl->X - 1, dl->Y, CornerType::UL);
-              if (ul != nullptr)
+              if (IsAreaEmpty(x + 1, y + 1, dr.X - 1, dr.Y - 1))
               {
-                if (IsAreaEmpty(x + 1, y + 1, dr->X - 1, dr->Y - 1))
+                //
+                // Do not count corridors as empty rooms, i.e.
+                //
+                //          ###
+                // #####    #.#
+                // #...# or #.#
+                // #####    #.#
+                //          ###
+                //
+                bool notACorridor = ( (dr.X - 1) - (x + 1) > 1
+                                   && (dr.Y - 1) - (y + 1) > 1 );
+                if (notACorridor)
                 {
-                  MarkZone(x + 1, y + 1, dr->X - 1, dr->Y - 1, 1);
+                  Rect r;
 
-                  EmptyRoom er =
-                  {
-                    { x + 1,     y + 1     },
-                    { dr->X - 1, dr->Y - 1 }
-                  };
+                  r.X1 = x + 1;
+                  r.Y1 = y + 1;
+                  r.X2 = dr.X - 1;
+                  r.Y2 = dr.Y - 1;
 
-                  _emptyRooms.push_back(er);
+                  _emptyRooms.push_back(r);
                 }
               }
             }
@@ -919,19 +943,6 @@ int DGBase::MarkRegions()
   }
 
   return marker;
-}
-
-// =============================================================================
-
-void DGBase::MarkZone(int x1, int y1, int x2, int y2, int zoneMarker)
-{
-  for (int x = x1; x <= x2; x++)
-  {
-    for (int y = y1; y <= y2; y++)
-    {
-      _map[x][y].ZoneMarker = zoneMarker;
-    }
-  }
 }
 
 // =============================================================================

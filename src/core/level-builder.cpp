@@ -208,13 +208,6 @@ std::map<Position, ShrineType>& LevelBuilder::ShrinesByPosition()
 
 // =============================================================================
 
-bool LevelBuilder::WasUsed()
-{
-  return (_generator != nullptr);
-}
-
-// =============================================================================
-
 std::string LevelBuilder::GetMapRawString()
 {
   return (_generator != nullptr)
@@ -238,7 +231,7 @@ MapCell* LevelBuilder::GetMapCell(int x, int y)
 
 // =============================================================================
 
-const std::vector<EmptyRoom>& LevelBuilder::GetEmptyRooms()
+const std::vector<Rect>& LevelBuilder::GetEmptyRooms()
 {
   if (_generator)
   {
