@@ -1105,10 +1105,7 @@ namespace Util
 
     capacity += capacityRandomness;
 
-    wand->Data.WandCapacity.Set(capacity);
-
     int spellCost = GlobalConstants::WandSpellCapacityCostByType.at(spellType);
-    int charges = capacity / spellCost;
 
     int wandRange = GlobalConstants::WandRangeByMaterial.at(material);
     int wrh = wandRange / 2;
@@ -1148,6 +1145,12 @@ namespace Util
     if (wandRange <= 0)
     {
       wandRange = 1;
+    }
+
+    int charges = capacity / spellCost;
+    if (charges <= 0)
+    {
+      charges = 1;
     }
 
     //

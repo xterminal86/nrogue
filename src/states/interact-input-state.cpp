@@ -170,8 +170,17 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
     AINPC* npcAi = aic->GetModel<AINPC>();
     if (npcAi != nullptr)
     {
-      nis->SetNPCRef(npcAi);
-      Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);
+      if (npcAi->Data.CanSpeak)
+      {
+        nis->SetNPCRef(npcAi);
+        Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);
+      }
+      else
+      {
+        auto str = Util::StringFormat("%s is not responding", actor->ObjectName.data());
+        Printer::Instance().AddMessage(str);
+        Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      }
     }
   }
 }

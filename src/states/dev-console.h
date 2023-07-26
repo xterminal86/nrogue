@@ -12,6 +12,7 @@ enum class DevConsoleCommand
   CLOSE,
   TRANSFORM_TILE,
   PLACE_WALL,
+  CREATE_DUMMY_ACTOR,
   CREATE_ALL_POTIONS,
   CREATE_ALL_GEMS,
   CREATE_ALL_SCROLLS,
@@ -144,6 +145,7 @@ class DevConsole : public GameState
     void PrintAdditionalHelp(DevConsoleCommand command);
     void InfoHandles();
     void CreateMonster(const std::vector<std::string>& params);
+    void CreateDummyActor(const std::vector<std::string>& params);
     void CreateAllGems();
     void CreateAllPotions();
     void CreateAllScrolls();
@@ -227,6 +229,7 @@ class DevConsole : public GameState
       { "g_pc",   DevConsoleCommand::PRINT_COLORS         },
       { "g_cm",   DevConsoleCommand::CREATE_MONSTER       },
       { "g_go",   DevConsoleCommand::GET_BY_ADDRESS       },
+      { "g_cda",  DevConsoleCommand::CREATE_DUMMY_ACTOR   },
       { "g_cag",  DevConsoleCommand::CREATE_ALL_GEMS      },
       { "g_cap",  DevConsoleCommand::CREATE_ALL_POTIONS   },
       { "g_cas",  DevConsoleCommand::CREATE_ALL_SCROLLS   },
@@ -263,6 +266,10 @@ class DevConsole : public GameState
       { "g_cap",  { "Create all potions and place them in town" } },
       { "g_cas",  { "Create all scrolls and place them in town" } },
       { "ao_de",  { "Dispel all effects from actor in handle" } },
+      {
+        "g_cda",
+        { "g_cda X Y", "Creates dummy actor at X Y" }
+      },
       {
         "p_ae",
         { "p_ae <AMOUNT>", "Give <AMOUNT> experience to player" }

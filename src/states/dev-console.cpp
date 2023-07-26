@@ -351,6 +351,10 @@ void DevConsole::ProcessCommand(const std::string& command,
       CreateMonster(params);
       break;
 
+    case DevConsoleCommand::CREATE_DUMMY_ACTOR:
+      CreateDummyActor(params);
+      break;
+
     case DevConsoleCommand::CREATE_ALL_GEMS:
       CreateAllGems();
       break;
@@ -684,6 +688,37 @@ void DevConsole::InfoHandles()
                                          _objectHandles[kvp.first]);
     StdOut(msg);
   }
+}
+
+// =============================================================================
+
+void DevConsole::CreateDummyActor(const std::vector<std::string>& params)
+{
+  if (params.size() != 2)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string sx = params[0];
+  std::string sy = params[1];
+
+  auto r = CoordinateParamsToInt(sx, sy);
+  if (r.first == -1 && r.second == -1)
+  {
+    return;
+  }
+
+  int x = r.first;
+  int y = r.second;
+
+  GameObject* actor = MonstersInc::Instance().CreateNPC(x,
+                                                        y,
+                                                        NPCType::UNDEFINED);
+
+  Map::Instance().CurrentLevel->PlaceActor(actor);
+
+  StdOut(Ok);
 }
 
 // =============================================================================

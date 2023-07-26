@@ -138,29 +138,11 @@ bool Player::Move(int dx, int dy)
 
   if (!cell->Blocking || isFlying)
   {
-    if (staticObject != nullptr)
-    {
-      if (staticObject->Blocking)
-      {
-        auto dc = staticObject->GetComponent<DoorComponent>();
-
-        // Automatically interact with door if it's closed
-        if (dc != nullptr)
-        {
-          auto ir = dc->Interact();
-          if (ir.first == InteractionResult::SUCCESS)
-          {
-            FinishTurn();
-          }
-        }
-      }
-      else
-      {
-        MoveGameObject(dx, dy);
-        moveOk = true;
-      }
-    }
-    else if (cell->Occupied)
+    //
+    // Occupied is set only by actors, so if actor is present on this cell,
+    // it can be walked into so there's no need to check for static object there.
+    //
+    if (cell->Occupied)
     {
       auto actor = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
       if (actor != nullptr)
@@ -174,8 +156,39 @@ bool Player::Move(int dx, int dy)
         passByNPC = PassByNPC(actor);
       }
     }
+    else if (staticObject != nullptr)
+    {
+      if (staticObject->Blocking)
+      {
+        auto dc = staticObject->GetComponent<DoorComponent>();
+
+        //
+        // Automatically interact with door if it's closed.
+        //
+        if (dc != nullptr)
+        {
+          auto ir = dc->Interact();
+          if (ir.first == InteractionResult::SUCCESS)
+          {
+            FinishTurn();
+          }
+        }
+      }
+      else
+      {
+        //
+        // If static object is no longer blocking (e.g. door was opened)
+        // just move there.
+        //
+        MoveGameObject(dx, dy);
+        moveOk = true;
+      }
+    }
     else
     {
+      //
+      // Some code duplication couldn't be avoided. :-(
+      //
       MoveGameObject(dx, dy);
       moveOk = true;
     }

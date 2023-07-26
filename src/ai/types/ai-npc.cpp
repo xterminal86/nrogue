@@ -671,6 +671,7 @@ void AINPC::SetDataDefault()
 {
   int gender = RNG::Instance().RandomRange(0, 2);
 
+  Data.Name = "Default Actor";
   Data.CanSpeak = false;
   Data.IsMale = (gender == 0);
 
