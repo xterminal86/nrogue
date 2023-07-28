@@ -977,16 +977,72 @@ void GenNamesTest(std::stringstream& ss)
 
 // =============================================================================
 
+void StringSplitTests(std::stringstream& ss)
+{
+  DebugLog("%s", __func__);
+
+  ss << "\n";
+
+  auto PerformSplit = [&](const std::string& example,
+                          const StringV& ethalon)
+  {
+    StringV res = Util::StringSplit(example, '/');
+
+    bool ok = true;
+
+    if (res.size() != ethalon.size())
+    {
+      ok = false;
+    }
+    else
+    {
+      for (size_t i = 0; i < res.size(); i++)
+      {
+        if (res[i] != ethalon[i])
+        {
+          ok = false;
+          break;
+        }
+      }
+    }
+
+    std::stringstream tmp;
+
+    for (auto& i : res)
+    {
+      tmp << "\"" << i << "\", ";
+    }
+
+    std::string line = tmp.str();
+
+    line.pop_back();
+    line.pop_back();
+
+    ss << "\"" << example << "\" -> " << line << "\n";
+    ss << (ok ? "OK!" : "FAIL!") << "\n";
+    ss << "\n";
+  };
+
+  PerformSplit("abc/def",  { "abc", "def"        });
+  PerformSplit("abc//def", { "abc", ""   , "def" });
+  PerformSplit("/abc",     { ""   , "abc"        });
+  PerformSplit("abc/",     { "abc", ""           });
+  PerformSplit("abc//",    { "abc", ""   , ""    });
+  PerformSplit("//",       { ""   , ""   , ""    });
+}
+
+// =============================================================================
+
 void Run()
 {
+  const std::string padding(40, '*');
+
   std::ofstream file;
   std::stringstream ss;
 
   file.open("tests.txt");
 
   DisplayProgress();
-
-  std::string padding(40, '*');
 
   ss << padding << " START TESTS " << padding << "\n\n";
 
@@ -1026,6 +1082,11 @@ void Run()
   DisplayProgress();
 
   GenNamesTest(ss);
+  ss << "\n\n" << padding << " o " << padding << "\n";
+
+  DisplayProgress();
+
+  StringSplitTests(ss);
   ss << "\n\n" << padding << " o " << padding << "\n";
 
   file << ss.str();

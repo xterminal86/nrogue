@@ -15,50 +15,30 @@ namespace Util
   {
     StringV res;
 
-    std::string toSearch = str;
+    int start, end = -1;
 
-    while (true)
+    do
     {
-      bool found = false;
-
-      for (size_t i = 0; i < toSearch.length(); i++)
+      start = end + 1;
+      end = str.find(delim, start);
+      if (end != -1)
       {
-        if (toSearch[i] == delim)
-        {
-          found = true;
-
-          std::string before = toSearch.substr(0, i);
-
-          if (i + 1 < toSearch.length())
-          {
-            toSearch = toSearch.substr(i + 1, toSearch.length() - i + 1);
-          }
-          else
-          {
-            found = false;
-            break;
-          }
-
-          res.push_back(before);
-
-          break;
-        }
+        std::string word = str.substr(start, end - start);
+        res.push_back(word);
       }
-
-      if (!found)
+      else
       {
-        if (res.empty())
+        if (start < (int)str.length())
         {
-          res = { str };
+          res.push_back(str.substr(start, str.length()));
         }
         else
         {
-          res.push_back(toSearch);
+          res.push_back("");
         }
-
-        break;
       }
     }
+    while (end != -1);
 
     return res;
   }
