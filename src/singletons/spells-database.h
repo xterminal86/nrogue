@@ -27,7 +27,7 @@ class SpellsDatabase : public Singleton<SpellsDatabase>
     void InitSpecific() override;
 
   private:
-    std::map<SpellType, SpellInfo> _database;
+    std::unordered_map<SpellType, SpellInfo> _database;
 };
 
 #endif // SPELLSDATABASE_H

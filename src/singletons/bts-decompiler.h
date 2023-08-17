@@ -2,7 +2,7 @@
 #define BTSDECOMPILER_H
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <cstdint>
 #include <string>
 
@@ -17,10 +17,10 @@ class BTSDecompiler : public Singleton<BTSDecompiler>
     void InitSpecific() override;
 
   private:
-    std::map<uint8_t, std::string> _taskByOpcode;
-    std::map<uint8_t, std::string> _paramByOpcode;
+    std::unordered_map<uint8_t, std::string> _taskByOpcode;
+    std::unordered_map<uint8_t, std::string> _paramByOpcode;
 
-    const uint8_t Nop = 0xFE;
+    const uint8_t Nop       = 0xFE;
     const uint8_t ParamsEnd = 0xFF;
 };
 

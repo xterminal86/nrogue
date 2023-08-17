@@ -936,7 +936,7 @@ void MainState::DisplayActiveEffects(const int& startPos)
 {
   int offsetX = startPos;
 
-  std::map<std::string, int> effectDurationByName;
+  std::unordered_map<std::string, int> effectDurationByName;
 
   for (auto& kvp : _playerRef->GetActiveEffects())
   {

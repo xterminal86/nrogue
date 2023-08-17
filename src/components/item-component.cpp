@@ -584,7 +584,7 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
 // =============================================================================
 
-void ItemComponent::AppendStatBonuses(const std::map<ItemBonusType, int>& statBonuses, std::vector<std::string>& res)
+void ItemComponent::AppendStatBonuses(const std::unordered_map<ItemBonusType, int>& statBonuses, std::vector<std::string>& res)
 {
   for (auto& kvp : statBonuses)
   {
@@ -607,12 +607,12 @@ void ItemComponent::AppendStatBonuses(const std::map<ItemBonusType, int>& statBo
 
 // =============================================================================
 
-std::map<ItemBonusType, int> ItemComponent::CountAllStatBonuses()
+std::unordered_map<ItemBonusType, int> ItemComponent::CountAllStatBonuses()
 {
   _nonZeroStatBonuses = 0;
   _nonStatBonusesPresent = false;
 
-  std::map<ItemBonusType, int> allStatModifiers =
+  std::unordered_map<ItemBonusType, int> allStatModifiers =
   {
     { ItemBonusType::STR, 0 },
     { ItemBonusType::DEF, 0 },

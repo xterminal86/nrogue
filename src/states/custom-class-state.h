@@ -43,8 +43,8 @@ class CustomClassState : public GameState
     bool _warning = false;
     bool _displayWarning = false;
 
-    std::map<PlayerStats, sspair> _statStringByType;
-    std::map<PlayerStats, std::pair<int, int>> _statDataByType;
+    std::unordered_map<PlayerStats, sspair> _statStringByType;
+    std::unordered_map<PlayerStats, std::pair<int, int>> _statDataByType;
 
     std::map<int, PlayerStats> _playerStatByCursorRows =
     {

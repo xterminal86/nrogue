@@ -436,7 +436,7 @@ namespace ItemUseHandlers
   {
     ItemPrefix buc = item->Data.Prefix;
 
-    std::map<PotionType, std::string> useMessagesByType =
+    std::unordered_map<PotionType, std::string> useMessagesByType =
     {
       { PotionType::STR_POTION, "Your Strength has "   },
       { PotionType::DEF_POTION, "Your Defence has "    },
@@ -474,7 +474,7 @@ namespace ItemUseHandlers
       break;
     }
 
-    std::map<PotionType, Attribute&> userStats =
+    std::unordered_map<PotionType, Attribute&> userStats =
     {
       { PotionType::STR_POTION, user->Attrs.Str },
       { PotionType::DEF_POTION, user->Attrs.Def },

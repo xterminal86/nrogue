@@ -5,8 +5,8 @@
 
 void BTSDecompiler::InitSpecific()
 {
-  std::map<std::string, uint8_t> opcodesByName;
-  std::map<std::string, uint8_t> taskParamsByName;
+  std::unordered_map<std::string, uint8_t> opcodesByName;
+  std::unordered_map<std::string, uint8_t> taskParamsByName;
 
   for (auto& kvp : GlobalConstants::BTSTaskNamesByName)
   {

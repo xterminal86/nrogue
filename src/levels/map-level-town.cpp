@@ -336,7 +336,7 @@ void MapLevelTown::CreateLevel()
   /*
   ItemQuality q = ItemQuality::EXCEPTIONAL;
 
-  std::map<ItemQuality, int> multByQ =
+  std::unordered_map<ItemQuality, int> multByQ =
   {
     { ItemQuality::DAMAGED,      1 },
     { ItemQuality::FLAWED,       2 },

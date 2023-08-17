@@ -214,7 +214,7 @@ void FromPermutationTiles::TryToPlaceLayout(const Position& p)
     return;
   }
 
-  std::map<RoomEdgeEnum, Position> points;
+  std::unordered_map<RoomEdgeEnum, Position> points;
 
   Position u = { p.X - _tileEdgeLength, p.Y                   };
   Position d = { p.X + _tileEdgeLength, p.Y                   };
@@ -271,7 +271,7 @@ bool FromPermutationTiles::CanBeConnected(const Tile& l1,
                                const Tile& l2,
                                const RoomEdgeEnum& along)
 {
-  std::map<RoomEdgeEnum, RoomEdgeEnum> oppositeDirByDir =
+  std::unordered_map<RoomEdgeEnum, RoomEdgeEnum> oppositeDirByDir =
   {
     { RoomEdgeEnum::NORTH, RoomEdgeEnum::SOUTH },
     { RoomEdgeEnum::EAST,  RoomEdgeEnum::WEST  },

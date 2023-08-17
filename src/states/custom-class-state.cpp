@@ -390,7 +390,7 @@ int CustomClassState::GetMp()
 
 void CustomClassState::InitPlayerAttributes(Player* playerRef)
 {
-  std::map<PlayerStats, Attribute&> map =
+  std::unordered_map<PlayerStats, Attribute&> map =
   {
     { PlayerStats::STR, playerRef->Attrs.Str },
     { PlayerStats::DEF, playerRef->Attrs.Def },

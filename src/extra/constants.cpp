@@ -72,7 +72,7 @@ namespace Colors
   const uint32_t ItemMixedColor            = 0xAA7700; // "#AA7700";
   const uint32_t ItemCursedColor           = 0xAA0000; // "#AA0000";
 
-  const std::map<GemType, std::pair<uint32_t, uint32_t>> GemColorByType =
+  const std::unordered_map<GemType, std::pair<uint32_t, uint32_t>> GemColorByType =
   {
     { GemType::BLACK_JETSTONE,  { 0xFFFFFF, 0x000000 } },
     { GemType::BLACK_OBSIDIAN,  { 0xFFFFFF, 0x000000 } },
@@ -91,7 +91,7 @@ namespace Colors
     { GemType::YELLOW_CITRINE,  { 0x000000, 0xFFFF00 } }
   };
 
-  const std::map<ShrineType, std::pair<uint32_t, uint32_t>> ShrineColorsByType =
+  const std::unordered_map<ShrineType, std::pair<uint32_t, uint32_t>> ShrineColorsByType =
   {
     { ShrineType::MIGHT,       { 0xFF0000, 0x888888 } },
     { ShrineType::SPIRIT,      { 0x0088FF, 0x888888 } },
@@ -109,7 +109,7 @@ namespace Colors
     { ShrineType::HOLY,        { 0xFFFF00, 0x888888 } },
   };
 
-  const std::map<std::string, std::vector<uint32_t>> PotionColorsByName =
+  const std::unordered_map<std::string, std::vector<uint32_t>> PotionColorsByName =
   {
     { "Red Potion",     { 0xFF0000, 0x440000 } },
     { "Green Potion",   { 0x00FF00, 0x004400 } },
@@ -124,7 +124,7 @@ namespace Colors
     { "Watery Potion",  { 0xBBBBBB, 0x000000 } }
   };
 
-  const std::map<WandMaterials, std::pair<uint32_t, uint32_t>> WandColorsByMaterial =
+  const std::unordered_map<WandMaterials, std::pair<uint32_t, uint32_t>> WandColorsByMaterial =
   {
     { WandMaterials::YEW_1,    { 0xD2AB7C, 0x8A8B5C } },
     { WandMaterials::IVORY_2,  { 0xFFFFFF, 0x9A9A9A } },
@@ -135,7 +135,7 @@ namespace Colors
     { WandMaterials::GOLDEN_7, { 0xFFFF00, 0xAAA700 } }
   };
 
-  const std::map<GemType, std::string> GemColorNameByType =
+  const std::unordered_map<GemType, std::string> GemColorNameByType =
   {
     { GemType::BLACK_JETSTONE,  "Black"  },
     { GemType::BLACK_OBSIDIAN,  "Black"  },
@@ -268,7 +268,7 @@ namespace Strings
 
 namespace GlobalConstants
 {
-  std::map<RoomEdgeEnum, std::string> DirNamesByDir =
+  std::unordered_map<RoomEdgeEnum, std::string> DirNamesByDir =
   {
     { RoomEdgeEnum::NORTH, "NORTH" },
     { RoomEdgeEnum::EAST,  "EAST"  },
@@ -280,7 +280,7 @@ namespace GlobalConstants
   //
   // To avoid C-style casting from enum
   //
-  std::map<NameCP437, int> CP437IndexByType;
+  std::unordered_map<NameCP437, int> CP437IndexByType;
 #endif
 
   int TerminalWidth  = 80;
@@ -354,7 +354,7 @@ namespace GlobalConstants
     { 5, { StatsEnum::SPD, "SPD" } }
   };
 
-  const std::map<ItemBonusType, std::string> BonusNameByType =
+  const std::unordered_map<ItemBonusType, std::string> BonusNameByType =
   {
     { ItemBonusType::STR, "STR" },
     { ItemBonusType::DEF, "DEF" },
@@ -366,7 +366,7 @@ namespace GlobalConstants
     { ItemBonusType::MP,  "MP"  }
   };
 
-  const std::map<ItemQuality, std::string> QualityNameByQuality =
+  const std::unordered_map<ItemQuality, std::string> QualityNameByQuality =
   {
     { ItemQuality::DAMAGED,     "Damaged"     },
     { ItemQuality::FLAWED,      "Flawed"      },
@@ -375,7 +375,7 @@ namespace GlobalConstants
     { ItemQuality::EXCEPTIONAL, "Exceptional" }
   };
 
-  const std::map<PlayerSkills, std::string> SkillNameByType =
+  const std::unordered_map<PlayerSkills, std::string> SkillNameByType =
   {
     { PlayerSkills::REPAIR,       "Repair"       },
     { PlayerSkills::RECHARGE,     "Recharge"     },
@@ -383,7 +383,7 @@ namespace GlobalConstants
     { PlayerSkills::AWARENESS,    "Awareness"    }
   };
 
-  const std::map<TraderRole, std::string> ShopNameByType =
+  const std::unordered_map<TraderRole, std::string> ShopNameByType =
   {
     { TraderRole::BLACKSMITH, "Armory"    },
     { TraderRole::CLERIC,     "Sanctuary" },
@@ -391,7 +391,7 @@ namespace GlobalConstants
     { TraderRole::JUNKER,     "Junkyard"  }
   };
 
-  const std::map<PotionType, int> PotionsWeightTable =
+  const std::unordered_map<PotionType, int> PotionsWeightTable =
   {
     { PotionType::HEALING_POTION, 50 },
     { PotionType::MANA_POTION,    50 },
@@ -408,7 +408,7 @@ namespace GlobalConstants
     { PotionType::RA_POTION,       5 }
   };
 
-  const std::map<PlayerStats, std::string> StatNameByType =
+  const std::unordered_map<PlayerStats, std::string> StatNameByType =
   {
     { PlayerStats::STR, "STR" },
     { PlayerStats::DEF, "DEF" },
@@ -420,7 +420,7 @@ namespace GlobalConstants
     { PlayerStats::MP,  "MP"  }
   };
 
-  const std::map<PotionType, std::string> PotionNameByType =
+  const std::unordered_map<PotionType, std::string> PotionNameByType =
   {
     { PotionType::HEALING_POTION, "Healing Potion"    },
     { PotionType::MANA_POTION,    "Mana Potion"       },
@@ -437,7 +437,7 @@ namespace GlobalConstants
     { PotionType::CW_POTION,      "Cure Weakness"     }
   };
 
-  const std::map<PotionType, std::string> StatNameByPotionType =
+  const std::unordered_map<PotionType, std::string> StatNameByPotionType =
   {
     { PotionType::STR_POTION, "STR" },
     { PotionType::DEF_POTION, "DEF" },
@@ -447,7 +447,7 @@ namespace GlobalConstants
     { PotionType::SPD_POTION, "SPD" },
   };
 
-  const std::map<WeaponType, std::string> WeaponNameByType =
+  const std::unordered_map<WeaponType, std::string> WeaponNameByType =
   {
     { WeaponType::DAGGER,       "Dagger"         },
     { WeaponType::SHORT_SWORD,  "Short Sword"    },
@@ -458,7 +458,7 @@ namespace GlobalConstants
     { WeaponType::PICKAXE,      "Pickaxe"        }
   };
 
-  const std::map<RangedWeaponType, std::string> RangedWeaponNameByType =
+  const std::unordered_map<RangedWeaponType, std::string> RangedWeaponNameByType =
   {
     { RangedWeaponType::SHORT_BOW,  "Short Bow"   },
     { RangedWeaponType::LONGBOW,    "Longbow"     },
@@ -468,13 +468,13 @@ namespace GlobalConstants
     { RangedWeaponType::HEAVY_XBOW, "H. Crossbow" }
   };
 
-  const std::map<ArrowType, std::string> ArrowNameByType =
+  const std::unordered_map<ArrowType, std::string> ArrowNameByType =
   {
     { ArrowType::ARROWS, "Arrows" },
     { ArrowType::BOLTS,  "Bolts"  }
   };
 
-  const std::map<ArmorType, std::string> ArmorNameByType =
+  const std::unordered_map<ArmorType, std::string> ArmorNameByType =
   {
     { ArmorType::PADDING, "Padded Surcoat" },
     { ArmorType::LEATHER, "Leather Jacket" },
@@ -483,7 +483,7 @@ namespace GlobalConstants
     { ArmorType::PLATE,   "Coat of Plates" }
   };
 
-  const std::map<ArmorType, int> ArmorDurabilityByType =
+  const std::unordered_map<ArmorType, int> ArmorDurabilityByType =
   {
     { ArmorType::PADDING, 25 },
     { ArmorType::LEATHER, 50 },
@@ -492,7 +492,7 @@ namespace GlobalConstants
     { ArmorType::PLATE,  180 }
   };
 
-  const std::map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =
+  const std::unordered_map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =
   {
     { FoodType::APPLE,        { "Apple",         10 } },
     { FoodType::BREAD,        { "Bread",         20 } },
@@ -505,7 +505,7 @@ namespace GlobalConstants
     { FoodType::IRON_RATIONS, { "Iron Rations", 100 } }
   };
 
-  const std::map<GemType, std::string> GemNameByType =
+  const std::unordered_map<GemType, std::string> GemNameByType =
   {
     { GemType::WORTHLESS_GLASS, "Worthless Glass" },
     { GemType::BLACK_JETSTONE,  "Jetstone"        },
@@ -525,7 +525,7 @@ namespace GlobalConstants
     { GemType::YELLOW_CITRINE,  "Citrine"         }
   };
 
-  const std::map<GemType, StringV> GemDescriptionByType =
+  const std::unordered_map<GemType, StringV> GemDescriptionByType =
   {
     {
       GemType::BLACK_JETSTONE,
@@ -677,7 +677,7 @@ namespace GlobalConstants
     }
   };
 
-  const std::map<GemType, int> GemCostByType =
+  const std::unordered_map<GemType, int> GemCostByType =
   {
     { GemType::WORTHLESS_GLASS,    0 },
     { GemType::BLACK_OBSIDIAN,   100 },
@@ -697,7 +697,7 @@ namespace GlobalConstants
     { GemType::WHITE_DIAMOND,   1500 }
   };
 
-  const std::map<ItemQuality, std::string> GemRatingByQuality =
+  const std::unordered_map<ItemQuality, std::string> GemRatingByQuality =
   {
     { ItemQuality::DAMAGED,     " --" },
     { ItemQuality::FLAWED,      " -"  },
@@ -706,7 +706,7 @@ namespace GlobalConstants
     { ItemQuality::EXCEPTIONAL, " ++" },
   };
 
-  const std::map<WandMaterials, int> WandCapacityByMaterial =
+  const std::unordered_map<WandMaterials, int> WandCapacityByMaterial =
   {
     { WandMaterials::YEW_1,    100 },
     { WandMaterials::IVORY_2,  150 },
@@ -717,10 +717,12 @@ namespace GlobalConstants
     { WandMaterials::GOLDEN_7, 800 }
   };
 
+  //
   // Divide wand capacity by this value to get amount of charges.
   // Total amount of charges is affected by material, BUC status and RNG god.
   // (see GameObjectsFactory::CreateWand())
-  const std::map<SpellType, int> WandSpellCapacityCostByType =
+  //
+  const std::unordered_map<SpellType, int> WandSpellCapacityCostByType =
   {
     { SpellType::NONE,          100 },
     { SpellType::LIGHT,         50  },
@@ -733,7 +735,7 @@ namespace GlobalConstants
     { SpellType::MAGIC_MISSILE, 70  }
   };
 
-  const std::map<WandMaterials, int> WandRangeByMaterial =
+  const std::unordered_map<WandMaterials, int> WandRangeByMaterial =
   {
     { WandMaterials::YEW_1,     5 },
     { WandMaterials::IVORY_2,  10 },
@@ -786,7 +788,7 @@ namespace GlobalConstants
     "LLORCS"
   };
 
-  const std::map<SpellType, std::string> SpellShortNameByType =
+  const std::unordered_map<SpellType, std::string> SpellShortNameByType =
   {
     { SpellType::NONE,              "-"  },
     { SpellType::LIGHT,             "L"  },
@@ -809,7 +811,7 @@ namespace GlobalConstants
     { SpellType::MANA_SHIELD,       "MS" }
   };
 
-  const std::map<WandMaterials, std::string> WandMaterialNamesByMaterial =
+  const std::unordered_map<WandMaterials, std::string> WandMaterialNamesByMaterial =
   {
     { WandMaterials::YEW_1,    "Yew"    },
     { WandMaterials::IVORY_2,  "Ivory"  },
@@ -820,7 +822,7 @@ namespace GlobalConstants
     { WandMaterials::GOLDEN_7, "Golden" }
   };
 
-  const std::map<ShrineType, std::string> ShrineSaintByType =
+  const std::unordered_map<ShrineType, std::string> ShrineSaintByType =
   {
     { ShrineType::MIGHT,      "St. George the Soldier"     },
     { ShrineType::SPIRIT,     "St. Mary the Mother"        },
@@ -829,7 +831,7 @@ namespace GlobalConstants
     { ShrineType::HEALING,    "St. Luke the Healer"        }
   };
 
-  const std::map<ShrineType, std::string> ShrineNameByType =
+  const std::unordered_map<ShrineType, std::string> ShrineNameByType =
   {
     { ShrineType::MIGHT,       "Shrine of Might"       },
     { ShrineType::SPIRIT,      "Shrine of Spirit"      },
@@ -899,7 +901,7 @@ namespace GlobalConstants
     "el"
   };
 
-  const std::map<MapType, StringV> MapLevelNames =
+  const std::unordered_map<MapType, StringV> MapLevelNames =
   {
     { MapType::TOWN,
       {
@@ -947,7 +949,7 @@ namespace GlobalConstants
     { MapType::THE_END,     { "???" } }
   };
 
-  const std::map<ItemBonusType, std::string> ItemBonusPrefixes =
+  const std::unordered_map<ItemBonusType, std::string> ItemBonusPrefixes =
   {
     { ItemBonusType::STR,            "Heavy"       },
     { ItemBonusType::DEF,            "Rampart"     },
@@ -980,7 +982,7 @@ namespace GlobalConstants
     { ItemBonusType::LEVITATION,     "Celestial"   }
   };
 
-  const std::map<ItemBonusType, std::string> ItemBonusSuffixes =
+  const std::unordered_map<ItemBonusType, std::string> ItemBonusSuffixes =
   {
     { ItemBonusType::STR,            "of Strength"    },
     { ItemBonusType::DEF,            "of Defence"     },
@@ -1013,7 +1015,7 @@ namespace GlobalConstants
     { ItemBonusType::LEVITATION,     "of the Angel"   }
   };
 
-  const std::map<ItemBonusType, int> MoneyCostIncreaseByBonusType =
+  const std::unordered_map<ItemBonusType, int> MoneyCostIncreaseByBonusType =
   {
     { ItemBonusType::NONE,              0 },
     { ItemBonusType::STR,             200 },
@@ -1047,7 +1049,7 @@ namespace GlobalConstants
     { ItemBonusType::LEVITATION,      500 }
   };
 
-  const std::map<ItemBonusType, std::string> BonusDisplayNameByType =
+  const std::unordered_map<ItemBonusType, std::string> BonusDisplayNameByType =
   {
     { ItemBonusType::STR,           "+ST" },
     { ItemBonusType::DEF,           "+DF" },
@@ -1074,7 +1076,7 @@ namespace GlobalConstants
     { ItemBonusType::WEAKNESS,      "Wea" }
   };
 
-  const std::map<std::string, ScriptTaskNames> BTSTaskNamesByName =
+  const std::unordered_map<std::string, ScriptTaskNames> BTSTaskNamesByName =
   {
     { "TREE", ScriptTaskNames::TREE },
     { "SEL",  ScriptTaskNames::SEL  },
@@ -1085,7 +1087,7 @@ namespace GlobalConstants
     { "COND", ScriptTaskNames::COND }
   };
 
-  const std::map<std::string, ScriptParamNames> BTSParamNamesByName =
+  const std::unordered_map<std::string, ScriptParamNames> BTSParamNamesByName =
   {
     { "idle",                 ScriptParamNames::IDLE                 },
     { "move_rnd",             ScriptParamNames::MOVE_RND             },
@@ -1229,6 +1231,9 @@ namespace GlobalConstants
       " www www ",
       "         "
     },
+    //
+    // 1 - black, 2 - white
+    //
     {
       "121212121",
       "2ww121ww2",
@@ -1403,7 +1408,7 @@ namespace GlobalConstants
     }
   };
 
-  const std::map<ShrineType, std::vector<StringV>> ShrineLayoutsByType =
+  const std::unordered_map<ShrineType, std::vector<StringV>> ShrineLayoutsByType =
   {
     {
       ShrineType::MIGHT,       { ShrineLayouts[0] }

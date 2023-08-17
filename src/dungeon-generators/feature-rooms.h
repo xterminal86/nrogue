@@ -65,10 +65,10 @@ class FeatureRooms : public DGBase
 
     Position _roomSizes;
 
-    std::map<FeatureRoomType, int> _generatedSoFar;
-    std::map<FeatureRoomType, int> _roomWeightByType;
+    std::unordered_map<FeatureRoomType, int> _generatedSoFar;
+    std::unordered_map<FeatureRoomType, int> _roomWeightByType;
 
-    const std::map<FeatureRoomType, std::vector<StringV>> _specialRoomLayoutByType =
+    const std::unordered_map<FeatureRoomType, std::vector<StringV>> _specialRoomLayoutByType =
     {
       { FeatureRoomType::GARDEN,   GlobalConstants::GardenLayouts   },
       { FeatureRoomType::POND,     GlobalConstants::PondLayouts     },

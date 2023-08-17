@@ -43,7 +43,7 @@ class TraderComponent : public Component
 
     // =========================================================================
 
-    const std::map<ItemType, int> _clericItemsWeights =
+    const std::unordered_map<ItemType, int> _clericItemsWeights =
     {
       { ItemType::POTION,    4 },
       { ItemType::WAND,      4 },
@@ -52,7 +52,7 @@ class TraderComponent : public Component
       { ItemType::RETURNER,  3 }
     };
 
-    const std::map<PotionType, int> _clericPotionWeights =
+    const std::unordered_map<PotionType, int> _clericPotionWeights =
     {
       { PotionType::HEALING_POTION, 6 },
       { PotionType::MANA_POTION,    6 },
@@ -61,7 +61,7 @@ class TraderComponent : public Component
       { PotionType::CW_POTION,      2 }
     };
 
-    const std::map<ItemPrefix, int> _clericPrefixWeights =
+    const std::unordered_map<ItemPrefix, int> _clericPrefixWeights =
     {
       { ItemPrefix::BLESSED,  3 },
       { ItemPrefix::UNCURSED, 7 }
@@ -69,7 +69,7 @@ class TraderComponent : public Component
 
     // -------------------------------------------------------------------------
 
-    const std::map<FoodType, int> _cookItemsWeights =
+    const std::unordered_map<FoodType, int> _cookItemsWeights =
     {
       { FoodType::APPLE,        10 },
       { FoodType::CHEESE,        8 },
@@ -82,7 +82,7 @@ class TraderComponent : public Component
       { FoodType::IRON_RATIONS,  3 }
     };
 
-    const std::map<ItemPrefix, int> _cookPrefixWeights =
+    const std::unordered_map<ItemPrefix, int> _cookPrefixWeights =
     {
       { ItemPrefix::BLESSED,  1 },
       { ItemPrefix::UNCURSED, 6 }
@@ -90,7 +90,7 @@ class TraderComponent : public Component
 
     // -------------------------------------------------------------------------
 
-    const std::map<ItemType, int> _blacksmithItemsWeights =
+    const std::unordered_map<ItemType, int> _blacksmithItemsWeights =
     {
       { ItemType::WEAPON,     5 },
       { ItemType::ARROWS,     3 },
@@ -99,7 +99,7 @@ class TraderComponent : public Component
       { ItemType::ACCESSORY,  1 }
     };
 
-    const std::map<ArmorType, int> _blacksmithArmorWeights =
+    const std::unordered_map<ArmorType, int> _blacksmithArmorWeights =
     {
       { ArmorType::PADDING, 6 },
       { ArmorType::LEATHER, 5 },
@@ -107,7 +107,7 @@ class TraderComponent : public Component
       { ArmorType::PLATE,   1 }
     };
 
-    const std::map<ItemPrefix, int> _blacksmithPrefixWeights =
+    const std::unordered_map<ItemPrefix, int> _blacksmithPrefixWeights =
     {
       { ItemPrefix::BLESSED,  1 },
       { ItemPrefix::UNCURSED, 6 }

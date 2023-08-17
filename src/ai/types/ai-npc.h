@@ -25,7 +25,7 @@ struct NPCData
 
   std::string NameResponse;
   std::string JobResponse;
-  std::map<MapType, std::vector<TextLines>> GossipResponsesByMap;
+  std::unordered_map<MapType, std::vector<TextLines>> GossipResponsesByMap;
 };
 
 class AINPC : public AIModelBase

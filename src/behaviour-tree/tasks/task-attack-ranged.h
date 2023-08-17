@@ -58,7 +58,7 @@ class TaskAttackRanged : public Node
     uint32_t _fgColor;
     uint32_t _bgColor;
 
-    const std::map<std::string, RangedAttackType> _attackTypeByName =
+    const std::unordered_map<std::string, RangedAttackType> _attackTypeByName =
     {
       { "WPN", RangedAttackType::WEAPON },
       { "MAG", RangedAttackType::MAGIC  }

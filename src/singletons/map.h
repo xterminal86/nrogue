@@ -118,8 +118,8 @@ class Map : public Singleton<Map>
     void InitSpecific() override;
 
   private:
-    std::map<MapType, std::unique_ptr<MapLevelBase>> _levels;
-    std::map<MapType, bool> _mapVisitFirstTime;
+    std::unordered_map<MapType, std::unique_ptr<MapLevelBase>> _levels;
+    std::unordered_map<MapType, bool> _mapVisitFirstTime;
 
     void ChangeOrInstantiateLevel(MapType levelName);
     void ShowLoadingText(const std::string& textOverride = std::string());

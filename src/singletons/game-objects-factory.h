@@ -80,14 +80,14 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
 
     // -------------------------------------------------------------------------
 
-    const std::map<DoorMaterials, int> _doorDefByMat =
+    const std::unordered_map<DoorMaterials, int> _doorDefByMat =
     {
       { DoorMaterials::WOOD,  5  },
       { DoorMaterials::STONE, 10 },
       { DoorMaterials::IRON,  15 }
     };
 
-    const std::map<DoorMaterials, std::string> _doorPrefixByMat =
+    const std::unordered_map<DoorMaterials, std::string> _doorPrefixByMat =
     {
       { DoorMaterials::WOOD,  "Wooden" },
       { DoorMaterials::STONE, "Stone"  },

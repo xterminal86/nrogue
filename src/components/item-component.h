@@ -34,9 +34,9 @@ class ItemComponent : public Component
 
     void AddModifiersInfo(std::vector<std::string>& res);
     void AddBonusesInfo(std::vector<std::string>& res);
-    void AppendStatBonuses(const std::map<ItemBonusType, int>& statBonuses, std::vector<std::string>& res);
+    void AppendStatBonuses(const std::unordered_map<ItemBonusType, int>& statBonuses, std::vector<std::string>& res);
 
-    std::map<ItemBonusType, int> CountAllStatBonuses();
+    std::unordered_map<ItemBonusType, int> CountAllStatBonuses();
 
     int _nonZeroStatBonuses = 0;
 
@@ -44,7 +44,7 @@ class ItemComponent : public Component
 
     // =========================================================================
 
-    const std::map<StatsEnum, ItemBonusType> _bonusByStat =
+    const std::unordered_map<StatsEnum, ItemBonusType> _bonusByStat =
     {
       { StatsEnum::STR, ItemBonusType::STR },
       { StatsEnum::DEF, ItemBonusType::DEF },

@@ -75,7 +75,7 @@ class GameState
 
     void AdjustWindowSize(const SDL_Event& evt);
 
-    std::map<SDL_Scancode, char> _charsByScancodes =
+    std::unordered_map<SDL_Scancode, char> _charsByScancodes =
     {
       { SDL_SCANCODE_GRAVE,        '`'  },
       { SDL_SCANCODE_1,            '1'  },
@@ -126,7 +126,7 @@ class GameState
       { SDL_SCANCODE_SLASH,        '/'  }
     };
 
-    std::map<SDL_Scancode, int> _specialKeysByScancode =
+    std::unordered_map<SDL_Scancode, int> _specialKeysByScancode =
     {
       { SDL_SCANCODE_SPACE,     SDLK_SPACE     },
       { SDL_SCANCODE_RETURN,    SDLK_RETURN    },
@@ -148,7 +148,7 @@ class GameState
       { SDL_SCANCODE_RIGHT,     SDLK_RIGHT     }
     };
 
-    std::map<char, char> _shiftMapping =
+    std::unordered_map<char, char> _shiftMapping =
     {
       { '`', '~' },
       { '1', '!' },

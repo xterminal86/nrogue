@@ -213,7 +213,7 @@ class GameObject
     bool IsOnDangerousTile();
     bool IsOnTile(GameObjectType tileType);
 
-    const std::map<uint64_t, std::vector<ItemBonusStruct>>& GetActiveEffects();
+    const std::unordered_map<uint64_t, std::vector<ItemBonusStruct>>& GetActiveEffects();
     const std::map<int, std::map<PlayerStats, int>>& GetLevelUpHistory();
 
     const uint64_t& ObjectId();
@@ -246,8 +246,8 @@ class GameObject
 #endif
 
   protected:
-    std::map<size_t, std::unique_ptr<Component>> _components;
-    std::map<uint64_t, std::vector<ItemBonusStruct>> _activeEffects;
+    std::unordered_map<size_t, std::unique_ptr<Component>> _components;
+    std::unordered_map<uint64_t, std::vector<ItemBonusStruct>> _activeEffects;
 
     GameObject* _previousCell = nullptr;
     GameObject* _currentCell = nullptr;
@@ -289,7 +289,7 @@ class GameObject
     // Unique in-game id
     uint64_t _objectId = 1;
 
-    const std::map<ItemBonusType, Attribute&> _attributesRefsByBonus =
+    const std::unordered_map<ItemBonusType, Attribute&> _attributesRefsByBonus =
     {
       { ItemBonusType::STR, Attrs.Str },
       { ItemBonusType::DEF, Attrs.Def },
@@ -299,7 +299,7 @@ class GameObject
       { ItemBonusType::SPD, Attrs.Spd }
     };
 
-    const std::map<ItemBonusType, RangedAttribute&> _rangedAttributesRefsByBonus =
+    const std::unordered_map<ItemBonusType, RangedAttribute&> _rangedAttributesRefsByBonus =
     {
       { ItemBonusType::HP, Attrs.HP },
       { ItemBonusType::MP, Attrs.MP }

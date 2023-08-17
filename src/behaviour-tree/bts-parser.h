@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <fstream>
 #include <algorithm>
 
@@ -11,7 +11,7 @@ struct ScriptNode
 {
   int Indent;
   std::string NodeName;
-  std::map<std::string, std::string> Params;
+  std::unordered_map<std::string, std::string> Params;
 
   void Print();
 };
@@ -42,7 +42,7 @@ class BTSParser
 
     int FindMaxIndent();
 
-    std::map<ScriptNode*, bool> _traverseMap;
+    std::unordered_map<ScriptNode*, bool> _traverseMap;
 
     std::vector<ScriptNode> _parsedData;
     std::string _rawText;
@@ -53,7 +53,7 @@ class BTSParser
 
     GameObject* _goRef;
 
-    std::map<std::string, uint8_t> _paramCodesByName;
+    std::unordered_map<std::string, uint8_t> _paramCodesByName;
 };
 
 #endif // BTSPARSER_H

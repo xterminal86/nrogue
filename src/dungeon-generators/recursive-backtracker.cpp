@@ -73,7 +73,7 @@ Position* RecursiveBacktracker::GetRandomCell(const Position& p)
 {
   Position* res = nullptr;
 
-  std::map<RoomEdgeEnum, Position> offsetsBySide =
+  std::unordered_map<RoomEdgeEnum, Position> offsetsBySide =
   {
     { RoomEdgeEnum::NORTH, { -1,  0 } },
     { RoomEdgeEnum::SOUTH, {  1,  0 } },

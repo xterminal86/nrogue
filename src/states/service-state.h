@@ -42,13 +42,13 @@ class ServiceState : public SelectItemStateBase
       int ServiceCost;
     };
 
-    std::map<char, ServiceInfo> _serviceInfoByChar;
+    std::unordered_map<char, ServiceInfo> _serviceInfoByChar;
 
     int GetValidBonusesCount(ItemComponent* ic);
 
     void BlessItem(const ServiceInfo& si);
 
-    const std::map<ServiceType, std::string> _displayOnEmptyItems =
+    const std::unordered_map<ServiceType, std::string> _displayOnEmptyItems =
     {
       { ServiceType::NONE,     "!!! INVALID TYPE !!!" },
       { ServiceType::IDENTIFY, "Nothing to identify"  },
@@ -57,7 +57,7 @@ class ServiceState : public SelectItemStateBase
       { ServiceType::REPAIR,   "Nothing to repair"    }
     };
 
-    const std::map<ServiceType, std::string> _serviceNameByType =
+    const std::unordered_map<ServiceType, std::string> _serviceNameByType =
     {
       { ServiceType::NONE,     " !!! INVALID TYPE !!! " },
       { ServiceType::IDENTIFY, " IDENTIFY ITEMS "       },

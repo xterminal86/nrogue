@@ -286,8 +286,9 @@ namespace Util
   //   { ORANGE, 10 }
   // };
   //
-  template <typename T>
-  std::pair<T, int> WeightedRandom(const std::map<T, int>& weightsByType)
+  template <typename Map>
+  std::pair<typename Map::key_type, typename Map::mapped_type>
+  WeightedRandom(const Map& weightsByType)
   {
     int sum = 0;
     for (auto& i : weightsByType)
@@ -301,7 +302,8 @@ namespace Util
     {
       if (target <= i.second)
       {
-        std::pair<T, int> res = { i.first, i.second };
+        std::pair<typename Map::key_type, typename Map::mapped_type> res = { i.first, i.second };
+
         return res;
       }
 
@@ -312,9 +314,9 @@ namespace Util
   }
 
   template <typename T>
-  std::map<T, double> WeightsToProbability(const std::map<T, int>& weightsMap)
+  std::unordered_map<T, double> WeightsToProbability(const std::unordered_map<T, int>& weightsMap)
   {
-    std::map<T, double> res;
+    std::unordered_map<T, double> res;
 
     int totalWeight = 0;
     for (auto& kvp : weightsMap)
@@ -332,9 +334,9 @@ namespace Util
   }
 
   template <typename T>
-  std::map<T, int> RollWeightsMap(const std::map<T, int>& weightsMap, int rolls)
+  std::unordered_map<T, int> RollWeightsMap(const std::unordered_map<T, int>& weightsMap, int rolls)
   {
-    std::map<T, int> res;
+    std::unordered_map<T, int> res;
 
     for (int i = 0; i < rolls; i++)
     {
@@ -345,11 +347,10 @@ namespace Util
     return res;
   }
 
-
   template <typename key, typename value>
-  std::map<value, key> FlipMap(const std::map<key, value>& src)
+  std::unordered_map<value, key> FlipMap(const std::unordered_map<key, value>& src)
   {
-    std::map<value, key> ret;
+    std::unordered_map<value, key> ret;
 
     std::transform(src.begin(),
                    src.end(),

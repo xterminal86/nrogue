@@ -70,7 +70,7 @@ class DevConsole : public GameState
     MapLevelBase* _currentLevel;
     Player* _playerRef;
 
-    std::map<ObjectHandleType, GameObject*> _objectHandles;
+    std::unordered_map<ObjectHandleType, GameObject*> _objectHandles;
 
     std::string _currentCommand;
 
@@ -100,7 +100,7 @@ class DevConsole : public GameState
     const std::string Ok = "Ok";
     const std::string Prompt = "> ";
 
-    const std::map<ObjectHandleType, std::string> _handleNameByType =
+    const std::unordered_map<ObjectHandleType, std::string> _handleNameByType =
     {
       { ObjectHandleType::STATIC, "_static" },
       { ObjectHandleType::ACTOR,  "_actor"  },
@@ -108,7 +108,7 @@ class DevConsole : public GameState
       { ObjectHandleType::ANY,    "_any"    }
     };
 
-    const std::map<GameObjectType, std::string> _validTileTransformTypes =
+    const std::unordered_map<GameObjectType, std::string> _validTileTransformTypes =
     {
       { GameObjectType::GROUND,        "Ground"        },
       { GameObjectType::LAVA,          "Lava"          },
@@ -117,7 +117,7 @@ class DevConsole : public GameState
       { GameObjectType::CHASM,         "Chasm"         }
     };
 
-    const std::map<GameObjectType, std::string> _monsters =
+    const std::unordered_map<GameObjectType, std::string> _monsters =
     {
       { GameObjectType::RAT,         "Rat"         },
       { GameObjectType::BAT,         "Bat"         },
@@ -205,8 +205,8 @@ class DevConsole : public GameState
       { "m_pw",   DevConsoleCommand::PLACE_WALL           },
       { "m_show", DevConsoleCommand::SHOW_MAP             },
       { "info",   DevConsoleCommand::INFO_HANDLES         },
-      { "i_trig", DevConsoleCommand::PRINT_TRIGGERS        },
-      { "i_act",  DevConsoleCommand::PRINT_ACTORS          },
+      { "i_trig", DevConsoleCommand::PRINT_TRIGGERS       },
+      { "i_act",  DevConsoleCommand::PRINT_ACTORS         },
       { "so_get", DevConsoleCommand::GET_STATIC_OBJECT    },
       { "ao_get", DevConsoleCommand::GET_ACTOR            },
       { "io_get", DevConsoleCommand::GET_ITEM             },
@@ -242,7 +242,7 @@ class DevConsole : public GameState
       "help <command> - displays help about <command>"
     };
 
-    const std::map<std::string, std::vector<std::string>> _helpTextByCommandName =
+    const std::unordered_map<std::string, std::vector<std::string>> _helpTextByCommandName =
     {
       { "help",   { "Not funny, didn't laugh"  } },
       { "clear",  { "Clears the screen"        } },

@@ -64,11 +64,15 @@ class LevelBuilder
     MapCell* GetMapCell(int x, int y);
 
     const std::vector<Rect>& GetEmptyRooms();
+    void TransformRooms(const TransformedRoomsWeights& weights);
 
     void PrintCustomDebugStuff();
 
     CharV2 MapRaw;
 
+    //
+    // Cannot replace with unordered_map bc of key hash.
+    //
     std::map<Position, ShrineType>& ShrinesByPosition();
 
   private:

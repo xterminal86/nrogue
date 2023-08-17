@@ -44,7 +44,7 @@ class AIModelBase
 
     BTSParser _aiReader;
 
-    std::map<std::string, ItemBonusType> _bonusTypeByDisplayName;
+    std::unordered_map<std::string, ItemBonusType> _bonusTypeByDisplayName;
 
     Node* CreateNode(const ScriptNode* data);
     Node* CreateTask(const ScriptNode* data);
@@ -70,7 +70,7 @@ class AIModelBase
 
     // -------------------------------------------------------------------------
 
-    const std::map<ScriptParamNames, EquipmentCategory> _eqCats =
+    const std::unordered_map<ScriptParamNames, EquipmentCategory> _eqCats =
     {
       { ScriptParamNames::HEA, EquipmentCategory::HEAD   },
       { ScriptParamNames::NCK, EquipmentCategory::NECK   },

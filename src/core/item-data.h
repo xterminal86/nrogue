@@ -160,7 +160,7 @@ struct ItemData
   // Cannot be const because we use assignment
   // in GameObjectsFactory::CloneItem()
   //
-  std::map<ItemQuality, double> _costModByQ =
+  std::unordered_map<ItemQuality, double> _costModByQ =
   {
     { ItemQuality::DAMAGED,     2.0 },
     { ItemQuality::FLAWED,      1.5 },

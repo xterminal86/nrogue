@@ -103,7 +103,7 @@ class MapLevelBase
   protected:
     std::vector<Position> _emptyCells;
     std::vector<StringV> _layoutsForLevel;
-    std::map<GameObjectType, int> _monstersSpawnRateForThisLevel;
+    std::unordered_map<GameObjectType, int> _monstersSpawnRateForThisLevel;
 
     StringV _specialLevel;
 

@@ -319,7 +319,7 @@ GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
 
   double failScale = 1.25;
 
-  const std::map<ItemType, int> weights =
+  const std::unordered_map<ItemType, int> weights =
   {
     { ItemType::NOTHING, nothingChance },
     { ItemType::DUMMY, somethingChance }

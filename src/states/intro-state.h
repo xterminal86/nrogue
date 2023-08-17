@@ -70,7 +70,7 @@ class IntroState : public GameState
 
     void PrepareTown();
 
-    const std::map<PlayerClass, std::string> _scenarioNameByClass =
+    const std::unordered_map<PlayerClass, std::string> _scenarioNameByClass =
     {
       { PlayerClass::SOLDIER,  "WARRIOR'S REST"      },
       { PlayerClass::THIEF,    "THIEF'S HIDEOUT"     },

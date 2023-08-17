@@ -1,4 +1,4 @@
-#ifndef ITEMSFACTORY_H
+﻿#ifndef ITEMSFACTORY_H
 #define ITEMSFACTORY_H
 
 #include "singleton.h"
@@ -156,7 +156,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
                                          ItemQuality qualityOverride = ItemQuality::RANDOM);
 
     void AdjustBonusWeightsMapForItem(ItemComponent* itemRef,
-                                      std::map<ItemBonusType, int>& bonusWeightByType);
+                                      std::unordered_map<ItemBonusType, int>& bonusWeightByType);
 
     void TryToAddBonusesToItem(ItemComponent* itemRef,
                                bool atLeastOne = false);
@@ -198,14 +198,14 @@ class ItemsFactory : public Singleton<ItemsFactory>
       std::string ScrollName;
     };
 
-    std::map<PotionType, PotionInfo> _gamePotionsMap;
-    std::map<SpellType, ScrollInfo>  _gameScrollsMap;
+    std::unordered_map<PotionType, PotionInfo> _gamePotionsMap;
+    std::unordered_map<SpellType, ScrollInfo>  _gameScrollsMap;
 
     Player* _playerRef = nullptr;
 
     // -------------------------------------------------------------------------
 
-    const std::map<WandMaterials, int> _wandMaterialsDistribution =
+    const std::unordered_map<WandMaterials, int> _wandMaterialsDistribution =
     {
       { WandMaterials::YEW_1,    80 },
       { WandMaterials::IVORY_2,  60 },
@@ -216,7 +216,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
       { WandMaterials::GOLDEN_7, 10 },
     };
 
-    const std::map<SpellType, int> _spellsDistribution =
+    const std::unordered_map<SpellType, int> _spellsDistribution =
     {
       { SpellType::LIGHT,         100 },
       { SpellType::STRIKE,         80 },
@@ -228,7 +228,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
       { SpellType::MAGIC_MISSILE,  50 }
     };
 
-    const std::map<FoodType, int> _foodMap =
+    const std::unordered_map<FoodType, int> _foodMap =
     {
       { FoodType::APPLE,        1 },
       { FoodType::CHEESE,       1 },
@@ -241,7 +241,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
       { FoodType::IRON_RATIONS, 1 }
     };
 
-    const std::map<GemType, int> _gemsMap =
+    const std::unordered_map<GemType, int> _gemsMap =
     {
       { GemType::WORTHLESS_GLASS, 250 },
       { GemType::BLACK_OBSIDIAN,  150 },
@@ -261,13 +261,13 @@ class ItemsFactory : public Singleton<ItemsFactory>
       { GemType::WHITE_DIAMOND,     7 },
     };
 
-    const std::map<ItemType, int> _returnerMap =
+    const std::unordered_map<ItemType, int> _returnerMap =
     {
       { ItemType::RETURNER, 1 },
       { ItemType::NOTHING,  4 }
     };
 
-    const std::map<ItemQuality, int> _chanceModByQ =
+    const std::unordered_map<ItemQuality, int> _chanceModByQ =
     {
       { ItemQuality::DAMAGED,    -10 },
       { ItemQuality::FLAWED,      -5 },
@@ -276,7 +276,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
       { ItemQuality::EXCEPTIONAL, 10 },
     };
 
-    const std::map<ItemQuality, int> _multByQ =
+    const std::unordered_map<ItemQuality, int> _multByQ =
     {
       { ItemQuality::DAMAGED,      1 },
       { ItemQuality::FLAWED,       2 },
@@ -285,7 +285,9 @@ class ItemsFactory : public Singleton<ItemsFactory>
       { ItemQuality::EXCEPTIONAL,  5 },
     };
 
-    // Probability of stat increase values
+    //
+    // Probability of stat increase values.
+    //
     const std::map<int, int> _statIncreaseWeightsMap =
     {
       { 1, 100 },
@@ -295,14 +297,14 @@ class ItemsFactory : public Singleton<ItemsFactory>
       { 5,  12 }
     };
 
-    const std::map<ItemPrefix, int> _bucDistr =
+    const std::unordered_map<ItemPrefix, int> _bucDistr =
     {
       { ItemPrefix::UNCURSED, 4 },
       { ItemPrefix::CURSED,   4 },
       { ItemPrefix::BLESSED,  1 }
     };
 
-    const std::map<ItemQuality, int> _qualityDistr =
+    const std::unordered_map<ItemQuality, int> _qualityDistr =
     {
       { ItemQuality::DAMAGED,     8 },
       { ItemQuality::FLAWED,      6 },
@@ -311,7 +313,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
       { ItemQuality::EXCEPTIONAL, 2 },
     };
 
-    const std::map<ItemQuality, double> _costMultByQuality =
+    const std::unordered_map<ItemQuality, double> _costMultByQuality =
     {
       { ItemQuality::DAMAGED,     0.5  },
       { ItemQuality::FLAWED,      0.75 },

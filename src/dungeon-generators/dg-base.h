@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <string>
 #include <stack>
 
@@ -10,6 +11,9 @@
 #include "position.h"
 #include "rect.h"
 
+//
+// Used in FeatureRooms generator.
+//
 enum class FeatureRoomType
 {
   EMPTY = 0,
@@ -21,6 +25,17 @@ enum class FeatureRoomType
   PILLARS,
   POND,
   FOUNTAIN
+};
+
+//
+// Used to procedurally convert empty rooms into something interesting.
+//
+enum class TransformedRoom
+{
+  EMPTY = 0,
+  TREASURY,
+  STORAGE,
+  FLOODED
 };
 
 enum class CornerType
@@ -42,7 +57,8 @@ enum class CornerType
 //
 // 0 if there is no limit to the amount of rooms
 //
-using FeatureRoomsWeights = std::map<FeatureRoomType, std::pair<int, int>>;
+using FeatureRoomsWeights     = std::unordered_map<FeatureRoomType, std::pair<int, int>>;
+using TransformedRoomsWeights = std::unordered_map<TransformedRoom, std::pair<int, int>>;
 
 using Tile = std::vector<std::string>;
 using Tiles = std::vector<Tile>;
@@ -61,7 +77,18 @@ struct MapCell
   int ZoneMarker = -1;
 
   char Image = '#';
+
+  //
+  // Doesn't seem to be used now, but may come in handy at some point
+  // if for some reason we need to find out cell's map coordinates
+  // when the only thing we have is cell object (pointer or reference).
+  // So let's have it.
+  //
   Position Coordinates;
+
+  //
+  // Used in generation algorithms.
+  //
   bool Visited = false;
 };
 
@@ -87,12 +114,18 @@ class DGBase
 
     const std::vector<Rect>& GetEmptyRooms();
 
+    void TransformRooms(const TransformedRoomsWeights& weights);
+
     CharV2 MapRaw;
 
     //
     // Since we cannot specify shrine type inside text map array
     // during generation, we save all shrines into this map and
     // use it at level instantiation stage.
+    //
+    // NOTE: cannot replace with unordered_map
+    // because there is not hash function for Position.
+    // Compiler gives weird error during compilation of player.cpp though.
     //
     std::map<Position, ShrineType> ShrinesByPosition;
 
@@ -164,6 +197,9 @@ class DGBase
     Position _nonMarkedCell;
     Position _cornerPos;
 
+    //
+    // Must be sorted.
+    //
     std::map<int, std::vector<Position>> _areaPointsByMarker;
 };
 

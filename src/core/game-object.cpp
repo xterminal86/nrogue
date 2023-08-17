@@ -1419,7 +1419,7 @@ void GameObject::LevelUpFromHistory(int gainedLevel, bool positive)
 {
   auto& data = _levelUpHistory[gainedLevel];
 
-  const std::map<PlayerStats, Attribute&> mainAttrs =
+  const std::unordered_map<PlayerStats, Attribute&> mainAttrs =
   {
     { PlayerStats::STR, Attrs.Str },
     { PlayerStats::DEF, Attrs.Def },
@@ -1525,7 +1525,7 @@ bool GameObject::CanRaiseAttribute(Attribute& attr)
 
 // =============================================================================
 
-const std::map<uint64_t, std::vector<ItemBonusStruct>>& GameObject::GetActiveEffects()
+const std::unordered_map<uint64_t, std::vector<ItemBonusStruct>>& GameObject::GetActiveEffects()
 {
   return _activeEffects;
 }

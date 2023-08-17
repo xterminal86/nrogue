@@ -280,8 +280,8 @@ void RNGTests(std::stringstream& ss)
   ss << "  roll 1d100 'iterations' of times and check if result is less than i\n";
   ss << "\n";
 
-  std::map<int, int> results1RN;
-  std::map<int, int> results2RN;
+  std::unordered_map<int, int> results1RN;
+  std::unordered_map<int, int> results2RN;
 
   for (int i = 0; i < d100; i++)
   {
@@ -323,8 +323,8 @@ void TestWeightsMap(const std::vector<std::tuple<GameObjectType, int, std::strin
 {
   DebugLog("%s", __func__);
 
-  std::map<GameObjectType, int> toTest;
-  std::map<GameObjectType, std::string> stringNames;
+  std::unordered_map<GameObjectType, int> toTest;
+  std::unordered_map<GameObjectType, std::string> stringNames;
 
   size_t maxLength = 0;
   for (auto& i : testData)
@@ -418,7 +418,7 @@ void WeightedRandomTest(std::stringstream& ss)
 
   ss << "\nWeighted random test:\n\n";
 
-  std::map<GemType, int> gemsMap =
+  std::unordered_map<GemType, int> gemsMap =
   {
     { GemType::WORTHLESS_GLASS, 250 },
     { GemType::BLACK_OBSIDIAN,  150 },
@@ -455,7 +455,7 @@ void WeightedRandomTest(std::stringstream& ss)
     { GameObjectType::TROLL,   1, "Troll"  }
   };
 
-  std::map<GameObjectType, int> t =
+  std::unordered_map<GameObjectType, int> t =
   {
     { GameObjectType::BAT,    20 },
     { GameObjectType::SPIDER, 10 },
@@ -497,9 +497,9 @@ void LootDropTest(std::stringstream& ss)
 
   ss << "\nLoot drop test:\n\n";
 
-  std::map<ItemType, int> scores;
+  std::unordered_map<ItemType, int> scores;
 
-  std::map<ItemType, int> lootTable =
+  std::unordered_map<ItemType, int> lootTable =
   {
     { ItemType::FOOD,     4 },
     { ItemType::NOTHING, 20 }

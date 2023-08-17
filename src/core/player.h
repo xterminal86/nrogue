@@ -74,9 +74,9 @@ class Player : public GameObject
 
     bool IsStarving = false;
 
-    std::map<PlayerSkills, int> SkillLevelBySkill;
+    std::unordered_map<PlayerSkills, int> SkillLevelBySkill;
 
-    std::map<std::string, int> TotalKills;
+    std::unordered_map<std::string, int> TotalKills;
 
     PotentialField DistanceField;
 
@@ -124,7 +124,7 @@ class Player : public GameObject
 
     std::vector<std::string> GetPrettyLevelUpText();
 
-    std::map<int, PlayerClass> _classesMap =
+    std::unordered_map<int, PlayerClass> _classesMap =
     {
       { 0, PlayerClass::SOLDIER  },
       { 1, PlayerClass::THIEF    },
@@ -132,7 +132,7 @@ class Player : public GameObject
       { 3, PlayerClass::CUSTOM   }
     };
 
-    std::map<int, std::string> _classesName =
+    std::unordered_map<int, std::string> _classesName =
     {
       { 0, "Soldier"  },
       { 1, "Thief"    },

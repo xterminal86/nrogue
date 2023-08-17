@@ -2337,7 +2337,7 @@ GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
 
 // =============================================================================
 
-void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map<ItemBonusType, int>& bonusWeightByType)
+void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::unordered_map<ItemBonusType, int>& bonusWeightByType)
 {
   //
   // Certain items shouldn't have certain bonuses
@@ -2392,7 +2392,7 @@ void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::map
 
 void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne)
 {
-  std::map<ItemBonusType, int> bonusWeightByType =
+  std::unordered_map<ItemBonusType, int> bonusWeightByType =
   {
     { ItemBonusType::STR,             25 },
     { ItemBonusType::DEF,             25 },

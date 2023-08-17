@@ -50,9 +50,15 @@ int main(int argc, char* argv[])
     printf("[%i;%i] - [%i;%i] (%i)\n", i.X1, i.Y1, i.X2, i.Y2, i.Area());
   }
 
-  if (!emptyRooms.empty())
+  TransformedRoomsWeights weights =
   {
-  }
+    { TransformedRoom::EMPTY,    { 1, 0 } },
+    { TransformedRoom::TREASURY, { 5, 1 } },
+    { TransformedRoom::STORAGE,  { 5, 0 } },
+    { TransformedRoom::FLOODED,  { 5, 0 } },
+  };
+
+  lb.TransformRooms(weights);
 
   std::string mapRaw = lb.GetMapRawString();
 

@@ -25,7 +25,7 @@ class RepairState : public SelectItemStateBase
     ItemComponent* _repairKit;
     int _inventoryIndex = 0;
 
-    std::map<char, ItemComponent*> _itemRefByChar;
+    std::unordered_map<char, ItemComponent*> _itemRefByChar;
 
     void RepairItem(ItemComponent* itemToRepair);
 };

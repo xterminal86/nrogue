@@ -1026,6 +1026,8 @@ uint64_t Application::GetNewGlobalId()
 
 void Application::PrepareChars()
 {
+  _charByCharIndex.resize(128);
+
   for (int i = 0; i < 128; i++)
   {
     _charByCharIndex[i] = i;

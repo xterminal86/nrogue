@@ -790,21 +790,21 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
-  std::map<WeaponType, int> possibleWeapons =
+  std::unordered_map<WeaponType, int> possibleWeapons =
   {
     { WeaponType::DAGGER,       3 },
     { WeaponType::SHORT_SWORD,  2 },
     { WeaponType::ARMING_SWORD, 1 }
   };
 
-  std::map<ArmorType, int> possibleArmor =
+  std::unordered_map<ArmorType, int> possibleArmor =
   {
     { ArmorType::PADDING, 5 },
     { ArmorType::LEATHER, 3 },
     { ArmorType::SCALE,   1 }
   };
 
-  std::map<ItemQuality, int> possibleQuality =
+  std::unordered_map<ItemQuality, int> possibleQuality =
   {
     { ItemQuality::DAMAGED, 10 },
     { ItemQuality::FLAWED,   7 },

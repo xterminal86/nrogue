@@ -29,7 +29,11 @@ class PickupItemState : public SelectItemStateBase
 
     Items _itemsList;
 
+    //
+    // Will be sorted alphabetically for convenience.
+    //
     std::map<char, int> _itemsListIndexByChar;
+
     std::vector<std::string> _displayLines;
 };
 

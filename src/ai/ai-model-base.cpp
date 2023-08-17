@@ -55,8 +55,8 @@ void AIModelBase::ConstructAI()
 
   _scriptAsText = std::string();
 
-  std::map<const ScriptNode*, bool> scriptNodesChecked;
-  std::map<const ScriptNode*, Node*> behaviourNodesCreated;
+  std::unordered_map<const ScriptNode*, bool> scriptNodesChecked;
+  std::unordered_map<const ScriptNode*, Node*> behaviourNodesCreated;
 
   const ScriptNode* nodeData = nullptr;
   const ScriptNode* parentNodeData = nullptr;

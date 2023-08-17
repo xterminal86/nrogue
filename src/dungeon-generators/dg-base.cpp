@@ -819,6 +819,21 @@ const std::vector<Rect>& DGBase::GetEmptyRooms()
 
 // =============================================================================
 
+void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
+{
+  if (_emptyRooms.empty())
+  {
+    DebugLog("no empty rooms - nothing to transform!");
+    return;
+  }
+
+  for (auto& i : _emptyRooms)
+  {
+  }
+}
+
+// =============================================================================
+
 double DGBase::GetEmptyOverWallsRatio()
 {
   int empty = 0;
@@ -870,7 +885,7 @@ void DGBase::AddCellToProcess(const Position& from,
                               Direction dir,
                               std::stack<Position>& addTo)
 {
-  const std::map<Direction, Position> newPosByLookDir =
+  const std::unordered_map<Direction, Position> newPosByLookDir =
   {
     { Direction::WEST,  { from.X,     from.Y - 1 } },
     { Direction::EAST,  { from.X,     from.Y + 1 } },

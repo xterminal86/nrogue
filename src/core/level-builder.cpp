@@ -243,6 +243,16 @@ const std::vector<Rect>& LevelBuilder::GetEmptyRooms()
 
 // =============================================================================
 
+void LevelBuilder::TransformRooms(const TransformedRoomsWeights& weights)
+{
+  if (_generator)
+  {
+    _generator->TransformRooms(weights);
+  }
+}
+
+// =============================================================================
+
 void LevelBuilder::PrintCustomDebugStuff()
 {
   if (_generator)

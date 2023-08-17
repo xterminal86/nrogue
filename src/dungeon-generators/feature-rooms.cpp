@@ -280,27 +280,27 @@ bool FeatureRooms::CreateDiamondRoom(const Position& start,
   int mx = start.X;
   int my = start.Y;
 
-  std::map<RoomEdgeEnum, Position> firstStep =
+  std::unordered_map<RoomEdgeEnum, Position> firstStep =
   {
-    { RoomEdgeEnum::NORTH, { -1, 0 } },
-    { RoomEdgeEnum::EAST,  { 0, 1 } },
-    { RoomEdgeEnum::SOUTH, { 1, 0 } },
-    { RoomEdgeEnum::WEST,  { 0, -1 } }
+    { RoomEdgeEnum::NORTH, { -1,  0 } },
+    { RoomEdgeEnum::EAST,  {  0,  1 } },
+    { RoomEdgeEnum::SOUTH, {  1,  0 } },
+    { RoomEdgeEnum::WEST,  {  0, -1 } }
   };
 
-  std::map<RoomEdgeEnum, Position> secondStep =
+  std::unordered_map<RoomEdgeEnum, Position> secondStep =
   {
-    { RoomEdgeEnum::NORTH, { 0, -1 } },
-    { RoomEdgeEnum::EAST,  { -1, 0 } },
-    { RoomEdgeEnum::SOUTH, { 0, 1 } },
-    { RoomEdgeEnum::WEST,  { 1, 0 } }
+    { RoomEdgeEnum::NORTH, {  0, -1 } },
+    { RoomEdgeEnum::EAST,  { -1,  0 } },
+    { RoomEdgeEnum::SOUTH, {  0,  1 } },
+    { RoomEdgeEnum::WEST,  {  1,  0 } }
   };
 
-  std::map<RoomEdgeEnum, Position> offsetsByDir =
+  std::unordered_map<RoomEdgeEnum, Position> offsetsByDir =
   {
-    { RoomEdgeEnum::NORTH, { -1, 1 } },
-    { RoomEdgeEnum::EAST,  { 1, 1 } },
-    { RoomEdgeEnum::SOUTH, { 1, -1 } },
+    { RoomEdgeEnum::NORTH, { -1,  1 } },
+    { RoomEdgeEnum::EAST,  {  1,  1 } },
+    { RoomEdgeEnum::SOUTH, {  1, -1 } },
     { RoomEdgeEnum::WEST,  { -1, -1 } }
   };
 

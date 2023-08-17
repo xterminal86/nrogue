@@ -234,7 +234,7 @@ void BTSParser::FormTree(bool printDebug)
     DebugLog("tree formed:\n\n");
   }
 
-  std::map<ScriptNode*, bool> nodesCreatedMap;
+  std::unordered_map<ScriptNode*, bool> nodesCreatedMap;
 
   int indent = FindMaxIndent();
   while (indent != 0)

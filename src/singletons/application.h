@@ -110,9 +110,9 @@ class Application : public Singleton<Application>
     GameState* _currentState = nullptr;
     GameState* _previousState = nullptr;
 
-    std::map<GameStates, std::unique_ptr<GameState>> _gameStates;
+    std::unordered_map<GameStates, std::unique_ptr<GameState>> _gameStates;
 
-    std::map<std::string, std::string> _config;
+    std::unordered_map<std::string, std::string> _config;
 
     void ParseConfig();
     void SetConfig();
@@ -151,7 +151,7 @@ class Application : public Singleton<Application>
 
     StatInfo GetStatInfo(const std::string& attrName);
 
-    std::map<uint8_t, char> _charByCharIndex;
+    std::vector<char> _charByCharIndex;
 
     void PrepareChars();
 
@@ -169,7 +169,7 @@ class Application : public Singleton<Application>
       "STR", "DEF", "MAG", "RES", "SKL", "SPD"
     };
 
-    const std::map<std::string, Attribute&> _attrsByName =
+    const std::unordered_map<std::string, Attribute&> _attrsByName =
     {
       { "STR", PlayerInstance.Attrs.Str },
       { "DEF", PlayerInstance.Attrs.Def },

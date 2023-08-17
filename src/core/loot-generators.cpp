@@ -9,7 +9,7 @@ namespace LootGenerators
 {
   void Rat(GameObject* go)
   {
-    const std::map<ItemType, int> lootTable =
+    const std::unordered_map<ItemType, int> lootTable =
     {
       { ItemType::FOOD,     4 },
       { ItemType::NOTHING, 20 }
@@ -34,7 +34,7 @@ namespace LootGenerators
 
   void MadMiner(GameObject* go)
   {
-    const std::map<ItemType, int> lootTable =
+    const std::unordered_map<ItemType, int> lootTable =
     {
       { ItemType::FOOD,    15 },
       { ItemType::COINS,   15 },
@@ -47,7 +47,7 @@ namespace LootGenerators
     {
       case ItemType::FOOD:
       {
-        const std::map<FoodType, int> foodTable =
+        const std::unordered_map<FoodType, int> foodTable =
         {
           { FoodType::BREAD,  20 },
           { FoodType::CHEESE, 20 },

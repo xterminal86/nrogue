@@ -259,7 +259,7 @@ void BlobTiles::ExtendWalls(StringV& tile)
 
   int n = tile[0].length();
 
-  const std::map<Direction, P> indexOffsetsByDir =
+  const std::unordered_map<Direction, P> indexOffsetsByDir =
   {
     { Direction::EAST,  {  0,  1 } },
     { Direction::WEST,  {  0, -1 } },

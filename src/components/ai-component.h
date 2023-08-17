@@ -68,7 +68,7 @@ class AIComponent : public Component
     AIModelBase* CurrentModel = nullptr;
 
   private:
-    std::map<size_t, std::unique_ptr<AIModelBase>> _aiModels;
+    std::unordered_map<size_t, std::unique_ptr<AIModelBase>> _aiModels;
 };
 
 #endif // AICOMPONENT_H
