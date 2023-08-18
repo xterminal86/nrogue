@@ -3,6 +3,7 @@ set (TARGET_NAME nrogue)
 set (OBJECT_LIB_NAME ${TARGET_NAME}-objlib)
 set (OBJLIB_LINK_NAME $<TARGET_OBJECTS:${OBJECT_LIB_NAME}>)
 set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD_REQUIRED On)
 project (${TARGET_NAME})
 
 # ==============================================================================

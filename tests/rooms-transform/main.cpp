@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
     { TransformedRoom::EMPTY,    { 1, 0 } },
     { TransformedRoom::TREASURY, { 5, 1 } },
     { TransformedRoom::STORAGE,  { 5, 0 } },
-    { TransformedRoom::FLOODED,  { 5, 0 } },
+    { TransformedRoom::FLOODED,  { 5, 1 } },
   };
 
   lb.TransformRooms(weights);

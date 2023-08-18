@@ -1,3 +1,6 @@
+set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD_REQUIRED On)
+
 add_subdirectory(all)
 add_subdirectory(dg-tunneler)
 add_subdirectory(dg-tunneler-bt)

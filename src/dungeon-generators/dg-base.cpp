@@ -827,9 +827,26 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
     return;
   }
 
+  std::unordered_map<TransformedRoom, int> generatedSoFar;
+  std::unordered_map<TransformedRoom, int> roomWeightByType;
+
+  for (auto& kvp : weights)
+  {
+    const TransformedRoom& type = kvp.first;
+    const int& weight = kvp.second.first;
+
+    generatedSoFar[type]   = 0;
+    roomWeightByType[type] = weight;
+  }
+
   for (auto& i : _emptyRooms)
   {
   }
+
+  //
+  // Some cleanup just in case.
+  //
+  _emptyRooms.clear();
 }
 
 // =============================================================================
