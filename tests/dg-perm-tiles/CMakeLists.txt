@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 2.9)
 set (TARGET_NAME dg-perm-tiles)
 project (${TARGET_NAME})
 

@@ -833,7 +833,7 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
   for (auto& kvp : weights)
   {
     const TransformedRoom& type = kvp.first;
-    const int& weight = kvp.second.first;
+    const int& weight           = kvp.second.first;
 
     generatedSoFar[type]   = 0;
     roomWeightByType[type] = weight;

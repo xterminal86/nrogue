@@ -3,6 +3,10 @@
 
 #include <string>
 
+#ifdef __MINGW64__
+#include <stdint.h>
+#endif
+
 ///
 /// Helper struct to reduce the amount of writing when creating objects.
 ///

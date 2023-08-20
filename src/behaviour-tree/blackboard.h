@@ -4,6 +4,10 @@
 #include <string>
 #include <unordered_map>
 
+#ifdef __MINGW64__
+#include <stdint.h>
+#endif
+
 #include "singleton.h"
 
 class GameObject;

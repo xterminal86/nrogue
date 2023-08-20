@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 2.9)
 set (TARGET_NAME dg-recbt)
 project (${TARGET_NAME})
 

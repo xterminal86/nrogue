@@ -7,6 +7,10 @@
 #include <fstream>
 #include <algorithm>
 
+#ifdef __MINGW64__
+#include <stdint.h>
+#endif
+
 struct ScriptNode
 {
   int Indent;
