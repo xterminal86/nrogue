@@ -53,15 +53,20 @@ int main(int argc, char* argv[])
   TransformedRoomsWeights weights =
   {
     { TransformedRoom::EMPTY,     { 1, 0 } },
-    { TransformedRoom::TREASURY,  { 5, 2 } },
-    { TransformedRoom::STORAGE,   { 4, 0 } },
-    { TransformedRoom::FLOODED,   { 3, 0 } },
-    { TransformedRoom::CHESTROOM, { 2, 1 } },
+    { TransformedRoom::TREASURY,  { 20, 2 } },
+    //{ TransformedRoom::STORAGE,   { 1, 0 } },
+    //{ TransformedRoom::FLOODED,   { 1, 0 } },
+    //{ TransformedRoom::CHESTROOM, { 1, 1 } },
   };
+
+  std::string mapRaw = lb.GetMapRawString();
+
+  printf("Before\n");
+  printf("%s\n\n", mapRaw.data());
 
   lb.TransformRooms(weights);
 
-  std::string mapRaw = lb.GetMapRawString();
+  mapRaw = lb.GetMapRawString();
 
   printf("%s\n", mapRaw.data());
   printf("empty / total = %.2f\n", lb.GetEmptyPercent() * 100.0);

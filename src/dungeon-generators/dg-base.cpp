@@ -100,6 +100,13 @@ std::string DGBase::GetMapRawString()
 
 // =============================================================================
 
+const std::vector<std::vector<MapCell>>& DGBase::GeneratedMap()
+{
+  return _map;
+}
+
+// =============================================================================
+
 void DGBase::ForCustomDebugStuff()
 {
   //
@@ -724,7 +731,7 @@ bool DGBase::IsAreaEmpty(int x1, int y1, int x2, int y2)
   {
     for (int y = y1; y <= y2; y++)
     {
-      if (_map[x][y].Image != '.' || _map[x][y].ZoneMarker != -1)
+      if (_map[x][y].Image != '.' || _map[x][y].ZoneMarker != TransformedRoom::UNMARKED)
       {
         return false;
       }
@@ -839,7 +846,9 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
     roomWeightByType[type] = weight;
   }
 
-  for (auto& i : _emptyRooms)
+  std::shuffle(_emptyRooms.begin(), _emptyRooms.end(), RNG::Instance().Random);
+
+  for (auto& area : _emptyRooms)
   {
     auto res = Util::WeightedRandom(roomWeightByType);
 
@@ -849,7 +858,7 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
       continue;
     }
 
-    if (TransformArea(res.first, i))
+    if (TransformArea(res.first, area))
     {
       generatedSoFar[res.first]++;
     }
@@ -872,28 +881,41 @@ bool DGBase::TransformArea(TransformedRoom type, const Rect& area)
   switch (type)
   {
     case TransformedRoom::EMPTY:
-    {
-      for (int x = area.X1; x <= area.X2; x++)
-      {
-        for (int y = area.Y1; y <= area.Y2; y++)
-        {
-          _map[x][y].ZoneMarker = (int)type;
-        }
-      }
-    }
-    break;
+      MarkAreaEmpty(area);
+      break;
 
     case TransformedRoom::TREASURY:
     {
-      int counter = 0;
-      for (int x = area.X1; x <= area.X2; x++)
+      //
+      // WxH where W, H - [4 ; 7]
+      //
+      if (area.Width()  >= 4 && area.Width()  <= 7
+       && area.Height() >= 4 && area.Height() <= 7)
       {
-        for (int y = area.Y1; y <= area.Y2; y++)
+        int counter = 0;
+        for (int x = area.X1; x <= area.X2; x++)
         {
-          _map[x][y].Image = (counter % 2 == 0) ? '1' : '2';
-          _map[x][y].ZoneMarker = (int)type;
-          counter++;
+          for (int y = area.Y1; y <= area.Y2; y++)
+          {
+            _map[x][y].Image = (counter % 2 == 0) ? '1' : '2';
+            _map[x][y].ZoneMarker = type;
+
+            if (Util::Rolld100(40))
+            {
+              _map[x][y].ObjectHere = ItemType::COINS;
+            }
+            else
+            {
+              _map[x][y].ObjectHere = GameObjectType::NONE;
+            }
+
+            counter++;
+          }
         }
+      }
+      else
+      {
+        success = false;
       }
     }
     break;
@@ -905,6 +927,19 @@ bool DGBase::TransformArea(TransformedRoom type, const Rect& area)
   }
 
   return success;
+}
+
+// =============================================================================
+
+void DGBase::MarkAreaEmpty(const Rect& area)
+{
+  for (int x = area.X1; x <= area.X2; x++)
+  {
+    for (int y = area.Y1; y <= area.Y2; y++)
+    {
+      _map[x][y].ZoneMarker = TransformedRoom::EMPTY;
+    }
+  }
 }
 
 // =============================================================================

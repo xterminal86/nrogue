@@ -1,8 +1,6 @@
 #ifndef LEVELBUILDER_H
 #define LEVELBUILDER_H
 
-#include <stack>
-#include <queue>
 #include <memory>
 
 #include "dg-base.h"
@@ -70,6 +68,8 @@ class LevelBuilder
 
     void PrintCustomDebugStuff();
 
+    const std::vector<std::vector<MapCell>>& GeneratedMap();
+
     CharV2 MapRaw;
 
     //
@@ -83,6 +83,8 @@ class LevelBuilder
     MapCell _cellInfo;
 
     std::vector<Rect> _emptyRoomsStub;
+
+    std::vector<std::vector<MapCell>> _emptyGeneratedMapStub;
 };
 
 #endif // LEVELBUILDER_H

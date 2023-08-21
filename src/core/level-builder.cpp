@@ -210,7 +210,7 @@ std::map<Position, ShrineType>& LevelBuilder::ShrinesByPosition()
 
 void LevelBuilder::UpdateMapRawFromCurrentGenerator()
 {
-  if (_generator != nullptr)
+  if (_generator)
   {
     MapRaw = _generator->MapRaw;
   }
@@ -220,9 +220,7 @@ void LevelBuilder::UpdateMapRawFromCurrentGenerator()
 
 std::string LevelBuilder::GetMapRawString()
 {
-  return (_generator != nullptr)
-      ? _generator->GetMapRawString()
-      : "_generator is null\n";
+  return _generator ? _generator->GetMapRawString() : "_generator is null\n";
 }
 
 // =============================================================================
@@ -263,6 +261,13 @@ void LevelBuilder::TransformRooms(const TransformedRoomsWeights& weights)
 
 // =============================================================================
 
+const std::vector<std::vector<MapCell>>& LevelBuilder::GeneratedMap()
+{
+  return _generator ? _generator->GeneratedMap() : _emptyGeneratedMapStub;
+}
+
+// =============================================================================
+
 void LevelBuilder::PrintCustomDebugStuff()
 {
   if (_generator)
@@ -275,16 +280,12 @@ void LevelBuilder::PrintCustomDebugStuff()
 
 double LevelBuilder::GetEmptyPercent()
 {
-  return (_generator != nullptr)
-      ? _generator->GetEmptyPercent()
-      : 0.0;
+  return _generator ? _generator->GetEmptyPercent() : 0.0;
 }
 
 // =============================================================================
 
 double LevelBuilder::GetEmptyOverWallsRatio()
 {
-  return (_generator.get() != nullptr)
-      ? _generator->GetEmptyPercent()
-      : 0.0;
+  return _generator ? _generator->GetEmptyPercent() : 0.0;
 }

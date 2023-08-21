@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <string>
 #include <stack>
+#include <variant>
 
 #include "constants.h"
 #include "position.h"
@@ -32,7 +33,8 @@ enum class FeatureRoomType
 //
 enum class TransformedRoom
 {
-  EMPTY = 0,
+  UNMARKED = -1,
+  EMPTY,
   TREASURY,
   STORAGE,
   FLOODED,
@@ -75,7 +77,7 @@ struct MapCell
   //
   // For marking cell to be part of a region during rooms transformation.
   //
-  int ZoneMarker = -1;
+  TransformedRoom ZoneMarker = TransformedRoom::UNMARKED;
 
   //
   // Tile visual.
@@ -85,7 +87,7 @@ struct MapCell
   //
   // Something to create on this tile.
   //
-  GameObjectType ObjectHere = GameObjectType::NONE;
+  std::variant<GameObjectType, ItemType> ObjectHere;
 
   //
   // Doesn't seem to be used now, but may come in handy at some point
@@ -139,6 +141,8 @@ class DGBase
     std::map<Position, ShrineType> ShrinesByPosition;
 
     std::string GetMapRawString();
+
+    const std::vector<std::vector<MapCell>>& GeneratedMap();
 
     virtual void ForCustomDebugStuff();
 
@@ -204,6 +208,8 @@ class DGBase
     void ConnectPoints(const Position& p1, const Position& p2);
 
     bool TransformArea(TransformedRoom type, const Rect& area);
+
+    void MarkAreaEmpty(const Rect& area);
 
     Position _nonMarkedCell;
     Position _cornerPos;

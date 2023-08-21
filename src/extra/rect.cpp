@@ -34,26 +34,26 @@ const Position& Rect::Dimensions()
 
 // =============================================================================
 
-int Rect::Perimeter()
+int Rect::Perimeter() const
 {
   return 2 * ( Width() + Height() );
 }
 
 // =============================================================================
 
-int Rect::Area()
+int Rect::Area() const
 {
   return Width() * Height();
 }
 
 // =============================================================================
 
-int Rect::Width()
+int Rect::Width() const
 {
   return (X2 - X1 + 1);
 }
 
-int Rect::Height()
+int Rect::Height() const
 {
   return (Y2 - Y1 + 1);
 }

@@ -24,10 +24,10 @@ class Rect
     Rect(const Position& p1, const Position& p2);
 
     const Position& Dimensions();
-    int Perimeter();
-    int Area();
-    int Width();
-    int Height();
+    int Perimeter() const;
+    int Area() const;
+    int Width() const;
+    int Height() const;
 
     std::vector<Position> GetBoundaryElements(bool excludeCorners = false);
 

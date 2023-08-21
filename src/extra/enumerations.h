@@ -113,6 +113,7 @@ enum class GameObjectType
   CHASM,
   PICKAXEABLE,
   TRAP,
+  CONTAINER,
   // ---------------------------------------------------------------------------
   RAT,
   BAT,
