@@ -53,7 +53,7 @@ std::string DGBase::GetMapRawString()
   int coordIndex = 0;
   for (int y = 0; y < _mapSize.Y; y++)
   {
-    result += coords[coordIndex];
+    result.append(1, coords[coordIndex]);
     coordIndex++;
 
     coordIndex = coordIndex % coords.length();
@@ -69,10 +69,10 @@ std::string DGBase::GetMapRawString()
 
     for (int y = 0; y < _mapSize.Y; y++)
     {
-      result += MapRaw[x][y];
+      result.append(1, MapRaw[x][y]);
     }
 
-    result += coords[coordIndex];
+    result.append(1, coords[coordIndex]);
 
     result += "\n";
 
@@ -87,7 +87,7 @@ std::string DGBase::GetMapRawString()
 
   for (int y = 0; y < _mapSize.Y; y++)
   {
-    result += coords[coordIndex];
+    result.append(1, coords[coordIndex]);
     coordIndex++;
 
     coordIndex = coordIndex % coords.length();
@@ -841,12 +841,70 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
 
   for (auto& i : _emptyRooms)
   {
+    auto res = Util::WeightedRandom(roomWeightByType);
+
+    int maxAllowed = weights.at(res.first).second;
+    if (maxAllowed > 0 && generatedSoFar[res.first] >= maxAllowed)
+    {
+      continue;
+    }
+
+    if (TransformArea(res.first, i))
+    {
+      generatedSoFar[res.first]++;
+    }
   }
 
   //
   // Some cleanup just in case.
   //
   _emptyRooms.clear();
+
+  FillMapRaw();
+}
+
+// =============================================================================
+
+bool DGBase::TransformArea(TransformedRoom type, const Rect& area)
+{
+  bool success = true;
+
+  switch (type)
+  {
+    case TransformedRoom::EMPTY:
+    {
+      for (int x = area.X1; x <= area.X2; x++)
+      {
+        for (int y = area.Y1; y <= area.Y2; y++)
+        {
+          _map[x][y].ZoneMarker = (int)type;
+        }
+      }
+    }
+    break;
+
+    case TransformedRoom::TREASURY:
+    {
+      int counter = 0;
+      for (int x = area.X1; x <= area.X2; x++)
+      {
+        for (int y = area.Y1; y <= area.Y2; y++)
+        {
+          _map[x][y].Image = (counter % 2 == 0) ? '1' : '2';
+          _map[x][y].ZoneMarker = (int)type;
+          counter++;
+        }
+      }
+    }
+    break;
+
+    default:
+      DebugLog("Unknown room type - %d", (int)type);
+      success = false;
+      break;
+  }
+
+  return success;
 }
 
 // =============================================================================

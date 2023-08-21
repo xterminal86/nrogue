@@ -35,7 +35,8 @@ enum class TransformedRoom
   EMPTY = 0,
   TREASURY,
   STORAGE,
-  FLOODED
+  FLOODED,
+  CHESTROOM
 };
 
 enum class CornerType
@@ -72,11 +73,19 @@ struct MapCell
   int AreaMarker = -1;
 
   //
-  // For storing additional meta information for a cell.
+  // For marking cell to be part of a region during rooms transformation.
   //
   int ZoneMarker = -1;
 
+  //
+  // Tile visual.
+  //
   char Image = '#';
+
+  //
+  // Something to create on this tile.
+  //
+  GameObjectType ObjectHere = GameObjectType::NONE;
 
   //
   // Doesn't seem to be used now, but may come in handy at some point
@@ -193,6 +202,8 @@ class DGBase
     Position* FindNonMarkedCell();
 
     void ConnectPoints(const Position& p1, const Position& p2);
+
+    bool TransformArea(TransformedRoom type, const Rect& area);
 
     Position _nonMarkedCell;
     Position _cornerPos;

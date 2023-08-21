@@ -208,6 +208,16 @@ std::map<Position, ShrineType>& LevelBuilder::ShrinesByPosition()
 
 // =============================================================================
 
+void LevelBuilder::UpdateMapRawFromCurrentGenerator()
+{
+  if (_generator != nullptr)
+  {
+    MapRaw = _generator->MapRaw;
+  }
+}
+
+// =============================================================================
+
 std::string LevelBuilder::GetMapRawString()
 {
   return (_generator != nullptr)

@@ -196,8 +196,8 @@ void BSPRooms::Traverse(BSPNode* node, int depth)
       // [X + 1, Y + 1] to [X - 1; Y - 1]
       // + 1 at the end because RandomRange traditionally excludes last number.
       //
-      int roomW = RNG::Instance().RandomRange(4, roomArea.Dimensions().X + 1);
-      int roomH = RNG::Instance().RandomRange(4, roomArea.Dimensions().Y + 1);
+      int roomW = RNG::Instance().RandomRange(4, roomArea.Dimensions().X);
+      int roomH = RNG::Instance().RandomRange(4, roomArea.Dimensions().Y);
 
       Position newEnd =
       {

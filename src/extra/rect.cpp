@@ -28,7 +28,7 @@ Rect::Rect(int x1, int y1, int x2, int y2)
 
 const Position& Rect::Dimensions()
 {
-  _dim.Set(Y2 - Y1, X2 - X1);
+  _dim.Set(Y2 - Y1 + 1, X2 - X1 + 1);
   return _dim;
 }
 
@@ -36,26 +36,26 @@ const Position& Rect::Dimensions()
 
 int Rect::Perimeter()
 {
-  return 2 * ( (X2 - X1) + (Y2 - Y1) );
+  return 2 * ( Width() + Height() );
 }
 
 // =============================================================================
 
 int Rect::Area()
 {
-  return (X2 - X1) * (Y2 - Y1);
+  return Width() * Height();
 }
 
 // =============================================================================
 
 int Rect::Width()
 {
-  return (X2 - X1);
+  return (X2 - X1 + 1);
 }
 
 int Rect::Height()
 {
-  return (Y2 - Y2);
+  return (Y2 - Y1 + 1);
 }
 
 // =============================================================================

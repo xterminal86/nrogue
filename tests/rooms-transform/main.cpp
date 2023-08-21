@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
   }
 
   RNG::Instance().Init();
-  RNG::Instance().SetSeed(1);
+  //RNG::Instance().SetSeed(1);
 
   Position mapSize;
   Position splitRatio;
@@ -47,15 +47,16 @@ int main(int argc, char* argv[])
 
   for (auto& i : emptyRooms)
   {
-    printf("[%i;%i] - [%i;%i] (%i)\n", i.X1, i.Y1, i.X2, i.Y2, i.Area());
+    printf("[%d;%d] - [%d;%d] (%d)\n", i.X1, i.Y1, i.X2, i.Y2, i.Area());
   }
 
   TransformedRoomsWeights weights =
   {
-    { TransformedRoom::EMPTY,    { 1, 0 } },
-    { TransformedRoom::TREASURY, { 5, 1 } },
-    { TransformedRoom::STORAGE,  { 5, 0 } },
-    { TransformedRoom::FLOODED,  { 5, 1 } },
+    { TransformedRoom::EMPTY,     { 1, 0 } },
+    { TransformedRoom::TREASURY,  { 5, 2 } },
+    { TransformedRoom::STORAGE,   { 4, 0 } },
+    { TransformedRoom::FLOODED,   { 3, 0 } },
+    { TransformedRoom::CHESTROOM, { 2, 1 } },
   };
 
   lb.TransformRooms(weights);

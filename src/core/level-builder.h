@@ -59,6 +59,8 @@ class LevelBuilder
     double GetEmptyPercent();
     double GetEmptyOverWallsRatio();
 
+    void UpdateMapRawFromCurrentGenerator();
+
     std::string GetMapRawString();
 
     MapCell* GetMapCell(int x, int y);
