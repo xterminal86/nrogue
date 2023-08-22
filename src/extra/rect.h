@@ -2,6 +2,7 @@
 #define RECT_H
 
 #include <vector>
+#include <string>
 
 #include "position.h"
 
@@ -28,6 +29,8 @@ class Rect
     int Area() const;
     int Width() const;
     int Height() const;
+
+    std::string ToString() const;
 
     std::vector<Position> GetBoundaryElements(bool excludeCorners = false);
 

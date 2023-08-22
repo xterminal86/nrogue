@@ -14,7 +14,12 @@ int main(int argc, char* argv[])
   }
 
   RNG::Instance().Init();
-  //RNG::Instance().SetSeed(1);
+  //RNG::Instance().SetSeed(1692708011872159643);
+  //RNG::Instance().SetSeed(1692710624278623825);
+  //RNG::Instance().SetSeed(1692729112495450837);
+  //RNG::Instance().SetSeed(1692729726453276167);
+
+  printf("seed is %lu\n", RNG::Instance().Seed);
 
   Position mapSize;
   Position splitRatio;
@@ -47,26 +52,22 @@ int main(int argc, char* argv[])
 
   for (auto& i : emptyRooms)
   {
-    printf("[%d;%d] - [%d;%d] (%d)\n", i.X1, i.Y1, i.X2, i.Y2, i.Area());
+    printf("[%2d;%2d] - [%2d;%2d] (%4d) %5d x %-5d\n",
+           i.X1, i.Y1, i.X2, i.Y2, i.Area(), i.Width(), i.Height());
   }
 
   TransformedRoomsWeights weights =
   {
     { TransformedRoom::EMPTY,     { 1, 0 } },
-    { TransformedRoom::TREASURY,  { 20, 2 } },
+    { TransformedRoom::TREASURY,  { 2, 2 } },
     //{ TransformedRoom::STORAGE,   { 1, 0 } },
     //{ TransformedRoom::FLOODED,   { 1, 0 } },
     //{ TransformedRoom::CHESTROOM, { 1, 1 } },
   };
 
-  std::string mapRaw = lb.GetMapRawString();
-
-  printf("Before\n");
-  printf("%s\n\n", mapRaw.data());
-
   lb.TransformRooms(weights);
 
-  mapRaw = lb.GetMapRawString();
+  std::string mapRaw = lb.GetMapRawString();
 
   printf("%s\n", mapRaw.data());
   printf("empty / total = %.2f\n", lb.GetEmptyPercent() * 100.0);

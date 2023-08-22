@@ -597,6 +597,8 @@ MapCell* DGBase::GetCell(int x, int y)
 
 bool DGBase::IsCorner(int x, int y, CornerType cornerType)
 {
+  bool res = false;
+
   switch (cornerType)
   {
     case CornerType::UL:
@@ -605,10 +607,10 @@ bool DGBase::IsCorner(int x, int y, CornerType cornerType)
       // #?
       // ?.
       //
-      return (_map[x][y].Image == '#'
-            && _map[x + 1][y].Image != '.'
-            && _map[x][y + 1].Image != '.'
-            && _map[x + 1][y + 1].Image == '.');
+      res = (_map[x][y].Image == '#'
+          && _map[x + 1][y].Image != '.'
+          && _map[x][y + 1].Image != '.'
+          && _map[x + 1][y + 1].Image == '.');
     }
     break;
 
@@ -618,10 +620,10 @@ bool DGBase::IsCorner(int x, int y, CornerType cornerType)
       // ?#
       // .?
       //
-      return (_map[x][y].Image == '#'
-            && _map[x + 1][y].Image != '.'
-            && _map[x][y - 1].Image != '.'
-            && _map[x + 1][y - 1].Image == '.');
+      res = (_map[x][y].Image == '#'
+          && _map[x + 1][y].Image != '.'
+          && _map[x][y - 1].Image != '.'
+          && _map[x + 1][y - 1].Image == '.');
     }
     break;
 
@@ -631,10 +633,10 @@ bool DGBase::IsCorner(int x, int y, CornerType cornerType)
       // ?.
       // #?
       //
-      return (_map[x][y].Image == '#'
-            && _map[x - 1][y].Image != '.'
-            && _map[x][y + 1].Image != '.'
-            && _map[x - 1][y + 1].Image == '.');
+      res = (_map[x][y].Image == '#'
+          && _map[x - 1][y].Image != '.'
+          && _map[x][y + 1].Image != '.'
+          && _map[x - 1][y + 1].Image == '.');
     }
     break;
 
@@ -644,21 +646,26 @@ bool DGBase::IsCorner(int x, int y, CornerType cornerType)
       // .?
       // ?#
       //
-      return (_map[x][y].Image == '#'
-            && _map[x - 1][y].Image != '.'
-            && _map[x][y - 1].Image != '.'
-            && _map[x - 1][y - 1].Image == '.');
+      res = (_map[x][y].Image == '#'
+          && _map[x - 1][y].Image != '.'
+          && _map[x][y - 1].Image != '.'
+          && _map[x - 1][y - 1].Image == '.');
     }
     break;
   }
 
-  return false;
+  return res;
 }
 
 // =============================================================================
 
 Position* DGBase::FindCorner(int x, int y, CornerType cornerToFind)
 {
+  auto IsWallOk = [this](int x, int y)
+  {
+    return (_map[x][y].Image == '#' || _map[x][y].Image == '+');
+  };
+
   Position* res = nullptr;
 
   switch (cornerToFind)
@@ -667,6 +674,11 @@ Position* DGBase::FindCorner(int x, int y, CornerType cornerToFind)
     {
       for (int i = y; i < _mapSize.Y; i++)
       {
+        if (!IsWallOk(x, i))
+        {
+          break;
+        }
+
         if (IsCorner(x, i, CornerType::UR))
         {
           _cornerPos = { x, i };
@@ -681,6 +693,11 @@ Position* DGBase::FindCorner(int x, int y, CornerType cornerToFind)
     {
       for (int i = x; i < _mapSize.X; i++)
       {
+        if (!IsWallOk(i, y))
+        {
+          break;
+        }
+
         if (IsCorner(i, y, CornerType::DR))
         {
           _cornerPos = { i, y };
@@ -695,6 +712,11 @@ Position* DGBase::FindCorner(int x, int y, CornerType cornerToFind)
     {
       for (int i = y; i >= 0; i--)
       {
+        if (!IsWallOk(x, i))
+        {
+          break;
+        }
+
         if (IsCorner(x, i, CornerType::DL))
         {
           _cornerPos = { x, i };
@@ -709,6 +731,11 @@ Position* DGBase::FindCorner(int x, int y, CornerType cornerToFind)
     {
       for (int i = x; i >= 0; i--)
       {
+        if (!IsWallOk(i, y))
+        {
+          break;
+        }
+
         if (IsCorner(i, y, CornerType::UL))
         {
           _cornerPos = { i, y };
@@ -789,29 +816,35 @@ const std::vector<Rect>& DGBase::GetEmptyRooms()
             p = FindCorner(dr.X, dr.Y - 1, CornerType::DL);
             if (p != nullptr && p->Y == y)
             {
-              if (IsAreaEmpty(x + 1, y + 1, dr.X - 1, dr.Y - 1))
+              Position dl = *p;
+
+              p = FindCorner(dl.X - 1, dl.Y, CornerType::UL);
+              if (p != nullptr)
               {
-                //
-                // Do not count corridors as empty rooms, i.e.
-                //
-                //          ###
-                // #####    #.#
-                // #...# or #.#
-                // #####    #.#
-                //          ###
-                //
-                bool notACorridor = ( (dr.X - 1) - (x + 1) > 1
-                                   && (dr.Y - 1) - (y + 1) > 1 );
-                if (notACorridor)
+                if (IsAreaEmpty(x + 1, y + 1, dr.X - 1, dr.Y - 1))
                 {
-                  Rect r;
+                  //
+                  // Do not count corridors as empty rooms, i.e.
+                  //
+                  //          ###
+                  // #####    #.#
+                  // #...# or #.#
+                  // #####    #.#
+                  //          ###
+                  //
+                  bool notACorridor = ( (dr.X - 1) - (x + 1) > 1
+                                     && (dr.Y - 1) - (y + 1) > 1 );
+                  if (notACorridor)
+                  {
+                    Rect r;
 
-                  r.X1 = x + 1;
-                  r.Y1 = y + 1;
-                  r.X2 = dr.X - 1;
-                  r.Y2 = dr.Y - 1;
+                    r.X1 = x + 1;
+                    r.Y1 = y + 1;
+                    r.X2 = dr.X - 1;
+                    r.Y2 = dr.Y - 1;
 
-                  _emptyRooms.push_back(r);
+                    _emptyRooms.push_back(r);
+                  }
                 }
               }
             }
@@ -848,17 +881,32 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
 
   std::shuffle(_emptyRooms.begin(), _emptyRooms.end(), RNG::Instance().Random);
 
-  for (auto& area : _emptyRooms)
+  for (size_t i = 0; i < _emptyRooms.size(); i++)
   {
-    auto res = Util::WeightedRandom(roomWeightByType);
-
-    int maxAllowed = weights.at(res.first).second;
-    if (maxAllowed > 0 && generatedSoFar[res.first] >= maxAllowed)
+    //
+    // Some rooms may have size requirements, so before trying to place them
+    // at the spot of this index, we'll check every available rooms
+    // and then pick one at random, thus marking that zone.
+    // The zone itself may be somewhere later in iteration cycle.
+    //
+    DebugLog("Trying %s", _emptyRooms[i].ToString().c_str());
+    if (_map[_emptyRooms[i].X1][_emptyRooms[i].Y1].ZoneMarker != TransformedRoom::UNMARKED)
     {
       continue;
     }
 
-    if (TransformArea(res.first, area))
+    auto res = Util::WeightedRandom(roomWeightByType);
+
+    DebugLog("got %d", (int)res.first);
+
+    int maxAllowed = weights.at(res.first).second;
+    if (maxAllowed > 0 && generatedSoFar[res.first] >= maxAllowed)
+    {
+      DebugLog("  current room type limit reached - skipping");
+      continue;
+    }
+
+    if (TransformArea(res.first, i))
     {
       generatedSoFar[res.first]++;
     }
@@ -874,9 +922,11 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
 
 // =============================================================================
 
-bool DGBase::TransformArea(TransformedRoom type, const Rect& area)
+bool DGBase::TransformArea(TransformedRoom type, size_t emptyRoomIndex)
 {
   bool success = true;
+
+  const Rect& area = _emptyRooms[emptyRoomIndex];
 
   switch (type)
   {
@@ -886,36 +936,31 @@ bool DGBase::TransformArea(TransformedRoom type, const Rect& area)
 
     case TransformedRoom::TREASURY:
     {
-      //
-      // WxH where W, H - [4 ; 7]
-      //
-      if (area.Width()  >= 4 && area.Width()  <= 7
-       && area.Height() >= 4 && area.Height() <= 7)
+      DebugLog("trying to place TREASURY at %s", area.ToString().c_str());
+
+      const int minSize = 5;
+      const int maxSize = 9;
+
+      if (DoesAreaFit(area, minSize, maxSize))
       {
-        int counter = 0;
-        for (int x = area.X1; x <= area.X2; x++)
-        {
-          for (int y = area.Y1; y <= area.Y2; y++)
-          {
-            _map[x][y].Image = (counter % 2 == 0) ? '1' : '2';
-            _map[x][y].ZoneMarker = type;
-
-            if (Util::Rolld100(40))
-            {
-              _map[x][y].ObjectHere = ItemType::COINS;
-            }
-            else
-            {
-              _map[x][y].ObjectHere = GameObjectType::NONE;
-            }
-
-            counter++;
-          }
-        }
+        PlaceTreasury(area);
+        DebugLog("OK");
       }
       else
       {
-        success = false;
+        auto candidates = TryToFindSuitableRooms(minSize, maxSize, emptyRoomIndex);
+        if (!candidates.empty())
+        {
+          int index = RNG::Instance().RandomRange(0, candidates.size());
+          size_t ri = candidates[index];
+          DebugLog("Placing at %s", _emptyRooms[ri].ToString().c_str());
+          PlaceTreasury(_emptyRooms[ri]);
+        }
+        else
+        {
+          DebugLog("requirements failed - skipping");
+          success = false;
+        }
       }
     }
     break;
@@ -931,6 +976,73 @@ bool DGBase::TransformArea(TransformedRoom type, const Rect& area)
 
 // =============================================================================
 
+bool DGBase::DoesAreaFit(const Rect& area, int minSize, int maxSize)
+{
+  return (area.Width()  >= minSize && area.Width()  <= maxSize
+       && area.Height() >= minSize && area.Height() <= maxSize);
+}
+
+// =============================================================================
+
+std::vector<size_t> DGBase::TryToFindSuitableRooms(int minSize, int maxSize,
+                                                   size_t skipRoomIndex)
+{
+  std::vector<size_t> res;
+
+  DebugLog("  trying to find suitable rooms for [%d ; %d]", minSize, maxSize);
+
+  for (size_t i = 0; i < _emptyRooms.size(); i++)
+  {
+    if (i == skipRoomIndex)
+    {
+      continue;
+    }
+
+    const Rect& area = _emptyRooms[i];
+
+    //
+    // Check if room candidate satisfies size requirements and was not already
+    // transformed by somebody else.
+    //
+    bool isNotMarked = (_map[area.X1][area.Y1].ZoneMarker == TransformedRoom::UNMARKED);
+    if (DoesAreaFit(area, minSize, maxSize) && isNotMarked)
+    {
+      DebugLog("  found room %s", _emptyRooms[i].ToString().c_str());
+      res.push_back(i);
+    }
+  }
+
+  return res;
+}
+
+// =============================================================================
+
+void DGBase::PlaceTreasury(const Rect& area)
+{
+  int counter = 0;
+  for (int x = area.X1; x <= area.X2; x++)
+  {
+    for (int y = area.Y1; y <= area.Y2; y++)
+    {
+      _map[x][y].Image = (counter % 2 == 0) ? '1' : '2';
+      _map[x][y].ZoneMarker = TransformedRoom::TREASURY;
+
+      if (Util::Rolld100(40))
+      {
+        _map[x][y].ObjectHere = ItemType::COINS;
+      }
+      else
+      {
+        _map[x][y].ObjectHere = GameObjectType::NONE;
+      }
+
+      counter++;
+    }
+  }
+}
+
+// =============================================================================
+
 void DGBase::MarkAreaEmpty(const Rect& area)
 {
   for (int x = area.X1; x <= area.X2; x++)
@@ -938,6 +1050,19 @@ void DGBase::MarkAreaEmpty(const Rect& area)
     for (int y = area.Y1; y <= area.Y2; y++)
     {
       _map[x][y].ZoneMarker = TransformedRoom::EMPTY;
+    }
+  }
+}
+
+// =============================================================================
+
+void DGBase::MarkAreaDebug(const Rect& area, char c)
+{
+  for (int x = area.X1; x <= area.X2; x++)
+  {
+    for (int y = area.Y1; y <= area.Y2; y++)
+    {
+      _map[x][y].Image = c;
     }
   }
 }

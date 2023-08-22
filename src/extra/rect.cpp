@@ -60,6 +60,18 @@ int Rect::Height() const
 
 // =============================================================================
 
+std::string Rect::ToString() const
+{
+  std::stringstream ss;
+
+  ss << "[" << X1 << " ; " << Y1 << "] - [" << X2 << " ; " << Y2 << "] "
+     << "W = " << Width() << " H = " << Height();
+
+  return ss.str();
+}
+
+// =============================================================================
+
 std::vector<Position> Rect::GetBoundaryElements(bool excludeCorners)
 {
   std::vector<Position> res;

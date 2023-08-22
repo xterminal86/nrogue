@@ -34,12 +34,15 @@ void BSPRooms::Generate(const Position& mapSize,
   int depth = 0;
   Traverse(&root, depth);
 
-  for (size_t i = 0; i < _connectionPoints.size() - 1; i++)
+  if (!_connectionPoints.empty())
   {
-    ConnectPoints(_connectionPoints[i], _connectionPoints[i + 1]);
-  }
+    for (size_t i = 0; i < _connectionPoints.size() - 1; i++)
+    {
+      ConnectPoints(_connectionPoints[i], _connectionPoints[i + 1]);
+    }
 
-  PlaceDoors();
+    PlaceDoors();
+  }
 
   FillMapRaw();
 }

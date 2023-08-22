@@ -38,7 +38,9 @@ enum class TransformedRoom
   TREASURY,
   STORAGE,
   FLOODED,
-  CHESTROOM
+  CHESTROOM,
+  GRAVEYARD,
+  LIBRARY
 };
 
 enum class CornerType
@@ -207,12 +209,19 @@ class DGBase
 
     void ConnectPoints(const Position& p1, const Position& p2);
 
-    bool TransformArea(TransformedRoom type, const Rect& area);
+    bool TransformArea(TransformedRoom type, size_t emptyRoomIndex);
+    bool DoesAreaFit(const Rect& area, int minSize, int maxSize);
 
     void MarkAreaEmpty(const Rect& area);
+    void MarkAreaDebug(const Rect& area, char c);
+
+    void PlaceTreasury(const Rect& area);
 
     Position _nonMarkedCell;
     Position _cornerPos;
+
+    std::vector<size_t> TryToFindSuitableRooms(int minSize, int maxSize,
+                                               size_t skipRoomIndex);
 
     //
     // Must be sorted.
