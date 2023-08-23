@@ -62,12 +62,8 @@ int Rect::Height() const
 
 std::string Rect::ToString() const
 {
-  std::stringstream ss;
-
-  ss << "[" << X1 << " ; " << Y1 << "] - [" << X2 << " ; " << Y2 << "] "
-     << "W = " << Width() << " H = " << Height();
-
-  return ss.str();
+  return Util::StringFormat("[%3d ; %-3d] - [%3d ; %-3d] %2d x %-2d",
+                            X1, Y1, X2, Y2, Width(), Height());
 }
 
 // =============================================================================
