@@ -18,6 +18,15 @@ int main(int argc, char* argv[])
   //RNG::Instance().SetSeed(1692710624278623825);
   //RNG::Instance().SetSeed(1692729112495450837);
   //RNG::Instance().SetSeed(1692729726453276167);
+  //RNG::Instance().SetSeed(1692903483318007350);
+  //RNG::Instance().SetSeed(1692903870204678915);
+  //RNG::Instance().SetSeed(1692904310499041332);
+  //RNG::Instance().SetSeed(1692970517326539720);
+  //RNG::Instance().SetSeed(1692973124684611547);
+  //RNG::Instance().SetSeed(1692974725102378573);
+  //RNG::Instance().SetSeed(1692976718046812796);
+  //RNG::Instance().SetSeed(1692977200693175939);
+  //RNG::Instance().SetSeed(1692978491065214259);
 
   printf("seed is %lu\n", RNG::Instance().Seed);
 
@@ -58,11 +67,10 @@ int main(int argc, char* argv[])
 
   TransformedRoomsWeights weights =
   {
-    { TransformedRoom::EMPTY,     { 1, 0 } },
-    { TransformedRoom::TREASURY,  { 2, 2 } },
-    //{ TransformedRoom::STORAGE,   { 1, 0 } },
-    //{ TransformedRoom::FLOODED,   { 1, 0 } },
-    //{ TransformedRoom::CHESTROOM, { 1, 1 } },
+    { TransformedRoom::EMPTY,     {  1, 0 } },
+    { TransformedRoom::TREASURY,  {  5, 1 } },
+    { TransformedRoom::SHRINE,    { 10, 1 } },
+    { TransformedRoom::STORAGE,   {  5, 2 } },
   };
 
   lb.TransformRooms(weights);

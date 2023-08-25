@@ -19,6 +19,9 @@ class MapLevelTown : public MapLevelBase
   protected:
     void CreateLevel() override;
 
+    void CreateCommonObjects(int x, int y, char image) override;
+    void CreateSpecialObjects(int x, int y, const MapCell& cell) override;
+
   private:
     void CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation = false);
     void CreateChurch(int x, int y);

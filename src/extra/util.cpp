@@ -882,6 +882,12 @@ namespace Util
   {
     StringV res;
 
+    if (layout.empty())
+    {
+      DebugLog("Layout is empty!");
+      return res;
+    }
+
     switch (r)
     {
       case RoomLayoutRotation::CCW_90:

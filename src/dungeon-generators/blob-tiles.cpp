@@ -174,6 +174,8 @@ void BlobTiles::Generate(int mapSizeX, int mapSizeY,
 
   ConnectIsolatedAreas();
 
+  PlaceDoors();
+
   FillMapRaw();
 }
 

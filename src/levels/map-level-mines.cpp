@@ -375,116 +375,34 @@ void MapLevelMines::CreateLevel()
 
   if (MapType_ != MapType::MINES_5)
   {
-    if (Util::Rolld100(_shrineRollChance))
+    TransformedRoomsWeights weights =
     {
-      PlaceRandomShrine(lb);
-    }
+      { TransformedRoom::EMPTY,     {  1, 0 } },
+      { TransformedRoom::TREASURY,  {  5, 1 } },
+      { TransformedRoom::SHRINE,    {  5, 1 } },
+      { TransformedRoom::STORAGE,   { 10, 2 } },
+    };
+
+    lb.TransformRooms(weights);
 
     ConstructFromBuilder(lb);
 
-    RecordEmptyCells();
-
+    /*
     if (MapType_ == MapType::MINES_1 || MapType_ == MapType::MINES_2)
     {
       CreateRandomBoxes();
       RecordEmptyCells();
     }
+    */
+
+    RecordEmptyCells();
 
     PlaceStairs();
 
     CreateInitialMonsters();
 
-    int itemsToCreate = GetEstimatedNumberOfItemsToCreate();
-    CreateItemsForLevel(itemsToCreate);
-  }
-}
-
-// =============================================================================
-
-void MapLevelMines::ConstructFromBuilder(LevelBuilder& lb)
-{
-  for (int x = 0; x < MapSize.X; x++)
-  {
-    for (int y = 0; y < MapSize.Y; y++)
-    {
-      GameObjectInfo t;
-
-      char image = lb.MapRaw[x][y];
-      switch (image)
-      {
-        case '#':
-          PlaceWall(x,
-                    y,
-                    ' ',
-                    Colors::BlackColor,
-                    Colors::ShadesOfGrey::Six,
-                    Strings::TileNames::MineWallText);
-          break;
-
-        case '+':
-        {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, DoorMaterials::WOOD);
-
-          if (Util::Rolld100(10))
-          {
-            DoorComponent* dc = door->GetComponent<DoorComponent>();
-            dc->OpenedBy = GlobalConstants::OpenedByNobody;
-          }
-
-          PlaceStaticObject(door);
-        }
-        break;
-
-        case '.':
-          PlaceGroundTile(x,
-                          y,
-                          image,
-                          Colors::ShadesOfGrey::Four,
-                          Colors::BlackColor,
-                          Strings::TileNames::DirtText);
-          break;
-
-        case 'g':
-          PlaceGrassTile(x, y);
-          break;
-
-        case 'w':
-          PlaceDeepWaterTile(x, y);
-          break;
-
-        case ' ':
-          PlaceGroundTile(x,
-                          y,
-                          '.',
-                          Colors::BlackColor,
-                          Colors::ShadesOfGrey::Ten,
-                          Strings::TileNames::StoneText);
-          break;
-
-        case 'l':
-          PlaceLavaTile(x, y);
-          break;
-
-        //
-        // Shrine b/w tiles.
-        //
-        case '1':
-        case '2':
-          PlaceGroundTile(x,
-                          y,
-                          ' ',
-                          Colors::BlackColor,
-                          (image == '1')
-                        ? Colors::ShadesOfGrey::Four
-                        : Colors::ShadesOfGrey::Twelve,
-                          Strings::TileNames::TiledFloorText);
-          break;
-
-        case '/':
-          PlaceShrine({ x, y, }, lb);
-          break;
-      }
-    }
+    //int itemsToCreate = GetEstimatedNumberOfItemsToCreate();
+    //CreateItemsForLevel(itemsToCreate);
   }
 }
 
@@ -700,6 +618,186 @@ void MapLevelMines::CreateSpecialLevel()
 
 // =============================================================================
 
+void MapLevelMines::OnLevelChanged(MapType from)
+{
+  //
+  // If we descended from from previous floor into boss room
+  // remove wall on top of the stairs (if it's still there).
+  // E.g., we defeated the boss, descended to the next dungeon floor,
+  // then teleported back to town and went all the way to this level by stairs.
+  //
+  if (from == MapType::MINES_4 && MapType_ == MapType::MINES_5)
+  {
+    if (StaticMapObjects[2][2] != nullptr)
+    {
+      StaticMapObjects[2][2].reset();
+    }
+  }
+}
+
+// =============================================================================
+
+void MapLevelMines::DisplayWelcomeText()
+{
+  std::vector<std::string> msg =
+  {
+  // 0--------1---------2---------3---------4 <- 40
+    "These mines once were a place of work ",
+    "and income for this village. Now it's ",
+    "just crumbling tunnels with occasional",
+    "signs and markings here and there     ",
+    "suggesting human presence in the past."
+  };
+
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Abandoned Mines", msg);
+}
+
+// =============================================================================
+
+void MapLevelMines::CreateSpecialMonsters()
+{
+  if (MapType_ == MapType::MINES_3)
+  {
+    if (Util::Rolld100(50))
+    {
+      int index = RNG::Instance().RandomRange(0, _emptyCells.size());
+      int x = _emptyCells[index].X;
+      int y = _emptyCells[index].Y;
+      if (!MapArray[x][y]->Occupied)
+      {
+        GameObject* m = MonstersInc::Instance().CreateMonster(x, y, GameObjectType::SHELOB);
+        PlaceActor(m);
+      }
+    }
+  }
+}
+
+// =============================================================================
+
+void MapLevelMines::CreateCommonObjects(int x, int y, char image)
+{
+  GameObjectInfo t;
+
+  switch (image)
+  {
+    case '#':
+      PlaceWall(x,
+                y,
+                ' ',
+                Colors::BlackColor,
+                Colors::ShadesOfGrey::Six,
+                Strings::TileNames::MineWallText);
+      break;
+
+    case '+':
+    {
+      GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, DoorMaterials::WOOD);
+
+      if (Util::Rolld100(10))
+      {
+        DoorComponent* dc = door->GetComponent<DoorComponent>();
+        dc->OpenedBy = GlobalConstants::OpenedByNobody;
+      }
+
+      PlaceStaticObject(door);
+    }
+    break;
+
+    case '.':
+      PlaceGroundTile(x,
+                      y,
+                      image,
+                      Colors::ShadesOfGrey::Four,
+                      Colors::BlackColor,
+                      Strings::TileNames::DirtText);
+      break;
+
+    case 'g':
+      PlaceGrassTile(x, y);
+      break;
+
+    case 'w':
+      PlaceDeepWaterTile(x, y);
+      break;
+
+    case ' ':
+      PlaceGroundTile(x,
+                      y,
+                      '.',
+                      Colors::BlackColor,
+                      Colors::ShadesOfGrey::Ten,
+                      Strings::TileNames::StoneText);
+      break;
+
+    case 'l':
+      PlaceLavaTile(x, y);
+      break;
+
+    //
+    // Black / white tiles.
+    //
+    case '1':
+    case '2':
+      PlaceGroundTile(x,
+                      y,
+                      ' ',
+                      Colors::BlackColor,
+                      (image == '1')
+                    ? Colors::ShadesOfGrey::Four
+                    : Colors::ShadesOfGrey::Twelve,
+                      Strings::TileNames::TiledFloorText);
+      break;
+  }
+}
+
+// =============================================================================
+
+void MapLevelMines::CreateSpecialObjects(int x, int y, const MapCell& cell)
+{
+  switch (cell.ZoneMarker)
+  {
+    case TransformedRoom::SHRINE:
+    {
+      if (std::holds_alternative<ShrineType>(cell.ObjectHere))
+      {
+        ShrineType t = std::get<ShrineType>(cell.ObjectHere);
+        PlaceShrine({ x, y }, t);
+        MapArray[x][y]->Special = true;
+      }
+    }
+    break;
+
+    case TransformedRoom::STORAGE:
+    {
+      if (std::holds_alternative<GameObjectType>(cell.ObjectHere))
+      {
+        if (std::get<GameObjectType>(cell.ObjectHere) == GameObjectType::CONTAINER)
+        {
+          GameObject* box = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(x, y, 'B', "Wooden Box", Colors::WoodColor, Colors::BlackColor);
+          PlaceStaticObject(box);
+        }
+      }
+    }
+    break;
+
+    case TransformedRoom::TREASURY:
+    {
+      if (std::holds_alternative<ItemType>(cell.ObjectHere))
+      {
+        if(std::get<ItemType>(cell.ObjectHere) == ItemType::COINS)
+        {
+          GameObject* go = ItemsFactory::Instance().CreateMoney();
+          go->PosX = x;
+          go->PosY = y;
+          PlaceGameObject(go);
+        }
+      }
+    }
+    break;
+  }
+}
+
+#ifdef false
 void MapLevelMines::CreateRandomBoxes()
 {
   //auto curLvl = Map::Instance().CurrentLevel;
@@ -755,59 +853,4 @@ void MapLevelMines::CreateRandomBoxes()
     }
   }
 }
-
-// =============================================================================
-
-void MapLevelMines::OnLevelChanged(MapType from)
-{
-  //
-  // If we descended from from previous floor into boss room
-  // remove wall on top of the stairs (if it's still there).
-  // E.g., we defeated the boss, descended to the next dungeon floor,
-  // then teleported back to town and went all the way to this level by stairs.
-  //
-  if (from == MapType::MINES_4 && MapType_ == MapType::MINES_5)
-  {
-    if (StaticMapObjects[2][2] != nullptr)
-    {
-      StaticMapObjects[2][2].reset();
-    }
-  }
-}
-
-// =============================================================================
-
-void MapLevelMines::DisplayWelcomeText()
-{
-  std::vector<std::string> msg =
-  {
-  // 0--------1---------2---------3---------4 <- 40
-    "These mines once were a place of work ",
-    "and income for this village. Now it's ",
-    "just crumbling tunnels with occasional",
-    "signs and markings here and there     ",
-    "suggesting human presence in the past."
-  };
-
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Abandoned Mines", msg);
-}
-
-// =============================================================================
-
-void MapLevelMines::CreateSpecialMonsters()
-{
-  if (MapType_ == MapType::MINES_3)
-  {
-    if (Util::Rolld100(50))
-    {
-      int index = RNG::Instance().RandomRange(0, _emptyCells.size());
-      int x = _emptyCells[index].X;
-      int y = _emptyCells[index].Y;
-      if (!MapArray[x][y]->Occupied)
-      {
-        GameObject* m = MonstersInc::Instance().CreateMonster(x, y, GameObjectType::SHELOB);
-        PlaceActor(m);
-      }
-    }
-  }
-}
+#endif

@@ -74,10 +74,12 @@ void MapLevelAbyss::CreateLevel()
 
   if (MapType_ != MapType::ABYSS_5)
   {
+    /*
     if (Util::Rolld100(_shrineRollChance))
     {
       PlaceRandomShrine(lb);
     }
+    */
 
     ConstructFromBuilder(lb);
 
@@ -88,66 +90,66 @@ void MapLevelAbyss::CreateLevel()
 
 // =============================================================================
 
-void MapLevelAbyss::ConstructFromBuilder(LevelBuilder& lb)
+void MapLevelAbyss::CreateCommonObjects(int x, int y, char image)
 {
-  for (int x = 0; x < MapSize.X; x++)
+  GameObjectInfo t;
+  std::string objName;
+
+  switch (image)
   {
-    for (int y = 0; y < MapSize.Y; y++)
+    case '#':
     {
-      GameObjectInfo t;
-      std::string objName;
-
-      char image = lb.MapRaw[x][y];
-      switch (image)
-      {
-        case '#':
-        {
-          objName = Strings::TileNames::AbyssalRocksText;
-          t.Set(true, true, ' ', Colors::BlackColor, Colors::RedPoppyColor, objName);
-          PlaceStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
-        }
-        break;
-
-        case '+':
-        {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false);
-
-          if (Util::Rolld100(15))
-          {
-            DoorComponent* dc = door->GetComponent<DoorComponent>();
-            dc->OpenedBy = GlobalConstants::OpenedByNobody;
-          }
-
-          PlaceStaticObject(door);
-        }
-        break;
-
-        case '.':
-          PlaceGroundTile(x, y, ' ', Colors::BlackColor, 0x440000, Strings::TileNames::AbyssalFloorText);
-          break;
-
-        case 'g':
-          PlaceGrassTile(x, y);
-          break;
-
-        case 'w':
-          PlaceDeepWaterTile(x, y);
-          break;
-
-        case ' ':
-          PlaceGroundTile(x, y, '.', Colors::BlackColor, Colors::ShadesOfGrey::Ten, Strings::TileNames::StoneText);
-          break;
-
-        case 'l':
-          PlaceLavaTile(x, y);
-          break;
-
-        case '/':
-          PlaceShrine({ x, y }, lb);
-          break;
-      }
+      objName = Strings::TileNames::AbyssalRocksText;
+      t.Set(true, true, ' ', Colors::BlackColor, Colors::RedPoppyColor, objName);
+      PlaceStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
     }
+    break;
+
+    case '+':
+    {
+      GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false);
+
+      if (Util::Rolld100(15))
+      {
+        DoorComponent* dc = door->GetComponent<DoorComponent>();
+        dc->OpenedBy = GlobalConstants::OpenedByNobody;
+      }
+
+      PlaceStaticObject(door);
+    }
+    break;
+
+    case '.':
+      PlaceGroundTile(x, y, ' ', Colors::BlackColor, 0x440000, Strings::TileNames::AbyssalFloorText);
+      break;
+
+    case 'g':
+      PlaceGrassTile(x, y);
+      break;
+
+    case 'w':
+      PlaceDeepWaterTile(x, y);
+      break;
+
+    case ' ':
+      PlaceGroundTile(x, y, '.', Colors::BlackColor, Colors::ShadesOfGrey::Ten, Strings::TileNames::StoneText);
+      break;
+
+    case 'l':
+      PlaceLavaTile(x, y);
+      break;
+
+    case '/':
+      // FIXME: replace
+      //PlaceShrine({ x, y }, lb);
+      break;
   }
+}
+
+// =============================================================================
+
+void MapLevelAbyss::CreateSpecialObjects(int x, int y, const MapCell& cell)
+{
 }
 
 // =============================================================================

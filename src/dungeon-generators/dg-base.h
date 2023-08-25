@@ -40,7 +40,12 @@ enum class TransformedRoom
   FLOODED,
   CHESTROOM,
   GRAVEYARD,
-  LIBRARY
+  LIBRARY,
+  SHRINE,
+  HALLOWED_GROUND,
+  CURSED_GROUND,
+  BATTLEFIELD,
+  ZOO
 };
 
 enum class CornerType
@@ -65,9 +70,10 @@ enum class CornerType
 using FeatureRoomsWeights     = std::unordered_map<FeatureRoomType, std::pair<int, int>>;
 using TransformedRoomsWeights = std::unordered_map<TransformedRoom, std::pair<int, int>>;
 
-using Tile = std::vector<std::string>;
-using Tiles = std::vector<Tile>;
+using Tile    = std::vector<std::string>;
+using Tiles   = std::vector<Tile>;
 using Tileset = std::vector<Tiles>;
+using PairII  = std::pair<int, int>;
 
 struct MapCell
 {
@@ -89,7 +95,13 @@ struct MapCell
   //
   // Something to create on this tile.
   //
-  std::variant<GameObjectType, ItemType> ObjectHere;
+  std::variant<GameObjectType, ItemType, ShrineType> ObjectHere;
+
+  //
+  // Some pompous name for the zone, like "Murder Hollace" or something.
+  // Unused for now.
+  //
+  std::string ZoneName;
 
   //
   // Doesn't seem to be used now, but may come in handy at some point
@@ -211,22 +223,68 @@ class DGBase
 
     bool TransformArea(TransformedRoom type, size_t emptyRoomIndex);
     bool DoesAreaFit(const Rect& area, int minSize, int maxSize);
+    bool DoesAreaFitExactly(const Rect& area, const PairII& size);
+
+    void MarkZone(const Rect& area, TransformedRoom zoneType);
 
     void MarkAreaEmpty(const Rect& area);
     void MarkAreaDebug(const Rect& area, char c);
 
     void PlaceTreasury(const Rect& area);
+    void PlaceShrine(const Rect& area);
+    void PlaceStorage(const Rect& area);
+
+    bool TryToPlaceRoom(int minSize, int maxSize,
+                        const Rect& area,
+                        size_t emptyRoomIndex,
+                        TransformedRoom roomType,
+                        const std::function<void(const Rect&)>& fn);
+
+    bool TryToPlaceRoom(const std::vector<PairII>& exactSizes,
+                        const Rect& area,
+                        size_t emptyRoomIndex,
+                        TransformedRoom roomType,
+                        const std::function<void(const Rect&)>& fn);
+
+    void TryToPlaceLayout(const Rect& area, const StringV& layout,
+                          int offsetX, int offsetY);
+
+    void CheckBlockedPassages(const Rect& area, const StringV& layout,
+                              int offsetX, int offsetY);
 
     Position _nonMarkedCell;
     Position _cornerPos;
 
+    //
+    // Trying to find room that fits into:
+    //
+    // width  >= minSize and <= maxSize,
+    // height >= minSize and <= maxSize
+    //
     std::vector<size_t> TryToFindSuitableRooms(int minSize, int maxSize,
+                                               size_t skipRoomIndex);
+
+    //
+    // Trying to find room that satisfies:
+    //
+    // width  == exactSizes[0].first,
+    // height == exactSizes[0].second
+    //
+    // among any of the exactSize vector elements.
+    //
+    std::vector<size_t> TryToFindSuitableRooms(const std::vector<PairII>& exactSizes,
                                                size_t skipRoomIndex);
 
     //
     // Must be sorted.
     //
     std::map<int, std::vector<Position>> _areaPointsByMarker;
+
+    //
+    // Rooms that cannot be placed for this map due to no suitable room found
+    // and thus shouldn't be checked again if rolled.
+    //
+    std::unordered_map<TransformedRoom, bool> _failures;
 };
 
 #endif

@@ -14,7 +14,10 @@ class MapLevelDeepDark : public MapLevelBase
   protected:
     void CreateLevel() override;
     void CreateSpecialLevel() override;
-    void ConstructFromBuilder(LevelBuilder& lb) override;
+
+    void CreateCommonObjects(int x, int y, char image) override;
+    void CreateSpecialObjects(int x, int y, const MapCell &cell) override;
+
 };
 
 #endif // MAPLEVELDEEPDARK_H

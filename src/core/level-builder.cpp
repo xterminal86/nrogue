@@ -255,7 +255,10 @@ void LevelBuilder::TransformRooms(const TransformedRoomsWeights& weights)
 {
   if (_generator)
   {
+    _generator->GetEmptyRooms();
     _generator->TransformRooms(weights);
+
+    UpdateMapRawFromCurrentGenerator();
   }
 }
 

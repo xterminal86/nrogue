@@ -55,7 +55,6 @@ enum class GameStates
   EXITING_STATE,
   MESSAGE_BOX_STATE,
   DEV_CONSOLE,
-  DELAY_STATE,
   ENDGAME_STATE
 };
 
@@ -114,6 +113,8 @@ enum class GameObjectType
   PICKAXEABLE,
   TRAP,
   CONTAINER,
+  SHRINE_GOOD,
+  SHRINE_BAD,
   // ---------------------------------------------------------------------------
   RAT,
   BAT,
@@ -247,7 +248,8 @@ enum class ItemType
 
 enum class PotionType
 {
-  RANDOM = 0,
+  NONE = 0,
+  RANDOM,
   HEALING_POTION,
   MANA_POTION,
   JUICE_POTION,
@@ -275,7 +277,8 @@ enum class ItemQuality
 
 enum class WeaponType
 {
-  RANDOM = 0,
+  NONE = 0,
+  RANDOM,
   DAGGER,
   SHORT_SWORD,
   ARMING_SWORD,
@@ -287,7 +290,8 @@ enum class WeaponType
 
 enum class RangedWeaponType
 {
-  RANDOM = 0,
+  NONE = 0,
+  RANDOM,
   SHORT_BOW,
   LONGBOW,
   WAR_BOW,
@@ -298,7 +302,8 @@ enum class RangedWeaponType
 
 enum class ArmorType
 {
-  RANDOM = 0,
+  NONE = 0,
+  RANDOM,
   PADDING,
   LEATHER,
   MAIL,
@@ -349,7 +354,8 @@ enum class ItemBonusType
 
 enum class FoodType
 {
-  FIRST_ELEMENT = 0,
+  NONE = -1,
+  FIRST_ELEMENT,
   APPLE,
   CHEESE,
   BREAD,
@@ -388,7 +394,7 @@ enum class SpellType
   // TODO: dispel magic?
 
   NONE = -1,         // Wand of Nothing can be imbued with spell
-  STRIKE = 0,        // 1 target, DEF
+  STRIKE,            // 1 target, DEF
   MAGIC_MISSILE,     // 1 target, RES
   FROST,             // 1 target, RES, slow
   FIREBALL,          // area damage, RES

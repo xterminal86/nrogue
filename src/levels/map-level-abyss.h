@@ -13,7 +13,9 @@ class MapLevelAbyss : public MapLevelBase
 
   protected:
     void CreateLevel() override;
-    void ConstructFromBuilder(LevelBuilder& lb) override;
+
+    void CreateCommonObjects(int x, int y, char image) override;
+    void CreateSpecialObjects(int x, int y, const MapCell& cell) override;
 };
 
 #endif // MAPLEVELABYSS_H

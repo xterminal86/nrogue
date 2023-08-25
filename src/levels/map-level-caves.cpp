@@ -164,10 +164,12 @@ void MapLevelCaves::CreateLevel()
 
   if (MapType_ != MapType::CAVES_5)
   {
+    /*
     if (Util::Rolld100(_shrineRollChance))
     {
       PlaceRandomShrine(lb);
     }
+    */
 
     ConstructFromBuilder(lb);
 
@@ -183,89 +185,89 @@ void MapLevelCaves::CreateLevel()
 
 // =============================================================================
 
-void MapLevelCaves::ConstructFromBuilder(LevelBuilder& lb)
+void MapLevelCaves::CreateCommonObjects(int x, int y, char image)
 {
-  for (int x = 0; x < MapSize.X; x++)
+  switch (image)
   {
-    for (int y = 0; y < MapSize.Y; y++)
+    case '#':
+      PlaceWall(x,
+                y,
+                ' ',
+                Colors::BlackColor,
+                Colors::CaveWallColor,
+                Strings::TileNames::CaveWallText);
+      break;
+
+    case '+':
     {
-      char image = lb.MapRaw[x][y];
-      switch (image)
+      GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false);
+
+      if (Util::Rolld100(15))
       {
-        case '#':
-          PlaceWall(x,
-                    y,
-                    ' ',
-                    Colors::BlackColor,
-                    Colors::CaveWallColor,
-                    Strings::TileNames::CaveWallText);
-          break;
-
-        case '+':
-        {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false);
-
-          if (Util::Rolld100(15))
-          {
-            DoorComponent* dc = door->GetComponent<DoorComponent>();
-            dc->OpenedBy = GlobalConstants::OpenedByNobody;
-          }
-
-          PlaceStaticObject(door);
-        }
-        break;
-
-        case '.':
-          PlaceGroundTile(x,
-                          y,
-                          image,
-                          Colors::ShadesOfGrey::Four,
-                          Colors::BlackColor,
-                          Strings::TileNames::StoneFloorText);
-          break;
-
-        case 'g':
-          PlaceGrassTile(x, y);
-          break;
-
-        case 'w':
-          PlaceDeepWaterTile(x, y);
-          break;
-
-        case ' ':
-          PlaceGroundTile(x,
-                          y,
-                          '.',
-                          Colors::BlackColor,
-                          Colors::ShadesOfGrey::Ten,
-                          Strings::TileNames::StoneText);
-          break;
-
-        case 'l':
-          PlaceLavaTile(x, y);
-          break;
-
-        //
-        // Shrine b/w tiles.
-        //
-        case '1':
-        case '2':
-          PlaceGroundTile(x,
-                          y,
-                          ' ',
-                          Colors::BlackColor,
-                          (image == '1')
-                        ? Colors::ShadesOfGrey::Four
-                        : Colors::ShadesOfGrey::Twelve,
-                          Strings::TileNames::TiledFloorText);
-          break;
-
-        case '/':
-          PlaceShrine({ x, y }, lb);
-          break;
+        DoorComponent* dc = door->GetComponent<DoorComponent>();
+        dc->OpenedBy = GlobalConstants::OpenedByNobody;
       }
+
+      PlaceStaticObject(door);
     }
+    break;
+
+    case '.':
+      PlaceGroundTile(x,
+                      y,
+                      image,
+                      Colors::ShadesOfGrey::Four,
+                      Colors::BlackColor,
+                      Strings::TileNames::StoneFloorText);
+      break;
+
+    case 'g':
+      PlaceGrassTile(x, y);
+      break;
+
+    case 'w':
+      PlaceDeepWaterTile(x, y);
+      break;
+
+    case ' ':
+      PlaceGroundTile(x,
+                      y,
+                      '.',
+                      Colors::BlackColor,
+                      Colors::ShadesOfGrey::Ten,
+                      Strings::TileNames::StoneText);
+      break;
+
+    case 'l':
+      PlaceLavaTile(x, y);
+      break;
+
+    //
+    // Black / white tiles.
+    //
+    case '1':
+    case '2':
+      PlaceGroundTile(x,
+                      y,
+                      ' ',
+                      Colors::BlackColor,
+                      (image == '1')
+                    ? Colors::ShadesOfGrey::Four
+                    : Colors::ShadesOfGrey::Twelve,
+                      Strings::TileNames::TiledFloorText);
+      break;
+
+    case '/':
+      // FIXME: replace
+      //PlaceShrine({ x, y }, lb);
+      break;
   }
+}
+
+// =============================================================================
+
+void MapLevelCaves::CreateSpecialObjects(int x, int y, const MapCell& cell)
+{
 }
 
 // =============================================================================

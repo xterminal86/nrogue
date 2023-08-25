@@ -363,7 +363,7 @@ namespace Util
     return ret;
   }
 
-  template<typename ... Args>
+  template <typename ... Args>
   std::string StringFormat(const std::string& format, Args ... args)
   {
     size_t size = snprintf(nullptr, 0, format.c_str(), args ...);

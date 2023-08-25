@@ -1142,3 +1142,15 @@ bool MapLevelTown::SkipArea(const Position& pos, const Rect& area)
        && pos.Y >= area.Y1
        && pos.Y <= area.Y2);
 }
+
+// =============================================================================
+
+void MapLevelTown::CreateCommonObjects(int x, int y, char image)
+{
+}
+
+// =============================================================================
+
+void MapLevelTown::CreateSpecialObjects(int x, int y, const MapCell& cell)
+{
+}

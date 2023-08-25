@@ -84,9 +84,9 @@ class MapLevelBase
     int DungeonLevel;
     int VisibilityRadius;
 
-    bool WelcomeTextDisplayed = false;
-    bool Peaceful = false;
-    bool ExitFound = false;
+    bool WelcomeTextDisplayed   = false;
+    bool Peaceful               = false;
+    bool ExitFound              = false;
     bool MysteriousForcePresent = false;
 
     void AdjustCamera();
@@ -115,10 +115,24 @@ class MapLevelBase
 
     int GetEstimatedNumberOfItemsToCreate();
 
+    void ConstructFromBuilder(LevelBuilder& lb);
+
     virtual void CreateLevel();
-    virtual void ConstructFromBuilder(LevelBuilder& lb);
     virtual void CreateSpecialLevel();
     virtual void CreateSpecialMonsters();
+
+    //
+    // To process tiles based on their visual representation.
+    // Used to instantiate common content: walls, doors, etc.
+    //
+    virtual void CreateCommonObjects(int x, int y, char image) = 0;
+
+    //
+    // To instantiate some additional content on this tile
+    // based on metadata in MapCell. Basically used to process zones
+    // and create some extra special objects there.
+    //
+    virtual void CreateSpecialObjects(int x, int y, const MapCell& cell) = 0;
 
     bool IsSpotValidForSpawn(const Position& pos);
     bool IsOutOfBounds(int x, int y);
@@ -157,6 +171,7 @@ class MapLevelBase
                    bool cannotBePickaxed = false);
 
     void PlaceShrine(const Position& pos, LevelBuilder& lb);
+    void PlaceShrine(const Position& pos, ShrineType type);
 
     void PlaceDoor(int x,
                    int y,

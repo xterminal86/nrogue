@@ -889,7 +889,6 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
     // and then pick one at random, thus marking that zone.
     // The zone itself may be somewhere later in iteration cycle.
     //
-    DebugLog("Trying %s", _emptyRooms[i].ToString().c_str());
     if (_map[_emptyRooms[i].X1][_emptyRooms[i].Y1].ZoneMarker != TransformedRoom::UNMARKED)
     {
       continue;
@@ -897,12 +896,9 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
 
     auto res = Util::WeightedRandom(roomWeightByType);
 
-    DebugLog("got %d", (int)res.first);
-
     int maxAllowed = weights.at(res.first).second;
     if (maxAllowed > 0 && generatedSoFar[res.first] >= maxAllowed)
     {
-      DebugLog("  current room type limit reached - skipping");
       continue;
     }
 
@@ -924,46 +920,93 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
 
 bool DGBase::TransformArea(TransformedRoom type, size_t emptyRoomIndex)
 {
+  if (_failures.count(type) == 1)
+  {
+    //DebugLog("This room is a failure - cannot be placed in this map");
+    return false;
+  }
+
+  //
+  // TODO: place illusionary walls / doors for interesting areas
+  //       by scanning area surrounding walls.
+  //
   bool success = true;
 
   const Rect& area = _emptyRooms[emptyRoomIndex];
 
   switch (type)
   {
+    // -------------------------------------------------------------------------
+
     case TransformedRoom::EMPTY:
       MarkAreaEmpty(area);
       break;
 
-    case TransformedRoom::TREASURY:
+    // -------------------------------------------------------------------------
+
+    case TransformedRoom::SHRINE:
     {
-      DebugLog("trying to place TREASURY at %s", area.ToString().c_str());
+      //DebugLog("Trying to place SHRINE at %s", area.ToString().c_str());
 
-      const int minSize = 5;
-      const int maxSize = 9;
+      //
+      // "As described in Callable, when invoking a pointer to non-static member
+      // function or pointer to non-static data member, the first argument
+      // has to be a reference or pointer (including, possibly, smart pointer
+      // such as std::shared_ptr and std::unique_ptr) to an object whose member
+      // will be accessed."
+      //
+      auto fn = std::bind(&DGBase::PlaceShrine, this, std::placeholders::_1);
 
-      if (DoesAreaFit(area, minSize, maxSize))
+      /*
+      success = TryToPlaceRoom({
+                                 { 5, 5 },
+                                 { 5, 7 },
+                                 { 7, 5 },
+                                 { 7, 7 }
+                               },
+                               area, emptyRoomIndex, type, fn);
+      */
+
+      success = TryToPlaceRoom(5, 7, area, emptyRoomIndex, type, fn);
+
+      if (!success)
       {
-        PlaceTreasury(area);
-        DebugLog("OK");
-      }
-      else
-      {
-        auto candidates = TryToFindSuitableRooms(minSize, maxSize, emptyRoomIndex);
-        if (!candidates.empty())
-        {
-          int index = RNG::Instance().RandomRange(0, candidates.size());
-          size_t ri = candidates[index];
-          DebugLog("Placing at %s", _emptyRooms[ri].ToString().c_str());
-          PlaceTreasury(_emptyRooms[ri]);
-        }
-        else
-        {
-          DebugLog("requirements failed - skipping");
-          success = false;
-        }
+        _failures[type] = true;
       }
     }
     break;
+
+    // -------------------------------------------------------------------------
+
+    case TransformedRoom::TREASURY:
+    {
+      //DebugLog("Trying to place TREASURY at %s", area.ToString().c_str());
+
+      auto fn = std::bind(&DGBase::PlaceTreasury, this, std::placeholders::_1);
+      success = TryToPlaceRoom(5, 9, area, emptyRoomIndex, type, fn);
+
+      if (!success)
+      {
+        _failures[type] = true;
+      }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
+    case TransformedRoom::STORAGE:
+    {
+      auto fn = std::bind(&DGBase::PlaceStorage, this, std::placeholders::_1);
+      success = TryToPlaceRoom(3, 7, area, emptyRoomIndex, type, fn);
+
+      if (!success)
+      {
+        _failures[type] = true;
+      }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
 
     default:
       DebugLog("Unknown room type - %d", (int)type);
@@ -984,12 +1027,19 @@ bool DGBase::DoesAreaFit(const Rect& area, int minSize, int maxSize)
 
 // =============================================================================
 
+bool DGBase::DoesAreaFitExactly(const Rect& area, const PairII& size)
+{
+  return (area.Width() == size.first && area.Height() == size.second);
+}
+
+// =============================================================================
+
 std::vector<size_t> DGBase::TryToFindSuitableRooms(int minSize, int maxSize,
                                                    size_t skipRoomIndex)
 {
   std::vector<size_t> res;
 
-  DebugLog("  trying to find suitable rooms for [%d ; %d]", minSize, maxSize);
+  //DebugLog("  trying to find suitable rooms for minSize = %d, maxSize = %d", minSize, maxSize);
 
   for (size_t i = 0; i < _emptyRooms.size(); i++)
   {
@@ -1007,8 +1057,44 @@ std::vector<size_t> DGBase::TryToFindSuitableRooms(int minSize, int maxSize,
     bool isNotMarked = (_map[area.X1][area.Y1].ZoneMarker == TransformedRoom::UNMARKED);
     if (DoesAreaFit(area, minSize, maxSize) && isNotMarked)
     {
-      DebugLog("  found room %s", _emptyRooms[i].ToString().c_str());
+      //DebugLog("  found room %s", _emptyRooms[i].ToString().c_str());
       res.push_back(i);
+    }
+  }
+
+  return res;
+}
+
+// =============================================================================
+
+std::vector<size_t> DGBase::TryToFindSuitableRooms(const std::vector<PairII>& exactSizes,
+                                                   size_t skipRoomIndex)
+{
+  std::vector<size_t> res;
+
+  for (auto& item : exactSizes)
+  {
+    int minSize = item.first;
+    int maxSize = item.second;
+
+    //DebugLog("  trying to find suitable rooms for [%d ; %d]", minSize, maxSize);
+
+    for (size_t i = 0; i < _emptyRooms.size(); i++)
+    {
+      if (i == skipRoomIndex)
+      {
+        continue;
+      }
+
+      const Rect& area = _emptyRooms[i];
+
+      bool isNotMarked = (_map[area.X1][area.Y1].ZoneMarker == TransformedRoom::UNMARKED);
+      bool exactSize = (area.Width() == minSize && area.Height() == maxSize);
+      if (exactSize && isNotMarked)
+      {
+        //DebugLog("  found room %s", _emptyRooms[i].ToString().c_str());
+        res.push_back(i);
+      }
     }
   }
 
@@ -1043,15 +1129,328 @@ void DGBase::PlaceTreasury(const Rect& area)
 
 // =============================================================================
 
-void DGBase::MarkAreaEmpty(const Rect& area)
+void DGBase::PlaceShrine(const Rect& area)
+{
+  MarkZone(area, TransformedRoom::SHRINE);
+
+  int index = RNG::Instance().RandomRange(0, GlobalConstants::ShrineLayouts.size());
+  auto it = GlobalConstants::ShrineLayoutsByType.begin();
+  std::advance(it, index);
+  int layoutIndex = RNG::Instance().RandomRange(0, it->second.size());
+  auto layout = it->second[layoutIndex];
+
+  const std::vector<RoomLayoutRotation> angles =
+  {
+    RoomLayoutRotation::NONE,
+    RoomLayoutRotation::CCW_90,
+    RoomLayoutRotation::CCW_180,
+    RoomLayoutRotation::CCW_270
+  };
+
+  int angleIndex = RNG::Instance().RandomRange(0, angles.size());
+
+  layout = Util::RotateRoomLayout(layout, angles[angleIndex]);
+
+  int wx = area.Width()  - 5;
+  int wy = area.Height() - 5;
+
+  int offsetX = RNG::Instance().RandomRange(0, wx + 1);
+  int offsetY = RNG::Instance().RandomRange(0, wy + 1);
+
+  //DebugLog("  got offsets %d %d", offsetX, offsetY);
+
+  TryToPlaceLayout(area, layout, offsetX, offsetY);
+
+  CheckBlockedPassages(area, layout, offsetX, offsetY);
+
+  //DebugLog("  marking [%d %d] tile as shrine", area.X1 + offsetX, area.Y1 + offsetY);
+
+  int shrineMiddle = (layout.size() - 1) / 2;
+
+  int shrineMarkerX = area.X1 + offsetX + shrineMiddle;
+  int shrineMarkerY = area.Y1 + offsetY + shrineMiddle;
+
+  _map[shrineMarkerX][shrineMarkerY].ObjectHere = it->first;
+}
+
+// =============================================================================
+
+void DGBase::PlaceStorage(const Rect& area)
 {
   for (int x = area.X1; x <= area.X2; x++)
   {
     for (int y = area.Y1; y <= area.Y2; y++)
     {
-      _map[x][y].ZoneMarker = TransformedRoom::EMPTY;
+      _map[x][y].ZoneMarker = TransformedRoom::STORAGE;
+
+      if (Util::Rolld100(40))
+      {
+        _map[x][y].ObjectHere = GameObjectType::CONTAINER;
+      }
     }
   }
+}
+
+// =============================================================================
+
+void DGBase::CheckBlockedPassages(const Rect& area, const StringV& layout,
+                                  int offsetX, int offsetY)
+{
+  //
+  // Check if placed layout blocks anything, e.g.:
+  //
+  // layout
+  //  ---
+  // |   |
+  // ##.#######
+  // #...#+        <- BAD, must replace layout's '#' with '.'
+  // ../..#####
+  // #...#
+  // ##.##
+  //
+  // Scan vertical and horizontal walls of layout area and check if there are
+  // no doors or empty cells near them. If there are, then replace layout's
+  // wall with empty cell.
+  //
+
+  int sx = area.X1 + offsetX;
+  int sy = area.Y1 + offsetY;
+  int ex = sx + layout.size() - 1;
+  int ey = sy + layout[0].length() - 1;
+
+  //DebugLog("  checking blocked for %d %d - %d %d", sx, sy, ex, ey);
+
+  //
+  // To prevent self-checking we must separately check
+  // horizontal and vertical blocked passages when we're scanning
+  // horizontal and vertical walls of the layout if placed in a room
+  // which size is bigger than layout.
+  //
+  //  layout
+  //   ---
+  //  |   |
+  // ........
+  // .#####..
+  // .#...##.
+  // .#...#X#   <- point X can be considered vertical and horizontal passageway
+  // .#...##.      simultaneously if checked for both conditions at once.
+  // .#####..
+  // ........
+  //
+  // |      |
+  //  ------
+  //  room size
+  //
+
+  auto IsPassage = [this](int x, int y, bool checkH)
+  {
+    bool horizontal = (_map[x][y].Image == '.' || _map[x][y].Image == '+')
+                   && (_map[x - 1][y].Image == '#' && _map[x + 1][y].Image == '#');
+
+    bool vertical = (_map[x][y].Image == '.' || _map[x][y].Image == '+')
+                 && (_map[x][y + 1].Image == '#' && _map[x][y - 1].Image == '#');
+
+    return (checkH ? horizontal : vertical);
+  };
+
+  //
+  // Horizontal.
+  //
+  for (int x = sx; x <= ex; x++)
+  {
+    if (_map[x][sy].Image == '#')
+    {
+      if (IsPassage(x, sy - 1, true))
+      {
+        _map[x][sy].Image = '.';
+      }
+    }
+
+    if (_map[x][ey].Image == '#')
+    {
+      if (IsPassage(x, ey + 1, true))
+      {
+        _map[x][ey].Image = '.';
+      }
+    }
+  }
+
+  //
+  // Vertical.
+  //
+  for (int y = sy; y <= ey; y++)
+  {
+    if (_map[sx][y].Image == '#')
+    {
+      if (IsPassage(sx - 1, y, false))
+      {
+        _map[sx][y].Image = '.';
+      }
+    }
+
+    if (_map[ex][y].Image == '#')
+    {
+      if (IsPassage(ex + 1, y, false))
+      {
+        _map[ex][y].Image = '.';
+      }
+    }
+  }
+}
+
+// =============================================================================
+
+bool DGBase::TryToPlaceRoom(int minSize, int maxSize,
+                            const Rect& area,
+                            size_t emptyRoomIndex,
+                            TransformedRoom roomType,
+                            const std::function<void(const Rect&)>& fn)
+{
+  bool success = true;
+
+  if (!Util::IsFunctionValid(fn))
+  {
+    DebugLog("Placement function is not defined!");
+    return false;
+  }
+
+  if (DoesAreaFit(area, minSize, maxSize))
+  {
+    fn(area);
+    //DebugLog("OK");
+  }
+  else
+  {
+    auto candidates = TryToFindSuitableRooms(minSize, maxSize, emptyRoomIndex);
+    if (!candidates.empty())
+    {
+      int index = RNG::Instance().RandomRange(0, candidates.size());
+      size_t ri = candidates[index];
+      //DebugLog("OK - placing at %s", _emptyRooms[ri].ToString().c_str());
+      fn(_emptyRooms[ri]);
+    }
+    else
+    {
+      //DebugLog("requirements failed - skipping");
+      success = false;
+    }
+  }
+
+  return success;
+}
+
+// =============================================================================
+
+bool DGBase::TryToPlaceRoom(const std::vector<PairII>& exactSizes,
+                            const Rect& area,
+                            size_t emptyRoomIndex,
+                            TransformedRoom roomType,
+                            const std::function<void(const Rect&)>& fn)
+{
+  bool success = true;
+
+  if (!Util::IsFunctionValid(fn))
+  {
+    DebugLog("Placement function is not defined!");
+    return false;
+  }
+
+  bool found = false;
+
+  for (auto& item : exactSizes)
+  {
+    //DebugLog("Trying [%d ; %d ] for area %s ...",
+    //         item.first, item.second, area.ToString().c_str());
+
+    if (DoesAreaFitExactly(area, item))
+    {
+      found = true;
+      fn(area);
+      //DebugLog("OK");
+      break;
+    }
+  }
+
+  if (!found)
+  {
+    //DebugLog("Current room doesn't fit - trying to find suitable");
+
+    auto candidates = TryToFindSuitableRooms(exactSizes, emptyRoomIndex);
+    if (!candidates.empty())
+    {
+      int index = RNG::Instance().RandomRange(0, candidates.size());
+      size_t ri = candidates[index];
+      //DebugLog("OK - placing at %s", _emptyRooms[ri].ToString().c_str());
+      fn(_emptyRooms[ri]);
+    }
+    else
+    {
+      //DebugLog("requirements failed - skipping");
+      success = false;
+    }
+  }
+
+  return success;
+}
+
+// =============================================================================
+
+void DGBase::TryToPlaceLayout(const Rect& area, const StringV& layout,
+                              int offsetX, int offsetY)
+{
+  if (layout.empty())
+  {
+    DebugLog("Layout is empty!");
+    return;
+  }
+
+  //DebugLog("layout size = %lu, len = %lu", layout.size(), layout[0].length());
+
+  bool doesNotFit = (area.Height() < (int)layout.size()
+                  || area.Width()  < (int)layout[0].length());
+  if (doesNotFit)
+  {
+    DebugLog("Layout doesn't fit!");
+    return;
+  }
+
+  int startX = area.X1 + offsetX;
+  int startY = area.Y1 + offsetY;
+
+  int lx = startX;
+  int ly = startY;
+
+  for (auto& line : layout)
+  {
+    for (auto& c : line)
+    {
+      _map[lx][ly].Image = c;
+      ly++;
+    }
+
+    ly = startY;
+    lx++;
+  }
+}
+
+// =============================================================================
+
+void DGBase::MarkZone(const Rect& area, TransformedRoom zoneType)
+{
+  for (int x = area.X1; x <= area.X2; x++)
+  {
+    for (int y = area.Y1; y <= area.Y2; y++)
+    {
+      _map[x][y].ZoneMarker = zoneType;
+    }
+  }
+}
+
+// =============================================================================
+
+void DGBase::MarkAreaEmpty(const Rect& area)
+{
+  MarkZone(area, TransformedRoom::EMPTY);
 }
 
 // =============================================================================

@@ -486,6 +486,7 @@ bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
   bool occupied  = false;
   bool danger    = Map::Instance().IsTileDangerous(pos);
   bool farEnough = false;
+  bool special   = Map::Instance().CurrentLevel->MapArray[pos.X][pos.Y]->Special;
 
   int distanceToPlayer = Util::BlockDistance(_playerRef->GetPosition(), pos);
 
@@ -553,7 +554,7 @@ bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
     }
   }
 
-  return (!blocked && !occupied && !danger);
+  return (!blocked && !occupied && !danger && !special);
 }
 
 // =============================================================================
@@ -819,6 +820,32 @@ void MapLevelBase::PlaceShrine(const Position& pos, LevelBuilder& lb)
         Colors::BlackColor,
         description,
         "?Shrine?");
+
+  PlaceStaticObject(pos.X, pos.Y, t);
+}
+
+// =============================================================================
+
+void MapLevelBase::PlaceShrine(const Position& pos, ShrineType type)
+{
+  if (IsOutOfBounds(pos.X, pos.Y))
+  {
+    return;
+  }
+
+  GameObjectInfo t;
+  auto go = GameObjectsFactory::Instance().CreateShrine(pos.X, pos.Y, type, 1000);
+  PlaceGameObject(go);
+
+  std::string description = GlobalConstants::ShrineNameByType.at(type);
+  t.Set(true,
+        false,
+        '/',
+        Colors::ShadesOfGrey::Four,
+        Colors::BlackColor,
+        description,
+        "?Shrine?");
+
   PlaceStaticObject(pos.X, pos.Y, t);
 }
 
@@ -901,8 +928,24 @@ void MapLevelBase::CreateLevel()
 
 void MapLevelBase::ConstructFromBuilder(LevelBuilder& lb)
 {
-  auto str = Util::StringFormat("%s, %s - calling base ConstructFromBuilder()!", __PRETTY_FUNCTION__, LevelName.data());
-  LogPrint(str, true);
+  for (int x = 0; x < MapSize.X; x++)
+  {
+    for (int y = 0; y < MapSize.Y; y++)
+    {
+      auto map = lb.GeneratedMap();
+
+      //
+      // This ensures that all common objects will share the same
+      // visual style that is defined for the current map.
+      //
+      CreateCommonObjects(x, y, lb.MapRaw[x][y]);
+
+      if (map[x][y].ZoneMarker != TransformedRoom::UNMARKED)
+      {
+        CreateSpecialObjects(x, y, map[x][y]);
+      }
+    }
+  }
 }
 
 // =============================================================================

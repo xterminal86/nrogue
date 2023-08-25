@@ -130,10 +130,12 @@ void AIModelBase::Update()
 
       //DebugLog("%s AIModelBase::Update() _root->Run() = %i", AIComponentRef->OwnerGameObject->ObjectName.data(), (int)res);
 
+      //
       // TODO: should we add [RESET] node to reset behaviour when we
       // need to perform some additional actions from last stage
       // even after FinishTurn() has been called?
       // Can we use currently unused BTResult::Running state?
+      //
       if (res == BTResult::Failure)
       {
         _root->Reset();

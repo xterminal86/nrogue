@@ -125,6 +125,8 @@ void EnterNameState::HandleInput()
             _seedEntered += c;
 
             _seedHex = std::stoull(_seedEntered, nullptr, 16);
+
+            DebugLog("Seed entered: 0x%lX", _seedHex);
           }
         }
       }

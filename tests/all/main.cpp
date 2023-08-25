@@ -8,6 +8,57 @@ const std::string Spaces30(30, ' ');
 
 // =============================================================================
 
+std::string GetBanner(const std::string& title)
+{
+  const int maxWidth = 80;
+
+  std::stringstream ss;
+
+  std::string decor(maxWidth, '*');
+  int startPos = (maxWidth / 2) - (title.length() / 2);
+
+  std::string titleLine(maxWidth, ' ');
+  std::string fillerLine(maxWidth, ' ');
+
+  titleLine[0] = '*';
+  titleLine[maxWidth - 1] = '*';
+
+  fillerLine[0] = '*';
+  fillerLine[maxWidth - 1] = '*';
+
+  for (size_t i = 0; i < title.length(); i++)
+  {
+    titleLine[startPos + i] = title[i];
+  }
+
+  ss << decor      << "\n"
+     << fillerLine << "\n"
+     << titleLine  << "\n"
+     << fillerLine << "\n"
+     << decor      << "\n";
+
+  return ss.str();
+}
+
+// =============================================================================
+
+std::string GetEndTestLine()
+{
+  std::stringstream ss;
+
+  std::string padding(80, '-');
+
+  padding[39] = ' ';
+  padding[40] = 'o';
+  padding[41] = ' ';
+
+  ss << "\n\n" << padding << "\n\n";
+
+  return ss.str();
+}
+
+// =============================================================================
+
 void DisplayProgress()
 {
   static int progress = 0;
@@ -20,6 +71,8 @@ void DisplayProgress()
 void TestLoS(std::stringstream& ss, int x, int y, int range)
 {
   DebugLog("%s", __func__);
+
+  ss << GetBanner(" BRESENHAM LoS ") << "\n";
 
   ss << Util::StringFormat("Starting Bresenham LoS test from (%i %i) in range %i...\n", x, y, range);
   ss << Util::StringFormat("The path should always start from (%i %i)\n\n", x, y);
@@ -59,7 +112,7 @@ void RoomTests(std::stringstream& ss)
 {
   DebugLog("%s", __func__);
 
-  ss << "\nRoom layouts rotations:\n\n";
+  ss << GetBanner(" ROOM LAYOUTS ROTATIONS ") << "\n\n";
 
   const std::vector<std::vector<std::string>> dungeonRooms =
   {
@@ -226,7 +279,7 @@ void RNGTests(std::stringstream& ss)
 {
   DebugLog("%s", __func__);
 
-  ss << "\nRNG tests:\n\n";
+  ss << GetBanner(" RNG tests ") << "\n\n";
 
   ss << "Random.Range(-10, 10):\n";
 
@@ -399,7 +452,7 @@ void LevelUpTests(std::stringstream& ss)
 {
   DebugLog("%s", __func__);
 
-  ss << "\nAuto levelling tests:\n\n";
+  ss << GetBanner(" AUTO LEVELLING ") << "\n\n";
 
   Player p1;
 
@@ -416,7 +469,7 @@ void WeightedRandomTest(std::stringstream& ss)
 {
   DebugLog("%s", __func__);
 
-  ss << "\nWeighted random test:\n\n";
+  ss << GetBanner(" WEIGHTED RANDOM ") << "\n\n";
 
   std::unordered_map<GemType, int> gemsMap =
   {
@@ -439,6 +492,15 @@ void WeightedRandomTest(std::stringstream& ss)
   };
 
   int runs = 1000;
+
+  ss << "Weight map:\n\n";
+
+  for (auto& kvp : gemsMap)
+  {
+    ss << (int)kvp.first << " = " << kvp.second << "\n";
+  }
+
+  ss << "\n";
 
   ss << "Total scores on " << runs << " runs:\n\n";
 
@@ -493,30 +555,90 @@ void WeightedRandomTest(std::stringstream& ss)
 
 void LootDropTest(std::stringstream& ss)
 {
+  using LootTable = std::unordered_map<ItemType, int>;
+
   DebugLog("%s", __func__);
 
-  ss << "\nLoot drop test:\n\n";
+  const int iterations = 1000;
 
-  std::unordered_map<ItemType, int> scores;
+  auto GetScores = [&ss, iterations](const LootTable& lootTable)
+  {
+    LootTable scores;
 
-  std::unordered_map<ItemType, int> lootTable =
+    for (int i = 0; i < iterations; i++)
+    {
+      auto weights = lootTable;
+      auto kvp = Util::WeightedRandom(weights);
+
+      scores[kvp.first]++;
+    }
+
+    for (auto& kvp : scores)
+    {
+      ss << Util::StringFormat("%i = %i\n", kvp.first, kvp.second);
+    }
+
+    ss << "\n\n";
+  };
+
+  ss << GetBanner(" LOOT DROP ") << "\n\n";
+
+  ss << "Running " << iterations << " iterations\n\n";
+
+  LootTable lootTable =
   {
     { ItemType::FOOD,     4 },
     { ItemType::NOTHING, 20 }
   };
 
-  for (int i = 0; i < 100; i++)
-  {
-    auto weights = lootTable;
-    auto kvp = Util::WeightedRandom(weights);
+  ss << "FOOD (3) = 4, NOTHING (0) = 20\n\n";
 
-    scores[kvp.first]++;
-  }
+  GetScores(lootTable);
 
-  for (auto& kvp : scores)
+  lootTable =
   {
-    ss << Util::StringFormat("%i = %i\n", kvp.first, kvp.second);
-  }
+    { ItemType::ARMOR,  1 },
+    { ItemType::ARROWS, 2 },
+    { ItemType::COINS,  3 },
+    { ItemType::FOOD,   4 }
+  };
+
+  ss << "ARMOR (9) = 1 "
+     << "ARROWS (15) = 2 "
+     << "COINS (2) = 3 "
+     << "FOOD (3) = 4\n\n";
+
+  GetScores(lootTable);
+
+  lootTable =
+  {
+    { ItemType::ARMOR,  1 },
+    { ItemType::ARROWS, 2 },
+    { ItemType::COINS,  4 },
+    { ItemType::FOOD,   8 }
+  };
+
+  ss << "ARMOR (9) = 1 "
+     << "ARROWS (15) = 2 "
+     << "COINS (2) = 4 "
+     << "FOOD (3) = 8\n\n";
+
+  GetScores(lootTable);
+
+  lootTable =
+  {
+    { ItemType::ARMOR,  1 },
+    { ItemType::ARROWS, 1 },
+    { ItemType::COINS,  1 },
+    { ItemType::FOOD,   1 }
+  };
+
+  ss << "ARMOR (9) = 1 "
+     << "ARROWS (15) = 1 "
+     << "COINS (2) = 1 "
+     << "FOOD (3) = 1\n\n";
+
+  GetScores(lootTable);
 }
 
 // =============================================================================
@@ -555,7 +677,7 @@ void Tunneler(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
     ss << "\n";
   };
 
-  ss << Spaces30 << "Tunneler:\n\n";
+  ss << GetBanner(" TUNNELER ") << "\n\n";
 
   for (int i = 2; i <= 10; i++)
   {
@@ -582,7 +704,7 @@ void Tunneler(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 
   // -------------------------------------------------------------------------
 
-  ss << Spaces30 << "Tunneler (backtracking):\n\n";
+  ss << GetBanner(" TUNNELER (backtracking) ") << "\n\n";
 
   for (int i = 2; i <= 10; i++)
   {
@@ -612,18 +734,16 @@ void RecursiveBacktracker(LevelBuilder& lb, const Position& mapSize, std::string
 {
   DebugLog("%s", __func__);
 
-  std::string str = "Recursive Backtracker:\n\n";
-
   Position start(1, 1);
 
-  ss << Spaces30 << str;
+  ss << GetBanner(" RECURSIVE BACKTRACKER ") << "\n\n";
 
   lb.RecursiveBacktrackerMethod(mapSize, start);
   lb.MapRaw[start.X][start.Y] = 'X';
 
   ss << lb.GetMapRawString();
 
-  str = "\nRecursive Backtracker (end walls removed):\n\n";
+  std::string str = "\nRecursive Backtracker (end walls removed):\n\n";
 
   ss << str;
 
@@ -710,6 +830,8 @@ void RecursiveBacktracker(LevelBuilder& lb, const Position& mapSize, std::string
     { 8, 8, 3 }
   };
 
+  const std::string decor(80, '-');
+
   for (auto i : removalParams)
   {
     str = Spaces30;
@@ -723,7 +845,7 @@ void RecursiveBacktracker(LevelBuilder& lb, const Position& mapSize, std::string
 
     ss << lb.GetMapRawString();
 
-    ss << "\n\n================================================================================\n\n";
+    ss << "\n\n" << decor << "\n\n";
   }
 }
 
@@ -733,13 +855,11 @@ void CellularAutomata(LevelBuilder& lb, const Position& mapSize, std::stringstre
 {
   DebugLog("%s", __func__);
 
-  std::string str = "\nCellular Automata:\n\n";
-
-  ss << str;
+  ss << GetBanner(" CELLULAR AUTOMATA ") << "\n\n";
 
   lb.CellularAutomataMethod(mapSize, 40, 5, 4, 12);
 
-  ss << lb.GetMapRawString();
+  ss << lb.GetMapRawString() << "\n\n";
 }
 
 // =============================================================================
@@ -748,9 +868,7 @@ void Digger(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
   DebugLog("%s", __func__);
 
-  std::string str = "\nDigger:\n\n";
-
-  ss << str;
+  ss << GetBanner(" DIGGER ") << "\n\n";
 
   int iterations = (mapSize.X * mapSize.Y) / 10;
 
@@ -761,7 +879,7 @@ void Digger(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 
   lb.FeatureRoomsMethod(mapSize, { 1, 10 }, weights, 3, iterations);
 
-  ss << lb.GetMapRawString();
+  ss << lb.GetMapRawString() << "\n\n";
 }
 
 // =============================================================================
@@ -770,9 +888,7 @@ void BSPRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
   DebugLog("%s", __func__);
 
-  std::string str = "\nBSP rooms:\n\n";
-
-  ss << str;
+  ss << GetBanner(" BSP ROOMS ") << "\n\n";
 
   auto GenerateMap = [&lb, &ss, mapSize](const Position& splitRatio, int roomSize)
   {
@@ -785,7 +901,7 @@ void BSPRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 
     lb.BSPRoomsMethod(mapSize, splitRatio , roomSize);
 
-    ss << lb.GetMapRawString();
+    ss << lb.GetMapRawString() << "\n\n";
   };
 
   for (int i = 0; i < 18; i++)
@@ -807,9 +923,7 @@ void FeatureRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& 
 {
   DebugLog("%s", __func__);
 
-  std::string str = "\nFeature rooms:\n\n";
-
-  ss << str;
+  ss << GetBanner(" FEATURE ROOMS ") << "\n\n";
 
   FeatureRoomsWeights weights =
   {
@@ -828,7 +942,7 @@ void FeatureRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& 
 
   lb.FeatureRoomsMethod(mapSize, roomSize, weights, 3, mapSize.X * mapSize.Y);
 
-  ss << lb.GetMapRawString();
+  ss << lb.GetMapRawString() << "\n\n";
 }
 
 // =============================================================================
@@ -837,9 +951,7 @@ void FromPermutationTiles(LevelBuilder& lb, const Position& mapSize, std::string
 {
   DebugLog("%s", __func__);
 
-  std::string str = "\nFrom tiles:\n";
-
-  ss << str;
+  ss << GetBanner(" FROM TILES ") << "\n\n";
 
   for (int i = 0; i < 9; i++)
   {
@@ -865,7 +977,7 @@ void FromPermutationTiles(LevelBuilder& lb, const Position& mapSize, std::string
 
     lb.FromPermutationTilesMethod({ 40, 80 }, i, true, true);
 
-    ss << lb.GetMapRawString();
+    ss << lb.GetMapRawString() << "\n\n";
   }
 }
 
@@ -875,21 +987,18 @@ void BlobTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
   DebugLog("%s", __func__);
 
-  std::string str = "\nFrom blob tiles:\n\n";
-
-  ss << str;
+  ss << GetBanner(" BLOB TILES ") << "\n\n";
 
   lb.FromBlobTiles(mapSize.X, mapSize.Y, 1, 1, true);
 
-  ss << lb.GetMapRawString();
+  ss << lb.GetMapRawString() << "\n\n";
 }
 
 // =============================================================================
 
 //
 // NOTE: for non square map size dimensions must be swapped
-// because, well, you know.
-// Another day - same shit.
+// because, well, you know: another day - same shit.
 //
 void LevelBuilderTest(std::stringstream& ss)
 {
@@ -897,7 +1006,7 @@ void LevelBuilderTest(std::stringstream& ss)
 
   std::string str;
 
-  ss << "\nLevel builders:\n\n";
+  ss << GetBanner(" LEVEL BUILDERS ") << "\n\n";
 
   LevelBuilder lb;
 
@@ -937,7 +1046,7 @@ void GenNamesTest(std::stringstream& ss)
 
   int number = 100;
 
-  ss << "\nGenerating " << number << " 'names':\n\n";
+  ss << GetBanner(" NAMES GEN ") << "\n\n";
 
   for (int i = 0; i < number; i++)
   {
@@ -981,7 +1090,7 @@ void StringSplitTests(std::stringstream& ss)
 {
   DebugLog("%s", __func__);
 
-  ss << "\n";
+  ss << GetBanner(" STRING SPLIT ") << "\n\n";
 
   auto PerformSplit = [&](const std::string& example,
                           const StringV& ethalon)
@@ -1035,8 +1144,6 @@ void StringSplitTests(std::stringstream& ss)
 
 void Run()
 {
-  const std::string padding(40, '*');
-
   std::ofstream file;
   std::stringstream ss;
 
@@ -1044,50 +1151,77 @@ void Run()
 
   DisplayProgress();
 
-  ss << padding << " START TESTS " << padding << "\n\n";
+  ss << GetBanner(" START TESTS ") << "\n\n";
+
+  // ---------------------------------------------------------------------------
 
   TestLoS(ss, 4, 4, 2);
-  ss << "\n\n" << padding << " o " << padding << "\n";
+
+  ss << GetEndTestLine();
 
   DisplayProgress();
+
+  // ---------------------------------------------------------------------------
 
   RoomTests(ss);
-  ss << "\n\n" << padding << " o " << padding << "\n";
+
+  ss << GetEndTestLine();
 
   DisplayProgress();
+
+  // ---------------------------------------------------------------------------
 
   RNGTests(ss);
-  ss << "\n\n" << padding << " o " << padding << "\n";
+
+  ss << GetEndTestLine();
 
   DisplayProgress();
+
+  // ---------------------------------------------------------------------------
 
   LevelUpTests(ss);
-  ss << "\n\n" << padding << " o " << padding << "\n";
+
+  ss << GetEndTestLine();
 
   DisplayProgress();
+
+  // ---------------------------------------------------------------------------
 
   WeightedRandomTest(ss);
-  ss << "\n\n" << padding << " o " << padding << "\n";
+
+  ss << GetEndTestLine();
 
   DisplayProgress();
+
+  // ---------------------------------------------------------------------------
 
   LootDropTest(ss);
-  ss << "\n\n" << padding << " o " << padding << "\n";
+
+  ss << GetEndTestLine();
 
   DisplayProgress();
+
+  // ---------------------------------------------------------------------------
 
   LevelBuilderTest(ss);
-  ss << "\n\n" << padding << " o " << padding << "\n";
+
+  ss << GetEndTestLine();
 
   DisplayProgress();
+
+  // ---------------------------------------------------------------------------
 
   GenNamesTest(ss);
-  ss << "\n\n" << padding << " o " << padding << "\n";
+
+  ss << GetEndTestLine();
 
   DisplayProgress();
 
+  // ---------------------------------------------------------------------------
+
   StringSplitTests(ss);
-  ss << "\n\n" << padding << " o " << padding << "\n";
+
+  ss << GetEndTestLine();
 
   file << ss.str();
 

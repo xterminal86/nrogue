@@ -478,7 +478,9 @@ bool FeatureRooms::CreateShrine(const Position& start,
   {
     for (int y = sy; y < ey; y++)
     {
-      // Remember shrine type and position
+      //
+      // Place shrine information at the center of area.
+      //
       if (lx == 2 && ly == 2)
       {
         Position key = { x, y };

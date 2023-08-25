@@ -547,7 +547,7 @@ void SpellsProcessor::ProcessScrollOfHiddenDetection(ItemComponent* scroll,
   ItemBonusStruct b;
   b.Type       = type;
 
-  // TODO: power is unused in this effect (see Map::DrawActors())
+  // Power is unused in this effect (see Map::DrawActors())
   b.BonusValue = power;
 
   b.Duration   = duration;
