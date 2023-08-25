@@ -743,8 +743,8 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
                       ' ',
                       Colors::BlackColor,
                       (image == '1')
-                    ? Colors::ShadesOfGrey::Four
-                    : Colors::ShadesOfGrey::Twelve,
+                    ? Colors::ShadesOfGrey::Two
+                    : Colors::ShadesOfGrey::Fourteen,
                       Strings::TileNames::TiledFloorText);
       break;
   }
@@ -762,7 +762,7 @@ void MapLevelMines::CreateSpecialObjects(int x, int y, const MapCell& cell)
       {
         ShrineType t = std::get<ShrineType>(cell.ObjectHere);
         PlaceShrine({ x, y }, t);
-        MapArray[x][y]->Special = true;
+        MapArray[x][y]->ZoneMarker = cell.ZoneMarker;
       }
     }
     break;
@@ -791,6 +791,8 @@ void MapLevelMines::CreateSpecialObjects(int x, int y, const MapCell& cell)
           go->PosY = y;
           PlaceGameObject(go);
         }
+
+        MapArray[x][y]->ZoneMarker = cell.ZoneMarker;
       }
     }
     break;

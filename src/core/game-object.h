@@ -138,6 +138,8 @@ class GameObject
     //
     bool Special = false;
 
+    TransformedRoom ZoneMarker = TransformedRoom::UNMARKED;
+
     bool Blocking    = false;
     bool BlocksSight = false;
     bool Revealed    = false;

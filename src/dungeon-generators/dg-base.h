@@ -8,53 +8,10 @@
 #include <stack>
 #include <variant>
 
+#include "enumerations.h"
 #include "constants.h"
 #include "position.h"
 #include "rect.h"
-
-//
-// Used in FeatureRooms generator.
-//
-enum class FeatureRoomType
-{
-  EMPTY = 0,
-  SHRINE,
-  GARDEN,
-  FLOODED,
-  DIAMOND,
-  ROUND,
-  PILLARS,
-  POND,
-  FOUNTAIN
-};
-
-//
-// Used to procedurally convert empty rooms into something interesting.
-//
-enum class TransformedRoom
-{
-  UNMARKED = -1,
-  EMPTY,
-  TREASURY,
-  STORAGE,
-  FLOODED,
-  CHESTROOM,
-  GRAVEYARD,
-  LIBRARY,
-  SHRINE,
-  HALLOWED_GROUND,
-  CURSED_GROUND,
-  BATTLEFIELD,
-  ZOO
-};
-
-enum class CornerType
-{
-  UL = 0,
-  UR,
-  DL,
-  DR
-};
 
 //
 // {

@@ -14,7 +14,12 @@ BTResult TaskMoveSmart::Run()
   {
     auto& so = Map::Instance().CurrentLevel->StaticMapObjects[c.X][c.Y];
 
+    //
+    // TODO: certain monsters can go to zones otherwise blocked.
+    // E.g. undead cannot step on SHRINE or HALLOWED_GROUND, but kobold can.
+    //
     bool isOk = !Map::Instance().CurrentLevel->MapArray[c.X][c.Y]->Special;
+
     bool isOccupied = Map::Instance().CurrentLevel->MapArray[c.X][c.Y]->Occupied;
     bool isDoor = (so != nullptr && (so->GetComponent<DoorComponent>() != nullptr));
 

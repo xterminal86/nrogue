@@ -1105,15 +1105,20 @@ std::vector<size_t> DGBase::TryToFindSuitableRooms(const std::vector<PairII>& ex
 
 void DGBase::PlaceTreasury(const Rect& area)
 {
+  bool toggler = false;
   int counter = 0;
+
   for (int x = area.X1; x <= area.X2; x++)
   {
+    toggler = !toggler;
+    counter = toggler ? 0 : 1;
+
     for (int y = area.Y1; y <= area.Y2; y++)
     {
       _map[x][y].Image = (counter % 2 == 0) ? '1' : '2';
       _map[x][y].ZoneMarker = TransformedRoom::TREASURY;
 
-      if (Util::Rolld100(40))
+      if (Util::Rolld100(30))
       {
         _map[x][y].ObjectHere = ItemType::COINS;
       }

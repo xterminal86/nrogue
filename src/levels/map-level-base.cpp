@@ -276,7 +276,9 @@ void MapLevelBase::RecordEmptyCells()
   {
     for (int y = 0; y < MapSize.Y; y++)
     {
-      if (!IsCellBlocking({ x, y }))
+      if (!IsCellBlocking({ x, y })
+       && (MapArray[x][y]->ZoneMarker == TransformedRoom::UNMARKED
+        || MapArray[x][y]->ZoneMarker == TransformedRoom::EMPTY))
       {
         Position pos(x, y);
         _emptyCells.push_back(pos);
@@ -482,11 +484,15 @@ bool MapLevelBase::IsOutOfBounds(int x, int y)
 
 bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
 {
+  auto& map = Map::Instance().CurrentLevel->MapArray;
+
   bool blocked   = IsCellBlocking(pos);
   bool occupied  = false;
   bool danger    = Map::Instance().IsTileDangerous(pos);
   bool farEnough = false;
-  bool special   = Map::Instance().CurrentLevel->MapArray[pos.X][pos.Y]->Special;
+  bool unmarked  = (map[pos.X][pos.Y]->ZoneMarker == TransformedRoom::UNMARKED
+                 || map[pos.X][pos.Y]->ZoneMarker == TransformedRoom::EMPTY);
+  bool special   = map[pos.X][pos.Y]->Special;
 
   int distanceToPlayer = Util::BlockDistance(_playerRef->GetPosition(), pos);
 
@@ -554,7 +560,7 @@ bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
     }
   }
 
-  return (!blocked && !occupied && !danger && !special);
+  return (!blocked && !occupied && !danger && unmarked && !special);
 }
 
 // =============================================================================
