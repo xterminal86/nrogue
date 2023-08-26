@@ -204,7 +204,8 @@ bool GameObject::CanMoveTo(const Position& pos)
 // =============================================================================
 
 void GameObject::Draw(const uint32_t& overrideColorFg,
-                      const uint32_t& overrideColorBg)
+                      const uint32_t& overrideColorBg,
+                      int imageOverride)
 {
   bool dontDraw = (FgColor == Colors::None
                 && BgColor == Colors::None
@@ -218,7 +219,9 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
 
   Printer::Instance().PrintFB(PosX + _levelOwner->MapOffsetX,
                               PosY + _levelOwner->MapOffsetY,
-                              Image,
+                              (imageOverride != -1)
+                              ? imageOverride
+                              : Image,
                               overrideColorFg == Colors::None
                               ? FgColor
                               : overrideColorFg,

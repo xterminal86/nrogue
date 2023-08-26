@@ -61,7 +61,8 @@ class GameObject
     bool CanMoveTo(const Position& pos);
 
     void Draw(const uint32_t& overrideFgColor = Colors::None,
-              const uint32_t& overrideBgColor = Colors::None);
+              const uint32_t& overrideBgColor = Colors::None,
+              int imageOverride = -1);
 
     template <typename T, typename ... Args>
     inline T* AddComponent(Args ... args)

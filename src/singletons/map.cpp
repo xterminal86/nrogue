@@ -1077,6 +1077,8 @@ void Map::DrawNonVisibleMapTile(int x, int y)
                        ? Colors::FogOfWarColor
                        : Colors::BlackColor;
 
+  int image = CurrentLevel->MapArray[x][y]->Image;
+
   //
   // If tile's fg color is already black
   // ("block" tiles with no symbols like water, floor, walls etc.),
@@ -1084,11 +1086,23 @@ void Map::DrawNonVisibleMapTile(int x, int y)
   //
   if (CurrentLevel->MapArray[x][y]->FgColor == Colors::BlackColor)
   {
-    CurrentLevel->MapArray[x][y]->Draw(Colors::BlackColor, tileColor);
+    //
+    // Block tiles are looking exactly as walls under fog of war,
+    // so let's replace them with '.'
+    //
+    CurrentLevel->MapArray[x][y]->Draw(Colors::BlackColor,
+                                       tileColor,
+                                       (image == ' ')
+                                       ? '.'
+                                       : image);
   }
   else
   {
-    CurrentLevel->MapArray[x][y]->Draw(tileColor, Colors::BlackColor);
+    CurrentLevel->MapArray[x][y]->Draw(tileColor,
+                                       Colors::BlackColor,
+                                       (image == ' ')
+                                       ? '.'
+                                       : image);
   }
 }
 

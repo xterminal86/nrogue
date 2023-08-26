@@ -1188,7 +1188,7 @@ void DGBase::PlaceStorage(const Rect& area)
     {
       _map[x][y].ZoneMarker = TransformedRoom::STORAGE;
 
-      if (Util::Rolld100(40))
+      if (Util::Rolld100(30))
       {
         _map[x][y].ObjectHere = GameObjectType::CONTAINER;
       }

@@ -8,7 +8,9 @@
 void RNG::InitSpecific()
 {
   auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+
   Random.seed(seed);
+
   Seed = seed;
 
   GenerateSeedString("<seed was randomized>");
@@ -22,7 +24,6 @@ void RNG::SetSeed(const std::string& string)
 
   if (string.empty())
   {
-    //DebugLog("Seed value is empty, generating random\n");
     isSeedValid = false;
   }
   else
@@ -45,6 +46,7 @@ void RNG::SetSeed(const std::string& string)
 void RNG::SetSeed(size_t seed)
 {
   Seed = seed;
+
   Random.seed(Seed);
 
   GenerateSeedString("<seed was set by value>");

@@ -42,7 +42,6 @@ void EnterNameState::HandleInput()
 
     case VK_ENTER:
     {
-      // Check if entered string is only spaces
       if (_nameEntered.find_first_not_of(' ') == std::string::npos)
       {
         _nameEntered.clear();
@@ -62,7 +61,7 @@ void EnterNameState::HandleInput()
         RNG::Instance().SetSeed(_seedEntered);
       }
 
-      Application::Instance().PlayerInstance.Name = _nameEntered;
+      Application::Instance().PlayerInstance.Name       = _nameEntered;
       Application::Instance().PlayerInstance.ObjectName = _nameEntered;
 
       Application::Instance().ChangeState(GameStates::INTRO_STATE);
