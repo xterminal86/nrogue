@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <filesystem>
 
 #include "version-config.h"
 
@@ -38,19 +39,19 @@ class MenuState : public GameState
     "(c) 2018-2023"
   };
 
-  const std::string _welcome         = "(press 'Enter' to start, 'q' to exit)";
+  const std::string _welcome         = "Press 'Enter' to start, 'q' to exit";
   const std::string _savefilePresent = "(save file found - press 'L' to load)";
 
   const std::vector<std::string> _picture =
   {
-    "...T...T...T....#   ",
-    ".T...T...T...T..#   ",
-    "...T...T...T....#   ",
-    "pppppppppppppppp+   ",
-    "pppppppppppppp@p+   ",
-    "...T...T...T....#   ",
-    ".T...T...T...T..#   ",
-    "...T...T...T....#   ",
+    "...T...T...T....#",
+    ".T...T...T...T..#",
+    "...T...T...T....#",
+    "pppppppppppppppp+",
+    "pppppppppppppp@p+",
+    "...T...T...T....#",
+    ".T...T...T...T..#",
+    "...T...T...T....#",
   };
 
   #ifdef USE_SDL
@@ -78,6 +79,8 @@ class MenuState : public GameState
   int _pictureY = 0;
 
   Position _borderSize;
+
+  bool _saveFileFound = false;
 
   std::map<std::pair<int, int>, uint32_t> _grassColorByPosition;
 };

@@ -20,6 +20,9 @@ void MenuState::Init()
 #endif
 
   PrepareGrassTiles();
+
+  std::filesystem::path p = Strings::SaveFileName;
+  _saveFileFound = std::filesystem::exists(p);
 }
 
 // =============================================================================
@@ -227,10 +230,19 @@ void MenuState::Update(bool forceUpdate)
     }
 
     Printer::Instance().PrintFB(_twHalf,
-                                _th - 4,
+                                _th - 5,
                                 _welcome,
                                 Printer::kAlignCenter,
                                 Colors::WhiteColor);
+
+    if (_saveFileFound)
+    {
+      Printer::Instance().PrintFB(_twHalf,
+                                  _th - 4,
+                                  _savefilePresent,
+                                  Printer::kAlignCenter,
+                                  0x44FF44);
+    }
 
     for (size_t i = 0; i < _signature.size(); i++)
     {

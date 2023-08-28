@@ -25,7 +25,7 @@ void SaveGameState::HandleInput()
       break;
 
     case 'y':
-      SaveGame();
+      Application::Instance().SaveGame();
       Application::Instance().ChangeState(GameStates::EXIT_GAME);
       break;
 
@@ -56,10 +56,4 @@ void SaveGameState::Update(bool forceUpdate)
 
     Printer::Instance().Render();
   }
-}
-
-// =============================================================================
-
-void SaveGameState::SaveGame()
-{
 }

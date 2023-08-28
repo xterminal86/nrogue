@@ -1,9 +1,9 @@
-#ifndef LOADTOWNSTATE_H
-#define LOADTOWNSTATE_H
+#ifndef STARTGAMESTATE_H
+#define STARTGAMESTATE_H
 
 #include "gamestate.h"
 
-class LoadTownState : public GameState
+class StartGameState : public GameState
 {
   public:
     void HandleInput() override;

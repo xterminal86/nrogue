@@ -13,6 +13,7 @@
 struct SaveFile
 {
   std::string PlayerName;
+  PlayerClass Class;
   size_t WorldSeed;
   std::vector<int> KeysPressed;
 };
@@ -38,6 +39,8 @@ class Application : public Singleton<Application>
                        const uint32_t& cursorColor = Colors::None);
 
     void WriteObituary(bool wasKilled = true);
+
+    void SaveGame();
 
     static uint64_t GetNewGlobalId();
 
@@ -110,13 +113,13 @@ class Application : public Singleton<Application>
 
     uint64_t PlayerTurnsPassed = 0;
 
+    SaveFile SaveData;
+
   protected:
     void InitSpecific() override;
 
   private:
     bool _appReady = false;
-
-    SaveFile _savedGame;
 
     GameState* _currentState = nullptr;
     GameState* _previousState = nullptr;

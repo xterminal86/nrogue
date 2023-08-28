@@ -54,6 +54,17 @@
     #define LogPrint(str, ...)
 #endif
 
+#ifdef USE_SDL
+  #define ConsoleLog(format, ...) SDL_Log(format, ##__VA_ARGS__)
+#else
+  #define ConsoleLog(format, ...)    \
+    do                               \
+    {                                \
+      printf(format, ##__VA_ARGS__); \
+      fflush(stdout);                \
+    } while(false)
+#endif
+
 // Coded Map
 using CM = std::vector<std::vector<std::pair<uint32_t, uint32_t>>>;
 

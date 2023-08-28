@@ -59,6 +59,8 @@ class GameState
   protected:
     int _keyPressed = -1;
 
+    std::unordered_map<int, bool> _keysToRecord;
+
     void DrawHeader(const std::string& header);
 
     const int _tw;

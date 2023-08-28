@@ -12,7 +12,7 @@
 #include "intro-state.h"
 #include "inventory-state.h"
 #include "help-state.h"
-#include "load-town-state.h"
+#include "start-game-state.h"
 #include "container-interact-state.h"
 #include "message-log-state.h"
 #include "look-input-state.h"
@@ -68,7 +68,7 @@ void Application::InitSpecific()
   Printer::Instance().AddMessage("You begin your quest");
   Printer::Instance().AddMessage("Press 'h' for help");
 
-  _savedGame.KeysPressed.reserve(64 * 1024);
+  SaveData.KeysPressed.reserve(64 * 1024);
 
   _appReady = true;
 }
@@ -379,6 +379,33 @@ void Application::WriteObituary(bool wasKilled)
   postMortem << ss.str();
 
   postMortem.close();
+}
+
+// =============================================================================
+
+void Application::SaveGame()
+{
+  std::ofstream saveFile(Strings::SaveFileName.c_str());
+  std::stringstream ss;
+
+  SaveData.WorldSeed  = RNG::Instance().Seed;
+  SaveData.PlayerName = PlayerInstance.Name;
+  SaveData.Class      = PlayerInstance.GetClass();
+
+  ss << SaveData.WorldSeed  << '\n';
+  ss << SaveData.PlayerName << '\n';
+  ss << (int)SaveData.Class << '\n';
+
+  for (auto& key : SaveData.KeysPressed)
+  {
+    ss << key << '\n';
+  }
+
+  saveFile << ss.str();
+
+  saveFile.close();
+
+  ConsoleLog("Game saved - see you next time!\n");
 }
 
 // =============================================================================
@@ -943,12 +970,7 @@ void Application::Cleanup()
 
   LogPrint("Application::Cleanup()");
 
-#ifdef USE_SDL
-  SDL_Log("Goodbye!\n");
-#else
-  printf("Goodbye!\n");
-  fflush(stdout);
-#endif
+  ConsoleLog("Goodbye!\n");
 }
 
 // =============================================================================
@@ -985,7 +1007,7 @@ void Application::InitGameStates()
   RegisterState<IntroState>            (GameStates::INTRO_STATE);
   RegisterState<InventoryState>        (GameStates::INVENTORY_STATE);
   RegisterState<HelpState>             (GameStates::HELP_STATE);
-  RegisterState<LoadTownState>         (GameStates::LOAD_TOWN_STATE);
+  RegisterState<StartGameState>        (GameStates::START_GAME_STATE);
   RegisterState<ContainerInteractState>(GameStates::CONTAINER_INTERACT_STATE);
   RegisterState<MessageLogState>       (GameStates::SHOW_MESSAGES_STATE);
   RegisterState<LookInputState>        (GameStates::LOOK_INPUT_STATE);
@@ -1008,7 +1030,8 @@ void Application::InitGameStates()
 
   for (auto& state : _gameStates)
   {
-    state.second->Init();
+    GameState* st = state.second.get();
+    st->Init();
   }
 }
 

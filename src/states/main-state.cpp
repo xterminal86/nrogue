@@ -11,6 +11,8 @@
 void MainState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
+
+
 }
 
 // =============================================================================
@@ -208,6 +210,14 @@ void MainState::HandleInput()
     // -------------------------------------------------------------------------
     default:
       break;
+  }
+
+  //
+  // FIXME: record only keys that did something.
+  //
+  if (_keyPressed != -1)
+  {
+    Application::Instance().SaveData.KeysPressed.push_back(_keyPressed);
   }
 }
 

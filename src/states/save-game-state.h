@@ -13,8 +13,6 @@ class SaveGameState : public GameState
     void Prepare() override;
 
   private:
-    void SaveGame();
-
     Player* _playerRef = nullptr;
 };
 

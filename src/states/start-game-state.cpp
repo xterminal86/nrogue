@@ -1,11 +1,11 @@
-#include "load-town-state.h"
+#include "start-game-state.h"
 
 #include "application.h"
 #include "printer.h"
 #include "map.h"
 #include "map-level-town.h"
 
-void LoadTownState::HandleInput()
+void StartGameState::HandleInput()
 {
   Printer::Instance().Clear();
   Printer::Instance().Render();
@@ -38,6 +38,6 @@ void LoadTownState::HandleInput()
 
 // =============================================================================
 
-void LoadTownState::Update(bool forceUpdate)
+void StartGameState::Update(bool forceUpdate)
 {
 }
