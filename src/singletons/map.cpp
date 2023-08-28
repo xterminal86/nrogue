@@ -67,6 +67,20 @@ void Map::Draw()
 
 // =============================================================================
 
+void Map::LoadTown()
+{
+  if (_townLoaded)
+  {
+    return;
+  }
+
+  ChangeOrInstantiateLevel(MapType::TOWN);
+
+  _townLoaded = true;
+}
+
+// =============================================================================
+
 void Map::Update()
 {
   if (CurrentLevel == nullptr)

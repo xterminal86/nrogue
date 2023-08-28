@@ -37,52 +37,53 @@ void MainState::HandleInput()
 
   switch (_keyPressed)
   {
+    // -------------------------------------------------------------------------
     case ALT_K7:
     case NUMPAD_7:
       ProcessMovement({ -1, -1 });
       break;
-
+    // -------------------------------------------------------------------------
     case ALT_K8:
     case NUMPAD_8:
       ProcessMovement({ 0, -1 });
       break;
-
+    // -------------------------------------------------------------------------
     case ALT_K9:
     case NUMPAD_9:
       ProcessMovement({ 1, -1 });
       break;
-
+    // -------------------------------------------------------------------------
     case ALT_K4:
     case NUMPAD_4:
       ProcessMovement({ -1, 0 });
       break;
-
+    // -------------------------------------------------------------------------
     case ALT_K2:
     case NUMPAD_2:
       ProcessMovement({ 0, 1 });
       break;
-
+    // -------------------------------------------------------------------------
     case ALT_K6:
     case NUMPAD_6:
       ProcessMovement({ 1, 0 });
       break;
-
+    // -------------------------------------------------------------------------
     case ALT_K1:
     case NUMPAD_1:
       ProcessMovement({ -1, 1 });
       break;
-
+    // -------------------------------------------------------------------------
     case ALT_K3:
     case NUMPAD_3:
       ProcessMovement({ 1, 1 });
       break;
-
+    // -------------------------------------------------------------------------
     case ALT_K5:
     case NUMPAD_5:
       Printer::Instance().AddMessage(Strings::MsgWait);
       _playerRef->FinishTurn();
       break;
-
+    // -------------------------------------------------------------------------
     case 'a':
     {
       if (Map::Instance().CurrentLevel->Peaceful)
@@ -99,7 +100,7 @@ void MainState::HandleInput()
       }
     }
     break;
-
+    // -------------------------------------------------------------------------
     case '$':
     {
       auto str = Util::StringFormat("You have %i %s",
@@ -108,49 +109,49 @@ void MainState::HandleInput()
       Printer::Instance().AddMessage(str);
     }
     break;
-
+    // -------------------------------------------------------------------------
     case 'e':
       Application::Instance().ChangeState(GameStates::INVENTORY_STATE);
       break;
-
+    // -------------------------------------------------------------------------
     case 'm':
       Application::Instance().ChangeState(GameStates::SHOW_MESSAGES_STATE);
       break;
-
+    // -------------------------------------------------------------------------
     case 'l':
       Application::Instance().ChangeState(GameStates::LOOK_INPUT_STATE);
       break;
-
+    // -------------------------------------------------------------------------
     case 'i':
       Application::Instance().ChangeState(GameStates::INTERACT_INPUT_STATE);
       break;
-
+    // -------------------------------------------------------------------------
     case 'I':
       DisplayScenarioInformation();
       break;
-
+    // -------------------------------------------------------------------------
     case 'g':
       TryToPickupItems();
       break;
-
+    // -------------------------------------------------------------------------
     case '@':
       Application::Instance().ChangeState(GameStates::INFO_STATE);
       break;
-
+    // -------------------------------------------------------------------------
     case 'H':
     case 'h':
     case '?':
       Application::Instance().ChangeState(GameStates::HELP_STATE);
       break;
-
+    // -------------------------------------------------------------------------
     case 'Q':
       Application::Instance().ChangeState(GameStates::EXITING_STATE);
       break;
-
+    // -------------------------------------------------------------------------
     case 'f':
       ProcessRangedWeapon();
       break;
-
+    // -------------------------------------------------------------------------
     case '>':
     {
       auto res = CheckStairs('>');
@@ -160,7 +161,7 @@ void MainState::HandleInput()
       }
     }
     break;
-
+    // -------------------------------------------------------------------------
     case '<':
     {
       auto res = CheckStairs('<');
@@ -170,7 +171,11 @@ void MainState::HandleInput()
       }
     }
     break;
-
+    // -------------------------------------------------------------------------
+    case 'S':
+      Application::Instance().ChangeState(GameStates::SAVE_GAME_STATE);
+      break;
+    // -------------------------------------------------------------------------
 #ifdef DEBUG_BUILD
     case '`':
       Application::Instance().ChangeState(GameStates::DEV_CONSOLE);
@@ -200,7 +205,7 @@ void MainState::HandleInput()
       GetActorsAround();
       break;
 #endif
-
+    // -------------------------------------------------------------------------
     default:
       break;
   }

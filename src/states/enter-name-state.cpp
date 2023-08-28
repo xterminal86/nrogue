@@ -91,7 +91,9 @@ void EnterNameState::HandleInput()
 
     default:
     {
-      // Don't include special characters
+      //
+      // Don't include special characters.
+      //
       if (_keyPressed >= 32 && _keyPressed <= 126)
       {
         if (_inputType == InputType::NAME && _nameEntered.length() < (size_t)MaxNameLength - 3)
@@ -124,8 +126,6 @@ void EnterNameState::HandleInput()
             _seedEntered += c;
 
             _seedHex = std::stoull(_seedEntered, nullptr, 16);
-
-            DebugLog("Seed entered: 0x%lX", _seedHex);
           }
         }
       }

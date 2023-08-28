@@ -21,11 +21,6 @@ class MapLevelMines : public MapLevelBase
 
     void CreateCommonObjects(int x, int y, char image) override;
     void CreateSpecialObjects(int x, int y, const MapCell& cell) override;
-
-#ifdef false
-  private:
-    void CreateRandomBoxes();
-#endif
 };
 
 #endif // MAPLEVELMINES_H

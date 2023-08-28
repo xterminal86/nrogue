@@ -3,7 +3,6 @@
 
 #include "application.h"
 #include "map.h"
-#include "map-level-town.h"
 
 void IntroState::Prepare()
 {
@@ -27,50 +26,12 @@ void IntroState::HandleInput()
   switch (_keyPressed)
   {
     case VK_ENTER:
-    {
-      PrepareTown();
-
-      // FIXME: debug
-      // OverrideStartingLevel<MapLevelMines>(MapType::MINES_5, { 60, 60 });
-
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
-    }
-    break;
+      Application::Instance().ChangeState(GameStates::LOAD_TOWN_STATE);
+      break;
 
     default:
       break;
   }
-}
-
-// =============================================================================
-
-void IntroState::PrepareTown()
-{
-  Printer::Instance().Clear();
-  Printer::Instance().Render();
-
-  Map::Instance().ChangeOrInstantiateLevel(MapType::TOWN);
-
-  auto& curLvl = Map::Instance().CurrentLevel;
-  auto& playerRef = Application::Instance().PlayerInstance;
-
-  //
-  // Some NPCs contain bonus lines
-  // depending on selected player character class and stats,
-  // as well as other initializations (e.g. food cost in shops
-  // depends on player hunger rate which is determined by selected class)
-  // so we need to initialize player first.
-  //
-  playerRef.SetLevelOwner(curLvl);
-  playerRef.Init();
-  playerRef.MoveTo({ 5, 8 });
-  playerRef.AddExtraItems();
-  playerRef.VisibilityRadius.Set(curLvl->VisibilityRadius);
-
-  curLvl->AdjustCamera();
-
-  MapLevelTown* mlt = static_cast<MapLevelTown*>(curLvl);
-  mlt->CreateNPCs();
 }
 
 // =============================================================================

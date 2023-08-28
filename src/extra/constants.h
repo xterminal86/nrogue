@@ -241,6 +241,8 @@ namespace Strings
   // ---------------------------------------------------------------------------
   extern const std::vector<std::string> MsgNotInTown;
   // ---------------------------------------------------------------------------
+  extern const std::string SaveFileName;
+  // ---------------------------------------------------------------------------
   namespace TileNames
   {
     extern const std::string MineWallText;

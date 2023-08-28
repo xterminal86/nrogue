@@ -38,7 +38,8 @@ class MenuState : public GameState
     "(c) 2018-2023"
   };
 
-  const std::string _welcome = "(press 'Enter' to start, 'q' to exit)";
+  const std::string _welcome         = "(press 'Enter' to start, 'q' to exit)";
+  const std::string _savefilePresent = "(save file found - press 'L' to load)";
 
   const std::vector<std::string> _picture =
   {

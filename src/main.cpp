@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 
   Application::Instance().Init();
 
-  if (!Application::Instance().AppReady())
+  if (!Application::Instance().IsAppReady())
   {
     DebugLog("There was an error during application initialization - no sense in continuing");
     return 1;

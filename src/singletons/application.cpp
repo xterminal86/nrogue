@@ -12,6 +12,7 @@
 #include "intro-state.h"
 #include "inventory-state.h"
 #include "help-state.h"
+#include "load-town-state.h"
 #include "container-interact-state.h"
 #include "message-log-state.h"
 #include "look-input-state.h"
@@ -20,6 +21,7 @@
 #include "shopping-state.h"
 #include "returner-state.h"
 #include "repair-state.h"
+#include "save-game-state.h"
 #include "pickup-item-state.h"
 #include "exiting-state.h"
 #include "message-box-state.h"
@@ -65,6 +67,8 @@ void Application::InitSpecific()
 
   Printer::Instance().AddMessage("You begin your quest");
   Printer::Instance().AddMessage("Press 'h' for help");
+
+  _savedGame.KeysPressed.reserve(64 * 1024);
 
   _appReady = true;
 }
@@ -192,7 +196,7 @@ GameState* Application::GetGameStateRefByName(GameStates stateName)
 
 // =============================================================================
 
-bool Application::AppReady()
+bool Application::IsAppReady()
 {
   return _appReady;
 }
@@ -981,6 +985,7 @@ void Application::InitGameStates()
   RegisterState<IntroState>            (GameStates::INTRO_STATE);
   RegisterState<InventoryState>        (GameStates::INVENTORY_STATE);
   RegisterState<HelpState>             (GameStates::HELP_STATE);
+  RegisterState<LoadTownState>         (GameStates::LOAD_TOWN_STATE);
   RegisterState<ContainerInteractState>(GameStates::CONTAINER_INTERACT_STATE);
   RegisterState<MessageLogState>       (GameStates::SHOW_MESSAGES_STATE);
   RegisterState<LookInputState>        (GameStates::LOOK_INPUT_STATE);
@@ -989,6 +994,7 @@ void Application::InitGameStates()
   RegisterState<ShoppingState>         (GameStates::SHOPPING_STATE);
   RegisterState<ReturnerState>         (GameStates::RETURNER_STATE);
   RegisterState<RepairState>           (GameStates::REPAIR_STATE);
+  RegisterState<SaveGameState>         (GameStates::SAVE_GAME_STATE);
   RegisterState<PickupItemState>       (GameStates::PICKUP_ITEM_STATE);
   RegisterState<ExitingState>          (GameStates::EXITING_STATE);
   RegisterState<MessageBoxState>       (GameStates::MESSAGE_BOX_STATE);

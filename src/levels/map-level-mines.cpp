@@ -387,14 +387,6 @@ void MapLevelMines::CreateLevel()
 
     ConstructFromBuilder(lb);
 
-    /*
-    if (MapType_ == MapType::MINES_1 || MapType_ == MapType::MINES_2)
-    {
-      CreateRandomBoxes();
-      RecordEmptyCells();
-    }
-    */
-
     RecordEmptyCells();
 
     PlaceStairs();
@@ -754,6 +746,8 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
 
 void MapLevelMines::CreateSpecialObjects(int x, int y, const MapCell& cell)
 {
+  MapArray[x][y]->ZoneMarker = cell.ZoneMarker;
+
   switch (cell.ZoneMarker)
   {
     case TransformedRoom::SHRINE:
@@ -762,7 +756,6 @@ void MapLevelMines::CreateSpecialObjects(int x, int y, const MapCell& cell)
       {
         ShrineType t = std::get<ShrineType>(cell.ObjectHere);
         PlaceShrine({ x, y }, t);
-        MapArray[x][y]->ZoneMarker = cell.ZoneMarker;
       }
     }
     break;
@@ -791,68 +784,8 @@ void MapLevelMines::CreateSpecialObjects(int x, int y, const MapCell& cell)
           go->PosY = y;
           PlaceGameObject(go);
         }
-
-        MapArray[x][y]->ZoneMarker = cell.ZoneMarker;
       }
     }
     break;
   }
 }
-
-#ifdef false
-void MapLevelMines::CreateRandomBoxes()
-{
-  //auto curLvl = Map::Instance().CurrentLevel;
-
-  auto emptyCellsCopy = _emptyCells;
-
-  int maxAttempts = 5;
-  int maxBoxes = 4;
-
-  for (int i = 0; i < maxAttempts; i++)
-  {
-    // Calculate range to check needed for required amount of barrels
-    size_t boxesNum = RNG::Instance().RandomRange(1, maxBoxes + 1);
-    int squareSideLengthRequired = (int)std::ceil(std::sqrt(boxesNum));
-    int rangeNeeded = (squareSideLengthRequired % 2 == 0)
-                     ? squareSideLengthRequired / 2
-                    : (squareSideLengthRequired - 1) / 2;
-
-    if (rangeNeeded == 0)
-    {
-      rangeNeeded = 1;
-    }
-
-    int index = RNG::Instance().RandomRange(0, emptyCellsCopy.size());
-    Position pos = emptyCellsCopy[index];
-    auto res = Map::Instance().GetEmptyCellsAround(pos, rangeNeeded);
-    if (res.size() >= boxesNum)
-    {
-      //
-      // res.size() is a minimum required square to put numBarrels into,
-      // which may be significantly larger than amount of barrels to create
-      // (e.g. 10 barrels can only fit in 5x5=25 square area around point),
-      // so we need to check the number of barrels created so far separately.
-      //
-      size_t created = 0;
-      for (auto& p : res)
-      {
-        if (created >= boxesNum)
-        {
-          break;
-        }
-
-        if (MapArray[p.X][p.Y]->Type != GameObjectType::LAVA
-         && MapArray[p.X][p.Y]->Type != GameObjectType::DEEP_WATER)
-        {
-          GameObject* box = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(p.X, p.Y, 'B', "Wooden Box", Colors::WoodColor, Colors::BlackColor);
-          PlaceStaticObject(box);
-          created++;
-        }
-      }
-
-      emptyCellsCopy.erase(emptyCellsCopy.begin() + index);
-    }
-  }
-}
-#endif

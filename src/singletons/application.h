@@ -10,6 +10,13 @@
 #include "gamestate.h"
 #include "player.h"
 
+struct SaveFile
+{
+  std::string PlayerName;
+  size_t WorldSeed;
+  std::vector<int> KeysPressed;
+};
+
 class Application : public Singleton<Application>
 {
   public:
@@ -82,7 +89,9 @@ class Application : public Singleton<Application>
     GameState* GetGameStateRefByName(GameStates stateName);
     bool CurrentStateIs(GameStates stateName);
 
-    bool AppReady();
+    bool IsAppReady();
+
+    bool ReplayMode = false;
 
 #ifdef USE_SDL
     SDL_Renderer* Renderer = nullptr;
@@ -106,6 +115,8 @@ class Application : public Singleton<Application>
 
   private:
     bool _appReady = false;
+
+    SaveFile _savedGame;
 
     GameState* _currentState = nullptr;
     GameState* _previousState = nullptr;

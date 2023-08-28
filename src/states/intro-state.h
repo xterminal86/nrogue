@@ -68,8 +68,6 @@ class IntroState : public GameState
     int _textPositionX = 0;
     int _textPositionY = 0;
 
-    void PrepareTown();
-
     const std::unordered_map<PlayerClass, std::string> _scenarioNameByClass =
     {
       { PlayerClass::SOLDIER,  "WARRIOR'S REST"      },
@@ -77,19 +75,6 @@ class IntroState : public GameState
       { PlayerClass::ARCANIST, "HOLY QUEST"          },
       { PlayerClass::CUSTOM,   "MYSTERIOUS STRANGER" }
     };
-
-    #ifdef DEBUG_BUILD
-    template <typename T>
-    void OverrideStartingLevel(MapType level, const Position& size)
-    {
-      Map::Instance()._levels[level] = std::unique_ptr<T>(new T(size.X, size.Y, level, (int)level));
-      Map::Instance().CurrentLevel = Map::Instance()._levels[level].get();
-      Map::Instance()._levels[level]->PrepareMap(Map::Instance()._levels[level].get());
-      Application::Instance().PlayerInstance.SetLevelOwner(Map::Instance().CurrentLevel);
-      Application::Instance().PlayerInstance.MoveTo(Map::Instance().CurrentLevel->LevelStart);
-      Map::Instance().CurrentLevel->AdjustCamera();
-    }
-    #endif
 };
 
 #endif // INTROSTATE_H

@@ -30,6 +30,8 @@ class Map : public Singleton<Map>
 
     void Draw();
 
+    void LoadTown();
+
     void PlaceActor(GameObject* actor);
     void PlaceGameObject(GameObject* goToInsert);
     void RemoveDestroyed(GameObjectCollectionType c = GameObjectCollectionType::ALL);
@@ -118,6 +120,8 @@ class Map : public Singleton<Map>
     void InitSpecific() override;
 
   private:
+    bool _townLoaded = false;
+
     std::unordered_map<MapType, std::unique_ptr<MapLevelBase>> _levels;
     std::unordered_map<MapType, bool> _mapVisitFirstTime;
 
@@ -141,8 +145,6 @@ class Map : public Singleton<Map>
     Player* _playerRef = nullptr;
 
     Position _windowSize;
-
-    friend class IntroState;
 };
 
 #endif

@@ -221,6 +221,8 @@ namespace Strings
   // ---------------------------------------------------------------------------
   const std::vector<std::string> MsgNotInTown = { "Not here", "Not in town" };
   // ---------------------------------------------------------------------------
+  const std::string SaveFileName = "save.nrg";
+  // ---------------------------------------------------------------------------
   namespace TileNames
   {
     const std::string MineWallText     = "Mine Wall";
