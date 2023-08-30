@@ -410,6 +410,48 @@ void Application::SaveGame()
 
 // =============================================================================
 
+void Application::LoadGame()
+{
+  std::ifstream saveFile(Strings::SaveFileName.c_str());
+
+  auto ReadLine = [&saveFile]()
+  {
+    std::string line;
+    std::getline(saveFile, line);
+    ConsoleLog("  %s\n", line.c_str());
+    return line;
+  };
+
+  std::string line;
+
+  SaveData.WorldSeed  = std::stoull(ReadLine());
+  SaveData.PlayerName = ReadLine();
+  SaveData.Class      = (PlayerClass)std::stoi(ReadLine());
+
+  SaveData.KeysPressed.clear();
+
+  while (std::getline(saveFile, line))
+  {
+    int key = std::stoi(line);
+    SaveData.KeysPressed.push_back(key);
+  }
+
+  saveFile.close();
+
+  ConsoleLog("File loaded:\n");
+  ConsoleLog("Seed  = %lu\n", SaveData.WorldSeed);
+  ConsoleLog("Name  = %s\n", SaveData.PlayerName.c_str());
+  ConsoleLog("Class = (%d)\n", (int)SaveData.Class);
+  ConsoleLog("Actions:\n");
+
+  for (auto& key : SaveData.KeysPressed)
+  {
+    ConsoleLog("%d\n", key);
+  }
+}
+
+// =============================================================================
+
 size_t Application::SavePossessions(std::stringstream& ss)
 {
   size_t stringResizeWidth = 0;

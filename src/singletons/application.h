@@ -41,6 +41,7 @@ class Application : public Singleton<Application>
     void WriteObituary(bool wasKilled = true);
 
     void SaveGame();
+    void LoadGame();
 
     static uint64_t GetNewGlobalId();
 

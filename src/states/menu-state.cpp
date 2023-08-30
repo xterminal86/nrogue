@@ -37,6 +37,10 @@ void MenuState::HandleInput()
       Application::Instance().ChangeState(GameStates::SELECT_CLASS_STATE);
       break;
 
+    case 'L':
+      Application::Instance().LoadGame();
+      break;
+
     case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::EXIT_GAME);
       break;
