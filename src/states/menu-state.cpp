@@ -9,7 +9,7 @@ void MenuState::Init()
   _titleY = _thHalf / 2 - _title.size() / 2;
 
   _pictureX = _twHalf - _picture[0].length() / 2;
-  _pictureY = _thHalf - _picture.size() / 4 + 1;;
+  _pictureY = _thHalf - _picture.size() / 4 + 1;
 
   _terminalSize = Util::StringFormat("terminal size: %ix%i", _tw, _th);
 
@@ -230,7 +230,7 @@ void MenuState::Update(bool forceUpdate)
     }
 
     Printer::Instance().PrintFB(_twHalf,
-                                _th - 5,
+                                _thHalf + _picture.size(),
                                 _welcome,
                                 Printer::kAlignCenter,
                                 Colors::WhiteColor);
@@ -238,7 +238,7 @@ void MenuState::Update(bool forceUpdate)
     if (_saveFileFound)
     {
       Printer::Instance().PrintFB(_twHalf,
-                                  _th - 4,
+                                  _thHalf + _picture.size() + 1,
                                   _savefilePresent,
                                   Printer::kAlignCenter,
                                   0x44FF44);

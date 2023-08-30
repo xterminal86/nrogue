@@ -4,6 +4,7 @@ dumb-compile/build/
 dumb-compile/CMakeFiles/
 CMakeLists.txt.user*
 nrogue
+save.nrg
 core.*
 *.txt
 !config-template.txt

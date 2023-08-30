@@ -995,6 +995,13 @@ void Application::ForceDrawCurrentState()
 
 // =============================================================================
 
+void Application::RecordAction(int key)
+{
+  SaveData.KeysPressed.push_back(key);
+}
+
+// =============================================================================
+
 void Application::InitGameStates()
 {
   RegisterState<MainState>             (GameStates::MAIN_STATE);

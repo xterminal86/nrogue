@@ -89,6 +89,8 @@ class Application : public Singleton<Application>
 
     void ForceDrawCurrentState();
 
+    void RecordAction(int key);
+
     GameState* GetGameStateRefByName(GameStates stateName);
     bool CurrentStateIs(GameStates stateName);
 
