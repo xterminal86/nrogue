@@ -12,10 +12,12 @@
 
 struct SaveFile
 {
+  using KeyAndCount = std::pair<int, int>;
+
   std::string PlayerName;
   PlayerClass Class;
   size_t WorldSeed;
-  std::vector<int> KeysPressed;
+  std::vector<KeyAndCount> KeysPressed;
 };
 
 class Application : public Singleton<Application>

@@ -396,9 +396,9 @@ void Application::SaveGame()
   ss << SaveData.PlayerName << '\n';
   ss << (int)SaveData.Class << '\n';
 
-  for (auto& key : SaveData.KeysPressed)
+  for (auto& pair : SaveData.KeysPressed)
   {
-    ss << key << '\n';
+    ss << pair.first << " " << pair.second << '\n';
   }
 
   saveFile << ss.str();
@@ -418,7 +418,6 @@ void Application::LoadGame()
   {
     std::string line;
     std::getline(saveFile, line);
-    ConsoleLog("  %s\n", line.c_str());
     return line;
   };
 
@@ -432,8 +431,11 @@ void Application::LoadGame()
 
   while (std::getline(saveFile, line))
   {
-    int key = std::stoi(line);
-    SaveData.KeysPressed.push_back(key);
+    auto spl = Util::StringSplit(line, ' ');
+    int key   = std::stoi(spl[0]);
+    int count = std::stoi(spl[1]);
+    SaveFile::KeyAndCount p = { key, count };
+    SaveData.KeysPressed.push_back(p);
   }
 
   saveFile.close();
@@ -444,10 +446,18 @@ void Application::LoadGame()
   ConsoleLog("Class = (%d)\n", (int)SaveData.Class);
   ConsoleLog("Actions:\n");
 
-  for (auto& key : SaveData.KeysPressed)
+  for (auto& pair : SaveData.KeysPressed)
   {
-    ConsoleLog("%d\n", key);
+    ConsoleLog("%d %d\n", pair.first, pair.second);
   }
+
+  PlayerInstance.Name          = SaveData.PlayerName;
+  PlayerInstance.SelectedClass = (int)SaveData.Class;
+
+  RNG::Instance().SetSeed(SaveData.WorldSeed);
+
+  //std::filesystem::path p = Strings::SaveFileName;
+  //std::filesystem::remove(p);
 }
 
 // =============================================================================
@@ -1039,7 +1049,24 @@ void Application::ForceDrawCurrentState()
 
 void Application::RecordAction(int key)
 {
-  SaveData.KeysPressed.push_back(key);
+  SaveFile::KeyAndCount newAction = { key, 1 };
+
+  if (!SaveData.KeysPressed.empty())
+  {
+    auto& lastAction = SaveData.KeysPressed.back();
+    if (lastAction.first == key)
+    {
+      lastAction.second++;
+    }
+    else
+    {
+      SaveData.KeysPressed.push_back(newAction);
+    }
+  }
+  else
+  {
+    SaveData.KeysPressed.push_back(newAction);
+  }
 }
 
 // =============================================================================

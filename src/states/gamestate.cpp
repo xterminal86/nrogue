@@ -24,6 +24,21 @@ GameState::GameState() :
 #ifdef USE_SDL
 int GameState::GetKeyDown()
 {
+  if (Application::Instance().ReplayMode)
+  {
+    if (!Application::Instance().SaveData.KeysPressed.empty())
+    {
+      // TODO:
+      //int key = Application::Instance().SaveData.KeysPressed.back();
+      //Application::Instance().SaveData.KeysPressed.pop_back();
+      //return key;
+    }
+    else
+    {
+      Application::Instance().ReplayMode = false;
+    }
+  }
+
   int res = -1;
 
   SDL_Event evt;
