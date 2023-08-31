@@ -17,6 +17,12 @@
 
 using Ns = std::chrono::nanoseconds;
 
+#define RECORD_ACTION(key)                    \
+  if (_keysToRecord.count(key) == 1)            \
+  {                                             \
+    Application::Instance().RecordAction(key);  \
+  }
+
 class GameState
 {
   public:

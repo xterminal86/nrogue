@@ -5,6 +5,25 @@
 #include "timer.h"
 #include "util.h"
 
+#define REPLAY_ACTIONS()                                                  \
+  if (Application::Instance().ReplayMode)                                   \
+  {                                                                         \
+    int savedActionToProcess = Application::Instance().GetSavedAction();    \
+                                                                            \
+    if (savedActionToProcess != -1)                                         \
+    {                                                                       \
+      return savedActionToProcess;                                          \
+    }                                                                        \
+    else                                                                     \
+    {                                                                        \
+      Application::Instance().ReplayMode = false;                            \
+      Printer::Instance().AddMessage("Game loaded!");                        \
+      Application::Instance().ForceDrawMainState();                          \
+    }                                                                        \
+  }
+
+// =============================================================================
+
 GameState::GameState() :
   _tw(Printer::TerminalWidth),
   _th(Printer::TerminalHeight),
@@ -24,20 +43,7 @@ GameState::GameState() :
 #ifdef USE_SDL
 int GameState::GetKeyDown()
 {
-  if (Application::Instance().ReplayMode)
-  {
-    if (!Application::Instance().SaveData.KeysPressed.empty())
-    {
-      // TODO:
-      //int key = Application::Instance().SaveData.KeysPressed.back();
-      //Application::Instance().SaveData.KeysPressed.pop_back();
-      //return key;
-    }
-    else
-    {
-      Application::Instance().ReplayMode = false;
-    }
-  }
+  REPLAY_ACTIONS();
 
   int res = -1;
 
@@ -128,6 +134,8 @@ int GameState::GetKeyDown()
 #else
 int GameState::GetKeyDown()
 {
+  REPLAY_ACTIONS();
+
   return getch();
 }
 #endif

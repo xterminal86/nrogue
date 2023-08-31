@@ -432,16 +432,21 @@ void Application::LoadGame()
   while (std::getline(saveFile, line))
   {
     auto spl = Util::StringSplit(line, ' ');
+
     int key   = std::stoi(spl[0]);
     int count = std::stoi(spl[1]);
-    SaveFile::KeyAndCount p = { key, count };
-    SaveData.KeysPressed.push_back(p);
+
+    for (int i = 0; i < count; i++)
+    {
+      _savedActionsToProcess.push_back(key);
+    }
   }
 
   saveFile.close();
 
+  /*
   ConsoleLog("File loaded:\n");
-  ConsoleLog("Seed  = %lu\n", SaveData.WorldSeed);
+  ConsoleLog("Seed  = %llu\n", SaveData.WorldSeed);
   ConsoleLog("Name  = %s\n", SaveData.PlayerName.c_str());
   ConsoleLog("Class = (%d)\n", (int)SaveData.Class);
   ConsoleLog("Actions:\n");
@@ -450,6 +455,7 @@ void Application::LoadGame()
   {
     ConsoleLog("%d %d\n", pair.first, pair.second);
   }
+  */
 
   PlayerInstance.Name          = SaveData.PlayerName;
   PlayerInstance.SelectedClass = (int)SaveData.Class;
@@ -1043,6 +1049,21 @@ void Application::ForceDrawCurrentState()
   {
     _currentState->Update(true);
   }
+}
+
+// =============================================================================
+
+int Application::GetSavedAction()
+{
+  int res = -1;
+
+  if (!_savedActionsToProcess.empty())
+  {
+    res = _savedActionsToProcess.front();
+    _savedActionsToProcess.pop_front();
+  }
+
+  return res;
 }
 
 // =============================================================================

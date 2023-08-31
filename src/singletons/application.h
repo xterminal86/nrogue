@@ -4,6 +4,7 @@
 #include <typeinfo>
 #include <memory>
 #include <vector>
+#include <list>
 #include <map>
 
 #include "singleton.h"
@@ -92,6 +93,8 @@ class Application : public Singleton<Application>
 
     void ForceDrawCurrentState();
 
+    int GetSavedAction();
+
     void RecordAction(int key);
 
     GameState* GetGameStateRefByName(GameStates stateName);
@@ -171,6 +174,8 @@ class Application : public Singleton<Application>
     StatInfo GetStatInfo(const std::string& attrName);
 
     std::vector<char> _charByCharIndex;
+
+    std::list<int> _savedActionsToProcess;
 
     void PrepareChars();
 

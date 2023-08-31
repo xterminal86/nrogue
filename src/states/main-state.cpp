@@ -235,10 +235,7 @@ void MainState::HandleInput()
       break;
   }
 
-  if (_keysToRecord.count(_keyPressed) == 1)
-  {
-    Application::Instance().RecordAction(_keyPressed);
-  }
+  RECORD_ACTION(_keyPressed);
 }
 
 // =============================================================================

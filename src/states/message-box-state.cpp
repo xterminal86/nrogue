@@ -6,6 +6,8 @@
 #include "util.h"
 #endif
 
+// =============================================================================
+
 void MessageBoxState::HandleInput()
 {
   _keyPressed = GetKeyDown();
@@ -14,10 +16,12 @@ void MessageBoxState::HandleInput()
   {
     if (_type == MessageBoxType::WAIT_FOR_INPUT && (_keyPressed == VK_ENTER || _keyPressed == 'q'))
     {
+      Application::Instance().RecordAction(_keyPressed);
       Application::Instance().CloseMessageBox();
     }
     else if (_type == MessageBoxType::ANY_KEY)
     {
+      Application::Instance().RecordAction(_keyPressed);
       Application::Instance().CloseMessageBox();
     }
   }
