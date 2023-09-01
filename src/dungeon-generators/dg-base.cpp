@@ -1008,6 +1008,21 @@ bool DGBase::TransformArea(TransformedRoom type, size_t emptyRoomIndex)
 
     // -------------------------------------------------------------------------
 
+    case TransformedRoom::FLOODED:
+    {
+      for (int x = area.X1; x <= area.X2; x++)
+      {
+        for (int y = area.Y1; y <= area.Y2; y++)
+        {
+          _map[x][y].ZoneMarker = type;
+          _map[x][y].Image      = 'W';
+        }
+      }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
     default:
       DebugLog("Unknown room type - %d", (int)type);
       success = false;

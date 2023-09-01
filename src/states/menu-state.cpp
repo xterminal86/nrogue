@@ -38,7 +38,7 @@ void MenuState::HandleInput()
       break;
 
     case 'L':
-      Application::Instance().LoadGame();
+      Application::Instance().LoadGame(true);
       Application::Instance().ReplayMode = true;
       Application::Instance().ChangeState(GameStates::START_GAME_STATE);
       break;

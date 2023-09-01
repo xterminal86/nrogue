@@ -43,8 +43,8 @@ class Application : public Singleton<Application>
 
     void WriteObituary(bool wasKilled = true);
 
-    void SaveGame();
-    void LoadGame();
+    void SaveGame(bool binary = false);
+    void LoadGame(bool binary = false);
 
     static uint64_t GetNewGlobalId();
 
@@ -147,6 +147,12 @@ class Application : public Singleton<Application>
     void SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled);
 
     size_t SavePossessions(std::stringstream& ss);
+
+    void SaveBinary();
+    void SaveText();
+
+    void LoadBinary();
+    void LoadText();
 
 #ifdef USE_SDL
     std::pair<int, int> _defaultWindowSize;

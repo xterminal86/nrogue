@@ -320,7 +320,8 @@ namespace GlobalConstants
   extern const int MaxVisibilityRadius;
   extern const int StarvationDamageTimeout;
   extern const int MonstersRespawnTimeout;
-
+  extern const int MaxNameLength;
+  extern const int MaxSeedStringLength;
   extern const int EffectDurationSkipsForTurn;
   extern const int EffectDefaultDuration;
 

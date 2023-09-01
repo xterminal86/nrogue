@@ -101,7 +101,7 @@ enum class GameStates
   EXITING_STATE,
   MESSAGE_BOX_STATE,
   DEV_CONSOLE,
-  ENDGAME_STATE
+  GAMEOVER_STATE
 };
 
 enum class MessageBoxType

@@ -27,7 +27,7 @@
 #include "message-box-state.h"
 #include "service-state.h"
 #include "target-state.h"
-#include "endgame-state.h"
+#include "gameover-state.h"
 
 // -----------------------------------------------------------------------------
 
@@ -388,7 +388,7 @@ void Application::WriteObituary(bool wasKilled)
 
 // =============================================================================
 
-void Application::SaveGame()
+void Application::SaveText()
 {
   std::ofstream saveFile(Strings::SaveFileName.c_str());
   std::stringstream ss;
@@ -410,12 +410,56 @@ void Application::SaveGame()
 
   saveFile.close();
 
+}
+
+// =============================================================================
+
+void Application::SaveBinary()
+{
+  std::ofstream saveFile(Strings::SaveFileName.c_str(), std::ofstream::binary);
+
+  SaveData.WorldSeed  = RNG::Instance().Seed;
+  SaveData.PlayerName = PlayerInstance.Name;
+  SaveData.Class      = PlayerInstance.GetClass();
+
+  std::string buf = SaveData.PlayerName;
+  buf.append(GlobalConstants::MaxNameLength - buf.length(), '\0');
+
+  saveFile.write((char*)&SaveData.WorldSeed, sizeof(SaveData.WorldSeed));
+  saveFile.write(buf.data(), buf.size());
+  saveFile.write((char*)&SaveData.Class, 1);
+
+  size_t keys = SaveData.KeysPressed.size();
+  saveFile.write((char*)&keys, sizeof(keys));
+
+  for (auto& pair : SaveData.KeysPressed)
+  {
+    saveFile.write((char*)&pair.first,  sizeof(pair.first));
+    saveFile.write((char*)&pair.second, sizeof(pair.second));
+  }
+
+  saveFile.close();
+}
+
+// =============================================================================
+
+void Application::SaveGame(bool binary)
+{
+  if (binary)
+  {
+    SaveBinary();
+  }
+  else
+  {
+    SaveText();
+  }
+
   ConsoleLog("Game saved - see you next time!\n");
 }
 
 // =============================================================================
 
-void Application::LoadGame()
+void Application::LoadText()
 {
   std::ifstream saveFile(Strings::SaveFileName.c_str());
 
@@ -448,6 +492,63 @@ void Application::LoadGame()
   }
 
   saveFile.close();
+}
+
+// =============================================================================
+
+void Application::LoadBinary()
+{
+  std::ifstream f(Strings::SaveFileName.c_str(), std::ifstream::binary);
+
+  SaveData.PlayerName.resize(GlobalConstants::MaxNameLength);
+
+  f.read((char*)&SaveData.WorldSeed, sizeof(SaveData.WorldSeed));
+  f.read(SaveData.PlayerName.data(), GlobalConstants::MaxNameLength);
+
+  SaveData.PlayerName.erase(SaveData.PlayerName.find('\0'));
+
+  SaveData.PlayerName.append(1, '\0');
+
+  uint8_t class_ = 255;
+
+  f.read((char*)&class_, 1);
+
+  SaveData.Class = (PlayerClass)class_;
+
+  size_t keys = 0;
+  f.read((char*)&keys, sizeof(keys));
+
+  SaveData.KeysPressed.clear();
+
+  for (size_t i = 0; i < keys; i++)
+  {
+    int key   = 0;
+    int count = 0;
+
+    f.read((char*)&key,   sizeof(key));
+    f.read((char*)&count, sizeof(count));
+
+    for (int i = 0; i < count; i++)
+    {
+      _savedActionsToProcess.push_back(key);
+    }
+  }
+
+  f.close();
+}
+
+// =============================================================================
+
+void Application::LoadGame(bool binary)
+{
+  if (binary)
+  {
+    LoadBinary();
+  }
+  else
+  {
+    LoadText();
+  }
 
   PlayerInstance.Name          = SaveData.PlayerName;
   PlayerInstance.SelectedClass = (int)SaveData.Class;
@@ -1114,7 +1215,7 @@ void Application::InitGameStates()
   RegisterState<MessageBoxState>       (GameStates::MESSAGE_BOX_STATE);
   RegisterState<ServiceState>          (GameStates::SERVICE_STATE);
   RegisterState<TargetState>           (GameStates::TARGET_STATE);
-  RegisterState<EndgameState>          (GameStates::ENDGAME_STATE);
+  RegisterState<GameOverState>         (GameStates::GAMEOVER_STATE);
 
   #ifdef DEBUG_BUILD
   RegisterState<DevConsole>(GameStates::DEV_CONSOLE);

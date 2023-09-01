@@ -1,17 +1,17 @@
-#include "endgame-state.h"
+#include "gameover-state.h"
 #include "printer.h"
 #include "map.h"
 #include "application.h"
 #include "util.h"
 
-void EndgameState::Init()
+void GameOverState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
 }
 
 // =============================================================================
 
-void EndgameState::Prepare()
+void GameOverState::Prepare()
 {
   _playerRef->SetDestroyed();
 
@@ -22,7 +22,7 @@ void EndgameState::Prepare()
 
 // =============================================================================
 
-void EndgameState::HandleInput()
+void GameOverState::HandleInput()
 {
   _keyPressed = GetKeyDown();
 
@@ -39,7 +39,7 @@ void EndgameState::HandleInput()
 
 // =============================================================================
 
-void EndgameState::Update(bool forceUpdate)
+void GameOverState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
@@ -68,7 +68,7 @@ void EndgameState::Update(bool forceUpdate)
 
 // =============================================================================
 
-void EndgameState::DisplayGameLog()
+void GameOverState::DisplayGameLog()
 {
   int x = Printer::TerminalWidth - 1;
   int y = Printer::TerminalHeight - 1;
@@ -89,7 +89,7 @@ void EndgameState::DisplayGameLog()
 
 // =============================================================================
 
-void EndgameState::DrawHPMP()
+void GameOverState::DrawHPMP()
 {
   int curHp = _playerRef->Attrs.HP.Min().Get();
   int maxHp = _playerRef->Attrs.HP.Max().Get();
@@ -119,7 +119,7 @@ void EndgameState::DrawHPMP()
 
 // =============================================================================
 
-void EndgameState::UpdateBar(int x, int y, RangedAttribute& attr)
+void GameOverState::UpdateBar(int x, int y, RangedAttribute& attr)
 {
   double ratio = ((double)attr.Min().Get() / (double)attr.Max().Get());
   int len = ratio * GlobalConstants::HPMPBarLength;

@@ -1,12 +1,12 @@
-#ifndef ENDGAMESTATE_H
-#define ENDGAMESTATE_H
+#ifndef GAMEOVERSTATE_H
+#define GAMEOVERSTATE_H
 
 #include "gamestate.h"
 
 class RangedAttribute;
 class Player;
 
-class EndgameState : public GameState
+class GameOverState : public GameState
 {
   public:
     void Init() override;
@@ -24,4 +24,4 @@ class EndgameState : public GameState
     std::string _bar;
 };
 
-#endif // ENDGAMESTATE_H
+#endif // GAMEOVERSTATE_H

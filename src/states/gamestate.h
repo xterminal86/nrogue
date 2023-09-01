@@ -17,17 +17,17 @@
 
 using Ns = std::chrono::nanoseconds;
 
-#define RECORD_ACTION(key)                      \
-  if (_keysToRecord.count(key) == 1)            \
-  {                                             \
-    Application::Instance().RecordAction(key);  \
+#define RECORD_ACTION(key)                     \
+  if (_keysToRecord.count(key) == 1)           \
+  {                                            \
+    Application::Instance().RecordAction(key); \
   }
 
 #ifdef DEBUG_BUILD
-  #define DONT_SHOW_REPLAY()               \
-  if (Application::Instance().ReplayMode)  \
-  {                                        \
-    Util::Sleep(0);                        \
+  #define DONT_SHOW_REPLAY()              \
+  if (Application::Instance().ReplayMode) \
+  {                                       \
+    Util::Sleep(0);                       \
   }
 #else
 #define DONT_SHOW_REPLAY()                \

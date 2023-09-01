@@ -5,21 +5,30 @@
 #include "timer.h"
 #include "util.h"
 
-#define REPLAY_ACTIONS()                                                  \
+#define REPLAY_ACTIONS()                                                    \
   if (Application::Instance().ReplayMode)                                   \
   {                                                                         \
-    int savedActionToProcess = Application::Instance().GetSavedAction();    \
-                                                                            \
-    if (savedActionToProcess != -1)                                         \
+    if (Application::Instance().CurrentStateIs(GameStates::GAMEOVER_STATE)) \
     {                                                                       \
-      return savedActionToProcess;                                          \
-    }                                                                        \
-    else                                                                     \
-    {                                                                        \
-      Application::Instance().ReplayMode = false;                            \
-      Printer::Instance().AddMessage("Game loaded!");                        \
-      Application::Instance().ForceDrawMainState();                          \
-    }                                                                        \
+      Application::Instance().ReplayMode = false;                           \
+      Application::Instance().ChangeState(GameStates::EXIT_GAME);           \
+      ConsoleLog("Save is corrupted!");                                     \
+    }                                                                       \
+    else                                                                    \
+    {                                                                       \
+      int savedActionToProcess = Application::Instance().GetSavedAction();  \
+                                                                            \
+      if (savedActionToProcess != -1)                                       \
+      {                                                                     \
+        return savedActionToProcess;                                        \
+      }                                                                     \
+      else                                                                  \
+      {                                                                     \
+        Application::Instance().ReplayMode = false;                         \
+        Printer::Instance().AddMessage("Game loaded!");                     \
+        Application::Instance().ForceDrawMainState();                       \
+      }                                                                     \
+    }                                                                       \
   }
 
 // =============================================================================

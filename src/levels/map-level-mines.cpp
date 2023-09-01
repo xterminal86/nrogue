@@ -381,6 +381,7 @@ void MapLevelMines::CreateLevel()
       { TransformedRoom::TREASURY,  {  5, 1 } },
       { TransformedRoom::SHRINE,    {  5, 1 } },
       { TransformedRoom::STORAGE,   { 10, 2 } },
+      { TransformedRoom::FLOODED,   {  3, 1 } },
     };
 
     lb.TransformRooms(weights);
@@ -708,7 +709,7 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
       PlaceGrassTile(x, y);
       break;
 
-    case 'w':
+    case 'W':
       PlaceDeepWaterTile(x, y);
       break;
 

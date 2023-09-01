@@ -30,17 +30,14 @@ class EnterNameState : public GameState
     const std::string kEnterNameString = "Enter your name";
     const std::string kEnterSeedString = "Enter seed (leave blank for random)";
 
-    const int MaxNameLength = 24;
-    const int MaxSeedStringLength = 65;
-
     InputType _inputType = InputType::NAME;
 
     int _x = 0;
     int _y = 0;
     int _cursorPos = 0;
 
-    const int _maxNameHalf = MaxNameLength / 2;
-    const int _maxSeedHalf = MaxSeedStringLength / 2;
+    const int _maxNameHalf = GlobalConstants::MaxNameLength / 2;
+    const int _maxSeedHalf = GlobalConstants::MaxSeedStringLength / 2;
 
     int _inputTypeIndex = 0;
 

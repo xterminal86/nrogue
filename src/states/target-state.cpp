@@ -485,7 +485,7 @@ void TargetState::DirtyHack()
   //
   if (!_playerRef->HasNonZeroHP())
   {
-    Application::Instance().ChangeState(GameStates::ENDGAME_STATE);
+    Application::Instance().ChangeState(GameStates::GAMEOVER_STATE);
   }
   else
   {

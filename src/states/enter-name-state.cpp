@@ -14,9 +14,9 @@ void EnterNameState::Prepare()
   _cursorPos = _y - 2;
 
 #ifdef USE_SDL
-  _windowSize = { MaxNameLength + 1, 4 };
+  _windowSize = { GlobalConstants::MaxNameLength + 1, 4 };
 #else
-  _windowSize = { MaxNameLength + 2, 4 };
+  _windowSize = { GlobalConstants::MaxNameLength + 2, 4 };
 #endif
 }
 
@@ -96,11 +96,13 @@ void EnterNameState::HandleInput()
       //
       if (_keyPressed >= 32 && _keyPressed <= 126)
       {
-        if (_inputType == InputType::NAME && _nameEntered.length() < (size_t)MaxNameLength - 3)
+        if (_inputType == InputType::NAME
+         && _nameEntered.length() < (size_t)GlobalConstants::MaxNameLength - 3)
         {
           _nameEntered += (char)_keyPressed;
         }
-        else if (_inputType == InputType::SEED_STRING && _seedEntered.length() < (size_t)MaxSeedStringLength - 2)
+        else if (_inputType == InputType::SEED_STRING
+              && _seedEntered.length() < (size_t)GlobalConstants::MaxSeedStringLength - 2)
         {
           _seedEntered += (char)_keyPressed;
 
@@ -149,13 +151,15 @@ void EnterNameState::Update(bool forceUpdate)
                                    (_inputType == InputType::NAME) ? Colors::MessageBoxHeaderBgColor : Colors::ShadesOfGrey::Six);
 
     Printer::Instance().DrawWindow({ _x - _maxSeedHalf, _cursorPos + 4 },
-                                   { MaxSeedStringLength + 2, 6 },
+                                   { GlobalConstants::MaxSeedStringLength + 2, 6 },
                                    kEnterSeedString,
                                    (_inputType != InputType::NAME) ? Colors::WhiteColor : Colors::BlackColor,
                                    (_inputType != InputType::NAME) ? Colors::MessageBoxHeaderBgColor : Colors::ShadesOfGrey::Six);
 
-    // Seed string hint
-    for (int i = 0; i < MaxSeedStringLength - 2; i++)
+    //
+    // Seed string hint.
+    //
+    for (int i = 0; i < GlobalConstants::MaxSeedStringLength - 2; i++)
     {
       Printer::Instance().PrintFB(_x - _maxSeedHalf + 2 + i,
                                   _cursorPos + 6,
@@ -163,7 +167,9 @@ void EnterNameState::Update(bool forceUpdate)
                                   Colors::ShadesOfGrey::Four);
     }
 
-    // Seed number hint
+    //
+    // Seed number hint.
+    //
     for (size_t i = 0; i < sizeof(RNG::Instance().Seed) * 2; i++)
     {
       Printer::Instance().PrintFB(_x - _maxSeedHalf + 4 + i,
