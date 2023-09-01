@@ -31,6 +31,8 @@ void MessageBoxState::HandleInput()
 
 void MessageBoxState::Update(bool forceUpdate)
 {
+  DONT_SHOW_REPLAY();
+
   if (_keyPressed != -1 || forceUpdate)
   {
     uint32_t headerBgColor = Colors::MessageBoxHeaderBgColor;

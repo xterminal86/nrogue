@@ -11,6 +11,20 @@
 void InventoryState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
+
+  _keysToRecord[ALT_K8]    = true;
+  _keysToRecord[NUMPAD_8]  = true;
+  _keysToRecord[ALT_K2]    = true;
+  _keysToRecord[NUMPAD_2]  = true;
+  _keysToRecord['i']       = true;
+  _keysToRecord['d']       = true;
+  _keysToRecord['u']       = true;
+  _keysToRecord['u']       = true;
+  _keysToRecord['e']       = true;
+  _keysToRecord['s']       = true;
+  _keysToRecord['t']       = true;
+  _keysToRecord[VK_CANCEL] = true;
+
 }
 
 // =============================================================================
@@ -221,12 +235,16 @@ void InventoryState::HandleInput()
 
   int inventorySize = _playerRef->Inventory->Contents.size();
   _selectedIndex = Util::Clamp(_selectedIndex, 0, inventorySize - 1);
+
+  RECORD_ACTION(_keyPressed);
 }
 
 // =============================================================================
 
 void InventoryState::Update(bool forceUpdate)
 {
+  DONT_SHOW_REPLAY();
+
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();

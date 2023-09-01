@@ -1297,6 +1297,11 @@ namespace Util
 
   void Sleep(uint32_t delayMs)
   {
+    if (delayMs == 0)
+    {
+      return;
+    }
+
     auto tp1 = Clock::now();
     auto tp2 = tp1;
     while (std::chrono::duration_cast<Ms>(tp2 - tp1).count() < delayMs)

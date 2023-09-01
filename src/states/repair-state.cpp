@@ -25,6 +25,7 @@ void RepairState::ProcessInput()
   switch (_keyPressed)
   {
     case VK_CANCEL:
+      Application::Instance().RecordAction(_keyPressed);
       Application::Instance().ChangeState(GameStates::INVENTORY_STATE);
       break;
 
@@ -32,6 +33,7 @@ void RepairState::ProcessInput()
     {
       if (_itemRefByChar.count(_keyPressed))
       {
+        Application::Instance().RecordAction(_keyPressed);
         ItemComponent* ic = _itemRefByChar[_keyPressed];
         if (ic->Data.Durability.Min().Get() == ic->Data.Durability.Max().Get())
         {

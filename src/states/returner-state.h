@@ -11,6 +11,7 @@ class ItemComponent;
 class ReturnerState : public GameState
 {
   public:
+    void Init() override;
     void Prepare() override;
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;

@@ -9,6 +9,17 @@
 #include "trader-component.h"
 #include "shopping-state.h"
 
+void NPCInteractState::Init()
+{
+  _keysToRecord['n']       = true;
+  _keysToRecord['j']       = true;
+  _keysToRecord['g']       = true;
+  _keysToRecord['s']       = true;
+  _keysToRecord[VK_CANCEL] = true;
+}
+
+// =============================================================================
+
 void NPCInteractState::Prepare()
 {
   _charPos            = _textStartPosX;
@@ -130,12 +141,16 @@ void NPCInteractState::HandleInput()
     default:
       break;
   }
+
+  RECORD_ACTION(_keyPressed);
 }
 
 // =============================================================================
 
 void NPCInteractState::Update(bool forceUpdate)
 {
+  DONT_SHOW_REPLAY();
+
   if (_textPrinting)
   {
     if (Util::WaitForMs(10))

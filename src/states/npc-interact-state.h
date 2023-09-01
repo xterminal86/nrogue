@@ -11,6 +11,7 @@ class AINPC;
 class NPCInteractState : public GameState
 {
   public:
+    void Init() override;
     void Prepare() override;
     void Cleanup() override;
     void HandleInput() override;

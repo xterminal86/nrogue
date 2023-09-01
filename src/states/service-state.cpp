@@ -19,6 +19,7 @@ void ServiceState::ProcessInput()
   {
     case VK_CANCEL:
     {
+      Application::Instance().RecordAction(_keyPressed);
       auto res = Application::Instance().GetGameStateRefByName(GameStates::NPC_INTERACT_STATE);
       NPCInteractState* nis = static_cast<NPCInteractState*>(res);
       nis->SetNPCRef(_shopOwner->NpcRef);
@@ -30,6 +31,7 @@ void ServiceState::ProcessInput()
     {
       if (_serviceInfoByChar.count(_keyPressed))
       {
+        Application::Instance().RecordAction(_keyPressed);
         ProcessItem(_keyPressed);
       }
     }

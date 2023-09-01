@@ -4,6 +4,15 @@
 #include "map.h"
 #include "printer.h"
 
+void ReturnerState::Init()
+{
+  _keysToRecord['u']       = true;
+  _keysToRecord['a']       = true;
+  _keysToRecord[VK_CANCEL] = true;
+}
+
+// =============================================================================
+
 void ReturnerState::Prepare()
 {
   _playerRef = &Application::Instance().PlayerInstance;
@@ -72,6 +81,8 @@ void ReturnerState::HandleInput()
     default:
       break;
   }
+
+  RECORD_ACTION(_keyPressed);
 }
 
 // =============================================================================

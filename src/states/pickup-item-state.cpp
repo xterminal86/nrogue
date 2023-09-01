@@ -32,6 +32,7 @@ void PickupItemState::ProcessInput()
   switch (_keyPressed)
   {
     case VK_CANCEL:
+      Application::Instance().RecordAction(_keyPressed);
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
@@ -41,6 +42,8 @@ void PickupItemState::ProcessInput()
       {
         if (_itemsListIndexByChar.count(_keyPressed))
         {
+          Application::Instance().RecordAction(_keyPressed);
+
           int index  = _itemsListIndexByChar[_keyPressed];
           auto& item = _itemsList[index];
 

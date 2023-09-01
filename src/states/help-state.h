@@ -8,16 +8,10 @@ class HelpState : public GameState
   public:
     HelpState();
 
-    void Prepare() override;
-
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;
 
   private:
-    void DrawScrollBars();
-
-    int _scrollPosition = 0;
-
     StringV _helpText =
     {
       R"('q' - Cancel / Close menu     )",
@@ -31,6 +25,7 @@ class HelpState : public GameState
       R"('e' - Inventory               )",
       R"('$' - Count your money        )",
       R"('g' - Get item from the ground)",
+      R"('S' - Save and exit           )",
       R"('>' - Go down the stairs      )",
       R"('<' - Go up the stairs        )",
       R"('Q' - Exit game               )",

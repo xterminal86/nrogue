@@ -1,6 +1,7 @@
 #include "select-item-state-base.h"
 
 #include "printer.h"
+#include "application.h"
 
 void SelectItemStateBase::HandleInput()
 {
@@ -13,6 +14,8 @@ void SelectItemStateBase::HandleInput()
 
 void SelectItemStateBase::Update(bool forceUpdate)
 {
+  DONT_SHOW_REPLAY();
+
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();

@@ -256,6 +256,11 @@ void Application::DisplayAttack(GameObject* defender,
                                 const std::string& messageToPrint,
                                 const uint32_t& cursorColor)
 {
+  if (ReplayMode)
+  {
+    return;
+  }
+
   if (GameConfig.FastCombat)
   {
     if (messageToPrint.length() != 0)
@@ -444,26 +449,16 @@ void Application::LoadGame()
 
   saveFile.close();
 
-  /*
-  ConsoleLog("File loaded:\n");
-  ConsoleLog("Seed  = %llu\n", SaveData.WorldSeed);
-  ConsoleLog("Name  = %s\n", SaveData.PlayerName.c_str());
-  ConsoleLog("Class = (%d)\n", (int)SaveData.Class);
-  ConsoleLog("Actions:\n");
-
-  for (auto& pair : SaveData.KeysPressed)
-  {
-    ConsoleLog("%d %d\n", pair.first, pair.second);
-  }
-  */
-
   PlayerInstance.Name          = SaveData.PlayerName;
   PlayerInstance.SelectedClass = (int)SaveData.Class;
 
   RNG::Instance().SetSeed(SaveData.WorldSeed);
 
-  //std::filesystem::path p = Strings::SaveFileName;
-  //std::filesystem::remove(p);
+  //
+  // Nethack style.
+  //
+  std::filesystem::path p = Strings::SaveFileName;
+  std::filesystem::remove(p);
 }
 
 // =============================================================================

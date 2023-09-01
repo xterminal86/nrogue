@@ -23,43 +23,12 @@ HelpState::HelpState()
 
 // =============================================================================
 
-void HelpState::Prepare()
-{
-  _scrollPosition = 0;
-}
-
-// =============================================================================
-
 void HelpState::HandleInput()
 {
   _keyPressed = GetKeyDown();
 
-  int msgSize = _helpText.size();
-  int th = Printer::TerminalHeight;
-
-  //
-  // Since we draw messages from y = 1, compensate with (th - 2)
-  //
-  int scrollLimit = (msgSize - 1) - (th - 2);
-
   switch (_keyPressed)
   {
-    case ALT_K2:
-    case NUMPAD_2:
-      if (msgSize > th - 2)
-      {
-        _scrollPosition++;
-      }
-      break;
-
-    case ALT_K8:
-    case NUMPAD_8:
-      if (msgSize > th - 2)
-      {
-        _scrollPosition--;
-      }
-      break;
-
     case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
@@ -67,8 +36,6 @@ void HelpState::HandleInput()
     default:
       break;
   }
-
-  _scrollPosition = Util::Clamp(_scrollPosition, 0, scrollLimit);
 }
 
 // =============================================================================
@@ -81,10 +48,8 @@ void HelpState::Update(bool forceUpdate)
 
     DrawHeader(" HELP ");
 
-    DrawScrollBars();
-
     int offsetY = 1;
-    for (size_t i = _scrollPosition; i < _helpText.size(); i++)
+    for (size_t i = 0; i < _helpText.size(); i++)
     {
       Printer::Instance().PrintFB(1,
                                   offsetY,
@@ -103,75 +68,5 @@ void HelpState::Update(bool forceUpdate)
     #endif
 
     Printer::Instance().Render();
-  }
-}
-
-// =============================================================================
-
-void HelpState::DrawScrollBars()
-{
-  //
-  // Since we draw messages from y = 1, compensate y pos with (th - 2)
-  //
-  int scrollLimit = (_helpText.size() - 1) - (_th - 2);
-
-  if (_helpText.size() - 1 > (size_t)_th - 2)
-  {
-    if (_scrollPosition == 0)
-    {
-      #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1,
-                                  _th - 1,
-                                  (int)NameCP437::DARROW_2,
-                                  Colors::WhiteColor);
-      #else
-      Printer::Instance().PrintFB(_tw - 1,
-                                  _th - 1,
-                                  "\\/",
-                                  Printer::kAlignRight,
-                                  Colors::WhiteColor);
-      #endif
-    }
-    else if (_scrollPosition == scrollLimit)
-    {
-      #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1,
-                                  1,
-                                  (int)NameCP437::UARROW_2,
-                                  Colors::WhiteColor);
-      #else
-      Printer::Instance().PrintFB(_tw - 1,
-                                  1,
-                                  "/\\",
-                                  Printer::kAlignRight,
-                                  Colors::WhiteColor);
-      #endif
-    }
-    else if (_scrollPosition > 0 && _scrollPosition != scrollLimit)
-    {
-      #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1,
-                                  1,
-                                  (int)NameCP437::UARROW_2,
-                                  Colors::WhiteColor);
-
-      Printer::Instance().PrintFB(_tw - 1,
-                                  _th - 1,
-                                  (int)NameCP437::DARROW_2,
-                                  Colors::WhiteColor);
-      #else
-      Printer::Instance().PrintFB(_tw - 1,
-                                  1,
-                                  "/\\",
-                                  Printer::kAlignRight,
-                                  Colors::WhiteColor);
-
-      Printer::Instance().PrintFB(_tw - 1,
-                                  _th - 1,
-                                  "\\/",
-                                  Printer::kAlignRight,
-                                  Colors::WhiteColor);
-      #endif
-    }
   }
 }
