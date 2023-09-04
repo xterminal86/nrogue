@@ -9,6 +9,9 @@ void AttackState::Init()
 
   RECORD_NUMPAD();
 
+  _keysToRecord[ALT_K5]   = false;
+  _keysToRecord[NUMPAD_5] = false;
+
   _keysToRecord[VK_CANCEL] = true;
 }
 

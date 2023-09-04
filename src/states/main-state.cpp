@@ -316,6 +316,15 @@ void MainState::ProcessMovement(const Position& dirOffsets)
       }
     }
   }
+  else
+  {
+    bool actorInFront = (Map::Instance().GetActorAtPosition(_playerRef->PosX + dirOffsets.X,
+                                                            _playerRef->PosY + dirOffsets.Y) != nullptr);
+    if (_playerRef->IsSwimming() && actorInFront)
+    {
+      Printer::Instance().AddMessage("You can't attack while swimming!");
+    }
+  }
 }
 
 // =============================================================================

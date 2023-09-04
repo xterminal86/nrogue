@@ -887,7 +887,10 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
     // Some rooms may have size requirements, so before trying to place them
     // at the spot of this index, we'll check every available rooms
     // and then pick one at random, thus marking that zone.
-    // The zone itself may be somewhere later in iteration cycle.
+    // The room that we picked this way may be somewhere in the middle
+    // of _emptyRooms, so in TransformArea() below we may actually
+    // mark some room beforehand in this way, so on next iteration
+    // of this for loop, it will be already marked.
     //
     if (_map[_emptyRooms[i].X1][_emptyRooms[i].Y1].ZoneMarker != TransformedRoom::UNMARKED)
     {

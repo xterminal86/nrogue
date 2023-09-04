@@ -11,9 +11,10 @@
 
 void NPCInteractState::Init()
 {
-  _keysToRecord['n']       = true;
+  //
+  // Save only shop related keys.
+  //
   _keysToRecord['j']       = true;
-  _keysToRecord['g']       = true;
   _keysToRecord['s']       = true;
   _keysToRecord[VK_CANCEL] = true;
 }

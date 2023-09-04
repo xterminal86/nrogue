@@ -89,6 +89,8 @@ void ReturnerState::HandleInput()
 
 void ReturnerState::Update(bool forceUpdate)
 {
+  DONT_SHOW_REPLAY();
+
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();

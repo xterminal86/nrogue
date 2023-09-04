@@ -1692,11 +1692,11 @@ namespace Util
       //
       // Ground units should perish on dangerous tiles.
       //
-      bool isFlying = receiver->HasEffect(ItemBonusType::LEVITATION);
-      bool danger   = Map::Instance().IsTileDangerous(receiver->GetPosition());
-      if (!isFlying && danger)
+      if (receiver->IsOnDangerousTile())
       {
-        Application::Instance().DisplayAttack(receiver, GlobalConstants::DisplayAttackDelayMs, std::string());
+        Application::Instance().DisplayAttack(receiver,
+                                              GlobalConstants::DisplayAttackDelayMs,
+                                              std::string());
         receiver->Attrs.HP.Reset(0);
         break;
       }
