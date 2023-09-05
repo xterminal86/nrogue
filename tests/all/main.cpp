@@ -1142,6 +1142,44 @@ void StringSplitTests(std::stringstream& ss)
 
 // =============================================================================
 
+void TownNamesTest(std::stringstream& ss)
+{
+  DebugLog("%s", __func__);
+
+  ss << GetBanner(" TOWN NAMES ") << "\n\n";
+
+  const std::vector<std::pair<int, int>> indices =
+  {
+    { 12, 1 },
+    {  3, 0 },
+    { 28, 6 },
+    {  3, 6 },
+    { 23, 5 },
+    { 18, 9 },
+    { 19, 2 }
+  };
+
+  for (auto& item : indices)
+  {
+    tm t;
+
+    t.tm_mday = item.first;
+    t.tm_mon  = item.second;
+
+    char buf[64];
+
+    std::string name = Util::GetTownName(item);
+
+    std::strftime(buf, sizeof(buf), "%e of %B", &t);
+
+    ss << "Today is " << buf << ", got name: '" << name << "'\n";
+  }
+
+  ss << "\n";
+}
+
+// =============================================================================
+
 void Run()
 {
   std::ofstream file;
@@ -1220,6 +1258,14 @@ void Run()
   // ---------------------------------------------------------------------------
 
   StringSplitTests(ss);
+
+  ss << GetEndTestLine();
+
+  DisplayProgress();
+
+  // ---------------------------------------------------------------------------
+
+  TownNamesTest(ss);
 
   ss << GetEndTestLine();
 

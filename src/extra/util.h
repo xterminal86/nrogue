@@ -264,6 +264,10 @@ namespace Util
 
   extern std::string GetCurrentDateTimeString();
 
+  extern std::pair<int, int> GetDayAndMonth();
+
+  extern std::string GetTownName(const std::pair<int, int>& dm);
+
   extern std::string GetGameObjectDisplayCharacter(GameObject* obj);
 
   extern size_t FindLongestStringLength(const StringV& list);
@@ -281,6 +285,10 @@ namespace Util
   extern bool CanBeSpawned(ItemComponent* ic);
 
   extern size_t CalculateItemHash(ItemComponent* item);
+
+  extern std::vector<char> CharByCharIndex;
+
+  extern void PrepareChars();
 
   // ---------------------------------------------------------------------------
 

@@ -30,14 +30,13 @@ MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
 
   if (MapType_ == MapType::TOWN)
   {
-    bool shouldGenerate = Util::Rolld100(90);
-    if (shouldGenerate)
+    auto dm = Util::GetDayAndMonth();
+    levelName = Util::GetTownName(dm);
+    if (levelName.empty())
     {
-      levelName = "Village of " + Util::GenerateName(false, true, GlobalConstants::TownNameEndings);
-    }
-    else
-    {
-      levelName = GetSpecialName();
+      levelName = "Village of " + Util::GenerateName(false,
+                                                     true,
+                                                     GlobalConstants::TownNameEndings);
     }
   }
   else
@@ -926,7 +925,8 @@ void MapLevelBase::PlaceDoor(int x, int y, bool isOpen, size_t openedBy, const s
 
 void MapLevelBase::CreateLevel()
 {
-  auto str = Util::StringFormat("%s, %s - no level was created!", __PRETTY_FUNCTION__, LevelName.data());
+  auto str = Util::StringFormat("%s, %s - no level was created!",
+                                __PRETTY_FUNCTION__, LevelName.data());
   LogPrint(str, true);
 }
 

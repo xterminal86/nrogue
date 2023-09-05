@@ -48,8 +48,6 @@ class Application : public Singleton<Application>
 
     static uint64_t GetNewGlobalId();
 
-    const char& CharByCharIndex(uint8_t index);
-
     Player PlayerInstance;
 
     struct Config
@@ -178,8 +176,6 @@ class Application : public Singleton<Application>
     };
 
     StatInfo GetStatInfo(const std::string& attrName);
-
-    std::vector<char> _charByCharIndex;
 
     std::list<int> _savedActionsToProcess;
 

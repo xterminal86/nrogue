@@ -11,6 +11,8 @@
 
 namespace Util
 {
+  std::vector<char> CharByCharIndex;
+
   StringV StringSplit(const std::string& str, char delim)
   {
     StringV res;
@@ -51,6 +53,8 @@ namespace Util
   //
   StringV DecodeMap(const CM& map)
   {
+    PrepareChars();
+
     StringV res;
 
     for (auto& block : map)
@@ -61,7 +65,7 @@ namespace Util
       {
         uint8_t charIndex = (pair.first & 0x000000FF);
         uint8_t charCount = (pair.second & 0x000000FF);
-        char c = Application::Instance().CharByCharIndex(charIndex);
+        char c = CharByCharIndex[charIndex];
         line.append(charCount, c);
       }
 
@@ -75,16 +79,33 @@ namespace Util
 
   std::string DecodeString(const CS& str)
   {
+    PrepareChars();
+
     std::string res;
 
     for (auto& i : str)
     {
       uint8_t charIndex = (i & 0x000000FF);
-      char c = Application::Instance().CharByCharIndex(charIndex);
+      char c = CharByCharIndex[charIndex];
       res.push_back(c);
     }
 
     return res;
+  }
+
+  // ===========================================================================
+
+  void PrepareChars()
+  {
+    if (CharByCharIndex.empty())
+    {
+      CharByCharIndex.resize(128);
+
+      for (int i = 0; i < 128; i++)
+      {
+        CharByCharIndex[i] = i;
+      }
+    }
   }
 
   // ===========================================================================
@@ -1546,11 +1567,134 @@ namespace Util
     std::stringstream ss;
 
     time_t now = time(nullptr);
-    tm *ltm = localtime(&now);
+    tm*    ltm = localtime(&now);
 
     ss << std::put_time(ltm, "%Y-%m-%d_%H-%M-%S");
 
     return ss.str();
+  }
+
+  // ===========================================================================
+
+  std::pair<int, int> GetDayAndMonth()
+  {
+    time_t t   = time(nullptr);
+    tm*    now = localtime(&t);
+
+    return { now->tm_mday, now->tm_mon };
+  }
+
+  // ===========================================================================
+
+  std::string GetTownName(const std::pair<int, int>& dm)
+  {
+    std::string res;
+
+    /*
+    { MapType::TOWN,
+      {
+        "Village of Darwin",
+        "Town of Tristram",
+        "Outpost of Kcahten",
+        "Resort of Protvino",
+        "Commune of Minetown",
+        "Settlement of Punchtree",
+        "Realm of Chaosforge"
+      }
+    }
+    */
+
+    const std::vector<std::vector<uint32_t>> names =
+    {
+      // 0
+      {
+        2035452758, 320811113, 2184258156, 899037292,
+        3030502753, 1577283431, 1200884581, 2454059808,
+        2303853167, 139463270, 534511392, 520708676,
+        2285307233, 2926622834, 6425719, 649874025,
+        1472787054
+      },
+      // 1
+      {
+        2233388884, 4183923311, 3692460663, 871193710,
+        2323814432, 2401580655, 1646737254, 1530506016,
+        3850633812, 847849586, 1330723689, 731264883,
+        1839685236, 531603826, 1930370657, 303719533
+      },
+      // 2
+      {
+        1971705935, 1128958837, 4053112436, 1951483760,
+        887331183, 618257011, 3932451956, 1736429088,
+        3791585391, 4087025510, 1150118432, 1108329291,
+        2208952675, 438266721, 3519925352, 2700822900,
+        1861253477, 34020718
+      },
+      // 3
+      {
+        258338642, 2661810789, 279765363, 1820702319,
+        2905006450, 2541669492, 713053728, 1019145583,
+        1551182182, 3055720480, 3544291152, 2194060914,
+        3601256047, 2600865140, 3431830134, 1016869737,
+        3549107566, 1900186479
+      },
+      // 4
+      {
+        3033661251, 2446324079, 1344890989, 3149458285,
+        3250106485, 371926382, 3833044325, 734511136,
+        3677294703, 1760037734, 208948768, 3805166157,
+        2320209769, 575861358, 1186231653, 2447355508,
+        4287656047, 2534996855, 994712942
+      },
+      // 5
+      {
+        2517185619, 2214707301, 472067700, 3190816372,
+        287755116, 854011493, 161785197, 2860656997,
+        677775470, 550765940, 1312715808, 3115322735,
+        2681527654, 1437313056, 4104702544, 3103309429,
+        2533481838, 2533266019, 91627368, 3093177716,
+        2563708786, 660585317, 1588540005
+      },
+      // 6
+      {
+        338370130, 4129115493, 2292460385, 1500310380,
+        3252194925, 1793713696, 1522887023, 4207989862,
+        2679049248, 1867362371, 2266461800, 2994197857,
+        4059345007, 2034016115, 1689669990, 4088227695,
+        3301296242, 3688947815, 953229925
+      }
+    };
+
+    const int& day   = dm.first;
+    const int& month = dm.second;
+
+    const std::vector<std::pair<int, int>> indices =
+    {
+      { 12, 1 },
+      {  3, 0 },
+      { 28, 6 },
+      {  3, 6 },
+      { 23, 5 },
+      { 18, 9 },
+      { 19, 2 }
+    };
+
+    int index = -1;
+
+    for (size_t i = 0; i < indices.size(); i++)
+    {
+      if ( (day == indices[i].first) && (month == indices[i].second) )
+      {
+        index = i;
+        break;
+      }
+    }
+
+    if (index != -1)
+    {
+      res = DecodeString(names[index]);
+    }
+
+    return res;
   }
 
   // ===========================================================================

@@ -29,6 +29,9 @@ void HelpState::HandleInput()
 
   switch (_keyPressed)
   {
+    case '?':
+    case 'h':
+    case 'H':
     case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;

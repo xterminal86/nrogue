@@ -41,6 +41,8 @@ void MessageLogState::HandleInput()
       }
       break;
 
+    case 'm':
+    case 'M':
     case VK_CANCEL:
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;

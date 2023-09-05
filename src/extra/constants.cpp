@@ -868,21 +868,30 @@ namespace GlobalConstants
 
   const std::vector<std::string> TownNameEndings =
   {
+    "ir",
+    "ire",
+    "yr",
+    "yre",
     "no",
     "ow",
     "to",
     "nd",
     "nt",
     "sh",
+    "rd",
+    "rn",
     "rsh",
     "urgh",
     "urg",
     "stan",
     "heim",
     "town",
+    "on",
     "ton",
     "shire",
     "pool",
+    "glade",
+    "bury",
     "gow"
   };
 
@@ -907,16 +916,6 @@ namespace GlobalConstants
 
   const std::unordered_map<MapType, StringV> MapLevelNames =
   {
-    { MapType::TOWN,
-      {
-        "Village of Darwin",
-        "Town of Tristram",
-        "Outpost of Fargoal",
-        "Resort of Protvino",
-        "Commune of Minetown",
-        "Settlement of Punchtree"
-      }
-    },
     // Abandoned Mines
     { MapType::MINES_1,     { "Mine Entrance"        } },
     { MapType::MINES_2,     { "Forsaken Prospects"   } },

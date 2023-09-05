@@ -45,7 +45,6 @@
 
 void Application::InitSpecific()
 {
-  PrepareChars();
   if (!InitGraphics())
   {
     return;
@@ -1242,23 +1241,4 @@ uint64_t Application::GetNewGlobalId()
 {
   static uint64_t globalId = 1;
   return globalId++;
-}
-
-// =============================================================================
-
-void Application::PrepareChars()
-{
-  _charByCharIndex.resize(128);
-
-  for (int i = 0; i < 128; i++)
-  {
-    _charByCharIndex[i] = i;
-  }
-}
-
-// =============================================================================
-
-const char& Application::CharByCharIndex(uint8_t index)
-{
-  return _charByCharIndex[index];
 }
