@@ -1590,20 +1590,6 @@ namespace Util
   {
     std::string res;
 
-    /*
-    { MapType::TOWN,
-      {
-        "Village of Darwin",
-        "Town of Tristram",
-        "Outpost of Kcahten",
-        "Resort of Protvino",
-        "Commune of Minetown",
-        "Settlement of Punchtree",
-        "Realm of Chaosforge"
-      }
-    }
-    */
-
     const std::vector<std::vector<uint32_t>> names =
     {
       // 0

@@ -70,25 +70,6 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
     case MapType::MINES_5:
     {
-      /*
-      _specialLevel =
-      {
-        "##############################",
-        "#...#.....bbb..........#.....#",
-        "#.<.#..###b%bb...b.###.#.WWW.#",
-        "#...#..###bbb...bbb###.#.WWW.#",
-        "##+##..###.b...bb%b###.#.WWW.#",
-        "#bbb...bbb...###bbb....#.....#",
-        "#b%bbbbb%bb..###.b...B.D...>.#",
-        "#bbb.b%bbb..b###.......#.....#",
-        "#.b..bb###.bbb..b..###.#.WWW.#",
-        "#b....b###bb%bbbbb.###.#.WWW.#",
-        "#bb....###.bbbbb%bb###.#.WWW.#",
-        "#%bb........b..bbb.....#.....#",
-        "##############################"
-      };
-      */
-
       const CM enc =
       {
         {
