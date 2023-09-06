@@ -41,11 +41,11 @@ turns that were not force redrawn.
     <TD colspan="2" align="center"><B>SCREENSHOTS</B></TD>
   </TR>
   <TR>
-    <TD><IMG src="resources/github-front/in-game.png" title="in-game"></IMG></TD>
-    <TD><IMG src="resources/github-front/in-game-battle.png" title="battle"></IMG></TD>
+    <TD><IMG src="resources/github-front/in-game.png" title="in-game"></TD>
+    <TD><IMG src="resources/github-front/in-game-battle.png" title="battle"></TD>
   </TR>
   <TR>
-    <TD><IMG src="resources/github-front/in-game-charsheet.png" title="charsheet"></IMG></TD>
-    <TD><IMG src="resources/github-front/in-game-shop.png" title="shop"></IMG></TD>
+    <TD><IMG src="resources/github-front/in-game-charsheet.png" title="charsheet"></TD>
+    <TD><IMG src="resources/github-front/in-game-shop.png" title="shop"></TD>
   </TR>      
 </TABLE>
