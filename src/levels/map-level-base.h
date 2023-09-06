@@ -137,10 +137,8 @@ class MapLevelBase
     bool IsSpotValidForSpawn(const Position& pos);
     bool IsOutOfBounds(int x, int y);
 
-    void FillArea(int ax,
-                  int ay,
-                  int aw,
-                  int ah,
+    void FillArea(int ax, int ay,
+                  int aw, int ah,
                   const GameObjectInfo& tileToFill);
 
     void CreateBorders(GameObjectInfo& t);
@@ -173,8 +171,7 @@ class MapLevelBase
     void PlaceShrine(const Position& pos, LevelBuilder& lb);
     void PlaceShrine(const Position& pos, ShrineType type);
 
-    void PlaceDoor(int x,
-                   int y,
+    void PlaceDoor(int x, int y,
                    bool isOpen = false,
                    size_t openedBy = GlobalConstants::OpenedByAnyone,
                    const std::string& objName = std::string());

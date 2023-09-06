@@ -66,10 +66,10 @@
 #endif
 
 // Coded Map
-using CM = std::vector<std::vector<std::pair<uint32_t, uint32_t>>>;
+using CM = std::vector<std::vector<std::pair<uint16_t, uint16_t>>>;
 
 // Coded String
-using CS = std::vector<uint32_t>;
+using CS = std::vector<uint16_t>;
 
 class GameObject;
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-inc=$(find src/ -type d);
+inc=$(find ../src/ -type d);
 
 inc_dirs=""
 
@@ -11,6 +11,6 @@ done
 
 fname="cppcheck-result.txt";
 
-cppcheck $inc_dirs src/ --enable=all &> $fname
+cppcheck --enable=warning,performance,information,unusedFunction $inc_dirs ../src/ &> $fname
 
 echo "cppcheck has finished - $fname written";

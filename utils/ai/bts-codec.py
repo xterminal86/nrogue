@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding = utf8
 
 #
@@ -99,6 +99,8 @@ ParamNames = [
 
 Bytecode = [];
 
+################################################################################
+
 def ParseLine(line):
   indentsParsed = False;
   exprStart = False;
@@ -115,7 +117,7 @@ def ParseLine(line):
       indentsParsed = True;
       exprStart = True;
 
-  # print("{0} {1}".format(indent, expr));
+  # print(f"{ indent } { expr }");
 
   splitRes = expr.split(' ');
 
@@ -135,11 +137,13 @@ def ParseLine(line):
       Bytecode.append(ParamsEnd);
 
   else:
-    print("\tillegal opcode: {0}".format(splitRes[0]));
+    print(f"\tillegal opcode: { splitRes[0] }");
+
+################################################################################
 
 def InitContainers():
 
-  print("Total number of params: {0}\n".format(len(ParamNames)));
+  print(f"Total number of params: { len(ParamNames) }\n");
 
   paramCode = 0x01;
 
@@ -168,12 +172,14 @@ def InitContainers():
 
   # print(ParamCodesByName);
 
+################################################################################
+
 def PrintBytecode():
   output = "";
   align = 0;
 
   for n in Bytecode:
-    tmp = "0x{:02X}".format(n);
+    tmp = f"0x{n:02X}";
     output += tmp;
 
     output += (' ' * (7 - len(tmp)));
@@ -187,8 +193,14 @@ def PrintBytecode():
   print(output);
   print("\n");
 
+################################################################################
+
 def PrintCppContainer():
-  print("\nC++ container:\n");
+  decor = "="*80;
+
+  print(decor);
+  print("C++ container:");
+  print(decor);
 
   output = "std::vector<uint8_t> bytecode =\n{\n  ";
 
@@ -197,7 +209,7 @@ def PrintCppContainer():
   align = 0;
 
   for n in Bytecode:
-    tmp = "0x{:02X}".format(n);
+    tmp = f"0x{n:02X}";
     output += tmp;
 
     if count != 1:
@@ -222,9 +234,15 @@ def PrintCppContainer():
   print(output);
   print("");
 
+################################################################################
+
 def Compile():
+  decor = "="*80;
+  print(decor);
+  print(f"Script (len={ len(Script) }):");
+  print(decor);
   print(Script);
-  print("Compiling...\n");
+  print("\nCompiling...");
 
   Lines = Script.splitlines();
   # print(Lines);
@@ -239,7 +257,9 @@ def Compile():
 
   print("");
 
-  print("Resulting bytecode (len={0}):\n".format(len(Bytecode)));
+  print(decor);
+  print(f"Resulting bytecode (len={ len(Bytecode) }):");
+  print(decor);
 
   PrintBytecode();
 
@@ -247,7 +267,7 @@ def Compile():
 
   compression = float(len(Bytecode)) / float(len(Script)) * 100;
 
-  print("Size reduction: {:0.2f}%\n".format(100 - compression));
+  print(f"Size reduction: {(100 - compression):0.2f}%\n");
 
   if ShouldWriteToFile == True:
 
@@ -256,6 +276,8 @@ def Compile():
     with open("script.btc", "wb") as f:
       ba = bytearray(Bytecode);
       f.write(ba);
+
+################################################################################
 
 def Decompile():
   index = 0;
@@ -284,12 +306,12 @@ def Decompile():
     taskName = "";
 
     if taskNameVal == None:
-      print("\tillegal opcode: {0}".format(opcode));
+      print(f"\tillegal opcode: { opecode }");
       opcode = Nop;
     else:
       taskName = taskNameVal;
       strIndent = (' ' * indent);
-      decompiled += "{0}[{1}".format(strIndent, taskName);
+      decompiled += f"{ strIndent }[{ taskName }";
 
     index = index + 2;
 
@@ -302,7 +324,7 @@ def Decompile():
 
       while curByte != ParamsEnd:
         paramType = paramByCode[curByte];
-        decompiled += " p{0}=\"{1}\"".format(paramCount, paramType);
+        decompiled += f" p{ paramCount }=\"{ paramType }\"";
         paramCount = paramCount + 1;
         index = index + 1;
         curByte = Bytecode[index];
@@ -314,10 +336,12 @@ def Decompile():
 
   print(decompiled);
 
-# ******************************************************************************
+################################################################################
 
 def PrintUsage(progName):
-  print("Usage: {0} c|d [WRITE_TO_FILE] < stdin".format(progName));
+  print(f"Usage: { progName } c|d [WRITE_TO_FILE] < stdin");
+
+################################################################################
 
 if __name__ == "__main__":
   if len(sys.argv) < 2:
@@ -328,13 +352,21 @@ if __name__ == "__main__":
 
   InitContainers();
 
-  for line in sys.stdin:
-    Script += line;
-
   if sys.argv[1] == "c":
+    for line in sys.stdin:
+      Script += line;
+
     Compile();
+
   elif sys.argv[1] == "d":
-    Bytecode = bytearray(Script);
+
+    rawInput = None;
+
+    with open(sys.stdin.fileno(), mode="rb", closefd=False) as f:
+      rawInput = f.read();
+
+    Bytecode = bytearray(rawInput);
     Decompile();
+
   else:
     PrintUsage(sys.argv[0]);

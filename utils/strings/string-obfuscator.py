@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding = utf8
 
 import random;
@@ -7,6 +7,9 @@ import sys;
 FullFill = 0xFFFFFFFF;
 LowFill  = 0x000000FF;
 HighFill = 0xFFFFFF00;
+
+Size = 16
+MaxNum = 2**Size;
 
 CharsByIndex = {};
 IndexByChars = {};
@@ -20,40 +23,40 @@ ObfuscatedString = [];
 
 def EncodeChar(c):
   indexToEncode = IndexByChars[c];
-  rndNum = random.randint(0, 4294967296);
-  rndNum = (rndNum & HighFill);  
+  rndNum = random.randint(0, MaxNum);
+  rndNum = (rndNum & HighFill);
   rndNum = rndNum + indexToEncode;
   return rndNum;
 
 ################################################################################
-      
+
 def EncodeNum(n):
-  rndNum = random.randint(0, 4294967296);
-  rndNum = (rndNum & HighFill);  
+  rndNum = random.randint(0, MaxNum);
+  rndNum = (rndNum & HighFill);
   rndNum = rndNum + n;
   return rndNum;
 
 ################################################################################
-  
+
 def DecodeNumToChar(n):
-  index = n & LowFill;  
+  index = n & LowFill;
   return CharsByIndex[index];
 
 ################################################################################
-  
+
 def DecodeNum(n):
   return (n & LowFill);
 
 ################################################################################
-        
+
 def CreateData():
-  for i in range(0, 128):    
+  for i in range(0, 128):
     IndexByChars[chr(i)] = i;
     CharsByIndex[i] = chr(i);
 
 ################################################################################
-        
-def ObfuscateString(str):  
+
+def ObfuscateString(str):
   for c in str:
     res = EncodeChar(c);
     ObfuscatedString.append(res);
@@ -65,8 +68,8 @@ def DecodeString(str):
   tmp = "";
   for c in str:
     res = DecodeNumToChar(c);
-    print("{0} = {1}".format(res, ord(res)));
-    tmp += res;  
+    print(f"{ res } = { ord(res) }");
+    tmp += res;
   print("\n");
   print(">"*80);
   print(tmp);
@@ -75,7 +78,7 @@ def DecodeString(str):
 ################################################################################
 
 def ToCppVector(list):
-  res = "std::vector<uint32_t> script = \n";
+  res = f"std::vector<uint{ Size }_t> script = \n";
   res += "{\n";
 
   countLines = 0;
@@ -90,11 +93,14 @@ def ToCppVector(list):
 
 ################################################################################
 
-def main():  
+def main():
   if len(sys.argv) == 2:
     MyString = sys.argv[1];
-    
-  CreateData();  
+  else:
+    print(f"Usage: { sys.argv[0] } <STRING>");
+    exit(0);
+
+  CreateData();
   ObfuscateString(MyString);
   DecodeString(ObfuscatedString);
   ToCppVector(ObfuscatedString);

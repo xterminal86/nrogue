@@ -1026,6 +1026,14 @@ bool DGBase::TransformArea(TransformedRoom type, size_t emptyRoomIndex)
 
     // -------------------------------------------------------------------------
 
+    case TransformedRoom::CHESTROOM:
+    {
+      // TODO:
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
     default:
       DebugLog("Unknown room type - %d", (int)type);
       success = false;
