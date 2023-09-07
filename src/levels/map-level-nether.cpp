@@ -163,18 +163,7 @@ void MapLevelNether::CreateCommonObjects(int x, int y, char image)
                     : Colors::ShadesOfGrey::Twelve,
                       Strings::TileNames::TiledFloorText);
       break;
-
-    case '/':
-      // FIXME: replace
-      //PlaceShrine({ x, y, }, lb);
-      break;
   }
-}
-
-// =============================================================================
-
-void MapLevelNether::CreateSpecialObjects(int x, int y, const MapCell& cell)
-{
 }
 
 // =============================================================================

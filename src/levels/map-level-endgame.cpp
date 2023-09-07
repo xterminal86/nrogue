@@ -60,8 +60,3 @@ void MapLevelEndgame::CreateCommonObjects(int x, int y, char image)
 {
 }
 
-// =============================================================================
-
-void MapLevelEndgame::CreateSpecialObjects(int x, int y, const MapCell& cell)
-{
-}

@@ -17,7 +17,6 @@ class MapLevelLostCity : public MapLevelBase
     void CreateLevel() override;
 
     void CreateCommonObjects(int x, int y, char image) override;
-    void CreateSpecialObjects(int x, int y, const MapCell& cell) override;
 
   private:
     void CreateShrines(LevelBuilder& lb);

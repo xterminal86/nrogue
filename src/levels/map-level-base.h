@@ -132,7 +132,7 @@ class MapLevelBase
     // based on metadata in MapCell. Basically used to process zones
     // and create some extra special objects there.
     //
-    virtual void CreateSpecialObjects(int x, int y, const MapCell& cell) = 0;
+    void CreateSpecialObjects(int x, int y, const MapCell& cell);
 
     bool IsSpotValidForSpawn(const Position& pos);
     bool IsOutOfBounds(int x, int y);

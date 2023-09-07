@@ -62,7 +62,7 @@ std::string GetEndTestLine()
 void DisplayProgress()
 {
   static int progress = 0;
-  DebugLog("\t\tRunning test no. %i\n", progress);
+  ConsoleLog("\t\tRunning test no. %i\n", progress);
   progress++;
 }
 
@@ -70,7 +70,7 @@ void DisplayProgress()
 
 void TestLoS(std::stringstream& ss, int x, int y, int range)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << GetBanner(" BRESENHAM LoS ") << "\n";
 
@@ -110,7 +110,7 @@ void TestLoS(std::stringstream& ss, int x, int y, int range)
 
 void RoomTests(std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << GetBanner(" ROOM LAYOUTS ROTATIONS ") << "\n\n";
 
@@ -277,7 +277,7 @@ void RoomTests(std::stringstream& ss)
 
 void RNGTests(std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << GetBanner(" RNG tests ") << "\n\n";
 
@@ -374,7 +374,7 @@ void TestWeightsMap(const std::vector<std::tuple<GameObjectType, int, std::strin
                     int rolls,
                     std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   std::unordered_map<GameObjectType, int> toTest;
   std::unordered_map<GameObjectType, std::string> stringNames;
@@ -413,7 +413,7 @@ void TestWeightsMap(const std::vector<std::tuple<GameObjectType, int, std::strin
 
 void AutoLevel(std::stringstream& ss, Player& p, int level)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << Util::StringFormat("Auto level to %i:\n\n", level);
 
@@ -450,7 +450,7 @@ void AutoLevel(std::stringstream& ss, Player& p, int level)
 
 void LevelUpTests(std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << GetBanner(" AUTO LEVELLING ") << "\n\n";
 
@@ -467,7 +467,7 @@ void LevelUpTests(std::stringstream& ss)
 
 void WeightedRandomTest(std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << GetBanner(" WEIGHTED RANDOM ") << "\n\n";
 
@@ -557,7 +557,7 @@ void LootDropTest(std::stringstream& ss)
 {
   using LootTable = std::unordered_map<ItemType, int>;
 
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   const int iterations = 1000;
 
@@ -645,7 +645,7 @@ void LootDropTest(std::stringstream& ss)
 
 void Tunneler(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   Position start(1, 1);
 
@@ -682,25 +682,25 @@ void Tunneler(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   for (int i = 2; i <= 10; i++)
   {
     Position minMax = { 1, i };
-    DebugLog("  minMax = %i %i\n", minMax.X, minMax.Y);
+    ConsoleLog("  minMax = %i %i\n", minMax.X, minMax.Y);
     RunTunneler(minMax);
   }
 
   for (int i = 2; i <= 9; i++)
   {
     Position minMax = { i, 10 };
-    DebugLog("  minMax = %i %i\n", minMax.X, minMax.Y);
+    ConsoleLog("  minMax = %i %i\n", minMax.X, minMax.Y);
     RunTunneler(minMax);
   }
 
   for (int i = 1; i <= 10; i++)
   {
     Position minMax = { i, i };
-    DebugLog("  minMax = %i %i\n", minMax.X, minMax.Y);
+    ConsoleLog("  minMax = %i %i\n", minMax.X, minMax.Y);
     RunTunneler(minMax);
   }
 
-  DebugLog("Tunneler (backtracking)\n");
+  ConsoleLog("Tunneler (backtracking)\n");
 
   // -------------------------------------------------------------------------
 
@@ -709,21 +709,21 @@ void Tunneler(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
   for (int i = 2; i <= 10; i++)
   {
     Position minMax = { 1, i };
-    DebugLog("  minMax = %i %i\n", minMax.X, minMax.Y);
+    ConsoleLog("  minMax = %i %i\n", minMax.X, minMax.Y);
     RunTunnelerBT(minMax);
   }
 
   for (int i = 2; i <= 9; i++)
   {
     Position minMax = { i, 10 };
-    DebugLog("  minMax = %i %i\n", minMax.X, minMax.Y);
+    ConsoleLog("  minMax = %i %i\n", minMax.X, minMax.Y);
     RunTunnelerBT(minMax);
   }
 
   for (int i = 1; i <= 10; i++)
   {
     Position minMax = { i, i };
-    DebugLog("  minMax = %i %i\n", minMax.X, minMax.Y);
+    ConsoleLog("  minMax = %i %i\n", minMax.X, minMax.Y);
     RunTunnelerBT(minMax);
   }
 }
@@ -732,7 +732,7 @@ void Tunneler(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 
 void RecursiveBacktracker(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   Position start(1, 1);
 
@@ -853,7 +853,7 @@ void RecursiveBacktracker(LevelBuilder& lb, const Position& mapSize, std::string
 
 void CellularAutomata(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << GetBanner(" CELLULAR AUTOMATA ") << "\n\n";
 
@@ -866,7 +866,7 @@ void CellularAutomata(LevelBuilder& lb, const Position& mapSize, std::stringstre
 
 void Digger(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << GetBanner(" DIGGER ") << "\n\n";
 
@@ -886,7 +886,7 @@ void Digger(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 
 void BSPRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << GetBanner(" BSP ROOMS ") << "\n\n";
 
@@ -897,7 +897,7 @@ void BSPRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
        << " room size: " << roomSize
        << "\n\n";
 
-    DebugLog("  split ratio: %ix%i, room size = %d\n", splitRatio.X, splitRatio.Y, roomSize);
+    ConsoleLog("  split ratio: %ix%i, room size = %d\n", splitRatio.X, splitRatio.Y, roomSize);
 
     lb.BSPRoomsMethod(mapSize, splitRatio , roomSize);
 
@@ -921,7 +921,7 @@ void BSPRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 
 void FeatureRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << GetBanner(" FEATURE ROOMS ") << "\n\n";
 
@@ -949,7 +949,7 @@ void FeatureRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& 
 
 void FromPermutationTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << GetBanner(" FROM TILES ") << "\n\n";
 
@@ -985,7 +985,7 @@ void FromPermutationTiles(LevelBuilder& lb, const Position& mapSize, std::string
 
 void BlobTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << GetBanner(" BLOB TILES ") << "\n\n";
 
@@ -1002,7 +1002,7 @@ void BlobTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 //
 void LevelBuilderTest(std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   std::string str;
 
@@ -1042,7 +1042,7 @@ void LevelBuilderTest(std::stringstream& ss)
 
 void GenNamesTest(std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   int number = 100;
 
@@ -1088,7 +1088,7 @@ void GenNamesTest(std::stringstream& ss)
 
 void StringSplitTests(std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << GetBanner(" STRING SPLIT ") << "\n\n";
 
@@ -1144,7 +1144,7 @@ void StringSplitTests(std::stringstream& ss)
 
 void TownNamesTest(std::stringstream& ss)
 {
-  DebugLog("%s", __func__);
+  ConsoleLog("%s", __func__);
 
   ss << GetBanner(" TOWN NAMES ") << "\n\n";
 
@@ -1187,100 +1187,102 @@ void Run()
 
   file.open("tests.txt");
 
-  DisplayProgress();
-
   ss << GetBanner(" START TESTS ") << "\n\n";
 
   // ---------------------------------------------------------------------------
+
+  DisplayProgress();
 
   TestLoS(ss, 4, 4, 2);
 
   ss << GetEndTestLine();
 
-  DisplayProgress();
-
   // ---------------------------------------------------------------------------
+
+  DisplayProgress();
 
   RoomTests(ss);
 
   ss << GetEndTestLine();
 
-  DisplayProgress();
-
   // ---------------------------------------------------------------------------
+
+  DisplayProgress();
 
   RNGTests(ss);
 
   ss << GetEndTestLine();
 
-  DisplayProgress();
-
   // ---------------------------------------------------------------------------
+
+  DisplayProgress();
 
   LevelUpTests(ss);
 
   ss << GetEndTestLine();
 
-  DisplayProgress();
-
   // ---------------------------------------------------------------------------
+
+  DisplayProgress();
 
   WeightedRandomTest(ss);
 
   ss << GetEndTestLine();
 
-  DisplayProgress();
-
   // ---------------------------------------------------------------------------
+
+  DisplayProgress();
 
   LootDropTest(ss);
 
   ss << GetEndTestLine();
 
-  DisplayProgress();
-
   // ---------------------------------------------------------------------------
+
+  DisplayProgress();
 
   LevelBuilderTest(ss);
 
   ss << GetEndTestLine();
 
-  DisplayProgress();
-
   // ---------------------------------------------------------------------------
+
+  DisplayProgress();
 
   GenNamesTest(ss);
 
   ss << GetEndTestLine();
 
-  DisplayProgress();
-
   // ---------------------------------------------------------------------------
+
+  DisplayProgress();
 
   StringSplitTests(ss);
 
   ss << GetEndTestLine();
 
-  DisplayProgress();
-
   // ---------------------------------------------------------------------------
+
+  DisplayProgress();
 
   TownNamesTest(ss);
 
   ss << GetEndTestLine();
 
+  // ---------------------------------------------------------------------------
+
   file << ss.str();
 
   file.close();
 
-  DebugLog("Test results have been written into 'tests.txt'\n\n");
+  ConsoleLog("Test results have been written into 'tests.txt'\n\n");
 }
 
 // =============================================================================
 
 int main(int argc, char* argv[])
 {
-  DebugLog("Running tests, this may take a while...\n");
+  ConsoleLog("Running tests, this may take a while...\n");
 
   Run();
 

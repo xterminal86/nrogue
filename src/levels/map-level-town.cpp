@@ -1148,9 +1148,3 @@ bool MapLevelTown::SkipArea(const Position& pos, const Rect& area)
 void MapLevelTown::CreateCommonObjects(int x, int y, char image)
 {
 }
-
-// =============================================================================
-
-void MapLevelTown::CreateSpecialObjects(int x, int y, const MapCell& cell)
-{
-}

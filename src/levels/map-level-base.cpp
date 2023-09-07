@@ -978,3 +978,51 @@ void MapLevelBase::CreateSpecialMonsters()
 {
   // For creation of mini-bosses
 }
+
+// =============================================================================
+
+void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
+{
+  MapArray[x][y]->ZoneMarker = cell.ZoneMarker;
+
+  switch (cell.ZoneMarker)
+  {
+    case TransformedRoom::SHRINE:
+    {
+      if (std::holds_alternative<ShrineType>(cell.ObjectHere))
+      {
+        ShrineType t = std::get<ShrineType>(cell.ObjectHere);
+        PlaceShrine({ x, y }, t);
+      }
+    }
+    break;
+
+    case TransformedRoom::STORAGE:
+    {
+      if (std::holds_alternative<GameObjectType>(cell.ObjectHere))
+      {
+        if (std::get<GameObjectType>(cell.ObjectHere) == GameObjectType::CONTAINER)
+        {
+          GameObject* box = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(x, y, 'B', "Wooden Box", Colors::WoodColor, Colors::BlackColor);
+          PlaceStaticObject(box);
+        }
+      }
+    }
+    break;
+
+    case TransformedRoom::TREASURY:
+    {
+      if (std::holds_alternative<ItemType>(cell.ObjectHere))
+      {
+        if(std::get<ItemType>(cell.ObjectHere) == ItemType::COINS)
+        {
+          GameObject* go = ItemsFactory::Instance().CreateMoney();
+          go->PosX = x;
+          go->PosY = y;
+          PlaceGameObject(go);
+        }
+      }
+    }
+    break;
+  }
+}

@@ -385,7 +385,7 @@ namespace Util
   template <typename ... Args>
   std::string StringFormat(const std::string& format, Args ... args)
   {
-    size_t size = snprintf(nullptr, 0, format.c_str(), args ...);
+    size_t size = snprintf(nullptr, 0, format.data(), args ...);
     std::string s;
 
     if (!size)
@@ -395,7 +395,7 @@ namespace Util
 
     s.resize(size);
     char *buf = (char *)s.data();
-    snprintf(buf, size + 1, format.c_str(), args ...);
+    snprintf(buf, size + 1, format.data(), args ...);
     return s;
   }
 

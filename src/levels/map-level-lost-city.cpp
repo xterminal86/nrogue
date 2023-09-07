@@ -193,12 +193,6 @@ void MapLevelLostCity::CreateCommonObjects(int x, int y, char image)
 
 // =============================================================================
 
-void MapLevelLostCity::CreateSpecialObjects(int x, int y, const MapCell& cell)
-{
-}
-
-// =============================================================================
-
 void MapLevelLostCity::CreateShrines(LevelBuilder& lb)
 {
   auto allShrines = lb.ShrinesByPosition();

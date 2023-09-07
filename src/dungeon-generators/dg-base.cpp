@@ -949,7 +949,7 @@ bool DGBase::TransformArea(TransformedRoom type, size_t emptyRoomIndex)
 
     case TransformedRoom::SHRINE:
     {
-      //DebugLog("Trying to place SHRINE at %s", area.ToString().c_str());
+      //DebugLog("Trying to place SHRINE at %s", area.ToString().data());
 
       //
       // "As described in Callable, when invoking a pointer to non-static member
@@ -983,7 +983,7 @@ bool DGBase::TransformArea(TransformedRoom type, size_t emptyRoomIndex)
 
     case TransformedRoom::TREASURY:
     {
-      //DebugLog("Trying to place TREASURY at %s", area.ToString().c_str());
+      //DebugLog("Trying to place TREASURY at %s", area.ToString().data());
 
       auto fn = std::bind(&DGBase::PlaceTreasury, this, std::placeholders::_1);
       success = TryToPlaceRoom(5, 9, area, emptyRoomIndex, type, fn);
@@ -1083,7 +1083,7 @@ std::vector<size_t> DGBase::TryToFindSuitableRooms(int minSize, int maxSize,
     bool isNotMarked = (_map[area.X1][area.Y1].ZoneMarker == TransformedRoom::UNMARKED);
     if (DoesAreaFit(area, minSize, maxSize) && isNotMarked)
     {
-      //DebugLog("  found room %s", _emptyRooms[i].ToString().c_str());
+      //DebugLog("  found room %s", _emptyRooms[i].ToString().data());
       res.push_back(i);
     }
   }
@@ -1118,7 +1118,7 @@ std::vector<size_t> DGBase::TryToFindSuitableRooms(const std::vector<PairII>& ex
       bool exactSize = (area.Width() == minSize && area.Height() == maxSize);
       if (exactSize && isNotMarked)
       {
-        //DebugLog("  found room %s", _emptyRooms[i].ToString().c_str());
+        //DebugLog("  found room %s", _emptyRooms[i].ToString().data());
         res.push_back(i);
       }
     }
@@ -1357,7 +1357,7 @@ bool DGBase::TryToPlaceRoom(int minSize, int maxSize,
     {
       int index = RNG::Instance().RandomRange(0, candidates.size());
       size_t ri = candidates[index];
-      //DebugLog("OK - placing at %s", _emptyRooms[ri].ToString().c_str());
+      //DebugLog("OK - placing at %s", _emptyRooms[ri].ToString().data());
       fn(_emptyRooms[ri]);
     }
     else
@@ -1391,7 +1391,7 @@ bool DGBase::TryToPlaceRoom(const std::vector<PairII>& exactSizes,
   for (auto& item : exactSizes)
   {
     //DebugLog("Trying [%d ; %d ] for area %s ...",
-    //         item.first, item.second, area.ToString().c_str());
+    //         item.first, item.second, area.ToString().data());
 
     if (DoesAreaFitExactly(area, item))
     {
@@ -1411,7 +1411,7 @@ bool DGBase::TryToPlaceRoom(const std::vector<PairII>& exactSizes,
     {
       int index = RNG::Instance().RandomRange(0, candidates.size());
       size_t ri = candidates[index];
-      //DebugLog("OK - placing at %s", _emptyRooms[ri].ToString().c_str());
+      //DebugLog("OK - placing at %s", _emptyRooms[ri].ToString().data());
       fn(_emptyRooms[ri]);
     }
     else

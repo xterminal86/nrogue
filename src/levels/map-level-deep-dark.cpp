@@ -273,18 +273,7 @@ void MapLevelDeepDark::CreateCommonObjects(int x, int y, char image)
                     : Colors::ShadesOfGrey::Twelve,
                       Strings::TileNames::TiledFloorText);
       break;
-
-    case '/':
-      // FIXME: replace
-      //PlaceShrine({ x, y }, lb);
-      break;
   }
-}
-
-// =============================================================================
-
-void MapLevelDeepDark::CreateSpecialObjects(int x, int y, const MapCell& cell)
-{
 }
 
 // =============================================================================

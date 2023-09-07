@@ -389,7 +389,7 @@ void Application::WriteObituary(bool wasKilled)
 
 void Application::SaveText()
 {
-  std::ofstream saveFile(Strings::SaveFileName.c_str());
+  std::ofstream saveFile(Strings::SaveFileName.data());
   std::stringstream ss;
 
   SaveData.WorldSeed  = RNG::Instance().Seed;
@@ -415,7 +415,7 @@ void Application::SaveText()
 
 void Application::SaveBinary()
 {
-  std::ofstream saveFile(Strings::SaveFileName.c_str(), std::ofstream::binary);
+  std::ofstream saveFile(Strings::SaveFileName.data(), std::ofstream::binary);
 
   SaveData.WorldSeed  = RNG::Instance().Seed;
   SaveData.PlayerName = PlayerInstance.Name;
@@ -460,7 +460,7 @@ void Application::SaveGame(bool binary)
 
 void Application::LoadText()
 {
-  std::ifstream saveFile(Strings::SaveFileName.c_str());
+  std::ifstream saveFile(Strings::SaveFileName.data());
 
   auto ReadLine = [&saveFile]()
   {
@@ -497,7 +497,7 @@ void Application::LoadText()
 
 void Application::LoadBinary()
 {
-  std::ifstream f(Strings::SaveFileName.c_str(), std::ifstream::binary);
+  std::ifstream f(Strings::SaveFileName.data(), std::ifstream::binary);
 
   SaveData.PlayerName.resize(GlobalConstants::MaxNameLength);
 
@@ -1229,14 +1229,6 @@ void Application::InitGameStates()
 
 // =============================================================================
 
-//
-// TODO: save last generated global id when implementing savegame data
-// or application of effects will be fucked up after loading
-// since "who applied" is determined by object's global id.
-//
-// In order to avoid potential BS with generation of player's object id,
-// to save last generated global id we'll have to do (GetNewGlobalId() - 1).
-//
 uint64_t Application::GetNewGlobalId()
 {
   static uint64_t globalId = 1;

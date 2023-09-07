@@ -503,16 +503,22 @@ void MapLevelMines::CreateSpecialLevel()
                                                        TriggerUpdateType::FINISH_TURN,
           [this]()
           {
-            // Mark area where trigger shouldn't activate ...
+            //
+            // Mark area where trigger shouldn't activate...
+            //
             bool activate = (_playerRef->PosX >= 1 && _playerRef->PosX <= 4
                           && _playerRef->PosY >= 1 && _playerRef->PosY <= 4);
 
-            // ... and set it to activate everywhere else!
+            //
+            // ...and set it to activate everywhere else!
+            //
             return !activate;
           },
           [this, boss]()
           {
-            // Place cave-in
+            //
+            // Place cave-in.
+            //
             for (int x = 1; x <= 3; x++)
             {
               for (int y = 1; y <= 3; y++)
@@ -740,50 +746,3 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
   }
 }
 
-// =============================================================================
-
-void MapLevelMines::CreateSpecialObjects(int x, int y, const MapCell& cell)
-{
-  MapArray[x][y]->ZoneMarker = cell.ZoneMarker;
-
-  switch (cell.ZoneMarker)
-  {
-    case TransformedRoom::SHRINE:
-    {
-      if (std::holds_alternative<ShrineType>(cell.ObjectHere))
-      {
-        ShrineType t = std::get<ShrineType>(cell.ObjectHere);
-        PlaceShrine({ x, y }, t);
-      }
-    }
-    break;
-
-    case TransformedRoom::STORAGE:
-    {
-      if (std::holds_alternative<GameObjectType>(cell.ObjectHere))
-      {
-        if (std::get<GameObjectType>(cell.ObjectHere) == GameObjectType::CONTAINER)
-        {
-          GameObject* box = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(x, y, 'B', "Wooden Box", Colors::WoodColor, Colors::BlackColor);
-          PlaceStaticObject(box);
-        }
-      }
-    }
-    break;
-
-    case TransformedRoom::TREASURY:
-    {
-      if (std::holds_alternative<ItemType>(cell.ObjectHere))
-      {
-        if(std::get<ItemType>(cell.ObjectHere) == ItemType::COINS)
-        {
-          GameObject* go = ItemsFactory::Instance().CreateMoney();
-          go->PosX = x;
-          go->PosY = y;
-          PlaceGameObject(go);
-        }
-      }
-    }
-    break;
-  }
-}

@@ -138,18 +138,7 @@ void MapLevelAbyss::CreateCommonObjects(int x, int y, char image)
     case 'l':
       PlaceLavaTile(x, y);
       break;
-
-    case '/':
-      // FIXME: replace
-      //PlaceShrine({ x, y }, lb);
-      break;
   }
-}
-
-// =============================================================================
-
-void MapLevelAbyss::CreateSpecialObjects(int x, int y, const MapCell& cell)
-{
 }
 
 // =============================================================================
