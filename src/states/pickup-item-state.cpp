@@ -42,14 +42,14 @@ void PickupItemState::ProcessInput()
       {
         if (_itemsListIndexByChar.count(_keyPressed))
         {
-          Application::Instance().RecordAction(_keyPressed);
-
           int index  = _itemsListIndexByChar[_keyPressed];
           auto& item = _itemsList[index];
 
           bool ok = PickupItem(item);
           if (ok)
           {
+            Application::Instance().RecordAction(_keyPressed);
+
             //
             // NOTE: list of items may be different on second interaction
             // if the pile was big enough and item was removed

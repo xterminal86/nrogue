@@ -19,12 +19,11 @@ void InventoryState::Init()
   _keysToRecord['i']       = true;
   _keysToRecord['d']       = true;
   _keysToRecord['u']       = true;
-  _keysToRecord['u']       = true;
   _keysToRecord['e']       = true;
   _keysToRecord['s']       = true;
   _keysToRecord['t']       = true;
-  _keysToRecord[VK_CANCEL] = true;
 
+  _keysToRecord[VK_CANCEL] = true;
 }
 
 // =============================================================================

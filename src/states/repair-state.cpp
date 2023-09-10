@@ -9,6 +9,8 @@ void RepairState::Init()
   _playerRef = &Application::Instance().PlayerInstance;
 
   _headerText = " REPAIR ITEMS ";
+
+  _itemRefByChar.reserve(Strings::AlphabetLowercase.length());
 }
 
 // =============================================================================
@@ -16,6 +18,17 @@ void RepairState::Init()
 void RepairState::Prepare()
 {
   _itemRefByChar.clear();
+
+  int itemIndex = 0;
+  for (auto& i : _playerRef->Inventory->Contents)
+  {
+    ItemComponent* ic = i->GetComponent<ItemComponent>();
+    if (ic->Data.IsEquipped && ic->Data.IsWeaponOrArmor())
+    {
+      _itemRefByChar.push_back(ic);
+      itemIndex++;
+    }
+  }
 }
 
 // =============================================================================
@@ -31,10 +44,10 @@ void RepairState::ProcessInput()
 
     default:
     {
-      if (_itemRefByChar.count(_keyPressed))
+      int index = (_keyPressed - 'a');
+      if (index >= 0 && index < (int)_itemRefByChar.size())
       {
-        Application::Instance().RecordAction(_keyPressed);
-        ItemComponent* ic = _itemRefByChar[_keyPressed];
+        ItemComponent* ic = _itemRefByChar[index];
         if (ic->Data.Durability.Min().Get() == ic->Data.Durability.Max().Get())
         {
           Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
@@ -44,6 +57,7 @@ void RepairState::ProcessInput()
         }
         else
         {
+          Application::Instance().RecordAction(_keyPressed);
           RepairItem(ic);
         }
       }
@@ -56,42 +70,35 @@ void RepairState::ProcessInput()
 
 void RepairState::DrawSpecific()
 {
-  int itemIndex = 0;
-  for (auto& i : _playerRef->Inventory->Contents)
+  for (size_t i = 0; i < _itemRefByChar.size(); i++)
   {
-    ItemComponent* ic = i->GetComponent<ItemComponent>();
-    if (ic->Data.IsEquipped && ic->Data.IsWeaponOrArmor())
+    char c = 'a' + i;
+    ItemComponent* ic = _itemRefByChar[i];
+
+    std::string name = ic->Data.IsIdentified ?
+                       ic->Data.IdentifiedName :
+                       ic->Data.UnidentifiedName;
+
+    std::string str;
+
+    if (ic->Data.IsIdentified)
     {
-      std::string name = ic->Data.IsIdentified ?
-                         ic->Data.IdentifiedName :
-                         ic->Data.UnidentifiedName;
-
-      char c = Strings::AlphabetLowercase[itemIndex];
-      std::string str;
-
-      if (ic->Data.IsIdentified)
-      {
-        str = Util::StringFormat("'%c' - %s (%i/%i)",
-                                 c,
-                                 name.data(),
-                                 ic->Data.Durability.Min().Get(),
-                                 ic->Data.Durability.Max().Get());
-      }
-      else
-      {
-        str = Util::StringFormat(R"('%c' - %s (??/??))", c, name.data());
-      }
-
-      Printer::Instance().PrintFB(1,
-                                  2 + itemIndex,
-                                  str,
-                                  Printer::kAlignLeft,
-                                  Colors::WhiteColor);
-
-      _itemRefByChar[c] = ic;
-
-      itemIndex++;
+      str = Util::StringFormat("'%c' - %s (%i/%i)",
+                               c,
+                               name.data(),
+                               ic->Data.Durability.Min().Get(),
+                               ic->Data.Durability.Max().Get());
     }
+    else
+    {
+      str = Util::StringFormat(R"('%c' - %s (??/??))", c, name.data());
+    }
+
+    Printer::Instance().PrintFB(1,
+                                2 + i,
+                                str,
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
   }
 }
 

@@ -20,6 +20,7 @@ void MainState::Init()
   _keysToRecord['i'] = true;
   _keysToRecord['g'] = true;
   _keysToRecord['>'] = true;
+  _keysToRecord['<'] = true;
 }
 
 // =============================================================================

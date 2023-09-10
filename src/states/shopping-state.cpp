@@ -21,7 +21,6 @@ void ShoppingState::Init()
   _keysToRecord[ALT_K6]    = true;
   _keysToRecord[NUMPAD_6]  = true;
   _keysToRecord[VK_ENTER]  = true;
-  _keysToRecord['i']       = true;
   _keysToRecord[VK_CANCEL] = true;
 }
 
