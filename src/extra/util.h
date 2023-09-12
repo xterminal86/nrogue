@@ -122,8 +122,6 @@ namespace Util
   extern double LinearDistance(int x1, int y1, int x2, int y2);
   extern double LinearDistance(const Position& s, const Position& e);
 
-  extern double Log2(uint64_t n);
-
   extern std::vector<Position> GetEightPointsAround(const Position& pos,
                                                     const Position& mapSize);
 

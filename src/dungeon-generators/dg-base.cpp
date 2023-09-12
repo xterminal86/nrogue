@@ -915,6 +915,7 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
   // Some cleanup just in case.
   //
   _emptyRooms.clear();
+  _failures.clear();
 
   FillMapRaw();
 }
@@ -1214,7 +1215,7 @@ void DGBase::PlaceStorage(const Rect& area)
     {
       _map[x][y].ZoneMarker = TransformedRoom::STORAGE;
 
-      if (Util::Rolld100(30))
+      if (Util::Rolld100(20))
       {
         _map[x][y].ObjectHere = GameObjectType::CONTAINER;
       }

@@ -544,16 +544,6 @@ namespace Util
 
   // ===========================================================================
 
-  double Log2(uint64_t n)
-  {
-    //
-    // log_2(n) = log_e(n) / log_e(2)
-    //
-    return (std::log(n) / std::log(2));
-  }
-
-  // ===========================================================================
-
   std::vector<Position> GetEightPointsAround(const Position& pos,
                                              const Position& mapSize)
   {
@@ -2187,30 +2177,63 @@ namespace Util
   int CalculateHitChanceMelee(GameObject* attacker,
                               GameObject* defender)
   {
-    //
-    // Amount of addition to hit chance
-    // times SKL difference of attacker and defender.
-    //
-    int attackChanceScale = 3;
-
-    int defaultHitChance = 50;
-    int hitChance = defaultHitChance;
-
-    int skillDiff = attacker->Attrs.Skl.Get() - defender->Attrs.Skl.Get();
-    int difficulty = (skillDiff * attackChanceScale);
-
-    hitChance += difficulty;
-
-    hitChance = Clamp(hitChance,
-                      GlobalConstants::MinHitChance,
-                      GlobalConstants::MaxHitChance);
-
-    if (attacker->HasEffect(ItemBonusType::BLINDNESS))
+    /*
+    auto LinearHitChance = [](GameObject* attacker,
+                              GameObject* defender)
     {
-      hitChance /= 2;
-    }
+      const int attackChanceScale = 3;
+      const int defaultHitChance = 50;
 
-    return hitChance;
+      int hitChance = defaultHitChance;
+
+      int skillDiff = attacker->Attrs.Skl.Get() - defender->Attrs.Skl.Get();
+      int difficulty = (skillDiff * attackChanceScale);
+
+      hitChance += difficulty;
+
+      hitChance = Clamp(hitChance,
+                        GlobalConstants::MinHitChance,
+                        GlobalConstants::MaxHitChance);
+
+      if (attacker->HasEffect(ItemBonusType::BLINDNESS))
+      {
+        hitChance /= 2;
+      }
+
+      return hitChance;
+    };
+
+    return LinearHitChance(attacker, defender);
+    */
+
+    auto NonLinearHitChance = [](GameObject* attacker,
+                                 GameObject* defender)
+    {
+      const int defaultHitChance = 50;
+
+      const int coeff1    = 34;
+      const double coeff2 = 2.25;
+
+      int skillDiff = attacker->Attrs.Skl.Get() - defender->Attrs.Skl.Get();
+      int diff      = (skillDiff + 1) <= 0 ? 1 : (skillDiff + 1);
+
+      double add = (skillDiff > 0) ? 0.0 : (double)skillDiff * coeff2;
+
+      int chance = defaultHitChance + (int)(std::log10((double)diff) * coeff1 + add);
+
+      chance = Clamp(chance,
+                     GlobalConstants::MinHitChance,
+                     GlobalConstants::MaxHitChance);
+
+      if (attacker->HasEffect(ItemBonusType::BLINDNESS))
+      {
+        chance /= 2;
+      }
+
+      return chance;
+    };
+
+    return NonLinearHitChance(attacker, defender);
   }
 
   // ===========================================================================
