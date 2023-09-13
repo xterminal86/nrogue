@@ -1,5 +1,5 @@
-#ifndef ROOMS_H
-#define ROOMS_H
+#ifndef BSPROOMS_H
+#define BSPROOMS_H
 
 #include <memory>
 
@@ -43,4 +43,4 @@ class BSPRooms : public DGBase
     void ConnectPoints(const Position& p1, const Position& p2);
 };
 
-#endif // ROOMS_H
+#endif // BSPROOMS_H

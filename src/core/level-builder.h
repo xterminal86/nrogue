@@ -43,10 +43,16 @@ class LevelBuilder
                         const Position& splitRatio,
                         int minRoomSize);
 
+    void RoomsMethod(const Position& mapSize,
+                     const Position& roomSizes,
+                     int maxIterations);
+
     void FromPermutationTilesMethod(const Position& mapSize,
                                     int tileSetIndex = -1,
                                     bool postProcess = false,
                                     bool removeBias = false);
+
+    // -------------------------------------------------------------------------
 
     void PlaceShrineLayout(const Position& start,
                            const StringV& layout);

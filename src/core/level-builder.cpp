@@ -9,6 +9,7 @@
 #include "blob-tiles.h"
 #include "from-permutation-tiles.h"
 #include "bsp-rooms.h"
+#include "rooms.h"
 #include "util.h"
 
 void LevelBuilder::FeatureRoomsMethod(const Position& mapSize,
@@ -112,6 +113,20 @@ void LevelBuilder::BSPRoomsMethod(const Position& mapSize,
   fl->Generate(mapSize, splitRatio, minRoomSize);
 
   MapRaw = fl->MapRaw;
+}
+
+// =============================================================================
+
+void LevelBuilder::RoomsMethod(const Position& mapSize,
+                               const Position& roomSizes,
+                               int maxIterations)
+{
+  _generator.reset(new Rooms());
+
+  Rooms* r = static_cast<Rooms*>(_generator.get());
+  r->Generate(mapSize, roomSizes, maxIterations);
+
+  MapRaw = r->MapRaw;
 }
 
 // =============================================================================

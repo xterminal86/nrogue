@@ -1,5 +1,5 @@
-#ifndef DG_BASE_H
-#define DG_BASE_H
+#ifndef DGBASE_H
+#define DGBASE_H
 
 #include <vector>
 #include <map>
@@ -138,7 +138,8 @@ class DGBase
     int CountAround(int x, int y, char ch);
 
     const StringV& ExtractMapChunk(int x, int y, int w, int h);
-    bool FillMapChunk(int x, int y, int w, int h, char with);
+    bool FillMapChunk(int x, int y, int w, int h, char with, bool markVisited = false);
+    bool VisitArea(int x, int y, int w, int h);
     bool AreChunksEqual(const StringV& chunk1, const StringV& chunk2);
     bool IsCorner(int x, int y, CornerType cornerType);
     bool IsAreaEmpty(int x1, int y1, int x2, int y2);
@@ -147,7 +148,7 @@ class DGBase
     std::vector<std::vector<MapCell>> CreateFilledMap(int w, int h, char image = '#');
     std::vector<std::vector<MapCell>> CreateRandomlyFilledMap(int w, int h, int chance);
 
-    void PlaceDoors();
+    void PlaceDoors(bool useAdditionalLayout = false);
     bool IsSpotValidForDoor(const Position& p);
     std::vector<Position> FindPlaceForDoor();
 
@@ -161,6 +162,8 @@ class DGBase
     RemovalParams _endWallsRemovalParams;
 
     StringV _mapChunk;
+
+    bool _useAdditionalLayoutForDoors = false;
 
     //
     // Algorithm specific data and methods, no need to expose these

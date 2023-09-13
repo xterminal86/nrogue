@@ -509,7 +509,7 @@ const StringV& DGBase::ExtractMapChunk(int x, int y, int w, int h)
 
 // =============================================================================
 
-bool DGBase::FillMapChunk(int x, int y, int w, int h, char with)
+bool DGBase::FillMapChunk(int x, int y, int w, int h, char with, bool markVisited)
 {
   int hx = x + w;
   int hy = y + h;
@@ -524,6 +524,34 @@ bool DGBase::FillMapChunk(int x, int y, int w, int h, char with)
     for (int j = y; j <= hy; j++)
     {
       _map[i][j].Image = with;
+
+      if (markVisited)
+      {
+        _map[i][j].Visited = true;
+      }
+    }
+  }
+
+  return true;
+}
+
+// =============================================================================
+
+bool DGBase::VisitArea(int x, int y, int w, int h)
+{
+  int hx = x + w;
+  int hy = y + h;
+
+  if (!IsInBounds(x, y) || !IsInBounds(hx, hy))
+  {
+    return false;
+  }
+
+  for (int i = x; i <= hx; i++)
+  {
+    for (int j = y; j <= hy; j++)
+    {
+      _map[i][j].Visited = true;
     }
   }
 
@@ -1796,8 +1824,10 @@ void DGBase::UnmarkRegions()
 
 // =============================================================================
 
-void DGBase::PlaceDoors()
+void DGBase::PlaceDoors(bool useAdditionalLayout)
 {
+  _useAdditionalLayoutForDoors = useAdditionalLayout;
+
   auto spotFound = FindPlaceForDoor();
   while (spotFound.size() != 0)
   {
@@ -1860,22 +1890,36 @@ bool DGBase::IsSpotValidForDoor(const Position& p)
       "#.#",
       "..."
     },
-    //
-    // Tends to produce doors in L shaped corridors.
-    //
-    /*
-    {
-      "#.#",
-      "#.#",
-      "#.."
-    },
-      */
     {
       "#..",
       "#.#",
       "#.."
     }
   };
+
+  if (_useAdditionalLayoutForDoors)
+  {
+    //
+    // Tend to produce doors in L shaped corridors.
+    //
+
+    Pattern add1 =
+    {
+      "#.#",
+      "#.#",
+      "#.."
+    };
+
+    Pattern add2 =
+    {
+      "#.#",
+      "#.#",
+      "..#"
+    };
+
+    validPatterns.push_back(add1);
+    validPatterns.push_back(add2);
+  }
 
   auto angles =
   {

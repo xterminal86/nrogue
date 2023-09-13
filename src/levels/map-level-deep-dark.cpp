@@ -227,13 +227,6 @@ void MapLevelDeepDark::CreateCommonObjects(int x, int y, char image)
     case '+':
     {
       GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, DoorMaterials::STONE);
-
-      if (Util::Rolld100(15))
-      {
-        DoorComponent* dc = door->GetComponent<DoorComponent>();
-        dc->OpenedBy = GlobalConstants::OpenedByNobody;
-      }
-
       PlaceStaticObject(door);
     }
     break;
@@ -243,6 +236,10 @@ void MapLevelDeepDark::CreateCommonObjects(int x, int y, char image)
       break;
 
     case 'w':
+      PlaceShallowWaterTile(x, y);
+      break;
+
+    case 'W':
       PlaceDeepWaterTile(x, y);
       break;
 

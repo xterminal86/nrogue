@@ -164,13 +164,6 @@ void MapLevelCaves::CreateLevel()
 
   if (MapType_ != MapType::CAVES_5)
   {
-    /*
-    if (Util::Rolld100(_shrineRollChance))
-    {
-      PlaceRandomShrine(lb);
-    }
-    */
-
     ConstructFromBuilder(lb);
 
     CreateRivers();
@@ -201,13 +194,6 @@ void MapLevelCaves::CreateCommonObjects(int x, int y, char image)
     case '+':
     {
       GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false);
-
-      if (Util::Rolld100(15))
-      {
-        DoorComponent* dc = door->GetComponent<DoorComponent>();
-        dc->OpenedBy = GlobalConstants::OpenedByNobody;
-      }
-
       PlaceStaticObject(door);
     }
     break;
@@ -226,6 +212,10 @@ void MapLevelCaves::CreateCommonObjects(int x, int y, char image)
       break;
 
     case 'w':
+      PlaceShallowWaterTile(x, y);
+      break;
+
+    case 'W':
       PlaceDeepWaterTile(x, y);
       break;
 
@@ -353,10 +343,6 @@ void MapLevelCaves::CreateSpecialLevel()
                     true);
         }
         break;
-
-        case 'W':
-          PlaceDeepWaterTile(posX, posY);
-          break;
 
         case '.':
           PlaceGroundTile(posX,

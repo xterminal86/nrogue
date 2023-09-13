@@ -328,23 +328,28 @@ void MapLevelMines::CreateLevel()
 
   LevelBuilder lb;
 
-  const std::vector<Position> splitRatios =
-  {
-    { 30, 70 },
-    { 70, 30 },
-    { 45, 55 },
-    { 60, 40 },
-    { 40, 60 }
-  };
-
-  int ind = RNG::Instance().RandomRange(0, splitRatios.size());
-
   switch (MapType_)
   {
     case MapType::MINES_1:
-    case MapType::MINES_2:
-      lb.BSPRoomsMethod(MapSize, splitRatios[ind], 7);
+      lb.RoomsMethod(MapSize, { 5, 9 }, 50);
       break;
+
+    case MapType::MINES_2:
+    {
+      const std::vector<Position> splitRatios =
+      {
+        { 30, 70 },
+        { 70, 30 },
+        { 45, 55 },
+        { 60, 40 },
+        { 40, 60 }
+      };
+
+      int ind = RNG::Instance().RandomRange(0, splitRatios.size());
+
+      lb.BSPRoomsMethod(MapSize, splitRatios[ind], 7);
+    }
+    break;
 
     case MapType::MINES_3:
     {
@@ -590,6 +595,10 @@ void MapLevelMines::CreateSpecialLevel()
                           "Someone's remains...");
           break;
 
+        case 'w':
+          PlaceShallowWaterTile(posX, posY);
+          break;
+
         case 'W':
           PlaceDeepWaterTile(posX, posY);
           break;
@@ -689,11 +698,18 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
     {
       GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, DoorMaterials::WOOD);
 
+      //
+      // May cause softlock if there is a locked door in flooded room
+      // since we cannot attack while swimming.
+      //
+
+      /*
       if (Util::Rolld100(10))
       {
         DoorComponent* dc = door->GetComponent<DoorComponent>();
         dc->OpenedBy = GlobalConstants::OpenedByNobody;
       }
+      */
 
       PlaceStaticObject(door);
     }

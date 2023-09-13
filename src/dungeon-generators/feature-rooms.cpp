@@ -150,7 +150,7 @@ bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
     {
       auto rndSize = GetRandomRoomSize();
       int choice = RNG::Instance().RandomRange(0, 2);
-      char variant = (choice == 0) ? 'w' : 'l';
+      char variant = (choice == 0) ? 'W' : 'l';
       success = CreateEmptyRoom(newRoomStartPos, rndSize, direction, variant);
     }
     break;

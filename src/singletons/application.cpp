@@ -994,20 +994,20 @@ SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
   //
   if (scaledW == 32)
   {
-    GlobalConstants::TerminalWidth = 59;
+    GlobalConstants::TerminalWidth = 60;
   }
 
   if (tileWidth == tileHeight)
   {
-    GlobalConstants::TerminalHeight = GlobalConstants::TerminalWidth / 2 + 2;
+    GlobalConstants::TerminalHeight = GlobalConstants::TerminalWidth / 2;
   }
 
   // ---------------------------------------------------------------------------
 
-  int ww = GlobalConstants::TerminalWidth * scaledW;
+  int ww = GlobalConstants::TerminalWidth  * scaledW;
   int wh = GlobalConstants::TerminalHeight * scaledH;
 
-  GameConfig.WindowWidth = ww;
+  GameConfig.WindowWidth  = ww;
   GameConfig.WindowHeight = wh;
 
   res.w = ww;
