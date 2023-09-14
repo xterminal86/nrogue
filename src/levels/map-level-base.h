@@ -117,6 +117,11 @@ class MapLevelBase
 
     void ConstructFromBuilder(LevelBuilder& lb);
 
+    void CreateGround(char img,
+                      uint32_t fgColor,
+                      uint32_t bgColor,
+                      const std::string& tileName);
+
     virtual void CreateLevel();
     virtual void CreateSpecialLevel();
     virtual void CreateSpecialMonsters();

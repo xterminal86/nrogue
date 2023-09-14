@@ -29,6 +29,11 @@ void MapLevelLostCity::CreateLevel()
   VisibilityRadius = 20;
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
+  CreateGround('.',
+               Colors::ShadesOfGrey::Four,
+               Colors::BlackColor,
+               Strings::TileNames::GroundText);
+
   LevelBuilder lb;
 
   FeatureRoomsWeights weights =

@@ -47,6 +47,11 @@ void MapLevelNether::CreateLevel()
   VisibilityRadius = 20;
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
+  CreateGround('.',
+               0x440000,
+               Colors::BlackColor,
+               Strings::TileNames::HellstoneText);
+
   LevelBuilder lb;
   switch (MapType_)
   {
@@ -71,13 +76,6 @@ void MapLevelNether::CreateLevel()
 
   if (MapType_ != MapType::NETHER_5)
   {
-    /*
-    if (Util::Rolld100(_shrineRollChance))
-    {
-      PlaceRandomShrine(lb);
-    }
-    */
-
     ConstructFromBuilder(lb);
 
     RecordEmptyCells();

@@ -996,6 +996,19 @@ void BlobTiles(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
 
 // =============================================================================
 
+void RoomsMethod(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
+{
+  ConsoleLog("%s", __func__);
+
+  ss << GetBanner(" ROOMS METHOD ") << "\n\n";
+
+  lb.RoomsMethod(mapSize, { 5, 9 }, 50);
+
+  ss << lb.GetMapRawString() << "\n\n";
+}
+
+// =============================================================================
+
 //
 // NOTE: for non square map size dimensions must be swapped
 // because, well, you know: another day - same shit.
@@ -1036,6 +1049,9 @@ void LevelBuilderTest(std::stringstream& ss)
   //
   DisplayProgress();
   BlobTiles(lb, mapSize, ss);
+  //
+  DisplayProgress();
+  RoomsMethod(lb, mapSize, ss);
 }
 
 // =============================================================================

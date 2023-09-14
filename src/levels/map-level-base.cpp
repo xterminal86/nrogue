@@ -956,6 +956,18 @@ void MapLevelBase::ConstructFromBuilder(LevelBuilder& lb)
 
 // =============================================================================
 
+void MapLevelBase::CreateGround(char img,
+                                uint32_t fgColor,
+                                uint32_t bgColor,
+                                const std::string& tileName)
+{
+  GameObjectInfo t;
+  t.Set(false, false, img, fgColor, bgColor, tileName);
+  FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
+}
+
+// =============================================================================
+
 void MapLevelBase::FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill)
 {
   for (int x = ax; x <= ax + aw; x++)

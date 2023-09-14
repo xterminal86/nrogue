@@ -49,6 +49,11 @@ void MapLevelAbyss::CreateLevel()
   VisibilityRadius = 40;
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
+  CreateGround(' ',
+               Colors::BlackColor,
+               0x440000,
+               Strings::TileNames::AbyssalFloorText);
+
   LevelBuilder lb;
   switch (MapType_)
   {
@@ -74,13 +79,6 @@ void MapLevelAbyss::CreateLevel()
 
   if (MapType_ != MapType::ABYSS_5)
   {
-    /*
-    if (Util::Rolld100(_shrineRollChance))
-    {
-      PlaceRandomShrine(lb);
-    }
-    */
-
     ConstructFromBuilder(lb);
 
     RecordEmptyCells();

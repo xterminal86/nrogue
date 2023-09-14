@@ -54,6 +54,11 @@ void MapLevelDeepDark::CreateLevel()
   VisibilityRadius = 3;
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
+  CreateGround('.',
+               Colors::ShadesOfGrey::Four,
+               Colors::BlackColor,
+               Strings::TileNames::GroundText);
+
   // NOTE: find out what was planned to do with these
 
   //int tunnelLengthMax = MapSize.X / 10;
@@ -110,13 +115,6 @@ void MapLevelDeepDark::CreateLevel()
 
   if (MapType_ != MapType::DEEP_DARK_5)
   {
-    /*
-    if (Util::Rolld100(_shrineRollChance))
-    {
-      PlaceRandomShrine(lb);
-    }
-    */
-
     ConstructFromBuilder(lb);
 
     RecordEmptyCells();

@@ -314,24 +314,17 @@ void MapLevelMines::CreateLevel()
   VisibilityRadius = 8;
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
-  GameObjectInfo t;
-  t.Set(false,
-        false,
-        '.',
-        Colors::ShadesOfGrey::Four,
-        Colors::BlackColor,
-        Strings::TileNames::DirtText);
-
-  FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
-
-  // Build level
+  CreateGround('.',
+               Colors::ShadesOfGrey::Four,
+               Colors::BlackColor,
+               Strings::TileNames::DirtText);
 
   LevelBuilder lb;
 
   switch (MapType_)
   {
     case MapType::MINES_1:
-      lb.RoomsMethod(MapSize, { 5, 9 }, 50);
+      lb.RoomsMethod(MapSize, { 3, 7 }, MapSize.X);
       break;
 
     case MapType::MINES_2:
@@ -367,7 +360,7 @@ void MapLevelMines::CreateLevel()
       break;
   }
 
-  // Borders
+  GameObjectInfo t;
 
   t.Set(true,
         true,
