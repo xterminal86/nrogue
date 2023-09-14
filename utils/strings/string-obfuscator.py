@@ -60,24 +60,27 @@ def ObfuscateString(str):
   for c in str:
     res = EncodeChar(c);
     ObfuscatedString.append(res);
+  print("Obfuscated bytes:");
   print(ObfuscatedString);
 
 ################################################################################
 
 def DecodeString(str):
   tmp = "";
-  for c in str:
-    res = DecodeNumToChar(c);
-    print(f"{ res } = { ord(res) }");
-    tmp += res;
   print("\n");
   print(">"*80);
-  print(tmp);
+  for c in str:
+    res = DecodeNumToChar(c);
+    print(f"{ res } = { ord(res) } ({ c })");
+    tmp += res;
   print("<"*80);
+  print(tmp);
 
 ################################################################################
 
 def ToCppVector(list):
+  print("");
+
   res = f"std::vector<uint{ Size }_t> script = \n";
   res += "{\n";
 

@@ -228,19 +228,21 @@ void MapLevelLostCity::DisplayWelcomeText()
 {
   std::vector<std::string> msg =
   {
-  // =============================================== <- 47
-    "You certainly heard rumors about a settlement  ",
-    "that was buried somewhere deep underground upon",
-    "which current City is built. Some even say that",
-    "back in the past it was all one giant residence",
-    "but then for some reason parts of it were      ",
-    "abandoned and over time sunk into the ground.  ",
-    "Since nobody knows whether it had a name or    ",
-    "whether it even existed, people refer to it    ",
-    "as just 'Lost City'.                           ",
-    "Nobody took its existence seriously,           ",
-    "but here you are, standing in its halls.       "
+         // ---------0---------0---------0---------0---------0 <- 50
+    { HIDE("You certainly heard rumors about a settlement  ") },
+    { HIDE("that was buried somewhere deep underground upon") },
+    { HIDE("which current City is built. Some even say that") },
+    { HIDE("back in the past it was all one giant residence") },
+    { HIDE("but then for some reason parts of it were      ") },
+    { HIDE("abandoned and over time sunk into the ground.  ") },
+    { HIDE("Since nobody knows whether it had a name or    ") },
+    { HIDE("whether it even existed, people refer to it    ") },
+    { HIDE("as just 'Lost City'.                           ") },
+    { HIDE("Nobody took its existence seriously,           ") },
+    { HIDE("but here you are, standing in its halls.       ") }
   };
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Lost City", msg);
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                                        { HIDE("Lost City") },
+                                         msg);
 }

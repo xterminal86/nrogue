@@ -1,5 +1,6 @@
 #include "constants.h"
 #include "base64-strings.h"
+#include "string-obfuscator.h"
 
 namespace Colors
 {
@@ -914,108 +915,122 @@ namespace GlobalConstants
     "el"
   };
 
-  const std::unordered_map<MapType, StringV> MapLevelNames =
+  const std::unordered_map<MapType, std::string> MapLevelNames =
   {
+    // -------------------------------------------------------------------------
     // Abandoned Mines
-    { MapType::MINES_1,     { "Mine Entrance"        } },
-    { MapType::MINES_2,     { "Forsaken Prospects"   } },
-    { MapType::MINES_3,     { "Abandoned Mines"      } },
-    { MapType::MINES_4,     { "Deep Mines"           } },
-    { MapType::MINES_5,     { "Sealed Chamber"       } },
+    // -------------------------------------------------------------------------
+    { MapType::MINES_1,     { HIDE("Mine Entrance")      } },
+    { MapType::MINES_2,     { HIDE("Forsaken Prospects") } },
+    { MapType::MINES_3,     { HIDE("Abandoned Mines")    } },
+    { MapType::MINES_4,     { HIDE("Deep Mines")         } },
+    { MapType::MINES_5,     { HIDE("Sealed Chamber")     } },
+    // -------------------------------------------------------------------------
     // Caves of Circe
-    { MapType::CAVES_1,     { "Catacombs"            } },
-    { MapType::CAVES_2,     { "Caves of Circe"       } },
-    { MapType::CAVES_3,     { "Corridors of Time"    } },
-    { MapType::CAVES_4,     { "Windy Tunnels"        } },
-    { MapType::CAVES_5,     { "Vertigo"              } },
+    // -------------------------------------------------------------------------
+    { MapType::CAVES_1,     { HIDE("Catacombs")         } },
+    { MapType::CAVES_2,     { HIDE("Caves of Circe")    } },
+    { MapType::CAVES_3,     { HIDE("Corridors of Time") } },
+    { MapType::CAVES_4,     { HIDE("Windy Tunnels")     } },
+    { MapType::CAVES_5,     { HIDE("Vertigo")           } },
+    // -------------------------------------------------------------------------
     // Lost City
-    { MapType::LOST_CITY,   { "Lost City"            } },
+    // -------------------------------------------------------------------------
+    { MapType::LOST_CITY,   { HIDE("Lost City") } },
+    // -------------------------------------------------------------------------
     // Deep Dark
-    { MapType::DEEP_DARK_1, { "Underdark"            } },
-    { MapType::DEEP_DARK_2, { "Embrace of Darkness"  } },
-    { MapType::DEEP_DARK_3, { "Deep Dark"            } },
-    { MapType::DEEP_DARK_4, { "Starless Night"       } },
-    { MapType::DEEP_DARK_5, { "Sinister"             } },
+    // -------------------------------------------------------------------------
+    { MapType::DEEP_DARK_1, { HIDE("Underdark")           } },
+    { MapType::DEEP_DARK_2, { HIDE("Embrace of Darkness") } },
+    { MapType::DEEP_DARK_3, { HIDE("Deep Dark")           } },
+    { MapType::DEEP_DARK_4, { HIDE("Starless Night")      } },
+    { MapType::DEEP_DARK_5, { HIDE("Sinister")            } },
+    // -------------------------------------------------------------------------
     // Stygian Abyss
-    { MapType::ABYSS_1,     { "Plains of Desolation" } },
-    { MapType::ABYSS_2,     { "Grey Wastes"          } },
-    { MapType::ABYSS_3,     { "Soul Pastures"        } },
-    { MapType::ABYSS_4,     { "Stygian Abyss"        } },
-    { MapType::ABYSS_5,     { "Hell's Maw"           } },
+    // -------------------------------------------------------------------------
+    { MapType::ABYSS_1,     { HIDE("Plains of Desolation") } },
+    { MapType::ABYSS_2,     { HIDE("Grey Wastes")          } },
+    { MapType::ABYSS_3,     { HIDE("Soul Pastures")        } },
+    { MapType::ABYSS_4,     { HIDE("Stygian Abyss")        } },
+    { MapType::ABYSS_5,     { HIDE("Hell's Maw")           } },
+    // -------------------------------------------------------------------------
     // Nether
-    { MapType::NETHER_1,    { "Blazing Gates"        } },
-    { MapType::NETHER_2,    { "River of Fire"        } },
-    { MapType::NETHER_3,    { "Red Wastes"           } },
-    { MapType::NETHER_4,    { "Citadel"              } },
-    { MapType::NETHER_5,    { "The Hearth"           } },
+    // -------------------------------------------------------------------------
+    { MapType::NETHER_1,    { HIDE("Blazing Gates") } },
+    { MapType::NETHER_2,    { HIDE("River of Fire") } },
+    { MapType::NETHER_3,    { HIDE("Red Wastes")    } },
+    { MapType::NETHER_4,    { HIDE("Citadel")       } },
+    { MapType::NETHER_5,    { HIDE("The Hearth")    } },
+    // -------------------------------------------------------------------------
     // The End
+    // -------------------------------------------------------------------------
     { MapType::THE_END,     { "???" } }
   };
 
   const std::unordered_map<ItemBonusType, std::string> ItemBonusPrefixes =
   {
-    { ItemBonusType::STR,            "Heavy"       },
-    { ItemBonusType::DEF,            "Rampart"     },
-    { ItemBonusType::MAG,            "Magical"     },
-    { ItemBonusType::RES,            "Electrum"    },
-    { ItemBonusType::SKL,            "Expert"      },
-    { ItemBonusType::SPD,            "Swift"       },
-    { ItemBonusType::HP,             "Vital"       },
-    { ItemBonusType::MP,             "Soulful"     },
-    { ItemBonusType::INDESTRUCTIBLE, "Everlasting" },
-    { ItemBonusType::SELF_REPAIR,    "Reliable"    },
-    { ItemBonusType::VISIBILITY,     "Shining"     },
-    { ItemBonusType::INVISIBILITY,   "Concealing"  },
-    { ItemBonusType::DAMAGE,         "Deadly"      },
-    { ItemBonusType::REMOVE_HUNGER,  "Sustaining"  },
-    { ItemBonusType::FREE_ACTION,    "Unbound"     },
-    { ItemBonusType::POISON_IMMUNE,  "Viridian"    },
-    { ItemBonusType::IGNORE_DEFENCE, "Defiant"     },
-    { ItemBonusType::IGNORE_ARMOR,   "Piercing"    },
-    { ItemBonusType::KNOCKBACK,      "Mighty"      },
-    { ItemBonusType::MANA_SHIELD,    "Spiritual"   },
-    { ItemBonusType::REGEN,          "Restorative" },
-    { ItemBonusType::REFLECT,        "Silver"      },
-    { ItemBonusType::LEECH,          "Vampiric"    },
-    { ItemBonusType::DMG_ABSORB,     "Protective"  },
-    { ItemBonusType::MAG_ABSORB,     "Shielding"   },
-    { ItemBonusType::THORNS,         "Spiked"      },
-    { ItemBonusType::TELEPATHY,      "Cautious"    },
-    { ItemBonusType::TRUE_SEEING,    "Clear"       },
-    { ItemBonusType::LEVITATION,     "Celestial"   }
+    { ItemBonusType::STR,            { HIDE("Heavy")       } },
+    { ItemBonusType::DEF,            { HIDE("Rampart")     } },
+    { ItemBonusType::MAG,            { HIDE("Magical")     } },
+    { ItemBonusType::RES,            { HIDE("Electrum")    } },
+    { ItemBonusType::SKL,            { HIDE("Expert")      } },
+    { ItemBonusType::SPD,            { HIDE("Swift")       } },
+    { ItemBonusType::HP,             { HIDE("Vital")       } },
+    { ItemBonusType::MP,             { HIDE("Soulful")     } },
+    { ItemBonusType::INDESTRUCTIBLE, { HIDE("Everlasting") } },
+    { ItemBonusType::SELF_REPAIR,    { HIDE("Reliable")    } },
+    { ItemBonusType::VISIBILITY,     { HIDE("Shining")     } },
+    { ItemBonusType::INVISIBILITY,   { HIDE("Concealing")  } },
+    { ItemBonusType::DAMAGE,         { HIDE("Deadly")      } },
+    { ItemBonusType::REMOVE_HUNGER,  { HIDE("Sustaining")  } },
+    { ItemBonusType::FREE_ACTION,    { HIDE("Unbound")     } },
+    { ItemBonusType::POISON_IMMUNE,  { HIDE("Viridian")    } },
+    { ItemBonusType::IGNORE_DEFENCE, { HIDE("Defiant")     } },
+    { ItemBonusType::IGNORE_ARMOR,   { HIDE("Piercing")    } },
+    { ItemBonusType::KNOCKBACK,      { HIDE("Mighty")      } },
+    { ItemBonusType::MANA_SHIELD,    { HIDE("Spiritual")   } },
+    { ItemBonusType::REGEN,          { HIDE("Restorative") } },
+    { ItemBonusType::REFLECT,        { HIDE("Silver")      } },
+    { ItemBonusType::LEECH,          { HIDE("Vampiric")    } },
+    { ItemBonusType::DMG_ABSORB,     { HIDE("Protective")  } },
+    { ItemBonusType::MAG_ABSORB,     { HIDE("Shielding")   } },
+    { ItemBonusType::THORNS,         { HIDE("Spiked")      } },
+    { ItemBonusType::TELEPATHY,      { HIDE("Cautious")    } },
+    { ItemBonusType::TRUE_SEEING,    { HIDE("Clear")       } },
+    { ItemBonusType::LEVITATION,     { HIDE("Celestial")   } }
   };
 
   const std::unordered_map<ItemBonusType, std::string> ItemBonusSuffixes =
   {
-    { ItemBonusType::STR,            "of Strength"    },
-    { ItemBonusType::DEF,            "of Defence"     },
-    { ItemBonusType::MAG,            "of Magic"       },
-    { ItemBonusType::RES,            "of Resistance"  },
-    { ItemBonusType::SKL,            "of Skill"       },
-    { ItemBonusType::SPD,            "of Speed"       },
-    { ItemBonusType::HP,             "of Life"        },
-    { ItemBonusType::MP,             "of Mana"        },
-    { ItemBonusType::INDESTRUCTIBLE, "of Ages"        },
-    { ItemBonusType::SELF_REPAIR,    "of Reliability" },
-    { ItemBonusType::VISIBILITY,     "of the Sun"     },
-    { ItemBonusType::INVISIBILITY,   "of the Unseen"  },
-    { ItemBonusType::DAMAGE,         "of Destruction" },
-    { ItemBonusType::REMOVE_HUNGER,  "of Satiation"   },
-    { ItemBonusType::FREE_ACTION,    "of Free Action" },
-    { ItemBonusType::POISON_IMMUNE,  "of Cleansing"   },
-    { ItemBonusType::IGNORE_DEFENCE, "of the Master"  },
-    { ItemBonusType::IGNORE_ARMOR,   "of the Awl"     },
-    { ItemBonusType::KNOCKBACK,      "of the Bear"    },
-    { ItemBonusType::MANA_SHIELD,    "of the Force"   },
-    { ItemBonusType::REGEN,          "of the Undying" },
-    { ItemBonusType::REFLECT,        "of Reflection"  },
-    { ItemBonusType::LEECH,          "of the Blood"   },
-    { ItemBonusType::DMG_ABSORB,     "of Protection"  },
-    { ItemBonusType::MAG_ABSORB,     "of Shielding"   },
-    { ItemBonusType::THORNS,         "of the Ivy"     },
-    { ItemBonusType::TELEPATHY,      "of the Oracle"  },
-    { ItemBonusType::TRUE_SEEING,    "of True Seeing" },
-    { ItemBonusType::LEVITATION,     "of the Angel"   }
+    { ItemBonusType::STR,            { HIDE("of Strength")    } },
+    { ItemBonusType::DEF,            { HIDE("of Defence")     } },
+    { ItemBonusType::MAG,            { HIDE("of Magic")       } },
+    { ItemBonusType::RES,            { HIDE("of Resistance")  } },
+    { ItemBonusType::SKL,            { HIDE("of Skill")       } },
+    { ItemBonusType::SPD,            { HIDE("of Speed")       } },
+    { ItemBonusType::HP,             { HIDE("of Life")        } },
+    { ItemBonusType::MP,             { HIDE("of Mana")        } },
+    { ItemBonusType::INDESTRUCTIBLE, { HIDE("of Ages")        } },
+    { ItemBonusType::SELF_REPAIR,    { HIDE("of Reliability") } },
+    { ItemBonusType::VISIBILITY,     { HIDE("of the Sun")     } },
+    { ItemBonusType::INVISIBILITY,   { HIDE("of the Unseen")  } },
+    { ItemBonusType::DAMAGE,         { HIDE("of Destruction") } },
+    { ItemBonusType::REMOVE_HUNGER,  { HIDE("of Satiation")   } },
+    { ItemBonusType::FREE_ACTION,    { HIDE("of Free Action") } },
+    { ItemBonusType::POISON_IMMUNE,  { HIDE("of Cleansing")   } },
+    { ItemBonusType::IGNORE_DEFENCE, { HIDE("of the Master")  } },
+    { ItemBonusType::IGNORE_ARMOR,   { HIDE("of the Awl")     } },
+    { ItemBonusType::KNOCKBACK,      { HIDE("of the Bear")    } },
+    { ItemBonusType::MANA_SHIELD,    { HIDE("of the Force")   } },
+    { ItemBonusType::REGEN,          { HIDE("of the Undying") } },
+    { ItemBonusType::REFLECT,        { HIDE("of Reflection")  } },
+    { ItemBonusType::LEECH,          { HIDE("of the Blood")   } },
+    { ItemBonusType::DMG_ABSORB,     { HIDE("of Protection")  } },
+    { ItemBonusType::MAG_ABSORB,     { HIDE("of Shielding")   } },
+    { ItemBonusType::THORNS,         { HIDE("of the Ivy")     } },
+    { ItemBonusType::TELEPATHY,      { HIDE("of the Oracle")  } },
+    { ItemBonusType::TRUE_SEEING,    { HIDE("of True Seeing") } },
+    { ItemBonusType::LEVITATION,     { HIDE("of the Angel")   } }
   };
 
   const std::unordered_map<ItemBonusType, int> MoneyCostIncreaseByBonusType =
@@ -1054,29 +1069,29 @@ namespace GlobalConstants
 
   const std::unordered_map<ItemBonusType, std::string> BonusDisplayNameByType =
   {
-    { ItemBonusType::STR,           "+ST" },
-    { ItemBonusType::DEF,           "+DF" },
-    { ItemBonusType::MAG,           "+MG" },
-    { ItemBonusType::RES,           "+RS" },
-    { ItemBonusType::SKL,           "+SK" },
-    { ItemBonusType::SPD,           "+SP" },
-    { ItemBonusType::INVISIBILITY,  "Hid" },
-    { ItemBonusType::MANA_SHIELD,   "Shi" },
-    { ItemBonusType::REGEN,         "Reg" },
-    { ItemBonusType::REFLECT,       "Ref" },
-    { ItemBonusType::DMG_ABSORB,    "PAb" },
-    { ItemBonusType::MAG_ABSORB,    "MAb" },
-    { ItemBonusType::THORNS,        "Ths" },
-    { ItemBonusType::PARALYZE,      "Par" },
-    { ItemBonusType::TELEPATHY,     "Tel" },
-    { ItemBonusType::TRUE_SEEING,   "See" },
-    { ItemBonusType::LEVITATION,    "Fly" },
-    { ItemBonusType::BLINDNESS,     "Bli" },
-    { ItemBonusType::FROZEN,        "Frz" },
-    { ItemBonusType::BURNING,       "Bur" },
-    { ItemBonusType::ILLUMINATED,   "Lgt" },
-    { ItemBonusType::POISONED,      "Psd" },
-    { ItemBonusType::WEAKNESS,      "Wea" }
+    { ItemBonusType::STR,           { HIDE("+ST") } },
+    { ItemBonusType::DEF,           { HIDE("+DF") } },
+    { ItemBonusType::MAG,           { HIDE("+MG") } },
+    { ItemBonusType::RES,           { HIDE("+RS") } },
+    { ItemBonusType::SKL,           { HIDE("+SK") } },
+    { ItemBonusType::SPD,           { HIDE("+SP") } },
+    { ItemBonusType::INVISIBILITY,  { HIDE("Hid") } },
+    { ItemBonusType::MANA_SHIELD,   { HIDE("Shi") } },
+    { ItemBonusType::REGEN,         { HIDE("Reg") } },
+    { ItemBonusType::REFLECT,       { HIDE("Ref") } },
+    { ItemBonusType::DMG_ABSORB,    { HIDE("PAb") } },
+    { ItemBonusType::MAG_ABSORB,    { HIDE("MAb") } },
+    { ItemBonusType::THORNS,        { HIDE("Ths") } },
+    { ItemBonusType::PARALYZE,      { HIDE("Par") } },
+    { ItemBonusType::TELEPATHY,     { HIDE("Tel") } },
+    { ItemBonusType::TRUE_SEEING,   { HIDE("See") } },
+    { ItemBonusType::LEVITATION,    { HIDE("Fly") } },
+    { ItemBonusType::BLINDNESS,     { HIDE("Bli") } },
+    { ItemBonusType::FROZEN,        { HIDE("Frz") } },
+    { ItemBonusType::BURNING,       { HIDE("Bur") } },
+    { ItemBonusType::ILLUMINATED,   { HIDE("Lgt") } },
+    { ItemBonusType::POISONED,      { HIDE("Psd") } },
+    { ItemBonusType::WEAKNESS,      { HIDE("Wea") } }
   };
 
   const std::unordered_map<std::string, ScriptTaskNames> BTSTaskNamesByName =
@@ -1169,245 +1184,245 @@ namespace GlobalConstants
     // Healing, Potential, Tranquility, Perception
     //
     {
-      "##.##",
-      "#...#",
-      "../..",
-      "#...#",
-      "##.##"
+      { HIDE("##.##") },
+      { HIDE("#...#") },
+      { HIDE("../..") },
+      { HIDE("#...#") },
+      { HIDE("##.##") }
     },
     // 1
     //
     // Holy, Healing, Potential, Tranquility, Perception
     //
     {
-      "wg gw",
-      "gg gg",
-      "  /  ",
-      "gg gg",
-      "wg gw"
+      { HIDE("wg gw") },
+      { HIDE("gg gg") },
+      { HIDE("  /  ") },
+      { HIDE("gg gg") },
+      { HIDE("wg gw") }
     },
     // 2
     //
     // Holy, Healing, Potential, Tranquility, Perception
     //
     {
-      "ww1ww",
-      "w121w",
-      "12/21",
-      "w121w",
-      "ww1ww"
+      { HIDE("ww1ww") },
+      { HIDE("w121w") },
+      { HIDE("12/21") },
+      { HIDE("w121w") },
+      { HIDE("ww1ww") }
     },
     // 3
     //
     // Forgotten, Hidden, Ruined, Desecrated, Disturbing
     //
     {
-      ".#+.#",
-      ".   #",
-      "../..",
-      "#.  .",
-      "##..#"
+      { HIDE(".#+.#") },
+      { HIDE(".   #") },
+      { HIDE("../..") },
+      { HIDE("#.  .") },
+      { HIDE("##..#") }
     },
     // 4
     //
     // Abyssal
     //
     {
-      "ll ll",
-      "l   l",
-      "  /  ",
-      "l   l",
-      "ll ll"
+      { HIDE("ll ll") },
+      { HIDE("l   l") },
+      { HIDE("  /  ") },
+      { HIDE("l   l") },
+      { HIDE("ll ll") }
     }
   };
 
   const std::vector<StringV> PondLayouts =
   {
     {
-      "         ",
-      " www www ",
-      " wgg ggw ",
-      " wgg ggw ",
-      "    W    ",
-      " wgg ggw ",
-      " wgg ggw ",
-      " www www ",
-      "         "
+      { HIDE("         ") },
+      { HIDE(" www www ") },
+      { HIDE(" wgg ggw ") },
+      { HIDE(" wgg ggw ") },
+      { HIDE("    W    ") },
+      { HIDE(" wgg ggw ") },
+      { HIDE(" wgg ggw ") },
+      { HIDE(" www www ") },
+      { HIDE("         ") }
     },
     //
     // 1 - black, 2 - white
     //
     {
-      "121212121",
-      "2ww121ww2",
-      "1w12121w1",
-      "212WWW212",
-      "121WWW121",
-      "212WWW212",
-      "1w12121w1",
-      "2ww121ww2",
-      "121212121"
+      { HIDE("121212121") },
+      { HIDE("2ww121ww2") },
+      { HIDE("1w12121w1") },
+      { HIDE("212WWW212") },
+      { HIDE("121WWW121") },
+      { HIDE("212WWW212") },
+      { HIDE("1w12121w1") },
+      { HIDE("2ww121ww2") },
+      { HIDE("121212121") }
     },
     {
-      "121212121",
-      "2www2www2",
-      "1wWw1wWw1",
-      "2www2www2",
-      "121212121",
-      "2www2www2",
-      "1wWw1wWw1",
-      "2www2www2",
-      "121212121"
+      { HIDE("121212121") },
+      { HIDE("2www2www2") },
+      { HIDE("1wWw1wWw1") },
+      { HIDE("2www2www2") },
+      { HIDE("121212121") },
+      { HIDE("2www2www2") },
+      { HIDE("1wWw1wWw1") },
+      { HIDE("2www2www2") },
+      { HIDE("121212121") }
     },
     {
-      "ggggggggg",
-      "ggggggggg",
-      "gg     gg",
-      "gg WWW gg",
-      "gg WWW gg",
-      "gg WWW gg",
-      "gg     gg",
-      "ggggggggg",
-      "ggggggggg"
+      { HIDE("ggggggggg") },
+      { HIDE("ggggggggg") },
+      { HIDE("gg     gg") },
+      { HIDE("gg WWW gg") },
+      { HIDE("gg WWW gg") },
+      { HIDE("gg WWW gg") },
+      { HIDE("gg     gg") },
+      { HIDE("ggggggggg") },
+      { HIDE("ggggggggg") }
     },
     {
-      "         ",
-      " ### ### ",
-      " #ggggg# ",
-      " #gwwwg# ",
-      "  gwWwg  ",
-      " #gwwwg# ",
-      " #ggggg# ",
-      " ### ### ",
-      "         "
+      { HIDE("         ") },
+      { HIDE(" ### ### ") },
+      { HIDE(" #ggggg# ") },
+      { HIDE(" #gwwwg# ") },
+      { HIDE("  gwWwg  ") },
+      { HIDE(" #gwwwg# ") },
+      { HIDE(" #ggggg# ") },
+      { HIDE(" ### ### ") },
+      { HIDE("         ") }
     }
   };
 
   const std::vector<StringV> FountainLayouts =
   {
     {
-      ".... ....",
-      ".##. .##.",
-      ".#.   .#.",
-      ".. www ..",
-      "   wFw   ",
-      ".. www ..",
-      ".#.   .#.",
-      ".##. .##.",
-      ".... ...."
+      { HIDE(".... ....") },
+      { HIDE(".##. .##.") },
+      { HIDE(".#.   .#.") },
+      { HIDE(".. www ..") },
+      { HIDE("   wFw   ") },
+      { HIDE(".. www ..") },
+      { HIDE(".#.   .#.") },
+      { HIDE(".##. .##.") },
+      { HIDE(".... ....") }
     },
     {
-      "ggggggggg",
-      "gwwwgwwwg",
-      "gwFwgwFwg",
-      "gwwwgwwwg",
-      "ggggggggg",
-      "gwwwgwwwg",
-      "gwFwgwFwg",
-      "gwwwgwwwg",
-      "ggggggggg"
+      { HIDE("ggggggggg") },
+      { HIDE("gwwwgwwwg") },
+      { HIDE("gwFwgwFwg") },
+      { HIDE("gwwwgwwwg") },
+      { HIDE("ggggggggg") },
+      { HIDE("gwwwgwwwg") },
+      { HIDE("gwFwgwFwg") },
+      { HIDE("gwwwgwwwg") },
+      { HIDE("ggggggggg") }
     }
   };
 
   const std::vector<StringV> GardenLayouts =
   {
     {
-      "ggggggggg",
-      "ggggTgggg",
-      "ggTgggTgg",
-      "ggggggggg",
-      "gTggTggTg",
-      "ggggggggg",
-      "ggTgggTgg",
-      "ggggTgggg",
-      "ggggggggg"
+      { HIDE("ggggggggg") },
+      { HIDE("ggggTgggg") },
+      { HIDE("ggTgggTgg") },
+      { HIDE("ggggggggg") },
+      { HIDE("gTggTggTg") },
+      { HIDE("ggggggggg") },
+      { HIDE("ggTgggTgg") },
+      { HIDE("ggggTgggg") },
+      { HIDE("ggggggggg") }
     },
     {
-      "gggg gggg",
-      "gwww wwwg",
-      "gwTg gTwg",
-      "gwgg ggwg",
-      "         ",
-      "gwgg ggwg",
-      "gwTg gTwg",
-      "gwww wwwg",
-      "gggg gggg"
+      { HIDE("gggg gggg") },
+      { HIDE("gwww wwwg") },
+      { HIDE("gwTg gTwg") },
+      { HIDE("gwgg ggwg") },
+      { HIDE("         ") },
+      { HIDE("gwgg ggwg") },
+      { HIDE("gwTg gTwg") },
+      { HIDE("gwww wwwg") },
+      { HIDE("gggg gggg") }
     },
     {
-      "gg ggg ggg gg",
-      "g   g   g   g",
-      "  T   T   T  ",
-      "g   g   g   g",
-      "gg ggg ggg gg",
-      "g   g   g   g",
-      "  T   T   T g",
-      "g   g   g   g",
-      "gg ggg ggg gg",
-      "g   g   g   g",
-      "  T   T   T g",
-      "g   g   g   g",
-      "gg ggg ggg gg"
+      { HIDE("gg ggg ggg gg") },
+      { HIDE("g   g   g   g") },
+      { HIDE("  T   T   T  ") },
+      { HIDE("g   g   g   g") },
+      { HIDE("gg ggg ggg gg") },
+      { HIDE("g   g   g   g") },
+      { HIDE("  T   T   T g") },
+      { HIDE("g   g   g   g") },
+      { HIDE("gg ggg ggg gg") },
+      { HIDE("g   g   g   g") },
+      { HIDE("  T   T   T g") },
+      { HIDE("g   g   g   g") },
+      { HIDE("gg ggg ggg gg") }
     }
   };
 
   const std::vector<StringV> PillarsLayouts =
   {
     {
-      "...........",
-      "..#.....#..",
-      ".###...###.",
-      "..#.....#..",
-      ".....#.....",
-      "....###....",
-      ".....#.....",
-      "..#.....#..",
-      ".###...###.",
-      "..#.....#..",
-      "..........."
+      { HIDE("...........") },
+      { HIDE("..#.....#..") },
+      { HIDE(".###...###.") },
+      { HIDE("..#.....#..") },
+      { HIDE(".....#.....") },
+      { HIDE("....###....") },
+      { HIDE(".....#.....") },
+      { HIDE("..#.....#..") },
+      { HIDE(".###...###.") },
+      { HIDE("..#.....#..") },
+      { HIDE("...........") }
     },
     {
-      "gggggggggggggggggggg",
-      "g   ggggg##ggggg   g",
-      "g T gggg####gggg T g",
-      "g   gggg####gggg   g",
-      "gg gggggg##gggggg gg",
-      "                    ",
-      "                    ",
-      "ggggggg      ggggggg",
-      "gg##ggg      ggg##gg",
-      "g####gg      gg####g",
-      "g####gg      gg####g",
-      "gg##ggg      ggg##gg",
-      "ggggggg      ggggggg",
-      "                    ",
-      "                    ",
-      "gg gggggg##gggggg gg",
-      "g   gggg####gggg   g",
-      "g T gggg####gggg T g",
-      "g   ggggg##ggggg   g",
-      "gggggggggggggggggggg"
+      { HIDE("gggggggggggggggggggg") },
+      { HIDE("g   ggggg##ggggg   g") },
+      { HIDE("g T gggg####gggg T g") },
+      { HIDE("g   gggg####gggg   g") },
+      { HIDE("gg gggggg##gggggg gg") },
+      { HIDE("                    ") },
+      { HIDE("                    ") },
+      { HIDE("ggggggg      ggggggg") },
+      { HIDE("gg##ggg      ggg##gg") },
+      { HIDE("g####gg      gg####g") },
+      { HIDE("g####gg      gg####g") },
+      { HIDE("gg##ggg      ggg##gg") },
+      { HIDE("ggggggg      ggggggg") },
+      { HIDE("                    ") },
+      { HIDE("                    ") },
+      { HIDE("gg gggggg##gggggg gg") },
+      { HIDE("g   gggg####gggg   g") },
+      { HIDE("g T gggg####gggg T g") },
+      { HIDE("g   ggggg##ggggg   g") },
+      { HIDE("gggggggggggggggggggg") }
     },
     {
-      "....................",
-      "..##.....##.....##..",
-      ".####...####...####.",
-      ".####...####...####.",
-      "..##.....##.....##..",
-      "....................",
-      "....................",
-      "....................",
-      "..##.....##.....##..",
-      ".####...####...####.",
-      ".####...####...####.",
-      "..##.....##.....##..",
-      "....................",
-      "....................",
-      "....................",
-      "..##.....##.....##..",
-      ".####...####...####.",
-      ".####...####...####.",
-      "..##.....##.....##..",
-      "...................."
+      { HIDE("....................") },
+      { HIDE("..##.....##.....##..") },
+      { HIDE(".####...####...####.") },
+      { HIDE(".####...####...####.") },
+      { HIDE("..##.....##.....##..") },
+      { HIDE("....................") },
+      { HIDE("....................") },
+      { HIDE("....................") },
+      { HIDE("..##.....##.....##..") },
+      { HIDE(".####...####...####.") },
+      { HIDE(".####...####...####.") },
+      { HIDE("..##.....##.....##..") },
+      { HIDE("....................") },
+      { HIDE("....................") },
+      { HIDE("....................") },
+      { HIDE("..##.....##.....##..") },
+      { HIDE(".####...####...####.") },
+      { HIDE(".####...####...####.") },
+      { HIDE("..##.....##.....##..") },
+      { HIDE("....................") }
     }
   };
 
@@ -1474,34 +1489,34 @@ namespace GlobalConstants
   {
     // Castle
     {
-      "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
-      "W###-###WWWWWWWWWWWWWWW###-###W",
-      "W#     #WWWWWWWWWWWWWWW#     #W",
-      "W#     #################     #W",
-      "W|                           |W",
-      "W#     #################     #W",
-      "W#     #.#######.......#     #W",
-      "W### #+#.#hh   S.......#+# ###W",
-      "WWW# #...+   / S.........# #WWW",
-      "WWW# #...#hh   S..######## #WWW",
-      "WWW# #...#######..#     ## #WWW",
-      "WWW# #............#     ## #WWW",
-      ".#######..........+     ## #WWW",
-      ".+.....+...ggg....+     ## #WWW",
-      ".+.....+...gFg....#     ## #WWW",
-      ".#######...ggg....#     ## #WWW",
-      "WWW# #............######## #WWW",
-      "WWW# #...................# #WWW",
-      "WWW# #..##+###+###+##....# #WWW",
-      "WWW# #..#   #   #   #....# #WWW",
-      "W### #+##   #   #   #..#+# ###W",
-      "W#     ##############..#     #W",
-      "W#     #################     #W",
-      "W|                           |W",
-      "W#     #################     #W",
-      "W#     #WWWWWWWWWWWWWWW#     #W",
-      "W###-###WWWWWWWWWWWWWWW###-###W",
-      "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+      { HIDE("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW") },
+      { HIDE("W###-###WWWWWWWWWWWWWWW###-###W") },
+      { HIDE("W#     #WWWWWWWWWWWWWWW#     #W") },
+      { HIDE("W#     #################     #W") },
+      { HIDE("W|                           |W") },
+      { HIDE("W#     #################     #W") },
+      { HIDE("W#     #.#######.......#     #W") },
+      { HIDE("W### #+#.#hh   S.......#+# ###W") },
+      { HIDE("WWW# #...+   / S.........# #WWW") },
+      { HIDE("WWW# #...#hh   S..######## #WWW") },
+      { HIDE("WWW# #...#######..#     ## #WWW") },
+      { HIDE("WWW# #............#     ## #WWW") },
+      { HIDE(".#######..........+     ## #WWW") },
+      { HIDE(".+.....+...ggg....+     ## #WWW") },
+      { HIDE(".+.....+...gFg....#     ## #WWW") },
+      { HIDE(".#######...ggg....#     ## #WWW") },
+      { HIDE("WWW# #............######## #WWW") },
+      { HIDE("WWW# #...................# #WWW") },
+      { HIDE("WWW# #..##+###+###+##....# #WWW") },
+      { HIDE("WWW# #..#   #   #   #....# #WWW") },
+      { HIDE("W### #+##   #   #   #..#+# ###W") },
+      { HIDE("W#     ##############..#     #W") },
+      { HIDE("W#     #################     #W") },
+      { HIDE("W|                           |W") },
+      { HIDE("W#     #################     #W") },
+      { HIDE("W#     #WWWWWWWWWWWWWWW#     #W") },
+      { HIDE("W###-###WWWWWWWWWWWWWWW###-###W") },
+      { HIDE("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW") },
     }
   };
 };
