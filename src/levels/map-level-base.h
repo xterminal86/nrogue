@@ -4,6 +4,7 @@
 #include "util.h"
 #include "game-object.h"
 #include "level-builder.h"
+#include "string-obfuscator.h"
 
 class Player;
 

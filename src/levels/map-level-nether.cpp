@@ -167,15 +167,17 @@ void MapLevelNether::DisplayWelcomeText()
 {
   std::vector<std::string> msg =
   {
-  // ======================================== <- 40
-    "You don't believe your eyes.             ",
-    "The very image of Hell that lives inside ",
-    "the head of any commoner is materialized ",
-    "before you. Pools of lava, fire and heat,",
-    "creatures of various shapes and sizes    ",
-    "that nobody ever imagined...             ",
-    "What is this place?"
+         // ---------0---------0---------0---------0 <- 40
+    { HIDE("You don't believe your eyes.             ") },
+    { HIDE("The very image of Hell that lives inside ") },
+    { HIDE("the head of any commoner is materialized ") },
+    { HIDE("before you. Pools of lava, fire and heat,") },
+    { HIDE("creatures of various shapes and sizes    ") },
+    { HIDE("that nobody ever imagined...             ") },
+    { HIDE("What is this place?                      ") }
   };
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Nether", msg);
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                                        { HIDE("Nether") },
+                                         msg);
 }

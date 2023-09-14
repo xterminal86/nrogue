@@ -142,13 +142,15 @@ void MapLevelAbyss::DisplayWelcomeText()
 {
   std::vector<std::string> msg =
   {
-  // ======================================== <- 40
-    "Now your surroundings are changed into  ",
-    "shades of grey. Spacious chambers with  ",
-    "darkness for the ceiling, ashen floors  ",
-    "and walls incur feelings of sorrow,     ",
-    "despair and oblivion.                   "
+         // ---------0---------0---------0---------0 <- 40
+    { HIDE("Now your surroundings are changed into") },
+    { HIDE("shades of grey. Spacious chambers with") },
+    { HIDE("darkness for the ceiling, ashen floors") },
+    { HIDE("and walls incur feelings of sorrow,   ") },
+    { HIDE("despair and oblivion.                 ") }
   };
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "Abyss", msg);
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                                        { HIDE("Stygian Abyss") },
+                                         msg);
 }

@@ -361,7 +361,7 @@ namespace GlobalConstants
   extern const std::unordered_map<WandMaterials, std::string>          WandMaterialNamesByMaterial;
   extern const std::unordered_map<ShrineType,    std::string>          ShrineSaintByType;
   extern const std::unordered_map<ShrineType,    std::string>          ShrineNameByType;
-  extern const std::unordered_map<MapType,           StringV>          MapLevelNames;
+  extern const std::unordered_map<MapType,       std::string>          MapLevelNames;
   extern const std::unordered_map<ShrineType,    std::vector<StringV>> ShrineLayoutsByType;
 
   extern const std::unordered_map<SpellType, std::string> SpellShortNameByType;

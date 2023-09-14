@@ -40,11 +40,12 @@ void MapLevelEndgame::DisplayWelcomeText()
 {
   std::vector<std::string> msg =
   {
-  // ======================================== <- 40
-    "You don't know where you are anymore."
+    { HIDE("You don't know where you are anymore...") }
   };
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "???", msg);
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                                         "???",
+                                         msg);
 }
 
 // =============================================================================

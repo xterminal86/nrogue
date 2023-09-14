@@ -21,13 +21,6 @@ MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
 
   std::string levelName;
 
-  auto GetSpecialName = [this]()
-  {
-    auto levelNames = GlobalConstants::MapLevelNames.at(MapType_);
-    int index = RNG::Instance().RandomRange(0, levelNames.size());
-    return levelNames[index];
-  };
-
   if (MapType_ == MapType::TOWN)
   {
     auto dm = Util::GetDayAndMonth();
@@ -41,7 +34,7 @@ MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
   }
   else
   {
-    levelName = GetSpecialName();
+    levelName = GlobalConstants::MapLevelNames.at(MapType_);
   }
 
   LevelName = levelName;

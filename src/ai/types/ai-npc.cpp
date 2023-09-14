@@ -4,6 +4,7 @@
 #include "rng.h"
 #include "application.h"
 #include "trader-component.h"
+#include "string-obfuscator.h"
 
 AINPC::AINPC()
 {
@@ -140,28 +141,28 @@ void AINPC::SetDataClaire()
   AIComponentRef->OwnerGameObject->ObjectName = "woman";
 
   Data.IsMale = false;
-  Data.UnacquaintedDescription = "You see a pink-haired woman";
-  Data.Name = "Claire";
-  Data.Job = "Soldier";
+  Data.UnacquaintedDescription = HIDE("You see a pink-haired woman");
+  Data.Name = HIDE("Claire");
+  Data.Job  = HIDE("Soldier");
 
-  Data.NameResponse = "My name is Claire.";
-  Data.JobResponse = "I'm a Soldier.";
+  Data.NameResponse = HIDE("My name is Claire.");
+  Data.JobResponse  = HIDE("I'm a Soldier.");
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      "I took a vacation only to arrive in a place",
-      "with some evil lurking underground.",
-      "Worst vacation ever."
+      { HIDE("I took a vacation only to arrive in a place") },
+      { HIDE("with some evil lurking underground.")         },
+      { HIDE("Worst vacation ever.")                        }
     },
     {
-      "They say the mines are enchanted or something.",
-      "They're different every time you arrive here.",
-      "Can you believe this?"
+      { HIDE("They say the mines are enchanted or something.") },
+      { HIDE("They're different every time you arrive here.")  },
+      { HIDE("Can you believe this?")                          }
     },
     {
-      "Lightning?",
-      "What about it?"
+      { HIDE("Lightning?")     },
+      { HIDE("What about it?") }
     }
   };
 
@@ -171,9 +172,9 @@ void AINPC::SetDataClaire()
   {
     TextLines bonusStr =
     {
-      "Greetings, fellow soldier! How are you today? ;-)",
-      "What? You're here on vacation too?",
-      "What a coincedence..."
+      { HIDE("Greetings, fellow soldier! How are you today? ;-)") },
+      { HIDE("What? You're here on vacation too?")                },
+      { HIDE("What a coincedence...")                             }
     };
 
     Data.GossipResponsesByMap[MapType::TOWN].push_back(bonusStr);
@@ -191,33 +192,33 @@ void AINPC::SetDataCloud()
 
   AIComponentRef->OwnerGameObject->ObjectName = "man";
 
-  Data.UnacquaintedDescription = "You see a man with a ridiculously big sword";
-  Data.Name = "Cloud";
-  Data.Job = "Ex-Soldier";
+  Data.UnacquaintedDescription = HIDE("You see a man with a ridiculously big sword");
+  Data.Name = HIDE("Cloud");
+  Data.Job  = HIDE("Ex-Soldier");
 
-  Data.NameResponse = "Cloud Strife.";
-  Data.JobResponse = "I'm an Ex-Soldier.";
+  Data.NameResponse = HIDE("Cloud Strife.");
+  Data.JobResponse  = HIDE("I'm an Ex-Soldier.");
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      "I'm not a \"soldier\" like those in your City.",
-      "I'm from the East actually.",
-      "We're... well, a little bit different up there."
+      { HIDE("I'm not a \"soldier\" like those in your City.")  },
+      { HIDE("I'm from the East actually.")                     },
+      { HIDE("We're... well, a little bit different up there.") }
     },
     {
-      "No one knows how deep the mines are.",
-      "Nobody ever returned to tell the tale."
+      { HIDE("No one knows how deep the mines are.")   },
+      { HIDE("Nobody ever returned to tell the tale.") }
     },
     {
-      "I try no to use my sword.",
-      "Use brings about wear, tear, and rust - and THAT is a real waste."
+      { HIDE("I try no to use my sword.")                                         },
+      { HIDE("Use brings about wear, tear, and rust - and THAT is a real waste.") }
     },
     {
-      "Why I never went to the mines myself?",
-      "Because I'm retired, that's why!",
-      "I've had enough nasty stuff happened to me over the past years.",
-      "I don't want any more."
+      { HIDE("Why I never went to the mines myself?!")                          },
+      { HIDE("Because I'm retired, that's why!")                                },
+      { HIDE("I've had enough nasty stuff happened to me over the past years.") },
+      { HIDE("I don't want any more. Enough is enough.")                        }
     }
   };
 
@@ -227,8 +228,8 @@ void AINPC::SetDataCloud()
   {
     TextLines bonusStr =
     {
-      "You're a Soldier, huh?",
-      "Well, say hello to Zack for me when you see him.",
+      { HIDE("You're a Soldier, huh?")                           },
+      { HIDE("Well, say hello to Zack for me when you see him.") },
     };
 
     Data.GossipResponsesByMap[MapType::TOWN].push_back(bonusStr);
@@ -246,12 +247,12 @@ void AINPC::SetDataIan()
 
   AIComponentRef->OwnerGameObject->ObjectName = "man";
 
-  Data.UnacquaintedDescription = "You see a man wearing a mask";
-  Data.Name = "Ian";
-  Data.Job = "Anonymous";
+  Data.UnacquaintedDescription = HIDE("You see a man wearing a mask");
+  Data.Name = HIDE("Ian");
+  Data.Job  = HIDE("Anonymous");
 
-  Data.NameResponse = "We are Legion.";
-  Data.JobResponse = "We fight the System.";
+  Data.NameResponse = HIDE("We are Legion.");
+  Data.JobResponse  = HIDE("We fight the System.");
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
