@@ -138,7 +138,7 @@ void AINPC::SetDataClaire()
   AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 2;
   AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 3;
 
-  AIComponentRef->OwnerGameObject->ObjectName = "woman";
+  AIComponentRef->OwnerGameObject->ObjectName = kWoman;
 
   Data.IsMale = false;
   Data.UnacquaintedDescription = HIDE("You see a pink-haired woman");
@@ -190,7 +190,7 @@ void AINPC::SetDataCloud()
   AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 1;
   AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 3;
 
-  AIComponentRef->OwnerGameObject->ObjectName = "man";
+  AIComponentRef->OwnerGameObject->ObjectName = kMan;
 
   Data.UnacquaintedDescription = HIDE("You see a man with a ridiculously big sword");
   Data.Name = HIDE("Cloud");
@@ -245,7 +245,7 @@ void AINPC::SetDataIan()
   AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 1;
   AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 1;
 
-  AIComponentRef->OwnerGameObject->ObjectName = "man";
+  AIComponentRef->OwnerGameObject->ObjectName = kMan;
 
   Data.UnacquaintedDescription = HIDE("You see a man wearing a mask");
   Data.Name = HIDE("Ian");
@@ -257,13 +257,13 @@ void AINPC::SetDataIan()
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      "The Great Eye is watching you."
+      { HIDE("The Great Eye is watching you.") }
     },
     {
-      "We are Anonymous. We never forget and never forgive."
+      { HIDE("We are Anonymous. We never forget and never forgive.") }
     },
     {
-      "Knowledge is power."
+      { HIDE("Knowledge is power.") }
     }
   };
 }
@@ -272,32 +272,32 @@ void AINPC::SetDataIan()
 
 void AINPC::SetDataMiles()
 {
-  AIComponentRef->OwnerGameObject->ObjectName = "man";
+  AIComponentRef->OwnerGameObject->ObjectName = kMan;
 
-  Data.UnacquaintedDescription = "You see a collected nobleman in fancy clothes";
-  Data.Name = "Miles";
-  Data.Job = "Prosecutor";
+  Data.UnacquaintedDescription = HIDE("You see a collected nobleman in fancy clothes");
+  Data.Name = HIDE("Miles");
+  Data.Job  = HIDE("Prosecutor");
 
-  Data.NameResponse = "Miles Edgeworth, at your service.";
-  Data.JobResponse = "I work as a Prosecutor for the Department of Justice in the City.";
+  Data.NameResponse = HIDE("Miles Edgeworth, at your service.");
+  Data.JobResponse  = HIDE("I work as a Prosecutor for the Department of Justice in the City.");
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      "I'm here to investigate rumors concerning the murder of a local miner.",
-      "But, as ill luck would have it, this excuse for a lawyer,",
-      "Phoenix Wright, arrives as well!",
-      "As if I don't have enough to worry about already!"
+      { HIDE("I'm here to investigate rumors concerning the murder of a local miner.") },
+      { HIDE("But, as ill luck would have it, this excuse for a lawyer,")              },
+      { HIDE("Phoenix Wright, arrives as well!")                                       },
+      { HIDE("As if I don't have enough to worry about already!")                      }
     },
     {
-      "If you want something done - hire a bounty hunter.",
-      "...",
-      "Wait, that's not my line...",
-      "And not from here either!"
+      { HIDE("If you want something done - hire a bounty hunter.") },
+      { HIDE("...")                                                },
+      { HIDE("Wait, that's not my line...")                        },
+      { HIDE("And not from here either!")                          }
     },
     {
-      "To be or not to be?",
-      "What kind of a stupid question is that?"
+      { HIDE("To be or not to be?")                     },
+      { HIDE("What kind of a stupid question is that?") }
     }
   };
 }
@@ -306,29 +306,29 @@ void AINPC::SetDataMiles()
 
 void AINPC::SetDataPhoenix()
 {
-  AIComponentRef->OwnerGameObject->ObjectName = "man";
+  AIComponentRef->OwnerGameObject->ObjectName = kMan;
 
-  Data.UnacquaintedDescription = "You see a carefree guy with spiky hair";
-  Data.Name = "Phoenix";
-  Data.Job = "Attorney";
+  Data.UnacquaintedDescription = HIDE("You see a carefree guy with spiky hair");
+  Data.Name = HIDE("Phoenix");
+  Data.Job  = HIDE("Attorney");
 
-  Data.NameResponse = "I'm Phoenix Wright.";
-  Data.JobResponse = "I'm a Defence Attorney.";
+  Data.NameResponse = HIDE("I'm Phoenix Wright.");
+  Data.JobResponse  = HIDE("I'm a Defence Attorney.");
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      "Miles may act as if he doesn't know me,",
-      "but we actually studied law together at the Academy.",
-      "Believe it or not, but he wanted to become a defense attorney too!",
-      "I wonder what changed him..."
+      { HIDE("Miles may act as if he doesn't know me,")                            },
+      { HIDE("but we actually studied law together at the Academy.")               },
+      { HIDE("Believe it or not, but he wanted to become a defense attorney too!") },
+      { HIDE("I wonder what changed him...")                                       }
     },
     {
-      "I've been to the villages before. But never to the \"classic\" ones."
+      { HIDE("I've been to the villages before. But never to the \"classic\" ones. XD") }
     },
     {
-      "Look, it's my attorney's badge!",
-      "(shows you small round gold plated pin with Scales of Justice engraved on it)"
+      { HIDE("Look, it's my attorney's badge!")                                               },
+      { HIDE("(shows you small round gold plated pin with Scales of Justice engraved on it)") }
     }
   };
 }
@@ -340,33 +340,34 @@ void AINPC::SetDataTigra()
   AIComponentRef->OwnerGameObject->ObjectName = "girl";
 
   Data.IsMale = false;
-  Data.UnacquaintedDescription = "You see a little girl wearing headband with cat ears";
-  Data.Name = "Tigra";
-  Data.Job = "Local";
+  Data.UnacquaintedDescription = HIDE("You see a little girl wearing headband with cat ears");
 
-  Data.NameResponse = "I'm Tigra! Nice to meet you!";
-  Data.JobResponse = "Me? Oh, I'm just a local.";
+  Data.Name = HIDE("Tigra");
+  Data.Job  = HIDE("Local");
+
+  Data.NameResponse = HIDE("I'm Tigra! Nice to meet you!");
+  Data.JobResponse  = HIDE("Me? Oh, I'm just a local.");
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      "Welcome to our small neighbourhood!",
-      "It wasn't always this gloomy, just so you know..."
+      { HIDE("Welcome to our small neighbourhood!")               },
+      { HIDE("It wasn't always this gloomy, just so you know...") }
     },
     {
-      "The dungeon? Oh, you mean the mine?",
-      "Yeah, I remember people always running around,",
-      "carrying stuff there and back, talking and being all busy.",
-      "Lots of commotion!",
-      "But then everything kinda stopped for some reason...",
-      "I don't know why, but I overheard grownups saying that",
-      "a miner was killed down there during a quarrel,",
-      "and now he has risen from the dead and seeking revenge on us for that!",
-      "Scary!"
+      { HIDE("The dungeon? Oh, you mean the mine?")                                    },
+      { HIDE("Yeah, I remember people always running around,")                         },
+      { HIDE("carrying stuff there and back, talking and being all busy.")             },
+      { HIDE("Lots of commotion!")                                                     },
+      { HIDE("But then everything kinda stopped for some reason...")                   },
+      { HIDE("I don't know why, but I overheard grownups saying that")                 },
+      { HIDE("a miner was killed down there during a quarrel,")                        },
+      { HIDE("and now he has risen from the dead and seeking revenge on us for that!") },
+      { HIDE("Scary!")                                                                 }
     },
     {
-      "My parents are... not around anymore.",
-      "Our priest was kind enough to adopt me so I'm staying at the chapel now."
+      { HIDE("My parents are... not around anymore.")                                    },
+      { HIDE("Our priest was kind enough to adopt me so I'm staying at the chapel now.") }
     }
   };
 }
@@ -380,70 +381,71 @@ void AINPC::SetDataSteve()
   AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 1;
   AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 2;
 
-  AIComponentRef->OwnerGameObject->ObjectName = "man";
+  AIComponentRef->OwnerGameObject->ObjectName = kMan;
 
-  Data.UnacquaintedDescription = "You see a blocky looking man carrying a pickaxe";
-  Data.Name = "Steve";
-  Data.Job = "Miner";
+  Data.UnacquaintedDescription = HIDE("You see a blocky looking man carrying a pickaxe");
 
-  Data.NameResponse = "My name's Steve.";
-  Data.JobResponse = "I'm a Miner.";
+  Data.Name = HIDE("Steve");
+  Data.Job  = HIDE("Miner");
+
+  Data.NameResponse = HIDE("My name's Steve.");
+  Data.JobResponse  = HIDE("I'm a Miner.");
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      "Emeralds are green, diamonds are blue,",
-      "Redstone is red and this is all true!",
-      "What's a redstone? Well, it's the thing",
-      "we use to make all our machinery work.",
-      "Looks like red powder, it emits a faint red light too,",
-      "so you can sort of dip a stick into it and use it as a makeshift torch.",
-      "You have to go very deep below the ground to mine it, though...",
-      "But never dig straight down!"
+      { HIDE("Emeralds are green, diamonds are blue,")                                  },
+      { HIDE("Redstone is red and this is all true!")                                   },
+      { HIDE("What's a redstone? Well, it's the thing")                                 },
+      { HIDE("we use to make all our machinery work.")                                  },
+      { HIDE("Looks like red powder, it emits a faint red light too,")                  },
+      { HIDE("so you can sort of dip a stick into it and use it as a makeshift torch.") },
+      { HIDE("You have to go very deep below the ground to mine it, though...")         },
+      { HIDE("But never dig straight down!")                                            }
     },
     {
-      "Baked bread or baked potatoes?",
-      "Cooked porkchop or steak?",
-      "...",
-      "Cooked silkworm? Hm... Don't want to remember it..."
+      { HIDE("Baked bread or baked potatoes?")                      },
+      { HIDE("Cooked porkchop or steak?")                           },
+      { HIDE("...")                                                 },
+      { HIDE("Cooked silkworm? Hm... Don't want to remember it...") }
     },
     {
-      "What do you mean I'm blocky? Look who's talking!"
+      { HIDE("What do you mean I'm blocky? Look who's talking!") }
     },
     {
-      "I've been working in these mines for almost eight years now.",
-      "I never heard or saw anything that would be even remotely",
-      "connected to those stories you may hear.",
-      "Just think for yourself: how could've something bad like that",
-      "happenned in such small and isolated place like this,",
-      "where people know each other since childhood,",
-      "yet nobody says he knows or heard anything?",
-      "I don't know, man..."
+      { HIDE("I've been working in these mines for almost eight years now.")  },
+      { HIDE("I never heard or saw anything that would be even remotely")     },
+      { HIDE("connected to those stories you may hear.")                      },
+      { HIDE("Just think for yourself: how could've something bad like that") },
+      { HIDE("happenned in such small and isolated place like this,")         },
+      { HIDE("where people know each other since childhood,")                 },
+      { HIDE("yet nobody says he knows or heard anything?")                   },
+      { HIDE("I don't know, man...")                                          }
     },
     {
-      "Business has been pretty much frozen since those events started.",
-      "I'm thinking on going to the City for earnings.",
-      "I wonder why they never bothered to send somebody",
-      "to look into our situation here if it's THAT bad?"
+      { HIDE("Business has been pretty much frozen since those events started.") },
+      { HIDE("I'm thinking on going to the City for earnings.")                  },
+      { HIDE("I wonder why they never bothered to send somebody")                },
+      { HIDE("to look into our situation here if it's THAT bad?")                }
     },
     {
-      "Would you believe me if I told you,",
-      "that there are places where there is nothing but empty sky around you?",
-      "You can see the clouds, the rainbows and even distant planets.",
-      "Sometimes it even rains there!",
-      "Or a place that literally looks pretty much like how you imagine Hell,",
-      "with red color everywhere, fire, lava,",
-      "and even soil itself sometimes is made of flesh?",
-      "There was also a great desert with nothing but dust,",
-      "stretching all the way to the horizon and beyond in all directions.",
-      "If you dig here and there you might discover",
-      "that under the sand lie ruins of some ancient city",
-      "of some advanced civilization!",
-      "I wonder what happened to them and whether all",
-      "that desert is somehow connected to their fate.",
-      "Battling with heat and questing for water was a big challenge back there...",
-      "...",
-      "Yeah, they all think I'm just crazy..."
+      { HIDE("Would you believe me if I told you,")                                         },
+      { HIDE("that there are places where there is nothing but empty sky around you?")      },
+      { HIDE("You can see the clouds, the rainbows and even distant planets.")              },
+      { HIDE("Sometimes it even rains there!")                                              },
+      { HIDE("Or a place that literally looks pretty much like how you imagine Hell,")      },
+      { HIDE("with red color everywhere, fire, lava,")                                      },
+      { HIDE("and even soil itself sometimes is made of flesh?")                            },
+      { HIDE("There was also a great desert with nothing but dust,")                        },
+      { HIDE("stretching all the way to the horizon and beyond in all directions.")         },
+      { HIDE("If you dig here and there you might discover")                                },
+      { HIDE("that under the sand lie ruins of some ancient city")                          },
+      { HIDE("of some advanced civilization!")                                              },
+      { HIDE("I wonder what happened to them and whether all")                              },
+      { HIDE("that desert is somehow connected to their fate.")                             },
+      { HIDE("Battling with heat and questing for water was a big challenge back there...") },
+      { HIDE("...")                                                                         },
+      { HIDE("Yeah, they all think I'm just crazy...")                                      }
     }
   };
 }
@@ -456,44 +458,45 @@ void AINPC::SetDataGimley()
   AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 3;
   AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 3;
 
-  AIComponentRef->OwnerGameObject->ObjectName = "man";
+  AIComponentRef->OwnerGameObject->ObjectName = kMan;
 
-  Data.UnacquaintedDescription = "You see a stubby looking guy with an impressive beard";
-  Data.Name = "Gimley";
-  Data.Job = "Warrior";
+  Data.UnacquaintedDescription = HIDE("You see a stubby looking guy with an impressive beard");
 
-  Data.NameResponse = "Gimley, son of Gloine.";
-  Data.JobResponse = "I'm a Warrior.";
+  Data.Name = HIDE("Gimley");
+  Data.Job  = HIDE("Warrior");
+
+  Data.NameResponse = HIDE("Gimley, son of Gloine.");
+  Data.JobResponse  = HIDE("I'm a Warrior.");
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      "(humming)",
-      "Far over the misty mountains cold,",
-      "To dungeons deep, and caverns old.",
-      "We must away, ere break of day,",
-      "To seek the pale, enchanted gold..."
+      { HIDE("(humming)")                           },
+      { HIDE("Far over the misty mountains cold,")  },
+      { HIDE("To dungeons deep, and caverns old.")  },
+      { HIDE("We must away, ere break of day,")     },
+      { HIDE("To seek the pale, enchanted gold...") }
     },
     {
-      "(humming)",
-      "Under the Mountain dark and tall,",
-      "The King has come unto his hall!",
-      "His foe is dead, the Worm of Dread,",
-      "And ever so his foes shall fall..."
+      { HIDE("(humming)")                           },
+      { HIDE("Under the Mountain dark and tall,")   },
+      { HIDE("The King has come unto his hall!")    },
+      { HIDE("His foe is dead, the Worm of Dread,") },
+      { HIDE("And ever so his foes shall fall...")  }
     },
     {
-      "(humming)",
-      "From the red sky of the East,",
-      "To the sunset in the West,",
-      "We have cheated Death,",
-      "And he has cheated us...",
+      { HIDE("(humming)")                     },
+      { HIDE("From the red sky of the East,") },
+      { HIDE("To the sunset in the West,")    },
+      { HIDE("We have cheated Death,")        },
+      { HIDE("And he has cheated us...")      }
     },
     {
-      "(humming)",
-      "The forest raised a Christmas tree,",
-      "'Twas silent and serene.",
-      "In winter and in summer it was,",
-      "Slender and so green...",
+      { HIDE("(humming)")                           },
+      { HIDE("The forest raised a Christmas tree,") },
+      { HIDE("'Twas silent and serene.")            },
+      { HIDE("In winter and in summer it was,")     },
+      { HIDE("Slender and so green...")             }
     }
   };
 }
@@ -507,40 +510,41 @@ void AINPC::SetDataMartin()
   AIComponentRef->OwnerGameObject->Attrs.Spd.Talents = 1;
   AIComponentRef->OwnerGameObject->Attrs.MP.Talents = 3;
 
-  AIComponentRef->OwnerGameObject->ObjectName = "man";
+  AIComponentRef->OwnerGameObject->ObjectName = kMan;
 
-  Data.UnacquaintedDescription = "You see a local cleric";
-  Data.Name = "Martin";
-  Data.Job = "Cleric";
+  Data.UnacquaintedDescription = HIDE("You see a local cleric");
 
-  Data.NameResponse = "I'm brother Martin.";
+  Data.Name = HIDE("Martin");
+  Data.Job  = HIDE("Cleric");
+
+  Data.NameResponse = HIDE("I'm brother Martin.");
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      "All money you spend buying my wares are going straight to charity."
+      { HIDE("All money you spend buying my wares are going straight to charity.") }
     },
     {
-      "I guess you know about Lost City, don't you?",
-      "They say it predates our City and is buried somewhere deep underground.",
-      "It was the center of an ancient civilization of the times long past,",
-      "but some catastrophe led to its demise along with its denizens.",
-      "I'd say it was arrogance - the more advanced we get,",
-      "the more reckless and irresponsible we become.",
-      "First we try to defeat some long-lasted issues",
-      "that plague human existence for centuries, like diseases.",
-      "And it seems just and good.",
-      "After that we decide that we need to improve our quality of life even further.",
-      "We create artificial lights that allow us to see during the night",
-      "so we could extend our daytime this way, we create artificial instruments,",
-      "so that they will do the work for us.",
-      "Then we decide that our life must not end at all",
-      "and we seek means to prolong it.",
-      "In the end we just start to think that we \"own\" everything",
-      "and can do anything and nothing is impossible.",
-      "We try to become gods.",
-      "How come that originally good intentions lead to such results?",
-      "Can it be avoided? And how?..."
+      { HIDE("I guess you know about Lost City, don't you?")                                   },
+      { HIDE("They say it predates our City and is buried somewhere deep underground.")        },
+      { HIDE("It was the center of an ancient civilization of the times long past,")           },
+      { HIDE("but some catastrophe led to its demise along with its denizens.")                },
+      { HIDE("I'd say it was arrogance - the more advanced we get,")                           },
+      { HIDE("the more reckless and irresponsible we become.")                                 },
+      { HIDE("First we try to defeat some long-lasted issues")                                 },
+      { HIDE("that plague human existence for centuries, like diseases.")                      },
+      { HIDE("And it seems just and good.")                                                    },
+      { HIDE("After that we decide that we need to improve our quality of life even further.") },
+      { HIDE("We create artificial lights that allow us to see during the night")              },
+      { HIDE("so we could extend our daytime this way, we create artificial instruments,")     },
+      { HIDE("so that they will do the work for us.")                                          },
+      { HIDE("Then we decide that our life must not end at all")                               },
+      { HIDE("and we seek means to prolong it.")                                               },
+      { HIDE("In the end we just start to think that we \"own\" everything")                   },
+      { HIDE("and can do anything and nothing is impossible.")                                 },
+      { HIDE("We try to become gods.")                                                         },
+      { HIDE("How come that originally good intentions lead to such results?")                 },
+      { HIDE("Can it be avoided? And how?...")                                                 }
     }
   };
 
@@ -549,8 +553,8 @@ void AINPC::SetDataMartin()
   {
     TextLines bonusStr =
     {
-      "You can pray at the altar of St. Nestor the Scribe here.",
-      "Just proceed past the Royal Gates behind me."
+      { HIDE("You can pray at the altar of St. Nestor the Scribe here.") },
+      { HIDE("Just proceed past the Royal Gates behind me.")             }
     };
 
     Data.GossipResponsesByMap[MapType::TOWN].push_back(bonusStr);
@@ -559,7 +563,7 @@ void AINPC::SetDataMartin()
   {
     TextLines bonusStr =
     {
-      "It is forbidden for laity to enter the Royal Gates."
+      { HIDE("It is forbidden for laity to enter the Royal Gates.") }
     };
 
     Data.GossipResponsesByMap[MapType::TOWN].push_back(bonusStr);
@@ -579,26 +583,27 @@ void AINPC::SetDataCasey()
   AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 3;
   AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 1;
 
-  AIComponentRef->OwnerGameObject->ObjectName = "man";
+  AIComponentRef->OwnerGameObject->ObjectName = kMan;
 
-  Data.UnacquaintedDescription = "You see a man wearing white cook's clothes";
-  Data.Name = "Casey";
-  Data.Job = "Cook";
+  Data.UnacquaintedDescription = HIDE("You see a man wearing white cook's clothes");
 
-  Data.NameResponse = "My name's Casey.";
+  Data.Name = HIDE("Casey");
+  Data.Job  = HIDE("Cook");
+
+  Data.NameResponse = HIDE("My name's Casey.");
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      "I used to be a cook in the Navy.",
-      "One day we were boarded by the enemy, on our very own ship!",
-      "I mananged to hide myself in the refrigerator room.",
-      "Almost froze to death, but then boarders finally decided",
-      "to check upon ship's kitchen.",
-      "Well, it didn't end 'well' for them in the end,",
-      "but it did end well for us!",
-      "All's well that ends well, eh?",
-      "Hahahahaha!"
+      { HIDE("I used to be a cook in the Navy.")                            },
+      { HIDE("One day we were boarded by the enemy, on our very own ship!") },
+      { HIDE("I mananged to hide myself in the refrigerator room.")         },
+      { HIDE("Almost froze to death, but then boarders finally decided")    },
+      { HIDE("to check upon ship's kitchen.")                               },
+      { HIDE("Well, it didn't end 'well' for them in the end,")             },
+      { HIDE("but it did end well for us!")                                 },
+      { HIDE("All's well that ends well, eh?")                              },
+      { HIDE("Hahahahaha!")                                                 }
     }
   };
 
@@ -616,48 +621,49 @@ void AINPC::SetDataMaya()
   AIComponentRef->OwnerGameObject->Attrs.Res.Talents = 2;
   AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 1;
 
-  AIComponentRef->OwnerGameObject->ObjectName = "woman";
+  AIComponentRef->OwnerGameObject->ObjectName = kWoman;
 
   Data.IsMale = false;
-  Data.UnacquaintedDescription = "You see a blue-haired woman wearing strange clothes";
-  Data.Name = "Maya";
-  Data.Job = "Junker";
+  Data.UnacquaintedDescription = HIDE("You see a blue-haired woman wearing strange clothes");
 
-  Data.NameResponse = "I'm Maya.";
+  Data.Name = HIDE("Maya");
+  Data.Job  = HIDE("Junker");
+
+  Data.NameResponse = HIDE("I'm Maya.");
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      "We, the Junkers, collect discarded and abandoned items.",
-      "Our culture revolves around it - we believe that every item is usable",
-      "as long as it's not destroyed completely.",
-      "Because of this \"junky\" business, people think that we're some kind of",
-      "a poor and homeless group of outcasts, making their living by rummaging",
-      "through piles of garbage, hoping to find food or something valuable.",
-      "Well, it may look repulsive and suspicious, but the thing is",
-      "you never know WHAT you'll find, so it might be some",
-      "useless trinket, a cursed ring or a blessed artifact, who knows..."
+      { HIDE("We, the Junkers, collect discarded and abandoned items.")                  },
+      { HIDE("Our culture revolves around it - we believe that every item is usable")    },
+      { HIDE("as long as it's not destroyed completely.")                                },
+      { HIDE("Because of this \"junky\" business, people think that we're some kind of") },
+      { HIDE("a poor and homeless group of outcasts, making their living by rummaging")  },
+      { HIDE("through piles of garbage, hoping to find food or something valuable.")     },
+      { HIDE("Well, it may look repulsive and suspicious, but the thing is")             },
+      { HIDE("you never know WHAT you'll find, so it might be some")                     },
+      { HIDE("useless trinket, a cursed ring or a blessed artifact, who knows...")       }
     },
     {
-      "Think of my services as a gambling - you can try to buy something",
-      "if you're feeling lucky and have money to spare.",
-      "Also you can bring to me any unidentified items",
-      "and I'll buy them from you for a higher price than other vendors.",
-      "So it's kind of a compensation for the risk, don't you think? ;-)",
+      { HIDE("Think of my services as a gambling - you can try to buy something") },
+      { HIDE("if you're feeling lucky and have money to spare.")                  },
+      { HIDE("Also you can bring to me any unidentified items")                   },
+      { HIDE("and I'll buy them from you for a higher price than other vendors.") },
+      { HIDE("So it's kind of a compensation for the risk, don't you think? ;-)") },
     },
     {
-      "I hail from a distant town called Oasis.",
-      "It's a long-long journey overseas, then across the barren lands,",
-      "mountains and canyons, further into the West...",
-      "I have an uncle and a little brother there.",
-      "He's quite a little rascal he is! XD",
-      "But it is to be expected, I suppose - our parents died",
-      "when we were still very young so I guess it's up to me now",
-      "to look after the little one...",
-      "I just want to see the world as much as possible,",
-      "that's why I'm so far away from home.",
-      "You cannot imagine how different all of this looks compared to my homeland!",
-      "Everything is so green!"
+      { HIDE("I hail from a distant town called Oasis.")                                    },
+      { HIDE("It's a long-long journey overseas, then across the barren lands,")            },
+      { HIDE("mountains and canyons, further into the West...")                             },
+      { HIDE("I have an uncle and a little brother there.")                                 },
+      { HIDE("He's quite a little rascal he is! XD")                                        },
+      { HIDE("But it is to be expected, I suppose - our parents died")                      },
+      { HIDE("when we were still very young so I guess it's up to me now")                  },
+      { HIDE("to look after the little one...")                                             },
+      { HIDE("I just want to see the world as much as possible,")                           },
+      { HIDE("that's why I'm so far away from home.")                                       },
+      { HIDE("You cannot imagine how different all of this looks compared to my homeland!") },
+      { HIDE("Everything is so green!")                                                     }
     }
   };
 
@@ -676,7 +682,7 @@ void AINPC::SetDataDefault()
   Data.CanSpeak = false;
   Data.IsMale = (gender == 0);
 
-  AIComponentRef->OwnerGameObject->ObjectName = (gender == 0) ? "man" : "woman";
+  AIComponentRef->OwnerGameObject->ObjectName = (gender == 0) ? kMan : kWoman;
 
   Data.UnacquaintedDescription = "You see a " + AIComponentRef->OwnerGameObject->ObjectName;
 }
@@ -690,19 +696,20 @@ void AINPC::SetDataGriswold()
   AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 1;
   AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 3;
 
-  AIComponentRef->OwnerGameObject->ObjectName = "man";
+  AIComponentRef->OwnerGameObject->ObjectName = kMan;
 
   Data.IsMale = true;
-  Data.UnacquaintedDescription = "You see a bald man wearing an apron";
-  Data.Name = "Griswold";
-  Data.Job = "Blacksmith";
+  Data.UnacquaintedDescription = HIDE("You see a bald man wearing an apron");
 
-  Data.NameResponse = "Name's Griswold.";
+  Data.Name = HIDE("Griswold");
+  Data.Job  = HIDE("Blacksmith");
+
+  Data.NameResponse = HIDE("Name's Griswold.");
 
   Data.GossipResponsesByMap[MapType::TOWN] =
   {
     {
-      "Well, what kin I do fer ya?"
+      { HIDE("Well, what kin I do fer ya?") }
     }
   };
 

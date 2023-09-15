@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "gamestate.h"
+#include "string-obfuscator.h"
 
 #ifdef DEBUG_BUILD
 #include "application.h"
@@ -22,43 +23,43 @@ class IntroState : public GameState
     std::vector<std::vector<std::string>> _introStrings =
     {
       {
-       //********************************************************************************80//
-        "Another day - another septim. Or so they say.",
-        "Finally your vacation time has arrived and you",
-        "decide to spend it away from the City you sworn to protect.",
-        "Somewhere in the countryside would be fine, so",
-        "you pack your things and move out.",
-        "You came across a remote village, which seems like a nice place though.",
-        "Maybe this vacation will turn out nice as well..."
+              //---------0---------0---------0---------0---------0---------0---------0---------0 <- 80
+        { HIDE("Another day - another septim. Or so they say.")                           },
+        { HIDE("Finally your vacation time has arrived and you")                          },
+        { HIDE("decide to spend it away from the City you sworn to protect.")             },
+        { HIDE("Somewhere in the countryside would be fine, so")                          },
+        { HIDE("you pack your things and move out.")                                      },
+        { HIDE("You came across a remote village, which seems like a nice place though.") },
+        { HIDE("Maybe this vacation will turn out nice as well...")                       }
       },
       {
-       //********************************************************************************80//
-        "You lived all your life as an orphan.",
-        "You've been everything: a messenger, a peddler, a pickpocket...",
-        "And occasionally a killer.",
-        "You don't remember how it started, but you're a criminal now.",
-        "And the City Watch is after you.",
-        "You decide to lay low for a while and no better place than a",
-        "remote countryside would do better.",
-        "And maybe you could help yourself as well, while you're at it...",
+              //---------0---------0---------0---------0---------0---------0---------0---------0 <- 80
+        { HIDE("You lived all your life as an orphan.")                            },
+        { HIDE("You've been everything: a messenger, a peddler, a pickpocket...")  },
+        { HIDE("And occasionally a killer.")                                       },
+        { HIDE("You don't remember how it started, but you're a criminal now.")    },
+        { HIDE("And the City Watch is after you.")                                 },
+        { HIDE("You decide to lay low for a while and no better place than a")     },
+        { HIDE("remote countryside would do better.")                              },
+        { HIDE("And maybe you could help yourself as well, while you're at it...") }
       },
       {
-       //********************************************************************************80//
-        "You left great deserts and pagodas of the East far behind.",
-        "A long journey has finally come to an end - you have arrived.",
-        "It was strange at best, being sent to some remote village",
-        "as a final part of your training.",
-        "And with some reconnaissance mission at that.",
-        "Not something you expected to say the least.",
-        "All you have to do is investigate this village and report back to the Order.",
-        "Do this and you'll be finally ordained and may begin",
-        "your service as a guardian of the Arcane.",
-        "With farewell words of your master still echoing",
-        "inside your head, you continue onward..."
+              //---------0---------0---------0---------0---------0---------0---------0---------0 <- 80
+        { HIDE("You left great deserts and pagodas of the East far behind.")                   },
+        { HIDE("A long journey has finally come to an end - you have arrived.")                },
+        { HIDE("It was strange at best, being sent to some remote village")                    },
+        { HIDE("as a final part of your training.")                                            },
+        { HIDE("And with some reconnaissance mission at that.")                                },
+        { HIDE("Not something you expected to say the least.")                                 },
+        { HIDE("All you have to do is investigate this village and report back to the Order.") },
+        { HIDE("Do this and you'll be finally ordained and may begin")                         },
+        { HIDE("your service as a guardian of the Arcane.")                                    },
+        { HIDE("With parting words of your master still echoing")                             },
+        { HIDE("inside your head, you continue onward...")                                     }
       },
       {
-       //********************************************************************************80//
-        "Custom class description goes here"
+              //---------0---------0---------0---------0---------0---------0---------0---------0 <- 80
+        { HIDE("Custom class description goes here") }
       }
     };
 
@@ -70,10 +71,10 @@ class IntroState : public GameState
 
     const std::unordered_map<PlayerClass, std::string> _scenarioNameByClass =
     {
-      { PlayerClass::SOLDIER,  "WARRIOR'S REST"      },
-      { PlayerClass::THIEF,    "THIEF'S HIDEOUT"     },
-      { PlayerClass::ARCANIST, "HOLY QUEST"          },
-      { PlayerClass::CUSTOM,   "MYSTERIOUS STRANGER" }
+      { PlayerClass::SOLDIER,  { HIDE("WARRIOR'S REST")      } },
+      { PlayerClass::THIEF,    { HIDE("THIEF'S HIDEOUT")     } },
+      { PlayerClass::ARCANIST, { HIDE("HOLY QUEST")          } },
+      { PlayerClass::CUSTOM,   { HIDE("MYSTERIOUS STRANGER") } }
     };
 };
 

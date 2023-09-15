@@ -48,9 +48,6 @@
 // packages installed.
 //
 
-//
-// TODO: obfuscate every important stuff when development is finished (lol)
-//
 int main(int argc, char* argv[])
 {
   RNG::Instance().Init();

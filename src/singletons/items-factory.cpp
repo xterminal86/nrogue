@@ -2095,18 +2095,18 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
   ic->Data.Durability.Reset(RNG::Instance().RandomRange(30, 40));
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
-  ic->Data.IdentifiedName = "The Needle";
+  ic->Data.IdentifiedName = HIDE("The Needle");
 
   auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
   ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
 
   ic->Data.IdentifiedDescription =
   {
-   //---------1---------2---------3---------4---------5---------6---------7---------8
-    "A small and elegant looking sword,",
-    "it feels very light and easy to handle.",
-    "Surprisingly, there are no signs",
-    "of the blade ever being used."
+          //---------1---------2---------3---------4---------5---------6---------7---------8
+    { HIDE("A small and elegant looking sword,")      },
+    { HIDE("it feels very light and easy to handle.") },
+    { HIDE("Surprisingly, there are no signs")        },
+    { HIDE("of the blade ever being used.")           }
   };
 
   ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
@@ -2151,7 +2151,7 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
   ic->Data.Durability.Reset(30);
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
-  ic->Data.IdentifiedName = "Block Breaker";
+  ic->Data.IdentifiedName = HIDE("Block Breaker");
 
   auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
   ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
@@ -2159,9 +2159,9 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
   ic->Data.IdentifiedDescription =
   {
    //---------1---------2---------3---------4---------5---------6---------7---------8
-    "This is quite an old but sturdy looking pickaxe,",
-    "yet you can't shake the uneasy feeling about it.",
-    "There are traces of blood on its head."
+    { HIDE("This is quite an old but sturdy looking pickaxe,") },
+    { HIDE("yet you can't shake the uneasy feeling about it.") },
+    { HIDE("There are traces of blood on its head.")           }
   };
 
   ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
@@ -2195,7 +2195,7 @@ GameObject* ItemsFactory::CreateOneRing()
   AddBonusToItem(ic, { ItemBonusType::STR,     rndStr });
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
-  ic->Data.IdentifiedName = "The One Ring";
+  ic->Data.IdentifiedName = HIDE("The One Ring");
   ic->Data.UnidentifiedDescription =
   {
     Strings::ItemDefaultDescAccessory
@@ -2204,10 +2204,10 @@ GameObject* ItemsFactory::CreateOneRing()
   ic->Data.IdentifiedDescription =
   {
    //---------1---------2---------3---------4---------5---------6---------7---------8
-    "This looks like a simple golden ring.",
-    "There are strange inscriptions running along the side of it.",
-    "Maybe letters, but then from a language you don't recognize.",
-    "For some reason you have a strange urge to put this ring on..."
+    { HIDE("This looks like a simple golden ring.")                          },
+    { HIDE("There are strange inscriptions running along the side of it.")   },
+    { HIDE("Maybe letters, but then from a language you don't recognize.")   },
+    { HIDE("For some reason you have a strange urge to put this ring on...") }
   };
 
   ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);

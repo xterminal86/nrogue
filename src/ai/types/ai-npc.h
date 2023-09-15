@@ -57,6 +57,9 @@ class AINPC : public AIModelBase
     void SetDataGriswold();
 
     void SetDataDefault();
+
+    const std::string kMan   = "man";
+    const std::string kWoman = "woman";
 };
 
 #endif // AINPC_H
