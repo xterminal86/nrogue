@@ -36,7 +36,7 @@ class LevelBuilder
     void FeatureRoomsMethod(const Position& mapSize,
                             const Position& roomSizes,
                             const FeatureRoomsWeights& weightsMap,
-                            int doorPlacementChance,
+                            uint8_t doorPlacementChance,
                             int maxIterations);
 
     void BSPRoomsMethod(const Position& mapSize,

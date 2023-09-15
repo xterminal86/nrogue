@@ -58,7 +58,7 @@ namespace StringObfuscator
 
     private:
       //
-      // Must use {} here, or won't compile.
+      // Initialize array elements to zero.
       //
       char _data[N]{};
 
@@ -69,8 +69,15 @@ namespace StringObfuscator
 // =============================================================================
 
 //
-// It seems this lambda is implicitly constexpr. At least such thing is possible
-// if lambda satisfies constexprness (since C++17).
+// This lambda will be executed at runtime.
+// So it looks like during compilation it will construct Obfuscator object,
+// which will encrypt the string in constructor, but at runtime it will
+// be decrypted via type conversion operator overload.
+// When assigning to std::string usually you have to embrace (lol)
+// the macro call with curly braces, but sometimes you don't.
+// When you're assigning to class member variable in .cpp file,
+// while member variable was declared in .h file, you have to drop curly braces.
+// Maybe compiler needs to know the full type or something, I don't fucking know.
 //
 #define HIDE(cStyleString)                                                              \
   []() -> StringObfuscator::Obfuscator<sizeof(cStyleString) / sizeof(cStyleString[0])>& \

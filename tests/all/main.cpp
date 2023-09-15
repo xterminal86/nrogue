@@ -877,7 +877,7 @@ void Digger(LevelBuilder& lb, const Position& mapSize, std::stringstream& ss)
     { FeatureRoomType::EMPTY, { 10, 0 }  }
   };
 
-  lb.FeatureRoomsMethod(mapSize, { 1, 10 }, weights, 3, iterations);
+  lb.FeatureRoomsMethod(mapSize, { 1, 11 }, weights, 30, iterations);
 
   ss << lb.GetMapRawString() << "\n\n";
 }
@@ -938,9 +938,9 @@ void FeatureRooms(LevelBuilder& lb, const Position& mapSize, std::stringstream& 
     { FeatureRoomType::SHRINE,   { 10, 1 } }
   };
 
-  Position roomSize = { 1, 10 };
+  Position roomSize = { 1, 11 };
 
-  lb.FeatureRoomsMethod(mapSize, roomSize, weights, 3, mapSize.X * mapSize.Y);
+  lb.FeatureRoomsMethod(mapSize, roomSize, weights, 30, mapSize.X * mapSize.Y);
 
   ss << lb.GetMapRawString() << "\n\n";
 }

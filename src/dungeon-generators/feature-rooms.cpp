@@ -6,8 +6,8 @@
 ///
 /// \brief Builds dungeon by attaching new rooms to existing ones.
 ///
-/// 'doorPlacementChance' is a value from 0 to 10 with higher
-/// values meaning higher chance to place door between rooms.
+/// 'doorPlacementChance' is a percentage of a chance
+/// to place door between rooms.
 /// 'maxIterations' should be empirically chosen, because
 /// it depends on roomSizes.
 /// Generally set 'maxIterations' to (mapSize.X * mapSize.Y)
@@ -16,7 +16,7 @@
 void FeatureRooms::Generate(const Position& mapSize,
                             const Position& roomSizes,
                             const FeatureRoomsWeights& weightsMap,
-                            int doorPlacementChance,
+                            uint8_t doorPlacementChance,
                             int maxIterations)
 {
   _weightsMap = weightsMap;
@@ -79,10 +79,11 @@ void FeatureRooms::Generate(const Position& mapSize,
     bool success = TryToCreateRoom(doorPos, newRoomStartPos, carveDir, typeRolled);
     if (success)
     {
-      int shouldPlaceDoor = RNG::Instance().RandomRange(1, 11);
-      _map[doorPos.X][doorPos.Y].Image = (shouldPlaceDoor <= doorPlacementChance)
-                                         ? '+'
-                                         : '.';
+      uint8_t doorChance = Util::Clamp(doorPlacementChance, 0, 100);
+
+      uint8_t chanceRolled = RNG::Instance().RandomRange(1, 101);
+
+      _map[doorPos.X][doorPos.Y].Image = (chanceRolled <= doorChance) ? '+' : '.';
       _generatedSoFar[typeRolled]++;
     }
   }

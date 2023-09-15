@@ -12,7 +12,7 @@ class FeatureRooms : public DGBase
     void Generate(const Position& mapSize,
                   const Position& roomSizes,
                   const FeatureRoomsWeights& weightsMap,
-                  int doorPlacementChance,
+                  uint8_t doorPlacementChance,
                   int maxIterations);
 
   private:

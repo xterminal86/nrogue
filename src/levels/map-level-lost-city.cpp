@@ -49,9 +49,9 @@ void MapLevelLostCity::CreateLevel()
     { FeatureRoomType::SHRINE,   { 10, 2 } }
   };
 
-  Position roomSize = { 1, 10 };
+  Position roomSize = { 1, 11 };
 
-  lb.FeatureRoomsMethod(MapSize, roomSize, weights, 3, MapSize.X * MapSize.Y);
+  lb.FeatureRoomsMethod(MapSize, roomSize, weights, 30, MapSize.X * MapSize.Y);
 
   ConstructFromBuilder(lb);
 

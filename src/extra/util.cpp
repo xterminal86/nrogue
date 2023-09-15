@@ -1404,7 +1404,7 @@ namespace Util
     // Iterate over this map and select color
     // for the first entry found with bool key == true.
     //
-    std::vector<std::pair<bool, uint32_t>> itemFirstColorToChoose =
+    const std::vector<std::pair<bool, uint32_t>> itemFirstColorToChoose =
     {
       { isMixed,   Colors::ItemMixedColor  },
       { isMagic,   Colors::ItemMagicColor  },

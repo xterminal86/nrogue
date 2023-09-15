@@ -78,7 +78,7 @@ void MapLevelDeepDark::CreateLevel()
         { FeatureRoomType::EMPTY, { 10, 0 } }
       };
 
-      lb.FeatureRoomsMethod(MapSize, { 1, 10 }, weights, 3, iterations);
+      lb.FeatureRoomsMethod(MapSize, { 1, 10 }, weights, 30, iterations);
     }
     break;
 

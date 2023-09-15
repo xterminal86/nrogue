@@ -15,7 +15,7 @@
 void LevelBuilder::FeatureRoomsMethod(const Position& mapSize,
                                       const Position& roomSizes,
                                       const FeatureRoomsWeights& weightsMap,
-                                      int doorPlacementChance,
+                                      uint8_t doorPlacementChance,
                                       int maxIterations)
 {
   _generator.reset(new FeatureRooms());
