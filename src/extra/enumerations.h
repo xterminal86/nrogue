@@ -158,7 +158,8 @@ enum class GameObjectType
   CHASM,
   PICKAXEABLE,
   TRAP,
-  CONTAINER,
+  BREAKABLE,
+  CHEST,
   SHRINE_GOOD,
   SHRINE_BAD,
   // ---------------------------------------------------------------------------

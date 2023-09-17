@@ -25,6 +25,8 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
                                   const uint32_t& fgColor,
                                   const uint32_t& bgColor);
 
+    GameObject* CreateChest(int x, int y, bool isLocked = true);
+
     GameObject* CreateContainer(int x,
                                 int y,
                                 int image,

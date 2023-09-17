@@ -193,6 +193,7 @@ class DGBase
     void PlaceTreasury(const Rect& area);
     void PlaceShrine(const Rect& area);
     void PlaceStorage(const Rect& area);
+    void PlaceChestroom(const Rect& area);
 
     bool TryToPlaceRoom(int minSize, int maxSize,
                         const Rect& area,

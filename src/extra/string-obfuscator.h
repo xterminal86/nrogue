@@ -77,7 +77,7 @@ namespace StringObfuscator
 // the macro call with curly braces, but sometimes you don't.
 // When you're assigning to class member variable in .cpp file,
 // while member variable was declared in .h file, you have to drop curly braces.
-// Maybe compiler needs to know the full type or something, I don't fucking know.
+// Maybe compiler can't deduce the type or something, I don't fucking know.
 //
 #define HIDE(cStyleString)                                                              \
   []() -> StringObfuscator::Obfuscator<sizeof(cStyleString) / sizeof(cStyleString[0])>& \

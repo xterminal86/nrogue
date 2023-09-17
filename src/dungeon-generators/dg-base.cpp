@@ -1057,7 +1057,13 @@ bool DGBase::TransformArea(TransformedRoom type, size_t emptyRoomIndex)
 
     case TransformedRoom::CHESTROOM:
     {
-      // TODO:
+      auto fn = std::bind(&DGBase::PlaceChestroom, this, std::placeholders::_1);
+      success = TryToPlaceRoom(3, 5, area, emptyRoomIndex, type, fn);
+
+      if (!success)
+      {
+        _failures[type] = true;
+      }
     }
     break;
 
@@ -1245,10 +1251,28 @@ void DGBase::PlaceStorage(const Rect& area)
 
       if (Util::Rolld100(20))
       {
-        _map[x][y].ObjectHere = GameObjectType::CONTAINER;
+        _map[x][y].ObjectHere = GameObjectType::BREAKABLE;
       }
     }
   }
+}
+
+// =============================================================================
+
+void DGBase::PlaceChestroom(const Rect& area)
+{
+  for (int x = area.X1; x <= area.X2; x++)
+  {
+    for (int y = area.Y1; y <= area.Y2; y++)
+    {
+      _map[x][y].ZoneMarker = TransformedRoom::CHESTROOM;
+    }
+  }
+
+  int x = area.X1 + area.Width() / 2;
+  int y = area.Y1 + area.Height() / 2;
+
+  _map[x][y].ObjectHere = GameObjectType::CHEST;
 }
 
 // =============================================================================

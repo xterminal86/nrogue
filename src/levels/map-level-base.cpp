@@ -1006,7 +1006,7 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
     {
       if (std::holds_alternative<GameObjectType>(cell.ObjectHere))
       {
-        if (std::get<GameObjectType>(cell.ObjectHere) == GameObjectType::CONTAINER)
+        if (std::get<GameObjectType>(cell.ObjectHere) == GameObjectType::BREAKABLE)
         {
           GameObject* box = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(x, y, 'B', "Wooden Box", Colors::WoodColor, Colors::BlackColor);
           PlaceStaticObject(box);
@@ -1022,6 +1022,21 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
         if(std::get<ItemType>(cell.ObjectHere) == ItemType::COINS)
         {
           GameObject* go = ItemsFactory::Instance().CreateMoney();
+          go->PosX = x;
+          go->PosY = y;
+          PlaceGameObject(go);
+        }
+      }
+    }
+    break;
+
+    case TransformedRoom::CHESTROOM:
+    {
+      if (std::holds_alternative<GameObjectType>(cell.ObjectHere))
+      {
+        if(std::get<GameObjectType>(cell.ObjectHere) == GameObjectType::CHEST)
+        {
+          GameObject* go = GameObjectsFactory::Instance().CreateChest(x, y, Util::Rolld100(50));
           go->PosX = x;
           go->PosY = y;
           PlaceGameObject(go);

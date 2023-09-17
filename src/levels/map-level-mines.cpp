@@ -272,7 +272,14 @@ void MapLevelMines::CreateSpecialLevel()
 
         case 'D':
         {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, DoorMaterials::IRON, "Iron Door", -1, Colors::BlackColor, Colors::IronColor);
+          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX,
+                                                                       posY,
+                                                                       false,
+                                                                       DoorMaterials::IRON,
+                                                                       "Iron Door",
+                                                                       -1,
+                                                                       Colors::BlackColor,
+                                                                       Colors::IronColor);
 
           DoorComponent* dc = door->GetComponent<DoorComponent>();
           dc->OpenedBy = key->GetComponent<ItemComponent>()->Data.ItemTypeHash;

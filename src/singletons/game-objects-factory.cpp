@@ -127,6 +127,32 @@ GameObject* GameObjectsFactory::CreateDummyObject(int x,
 
 // =============================================================================
 
+GameObject* GameObjectsFactory::CreateChest(int x, int y, bool isLocked)
+{
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+
+  go->ObjectName = "Chest";
+  go->PosX = x;
+  go->PosY = y;
+  go->Image = 'C';
+  go->FgColor = Colors::BlackColor;
+  go->BgColor = Colors::IronColor;
+  go->Blocking = true;
+  go->BlocksSight = true;
+
+  ContainerComponent* cc = go->AddComponent<ContainerComponent>();
+
+  cc->CanBeOpened = !isLocked;
+
+  // TODO: add random loot via cc->Add()
+
+  go->InteractionCallback = std::bind(&ContainerComponent::Interact, cc);
+
+  return go;
+}
+
+// =============================================================================
+
 GameObject* GameObjectsFactory::CreateContainer(int x,
                                                 int y,
                                                 int image,

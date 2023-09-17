@@ -20,9 +20,13 @@ def FindMaxIndent():
 
   return indent;
 
+################################################################################
+
 def GetNodeType(data):
   spl = data.split(' ');
   return spl[0];
+
+################################################################################
 
 def GetNodeData(data):
   spl = data.split(' ');
@@ -39,6 +43,8 @@ def GetNodeData(data):
     result = None;
     
   return result;
+
+################################################################################
 
 def GenerateUmlDefinitions():
   output = "";
@@ -67,6 +73,8 @@ def GenerateUmlDefinitions():
     # print(id, ") ", data, " <------ ", pId, ") ", pData);
 
   print(output);
+
+################################################################################
 
 def main():
   start = False;
@@ -130,6 +138,8 @@ def main():
     indent = FindMaxIndent();
 
   GenerateUmlDefinitions();
+
+################################################################################
 
 if __name__ == "__main__":
   for line in sys.stdin:
