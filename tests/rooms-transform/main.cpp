@@ -36,8 +36,8 @@ int main(int argc, char* argv[])
 
   std::vector<int*> params =
   {
-    &mapSize.X,
     &mapSize.Y,
+    &mapSize.X,
     &splitRatio.X,
     &splitRatio.Y,
     &minRoomSize
@@ -71,6 +71,7 @@ int main(int argc, char* argv[])
     { TransformedRoom::TREASURY,  {  5, 1 } },
     { TransformedRoom::SHRINE,    { 10, 1 } },
     { TransformedRoom::STORAGE,   {  5, 2 } },
+    { TransformedRoom::CHESTROOM, {  5, 1 } },
   };
 
   lb.TransformRooms(weights);

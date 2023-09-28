@@ -22,13 +22,13 @@ int main(int argc, char* argv[])
 
   std::vector<int*> params =
   {
-    &mapSize.X,
     &mapSize.Y,
+    &mapSize.X,
     &iterations,
     &tunnelMinMax.X,
     &tunnelMinMax.Y,
-    &start.X,
-    &start.Y
+    &start.Y,
+    &start.X
   };
 
   int cnt = 1;

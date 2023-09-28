@@ -7,6 +7,40 @@
 
 namespace LootGenerators
 {
+  void DropLoot(GameObject *go)
+  {
+    if (go == nullptr)
+    {
+      DebugLog("DropLoot() - go is nullptr!");
+      return;
+    }
+
+    switch(go->Type)
+    {
+      case GameObjectType::RAT:
+        Rat(go);
+        break;
+
+      case GameObjectType::MAD_MINER:
+        MadMiner(go);
+        break;
+
+      case GameObjectType::SHELOB:
+        Shelob(go);
+        break;
+
+      case GameObjectType::KOBOLD:
+        Kobold(go);
+        break;
+
+      default:
+        DebugLog("No loot function specified for object type %d", (int)go->Type);
+        break;
+    }
+  }
+
+  // ===========================================================================
+
   void Rat(GameObject* go)
   {
     const std::unordered_map<ItemType, int> lootTable =

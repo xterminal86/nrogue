@@ -22,8 +22,8 @@ int main(int argc, char* argv[])
 
   std::vector<int*> params =
   {
-    &mapSize.X,
     &mapSize.Y,
+    &mapSize.X,
     &tilesetIndex,
     &postProcess,
     &removeBias

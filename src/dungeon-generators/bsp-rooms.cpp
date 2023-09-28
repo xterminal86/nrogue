@@ -22,6 +22,13 @@ void BSPRooms::Generate(const Position& mapSize,
 
   _map = CreateFilledMap(mapSize.X, mapSize.Y);
 
+  if (minRoomSize <= 1)
+  {
+    DebugLog("minRoomSize is <= 1, not generating shit!");
+    FillMapRaw();
+    return;
+  }
+
   Rect area = { 0, 0, mapSize.X, mapSize.Y };
   auto split = GetSplitRatio(area);
 

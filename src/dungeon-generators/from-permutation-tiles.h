@@ -9,7 +9,7 @@
 class FromPermutationTiles : public DGBase
 {
   public:
-    void Generate(const Position& mspSize,
+    void Generate(const Position& mapSize,
                   int tileSetIndex,
                   bool postProcess,
                   bool removeBias);

@@ -22,10 +22,10 @@ int main(int argc, char* argv[])
 
   std::vector<int*> params =
   {
-    &mapSize.X,
     &mapSize.Y,
-    &splitRatio.X,
+    &mapSize.X,
     &splitRatio.Y,
+    &splitRatio.X,
     &minRoomSize
   };
 

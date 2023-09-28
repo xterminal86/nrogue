@@ -5,6 +5,8 @@ class GameObject;
 
 namespace LootGenerators
 {
+  void DropLoot(GameObject* go);
+  // ---------------------------------------
   void Rat(GameObject* go);
   void MadMiner(GameObject* go);
   void Shelob(GameObject* go);

@@ -99,6 +99,7 @@ GameObject* MonstersInc::CreateMonster(int x, int y, GameObjectType monsterType)
     go->Type = monsterType;
     go->PosX = x;
     go->PosY = y;
+    go->GenerateLootFunction = std::bind(&LootGenerators::DropLoot, go);
   }
 
   return go;
@@ -191,8 +192,6 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
   aimb->ConstructAI();
   ai->ChangeModel<AIMonsterBasic>();
   // ---------------------------------------------------------------------------
-
-  go->GenerateLootFunction = std::bind(&LootGenerators::Rat, go);
 
   return go;
 }
@@ -515,7 +514,6 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
 
   go->MoveTo(x, y);
 
-
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
@@ -554,8 +552,6 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
   aim->ConstructAI();
   ai->ChangeModel<AIMonsterMadMiner>();
   // ---------------------------------------------------------------------------
-
-  go->GenerateLootFunction = std::bind(&LootGenerators::MadMiner, go);
 
   return go;
 }
@@ -621,8 +617,6 @@ GameObject* MonstersInc::CreateKobold(int x, int y)
   ai->ChangeModel<AIMonsterKobold>();
   // ---------------------------------------------------------------------------
 
-  go->GenerateLootFunction = std::bind(&LootGenerators::Kobold, go);
-
   return go;
 }
 
@@ -664,8 +658,6 @@ GameObject* MonstersInc::CreateShelob(int x, int y)
   aim->ConstructAI();
   ai->ChangeModel<AIMonsterShelob>();
   // ---------------------------------------------------------------------------
-
-  go->GenerateLootFunction = std::bind(&LootGenerators::Shelob, go);
 
   return go;
 }

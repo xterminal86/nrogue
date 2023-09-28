@@ -23,10 +23,10 @@ int main(int argc, char* argv[])
 
   std::vector<int*> params =
   {
-    &mapSize.X,
     &mapSize.Y,
-    &roomSizes.X,
+    &mapSize.X,
     &roomSizes.Y,
+    &roomSizes.X,
     &doorChance
   };
 

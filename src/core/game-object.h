@@ -69,7 +69,8 @@ class GameObject
     {
       if (_components.count(typeid(T).hash_code()) == 1)
       {
-        DebugLog("[WAR] trying to add existing component %s on game object [0x%X] - returning existing 0x%X",
+        DebugLog("[WAR] trying to add existing component %s "
+                 "on game object [0x%X] - returning existing 0x%X",
                  typeid(T).name(),
                  this,
                  _components[typeid(T).hash_code()].get());

@@ -11,6 +11,7 @@ int main(int argc, char* argv[])
            "<birth_threshold> "
            "<death_threshold> "
            "<iterations>\n", argv[0]);
+    printf("Example params for 100x100 map: 40, 5, 4, 12\n");
     return 1;
   }
 
@@ -24,8 +25,8 @@ int main(int argc, char* argv[])
 
   std::vector<int*> params =
   {
-    &mapSize.X,
     &mapSize.Y,
+    &mapSize.X,
     &wallChance,
     &threshold,
     &deathThreshold,

@@ -131,7 +131,7 @@ GameObject* GameObjectsFactory::CreateChest(int x, int y, bool isLocked)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  go->ObjectName = "Chest";
+  go->ObjectName = "Iron Chest";
   go->PosX = x;
   go->PosY = y;
   go->Image = 'C';
@@ -142,9 +142,25 @@ GameObject* GameObjectsFactory::CreateChest(int x, int y, bool isLocked)
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
 
-  cc->CanBeOpened = !isLocked;
+  //cc->CanBeOpened = !isLocked;
 
-  // TODO: add random loot via cc->Add()
+  int chance = 100;
+
+  const double scale = 1.6;
+
+  for (int i = 0; i < 10; i++)
+  {
+    if (Util::Rolld100(chance))
+    {
+      GameObject* go = ItemsFactory::Instance().CreateRandomItem(0, 0);
+      cc->Add(go);
+      chance = (int)((double)chance / scale);
+    }
+    else
+    {
+      break;
+    }
+  }
 
   go->InteractionCallback = std::bind(&ContainerComponent::Interact, cc);
 

@@ -21,10 +21,10 @@ int main(int argc, char* argv[])
 
   std::vector<int*> params =
   {
-    &mapSize.X,
     &mapSize.Y,
-    &start.X,
+    &mapSize.X,
     &start.Y,
+    &start.X,
     &removalParams.EmptyCellsAroundMin,
     &removalParams.EmptyCellsAroundMax,
     &removalParams.Passes
