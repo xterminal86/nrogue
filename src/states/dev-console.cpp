@@ -1255,6 +1255,8 @@ void DevConsole::PrintActors()
   }
 }
 
+#ifdef DEBUG_BUILD
+
 // =============================================================================
 
 void DevConsole::DispelEffects()
@@ -1276,6 +1278,8 @@ void DevConsole::DispelEffectsActor()
   _objectHandles[ObjectHandleType::ACTOR]->DispelEffects();
   StdOut(Ok);
 }
+
+#endif
 
 // =============================================================================
 

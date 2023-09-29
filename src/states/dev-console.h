@@ -170,8 +170,11 @@ class DevConsole : public GameState
     void ToggleGodMode();
     void PrintTriggers();
     void PrintActors();
+
+#ifdef DEBUG_BUILD
     void DispelEffects();
     void DispelEffectsActor();
+#endif
 
     bool StringIsNumbers(const std::string& str);
     std::pair<int, int> CoordinateParamsToInt(const std::string& px,

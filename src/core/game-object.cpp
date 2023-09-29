@@ -1127,6 +1127,8 @@ void GameObject::DispelEffectsAllOf(const ItemBonusType& type)
   }
 }
 
+#ifdef DEBUG_BUILD
+
 // =============================================================================
 
 void GameObject::DispelEffects()
@@ -1153,6 +1155,8 @@ void GameObject::DispelEffects()
     }
   }
 }
+
+#endif
 
 // =============================================================================
 

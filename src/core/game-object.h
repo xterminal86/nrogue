@@ -199,7 +199,10 @@ class GameObject
     //
     void DispelEffectFirstFound(const ItemBonusType& type);
     void DispelEffectsAllOf(const ItemBonusType& type);
+
+#ifdef DEBUG_BUILD
     void DispelEffects();
+#endif
 
     //
     // Removes effects imposed by items or objects.
