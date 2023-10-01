@@ -125,16 +125,18 @@ std::string NRS::Serialize()
 
 bool NRS::Save(const std::string& fileName)
 {
+  bool ok = false;
+
   std::ofstream file(fileName);
   if (file.is_open())
   {
     std::string serialized = Serialize();
     file << serialized;
     file.close();
-    return true;
+    ok = true;
   }
 
-  return false;
+  return ok;
 }
 
 // =============================================================================
@@ -153,16 +155,16 @@ void NRS::WriteIntl(const NRS& d, std::stringstream& ss)
       {
         bool itemsLeft = ((nItems - i) > 1);
 
-        size_t x = item.second.GetString(i).find_first_of(_separatorCh);
+        size_t x = item.second.GetString(i).find_first_of(_listSeparatorCh);
         if (x != std::string::npos)
         {
           ss << "\"" << item.second.GetString(i) << "\""
-            << (itemsLeft ? _separator : "");
+            << (itemsLeft ? _listSeparatorMark : "");
         }
         else
         {
           ss << item.second.GetString(i)
-            << (itemsLeft ? _separator : "");
+            << (itemsLeft ? _listSeparatorMark : "");
         }
       }
 
@@ -248,14 +250,21 @@ void NRS::Deserialize(const std::string& data)
           }
           else
           {
+            //
+            // ',' can be part of a list item if it's enclosed in quotes.
+            //
             if (inQuotes)
             {
               token.append(1, c);
             }
             else
             {
-              if (c == _separatorCh)
+              if (c == _listSeparatorCh)
               {
+                //
+                // List separator encountered, put all that has been read until
+                // this point into the appropriate NRS node's position.
+                //
                 TrimString(token);
                 (*tree.top())[key].SetString(token, tokenCount);
                 token.clear();
@@ -263,12 +272,20 @@ void NRS::Deserialize(const std::string& data)
               }
               else
               {
+                //
+                // Otherwise just continue to accumulate characters of an item
+                // we're currently reading.
+                //
                 token.append(1, c);
               }
             }
           }
         }
 
+        //
+        // Add last element of a list, because there is no ',' at the end
+        // (at least it shouldn't be normally).
+        //
         if (!token.empty())
         {
           TrimString(token);
@@ -308,6 +325,8 @@ void NRS::Deserialize(const std::string& data)
 
 bool NRS::Load(const std::string& fname)
 {
+  bool ok = false;
+
   std::ifstream file(fname);
   if (file.is_open())
   {
@@ -321,10 +340,10 @@ bool NRS::Load(const std::string& fname)
 
     Deserialize(ss.str());
 
-    return true;
+    ok = true;
   }
 
-  return false;
+  return ok;
 }
 
 // =============================================================================

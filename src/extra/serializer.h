@@ -109,8 +109,8 @@ class NRS
 
     const std::string kEmptyString;
 
-    const char _separatorCh = ',';
-    const std::string _separator  = { _separatorCh, ' ' };
+    const char _listSeparatorCh = ',';
+    const std::string _listSeparatorMark  = { _listSeparatorCh, ' ' };
 
     const char _kvSeparatorCh = ':';
     const std::string _kvSeparatorMark = { ' ', _kvSeparatorCh, ' ' };
