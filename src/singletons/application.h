@@ -11,7 +11,7 @@
 #include "gamestate.h"
 #include "player.h"
 
-struct SaveFile
+struct ReplayData
 {
   using KeyAndCount = std::pair<int, int>;
 
@@ -119,7 +119,7 @@ class Application : public Singleton<Application>
 
     uint64_t PlayerTurnsPassed = 0;
 
-    SaveFile SaveData;
+    ReplayData Replay;
 
   protected:
     void InitSpecific() override;

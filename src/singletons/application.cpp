@@ -67,7 +67,7 @@ void Application::InitSpecific()
   Printer::Instance().AddMessage("You begin your quest");
   Printer::Instance().AddMessage("Press 'h' for help");
 
-  SaveData.KeysPressed.reserve(64 * 1024);
+  Replay.KeysPressed.reserve(64 * 1024);
 
   _appReady = true;
 }
@@ -392,15 +392,15 @@ void Application::SaveText()
   std::ofstream saveFile(Strings::SaveFileName.data());
   std::stringstream ss;
 
-  SaveData.WorldSeed  = RNG::Instance().Seed;
-  SaveData.PlayerName = PlayerInstance.Name;
-  SaveData.Class      = PlayerInstance.GetClass();
+  Replay.WorldSeed  = RNG::Instance().Seed;
+  Replay.PlayerName = PlayerInstance.Name;
+  Replay.Class      = PlayerInstance.GetClass();
 
-  ss << SaveData.WorldSeed  << '\n';
-  ss << SaveData.PlayerName << '\n';
-  ss << (int)SaveData.Class << '\n';
+  ss << Replay.WorldSeed  << '\n';
+  ss << Replay.PlayerName << '\n';
+  ss << (int)Replay.Class << '\n';
 
-  for (auto& pair : SaveData.KeysPressed)
+  for (auto& pair : Replay.KeysPressed)
   {
     ss << pair.first << " " << pair.second << '\n';
   }
@@ -417,21 +417,21 @@ void Application::SaveBinary()
 {
   std::ofstream saveFile(Strings::SaveFileName.data(), std::ofstream::binary);
 
-  SaveData.WorldSeed  = RNG::Instance().Seed;
-  SaveData.PlayerName = PlayerInstance.Name;
-  SaveData.Class      = PlayerInstance.GetClass();
+  Replay.WorldSeed  = RNG::Instance().Seed;
+  Replay.PlayerName = PlayerInstance.Name;
+  Replay.Class      = PlayerInstance.GetClass();
 
-  std::string buf = SaveData.PlayerName;
+  std::string buf = Replay.PlayerName;
   buf.append(GlobalConstants::MaxNameLength - buf.length(), '\0');
 
-  saveFile.write((char*)&SaveData.WorldSeed, sizeof(SaveData.WorldSeed));
+  saveFile.write((char*)&Replay.WorldSeed, sizeof(Replay.WorldSeed));
   saveFile.write(buf.data(), buf.size());
-  saveFile.write((char*)&SaveData.Class, 1);
+  saveFile.write((char*)&Replay.Class, 1);
 
-  size_t keys = SaveData.KeysPressed.size();
+  size_t keys = Replay.KeysPressed.size();
   saveFile.write((char*)&keys, sizeof(keys));
 
-  for (auto& pair : SaveData.KeysPressed)
+  for (auto& pair : Replay.KeysPressed)
   {
     saveFile.write((char*)&pair.first,  sizeof(pair.first));
     saveFile.write((char*)&pair.second, sizeof(pair.second));
@@ -471,11 +471,11 @@ void Application::LoadText()
 
   std::string line;
 
-  SaveData.WorldSeed  = std::stoull(ReadLine());
-  SaveData.PlayerName = ReadLine();
-  SaveData.Class      = (PlayerClass)std::stoi(ReadLine());
+  Replay.WorldSeed  = std::stoull(ReadLine());
+  Replay.PlayerName = ReadLine();
+  Replay.Class      = (PlayerClass)std::stoi(ReadLine());
 
-  SaveData.KeysPressed.clear();
+  Replay.KeysPressed.clear();
 
   while (std::getline(saveFile, line))
   {
@@ -499,25 +499,25 @@ void Application::LoadBinary()
 {
   std::ifstream f(Strings::SaveFileName.data(), std::ifstream::binary);
 
-  SaveData.PlayerName.resize(GlobalConstants::MaxNameLength);
+  Replay.PlayerName.resize(GlobalConstants::MaxNameLength);
 
-  f.read((char*)&SaveData.WorldSeed, sizeof(SaveData.WorldSeed));
-  f.read(SaveData.PlayerName.data(), GlobalConstants::MaxNameLength);
+  f.read((char*)&Replay.WorldSeed, sizeof(Replay.WorldSeed));
+  f.read(Replay.PlayerName.data(), GlobalConstants::MaxNameLength);
 
-  SaveData.PlayerName.erase(SaveData.PlayerName.find('\0'));
+  Replay.PlayerName.erase(Replay.PlayerName.find('\0'));
 
-  SaveData.PlayerName.append(1, '\0');
+  Replay.PlayerName.append(1, '\0');
 
   uint8_t class_ = 255;
 
   f.read((char*)&class_, 1);
 
-  SaveData.Class = (PlayerClass)class_;
+  Replay.Class = (PlayerClass)class_;
 
   size_t keys = 0;
   f.read((char*)&keys, sizeof(keys));
 
-  SaveData.KeysPressed.clear();
+  Replay.KeysPressed.clear();
 
   for (size_t i = 0; i < keys; i++)
   {
@@ -549,10 +549,10 @@ void Application::LoadGame(bool binary)
     LoadText();
   }
 
-  PlayerInstance.Name          = SaveData.PlayerName;
-  PlayerInstance.SelectedClass = (int)SaveData.Class;
+  PlayerInstance.Name          = Replay.PlayerName;
+  PlayerInstance.SelectedClass = (int)Replay.Class;
 
-  RNG::Instance().SetSeed(SaveData.WorldSeed);
+  RNG::Instance().SetSeed(Replay.WorldSeed);
 
   //
   // Nethack style.
@@ -1165,23 +1165,23 @@ int Application::GetSavedAction()
 
 void Application::RecordAction(int key)
 {
-  SaveFile::KeyAndCount newAction = { key, 1 };
+  ReplayData::KeyAndCount newAction = { key, 1 };
 
-  if (!SaveData.KeysPressed.empty())
+  if (!Replay.KeysPressed.empty())
   {
-    auto& lastAction = SaveData.KeysPressed.back();
+    auto& lastAction = Replay.KeysPressed.back();
     if (lastAction.first == key)
     {
       lastAction.second++;
     }
     else
     {
-      SaveData.KeysPressed.push_back(newAction);
+      Replay.KeysPressed.push_back(newAction);
     }
   }
   else
   {
-    SaveData.KeysPressed.push_back(newAction);
+    Replay.KeysPressed.push_back(newAction);
   }
 }
 

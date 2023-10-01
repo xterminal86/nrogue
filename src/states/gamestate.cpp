@@ -12,7 +12,7 @@
     {                                                                       \
       Application::Instance().ReplayMode = false;                           \
       Application::Instance().ChangeState(GameStates::EXIT_GAME);           \
-      ConsoleLog("Save is corrupted!");                                     \
+      ConsoleLog("Replay is corrupted!");                                  \
     }                                                                       \
     else                                                                    \
     {                                                                       \
