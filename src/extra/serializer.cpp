@@ -366,3 +366,144 @@ void NRS::TrimString(std::string& str)
   str.erase(0, str.find_first_not_of(_trimCharacters.data()));
   str.erase(str.find_last_not_of(_trimCharacters.data()) + 1);
 }
+
+// =============================================================================
+
+std::string NRS::MakeOneliner(const std::string& stringObject)
+{
+  std::stringstream ss;
+
+  bool inQuotes = false;
+
+  for (auto& c : stringObject)
+  {
+    bool unwantedFound = std::find(_trimCharacters.begin(),
+                                   _trimCharacters.end(),
+                                   c) != _trimCharacters.end();
+
+    if (c == '\"')
+    {
+      inQuotes = !inQuotes;
+    }
+
+    if (inQuotes || !unwantedFound)
+    {
+      ss << c;
+    }
+  }
+
+  return ss.str();
+}
+
+// =============================================================================
+
+std::string NRS::ToStringObject()
+{
+  _currentIndent = 0;
+  std::stringstream ss;
+  WriteIntl2(*this, ss);
+  return ss.str();
+}
+
+// =============================================================================
+
+void NRS::WriteIntl2(const NRS& d, std::stringstream& ss)
+{
+  for (auto& item : d._children)
+  {
+    if (item.second._children.empty())
+    {
+      ss << item.first << ":";
+
+      size_t nItems = item.second.ValuesCount();
+      for (size_t i = 0; i < nItems; i++)
+      {
+        bool itemsLeft = ((nItems - i) > 1);
+
+        size_t x = item.second.GetString(i).find_first_of("/ ");
+        if (x != std::string::npos)
+        {
+          ss << "\"" << item.second.GetString(i) << "\""
+            << (itemsLeft ? "/" : "");
+        }
+        else
+        {
+          ss << item.second.GetString(i)
+            << (itemsLeft ? "/" : "");
+        }
+      }
+
+      ss << ",";
+    }
+    else
+    {
+      ss << item.first << ":{";
+
+      _currentIndent++;
+
+      WriteIntl2(item.second, ss);
+
+      ss << "},";
+    }
+  }
+
+  if (_currentIndent > 0)
+  {
+    _currentIndent--;
+  }
+}
+
+// =============================================================================
+
+void NRS::FromStringObject(const std::string& so)
+{
+  //
+  // Just in case.
+  //
+  Clear();
+
+  std::string oneliner = MakeOneliner(so);
+
+  std::string key;
+
+  std::stack<NRS*> tree;
+  tree.push(this);
+
+  bool inQuotes = false;
+
+  size_t indent = 0;
+
+  std::stringstream ss;
+  for (auto& c : oneliner)
+  {
+    switch(c)
+    {
+      case '\"':
+        inQuotes = !inQuotes;
+        break;
+
+      case ':':
+      {
+        key = ss.str();
+        ss.str(std::string());
+      }
+      break;
+
+      case '{':
+      {
+        indent++;
+      }
+      break;
+
+      case '}':
+      {
+        indent--;
+      }
+      break;
+
+      default:
+        ss << c;
+        break;
+    }
+  }
+}

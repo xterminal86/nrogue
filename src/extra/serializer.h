@@ -71,14 +71,20 @@ class NRS
     std::string Serialize();
     void Deserialize(const std::string& data);
 
+    std::string ToStringObject();
+    void FromStringObject(const std::string& so);
+
     bool Save(const std::string& fileName);
     bool Load(const std::string& fname);
 
   private:
     std::string IndentString(const std::string& str, size_t n);
+    std::string MakeOneliner(const std::string& stringObject);
+
     void TrimString(std::string& str);
 
     void WriteIntl(const NRS& d, std::stringstream& ss);
+    void WriteIntl2(const NRS& d, std::stringstream& ss);
 
     //
     // Contains value elements (after ':' symbol).

@@ -1,5 +1,96 @@
 #include "serializer.h"
 
+const std::string UnwantedCharacters = " .\t\n\r\f\v";
+
+std::string MakeOneliner(const std::string& pseudoJson)
+{
+  std::stringstream ss;
+
+  bool inQuotes = false;
+
+  for (auto& c : pseudoJson)
+  {
+    bool unwantedFound = std::find(UnwantedCharacters.begin(),
+                                   UnwantedCharacters.end(),
+                                   c) != UnwantedCharacters.end();
+
+    if (c == '\"')
+    {
+      inQuotes = !inQuotes;
+    }
+
+    if (inQuotes || !unwantedFound)
+    {
+      ss << c;
+    }
+  }
+
+  return ss.str();
+}
+
+// =============================================================================
+
+void PrettyPrintOneliner(const std::string& oneliner)
+{
+  std::vector<std::string> lines;
+
+  std::stringstream ss;
+
+  size_t indent = 0;
+
+  char prevChar = '\0';
+
+  for (auto& c : oneliner)
+  {
+    switch(c)
+    {
+      case ':':
+      {
+        ss << " " << c << " ";
+      }
+      break;
+
+      case '{':
+      {
+        ss << c;
+        std::string line = ss.str();
+        line.insert(0, indent, ' ');
+        lines.push_back(line);
+        ss.str(std::string());
+        indent += 2;
+      }
+      break;
+
+      case ',':
+      {
+        ss << c;
+        if (prevChar == '}')
+        {
+          indent -= 2;
+        }
+        std::string line = ss.str();
+        line.insert(0, indent, ' ');
+        lines.push_back(line);
+        ss.str(std::string());
+      }
+      break;
+
+      default:
+        ss << c;
+        break;
+    }
+
+    prevChar = c;
+  }
+
+  for (auto& line : lines)
+  {
+    printf("%s\n", line.data());
+  }
+}
+
+// =============================================================================
+
 void Dump(NRS& object)
 {
   const std::string decor(80, '=');
@@ -14,6 +105,7 @@ void Dump(NRS& object)
 
 int main(int argc, char* argv[])
 {
+  /*
   NRS sf;
 
   auto& obj = sf["object1"];
@@ -81,6 +173,72 @@ GameObject
   printf("%lu\n", ds["GameObject"]["inventory"].ValuesCount());
 
   //ds.Write("serialized-saved.txt");
+  */
+
+  /*
+  const std::string pseudoJson = R"(
+Actor1 : {
+  id        : 123,
+  name      : "John Doe",
+  inventory : item1/item2/item3,
+  inner : {
+    ik1 : iv1,
+    ik2 : iv2,
+  },
+},
+Actor2 : {
+  id     : 456,
+  name   : DummyName,
+  skills : {
+    sword     : 1,
+    armor     : 2,
+    athletics : 3,
+  },
+  magic : {
+    air   : 0,
+    earth : 1,
+    fire  : 3,
+    water : 0,
+  },
+},
+)";
+  */
+
+  const std::string pseudoJson = R"(
+root : {
+  key   : value,
+  list  : item1/item2/item3,
+  inner : {
+    ik1 : iv1,
+    il  : i1/i2/i3,
+  },
+},
+)";
+
+  std::string oneliner = MakeOneliner(pseudoJson);
+  printf("%s\n", oneliner.data());
+
+  PrettyPrintOneliner(oneliner);
+
+  NRS obj;
+  obj["root"]["key"].SetString("value");
+
+  obj["root"]["list"].SetString("item1", 0);
+  obj["root"]["list"].SetString("item2", 1);
+  obj["root"]["list"].SetString("item3", 2);
+
+  obj["root"]["inner"]["ik1"].SetString("iv1");
+
+  obj["root"]["inner"]["il"].SetString("i1", 0);
+  obj["root"]["inner"]["il"].SetString("i2", 1);
+  obj["root"]["inner"]["il"].SetString("i3", 2);
+
+  std::string t = obj.ToStringObject();
+  printf("%s\n", t.data());
+
+  obj.FromStringObject(pseudoJson);
+
+  //Dump(obj);
 
   return 0;
 }
