@@ -10,8 +10,8 @@ namespace StringObfuscator
 {
   //
   // Poorly chosen key will affect the "quality" of obfuscation, so to speak.
-  // In author's version he uses some kind of MurmurHash3 magic,
-  // but I'll just use some bullshit value.
+  // In author's version he uses some kind of MurmurHash3 magic, I don't know
+  // what that is so I'll just use some random bullshit value.
   //
   constexpr uint64_t Key = 0xCAFEBABEDEADBEEF;
 
@@ -25,6 +25,10 @@ namespace StringObfuscator
 
   // ---------------------------------------------------------------------------
 
+  //
+  // So called "non-type template parameter", N gets substituted directly as a
+  // compile time value of specified type (size_t in this case).
+  //
   template <size_t N>
   class Obfuscator
   {
@@ -82,7 +86,7 @@ namespace StringObfuscator
 #define HIDE(cStyleString)                                                              \
   []() -> StringObfuscator::Obfuscator<sizeof(cStyleString) / sizeof(cStyleString[0])>& \
   {                                                                                     \
-    constexpr auto n = sizeof(cStyleString) / sizeof(cStyleString[0]);                  \
+    constexpr size_t n = sizeof(cStyleString) / sizeof(cStyleString[0]);                  \
     static auto obfuscator = StringObfuscator::Obfuscator<n>(cStyleString);             \
     return obfuscator;                                                                  \
   }()
