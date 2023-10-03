@@ -204,6 +204,7 @@ Actor2 : {
 )";
   */
 
+  /*
   const std::string pseudoJson = R"(
 root : {
   key   : value,
@@ -219,6 +220,36 @@ root : {
   printf("%s\n", oneliner.data());
 
   PrettyPrintOneliner(oneliner);
+  */
+
+  //
+  // Root level items, simple object
+  //
+
+  /*
+  NRS obj;
+  obj["key1"].SetString("value1");
+  obj["key2"].SetString("value2");
+  obj["list"].SetString("item1", 0);
+  obj["list"].SetString("item2", 1);
+  obj["list"].SetString("item3", 2);
+  */
+
+  //
+  // Compound simple object
+  //
+
+  /*
+  NRS obj;
+  obj["root"]["inner"].SetString("value");
+  obj["root"]["list"].SetString("item1", 0);
+  obj["root"]["list"].SetString("item2", 1);
+  obj["root"]["list"].SetString("item2", 2);
+  */
+
+  //
+  // Compound complex object
+  //
 
   NRS obj;
   obj["root"]["key"].SetString("value");
@@ -231,12 +262,24 @@ root : {
 
   obj["root"]["inner"]["il"].SetString("i1", 0);
   obj["root"]["inner"]["il"].SetString("i2", 1);
-  obj["root"]["inner"]["il"].SetString("i3", 2);
+  obj["root"]["inner"]["il"].SetString("i,3", 2);
 
   std::string t = obj.ToStringObject();
-  printf("%s\n", t.data());
 
-  obj.FromStringObject(pseudoJson);
+  const std::string decor(80, '-');
+
+  printf("To:\n");
+  printf("%s\n", decor.data());
+  printf("%s\n", t.data());
+  printf("%s\n", decor.data());
+
+  obj.FromStringObject(t);
+  //obj.FromStringObject(pseudoJson);
+
+  printf("From:\n");
+  printf("%s\n", decor.data());
+  printf("%s\n", obj.ToPrettyString().data());
+  printf("%s\n", decor.data());
 
   //Dump(obj);
 

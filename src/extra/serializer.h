@@ -64,7 +64,7 @@ class NRS
 
     //
     // For easy access to inner elements, e.g. "object.inventory"
-    // instead of data["object"]["inventory"]
+    // instead of ["object"]["inventory"]
     //
     NRS& GetNode(const std::string& path);
 
@@ -76,6 +76,8 @@ class NRS
 
     bool Save(const std::string& fileName);
     bool Load(const std::string& fname);
+
+    std::string ToPrettyString();
 
   private:
     std::string IndentString(const std::string& str, size_t n);
@@ -123,7 +125,7 @@ class NRS
 
     const std::string _indentMark = "  ";
 
-    const std::string _trimCharacters = " .\t\n\r\f\v";
+    const std::string _trimCharacters = " \t\n\r\f\v";
 };
 
 #endif // SERIALIZER_H

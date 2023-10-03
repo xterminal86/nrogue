@@ -13,7 +13,7 @@ namespace StringObfuscator
   // In author's version he uses some kind of MurmurHash3 magic, I don't know
   // what that is so I'll just use some random bullshit value.
   //
-  constexpr uint64_t Key = 0xCAFEBABEDEADBEEF;
+  const uint64_t Key = 0xCAFEBABEDEADBEEF;
 
   constexpr void Cipher(char* data, size_t size, uint64_t key)
   {

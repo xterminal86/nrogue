@@ -309,7 +309,10 @@ void NRS::Deserialize(const std::string& data)
         {
           if (line[0] == '}')
           {
-            tree.pop();
+            if (!tree.empty())
+            {
+              tree.pop();
+            }
           }
           else
           {
@@ -420,7 +423,7 @@ void NRS::WriteIntl2(const NRS& d, std::stringstream& ss)
       {
         bool itemsLeft = ((nItems - i) > 1);
 
-        size_t x = item.second.GetString(i).find_first_of("/ ");
+        size_t x = item.second.GetString(i).find_first_of("/ ,");
         if (x != std::string::npos)
         {
           ss << "\"" << item.second.GetString(i) << "\""
@@ -462,16 +465,18 @@ void NRS::FromStringObject(const std::string& so)
   //
   Clear();
 
+  //
+  // And this one too.
+  //
   std::string oneliner = MakeOneliner(so);
 
   std::string key;
+  std::string value;
 
   std::stack<NRS*> tree;
   tree.push(this);
 
-  bool inQuotes = false;
-
-  size_t indent = 0;
+  bool inQuotesTop = false;
 
   std::stringstream ss;
   for (auto& c : oneliner)
@@ -479,7 +484,7 @@ void NRS::FromStringObject(const std::string& so)
     switch(c)
     {
       case '\"':
-        inQuotes = !inQuotes;
+        inQuotesTop = !inQuotesTop;
         break;
 
       case ':':
@@ -489,15 +494,85 @@ void NRS::FromStringObject(const std::string& so)
       }
       break;
 
+      case ',':
+      {
+        if (inQuotesTop)
+        {
+          ss << c;
+        }
+        else
+        {
+          value = ss.str();
+
+          printf("%s\n", value.data());
+
+          //
+          // Check if it's a list.
+          //
+
+          bool inQuotes = false;
+
+          std::string valueItem;
+
+          size_t valueIndex = 0;
+
+          for (auto& ch : value)
+          {
+            switch (ch)
+            {
+              case '\"':
+                inQuotes = !inQuotes;
+                break;
+
+              default:
+              {
+                if (inQuotes)
+                {
+                  valueItem.append(1, ch);
+                }
+                else
+                {
+                  if (ch == '/')
+                  {
+                    (*tree.top())[key].SetString(valueItem, valueIndex);
+                    valueIndex++;
+                    valueItem.clear();
+                  }
+                  else
+                  {
+                    valueItem.append(1, ch);
+                  }
+                }
+              }
+              break;
+            }
+          }
+
+          if (!valueItem.empty())
+          {
+            (*tree.top())[key].SetString(valueItem, valueIndex);
+          }
+
+          ss.str(std::string());
+        }
+      }
+      break;
+
       case '{':
       {
-        indent++;
+        tree.push(&(*tree.top())[key]);
+        ss.str(std::string());
       }
       break;
 
       case '}':
       {
-        indent--;
+        if (!tree.empty())
+        {
+          tree.pop();
+        }
+
+        ss.str(std::string());
       }
       break;
 
@@ -506,4 +581,73 @@ void NRS::FromStringObject(const std::string& so)
         break;
     }
   }
+}
+
+// =============================================================================
+
+std::string NRS::ToPrettyString()
+{
+  std::vector<std::string> lines;
+
+  std::stringstream ss;
+
+  size_t indent = 0;
+
+  char prevChar = '\0';
+
+  std::string oneliner = ToStringObject();
+
+  for (auto& c : oneliner)
+  {
+    switch(c)
+    {
+      case ':':
+      {
+        ss << " " << c << " ";
+      }
+      break;
+
+      case '{':
+      {
+        ss << c << "\n";
+        std::string line = ss.str();
+        line.insert(0, indent, ' ');
+        lines.push_back(line);
+        ss.str(std::string());
+        indent += 2;
+      }
+      break;
+
+      case ',':
+      {
+        ss << c << "\n";
+
+        if (prevChar == '}')
+        {
+          indent -= 2;
+        }
+
+        std::string line = ss.str();
+        line.insert(0, indent, ' ');
+        lines.push_back(line);
+        ss.str(std::string());
+      }
+      break;
+
+      default:
+        ss << c;
+        break;
+    }
+
+    prevChar = c;
+  }
+
+  ss.str(std::string());
+
+  for (auto& line : lines)
+  {
+    ss << line;
+  }
+
+  return ss.str();
 }
