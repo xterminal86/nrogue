@@ -78,6 +78,7 @@ class NRS
     bool Load(const std::string& fname);
 
     std::string ToPrettyString();
+    std::string DumpStructureToString();
 
   private:
     std::string IndentString(const std::string& str, size_t n);

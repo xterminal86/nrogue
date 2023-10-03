@@ -485,6 +485,7 @@ void NRS::FromStringObject(const std::string& so)
     {
       case '\"':
         inQuotesTop = !inQuotesTop;
+        ss << c;
         break;
 
       case ':':
@@ -504,7 +505,7 @@ void NRS::FromStringObject(const std::string& so)
         {
           value = ss.str();
 
-          printf("%s\n", value.data());
+          printf("[%s]\n", value.data());
 
           //
           // Check if it's a list.
@@ -648,6 +649,53 @@ std::string NRS::ToPrettyString()
   {
     ss << line;
   }
+
+  return ss.str();
+}
+
+// =============================================================================
+
+std::string NRS::DumpStructureToString()
+{
+  std::stringstream ss;
+
+  std::function<void(NRS*,std::stringstream&,size_t)>
+  DumpIntl = [&](NRS* node, std::stringstream& ss, size_t indent)
+  {
+    if (node->ChildrenCount() == 0)
+    {
+      const std::string indentation(indent, '.');
+
+      char buf[32];
+
+      for (auto& item : node->_content)
+      {
+        sprintf(buf, "0x%X", &item);
+        ss << indentation << item << " (" << buf << ")\n";
+      }
+    }
+    else
+    {
+      const std::string indentation(indent, '.');
+
+      char buf[32];
+
+      for (auto& kvp : node->_childIndexByName)
+      {
+        sprintf(buf, "0x%X", &(node->_children[kvp.second].second));
+        ss << indentation << kvp.first << " (" << buf << ")" << "\n";
+        DumpIntl(&(node->_children[kvp.second].second), ss, indent + 2);
+      }
+    }
+  };
+
+  char buf[32];
+  sprintf(buf, "0x%X", this);
+  ss << "--- start of [NRS] (" << buf << ") ---\n";
+
+  DumpIntl(this, ss, 0);
+
+  ss << "--- end of [NRS] (" << buf << ") ---\n";
 
   return ss.str();
 }
