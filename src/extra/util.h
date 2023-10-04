@@ -102,6 +102,8 @@ namespace Util
                                    unsigned int in_len);
   extern std::string Base64_Decode(const std::string& encoded_string);
 
+  extern std::string Encrypt(const std::string& str);
+
   extern std::vector<unsigned char> ConvertStringToBytes(const std::string& encodedStr);
 
   extern bool CheckLimits(const Position& posToCheck, const Position& limits);

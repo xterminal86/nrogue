@@ -371,6 +371,22 @@ namespace Util
 
   // ===========================================================================
 
+  std::string Encrypt(const std::string& str)
+  {
+    static const uint64_t key = 0x954754CBDAC8B352;
+
+    std::string res = str;
+
+    for (size_t i = 0; i < str.length(); i++)
+    {
+      res[i] ^= char(key >> ((i % 8) * 8));
+    }
+
+    return res;
+  }
+
+  // ===========================================================================
+
   std::vector<uint8_t> ConvertStringToBytes(const std::string& encodedStr)
   {
     std::vector<uint8_t> byteArray;

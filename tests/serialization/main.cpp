@@ -1,78 +1,92 @@
 #include "serializer.h"
 
-int main(int argc, char* argv[])
+#include "util.h"
+
+std::string GetBanner(const std::string& title)
 {
-  /*
-  NRS sf;
+  const int maxWidth = 80;
 
-  auto& obj = sf["object1"];
-  obj["name"].SetString("Dummy Actor");
-  obj["hitpoints"].SetUInt(40);
+  std::stringstream ss;
 
-  auto& skls = obj["skills"];
-  skls["sword"].SetUInt(1);
-  skls["armor"].SetUInt(2);
-  skls["athletics"].SetUInt(3);
+  std::string decor(maxWidth, '*');
+  int startPos = (maxWidth / 2) - (title.length() / 2);
 
-  auto& inv = obj["inventory"];
+  std::string titleLine(maxWidth, ' ');
+  std::string fillerLine(maxWidth, ' ');
 
-  inv.SetString("item1", 0);
-  inv.SetString("item2", 1);
-  inv.SetString("item3", 2);
-  inv.SetString("it,em", 3);
+  titleLine[0] = '*';
+  titleLine[maxWidth - 1] = '*';
 
-  sf["object2"]["name"].SetString("Object 2");
+  fillerLine[0] = '*';
+  fillerLine[maxWidth - 1] = '*';
 
-  //
-  // Prints 2: two root objects.
-  //
-  printf("%lu\n", sf.ChildrenCount());
-
-  std::string skill = sf.GetNode("object1.skills.sword").GetString();
-  printf("sword = %s\n", skill.data());
-
-  Dump(sf);
-
-  const std::string data = R"(
-GameObject
-{
-  name : Dummy Actor
-  hitpoints : 40
-  skills
+  for (size_t i = 0; i < title.length(); i++)
   {
-    sword : 1
-    armor : 2
-    athletics : 3
+    titleLine[startPos + i] = title[i];
   }
-  inventory : item1, item2, item3
+
+  ss << decor      << "\n"
+     << fillerLine << "\n"
+     << titleLine  << "\n"
+     << fillerLine << "\n"
+     << decor      << "\n";
+
+  return ss.str();
 }
+
+// =============================================================================
+
+void TestSimple()
+{
+  std::string banner = GetBanner(__func__);
+  printf("%s\n", banner.data());
+
+  const std::string decor(80, '-');
+
+  const std::string pseudoJson = R"(
+key1 : value1,
+key2 : value2,
+list : item1/item2/"it,e/m3",
 )";
 
-  NRS ds;
-  ds.Deserialize(data);
+  NRS dso;
+  dso.FromStringObject(pseudoJson);
 
-  Dump(ds);
+  NRS obj;
+  obj["key1"].SetString("value1");
+  obj["key2"].SetString("value2");
+  obj["list"].SetString("item1",   0);
+  obj["list"].SetString("item2",   1);
+  obj["list"].SetString("it,e/m3", 2);
 
-  ds.Load("serialized-object.txt");
+  std::string sos = obj.ToStringObject();
 
-  Dump(ds);
+  printf("%s\n", decor.data());
+  printf("%s\n", sos.data());
+  printf("%s\n", decor.data());
 
-  //
-  // Root object has only 1 element - GameObject
-  //
-  printf("children = %lu\n", ds.ChildrenCount());
+  std::string dsos = dso.ToStringObject();
+  printf("%s\n", decor.data());
+  printf("%s\n", dsos.data());
+  printf("%s\n", decor.data());
 
-  //
-  // Total 4 - name, hitpoints, skills, inventory
-  //
-  printf("children = %lu\n", ds["GameObject"].ChildrenCount());
+  printf("%s\n", (sos == dsos) ? "OK" : "FAIL!");
 
-  printf("%lu\n", ds["GameObject"]["inventory"].ValuesCount());
+  printf("%s\n", dso.DumpObjectStructureToString().data());
+  printf("%s\n", obj.DumpObjectStructureToString().data());
 
-  //ds.Write("serialized-saved.txt");
-  */
+  printf("\n");
+}
 
-  /*
+// =============================================================================
+
+void TestComplex()
+{
+  std::string banner = GetBanner(__func__);
+  printf("%s\n", banner.data());
+
+  const std::string decor(80, '-');
+
   const std::string pseudoJson = R"(
 Actor1 : {
   id        : 123,
@@ -99,92 +113,236 @@ Actor2 : {
   },
 },
 )";
-  */
 
-  /*
+  NRS dso;
+  dso.FromStringObject(pseudoJson);
+
+  NRS obj;
+
+  // Actor1
+  obj.GetNode("Actor1.id").SetString("123");
+  obj.GetNode("Actor1.name").SetString("John Doe");
+
+  obj.GetNode("Actor1.inventory").SetString("item1", 0);
+  obj.GetNode("Actor1.inventory").SetString("item2", 1);
+  obj.GetNode("Actor1.inventory").SetString("item3", 2);
+
+  obj.GetNode("Actor1.inner.ik1").SetString("iv1");
+  obj.GetNode("Actor1.inner.ik2").SetString("iv2");
+
+  // Actor2
+
+  obj.GetNode("Actor2.id").SetString("456");
+  obj.GetNode("Actor2.name").SetString("DummyName");
+
+  obj.GetNode("Actor2.skills.sword").SetString("1");
+  obj.GetNode("Actor2.skills.armor").SetString("2");
+  obj.GetNode("Actor2.skills.athletics").SetString("3");
+
+  obj.GetNode("Actor2.magic.air").SetString("0");
+  obj.GetNode("Actor2.magic.earth").SetString("1");
+  obj.GetNode("Actor2.magic.fire").SetString("3");
+  obj.GetNode("Actor2.magic.water").SetString("0");
+
+  std::string sos = obj.ToStringObject();
+
+  printf("%s\n", decor.data());
+  printf("%s\n", sos.data());
+  printf("%s\n", decor.data());
+
+  std::string dsos = dso.ToStringObject();
+  printf("%s\n", decor.data());
+  printf("%s\n", dsos.data());
+  printf("%s\n", decor.data());
+
+  printf("%s\n", (sos == dsos) ? "OK" : "FAIL!");
+
+  printf("%s\n", dso.DumpObjectStructureToString().data());
+  printf("%s\n", obj.DumpObjectStructureToString().data());
+
+  printf("\n");
+}
+
+// =============================================================================
+
+void WithFile()
+{
+  std::string banner = GetBanner(__func__);
+  printf("%s\n", banner.data());
+
   const std::string pseudoJson = R"(
-root : {
-  key   : value,
-  list  : item1/item2/item3,
+Actor1 : {
+  id        : 123,
+  name      : "John Doe",
+  inventory : item1/item2/item3,
   inner : {
     ik1 : iv1,
-    il  : i1/i2/i3,
+    ik2 : iv2,
+  },
+},
+Actor2 : {
+  id     : 456,
+  name   : DummyName,
+  skills : {
+    sword     : 1,
+    armor     : 2,
+    athletics : 3,
+  },
+  magic : {
+    air   : 0,
+    earth : 1,
+    fire  : 3,
+    water : 0,
   },
 },
 )";
 
-  std::string oneliner = MakeOneliner(pseudoJson);
-  printf("%s\n", oneliner.data());
+  const std::string fname = "serialized-to.txt";
 
-  PrettyPrintOneliner(oneliner);
-  */
+  NRS dso;
+  dso.FromStringObject(pseudoJson);
 
-  //
-  // Root level items, simple object
-  //
-
-  /*
-  NRS obj;
-  obj["key1"].SetString("value1");
-  obj["key2"].SetString("value2");
-  obj["list"].SetString("item1", 0);
-  obj["list"].SetString("item2", 1);
-  obj["list"].SetString("item3", 2);
-  */
-
-  //
-  // Compound simple object
-  //
-
-  /*
-  NRS obj;
-  obj["root"]["inner"].SetString("value");
-  obj["root"]["list"].SetString("item1", 0);
-  obj["root"]["list"].SetString("item2", 1);
-  obj["root"]["list"].SetString("item2", 2);
-  */
-
-  //
-  // Compound complex object
-  //
+  dso.Save(fname);
 
   NRS obj;
-  obj["root"]["key"].SetString("value");
+  obj.Load(fname);
 
-  obj["root"]["list"].SetString("item1", 0);
-  obj["root"]["list"].SetString("item2", 1);
-  obj["root"]["list"].SetString("item3", 2);
+  std::string ol1 = dso.ToStringObject();
+  std::string ol2 = obj.ToStringObject();
 
-  obj["root"]["inner"]["ik1"].SetString("iv1");
+  printf("%s\n", (ol1 == ol2) ? "OK" : "FAIL!");
 
-  obj["root"]["inner"]["il"].SetString("i1", 0);
-  obj["root"]["inner"]["il"].SetString("i2", 1);
-  obj["root"]["inner"]["il"].SetString("te,s/t", 2);
+  printf("\n");
+}
 
-  std::string dump = obj.DumpStructureToString();
+// =============================================================================
 
-  printf("%s\n", dump.data());
+void Encrypt()
+{
+  std::string banner = GetBanner(__func__);
+  printf("%s\n", banner.data());
 
-  std::string t = obj.ToStringObject();
+  const std::string pseudoJson = R"(
+Actor1 : {
+  id        : 123,
+  name      : "John Doe",
+  inventory : item1/item2/item3,
+  inner : {
+    ik1 : iv1,
+    ik2 : iv2,
+  },
+},
+Actor2 : {
+  id     : 456,
+  name   : DummyName,
+  skills : {
+    sword     : 1,
+    armor     : 2,
+    athletics : 3,
+  },
+  magic : {
+    air   : 0,
+    earth : 1,
+    fire  : 3,
+    water : 0,
+  },
+},
+)";
 
   const std::string decor(80, '-');
 
-  printf("To:\n");
-  printf("%s\n", decor.data());
-  printf("%s\n", obj.ToPrettyString().data());
-  printf("oneliner:\n");
-  printf("%s\n", t.data());
+  NRS dso;
+  dso.FromStringObject(pseudoJson);
+
+  std::string sos = dso.ToStringObject();
+
   printf("%s\n", decor.data());
 
-  obj.FromStringObject(t);
-  //obj.FromStringObject(pseudoJson);
+  size_t bytesCount = 0;
+  for (auto& c : sos)
+  {
+    printf(".0x%02X.", (uint8_t)c);
+    bytesCount++;
 
-  printf("From:\n");
-  printf("%s\n", decor.data());
-  printf("%s\n", obj.ToPrettyString().data());
+    if (bytesCount == 8)
+    {
+      printf(" ");
+    }
+    else if (bytesCount == 16)
+    {
+      printf("\n");
+      bytesCount = 0;
+    }
+  }
+
+  printf("\n");
+
   printf("%s\n", decor.data());
 
-  printf("%s\n", obj.DumpStructureToString().data());
+  std::string es = Util::Encrypt(sos);
+  std::string ds = Util::Encrypt(es);
+
+  printf("%s\n", decor.data());
+
+  bytesCount = 0;
+  for (auto& c : es)
+  {
+    printf(".0x%02X.", (uint8_t)c);
+
+    bytesCount++;
+
+    if (bytesCount == 8)
+    {
+      printf(" ");
+    }
+    else if (bytesCount == 16)
+    {
+      printf("\n");
+      bytesCount = 0;
+    }
+  }
+
+  printf("\n");
+
+  printf("%s\n", decor.data());
+
+  printf("%s\n", (sos == ds) ? "OK" : "FAIL!");
+
+  printf("\n");
+}
+
+// =============================================================================
+
+void NewConfig()
+{
+  std::string banner = GetBanner(__func__);
+  printf("%s\n", banner.data());
+
+  std::string cfg = R"(
+tileset : "resources/std-8x16-ck.bmp",
+tile_w : 8,
+tile_h : 16,
+scale : 2.0,
+fast_combat : 0,
+fast_monster_movement : 0,
+)";
+
+  NRS config;
+  config.FromStringObject(cfg);
+
+  printf("%s\n", config.ToPrettyString().data());
+  printf("%s\n", config.DumpObjectStructureToString().data());
+}
+
+// =============================================================================
+
+int main(int argc, char* argv[])
+{
+  TestSimple();
+  TestComplex();
+  //WithFile();
+  Encrypt();
+  NewConfig();
 
   return 0;
 }

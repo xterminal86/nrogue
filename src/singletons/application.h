@@ -10,6 +10,7 @@
 #include "singleton.h"
 #include "gamestate.h"
 #include "player.h"
+#include "serializer.h"
 
 struct ReplayData
 {
@@ -132,11 +133,12 @@ class Application : public Singleton<Application>
 
     std::unordered_map<GameStates, std::unique_ptr<GameState>> _gameStates;
 
-    std::unordered_map<std::string, std::string> _config;
+    NRS _loadedConfig;
 
-    void ParseConfig();
-    void SetConfig();
+    void LoadConfig();
+
     bool InitGraphics();
+
     void InitGameStates();
     void DrawAttackCursor(int x, int y,
                           GameObject* defender,
@@ -181,12 +183,12 @@ class Application : public Singleton<Application>
 
     void PrepareChars();
 
-    const std::string kConfigKeyFile                = "FILE";
-    const std::string kConfigKeyTileW               = "TILE_W";
-    const std::string kConfigKeyTileH               = "TILE_H";
-    const std::string kConfigKeyScale               = "SCALE";
-    const std::string kConfigKeyFastCombat          = "FAST_COMBAT";
-    const std::string kConfigKeyFastMonsterMovement = "FAST_MONSTER_MOVEMENT";
+    const std::string kConfigKeyTileset             = "tileset";
+    const std::string kConfigKeyTileW               = "tile_w";
+    const std::string kConfigKeyTileH               = "tile_h";
+    const std::string kConfigKeyScale               = "scale";
+    const std::string kConfigKeyFastCombat          = "fast_combat";
+    const std::string kConfigKeyFastMonsterMovement = "fast_monster_movement";
 
     // =========================================================================
 

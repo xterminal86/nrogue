@@ -19,20 +19,20 @@ Transparent color key is magenta (R:255, G:0, B:255).
 Scale can be a floating point number (e.g. 1.5), but it's not recommended,
 since non-integer scaling will result in distortions.
 You can resize the window though.
-The format should be as follows (no empty lines):
+The format is as follows (key-value pair separator ',' must always be present):
 
 ```
-FILE=resources/standard_8x16.bmp
-TILE_W=8
-TILE_H=16
-SCALE=2
-FAST_COMBAT=OFF
-FAST_MONSTER_MOVEMENT=OFF
+tileset               : "resources/std-8x16-ck.bmp",
+tile_w                : 8,
+tile_h                : 16,
+scale                 : 2,
+fast_combat           : 0,
+fast_monster_movement : 0,
 ```
 
 Two last lines are optional, they're off by default.
-FAST_COMBAT disables visual attack display and FAST_MONSTER_MOVEMENT doesn't force redraw after each visible monster's turn.
-Both of these options reduce gameplay lag, although with FAST_MONSTER_MOVEMENT=ON it may sometimes look as if
+`fast_combat` disables visual attack display and `fast_monster_movement` doesn't force redraw after each visible monster's turn.
+Both of these options reduce gameplay lag, although with `fast_monster_movement != 0` it may sometimes look as if
 enemy just spawned before player if said monster had much larger SPD than player, which allowed it to perform several
 turns that were not force redrawn.
 
@@ -47,5 +47,5 @@ turns that were not force redrawn.
   <TR>
     <TD><IMG src="resources/github-front/in-game-charsheet.png" title="charsheet"></TD>
     <TD><IMG src="resources/github-front/in-game-shop.png" title="shop"></TD>
-  </TR>      
+  </TR>
 </TABLE>

@@ -74,7 +74,7 @@ bool Printer::InitForSDL()
     if (!surf)
     {
       auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", SDL_GetError());
-      DebugLog("%s\n", str.data());
+      ConsoleLog("%s\n", str.data());
       LogPrint(str, true);
       return false;
     }
@@ -83,7 +83,7 @@ bool Printer::InitForSDL()
     _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
     if (_tileset == nullptr)
     {
-      DebugLog("SDL_CreateTextureFromSurface() fail: %s\n", SDL_GetError());
+      ConsoleLog("SDL_CreateTextureFromSurface() fail: %s\n", SDL_GetError());
       return false;
     }
 
@@ -112,7 +112,7 @@ bool Printer::InitForSDL()
 
   if (_frameBuffer == nullptr)
   {
-    DebugLog("SDL_CreateTexture() fail: %s\n", SDL_GetError());
+    ConsoleLog("SDL_CreateTexture() fail: %s\n", SDL_GetError());
     return false;
   }
 

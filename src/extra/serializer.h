@@ -21,27 +21,28 @@
 //
 // I modified the author's implementation a little bit to suit my personal code
 // style by doing .h/.cpp splitting and removing of static methods. Also I made
-// the format a little more JSON-like by replacing '=' with ':'.
+// the format a little more JSON-like. Thus it can be made into oneliner
+// and we can save space on whitespaces (lol) about 50% in the filesize.
 //
 // The storage format looks like this:
 //
-// object1
-// {
-//   name : Dummy Actor
-//   hitpoints : 40
-//   skills
-//   {
-//     sword : 1
-//     armor : 2
-//     athletics : 3
-//   }
-//   inventory : item1, item2, item3, "it,em"
-// }
+// -----------------------------------------------------------------------------
+// object1 : {
+//   name : "Dummy Actor",
+//   hitpoints : 40,
+//   skills : {
+//     sword : 1,
+//     armor : 2,
+//     athletics : 3,
+//   },
+//   inventory : item1/item2/item3/"it,e/m",
+// },
+// -----------------------------------------------------------------------------
 //
 // All items are key/value string pairs.
 // It is possible to have a list of items in a value by separating items
-// with ','. If list item itself contains ',' then the whole item will be
-// enclosed in quotes, as it is shown in the example above.
+// with '/'. If list item itself contains '/' and/or ',' then the whole item
+// will be enclosed in quotes, as it is shown in the example above.
 //
 class NRS
 {
@@ -60,16 +61,15 @@ class NRS
     size_t ValuesCount() const;
     size_t ChildrenCount() const;
 
+    bool Has(const std::string& nodeName);
+
     NRS& operator[](const std::string& nodeName);
 
     //
-    // For easy access to inner elements, e.g. "object.inventory"
+    // For more readable access to inner elements, e.g. "object.inventory"
     // instead of ["object"]["inventory"]
     //
     NRS& GetNode(const std::string& path);
-
-    std::string Serialize();
-    void Deserialize(const std::string& data);
 
     std::string ToStringObject();
     void FromStringObject(const std::string& so);
@@ -78,16 +78,12 @@ class NRS
     bool Load(const std::string& fname);
 
     std::string ToPrettyString();
-    std::string DumpStructureToString();
+    std::string DumpObjectStructureToString();
 
   private:
-    std::string IndentString(const std::string& str, size_t n);
     std::string MakeOneliner(const std::string& stringObject);
 
-    void TrimString(std::string& str);
-
     void WriteIntl(const NRS& d, std::stringstream& ss);
-    void WriteIntl2(const NRS& d, std::stringstream& ss);
 
     //
     // Contains value elements (after ':' symbol).
@@ -99,7 +95,7 @@ class NRS
     // instance, so we use vector. We can't use map since it's sorted by string
     // and we cannot use unordered_map since it doesn't guarantee order at all.
     // But we still need to access our nodes somehow. So the only way to do this
-    // is by using indices in a vector.
+    // while preserving serial order is by using indices in a vector.
     // And since we're using indices there's no danger of "losing" access due to
     // vector's relocation in memory because we don't rely on object addresses,
     // just on their serial order.
@@ -118,15 +114,7 @@ class NRS
 
     const std::string kEmptyString;
 
-    const char _listSeparatorCh = ',';
-    const std::string _listSeparatorMark  = { _listSeparatorCh, ' ' };
-
-    const char _kvSeparatorCh = ':';
-    const std::string _kvSeparatorMark = { ' ', _kvSeparatorCh, ' ' };
-
-    const std::string _indentMark = "  ";
-
-    const std::string _trimCharacters = " \t\n\r\f\v";
+    const std::string _unwantedCharacters = " \t\n\r\f\v";
 };
 
 #endif // SERIALIZER_H
