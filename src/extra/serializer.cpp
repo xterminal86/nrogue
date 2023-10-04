@@ -505,18 +505,15 @@ void NRS::FromStringObject(const std::string& so)
         {
           value = ss.str();
 
-          printf("[%s]\n", value.data());
-
-          //
-          // Check if it's a list.
-          //
-
           bool inQuotes = false;
 
           std::string valueItem;
 
           size_t valueIndex = 0;
 
+          //
+          // Check if it's a list.
+          //
           for (auto& ch : value)
           {
             switch (ch)
@@ -598,10 +595,16 @@ std::string NRS::ToPrettyString()
 
   std::string oneliner = ToStringObject();
 
+  bool inQuotes = false;
+
   for (auto& c : oneliner)
   {
     switch(c)
     {
+      case '\"':
+        inQuotes = !inQuotes;
+        break;
+
       case ':':
       {
         ss << " " << c << " ";
@@ -621,17 +624,24 @@ std::string NRS::ToPrettyString()
 
       case ',':
       {
-        ss << c << "\n";
-
-        if (prevChar == '}')
+        if (inQuotes)
         {
-          indent -= 2;
+          ss << c;
         }
+        else
+        {
+          ss << c << "\n";
 
-        std::string line = ss.str();
-        line.insert(0, indent, ' ');
-        lines.push_back(line);
-        ss.str(std::string());
+          if (prevChar == '}')
+          {
+            indent -= 2;
+          }
+
+          std::string line = ss.str();
+          line.insert(0, indent, ' ');
+          lines.push_back(line);
+          ss.str(std::string());
+        }
       }
       break;
 

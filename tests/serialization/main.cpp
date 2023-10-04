@@ -171,6 +171,8 @@ root : {
 
   printf("To:\n");
   printf("%s\n", decor.data());
+  printf("%s\n", obj.ToPrettyString().data());
+  printf("oneliner:\n");
   printf("%s\n", t.data());
   printf("%s\n", decor.data());
 
