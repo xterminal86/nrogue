@@ -888,7 +888,6 @@ bool Application::InitSDL()
   SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
 
   LoadConfig();
-  //  SetConfig();
 
   SDL_Rect rect = GetWindowSize(GameConfig.TileWidth,
                                 GameConfig.TileHeight);

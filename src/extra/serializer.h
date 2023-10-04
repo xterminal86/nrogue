@@ -22,7 +22,8 @@
 // I modified the author's implementation a little bit to suit my personal code
 // style by doing .h/.cpp splitting and removing of static methods. Also I made
 // the format a little more JSON-like. Thus it can be made into oneliner
-// and we can save space on whitespaces (lol) about 50% in the filesize.
+// and we can save space on whitespaces (lol) about 50% in the filesize
+// department.
 //
 // The storage format looks like this:
 //
