@@ -15,11 +15,11 @@ You can build either version, SDL2 or ncurses, check comments in main.cpp.
 
 When running an SDL2 executable, you can use custom font image and scale it by creating
 file called "config.txt" and placing it alongside with the game's binary.
-Transparent color key is magenta (R:255, G:0, B:255).
+Transparent color key is magenta `(R:255, G:0, B:255)`.
 Scale can be a floating point number (e.g. 1.5), but it's not recommended,
 since non-integer scaling will result in distortions.
 You can resize the window though.
-The format is as follows (key-value pair separator ',' must always be present):
+The format is as follows (key-value pair separator `','` must always be present):
 
 ```
 tileset               : "resources/std-8x16-ck.bmp",
