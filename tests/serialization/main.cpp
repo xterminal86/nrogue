@@ -2,6 +2,36 @@
 
 #include "util.h"
 
+std::string MakeOneliner(const std::string& stringObject)
+{
+  const std::string _unwantedCharacters = " \t\n\r\f\v";
+
+  std::stringstream ss;
+
+  bool inQuotes = false;
+
+  for (auto& c : stringObject)
+  {
+    bool unwantedFound = std::find(_unwantedCharacters.begin(),
+                                   _unwantedCharacters.end(),
+                                   c) != _unwantedCharacters.end();
+
+    if (c == '\"')
+    {
+      inQuotes = !inQuotes;
+    }
+
+    if (inQuotes || !unwantedFound)
+    {
+      ss << c;
+    }
+  }
+
+  return ss.str();
+}
+
+// =============================================================================
+
 std::string GetBanner(const std::string& title)
 {
   const int maxWidth = 80;
@@ -336,13 +366,78 @@ fast_monster_movement : 0,
 
 // =============================================================================
 
+void CheckSyntax()
+{
+  std::string good1 = R"(
+key  : "value 1",
+)";
+
+  std::string good2 = R"(
+key  : "value 1",
+list : item1/item2/item3,
+)";
+
+  std::string good3 = R"(
+key  : "value 1",
+obj : {
+  in1 : v1,
+  in2 : v2,
+},
+)";
+
+  std::string good4 = R"(
+key  : "value 1",
+key2 : value2,
+list : item1/item2/item3,
+)";
+
+  std::string good5 = R"(
+key  : "value 1",
+key2 : value2,
+list : item1/"it/e,m2"/item3,
+)";
+
+  std::string bad1 = R"(
+l{f : lol,
+)";
+
+  std::string bad2 = R"(
+lf : l"ol,
+)";
+
+  std::string bad3 = R"(
+lf : lol, {
+)";
+
+  std::vector<std::string> testCases =
+  {
+    good1, good2, good3, good4, good5, bad1, bad2, bad3
+  };
+
+  const std::string decor(80, '-');
+
+  for (auto& item : testCases)
+  {
+    NRS obj;
+    std::string oneliner = MakeOneliner(item);
+    printf("%s\n", decor.data());
+    printf("%s\n", oneliner.data());
+    bool ok = obj.CheckSyntax(item);
+    printf("%s\n", ok ? "OK" : "BAD");
+    printf("%s\n", decor.data());
+  }
+}
+
+// =============================================================================
+
 int main(int argc, char* argv[])
 {
-  TestSimple();
-  TestComplex();
+  //TestSimple();
+  //TestComplex();
   //WithFile();
-  Encrypt();
-  NewConfig();
+  //Encrypt();
+  //NewConfig();
+  CheckSyntax();
 
   return 0;
 }

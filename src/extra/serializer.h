@@ -9,6 +9,7 @@
 #include <sstream>
 #include <algorithm>
 #include <stack>
+#include <set>
 
 //
 // Based on savefile class courtesy of OneLoneCoder video:
@@ -75,6 +76,8 @@ class NRS
     std::string ToStringObject();
     void FromStringObject(const std::string& so);
 
+    bool CheckSyntax(const std::string& so);
+
     bool Save(const std::string& fileName);
     bool Load(const std::string& fname);
 
@@ -85,6 +88,8 @@ class NRS
     std::string MakeOneliner(const std::string& stringObject);
 
     void WriteIntl(const NRS& d, std::stringstream& ss);
+
+    void DriveStateMachine(const char currentChar);
 
     //
     // Contains value elements (after ':' symbol).
@@ -116,6 +121,25 @@ class NRS
     const std::string kEmptyString;
 
     const std::string _unwantedCharacters = " \t\n\r\f\v";
+
+    enum class ParsingState
+    {
+      UNDEFINED = -1,
+      READING_KEY,
+      KEY_DONE,
+      READING_VALUE,
+      VALUE_DONE,
+      OK,
+      ERROR
+    };
+
+    bool _parsingQuotesFlag = false;
+
+    size_t _parsingScopeCount = 0;
+
+    ParsingState _parsingState = ParsingState::UNDEFINED;
+
+    const std::set<char> _transitionsChars = { ':', '{', '}', ',', '"', '/' };
 };
 
 #endif // SERIALIZER_H
