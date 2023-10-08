@@ -377,8 +377,6 @@ bool NRS::CheckSyntax(const std::string& so)
 
   std::stringstream ss;
 
-  bool res = true;
-
   size_t index = 0;
 
   for (auto& c : oneliner)
@@ -387,25 +385,24 @@ bool NRS::CheckSyntax(const std::string& so)
 
     if (_parsingState == ParsingState::ERROR)
     {
-      res = false;
       break;
     }
 
     index++;
   }
 
-  return res;
+  return (_parsingState == ParsingState::VALUE_DONE);
 }
 
 // =============================================================================
 
 void NRS::DriveStateMachine(const char currentChar)
 {
-  //printf("%c\n", currentChar);
+  printf("%c\n", currentChar);
 
   auto IsValidChar = [this](const char c)
   {
-    return (c > 32 && c < 127 && _transitionsChars.count(c) == 0);
+    return (c > 32 && c < 127 && _transitionChars.count(c) == 0);
   };
 
   switch (_parsingState)
@@ -418,7 +415,7 @@ void NRS::DriveStateMachine(const char currentChar)
                     ? ParsingState::READING_KEY
                     : ParsingState::ERROR;
 
-      //printf("UNDEFINED -> READING_KEY\n");
+      printf("UNDEFINED -> READING_KEY\n");
     }
     break;
 
@@ -429,7 +426,7 @@ void NRS::DriveStateMachine(const char currentChar)
       if (currentChar == ':')
       {
         _parsingState = ParsingState::KEY_DONE;
-        //printf("READING_KEY -> KEY_DONE\n");
+        printf("READING_KEY -> KEY_DONE\n");
       }
       else
       {
@@ -447,22 +444,21 @@ void NRS::DriveStateMachine(const char currentChar)
     {
       if (currentChar == '\"')
       {
-        _parsingQuotesFlag = !_parsingQuotesFlag;
-        _parsingState = ParsingState::READING_VALUE;
-        //printf("KEY_DONE -> READING_VALUE (q)\n");
+        _parsingState = ParsingState::READING_VALUE_Q;
+        printf("KEY_DONE -> READING_VALUE_Q\n");
       }
       else if (currentChar == '{')
       {
         _parsingScopeCount++;
         _parsingState = ParsingState::READING_KEY;
-        //printf("KEY_DONE -> READING_KEY\n");
+        printf("KEY_DONE -> READING_KEY\n");
       }
       else
       {
         if (IsValidChar(currentChar))
         {
           _parsingState = ParsingState::READING_VALUE;
-          //printf("KEY_DONE -> READING_VALUE\n");
+          printf("KEY_DONE -> READING_VALUE\n");
         }
         else
         {
@@ -476,30 +472,26 @@ void NRS::DriveStateMachine(const char currentChar)
 
     case ParsingState::READING_VALUE:
     {
-      if (_parsingQuotesFlag)
+      switch (currentChar)
       {
-        if (currentChar == '\"')
-        {
-          _parsingQuotesFlag = !_parsingQuotesFlag;
-          //printf("READING_VALUE (q) -> READING_VALUE\n");
-        }
-      }
-      else
-      {
-        if (currentChar == '\"')
-        {
-          _parsingQuotesFlag = !_parsingQuotesFlag;
-          //printf("READING_VALUE -> READING_VALUE (q)\n");
-        }
-        else if (currentChar == ',')
-        {
+        case ',':
           _parsingState = ParsingState::VALUE_DONE;
-          //printf("READING_VALUE -> VALUE_DONE\n");
-        }
-        else if (currentChar != '/' && !IsValidChar(currentChar))
+          printf("READING_VALUE -> VALUE_DONE\n");
+          break;
+
+        case '/':
+          _parsingState = ParsingState::READING_LIST;
+          printf("READING_VALUE -> READING_LIST\n");
+          break;
+
+        default:
         {
-          _parsingState = ParsingState::ERROR;
+          if (!IsValidChar(currentChar))
+          {
+            _parsingState = ParsingState::ERROR;
+          }
         }
+        break;
       }
     }
     break;
@@ -508,25 +500,116 @@ void NRS::DriveStateMachine(const char currentChar)
 
     case ParsingState::VALUE_DONE:
     {
-      if (currentChar == '}')
+      switch (currentChar)
       {
-        if (_parsingScopeCount > 0)
+        case '}':
         {
-          _parsingScopeCount--;
-          _parsingState = ParsingState::READING_VALUE;
+          if (_parsingScopeCount > 0)
+          {
+            _parsingScopeCount--;
+            _parsingState = ParsingState::OBJECT_DONE;
+            printf("VALUE_DONE -> OBJECT_DONE\n");
+          }
+          else
+          {
+            _parsingState = ParsingState::ERROR;
+          }
         }
-        else
-        {
-          _parsingState = ParsingState::ERROR;
-        }
-      }
-      else
-      {
-        _parsingState = IsValidChar(currentChar)
-                      ? ParsingState::READING_KEY
-                      : ParsingState::ERROR;
+        break;
 
-        //printf("VALUE_DONE -> READING_KEY\n");
+        default:
+        {
+          if (IsValidChar(currentChar))
+          {
+            _parsingState = ParsingState::READING_KEY;
+            printf("VALUE_DONE -> READING_KEY\n");
+          }
+          else
+          {
+            _parsingState = ParsingState::ERROR;
+          }
+        }
+        break;
+      }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
+    case ParsingState::OBJECT_DONE:
+    {
+      switch (currentChar)
+      {
+        case ',':
+          _parsingState = ParsingState::VALUE_DONE;
+          printf("OBJECT_DONE -> VALUE_DONE\n");
+          break;
+
+        default:
+          _parsingState = ParsingState::ERROR;
+          break;
+      }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
+    case ParsingState::READING_VALUE_Q:
+    {
+      if (currentChar == '\"')
+      {
+        _parsingState = ParsingState::VALUE_Q_DONE;
+        printf("READING_VALUE_Q -> VALUE_Q_DONE\n");
+      }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
+    case ParsingState::VALUE_Q_DONE:
+    {
+      switch(currentChar)
+      {
+        case ',':
+          _parsingState = ParsingState::VALUE_DONE;
+          printf("VALUE_Q_DONE -> VALUE_DONE\n");
+          break;
+
+        case '/':
+          _parsingState = ParsingState::READING_LIST;
+          printf("VALUE_Q_DONE -> READING_LIST\n");
+          break;
+
+        default:
+          _parsingState = ParsingState::ERROR;
+      }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
+    case ParsingState::READING_LIST:
+    {
+      switch(currentChar)
+      {
+        case '\"':
+          _parsingState = ParsingState::READING_VALUE_Q;
+          printf("READING_LIST -> READING_VALUE_Q\n");
+          break;
+
+        default:
+        {
+          if (IsValidChar(currentChar))
+          {
+            _parsingState = ParsingState::READING_VALUE;
+            printf("READING_LIST -> READING_VALUE\n");
+          }
+          else
+          {
+            _parsingState = ParsingState::ERROR;
+          }
+        }
+        break;
       }
     }
     break;

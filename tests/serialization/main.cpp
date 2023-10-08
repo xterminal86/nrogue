@@ -375,6 +375,7 @@ key  : "value 1",
   std::string good2 = R"(
 key  : "value 1",
 list : item1/item2/item3,
+data : test,
 )";
 
   std::string good3 = R"(
@@ -397,6 +398,17 @@ key2 : value2,
 list : item1/"it/e,m2"/item3,
 )";
 
+  std::string good6 = R"(
+obj : {
+  innerObj : {
+    ik1 : iv1,
+    lst : item1/item2/"it,e/m 3",
+    ik2 : iv2,
+  },
+  inner2 : huj,
+},
+)";
+
   std::string bad1 = R"(
 l{f : lol,
 )";
@@ -416,6 +428,7 @@ lf : lol, {
 
   const std::string decor(80, '-');
 
+  /*
   for (auto& item : testCases)
   {
     NRS obj;
@@ -426,6 +439,11 @@ lf : lol, {
     printf("%s\n", ok ? "OK" : "BAD");
     printf("%s\n", decor.data());
   }
+  */
+
+  NRS obj;
+  bool ok = obj.CheckSyntax(good6);
+  printf("%s\n", ok ? "OK" : "BAD");
 }
 
 // =============================================================================

@@ -129,17 +129,18 @@ class NRS
       KEY_DONE,
       READING_VALUE,
       VALUE_DONE,
-      OK,
+      READING_VALUE_Q,
+      VALUE_Q_DONE,
+      READING_LIST,
+      OBJECT_DONE,
       ERROR
     };
-
-    bool _parsingQuotesFlag = false;
 
     size_t _parsingScopeCount = 0;
 
     ParsingState _parsingState = ParsingState::UNDEFINED;
 
-    const std::set<char> _transitionsChars = { ':', '{', '}', ',', '"', '/' };
+    const std::set<char> _transitionChars = { ':', '{', '}', ',', '"', '/' };
 };
 
 #endif // SERIALIZER_H
