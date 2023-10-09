@@ -89,7 +89,7 @@ class NRS
 
     void WriteIntl(const NRS& d, std::stringstream& ss);
 
-    void DriveStateMachine(const char currentChar);
+    void DriveStateMachine(const char currentChar, bool debug = false);
 
     //
     // Contains value elements (after ':' symbol).
@@ -132,6 +132,7 @@ class NRS
       READING_VALUE_Q,
       VALUE_Q_DONE,
       READING_LIST,
+      READING_OBJECT,
       OBJECT_DONE,
       ERROR
     };

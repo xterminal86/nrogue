@@ -368,37 +368,50 @@ fast_monster_movement : 0,
 
 void CheckSyntax()
 {
-  std::string good1 = R"(
+  std::vector<std::pair<std::string, bool>> testCases =
+  {
+    {
+    R"(
 key  : "value 1",
-)";
-
-  std::string good2 = R"(
+)",
+    true
+    },
+    {
+  R"(
 key  : "value 1",
 list : item1/item2/item3,
 data : test,
-)";
-
-  std::string good3 = R"(
+)",
+    true
+    },
+    {
+  R"(
 key  : "value 1",
 obj : {
   in1 : v1,
   in2 : v2,
 },
-)";
-
-  std::string good4 = R"(
+)",
+    true
+    },
+    {
+  R"(
 key  : "value 1",
 key2 : value2,
 list : item1/item2/item3,
-)";
-
-  std::string good5 = R"(
+)",
+    true
+    },
+    {
+  R"(
 key  : "value 1",
 key2 : value2,
 list : item1/"it/e,m2"/item3,
-)";
-
-  std::string good6 = R"(
+)",
+    true
+    },
+    {
+  R"(
 obj : {
   innerObj : {
     ik1 : iv1,
@@ -407,43 +420,180 @@ obj : {
   },
   inner2 : huj,
 },
-)";
-
-  std::string bad1 = R"(
+)",
+    true
+    },
+    {
+  R"(
+obj : {
+  innerObj : {
+    ik1 : iv1,
+    lst : item1/item2/"it,e/m 3",
+    inner3 : {
+      someKey : someValue,
+    },
+    inner4 : {
+      inKey : inValue,
+      inLst : i1/i2,
+    },
+  },
+},
+)",
+    true
+    },
+    {
+  R"(
+key  : "value 1",
+list : item1/item2/item3,
+obj : {
+  k1 : v1,
+  lst : i1/i2,
+  io : {
+    k : v,
+    l : i1/i2/i3,
+  },
+  item : data,
+},
+)",
+    true
+    },
+  // ---------------------------------------------------------------------------
+    {
+  R"(
 l{f : lol,
-)";
-
-  std::string bad2 = R"(
+)",
+    false
+    },
+    {
+  R"(
 lf : l"ol,
-)";
-
-  std::string bad3 = R"(
+)",
+    false
+    },
+    {
+  R"(
 lf : lol, {
-)";
-
-  std::vector<std::string> testCases =
+)",
+    false
+    },
+    {
+  R"(
+root : {
+  key : "test
+},
+)",
+    false
+    },
+    {
+  R"(
+root : {
+  key : "test"
+},
+)",
+    false
+    },
+    {
+  R"(
+root : {{
+  key : "test",
+},
+)",
+    false
+    },
+    {
+  R"(
+root : {
+  key : value,
+},
+b
+)",
+    false
+    },
+    {
+  R"(
+root : {
+  key : value,
+  lst : one//
+},
+)",
+    false
+    },
+    {
+  R"(
+root : {
+  key : value,
+  lst : one/two/three
+},
+)",
+    false
+    },
+    {
+  R"(
+root : {
+  key : value,
+  lst : one/two/three,
+}
+)",
+    false
+    },
+    {
+  R"(
+root :{:
+)",
+    false
+    },
+    {
+  R"(
+root : {
+  : value,
+},
+)",
+    false
+    },
+    {
+  R"(
+root : {
+  key : value,
   {
-    good1, good2, good3, good4, good5, bad1, bad2, bad3
-  };
+    a : b,
+  },
+},
+)",
+    false
+    },
+    {
+  R"(
+root : {
+  key : value,
+  : {
+    a : b,
+  },
+},
+)",
+    false
+    },
+};
 
   const std::string decor(80, '-');
 
-  /*
-  for (auto& item : testCases)
+  for (auto& [str, good] : testCases)
   {
     NRS obj;
-    std::string oneliner = MakeOneliner(item);
+    std::string oneliner = MakeOneliner(str);
     printf("%s\n", decor.data());
     printf("%s\n", oneliner.data());
-    bool ok = obj.CheckSyntax(item);
-    printf("%s\n", ok ? "OK" : "BAD");
+    printf("is good? : %s\n", good ? "yes" : "no");
+    bool ok = obj.CheckSyntax(str);
+
+    if (ok)
+    {
+      obj.FromStringObject(str);
+      printf("%s\n", obj.DumpObjectStructureToString().data());
+    }
+
+    printf("%s\n", (ok == good) ? "PASSED" : "FAILED!");
     printf("%s\n", decor.data());
   }
-  */
-
-  NRS obj;
-  bool ok = obj.CheckSyntax(good6);
-  printf("%s\n", ok ? "OK" : "BAD");
 }
 
 // =============================================================================
