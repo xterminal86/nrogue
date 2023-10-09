@@ -131,9 +131,9 @@ bool NRS::Save(const std::string& fileName)
 
 // =============================================================================
 
-bool NRS::Load(const std::string& fname)
+NRS::LoadResult NRS::Load(const std::string& fname)
 {
-  bool ok = false;
+  LoadResult res = LoadResult::OK;
 
   std::ifstream file(fname);
   if (file.is_open())
@@ -151,11 +151,18 @@ bool NRS::Load(const std::string& fname)
     if (CheckSyntax(ss.str()))
     {
       FromStringObject(ss.str());
-      ok = true;
+    }
+    else
+    {
+      res = LoadResult::INVALID_FORMAT;
     }
   }
+  else
+  {
+    res = LoadResult::ERROR;
+  }
 
-  return ok;
+  return res;
 }
 
 // =============================================================================

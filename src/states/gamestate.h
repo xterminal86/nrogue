@@ -30,14 +30,13 @@ using Ns = std::chrono::nanoseconds;
     Util::Sleep(0);                       \
   }
 #else
-#define DONT_SHOW_REPLAY()                                            \
+#define DONT_SHOW_REPLAY()                                              \
   if (Application::Instance().ReplayMode)                               \
   {                                                                     \
     if (Application::Instance().CurrentStateIs(GameStates::MAIN_STATE)) \
     {                                                                   \
       Application::Instance().PlayerInstance.CheckVisibility();         \
     }                                                                   \
-                                                                        \
     return;                                                             \
   }
 #endif

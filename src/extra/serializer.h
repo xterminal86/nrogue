@@ -79,7 +79,15 @@ class NRS
     bool CheckSyntax(const std::string& so);
 
     bool Save(const std::string& fileName);
-    bool Load(const std::string& fname);
+
+    enum class LoadResult
+    {
+      OK = 0,
+      INVALID_FORMAT,
+      ERROR
+    };
+
+    LoadResult Load(const std::string& fname);
 
     std::string ToPrettyString();
     std::string DumpObjectStructureToString();

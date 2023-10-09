@@ -12,12 +12,11 @@
     {                                                                       \
       Application::Instance().ReplayMode = false;                           \
       Application::Instance().ChangeState(GameStates::EXIT_GAME);           \
-      ConsoleLog("Replay is corrupted!");                                  \
+      ConsoleLog("Replay is corrupted!");                                   \
     }                                                                       \
     else                                                                    \
     {                                                                       \
       int savedActionToProcess = Application::Instance().GetSavedAction();  \
-                                                                            \
       if (savedActionToProcess != -1)                                       \
       {                                                                     \
         return savedActionToProcess;                                        \

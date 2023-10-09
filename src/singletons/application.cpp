@@ -1033,39 +1033,42 @@ SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
 
 void Application::LoadConfig()
 {
-  //
-  // If config couldn't be opened, assume default values for embedded tileset.
-  //
-  if (!_loadedConfig.Load("config.txt"))
-  {
-    ConsoleLog("couldn't load config - assuming default values");
+  GameConfig.TileWidth  = 8;
+  GameConfig.TileHeight = 16;
 
-    GameConfig.TileWidth  = 8;
-    GameConfig.TileHeight = 16;
-  }
-  else
+  NRS::LoadResult res = _loadedConfig.Load("config.txt");
+  switch (res)
   {
-    //
-    // If tileset file can't be opened,
-    // fallback to default '8x16' scaled window size.
-    // Scale can still be read.
-    //
-    std::ifstream tileset(_loadedConfig[kConfigKeyTileset].GetString());
-    if (!tileset.is_open())
-    {
-      GameConfig.TileWidth = 8;
-      GameConfig.TileHeight = 16;
-    }
-    else
-    {
-      GameConfig.TilesetFilename = _loadedConfig[kConfigKeyTileset].GetString();
-    }
+    case NRS::LoadResult::INVALID_FORMAT:
+      ConsoleLog("Config format is invalid - check syntax! Will assume default values for now.");
+      break;
 
-    GameConfig.TileWidth           = std::stoi(_loadedConfig[kConfigKeyTileW].GetString());
-    GameConfig.TileHeight          = std::stoi(_loadedConfig[kConfigKeyTileH].GetString());
-    GameConfig.ScaleFactor         = std::stod(_loadedConfig[kConfigKeyScale].GetString());
-    GameConfig.FastCombat          = (_loadedConfig[kConfigKeyFastCombat].GetString() != "0");
-    GameConfig.FastMonsterMovement = (_loadedConfig[kConfigKeyFastMonsterMovement].GetString() != "0");
+    case NRS::LoadResult::ERROR:
+      ConsoleLog("Couldn't load config - check if file exists! Will assume default values for now.");
+      break;
+
+    default:
+    {
+      DebugLog("Config loaded:\n%s\n", _loadedConfig.ToPrettyString().data());
+
+      //
+      // If tileset file can't be opened,
+      // fallback to default '8x16' scaled window size.
+      // Scale can still be read.
+      //
+      std::ifstream tileset(_loadedConfig[kConfigKeyTileset].GetString());
+      if (tileset.is_open())
+      {
+        GameConfig.TilesetFilename = _loadedConfig[kConfigKeyTileset].GetString();
+      }
+
+      GameConfig.TileWidth           = std::stoi(_loadedConfig[kConfigKeyTileW].GetString());
+      GameConfig.TileHeight          = std::stoi(_loadedConfig[kConfigKeyTileH].GetString());
+      GameConfig.ScaleFactor         = std::stod(_loadedConfig[kConfigKeyScale].GetString());
+      GameConfig.FastCombat          = (_loadedConfig[kConfigKeyFastCombat].GetString() != "0");
+      GameConfig.FastMonsterMovement = (_loadedConfig[kConfigKeyFastMonsterMovement].GetString() != "0");
+    }
+    break;
   }
 }
 

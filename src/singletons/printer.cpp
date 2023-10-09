@@ -55,7 +55,8 @@ bool Printer::InitForSDL()
   }
   else
   {
-    auto str = Util::StringFormat("***** Could not load tileset: %s! *****\nFalling back to embedded.\n", SDL_GetError());
+    auto str = Util::StringFormat("***** Could not load tileset: %s! *****\n"
+                                  "Falling back to embedded.\n", SDL_GetError());
     ConsoleLog("%s\n", str.data());
     LogPrint(str, true);
 
