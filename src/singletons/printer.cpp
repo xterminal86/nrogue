@@ -44,7 +44,7 @@ bool Printer::InitForSDL()
     _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
     if (_tileset == nullptr)
     {
-      DebugLog("SDL_CreateTextureFromSurface() fail: %s\n", SDL_GetError());
+      ConsoleLog("SDL_CreateTextureFromSurface() fail: %s\n", SDL_GetError());
       return false;
     }
 
@@ -56,7 +56,7 @@ bool Printer::InitForSDL()
   else
   {
     auto str = Util::StringFormat("***** Could not load tileset: %s! *****\nFalling back to embedded.\n", SDL_GetError());
-    DebugLog("%s\n", str.data());
+    ConsoleLog("%s\n", str.data());
     LogPrint(str, true);
 
     _tileWidth = 8;

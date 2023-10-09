@@ -148,9 +148,11 @@ bool NRS::Load(const std::string& fname)
 
     file.close();
 
-    FromStringObject(ss.str());
-
-    ok = true;
+    if (CheckSyntax(ss.str()))
+    {
+      FromStringObject(ss.str());
+      ok = true;
+    }
   }
 
   return ok;

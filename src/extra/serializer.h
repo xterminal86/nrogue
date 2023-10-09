@@ -116,6 +116,9 @@ class NRS
     //
     std::unordered_map<std::string, size_t> _childIndexByName;
 
+    //
+    // For writing to file.
+    //
     size_t _currentIndent = 0;
 
     const std::string kEmptyString;
@@ -137,6 +140,9 @@ class NRS
       ERROR
     };
 
+    //
+    // For checking syntax.
+    //
     size_t _parsingScopeCount = 0;
 
     ParsingState _parsingState = ParsingState::UNDEFINED;

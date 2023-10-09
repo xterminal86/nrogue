@@ -28,6 +28,8 @@ void MonstersInc::InitSpecific()
 {
 }
 
+// =============================================================================
+
 //
 // TODO: determine proper difficulty scaling for monsters
 //

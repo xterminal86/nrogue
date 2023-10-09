@@ -866,7 +866,7 @@ void Application::SetIcon()
   {
     auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", SDL_GetError());
     LogPrint(str);
-    DebugLog("%s\n", str.data());
+    ConsoleLog("%s\n", str.data());
     return;
   }
 
@@ -881,7 +881,7 @@ bool Application::InitSDL()
 {
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
   {
-    DebugLog("SDL_Init Error: %s\n", SDL_GetError());
+    ConsoleLog("SDL_Init Error: %s\n", SDL_GetError());
     return false;
   }
 
@@ -903,7 +903,7 @@ bool Application::InitSDL()
 
   if (Window == nullptr)
   {
-    DebugLog("SDL_CreateWindow fail: %s", SDL_GetError());
+    ConsoleLog("SDL_CreateWindow fail: %s", SDL_GetError());
     return false;
   }
 
@@ -927,13 +927,13 @@ bool Application::InitSDL()
   Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
   if (Renderer == nullptr)
   {
-    DebugLog("SDL_CreateRenderer() fail: %s", SDL_GetError());
-    DebugLog("Trying software mode...");
+    ConsoleLog("SDL_CreateRenderer() fail: %s", SDL_GetError());
+    ConsoleLog("Trying software mode...");
 
     Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_SOFTWARE | SDL_RENDERER_TARGETTEXTURE);
     if (Renderer == nullptr)
     {
-      DebugLog("SDL_CreateRenderer() fail: %s", SDL_GetError());
+      ConsoleLog("SDL_CreateRenderer() fail: %s", SDL_GetError());
       return false;
     }
   }
@@ -946,7 +946,7 @@ bool Application::InitSDL()
 
   if (!Printer::Instance().IsReady())
   {
-    DebugLog("Printer failed to initialize!");
+    ConsoleLog("Printer failed to initialize!");
     return false;
   }
 
@@ -1038,6 +1038,8 @@ void Application::LoadConfig()
   //
   if (!_loadedConfig.Load("config.txt"))
   {
+    ConsoleLog("couldn't load config - assuming default values");
+
     GameConfig.TileWidth  = 8;
     GameConfig.TileHeight = 16;
   }
