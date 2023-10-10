@@ -145,6 +145,7 @@ class NRS
       READING_LIST,
       READING_OBJECT,
       OBJECT_DONE,
+      OK,
       ERROR
     };
 

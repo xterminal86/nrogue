@@ -400,7 +400,17 @@ bool NRS::CheckSyntax(const std::string& so)
     index++;
   }
 
-  return (_parsingState == ParsingState::VALUE_DONE);
+  //
+  // To handle negative case:
+  //
+  // obj : { key : value,
+  //
+  bool success = (_parsingState == ParsingState::VALUE_DONE
+               && _parsingScopeCount == 0);
+
+  _parsingState = success ? ParsingState::OK : ParsingState::ERROR;
+
+  return (_parsingState == ParsingState::OK);
 }
 
 // =============================================================================

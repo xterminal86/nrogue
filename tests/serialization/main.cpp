@@ -572,6 +572,13 @@ root : {
 )",
     false
     },
+    {
+  R"(
+root : {
+  key : value,
+)",
+    false
+    },
 };
 
   const std::string decor(80, '-');
