@@ -19,7 +19,7 @@ Transparent color key is magenta `(R:255, G:0, B:255)`.
 Scale can be a floating point number (e.g. 1.5), but it's not recommended,
 since non-integer scaling will result in distortions.
 You can resize the window though.
-The format is as follows (key-value pair separator `','` must always be present):
+The format is as follows (key-value pair separator `,` must always be present):
 
 ```
 tileset               : "resources/std-8x16-ck.bmp",
