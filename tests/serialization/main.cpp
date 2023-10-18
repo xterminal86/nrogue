@@ -66,10 +66,17 @@ std::string GetBanner(const std::string& title)
 
 // =============================================================================
 
+#define PRINT_BANNER()                        \
+  do {                                        \
+    std::string banner = GetBanner(__func__); \
+    printf("%s\n", banner.data());            \
+  } while (false)
+
+// =============================================================================
+
 void TestSimple()
 {
-  std::string banner = GetBanner(__func__);
-  printf("%s\n", banner.data());
+  PRINT_BANNER();
 
   const std::string decor(80, '-');
 
@@ -112,8 +119,7 @@ list : item1/item2/"it,e/m3",
 
 void TestComplex()
 {
-  std::string banner = GetBanner(__func__);
-  printf("%s\n", banner.data());
+  PRINT_BANNER();
 
   const std::string decor(80, '-');
 
@@ -197,8 +203,7 @@ Actor2 : {
 
 void WithFile()
 {
-  std::string banner = GetBanner(__func__);
-  printf("%s\n", banner.data());
+  PRINT_BANNER();
 
   const std::string pseudoJson = R"(
 Actor1 : {
@@ -249,8 +254,7 @@ Actor2 : {
 
 void Encrypt()
 {
-  std::string banner = GetBanner(__func__);
-  printf("%s\n", banner.data());
+  PRINT_BANNER();
 
   const std::string pseudoJson = R"(
 Actor1 : {
@@ -345,8 +349,7 @@ Actor2 : {
 
 void NewConfig()
 {
-  std::string banner = GetBanner(__func__);
-  printf("%s\n", banner.data());
+  PRINT_BANNER();
 
   std::string cfg = R"(
 tileset : "resources/std-8x16-ck.bmp",
@@ -368,8 +371,11 @@ fast_monster_movement : 0,
 
 void CheckSyntax()
 {
+  PRINT_BANNER();
+
   std::vector<std::pair<std::string, bool>> testCases =
   {
+    // ------------------------------- gud -------------------------------------
     {
     R"(
 key  : "value 1",
@@ -420,6 +426,20 @@ obj : {
   },
   inner2 : huj,
 },
+outer : val,
+)",
+    true
+    },
+    {
+  R"(
+obj : {
+  innerObj : {
+    ik1 : iv1,
+    lst : item1/item2/"it,e/m 3",
+    ik2 : iv2,
+  },
+  inner2 : huj,
+},
 )",
     true
     },
@@ -457,7 +477,7 @@ obj : {
 )",
     true
     },
-  // ---------------------------------------------------------------------------
+    // ------------------------------- bad -------------------------------------
     {
   R"(
 l{f : lol,
@@ -583,6 +603,10 @@ root : {
 
   const std::string decor(80, '-');
 
+  std::vector<int> failedTests;
+
+  int testNum = 0;
+
   for (auto& [str, good] : testCases)
   {
     NRS obj;
@@ -598,9 +622,69 @@ root : {
       printf("%s\n", obj.DumpObjectStructureToString().data());
     }
 
+    if (ok != good)
+    {
+      failedTests.push_back(testNum);
+    }
+
     printf("%s\n", (ok == good) ? "PASSED" : "FAILED!");
     printf("%s\n", decor.data());
+
+    testNum++;
   }
+
+  if (!failedTests.empty())
+  {
+    printf("Some tests failed:\n");
+
+    for (auto& i : failedTests)
+    {
+      printf("no. %d\n", i);
+    }
+  }
+  else
+  {
+    printf("All tests passed!\n\n");
+  }
+}
+
+// =============================================================================
+
+void SaveGameTest()
+{
+  PRINT_BANNER();
+
+  std::string data = R"(
+map : {
+  0  : "#####################",
+  1  : "#...................#",
+  2  : "#...................#",
+  3  : "#...................#",
+  4  : "#...................#",
+  5  : "#...................#",
+  6  : "#...................#",
+  7  : "#...................#",
+  8  : "#...................#",
+  9  : "#...................#",
+  10 : "#...................#",
+  11 : "#...................#",
+  12 : "#...................#",
+  13 : "#...................#",
+  14 : "#...................#",
+  15 : "#...................#",
+  16 : "#...................#",
+  17 : "#...................#",
+  18 : "#...................#",
+  19 : "#...................#",
+  20 : "#...................#",
+  21 : "#####################",
+},
+)";
+
+  NRS map;
+  map.FromStringObject(data);
+  std::string dump = map.DumpObjectStructureToString();
+  printf("%s\n", dump.data());
 }
 
 // =============================================================================
@@ -612,7 +696,8 @@ int main(int argc, char* argv[])
   //WithFile();
   //Encrypt();
   //NewConfig();
-  CheckSyntax();
+  //CheckSyntax();
+  SaveGameTest();
 
   return 0;
 }

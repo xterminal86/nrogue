@@ -845,11 +845,11 @@ std::string NRS::DumpObjectStructureToString()
 
       char buf[32];
 
-      for (auto& kvp : node->_childIndexByName)
+      for (auto& p : node->_children)
       {
-        sprintf(buf, "0x%X", &(node->_children[kvp.second].second));
-        ss << indentation << "'" << kvp.first << "'" << " (" << buf << ")" << "\n";
-        DumpIntl(&(node->_children[kvp.second].second), ss, indent + 2);
+        sprintf(buf, "0x%X", &p.second);
+        ss << indentation << "'" << p.first << "'" << " (" << buf << ")" << "\n";
+        DumpIntl(&p.second, ss, indent + 2);
       }
     }
   };
