@@ -685,6 +685,7 @@ map : {
   map.FromStringObject(data);
   std::string dump = map.DumpObjectStructureToString();
   printf("%s\n", dump.data());
+  printf("%s\n", map.ToStringObject().data());
 }
 
 // =============================================================================
