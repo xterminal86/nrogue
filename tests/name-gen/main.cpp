@@ -5,18 +5,45 @@ int main(int argc, char* argv[])
 {
   if (argc < 2)
   {
-    printf("Usage: %s <ALLOW_DOUBLE_VOWELS>\n", argv[0]);
+    printf("Usage: %s <N> [<ALLOW_DOUBLE_VOWELS>]\n", argv[0]);
+    printf("<N>                   - number of \"names\" to generate\n");
+    printf("<ALLOW_DOUBLE_VOWELS> - any value\n");
     return 0;
   }
 
   RNG::Instance().Init();
 
-  bool allowDoubleVowels = argv[1];
+  //RNG::Instance().SetSeed(1698773628612500435);
 
-  for (size_t i = 0; i < 20; i++)
+  printf("Seed = %lu\n", RNG::Instance().Seed);
+
+  bool allowDoubleVowels = (argc > 2);
+
+  size_t namesCount = std::stoull(argv[1]);
+
+  if (namesCount == 0)
+  {
+    printf("<N> = 0\n");
+    return 0;
+  }
+
+  size_t namesCountTmp = namesCount;
+  size_t digits = 0;
+
+  while (namesCountTmp != 0)
+  {
+    namesCountTmp /= 10;
+    digits++;
+  }
+
+  std::stringstream ss;
+
+  ss << "%" << digits << "lu. %s\n";
+
+  for (size_t i = 0; i < namesCount; i++)
   {
     std::string name = Util::GenerateName(allowDoubleVowels, false);
-    printf("%s\n", name.data());
+    printf(ss.str().data(), i + 1, name.data());
   }
 
   return 0;
