@@ -16,6 +16,7 @@ void GameOverState::Prepare()
   _playerRef->SetDestroyed();
 
   Printer::Instance().AddMessage("You are dead. Not big surprise.");
+  Printer::Instance().AddMessage("Save replay? (y/n)");
 
   Application::Instance().WriteObituary();
 }
@@ -29,6 +30,13 @@ void GameOverState::HandleInput()
   switch (_keyPressed)
   {
     case VK_CANCEL:
+    case 'n':
+    case 'N':
+      Application::Instance().ChangeState(GameStates::EXIT_GAME);
+      break;
+
+    case 'y':
+      Application::Instance().SaveReplay(true);
       Application::Instance().ChangeState(GameStates::EXIT_GAME);
       break;
 

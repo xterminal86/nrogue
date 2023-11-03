@@ -44,8 +44,8 @@ class Application : public Singleton<Application>
 
     void WriteObituary(bool wasKilled = true);
 
-    void SaveGame(bool binary = false);
-    void LoadGame(bool binary = false);
+    void SaveReplay(bool binary = false);
+    void LoadReplay(const std::string& replayFilename, bool binary = false);
 
     static uint64_t GetNewGlobalId();
 
@@ -148,11 +148,11 @@ class Application : public Singleton<Application>
 
     size_t SavePossessions(std::stringstream& ss);
 
-    void SaveBinary();
-    void SaveText();
+    void SaveReplayBinary();
+    void SaveReplayText();
 
-    void LoadBinary();
-    void LoadText();
+    void LoadReplayBinary();
+    void LoadReplayText();
 
 #ifdef USE_SDL
     std::pair<int, int> _defaultWindowSize;
@@ -182,6 +182,8 @@ class Application : public Singleton<Application>
     std::list<int> _savedActionsToProcess;
 
     void PrepareChars();
+
+    std::string _replayFilename;
 
     const std::string kConfigKeyTileset             = "tileset";
     const std::string kConfigKeyTileW               = "tile_w";

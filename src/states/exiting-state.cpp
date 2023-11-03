@@ -20,14 +20,34 @@ void ExitingState::HandleInput()
     case VK_CANCEL:
     case 'n':
     case 'N':
-      Printer::Instance().ShowLastMessage = false;
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
-      break;
+    {
+      if (!_isExiting)
+      {
+        Printer::Instance().ShowLastMessage = false;
+        Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      }
+      else
+      {
+        Application::Instance().WriteObituary(false);
+        Application::Instance().ChangeState(GameStates::EXIT_GAME);
+      }
+    }
+    break;
 
     case 'y':
-      Application::Instance().WriteObituary(false);
-      Application::Instance().ChangeState(GameStates::EXIT_GAME);
-      break;
+    {
+      if (!_isExiting)
+      {
+        _isExiting = true;
+      }
+      else
+      {
+        Application::Instance().SaveReplay(true);
+        Application::Instance().WriteObituary(false);
+        Application::Instance().ChangeState(GameStates::EXIT_GAME);
+      }
+    }
+    break;
 
     default:
       break;
@@ -48,11 +68,22 @@ void ExitingState::Update(bool forceUpdate)
 
     _playerRef->Draw();
 
-    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
-                                Printer::TerminalHeight - 1,
-                                "Exit game? (y/q)",
-                                Printer::kAlignRight,
-                                Colors::WhiteColor);
+    if (!_isExiting)
+    {
+      Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
+                                  Printer::TerminalHeight - 1,
+                                  "Exit game? (y/n)",
+                                  Printer::kAlignRight,
+                                  Colors::WhiteColor);
+    }
+    else
+    {
+      Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
+                                  Printer::TerminalHeight - 1,
+                                  "Save replay? (y/n)",
+                                  Printer::kAlignRight,
+                                  Colors::WhiteColor);
+    }
 
     Printer::Instance().Render();
   }

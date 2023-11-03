@@ -176,7 +176,6 @@ void MapLevelMines::CreateLevel()
     TransformedRoomsWeights weights =
     {
       { TransformedRoom::EMPTY,     {  1, 0 } },
-      { TransformedRoom::TREASURY,  {  5, 1 } },
       { TransformedRoom::SHRINE,    {  5, 1 } },
       { TransformedRoom::STORAGE,   { 10, 2 } },
       { TransformedRoom::FLOODED,   {  3, 1 } },

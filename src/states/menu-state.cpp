@@ -38,9 +38,10 @@ void MenuState::HandleInput()
       break;
 
     case 'L':
-      Application::Instance().LoadGame(true);
-      Application::Instance().ReplayMode = true;
-      Application::Instance().ChangeState(GameStates::START_GAME_STATE);
+      DebugLog("FIXME: implement replay state");
+      //Application::Instance().LoadReplay(true);
+      //Application::Instance().ReplayMode = true;
+      //Application::Instance().ChangeState(GameStates::START_GAME_STATE);
       break;
 
     case VK_CANCEL:

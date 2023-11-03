@@ -35,6 +35,7 @@
 #include "map-level-base.h"
 #include "printer.h"
 #include "timer.h"
+#include "util.h"
 
 #ifdef DEBUG_BUILD
 #include "logger.h"
@@ -387,7 +388,7 @@ void Application::WriteObituary(bool wasKilled)
 
 // =============================================================================
 
-void Application::SaveText()
+void Application::SaveReplayText()
 {
   std::ofstream saveFile(Strings::SaveFileName.data());
   std::stringstream ss;
@@ -413,9 +414,9 @@ void Application::SaveText()
 
 // =============================================================================
 
-void Application::SaveBinary()
+void Application::SaveReplayBinary()
 {
-  std::ofstream saveFile(Strings::SaveFileName.data(), std::ofstream::binary);
+  std::ofstream saveFile(_replayFilename.data(), std::ofstream::binary);
 
   Replay.WorldSeed  = RNG::Instance().Seed;
   Replay.PlayerName = PlayerInstance.Name;
@@ -442,30 +443,37 @@ void Application::SaveBinary()
 
 // =============================================================================
 
-void Application::SaveGame(bool binary)
+void Application::SaveReplay(bool binary)
 {
-  if (binary)
+  std::string timestamp = Util::GetCurrentDateTimeString();
+
+  _replayFilename = Util::StringFormat("%s-%s.rpl",
+                                       PlayerInstance.Name.data(),
+                                       timestamp.data());
+    if (binary)
   {
-    SaveBinary();
+    SaveReplayBinary();
   }
   else
   {
-    SaveText();
+    SaveReplayText();
   }
 
-  ConsoleLog("Game saved - see you next time!\n");
+  ConsoleLog("Replay saved as '%s'", _replayFilename.data());
 }
 
 // =============================================================================
 
-void Application::LoadText()
+void Application::LoadReplayText()
 {
-  std::ifstream saveFile(Strings::SaveFileName.data());
+  // TODO: add new state
 
-  auto ReadLine = [&saveFile]()
+  std::ifstream f(_replayFilename.data());
+
+  auto ReadLine = [&f]()
   {
     std::string line;
-    std::getline(saveFile, line);
+    std::getline(f, line);
     return line;
   };
 
@@ -477,7 +485,7 @@ void Application::LoadText()
 
   Replay.KeysPressed.clear();
 
-  while (std::getline(saveFile, line))
+  while (std::getline(f, line))
   {
     auto spl = Util::StringSplit(line, ' ');
 
@@ -490,14 +498,14 @@ void Application::LoadText()
     }
   }
 
-  saveFile.close();
+  f.close();
 }
 
 // =============================================================================
 
-void Application::LoadBinary()
+void Application::LoadReplayBinary()
 {
-  std::ifstream f(Strings::SaveFileName.data(), std::ifstream::binary);
+  std::ifstream f(_replayFilename.data(), std::ifstream::binary);
 
   Replay.PlayerName.resize(GlobalConstants::MaxNameLength);
 
@@ -538,27 +546,23 @@ void Application::LoadBinary()
 
 // =============================================================================
 
-void Application::LoadGame(bool binary)
+void Application::LoadReplay(const std::string& replayFilename, bool binary)
 {
+  _replayFilename = replayFilename;
+
   if (binary)
   {
-    LoadBinary();
+    LoadReplayBinary();
   }
   else
   {
-    LoadText();
+    LoadReplayText();
   }
 
   PlayerInstance.Name          = Replay.PlayerName;
   PlayerInstance.SelectedClass = (int)Replay.Class;
 
   RNG::Instance().SetSeed(Replay.WorldSeed);
-
-  //
-  // Nethack style.
-  //
-  std::filesystem::path p = Strings::SaveFileName;
-  std::filesystem::remove(p);
 }
 
 // =============================================================================
