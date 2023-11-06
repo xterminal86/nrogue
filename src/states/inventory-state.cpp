@@ -242,7 +242,7 @@ void InventoryState::HandleInput()
 
 void InventoryState::Update(bool forceUpdate)
 {
-  DONT_SHOW_REPLAY();
+  DELAY_REPLAY();
 
   if (_keyPressed != -1 || forceUpdate)
   {

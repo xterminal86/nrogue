@@ -14,7 +14,7 @@ void SelectItemStateBase::HandleInput()
 
 void SelectItemStateBase::Update(bool forceUpdate)
 {
-  DONT_SHOW_REPLAY();
+  DELAY_REPLAY();
 
   if (_keyPressed != -1 || forceUpdate)
   {

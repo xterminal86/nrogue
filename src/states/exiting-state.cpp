@@ -42,7 +42,7 @@ void ExitingState::HandleInput()
       }
       else
       {
-        Application::Instance().SaveReplay(true);
+        Application::Instance().SaveReplay();
         Application::Instance().WriteObituary(false);
         Application::Instance().ChangeState(GameStates::EXIT_GAME);
       }

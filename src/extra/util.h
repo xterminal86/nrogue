@@ -262,7 +262,7 @@ namespace Util
                                        const StringV& anyOf,
                                        const std::string& replaceWith);
 
-  extern std::string GetCurrentDateTimeString();
+  extern std::string GetCurrentDateTimeString(bool osFriendly = false);
 
   extern std::pair<int, int> GetDayAndMonth();
 

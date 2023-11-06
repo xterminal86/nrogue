@@ -150,7 +150,7 @@ void NPCInteractState::HandleInput()
 
 void NPCInteractState::Update(bool forceUpdate)
 {
-  DONT_SHOW_REPLAY();
+  DELAY_REPLAY();
 
   if (_textPrinting)
   {

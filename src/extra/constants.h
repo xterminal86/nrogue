@@ -242,6 +242,7 @@ namespace Strings
   extern const std::vector<std::string> MsgNotInTown;
   // ---------------------------------------------------------------------------
   extern const std::string SaveFileName;
+  extern const std::string ReplayFileExtension;
   // ---------------------------------------------------------------------------
   namespace TileNames
   {
@@ -290,7 +291,7 @@ namespace Strings
 
 namespace GlobalConstants
 {
-  extern std::unordered_map<RoomEdgeEnum, std::string> DirNamesByDir;
+  extern const std::unordered_map<RoomEdgeEnum, std::string> DirNamesByDir;
 
 #ifdef USE_SDL
   extern std::unordered_map<NameCP437, int> CP437IndexByType;
@@ -365,6 +366,8 @@ namespace GlobalConstants
   extern const std::unordered_map<ShrineType,    std::vector<StringV>> ShrineLayoutsByType;
 
   extern const std::unordered_map<SpellType, std::string> SpellShortNameByType;
+
+  extern const std::unordered_map<PlayerClass, std::string> PlayerClassNameByType;
 
   extern const std::vector<SpellType> ScrollValidSpellTypes;
 

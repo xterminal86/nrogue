@@ -21,6 +21,8 @@
 #include "shopping-state.h"
 #include "returner-state.h"
 #include "repair-state.h"
+#include "replay-start-state.h"
+#include "replay-end-state.h"
 #include "save-game-state.h"
 #include "pickup-item-state.h"
 #include "exiting-state.h"
@@ -71,6 +73,41 @@ void Application::InitSpecific()
   Replay.KeysPressed.reserve(64 * 1024);
 
   _appReady = true;
+}
+
+// =============================================================================
+
+void Application::Reset()
+{
+  InitGameStates(true);
+
+  _currentState = _gameStates[GameStates::MENU_STATE].get();
+
+  //
+  // In SDL build GetKeyDown() will return -1 on application
+  // start resulting in white screen during to not
+  // redundantly drawing the "scene"
+  // because no key has been pressed yet.
+  //
+  _currentState->Update(true);
+
+  PlayerInstance.Attrs.Indestructible = false;
+
+  Printer::Instance().Messages().clear();
+  Printer::Instance().ResetMessagesToDisplay();
+
+  Printer::Instance().AddMessage("You begin your quest");
+  Printer::Instance().AddMessage("Press 'h' for help");
+
+  ReplayMode = false;
+
+  Replay = ReplayData();
+
+  Replay.KeysPressed.reserve(64 * 1024);
+
+  _savedActionsToProcess.clear();
+
+  Map::Instance().Reset();
 }
 
 // =============================================================================
@@ -400,6 +437,7 @@ void Application::SaveReplayText()
   ss << Replay.WorldSeed  << '\n';
   ss << Replay.PlayerName << '\n';
   ss << (int)Replay.Class << '\n';
+  ss << Replay.Timestamp  << '\n';
 
   for (auto& pair : Replay.KeysPressed)
   {
@@ -429,6 +467,11 @@ void Application::SaveReplayBinary()
   saveFile.write(buf.data(), buf.size());
   saveFile.write((char*)&Replay.Class, 1);
 
+  size_t tsLength = Replay.Timestamp.size();
+  saveFile.write((char*)&tsLength, sizeof(tsLength));
+
+  saveFile.write(Replay.Timestamp.data(), Replay.Timestamp.size());
+
   size_t keys = Replay.KeysPressed.size();
   saveFile.write((char*)&keys, sizeof(keys));
 
@@ -445,12 +488,14 @@ void Application::SaveReplayBinary()
 
 void Application::SaveReplay(bool binary)
 {
-  std::string timestamp = Util::GetCurrentDateTimeString();
+  std::string timestamp = Util::GetCurrentDateTimeString(true);
 
-  _replayFilename = Util::StringFormat("%s-%s.rpl",
-                                       PlayerInstance.Name.data(),
-                                       timestamp.data());
-    if (binary)
+  Replay.Timestamp = Util::GetCurrentDateTimeString();
+
+  _replayFilename = Util::StringFormat("replay-%s%s",
+                                       timestamp.data(),
+                                       Strings::ReplayFileExtension.data());
+  if (binary)
   {
     SaveReplayBinary();
   }
@@ -466,8 +511,6 @@ void Application::SaveReplay(bool binary)
 
 void Application::LoadReplayText()
 {
-  // TODO: add new state
-
   std::ifstream f(_replayFilename.data());
 
   auto ReadLine = [&f]()
@@ -482,6 +525,7 @@ void Application::LoadReplayText()
   Replay.WorldSeed  = std::stoull(ReadLine());
   Replay.PlayerName = ReadLine();
   Replay.Class      = (PlayerClass)std::stoi(ReadLine());
+  Replay.Timestamp  = ReadLine();
 
   Replay.KeysPressed.clear();
 
@@ -507,21 +551,41 @@ void Application::LoadReplayBinary()
 {
   std::ifstream f(_replayFilename.data(), std::ifstream::binary);
 
-  Replay.PlayerName.resize(GlobalConstants::MaxNameLength);
-
+  //
+  // Read seed.
+  //
   f.read((char*)&Replay.WorldSeed, sizeof(Replay.WorldSeed));
+
+  //
+  // Read player name.
+  //
+  Replay.PlayerName.resize(GlobalConstants::MaxNameLength);
   f.read(Replay.PlayerName.data(), GlobalConstants::MaxNameLength);
 
   Replay.PlayerName.erase(Replay.PlayerName.find('\0'));
-
   Replay.PlayerName.append(1, '\0');
 
+  //
+  // Read class.
+  //
   uint8_t class_ = 255;
-
-  f.read((char*)&class_, 1);
+  f.read((char*)&class_, sizeof(class_));
 
   Replay.Class = (PlayerClass)class_;
 
+  //
+  // Read timestamp.
+  //
+  size_t tsLength = 0;
+  f.read((char*)&tsLength, sizeof(tsLength));
+
+  Replay.Timestamp.resize(tsLength);
+
+  f.read(Replay.Timestamp.data(), tsLength);
+
+  //
+  // Read actions.
+  //
   size_t keys = 0;
   f.read((char*)&keys, sizeof(keys));
 
@@ -1162,12 +1226,16 @@ void Application::RecordAction(int key)
 
 // =============================================================================
 
-void Application::InitGameStates()
+void Application::InitGameStates(bool restart)
 {
+  if (!restart)
+  {
+    RegisterState<MenuState>(GameStates::MENU_STATE);
+  }
+
   RegisterState<MainState>             (GameStates::MAIN_STATE);
   RegisterState<InfoState>             (GameStates::INFO_STATE);
   RegisterState<AttackState>           (GameStates::ATTACK_STATE);
-  RegisterState<MenuState>             (GameStates::MENU_STATE);
   RegisterState<SelectClassState>      (GameStates::SELECT_CLASS_STATE);
   RegisterState<CustomClassState>      (GameStates::CUSTOM_CLASS_STATE);
   RegisterState<EnterNameState>        (GameStates::ENTER_NAME_STATE);
@@ -1184,6 +1252,8 @@ void Application::InitGameStates()
   RegisterState<ReturnerState>         (GameStates::RETURNER_STATE);
   RegisterState<RepairState>           (GameStates::REPAIR_STATE);
   RegisterState<SaveGameState>         (GameStates::SAVE_GAME_STATE);
+  RegisterState<ReplayStartState>      (GameStates::REPLAY_START_STATE);
+  RegisterState<ReplayEndState>        (GameStates::REPLAY_END_STATE);
   RegisterState<PickupItemState>       (GameStates::PICKUP_ITEM_STATE);
   RegisterState<ExitingState>          (GameStates::EXITING_STATE);
   RegisterState<MessageBoxState>       (GameStates::MESSAGE_BOX_STATE);

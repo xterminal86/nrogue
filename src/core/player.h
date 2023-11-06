@@ -36,7 +36,7 @@ class Player : public GameObject
 
     PlayerClass GetClass();
 
-    std::string& GetClassName();
+    const std::string& GetClassName();
 
     void Draw();
     void MeleeAttack(GameObject* what, bool alwaysHit = false);
@@ -123,22 +123,6 @@ class Player : public GameObject
     int _starvingTimeout = 0;
 
     std::vector<std::string> GetPrettyLevelUpText();
-
-    std::unordered_map<int, PlayerClass> _classesMap =
-    {
-      { 0, PlayerClass::SOLDIER  },
-      { 1, PlayerClass::THIEF    },
-      { 2, PlayerClass::ARCANIST },
-      { 3, PlayerClass::CUSTOM   }
-    };
-
-    std::unordered_map<int, std::string> _classesName =
-    {
-      { 0, "Soldier"  },
-      { 1, "Thief"    },
-      { 2, "Arcanist" },
-      { 3, "Unknown"  }
-    };
 
     //
     // std::map automatically sorts by key, so in case of string key,

@@ -26,7 +26,6 @@ class GameObject
 {
   public:
     GameObject(MapLevelBase* levelOwner = nullptr);
-    GameObject(GameObject&) = delete;
     virtual ~GameObject();
 
     GameObject(MapLevelBase* levelOwner,

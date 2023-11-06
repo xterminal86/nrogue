@@ -17,29 +17,36 @@
 
 using Ns = std::chrono::nanoseconds;
 
+// #############################################################################
+
 #define RECORD_ACTION(key)                     \
   if (_keysToRecord.count(key) == 1)           \
   {                                            \
     Application::Instance().RecordAction(key); \
   }
 
-#ifdef DEBUG_BUILD
-  #define DONT_SHOW_REPLAY()              \
-  if (Application::Instance().ReplayMode) \
-  {                                       \
-    Util::Sleep(0);                       \
+// #############################################################################
+
+#define DELAY_REPLAY()                            \
+  if (Application::Instance().ReplayMode)          \
+  {                                                \
+    switch (Application::Instance().ReplaySpeed_) \
+    {                                              \
+      case ReplaySpeed::SLOW:                      \
+        Util::Sleep(300);                          \
+        break;                                     \
+                                                   \
+      case ReplaySpeed::NORMAL:                    \
+        Util::Sleep(150);                          \
+        break;                                     \
+                                                    \
+      case ReplaySpeed::FAST:                      \
+        Util::Sleep(75);                           \
+        break;                                     \
+    }                                               \
   }
-#else
-#define DONT_SHOW_REPLAY()                                              \
-  if (Application::Instance().ReplayMode)                               \
-  {                                                                     \
-    if (Application::Instance().CurrentStateIs(GameStates::MAIN_STATE)) \
-    {                                                                   \
-      Application::Instance().PlayerInstance.CheckVisibility();         \
-    }                                                                   \
-    return;                                                             \
-  }
-#endif
+
+// #############################################################################
 
 #define RECORD_NUMPAD()           \
   _keysToRecord[ALT_K1]   = true; \
@@ -60,6 +67,8 @@ using Ns = std::chrono::nanoseconds;
   _keysToRecord[NUMPAD_8] = true; \
   _keysToRecord[ALT_K9]   = true; \
   _keysToRecord[NUMPAD_9] = true;
+
+// #############################################################################
 
 class GameState
 {

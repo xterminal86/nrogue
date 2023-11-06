@@ -16,6 +16,7 @@ struct ReplayData
 {
   using KeyAndCount = std::pair<int, int>;
 
+  std::string Timestamp;
   std::string PlayerName;
   PlayerClass Class;
   size_t WorldSeed;
@@ -44,8 +45,8 @@ class Application : public Singleton<Application>
 
     void WriteObituary(bool wasKilled = true);
 
-    void SaveReplay(bool binary = false);
-    void LoadReplay(const std::string& replayFilename, bool binary = false);
+    void SaveReplay(bool binary = true);
+    void LoadReplay(const std::string& replayFilename, bool binary = true);
 
     static uint64_t GetNewGlobalId();
 
@@ -121,6 +122,7 @@ class Application : public Singleton<Application>
     uint64_t PlayerTurnsPassed = 0;
 
     ReplayData Replay;
+    ReplaySpeed ReplaySpeed_ = ReplaySpeed::NORMAL;
 
   protected:
     void InitSpecific() override;
@@ -139,10 +141,12 @@ class Application : public Singleton<Application>
 
     bool InitGraphics();
 
-    void InitGameStates();
+    void InitGameStates(bool restart = false);
+
     void DrawAttackCursor(int x, int y,
                           GameObject* defender,
                           const uint32_t& cursorColor = Colors::None);
+
     void SavePrettyAlignedStatInfo(std::stringstream& ss);
     void SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled);
 
@@ -163,10 +167,12 @@ class Application : public Singleton<Application>
     bool InitCurses();
 #endif
 
+    void Reset();
+
     template <typename StateClass>
     inline void RegisterState(GameStates stateName)
     {
-      _gameStates[stateName] = std::unique_ptr<GameState>(new StateClass());
+      _gameStates[stateName] = std::make_unique<StateClass>();
     }
 
     struct StatInfo
@@ -210,6 +216,7 @@ class Application : public Singleton<Application>
     };
 
     friend class TargetState;
+    friend class ReplayEndState;
 };
 
 #endif

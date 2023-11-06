@@ -27,6 +27,9 @@ void Player::Init()
   FgColor = Colors::PlayerColor;
   Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
+  _components.clear();
+  _activeEffects.clear();
+
   Inventory = AddComponent<ContainerComponent>();
   Equipment = AddComponent<EquipmentComponent>(Inventory);
 
@@ -1717,14 +1720,14 @@ void Player::AddExtraItems()
 
 PlayerClass Player::GetClass()
 {
-  return _classesMap[SelectedClass];
+  return (PlayerClass)SelectedClass;
 }
 
 // =============================================================================
 
-std::string& Player::GetClassName()
+const std::string& Player::GetClassName()
 {
-  return _classesName[SelectedClass];
+  return GlobalConstants::PlayerClassNameByType.at((PlayerClass)SelectedClass);
 }
 
 // =============================================================================

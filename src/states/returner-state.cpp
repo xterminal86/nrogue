@@ -89,7 +89,7 @@ void ReturnerState::HandleInput()
 
 void ReturnerState::Update(bool forceUpdate)
 {
-  DONT_SHOW_REPLAY();
+  DELAY_REPLAY();
 
   if (_keyPressed != -1 || forceUpdate)
   {

@@ -20,6 +20,15 @@
 
 void Map::InitSpecific()
 {
+  Reset();
+}
+
+// =============================================================================
+
+void Map::Reset()
+{
+  Cleanup();
+
   _mapVisitFirstTime[MapType::MINES_1]     = false;
   _mapVisitFirstTime[MapType::CAVES_1]     = false;
   _mapVisitFirstTime[MapType::LOST_CITY]   = false;
@@ -38,6 +47,8 @@ void Map::InitSpecific()
   // condition branch in Application::Run() on nullptr level.
   //
   _playerRef->Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
+
+  _townLoaded = false;
 }
 
 // =============================================================================

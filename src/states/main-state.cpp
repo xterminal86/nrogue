@@ -227,7 +227,7 @@ void MainState::HandleInput()
 
 void MainState::Update(bool forceUpdate)
 {
-  DONT_SHOW_REPLAY();
+  DELAY_REPLAY();
 
   if (_keyPressed != -1 || forceUpdate)
   {
@@ -1059,5 +1059,6 @@ void MainState::DisplayScenarioInformation()
   ss << "Seed value: " << seedString.second;
   messages.push_back(ss.str());
 
-  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, "Scenario Information", messages);
+  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                         "Scenario Information", messages);
 }

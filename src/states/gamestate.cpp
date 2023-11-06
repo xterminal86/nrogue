@@ -11,8 +11,7 @@
     if (Application::Instance().CurrentStateIs(GameStates::GAMEOVER_STATE)) \
     {                                                                       \
       Application::Instance().ReplayMode = false;                           \
-      Application::Instance().ChangeState(GameStates::EXIT_GAME);           \
-      ConsoleLog("Replay is corrupted!");                                   \
+      Application::Instance().ChangeState(GameStates::REPLAY_END_STATE);    \
     }                                                                       \
     else                                                                    \
     {                                                                       \
@@ -24,8 +23,7 @@
       else                                                                  \
       {                                                                     \
         Application::Instance().ReplayMode = false;                         \
-        Printer::Instance().AddMessage("Game loaded!");                     \
-        Application::Instance().ForceDrawMainState();                       \
+        Application::Instance().ChangeState(GameStates::REPLAY_END_STATE);  \
       }                                                                     \
     }                                                                       \
   }
@@ -213,7 +211,7 @@ void GameState::TakeScreenshot()
                        SDL_PIXELFORMAT_ARGB8888,
                        sshot->pixels,
                        sshot->pitch);
-  std::string time = Util::GetCurrentDateTimeString();
+  std::string time = Util::GetCurrentDateTimeString(true);
   std::string fname = Util::StringFormat("s_%s.bmp", time.data());
   SDL_SaveBMP(sshot, fname.data());
   SDL_FreeSurface(sshot);

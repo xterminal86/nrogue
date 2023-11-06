@@ -21,7 +21,9 @@ void MenuState::Init()
 
   PrepareGrassTiles();
 
-  std::filesystem::path p = Strings::SaveFileName;
+  using Path = std::filesystem::path;
+
+  Path p = Strings::SaveFileName;
   _saveFileFound = std::filesystem::exists(p);
 }
 
@@ -37,11 +39,12 @@ void MenuState::HandleInput()
       Application::Instance().ChangeState(GameStates::SELECT_CLASS_STATE);
       break;
 
+    case 'r':
+      Application::Instance().ChangeState(GameStates::REPLAY_START_STATE);
+      break;
+
     case 'L':
-      DebugLog("FIXME: implement replay state");
-      //Application::Instance().LoadReplay(true);
-      //Application::Instance().ReplayMode = true;
-      //Application::Instance().ChangeState(GameStates::START_GAME_STATE);
+      DebugLog("FIXME: implement proper save/load");
       break;
 
     case VK_CANCEL:
@@ -242,10 +245,16 @@ void MenuState::Update(bool forceUpdate)
                                 Printer::kAlignCenter,
                                 Colors::WhiteColor);
 
+    Printer::Instance().PrintFB(_twHalf,
+                                _thHalf + _picture.size() + 1,
+                                "('r' to check replay files)",
+                                Printer::kAlignCenter,
+                                Colors::ShadesOfGrey::Ten);
+
     if (_saveFileFound)
     {
       Printer::Instance().PrintFB(_twHalf,
-                                  _thHalf + _picture.size() + 1,
+                                  _thHalf + _picture.size() + 2,
                                   _savefilePresent,
                                   Printer::kAlignCenter,
                                   0x44FF44);

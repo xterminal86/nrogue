@@ -31,7 +31,7 @@ void MessageBoxState::HandleInput()
 
 void MessageBoxState::Update(bool forceUpdate)
 {
-  DONT_SHOW_REPLAY();
+  DELAY_REPLAY();
 
   if (_keyPressed != -1 || forceUpdate)
   {

@@ -117,7 +117,7 @@ void ShoppingState::HandleInput()
 
 void ShoppingState::Update(bool forceUpdate)
 {
-  DONT_SHOW_REPLAY();
+  DELAY_REPLAY();
 
   if (_keyPressed != -1 || forceUpdate)
   {

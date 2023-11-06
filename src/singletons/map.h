@@ -140,11 +140,15 @@ class Map : public Singleton<Map>
     void RemoveStaticObjects();
     void EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list);
 
+    void Reset();
+
     std::pair<uint32_t, uint32_t> GetActorColors(GameObject* actor);
 
     Player* _playerRef = nullptr;
 
     Position _windowSize;
+
+    friend class Application;
 };
 
 #endif

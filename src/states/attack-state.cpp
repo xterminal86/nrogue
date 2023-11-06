@@ -159,7 +159,7 @@ void AttackState::HandleInput()
 
 void AttackState::Update(bool forceUpdate)
 {
-  DONT_SHOW_REPLAY();
+  DELAY_REPLAY();
 
   if (_keyPressed != -1 || forceUpdate)
   {

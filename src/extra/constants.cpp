@@ -222,7 +222,8 @@ namespace Strings
   // ---------------------------------------------------------------------------
   const std::vector<std::string> MsgNotInTown = { "Not here", "Not in town" };
   // ---------------------------------------------------------------------------
-  const std::string SaveFileName = "save.nrg";
+  const std::string SaveFileName        = "save.nrg";
+  const std::string ReplayFileExtension = ".rpl";
   // ---------------------------------------------------------------------------
   namespace TileNames
   {
@@ -271,12 +272,20 @@ namespace Strings
 
 namespace GlobalConstants
 {
-  std::unordered_map<RoomEdgeEnum, std::string> DirNamesByDir =
+  const std::unordered_map<RoomEdgeEnum, std::string> DirNamesByDir =
   {
     { RoomEdgeEnum::NORTH, "NORTH" },
     { RoomEdgeEnum::EAST,  "EAST"  },
     { RoomEdgeEnum::SOUTH, "SOUTH" },
     { RoomEdgeEnum::WEST,  "WEST"  }
+  };
+
+  const std::unordered_map<PlayerClass, std::string> PlayerClassNameByType =
+  {
+    { PlayerClass::SOLDIER,  "Soldier"  },
+    { PlayerClass::THIEF,    "Thief"    },
+    { PlayerClass::ARCANIST, "Arcanist" },
+    { PlayerClass::CUSTOM,   "Custom"   },
   };
 
 #ifdef USE_SDL

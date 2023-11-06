@@ -1569,14 +1569,16 @@ namespace Util
 
   // ===========================================================================
 
-  std::string GetCurrentDateTimeString()
+  std::string GetCurrentDateTimeString(bool osFriendly)
   {
     std::stringstream ss;
 
     time_t now = time(nullptr);
     tm*    ltm = localtime(&now);
 
-    ss << std::put_time(ltm, "%Y-%m-%d_%H-%M-%S");
+    ss << std::put_time(ltm, osFriendly
+                        ? "%Y-%m-%d_%H-%M-%S"
+                        : "%Y-%m-%d %H:%M:%S");
 
     return ss.str();
   }

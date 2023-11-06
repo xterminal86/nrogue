@@ -36,7 +36,7 @@ void GameOverState::HandleInput()
       break;
 
     case 'y':
-      Application::Instance().SaveReplay(true);
+      Application::Instance().SaveReplay();
       Application::Instance().ChangeState(GameStates::EXIT_GAME);
       break;
 

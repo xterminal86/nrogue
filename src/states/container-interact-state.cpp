@@ -102,7 +102,7 @@ void ContainerInteractState::HandleInput()
 
 void ContainerInteractState::Update(bool forceUpdate)
 {
-  DONT_SHOW_REPLAY();
+  DELAY_REPLAY();
 
   if (_keyPressed != -1 || forceUpdate)
   {
