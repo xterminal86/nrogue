@@ -160,10 +160,10 @@ class GameObject
 
     bool IsDestroyed = false;
 
-    int Image;
+    int Image = '?';
 
-    uint32_t FgColor = Colors::BlackColor;
-    uint32_t BgColor = Colors::BlackColor;
+    uint32_t FgColor = Colors::WhiteColor;
+    uint32_t BgColor = Colors::MagentaColor;
 
     std::string ObjectName;
     std::string FogOfWarName;
@@ -268,8 +268,8 @@ class GameObject
     MapLevelBase* _levelOwner = nullptr;
 
     int _healthRegenTurnsCounter = 0;
-    int _manaRegenTurnsCounter = 0;
-    int _skipTurnsCounter = 0;
+    int _manaRegenTurnsCounter   = 0;
+    int _skipTurnsCounter        = 0;
 
     void MoveGameObject(int dx, int dy);
     void ProcessEffects();

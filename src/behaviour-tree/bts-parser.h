@@ -55,7 +55,7 @@ class BTSParser
 
     ConstructionOrder _constructionOrder;
 
-    GameObject* _goRef;
+    GameObject* _goRef = nullptr;
 
     std::unordered_map<std::string, uint8_t> _paramCodesByName;
 };

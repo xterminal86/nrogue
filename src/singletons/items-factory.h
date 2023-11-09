@@ -185,6 +185,8 @@ class ItemsFactory : public Singleton<ItemsFactory>
     ItemPrefix RollItemPrefix();
     ItemQuality RollItemQuality();
 
+    void Reset();
+
     struct PotionInfo
     {
       PotionType PotionType_ = PotionType::RANDOM;
@@ -325,6 +327,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
     // -------------------------------------------------------------------------
 
     friend class GameObjectsFactory;
+    friend class StartGameState;
 };
 
 #endif // ITEMSFACTORY_H

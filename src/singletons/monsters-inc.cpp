@@ -153,9 +153,9 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
                                   'r',
                                   Colors::MonsterColor);
 
-  go->ObjectName = "Feral Rat";
+  go->ObjectName           = "Feral Rat";
   go->Attrs.Indestructible = false;
-  go->HealthRegenTurns = 30;
+  go->HealthRegenTurns     = 30;
 
   // Sets Occupied flag for _currentCell
   go->Move(0, 0);
@@ -207,9 +207,10 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
                                   y,
                                   'b',
                                   Colors::MonsterColor);
-  go->ObjectName = "Flying Bat";
+
+  go->ObjectName           = "Flying Bat";
   go->Attrs.Indestructible = false;
-  go->HealthRegenTurns = 20;
+  go->HealthRegenTurns     = 20;
 
   go->IsLiving = true;
 
@@ -264,9 +265,10 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
                                   y,
                                   'b',
                                   Colors::MonsterColor);
-  go->ObjectName = "Red Bat";
+
+  go->ObjectName           = "Red Bat";
   go->Attrs.Indestructible = false;
-  go->HealthRegenTurns = 20;
+  go->HealthRegenTurns     = 20;
 
   go->IsLiving = false;
 
@@ -320,9 +322,10 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
                                   y,
                                   's',
                                   Colors::MonsterColor);
-  go->ObjectName = "Cave Spider";
+
+  go->ObjectName           = "Cave Spider";
   go->Attrs.Indestructible = false;
-  go->HealthRegenTurns = 30;
+  go->HealthRegenTurns     = 30;
 
   go->IsLiving = true;
 
@@ -369,9 +372,10 @@ GameObject* MonstersInc::CreateTroll(int x, int y, bool randomize)
                                   y,
                                   'T',
                                   Colors::MonsterColor);
-  go->ObjectName = "Troll";
+
+  go->ObjectName           = "Troll";
   go->Attrs.Indestructible = false;
-  go->HealthRegenTurns = 3;
+  go->HealthRegenTurns     = 3;
 
   go->IsLiving = true;
 
@@ -431,9 +435,10 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
                                   y,
                                   img,
                                   Colors::MonsterColor);
-  go->ObjectName = "Herobrine";
+
+  go->ObjectName           = "Herobrine";
   go->Attrs.Indestructible = false;
-  go->HealthRegenTurns = 30;
+  go->HealthRegenTurns     = 30;
 
   go->MoveTo(x, y);
 
@@ -509,10 +514,15 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
   img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
   #endif
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, Colors::MonsterColor);
-  go->ObjectName = "Mad Miner";
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  img,
+                                  Colors::MonsterColor);
+
+  go->ObjectName           = "Mad Miner";
   go->Attrs.Indestructible = false;
-  go->HealthRegenTurns = 30;
+  go->HealthRegenTurns     = 30;
 
   go->MoveTo(x, y);
 
@@ -564,10 +574,15 @@ GameObject* MonstersInc::CreateKobold(int x, int y)
 {
   char img = 'k';
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, Colors::MonsterColor);
-  go->ObjectName = "Kobold";
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  img,
+                                  Colors::MonsterColor);
+
+  go->ObjectName           = "Kobold";
   go->Attrs.Indestructible = false;
-  go->HealthRegenTurns = 30;
+  go->HealthRegenTurns     = 30;
 
   go->MoveTo(x, y);
 
@@ -631,9 +646,10 @@ GameObject* MonstersInc::CreateShelob(int x, int y)
                                   y,
                                   's',
                                   Colors::MonsterUniqueColor);
-  go->ObjectName = "Shelob";
+
+  go->ObjectName           = "Shelob";
   go->Attrs.Indestructible = false;
-  go->HealthRegenTurns = 15;
+  go->HealthRegenTurns     = 15;
 
   go->MoveTo(x, y);
 
@@ -674,9 +690,9 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
                                   'Z',
                                   Colors::MonsterColor);
 
-  go->ObjectName = "Zombie";
+  go->ObjectName           = "Zombie";
   go->Attrs.Indestructible = false;
-  go->IsLiving = false;
+  go->IsLiving             = false;
 
   go->MoveTo(x, y);
 
@@ -761,9 +777,9 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
                                   'S',
                                   Colors::MonsterColor);
 
-  go->ObjectName = "Skeleton";
+  go->ObjectName           = "Skeleton";
   go->Attrs.Indestructible = false;
-  go->IsLiving = false;
+  go->IsLiving             = false;
 
   go->MoveTo(x, y);
 
@@ -845,10 +861,10 @@ GameObject* MonstersInc::CreateWraith(int x, int y)
                                   Colors::None,
                                   Colors::None);
 
-  go->ObjectName = "Wraith";
+  go->ObjectName           = "Wraith";
   go->Attrs.Indestructible = false;
-  go->IsLiving = false;
-  go->Corporeal = false;
+  go->IsLiving             = false;
+  go->Corporeal            = false;
 
   go->MoveTo(x, y);
 
@@ -901,9 +917,9 @@ GameObject* MonstersInc::CreateStalker(int x, int y)
                                   'G',
                                   Colors::MonsterColor);
 
-  go->ObjectName = "Gollum";
+  go->ObjectName           = "Gollum";
   go->Attrs.Indestructible = false;
-  go->IsLiving = true;
+  go->IsLiving             = true;
 
   go->MoveTo(x, y);
 

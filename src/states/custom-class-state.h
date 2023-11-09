@@ -19,11 +19,11 @@ class CustomClassState : public GameState
     void InitPlayerAttributes(Player* playerRef);
 
   private:
-    const int kBaseStatCost = 25;
-    const int kGrowthRateCost = 1;
+    const int kBaseStatCost        = 25;
+    const int kGrowthRateCost      = 1;
     const int kGrowthRateCostShift = 5;
-    const int kTalentCost = 10;
-    const int kStartingPoints = 300;
+    const int kTalentCost          = 10;
+    const int kStartingPoints      = 300;
 
     int _points = kStartingPoints;
 

@@ -15,8 +15,8 @@ class ReplayStartState : public GameState
     {
       std::string Timestamp;
       std::string PlayerName;
-      PlayerClass Class;
-      size_t WorldSeed;
+      PlayerClass Class = PlayerClass::SOLDIER;
+      size_t WorldSeed = 0;
       std::string FileNameTruncated;
       std::string Filename;
     };
@@ -27,14 +27,18 @@ class ReplayStartState : public GameState
 
     ReplayFileData _replayFileData;
 
-    int _cursorIndex = 0;
+    int _cursorIndex  = 0;
     int _scrollOffset = 0;
 
     const size_t _replayNameCharsLimit = 26;
 
     const int _maxFilesToDisplay = 20;
 
-    int _replaySpeed = 0;
+    const std::string _selectionBarSpaces = std::string(28, ' ');
+
+    int _replaySpeed = (int)ReplaySpeed::NORMAL;
+
+    bool _deleteStarted = false;
 };
 
 #endif // REPLAYSTARTSTATE_H

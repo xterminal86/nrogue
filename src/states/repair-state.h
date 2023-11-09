@@ -22,7 +22,7 @@ class RepairState : public SelectItemStateBase
   private:
     Player* _playerRef = nullptr;
 
-    ItemComponent* _repairKit;
+    ItemComponent* _repairKit = nullptr;
     int _inventoryIndex = 0;
 
     std::vector<ItemComponent*> _itemRefByChar;

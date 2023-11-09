@@ -27,7 +27,7 @@ class AIModelBase
     bool IsAgressive = false;
 
   protected:
-    size_t _hash;
+    size_t _hash = 0;
     Player* _playerRef = nullptr;
 
     std::unique_ptr<Root> _root;

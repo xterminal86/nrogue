@@ -13,7 +13,7 @@ class TimedDestroyerComponent : public Component
     void Update() override;
 
   private:
-    int _time;
+    int _time = 0;
 
     std::function<void()> _onTimerEnd;
 };

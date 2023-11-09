@@ -23,7 +23,7 @@ class RNG : public Singleton<RNG>
 
     std::mt19937_64 Random;
 
-    size_t Seed;
+    size_t Seed = 0;
 
   protected:
     void InitSpecific() override;

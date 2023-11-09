@@ -27,8 +27,8 @@ class TraderComponent : public Component
     TraderRole Type();
 
   private:
-    int _maxItems = 0;
-    int _itemsToCreate = 0;
+    int _maxItems          = 0;
+    int _itemsToCreate     = 0;
     int _stockResetCounter = 0;
     int _stockRefreshTurns = 0;
 

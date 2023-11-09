@@ -20,14 +20,14 @@ class DoorComponent : public Component
 
     bool InteractBySomeone();
 
-    bool IsOpen;
+    bool IsOpen = false;
 
     // Hash of item that opens this door,
     // Set to GlobalConstants::OpenedByAnyone to leave unlocked
     size_t OpenedBy = GlobalConstants::OpenedByAnyone;
 
-    uint32_t FgColorOverride;
-    uint32_t BgColorOverride;
+    uint32_t FgColorOverride = Colors::BlackColor;
+    uint32_t BgColorOverride = Colors::BlackColor;
 
     DoorMaterials Material = DoorMaterials::WOOD;
 };

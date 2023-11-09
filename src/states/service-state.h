@@ -38,8 +38,8 @@ class ServiceState : public SelectItemStateBase
       std::string Letter;
       std::string NameToDisplay;
       uint32_t Color = Colors::WhiteColor;
-      ItemComponent* ItemComponentRef;
-      int ServiceCost;
+      ItemComponent* ItemComponentRef = nullptr;
+      int ServiceCost = 0;
     };
 
     std::unordered_map<char, ServiceInfo> _serviceInfoByChar;
@@ -82,7 +82,7 @@ class ServiceState : public SelectItemStateBase
       ItemBonusType::TRUE_SEEING
     };
 
-    size_t _maxStrLen;
+    size_t _maxStrLen = 0;
 };
 
 #endif // SERVICESTATE_H

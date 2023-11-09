@@ -13,7 +13,7 @@ struct SpellInfo
   std::string SpellShortName;
   int SpellBaseCost = 0;
   std::pair<int, int> SpellBaseDamage;
-  uint32_t SpellProjectileColor;
+  uint32_t SpellProjectileColor = Colors::MagentaColor;
 };
 
 class SpellsDatabase : public Singleton<SpellsDatabase>

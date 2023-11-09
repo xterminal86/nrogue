@@ -7,6 +7,8 @@
 #include <stdint.h>
 #endif
 
+#include "constants.h"
+
 ///
 /// Helper struct to reduce the amount of writing when creating objects.
 ///
@@ -20,12 +22,12 @@ struct GameObjectInfo
            const std::string& objectName,
            const std::string& fowName = std::string());
 
-  bool IsBlocking;
-  bool BlocksSight;
-  int Image;
+  bool IsBlocking  = false;
+  bool BlocksSight = false;
+  int Image        = '?';
 
-  uint32_t FgColor;
-  uint32_t BgColor;
+  uint32_t FgColor = Colors::WhiteColor;
+  uint32_t BgColor = Colors::MagentaColor;
 
   std::string ObjectName;
   std::string FogOfWarName;

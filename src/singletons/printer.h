@@ -225,7 +225,7 @@ class Printer : public Singleton<Printer>
     SDL_Texture* _tileset = nullptr;
     SDL_Texture* _frameBuffer = nullptr;
 
-    int _tilesetWidth = 0;
+    int _tilesetWidth  = 0;
     int _tilesetHeight = 0;
 
     std::vector<TileInfo> _tiles;
@@ -233,10 +233,10 @@ class Printer : public Singleton<Printer>
 
     std::unordered_map<uint32_t, TileColor> _validColorsCache;
 
-    int _tileWidth = 0;
+    int _tileWidth  = 0;
     int _tileHeight = 0;
 
-    int _tileWidthScaled = 0;
+    int _tileWidthScaled  = 0;
     int _tileHeightScaled = 0;
 
     double _tileAspectRatio = 0.0;

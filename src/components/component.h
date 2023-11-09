@@ -20,14 +20,14 @@ class Component
 
     const size_t& GetComponentHash();
 
-    GameObject* OwnerGameObject;
+    GameObject* OwnerGameObject = nullptr;
 
     bool IsEnabled = true;
 
   protected:
     virtual void PrepareAdditional();
 
-    size_t _componentHash;
+    size_t _componentHash = 0;
 };
 
 #endif

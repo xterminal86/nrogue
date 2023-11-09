@@ -5,14 +5,22 @@
 #include "map.h"
 #include "map-level-town.h"
 
+#include "items-factory.h"
+
 void StartGameState::HandleInput()
 {
+  //
+  // Potion colors and scroll names for current game session are generated
+  // randomly before start.
+  //
+  ItemsFactory::Instance().Reset();
+
   Printer::Instance().Clear();
   Printer::Instance().Render();
 
   Map::Instance().LoadTown();
 
-  auto& curLvl = Map::Instance().CurrentLevel;
+  auto& curLvl    = Map::Instance().CurrentLevel;
   auto& playerRef = Application::Instance().PlayerInstance;
 
   //

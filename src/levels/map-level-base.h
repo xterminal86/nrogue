@@ -70,8 +70,8 @@ class MapLevelBase
     Position LevelStart;
     Position LevelExit;
 
-    int MapOffsetX;
-    int MapOffsetY;
+    int MapOffsetX = 0;
+    int MapOffsetY = 0;
 
     size_t MaxMonsters = 0;
 
@@ -82,8 +82,8 @@ class MapLevelBase
     //
     int MonstersRespawnTurns = -1;
 
-    int DungeonLevel;
-    int VisibilityRadius;
+    int DungeonLevel     = 0;
+    int VisibilityRadius = 0;
 
     bool WelcomeTextDisplayed   = false;
     bool Peaceful               = false;

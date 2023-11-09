@@ -12,7 +12,8 @@ void ReplayStartState::Prepare()
 
   _files.clear();
 
-  _cursorIndex = 0;
+  _cursorIndex  = 0;
+  _scrollOffset = 0;
 
   std::string curDir = std::filesystem::current_path().string();
 
@@ -26,6 +27,10 @@ void ReplayStartState::Prepare()
       _files[fname] = ReadReplayFileData(fname);
     }
   }
+
+  _deleteStarted = false;
+
+  _replaySpeed = (int)ReplaySpeed::NORMAL;
 }
 
 // =============================================================================
@@ -34,42 +39,74 @@ void ReplayStartState::HandleInput()
 {
   _keyPressed = GetKeyDown();
 
-  switch (_keyPressed)
+  if (_deleteStarted)
   {
-    #ifdef USE_SDL
-    case KEY_DOWN:
-    #endif
-    case NUMPAD_2:
-      _cursorIndex++;
+    switch (_keyPressed)
+    {
+      case 'Y':
+      {
+        if (_deleteStarted)
+        {
+          // TODO: delete file
+
+          _deleteStarted = false;
+        }
+      }
       break;
 
-    #ifdef USE_SDL
-    case KEY_UP:
-    #endif
-    case NUMPAD_8:
-      _cursorIndex--;
+      case 'n':
+      {
+        if (_deleteStarted)
+        {
+          _deleteStarted = false;
+        }
+      }
       break;
+    }
+  }
+  else
+  {
+    switch (_keyPressed)
+    {
+      #ifdef USE_SDL
+      case KEY_DOWN:
+      #endif
+      case NUMPAD_2:
+        _cursorIndex++;
+        break;
 
-    case '<':
-      _replaySpeed--;
-      break;
+      #ifdef USE_SDL
+      case KEY_UP:
+      #endif
+      case NUMPAD_8:
+        _cursorIndex--;
+        break;
 
-    case '>':
-      _replaySpeed++;
-      break;
+      case '<':
+        _replaySpeed--;
+        break;
 
-    case VK_CANCEL:
-      Application::Instance().ChangeState(GameStates::MENU_STATE);
-      break;
+      case '>':
+        _replaySpeed++;
+        break;
 
-    case VK_ENTER:
-      auto it = _files.begin();
-      std::advance(it, _cursorIndex);
-      Application::Instance().LoadReplay(it->second.Filename);
-      Application::Instance().ReplaySpeed_ = (ReplaySpeed)_replaySpeed;
-      Application::Instance().ReplayMode = true;
-      Application::Instance().ChangeState(GameStates::START_GAME_STATE);
-      break;
+      case 'D':
+        _deleteStarted = true;
+        break;
+
+      case VK_CANCEL:
+        Application::Instance().ChangeState(GameStates::MENU_STATE);
+        break;
+
+      case VK_ENTER:
+        auto it = _files.begin();
+        std::advance(it, _cursorIndex);
+        Application::Instance().LoadReplay(it->second.Filename);
+        Application::Instance().ReplaySpeed_ = (ReplaySpeed)_replaySpeed;
+        Application::Instance().ReplayMode = true;
+        Application::Instance().ChangeState(GameStates::START_GAME_STATE);
+        break;
+    }
   }
 
   _cursorIndex = Util::Clamp(_cursorIndex, 0, _files.size() - 1);
@@ -119,6 +156,14 @@ void ReplayStartState::Update(bool forceUpdate)
         const ReplayFileData& rfd = it->second;
 
         Printer::Instance().PrintFB(2, 2 + yOffset,
+                                    _selectionBarSpaces,
+                                    Printer::kAlignLeft,
+                                    Colors::BlackColor,
+                                    (i == _cursorIndex)
+                                    ? Colors::ShadesOfGrey::Four
+                                    : Colors::BlackColor);
+
+        Printer::Instance().PrintFB(3, 2 + yOffset,
                                     rfd.FileNameTruncated.empty()
                                     ? fname
                                     : rfd.FileNameTruncated,
@@ -160,6 +205,24 @@ void ReplayStartState::Update(bool forceUpdate)
       }
     }
 
+    if (_deleteStarted)
+    {
+      Printer::Instance().DrawWindow({ _twHalf - 10, _thHalf - 2 },
+                                     { 20, 4 },
+                                     "",
+                                     Colors::WhiteColor,
+                                     Colors::RedColor,
+                                     Colors::WhiteColor,
+                                     Colors::RedColor,
+                                     Colors::RedColor);
+
+      Printer::Instance().PrintFB(_twHalf, _thHalf,
+                                  "Delete? (Y/n)",
+                                  Printer::kAlignCenter,
+                                  Colors::WhiteColor,
+                                  Colors::RedColor);
+    }
+
     std::string replaySpeedText;
     uint32_t textColor = Colors::WhiteColor;
 
@@ -188,6 +251,9 @@ void ReplayStartState::Update(bool forceUpdate)
         break;
     }
 
+    Printer::Instance().PrintFB(_twHalf - 15, _th - 2, '<', Colors::WhiteColor);
+    Printer::Instance().PrintFB(_twHalf + 9,  _th - 2, '>', Colors::WhiteColor);
+
     Printer::Instance().PrintFB(_twHalf, _th - 2,
                                 "Replay speed:",
                                 Printer::kAlignRight,
@@ -204,7 +270,7 @@ void ReplayStartState::Update(bool forceUpdate)
                                 Colors::WhiteColor);
 
     Printer::Instance().PrintFB(_tw - 2, _th - 2,
-                                "'ENTER' - start replay",
+                                "'Enter' - start replay",
                                 Printer::kAlignRight,
                                 Colors::WhiteColor);
 

@@ -1488,7 +1488,7 @@ void DGBase::TryToPlaceLayout(const Rect& area, const StringV& layout,
     return;
   }
 
-  //DebugLog("layout size = %lu, len = %lu", layout.size(), layout[0].length());
+  //DebugLog("layout size = %llu, len = %llu", layout.size(), layout[0].length());
 
   bool doesNotFit = (area.Height() < (int)layout.size()
                   || area.Width()  < (int)layout[0].length());

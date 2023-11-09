@@ -21,8 +21,8 @@ struct Position
 
   void Print();
 
-  int X;
-  int Y;
+  int X = 0;
+  int Y = 0;
 };
 
 #endif // POSITION_H

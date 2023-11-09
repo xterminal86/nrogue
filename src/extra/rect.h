@@ -42,10 +42,10 @@ class Rect
 
     void PrintToLog();
 
-    int X1;
-    int Y1;
-    int X2;
-    int Y2;
+    int X1 = 0;
+    int Y1 = 0;
+    int X2 = 0;
+    int Y2 = 0;
 
   private:
     Position _dim;

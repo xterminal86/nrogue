@@ -54,8 +54,8 @@ class Player : public GameObject
 
     void SetDestroyed();
 
-    ContainerComponent* Inventory;
-    EquipmentComponent* Equipment;
+    ContainerComponent* Inventory = nullptr;
+    EquipmentComponent* Equipment = nullptr;
 
     std::string Name = "Nameless One";
 

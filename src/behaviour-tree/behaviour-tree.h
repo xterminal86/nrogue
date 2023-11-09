@@ -48,7 +48,7 @@ class Node
 
     bool _firstRunFlag = false;
 
-    Player* _playerRef;
+    Player* _playerRef = nullptr;
 
     // FirstRun and Reset shouldn't be allowed to be called
     // directly on task objects.
@@ -222,7 +222,7 @@ class Repeater : public ControlNode
     void ResetSpecific() override;
 
   private:
-    int _toRepeat = 0;
+    int _toRepeat    = 0;
     int _repeatCount = 0;
 };
 

@@ -16,10 +16,15 @@ using namespace std::placeholders;
 
 void ItemsFactory::InitSpecific()
 {
+  _playerRef = &Application::Instance().PlayerInstance;
+}
+
+// =============================================================================
+
+void ItemsFactory::Reset()
+{
   InitPotionColors();
   InitScrolls();
-
-  _playerRef = &Application::Instance().PlayerInstance;
 }
 
 // =============================================================================

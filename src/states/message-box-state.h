@@ -23,8 +23,8 @@ class MessageBoxState : public GameState
     std::string _header;
     std::vector<std::string> _message;
 
-    uint32_t _bgColor;
-    uint32_t _borderColor;
+    uint32_t _bgColor     = Colors::BlackColor;
+    uint32_t _borderColor = Colors::WhiteColor;
 
     Position _leftCorner;
     Position _windowSize;

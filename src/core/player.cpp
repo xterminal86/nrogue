@@ -14,6 +14,8 @@
 
 void Player::Init()
 {
+  _objectId = 1;
+
   Type = GameObjectType::PLAYER;
 
   Image = '@';

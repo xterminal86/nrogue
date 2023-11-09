@@ -17,7 +17,7 @@ class TaskTryPickupItems : public Node
     BTResult Run() override;
 
   private:
-    ContainerComponent* _inventoryRef;
+    ContainerComponent* _inventoryRef = nullptr;
 
     bool PickupItems(const Items& items,
                      const Filter& filter);

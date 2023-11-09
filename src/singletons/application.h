@@ -48,7 +48,7 @@ class Application : public Singleton<Application>
     void SaveReplay(bool binary = true);
     void LoadReplay(const std::string& replayFilename, bool binary = true);
 
-    static uint64_t GetNewGlobalId();
+    static uint64_t GetNewGlobalId(bool reset = false);
 
     Player PlayerInstance;
 
@@ -56,10 +56,10 @@ class Application : public Singleton<Application>
     {
       double ScaleFactor = 1.0;
 
-      int TileWidth = 0;
+      int TileWidth  = 0;
       int TileHeight = 0;
 
-      int WindowWidth = 0;
+      int WindowWidth  = 0;
       int WindowHeight = 0;
 
       //
@@ -106,7 +106,7 @@ class Application : public Singleton<Application>
 
 #ifdef USE_SDL
     SDL_Renderer* Renderer = nullptr;
-    SDL_Window* Window = nullptr;
+    SDL_Window* Window     = nullptr;
 
     SDL_Rect GetWindowSize(int tileWidth, int tileHeight);
 
@@ -178,9 +178,9 @@ class Application : public Singleton<Application>
     struct StatInfo
     {
       std::string AttrName;
-      int OriginalValue;
-      int Modifier;
-      int ResultingValue;
+      int OriginalValue  = 0;
+      int Modifier       = 0;
+      int ResultingValue = 0;
     };
 
     StatInfo GetStatInfo(const std::string& attrName);

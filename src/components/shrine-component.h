@@ -23,11 +23,10 @@ class ShrineComponent : public Component
     void ApplyTemporaryStatRaise(std::string& logMessageToWrite);
     void SetEffectGainMessage(std::string& logMessageToWrite, ItemBonusType e);
 
-    int _power;
-    int _duration;
-
-    int _timeout = -1;
-    int _counter = 0;
+    int _power    = 0;
+    int _duration = 0;
+    int _timeout  = -1;
+    int _counter  = 0;
 
     bool _oneTimeUse = true;
 

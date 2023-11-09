@@ -65,9 +65,9 @@ GameObject::~GameObject()
 
 #ifdef DEBUG_BUILD
   GameState* s = Application::Instance().GetGameStateRefByName(GameStates::DEV_CONSOLE);
-  DevConsole* dc = static_cast<DevConsole*>(s);
-  if (dc != nullptr)
+  if (s != nullptr)
   {
+    DevConsole* dc = static_cast<DevConsole*>(s);
     for (auto& kvp : dc->_objectHandles)
     {
       if (kvp.second == this)
@@ -103,8 +103,11 @@ void GameObject::Init(MapLevelBase* levelOwner,
   // _currentCell->Occupied is not set to true by default,
   // see game-object.h comments for Occupied field.
   //
-  _currentCell  = _levelOwner->MapArray[PosX][PosY].get();
-  _previousCell = _levelOwner->MapArray[PosX][PosY].get();
+  if (_levelOwner != nullptr)
+  {
+    _currentCell  = _levelOwner->MapArray[PosX][PosY].get();
+    _previousCell = _levelOwner->MapArray[PosX][PosY].get();
+  }
 }
 
 // =============================================================================
@@ -1566,7 +1569,7 @@ std::vector<std::string> GameObject::DebugInfo()
   str = Util::StringFormat("  ObjName: %s", ObjectName.data());
   res.push_back(str);
 
-  str = Util::StringFormat("  ObjectId: %lu", _objectId);
+  str = Util::StringFormat("  ObjectId: %llu", _objectId);
   res.push_back(str);
 
   std::string ch = { (char)Image };
@@ -1599,7 +1602,7 @@ std::vector<std::string> GameObject::DebugInfo()
 
   for (auto& kvp : _activeEffects)
   {
-    str = Util::StringFormat("    %lu (%zu):", kvp.first, kvp.second.size());
+    str = Util::StringFormat("    %llu (%zu):", kvp.first, kvp.second.size());
     res.push_back(str);
 
     for (ItemBonusStruct& i : kvp.second)

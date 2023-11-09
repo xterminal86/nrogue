@@ -39,7 +39,7 @@ class PotentialField
   private:
     std::vector<std::vector<Cell>> _field;
 
-    int _fieldRadius;
+    int _fieldRadius = 0;
 
     bool _isDirty = true;
 

@@ -543,16 +543,23 @@ void MainState::PrintDebugInfo()
 
   Printer::Instance().PrintFB(1, 2, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
-  _debugInfo = Util::StringFormat("Level Start: [%i;%i]", Map::Instance().CurrentLevel->LevelStart.X, Map::Instance().CurrentLevel->LevelStart.Y);
+  _debugInfo = Util::StringFormat("Level Start: [%i;%i]",
+                                  Map::Instance().CurrentLevel->LevelStart.X,
+                                  Map::Instance().CurrentLevel->LevelStart.Y);
   Printer::Instance().PrintFB(1, 3, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
-  _debugInfo = Util::StringFormat("Level Exit: [%i;%i]", Map::Instance().CurrentLevel->LevelExit.X, Map::Instance().CurrentLevel->LevelExit.Y);
+  _debugInfo = Util::StringFormat("Level Exit: [%i;%i]",
+                                  Map::Instance().CurrentLevel->LevelExit.X,
+                                  Map::Instance().CurrentLevel->LevelExit.Y);
   Printer::Instance().PrintFB(1, 4, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
-  _debugInfo = Util::StringFormat("Colors Used: %i", Printer::Instance().ColorsUsed());
+  _debugInfo = Util::StringFormat("Colors Used: %i",
+                                  Printer::Instance().ColorsUsed());
   Printer::Instance().PrintFB(1, 5, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
-  _debugInfo = Util::StringFormat("PT: %lu MU: %lu", Application::Instance().PlayerTurnsPassed, Application::Instance().MapUpdateCyclesPassed);
+  _debugInfo = Util::StringFormat("PT: %llu MU: %llu",
+                                  Application::Instance().PlayerTurnsPassed,
+                                  Application::Instance().MapUpdateCyclesPassed);
   Printer::Instance().PrintFB(1, 6, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
   Printer::Instance().PrintFB(1, 7, "Actors watched:", Printer::kAlignLeft, Colors::WhiteColor);
@@ -565,7 +572,10 @@ void MainState::PrintDebugInfo()
     {
       if (a->ObjectId() == id)
       {
-        _debugInfo = Util::StringFormat("%s_%lu (%i)", a->ObjectName.data(), id, a->Attrs.ActionMeter);
+        _debugInfo = Util::StringFormat("%s_%llu (%i)",
+                                        a->ObjectName.data(),
+                                        id,
+                                        a->Attrs.ActionMeter);
         Printer::Instance().PrintFB(1, 8 + yOffset, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
         yOffset++;
         found = true;

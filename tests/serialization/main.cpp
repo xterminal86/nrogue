@@ -1,5 +1,15 @@
 #include "serializer.h"
 
+#include "application.h"
+#include "game-objects-factory.h"
+#include "spells-processor.h"
+#include "items-factory.h"
+#include "monsters-inc.h"
+#include "blackboard.h"
+#include "bts-decompiler.h"
+#include "map.h"
+#include "logger.h"
+#include "timer.h"
 #include "util.h"
 
 std::string MakeOneliner(const std::string& stringObject)
@@ -650,55 +660,120 @@ root : {
 
 // =============================================================================
 
+void SerializeObjects()
+{
+  PRINT_BANNER();
+
+  struct Test
+  {
+    uint64_t Id = 0;
+    std::string ObjectName;
+    size_t SomeValue = 0;
+    std::vector<int> SomeData;
+
+    void Serialize(NRS& saveTo, const std::string& level)
+    {
+      std::string key = Util::StringFormat("%s_%llu", ObjectName.data(), Id);
+
+      NRS& node = saveTo[level];
+
+      node[key]["id"].SetUInt(Id);
+      node[key]["name"].SetString(ObjectName);
+      node[key]["value"].SetUInt(SomeValue);
+
+      for (size_t i = 0; i < SomeData.size(); i++)
+      {
+        node[key]["data"].SetInt(SomeData[i], i);
+      }
+    }
+  };
+
+  NRS saveData;
+
+  std::vector<Test> objects;
+
+  for (size_t i = 0; i < 10; i++)
+  {
+    Test t;
+    t.Id = i + 1;
+    t.ObjectName = Util::GenerateName();
+    t.SomeValue = RNG::Instance().RandomRange(1, 255);
+
+    int size = RNG::Instance().RandomRange(0, 5);
+
+    for (int i = 0; i < size; i++)
+    {
+      int val = RNG::Instance().RandomRange(-255, 256);
+      t.SomeData.push_back(val);
+    }
+
+    t.Serialize(saveData, "objects");
+  }
+
+  printf("%s\n", saveData.ToPrettyString().data());
+}
+
+// =============================================================================
+
 void SaveGameTest()
 {
   PRINT_BANNER();
 
-  std::string data = R"(
-map : {
-  0  : "#####################",
-  1  : "#...................#",
-  2  : "#...................#",
-  3  : "#...................#",
-  4  : "#...................#",
-  5  : "#...................#",
-  6  : "#...................#",
-  7  : "#...................#",
-  8  : "#...................#",
-  9  : "#...................#",
-  10 : "#...................#",
-  11 : "#...................#",
-  12 : "#...................#",
-  13 : "#...................#",
-  14 : "#...................#",
-  15 : "#...................#",
-  16 : "#...................#",
-  17 : "#...................#",
-  18 : "#...................#",
-  19 : "#...................#",
-  20 : "#...................#",
-  21 : "#####################",
-},
-)";
+  // ---------------------------------------------------------------------------
+
+  Blackboard::Instance().Init();
+  Timer::Instance().Init();
+
+  Logger::Instance().Init();
+  Logger::Instance().Prepare(false);
+
+  BTSDecompiler::Instance().Init();
+
+  Application::Instance().Init();
+
+  GameObjectsFactory::Instance().Init();
+  ItemsFactory::Instance().Init();
+  MonstersInc::Instance().Init();
+
+  SpellsDatabase::Instance().Init();
+  SpellsProcessor::Instance().Init();
+
+  Map::Instance().Init();
+  Map::Instance().LoadTown();
+
+  // ---------------------------------------------------------------------------
+
+  GameObject* go = MonstersInc::Instance().CreateMadMiner(0, 0);
+  std::unique_ptr<GameObject> owner;
+  owner.reset(go);
 
   NRS map;
-  map.FromStringObject(data);
+
+  // TODO:
+
   std::string dump = map.DumpObjectStructureToString();
   printf("%s\n", dump.data());
   printf("%s\n", map.ToStringObject().data());
+
+  // ---------------------------------------------------------------------------
+
+  Application::Instance().Cleanup();
 }
 
 // =============================================================================
 
 int main(int argc, char* argv[])
 {
+  RNG::Instance().Init();
+
   //TestSimple();
   //TestComplex();
   //WithFile();
   //Encrypt();
   //NewConfig();
   //CheckSyntax();
-  SaveGameTest();
+  SerializeObjects();
+  //SaveGameTest();
 
   return 0;
 }

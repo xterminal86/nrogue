@@ -79,6 +79,8 @@ void Application::InitSpecific()
 
 void Application::Reset()
 {
+  GetNewGlobalId(true);
+
   InitGameStates(true);
 
   _currentState = _gameStates[GameStates::MENU_STATE].get();
@@ -1274,8 +1276,15 @@ void Application::InitGameStates(bool restart)
 
 // =============================================================================
 
-uint64_t Application::GetNewGlobalId()
+uint64_t Application::GetNewGlobalId(bool reset)
 {
   static uint64_t globalId = 1;
+
+  if (reset)
+  {
+    globalId = 1;
+    return globalId;
+  }
+
   return globalId++;
 }

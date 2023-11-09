@@ -34,6 +34,7 @@ class EnterNameState : public GameState
 
     int _x = 0;
     int _y = 0;
+
     int _cursorPos = 0;
 
     const int _maxNameHalf = GlobalConstants::MaxNameLength / 2;

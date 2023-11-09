@@ -35,7 +35,7 @@ void ReplayEndState::Update(bool forceUpdate)
                                 Colors::WhiteColor);
 
     Printer::Instance().PrintFB(_twHalf, 2,
-                                "Press 'q' to exit",
+                                "Press 'q' to return to menu",
                                 Printer::kAlignCenter,
                                 Colors::WhiteColor);
 

@@ -65,13 +65,6 @@ int main(int argc, char* argv[])
 
   BTSDecompiler::Instance().Init();
 
-  GameObjectsFactory::Instance().Init();
-  ItemsFactory::Instance().Init();
-  MonstersInc::Instance().Init();
-
-  SpellsDatabase::Instance().Init();
-  SpellsProcessor::Instance().Init();
-
   Application::Instance().Init();
 
   if (!Application::Instance().IsAppReady())
@@ -79,6 +72,13 @@ int main(int argc, char* argv[])
     ConsoleLog("There was an error during application initialization - no sense in continuing");
     return 1;
   }
+
+  GameObjectsFactory::Instance().Init();
+  ItemsFactory::Instance().Init();
+  MonstersInc::Instance().Init();
+
+  SpellsDatabase::Instance().Init();
+  SpellsProcessor::Instance().Init();
 
   Map::Instance().Init();
 

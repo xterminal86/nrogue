@@ -81,7 +81,7 @@ struct Attributes
   RangedAttribute Exp;
   Attribute Lvl;
 
-  int Hunger = 0;
+  int Hunger      = 0;
   int ActionMeter = 0;
 
   //

@@ -395,7 +395,8 @@ void LookInputState::DisplayMonsterStats()
   {
     _monsterStatsInfo.clear();
 
-    std::string name = Util::StringFormat("%s_%lu", actor->ObjectName.data(), actor->ObjectId());
+    std::string name = Util::StringFormat("%s_%llu", actor->ObjectName.data(),
+                                          actor->ObjectId());
 
     _monsterStatsInfo.push_back(Util::StringFormat("LVL: %i", actor->Attrs.Lvl.Get()));
     _monsterStatsInfo.push_back(Util::StringFormat("EXP: %i", actor->Attrs.Exp.Min().Get()));
