@@ -664,6 +664,10 @@ void SerializeObjects()
 {
   PRINT_BANNER();
 
+  const std::string line(80, '-');
+
+  // ---------------------------------------------------------------------------
+
   struct Test
   {
     uint64_t Id = 0;
@@ -671,28 +675,89 @@ void SerializeObjects()
     size_t SomeValue = 0;
     std::vector<int> SomeData;
 
-    void Serialize(NRS& saveTo, const std::string& level)
+    bool operator==(const Test& rhs)
     {
-      std::string key = Util::StringFormat("%s_%llu", ObjectName.data(), Id);
+      if (Id != rhs.Id)                           return false;
+      if (ObjectName != rhs.ObjectName)           return false;
+      if (SomeValue != rhs.SomeValue)             return false;
+      if (SomeData.size() != rhs.SomeData.size()) return false;
 
-      NRS& node = saveTo[level];
+      for (size_t ind = 0; ind < SomeData.size(); ind++)
+      {
+        if (SomeData[ind] != rhs.SomeData[ind])
+        {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    void Serialize(NRS& saveTo, const std::string& path, size_t index)
+    {
+      std::string key = Util::StringFormat("go_%llu", index);
+
+      NRS& node = saveTo.GetNode(path);
 
       node[key]["id"].SetUInt(Id);
       node[key]["name"].SetString(ObjectName);
       node[key]["value"].SetUInt(SomeValue);
+      node[key]["data_size"].SetUInt(SomeData.size());
 
       for (size_t i = 0; i < SomeData.size(); i++)
       {
         node[key]["data"].SetInt(SomeData[i], i);
       }
     }
+
+    void Deserialize(NRS& from)
+    {
+      Id         = from["id"].GetUInt();
+      ObjectName = from["name"].GetString();
+      SomeValue  = from["value"].GetUInt();
+
+      size_t dataSize = from["data_size"].GetUInt();
+
+      for (size_t i = 0; i < dataSize; i++)
+      {
+        int val = from["data"].GetInt(i);
+        SomeData.push_back(val);
+      }
+    }
+
+    std::string ToString()
+    {
+      std::stringstream ss;
+
+      ss << "id    = " << Id         << "\n";
+      ss << "name  = " << ObjectName << "\n";
+      ss << "value = " << SomeValue  << "\n";
+      ss << "data  = ";
+
+      for (auto& i : SomeData)
+      {
+        ss << i << " ";
+      }
+
+      ss << "\n";
+
+      return ss.str();
+    }
   };
+
+  // ---------------------------------------------------------------------------
+
+  const std::string path = "root.objects";
 
   NRS saveData;
 
   std::vector<Test> objects;
 
-  for (size_t i = 0; i < 10; i++)
+  const size_t objectsCount = 5;
+
+  saveData.GetNode(path)["size"].SetUInt(objectsCount);
+
+  for (size_t i = 0; i < objectsCount; i++)
   {
     Test t;
     t.Id = i + 1;
@@ -701,16 +766,59 @@ void SerializeObjects()
 
     int size = RNG::Instance().RandomRange(0, 5);
 
-    for (int i = 0; i < size; i++)
+    for (int j = 0; j < size; j++)
     {
       int val = RNG::Instance().RandomRange(-255, 256);
       t.SomeData.push_back(val);
     }
 
-    t.Serialize(saveData, "objects");
+    objects.push_back(t);
+
+    t.Serialize(saveData, path, i);
   }
 
+  std::string pjson = saveData.ToStringObject();
+
   printf("%s\n", saveData.ToPrettyString().data());
+  //printf("%s\n", saveData.DumpObjectStructureToString().data());
+
+  // ---------------------------------------------------------------------------
+
+  std::vector<Test> objectsRead;
+
+  NRS ds;
+  ds.FromStringObject(pjson);
+
+  size_t cnt = ds.GetNode(path)["size"].GetUInt();
+
+  for (size_t i = 0; i < cnt; i++)
+  {
+    std::string key = Util::StringFormat("go_%llu", i);
+
+    NRS& node = ds.GetNode(path)[key];
+
+    Test t;
+    t.Deserialize(node);
+
+    objectsRead.push_back(t);
+  }
+
+  printf("%s\n", line.data());
+  printf("Objects read:\n");
+  printf("%s\n\n", line.data());
+
+  for (auto& i : objectsRead)
+  {
+    printf("%s\n", i.ToString().data());
+  }
+
+  printf("\n%s\n", line.data());
+
+  for (size_t i = 0; i < objectsCount; i++)
+  {
+    bool ok = (objects[i] == objectsRead[i]);
+    printf("originalObj[%llu] == readObj[%llu] ? %s\n", i, i, (ok ? "yes" : "no"));
+  }
 }
 
 // =============================================================================
@@ -739,17 +847,33 @@ void SaveGameTest()
   SpellsProcessor::Instance().Init();
 
   Map::Instance().Init();
-  Map::Instance().LoadTown();
 
   // ---------------------------------------------------------------------------
 
-  GameObject* go = MonstersInc::Instance().CreateMadMiner(0, 0);
-  std::unique_ptr<GameObject> owner;
-  owner.reset(go);
-
   NRS map;
 
-  // TODO:
+  //
+  // TODO: add test level for this specific test case.
+  //
+  Map::Instance().LoadTown();
+
+  //
+  // Serialization of 40k simple Test objects from SerializeObjects() test
+  // (which is 200x200, currently the largest in-game map possible) takes around
+  // 7 seconds. Given the fact that GameObject is much more complex than test
+  // Test class, and given the fact that we have 28 maps, this starting to look
+  // not so good. We need to deal with this issue somehow.
+  // We're going to assume that several objects are not going to change much,
+  // or at least they're not expected to have any special behaviour: objects
+  // like walls and water, for example. So we'll serialize these common objects
+  // (walls, floor, lava, water etc., basically everything inside
+  // MapLevelBase::CreateCommonObjects()) as char array, basically in MapRaw
+  // format.
+  // Then, every special game object / actor is serialized as needed.
+  // Of course, theoretically you could attach components to walls, water and
+  // so on, but we're not going to account for that and deal with it if need
+  // arises (and when we get there).
+  //
 
   std::string dump = map.DumpObjectStructureToString();
   printf("%s\n", dump.data());

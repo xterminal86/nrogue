@@ -9,6 +9,7 @@
 #include "game-object-info.h"
 #include "ai-component.h"
 #include "trigger-component.h"
+#include "serializer.h"
 #include "blackboard.h"
 
 #ifdef DEBUG_BUILD
@@ -1552,6 +1553,12 @@ const std::map<int, std::map<PlayerStats, int>>& GameObject::GetLevelUpHistory()
 const uint64_t& GameObject::ObjectId()
 {
   return _objectId;
+}
+
+// =============================================================================
+
+void GameObject::Serialize(NRS& savefile)
+{
 }
 
 // =============================================================================

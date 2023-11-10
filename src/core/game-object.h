@@ -21,6 +21,7 @@ class GameObjectInfo;
 class MapLevelBase;
 class Position;
 class Node;
+class NRS;
 
 class GameObject
 {
@@ -107,6 +108,8 @@ class GameObject
     {
       return (GetComponent<T>() != nullptr);
     }
+
+    void Serialize(NRS& savefile);
 
     void MakeTile(const GameObjectInfo& t,
                   GameObjectType typeOverride = GameObjectType::GROUND);
