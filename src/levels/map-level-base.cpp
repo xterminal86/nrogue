@@ -56,7 +56,7 @@ MapLevelBase::~MapLevelBase()
 
 // =============================================================================
 
-void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
+void MapLevelBase::PrepareMap()
 {
   MapArray.reserve(MapSize.X);
   StaticMapObjects.reserve(MapSize.X);
@@ -89,7 +89,7 @@ void MapLevelBase::PrepareMap(MapLevelBase* levelOwner)
   {
     for (int y = 0; y < MapSize.Y; y++)
     {
-      MapArray[x][y]->Init(levelOwner, x, y, '.', Colors::BlackColor, Colors::BlackColor);
+      MapArray[x][y]->Init(this, x, y, '.', Colors::BlackColor, Colors::BlackColor);
     }
   }
 }
@@ -612,6 +612,62 @@ void MapLevelBase::DisplayWelcomeText()
 
 void MapLevelBase::OnLevelChanged(MapType from)
 {
+}
+
+// =============================================================================
+
+void MapLevelBase::Serialize(NRS& saveTo)
+{
+  saveTo.GetNode("save.seed").SetUInt(RNG::Instance().Seed);
+  saveTo.GetNode("save.level.type").SetInt((int)MapType_);
+  saveTo.GetNode("save.level.name").SetString(LevelName);
+
+  NRS& node = saveTo.GetNode("save.level.map_raw");
+
+  //
+  // Once again, we will swap coordinates so that map looks readable in
+  // savefile. In reality we use map as array under the hood, but draw it
+  // like it is a picture, which effectively means draw array rotated 90 CCW.
+  //
+  // E.g.:
+  //
+  // 012345
+  // ###### 0
+  // #....# 1
+  // #....# 2
+  // ###### 3
+  //
+  // In memory it is stored as:
+  //
+  // 0123
+  // #### 0
+  // #..# 1
+  // #..# 2
+  // #..# 3
+  // #..# 4
+  // #### 5
+  //
+  // Basically, our map displayed is rotated 90 degrees clockwise in memory.
+  // So when game object moves from 1;1 to 2;1 it actually moves DOWN in array,
+  // but when we draw it, it looks like it moved to the right. I don't know how
+  // I managed to fuck this up again and not planned everything correctly from
+  // the start, so that it looks the same everywhere at the interface level and
+  // you don't have to always make this mental note that map displayed is not
+  // the same as map in memory, so you should be careful when accessing arrays
+  // and stuff.
+  // Well, next time I guess...
+  //
+  for (int y = 0; y < MapSize.Y; y++)
+  {
+    std::stringstream ss;
+
+    for (int x = 0; x < MapSize.X; x++)
+    {
+      ss << MapArray[x][y]->Image;
+    }
+
+    node[std::to_string(y)].SetString(ss.str());
+  }
 }
 
 // =============================================================================

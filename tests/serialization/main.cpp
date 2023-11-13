@@ -1,5 +1,6 @@
 #include "serializer.h"
 
+#include "gid-generator.h"
 #include "application.h"
 #include "game-objects-factory.h"
 #include "spells-processor.h"
@@ -829,6 +830,7 @@ void SaveGameTest()
 
   // ---------------------------------------------------------------------------
 
+  GID::Instance().Init();
   Blackboard::Instance().Init();
   Timer::Instance().Init();
 
@@ -850,13 +852,6 @@ void SaveGameTest()
 
   // ---------------------------------------------------------------------------
 
-  NRS map;
-
-  //
-  // TODO: add test level for this specific test case.
-  //
-  Map::Instance().LoadTown();
-
   //
   // Serialization of 40k simple Test objects from SerializeObjects() test
   // (which is 200x200, currently the largest in-game map possible) takes around
@@ -875,12 +870,24 @@ void SaveGameTest()
   // arises (and when we get there).
   //
 
-  std::string dump = map.DumpObjectStructureToString();
-  printf("%s\n", dump.data());
-  printf("%s\n", map.ToStringObject().data());
+  Map::Instance().LoadTestLevel();
+
+  auto& curLvl    = Map::Instance().CurrentLevel;
+  auto& playerRef = Application::Instance().PlayerInstance;
+
+  playerRef.SetLevelOwner(curLvl);
+  playerRef.Init();
+  playerRef.MoveTo({ 1, 1 });
+  playerRef.AddExtraItems();
+  playerRef.VisibilityRadius.Set(curLvl->VisibilityRadius);
+
+  curLvl->AdjustCamera();
+
+  Application::Instance().ChangeState(GameStates::MAIN_STATE);
 
   // ---------------------------------------------------------------------------
 
+  Application::Instance().Run();
   Application::Instance().Cleanup();
 }
 
@@ -896,8 +903,8 @@ int main(int argc, char* argv[])
   //Encrypt();
   //NewConfig();
   //CheckSyntax();
-  SerializeObjects();
-  //SaveGameTest();
+  //SerializeObjects();
+  SaveGameTest();
 
   return 0;
 }

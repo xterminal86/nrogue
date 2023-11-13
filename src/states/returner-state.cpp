@@ -6,9 +6,6 @@
 
 void ReturnerState::Init()
 {
-  _keysToRecord['u']       = true;
-  _keysToRecord['a']       = true;
-  _keysToRecord[VK_CANCEL] = true;
 }
 
 // =============================================================================
@@ -81,16 +78,12 @@ void ReturnerState::HandleInput()
     default:
       break;
   }
-
-  RECORD_ACTION(_keyPressed);
 }
 
 // =============================================================================
 
 void ReturnerState::Update(bool forceUpdate)
 {
-  DELAY_REPLAY();
-
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();

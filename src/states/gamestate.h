@@ -17,59 +17,6 @@
 
 using Ns = std::chrono::nanoseconds;
 
-// #############################################################################
-
-#define RECORD_ACTION(key)                     \
-  if (_keysToRecord.count(key) == 1)           \
-  {                                            \
-    Application::Instance().RecordAction(key); \
-  }
-
-// #############################################################################
-
-#define DELAY_REPLAY()                            \
-  if (Application::Instance().ReplayMode)          \
-  {                                                \
-    switch (Application::Instance().ReplaySpeed_) \
-    {                                              \
-      case ReplaySpeed::SLOW:                      \
-        Util::Sleep(300);                          \
-        break;                                     \
-                                                   \
-      case ReplaySpeed::NORMAL:                    \
-        Util::Sleep(150);                          \
-        break;                                     \
-                                                    \
-      case ReplaySpeed::FAST:                      \
-        Util::Sleep(75);                           \
-        break;                                     \
-    }                                               \
-  }
-
-// #############################################################################
-
-#define RECORD_NUMPAD()           \
-  _keysToRecord[ALT_K1]   = true; \
-  _keysToRecord[NUMPAD_1] = true; \
-  _keysToRecord[ALT_K2]   = true; \
-  _keysToRecord[NUMPAD_2] = true; \
-  _keysToRecord[ALT_K3]   = true; \
-  _keysToRecord[NUMPAD_3] = true; \
-  _keysToRecord[ALT_K4]   = true; \
-  _keysToRecord[NUMPAD_4] = true; \
-  _keysToRecord[ALT_K5]   = true; \
-  _keysToRecord[NUMPAD_5] = true; \
-  _keysToRecord[ALT_K6]   = true; \
-  _keysToRecord[NUMPAD_6] = true; \
-  _keysToRecord[ALT_K7]   = true; \
-  _keysToRecord[NUMPAD_7] = true; \
-  _keysToRecord[ALT_K8]   = true; \
-  _keysToRecord[NUMPAD_8] = true; \
-  _keysToRecord[ALT_K9]   = true; \
-  _keysToRecord[NUMPAD_9] = true;
-
-// #############################################################################
-
 class GameState
 {
   public:
@@ -111,8 +58,6 @@ class GameState
 
   protected:
     int _keyPressed = -1;
-
-    std::unordered_map<int, bool> _keysToRecord;
 
     void DrawHeader(const std::string& header);
 

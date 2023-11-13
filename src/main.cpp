@@ -1,3 +1,4 @@
+#include "gid-generator.h"
 #include "application.h"
 #include "bts-decompiler.h"
 #include "spells-processor.h"
@@ -50,6 +51,7 @@
 
 int main(int argc, char* argv[])
 {
+  GID::Instance().Init();
   RNG::Instance().Init();
   Blackboard::Instance().Init();
   Timer::Instance().Init();

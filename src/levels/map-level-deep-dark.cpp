@@ -40,9 +40,9 @@ MapLevelDeepDark::MapLevelDeepDark(int sizeX, int sizeY, MapType type, int dunge
 
 // =============================================================================
 
-void MapLevelDeepDark::PrepareMap(MapLevelBase* levelOwner)
+void MapLevelDeepDark::PrepareMap()
 {
-  MapLevelBase::PrepareMap(levelOwner);
+  MapLevelBase::PrepareMap();
 
   CreateLevel();
 }

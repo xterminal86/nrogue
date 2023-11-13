@@ -8,7 +8,7 @@ class MapLevelEndgame : public MapLevelBase
   public:
     MapLevelEndgame(int sizeX, int sizeY, MapType type, int dungeonLevel);
 
-    void PrepareMap(MapLevelBase* levelOwner) override;
+    void PrepareMap() override;
     void DisplayWelcomeText() override;
 
   protected:

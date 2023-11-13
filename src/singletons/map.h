@@ -32,6 +32,10 @@ class Map : public Singleton<Map>
 
     void LoadTown();
 
+    #ifdef BUILD_TESTS
+    void LoadTestLevel();
+    #endif
+
     void PlaceActor(GameObject* actor);
     void PlaceGameObject(GameObject* goToInsert);
     void RemoveDestroyed(GameObjectCollectionType c = GameObjectCollectionType::ALL);
@@ -64,6 +68,8 @@ class Map : public Singleton<Map>
 
     GameObject* FindGameObjectById(const uint64_t& objId,
                                    GameObjectCollectionType collectionType);
+
+    GameObject* GetMapObjectAtPosition(int x, int y);
 
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
 
@@ -147,6 +153,12 @@ class Map : public Singleton<Map>
     Player* _playerRef = nullptr;
 
     Position _windowSize;
+
+    template <typename T>
+    void InstantiateLevel(int sizeX, int sizeY, MapType type, int dungeonLevel)
+    {
+      _levels[type] = std::make_unique<T>(sizeX, sizeY, type, dungeonLevel);
+    }
 
     friend class Application;
 };

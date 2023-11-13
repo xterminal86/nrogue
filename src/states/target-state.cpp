@@ -11,19 +11,6 @@
 void TargetState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
-
-  RECORD_NUMPAD();
-
-  //
-  // "Waiting" is not used here.
-  //
-  _keysToRecord[ALT_K5]   = false;
-  _keysToRecord[NUMPAD_5] = false;
-
-  _keysToRecord[VK_TAB]    = true;
-  _keysToRecord[VK_ENTER]  = true;
-  _keysToRecord['f']       = true;
-  _keysToRecord[VK_CANCEL] = true;
 }
 
 // =============================================================================
@@ -199,8 +186,6 @@ void TargetState::HandleInput()
     default:
       break;
   }
-
-  RECORD_ACTION(_keyPressed);
 }
 
 // =============================================================================
@@ -747,8 +732,6 @@ void TargetState::DrawCursor()
 
 void TargetState::Update(bool forceUpdate)
 {
-  DELAY_REPLAY();
-
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();

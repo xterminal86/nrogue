@@ -10,7 +10,7 @@ class MapLevelMines : public MapLevelBase
   public:
     MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLevel);
 
-    void PrepareMap(MapLevelBase* levelOwner) override;
+    void PrepareMap() override;
     void DisplayWelcomeText() override;
     void OnLevelChanged(MapType from) override;
 

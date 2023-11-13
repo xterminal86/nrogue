@@ -97,6 +97,12 @@ if (${CMAKE_BUILD_TYPE} MATCHES Release)
     ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/logger.h)
 endif()
 
+if (NOT BUILD_TESTS)
+  list(REMOVE_ITEM SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/map-level-test.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/map-level-test.cpp)
+endif()
+
 #
 # To allow sharing of object files since it's all the same shit anyway.
 #

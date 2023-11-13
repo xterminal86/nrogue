@@ -10,7 +10,7 @@ class MapLevelTown : public MapLevelBase
   public:
     MapLevelTown(int sizeX, int sizeY, MapType type, int dungeonLevel);
 
-    void PrepareMap(MapLevelBase* levelOwner) override;
+    void PrepareMap() override;
 
     const Position& TownPortalPos();
 

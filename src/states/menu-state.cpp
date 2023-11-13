@@ -39,10 +39,6 @@ void MenuState::HandleInput()
       Application::Instance().ChangeState(GameStates::SELECT_CLASS_STATE);
       break;
 
-    case 'r':
-      Application::Instance().ChangeState(GameStates::REPLAY_START_STATE);
-      break;
-
     case 'L':
       DebugLog("FIXME: implement proper save/load");
       break;
@@ -245,16 +241,10 @@ void MenuState::Update(bool forceUpdate)
                                 Printer::kAlignCenter,
                                 Colors::WhiteColor);
 
-    Printer::Instance().PrintFB(_twHalf,
-                                _thHalf + _picture.size() + 1,
-                                "('r' to check replay files)",
-                                Printer::kAlignCenter,
-                                Colors::ShadesOfGrey::Ten);
-
     if (_saveFileFound)
     {
       Printer::Instance().PrintFB(_twHalf,
-                                  _thHalf + _picture.size() + 2,
+                                  _thHalf + _picture.size() + 1,
                                   _savefilePresent,
                                   Printer::kAlignCenter,
                                   0x44FF44);

@@ -78,7 +78,7 @@ class NRS
 
     bool CheckSyntax(const std::string& so);
 
-    bool Save(const std::string& fileName);
+    bool Save(const std::string& fileName, bool encrypt = false);
 
     enum class LoadResult
     {
@@ -87,7 +87,7 @@ class NRS
       ERROR
     };
 
-    LoadResult Load(const std::string& fname);
+    LoadResult Load(const std::string& fname, bool encrypted = false);
 
     std::string ToPrettyString();
     std::string DumpObjectStructureToString();

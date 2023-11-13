@@ -23,6 +23,10 @@ class Position;
 class Node;
 class NRS;
 
+#ifdef DEBUG_BUILD
+extern std::unordered_map<uint64_t, GameObject*> GameObjectsById;
+#endif
+
 class GameObject
 {
   public:
@@ -296,7 +300,7 @@ class GameObject
     void LevelUpNatural(int gainedLevel, int baseHpOverride);
 
     // Unique in-game id
-    uint64_t _objectId = 1;
+    uint64_t _objectId = 0;
 
     const std::unordered_map<ItemBonusType, Attribute&> _attributesRefsByBonus =
     {

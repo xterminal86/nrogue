@@ -14,8 +14,6 @@ void SelectItemStateBase::HandleInput()
 
 void SelectItemStateBase::Update(bool forceUpdate)
 {
-  DELAY_REPLAY();
-
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();

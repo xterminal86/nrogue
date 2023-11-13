@@ -32,7 +32,6 @@ void PickupItemState::ProcessInput()
   switch (_keyPressed)
   {
     case VK_CANCEL:
-      Application::Instance().RecordAction(_keyPressed);
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
 
@@ -48,8 +47,6 @@ void PickupItemState::ProcessInput()
           bool ok = PickupItem(item);
           if (ok)
           {
-            Application::Instance().RecordAction(_keyPressed);
-
             //
             // NOTE: list of items may be different on second interaction
             // if the pile was big enough and item was removed

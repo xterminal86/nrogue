@@ -7,18 +7,6 @@
 void ContainerInteractState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
-
-  _keysToRecord[ALT_K2]    = true;
-  _keysToRecord[NUMPAD_2]  = true;
-  _keysToRecord[ALT_K8]    = true;
-  _keysToRecord[NUMPAD_8]  = true;
-  _keysToRecord[ALT_K4]    = true;
-  _keysToRecord[NUMPAD_4]  = true;
-  _keysToRecord[ALT_K6]    = true;
-  _keysToRecord[NUMPAD_6]  = true;
-
-  _keysToRecord[VK_ENTER]  = true;
-  _keysToRecord[VK_CANCEL] = true;
 }
 
 // =============================================================================
@@ -94,16 +82,12 @@ void ContainerInteractState::HandleInput()
   }
 
   CheckIndexLimits();
-
-  RECORD_ACTION(_keyPressed);
 }
 
 // =============================================================================
 
 void ContainerInteractState::Update(bool forceUpdate)
 {
-  DELAY_REPLAY();
-
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();

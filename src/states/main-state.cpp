@@ -11,16 +11,6 @@
 void MainState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
-
-  RECORD_NUMPAD();
-
-  _keysToRecord['a'] = true;
-  _keysToRecord['f'] = true;
-  _keysToRecord['e'] = true;
-  _keysToRecord['i'] = true;
-  _keysToRecord['g'] = true;
-  _keysToRecord['>'] = true;
-  _keysToRecord['<'] = true;
 }
 
 // =============================================================================
@@ -219,16 +209,12 @@ void MainState::HandleInput()
     default:
       break;
   }
-
-  RECORD_ACTION(_keyPressed);
 }
 
 // =============================================================================
 
 void MainState::Update(bool forceUpdate)
 {
-  DELAY_REPLAY();
-
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();

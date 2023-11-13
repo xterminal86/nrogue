@@ -25,10 +25,8 @@ void SaveGameState::HandleInput()
       break;
 
     case 'y':
-      //Application::Instance().SaveGame(true);
-      //Application::Instance().ChangeState(GameStates::EXIT_GAME);
-      Printer::Instance().AddMessage("Not implemented yet", Colors::YellowColor);
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Application::Instance().SaveGame();
+      Application::Instance().ChangeState(GameStates::EXIT_GAME);
       break;
 
     default:

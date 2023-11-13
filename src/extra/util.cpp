@@ -373,6 +373,18 @@ namespace Util
 
   std::string Encrypt(const std::string& str)
   {
+    std::string res = str;
+
+    std::mt19937_64 rng(0x954754CBDAC8B352);
+
+    for (size_t i = 0; i < str.length(); i++)
+    {
+      res[i] ^= char(rng() % 256);
+    }
+
+    return res;
+
+    /*
     static const uint64_t key = 0x954754CBDAC8B352;
 
     std::string res = str;
@@ -383,6 +395,7 @@ namespace Util
     }
 
     return res;
+    */
   }
 
   // ===========================================================================

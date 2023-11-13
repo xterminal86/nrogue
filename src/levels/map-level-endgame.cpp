@@ -25,11 +25,11 @@ MapLevelEndgame::MapLevelEndgame(int sizeX, int sizeY, MapType type, int dungeon
 
 // =============================================================================
 
-void MapLevelEndgame::PrepareMap(MapLevelBase* levelOwner)
+void MapLevelEndgame::PrepareMap()
 {
   MysteriousForcePresent = true;
 
-  MapLevelBase::PrepareMap(levelOwner);
+  MapLevelBase::PrepareMap();
 
   CreateLevel();
 }

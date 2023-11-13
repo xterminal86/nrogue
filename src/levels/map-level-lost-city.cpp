@@ -15,9 +15,9 @@ MapLevelLostCity::MapLevelLostCity(int sizeX, int sizeY, MapType type, int dunge
 
 // =============================================================================
 
-void MapLevelLostCity::PrepareMap(MapLevelBase* levelOwner)
+void MapLevelLostCity::PrepareMap()
 {
-  MapLevelBase::PrepareMap(levelOwner);
+  MapLevelBase::PrepareMap();
 
   CreateLevel();
 }

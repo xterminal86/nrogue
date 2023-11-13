@@ -38,7 +38,6 @@ void RepairState::ProcessInput()
   switch (_keyPressed)
   {
     case VK_CANCEL:
-      Application::Instance().RecordAction(_keyPressed);
       Application::Instance().ChangeState(GameStates::INVENTORY_STATE);
       break;
 
@@ -57,7 +56,6 @@ void RepairState::ProcessInput()
         }
         else
         {
-          Application::Instance().RecordAction(_keyPressed);
           RepairItem(ic);
         }
       }

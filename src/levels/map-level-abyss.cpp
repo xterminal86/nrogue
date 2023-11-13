@@ -33,11 +33,11 @@ MapLevelAbyss::MapLevelAbyss(int sizeX, int sizeY, MapType type, int dungeonLeve
 
 // =============================================================================
 
-void MapLevelAbyss::PrepareMap(MapLevelBase* levelOwner)
+void MapLevelAbyss::PrepareMap()
 {
   MysteriousForcePresent = true;
 
-  MapLevelBase::PrepareMap(levelOwner);
+  MapLevelBase::PrepareMap();
 
   CreateLevel();
 }

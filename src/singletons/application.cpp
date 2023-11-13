@@ -1,4 +1,5 @@
 #include "application.h"
+#include "gid-generator.h"
 
 // -----------------------------------------------------------------------------
 
@@ -21,8 +22,6 @@
 #include "shopping-state.h"
 #include "returner-state.h"
 #include "repair-state.h"
-#include "replay-start-state.h"
-#include "replay-end-state.h"
 #include "save-game-state.h"
 #include "pickup-item-state.h"
 #include "exiting-state.h"
@@ -70,8 +69,6 @@ void Application::InitSpecific()
   Printer::Instance().AddMessage("You begin your quest");
   Printer::Instance().AddMessage("Press 'h' for help");
 
-  Replay.KeysPressed.reserve(64 * 1024);
-
   _appReady = true;
 }
 
@@ -79,7 +76,7 @@ void Application::InitSpecific()
 
 void Application::Reset()
 {
-  GetNewGlobalId(true);
+  GID::Instance().Reset();
 
   InitGameStates(true);
 
@@ -100,14 +97,6 @@ void Application::Reset()
 
   Printer::Instance().AddMessage("You begin your quest");
   Printer::Instance().AddMessage("Press 'h' for help");
-
-  ReplayMode = false;
-
-  Replay = ReplayData();
-
-  Replay.KeysPressed.reserve(64 * 1024);
-
-  _savedActionsToProcess.clear();
 
   Map::Instance().Reset();
 }
@@ -295,11 +284,6 @@ void Application::DisplayAttack(GameObject* defender,
                                 const std::string& messageToPrint,
                                 const uint32_t& cursorColor)
 {
-  if (ReplayMode)
-  {
-    return;
-  }
-
   if (GameConfig.FastCombat)
   {
     if (messageToPrint.length() != 0)
@@ -407,7 +391,7 @@ void Application::WriteObituary(bool wasKilled)
   ss << '\n';
   ss << "********** POSSESSIONS **********\n\n";
 
-  size_t stringResizeWidth = SavePossessions(ss);
+  size_t stringResizeWidth = WritePossessions(ss);
 
   ss << '\n';
   ss << "**********    KILLS    **********\n\n";
@@ -427,213 +411,24 @@ void Application::WriteObituary(bool wasKilled)
 
 // =============================================================================
 
-void Application::SaveReplayText()
+void Application::SaveGame()
 {
-  std::ofstream saveFile(Strings::SaveFileName.data());
-  std::stringstream ss;
+  NRS save;
 
-  Replay.WorldSeed  = RNG::Instance().Seed;
-  Replay.PlayerName = PlayerInstance.Name;
-  Replay.Class      = PlayerInstance.GetClass();
+  //
+  // FIXME: one level for now
+  //
+  Map::Instance().CurrentLevel->Serialize(save);
 
-  ss << Replay.WorldSeed  << '\n';
-  ss << Replay.PlayerName << '\n';
-  ss << (int)Replay.Class << '\n';
-  ss << Replay.Timestamp  << '\n';
-
-  for (auto& pair : Replay.KeysPressed)
+  if (!save.Save(Strings::SaveFileName))
   {
-    ss << pair.first << " " << pair.second << '\n';
+    ConsoleLog("Couldn't save at %s !", Strings::SaveFileName.data());
   }
-
-  saveFile << ss.str();
-
-  saveFile.close();
-
 }
 
 // =============================================================================
 
-void Application::SaveReplayBinary()
-{
-  std::ofstream saveFile(_replayFilename.data(), std::ofstream::binary);
-
-  Replay.WorldSeed  = RNG::Instance().Seed;
-  Replay.PlayerName = PlayerInstance.Name;
-  Replay.Class      = PlayerInstance.GetClass();
-
-  std::string buf = Replay.PlayerName;
-  buf.append(GlobalConstants::MaxNameLength - buf.length(), '\0');
-
-  saveFile.write((char*)&Replay.WorldSeed, sizeof(Replay.WorldSeed));
-  saveFile.write(buf.data(), buf.size());
-  saveFile.write((char*)&Replay.Class, 1);
-
-  size_t tsLength = Replay.Timestamp.size();
-  saveFile.write((char*)&tsLength, sizeof(tsLength));
-
-  saveFile.write(Replay.Timestamp.data(), Replay.Timestamp.size());
-
-  size_t keys = Replay.KeysPressed.size();
-  saveFile.write((char*)&keys, sizeof(keys));
-
-  for (auto& pair : Replay.KeysPressed)
-  {
-    saveFile.write((char*)&pair.first,  sizeof(pair.first));
-    saveFile.write((char*)&pair.second, sizeof(pair.second));
-  }
-
-  saveFile.close();
-}
-
-// =============================================================================
-
-void Application::SaveReplay(bool binary)
-{
-  std::string timestamp = Util::GetCurrentDateTimeString(true);
-
-  Replay.Timestamp = Util::GetCurrentDateTimeString();
-
-  _replayFilename = Util::StringFormat("replay-%s%s",
-                                       timestamp.data(),
-                                       Strings::ReplayFileExtension.data());
-  if (binary)
-  {
-    SaveReplayBinary();
-  }
-  else
-  {
-    SaveReplayText();
-  }
-
-  ConsoleLog("Replay saved as '%s'", _replayFilename.data());
-}
-
-// =============================================================================
-
-void Application::LoadReplayText()
-{
-  std::ifstream f(_replayFilename.data());
-
-  auto ReadLine = [&f]()
-  {
-    std::string line;
-    std::getline(f, line);
-    return line;
-  };
-
-  std::string line;
-
-  Replay.WorldSeed  = std::stoull(ReadLine());
-  Replay.PlayerName = ReadLine();
-  Replay.Class      = (PlayerClass)std::stoi(ReadLine());
-  Replay.Timestamp  = ReadLine();
-
-  Replay.KeysPressed.clear();
-
-  while (std::getline(f, line))
-  {
-    auto spl = Util::StringSplit(line, ' ');
-
-    int key   = std::stoi(spl[0]);
-    int count = std::stoi(spl[1]);
-
-    for (int i = 0; i < count; i++)
-    {
-      _savedActionsToProcess.push_back(key);
-    }
-  }
-
-  f.close();
-}
-
-// =============================================================================
-
-void Application::LoadReplayBinary()
-{
-  std::ifstream f(_replayFilename.data(), std::ifstream::binary);
-
-  //
-  // Read seed.
-  //
-  f.read((char*)&Replay.WorldSeed, sizeof(Replay.WorldSeed));
-
-  //
-  // Read player name.
-  //
-  Replay.PlayerName.resize(GlobalConstants::MaxNameLength);
-  f.read(Replay.PlayerName.data(), GlobalConstants::MaxNameLength);
-
-  Replay.PlayerName.erase(Replay.PlayerName.find('\0'));
-  Replay.PlayerName.append(1, '\0');
-
-  //
-  // Read class.
-  //
-  uint8_t class_ = 255;
-  f.read((char*)&class_, sizeof(class_));
-
-  Replay.Class = (PlayerClass)class_;
-
-  //
-  // Read timestamp.
-  //
-  size_t tsLength = 0;
-  f.read((char*)&tsLength, sizeof(tsLength));
-
-  Replay.Timestamp.resize(tsLength);
-
-  f.read(Replay.Timestamp.data(), tsLength);
-
-  //
-  // Read actions.
-  //
-  size_t keys = 0;
-  f.read((char*)&keys, sizeof(keys));
-
-  Replay.KeysPressed.clear();
-
-  for (size_t i = 0; i < keys; i++)
-  {
-    int key   = 0;
-    int count = 0;
-
-    f.read((char*)&key,   sizeof(key));
-    f.read((char*)&count, sizeof(count));
-
-    for (int i = 0; i < count; i++)
-    {
-      _savedActionsToProcess.push_back(key);
-    }
-  }
-
-  f.close();
-}
-
-// =============================================================================
-
-void Application::LoadReplay(const std::string& replayFilename, bool binary)
-{
-  _replayFilename = replayFilename;
-
-  if (binary)
-  {
-    LoadReplayBinary();
-  }
-  else
-  {
-    LoadReplayText();
-  }
-
-  PlayerInstance.Name          = Replay.PlayerName;
-  PlayerInstance.SelectedClass = (int)Replay.Class;
-
-  RNG::Instance().SetSeed(Replay.WorldSeed);
-}
-
-// =============================================================================
-
-size_t Application::SavePossessions(std::stringstream& ss)
+size_t Application::WritePossessions(std::stringstream& ss)
 {
   size_t stringResizeWidth = 0;
   for (auto& i : PlayerInstance.Inventory->Contents)
@@ -1189,45 +984,6 @@ void Application::ForceDrawCurrentState()
 
 // =============================================================================
 
-int Application::GetSavedAction()
-{
-  int res = -1;
-
-  if (!_savedActionsToProcess.empty())
-  {
-    res = _savedActionsToProcess.front();
-    _savedActionsToProcess.pop_front();
-  }
-
-  return res;
-}
-
-// =============================================================================
-
-void Application::RecordAction(int key)
-{
-  ReplayData::KeyAndCount newAction = { key, 1 };
-
-  if (!Replay.KeysPressed.empty())
-  {
-    auto& lastAction = Replay.KeysPressed.back();
-    if (lastAction.first == key)
-    {
-      lastAction.second++;
-    }
-    else
-    {
-      Replay.KeysPressed.push_back(newAction);
-    }
-  }
-  else
-  {
-    Replay.KeysPressed.push_back(newAction);
-  }
-}
-
-// =============================================================================
-
 void Application::InitGameStates(bool restart)
 {
   if (!restart)
@@ -1254,8 +1010,6 @@ void Application::InitGameStates(bool restart)
   RegisterState<ReturnerState>         (GameStates::RETURNER_STATE);
   RegisterState<RepairState>           (GameStates::REPAIR_STATE);
   RegisterState<SaveGameState>         (GameStates::SAVE_GAME_STATE);
-  RegisterState<ReplayStartState>      (GameStates::REPLAY_START_STATE);
-  RegisterState<ReplayEndState>        (GameStates::REPLAY_END_STATE);
   RegisterState<PickupItemState>       (GameStates::PICKUP_ITEM_STATE);
   RegisterState<ExitingState>          (GameStates::EXITING_STATE);
   RegisterState<MessageBoxState>       (GameStates::MESSAGE_BOX_STATE);
@@ -1272,19 +1026,4 @@ void Application::InitGameStates(bool restart)
     GameState* st = state.second.get();
     st->Init();
   }
-}
-
-// =============================================================================
-
-uint64_t Application::GetNewGlobalId(bool reset)
-{
-  static uint64_t globalId = 1;
-
-  if (reset)
-  {
-    globalId = 1;
-    return globalId;
-  }
-
-  return globalId++;
 }

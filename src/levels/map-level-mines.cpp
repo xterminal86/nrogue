@@ -100,9 +100,9 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
 
 // =============================================================================
 
-void MapLevelMines::PrepareMap(MapLevelBase* levelOwner)
+void MapLevelMines::PrepareMap()
 {
-  MapLevelBase::PrepareMap(levelOwner);
+  MapLevelBase::PrepareMap();
 
   CreateLevel();
 }

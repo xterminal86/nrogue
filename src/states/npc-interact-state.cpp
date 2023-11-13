@@ -11,12 +11,6 @@
 
 void NPCInteractState::Init()
 {
-  //
-  // Save only shop related keys.
-  //
-  _keysToRecord['j']       = true;
-  _keysToRecord['s']       = true;
-  _keysToRecord[VK_CANCEL] = true;
 }
 
 // =============================================================================
@@ -142,16 +136,12 @@ void NPCInteractState::HandleInput()
     default:
       break;
   }
-
-  RECORD_ACTION(_keyPressed);
 }
 
 // =============================================================================
 
 void NPCInteractState::Update(bool forceUpdate)
 {
-  DELAY_REPLAY();
-
   if (_textPrinting)
   {
     if (Util::WaitForMs(10))

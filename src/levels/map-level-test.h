@@ -1,12 +1,12 @@
-#ifndef MAPLEVELNETHER_H
-#define MAPLEVELNETHER_H
+#ifndef MAPLEVELTEST_H
+#define MAPLEVELTEST_H
 
 #include "map-level-base.h"
 
-class MapLevelNether : public MapLevelBase
+class MapLevelTest : public MapLevelBase
 {
   public:
-    MapLevelNether(int sizeX, int sizeY, MapType type, int dungeonLevel);
+    MapLevelTest(int sizeX, int sizeY, MapType type, int dungeonLevel);
 
     void PrepareMap() override;
     void DisplayWelcomeText() override;
@@ -17,4 +17,4 @@ class MapLevelNether : public MapLevelBase
     void CreateCommonObjects(int x, int y, char image) override;
 };
 
-#endif // MAPLEVELNETHER_H
+#endif // MAPLEVELTEST_H

@@ -1,5 +1,7 @@
 #include "serializer.h"
 
+#include "util.h"
+
 void NRS::SetString(const std::string& s, size_t index)
 {
   if (_content.size() <= index)
@@ -113,7 +115,7 @@ NRS& NRS::GetNode(const std::string& path)
 
 // =============================================================================
 
-bool NRS::Save(const std::string& fileName)
+bool NRS::Save(const std::string& fileName, bool encrypt)
 {
   bool ok = false;
 
@@ -121,6 +123,12 @@ bool NRS::Save(const std::string& fileName)
   if (file.is_open())
   {
     std::string serialized = ToStringObject();
+
+    if (encrypt)
+    {
+      serialized = Util::Encrypt(serialized);
+    }
+
     file << serialized;
     file.close();
     ok = true;
@@ -131,7 +139,7 @@ bool NRS::Save(const std::string& fileName)
 
 // =============================================================================
 
-NRS::LoadResult NRS::Load(const std::string& fname)
+NRS::LoadResult NRS::Load(const std::string& fname, bool encrypted)
 {
   LoadResult res = LoadResult::OK;
 
@@ -148,9 +156,16 @@ NRS::LoadResult NRS::Load(const std::string& fname)
 
     file.close();
 
-    if (CheckSyntax(ss.str()))
+    std::string loaded = ss.str();
+
+    if (encrypted)
     {
-      FromStringObject(ss.str());
+      loaded = Util::Encrypt(loaded);
+    }
+
+    if (CheckSyntax(loaded))
+    {
+      FromStringObject(loaded);
     }
     else
     {

@@ -223,7 +223,6 @@ namespace Strings
   const std::vector<std::string> MsgNotInTown = { "Not here", "Not in town" };
   // ---------------------------------------------------------------------------
   const std::string SaveFileName        = "save.nrg";
-  const std::string ReplayFileExtension = ".rpl";
   // ---------------------------------------------------------------------------
   namespace TileNames
   {
@@ -973,7 +972,13 @@ namespace GlobalConstants
     // -------------------------------------------------------------------------
     // The End
     // -------------------------------------------------------------------------
-    { MapType::THE_END,     { "???" } }
+    { MapType::THE_END,     { "???" } },
+#ifdef BUILD_TESTS
+    // -------------------------------------------------------------------------
+    // Test level
+    // -------------------------------------------------------------------------
+    { MapType::TEST_LEVEL, { "Test Level" } },
+#endif
   };
 
   const std::unordered_map<ItemBonusType, std::string> ItemBonusPrefixes =

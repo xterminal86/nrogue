@@ -18,6 +18,10 @@
 #include "logger.h"
 #endif
 
+#ifdef BUILD_TESTS
+#include "map-level-test.h"
+#endif
+
 void Map::InitSpecific()
 {
   Reset();
@@ -89,6 +93,15 @@ void Map::LoadTown()
 
   _townLoaded = true;
 }
+
+// =============================================================================
+
+#ifdef BUILD_TESTS
+void Map::LoadTestLevel()
+{
+  ChangeOrInstantiateLevel(MapType::TEST_LEVEL);
+}
+#endif
 
 // =============================================================================
 
@@ -307,6 +320,13 @@ GameObject* Map::GetActorAtPosition(int x, int y)
   }
 
   return nullptr;
+}
+
+// =============================================================================
+
+GameObject* Map::GetMapObjectAtPosition(int x, int y)
+{
+  return CurrentLevel->MapArray[x][y].get();
 }
 
 // =============================================================================
@@ -614,39 +634,37 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
     switch (levelName)
     {
       case MapType::TOWN:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelTown(100, 50, levelName, lvlAsInt));
+        InstantiateLevel<MapLevelTown>(100, 50, levelName, lvlAsInt);
         break;
 
       case MapType::MINES_1:
       case MapType::MINES_2:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(50, 50, levelName, lvlAsInt));
+        InstantiateLevel<MapLevelMines>(50, 50, levelName, lvlAsInt);
         break;
 
       case MapType::MINES_3:
       case MapType::MINES_4:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(30, 30, levelName, lvlAsInt));
+        InstantiateLevel<MapLevelMines>(30, 30, levelName, lvlAsInt);
         break;
 
       case MapType::MINES_5:
-      {
         //
         // Map size values in the constructor here don't matter
         // since they will be overridden there for special level case.
         //
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelMines(30, 30, levelName, lvlAsInt));
-      }
-      break;
+        InstantiateLevel<MapLevelMines>(30, 30, levelName, lvlAsInt);
+        break;
 
       case MapType::CAVES_1:
       case MapType::CAVES_2:
       case MapType::CAVES_3:
       case MapType::CAVES_4:
       case MapType::CAVES_5:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelCaves(30, 30, levelName, lvlAsInt));
+        InstantiateLevel<MapLevelCaves>(30, 30, levelName, lvlAsInt);
         break;
 
       case MapType::LOST_CITY:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelLostCity(100, 100, levelName, lvlAsInt));
+        InstantiateLevel<MapLevelLostCity>(100, 100, levelName, lvlAsInt);
         break;
 
       case MapType::DEEP_DARK_1:
@@ -654,7 +672,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
       case MapType::DEEP_DARK_3:
       case MapType::DEEP_DARK_4:
       case MapType::DEEP_DARK_5:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelDeepDark(80, 80, levelName, lvlAsInt));
+        InstantiateLevel<MapLevelDeepDark>(80, 80, levelName, lvlAsInt);
         break;
 
       case MapType::ABYSS_1:
@@ -662,7 +680,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
       case MapType::ABYSS_3:
       case MapType::ABYSS_4:
       case MapType::ABYSS_5:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelAbyss(200, 200, levelName, lvlAsInt));
+        InstantiateLevel<MapLevelAbyss>(200, 200, levelName, lvlAsInt);
         break;
 
       case MapType::NETHER_1:
@@ -670,12 +688,18 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
       case MapType::NETHER_3:
       case MapType::NETHER_4:
       case MapType::NETHER_5:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelNether(120, 120, levelName, lvlAsInt));
+        InstantiateLevel<MapLevelNether>(120, 120, levelName, lvlAsInt);
         break;
 
       case MapType::THE_END:
-        _levels[levelName] = std::unique_ptr<MapLevelBase>(new MapLevelEndgame(64, 64, levelName, lvlAsInt));
+        InstantiateLevel<MapLevelEndgame>(64, 64, levelName, lvlAsInt);
         break;
+
+      #ifdef BUILD_TESTS
+      case MapType::TEST_LEVEL:
+        InstantiateLevel<MapLevelTest>(40, 20, levelName, lvlAsInt);
+        break;
+      #endif
     }
 
     //
@@ -683,7 +707,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
     //
     CurrentLevel = _levels[levelName].get();
 
-    _levels[levelName]->PrepareMap(CurrentLevel);
+    _levels[levelName]->PrepareMap();
   }
   else
   {
@@ -1208,7 +1232,11 @@ void Map::DrawMapTilesAroundPlayer()
   int tw = Printer::TerminalWidth;
   int th = Printer::TerminalHeight;
 
-  auto mapCells = Util::GetRectAroundPoint(_playerRef->PosX, _playerRef->PosY, tw / 2, th / 2, CurrentLevel->MapSize);
+  auto mapCells = Util::GetRectAroundPoint(_playerRef->PosX,
+                                           _playerRef->PosY,
+                                           tw / 2,
+                                           th / 2,
+                                           CurrentLevel->MapSize);
   for (auto& cell : mapCells)
   {
     int x = cell.X;

@@ -90,9 +90,9 @@ MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLeve
 
 // =============================================================================
 
-void MapLevelCaves::PrepareMap(MapLevelBase* levelOwner)
+void MapLevelCaves::PrepareMap()
 {
-  MapLevelBase::PrepareMap(levelOwner);
+  MapLevelBase::PrepareMap();
 
   CreateLevel();
 }

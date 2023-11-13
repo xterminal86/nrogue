@@ -14,15 +14,20 @@ void MessageBoxState::HandleInput()
 
   if (_keyPressed != -1)
   {
-    if (_type == MessageBoxType::WAIT_FOR_INPUT && (_keyPressed == VK_ENTER || _keyPressed == 'q'))
+    switch (_type)
     {
-      Application::Instance().RecordAction(_keyPressed);
-      Application::Instance().CloseMessageBox();
-    }
-    else if (_type == MessageBoxType::ANY_KEY)
-    {
-      Application::Instance().RecordAction(_keyPressed);
-      Application::Instance().CloseMessageBox();
+      case MessageBoxType::WAIT_FOR_INPUT:
+      {
+        if (_keyPressed == VK_ENTER || _keyPressed == 'q')
+        {
+          Application::Instance().CloseMessageBox();
+        }
+      }
+      break;
+
+      default:
+        Application::Instance().CloseMessageBox();
+        break;
     }
   }
 }
@@ -31,8 +36,6 @@ void MessageBoxState::HandleInput()
 
 void MessageBoxState::Update(bool forceUpdate)
 {
-  DELAY_REPLAY();
-
   if (_keyPressed != -1 || forceUpdate)
   {
     uint32_t headerBgColor = Colors::MessageBoxHeaderBgColor;

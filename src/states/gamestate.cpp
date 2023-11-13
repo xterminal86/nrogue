@@ -5,31 +5,6 @@
 #include "timer.h"
 #include "util.h"
 
-#define REPLAY_ACTIONS()                                                    \
-  if (Application::Instance().ReplayMode)                                   \
-  {                                                                         \
-    if (Application::Instance().CurrentStateIs(GameStates::GAMEOVER_STATE)) \
-    {                                                                       \
-      Application::Instance().ReplayMode = false;                           \
-      Application::Instance().ChangeState(GameStates::REPLAY_END_STATE);    \
-    }                                                                       \
-    else                                                                    \
-    {                                                                       \
-      int savedActionToProcess = Application::Instance().GetSavedAction();  \
-      if (savedActionToProcess != -1)                                       \
-      {                                                                     \
-        return savedActionToProcess;                                        \
-      }                                                                     \
-      else                                                                  \
-      {                                                                     \
-        Application::Instance().ReplayMode = false;                         \
-        Application::Instance().ChangeState(GameStates::REPLAY_END_STATE);  \
-      }                                                                     \
-    }                                                                       \
-  }
-
-// =============================================================================
-
 GameState::GameState() :
   _tw(Printer::TerminalWidth),
   _th(Printer::TerminalHeight),
@@ -49,8 +24,6 @@ GameState::GameState() :
 #ifdef USE_SDL
 int GameState::GetKeyDown()
 {
-  REPLAY_ACTIONS();
-
   int res = -1;
 
   SDL_Event evt;
@@ -140,8 +113,6 @@ int GameState::GetKeyDown()
 #else
 int GameState::GetKeyDown()
 {
-  REPLAY_ACTIONS();
-
   return getch();
 }
 #endif

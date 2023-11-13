@@ -242,7 +242,6 @@ namespace Strings
   extern const std::vector<std::string> MsgNotInTown;
   // ---------------------------------------------------------------------------
   extern const std::string SaveFileName;
-  extern const std::string ReplayFileExtension;
   // ---------------------------------------------------------------------------
   namespace TileNames
   {

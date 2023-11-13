@@ -10,6 +10,7 @@ enum class DevConsoleCommand
   CLEAR,
   HELP,
   CLOSE,
+  HISTORY,
   TRANSFORM_TILE,
   PLACE_WALL,
   CREATE_DUMMY_ACTOR,
@@ -19,10 +20,13 @@ enum class DevConsoleCommand
   CREATE_ITEM,
   DISPEL_EFFECTS,
   DISPEL_EFFECTS_ACTOR,
+  GET_MAP_OBJECT,
   GET_STATIC_OBJECT,
   GET_ACTOR,
   GET_ITEM,
   GET_BY_ADDRESS,
+  GET_BY_ID,
+  GET_ANY_OBJECT,
   GOD_MODE,
   PRINT_TRIGGERS,
   PRINT_ACTORS,
@@ -50,6 +54,7 @@ enum class ObjectHandleType
   STATIC = 0,
   ITEM,
   ACTOR,
+  MAP,
   ANY
 };
 
@@ -105,6 +110,7 @@ class DevConsole : public GameState
       { ObjectHandleType::STATIC, "_static" },
       { ObjectHandleType::ACTOR,  "_actor"  },
       { ObjectHandleType::ITEM,   "_item"   },
+      { ObjectHandleType::MAP,    "_map"    },
       { ObjectHandleType::ANY,    "_any"    }
     };
 
@@ -143,6 +149,7 @@ class DevConsole : public GameState
                         const std::vector<std::string>& params);
     void DisplayHelpAboutCommand(const std::vector<std::string>& params);
     void PrintAdditionalHelp(DevConsoleCommand command);
+    void PrintHistory();
     void InfoHandles();
     void CreateMonster(const std::vector<std::string>& params);
     void CreateDummyActor(const std::vector<std::string>& params);
@@ -162,6 +169,7 @@ class DevConsole : public GameState
     void TransformTile(const std::vector<std::string>& params);
     void PlaceWall(const std::vector<std::string>& params);
     void GetObjectByAddress(const std::vector<std::string>& params);
+    void GetObjectById(const std::vector<std::string>& params);
     void ReportHandleDebugInfo(ObjectHandleType type);
     void PrintDebugInfo(const std::vector<std::string>& debugInfo);
     void GiveMoney(const std::vector<std::string>& params);
@@ -199,44 +207,48 @@ class DevConsole : public GameState
 
     const std::map<std::string, DevConsoleCommand> _commandTypeByName =
     {
-      { "clear",  DevConsoleCommand::CLEAR                },
-      { "help",   DevConsoleCommand::HELP                 },
-      { "exit",   DevConsoleCommand::CLOSE                },
-      { "q",      DevConsoleCommand::CLOSE                },
-      { "quit",   DevConsoleCommand::CLOSE                },
-      { "m_trns", DevConsoleCommand::TRANSFORM_TILE       },
-      { "m_pw",   DevConsoleCommand::PLACE_WALL           },
-      { "m_show", DevConsoleCommand::SHOW_MAP             },
-      { "info",   DevConsoleCommand::INFO_HANDLES         },
-      { "i_trig", DevConsoleCommand::PRINT_TRIGGERS       },
-      { "i_act",  DevConsoleCommand::PRINT_ACTORS         },
-      { "so_get", DevConsoleCommand::GET_STATIC_OBJECT    },
-      { "ao_get", DevConsoleCommand::GET_ACTOR            },
-      { "io_get", DevConsoleCommand::GET_ITEM             },
-      { "so_mov", DevConsoleCommand::MOVE_STATIC_OBJECT   },
-      { "ao_mov", DevConsoleCommand::MOVE_ACTOR           },
-      { "ao_de",  DevConsoleCommand::DISPEL_EFFECTS_ACTOR },
-      { "ao_psn", DevConsoleCommand::POISON_ACTOR         },
-      { "ao_dmg", DevConsoleCommand::DAMAGE_ACTOR         },
-      { "io_mov", DevConsoleCommand::MOVE_ITEM            },
-      { "p_mov",  DevConsoleCommand::MOVE_PLAYER          },
-      { "p_de",   DevConsoleCommand::DISPEL_EFFECTS       },
-      { "o_del",  DevConsoleCommand::REMOVE_OBJECT        },
-      { "p_gm",   DevConsoleCommand::GIVE_MONEY           },
-      { "p_ae",   DevConsoleCommand::AWARD_EXP            },
-      { "p_lu",   DevConsoleCommand::LEVEL_UP             },
-      { "p_ld",   DevConsoleCommand::LEVEL_DOWN           },
-      { "p_god",  DevConsoleCommand::GOD_MODE             },
-      { "p_info", DevConsoleCommand::REPORT_PLAYER        },
-      { "g_pm",   DevConsoleCommand::PRINT_MAP            },
-      { "g_pc",   DevConsoleCommand::PRINT_COLORS         },
-      { "g_cm",   DevConsoleCommand::CREATE_MONSTER       },
-      { "g_go",   DevConsoleCommand::GET_BY_ADDRESS       },
-      { "g_cda",  DevConsoleCommand::CREATE_DUMMY_ACTOR   },
-      { "g_cag",  DevConsoleCommand::CREATE_ALL_GEMS      },
-      { "g_cap",  DevConsoleCommand::CREATE_ALL_POTIONS   },
-      { "g_cas",  DevConsoleCommand::CREATE_ALL_SCROLLS   },
-      { "g_ci",   DevConsoleCommand::CREATE_ITEM          }
+      { "clear",   DevConsoleCommand::CLEAR                },
+      { "help",    DevConsoleCommand::HELP                 },
+      { "exit",    DevConsoleCommand::CLOSE                },
+      { "q",       DevConsoleCommand::CLOSE                },
+      { "quit",    DevConsoleCommand::CLOSE                },
+      { "history", DevConsoleCommand::HISTORY             },
+      { "m_trns",  DevConsoleCommand::TRANSFORM_TILE       },
+      { "m_pw",    DevConsoleCommand::PLACE_WALL           },
+      { "m_show",  DevConsoleCommand::SHOW_MAP             },
+      { "info",    DevConsoleCommand::INFO_HANDLES         },
+      { "i_trig",  DevConsoleCommand::PRINT_TRIGGERS       },
+      { "i_act",   DevConsoleCommand::PRINT_ACTORS         },
+      { "so_get",  DevConsoleCommand::GET_STATIC_OBJECT    },
+      { "mo_get",  DevConsoleCommand::GET_MAP_OBJECT       },
+      { "ao_get",  DevConsoleCommand::GET_ACTOR            },
+      { "io_get",  DevConsoleCommand::GET_ITEM             },
+      { "go_get",  DevConsoleCommand::GET_ANY_OBJECT       },
+      { "so_mov",  DevConsoleCommand::MOVE_STATIC_OBJECT   },
+      { "ao_mov",  DevConsoleCommand::MOVE_ACTOR           },
+      { "ao_de",   DevConsoleCommand::DISPEL_EFFECTS_ACTOR },
+      { "ao_psn",  DevConsoleCommand::POISON_ACTOR         },
+      { "ao_dmg",  DevConsoleCommand::DAMAGE_ACTOR         },
+      { "io_mov",  DevConsoleCommand::MOVE_ITEM            },
+      { "p_mov",   DevConsoleCommand::MOVE_PLAYER          },
+      { "p_de",    DevConsoleCommand::DISPEL_EFFECTS       },
+      { "o_del",   DevConsoleCommand::REMOVE_OBJECT        },
+      { "p_gm",    DevConsoleCommand::GIVE_MONEY           },
+      { "p_ae",    DevConsoleCommand::AWARD_EXP            },
+      { "p_lu",    DevConsoleCommand::LEVEL_UP             },
+      { "p_ld",    DevConsoleCommand::LEVEL_DOWN           },
+      { "p_god",   DevConsoleCommand::GOD_MODE             },
+      { "p_info",  DevConsoleCommand::REPORT_PLAYER        },
+      { "g_pm",    DevConsoleCommand::PRINT_MAP            },
+      { "g_pc",    DevConsoleCommand::PRINT_COLORS         },
+      { "g_cm",    DevConsoleCommand::CREATE_MONSTER       },
+      { "g_go",    DevConsoleCommand::GET_BY_ADDRESS       },
+      { "g_gbid",  DevConsoleCommand::GET_BY_ID            },
+      { "g_cda",   DevConsoleCommand::CREATE_DUMMY_ACTOR   },
+      { "g_cag",   DevConsoleCommand::CREATE_ALL_GEMS      },
+      { "g_cap",   DevConsoleCommand::CREATE_ALL_POTIONS   },
+      { "g_cas",   DevConsoleCommand::CREATE_ALL_SCROLLS   },
+      { "g_ci",    DevConsoleCommand::CREATE_ITEM          }
     };
 
     const std::vector<std::string> _help =
@@ -247,28 +259,30 @@ class DevConsole : public GameState
 
     const std::unordered_map<std::string, std::vector<std::string>> _helpTextByCommandName =
     {
-      { "help",   { "Not funny, didn't laugh"  } },
-      { "clear",  { "Clears the screen"        } },
-      { "q",      { "Close the console"        } },
-      { "quit",   { "Close the console"        } },
-      { "info",   { "Show handlers"            } },
-      { "exit",   { "Close the console"        } },
-      { "p_lu",   { "Give player a level"      } },
-      { "p_ld",   { "Take a level from player" } },
-      { "p_info", { "Print debug info about player" } },
-      { "p_god",  { "Toggles player's invulnerability" } },
-      { "g_pm",   { "Save current map layout to a file" } },
-      { "g_pc",   { "Prints colors used so far" } },
-      { "g_go",   { "g_go 0x%X", "Get game object by address (slow!)" } },
-      { "ao_psn", { "Add lingering damage to actor in handle" } },
-      { "m_show", { "Toggle fog of war" } },
-      { "i_trig", { "Print current level triggers" } },
-      { "i_act",  { "Print current level actors" } },
-      { "p_de",   { "Dispel effects from player" } },
-      { "g_cag",  { "Create all gems and place them in town" } },
-      { "g_cap",  { "Create all potions and place them in town" } },
-      { "g_cas",  { "Create all scrolls and place them in town" } },
-      { "ao_de",  { "Dispel all effects from actor in handle" } },
+      { "help",    { "Not funny, didn't laugh"  } },
+      { "clear",   { "Clears the screen"        } },
+      { "q",       { "Close the console"        } },
+      { "quit",    { "Close the console"        } },
+      { "history", { "Display commands history" } },
+      { "info",    { "Show handlers"            } },
+      { "exit",    { "Close the console"        } },
+      { "p_lu",    { "Give player a level"      } },
+      { "p_ld",    { "Take a level from player" } },
+      { "p_info",  { "Print debug info about player" } },
+      { "p_god",   { "Toggles player's invulnerability" } },
+      { "g_pm",    { "Save current map layout to a file" } },
+      { "g_pc",    { "Prints colors used so far" } },
+      { "g_go",    { "g_go [0x%X]", "Get game object by address" } },
+      { "g_gbid",  { "g_gbid [<ID>]", "Get game object by global id value" } },
+      { "ao_psn",  { "Add lingering damage to actor in handle" } },
+      { "m_show",  { "Toggle fog of war" } },
+      { "i_trig",  { "Print current level triggers" } },
+      { "i_act",   { "Print current level actors" } },
+      { "p_de",    { "Dispel effects from player" } },
+      { "g_cag",   { "Create all gems and place them in town" } },
+      { "g_cap",   { "Create all potions and place them in town" } },
+      { "g_cas",   { "Create all scrolls and place them in town" } },
+      { "ao_de",   { "Dispel all effects from actor in handle" } },
       {
         "g_cda",
         { "g_cda X Y", "Creates dummy actor at X Y" }
@@ -288,6 +302,14 @@ class DevConsole : public GameState
       {
         "io_get",
         { "io_get [X Y]", "Try to get handle to item object at X Y" }
+      },
+      {
+        "mo_get",
+        { "mo_get [X Y]", "Try to get handle to map object at X Y" }
+      },
+      {
+        "go_get",
+        { "go_get [X Y]", "Try to get handle to any game object at X Y" }
       },
       {
         "so_mov",

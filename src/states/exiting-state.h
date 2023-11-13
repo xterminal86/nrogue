@@ -14,8 +14,6 @@ class ExitingState : public GameState
 
   private:
     Player* _playerRef = nullptr;
-
-    bool _isExiting = false;
 };
 
 #endif // EXITINGSTATE_H

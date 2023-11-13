@@ -45,14 +45,6 @@ enum class CornerType
   DR
 };
 
-enum class ReplaySpeed
-{
-  SLOW = 0,
-  NORMAL,
-  FAST,
-  INSTANT
-};
-
 enum class InteractionResult
 {
   SUCCESS = 0,
@@ -103,8 +95,6 @@ enum class GameStates
   RETURNER_STATE,
   REPAIR_STATE,
   SAVE_GAME_STATE,
-  REPLAY_START_STATE,
-  REPLAY_END_STATE,
   PICKUP_ITEM_STATE,
   SERVICE_STATE,
   TARGET_STATE,
@@ -151,7 +141,10 @@ enum class MapType
   NETHER_3,
   NETHER_4,
   NETHER_5,
-  THE_END
+  THE_END,
+  #ifdef BUILD_TESTS
+  TEST_LEVEL
+  #endif
 };
 
 enum class GameObjectType

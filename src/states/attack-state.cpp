@@ -6,13 +6,6 @@
 void AttackState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
-
-  RECORD_NUMPAD();
-
-  _keysToRecord[ALT_K5]   = false;
-  _keysToRecord[NUMPAD_5] = false;
-
-  _keysToRecord[VK_CANCEL] = true;
 }
 
 // =============================================================================
@@ -151,16 +144,12 @@ void AttackState::HandleInput()
 
     Application::Instance().ChangeState(GameStates::MAIN_STATE);
   }
-
-  RECORD_ACTION(_keyPressed);
 }
 
 // =============================================================================
 
 void AttackState::Update(bool forceUpdate)
 {
-  DELAY_REPLAY();
-
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();

@@ -11,10 +11,15 @@
 #include "application.h"
 #include "spells-database.h"
 #include "custom-class-state.h"
+#include "gid-generator.h"
 
 void Player::Init()
 {
-  _objectId = 1;
+  _objectId = GID::Instance().GenerateGlobalId();
+
+#ifdef DEBUG_BUILD
+  GameObjectsById[_objectId] = this;
+#endif
 
   Type = GameObjectType::PLAYER;
 
@@ -27,6 +32,8 @@ void Player::Init()
   #endif
 
   FgColor = Colors::PlayerColor;
+  BgColor = Colors::BlackColor;
+
   Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
   _components.clear();
@@ -41,7 +48,8 @@ void Player::Init()
   SetDefaultSkills();
 
   _previousCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
-  _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
+  _currentCell  = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
+
   _currentCell->Occupied = true;
 
   int expToLvlUp = Util::GetExpForNextLevel(Attrs.Lvl.Get());

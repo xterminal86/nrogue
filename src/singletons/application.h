@@ -12,17 +12,6 @@
 #include "player.h"
 #include "serializer.h"
 
-struct ReplayData
-{
-  using KeyAndCount = std::pair<int, int>;
-
-  std::string Timestamp;
-  std::string PlayerName;
-  PlayerClass Class;
-  size_t WorldSeed;
-  std::vector<KeyAndCount> KeysPressed;
-};
-
 class Application : public Singleton<Application>
 {
   public:
@@ -45,10 +34,7 @@ class Application : public Singleton<Application>
 
     void WriteObituary(bool wasKilled = true);
 
-    void SaveReplay(bool binary = true);
-    void LoadReplay(const std::string& replayFilename, bool binary = true);
-
-    static uint64_t GetNewGlobalId(bool reset = false);
+    void SaveGame();
 
     Player PlayerInstance;
 
@@ -93,16 +79,10 @@ class Application : public Singleton<Application>
 
     void ForceDrawCurrentState();
 
-    int GetSavedAction();
-
-    void RecordAction(int key);
-
     GameState* GetGameStateRefByName(GameStates stateName);
     bool CurrentStateIs(GameStates stateName);
 
     bool IsAppReady();
-
-    bool ReplayMode = false;
 
 #ifdef USE_SDL
     SDL_Renderer* Renderer = nullptr;
@@ -120,9 +100,6 @@ class Application : public Singleton<Application>
     uint64_t MapUpdateCyclesPassed = 0;
 
     uint64_t PlayerTurnsPassed = 0;
-
-    ReplayData Replay;
-    ReplaySpeed ReplaySpeed_ = ReplaySpeed::NORMAL;
 
   protected:
     void InitSpecific() override;
@@ -150,13 +127,7 @@ class Application : public Singleton<Application>
     void SavePrettyAlignedStatInfo(std::stringstream& ss);
     void SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled);
 
-    size_t SavePossessions(std::stringstream& ss);
-
-    void SaveReplayBinary();
-    void SaveReplayText();
-
-    void LoadReplayBinary();
-    void LoadReplayText();
+    size_t WritePossessions(std::stringstream& ss);
 
 #ifdef USE_SDL
     std::pair<int, int> _defaultWindowSize;
@@ -185,11 +156,7 @@ class Application : public Singleton<Application>
 
     StatInfo GetStatInfo(const std::string& attrName);
 
-    std::list<int> _savedActionsToProcess;
-
     void PrepareChars();
-
-    std::string _replayFilename;
 
     const std::string kConfigKeyTileset             = "tileset";
     const std::string kConfigKeyTileW               = "tile_w";
@@ -216,7 +183,6 @@ class Application : public Singleton<Application>
     };
 
     friend class TargetState;
-    friend class ReplayEndState;
 };
 
 #endif

@@ -21,7 +21,13 @@ void DevConsole::Init()
   _objectHandles[ObjectHandleType::STATIC] = nullptr;
   _objectHandles[ObjectHandleType::ACTOR]  = nullptr;
   _objectHandles[ObjectHandleType::ITEM]   = nullptr;
+  _objectHandles[ObjectHandleType::MAP]    = nullptr;
   _objectHandles[ObjectHandleType::ANY]    = nullptr;
+
+  StdOut("Copyright (C) 1992, Lance Wilson Productions");
+  StdOut("\"Ryder, nigga!\"");
+  StdOut("");
+  StdOut("Type 'help commands' for a list of available commands");
 }
 
 // =============================================================================
@@ -132,7 +138,9 @@ void DevConsole::HandleInput()
 
       if (_commandsHistory.size() > _maxHistory)
       {
-        _commandsHistory.pop_back();
+        _commandsHistory.erase(_commandsHistory.begin());
+        _commandsHistoryIndex = _commandsHistory.size() - 1;
+        _oldIndex = 0;
       }
     }
     break;
@@ -250,11 +258,13 @@ void DevConsole::ProcessCommand(const std::string& command,
       break;
 
     case DevConsoleCommand::CLOSE:
-    {
       _closedByCommand = true;
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
-    }
-    break;
+      break;
+
+    case DevConsoleCommand::HISTORY:
+      PrintHistory();
+      break;
 
     case DevConsoleCommand::INFO_HANDLES:
       InfoHandles();
@@ -262,6 +272,10 @@ void DevConsole::ProcessCommand(const std::string& command,
 
     case DevConsoleCommand::GET_BY_ADDRESS:
       GetObjectByAddress(params);
+      break;
+
+    case DevConsoleCommand::GET_BY_ID:
+      GetObjectById(params);
       break;
 
     case DevConsoleCommand::GET_STATIC_OBJECT:
@@ -274,6 +288,14 @@ void DevConsole::ProcessCommand(const std::string& command,
 
     case DevConsoleCommand::GET_ACTOR:
       GetObject(params, ObjectHandleType::ACTOR);
+      break;
+
+    case DevConsoleCommand::GET_MAP_OBJECT:
+      GetObject(params, ObjectHandleType::MAP);
+      break;
+
+    case DevConsoleCommand::GET_ANY_OBJECT:
+      GetObject(params, ObjectHandleType::ANY);
       break;
 
     case DevConsoleCommand::MOVE_STATIC_OBJECT:
@@ -472,6 +494,49 @@ void DevConsole::GetObjectByAddress(const std::vector<std::string>& params)
 
   ReportHandle(ObjectHandleType::ANY);
   ReportHandleDebugInfo(ObjectHandleType::ANY);
+}
+
+// =============================================================================
+
+void DevConsole::GetObjectById(const std::vector<std::string>& params)
+{
+  if (params.size() > 1)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  if (params.size() == 0)
+  {
+    ReportHandle(ObjectHandleType::ANY);
+
+    if (_objectHandles[ObjectHandleType::ANY] != nullptr)
+    {
+      ReportHandleDebugInfo(ObjectHandleType::ANY);
+    }
+
+    return;
+  }
+
+  std::string str = params[0];
+
+  if (!StringIsNumbers(str))
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  uint64_t id = std::stoull(str);
+
+  if (GameObjectsById.count(id) == 1)
+  {
+    _objectHandles[ObjectHandleType::ANY] = GameObjectsById[id];
+    ReportHandle(ObjectHandleType::ANY);
+  }
+  else
+  {
+    StdOut(ErrNoObjectsFound);
+  }
 }
 
 // =============================================================================
@@ -910,10 +975,8 @@ void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleT
   switch (handleType)
   {
     case ObjectHandleType::STATIC:
-    {
       _objectHandles[handleType] = Map::Instance().GetStaticGameObjectAtPosition(x, y);
-    }
-    break;
+      break;
 
     case ObjectHandleType::ITEM:
     {
@@ -926,8 +989,37 @@ void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleT
     break;
 
     case ObjectHandleType::ACTOR:
-    {
       _objectHandles[handleType] = Map::Instance().GetActorAtPosition(x, y);
+      break;
+
+    case ObjectHandleType::MAP:
+      _objectHandles[handleType] = Map::Instance().GetMapObjectAtPosition(x, y);
+      break;
+
+    case ObjectHandleType::ANY:
+    {
+      GameObject* res = nullptr;
+
+      res = Map::Instance().GetActorAtPosition(x, y);
+
+      if (res == nullptr)
+      {
+        auto vector = Map::Instance().GetGameObjectsAtPosition(x, y);
+        if (vector.empty())
+        {
+          res = Map::Instance().GetStaticGameObjectAtPosition(x, y);
+          if (res == nullptr)
+          {
+            res = Map::Instance().GetMapObjectAtPosition(x, y);
+          }
+        }
+        else
+        {
+          res = vector.back();
+        }
+      }
+
+      _objectHandles[handleType] = res;
     }
     break;
   }
@@ -1335,6 +1427,16 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
 
 // =============================================================================
 
+void DevConsole::PrintHistory()
+{
+  for (auto& line : _commandsHistory)
+  {
+    StdOut(line);
+  }
+}
+
+// =============================================================================
+
 void DevConsole::PrintAdditionalHelp(DevConsoleCommand command)
 {
   switch (command)
@@ -1390,8 +1492,8 @@ std::pair<int, int> DevConsole::CoordinateParamsToInt(const std::string &px, con
   res.first  = std::stoi(px);
   res.second = std::stoi(py);
 
-  if (res.first  < 1 || res.first  > _currentLevel->MapSize.X - 1
-   || res.second < 1 || res.second > _currentLevel->MapSize.Y - 1)
+  if (res.first  < 0 || res.first  > _currentLevel->MapSize.X - 1
+   || res.second < 0 || res.second > _currentLevel->MapSize.Y - 1)
   {
     StdOut("Out of bounds");
     res = { -1, -1 };

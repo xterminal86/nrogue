@@ -25,9 +25,11 @@ class MapLevelBase
     void PlaceTrigger(GameObject* trigger, TriggerUpdateType updateType);
     void TryToSpawnMonsters();
 
-    virtual void PrepareMap(MapLevelBase* levelOwner);
+    virtual void PrepareMap();
     virtual void DisplayWelcomeText();
     virtual void OnLevelChanged(MapType from);
+
+    void Serialize(NRS& saveTo);
 
     //
     // Map ground tiles (floor, water, ground etc.).

@@ -31,11 +31,11 @@ MapLevelNether::MapLevelNether(int sizeX, int sizeY, MapType type, int dungeonLe
 
 // =============================================================================
 
-void MapLevelNether::PrepareMap(MapLevelBase* levelOwner)
+void MapLevelNether::PrepareMap()
 {
   MysteriousForcePresent = true;
 
-  MapLevelBase::PrepareMap(levelOwner);
+  MapLevelBase::PrepareMap();
 
   CreateLevel();
 }

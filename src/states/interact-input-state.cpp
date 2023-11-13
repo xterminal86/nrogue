@@ -11,16 +11,6 @@
 void InteractInputState::Init()
 {
   _playerRef = &Application::Instance().PlayerInstance;
-
-  RECORD_NUMPAD();
-
-  //
-  // No "waiting" in this state.
-  //
-  _keysToRecord[ALT_K5]   = false;
-  _keysToRecord[NUMPAD_5] = false;
-
-  _keysToRecord[VK_CANCEL] = true;
 }
 
 // =============================================================================
@@ -96,8 +86,6 @@ void InteractInputState::HandleInput()
   {
     ProcessInteraction();
   }
-
-  RECORD_ACTION(_keyPressed);
 }
 
 // =============================================================================
@@ -201,8 +189,6 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
 
 void InteractInputState::Update(bool forceUpdate)
 {
-  DELAY_REPLAY();
-
   if (_keyPressed != -1 || forceUpdate)
   {
     Printer::Instance().Clear();

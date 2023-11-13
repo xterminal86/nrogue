@@ -5,15 +5,18 @@
 #include "items-factory.h"
 #include "map-level-base.h"
 #include "map.h"
-#include "application.h"
 #include "game-object-info.h"
 #include "ai-component.h"
 #include "trigger-component.h"
 #include "serializer.h"
 #include "blackboard.h"
+#include "gid-generator.h"
 
 #ifdef DEBUG_BUILD
+#include "application.h"
 #include "dev-console.h"
+
+std::unordered_map<uint64_t, GameObject*> GameObjectsById;
 #endif
 
 GameObject::GameObject(MapLevelBase* levelOwner)
@@ -21,9 +24,10 @@ GameObject::GameObject(MapLevelBase* levelOwner)
   _levelOwner = levelOwner;
   VisibilityRadius.Set(0);
 
-  _objectId = Application::GetNewGlobalId();
+  _objectId = GID::Instance().GenerateGlobalId();
 
 #ifdef DEBUG_BUILD
+  GameObjectsById[_objectId] = this;
   HexAddressString = Util::StringFormat("0x%X", this);
 #endif
 }
@@ -37,11 +41,12 @@ GameObject::GameObject(MapLevelBase *levelOwner,
                        const uint32_t& htmlColor,
                        const uint32_t& bgColor)
 {
-  _objectId = Application::GetNewGlobalId();
+  _objectId = GID::Instance().GenerateGlobalId();
 
   Init(levelOwner, x, y, avatar, htmlColor, bgColor);
 
 #ifdef DEBUG_BUILD
+  GameObjectsById[_objectId] = this;
   HexAddressString = Util::StringFormat("0x%X", this);
 #endif
 }

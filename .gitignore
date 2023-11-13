@@ -7,7 +7,6 @@ nrogue
 save.nrg
 core.*
 *.txt
-*.rpl
 !config-template.txt
 !SDL2-QT-config.txt
 !CMakeLists.txt

@@ -187,9 +187,9 @@ const Position& MapLevelTown::TownPortalPos()
 
 // =============================================================================
 
-void MapLevelTown::PrepareMap(MapLevelBase* levelOwner)
+void MapLevelTown::PrepareMap()
 {
-  MapLevelBase::PrepareMap(levelOwner);
+  MapLevelBase::PrepareMap();
 
   CreateLevel();
 }
