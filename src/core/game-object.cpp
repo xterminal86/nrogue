@@ -1,8 +1,10 @@
 #include "game-object.h"
 
+#include "application.h"
 #include "printer.h"
 #include "game-objects-factory.h"
 #include "items-factory.h"
+#include "item-component.h"
 #include "map-level-base.h"
 #include "map.h"
 #include "game-object-info.h"
@@ -13,7 +15,6 @@
 #include "gid-generator.h"
 
 #ifdef DEBUG_BUILD
-#include "application.h"
 #include "dev-console.h"
 
 std::unordered_map<uint64_t, GameObject*> GameObjectsById;

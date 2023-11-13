@@ -5,6 +5,7 @@
 #include <map>
 #include <memory>
 #include <functional>
+#include <queue>
 
 #ifndef USE_SDL
 #include <ncurses.h>
@@ -22,10 +23,6 @@ class MapLevelBase;
 class Position;
 class Node;
 class NRS;
-
-#ifdef DEBUG_BUILD
-extern std::unordered_map<uint64_t, GameObject*> GameObjectsById;
-#endif
 
 class GameObject
 {
@@ -362,5 +359,9 @@ class GameObject
     friend class DevConsole;
 #endif
 };
+
+#ifdef DEBUG_BUILD
+extern std::unordered_map<uint64_t, GameObject*> GameObjectsById;
+#endif
 
 #endif
