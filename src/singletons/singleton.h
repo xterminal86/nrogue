@@ -5,6 +5,8 @@ template <typename T>
 class Singleton
 {
   public:
+    virtual ~Singleton() = default;
+
     static T& Instance()
     {
       static T instance;
@@ -25,7 +27,6 @@ class Singleton
 
   protected:
     Singleton() = default;
-    virtual ~Singleton() = default;
 
     virtual void InitSpecific() = 0;
 

@@ -9,9 +9,12 @@
 #include "blackboard.h"
 #include "bts-decompiler.h"
 #include "map.h"
-#include "logger.h"
 #include "timer.h"
 #include "util.h"
+
+#ifdef DEBUG_BUILD
+#include "logger.h"
+#endif
 
 void SaveGameTest()
 {
@@ -21,8 +24,10 @@ void SaveGameTest()
   Blackboard::Instance().Init();
   Timer::Instance().Init();
 
+#ifdef DEBUG_BUILD
   Logger::Instance().Init();
   Logger::Instance().Prepare(false);
+#endif
 
   BTSDecompiler::Instance().Init();
 

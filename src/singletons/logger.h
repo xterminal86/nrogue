@@ -10,7 +10,7 @@
 class Logger : public Singleton<Logger>
 {
   public:
-    virtual ~Logger();
+    ~Logger() override;
 
     void Prepare(bool enabled);
     void Print(const std::string& stringToPrint, bool error = false);

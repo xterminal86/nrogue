@@ -121,7 +121,7 @@ bool NRS::Save(const std::string& fileName, bool encrypt)
 {
   bool ok = false;
 
-  std::ofstream file(fileName);
+  std::ofstream file(fileName, std::ios::binary);
   if (file.is_open())
   {
     std::string serialized = ToStringObject();
@@ -131,7 +131,14 @@ bool NRS::Save(const std::string& fileName, bool encrypt)
       serialized = Util::Encrypt(serialized);
     }
 
-    file << serialized;
+    //
+    // Will use write() here as well, because we need to store values exactly,
+    // as operator << has some constraints. At least from what I read on the
+    // Internet, default format flags are skipws | dec, which means it will skip
+    // whitespaces (which may suddenly appear after encryption). It seems these
+    // can be circumvented using so-called manipulators, but fuck that.
+    //
+    file.write(serialized.data(), serialized.length());
     file.close();
     ok = true;
   }
