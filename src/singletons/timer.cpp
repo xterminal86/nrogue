@@ -8,7 +8,7 @@ void Timer::InitSpecific()
 
 double Timer::DeltaTime()
 {
-  return (_dt * 1000.0);
+  return FT::duration<double, std::milli>(_dt).count();
 }
 
 // =============================================================================
@@ -33,7 +33,7 @@ void Timer::MeasureEnd()
   _measureEnd = Clock::now();
   _deltaTime  = _measureEnd - _measureStart;
 
-  _dt = std::chrono::duration<double>(_measureEnd - _measureStart).count();
+  _dt = FT::duration<double>(_measureEnd - _measureStart).count();
 
   _timePassed += _deltaTime;
 }

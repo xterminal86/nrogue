@@ -37,8 +37,7 @@ void DevConsole::Prepare()
   _closedByCommand = false;
   _currentLevel = Map::Instance().CurrentLevel;
   _currentCommand = Prompt;
-  _commandsHistoryIndex = _commandsHistory.size() - 1;
-  _oldIndex = 0;
+  _commandsHistoryIndex = _commandsHistory.size();
 }
 
 // =============================================================================
@@ -65,15 +64,12 @@ void DevConsole::HandleInput()
     {
       if (!_commandsHistory.empty())
       {
-        _oldIndex = _commandsHistoryIndex;
+        if (_commandsHistoryIndex > 0)
+        {
+          _commandsHistoryIndex--;
+        }
 
         _currentCommand = Prompt + _commandsHistory[_commandsHistoryIndex];
-
-        _commandsHistoryIndex--;
-        if (_commandsHistoryIndex < 0)
-        {
-          _commandsHistoryIndex = 0;
-        }
       }
     }
     break;
@@ -82,20 +78,15 @@ void DevConsole::HandleInput()
     {
       if (!_commandsHistory.empty())
       {
-        _commandsHistoryIndex++;
-        if (_oldIndex == _commandsHistoryIndex)
+        if (_commandsHistoryIndex < (int)_commandsHistory.size() - 1)
         {
           _commandsHistoryIndex++;
-        }
-
-        if (_commandsHistoryIndex > (int)_commandsHistory.size() - 1)
-        {
-          _currentCommand = Prompt;
-          _commandsHistoryIndex = _commandsHistory.size() - 1;
+          _currentCommand = Prompt + _commandsHistory[_commandsHistoryIndex];
         }
         else
         {
-          _currentCommand = Prompt + _commandsHistory[_commandsHistoryIndex];
+          _commandsHistoryIndex = _commandsHistory.size();
+          _currentCommand = Prompt;
         }
       }
     }
@@ -123,8 +114,7 @@ void DevConsole::HandleInput()
       if (!noPrompt.empty() && ok)
       {
         _commandsHistory.push_back(_currentCommand);
-        _commandsHistoryIndex = _commandsHistory.size() - 1;
-        _oldIndex = 0;
+        _commandsHistoryIndex = _commandsHistory.size();
       }
 
       _currentCommand = Prompt;
@@ -139,8 +129,7 @@ void DevConsole::HandleInput()
       if (_commandsHistory.size() > _maxHistory)
       {
         _commandsHistory.erase(_commandsHistory.begin());
-        _commandsHistoryIndex = _commandsHistory.size() - 1;
-        _oldIndex = 0;
+        _commandsHistoryIndex = _commandsHistory.size();
       }
     }
     break;
@@ -178,12 +167,35 @@ void DevConsole::Update(bool forceUpdate)
     int lineCount = 0;
     for (int i = _stdout.size() - 1; i >= 0; i--)
     {
-      Printer::Instance().PrintFB(1, 2 + lineCount, _stdout[i], Printer::kAlignLeft, Colors::WhiteColor);
+      Printer::Instance().PrintFB(1,
+                                  2 + lineCount,
+                                  _stdout[i],
+                                  Printer::kAlignLeft,
+                                  Colors::WhiteColor);
       lineCount++;
     }
 
-    Printer::Instance().PrintFB(1, 2 + lineCount, _currentCommand, Printer::kAlignLeft, Colors::WhiteColor);
-    Printer::Instance().PrintFB(1 + _currentCommand.length(), 2 + lineCount, ' ', Colors::BlackColor, Colors::WhiteColor);
+    Printer::Instance().PrintFB(1,
+                                2 + lineCount,
+                                _currentCommand,
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor);
+
+    Printer::Instance().PrintFB(1 + _currentCommand.length(),
+                                2 + lineCount,
+                                ' ',
+                                Colors::BlackColor,
+                                Colors::WhiteColor);
+
+    /*
+    std::string toPrint = Util::StringFormat("_commandsHistoryIndex = %d",
+                                             _commandsHistoryIndex);
+    Printer::Instance().PrintFB(_tw - 1,
+                                3,
+                                toPrint,
+                                Printer::kAlignRight,
+                                Colors::WhiteColor);
+    */
 
     Printer::Instance().Render();
   }
@@ -227,14 +239,23 @@ bool DevConsole::ParseCommand()
 
   params.erase(params.begin());
 
-  if (_commandTypeByName.count(commandEntered) == 0)
+  bool specialCase = (commandEntered[0] == '!');
+  if (specialCase)
   {
-    std::string errMsg = Util::StringFormat("%s: %s", commandEntered.data(), ErrUnknownCommand.data());
-    StdOut(errMsg);
+    RepeatCommand(commandEntered);
   }
   else
   {
-    ProcessCommand(commandEntered, params);
+    if (_commandTypeByName.count(commandEntered) == 0)
+    {
+      std::string errMsg = Util::StringFormat(ErrUnknownCommand,
+                                              commandEntered.data());
+      StdOut(errMsg);
+    }
+    else
+    {
+      ProcessCommand(commandEntered, params);
+    }
   }
 
   return true;
@@ -249,6 +270,8 @@ void DevConsole::ProcessCommand(const std::string& command,
 
   switch (c)
   {
+    // ------------------ shell builtins ---------------------------------------
+
     case DevConsoleCommand::CLEAR:
       _stdout.clear();
       break;
@@ -265,6 +288,8 @@ void DevConsole::ProcessCommand(const std::string& command,
     case DevConsoleCommand::HISTORY:
       PrintHistory();
       break;
+
+    // -------------------------------------------------------------------------
 
     case DevConsoleCommand::INFO_HANDLES:
       InfoHandles();
@@ -1429,10 +1454,59 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
 
 void DevConsole::PrintHistory()
 {
+  size_t ind = 1;
   for (auto& line : _commandsHistory)
   {
-    StdOut(line);
+    std::string ln = Util::StringFormat("%2d %s", ind, line.data());
+    StdOut(ln);
+    ind++;
   }
+
+  //
+  // Display just entered 'history' command in history as well.
+  //
+  std::string additional = Util::StringFormat("%2d history", ind);
+  StdOut(additional);
+}
+
+// =============================================================================
+
+void DevConsole::RepeatCommand(const std::string& shellCmd)
+{
+  if (shellCmd.size() == 1)
+  {
+    return;
+  }
+
+  auto it = std::find_if(shellCmd.begin() + 1,
+                         shellCmd.end(),
+                         [](char c)
+                         {
+                           return (c < '0' || c > '9');
+                         });
+
+  if (it != shellCmd.end())
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string str = shellCmd.substr(1);
+
+  int cmdIndex = std::stoi(str);
+  int vecIndex = cmdIndex - 1;
+
+  if (vecIndex < 0 || vecIndex > (int)_commandsHistory.size() - 1)
+  {
+    std::string ln = Util::StringFormat(ErrEventNotFound, cmdIndex);
+    StdOut(ln);
+    return;
+  }
+
+  StdOut(_commandsHistory[vecIndex]);
+
+  _currentCommand = Prompt + _commandsHistory[vecIndex];
+  ParseCommand();
 }
 
 // =============================================================================

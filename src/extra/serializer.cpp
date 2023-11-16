@@ -60,6 +60,8 @@ void NRS::Clear()
   _children.clear();
   _childIndexByName.clear();
   _currentIndent = 0;
+  _parsingScopeCount = 0;
+  _parsingState = ParsingState::UNDEFINED;
 }
 
 // =============================================================================
@@ -141,40 +143,52 @@ bool NRS::Save(const std::string& fileName, bool encrypt)
 
 NRS::LoadResult NRS::Load(const std::string& fname, bool encrypted)
 {
-  LoadResult res = LoadResult::OK;
+  LoadResult res = LoadResult::LOAD_OK;
 
-  std::ifstream file(fname);
-  if (file.is_open())
+  std::string loaded;
+
+  std::stringstream ss;
+
+  //
+  // If we're going to use encryption, we cannot use std::getline for reading
+  // back, because it reads until it meets a delimiter, which can suddenly
+  // appear in encrypted file and thus fuck up our reading.
+  //
+  std::ifstream file(fname, std::ios::binary | std::ios::ate);
+  if (!file.is_open())
   {
-    std::stringstream ss;
-    while (!file.eof())
-    {
-      std::string line;
-      std::getline(file, line);
-      ss << line << "\n";
-    }
+    res = LoadResult::ERROR;
+    return res;
+  }
 
-    file.close();
 
-    std::string loaded = ss.str();
+  file.seekg(0, std::ios::end);
+  auto fsize = file.tellg();
+  file.seekg(0, std::ios::beg);
 
-    if (encrypted)
-    {
-      loaded = Util::Encrypt(loaded);
-    }
+  std::string buf(fsize, '\0');
 
-    if (CheckSyntax(loaded))
-    {
-      FromStringObject(loaded);
-    }
-    else
-    {
-      res = LoadResult::INVALID_FORMAT;
-    }
+  while(file.read(&buf[0], fsize))
+  {
+    ss << buf;
+  }
+
+  file.close();
+
+  loaded = ss.str();
+
+  if (encrypted)
+  {
+    loaded = Util::Encrypt(loaded);
+  }
+
+  if (CheckSyntax(loaded))
+  {
+    FromStringObject(loaded);
   }
   else
   {
-    res = LoadResult::ERROR;
+    res = LoadResult::INVALID_FORMAT;
   }
 
   return res;
@@ -423,9 +437,9 @@ bool NRS::CheckSyntax(const std::string& so)
   bool success = (_parsingState == ParsingState::VALUE_DONE
                && _parsingScopeCount == 0);
 
-  _parsingState = success ? ParsingState::OK : ParsingState::ERROR;
+  _parsingState = success ? ParsingState::PARSING_OK : ParsingState::ERROR;
 
-  return (_parsingState == ParsingState::OK);
+  return (_parsingState == ParsingState::PARSING_OK);
 }
 
 // =============================================================================

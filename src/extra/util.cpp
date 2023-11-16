@@ -379,23 +379,10 @@ namespace Util
 
     for (size_t i = 0; i < str.length(); i++)
     {
-      res[i] ^= char(rng() % 256);
+      res[i] ^= char( (rng() % 256) );
     }
 
     return res;
-
-    /*
-    static const uint64_t key = 0x954754CBDAC8B352;
-
-    std::string res = str;
-
-    for (size_t i = 0; i < str.length(); i++)
-    {
-      res[i] ^= char(key >> ((i % 8) * 8));
-    }
-
-    return res;
-    */
   }
 
   // ===========================================================================

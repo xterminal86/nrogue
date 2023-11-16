@@ -82,7 +82,11 @@ class NRS
 
     enum class LoadResult
     {
-      OK = 0,
+      //
+      // Using just 'OK' will clash with ncurses '#define OK' constant.
+      // Talking about global namespace pollution...
+      //
+      LOAD_OK = 0,
       INVALID_FORMAT,
       ERROR
     };
@@ -145,7 +149,10 @@ class NRS
       READING_LIST,
       READING_OBJECT,
       OBJECT_DONE,
-      OK,
+      //
+      // Same shit with 'OK' here as in LoadingResult case.
+      //
+      PARSING_OK,
       ERROR
     };
 

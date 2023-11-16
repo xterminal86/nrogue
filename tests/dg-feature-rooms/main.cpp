@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 
   RNG::Instance().Init();
 
-  printf("seed is %lu\n", RNG::Instance().Seed);
+  printf("seed is %llu\n", RNG::Instance().Seed);
 
   Position mapSize;
   Position roomSizes;

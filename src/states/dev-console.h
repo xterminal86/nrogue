@@ -11,6 +11,7 @@ enum class DevConsoleCommand
   HELP,
   CLOSE,
   HISTORY,
+  REPEAT_COMMAND,
   TRANSFORM_TILE,
   PLACE_WALL,
   CREATE_DUMMY_ACTOR,
@@ -82,7 +83,6 @@ class DevConsole : public GameState
     std::vector<std::string> _stdout;
     std::vector<std::string> _commandsHistory;
 
-    int _oldIndex = 0;
     int _commandsHistoryIndex = -1;
 
     int _cursorX = 1;
@@ -92,7 +92,7 @@ class DevConsole : public GameState
 
     const size_t _maxHistory = 20;
 
-    const std::string ErrUnknownCommand = "command not found...";
+    const std::string ErrUnknownCommand = "%s: command not found...";
     const std::string ErrSyntaxError    = "Syntax error";
     const std::string ErrWrongParams    = "Wrong params";
     const std::string ErrNoObjectsFound = "No objects found";
@@ -101,6 +101,7 @@ class DevConsole : public GameState
     const std::string ErrInvalidType    = "Invalid type";
     const std::string ErrCmdNotHandled  = "Command not handled";
     const std::string ErrCantLevelDown  = "Error: current level is 1";
+    const std::string ErrEventNotFound  = "!%d: event not found";
 
     const std::string Ok = "Ok";
     const std::string Prompt = "> ";
@@ -150,6 +151,7 @@ class DevConsole : public GameState
     void DisplayHelpAboutCommand(const std::vector<std::string>& params);
     void PrintAdditionalHelp(DevConsoleCommand command);
     void PrintHistory();
+    void RepeatCommand(const std::string& shellCmd);
     void InfoHandles();
     void CreateMonster(const std::vector<std::string>& params);
     void CreateDummyActor(const std::vector<std::string>& params);
@@ -212,7 +214,8 @@ class DevConsole : public GameState
       { "exit",    DevConsoleCommand::CLOSE                },
       { "q",       DevConsoleCommand::CLOSE                },
       { "quit",    DevConsoleCommand::CLOSE                },
-      { "history", DevConsoleCommand::HISTORY             },
+      { "history", DevConsoleCommand::HISTORY              },
+      { "!",       DevConsoleCommand::REPEAT_COMMAND       },
       { "m_trns",  DevConsoleCommand::TRANSFORM_TILE       },
       { "m_pw",    DevConsoleCommand::PLACE_WALL           },
       { "m_show",  DevConsoleCommand::SHOW_MAP             },
@@ -264,6 +267,7 @@ class DevConsole : public GameState
       { "q",       { "Close the console"        } },
       { "quit",    { "Close the console"        } },
       { "history", { "Display commands history" } },
+      { "!",       { "!<N> to repeat command no. <N> in history" } },
       { "info",    { "Show handlers"            } },
       { "exit",    { "Close the console"        } },
       { "p_lu",    { "Give player a level"      } },

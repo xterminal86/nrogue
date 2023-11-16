@@ -6,14 +6,19 @@
 #include <chrono>
 
 //
+// For "Fucking Time"
+//
+namespace FT = std::chrono;
+
+//
 // Let's try to use steady_clock since it's claimed to be increasing
 // at a uniform rate.
 //
-using Clock = std::chrono::steady_clock;
+using Clock = FT::steady_clock;
 
-using Ms    = std::chrono::milliseconds;
-using Ns    = std::chrono::nanoseconds;
-using Sec   = std::chrono::seconds;
+using Ms  = FT::milliseconds;
+using Ns  = FT::nanoseconds;
+using Sec = FT::seconds;
 
 class Timer : public Singleton<Timer>
 {

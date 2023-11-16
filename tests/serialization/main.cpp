@@ -1,17 +1,11 @@
+#include <filesystem>
+#include <chrono>
+
 #include "serializer.h"
 
-#include "gid-generator.h"
-#include "application.h"
-#include "game-objects-factory.h"
-#include "spells-processor.h"
-#include "items-factory.h"
-#include "monsters-inc.h"
-#include "blackboard.h"
-#include "bts-decompiler.h"
-#include "map.h"
-#include "logger.h"
-#include "timer.h"
 #include "util.h"
+
+// =============================================================================
 
 std::string MakeOneliner(const std::string& stringObject)
 {
@@ -243,7 +237,13 @@ Actor2 : {
 },
 )";
 
-  const std::string fname = "serialized-to.txt";
+  namespace FS = std::filesystem;
+
+  printf("Plain text...\n");
+
+  std::string fname = Util::StringFormat("%llu.tmp", RNG::Instance().Random());
+
+  FS::path p = fname;
 
   NRS dso;
   dso.FromStringObject(pseudoJson);
@@ -259,6 +259,27 @@ Actor2 : {
   printf("%s\n", (ol1 == ol2) ? "OK" : "FAIL!");
 
   printf("\n");
+
+  FS::remove(p);
+
+  printf("Using encryption...\n");
+
+  fname = Util::StringFormat("%llu.tmp", RNG::Instance().Random());
+
+  p = fname;
+
+  dso.FromStringObject(pseudoJson);
+
+  dso.Save(fname, true);
+  obj.Load(fname, true);
+
+  ol1 = dso.ToStringObject();
+  ol2 = obj.ToStringObject();
+
+  printf("%s\n", (ol1 == ol2) ? "OK" : "FAIL!");
+  printf("\n");
+
+  FS::remove(p);
 }
 
 // =============================================================================
@@ -349,6 +370,8 @@ Actor2 : {
 
   printf("\n");
 
+  printf("%s\n", decor.data());
+  printf("%s\n", ds.data());
   printf("%s\n", decor.data());
 
   printf("%s\n", (sos == ds) ? "OK" : "FAIL!");
@@ -610,6 +633,22 @@ root : {
 )",
     false
     },
+    {
+  R"(
+root : {
+  key : value,
+},,
+)",
+    false
+    },
+    {
+  R"(
+root : {
+  key : value,,
+},
+)",
+    false
+    },
 };
 
   const std::string decor(80, '-');
@@ -735,9 +774,14 @@ void SerializeObjects()
       ss << "value = " << SomeValue  << "\n";
       ss << "data  = ";
 
-      for (auto& i : SomeData)
+      for (size_t i = 0; i < SomeData.size(); i++)
       {
-        ss << i << " ";
+        ss << SomeData[i];
+
+        if (i != SomeData.size() - 1)
+        {
+          ss << "/";
+        }
       }
 
       ss << "\n";
@@ -754,7 +798,7 @@ void SerializeObjects()
 
   std::vector<Test> objects;
 
-  const size_t objectsCount = 5;
+  const size_t objectsCount = 10;
 
   saveData.GetNode(path)["size"].SetUInt(objectsCount);
 
@@ -820,75 +864,246 @@ void SerializeObjects()
     bool ok = (objects[i] == objectsRead[i]);
     printf("originalObj[%llu] == readObj[%llu] ? %s\n", i, i, (ok ? "yes" : "no"));
   }
+
+  printf("\n");
 }
 
 // =============================================================================
+//
+// Doesn't work with constant variables because compiler complains about usage
+// of local variable with automatic storage from containing function.
+//
+#define GO_FORMAT     "go_%llu"
+#define KEY_VALUE     "value"
+#define KEY_STRING    "string"
+#define KEY_LIST_SIZE "list_size"
+#define KEY_LIST      "list"
 
-void SaveGameTest()
+void StressTest()
 {
   PRINT_BANNER();
 
-  // ---------------------------------------------------------------------------
+  const std::string decor(80, '-');
+  const std::string decor2(80, '=');
 
-  GID::Instance().Init();
-  Blackboard::Instance().Init();
-  Timer::Instance().Init();
+  namespace FS = std::filesystem;
+  namespace FT = std::chrono;
+  using Clock  = std::chrono::system_clock;
 
-  Logger::Instance().Init();
-  Logger::Instance().Prepare(false);
+  uint64_t fileId1 = RNG::Instance().Random();
+  uint64_t fileId2 = fileId1 + 1;
 
-  BTSDecompiler::Instance().Init();
+  std::string fname1 = Util::StringFormat("%llu.tmp", fileId1);
+  std::string fname2 = Util::StringFormat("%llu.tmp", fileId2);
 
-  Application::Instance().Init();
+  // ***************************************************************************
 
-  GameObjectsFactory::Instance().Init();
-  ItemsFactory::Instance().Init();
-  MonstersInc::Instance().Init();
+  struct Test
+  {
+    uint64_t Value = 0;
+    std::string String;
+    std::vector<int> List;
 
-  SpellsDatabase::Instance().Init();
-  SpellsProcessor::Instance().Init();
+    // -------------------------------------------------------------------------
 
-  Map::Instance().Init();
+    void Serialize(NRS& saveTo, const std::string& path, size_t index)
+    {
+      std::string key = Util::StringFormat(GO_FORMAT, index);
 
-  // ---------------------------------------------------------------------------
+      NRS& node = saveTo.GetNode(path);
 
-  //
-  // Serialization of 40k simple Test objects from SerializeObjects() test
-  // (which is 200x200, currently the largest in-game map possible) takes around
-  // 7 seconds. Given the fact that GameObject is much more complex than test
-  // Test class, and given the fact that we have 28 maps, this starting to look
-  // not so good. We need to deal with this issue somehow.
-  // We're going to assume that several objects are not going to change much,
-  // or at least they're not expected to have any special behaviour: objects
-  // like walls and water, for example. So we'll serialize these common objects
-  // (walls, floor, lava, water etc., basically everything inside
-  // MapLevelBase::CreateCommonObjects()) as char array, basically in MapRaw
-  // format.
-  // Then, every special game object / actor is serialized as needed.
-  // Of course, theoretically you could attach components to walls, water and
-  // so on, but we're not going to account for that and deal with it if need
-  // arises (and when we get there).
-  //
+      node[key][KEY_VALUE].SetUInt(Value);
+      node[key][KEY_STRING].SetString(String);
+      node[key][KEY_LIST_SIZE].SetUInt(List.size());
 
-  Map::Instance().LoadTestLevel();
+      for (size_t i = 0; i < List.size(); i++)
+      {
+        node[key][KEY_LIST].SetInt(List[i], (int)i);
+      }
+    }
 
-  auto& curLvl    = Map::Instance().CurrentLevel;
-  auto& playerRef = Application::Instance().PlayerInstance;
+    // -------------------------------------------------------------------------
 
-  playerRef.SetLevelOwner(curLvl);
-  playerRef.Init();
-  playerRef.MoveTo({ 1, 1 });
-  playerRef.AddExtraItems();
-  playerRef.VisibilityRadius.Set(curLvl->VisibilityRadius);
+    void Deserialize(NRS& from)
+    {
+      Value  = from[KEY_VALUE].GetUInt();
+      String = from[KEY_STRING].GetString();
 
-  curLvl->AdjustCamera();
+      size_t dataSize = from[KEY_LIST_SIZE].GetUInt();
 
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      for (size_t i = 0; i < dataSize; i++)
+      {
+        int val = from[KEY_LIST].GetInt(i);
+        List.push_back(val);
+      }
+    }
 
-  // ---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
-  Application::Instance().Run();
-  Application::Instance().Cleanup();
+    bool operator==(const Test& rhs)
+    {
+      if (Value       != rhs.Value)       return false;
+      if (String      != rhs.String)      return false;
+      if (List.size() != rhs.List.size()) return false;
+
+      for (size_t i = 0; i < List.size(); i++)
+      {
+        if (List[i] != rhs.List[i])
+        {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    // -------------------------------------------------------------------------
+
+    std::string ToString() const
+    {
+      std::stringstream ss;
+
+      ss << "Value  = " << Value  << "\n"
+         << "String = " << String << "\n"
+         << "List   = ";
+
+      for (auto& i : List)
+      {
+        ss << List[i] << "/";
+      }
+
+      ss << "\n";
+
+      return ss.str();
+    }
+  };
+
+  // ***************************************************************************
+
+  const std::string path = "root.objects";
+
+  const uint64_t kMaxObjects = 100000;
+
+  printf("Preparing %llu objects...\n", kMaxObjects);
+
+  NRS saveData;
+
+  std::vector<Test> objects;
+  objects.resize(kMaxObjects);
+
+  for (uint64_t i = 0; i < kMaxObjects; i++)
+  {
+    //
+    // Let's not waste CPU time on generating random values,
+    // let's pretend that we're using "real" ones.
+    //
+    Test t;
+    t.Value = i + 1;
+    t.String = "Test Name";
+
+    uint8_t size = 5;
+    t.List.reserve(size);
+
+    for (uint8_t j = 0; j < size; j++)
+    {
+      int val = -42;
+      t.List.push_back(val);
+    }
+
+    objects[i] = t;
+
+    objects[i].Serialize(saveData, path, i);
+  }
+
+  printf("Done\n");
+  printf("%s\n", decor.data());
+
+  // ***************************************************************************
+
+  auto Do = [&decor, &decor2, &path, &objects](NRS& save,
+                                               const std::string& fname,
+                                               bool useEncryption)
+  {
+    printf("Using file %s\n", fname.data());
+
+    FS::path p = fname;
+
+    printf("%s\n", decor2.data());
+    printf("%s\n", useEncryption ? "Using encryption" : "Plain text");
+    printf("%s\n", decor2.data());
+
+    printf("Saving %llu objects...\n", kMaxObjects);
+
+    auto tp = Clock::now();
+
+    save.Save(fname, useEncryption);
+
+    auto dur = Clock::now() - tp;
+
+    printf("It took %.2f ms\n", FT::duration<double, std::milli>(dur).count());
+
+    printf("%s\n", decor.data());
+
+    NRS load;
+
+    printf("Loading %llu objects...\n", kMaxObjects);
+
+    tp = Clock::now();
+
+    load.Load(fname, useEncryption);
+
+    dur = Clock::now() - tp;
+
+    printf("It took %.2f ms\n", FT::duration<double, std::milli>(dur).count());
+
+    printf("%s\n", decor.data());
+
+    printf("Deleting %s\n", fname.data());
+
+    FS::remove(p);
+
+    printf("\nComparing data...\n");
+
+    std::vector<Test> ds;
+    ds.resize(kMaxObjects);
+
+    for (uint64_t i = 0; i < kMaxObjects; i++)
+    {
+      std::string key = Util::StringFormat(GO_FORMAT, i);
+
+      NRS& node = load.GetNode(path)[key];
+
+      Test t;
+      t.Deserialize(node);
+
+      ds[i] = t;
+    }
+
+    bool succ = true;
+
+    for (uint64_t i = 0; i < kMaxObjects; i++)
+    {
+      if (!(ds[i] == objects[i]))
+      {
+        printf("\n! Comparison failed !\n");
+        printf("Original:\n");
+        printf("\n");
+        printf("%s\n", objects[i].ToString().data());
+        printf("Loaded:\n");
+        printf("%s\n", ds[i].ToString().data());
+        succ = false;
+        break;
+      }
+    }
+
+    printf("%s\n", succ ? "OK" : "FAIL!");
+    printf("%s\n", decor.data());
+  };
+
+  // ***************************************************************************
+
+  Do(saveData, fname1, false);
+  Do(saveData, fname2, true);
 }
 
 // =============================================================================
@@ -896,15 +1111,18 @@ void SaveGameTest()
 int main(int argc, char* argv[])
 {
   RNG::Instance().Init();
+  //RNG::Instance().SetSeed(1700139497490078115);
 
-  //TestSimple();
-  //TestComplex();
-  //WithFile();
-  //Encrypt();
-  //NewConfig();
-  //CheckSyntax();
-  //SerializeObjects();
-  SaveGameTest();
+  printf("Seed = %llu\n\n", RNG::Instance().Seed);
+
+  TestSimple();
+  TestComplex();
+  WithFile();
+  Encrypt();
+  NewConfig();
+  CheckSyntax();
+  SerializeObjects();
+  StressTest();
 
   return 0;
 }

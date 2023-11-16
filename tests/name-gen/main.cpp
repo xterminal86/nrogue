@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
 
   //RNG::Instance().SetSeed(1698773628612500435);
 
-  printf("Seed = %lu\n", RNG::Instance().Seed);
+  printf("Seed = %llu\n", RNG::Instance().Seed);
 
   bool allowDoubleVowels = (argc > 2);
 

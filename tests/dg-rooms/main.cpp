@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 
   //RNG::Instance().SetSeed(1694631412025388189);
 
-  printf("seed is %lu\n", RNG::Instance().Seed);
+  printf("seed is %llu\n", RNG::Instance().Seed);
 
   Position mapSize;
   Position roomSizes;
