@@ -148,6 +148,30 @@ bool NRS::Save(const std::string& fileName, bool encrypt)
 
 // =============================================================================
 
+const char* NRS::LoadResultToString(LoadResult res)
+{
+  switch (res)
+  {
+    case LoadResult::LOAD_OK:
+      return "LOAD_OK";
+      break;
+
+    case LoadResult::ERROR:
+      return "ERROR";
+      break;
+
+    case LoadResult::INVALID_FORMAT:
+      return "INVALID_FORMAT";
+      break;
+
+    default:
+      return "UNEXPECTED_CODE";
+      break;
+  }
+}
+
+// =============================================================================
+
 NRS::LoadResult NRS::Load(const std::string& fname, bool encrypted)
 {
   LoadResult res = LoadResult::LOAD_OK;
@@ -247,23 +271,39 @@ void NRS::WriteIntl(const NRS& d, std::stringstream& ss)
   {
     if (item.second._children.empty())
     {
-      ss << item.first << ":";
-
       size_t nItems = item.second.ValuesCount();
-      for (size_t i = 0; i < nItems; i++)
-      {
-        bool itemsLeft = ((nItems - i) > 1);
 
-        size_t x = item.second.GetString(i).find_first_of("/ ,");
-        if (x != std::string::npos)
+      //
+      // Empty object.
+      //
+      if (nItems == 0)
+      {
+        ss << item.first << ":{}";
+      }
+      else
+      {
+        ss << item.first << ":";
+
+        for (size_t i = 0; i < nItems; i++)
         {
-          ss << "\"" << item.second.GetString(i) << "\""
-            << (itemsLeft ? "/" : "");
-        }
-        else
-        {
-          ss << item.second.GetString(i)
-            << (itemsLeft ? "/" : "");
+          bool itemsLeft = ((nItems - i) > 1);
+
+          const std::string& str = item.second.GetString(i);
+
+          size_t x = str.find_first_of("/ ,");
+
+          //
+          // Empty string goes as "" in file so that it can pass syntax check
+          // and could subsequently be read back correctly.
+          //
+          if (str.empty() || x != std::string::npos)
+          {
+            ss << "\"" << str << "\"" << (itemsLeft ? "/" : "");
+          }
+          else
+          {
+            ss << str << (itemsLeft ? "/" : "");
+          }
         }
       }
 
@@ -320,11 +360,9 @@ void NRS::FromStringObject(const std::string& so)
         break;
 
       case ':':
-      {
         key = ss.str();
         ss.str(std::string());
-      }
-      break;
+        break;
 
       case ',':
       {
@@ -341,6 +379,8 @@ void NRS::FromStringObject(const std::string& so)
           std::string valueItem;
 
           size_t valueIndex = 0;
+
+          bool listFound = false;
 
           //
           // Check if it's a list.
@@ -363,6 +403,8 @@ void NRS::FromStringObject(const std::string& so)
                 {
                   if (ch == '/')
                   {
+                    listFound = true;
+
                     (*tree.top())[key].SetString(valueItem, valueIndex);
                     valueIndex++;
                     valueItem.clear();
@@ -377,9 +419,23 @@ void NRS::FromStringObject(const std::string& so)
             }
           }
 
-          if (!valueItem.empty())
+          //
+          // At this point valueItem is either a leftover from list parsing,
+          // or just a value.
+          //
+          if (listFound)
           {
             (*tree.top())[key].SetString(valueItem, valueIndex);
+          }
+          else
+          {
+            //
+            // If it wasn't a list but we got nothing, don't create a node.
+            //
+            if (!valueItem.empty())
+            {
+              (*tree.top())[key].SetString(valueItem, valueIndex);
+            }
           }
 
           ss.str(std::string());
@@ -641,18 +697,47 @@ void NRS::DriveStateMachine(const char currentChar, bool debug)
 
     case ParsingState::READING_OBJECT:
     {
-      if (IsValidChar(currentChar))
+      switch (currentChar)
       {
-        _parsingState = ParsingState::READING_KEY;
-
-        if (debug)
+        //
+        // This is an empty object.
+        //
+        case '}':
         {
-          printf("READING_OBJECT -> READING_KEY\n");
+          if (_parsingScopeCount > 0)
+          {
+            _parsingScopeCount--;
+            _parsingState = ParsingState::OBJECT_DONE;
+
+            if (debug)
+            {
+              printf("READING_OBJECT -> OBJECT_DONE\n");
+            }
+          }
+          else
+          {
+            _parsingState = ParsingState::ERROR;
+          }
         }
-      }
-      else
-      {
-        _parsingState = ParsingState::ERROR;
+        break;
+
+        default:
+        {
+          if (IsValidChar(currentChar))
+          {
+            _parsingState = ParsingState::READING_KEY;
+
+            if (debug)
+            {
+              printf("READING_OBJECT -> READING_KEY\n");
+            }
+          }
+          else
+          {
+            _parsingState = ParsingState::ERROR;
+          }
+        }
+        break;
       }
     }
     break;

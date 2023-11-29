@@ -31,12 +31,13 @@ void EnterNameState::HandleInput()
     case VK_TAB:
     {
       _inputTypeIndex++;
-      _inputTypeIndex %= static_cast<size_t>(InputType::ENUM_END);
+      _inputTypeIndex %= (size_t)(InputType::ENUM_END);
 
       _inputType = _inputTypeByIndex.at(_inputTypeIndex);
 
       _seedEntered.clear();
       _seedHex = 0;
+      _seedConverted = false;
     }
     break;
 
@@ -52,7 +53,7 @@ void EnterNameState::HandleInput()
         _nameEntered = Util::ChooseRandomName();
       }
 
-      if (_seedHex != 0)
+      if (_seedConverted)
       {
         RNG::Instance().SetSeed(_seedHex);
       }
@@ -91,44 +92,58 @@ void EnterNameState::HandleInput()
 
     default:
     {
-      //
-      // Don't include special characters.
-      //
-      if (_keyPressed >= 32 && _keyPressed <= 126)
+      if (_keyPressed >= ' ' && _keyPressed <= '~')
       {
-        if (_inputType == InputType::NAME
-         && _nameEntered.length() < (size_t)GlobalConstants::MaxNameLength - 3)
+        switch(_inputType)
         {
-          _nameEntered += (char)_keyPressed;
-        }
-        else if (_inputType == InputType::SEED_STRING
-              && _seedEntered.length() < (size_t)GlobalConstants::MaxSeedStringLength - 2)
-        {
-          _seedEntered += (char)_keyPressed;
-
-          UpdateSeedAsHex();
-        }
-        else if (_inputType == InputType::SEED_HEX && _seedEntered.length() < sizeof(RNG::Instance().Seed) * 2)
-        {
-          bool isNumber   = (_keyPressed >= 48 && _keyPressed <= 57);
-          bool isHexUpper = (_keyPressed >= 65 && _keyPressed <= 70);
-          bool isHexLower = (_keyPressed >= 97 && _keyPressed <= 102);
-
-          bool isValid = isNumber || isHexUpper || isHexLower;
-
-          if (isValid)
+          case InputType::NAME:
           {
-            char c = (char)_keyPressed;
-
-            if (isHexLower)
+            if (_nameEntered.length() < (size_t)GlobalConstants::MaxNameLength - 3)
             {
-              c = std::toupper(c);
+              _nameEntered += (char)_keyPressed;
             }
-
-            _seedEntered += c;
-
-            _seedHex = std::stoull(_seedEntered, nullptr, 16);
           }
+          break;
+
+          case InputType::SEED_STRING:
+          {
+            if (_seedEntered.length() < (size_t)GlobalConstants::MaxSeedStringLength - 2)
+            {
+              _seedEntered += (char)_keyPressed;
+
+              UpdateSeedAsHex();
+            }
+          }
+          break;
+
+          case InputType::SEED_HEX:
+          {
+            if (_seedEntered.length() < sizeof(RNG::Instance().Seed) * 2)
+            {
+              bool isNumber   = (_keyPressed >= '0' && _keyPressed <= '9');
+              bool isHexUpper = (_keyPressed >= 'A' && _keyPressed <= 'F');
+              bool isHexLower = (_keyPressed >= 'a' && _keyPressed <= 'f');
+
+              bool isValid = isNumber || isHexUpper || isHexLower;
+
+              if (isValid)
+              {
+                char c = (char)_keyPressed;
+
+                if (isHexLower)
+                {
+                  c = std::toupper(c);
+                }
+
+                _seedEntered += c;
+
+                _seedHex = std::stoull(_seedEntered, nullptr, 16);
+
+                _seedConverted = true;
+              }
+            }
+          }
+          break;
         }
       }
     }

@@ -1475,6 +1475,7 @@ void DevConsole::RepeatCommand(const std::string& shellCmd)
 {
   if (shellCmd.size() == 1)
   {
+    StdOut(ErrSyntaxError);
     return;
   }
 

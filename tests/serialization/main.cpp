@@ -79,6 +79,82 @@ std::string GetBanner(const std::string& title)
 
 // =============================================================================
 
+void ParseTest()
+{
+  PRINT_BANNER();
+
+  const std::string decor(80, '-');
+
+  auto Do = [&decor](const std::string& so)
+  {
+    printf("%s\n", decor.data());
+    printf("From:\n");
+    printf("%s\n", decor.data());
+    printf("%s\n", so.data());
+
+    NRS dso;
+    dso.FromStringObject(so);
+
+    printf("%s\n", decor.data());
+    printf("To:\n");
+    printf("%s\n", decor.data());
+    printf("%s\n", dso.ToPrettyString().data());
+    printf("%s\n", decor.data());
+    printf("%s\n", dso.DumpObjectStructureToString().data());
+    printf("%s\n", decor.data());
+    printf("\n");
+  };
+
+  const std::string pseudoJson = R"(
+key1 : value1,
+key2 : value2,
+list : item1/item2/"it,e/m3",
+str1 : "",
+lst2 : ""/huj/"",
+inner : {
+  is1 : "",
+  in2 : {
+    iis1 : "",
+    },
+  },
+)";
+
+  const std::string empty = R"(
+empty : {
+},
+)";
+
+  const std::string empty2 = R"(
+empty : {
+  e : {
+    ee : {
+    },
+  },
+},
+)";
+
+  const std::string empty3 = R"(
+empty : {
+  s: "",
+  e : {
+    s2: "",
+    ee : {
+      s4: "",
+    },
+    s3: "",
+  },
+  s5: "",
+},
+)";
+
+  Do(pseudoJson);
+  Do(empty);
+  Do(empty2);
+  Do(empty3);
+}
+
+// =============================================================================
+
 void TestSimple()
 {
   PRINT_BANNER();
@@ -90,6 +166,8 @@ key1 : value1,
 key2 : value2,
 list : item1/item2/"it,e/m3",
 )";
+
+  printf("%s\n", pseudoJson.data());
 
   NRS dso;
   dso.FromStringObject(pseudoJson);
@@ -187,11 +265,14 @@ Actor2 : {
 
   std::string sos = obj.ToStringObject();
 
+  printf("sos:\n");
   printf("%s\n", decor.data());
   printf("%s\n", sos.data());
   printf("%s\n", decor.data());
 
   std::string dsos = dso.ToStringObject();
+
+  printf("dsos:\n");
   printf("%s\n", decor.data());
   printf("%s\n", dsos.data());
   printf("%s\n", decor.data());
@@ -411,8 +492,14 @@ void CheckSyntax()
   {
     // ------------------------------- gud -------------------------------------
     {
-    R"(
+  R"(
 key  : "value 1",
+)",
+    true
+    },
+    {
+  R"(
+key  : "",
 )",
     true
     },
@@ -508,6 +595,28 @@ obj : {
   },
   item : data,
 },
+)",
+    true
+    },
+    {
+  R"(
+root : {
+  list : ""/""/"",
+},
+)",
+    true
+    },
+    {
+R"(
+root : {
+list : ""/"mid"/lol,
+},
+)",
+    true
+    },
+    {
+R"(
+empty : {},
 )",
     true
     },
@@ -649,6 +758,28 @@ root : {
 )",
     false
     },
+    {
+  R"(
+key :
+)",
+    false
+    },
+    {
+  R"(
+root : {
+  key : ,
+},
+)",
+    false
+    },
+    {
+  R"(
+root : {
+  key :
+},
+)",
+    false
+    },
 };
 
   const std::string decor(80, '-');
@@ -717,9 +848,9 @@ void SerializeObjects()
 
     bool operator==(const Test& rhs)
     {
-      if (Id != rhs.Id)                           return false;
-      if (ObjectName != rhs.ObjectName)           return false;
-      if (SomeValue != rhs.SomeValue)             return false;
+      if (Id              != rhs.Id)              return false;
+      if (ObjectName      != rhs.ObjectName)      return false;
+      if (SomeValue       != rhs.SomeValue)       return false;
       if (SomeData.size() != rhs.SomeData.size()) return false;
 
       for (size_t ind = 0; ind < SomeData.size(); ind++)
@@ -825,7 +956,7 @@ void SerializeObjects()
   std::string pjson = saveData.ToStringObject();
 
   printf("%s\n", saveData.ToPrettyString().data());
-  //printf("%s\n", saveData.DumpObjectStructureToString().data());
+  printf("\n%s\n", saveData.DumpObjectStructureToString().data());
 
   // ---------------------------------------------------------------------------
 
@@ -833,6 +964,8 @@ void SerializeObjects()
 
   NRS ds;
   ds.FromStringObject(pjson);
+
+  printf("\n%s\n", ds.DumpObjectStructureToString().data());
 
   size_t cnt = ds.GetNode(path)["size"].GetUInt();
 
@@ -1115,6 +1248,7 @@ int main(int argc, char* argv[])
 
   printf("Seed = %llu\n\n", RNG::Instance().Seed);
 
+  ParseTest();
   TestSimple();
   TestComplex();
   WithFile();

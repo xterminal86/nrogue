@@ -1,6 +1,7 @@
 #ifndef MAPLEVELBASE_H
 #define MAPLEVELBASE_H
 
+#include "game-object-info.h"
 #include "util.h"
 #include "game-object.h"
 #include "level-builder.h"
@@ -109,6 +110,8 @@ class MapLevelBase
     std::unordered_map<GameObjectType, int> _monstersSpawnRateForThisLevel;
 
     StringV _specialLevel;
+
+    GameObjectInfo _defaultGround;
 
     Player* _playerRef = nullptr;
 

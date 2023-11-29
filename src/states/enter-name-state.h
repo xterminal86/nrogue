@@ -46,6 +46,11 @@ class EnterNameState : public GameState
 
     size_t _seedHex = 0;
 
+    //
+    // To allow entering zero seed hex value.
+    //
+    bool _seedConverted = false;
+
     const std::map<size_t, InputType> _inputTypeByIndex =
     {
       { 0, InputType::NAME        },

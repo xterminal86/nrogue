@@ -91,6 +91,8 @@ class NRS
       ERROR
     };
 
+    static const char* LoadResultToString(LoadResult res);
+
     LoadResult Load(const std::string& fname, bool encrypted = false);
 
     std::string ToPrettyString();

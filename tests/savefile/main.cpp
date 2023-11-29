@@ -11,16 +11,21 @@
 #include "map.h"
 #include "timer.h"
 #include "util.h"
+#include "rng.h"
 
 #ifdef DEBUG_BUILD
 #include "logger.h"
 #endif
+
+bool LoadGame = false;
 
 void SaveGameTest()
 {
   // ---------------------------------------------------------------------------
 
   GID::Instance().Init();
+  RNG::Instance().Init();
+
   Blackboard::Instance().Init();
   Timer::Instance().Init();
 
@@ -87,9 +92,28 @@ void SaveGameTest()
 
 int main(int argc, char* argv[])
 {
+  LoadGame = (argc > 1);
+
   RNG::Instance().Init();
 
-  SaveGameTest();
+  if (!LoadGame)
+  {
+    SaveGameTest();
+  }
+  else
+  {
+    NRS save;
+    NRS::LoadResult res = save.Load(Strings::SaveFileName);
+    if (res != NRS::LoadResult::LOAD_OK)
+    {
+      printf("load failed, reason: %s\n", NRS::LoadResultToString(res));
+    }
+    else
+    {
+      //printf("%s\n", save.ToPrettyString().data());
+      //printf("%s\n", save.DumpObjectStructureToString().data());
+    }
+  }
 
   return 0;
 }

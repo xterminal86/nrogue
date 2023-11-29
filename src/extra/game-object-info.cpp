@@ -15,6 +15,4 @@ void GameObjectInfo::Set(bool isBlocking,
   BgColor      = bgColor;
   ObjectName   = objectName;
   FogOfWarName = fowName;
-
-  IsSet = true;
 }

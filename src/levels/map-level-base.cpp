@@ -1,9 +1,9 @@
 ﻿#include "map-level-base.h"
 #include "application.h"
 #include "game-objects-factory.h"
+#include "gid-generator.h"
 #include "monsters-inc.h"
 #include "items-factory.h"
-#include "game-object-info.h"
 #include "printer.h"
 #include "door-component.h"
 #include "map.h"
@@ -618,11 +618,28 @@ void MapLevelBase::OnLevelChanged(MapType from)
 
 void MapLevelBase::Serialize(NRS& saveTo)
 {
-  saveTo.GetNode("save.seed").SetUInt(RNG::Instance().Seed);
+  saveTo.GetNode("save.gid").SetUInt(GID::Instance().GetCurrentGlobalId());
+
+  //
+  // Won't be making any practical sense, since everything will be reconstructed
+  // basically from scratch, so these are just for informational purposes.
+  //
+  saveTo.GetNode("save.seed.value").SetUInt(RNG::Instance().Seed);
+  saveTo.GetNode("save.seed.name").SetString(RNG::Instance().GetSeedString().first);
+
   saveTo.GetNode("save.level.type").SetInt((int)MapType_);
   saveTo.GetNode("save.level.name").SetString(LevelName);
 
-  NRS& node = saveTo.GetNode("save.level.map_raw");
+  NRS& mapArray = saveTo.GetNode("save.level.map_array");
+  NRS& ground   = saveTo.GetNode("save.level.default_ground");
+
+  ground["is_blocking"].SetUInt((uint8_t)_defaultGround.IsBlocking);
+  ground["blocks_sight"].SetUInt((uint8_t)_defaultGround.BlocksSight);
+  ground["image"].SetInt(_defaultGround.Image);
+  ground["fg_color"].SetUInt(_defaultGround.FgColor);
+  ground["bg_color"].SetUInt(_defaultGround.BgColor);
+  ground["object_name"].SetString(_defaultGround.ObjectName);
+  ground["fov_name"].SetString(_defaultGround.FogOfWarName);
 
   //
   // Once again, we will swap coordinates so that map looks readable in
@@ -659,14 +676,20 @@ void MapLevelBase::Serialize(NRS& saveTo)
   //
   for (int y = 0; y < MapSize.Y; y++)
   {
-    std::stringstream ss;
+    //std::stringstream ss;
 
     for (int x = 0; x < MapSize.X; x++)
     {
-      ss << MapArray[x][y]->Image;
+      //
+      // We will store chars as ints so that they don't conflict with file
+      // format if, for example, accidentally there will be an object with
+      // image ','.
+      //
+      //ss << MapArray[x][y]->Image;
+      mapArray[std::to_string(y)].SetInt(MapArray[x][y]->Image, x);
     }
 
-    node[std::to_string(y)].SetString(ss.str());
+    //mapArray[std::to_string(y)].SetString(ss.str());
   }
 }
 
@@ -1012,6 +1035,7 @@ void MapLevelBase::CreateGround(char img,
 {
   GameObjectInfo t;
   t.Set(false, false, img, fgColor, bgColor, tileName);
+  _defaultGround = t;
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
 }
 

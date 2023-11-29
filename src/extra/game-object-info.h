@@ -31,8 +31,6 @@ struct GameObjectInfo
 
   std::string ObjectName;
   std::string FogOfWarName;
-
-  bool IsSet = false;
 };
 
 #endif // GAMEOBJECTINFO_H

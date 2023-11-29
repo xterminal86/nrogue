@@ -261,7 +261,11 @@ void Player::CheckVisibility()
               ? VisibilityRadius.Get() / 4
               : VisibilityRadius.Get();
 
-  auto mapCells = Util::GetRectAroundPoint(PosX, PosY, tw / 2, th / 2, Map::Instance().CurrentLevel->MapSize);
+  auto mapCells = Util::GetRectAroundPoint(PosX,
+                                           PosY,
+                                           tw / 2,
+                                           th / 2,
+                                           Map::Instance().CurrentLevel->MapSize);
 
 #ifdef DEBUG_BUILD
   for (auto& cell : mapCells)

@@ -313,7 +313,7 @@ namespace GlobalConstants
   const int MaxHitChance                = 99;
   const int DisplayAttackDelayMs        = 50;
   const int InventoryMaxSize            = 20;
-  const int MaxNameLength               = 24;
+  const int MaxNameLength               = 21;
   const int MaxSeedStringLength         = 65;
 
   //
