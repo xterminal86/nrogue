@@ -55,15 +55,10 @@ void MapLevelLostCity::CreateLevel()
 
   ConstructFromBuilder(lb);
 
-  GameObjectInfo t;
-  t.Set(true,
-        true,
-        ' ',
-        Colors::BlackColor,
-        Colors::ShadesOfGrey::Six,
-        Strings::TileNames::RocksText);
-
-  CreateBorders(t);
+  CreateBorders(' ',
+                Colors::BlackColor,
+                Colors::ShadesOfGrey::Six,
+                Strings::TileNames::RocksText);
 
   RecordEmptyCells();
   PlaceStairs();

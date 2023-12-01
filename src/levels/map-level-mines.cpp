@@ -160,16 +160,10 @@ void MapLevelMines::CreateLevel()
       break;
   }
 
-  GameObjectInfo t;
-
-  t.Set(true,
-        true,
-        ' ',
-        Colors::BlackColor,
-        Colors::ShadesOfGrey::Six,
-        Strings::TileNames::RocksText);
-
-  CreateBorders(t);
+  CreateBorders(' ',
+                Colors::BlackColor,
+                Colors::ShadesOfGrey::Six,
+                Strings::TileNames::RocksText);
 
   if (MapType_ != MapType::MINES_5)
   {
@@ -434,7 +428,7 @@ void MapLevelMines::DisplayWelcomeText()
 {
   std::vector<std::string> msg =
   {
-         // ---------0---------0---------0---------0 <- 40
+         // ---------1---------2---------3---------4
     { HIDE("These mines once were a place of work ") },
     { HIDE("and income for this village. Now it's ") },
     { HIDE("just crumbling tunnels with occasional") },

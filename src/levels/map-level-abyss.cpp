@@ -66,16 +66,10 @@ void MapLevelAbyss::CreateLevel()
       break;
   }
 
-  // Borders
-  GameObjectInfo t;
-  t.Set(true,
-        true,
-        ' ',
-        Colors::BlackColor,
-        Colors::ShadesOfGrey::Six,
-        Strings::TileNames::AbyssalRocksText);
-
-  CreateBorders(t);
+  CreateBorders(' ',
+                Colors::BlackColor,
+                Colors::ShadesOfGrey::Six,
+                Strings::TileNames::AbyssalRocksText);
 
   if (MapType_ != MapType::ABYSS_5)
   {

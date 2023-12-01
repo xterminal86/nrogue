@@ -255,14 +255,11 @@ void MapLevelTown::CreateLevel()
 
   BuildRoads();
 
-  t.Set(true,
-        true,
-        '#',
-        Colors::ShadesOfGrey::Four,
-        Colors::ShadesOfGrey::Two,
-        Strings::TileNames::WallsText);
+  CreateBorders('#',
+                Colors::ShadesOfGrey::Four,
+                Colors::ShadesOfGrey::Two,
+                Strings::TileNames::WallsText);
 
-  CreateBorders(t);
   CreateTownGates();
 
   RecordEmptyCells();

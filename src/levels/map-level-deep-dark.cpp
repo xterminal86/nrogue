@@ -103,15 +103,10 @@ void MapLevelDeepDark::CreateLevel()
     break;
   }
 
-  GameObjectInfo t;
-  t.Set(true,
-        true,
-        ' ',
-        Colors::BlackColor,
-        Colors::ShadesOfGrey::Six,
-        Strings::TileNames::StoneWallText);
-
-  CreateBorders(t);
+  CreateBorders(' ',
+                Colors::BlackColor,
+                Colors::ShadesOfGrey::Six,
+                Strings::TileNames::StoneWallText);
 
   if (MapType_ != MapType::DEEP_DARK_5)
   {

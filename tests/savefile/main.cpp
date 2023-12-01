@@ -110,8 +110,8 @@ int main(int argc, char* argv[])
     }
     else
     {
-      //printf("%s\n", save.ToPrettyString().data());
-      //printf("%s\n", save.DumpObjectStructureToString().data());
+      printf("%s\n", save.ToPrettyString().data());
+      printf("%s\n", save.DumpObjectStructureToString().data());
     }
   }
 

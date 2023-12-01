@@ -89,7 +89,12 @@ void MapLevelBase::PrepareMap()
   {
     for (int y = 0; y < MapSize.Y; y++)
     {
-      MapArray[x][y]->Init(this, x, y, '.', Colors::BlackColor, Colors::BlackColor);
+      MapArray[x][y]->Init(this,
+                           x,
+                           y,
+                           '?',
+                           Colors::WhiteColor,
+                           Colors::MagentaColor);
     }
   }
 }
@@ -281,9 +286,20 @@ void MapLevelBase::RecordEmptyCells()
 
 // =============================================================================
 
-void MapLevelBase::CreateBorders(GameObjectInfo& t)
+void MapLevelBase::CreateBorders(char img,
+                                 uint32_t fgColor,
+                                 uint32_t bgColor,
+                                 const std::string& objectName)
 {
   using GOF = GameObjectsFactory;
+
+  GameObjectInfo oi;
+
+  oi.Image       = img;
+  oi.FgColor     = fgColor;
+  oi.BgColor     = bgColor;
+  oi.IsBlocking  = true;
+  oi.BlocksSight = true;
 
   auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
   for (auto& i : bounds)
@@ -292,10 +308,11 @@ void MapLevelBase::CreateBorders(GameObjectInfo& t)
     // Borders are to ignore IsOutOfBounds() check, so pasting contents
     // of PlaceStaticObject() method directly.
     //
-    GameObject* go = GOF::Instance().CreateStaticObject(i.X, i.Y,
-                                                          t,
-                                                         -1,
-                                                          GameObjectType::PICKAXEABLE);
+    GameObject* go = GOF::Instance().CreateStaticObject(i.X,
+                                                        i.Y,
+                                                        oi,
+                                                       -1,
+                                                        GameObjectType::PICKAXEABLE);
     PlaceStaticObject(go);
   }
 }
@@ -630,16 +647,10 @@ void MapLevelBase::Serialize(NRS& saveTo)
   saveTo.GetNode("save.level.type").SetInt((int)MapType_);
   saveTo.GetNode("save.level.name").SetString(LevelName);
 
-  NRS& mapArray = saveTo.GetNode("save.level.map_array");
-  NRS& ground   = saveTo.GetNode("save.level.default_ground");
+  saveTo.GetNode("save.level.visibility").SetInt(VisibilityRadius);
+  saveTo.GetNode("save.level.respawn").SetInt(MonstersRespawnTurns);
 
-  ground["is_blocking"].SetUInt((uint8_t)_defaultGround.IsBlocking);
-  ground["blocks_sight"].SetUInt((uint8_t)_defaultGround.BlocksSight);
-  ground["image"].SetInt(_defaultGround.Image);
-  ground["fg_color"].SetUInt(_defaultGround.FgColor);
-  ground["bg_color"].SetUInt(_defaultGround.BgColor);
-  ground["object_name"].SetString(_defaultGround.ObjectName);
-  ground["fov_name"].SetString(_defaultGround.FogOfWarName);
+  NRS& mapArray = saveTo.GetNode("save.level.map");
 
   //
   // Once again, we will swap coordinates so that map looks readable in
@@ -1035,13 +1046,16 @@ void MapLevelBase::CreateGround(char img,
 {
   GameObjectInfo t;
   t.Set(false, false, img, fgColor, bgColor, tileName);
-  _defaultGround = t;
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
 }
 
 // =============================================================================
 
-void MapLevelBase::FillArea(int ax, int ay, int aw, int ah, const GameObjectInfo& tileToFill)
+void MapLevelBase::FillArea(int ax,
+                            int ay,
+                            int aw,
+                            int ah,
+                            const GameObjectInfo& tileToFill)
 {
   for (int x = ax; x <= ax + aw; x++)
   {

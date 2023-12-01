@@ -138,18 +138,17 @@ class GameObject
     int PosX = 0;
     int PosY = 0;
 
+    TransformedRoom ZoneMarker = TransformedRoom::UNMARKED;
+
     //
     // E.g. to disallow walking into a tile for NPC
     //
     bool Special = false;
 
-    TransformedRoom ZoneMarker = TransformedRoom::UNMARKED;
-
     bool Blocking    = false;
     bool BlocksSight = false;
     bool Revealed    = false;
-
-    bool Corporeal = true;
+    bool Corporeal   = true;
 
     //
     // Determines if objects on the map tile should be drawn.
@@ -163,6 +162,11 @@ class GameObject
     bool Occupied = false;
 
     bool IsDestroyed = false;
+
+    //
+    // Undead or not.
+    //
+    bool IsLiving = false;
 
     int Image = '?';
 
@@ -244,11 +248,6 @@ class GameObject
     // in case of multiple remains on one cell.
     //
     uint64_t RemainsOf = 0;
-
-    //
-    // Undead or not.
-    //
-    bool IsLiving = false;
 
 #ifdef DEBUG_BUILD
     std::vector<std::string> DebugInfo();

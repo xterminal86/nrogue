@@ -64,15 +64,10 @@ void MapLevelNether::CreateLevel()
       break;
   }
 
-  GameObjectInfo t;
-  t.Set(true,
-        true,
-        ' ',
-        Colors::BlackColor,
-        Colors::CaveWallColor,
-        Strings::TileNames::CaveWallText);
-
-  CreateBorders(t);
+  CreateBorders(' ',
+                Colors::BlackColor,
+                Colors::CaveWallColor,
+                Strings::TileNames::CaveWallText);
 
   if (MapType_ != MapType::NETHER_5)
   {

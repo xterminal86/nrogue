@@ -33,16 +33,10 @@ void MapLevelTest::CreateLevel()
                Colors::BlackColor,
                Strings::TileNames::GroundText);
 
-  GameObjectInfo t;
-
-  t.Set(true,
-        true,
-        '#',
-        Colors::WhiteColor,
-        Colors::ShadesOfGrey::Six,
-        Strings::TileNames::RocksText);
-
-  CreateBorders(t);
+  CreateBorders('#',
+                Colors::WhiteColor,
+                Colors::ShadesOfGrey::Six,
+                Strings::TileNames::RocksText);
 }
 
 // =============================================================================

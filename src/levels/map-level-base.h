@@ -111,8 +111,6 @@ class MapLevelBase
 
     StringV _specialLevel;
 
-    GameObjectInfo _defaultGround;
-
     Player* _playerRef = nullptr;
 
     int _respawnCounter = 0;
@@ -127,6 +125,11 @@ class MapLevelBase
                       uint32_t fgColor,
                       uint32_t bgColor,
                       const std::string& tileName);
+
+    void CreateBorders(char img,
+                       uint32_t fgColor,
+                       uint32_t bgColor,
+                       const std::string& objectName);
 
     virtual void CreateLevel();
     virtual void CreateSpecialLevel();
@@ -152,7 +155,6 @@ class MapLevelBase
                   int aw, int ah,
                   const GameObjectInfo& tileToFill);
 
-    void CreateBorders(GameObjectInfo& t);
     void RecordEmptyCells();
     void CreateItemsForLevel(int maxItems);
     void PlaceRandomShrine(LevelBuilder& lb);
