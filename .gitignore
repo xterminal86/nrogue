@@ -2,7 +2,9 @@ build*/
 obj/
 dumb-compile/build/
 dumb-compile/CMakeFiles/
+.vs/
 CMakeLists.txt.user*
+CMakeSettings.json
 nrogue
 save.nrg
 core.*
