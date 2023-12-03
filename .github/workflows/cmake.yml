@@ -67,7 +67,9 @@ jobs:
            mkdir build-latest
            cp ${{github.workspace}}/build/nrogue.exe build-latest/
            cp ${{github.workspace}}/SDL2.dll build-latest/
-           cp ${{github.workspace}}/config-template.txt build-latest/           
+           cp ${{github.workspace}}/config-template.txt build-latest/
+           cp C:/msys64/mingw64/bin/libgcc_s_seh-1.dll build-latest/
+           cp C:/msys64/mingw64/bin/libstdc++-6.dll build-latest/
     
     - name: PACK ARTIFACT
       run: |
