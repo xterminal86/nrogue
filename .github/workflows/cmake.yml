@@ -21,7 +21,6 @@ jobs:
     steps:
     - name: PRINT ENV
       run: |
-           export
            echo $PATH
            echo $ENV
            echo $PATH
