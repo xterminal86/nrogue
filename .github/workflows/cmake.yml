@@ -26,7 +26,7 @@ jobs:
            echo $PATH
            ls C:/
            ls C:/msys64/
-           ls C:/msys64/mingw64
-           ls C:/msys64/mingw64/bin
+           ls C:/msys64/mingw64/
+           ls C:/msys64/mingw64/bin/
            
     
