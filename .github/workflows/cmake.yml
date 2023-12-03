@@ -19,14 +19,132 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: PRINT ENV
-      run: |
-           echo $PATH
-           echo $ENV
-           echo $PATH
-           ls C:/
-           ls C:/msys64/
-           ls C:/msys64/mingw64/
-           ls C:/msys64/mingw64/bin/
+    
+    #- name: PRINT ENV
+    #  run: |
+    #       echo $PATH
+    #       echo $ENV
+    #       echo $PATH
+    #       ls C:/
+    #       ls C:/msys64/
+    #       ls C:/msys64/mingw64/
+    #       ls C:/msys64/mingw64/bin/
            
+    - name: CHECKOUT
+      uses: actions/checkout@v3
+        
+    - name: CONFIGURE CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      # Starting from https://github.com/xterminal86/nrogue/actions/runs/7036707213 MSVC build broke for some fucking reason,
+      # so I switched it over to MinGW by specifying different cmake generator (-G "MSYS Makefiles") which was quite a Google journey by itself.
+      run: >          
+          cmake 
+          -B ${{github.workspace}}/build 
+          -G "MSYS Makefiles"
+          -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
+          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
+          -DBUILD_TESTS=OFF 
+          -DUSE_SDL=ON 
+          -DSDL2_DIR=${{github.workspace}}/SDL2 
+          -DSDL2_INCLUDE_DIR=${{github.workspace}}/SDL2/x86_64-w64-mingw32/include 
+          -DSDL2MAIN_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2main.a 
+          -DSDL2_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2.dll.a
+
+    - name: BUILD      
+      # Build your program with the given configuration
+      run: |
+           cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: AFTER BUILD
+      run: |
+           echo "AFTER BUILD:"
+           ls
+           ls build           
+
+    - name: PREPARE ARTIFACT
+      run: |
+           mkdir build-latest
+           cp ${{github.workspace}}/build/nrogue.exe build-latest/
+           cp ${{github.workspace}}/SDL2.dll build-latest/
+           cp ${{github.workspace}}/config-template.txt build-latest/           
+    
+    - name: PACK ARTIFACT
+      run: |
+           cd build-latest
+           7z a -tzip build-latest.zip *
+           mv build-latest.zip ../
+        
+    - name: UPLOAD ARTIFACT
+      uses: actions/upload-artifact@v3.0.0
+      with:        
+        name: build-latest
+        path: ${{github.workspace}}/build-latest.zip
+        retention-days: 1
+        
+    - name: DEBUG INFO
+      run: |
+           echo "FINISHED ARTIFACTS PACKING:"
+           ls
+           ls build           
+           
+    - name: CHECK IF RELEASE EXISTS
+      id: checkIfLatestReleaseExists
+      uses: mukunku/tag-exists-action@v1.0.0
+      with:
+          tag: "build-latest"
+      env:
+          GITHUB_TOKEN: ${{ github.token }}    
+     
+    - name: DELETE OLD RELEASE
+      if: ${{ steps.checkIfLatestReleaseExists.outputs.exists }} == "true"      
+      uses: dev-drprasad/delete-tag-and-release@v0.2.1
+      with:
+          delete_release: true
+          tag_name: build-latest
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: CREATE 'build-latest' RELEASE
+      uses: actions/create-release@v1
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+          tag_name: build-latest
+          release_name: build-latest
+          body: |
+                Builds automatically on every new commit.
+                
+                May be unstable and / or broken.  
+          draft: false
+          prerelease: false          
+    
+  publish:
+    needs: build
+    runs-on: windows-latest    
+    steps:
+      - uses: actions/checkout@v3
+    
+      - name: DOWNLOAD ARTIFACT
+        uses: actions/download-artifact@v3.0.0
+        with:          
+          name: build-latest          
+
+      - name: GET 'build-latest' RELEASE INFO
+        id: latest-release-info
+        uses: cardinalby/git-get-release-action@v1
+        env:
+            GITHUB_TOKEN: ${{ github.token }}
+        with:
+            tag: build-latest
+
+      - name: UPLOAD LATEST RELEASE ZIP
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.latest-release-info.outputs.upload_url }}
+          asset_path: ${{github.workspace}}/build-latest.zip
+          asset_name: build-latest-${{ github.run_number }}.zip
+          asset_content_type: application/zip
     
