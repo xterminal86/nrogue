@@ -22,7 +22,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
       with:
-        vs-version: '[17.7.2+d6990bcfa,17.3)'
+        vs-version: '[17.7.2,17.3)'
         
     - uses: actions/checkout@v3
                
