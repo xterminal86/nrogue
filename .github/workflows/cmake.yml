@@ -26,15 +26,7 @@ jobs:
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
           $env:PATH = "C:\msys64\ucrt64\bin;C:\msys64\usr\bin;$env:PATH"          
-          cmake -B ${{github.workspace}}/build \        
-          -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} \
-          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-          -DBUILD_TESTS=OFF \
-          -DUSE_SDL=ON \
-          -DSDL2_DIR=${{github.workspace}}/SDL2 \
-          -DSDL2_INCLUDE_DIR=${{github.workspace}}/SDL2/x86_64-w64-mingw32/include \
-          -DSDL2MAIN_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2main.a \
-          -DSDL2_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2.dll.a
+          cmake -B ${{github.workspace}}/build -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_TESTS=OFF -DUSE_SDL=ON -DSDL2_DIR=${{github.workspace}}/SDL2 -DSDL2_INCLUDE_DIR=${{github.workspace}}/SDL2/x86_64-w64-mingw32/include -DSDL2MAIN_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2main.a -DSDL2_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2.dll.a
 
     - name: BUILD
       # Build your program with the given configuration
