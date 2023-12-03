@@ -19,6 +19,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        vs-version: '[17.2]'
+        
     - uses: actions/checkout@v3
                
     - name: CONFIGURE CMake
