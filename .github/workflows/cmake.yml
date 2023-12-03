@@ -29,7 +29,19 @@ jobs:
     #       ls C:/msys64/
     #       ls C:/msys64/mingw64/
     #       ls C:/msys64/mingw64/bin/
-           
+
+    - name: '${{ matrix.icon }} Setup MSYS2'
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          git
+          make
+        pacboy: >-
+          toolchain:p
+          cmake:p
+          ninja:p
+      
     - name: CHECKOUT
       uses: actions/checkout@v3
         
@@ -41,7 +53,7 @@ jobs:
       run: >          
           cmake 
           -B ${{github.workspace}}/build 
-          -G "MSYS Makefiles"
+          -G Ninja
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
           -DBUILD_TESTS=OFF 
