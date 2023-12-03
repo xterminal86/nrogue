@@ -28,7 +28,7 @@ jobs:
       run: >          
           cmake 
           -B ${{github.workspace}}/build 
-          -G "Ninja"
+          -G "MinGW Makefiles"
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
           -DBUILD_TESTS=OFF 
