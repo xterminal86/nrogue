@@ -1,0 +1,39 @@
+name: MSVC
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  BUILD_VERSION_TEXT: build-${{ github.run_number }}
+  BUILD_DIR_REL: build-msvc    
+
+#
+# For testing MSVC build
+#
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: CHECKOUT
+      uses: actions/checkout@v3
+
+    - name: CONFIGURE CMAKE
+      run: >          
+          cmake 
+          -B ${{github.workspace}}/${{ env.BUILD_DIR_REL }}          
+          -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
+          -DCMAKE_BUILD_TYPE=Release
+          -DBUILD_TESTS=OFF 
+          -DUSE_SDL=ON 
+          -DSDL2_DIR=${{github.workspace}}/SDL2 
+          -DSDL2_INCLUDE_DIR=${{github.workspace}}/SDL2/x86_64-w64-mingw32/include 
+          -DSDL2MAIN_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2main.a 
+          -DSDL2_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2.dll.a
+
+    - name: BUILD      
+      run: cmake --build ${{github.workspace}}/${{ env.BUILD_DIR_REL }} --config Release
+      
