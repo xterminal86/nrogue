@@ -104,7 +104,7 @@ jobs:
            cd ${{ env.PACK_DIR }}
            7z a -tzip nrogue.zip nrogue.exe SDL2.dll config-template.txt libgcc_s_seh-1.dll libstdc++-6.dll
            rm nrogue.exe
-           cp -f ${{github.workspace}}/${{ env.BUILD_DIR_DBG }}/nrogue.exe .
+           cp ${{github.workspace}}/${{ env.BUILD_DIR_DBG }}/nrogue.exe .
            7z a -tzip nrogue-dbg.zip nrogue.exe SDL2.dll config-template.txt libgcc_s_seh-1.dll libstdc++-6.dll
            7z a -tzip build-latest.zip nrogue.zip nrogue-dbg.zip
            mv build-latest.zip ../
@@ -123,8 +123,7 @@ jobs:
         name: build-latest
         path: ${{github.workspace}}/build-latest.zip
         retention-days: 1
-       
-           
+                  
     - name: CHECK IF RELEASE EXISTS
       id: checkIfLatestReleaseExists
       uses: mukunku/tag-exists-action@v1.0.0
