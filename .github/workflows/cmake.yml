@@ -156,8 +156,10 @@ jobs:
           draft: false
           prerelease: false          
     
+# ==============================================================================
+
   publish:
-    needs: build-release
+    needs: build
     runs-on: windows-latest    
     steps:
       - uses: actions/checkout@v3
