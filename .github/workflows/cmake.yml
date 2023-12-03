@@ -26,7 +26,9 @@ jobs:
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >          
-          cmake -B ${{github.workspace}}/build 
+          cmake 
+          -B ${{github.workspace}}/build 
+          -G "MSYS Makefiles"          
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
           -DBUILD_TESTS=OFF 
