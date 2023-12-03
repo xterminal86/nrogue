@@ -1,6 +1,6 @@
 [![CMake](https://github.com/xterminal86/nrogue/actions/workflows/cmake.yml/badge.svg?branch=master)](https://github.com/xterminal86/nrogue/actions/workflows/cmake.yml)
 
-[![CMake](https://github.com/xterminal86/nrogue/actions/workflows/cmake.yml/badge.svg?branch=master)](https://github.com/xterminal86/nrogue/actions/workflows/msvc.yml)
+[![MSVC](https://github.com/xterminal86/nrogue/actions/workflows/msvc.yaml/badge.svg)](https://github.com/xterminal86/nrogue/actions/workflows/msvc.yaml)
 
 # NROGUE
 *ncurses roguelike challenge*
