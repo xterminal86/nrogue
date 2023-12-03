@@ -18,7 +18,16 @@ jobs:
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: windows-latest
 
-    steps:            
+    steps:
+    - name: PRINT ENV
+      run: |
+           export
+           echo $PATH
+           echo $ENV
+           echo $PATH
+           ls C:/
+           ls C:/msys64/mingw64/bin
+           
     - name: CHECKOUT
       uses: actions/checkout@v3
         
@@ -45,7 +54,7 @@ jobs:
       run: |
            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: DEBUG INFO
+    - name: AFTER BUILD
       run: |
            echo "AFTER BUILD:"
            ls
@@ -54,7 +63,7 @@ jobs:
     - name: PREPARE ARTIFACT
       run: |
            mkdir build-latest
-           cp ${{github.workspace}}/build/Release/nrogue.exe build-latest/
+           cp ${{github.workspace}}/build/nrogue.exe build-latest/
            cp ${{github.workspace}}/SDL2.dll build-latest/
            cp ${{github.workspace}}/config-template.txt build-latest/           
     
