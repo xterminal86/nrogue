@@ -28,7 +28,7 @@ jobs:
       run: >          
           cmake 
           -B ${{github.workspace}}/build 
-          -G "MinGW Makefiles"
+          -G "MSYS Makefiles"
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
           -DBUILD_TESTS=OFF 
@@ -40,7 +40,9 @@ jobs:
 
     - name: BUILD      
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: |
+           cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+           ls -l
 
     - name: PREPARE ARTIFACT
       run: |
