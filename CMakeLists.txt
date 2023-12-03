@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.9)
+cmake_minimum_required(VERSION 3.12)
 set (TARGET_NAME nrogue)
 set (OBJECT_LIB_NAME ${TARGET_NAME}-objlib)
 set (OBJLIB_LINK_NAME $<TARGET_OBJECTS:${OBJECT_LIB_NAME}>)
@@ -12,7 +12,7 @@ if (MSVC)
   add_compile_options(/W1)
   add_definitions(-DMSVC_COMPILER)
   add_definitions(-D__PRETTY_FUNCTION__=__FUNCSIG__)
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
+  # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
 else()
   add_compile_options(-Wall
                       #-Wextra
@@ -116,9 +116,15 @@ endif()
 
 # ==============================================================================
 
-add_executable(${TARGET_NAME}
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-  ${OBJLIB_LINK_NAME})
+if (WIN32)
+  add_executable(${TARGET_NAME} WIN32
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+    ${OBJLIB_LINK_NAME})
+else()
+  add_executable(${TARGET_NAME}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+    ${OBJLIB_LINK_NAME})
+endif()
 
 if (USE_SDL)
   find_package(SDL2 REQUIRED)
