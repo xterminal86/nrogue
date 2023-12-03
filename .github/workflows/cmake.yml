@@ -28,7 +28,7 @@ jobs:
       run: >          
           cmake 
           -B ${{github.workspace}}/build 
-          -G "Visual Studio 16 2019" -A x64
+          -G "Ninja"
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
           -DBUILD_TESTS=OFF 
