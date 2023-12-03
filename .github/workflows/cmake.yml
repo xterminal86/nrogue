@@ -7,12 +7,12 @@ on:
     branches: [ master ]
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
   BUILD_VERSION_TEXT: build-${{ github.run_number }}
+  BUILD_DIR_DBG: build-debug
+  BUILD_DIR_REL: build-release
   
 jobs:
-  build:
+  build-release:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
@@ -40,10 +40,10 @@ jobs:
       # so I switched it over to MinGW by specifying different cmake generator (-G "MSYS Makefiles") which was quite a Google journey by itself.
       run: >          
           cmake 
-          -B ${{github.workspace}}/build 
+          -B ${{github.workspace}}/${{ env.BUILD_DIR_REL }}
           -G "MSYS Makefiles"
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
-          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
+          -DCMAKE_BUILD_TYPE=Release
           -DBUILD_TESTS=OFF 
           -DUSE_SDL=ON 
           -DSDL2_DIR=${{github.workspace}}/SDL2 
@@ -54,18 +54,18 @@ jobs:
     - name: BUILD      
       # Build your program with the given configuration
       run: |
-           cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+           cmake --build ${{github.workspace}}/${{ env.BUILD_DIR_REL }} --config Release
 
     - name: AFTER BUILD
       run: |
            echo "AFTER BUILD:"
            ls
-           ls build           
+           ls ${{ env.BUILD_DIR_REL }}           
 
     - name: PREPARE ARTIFACT
       run: |
            mkdir build-latest
-           cp ${{github.workspace}}/build/nrogue.exe build-latest/
+           cp ${{github.workspace}}/${{ env.BUILD_DIR_REL }}/nrogue.exe build-latest/
            cp ${{github.workspace}}/SDL2.dll build-latest/
            cp ${{github.workspace}}/config-template.txt build-latest/
            cp ${{github.workspace}}/libgcc_s_seh-1.dll build-latest/
@@ -88,7 +88,7 @@ jobs:
       run: |
            echo "FINISHED ARTIFACTS PACKING:"
            ls
-           ls build           
+           ls ${{ env.BUILD_DIR_REL }}           
            
     - name: CHECK IF RELEASE EXISTS
       id: checkIfLatestReleaseExists
@@ -122,7 +122,7 @@ jobs:
           prerelease: false          
     
   publish:
-    needs: build
+    needs: build-release
     runs-on: windows-latest    
     steps:
       - uses: actions/checkout@v3
@@ -149,4 +149,125 @@ jobs:
           asset_path: ${{github.workspace}}/build-latest.zip
           asset_name: build-latest-${{ github.run_number }}.zip
           asset_content_type: application/zip
+
+# ---------------------------------------------------------------------------------------------------------------------------------
+
+  build-debug:
+    runs-on: windows-latest    
+    steps:
+      - name: CHECKOUT
+        uses: actions/checkout@v3
+
+      - name: CONFIGURE CMake      
+        run: >          
+          cmake 
+          -B ${{github.workspace}}/${{ env.BUILD_DIR_DBG }}
+          -G "MSYS Makefiles"
+          -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
+          -DCMAKE_BUILD_TYPE=Debug
+          -DBUILD_TESTS=OFF 
+          -DUSE_SDL=ON 
+          -DSDL2_DIR=${{github.workspace}}/SDL2 
+          -DSDL2_INCLUDE_DIR=${{github.workspace}}/SDL2/x86_64-w64-mingw32/include 
+          -DSDL2MAIN_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2main.a 
+          -DSDL2_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2.dll.a
+
+      - name: BUILD
+        run: |
+             cmake --build ${{github.workspace}}/${{ env.BUILD_DIR_DBG }} --config Debug
+
+      - name: AFTER BUILD
+        run: |
+             echo "AFTER BUILD:"
+             ls
+             ls ${{ env.BUILD_DIR_DBG }}
+
+      - name: PREPARE ARTIFACT
+        run: |
+             mkdir build-dbg
+             cp ${{github.workspace}}/${{ env.BUILD_DIR_DBG }}/nrogue.exe build-dbg/
+             cp ${{github.workspace}}/SDL2.dll build-dbg/
+             cp ${{github.workspace}}/config-template.txt build-dbg/
+             cp ${{github.workspace}}/libgcc_s_seh-1.dll build-dbg/
+             cp ${{github.workspace}}/libstdc++-6.dll build-dbg/
+    
+      - name: PACK ARTIFACT
+        run: |
+             cd build-dbg
+             7z a -tzip build-dbg.zip *
+             mv build-dbg.zip ../
+        
+      - name: UPLOAD ARTIFACT
+        uses: actions/upload-artifact@v3.0.0
+        with:        
+          name: build-dbg
+          path: ${{github.workspace}}/build-dbg.zip
+          retention-days: 1
+        
+      - name: DEBUG INFO
+        run: |
+             echo "FINISHED ARTIFACTS PACKING:"
+             ls
+             ls ${{ env.BUILD_DIR_DBG }}
+           
+      - name: CHECK IF RELEASE EXISTS
+        id: checkIfLatestReleaseExists
+        uses: mukunku/tag-exists-action@v1.0.0
+        with:
+            tag: "build-latest"
+        env:
+            GITHUB_TOKEN: ${{ github.token }}    
+     
+      - name: DELETE OLD RELEASE
+        if: ${{ steps.checkIfLatestReleaseExists.outputs.exists }} == "true"      
+        uses: dev-drprasad/delete-tag-and-release@v0.2.1
+        with:
+            delete_release: true
+            tag_name: build-dbg
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: CREATE 'build-dbg' RELEASE
+        uses: actions/create-release@v1
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            tag_name: build-dbg
+            release_name: build-dbg
+            body: |
+                  Builds automatically on every new commit.
+                
+                  Contains debugging information.
+            draft: false
+            prerelease: false          
+    
+  publish-debug:
+    needs: build-debug
+    runs-on: windows-latest    
+    steps:
+      - uses: actions/checkout@v3
+    
+      - name: DOWNLOAD ARTIFACT
+        uses: actions/download-artifact@v3.0.0
+        with:          
+          name: build-dbg
+
+      - name: GET 'build-dbg' RELEASE INFO
+        id: latest-release-info
+        uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+            tag: build-dbg
+
+      - name: UPLOAD LATEST DEBUG RELEASE ZIP
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.latest-release-info.outputs.upload_url }}
+          asset_path: ${{github.workspace}}/build-dbg.zip
+          asset_name: build-dbg-${{ github.run_number }}.zip
+          asset_content_type: application/zip  
+  
     
