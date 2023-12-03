@@ -25,6 +25,8 @@ jobs:
     - name: CONFIGURE CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      # Starting from https://github.com/xterminal86/nrogue/actions/runs/7036707213 MSVC build broke for some fucking reason,
+      # so I switched it over to MinGW by specifying different cmake generator (-G "MSYS Makefiles") which was quite a Google journey by itself.
       run: >          
           cmake 
           -B ${{github.workspace}}/build 
@@ -42,7 +44,12 @@ jobs:
       # Build your program with the given configuration
       run: |
            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-           ls -l .
+
+    - name: DEBUG INFO
+      run: |
+           echo "AFTER BUILD:"
+           ls
+           ls build           
 
     - name: PREPARE ARTIFACT
       run: |
@@ -66,9 +73,9 @@ jobs:
         
     - name: DEBUG INFO
       run: |
+           echo "FINISHED ARTIFACTS PACKING:"
            ls
-           ls build
-           ls build-latest           
+           ls build           
            
     - name: CHECK IF RELEASE EXISTS
       id: checkIfLatestReleaseExists
