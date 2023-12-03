@@ -29,18 +29,6 @@ jobs:
     #       ls C:/msys64/
     #       ls C:/msys64/mingw64/
     #       ls C:/msys64/mingw64/bin/
-
-    - name: '${{ matrix.icon }} Setup MSYS2'
-      uses: msys2/setup-msys2@v2
-      with:
-        update: true
-        install: >-
-          git
-          make
-        pacboy: >-
-          toolchain:p
-          cmake:p
-          ninja:p
       
     - name: CHECKOUT
       uses: actions/checkout@v3
@@ -53,7 +41,7 @@ jobs:
       run: >          
           cmake 
           -B ${{github.workspace}}/build 
-          -G Ninja
+          -G "MSYS Makefiles"
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
           -DBUILD_TESTS=OFF 
@@ -80,8 +68,8 @@ jobs:
            cp ${{github.workspace}}/build/nrogue.exe build-latest/
            cp ${{github.workspace}}/SDL2.dll build-latest/
            cp ${{github.workspace}}/config-template.txt build-latest/
-           cp C:/msys64/mingw64/bin/libgcc_s_seh-1.dll build-latest/
-           cp C:/msys64/mingw64/bin/libstdc++-6.dll build-latest/
+           cp ${{github.workspace}}/libgcc_s_seh-1.dll build-latest/
+           cp ${{github.workspace}}/libstdc++-6.dll build-latest/
     
     - name: PACK ARTIFACT
       run: |
