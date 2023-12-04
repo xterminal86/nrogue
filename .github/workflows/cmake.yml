@@ -19,6 +19,11 @@ jobs:
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: windows-latest
 
+    # Setting default options - default shell in this case in which all run commands will execute.
+    defaults:
+      run:
+        shell: msys2 {0}
+
     steps:
     
     #- name: PRINT ENV
@@ -32,8 +37,13 @@ jobs:
     #       ls C:/msys64/mingw64/bin/
       
     - name: CHECKOUT
-      uses: actions/checkout@v3
-
+    - uses: actions/checkout@v3
+    - uses: msys2/setup-msys2@v2
+      with:
+        msystem: UCRT64
+        update: true
+        install: git mingw-w64-ucrt-x86_64-gcc
+          
     # --------------------------------------------------------------------------
 
     - name: CONFIGURE CMake (Release)
