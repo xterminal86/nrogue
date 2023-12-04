@@ -35,13 +35,15 @@ jobs:
     #       ls C:/msys64/
     #       ls C:/msys64/mingw64/
     #       ls C:/msys64/mingw64/bin/
-    #- name: CHECKOUT
-    - uses: actions/checkout@v3
-    - uses: msys2/setup-msys2@v2
-      with:
-        msystem: UCRT64
-        update: true
-        install: git mingw-w64-ucrt-x86_64-gcc cmake
+    - name: CHECKOUT
+      uses: actions/checkout@v3
+      
+    - name: SET UP MSYS2
+      uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: git mingw-w64-ucrt-x86_64-gcc cmake
       
     # --------------------------------------------------------------------------
 
@@ -52,8 +54,7 @@ jobs:
       # so I switched it over to MinGW by specifying different cmake generator (-G "MSYS Makefiles") which was quite a Google journey by itself.
       run: >          
           cmake 
-          -B ${{github.workspace}}/${{ env.BUILD_DIR_REL }}
-          -G "MSYS Makefiles"
+          -B ${{github.workspace}}/${{ env.BUILD_DIR_REL }}          
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
           -DCMAKE_BUILD_TYPE=Release
           -DBUILD_TESTS=OFF 
