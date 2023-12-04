@@ -43,7 +43,7 @@ jobs:
       with:
         msystem: UCRT64
         update: true
-        install: git mingw-w64-ucrt-x86_64-gcc cmake
+        install: git mingw-w64-ucrt-x86_64-cmake mingw-w64-x86_64-ninja
       
     # --------------------------------------------------------------------------
 
@@ -56,6 +56,7 @@ jobs:
           cmake 
           -B ${{github.workspace}}/${{ env.BUILD_DIR_REL }}          
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
+          -G Ninja
           -DCMAKE_BUILD_TYPE=Release
           -DBUILD_TESTS=OFF 
           -DUSE_SDL=ON 
