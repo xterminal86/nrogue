@@ -35,15 +35,14 @@ jobs:
     #       ls C:/msys64/
     #       ls C:/msys64/mingw64/
     #       ls C:/msys64/mingw64/bin/
-      
-    - name: CHECKOUT
+    #- name: CHECKOUT
     - uses: actions/checkout@v3
     - uses: msys2/setup-msys2@v2
       with:
         msystem: UCRT64
         update: true
         install: git mingw-w64-ucrt-x86_64-gcc
-          
+      
     # --------------------------------------------------------------------------
 
     - name: CONFIGURE CMake (Release)
