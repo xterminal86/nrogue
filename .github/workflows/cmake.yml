@@ -40,10 +40,10 @@ jobs:
       
     - name: SET UP MSYS2
       uses: msys2/setup-msys2@v2
-        with:
-          msystem: UCRT64
-          update: true
-          install: git mingw-w64-ucrt-x86_64-gcc cmake
+      with:
+        msystem: UCRT64
+        update: true
+        install: git mingw-w64-ucrt-x86_64-gcc cmake
       
     # --------------------------------------------------------------------------
 
