@@ -1,10 +1,10 @@
 name: MSVC
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  workflow_run:
+    workflows: ["CMake"]
+    types:
+      - completed
 
 env:
   BUILD_VERSION_TEXT: build-${{ github.run_number }}
