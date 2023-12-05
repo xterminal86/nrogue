@@ -54,7 +54,7 @@ jobs:
       # so I switched it over to MinGW by specifying different cmake generator (-G "MSYS Makefiles") which was quite a Google journey by itself.
       run: >          
           cmake 
-          -B ${{github.workspace}}/${{ env.BUILD_DIR_REL }}          
+          -B '${{github.workspace}}/${{ env.BUILD_DIR_REL }}'
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
           -G Ninja
           -DCMAKE_BUILD_TYPE=Release
@@ -68,14 +68,14 @@ jobs:
     - name: BUILD (Release)      
       # Build your program with the given configuration
       run: |
-           cmake --build ${{github.workspace}}/${{ env.BUILD_DIR_REL }} --config Release
+           cmake --build '${{github.workspace}}/${{ env.BUILD_DIR_REL }}' --config Release
 
     # --------------------------------------------------------------------------
 
     - name: CONFIGURE CMake (Debug)
       run: >          
           cmake 
-          -B ${{github.workspace}}/${{ env.BUILD_DIR_DBG }}
+          -B '${{github.workspace}}/${{ env.BUILD_DIR_DBG }}'
           -G "MSYS Makefiles"
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
           -DCMAKE_BUILD_TYPE=Debug
@@ -88,7 +88,7 @@ jobs:
 
     - name: BUILD (Debug)      
       run: |
-           cmake --build ${{github.workspace}}/${{ env.BUILD_DIR_DBG }} --config Debug
+           cmake --build '${{github.workspace}}/${{ env.BUILD_DIR_DBG }}' --config Debug
 
     # --------------------------------------------------------------------------
 
