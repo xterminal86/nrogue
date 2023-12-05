@@ -38,7 +38,14 @@ jobs:
            
     - name: CHECKOUT
       uses: actions/checkout@v3
-      
+
+    #
+    # Starting from https://github.com/xterminal86/nrogue/actions/runs/7036707213 MSVC build broke for some fucking reason,
+    # so I switched it over to MSYS2 which was quite a Google journey by itself to make build working here.
+    #
+    # How to set up environment:              https://www.msys2.org/docs/cmake/
+    # List of available packages to install:  https://packages.msys2.org/package/?repo=ucrt64
+    #
     - name: SET UP MSYS2
       uses: msys2/setup-msys2@v2
       with:
@@ -72,8 +79,7 @@ jobs:
     - name: CONFIGURE CMake (Release)
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      # Starting from https://github.com/xterminal86/nrogue/actions/runs/7036707213 MSVC build broke for some fucking reason,
-      # so I switched it over to MinGW by specifying different cmake generator (-G "MSYS Makefiles") which was quite a Google journey by itself.
+      # NOTE: MSYS2 has bullshit problems with handling slashes, so put everything related in '' quotes.
       run: >          
           cmake 
           -B '${{github.workspace}}/${{ env.BUILD_DIR_REL }}'
@@ -117,8 +123,11 @@ jobs:
     - name: AFTER BUILD
       run: |
            echo "AFTER BUILD:"
+           echo "--- ROOT ---"
            ls
+           echo "--- RELEASE DIR ---"
            ls ${{ env.BUILD_DIR_REL }}           
+           echo "--- DEBUG DIR ---"
            ls ${{ env.BUILD_DIR_DBG }}           
 
     # --------------------------------------------------------------------------
@@ -151,7 +160,9 @@ jobs:
     - name: DEBUG INFO
       run: |
            echo "FINISHED ARTIFACTS PACKING:"
+           echo "--- ROOT ---"
            ls
+           echo "--- PACK DIR ---"
            ls ${{ env.PACK_DIR }}           
 
     - name: UPLOAD ARTIFACT
