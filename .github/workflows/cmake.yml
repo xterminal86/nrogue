@@ -26,15 +26,16 @@ jobs:
 
     steps:
     
-    #- name: PRINT ENV
-    #  run: |
-    #       echo $PATH
-    #       echo $ENV
-    #       echo $PATH
-    #       ls C:/
-    #       ls C:/msys64/
-    #       ls C:/msys64/mingw64/
-    #       ls C:/msys64/mingw64/bin/   
+    - name: PRINT ENV
+      if: false
+      run: |
+           echo $PATH
+           echo $ENV
+           echo $PATH
+           ls C:/
+           ls C:/msys64/
+           ls C:/msys64/mingw64/
+           ls C:/msys64/mingw64/bin/   
            
     - name: CHECKOUT
       uses: actions/checkout@v3
@@ -59,20 +60,21 @@ jobs:
                  mingw-w64-ucrt-x86_64-SDL2
                  mingw-w64-ucrt-x86_64-7zip
 
-    #- name: PRINT MSYS2
-    #  run: |
-    #       echo "--- ROOT ---"
-    #       ls /
-    #       echo "--- /ucrt64 ---"
-    #       ls /ucrt64
-    #       echo "--- /ucrt64/bin ---"
-    #       ls /ucrt64/bin
-    #       echo "--- /ucrt64/lib ---"
-    #       ls /ucrt64/lib       
-    #       echo "--- /ucrt64/include ---"
-    #       ls /ucrt64/include
-    #       echo "--- /ucrt64/include/SDL2 ---"
-    #       ls /ucrt64/include/SDL2
+    - name: PRINT MSYS2
+      if: false
+      run: |
+           echo "--- ROOT ---"
+           ls /
+           echo "--- /ucrt64 ---"
+           ls /ucrt64
+           echo "--- /ucrt64/bin ---"
+           ls /ucrt64/bin
+           echo "--- /ucrt64/lib ---"
+           ls /ucrt64/lib       
+           echo "--- /ucrt64/include ---"
+           ls /ucrt64/include
+           echo "--- /ucrt64/include/SDL2 ---"
+           ls /ucrt64/include/SDL2
            
     # --------------------------------------------------------------------------
 
