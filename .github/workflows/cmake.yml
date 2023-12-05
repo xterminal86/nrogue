@@ -101,6 +101,7 @@ jobs:
     # --------------------------------------------------------------------------
 
     - name: CONFIGURE CMake (Debug)
+      if: false
       run: >          
           cmake 
           -B '${{github.workspace}}/${{ env.BUILD_DIR_DBG }}'
@@ -114,7 +115,8 @@ jobs:
           -DSDL2MAIN_LIBRARY='/ucrt64/lib/libSDL2main.a'
           -DSDL2_LIBRARY='/ucrt64/lib/libSDL2.dll.a'
 
-    - name: BUILD (Debug)      
+    - name: BUILD (Debug)
+      if: false
       run: |
            cmake --build '${{github.workspace}}/${{ env.BUILD_DIR_DBG }}' --config Debug
 
@@ -135,15 +137,18 @@ jobs:
     # It seems static linking of libgcc_seh and libstdc++ works, 
     # so no need to copy these.
     #
-    - name: PREPARE ARTIFACTS
+    - name: PREPARE ARTIFACTS (Release)
       run: |
            mkdir '${{ env.PACK_DIR }}'
            mkdir '${{ env.PACK_DIR }}/nrogue'
-           mkdir '${{ env.PACK_DIR }}/nrogue-dbg'
            cp '${{github.workspace}}/${{ env.BUILD_DIR_REL }}/nrogue.exe' '${{ env.PACK_DIR }}/nrogue/'
            cp '/ucrt64/bin/SDL2.dll' '${{ env.PACK_DIR }}/nrogue/'
            cp '${{github.workspace}}/config-template.txt' '${{ env.PACK_DIR }}/nrogue/'           
-           # -----------------------------------------------------------------------------------------
+
+    - name: PREPARE ARTIFACTS (Debug)
+      if: false
+      run: |
+           mkdir '${{ env.PACK_DIR }}/nrogue-dbg'
            cp '${{github.workspace}}/${{ env.BUILD_DIR_DBG }}/nrogue.exe' '${{ env.PACK_DIR }}/nrogue-dbg/'
            cp '/ucrt64/bin/SDL2.dll' '${{ env.PACK_DIR }}/nrogue-dbg/'
            cp '${{github.workspace}}/config-template.txt' '${{ env.PACK_DIR }}/nrogue-dbg/'           
@@ -151,7 +156,7 @@ jobs:
     - name: PACK ARTIFACTS
       run: |
            cd ${{ env.PACK_DIR }}
-           7z a -tzip build-latest.zip nrogue/ nrogue-dbg/
+           7z a -tzip build-latest.zip nrogue/
            mv build-latest.zip ../
 
     # --------------------------------------------------------------------------
@@ -162,7 +167,8 @@ jobs:
            echo "--- ROOT ---"
            ls
            echo "--- PACK DIR ---"
-           ls ${{ env.PACK_DIR }}           
+           ls ${{ env.PACK_DIR }}
+           ls ${{ env.PACK_DIR }}/nrogue
 
     - name: UPLOAD ARTIFACT
       uses: actions/upload-artifact@v3.0.0
