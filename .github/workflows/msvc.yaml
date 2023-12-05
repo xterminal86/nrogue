@@ -14,9 +14,10 @@ env:
 # For testing MSVC build
 #
 jobs:
-  build:
+  build:    
     runs-on: windows-latest
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
     steps:
     - name: CHECKOUT
       uses: actions/checkout@v3
