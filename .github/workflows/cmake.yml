@@ -35,6 +35,14 @@ jobs:
     #       ls C:/msys64/
     #       ls C:/msys64/mingw64/
     #       ls C:/msys64/mingw64/bin/
+    - name: PRINT MSYS2
+      run: |
+           ls /
+           ls /ucrt64
+           ls /ucrt64/lib           
+           ls /ucrt64/include
+           ls /ucrt64/include/SDL2
+           
     - name: CHECKOUT
       uses: actions/checkout@v3
       
@@ -65,10 +73,10 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release
           -DBUILD_TESTS=OFF 
           -DUSE_SDL=ON 
-          -DSDL2_DIR=${{github.workspace}}/SDL2 
-          -DSDL2_INCLUDE_DIR=${{github.workspace}}/SDL2/x86_64-w64-mingw32/include 
-          -DSDL2MAIN_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2main.a 
-          -DSDL2_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2.dll.a
+          -DSDL2_DIR='/ucrt64/lib/cmake/SDL2/'
+          -DSDL2_INCLUDE_DIR='/ucrt64/include/'
+          -DSDL2MAIN_LIBRARY='/ucrt64/lib/libSDL2main.a'
+          -DSDL2_LIBRARY='/ucrt64/lib/libSDL2.dll.a'
 
     - name: BUILD (Release)      
       # Build your program with the given configuration
