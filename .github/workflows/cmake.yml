@@ -128,9 +128,7 @@ jobs:
            echo "--- ROOT ---"
            ls
            echo "--- RELEASE DIR ---"
-           ls ${{ env.BUILD_DIR_REL }}           
-           echo "--- DEBUG DIR ---"
-           ls ${{ env.BUILD_DIR_DBG }}           
+           ls ${{ env.BUILD_DIR_REL }}
 
     # --------------------------------------------------------------------------
     #
@@ -167,8 +165,7 @@ jobs:
            echo "--- ROOT ---"
            ls
            echo "--- PACK DIR ---"
-           ls ${{ env.PACK_DIR }}
-           ls ${{ env.PACK_DIR }}/nrogue
+           ls ${{ env.PACK_DIR }}           
 
     - name: UPLOAD ARTIFACT
       uses: actions/upload-artifact@v3.0.0
