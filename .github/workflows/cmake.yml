@@ -131,7 +131,10 @@ jobs:
            ls ${{ env.BUILD_DIR_DBG }}           
 
     # --------------------------------------------------------------------------
-
+    #
+    # It seems static linking of libgcc_seh and libstdc++ works, 
+    # so no need to copy these.
+    #
     - name: PREPARE ARTIFACTS
       run: |
            mkdir '${{ env.PACK_DIR }}'
@@ -139,15 +142,11 @@ jobs:
            mkdir '${{ env.PACK_DIR }}/nrogue-dbg'
            cp '${{github.workspace}}/${{ env.BUILD_DIR_REL }}/nrogue.exe' '${{ env.PACK_DIR }}/nrogue/'
            cp '/ucrt64/bin/SDL2.dll' '${{ env.PACK_DIR }}/nrogue/'
-           cp '${{github.workspace}}/config-template.txt' '${{ env.PACK_DIR }}/nrogue/'
-           cp '/ucrt64/bin/libgcc_s_seh-1.dll' '${{ env.PACK_DIR }}/nrogue/'
-           cp '/ucrt64/bin/libstdc++-6.dll' '${{ env.PACK_DIR }}/nrogue/'
+           cp '${{github.workspace}}/config-template.txt' '${{ env.PACK_DIR }}/nrogue/'           
            # -----------------------------------------------------------------------------------------
            cp '${{github.workspace}}/${{ env.BUILD_DIR_DBG }}/nrogue.exe' '${{ env.PACK_DIR }}/nrogue-dbg/'
            cp '/ucrt64/bin/SDL2.dll' '${{ env.PACK_DIR }}/nrogue-dbg/'
-           cp '${{github.workspace}}/config-template.txt' '${{ env.PACK_DIR }}/nrogue-dbg/'
-           cp '/ucrt64/bin/libgcc_s_seh-1.dll' '${{ env.PACK_DIR }}/nrogue-dbg/'
-           cp '/ucrt64/bin/libstdc++-6.dll' '${{ env.PACK_DIR }}/nrogue-dbg/'
+           cp '${{github.workspace}}/config-template.txt' '${{ env.PACK_DIR }}/nrogue-dbg/'           
            
     - name: PACK ARTIFACTS
       run: |
