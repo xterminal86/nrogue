@@ -56,7 +56,7 @@ jobs:
           cmake 
           -B ${{github.workspace}}/${{ env.BUILD_DIR_REL }}          
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
-          -G Ninja
+          -G "MSYS Makefiles"
           -DCMAKE_BUILD_TYPE=Release
           -DBUILD_TESTS=OFF 
           -DUSE_SDL=ON 
