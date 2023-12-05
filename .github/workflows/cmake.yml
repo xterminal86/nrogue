@@ -34,14 +34,7 @@ jobs:
     #       ls C:/
     #       ls C:/msys64/
     #       ls C:/msys64/mingw64/
-    #       ls C:/msys64/mingw64/bin/
-    - name: PRINT MSYS2
-      run: |
-           ls /
-           ls /ucrt64
-           ls /ucrt64/lib           
-           ls /ucrt64/include
-           ls /ucrt64/include/SDL2
+    #       ls C:/msys64/mingw64/bin/   
            
     - name: CHECKOUT
       uses: actions/checkout@v3
@@ -57,7 +50,15 @@ jobs:
                  mingw-w64-ucrt-x86_64-cmake 
                  mingw-w64-ucrt-x86_64-ninja 
                  mingw-w64-ucrt-x86_64-SDL2
-      
+
+    - name: PRINT MSYS2
+      run: |
+           ls /
+           ls /ucrt64
+           ls /ucrt64/lib           
+           ls /ucrt64/include
+           ls /ucrt64/include/SDL2
+           
     # --------------------------------------------------------------------------
 
     - name: CONFIGURE CMake (Release)
