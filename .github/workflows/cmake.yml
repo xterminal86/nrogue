@@ -57,6 +57,8 @@ jobs:
            ls /
            echo "--- /ucrt64 ---"
            ls /ucrt64
+           echo "--- /ucrt64/bin ---"
+           ls /ucrt64/bin
            echo "--- /ucrt64/lib ---"
            ls /ucrt64/lib       
            echo "--- /ucrt64/include ---"
@@ -122,20 +124,20 @@ jobs:
 
     - name: PREPARE ARTIFACTS
       run: |
-           mkdir ${{ env.PACK_DIR }}
-           mkdir ${{ env.PACK_DIR }}/nrogue
-           mkdir ${{ env.PACK_DIR }}/nrogue-dbg           
-           cp ${{github.workspace}}/${{ env.BUILD_DIR_REL }}/nrogue.exe ${{ env.PACK_DIR }}/nrogue/
-           cp ${{github.workspace}}/SDL2.dll ${{ env.PACK_DIR }}/nrogue/
-           cp ${{github.workspace}}/config-template.txt ${{ env.PACK_DIR }}/nrogue/
-           cp ${{github.workspace}}/libgcc_s_seh-1.dll ${{ env.PACK_DIR }}/nrogue/
-           cp ${{github.workspace}}/libstdc++-6.dll ${{ env.PACK_DIR }}/nrogue/
+           mkdir '${{ env.PACK_DIR }}'
+           mkdir '${{ env.PACK_DIR }}/nrogue'
+           mkdir '${{ env.PACK_DIR }}/nrogue-dbg'
+           cp '${{github.workspace}}/${{ env.BUILD_DIR_REL }}/nrogue.exe' '${{ env.PACK_DIR }}/nrogue/'
+           cp '/ucrt64/bin/SDL2.dll' '${{ env.PACK_DIR }}/nrogue/'
+           cp '${{github.workspace}}/config-template.txt' '${{ env.PACK_DIR }}/nrogue/'
+           cp '/ucrt64/bin/libgcc_s_seh-1.dll' '${{ env.PACK_DIR }}/nrogue/'
+           cp '/ucrt64/bin/libstdc++-6.dll' '${{ env.PACK_DIR }}/nrogue/'
            # -----------------------------------------------------------------------------------------
-           cp ${{github.workspace}}/${{ env.BUILD_DIR_DBG }}/nrogue.exe ${{ env.PACK_DIR }}/nrogue-dbg/
-           cp ${{github.workspace}}/SDL2.dll ${{ env.PACK_DIR }}/nrogue-dbg/
-           cp ${{github.workspace}}/config-template.txt ${{ env.PACK_DIR }}/nrogue-dbg/
-           cp ${{github.workspace}}/libgcc_s_seh-1.dll ${{ env.PACK_DIR }}/nrogue-dbg/
-           cp ${{github.workspace}}/libstdc++-6.dll ${{ env.PACK_DIR }}/nrogue-dbg/
+           cp '${{github.workspace}}/${{ env.BUILD_DIR_DBG }}/nrogue.exe' '${{ env.PACK_DIR }}/nrogue-dbg/'
+           cp '/ucrt64/bin/SDL2.dll' '${{ env.PACK_DIR }}/nrogue-dbg/'
+           cp '${{github.workspace}}/config-template.txt' '${{ env.PACK_DIR }}/nrogue-dbg/'
+           cp '/ucrt64/bin/libgcc_s_seh-1.dll' '${{ env.PACK_DIR }}/nrogue-dbg/'
+           cp '/ucrt64/bin/libstdc++-6.dll' '${{ env.PACK_DIR }}/nrogue-dbg/'
            
     - name: PACK ARTIFACTS
       run: |
