@@ -33,7 +33,7 @@ void Timer::MeasureEnd()
   _measureEnd = Clock::now();
   _deltaTime  = _measureEnd - _measureStart;
 
-  _dt = FT::duration<double>(_measureEnd - _measureStart).count();
+  _dt = FT::duration<double>(_deltaTime).count();
 
   _timePassed += _deltaTime;
 }
