@@ -9,12 +9,6 @@
 
 void StartGameState::HandleInput()
 {
-  //
-  // Potion colors and scroll names for current game session are generated
-  // randomly before start.
-  //
-  ItemsFactory::Instance().Reset();
-
   Printer::Instance().Clear();
   Printer::Instance().Render();
 

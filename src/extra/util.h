@@ -138,9 +138,10 @@ namespace Util
   extern std::vector<GameObject*> GetContainersInRange(GameObject* from, int range);
 
   extern std::string ChooseRandomName();
-  extern std::string NumberToHexString(int num);
 
   extern StringV RotateRoomLayout(const StringV& layout, RoomLayoutRotation r);
+
+  extern int RandomRange(int min, int max, std::mt19937_64& rng);
 
   extern int Rolld100();
 
@@ -290,7 +291,7 @@ namespace Util
 
   extern void PrepareChars();
 
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
 
   //
   // Produces random pair from pairs list according to weight value:
@@ -332,6 +333,8 @@ namespace Util
     return *weightsByType.begin();
   }
 
+  // ===========================================================================
+
   template <typename T>
   std::unordered_map<T, double> WeightsToProbability(const std::unordered_map<T, int>& weightsMap)
   {
@@ -352,6 +355,8 @@ namespace Util
     return res;
   }
 
+  // ===========================================================================
+
   template <typename T>
   std::unordered_map<T, int> RollWeightsMap(const std::unordered_map<T, int>& weightsMap, int rolls)
   {
@@ -365,6 +370,8 @@ namespace Util
 
     return res;
   }
+
+  // ===========================================================================
 
   template <typename key, typename value>
   std::unordered_map<value, key> FlipMap(const std::unordered_map<key, value>& src)
@@ -382,6 +389,8 @@ namespace Util
     return ret;
   }
 
+  // ===========================================================================
+
   template <typename ... Args>
   std::string StringFormat(const std::string& format, Args ... args)
   {
@@ -398,6 +407,20 @@ namespace Util
     snprintf(buf, size + 1, format.data(), args ...);
     return s;
   }
+
+  // ===========================================================================
+
+  template <typename T>
+  std::string NumberToHexString(T num)
+  {
+    static_assert(std::is_integral<T>::value, "numbers only");
+
+    std::stringstream ss;
+    ss << std::hex << std::uppercase << num;
+    return ss.str();
+  }
+
+  // ===========================================================================
 
   template <typename F>
   bool IsFunctionValid(const F& fn)

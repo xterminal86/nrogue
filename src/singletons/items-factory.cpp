@@ -17,12 +17,9 @@ using namespace std::placeholders;
 void ItemsFactory::InitSpecific()
 {
   _playerRef = &Application::Instance().PlayerInstance;
-}
 
-// =============================================================================
+  _rng.seed(RNG::Instance().Seed);
 
-void ItemsFactory::Reset()
-{
   InitPotionColors();
   InitScrolls();
 }
@@ -53,9 +50,7 @@ void ItemsFactory::InitPotionColors()
     PotionType::RA_POTION
   };
 
-  std::shuffle(potionTypes.begin(),
-               potionTypes.end(),
-               RNG::Instance().Random);
+  std::shuffle(potionTypes.begin(), potionTypes.end(), _rng);
 
   size_t mapInd = 0;
 
@@ -89,10 +84,10 @@ void ItemsFactory::InitScrolls()
 
   while (scrollNames.size() != 0)
   {
-    int scrollNameIndex = RNG::Instance().RandomRange(0, scrollNames.size());
+    int scrollNameIndex = Util::RandomRange(0, scrollNames.size(), _rng);
     std::string scrollName = scrollNames[scrollNameIndex];
 
-    int spellIndex = RNG::Instance().RandomRange(0, validSpells.size());
+    int spellIndex = Util::RandomRange(0, validSpells.size(), _rng);
     SpellType spell = validSpells[spellIndex];
 
     ScrollInfo si;

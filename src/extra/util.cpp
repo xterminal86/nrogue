@@ -883,25 +883,6 @@ namespace Util
 
   // ===========================================================================
 
-  std::string NumberToHexString(int num)
-  {
-    std::string res;
-
-    std::stringstream ss;
-    ss << std::hex << std::uppercase << num;
-
-    res = ss.str();
-
-    if (res.length() == 1)
-    {
-      res.insert(res.begin(), '0');
-    }
-
-    return res;
-  }
-
-  // ===========================================================================
-
   //
   // Rotates room text layout, provided all lines are of equal length.
   //
@@ -1250,6 +1231,29 @@ namespace Util
           break;
       }
     }
+  }
+
+  // ===========================================================================
+
+  int RandomRange(int min, int max, std::mt19937_64& rng)
+  {
+    if (min == max)
+    {
+      return min;
+    }
+
+    int trueMin = std::min(min, max);
+    int trueMax = std::max(min, max);
+
+    int d = std::abs(trueMax - trueMin);
+    if (d == 0)
+    {
+      d = 1;
+    }
+
+    int random = rng() % d;
+
+    return trueMin + random;
   }
 
   // ===========================================================================

@@ -109,6 +109,9 @@ class MapLevelBase
     std::vector<StringV> _layoutsForLevel;
     std::unordered_map<GameObjectType, int> _monstersSpawnRateForThisLevel;
 
+    GameObject* _defaultGround = nullptr;
+    GameObject* _defaultWall   = nullptr;
+
     StringV _specialLevel;
 
     Player* _playerRef = nullptr;

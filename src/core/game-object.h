@@ -110,7 +110,7 @@ class GameObject
       return (GetComponent<T>() != nullptr);
     }
 
-    void Serialize(NRS& savefile);
+    void Serialize(NRS& section);
 
     void MakeTile(const GameObjectInfo& t,
                   GameObjectType typeOverride = GameObjectType::GROUND);
@@ -140,6 +140,7 @@ class GameObject
 
     TransformedRoom ZoneMarker = TransformedRoom::UNMARKED;
 
+    // -------------------------------------------------------------------------
     //
     // E.g. to disallow walking into a tile for NPC
     //
@@ -167,6 +168,11 @@ class GameObject
     // Undead or not.
     //
     bool IsLiving = false;
+
+    uint16_t BoolFlagsToMask();
+    void MaskToBoolFlags(const uint16_t& mask);
+
+    // -------------------------------------------------------------------------
 
     int Image = '?';
 

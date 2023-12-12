@@ -295,11 +295,12 @@ void MapLevelBase::CreateBorders(char img,
 
   GameObjectInfo oi;
 
-  oi.Image       = img;
-  oi.FgColor     = fgColor;
-  oi.BgColor     = bgColor;
-  oi.IsBlocking  = true;
-  oi.BlocksSight = true;
+  oi.Image        = img;
+  oi.FgColor      = fgColor;
+  oi.BgColor      = bgColor;
+  oi.IsBlocking   = true;
+  oi.BlocksSight  = true;
+  oi.ObjectName   = objectName;
 
   auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
   for (auto& i : bounds)
@@ -312,9 +313,11 @@ void MapLevelBase::CreateBorders(char img,
                                                         i.Y,
                                                         oi,
                                                        -1,
-                                                        GameObjectType::PICKAXEABLE);
+                                                        GameObjectType::BORDER);
     PlaceStaticObject(go);
   }
+
+  _defaultWall = StaticMapObjects[0][0].get();
 }
 
 // =============================================================================
@@ -644,63 +647,29 @@ void MapLevelBase::Serialize(NRS& saveTo)
   saveTo.GetNode("save.seed.value").SetUInt(RNG::Instance().Seed);
   saveTo.GetNode("save.seed.name").SetString(RNG::Instance().GetSeedString().first);
 
-  saveTo.GetNode("save.level.type").SetInt((int)MapType_);
-  saveTo.GetNode("save.level.name").SetString(LevelName);
+  std::string lvlNodeName = Util::StringFormat("save.level_%d", (int)MapType_);
 
-  saveTo.GetNode("save.level.visibility").SetInt(VisibilityRadius);
-  saveTo.GetNode("save.level.respawn").SetInt(MonstersRespawnTurns);
+  NRS& levelNode = saveTo.GetNode(lvlNodeName);
 
-  NRS& mapArray = saveTo.GetNode("save.level.map");
+  levelNode["size"].SetInt(MapSize.X, 0);
+  levelNode["size"].SetInt(MapSize.Y, 1);
 
-  //
-  // Once again, we will swap coordinates so that map looks readable in
-  // savefile. In reality we use map as array under the hood, but draw it
-  // like it is a picture, which effectively means draw array rotated 90 CCW.
-  //
-  // E.g.:
-  //
-  // 012345
-  // ###### 0
-  // #....# 1
-  // #....# 2
-  // ###### 3
-  //
-  // In memory it is stored as:
-  //
-  // 0123
-  // #### 0
-  // #..# 1
-  // #..# 2
-  // #..# 3
-  // #..# 4
-  // #### 5
-  //
-  // Basically, our map displayed is rotated 90 degrees clockwise in memory.
-  // So when game object moves from 1;1 to 2;1 it actually moves DOWN in array,
-  // but when we draw it, it looks like it moved to the right. I don't know how
-  // I managed to fuck this up again and not planned everything correctly from
-  // the start, so that it looks the same everywhere at the interface level and
-  // you don't have to always make this mental note that map displayed is not
-  // the same as map in memory, so you should be careful when accessing arrays
-  // and stuff.
-  // Well, next time I guess...
-  //
-  for (int y = 0; y < MapSize.Y; y++)
+  levelNode["type"].SetInt((int)MapType_);
+  levelNode["name"].SetString(LevelName);
+
+  levelNode["visibility"].SetInt(VisibilityRadius);
+  levelNode["respawn"].SetInt(MonstersRespawnTurns);
+
+  NRS& n = saveTo.GetNode("save");
+
+  _playerRef->Serialize(n);
+
+  // ---------------------------------------------------------------------------
   {
-    //std::stringstream ss;
+    NRS& node = levelNode["objects"];
 
-    for (int x = 0; x < MapSize.X; x++)
-    {
-      //
-      // We will store chars as ints so that they don't conflict with file
-      // format if, for example, accidentally there will be an object with
-      // image ','.
-      //
-      //ss << MapArray[x][y]->Image;
-      mapArray[std::to_string(y)].SetInt(MapArray[x][y]->Image, x);
-    }
-
-    //mapArray[std::to_string(y)].SetString(ss.str());
+    _defaultGround->Serialize(node);
+    _defaultWall->Serialize(node);
   }
 }
 
@@ -1046,7 +1015,10 @@ void MapLevelBase::CreateGround(char img,
 {
   GameObjectInfo t;
   t.Set(false, false, img, fgColor, bgColor, tileName);
+
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
+
+  _defaultGround = MapArray[0][0].get();
 }
 
 // =============================================================================

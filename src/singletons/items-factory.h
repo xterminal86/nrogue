@@ -1,6 +1,8 @@
 ﻿#ifndef ITEMSFACTORY_H
 #define ITEMSFACTORY_H
 
+#include <random>
+
 #include "singleton.h"
 #include "constants.h"
 #include "item-data.h"
@@ -185,8 +187,6 @@ class ItemsFactory : public Singleton<ItemsFactory>
     ItemPrefix RollItemPrefix();
     ItemQuality RollItemQuality();
 
-    void Reset();
-
     struct PotionInfo
     {
       PotionType PotionType_ = PotionType::RANDOM;
@@ -204,6 +204,13 @@ class ItemsFactory : public Singleton<ItemsFactory>
     std::unordered_map<SpellType, ScrollInfo>  _gameScrollsMap;
 
     Player* _playerRef = nullptr;
+
+    //
+    // Will use its own RNG that will be seeded with seed from common RNG
+    // so that on game load all newly created unidentified potion colors and
+    // scroll names will be the same.
+    //
+    std::mt19937_64 _rng;
 
     // -------------------------------------------------------------------------
 

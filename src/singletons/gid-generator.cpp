@@ -19,11 +19,5 @@ const uint64_t& GID::GetCurrentGlobalId()
 
 void GID::InitSpecific()
 {
-}
-
-// =============================================================================
-
-void GID::Reset()
-{
   _globalId = kStartingValue;
 }

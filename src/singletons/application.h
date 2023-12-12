@@ -138,8 +138,6 @@ class Application : public Singleton<Application>
     bool InitCurses();
 #endif
 
-    void Reset();
-
     template <typename StateClass>
     inline void RegisterState(GameStates stateName)
     {

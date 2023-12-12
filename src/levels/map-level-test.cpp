@@ -1,6 +1,7 @@
 #include "map-level-test.h"
 
 #include "game-object-info.h"
+#include "game-objects-factory.h"
 
 MapLevelTest::MapLevelTest(int sizeX, int sizeY, MapType type, int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)
@@ -37,6 +38,9 @@ void MapLevelTest::CreateLevel()
                 Colors::WhiteColor,
                 Colors::ShadesOfGrey::Six,
                 Strings::TileNames::RocksText);
+
+  GameObject* go = GameObjectsFactory::Instance().CreateChest(5, 5, false);
+  PlaceGameObject(go);
 }
 
 // =============================================================================

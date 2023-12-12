@@ -8,8 +8,6 @@
 class GID : public Singleton<GID>
 {
   public:
-    void Reset();
-
     const uint64_t& GenerateGlobalId();
     const uint64_t& GetCurrentGlobalId();
 

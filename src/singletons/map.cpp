@@ -24,15 +24,6 @@
 
 void Map::InitSpecific()
 {
-  Reset();
-}
-
-// =============================================================================
-
-void Map::Reset()
-{
-  Cleanup();
-
   _mapVisitFirstTime[MapType::MINES_1]     = false;
   _mapVisitFirstTime[MapType::CAVES_1]     = false;
   _mapVisitFirstTime[MapType::LOST_CITY]   = false;

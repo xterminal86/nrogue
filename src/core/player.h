@@ -158,6 +158,8 @@ class Player : public GameObject
     Position _attackDir;
     Position _knockBackDir;
 
+    const uint8_t kDistanceFieldRadius = 40;
+
     friend class SpellsProcessor;
     friend class ServiceState;
     friend class InfoState;

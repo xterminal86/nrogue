@@ -1563,8 +1563,110 @@ const uint64_t& GameObject::ObjectId()
 
 // =============================================================================
 
-void GameObject::Serialize(NRS& savefile)
+uint16_t GameObject::BoolFlagsToMask()
 {
+  uint16_t res = 0;
+
+  std::vector<bool> traverse =
+  {
+    Special,   Blocking, BlocksSight, Revealed,
+    Corporeal, Visible,  Occupied,    IsLiving
+  };
+
+  size_t ind = 0;
+
+  for (const bool& flag : traverse)
+  {
+    res |= ( (flag ? 1 : 0) << ind);
+    ind++;
+  }
+
+  return res;
+}
+
+// =============================================================================
+
+void GameObject::MaskToBoolFlags(const uint16_t& mask)
+{
+  Special     = (mask & 0x1);
+  Blocking    = (mask & 0x2);
+  BlocksSight = (mask & 0x4);
+  Revealed    = (mask & 0x8);
+  Corporeal   = (mask & 0x10);
+  Visible     = (mask & 0x20);
+  Occupied    = (mask & 0x40);
+  IsLiving    = (mask & 0x80);
+}
+
+// =============================================================================
+
+void GameObject::Serialize(NRS& section)
+{
+  NRS* ptr = nullptr;
+
+  switch (Type)
+  {
+    //
+    // NOTE: will probably contain a lot of common code with actors.
+    //
+    case GameObjectType::PLAYER:
+    {
+      ptr = &section["player"];
+
+      Player* p = static_cast<Player*>(this);
+
+      NRS& n = *ptr;
+
+      n["class"].SetInt(p->SelectedClass);
+      n["name"].SetString(p->Name);
+      n["pos"].SetInt(PosX, 0);
+      n["pos"].SetInt(PosY, 1);
+      n["owner"].SetInt((int)_levelOwner->MapType_);
+    }
+    break;
+
+    case GameObjectType::BORDER:
+    {
+      ptr = &section["border"];
+
+      NRS& n = *ptr;
+
+      n["name"].SetString(ObjectName);
+
+      if (!FogOfWarName.empty())
+      {
+        n["fovName"].SetString(FogOfWarName);
+      }
+    }
+    break;
+
+    case GameObjectType::GROUND:
+    {
+      ptr = &section["ground"];
+
+      NRS& n = *ptr;
+
+      n["name"].SetString(ObjectName);
+
+      if (!FogOfWarName.empty())
+      {
+        n["fovName"].SetString(FogOfWarName);
+      }
+    }
+    break;
+  }
+
+  if (ptr != nullptr)
+  {
+    NRS& n = *ptr;
+
+    n["id"].SetUInt(_objectId);
+    n["img"].SetInt(Image);
+    n["fg"].SetString(Util::NumberToHexString(FgColor));
+    n["bg"].SetString(Util::NumberToHexString(BgColor));
+    n["mask"].SetUInt(BoolFlagsToMask());
+    n["type"].SetInt((int)Type);
+  }
 }
 
 // =============================================================================

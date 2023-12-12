@@ -160,6 +160,7 @@ enum class GameObjectType
   LAVA,
   CHASM,
   PICKAXEABLE,
+  BORDER,
   TRAP,
   BREAKABLE,
   CHEST,

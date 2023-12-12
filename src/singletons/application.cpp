@@ -74,35 +74,6 @@ void Application::InitSpecific()
 
 // =============================================================================
 
-void Application::Reset()
-{
-  GID::Instance().Reset();
-
-  InitGameStates(true);
-
-  _currentState = _gameStates[GameStates::MENU_STATE].get();
-
-  //
-  // In SDL build GetKeyDown() will return -1 on application
-  // start resulting in white screen during to not
-  // redundantly drawing the "scene"
-  // because no key has been pressed yet.
-  //
-  _currentState->Update(true);
-
-  PlayerInstance.Attrs.Indestructible = false;
-
-  Printer::Instance().Messages().clear();
-  Printer::Instance().ResetMessagesToDisplay();
-
-  Printer::Instance().AddMessage("You begin your quest");
-  Printer::Instance().AddMessage("Press 'h' for help");
-
-  Map::Instance().Reset();
-}
-
-// =============================================================================
-
 void Application::Run()
 {
   while (_currentState != nullptr)
@@ -905,11 +876,13 @@ void Application::LoadConfig()
   switch (res)
   {
     case NRS::LoadResult::INVALID_FORMAT:
-      ConsoleLog("Config format is invalid - check syntax! Will assume default values for now.");
+      ConsoleLog("Config format is invalid - check syntax! "
+                 "Will assume default values for now.");
       break;
 
     case NRS::LoadResult::ERROR:
-      ConsoleLog("Couldn't load config - check if file exists! Will assume default values for now.");
+      ConsoleLog("Couldn't load config - check if file exists! "
+                 "Will assume default values for now.");
       break;
 
     default:

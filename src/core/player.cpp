@@ -57,7 +57,7 @@ void Player::Init()
   Attrs.Exp.Reset(0);
   Attrs.Exp.SetMax(expToLvlUp);
 
-  DistanceField.Init(this, 40);
+  DistanceField.Init(this, kDistanceFieldRadius);
 
   // FIXME: debug
 

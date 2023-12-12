@@ -36,7 +36,7 @@ namespace StringObfuscator
       //
       // constexpr constructor constructs object at compile time, if it can.
       //
-      constexpr Obfuscator(const char* data)
+      explicit constexpr Obfuscator(const char* data)
       {
         for (size_t i = 0; i < N; i++)
         {
@@ -86,7 +86,7 @@ namespace StringObfuscator
 #define HIDE(cStyleString)                                                              \
   []() -> StringObfuscator::Obfuscator<sizeof(cStyleString) / sizeof(cStyleString[0])>& \
   {                                                                                     \
-    constexpr size_t n = sizeof(cStyleString) / sizeof(cStyleString[0]);                  \
+    constexpr size_t n = sizeof(cStyleString) / sizeof(cStyleString[0]);                \
     static auto obfuscator = StringObfuscator::Obfuscator<n>(cStyleString);             \
     return obfuscator;                                                                  \
   }()
