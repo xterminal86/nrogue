@@ -30,6 +30,27 @@ class MapLevelBase
     virtual void DisplayWelcomeText();
     virtual void OnLevelChanged(MapType from);
 
+    //
+    // Save plan:
+    //
+    // - MapArray
+    // - StaticMapObjects (without components)
+    // - StaticMapObjects (with components)
+    // - Items
+    // - Triggers
+    // - Actors (inventory, stats, effects etc.)
+    // - Player (inventory, stats, effects etc.)
+    //
+    // Notes:
+    //
+    // 1. Don't serialize the whole rolled data of unidentified items,
+    //    recreate them on load. This will make RNG abusing possible,
+    //    but I'm not the first one to have it (e.g. M&M 6).
+    // 2. Not all components need to be saved (e.g. AIComponent).
+    // 3. Not all data in component need to be saved (chest with unidentified
+    //    items)
+    // 4. How to save discovered but hidden under FoW cells?
+    //
     void Serialize(NRS& saveTo);
 
     //
@@ -66,8 +87,8 @@ class MapLevelBase
     //
     std::vector<std::unique_ptr<GameObject>> GlobalTriggers;
 
-    MapType MapType_;
-    Position MapSize;
+    MapType     MapType_;
+    Position    MapSize;
     std::string LevelName;
 
     Position LevelStart;
@@ -88,6 +109,9 @@ class MapLevelBase
     int DungeonLevel     = 0;
     int VisibilityRadius = 0;
 
+    //
+    // FIXME: convert to mask in serialization
+    //
     bool WelcomeTextDisplayed   = false;
     bool Peaceful               = false;
     bool ExitFound              = false;
@@ -106,11 +130,8 @@ class MapLevelBase
 
   protected:
     std::vector<Position> _emptyCells;
-    std::vector<StringV> _layoutsForLevel;
+    std::vector<StringV>  _layoutsForLevel;
     std::unordered_map<GameObjectType, int> _monstersSpawnRateForThisLevel;
-
-    GameObject* _defaultGround = nullptr;
-    GameObject* _defaultWall   = nullptr;
 
     StringV _specialLevel;
 

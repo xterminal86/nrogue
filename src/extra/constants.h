@@ -286,6 +286,33 @@ namespace Strings
     extern const std::string HellstoneText;
     extern const std::string TiledFloorText;
   }
+  // ---------------------------------------------------------------------------
+  namespace SerializationKeys
+  {
+    extern const std::string Root;
+    extern const std::string Gid;
+    extern const std::string Seed;
+    extern const std::string Name;
+    extern const std::string Value;
+    extern const std::string Size;
+    extern const std::string Type;
+    extern const std::string Visibility;
+    extern const std::string Respawn;
+    extern const std::string MapObjects;
+    extern const std::string Image;
+    extern const std::string Color;
+    extern const std::string FowName;
+    extern const std::string Player;
+    extern const std::string Border;
+    extern const std::string Class;
+    extern const std::string Pos;
+    extern const std::string Owner;
+    extern const std::string Ground;
+    extern const std::string Id;
+    extern const std::string Mask;
+    extern const std::string Layout;
+    extern const std::string Indestructible;
+  }
 }
 
 namespace GlobalConstants

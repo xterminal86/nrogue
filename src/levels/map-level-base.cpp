@@ -316,8 +316,6 @@ void MapLevelBase::CreateBorders(char img,
                                                         GameObjectType::BORDER);
     PlaceStaticObject(go);
   }
-
-  _defaultWall = StaticMapObjects[0][0].get();
 }
 
 // =============================================================================
@@ -638,38 +636,150 @@ void MapLevelBase::OnLevelChanged(MapType from)
 
 void MapLevelBase::Serialize(NRS& saveTo)
 {
-  saveTo.GetNode("save.gid").SetUInt(GID::Instance().GetCurrentGlobalId());
+  namespace SK = Strings::SerializationKeys;
 
-  //
-  // Won't be making any practical sense, since everything will be reconstructed
-  // basically from scratch, so these are just for informational purposes.
-  //
-  saveTo.GetNode("save.seed.value").SetUInt(RNG::Instance().Seed);
-  saveTo.GetNode("save.seed.name").SetString(RNG::Instance().GetSeedString().first);
+  NRS& root = saveTo[SK::Root];
 
-  std::string lvlNodeName = Util::StringFormat("save.level_%d", (int)MapType_);
+  root[SK::Gid].SetUInt(GID::Instance().GetCurrentGlobalId());
 
-  NRS& levelNode = saveTo.GetNode(lvlNodeName);
-
-  levelNode["size"].SetInt(MapSize.X, 0);
-  levelNode["size"].SetInt(MapSize.Y, 1);
-
-  levelNode["type"].SetInt((int)MapType_);
-  levelNode["name"].SetString(LevelName);
-
-  levelNode["visibility"].SetInt(VisibilityRadius);
-  levelNode["respawn"].SetInt(MonstersRespawnTurns);
-
-  NRS& n = saveTo.GetNode("save");
-
-  _playerRef->Serialize(n);
-
-  // ---------------------------------------------------------------------------
   {
-    NRS& node = levelNode["objects"];
+    NRS& node = root[SK::Seed];
 
-    _defaultGround->Serialize(node);
-    _defaultWall->Serialize(node);
+    node[SK::Name].SetString(RNG::Instance().GetSeedString().first);
+    node[SK::Value].SetUInt(RNG::Instance().Seed);
+  }
+
+  std::string lvlNodeName = Util::StringFormat("level_%d", (int)MapType_);
+
+  NRS& levelNode = root[lvlNodeName];
+
+  levelNode[SK::Size].SetInt(MapSize.X, 0);
+  levelNode[SK::Size].SetInt(MapSize.Y, 1);
+
+  levelNode[SK::Type].SetInt((int)MapType_);
+  levelNode[SK::Name].SetString(LevelName);
+
+  levelNode[SK::Visibility].SetInt(VisibilityRadius);
+  levelNode[SK::Respawn].SetInt(MonstersRespawnTurns);
+
+  _playerRef->Serialize(root);
+
+  using SDM = GameObject::SaveDataMinimal;
+  std::unordered_map<std::string, SDM> saveData;
+
+  auto WriteSaveData = [this, &saveData](GameObject* go)
+  {
+    if (go == nullptr)
+    {
+      return;
+    }
+
+    const SDM& d = go->GetSaveDataMinimal();
+
+    std::string key = d.ToStringKey();
+
+    if (saveData.count(key) == 0)
+    {
+      saveData[d.ToStringKey()] = d;
+    }
+  };
+
+  for (int y = 0; y < MapSize.Y; y++)
+  {
+    for (int x = 0; x < MapSize.X; x++)
+    {
+      WriteSaveData(MapArray[x][y].get());
+
+      GameObject* so = StaticMapObjects[x][y].get();
+      if (so != nullptr && (so->Type == GameObjectType::PICKAXEABLE
+                         || so->Type == GameObjectType::BORDER))
+      {
+        WriteSaveData(StaticMapObjects[x][y].get());
+      }
+    }
+  }
+
+  std::unordered_map<std::string, int> indexByKey;
+
+  {
+    NRS& node = levelNode[SK::MapObjects];
+
+    int index = 0;
+    for (auto& kvp : saveData)
+    {
+      const SDM& sdm = kvp.second;
+
+      indexByKey[sdm.ToStringKey()] = index;
+
+      std::string objKey = Util::StringFormat("o_%d", index);
+
+      NRS& n = node[objKey];
+
+      n[SK::Type].SetInt((int)sdm.Type);
+      n[SK::Image].SetInt(sdm.Image);
+      n[SK::Color].SetString(Util::NumberToHexString(sdm.FgColor), 0);
+      n[SK::Color].SetString(Util::NumberToHexString(sdm.BgColor), 1);
+      n[SK::Name].SetString(sdm.Name);
+
+      if (!sdm.FowName.empty())
+      {
+        n[SK::FowName].SetString(sdm.FowName);
+      }
+
+      if (sdm.Type != GameObjectType::GROUND)
+      {
+        n[SK::Indestructible].SetInt((int)sdm.Indestructible);
+      }
+
+      index++;
+    }
+  }
+
+  std::string cell;
+
+  int lineInd = 0;
+
+  NRS& levelLayout = levelNode[SK::Layout];
+
+  for (int y = 0; y < MapSize.Y; y++)
+  {
+    int listInd = 0;
+
+    std::string lineKey = Util::StringFormat("%d", lineInd);
+
+    NRS& n = levelLayout[lineKey];
+
+    for (int x = 0; x < MapSize.X; x++)
+    {
+      const SDM& sdm = MapArray[x][y]->GetSaveDataMinimal();
+
+      const std::string& key = sdm.ToStringKey();
+
+      int ind1 = indexByKey[key];
+
+      if (StaticMapObjects[x][y] != nullptr
+      && (StaticMapObjects[x][y]->Type == GameObjectType::PICKAXEABLE
+       || StaticMapObjects[x][y]->Type == GameObjectType::BORDER))
+      {
+        const SDM& sdm = StaticMapObjects[x][y]->GetSaveDataMinimal();
+
+        const std::string& key = sdm.ToStringKey();
+
+        int ind2 = indexByKey[key];
+
+        cell = Util::StringFormat("%d|%d", ind1, ind2);
+      }
+      else
+      {
+        cell = Util::StringFormat("%d|", ind1);
+      }
+
+      n.SetString(cell, listInd);
+
+      listInd++;
+    }
+
+    lineInd++;
   }
 }
 
@@ -952,7 +1062,11 @@ void MapLevelBase::PlaceWall(int x, int y,
   // branch in Player::ProcessMeleeAttack() to allow walls to be destroyed
   // using pickaxe.
   //
-  PlaceStaticObject(x, y, t, cannotBePickaxed ? -1 : 1, GameObjectType::PICKAXEABLE);
+  PlaceStaticObject(x,
+                    y,
+                    t,
+                    cannotBePickaxed ? -1 : 1,
+                    GameObjectType::PICKAXEABLE);
 }
 
 // =============================================================================
@@ -1017,8 +1131,6 @@ void MapLevelBase::CreateGround(char img,
   t.Set(false, false, img, fgColor, bgColor, tileName);
 
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
-
-  _defaultGround = MapArray[0][0].get();
 }
 
 // =============================================================================

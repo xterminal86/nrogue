@@ -688,7 +688,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
 
       #ifdef BUILD_TESTS
       case MapType::TEST_LEVEL:
-        InstantiateLevel<MapLevelTest>(40, 20, levelName, lvlAsInt);
+        InstantiateLevel<MapLevelTest>(30, 20, levelName, lvlAsInt);
         break;
       #endif
     }

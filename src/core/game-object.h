@@ -260,12 +260,43 @@ class GameObject
     std::string HexAddressString;
 #endif
 
+    struct SaveDataMinimal
+    {
+      GameObjectType Type = GameObjectType::NONE;
+      int Image = '?';
+      int PosX  = 0;
+      int PosY  = 0;
+      uint32_t FgColor = Colors::None;
+      uint32_t BgColor = Colors::None;
+      std::string Name;
+      std::string FowName;
+      bool Indestructible;
+
+      std::string ToStringKey() const
+      {
+        std::stringstream ss;
+
+        ss << (int)Type
+           << Image
+           << Util::NumberToHexString(FgColor)
+           << Util::NumberToHexString(BgColor)
+           << Name
+           << FowName;
+
+        return ss.str();
+      }
+    };
+
+    const SaveDataMinimal& GetSaveDataMinimal();
+
   protected:
     std::unordered_map<size_t, std::unique_ptr<Component>> _components;
     std::unordered_map<uint64_t, std::vector<ItemBonusStruct>> _activeEffects;
 
     GameObject* _previousCell = nullptr;
     GameObject* _currentCell = nullptr;
+
+    SaveDataMinimal _sdm;
 
     Position _position;
 
