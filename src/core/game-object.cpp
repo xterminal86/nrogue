@@ -1565,13 +1565,24 @@ const uint64_t& GameObject::ObjectId()
 
 void GameObject::MaskToBoolFlags(const uint16_t mask)
 {
-  Special     = (mask & 0x1);
-  Blocking    = (mask & 0x2);
-  BlocksSight = (mask & 0x4);
-  Revealed    = (mask & 0x8);
-  Corporeal   = (mask & 0x10);
-  Visible     = (mask & 0x20);
-  IsLiving    = (mask & 0x80);
+  std::map<int, bool&> traverseMap =
+  {
+    { 0, Special     },
+    { 1, Blocking    },
+    { 2, BlocksSight },
+    { 3, Revealed    },
+    { 4, Corporeal   },
+    { 5, Visible     },
+    { 6, IsLiving    }
+  };
+
+  uint64_t index = 0x1;
+
+  for (auto& kvp : traverseMap)
+  {
+    kvp.second = (mask & index);
+    index <<= 1;
+  }
 }
 
 // =============================================================================

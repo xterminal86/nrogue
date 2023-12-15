@@ -362,10 +362,21 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
 
 void MapLevelBase::MaskToBoolFlags(const uint16_t mask)
 {
-  WelcomeTextDisplayed   = (mask & 0x1);
-  Peaceful               = (mask & 0x2);
-  ExitFound              = (mask & 0x4);
-  MysteriousForcePresent = (mask & 0x8);
+  std::map<int, bool&> traverseMap =
+  {
+    { 0, WelcomeTextDisplayed   },
+    { 1, Peaceful               },
+    { 2, ExitFound              },
+    { 3, MysteriousForcePresent },
+  };
+
+  uint64_t index = 0x1;
+
+  for (auto& kvp : traverseMap)
+  {
+    kvp.second = (mask & index);
+    index <<= 1;
+  }
 }
 
 // =============================================================================
