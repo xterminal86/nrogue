@@ -1563,30 +1563,7 @@ const uint64_t& GameObject::ObjectId()
 
 // =============================================================================
 
-uint16_t GameObject::BoolFlagsToMask()
-{
-  uint16_t res = 0;
-
-  std::vector<bool> traverse =
-  {
-    Special,   Blocking, BlocksSight, Revealed,
-    Corporeal, Visible,  Occupied,    IsLiving
-  };
-
-  size_t ind = 0;
-
-  for (const bool& flag : traverse)
-  {
-    res |= ( (flag ? 1 : 0) << ind);
-    ind++;
-  }
-
-  return res;
-}
-
-// =============================================================================
-
-void GameObject::MaskToBoolFlags(const uint16_t& mask)
+void GameObject::MaskToBoolFlags(const uint16_t mask)
 {
   Special     = (mask & 0x1);
   Blocking    = (mask & 0x2);
@@ -1594,7 +1571,6 @@ void GameObject::MaskToBoolFlags(const uint16_t& mask)
   Revealed    = (mask & 0x8);
   Corporeal   = (mask & 0x10);
   Visible     = (mask & 0x20);
-  Occupied    = (mask & 0x40);
   IsLiving    = (mask & 0x80);
 }
 
@@ -1626,40 +1602,6 @@ void GameObject::Serialize(NRS& section)
       n[SK::Owner].SetInt((int)_levelOwner->MapType_);
     }
     break;
-
-    // -------------------------------------------------------------------------
-
-    case GameObjectType::BORDER:
-    {
-      ptr = &section[SK::Border];
-
-      NRS& n = *ptr;
-
-      n[SK::Name].SetString(ObjectName);
-
-      if (!FogOfWarName.empty())
-      {
-        n[SK::FowName].SetString(FogOfWarName);
-      }
-    }
-    break;
-
-    // -------------------------------------------------------------------------
-
-    case GameObjectType::GROUND:
-    {
-      ptr = &section[SK::Ground];
-
-      NRS& n = *ptr;
-
-      n[SK::Name].SetString(ObjectName);
-
-      if (!FogOfWarName.empty())
-      {
-        n[SK::FowName].SetString(FogOfWarName);
-      }
-    }
-    break;
   }
 
   if (ptr != nullptr)
@@ -1670,7 +1612,18 @@ void GameObject::Serialize(NRS& section)
     n[SK::Image].SetInt(Image);
     n[SK::Color].SetString(Util::NumberToHexString(FgColor), 0);
     n[SK::Color].SetString(Util::NumberToHexString(BgColor), 1);
-    n[SK::Mask].SetUInt(BoolFlagsToMask());
+
+    uint16_t mask = Util::BoolFlagsToMask({
+                                            Special,
+                                            Blocking,
+                                            BlocksSight,
+                                            Revealed,
+                                            Corporeal,
+                                            Visible,
+                                            IsLiving
+                                          });
+
+    n[SK::Mask].SetUInt(mask);
     n[SK::Type].SetInt((int)Type);
   }
 }
@@ -1679,15 +1632,23 @@ void GameObject::Serialize(NRS& section)
 
 const GameObject::SaveDataMinimal& GameObject::GetSaveDataMinimal()
 {
-  _sdm.Type           = Type;
-  _sdm.Image          = Image;
-  _sdm.PosX           = PosX;
-  _sdm.PosY           = PosY;
-  _sdm.FgColor        = FgColor;
-  _sdm.BgColor        = BgColor;
-  _sdm.Name           = ObjectName;
-  _sdm.FowName        = FogOfWarName;
-  _sdm.Indestructible = Attrs.Indestructible;
+  _sdm.Type    = Type;
+  _sdm.Image   = Image;
+  _sdm.PosX    = PosX;
+  _sdm.PosY    = PosY;
+  _sdm.FgColor = FgColor;
+  _sdm.BgColor = BgColor;
+  _sdm.Name    = ObjectName;
+  _sdm.FowName = FogOfWarName;
+  _sdm.Mask    = Util::BoolFlagsToMask({
+                                         Special,
+                                         Blocking,
+                                         BlocksSight,
+                                         Revealed,
+                                         Corporeal,
+                                         Visible,
+                                         IsLiving
+                                       });
 
   return _sdm;
 }

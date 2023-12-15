@@ -291,6 +291,8 @@ namespace Util
 
   extern void PrepareChars();
 
+  extern uint16_t BoolFlagsToMask(const std::vector<bool>& traverse);
+
   // ===========================================================================
 
   //

@@ -210,8 +210,14 @@ std::vector<std::string> ItemComponent::GetWeaponInspectionInfo()
 {
   std::vector<std::string> res =
   {
-    { Util::StringFormat("DMG: %id%i", Data.Damage.Min().Get(), Data.Damage.Max().Get()) },
-    { Util::StringFormat("%i / %i", Data.Durability.Min().Get(), Data.Durability.Max().Get()) }
+    {
+      Util::StringFormat("DMG: %id%i", Data.Damage.Min().Get(),
+                                       Data.Damage.Max().Get())
+    },
+    {
+      Util::StringFormat("%i / %i", Data.Durability.Min().Get(),
+                                    Data.Durability.Max().Get())
+    }
   };
 
   AddBonusesInfo(res);
@@ -225,7 +231,10 @@ std::vector<std::string> ItemComponent::GetArmorInspectionInfo()
 {
   std::vector<std::string> res =
   {
-    { Util::StringFormat("%i / %i", Data.Durability.Min().Get(), Data.Durability.Max().Get()) }
+    {
+      Util::StringFormat("%i / %i", Data.Durability.Min().Get(),
+                                    Data.Durability.Max().Get())
+    }
   };
 
   AddBonusesInfo(res);

@@ -164,8 +164,6 @@ enum class GameObjectType
   TRAP,
   BREAKABLE,
   CHEST,
-  SHRINE_GOOD,
-  SHRINE_BAD,
   // ---------------------------------------------------------------------------
   RAT,
   BAT,

@@ -510,9 +510,12 @@ int ShoppingState::GetCost(ItemComponent* ic, bool playerSide)
 {
   int cost = ic->Data.GetCost();
 
-  for (auto& i : ic->Data.Bonuses)
+  if (ic->Data.IsIdentified)
   {
-    cost += i.MoneyCostIncrease;
+    for (auto& i : ic->Data.Bonuses)
+    {
+      cost += i.MoneyCostIncrease;
+    }
   }
 
   if (!playerSide)

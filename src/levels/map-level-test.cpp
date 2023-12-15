@@ -26,7 +26,7 @@ void MapLevelTest::DisplayWelcomeText()
 
 void MapLevelTest::CreateLevel()
 {
-  VisibilityRadius = 32;
+  VisibilityRadius = 16;
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
   CreateGround('.',
@@ -39,8 +39,20 @@ void MapLevelTest::CreateLevel()
                 Colors::ShadesOfGrey::Six,
                 Strings::TileNames::RocksText);
 
-  GameObject* go = GameObjectsFactory::Instance().CreateChest(5, 5, false);
-  PlaceGameObject(go);
+  {
+    GameObject* go = GameObjectsFactory::Instance().CreateChest(5, 5, false);
+    PlaceGameObject(go);
+  }
+
+  {
+    GameObject* go = GameObjectsFactory::Instance().CreateDoor(10, 10, false);
+    PlaceStaticObject(go);
+  }
+
+  {
+    GameObject* go = GameObjectsFactory::Instance().CreateDoor(10, 11, true);
+    PlaceStaticObject(go);
+  }
 }
 
 // =============================================================================

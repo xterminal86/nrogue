@@ -49,7 +49,17 @@ class MapLevelBase
     // 2. Not all components need to be saved (e.g. AIComponent).
     // 3. Not all data in component need to be saved (chest with unidentified
     //    items)
-    // 4. How to save discovered but hidden under FoW cells?
+    // 4. How about going D1-style and not actually apply any bonuses for
+    //    unidentified items until they're actually identified?
+    //    In case of equipping such unidentified item deal with only base stuff
+    //    (durability and damage). Accessories then will have no effect at all.
+    //    Thus we can make it easier on ourselves savewise, both in terms of
+    //    savefile size and save data management.
+    //    But the again, nobody stops you from identifying everything and then
+    //    you must save everything, so it renders the whole point kinda moot.
+    //    Let's hold onto this thought for now until components serialization
+    //    process is implemented and then see how it goes based on complexity of
+    //    that.
     //
     void Serialize(NRS& saveTo);
 
@@ -109,9 +119,6 @@ class MapLevelBase
     int DungeonLevel     = 0;
     int VisibilityRadius = 0;
 
-    //
-    // FIXME: convert to mask in serialization
-    //
     bool WelcomeTextDisplayed   = false;
     bool Peaceful               = false;
     bool ExitFound              = false;
@@ -140,6 +147,14 @@ class MapLevelBase
     int _respawnCounter = 0;
 
     const int _shrineRollChance = 50;
+
+    void MaskToBoolFlags(const uint16_t mask);
+
+    void SerializeLayout(NRS& saveTo);
+    void SerializeObjects(NRS& saveTo);
+    void SerializeItems(NRS& saveTo);
+    void SerializeTriggers(NRS& saveTo);
+    void SerializeActors(NRS& saveTo);
 
     int GetEstimatedNumberOfItemsToCreate();
 

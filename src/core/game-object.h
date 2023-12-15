@@ -156,21 +156,31 @@ class GameObject
     //
     bool Visible = false;
 
+    // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //
+    // Don't serialize these because they either don't make sense
+    // or their value is driven by code.
+    //
+
     //
     // NOTE: set manually for NPCs during creation via GameObject::Move(),
     // because some game objects can be stepped on (e.g. bench, money etc)
     //
     bool Occupied = false;
 
+    //
+    // Will be set to true if object needs to be destroyed on next game update.
+    //
     bool IsDestroyed = false;
+
+    // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     //
     // Undead or not.
     //
     bool IsLiving = false;
 
-    uint16_t BoolFlagsToMask();
-    void MaskToBoolFlags(const uint16_t& mask);
+    void MaskToBoolFlags(const uint16_t mask);
 
     // -------------------------------------------------------------------------
 
@@ -270,7 +280,7 @@ class GameObject
       uint32_t BgColor = Colors::None;
       std::string Name;
       std::string FowName;
-      bool Indestructible;
+      uint16_t Mask;
 
       std::string ToStringKey() const
       {
@@ -281,7 +291,8 @@ class GameObject
            << Util::NumberToHexString(FgColor)
            << Util::NumberToHexString(BgColor)
            << Name
-           << FowName;
+           << FowName
+           << Mask;
 
         return ss.str();
       }

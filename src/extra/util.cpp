@@ -110,6 +110,23 @@ namespace Util
 
   // ===========================================================================
 
+  uint16_t BoolFlagsToMask(const std::vector<bool>& traverse)
+  {
+    uint16_t res = 0;
+
+    size_t ind = 0;
+
+    for (const bool flag : traverse)
+    {
+      res |= ( (flag ? 1 : 0) << ind);
+      ind++;
+    }
+
+    return res;
+  }
+
+  // ===========================================================================
+
   bool IsObjectInRange(GameObject* checker,
                        GameObject* checked,
                        int range)

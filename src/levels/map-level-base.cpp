@@ -360,6 +360,16 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
 
 // =============================================================================
 
+void MapLevelBase::MaskToBoolFlags(const uint16_t mask)
+{
+  WelcomeTextDisplayed   = (mask & 0x1);
+  Peaceful               = (mask & 0x2);
+  ExitFound              = (mask & 0x4);
+  MysteriousForcePresent = (mask & 0x8);
+}
+
+// =============================================================================
+
 int MapLevelBase::GetEstimatedNumberOfItemsToCreate()
 {
   double count = std::log2(EmptyCells().size());
@@ -636,7 +646,20 @@ void MapLevelBase::OnLevelChanged(MapType from)
 
 void MapLevelBase::Serialize(NRS& saveTo)
 {
+  SerializeLayout(saveTo);
+  SerializeObjects(saveTo);
+  SerializeItems(saveTo);
+  SerializeTriggers(saveTo);
+  SerializeActors(saveTo);
+}
+
+// =============================================================================
+
+void MapLevelBase::SerializeLayout(NRS& saveTo)
+{
   namespace SK = Strings::SerializationKeys;
+
+  // ---------------- BASE STUFF ----------------
 
   NRS& root = saveTo[SK::Root];
 
@@ -662,7 +685,16 @@ void MapLevelBase::Serialize(NRS& saveTo)
   levelNode[SK::Visibility].SetInt(VisibilityRadius);
   levelNode[SK::Respawn].SetInt(MonstersRespawnTurns);
 
-  _playerRef->Serialize(root);
+  uint16_t mask = Util::BoolFlagsToMask({
+                                          WelcomeTextDisplayed,
+                                          Peaceful,
+                                          ExitFound,
+                                          MysteriousForcePresent
+                                        });
+
+  levelNode[SK::Mask].SetUInt(mask);
+
+  // ---------------- BUILD OBJECTS LAYOUT LIBRARY ----------------
 
   using SDM = GameObject::SaveDataMinimal;
   std::unordered_map<std::string, SDM> saveData;
@@ -726,14 +758,13 @@ void MapLevelBase::Serialize(NRS& saveTo)
         n[SK::FowName].SetString(sdm.FowName);
       }
 
-      if (sdm.Type != GameObjectType::GROUND)
-      {
-        n[SK::Indestructible].SetInt((int)sdm.Indestructible);
-      }
+      n[SK::Mask].SetUInt(sdm.Mask);
 
       index++;
     }
   }
+
+  // ---------------- SAVE MAP LAYOUT ----------------
 
   std::string cell;
 
@@ -745,9 +776,7 @@ void MapLevelBase::Serialize(NRS& saveTo)
   {
     int listInd = 0;
 
-    std::string lineKey = Util::StringFormat("%d", lineInd);
-
-    NRS& n = levelLayout[lineKey];
+    NRS& n = levelLayout[std::to_string(lineInd)];
 
     for (int x = 0; x < MapSize.X; x++)
     {
@@ -781,6 +810,40 @@ void MapLevelBase::Serialize(NRS& saveTo)
 
     lineInd++;
   }
+}
+
+// =============================================================================
+
+void MapLevelBase::SerializeObjects(NRS& saveTo)
+{
+  // TODO:
+}
+
+// =============================================================================
+
+void MapLevelBase::SerializeItems(NRS& saveTo)
+{
+  // TODO:
+}
+
+// =============================================================================
+
+void MapLevelBase::SerializeTriggers(NRS& saveTo)
+{
+  // TODO:
+}
+
+// =============================================================================
+
+void MapLevelBase::SerializeActors(NRS& saveTo)
+{
+  namespace SK = Strings::SerializationKeys;
+
+  NRS& root = saveTo[SK::Root];
+
+  // TODO:
+
+  _playerRef->Serialize(root);
 }
 
 // =============================================================================

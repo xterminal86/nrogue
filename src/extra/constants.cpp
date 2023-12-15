@@ -294,7 +294,6 @@ namespace Strings
     const std::string Id             = "id";
     const std::string Mask           = "mask";
     const std::string Layout         = "layout";
-    const std::string Indestructible = "indestr";
   }
 }
 
