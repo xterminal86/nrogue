@@ -1,6 +1,6 @@
 #include "tunneler.h"
 
-#include "rng.h"
+#include "util.h"
 
 ///
 /// \brief Builds tunnels perpendicular to previous direction,
@@ -26,8 +26,8 @@ void Tunneler::Backtracking(const Position& mapSize,
 
   if (start.X == -1 || start.Y == -1)
   {
-    sx = RNG::Instance().RandomRange(1, mapSize.X - 1);
-    sy = RNG::Instance().RandomRange(1, mapSize.Y - 1);
+    sx = Util::RandomRange(1, mapSize.X - 1, _rng);
+    sy = Util::RandomRange(1, mapSize.Y - 1, _rng);
   }
   else
   {
@@ -63,7 +63,7 @@ void Tunneler::Backtracking(const Position& mapSize,
     int tunMin = tunnelLengthMinMax.X;
     int tunMax = tunnelLengthMinMax.Y;
 
-    int length = RNG::Instance().RandomRange(tunMin, tunMax);
+    int length = Util::RandomRange(tunMin, tunMax, _rng);
 
     bool wasBuilt = true;
 
@@ -179,8 +179,9 @@ void Tunneler::Normal(const Position& mapSize,
     if (newDir != nullptr)
     {
       int currentLength = 0;
-      int rndLength = RNG::Instance().RandomRange(tunnelLengthMinMax.X,
-                                                  tunnelLengthMinMax.Y);
+      int rndLength = Util::RandomRange(tunnelLengthMinMax.X,
+                                        tunnelLengthMinMax.Y,
+                                        _rng);
 
       std::vector<Position> corridor;
 
@@ -205,7 +206,7 @@ void Tunneler::Normal(const Position& mapSize,
 
     if (carvedPoints.size() != 0)
     {
-      int index = RNG::Instance().RandomRange(0, carvedPoints.size());
+      int index = Util::RandomRange(0, carvedPoints.size(), _rng);
       mapPos = carvedPoints[index];
 
       carvedPoints.erase(carvedPoints.begin() + index);
@@ -249,7 +250,7 @@ Position* Tunneler::GetRandomDir(const Position& pos)
 
   while (!directions.empty())
   {
-    int index = RNG::Instance().RandomRange(0, directions.size());
+    int index = Util::RandomRange(0, directions.size(), _rng);
     Position newDir = directions[index];
     int nx = pos.X + newDir.X;
     int ny = pos.Y + newDir.Y;
@@ -314,7 +315,7 @@ Position* Tunneler::TryToGetPerpendicularDir(const Position& pos, const Position
 
   while (selectedPair.size() != 0)
   {
-    int index = RNG::Instance().RandomRange(0, selectedPair.size());
+    int index = Util::RandomRange(0, selectedPair.size(), _rng);
 
     int x = pos.X + selectedPair[index].X;
     int y = pos.Y + selectedPair[index].Y;
@@ -366,7 +367,7 @@ Position Tunneler::GetRandomPerpendicularDir(const Position& dir)
   {
     if (dir.X == directions[i].X && dir.Y == directions[i].Y)
     {
-      int index = RNG::Instance().RandomRange(0, 2);
+      int index = Util::RandomRange(0, 2, _rng);
       res = choicesByDir[i][index];
       break;
     }
@@ -415,7 +416,7 @@ Position* Tunneler::GetCorridorDir(const Position& pos)
 
   if (validDirs.size() != 0)
   {
-    int index = RNG::Instance().RandomRange(0, validDirs.size());
+    int index = Util::RandomRange(0, validDirs.size(), _rng);
     _corridorDir = validDirs[index];
     res = &_corridorDir;
   }

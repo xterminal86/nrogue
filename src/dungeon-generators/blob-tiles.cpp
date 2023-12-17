@@ -143,7 +143,7 @@ void BlobTiles::Generate(int mapSizeX, int mapSizeY,
 
       if (!roomsToChoose.empty())
       {
-        int ind = RNG::Instance().RandomRange(0, roomsToChoose.size());
+        int ind = Util::RandomRange(0, roomsToChoose.size(), _rng);
         PlaceTile(x, y, roomsToChoose[ind]);
       }
     }

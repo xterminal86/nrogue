@@ -6,6 +6,13 @@
 #include "logger.h"
 #endif
 
+DGBase::DGBase()
+{
+  _rng.seed(RNG::Instance().Seed);
+}
+
+// =============================================================================
+
 void DGBase::PrintMapRaw()
 {
   auto raw = GetMapRawString();
@@ -435,7 +442,7 @@ void DGBase::CheckIfProblemCorner(const Position& p)
      && _map[d.X][d.Y].Image == '.'
      && hasWalls)
     {
-      int rndIndex = RNG::Instance().RandomRange(0, 2);
+      int rndIndex = Util::RandomRange(0, 2, _rng);
       Position choice = choices[i][rndIndex];
       _map[p.X + choice.X][p.Y + choice.Y].Image = '.';
       break;
@@ -907,7 +914,7 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
     roomWeightByType[type] = weight;
   }
 
-  std::shuffle(_emptyRooms.begin(), _emptyRooms.end(), RNG::Instance().Random);
+  std::shuffle(_emptyRooms.begin(), _emptyRooms.end(), _rng);
 
   for (size_t i = 0; i < _emptyRooms.size(); i++)
   {
@@ -918,7 +925,7 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
     // The room that we picked this way may be somewhere in the middle
     // of _emptyRooms, so in TransformArea() below we may actually
     // mark some room beforehand in this way, so on next iteration
-    // of this for loop, it will be already marked.
+    // of this for loop it will be already marked.
     //
     if (_map[_emptyRooms[i].X1][_emptyRooms[i].Y1].ZoneMarker != TransformedRoom::UNMARKED)
     {
@@ -1199,10 +1206,10 @@ void DGBase::PlaceShrine(const Rect& area)
 {
   MarkZone(area, TransformedRoom::SHRINE);
 
-  int index = RNG::Instance().RandomRange(0, GlobalConstants::ShrineLayouts.size());
+  int index = Util::RandomRange(0, GlobalConstants::ShrineLayouts.size(), _rng);
   auto it = GlobalConstants::ShrineLayoutsByType.begin();
   std::advance(it, index);
-  int layoutIndex = RNG::Instance().RandomRange(0, it->second.size());
+  int layoutIndex = Util::RandomRange(0, it->second.size(), _rng);
   auto layout = it->second[layoutIndex];
 
   const std::vector<RoomLayoutRotation> angles =
@@ -1213,15 +1220,15 @@ void DGBase::PlaceShrine(const Rect& area)
     RoomLayoutRotation::CCW_270
   };
 
-  int angleIndex = RNG::Instance().RandomRange(0, angles.size());
+  int angleIndex = Util::RandomRange(0, angles.size(), _rng);
 
   layout = Util::RotateRoomLayout(layout, angles[angleIndex]);
 
   int wx = area.Width()  - 5;
   int wy = area.Height() - 5;
 
-  int offsetX = RNG::Instance().RandomRange(0, wx + 1);
-  int offsetY = RNG::Instance().RandomRange(0, wy + 1);
+  int offsetX = Util::RandomRange(0, wx + 1, _rng);
+  int offsetY = Util::RandomRange(0, wy + 1, _rng);
 
   //DebugLog("  got offsets %d %d", offsetX, offsetY);
 
@@ -1408,7 +1415,7 @@ bool DGBase::TryToPlaceRoom(int minSize, int maxSize,
     auto candidates = TryToFindSuitableRooms(minSize, maxSize, emptyRoomIndex);
     if (!candidates.empty())
     {
-      int index = RNG::Instance().RandomRange(0, candidates.size());
+      int index = Util::RandomRange(0, candidates.size(), _rng);
       size_t ri = candidates[index];
       //DebugLog("OK - placing at %s", _emptyRooms[ri].ToString().data());
       fn(_emptyRooms[ri]);
@@ -1462,7 +1469,7 @@ bool DGBase::TryToPlaceRoom(const std::vector<PairII>& exactSizes,
     auto candidates = TryToFindSuitableRooms(exactSizes, emptyRoomIndex);
     if (!candidates.empty())
     {
-      int index = RNG::Instance().RandomRange(0, candidates.size());
+      int index = Util::RandomRange(0, candidates.size(), _rng);
       size_t ri = candidates[index];
       //DebugLog("OK - placing at %s", _emptyRooms[ri].ToString().data());
       fn(_emptyRooms[ri]);
@@ -1763,7 +1770,7 @@ void DGBase::ConnectIsolatedAreas()
     //
     // Get random connection point from all possible variants.
     //
-    int index = RNG::Instance().RandomRange(0, connectionPoints.size());
+    int index = Util::RandomRange(0, connectionPoints.size(), _rng);
     auto pointsToConnect = connectionPoints[index];
     ConnectPoints(pointsToConnect.first, pointsToConnect.second);
 

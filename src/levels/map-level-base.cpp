@@ -759,6 +759,7 @@ void MapLevelBase::SerializeLayout(NRS& saveTo)
       NRS& n = node[objKey];
 
       n[SK::Type].SetInt((int)sdm.Type);
+      n[SK::Zone].SetInt((int)sdm.ZoneMarker);
       n[SK::Image].SetInt(sdm.Image);
       n[SK::Color].SetString(Util::NumberToHexString(sdm.FgColor), 0);
       n[SK::Color].SetString(Util::NumberToHexString(sdm.BgColor), 1);

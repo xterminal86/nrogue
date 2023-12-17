@@ -296,6 +296,7 @@ namespace Strings
     extern const std::string Value;
     extern const std::string Size;
     extern const std::string Type;
+    extern const std::string Zone;
     extern const std::string Visibility;
     extern const std::string Respawn;
     extern const std::string MapObjects;

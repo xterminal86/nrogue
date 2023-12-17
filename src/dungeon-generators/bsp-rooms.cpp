@@ -129,7 +129,7 @@ std::pair<bool, double> BSPRooms::GetSplitRatio(Rect& area)
 {
   std::pair<bool, double> res;
 
-  int r = RNG::Instance().RandomRange(_splitRatio.X, _splitRatio.Y + 1);
+  int r = Util::RandomRange(_splitRatio.X, _splitRatio.Y + 1, _rng);
 
   double ratio = (double)r / 100.0;
 
@@ -206,8 +206,8 @@ void BSPRooms::Traverse(BSPNode* node, int depth)
       // [X + 1, Y + 1] to [X - 1; Y - 1]
       // + 1 at the end because RandomRange traditionally excludes last number.
       //
-      int roomW = RNG::Instance().RandomRange(4, roomArea.Dimensions().X);
-      int roomH = RNG::Instance().RandomRange(4, roomArea.Dimensions().Y);
+      int roomW = Util::RandomRange(4, roomArea.Dimensions().X, _rng);
+      int roomH = Util::RandomRange(4, roomArea.Dimensions().Y, _rng);
 
       Position newEnd =
       {
@@ -219,8 +219,8 @@ void BSPRooms::Traverse(BSPNode* node, int depth)
 
       FillArea(r);
 
-      int indX = RNG::Instance().RandomRange(node->CornerStart.X + 1, newEnd.X);
-      int indY = RNG::Instance().RandomRange(node->CornerStart.Y + 1, newEnd.Y);
+      int indX = Util::RandomRange(node->CornerStart.X + 1, newEnd.X, _rng);
+      int indY = Util::RandomRange(node->CornerStart.Y + 1, newEnd.Y, _rng);
 
       _connectionPoints.push_back({ indX, indY });
     }

@@ -43,7 +43,7 @@ void FeatureRooms::Generate(const Position& mapSize,
       break;
     }
 
-    int posIndex = RNG::Instance().RandomRange(0, validCells.size());
+    int posIndex = Util::RandomRange(0, validCells.size(), _rng);
 
     Position doorPos = validCells[posIndex];
 
@@ -81,7 +81,7 @@ void FeatureRooms::Generate(const Position& mapSize,
     {
       uint8_t doorChance = Util::Clamp(doorPlacementChance, 0, 100);
 
-      uint8_t chanceRolled = RNG::Instance().RandomRange(1, 101);
+      uint8_t chanceRolled = Util::RandomRange(1, 101, _rng);
 
       _map[doorPos.X][doorPos.Y].Image = (chanceRolled <= doorChance) ? '+' : '.';
       _generatedSoFar[typeRolled]++;
@@ -105,7 +105,7 @@ void FeatureRooms::CreateStartingRoom()
     RoomEdgeEnum::WEST
   };
 
-  int index = RNG::Instance().RandomRange(0, dirs.size());
+  int index = Util::RandomRange(0, dirs.size(), _rng);
   RoomEdgeEnum d = dirs[index];
 
   int sx = _mapSize.X / 2;
@@ -121,8 +121,8 @@ Position FeatureRooms::GetRandomRoomSize()
   int roomMinSize = _roomSizes.X;
   int roomMaxSize = _roomSizes.Y;
 
-  int roomSizeX = RNG::Instance().RandomRange(roomMinSize, roomMaxSize);
-  int roomSizeY = RNG::Instance().RandomRange(roomMinSize, roomMaxSize);
+  int roomSizeX = Util::RandomRange(roomMinSize, roomMaxSize, _rng);
+  int roomSizeY = Util::RandomRange(roomMinSize, roomMaxSize, _rng);
 
   return { roomSizeX, roomSizeY };
 }
@@ -150,7 +150,7 @@ bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
     case FeatureRoomType::FLOODED:
     {
       auto rndSize = GetRandomRoomSize();
-      int choice = RNG::Instance().RandomRange(0, 2);
+      int choice = Util::RandomRange(0, 2, _rng);
       char variant = (choice == 0) ? 'W' : 'l';
       success = CreateEmptyRoom(newRoomStartPos, rndSize, direction, variant);
     }
@@ -158,7 +158,7 @@ bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
 
     case FeatureRoomType::DIAMOND:
     {
-      int size = RNG::Instance().RandomRange(2, 8);
+      int size = Util::RandomRange(2, 8, _rng);
       success = CreateDiamondRoom(newRoomStartPos, size, direction);
     }
     break;
@@ -167,14 +167,16 @@ bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
     {
       // Room becomes round only if radius >= 4,
       // otherwise it degenerates into empty room.
-      int r = RNG::Instance().RandomRange(4, 8);
+      int r = Util::RandomRange(4, 8, _rng);
       success = CreateRoundRoom(newRoomStartPos, r, direction);
     }
     break;
 
     case FeatureRoomType::SHRINE:
     {
-      int index = RNG::Instance().RandomRange(0, GlobalConstants::ShrineNameByType.size());
+      int index = Util::RandomRange(0,
+                                    GlobalConstants::ShrineNameByType.size(),
+                                    _rng);
       auto it = GlobalConstants::ShrineNameByType.begin();
       std::advance(it, index);
 
@@ -187,8 +189,8 @@ bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
     case FeatureRoomType::FOUNTAIN:
     {
       auto layoutVariant = _specialRoomLayoutByType.at(roomType);
-      int layoutSubvariant = RNG::Instance().RandomRange(0, 2);
-      int index = RNG::Instance().RandomRange(0, layoutVariant.size());
+      int layoutSubvariant = Util::RandomRange(0, 2, _rng);
+      int index = Util::RandomRange(0, layoutVariant.size(), _rng);
       auto layout = layoutVariant[index];
       success = PlaceLayout(newRoomStartPos, layout, direction, (layoutSubvariant == 0));
     }
@@ -196,7 +198,9 @@ bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
 
     case FeatureRoomType::PILLARS:
     {
-      int index = RNG::Instance().RandomRange(0, GlobalConstants::PillarsLayouts.size());
+      int index = Util::RandomRange(0,
+                                    GlobalConstants::PillarsLayouts.size(),
+                                    _rng);
       auto layout = GlobalConstants::PillarsLayouts[index];
       success = PlaceLayout(newRoomStartPos, layout, direction);
     }
@@ -387,8 +391,8 @@ bool FeatureRooms::CreateEmptyRoom(const Position& start,
                                    RoomEdgeEnum dir,
                                    char ground)
 {
-  int shiftX = RNG::Instance().RandomRange(0, size.X);
-  int shiftY = RNG::Instance().RandomRange(0, size.Y);
+  int shiftX = Util::RandomRange(0, size.X, _rng);
+  int shiftY = Util::RandomRange(0, size.Y, _rng);
 
   int heightOffsetToStart = size.X - 1;
   int widthOffsetToStart = size.Y - 1;
@@ -453,7 +457,7 @@ bool FeatureRooms::CreateShrine(const Position& start,
                                 ShrineType type)
 {
   std::vector<StringV> layouts = GlobalConstants::ShrineLayoutsByType.at(type);
-  int index = RNG::Instance().RandomRange(0, layouts.size());
+  int index = Util::RandomRange(0, layouts.size(), _rng);
   auto layout = layouts[index];
 
   //
@@ -538,8 +542,8 @@ bool FeatureRooms::PlaceLayout(const Position& start,
                                RoomEdgeEnum dir,
                                bool demonize)
 {
-  int shiftX = RNG::Instance().RandomRange(0, layout.size());
-  int shiftY = RNG::Instance().RandomRange(0, layout[0].size());
+  int shiftX = Util::RandomRange(0, layout.size(), _rng);
+  int shiftY = Util::RandomRange(0, layout[0].size(), _rng);
 
   int heightOffsetToStart = layout.size() - 1;
   int widthOffsetToStart = layout[0].size() - 1;

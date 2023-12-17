@@ -273,6 +273,7 @@ class GameObject
     struct SaveDataMinimal
     {
       GameObjectType Type = GameObjectType::NONE;
+      TransformedRoom ZoneMarker = TransformedRoom::UNMARKED;
       int Image = '?';
       int PosX  = 0;
       int PosY  = 0;
@@ -287,6 +288,7 @@ class GameObject
         std::stringstream ss;
 
         ss << (int)Type
+           << (int)ZoneMarker
            << Image
            << Util::NumberToHexString(FgColor)
            << Util::NumberToHexString(BgColor)

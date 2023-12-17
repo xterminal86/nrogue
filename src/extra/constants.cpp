@@ -272,28 +272,29 @@ namespace Strings
   // ---------------------------------------------------------------------------
   namespace SerializationKeys
   {
-    const std::string Root           = "save";
-    const std::string Gid            = "gid";
-    const std::string Seed           = "seed";
-    const std::string Name           = "name";
-    const std::string Value          = "value";
-    const std::string Size           = "size";
-    const std::string Type           = "type";
-    const std::string Visibility     = "vis";
-    const std::string Respawn        = "respawn";
-    const std::string MapObjects     = "mo";
-    const std::string Image          = "image";
-    const std::string Color          = "color";
-    const std::string FowName        = "fowName";
-    const std::string Player         = "player";
-    const std::string Border         = "border";
-    const std::string Class          = "class";
-    const std::string Pos            = "pos";
-    const std::string Owner          = "owner";
-    const std::string Ground         = "ground";
-    const std::string Id             = "id";
-    const std::string Mask           = "mask";
-    const std::string Layout         = "layout";
+    const std::string Root       = "save";
+    const std::string Gid        = "gid";
+    const std::string Seed       = "seed";
+    const std::string Name       = "name";
+    const std::string Value      = "value";
+    const std::string Size       = "size";
+    const std::string Type       = "type";
+    const std::string Zone       = "zone";
+    const std::string Visibility = "vis";
+    const std::string Respawn    = "respawn";
+    const std::string MapObjects = "mo";
+    const std::string Image      = "image";
+    const std::string Color      = "color";
+    const std::string FowName    = "fowName";
+    const std::string Player     = "player";
+    const std::string Border     = "border";
+    const std::string Class      = "class";
+    const std::string Pos        = "pos";
+    const std::string Owner      = "owner";
+    const std::string Ground     = "ground";
+    const std::string Id         = "id";
+    const std::string Mask       = "mask";
+    const std::string Layout     = "layout";
   }
 }
 

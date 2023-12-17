@@ -1,6 +1,6 @@
 #include "recursive-backtracker.h"
 
-#include "rng.h"
+#include "util.h"
 #include "constants.h"
 
 #include <stack>
@@ -29,8 +29,8 @@ void RecursiveBacktracker::Generate(const Position& mapSize,
 
   if (startingPoint.X == -1 || startingPoint.Y == -1)
   {
-    sx = RNG::Instance().RandomRange(1, mapSize.X - 1);
-    sy = RNG::Instance().RandomRange(1, mapSize.Y - 1);
+    sx = Util::RandomRange(1, mapSize.X - 1, _rng);
+    sy = Util::RandomRange(1, mapSize.Y - 1, _rng);
   }
   else
   {
@@ -99,7 +99,7 @@ Position* RecursiveBacktracker::GetRandomCell(const Position& p)
 
   if (candidates.size() != 0)
   {
-    int index = RNG::Instance().RandomRange(0, candidates.size());
+    int index = Util::RandomRange(0, candidates.size(), _rng);
     Position cp = candidates[index];
     _map[cp.X][cp.Y].Visited = true;
     _map[cp.X][cp.Y].Image = '.';

@@ -49,7 +49,7 @@ void FromPermutationTiles::Generate(const Position& mapSize,
   int tsIndex = 0;
   if (tileSetIndex == -1)
   {
-    tsIndex = RNG::Instance().RandomRange(0, _tileset.size());
+    tsIndex = Util::RandomRange(0, _tileset.size(), _rng);
 
   }
   else
@@ -65,7 +65,7 @@ void FromPermutationTiles::Generate(const Position& mapSize,
 
   _currentTileset = _tileset[tsIndex];
 
-  size_t index = RNG::Instance().RandomRange(0, _currentTileset.size());
+  size_t index = Util::RandomRange(0, _currentTileset.size(), _rng);
   Tile t = _currentTileset[index];
   PlaceLayout({ cx, cy }, t);
   _visited.push_back({ cx, cy });
@@ -258,7 +258,7 @@ void FromPermutationTiles::TryToPlaceLayout(const Position& p)
 
   if (!validLayouts.empty())
   {
-    int index = RNG::Instance().RandomRange(0, validLayouts.size());
+    int index = Util::RandomRange(0, validLayouts.size(), _rng);
     PlaceLayout(p, validLayouts[index]);
     AddPointsToProcess(p);
     _visited.push_back(p);

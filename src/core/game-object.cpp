@@ -1643,23 +1643,24 @@ void GameObject::Serialize(NRS& section)
 
 const GameObject::SaveDataMinimal& GameObject::GetSaveDataMinimal()
 {
-  _sdm.Type    = Type;
-  _sdm.Image   = Image;
-  _sdm.PosX    = PosX;
-  _sdm.PosY    = PosY;
-  _sdm.FgColor = FgColor;
-  _sdm.BgColor = BgColor;
-  _sdm.Name    = ObjectName;
-  _sdm.FowName = FogOfWarName;
-  _sdm.Mask    = Util::BoolFlagsToMask({
-                                         Special,
-                                         Blocking,
-                                         BlocksSight,
-                                         Revealed,
-                                         Corporeal,
-                                         Visible,
-                                         IsLiving
-                                       });
+  _sdm.Type       = Type;
+  _sdm.ZoneMarker = ZoneMarker;
+  _sdm.Image      = Image;
+  _sdm.PosX       = PosX;
+  _sdm.PosY       = PosY;
+  _sdm.FgColor    = FgColor;
+  _sdm.BgColor    = BgColor;
+  _sdm.Name       = ObjectName;
+  _sdm.FowName    = FogOfWarName;
+  _sdm.Mask       = Util::BoolFlagsToMask({
+                                            Special,
+                                            Blocking,
+                                            BlocksSight,
+                                            Revealed,
+                                            Corporeal,
+                                            Visible,
+                                            IsLiving
+                                          });
 
   return _sdm;
 }

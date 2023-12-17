@@ -7,6 +7,7 @@
 #include <string>
 #include <stack>
 #include <variant>
+#include <random>
 
 #include "enumerations.h"
 #include "constants.h"
@@ -84,6 +85,7 @@ struct RemovalParams
 class DGBase
 {
   public:
+    DGBase();
     virtual ~DGBase() = default;
 
     void PrintMapRaw();
@@ -164,6 +166,12 @@ class DGBase
     StringV _mapChunk;
 
     bool _useAdditionalLayoutForDoors = false;
+
+    //
+    // Will use its own RNG as well to decouple dungeon generation from
+    // any code changes.
+    //
+    std::mt19937_64 _rng;
 
     //
     // Algorithm specific data and methods, no need to expose these
