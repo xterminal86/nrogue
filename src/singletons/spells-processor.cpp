@@ -738,8 +738,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObje
       int index = RNG::Instance().RandomRange(0, nonCursedItems.size());
       ItemComponent* item = nonCursedItems[index];
       item->Data.IsPrefixDiscovered = true;
-      item->Data.Prefix = ItemPrefix::CURSED;
-      item->Data.ItemTypeHash = Util::CalculateItemHash(item);
+      Util::UpdateItemPrefix(item, ItemPrefix::CURSED);
 
       //
       // No additional stat penalties, just can't uneqip.
@@ -772,8 +771,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObje
       int index = RNG::Instance().RandomRange(0, cursedItems.size());
       ItemComponent* item = cursedItems[index];
       item->Data.IsPrefixDiscovered = true;
-      item->Data.Prefix = ItemPrefix::UNCURSED;
-      item->Data.ItemTypeHash = Util::CalculateItemHash(item);
+      Util::UpdateItemPrefix(item, ItemPrefix::UNCURSED);
 
       auto& idName = item->Data.IdentifiedName;
       idName = Util::ReplaceItemPrefix(idName, { "Cursed" }, "Uncursed");
@@ -795,8 +793,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObje
       if (ic->Data.Prefix == ItemPrefix::CURSED)
       {
         ic->Data.IsPrefixDiscovered = true;
-        ic->Data.Prefix = ItemPrefix::UNCURSED;
-        ic->Data.ItemTypeHash = Util::CalculateItemHash(ic);
+        Util::UpdateItemPrefix(ic, ItemPrefix::UNCURSED);
 
         success = true;
 

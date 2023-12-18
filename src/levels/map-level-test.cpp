@@ -53,6 +53,14 @@ void MapLevelTest::CreateLevel()
     GameObject* go = GameObjectsFactory::Instance().CreateDoor(10, 11, true);
     PlaceStaticObject(go);
   }
+
+  {
+    GameObject* go = GameObjectsFactory::Instance().CreateShrine(13,
+                                                                 13,
+                                                                 ShrineType::HEALING,
+                                                                 -1);
+    PlaceStaticObject(go);
+  }
 }
 
 // =============================================================================

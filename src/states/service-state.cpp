@@ -119,7 +119,7 @@ void ServiceState::ProcessBlessing(int key)
     //
     if (si.ItemComponentRef->Data.Prefix != ItemPrefix::BLESSED)
     {
-      si.ItemComponentRef->Data.Prefix = ItemPrefix::BLESSED;
+      Util::UpdateItemPrefix(si.ItemComponentRef, ItemPrefix::BLESSED);
 
       BlessItem(si);
 
@@ -128,11 +128,6 @@ void ServiceState::ProcessBlessing(int key)
       // that was generated during object creation.
       //
       si.ItemComponentRef->Data.IdentifiedName = Util::ReplaceItemPrefix(si.ItemComponentRef->Data.IdentifiedName, { "Cursed" , "Uncursed" }, "Blessed");
-
-      //
-      // Recalculate hash to avoid potential inventory sorting issues.
-      //
-      si.ItemComponentRef->Data.ItemTypeHash = Util::CalculateItemHash(si.ItemComponentRef);
     }
 
     si.ItemComponentRef->Data.IsPrefixDiscovered = true;

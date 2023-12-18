@@ -798,11 +798,13 @@ void MapLevelBase::SerializeLayout(NRS& saveTo)
 
       int ind1 = indexByKey[key];
 
-      if (StaticMapObjects[x][y] != nullptr
-      && (StaticMapObjects[x][y]->Type == GameObjectType::PICKAXEABLE
-       || StaticMapObjects[x][y]->Type == GameObjectType::BORDER))
+      GameObject* so = StaticMapObjects[x][y].get();
+
+      if (so != nullptr
+      && (so->Type == GameObjectType::PICKAXEABLE
+       || so->Type == GameObjectType::BORDER))
       {
-        const SDM& sdm = StaticMapObjects[x][y]->GetSaveDataMinimal();
+        const SDM& sdm = so->GetSaveDataMinimal();
 
         const std::string& key = sdm.ToStringKey();
 
@@ -828,7 +830,25 @@ void MapLevelBase::SerializeLayout(NRS& saveTo)
 
 void MapLevelBase::SerializeObjects(NRS& saveTo)
 {
-  // TODO:
+  namespace SK = Strings::SerializationKeys;
+
+  NRS& root    = saveTo[SK::Root];
+  NRS& objects = root[SK::Objects];
+
+  for (int y = 0; y < MapSize.Y; y++)
+  {
+    for (int x = 0; x < MapSize.X; x++)
+    {
+      GameObject* so = StaticMapObjects[x][y].get();
+
+      if (so != nullptr
+      && (so->Type != GameObjectType::PICKAXEABLE
+       && so->Type != GameObjectType::BORDER))
+      {
+        so->Serialize(objects);
+      }
+    }
+  }
 }
 
 // =============================================================================

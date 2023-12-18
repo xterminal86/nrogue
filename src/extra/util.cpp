@@ -3006,4 +3006,18 @@ namespace Util
                                    item->OwnerGameObject->ObjectName.data());
     return hasher(str);
   }
+
+  // ===========================================================================
+
+  void UpdateItemPrefix(ItemComponent *item, ItemPrefix prefixToSet)
+  {
+    if (item == nullptr)
+    {
+      DebugLog("[WAR] CalculateItemHash() - item is null!");
+      return;
+    }
+
+    item->Data.Prefix = prefixToSet;
+    item->Data.ItemTypeHash = CalculateItemHash(item);
+  }
 }

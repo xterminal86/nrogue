@@ -147,6 +147,9 @@ enum class MapType
   #endif
 };
 
+//
+// NOTE: total violation of the classification scheme.
+//
 enum class GameObjectType
 {
   NONE = -1,

@@ -217,7 +217,7 @@ void ShrineComponent::ProcessEffect()
       if (!itemsToCurse.empty())
       {
         int index = RNG::Instance().RandomRange(0, itemsToCurse.size());
-        itemsToCurse[index]->Data.Prefix = ItemPrefix::CURSED;
+        Util::UpdateItemPrefix(itemsToCurse[index], ItemPrefix::CURSED);
         msg = "You sense the malevolent energy";
         auto& idName = itemsToCurse[index]->Data.IdentifiedName;
         idName = Util::ReplaceItemPrefix(idName, { "Blessed", "Uncursed" }, "Cursed");
@@ -297,7 +297,7 @@ void ShrineComponent::ProcessEffect()
         if (ic->Data.Prefix == ItemPrefix::CURSED)
         {
           ic->Data.IsPrefixDiscovered = true;
-          ic->Data.Prefix = ItemPrefix::UNCURSED;
+          Util::UpdateItemPrefix(ic, ItemPrefix::UNCURSED);
           success = true;
           ic->Data.IdentifiedName = Util::ReplaceItemPrefix(ic->Data.IdentifiedName, { "Cursed" }, "Uncursed");
         }

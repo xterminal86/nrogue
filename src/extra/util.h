@@ -286,6 +286,7 @@ namespace Util
   extern bool CanBeSpawned(ItemComponent* ic);
 
   extern size_t CalculateItemHash(ItemComponent* item);
+  extern void UpdateItemPrefix(ItemComponent* item, ItemPrefix prefixToSet);
 
   extern std::vector<char> CharByCharIndex;
 

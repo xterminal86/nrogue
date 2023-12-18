@@ -312,6 +312,7 @@ namespace Strings
     extern const std::string Id;
     extern const std::string Mask;
     extern const std::string Layout;
+    extern const std::string Objects;
   }
 }
 

@@ -1613,6 +1613,11 @@ void GameObject::Serialize(NRS& section)
       n[SK::Owner].SetInt((int)_levelOwner->MapType_);
     }
     break;
+
+    // -------------------------------------------------------------------------
+
+    default:
+      break;
   }
 
   if (ptr != nullptr)
