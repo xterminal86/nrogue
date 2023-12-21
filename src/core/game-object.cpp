@@ -13,6 +13,7 @@
 #include "serializer.h"
 #include "blackboard.h"
 #include "gid-generator.h"
+#include "door-component.h"
 
 #ifdef DEBUG_BUILD
 #include "dev-console.h"
@@ -1616,6 +1617,20 @@ void GameObject::Serialize(NRS& section)
 
     // -------------------------------------------------------------------------
 
+    case GameObjectType::DOOR:
+    {
+      ptr = &section;
+
+      DoorComponent* dc = GetComponent<DoorComponent>();
+      if (dc != nullptr)
+      {
+        NRS& n = *ptr;
+      }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
     default:
       break;
   }
@@ -1628,6 +1643,8 @@ void GameObject::Serialize(NRS& section)
     n[SK::Image].SetInt(Image);
     n[SK::Color].SetString(Util::NumberToHexString(FgColor), 0);
     n[SK::Color].SetString(Util::NumberToHexString(BgColor), 1);
+    n[SK::Pos].SetInt(PosX, 0);
+    n[SK::Pos].SetInt(PosY, 1);
 
     uint16_t mask = Util::BoolFlagsToMask({
                                             Special,

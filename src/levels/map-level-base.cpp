@@ -835,6 +835,10 @@ void MapLevelBase::SerializeObjects(NRS& saveTo)
   NRS& root    = saveTo[SK::Root];
   NRS& objects = root[SK::Objects];
 
+  int index = 0;
+
+  std::string key;
+
   for (int y = 0; y < MapSize.Y; y++)
   {
     for (int x = 0; x < MapSize.X; x++)
@@ -845,7 +849,12 @@ void MapLevelBase::SerializeObjects(NRS& saveTo)
       && (so->Type != GameObjectType::PICKAXEABLE
        && so->Type != GameObjectType::BORDER))
       {
-        so->Serialize(objects);
+        key = Util::StringFormat("o_%d", index);
+
+        NRS& node = objects[key];
+        so->Serialize(node);
+
+        index++;
       }
     }
   }
@@ -1166,7 +1175,10 @@ void MapLevelBase::PlaceWall(int x, int y,
 
 // =============================================================================
 
-void MapLevelBase::PlaceDoor(int x, int y, bool isOpen, size_t openedBy, const std::string& objName)
+void MapLevelBase::PlaceDoor(int x, int y,
+                             bool isOpen,
+                             size_t openedBy,
+                             const std::string& objName)
 {
   if (IsOutOfBounds(x, y))
   {
@@ -1179,6 +1191,7 @@ void MapLevelBase::PlaceDoor(int x, int y, bool isOpen, size_t openedBy, const s
     DoorComponent* dc = door->GetComponent<DoorComponent>();
     dc->OpenedBy = openedBy;
   }
+
   PlaceStaticObject(door);
 }
 
@@ -1307,7 +1320,7 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
     {
       if (std::holds_alternative<GameObjectType>(cell.ObjectHere))
       {
-        if(std::get<GameObjectType>(cell.ObjectHere) == GameObjectType::CHEST)
+        if(std::get<GameObjectType>(cell.ObjectHere) == GameObjectType::CONTAINER)
         {
           GameObject* go = GameObjectsFactory::Instance().CreateChest(x, y, Util::Rolld100(50));
           go->PosX = x;

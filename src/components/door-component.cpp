@@ -7,7 +7,6 @@
 
 DoorComponent::DoorComponent()
 {
-  _componentHash = typeid(*this).hash_code();
 }
 
 // =============================================================================

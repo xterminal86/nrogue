@@ -6,8 +6,6 @@
 
 EquipmentComponent::EquipmentComponent(ContainerComponent* inventoryRef)
 {
-  _componentHash = typeid(*this).hash_code();
-
   EquipmentByCategory[EquipmentCategory::HEAD]   = { nullptr };
   EquipmentByCategory[EquipmentCategory::NECK]   = { nullptr };
   EquipmentByCategory[EquipmentCategory::TORSO]  = { nullptr };

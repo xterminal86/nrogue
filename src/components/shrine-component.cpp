@@ -9,8 +9,6 @@
 
 ShrineComponent::ShrineComponent(ShrineType shrineType, int timeout, bool oneTimeUse)
 {
-  _componentHash = typeid(*this).hash_code();
-
   _timeout = timeout;
 
   //

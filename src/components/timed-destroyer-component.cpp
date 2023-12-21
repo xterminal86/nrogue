@@ -5,8 +5,6 @@
 
 TimedDestroyerComponent::TimedDestroyerComponent(int delay, const std::function<void()>& onTimerEnd)
 {
-  _componentHash = typeid(*this).hash_code();
-
   _time = delay;
   _onTimerEnd = onTimerEnd;
 }

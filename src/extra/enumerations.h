@@ -166,7 +166,10 @@ enum class GameObjectType
   BORDER,
   TRAP,
   BREAKABLE,
-  CHEST,
+  CONTAINER,
+  SHRINE,
+  DOOR,
+  STAIRS,
   // ---------------------------------------------------------------------------
   RAT,
   BAT,

@@ -1279,7 +1279,7 @@ void DGBase::PlaceChestroom(const Rect& area)
   int x = area.X1 + area.Width() / 2;
   int y = area.Y1 + area.Height() / 2;
 
-  _map[x][y].ObjectHere = GameObjectType::CHEST;
+  _map[x][y].ObjectHere = GameObjectType::CONTAINER;
 }
 
 // =============================================================================

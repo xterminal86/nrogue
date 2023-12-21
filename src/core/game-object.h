@@ -94,8 +94,7 @@ class GameObject
     {
       for (auto& c : _components)
       {
-        if (c.second.get() != nullptr
-         && c.second.get()->GetComponentHash() == typeid(T).hash_code())
+        if (c.second.get() != nullptr && typeid(*c.second.get()) == typeid(T))
         {
           return static_cast<T*>(c.second.get());
         }

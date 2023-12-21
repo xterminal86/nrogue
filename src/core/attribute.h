@@ -35,6 +35,8 @@ struct Attribute
     int _originalValue = 0;
 };
 
+// =============================================================================
+
 struct RangedAttribute
 {
   void Reset(int initialValue);
@@ -56,6 +58,8 @@ struct RangedAttribute
     Attribute _min;
     Attribute _max;
 };
+
+// =============================================================================
 
 struct Attributes
 {

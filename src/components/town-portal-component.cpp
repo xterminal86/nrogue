@@ -5,7 +5,6 @@
 
 TownPortalComponent::TownPortalComponent()
 {
-  _componentHash = typeid(*this).hash_code();
 }
 
 // =============================================================================

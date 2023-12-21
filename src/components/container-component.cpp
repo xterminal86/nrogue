@@ -11,8 +11,6 @@
 
 ContainerComponent::ContainerComponent(size_t maxCapacity)
 {
-  _componentHash = typeid(*this).hash_code();
-
   _maxCapacity = maxCapacity;
 
   Contents.reserve(_maxCapacity);

@@ -36,6 +36,8 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y,
   go->FgColor = Colors::ShrineColorsByType.at(type).first;
   go->BgColor = Colors::ShrineColorsByType.at(type).second;
 
+  go->Type = GameObjectType::SHRINE;
+
   bool oneTimeUse = (type != ShrineType::POTENTIAL);
 
   ShrineComponent* sc = go->AddComponent<ShrineComponent>(type, timeout, oneTimeUse);
@@ -102,6 +104,7 @@ void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate,
   tile->FgColor = Colors::WhiteColor;
   tile->BgColor = Colors::DoorHighlightColor;
   tile->Image = image;
+  tile->Type = GameObjectType::STAIRS;
 }
 
 // =============================================================================
@@ -131,14 +134,15 @@ GameObject* GameObjectsFactory::CreateChest(int x, int y, bool isLocked)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  go->ObjectName = "Iron Chest";
-  go->PosX = x;
-  go->PosY = y;
-  go->Image = 'C';
-  go->FgColor = Colors::BlackColor;
-  go->BgColor = Colors::IronColor;
-  go->Blocking = true;
+  go->ObjectName  = "Iron Chest";
+  go->PosX        = x;
+  go->PosY        = y;
+  go->Image       = 'C';
+  go->FgColor     = Colors::BlackColor;
+  go->BgColor     = Colors::IronColor;
+  go->Blocking    = true;
   go->BlocksSight = true;
+  go->Type        = GameObjectType::CONTAINER;
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
 
@@ -177,14 +181,15 @@ GameObject* GameObjectsFactory::CreateContainer(int x,
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
-  go->ObjectName = name;
-  go->PosX = x;
-  go->PosY = y;
-  go->Image = image;
-  go->FgColor = Colors::WhiteColor;
-  go->BgColor = bgColor;
-  go->Blocking = true;
+  go->ObjectName  = name;
+  go->PosX        = x;
+  go->PosY        = y;
+  go->Image       = image;
+  go->FgColor     = Colors::WhiteColor;
+  go->BgColor     = bgColor;
+  go->Blocking    = true;
   go->BlocksSight = true;
+  go->Type        = GameObjectType::CONTAINER;
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
 
@@ -217,6 +222,8 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
 
   go->PosX = x;
   go->PosY = y;
+
+  go->Type = GameObjectType::DOOR;
 
   if (hitPoints > 0)
   {
@@ -293,6 +300,7 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
   copy->VisibilityRadius = copyFrom->VisibilityRadius;
   copy->PosX             = copyFrom->PosX;
   copy->PosY             = copyFrom->PosY;
+  copy->ZoneMarker       = copyFrom->ZoneMarker;
   copy->Special          = copyFrom->Special;
   copy->Blocking         = copyFrom->Blocking;
   copy->BlocksSight      = copyFrom->BlocksSight;

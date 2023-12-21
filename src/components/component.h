@@ -18,16 +18,12 @@ class Component
 
     virtual void Update() = 0;
 
-    const size_t& GetComponentHash();
-
     GameObject* OwnerGameObject = nullptr;
 
     bool IsEnabled = true;
 
   protected:
     virtual void PrepareAdditional();
-
-    size_t _componentHash = 0;
 };
 
 #endif
