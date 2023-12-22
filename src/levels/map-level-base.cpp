@@ -683,14 +683,11 @@ void MapLevelBase::SerializeLayout(NRS& saveTo)
     node[SK::Value].SetUInt(RNG::Instance().Seed);
   }
 
-  std::string lvlNodeName = Util::StringFormat("level_%d", (int)MapType_);
-
-  NRS& levelNode = root[lvlNodeName];
+  NRS& levelNode = root[std::to_string((int)MapType_)];
 
   levelNode[SK::Size].SetInt(MapSize.X, 0);
   levelNode[SK::Size].SetInt(MapSize.Y, 1);
 
-  levelNode[SK::Type].SetInt((int)MapType_);
   levelNode[SK::Name].SetString(LevelName);
 
   levelNode[SK::Visibility].SetInt(VisibilityRadius);
@@ -754,9 +751,7 @@ void MapLevelBase::SerializeLayout(NRS& saveTo)
 
       indexByKey[sdm.ToStringKey()] = index;
 
-      std::string objKey = Util::StringFormat("o_%d", index);
-
-      NRS& n = node[objKey];
+      NRS& n = node[std::to_string(index)];
 
       n[SK::Type].SetInt((int)sdm.Type);
       n[SK::Zone].SetInt((int)sdm.ZoneMarker);
@@ -837,8 +832,6 @@ void MapLevelBase::SerializeObjects(NRS& saveTo)
 
   int index = 0;
 
-  std::string key;
-
   for (int y = 0; y < MapSize.Y; y++)
   {
     for (int x = 0; x < MapSize.X; x++)
@@ -849,9 +842,7 @@ void MapLevelBase::SerializeObjects(NRS& saveTo)
       && (so->Type != GameObjectType::PICKAXEABLE
        && so->Type != GameObjectType::BORDER))
       {
-        key = Util::StringFormat("o_%d", index);
-
-        NRS& node = objects[key];
+        NRS& node = objects[std::to_string(index)];
         so->Serialize(node);
 
         index++;
