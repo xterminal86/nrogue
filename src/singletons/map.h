@@ -81,6 +81,7 @@ class Map : public Singleton<Map>
     std::vector<Position> GetWalkableCellsAround(const Position& pos);
     std::vector<Position> GetEmptyCellsAround(const Position& pos, int range);
     std::vector<MapType> GetAllVisitedLevels();
+
     Position GetRandomEmptyCell();
 
     int CountEmptyCellsAround(int x, int y);

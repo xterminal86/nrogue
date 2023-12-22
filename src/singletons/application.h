@@ -34,6 +34,7 @@ class Application : public Singleton<Application>
 
     void WriteObituary(bool wasKilled = true);
 
+    void LoadGame();
     void SaveGame();
 
     Player PlayerInstance;

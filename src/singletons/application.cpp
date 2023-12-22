@@ -384,7 +384,14 @@ void Application::WriteObituary(bool wasKilled)
 
 void Application::SaveGame()
 {
+  using C  = std::chrono::system_clock;
+  using TP = std::chrono::time_point<C>;
+
   NRS save;
+
+  DebugLog("saving game...");
+
+  TP now = C::now();
 
   //
   // FIXME: one level for now
@@ -395,6 +402,18 @@ void Application::SaveGame()
   {
     ConsoleLog("Couldn't save at %s !", Strings::SaveFileName.data());
   }
+  else
+  {
+    FT::duration<double, std::milli> dur = C::now() - now;
+    DebugLog("done in %.4f ms", dur.count());
+  }
+}
+
+// =============================================================================
+
+void Application::LoadGame()
+{
+  // TODO:
 }
 
 // =============================================================================

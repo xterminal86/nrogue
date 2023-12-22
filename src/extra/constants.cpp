@@ -286,7 +286,7 @@ namespace Strings
     const std::string Zone       = "zone";
     const std::string Visibility = "vis";
     const std::string Respawn    = "respawn";
-    const std::string MapObjects = "map_objects";
+    const std::string MapObjects = "mapObjects";
     const std::string Image      = "image";
     const std::string Color      = "color";
     const std::string FowName    = "fowName";
@@ -299,7 +299,7 @@ namespace Strings
     const std::string Id         = "id";
     const std::string Mask       = "mask";
     const std::string Layout     = "layout";
-    const std::string Objects    = "static_objects";
+    const std::string Objects    = "staticObjects";
   }
 }
 
