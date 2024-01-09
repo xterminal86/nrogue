@@ -672,9 +672,7 @@ void MapLevelBase::SerializeLayout(NRS& saveTo)
 
   NRS& root = saveTo[SK::Root];
 
-  std::string lvlNodeName = Util::StringFormat("level_%d", (int)MapType_);
-
-  NRS& levelNode = root[lvlNodeName];
+  NRS& levelNode = root[std::to_string((int)MapType_)];
 
   levelNode[SK::Size].SetInt(MapSize.X, 0);
   levelNode[SK::Size].SetInt(MapSize.Y, 1);
