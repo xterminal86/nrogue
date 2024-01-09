@@ -670,20 +670,11 @@ void MapLevelBase::SerializeLayout(NRS& saveTo)
 {
   namespace SK = Strings::SerializationKeys;
 
-  // ---------------- BASE STUFF ----------------
-
   NRS& root = saveTo[SK::Root];
 
-  root[SK::Gid].SetUInt(GID::Instance().GetCurrentGlobalId());
+  std::string lvlNodeName = Util::StringFormat("level_%d", (int)MapType_);
 
-  {
-    NRS& node = root[SK::Seed];
-
-    node[SK::Name].SetString(RNG::Instance().GetSeedString().first);
-    node[SK::Value].SetUInt(RNG::Instance().Seed);
-  }
-
-  NRS& levelNode = root[std::to_string((int)MapType_)];
+  NRS& levelNode = root[lvlNodeName];
 
   levelNode[SK::Size].SetInt(MapSize.X, 0);
   levelNode[SK::Size].SetInt(MapSize.Y, 1);
@@ -874,8 +865,6 @@ void MapLevelBase::SerializeActors(NRS& saveTo)
   NRS& root = saveTo[SK::Root];
 
   // TODO:
-
-  _playerRef->Serialize(root);
 }
 
 // =============================================================================

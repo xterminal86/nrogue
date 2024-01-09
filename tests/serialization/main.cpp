@@ -239,6 +239,7 @@ Actor2 : {
   NRS obj;
 
   // Actor1
+
   obj.GetNode("Actor1.id").SetString("123");
   obj.GetNode("Actor1.name").SetString("John Doe");
 

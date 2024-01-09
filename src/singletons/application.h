@@ -155,6 +155,9 @@ class Application : public Singleton<Application>
 
     StatInfo GetStatInfo(const std::string& attrName);
 
+    void SaveBaseStuff(NRS& save);
+    void SavePlayer(NRS& save);
+
     void PrepareChars();
 
     const std::string kConfigKeyTileset             = "tileset";

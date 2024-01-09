@@ -391,12 +391,16 @@ void Application::SaveGame()
 
   DebugLog("saving game...");
 
-  TP now = C::now();
+  TP before = C::now();
+
+  SaveBaseStuff(save);
 
   //
   // FIXME: one level for now
   //
   Map::Instance().CurrentLevel->Serialize(save);
+
+  SavePlayer(save);
 
   if (!save.Save(Strings::SaveFileName))
   {
@@ -404,9 +408,37 @@ void Application::SaveGame()
   }
   else
   {
-    FT::duration<double, std::milli> dur = C::now() - now;
+    FT::duration<double, std::milli> dur = C::now() - before;
     DebugLog("done in %.4f ms", dur.count());
   }
+}
+
+// =============================================================================
+
+void Application::SaveBaseStuff(NRS& save)
+{
+  namespace SK = Strings::SerializationKeys;
+
+  NRS& root = save[SK::Root];
+
+  root[SK::Gid].SetUInt(GID::Instance().GetCurrentGlobalId());
+  {
+    NRS& node = root[SK::Seed];
+
+    node[SK::Name].SetString(RNG::Instance().GetSeedString().first);
+    node[SK::Value].SetUInt(RNG::Instance().Seed);
+  }
+}
+
+// =============================================================================
+
+void Application::SavePlayer(NRS& save)
+{
+  namespace SK = Strings::SerializationKeys;
+
+  NRS& root = save[SK::Root];
+
+  PlayerInstance.Serialize(root);
 }
 
 // =============================================================================
