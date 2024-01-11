@@ -194,6 +194,7 @@ namespace Strings
   extern const std::string MessageBoxInformationHeaderText;
   extern const std::string MessageBoxEpicFailHeaderText;
   extern const std::string UnidentifiedEffectText;
+  extern const std::string TripleQuestionMarks;
   // ---------------------------------------------------------------------------
   extern const std::string BlackboardKeyPlayerPos;
   extern const std::string BlackboardKeyLastMinedPos;

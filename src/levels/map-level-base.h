@@ -97,6 +97,19 @@ class MapLevelBase
     //
     std::vector<std::unique_ptr<GameObject>> GlobalTriggers;
 
+    // -------------------------------------------------------------------------
+    struct FowObj
+    {
+      int Image;
+      std::string FowName;
+    };
+
+    //
+    // Separate layer to display last seen object on specific tile in look mode.
+    //
+    std::vector<std::vector<FowObj>> FowLayer;
+    // -------------------------------------------------------------------------
+
     MapType     MapType_;
     Position    MapSize;
     std::string LevelName;

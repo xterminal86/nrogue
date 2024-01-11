@@ -1106,72 +1106,6 @@ std::vector<Position> Map::GetEmptyCellsAround(const Position& pos, int range)
 
 // =============================================================================
 
-void Map::DrawNonVisibleMapTile(int x, int y)
-{
-  //
-  // If map tile has already been seen (revealed),
-  // draw it with fog of war color,
-  // otherwise use tile's color and black color as a background.
-  //
-  uint32_t tileColor = CurrentLevel->MapArray[x][y]->Revealed
-                       ? Colors::FogOfWarColor
-                       : Colors::BlackColor;
-
-  int image = CurrentLevel->MapArray[x][y]->Image;
-
-  //
-  // If tile's fg color is already black
-  // ("block" tiles with no symbols like water, floor, walls etc.),
-  // replace the background instead.
-  //
-  if (CurrentLevel->MapArray[x][y]->FgColor == Colors::BlackColor)
-  {
-    //
-    // Block tiles are looking exactly as walls under fog of war,
-    // so let's replace them with '.'
-    //
-    CurrentLevel->MapArray[x][y]->Draw(Colors::BlackColor,
-                                       tileColor,
-                                       (image == ' ')
-                                       ? '.'
-                                       : image);
-  }
-  else
-  {
-    CurrentLevel->MapArray[x][y]->Draw(tileColor,
-                                       Colors::BlackColor,
-                                       (image == ' ')
-                                       ? '.'
-                                       : image);
-  }
-}
-
-// =============================================================================
-
-void Map::DrawNonVisibleStaticObject(int x, int y)
-{
-  if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
-  {
-    //
-    // Same as in method above.
-    //
-    uint32_t tileColor = CurrentLevel->MapArray[x][y]->Revealed
-                         ? Colors::FogOfWarColor
-                         : Colors::BlackColor;
-
-    if (CurrentLevel->StaticMapObjects[x][y]->FgColor == Colors::BlackColor)
-    {
-      CurrentLevel->StaticMapObjects[x][y]->Draw(Colors::BlackColor, tileColor);
-    }
-    else
-    {
-      CurrentLevel->StaticMapObjects[x][y]->Draw(tileColor, Colors::BlackColor);
-    }
-  }
-}
-
-// =============================================================================
-
 bool Map::IsObjectVisible(const Position &from,
                           const Position &to,
                           bool excludeEnd)
@@ -1247,9 +1181,34 @@ void Map::DrawMapTilesAroundPlayer()
     }
     else
     {
-      DrawNonVisibleMapTile(x, y);
-      DrawNonVisibleStaticObject(x, y);
+      DrawFowTile(x, y);
     }
+  }
+}
+
+// =============================================================================
+
+void Map::DrawFowTile(int x, int y)
+{
+  //
+  // "Block" tiles with no symbols like water, floor, walls etc. are colored
+  // using background color with foreground set to black.
+  //
+  if (CurrentLevel->FowLayer[x][y].Image == ' ')
+  {
+    Printer::Instance().PrintFB(x + CurrentLevel->MapOffsetX,
+                                y + CurrentLevel->MapOffsetY,
+                                CurrentLevel->FowLayer[x][y].Image,
+                                Colors::BlackColor,
+                                Colors::FogOfWarColor);
+  }
+  else
+  {
+    Printer::Instance().PrintFB(x + CurrentLevel->MapOffsetX,
+                                y + CurrentLevel->MapOffsetY,
+                                CurrentLevel->FowLayer[x][y].Image,
+                                Colors::FogOfWarColor,
+                                Colors::BlackColor);
   }
 }
 

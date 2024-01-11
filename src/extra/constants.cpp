@@ -181,6 +181,8 @@ namespace Strings
 
   const std::string MessageBoxInformationHeaderText = "Information";
   const std::string MessageBoxEpicFailHeaderText    = "Epic Fail!";
+
+  const std::string TripleQuestionMarks = "???";
   // ---------------------------------------------------------------------------
   const char InventoryEmptySlotChar = '.';
   // ---------------------------------------------------------------------------
@@ -1006,7 +1008,7 @@ namespace GlobalConstants
     // -------------------------------------------------------------------------
     // The End
     // -------------------------------------------------------------------------
-    { MapType::THE_END,     { "???" } },
+    { MapType::THE_END,     { Strings::TripleQuestionMarks } },
 #ifdef BUILD_TESTS
     // -------------------------------------------------------------------------
     // Test level

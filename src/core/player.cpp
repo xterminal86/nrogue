@@ -349,6 +349,16 @@ void Player::DiscoverCell(int x, int y)
   if (staticObjects[x][y] != nullptr)
   {
     staticObjects[x][y]->Visible = true;
+
+    curLvl->FowLayer[x][y].Image   = staticObjects[x][y]->Image;
+    curLvl->FowLayer[x][y].FowName = Util::GetFowName(staticObjects[x][y].get());
+  }
+  else
+  {
+    curLvl->FowLayer[x][y].Image   = (map[x][y]->Image == ' ')
+                                     ? '.'
+                                     : map[x][y]->Image;
+    curLvl->FowLayer[x][y].FowName = Util::GetFowName(map[x][y].get());
   }
 
   if (!map[x][y]->Revealed)

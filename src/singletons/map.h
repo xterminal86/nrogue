@@ -134,8 +134,7 @@ class Map : public Singleton<Map>
 
     void ChangeOrInstantiateLevel(MapType levelName);
     void ShowLoadingText(const std::string& textOverride = std::string());
-    void DrawNonVisibleMapTile(int x, int y);
-    void DrawNonVisibleStaticObject(int x, int y);
+    void DrawFowTile(int x, int y);
     void DrawMapTilesAroundPlayer();
     void DrawGameObjects();
     void DrawActors();

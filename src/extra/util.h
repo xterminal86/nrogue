@@ -271,6 +271,8 @@ namespace Util
 
   extern std::string GetGameObjectDisplayCharacter(GameObject* obj);
 
+  extern std::string GetFowName(GameObject* obj);
+
   extern size_t FindLongestStringLength(const StringV& list);
 
   extern std::vector<Position> GetAreaDamagePointsFrom(const Position& from,

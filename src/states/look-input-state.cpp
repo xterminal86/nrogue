@@ -129,7 +129,9 @@ void LookInputState::HandleInput()
 
       PotentialField::Cell* c = _playerRef->DistanceField.GetCell(_cursorPosition.X, _cursorPosition.Y);
 
-      _distanceField = (c == nullptr) ? "0x0" : Util::StringFormat("%i %i [%i]", c->MapPos.X, c->MapPos.Y, c->Cost);
+      _distanceField = (c == nullptr)
+                       ? "0x0"
+                       : Util::StringFormat("%i %i [%i]", c->MapPos.X, c->MapPos.Y, c->Cost);
     }
     break;
 
@@ -165,9 +167,11 @@ void LookInputState::Update(bool forceUpdate)
     int mapSizeX = Map::Instance().CurrentLevel->MapSize.X;
     int mapSizeY = Map::Instance().CurrentLevel->MapSize.Y;
 
+    auto curLvl = Map::Instance().CurrentLevel;
+
     if (Util::CheckLimits(_cursorPosition, { mapSizeX, mapSizeY }))
     {
-      auto tile = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
+      auto tile = curLvl->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
 
       bool foundGameObject = false;
 
@@ -176,98 +180,97 @@ void LookInputState::Update(bool forceUpdate)
         lookStatus = "It's you!";
         foundGameObject = true;
       }
-      else if (tile->Visible)
+      else
       {
-        auto actor = CheckActor();
-        if (actor != nullptr)
+        //
+        // If tile is visible, check if game objects are present on it:
+        // actors or items.
+        //
+        if (tile->Visible)
         {
-          AIComponent* aic = actor->GetComponent<AIComponent>();
-          if (aic != nullptr)
+          auto actor = CheckActor();
+          if (actor != nullptr)
           {
-            if (aic->CurrentModel != nullptr)
+            AIComponent* aic = actor->GetComponent<AIComponent>();
+            if (aic != nullptr)
             {
-              AINPC* model = dynamic_cast<AINPC*>(aic->CurrentModel);
-              if (model != nullptr)
+              if (aic->CurrentModel != nullptr)
               {
-                std::string name = model->Data.Name;
-                std::string title = model->Data.Job;
-                std::string unidStr = model->Data.UnacquaintedDescription;
-                auto idStr = Util::StringFormat("You see %s the %s", name.data(), title.data());
-                lookStatus = (model->Data.IsAquainted) ? idStr : unidStr;
-                foundGameObject = true;
-              }
-              else
-              {
-                std::string objName = aic->OwnerGameObject->ObjectName;
-
-                if (aic->OwnerGameObject->HasEffect(ItemBonusType::INVISIBILITY))
+                AINPC* model = dynamic_cast<AINPC*>(aic->CurrentModel);
+                if (model != nullptr)
                 {
-                  bool hasTele = _playerRef->HasEffect(ItemBonusType::TELEPATHY);
-                  bool hasTS   = _playerRef->HasEffect(ItemBonusType::TRUE_SEEING);
-
-                  bool objIsLiving = aic->OwnerGameObject->IsLiving;
-
-                  bool detectLiving = ((hasTele || hasTS) && objIsLiving);
-                  bool detectHidden = (hasTS && !objIsLiving);
-
-                  objName = (detectHidden || detectLiving)
-                          ? aic->OwnerGameObject->ObjectName
-                          : "?";
+                  std::string name = model->Data.Name;
+                  std::string title = model->Data.Job;
+                  std::string unidStr = model->Data.UnacquaintedDescription;
+                  auto idStr = Util::StringFormat("You see %s the %s", name.data(), title.data());
+                  lookStatus = (model->Data.IsAquainted) ? idStr : unidStr;
+                  foundGameObject = true;
                 }
+                else
+                {
+                  std::string objName = aic->OwnerGameObject->ObjectName;
 
-                lookStatus = objName;
-                foundGameObject = true;
+                  if (aic->OwnerGameObject->HasEffect(ItemBonusType::INVISIBILITY))
+                  {
+                    bool hasTele = _playerRef->HasEffect(ItemBonusType::TELEPATHY);
+                    bool hasTS   = _playerRef->HasEffect(ItemBonusType::TRUE_SEEING);
+
+                    bool objIsLiving = aic->OwnerGameObject->IsLiving;
+
+                    bool detectLiving = ((hasTele || hasTS) && objIsLiving);
+                    bool detectHidden = (hasTS && !objIsLiving);
+
+                    objName = (detectHidden || detectLiving)
+                            ? aic->OwnerGameObject->ObjectName
+                            : "?";
+                  }
+
+                  lookStatus = objName;
+                  foundGameObject = true;
+                }
               }
             }
+          }
+          else
+          {
+            auto gos = CheckGameObjects();
+            if (gos.size() != 0)
+            {
+              std::string objName = gos.back()->ObjectName;
+
+              ItemComponent* ic = gos.back()->GetComponent<ItemComponent>();
+              if (ic != nullptr)
+              {
+                objName = ic->Data.IsIdentified ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
+              }
+
+              lookStatus = objName;
+              foundGameObject = true;
+            }
+          }
+
+          //
+          // No objects found on this tile,
+          // get static object or map array object name as name to display.
+          //
+          if (!foundGameObject)
+          {
+            auto& staticObj = curLvl->StaticMapObjects[_cursorPosition.X][_cursorPosition.Y];
+
+            lookStatus = (staticObj != nullptr)
+                         ? staticObj->ObjectName
+                         : tile->ObjectName;
           }
         }
         else
         {
-          auto gos = CheckGameObjects();
-          if (gos.size() != 0)
-          {
-            std::string objName = gos.back()->ObjectName;
-
-            ItemComponent* ic = gos.back()->GetComponent<ItemComponent>();
-            if (ic != nullptr)
-            {
-              objName = ic->Data.IsIdentified ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
-            }
-
-            lookStatus = objName;
-            foundGameObject = true;
-          }
-        }
-      }
-
-      //
-      // If nothing is found or area is under fog of war.
-      //
-      if (!foundGameObject)
-      {
-        if (!tile->Revealed)
-        {
-          lookStatus = "???";
-        }
-        else if (tile->Revealed)
-        {
-          auto& staticObj = Map::Instance().CurrentLevel->StaticMapObjects[_cursorPosition.X][_cursorPosition.Y];
-
-          if (staticObj != nullptr)
-          {
-            auto nameHidden = (staticObj->FogOfWarName.empty()) ?
-                              "?" + staticObj->ObjectName + "?" :
-                              staticObj->FogOfWarName;
-
-            lookStatus = tile->Visible ? staticObj->ObjectName : nameHidden;
-          }
-          else
-          {
-            auto nameHidden = (tile->FogOfWarName.empty()) ?
-                              "?" + tile->ObjectName + "?" :
-                              tile->FogOfWarName;
-            lookStatus = tile->Visible ? tile->ObjectName : nameHidden;
-          }
+          //
+          // Tile is not visible,
+          // so get its last known name if it was revealed earlier.
+          //
+          lookStatus = tile->Revealed
+                       ? curLvl->FowLayer[_cursorPosition.X][_cursorPosition.Y].FowName
+                       : Strings::TripleQuestionMarks;
         }
       }
     }
@@ -276,7 +279,7 @@ void LookInputState::Update(bool forceUpdate)
       //
       // If cursor is outside map boundaries.
       //
-      lookStatus = "???";
+      lookStatus = Strings::TripleQuestionMarks;
     }
 
     Printer::Instance().PrintFB(_twHalf, 0,

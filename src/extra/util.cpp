@@ -1732,6 +1732,20 @@ namespace Util
 
   // ===========================================================================
 
+  std::string GetFowName(GameObject* obj)
+  {
+    std::string res = obj->FogOfWarName;
+
+    if (res.empty())
+    {
+      res = StringFormat("?%s?", obj->ObjectName.data());
+    }
+
+    return res;
+  }
+
+  // ===========================================================================
+
   size_t FindLongestStringLength(const StringV& list)
   {
     size_t res = 0;

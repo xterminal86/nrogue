@@ -44,7 +44,7 @@ void MapLevelEndgame::DisplayWelcomeText()
   };
 
   Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                                         "???",
+                                         Strings::TripleQuestionMarks,
                                          msg);
 }
 

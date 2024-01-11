@@ -67,10 +67,15 @@ void MapLevelBase::PrepareMap()
   FinishTurnTriggers.reserve(100);
   GlobalTriggers.reserve(100);
 
+  FowLayer.reserve(MapSize.X);
+
   for (int x = 0; x < MapSize.X; x++)
   {
     std::vector<std::unique_ptr<GameObject>> row;
     std::vector<std::unique_ptr<GameObject>> rowStatic;
+
+    std::vector<FowObj> fowLine;
+    fowLine.reserve(MapSize.Y);
 
     row.reserve(MapSize.Y);
     rowStatic.reserve(MapSize.Y);
@@ -79,10 +84,14 @@ void MapLevelBase::PrepareMap()
     {
       row.push_back(std::unique_ptr<GameObject>(new GameObject()));
       rowStatic.push_back(nullptr);
+
+      fowLine.push_back(FowObj());
     }
 
     MapArray.push_back(std::move(row));
     StaticMapObjects.push_back(std::move(rowStatic));
+
+    FowLayer.push_back(fowLine);
   }
 
   for (int x = 0; x < MapSize.X; x++)
