@@ -315,15 +315,16 @@ void Player::CheckVisibility()
         continue;
       }
 
-      if (map[point.X][point.Y]->BlocksSight
-          || (staticObjects[point.X][point.Y] != nullptr
-           && staticObjects[point.X][point.Y]->BlocksSight) )
+      DiscoverCell(point.X, point.Y);
+
+      bool mapBlock = map[point.X][point.Y]->BlocksSight;
+      bool staticBlock = (staticObjects[point.X][point.Y] != nullptr
+                       && staticObjects[point.X][point.Y]->BlocksSight);
+
+      if (mapBlock || staticBlock)
       {
-        DiscoverCell(point.X, point.Y);
         break;
       }
-
-      DiscoverCell(point.X, point.Y);
     }
   }
 }

@@ -121,7 +121,11 @@ GameObject* MonstersInc::CreateNPC(int x,
   img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
   #endif
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, x, y, img, Colors::WhiteColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  x,
+                                  y,
+                                  img,
+                                  Colors::WhiteColor);
 
   go->IsLiving = true;
   go->Type = GameObjectType::NPC;

@@ -134,7 +134,9 @@ GameObject* ItemsFactory::CreateMoney(int amount)
 
   int scale = Map::Instance().CurrentLevel->DungeonLevel;
 
-  int money = (amount == 0) ? RNG::Instance().RandomRange(1, 11) * scale : amount;
+  int money = (amount == 0)
+              ? RNG::Instance().RandomRange(1, 11) * scale
+              : amount;
 
   ic->Data.Cost           = money;
   ic->Data.Amount         = money;
@@ -234,7 +236,11 @@ GameObject* ItemsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 
   ic->Data.ItemType_ = ItemType::POTION;
   ic->Data.PotionType_ = pt;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
@@ -268,7 +274,7 @@ GameObject* ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride
   uint32_t fgColor = _gamePotionsMap[pt].FgBgColor.first;
   uint32_t bgColor = _gamePotionsMap[pt].FgBgColor.second;
 
-  std::string name    = _gamePotionsMap[pt].PotionName;
+  std::string name = _gamePotionsMap[pt].PotionName;
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
@@ -281,7 +287,11 @@ GameObject* ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride
 
   ic->Data.ItemType_   = ItemType::POTION;
   ic->Data.PotionType_ = pt;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
@@ -328,7 +338,11 @@ GameObject* ItemsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 
   ic->Data.ItemType_   = ItemType::POTION;
   ic->Data.PotionType_ = pt;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
@@ -375,7 +389,11 @@ GameObject* ItemsFactory::CreateJuicePotion(ItemPrefix prefixOverride)
 
   ic->Data.ItemType_   = ItemType::POTION;
   ic->Data.PotionType_ = pt;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
@@ -422,7 +440,11 @@ GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 
   ic->Data.ItemType_   = ItemType::POTION;
   ic->Data.PotionType_ = pt;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
@@ -463,7 +485,7 @@ GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPref
   uint32_t fgColor = _gamePotionsMap[pt].FgBgColor.first;
   uint32_t bgColor = _gamePotionsMap[pt].FgBgColor.second;
 
-  std::string name    = _gamePotionsMap[pt].PotionName;
+  std::string name = _gamePotionsMap[pt].PotionName;
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
@@ -476,7 +498,11 @@ GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPref
 
   ic->Data.ItemType_   = ItemType::POTION;
   ic->Data.PotionType_ = pt;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
@@ -525,7 +551,11 @@ GameObject* ItemsFactory::CreateCWPotion(ItemPrefix prefixOverride)
 
   ic->Data.ItemType_   = ItemType::POTION;
   ic->Data.PotionType_ = pt;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
@@ -578,7 +608,11 @@ GameObject* ItemsFactory::CreateRAPotion(ItemPrefix prefixOverride)
 
   ic->Data.ItemType_   = ItemType::POTION;
   ic->Data.PotionType_ = pt;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
   ic->Data.Amount = 1;
   ic->Data.IsStackable = true;
   ic->Data.IsIdentified = true;
@@ -657,7 +691,10 @@ GameObject* ItemsFactory::CreateRandomPotion()
   ItemComponent* ic = go->GetComponent<ItemComponent>();
 
   ic->Data.IsIdentified = false;
-  ic->Data.UnidentifiedDescription = { "You don't know what will happen if you drink it." };
+  ic->Data.UnidentifiedDescription =
+  {
+    "You don't know what will happen if you drink it."
+  };
 
   return go;
 }
@@ -698,10 +735,18 @@ GameObject* ItemsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix pre
   ic->Data.IsStackable = true;
   go->StackObjectId = go->ObjectId();
 
-  std::string unidName = (type == FoodType::RATIONS || type == FoodType::IRON_RATIONS) ? "Rations" : name;
+  std::string unidName = (type == FoodType::RATIONS
+                       || type == FoodType::IRON_RATIONS)
+                         ? "Rations"
+                         : name;
+
   ic->Data.UnidentifiedName = "?" + unidName + "?";
 
-  ic->Data.UnidentifiedDescription = { "Looks edible but eat at your own risk." };
+  ic->Data.UnidentifiedDescription =
+  {
+    "Looks edible but eat at your own risk."
+  };
+
   ic->Data.IdentifiedDescription = { "Looks edible." };
   ic->Data.IdentifiedName = name;
 
@@ -799,7 +844,11 @@ GameObject* ItemsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.IsBurnable = true;
-  ic->Data.Prefix = (prefixOverride != ItemPrefix::RANDOM) ? prefixOverride : RollItemPrefix();
+
+  ic->Data.Prefix = (prefixOverride != ItemPrefix::RANDOM)
+                    ? prefixOverride
+                    : RollItemPrefix();
+
   ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
 
   ic->Data.ItemType_ = ItemType::SCROLL;
@@ -813,10 +862,13 @@ GameObject* ItemsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix 
   ic->Data.Cost = si->SpellBaseCost; //si->SpellBaseCost * 2;
 
   ic->Data.UnidentifiedName = "\"" + _gameScrollsMap[type].ScrollName + "\"";
-  ic->Data.UnidentifiedDescription = { "Who knows what will happen if you read these words aloud..." };
+  ic->Data.UnidentifiedDescription =
+  {
+    "Who knows what will happen if you read these words aloud..."
+  };
 
   ic->Data.IdentifiedDescription = { "TODO:" };
-  ic->Data.IdentifiedName = "Scroll of " + si->SpellName;
+  ic->Data.IdentifiedName        = "Scroll of " + si->SpellName;
 
   SetItemName(go, ic->Data);
 
@@ -867,9 +919,12 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
   ic->Data.EqCategory = EquipmentCategory::WEAPON;
   ic->Data.ItemType_  = ItemType::WEAPON;
 
-  ic->Data.Prefix       = (prefix != ItemPrefix::RANDOM) ? prefix : RollItemPrefix();
+  ic->Data.Prefix = (prefix != ItemPrefix::RANDOM) ? prefix : RollItemPrefix();
   ic->Data.IsIdentified = (prefix != ItemPrefix::RANDOM) ? true : false;
-  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
+
+  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM)
+                          ? quality
+                          : RollItemQuality();
 
   int avgDamage = 0;
   int baseDurability = 0;
@@ -1188,7 +1243,8 @@ GameObject* ItemsFactory::CreateWand(int x,
 
   if (GlobalConstants::WandSpellCapacityCostByType.count(spellType) == 0)
   {
-    auto str = Util::StringFormat("Wands don't support spell '%s'!", si.SpellName.data());
+    auto str = Util::StringFormat("Wands don't support spell '%s'!",
+                                  si.SpellName.data());
     LogPrint(str);
     DebugLog("%s\n", str.data());
     return nullptr;
@@ -1211,8 +1267,14 @@ GameObject* ItemsFactory::CreateWand(int x,
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
-  ic->Data.ItemQuality_ = (quality == ItemQuality::RANDOM) ? RollItemQuality() : quality;
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
+  ic->Data.ItemQuality_ = (quality == ItemQuality::RANDOM)
+                          ? RollItemQuality()
+                          : quality;
+
   ic->Data.WandMaterial = material;
   ic->Data.SpellHeld = si;
 
@@ -1229,7 +1291,9 @@ GameObject* ItemsFactory::CreateWand(int x,
 
   ic->Data.UnidentifiedDescription = { "You don't know what it can do" };
 
-  auto str = Util::StringFormat("%s Wand (%s)", wandMaterialName.data(), spellShortName.data());
+  auto str = Util::StringFormat("%s Wand (%s)",
+                                wandMaterialName.data(),
+                                spellShortName.data());
   go->ObjectName = str;
 
   SetItemName(go, ic->Data);
@@ -1283,7 +1347,11 @@ GameObject* ItemsFactory::CreateReturner(int x, int y, int charges, ItemPrefix p
                   : charges;
 
   ic->Data.ItemType_ = ItemType::RETURNER;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = (prefixOverride == ItemPrefix::RANDOM) ? false : true;
   ic->Data.IsChargeable = true;
@@ -1329,10 +1397,16 @@ GameObject* ItemsFactory::CreateRepairKit(int x, int y, int charges, ItemPrefix 
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  int chargesNum = (charges == -1) ? RNG::Instance().RandomRange(1, 51) : charges;
+  int chargesNum = (charges == -1)
+                   ? RNG::Instance().RandomRange(1, 51)
+                   : charges;
 
   ic->Data.ItemType_ = ItemType::REPAIR_KIT;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = true;
   ic->Data.IsChargeable = true;
@@ -1388,10 +1462,17 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
 
   ic->Data.EqCategory = EquipmentCategory::TORSO;
   ic->Data.ItemType_ = ItemType::ARMOR;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = (prefixOverride == ItemPrefix::RANDOM) ? false : true;
-  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
+
+  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM)
+                          ? quality
+                          : RollItemQuality();
 
   int baseDurability = GlobalConstants::ArmorDurabilityByType.at(type);
   int cursedPenalty = 0;
@@ -1574,7 +1655,9 @@ GameObject* ItemsFactory::CreateArrows(int x, int y, ArrowType type, ItemPrefix 
 
   go->StackObjectId = go->ObjectId();
 
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
@@ -1623,8 +1706,14 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.RangedWeaponType_ = type;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
-  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
+  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM)
+                          ? quality
+                          : RollItemQuality();
 
   switch (type)
   {
@@ -1833,7 +1922,11 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
   go->FgColor = Colors::WhiteColor;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
+
   ic->Data.EqCategory = category;
   ic->Data.ItemType_ = ItemType::ACCESSORY;
   ic->Data.IsIdentified = (prefixOverride != ItemPrefix::RANDOM) ? true : false;
@@ -1890,7 +1983,11 @@ GameObject* ItemsFactory::CreateAccessory(int x, int y,
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
   ic->Data.Prefix = (prefix == ItemPrefix::RANDOM) ? RollItemPrefix() : prefix;
-  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
+
+  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM)
+                          ? quality
+                          : RollItemQuality();
+
   ic->Data.EqCategory = category;
   ic->Data.ItemType_ = ItemType::ACCESSORY;
   ic->Data.IsIdentified = (prefix != ItemPrefix::RANDOM) ? true : false;
@@ -2073,7 +2170,7 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
   ic->Data.ItemType_  = ItemType::WEAPON;
   ic->Data.Rarity     = ItemRarity::UNIQUE;
 
-  ic->Data.Prefix = ItemPrefix::BLESSED;
+  ic->Data.Prefix       = ItemPrefix::BLESSED;
   ic->Data.IsIdentified = false;
 
   int diceRolls = 1;
@@ -2238,7 +2335,9 @@ GameObject* ItemsFactory::CreateRandomGlass(ItemQuality quality)
   ic->Data.IsStackable = false;
   ic->Data.IsIdentified = false;
 
-  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
+  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM)
+                          ? quality
+                          : RollItemQuality();
 
   ic->Data.UnidentifiedDescription = { Strings::ItemDefaultDescGem };
   ic->Data.UnidentifiedName = Util::StringFormat("?%s Gem?", colorDesc.data());
@@ -2249,7 +2348,9 @@ GameObject* ItemsFactory::CreateRandomGlass(ItemQuality quality)
                  lowerCase.begin(),
                  ::tolower);
 
-  auto str = Util::StringFormat("This is a piece of %s worthless glass", lowerCase.data());
+  auto str = Util::StringFormat("This is a piece of %s worthless glass",
+                                lowerCase.data());
+
   ic->Data.IdentifiedDescription = { str };
 
   ic->Data.IdentifiedName = go->ObjectName;
@@ -2293,11 +2394,15 @@ GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
   }
   else
   {
-    std::string str = Util::StringFormat("%s description goes here", GlobalConstants::GemNameByType.at(t).data());
+    std::string str = Util::StringFormat("%s description goes here",
+                                         GlobalConstants::GemNameByType.at(t).data());
+
     ic->Data.IdentifiedDescription = { str };
   }
 
-  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM) ? quality : RollItemQuality();
+  ic->Data.ItemQuality_ = (quality != ItemQuality::RANDOM)
+                          ? quality
+                          : RollItemQuality();
 
   int additionalCost = 0;
 
@@ -2486,7 +2591,9 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
 
   ItemBonusStruct bs;
   bs.Type = bonusType;
-  bs.MoneyCostIncrease = (itemRef->Data.Prefix == ItemPrefix::CURSED) ? moneyIncrease / 2 : moneyIncrease;
+  bs.MoneyCostIncrease = (itemRef->Data.Prefix == ItemPrefix::CURSED)
+                         ? moneyIncrease / 2
+                         : moneyIncrease;
 
   // TODO: finish other bonuses
 

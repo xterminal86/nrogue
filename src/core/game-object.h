@@ -198,6 +198,12 @@ class GameObject
 
     size_t ComponentsSize();
 
+    //
+    // ignoreArmor  - do not damage armor but damage HP if to hit chance roll
+    //                passed.
+    // directDamage - do not perform any hit chance calculation and do direct HP
+    //                amount of damage.
+    //
     virtual bool ReceiveDamage(GameObject* from,
                                int amount,
                                bool isMagical,

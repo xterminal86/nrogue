@@ -2265,7 +2265,7 @@ namespace Util
     {
       const int defaultHitChance = 50;
 
-      const int coeff1    = 34;
+      const int    coeff1 = 34;
       const double coeff2 = 2.25;
 
       int skillDiff = attacker->Attrs.Skl.Get() - defender->Attrs.Skl.Get();
@@ -2401,7 +2401,9 @@ namespace Util
   {
     int res = 0;
 
-    ItemBonusType t = magic ? ItemBonusType::MAG_ABSORB : ItemBonusType::DMG_ABSORB;
+    ItemBonusType t = magic
+                      ? ItemBonusType::MAG_ABSORB
+                      : ItemBonusType::DMG_ABSORB;
 
     if (who != nullptr)
     {

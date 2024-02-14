@@ -506,7 +506,9 @@ bool GameObject::ReceiveDamage(GameObject* from,
                        ? "destroyed"
                        : "killed";
 
-      logMessages.push(Util::StringFormat("%s was %s", objName.data(), verb.data()));
+      logMessages.push(Util::StringFormat("%s was %s",
+                                          objName.data(),
+                                          verb.data()));
     }
 
     dmgSuccess = true;

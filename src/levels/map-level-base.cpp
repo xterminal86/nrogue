@@ -1265,6 +1265,8 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
 
   switch (cell.ZoneMarker)
   {
+    // -------------------------------------------------------------------------
+
     case TransformedRoom::SHRINE:
     {
       if (std::holds_alternative<ShrineType>(cell.ObjectHere))
@@ -1274,6 +1276,8 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
       }
     }
     break;
+
+    // -------------------------------------------------------------------------
 
     case TransformedRoom::STORAGE:
     {
@@ -1287,6 +1291,8 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
       }
     }
     break;
+
+    // -------------------------------------------------------------------------
 
     case TransformedRoom::TREASURY:
     {
@@ -1302,6 +1308,8 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
       }
     }
     break;
+
+    // -------------------------------------------------------------------------
 
     case TransformedRoom::CHESTROOM:
     {
