@@ -172,7 +172,7 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
-    difficulty = Util::Clamp(difficulty, 1, 3);
+    difficulty = Util::Clamp(difficulty, 1, (int)MapType::MINES_5);
 
     go->Attrs.Str.Talents = 1;
     go->Attrs.Spd.Talents = 1;
@@ -184,7 +184,8 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
 
     //
     // NOTE: if HP is not set to > 0,
-    // game object update and melee attack will fail.
+    // game object update and melee attack will fail
+    // ( see GameObject::CanAct() and Player::MeleeAttack() )
     //
     go->Attrs.HP.Restore();
 
@@ -218,16 +219,14 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
 
   go->IsLiving = true;
 
-  // Sets Occupied flag for _currentCell
   go->Move(0, 0);
 
-  // Set attributes
   if (randomize)
   {
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
-    difficulty = Util::Clamp(difficulty, 1, 5);
+    difficulty = Util::Clamp(difficulty, 1, (int)MapType::MINES_5);
 
     go->Attrs.Def.Talents = 3;
     go->Attrs.Spd.Talents = 1;
@@ -278,13 +277,12 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
 
   go->Move(0, 0);
 
-  // Set attributes
   if (randomize)
   {
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
-    difficulty = Util::Clamp(difficulty, 1, 5);
+    difficulty = Util::Clamp(difficulty, 1, (int)MapType::MINES_5);
 
     go->Attrs.Def.Talents = 3;
     go->Attrs.Spd.Talents = 3;
@@ -335,13 +333,12 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
 
   go->Move(0, 0);
 
-  // Set attributes
   if (randomize)
   {
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
-    difficulty = Util::Clamp(difficulty, 1, 7);
+    difficulty = Util::Clamp(difficulty, 1, (int)MapType::CAVES_5);
 
     go->Attrs.Str.Talents = 2;
     go->Attrs.Def.Talents = 2;
@@ -385,13 +382,12 @@ GameObject* MonstersInc::CreateTroll(int x, int y, bool randomize)
 
   go->Move(0, 0);
 
-  // Set attributes
   if (randomize)
   {
     //int pl = _playerRef->Attrs.Lvl.Get();
     int difficulty = GetDifficulty();
 
-    difficulty = Util::Clamp(difficulty, 1, 10);
+    difficulty = Util::Clamp(difficulty, 1, (int)MapType::CAVES_5);
 
     go->Attrs.Str.Set(4);
 
@@ -551,7 +547,7 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
 
   int difficulty = GetDifficulty();
 
-  difficulty = Util::Clamp(difficulty, 1, 10);
+  difficulty = Util::Clamp(difficulty, 1, (int)MapType::CAVES_5);
 
   for (int i = 0; i < difficulty; i++)
   {
@@ -620,7 +616,9 @@ GameObject* MonstersInc::CreateKobold(int x, int y)
 
   int difficulty = GetDifficulty();
 
-  difficulty = Util::Clamp(difficulty, 1, 10);
+  difficulty = Util::Clamp(difficulty,
+                           (int)MapType::CAVES_1,
+                           (int)MapType::DEEP_DARK_5);
 
   for (int i = 0; i < difficulty; i++)
   {
@@ -705,7 +703,7 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
 
   int difficulty = GetDifficulty();
 
-  difficulty = Util::Clamp(difficulty, 1, 10);
+  difficulty = Util::Clamp(difficulty, 1, (int)MapType::LOST_CITY);
 
   for (int i = 0; i < difficulty; i++)
   {
@@ -792,7 +790,7 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
 
   int difficulty = GetDifficulty();
 
-  difficulty = Util::Clamp(difficulty, 1, 12);
+  difficulty = Util::Clamp(difficulty, 1, (int)MapType::LOST_CITY);
 
   for (int i = 0; i < difficulty; i++)
   {

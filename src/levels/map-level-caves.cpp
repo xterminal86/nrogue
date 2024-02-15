@@ -157,10 +157,20 @@ void MapLevelCaves::CreateLevel()
     break;
   }
 
-  CreateBorders(' ',
-                Colors::BlackColor,
-                Colors::CaveWallColor,
-                Strings::TileNames::CaveWallText);
+  if (MapType_ != MapType::CAVES_5)
+  {
+    CreateBorders(' ',
+                  Colors::BlackColor,
+                  Colors::CaveWallColor,
+                  Strings::TileNames::CaveWallText);
+  }
+  else
+  {
+    CreateBorders('#',
+                  Colors::ObsidianColorHigh,
+                  Colors::ObsidianColorLow,
+                  Strings::TileNames::ObsidianWallText);
+  }
 
   if (MapType_ != MapType::CAVES_5)
   {

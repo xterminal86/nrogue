@@ -245,7 +245,12 @@ class GameObject
 
     bool HasEffect(const ItemBonusType& e);
     bool HasNonZeroHP();
+
+    //
+    // Should only be called on actors.
+    //
     bool IsOnDangerousTile();
+
     bool IsOnTile(GameObjectType tileType);
 
     const std::unordered_map<uint64_t, std::vector<ItemBonusStruct>>& GetActiveEffects();
@@ -350,7 +355,9 @@ class GameObject
     void LevelUpFromHistory(int gainedLevel, bool positive);
     void LevelUpNatural(int gainedLevel, int baseHpOverride);
 
-    // Unique in-game id
+    //
+    // Unique in-game id.
+    //
     uint64_t _objectId = 0;
 
     const std::unordered_map<ItemBonusType, Attribute&> _attributesRefsByBonus =

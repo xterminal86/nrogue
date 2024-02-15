@@ -184,6 +184,14 @@ void MapLevelBase::PlaceActor(GameObject* actor)
   }
 
   ActorGameObjects.push_back(std::unique_ptr<GameObject>(actor));
+
+  //
+  // NOTE: standing danger check for actors is performed in
+  // GameObject::FinishTurn() -> GameObject::TileStandingCheck()
+  // since not all monsters can be killed on otherwise dangerous tiles
+  // (e.g. water element cannot drown in deep water,
+  // fire mage can walk in lava etc.)
+  //
 }
 
 // =============================================================================
@@ -203,6 +211,27 @@ void MapLevelBase::PlaceGameObject(GameObject* goToInsert)
   }
 
   GameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
+
+  GameObject* what = GameObjects.back().get();
+  GameObjectType t = MapArray[what->PosX][what->PosY]->Type;
+
+  //
+  // Assuming all items can perish this way, contrary to actors.
+  //
+  bool danger = (t == GameObjectType::DEEP_WATER
+              || t == GameObjectType::LAVA
+              || t == GameObjectType::CHASM);
+
+  if (danger)
+  {
+    int x = what->PosX;
+    int y = what->PosY;
+
+    std::string msg = Util::GetDestroyedByMapString(what, MapArray[x][y].get());
+    Printer::Instance().AddMessage(msg);
+
+    GameObjects.pop_back();
+  }
 }
 
 // =============================================================================
@@ -1285,7 +1314,13 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
       {
         if (std::get<GameObjectType>(cell.ObjectHere) == GameObjectType::BREAKABLE)
         {
-          GameObject* box = GameObjectsFactory::Instance().CreateBreakableObjectWithRandomLoot(x, y, 'B', "Wooden Box", Colors::WoodColor, Colors::BlackColor);
+          static GameObjectsFactory& gof = GameObjectsFactory::Instance();
+          GameObject* box = gof.CreateBreakableObjectWithRandomLoot(x,
+                                                                    y,
+                                                                    'B',
+                                                                    "Wooden Box",
+                                                                    Colors::WoodColor,
+                                                                    Colors::BlackColor);
           PlaceStaticObject(box);
         }
       }

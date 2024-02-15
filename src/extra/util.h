@@ -251,6 +251,11 @@ namespace Util
 
   extern void DrawLaserAttack(const std::vector<Position>& line);
 
+  extern bool ShouldAwardExp(GameObjectType type);
+
+  extern std::string GetDestroyedByMapString(GameObject* what,
+                                             GameObject* tileRef);
+
   // ---------------------------------------------------------------------------
 
   extern uint32_t GetItemInventoryColor(const ItemData& data);

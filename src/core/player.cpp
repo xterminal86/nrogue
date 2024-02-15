@@ -1209,8 +1209,7 @@ void Player::ProcessKill(GameObject* monster)
   //
   // Do not award experience for nothing.
   //
-  if (monster->Type != GameObjectType::HARMLESS
-   && monster->Type != GameObjectType::REMAINS)
+  if (Util::ShouldAwardExp(monster->Type))
   {
     int exp = monster->Attrs.Rating();
     exp = Util::Clamp(exp, 0, GlobalConstants::AwardedExpMax);
@@ -1361,8 +1360,7 @@ void Player::FinishTurn()
   ProcessEffectsPlayer();
   ProcessItemsEffects();
 
-  if (IsOnTile(GameObjectType::CHASM)
-   || IsOnTile(GameObjectType::LAVA))
+  if (IsOnDangerousTile())
   {
     Attrs.HP.Reset(0);
   }

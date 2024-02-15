@@ -17,6 +17,7 @@ BTResult TaskMoveSmart::Run()
     //
     // TODO: certain monsters can go to zones otherwise blocked.
     // E.g. undead cannot step on SHRINE or HALLOWED_GROUND, but kobold can.
+    // Add ZoneMarker to check.
     //
     bool isOk = !Map::Instance().CurrentLevel->MapArray[c.X][c.Y]->Special;
 

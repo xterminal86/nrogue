@@ -3036,4 +3036,99 @@ namespace Util
     item->Data.Prefix = prefixToSet;
     item->Data.ItemTypeHash = CalculateItemHash(item);
   }
+
+  // ===========================================================================
+
+  bool ShouldAwardExp(GameObjectType type)
+  {
+    bool res = true;
+
+    switch(type)
+    {
+      case GameObjectType::HARMLESS:
+      case GameObjectType::REMAINS:
+      case GameObjectType::PICKAXEABLE:
+      // case GameObjectType::TRAP:
+      case GameObjectType::BREAKABLE:
+      case GameObjectType::CONTAINER:
+      case GameObjectType::SHRINE:
+      case GameObjectType::DOOR:
+      case GameObjectType::STAIRS:
+        res = false;
+        break;
+
+      default:
+        break;
+    }
+
+    return res;
+  }
+
+  // ===========================================================================
+
+  std::string GetDestroyedByMapString(GameObject* what, GameObject* tileRef)
+  {
+    std::string res;
+
+    if (what == nullptr || tileRef == nullptr)
+    {
+      return res;
+    }
+
+    GameObjectType tile = tileRef->Type;
+
+    std::string objName;
+
+    bool isStackable = false;
+    int amount = 1;
+
+    ItemComponent* ic = what->GetComponent<ItemComponent>();
+    if (ic != nullptr)
+    {
+      isStackable = ic->Data.IsStackable;
+      amount = ic->Data.Amount;
+
+      objName = ic->Data.IsIdentified
+                ? what->ObjectName
+                : ic->Data.UnidentifiedName;
+    }
+    else
+    {
+      //
+      // Theoretically it may be possible to destroy non-item objects using
+      // map environment (e.g. push wooden box or monster into the lava etc.),
+      // so let's kinda plan this functionality ahead.
+      //
+      objName = what->ObjectName;
+    }
+
+    std::string verb;
+    std::string tileName = tileRef->ObjectName;
+
+    switch (tile)
+    {
+      case GameObjectType::DEEP_WATER:
+        verb = (isStackable && amount > 1) ? "drown" : "drowns";
+        break;
+
+      case GameObjectType::LAVA:
+        verb = (isStackable && amount > 1) ? "melt" : "melts";
+        break;
+
+      case GameObjectType::CHASM:
+        verb = (isStackable && amount > 1) ? "fall down" : "falls down";
+        break;
+
+      default:
+        verb = (isStackable && amount > 1) ? "are destroyed" : "is destroyed";
+        break;
+    }
+
+    res = Util::StringFormat("%s %s in %s!",
+                             objName.data(),
+                             verb.data(),
+                             tileName.data());
+
+    return res;
+  }
 }

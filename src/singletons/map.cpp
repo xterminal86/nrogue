@@ -181,7 +181,9 @@ void Map::UpdateActors()
         Position plPos = _playerRef->GetPosition();
         Position objPos = go->GetPosition();
 
-        // Check if object is in visibility radius
+        //
+        // Check if object is in visibility radius.
+        //
         int d = (int)Util::LinearDistance(plPos, objPos);
         if (d <= _playerRef->VisibilityRadius.Get())
         {
@@ -630,7 +632,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
 
       case MapType::MINES_1:
       case MapType::MINES_2:
-        InstantiateLevel<MapLevelMines>(50, 50, levelName, lvlAsInt);
+        InstantiateLevel<MapLevelMines>(50, 25, levelName, lvlAsInt);
         break;
 
       case MapType::MINES_3:
@@ -651,11 +653,11 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
       case MapType::CAVES_3:
       case MapType::CAVES_4:
       case MapType::CAVES_5:
-        InstantiateLevel<MapLevelCaves>(30, 30, levelName, lvlAsInt);
+        InstantiateLevel<MapLevelCaves>(60, 30, levelName, lvlAsInt);
         break;
 
       case MapType::LOST_CITY:
-        InstantiateLevel<MapLevelLostCity>(100, 100, levelName, lvlAsInt);
+        InstantiateLevel<MapLevelLostCity>(150, 50, levelName, lvlAsInt);
         break;
 
       case MapType::DEEP_DARK_1:
@@ -663,7 +665,7 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
       case MapType::DEEP_DARK_3:
       case MapType::DEEP_DARK_4:
       case MapType::DEEP_DARK_5:
-        InstantiateLevel<MapLevelDeepDark>(80, 80, levelName, lvlAsInt);
+        InstantiateLevel<MapLevelDeepDark>(80, 40, levelName, lvlAsInt);
         break;
 
       case MapType::ABYSS_1:

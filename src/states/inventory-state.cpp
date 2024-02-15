@@ -458,23 +458,29 @@ void InventoryState::DropItem(ItemComponent* ic)
   //
   ic->OwnerGameObject->SetLevelOwner(Map::Instance().CurrentLevel);
 
-  ic->Transfer();
-
-  std::string objName = ic->Data.IsIdentified ? go->ObjectName : ic->Data.UnidentifiedName;
+  std::string objName = ic->Data.IsIdentified
+                      ? go->ObjectName
+                      : ic->Data.UnidentifiedName;
 
   std::string message;
   if (ic->Data.IsStackable)
   {
-    message = Util::StringFormat(Strings::FmtDroppedIS, ic->Data.Amount, objName.data());
+    message = Util::StringFormat(Strings::FmtDroppedIS,
+                                 ic->Data.Amount,
+                                 objName.data());
   }
   else
   {
     message = Util::StringFormat(Strings::FmtDroppedS, objName.data());
   }
 
-  // !!! OwnerGameObject should not be destroyed here !!!
-
   Printer::Instance().AddMessage(message);
+
+  //
+  // Transferred game object could be destroyed in the process (e.g. dropped on
+  // lava or deep water), so remember everything important before this call.
+  //
+  ic->Transfer();
 }
 
 // =============================================================================

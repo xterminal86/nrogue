@@ -127,6 +127,7 @@ GameObject* ItemsFactory::CreateMoney(int amount)
   go->ObjectName = Strings::MoneyName;
   go->Image = '$';
   go->FgColor = Colors::CoinsColor;
+  go->BgColor = Colors::None;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -716,7 +717,7 @@ GameObject* ItemsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix pre
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   go->FgColor = Colors::WhiteColor;
-  go->BgColor = Colors::BlackColor;
+  go->BgColor = Colors::None;
   go->Image = '%';
   go->ObjectName = name;
   go->PosX = x;
@@ -913,6 +914,7 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
   go->ObjectName = GlobalConstants::WeaponNameByType.at(type);
   go->Image = ')';
   go->FgColor = Colors::WhiteColor;
+  go->BgColor = Colors::None;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -1394,6 +1396,7 @@ GameObject* ItemsFactory::CreateRepairKit(int x, int y, int charges, ItemPrefix 
   go->Image = '(';
 
   go->FgColor = Colors::WhiteColor;
+  go->BgColor = Colors::None;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -1457,6 +1460,7 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
   go->Image = '[';
 
   go->FgColor = Colors::WhiteColor;
+  go->BgColor = Colors::None;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -1632,6 +1636,7 @@ GameObject* ItemsFactory::CreateArrows(int x, int y, ArrowType type, ItemPrefix 
 
   go->Image = '^';
   go->FgColor = Colors::WhiteColor;
+  go->BgColor = Colors::None;
 
   go->ObjectName = GlobalConstants::ArrowNameByType.at(type);
 
@@ -1700,6 +1705,7 @@ GameObject* ItemsFactory::CreateRangedWeapon(int x,
 
   go->Image = ')';
   go->FgColor = Colors::WhiteColor;
+  go->BgColor = Colors::None;
 
   go->ObjectName = GlobalConstants::RangedWeaponNameByType.at(type);
 
@@ -1980,6 +1986,7 @@ GameObject* ItemsFactory::CreateAccessory(int x, int y,
   go->PosY = y;
 
   go->FgColor = Colors::WhiteColor;
+  go->BgColor = Colors::None;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
   ic->Data.Prefix = (prefix == ItemPrefix::RANDOM) ? RollItemPrefix() : prefix;
@@ -2163,6 +2170,7 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
   go->ObjectName = "Short Sword";
   go->Image = '(';
   go->FgColor = Colors::ItemUniqueColor;
+  go->BgColor = Colors::None;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -2220,6 +2228,7 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
   go->ObjectName = "Pickaxe";
   go->Image = '(';
   go->FgColor = Colors::ItemUniqueColor;
+  go->BgColor = Colors::None;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -2275,6 +2284,7 @@ GameObject* ItemsFactory::CreateOneRing()
   go->ObjectName = "Ring";
   go->Image = '=';
   go->FgColor = Colors::ItemUniqueColor;
+  go->BgColor = Colors::None;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 

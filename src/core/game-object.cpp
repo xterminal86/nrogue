@@ -501,10 +501,7 @@ bool GameObject::ReceiveDamage(GameObject* from,
 
       MarkAndCreateRemains();
 
-      std::string verb = (Type == GameObjectType::HARMLESS
-                       || Type == GameObjectType::REMAINS)
-                       ? "destroyed"
-                       : "killed";
+      std::string verb = !Util::ShouldAwardExp(Type) ? "destroyed" : "killed";
 
       logMessages.push(Util::StringFormat("%s was %s",
                                           objName.data(),
@@ -548,7 +545,8 @@ bool GameObject::CanAct()
   //
   // ( see Map::UpdateAll() )
   //
-  return (HasNonZeroHP() && (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue));
+  return (HasNonZeroHP()
+      && (Attrs.ActionMeter >= GlobalConstants::TurnReadyValue));
 }
 
 // =============================================================================
@@ -640,11 +638,22 @@ bool GameObject::IsOnDangerousTile()
 
   if (HasEffect(ItemBonusType::LEVITATION) == false)
   {
-    if (_currentCell->Type == GameObjectType::LAVA
-     || _currentCell->Type == GameObjectType::DEEP_WATER
-     || _currentCell->Type == GameObjectType::CHASM)
+    _currentCell = _levelOwner->MapArray[PosX][PosY].get();
+
+    switch (_currentCell->Type)
     {
-      res = true;
+      //
+      // FIXME: some monsters could swim in deep water or lava (or player could
+      // get some fire resistnace or something).
+      //
+      case GameObjectType::DEEP_WATER:
+      case GameObjectType::LAVA:
+      case GameObjectType::CHASM:
+        res = true;
+        break;
+
+      default:
+        break;
     }
   }
 
@@ -1315,7 +1324,9 @@ void GameObject::MarkAndCreateRemains()
   //
   if (!tileDangerous && Corporeal)
   {
+    //
     // Destroying remains should not spawn another remains.
+    //
     if (Type != GameObjectType::REMAINS)
     {
       auto go = GameObjectsFactory::Instance().CreateRemains(this);
