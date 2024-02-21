@@ -121,12 +121,14 @@ void MessageLogState::DrawScrollBars()
       Printer::Instance().PrintFB(_tw - 1,
                                   _th - 1,
                                   (int)NameCP437::DARROW_2,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
       #else
       Printer::Instance().PrintFB(_tw - 1,
                                   _th - 1,
                                   ACS_DARROW,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
       #endif
     }
     else if (_scrollPosition == scrollLimit)
@@ -135,12 +137,14 @@ void MessageLogState::DrawScrollBars()
       Printer::Instance().PrintFB(_tw - 1,
                                   1,
                                   (int)NameCP437::UARROW_2,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
       #else
       Printer::Instance().PrintFB(_tw - 1,
                                   1,
                                   ACS_UARROW,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
       #endif
     }
     else if (_scrollPosition > 0 && _scrollPosition != scrollLimit)
@@ -149,22 +153,26 @@ void MessageLogState::DrawScrollBars()
       Printer::Instance().PrintFB(_tw - 1,
                                   1,
                                   (int)NameCP437::UARROW_2,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
 
       Printer::Instance().PrintFB(_tw - 1,
                                   _th - 1,
                                   (int)NameCP437::DARROW_2,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
       #else
       Printer::Instance().PrintFB(_tw - 1,
                                   1,
                                   ACS_UARROW,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
 
       Printer::Instance().PrintFB(_tw - 1,
                                   _th - 1,
                                   ACS_DARROW,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
       #endif
     }
   }

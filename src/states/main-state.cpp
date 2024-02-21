@@ -243,7 +243,8 @@ void MainState::Update(bool forceUpdate)
                                 0,
                                 Map::Instance().CurrentLevel->LevelName,
                                 Printer::kAlignRight,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     #ifdef DEBUG_BUILD
     PrintDebugInfo();
@@ -457,7 +458,8 @@ void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
                               y,
                               bar,
                               Printer::kAlignLeft,
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 }
 
 // =============================================================================
@@ -520,35 +522,74 @@ void MainState::PrintDebugInfo()
                                   _playerRef->PosY,
                                   _playerRef->Attrs.Hunger);
 
-  Printer::Instance().PrintFB(1, 1, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(1,
+                              1,
+                              _debugInfo,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   _debugInfo = Util::StringFormat("Key: %i Actors: %i Respawn: %i",
                                   _keyPressed,
                                   Map::Instance().CurrentLevel->ActorGameObjects.size(),
                                   Map::Instance().CurrentLevel->RespawnCounter());
 
-  Printer::Instance().PrintFB(1, 2, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(1,
+                              2,
+                              _debugInfo,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   _debugInfo = Util::StringFormat("Level Start: [%i;%i]",
                                   Map::Instance().CurrentLevel->LevelStart.X,
                                   Map::Instance().CurrentLevel->LevelStart.Y);
-  Printer::Instance().PrintFB(1, 3, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
+
+  Printer::Instance().PrintFB(1,
+                              3,
+                              _debugInfo,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   _debugInfo = Util::StringFormat("Level Exit: [%i;%i]",
                                   Map::Instance().CurrentLevel->LevelExit.X,
                                   Map::Instance().CurrentLevel->LevelExit.Y);
-  Printer::Instance().PrintFB(1, 4, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
+
+  Printer::Instance().PrintFB(1,
+                              4,
+                              _debugInfo,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   _debugInfo = Util::StringFormat("Colors Used: %i",
                                   Printer::Instance().ColorsUsed());
-  Printer::Instance().PrintFB(1, 5, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
+
+  Printer::Instance().PrintFB(1,
+                              5,
+                              _debugInfo,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   _debugInfo = Util::StringFormat("PT: %llu MU: %llu",
                                   Application::Instance().PlayerTurnsPassed,
                                   Application::Instance().MapUpdateCyclesPassed);
-  Printer::Instance().PrintFB(1, 6, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
 
-  Printer::Instance().PrintFB(1, 7, "Actors watched:", Printer::kAlignLeft, Colors::WhiteColor);
+  Printer::Instance().PrintFB(1,
+                              6,
+                              _debugInfo,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
+
+  Printer::Instance().PrintFB(1,
+                              7,
+                              "Actors watched:",
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   int yOffset = 0;
   bool found = false;
@@ -562,7 +603,13 @@ void MainState::PrintDebugInfo()
                                         a->ObjectName.data(),
                                         id,
                                         a->Attrs.ActionMeter);
-        Printer::Instance().PrintFB(1, 8 + yOffset, _debugInfo, Printer::kAlignLeft, Colors::WhiteColor);
+
+        Printer::Instance().PrintFB(1,
+                                    8 + yOffset,
+                                    _debugInfo,
+                                    Printer::kAlignLeft,
+                                    Colors::WhiteColor,
+                                    Colors::BlackColor);
         yOffset++;
         found = true;
       }
@@ -571,7 +618,12 @@ void MainState::PrintDebugInfo()
 
   if (!found)
   {
-    Printer::Instance().PrintFB(1, 8, "<Press 's' to scan 1x1 around player>", Printer::kAlignLeft, Colors::WhiteColor);
+    Printer::Instance().PrintFB(1,
+                                8,
+                                "<Press 's' to scan 1x1 around player>",
+                                Printer::kAlignLeft,
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
   }
 }
 
@@ -805,7 +857,8 @@ void MainState::DisplayStartHint()
                               th - 4,
                               dir,
                               Printer::kAlignLeft,
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 }
 
 // =============================================================================
@@ -851,7 +904,8 @@ void MainState::DisplayExitHint()
                               th - 3,
                               curLvl->ExitFound ? dir : "??",
                               Printer::kAlignLeft,
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 }
 
 // =============================================================================
@@ -911,7 +965,8 @@ void MainState::DisplayWeaponCondition(const int& startPos)
       Printer::Instance().PrintFB(startPos + 2,
                                   _th - 3,
                                   ')',
-                                  Colors::YellowColor);
+                                  Colors::YellowColor,
+                                  Colors::BlackColor);
     }
   }
 }
@@ -931,7 +986,8 @@ void MainState::DisplayArmorCondition(const int& startPos)
       Printer::Instance().PrintFB(startPos + 4,
                                   _th - 3,
                                   '[',
-                                  Colors::YellowColor);
+                                  Colors::YellowColor,
+                                  Colors::BlackColor);
     }
   }
 }
@@ -949,7 +1005,8 @@ void MainState::DisplayAmmoCondition(const int& startPos)
       Printer::Instance().PrintFB(startPos + 6,
                                   _th - 3,
                                   '^',
-                                  Colors::YellowColor);
+                                  Colors::YellowColor,
+                                  Colors::BlackColor);
     }
   }
 }
@@ -992,7 +1049,8 @@ void MainState::DisplayActiveEffects(const int& startPos)
                                 _th - 4,
                                 kvp.first,
                                 Printer::kAlignLeft,
-                                color);
+                                color,
+                                Colors::BlackColor);
 
     offsetX += 4;
   }

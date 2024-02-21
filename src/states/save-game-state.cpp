@@ -52,7 +52,8 @@ void SaveGameState::Update(bool forceUpdate)
                                 Printer::TerminalHeight - 1,
                                 "Save and quit? (y/q)",
                                 Printer::kAlignRight,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().Render();
   }

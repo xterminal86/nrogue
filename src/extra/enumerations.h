@@ -197,6 +197,7 @@ enum class GameObjectType
   LOOTER,
   ARCHER,
   FENCER,           // has ignore defence and / or ignore armor sword
+  CENTAUR,
   ENUM_END
 };
 
@@ -399,6 +400,8 @@ enum class ItemBonusType
   TRUE_SEEING,    // See anything invisible
   TELEPATHY,      // See monsters (with brains)
   LEVITATION,
+  WATER_WALKING,  // Can walk on water and lava
+  LAVA_IMMUNE,
   BLINDNESS,      // anti-visibility (-100500 to LightRadius)
   FROZEN,         // SPD penalty
   BURNING,        // inflicts fire damage over several turns + gives illuminated

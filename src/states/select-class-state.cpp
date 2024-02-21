@@ -65,7 +65,8 @@ void SelectClassState::Update(bool forceUpdate)
                                 _thHalf - 4,
                                 "Who are you?",
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     int offset = 0;
     int index = 0;

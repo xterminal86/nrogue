@@ -266,7 +266,8 @@ void InventoryState::Update(bool forceUpdate)
                                     2 + yPos,
                                     stackAmount,
                                     Printer::kAlignLeft,
-                                    Colors::WhiteColor);
+                                    Colors::WhiteColor,
+                                    Colors::BlackColor);
       }
       else if (ic->Data.IsEquipped)
       {
@@ -275,7 +276,8 @@ void InventoryState::Update(bool forceUpdate)
                                     2 + yPos,
                                     equipStatus,
                                     Printer::kAlignLeft,
-                                    Colors::WhiteColor);
+                                    Colors::WhiteColor,
+                                    Colors::BlackColor);
       }
 
       uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
@@ -296,7 +298,8 @@ void InventoryState::Update(bool forceUpdate)
                                   2 + yPos,
                                   stub,
                                   Printer::kAlignLeft,
-                                  Colors::ShadesOfGrey::Six);
+                                  Colors::ShadesOfGrey::Six,
+                                  Colors::BlackColor);
       yPos++;
     }
 
@@ -355,7 +358,8 @@ void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldNa
                               y,
                               fieldName,
                               Printer::kAlignCenter,
-                              Colors::ShadesOfGrey::Ten);
+                              Colors::ShadesOfGrey::Ten,
+                              Colors::BlackColor);
 
   uint32_t itemColor = Colors::WhiteColor;
 
@@ -374,7 +378,8 @@ void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldNa
                               Printer::kAlignCenter,
                               (eq != nullptr)
                             ? itemColor
-                            : Colors::ShadesOfGrey::Six);
+                            : Colors::ShadesOfGrey::Six,
+                              Colors::BlackColor);
 }
 
 // =============================================================================
@@ -403,7 +408,8 @@ void InventoryState::PrintFooter()
                                 th - 1,
                                 tmp,
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
     counter++;
   }
 
@@ -429,7 +435,8 @@ void InventoryState::PrintFooter()
                                 th - 1,
                                 tmp,
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
     counter++;
   }
 }
@@ -502,7 +509,8 @@ void InventoryState::DrawSelectionBar(int yOffset, const std::string& text, cons
                                 2 + yOffset,
                                 text,
                                 Printer::kAlignLeft,
-                                textColor);
+                                textColor,
+                                Colors::BlackColor);
   }
 }
 

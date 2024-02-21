@@ -323,6 +323,23 @@ namespace GlobalConstants
     { PlayerClass::CUSTOM,   "Custom"   },
   };
 
+  const std::unordered_map<GameObjectType, bool> CanSwimMap =
+  {
+    { GameObjectType::PLAYER,          true },
+    { GameObjectType::NPC,             true },
+    { GameObjectType::TROLL,           true },
+    { GameObjectType::MAD_MINER,       true },
+    { GameObjectType::HEROBRINE,       true },
+    { GameObjectType::KOBOLD,          true },
+    { GameObjectType::STALKER,         true },
+    { GameObjectType::WATER_MAGE,      true },
+    { GameObjectType::WATER_ELEMENTAL, true },
+    { GameObjectType::LOOTER,          true },
+    { GameObjectType::ARCHER,          true },
+    { GameObjectType::FENCER,          true },
+    { GameObjectType::CENTAUR,         true },
+  };
+
 #ifdef USE_SDL
   //
   // To avoid C-style casting from enum

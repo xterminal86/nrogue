@@ -874,7 +874,12 @@ void Map::ShowLoadingText(const std::string& textOverride)
                                  Colors::MessageBoxHeaderBgColor,
                                  Colors::ShadesOfGrey::Four);
 
-  Printer::Instance().PrintFB(tw, th, text, Printer::kAlignCenter, Colors::WhiteColor);
+  Printer::Instance().PrintFB(tw,
+                              th,
+                              text,
+                              Printer::kAlignCenter,
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   Printer::Instance().Render();
 }
@@ -1208,7 +1213,9 @@ void Map::DrawFowTile(int x, int y)
   {
     Printer::Instance().PrintFB(x + CurrentLevel->MapOffsetX,
                                 y + CurrentLevel->MapOffsetY,
-                                CurrentLevel->FowLayer[x][y].Image,
+                                (CurrentLevel->FowLayer[x][y].Image == -1)
+                                ? ' '
+                                : CurrentLevel->FowLayer[x][y].Image,
                                 Colors::FogOfWarColor,
                                 Colors::BlackColor);
   }

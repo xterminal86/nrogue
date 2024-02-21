@@ -214,6 +214,19 @@ bool GameObject::CanMoveTo(const Position& pos)
 
 // =============================================================================
 
+bool GameObject::IsSwimming()
+{
+  bool isFlying       = HasEffect(ItemBonusType::LEVITATION);
+  bool isWaterWalking = HasEffect(ItemBonusType::WATER_WALKING);
+  bool canSwim        = (GlobalConstants::CanSwimMap.count(Type) == 1
+                      && GlobalConstants::CanSwimMap.at(Type) == true);
+  bool isOnDeepWater  = (_currentCell->Type == GameObjectType::DEEP_WATER);
+
+  return (isOnDeepWater && canSwim && !isFlying && !isWaterWalking);
+}
+
+// =============================================================================
+
 void GameObject::Draw(const uint32_t& overrideColorFg,
                       const uint32_t& overrideColorBg,
                       int imageOverride)
@@ -228,17 +241,33 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
     return;
   }
 
+  uint32_t fgColor = FgColor;
+  uint32_t bgColor = BgColor;
+
+  if (overrideColorFg != Colors::None && overrideColorFg != FgColor)
+  {
+    fgColor = overrideColorFg;
+  }
+
+  if (overrideColorBg != Colors::None && overrideColorBg != BgColor)
+  {
+    bgColor = overrideColorBg;
+  }
+
+#ifndef USE_SDL
+  if (bgColor == Colors::None)
+  {
+    bgColor = Colors::BlackColor;
+  }
+#endif
+
   Printer::Instance().PrintFB(PosX + _levelOwner->MapOffsetX,
                               PosY + _levelOwner->MapOffsetY,
                               (imageOverride != -1)
                               ? imageOverride
                               : Image,
-                              overrideColorFg == Colors::None
-                              ? FgColor
-                              : overrideColorFg,
-                              overrideColorBg == Colors::None
-                              ? BgColor
-                              : overrideColorBg);
+                              fgColor,
+                              bgColor);
 }
 
 // =============================================================================
@@ -636,25 +665,32 @@ bool GameObject::IsOnDangerousTile()
 {
   bool res = false;
 
-  if (HasEffect(ItemBonusType::LEVITATION) == false)
+  _currentCell = _levelOwner->MapArray[PosX][PosY].get();
+
+  switch (_currentCell->Type)
   {
-    _currentCell = _levelOwner->MapArray[PosX][PosY].get();
-
-    switch (_currentCell->Type)
+    case GameObjectType::DEEP_WATER:
     {
-      //
-      // FIXME: some monsters could swim in deep water or lava (or player could
-      // get some fire resistnace or something).
-      //
-      case GameObjectType::DEEP_WATER:
-      case GameObjectType::LAVA:
-      case GameObjectType::CHASM:
-        res = true;
-        break;
-
-      default:
-        break;
+      res = !IsSwimming();
     }
+    break;
+
+    case GameObjectType::LAVA:
+    {
+      res = !(HasEffect(ItemBonusType::LAVA_IMMUNE)
+           || HasEffect(ItemBonusType::WATER_WALKING)
+           || HasEffect(ItemBonusType::LEVITATION));
+    }
+    break;
+
+    case GameObjectType::CHASM:
+    {
+      res = !HasEffect(ItemBonusType::LEVITATION);
+    }
+    break;
+
+    default:
+      break;
   }
 
   return res;

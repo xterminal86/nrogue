@@ -179,7 +179,8 @@ void EnterNameState::Update(bool forceUpdate)
       Printer::Instance().PrintFB(_x - _maxSeedHalf + 2 + i,
                                   _cursorPos + 6,
                                   '.',
-                                  Colors::ShadesOfGrey::Four);
+                                  Colors::ShadesOfGrey::Four,
+                                  Colors::BlackColor);
     }
 
     //
@@ -190,20 +191,23 @@ void EnterNameState::Update(bool forceUpdate)
       Printer::Instance().PrintFB(_x - _maxSeedHalf + 4 + i,
                                   _cursorPos + 8,
                                   '.',
-                                  Colors::ShadesOfGrey::Four);
+                                  Colors::ShadesOfGrey::Four,
+                                  Colors::BlackColor);
     }
 
     Printer::Instance().PrintFB(_x - _maxNameHalf + 2,
                                 _cursorPos,
                                 _nameEntered,
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().PrintFB(_x - _maxSeedHalf + 2,
                                 _cursorPos + 8,
                                 "0x",
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     if (_inputType == InputType::NAME)
     {
@@ -225,7 +229,8 @@ void EnterNameState::Update(bool forceUpdate)
                                   _cursorPos + 6,
                                   _seedEntered,
                                   Printer::kAlignLeft,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
 
       if (!_seedEntered.empty())
       {
@@ -233,7 +238,8 @@ void EnterNameState::Update(bool forceUpdate)
                                     _cursorPos + 8,
                                     _seedAsHex,
                                     Printer::kAlignLeft,
-                                    Colors::WhiteColor);
+                                    Colors::WhiteColor,
+                                    Colors::BlackColor);
       }
     }
     else if (_inputType == InputType::SEED_HEX)
@@ -248,14 +254,16 @@ void EnterNameState::Update(bool forceUpdate)
                                   _cursorPos + 8,
                                   _seedEntered,
                                   Printer::kAlignLeft,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
     }
 
     Printer::Instance().PrintFB(_twHalf,
                                 Printer::TerminalHeight - 1,
                                 "'Tab' - change fields",
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().Render();
   }

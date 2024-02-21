@@ -24,6 +24,8 @@ BTResult TaskAttack::Run()
 
   switch (_objectToControl->Type)
   {
+    // -------------------------------------------------------------------------
+
     case GameObjectType::RAT:
     case GameObjectType::BAT:
     case GameObjectType::TROLL:
@@ -42,6 +44,8 @@ BTResult TaskAttack::Run()
       }
     }
     break;
+
+    // -------------------------------------------------------------------------
 
     case GameObjectType::VAMPIRE_BAT:
     {
@@ -69,6 +73,8 @@ BTResult TaskAttack::Run()
       }
     }
     break;
+
+    // -------------------------------------------------------------------------
 
     case GameObjectType::SPIDER:
     case GameObjectType::SHELOB:
@@ -108,11 +114,15 @@ BTResult TaskAttack::Run()
     }
     break;
 
+    // -------------------------------------------------------------------------
+
     case GameObjectType::KOBOLD:
     case GameObjectType::HEROBRINE:
     case GameObjectType::MAD_MINER:
       AttackWithWeapon();
       break;
+
+    // -------------------------------------------------------------------------
 
     case GameObjectType::WRAITH:
     {
@@ -124,6 +134,8 @@ BTResult TaskAttack::Run()
       }
     }
     break;
+
+    // -------------------------------------------------------------------------
 
     default:
       DebugLog("[WAR] %s - attack not defined!", _objectToControl->ObjectName.data());

@@ -98,7 +98,8 @@ void ContainerInteractState::Update(bool forceUpdate)
       Printer::Instance().PrintFB(_twHalf,
                                   y,
                                   (int)NameCP437::VBAR_2,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
       #else
       Printer::Instance().PrintFB(_twHalf,
                                   y,
@@ -114,19 +115,22 @@ void ContainerInteractState::Update(bool forceUpdate)
                                 0,
                                 "Player",
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().PrintFB(_tw - _twQuarter - 1,
                                 0,
                                 containerName,
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().PrintFB(1,
                                 _th - 1,
                                 "'Enter' - exchange",
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     DisplayPlayerInventory();
     DisplayContainerInventory();
@@ -159,7 +163,8 @@ void ContainerInteractState::DisplayPlayerInventory()
                                   yPos + index,
                                   stackAmount,
                                   Printer::kAlignLeft,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
     }
     else if (ic->Data.IsEquipped)
     {
@@ -168,7 +173,8 @@ void ContainerInteractState::DisplayPlayerInventory()
                                   yPos + index,
                                   equipStatus,
                                   Printer::kAlignLeft,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
     }
 
     uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
@@ -188,7 +194,8 @@ void ContainerInteractState::DisplayPlayerInventory()
                                   yPos + index,
                                   nameInInventory,
                                   Printer::kAlignLeft,
-                                  textColor);
+                                  textColor,
+                                  Colors::BlackColor);
     }
 
     index++;
@@ -203,7 +210,8 @@ void ContainerInteractState::DisplayPlayerInventory()
                                 yPos + index,
                                 stub,
                                 Printer::kAlignLeft,
-                                Colors::ShadesOfGrey::Six);
+                                Colors::ShadesOfGrey::Six,
+                                Colors::BlackColor);
     yPos++;
   }
 }
@@ -241,7 +249,8 @@ void ContainerInteractState::DisplayContainerInventory()
                                   yPos + index,
                                   stackAmount,
                                   Printer::kAlignRight,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
     }
     else if (ic->Data.IsEquipped)
     {
@@ -250,7 +259,8 @@ void ContainerInteractState::DisplayContainerInventory()
                                   yPos + index,
                                   equipStatus,
                                   Printer::kAlignRight,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
     }
 
     uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
@@ -270,7 +280,8 @@ void ContainerInteractState::DisplayContainerInventory()
                                   yPos + index,
                                   nameInInventory,
                                   Printer::kAlignRight,
-                                  textColor);
+                                  textColor,
+                                  Colors::BlackColor);
     }
 
     index++;
@@ -285,7 +296,8 @@ void ContainerInteractState::DisplayContainerInventory()
                                 yPos + index,
                                 stub,
                                 Printer::kAlignRight,
-                                Colors::ShadesOfGrey::Six);
+                                Colors::ShadesOfGrey::Six,
+                                Colors::BlackColor);
     yPos++;
   }
 }

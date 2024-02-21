@@ -945,21 +945,6 @@ void Printer::DrawWindow(const Position& leftCorner,
 
 // =============================================================================
 
-void Printer::PrintFB(const int& x, const int& y,
-                      const std::string& text,
-                      size_t scale,
-                      int align,
-                      const uint32_t& htmlColorFg,
-                      const uint32_t& htmlColorBg)
-{
-  //
-  // No scaling in ncurses :-(
-  //
-  PrintFB(x, y, text, align, htmlColorFg, htmlColorBg);
-}
-
-// =============================================================================
-
 void Printer::PrepareFrameBuffer()
 {
   for (size_t x = 0; x < TerminalWidth; x++)
@@ -1039,7 +1024,11 @@ std::vector<Position> Printer::DrawExplosion(const Position& pos, int aRange)
 
       if (Map::Instance().CurrentLevel->MapArray[p.X][p.Y]->Visible)
       {
-        Printer::Instance().PrintFB(drawX, drawY, 'x', Colors::RedColor);
+        Printer::Instance().PrintFB(drawX,
+                                    drawY,
+                                    'x',
+                                    Colors::RedColor,
+                                    Colors::BlackColor);
       }
     }
 

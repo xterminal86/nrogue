@@ -239,7 +239,8 @@ void MenuState::Update(bool forceUpdate)
                                 _thHalf + _picture.size(),
                                 _welcome,
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     if (_saveFileFound)
     {
@@ -247,7 +248,8 @@ void MenuState::Update(bool forceUpdate)
                                   _thHalf + _picture.size() + 1,
                                   _savefilePresent,
                                   Printer::kAlignCenter,
-                                  0x44FF44);
+                                  0x44FF44,
+                                  Colors::BlackColor);
     }
 
     for (size_t i = 0; i < _signature.size(); i++)
@@ -256,26 +258,30 @@ void MenuState::Update(bool forceUpdate)
                                   _th - 1 - (_signature.size() - i),
                                   _signature[i],
                                   Printer::kAlignRight,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
     }
 
     Printer::Instance().PrintFB(2,
                                 _th -3,
                                 _buildVersionText,
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().PrintFB(_twHalf,
                                 _th - 2,
                                 _builtWith,
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().PrintFB(2,
                                 _th - 2,
                                 _terminalSize,
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().Render();
   }

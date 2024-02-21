@@ -73,31 +73,24 @@ class Printer : public Singleton<Printer>
                const std::string& text,
                int align,
                const uint32_t& htmlColorFg,
-               const uint32_t& htmlColorBg = Colors::BlackColor);
+               const uint32_t& htmlColorBg);
 
     void Print(const int& x, const int& y,
                const int& ch,
                const uint32_t& htmlColorFg,
-               const uint32_t& htmlColorBg = Colors::BlackColor);
+               const uint32_t& htmlColorBg);
 
     /// Print to "framebuffer" instead of directly to the screen
     void PrintFB(const int& x, const int& y,
                  const int& ch,
                  const uint32_t& htmlColorFg,
-                 const uint32_t& htmlColorBg = Colors::BlackColor);
+                 const uint32_t& htmlColorBg);
 
     void PrintFB(const int& x, const int& y,
                  const std::string& text,
                  int align,
                  const uint32_t& htmlColorFg,
-                 const uint32_t& htmlColorBg = Colors::BlackColor);
-
-    void PrintFB(const int& x, const int& y,
-                 const std::string& text,
-                 size_t scale,
-                 int align,
-                 const uint32_t& htmlColorFg,
-                 const uint32_t& htmlColorBg = Colors::BlackColor);
+                 const uint32_t& htmlColorBg);
 
     void DrawWindow(const Position& leftCorner,
                     const Position& size,
@@ -113,20 +106,20 @@ class Printer : public Singleton<Printer>
     void PrintFB(const int& x, const int& y,
                  int image,
                  const uint32_t& htmlColorFg,
-                 const uint32_t& htmlColorBg = Colors::BlackColor);
+                 const uint32_t& htmlColorBg);
 
     void PrintFB(const int& x, const int& y,
                  const std::string& text,
                  int align,
                  const uint32_t& htmlColorFg,
-                 const uint32_t& htmlColorBg = Colors::BlackColor);
+                 const uint32_t& htmlColorBg);
 
     void PrintFB(const int& x, const int& y,
                  const std::string& text,
                  size_t scale,
                  int align,
                  const uint32_t& htmlColorFg,
-                 const uint32_t& htmlColorBg = Colors::BlackColor);
+                 const uint32_t& htmlColorBg);
 
     void DrawWindow(const Position& leftCorner,
                     const Position& size,

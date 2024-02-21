@@ -129,16 +129,6 @@ bool Player::TryToMeleeAttack(int dx, int dy)
 
 // =============================================================================
 
-bool Player::IsSwimming()
-{
-  bool isFlying   = HasEffect(ItemBonusType::LEVITATION);
-  bool isSwimming = (_currentCell->Type == GameObjectType::DEEP_WATER);
-
-  return (!isFlying && isSwimming);
-}
-
-// =============================================================================
-
 bool Player::Move(int dx, int dy)
 {
   auto cell = Map::Instance().CurrentLevel->MapArray[PosX + dx][PosY + dy].get();

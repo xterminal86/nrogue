@@ -98,13 +98,15 @@ void ReturnerState::Update(bool forceUpdate)
                                 Printer::TerminalHeight - 1,
                                 "What do you want to do with returner?",
                                 Printer::kAlignRight,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 2,
                                 "(a) - attune, (u) - use, (q) - nothing",
                                 Printer::kAlignRight,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().Render();
   }

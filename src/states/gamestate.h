@@ -132,6 +132,7 @@ class GameState
       { SDL_SCANCODE_RETURN,    SDLK_RETURN    },
       { SDL_SCANCODE_RETURN2,   SDLK_RETURN2   },
       { SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE },
+      { SDL_SCANCODE_DELETE,    SDLK_DELETE    },
       { SDL_SCANCODE_TAB,       SDLK_TAB       },
       { SDL_SCANCODE_KP_1,      SDLK_KP_1      },
       { SDL_SCANCODE_KP_2,      SDLK_KP_2      },

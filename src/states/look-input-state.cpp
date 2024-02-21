@@ -285,20 +285,23 @@ void LookInputState::Update(bool forceUpdate)
     Printer::Instance().PrintFB(_twHalf, 0,
                                 "Press 'q' to exit look mode",
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     std::string coords = Util::StringFormat("[%i;%i]", _cursorPosition.X, _cursorPosition.Y);
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 2,
                                 coords,
                                 Printer::kAlignRight,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 1,
                                 lookStatus,
                                 Printer::kAlignRight,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     #ifdef DEBUG_BUILD
     PrintDebugInfo();
@@ -338,12 +341,14 @@ void LookInputState::DrawCursor()
   Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().CurrentLevel->MapOffsetX + 1,
                               _cursorPosition.Y + Map::Instance().CurrentLevel->MapOffsetY,
                               ']',
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().CurrentLevel->MapOffsetX - 1,
                               _cursorPosition.Y + Map::Instance().CurrentLevel->MapOffsetY,
                               '[',
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 }
 
 // =============================================================================
@@ -436,7 +441,8 @@ void LookInputState::PrintDebugInfo()
                                 yStart,
                                 line,
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
     yStart++;
   }
 
@@ -444,6 +450,7 @@ void LookInputState::PrintDebugInfo()
                               yStart + 1,
                               _distanceField,
                               Printer::kAlignLeft,
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 }
 #endif

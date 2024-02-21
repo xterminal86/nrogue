@@ -32,6 +32,7 @@
   #define VK_BACKSPACE SDLK_BACKSPACE
   #define VK_ENTER     SDLK_RETURN
   #define VK_TAB       SDLK_TAB
+  #define VK_DELETE    SDLK_DELETE
 
   #define KEY_DOWN     SDLK_DOWN
   #define KEY_UP       SDLK_UP
@@ -94,6 +95,7 @@
 
   #define VK_ENTER     10
   #define VK_TAB       '\t'
+  #define VK_DELETE    KEY_DC
 
 #endif
 
@@ -396,6 +398,8 @@ namespace GlobalConstants
   extern const std::unordered_map<SpellType, std::string> SpellShortNameByType;
 
   extern const std::unordered_map<PlayerClass, std::string> PlayerClassNameByType;
+
+  extern const std::unordered_map<GameObjectType, bool> CanSwimMap;
 
   extern const std::vector<SpellType> ScrollValidSpellTypes;
 

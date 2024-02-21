@@ -58,7 +58,8 @@ void HelpState::Update(bool forceUpdate)
                                   offsetY,
                                   _helpText[i],
                                   Printer::kAlignLeft,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
       offsetY++;
     }
 
@@ -67,7 +68,8 @@ void HelpState::Update(bool forceUpdate)
                                 1,
                                 _specialText,
                                 Printer::kAlignRight,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
     #endif
 
     Printer::Instance().Render();

@@ -85,6 +85,8 @@ class DevConsole : public GameState
 
     int _commandsHistoryIndex = -1;
 
+    int _cursorPosition = 0;
+
     int _cursorX = 1;
     int _cursorY = 2;
 

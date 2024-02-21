@@ -38,6 +38,7 @@ void DevConsole::Prepare()
   _currentLevel = Map::Instance().CurrentLevel;
   _currentCommand = Prompt;
   _commandsHistoryIndex = _commandsHistory.size();
+  _cursorPosition = 0;
 }
 
 // =============================================================================
@@ -56,9 +57,13 @@ void DevConsole::HandleInput()
 
   switch (_keyPressed)
   {
+    // -------------------------------------------------------------------------
+
     case '`':
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
       break;
+
+    // -------------------------------------------------------------------------
 
     case KEY_UP:
     {
@@ -70,9 +75,12 @@ void DevConsole::HandleInput()
         }
 
         _currentCommand = Prompt + _commandsHistory[_commandsHistoryIndex];
+        _cursorPosition = _commandsHistory[_commandsHistoryIndex].length();
       }
     }
     break;
+
+    // -------------------------------------------------------------------------
 
     case KEY_DOWN:
     {
@@ -82,15 +90,41 @@ void DevConsole::HandleInput()
         {
           _commandsHistoryIndex++;
           _currentCommand = Prompt + _commandsHistory[_commandsHistoryIndex];
+          _cursorPosition = _commandsHistory[_commandsHistoryIndex].length();
         }
         else
         {
           _commandsHistoryIndex = _commandsHistory.size();
           _currentCommand = Prompt;
+          _cursorPosition = 0;
         }
       }
     }
     break;
+
+    // -------------------------------------------------------------------------
+
+    case KEY_LEFT:
+    {
+      if (_cursorPosition > 0)
+      {
+        _cursorPosition--;
+      }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
+    case KEY_RIGHT:
+    {
+      if (_cursorPosition < (int)_currentCommand.substr(2).length())
+      {
+        _cursorPosition++;
+      }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
 
     case VK_ENTER:
     {
@@ -131,23 +165,51 @@ void DevConsole::HandleInput()
         _commandsHistory.erase(_commandsHistory.begin());
         _commandsHistoryIndex = _commandsHistory.size();
       }
+
+      _cursorPosition = 0;
     }
     break;
+
+    // -------------------------------------------------------------------------
 
     case VK_BACKSPACE:
     {
       if (_currentCommand.length() > 2)
       {
         _currentCommand.pop_back();
+
+        if (_cursorPosition > 0)
+        {
+          _cursorPosition--;
+        }
       }
     }
     break;
+
+    // -------------------------------------------------------------------------
+
+    case VK_DELETE:
+    {
+      if (_currentCommand.length() > 2)
+      {
+        if ((int)_currentCommand.substr(2).length() > _cursorPosition)
+        {
+          _currentCommand.erase(_currentCommand.begin() + 2 + _cursorPosition);
+        }
+      }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
 
     default:
     {
       if (_keyPressed >= 32 && _keyPressed <= 126)
       {
-        _currentCommand += (char)_keyPressed;
+        _currentCommand.insert(_currentCommand.begin() + 2 + _cursorPosition,
+                               (char)_keyPressed);
+        //_currentCommand += (char)_keyPressed;
+        _cursorPosition++;
       }
     }
     break;
@@ -171,7 +233,8 @@ void DevConsole::Update(bool forceUpdate)
                                   2 + lineCount,
                                   _stdout[i],
                                   Printer::kAlignLeft,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
       lineCount++;
     }
 
@@ -179,17 +242,30 @@ void DevConsole::Update(bool forceUpdate)
                                 2 + lineCount,
                                 _currentCommand,
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
-    Printer::Instance().PrintFB(1 + _currentCommand.length(),
+    Printer::Instance().PrintFB(3 + _cursorPosition,
                                 2 + lineCount,
                                 ' ',
                                 Colors::BlackColor,
                                 Colors::WhiteColor);
 
     /*
-    std::string toPrint = Util::StringFormat("_commandsHistoryIndex = %d",
-                                             _commandsHistoryIndex);
+    Printer::Instance().PrintFB(1 + _currentCommand.length(),
+                                2 + lineCount,
+                                ' ',
+                                Colors::BlackColor,
+                                Colors::WhiteColor);
+    */
+
+    /*
+    std::string toPrint = Util::StringFormat("historyIndex = %d, "
+                                             "cursorPos = %d, "
+                                             "len = %llu",
+                                             _commandsHistoryIndex,
+                                             _cursorPosition,
+                                             _currentCommand.substr(2).length());
     Printer::Instance().PrintFB(_tw - 1,
                                 3,
                                 toPrint,

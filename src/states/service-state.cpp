@@ -206,13 +206,15 @@ void ServiceState::DrawSpecific()
                               _th - 1,
                               youHaveStr,
                               Printer::kAlignLeft,
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   Printer::Instance().PrintFB(1 + youHaveStr.length(),
                               _th - 1,
                               playerMoney,
                               Printer::kAlignLeft,
-                              Colors::CoinsColor);
+                              Colors::CoinsColor,
+                              Colors::BlackColor);
 }
 
 // =============================================================================
@@ -225,7 +227,8 @@ void ServiceState::DisplayItems()
                                 _thHalf,
                                 _displayOnEmptyItems.at(_shopOwner->NpcRef->Data.ProvidesService),
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
   }
   else
   {
@@ -240,7 +243,8 @@ void ServiceState::DisplayItems()
                                   2 + itemIndex,
                                   ri.NameToDisplay,
                                   Printer::kAlignLeft,
-                                  ri.Color);
+                                  ri.Color,
+                                  Colors::BlackColor);
 
       //
       // Replace letter and dash with white color
@@ -250,13 +254,15 @@ void ServiceState::DisplayItems()
                                   2 + itemIndex,
                                   ri.Letter + " - ",
                                   Printer::kAlignLeft,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
 
       Printer::Instance().PrintFB(1 + _maxStrLen + 1,
                                   2 + itemIndex,
                                   cost,
                                   Printer::kAlignLeft,
-                                  Colors::CoinsColor);
+                                  Colors::CoinsColor,
+                                  Colors::BlackColor);
 
       itemIndex++;
     }

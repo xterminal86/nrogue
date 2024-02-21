@@ -206,12 +206,14 @@ void GameState::DrawHeader(const std::string& header)
     Printer::Instance().PrintFB(x,
                                 0,
                                 (int)NameCP437::HBAR_2,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
     #else
     Printer::Instance().PrintFB(x,
                                 0,
                                 ACS_HLINE,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
     #endif
   }
 

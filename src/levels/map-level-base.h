@@ -100,7 +100,7 @@ class MapLevelBase
     // -------------------------------------------------------------------------
     struct FowObj
     {
-      int Image;
+      int Image = -1;
       std::string FowName;
     };
 

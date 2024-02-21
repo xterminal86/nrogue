@@ -39,7 +39,8 @@ void InfoState::Update(bool forceUpdate)
                                 0,
                                 title,
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     int charToPrint = 0;
 
@@ -54,12 +55,14 @@ void InfoState::Update(bool forceUpdate)
       Printer::Instance().PrintFB(i,
                                   1,
                                   charToPrint,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
 
       Printer::Instance().PrintFB(i,
                                   yPos + 12,
                                   charToPrint,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
     }
 
     #ifdef USE_SDL
@@ -73,7 +76,8 @@ void InfoState::Update(bool forceUpdate)
       Printer::Instance().PrintFB(kMaxNameUnderscoreLength,
                                   y,
                                   charToPrint,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
     }
 
     PrintAttribute(1, yPos, "LVL", _playerRef->Attrs.Lvl);
@@ -104,7 +108,8 @@ void InfoState::Update(bool forceUpdate)
                                 yPos + 13,
                                 "SKILLS",
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     int yPrintOffset = 14;
     for (auto& kvp : _playerRef->SkillLevelBySkill)
@@ -114,7 +119,8 @@ void InfoState::Update(bool forceUpdate)
                                   yPos + yPrintOffset,
                                   skillName,
                                   Printer::kAlignLeft,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
       yPrintOffset++;
     }
 
@@ -137,7 +143,8 @@ void InfoState::PrintExp(int x, int y)
                               y,
                               placeholder,
                               Printer::kAlignLeft,
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   std::string minVal = Util::StringFormat("%i", _playerRef->Attrs.Exp.Min().Get());
   std::string maxVal = Util::StringFormat("%i", _playerRef->Attrs.Exp.Max().Get());
@@ -147,13 +154,15 @@ void InfoState::PrintExp(int x, int y)
                               y,
                               minVal,
                               Printer::kAlignLeft,
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   Printer::Instance().PrintFB(x + placeholder.length() - digits,
                               y,
                               maxVal,
                               Printer::kAlignLeft,
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 }
 
 // =============================================================================
@@ -177,7 +186,8 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
                               y,
                               attrPlaceholder,
                               Printer::kAlignLeft,
-                              Colors::ShadesOfGrey::Five);
+                              Colors::ShadesOfGrey::Five,
+                              Colors::BlackColor);
 
   std::string text = Util::StringFormat("%i", attr.Get());
 
@@ -185,7 +195,8 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
                               y,
                               text,
                               Printer::kAlignLeft,
-                              color);
+                              color,
+                              Colors::BlackColor);
 
   //text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
   //Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
@@ -198,7 +209,8 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
                               y,
                               str,
                               Printer::kAlignLeft,
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 }
 
 // =============================================================================
@@ -222,7 +234,8 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
                               y,
                               placeholder,
                               Printer::kAlignLeft,
-                              Colors::ShadesOfGrey::Five);
+                              Colors::ShadesOfGrey::Five,
+                              Colors::BlackColor);
 
   //std::string text = Util::StringFormat("%s: %i / %i", attrName.data(), attr.Min().Get(), attr.Max().Get());
   //Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
@@ -235,18 +248,21 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
                               y,
                               minVal,
                               Printer::kAlignLeft,
-                              color);
+                              color,
+                              Colors::BlackColor);
 
   Printer::Instance().PrintFB(x + placeholder.length() - 3,
                               y,
                               maxVal,
                               Printer::kAlignLeft,
-                              color);
+                              color,
+                              Colors::BlackColor);
 
   Printer::Instance().PrintFB(x + placeholder.length() - 5,
                               y,
                               '/',
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   //
   // Replace stat name back with white color (kinda hack)
@@ -256,7 +272,8 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
                               y,
                               str,
                               Printer::kAlignLeft,
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 }
 
 // =============================================================================
@@ -279,42 +296,48 @@ void InfoState::PrintModifiers(int x, int y)
                               y,
                               res.second,
                               Printer::kAlignLeft,
-                              res.first);
+                              res.first,
+                              Colors::BlackColor);
 
   res = GetModifierString(defMod);
   Printer::Instance().PrintFB(x,
                               y + 1,
                               res.second,
                               Printer::kAlignLeft,
-                              res.first);
+                              res.first,
+                              Colors::BlackColor);
 
   res = GetModifierString(magMod);
   Printer::Instance().PrintFB(x,
                               y + 2,
                               res.second,
                               Printer::kAlignLeft,
-                              res.first);
+                              res.first,
+                              Colors::BlackColor);
 
   res = GetModifierString(resMod);
   Printer::Instance().PrintFB(x,
                               y + 3,
                               res.second,
                               Printer::kAlignLeft,
-                              res.first);
+                              res.first,
+                              Colors::BlackColor);
 
   res = GetModifierString(sklMod);
   Printer::Instance().PrintFB(x,
                               y + 4,
                               res.second,
                               Printer::kAlignLeft,
-                              res.first);
+                              res.first,
+                              Colors::BlackColor);
 
   res = GetModifierString(spdMod);
   Printer::Instance().PrintFB(x,
                               y + 5,
                               res.second,
                               Printer::kAlignLeft,
-                              res.first);
+                              res.first,
+                              Colors::BlackColor);
 }
 
 // =============================================================================

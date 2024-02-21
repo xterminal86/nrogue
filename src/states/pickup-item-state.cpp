@@ -132,7 +132,8 @@ void PickupItemState::DrawSpecific()
                                 _thHalf,
                                 "No items",
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
   }
   else
   {
@@ -143,7 +144,8 @@ void PickupItemState::DrawSpecific()
                                   2 + lineIndex,
                                   line,
                                   Printer::kAlignLeft,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
       lineIndex++;
     }
   }

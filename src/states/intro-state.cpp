@@ -38,6 +38,7 @@ void IntroState::HandleInput()
 
 void IntroState::Update(bool forceUpdate)
 {
+#ifdef USE_SDL
   Printer::Instance().PrintFB(_twHalf,
                               (Printer::TerminalHeight - _introStrings[Application::Instance().PlayerInstance.SelectedClass].size()) / 4,
                               _scenarioNameByClass.at(Application::Instance().PlayerInstance.GetClass()),
@@ -45,6 +46,15 @@ void IntroState::Update(bool forceUpdate)
                               Printer::kAlignCenter,
                               Colors::WhiteColor,
                               Colors::BlackColor);
+#else
+  Printer::Instance().PrintFB(_twHalf,
+                              (Printer::TerminalHeight - _introStrings[Application::Instance().PlayerInstance.SelectedClass].size()) / 4,
+                              _scenarioNameByClass.at(Application::Instance().PlayerInstance.GetClass()),
+                              Printer::kAlignCenter,
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
+#endif
+
   if (Util::WaitForMs(10))
   {
     int textIndex = Application::Instance().PlayerInstance.SelectedClass;
@@ -57,7 +67,8 @@ void IntroState::Update(bool forceUpdate)
         Printer::Instance().PrintFB(_textPositionX - len / 2,
                                     _textPositionY,
                                     _introStrings[textIndex][_stringIndex][_textPositionCursor],
-                                    Colors::WhiteColor);
+                                    Colors::WhiteColor,
+                                    Colors::BlackColor);
 
         Printer::Instance().PrintFB(_textPositionX - len / 2 + 1,
                                     _textPositionY,
@@ -73,6 +84,7 @@ void IntroState::Update(bool forceUpdate)
         Printer::Instance().PrintFB(_textPositionX - len / 2,
                                     _textPositionY,
                                     ' ',
+                                    Colors::BlackColor,
                                     Colors::BlackColor);
 
         _textPositionCursor = 0;
@@ -89,7 +101,8 @@ void IntroState::Update(bool forceUpdate)
                                   Printer::TerminalHeight - 1,
                                   "Press 'Enter' to continue",
                                   Printer::kAlignCenter,
-                                  Colors::WhiteColor);
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
     }
 
     Printer::Instance().Render();

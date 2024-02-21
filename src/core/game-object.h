@@ -60,6 +60,7 @@ class GameObject
     bool MoveTo(const Position& pos, bool force = false);
 
     bool CanMoveTo(const Position& pos);
+    bool IsSwimming();
 
     void Draw(const uint32_t& overrideFgColor = Colors::None,
               const uint32_t& overrideBgColor = Colors::None,

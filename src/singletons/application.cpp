@@ -293,13 +293,23 @@ void Application::DrawAttackCursor(int x, int y,
     if (defender->FgColor != Colors::None
      && defender->BgColor != Colors::None)
     {
-      Printer::Instance().PrintFB(x, y, defender->Image, defender->FgColor, defender->BgColor);
+      Printer::Instance().PrintFB(x,
+                                  y,
+                                  defender->Image,
+                                  defender->FgColor,
+                                  defender->BgColor);
+
       Printer::Instance().Render();
     }
   }
   else
   {
-    Printer::Instance().PrintFB(x, y, ' ', Colors::BlackColor, cursorColor);
+    Printer::Instance().PrintFB(x,
+                                y,
+                                ' ',
+                                Colors::BlackColor,
+                                cursorColor);
+
     Printer::Instance().Render();
   }
 }

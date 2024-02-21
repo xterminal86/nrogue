@@ -30,7 +30,6 @@ class Player : public GameObject
     void CheckVisibility();
 
     bool TryToMeleeAttack(int dx, int dy);
-    bool IsSwimming();
 
     int SelectedClass;
 

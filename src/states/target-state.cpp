@@ -708,7 +708,11 @@ void TargetState::DrawHint()
 
   for (auto& p : cellsToHighlight)
   {
-    Printer::Instance().PrintFB(p.X + mox, p.Y + moy, '.', Colors::RedColor);
+    Printer::Instance().PrintFB(p.X + mox,
+                                p.Y + moy,
+                                '.',
+                                Colors::RedColor,
+                                Colors::BlackColor);
   }
 }
 
@@ -721,11 +725,15 @@ void TargetState::DrawCursor()
 
   Printer::Instance().PrintFB(_cursorPosition.X + mox + 1,
                               _cursorPosition.Y + moy,
-                              ']', Colors::WhiteColor);
+                              ']',
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   Printer::Instance().PrintFB(_cursorPosition.X + mox - 1,
                               _cursorPosition.Y + moy,
-                              '[', Colors::WhiteColor);
+                              '[',
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 }
 
 // =============================================================================
@@ -751,12 +759,14 @@ void TargetState::Update(bool forceUpdate)
     Printer::Instance().PrintFB(tw / 2, 0,
                                 "Select target then press 'f' or 'Enter' to fire",
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().PrintFB(tw / 2, 1,
                                 "(TAB to cycle through visible ones)",
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().Render();
   }

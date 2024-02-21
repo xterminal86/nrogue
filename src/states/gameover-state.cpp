@@ -62,7 +62,8 @@ void GameOverState::Update(bool forceUpdate)
                                 0,
                                 "Press 'q' to exit",
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().Render();
   }
@@ -138,5 +139,6 @@ void GameOverState::UpdateBar(int x, int y, RangedAttribute& attr)
                               y,
                               _bar,
                               Printer::kAlignLeft,
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 }

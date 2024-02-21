@@ -26,7 +26,8 @@ void SelectItemStateBase::Update(bool forceUpdate)
                                 _th - 1,
                                 "'q' - exit",
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().Render();
   }

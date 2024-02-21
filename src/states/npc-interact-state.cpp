@@ -178,7 +178,8 @@ void NPCInteractState::AnimateText()
   Printer::Instance().PrintFB(_charPos,
                               _currentLine + 2,
                               line[_textBlockCharIndex],
-                              Colors::WhiteColor);
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
 
   Printer::Instance().Render();
 
@@ -190,6 +191,7 @@ void NPCInteractState::AnimateText()
     Printer::Instance().PrintFB(_charPos,
                                 _currentLine + 2,
                                 ' ',
+                                Colors::BlackColor,
                                 Colors::BlackColor);
     _charPos = _textStartPosX;
     _textBlockCharIndex = 0;
@@ -218,7 +220,8 @@ void NPCInteractState::DisplayStillText()
                                 yPos,
                                 l,
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
     yPos++;
   }
 
@@ -266,23 +269,24 @@ void NPCInteractState::PrintFooter()
                                 th - 1,
                                 "Listening...",
                                 Printer::kAlignCenter,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
     return;
   }
 
   if (_npcRef->Data.ProvidesService != ServiceType::NONE)
   {
-    Printer::Instance().PrintFB(1,               th - 1, StrName,     Printer::kAlignLeft,   Colors::WhiteColor);
-    Printer::Instance().PrintFB(tw / 2 - tw / 4, th - 1, StrJob,      Printer::kAlignCenter, Colors::WhiteColor);
-    Printer::Instance().PrintFB(tw / 2,          th - 1, StrServices, Printer::kAlignCenter, Colors::WhiteColor);
-    Printer::Instance().PrintFB(tw / 2 + tw / 4, th - 1, StrGossip,   Printer::kAlignCenter, Colors::WhiteColor);
-    Printer::Instance().PrintFB(tw - 1,          th - 1, StrBye,      Printer::kAlignRight,  Colors::WhiteColor);
+    Printer::Instance().PrintFB(1,               th - 1, StrName,     Printer::kAlignLeft,   Colors::WhiteColor, Colors::BlackColor);
+    Printer::Instance().PrintFB(tw / 2 - tw / 4, th - 1, StrJob,      Printer::kAlignCenter, Colors::WhiteColor, Colors::BlackColor);
+    Printer::Instance().PrintFB(tw / 2,          th - 1, StrServices, Printer::kAlignCenter, Colors::WhiteColor, Colors::BlackColor);
+    Printer::Instance().PrintFB(tw / 2 + tw / 4, th - 1, StrGossip,   Printer::kAlignCenter, Colors::WhiteColor, Colors::BlackColor);
+    Printer::Instance().PrintFB(tw - 1,          th - 1, StrBye,      Printer::kAlignRight,  Colors::WhiteColor, Colors::BlackColor);
   }
   else
   {
-    Printer::Instance().PrintFB(1,               th - 1, StrName,   Printer::kAlignLeft,   Colors::WhiteColor);
-    Printer::Instance().PrintFB(tw / 2 - tw / 8, th - 1, StrJob,    Printer::kAlignCenter, Colors::WhiteColor);
-    Printer::Instance().PrintFB(tw / 2 + tw / 8, th - 1, StrGossip, Printer::kAlignCenter, Colors::WhiteColor);
-    Printer::Instance().PrintFB(tw - 1,          th - 1, StrBye,    Printer::kAlignRight,  Colors::WhiteColor);
+    Printer::Instance().PrintFB(1,               th - 1, StrName,   Printer::kAlignLeft,   Colors::WhiteColor, Colors::BlackColor);
+    Printer::Instance().PrintFB(tw / 2 - tw / 8, th - 1, StrJob,    Printer::kAlignCenter, Colors::WhiteColor, Colors::BlackColor);
+    Printer::Instance().PrintFB(tw / 2 + tw / 8, th - 1, StrGossip, Printer::kAlignCenter, Colors::WhiteColor, Colors::BlackColor);
+    Printer::Instance().PrintFB(tw - 1,          th - 1, StrBye,    Printer::kAlignRight,  Colors::WhiteColor, Colors::BlackColor);
   }
 }

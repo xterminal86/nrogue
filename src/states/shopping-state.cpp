@@ -113,9 +113,17 @@ void ShoppingState::Update(bool forceUpdate)
     for (int y = 1; y < _th; y++)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw / 2, y, (int)NameCP437::VBAR_2, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw / 2,
+                                  y,
+                                  (int)NameCP437::VBAR_2,
+                                  Colors::WhiteColor,
+                                  Colors::BlackColor);
       #else
-      Printer::Instance().PrintFB(_tw / 2, y, '|', Colors::BlackColor, Colors::WhiteColor);
+      Printer::Instance().PrintFB(_tw / 2,
+                                  y,
+                                  '|',
+                                  Colors::BlackColor,
+                                  Colors::WhiteColor);
       #endif
     }
 
@@ -129,25 +137,29 @@ void ShoppingState::Update(bool forceUpdate)
                                 _th - 1,
                                 youHaveStr,
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().PrintFB(1 + youHaveStr.length(),
                                 _th - 1,
                                 playerMoney,
                                 Printer::kAlignLeft,
-                                Colors::CoinsColor);
+                                Colors::CoinsColor,
+                                Colors::BlackColor);
 
     Printer::Instance().PrintFB(_tw / 2 + 1,
                                 _th - 1,
                                 " 'i' - inspect ",
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().PrintFB(_tw,
                                 _th - 1,
                                 "'q' - exit ",
                                 Printer::kAlignRight,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     Printer::Instance().Render();
   }
@@ -190,7 +202,8 @@ void ShoppingState::DisplayPlayerInventory()
                                 yPos + index,
                                 extraInfo,
                                 Printer::kAlignLeft,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     int cost = GetCost(ic, true);
 
@@ -200,7 +213,8 @@ void ShoppingState::DisplayPlayerInventory()
                                 yPos + index,
                                 costString,
                                 Printer::kAlignLeft,
-                                Colors::CoinsColor);
+                                Colors::CoinsColor,
+                                Colors::BlackColor);
 
     uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
@@ -219,7 +233,8 @@ void ShoppingState::DisplayPlayerInventory()
                                   yPos + index,
                                   nameInInventory,
                                   Printer::kAlignLeft,
-                                  textColor);
+                                  textColor,
+                                  Colors::BlackColor);
     }
 
     index++;
@@ -236,7 +251,8 @@ void ShoppingState::DisplayPlayerInventory()
                                 yPos + index,
                                 stub,
                                 Printer::kAlignLeft,
-                                Colors::ShadesOfGrey::Six);
+                                Colors::ShadesOfGrey::Six,
+                                Colors::BlackColor);
     yPos++;
   }
 }
@@ -278,7 +294,8 @@ void ShoppingState::DisplayShopInventory()
                                 yPos + index,
                                 extraInfo,
                                 Printer::kAlignRight,
-                                Colors::WhiteColor);
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
 
     int cost = GetCost(ic, false);
 
@@ -290,7 +307,8 @@ void ShoppingState::DisplayShopInventory()
                                 yPos + index,
                                 costString,
                                 Printer::kAlignRight,
-                                Colors::CoinsColor);
+                                Colors::CoinsColor,
+                                Colors::BlackColor);
 
     uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
@@ -309,7 +327,8 @@ void ShoppingState::DisplayShopInventory()
                                   yPos + index,
                                   nameInInventory,
                                   Printer::kAlignRight,
-                                  textColor);
+                                  textColor,
+                                  Colors::BlackColor);
     }
 
     index++;
@@ -326,7 +345,8 @@ void ShoppingState::DisplayShopInventory()
                                 yPos + index,
                                 stub,
                                 Printer::kAlignRight,
-                                Colors::ShadesOfGrey::Six);
+                                Colors::ShadesOfGrey::Six,
+                                Colors::BlackColor);
     yPos++;
   }
 }
