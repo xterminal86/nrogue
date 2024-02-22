@@ -2229,9 +2229,9 @@ namespace Util
   // ===========================================================================
 
   int CalculateHitChanceMelee(GameObject* attacker,
-                              GameObject* defender)
+                              GameObject* defender,
+                              bool linear)
   {
-    /*
     auto LinearHitChance = [](GameObject* attacker,
                               GameObject* defender)
     {
@@ -2256,9 +2256,6 @@ namespace Util
 
       return hitChance;
     };
-
-    return LinearHitChance(attacker, defender);
-    */
 
     auto NonLinearHitChance = [](GameObject* attacker,
                                  GameObject* defender)
@@ -2287,7 +2284,9 @@ namespace Util
       return chance;
     };
 
-    return NonLinearHitChance(attacker, defender);
+    return linear
+        ? LinearHitChance(attacker, defender)
+        : NonLinearHitChance(attacker, defender);
   }
 
   // ===========================================================================

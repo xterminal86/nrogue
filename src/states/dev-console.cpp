@@ -176,10 +176,11 @@ void DevConsole::HandleInput()
     {
       if (_currentCommand.length() > 2)
       {
-        _currentCommand.pop_back();
+        //_currentCommand.pop_back();
 
         if (_cursorPosition > 0)
         {
+          _currentCommand.erase(_currentCommand.begin() + 2 + _cursorPosition - 1);
           _cursorPosition--;
         }
       }

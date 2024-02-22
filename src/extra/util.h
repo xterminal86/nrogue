@@ -208,7 +208,8 @@ namespace Util
                                   bool meleeAttackWithRangedWeapon);
 
   extern int CalculateHitChanceMelee(GameObject* attacker,
-                                     GameObject* defender);
+                                     GameObject* defender,
+                                     bool linear = false);
 
   extern int CalculateHitChanceRanged(const Position& start,
                                       const Position& end,
