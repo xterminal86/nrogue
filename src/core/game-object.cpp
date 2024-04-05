@@ -254,12 +254,15 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
     bgColor = overrideColorBg;
   }
 
-#ifndef USE_SDL
+  //
+  // SDL build uses transparency as Colors::None, so without this check it will
+  // cause objects from breakable containers to overlay with container's remains
+  // which doesn't look good.
+  //
   if (bgColor == Colors::None)
   {
     bgColor = Colors::BlackColor;
   }
-#endif
 
   Printer::Instance().PrintFB(PosX + _levelOwner->MapOffsetX,
                               PosY + _levelOwner->MapOffsetY,

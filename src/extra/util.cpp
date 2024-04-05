@@ -1079,7 +1079,7 @@ namespace Util
 
   int GetExpForNextLevel(int curLvl)
   {
-    double p = std::pow(1.3, curLvl) * 20;
+    double p = std::round(std::pow(1.3, curLvl) * 20);
     return (int)p;
   }
 
@@ -2603,8 +2603,8 @@ namespace Util
   // ===========================================================================
 
   StringV DamageArmor(GameObject* who,
-                       GameObject* from,
-                       int amount)
+                      GameObject* from,
+                      int amount)
   {
     StringV logMsgs;
     StringV logMsgsRec;
@@ -3047,7 +3047,7 @@ namespace Util
       case GameObjectType::HARMLESS:
       case GameObjectType::REMAINS:
       case GameObjectType::PICKAXEABLE:
-      // case GameObjectType::TRAP:
+      case GameObjectType::TRAP:
       case GameObjectType::BREAKABLE:
       case GameObjectType::CONTAINER:
       case GameObjectType::SHRINE:

@@ -850,6 +850,12 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
   bool ignoreArmor = false;
   bool pickaxeEquipped = false;
 
+  //
+  // GameObject default type is HARMLESS to avoid it being pickaxed away.
+  //
+  bool isPickaxeable = (defender->Type == GameObjectType::PICKAXEABLE);
+  bool isOnBorder    = IsGameObjectBorder(defender);
+
   if (weapon != nullptr)
   {
     //
@@ -870,23 +876,41 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
         hasLeech = true;
       }
 
-      std::string logMsg = Util::TryToDamageEquipment(this, weapon, -1);
-      if (!logMsg.empty())
+      bool defHasArmor = false;
+
+      EquipmentComponent* ec = defender->GetComponent<EquipmentComponent>();
+      if (ec != nullptr)
       {
-        Printer::Instance().AddMessage(logMsg);
+        ItemComponent* armor = ec->EquipmentByCategory[EquipmentCategory::TORSO][0];
+        defHasArmor = (armor != nullptr);
+      }
+
+      //
+      // Do not damage weapon unless you hit armor, using a pickaxe
+      // or doing dumb shit.
+      //
+      bool shouldDamageWeapon = (defHasArmor
+                             || (pickaxeEquipped && isPickaxeable)
+                             //
+                             // Use function from different domain to check
+                             // against specific set of item types.
+                             //
+                             || !Util::ShouldAwardExp(defender->Type));
+
+      if (shouldDamageWeapon)
+      {
+        std::string logMsg = Util::TryToDamageEquipment(this, weapon, -1);
+        if (!logMsg.empty())
+        {
+          Printer::Instance().AddMessage(logMsg);
+        }
       }
     }
   }
 
-  //
-  // GameObject default type is HARMLESS to avoid it being pickaxed away.
-  //
-  bool isPickaxeable = (defender->Type == GameObjectType::PICKAXEABLE);
-  bool isWallOnBorder  = IsGameObjectBorder(defender);
-
   shouldTearDownWall = (pickaxeEquipped
                      && isPickaxeable
-                     && !isWallOnBorder
+                     && !isOnBorder
                      && !defender->Attrs.Indestructible);
 
   if (shouldTearDownWall)

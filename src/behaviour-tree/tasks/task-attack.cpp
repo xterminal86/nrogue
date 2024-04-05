@@ -203,7 +203,10 @@ bool TaskAttack::AttackWithWeapon()
     if (weapon != nullptr
      && weapon->Data.ItemType_ != ItemType::RANGED_WEAPON)
     {
-      Util::TryToDamageEquipment(_objectToControl, weapon, -1);
+      if (PlayerHasArmor())
+      {
+        Util::TryToDamageEquipment(_objectToControl, weapon, -1);
+      }
     }
 
     result = true;

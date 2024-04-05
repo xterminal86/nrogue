@@ -174,9 +174,6 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
 
     difficulty = Util::Clamp(difficulty, 1, (int)MapType::MINES_5);
 
-    go->Attrs.Str.Talents = 1;
-    go->Attrs.Spd.Talents = 1;
-
     for (int i = 0; i < difficulty; i++)
     {
       go->LevelUp(2);
@@ -229,7 +226,6 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
     difficulty = Util::Clamp(difficulty, 1, (int)MapType::MINES_5);
 
     go->Attrs.Def.Talents = 3;
-    go->Attrs.Spd.Talents = 1;
 
     for (int i = 0; i < difficulty; i++)
     {
@@ -285,7 +281,6 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
     difficulty = Util::Clamp(difficulty, 1, (int)MapType::MINES_5);
 
     go->Attrs.Def.Talents = 3;
-    go->Attrs.Spd.Talents = 3;
 
     for (int i = 0; i < difficulty; i++)
     {
@@ -342,7 +337,6 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
 
     go->Attrs.Str.Talents = 2;
     go->Attrs.Def.Talents = 2;
-    go->Attrs.Spd.Talents = 1;
 
     for (int i = 0; i < difficulty; i++)
     {
@@ -698,8 +692,7 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
 
   go->MoveTo(x, y);
 
-  go->Attrs.Str.Talents = 3;
-  go->Attrs.HP.Talents  = 3;
+  go->Attrs.HP.Talents = 2;
 
   int difficulty = GetDifficulty();
 
@@ -784,9 +777,6 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
   go->IsLiving             = false;
 
   go->MoveTo(x, y);
-
-  go->Attrs.Spd.Talents = 1;
-  go->Attrs.Skl.Talents = 3;
 
   int difficulty = GetDifficulty();
 
