@@ -1,6 +1,10 @@
-﻿#include "map-level-base.h"
-#include "application.h"
+﻿#ifdef MSVC_COMPILER
+#include "game-object.h"
+#endif
+
 #include "game-objects-factory.h"
+#include "map-level-base.h"
+#include "application.h"
 #include "gid-generator.h"
 #include "monsters-inc.h"
 #include "items-factory.h"

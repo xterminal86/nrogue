@@ -1,3 +1,7 @@
+#ifdef MSVC_COMPILER
+#include "game-object.h"
+#endif
+
 #include "map-level-town.h"
 
 #include "player.h"
