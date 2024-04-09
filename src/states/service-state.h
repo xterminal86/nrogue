@@ -42,7 +42,10 @@ class ServiceState : public SelectItemStateBase
       int ServiceCost = 0;
     };
 
-    std::unordered_map<char, ServiceInfo> _serviceInfoByChar;
+    //
+    // Must be std::map so that service items are sorted by alphabet.
+    //
+    std::map<char, ServiceInfo> _serviceInfoByChar;
 
     int GetValidBonusesCount(ItemComponent* ic);
 

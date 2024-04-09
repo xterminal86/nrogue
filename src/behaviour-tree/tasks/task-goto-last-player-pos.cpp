@@ -27,7 +27,11 @@ BTResult TaskGotoLastPlayerPos::Run()
   {
     // We have arrived at the last known player position
 
-    Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPos, std::string() });
+    Blackboard::Instance().Set(_objectToControl->ObjectId(),
+                               {
+                                 Strings::BlackboardKeyPlayerPos,
+                                 std::string()
+                               });
 
     return BTResult::Success;
   }
@@ -54,7 +58,11 @@ BTResult TaskGotoLastPlayerPos::Run()
   }
 
   // No path can be built or MoveTo() failed
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPos, std::string() });
+  Blackboard::Instance().Set(_objectToControl->ObjectId(),
+                             {
+                               Strings::BlackboardKeyPlayerPos,
+                               std::string()
+                             });
 
   return BTResult::Failure;
 }

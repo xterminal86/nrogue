@@ -112,7 +112,11 @@ BTResult TaskMineTunnel::Run()
 
   auto minedPos = Util::StringFormat("%i,%i", found.X, found.Y);
 
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyLastMinedPos, minedPos });
+  Blackboard::Instance().Set(_objectToControl->ObjectId(),
+                             {
+                               Strings::BlackboardKeyLastMinedPos,
+                               minedPos
+                             });
 
   return BTResult::Success;
 }

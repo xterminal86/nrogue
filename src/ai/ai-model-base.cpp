@@ -621,7 +621,11 @@ std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF()
     {
       std::string plPosStr = Util::StringFormat("%i,%i", plPos.X, plPos.Y);
 
-      Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(), { Strings::BlackboardKeyPlayerPos, plPosStr });
+      Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(),
+                                 {
+                                   Strings::BlackboardKeyPlayerPos,
+                                   plPosStr
+                                 });
     }
 
     //

@@ -294,21 +294,7 @@ class GameObject
       std::string FowName;
       uint16_t Mask;
 
-      std::string ToStringKey() const
-      {
-        std::stringstream ss;
-
-        ss << (int)Type
-           << (int)ZoneMarker
-           << Image
-           << Util::NumberToHexString(FgColor)
-           << Util::NumberToHexString(BgColor)
-           << Name
-           << FowName
-           << Mask;
-
-        return ss.str();
-      }
+      std::string ToStringKey() const;
     };
 
     const SaveDataMinimal& GetSaveDataMinimal();

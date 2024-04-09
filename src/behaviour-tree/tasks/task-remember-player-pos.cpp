@@ -12,7 +12,11 @@ BTResult TaskRememberPlayerPos::Run()
 
   auto plPos = Util::StringFormat("%i,%i", _playerRef->PosX, _playerRef->PosY);
 
-  Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyPlayerPos, plPos });
+  Blackboard::Instance().Set(_objectToControl->ObjectId(),
+                             {
+                               Strings::BlackboardKeyPlayerPos,
+                               plPos
+                             });
 
   return BTResult::Success;
 }

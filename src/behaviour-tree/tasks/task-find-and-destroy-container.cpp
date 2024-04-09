@@ -22,7 +22,11 @@ BTResult TaskFindAndDestroyContainer::Run()
     GameObject* object = Map::Instance().FindGameObjectById(objIdInt, GameObjectCollectionType::STATIC_OBJECTS);
     if (object == nullptr)
     {
-      Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyObjectId, std::string() });
+      Blackboard::Instance().Set(_objectToControl->ObjectId(),
+                                 {
+                                   Strings::BlackboardKeyObjectId,
+                                   std::string()
+                                 });
     }
     else
     {
@@ -34,7 +38,11 @@ BTResult TaskFindAndDestroyContainer::Run()
     GameObject* container = FindContainer();
     if (container != nullptr)
     {
-      Blackboard::Instance().Set(_objectToControl->ObjectId(), { Strings::BlackboardKeyObjectId, std::to_string(container->ObjectId()) });
+      Blackboard::Instance().Set(_objectToControl->ObjectId(),
+                                 {
+                                   Strings::BlackboardKeyObjectId,
+                                   std::to_string(container->ObjectId())
+                                 });
       res = ProcessExistingObject(container);
     }
   }

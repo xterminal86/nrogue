@@ -1677,6 +1677,8 @@ void GameObject::Serialize(NRS& section)
       if (dc != nullptr)
       {
         NRS& n = *ptr;
+
+        // TODO:
       }
     }
     break;
@@ -1737,6 +1739,22 @@ const GameObject::SaveDataMinimal& GameObject::GetSaveDataMinimal()
                                           });
 
   return _sdm;
+}
+
+std::string GameObject::SaveDataMinimal::ToStringKey() const
+{
+  std::stringstream ss;
+
+  ss << (int)Type
+     << (int)ZoneMarker
+     << Image
+     << Util::NumberToHexString(FgColor)
+     << Util::NumberToHexString(BgColor)
+     << Name
+     << FowName
+     << Mask;
+
+  return ss.str();
 }
 
 // =============================================================================
