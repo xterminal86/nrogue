@@ -37,4 +37,14 @@ jobs:
 
     - name: BUILD      
       run: cmake --build ${{github.workspace}}/${{ env.BUILD_DIR_REL }} --config Release
-      
+
+    # ------------------------------------------------------------------------------------
+
+    - name: AFTER BUILD
+      run: |
+           echo "AFTER BUILD:"
+           echo "--- ROOT ---"
+           ls
+           echo "--- RELEASE DIR ---"
+           ls ${{ env.BUILD_DIR_REL }}
+    
