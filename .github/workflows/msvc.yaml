@@ -7,7 +7,7 @@ on:
       - completed
 
 env:
-  BUILD_VERSION_TEXT: build-${{ github.run_number }}
+  BUILD_VERSION_TEXT: build-msvc-${{ github.run_number }}
   BUILD_DIR_REL: build-msvc
   PACK_DIR: build-msvc-${{ github.run_number }}
   ARCHIVE_NAME: build-msvc-${{ github.run_number }}.zip
