@@ -53,4 +53,7 @@ jobs:
            ls ${{ env.BUILD_DIR_REL }}/x64
            echo "--- /x64/Release ---"
            ls ${{ env.BUILD_DIR_REL }}/x64/Release
+           ls ${{ env.BUILD_DIR_REL }}/x64/Release/ALL_BUILD
+           ls ${{ env.BUILD_DIR_REL }}/x64/Release/ZERO_CHECK
+           
     
