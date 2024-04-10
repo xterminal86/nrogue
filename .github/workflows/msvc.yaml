@@ -8,7 +8,9 @@ on:
 
 env:
   BUILD_VERSION_TEXT: build-${{ github.run_number }}
-  BUILD_DIR_REL: build-msvc    
+  BUILD_DIR_REL: build-msvc
+  PACK_DIR: build-msvc-${{ github.run_number }}
+  ARCHIVE_NAME: build-msvc-${{ github.run_number }}.zip
 
 #
 # For testing MSVC build
@@ -55,5 +57,16 @@ jobs:
            ls ${{ env.BUILD_DIR_REL }}/x64/Release
            ls ${{ env.BUILD_DIR_REL }}/x64/Release/ALL_BUILD
            ls ${{ env.BUILD_DIR_REL }}/x64/Release/ZERO_CHECK
-           
+
+    - name: PREPARE ARTIFACTS
+      run: |
+           mkdir '${{ env.PACK_DIR }}' 
+           cp '${{ env.BUILD_DIR_REL }}/Release/nrogue.exe' '${{ env.PACK_DIR }}/'
+           cp '${{ env.BUILD_DIR_REL }}/SDL2.dll' '${{ env.PACK_DIR }}/'
+           cp '${{ env.BUILD_DIR_REL }}/config-template.txt' '${{ env.PACK_DIR }}/'
+
+    - name: PACK ARTIFACTS
+      run: |
+           7z a -tzip ${{ env.ARCHIVE_NAME }} ${{ env.PACK_DIR }}/
+           ls          
     
