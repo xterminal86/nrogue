@@ -43,14 +43,15 @@ jobs:
     # ------------------------------------------------------------------------------------
 
     - name: AFTER BUILD
+      if: false
       run: |
            echo "AFTER BUILD:"
            echo "--- ROOT ---"
            ls
            echo "--- RELEASE DIR ---"
            ls ${{ env.BUILD_DIR_REL }}
-           echo "--- /Release ---"
-           ls ${{ env.BUILD_DIR_REL }}/Release
+           echo "--- /Release ---"           
+           ls ${{ env.BUILD_DIR_REL }}/Release # Binary is here
            echo "--- /x64 ---"
            ls ${{ env.BUILD_DIR_REL }}/x64
            echo "--- /x64/Release ---"
@@ -62,11 +63,11 @@ jobs:
       run: |
            mkdir '${{ env.PACK_DIR }}' 
            cp '${{github.workspace}}/${{ env.BUILD_DIR_REL }}/Release/nrogue.exe' '${{ env.PACK_DIR }}/'
-           cp '${{github.workspace}}/${{ env.BUILD_DIR_REL }}/SDL2.dll' '${{ env.PACK_DIR }}/'
-           cp '${{github.workspace}}/${{ env.BUILD_DIR_REL }}/config-template.txt' '${{ env.PACK_DIR }}/'
+           cp '${{github.workspace}}/SDL2.dll' '${{ env.PACK_DIR }}/'
+           cp '${{github.workspace}}/config-template.txt' '${{ env.PACK_DIR }}/'
 
     - name: PACK ARTIFACTS
       run: |
            7z a -tzip ${{ env.ARCHIVE_NAME }} ${{ env.PACK_DIR }}/
-           ls       
+           ls          
     
