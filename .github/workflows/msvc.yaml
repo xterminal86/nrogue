@@ -61,12 +61,12 @@ jobs:
     - name: PREPARE ARTIFACTS
       run: |
            mkdir '${{ env.PACK_DIR }}' 
-           cp '${{ env.BUILD_DIR_REL }}/Release/nrogue.exe' '${{ env.PACK_DIR }}/'
-           cp '${{ env.BUILD_DIR_REL }}/SDL2.dll' '${{ env.PACK_DIR }}/'
-           cp '${{ env.BUILD_DIR_REL }}/config-template.txt' '${{ env.PACK_DIR }}/'
+           cp '${{github.workspace}}/${{ env.BUILD_DIR_REL }}/Release/nrogue.exe' '${{ env.PACK_DIR }}/'
+           cp '${{github.workspace}}/${{ env.BUILD_DIR_REL }}/SDL2.dll' '${{ env.PACK_DIR }}/'
+           cp '${{github.workspace}}/${{ env.BUILD_DIR_REL }}/config-template.txt' '${{ env.PACK_DIR }}/'
 
     - name: PACK ARTIFACTS
       run: |
            7z a -tzip ${{ env.ARCHIVE_NAME }} ${{ env.PACK_DIR }}/
-           ls          
+           ls       
     
