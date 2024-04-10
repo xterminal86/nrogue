@@ -69,5 +69,22 @@ jobs:
     - name: PACK ARTIFACTS
       run: |
            7z a -tzip ${{ env.ARCHIVE_NAME }} ${{ env.PACK_DIR }}/
-           ls          
+           ls
     
+    - name: GET RELEASE INFO
+      id: latest-release-info
+      uses: cardinalby/git-get-release-action@v1
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
+      with:
+          tag: build-latest
+
+    - name: UPLOAD RELEASE ZIP
+      uses: actions/upload-release-asset@v1
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
+      with:
+          upload_url: ${{ steps.latest-release-info.outputs.upload_url }}
+          asset_path: ${{github.workspace}}/${{ env.ARCHIVE_NAME }}
+          asset_name: ${{ env.ARCHIVE_NAME }}
+          asset_content_type: application/zip    
