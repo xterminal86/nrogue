@@ -1,6 +1,6 @@
-﻿//#ifdef MSVC_COMPILER
-//#include "game-object.h"
-//#endif
+﻿#ifdef MSVC_COMPILER
+#include "game-object.h"
+#endif
 
 #include "game-objects-factory.h"
 #include "map-level-base.h"
