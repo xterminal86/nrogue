@@ -107,6 +107,8 @@ if (NOT BUILD_TESTS)
     ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/map-level-test.cpp)
 endif()
 
+list(SORT SOURCES)
+
 #
 # To allow sharing of object files since it's all the same shit anyway.
 #

@@ -1,9 +1,9 @@
 #ifndef STRINGOBFUSCATOR_H
 #define STRINGOBFUSCATOR_H
 
-#ifdef MSVC_COMPILER
-#include <cstdint>
-#endif
+//#ifdef MSVC_COMPILER
+//#include <cstdint>
+//#endif
 
 //
 // Based on the obfuscator class by Adam Yaxley.
