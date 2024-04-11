@@ -7,10 +7,10 @@ on:
     branches: [ master ]
 
 env:
-  BUILD_VERSION_TEXT: build-${{ github.run_number }}
+  BUILD_VERSION_TEXT: build-msys2-${{ github.run_number }}
   BUILD_DIR_DBG: build-debug
   BUILD_DIR_REL: build-release
-  PACK_DIR: build-latest  
+  PACK_DIR: build-msys2  
   
 jobs:
   build:
@@ -235,7 +235,7 @@ jobs:
         with:
           upload_url: ${{ steps.latest-release-info.outputs.upload_url }}
           asset_path: ${{github.workspace}}/build-latest.zip
-          asset_name: build-cmake-${{ github.run_number }}.zip
+          asset_name: build-msys2-${{ github.run_number }}.zip
           asset_content_type: application/zip
 
   
