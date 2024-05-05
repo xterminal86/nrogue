@@ -318,14 +318,9 @@ void Application::DrawAttackCursor(int x, int y,
 
 void Application::WriteObituary(bool wasKilled)
 {
-  std::ofstream postMortem;
+  std::ofstream postMortem("obituary.txt");
+
   std::stringstream ss;
-
-  ss << "obituary.txt";
-
-  postMortem.open(ss.str());
-
-  ss.str(std::string());
 
   MapLevelBase* curLvl = Map::Instance().CurrentLevel;
 
