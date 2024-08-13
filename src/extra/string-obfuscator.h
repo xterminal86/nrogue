@@ -199,15 +199,15 @@ namespace StringConcealer
 // then puts call to ToString() to be executed at runtime.
 //
 
-#define HIDE(string)                                            \
-  []()                                                          \
-  {                                                             \
-    constexpr auto ln = (sizeof(string) == 0)                   \
-    ? 0                                                         \
-    : (sizeof(string) / sizeof(string[0]));                     \
-    constexpr auto lt = ((ln / 8) == 0 ? 1 : (ln / 8)) + 1;     \
-    static auto c = StringConcealer::Concealer<ln, lt>(string); \
-    return c.ToString();                                        \
+#define HIDE(string)                                               \
+  []()                                                             \
+  {                                                                \
+    static constexpr auto ln = (sizeof(string) == 0)               \
+    ? 0                                                            \
+    : (sizeof(string) / sizeof(string[0]));                        \
+    static constexpr auto lt = ((ln / 8) == 0 ? 1 : (ln / 8)) + 1; \
+    static auto c = StringConcealer::Concealer<ln, lt>(string);    \
+    return c.ToString();                                           \
   }()
 
 #endif // STRINGOBFUSCATOR_H
