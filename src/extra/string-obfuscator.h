@@ -87,7 +87,6 @@ namespace StringObfuscator
 // while member variable was declared in .h file, you have to drop curly braces.
 // Maybe compiler can't deduce the type or something, I don't fucking know.
 //
-#if 0
 #define HIDE(cStyleString)                                                              \
   []() -> StringObfuscator::Obfuscator<sizeof(cStyleString) / sizeof(cStyleString[0])>& \
   {                                                                                     \
@@ -95,10 +94,10 @@ namespace StringObfuscator
     static auto obfuscator = StringObfuscator::Obfuscator<n>(cStyleString);             \
     return obfuscator;                                                                  \
   }()
-#endif
 
 // =============================================================================
 
+#if 0
 //
 // Hide characters inside uint64_t bytes.
 // Hopefully this will help us get rid of compiler warnings in MSVC.
@@ -197,6 +196,8 @@ namespace StringConcealer
 //
 // So TLDR - compiler compiles everything that is constexpr at compile time and
 // then puts call to ToString() to be executed at runtime.
+// 
+// NOTE: doesn't work for MSVC (at least for 14.37.32822)
 //
 
 #define HIDE(string)                                               \
@@ -209,5 +210,6 @@ namespace StringConcealer
     static auto c = StringConcealer::Concealer<ln, lt>(string);    \
     return c.ToString();                                           \
   }()
+#endif
 
 #endif // STRINGOBFUSCATOR_H
