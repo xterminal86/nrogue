@@ -930,6 +930,11 @@ namespace GlobalConstants
 
   const std::vector<std::string> TownNameEndings =
   {
+    "by",
+    "cester",
+    "caster",
+    "ford",
+    "stead",
     "ir",
     "ire",
     "yr",
