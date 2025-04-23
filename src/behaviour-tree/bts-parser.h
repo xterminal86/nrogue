@@ -6,10 +6,7 @@
 #include <unordered_map>
 #include <fstream>
 #include <algorithm>
-
-#ifdef __MINGW64__
-#include <stdint.h>
-#endif
+#include <cstdint>
 
 struct ScriptNode
 {

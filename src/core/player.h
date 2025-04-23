@@ -81,7 +81,8 @@ class Player : public GameObject
 
     #ifdef DEBUG_BUILD
     bool ToggleFogOfWar = false;
-    bool GodMode = false;
+    bool GodMode        = false;
+    bool IgnoreMe       = false;
     #endif
 
   private:

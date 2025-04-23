@@ -3,10 +3,7 @@
 
 #include <string>
 #include <unordered_map>
-
-#ifdef __MINGW64__
-#include <stdint.h>
-#endif
+#include <cstdint>
 
 #include "singleton.h"
 

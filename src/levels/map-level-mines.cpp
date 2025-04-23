@@ -169,10 +169,10 @@ void MapLevelMines::CreateLevel()
   {
     TransformedRoomsWeights weights =
     {
-      { TransformedRoom::EMPTY,     {  1, 0 } },
-      { TransformedRoom::SHRINE,    {  5, 1 } },
-      { TransformedRoom::STORAGE,   { 10, 2 } },
-      { TransformedRoom::FLOODED,   {  3, 1 } },
+      { TransformedRoom::EMPTY,   {  1, 0 } },
+      { TransformedRoom::SHRINE,  {  5, 1 } },
+      { TransformedRoom::STORAGE, { 10, 2 } },
+      { TransformedRoom::FLOODED, {  3, 1 } },
     };
 
     lb.TransformRooms(weights);
@@ -209,7 +209,7 @@ void MapLevelMines::CreateSpecialLevel()
   key->GetComponent<ItemComponent>()->Data.IsImportant = true;
 
   MapType stairsDownTo = (MapType)(DungeonLevel + 1);
-  MapType stairsUpTo = (MapType)(DungeonLevel - 1);
+  MapType stairsUpTo   = (MapType)(DungeonLevel - 1);
 
   int posX = 0;
   int posY = 0;

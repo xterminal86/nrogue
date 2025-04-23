@@ -101,7 +101,6 @@ void AIModelBase::ConstructAI()
 
   _root.reset(static_cast<Root*>(parentRef));
 
-  //FIXME: debug
   /*
   if (_root)
   {
@@ -345,7 +344,7 @@ std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* da
     // Checks if player is in square range specified by p2
     //
     case ScriptParamNames::PLAYER_IN_RANGE:
-      fn = GetInRangeCF(data);
+      fn = GetPlayerInRangeCF(data);
       break;
 
     //
@@ -647,7 +646,7 @@ std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF()
 
 // =============================================================================
 
-std::function<BTResult()> AIModelBase::GetInRangeCF(const ScriptNode* data)
+std::function<BTResult()> AIModelBase::GetPlayerInRangeCF(const ScriptNode* data)
 {
   // If range is not specified, it defaults to VisibilityRadius
   Attribute vr = AIComponentRef->OwnerGameObject->VisibilityRadius;
@@ -663,6 +662,13 @@ std::function<BTResult()> AIModelBase::GetInRangeCF(const ScriptNode* data)
   {
     auto& playerRef = Application::Instance().PlayerInstance;
     auto& objRef    = AIComponentRef->OwnerGameObject;
+
+    #ifdef DEBUG_BUILD
+    if (playerRef.IgnoreMe)
+    {
+      return BTResult::Failure;
+    }
+    #endif
 
     bool res = Util::IsObjectInRange(objRef->GetPosition(),
                                      playerRef.GetPosition(),

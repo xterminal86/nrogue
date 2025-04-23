@@ -144,6 +144,10 @@ class MapLevelBase
 
     bool IsCellBlocking(const Position& pos);
 
+    void UpdateFowLayer(GameObject* obj);
+
+    GameObject* GetTopmostObject(const Position& pos);
+
 #ifdef DEBUG_BUILD
     GameObject* FindObjectByAddress(const std::string& addressString);
 #endif

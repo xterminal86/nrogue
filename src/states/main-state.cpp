@@ -7,6 +7,7 @@
 #include "target-state.h"
 #include "spells-processor.h"
 #include "pickup-item-state.h"
+#include "timer.h"
 
 void MainState::Init()
 {
@@ -186,17 +187,24 @@ void MainState::HandleInput()
       int exitX = Map::Instance().CurrentLevel->LevelExit.X;
       int exitY = Map::Instance().CurrentLevel->LevelExit.Y;
 
-      if (_playerRef->MoveTo(exitX, exitY))
+      if (exitX < 0 || exitY < 0)
       {
-        Map::Instance().CurrentLevel->AdjustCamera();
-        Update(true);
-        _playerRef->FinishTurn();
+        Printer::Instance().AddMessage("No exit defined on this level!");
       }
       else
       {
-        auto str = Util::StringFormat("[%i;%i] is occupied!", exitX, exitY);
-        Printer::Instance().AddMessage(str);
-        DebugLog("%s\n", str.data());
+        if (_playerRef->MoveTo(exitX, exitY))
+        {
+          Map::Instance().CurrentLevel->AdjustCamera();
+          Update(true);
+          _playerRef->FinishTurn();
+        }
+        else
+        {
+          auto str = Util::StringFormat("[%i;%i] is occupied!", exitX, exitY);
+          Printer::Instance().AddMessage(str);
+          DebugLog("%s\n", str.data());
+        }
       }
     }
     break;
@@ -512,6 +520,7 @@ void MainState::ClimbStairs(const std::pair<GameObject*, bool>& stairsTileInfo)
 
 // =============================================================================
 
+#ifdef DEBUG_BUILD
 void MainState::PrintDebugInfo()
 {
   _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i: Plr: [%i;%i] Hunger: %i",
@@ -626,6 +635,7 @@ void MainState::PrintDebugInfo()
                                 Colors::BlackColor);
   }
 }
+#endif
 
 // =============================================================================
 

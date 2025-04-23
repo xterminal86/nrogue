@@ -34,11 +34,11 @@ void DevConsole::Init()
 
 void DevConsole::Prepare()
 {
-  _closedByCommand = false;
-  _currentLevel = Map::Instance().CurrentLevel;
-  _currentCommand = Prompt;
+  _closedByCommand      = false;
+  _currentLevel         = Map::Instance().CurrentLevel;
+  _currentCommand       = Prompt;
   _commandsHistoryIndex = _commandsHistory.size();
-  _cursorPosition = 0;
+  _cursorPosition       = 0;
 }
 
 // =============================================================================
@@ -513,6 +513,10 @@ void DevConsole::ProcessCommand(const std::string& command,
 
     case DevConsoleCommand::GOD_MODE:
       ToggleGodMode();
+      break;
+
+    case DevConsoleCommand::IGNORE_PLAYER:
+      TogglePlayerIgnore();
       break;
 
     case DevConsoleCommand::PRINT_TRIGGERS:
@@ -1415,7 +1419,19 @@ void DevConsole::ToggleGodMode()
 {
   _playerRef->GodMode = !_playerRef->GodMode;
 
-  auto str = Util::StringFormat("God mode %s", _playerRef->GodMode ? "on" : "off");
+  auto str = Util::StringFormat("God mode: %s",
+                                _playerRef->GodMode ? "ON" : "OFF");
+  StdOut(str);
+}
+
+// =============================================================================
+
+void DevConsole::TogglePlayerIgnore()
+{
+  _playerRef->IgnoreMe = !_playerRef->IgnoreMe;
+
+  auto str = Util::StringFormat("Player ignore: %s",
+                                _playerRef->IgnoreMe ? "ON" : "OFF");
   StdOut(str);
 }
 

@@ -18,8 +18,12 @@
 
 MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
 {
+  LevelExit.X = -1;
+  LevelExit.Y = -1;
+
   MapSize.X = sizeX;
   MapSize.Y = sizeY;
+
   MapType_ = type;
   DungeonLevel = dungeonLevel;
 
@@ -520,9 +524,6 @@ void MapLevelBase::CreateInitialMonsters()
 {
   MaxMonsters = (size_t)std::ceil(std::log2(_emptyCells.size()));
 
-  // FIXME: debug
-  //MaxMonsters = 1;
-
   for (size_t i = 0; i < MaxMonsters; i++)
   {
     int index = RNG::Instance().RandomRange(0, _emptyCells.size());
@@ -534,9 +535,6 @@ void MapLevelBase::CreateInitialMonsters()
     if (spawnOk && !_monstersSpawnRateForThisLevel.empty())
     {
       auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
-
-      // FIXME: debug
-      //res = { GameObjectType::SPIDER, 1 };
 
       auto monster = MonstersInc::Instance().CreateMonster(x, y, res.first);
       PlaceActor(monster);
@@ -569,7 +567,10 @@ bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
 
   int distanceToPlayer = Util::BlockDistance(_playerRef->GetPosition(), pos);
 
-  int spawnPointMinDistance = 20;
+  //
+  // Set min distance to block distance of player's light radius + a little bit.
+  //
+  int spawnPointMinDistance = _playerRef->VisibilityRadius.Get() * 2 + 1;
 
   //
   // If map size is greater than spawnPointMinDistance
@@ -585,7 +586,7 @@ bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
     spawnPointMinDistance = mapMinSize / 2;
 
     //
-    // Add certain remainder after each dimension increase since 2x2
+    // Add certain remainder to each dimension increase after 2x2
     // to get maximum available block distance for the square map
     // of that dimension.
     //
@@ -924,6 +925,52 @@ bool MapLevelBase::IsCellBlocking(const Position& pos)
   }
 
   return (groundBlock || staticBlock);
+}
+
+// =============================================================================
+
+void MapLevelBase::UpdateFowLayer(GameObject* obj)
+{
+  if (obj == nullptr)
+  {
+    return;
+  }
+
+  FowLayer[obj->PosX][obj->PosY].Image   = obj->Image;
+  FowLayer[obj->PosX][obj->PosY].FowName = Util::GetFowName(obj);
+}
+
+// =============================================================================
+
+GameObject* MapLevelBase::GetTopmostObject(const Position& pos)
+{
+  if (pos.X < 0 || pos.X >= MapSize.X || pos.Y < 0 || pos.Y >= MapSize.Y)
+  {
+    return nullptr;
+  }
+
+  for (auto& i : ActorGameObjects)
+  {
+    if (i->PosX == pos.X && i->PosY == pos.Y)
+    {
+      return i.get();
+    }
+  }
+
+  for (auto& i : GameObjects)
+  {
+    if (i->PosX == pos.X && i->PosY == pos.Y)
+    {
+      return i.get();
+    }
+  }
+
+  if (StaticMapObjects[pos.X][pos.Y] != nullptr)
+  {
+    return StaticMapObjects[pos.X][pos.Y].get();
+  }
+
+  return MapArray[pos.X][pos.Y].get();
 }
 
 // =============================================================================

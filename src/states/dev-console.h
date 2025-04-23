@@ -29,6 +29,7 @@ enum class DevConsoleCommand
   GET_BY_ID,
   GET_ANY_OBJECT,
   GOD_MODE,
+  IGNORE_PLAYER,
   PRINT_TRIGGERS,
   PRINT_ACTORS,
   GIVE_MONEY,
@@ -180,6 +181,7 @@ class DevConsole : public GameState
     void AwardExperience(const std::vector<std::string>& params);
     void ToggleFogOfWar();
     void ToggleGodMode();
+    void TogglePlayerIgnore();
     void PrintTriggers();
     void PrintActors();
 
@@ -243,6 +245,7 @@ class DevConsole : public GameState
       { "p_lu",    DevConsoleCommand::LEVEL_UP             },
       { "p_ld",    DevConsoleCommand::LEVEL_DOWN           },
       { "p_god",   DevConsoleCommand::GOD_MODE             },
+      { "p_ign",   DevConsoleCommand::IGNORE_PLAYER        },
       { "p_info",  DevConsoleCommand::REPORT_PLAYER        },
       { "g_pm",    DevConsoleCommand::PRINT_MAP            },
       { "g_pc",    DevConsoleCommand::PRINT_COLORS         },
@@ -276,6 +279,7 @@ class DevConsole : public GameState
       { "p_ld",    { "Take a level from player" } },
       { "p_info",  { "Print debug info about player" } },
       { "p_god",   { "Toggles player's invulnerability" } },
+      { "p_ign",   { "Make monsters ignore player" } },
       { "g_pm",    { "Save current map layout to a file" } },
       { "g_pc",    { "Prints colors used so far" } },
       { "g_go",    { "g_go [0x%X]", "Get game object by address" } },

@@ -104,6 +104,7 @@
 #include <unordered_map>
 #include <map>
 #include <functional>
+#include <cstdint>
 
 #include "enumerations.h"
 

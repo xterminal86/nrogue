@@ -39,7 +39,11 @@ class MainState : public GameState
     void PickupSingleItem(std::pair<int, GameObject*>& item);
     void DrawHPMP();
     void GetActorsAround();
+
+    #ifdef DEBUG_BUILD
     void PrintDebugInfo();
+    #endif
+
     void PrintNoAttackInTown();
     void ProcessItemPickup(std::pair<int, GameObject*>& pair);
     void ProcessRangedWeapon();

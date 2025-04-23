@@ -6,14 +6,21 @@ void Timer::InitSpecific()
 
 // =============================================================================
 
-double Timer::DeltaTime()
+const Ns& Timer::DeltaTimeDur()
 {
-  return FT::duration<double, std::milli>(_dt).count();
+  return _deltaTime;
 }
 
 // =============================================================================
 
-const Ns& Timer::TimePassed()
+const double& Timer::DelatTimeMs()
+{
+  return _dt;
+}
+
+// =============================================================================
+
+const Ns& Timer::TimePassedDur()
 {
   return _timePassed;
 }
@@ -31,9 +38,9 @@ void Timer::MeasureStart()
 void Timer::MeasureEnd()
 {
   _measureEnd = Clock::now();
-  _deltaTime  = _measureEnd - _measureStart;
+  _deltaTime  = FT::duration_cast<Ns>(_measureEnd - _measureStart);
 
-  _dt = FT::duration<double>(_deltaTime).count();
+  _dt = (double)_deltaTime.count() / 1000000.0;
 
   _timePassed += _deltaTime;
 }

@@ -4,6 +4,7 @@
 #include "singleton.h"
 
 #include <chrono>
+#include <cstdint>
 
 //
 // For "Fucking Time"
@@ -23,9 +24,10 @@ using Sec = FT::seconds;
 class Timer : public Singleton<Timer>
 {
   public:
-    const Ns& TimePassed();
+    const Ns& TimePassedDur();
+    const Ns& DeltaTimeDur();
 
-    double DeltaTime();
+    const double& DelatTimeMs();
 
     void MeasureStart();
     void MeasureEnd();
@@ -35,9 +37,7 @@ class Timer : public Singleton<Timer>
 
   private:
     //
-    // chrono clock now() uses
-    // nanoseconds as internal duration period
-    // (see time_point struct declaration)
+    // Will use nanoseconds for maximum accuracy.
     //
     Ns _deltaTime  = Ns{0};
     Ns _timePassed = Ns{0};

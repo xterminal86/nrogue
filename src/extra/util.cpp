@@ -1353,7 +1353,7 @@ namespace Util
 
     auto tp1 = Clock::now();
     auto tp2 = tp1;
-    while (std::chrono::duration_cast<Ms>(tp2 - tp1).count() < delayMs)
+    while (std::chrono::duration_cast<Ms>(tp2 - tp1).count() < (int32_t)delayMs)
     {
       tp2 = Clock::now();
     }
@@ -1363,9 +1363,8 @@ namespace Util
 
   bool WaitForMs(uint64_t delayMs, bool reset)
   {
-    auto timePassed = Timer::Instance().TimePassed();
-    Ms s = std::chrono::duration_cast<Ms>(timePassed);
-    static uint64_t prevMs = s.count();
+    auto tp = Timer::Instance().TimePassedDur();
+    static Ns prevNs = tp;
 
     //
     // If WaitForMs() hasn't been called for some time,
@@ -1377,13 +1376,13 @@ namespace Util
     //
     if (reset)
     {
-      prevMs = s.count();
+      prevNs = tp;
       return true;
     }
 
-    if (s.count() - prevMs > delayMs)
+    if (FT::duration_cast<Ms>(tp - prevNs).count() > (int64_t)delayMs)
     {
-      prevMs = s.count();
+      prevNs = tp;
       return true;
     }
 

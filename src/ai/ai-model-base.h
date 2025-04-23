@@ -57,7 +57,7 @@ class AIModelBase
     std::function<BTResult()> GetPlayerCanMoveCF();
     std::function<BTResult()> GetPlayerEnergyCF(const ScriptNode* data);
     std::function<BTResult()> GetPlayerNextTurnCF(const ScriptNode* data);
-    std::function<BTResult()> GetInRangeCF(const ScriptNode* data);
+    std::function<BTResult()> GetPlayerInRangeCF(const ScriptNode* data);
     std::function<BTResult()> GetTurnsLeftCF(const ScriptNode* data);
     std::function<BTResult()> GetTurnsCheckCF(const ScriptNode* data);
     std::function<BTResult()> GetHasEffectCF(const ScriptNode* data);

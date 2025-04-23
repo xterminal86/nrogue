@@ -15,6 +15,9 @@ class MapLevelTest : public MapLevelBase
     void CreateLevel() override;
 
     void CreateCommonObjects(int x, int y, char image) override;
+
+  private:
+    void CreateStuff();
 };
 
 #endif // MAPLEVELTEST_H

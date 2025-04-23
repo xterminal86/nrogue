@@ -58,13 +58,6 @@ void Player::Init()
   Attrs.Exp.SetMax(expToLvlUp);
 
   DistanceField.Init(this, kDistanceFieldRadius);
-
-  // FIXME: debug
-
-  //Money = 0;
-  //Money = 100000;
-  //Attrs.HP.Reset(1);
-  //Attrs.HungerRate.Set(0);
 }
 
 // =============================================================================
@@ -340,16 +333,12 @@ void Player::DiscoverCell(int x, int y)
   if (staticObjects[x][y] != nullptr)
   {
     staticObjects[x][y]->Visible = true;
-
-    curLvl->FowLayer[x][y].Image   = staticObjects[x][y]->Image;
-    curLvl->FowLayer[x][y].FowName = Util::GetFowName(staticObjects[x][y].get());
   }
-  else
+
+  GameObject* top = curLvl->GetTopmostObject({ x, y });
+  if (top != nullptr)
   {
-    curLvl->FowLayer[x][y].Image   = (map[x][y]->Image == ' ')
-                                     ? '.'
-                                     : map[x][y]->Image;
-    curLvl->FowLayer[x][y].FowName = Util::GetFowName(map[x][y].get());
+    curLvl->UpdateFowLayer(top);
   }
 
   if (!map[x][y]->Revealed)
