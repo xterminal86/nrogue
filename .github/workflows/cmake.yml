@@ -170,7 +170,7 @@ jobs:
            ls ${{ env.PACK_DIR }}           
 
     - name: UPLOAD ARTIFACT
-      uses: actions/upload-artifact@v3.0.0
+      uses: actions/upload-artifact@v4
       with:        
         name: build-latest
         path: ${{github.workspace}}/build-latest.zip
@@ -216,7 +216,7 @@ jobs:
       - uses: actions/checkout@v3
     
       - name: DOWNLOAD ARTIFACT
-        uses: actions/download-artifact@v3.0.0
+        uses: actions/download-artifact@v4
         with:          
           name: build-latest          
 
