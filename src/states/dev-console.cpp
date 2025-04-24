@@ -11,10 +11,12 @@
 
 void DevConsole::Init()
 {
-  for (auto& kvp : _commandTypeByName)
+  for (auto& kvp : _commandNameByType)
   {
-    _allCommandsList.push_back(kvp.first);
+    _allCommandsList.push_back(kvp.second);
   }
+
+  _commandTypeByName = Util::FlipMap(_commandNameByType);
 
   _playerRef = &Application::Instance().PlayerInstance;
 
@@ -358,9 +360,14 @@ void DevConsole::ProcessCommand(const std::string& command,
       break;
 
     case DevConsoleCommand::CLOSE:
+    case DevConsoleCommand::CLOSE2:
+    case DevConsoleCommand::CLOSE3:
+    case DevConsoleCommand::CLOSE4:
+    {
       _closedByCommand = true;
       Application::Instance().ChangeState(GameStates::MAIN_STATE);
-      break;
+    }
+    break;
 
     case DevConsoleCommand::HISTORY:
       PrintHistory();
@@ -493,6 +500,14 @@ void DevConsole::ProcessCommand(const std::string& command,
 
     case DevConsoleCommand::CREATE_ITEM:
       CreateItem(params);
+      break;
+
+    case DevConsoleCommand::CREATE_SHRINE:
+      CreateShrine(params);
+      break;
+
+    case DevConsoleCommand::CREATE_DUMMY_OBJECT:
+      CreateDummyObject(params);
       break;
 
     case DevConsoleCommand::DAMAGE_ACTOR:
@@ -1045,6 +1060,122 @@ void DevConsole::CreateItem(const std::vector<std::string>& params)
   _currentLevel->PlaceGameObject(go);
 
   StdOut(Ok);
+}
+
+// =============================================================================
+
+void DevConsole::CreateDummyObject(const std::vector<std::string>& params)
+{
+  if (params.size() < 2)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string sx = params[0];
+  std::string sy = params[1];
+
+  auto r = CoordinateParamsToInt(sx, sy);
+  if (r.first == -1 && r.second == -1)
+  {
+    return;
+  }
+
+  char image = 'D';
+
+  if (params.size() >= 3)
+  {
+    image = params[2][0];
+  }
+
+  GameObject* go = GameObjectsFactory::Instance().CreateDummyObject(r.first,
+                                                                    r.second,
+                                                                    "Dummy",
+                                                                    image,
+                                                                    Colors::WhiteColor,
+                                                                    Colors::BlackColor);
+
+  _currentLevel->PlaceGameObject(go);
+
+  StdOut(Ok);
+}
+
+// =============================================================================
+
+void DevConsole::CreateChest(const std::vector<std::string>& params)
+{
+  if (params.size() != 2)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string sx = params[0];
+  std::string sy = params[1];
+
+  auto r = CoordinateParamsToInt(sx, sy);
+  if (r.first == -1 && r.second == -1)
+  {
+    return;
+  }
+
+  GameObject* go = GameObjectsFactory::Instance().CreateChest(r.first,
+                                                              r.second,
+                                                              false);
+
+  _currentLevel->PlaceStaticObject(go);
+
+  StdOut(Ok);
+}
+
+// =============================================================================
+
+void DevConsole::CreateShrine(const std::vector<std::string>& params)
+{
+  if (params.size() != 3)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string sx = params[0];
+  std::string sy = params[1];
+
+  auto r = CoordinateParamsToInt(sx, sy);
+  if (r.first == -1 && r.second == -1)
+  {
+    return;
+  }
+
+  std::string shrineType = params[2];
+  if (!StringIsNumbers(shrineType))
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  int type = std::stoul(shrineType);
+  if (type >= (int)ShrineType::LAST_ELEMENT)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  GameObject* go = GameObjectsFactory::Instance().CreateShrine(r.first,
+                                                               r.second,
+                                                               (ShrineType)type,
+                                                               100);
+
+  _currentLevel->PlaceStaticObject(go);
+
+  StdOut(Ok);
+}
+
+// =============================================================================
+
+void DevConsole::CreateBreakable(const std::vector<std::string>& params)
+{
+  // TODO
 }
 
 // =============================================================================
@@ -1663,7 +1794,7 @@ std::pair<int, int> DevConsole::CoordinateParamsToInt(const std::string &px, con
   if (res.first  < 0 || res.first  > _currentLevel->MapSize.X - 1
    || res.second < 0 || res.second > _currentLevel->MapSize.Y - 1)
   {
-    StdOut("Out of bounds");
+    StdOut(ErrOutOfBounds);
     res = { -1, -1 };
   }
 

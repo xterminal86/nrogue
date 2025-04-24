@@ -523,13 +523,26 @@ void MainState::ClimbStairs(const std::pair<GameObject*, bool>& stairsTileInfo)
 #ifdef DEBUG_BUILD
 void MainState::PrintDebugInfo()
 {
-  _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i: Plr: [%i;%i] Hunger: %i",
+  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+
+  _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i Pos: [%i;%i] Hngr: %i",
                                   _playerRef->Attrs.ActionMeter,
-                                  Map::Instance().CurrentLevel->MapOffsetX,
-                                  Map::Instance().CurrentLevel->MapOffsetY,
+                                  curLvl->MapOffsetX,
+                                  curLvl->MapOffsetY,
                                   _playerRef->PosX,
                                   _playerRef->PosY,
                                   _playerRef->Attrs.Hunger);
+
+  Printer::Instance().PrintFB(1,
+                              0,
+                              _debugInfo,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
+
+  _debugInfo = Util::StringFormat("GO = %lu Actors = %lu",
+                                  curLvl->GameObjects.size(),
+                                  curLvl->ActorGameObjects.size());
 
   Printer::Instance().PrintFB(1,
                               1,
@@ -538,10 +551,7 @@ void MainState::PrintDebugInfo()
                               Colors::WhiteColor,
                               Colors::BlackColor);
 
-  _debugInfo = Util::StringFormat("Key: %i Actors: %i Respawn: %i",
-                                  _keyPressed,
-                                  Map::Instance().CurrentLevel->ActorGameObjects.size(),
-                                  Map::Instance().CurrentLevel->RespawnCounter());
+  _debugInfo = Util::StringFormat("Key: %i", _keyPressed);
 
   Printer::Instance().PrintFB(1,
                               2,
@@ -550,9 +560,9 @@ void MainState::PrintDebugInfo()
                               Colors::WhiteColor,
                               Colors::BlackColor);
 
-  _debugInfo = Util::StringFormat("Level Start: [%i;%i]",
-                                  Map::Instance().CurrentLevel->LevelStart.X,
-                                  Map::Instance().CurrentLevel->LevelStart.Y);
+  _debugInfo = Util::StringFormat("Start: [%i;%i]",
+                                  curLvl->LevelStart.X,
+                                  curLvl->LevelStart.Y);
 
   Printer::Instance().PrintFB(1,
                               3,
@@ -561,9 +571,9 @@ void MainState::PrintDebugInfo()
                               Colors::WhiteColor,
                               Colors::BlackColor);
 
-  _debugInfo = Util::StringFormat("Level Exit: [%i;%i]",
-                                  Map::Instance().CurrentLevel->LevelExit.X,
-                                  Map::Instance().CurrentLevel->LevelExit.Y);
+  _debugInfo = Util::StringFormat("Exit: [%i;%i]",
+                                  curLvl->LevelExit.X,
+                                  curLvl->LevelExit.Y);
 
   Printer::Instance().PrintFB(1,
                               4,
@@ -572,7 +582,7 @@ void MainState::PrintDebugInfo()
                               Colors::WhiteColor,
                               Colors::BlackColor);
 
-  _debugInfo = Util::StringFormat("Colors Used: %i",
+  _debugInfo = Util::StringFormat("Colors: %i",
                                   Printer::Instance().ColorsUsed());
 
   Printer::Instance().PrintFB(1,
@@ -604,7 +614,7 @@ void MainState::PrintDebugInfo()
   bool found = false;
   for (auto& id : _actorsForDebugDisplay)
   {
-    for (auto& a : Map::Instance().CurrentLevel->ActorGameObjects)
+    for (auto& a : curLvl->ActorGameObjects)
     {
       if (a->ObjectId() == id)
       {
@@ -629,7 +639,7 @@ void MainState::PrintDebugInfo()
   {
     Printer::Instance().PrintFB(1,
                                 8,
-                                "<Press 's' to scan 1x1 around player>",
+                                "NONE",
                                 Printer::kAlignLeft,
                                 Colors::WhiteColor,
                                 Colors::BlackColor);

@@ -905,6 +905,8 @@ void MapLevelBase::SerializeActors(NRS& saveTo)
 
   NRS& root = saveTo[SK::Root];
 
+  std::ignore = root;
+
   // TODO:
 }
 

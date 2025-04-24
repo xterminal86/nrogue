@@ -1678,6 +1678,8 @@ void GameObject::Serialize(NRS& section)
       {
         NRS& n = *ptr;
 
+        std::ignore = n;
+
         // TODO:
       }
     }

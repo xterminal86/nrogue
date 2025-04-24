@@ -517,7 +517,8 @@ enum class ShrineType
   FORGOTTEN,   // random effect
   POTENTIAL,   // temporary raises stats
   HIDDEN,      // random effect
-  HOLY         // removes curse
+  HOLY,        // removes curse
+  LAST_ELEMENT
 };
 
 enum class RoomLayoutRotation

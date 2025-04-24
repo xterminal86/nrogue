@@ -27,14 +27,6 @@ void MapLevelTest::DisplayWelcomeText()
 
 void MapLevelTest::CreateStuff()
 {
-  GameObject* go = GameObjectsFactory::Instance().CreateChest(5, 5, false);
-  PlaceGameObject(go);
-
-  PlaceDoor(10, 10, false);
-  PlaceDoor(10, 11, true);
-
-  PlaceShrine({ 13, 13 }, ShrineType::HEALING);
-
   // ========================= CREATE 20 RANDOM MELEE WEAPONS ==================
 
   /*

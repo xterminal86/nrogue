@@ -385,9 +385,29 @@ namespace Util
   // ===========================================================================
 
   template <typename key, typename value>
-  std::unordered_map<value, key> FlipMap(const std::unordered_map<key, value>& src)
+  std::unordered_map<value, key>
+  FlipMap(const std::unordered_map<key, value>& src)
   {
     std::unordered_map<value, key> ret;
+
+    std::transform(src.begin(),
+                   src.end(),
+                   std::inserter(ret, ret.begin()),
+                   [](const std::pair<key, value>& p)
+    {
+      return std::pair<value, key>(p.second, p.first);
+    });
+
+    return ret;
+  }
+
+  // ===========================================================================
+
+  template <typename key, typename value>
+  std::map<value, key>
+  FlipMap(const std::map<key, value>& src)
+  {
+    std::map<value, key> ret;
 
     std::transform(src.begin(),
                    src.end(),
@@ -405,6 +425,9 @@ namespace Util
   template <typename ... Args>
   std::string StringFormat(const std::string& format, Args ... args)
   {
+    //
+    // snprintf() returns number of bytes WITHOUT \0
+    //
     size_t size = snprintf(nullptr, 0, format.data(), args ...);
     std::string s;
 
@@ -415,7 +438,13 @@ namespace Util
 
     s.resize(size);
     char *buf = (char *)s.data();
+
+    //
+    // 1 extra byte for \0 since when actually writing to 'buf' \0 is included.
+    // std::string always contains \0 implicitly (so to speak).
+    //
     snprintf(buf, size + 1, format.data(), args ...);
+
     return s;
   }
 
