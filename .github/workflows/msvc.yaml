@@ -6,6 +6,10 @@ on:
     types:
       - completed
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
 env:
   BUILD_VERSION_TEXT: build-msvc-${{ github.run_number }}
   BUILD_DIR_REL: build-msvc
