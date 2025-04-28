@@ -12,7 +12,6 @@ void AIMonsterBat::PrepareScript()
   //
   // Bat AI is replaced with basic attack pattern.
   //
-
   _scriptAsText =
 R"(
 [TREE]

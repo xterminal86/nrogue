@@ -996,16 +996,6 @@ bool DGBase::TransformArea(TransformedRoom type, size_t emptyRoomIndex)
       //
       auto fn = std::bind(&DGBase::PlaceShrine, this, std::placeholders::_1);
 
-      /*
-      success = TryToPlaceRoom({
-                                 { 5, 5 },
-                                 { 5, 7 },
-                                 { 7, 5 },
-                                 { 7, 7 }
-                               },
-                               area, emptyRoomIndex, type, fn);
-      */
-
       success = TryToPlaceRoom(5, 7, area, emptyRoomIndex, type, fn);
 
       if (!success)

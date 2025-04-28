@@ -935,6 +935,7 @@ void MapLevelBase::UpdateFowLayer(GameObject* obj)
 {
   if (obj == nullptr)
   {
+    DebugLog("UpdateFowLayer() called on nullptr!");
     return;
   }
 
@@ -951,6 +952,9 @@ GameObject* MapLevelBase::GetTopmostObject(const Position& pos)
     return nullptr;
   }
 
+  //
+  // There shouldn't be more than 1 actor per tile.
+  //
   for (auto& i : ActorGameObjects)
   {
     if (i->PosX == pos.X && i->PosY == pos.Y)
@@ -959,19 +963,34 @@ GameObject* MapLevelBase::GetTopmostObject(const Position& pos)
     }
   }
 
+  //
+  // To get topmost object, we need to get last item for this tile.
+  //
+  std::stack<GameObject*> itemsHere;
   for (auto& i : GameObjects)
   {
     if (i->PosX == pos.X && i->PosY == pos.Y)
     {
-      return i.get();
+      itemsHere.push(i.get());
     }
   }
 
+  if (!itemsHere.empty())
+  {
+    return itemsHere.top();
+  }
+
+  //
+  // Static object is also only 1 per tile.
+  //
   if (StaticMapObjects[pos.X][pos.Y] != nullptr)
   {
     return StaticMapObjects[pos.X][pos.Y].get();
   }
 
+  //
+  // Fallback to map tile otherwise.
+  //
   return MapArray[pos.X][pos.Y].get();
 }
 

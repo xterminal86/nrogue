@@ -1417,7 +1417,9 @@ void Player::ProcessEffectsPlayer()
         {
           if (ic->Data.IsBurnable)
           {
-            std::string objName = ic->Data.IsIdentified ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
+            std::string objName = ic->Data.IsIdentified ?
+                                  ic->Data.IdentifiedName :
+                                  ic->Data.UnidentifiedName;
             auto str = Util::StringFormat("%s burns up!", objName.data());
             Printer::Instance().AddMessage(str);
             Inventory->Contents.erase(Inventory->Contents.begin() + i);

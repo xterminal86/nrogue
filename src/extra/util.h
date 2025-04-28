@@ -157,8 +157,8 @@ namespace Util
   extern void Sleep(uint32_t delayMs);
 
   extern bool WaitForMs(uint64_t delayMs, bool reset = false);
-
   extern void PrintVector(const std::string& title, const std::vector<Position>& v);
+
   extern void PrintLayout(const StringV& l);
 
   extern void LaunchProjectile(const Position& from,
@@ -426,13 +426,20 @@ namespace Util
   std::string StringFormat(const std::string& format, Args ... args)
   {
     //
+    // People say that making such variables 'static' is actually bad for
+    // performance (at least on modern processors). E.g.:
+    //
+    // https://softwareengineering.stackexchange.com/questions/350501/is-there-any-benefit-to-to-define-constant-local-variables-as-static-c
+    //
+    std::string s;
+
+    //
     // snprintf() returns number of bytes WITHOUT \0
     //
     size_t size = snprintf(nullptr, 0, format.data(), args ...);
-    std::string s;
-
     if (!size)
     {
+      s.clear();
       return s;
     }
 

@@ -510,6 +510,14 @@ void DevConsole::ProcessCommand(const std::string& command,
       CreateDummyObject(params);
       break;
 
+    case DevConsoleCommand::CREATE_CHEST:
+      CreateChest(params);
+      break;
+
+    case DevConsoleCommand::CREATE_BREAKABLE:
+      CreateBreakable(params);
+      break;
+
     case DevConsoleCommand::DAMAGE_ACTOR:
       DamageActor(params);
       break;
@@ -1175,7 +1183,32 @@ void DevConsole::CreateShrine(const std::vector<std::string>& params)
 
 void DevConsole::CreateBreakable(const std::vector<std::string>& params)
 {
-  // TODO
+  if (params.size() != 2)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string sx = params[0];
+  std::string sy = params[1];
+
+  auto r = CoordinateParamsToInt(sx, sy);
+  if (r.first == -1 && r.second == -1)
+  {
+    return;
+  }
+
+  static GameObjectsFactory& gof = GameObjectsFactory::Instance();
+
+  GameObject* go = gof.CreateBreakableObjectWithRandomLoot(r.first,
+                                                           r.second,
+                                                           'B',
+                                                           "Breakable",
+                                                           Colors::WoodColor,
+                                                           Colors::BlackColor);
+  _currentLevel->PlaceStaticObject(go);
+
+  StdOut(Ok);
 }
 
 // =============================================================================

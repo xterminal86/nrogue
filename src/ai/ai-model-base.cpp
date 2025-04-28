@@ -457,7 +457,7 @@ std::function<BTResult()> AIModelBase::GetPlayerEnergyCF(const ScriptNode* data)
 std::function<BTResult()> AIModelBase::GetPlayerNextTurnCF(const ScriptNode* data)
 {
   //
-  // NOTE: when implementing "hit and run" tactics
+  // FIXME: when implementing "hit and run" tactics
   // we cannot rely on this CF to determine if player can move
   // on next turn, because if SPDs are equal there might be
   // a situation like this:

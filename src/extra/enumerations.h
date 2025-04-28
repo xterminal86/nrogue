@@ -148,7 +148,7 @@ enum class MapType
 };
 
 //
-// WARNING: total violation of the classification scheme.
+// WARNING: total violation of the classification rule.
 //
 enum class GameObjectType
 {

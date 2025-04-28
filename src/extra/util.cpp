@@ -431,7 +431,7 @@ namespace Util
   // ===========================================================================
 
   //
-  // Bresenham line including end point.
+  // Original Bresenham line algorithm implementation, including end point.
   //
   std::vector<Position> BresenhamLine(int sx, int sy, int ex, int ey)
   {
@@ -1395,12 +1395,10 @@ namespace Util
   {
     DebugLog("Vector of '%s' (size %u)\n", title.data(), v.size());
 
-    #ifdef DEBUG_BUILD
     for (auto& p : v)
     {
       DebugLog("[%i;%i] ", p.X, p.Y);
     }
-    #endif
 
     DebugLog("\n");
   }
@@ -1465,7 +1463,8 @@ namespace Util
     //
     if (!data.IsIdentified)
     {
-      bool isCursed = (data.IsPrefixDiscovered && data.Prefix == ItemPrefix::CURSED);
+      bool isCursed = (data.IsPrefixDiscovered &&
+                       data.Prefix == ItemPrefix::CURSED);
       textColor = isCursed ? Colors::ItemCursedColor : Colors::WhiteColor;
     }
 
@@ -1733,11 +1732,32 @@ namespace Util
 
   std::string GetFowName(GameObject* obj)
   {
+    if (obj == nullptr)
+    {
+      DebugLog("GetFowName() called on nullptr!");
+      return std::string();
+    }
+
     std::string res = obj->FogOfWarName;
 
     if (res.empty())
     {
-      res = StringFormat("?%s?", obj->ObjectName.data());
+      ItemComponent* ic = obj->GetComponent<ItemComponent>();
+      if (ic != nullptr)
+      {
+        if (ic->Data.IsIdentified)
+        {
+          res = StringFormat("?%s?", obj->ObjectName.data());
+        }
+        else
+        {
+          res = StringFormat("%s", ic->Data.UnidentifiedName.data());
+        }
+      }
+      else
+      {
+        res = StringFormat("?%s?", obj->ObjectName.data());
+      }
     }
 
     return res;
@@ -2132,10 +2152,9 @@ namespace Util
 
     //
     // NOTE: item can be legitimately null
-    // if actor is a monster like a rat, for example,
+    // if actor is a monster, like a rat, for example,
     // who doesn't have equipped items.
     //
-
     if (item == nullptr)
     {
       //DebugLog("[WAR] Util::TryToDamageEquipment() item is null on %s!", actor->ObjectName.data());
@@ -2190,8 +2209,7 @@ namespace Util
     else
     {
       //
-      // Melee attack with ranged weapon in hand
-      // fallbacks to unarmed attack.
+      // Melee attack with ranged weapon in hand fallbacks to unarmed attack.
       //
       if (meleeAttackWithRangedWeapon)
       {
@@ -2269,7 +2287,8 @@ namespace Util
 
       double add = (skillDiff > 0) ? 0.0 : (double)skillDiff * coeff2;
 
-      int chance = defaultHitChance + (int)(std::log10((double)diff) * coeff1 + add);
+      int chance = defaultHitChance +
+                   (int)(std::log10((double)diff) * coeff1 + add);
 
       chance = Clamp(chance,
                      GlobalConstants::MinHitChance,
@@ -3086,9 +3105,9 @@ namespace Util
       isStackable = ic->Data.IsStackable;
       amount = ic->Data.Amount;
 
-      objName = ic->Data.IsIdentified
-                ? what->ObjectName
-                : ic->Data.UnidentifiedName;
+      objName = ic->Data.IsIdentified ?
+                what->ObjectName :
+                ic->Data.UnidentifiedName;
     }
     else
     {
