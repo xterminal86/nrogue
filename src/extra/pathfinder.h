@@ -55,12 +55,12 @@ class Pathfinder
                                     bool eightDirs = false);
 
     std::stack<Position> BuildRoad(MapLevelBase* mapRef,
-                                    const Position& start,
-                                    const Position& end,
-                                    const std::vector<char>& mapTilesToIgnore,
-                                    bool ignoreActors = true,
-                                    bool eightDirs = false,
-                                    size_t maxPathLength = 0);
+                                   const Position& start,
+                                   const Position& end,
+                                   const std::vector<char>& mapTilesToIgnore,
+                                   bool ignoreActors = true,
+                                   bool eightDirs = false,
+                                   size_t maxPathLength = 0);
 
   private:
     Position _mapSize;
@@ -92,7 +92,8 @@ class Pathfinder
     bool IsNodePresent(const PathNode& n, const std::vector<PathNode>& list);
     bool IsInsideMap(const Position& c);
 
-    PathNode FindNodeWithPosition(const std::vector<PathNode>& list, const Position& p);
+    PathNode FindNodeWithPosition(const std::vector<PathNode>& list,
+                                  const Position& p);
 
     std::vector<PathNode> _openList;
     std::vector<PathNode> _closedList;

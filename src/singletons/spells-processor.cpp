@@ -137,7 +137,8 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll, GameObject* user)
       break;
 
     default:
-      DebugLog("[WAR] SpellsProcessor::ProcessScroll() spell %i not handled!", (int)scroll->Data.SpellHeld.SpellType_);
+      DebugLog("[WAR] SpellsProcessor::ProcessScroll() spell %i not handled!",
+               (int)scroll->Data.SpellHeld.SpellType_);
       _scrollUseMessages.push_back(_kNoActionText);
       break;
   }
@@ -155,7 +156,8 @@ void SpellsProcessor::PrintUsageResult(ItemComponent* scroll, GameObject* user)
                              scroll->Data.IdentifiedName :
                              scroll->Data.UnidentifiedName;
 
-    auto str = Util::StringFormat("You read the scroll %s...", scrollName.data());
+    auto str = Util::StringFormat("You read the scroll %s...",
+                                  scrollName.data());
 
     Printer::Instance().AddMessage(str);
 
@@ -170,7 +172,8 @@ void SpellsProcessor::PrintUsageResult(ItemComponent* scroll, GameObject* user)
 
 // =============================================================================
 
-void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll, GameObject* user)
+void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll,
+                                            GameObject* user)
 {
   //
   // TODO: should monsters be able to use this?
@@ -203,14 +206,18 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll, GameObject* u
     int index = RNG::Instance().RandomRange(0, itemsToRepair.size());
     ItemComponent* item = itemsToRepair[index];
 
-    auto str = Util::StringFormat("Your %s disintegrates!", item->OwnerGameObject->ObjectName.data());
+    auto str = Util::StringFormat("Your %s disintegrates!",
+                                  item->OwnerGameObject->ObjectName.data());
     _scrollUseMessages.push_back(str);
 
     item->Break(_playerRef);
   }
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {
-    auto str = Util::StringFormat("Your %s is repaired!", itemsToRepair[0]->OwnerGameObject->ObjectName.data());
+    auto str = Util::StringFormat(
+                 "Your %s is repaired!",
+                 itemsToRepair[0]->OwnerGameObject->ObjectName.data()
+    );
     _scrollUseMessages.push_back(str);
 
     itemsToRepair[0]->Data.Durability.Restore();
@@ -228,10 +235,11 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll, GameObject* u
 
 // =============================================================================
 
-void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll, GameObject* user)
+void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll,
+                                              GameObject* user)
 {
   //
-  // Monsters dont't use this
+  // Monsters dont't use this.
   //
   if (!Util::IsPlayer(user))
   {
@@ -261,7 +269,9 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll, GameObject*
       return;
     }
 
-    _scrollUseMessages.push_back("You forget the details about inventory item!");
+    _scrollUseMessages.push_back(
+          "You forget the details about inventory item!"
+    );
 
     int index = RNG::Instance().RandomRange(0, itemsKnown.size());
     auto item = itemsKnown[index];
@@ -301,7 +311,8 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll, GameObject*
 
 // =============================================================================
 
-void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll, GameObject* user)
+void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll,
+                                                      GameObject* user)
 {
   int userPow = user->Attrs.Mag.Get();
 
@@ -350,10 +361,12 @@ void SpellsProcessor::ProcessScrollOfNeutralizePoison(ItemComponent* scroll, Gam
 
 // =============================================================================
 
-void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll, GameObject* user)
+void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll,
+                                             GameObject* user)
 {
   int power = user->Attrs.HP.Max().Get();
-  bool atFullHealth = (user->Attrs.HP.Min().Get() == user->Attrs.HP.Max().Get());
+  bool atFullHealth =
+      (user->Attrs.HP.Min().Get() == user->Attrs.HP.Max().Get());
 
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
@@ -385,7 +398,8 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll, GameObject* 
 
 // =============================================================================
 
-void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll, GameObject* user)
+void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll,
+                                           GameObject* user)
 {
   int radius = Map::Instance().CurrentLevel->VisibilityRadius;
 
@@ -480,7 +494,9 @@ void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll, GameObject* user)
 
       for (auto& actor : mapRef->ActorGameObjects)
       {
-        std::string str = Util::StringFormat("You sense: %s (danger %i)", actor->ObjectName.data(), actor->Attrs.Rating());
+        std::string str = Util::StringFormat("You sense: %s (danger %i)",
+                                             actor->ObjectName.data(),
+                                             actor->Attrs.Rating());
         monstersOnLevel.push_back(str);
       }
 
@@ -511,7 +527,8 @@ void SpellsProcessor::ProcessScrollOfHiddenDetection(ItemComponent* scroll,
 
   if (!isValidType)
   {
-    DebugLog("[WAR] ProcessScrollOfDetectMonsters() type is wrong: %i!", (int)type);
+    DebugLog("[WAR] ProcessScrollOfDetectMonsters() type is wrong: %i!",
+             (int)type);
     type = ItemBonusType::TELEPATHY;
   }
 
@@ -558,7 +575,8 @@ void SpellsProcessor::ProcessScrollOfHiddenDetection(ItemComponent* scroll,
 
 // =============================================================================
 
-void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObject* user)
+void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll,
+                                                GameObject* user)
 {
   //
   // Monsters dont't use this
@@ -582,7 +600,9 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
 
   for (size_t i = 0; i < lvl->GameObjects.size(); i++)
   {
-    TownPortalComponent* tpc = lvl->GameObjects[i]->GetComponent<TownPortalComponent>();
+    TownPortalComponent* tpc =
+        lvl->GameObjects[i]->GetComponent<TownPortalComponent>();
+
     if (tpc != nullptr)
     {
       ind = i;
@@ -609,13 +629,19 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
     int index = RNG::Instance().RandomRange(0, posToAppear.size());
     Position res = posToAppear[index];
 
-    GameObject* portal = new GameObject(lvl, tpPos.X, tpPos.Y, '0', Colors::WhiteColor, Colors::BlueColor);
+    GameObject* portal = new GameObject(lvl,
+                                        tpPos.X,
+                                        tpPos.Y,
+                                        '0',
+                                        Colors::WhiteColor,
+                                        Colors::BlueColor);
 
     portal->BlocksSight = true;
     portal->ObjectName = "Town Portal";
 
     TownPortalComponent* tpc = portal->AddComponent<TownPortalComponent>();
-    tpc->SavePosition(Map::Instance().CurrentLevel->MapType_, _playerRef->GetPosition());
+    tpc->SavePosition(Map::Instance().CurrentLevel->MapType_,
+                      _playerRef->GetPosition());
 
     lvl->PlaceGameObject(portal);
 
@@ -625,7 +651,8 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {
     _scrollUseMessages.push_back("You're back in town all of a sudden!");
-    Map::Instance().TeleportToExistingLevel(MapType::TOWN, lvl->TownPortalPos());
+    Map::Instance().TeleportToExistingLevel(MapType::TOWN,
+                                            lvl->TownPortalPos());
   }
   else if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
@@ -640,7 +667,8 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll, GameObjec
 
 // =============================================================================
 
-void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll, GameObject* user)
+void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll,
+                                              GameObject* user)
 {
   if (Map::Instance().CurrentLevel->MysteriousForcePresent)
   {
@@ -676,7 +704,8 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll, GameObject*
 
 // =============================================================================
 
-void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll, GameObject* user)
+void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll,
+                                                GameObject* user)
 {
   bool manaShieldOk = (user->Attrs.MP.Min().Get() != 0 ||
                       (user->Attrs.MP.Max().Get() != 0 &&
@@ -713,7 +742,8 @@ void SpellsProcessor::ProcessScrollOfManaShield(ItemComponent *scroll, GameObjec
 
 // =============================================================================
 
-void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObject* user)
+void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll,
+                                                 GameObject* user)
 {
   if (!Util::IsPlayer(user))
   {
@@ -744,7 +774,9 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObje
       // No additional stat penalties, just can't uneqip.
       //
       auto& idName = item->Data.IdentifiedName;
-      idName = Util::ReplaceItemPrefix(idName, { "Blessed", "Uncursed" }, "Cursed");
+      idName = Util::ReplaceItemPrefix(idName,
+                                       { "Blessed", "Uncursed" },
+                                       "Cursed");
 
       _scrollUseMessages.push_back("The malevolent energy creeps in...");
     }
@@ -804,7 +836,9 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll, GameObje
 
     if (success)
     {
-      _scrollUseMessages.push_back("The malevolent energy disperses completely!");
+      _scrollUseMessages.push_back(
+            "The malevolent energy disperses completely!"
+      );
     }
     else
     {

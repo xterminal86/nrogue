@@ -65,7 +65,12 @@ std::vector<Position> Pathfinder::BuildRoad(const CharV2& map,
       break;
     }
 
-    LookAround(map, _openList[index], _openList, _closedList, obstacles, eightDirs);
+    LookAround(map,
+               _openList[index],
+               _openList,
+               _closedList,
+               obstacles,
+               eightDirs);
 
     _openList.erase(_openList.begin() + index);
   }
@@ -75,13 +80,14 @@ std::vector<Position> Pathfinder::BuildRoad(const CharV2& map,
 
 // =============================================================================
 
-std::stack<Position> Pathfinder::BuildRoad(MapLevelBase* mapRef,
-                                           const Position& start,
-                                           const Position& end,
-                                           const std::vector<char>& mapTilesToIgnore,
-                                           bool ignoreActors,
-                                           bool eightDirs,
-                                           size_t maxPathLength)
+std::stack<Position>
+Pathfinder::BuildRoad(MapLevelBase* mapRef,
+                      const Position& start,
+                      const Position& end,
+                      const std::vector<char>& mapTilesToIgnore,
+                      bool ignoreActors,
+                      bool eightDirs,
+                      size_t maxPathLength)
 {
   _mapSize = mapRef->MapSize;
 
@@ -184,7 +190,8 @@ void Pathfinder::LookAround(const CharV2& map,
 
     if (IsNodePresent(nodeAround, openList))
     {
-      int newG = nodeAround.CostG + TraverseCost(nodeAround.Coordinate, currentNode.Coordinate);
+      int newG = nodeAround.CostG + TraverseCost(nodeAround.Coordinate,
+                                                 currentNode.Coordinate);
       if (newG < nodeAround.CostG)
       {
         nodeAround.CostG = newG;
@@ -195,7 +202,9 @@ void Pathfinder::LookAround(const CharV2& map,
     }
     else
     {
-      nodeAround.CostG = currentNode.CostG + TraverseCost(currentNode.Coordinate, nodeAround.Coordinate);
+      nodeAround.CostG = currentNode.CostG +
+                         TraverseCost(currentNode.Coordinate,
+                                      nodeAround.Coordinate);
       nodeAround.CostH = Util::BlockDistance(nodeAround.Coordinate, _end);
       nodeAround.CostF = nodeAround.CostG + nodeAround.CostH;
 
@@ -272,7 +281,8 @@ void Pathfinder::LookAround(MapLevelBase* mapRef,
 
     if (IsNodePresent(nodeAround, openList))
     {
-      int newG = nodeAround.CostG + TraverseCost(nodeAround.Coordinate, currentNode.Coordinate);
+      int newG = nodeAround.CostG + TraverseCost(nodeAround.Coordinate,
+                                                 currentNode.Coordinate);
       if (newG < nodeAround.CostG)
       {
         nodeAround.CostG = newG;
@@ -283,7 +293,9 @@ void Pathfinder::LookAround(MapLevelBase* mapRef,
     }
     else
     {
-      nodeAround.CostG = currentNode.CostG + TraverseCost(currentNode.Coordinate, nodeAround.Coordinate);
+      nodeAround.CostG = currentNode.CostG +
+                         TraverseCost(currentNode.Coordinate,
+                                      nodeAround.Coordinate);
       nodeAround.CostH = Util::BlockDistance(nodeAround.Coordinate, _end);
       nodeAround.CostF = nodeAround.CostG + nodeAround.CostH;
 
@@ -325,7 +337,8 @@ int Pathfinder::TraverseCost(const Position& p1, const Position& p2)
 
 // =============================================================================
 
-bool Pathfinder::IsNodePresent(const PathNode& n, const std::vector<PathNode>& list)
+bool Pathfinder::IsNodePresent(const PathNode& n,
+                               const std::vector<PathNode>& list)
 {
   for (auto& item : list)
   {
@@ -353,7 +366,8 @@ bool Pathfinder::IsInsideMap(const Position& c)
 
 // =============================================================================
 
-PathNode Pathfinder::FindNodeWithPosition(const std::vector<PathNode>& list, const Position& p)
+PathNode Pathfinder::FindNodeWithPosition(const std::vector<PathNode>& list,
+                                          const Position& p)
 {
   PathNode res;
 

@@ -300,7 +300,8 @@ bool FromPermutationTiles::CanBeConnected(const Tile& l1,
 
 // =============================================================================
 
-std::string FromPermutationTiles::GetLayoutEdge(const Tile& l, const RoomEdgeEnum& along)
+std::string FromPermutationTiles::GetLayoutEdge(const Tile& l,
+                                                const RoomEdgeEnum& along)
 {
   std::string edge;
 

@@ -52,7 +52,10 @@ void PickupItemState::ProcessInput()
             // if the pile was big enough and item was removed
             // from around the middle on first interaction.
             //
-            _itemsList = Map::Instance().GetGameObjectsToPickup(_playerRef->PosX, _playerRef->PosY);
+            _itemsList =
+                Map::Instance().GetGameObjectsToPickup(_playerRef->PosX,
+                                                       _playerRef->PosY);
+
             RebuildDisplayList();
           }
         }
@@ -69,7 +72,10 @@ bool PickupItemState::PickupItem(const Item& item)
   ItemComponent* ic = item.second->GetComponent<ItemComponent>();
   if (ic->Data.ItemType_ == ItemType::COINS)
   {
-    auto message = Util::StringFormat(Strings::FmtPickedUpIS, ic->Data.Amount, ic->OwnerGameObject->ObjectName.data());
+    auto message = Util::StringFormat(Strings::FmtPickedUpIS,
+                                      ic->Data.Amount,
+                                      ic->OwnerGameObject->ObjectName.data());
+
     Printer::Instance().AddMessage(message);
 
     _playerRef->Money += ic->Data.Amount;
@@ -83,10 +89,12 @@ bool PickupItemState::PickupItem(const Item& item)
   {
     if (_playerRef->Inventory->IsFull())
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                             Strings::MessageBoxEpicFailHeaderText,
-                                             { Strings::MsgInventoryFull },
-                                             Colors::MessageBoxRedBorderColor);
+      Application::Instance().ShowMessageBox(
+            MessageBoxType::ANY_KEY,
+            Strings::MessageBoxEpicFailHeaderText,
+            { Strings::MsgInventoryFull },
+            Colors::MessageBoxRedBorderColor
+      );
 
       return false;
     }

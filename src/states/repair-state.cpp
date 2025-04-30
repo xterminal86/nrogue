@@ -49,10 +49,12 @@ void RepairState::ProcessInput()
         ItemComponent* ic = _itemRefByChar[index];
         if (ic->Data.Durability.Min().Get() == ic->Data.Durability.Max().Get())
         {
-          Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                                 Strings::MessageBoxInformationHeaderText,
-                                                 { Strings::MsgItemUndamaged },
-                                                 Colors::ShadesOfGrey::Six);
+          Application::Instance().ShowMessageBox(
+                MessageBoxType::ANY_KEY,
+                Strings::MessageBoxInformationHeaderText,
+                { Strings::MsgItemUndamaged },
+                Colors::ShadesOfGrey::Six
+          );
         }
         else
         {

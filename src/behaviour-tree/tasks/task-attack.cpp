@@ -67,7 +67,8 @@ BTResult TaskAttack::Run()
 
           if (shouldPrintMessage)
           {
-            Printer::Instance().AddMessage(_objectToControl->ObjectName + " is healed!");
+            Printer::Instance().AddMessage(_objectToControl->ObjectName +
+                                           " is healed!");
           }
         }
       }
@@ -138,7 +139,8 @@ BTResult TaskAttack::Run()
     // -------------------------------------------------------------------------
 
     default:
-      DebugLog("[WAR] %s - attack not defined!", _objectToControl->ObjectName.data());
+      DebugLog("[WAR] %s - attack not defined!",
+               _objectToControl->ObjectName.data());
       break;
   }
 
@@ -213,7 +215,10 @@ bool TaskAttack::AttackWithWeapon()
   }
   else
   {
-    auto msg = Util::StringFormat(Strings::FmtSMissed, Util::GetGameObjectDisplayCharacter(_objectToControl).data());
+    auto msg = Util::StringFormat(Strings::FmtSMissed,
+                                  Util::GetGameObjectDisplayCharacter(
+                                    _objectToControl
+                                  ).data());
     Application::Instance().DisplayAttack(_playerRef,
                                           GlobalConstants::DisplayAttackDelayMs,
                                           msg,
@@ -262,7 +267,10 @@ AttackResult TaskAttack::AttackUnarmed(const DamageRoll& damageRoll)
   }
   else
   {
-    auto msg = Util::StringFormat(Strings::FmtSMissed, Util::GetGameObjectDisplayCharacter(_objectToControl).data());
+    auto msg = Util::StringFormat(Strings::FmtSMissed,
+                                  Util::GetGameObjectDisplayCharacter(
+                                    _objectToControl
+                                  ).data());
     Application::Instance().DisplayAttack(_playerRef,
                                           GlobalConstants::DisplayAttackDelayMs,
                                           msg,
@@ -278,7 +286,8 @@ AttackResult TaskAttack::AttackUnarmed(const DamageRoll& damageRoll)
 
 bool TaskAttack::PlayerHasArmor()
 {
-  ItemComponent* armor = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::TORSO][0];
+  ItemComponent* armor =
+      _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::TORSO][0];
   return (armor != nullptr);
 }
 
@@ -287,7 +296,9 @@ bool TaskAttack::PlayerHasArmor()
 #if DEBUG_BUILD
 void TaskAttack::LogAttackData(int hitChance)
 {
-  auto logMsg = Util::StringFormat("%s (SKL %i, LVL %i) attacks Player (SKL: %i, LVL %i): chance = %i",
+  auto logMsg = Util::StringFormat("%s (SKL %i, LVL %i) "
+                                   "attacks Player (SKL: %i, LVL %i): "
+                                   "chance = %i",
                                    _objectToControl->ObjectName.data(),
                                    _objectToControl->Attrs.Skl.Get(),
                                    _objectToControl->Attrs.Lvl.Get(),

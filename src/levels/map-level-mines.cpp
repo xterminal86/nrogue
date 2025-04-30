@@ -19,7 +19,10 @@
 #include "logger.h"
 #endif
 
-MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLevel) :
+MapLevelMines::MapLevelMines(int sizeX,
+                             int sizeY,
+                             MapType type,
+                             int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
   switch (MapType_)
@@ -47,10 +50,10 @@ MapLevelMines::MapLevelMines(int sizeX, int sizeY, MapType type, int dungeonLeve
     {
       _monstersSpawnRateForThisLevel =
       {
-        { GameObjectType::RAT,         20 },
-        { GameObjectType::BAT,          5 },
-        { GameObjectType::SPIDER,       3 },
-        { GameObjectType::MAD_MINER,    2 }
+        { GameObjectType::RAT,       20 },
+        { GameObjectType::BAT,        5 },
+        { GameObjectType::SPIDER,     3 },
+        { GameObjectType::MAD_MINER,  2 }
       };
     }
     break;
@@ -196,15 +199,16 @@ void MapLevelMines::CreateSpecialLevel()
 {
   MysteriousForcePresent = true;
 
-  GameObject* key = ItemsFactory::Instance().CreateDummyItem("Iron Key",
-                                                             '1',
-                                                             Colors::IronColor,
-                                                             Colors::BlackColor,
-                                                             {
-                                                               "A simple iron key.",
-                                                               "Now you just need to find a lock."
-                                                             }
-                                                             );
+  GameObject* key = ItemsFactory::Instance().CreateDummyItem(
+    "Iron Key",
+    '1',
+    Colors::IronColor,
+    Colors::BlackColor,
+    {
+      "A simple iron key.",
+      "Now you just need to find a lock."
+    }
+  );
 
   key->GetComponent<ItemComponent>()->Data.IsImportant = true;
 
@@ -227,7 +231,11 @@ void MapLevelMines::CreateSpecialLevel()
           LevelStart.X = posX;
           LevelStart.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, c, stairsUpTo);
+          GameObjectsFactory::Instance().CreateStairs(this,
+                                                      LevelStart.X,
+                                                      LevelStart.Y,
+                                                      c,
+                                                      stairsUpTo);
         }
         break;
 
@@ -236,7 +244,11 @@ void MapLevelMines::CreateSpecialLevel()
           LevelExit.X = posX;
           LevelExit.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, c, stairsDownTo);
+          GameObjectsFactory::Instance().CreateStairs(this,
+                                                      LevelExit.X,
+                                                      LevelExit.Y,
+                                                      c,
+                                                      stairsDownTo);
         }
         break;
 
@@ -253,7 +265,11 @@ void MapLevelMines::CreateSpecialLevel()
 
         case '+':
         {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX, posY, false, DoorMaterials::STONE);
+          GameObject* door =
+              GameObjectsFactory::Instance().CreateDoor(posX,
+                                                        posY,
+                                                        false,
+                                                        DoorMaterials::STONE);
 
           DoorComponent* dc = door->GetComponent<DoorComponent>();
 
@@ -265,14 +281,15 @@ void MapLevelMines::CreateSpecialLevel()
 
         case 'D':
         {
-          GameObject* door = GameObjectsFactory::Instance().CreateDoor(posX,
-                                                                       posY,
-                                                                       false,
-                                                                       DoorMaterials::IRON,
-                                                                       "Iron Door",
-                                                                       -1,
-                                                                       Colors::BlackColor,
-                                                                       Colors::IronColor);
+          GameObject* door =
+              GameObjectsFactory::Instance().CreateDoor(posX,
+                                                        posY,
+                                                        false,
+                                                        DoorMaterials::IRON,
+                                                        "Iron Door",
+                                                        -1,
+                                                        Colors::BlackColor,
+                                                        Colors::IronColor);
 
           DoorComponent* dc = door->GetComponent<DoorComponent>();
           dc->OpenedBy = key->GetComponent<ItemComponent>()->Data.ItemTypeHash;
@@ -290,15 +307,19 @@ void MapLevelMines::CreateSpecialLevel()
                           Colors::BlackColor,
                           Strings::TileNames::GroundText);
 
-          GameObject* boss = MonstersInc::Instance().CreateMonster(posX, posY, GameObjectType::HEROBRINE);
+          GameObject* boss =
+              MonstersInc::Instance().CreateMonster(posX,
+                                                    posY,
+                                                    GameObjectType::HEROBRINE);
 
           ContainerComponent* cc = boss->GetComponent<ContainerComponent>();
           cc->Add(key);
 
           PlaceActor(boss);
 
-          GameObjectsFactory::Instance().CreateTrigger(TriggerType::ONE_SHOT,
-                                                       TriggerUpdateType::FINISH_TURN,
+          GameObjectsFactory::Instance().CreateTrigger(
+                TriggerType::ONE_SHOT,
+                TriggerUpdateType::FINISH_TURN,
           [this]()
           {
             //
@@ -332,7 +353,8 @@ void MapLevelMines::CreateSpecialLevel()
 
             Printer::Instance().AddMessage("The tunnel collapses!");
 
-            GameObject* door = Map::Instance().GetStaticGameObjectAtPosition(2, 4);
+            GameObject* door = Map::Instance().GetStaticGameObjectAtPosition(2,
+                                                                             4);
             if (door != nullptr)
             {
               DoorComponent* dc = door->GetComponent<DoorComponent>();
@@ -354,7 +376,9 @@ void MapLevelMines::CreateSpecialLevel()
             int index = RNG::Instance().RandomRange(0, phrases.size());
             std::string phrase = phrases[index];
 
-            Printer::Instance().AddMessage(phrase, Colors::WhiteColor, 0xAA0000);
+            Printer::Instance().AddMessage(phrase,
+                                           Colors::WhiteColor,
+                                           0xAA0000);
           });
         }
         break;
@@ -454,7 +478,10 @@ void MapLevelMines::CreateSpecialMonsters()
       int y = _emptyCells[index].Y;
       if (!MapArray[x][y]->Occupied)
       {
-        GameObject* m = MonstersInc::Instance().CreateMonster(x, y, GameObjectType::SHELOB);
+        GameObject* m =
+            MonstersInc::Instance().CreateMonster(x,
+                                                  y,
+                                                  GameObjectType::SHELOB);
         PlaceActor(m);
       }
     }
@@ -480,7 +507,11 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
 
     case '+':
     {
-      GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, DoorMaterials::WOOD);
+      GameObject* door =
+          GameObjectsFactory::Instance().CreateDoor(x,
+                                                    y,
+                                                    false,
+                                                    DoorMaterials::WOOD);
 
       //
       // May cause softlock if there is a locked door in flooded room

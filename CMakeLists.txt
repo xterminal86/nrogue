@@ -19,7 +19,10 @@ if (MSVC)
   # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
 else()
   add_compile_options(-Wall
+    # -Wextra checks for unused parameters,
+    # so maybe enable in nearly completed stage of the project to cleanup stuff.
                       #-Wextra
+                      -Wpedantic
                       -Wno-switch
                       -Wno-format
                       -Werror=return-type

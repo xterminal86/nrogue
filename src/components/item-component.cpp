@@ -47,7 +47,8 @@ void ItemComponent::Transfer(ContainerComponent* destination)
 
 // =============================================================================
 
-std::pair<std::string, StringV> ItemComponent::GetInspectionInfo(bool overrideDescriptions)
+std::pair<std::string, StringV>
+ItemComponent::GetInspectionInfo(bool overrideDescriptions)
 {
   std::pair<std::string, StringV> res;
 
@@ -126,7 +127,9 @@ std::pair<std::string, StringV> ItemComponent::GetInspectionInfo(bool overrideDe
 void ItemComponent::Inspect(bool overrideDescriptions)
 {
   auto lore = GetInspectionInfo(overrideDescriptions);
-  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, lore.first, lore.second);
+  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                         lore.first,
+                                         lore.second);
 }
 
 // =============================================================================
@@ -274,7 +277,10 @@ std::vector<std::string> ItemComponent::GetReturnerInspectionInfo()
     else
     {
       auto levelName = Map::Instance().GetLevelRefByType(mt)->LevelName;
-      text = Util::StringFormat("Set to %s at [%i;%i]", levelName.data(), pos.X, pos.Y);
+      text = Util::StringFormat("Set to %s at [%i;%i]",
+                                levelName.data(),
+                                pos.X,
+                                pos.Y);
     }
   }
   else
@@ -294,7 +300,8 @@ std::vector<std::string> ItemComponent::GetReturnerInspectionInfo()
   }
   else if (Data.Prefix == ItemPrefix::CURSED)
   {
-    res.push_back("This one is cursed and its performance is quite unpredictable.");
+    res.push_back("This one is cursed and its performance "
+                  "is quite unpredictable.");
   }
 
   res.push_back(text);
@@ -308,7 +315,10 @@ std::vector<std::string> ItemComponent::GetWandInspectionInfo()
 {
   std::vector<std::string> res;
 
-  std::string damage  = Util::StringFormat("Damage  : %id%i ", Data.SpellHeld.SpellBaseDamage.first, Data.SpellHeld.SpellBaseDamage.second);
+  std::string damage = Util::StringFormat( "Damage  : %id%i ",
+                         Data.SpellHeld.SpellBaseDamage.first,
+                         Data.SpellHeld.SpellBaseDamage.second);
+
   std::string charges = Util::StringFormat("Charges : %i", Data.Amount);
   std::string range   = Util::StringFormat("Range   : %i", Data.Range);
 
@@ -419,7 +429,11 @@ void ItemComponent::AddModifiersInfo(std::vector<std::string>& res)
       bonus2 = bonusStr[1];
     }
 
-    auto str = Util::StringFormat("%s: %c%c%c", statName.data(), prefix, bonus1, bonus2);
+    auto str = Util::StringFormat("%s: %c%c%c",
+                                  statName.data(),
+                                  prefix,
+                                  bonus1,
+                                  bonus2);
     res.push_back(str);
   }
 }
@@ -458,7 +472,8 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
   // If we have stat bonuses and non-stat bonuses,
   // separate them with empty line.
   //
-  bool onlySpecialBonuses = (_nonZeroStatBonuses == 0 && _nonStatBonusesPresent);
+  bool onlySpecialBonuses = (_nonZeroStatBonuses == 0
+                          && _nonStatBonusesPresent);
   bool bothPresent = (_nonZeroStatBonuses != 0 && _nonStatBonusesPresent);
 
   //
@@ -480,7 +495,9 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::SELF_REPAIR:
       {
-        auto str = Util::StringFormat("Repairs 1 point of durability every %i turns", i.Period);
+        auto str = Util::StringFormat("Repairs 1 point of durability "
+                                      "every %i turns",
+                                      i.Period);
         res.push_back(str);
       }
       break;
@@ -539,7 +556,9 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
       {
         int tiles = i.BonusValue;
         std::string tilesStr = (tiles == 1) ? "tile" : "tiles";
-        auto str = Util::StringFormat("Knocks enemy %i %s back", tiles, tilesStr.data());
+        auto str = Util::StringFormat("Knocks enemy %i %s back",
+                                      tiles,
+                                      tilesStr.data());
         res.push_back(str);
       }
       break;
@@ -550,7 +569,8 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::REGEN:
       {
-        auto str = Util::StringFormat("Regenerates 1 HP every %i turns", i.Period);
+        auto str = Util::StringFormat("Regenerates 1 HP every %i turns",
+                                      i.Period);
         res.push_back(str);
       }
       break;
@@ -561,28 +581,36 @@ void ItemComponent::AddBonusesInfo(std::vector<std::string>& res)
 
       case ItemBonusType::LEECH:
       {
-        auto str = Util::StringFormat("%i%c of the inflicted physical damage goes to HP", i.BonusValue, '%');
+        auto str = Util::StringFormat("%i%c of the inflicted physical "
+                                      "damage goes to HP",
+                                      i.BonusValue,
+                                      '%');
         res.push_back(str);
       }
       break;
 
       case ItemBonusType::DMG_ABSORB:
       {
-        auto str = Util::StringFormat("Absorbs %i physical damage", i.BonusValue);
+        auto str = Util::StringFormat("Absorbs %i physical damage",
+                                      i.BonusValue);
         res.push_back(str);
       }
       break;
 
       case ItemBonusType::MAG_ABSORB:
       {
-        auto str = Util::StringFormat("Absorbs %i magical damage", i.BonusValue);
+        auto str = Util::StringFormat("Absorbs %i magical damage",
+                                      i.BonusValue);
         res.push_back(str);
       }
       break;
 
       case ItemBonusType::THORNS:
       {
-        auto str = Util::StringFormat("Returns %i%c of the received physical damage", i.BonusValue, '%');
+        auto str = Util::StringFormat("Returns %i%c of the received physical "
+                                      "damage",
+                                      i.BonusValue,
+                                      '%');
         res.push_back(str);
       }
       break;

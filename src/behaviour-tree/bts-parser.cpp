@@ -63,8 +63,13 @@ void BTSParser::ParseFromString(const std::string& script)
 
   if (script.empty())
   {
-    std::string objName = (_goRef != nullptr) ? _goRef->ObjectName : "<nullptr>";
-    auto str = Util::StringFormat("%s: script on %s is empty!", __PRETTY_FUNCTION__, objName.data());
+    std::string objName = (_goRef != nullptr)
+                         ? _goRef->ObjectName
+                         : "<nullptr>";
+
+    auto str = Util::StringFormat("%s: script on %s is empty!",
+                                  __PRETTY_FUNCTION__,
+                                  objName.data());
     LogPrint(str, true);
 
     DebugLog("%s\n", str.data());
@@ -223,8 +228,14 @@ void BTSParser::FormTree(bool printDebug)
     if (printDebug)
     {
       std::string tabs(i.Indent, '.');
-      std::string addInfo = (i.Params.size() != 0 ? i.Params["p1"].data() : std::string());
-      DebugLog("%s 0x%X %s (%s)\n", tabs.data(), &i, i.NodeName.data(), addInfo.data());
+      std::string addInfo = (i.Params.size() != 0
+                           ? i.Params["p1"].data()
+                           : std::string());
+      DebugLog("%s 0x%X %s (%s)\n",
+               tabs.data(),
+               &i,
+               i.NodeName.data(),
+               addInfo.data());
     }
   }
 
@@ -254,8 +265,13 @@ void BTSParser::FormTree(bool printDebug)
 
         if (printDebug)
         {
-          std::string addInfo1 = (_parsedData[i].Params.size() != 0 ? _parsedData[i].Params["p1"].data() : std::string());
-          std::string addInfo2 = (parent->Params.size() != 0 ? parent->Params.at("p1").data() : std::string());
+          std::string addInfo1 = (_parsedData[i].Params.size() != 0
+                                ? _parsedData[i].Params["p1"].data()
+                                : std::string());
+
+          std::string addInfo2 = (parent->Params.size() != 0
+                                ? parent->Params.at("p1").data()
+                                : std::string());
 
           std::string tabs(indent, '.');
           DebugLog("%s 0x%X %s (%s) <- 0x%X %s (%s)\n",
@@ -318,7 +334,10 @@ void ScriptNode::Print()
   #ifdef DEBUG_BUILD
   for (auto& kvp : Params)
   {
-    DebugLog("%s\t%s : %s\n", tabs.data(), kvp.first.data(), kvp.second.data());
+    DebugLog("%s\t%s : %s\n",
+             tabs.data(),
+             kvp.first.data(),
+             kvp.second.data());
   }
   #endif
 

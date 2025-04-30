@@ -293,7 +293,8 @@ BTResult Selector::Run()
 // |                               REPEATER                                    |
 // |                                                                           |
 // +---------------------------------------------------------------------------+
-Repeater::Repeater(GameObject* objectToControl, int toRepeat) : ControlNode(objectToControl)
+Repeater::Repeater(GameObject* objectToControl,
+                   int toRepeat) : ControlNode(objectToControl)
 {
   _toRepeat = toRepeat;
   _repeatCount = 0;

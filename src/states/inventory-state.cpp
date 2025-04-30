@@ -47,7 +47,8 @@ void InventoryState::HandleInput()
         return;
       }
 
-      ItemComponent* c = _playerRef->Inventory->Contents[_selectedIndex]->GetComponent<ItemComponent>();
+      auto& pic = _playerRef->Inventory->Contents;
+      ItemComponent* c = pic[_selectedIndex]->GetComponent<ItemComponent>();
       c->Inspect();
     }
     break;
@@ -64,19 +65,25 @@ void InventoryState::HandleInput()
 
       if (ic->Data.IsEquipped)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                               Strings::MessageBoxEpicFailHeaderText,
-                                               { Strings::MsgUnequipFirst },
-                                               Colors::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(
+              MessageBoxType::ANY_KEY,
+              Strings::MessageBoxEpicFailHeaderText,
+              { Strings::MsgUnequipFirst },
+              Colors::MessageBoxRedBorderColor
+        );
+
         return;
       }
 
       if (ic->Data.IsImportant)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                               Strings::MessageBoxInformationHeaderText,
-                                               { Strings::MsgLooksImportant },
-                                               Colors::MessageBoxBlueBorderColor);
+        Application::Instance().ShowMessageBox(
+              MessageBoxType::ANY_KEY,
+              Strings::MessageBoxInformationHeaderText,
+              { Strings::MsgLooksImportant },
+              Colors::MessageBoxBlueBorderColor
+        );
+
         return;
       }
 
@@ -114,14 +121,18 @@ void InventoryState::HandleInput()
         {
           if (ic->Data.ItemType_ == ItemType::RETURNER)
           {
-            auto s = Application::Instance().GetGameStateRefByName(GameStates::RETURNER_STATE);
+            auto s = Application::Instance().GetGameStateRefByName(
+                       GameStates::RETURNER_STATE
+            );
             ReturnerState* rs = static_cast<ReturnerState*>(s);
             rs->SetItemComponentRef(ic);
             Application::Instance().ChangeState(GameStates::RETURNER_STATE);
           }
           else if (ic->Data.ItemType_ == ItemType::REPAIR_KIT)
           {
-            auto s = Application::Instance().GetGameStateRefByName(GameStates::REPAIR_STATE);
+            auto s = Application::Instance().GetGameStateRefByName(
+                       GameStates::REPAIR_STATE
+            );
             RepairState* rs = static_cast<RepairState*>(s);
             rs->SetRepairKitRef(ic, _selectedIndex);
             Application::Instance().ChangeState(GameStates::REPAIR_STATE);
@@ -153,10 +164,12 @@ void InventoryState::HandleInput()
       }
       else if (r == UseResult::UNUSABLE)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                               Strings::MessageBoxEpicFailHeaderText,
-                                               { Strings::MsgCantBeUsed },
-                                               Colors::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(
+              MessageBoxType::ANY_KEY,
+              Strings::MessageBoxEpicFailHeaderText,
+              { Strings::MsgCantBeUsed },
+              Colors::MessageBoxRedBorderColor
+        );
       }
     }
     break;
@@ -188,23 +201,30 @@ void InventoryState::HandleInput()
       ItemComponent* ic = go->GetComponent<ItemComponent>();
       if (ic->Data.IsEquipped)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                               Strings::MessageBoxEpicFailHeaderText,
-                                               { Strings::MsgUnequipFirst },
-                                               Colors::MessageBoxRedBorderColor);
+        Application::Instance().ShowMessageBox(
+              MessageBoxType::ANY_KEY,
+              Strings::MessageBoxEpicFailHeaderText,
+              { Strings::MsgUnequipFirst },
+              Colors::MessageBoxRedBorderColor
+        );
         return;
       }
 
       if (ic->Data.IsImportant)
       {
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                               Strings::MessageBoxInformationHeaderText,
-                                               { Strings::MsgLooksImportant },
-                                               Colors::MessageBoxBlueBorderColor);
+        Application::Instance().ShowMessageBox(
+              MessageBoxType::ANY_KEY,
+              Strings::MessageBoxInformationHeaderText,
+              { Strings::MsgLooksImportant },
+              Colors::MessageBoxBlueBorderColor
+        );
         return;
       }
 
-      auto s = Application::Instance().GetGameStateRefByName(GameStates::TARGET_STATE);
+      auto s = Application::Instance().GetGameStateRefByName(
+                 GameStates::TARGET_STATE
+      );
+
       TargetState* ts = static_cast<TargetState*>(s);
       ts->SetupForThrowing(ic, _selectedIndex);
       Application::Instance().ChangeState(GameStates::TARGET_STATE);
@@ -252,7 +272,8 @@ void InventoryState::Update(bool forceUpdate)
 
       nameInInventory.resize(GlobalConstants::InventoryMaxNameLength, ' ');
 
-      if (ic->Data.IsStackable || (ic->Data.IsChargeable && ic->Data.IsIdentified))
+      if (ic->Data.IsStackable
+      || (ic->Data.IsChargeable && ic->Data.IsIdentified))
       {
         std::string stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
         if ((ic->Data.ItemType_ == ItemType::ARROWS
@@ -350,7 +371,10 @@ void InventoryState::DisplayEquipment()
 
 // =============================================================================
 
-void InventoryState::DrawEquipmentField(int x, int y, const std::string& fieldName, ItemComponent* eq)
+void InventoryState::DrawEquipmentField(int x,
+                                        int y,
+                                        const std::string& fieldName,
+                                        ItemComponent* eq)
 {
   std::string stub(kEquipmentMaxNameLength, Strings::InventoryEmptySlotChar);
 
@@ -492,7 +516,9 @@ void InventoryState::DropItem(ItemComponent* ic)
 
 // =============================================================================
 
-void InventoryState::DrawSelectionBar(int yOffset, const std::string& text, const uint32_t& textColor)
+void InventoryState::DrawSelectionBar(int yOffset,
+                                      const std::string& text,
+                                      const uint32_t& textColor)
 {
   if (yOffset == _selectedIndex)
   {

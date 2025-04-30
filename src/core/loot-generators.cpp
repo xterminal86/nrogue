@@ -34,7 +34,8 @@ namespace LootGenerators
         break;
 
       default:
-        DebugLog("No loot function specified for object type %d", (int)go->Type);
+        DebugLog("No loot function specified for object type %d",
+                 (int)go->Type);
         break;
     }
   }
@@ -54,7 +55,9 @@ namespace LootGenerators
     {
       case ItemType::FOOD:
       {
-        auto food = ItemsFactory::Instance().CreateFood(go->PosX, go->PosY, FoodType::CHEESE);
+        auto food = ItemsFactory::Instance().CreateFood(go->PosX,
+                                                        go->PosY,
+                                                        FoodType::CHEESE);
         Map::Instance().PlaceGameObject(food);
       }
       break;
@@ -90,7 +93,9 @@ namespace LootGenerators
         };
         auto f = Util::WeightedRandom(foodTable);
 
-        auto food = ItemsFactory::Instance().CreateFood(go->PosX, go->PosY, f.first);
+        auto food = ItemsFactory::Instance().CreateFood(go->PosX,
+                                                        go->PosY,
+                                                        f.first);
         Map::Instance().PlaceGameObject(food);
       }
       break;

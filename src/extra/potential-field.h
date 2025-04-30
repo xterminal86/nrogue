@@ -47,7 +47,8 @@ class PotentialField
 
     GameObject* _owner = nullptr;
 
-    void LookAround(const Position& mapPos, std::queue<Position>& cellsToVisit);
+    void LookAround(const Position& mapPos,
+                    std::queue<Position>& cellsToVisit);
 
     bool IsOutOfBounds(const Position& fieldPos);
 };

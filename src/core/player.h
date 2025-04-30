@@ -104,8 +104,13 @@ class Player : public GameObject
     void ProcessKill(GameObject* monster);
 
     void ProcessStarvation();
-    void ProcessMeleeAttack(ItemComponent* weapon, GameObject* defender, int damageToInflict);
-    void ProcessMagicAttack(GameObject* target, ItemComponent* weapon, int damage, bool againstRes);
+    void ProcessMeleeAttack(ItemComponent* weapon,
+                            GameObject* defender,
+                            int damageToInflict);
+    void ProcessMagicAttack(GameObject* target,
+                            ItemComponent* weapon,
+                            int damage,
+                            bool againstRes);
 
     bool PassByNPC(GameObject* actor);
 
@@ -133,7 +138,8 @@ class Player : public GameObject
     //
     // ...yeah, I know, right?
     //
-    const std::map<PlayerStats, std::pair<std::string, Attribute&>> _mainAttributesByStatName =
+    const std::map<PlayerStats, std::pair<std::string, Attribute&>>
+    _mainAttributesByStatName =
     {
       { PlayerStats::STR, { "STR", Attrs.Str } },
       { PlayerStats::DEF, { "DEF", Attrs.Def } },

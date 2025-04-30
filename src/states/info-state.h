@@ -16,8 +16,16 @@ class InfoState : public GameState
 
   private:
     void PrintExp(int x, int y);
-    void PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr);
-    void PrintRangedAttribute(int x, int y, const std::string& attrName, RangedAttribute& attr);
+    void PrintAttribute(int x,
+                        int y,
+                        const std::string& attrName,
+                        Attribute& attr);
+
+    void PrintRangedAttribute(int x,
+                              int y,
+                              const std::string& attrName,
+                              RangedAttribute& attr);
+
     void PrintModifiers(int x, int y);
 
     int FindAttrsMaxStringLength();

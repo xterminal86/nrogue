@@ -8,7 +8,10 @@
 #include "logger.h"
 #endif
 
-MapLevelLostCity::MapLevelLostCity(int sizeX, int sizeY, MapType type, int dungeonLevel)
+MapLevelLostCity::MapLevelLostCity(int sizeX,
+                                   int sizeY,
+                                   MapType type,
+                                   int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
 }
@@ -212,7 +215,10 @@ void MapLevelLostCity::CreateShrines(LevelBuilder& lb)
           "?Shrine?");
     PlaceStaticObject(kvp.first.X, kvp.first.Y, t);
 
-    auto go = GameObjectsFactory::Instance().CreateShrine(kvp.first.X, kvp.first.Y, shrineType, 1000);
+    auto go = GameObjectsFactory::Instance().CreateShrine(kvp.first.X,
+                                                          kvp.first.Y,
+                                                          shrineType,
+                                                          1000);
     PlaceGameObject(go);
   }
 }

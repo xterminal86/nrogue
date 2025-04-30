@@ -79,7 +79,11 @@ void AINPC::Init(NPCType type, bool immovable, ServiceType serviceType)
       break;
   }
 
-  for (int i = 0; i < 19; i++)
+  //
+  // Everybody start at level 1.
+  // 19 level ups will get you to 20.
+  //
+  for (int i = 1; i < 20; i++)
   {
     AIComponentRef->OwnerGameObject->LevelUp();
   }
@@ -136,7 +140,7 @@ void AINPC::SetDataClaire()
   AIComponentRef->OwnerGameObject->Attrs.Str.Talents = 3;
   AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 2;
   AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 2;
-  AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.HP.Talents  = 3;
 
   AIComponentRef->OwnerGameObject->ObjectName = kWoman;
 
@@ -188,7 +192,7 @@ void AINPC::SetDataCloud()
   AIComponentRef->OwnerGameObject->Attrs.Str.Talents = 3;
   AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 2;
   AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 1;
-  AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 3;
+  AIComponentRef->OwnerGameObject->Attrs.HP.Talents  = 3;
 
   AIComponentRef->OwnerGameObject->ObjectName = kMan;
 
@@ -243,7 +247,7 @@ void AINPC::SetDataIan()
   AIComponentRef->OwnerGameObject->Attrs.Spd.Talents = 3;
   AIComponentRef->OwnerGameObject->Attrs.Skl.Talents = 2;
   AIComponentRef->OwnerGameObject->Attrs.Def.Talents = 1;
-  AIComponentRef->OwnerGameObject->Attrs.HP.Talents = 1;
+  AIComponentRef->OwnerGameObject->Attrs.HP.Talents  = 1;
 
   AIComponentRef->OwnerGameObject->ObjectName = kMan;
 
@@ -684,7 +688,8 @@ void AINPC::SetDataDefault()
 
   AIComponentRef->OwnerGameObject->ObjectName = (gender == 0) ? kMan : kWoman;
 
-  Data.UnacquaintedDescription = "You see a " + AIComponentRef->OwnerGameObject->ObjectName;
+  Data.UnacquaintedDescription = "You see a " +
+                                 AIComponentRef->OwnerGameObject->ObjectName;
 }
 
 // =============================================================================

@@ -9,7 +9,10 @@
 #include "logger.h"
 #endif
 
-MapLevelNether::MapLevelNether(int sizeX, int sizeY, MapType type, int dungeonLevel)
+MapLevelNether::MapLevelNether(int sizeX,
+                               int sizeY,
+                               MapType type,
+                               int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
   _specialLevel =
@@ -100,7 +103,11 @@ void MapLevelNether::CreateCommonObjects(int x, int y, char image)
 
     case '+':
     {
-      GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, DoorMaterials::STONE);
+      GameObject* door =
+          GameObjectsFactory::Instance().CreateDoor(x,
+                                                    y,
+                                                    false,
+                                                    DoorMaterials::STONE);
       PlaceStaticObject(door);
     }
     break;

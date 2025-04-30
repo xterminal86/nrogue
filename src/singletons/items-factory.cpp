@@ -97,10 +97,16 @@ void ItemsFactory::InitScrolls()
 
     _gameScrollsMap[spell] = si;
 
-    //auto str = Util::StringFormat("%s = %s", GlobalConstants::SpellNameByType.at(si.SpellType_).data(), si.ScrollName.data());
+    //auto str = Util::StringFormat(
+    //               "%s = %s",
+    //               GlobalConstants::SpellNameByType.at(si.SpellType_).data(),
+    //               si.ScrollName.data()
+    //);
     //Logger::Instance().Print(str);
 
-    // DebugLog("%s = %s\n", GlobalConstants::SpellNameByType.at(si.SpellType_).data(), si.ScrollName.data());
+    // DebugLog("%s = %s\n",
+    //          GlobalConstants::SpellNameByType.at(si.SpellType_).data(),
+    //          si.ScrollName.data());
 
     scrollNames.erase(scrollNames.begin() + scrollNameIndex);
     validSpells.erase(validSpells.begin() + spellIndex);
@@ -155,7 +161,8 @@ GameObject* ItemsFactory::CreateMoney(int amount)
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreatePotion(PotionType type, ItemPrefix prefixOverride)
+GameObject* ItemsFactory::CreatePotion(PotionType type,
+                                       ItemPrefix prefixOverride)
 {
   GameObject* go = nullptr;
 
@@ -185,7 +192,8 @@ GameObject* ItemsFactory::CreatePotion(PotionType type, ItemPrefix prefixOverrid
       case PotionType::RES_POTION:
       case PotionType::SKL_POTION:
       case PotionType::SPD_POTION:
-        go = CreateStatPotion(GlobalConstants::StatNameByPotionType.at(type), prefixOverride);
+        go = CreateStatPotion(GlobalConstants::StatNameByPotionType.at(type),
+                              prefixOverride);
         break;
 
       case PotionType::EXP_POTION:
@@ -266,7 +274,8 @@ GameObject* ItemsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride)
+GameObject*
+ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -304,9 +313,10 @@ GameObject* ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride
   ic->Data.IdentifiedName        = name;
   ic->Data.UnidentifiedName      = "?" + name + "?";
 
-  ic->Data.UseCallback = std::bind(&ItemUseHandlers::NeutralizePoisonPotionUseHandler,
-                                   _1,
-                                   _2);
+  ic->Data.UseCallback =
+      std::bind(&ItemUseHandlers::NeutralizePoisonPotionUseHandler,
+                _1,
+                _2);
 
   SetItemName(go, ic->Data);
 
@@ -475,7 +485,8 @@ GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateStatPotion(const std::string& statName, ItemPrefix prefixOverride)
+GameObject* ItemsFactory::CreateStatPotion(const std::string& statName,
+                                           ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -685,8 +696,12 @@ GameObject* ItemsFactory::CreateRandomPotion()
     case PotionType::RES_POTION:
     case PotionType::SKL_POTION:
     case PotionType::SPD_POTION:
-      go = CreateStatPotion(GlobalConstants::StatNameByPotionType.at(weights.first));
-      break;
+    {
+      const std::string& name =
+          GlobalConstants::StatNameByPotionType.at(weights.first);
+      go = CreateStatPotion(name);
+    }
+    break;
   }
 
   ItemComponent* ic = go->GetComponent<ItemComponent>();
@@ -702,7 +717,11 @@ GameObject* ItemsFactory::CreateRandomPotion()
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix prefixOverride, bool isIdentified)
+GameObject* ItemsFactory::CreateFood(int x,
+                                     int y,
+                                     FoodType type,
+                                     ItemPrefix prefixOverride,
+                                     bool isIdentified)
 {
   std::string name;
   int addsHunger = 0;
@@ -726,7 +745,9 @@ GameObject* ItemsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix pre
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   ic->Data.ItemType_ = ItemType::FOOD;
-  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM) ? RollItemPrefix() : prefixOverride;
+  ic->Data.Prefix = (prefixOverride == ItemPrefix::RANDOM)
+                    ? RollItemPrefix()
+                    : prefixOverride;
   ic->Data.Amount = 1;
   ic->Data.IsIdentified = isIdentified;
 
@@ -764,7 +785,8 @@ GameObject* ItemsFactory::CreateFood(int x, int y, FoodType type, ItemPrefix pre
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateNote(const std::string& objName, const std::vector<std::string>& text)
+GameObject* ItemsFactory::CreateNote(const std::string& objName,
+                                     const std::vector<std::string>& text)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -790,11 +812,12 @@ GameObject* ItemsFactory::CreateNote(const std::string& objName, const std::vect
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateDummyItem(const std::string& objName,
-                                          char image,
-                                          const uint32_t& fgColor,
-                                          const uint32_t& bgColor,
-                                          const std::vector<std::string>& descText)
+GameObject*
+ItemsFactory::CreateDummyItem(const std::string& objName,
+                              char image,
+                              const uint32_t& fgColor,
+                              const uint32_t& bgColor,
+                              const std::vector<std::string>& descText)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -818,7 +841,10 @@ GameObject* ItemsFactory::CreateDummyItem(const std::string& objName,
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix prefixOverride)
+GameObject* ItemsFactory::CreateScroll(int x,
+                                       int y,
+                                       SpellType type,
+                                       ItemPrefix prefixOverride)
 {
   SpellInfo* si = SpellsDatabase::Instance().GetSpellInfoFromDatabase(type);
 
@@ -826,7 +852,9 @@ GameObject* ItemsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix 
                 GlobalConstants::ScrollValidSpellTypes.end(),
                 type) == GlobalConstants::ScrollValidSpellTypes.end())
   {
-    auto msg = Util::StringFormat("[WARNING] Trying to create a scroll with invalid spell (%s)!\n", si->SpellName.data());
+    auto msg = Util::StringFormat("[WARNING] Trying to create a scroll "
+                                  "with invalid spell (%s)!\n",
+                                  si->SpellName.data());
     Printer::Instance().AddMessage(msg);
     LogPrint(msg, true);
     DebugLog("%s\n", msg.data());
@@ -886,19 +914,21 @@ GameObject* ItemsFactory::CreateScroll(int x, int y, SpellType type, ItemPrefix 
 
 GameObject* ItemsFactory::CreateRandomScroll(ItemPrefix prefix)
 {
-  int index = RNG::Instance().RandomRange(0, GlobalConstants::ScrollValidSpellTypes.size());
+  size_t totalSize = GlobalConstants::ScrollValidSpellTypes.size();
+  int index = RNG::Instance().RandomRange(0, totalSize);
   SpellType type = GlobalConstants::ScrollValidSpellTypes.at(index);
   return CreateScroll(0, 0, type, prefix);
 }
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateMeleeWeapon(int x,
-                                            int y,
-                                            WeaponType type,
-                                            ItemPrefix prefix,
-                                            ItemQuality quality,
-                                            const std::vector<ItemBonusStruct>& bonuses)
+GameObject*
+ItemsFactory::CreateMeleeWeapon(int x,
+                                int y,
+                                WeaponType type,
+                                ItemPrefix prefix,
+                                ItemQuality quality,
+                                const std::vector<ItemBonusStruct>& bonuses)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1066,7 +1096,8 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
 
   avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-  int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1) + dungeonLevel;
+  int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1) +
+                     dungeonLevel;
 
   int durability = baseDurability + randomDurAdd;
   ic->Data.Durability.Reset(durability);
@@ -1074,7 +1105,8 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
 
-  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
+  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(),
+                                avgDamage);
   ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
 
   // *** !!!
@@ -1095,7 +1127,8 @@ GameObject* ItemsFactory::CreateMeleeWeapon(int x,
 GameObject* ItemsFactory::ChooseRandomMeleeWeapon(ItemPrefix prefixOverride,
                                                   ItemQuality qualityOverride)
 {
-  int index = RNG::Instance().RandomRange(0, GlobalConstants::WeaponNameByType.size());
+  size_t totalSize = GlobalConstants::WeaponNameByType.size();
+  int index = RNG::Instance().RandomRange(0, totalSize);
   auto it = GlobalConstants::WeaponNameByType.begin();
   std::advance(it, index);
   return CreateMeleeWeapon(0, 0, it->first, prefixOverride, qualityOverride);
@@ -1106,7 +1139,8 @@ GameObject* ItemsFactory::ChooseRandomMeleeWeapon(ItemPrefix prefixOverride,
 GameObject* ItemsFactory::ChooseRandomRangedWeapon(ItemPrefix prefixOverride,
                                                    ItemQuality qualityOverride)
 {
-  int index = RNG::Instance().RandomRange(0, GlobalConstants::RangedWeaponNameByType.size());
+  size_t totalSize = GlobalConstants::RangedWeaponNameByType.size();
+  int index = RNG::Instance().RandomRange(0, totalSize);
   auto it = GlobalConstants::RangedWeaponNameByType.begin();
   std::advance(it, index);
   return CreateRangedWeapon(0, 0, it->first, prefixOverride, qualityOverride);
@@ -1137,7 +1171,8 @@ GameObject* ItemsFactory::CreateRandomMeleeWeapon(WeaponType type,
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateRandomRangedWeapon(RangedWeaponType type, ItemPrefix prefixOverride)
+GameObject* ItemsFactory::CreateRandomRangedWeapon(RangedWeaponType type,
+                                                   ItemPrefix prefixOverride)
 {
   GameObject* go = nullptr;
 
@@ -1203,7 +1238,10 @@ GameObject* ItemsFactory::CreateGem(int x, int y,
       }
     }
 
-    int index = RNG::Instance().RandomRange(rndStartingIndex, GlobalConstants::GemNameByType.size());
+    size_t totalSize = GlobalConstants::GemNameByType.size();
+
+    int index = RNG::Instance().RandomRange(rndStartingIndex, totalSize);
+
     GemType t = (GemType)index;
     if (t == GemType::WORTHLESS_GLASS)
     {
@@ -1241,7 +1279,8 @@ GameObject* ItemsFactory::CreateWand(int x,
                                      ItemPrefix prefixOverride,
                                      ItemQuality quality)
 {
-  SpellInfo si = *SpellsDatabase::Instance().GetSpellInfoFromDatabase(spellType);
+  SpellInfo si =
+      *SpellsDatabase::Instance().GetSpellInfoFromDatabase(spellType);
 
   if (GlobalConstants::WandSpellCapacityCostByType.count(spellType) == 0)
   {
@@ -1255,7 +1294,8 @@ GameObject* ItemsFactory::CreateWand(int x,
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
   auto wandColorPair = Colors::WandColorsByMaterial.at(material);
-  std::string wandMaterialName = GlobalConstants::WandMaterialNamesByMaterial.at(material);
+  std::string wandMaterialName =
+      GlobalConstants::WandMaterialNamesByMaterial.at(material);
   std::string spellName = si.SpellName;
   std::string spellShortName = si.SpellShortName;
 
@@ -1321,7 +1361,10 @@ GameObject* ItemsFactory::CreateRandomWand(ItemPrefix prefixOverride)
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateReturner(int x, int y, int charges, ItemPrefix prefixOverride)
+GameObject* ItemsFactory::CreateReturner(int x,
+                                         int y,
+                                         int charges,
+                                         ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1330,7 +1373,9 @@ GameObject* ItemsFactory::CreateReturner(int x, int y, int charges, ItemPrefix p
 
   go->Image = '*';
 
-  int colorIndex = RNG::Instance().RandomRange(1, Colors::GemColorNameByType.size());
+  size_t totalSize = Colors::GemColorNameByType.size();
+
+  int colorIndex = RNG::Instance().RandomRange(1, totalSize);
 
   GemType t = (GemType)colorIndex;
 
@@ -1386,7 +1431,10 @@ GameObject* ItemsFactory::CreateReturner(int x, int y, int charges, ItemPrefix p
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateRepairKit(int x, int y, int charges, ItemPrefix prefixOverride)
+GameObject* ItemsFactory::CreateRepairKit(int x,
+                                          int y,
+                                          int charges,
+                                          ItemPrefix prefixOverride)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1443,7 +1491,11 @@ GameObject* ItemsFactory::CreateRepairKit(int x, int y, int charges, ItemPrefix 
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix prefixOverride, ItemQuality quality)
+GameObject* ItemsFactory::CreateArmor(int x,
+                                      int y,
+                                      ArmorType type,
+                                      ItemPrefix prefixOverride,
+                                      ItemQuality quality)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1584,7 +1636,8 @@ GameObject* ItemsFactory::CreateArmor(int x, int y, ArmorType type, ItemPrefix p
 
   //ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;
 
-  int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1) + dungeonLevel;
+  int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1) +
+                     dungeonLevel;
 
   int durability = baseDurability + randomDurAdd;
   ic->Data.Durability.Reset(durability);
@@ -1613,7 +1666,8 @@ GameObject* ItemsFactory::CreateRandomArmor(ArmorType type,
   }
   else
   {
-    int index = RNG::Instance().RandomRange(0, GlobalConstants::ArmorNameByType.size());
+    size_t totalSize = GlobalConstants::ArmorNameByType.size();
+    int index = RNG::Instance().RandomRange(0, totalSize);
     auto it = GlobalConstants::ArmorNameByType.begin();
     std::advance(it, index);
     go = CreateArmor(0, 0, it->first, prefixOverride, qualityOverride);
@@ -1627,7 +1681,11 @@ GameObject* ItemsFactory::CreateRandomArmor(ArmorType type,
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateArrows(int x, int y, ArrowType type, ItemPrefix prefixOverride, int amount)
+GameObject* ItemsFactory::CreateArrows(int x,
+                                       int y,
+                                       ArrowType type,
+                                       ItemPrefix prefixOverride,
+                                       int amount)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1691,12 +1749,13 @@ GameObject* ItemsFactory::CreateArrows(int x, int y, ArrowType type, ItemPrefix 
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateRangedWeapon(int x,
-                                             int y,
-                                             RangedWeaponType type,
-                                             ItemPrefix prefixOverride,
-                                             ItemQuality quality,
-                                             const std::vector<ItemBonusStruct>& bonuses)
+GameObject*
+ItemsFactory::CreateRangedWeapon(int x,
+                                 int y,
+                                 RangedWeaponType type,
+                                 ItemPrefix prefixOverride,
+                                 ItemQuality quality,
+                                 const std::vector<ItemBonusStruct>& bonuses)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -1963,11 +2022,12 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
 //
 // Utility method, used for debug creation of items.
 //
-GameObject* ItemsFactory::CreateAccessory(int x, int y,
-                                          EquipmentCategory category,
-                                          const std::vector<ItemBonusStruct>& bonuses,
-                                          ItemPrefix prefix,
-                                          ItemQuality quality)
+GameObject*
+ItemsFactory::CreateAccessory(int x, int y,
+                              EquipmentCategory category,
+                              const std::vector<ItemBonusStruct>& bonuses,
+                              ItemPrefix prefix,
+                              ItemQuality quality)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -2029,9 +2089,10 @@ GameObject* ItemsFactory::CreateAccessory(int x, int y,
 
 // =============================================================================
 
-GameObject* ItemsFactory::CreateRandomItem(int x,
-                                           int y,
-                                           const std::vector<ItemType>& itemsToExclude)
+GameObject*
+ItemsFactory::CreateRandomItem(int x,
+                               int y,
+                               const std::vector<ItemType>& itemsToExclude)
 {
   GameObject* go = nullptr;
 
@@ -2202,7 +2263,8 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = HIDE("The Needle");
 
-  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
+  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(),
+                                avgDamage);
   ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
 
   ic->Data.IdentifiedDescription =
@@ -2259,7 +2321,8 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = HIDE("Block Breaker");
 
-  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(), avgDamage);
+  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(),
+                                avgDamage);
   ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
 
   ic->Data.IdentifiedDescription =
@@ -2330,7 +2393,9 @@ GameObject* ItemsFactory::CreateRandomGlass(ItemQuality quality)
 
   go->Image = '*';
 
-  int colorIndex = RNG::Instance().RandomRange(1, Colors::GemColorNameByType.size());
+  size_t totalSize = Colors::GemColorNameByType.size();
+
+  int colorIndex = RNG::Instance().RandomRange(1, totalSize);
 
   GemType t = (GemType)colorIndex;
 
@@ -2400,12 +2465,14 @@ GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
 
   if (GlobalConstants::GemDescriptionByType.count(t) == 1)
   {
-    ic->Data.IdentifiedDescription = GlobalConstants::GemDescriptionByType.at(t);
+    ic->Data.IdentifiedDescription =
+        GlobalConstants::GemDescriptionByType.at(t);
   }
   else
   {
-    std::string str = Util::StringFormat("%s description goes here",
-                                         GlobalConstants::GemNameByType.at(t).data());
+    std::string str =
+        Util::StringFormat("%s description goes here",
+                           GlobalConstants::GemNameByType.at(t).data());
 
     ic->Data.IdentifiedDescription = { str };
   }
@@ -2418,7 +2485,9 @@ GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
 
   ItemQuality q = ic->Data.ItemQuality_;
 
-  double baseCost = (double)GlobalConstants::GemCostByType.at(t) * _costMultByQuality.at(q);
+  double baseCost = (double)GlobalConstants::GemCostByType.at(t) *
+                    _costMultByQuality.at(q);
+
   double upperBound = baseCost / 2.0;
   int range = RNG::Instance().RandomRange(0, (int)upperBound);
 
@@ -2452,7 +2521,10 @@ GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
 
 // =============================================================================
 
-void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::unordered_map<ItemBonusType, int>& bonusWeightByType)
+void ItemsFactory::AdjustBonusWeightsMapForItem(
+    ItemComponent* itemRef,
+    std::unordered_map<ItemBonusType, int>& bonusWeightByType
+  )
 {
   //
   // Certain items shouldn't have certain bonuses
@@ -2505,7 +2577,8 @@ void ItemsFactory::AdjustBonusWeightsMapForItem(ItemComponent* itemRef, std::uno
 
 // =============================================================================
 
-void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne)
+void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef,
+                                         bool atLeastOne)
 {
   std::unordered_map<ItemBonusType, int> bonusWeightByType =
   {
@@ -2594,10 +2667,14 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef, bool atLeastOne
 
 // =============================================================================
 
-void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusType bonusType)
+void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef,
+                                             ItemBonusType bonusType)
 {
-  // No negative bonuses assumed
-  int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusType);
+  //
+  // No negative bonuses assumed.
+  //
+  int moneyIncrease =
+      GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusType);
 
   ItemBonusStruct bs;
   bs.Type = bonusType;
@@ -2692,11 +2769,14 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
       int min = 20;
       int max = 40;
 
-      // Number of turns before effect acts
+      //
+      // Number of turns before effect acts.
+      //
       int minVal = min - 2 * _multByQ.at(q);
       int maxVal = max - 4 * _multByQ.at(q);
       bs.Period = RNG::Instance().RandomRange(minVal, maxVal + 1);
-      bs.MoneyCostIncrease = (int)(((double)max / (double)bs.Period) * (double)moneyIncrease);
+      bs.MoneyCostIncrease = (int)(((double)max / (double)bs.Period) *
+                                   (double)moneyIncrease);
     }
     break;
 
@@ -2729,7 +2809,8 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
     break;
 
     default:
-      DebugLog("[WAR] ItemsFactory::AddRandomValueBonusToItem() bonus %i not handled on item %s",
+      DebugLog("[WAR] ItemsFactory::AddRandomValueBonusToItem() "
+               "bonus %i not handled on item %s",
                (int)bonusType,
                itemRef->Data.IdentifiedName.data());
       break;
@@ -2744,13 +2825,17 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef, ItemBonusTy
 
 // =============================================================================
 
-void ItemsFactory::AddBonusToItem(ItemComponent* itemRef, const ItemBonusStruct& bonusData, bool forceAdd)
+void ItemsFactory::AddBonusToItem(ItemComponent* itemRef,
+                                  const ItemBonusStruct& bonusData,
+                                  bool forceAdd)
 {
+  //
   // If bonus doesn't modify anything,
   // (i.e. if during weapon / armor generation total value of modifier
   // became 0 due to being cursed), don't add it unless forced to
   // (if it's some kind of 'special' item bonus
   // like mana shield or knockback where bonus value is not used).
+  //
   if (!forceAdd && bonusData.BonusValue == 0)
   {
     return;
@@ -2758,14 +2843,20 @@ void ItemsFactory::AddBonusToItem(ItemComponent* itemRef, const ItemBonusStruct&
 
   auto copy = bonusData;
 
-  int moneyIncrease = GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusData.Type);
+  int moneyIncrease =
+      GlobalConstants::MoneyCostIncreaseByBonusType.at(bonusData.Type);
 
-  // If bonus is like mana shield, that has no bonus value, count it only once
+  //
+  // If bonus is like mana shield, that has no bonus value, count it only once.
+  //
   if (bonusData.BonusValue == 0)
   {
     copy.MoneyCostIncrease = moneyIncrease;
   }
-  // Negative bonus values aren't taken into account regarding total cost
+
+  //
+  // Negative bonus values aren't taken into account regarding total cost.
+  //
   else if (bonusData.BonusValue > 0)
   {
     int total = bonusData.BonusValue * moneyIncrease;
@@ -2798,7 +2889,8 @@ void ItemsFactory::SetItemName(GameObject* go, ItemData& itemData)
     case ItemQuality::FLAWED:
     case ItemQuality::FINE:
     case ItemQuality::EXCEPTIONAL:
-      std::string qualityName = GlobalConstants::QualityNameByQuality.at(itemData.ItemQuality_);
+      std::string qualityName =
+          GlobalConstants::QualityNameByQuality.at(itemData.ItemQuality_);
       std::string strToInsert = qualityName + " ";
       itemData.IdentifiedName.insert(0, strToInsert);
       break;
@@ -2898,13 +2990,17 @@ void ItemsFactory::SetItemName(GameObject* go, ItemData& itemData)
     {
       if (itemData.Prefix == ItemPrefix::BLESSED)
       {
-        itemData.IdentifiedDescription.push_back("Because of its excellent condition,");
-        itemData.IdentifiedDescription.push_back("repairing will be more effective.");
+        itemData.IdentifiedDescription
+            .push_back("Because of its excellent condition,");
+        itemData.IdentifiedDescription
+            .push_back("repairing will be more effective.");
       }
       else if (itemData.Prefix == ItemPrefix::CURSED)
       {
-        itemData.IdentifiedDescription.push_back("Because of its poor condition,");
-        itemData.IdentifiedDescription.push_back("repairing will be less effective.");
+        itemData.IdentifiedDescription
+            .push_back("Because of its poor condition,");
+        itemData.IdentifiedDescription
+            .push_back("repairing will be less effective.");
       }
     }
     break;
@@ -2913,13 +3009,17 @@ void ItemsFactory::SetItemName(GameObject* go, ItemData& itemData)
     {
       if (itemData.Prefix == ItemPrefix::BLESSED)
       {
-        itemData.IdentifiedDescription.push_back("These projectiles are blessed");
-        itemData.IdentifiedDescription.push_back("and thus more likely to hit the enemy.");
+        itemData.IdentifiedDescription
+            .push_back("These projectiles are blessed");
+        itemData.IdentifiedDescription
+            .push_back("and thus more likely to hit the enemy.");
       }
       else if (itemData.Prefix == ItemPrefix::CURSED)
       {
-        itemData.IdentifiedDescription.push_back("These projectiles are cursed");
-        itemData.IdentifiedDescription.push_back("and thus less likely to hit the enemy.");
+        itemData.IdentifiedDescription
+            .push_back("These projectiles are cursed");
+        itemData.IdentifiedDescription
+            .push_back("and thus less likely to hit the enemy.");
       }
     }
     break;
@@ -2936,7 +3036,8 @@ void ItemsFactory::SetItemName(GameObject* go, ItemData& itemData)
        && itemData.ItemType_ != ItemType::ARMOR
        && itemData.ItemType_ != ItemType::RANGED_WEAPON))
       {
-        itemData.IdentifiedDescription.push_back("This one is blessed and will perform better.");
+        itemData.IdentifiedDescription
+            .push_back("This one is blessed and will perform better.");
       }
       else if (itemData.Prefix == ItemPrefix::CURSED
            && (itemData.ItemType_ != ItemType::WEAPON
@@ -2944,7 +3045,8 @@ void ItemsFactory::SetItemName(GameObject* go, ItemData& itemData)
             && itemData.ItemType_ != ItemType::ARMOR
             && itemData.ItemType_ != ItemType::RANGED_WEAPON))
       {
-        itemData.IdentifiedDescription.push_back("This one is cursed and should probably be avoided.");
+        itemData.IdentifiedDescription
+            .push_back("This one is cursed and should probably be avoided.");
       }
     }
     break;
@@ -2953,7 +3055,10 @@ void ItemsFactory::SetItemName(GameObject* go, ItemData& itemData)
 
 // =============================================================================
 
-void ItemsFactory::SetMagicItemName(ItemComponent* itemRef, const std::vector<ItemBonusType>& bonusesRolled)
+void ItemsFactory::SetMagicItemName(
+    ItemComponent* itemRef,
+    const std::vector<ItemBonusType>& bonusesRolled
+  )
 {
   std::string prefix;
   std::string suffix;
@@ -2974,17 +3079,20 @@ void ItemsFactory::SetMagicItemName(ItemComponent* itemRef, const std::vector<It
 
     case 3:
     {
-      // Randomize resulting name a bit in case of more than 2 bonuses
-
+      //
+      // Randomize resulting name a bit in case of more than 2 bonuses.
+      //
       std::vector<ItemBonusType> bonusesRolledCopy = bonusesRolled;
 
       int suffixInd1 = RNG::Instance().RandomRange(0, 3);
-      auto prefix1 = GlobalConstants::ItemBonusPrefixes.at(bonusesRolledCopy[suffixInd1]);
+      auto prefix1 =
+          GlobalConstants::ItemBonusPrefixes.at(bonusesRolledCopy[suffixInd1]);
       rarePrefixes.push_back(prefix1);
       bonusesRolledCopy.erase(bonusesRolledCopy.begin() + suffixInd1);
 
       int suffixInd2 = RNG::Instance().RandomRange(0, 2);
-      auto prefix2 = GlobalConstants::ItemBonusPrefixes.at(bonusesRolledCopy[suffixInd2]);
+      auto prefix2 =
+          GlobalConstants::ItemBonusPrefixes.at(bonusesRolledCopy[suffixInd2]);
       rarePrefixes.push_back(prefix2);
       bonusesRolledCopy.erase(bonusesRolledCopy.begin() + suffixInd2);
 
@@ -3007,24 +3115,43 @@ void ItemsFactory::SetMagicItemName(ItemComponent* itemRef, const std::vector<It
     bucStatus = "Cursed";
   }
 
-  std::string quality = GlobalConstants::QualityNameByQuality.at(itemRef->Data.ItemQuality_);
+  std::string quality =
+      GlobalConstants::QualityNameByQuality.at(itemRef->Data.ItemQuality_);
   if (!quality.empty())
   {
-    bucStatus += " ";
+    bucStatus.append(1, ' ');
   }
 
-  std::string itemName = bucStatus + quality + " " + objName;
+  std::string itemName = Util::StringFormat("%s%s %s",
+                                            bucStatus.data(),
+                                            quality.data(),
+                                            objName.data());
   if (bonusesRolled.size() == 1)
   {
-    itemName = bucStatus + quality + " " + prefix + " " + objName;
+    itemName = Util::StringFormat("%s%s %s %s",
+                                  bucStatus.data(),
+                                  quality.data(),
+                                  prefix.data(),
+                                  objName.data());
   }
   else if (bonusesRolled.size() == 2)
   {
-    itemName = bucStatus + quality + " " + prefix + " " + objName + " " + suffix;
+    itemName = Util::StringFormat("%s%s %s %s %s",
+                                  bucStatus.data(),
+                                  quality.data(),
+                                  prefix.data(),
+                                  objName.data(),
+                                  suffix.data());
   }
   else if (bonusesRolled.size() == 3)
   {
-    itemName = bucStatus + quality + " " + rarePrefixes[0] + " " + rarePrefixes[1] + " " + objName + " " + suffix;
+    itemName = Util::StringFormat("%s%s %s %s %s %s",
+                                  bucStatus.data(),
+                                  quality.data(),
+                                  rarePrefixes[0].data(),
+                                  rarePrefixes[1].data(),
+                                  objName.data(),
+                                  suffix.data());
   }
 
   itemRef->Data.IdentifiedName = itemName;
@@ -3109,13 +3236,17 @@ void ItemsFactory::BUCQualityAdjust(ItemData& itemData)
     break;
   }
 
-  // Just in case, since '0 dice rolls' makes no sense
+  //
+  // Just in case, since '0 dice rolls' makes no sense.
+  //
   if (itemData.Damage.Min().OriginalValue() == 0)
   {
     itemData.Damage.Min().Set(1);
   }
 
-  // Just to be sure
+  //
+  // Just to be sure.
+  //
   if (itemData.Damage.Max().OriginalValue() == 0)
   {
     itemData.Damage.Max().Set(1);

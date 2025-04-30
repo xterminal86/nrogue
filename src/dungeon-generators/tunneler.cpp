@@ -45,7 +45,10 @@ void Tunneler::Backtracking(const Position& mapSize,
 
   Position* rndDir = GetRandomDir(_startingPoint);
 
-  nodePoints.push({ _startingPoint, (rndDir == nullptr) ? Position() : *rndDir });
+  nodePoints.push({
+                    _startingPoint,
+                    (rndDir == nullptr) ? Position() : *rndDir
+                  });
 
   while (!nodePoints.empty())
   {
@@ -90,7 +93,9 @@ void Tunneler::Backtracking(const Position& mapSize,
 
     if (wasBuilt)
     {
-      //auto str = Util::StringFormat("\tFinished building, adding node point %i %i dir %i %i", x, y, dir.X, dir.Y);
+      //auto str = Util::StringFormat("\tFinished building, "
+      //                              "adding node point %i %i dir %i %i",
+      //                              x, y, dir.X, dir.Y);
       //Logger::Instance().Print(str);
 
       nodePoints.push({ { x, y }, dir });
@@ -271,7 +276,8 @@ Position* Tunneler::GetRandomDir(const Position& pos)
 
 // =============================================================================
 
-Position* Tunneler::TryToGetPerpendicularDir(const Position& pos, const Position& lastDir)
+Position* Tunneler::TryToGetPerpendicularDir(const Position& pos,
+                                             const Position& lastDir)
 {
   Position* res = nullptr;
 
@@ -290,7 +296,8 @@ Position* Tunneler::TryToGetPerpendicularDir(const Position& pos, const Position
 
   std::vector<Position> selectedPair;
 
-  //auto str = Util::StringFormat("Trying to get perpendicular dir to %i %i", lastDir.X, lastDir.Y);
+  //auto str = Util::StringFormat("Trying to get perpendicular dir to %i %i",
+  //                              lastDir.X, lastDir.Y);
   //Logger::Instance().Print(str);
 
   for (size_t i = 0; i < directions.size(); i++)
@@ -330,7 +337,9 @@ Position* Tunneler::TryToGetPerpendicularDir(const Position& pos, const Position
      && IsDeadEnd({ x, y })
      && !_map[x][y].Visited)
     {
-      //auto str = Util::StringFormat("\t Selected dir %i %i", selectedPair[index].X, selectedPair[index].Y);
+      //auto str = Util::StringFormat("\t Selected dir %i %i",
+      //                              selectedPair[index].X,
+      //                              selectedPair[index].Y);
       //Logger::Instance().Print(str);
 
       _perpendicularDir = selectedPair[index];

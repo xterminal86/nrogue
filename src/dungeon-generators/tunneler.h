@@ -21,7 +21,8 @@ class Tunneler : public DGBase
 
   private:
     Position* GetRandomDir(const Position& pos);
-    Position* TryToGetPerpendicularDir(const Position& pos, const Position& lastDir);
+    Position* TryToGetPerpendicularDir(const Position& pos,
+                                       const Position& lastDir);
 
     Position GetRandomPerpendicularDir(const Position& dir);
 

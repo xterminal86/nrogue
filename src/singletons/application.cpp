@@ -150,16 +150,21 @@ void Application::ChangeState(const GameStates& gameStateIndex)
 
   if (gameStateIndex != GameStates::EXIT_GAME)
   {
-    auto str = Util::StringFormat("Changing state: %s [0x%X] => %s [0x%X]",
-                                  typeid(*_currentState).name(), _currentState,
-                                  typeid(*_gameStates[gameStateIndex].get()).name(),
-                                  _gameStates[gameStateIndex].get());
+    auto str =
+        Util::StringFormat("Changing state: %s [0x%X] => %s [0x%X]",
+                           typeid(*_currentState).name(),
+                           _currentState,
+                           typeid(*_gameStates[gameStateIndex].get()).name(),
+                           _gameStates[gameStateIndex].get());
     LogPrint(str);
     //DebugLog("%s\n", str.data());
   }
   else
   {
-    auto str = Util::StringFormat("Changing state: %s [0x%X] => EXIT_GAME [0x0]", typeid(*_currentState).name(), _currentState);
+    auto str = Util::StringFormat("Changing state: %s [0x%X] "
+                                  "=> EXIT_GAME [0x0]",
+                                  typeid(*_currentState).name(),
+                                  _currentState);
     LogPrint(str);
     //DebugLog("%s\n", str.data());
   }
@@ -660,7 +665,9 @@ void Application::SavePrettyAlignedStatInfo(std::stringstream& ss)
 
   statInfoIndex = 0;
 
-  size_t longestResultingStatLen = Util::FindLongestStringLength(resultingValuesStringList);
+  size_t longestResultingStatLen =
+      Util::FindLongestStringLength(resultingValuesStringList);
+
   for (auto& i : statInfoStrings)
   {
     ss << i;
@@ -747,7 +754,9 @@ void Application::SetIcon()
   SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);
   if (!surf)
   {
-    auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", SDL_GetError());
+    auto str = Util::StringFormat("***** Could not load from memory: "
+                                  "%s *****\n",
+                                  SDL_GetError());
     LogPrint(str);
     ConsoleLog("%s\n", str.data());
     return;
@@ -807,13 +816,19 @@ bool Application::InitSDL()
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 #endif
 
-  Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+  Renderer = SDL_CreateRenderer(Window,
+                                -1,
+                                SDL_RENDERER_ACCELERATED |
+                                SDL_RENDERER_TARGETTEXTURE);
   if (Renderer == nullptr)
   {
     ConsoleLog("SDL_CreateRenderer() fail: %s", SDL_GetError());
     ConsoleLog("Trying software mode...");
 
-    Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_SOFTWARE | SDL_RENDERER_TARGETTEXTURE);
+    Renderer = SDL_CreateRenderer(Window,
+                                  -1,
+                                  SDL_RENDERER_SOFTWARE |
+                                  SDL_RENDERER_TARGETTEXTURE);
     if (Renderer == nullptr)
     {
       ConsoleLog("SDL_CreateRenderer() fail: %s", SDL_GetError());
@@ -833,7 +848,12 @@ bool Application::InitSDL()
     return false;
   }
 
-  Printer::Instance().SetRenderDst({ 0, 0, _defaultWindowSize.first, _defaultWindowSize.second });
+  Printer::Instance().SetRenderDst({
+                                     0,
+                                     0,
+                                     _defaultWindowSize.first,
+                                     _defaultWindowSize.second
+                                   });
 
   Printer::TerminalWidth  = GlobalConstants::TerminalWidth;
   Printer::TerminalHeight = GlobalConstants::TerminalHeight;
@@ -944,14 +964,24 @@ void Application::LoadConfig()
       std::ifstream tileset(_loadedConfig[kConfigKeyTileset].GetString());
       if (tileset.is_open())
       {
-        GameConfig.TilesetFilename = _loadedConfig[kConfigKeyTileset].GetString();
+        GameConfig.TilesetFilename =
+            _loadedConfig[kConfigKeyTileset].GetString();
       }
 
-      GameConfig.TileWidth           = std::stoi(_loadedConfig[kConfigKeyTileW].GetString());
-      GameConfig.TileHeight          = std::stoi(_loadedConfig[kConfigKeyTileH].GetString());
-      GameConfig.ScaleFactor         = std::stod(_loadedConfig[kConfigKeyScale].GetString());
-      GameConfig.FastCombat          = (_loadedConfig[kConfigKeyFastCombat].GetString() != "0");
-      GameConfig.FastMonsterMovement = (_loadedConfig[kConfigKeyFastMonsterMovement].GetString() != "0");
+      GameConfig.TileWidth =
+          std::stoi(_loadedConfig[kConfigKeyTileW].GetString());
+
+      GameConfig.TileHeight =
+          std::stoi(_loadedConfig[kConfigKeyTileH].GetString());
+
+      GameConfig.ScaleFactor =
+          std::stod(_loadedConfig[kConfigKeyScale].GetString());
+
+      GameConfig.FastCombat =
+          (_loadedConfig[kConfigKeyFastCombat].GetString() != "0");
+
+      GameConfig.FastMonsterMovement =
+          (_loadedConfig[kConfigKeyFastMonsterMovement].GetString() != "0");
     }
     break;
   }

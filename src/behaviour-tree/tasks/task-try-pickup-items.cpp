@@ -71,7 +71,9 @@ bool TaskTryPickupItems::PickupItems(const Items& items,
     ItemComponent* ic = i.second->GetComponent<ItemComponent>();
     if (ic == nullptr)
     {
-      DebugLog("[WAR] TaskTryPickupItems::FilterItem() no ItemComponent found on %s!", i.second->ObjectName.data());
+      DebugLog("[WAR] TaskTryPickupItems::FilterItem() "
+               "no ItemComponent found on %s!",
+               i.second->ObjectName.data());
       continue;
     }
 

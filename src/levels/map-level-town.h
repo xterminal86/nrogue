@@ -22,9 +22,15 @@ class MapLevelTown : public MapLevelBase
     void CreateCommonObjects(int x, int y, char image) override;
 
   private:
-    void CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation = false);
+    void CreateRoom(int x,
+                    int y,
+                    const std::vector<std::string>& layout,
+                    bool randomizeOrientation = false);
     void CreateChurch(int x, int y);
-    void CreateBlacksmith(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation = false);
+    void CreateBlacksmith(int x,
+                          int y,
+                          const std::vector<std::string>& layout,
+                          bool randomizeOrientation = false);
     void PlaceGarden(int x, int y);
     void PlaceMineEntrance(int x, int y);
     void PlacePortalSquare(int x, int y);

@@ -58,7 +58,8 @@ int GameState::GetKeyDown()
 
         if (sc == SDL_SCANCODE_F9)
         {
-          if (Application::Instance().CurrentStateIs(GameStates::MESSAGE_BOX_STATE))
+          GameStates s = GameStates::MESSAGE_BOX_STATE;
+          if (Application::Instance().CurrentStateIs(s))
           {
             Application::Instance().CloseMessageBox();
           }
@@ -169,14 +170,17 @@ bool GameState::ShouldShiftMap(int& key)
 void GameState::TakeScreenshot()
 {
   auto r = Application::Instance().Renderer;
-  SDL_Surface* sshot = SDL_CreateRGBSurface(0,
-                                            Application::Instance().GetResizedWindowSize().first,
-                                            Application::Instance().GetResizedWindowSize().second,
-                                            32,
-                                            0x00FF0000,
-                                            0x0000FF00,
-                                            0x000000FF,
-                                            0xFF000000);
+  SDL_Surface* sshot = SDL_CreateRGBSurface(
+    0,
+    Application::Instance().GetResizedWindowSize().first,
+    Application::Instance().GetResizedWindowSize().second,
+    32,
+    0x00FF0000,
+    0x0000FF00,
+    0x000000FF,
+    0xFF000000
+  );
+
   SDL_RenderReadPixels(r,
                        nullptr,
                        SDL_PIXELFORMAT_ARGB8888,

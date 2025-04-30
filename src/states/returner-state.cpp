@@ -49,21 +49,24 @@ void ReturnerState::HandleInput()
 
     case 'a':
     {
-      _itemRef->Data.ReturnerPosition.first = Map::Instance().CurrentLevel->MapType_;
+      _itemRef->Data.ReturnerPosition.first =
+          Map::Instance().CurrentLevel->MapType_;
 
       if (_itemRef->Data.Prefix == ItemPrefix::CURSED)
       {
         Position p = GetRandomPositionAroundPlayer();
-        _itemRef->Data.ReturnerPosition.second.first = p.X;
+        _itemRef->Data.ReturnerPosition.second.first  = p.X;
         _itemRef->Data.ReturnerPosition.second.second = p.Y;
       }
       else
       {
-        _itemRef->Data.ReturnerPosition.second.first = _playerRef->PosX;
+        _itemRef->Data.ReturnerPosition.second.first  = _playerRef->PosX;
         _itemRef->Data.ReturnerPosition.second.second = _playerRef->PosY;
       }
 
-      Printer::Instance().AddMessage("The stone has been attuned to this position");
+      Printer::Instance().AddMessage(
+            "The stone has been attuned to this position"
+      );
 
       _playerRef->FinishTurn();
 

@@ -73,7 +73,8 @@ namespace Colors
   const uint32_t ItemMixedColor            = 0xAA7700; // "#AA7700";
   const uint32_t ItemCursedColor           = 0xAA0000; // "#AA0000";
 
-  const std::unordered_map<GemType, std::pair<uint32_t, uint32_t>> GemColorByType =
+  const std::unordered_map<GemType, std::pair<uint32_t, uint32_t>>
+  GemColorByType =
   {
     { GemType::BLACK_JETSTONE,  { 0xFFFFFF, 0x000000 } },
     { GemType::BLACK_OBSIDIAN,  { 0xFFFFFF, 0x000000 } },
@@ -92,7 +93,8 @@ namespace Colors
     { GemType::YELLOW_CITRINE,  { 0x000000, 0xFFFF00 } }
   };
 
-  const std::unordered_map<ShrineType, std::pair<uint32_t, uint32_t>> ShrineColorsByType =
+  const std::unordered_map<ShrineType, std::pair<uint32_t, uint32_t>>
+  ShrineColorsByType =
   {
     { ShrineType::MIGHT,       { 0xFF0000, 0x888888 } },
     { ShrineType::SPIRIT,      { 0x0088FF, 0x888888 } },
@@ -110,7 +112,8 @@ namespace Colors
     { ShrineType::HOLY,        { 0xFFFF00, 0x888888 } },
   };
 
-  const std::unordered_map<std::string, std::vector<uint32_t>> PotionColorsByName =
+  const std::unordered_map<std::string, std::vector<uint32_t>>
+  PotionColorsByName =
   {
     { "Red Potion",     { 0xFF0000, 0x440000 } },
     { "Green Potion",   { 0x00FF00, 0x004400 } },
@@ -125,7 +128,8 @@ namespace Colors
     { "Watery Potion",  { 0xBBBBBB, 0x000000 } }
   };
 
-  const std::unordered_map<WandMaterials, std::pair<uint32_t, uint32_t>> WandColorsByMaterial =
+  const std::unordered_map<WandMaterials, std::pair<uint32_t, uint32_t>>
+  WandColorsByMaterial =
   {
     { WandMaterials::YEW_1,    { 0xD2AB7C, 0x8A8B5C } },
     { WandMaterials::IVORY_2,  { 0xFFFFFF, 0x9A9A9A } },
@@ -161,7 +165,8 @@ namespace Colors
 namespace Strings
 {
   const std::string HexChars    = "0123456789ABCDEF";
-  const std::string Base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  const std::string Base64Chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
   const std::string AlphabetUppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const std::string AlphabetLowercase = "abcdefghijklmnopqrstuvwxyz";
@@ -400,7 +405,8 @@ namespace GlobalConstants
   // Also the number of action increments (end turns)
   // for player before he can act (for SPD = 0)
   //
-  const int EffectDurationSkipsForTurn = ((double)TurnReadyValue / (double)TurnTickValue) + 1;
+  const int EffectDurationSkipsForTurn = ((double)TurnReadyValue /
+                                          (double)TurnTickValue) + 1;
 
   //
   // Default duration is 20 SPD=0 player end turns.
@@ -524,7 +530,8 @@ namespace GlobalConstants
     { WeaponType::PICKAXE,      "Pickaxe"        }
   };
 
-  const std::unordered_map<RangedWeaponType, std::string> RangedWeaponNameByType =
+  const std::unordered_map<RangedWeaponType, std::string>
+  RangedWeaponNameByType =
   {
     { RangedWeaponType::SHORT_BOW,  "Short Bow"   },
     { RangedWeaponType::LONGBOW,    "Longbow"     },
@@ -558,7 +565,8 @@ namespace GlobalConstants
     { ArmorType::PLATE,  180 }
   };
 
-  const std::unordered_map<FoodType, std::pair<std::string, int>> FoodHungerPercentageByName =
+  const std::unordered_map<FoodType, std::pair<std::string, int>>
+  FoodHungerPercentageByName =
   {
     { FoodType::APPLE,        { "Apple",         10 } },
     { FoodType::BREAD,        { "Bread",         20 } },
@@ -597,148 +605,148 @@ namespace GlobalConstants
       GemType::BLACK_JETSTONE,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "Jetstone is an organic rock created ",
-        "when pieces of woody material are buried,",
-        "compacted, and then go through organic degradation.",
-        "It can be easily cut or carved, and it has a uniform texture",
-        "that makes it possible to carve with accuracy.",
+        "Jetstone is an organic rock created "
+      , "when pieces of woody material are buried,"
+      , "compacted, and then go through organic degradation."
+      , "It can be easily cut or carved, and it has a uniform texture"
+      , "that makes it possible to carve with accuracy."
       }
     },
     {
       GemType::BLACK_OBSIDIAN,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "Obsidian is a naturally occurring volcanic glass",
-        "formed when lava extruded from a volcano cools rapidly",
-        "with minimal crystal growth. It is an igneous rock."
+        "Obsidian is a naturally occurring volcanic glass"
+      , "formed when lava extruded from a volcano cools rapidly"
+      , "with minimal crystal growth. It is an igneous rock."
       }
     },
     {
       GemType::BLUE_AQUAMARINE,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "Aquamarine is a pale-blue to light-green variety of beryl.",
-        "The color of aquamarine can be changed by heat."
+        "Aquamarine is a pale-blue to light-green variety of beryl."
+      , "The color of aquamarine can be changed by heat."
       }
     },
     {
       GemType::BLUE_SAPPHIRE,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "Sapphire is a gemstone associated with royalty.",
-        "It is said to be the wisdom stone,",
-        "stimulating concentration, enhancing creativity",
-        "and promoting purity and depth of thought."
+        "Sapphire is a gemstone associated with royalty."
+      , "It is said to be the wisdom stone,"
+      , "stimulating concentration, enhancing creativity"
+      , "and promoting purity and depth of thought."
       }
     },
     {
       GemType::GREEN_EMERALD,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "Emerald is the bluish green to green variety of beryl,",
-        "a mineral species that includes aquamarine.",
-        "Highly saturated green color defines high quality emerald."
+        "Emerald is the bluish green to green variety of beryl,"
+      , "a mineral species that includes aquamarine."
+      , "Highly saturated green color defines high quality emerald."
       }
     },
     {
       GemType::GREEN_JADE,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "Jade is a type of gemstone that refers to",
-        "two different mineral stones that are typically tough,",
-        "durable, compact, and green. Both jadeite and nephrite",
-        "have inspired beautiful works of art and a rich body of lore."
+        "Jade is a type of gemstone that refers to"
+      , "two different mineral stones that are typically tough,"
+      , "durable, compact, and green. Both jadeite and nephrite"
+      , "have inspired beautiful works of art and a rich body of lore."
       }
     },
     {
       GemType::ORANGE_AMBER,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "Amber is considered a gem because it glows and glistens",
-        "when polished, but it is not actually a gemstone.",
-        "It is the hardened resin of certain types of ancient trees",
-        "that have been fossilized over millennia."
+        "Amber is considered a gem because it glows and glistens"
+      , "when polished, but it is not actually a gemstone."
+      , "It is the hardened resin of certain types of ancient trees"
+      , "that have been fossilized over millennia."
       }
     },
     {
       GemType::ORANGE_JACINTH,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "Jacinth gemstone, often known as hyacinth, is a semi-precious stone.",
-        "It is a gleaming orange-yellow, orange-red, or yellow-brown zircon.",
-        "Jacinth is beneficial in the treatment of insomnia.",
-        "Encourages spiritual awareness and comprehension."
+        "Jacinth gemstone, often known as hyacinth, is a semi-precious stone."
+      , "It is a gleaming orange-yellow, orange-red, or yellow-brown zircon."
+      , "Jacinth is beneficial in the treatment of insomnia."
+      , "Encourages spiritual awareness and comprehension."
       }
     },
     {
       GemType::PURPLE_AMETHYST,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "Amethyst is a violet variety of quartz.",
-        "Cross-culturally, this popular gemstone was used",
-        "as a symbol of peace and unification."
+        "Amethyst is a violet variety of quartz."
+      , "Cross-culturally, this popular gemstone was used"
+      , "as a symbol of peace and unification."
       }
     },
     {
       GemType::PURPLE_FLUORITE,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "Purple Fluorite is a light to very dark grape-purple crystal",
-        "ranging from translucent to opaque. It has a glassy luster",
-        "and often forms as isometric cubes, nodules, or clusters.",
-        "Purple Fluorite enhances intuition and brings order out of chaos."
+        "Purple Fluorite is a light to very dark grape-purple crystal"
+      , "ranging from translucent to opaque. It has a glassy luster"
+      , "and often forms as isometric cubes, nodules, or clusters."
+      , "Purple Fluorite enhances intuition and brings order out of chaos."
       }
     },
     {
       GemType::RED_GARNET,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "Garnets come in a variety of colors and have many different varieties.",
-        "However, the most widely-known color of Garnet gemstones is dark red.",
-        "Red Garnet Gems have always been associated with journeys",
-        "and were carried by travelers, traders and journeymen."
+        "Garnets come in a variety of colors and have many different varieties."
+      , "However, the most widely-known color of Garnet gemstones is dark red."
+      , "Red Garnet Gems have always been associated with journeys"
+      , "and were carried by travelers, traders and journeymen."
       }
     },
     {
       GemType::RED_RUBY,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "A ruby is a pinkish red to blood-red colored gemstone,",
-        "a variety of the mineral corundum.",
-        "Ruby is one of the most popular traditional jewelry gems",
-        "and is very durable. Other varieties of gem-quality corundum",
-        "are called sapphires."
+        "A ruby is a pinkish red to blood-red colored gemstone,"
+      , "a variety of the mineral corundum."
+      , "Ruby is one of the most popular traditional jewelry gems"
+      , "and is very durable. Other varieties of gem-quality corundum"
+      , "are called sapphires."
       }
     },
     {
       GemType::WHITE_DIAMOND,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "Diamond, a mineral composed of pure carbon.",
-        "It is the hardest naturally occurring substance known.",
-        "It is also the most popular gemstone.",
-        "Because of their extreme hardness, ",
-        "diamonds have a number of important industrial applications."
+        "Diamond, a mineral composed of pure carbon."
+      , "It is the hardest naturally occurring substance known."
+      , "It is also the most popular gemstone."
+      , "Because of their extreme hardness, "
+      , "diamonds have a number of important industrial applications."
       }
     },
     {
       GemType::WHITE_OPAL,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "An amorphous non-crystalline gem mineral",
-        "solidified from gelatinous or liquid silica",
-        "deposited in cracks and cavities left by",
-        "decaying vegetation, wood, crustaceans and bones."
+        "An amorphous non-crystalline gem mineral"
+      , "solidified from gelatinous or liquid silica"
+      , "deposited in cracks and cavities left by"
+      , "decaying vegetation, wood, crustaceans and bones."
       }
     },
     {
       GemType::YELLOW_CITRINE,
       {
       // ---------1---------2---------3---------4---------5---------6---------7---------8
-        "Citrine is a semiprecious gem that is valued for its yellow",
-        "to brownish colour and its resemblance to the rarer topaz.",
-        "It is a popular gemstone that has been used for centuries",
-        "as an adornment and symbol of wealth due to its association with gold."
+        "Citrine is a semiprecious gem that is valued for its yellow"
+      , "to brownish colour and its resemblance to the rarer topaz."
+      , "It is a popular gemstone that has been used for centuries"
+      , "as an adornment and symbol of wealth due to its association with gold."
       }
     }
   };
@@ -818,18 +826,18 @@ namespace GlobalConstants
   //
   const std::vector<SpellType> ScrollValidSpellTypes =
   {
-    SpellType::LIGHT,
-    SpellType::IDENTIFY,
-    SpellType::MAGIC_MAPPING,
-    SpellType::TELEPORT,
-    SpellType::DETECT_MONSTERS,
-    SpellType::TRUE_SEEING,
-    SpellType::REMOVE_CURSE,
-    SpellType::REPAIR,
-    SpellType::TOWN_PORTAL,
-    SpellType::HEAL,
-    SpellType::NEUTRALIZE_POISON,
-    SpellType::MANA_SHIELD
+      SpellType::LIGHT
+    , SpellType::IDENTIFY
+    , SpellType::MAGIC_MAPPING
+    , SpellType::TELEPORT
+    , SpellType::DETECT_MONSTERS
+    , SpellType::TRUE_SEEING
+    , SpellType::REMOVE_CURSE
+    , SpellType::REPAIR
+    , SpellType::TOWN_PORTAL
+    , SpellType::HEAL
+    , SpellType::NEUTRALIZE_POISON
+    , SpellType::MANA_SHIELD
   };
 
   //
@@ -840,18 +848,18 @@ namespace GlobalConstants
   //
   const std::vector<std::string> ScrollUnidentifiedNames =
   {
-    "TAMAM SHUD",
-    "GACHIMUCHI",
-    "XYETA",
-    "ZA WARUDO",
-    "ZELGO MER",
-    "LOREM IPSUM",
-    "GHOTI",
-    "LALIHO",
-    "SHAN DONG",
-    "SUIL A RUIN",
-    "KOBAYASHI MARU",
-    "LLORCS"
+      "TAMAM SHUD"
+    , "GACHIMUCHI"
+    , "XYETA"
+    , "ZA WARUDO"
+    , "ZELGO MER"
+    , "LOREM IPSUM"
+    , "GHOTI"
+    , "LALIHO"
+    , "SHAN DONG"
+    , "SUIL A RUIN"
+    , "KOBAYASHI MARU"
+    , "LLORCS"
   };
 
   const std::unordered_map<SpellType, std::string> SpellShortNameByType =
@@ -877,7 +885,8 @@ namespace GlobalConstants
     { SpellType::MANA_SHIELD,       "MS" }
   };
 
-  const std::unordered_map<WandMaterials, std::string> WandMaterialNamesByMaterial =
+  const std::unordered_map<WandMaterials, std::string>
+  WandMaterialNamesByMaterial =
   {
     { WandMaterials::YEW_1,    "Yew"    },
     { WandMaterials::IVORY_2,  "Ivory"  },
@@ -917,68 +926,68 @@ namespace GlobalConstants
 
   const std::vector<std::string> RandomNames =
   {
-    "Kornel Kisielewicz",
-    "Darren Grey",
-    "Thomas Biskup",
-    "Glenn Wichman",
-    "Michael Toy",
-    "Ken Arnold",
-    "Jon Lane",
-    "Mike Stephenson",
-    "Markus Persson"
+      "Kornel Kisielewicz"
+    , "Darren Grey"
+    , "Thomas Biskup"
+    , "Glenn Wichman"
+    , "Michael Toy"
+    , "Ken Arnold"
+    , "Jon Lane"
+    , "Mike Stephenson"
+    , "Markus Persson"
   };
 
   const std::vector<std::string> TownNameEndings =
   {
-    "by",
-    "cester",
-    "caster",
-    "ford",
-    "stead",
-    "ir",
-    "ire",
-    "yr",
-    "yre",
-    "no",
-    "ow",
-    "to",
-    "nd",
-    "nt",
-    "sh",
-    "rd",
-    "rn",
-    "rsh",
-    "urgh",
-    "urg",
-    "stan",
-    "heim",
-    "town",
-    "on",
-    "ton",
-    "shire",
-    "pool",
-    "glade",
-    "bury",
-    "gow"
+      "by"
+    , "cester"
+    , "caster"
+    , "ford"
+    , "stead"
+    , "ir"
+    , "ire"
+    , "yr"
+    , "yre"
+    , "no"
+    , "ow"
+    , "to"
+    , "nd"
+    , "nt"
+    , "sh"
+    , "rd"
+    , "rn"
+    , "rsh"
+    , "urgh"
+    , "urg"
+    , "stan"
+    , "heim"
+    , "town"
+    , "on"
+    , "ton"
+    , "shire"
+    , "pool"
+    , "glade"
+    , "bury"
+    , "gow"
   };
 
   const std::vector<std::string> NameEndings =
   {
-    "d",
-    "t",
-    "r",
-    "rt",
-    "na",
-    "ko",
-    "ya",
-    "in",
-    "an",
-    "in",
-    "to",
-    "om",
-    "mo",
-    "mi",
-    "el"
+      "d"
+    , "t"
+    , "r"
+    , "rt"
+    , "na"
+    , "ko"
+    , "ya"
+    , "in"
+    , "an"
+    , "in"
+    , "to"
+    , "om"
+    , "mo"
+    , "mi"
+    , "el"
   };
 
   const std::unordered_map<MapType, std::string> MapLevelNames =
@@ -1498,7 +1507,8 @@ namespace GlobalConstants
     }
   };
 
-  const std::unordered_map<ShrineType, std::vector<StringV>> ShrineLayoutsByType =
+  const std::unordered_map<ShrineType, std::vector<StringV>>
+  ShrineLayoutsByType =
   {
     {
       ShrineType::MIGHT,       { ShrineLayouts[0] }

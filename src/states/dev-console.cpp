@@ -182,7 +182,8 @@ void DevConsole::HandleInput()
 
         if (_cursorPosition > 0)
         {
-          _currentCommand.erase(_currentCommand.begin() + 2 + _cursorPosition - 1);
+          size_t pos = 2 + _cursorPosition - 1;
+          _currentCommand.erase(_currentCommand.begin() + pos);
           _cursorPosition--;
         }
       }
@@ -429,7 +430,9 @@ void DevConsole::ProcessCommand(const std::string& command,
 
     case DevConsoleCommand::LEVEL_UP:
     {
-      int expToGive = _playerRef->Attrs.Exp.Max().Get() - _playerRef->Attrs.Exp.Min().Get();
+      int expToGive = _playerRef->Attrs.Exp.Max().Get() -
+                      _playerRef->Attrs.Exp.Min().Get();
+
       _playerRef->AwardExperience(expToGive);
       StdOut(Ok);
     }
@@ -619,7 +622,8 @@ void DevConsole::GetObjectByAddress(const std::vector<std::string>& params)
 
   std::string hexAddr = "0x" + addr;
 
-  _objectHandles[ObjectHandleType::ANY] = _currentLevel->FindObjectByAddress(hexAddr);
+  _objectHandles[ObjectHandleType::ANY] =
+      _currentLevel->FindObjectByAddress(hexAddr);
 
   ReportHandle(ObjectHandleType::ANY);
   ReportHandleDebugInfo(ObjectHandleType::ANY);
@@ -735,7 +739,12 @@ void DevConsole::TransformTile(const std::vector<std::string>& params)
   switch (newTileType)
   {
     case GameObjectType::GROUND:
-      _currentLevel->PlaceGroundTile(x, y, '.', Colors::BlackColor, Colors::DirtColor, "Ground");
+      _currentLevel->PlaceGroundTile(x,
+                                     y,
+                                     '.',
+                                     Colors::BlackColor,
+                                     Colors::DirtColor,
+                                     "Ground");
       break;
 
     case GameObjectType::LAVA:
@@ -781,7 +790,13 @@ void DevConsole::PlaceWall(const std::vector<std::string>& params)
   int x = r.first;
   int y = r.second;
 
-  GameObject* wall = new GameObject(_currentLevel, x, y, '#', Colors::WhiteColor, Colors::MagentaColor);
+  GameObject* wall = new GameObject(_currentLevel,
+                                    x,
+                                    y,
+                                    '#',
+                                    Colors::WhiteColor,
+                                    Colors::MagentaColor);
+
   wall->ObjectName = "Dev Wall";
   wall->Blocking = true;
   wall->BlocksSight = true;
@@ -843,7 +858,9 @@ void DevConsole::PrintColors()
 
     std::string bgTotal = r + g + b;
 
-    std::string toAdd =  Util::StringFormat("[%s|%s] ", fgTotal.data(), bgTotal.data());
+    std::string toAdd =  Util::StringFormat("[%s|%s] ",
+                                            fgTotal.data(),
+                                            bgTotal.data());
     std::string total = msg + toAdd;
     if (total.length() > 80)
     {
@@ -1025,7 +1042,11 @@ void DevConsole::CreateAllScrolls()
 
     for (auto& item : GlobalConstants::ScrollValidSpellTypes)
     {
-      auto scroll = ItemsFactory::Instance().CreateScroll(1 + xOffset, 10 + i, item, p);
+      auto scroll = ItemsFactory::Instance().CreateScroll(1 + xOffset,
+                                                          10 + i,
+                                                          item,
+                                                          p);
+
       ItemComponent* ic = scroll->GetComponent<ItemComponent>();
       ic->Data.IsIdentified = true;
       _currentLevel->PlaceGameObject(scroll);
@@ -1096,12 +1117,13 @@ void DevConsole::CreateDummyObject(const std::vector<std::string>& params)
     image = params[2][0];
   }
 
-  GameObject* go = GameObjectsFactory::Instance().CreateDummyObject(r.first,
-                                                                    r.second,
-                                                                    "Dummy",
-                                                                    image,
-                                                                    Colors::WhiteColor,
-                                                                    Colors::BlackColor);
+  GameObject* go =
+      GameObjectsFactory::Instance().CreateDummyObject(r.first,
+                                                       r.second,
+                                                       "Dummy",
+                                                       image,
+                                                       Colors::WhiteColor,
+                                                       Colors::BlackColor);
 
   _currentLevel->PlaceGameObject(go);
 
@@ -1213,7 +1235,8 @@ void DevConsole::CreateBreakable(const std::vector<std::string>& params)
 
 // =============================================================================
 
-void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleType handleType)
+void DevConsole::GetObject(const std::vector<std::string>& params,
+                           ObjectHandleType handleType)
 {
   if (params.size() > 0 && params.size() < 2)
   {
@@ -1245,7 +1268,8 @@ void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleT
   switch (handleType)
   {
     case ObjectHandleType::STATIC:
-      _objectHandles[handleType] = Map::Instance().GetStaticGameObjectAtPosition(x, y);
+      _objectHandles[handleType] =
+          Map::Instance().GetStaticGameObjectAtPosition(x, y);
       break;
 
     case ObjectHandleType::ITEM:
@@ -1306,7 +1330,8 @@ void DevConsole::GetObject(const std::vector<std::string>& params, ObjectHandleT
 
 // =============================================================================
 
-void DevConsole::MoveObject(const std::vector<std::string>& params, ObjectHandleType handleType)
+void DevConsole::MoveObject(const std::vector<std::string>& params,
+                            ObjectHandleType handleType)
 {
   if (_objectHandles[handleType] == nullptr)
   {
@@ -1433,7 +1458,9 @@ void DevConsole::RemoveObject(const std::vector<std::string>& params)
   GameObject* go = Map::Instance().GetActorAtPosition(x, y);
   if (go == nullptr)
   {
-    std::vector<GameObject*> res = Map::Instance().GetGameObjectsAtPosition(x, y);
+    std::vector<GameObject*> res =
+        Map::Instance().GetGameObjectsAtPosition(x, y);
+
     if (res.empty())
     {
       go = Map::Instance().GetStaticGameObjectAtPosition(x, y);
@@ -1489,7 +1516,12 @@ void DevConsole::DamageActor(const std::vector<std::string>& params)
   }
 
   int dmg = std::stoi(n);
-  _objectHandles[ObjectHandleType::ACTOR]->ReceiveDamage(nullptr, dmg, true, true, isDirect, false);
+  _objectHandles[ObjectHandleType::ACTOR]->ReceiveDamage(nullptr,
+                                                         dmg,
+                                                         true,
+                                                         true,
+                                                         isDirect,
+                                                         false);
 
   Map::Instance().RemoveDestroyed();
 
@@ -1569,10 +1601,15 @@ void DevConsole::ToggleFogOfWar()
 {
   _playerRef->ToggleFogOfWar = !_playerRef->ToggleFogOfWar;
 
-  auto state = Application::Instance().GetGameStateRefByName(GameStates::MAIN_STATE);
+  auto state =
+      Application::Instance().GetGameStateRefByName(GameStates::MAIN_STATE);
+
   state->Update(true);
 
-  auto str = Util::StringFormat("For of war %s", _playerRef->ToggleFogOfWar ? "off" : "on");
+  auto str = Util::StringFormat("For of war %s",
+                                _playerRef->ToggleFogOfWar
+                                ? "off"
+                                : "on");
 
   StdOut(str);
 }
@@ -1603,7 +1640,8 @@ void DevConsole::TogglePlayerIgnore()
 
 void DevConsole::PrintTriggers()
 {
-  auto out = Util::StringFormat("Triggers on this level: %u", _currentLevel->FinishTurnTriggers.size());
+  auto out = Util::StringFormat("Triggers on this level: %u",
+                                _currentLevel->FinishTurnTriggers.size());
   StdOut(out);
 
   for (auto& t : _currentLevel->FinishTurnTriggers)
@@ -1701,7 +1739,8 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
     }
     else
     {
-      std::string msg = Util::StringFormat("No help found for '%s'", params[0].data());
+      std::string msg = Util::StringFormat("No help found for '%s'",
+                                           params[0].data());
       StdOut(msg);
     }
   }
@@ -1811,7 +1850,8 @@ bool DevConsole::StringIsNumbers(const std::string& str)
 
 // =============================================================================
 
-std::pair<int, int> DevConsole::CoordinateParamsToInt(const std::string &px, const std::string &py)
+std::pair<int, int> DevConsole::CoordinateParamsToInt(const std::string &px,
+                                                      const std::string &py)
 {
   std::pair<int, int> res = { -1, -1 };
 

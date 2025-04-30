@@ -314,8 +314,11 @@ void MainState::ProcessMovement(const Position& dirOffsets)
   }
   else
   {
-    bool actorInFront = (Map::Instance().GetActorAtPosition(_playerRef->PosX + dirOffsets.X,
-                                                            _playerRef->PosY + dirOffsets.Y) != nullptr);
+    bool actorInFront = (Map::Instance().GetActorAtPosition(
+                           _playerRef->PosX + dirOffsets.X,
+                           _playerRef->PosY + dirOffsets.Y
+                        ) != nullptr);
+
     if (_playerRef->IsSwimming() && actorInFront)
     {
       Printer::Instance().AddMessage("You can't attack while swimming!");
@@ -327,7 +330,8 @@ void MainState::ProcessMovement(const Position& dirOffsets)
 
 void MainState::CheckItemsOnGround()
 {
-  auto items = Map::Instance().GetGameObjectsToPickup(_playerRef->PosX, _playerRef->PosY);
+  auto items = Map::Instance().GetGameObjectsToPickup(_playerRef->PosX,
+                                                      _playerRef->PosY);
   if (items.size() > 1)
   {
     Printer::Instance().AddMessage(Strings::MsgItemsLyingHere);
@@ -359,7 +363,8 @@ void MainState::DisplayGameLog()
 
 void MainState::TryToPickupItems()
 {
-  auto items = Map::Instance().GetGameObjectsToPickup(_playerRef->PosX, _playerRef->PosY);
+  auto items = Map::Instance().GetGameObjectsToPickup(_playerRef->PosX,
+                                                      _playerRef->PosY);
   if (!items.empty())
   {
     if (items.size() == 1)
@@ -368,7 +373,8 @@ void MainState::TryToPickupItems()
     }
     else
     {
-      auto gs = Application::Instance().GetGameStateRefByName(GameStates::PICKUP_ITEM_STATE);
+      GameStates s = GameStates::PICKUP_ITEM_STATE;
+      auto gs = Application::Instance().GetGameStateRefByName(s);
       PickupItemState* pis = static_cast<PickupItemState*>(gs);
       pis->Setup(items);
       Application::Instance().ChangeState(GameStates::PICKUP_ITEM_STATE);
@@ -391,10 +397,13 @@ void MainState::PickupSingleItem(std::pair<int, GameObject *>& item)
 
   if (_playerRef->Inventory->IsFull())
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           Strings::MessageBoxEpicFailHeaderText,
-                                           { Strings::MsgInventoryFull },
-                                           Colors::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(
+          MessageBoxType::ANY_KEY,
+          Strings::MessageBoxEpicFailHeaderText,
+          { Strings::MsgInventoryFull },
+          Colors::MessageBoxRedBorderColor
+    );
+
     return;
   }
 
@@ -474,7 +483,8 @@ void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
 
 std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
 {
-  GameObject* stairsTile = Map::Instance().CurrentLevel->MapArray[_playerRef->PosX][_playerRef->PosY].get();
+  auto& ma = Map::Instance().CurrentLevel->MapArray;
+  GameObject* stairsTile = ma[_playerRef->PosX][_playerRef->PosY].get();
 
   //
   // We're relying here on stairsSymbol to be exactly '>' or '<'
@@ -511,7 +521,10 @@ std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
 void MainState::ClimbStairs(const std::pair<GameObject*, bool>& stairsTileInfo)
 {
   bool shouldGoDown = stairsTileInfo.second;
-  StairsComponent* stairs = stairsTileInfo.first->GetComponent<StairsComponent>();
+
+  StairsComponent* stairs =
+      stairsTileInfo.first->GetComponent<StairsComponent>();
+
   if (stairs->IsEnabled)
   {
     Map::Instance().ChangeLevel(stairs->LeadsTo, shouldGoDown);
@@ -592,9 +605,10 @@ void MainState::PrintDebugInfo()
                               Colors::WhiteColor,
                               Colors::BlackColor);
 
-  _debugInfo = Util::StringFormat("PT: %llu MU: %llu",
-                                  Application::Instance().PlayerTurnsPassed,
-                                  Application::Instance().MapUpdateCyclesPassed);
+  _debugInfo =
+      Util::StringFormat("PT: %llu MU: %llu",
+                         Application::Instance().PlayerTurnsPassed,
+                         Application::Instance().MapUpdateCyclesPassed);
 
   Printer::Instance().PrintFB(1,
                               6,
@@ -666,7 +680,9 @@ void MainState::ProcessRangedWeapon()
 
   // TODO: wands in both hands?
 
-  ItemComponent* weapon = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  ItemComponent* weapon =
+      _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+
   if (weapon != nullptr)
   {
     if (weapon->Data.ItemType_ == ItemType::WAND)
@@ -692,16 +708,20 @@ void MainState::ProcessRangedWeapon()
 
 void MainState::ProcessWeapon(ItemComponent* weapon)
 {
-  ItemComponent* arrows = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+  ItemComponent* arrows =
+      _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+
+  RangedWeaponType wt = weapon->Data.RangedWeaponType_;
+
   if (arrows != nullptr)
   {
-    bool isBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::SHORT_BOW
-               || weapon->Data.RangedWeaponType_ == RangedWeaponType::LONGBOW
-               || weapon->Data.RangedWeaponType_ == RangedWeaponType::WAR_BOW);
+    bool isBow = (wt == RangedWeaponType::SHORT_BOW
+               || wt == RangedWeaponType::LONGBOW
+               || wt == RangedWeaponType::WAR_BOW);
 
-    bool isXBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_XBOW
-                || weapon->Data.RangedWeaponType_ == RangedWeaponType::XBOW
-                || weapon->Data.RangedWeaponType_ == RangedWeaponType::HEAVY_XBOW);
+    bool isXBow = (wt == RangedWeaponType::LIGHT_XBOW
+                || wt == RangedWeaponType::XBOW
+                || wt == RangedWeaponType::HEAVY_XBOW);
 
     if (arrows->Data.ItemType_ != ItemType::ARROWS)
     {
@@ -722,7 +742,10 @@ void MainState::ProcessWeapon(ItemComponent* weapon)
       }
       else
       {
-        auto s = Application::Instance().GetGameStateRefByName(GameStates::TARGET_STATE);
+        auto s = Application::Instance().GetGameStateRefByName(
+                   GameStates::TARGET_STATE
+        );
+
         TargetState* ts = static_cast<TargetState*>(s);
         ts->Setup(weapon);
         Application::Instance().ChangeState(GameStates::TARGET_STATE);
@@ -773,7 +796,10 @@ void MainState::ProcessWand(ItemComponent* wand)
       case SpellType::MAGIC_MISSILE:
       case SpellType::NONE:
       {
-        auto s = Application::Instance().GetGameStateRefByName(GameStates::TARGET_STATE);
+        auto s = Application::Instance().GetGameStateRefByName(
+                   GameStates::TARGET_STATE
+        );
+
         TargetState* ts = static_cast<TargetState*>(s);
         ts->Setup(wand);
         Application::Instance().ChangeState(GameStates::TARGET_STATE);
@@ -793,7 +819,9 @@ bool MainState::ProcessMoneyPickup(std::pair<int, GameObject*>& pair)
   ItemComponent* ic = pair.second->GetComponent<ItemComponent>();
   if (ic->Data.ItemType_ == ItemType::COINS)
   {
-    auto message = Util::StringFormat(Strings::FmtPickedUpIS, ic->Data.Amount, ic->OwnerGameObject->ObjectName.data());
+    auto message = Util::StringFormat(Strings::FmtPickedUpIS,
+                                      ic->Data.Amount,
+                                      ic->OwnerGameObject->ObjectName.data());
     Printer::Instance().AddMessage(message);
 
     _playerRef->Money += ic->Data.Amount;
@@ -972,7 +1000,9 @@ void MainState::DisplayHungerStatus(const int& startPos)
 
 void MainState::DisplayWeaponCondition(const int& startPos)
 {
-  ItemComponent* weapon = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+  ItemComponent* weapon =
+      _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+
   if (weapon != nullptr &&
      (weapon->Data.ItemType_ == ItemType::WEAPON
    || weapon->Data.ItemType_ == ItemType::RANGED_WEAPON))
@@ -995,7 +1025,9 @@ void MainState::DisplayWeaponCondition(const int& startPos)
 
 void MainState::DisplayArmorCondition(const int& startPos)
 {
-  ItemComponent* armor = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::TORSO][0];
+  ItemComponent* armor =
+      _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::TORSO][0];
+
   if (armor != nullptr && armor->Data.ItemType_ == ItemType::ARMOR)
   {
     int maxDur = armor->Data.Durability.Max().Get();
@@ -1016,7 +1048,9 @@ void MainState::DisplayArmorCondition(const int& startPos)
 
 void MainState::DisplayAmmoCondition(const int& startPos)
 {
-  ItemComponent* arrows = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+  ItemComponent* arrows =
+      _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+
   if (arrows != nullptr && arrows->Data.ItemType_ == ItemType::ARROWS)
   {
     int amount = arrows->Data.Amount;
@@ -1043,7 +1077,9 @@ void MainState::DisplayActiveEffects(const int& startPos)
   {
     for (const ItemBonusStruct& item : kvp.second)
     {
-      std::string shortName = GlobalConstants::BonusDisplayNameByType.at(item.Type);
+      std::string shortName =
+          GlobalConstants::BonusDisplayNameByType.at(item.Type);
+
       int duration = item.Duration;
       if (duration != -1)
       {

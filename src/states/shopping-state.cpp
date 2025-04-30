@@ -80,7 +80,8 @@ void ShoppingState::HandleInput()
 
     case VK_CANCEL:
     {
-      auto res = Application::Instance().GetGameStateRefByName(GameStates::NPC_INTERACT_STATE);
+      GameStates gs = GameStates::NPC_INTERACT_STATE;
+      auto res = Application::Instance().GetGameStateRefByName(gs);
       NPCInteractState* nis = static_cast<NPCInteractState*>(res);
       nis->SetNPCRef(_shopOwner->NpcRef);
       Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);
@@ -176,7 +177,8 @@ void ShoppingState::DisplayPlayerInventory()
 
   std::string costString;
 
-  int itemStringTotalLen = GetItemStringTotalLen(_playerRef->Inventory->Contents);
+  int itemStringTotalLen =
+      GetItemStringTotalLen(_playerRef->Inventory->Contents);
 
   for (auto& item : _playerRef->Inventory->Contents)
   {
@@ -276,7 +278,9 @@ void ShoppingState::DisplayShopInventory()
   {
     ItemComponent* ic = item->GetComponent<ItemComponent>();
 
-    std::string nameInInventory = ic->Data.IsIdentified ? item->ObjectName : ic->Data.UnidentifiedName;
+    std::string nameInInventory = ic->Data.IsIdentified
+                                  ? item->ObjectName
+                                  : ic->Data.UnidentifiedName;
 
     std::string tmpName = nameInInventory;
 
@@ -285,12 +289,17 @@ void ShoppingState::DisplayShopInventory()
       tmpName.resize(GlobalConstants::InventoryMaxNameLength);
     }
 
-    nameInInventory.insert(0, GlobalConstants::InventoryMaxNameLength - tmpName.length(), ' ');
+    nameInInventory.insert(0,
+                           GlobalConstants::InventoryMaxNameLength -
+                           tmpName.length(),
+                           ' ');
+
     nameInInventory.resize(GlobalConstants::InventoryMaxNameLength);
 
     std::string extraInfo = GetItemExtraInfo(ic);
 
-    Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1,
+    Printer::Instance().PrintFB(xPos -
+                                GlobalConstants::InventoryMaxNameLength - 1,
                                 yPos + index,
                                 extraInfo,
                                 Printer::kAlignRight,
@@ -374,7 +383,9 @@ void ShoppingState::CheckIndexLimits()
 
 // =============================================================================
 
-size_t ShoppingState::GetItemStringTotalLen(std::vector<std::unique_ptr<GameObject>>& container)
+size_t ShoppingState::GetItemStringTotalLen(
+    std::vector<std::unique_ptr<GameObject>>& container
+  )
 {
   size_t maxLen = 0;
 
@@ -430,19 +441,23 @@ void ShoppingState::BuyOrSellItem()
 
     if (ic->Data.IsEquipped)
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                              Strings::MessageBoxEpicFailHeaderText,
-                                              { Strings::MsgUnequipFirst },
-                                              Colors::MessageBoxRedBorderColor);
+      Application::Instance().ShowMessageBox(
+            MessageBoxType::ANY_KEY,
+            Strings::MessageBoxEpicFailHeaderText,
+            { Strings::MsgUnequipFirst },
+            Colors::MessageBoxRedBorderColor
+      );
       return;
     }
 
     if (ic->Data.IsImportant)
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                              Strings::MessageBoxInformationHeaderText,
-                                              { Strings::MsgLooksImportant },
-                                              Colors::MessageBoxBlueBorderColor);
+      Application::Instance().ShowMessageBox(
+            MessageBoxType::ANY_KEY,
+            Strings::MessageBoxInformationHeaderText,
+            { Strings::MsgLooksImportant },
+            Colors::MessageBoxBlueBorderColor
+      );
       return;
     }
 
@@ -506,18 +521,22 @@ bool ShoppingState::CanBeBought(ItemComponent *ic)
 
   if (_playerRef->Money < cost)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           Strings::MessageBoxEpicFailHeaderText,
-                                           { Strings::MsgNotEnoughMoney },
-                                           Colors::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(
+          MessageBoxType::ANY_KEY,
+          Strings::MessageBoxEpicFailHeaderText,
+          { Strings::MsgNotEnoughMoney },
+          Colors::MessageBoxRedBorderColor
+    );
     return false;
   }
   else if (_playerRef->Inventory->IsFull())
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           Strings::MessageBoxEpicFailHeaderText,
-                                           { Strings::MsgNoRoomInInventory },
-                                           Colors::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(
+          MessageBoxType::ANY_KEY,
+          Strings::MessageBoxEpicFailHeaderText,
+          { Strings::MsgNoRoomInInventory },
+          Colors::MessageBoxRedBorderColor
+    );
     return false;
   }
 

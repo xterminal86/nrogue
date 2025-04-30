@@ -59,7 +59,9 @@ class FeatureRooms : public DGBase
 
     void DemonizeLayout(StringV& layout);
 
-    std::pair<Position, Position> CenterRoomAlongDir(const Position& start, int size, RoomEdgeEnum dir);
+    std::pair<Position, Position> CenterRoomAlongDir(const Position& start,
+                                                     int size,
+                                                     RoomEdgeEnum dir);
 
     FeatureRoomsWeights _weightsMap;
 
@@ -68,7 +70,8 @@ class FeatureRooms : public DGBase
     std::unordered_map<FeatureRoomType, int> _generatedSoFar;
     std::unordered_map<FeatureRoomType, int> _roomWeightByType;
 
-    const std::unordered_map<FeatureRoomType, std::vector<StringV>> _specialRoomLayoutByType =
+    const std::unordered_map<FeatureRoomType, std::vector<StringV>>
+    _specialRoomLayoutByType =
     {
       { FeatureRoomType::GARDEN,   GlobalConstants::GardenLayouts   },
       { FeatureRoomType::POND,     GlobalConstants::PondLayouts     },

@@ -21,7 +21,8 @@ void TownPortalComponent::Update()
 
 // =============================================================================
 
-void TownPortalComponent::SavePosition(MapType mapToReturn, const Position& posToReturn)
+void TownPortalComponent::SavePosition(MapType mapToReturn,
+                                       const Position& posToReturn)
 {
   _posToReturn.first  = mapToReturn;
   _posToReturn.second = posToReturn;
@@ -35,5 +36,6 @@ void TownPortalComponent::TeleportBack()
 
   OwnerGameObject->IsDestroyed = true;
 
-  Map::Instance().TeleportToExistingLevel(_posToReturn.first, _posToReturn.second);
+  Map::Instance().TeleportToExistingLevel(_posToReturn.first,
+                                          _posToReturn.second);
 }

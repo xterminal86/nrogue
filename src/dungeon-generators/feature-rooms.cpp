@@ -76,14 +76,19 @@ void FeatureRooms::Generate(const Position& mapSize,
       continue;
     }
 
-    bool success = TryToCreateRoom(doorPos, newRoomStartPos, carveDir, typeRolled);
+    bool success = TryToCreateRoom(doorPos,
+                                   newRoomStartPos,
+                                   carveDir,
+                                   typeRolled);
     if (success)
     {
       uint8_t doorChance = Util::Clamp(doorPlacementChance, 0, 100);
 
       uint8_t chanceRolled = Util::RandomRange(1, 101, _rng);
 
-      _map[doorPos.X][doorPos.Y].Image = (chanceRolled <= doorChance) ? '+' : '.';
+      _map[doorPos.X][doorPos.Y].Image = (chanceRolled <= doorChance)
+                                         ? '+'
+                                         : '.';
       _generatedSoFar[typeRolled]++;
     }
   }
@@ -192,7 +197,10 @@ bool FeatureRooms::TryToCreateRoom(const Position& doorPos,
       int layoutSubvariant = Util::RandomRange(0, 2, _rng);
       int index = Util::RandomRange(0, layoutVariant.size(), _rng);
       auto layout = layoutVariant[index];
-      success = PlaceLayout(newRoomStartPos, layout, direction, (layoutSubvariant == 0));
+      success = PlaceLayout(newRoomStartPos,
+                            layout,
+                            direction,
+                            (layoutSubvariant == 0));
     }
     break;
 
@@ -726,7 +734,10 @@ bool FeatureRooms::IsCellValid(const Position& pos)
 //
 // 'roomSize' must be odd.
 //
-std::pair<Position, Position> FeatureRooms::CenterRoomAlongDir(const Position& start, int roomSize, RoomEdgeEnum dir)
+std::pair<Position, Position>
+FeatureRooms::CenterRoomAlongDir(const Position& start,
+                                 int roomSize,
+                                 RoomEdgeEnum dir)
 {
   std::pair<Position, Position> res;
 

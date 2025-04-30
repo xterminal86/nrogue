@@ -2,7 +2,10 @@
 
 #include "application.h"
 
-MapLevelEndgame::MapLevelEndgame(int sizeX, int sizeY, MapType type, int dungeonLevel)
+MapLevelEndgame::MapLevelEndgame(int sizeX,
+                                 int sizeY,
+                                 MapType type,
+                                 int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
   _specialLevel =

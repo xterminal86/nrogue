@@ -140,7 +140,8 @@ namespace ItemUseHandlers
 
   // ===========================================================================
 
-  UseResult NeutralizePoisonPotionUseHandler(ItemComponent* item, GameObject* user)
+  UseResult NeutralizePoisonPotionUseHandler(ItemComponent* item,
+                                             GameObject* user)
   {
     std::string message = Strings::NoActionText;
 
@@ -484,7 +485,8 @@ namespace ItemUseHandlers
       { PotionType::SPD_POTION, user->Attrs.Spd }
     };
 
-    int newValue = userStats.at(item->Data.PotionType_).OriginalValue() + valueToAdd;
+    int newValue = userStats.at(item->Data.PotionType_).OriginalValue() +
+                   valueToAdd;
 
     if (newValue < 0)
     {
@@ -517,10 +519,13 @@ namespace ItemUseHandlers
     if (item->Data.Amount == 0
      || Map::Instance().CurrentLevel->MysteriousForcePresent)
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                             Strings::MessageBoxInformationHeaderText,
-                                             { "You invoke the returner, but nothing happens." },
-                                             Colors::ShadesOfGrey::Six);
+      Application::Instance().ShowMessageBox(
+            MessageBoxType::ANY_KEY,
+            Strings::MessageBoxInformationHeaderText,
+            { "You invoke the returner, but nothing happens." },
+            Colors::ShadesOfGrey::Six
+      );
+
       return UseResult::FAILURE;
     }
 
@@ -538,10 +543,13 @@ namespace ItemUseHandlers
 
     if (!playerRef->HasSkill(PlayerSkills::REPAIR))
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                             Strings::MessageBoxEpicFailHeaderText,
-                                             { "You don't possess the necessary skill!" },
-                                             Colors::MessageBoxRedBorderColor);
+      Application::Instance().ShowMessageBox(
+            MessageBoxType::ANY_KEY,
+            Strings::MessageBoxEpicFailHeaderText,
+            { "You don't possess the necessary skill!" },
+            Colors::MessageBoxRedBorderColor
+      );
+
       return UseResult::FAILURE;
     }
 

@@ -21,7 +21,11 @@ void LevelBuilder::FeatureRoomsMethod(const Position& mapSize,
   _generator.reset(new FeatureRooms());
 
   FeatureRooms* fr = static_cast<FeatureRooms*>(_generator.get());
-  fr->Generate(mapSize, roomSizes, weightsMap, doorPlacementChance, maxIterations);
+  fr->Generate(mapSize,
+               roomSizes,
+               weightsMap,
+               doorPlacementChance,
+               maxIterations);
 
   MapRaw = fr->MapRaw;
 }
@@ -37,7 +41,11 @@ void LevelBuilder::CellularAutomataMethod(const Position& mapSize,
   _generator.reset(new CellularAutomata());
 
   CellularAutomata* ca = static_cast<CellularAutomata*>(_generator.get());
-  ca->Generate(mapSize, initialWallChance, birthThreshold, deathThreshold, maxIterations);
+  ca->Generate(mapSize,
+               initialWallChance,
+               birthThreshold,
+               deathThreshold,
+               maxIterations);
 
   MapRaw = ca->MapRaw;
 }
@@ -74,13 +82,17 @@ void LevelBuilder::TunnelerMethod(const Position& mapSize,
 
 // =============================================================================
 
-void LevelBuilder::RecursiveBacktrackerMethod(const Position& mapSize,
-                                              const Position& startingPoint,
-                                              const RemovalParams& endWallsRemovalParams)
+void LevelBuilder::RecursiveBacktrackerMethod(
+    const Position& mapSize,
+    const Position& startingPoint,
+    const RemovalParams& endWallsRemovalParams
+    )
 {
   _generator.reset(new RecursiveBacktracker());
 
-  RecursiveBacktracker* rb = static_cast<RecursiveBacktracker*>(_generator.get());
+  RecursiveBacktracker* rb =
+      static_cast<RecursiveBacktracker*>(_generator.get());
+
   rb->Generate(mapSize, startingPoint, endWallsRemovalParams);
 
   MapRaw = rb->MapRaw;
@@ -96,7 +108,11 @@ void LevelBuilder::FromBlobTiles(int mapSizeX, int mapSizeY,
   _generator.reset(new BlobTiles());
 
   BlobTiles* bt = static_cast<BlobTiles*>(_generator.get());
-  bt->Generate(mapSizeX, mapSizeY, tileSizeFactor, wallsSizeFactor, postProcess);
+  bt->Generate(mapSizeX,
+               mapSizeY,
+               tileSizeFactor,
+               wallsSizeFactor,
+               postProcess);
 
   MapRaw = bt->MapRaw;
 }
@@ -138,7 +154,9 @@ void LevelBuilder::FromPermutationTilesMethod(const Position& mapSize,
 {
   _generator.reset(new FromPermutationTiles());
 
-  FromPermutationTiles* ft = static_cast<FromPermutationTiles*>(_generator.get());
+  FromPermutationTiles* ft =
+      static_cast<FromPermutationTiles*>(_generator.get());
+
   ft->Generate(mapSize, tileSetIndex, postProcess, removeBias);
 
   MapRaw = ft->MapRaw;

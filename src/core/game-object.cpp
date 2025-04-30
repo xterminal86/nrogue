@@ -72,7 +72,8 @@ GameObject::~GameObject()
   }
 
 #ifdef DEBUG_BUILD
-  GameState* s = Application::Instance().GetGameStateRefByName(GameStates::DEV_CONSOLE);
+  GameState* s =
+      Application::Instance().GetGameStateRefByName(GameStates::DEV_CONSOLE);
   if (s != nullptr)
   {
     DevConsole* dc = static_cast<DevConsole*>(s);
@@ -255,9 +256,9 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
   }
 
   //
-  // SDL build uses transparency as Colors::None, so without this check it will
-  // cause objects from breakable containers to overlay with container's remains
-  // which doesn't look good.
+  // SDL build uses transparency as Colors::None,
+  // so without this check it will cause objects from breakable containers
+  // to overlay with container's remains which doesn't look good.
   //
   if (bgColor == Colors::None)
   {
@@ -319,17 +320,24 @@ void GameObject::ApplyBonus(ItemComponent* itemRef,
     case ItemBonusType::RES:
     case ItemBonusType::SKL:
     case ItemBonusType::SPD:
-      _attributesRefsByBonus.at(bonus.Type).AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.BonusValue);
+      _attributesRefsByBonus.at(bonus.Type).AddModifier(
+            itemRef->OwnerGameObject->ObjectId(),
+            bonus.BonusValue
+      );
       break;
 
     case ItemBonusType::HP:
     case ItemBonusType::MP:
-      _rangedAttributesRefsByBonus.at(bonus.Type).Max().AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.BonusValue);
+      _rangedAttributesRefsByBonus.at(bonus.Type).Max().AddModifier(
+            itemRef->OwnerGameObject->ObjectId(),
+            bonus.BonusValue
+      );
       _rangedAttributesRefsByBonus.at(bonus.Type).CheckOverflow();
       break;
 
     case ItemBonusType::VISIBILITY:
-      VisibilityRadius.AddModifier(itemRef->OwnerGameObject->ObjectId(), bonus.BonusValue);
+      VisibilityRadius.AddModifier(itemRef->OwnerGameObject->ObjectId(),
+                                   bonus.BonusValue);
       break;
 
     case ItemBonusType::REGEN:
@@ -381,12 +389,16 @@ void GameObject::UnapplyBonus(ItemComponent* itemRef,
     case ItemBonusType::RES:
     case ItemBonusType::SKL:
     case ItemBonusType::SPD:
-      _attributesRefsByBonus.at(bonus.Type).RemoveModifier(itemRef->OwnerGameObject->ObjectId());
+      _attributesRefsByBonus.at(bonus.Type).RemoveModifier(
+            itemRef->OwnerGameObject->ObjectId()
+      );
       break;
 
     case ItemBonusType::HP:
     case ItemBonusType::MP:
-      _rangedAttributesRefsByBonus.at(bonus.Type).Max().RemoveModifier(itemRef->OwnerGameObject->ObjectId());
+      _rangedAttributesRefsByBonus.at(bonus.Type).Max().RemoveModifier(
+            itemRef->OwnerGameObject->ObjectId()
+      );
       _rangedAttributesRefsByBonus.at(bonus.Type).CheckOverflow();
       break;
 
@@ -551,7 +563,8 @@ bool GameObject::ReceiveDamage(GameObject* from,
     }
   }
 
-  bool tileVisible = Map::Instance().CurrentLevel->MapArray[PosX][PosY]->Visible;
+  bool tileVisible =
+      Map::Instance().CurrentLevel->MapArray[PosX][PosY]->Visible;
 
   if (!suppressLog && tileVisible)
   {
@@ -922,13 +935,16 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
 
   /*
   #ifdef DEBUG_BUILD
-  auto str = Util::StringFormat("%s gained %s (duration %i period %i)",
-                                ObjectName.data(),
-                                GlobalConstants::BonusDisplayNameByType.count(effectToAdd.Type) == 1 ?
-                                GlobalConstants::BonusDisplayNameByType.at(effectToAdd.Type).data() :
-                                "<effect name not found>",
-                                effectToAdd.Duration,
-                                effectToAdd.Period);
+  auto str =
+    Util::StringFormat("%s gained %s (duration %i period %i)",
+                       ObjectName.data(),
+                       GlobalConstants::BonusDisplayNameByType
+                       .count(effectToAdd.Type) == 1 ?
+                       GlobalConstants::BonusDisplayNameByType
+                       .at(effectToAdd.Type).data() :
+                       "<effect name not found>",
+                       effectToAdd.Duration,
+                       effectToAdd.Period);
   Logger::Instance().Print(str);
   DebugLog(str.data());
   #endif
@@ -1095,7 +1111,8 @@ void GameObject::UnapplyEffect(const ItemBonusStruct& e)
 
 // =============================================================================
 
-void GameObject::RemoveEffect(const ItemBonusType& type, const uint64_t& causer)
+void GameObject::RemoveEffect(const ItemBonusType& type,
+                              const uint64_t& causer)
 {
   //
   // Loop goes from end to start to avoid potential skipping
@@ -1273,7 +1290,11 @@ void GameObject::ProcessEffects()
 
         /*
         #ifndef RELEASE_BUILD
-        DebugLog("\t%s ProcessEffects() [%s] duration %i = %i - 1", ObjectName.data(), GlobalConstants::BonusDisplayNameByType.at(ae[j].Type).data(), ae[j].Duration, ae[j].Duration);
+        DebugLog("\t%s ProcessEffects() [%s] duration %i = %i - 1",
+                 ObjectName.data(),
+                 GlobalConstants::BonusDisplayNameByType.at(ae[j].Type).data(),
+                 ae[j].Duration,
+                 ae[j].Duration);
         #endif
         */
 
@@ -1574,7 +1595,9 @@ void GameObject::LevelUpNatural(int gainedLevel, int baseHpOverride)
 bool GameObject::CanRaiseAttribute(Attribute& attr)
 {
   bool customChance = (attr.RaiseProbability >= 0);
-  int chance = customChance ? attr.RaiseProbability : GlobalConstants::AttributeMinimumRaiseChance;
+  int chance = customChance
+               ? attr.RaiseProbability
+               : GlobalConstants::AttributeMinimumRaiseChance;
 
   if (!customChance)
   {
@@ -1595,14 +1618,16 @@ bool GameObject::CanRaiseAttribute(Attribute& attr)
 
 // =============================================================================
 
-const std::unordered_map<uint64_t, std::vector<ItemBonusStruct>>& GameObject::GetActiveEffects()
+const std::unordered_map<uint64_t, std::vector<ItemBonusStruct>>&
+GameObject::GetActiveEffects()
 {
   return _activeEffects;
 }
 
 // =============================================================================
 
-const std::map<int, std::map<PlayerStats, int>>& GameObject::GetLevelUpHistory()
+const std::map<int, std::map<PlayerStats, int>>&
+GameObject::GetLevelUpHistory()
 {
   return _levelUpHistory;
 }

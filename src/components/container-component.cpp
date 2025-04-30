@@ -49,7 +49,8 @@ bool ContainerComponent::Add(GameObject* object)
         //
         bool fromTheSameStack = (!ic->Data.IsIdentified
                               && !itemToAdd->Data.IsIdentified
-                              && (ic->OwnerGameObject->StackObjectId == itemToAdd->OwnerGameObject->StackObjectId));
+                              && (ic->OwnerGameObject->StackObjectId ==
+                                  itemToAdd->OwnerGameObject->StackObjectId));
 
         if (isIded || fromTheSameStack)
         {
@@ -93,16 +94,22 @@ IR ContainerComponent::Interact()
 
   if (!CanBeOpened)
   {
-    std::string failMsg = Util::StringFormat("%s can't be opened!", OwnerGameObject->ObjectName.data());
+    std::string failMsg =
+        Util::StringFormat("%s can't be opened!",
+                           OwnerGameObject->ObjectName.data());
     Printer::Instance().AddMessage(failMsg);
     return { InteractionResult::FAILURE, GameStates::MAIN_STATE };
   }
 
-  auto s = Application::Instance().GetGameStateRefByName(GameStates::CONTAINER_INTERACT_STATE);
+  auto s = Application::Instance().GetGameStateRefByName(
+             GameStates::CONTAINER_INTERACT_STATE
+           );
+
   ContainerInteractState* cis = static_cast<ContainerInteractState*>(s);
   cis->SetContainerRef(this);
 
-  std::string succMsg = Util::StringFormat("You open %s", OwnerGameObject->ObjectName.data());
+  std::string succMsg = Util::StringFormat("You open %s",
+                                           OwnerGameObject->ObjectName.data());
   Printer::Instance().AddMessage(succMsg);
 
   return { InteractionResult::SUCCESS, GameStates::CONTAINER_INTERACT_STATE };

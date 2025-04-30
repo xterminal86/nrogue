@@ -4,7 +4,10 @@
 #include "game-object-info.h"
 #include "game-objects-factory.h"
 
-MapLevelTest::MapLevelTest(int sizeX, int sizeY, MapType type, int dungeonLevel)
+MapLevelTest::MapLevelTest(int sizeX,
+                           int sizeY,
+                           MapType type,
+                           int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
 }

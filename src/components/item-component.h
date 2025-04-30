@@ -18,7 +18,8 @@ class ItemComponent : public Component
     void Inspect(bool overrideDescriptions = false);
     void Break(GameObject* itemOwner);
 
-    std::pair<std::string, StringV> GetInspectionInfo(bool overrideDescriptions = false);
+    std::pair<std::string, StringV>
+    GetInspectionInfo(bool overrideDescriptions = false);
 
     ItemData Data;
 
@@ -34,7 +35,10 @@ class ItemComponent : public Component
 
     void AddModifiersInfo(std::vector<std::string>& res);
     void AddBonusesInfo(std::vector<std::string>& res);
-    void AppendStatBonuses(const std::unordered_map<ItemBonusType, int>& statBonuses, std::vector<std::string>& res);
+    void AppendStatBonuses(
+        const std::unordered_map<ItemBonusType, int>& statBonuses,
+        std::vector<std::string>& res
+    );
 
     std::unordered_map<ItemBonusType, int> CountAllStatBonuses();
 

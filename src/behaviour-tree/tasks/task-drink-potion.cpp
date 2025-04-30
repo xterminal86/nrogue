@@ -62,7 +62,8 @@ void TaskDrinkPotion::UsePotion(int inventoryIndex)
     _inventoryRef->Contents.erase(it + inventoryIndex);
   };
 
-  ItemComponent* ic = _inventoryRef->Contents[inventoryIndex]->GetComponent<ItemComponent>();
+  ItemComponent* ic =
+      _inventoryRef->Contents[inventoryIndex]->GetComponent<ItemComponent>();
   ic->Use(_objectToControl);
 
   //
@@ -91,7 +92,8 @@ void TaskDrinkPotion::UsePotion(int inventoryIndex)
 void TaskDrinkPotion::PrintLogIfNeeded(ItemComponent* ic)
 {
   auto curLvl = Map::Instance().CurrentLevel;
-  auto curTile = curLvl->MapArray[_objectToControl->PosX][_objectToControl->PosY].get();
+  auto curTile =
+      curLvl->MapArray[_objectToControl->PosX][_objectToControl->PosY].get();
 
   if (curTile->Visible)
   {
@@ -111,7 +113,9 @@ int TaskDrinkPotion::FindPotionHP()
 
   for (size_t i = 0; i < _inventoryRef->Contents.size(); i++)
   {
-    ItemComponent* ic = _inventoryRef->Contents[i]->GetComponent<ItemComponent>();
+    ItemComponent* ic =
+        _inventoryRef->Contents[i]->GetComponent<ItemComponent>();
+
     if (ic->Data.ItemType_ == ItemType::POTION
      && ic->Data.PotionType_ == PotionType::HEALING_POTION
      && ic->Data.IsIdentified)
@@ -132,7 +136,8 @@ int TaskDrinkPotion::FindPotionMP()
 
   for (size_t i = 0; i < _inventoryRef->Contents.size(); i++)
   {
-    ItemComponent* ic = _inventoryRef->Contents[i]->GetComponent<ItemComponent>();
+    ItemComponent* ic =
+        _inventoryRef->Contents[i]->GetComponent<ItemComponent>();
     if (ic->Data.ItemType_ == ItemType::POTION
      && ic->Data.PotionType_ == PotionType::MANA_POTION
      && ic->Data.IsIdentified)
@@ -155,7 +160,8 @@ int TaskDrinkPotion::FindPotionAny()
 
   for (size_t i = 0; i < _inventoryRef->Contents.size(); i++)
   {
-    ItemComponent* ic = _inventoryRef->Contents[i]->GetComponent<ItemComponent>();
+    ItemComponent* ic =
+        _inventoryRef->Contents[i]->GetComponent<ItemComponent>();
     if (ic->Data.ItemType_ == ItemType::POTION)
     {
       itemIndices.push_back(i);

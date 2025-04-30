@@ -92,7 +92,8 @@ GameObject* MonstersInc::CreateMonster(int x, int y, GameObjectType monsterType)
       break;
 
     default:
-      DebugLog("CreateMonster(): monster type %i is not implemented!", monsterType);
+      DebugLog("CreateMonster(): monster type %i is not implemented!",
+               monsterType);
       break;
   }
 
@@ -161,12 +162,16 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns     = 30;
 
+  //
   // Sets Occupied flag for _currentCell
+  //
   go->Move(0, 0);
 
   go->IsLiving = true;
 
-  // Set attributes
+  //
+  // Set attributes.
+  //
   if (randomize)
   {
     //int pl = _playerRef->Attrs.Lvl.Get();
@@ -440,7 +445,8 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
   GameObject* pickaxe = ItemsFactory::Instance().CreateBlockBreakerPickaxe();
-  GameObject* armor = ItemsFactory::Instance().CreateRandomArmor(ArmorType::PADDING);
+  GameObject* armor =
+      ItemsFactory::Instance().CreateRandomArmor(ArmorType::PADDING);
 
   //
   // First, add objects to inventory so that we aquire the naked pointer.
@@ -460,7 +466,10 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   //
   // Everything else in inventory will be dropped on kill.
   //
-  GameObject* gem = ItemsFactory::Instance().CreateGem(0, 0, GemType::RANDOM, 100);
+  GameObject* gem = ItemsFactory::Instance().CreateGem(0,
+                                                       0,
+                                                       GemType::RANDOM,
+                                                       100);
   cc->Add(gem);
 
   //
@@ -523,8 +532,11 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
-  GameObject* pick = ItemsFactory::Instance().CreateRandomMeleeWeapon(WeaponType::PICKAXE);
-  GameObject* armor = ItemsFactory::Instance().CreateRandomArmor(ArmorType::PADDING);
+  GameObject* pick =
+      ItemsFactory::Instance().CreateRandomMeleeWeapon(WeaponType::PICKAXE);
+
+  GameObject* armor =
+      ItemsFactory::Instance().CreateRandomArmor(ArmorType::PADDING);
 
   cc->Add(pick);
   cc->Add(armor);
@@ -587,7 +599,8 @@ GameObject* MonstersInc::CreateKobold(int x, int y)
                     WeaponType::DAGGER :
                     WeaponType::SHORT_SWORD;
 
-  GameObject* sword = ItemsFactory::Instance().CreateRandomMeleeWeapon(weaponType);
+  GameObject* sword =
+      ItemsFactory::Instance().CreateRandomMeleeWeapon(weaponType);
 
   if (Util::Rolld100(30))
   {
@@ -743,7 +756,11 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
           {
             GameObject* reanimated = CreateZombie(pos.X, pos.Y);
             reanimated->Attrs = attrs;
-            reanimated->Attrs.HP.Reset(reanimated->Attrs.HP.Max().OriginalValue());
+
+            reanimated->Attrs.HP.Reset(
+                  reanimated->Attrs.HP.Max().OriginalValue()
+            );
+
             Map::Instance().PlaceActor(reanimated);
           }
         });
@@ -819,7 +836,9 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
                                       : ItemPrefix::CURSED;
   ArmorType at   = Util::WeightedRandom(possibleArmor).first;
 
-  GameObject* weapon = ItemsFactory::Instance().CreateRandomMeleeWeapon(wt, ip, iq);
+  GameObject* weapon = ItemsFactory::Instance().CreateRandomMeleeWeapon(wt,
+                                                                        ip,
+                                                                        iq);
   GameObject* armor  = ItemsFactory::Instance().CreateRandomArmor(at, ip, iq);
 
   cc->Add(weapon);
@@ -929,7 +948,10 @@ GameObject* MonstersInc::CreateStalker(int x, int y)
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
-  GameObject* weapon = ItemsFactory::Instance().CreateRandomMeleeWeapon(WeaponType::DAGGER, ItemPrefix::CURSED);
+  GameObject* weapon =
+      ItemsFactory::Instance().CreateRandomMeleeWeapon(WeaponType::DAGGER,
+                                                       ItemPrefix::CURSED);
+
   GameObject* ring = ItemsFactory::Instance().CreateOneRing();
 
   cc->Add(weapon);

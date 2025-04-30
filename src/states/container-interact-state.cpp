@@ -153,7 +153,10 @@ void ContainerInteractState::DisplayPlayerInventory()
     auto c = item->GetComponent<ItemComponent>();
     ItemComponent* ic = static_cast<ItemComponent*>(c);
 
-    std::string nameInInventory = ic->Data.IsIdentified ? item->ObjectName : ic->Data.UnidentifiedName;
+    std::string nameInInventory = ic->Data.IsIdentified
+                                  ? item->ObjectName
+                                  : ic->Data.UnidentifiedName;
+
     nameInInventory.resize(GlobalConstants::InventoryMaxNameLength, ' ');
 
     if (ic->Data.IsStackable)
@@ -205,7 +208,9 @@ void ContainerInteractState::DisplayPlayerInventory()
 
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
-    std::string stub(GlobalConstants::InventoryMaxNameLength, Strings::InventoryEmptySlotChar);
+    std::string stub(GlobalConstants::InventoryMaxNameLength,
+                     Strings::InventoryEmptySlotChar);
+
     Printer::Instance().PrintFB(1,
                                 yPos + index,
                                 stub,
@@ -238,29 +243,36 @@ void ContainerInteractState::DisplayContainerInventory()
                                 : ic->Data.UnidentifiedName;
 
     std::string tmpName = nameInInventory;
-    nameInInventory.insert(0, GlobalConstants::InventoryMaxNameLength - tmpName.length(), ' ');
+    nameInInventory.insert(0,
+                           GlobalConstants::InventoryMaxNameLength -
+                           tmpName.length(),
+                           ' ');
 
     nameInInventory.resize(GlobalConstants::InventoryMaxNameLength);
 
     if (ic->Data.IsStackable)
     {
       auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
-      Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1,
-                                  yPos + index,
-                                  stackAmount,
-                                  Printer::kAlignRight,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
+      Printer::Instance().PrintFB(
+            xPos - GlobalConstants::InventoryMaxNameLength - 1,
+            yPos + index,
+            stackAmount,
+            Printer::kAlignRight,
+            Colors::WhiteColor,
+            Colors::BlackColor
+      );
     }
     else if (ic->Data.IsEquipped)
     {
       auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
-      Printer::Instance().PrintFB(xPos - GlobalConstants::InventoryMaxNameLength - 1,
-                                  yPos + index,
-                                  equipStatus,
-                                  Printer::kAlignRight,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
+      Printer::Instance().PrintFB(
+            xPos - GlobalConstants::InventoryMaxNameLength - 1,
+            yPos + index,
+            equipStatus,
+            Printer::kAlignRight,
+            Colors::WhiteColor,
+            Colors::BlackColor
+      );
     }
 
     uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
@@ -291,7 +303,8 @@ void ContainerInteractState::DisplayContainerInventory()
 
   for (size_t i = itemsCount; i < GlobalConstants::InventoryMaxNameLength; i++)
   {
-    std::string stub(GlobalConstants::InventoryMaxNameLength, Strings::InventoryEmptySlotChar);
+    std::string stub(GlobalConstants::InventoryMaxNameLength,
+                     Strings::InventoryEmptySlotChar);
     Printer::Instance().PrintFB(xPos,
                                 yPos + index,
                                 stub,
@@ -337,10 +350,12 @@ void ContainerInteractState::TryToTransferItem()
 
   if (dst->IsFull())
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           Strings::MessageBoxEpicFailHeaderText,
-                                           { Strings::MsgNoRoomInInventory },
-                                           Colors::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(
+          MessageBoxType::ANY_KEY,
+          Strings::MessageBoxEpicFailHeaderText,
+          { Strings::MsgNoRoomInInventory },
+          Colors::MessageBoxRedBorderColor
+    );
     return;
   }
 
@@ -349,10 +364,13 @@ void ContainerInteractState::TryToTransferItem()
 
   if (ic->Data.IsEquipped)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           Strings::MessageBoxEpicFailHeaderText,
-                                           { Strings::MsgUnequipFirst },
-                                           Colors::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(
+          MessageBoxType::ANY_KEY,
+          Strings::MessageBoxEpicFailHeaderText,
+          { Strings::MsgUnequipFirst },
+          Colors::MessageBoxRedBorderColor
+    );
+
     return;
   }
 

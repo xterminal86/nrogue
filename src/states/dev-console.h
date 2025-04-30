@@ -6,66 +6,77 @@
 
 enum class DevConsoleCommand
 {
-  UNKNOWN = 0,
-  CLEAR,
-  HELP,
-  CLOSE,
-  CLOSE2,
-  CLOSE3,
-  CLOSE4,
-  HISTORY,
-  REPEAT_COMMAND,
-  TRANSFORM_TILE,
-  PLACE_WALL,
-  CREATE_DUMMY_ACTOR,
-  CREATE_ALL_POTIONS,
-  CREATE_ALL_GEMS,
-  CREATE_ALL_SCROLLS,
-  CREATE_SHRINE,
-  CREATE_DUMMY_OBJECT,
-  CREATE_CHEST,
-  CREATE_BREAKABLE,
-  CREATE_DOOR,
-  CREATE_ITEM,
-  DISPEL_EFFECTS,
-  DISPEL_EFFECTS_ACTOR,
-  GET_MAP_OBJECT,
-  GET_STATIC_OBJECT,
-  GET_ACTOR,
-  GET_ITEM,
-  GET_BY_ADDRESS,
-  GET_BY_ID,
-  GET_ANY_OBJECT,
-  GOD_MODE,
-  IGNORE_PLAYER,
-  PRINT_TRIGGERS,
-  PRINT_ACTORS,
-  GIVE_MONEY,
-  POISON_ACTOR,
-  DAMAGE_ACTOR,
-  MOVE_STATIC_OBJECT,
-  MOVE_ACTOR,
-  MOVE_ITEM,
-  MOVE_PLAYER,
-  REPORT_PLAYER,
-  REMOVE_OBJECT,
-  SHOW_MAP,
-  AWARD_EXP,
-  LEVEL_UP,
-  LEVEL_DOWN,
-  PRINT_MAP,
-  PRINT_COLORS,
-  CREATE_MONSTER,
-  INFO_HANDLES
+  //
+  // https://pvs-studio.com/en/blog/posts/cpp/1053/
+  //
+  // "Beautiful code is correct code"
+  //
+  // By putting comma on the left side, it's easier to reformat if needed,
+  // without having to insert spaces on the right side everywhere.
+  // And in case of missing comma, it's more obvious.
+  // Also, as a bonus, it makes it easier to write line comments to the right
+  // of enum entry.
+  //
+    UNKNOWN = 0
+  , CLEAR
+  , HELP
+  , CLOSE
+  , CLOSE2
+  , CLOSE3
+  , CLOSE4
+  , HISTORY
+  , REPEAT_COMMAND
+  , TRANSFORM_TILE
+  , PLACE_WALL
+  , CREATE_DUMMY_ACTOR
+  , CREATE_ALL_POTIONS
+  , CREATE_ALL_GEMS
+  , CREATE_ALL_SCROLLS
+  , CREATE_SHRINE
+  , CREATE_DUMMY_OBJECT
+  , CREATE_CHEST
+  , CREATE_BREAKABLE
+  , CREATE_DOOR
+  , CREATE_ITEM
+  , DISPEL_EFFECTS
+  , DISPEL_EFFECTS_ACTOR
+  , GET_MAP_OBJECT
+  , GET_STATIC_OBJECT
+  , GET_ACTOR
+  , GET_ITEM
+  , GET_BY_ADDRESS
+  , GET_BY_ID
+  , GET_ANY_OBJECT
+  , GOD_MODE
+  , IGNORE_PLAYER
+  , PRINT_TRIGGERS
+  , PRINT_ACTORS
+  , GIVE_MONEY
+  , POISON_ACTOR
+  , DAMAGE_ACTOR
+  , MOVE_STATIC_OBJECT
+  , MOVE_ACTOR
+  , MOVE_ITEM
+  , MOVE_PLAYER
+  , REPORT_PLAYER
+  , REMOVE_OBJECT
+  , SHOW_MAP
+  , AWARD_EXP
+  , LEVEL_UP
+  , LEVEL_DOWN
+  , PRINT_MAP
+  , PRINT_COLORS
+  , CREATE_MONSTER
+  , INFO_HANDLES
 };
 
 enum class ObjectHandleType
 {
-  STATIC = 0,
-  ITEM,
-  ACTOR,
-  MAP,
-  ANY
+    STATIC = 0
+  , ITEM
+  , ACTOR
+  , MAP
+  , ANY
 };
 
 class MapLevelBase;

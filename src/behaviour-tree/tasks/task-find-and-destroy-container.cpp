@@ -11,17 +11,21 @@ BTResult TaskFindAndDestroyContainer::Run()
 {
   BTResult res = BTResult::Failure;
 
-  std::string objId = Blackboard::Instance().Get(_objectToControl->ObjectId(), Strings::BlackboardKeyObjectId);
+  std::string objId =
+      Blackboard::Instance().Get(_objectToControl->ObjectId(),
+                                 Strings::BlackboardKeyObjectId);
   if (!objId.empty())
   {
     uint64_t objIdInt = std::stoull(objId);
-    //
-    // If our saved object no longer exists, erase it from blackboard
-    // so that new container could be found on next iteration.
-    //
-    GameObject* object = Map::Instance().FindGameObjectById(objIdInt, GameObjectCollectionType::STATIC_OBJECTS);
+    GameObjectCollectionType t = GameObjectCollectionType::STATIC_OBJECTS;
+
+    GameObject* object = Map::Instance().FindGameObjectById(objIdInt, t);
     if (object == nullptr)
     {
+      //
+      // If our saved object no longer exists, erase it from blackboard
+      // so that new container could be found on next iteration.
+      //
       Blackboard::Instance().Set(_objectToControl->ObjectId(),
                                  {
                                    Strings::BlackboardKeyObjectId,
@@ -91,14 +95,16 @@ GameObject* TaskFindAndDestroyContainer::FindContainer()
 
 // =============================================================================
 
-BTResult TaskFindAndDestroyContainer::ProcessExistingObject(GameObject* container)
+BTResult
+TaskFindAndDestroyContainer::ProcessExistingObject(GameObject* container)
 {
   if (Util::IsObjectInRange(_objectToControl,
                             container,
                             1))
   {
     ItemComponent* weapon = nullptr;
-    EquipmentComponent* ec = _objectToControl->GetComponent<EquipmentComponent>();
+    EquipmentComponent* ec =
+        _objectToControl->GetComponent<EquipmentComponent>();
     if (ec != nullptr)
     {
       weapon = ec->EquipmentByCategory[EquipmentCategory::WEAPON][0];

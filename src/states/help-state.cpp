@@ -7,9 +7,13 @@
 HelpState::HelpState()
 {
   std::string s = Util::StringFormat("'%c' '%c' '%c'", ALT_K7, ALT_K8, ALT_K9);
+
   _keymap[0] = s;
 
-  s = Util::StringFormat("'%c' '%c' '%c' or numpad for movement", ALT_K4, ALT_K5, ALT_K6);
+  s = Util::StringFormat("'%c' '%c' '%c' or numpad for movement",
+                         ALT_K4,
+                         ALT_K5,
+                         ALT_K6);
   _keymap[2] = s;
 
   s = Util::StringFormat("'%c' '%c' '%c'", ALT_K1, ALT_K2, ALT_K3);

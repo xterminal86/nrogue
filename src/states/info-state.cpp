@@ -137,7 +137,9 @@ void InfoState::PrintExp(int x, int y)
   size_t digits = std::to_string(_playerRef->Attrs.Exp.Max().Get()).length();
 
   std::string dots(digits, ' ');
-  std::string placeholder = Util::StringFormat("EXP: %s / %s", dots.data(), dots.data());
+  std::string placeholder = Util::StringFormat("EXP: %s / %s",
+                                               dots.data(),
+                                               dots.data());
 
   Printer::Instance().PrintFB(x,
                               y,
@@ -146,8 +148,11 @@ void InfoState::PrintExp(int x, int y)
                               Colors::WhiteColor,
                               Colors::BlackColor);
 
-  std::string minVal = Util::StringFormat("%i", _playerRef->Attrs.Exp.Min().Get());
-  std::string maxVal = Util::StringFormat("%i", _playerRef->Attrs.Exp.Max().Get());
+  std::string minVal = Util::StringFormat("%i",
+                                          _playerRef->Attrs.Exp.Min().Get());
+
+  std::string maxVal = Util::StringFormat("%i",
+                                          _playerRef->Attrs.Exp.Max().Get());
 
   int xPos = x + placeholder.length() - digits - minVal.length() - 3;
   Printer::Instance().PrintFB(xPos,
@@ -167,7 +172,10 @@ void InfoState::PrintExp(int x, int y)
 
 // =============================================================================
 
-void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attribute& attr)
+void InfoState::PrintAttribute(int x,
+                               int y,
+                               const std::string& attrName,
+                               Attribute& attr)
 {
   uint32_t color = Colors::WhiteColor;
 
@@ -215,7 +223,10 @@ void InfoState::PrintAttribute(int x, int y, const std::string& attrName, Attrib
 
 // =============================================================================
 
-void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, RangedAttribute& attr)
+void InfoState::PrintRangedAttribute(int x,
+                                     int y,
+                                     const std::string& attrName,
+                                     RangedAttribute& attr)
 {
   uint32_t color = Colors::WhiteColor;
 
@@ -229,7 +240,9 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
     color = Colors::RedColor;
   }
 
-  std::string placeholder = Util::StringFormat("%s:     /    ", attrName.data());
+  std::string placeholder =
+      Util::StringFormat("%s:     /    ", attrName.data());
+
   Printer::Instance().PrintFB(x,
                               y,
                               placeholder,
@@ -237,7 +250,10 @@ void InfoState::PrintRangedAttribute(int x, int y, const std::string& attrName, 
                               Colors::ShadesOfGrey::Five,
                               Colors::BlackColor);
 
-  //std::string text = Util::StringFormat("%s: %i / %i", attrName.data(), attr.Min().Get(), attr.Max().Get());
+  //std::string text = Util::StringFormat("%s: %i / %i",
+  //                                      attrName.data(),
+  //                                      attr.Min().Get(),
+  //                                      attr.Max().Get());
   //Printer::Instance().PrintFB(x, y, text, Printer::kAlignLeft, color);
 
   std::string minVal = Util::StringFormat("%i", attr.Min().Get());
@@ -378,12 +394,29 @@ int InfoState::FindAttrsMaxStringLength()
 
   std::vector<int> lengths;
 
-  lengths.push_back(std::to_string(playerRef.Attrs.Str.OriginalValue()).length());
-  lengths.push_back(std::to_string(playerRef.Attrs.Def.OriginalValue()).length());
-  lengths.push_back(std::to_string(playerRef.Attrs.Mag.OriginalValue()).length());
-  lengths.push_back(std::to_string(playerRef.Attrs.Res.OriginalValue()).length());
-  lengths.push_back(std::to_string(playerRef.Attrs.Skl.OriginalValue()).length());
-  lengths.push_back(std::to_string(playerRef.Attrs.Spd.OriginalValue()).length());
+  lengths.push_back(
+        std::to_string(playerRef.Attrs.Str.OriginalValue()).length()
+  );
+
+  lengths.push_back(
+        std::to_string(playerRef.Attrs.Def.OriginalValue()).length()
+  );
+
+  lengths.push_back(
+        std::to_string(playerRef.Attrs.Mag.OriginalValue()).length()
+  );
+
+  lengths.push_back(
+        std::to_string(playerRef.Attrs.Res.OriginalValue()).length()
+  );
+
+  lengths.push_back(
+        std::to_string(playerRef.Attrs.Skl.OriginalValue()).length()
+  );
+
+  lengths.push_back(
+        std::to_string(playerRef.Attrs.Spd.OriginalValue()).length()
+  );
 
   int max = 0;
   for (auto& l : lengths)

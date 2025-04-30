@@ -19,8 +19,10 @@ BTResult TaskMineTunnel::Run()
 {
   //DebugLog("[TaskMine]\n");
 
+  EquipmentCategory ec = EquipmentCategory::WEAPON;
+
   bool equipmentFail = (_equipment == nullptr
-                     || _equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0] == nullptr);
+                     || _equipment->EquipmentByCategory[ec][0] == nullptr);
 
   if (!_ignorePickaxe && equipmentFail)
   {
@@ -90,7 +92,8 @@ BTResult TaskMineTunnel::Run()
 
   auto& so = Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y];
 
-  if (!Util::IsInsideMap(found, Map::Instance().CurrentLevel->MapSize) || so == nullptr)
+  if (!Util::IsInsideMap(found, Map::Instance().CurrentLevel->MapSize)
+   || so == nullptr)
   {
     return BTResult::Failure;
   }
@@ -105,8 +108,10 @@ BTResult TaskMineTunnel::Run()
     Util::TryToDamageEquipment(_objectToControl, EquipmentCategory::WEAPON, -1);
   }
 
-  Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y]->Attrs.HP.SetMin(0);
-  Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y]->IsDestroyed = true;
+  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+
+  curLvl->StaticMapObjects[found.X][found.Y]->Attrs.HP.SetMin(0);
+  curLvl->StaticMapObjects[found.X][found.Y]->IsDestroyed = true;
 
   _objectToControl->FinishTurn();
 

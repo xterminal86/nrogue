@@ -124,8 +124,10 @@ bool Player::TryToMeleeAttack(int dx, int dy)
 
 bool Player::Move(int dx, int dy)
 {
-  auto cell = Map::Instance().CurrentLevel->MapArray[PosX + dx][PosY + dy].get();
-  auto staticObject = Map::Instance().CurrentLevel->StaticMapObjects[PosX + dx][PosY + dy].get();
+  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+
+  auto cell         = curLvl->MapArray[PosX + dx][PosY + dy].get();
+  auto staticObject = curLvl->StaticMapObjects[PosX + dx][PosY + dy].get();
 
   bool moveOk = false;
   bool passByNPC = false;
@@ -136,7 +138,8 @@ bool Player::Move(int dx, int dy)
   {
     //
     // Occupied is set only by actors, so if actor is present on this cell,
-    // it can be walked into so there's no need to check for static object there.
+    // it can be walked into so there's no need to check for static object
+    // there.
     //
     if (cell->Occupied)
     {
@@ -211,7 +214,9 @@ bool Player::PassByNPC(GameObject* actor)
   {
     if (npc->Data.IsImmovable)
     {
-      std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : "The " + actor->ObjectName;
+      std::string name = (npc->Data.IsAquainted)
+                        ? npc->Data.Name
+                        : "The " + actor->ObjectName;
       Printer::Instance().AddMessage(name + " won't move over");
       ok = false;
     }
@@ -442,7 +447,11 @@ void Player::SetArcanistAttrs()
 
 void Player::SetCustomClassAttrs()
 {
-  GameState* stateRef = Application::Instance().GetGameStateRefByName(GameStates::CUSTOM_CLASS_STATE);
+  GameState* stateRef =
+      Application::Instance().GetGameStateRefByName(
+        GameStates::CUSTOM_CLASS_STATE
+      );
+
   CustomClassState* ccs = static_cast<CustomClassState*>(stateRef);
   ccs->InitPlayerAttributes(this);
 }
@@ -470,17 +479,31 @@ void Player::SetDefaultEquipment()
   GameObject* weapon = nullptr;
   GameObject* armor = nullptr;
 
+  static ItemsFactory& factory = ItemsFactory::Instance();
+
   switch (GetClass())
   {
     case PlayerClass::THIEF:
     {
-      weapon = ItemsFactory::Instance().CreateRangedWeapon(0, 0, RangedWeaponType::SHORT_BOW, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+      weapon = factory.CreateRangedWeapon(0,
+                                          0,
+                                          RangedWeaponType::SHORT_BOW,
+                                          ItemPrefix::UNCURSED,
+                                          ItemQuality::NORMAL);
       Inventory->Add(weapon);
 
-      GameObject* arrows = ItemsFactory::Instance().CreateArrows(0, 0, ArrowType::ARROWS, ItemPrefix::BLESSED, 60);
+      GameObject* arrows = factory.CreateArrows(0,
+                                                0,
+                                                ArrowType::ARROWS,
+                                                ItemPrefix::BLESSED,
+                                                60);
       Inventory->Add(arrows);
 
-      GameObject* dagger = ItemsFactory::Instance().CreateMeleeWeapon(0, 0, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+      GameObject* dagger = factory.CreateMeleeWeapon(0,
+                                                     0,
+                                                     WeaponType::DAGGER,
+                                                     ItemPrefix::UNCURSED,
+                                                     ItemQuality::NORMAL);
       Inventory->Add(dagger);
 
       weaponAndArmorToEquip.push_back(arrows);
@@ -490,10 +513,18 @@ void Player::SetDefaultEquipment()
 
     case PlayerClass::SOLDIER:
     {
-      weapon = ItemsFactory::Instance().CreateMeleeWeapon(0, 0, WeaponType::SHORT_SWORD, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+      weapon = factory.CreateMeleeWeapon(0,
+                                         0,
+                                         WeaponType::SHORT_SWORD,
+                                         ItemPrefix::UNCURSED,
+                                         ItemQuality::NORMAL);
       Inventory->Add(weapon);
 
-      armor = ItemsFactory::Instance().CreateArmor(0, 0, ArmorType::PADDING, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+      armor = factory.CreateArmor(0,
+                                  0,
+                                  ArmorType::PADDING,
+                                  ItemPrefix::UNCURSED,
+                                  ItemQuality::NORMAL);
       Inventory->Add(armor);
 
       weaponAndArmorToEquip.push_back(weapon);
@@ -503,10 +534,19 @@ void Player::SetDefaultEquipment()
 
     case PlayerClass::ARCANIST:
     {
-      weapon = ItemsFactory::Instance().CreateMeleeWeapon(0, 0, WeaponType::STAFF, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+      weapon = factory.CreateMeleeWeapon(0,
+                                         0,
+                                         WeaponType::STAFF,
+                                         ItemPrefix::UNCURSED,
+                                         ItemQuality::NORMAL);
       Inventory->Add(weapon);
 
-      auto wand = ItemsFactory::Instance().CreateWand(0, 0, WandMaterials::EBONY_3, SpellType::MAGIC_MISSILE, ItemPrefix::BLESSED, ItemQuality::NORMAL);
+      auto wand = factory.CreateWand(0,
+                                     0,
+                                     WandMaterials::EBONY_3,
+                                     SpellType::MAGIC_MISSILE,
+                                     ItemPrefix::BLESSED,
+                                     ItemQuality::NORMAL);
       Inventory->Add(wand);
 
       weaponAndArmorToEquip.push_back(weapon);
@@ -552,8 +592,11 @@ void Player::SetDefaultEquipment()
 //
 void Player::RangedAttack(GameObject* what, ItemComponent* with)
 {
-  ItemComponent* weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
-  ItemComponent* arrows = Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+  ItemComponent* weapon =
+      Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+
+  ItemComponent* arrows =
+      Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0];
 
   int dmg = Util::CalculateDamageValue(this, what, weapon, false);
 
@@ -577,9 +620,15 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
     //
     if (what->HasNonZeroHP())
     {
-      bool ignoreArmor = (weapon != nullptr && weapon->Data.HasBonus(ItemBonusType::IGNORE_ARMOR));
+      bool ignoreArmor = (weapon != nullptr
+                       && weapon->Data.HasBonus(ItemBonusType::IGNORE_ARMOR));
 
-      bool succ = what->ReceiveDamage(this, dmg, false, ignoreArmor, false, false);
+      bool succ = what->ReceiveDamage(this,
+                                      dmg,
+                                      false,
+                                      ignoreArmor,
+                                      false,
+                                      false);
 
       if (succ
        && weapon != nullptr
@@ -600,7 +649,11 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
         || what->Type != GameObjectType::CHASM)
   {
     // Create arrow object on the cell where it landed
-    ItemComponent* arrow = GameObjectsFactory::Instance().CloneItem(Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0]);
+    ItemComponent* arrow =
+        GameObjectsFactory::Instance().CloneItem(
+          Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0]
+        );
+
     arrow->OwnerGameObject->PosX = what->PosX;
     arrow->OwnerGameObject->PosY = what->PosY;
     arrow->Data.Amount = 1;
@@ -684,7 +737,8 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
     break;
 
     default:
-      DebugLog("[WAR] Player::MagicAttack() spell %i not handled!", (int)with->Data.SpellHeld.SpellType_);
+      DebugLog("[WAR] Player::MagicAttack() spell %i not handled!",
+               (int)with->Data.SpellHeld.SpellType_);
       break;
   }
 }
@@ -701,7 +755,11 @@ void Player::ProcessMagicAttack(GameObject* target,
   auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
   if (actor != nullptr)
   {
-    bool damageDone = Util::TryToDamageObject(actor, this, damage, againstRes).first;
+    bool damageDone = Util::TryToDamageObject(actor,
+                                              this,
+                                              damage,
+                                              againstRes).first;
+
     if (weapon->Data.SpellHeld.SpellType_ == SpellType::FROST)
     {
       ItemBonusStruct b;
@@ -756,7 +814,8 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
   int hitChance = Util::CalculateHitChanceMelee(this, what);
 
   #ifdef DEBUG_BUILD
-  auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) attacks %s (SKL: %i, LVL %i): chance = %i",
+  auto logMsg = Util::StringFormat("Player (SKL %i, LVL %i) "
+                                   "attacks %s (SKL: %i, LVL %i): chance = %i",
                                    Attrs.Skl.Get(),
                                    Attrs.Lvl.Get(),
                                    what->ObjectName.data(),
@@ -782,7 +841,8 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
                                           std::string(),
                                           Colors::RedColor);
 
-    ItemComponent* weapon = Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
+    ItemComponent* weapon =
+        Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
 
     bool isRanged = false;
     if (weapon != nullptr)
@@ -870,7 +930,8 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
       EquipmentComponent* ec = defender->GetComponent<EquipmentComponent>();
       if (ec != nullptr)
       {
-        ItemComponent* armor = ec->EquipmentByCategory[EquipmentCategory::TORSO][0];
+        ItemComponent* armor =
+            ec->EquipmentByCategory[EquipmentCategory::TORSO][0];
         defHasArmor = (armor != nullptr);
       }
 
@@ -907,7 +968,8 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
     defender->Attrs.HP.SetMin(0);
     defender->IsDestroyed = true;
 
-    auto msg = Util::StringFormat("You tear down the %s", defender->ObjectName.data());
+    auto msg = Util::StringFormat("You tear down the %s",
+                                  defender->ObjectName.data());
     Printer::Instance().AddMessage(msg);
   }
   else
@@ -999,9 +1061,10 @@ bool Player::ReceiveDamage(GameObject* from,
 
   if (dmgReturned != 0 && from != nullptr)
   {
-    auto thornsLogMsg = Util::StringFormat("@ => %s (%i)",
-                                           Util::GetGameObjectDisplayCharacter(from).data(),
-                                           dmgReturned);
+    auto thornsLogMsg =
+        Util::StringFormat("@ => %s (%i)",
+                           Util::GetGameObjectDisplayCharacter(from).data(),
+                           dmgReturned);
 
     Printer::Instance().AddMessage(thornsLogMsg);
 
@@ -1182,7 +1245,9 @@ void Player::PrintLevelUpResultsToLog(bool reallyUp)
                        ? Util::StringFormat("+%i", kvp.second.second)
                        : Util::StringFormat("%i", kvp.second.second);
 
-      messages.push_back(Util::StringFormat("%s %s", kvp.second.first.data(), num.data()));
+      messages.push_back(Util::StringFormat("%s %s",
+                                            kvp.second.first.data(),
+                                            num.data()));
     }
   }
 
@@ -1262,7 +1327,10 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
   {
     auto kvp = i.second;
 
-    mbStr = Util::StringFormat("%s: %i", kvp.first.data(), kvp.second.OriginalValue());
+    mbStr = Util::StringFormat("%s: %i",
+                               kvp.first.data(),
+                               kvp.second.OriginalValue());
+
     levelUpResults.push_back(mbStr);
   }
 
@@ -1307,11 +1375,13 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
 
     if (_statRaisesMap[i.first].second >= 0)
     {
-      addition = Util::StringFormat("  +%i", _statRaisesMap[i.first].second);
+      addition = Util::StringFormat("  +%i",
+                                    _statRaisesMap[i.first].second);
     }
     else
     {
-      addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap[i.first].second));
+      addition = Util::StringFormat("  -%i",
+                                    std::abs(_statRaisesMap[i.first].second));
     }
 
     levelUpResults[index] += addition;
@@ -1327,11 +1397,15 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
 
   if (_statRaisesMap[PlayerStats::HP].second >= 0)
   {
-    addition = Util::StringFormat("  +%i", _statRaisesMap[PlayerStats::HP].second);
+    addition =
+        Util::StringFormat("  +%i",
+                           _statRaisesMap[PlayerStats::HP].second);
   }
   else
   {
-    addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap[PlayerStats::HP].second));
+    addition =
+        Util::StringFormat("  -%i",
+                           std::abs(_statRaisesMap[PlayerStats::HP].second));
   }
 
   levelUpResults[index] += addition;
@@ -1339,11 +1413,15 @@ std::vector<std::string> Player::GetPrettyLevelUpText()
 
   if (_statRaisesMap[PlayerStats::MP].second >= 0)
   {
-    addition = Util::StringFormat("  +%i", _statRaisesMap[PlayerStats::MP].second);
+    addition =
+        Util::StringFormat("  +%i",
+                           _statRaisesMap[PlayerStats::MP].second);
   }
   else
   {
-    addition = Util::StringFormat("  -%i", std::abs(_statRaisesMap[PlayerStats::MP].second));
+    addition =
+        Util::StringFormat("  -%i",
+                           std::abs(_statRaisesMap[PlayerStats::MP].second));
   }
 
   levelUpResults[index] += addition;
@@ -1575,7 +1653,10 @@ void Player::SetSoldierDefaultItems()
 
   Inventory->Add(go);
 
-  go = ItemsFactory::Instance().CreateFood(0, 0, FoodType::IRON_RATIONS, ItemPrefix::UNCURSED);
+  go = ItemsFactory::Instance().CreateFood(0,
+                                           0,
+                                           FoodType::IRON_RATIONS,
+                                           ItemPrefix::UNCURSED);
   ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 1;
   ic->Data.IsIdentified = true;
@@ -1615,7 +1696,10 @@ void Player::SetArcanistDefaultItems()
   go = ItemsFactory::Instance().CreateReturner(0, 0, 3, ItemPrefix::UNCURSED);
   Inventory->Add(go);
 
-  go = ItemsFactory::Instance().CreateScroll(0, 0, SpellType::MANA_SHIELD, ItemPrefix::BLESSED);
+  go = ItemsFactory::Instance().CreateScroll(0,
+                                             0,
+                                             SpellType::MANA_SHIELD,
+                                             ItemPrefix::BLESSED);
   Inventory->Add(go);
 }
 
@@ -1657,7 +1741,9 @@ void Player::SwitchPlaces(AIComponent* other)
   Map::Instance().CurrentLevel->AdjustCamera();
 
   AINPC* npc = static_cast<AINPC*>(other->CurrentModel);
-  std::string name = (npc->Data.IsAquainted) ? npc->Data.Name : "the " + other->OwnerGameObject->ObjectName;
+  std::string name = (npc->Data.IsAquainted)
+                     ? npc->Data.Name
+                     : "the " + other->OwnerGameObject->ObjectName;
   Printer::Instance().AddMessage("You pass by " + name);
 }
 

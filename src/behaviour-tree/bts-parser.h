@@ -19,7 +19,8 @@ struct ScriptNode
 
 class GameObject;
 
-using ConstructionOrder = std::vector<std::pair<const ScriptNode*, const ScriptNode*>>;
+using ConstructionOrder = std::vector<std::pair<const ScriptNode*,
+                                                const ScriptNode*>>;
 
 class BTSParser
 {

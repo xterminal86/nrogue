@@ -254,7 +254,9 @@ class GameObject
 
     bool IsOnTile(GameObjectType tileType);
 
-    const std::unordered_map<uint64_t, std::vector<ItemBonusStruct>>& GetActiveEffects();
+    const std::unordered_map<uint64_t, std::vector<ItemBonusStruct>>&
+    GetActiveEffects();
+
     const std::map<int, std::map<PlayerStats, int>>& GetLevelUpHistory();
 
     const uint64_t& ObjectId();
@@ -357,13 +359,15 @@ class GameObject
       { ItemBonusType::SPD, Attrs.Spd }
     };
 
-    const std::unordered_map<ItemBonusType, RangedAttribute&> _rangedAttributesRefsByBonus =
+    const std::unordered_map<ItemBonusType, RangedAttribute&>
+    _rangedAttributesRefsByBonus =
     {
       { ItemBonusType::HP, Attrs.HP },
       { ItemBonusType::MP, Attrs.MP }
     };
 
-    const std::map<int, std::pair<PlayerStats, Attribute&>> _mainAttributesByIndex =
+    const std::map<int, std::pair<PlayerStats, Attribute&>>
+    _mainAttributesByIndex =
     {
       { 0, { PlayerStats::STR, Attrs.Str } },
       { 1, { PlayerStats::DEF, Attrs.Def } },

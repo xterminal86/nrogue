@@ -140,15 +140,27 @@ class DGBase
     int CountAround(int x, int y, char ch);
 
     const StringV& ExtractMapChunk(int x, int y, int w, int h);
-    bool FillMapChunk(int x, int y, int w, int h, char with, bool markVisited = false);
+
+    bool FillMapChunk(int x,
+                      int y,
+                      int w,
+                      int h,
+                      char with,
+                      bool markVisited = false);
+
     bool VisitArea(int x, int y, int w, int h);
     bool AreChunksEqual(const StringV& chunk1, const StringV& chunk2);
     bool IsCorner(int x, int y, CornerType cornerType);
     bool IsAreaEmpty(int x1, int y1, int x2, int y2);
     Position* FindCorner(int x, int y, CornerType cornerToFind);
 
-    std::vector<std::vector<MapCell>> CreateFilledMap(int w, int h, char image = '#');
-    std::vector<std::vector<MapCell>> CreateRandomlyFilledMap(int w, int h, int chance);
+    std::vector<std::vector<MapCell>> CreateFilledMap(int w,
+                                                      int h,
+                                                      char image = '#');
+
+    std::vector<std::vector<MapCell>> CreateRandomlyFilledMap(int w,
+                                                              int h,
+                                                              int chance);
 
     void PlaceDoors(bool useAdditionalLayout = false);
     bool IsSpotValidForDoor(const Position& p);
@@ -241,8 +253,9 @@ class DGBase
     //
     // among any of the exactSize vector elements.
     //
-    std::vector<size_t> TryToFindSuitableRooms(const std::vector<PairII>& exactSizes,
-                                               size_t skipRoomIndex);
+    std::vector<size_t>
+    TryToFindSuitableRooms(const std::vector<PairII>& exactSizes,
+                           size_t skipRoomIndex);
 
     //
     // Must be sorted.

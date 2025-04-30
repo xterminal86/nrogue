@@ -15,7 +15,10 @@
 #include "logger.h"
 #endif
 
-MapLevelCaves::MapLevelCaves(int sizeX, int sizeY, MapType type, int dungeonLevel) :
+MapLevelCaves::MapLevelCaves(int sizeX,
+                             int sizeY,
+                             MapType type,
+                             int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
   switch (MapType_)
@@ -292,7 +295,8 @@ void MapLevelCaves::CreateSpecialLevel()
     //
     // TODO: restore back after boss death.
     //
-    StairsComponent* sc = MapArray[startX][startY]->GetComponent<StairsComponent>();
+    StairsComponent* sc =
+        MapArray[startX][startY]->GetComponent<StairsComponent>();
     sc->OwnerGameObject->Image = '.';
     sc->OwnerGameObject->FgColor = Colors::ShadesOfGrey::Four;
     sc->OwnerGameObject->BgColor = Colors::BlackColor;
@@ -316,7 +320,11 @@ void MapLevelCaves::CreateSpecialLevel()
           LevelStart.X = posX;
           LevelStart.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, c, stairsUpTo);
+          GameObjectsFactory::Instance().CreateStairs(this,
+                                                      LevelStart.X,
+                                                      LevelStart.Y,
+                                                      c,
+                                                      stairsUpTo);
         }
         break;
 
@@ -325,7 +333,11 @@ void MapLevelCaves::CreateSpecialLevel()
           LevelExit.X = posX;
           LevelExit.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, c, stairsDownTo);
+          GameObjectsFactory::Instance().CreateStairs(this,
+                                                      LevelExit.X,
+                                                      LevelExit.Y,
+                                                      c,
+                                                      stairsDownTo);
         }
         break;
 

@@ -16,12 +16,17 @@ BTResult TaskRandomMovement::Run()
 
 BTResult TaskRandomMovement::Smart()
 {
-  auto cells = Util::GetEightPointsAround(_objectToControl->GetPosition(), Map::Instance().CurrentLevel->MapSize);
+  auto cells =
+      Util::GetEightPointsAround(_objectToControl->GetPosition(),
+                                 Map::Instance().CurrentLevel->MapSize);
+
   std::vector<Position> cellsToMove;
   for (auto& c : cells)
   {
-    bool isOk = !Map::Instance().CurrentLevel->MapArray[c.X][c.Y]->Special;
-    bool isOccupied = Map::Instance().CurrentLevel->MapArray[c.X][c.Y]->Occupied;
+    MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+
+    bool isOk       = !curLvl->MapArray[c.X][c.Y]->Special;
+    bool isOccupied = curLvl->MapArray[c.X][c.Y]->Occupied;
 
     if (isOk && !isOccupied)
     {
@@ -56,8 +61,15 @@ BTResult TaskRandomMovement::Dumb()
   dx *= signX;
   dy *= signY;
 
-  Position newPos = { _objectToControl->PosX + dx, _objectToControl->PosY + dy };
-  bool isOk = !Map::Instance().CurrentLevel->MapArray[newPos.X][newPos.Y]->Special;
+  Position newPos =
+  {
+    _objectToControl->PosX + dx,
+    _objectToControl->PosY + dy
+  };
+
+  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+
+  bool isOk = !curLvl->MapArray[newPos.X][newPos.Y]->Special;
 
   if (isOk && _objectToControl->Move(dx, dy))
   {

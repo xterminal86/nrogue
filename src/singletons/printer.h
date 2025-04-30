@@ -187,7 +187,10 @@ class Printer : public Singleton<Printer>
     NColor GetNColor(const uint32_t& htmlColor);
     size_t GetOrSetColor(const uint32_t& htmlColorFg,
                          const uint32_t& htmlColorBg);
-    std::pair<int, int> AlignText(int x, int y, int align, const std::string& text);
+    std::pair<int, int> AlignText(int x,
+                                  int y,
+                                  int align,
+                                  const std::string& text);
 
     void PrepareFrameBuffer();
 

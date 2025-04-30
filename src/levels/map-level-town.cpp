@@ -17,7 +17,10 @@
 #include "printer.h"
 #include "application.h"
 
-MapLevelTown::MapLevelTown(int sizeX, int sizeY, MapType type, int dungeonLevel) :
+MapLevelTown::MapLevelTown(int sizeX,
+                           int sizeY,
+                           MapType type,
+                           int dungeonLevel) :
   MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
   for (auto& kvp : _iterationMap)
@@ -227,7 +230,8 @@ void MapLevelTown::CreateLevel()
 
   int numHouses = 4;
 
-  auto rotatedRoom = Util::RotateRoomLayout(_layoutsForLevel[0], RoomLayoutRotation::CCW_180);
+  auto rotatedRoom = Util::RotateRoomLayout(_layoutsForLevel[0],
+                                            RoomLayoutRotation::CCW_180);
 
   int offset = 15;
   for (int i = 0; i < numHouses; i++)
@@ -241,7 +245,8 @@ void MapLevelTown::CreateLevel()
 
   CreateRoom(5, 20, _layoutsForLevel[3]);
 
-  auto room = Util::RotateRoomLayout(_layoutsForLevel[3], RoomLayoutRotation::CCW_270);
+  auto room = Util::RotateRoomLayout(_layoutsForLevel[3],
+                                     RoomLayoutRotation::CCW_270);
   CreateRoom(5, 32, room);
 
   CreateRoom(25, 30, _layoutsForLevel[4]);
@@ -271,7 +276,11 @@ void MapLevelTown::CreateLevel()
   LevelExit.X = 91;
   LevelExit.Y = 44;
 
-  GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, '>', MapType::MINES_1);
+  GameObjectsFactory::Instance().CreateStairs(this,
+                                              LevelExit.X,
+                                              LevelExit.Y,
+                                              '>',
+                                              MapType::MINES_1);
 }
 
 // =============================================================================
@@ -402,7 +411,10 @@ void MapLevelTown::ReplaceGroundWithGrass()
 
 // =============================================================================
 
-void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation)
+void MapLevelTown::CreateBlacksmith(int x,
+                                    int y,
+                                    const std::vector<std::string>& layout,
+                                    bool randomizeOrientation)
 {
   GameObjectInfo t;
 
@@ -493,7 +505,10 @@ void MapLevelTown::CreateBlacksmith(int x, int y, const std::vector<std::string>
 
 // =============================================================================
 
-void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layout, bool randomizeOrientation)
+void MapLevelTown::CreateRoom(int x,
+                              int y,
+                              const std::vector<std::string>& layout,
+                              bool randomizeOrientation)
 {
   int posX = x;
   int posY = y;
@@ -561,10 +576,10 @@ void MapLevelTown::CreateRoom(int x, int y, const std::vector<std::string>& layo
           break;
 
         //
-        // NOTE: since ' ' (i.e. 'Space', 32 ASCII) is a transparent tile in the tileset,
-        // you must use bg color to color it, because colored tile for background
-        // is made from tile 219, which is a white block. So basically for ' ' tile
-        // foreground color is ignored.
+        // NOTE: since ' ' (i.e. 'Space', 32 ASCII) is a transparent tile in the
+        // tileset, you must use bg color to color it, because colored tile for
+        // background is made from tile 219, which is a white block.
+        // So basically for ' ' tile foreground color is ignored.
         //
         // To allow fog of war to cover floor made of
         // background colored ' ', set FgColor to black.
@@ -713,7 +728,8 @@ void MapLevelTown::CreateChurch(int x, int y)
           // certain objects to be shown, like in this case.
           //
           ShrineType shrineType = ShrineType::KNOWLEDGE;
-          std::string description = GlobalConstants::ShrineNameByType.at(shrineType);
+          std::string description =
+              GlobalConstants::ShrineNameByType.at(shrineType);
           t.Set(true,
                 false,
                 '/',
@@ -728,7 +744,10 @@ void MapLevelTown::CreateChurch(int x, int y)
           // we must make it a global game object so it could be updated
           // every turn no matter where the player is.
           //
-          auto go = GameObjectsFactory::Instance().CreateShrine(posX, posY, shrineType, 100);
+          auto go = GameObjectsFactory::Instance().CreateShrine(posX,
+                                                                posY,
+                                                                shrineType,
+                                                                100);
           PlaceGameObject(go);
         }
         break;
@@ -746,7 +765,8 @@ void MapLevelTown::CreateChurch(int x, int y)
 
 void MapLevelTown::CreatePlayerHouse()
 {
-  auto rot = Util::RotateRoomLayout(_layoutsForLevel[0], RoomLayoutRotation::CCW_180);
+  auto rot = Util::RotateRoomLayout(_layoutsForLevel[0],
+                                    RoomLayoutRotation::CCW_180);
   CreateRoom(3, 3, rot);
 
   GameObjectInfo t;
@@ -760,11 +780,14 @@ void MapLevelTown::CreatePlayerHouse()
   Position cp(6, 6);
   PlaceStaticObject(6, 6, t);
 
-  auto stash = GameObjectsFactory::Instance().CreateContainer(cp.X,
-                                                              cp.Y,
-                                                              'C',
-                                                              Strings::TileNames::StashText,
-                                                              Colors::ChestColor);
+  auto stash = GameObjectsFactory::Instance().CreateContainer(
+                 cp.X,
+                 cp.Y,
+                 'C',
+                 Strings::TileNames::StashText,
+                 Colors::ChestColor
+  );
+
   PlaceGameObject(stash);
 }
 
@@ -824,7 +847,9 @@ void MapLevelTown::CreateNPCs()
 
     int index = RNG::Instance().RandomRange(0, emptyCells.size());
 
-    auto go = MonstersInc::Instance().CreateNPC(emptyCells[index].X, emptyCells[index].Y, npc);
+    auto go = MonstersInc::Instance().CreateNPC(emptyCells[index].X,
+                                                emptyCells[index].Y,
+                                                npc);
     PlaceActor(go);
 
     visited.push_back(Position(emptyCells[index].X, emptyCells[index].Y));
@@ -837,16 +862,28 @@ void MapLevelTown::CreateNPCs()
 
   // Traders
 
-  go = MonstersInc::Instance().CreateNPC(83, 24, NPCType::MARTIN, true, ServiceType::BLESS);
+  go = MonstersInc::Instance().CreateNPC(83,
+                                         24,
+                                         NPCType::MARTIN,
+                                         true,
+                                         ServiceType::BLESS);
   PlaceActor(go);
 
   go = MonstersInc::Instance().CreateNPC(9, 22, NPCType::CASEY, true);
   PlaceActor(go);
 
-  go = MonstersInc::Instance().CreateNPC(9, 43, NPCType::MAYA, true, ServiceType::IDENTIFY);
+  go = MonstersInc::Instance().CreateNPC(9,
+                                         43,
+                                         NPCType::MAYA,
+                                         true,
+                                         ServiceType::IDENTIFY);
   PlaceActor(go);
 
-  go = MonstersInc::Instance().CreateNPC(81, 7, NPCType::GRISWOLD, true, ServiceType::REPAIR);
+  go = MonstersInc::Instance().CreateNPC(81,
+                                         7,
+                                         NPCType::GRISWOLD,
+                                         true,
+                                         ServiceType::REPAIR);
   PlaceActor(go);
 }
 
@@ -1028,8 +1065,19 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
 
 void MapLevelTown::CreateTownGates()
 {
-  GameObject* gate1 = ItemsFactory::Instance().CreateDummyItem(Strings::TileNames::GatesText, '+', Colors::WhiteColor, Colors::BlackColor, std::vector<std::string>());
-  GameObject* gate2 = ItemsFactory::Instance().CreateDummyItem(Strings::TileNames::GatesText, '+', Colors::WhiteColor, Colors::BlackColor, std::vector<std::string>());
+  static ItemsFactory& factory = ItemsFactory::Instance();
+
+  GameObject* gate1 = factory.CreateDummyItem(Strings::TileNames::GatesText,
+                                              '+',
+                                              Colors::WhiteColor,
+                                              Colors::BlackColor,
+                                              std::vector<std::string>());
+
+  GameObject* gate2 = factory.CreateDummyItem(Strings::TileNames::GatesText,
+                                              '+',
+                                              Colors::WhiteColor,
+                                              Colors::BlackColor,
+                                              std::vector<std::string>());
 
   //
   // Have to explicitly specify trailing return type

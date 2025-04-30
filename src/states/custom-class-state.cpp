@@ -122,7 +122,9 @@ void CustomClassState::HandleInput()
     }
 
     _cursorCols = Util::Clamp(_cursorCols, 0, 1);
-    _cursorRows = Util::Clamp(_cursorRows, 0, _playerStatByCursorRows.size() - 1);
+    _cursorRows = Util::Clamp(_cursorRows,
+                              0,
+                              _playerStatByCursorRows.size() - 1);
 
     if (_playerStatByCursorRows[_cursorRows] == PlayerStats::HP
      || _playerStatByCursorRows[_cursorRows] == PlayerStats::MP)
@@ -263,7 +265,9 @@ sspair CustomClassState::GetStringsForStat(PlayerStats statType)
 
   if (statType != PlayerStats::HP && statType != PlayerStats::MP)
   {
-    res.first  = Util::StringFormat("%s:  %i  ", statName.data(), _statDataByType[statType].first);
+    res.first  = Util::StringFormat("%s:  %i  ",
+                                    statName.data(),
+                                    _statDataByType[statType].first);
     res.second = Util::StringFormat("(%i%)", _statDataByType[statType].second);
   }
   else
@@ -274,7 +278,9 @@ sspair CustomClassState::GetStringsForStat(PlayerStats statType)
       stars[i] = '*';
     }
 
-    res.first = Util::StringFormat("%s:  %i  ", statName.data(), _statDataByType[statType].first);
+    res.first = Util::StringFormat("%s:  %i  ",
+                                   statName.data(),
+                                   _statDataByType[statType].first);
     res.second = Util::StringFormat("(%s)", stars.data());
   }
 
@@ -289,9 +295,11 @@ void CustomClassState::ModifyStat(bool isIncreasing, bool shiftPressed)
 
   PlayerStats statFromCursor = _playerStatByCursorRows[_cursorRows];
 
-  bool isBaseStat = (statFromCursor != PlayerStats::HP && statFromCursor != PlayerStats::MP);
+  bool isBaseStat = (statFromCursor != PlayerStats::HP
+                  && statFromCursor != PlayerStats::MP);
 
-  bool isHpMp = (statFromCursor == PlayerStats::HP || statFromCursor == PlayerStats::MP);
+  bool isHpMp = (statFromCursor == PlayerStats::HP
+              || statFromCursor == PlayerStats::MP);
 
   //
   // NOTE: for now this is kinda hardcoded
@@ -308,7 +316,10 @@ void CustomClassState::ModifyStat(bool isIncreasing, bool shiftPressed)
       if (isGrowthRate)
       {
         int cost = (shiftPressed ? kGrowthRateCostShift : kGrowthRateCost);
-        bool canBeIncreased = (_statDataByType[statFromCursor].second + cost <= 100);
+
+        bool canBeIncreased =
+            (_statDataByType[statFromCursor].second + cost <= 100);
+
         if (_points >= cost && canBeIncreased)
         {
           _points -= cost;
@@ -327,7 +338,9 @@ void CustomClassState::ModifyStat(bool isIncreasing, bool shiftPressed)
     }
     else if (isHpMp)
     {
-      int cost = kTalentCost + _statDataByType[statFromCursor].second * kTalentCost;
+      int cost =
+          kTalentCost + _statDataByType[statFromCursor].second * kTalentCost;
+
       if (_points >= cost && _statDataByType[statFromCursor].second < 3)
       {
         _points -= cost;
@@ -342,7 +355,10 @@ void CustomClassState::ModifyStat(bool isIncreasing, bool shiftPressed)
       if (isGrowthRate)
       {
         int cost = shiftPressed ? kGrowthRateCostShift : kGrowthRateCost;
-        bool canBeDecreased = (_statDataByType[statFromCursor].second - cost >= 0);
+
+        bool canBeDecreased =
+            (_statDataByType[statFromCursor].second - cost >= 0);
+
         if (canBeDecreased)
         {
           _points += cost;
@@ -361,7 +377,9 @@ void CustomClassState::ModifyStat(bool isIncreasing, bool shiftPressed)
     }
     else if (isHpMp)
     {
-      int cost = kTalentCost + (_statDataByType[statFromCursor].second - 1) * kTalentCost;
+      int cost = kTalentCost +
+                 (_statDataByType[statFromCursor].second - 1) * kTalentCost;
+
       if (_statDataByType[statFromCursor].second > 0)
       {
         _points += cost;

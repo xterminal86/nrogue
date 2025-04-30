@@ -6,7 +6,8 @@
 class TaskPrintMessage : public Node
 {
   public:
-    TaskPrintMessage(GameObject* objectToControl, const std::string& debugMessage);
+    TaskPrintMessage(GameObject* objectToControl,
+                     const std::string& debugMessage);
 
     BTResult Run() override;
 

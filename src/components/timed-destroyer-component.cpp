@@ -3,7 +3,10 @@
 #include "game-object.h"
 #include "map.h"
 
-TimedDestroyerComponent::TimedDestroyerComponent(int delay, const std::function<void()>& onTimerEnd)
+TimedDestroyerComponent::TimedDestroyerComponent(
+    int delay,
+    const std::function<void()>& onTimerEnd
+    )
 {
   _time = delay;
   _onTimerEnd = onTimerEnd;

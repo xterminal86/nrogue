@@ -20,8 +20,10 @@ BTResult TaskMineBlock::Run()
 {
   //DebugLog("[TaskMineBlock]\n");
 
+  EquipmentCategory ec = EquipmentCategory::WEAPON;
+
   bool equipmentFail = (_equipment == nullptr
-                     || _equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0] == nullptr);
+                     || _equipment->EquipmentByCategory[ec][0] == nullptr);
 
   if (!_ignorePickaxe && equipmentFail)
   {
@@ -44,7 +46,9 @@ BTResult TaskMineBlock::Run()
   std::vector<Position> candidates;
   for (auto& p : toCheck)
   {
-    bool insideMap = Util::IsInsideMap(p, Map::Instance().CurrentLevel->MapSize);
+    bool insideMap = Util::IsInsideMap(p,
+                                       Map::Instance().CurrentLevel->MapSize);
+
     auto& so = Map::Instance().CurrentLevel->StaticMapObjects[p.X][p.Y];
 
     if (insideMap && so != nullptr && so->Type == GameObjectType::PICKAXEABLE)
@@ -67,8 +71,10 @@ BTResult TaskMineBlock::Run()
     Util::TryToDamageEquipment(_objectToControl, EquipmentCategory::WEAPON, -1);
   }
 
-  Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y]->Attrs.HP.SetMin(0);
-  Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y]->IsDestroyed = true;
+  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+
+  curLvl->StaticMapObjects[found.X][found.Y]->Attrs.HP.SetMin(0);
+  curLvl->StaticMapObjects[found.X][found.Y]->IsDestroyed = true;
 
   _objectToControl->FinishTurn();
 

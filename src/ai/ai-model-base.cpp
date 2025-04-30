@@ -28,7 +28,8 @@
 AIModelBase::AIModelBase()
 {
   _playerRef = &Application::Instance().PlayerInstance;
-  _bonusTypeByDisplayName = Util::FlipMap(GlobalConstants::BonusDisplayNameByType);
+  _bonusTypeByDisplayName =
+      Util::FlipMap(GlobalConstants::BonusDisplayNameByType);
 }
 
 // =============================================================================
@@ -45,7 +46,7 @@ void AIModelBase::ConstructAI()
 
   if (!_scriptCompiled.empty())
   {
-    _scriptAsText = BTSDecompiler::Instance().Decompile(_scriptCompiled);
+    _scriptAsText   = BTSDecompiler::Instance().Decompile(_scriptCompiled);
     _scriptCompiled = std::vector<uint8_t>();
   }
 
@@ -58,18 +59,18 @@ void AIModelBase::ConstructAI()
   std::unordered_map<const ScriptNode*, bool> scriptNodesChecked;
   std::unordered_map<const ScriptNode*, Node*> behaviourNodesCreated;
 
-  const ScriptNode* nodeData = nullptr;
+  const ScriptNode* nodeData       = nullptr;
   const ScriptNode* parentNodeData = nullptr;
 
-  Node* taskRef = nullptr;
+  Node* taskRef   = nullptr;
   Node* parentRef = nullptr;
 
   for (auto& i : _aiReader.GetConstructionOrder())
   {
-    nodeData = i.first;
+    nodeData       = i.first;
     parentNodeData = i.second;
 
-    Node* task = nullptr;
+    Node* task   = nullptr;
     Node* parent = nullptr;
 
     //std::string addInfo1 = nodeData->Params.size() != 0 ? nodeData->Params.at("p1") : "";
@@ -91,7 +92,7 @@ void AIModelBase::ConstructAI()
       behaviourNodesCreated[parentNodeData] = parent;
     }
 
-    taskRef = behaviourNodesCreated[nodeData];
+    taskRef   = behaviourNodesCreated[nodeData];
     parentRef = behaviourNodesCreated[parentNodeData];
 
     parentRef->AddNode(taskRef);
@@ -101,14 +102,12 @@ void AIModelBase::ConstructAI()
 
   _root.reset(static_cast<Root*>(parentRef));
 
-  /*
-  if (_root)
-  {
-    DebugLog("\n");
-    PrintBrains(_root->_root.get(), 0);
-    DebugLog("\n");
-  }
-  */
+  //if (_root)
+  //{
+  //  DebugLog("\n");
+  //  PrintBrains(_root->_root.get(), 0);
+  //  DebugLog("\n");
+  //}
 }
 
 // =============================================================================
@@ -143,7 +142,9 @@ void AIModelBase::Update()
   }
   else
   {
-    auto str = Util::StringFormat("No AI on this object: %s!", AIComponentRef->OwnerGameObject->ObjectName.data());
+    auto str =
+        Util::StringFormat("No AI on this object: %s!",
+                           AIComponentRef->OwnerGameObject->ObjectName.data());
     LogPrint(str, true);
 
     DebugLog("%s\n", str.data());
@@ -293,7 +294,10 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
 
   if (task == nullptr)
   {
-    auto who = Util::StringFormat("%s_%u", AIComponentRef->OwnerGameObject->ObjectName.data(), AIComponentRef->OwnerGameObject->ObjectId());
+    auto who =
+        Util::StringFormat("%s_%u",
+                           AIComponentRef->OwnerGameObject->ObjectName.data(),
+                           AIComponentRef->OwnerGameObject->ObjectId());
     LogPrint(who, true);
 
     DebugLog("\t[%s] no such task - %s!\n", who.data(), taskName.data());
@@ -304,7 +308,8 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
 
 // =============================================================================
 
-std::function<BTResult()> AIModelBase::GetConditionFunction(const ScriptNode* data)
+std::function<BTResult()>
+AIModelBase::GetConditionFunction(const ScriptNode* data)
 {
   std::function<BTResult()> fn;
 
@@ -454,7 +459,8 @@ std::function<BTResult()> AIModelBase::GetPlayerEnergyCF(const ScriptNode* data)
 
 // =============================================================================
 
-std::function<BTResult()> AIModelBase::GetPlayerNextTurnCF(const ScriptNode* data)
+std::function<BTResult()>
+AIModelBase::GetPlayerNextTurnCF(const ScriptNode* data)
 {
   //
   // FIXME: when implementing "hit and run" tactics
@@ -646,7 +652,8 @@ std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF()
 
 // =============================================================================
 
-std::function<BTResult()> AIModelBase::GetPlayerInRangeCF(const ScriptNode* data)
+std::function<BTResult()>
+AIModelBase::GetPlayerInRangeCF(const ScriptNode* data)
 {
   // If range is not specified, it defaults to VisibilityRadius
   Attribute vr = AIComponentRef->OwnerGameObject->VisibilityRadius;
@@ -754,7 +761,7 @@ std::function<BTResult()> AIModelBase::GetTurnsCheckCF(const ScriptNode* data)
 
 std::function<BTResult()> AIModelBase::GetHasEffectCF(const ScriptNode* data)
 {
-  std::string who = data->Params.at("p2");
+  std::string who    = data->Params.at("p2");
   std::string effect = data->Params.at("p3");
 
   ScriptParamNames at = (who == "player")
@@ -765,7 +772,9 @@ std::function<BTResult()> AIModelBase::GetHasEffectCF(const ScriptNode* data)
   {
     bool res = (at == ScriptParamNames::PLAYER)
                ? _playerRef->HasEffect(_bonusTypeByDisplayName.at(effect))
-               : AIComponentRef->OwnerGameObject->HasEffect(_bonusTypeByDisplayName.at(effect));
+               : AIComponentRef->OwnerGameObject->HasEffect(
+                   _bonusTypeByDisplayName.at(effect)
+                 );
 
     return res ? BTResult::Success : BTResult::Failure;
   };
@@ -798,7 +807,7 @@ std::function<BTResult()> AIModelBase::GetHasEquippedCF(const ScriptNode* data)
 {
   std::string eqType = data->Params.at("p2");
 
-  EquipmentCategory eqCat = EquipmentCategory::NOT_EQUIPPABLE;
+  EquipmentCategory eqCat    = EquipmentCategory::NOT_EQUIPPABLE;
   ScriptParamNames paramName = ScriptParamNames::ANY;
 
   if (GlobalConstants::BTSParamNamesByName.count(eqType) == 1)
@@ -818,7 +827,8 @@ std::function<BTResult()> AIModelBase::GetHasEquippedCF(const ScriptNode* data)
       return BTResult::Failure;
     }
 
-    EquipmentComponent* ec = AIComponentRef->OwnerGameObject->GetComponent<EquipmentComponent>();
+    EquipmentComponent* ec =
+        AIComponentRef->OwnerGameObject->GetComponent<EquipmentComponent>();
     if (ec == nullptr)
     {
       return BTResult::Failure;
@@ -860,7 +870,9 @@ Node* AIModelBase::CreateConditionNode(const ScriptNode* data)
 
   if (!Util::IsFunctionValid(fn))
   {
-    auto str = Util::StringFormat("%s - empty COND function (%s)!", __PRETTY_FUNCTION__, data->Params.at("p1").data());
+    auto str = Util::StringFormat("%s - empty COND function (%s)!",
+                                  __PRETTY_FUNCTION__,
+                                  data->Params.at("p1").data());
     LogPrint(str);
 
     DebugLog("%s\n", str.data());
@@ -919,7 +931,10 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
 
   if (n == nullptr && nodeType != ScriptTaskNames::TASK)
   {
-    auto who = Util::StringFormat("%s_%u", AIComponentRef->OwnerGameObject->ObjectName.data(), AIComponentRef->OwnerGameObject->ObjectId());
+    auto who =
+        Util::StringFormat("%s_%u",
+                           AIComponentRef->OwnerGameObject->ObjectName.data(),
+                           AIComponentRef->OwnerGameObject->ObjectId());
     LogPrint(who);
 
     DebugLog("[%s] no such node - %s!\n", who.data(), nodeName.data());

@@ -25,7 +25,8 @@ class SpellsProcessor : public Singleton<SpellsProcessor>
     void ProcessScrollOfLight(ItemComponent* scroll, GameObject* user);
     void ProcessScrollOfMM(ItemComponent* scroll, GameObject* user);
     void ProcessScrollOfHealing(ItemComponent* scroll, GameObject* user);
-    void ProcessScrollOfNeutralizePoison(ItemComponent* scroll, GameObject* user);
+    void ProcessScrollOfNeutralizePoison(ItemComponent* scroll,
+                                         GameObject* user);
     void ProcessScrollOfIdentify(ItemComponent* scroll, GameObject* user);
     void ProcessScrollOfRepair(ItemComponent* scroll, GameObject* user);
     void ProcessScrollOfHiddenDetection(ItemComponent* scroll,

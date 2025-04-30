@@ -98,7 +98,8 @@ void EnterNameState::HandleInput()
         {
           case InputType::NAME:
           {
-            if (_nameEntered.length() < (size_t)GlobalConstants::MaxNameLength - 3)
+            if (_nameEntered.length() <
+                (size_t)GlobalConstants::MaxNameLength - 3)
             {
               _nameEntered += (char)_keyPressed;
             }
@@ -107,7 +108,8 @@ void EnterNameState::HandleInput()
 
           case InputType::SEED_STRING:
           {
-            if (_seedEntered.length() < (size_t)GlobalConstants::MaxSeedStringLength - 2)
+            if (_seedEntered.length() <
+                (size_t)GlobalConstants::MaxSeedStringLength - 2)
             {
               _seedEntered += (char)_keyPressed;
 
@@ -159,17 +161,29 @@ void EnterNameState::Update(bool forceUpdate)
   {
     Printer::Instance().Clear();
 
-    Printer::Instance().DrawWindow({ _x - _maxNameHalf, _cursorPos - 2 },
-                                   _windowSize,
-                                   kEnterNameString,
-                                   (_inputType == InputType::NAME) ? Colors::WhiteColor : Colors::BlackColor,
-                                   (_inputType == InputType::NAME) ? Colors::MessageBoxHeaderBgColor : Colors::ShadesOfGrey::Six);
+    Printer::Instance().DrawWindow(
+          { _x - _maxNameHalf, _cursorPos - 2 },
+          _windowSize,
+          kEnterNameString,
+          (_inputType == InputType::NAME)
+          ? Colors::WhiteColor
+          : Colors::BlackColor,
+          (_inputType == InputType::NAME)
+          ? Colors::MessageBoxHeaderBgColor
+          : Colors::ShadesOfGrey::Six
+    );
 
-    Printer::Instance().DrawWindow({ _x - _maxSeedHalf, _cursorPos + 4 },
-                                   { GlobalConstants::MaxSeedStringLength + 2, 6 },
-                                   kEnterSeedString,
-                                   (_inputType != InputType::NAME) ? Colors::WhiteColor : Colors::BlackColor,
-                                   (_inputType != InputType::NAME) ? Colors::MessageBoxHeaderBgColor : Colors::ShadesOfGrey::Six);
+    Printer::Instance().DrawWindow(
+          { _x - _maxSeedHalf, _cursorPos + 4 },
+          { GlobalConstants::MaxSeedStringLength + 2, 6 },
+          kEnterSeedString,
+          (_inputType != InputType::NAME)
+          ? Colors::WhiteColor
+          : Colors::BlackColor,
+          (_inputType != InputType::NAME)
+          ? Colors::MessageBoxHeaderBgColor
+          : Colors::ShadesOfGrey::Six
+    );
 
     //
     // Seed string hint.

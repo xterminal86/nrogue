@@ -16,7 +16,10 @@
 #include "logger.h"
 #endif
 
-MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
+MapLevelBase::MapLevelBase(int sizeX,
+                           int sizeY,
+                           MapType type,
+                           int dungeonLevel)
 {
   LevelExit.X = -1;
   LevelExit.Y = -1;
@@ -35,9 +38,10 @@ MapLevelBase::MapLevelBase(int sizeX, int sizeY, MapType type, int dungeonLevel)
     levelName = Util::GetTownName(dm);
     if (levelName.empty())
     {
-      levelName = "Village of " + Util::GenerateName(false,
-                                                     true,
-                                                     GlobalConstants::TownNameEndings);
+      std::string name = Util::GenerateName(false,
+                                            true,
+                                            GlobalConstants::TownNameEndings);
+      levelName = Util::StringFormat("Village of %s", name.data());
     }
   }
   else
@@ -284,7 +288,8 @@ void MapLevelBase::PlaceStaticObject(GameObject* goToInsert)
 
 // =============================================================================
 
-void MapLevelBase::PlaceTrigger(GameObject* trigger, TriggerUpdateType updateType)
+void MapLevelBase::PlaceTrigger(GameObject* trigger,
+                                TriggerUpdateType updateType)
 {
   if (trigger == nullptr)
   {
@@ -468,7 +473,8 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
   int index = RNG::Instance().RandomRange(0, possibleSpots.size());
   Position p = possibleSpots[index];
 
-  index = RNG::Instance().RandomRange(0, GlobalConstants::ShrineLayoutsByType.size());
+  size_t totalLayouts = GlobalConstants::ShrineLayoutsByType.size();
+  index = RNG::Instance().RandomRange(0, totalLayouts);
   auto it = GlobalConstants::ShrineLayoutsByType.begin();
   std::advance(it, index);
   ShrineType type = it->first;
@@ -649,7 +655,8 @@ void MapLevelBase::TryToSpawnMonsters()
     //
     _respawnCounter += (_playerRef->Attrs.Spd.Get() <= 0)
                        ? 1
-                       : (_playerRef->Attrs.Spd.Get() * GlobalConstants::TurnTickValue);
+                       : (_playerRef->Attrs.Spd.Get() *
+                          GlobalConstants::TurnTickValue);
     return;
   }
 
@@ -687,7 +694,9 @@ void MapLevelBase::DisplayWelcomeText()
     "You're not supposed to see this text.",
   };
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT, "MapLevelBase", msg);
+  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                                         "MapLevelBase",
+                                         msg);
 }
 
 // =============================================================================
@@ -1168,7 +1177,10 @@ void MapLevelBase::PlaceShrine(const Position& pos, LevelBuilder& lb)
 
   GameObjectInfo t;
   ShrineType type = lb.ShrinesByPosition().at(pos);
-  auto go = GameObjectsFactory::Instance().CreateShrine(pos.X, pos.Y, type, 1000);
+  auto go = GameObjectsFactory::Instance().CreateShrine(pos.X,
+                                                        pos.Y,
+                                                        type,
+                                                        1000);
   PlaceGameObject(go);
 
   std::string description = GlobalConstants::ShrineNameByType.at(type);
@@ -1193,7 +1205,10 @@ void MapLevelBase::PlaceShrine(const Position& pos, ShrineType type)
   }
 
   GameObjectInfo t;
-  auto go = GameObjectsFactory::Instance().CreateShrine(pos.X, pos.Y, type, 1000);
+  auto go = GameObjectsFactory::Instance().CreateShrine(pos.X,
+                                                        pos.Y,
+                                                        type,
+                                                        1000);
   PlaceGameObject(go);
 
   std::string description = GlobalConstants::ShrineNameByType.at(type);
@@ -1224,7 +1239,12 @@ void MapLevelBase::PlaceTree(int x, int y)
   #endif
 
   GameObjectInfo t;
-  t.Set(true, true, img, Colors::GreenColor, Colors::BlackColor, Strings::TileNames::TreeText);
+  t.Set(true,
+        true,
+        img,
+        Colors::GreenColor,
+        Colors::BlackColor,
+        Strings::TileNames::TreeText);
   PlaceStaticObject(x, y, t);
 }
 
@@ -1273,7 +1293,13 @@ void MapLevelBase::PlaceDoor(int x, int y,
     return;
   }
 
-  GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, isOpen, DoorMaterials::WOOD, objName);
+  GameObject* door =
+      GameObjectsFactory::Instance().CreateDoor(x,
+                                                y,
+                                                isOpen,
+                                                DoorMaterials::WOOD,
+                                                objName);
+
   if (openedBy != GlobalConstants::OpenedByAnyone)
   {
     DoorComponent* dc = door->GetComponent<DoorComponent>();
@@ -1384,15 +1410,17 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
     {
       if (std::holds_alternative<GameObjectType>(cell.ObjectHere))
       {
-        if (std::get<GameObjectType>(cell.ObjectHere) == GameObjectType::BREAKABLE)
+        GameObjectType t = std::get<GameObjectType>(cell.ObjectHere);
+        if (t == GameObjectType::BREAKABLE)
         {
           static GameObjectsFactory& gof = GameObjectsFactory::Instance();
-          GameObject* box = gof.CreateBreakableObjectWithRandomLoot(x,
-                                                                    y,
-                                                                    'B',
-                                                                    "Wooden Box",
-                                                                    Colors::WoodColor,
-                                                                    Colors::BlackColor);
+          GameObject* box =
+              gof.CreateBreakableObjectWithRandomLoot(x,
+                                                      y,
+                                                      'B',
+                                                      "Wooden Box",
+                                                      Colors::WoodColor,
+                                                      Colors::BlackColor);
           PlaceStaticObject(box);
         }
       }
@@ -1422,9 +1450,11 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
     {
       if (std::holds_alternative<GameObjectType>(cell.ObjectHere))
       {
-        if(std::get<GameObjectType>(cell.ObjectHere) == GameObjectType::CONTAINER)
+        GameObjectType t = std::get<GameObjectType>(cell.ObjectHere);
+        if(t == GameObjectType::CONTAINER)
         {
-          GameObject* go = GameObjectsFactory::Instance().CreateChest(x, y, Util::Rolld100(50));
+          static GameObjectsFactory& gof = GameObjectsFactory::Instance();
+          GameObject* go = gof.CreateChest(x, y, Util::Rolld100(50));
           go->PosX = x;
           go->PosY = y;
           PlaceGameObject(go);

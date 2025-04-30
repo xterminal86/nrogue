@@ -10,7 +10,8 @@ BTResult TaskGotoLastPlayerPos::Run()
 {
   //DebugLog("[TaskGotoLastPlayerPos]\n");
 
-  auto plPos = Blackboard::Instance().Get(_objectToControl->ObjectId(), Strings::BlackboardKeyPlayerPos);
+  auto plPos = Blackboard::Instance().Get(_objectToControl->ObjectId(),
+                                          Strings::BlackboardKeyPlayerPos);
 
   if (plPos.empty())
   {

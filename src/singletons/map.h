@@ -38,7 +38,11 @@ class Map : public Singleton<Map>
 
     void PlaceActor(GameObject* actor);
     void PlaceGameObject(GameObject* goToInsert);
-    void RemoveDestroyed(GameObjectCollectionType c = GameObjectCollectionType::ALL);
+
+    void RemoveDestroyed(
+        GameObjectCollectionType c = GameObjectCollectionType::ALL
+    );
+
     void Update();
     void UpdateTriggers(TriggerUpdateType updateType);
 
@@ -74,7 +78,9 @@ class Map : public Singleton<Map>
     std::vector<GameObject*> GetGameObjectsAtPosition(int x, int y);
 
     std::pair<int, GameObject*> GetGameObjectToPickup(int x, int y);
-    std::vector<std::pair<int, GameObject*>> GetGameObjectsToPickup(int x, int y);
+
+    std::vector<std::pair<int, GameObject*>>
+    GetGameObjectsToPickup(int x, int y);
 
     MapLevelBase* GetLevelRefByType(MapType type);
 

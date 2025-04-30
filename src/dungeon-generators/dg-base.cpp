@@ -123,7 +123,9 @@ void DGBase::ForCustomDebugStuff()
 
 // =============================================================================
 
-std::vector<std::vector<MapCell>> DGBase::CreateFilledMap(int w, int h, char image)
+std::vector<std::vector<MapCell>> DGBase::CreateFilledMap(int w,
+                                                          int h,
+                                                          char image)
 {
   std::vector<std::vector<MapCell>> map;
 
@@ -153,7 +155,9 @@ std::vector<std::vector<MapCell>> DGBase::CreateFilledMap(int w, int h, char ima
 
 // =============================================================================
 
-std::vector<std::vector<MapCell>> DGBase::CreateRandomlyFilledMap(int w, int h, int chance)
+std::vector<std::vector<MapCell>> DGBase::CreateRandomlyFilledMap(int w,
+                                                                  int h,
+                                                                  int chance)
 {
   std::vector<std::vector<MapCell>> map;
 
@@ -516,7 +520,12 @@ const StringV& DGBase::ExtractMapChunk(int x, int y, int w, int h)
 
 // =============================================================================
 
-bool DGBase::FillMapChunk(int x, int y, int w, int h, char with, bool markVisited)
+bool DGBase::FillMapChunk(int x,
+                          int y,
+                          int w,
+                          int h,
+                          char with,
+                          bool markVisited)
 {
   int hx = x + w;
   int hy = y + h;
@@ -793,7 +802,8 @@ bool DGBase::IsAreaEmpty(int x1, int y1, int x2, int y2)
   {
     for (int y = y1; y <= y2; y++)
     {
-      if (_map[x][y].Image != '.' || _map[x][y].ZoneMarker != TransformedRoom::UNMARKED)
+      if (_map[x][y].Image != '.'
+       || _map[x][y].ZoneMarker != TransformedRoom::UNMARKED)
       {
         return false;
       }
@@ -927,7 +937,8 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
     // mark some room beforehand in this way, so on next iteration
     // of this for loop it will be already marked.
     //
-    if (_map[_emptyRooms[i].X1][_emptyRooms[i].Y1].ZoneMarker != TransformedRoom::UNMARKED)
+    TransformedRoom zm = _map[_emptyRooms[i].X1][_emptyRooms[i].Y1].ZoneMarker;
+    if (zm != TransformedRoom::UNMARKED)
     {
       continue;
     }
@@ -1097,7 +1108,9 @@ std::vector<size_t> DGBase::TryToFindSuitableRooms(int minSize, int maxSize,
 {
   std::vector<size_t> res;
 
-  //DebugLog("  trying to find suitable rooms for minSize = %d, maxSize = %d", minSize, maxSize);
+  //DebugLog("  trying to find suitable rooms for minSize = %d, maxSize = %d",
+  //         minSize,
+  //         maxSize);
 
   for (size_t i = 0; i < _emptyRooms.size(); i++)
   {
@@ -1112,7 +1125,8 @@ std::vector<size_t> DGBase::TryToFindSuitableRooms(int minSize, int maxSize,
     // Check if room candidate satisfies size requirements and was not already
     // transformed by somebody else.
     //
-    bool isNotMarked = (_map[area.X1][area.Y1].ZoneMarker == TransformedRoom::UNMARKED);
+    bool isNotMarked =
+        (_map[area.X1][area.Y1].ZoneMarker == TransformedRoom::UNMARKED);
     if (DoesAreaFit(area, minSize, maxSize) && isNotMarked)
     {
       //DebugLog("  found room %s", _emptyRooms[i].ToString().data());
@@ -1125,8 +1139,9 @@ std::vector<size_t> DGBase::TryToFindSuitableRooms(int minSize, int maxSize,
 
 // =============================================================================
 
-std::vector<size_t> DGBase::TryToFindSuitableRooms(const std::vector<PairII>& exactSizes,
-                                                   size_t skipRoomIndex)
+std::vector<size_t>
+DGBase::TryToFindSuitableRooms(const std::vector<PairII>& exactSizes,
+                               size_t skipRoomIndex)
 {
   std::vector<size_t> res;
 
@@ -1135,7 +1150,9 @@ std::vector<size_t> DGBase::TryToFindSuitableRooms(const std::vector<PairII>& ex
     int minSize = item.first;
     int maxSize = item.second;
 
-    //DebugLog("  trying to find suitable rooms for [%d ; %d]", minSize, maxSize);
+    //DebugLog("  trying to find suitable rooms for [%d ; %d]",
+    //         minSize,
+    //         maxSize);
 
     for (size_t i = 0; i < _emptyRooms.size(); i++)
     {
@@ -1146,7 +1163,9 @@ std::vector<size_t> DGBase::TryToFindSuitableRooms(const std::vector<PairII>& ex
 
       const Rect& area = _emptyRooms[i];
 
-      bool isNotMarked = (_map[area.X1][area.Y1].ZoneMarker == TransformedRoom::UNMARKED);
+      bool isNotMarked =
+          (_map[area.X1][area.Y1].ZoneMarker == TransformedRoom::UNMARKED);
+
       bool exactSize = (area.Width() == minSize && area.Height() == maxSize);
       if (exactSize && isNotMarked)
       {
@@ -1226,7 +1245,9 @@ void DGBase::PlaceShrine(const Rect& area)
 
   CheckBlockedPassages(area, layout, offsetX, offsetY);
 
-  //DebugLog("  marking [%d %d] tile as shrine", area.X1 + offsetX, area.Y1 + offsetY);
+  //DebugLog("  marking [%d %d] tile as shrine",
+  //         area.X1 + offsetX,
+  //         area.Y1 + offsetY);
 
   int shrineMiddle = (layout.size() - 1) / 2;
 
@@ -1326,10 +1347,12 @@ void DGBase::CheckBlockedPassages(const Rect& area, const StringV& layout,
   auto IsPassage = [this](int x, int y, bool checkH)
   {
     bool horizontal = (_map[x][y].Image == '.' || _map[x][y].Image == '+')
-                   && (_map[x - 1][y].Image == '#' && _map[x + 1][y].Image == '#');
+                   && (_map[x - 1][y].Image == '#'
+                    && _map[x + 1][y].Image == '#');
 
     bool vertical = (_map[x][y].Image == '.' || _map[x][y].Image == '+')
-                 && (_map[x][y + 1].Image == '#' && _map[x][y - 1].Image == '#');
+                 && (_map[x][y + 1].Image == '#'
+                  && _map[x][y - 1].Image == '#');
 
     return (checkH ? horizontal : vertical);
   };
@@ -1485,7 +1508,9 @@ void DGBase::TryToPlaceLayout(const Rect& area, const StringV& layout,
     return;
   }
 
-  //DebugLog("layout size = %llu, len = %llu", layout.size(), layout[0].length());
+  //DebugLog("layout size = %llu, len = %llu",
+  //         layout.size(),
+  //         layout[0].length());
 
   bool doesNotFit = (area.Height() < (int)layout.size()
                   || area.Width()  < (int)layout[0].length());
@@ -1764,7 +1789,11 @@ void DGBase::ConnectIsolatedAreas()
     auto pointsToConnect = connectionPoints[index];
     ConnectPoints(pointsToConnect.first, pointsToConnect.second);
 
-    //DebugLog("\t\t\tconnecting [%i;%i] -> [%i;%i]\n", pointsToConnect.first.X, pointsToConnect.first.Y, pointsToConnect.second.X, pointsToConnect.second.Y);
+    //DebugLog("\t\t\tconnecting [%i;%i] -> [%i;%i]\n",
+    //         pointsToConnect.first.X,
+    //         pointsToConnect.first.Y,
+    //         pointsToConnect.second.X,
+    //         pointsToConnect.second.Y);
 
     //
     // Rinse and repeat.

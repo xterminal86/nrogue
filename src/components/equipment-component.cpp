@@ -91,7 +91,9 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
 
         if (IsThisPlayer())
         {
-          auto str = Util::StringFormat("You can't unequip %s - it's cursed!", rings[i]->OwnerGameObject->ObjectName.data());
+          auto str =
+              Util::StringFormat("You can't unequip %s - it's cursed!",
+                                 rings[i]->OwnerGameObject->ObjectName.data());
           Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
                                                  Strings::MessageBoxEpicFailHeaderText,
                                                  { str },
@@ -207,7 +209,9 @@ bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item)
 
       if (IsThisPlayer())
       {
-        auto str = Util::StringFormat("You can't unequip %s - it's cursed!", itemEquipped->OwnerGameObject->ObjectName.data());
+        auto str =
+            Util::StringFormat("You can't unequip %s - it's cursed!",
+                               itemEquipped->OwnerGameObject->ObjectName.data());
         Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
                                                Strings::MessageBoxEpicFailHeaderText,
                                                { str },

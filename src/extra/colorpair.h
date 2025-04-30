@@ -11,9 +11,9 @@ struct NColor
 
 struct ColorPair
 {
-  short PairIndex;
   NColor FgColor;
   NColor BgColor;
+  short PairIndex;
 };
 
 #endif

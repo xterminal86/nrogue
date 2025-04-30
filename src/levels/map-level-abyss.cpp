@@ -9,7 +9,10 @@
 #include "logger.h"
 #endif
 
-MapLevelAbyss::MapLevelAbyss(int sizeX, int sizeY, MapType type, int dungeonLevel)
+MapLevelAbyss::MapLevelAbyss(int sizeX,
+                             int sizeY,
+                             MapType type,
+                             int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
   _specialLevel =

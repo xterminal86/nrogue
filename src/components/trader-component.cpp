@@ -10,7 +10,9 @@ TraderComponent::TraderComponent()
 
 // =============================================================================
 
-void TraderComponent::Init(TraderRole traderType, int stockRefreshTurns, int maxItems)
+void TraderComponent::Init(TraderRole traderType,
+                           int stockRefreshTurns,
+                           int maxItems)
 {
   _traderType = traderType;
   _stockRefreshTurns = stockRefreshTurns;
@@ -81,6 +83,8 @@ void TraderComponent::CreateClericItems()
   std::string npcName = NpcRef->Data.Name;
   ShopTitle = Util::StringFormat(" %s's %s ", npcName.data(), shopName.data());
 
+  static ItemsFactory& factory = ItemsFactory::Instance();
+
   for (int i = 0; i < _itemsToCreate; i++)
   {
     auto itemPair   = Util::WeightedRandom(_clericItemsWeights);
@@ -96,23 +100,23 @@ void TraderComponent::CreateClericItems()
         switch (potionPair.first)
         {
           case PotionType::HEALING_POTION:
-            go = ItemsFactory::Instance().CreateHealingPotion(prefixPair.first);
+            go = factory.CreateHealingPotion(prefixPair.first);
             break;
 
           case PotionType::MANA_POTION:
-            go = ItemsFactory::Instance().CreateManaPotion(prefixPair.first);
+            go = factory.CreateManaPotion(prefixPair.first);
             break;
 
           case PotionType::NP_POTION:
-            go = ItemsFactory::Instance().CreateNeutralizePoisonPotion(prefixPair.first);
+            go = factory.CreateNeutralizePoisonPotion(prefixPair.first);
             break;
 
           case PotionType::CW_POTION:
-            go = ItemsFactory::Instance().CreateCWPotion(prefixPair.first);
+            go = factory.CreateCWPotion(prefixPair.first);
             break;
 
           case PotionType::RA_POTION:
-            go = ItemsFactory::Instance().CreateRAPotion(prefixPair.first);
+            go = factory.CreateRAPotion(prefixPair.first);
             break;
         }
       }
@@ -120,19 +124,19 @@ void TraderComponent::CreateClericItems()
 
 
       case ItemType::RETURNER:
-        go = ItemsFactory::Instance().CreateReturner(0, 0, -1, prefixPair.first);
+        go = factory.CreateReturner(0, 0, -1, prefixPair.first);
         break;
 
       case ItemType::WAND:
-        go = ItemsFactory::Instance().CreateRandomWand(prefixPair.first);
+        go = factory.CreateRandomWand(prefixPair.first);
         break;
 
       case ItemType::SCROLL:
-        go = ItemsFactory::Instance().CreateRandomScroll(prefixPair.first);
+        go = factory.CreateRandomScroll(prefixPair.first);
         break;
 
       case ItemType::ACCESSORY:
-        go = ItemsFactory::Instance().CreateRandomAccessory(0, 0, prefixPair.first, true);
+        go = factory.CreateRandomAccessory(0, 0, prefixPair.first, true);
         break;
     }
 
@@ -153,7 +157,11 @@ void TraderComponent::CreateCookItems()
     auto itemPair   = Util::WeightedRandom(_cookItemsWeights);
     auto prefixPair = Util::WeightedRandom(_cookPrefixWeights);
 
-    GameObject* go = ItemsFactory::Instance().CreateFood(0, 0, itemPair.first, prefixPair.first, true);
+    GameObject* go = ItemsFactory::Instance().CreateFood(0,
+                                                         0,
+                                                         itemPair.first,
+                                                         prefixPair.first,
+                                                         true);
 
     Items.push_back(std::unique_ptr<GameObject>(go));
   }
@@ -169,7 +177,12 @@ void TraderComponent::CreateJunkerItems()
 
   for (int i = 0; i < _itemsToCreate; i++)
   {
-    GameObject* go = ItemsFactory::Instance().CreateRandomItem(0, 0, { ItemType::COINS, ItemType::FOOD });
+    GameObject* go =
+        ItemsFactory::Instance().CreateRandomItem(0, 0,
+                                                  {
+                                                    ItemType::COINS,
+                                                    ItemType::FOOD
+                                                  });
     if (go != nullptr)
     {
       Items.push_back(std::unique_ptr<GameObject>(go));
@@ -199,27 +212,42 @@ void TraderComponent::CreateBlacksmithItems()
         break;
 
       case ItemType::REPAIR_KIT:
-        go = ItemsFactory::Instance().CreateRepairKit(0, 0, 30, prefixPair.first);
+        go = ItemsFactory::Instance().CreateRepairKit(0,
+                                                      0,
+                                                      30,
+                                                      prefixPair.first);
         break;
 
       case ItemType::ARMOR:
       {
         auto armorPair = Util::WeightedRandom(_blacksmithArmorWeights);
-        go = ItemsFactory::Instance().CreateArmor(0, 0, armorPair.first, prefixPair.first);
+        go = ItemsFactory::Instance().CreateArmor(0,
+                                                  0,
+                                                  armorPair.first,
+                                                  prefixPair.first);
       }
       break;
 
       case ItemType::ARROWS:
       {
         int flag = RNG::Instance().RandomRange(0, 2);
-        ArrowType arrowsType = (flag == 0) ? ArrowType::ARROWS : ArrowType::BOLTS;
+        ArrowType arrowsType = (flag == 0)
+                              ? ArrowType::ARROWS
+                              : ArrowType::BOLTS;
         int amount = RNG::Instance().RandomRange(10, 21);
-        go = ItemsFactory::Instance().CreateArrows(0, 0, arrowsType, prefixPair.first, amount);
+        go = ItemsFactory::Instance().CreateArrows(0,
+                                                   0,
+                                                   arrowsType,
+                                                   prefixPair.first,
+                                                   amount);
       }
       break;
 
       case ItemType::ACCESSORY:
-        go = ItemsFactory::Instance().CreateRandomAccessory(0, 0, prefixPair.first, true);
+        go = ItemsFactory::Instance().CreateRandomAccessory(0,
+                                                            0,
+                                                            prefixPair.first,
+                                                            true);
         break;
     }
 

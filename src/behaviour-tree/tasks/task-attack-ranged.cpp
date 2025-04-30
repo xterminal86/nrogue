@@ -107,7 +107,8 @@ BTResult TaskAttackRanged::ProcessSpellAttack()
   SpellInfo* si = SpellsDatabase::Instance().GetSpellInfoFromDatabase(_spellType);
   if (si == nullptr)
   {
-    DebugLog("[WAR] TaskAttackRanged::ProcessSpellAttack() no spell info for spell %i!", (int)_spellType);
+    DebugLog("[WAR] TaskAttackRanged::ProcessSpellAttack() "
+             "no spell info for spell %i!", (int)_spellType);
     return BTResult::Failure;
   }
 
@@ -332,7 +333,8 @@ void TaskAttackRanged::ProcessWand(ItemComponent* wand, GameObject* what)
       break;
 
     default:
-      DebugLog("[WAR] TaskAttackRanged::ProcessWand() spell %i not handled!", (int)wand->Data.SpellHeld.SpellType_);
+      DebugLog("[WAR] TaskAttackRanged::ProcessWand() spell %i not handled!",
+               (int)wand->Data.SpellHeld.SpellType_);
       break;
   }
 }
@@ -417,7 +419,8 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
                                         int centralDamage,
                                         bool againstRes)
 {
-  auto pointsAffected = Printer::Instance().DrawExplosion(target->GetPosition(), 3);
+  auto pointsAffected = Printer::Instance().DrawExplosion(target->GetPosition(),
+                                                          3);
 
   GameObject* from = (weapon != nullptr) ?
                      weapon->OwnerGameObject :
@@ -487,17 +490,19 @@ BTResult TaskAttackRanged::CheckRangedWeaponValidity(ItemComponent* weapon,
 
     case ItemType::RANGED_WEAPON:
     {
-      bool isBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::SHORT_BOW
-                 || weapon->Data.RangedWeaponType_ == RangedWeaponType::LONGBOW
-                 || weapon->Data.RangedWeaponType_ == RangedWeaponType::WAR_BOW);
+      RangedWeaponType rwt = weapon->Data.RangedWeaponType_;
 
-      bool isXBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_XBOW
-                  || weapon->Data.RangedWeaponType_ == RangedWeaponType::XBOW
-                  || weapon->Data.RangedWeaponType_ == RangedWeaponType::HEAVY_XBOW);
+      bool isBow = (rwt == RangedWeaponType::SHORT_BOW
+                 || rwt == RangedWeaponType::LONGBOW
+                 || rwt == RangedWeaponType::WAR_BOW);
 
-      bool noArrows = (arrows == nullptr ||
-                       (arrows != nullptr
-                     && arrows->Data.ItemType_ != ItemType::ARROWS));
+      bool isXBow = (rwt == RangedWeaponType::LIGHT_XBOW
+                  || rwt == RangedWeaponType::XBOW
+                  || rwt == RangedWeaponType::HEAVY_XBOW);
+
+      bool noArrows = (arrows == nullptr
+                     || (arrows != nullptr
+                      && arrows->Data.ItemType_ != ItemType::ARROWS));
 
       if ((isBow || isXBow) && noArrows)
       {

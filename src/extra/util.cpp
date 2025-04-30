@@ -133,7 +133,10 @@ namespace Util
   {
     if (checker == nullptr || checked == nullptr)
     {
-      DebugLog("[WAR] Util::IsObjectInRange() checker: [0x%X] checked: [0x%X]", checker, checked);
+      DebugLog("[WAR] Util::IsObjectInRange() checker: "
+               "[0x%X] checked: [0x%X]",
+               checker,
+               checked);
       return false;
     }
 
@@ -167,9 +170,12 @@ namespace Util
 
   // ===========================================================================
 
-  std::vector<GameObject*> FindObjectsInRange(GameObject* aroundWho,
-                                               const std::vector<std::vector<std::unique_ptr<GameObject>>>& where,
-                                               int range)
+  std::vector<GameObject*>
+  FindObjectsInRange(GameObject* aroundWho,
+                     const std::vector<
+                     std::vector<std::unique_ptr<GameObject>>
+                     >& where,
+                     int range)
   {
     std::vector<GameObject*> res;
 
@@ -212,9 +218,10 @@ namespace Util
 
   // ===========================================================================
 
-  std::vector<GameObject*> FindObjectsInRange(GameObject* aroundWho,
-                                              const std::vector<std::unique_ptr<GameObject>>& where,
-                                              int range)
+  std::vector<GameObject*>
+  FindObjectsInRange(GameObject* aroundWho,
+                     const std::vector<std::unique_ptr<GameObject>>& where,
+                     int range)
   {
     std::vector<GameObject*> res;
 
@@ -288,8 +295,10 @@ namespace Util
       if (i == 3)
       {
         char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
-        char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
-        char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
+        char_array_4[1] = ((char_array_3[0] & 0x03) << 4) +
+                          ((char_array_3[1] & 0xf0) >> 4);
+        char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) +
+                          ((char_array_3[2] & 0xc0) >> 6);
         char_array_4[3] = char_array_3[2] & 0x3f;
 
         for(i = 0; (i < 4) ; i++)
@@ -309,8 +318,10 @@ namespace Util
       }
 
       char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
-      char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
-      char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
+      char_array_4[1] = ((char_array_3[0] & 0x03) << 4) +
+                        ((char_array_3[1] & 0xf0) >> 4);
+      char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) +
+                        ((char_array_3[2] & 0xc0) >> 6);
       char_array_4[3] = char_array_3[2] & 0x3f;
 
       for (j = 0; (j < i + 1); j++)
@@ -338,7 +349,9 @@ namespace Util
     unsigned char char_array_4[4], char_array_3[3];
     std::string ret;
 
-    while (in_len-- && ( encoded_string[in_] != '=') && IsBase64(encoded_string[in_]))
+    while (in_len--
+       && (encoded_string[in_] != '=')
+       && IsBase64(encoded_string[in_]))
     {
       char_array_4[i++] = encoded_string[in_]; in_++;
       if (i ==4)
@@ -348,8 +361,10 @@ namespace Util
           char_array_4[i] = Strings::Base64Chars.find(char_array_4[i]);
         }
 
-        char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
-        char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
+        char_array_3[0] = (char_array_4[0] << 2) +
+                          ((char_array_4[1] & 0x30) >> 4);
+        char_array_3[1] = ((char_array_4[1] & 0xf) << 4) +
+                          ((char_array_4[2] & 0x3c) >> 2);
         char_array_3[2] = ((char_array_4[2] & 0x3) << 6) + char_array_4[3];
 
         for (i = 0; (i < 3); i++)
@@ -373,8 +388,10 @@ namespace Util
         char_array_4[j] = Strings::Base64Chars.find(char_array_4[j]);
       }
 
-      char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
-      char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
+      char_array_3[0] = (char_array_4[0] << 2) +
+                        ((char_array_4[1] & 0x30) >> 4);
+      char_array_3[1] = ((char_array_4[1] & 0xf) << 4) +
+                        ((char_array_4[2] & 0x3c) >> 2);
       char_array_3[2] = ((char_array_4[2] & 0x3) << 6) + char_array_4[3];
 
       for (j = 0; (j < i - 1); j++)
@@ -1095,10 +1112,13 @@ namespace Util
 
     auto spellType = wand->Data.SpellHeld.SpellType_;
 
-    SpellInfo* sip = SpellsDatabase::Instance().GetSpellInfoFromDatabase(spellType);
+    static SpellsDatabase& sd = SpellsDatabase::Instance();
+    SpellInfo* sip = sd.GetSpellInfoFromDatabase(spellType);
     if (sip == nullptr)
     {
-      DebugLog("[WAR] Util::RecalculateWandStats() no such spell %i in database!", (int)spellType);
+      DebugLog("[WAR] Util::RecalculateWandStats() "
+               "no such spell %i in database!",
+               (int)spellType);
       return;
     }
 
@@ -1244,7 +1264,8 @@ namespace Util
           break;
 
         default:
-          DebugLog("[WAR] Util::BlessItem() bonus type %i not handled!", (int)bonus.Type);
+          DebugLog("[WAR] Util::BlessItem() bonus type %i not handled!",
+                   (int)bonus.Type);
           break;
       }
     }
@@ -1499,8 +1520,10 @@ namespace Util
         {
           case 0:
           {
-            vowelIndex = RNG::Instance().RandomRange(0, Strings::Vowels.length());
-            consIndex  = RNG::Instance().RandomRange(0, Strings::Consonants.length());
+            vowelIndex =
+                RNG::Instance().RandomRange(0, Strings::Vowels.length());
+            consIndex =
+                RNG::Instance().RandomRange(0, Strings::Consonants.length());
 
             vowel = { Strings::Vowels[vowelIndex]    };
             cons  = { Strings::Consonants[consIndex] };
@@ -1511,8 +1534,9 @@ namespace Util
 
           case 1:
           {
-            consIndex = RNG::Instance().RandomRange(0, Strings::Consonants.length());
-            cons      = Strings::Consonants[consIndex];
+            consIndex =
+                RNG::Instance().RandomRange(0, Strings::Consonants.length());
+            cons = Strings::Consonants[consIndex];
 
             syl = cons;
 
@@ -1520,7 +1544,8 @@ namespace Util
 
             for (int i = 0; i < 2; i++)
             {
-              vowelIndex = RNG::Instance().RandomRange(0, Strings::Vowels.length());
+              vowelIndex =
+                  RNG::Instance().RandomRange(0, Strings::Vowels.length());
 
               char v = Strings::Vowels[vowelIndex];
               vowel  = { v };
@@ -1578,7 +1603,9 @@ namespace Util
       size_t pos = newIdentifiedName.find(s);
       if (pos != std::string::npos)
       {
-        newIdentifiedName = newIdentifiedName.replace(pos, s.length(), replaceWith);
+        newIdentifiedName = newIdentifiedName.replace(pos,
+                                                      s.length(),
+                                                      replaceWith);
         break;
       }
     }
@@ -1701,7 +1728,9 @@ namespace Util
 
     if (obj == nullptr ||
        (obj->HasEffect(ItemBonusType::INVISIBILITY)
-     && !Application::Instance().PlayerInstance.HasEffect(ItemBonusType::TELEPATHY)))
+     && !Application::Instance().PlayerInstance.HasEffect(
+          ItemBonusType::TELEPATHY
+          )))
     {
       return res;
     }
@@ -1869,9 +1898,12 @@ namespace Util
       //
       if (receiver->IsOnDangerousTile())
       {
-        Application::Instance().DisplayAttack(receiver,
-                                              GlobalConstants::DisplayAttackDelayMs,
-                                              std::string());
+        Application::Instance().DisplayAttack(
+              receiver,
+              GlobalConstants::DisplayAttackDelayMs,
+              std::string()
+        );
+
         receiver->Attrs.HP.Reset(0);
         break;
       }
@@ -1919,7 +1951,8 @@ namespace Util
       MapType mt = Map::Instance().CurrentLevel->MapType_;
       Map::Instance().TeleportToExistingLevel(mt, pos, actor);
 
-      msg = Util::StringFormat("%s suddenly disappears!", actor->ObjectName.data());
+      msg = Util::StringFormat("%s suddenly disappears!",
+                               actor->ObjectName.data());
     }
 
     return msg;
@@ -1927,8 +1960,9 @@ namespace Util
 
   // ===========================================================================
 
-  std::pair<char, uint32_t> GetProjectileImageAndColor(ItemComponent* weapon,
-                                                       bool throwingFromInventory)
+  std::pair<char, uint32_t>
+  GetProjectileImageAndColor(ItemComponent* weapon,
+                             bool throwingFromInventory)
   {
     std::pair<char, uint32_t> res;
 
@@ -1976,7 +2010,8 @@ namespace Util
 
   // ===========================================================================
 
-  std::vector<GameObject*> GetObjectsOnTheLine(const std::vector<Position>& line)
+  std::vector<GameObject*>
+  GetObjectsOnTheLine(const std::vector<Position>& line)
   {
     std::vector<GameObject*> res;
 
@@ -2090,11 +2125,17 @@ namespace Util
 
       if (dmgHere <= 0)
       {
-        res.second = Util::StringFormat("%s seems unaffected!", object->ObjectName.data());;
+        res.second = Util::StringFormat("%s seems unaffected!",
+                                        object->ObjectName.data());;
       }
       else
       {
-        object->ReceiveDamage(from, dmgHere, againstRes, false, false, !IsPlayer(from));
+        object->ReceiveDamage(from,
+                              dmgHere,
+                              againstRes,
+                              false,
+                              false,
+                              !IsPlayer(from));
         res.first = true;
       }
     }
@@ -2112,7 +2153,8 @@ namespace Util
 
     if (cat == EquipmentCategory::NOT_EQUIPPABLE)
     {
-      DebugLog("[WAR] Util::TryToDamageEquipment() category is NOT_EQUIPPABLE!");
+      DebugLog("[WAR] Util::TryToDamageEquipment() "
+               "category is NOT_EQUIPPABLE!");
       return msg;
     }
 
@@ -2130,7 +2172,9 @@ namespace Util
     }
     else
     {
-      DebugLog("[WAR] Util::TryToDamageEquipment() equipment is null on %s!", actor->ObjectName.data());
+      DebugLog("[WAR] Util::TryToDamageEquipment() "
+               "equipment is null on %s!",
+               actor->ObjectName.data());
     }
 
     return msg;
@@ -2157,7 +2201,9 @@ namespace Util
     //
     if (item == nullptr)
     {
-      //DebugLog("[WAR] Util::TryToDamageEquipment() item is null on %s!", actor->ObjectName.data());
+      //DebugLog("[WAR] Util::TryToDamageEquipment() "
+      //         "item is null on %s!",
+      //         actor->ObjectName.data());
       return msg;
     }
 
@@ -2170,7 +2216,8 @@ namespace Util
 
     if (item->Data.Durability.Min().Get() <= 0)
     {
-      msg = StringFormat("%s breaks!", item->OwnerGameObject->ObjectName.data());
+      msg = StringFormat("%s breaks!",
+                         item->OwnerGameObject->ObjectName.data());
       item->Break(actor);
     }
 
@@ -2344,9 +2391,11 @@ namespace Util
       }
       else
       {
-        bool isXBow = (weapon->Data.RangedWeaponType_ == RangedWeaponType::LIGHT_XBOW
-                    || weapon->Data.RangedWeaponType_ == RangedWeaponType::XBOW
-                    || weapon->Data.RangedWeaponType_ == RangedWeaponType::HEAVY_XBOW);
+        RangedWeaponType rwt = weapon->Data.RangedWeaponType_;
+
+        bool isXBow = (rwt == RangedWeaponType::LIGHT_XBOW
+                    || rwt == RangedWeaponType::XBOW
+                    || rwt == RangedWeaponType::HEAVY_XBOW);
 
         baseChance = isXBow ? (baseChance + 15) : baseChance;
 
@@ -2355,10 +2404,12 @@ namespace Util
         EquipmentComponent* ec = user->GetComponent<EquipmentComponent>();
         if (ec != nullptr)
         {
+          EquipmentCategory shield = EquipmentCategory::SHIELD;
+
           //
           // Assuming valid projectiles are already equipped.
           //
-          ItemComponent* arrows = ec->EquipmentByCategory[EquipmentCategory::SHIELD][0];
+          ItemComponent* arrows = ec->EquipmentByCategory[shield][0];
           if (arrows != nullptr)
           {
             if (arrows->Data.ItemType_ != ItemType::ARROWS)
@@ -2366,7 +2417,8 @@ namespace Util
               DebugLog("[WAR] off-hand slot is not arrows!");
             }
 
-            ItemPrefix ammoPrefix = ec->EquipmentByCategory[EquipmentCategory::SHIELD][0]->Data.Prefix;
+            ItemPrefix ammoPrefix =
+                ec->EquipmentByCategory[shield][0]->Data.Prefix;
             switch (ammoPrefix)
             {
               case ItemPrefix::BLESSED:
@@ -2388,7 +2440,8 @@ namespace Util
 
     /*
     #ifdef DEBUG_BUILD
-    auto str = StringFormat("Calculated hit chance: %i (SKL: %i, SKL bonus: %i, distance: -%i)",
+    auto str = StringFormat("Calculated hit chance: "
+                            "%i (SKL: %i, SKL bonus: %i, distance: -%i)",
                             chance,
                             skl,
                             (attackChanceScale * skl),
@@ -2661,7 +2714,11 @@ namespace Util
         {
           if (IsPlayer(who))
           {
-            logMsgs.push_back(StringFormat("%s breaks!", armor->OwnerGameObject->ObjectName.data()));
+            std::string s =
+                StringFormat("%s breaks!",
+                             armor->OwnerGameObject->ObjectName.data());
+
+            logMsgs.push_back(s);
           }
 
           armor->Break(who);
@@ -2700,20 +2757,26 @@ namespace Util
 
     bool outOfRange = false;
 
+    //
     // If we shoot from point blank in a corridor,
     // we shouldn't accidentaly target ourselves
     // due to lack of skill.
+    //
     for (size_t i = 0; i < rect.size(); i++)
     {
+      //
       // Do not include points above weapon's maximum range as well.
+      //
       int d = LinearDistance(user->GetPosition(), rect[i]);
       if (weapon != nullptr && d > weapon->Data.Range)
       {
         outOfRange = true;
       }
 
+      //
       // If random point from lack of skill is the one
       // we're standing on, ignore it.
+      //
       bool targetSelf = (rect[i].X == user->PosX
                       && rect[i].Y == user->PosY);
 
@@ -2773,9 +2836,10 @@ namespace Util
 
   // ===========================================================================
 
-  std::vector<Position> ProcessLaserAttack(GameObject* user,
-                                           const std::pair<int, int>& damageRange,
-                                           const Position& end)
+  std::vector<Position>
+  ProcessLaserAttack(GameObject* user,
+                     const std::pair<int, int>& damageRange,
+                     const Position& end)
   {
     std::vector<Position> lineRes;
 
@@ -2940,8 +3004,10 @@ namespace Util
 
         int d = LinearDistance(from, point);
 
-        auto cell = Map::Instance().CurrentLevel->MapArray[point.X][point.Y].get();
-        auto obj  = Map::Instance().CurrentLevel->StaticMapObjects[point.X][point.Y].get();
+        MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+
+        GameObject* cell = curLvl->MapArray[point.X][point.Y].get();
+        GameObject* obj  = curLvl->StaticMapObjects[point.X][point.Y].get();
 
         bool cellOk = (!cell->Blocking);
         bool objOk  = (obj == nullptr);

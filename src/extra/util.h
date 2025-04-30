@@ -81,21 +81,25 @@ namespace Util
   extern std::string DecodeString(const CS& str);
 
   extern bool IsObjectInRange(GameObject* checker,
-                                GameObject* checked,
-                                int range);
+                              GameObject* checked,
+                              int range);
 
   extern bool IsObjectInRange(const Position& posToCheckFrom,
                               const Position& objectPositionToCheck,
                               int rangeX,
                               int rangeY);
 
-  extern std::vector<GameObject*> FindObjectsInRange(GameObject* aroundWho,
-                                                     const std::vector<std::vector<std::unique_ptr<GameObject>>>& where,
-                                                     int range);
+  extern std::vector<GameObject*>
+  FindObjectsInRange(GameObject* aroundWho,
+                     const std::vector<
+                     std::vector<std::unique_ptr<GameObject>>
+                     >& where,
+                     int range);
 
-  extern std::vector<GameObject*> FindObjectsInRange(GameObject* aroundWho,
-                                                     const std::vector<std::unique_ptr<GameObject>>& where,
-                                                     int range);
+  extern std::vector<GameObject*>
+  FindObjectsInRange(GameObject* aroundWho,
+                     const std::vector<std::unique_ptr<GameObject>>& where,
+                     int range);
 
   extern bool IsBase64(unsigned char c);
   extern std::string Base64_Encode(unsigned char const* bytes_to_encode,
@@ -104,7 +108,8 @@ namespace Util
 
   extern std::string Encrypt(const std::string& str);
 
-  extern std::vector<unsigned char> ConvertStringToBytes(const std::string& encodedStr);
+  extern std::vector<unsigned char>
+  ConvertStringToBytes(const std::string& encodedStr);
 
   extern bool CheckLimits(const Position& posToCheck, const Position& limits);
 
@@ -128,14 +133,41 @@ namespace Util
                                                     const Position& mapSize);
 
   extern std::vector<Position> GetScreenRect(int x1, int y1, int x2, int y2);
-  extern std::vector<Position> GetScreenRectPerimeter(int x1, int y1, int x2, int y2, bool includeCorners = true);
-  extern std::vector<Position> GetScreenRectAroundPoint(int pointX, int pointY, int rangeX, int rangeY);
-  extern std::vector<Position> GetRectAroundPoint(int pointX, int pointY, int rangeX, int rangeY, const Position& mapSize);
 
-  extern std::vector<Position> GetPerimeter(int x, int y, int w, int h, bool includeCorners = true);
-  extern std::vector<Position> GetPerimeterAroundPoint(int x, int y, int w, int h, bool includeCorners = true);
+  extern std::vector<Position>
+  GetScreenRectPerimeter(int x1,
+                         int y1,
+                         int x2,
+                         int y2,
+                         bool includeCorners = true);
+
+  extern std::vector<Position> GetScreenRectAroundPoint(int pointX,
+                                                        int pointY,
+                                                        int rangeX,
+                                                        int rangeY);
+
+  extern std::vector<Position> GetRectAroundPoint(int pointX,
+                                                  int pointY,
+                                                  int rangeX,
+                                                  int rangeY,
+                                                  const Position& mapSize);
+
+  extern std::vector<Position> GetPerimeter(int x,
+                                            int y,
+                                            int w,
+                                            int h,
+                                            bool includeCorners = true);
+
+  extern std::vector<Position>
+  GetPerimeterAroundPoint(int x,
+                          int y,
+                          int w,
+                          int h,
+                          bool includeCorners = true);
+
   extern std::vector<GameObject*> GetActorsInRange(GameObject* from, int range);
-  extern std::vector<GameObject*> GetContainersInRange(GameObject* from, int range);
+  extern std::vector<GameObject*> GetContainersInRange(GameObject* from,
+                                                       int range);
 
   extern std::string ChooseRandomName();
 
@@ -157,7 +189,8 @@ namespace Util
   extern void Sleep(uint32_t delayMs);
 
   extern bool WaitForMs(uint64_t delayMs, bool reset = false);
-  extern void PrintVector(const std::string& title, const std::vector<Position>& v);
+  extern void PrintVector(const std::string& title,
+                          const std::vector<Position>& v);
 
   extern void PrintLayout(const StringV& l);
 
@@ -181,10 +214,13 @@ namespace Util
 
   extern std::string ProcessTeleport(GameObject* target);
 
-  extern std::pair<char, uint32_t> GetProjectileImageAndColor(ItemComponent* weapon,
-                                                              bool throwingFromInventory);
+  extern std::pair<char, uint32_t>
+  GetProjectileImageAndColor(ItemComponent* weapon,
+                             bool throwingFromInventory);
 
-  extern std::vector<GameObject*> GetObjectsOnTheLine(const std::vector<Position>& line);
+  extern std::vector<GameObject*>
+  GetObjectsOnTheLine(const std::vector<Position>& line);
+
   extern GameObject* GetFirstObjectOnTheLine(const std::vector<Position>& line);
 
   // ---------------------------------------------------------------------------
@@ -242,9 +278,10 @@ namespace Util
                                        ItemComponent* weapon,
                                        const Position& aroundThis);
 
-  extern std::vector<Position> ProcessLaserAttack(GameObject* user,
-                                                  const std::pair<int, int>& damageRange,
-                                                  const Position& end);
+  extern std::vector<Position>
+  ProcessLaserAttack(GameObject* user,
+                     const std::pair<int, int>& damageRange,
+                     const Position& end);
 
   extern std::vector<Position> ProcessLaserAttack(GameObject* user,
                                                   ItemComponent* weapon,
@@ -333,7 +370,8 @@ namespace Util
     {
       if (target <= i.second)
       {
-        std::pair<typename Map::key_type, typename Map::mapped_type> res = { i.first, i.second };
+        std::pair<typename Map::key_type, typename Map::mapped_type>
+        res = { i.first, i.second };
 
         return res;
       }
@@ -347,7 +385,8 @@ namespace Util
   // ===========================================================================
 
   template <typename T>
-  std::unordered_map<T, double> WeightsToProbability(const std::unordered_map<T, int>& weightsMap)
+  std::unordered_map<T, double>
+  WeightsToProbability(const std::unordered_map<T, int>& weightsMap)
   {
     std::unordered_map<T, double> res;
 
@@ -369,7 +408,8 @@ namespace Util
   // ===========================================================================
 
   template <typename T>
-  std::unordered_map<T, int> RollWeightsMap(const std::unordered_map<T, int>& weightsMap, int rolls)
+  std::unordered_map<T, int>
+  RollWeightsMap(const std::unordered_map<T, int>& weightsMap, int rolls)
   {
     std::unordered_map<T, int> res;
 
@@ -439,7 +479,6 @@ namespace Util
     size_t size = snprintf(nullptr, 0, format.data(), args ...);
     if (!size)
     {
-      s.clear();
       return s;
     }
 

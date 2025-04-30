@@ -42,7 +42,10 @@ BTResult TaskMoveAwayFromPlayer::Run()
     return BTResult::Failure;
   }
 
-  bool playerCanAttackThere = Util::IsObjectInRange(cellFound->MapPos, playerPos, 1, 1);
+  bool playerCanAttackThere = Util::IsObjectInRange(cellFound->MapPos,
+                                                    playerPos,
+                                                    1,
+                                                    1);
   if (playerCanAttackThere)
   {
     return BTResult::Failure;

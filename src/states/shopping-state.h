@@ -39,7 +39,9 @@ class ShoppingState : public GameState
 
     bool CanBeBought(ItemComponent* ic);
 
-    size_t GetItemStringTotalLen(std::vector<std::unique_ptr<GameObject>>& container);
+    size_t GetItemStringTotalLen(
+        std::vector<std::unique_ptr<GameObject>>& container
+    );
 
     int GetCost(ItemComponent* ic, bool playerSide);
 

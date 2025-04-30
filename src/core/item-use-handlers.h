@@ -9,7 +9,8 @@ class GameObject;
 namespace ItemUseHandlers
 {
   UseResult HealingPotionUseHandler(ItemComponent* item, GameObject* user);
-  UseResult NeutralizePoisonPotionUseHandler(ItemComponent* item, GameObject* user);
+  UseResult NeutralizePoisonPotionUseHandler(ItemComponent* item,
+                                             GameObject* user);
   UseResult ManaPotionUseHandler(ItemComponent* item, GameObject* user);
   UseResult JuicePotionUseHandler(ItemComponent* item, GameObject* user);
   UseResult CWPotionUseHandler(ItemComponent* item, GameObject* user);

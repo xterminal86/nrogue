@@ -260,7 +260,8 @@ void TargetState::FireWeapon(bool throwingFromInventory)
 
   GameObject* stoppedAt = nullptr;
 
-  auto res = Util::GetProjectileImageAndColor(_weaponRef, throwingFromInventory);
+  auto res = Util::GetProjectileImageAndColor(_weaponRef,
+                                              throwingFromInventory);
 
   bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
 
@@ -326,7 +327,9 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
   //
   if (stoppedAt == nullptr)
   {
-    auto cell = Map::Instance().CurrentLevel->MapArray[endPoint.X][endPoint.Y].get();
+    auto cell =
+        Map::Instance().CurrentLevel->MapArray[endPoint.X][endPoint.Y].get();
+
     stoppedAt = cell;
   }
 
@@ -359,7 +362,9 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
     {
       if (cell->Blocking)
       {
-        auto prevCell = Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
+        auto prevCell =
+            Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
+
         return prevCell;
       }
       else
@@ -379,7 +384,9 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
         {
           if (_weaponRef->Data.SpellHeld.SpellType_ == SpellType::FIREBALL)
           {
-            auto prevCell = Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
+            auto prevCell =
+                Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
+
             return prevCell;
           }
           else
@@ -490,7 +497,8 @@ void TargetState::DirtyHack()
     //
     if (Application::Instance().CurrentStateIs(GameStates::MESSAGE_BOX_STATE))
     {
-      Application::Instance()._previousState = Application::Instance().GetGameStateRefByName(GameStates::MAIN_STATE);
+      Application::Instance()._previousState =
+          Application::Instance().GetGameStateRefByName(GameStates::MAIN_STATE);
     }
     else
     {
@@ -514,7 +522,9 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
   bool isRangedWeapon = (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON);
   bool isWand         = (_weaponRef->Data.ItemType_ == ItemType::WAND);
 
-  bool isStackable = (!isWand && !isRangedWeapon && _weaponRef->Data.IsStackable);
+  bool isStackable = (!isWand
+                   && !isRangedWeapon
+                   && _weaponRef->Data.IsStackable);
 
   bool tileOk = (mapRef[x][y]->Type != GameObjectType::DEEP_WATER
               && mapRef[x][y]->Type != GameObjectType::LAVA
@@ -531,7 +541,9 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
 
     if (tileOk)
     {
-      ItemComponent* copy = GameObjectsFactory::Instance().CloneItem(_weaponRef);
+      ItemComponent* copy =
+          GameObjectsFactory::Instance().CloneItem(_weaponRef);
+
       copy->Data.Amount = 1;
 
       copy->OwnerGameObject->PosX = x;
@@ -554,7 +566,8 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
   {
     if (tileOk)
     {
-      GameObject* item = _playerRef->Inventory->Contents[_throwingItemInventoryIndex].release();
+      auto& c = _playerRef->Inventory->Contents;
+      GameObject* item = c[_throwingItemInventoryIndex].release();
 
       //
       // See comments in InventoryState::DropItem()
@@ -586,8 +599,10 @@ void TargetState::ProcessHit(GameObject* hitPoint)
   }
   else
   {
-    bool isWand         = (_weaponRef->Data.ItemType_ == ItemType::WAND);
-    bool isRangedWeapon = (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON);
+    bool isWand = (_weaponRef->Data.ItemType_ == ItemType::WAND);
+
+    bool isRangedWeapon =
+        (_weaponRef->Data.ItemType_ == ItemType::RANGED_WEAPON);
 
     if (isWand)
     {
@@ -627,7 +642,11 @@ void TargetState::PrintThrowResult(GameObject* tileRef)
 
   if (!verb.empty())
   {
-    auto str = Util::StringFormat("%s %s in %s!", objName.data(), verb.data(), tileName.data());
+    auto str = Util::StringFormat("%s %s in %s!",
+                                  objName.data(),
+                                  verb.data(),
+                                  tileName.data());
+
     Printer::Instance().AddMessage(str);
   }
 }
@@ -757,7 +776,8 @@ void TargetState::Update(bool forceUpdate)
     int tw = Printer::TerminalWidth;
 
     Printer::Instance().PrintFB(tw / 2, 0,
-                                "Select target then press 'f' or 'Enter' to fire",
+                                "Select target then press 'f' "
+                                "or 'Enter' to fire",
                                 Printer::kAlignCenter,
                                 Colors::WhiteColor,
                                 Colors::BlackColor);
@@ -781,7 +801,8 @@ void TargetState::Setup(ItemComponent* weapon)
 
 // =============================================================================
 
-void TargetState::SetupForThrowing(ItemComponent* itemToThrow, int throwingItemInventoryIndex)
+void TargetState::SetupForThrowing(ItemComponent* itemToThrow,
+                                   int throwingItemInventoryIndex)
 {
   _throwingItemInventoryIndex = throwingItemInventoryIndex;
   _weaponRef = itemToThrow;

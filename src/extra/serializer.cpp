@@ -969,7 +969,9 @@ std::string NRS::DumpObjectStructureToString()
       for (auto& p : node->_children)
       {
         sprintf(buf, "0x%X", &p.second);
-        ss << indentation << "'" << p.first << "'" << " (" << buf << ")" << "\n";
+        ss << indentation << "'" << p.first << "'"
+           << " (" << buf << ")"
+           << "\n";
         DumpIntl(&p.second, ss, indent + 2);
       }
     }

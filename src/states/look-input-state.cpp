@@ -87,7 +87,9 @@ void LookInputState::HandleInput()
 #ifdef DEBUG_BUILD
     case 'd':
     {
-      GameObject* go = Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X, _cursorPosition.Y);
+      GameObject* go =
+          Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X,
+                                                        _cursorPosition.Y);
       if (go != nullptr)
       {
         go->IsDestroyed = true;
@@ -104,7 +106,8 @@ void LookInputState::HandleInput()
 
     case 'D':
     {
-      auto gos = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
+      auto gos = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X,
+                                                          _cursorPosition.Y);
       if (!gos.empty())
       {
         GameObject* top = gos[gos.size() - 1];
@@ -127,17 +130,25 @@ void LookInputState::HandleInput()
         _playerRef->DistanceField.Emanate();
       }
 
-      PotentialField::Cell* c = _playerRef->DistanceField.GetCell(_cursorPosition.X, _cursorPosition.Y);
+      PotentialField::Cell* c =
+          _playerRef->DistanceField.GetCell(_cursorPosition.X,
+                                            _cursorPosition.Y);
 
       _distanceField = (c == nullptr)
                        ? "0x0"
-                       : Util::StringFormat("%i %i [%i]", c->MapPos.X, c->MapPos.Y, c->Cost);
+                       : Util::StringFormat("%i %i [%i]",
+                                            c->MapPos.X,
+                                            c->MapPos.Y,
+                                            c->Cost);
     }
     break;
 
     case 'M':
     {
-      GameObject* mm = MonstersInc::Instance().CreateMonster(_cursorPosition.X, _cursorPosition.Y, GameObjectType::MAD_MINER);
+      GameObject* mm =
+          MonstersInc::Instance().CreateMonster(_cursorPosition.X,
+                                                _cursorPosition.Y,
+                                                GameObjectType::MAD_MINER);
       Map::Instance().PlaceActor(mm);
     }
     break;
@@ -202,7 +213,9 @@ void LookInputState::Update(bool forceUpdate)
                   std::string name = model->Data.Name;
                   std::string title = model->Data.Job;
                   std::string unidStr = model->Data.UnacquaintedDescription;
-                  auto idStr = Util::StringFormat("You see %s the %s", name.data(), title.data());
+                  auto idStr = Util::StringFormat("You see %s the %s",
+                                                  name.data(),
+                                                  title.data());
                   lookStatus = (model->Data.IsAquainted) ? idStr : unidStr;
                   foundGameObject = true;
                 }
@@ -210,10 +223,18 @@ void LookInputState::Update(bool forceUpdate)
                 {
                   std::string objName = aic->OwnerGameObject->ObjectName;
 
-                  if (aic->OwnerGameObject->HasEffect(ItemBonusType::INVISIBILITY))
+                  bool hasInvisibility =
+                      aic->OwnerGameObject->HasEffect(
+                        ItemBonusType::INVISIBILITY
+                  );
+
+                  if (hasInvisibility)
                   {
-                    bool hasTele = _playerRef->HasEffect(ItemBonusType::TELEPATHY);
-                    bool hasTS   = _playerRef->HasEffect(ItemBonusType::TRUE_SEEING);
+                    bool hasTele =
+                        _playerRef->HasEffect(ItemBonusType::TELEPATHY);
+
+                    bool hasTS =
+                        _playerRef->HasEffect(ItemBonusType::TRUE_SEEING);
 
                     bool objIsLiving = aic->OwnerGameObject->IsLiving;
 
@@ -241,7 +262,9 @@ void LookInputState::Update(bool forceUpdate)
               ItemComponent* ic = gos.back()->GetComponent<ItemComponent>();
               if (ic != nullptr)
               {
-                objName = ic->Data.IsIdentified ? ic->Data.IdentifiedName : ic->Data.UnidentifiedName;
+                objName = ic->Data.IsIdentified
+                          ? ic->Data.IdentifiedName
+                          : ic->Data.UnidentifiedName;
               }
 
               lookStatus = objName;
@@ -255,7 +278,8 @@ void LookInputState::Update(bool forceUpdate)
           //
           if (!foundGameObject)
           {
-            auto& staticObj = curLvl->StaticMapObjects[_cursorPosition.X][_cursorPosition.Y];
+            auto& staticObj =
+                curLvl->StaticMapObjects[_cursorPosition.X][_cursorPosition.Y];
 
             lookStatus = (staticObj != nullptr)
                          ? staticObj->ObjectName
@@ -268,9 +292,10 @@ void LookInputState::Update(bool forceUpdate)
           // Tile is not visible,
           // so get its last known name if it was revealed earlier.
           //
-          lookStatus = tile->Revealed
-                       ? curLvl->FowLayer[_cursorPosition.X][_cursorPosition.Y].FowName
-                       : Strings::TripleQuestionMarks;
+          lookStatus =
+              tile->Revealed
+              ? curLvl->FowLayer[_cursorPosition.X][_cursorPosition.Y].FowName
+              : Strings::TripleQuestionMarks;
         }
       }
     }
@@ -288,7 +313,10 @@ void LookInputState::Update(bool forceUpdate)
                                 Colors::WhiteColor,
                                 Colors::BlackColor);
 
-    std::string coords = Util::StringFormat("[%i;%i]", _cursorPosition.X, _cursorPosition.Y);
+    std::string coords = Util::StringFormat("[%i;%i]",
+                                            _cursorPosition.X,
+                                            _cursorPosition.Y);
+
     Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
                                 Printer::TerminalHeight - 2,
                                 coords,
@@ -338,14 +366,18 @@ void LookInputState::MoveCursor(int dx, int dy)
 
 void LookInputState::DrawCursor()
 {
-  Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().CurrentLevel->MapOffsetX + 1,
-                              _cursorPosition.Y + Map::Instance().CurrentLevel->MapOffsetY,
+  Printer::Instance().PrintFB(_cursorPosition.X +
+                              Map::Instance().CurrentLevel->MapOffsetX + 1,
+                              _cursorPosition.Y +
+                              Map::Instance().CurrentLevel->MapOffsetY,
                               ']',
                               Colors::WhiteColor,
                               Colors::BlackColor);
 
-  Printer::Instance().PrintFB(_cursorPosition.X + Map::Instance().CurrentLevel->MapOffsetX - 1,
-                              _cursorPosition.Y + Map::Instance().CurrentLevel->MapOffsetY,
+  Printer::Instance().PrintFB(_cursorPosition.X +
+                              Map::Instance().CurrentLevel->MapOffsetX - 1,
+                              _cursorPosition.Y +
+                              Map::Instance().CurrentLevel->MapOffsetY,
                               '[',
                               Colors::WhiteColor,
                               Colors::BlackColor);
@@ -363,7 +395,8 @@ bool LookInputState::CheckPlayer()
 
 GameObject* LookInputState::CheckActor()
 {
-  auto actor = Map::Instance().GetActorAtPosition(_cursorPosition.X, _cursorPosition.Y);
+  auto actor = Map::Instance().GetActorAtPosition(_cursorPosition.X,
+                                                  _cursorPosition.Y);
   return actor;
 }
 
@@ -371,7 +404,8 @@ GameObject* LookInputState::CheckActor()
 
 const std::vector<GameObject*> LookInputState::CheckGameObjects()
 {
-  return Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
+  return Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X,
+                                                  _cursorPosition.Y);
 }
 
 // =============================================================================
@@ -388,7 +422,10 @@ void LookInputState::DisplayMonsterStats()
                       ? Util::StringFormat("(%i)", mod)
                       : Util::StringFormat("(+%i)", mod);
 
-    std::string total = Util::StringFormat("%s: %i %s", attrName.data(), val, txt.data());
+    std::string total = Util::StringFormat("%s: %i %s",
+                                           attrName.data(),
+                                           val,
+                                           txt.data());
 
     return total;
   };
@@ -403,11 +440,18 @@ void LookInputState::DisplayMonsterStats()
   {
     _monsterStatsInfo.clear();
 
-    std::string name = Util::StringFormat("%s_%llu", actor->ObjectName.data(),
+    std::string name = Util::StringFormat("%s_%llu",
+                                          actor->ObjectName.data(),
                                           actor->ObjectId());
 
-    _monsterStatsInfo.push_back(Util::StringFormat("LVL: %i", actor->Attrs.Lvl.Get()));
-    _monsterStatsInfo.push_back(Util::StringFormat("EXP: %i", actor->Attrs.Exp.Min().Get()));
+    _monsterStatsInfo.push_back(
+          Util::StringFormat("LVL: %i", actor->Attrs.Lvl.Get())
+    );
+
+    _monsterStatsInfo.push_back(
+          Util::StringFormat("EXP: %i", actor->Attrs.Exp.Min().Get())
+    );
+
     _monsterStatsInfo.push_back(std::string());
     _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Str, "STR"));
     _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Def, "DEF"));
@@ -416,15 +460,36 @@ void LookInputState::DisplayMonsterStats()
     _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Skl, "SKL"));
     _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Spd, "SPD"));
     _monsterStatsInfo.push_back(std::string());
-    _monsterStatsInfo.push_back(Util::StringFormat("Rating: %i", actor->Attrs.Rating()));
-    _monsterStatsInfo.push_back(Util::StringFormat("(CR: %i)", actor->Attrs.ChallengeRating));
-    _monsterStatsInfo.push_back(std::string());
-    _monsterStatsInfo.push_back(Util::StringFormat("HP: %i/%i", actor->Attrs.HP.Min().Get(), actor->Attrs.HP.Max().Get()));
-    _monsterStatsInfo.push_back(Util::StringFormat("MP: %i/%i", actor->Attrs.MP.Min().Get(), actor->Attrs.MP.Max().Get()));
-    _monsterStatsInfo.push_back(std::string());
-    _monsterStatsInfo.push_back(Util::StringFormat("Action Meter: %i", actor->Attrs.ActionMeter));
 
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY, name, _monsterStatsInfo);
+    _monsterStatsInfo.push_back(
+          Util::StringFormat("Rating: %i", actor->Attrs.Rating())
+    );
+
+    _monsterStatsInfo.push_back(
+          Util::StringFormat("(CR: %i)", actor->Attrs.ChallengeRating)
+    );
+
+    _monsterStatsInfo.push_back(std::string());
+
+    _monsterStatsInfo.push_back(
+          Util::StringFormat("HP: %i/%i",
+                             actor->Attrs.HP.Min().Get(),
+                             actor->Attrs.HP.Max().Get())
+    );
+
+    _monsterStatsInfo.push_back(
+          Util::StringFormat("MP: %i/%i",
+                             actor->Attrs.MP.Min().Get(),
+                             actor->Attrs.MP.Max().Get())
+    );
+
+    _monsterStatsInfo.push_back(std::string());
+    _monsterStatsInfo.push_back(Util::StringFormat("Action Meter: %i",
+                                                   actor->Attrs.ActionMeter));
+
+    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
+                                           name,
+                                           _monsterStatsInfo);
   }
 }
 

@@ -10,7 +10,10 @@
 #include "logger.h"
 #endif
 
-MapLevelDeepDark::MapLevelDeepDark(int sizeX, int sizeY, MapType type, int dungeonLevel)
+MapLevelDeepDark::MapLevelDeepDark(int sizeX,
+                                   int sizeY,
+                                   MapType type,
+                                   int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
   switch (MapType_)
@@ -153,7 +156,11 @@ void MapLevelDeepDark::CreateSpecialLevel()
           LevelStart.X = posX;
           LevelStart.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this, LevelStart.X, LevelStart.Y, c, stairsUpTo);
+          GameObjectsFactory::Instance().CreateStairs(this,
+                                                      LevelStart.X,
+                                                      LevelStart.Y,
+                                                      c,
+                                                      stairsUpTo);
         }
         break;
 
@@ -162,7 +169,11 @@ void MapLevelDeepDark::CreateSpecialLevel()
           LevelExit.X = posX;
           LevelExit.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this, LevelExit.X, LevelExit.Y, c, stairsDownTo);
+          GameObjectsFactory::Instance().CreateStairs(this,
+                                                      LevelExit.X,
+                                                      LevelExit.Y,
+                                                      c,
+                                                      stairsDownTo);
         }
         break;
 
@@ -219,7 +230,11 @@ void MapLevelDeepDark::CreateCommonObjects(int x, int y, char image)
 
     case '+':
     {
-      GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false, DoorMaterials::STONE);
+      GameObject* door =
+          GameObjectsFactory::Instance().CreateDoor(x,
+                                                    y,
+                                                    false,
+                                                    DoorMaterials::STONE);
       PlaceStaticObject(door);
     }
     break;

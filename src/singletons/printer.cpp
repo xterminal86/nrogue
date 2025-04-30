@@ -41,7 +41,8 @@ bool Printer::InitForSDL()
   {
     SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
 
-    _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
+    _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer,
+                                            surf);
     if (_tileset == nullptr)
     {
       ConsoleLog("SDL_CreateTextureFromSurface() fail: %s\n", SDL_GetError());
@@ -63,7 +64,8 @@ bool Printer::InitForSDL()
     _tileWidth = 8;
     _tileHeight = 16;
 
-    SDL_Rect rect = Application::Instance().GetWindowSize(_tileWidth, _tileHeight);
+    SDL_Rect rect = Application::Instance().GetWindowSize(_tileWidth,
+                                                          _tileHeight);
 
     SDL_SetWindowPosition(Application::Instance().Window, rect.x, rect.y);
     SDL_SetWindowSize(Application::Instance().Window, rect.w, rect.h);
@@ -74,14 +76,17 @@ bool Printer::InitForSDL()
     surf = SDL_LoadBMP_RW(data, 1);
     if (!surf)
     {
-      auto str = Util::StringFormat("***** Could not load from memory: %s *****\n", SDL_GetError());
+      auto str = Util::StringFormat("***** Could not load from memory: "
+                                    "%s *****\n",
+                                    SDL_GetError());
       ConsoleLog("%s\n", str.data());
       LogPrint(str, true);
       return false;
     }
 
     SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
-    _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer, surf);
+    _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer,
+                                            surf);
     if (_tileset == nullptr)
     {
       ConsoleLog("SDL_CreateTextureFromSurface() fail: %s\n", SDL_GetError());
@@ -303,7 +308,10 @@ void Printer::DrawRect(int x1, int y1,
                          _convertedHtml.G,
                          _convertedHtml.B);
 
-  SDL_RenderCopy(Application::Instance().Renderer, _tileset, &_drawSrc, &_drawDst);
+  SDL_RenderCopy(Application::Instance().Renderer,
+                 _tileset,
+                 &_drawSrc,
+                 &_drawDst);
 }
 
 // =============================================================================
@@ -327,15 +335,23 @@ void Printer::DrawTile(int x, int y, int tileIndex)
     SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
   }
 
-  SDL_RenderCopy(Application::Instance().Renderer, _tileset, &_drawSrc, &_drawDst);
+  SDL_RenderCopy(Application::Instance().Renderer,
+                 _tileset,
+                 &_drawSrc,
+                 &_drawDst);
 }
 
 // =============================================================================
 
 void Printer::DrawTile(int x, int y, int tileIndex, size_t scale)
 {
-  size_t tileScaleW = (scale <= 1) ? _tileWidthScaled : _tileWidthScaled * ((scale - 1) * 3);
-  size_t tileScaleH = (scale <= 1) ? _tileHeightScaled : _tileHeightScaled * ((scale - 1) * 3);
+  size_t tileScaleW = (scale <= 1)
+                      ? _tileWidthScaled
+                      : _tileWidthScaled * ((scale - 1) * 3);
+
+  size_t tileScaleH = (scale <= 1)
+                      ? _tileHeightScaled
+                      : _tileHeightScaled * ((scale - 1) * 3);
 
   size_t offsetX = (scale <= 1) ? 0 : tileScaleW / 3;
   size_t offsetY = (scale <= 1) ? 0 : tileScaleH / 3;
@@ -357,7 +373,10 @@ void Printer::DrawTile(int x, int y, int tileIndex, size_t scale)
     SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
   }
 
-  SDL_RenderCopy(Application::Instance().Renderer, _tileset, &_drawSrc, &_drawDst);
+  SDL_RenderCopy(Application::Instance().Renderer,
+                 _tileset,
+                 &_drawSrc,
+                 &_drawDst);
 }
 
 // =============================================================================
@@ -452,7 +471,10 @@ void Printer::PrintFB(const int& x,
   size_t tileScaleW = (scale <= 1)
                       ? _tileWidthScaled
                       : _tileWidthScaled * ((scale - 1) * 3);
-  //size_t tileScaleH = (scale <= 1) ? _tileHeightScaled : _tileHeightScaled * ((scale - 1) * 3);
+
+  //size_t tileScaleH = (scale <= 1)
+  //                  ? _tileHeightScaled
+  //                  : _tileHeightScaled * ((scale - 1) * 3);
 
   int px = x * _tileWidthScaled;
   int py = y * _tileHeightScaled;
@@ -674,7 +696,9 @@ size_t Printer::GetOrSetColor(const uint32_t& htmlColorFg,
     ColorPair cp = { _colorPairsGlobalIndex++, fg, bg };
     _colorMap[hash] = cp;
 
-    init_pair(_colorMap[hash].PairIndex, _colorIndexMap[hashFg], _colorIndexMap[hashBg]);
+    init_pair(_colorMap[hash].PairIndex,
+              _colorIndexMap[hashFg],
+              _colorIndexMap[hashBg]);
   }
 
   return hash;
@@ -682,7 +706,10 @@ size_t Printer::GetOrSetColor(const uint32_t& htmlColorFg,
 
 // =============================================================================
 
-std::pair<int, int> Printer::AlignText(int x, int y, int align, const std::string& text)
+std::pair<int, int> Printer::AlignText(int x,
+                                       int y,
+                                       int align,
+                                       const std::string& text)
 {
   std::pair<int, int> res;
 
@@ -767,7 +794,10 @@ void Printer::PrintFB(const int& x, const int& y,
     return;
   }
 
-  // Black & White mode for Windows due to PDCurses not handling colors correctly
+  //
+  // Black & White mode for Windows due to PDCurses not handling colors
+  // correctly.
+  //
 
   #if !(defined(__unix__) || defined(__linux__))
 
@@ -824,7 +854,11 @@ void Printer::PrintFB(const int& x, const int& y,
   {
     // Coordinates are swapped because
     // in framebuffer we don't work in ncurses coordinate system
-    PrintFB(textPos.second + xOffset, textPos.first, c, htmlColorFg, htmlColorBg);
+    PrintFB(textPos.second + xOffset,
+            textPos.first,
+            c,
+            htmlColorFg,
+            htmlColorBg);
     xOffset++;
   }
 }
@@ -1003,7 +1037,10 @@ void Printer::Render()
 #else
   SDL_SetRenderTarget(Application::Instance().Renderer, nullptr);
   SDL_RenderClear(Application::Instance().Renderer);
-  SDL_RenderCopy(Application::Instance().Renderer, _frameBuffer, nullptr, &_renderDst);
+  SDL_RenderCopy(Application::Instance().Renderer,
+                 _frameBuffer,
+                 nullptr,
+                 &_renderDst);
   SDL_RenderPresent(Application::Instance().Renderer);
 #endif
 }
@@ -1012,7 +1049,8 @@ void Printer::Render()
 
 std::vector<Position> Printer::DrawExplosion(const Position& pos, int aRange)
 {
-  std::vector<Position> cellsAffected = Util::GetAreaDamagePointsFrom(pos, aRange);
+  std::vector<Position> cellsAffected =
+      Util::GetAreaDamagePointsFrom(pos, aRange);
 
   for (int range = 1; range <= aRange; range++)
   {
@@ -1046,7 +1084,12 @@ std::vector<Position> Printer::DrawExplosion(const Position& pos, int aRange)
 
 void Printer::AddMessage(const std::string& message)
 {
-  AddMessage(GameLogMessageData{ message, Colors::WhiteColor, Colors::BlackColor });
+  AddMessage(GameLogMessageData
+             {
+               message,
+               Colors::WhiteColor,
+               Colors::BlackColor
+             });
 }
 
 // =============================================================================
@@ -1073,13 +1116,20 @@ void Printer::AddMessage(const GameLogMessageData& data)
   if (!_inGameMessages.empty() && (_repeatingMessage == data.Message))
   {
     _messageRepeatCounter++;
-    auto newStr = Util::StringFormat("(x%i) %s", _messageRepeatCounter, _repeatingMessage.data());
+    auto newStr = Util::StringFormat("(x%i) %s",
+                                     _messageRepeatCounter,
+                                     _repeatingMessage.data());
     _inGameMessages.front() = { newStr, data.FgColor, data.BgColor };
   }
   else
   {
     _messageRepeatCounter = 1;
-    _inGameMessages.insert(_inGameMessages.begin(), { data.Message, data.FgColor, data.BgColor });
+    _inGameMessages.insert(_inGameMessages.begin(),
+                           {
+                             data.Message,
+                             data.FgColor,
+                             data.BgColor
+                           });
     _lastMessagesToDisplay++;
   }
 

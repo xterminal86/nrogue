@@ -7,22 +7,28 @@ BTResult TaskMoveSmart::Run()
 {
   //DebugLog("[TaskMoveSmart]\n");
 
-  auto cells = Util::GetEightPointsAround(_objectToControl->GetPosition(),
-                                          Map::Instance().CurrentLevel->MapSize);
+  auto cells =
+      Util::GetEightPointsAround(_objectToControl->GetPosition(),
+                                 Map::Instance().CurrentLevel->MapSize);
+
   std::vector<Position> cellsToMove;
   for (auto& c : cells)
   {
     auto& so = Map::Instance().CurrentLevel->StaticMapObjects[c.X][c.Y];
+
+    MapLevelBase* curLvl = Map::Instance().CurrentLevel;
 
     //
     // TODO: certain monsters can go to zones otherwise blocked.
     // E.g. undead cannot step on SHRINE or HALLOWED_GROUND, but kobold can.
     // Add ZoneMarker to check.
     //
-    bool isOk = !Map::Instance().CurrentLevel->MapArray[c.X][c.Y]->Special;
+    bool isOk = !curLvl->MapArray[c.X][c.Y]->Special;
 
-    bool isOccupied = Map::Instance().CurrentLevel->MapArray[c.X][c.Y]->Occupied;
-    bool isDoor = (so != nullptr && (so->GetComponent<DoorComponent>() != nullptr));
+    bool isOccupied = curLvl->MapArray[c.X][c.Y]->Occupied;
+
+    bool isDoor = (so != nullptr
+               && (so->GetComponent<DoorComponent>() != nullptr));
 
     if (isOk && (!isOccupied || isDoor))
     {

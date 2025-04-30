@@ -112,7 +112,8 @@ void AttackState::HandleInput()
     //
     // Check actors first.
     //
-    auto res = Map::Instance().GetActorAtPosition(_cursorPosition.X, _cursorPosition.Y);
+    auto res = Map::Instance().GetActorAtPosition(_cursorPosition.X,
+                                                  _cursorPosition.Y);
     if (res != nullptr)
     {
       _playerRef->MeleeAttack(res);
@@ -122,7 +123,9 @@ void AttackState::HandleInput()
       //
       // Check static game objects.
       //
-      auto so = Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X, _cursorPosition.Y);
+      auto so =
+          Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X,
+                                                        _cursorPosition.Y);
       if (so != nullptr)
       {
         //
@@ -132,11 +135,14 @@ void AttackState::HandleInput()
       }
       else
       {
-        auto* cell = Map::Instance().CurrentLevel->MapArray[_cursorPosition.X][_cursorPosition.Y].get();
-        Application::Instance().DisplayAttack(cell,
-                                              GlobalConstants::DisplayAttackDelayMs,
-                                              "*whoosh*",
-                                              Colors::WhiteColor);
+        auto& ma = Map::Instance().CurrentLevel->MapArray;
+        auto* cell = ma[_cursorPosition.X][_cursorPosition.Y].get();
+        Application::Instance().DisplayAttack(
+              cell,
+              GlobalConstants::DisplayAttackDelayMs,
+              "*whoosh*",
+              Colors::WhiteColor
+        );
       }
     }
 

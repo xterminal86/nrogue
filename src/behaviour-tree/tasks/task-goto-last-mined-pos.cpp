@@ -7,7 +7,9 @@ BTResult TaskGotoLastMinedPos::Run()
 {
   //DebugLog("[TaskGotoLastMinedPos]\n");
 
-  auto minedPos = Blackboard::Instance().Get(_objectToControl->ObjectId(), Strings::BlackboardKeyLastMinedPos);
+  auto minedPos =
+      Blackboard::Instance().Get(_objectToControl->ObjectId(),
+                                 Strings::BlackboardKeyLastMinedPos);
 
   if (minedPos.empty())
   {

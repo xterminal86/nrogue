@@ -38,21 +38,28 @@ void IntroState::HandleInput()
 
 void IntroState::Update(bool forceUpdate)
 {
+  int pci = Application::Instance().PlayerInstance.SelectedClass;
+  PlayerClass pc = Application::Instance().PlayerInstance.GetClass();
+
 #ifdef USE_SDL
-  Printer::Instance().PrintFB(_twHalf,
-                              (Printer::TerminalHeight - _introStrings[Application::Instance().PlayerInstance.SelectedClass].size()) / 4,
-                              _scenarioNameByClass.at(Application::Instance().PlayerInstance.GetClass()),
-                              2,
-                              Printer::kAlignCenter,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Printer::Instance().PrintFB(
+        _twHalf,
+        (Printer::TerminalHeight - _introStrings[pci].size()) / 4,
+        _scenarioNameByClass.at(pc),
+        2,
+        Printer::kAlignCenter,
+        Colors::WhiteColor,
+        Colors::BlackColor
+  );
 #else
-  Printer::Instance().PrintFB(_twHalf,
-                              (Printer::TerminalHeight - _introStrings[Application::Instance().PlayerInstance.SelectedClass].size()) / 4,
-                              _scenarioNameByClass.at(Application::Instance().PlayerInstance.GetClass()),
-                              Printer::kAlignCenter,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Printer::Instance().PrintFB(
+        _twHalf,
+        (Printer::TerminalHeight - _introStrings[pci].size()) / 4,
+        _scenarioNameByClass.at(pc),
+        Printer::kAlignCenter,
+        Colors::WhiteColor,
+        Colors::BlackColor
+  );
 #endif
 
   if (Util::WaitForMs(10))
@@ -60,13 +67,14 @@ void IntroState::Update(bool forceUpdate)
     int textIndex = Application::Instance().PlayerInstance.SelectedClass;
     if (_stringIndex != _introStrings[textIndex].size())
     {
-      int len = _introStrings[textIndex][_stringIndex].length();
+      const std::string& s = _introStrings[textIndex][_stringIndex];
+      int len = s.length();
 
-      if (_textPositionCursor != _introStrings[textIndex][_stringIndex].length())
+      if ((int)_textPositionCursor != len)
       {
         Printer::Instance().PrintFB(_textPositionX - len / 2,
                                     _textPositionY,
-                                    _introStrings[textIndex][_stringIndex][_textPositionCursor],
+                                    s[_textPositionCursor],
                                     Colors::WhiteColor,
                                     Colors::BlackColor);
 

@@ -7,7 +7,9 @@
 #include "game-objects-factory.h"
 #include "map.h"
 
-ShrineComponent::ShrineComponent(ShrineType shrineType, int timeout, bool oneTimeUse)
+ShrineComponent::ShrineComponent(ShrineType shrineType,
+                                 int timeout,
+                                 bool oneTimeUse)
 {
   _timeout = timeout;
 
@@ -61,7 +63,8 @@ IR ShrineComponent::Interact()
     OwnerGameObject->FgColor = Colors::BlackColor;
 
     std::string shrineName = GlobalConstants::ShrineNameByType.at(_type);
-    std::string message = Util::StringFormat("You touch the %s...", shrineName.data());
+    std::string message = Util::StringFormat("You touch the %s...",
+                                             shrineName.data());
 
     if (GlobalConstants::ShrineSaintByType.count(_type) == 1)
     {
@@ -218,7 +221,9 @@ void ShrineComponent::ProcessEffect()
         Util::UpdateItemPrefix(itemsToCurse[index], ItemPrefix::CURSED);
         msg = "You sense the malevolent energy";
         auto& idName = itemsToCurse[index]->Data.IdentifiedName;
-        idName = Util::ReplaceItemPrefix(idName, { "Blessed", "Uncursed" }, "Cursed");
+        idName = Util::ReplaceItemPrefix(idName,
+                                         { "Blessed", "Uncursed" },
+                                         "Cursed");
       }
     }
     break;
@@ -297,7 +302,10 @@ void ShrineComponent::ProcessEffect()
           ic->Data.IsPrefixDiscovered = true;
           Util::UpdateItemPrefix(ic, ItemPrefix::UNCURSED);
           success = true;
-          ic->Data.IdentifiedName = Util::ReplaceItemPrefix(ic->Data.IdentifiedName, { "Cursed" }, "Uncursed");
+          ic->Data.IdentifiedName =
+              Util::ReplaceItemPrefix(ic->Data.IdentifiedName,
+                                      { "Cursed" },
+                                      "Uncursed");
         }
       }
 
@@ -318,7 +326,11 @@ void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
 {
   auto& playerRef = Application::Instance().PlayerInstance;
 
-  int effectIndex = RNG::Instance().RandomRange(0, GlobalConstants::BonusDisplayNameByType.size());
+  int effectIndex = RNG::Instance().RandomRange(
+                      0,
+                      GlobalConstants::BonusDisplayNameByType.size()
+                    );
+
   auto it = GlobalConstants::BonusDisplayNameByType.begin();
   std::advance(it, effectIndex);
 
@@ -394,9 +406,9 @@ void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
   b.Duration   = _duration;
   b.Id         = OwnerGameObject->ObjectId();
 
-  bool manaShieldOk = (playerRef.Attrs.MP.Min().Get() != 0 ||
-                      (playerRef.Attrs.MP.Max().Get() != 0 &&
-                       playerRef.Attrs.Mag.Get() > 0));
+  bool manaShieldOk = (playerRef.Attrs.MP.Min().Get() != 0
+                   || (playerRef.Attrs.MP.Max().Get() != 0
+                    && playerRef.Attrs.Mag.Get() > 0));
 
   if (t == ItemBonusType::MANA_SHIELD)
   {

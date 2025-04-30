@@ -13,9 +13,11 @@ class LevelBuilder
                        int wallsSizeFactor,
                        bool postProcess = false);
 
-    void RecursiveBacktrackerMethod(const Position& mapSize,
-                                    const Position& startingPoint = { -1, -1 },
-                                    const RemovalParams& endWallsRemovalParams = RemovalParams());
+    void RecursiveBacktrackerMethod(
+        const Position& mapSize,
+        const Position& startingPoint = { -1, -1 },
+        const RemovalParams& endWallsRemovalParams = RemovalParams()
+    );
 
     void TunnelerMethod(const Position& mapSize,
                         int maxIterations,

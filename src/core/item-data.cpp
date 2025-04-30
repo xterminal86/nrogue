@@ -50,7 +50,9 @@ int ItemData::GetCost()
   if (ItemType_ == ItemType::WAND)
   {
     int capacity = WandCapacity.Get();
-    int spellCost = SpellsDatabase::Instance().GetSpellInfoFromDatabase(SpellHeld.SpellType_)->SpellBaseCost;
+    int spellCost =
+        SpellsDatabase::Instance()
+        .GetSpellInfoFromDatabase(SpellHeld.SpellType_)->SpellBaseCost;
     price = capacity + spellCost * Amount;
   }
   else

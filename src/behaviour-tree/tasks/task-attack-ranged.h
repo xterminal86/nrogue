@@ -31,7 +31,8 @@ class TaskAttackRanged : public Node
     BTResult Run() override;
 
   protected:
-    BTResult CheckRangedWeaponValidity(ItemComponent* weapon, ItemComponent* arrows);
+    BTResult CheckRangedWeaponValidity(ItemComponent* weapon,
+                                       ItemComponent* arrows);
     BTResult ProcessWeaponAttack();
     BTResult ProcessSpellAttack();
 

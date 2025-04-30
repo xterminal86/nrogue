@@ -40,7 +40,9 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y,
 
   bool oneTimeUse = (type != ShrineType::POTENTIAL);
 
-  ShrineComponent* sc = go->AddComponent<ShrineComponent>(type, timeout, oneTimeUse);
+  ShrineComponent* sc = go->AddComponent<ShrineComponent>(type,
+                                                          timeout,
+                                                          oneTimeUse);
 
   go->ObjectName = GlobalConstants::ShrineNameByType.at(type);
   go->FogOfWarName = "?Shrine?";
@@ -53,7 +55,12 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y,
 
 GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel, from->PosX, from->PosY, '%', from->FgColor, from->BgColor);
+  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+                                  from->PosX,
+                                  from->PosY,
+                                  '%',
+                                  from->FgColor,
+                                  from->BgColor);
 
   go->Type = GameObjectType::REMAINS;
 
@@ -241,7 +248,8 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
 
   dc->UpdateDoorState();
 
-  dc->OwnerGameObject->InteractionCallback = std::bind(&DoorComponent::Interact, dc);
+  dc->OwnerGameObject->InteractionCallback = std::bind(&DoorComponent::Interact,
+                                                       dc);
   dc->OwnerGameObject->ObjectName = doorNameTotal;
 
   return go;
@@ -249,11 +257,12 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
 
 // =============================================================================
 
-GameObject* GameObjectsFactory::CreateStaticObject(int x,
-                                                   int y,
-                                                   const GameObjectInfo& objectInfo,
-                                                   int hitPoints,
-                                                   GameObjectType type)
+GameObject*
+GameObjectsFactory::CreateStaticObject(int x,
+                                       int y,
+                                       const GameObjectInfo& objectInfo,
+                                       int hitPoints,
+                                       GameObjectType type)
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 
@@ -334,12 +343,15 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
 
 // =============================================================================
 
-GameObject* GameObjectsFactory::CreateBreakableObjectWithRandomLoot(int x,
-                                                                    int y,
-                                                                    char image,
-                                                                    const std::string& objName,
-                                                                    const uint32_t& fgColor,
-                                                                    const uint32_t& bgColor)
+GameObject*
+GameObjectsFactory::CreateBreakableObjectWithRandomLoot(
+    int x,
+    int y,
+    char image,
+    const std::string& objName,
+    const uint32_t& fgColor,
+    const uint32_t& bgColor
+  )
 {
   GameObject* go = new GameObject(Map::Instance().CurrentLevel);
 

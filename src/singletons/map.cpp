@@ -168,8 +168,8 @@ void Map::UpdateActors()
 
       //
       // If we have fast monster, player should be able to see its movements
-      // or it may look like monster just popped out of nowhere before the player
-      // since all movement updates are off-screen.
+      // or it may look like monster just popped out of nowhere before the
+      // player since all movement updates are off-screen.
       // Same case with hit-and-run monster tactics: it may seem as if
       // monster is attacking from distance.
       // Check against specific level is needed to avoid update lag
@@ -281,7 +281,8 @@ std::pair<int, GameObject*> Map::GetGameObjectToPickup(int x, int y)
 
 // =============================================================================
 
-std::vector<std::pair<int, GameObject*>> Map::GetGameObjectsToPickup(int x, int y)
+std::vector<std::pair<int, GameObject*>> Map::GetGameObjectsToPickup(int x,
+                                                                     int y)
 {
   std::vector<std::pair<int, GameObject*>> res;
 
@@ -447,7 +448,8 @@ void Map::RemoveDestroyed(GameObjectCollectionType c)
 
 void Map::RemoveTriggers()
 {
-  auto RemoveFromCollecton = [this](std::vector<std::unique_ptr<GameObject>>& collection)
+  auto RemoveFromCollecton =
+  [this](std::vector<std::unique_ptr<GameObject>>& collection)
   {
     auto newBegin = std::remove_if(collection.begin(),
                                    collection.end(),
@@ -478,7 +480,11 @@ void Map::RemoveStaticObjects()
   int tw = Printer::TerminalWidth;
   int th = Printer::TerminalHeight;
 
-  auto mapCells = Util::GetRectAroundPoint(playerX, playerY, tw / 2, th / 2, CurrentLevel->MapSize);
+  auto mapCells = Util::GetRectAroundPoint(playerX,
+                                           playerY,
+                                           tw / 2,
+                                           th / 2,
+                                           CurrentLevel->MapSize);
   for (auto& cell : mapCells)
   {
     //
@@ -542,12 +548,13 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
   // we must manually unblock player's cell first
   // or MoveTo() for actor won't work.
   //
-  CurrentLevel->MapArray[whoToTeleport->PosX][whoToTeleport->PosY]->Occupied = false;
+  auto& ma = CurrentLevel->MapArray;
+  ma[whoToTeleport->PosX][whoToTeleport->PosY]->Occupied = false;
 
   CurrentLevel = _levels[levelToChange].get();
 
   auto& mapRef = CurrentLevel->MapArray[teleportTo.X][teleportTo.Y];
-  auto& soRef = CurrentLevel->StaticMapObjects[teleportTo.X][teleportTo.Y];
+  auto& soRef  = CurrentLevel->StaticMapObjects[teleportTo.X][teleportTo.Y];
 
   bool tpToWall = ((mapRef != nullptr && mapRef->Blocking)
                 || (soRef != nullptr && soRef->Blocking));
@@ -581,7 +588,8 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
       // he can be moved at least to his 'previous' position
       // (thus, any empty cell around him).
       //
-      auto str = Util::StringFormat("You bump into %s!", actor->ObjectName.data());
+      auto str = Util::StringFormat("You bump into %s!",
+                                    actor->ObjectName.data());
       Printer::Instance().AddMessage(str);
     }
 
@@ -825,8 +833,10 @@ int Map::CountWallsOrthogonal(int x, int y)
       continue;
     }
 
+    GameObjectType toCheck = GameObjectType::PICKAXEABLE;
+
     if (CurrentLevel->StaticMapObjects[p.X][p.Y] != nullptr
-     && CurrentLevel->StaticMapObjects[p.X][p.Y]->Type == GameObjectType::PICKAXEABLE)
+     && CurrentLevel->StaticMapObjects[p.X][p.Y]->Type == toCheck)
     {
       res++;
     }
@@ -894,7 +904,8 @@ void Map::PrintMapArrayRevealedStatus()
     std::string row;
     for (int y = 0; y < CurrentLevel->MapSize.Y; y++)
     {
-      auto str = Util::StringFormat("%i", CurrentLevel->MapArray[x][y]->Revealed);
+      auto str = Util::StringFormat("%i",
+                                    CurrentLevel->MapArray[x][y]->Revealed);
       row += str;
     }
     dbg.push_back(row);
@@ -917,7 +928,8 @@ void Map::PrintMapLayout()
 {
   std::ofstream f;
 
-  std::string fname = Util::StringFormat("DBG_%s.txt", CurrentLevel->LevelName.data());
+  std::string fname = Util::StringFormat("DBG_%s.txt",
+                                         CurrentLevel->LevelName.data());
 
   f.open(fname);
 
@@ -929,7 +941,9 @@ void Map::PrintMapLayout()
     {
       char ch = CurrentLevel->MapArray[y][x]->Image;
 
+      //
       // Replace 'wall' tiles with '#'
+      //
       if (CurrentLevel->MapArray[y][x]->Blocking
        && CurrentLevel->MapArray[y][x]->BlocksSight
        && ch == ' ')
@@ -942,7 +956,9 @@ void Map::PrintMapLayout()
       {
         ch = gameObjects.back()->Image;
 
+        //
         // Replace 'wall' objects with '#'
+        //
         if (gameObjects.back()->Blocking
          && gameObjects.back()->BlocksSight
          && ch == ' ')
@@ -961,7 +977,9 @@ void Map::PrintMapLayout()
         }
       }
 
+      //
       // Replace non-printable character with '?'
+      //
       if (ch < 32 || ch > 126)
       {
         ch = '?';
@@ -986,7 +1004,8 @@ void Map::PrintMapLayout()
 
 void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes)
 {
-  auto pointsAffected = Printer::Instance().DrawExplosion(target->GetPosition(), 3);
+  auto pointsAffected =
+      Printer::Instance().DrawExplosion(target->GetPosition(), 3);
 
   //Util::PrintVector("points affected", pointsAffected);
 
@@ -1237,7 +1256,9 @@ void Map::DrawGameObjects()
       // If game object has black bg color,
       // replace it with current floor color
       //bool cond = (go->BgColor == GlobalConstants::BlackColor);
-      //go.get()->Draw(go.get()->FgColor, cond ? CurrentLevel->MapArray[x][y]->BgColor : go->BgColor);
+      //go.get()->Draw(go.get()->FgColor, cond
+      //               ? CurrentLevel->MapArray[x][y]->BgColor
+      //               : go->BgColor);
 
       go->Draw(go->FgColor, go->BgColor);
     }
@@ -1329,12 +1350,16 @@ std::pair<uint32_t, uint32_t> Map::GetActorColors(GameObject* actor)
     if (isOnStaticObject)
     {
       auto& objBgColor = CurrentLevel->StaticMapObjects[x][y]->BgColor;
-      bgColor = (objBgColor == actor->FgColor ? Colors::BlackColor : objBgColor);
+      bgColor = (objBgColor == actor->FgColor
+                 ? Colors::BlackColor
+                 : objBgColor);
     }
     else
     {
       auto& tileBgColor = CurrentLevel->MapArray[x][y]->BgColor;
-      bgColor = (tileBgColor == actor->FgColor ? Colors::BlackColor : tileBgColor);
+      bgColor = (tileBgColor == actor->FgColor
+                 ? Colors::BlackColor
+                 : tileBgColor);
     }
   }
 
@@ -1346,9 +1371,10 @@ std::pair<uint32_t, uint32_t> Map::GetActorColors(GameObject* actor)
 void Map::EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list)
 {
   //
-  // It's dangerous to iterate over collection from start to end using plain for loop
-  // to remove elements that satisfy certain condition, because it is possible to skip
-  // some of them if such elements happen to be adjacent. E.g.:
+  // It's dangerous to iterate over collection from start to end using plain for
+  // loop to remove elements that satisfy certain condition, because it is
+  // possible to skip some of them if such elements happen to be adjacent.
+  // E.g.:
   //
   // i: 0  1  2  3
   //  { 1, 2, 2, 4 }
@@ -1368,31 +1394,31 @@ void Map::EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list)
   // STL algorithms.
   // Or use ye olde C-style way by iterating over collection backwards.
   //
-  auto newBegin = std::remove_if(list.begin(),
-                                 list.end(),
-                                 [this](const std::unique_ptr<GameObject>& go)
-                                 {
-                                    if (go != nullptr && go->IsDestroyed)
-                                    {
-                                      int x = go->PosX;
-                                      int y = go->PosY;
+  auto newBegin =
+      std::remove_if(list.begin(),
+                     list.end(),
+                     [this](const std::unique_ptr<GameObject>& go)
+                     {
+                       if (go != nullptr && go->IsDestroyed)
+                       {
+                         int x = go->PosX;
+                         int y = go->PosY;
 
-                                      //
-                                      // GameObjects vector may contain just items
-                                      // or blocking objects with logic like shrines.
-                                      // So to handle both cases, we just set Occupied
-                                      // flag to false, since if it was a simple
-                                      // item it wasn't blocking in the first place,
-                                      // but if it was something blocking, the cell
-                                      // should become unblocked now.
-                                      //
-                                      CurrentLevel->MapArray[x][y]->Occupied = false;
+                         //
+                         // GameObjects vector may contain just items or
+                         // blocking objects with logic like shrines.
+                         // So to handle both cases, we just set Occupied flag
+                         // to false, since if it was a simple item it wasn't
+                         // blocking in the first place, but if it was something
+                         // blocking, the cell should become unblocked now.
+                         //
+                         CurrentLevel->MapArray[x][y]->Occupied = false;
 
-                                      return true;
-                                    }
+                         return true;
+                       }
 
-                                    return false;
-                                  });
+                       return false;
+                     });
 
   list.erase(newBegin, list.end());
 }

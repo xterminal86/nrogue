@@ -86,7 +86,9 @@ std::string BTSDecompiler::Decompile(const std::vector<uint8_t>& bytecode)
       while (curByte != ParamsEnd)
       {
         std::string paramType = _paramByOpcode[curByte];
-        script += Util::StringFormat(" p%i=\"%s\"", paramCount, paramType.data());
+        script += Util::StringFormat(" p%i=\"%s\"",
+                                     paramCount,
+                                     paramType.data());
         paramCount++;
         index++;
         curByte = bytecode[index];

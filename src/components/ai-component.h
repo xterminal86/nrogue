@@ -56,7 +56,9 @@ class AIComponent : public Component
       }
       else
       {
-        auto str = Util::StringFormat("%s no such AI model - %s!", __PRETTY_FUNCTION__, typeid(T).name());
+        auto str = Util::StringFormat("%s no such AI model - %s!",
+                                      __PRETTY_FUNCTION__,
+                                      typeid(T).name());
         LogPrint(str, true);
 
         DebugLog("%s\n", str.data());

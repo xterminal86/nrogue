@@ -102,21 +102,26 @@ bool InteractInputState::SetDir(const Position& dir)
 
 void InteractInputState::ProcessInteraction()
 {
-  auto actor = Map::Instance().GetActorAtPosition(_cursorPosition.X, _cursorPosition.Y);
+  auto actor = Map::Instance().GetActorAtPosition(_cursorPosition.X,
+                                                  _cursorPosition.Y);
   if (actor != nullptr)
   {
     TryToInteractWithActor(actor);
   }
   else
   {
-    auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X, _cursorPosition.Y);
+    auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X,
+                                                        _cursorPosition.Y);
     if (res.size() != 0)
     {
       TryToInteractWithObject(res.back());
     }
     else
     {
-      auto staticObject = Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X, _cursorPosition.Y);
+      auto staticObject =
+          Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X,
+                                                        _cursorPosition.Y);
+
       if (staticObject != nullptr)
       {
         TryToInteractWithObject(staticObject);
@@ -165,7 +170,8 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
   }
   else
   {
-    auto state = Application::Instance().GetGameStateRefByName(GameStates::NPC_INTERACT_STATE);
+    GameStates s = GameStates::NPC_INTERACT_STATE;
+    auto state = Application::Instance().GetGameStateRefByName(s);
     NPCInteractState* nis = static_cast<NPCInteractState*>(state);
     AINPC* npcAi = aic->GetModel<AINPC>();
     if (npcAi != nullptr)
@@ -177,7 +183,8 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
       }
       else
       {
-        auto str = Util::StringFormat("%s is not responding", actor->ObjectName.data());
+        auto str = Util::StringFormat("%s is not responding",
+                                      actor->ObjectName.data());
         Printer::Instance().AddMessage(str);
         Application::Instance().ChangeState(GameStates::MAIN_STATE);
       }

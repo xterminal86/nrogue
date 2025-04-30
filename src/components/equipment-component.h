@@ -26,7 +26,8 @@ class EquipmentComponent : public Component
     bool Equip(ItemComponent* item);
     bool HasBonus(ItemBonusType type);
 
-    std::unordered_map<EquipmentCategory, std::vector<ItemComponent*>> EquipmentByCategory;
+    std::unordered_map<EquipmentCategory, std::vector<ItemComponent*>>
+    EquipmentByCategory;
 
   private:
     bool ProcessItemEquiption(ItemComponent* item);

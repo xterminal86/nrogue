@@ -19,7 +19,8 @@ void ServiceState::ProcessInput()
   {
     case VK_CANCEL:
     {
-      auto res = Application::Instance().GetGameStateRefByName(GameStates::NPC_INTERACT_STATE);
+      GameStates gs = GameStates::NPC_INTERACT_STATE;
+      auto res = Application::Instance().GetGameStateRefByName(gs);
       NPCInteractState* nis = static_cast<NPCInteractState*>(res);
       nis->SetNPCRef(_shopOwner->NpcRef);
       Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);
@@ -64,10 +65,12 @@ void ServiceState::ProcessRepair(int key)
   ServiceInfo& si = _serviceInfoByChar[key];
   if (_playerRef->Money < si.ServiceCost)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           Strings::MessageBoxEpicFailHeaderText,
-                                           { Strings::MsgNoMoney },
-                                           Colors::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(
+          MessageBoxType::ANY_KEY,
+          Strings::MessageBoxEpicFailHeaderText,
+          { Strings::MsgNoMoney },
+          Colors::MessageBoxRedBorderColor
+    );
   }
   else
   {
@@ -84,10 +87,12 @@ void ServiceState::ProcessIdentify(int key)
   ServiceInfo& si = _serviceInfoByChar[key];
   if (_playerRef->Money < si.ServiceCost)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           Strings::MessageBoxEpicFailHeaderText,
-                                           { Strings::MsgNotEnoughMoney },
-                                           Colors::MessageBoxRedBorderColor);
+    Application::Instance().ShowMessageBox(
+          MessageBoxType::ANY_KEY,
+          Strings::MessageBoxEpicFailHeaderText,
+          { Strings::MsgNotEnoughMoney },
+          Colors::MessageBoxRedBorderColor
+    );
   }
   else
   {
@@ -127,7 +132,10 @@ void ServiceState::ProcessBlessing(int key)
       // Now we need to replace header BUC status name
       // that was generated during object creation.
       //
-      si.ItemComponentRef->Data.IdentifiedName = Util::ReplaceItemPrefix(si.ItemComponentRef->Data.IdentifiedName, { "Cursed" , "Uncursed" }, "Blessed");
+      si.ItemComponentRef->Data.IdentifiedName =
+          Util::ReplaceItemPrefix(si.ItemComponentRef->Data.IdentifiedName,
+                                  { "Cursed" , "Uncursed" },
+                                  "Blessed");
     }
 
     si.ItemComponentRef->Data.IsPrefixDiscovered = true;
@@ -168,8 +176,10 @@ void ServiceState::BlessItem(const ServiceInfo& si)
     //
     if (cat == EquipmentCategory::RING)
     {
-      auto leftHand  = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][0];
-      auto rightHand = _playerRef->Equipment->EquipmentByCategory[EquipmentCategory::RING][1];
+      auto& ebc = _playerRef->Equipment->EquipmentByCategory;
+
+      auto leftHand  =ebc[EquipmentCategory::RING][0];
+      auto rightHand =ebc[EquipmentCategory::RING][1];
 
       if (leftHand == si.ItemComponentRef
        || rightHand == si.ItemComponentRef)
@@ -223,12 +233,14 @@ void ServiceState::DisplayItems()
 {
   if (_serviceInfoByChar.empty())
   {
-    Printer::Instance().PrintFB(_twHalf,
-                                _thHalf,
-                                _displayOnEmptyItems.at(_shopOwner->NpcRef->Data.ProvidesService),
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Printer::Instance().PrintFB(
+          _twHalf,
+          _thHalf,
+          _displayOnEmptyItems.at(_shopOwner->NpcRef->Data.ProvidesService),
+          Printer::kAlignCenter,
+          Colors::WhiteColor,
+          Colors::BlackColor
+    );
   }
   else
   {
@@ -306,8 +318,10 @@ void ServiceState::FillItemsForBlessing()
   {
     ItemComponent* ic = item->GetComponent<ItemComponent>();
 
-    bool alreadyKnown   = (ic->Data.IsIdentified || ic->Data.IsPrefixDiscovered);
-    bool alreadyBlessed = (alreadyKnown && ic->Data.Prefix == ItemPrefix::BLESSED);
+    bool alreadyKnown   = (ic->Data.IsIdentified
+                        || ic->Data.IsPrefixDiscovered);
+    bool alreadyBlessed = (alreadyKnown
+                        && ic->Data.Prefix == ItemPrefix::BLESSED);
     bool isUnique       = (ic->Data.Rarity == ItemRarity::UNIQUE);
     bool cantBeBlessed  = (ic->Data.ItemType_ == ItemType::GEM
                         || ic->Data.ItemType_ == ItemType::RETURNER);
@@ -322,7 +336,9 @@ void ServiceState::FillItemsForBlessing()
     bool noValidBonuses = (validBonuses == 0);
     bool isDummy        = (ic->Data.ItemType_ == ItemType::DUMMY);
     bool isUncursed     = (ic->Data.Prefix == ItemPrefix::UNCURSED);
-    bool isEquippable   = (ic->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE);
+
+    bool isEquippable =
+        (ic->Data.EqCategory != EquipmentCategory::NOT_EQUIPPABLE);
 
     bool canBeEquippedButInvalid = (isEquippable
                                  && isUncursed
@@ -340,9 +356,14 @@ void ServiceState::FillItemsForBlessing()
 
     char c = Strings::AlphabetLowercase[itemIndex];
 
-    std::string nameToDisplay = (ic->Data.IsIdentified ? item->ObjectName : ic->Data.UnidentifiedName);
+    std::string nameToDisplay = (ic->Data.IsIdentified
+                                 ? item->ObjectName
+                                 : ic->Data.UnidentifiedName);
+
     std::string charStr = Util::StringFormat("'%c'", c);
-    std::string str = Util::StringFormat("%s - %s", charStr.data(), nameToDisplay.data());
+    std::string str     = Util::StringFormat("%s - %s",
+                                             charStr.data(),
+                                             nameToDisplay.data());
 
     if (_maxStrLen < str.length())
     {
@@ -413,7 +434,9 @@ void ServiceState::FillItemsForIdentify()
     char c = Strings::AlphabetLowercase[itemIndex];
 
     std::string charStr = Util::StringFormat("'%c'", c);
-    std::string str = Util::StringFormat("%s - %s", charStr.data(), ic->Data.UnidentifiedName.data());
+    std::string str     = Util::StringFormat("%s - %s",
+                                             charStr.data(),
+                                             ic->Data.UnidentifiedName.data());
 
     if (_maxStrLen < str.length())
     {
@@ -453,7 +476,9 @@ void ServiceState::FillItemsForRepair()
 
     if (ic->Data.IsIdentified)
     {
-      dur = Util::StringFormat("(%i/%i)", ic->Data.Durability.Min().Get(), ic->Data.Durability.Max().Get());
+      dur = Util::StringFormat("(%i/%i)",
+                               ic->Data.Durability.Min().Get(),
+                               ic->Data.Durability.Max().Get());
     }
     else
     {
@@ -461,14 +486,19 @@ void ServiceState::FillItemsForRepair()
     }
 
     std::string charStr = Util::StringFormat("'%c'", c);
-    str = Util::StringFormat("%s - %s %s", charStr.data(), name.data(), dur.data());
+    str = Util::StringFormat("%s - %s %s",
+                             charStr.data(),
+                             name.data(),
+                             dur.data());
 
     if (_maxStrLen < str.length())
     {
       _maxStrLen = str.length();
     }
 
-    int toRepair = ic->Data.Durability.Max().Get() - ic->Data.Durability.Min().Get();
+    int toRepair =
+        ic->Data.Durability.Max().Get() - ic->Data.Durability.Min().Get();
+
     if (ic->Data.Prefix == ItemPrefix::BLESSED)
     {
       toRepair *= 2;
