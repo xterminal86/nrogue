@@ -424,6 +424,7 @@ namespace Util
   std::vector<uint8_t> ConvertStringToBytes(const std::string& encodedStr)
   {
     std::vector<uint8_t> byteArray;
+
     for (auto& c : encodedStr)
     {
         byteArray.push_back(c);
@@ -436,13 +437,8 @@ namespace Util
 
   bool CheckLimits(const Position& posToCheck, const Position& limits)
   {
-    if (posToCheck.X >= 0 && posToCheck.X < limits.X
-     && posToCheck.Y >= 0 && posToCheck.Y < limits.Y)
-    {
-      return true;
-    }
-
-    return false;
+    return (posToCheck.X >= 0 && posToCheck.X < limits.X
+         && posToCheck.Y >= 0 && posToCheck.Y < limits.Y);
   }
 
   // ===========================================================================
@@ -581,8 +577,7 @@ namespace Util
 
   double LinearDistance(int x1, int y1, int x2, int y2)
   {
-    double d = std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2));
-    return d;
+    return std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2));
   }
 
   // ===========================================================================
@@ -1096,8 +1091,7 @@ namespace Util
 
   int GetExpForNextLevel(int curLvl)
   {
-    double p = std::round(std::pow(1.3, curLvl) * 20);
-    return (int)p;
+    return (int)(std::round(std::pow(1.3, curLvl) * 20));
   }
 
   // ===========================================================================
@@ -1761,13 +1755,15 @@ namespace Util
 
   std::string GetFowName(GameObject* obj)
   {
+    std::string res;
+
     if (obj == nullptr)
     {
       DebugLog("GetFowName() called on nullptr!");
-      return std::string();
+      return res;
     }
 
-    std::string res = obj->FogOfWarName;
+    res = obj->FogOfWarName;
 
     if (res.empty())
     {
@@ -2581,13 +2577,13 @@ namespace Util
                                    GameObject* from,
                                    int& amount)
   {
+    std::string logMsg;
+
     if (who == nullptr)
     {
       DebugLog("[WAR] Util::ProcessMagicalDamage() who is null!");
-      return std::string();
+      return logMsg;
     }
-
-    std::string logMsg;
 
     std::string whoImg  = GetGameObjectDisplayCharacter(who);
     std::string fromImg = GetGameObjectDisplayCharacter(from);

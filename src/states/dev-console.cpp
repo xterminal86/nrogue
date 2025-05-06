@@ -13,7 +13,11 @@ void DevConsole::Init()
 {
   for (auto& kvp : _commandNameByType)
   {
-    _allCommandsList.push_back(kvp.second);
+    if (kvp.second.length() > _longestCommandStringLength)
+    {
+      _longestCommandStringLength = kvp.second.length();
+    }
+
     _trie.Add(kvp.second);
   }
 
@@ -1768,25 +1772,31 @@ void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
     }
     else if (params[0] == "commands")
     {
-      size_t count = 0;
+      size_t count = 0, spacesCount = 0;
       std::string totalString;
-      for (auto& t : _allCommandsList)
+      std::stringstream ss;
+      for (auto& kvp : _commandTypeByName)
       {
-        count += (t.length() + _commandsDelimiter.length());
+        const std::string& t = kvp.first;
+
+        spacesCount = _longestCommandStringLength - t.length();
+        count += t.length() + spacesCount;
+
         if (count > 78)
         {
-          StdOut(totalString);
-          totalString.clear();
-          count = (t.length() + _commandsDelimiter.length());
+          StdOut(ss.str());
+          ss.str(std::string());
+          spacesCount = _longestCommandStringLength - t.length();
+          count = t.length() + spacesCount;
         }
 
-        totalString += t;
-        totalString += _commandsDelimiter;
+        std::string spaces(spacesCount, ' ');
+        totalString = Util::StringFormat("%s%s ", t.data(), spaces.data());
+
+        ss << totalString;
       }
 
-      totalString.pop_back();
-
-      StdOut(totalString);
+      StdOut(ss.str());
     }
     else
     {

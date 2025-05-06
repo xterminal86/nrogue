@@ -232,61 +232,59 @@ class DevConsole : public GameState
       }
     }
 
-    std::vector<std::string> _allCommandsList;
-
     const std::string _commandsDelimiter = " | ";
 
     const std::map<DevConsoleCommand, std::string> _commandNameByType =
     {
-      { DevConsoleCommand::CLEAR               , "clear"   },
-      { DevConsoleCommand::HELP                , "help"    },
-      { DevConsoleCommand::CLOSE               , "q"       },
-      { DevConsoleCommand::CLOSE2              , "quit"    },
-      { DevConsoleCommand::CLOSE3              , "exit"    },
-      { DevConsoleCommand::CLOSE4              , "close"   },
-      { DevConsoleCommand::HISTORY             , "history" },
-      { DevConsoleCommand::REPEAT_COMMAND      , "!"       },
-      { DevConsoleCommand::TRANSFORM_TILE      , "m_trns"  },
-      { DevConsoleCommand::PLACE_WALL          , "m_pw"    },
-      { DevConsoleCommand::SHOW_MAP            , "m_show"  },
-      { DevConsoleCommand::INFO_HANDLES        , "info"    },
-      { DevConsoleCommand::PRINT_TRIGGERS      , "i_trig"  },
-      { DevConsoleCommand::PRINT_ACTORS        , "i_act"   },
-      { DevConsoleCommand::GET_STATIC_OBJECT   , "so_get"  },
-      { DevConsoleCommand::GET_MAP_OBJECT      , "mo_get"  },
-      { DevConsoleCommand::GET_ACTOR           , "ao_get"  },
-      { DevConsoleCommand::GET_ITEM            , "io_get"  },
-      { DevConsoleCommand::GET_ANY_OBJECT      , "go_get"  },
-      { DevConsoleCommand::MOVE_STATIC_OBJECT  , "so_mov"  },
-      { DevConsoleCommand::MOVE_ACTOR          , "ao_mov"  },
-      { DevConsoleCommand::DISPEL_EFFECTS_ACTOR, "ao_de"   },
-      { DevConsoleCommand::POISON_ACTOR        , "ao_psn"  },
-      { DevConsoleCommand::DAMAGE_ACTOR        , "ao_dmg"  },
-      { DevConsoleCommand::MOVE_ITEM           , "io_mov"  },
-      { DevConsoleCommand::MOVE_PLAYER         , "p_mov"   },
-      { DevConsoleCommand::DISPEL_EFFECTS      , "p_de"    },
-      { DevConsoleCommand::REMOVE_OBJECT       , "o_del"   },
-      { DevConsoleCommand::GIVE_MONEY          , "p_gm"    },
-      { DevConsoleCommand::AWARD_EXP           , "p_ae"    },
-      { DevConsoleCommand::LEVEL_UP            , "p_lu"    },
-      { DevConsoleCommand::LEVEL_DOWN          , "p_ld"    },
-      { DevConsoleCommand::GOD_MODE            , "p_god"   },
-      { DevConsoleCommand::IGNORE_PLAYER       , "p_ign"   },
-      { DevConsoleCommand::REPORT_PLAYER       , "p_info"  },
-      { DevConsoleCommand::PRINT_MAP           , "g_pm"    },
-      { DevConsoleCommand::PRINT_COLORS        , "g_pc"    },
-      { DevConsoleCommand::CREATE_MONSTER      , "g_cm"    },
-      { DevConsoleCommand::GET_BY_ADDRESS      , "g_go"    },
-      { DevConsoleCommand::GET_BY_ID           , "g_gbid"  },
-      { DevConsoleCommand::CREATE_DUMMY_ACTOR  , "g_cda"   },
-      { DevConsoleCommand::CREATE_ALL_GEMS     , "g_cag"   },
-      { DevConsoleCommand::CREATE_ALL_POTIONS  , "g_cap"   },
-      { DevConsoleCommand::CREATE_ALL_SCROLLS  , "g_cas"   },
-      { DevConsoleCommand::CREATE_ITEM         , "g_ci"    },
-      { DevConsoleCommand::CREATE_SHRINE       , "g_cs"    },
-      { DevConsoleCommand::CREATE_DUMMY_OBJECT , "g_cdo"   },
-      { DevConsoleCommand::CREATE_CHEST        , "g_ccst"  },
-      { DevConsoleCommand::CREATE_BREAKABLE    , "g_cbo"   }
+      { DevConsoleCommand::CLEAR               , "clear"             },
+      { DevConsoleCommand::HELP                , "help"              },
+      { DevConsoleCommand::CLOSE               , "q"                 },
+      { DevConsoleCommand::CLOSE2              , "quit"              },
+      { DevConsoleCommand::CLOSE3              , "exit"              },
+      { DevConsoleCommand::CLOSE4              , "close"             },
+      { DevConsoleCommand::HISTORY             , "history"           },
+      { DevConsoleCommand::REPEAT_COMMAND      , "!"                 },
+      { DevConsoleCommand::TRANSFORM_TILE      , "map_trnstile"      },
+      { DevConsoleCommand::PLACE_WALL          , "map_placewall"     },
+      { DevConsoleCommand::SHOW_MAP            , "map_show"          },
+      { DevConsoleCommand::PRINT_MAP           , "map_print2file"    },
+      { DevConsoleCommand::INFO_HANDLES        , "info_handles"      },
+      { DevConsoleCommand::PRINT_TRIGGERS      , "info_triggers"     },
+      { DevConsoleCommand::PRINT_ACTORS        , "info_actors"       },
+      { DevConsoleCommand::GET_STATIC_OBJECT   , "get_staticobj"     },
+      { DevConsoleCommand::GET_MAP_OBJECT      , "get_mapobj"        },
+      { DevConsoleCommand::GET_ACTOR           , "get_actor"         },
+      { DevConsoleCommand::GET_ITEM            , "get_item"          },
+      { DevConsoleCommand::GET_ANY_OBJECT      , "get_anyobj"        },
+      { DevConsoleCommand::DISPEL_EFFECTS_ACTOR, "actor_dispel"      },
+      { DevConsoleCommand::POISON_ACTOR        , "actor_poison"      },
+      { DevConsoleCommand::DAMAGE_ACTOR        , "actor_damage"      },
+      { DevConsoleCommand::MOVE_STATIC_OBJECT  , "mov_staticobj"     },
+      { DevConsoleCommand::MOVE_ACTOR          , "mov_actor"         },
+      { DevConsoleCommand::MOVE_ITEM           , "mov_item"          },
+      { DevConsoleCommand::MOVE_PLAYER         , "mov_player"        },
+      { DevConsoleCommand::DISPEL_EFFECTS      , "plr_dispel"        },
+      { DevConsoleCommand::GIVE_MONEY          , "plr_givemoney"     },
+      { DevConsoleCommand::AWARD_EXP           , "plr_awardexp"      },
+      { DevConsoleCommand::LEVEL_UP            , "plr_levelup"       },
+      { DevConsoleCommand::LEVEL_DOWN          , "plr_leveldown"     },
+      { DevConsoleCommand::GOD_MODE            , "plr_godmode"       },
+      { DevConsoleCommand::IGNORE_PLAYER       , "plr_ignore"        },
+      { DevConsoleCommand::REPORT_PLAYER       , "plr_info"          },
+      { DevConsoleCommand::REMOVE_OBJECT       , "eng_deleteobj"     },
+      { DevConsoleCommand::PRINT_COLORS        , "eng_printclrs"     },
+      { DevConsoleCommand::GET_BY_ADDRESS      , "eng_getbyaddr"     },
+      { DevConsoleCommand::GET_BY_ID           , "eng_getbyid"       },
+      { DevConsoleCommand::CREATE_MONSTER      , "create_monster"    },
+      { DevConsoleCommand::CREATE_DUMMY_ACTOR  , "create_dummyactor" },
+      { DevConsoleCommand::CREATE_ALL_GEMS     , "create_allgems"    },
+      { DevConsoleCommand::CREATE_ALL_POTIONS  , "create_allpotions" },
+      { DevConsoleCommand::CREATE_ALL_SCROLLS  , "create_allscrolls" },
+      { DevConsoleCommand::CREATE_ITEM         , "create_item"       },
+      { DevConsoleCommand::CREATE_SHRINE       , "create_shrine"     },
+      { DevConsoleCommand::CREATE_DUMMY_OBJECT , "create_dummyobj"   },
+      { DevConsoleCommand::CREATE_CHEST        , "create_chest"      },
+      { DevConsoleCommand::CREATE_BREAKABLE    , "create_breakable"  }
 
     };
 
@@ -401,14 +399,15 @@ class DevConsole : public GameState
         _commandNameByType.at(DevConsoleCommand::GET_BY_ADDRESS),
         {
           _commandNameByType.at(DevConsoleCommand::GET_BY_ADDRESS) + " [0x%X]",
-          "Get game object by address"
+          "Get game object by address. Print debug info if handle already set"
         }
       },
       {
         _commandNameByType.at(DevConsoleCommand::GET_BY_ID),
         {
           _commandNameByType.at(DevConsoleCommand::GET_BY_ID) + " [<ID>]",
-          "Get game object by global id value"
+          "Get game object by global id value. "
+          "Print debug info if handle already set."
         }
       },
       {
@@ -484,7 +483,8 @@ class DevConsole : public GameState
         {
           _commandNameByType.at(DevConsoleCommand::GET_STATIC_OBJECT) +
           " [X Y]",
-          "Try to get handle to static object at X Y"
+          "Try to get handle to static object at X Y. "
+          "Print debug info if already set."
         }
       },
       {
@@ -498,7 +498,8 @@ class DevConsole : public GameState
         _commandNameByType.at(DevConsoleCommand::GET_ITEM),
         {
           _commandNameByType.at(DevConsoleCommand::GET_ITEM) + " [X Y]",
-          "Try to get handle to item object at X Y"
+          "Try to get handle to item object at X Y. "
+          "Print debug info if already set."
         }
       },
       {
@@ -512,7 +513,8 @@ class DevConsole : public GameState
         _commandNameByType.at(DevConsoleCommand::GET_ANY_OBJECT),
         {
           _commandNameByType.at(DevConsoleCommand::GET_ANY_OBJECT) + " [X Y]",
-          "Try to get handle to any game object at X Y"
+          "Try to get handle to any game object at X Y. "
+          "Print debug info if already set."
         }
       },
       {
@@ -626,6 +628,8 @@ class DevConsole : public GameState
         }
       }
     };
+
+    size_t _longestCommandStringLength = 0;
 
     Trie _trie;
 

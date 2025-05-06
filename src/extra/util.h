@@ -358,6 +358,11 @@ namespace Util
   std::pair<typename Map::key_type, typename Map::mapped_type>
   WeightedRandom(const Map& weightsByType)
   {
+    using ResultType = std::pair<typename Map::key_type,
+                                 typename Map::mapped_type>;
+
+    ResultType res = *weightsByType.begin();
+
     int sum = 0;
     for (auto& i : weightsByType)
     {
@@ -370,16 +375,14 @@ namespace Util
     {
       if (target <= i.second)
       {
-        std::pair<typename Map::key_type, typename Map::mapped_type>
         res = { i.first, i.second };
-
         return res;
       }
 
       target -= i.second;
     }
 
-    return *weightsByType.begin();
+    return res;
   }
 
   // ===========================================================================
