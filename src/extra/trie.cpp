@@ -61,10 +61,13 @@ Trie::FindAll(const std::string& prefix)
   }
   else
   {
+    bool prefixFound = true;
+
     for (char c : prefix)
     {
       if (head->_root.count(c) == 0)
       {
+        prefixFound = false;
         break;
       }
 
@@ -72,9 +75,10 @@ Trie::FindAll(const std::string& prefix)
     }
 
     //
-    // Make sure that prefix is actually in the trie.
+    // Make sure that specified prefix is actually in the trie.
+    // Otherwise ther's nothing to search for.
     //
-    if (Find(prefix))
+    if (prefixFound)
     {
       std::string start = prefix;
       TraverseHead(head, prefix, start, _hints);

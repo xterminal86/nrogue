@@ -33,6 +33,8 @@
   #define VK_ENTER     SDLK_RETURN
   #define VK_TAB       SDLK_TAB
   #define VK_DELETE    SDLK_DELETE
+  #define VK_HOME      SDLK_HOME
+  #define VK_END       SDLK_END
 
   #define KEY_DOWN     SDLK_DOWN
   #define KEY_UP       SDLK_UP

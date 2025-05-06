@@ -146,7 +146,9 @@ class GameState
       { SDL_SCANCODE_UP,        SDLK_UP        },
       { SDL_SCANCODE_DOWN,      SDLK_DOWN      },
       { SDL_SCANCODE_LEFT,      SDLK_LEFT      },
-      { SDL_SCANCODE_RIGHT,     SDLK_RIGHT     }
+      { SDL_SCANCODE_RIGHT,     SDLK_RIGHT     },
+      { SDL_SCANCODE_HOME,      SDLK_HOME      },
+      { SDL_SCANCODE_END,       SDLK_END       }
     };
 
     std::unordered_map<char, char> _shiftMapping =

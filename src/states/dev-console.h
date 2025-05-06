@@ -232,8 +232,6 @@ class DevConsole : public GameState
       }
     }
 
-    const std::string _commandsDelimiter = " | ";
-
     const std::map<DevConsoleCommand, std::string> _commandNameByType =
     {
       { DevConsoleCommand::CLEAR               , "clear"             },
@@ -399,7 +397,8 @@ class DevConsole : public GameState
         _commandNameByType.at(DevConsoleCommand::GET_BY_ADDRESS),
         {
           _commandNameByType.at(DevConsoleCommand::GET_BY_ADDRESS) + " [0x%X]",
-          "Get game object by address. Print debug info if handle already set"
+          "Get game object by address. "
+          "Print debug info if handle already set."
         }
       },
       {

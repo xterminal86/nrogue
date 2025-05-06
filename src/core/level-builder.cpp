@@ -253,7 +253,14 @@ void LevelBuilder::UpdateMapRawFromCurrentGenerator()
 
 std::string LevelBuilder::GetMapRawString()
 {
-  return _generator ? _generator->GetMapRawString() : "_generator is null\n";
+  std::string res = "_generator is null\n";
+
+  if (_generator)
+  {
+    res = _generator->GetMapRawString();
+  }
+
+  return res;
 }
 
 // =============================================================================
