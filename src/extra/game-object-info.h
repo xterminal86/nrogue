@@ -2,10 +2,7 @@
 #define GAMEOBJECTINFO_H
 
 #include <string>
-
-#ifdef __MINGW64__
-#include <stdint.h>
-#endif
+#include <cstdint>
 
 #include "constants.h"
 

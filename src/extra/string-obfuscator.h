@@ -1,9 +1,7 @@
 #ifndef STRINGOBFUSCATOR_H
 #define STRINGOBFUSCATOR_H
 
-#ifdef MSVC_COMPILER
 #include <cstdint>
-#endif
 
 //
 // Based on the obfuscator class by Adam Yaxley.
@@ -196,7 +194,7 @@ namespace StringConcealer
 //
 // So TLDR - compiler compiles everything that is constexpr at compile time and
 // then puts call to ToString() to be executed at runtime.
-// 
+//
 // NOTE: doesn't work for MSVC (at least for 14.37.32822)
 //
 

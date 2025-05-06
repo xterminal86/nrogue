@@ -3,9 +3,7 @@
 #include "rng.h"
 #include "util.h"
 
-#ifdef MSVC_COMPILER
 #include <sstream>
-#endif
 
 ///
 /// \brief Generate dungeon from 47 tile subset of 2-edge 2-corner Wang tileset.

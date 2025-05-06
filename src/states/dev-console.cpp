@@ -14,6 +14,7 @@ void DevConsole::Init()
   for (auto& kvp : _commandNameByType)
   {
     _allCommandsList.push_back(kvp.second);
+    _trie.Add(kvp.second);
   }
 
   _commandTypeByName = Util::FlipMap(_commandNameByType);
@@ -30,6 +31,7 @@ void DevConsole::Init()
   StdOut("\"Ryder, nigga!\"");
   StdOut("");
   StdOut("Type 'help commands' for a list of available commands");
+  StdOut("Hit 'TAB' for autocompletion");
 }
 
 // =============================================================================
@@ -76,7 +78,11 @@ void DevConsole::HandleInput()
           _commandsHistoryIndex--;
         }
 
-        _currentCommand = Prompt + _commandsHistory[_commandsHistoryIndex];
+        _currentCommand =
+            Util::StringFormat("%s%s",
+                               Prompt.data(),
+                               _commandsHistory[_commandsHistoryIndex].data());
+
         _cursorPosition = _commandsHistory[_commandsHistoryIndex].length();
       }
     }
@@ -91,7 +97,10 @@ void DevConsole::HandleInput()
         if (_commandsHistoryIndex < (int)_commandsHistory.size() - 1)
         {
           _commandsHistoryIndex++;
-          _currentCommand = Prompt + _commandsHistory[_commandsHistoryIndex];
+          _currentCommand =
+              Util::StringFormat("%s%s", Prompt.data(),
+                                 _commandsHistory[_commandsHistoryIndex].data());
+
           _cursorPosition = _commandsHistory[_commandsHistoryIndex].length();
         }
         else
@@ -122,6 +131,48 @@ void DevConsole::HandleInput()
       if (_cursorPosition < (int)_currentCommand.substr(2).length())
       {
         _cursorPosition++;
+      }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
+    case VK_TAB:
+    {
+      std::string noPrompt = _currentCommand.substr(2);
+
+      auto hints = _trie.FindAll(noPrompt);
+
+      if (hints.size() == 1)
+      {
+        _currentCommand =
+            Util::StringFormat("%s%s ", Prompt.data(), (*hints.begin()).data());
+
+        //
+        // Just in case.
+        //
+        if (_currentCommand.length() > Prompt.length())
+        {
+          _cursorPosition = _currentCommand.length() - Prompt.length();
+        }
+      }
+      else
+      {
+        if (hints.size() != 0)
+        {
+          StdOut(Prompt);
+
+          for (auto& item : hints)
+          {
+            StdOut(item);
+            _cursorY++;
+
+            while (_stdout.size() > _maxHistory)
+            {
+              _stdout.pop_back();
+            }
+          }
+        }
       }
     }
     break;

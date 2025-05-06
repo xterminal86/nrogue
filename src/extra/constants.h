@@ -103,11 +103,15 @@
 #include <string>
 #include <unordered_map>
 #include <map>
+#include <set>
+#include <unordered_set>
 #include <functional>
 #include <cstdint>
 
 #include "enumerations.h"
 
+using UOSetS  = std::unordered_set<std::string>;
+using SetS    = std::set<std::string>;
 using StringV = std::vector<std::string>;
 using CharV2  = std::vector<std::vector<char>>;
 using IR      = std::pair<InteractionResult, GameStates>;

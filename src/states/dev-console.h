@@ -3,6 +3,7 @@
 
 #include "gamestate.h"
 #include "util.h"
+#include "trie.h"
 
 enum class DevConsoleCommand
 {
@@ -625,6 +626,8 @@ class DevConsole : public GameState
         }
       }
     };
+
+    Trie _trie;
 
     friend class GameObject;
 };
