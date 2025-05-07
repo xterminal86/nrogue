@@ -300,8 +300,10 @@ jobs:
     - name: DEBUG LOGS
       run: >
            ls /ucrt64/include/ncurses/
-           ls D:/a/_temp/msys64/ucrt64/include
-           ls D:/a/_temp/msys64/ucrt64/lib
+           ls D:/a/_temp/msys64/ucrt64/include/*curses*
+           ls D:/a/_temp/msys64/ucrt64/lib/*curses*
+           # FIXME: this is a hack, hopefully it will work.
+           ln -s D:/a/_temp/msys64/ucrt64/include/ncurses D:/a/_temp/msys64/ucrt64/include/ncurses.h
            
     # --------------------------------------------------------------------------
          
