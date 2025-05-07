@@ -79,6 +79,7 @@
 
   #else
 
+    /*
     #define NUMPAD_7  KEY_A1
     #define NUMPAD_8  KEY_A2
     #define NUMPAD_9  KEY_A3
@@ -88,6 +89,20 @@
     #define NUMPAD_1  KEY_C1
     #define NUMPAD_2  KEY_C2
     #define NUMPAD_3  KEY_C3
+    */
+
+    //
+    // Try to fix ncurses build in github pipeline.
+    //
+    #define NUMPAD_7  KEY_HOME
+    #define NUMPAD_8  KEY_UP
+    #define NUMPAD_9  KEY_PPAGE
+    #define NUMPAD_4  KEY_LEFT
+    #define NUMPAD_5  KEY_B2
+    #define NUMPAD_6  KEY_RIGHT
+    #define NUMPAD_1  KEY_END
+    #define NUMPAD_2  KEY_DOWN
+    #define NUMPAD_3  KEY_NPAGE
 
     // ********************
 
