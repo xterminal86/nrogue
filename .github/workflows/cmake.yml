@@ -300,6 +300,7 @@ jobs:
     # --------------------------------------------------------------------------
 
     - name: DEBUG LOGS
+      if: false
       run: |
             echo "--- ls /ucrt64/include/ncurses/ ---"
             ls /ucrt64/include/ncurses/
@@ -315,6 +316,13 @@ jobs:
     # values into ncurses related variables through command line 
     # even though they are reported to be successfully found by cmake.
     # Otherwise it won't compile because it can't find <ncurses.h>
+    # And by the way find_package() sets DIFFERENT variables: 
+    # CURSES_INCLUDE_DIRS and CURSES_LIBRARIES.
+    # While here it's:
+    # CURSES_INCLUDE_PATH and CURSES_LIBRARY.
+    # And it still works somehow.
+    # I mean, I don't fucking know anymore - I stop trying to figure out 
+    # how this bullshit build system works.
     #
     - name: CONFIGURE CMake
       run: >          
