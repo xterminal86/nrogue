@@ -293,13 +293,8 @@ jobs:
                  mingw-w64-ucrt-x86_64-cmake 
                  mingw-w64-ucrt-x86_64-ninja 
                  mingw-w64-ucrt-x86_64-ncurses
-
-    # --------------------------------------------------------------------------
-
-    - name: DEBUG LOGS
-      run: >
-           ls /ucrt64/lib/libncurses*
-
+                 ncurses-devel
+    
     # --------------------------------------------------------------------------
          
     - name: CONFIGURE CMake
@@ -310,8 +305,7 @@ jobs:
           -G Ninja
           -DCMAKE_BUILD_TYPE=Release
           -DBUILD_TESTS=OFF 
-          -DUSE_SDL=OFF          
-          -DCURSES_INCLUDE_PATH='/ucrt64/include/ncurses'
+          -DUSE_SDL=OFF                    
 
     # --------------------------------------------------------------------------
     
