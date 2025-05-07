@@ -48,7 +48,7 @@ else()
     message("*** curses library found at ${CURSES_INCLUDE_DIRS}")
     message("*** curses library is       ${CURSES_LIBRARIES}")
   endif()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I ${CURSES_INCLUDE_DIRS}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I ${CURSES_INCLUDE_DIRS} -I /ucrt64/include/ncurses")
 endif()
 
 if (BUILD_TESTS)
