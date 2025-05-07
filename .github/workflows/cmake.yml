@@ -268,8 +268,7 @@ jobs:
 
   # ============================================================================
 
-  build-ncurses:
-    needs: publish
+  build-ncurses:    
     runs-on: windows-latest
 
     defaults:
@@ -296,7 +295,13 @@ jobs:
                  mingw-w64-ucrt-x86_64-ncurses
 
     # --------------------------------------------------------------------------
-    
+
+    - name: DEBUG LOGS
+      run: >
+           ls /ucrt64/lib/libncurses*
+
+    # --------------------------------------------------------------------------
+         
     - name: CONFIGURE CMake
       run: >          
           cmake 
@@ -306,6 +311,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release
           -DBUILD_TESTS=OFF 
           -DUSE_SDL=OFF          
+          -DCURSES_INCLUDE_PATH='/ucrt64/include/ncurses'
 
     # --------------------------------------------------------------------------
     
