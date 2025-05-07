@@ -149,9 +149,11 @@ if (USE_SDL)
 
 else()
   if (WIN32)
-    target_link_libraries(${TARGET_NAME} pdcurses)
-  else()
     find_package(Curses REQUIRED)
+    include_directories(${CURSES_INCLUDE_DIRS})
+    target_link_libraries(${TARGET_NAME} ${CURSES_LIBRARIES})
+  else()
+    find_package(Curses REQUIRED)    
     target_link_libraries(${TARGET_NAME} ncurses)
   endif()
 
