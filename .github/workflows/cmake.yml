@@ -279,7 +279,7 @@ jobs:
     
     - name: CHECKOUT
       uses: actions/checkout@v3  
-
+           
     # --------------------------------------------------------------------------
     
     - name: SET UP MSYS2
@@ -294,7 +294,15 @@ jobs:
                  mingw-w64-ucrt-x86_64-ninja 
                  mingw-w64-ucrt-x86_64-ncurses
                  ncurses-devel
-    
+
+    # --------------------------------------------------------------------------
+
+    - name: DEBUG LOGS
+      run: >
+           ls /ucrt64/include/ncurses/
+           ls D:/a/_temp/msys64/ucrt64/include
+           ls D:/a/_temp/msys64/ucrt64/lib
+           
     # --------------------------------------------------------------------------
          
     - name: CONFIGURE CMake
