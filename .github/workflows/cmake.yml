@@ -299,8 +299,10 @@ jobs:
 
     # --------------------------------------------------------------------------
 
-    #- name: DEBUG LOGS
-    #  run: |
+    - name: DEBUG LOGS
+      run: |
+            echo "--- ls /usr/lib/ncurses ---"
+            ls /usr/lib/libncurses*
     #       echo "--- ls /ucrt64/include/ncurses/ ---"
     #       ls /ucrt64/include/ncurses/
     #       echo "--- ls D:/a/_temp/msys64/ucrt64/include/*curses* ---"
@@ -318,7 +320,8 @@ jobs:
           -G Ninja
           -DCMAKE_BUILD_TYPE=Release
           -DBUILD_TESTS=OFF
-          -DCURSES_INCLUDE_DIRS='/usr/include/ncurses'          
+          -DCURSES_INCLUDE_PATH='/usr/include/ncurses'          
+          -DCURSES_LIBRARY='/usr/lib/libncurses.a'
 
     # --------------------------------------------------------------------------
     
