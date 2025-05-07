@@ -231,8 +231,7 @@ jobs:
     
   # ============================================================================
 
-  publish:
-    if: false
+  publish:    
     needs: build
     runs-on: windows-latest    
     steps:
