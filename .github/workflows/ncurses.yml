@@ -58,6 +58,12 @@ jobs:
     # For some fucking reason you still need to manually pass in
     # values into ncurses related variables through command line 
     # even though they are reported to be successfully found by cmake.
+    # You can find values to set in msys package registry, 
+    # in the list of provided files for a package. 
+    # For this workflow it's here:
+    #
+    # https://packages.msys2.org/packages/mingw-w64-ucrt-x86_64-ncurses
+    #
     # Otherwise it won't compile because it can't find <ncurses.h>
     # And by the way find_package() sets DIFFERENT variables: 
     # CURSES_INCLUDE_DIRS and CURSES_LIBRARIES.
