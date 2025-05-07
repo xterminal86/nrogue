@@ -2,7 +2,7 @@ name: MSVC
 
 on:
   workflow_run:
-    workflows: ["CMake"]
+    workflows: ["mingw"]
     types:
       - completed
 

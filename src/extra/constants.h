@@ -79,20 +79,8 @@
 
   #else
 
-    /*
-    #define NUMPAD_7  KEY_A1
-    #define NUMPAD_8  KEY_A2
-    #define NUMPAD_9  KEY_A3
-    #define NUMPAD_4  KEY_B1
-    #define NUMPAD_5  KEY_B2
-    #define NUMPAD_6  KEY_B3
-    #define NUMPAD_1  KEY_C1
-    #define NUMPAD_2  KEY_C2
-    #define NUMPAD_3  KEY_C3
-    */
-
     //
-    // Try to fix ncurses build in github pipeline.
+    // For fixing ncurses build in github pipeline.
     //
     #define NUMPAD_7  KEY_HOME
     #define NUMPAD_8  KEY_UP

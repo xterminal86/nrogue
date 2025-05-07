@@ -1,4 +1,4 @@
-name: CMake
+name: mingw
 
 on:
   push:
@@ -13,13 +13,11 @@ concurrency:
 env:
   BUILD_VERSION_TEXT: build-msys2-${{ github.run_number }}
   BUILD_DIR_DBG: build-debug
-  BUILD_DIR_REL: build-release
-  BUILD_DIR_NCURSES: build-ncurses
+  BUILD_DIR_REL: build-release  
   PACK_DIR: build-msys2  
   
 jobs:
   build:
-    if: false
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
@@ -268,76 +266,4 @@ jobs:
           asset_path: ${{github.workspace}}/build-latest.zip
           asset_name: build-msys2-${{ github.run_number }}.zip
           asset_content_type: application/zip
-
-  # ============================================================================
-
-  build-ncurses:    
-    runs-on: windows-latest
-
-    defaults:
-      run:
-        shell: msys2 {0}
-    
-    steps:
-    
-    - name: CHECKOUT
-      uses: actions/checkout@v3  
-           
-    # --------------------------------------------------------------------------
-    
-    - name: SET UP MSYS2
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: UCRT64
-        update: true
-        install: |
-                 git 
-                 mingw-w64-ucrt-x86_64-gcc 
-                 mingw-w64-ucrt-x86_64-cmake 
-                 mingw-w64-ucrt-x86_64-ninja 
-                 mingw-w64-ucrt-x86_64-ncurses              
-
-    # --------------------------------------------------------------------------
-
-    - name: DEBUG LOGS
-      if: false
-      run: |
-            echo "--- ls /ucrt64/include/ncurses/ ---"
-            ls /ucrt64/include/ncurses/
-            echo "--- ls /ucrt64/lib/libnc* ---"
-            ls /ucrt64/lib/libnc*
-            echo "--- cat /ucrt64/include/ncurses/ncurses.h ---"
-            cat /ucrt64/include/ncurses/ncurses.h | grep "KEY_"
-           
-    # --------------------------------------------------------------------------
-
-    #
-    # For some fucking reason you still need to manually pass in
-    # values into ncurses related variables through command line 
-    # even though they are reported to be successfully found by cmake.
-    # Otherwise it won't compile because it can't find <ncurses.h>
-    # And by the way find_package() sets DIFFERENT variables: 
-    # CURSES_INCLUDE_DIRS and CURSES_LIBRARIES.
-    # While here it's:
-    # CURSES_INCLUDE_PATH and CURSES_LIBRARY.
-    # And it still works somehow.
-    # I mean, I don't fucking know anymore - I stop trying to figure out 
-    # how this bullshit build system works.
-    #
-    - name: CONFIGURE CMake
-      run: >          
-          cmake 
-          -B '${{github.workspace}}/${{ env.BUILD_DIR_NCURSES }}'
-          -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
-          -G Ninja
-          -DCMAKE_BUILD_TYPE=Release
-          -DBUILD_TESTS=OFF
-          -DCURSES_INCLUDE_PATH='/ucrt64/include/ncurses'          
-          -DCURSES_LIBRARY='/ucrt64/lib/libncursesw.dll.a'
-          
-    # --------------------------------------------------------------------------
-    
-    - name: BUILD      
-      run: |
-           cmake --build '${{github.workspace}}/${{ env.BUILD_DIR_NCURSES }}' --config Release
-           
+  
