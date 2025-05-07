@@ -292,8 +292,7 @@ jobs:
                  mingw-w64-ucrt-x86_64-gcc 
                  mingw-w64-ucrt-x86_64-cmake 
                  mingw-w64-ucrt-x86_64-ninja 
-                 mingw-w64-ucrt-x86_64-ncurses
-                 ncurses-devel
+                 mingw-w64-ucrt-x86_64-ncurses                 
     
     # --------------------------------------------------------------------------
          
@@ -304,8 +303,7 @@ jobs:
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
           -G Ninja
           -DCMAKE_BUILD_TYPE=Release
-          -DBUILD_TESTS=OFF 
-          -DUSE_SDL=OFF                    
+          -DBUILD_TESTS=OFF           
 
     # --------------------------------------------------------------------------
     
