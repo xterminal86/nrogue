@@ -295,22 +295,16 @@ jobs:
                  mingw-w64-ucrt-x86_64-gcc 
                  mingw-w64-ucrt-x86_64-cmake 
                  mingw-w64-ucrt-x86_64-ninja 
-                 ncurses-devel
+                 mingw-w64-ucrt-x86_64-ncurses              
 
     # --------------------------------------------------------------------------
 
     - name: DEBUG LOGS
       run: |
-            echo "--- ls /usr/lib/ncurses ---"
-            ls /usr/lib/libncurses*
-            echo "--- ls /usr/include/ncurses ---"
-            ls /usr/include/ncurses
             echo "--- ls /ucrt64/include/ncurses/ ---"
             ls /ucrt64/include/ncurses/
-    #       echo "--- ls D:/a/_temp/msys64/ucrt64/include/*curses* ---"
-    #       ls D:/a/_temp/msys64/ucrt64/include/*curses*
-    #       echo "--- ls D:/a/_temp/msys64/ucrt64/lib/*curses* ---"
-    #       ls D:/a/_temp/msys64/ucrt64/lib/*curses*           
+            echo "--- ls /ucrt64/lib/libnc* ---"
+            ls /ucrt64/lib/libnc*    
            
     # --------------------------------------------------------------------------
          
@@ -322,8 +316,8 @@ jobs:
           -G Ninja
           -DCMAKE_BUILD_TYPE=Release
           -DBUILD_TESTS=OFF
-          -DCURSES_INCLUDE_PATH='/usr/include/ncurses'          
-          -DCURSES_LIBRARY='/usr/lib/libncurses.a'
+          -DCURSES_INCLUDE_PATH='/ucrt64/include/ncurses'          
+          -DCURSES_LIBRARY='/ucrt64/lib/libncursesw.dll.a'
 
     # --------------------------------------------------------------------------
     
