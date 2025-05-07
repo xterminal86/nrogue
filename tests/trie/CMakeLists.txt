@@ -16,16 +16,11 @@ if (USE_SDL)
                                          ${SDL2MAIN_LIBRARY}
                                          ${SDL2_LIBRARY})
   else()
-    target_link_libraries(${TARGET_NAME} SDL2)
+    target_link_libraries(${TARGET_NAME} ${SDL2_LIBRARY})
   endif()
 
 else()
-
-  if (WIN32)
-    target_link_libraries(${TARGET_NAME} pdcurses)
-  else()
-    find_package(Curses REQUIRED)
-    target_link_libraries(${TARGET_NAME} ncurses)
-  endif()
-
+  find_package(Curses REQUIRED)
+  include_directories(${CURSES_INCLUDE_DIRS})
+  target_link_libraries(${TARGET_NAME} ${CURSES_LIBRARIES})
 endif()

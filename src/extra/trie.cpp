@@ -76,7 +76,7 @@ Trie::FindAll(const std::string& prefix)
 
     //
     // Make sure that specified prefix is actually in the trie.
-    // Otherwise ther's nothing to search for.
+    // Otherwise there's nothing to search for.
     //
     if (prefixFound)
     {
@@ -228,6 +228,7 @@ void Trie::TraverseHead(Trie* head,
     if (kvp.first == _terminator)
     {
       hints.insert(soFar);
+      break; // There should be only one element anyway, but whatever.
     }
     else
     {
