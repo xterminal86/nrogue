@@ -1408,6 +1408,7 @@ namespace Util
 
   void PrintVector(const std::string& title, const std::vector<Position>& v)
   {
+    #ifdef DEBUG_BUILD
     DebugLog("Vector of '%s' (size %u)\n", title.data(), v.size());
 
     for (auto& p : v)
@@ -1416,6 +1417,7 @@ namespace Util
     }
 
     DebugLog("\n");
+    #endif
   }
 
   // ===========================================================================
