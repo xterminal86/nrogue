@@ -43,7 +43,7 @@ jobs:
     # ---------------------------------------------------------------------
 
     - name: DEBUG LOGS
-      if: true
+      if: false
       run: |
             echo "--- ls /ucrt64/include/ncurses/ ---"
             ls /ucrt64/include/ncurses/
