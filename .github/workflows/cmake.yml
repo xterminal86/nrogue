@@ -306,10 +306,16 @@ jobs:
             echo "--- ls /ucrt64/lib/libnc* ---"
             ls /ucrt64/lib/libnc*
             echo "--- cat /ucrt64/include/ncurses/ncurses.h ---"
-            cat /ucrt64/include/ncurses/ncurses.h
+            cat /ucrt64/include/ncurses/ncurses.h | grep "KEY_"
            
     # --------------------------------------------------------------------------
-         
+
+    #
+    # For some fucking reason you still need to manually pass in
+    # values into ncurses related variables through command line 
+    # even though they are reported to be successfully found by cmake.
+    # Otherwise it won't compile because it can't find <ncurses.h>
+    #
     - name: CONFIGURE CMake
       run: >          
           cmake 
@@ -318,6 +324,8 @@ jobs:
           -G Ninja
           -DCMAKE_BUILD_TYPE=Release
           -DBUILD_TESTS=OFF
+          -DCURSES_INCLUDE_PATH='/ucrt64/include/ncurses'          
+          -DCURSES_LIBRARY='/ucrt64/lib/libncursesw.dll.a'
           
     # --------------------------------------------------------------------------
     
