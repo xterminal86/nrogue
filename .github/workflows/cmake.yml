@@ -303,8 +303,10 @@ jobs:
       run: |
             echo "--- ls /usr/lib/ncurses ---"
             ls /usr/lib/libncurses*
-    #       echo "--- ls /ucrt64/include/ncurses/ ---"
-    #       ls /ucrt64/include/ncurses/
+            echo "--- ls /usr/include/ncurses ---"
+            ls /usr/include/ncurses
+            echo "--- ls /ucrt64/include/ncurses/ ---"
+            ls /ucrt64/include/ncurses/
     #       echo "--- ls D:/a/_temp/msys64/ucrt64/include/*curses* ---"
     #       ls D:/a/_temp/msys64/ucrt64/include/*curses*
     #       echo "--- ls D:/a/_temp/msys64/ucrt64/lib/*curses* ---"
