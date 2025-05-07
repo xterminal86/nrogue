@@ -29,6 +29,8 @@ jobs:
         shell: msys2 {0}
 
     steps:
+
+    # --------------------------------------------------------------------------
     
     - name: PRINT ENV
       if: false
@@ -40,7 +42,9 @@ jobs:
            ls C:/msys64/
            ls C:/msys64/mingw64/
            ls C:/msys64/mingw64/bin/   
-           
+
+    # --------------------------------------------------------------------------
+    
     - name: CHECKOUT
       uses: actions/checkout@v3
 
@@ -64,6 +68,8 @@ jobs:
                  mingw-w64-ucrt-x86_64-SDL2
                  mingw-w64-ucrt-x86_64-7zip
 
+    # --------------------------------------------------------------------------
+    
     - name: PRINT MSYS2
       if: false
       run: |
@@ -99,6 +105,8 @@ jobs:
           -DSDL2MAIN_LIBRARY='/ucrt64/lib/libSDL2main.a'
           -DSDL2_LIBRARY='/ucrt64/lib/libSDL2.dll.a'
 
+    # --------------------------------------------------------------------------
+    
     - name: BUILD (Release)      
       # Build your program with the given configuration
       run: |
@@ -121,6 +129,8 @@ jobs:
           -DSDL2MAIN_LIBRARY='/ucrt64/lib/libSDL2main.a'
           -DSDL2_LIBRARY='/ucrt64/lib/libSDL2.dll.a'
 
+    # --------------------------------------------------------------------------
+    
     - name: BUILD (Debug)
       if: false
       run: |
@@ -173,13 +183,17 @@ jobs:
            echo "--- PACK DIR ---"
            ls ${{ env.PACK_DIR }}           
 
+    # --------------------------------------------------------------------------
+    
     - name: UPLOAD ARTIFACT
       uses: actions/upload-artifact@v4
       with:        
         name: build-latest
         path: ${{github.workspace}}/build-latest.zip
         retention-days: 1
-                  
+
+    # --------------------------------------------------------------------------
+    
     - name: CHECK IF RELEASE EXISTS
       id: checkIfLatestReleaseExists
       uses: mukunku/tag-exists-action@v1.0.0
@@ -187,6 +201,8 @@ jobs:
           tag: "build-latest"
       env:
           GITHUB_TOKEN: ${{ github.token }}    
+
+    # --------------------------------------------------------------------------
      
     - name: DELETE OLD RELEASE
       if: ${{ steps.checkIfLatestReleaseExists.outputs.exists }} == "true"      
@@ -196,7 +212,9 @@ jobs:
           tag_name: build-latest
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+    
+    # --------------------------------------------------------------------------
+    
     - name: CREATE 'build-latest' RELEASE
       uses: actions/create-release@v1
       env:
@@ -211,19 +229,23 @@ jobs:
           draft: false
           prerelease: false          
     
-# ==============================================================================
+  # ============================================================================
 
   publish:
     needs: build
     runs-on: windows-latest    
     steps:
       - uses: actions/checkout@v3
-    
+
+      # --------------------------------------------------------------------------
+      
       - name: DOWNLOAD ARTIFACT
         uses: actions/download-artifact@v4
         with:          
           name: build-latest          
 
+      # --------------------------------------------------------------------------
+      
       - name: GET 'build-latest' RELEASE INFO
         id: latest-release-info
         uses: cardinalby/git-get-release-action@v1
@@ -232,6 +254,8 @@ jobs:
         with:
             tag: build-latest
 
+      # --------------------------------------------------------------------------
+      
       - name: UPLOAD LATEST RELEASE ZIP
         uses: actions/upload-release-asset@v1
         env:
@@ -242,4 +266,50 @@ jobs:
           asset_name: build-msys2-${{ github.run_number }}.zip
           asset_content_type: application/zip
 
-  
+  # ============================================================================
+
+  build-ncurses:
+    needs: publish
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: msys2 {0}
+    
+    steps:
+    
+    - name: CHECKOUT
+      uses: actions/checkout@v3  
+
+    # --------------------------------------------------------------------------
+    
+    - name: SET UP MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: UCRT64
+        update: true
+        install: |
+                 git 
+                 mingw-w64-ucrt-x86_64-gcc 
+                 mingw-w64-ucrt-x86_64-cmake 
+                 mingw-w64-ucrt-x86_64-ninja 
+                 mingw-w64-ucrt-x86_64-ncurses
+
+    # --------------------------------------------------------------------------
+    
+    - name: CONFIGURE CMake
+      run: >          
+          cmake 
+          -B '${{github.workspace}}/${{ env.BUILD_DIR_REL }}'
+          -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
+          -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DBUILD_TESTS=OFF 
+          -DUSE_SDL=OFF          
+
+    # --------------------------------------------------------------------------
+    
+    - name: BUILD      
+      run: |
+           cmake --build '${{github.workspace}}/${{ env.BUILD_DIR_REL }}' --config Release
+           
