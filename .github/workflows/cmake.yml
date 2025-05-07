@@ -295,7 +295,7 @@ jobs:
                  mingw-w64-ucrt-x86_64-gcc 
                  mingw-w64-ucrt-x86_64-cmake 
                  mingw-w64-ucrt-x86_64-ninja 
-                 mingw-w64-ucrt-x86_64-ncurses                 
+                 ncurses-devel
 
     # --------------------------------------------------------------------------
 
@@ -317,7 +317,8 @@ jobs:
           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
           -G Ninja
           -DCMAKE_BUILD_TYPE=Release
-          -DBUILD_TESTS=OFF           
+          -DBUILD_TESTS=OFF
+          -DCURSES_INCLUDE_DIRS='/usr/include/ncurses'          
 
     # --------------------------------------------------------------------------
     
