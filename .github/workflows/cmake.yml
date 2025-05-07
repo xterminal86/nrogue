@@ -299,9 +299,13 @@ jobs:
 
     - name: DEBUG LOGS
       run: |
+           echo "--- ls /ucrt64/include/ncurses/ ---"
            ls /ucrt64/include/ncurses/
+           echo "--- ls D:/a/_temp/msys64/ucrt64/include/*curses* ---"
            ls D:/a/_temp/msys64/ucrt64/include/*curses*
+           echo "--- ls D:/a/_temp/msys64/ucrt64/lib/*curses* ---"
            ls D:/a/_temp/msys64/ucrt64/lib/*curses*           
+           echo "ln -s D:/a/_temp/msys64/ucrt64/include/ncurses D:/a/_temp/msys64/ucrt64/include/ncurses.h"
            ln -s D:/a/_temp/msys64/ucrt64/include/ncurses D:/a/_temp/msys64/ucrt64/include/ncurses.h
            
     # --------------------------------------------------------------------------
