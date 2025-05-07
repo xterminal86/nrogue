@@ -98,6 +98,8 @@
   #define VK_ENTER     10
   #define VK_TAB       '\t'
   #define VK_DELETE    KEY_DC
+  #define VK_HOME      KEY_HOME
+  #define VK_END       KEY_END
 
 #endif
 

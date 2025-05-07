@@ -693,7 +693,7 @@ size_t Printer::GetOrSetColor(const uint32_t& htmlColorFg,
       bg.ColorIndex = _colorIndexMap[hashBg];
     }
 
-    ColorPair cp = { _colorPairsGlobalIndex++, fg, bg };
+    ColorPair cp = { fg, bg, _colorPairsGlobalIndex++ };
     _colorMap[hash] = cp;
 
     init_pair(_colorMap[hash].PairIndex,
