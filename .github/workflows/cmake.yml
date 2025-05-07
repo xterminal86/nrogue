@@ -304,7 +304,9 @@ jobs:
             echo "--- ls /ucrt64/include/ncurses/ ---"
             ls /ucrt64/include/ncurses/
             echo "--- ls /ucrt64/lib/libnc* ---"
-            ls /ucrt64/lib/libnc*    
+            ls /ucrt64/lib/libnc*
+            echo "--- cat /ucrt64/include/ncurses/ncurses.h ---"
+            cat /ucrt64/include/ncurses/ncurses.h
            
     # --------------------------------------------------------------------------
          
@@ -316,9 +318,7 @@ jobs:
           -G Ninja
           -DCMAKE_BUILD_TYPE=Release
           -DBUILD_TESTS=OFF
-          -DCURSES_INCLUDE_PATH='/ucrt64/include/ncurses'          
-          -DCURSES_LIBRARY='/ucrt64/lib/libncursesw.dll.a'
-
+          
     # --------------------------------------------------------------------------
     
     - name: BUILD      
