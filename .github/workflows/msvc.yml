@@ -9,7 +9,7 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-  
+
 env:
   BUILD_VERSION_TEXT: build-msvc-${{ github.run_number }}
   BUILD_DIR_REL: build-msvc
@@ -20,31 +20,31 @@ env:
 # For testing MSVC build
 #
 jobs:
-  build:    
+  build:
     runs-on: windows-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    
+
     steps:
     - name: CHECKOUT
       uses: actions/checkout@v3
 
     - name: CONFIGURE CMAKE
-      run: >          
-          cmake 
-          -B ${{github.workspace}}/${{ env.BUILD_DIR_REL }}          
-          -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }} 
+      run: >
+          cmake
+          -B ${{github.workspace}}/${{ env.BUILD_DIR_REL }}
+          -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }}
           -DCMAKE_BUILD_TYPE=Release
-          -DBUILD_TESTS=OFF 
-          -DUSE_SDL=ON 
-          -DSDL2_DIR=${{github.workspace}}/SDL2 
-          -DSDL2_INCLUDE_DIR=${{github.workspace}}/SDL2/x86_64-w64-mingw32/include 
-          -DSDL2MAIN_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2main.a 
+          -DBUILD_TESTS=OFF
+          -DUSE_SDL=ON
+          -DSDL2_DIR=${{github.workspace}}/SDL2
+          -DSDL2_INCLUDE_DIR=${{github.workspace}}/SDL2/x86_64-w64-mingw32/include
+          -DSDL2MAIN_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2main.a
           -DSDL2_LIBRARY=${{github.workspace}}/SDL2/x86_64-w64-mingw32/lib/libSDL2.dll.a
 
-    - name: BUILD      
+    - name: BUILD
       run: cmake --build ${{github.workspace}}/${{ env.BUILD_DIR_REL }} --config Release
 
-    # ------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     - name: AFTER BUILD
       if: false
@@ -54,7 +54,7 @@ jobs:
            ls
            echo "--- RELEASE DIR ---"
            ls ${{ env.BUILD_DIR_REL }}
-           echo "--- /Release ---"           
+           echo "--- /Release ---"
            ls ${{ env.BUILD_DIR_REL }}/Release # Binary is here
            echo "--- /x64 ---"
            ls ${{ env.BUILD_DIR_REL }}/x64
@@ -65,7 +65,7 @@ jobs:
 
     - name: PREPARE ARTIFACTS
       run: |
-           mkdir '${{ env.PACK_DIR }}' 
+           mkdir '${{ env.PACK_DIR }}'
            cp '${{github.workspace}}/${{ env.BUILD_DIR_REL }}/Release/nrogue.exe' '${{ env.PACK_DIR }}/'
            cp '${{github.workspace}}/SDL2.dll' '${{ env.PACK_DIR }}/'
            cp '${{github.workspace}}/config-template.txt' '${{ env.PACK_DIR }}/'
@@ -74,7 +74,7 @@ jobs:
       run: |
            7z a -tzip ${{ env.ARCHIVE_NAME }} ${{ env.PACK_DIR }}/
            ls
-    
+
     - name: GET RELEASE INFO
       id: latest-release-info
       uses: cardinalby/git-get-release-action@v1
@@ -91,4 +91,5 @@ jobs:
           upload_url: ${{ steps.latest-release-info.outputs.upload_url }}
           asset_path: ${{github.workspace}}/${{ env.ARCHIVE_NAME }}
           asset_name: ${{ env.ARCHIVE_NAME }}
-          asset_content_type: application/zip    
+          asset_content_type: application/zip
+
