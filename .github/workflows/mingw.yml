@@ -6,10 +6,18 @@ on:
   pull_request:
     branches: [ master ]
 
+#
+# Allow only one instance of this workflow to be run.
+# If new commits were pushed during pipeline execution, new workflow will be
+# cancelled.
+#
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+#
+# Some global variables.
+#
 env:
   BUILD_VERSION_TEXT: build-msys2-${{ github.run_number }}
   BUILD_DIR_DBG: build-debug
@@ -30,25 +38,21 @@ jobs:
 
     #
     # Setting default options - default shell in this case in which all
-    # 'run' commands will execute. Different shell variants for appropriate
-    # environments can be found in MSYS2 installation folder.
+    # 'run' commands will execute. I don't remember now why I did this, but I'm
+    # pretty sure it didn't work without it. Default shell variant depends on
+    # 'runs-on' image that you use. In case of 'windows-latest' it will be
+    # PowerShell. So we change it to be 'msys2'. Note to self: 'msys2' here is
+    # not the same as 'msys2.exe'. More information here:
     #
-    # For example, on my local machine I have:
+    # https://github.com/msys2/setup-msys2
     #
-    # clang32.exe
-    # clang64.exe
-    # clangarm64.exe
-    # mingw32.exe
-    # mingw64.exe
-    # msys2.exe
-    # ucrt64.exe
+    # Good article about github actions and shells:
     #
-    # For Windows applications one should use ucrt64 environment because
-    # it's the newest one.
+    # https://dev.to/pwd9000/github-actions-all-the-shells-581h
     #
     defaults:
       run:
-        shell: ucrt64 {0}
+        shell: msys2 {0}
 
     steps:
 
@@ -123,8 +127,8 @@ jobs:
       #
       # https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       #
-      # NOTE: shell has bullshit problems with handling slashes, so put
-      # everything related in '' quotes.
+      # NOTE: there's some bullshit problems with handling slashes in pipeline,
+      # so put everything related in '' quotes.
       #
       run: >
           cmake
