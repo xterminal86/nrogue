@@ -514,7 +514,7 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
                                                     DoorMaterials::WOOD);
 
       //
-      // May cause softlock if there is a locked door in flooded room
+      // NOTE: may cause softlock if there is a locked door in flooded room
       // since we cannot attack while swimming.
       //
 

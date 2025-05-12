@@ -1408,11 +1408,11 @@ bool DGBase::TryToPlaceRoom(int minSize, int maxSize,
                             const Rect& area,
                             size_t emptyRoomIndex,
                             TransformedRoom roomType,
-                            const std::function<void(const Rect&)>& fn)
+                            const std::function<void(const Rect&)>& roomPlacer)
 {
   bool success = true;
 
-  if (!Util::IsFunctionValid(fn))
+  if (!Util::IsFunctionValid(roomPlacer))
   {
     DebugLog("Placement function is not defined!");
     return false;
@@ -1420,7 +1420,7 @@ bool DGBase::TryToPlaceRoom(int minSize, int maxSize,
 
   if (DoesAreaFit(area, minSize, maxSize))
   {
-    fn(area);
+    roomPlacer(area);
     //DebugLog("OK");
   }
   else
@@ -1431,7 +1431,7 @@ bool DGBase::TryToPlaceRoom(int minSize, int maxSize,
       int index = Util::RandomRange(0, candidates.size(), _rng);
       size_t ri = candidates[index];
       //DebugLog("OK - placing at %s", _emptyRooms[ri].ToString().data());
-      fn(_emptyRooms[ri]);
+      roomPlacer(_emptyRooms[ri]);
     }
     else
     {

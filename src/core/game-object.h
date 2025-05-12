@@ -1,4 +1,4 @@
-#ifndef GAME_OBJECT_H
+﻿#ifndef GAME_OBJECT_H
 #define GAME_OBJECT_H
 
 #include <string>
@@ -294,7 +294,7 @@ class GameObject
       uint32_t BgColor = Colors::None;
       std::string Name;
       std::string FowName;
-      uint16_t Mask;
+      uint16_t Mask = 0;
 
       std::string ToStringKey() const;
     };

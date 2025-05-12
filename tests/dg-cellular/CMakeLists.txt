@@ -16,7 +16,7 @@ if (USE_SDL)
                                          ${SDL2MAIN_LIBRARY}
                                          ${SDL2_LIBRARY})
   else()
-    target_link_libraries(${TARGET_NAME} ${SDL2_LIBRARY})
+    target_link_libraries(${TARGET_NAME} ${SDL2_LIBRARIES})
   endif()
 
 else()

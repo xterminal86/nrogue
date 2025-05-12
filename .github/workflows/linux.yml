@@ -1,0 +1,49 @@
+name: linux
+
+on:
+  workflow_run:
+    workflows: ["mingw"]
+    types:
+      - completed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BUILD_DIR_LINUX: build-linux
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+
+    - name: CHECKOUT
+      uses: actions/checkout@v3
+
+    # --------------------------------------------------------------------------
+
+    - name: INSTALL SDL2
+      run: sudo apt install -y libsdl2
+
+    # --------------------------------------------------------------------------
+
+    - name: CONFIGURE CMake
+      run: >
+          cmake
+          -B '${{github.workspace}}/${{ env.BUILD_DIR_LINUX }}'
+          -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }}
+          -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DBUILD_TESTS=OFF
+          -DUSE_SDL=ON
+
+    # --------------------------------------------------------------------------
+
+    - name: BUILD
+      run: >
+           cmake --build '${{github.workspace}}/${{ env.BUILD_DIR_LINUX }}'
+           --config Release
+
