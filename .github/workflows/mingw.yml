@@ -25,7 +25,6 @@ env:
   PACK_DIR: build-msys2
 
 jobs:
-  if: false
   build:
     #
     # The CMake configure and build commands are platform agnostic and
