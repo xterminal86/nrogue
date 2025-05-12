@@ -251,6 +251,16 @@ void LevelBuilder::UpdateMapRawFromCurrentGenerator()
 
 // =============================================================================
 
+CharV2& LevelBuilder::GetMapRaw()
+{
+  //
+  // Kinda unsafe, but whatever.
+  //
+  return _generator->GetMapRaw();
+}
+
+// =============================================================================
+
 std::string LevelBuilder::GetMapRawString()
 {
   std::string res = "_generator is null\n";

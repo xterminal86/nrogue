@@ -47,6 +47,13 @@ void DGBase::FillMapRaw()
 
 // =============================================================================
 
+CharV2& DGBase::GetMapRaw()
+{
+  return MapRaw;
+}
+
+// =============================================================================
+
 std::string DGBase::GetMapRawString()
 {
   std::string result;
@@ -972,7 +979,7 @@ bool DGBase::TransformArea(TransformedRoom type, size_t emptyRoomIndex)
 {
   if (_failures.count(type) == 1)
   {
-    //DebugLog("This room is a failure - cannot be placed in this map");
+    DebugLog("Room %d is a failure - cannot be placed in this map", (int)type);
     return false;
   }
 
@@ -991,30 +998,6 @@ bool DGBase::TransformArea(TransformedRoom type, size_t emptyRoomIndex)
     case TransformedRoom::EMPTY:
       MarkAreaEmpty(area);
       break;
-
-    // -------------------------------------------------------------------------
-
-    case TransformedRoom::SHRINE:
-    {
-      //DebugLog("Trying to place SHRINE at %s", area.ToString().data());
-
-      //
-      // "As described in Callable, when invoking a pointer to non-static member
-      // function or pointer to non-static data member, the first argument
-      // has to be a reference or pointer (including, possibly, smart pointer
-      // such as std::shared_ptr and std::unique_ptr) to an object whose member
-      // will be accessed."
-      //
-      auto fn = std::bind(&DGBase::PlaceShrine, this, std::placeholders::_1);
-
-      success = TryToPlaceRoom(5, 7, area, emptyRoomIndex, type, fn);
-
-      if (!success)
-      {
-        _failures[type] = true;
-      }
-    }
-    break;
 
     // -------------------------------------------------------------------------
 
@@ -1074,6 +1057,66 @@ bool DGBase::TransformArea(TransformedRoom type, size_t emptyRoomIndex)
       }
     }
     break;
+
+    // -------------------------------------------------------------------------
+
+    case TransformedRoom::GRAVEYARD:
+      MarkZone(area, type);
+      break;
+
+    // -------------------------------------------------------------------------
+
+    case TransformedRoom::LIBRARY:
+      MarkZone(area, type);
+      break;
+
+    // -------------------------------------------------------------------------
+
+    case TransformedRoom::SHRINE:
+    {
+      //DebugLog("Trying to place SHRINE at %s", area.ToString().data());
+
+      //
+      // "As described in Callable, when invoking a pointer to non-static member
+      // function or pointer to non-static data member, the first argument
+      // has to be a reference or pointer (including, possibly, smart pointer
+      // such as std::shared_ptr and std::unique_ptr) to an object whose member
+      // will be accessed."
+      //
+      auto fn = std::bind(&DGBase::PlaceShrine, this, std::placeholders::_1);
+
+      success = TryToPlaceRoom(5, 7, area, emptyRoomIndex, type, fn);
+
+      if (!success)
+      {
+        _failures[type] = true;
+      }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
+    case TransformedRoom::HALLOWED_GROUND:
+      MarkZone(area, type);
+      break;
+
+    // -------------------------------------------------------------------------
+
+    case TransformedRoom::CURSED_GROUND:
+      MarkZone(area, type);
+      break;
+
+    // -------------------------------------------------------------------------
+
+    case TransformedRoom::BATTLEFIELD:
+      MarkZone(area, type);
+      break;
+
+    // -------------------------------------------------------------------------
+
+    case TransformedRoom::ZOO:
+      MarkZone(area, type);
+      break;
 
     // -------------------------------------------------------------------------
 
@@ -1195,7 +1238,7 @@ void DGBase::PlaceTreasury(const Rect& area)
       _map[x][y].Image = (counter % 2 == 0) ? '1' : '2';
       _map[x][y].ZoneMarker = TransformedRoom::TREASURY;
 
-      if (Util::Rolld100(30))
+      if (Util::Rolld100(40))
       {
         _map[x][y].ObjectHere = ItemType::COINS;
       }

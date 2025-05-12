@@ -113,6 +113,7 @@ class DGBase
     //
     std::map<Position, ShrineType> ShrinesByPosition;
 
+    CharV2& GetMapRaw();
     std::string GetMapRawString();
 
     const std::vector<std::vector<MapCell>>& GeneratedMap();

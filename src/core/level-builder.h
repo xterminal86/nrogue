@@ -67,6 +67,7 @@ class LevelBuilder
 
     void UpdateMapRawFromCurrentGenerator();
 
+    CharV2& GetMapRaw();
     std::string GetMapRawString();
 
     MapCell* GetMapCell(int x, int y);

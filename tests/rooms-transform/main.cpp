@@ -1,6 +1,46 @@
 #include "level-builder.h"
 #include "rng.h"
 
+void PostProcessForPrinting(LevelBuilder& lb)
+{
+  auto gm = lb.GeneratedMap();
+
+  for (auto& line : gm)
+  {
+    for (MapCell& cell : line)
+    {
+      switch (cell.ZoneMarker)
+      {
+        case TransformedRoom::CHESTROOM:
+        {
+          //
+          // This will always pass, although it seems that default value for
+          // enum is always 0, unless explicitly assigned to the variant.
+          // That's why we need additional check.
+          //
+          if (std::holds_alternative<GameObjectType>(cell.ObjectHere))
+          {
+            GameObjectType t = std::get<GameObjectType>(cell.ObjectHere);
+            if (t == GameObjectType::CONTAINER)
+            {
+              lb.GetMapRaw()[cell.Coordinates.X][cell.Coordinates.Y] = 'C';
+            }
+          }
+        }
+        break;
+
+        // ---------------------------------------------------------------------
+
+        default:
+          // Not doing shit.
+          break;
+      }
+    }
+  }
+}
+
+// =============================================================================
+
 int main(int argc, char* argv[])
 {
   if (argc < 6)
@@ -67,14 +107,23 @@ int main(int argc, char* argv[])
 
   TransformedRoomsWeights weights =
   {
-    { TransformedRoom::EMPTY,     {  1, 0 } },
-    { TransformedRoom::TREASURY,  {  5, 1 } },
-    { TransformedRoom::SHRINE,    { 10, 1 } },
-    { TransformedRoom::STORAGE,   {  5, 2 } },
-    { TransformedRoom::CHESTROOM, {  5, 1 } },
+    //{ TransformedRoom::EMPTY,           {  1, 0 } },
+    //{ TransformedRoom::TREASURY,        {  5, 1 } },
+    //{ TransformedRoom::STORAGE,         {  5, 2 } },
+    //{ TransformedRoom::FLOODED,         { 10, 1 } },
+    { TransformedRoom::CHESTROOM,       {  5, 1 } },
+    //{ TransformedRoom::GRAVEYARD,       {  5, 1 } },
+    //{ TransformedRoom::LIBRARY,         {  5, 1 } },
+    //{ TransformedRoom::SHRINE,          { 10, 1 } },
+    //{ TransformedRoom::HALLOWED_GROUND, { 10, 1 } },
+    //{ TransformedRoom::CURSED_GROUND,   { 10, 1 } },
+    //{ TransformedRoom::BATTLEFIELD,     { 10, 1 } },
+    //{ TransformedRoom::ZOO,             { 10, 1 } },
   };
 
   lb.TransformRooms(weights);
+
+  PostProcessForPrinting(lb);
 
   std::string mapRaw = lb.GetMapRawString();
 
