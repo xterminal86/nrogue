@@ -1,6 +1,7 @@
 [![mingw](https://github.com/xterminal86/nrogue/actions/workflows/mingw.yml/badge.svg?branch=master)](https://github.com/xterminal86/nrogue/actions/workflows/mingw.yml)
 [![MSVC](https://github.com/xterminal86/nrogue/actions/workflows/msvc.yml/badge.svg)](https://github.com/xterminal86/nrogue/actions/workflows/msvc.yml)
 [![ncurses](https://github.com/xterminal86/nrogue/actions/workflows/ncurses.yml/badge.svg)](https://github.com/xterminal86/nrogue/actions/workflows/ncurses.yml)
+[![linux](https://github.com/xterminal86/nrogue/actions/workflows/linux.yml/badge.svg)](https://github.com/xterminal86/nrogue/actions/workflows/linux.yml)
 
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/xterminal86/nrogue/total)
 

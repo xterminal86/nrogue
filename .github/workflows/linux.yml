@@ -25,28 +25,49 @@ jobs:
 
     # --------------------------------------------------------------------------
 
-    - name: INSTALL SDL2
+    - name: INSTALL LIBRARIES
       run: |
            sudo apt update
-           sudo apt search sdl2 
-           sudo apt install -y libsdl2-dev          
+           sudo apt install -y libsdl2-dev libncurses-dev
 
     # --------------------------------------------------------------------------
 
-    - name: CONFIGURE CMake
+    - name: CONFIGURE CMake (SDL2)
       run: >
-          cmake
-          -B '${{github.workspace}}/${{ env.BUILD_DIR_LINUX }}'
-          -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }}
-          -G Ninja
-          -DCMAKE_BUILD_TYPE=Release
-          -DBUILD_TESTS=OFF
-          -DUSE_SDL=ON
+           cmake
+           -B '${{github.workspace}}/${{ env.BUILD_DIR_LINUX }}'
+           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }}
+           -G Ninja
+           -DCMAKE_BUILD_TYPE=Release
+           -DBUILD_TESTS=OFF
+           -DUSE_SDL=ON
 
     # --------------------------------------------------------------------------
 
-    - name: BUILD
+    - name: BUILD (SDL2)
       run: >
            cmake --build '${{github.workspace}}/${{ env.BUILD_DIR_LINUX }}'
            --config Release
 
+    # --------------------------------------------------------------------------
+
+    - name: CLEANUP BUILD DIR
+      run: rm -rf ${{github.workspace}}/${{ env.BUILD_DIR_LINUX }}/*
+
+    # --------------------------------------------------------------------------
+
+    - name: CONFIGURE CMake (ncurses)
+      run: >
+           cmake
+           -B '${{github.workspace}}/${{ env.BUILD_DIR_LINUX }}'
+           -DBUILD_VERSION_TEXT=${{ env.BUILD_VERSION_TEXT }}
+           -G Ninja
+           -DCMAKE_BUILD_TYPE=Release
+           -DBUILD_TESTS=OFF
+
+    # --------------------------------------------------------------------------
+
+    - name: BUILD (ncurses)
+      run: >
+           cmake --build '${{github.workspace}}/${{ env.BUILD_DIR_LINUX }}'
+           --config Release
