@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+import sys;
+
 CharsByIndex = {};
 
 def CreateData():
@@ -34,12 +36,32 @@ def Decode(data : list):
 def main():
   CreateData();
 
-  data = [
-    50497, 16488, 24366, 1838, 53806, 42528, 15174, 31858, 19301,
-    47219, 14184, 800, 63085, 64101, 58209, 41332, 36444, 8993,
-  ];
+  print("Enter numbers separated by whitespace (CTRL+D on empty line to finish)");
 
-  Decode(data);
+  data = "";
+
+  for line in sys.stdin:
+    data += line;
+
+  spl = data.split(' ');
+
+  ar = [];
+
+  for item in spl:
+    hasChars = item.strip();
+    if not hasChars:
+      continue;
+    try:
+      ar.append(int(item.strip()));
+    except Exception as e:
+      print(f"{ e }");
+      exit(1);
+
+  if not ar:
+    print("No input");
+    exit(0);
+
+  Decode(ar);
 
 ################################################################################
 

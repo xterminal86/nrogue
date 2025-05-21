@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # coding = utf8
 
+import argparse;
 import random;
 import sys;
 
@@ -61,7 +62,7 @@ def ObfuscateString(str):
     res = EncodeChar(c);
     ObfuscatedString.append(res);
   print("Obfuscated bytes:");
-  print(ObfuscatedString);
+  print(*ObfuscatedString);
 
 ################################################################################
 
@@ -83,6 +84,7 @@ def ToCppVector(list):
 
   res = f"std::vector<uint{ Size }_t> script = \n";
   res += "{\n";
+  res += "  ";
 
   countLines = 0;
   for item in list:
@@ -91,17 +93,22 @@ def ToCppVector(list):
     if countLines > 8:
       countLines = 0;
       res += "\n";
+      res += "  ";
   res += "\n};\n";
   print(res);
 
 ################################################################################
 
 def main():
-  if len(sys.argv) == 2:
-    MyString = sys.argv[1];
-  else:
-    print(f"Usage: { sys.argv[0] } <STRING>");
-    exit(0);
+  global MyString;
+
+  parser = argparse.ArgumentParser();
+
+  parser.add_argument("STRING", help="String to obfuscate", type=str);
+
+  args = parser.parse_args();
+
+  MyString = args.STRING;
 
   CreateData();
   ObfuscateString(MyString);
