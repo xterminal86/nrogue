@@ -856,8 +856,12 @@ GameObject* ItemsFactory::CreateScroll(int x,
                                   "with invalid spell (%s)!\n",
                                   si->SpellName.data());
     Printer::Instance().AddMessage(msg);
+
+    #ifdef DEBUG_BUILD
     LogPrint(msg, true);
     DebugLog("%s\n", msg.data());
+    #endif
+
     return nullptr;
   }
 
@@ -1284,10 +1288,12 @@ GameObject* ItemsFactory::CreateWand(int x,
 
   if (GlobalConstants::WandSpellCapacityCostByType.count(spellType) == 0)
   {
+    #ifdef DEBUG_BUILD
     auto str = Util::StringFormat("Wands don't support spell '%s'!",
                                   si.SpellName.data());
     LogPrint(str);
     DebugLog("%s\n", str.data());
+    #endif
     return nullptr;
   }
 

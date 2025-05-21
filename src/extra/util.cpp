@@ -754,6 +754,8 @@ namespace Util
     hx = Clamp(hx, 0, mw - 1);
     hy = Clamp(hy, 0, mh - 1);
 
+    result.reserve(hx * hy);
+
     for (int x = lx; x <= hx; x++)
     {
       for (int y = ly; y <= hy; y++)

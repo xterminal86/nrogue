@@ -71,7 +71,8 @@ int main(int argc, char* argv[])
 
   if (!Application::Instance().IsAppReady())
   {
-    ConsoleLog("There was an error during application initialization - no sense in continuing");
+    ConsoleLog("There was an error during application initialization - "
+               "no sense in continuing");
     return 1;
   }
 

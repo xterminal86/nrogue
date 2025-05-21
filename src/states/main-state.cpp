@@ -255,7 +255,9 @@ void MainState::Update(bool forceUpdate)
                                 Colors::BlackColor);
 
     #ifdef DEBUG_BUILD
+    Timer::Instance().StartProfiling("  PrintDebugInfo()");
     PrintDebugInfo();
+    Timer::Instance().FinishProfiling("  PrintDebugInfo()");
     #endif
 
     Printer::Instance().Render();

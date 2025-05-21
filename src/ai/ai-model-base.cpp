@@ -142,12 +142,13 @@ void AIModelBase::Update()
   }
   else
   {
+    #ifdef DEBUG_BUILD
     auto str =
         Util::StringFormat("No AI on this object: %s!",
                            AIComponentRef->OwnerGameObject->ObjectName.data());
     LogPrint(str, true);
-
     DebugLog("%s\n", str.data());
+    #endif
 
     AIComponentRef->OwnerGameObject->FinishTurn();
   }
@@ -292,6 +293,7 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
 
   // ---------------------------------------------------------------------------
 
+  #ifdef DEBUG_BUILD
   if (task == nullptr)
   {
     auto who =
@@ -299,9 +301,9 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
                            AIComponentRef->OwnerGameObject->ObjectName.data(),
                            AIComponentRef->OwnerGameObject->ObjectId());
     LogPrint(who, true);
-
     DebugLog("\t[%s] no such task - %s!\n", who.data(), taskName.data());
   }
+  #endif
 
   return task;
 }
@@ -868,15 +870,16 @@ Node* AIModelBase::CreateConditionNode(const ScriptNode* data)
 {
   std::function<BTResult()> fn = GetConditionFunction(data);
 
+  #ifdef DEBUG_BUILD
   if (!Util::IsFunctionValid(fn))
   {
     auto str = Util::StringFormat("%s - empty COND function (%s)!",
                                   __PRETTY_FUNCTION__,
                                   data->Params.at("p1").data());
     LogPrint(str);
-
     DebugLog("%s\n", str.data());
   }
+  #endif
 
   Node* node = new Condition(AIComponentRef->OwnerGameObject, fn);
 
@@ -929,6 +932,7 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
       break;
   }
 
+  #ifdef DEBUG_BUILD
   if (n == nullptr && nodeType != ScriptTaskNames::TASK)
   {
     auto who =
@@ -936,9 +940,9 @@ Node* AIModelBase::CreateNode(const ScriptNode* data)
                            AIComponentRef->OwnerGameObject->ObjectName.data(),
                            AIComponentRef->OwnerGameObject->ObjectId());
     LogPrint(who);
-
     DebugLog("[%s] no such node - %s!\n", who.data(), nodeName.data());
   }
+  #endif
 
   return n;
 }

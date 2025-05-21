@@ -1,10 +1,13 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include "singleton.h"
-
+#include <string>
 #include <chrono>
 #include <cstdint>
+#include <unordered_map>
+
+#include "singleton.h"
+#include "constants.h"
 
 //
 // For "Fucking Time"
@@ -24,6 +27,9 @@ using Sec = FT::seconds;
 class Timer : public Singleton<Timer>
 {
   public:
+    void StartProfiling(const std::string& timestampName);
+    void FinishProfiling(const std::string& timestampName);
+
     const Ns& TimePassedDur();
     const Ns& DeltaTimeDur();
 
@@ -31,6 +37,8 @@ class Timer : public Singleton<Timer>
 
     void MeasureStart();
     void MeasureEnd();
+
+    const StringV& GetProfilingReport();
 
   protected:
     void InitSpecific() override;
@@ -46,6 +54,16 @@ class Timer : public Singleton<Timer>
     Clock::time_point _measureEnd;
 
     double _dt = 0.0;
+
+    struct ProfilerData
+    {
+      Clock::time_point TimePoint;
+      double DeltaTime = 0.0;
+    };
+
+    std::unordered_map<std::string, ProfilerData> _timestamps;
+
+    StringV _report;
 };
 
 #endif // TIMER_H

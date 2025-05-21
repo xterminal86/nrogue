@@ -13,6 +13,7 @@
 #include "map-level-abyss.h"
 #include "map-level-nether.h"
 #include "map-level-endgame.h"
+#include "timer.h"
 
 #ifdef DEBUG_BUILD
 #include "logger.h"
@@ -66,9 +67,17 @@ void Map::Cleanup()
 
 void Map::Draw()
 {
+  Timer::Instance().StartProfiling("  DrawMapTilesAroundPlayer()");
   DrawMapTilesAroundPlayer();
+  Timer::Instance().FinishProfiling("  DrawMapTilesAroundPlayer()");
+
+  Timer::Instance().StartProfiling("  DrawGameObjects()");
   DrawGameObjects();
+  Timer::Instance().FinishProfiling("  DrawGameObjects()");
+
+  Timer::Instance().StartProfiling("  DrawActors()");
   DrawActors();
+  Timer::Instance().FinishProfiling("  DrawActors()");
 }
 
 // =============================================================================
@@ -111,10 +120,17 @@ void Map::Update()
 
   CurrentLevel->TryToSpawnMonsters();
 
+  Timer::Instance().StartProfiling("  UpdateGameObjects()");
   UpdateGameObjects();
-  UpdateActors();
+  Timer::Instance().FinishProfiling("  UpdateGameObjects()");
 
+  Timer::Instance().StartProfiling("  UpdateActors()");
+  UpdateActors();
+  Timer::Instance().FinishProfiling("  UpdateActors()");
+
+  Timer::Instance().StartProfiling("  UpdateTriggers(GLOBAL)");
   UpdateTriggers(TriggerUpdateType::GLOBAL);
+  Timer::Instance().FinishProfiling("  UpdateTriggers(GLOBAL)");
 
   //
   // If enemy is killed via thorns damage,
@@ -123,7 +139,9 @@ void Map::Update()
   // or we will end up with object that is not alive,
   // but can still be attacked on player turn, killed and gained EXP for it.
   //
+  Timer::Instance().StartProfiling("  RemoveDestroyed()");
   RemoveDestroyed();
+  Timer::Instance().FinishProfiling("  RemoveDestroyed()");
 }
 
 // =============================================================================

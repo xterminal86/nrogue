@@ -57,10 +57,9 @@ void Application::InitSpecific()
   _currentState = _gameStates[GameStates::MENU_STATE].get();
 
   //
-  // In SDL build GetKeyDown() will return -1 on application
-  // start resulting in white screen during to not
-  // redundantly drawing the "scene"
-  // because no key has been pressed yet.
+  // In SDL build GetKeyDown() will return -1 on application start, resulting in
+  // white screen due to no key being pressed yet, so no drawing of current
+  // state happens, which is not what we want.
   //
   _currentState->Update(true);
 
@@ -132,6 +131,25 @@ void Application::Run()
     }
 
     Timer::Instance().MeasureEnd();
+
+    #ifdef DEBUG_BUILD
+    auto report = Timer::Instance().GetProfilingReport();
+
+    if (!report.empty())
+    {
+      Logger::Instance().Print("=== PROFILER START ===");
+    }
+
+    for (auto& line : report)
+    {
+      Logger::Instance().Print(line);
+    }
+
+    if (!report.empty())
+    {
+      Logger::Instance().Print("=== PROFILER END ===");
+    }
+    #endif
   }
 }
 
@@ -148,6 +166,7 @@ void Application::ChangeState(const GameStates& gameStateIndex)
     return;
   }
 
+  #ifdef DEBUG_BUILD
   if (gameStateIndex != GameStates::EXIT_GAME)
   {
     auto str =
@@ -168,6 +187,7 @@ void Application::ChangeState(const GameStates& gameStateIndex)
     LogPrint(str);
     //DebugLog("%s\n", str.data());
   }
+  #endif
 
   _currentState->Cleanup();
 
@@ -754,11 +774,13 @@ void Application::SetIcon()
   SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);
   if (!surf)
   {
+    #ifdef DEBUG_BUILD
     auto str = Util::StringFormat("***** Could not load from memory: "
                                   "%s *****\n",
                                   SDL_GetError());
     LogPrint(str);
     ConsoleLog("%s\n", str.data());
+    #endif
     return;
   }
 

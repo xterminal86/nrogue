@@ -31,7 +31,7 @@ class MapLevelBase
     virtual void OnLevelChanged(MapType from);
 
     //
-    // Save plan:
+    // TODO: save plan:
     //
     // - MapArray
     // - StaticMapObjects (without components)

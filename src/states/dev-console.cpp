@@ -160,13 +160,40 @@ void DevConsole::HandleInput()
     case VK_TAB:
     {
       std::string noPrompt = _currentCommand.substr(2);
+      std::string lastCmd;
 
-      auto hints = _trie.FindAll(noPrompt);
+      StringV spl = Util::StringSplit(noPrompt, ' ');
+      if (!spl.empty())
+      {
+        lastCmd = spl.back();
+      }
+
+      auto hints = _trie.FindAll(lastCmd);
 
       if (hints.size() == 1)
       {
-        _currentCommand =
-            Util::StringFormat("%s%s ", Prompt.data(), (*hints.begin()).data());
+        //
+        // If there are several words on command line, attach hint only to the
+        // last one, while preserving what was already inputted.
+        //
+        if (spl.size() > 1)
+        {
+          _currentCommand = Prompt;
+
+          for (size_t i = 0; i < spl.size() - 1; i++)
+          {
+            _currentCommand.append(spl[i]);
+            _currentCommand.append(" ");
+          }
+
+          _currentCommand.append(*hints.begin());
+          _currentCommand.append(" ");
+        }
+        else
+        {
+          _currentCommand =
+              Util::StringFormat("%s%s ", Prompt.data(), (*hints.begin()).data());
+        }
 
         //
         // Just in case.
@@ -176,82 +203,98 @@ void DevConsole::HandleInput()
           _cursorPosition = _currentCommand.length() - Prompt.length();
         }
       }
-      else
+      else if (hints.size() != 0)
       {
-        if (hints.size() != 0)
+        StdOut(Prompt);
+
+        //
+        // Check if there's common prefix in returned hints.
+        // If yes - autocomplete to it.
+        //
+        StringV hintsV;
+        hintsV.reserve(hints.size());
+
+        size_t shortestStringLength = std::numeric_limits<size_t>::max();
+        for (auto& item : hints)
         {
-          StdOut(Prompt);
-
-          //
-          // Check if there's common prefix in returned hints.
-          // If yes - autocomplete to it.
-          //
-          StringV hintsV;
-          hintsV.reserve(hints.size());
-
-          size_t shortestStringLength = std::numeric_limits<size_t>::max();
-          for (auto& item : hints)
+          if (item.length() < shortestStringLength)
           {
-            if (item.length() < shortestStringLength)
-            {
-              shortestStringLength = item.length();
-            }
-
-            hintsV.push_back(item);
+            shortestStringLength = item.length();
           }
 
-          std::string commonPrefix;
+          hintsV.push_back(item);
+        }
 
-          bool commonPrefixFound = true;
-          if (not hintsV.empty())
+        std::string commonPrefix;
+
+        bool commonPrefixFound = true;
+        if (not hintsV.empty())
+        {
+          for (size_t i = 0; i < shortestStringLength; i++)
           {
-            for (size_t i = 0; i < shortestStringLength; i++)
+            char c = hintsV[0][i];
+            for (auto& s : hintsV)
             {
-              char c = hintsV[0][i];
-              for (auto& s : hintsV)
+              if (s[i] != c)
               {
-                if (s[i] != c)
-                {
-                  commonPrefixFound = false;
-                  break;
-                }
-              }
-
-              if (not commonPrefixFound)
-              {
+                commonPrefixFound = false;
                 break;
               }
-
-              commonPrefix.append(1, c);
             }
-          }
 
-          if (not commonPrefix.empty())
+            if (not commonPrefixFound)
+            {
+              break;
+            }
+
+            commonPrefix.append(1, c);
+          }
+        }
+
+        //
+        // Prefix found, attach it to current command with all that was
+        // inputted.
+        //
+        if (not commonPrefix.empty())
+        {
+          if (spl.size() > 1)
+          {
+            _currentCommand = Prompt;
+
+            for (size_t i = 0; i < spl.size() - 1; i++)
+            {
+              _currentCommand.append(spl[i]);
+              _currentCommand.append(" ");
+            }
+
+            _currentCommand.append(commonPrefix);
+          }
+          else
           {
             _currentCommand = Util::StringFormat("%s%s",
                                                   Prompt.data(),
                                                   commonPrefix.data());
-
-            //
-            // Just in case.
-            //
-            if (_currentCommand.length() > Prompt.length())
-            {
-              _cursorPosition = _currentCommand.length() - Prompt.length();
-            }
-
-            hints = _trie.FindAll(commonPrefix);
           }
 
-          for (auto& item : hints)
+          //
+          // Just in case.
+          //
+          if (_currentCommand.length() > Prompt.length())
           {
-            StdOut(item);
-            _cursorY++;
+            _cursorPosition = _currentCommand.length() - Prompt.length();
+          }
 
-            while (_stdout.size() > _maxHistory)
-            {
-              _stdout.pop_back();
-            }
+          hints = _trie.FindAll(commonPrefix);
+        }
+
+        for (auto& item : hints)
+        {
+          StdOut(item);
+          _cursorY++;
+
+          while (_stdout.size() > _maxHistory)
+          {
+            _stdout.pop_back();
           }
         }
       }
@@ -489,6 +532,7 @@ void DevConsole::ProcessCommand(const std::string& command,
       break;
 
     case DevConsoleCommand::HELP:
+    case DevConsoleCommand::HELP2:
       DisplayHelpAboutCommand(params);
       break;
 

@@ -63,6 +63,7 @@ void BTSParser::ParseFromString(const std::string& script)
 
   if (script.empty())
   {
+    #ifdef DEBUG_BUILD
     std::string objName = (_goRef != nullptr)
                          ? _goRef->ObjectName
                          : "<nullptr>";
@@ -71,8 +72,8 @@ void BTSParser::ParseFromString(const std::string& script)
                                   __PRETTY_FUNCTION__,
                                   objName.data());
     LogPrint(str, true);
-
     DebugLog("%s\n", str.data());
+    #endif
 
     return;
   }

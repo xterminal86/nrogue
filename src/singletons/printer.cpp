@@ -76,11 +76,13 @@ bool Printer::InitForSDL()
     surf = SDL_LoadBMP_RW(data, 1);
     if (!surf)
     {
+      #ifdef DEBUG_BUILD
       auto str = Util::StringFormat("***** Could not load from memory: "
                                     "%s *****\n",
                                     SDL_GetError());
       ConsoleLog("%s\n", str.data());
       LogPrint(str, true);
+      #endif
       return false;
     }
 

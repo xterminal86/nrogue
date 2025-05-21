@@ -12,6 +12,7 @@
 #include "spells-database.h"
 #include "custom-class-state.h"
 #include "gid-generator.h"
+#include "timer.h"
 
 void Player::Init()
 {
@@ -233,6 +234,8 @@ bool Player::PassByNPC(GameObject* actor)
 
 void Player::CheckVisibility()
 {
+  Timer::Instance().StartProfiling("  Player::CheckVisibility()");
+
   int tw = Printer::TerminalWidth;
   int th = Printer::TerminalHeight;
 
@@ -315,6 +318,8 @@ void Player::CheckVisibility()
       }
     }
   }
+
+  Timer::Instance().FinishProfiling("  Player::CheckVisibility()");
 }
 
 // =============================================================================
@@ -822,7 +827,6 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
                                    what->Attrs.Skl.Get(),
                                    what->Attrs.Lvl.Get(),
                                    hitChance);
-
   Logger::Instance().Print(logMsg);
   #endif
 

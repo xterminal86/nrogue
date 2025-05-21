@@ -56,12 +56,13 @@ class AIComponent : public Component
       }
       else
       {
+        #ifdef DEBUG_BUILD
         auto str = Util::StringFormat("%s no such AI model - %s!",
                                       __PRETTY_FUNCTION__,
                                       typeid(T).name());
         LogPrint(str, true);
-
         DebugLog("%s\n", str.data());
+        #endif
       }
     }
 

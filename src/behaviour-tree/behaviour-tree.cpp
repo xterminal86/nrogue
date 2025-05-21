@@ -65,8 +65,7 @@ void Node::AddNode(Node* node)
 
 std::string Node::ToString()
 {
-  std::string res = Util::StringFormat("[%s]", typeid(*this).name());
-  return res;
+  return Util::StringFormat("[%s]", typeid(*this).name());
 }
 
 // +---------------------------------------------------------------------------+

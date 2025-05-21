@@ -32,6 +32,13 @@ int main(int argc, char* argv[])
 
   Application::Instance().Init();
 
+  if (!Application::Instance().IsAppReady())
+  {
+    ConsoleLog("There was an error during application initialization - "
+               "no sense in continuing");
+    return 1;
+  }
+
   GameObjectsFactory::Instance().Init();
   ItemsFactory::Instance().Init();
   MonstersInc::Instance().Init();

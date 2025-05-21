@@ -330,7 +330,6 @@ class GameObject
     void UnapplyEffect(const ItemBonusStruct& e);
     void EffectAction(const ItemBonusStruct& e);
     void MarkAndCreateRemains();
-    void TryToBurnItem();
     void ProcessNaturalRegenHP();
     void ProcessNaturalRegenMP();
     void ConsumeEnergy();

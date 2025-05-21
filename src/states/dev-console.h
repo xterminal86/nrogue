@@ -21,6 +21,7 @@ enum class DevConsoleCommand
     UNKNOWN = 0
   , CLEAR
   , HELP
+  , HELP2
   , CLOSE
   , CLOSE2
   , CLOSE3
@@ -236,6 +237,8 @@ class DevConsole : public GameState
     {
       { DevConsoleCommand::CLEAR               , "clear"             },
       { DevConsoleCommand::HELP                , "help"              },
+      // So that 'help commands' can work with autocompletion.
+      { DevConsoleCommand::HELP2               , "commands"          },
       { DevConsoleCommand::CLOSE               , "q"                 },
       { DevConsoleCommand::CLOSE2              , "quit"              },
       { DevConsoleCommand::CLOSE3              , "exit"              },
