@@ -2,6 +2,7 @@
 #define DEVCONSOLE_H
 
 #include "gamestate.h"
+#include "msg-scroll-buffer.h"
 #include "util.h"
 #include "trie.h"
 
@@ -102,15 +103,13 @@ class DevConsole : public GameState
 
     std::string _currentCommand;
 
-    std::vector<std::string> _stdout;
+    MsgScrollBuffer _stdout;
+
     std::vector<std::string> _commandsHistory;
 
     int _commandsHistoryIndex = -1;
 
     int _cursorPosition = 0;
-
-    int _cursorX = 1;
-    int _cursorY = 2;
 
     bool _closedByCommand = false;
 

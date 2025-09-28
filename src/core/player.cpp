@@ -232,6 +232,10 @@ bool Player::PassByNPC(GameObject* actor)
 
 // =============================================================================
 
+//
+// FIXME: profiler says it takes too long. Remove creation of std::vectors every
+//        call and replace with precomputed.
+//
 void Player::CheckVisibility()
 {
   Timer::Instance().StartProfiling("  Player::CheckVisibility()");

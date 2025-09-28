@@ -53,7 +53,6 @@ void DevConsole::Prepare()
 
 void DevConsole::Cleanup()
 {
-  //_stdout.clear();
   _currentCommand.clear();
 }
 
@@ -290,14 +289,22 @@ void DevConsole::HandleInput()
         for (auto& item : hints)
         {
           StdOut(item);
-          _cursorY++;
-
-          while (_stdout.size() > _maxHistory)
-          {
-            _stdout.pop_back();
-          }
         }
       }
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
+    case NUMPAD_8:
+    {
+      _stdout.ScrollUp();
+    }
+    break;
+
+    case NUMPAD_2:
+    {
+      _stdout.ScrollDown();
     }
     break;
 
@@ -329,13 +336,6 @@ void DevConsole::HandleInput()
       }
 
       _currentCommand = Prompt;
-      _cursorX = 1;
-      _cursorY++;
-
-      while (_stdout.size() > _maxHistory)
-      {
-        _stdout.pop_back();
-      }
 
       if (_commandsHistory.size() > _maxHistory)
       {
@@ -353,8 +353,6 @@ void DevConsole::HandleInput()
     {
       if (_currentCommand.length() > 2)
       {
-        //_currentCommand.pop_back();
-
         if (_cursorPosition > 0)
         {
           size_t pos = 2 + _cursorPosition - 1;
@@ -385,9 +383,9 @@ void DevConsole::HandleInput()
     {
       if (_keyPressed >= 32 && _keyPressed <= 126)
       {
+        _stdout.ResetScroll();
         _currentCommand.insert(_currentCommand.begin() + 2 + _cursorPosition,
                                (char)_keyPressed);
-        //_currentCommand += (char)_keyPressed;
         _cursorPosition++;
       }
     }
@@ -405,52 +403,38 @@ void DevConsole::Update(bool forceUpdate)
 
     DrawHeader(" DEVELOPER'S CONSOLE ");
 
+    auto msgs = _stdout.GetMessages();
+
     int lineCount = 0;
-    for (int i = _stdout.size() - 1; i >= 0; i--)
+    for (const std::string* msg : msgs)
     {
+      if (msg == nullptr)
+      {
+        break;
+      }
+
       Printer::Instance().PrintFB(1,
-                                  2 + lineCount,
-                                  _stdout[i],
+                                  1 + lineCount,
+                                  *msg,
                                   Printer::kAlignLeft,
                                   Colors::WhiteColor,
                                   Colors::BlackColor);
+
       lineCount++;
     }
 
     Printer::Instance().PrintFB(1,
-                                2 + lineCount,
+                                1 + lineCount,
                                 _currentCommand,
                                 Printer::kAlignLeft,
                                 Colors::WhiteColor,
                                 Colors::BlackColor);
 
     Printer::Instance().PrintFB(3 + _cursorPosition,
-                                2 + lineCount,
+                                1 + lineCount,
                                 ' ',
                                 Colors::BlackColor,
                                 Colors::WhiteColor);
-
-    /*
-    Printer::Instance().PrintFB(1 + _currentCommand.length(),
-                                2 + lineCount,
-                                ' ',
-                                Colors::BlackColor,
-                                Colors::WhiteColor);
-    */
-
-    /*
-    std::string toPrint = Util::StringFormat("historyIndex = %d, "
-                                             "cursorPos = %d, "
-                                             "len = %llu",
-                                             _commandsHistoryIndex,
-                                             _cursorPosition,
-                                             _currentCommand.substr(2).length());
-    Printer::Instance().PrintFB(_tw - 1,
-                                3,
-                                toPrint,
-                                Printer::kAlignRight,
-                                Colors::WhiteColor);
-    */
 
     Printer::Instance().Render();
   }
@@ -528,7 +512,7 @@ void DevConsole::ProcessCommand(const std::string& command,
     // ------------------ shell builtins ---------------------------------------
 
     case DevConsoleCommand::CLEAR:
-      _stdout.clear();
+      _stdout.Clear();
       break;
 
     case DevConsoleCommand::HELP:
@@ -2008,7 +1992,7 @@ void DevConsole::PrintAdditionalHelp(DevConsoleCommand command)
 
 void DevConsole::StdOut(const std::string& str)
 {
-  _stdout.insert(_stdout.begin(), str);
+  _stdout.AddMessage(str);
 }
 
 // =============================================================================

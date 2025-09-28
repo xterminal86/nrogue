@@ -686,6 +686,16 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll,
 
   // TODO: blessed scroll of teleport - what positive effect for player?
 
+  //
+  // FIXME: TeleportToExistingLevel() prints directly to the screen, which
+  //        messes up order of messages. For example, if you teleported into
+  //        wall, you'll get message about it first (from
+  //        TeleportToExistingLevel()) and then all the messages from
+  //        _scrollUseMessages afterwards which are printed at the end of
+  //        SpellsProcessor::ProcessScroll(). But they sould be printed first.
+  //        Think on rewriting in-game message log output system so that message
+  //        creation and output is not all over the place.
+  //
   if (scroll->Data.Prefix == ItemPrefix::UNCURSED
    || scroll->Data.Prefix == ItemPrefix::BLESSED)
   {
