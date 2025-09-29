@@ -78,14 +78,19 @@ void GameOverState::DisplayGameLog()
 
   int count = 0;
   auto msgs = Printer::Instance().GetLastMessages();
-  for (GameLogMessageData& m : msgs)
+  for (GameLogMessageData* m : msgs)
   {
+    if (m == nullptr)
+    {
+      break;
+    }
+
     Printer::Instance().PrintFB(x,
                                 y - count,
-                                m.Message,
+                                m->Message,
                                 Printer::kAlignRight,
-                                m.FgColor,
-                                m.BgColor);
+                                m->FgColor,
+                                m->BgColor);
     count++;
   }
 }

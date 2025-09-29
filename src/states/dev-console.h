@@ -64,6 +64,7 @@ enum class DevConsoleCommand
   , REPORT_PLAYER
   , REMOVE_OBJECT
   , SHOW_MAP
+  , SPAM_TO_LOG
   , AWARD_EXP
   , LEVEL_UP
   , LEVEL_DOWN
@@ -103,7 +104,7 @@ class DevConsole : public GameState
 
     std::string _currentCommand;
 
-    MsgScrollBuffer<std::string> _stdout{4};
+    MsgScrollBuffer<std::string> _stdout{23, 4};
 
     std::vector<std::string> _commandsHistory;
 
@@ -171,44 +172,43 @@ class DevConsole : public GameState
     bool ParseCommand();
 
     void ProcessCommand(const std::string& command,
-                        const std::vector<std::string>& params);
-    void DisplayHelpAboutCommand(const std::vector<std::string>& params);
+                        const StringV& params);
+    void DisplayHelpAboutCommand(const StringV& params);
     void PrintAdditionalHelp(DevConsoleCommand command);
     void PrintHistory();
     void RepeatCommand(const std::string& shellCmd);
     void InfoHandles();
-    void CreateMonster(const std::vector<std::string>& params);
-    void CreateDummyActor(const std::vector<std::string>& params);
-    void CreateDummyObject(const std::vector<std::string>& params);
-    void CreateChest(const std::vector<std::string>& params);
+    void CreateMonster(const StringV& params);
+    void CreateDummyActor(const StringV& params);
+    void CreateDummyObject(const StringV& params);
+    void CreateChest(const StringV& params);
     void CreateAllGems();
     void CreateAllPotions();
     void CreateAllScrolls();
-    void CreateItem(const std::vector<std::string>& params);
-    void CreateShrine(const std::vector<std::string>& params);
-    void CreateBreakable(const std::vector<std::string>& params);
-    void GetObject(const std::vector<std::string>& params,
-                   ObjectHandleType handleType);
-    void MoveObject(const std::vector<std::string>& params,
-                    ObjectHandleType handleType);
-    void MovePlayer(const std::vector<std::string>& params);
-    void RemoveObject(const std::vector<std::string>& params);
-    void DamageActor(const std::vector<std::string>& params);
+    void CreateItem(const StringV& params);
+    void CreateShrine(const StringV& params);
+    void CreateBreakable(const StringV& params);
+    void GetObject(const StringV& params, ObjectHandleType handleType);
+    void MoveObject(const StringV& params, ObjectHandleType handleType);
+    void MovePlayer(const StringV& params);
+    void RemoveObject(const StringV& params);
+    void DamageActor(const StringV& params);
     void PoisonActor();
     void PrintColors();
-    void TransformTile(const std::vector<std::string>& params);
-    void PlaceWall(const std::vector<std::string>& params);
-    void GetObjectByAddress(const std::vector<std::string>& params);
-    void GetObjectById(const std::vector<std::string>& params);
+    void TransformTile(const StringV& params);
+    void PlaceWall(const StringV& params);
+    void GetObjectByAddress(const StringV& params);
+    void GetObjectById(const StringV& params);
     void ReportHandleDebugInfo(ObjectHandleType type);
-    void PrintDebugInfo(const std::vector<std::string>& debugInfo);
-    void GiveMoney(const std::vector<std::string>& params);
-    void AwardExperience(const std::vector<std::string>& params);
+    void PrintDebugInfo(const StringV& debugInfo);
+    void GiveMoney(const StringV& params);
+    void AwardExperience(const StringV& params);
     void ToggleFogOfWar();
     void ToggleGodMode();
     void TogglePlayerIgnore();
     void PrintTriggers();
     void PrintActors();
+    void SpamToLog(const StringV& params);
 
 #ifdef DEBUG_BUILD
     void DispelEffects();
@@ -234,58 +234,58 @@ class DevConsole : public GameState
 
     const std::map<DevConsoleCommand, std::string> _commandNameByType =
     {
-      { DevConsoleCommand::CLEAR               , "clear"             },
-      { DevConsoleCommand::HELP                , "help"              },
-      // So that 'help commands' can work with autocompletion.
-      { DevConsoleCommand::HELP2               , "commands"          },
-      { DevConsoleCommand::CLOSE               , "q"                 },
-      { DevConsoleCommand::CLOSE2              , "quit"              },
-      { DevConsoleCommand::CLOSE3              , "exit"              },
-      { DevConsoleCommand::CLOSE4              , "close"             },
-      { DevConsoleCommand::HISTORY             , "history"           },
-      { DevConsoleCommand::REPEAT_COMMAND      , "!"                 },
-      { DevConsoleCommand::TRANSFORM_TILE      , "map_trnstile"      },
-      { DevConsoleCommand::PLACE_WALL          , "map_placewall"     },
-      { DevConsoleCommand::SHOW_MAP            , "map_show"          },
-      { DevConsoleCommand::PRINT_MAP           , "map_print2file"    },
-      { DevConsoleCommand::INFO_HANDLES        , "info_handles"      },
-      { DevConsoleCommand::PRINT_TRIGGERS      , "info_triggers"     },
-      { DevConsoleCommand::PRINT_ACTORS        , "info_actors"       },
-      { DevConsoleCommand::GET_STATIC_OBJECT   , "get_staticobj"     },
-      { DevConsoleCommand::GET_MAP_OBJECT      , "get_mapobj"        },
-      { DevConsoleCommand::GET_ACTOR           , "get_actor"         },
-      { DevConsoleCommand::GET_ITEM            , "get_item"          },
-      { DevConsoleCommand::GET_ANY_OBJECT      , "get_anyobj"        },
-      { DevConsoleCommand::DISPEL_EFFECTS_ACTOR, "actor_dispel"      },
-      { DevConsoleCommand::POISON_ACTOR        , "actor_poison"      },
-      { DevConsoleCommand::DAMAGE_ACTOR        , "actor_damage"      },
-      { DevConsoleCommand::MOVE_STATIC_OBJECT  , "mov_staticobj"     },
-      { DevConsoleCommand::MOVE_ACTOR          , "mov_actor"         },
-      { DevConsoleCommand::MOVE_ITEM           , "mov_item"          },
-      { DevConsoleCommand::MOVE_PLAYER         , "mov_player"        },
-      { DevConsoleCommand::DISPEL_EFFECTS      , "plr_dispel"        },
-      { DevConsoleCommand::GIVE_MONEY          , "plr_givemoney"     },
-      { DevConsoleCommand::AWARD_EXP           , "plr_awardexp"      },
-      { DevConsoleCommand::LEVEL_UP            , "plr_levelup"       },
-      { DevConsoleCommand::LEVEL_DOWN          , "plr_leveldown"     },
-      { DevConsoleCommand::GOD_MODE            , "plr_godmode"       },
-      { DevConsoleCommand::IGNORE_PLAYER       , "plr_ignore"        },
-      { DevConsoleCommand::REPORT_PLAYER       , "plr_info"          },
-      { DevConsoleCommand::REMOVE_OBJECT       , "eng_deleteobj"     },
-      { DevConsoleCommand::PRINT_COLORS        , "eng_printclrs"     },
-      { DevConsoleCommand::GET_BY_ADDRESS      , "eng_getbyaddr"     },
-      { DevConsoleCommand::GET_BY_ID           , "eng_getbyid"       },
-      { DevConsoleCommand::CREATE_MONSTER      , "create_monster"    },
-      { DevConsoleCommand::CREATE_DUMMY_ACTOR  , "create_dummyactor" },
-      { DevConsoleCommand::CREATE_ALL_GEMS     , "create_allgems"    },
-      { DevConsoleCommand::CREATE_ALL_POTIONS  , "create_allpotions" },
-      { DevConsoleCommand::CREATE_ALL_SCROLLS  , "create_allscrolls" },
-      { DevConsoleCommand::CREATE_ITEM         , "create_item"       },
-      { DevConsoleCommand::CREATE_SHRINE       , "create_shrine"     },
-      { DevConsoleCommand::CREATE_DUMMY_OBJECT , "create_dummyobj"   },
-      { DevConsoleCommand::CREATE_CHEST        , "create_chest"      },
-      { DevConsoleCommand::CREATE_BREAKABLE    , "create_breakable"  }
-
+       { DevConsoleCommand::CLEAR               , "clear"             }
+     , { DevConsoleCommand::HELP                , "help"              }
+     // So that 'help commands' can work with autocompletion.
+     , { DevConsoleCommand::HELP2               , "commands"          }
+     , { DevConsoleCommand::CLOSE               , "q"                 }
+     , { DevConsoleCommand::CLOSE2              , "quit"              }
+     , { DevConsoleCommand::CLOSE3              , "exit"              }
+     , { DevConsoleCommand::CLOSE4              , "close"             }
+     , { DevConsoleCommand::HISTORY             , "history"           }
+     , { DevConsoleCommand::REPEAT_COMMAND      , "!"                 }
+     , { DevConsoleCommand::TRANSFORM_TILE      , "map_trnstile"      }
+     , { DevConsoleCommand::PLACE_WALL          , "map_placewall"     }
+     , { DevConsoleCommand::SHOW_MAP            , "map_show"          }
+     , { DevConsoleCommand::PRINT_MAP           , "map_print2file"    }
+     , { DevConsoleCommand::INFO_HANDLES        , "info_handles"      }
+     , { DevConsoleCommand::PRINT_TRIGGERS      , "info_triggers"     }
+     , { DevConsoleCommand::PRINT_ACTORS        , "info_actors"       }
+     , { DevConsoleCommand::GET_STATIC_OBJECT   , "get_staticobj"     }
+     , { DevConsoleCommand::GET_MAP_OBJECT      , "get_mapobj"        }
+     , { DevConsoleCommand::GET_ACTOR           , "get_actor"         }
+     , { DevConsoleCommand::GET_ITEM            , "get_item"          }
+     , { DevConsoleCommand::GET_ANY_OBJECT      , "get_anyobj"        }
+     , { DevConsoleCommand::DISPEL_EFFECTS_ACTOR, "actor_dispel"      }
+     , { DevConsoleCommand::POISON_ACTOR        , "actor_poison"      }
+     , { DevConsoleCommand::DAMAGE_ACTOR        , "actor_damage"      }
+     , { DevConsoleCommand::MOVE_STATIC_OBJECT  , "mov_staticobj"     }
+     , { DevConsoleCommand::MOVE_ACTOR          , "mov_actor"         }
+     , { DevConsoleCommand::MOVE_ITEM           , "mov_item"          }
+     , { DevConsoleCommand::MOVE_PLAYER         , "mov_player"        }
+     , { DevConsoleCommand::DISPEL_EFFECTS      , "plr_dispel"        }
+     , { DevConsoleCommand::GIVE_MONEY          , "plr_givemoney"     }
+     , { DevConsoleCommand::AWARD_EXP           , "plr_awardexp"      }
+     , { DevConsoleCommand::LEVEL_UP            , "plr_levelup"       }
+     , { DevConsoleCommand::LEVEL_DOWN          , "plr_leveldown"     }
+     , { DevConsoleCommand::GOD_MODE            , "plr_godmode"       }
+     , { DevConsoleCommand::IGNORE_PLAYER       , "plr_ignore"        }
+     , { DevConsoleCommand::REPORT_PLAYER       , "plr_info"          }
+     , { DevConsoleCommand::REMOVE_OBJECT       , "eng_deleteobj"     }
+     , { DevConsoleCommand::PRINT_COLORS        , "eng_printclrs"     }
+     , { DevConsoleCommand::GET_BY_ADDRESS      , "eng_getbyaddr"     }
+     , { DevConsoleCommand::GET_BY_ID           , "eng_getbyid"       }
+     , { DevConsoleCommand::CREATE_MONSTER      , "create_monster"    }
+     , { DevConsoleCommand::CREATE_DUMMY_ACTOR  , "create_dummyactor" }
+     , { DevConsoleCommand::CREATE_ALL_GEMS     , "create_allgems"    }
+     , { DevConsoleCommand::CREATE_ALL_POTIONS  , "create_allpotions" }
+     , { DevConsoleCommand::CREATE_ALL_SCROLLS  , "create_allscrolls" }
+     , { DevConsoleCommand::CREATE_ITEM         , "create_item"       }
+     , { DevConsoleCommand::CREATE_SHRINE       , "create_shrine"     }
+     , { DevConsoleCommand::CREATE_DUMMY_OBJECT , "create_dummyobj"   }
+     , { DevConsoleCommand::CREATE_CHEST        , "create_chest"      }
+     , { DevConsoleCommand::CREATE_BREAKABLE    , "create_breakable"  }
+     , { DevConsoleCommand::SPAM_TO_LOG         , "spam_log"          }
     };
 
     std::map<std::string, DevConsoleCommand> _commandTypeByName;
@@ -626,6 +626,13 @@ class DevConsole : public GameState
         {
           _commandNameByType.at(DevConsoleCommand::CREATE_BREAKABLE) + " X Y",
           "Create breakable object with random loot at X Y"
+        }
+      },
+      {
+        _commandNameByType.at(DevConsoleCommand::SPAM_TO_LOG),
+        {
+          _commandNameByType.at(DevConsoleCommand::SPAM_TO_LOG) + " <COUNT>",
+          "Add <COUNT> messages to in-game log"
         }
       }
     };

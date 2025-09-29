@@ -14,9 +14,6 @@ size_t Printer::TerminalHeight = 0;
 
 void Printer::InitSpecific()
 {
-  _inGameMessages.reserve(kMaxGameLogMessages * 2);
-  _lastMessages.reserve(10);
-
 #ifdef USE_SDL
   _ok = InitForSDL();
 #else
@@ -1115,32 +1112,41 @@ void Printer::AddMessage(const std::string& message,
 
 void Printer::AddMessage(const GameLogMessageData& data)
 {
-  if (!_inGameMessages.empty() && (_repeatingMessage == data.Message))
+  //
+  // There are messages in log and current message is the same as the last one.
+  //
+  if (!_inGameMessages.IsEmpty() && (_repeatingMessage == data.Message))
   {
     _messageRepeatCounter++;
-    auto newStr = Util::StringFormat("(x%i) %s",
-                                     _messageRepeatCounter,
-                                     _repeatingMessage.data());
-    _inGameMessages.front() = { newStr, data.FgColor, data.BgColor };
+    GameLogMessageData* lastMsg = _inGameMessages.LastMessage();
+    if (lastMsg != nullptr)
+    {
+      *lastMsg =
+      {
+        Util::StringFormat("(x%i) %s",
+                           _messageRepeatCounter,
+                           _repeatingMessage.data()),
+        data.FgColor,
+        data.BgColor
+      };
+    }
   }
+  //
+  // Otherwise log is empty or it's a different message.
+  //
   else
   {
     _messageRepeatCounter = 1;
-    _inGameMessages.insert(_inGameMessages.begin(),
-                           {
-                             data.Message,
-                             data.FgColor,
-                             data.BgColor
-                           });
+    _inGameMessages.AddMessage(
+    {
+      data.Message,
+      data.FgColor,
+      data.BgColor
+    });
     _lastMessagesToDisplay++;
   }
 
   _repeatingMessage = data.Message;
-
-  if (_inGameMessages.size() > kMaxGameLogMessages)
-  {
-    _inGameMessages.pop_back();
-  }
 
   _lastMessagesToDisplay = Util::Clamp(_lastMessagesToDisplay, 0, 5);
 
@@ -1149,40 +1155,22 @@ void Printer::AddMessage(const GameLogMessageData& data)
 
 // =============================================================================
 
-std::vector<GameLogMessageData> Printer::GetLastMessages()
+const std::vector<GameLogMessageData*>& Printer::GetLastMessages()
 {
-  _lastMessages.clear();
-
-  int count = 0;
-  for (auto& m : _inGameMessages)
-  {
-    _lastMessages.push_back(m);
-
-    count++;
-
-    if (count >= _lastMessagesToDisplay)
-    {
-      break;
-    }
-  }
-
-  return _lastMessages;
+  return _inGameMessages.GetLastMessages(_lastMessagesToDisplay);
 }
 
 // =============================================================================
 
-GameLogMessageData Printer::GetLastMessage()
+GameLogMessageData* Printer::GetLastMessage()
 {
-  return (_inGameMessages.size() > 0)
-      ? _inGameMessages.front()
-      : GameLogMessageData();
+  return _inGameMessages.GetLastMessage();
 }
 
 // =============================================================================
 
 void Printer::ResetMessagesToDisplay()
 {
-  _lastMessages.clear();
   _lastMessagesToDisplay = 0;
   _messageRepeatCounter = 1;
   _repeatingMessage.clear();
@@ -1190,7 +1178,14 @@ void Printer::ResetMessagesToDisplay()
 
 // =============================================================================
 
-std::vector<GameLogMessageData>& Printer::Messages()
+const std::vector<GameLogMessageData*>& Printer::Messages()
+{
+  return _inGameMessages.GetMessages();
+}
+
+// =============================================================================
+
+MsgScrollBuffer<GameLogMessageData>& Printer::GetMsgBufferObj()
 {
   return _inGameMessages;
 }

@@ -15,6 +15,7 @@
 #include "colorpair.h"
 #include "position.h"
 #include "constants.h"
+#include "msg-scroll-buffer.h"
 
 #ifdef USE_SDL
 struct TileColor
@@ -160,12 +161,14 @@ class Printer : public Singleton<Printer>
                     const uint32_t& fgColor,
                     const uint32_t& bgColor);
 
-    GameLogMessageData GetLastMessage();
+    GameLogMessageData* GetLastMessage();
 
     void ResetMessagesToDisplay();
 
-    std::vector<GameLogMessageData> GetLastMessages();
-    std::vector<GameLogMessageData>& Messages();
+    const std::vector<GameLogMessageData*>& GetLastMessages();
+    const std::vector<GameLogMessageData*>& Messages();
+
+    MsgScrollBuffer<GameLogMessageData>& GetMsgBufferObj();
 
     bool ShowLastMessage;
 
@@ -205,12 +208,12 @@ class Printer : public Singleton<Printer>
 
     bool _ok = false;
 
-    std::vector<GameLogMessageData> _inGameMessages;
-    std::vector<GameLogMessageData> _lastMessages;
+    MsgScrollBuffer<GameLogMessageData> _inGameMessages{24, 5};
+
+    //std::vector<GameLogMessageData> _inGameMessages;
+    //std::vector<GameLogMessageData> _lastMessages;
 
     int _lastMessagesToDisplay = 0;
-
-    const size_t kMaxGameLogMessages = 100;
 
     int _messageRepeatCounter = 0;
     std::string _repeatingMessage;

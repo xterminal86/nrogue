@@ -37,6 +37,14 @@ enum class TransformedRoom
   , ZOO
 };
 
+enum class MessageBufferScrollState
+{
+  NONE,
+  TOP,
+  MIDDLE,
+  BOTTOM
+};
+
 enum class CornerType
 {
     UL = 0

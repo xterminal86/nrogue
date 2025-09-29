@@ -5,6 +5,7 @@
 #include <string>
 
 #include "util.h"
+#include "enumerations.h"
 
 template <typename T>
 class MsgScrollBuffer
@@ -12,20 +13,22 @@ class MsgScrollBuffer
   public:
     MsgScrollBuffer()
     {
-      Init(kScreenSize * 2);
+      Init(_screenSize * 2);
     }
 
     // =========================================================================
 
-    MsgScrollBuffer(uint8_t screensCount)
+    MsgScrollBuffer(size_t screenSize, uint8_t screensCount)
     {
+      _screenSize = screenSize;
+
       uint8_t corrected = (screensCount <= 1) ? 2 : screensCount;
-      Init(kScreenSize * corrected);
+      Init(_screenSize * corrected);
     }
 
     // =========================================================================
 
-    void AddMessage(const std::string& msg)
+    void AddMessage(const T& msg)
     {
       _bufferIndex++;
 
@@ -44,11 +47,25 @@ class MsgScrollBuffer
 
     // =========================================================================
 
+    T* LastMessage()
+    {
+      return (_bufferIndex == -1) ? nullptr : &_buffer[_bufferIndex];
+    }
+
+    // =========================================================================
+
+    bool IsEmpty()
+    {
+      return (_msgsCount == 0);
+    }
+
+    // =========================================================================
+
     void ScrollUp()
     {
-      if (_msgsCount > kScreenSize)
+      if (_msgsCount > _screenSize)
       {
-        size_t limit = _msgsCount - kScreenSize;
+        size_t limit = _msgsCount - _screenSize;
         if ((size_t)_scrollIndex != limit)
         {
           _scrollIndex++;
@@ -60,7 +77,7 @@ class MsgScrollBuffer
 
     void ScrollDown()
     {
-      if (_msgsCount > kScreenSize)
+      if (_msgsCount > _screenSize)
       {
         if (_scrollIndex != 0)
         {
@@ -84,10 +101,11 @@ class MsgScrollBuffer
       _scrollIndex = 0;
       _bufferIndex = -1;
 
-      for (size_t i = 0; i < kScreenSize; i++)
+      for (size_t i = 0; i < _screenSize; i++)
       {
         _msgIndices[i] = -1;
         _output[i] = nullptr;
+        _lastMsgs[i] = nullptr;
       }
     }
 
@@ -103,7 +121,7 @@ class MsgScrollBuffer
         return;
       }
 
-      int from = (_bufferIndex - kScreenSize - _scrollIndex + 1);
+      int from = (_bufferIndex - _screenSize - _scrollIndex + 1);
       if (from < 0)
       {
         //
@@ -111,7 +129,7 @@ class MsgScrollBuffer
         // occur or we haven't filled the buffer, do not perform wrap
         // around calculations to find out proper starting index.
         //
-        from = (_msgsCount < kScreenSize || _msgsCount != _bufferSize)
+        from = (_msgsCount < _screenSize || _msgsCount != _bufferSize)
                ? 0
                : (_bufferSize + from);
       }
@@ -130,7 +148,7 @@ class MsgScrollBuffer
 
         msgCount++;
 
-        if (msgCount == _msgsCount || msgCount == kScreenSize)
+        if (msgCount == _msgsCount || msgCount == _screenSize)
         {
           break;
         }
@@ -143,10 +161,10 @@ class MsgScrollBuffer
     {
       if (_msgsCount != 0)
       {
-        int from = (_bufferIndex - kScreenSize - _scrollIndex + 1);
+        int from = (_bufferIndex - _screenSize - _scrollIndex + 1);
         if (from < 0)
         {
-          from = (_msgsCount < kScreenSize || _msgsCount != _bufferSize)
+          from = (_msgsCount < _screenSize || _msgsCount != _bufferSize)
                  ? 0
                  : (_bufferSize + from);
         }
@@ -168,14 +186,14 @@ class MsgScrollBuffer
 
           msgCount++;
 
-          if (msgCount == _msgsCount || msgCount == kScreenSize)
+          if (msgCount == _msgsCount || msgCount == _screenSize)
           {
             break;
           }
         }
       }
 
-      for (size_t i = 0; i < kScreenSize; i++)
+      for (size_t i = 0; i < _screenSize; i++)
       {
         int ind = _msgIndices[i];
         if (ind == -1)
@@ -190,6 +208,106 @@ class MsgScrollBuffer
       return _output;
     }
 
+    // =========================================================================
+
+    const std::vector<T*>& GetLastMessages(size_t windowSize)
+    {
+      if (windowSize == 0 || windowSize > _bufferSize)
+      {
+        return _empty;
+      }
+
+      if (_msgsCount != 0)
+      {
+        int from = (_bufferIndex - windowSize + 1);
+        if (from < 0)
+        {
+          from = (_msgsCount < _screenSize || _msgsCount != _bufferSize)
+                 ? 0
+                 : (_bufferSize + from);
+        }
+
+        int ind = 0;
+
+        size_t msgCount = 0;
+        while (true)
+        {
+          _msgIndices[ind] = from;
+
+          ind++;
+          from++;
+
+          if ((size_t)from == _bufferSize)
+          {
+            from = 0;
+          }
+
+          msgCount++;
+
+          if (msgCount == _msgsCount || msgCount == windowSize)
+          {
+            break;
+          }
+        }
+      }
+
+      for (size_t i = 0; i < windowSize; i++)
+      {
+        int ind = _msgIndices[i];
+        if (ind == -1)
+        {
+          _lastMsgs[i] = nullptr;
+          break;
+        }
+
+        _lastMsgs[i] = &_buffer[ind];
+      }
+
+      return _lastMsgs;
+    }
+
+    // =========================================================================
+
+    T* GetLastMessage()
+    {
+      return (_bufferIndex < 0) ? nullptr : &_buffer[_bufferIndex];
+    }
+
+    // =========================================================================
+
+    MessageBufferScrollState GetScrollState()
+    {
+      if (_msgsCount <= _screenSize)
+      {
+        return MessageBufferScrollState::NONE;
+      }
+
+      size_t limit = _msgsCount - _screenSize;
+
+      if (_scrollIndex == 0)
+      {
+        return MessageBufferScrollState::BOTTOM;
+      }
+      else if ((size_t)_scrollIndex == limit)
+      {
+        return MessageBufferScrollState::TOP;
+      }
+
+      return MessageBufferScrollState::MIDDLE;
+    }
+
+    // =========================================================================
+
+    double GetScrollProgress()
+    {
+      if (_msgsCount > _screenSize)
+      {
+        return (double)_scrollIndex / (double)(_msgsCount - _screenSize);
+      }
+
+      return 0.0;
+    }
+
   private:
     void Init(size_t bufSize)
     {
@@ -202,22 +320,27 @@ class MsgScrollBuffer
       _scrollIndex = 0;
       _msgsCount   = 0;
 
-      _msgIndices.resize(kScreenSize);
-      _output.resize(kScreenSize);
+      _msgIndices.resize(_screenSize);
+      _output.resize(_screenSize);
+      _lastMsgs.resize(_screenSize);
 
-      for (size_t i = 0; i < kScreenSize; i++)
+      for (size_t i = 0; i < _screenSize; i++)
       {
         _msgIndices[i] = -1;
-        _output[i] = nullptr;
+        _output[i]     = nullptr;
+        _lastMsgs[i]   = nullptr;
       }
     }
 
-    const size_t kScreenSize = 23;
+    size_t _screenSize = 23;
 
     size_t _bufferSize = 0;
 
     std::vector<T>  _buffer;
     std::vector<T*> _output;
+    std::vector<T*> _lastMsgs;
+
+    std::vector<T*> _empty;
 
     std::vector<int> _msgIndices;
 

@@ -21,13 +21,13 @@ EquipmentComponent::EquipmentComponent(ContainerComponent* inventoryRef)
 
 // =============================================================================
 
-bool EquipmentComponent::Equip(ItemComponent* item)
+bool EquipmentComponent::Equip(ItemComponent* item, bool suppressLog)
 {
   bool res = false;
 
   if (item->Data.EqCategory == EquipmentCategory::NOT_EQUIPPABLE)
   {
-    if (IsThisPlayer())
+    if (IsThisPlayer() && !suppressLog)
     {
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
                                              Strings::MessageBoxEpicFailHeaderText,
@@ -42,11 +42,11 @@ bool EquipmentComponent::Equip(ItemComponent* item)
 
   if (category == EquipmentCategory::RING)
   {
-    res = ProcessRingEquiption(item);
+    res = ProcessRingEquiption(item, suppressLog);
   }
   else
   {
-    res = ProcessItemEquiption(item);
+    res = ProcessItemEquiption(item, suppressLog);
   }
 
   return res;
@@ -72,7 +72,8 @@ bool EquipmentComponent::HasBonus(ItemBonusType type)
 
 // --------------------------------- RING --------------------------------------
 
-bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
+bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item,
+                                              bool suppressLog)
 {
   bool emptySlotFound = false;
 
@@ -89,7 +90,7 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
       {
         rings[i]->Data.IsPrefixDiscovered = true;
 
-        if (IsThisPlayer())
+        if (IsThisPlayer() && !suppressLog)
         {
           auto str =
               Util::StringFormat("You can't unequip %s - it's cursed!",
@@ -103,7 +104,7 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
         return false;
       }
 
-      UnequipRing(rings[i], i);
+      UnequipRing(rings[i], i, suppressLog);
       return true;
     }
   }
@@ -115,7 +116,7 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
   {
     if (rings[i] == nullptr)
     {
-      EquipRing(item, i);
+      EquipRing(item, i, suppressLog);
       return true;
     }
   }
@@ -123,7 +124,7 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
   //
   // Finally, if no empty slots found, display a warning.
   //
-  if (!emptySlotFound && IsThisPlayer())
+  if (!suppressLog && !emptySlotFound && IsThisPlayer())
   {
     Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
                                            Strings::MessageBoxEpicFailHeaderText,
@@ -136,47 +137,54 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item)
 
 // =============================================================================
 
-void EquipmentComponent::EquipRing(ItemComponent* ring, int index)
+void EquipmentComponent::EquipRing(ItemComponent* ring,
+                                   int index,
+                                   bool suppressLog)
 {
   ring->Data.IsEquipped = true;
   EquipmentByCategory[ring->Data.EqCategory][index] = ring;
 
   OwnerGameObject->ApplyBonuses(ring);
 
-  if (IsThisPlayer())
+  if (IsThisPlayer() && !suppressLog)
   {
     std::string objName = ring->Data.IsIdentified ?
                           ring->OwnerGameObject->ObjectName :
                           ring->Data.UnidentifiedName;
 
-    auto str = Util::StringFormat("You put on %s", objName.data());
-    Printer::Instance().AddMessage(str);
+    Printer::Instance().AddMessage(
+      Util::StringFormat("You put on %s", objName.data())
+    );
   }
 }
 
 // =============================================================================
 
-void EquipmentComponent::UnequipRing(ItemComponent* ring, int index)
+void EquipmentComponent::UnequipRing(ItemComponent* ring,
+                                     int index,
+                                     bool suppressLog)
 {
   ring->Data.IsEquipped = false;
   EquipmentByCategory[ring->Data.EqCategory][index] = nullptr;
 
   OwnerGameObject->UnapplyBonuses(ring);
 
-  if (IsThisPlayer())
+  if (IsThisPlayer() && !suppressLog)
   {
     std::string objName = ring->Data.IsIdentified ?
                           ring->OwnerGameObject->ObjectName :
                           ring->Data.UnidentifiedName;
 
-    auto str = Util::StringFormat("You take off %s", objName.data());
-    Printer::Instance().AddMessage(str);
+    Printer::Instance().AddMessage(
+      Util::StringFormat("You take off %s", objName.data())
+    );
   }
 }
 
 // --------------------------------- ITEM --------------------------------------
 
-bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item)
+bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item,
+                                              bool suppressLog)
 {
   bool res = true;
 
@@ -187,11 +195,11 @@ bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item)
     //
     // If nothing was equipped, equip item.
     //
-    EquipItem(item);
+    EquipItem(item, suppressLog);
   }
   else if (itemEquipped != item)
   {
-    if (IsThisPlayer())
+    if (IsThisPlayer() && !suppressLog)
     {
       Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
                                              Strings::MessageBoxEpicFailHeaderText,
@@ -207,7 +215,7 @@ bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item)
     {
       itemEquipped->Data.IsPrefixDiscovered = true;
 
-      if (IsThisPlayer())
+      if (IsThisPlayer() && !suppressLog)
       {
         auto str =
             Util::StringFormat("You can't unequip %s - it's cursed!",
@@ -225,7 +233,7 @@ bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item)
       //
       // If it's the same item, just unequip it.
       //
-      UnequipItem(itemEquipped);
+      UnequipItem(itemEquipped, suppressLog);
     }
   }
 
@@ -234,14 +242,14 @@ bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item)
 
 // =============================================================================
 
-void EquipmentComponent::EquipItem(ItemComponent* item)
+void EquipmentComponent::EquipItem(ItemComponent* item, bool suppressLog)
 {
   item->Data.IsEquipped = true;
   EquipmentByCategory[item->Data.EqCategory][0] = item;
 
   OwnerGameObject->ApplyBonuses(item);
 
-  if (IsThisPlayer())
+  if (IsThisPlayer() && !suppressLog)
   {
     std::string verb;
 
@@ -258,21 +266,22 @@ void EquipmentComponent::EquipItem(ItemComponent* item)
                           item->OwnerGameObject->ObjectName :
                           item->Data.UnidentifiedName;
 
-    auto message = Util::StringFormat("You %s %s", verb.data(), objName.data());
-    Printer::Instance().AddMessage(message);
+    Printer::Instance().AddMessage(
+      Util::StringFormat("You %s %s", verb.data(), objName.data())
+    );
   }
 }
 
 // =============================================================================
 
-void EquipmentComponent::UnequipItem(ItemComponent* item)
+void EquipmentComponent::UnequipItem(ItemComponent* item, bool suppressLog)
 {
   item->Data.IsEquipped = false;
   EquipmentByCategory[item->Data.EqCategory][0] = nullptr;
 
   OwnerGameObject->UnapplyBonuses(item);
 
-  if (IsThisPlayer())
+  if (IsThisPlayer() && !suppressLog)
   {
     std::string verb;
 
@@ -289,8 +298,9 @@ void EquipmentComponent::UnequipItem(ItemComponent* item)
                         ? item->OwnerGameObject->ObjectName
                         : item->Data.UnidentifiedName;
 
-    auto message = Util::StringFormat("You %s %s", verb.data(), objName.data());
-    Printer::Instance().AddMessage(message);
+    Printer::Instance().AddMessage(
+      Util::StringFormat("You %s %s", verb.data(), objName.data())
+    );
   }
 }
 

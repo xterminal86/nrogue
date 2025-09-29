@@ -23,21 +23,21 @@ class EquipmentComponent : public Component
 
     void Update() override;
 
-    bool Equip(ItemComponent* item);
+    bool Equip(ItemComponent* item, bool suppressLog = false);
     bool HasBonus(ItemBonusType type);
 
     std::unordered_map<EquipmentCategory, std::vector<ItemComponent*>>
     EquipmentByCategory;
 
   private:
-    bool ProcessItemEquiption(ItemComponent* item);
-    bool ProcessRingEquiption(ItemComponent* item);
+    bool ProcessItemEquiption(ItemComponent* item, bool suppressLog);
+    bool ProcessRingEquiption(ItemComponent* item, bool suppressLog);
 
-    void EquipRing(ItemComponent* ring, int index);
-    void UnequipRing(ItemComponent* ring, int index);
+    void EquipRing(ItemComponent* ring, int index, bool suppressLog);
+    void UnequipRing(ItemComponent* ring, int index, bool suppressLog);
 
-    void EquipItem(ItemComponent* item);
-    void UnequipItem(ItemComponent* item);
+    void EquipItem(ItemComponent* item, bool suppressLog);
+    void UnequipItem(ItemComponent* item, bool suppressLog);
 
     bool IsThisPlayer();
 

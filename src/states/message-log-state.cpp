@@ -6,7 +6,7 @@
 
 void MessageLogState::Prepare()
 {
-  _scrollPosition = 0;
+  Printer::Instance().GetMsgBufferObj().ResetScroll();
 }
 
 // =============================================================================
@@ -15,31 +15,21 @@ void MessageLogState::HandleInput()
 {
   _keyPressed = GetKeyDown();
 
-  int msgSize = Printer::Instance().Messages().size();
-  int th = Printer::TerminalHeight;
-
-  //
-  // Since we draw messages from y = 1, compensate with (th - 2)
-  //
-  int scrollLimit = (msgSize - 1) - (th - 2);
-
   switch (_keyPressed)
   {
     case ALT_K2:
     case NUMPAD_2:
-      if (msgSize > th - 2)
-      {
-        _scrollPosition++;
-      }
-      break;
+    {
+      Printer::Instance().GetMsgBufferObj().ScrollDown();
+    }
+    break;
 
     case ALT_K8:
     case NUMPAD_8:
-      if (msgSize > th - 2)
-      {
-        _scrollPosition--;
-      }
-      break;
+    {
+      Printer::Instance().GetMsgBufferObj().ScrollUp();
+    }
+    break;
 
     case 'm':
     case 'M':
@@ -50,8 +40,6 @@ void MessageLogState::HandleInput()
     default:
       break;
   }
-
-  _scrollPosition = Util::Clamp(_scrollPosition, 0, scrollLimit);
 }
 
 // =============================================================================
@@ -63,39 +51,49 @@ void MessageLogState::Update(bool forceUpdate)
     Printer::Instance().Clear();
 
     DrawHeader(_windowHeader);
-
     DrawScrollBars();
 
-    auto messages = Printer::Instance().Messages();
-
     int offsetY = 1;
-    for (size_t i = _scrollPosition; i < messages.size(); i++)
+
+    GameLogMessageData* lm = nullptr;
+
+    auto& msb = Printer::Instance().GetMsgBufferObj();
+
+    auto msgs = Printer::Instance().Messages();
+    for (GameLogMessageData* m : msgs)
     {
-      //
-      // No need to draw outside the screen.
-      //
-      if (offsetY > _th)
+      if (m == nullptr)
       {
         break;
       }
 
-      if (_scrollPosition == 0)
-      {
-        Printer::Instance().PrintFB(0,
-                                    1,
-                                    "=>",
-                                    Printer::kAlignLeft,
-                                    Colors::WhiteColor,
-                                    Colors::ShadesOfGrey::Six);
-      }
-
-      Printer::Instance().PrintFB(3,
+      Printer::Instance().PrintFB(1,
                                   offsetY,
-                                  messages[i].Message,
+                                  m->Message,
                                   Printer::kAlignLeft,
-                                  messages[i].FgColor,
-                                  messages[i].BgColor);
+                                  m->FgColor,
+                                  m->BgColor);
+      lm = m;
       offsetY++;
+    }
+
+    //
+    // Mark last added message in the log for clarity.
+    //
+    MessageBufferScrollState ss = msb.GetScrollState();
+
+    if (ss == MessageBufferScrollState::BOTTOM
+     || ss == MessageBufferScrollState::NONE)
+    {
+      if (lm != nullptr)
+      {
+        Printer::Instance().PrintFB(1,
+                                    offsetY - 1,
+                                    "=> " + lm->Message,
+                                    Printer::kAlignLeft,
+                                    lm->FgColor,
+                                    lm->BgColor);
+      }
     }
 
     Printer::Instance().Render();
@@ -106,74 +104,62 @@ void MessageLogState::Update(bool forceUpdate)
 
 void MessageLogState::DrawScrollBars()
 {
-  auto messages = Printer::Instance().Messages();
-
-  //
-  // Since we draw messages from y = 1, compensate y pos with (th - 2)
-  //
-  int scrollLimit = (messages.size() - 1) - (_th - 2);
-
-  if (messages.size() - 1 > (size_t)_th - 2)
+  auto DrawArrow = [](int x, int y, int arrowChar)
   {
-    if (_scrollPosition == 0)
-    {
-      #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1,
-                                  _th - 1,
-                                  (int)NameCP437::DARROW_2,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
-      #else
-      Printer::Instance().PrintFB(_tw - 1,
-                                  _th - 1,
-                                  ACS_DARROW,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
-      #endif
-    }
-    else if (_scrollPosition == scrollLimit)
-    {
-      #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1,
-                                  1,
-                                  (int)NameCP437::UARROW_2,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
-      #else
-      Printer::Instance().PrintFB(_tw - 1,
-                                  1,
-                                  ACS_UARROW,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
-      #endif
-    }
-    else if (_scrollPosition > 0 && _scrollPosition != scrollLimit)
-    {
-      #ifdef USE_SDL
-      Printer::Instance().PrintFB(_tw - 1,
-                                  1,
-                                  (int)NameCP437::UARROW_2,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
+    #ifdef USE_SDL
+    Printer::Instance().PrintFB(x,
+                                y,
+                                arrowChar,
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
+    #else
+    Printer::Instance().PrintFB(x,
+                                y,
+                                arrowChar,
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
+    #endif
+  };
 
-      Printer::Instance().PrintFB(_tw - 1,
-                                  _th - 1,
-                                  (int)NameCP437::DARROW_2,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
-      #else
-      Printer::Instance().PrintFB(_tw - 1,
-                                  1,
-                                  ACS_UARROW,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
+  auto s = Printer::Instance().GetMsgBufferObj().GetScrollState();
+  switch (s)
+  {
+    case MessageBufferScrollState::NONE:
+      break;
 
-      Printer::Instance().PrintFB(_tw - 1,
-                                  _th - 1,
-                                  ACS_DARROW,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
+    default:
+    {
+      #ifdef USE_SDL
+      int arrowDown = (s == MessageBufferScrollState::BOTTOM)
+                      ? 'x'
+                      : (int)NameCP437::DARROW_2;
+      int arrowUp   = (s == MessageBufferScrollState::TOP)
+                      ? 'x'
+                      : (int)NameCP437::UARROW_2;
+      #else
+      int arrowDown = (s == MessageBufferScrollState::BOTTOM)
+                      ? 'x'
+                      : ACS_DARROW;
+      int arrowUp   = (s == MessageBufferScrollState::TOP)
+                      ? 'x'
+                      : ACS_UARROW;
       #endif
+      DrawArrow(_tw - 1, _th - 1, arrowDown);
+      DrawArrow(_tw - 1, 1, arrowUp);
     }
+    break;
+  }
+
+  //
+  // Draw scroll progress.
+  //
+  if (s != MessageBufferScrollState::NONE)
+  {
+    double progress = Printer::Instance().GetMsgBufferObj().GetScrollProgress();
+    Printer::Instance().PrintFB(_tw - 1,
+                                _th - 2 - (int)(21.0 * progress),
+                                '*',
+                                Colors::WhiteColor,
+                                Colors::BlackColor);
   }
 }

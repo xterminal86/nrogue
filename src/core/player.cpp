@@ -582,15 +582,10 @@ void Player::SetDefaultEquipment()
     break;
   }
 
-  // Since equipping produces message in log,
-  // we explicitly delete it here.
   for (auto& i : weaponAndArmorToEquip)
   {
     ItemComponent* ic = i->GetComponent<ItemComponent>();
-    Equipment->Equip(ic);
-
-    auto it = Printer::Instance().Messages().begin();
-    Printer::Instance().Messages().erase(it);
+    Equipment->Equip(ic, true);
   }
 }
 

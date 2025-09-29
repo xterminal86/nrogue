@@ -305,6 +305,7 @@ void DevConsole::HandleInput()
 
     // -------------------------------------------------------------------------
 
+    case ALT_K8:
     case NUMPAD_8:
     {
       _stdout.ScrollUp();
@@ -313,6 +314,7 @@ void DevConsole::HandleInput()
 
     // -------------------------------------------------------------------------
 
+    case ALT_K2:
     case NUMPAD_2:
     {
       _stdout.ScrollDown();
@@ -481,7 +483,7 @@ bool DevConsole::ParseCommand()
     }
   }
 
-  std::vector<std::string> params = Util::StringSplit(_currentCommand, ' ');
+  StringV params = Util::StringSplit(_currentCommand, ' ');
 
   std::string commandEntered = params[0];
   for (auto& c : commandEntered)
@@ -516,7 +518,7 @@ bool DevConsole::ParseCommand()
 // =============================================================================
 
 void DevConsole::ProcessCommand(const std::string& command,
-                                const std::vector<std::string>& params)
+                                const StringV& params)
 {
   DevConsoleCommand c = _commandTypeByName.at(command);
 
@@ -734,6 +736,10 @@ void DevConsole::ProcessCommand(const std::string& command,
       DispelEffectsActor();
       break;
 
+    case DevConsoleCommand::SPAM_TO_LOG:
+      SpamToLog(params);
+      break;
+
     default:
       StdOut(ErrCmdNotHandled);
       break;
@@ -742,7 +748,7 @@ void DevConsole::ProcessCommand(const std::string& command,
 
 // =============================================================================
 
-void DevConsole::GetObjectByAddress(const std::vector<std::string>& params)
+void DevConsole::GetObjectByAddress(const StringV& params)
 {
   if (params.size() > 1)
   {
@@ -804,7 +810,7 @@ void DevConsole::GetObjectByAddress(const std::vector<std::string>& params)
 
 // =============================================================================
 
-void DevConsole::GetObjectById(const std::vector<std::string>& params)
+void DevConsole::GetObjectById(const StringV& params)
 {
   if (params.size() > 1)
   {
@@ -858,7 +864,7 @@ void DevConsole::ReportHandleDebugInfo(ObjectHandleType type)
 
 // =============================================================================
 
-void DevConsole::PrintDebugInfo(const std::vector<std::string>& debugInfo)
+void DevConsole::PrintDebugInfo(const StringV& debugInfo)
 {
   for (auto& l : debugInfo)
   {
@@ -868,7 +874,7 @@ void DevConsole::PrintDebugInfo(const std::vector<std::string>& debugInfo)
 
 // =============================================================================
 
-void DevConsole::TransformTile(const std::vector<std::string>& params)
+void DevConsole::TransformTile(const StringV& params)
 {
   if (params.size() < 3)
   {
@@ -942,7 +948,7 @@ void DevConsole::TransformTile(const std::vector<std::string>& params)
 
 // =============================================================================
 
-void DevConsole::PlaceWall(const std::vector<std::string>& params)
+void DevConsole::PlaceWall(const StringV& params)
 {
   if (params.size() < 2)
   {
@@ -1076,7 +1082,7 @@ void DevConsole::InfoHandles()
 
 // =============================================================================
 
-void DevConsole::CreateDummyActor(const std::vector<std::string>& params)
+void DevConsole::CreateDummyActor(const StringV& params)
 {
   if (params.size() != 2)
   {
@@ -1107,7 +1113,7 @@ void DevConsole::CreateDummyActor(const std::vector<std::string>& params)
 
 // =============================================================================
 
-void DevConsole::CreateMonster(const std::vector<std::string>& params)
+void DevConsole::CreateMonster(const StringV& params)
 {
   if (params.size() != 3)
   {
@@ -1232,7 +1238,7 @@ void DevConsole::CreateAllScrolls()
 
 // =============================================================================
 
-void DevConsole::CreateItem(const std::vector<std::string>& params)
+void DevConsole::CreateItem(const StringV& params)
 {
   if (params.size() != 2)
   {
@@ -1266,7 +1272,7 @@ void DevConsole::CreateItem(const std::vector<std::string>& params)
 
 // =============================================================================
 
-void DevConsole::CreateDummyObject(const std::vector<std::string>& params)
+void DevConsole::CreateDummyObject(const StringV& params)
 {
   if (params.size() < 2)
   {
@@ -1305,7 +1311,7 @@ void DevConsole::CreateDummyObject(const std::vector<std::string>& params)
 
 // =============================================================================
 
-void DevConsole::CreateChest(const std::vector<std::string>& params)
+void DevConsole::CreateChest(const StringV& params)
 {
   if (params.size() != 2)
   {
@@ -1333,7 +1339,7 @@ void DevConsole::CreateChest(const std::vector<std::string>& params)
 
 // =============================================================================
 
-void DevConsole::CreateShrine(const std::vector<std::string>& params)
+void DevConsole::CreateShrine(const StringV& params)
 {
   if (params.size() != 3)
   {
@@ -1376,7 +1382,7 @@ void DevConsole::CreateShrine(const std::vector<std::string>& params)
 
 // =============================================================================
 
-void DevConsole::CreateBreakable(const std::vector<std::string>& params)
+void DevConsole::CreateBreakable(const StringV& params)
 {
   if (params.size() != 2)
   {
@@ -1408,7 +1414,7 @@ void DevConsole::CreateBreakable(const std::vector<std::string>& params)
 
 // =============================================================================
 
-void DevConsole::GetObject(const std::vector<std::string>& params,
+void DevConsole::GetObject(const StringV& params,
                            ObjectHandleType handleType)
 {
   if (params.size() > 0 && params.size() < 2)
@@ -1503,7 +1509,7 @@ void DevConsole::GetObject(const std::vector<std::string>& params,
 
 // =============================================================================
 
-void DevConsole::MoveObject(const std::vector<std::string>& params,
+void DevConsole::MoveObject(const StringV& params,
                             ObjectHandleType handleType)
 {
   if (_objectHandles[handleType] == nullptr)
@@ -1573,7 +1579,7 @@ void DevConsole::MoveObject(const std::vector<std::string>& params,
 
 // =============================================================================
 
-void DevConsole::MovePlayer(const std::vector<std::string>& params)
+void DevConsole::MovePlayer(const StringV& params)
 {
   if (params.size() != 2)
   {
@@ -1608,7 +1614,7 @@ void DevConsole::MovePlayer(const std::vector<std::string>& params)
 
 // =============================================================================
 
-void DevConsole::RemoveObject(const std::vector<std::string>& params)
+void DevConsole::RemoveObject(const StringV& params)
 {
   if (params.size() != 2)
   {
@@ -1661,7 +1667,7 @@ void DevConsole::RemoveObject(const std::vector<std::string>& params)
 
 // =============================================================================
 
-void DevConsole::DamageActor(const std::vector<std::string>& params)
+void DevConsole::DamageActor(const StringV& params)
 {
   if (params.size() != 1)
   {
@@ -1725,7 +1731,7 @@ void DevConsole::PoisonActor()
 
 // =============================================================================
 
-void DevConsole::AwardExperience(const std::vector<std::string>& params)
+void DevConsole::AwardExperience(const StringV& params)
 {
   if (params.size() != 1)
   {
@@ -1747,7 +1753,7 @@ void DevConsole::AwardExperience(const std::vector<std::string>& params)
 
 // =============================================================================
 
-void DevConsole::GiveMoney(const std::vector<std::string>& params)
+void DevConsole::GiveMoney(const StringV& params)
 {
   if (params.size() != 1)
   {
@@ -1840,6 +1846,35 @@ void DevConsole::PrintActors()
   }
 }
 
+// =============================================================================
+
+void DevConsole::SpamToLog(const StringV& params)
+{
+  if (params.size() != 1)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string n = params[0];
+  if (!StringIsNumbers(n))
+  {
+    StdOut(ErrSyntaxError);
+    return;
+  }
+
+  int count = std::stoi(n);
+
+  for (int i = 0; i < count; i++)
+  {
+    Printer::Instance().AddMessage(
+      Util::StringFormat("Message %02d", (i + 1))
+    );
+  }
+
+  StdOut(Ok);
+}
+
 #ifdef DEBUG_BUILD
 
 // =============================================================================
@@ -1868,7 +1903,7 @@ void DevConsole::DispelEffectsActor()
 
 // =============================================================================
 
-void DevConsole::DisplayHelpAboutCommand(const std::vector<std::string>& params)
+void DevConsole::DisplayHelpAboutCommand(const StringV& params)
 {
   if (params.empty())
   {

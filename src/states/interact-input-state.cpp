@@ -206,14 +206,16 @@ void InteractInputState::Update(bool forceUpdate)
 
     _playerRef->Draw();
 
-    auto lastMessage = Printer::Instance().GetLastMessage();
-
-    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
-                                Printer::TerminalHeight - 1,
-                                lastMessage.Message,
-                                Printer::kAlignRight,
-                                lastMessage.FgColor,
-                                lastMessage.BgColor);
+    GameLogMessageData* lastMessage = Printer::Instance().GetLastMessage();
+    if (lastMessage != nullptr)
+    {
+      Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
+                                  Printer::TerminalHeight - 1,
+                                  lastMessage->Message,
+                                  Printer::kAlignRight,
+                                  lastMessage->FgColor,
+                                  lastMessage->BgColor);
+    }
 
     Printer::Instance().Render();
   }
