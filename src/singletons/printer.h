@@ -210,9 +210,6 @@ class Printer : public Singleton<Printer>
 
     MsgScrollBuffer<GameLogMessageData> _inGameMessages{24, 5};
 
-    //std::vector<GameLogMessageData> _inGameMessages;
-    //std::vector<GameLogMessageData> _lastMessages;
-
     int _lastMessagesToDisplay = 0;
 
     int _messageRepeatCounter = 0;

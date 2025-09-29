@@ -347,6 +347,7 @@ void MainState::DisplayGameLog()
   int x = Printer::TerminalWidth - 1;
   int y = Printer::TerminalHeight - 1;
 
+  // FIXME: always prints > 1 messages if available.
   int count = 0;
   auto msgs = Printer::Instance().GetLastMessages();
   for (GameLogMessageData* m : msgs)

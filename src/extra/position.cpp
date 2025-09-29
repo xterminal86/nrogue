@@ -12,7 +12,7 @@ Position::Position()
 
 // =============================================================================
 
-Position::Position(int x, int y)
+Position::Position(int32_t x, int32_t y)
 {
   X = x;
   Y = y;
@@ -20,7 +20,7 @@ Position::Position(int x, int y)
 
 // =============================================================================
 
-void Position::Set(int x, int y)
+void Position::Set(int32_t x, int32_t y)
 {
   X = x;
   Y = y;
@@ -32,6 +32,20 @@ void Position::Set(const Position &from)
 {
   X = from.X;
   Y = from.Y;
+}
+
+// =============================================================================
+
+uint64_t Position::GetHashCode() const
+{
+  std::bitset<64> one{(uint32_t)X};
+  std::bitset<64> two{(uint32_t)Y};
+
+  one <<= 32;
+
+  std::bitset<64> hash = one | two;
+
+  return hash.to_ullong();
 }
 
 // =============================================================================
@@ -59,5 +73,5 @@ bool Position::operator!= (const Position& rhs) const
 
 void Position::Print()
 {
-  DebugLog("%s: [%i ; %i]\n", __PRETTY_FUNCTION__, X, Y);
+  DebugLog("%s: [%d ; %d]\n", __PRETTY_FUNCTION__, X, Y);
 }

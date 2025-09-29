@@ -11,6 +11,13 @@ void MessageLogState::Prepare()
 
 // =============================================================================
 
+void MessageLogState::Cleanup()
+{
+  Printer::Instance().GetMsgBufferObj().ResetScroll();
+}
+
+// =============================================================================
+
 void MessageLogState::HandleInput()
 {
   _keyPressed = GetKeyDown();
@@ -71,8 +78,8 @@ void MessageLogState::Update(bool forceUpdate)
                                   offsetY,
                                   m->Message,
                                   Printer::kAlignLeft,
-                                  m->FgColor,
-                                  m->BgColor);
+                                  Colors::ShadesOfGrey::Six,
+                                  Colors::BlackColor);
       lm = m;
       offsetY++;
     }
@@ -89,10 +96,10 @@ void MessageLogState::Update(bool forceUpdate)
       {
         Printer::Instance().PrintFB(1,
                                     offsetY - 1,
-                                    "=> " + lm->Message,
+                                    lm->Message,
                                     Printer::kAlignLeft,
-                                    lm->FgColor,
-                                    lm->BgColor);
+                                    Colors::WhiteColor,
+                                    Colors::BlackColor);
       }
     }
 
@@ -129,6 +136,15 @@ void MessageLogState::DrawScrollBars()
 
     default:
     {
+      for (int y = 2; y < _th - 1; y++)
+      {
+        Printer::Instance().PrintFB(_tw - 1,
+                                     y,
+                                     '|',
+                                     Colors::ShadesOfGrey::Six,
+                                     Colors::BlackColor);
+      }
+
       #ifdef USE_SDL
       int arrowDown = (s == MessageBufferScrollState::BOTTOM)
                       ? 'x'
@@ -158,7 +174,7 @@ void MessageLogState::DrawScrollBars()
     double progress = Printer::Instance().GetMsgBufferObj().GetScrollProgress();
     Printer::Instance().PrintFB(_tw - 1,
                                 _th - 2 - (int)(21.0 * progress),
-                                '*',
+                                '=',
                                 Colors::WhiteColor,
                                 Colors::BlackColor);
   }

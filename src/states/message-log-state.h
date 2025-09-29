@@ -7,6 +7,7 @@ class MessageLogState : public GameState
 {
   public:
     void Prepare() override;
+    void Cleanup() override;
 
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;
