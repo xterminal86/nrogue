@@ -103,7 +103,7 @@ class DevConsole : public GameState
 
     std::string _currentCommand;
 
-    MsgScrollBuffer _stdout;
+    MsgScrollBuffer _stdout{4};
 
     std::vector<std::string> _commandsHistory;
 
@@ -113,7 +113,7 @@ class DevConsole : public GameState
 
     bool _closedByCommand = false;
 
-    const size_t _maxHistory = 20;
+    const size_t _maxHistory = 50;
 
     const std::string ErrUnknownCommand = "%s: command not found...";
     const std::string ErrSyntaxError    = "Syntax error";

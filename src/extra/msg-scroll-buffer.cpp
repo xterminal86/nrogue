@@ -4,14 +4,15 @@
 
 MsgScrollBuffer::MsgScrollBuffer()
 {
-  Init(kScreenSize * 4);
+  Init(kScreenSize * 2);
 }
 
 // =============================================================================
 
-MsgScrollBuffer::MsgScrollBuffer(size_t bufSize)
+MsgScrollBuffer::MsgScrollBuffer(uint8_t screensCount)
 {
-  Init(bufSize);
+  uint8_t corrected = (screensCount <= 1) ? 2 : screensCount;
+  Init(kScreenSize * corrected);
 }
 
 // =============================================================================
@@ -37,9 +38,13 @@ void MsgScrollBuffer::AddMessage(const std::string& msg)
 
 void MsgScrollBuffer::ScrollUp()
 {
-  if ((size_t)_scrollIndex != _scrollLimit && _msgsCount > kScreenSize)
+  if (_msgsCount > kScreenSize)
   {
-    _scrollIndex++;
+    size_t limit = _msgsCount - kScreenSize;
+    if ((size_t)_scrollIndex != limit)
+    {
+      _scrollIndex++;
+    }
   }
 }
 
@@ -47,9 +52,12 @@ void MsgScrollBuffer::ScrollUp()
 
 void MsgScrollBuffer::ScrollDown()
 {
-  if (_scrollIndex != 0 && _msgsCount > kScreenSize)
+  if (_msgsCount > kScreenSize)
   {
-    _scrollIndex--;
+    if (_scrollIndex != 0)
+    {
+      _scrollIndex--;
+    }
   }
 }
 
@@ -103,7 +111,7 @@ void MsgScrollBuffer::Print()
   size_t msgCount = 0;
   while (true)
   {
-    DebugLog("%s\n", _buffer[from].data());
+    printf("%s\n", _buffer[from].data());
 
     from++;
 
@@ -162,8 +170,6 @@ const std::vector<std::string*>& MsgScrollBuffer::GetMessages()
   for (size_t i = 0; i < kScreenSize; i++)
   {
     int ind = _msgIndices[i];
-    DebugLog("%d", ind);
-
     if (ind == -1)
     {
       _output[i] = nullptr;
@@ -172,8 +178,6 @@ const std::vector<std::string*>& MsgScrollBuffer::GetMessages()
 
     _output[i] = &_buffer[ind];
   }
-
-  DebugLog("==========");
 
   return _output;
 }
@@ -191,12 +195,9 @@ void MsgScrollBuffer::Init(size_t bufSize)
   _scrollIndex = 0;
   _msgsCount   = 0;
 
-  _scrollLimit = (_bufferSize > kScreenSize)
-                 ? (_bufferSize - kScreenSize)
-                 : 0;
-
   _msgIndices.resize(kScreenSize);
   _output.resize(kScreenSize);
+
   for (size_t i = 0; i < kScreenSize; i++)
   {
     _msgIndices[i] = -1;

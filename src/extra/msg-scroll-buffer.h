@@ -10,7 +10,7 @@ class MsgScrollBuffer
 {
   public:
     MsgScrollBuffer();
-    MsgScrollBuffer(size_t bufSize);
+    MsgScrollBuffer(uint8_t screensCount);
 
     void AddMessage(const std::string& msg);
 
@@ -30,7 +30,7 @@ class MsgScrollBuffer
 
     size_t _bufferSize = 0;
 
-    std::vector<std::string> _buffer;
+    std::vector<std::string>  _buffer;
     std::vector<std::string*> _output;
 
     std::vector<int> _msgIndices;
@@ -39,8 +39,6 @@ class MsgScrollBuffer
 
     int _bufferIndex = 0;
     int _scrollIndex = 0;
-
-    size_t _scrollLimit = 0;
 };
 
 #endif // MSGSCROLLBUFFER_H

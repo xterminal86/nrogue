@@ -35,7 +35,7 @@ void DevConsole::Init()
   StdOut("\"Ryder, nigga!\"");
   StdOut("");
   StdOut("Type 'help commands' for a list of available commands");
-  StdOut("Hit 'TAB' for autocompletion");
+  StdOut("Hit 'TAB' for autocompletion, numpad 2, 8 to scroll.");
 }
 
 // =============================================================================
@@ -76,6 +76,8 @@ void DevConsole::HandleInput()
     {
       if (!_commandsHistory.empty())
       {
+        _stdout.ResetScroll();
+
         if (_commandsHistoryIndex > 0)
         {
           _commandsHistoryIndex--;
@@ -97,6 +99,7 @@ void DevConsole::HandleInput()
     {
       if (!_commandsHistory.empty())
       {
+        _stdout.ResetScroll();
         if (_commandsHistoryIndex < (int)_commandsHistory.size() - 1)
         {
           _commandsHistoryIndex++;
@@ -122,6 +125,7 @@ void DevConsole::HandleInput()
     {
       if (_cursorPosition > 0)
       {
+        _stdout.ResetScroll();
         _cursorPosition--;
       }
     }
@@ -133,6 +137,7 @@ void DevConsole::HandleInput()
     {
       if (_cursorPosition < (int)_currentCommand.substr(2).length())
       {
+        _stdout.ResetScroll();
         _cursorPosition++;
       }
     }
@@ -142,6 +147,7 @@ void DevConsole::HandleInput()
 
     case VK_HOME:
     {
+      _stdout.ResetScroll();
       _cursorPosition = 0;
     }
     break;
@@ -150,6 +156,7 @@ void DevConsole::HandleInput()
 
     case VK_END:
     {
+      _stdout.ResetScroll();
       _cursorPosition = (int)_currentCommand.substr(2).length();
     }
     break;
@@ -158,6 +165,8 @@ void DevConsole::HandleInput()
 
     case VK_TAB:
     {
+      _stdout.ResetScroll();
+
       std::string noPrompt = _currentCommand.substr(2);
       std::string lastCmd;
 
@@ -302,6 +311,8 @@ void DevConsole::HandleInput()
     }
     break;
 
+    // -------------------------------------------------------------------------
+
     case NUMPAD_2:
     {
       _stdout.ScrollDown();
@@ -355,6 +366,7 @@ void DevConsole::HandleInput()
       {
         if (_cursorPosition > 0)
         {
+          _stdout.ResetScroll();
           size_t pos = 2 + _cursorPosition - 1;
           _currentCommand.erase(_currentCommand.begin() + pos);
           _cursorPosition--;
@@ -371,6 +383,7 @@ void DevConsole::HandleInput()
       {
         if ((int)_currentCommand.substr(2).length() > _cursorPosition)
         {
+          _stdout.ResetScroll();
           _currentCommand.erase(_currentCommand.begin() + 2 + _cursorPosition);
         }
       }
