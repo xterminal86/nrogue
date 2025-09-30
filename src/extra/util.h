@@ -115,8 +115,33 @@ namespace Util
 
   extern bool CheckLimits(const Position& posToCheck, const Position& limits);
 
+  //
+  // Head-on implementation.
+  //
   extern std::vector<Position> BresenhamLine(int sx, int sy, int ex, int ey);
   extern std::vector<Position> BresenhamLine(const Position& start,
+                                             const Position& end);
+  //
+  // Uses precomputed cache.
+  // Returns offsets that should be added to starting position for points along
+  // the line.
+  //
+  extern const PositionV& BresenhamLineFast(int32_t sx,
+                                            int32_t sy,
+                                            int32_t ex,
+                                            int32_t ey,
+                                            bool truePositions = false);
+  extern const PositionV& BresenhamLineFast(const Position& start,
+                                            const Position& end,
+                                            bool truePositions = false);
+  //
+  // Returns true ("Corrected") Bresenham line positions using cache (slower).
+  //
+  extern const PositionV& BresenhamLineFastC(int32_t sx,
+                                             int32_t sy,
+                                             int32_t ex,
+                                             int32_t ey);
+  extern const PositionV& BresenhamLineFastC(const Position& start,
                                              const Position& end);
 
   extern bool IsInsideMap(const Position& pos,

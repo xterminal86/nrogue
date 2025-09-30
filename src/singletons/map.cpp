@@ -1154,20 +1154,24 @@ bool Map::IsObjectVisible(const Position &from,
                           const Position &to,
                           bool excludeEnd)
 {
-  auto line = Util::BresenhamLine(from, to);
-
+  //auto line = Util::BresenhamLine(from, to);
   //
   // If we need to check if certain wall or static object is visible
   // it will fail on itself on the last point of the line,
   // so to prevent it we can use tis flag.
   //
-  if (excludeEnd && !line.empty())
-  {
-    line.pop_back();
-  }
+  //if (excludeEnd && !line.empty())
+  //{
+  //  line.pop_back();
+  //}
 
-  for (auto& c : line)
+  Position c;
+  const PositionV& line = Util::BresenhamLineFast(from, to);
+
+  for (auto& offset : line)
   {
+    c.Set(from.X + offset.X, from.Y + offset.Y);
+
     if (!Util::IsInsideMap(c, CurrentLevel->MapSize))
     {
       return false;
@@ -1180,12 +1184,14 @@ bool Map::IsObjectVisible(const Position &from,
     bool groundBlock = CurrentLevel->MapArray[c.X][c.Y]->BlocksSight;
     bool staticBlock = false;
 
+    bool lastPos = (c.X == to.X && c.Y == to.Y);
+
     if (CurrentLevel->StaticMapObjects[c.X][c.Y] != nullptr)
     {
       staticBlock = CurrentLevel->StaticMapObjects[c.X][c.Y]->BlocksSight;
     }
 
-    if (groundBlock || staticBlock)
+    if ((groundBlock || staticBlock) && !(excludeEnd && lastPos))
     {
       return false;
     }

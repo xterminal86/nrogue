@@ -305,7 +305,6 @@ void DevConsole::HandleInput()
 
     // -------------------------------------------------------------------------
 
-    case ALT_K8:
     case NUMPAD_8:
     {
       _stdout.ScrollUp();
@@ -314,7 +313,6 @@ void DevConsole::HandleInput()
 
     // -------------------------------------------------------------------------
 
-    case ALT_K2:
     case NUMPAD_2:
     {
       _stdout.ScrollDown();
@@ -738,6 +736,10 @@ void DevConsole::ProcessCommand(const std::string& command,
 
     case DevConsoleCommand::SPAM_TO_LOG:
       SpamToLog(params);
+      break;
+
+    case DevConsoleCommand::LAUNCH_PROJECTILE:
+      LaunchProjectile(params);
       break;
 
     default:
@@ -1873,6 +1875,43 @@ void DevConsole::SpamToLog(const StringV& params)
   }
 
   StdOut(Ok);
+}
+
+// =============================================================================
+
+void DevConsole::LaunchProjectile(const StringV& params)
+{
+  if (params.size() != 4)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string x1s = params[0];
+  std::string y1s = params[1];
+  std::string x2s = params[2];
+  std::string y2s = params[3];
+
+  if (!StringIsNumbers(x1s)
+   || !StringIsNumbers(y1s)
+   || !StringIsNumbers(x2s)
+   || !StringIsNumbers(y2s))
+  {
+    StdOut(ErrSyntaxError);
+    return;
+  }
+
+  int x1 = std::stoi(x1s);
+  int y1 = std::stoi(y1s);
+  int x2 = std::stoi(x2s);
+  int y2 = std::stoi(y2s);
+
+  Position from(x1, y1);
+  Position to(x2, y2);
+
+  Application::Instance().ChangeState(GameStates::MAIN_STATE);
+
+  Util::LaunchProjectile(from, to, '*', Colors::YellowColor);
 }
 
 #ifdef DEBUG_BUILD

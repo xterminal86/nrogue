@@ -49,6 +49,7 @@ class TargetState : public GameState
     GameObject* CheckHit(const Position& at, const Position& prev);
 
     std::vector<GameObject*> _targets;
+    std::vector<Position> _cellsToHighlight;
 
     size_t _lastTargetIndex = -1;
     int _maxThrowingRange = 1;

@@ -57,6 +57,7 @@ enum class DevConsoleCommand
   , GIVE_MONEY
   , POISON_ACTOR
   , DAMAGE_ACTOR
+  , LAUNCH_PROJECTILE
   , MOVE_STATIC_OBJECT
   , MOVE_ACTOR
   , MOVE_ITEM
@@ -209,6 +210,7 @@ class DevConsole : public GameState
     void PrintTriggers();
     void PrintActors();
     void SpamToLog(const StringV& params);
+    void LaunchProjectile(const StringV& params);
 
 #ifdef DEBUG_BUILD
     void DispelEffects();
@@ -286,6 +288,7 @@ class DevConsole : public GameState
      , { DevConsoleCommand::CREATE_CHEST        , "create_chest"      }
      , { DevConsoleCommand::CREATE_BREAKABLE    , "create_breakable"  }
      , { DevConsoleCommand::SPAM_TO_LOG         , "spam_log"          }
+     , { DevConsoleCommand::LAUNCH_PROJECTILE   , "launch_projectile" }
     };
 
     std::map<std::string, DevConsoleCommand> _commandTypeByName;
@@ -398,6 +401,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::GET_BY_ADDRESS),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::GET_BY_ADDRESS) + " [0x%X]",
           "Get game object by address. "
           "Print debug info if handle already set."
@@ -406,6 +410,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::GET_BY_ID),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::GET_BY_ID) + " [<ID>]",
           "Get game object by global id value. "
           "Print debug info if handle already set."
@@ -468,6 +473,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::CREATE_DUMMY_ACTOR),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::CREATE_DUMMY_ACTOR) + " X Y",
           "Creates dummy actor at X Y"
         }
@@ -475,6 +481,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::AWARD_EXP),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::AWARD_EXP) + " <AMOUNT>",
           "Give <AMOUNT> experience to player"
         }
@@ -482,6 +489,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::GET_STATIC_OBJECT),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::GET_STATIC_OBJECT) +
           " [X Y]",
           "Try to get handle to static object at X Y. "
@@ -491,6 +499,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::GET_ACTOR),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::GET_ACTOR) + " [X Y]",
           "Try to get handle to actor at X Y"
         }
@@ -498,6 +507,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::GET_ITEM),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::GET_ITEM) + " [X Y]",
           "Try to get handle to item object at X Y. "
           "Print debug info if already set."
@@ -506,6 +516,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::GET_MAP_OBJECT),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::GET_MAP_OBJECT) + " [X Y]",
           "Try to get handle to map object at X Y"
         }
@@ -513,6 +524,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::GET_ANY_OBJECT),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::GET_ANY_OBJECT) + " [X Y]",
           "Try to get handle to any game object at X Y. "
           "Print debug info if already set."
@@ -521,6 +533,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::MOVE_STATIC_OBJECT),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::MOVE_STATIC_OBJECT) + " X Y",
           "Try to move static object in handle to X Y"
         }
@@ -528,6 +541,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::MOVE_ACTOR),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::MOVE_ACTOR) + " X Y",
           "Try to move actor in handle to X Y"
         }
@@ -535,6 +549,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::DAMAGE_ACTOR),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::DAMAGE_ACTOR) +
           " N <DIRECT>",
           "Inflict N damage to actor in handle"
@@ -543,6 +558,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::MOVE_ITEM),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::MOVE_ITEM) + " X Y",
           "Try to move item in handle to X Y"
         }
@@ -550,6 +566,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::MOVE_PLAYER),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::MOVE_PLAYER) + " X Y",
           "Try to move player to X Y"
         }
@@ -557,6 +574,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::REMOVE_OBJECT),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::REMOVE_OBJECT) + " X Y",
           "Delete any object at X Y (actor -> item -> static)"
         }
@@ -564,6 +582,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::TRANSFORM_TILE),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::TRANSFORM_TILE) +
           " X Y <TYPE>",
           "Transform tile X Y to type <TYPE>"
@@ -572,6 +591,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::PLACE_WALL),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::PLACE_WALL) + " X Y",
           "Places generic wall at X Y"
         }
@@ -579,14 +599,16 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::CREATE_MONSTER),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::CREATE_MONSTER) +
           " X Y <TYPE>",
-          "Create monster <TYPE> at X Y"
+          "Creates monster <TYPE> at X Y"
         }
       },
       {
         _commandNameByType.at(DevConsoleCommand::GIVE_MONEY),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::GIVE_MONEY) + " <AMOUNT>",
           "Give player <AMOUNT> money"
         }
@@ -594,6 +616,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::CREATE_ITEM),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::CREATE_ITEM) + " X Y",
           "Create random item at X Y"
         }
@@ -601,6 +624,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::CREATE_SHRINE),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::CREATE_SHRINE) +
           " X Y <TYPE>",
           "Create shrine at X Y"
@@ -609,6 +633,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::CREATE_DUMMY_OBJECT),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::CREATE_DUMMY_OBJECT) +
           " X Y [<IMAGE> = 'D']",
           "Create dummy object at X Y"
@@ -617,6 +642,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::CREATE_CHEST),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::CREATE_CHEST) + " X Y",
           "Create chest at X Y"
         }
@@ -624,6 +650,7 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::CREATE_BREAKABLE),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::CREATE_BREAKABLE) + " X Y",
           "Create breakable object with random loot at X Y"
         }
@@ -631,8 +658,18 @@ class DevConsole : public GameState
       {
         _commandNameByType.at(DevConsoleCommand::SPAM_TO_LOG),
         {
+          "Usage: " +
           _commandNameByType.at(DevConsoleCommand::SPAM_TO_LOG) + " <COUNT>",
           "Add <COUNT> messages to in-game log"
+        }
+      },
+      {
+        _commandNameByType.at(DevConsoleCommand::LAUNCH_PROJECTILE),
+        {
+          "Usage: " +
+          _commandNameByType.at(DevConsoleCommand::LAUNCH_PROJECTILE) +
+          " SX SY DX DY",
+          "Launch projectile from <SX SY> to <DX DY>"
         }
       }
     };

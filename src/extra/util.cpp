@@ -4,6 +4,7 @@
 #include "printer.h"
 #include "timer.h"
 #include "map.h"
+#include "bresenham-cached.h"
 
 #ifdef DEBUG_BUILD
 #include "logger.h"
@@ -536,6 +537,47 @@ namespace Util
                                       const Position& end)
   {
     return BresenhamLine(start.X, start.Y, end.X, end.Y);
+  }
+
+  // ===========================================================================
+
+  const PositionV& BresenhamLineFast(int32_t sx,
+                                     int32_t sy,
+                                     int32_t ex,
+                                     int32_t ey,
+                                     bool truePositions)
+  {
+    static BresenhamCached bc(50, 50);
+    return truePositions
+           ? bc.GetLine(sx, sy, ex, ey)
+           : bc.GetLineOffsets(sx, sy, ex, ey);
+  }
+
+  // ===========================================================================
+
+  const PositionV& BresenhamLineFast(const Position& start,
+                                     const Position& end,
+                                     bool truePositions)
+  {
+    return BresenhamLineFast(start.X, start.Y, end.X, end.Y, truePositions);
+  }
+
+  // ===========================================================================
+
+  const PositionV& BresenhamLineFastC(int32_t sx,
+                                      int32_t sy,
+                                      int32_t ex,
+                                      int32_t ey)
+  {
+    return BresenhamLineFast(sx, sy, ex, ey, true);
+  }
+
+  // ===========================================================================
+
+  const PositionV& BresenhamLineFastC(const Position &start,
+                                      const Position &end)
+  {
+    return BresenhamLineFast(start.X, start.Y, end.X, end.Y, true);
   }
 
   // ===========================================================================
@@ -1847,8 +1889,7 @@ namespace Util
                         const uint32_t& fgColor,
                         const uint32_t& bgColor)
   {
-    auto line = BresenhamLine(from, to);
-
+    const PositionV& line = BresenhamLineFastC(from, to);
     LaunchProjectile(line, image, fgColor, bgColor);
   }
 

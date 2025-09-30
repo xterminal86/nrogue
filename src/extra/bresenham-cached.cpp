@@ -15,12 +15,17 @@ BresenhamCached::BresenhamCached(size_t rangeX, size_t rangeY)
       _cache[dst] = Util::BresenhamLine(_zero, dst);
     }
   }
+
+  size_t capacity =
+      std::sqrt(std::pow(rangeX * 2, 2) + std::pow(rangeY * 2, 2)) * 2;
+
+  _trueLine.reserve(capacity);
 }
 
 // =============================================================================
 
-const PositionV& BresenhamCached::GetLine(const Position& from,
-                                          const Position& to)
+const PositionV& BresenhamCached::GetLineOffsets(const Position& from,
+                                                 const Position& to)
 {
   _corrected.Set(to.X - from.X, to.Y - from.Y);
 
@@ -34,6 +39,51 @@ const PositionV& BresenhamCached::GetLine(const Position& from,
 
 // =============================================================================
 
+const PositionV& BresenhamCached::GetLineOffsets(int32_t sx,
+                                                 int32_t sy,
+                                                 int32_t ex,
+                                                 int32_t ey)
+{
+  _start.Set(sx, sy);
+  _end.Set(ex, ey);
+
+  return GetLineOffsets(_start, _end);
+}
+
+// =============================================================================
+
+const PositionV& BresenhamCached::GetLine(const Position &from,
+                                          const Position &to)
+{
+  _trueLine.clear();
+
+  const PositionV& offsets = GetLineOffsets(from, to);
+
+  Position p;
+  for (const Position& offset : offsets)
+  {
+    p.Set(from.X + offset.X, from.Y + offset.Y);
+    _trueLine.push_back(p);
+  }
+
+  return _trueLine;
+}
+
+// =============================================================================
+
+const PositionV& BresenhamCached::GetLine(int32_t sx,
+                                          int32_t sy,
+                                          int32_t ex,
+                                          int32_t ey)
+{
+  _start.Set(sx, sy);
+  _end.Set(ex, ey);
+
+  return GetLine(_start, _end);
+}
+
+// =============================================================================
+
 std::string BresenhamCached::GetStats()
 {
   static const std::string ruler(80, '=');
@@ -41,12 +91,13 @@ std::string BresenhamCached::GetStats()
 
   ss << ruler.data() << "\n";
 
-  ss << "Size             : " << _cache.size()              << "\n"
-     << "Max size         : " << _cache.max_size()          << "\n"
-     << "Bucket count     : " << _cache.bucket_count()      << "\n"
-     << "Max bucket count : " << _cache.max_bucket_count()  << "\n"
-     << "Load factor      : " << _cache.load_factor()       << "\n"
-     << "Max load factor  : " << _cache.max_load_factor()   << "\n";
+  ss << "Size               : " << _cache.size()             << "\n"
+     << "Max size           : " << _cache.max_size()         << "\n"
+     << "Bucket count       : " << _cache.bucket_count()     << "\n"
+     << "Max bucket count   : " << _cache.max_bucket_count() << "\n"
+     << "Load factor        : " << _cache.load_factor()      << "\n"
+     << "Max load factor    : " << _cache.max_load_factor()  << "\n"
+     << "True line capacity : " << _trueLine.capacity()      << "\n";
 
   size_t footprint = 0;
 

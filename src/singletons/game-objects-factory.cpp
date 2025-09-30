@@ -408,7 +408,9 @@ GameObjectsFactory::CreateBreakableObjectWithRandomLoot(
         if (!Util::CanBeSpawned(ic) || cc->Add(item))
         {
           //
-          // Yes, we're deleting the object we've just created.
+          // In which case it was either impossible to spawn an object or it was
+          // added to existing stack in container, so we can delete the object
+          // we just created.
           //
           delete item;
         }

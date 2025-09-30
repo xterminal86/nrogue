@@ -302,9 +302,15 @@ void Player::CheckVisibility()
     // From what I understand it's considered most shitty implementation of one,
     // but it'll do for now.
     //
-    auto line = Util::BresenhamLine(PosX, PosY, cell.X, cell.Y);
-    for (auto& point : line)
+
+    //auto line = Util::BresenhamLine(PosX, PosY, cell.X, cell.Y);
+    const PositionV& line = Util::BresenhamLineFast(PosX, PosY, cell.X, cell.Y);
+
+    Position point;
+    for (auto& offset : line)
     {
+      point.Set(PosX + offset.X, PosY + offset.Y);
+
       if (point.X == PosX && point.Y == PosY)
       {
         continue;

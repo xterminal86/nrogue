@@ -289,7 +289,11 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
   Position startPoint = _playerRef->GetPosition();
   Position endPoint   = _cursorPosition;
 
-  auto line = Util::BresenhamLine(startPoint, endPoint);
+  //auto line = Util::BresenhamLine(startPoint, endPoint);
+  const PositionV& line = Util::BresenhamLineFast(startPoint, endPoint);
+
+  Position p;
+  Position pp;
 
   int distanceCovered = 0;
 
@@ -298,9 +302,14 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
   //
   for (size_t i = 1; i < line.size(); i++)
   {
-    endPoint = line[i];
+    pp.Set(startPoint.X + line[i - 1].X, startPoint.Y + line[i - 1].Y);
+    p.Set(startPoint.X + line[i].X, startPoint.Y + line[i].Y);
 
-    stoppedAt = CheckHit(line[i], line[i - 1]);
+    //endPoint = line[i];
+    endPoint.Set(startPoint.X + line[i].X, startPoint.Y + line[i].Y);
+
+    //stoppedAt = CheckHit(line[i], line[i - 1]);
+    stoppedAt = CheckHit(p, pp);
 
     distanceCovered++;
 
@@ -690,12 +699,15 @@ void TargetState::DrawHint()
 
   Position mapSize = Map::Instance().CurrentLevel->MapSize;
 
-  std::vector<Position> cellsToHighlight;
+  _cellsToHighlight.clear();
 
-  auto line = Util::BresenhamLine(startPoint, _cursorPosition);
+  const PositionV& line = Util::BresenhamLineFast(startPoint, _cursorPosition);
 
-  for (auto& p : line)
+  Position p;
+  for (auto& i : line)
   {
+    p.Set(startPoint.X + i.X, startPoint.Y + i.Y);
+
     if (p == startPoint)
     {
       continue;
@@ -720,12 +732,12 @@ void TargetState::DrawHint()
       }
       else
       {
-        cellsToHighlight.push_back(p);
+        _cellsToHighlight.push_back(p);
       }
     }
   }
 
-  for (auto& p : cellsToHighlight)
+  for (auto& p : _cellsToHighlight)
   {
     Printer::Instance().PrintFB(p.X + mox,
                                 p.Y + moy,

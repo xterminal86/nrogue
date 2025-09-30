@@ -416,9 +416,15 @@ void MapLevelCaves::CreateRivers()
       end.Set(y2, MapSize.X - 1);
     }
 
-    auto line = Util::BresenhamLine(start, end);
-    for (auto& p : line)
+    //auto line = Util::BresenhamLine(start, end);
+
+    Position p;
+
+    const PositionV& line = Util::BresenhamLineFast(start, end);
+    for (auto& offset : line)
     {
+      p.Set(start.X + offset.X, start.Y + offset.Y);
+
       if (MapArray[p.X][p.Y]->Image == '.')
       {
         GameObjectInfo t;
