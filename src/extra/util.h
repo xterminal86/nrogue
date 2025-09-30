@@ -127,22 +127,22 @@ namespace Util
   // the line.
   //
   extern const PositionV& BresenhamLineFast(int32_t sx,
-                                            int32_t sy,
-                                            int32_t ex,
-                                            int32_t ey,
-                                            bool truePositions = false);
+                                              int32_t sy,
+                                              int32_t ex,
+                                              int32_t ey,
+                                              bool truePositions = false);
   extern const PositionV& BresenhamLineFast(const Position& start,
-                                            const Position& end,
-                                            bool truePositions = false);
+                                              const Position& end,
+                                              bool truePositions = false);
   //
-  // Returns true ("Corrected") Bresenham line positions using cache (slower).
+  // Returns actual Bresenham line points using cache (slower).
   //
-  extern const PositionV& BresenhamLineFastC(int32_t sx,
-                                             int32_t sy,
-                                             int32_t ex,
-                                             int32_t ey);
-  extern const PositionV& BresenhamLineFastC(const Position& start,
-                                             const Position& end);
+  extern const PositionV& BresenhamLineFastPoints(int32_t sx,
+                                                     int32_t sy,
+                                                     int32_t ex,
+                                                     int32_t ey);
+  extern const PositionV& BresenhamLineFastPoints(const Position& start,
+                                                     const Position& end);
 
   extern bool IsInsideMap(const Position& pos,
                           const Position& mapSize,

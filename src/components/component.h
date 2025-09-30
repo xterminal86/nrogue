@@ -5,6 +5,13 @@
 
 #include <stdlib.h>
 
+#ifdef DEBUG_BUILD
+#include <string>
+#include <vector>
+
+#include "util.h"
+#endif
+
 class GameObject;
 
 class Component
@@ -21,6 +28,11 @@ class Component
     GameObject* OwnerGameObject = nullptr;
 
     bool IsEnabled = true;
+
+#ifdef DEBUG_BUILD
+    virtual StringV Dump(size_t indent = 0);
+    std::string HexAddressString;
+#endif
 
   protected:
     virtual void PrepareAdditional();

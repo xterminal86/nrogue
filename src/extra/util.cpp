@@ -549,8 +549,8 @@ namespace Util
   {
     static BresenhamCached bc(50, 50);
     return truePositions
-           ? bc.GetLine(sx, sy, ex, ey)
-           : bc.GetLineOffsets(sx, sy, ex, ey);
+           ? bc.GetPoints(sx, sy, ex, ey)
+           : bc.GetOffsets(sx, sy, ex, ey);
   }
 
   // ===========================================================================
@@ -564,18 +564,18 @@ namespace Util
 
   // ===========================================================================
 
-  const PositionV& BresenhamLineFastC(int32_t sx,
-                                      int32_t sy,
-                                      int32_t ex,
-                                      int32_t ey)
+  const PositionV& BresenhamLineFastPoints(int32_t sx,
+                                             int32_t sy,
+                                             int32_t ex,
+                                             int32_t ey)
   {
     return BresenhamLineFast(sx, sy, ex, ey, true);
   }
 
   // ===========================================================================
 
-  const PositionV& BresenhamLineFastC(const Position &start,
-                                      const Position &end)
+  const PositionV& BresenhamLineFastPoints(const Position &start,
+                                             const Position &end)
   {
     return BresenhamLineFast(start.X, start.Y, end.X, end.Y, true);
   }
@@ -1889,7 +1889,7 @@ namespace Util
                         const uint32_t& fgColor,
                         const uint32_t& bgColor)
   {
-    const PositionV& line = BresenhamLineFastC(from, to);
+    const PositionV& line = BresenhamLineFastPoints(from, to);
     LaunchProjectile(line, image, fgColor, bgColor);
   }
 
@@ -2890,10 +2890,7 @@ namespace Util
       return lineRes;
     }
 
-    Position startPoint = user->GetPosition();
-    Position endPoint   = end;
-
-    auto line = BresenhamLine(startPoint, endPoint);
+    const PositionV& line = BresenhamLineFastPoints(user->GetPosition(), end);
     auto objects = GetObjectsOnTheLine(line);
 
     int distanceCovered = 0;
@@ -2988,6 +2985,7 @@ namespace Util
 
   // ===========================================================================
 
+  // FIXME: replace with precomputed AreaPoints
   std::vector<Position> GetAreaDamagePointsFrom(const Position& from, int range)
   {
     std::vector<Position> res;

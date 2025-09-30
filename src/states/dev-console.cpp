@@ -641,7 +641,7 @@ void DevConsole::ProcessCommand(const std::string& command,
 
     case DevConsoleCommand::REPORT_PLAYER:
     {
-      auto lines = _playerRef->DebugInfo();
+      auto lines = _playerRef->Dump();
       PrintDebugInfo(lines);
     }
     break;
@@ -740,6 +740,10 @@ void DevConsole::ProcessCommand(const std::string& command,
 
     case DevConsoleCommand::LAUNCH_PROJECTILE:
       LaunchProjectile(params);
+      break;
+
+    case DevConsoleCommand::INSPECT:
+      Inspect(params);
       break;
 
     default:
@@ -859,7 +863,7 @@ void DevConsole::ReportHandleDebugInfo(ObjectHandleType type)
 {
   if (_objectHandles[type] != nullptr)
   {
-    auto lines = _objectHandles[type]->DebugInfo();
+    auto lines = _objectHandles[type]->Dump();
     PrintDebugInfo(lines);
   }
 }
@@ -1912,6 +1916,14 @@ void DevConsole::LaunchProjectile(const StringV& params)
   Application::Instance().ChangeState(GameStates::MAIN_STATE);
 
   Util::LaunchProjectile(from, to, '*', Colors::YellowColor);
+}
+
+// =============================================================================
+
+void DevConsole::Inspect(const StringV& params)
+{
+  // TODO:
+  StdOut("Not implemented yet");
 }
 
 #ifdef DEBUG_BUILD

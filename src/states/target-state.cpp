@@ -430,9 +430,15 @@ void TargetState::CheckCursorPositionBounds()
 {
   Position lastPositionInsideMap;
   bool isOutsideMap = false;
-  auto line = Util::BresenhamLine(_playerRef->GetPosition(), _cursorPosition);
-  for (auto& p : line)
+
+  Position p;
+
+  const Position& plrPos = _playerRef->GetPosition();
+  const PositionV& line = Util::BresenhamLineFast(plrPos, _cursorPosition);
+
+  for (auto& offset : line)
   {
+    p.Set(plrPos.X + offset.X, plrPos.Y + offset.Y);
     if (!Util::IsInsideMap(p, Map::Instance().CurrentLevel->MapSize, false))
     {
       isOutsideMap = true;
@@ -452,22 +458,24 @@ void TargetState::CheckCursorPositionBounds()
 
 void TargetState::UpdatePlayerPossibleKnockbackDir()
 {
-  Position startPoint = _playerRef->GetPosition();
+  const Position& startPoint = _playerRef->GetPosition();
 
-  auto line = Util::BresenhamLine(startPoint, _cursorPosition);
-  if (!line.empty())
+  const PositionV& line = Util::BresenhamLineFast(startPoint,
+                                                  _cursorPosition);
+  Position dir = Position::Zero();
+
+  if (!line.empty() && (line.size() >= 2))
   {
     auto& last       = line[line.size() - 1];
     auto& beforeLast = line[line.size() - 2];
 
-    Position dir =
-    {
-      last.X - beforeLast.X,
-      last.Y - beforeLast.Y
-    };
-
-    _playerRef->SetKnockBackDir(dir);
+    //
+    // Direction should be the same, so no need to convert to actual position.
+    //
+    dir = { last.X - beforeLast.X, last.Y - beforeLast.Y };
   }
+
+  _playerRef->SetKnockBackDir(dir);
 }
 
 // =============================================================================

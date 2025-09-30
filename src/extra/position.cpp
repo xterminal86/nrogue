@@ -71,3 +71,11 @@ const std::string& Position::ToString() const
   intl = Util::StringFormat("<%d %d>", X, Y);
   return intl;
 }
+
+// =============================================================================
+
+const Position& Position::Zero()
+{
+  static Position zero(0, 0);
+  return zero;
+}

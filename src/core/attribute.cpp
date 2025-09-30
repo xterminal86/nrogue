@@ -223,3 +223,89 @@ void Attributes::ResetStats()
     kvp.second.Reset();
   }
 }
+
+#ifdef DEBUG_BUILD
+StringV Attribute::Dump(const std::string& name, size_t indent)
+{
+  const std::string spaces(indent, ' ');
+
+  StringV res;
+
+  res.push_back(
+    Util::StringFormat("%s'%s': {", spaces.data(), name.data())
+  );
+
+  res.push_back(
+   Util::StringFormat("%s  'Talents': %d,", spaces.data(), Talents)
+  );
+
+  res.push_back(
+   Util::StringFormat("%s  'RaiseProbability': %d,",
+                      spaces.data(),
+                      RaiseProbability)
+  );
+
+  res.push_back(
+   Util::StringFormat("%s  '_originalValue': %d",
+                      spaces.data(),
+                      _originalValue)
+  );
+
+  res.push_back(
+    Util::StringFormat("%s}", spaces.data())
+  );
+
+  return res;
+}
+
+StringV RangedAttribute::Dump(const std::string& name, size_t indent)
+{
+  const std::string spaces(indent, ' ');
+
+  StringV res;
+
+  res.push_back(
+    Util::StringFormat("%s'%s': {", spaces.data(), name.data())
+  );
+
+  res.push_back(
+   Util::StringFormat("%s  'Talents': %d,", spaces.data(), Talents)
+  );
+
+  auto mind = _min.Dump("_min", indent + 4);
+  for (auto& i : mind)
+  {
+    res.push_back(i);
+  }
+
+  auto maxd = _min.Dump("_max", indent + 4);
+  for (auto& i : maxd)
+  {
+    res.push_back(i);
+  }
+
+  res.push_back(
+    Util::StringFormat("%s}", spaces.data())
+  );
+
+  return res;
+}
+
+StringV Attributes::Dump(const std::string& name, size_t indent)
+{
+  const std::string spaces(indent, ' ');
+
+  StringV res;
+
+  res.push_back(
+    Util::StringFormat("%s'%s': {", spaces.data(), name.data())
+  );
+
+  res.push_back(
+    Util::StringFormat("%s}", spaces.data())
+  );
+
+  return res;
+}
+
+#endif

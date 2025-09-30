@@ -24,14 +24,19 @@ BresenhamCached::BresenhamCached(size_t rangeX, size_t rangeY)
 
 // =============================================================================
 
-const PositionV& BresenhamCached::GetLineOffsets(const Position& from,
-                                                 const Position& to)
+const PositionV& BresenhamCached::GetOffsets(const Position& from,
+                                              const Position& to)
 {
   _corrected.Set(to.X - from.X, to.Y - from.Y);
 
   if (_cache.count(_corrected) == 0)
   {
+    _cacheMisses++;
     _cache[_corrected] = Util::BresenhamLine(_zero, _corrected);
+  }
+  else
+  {
+    _cacheHits++;
   }
 
   return _cache[_corrected];
@@ -39,25 +44,25 @@ const PositionV& BresenhamCached::GetLineOffsets(const Position& from,
 
 // =============================================================================
 
-const PositionV& BresenhamCached::GetLineOffsets(int32_t sx,
-                                                 int32_t sy,
-                                                 int32_t ex,
-                                                 int32_t ey)
+const PositionV& BresenhamCached::GetOffsets(int32_t sx,
+                                              int32_t sy,
+                                              int32_t ex,
+                                              int32_t ey)
 {
   _start.Set(sx, sy);
   _end.Set(ex, ey);
 
-  return GetLineOffsets(_start, _end);
+  return GetOffsets(_start, _end);
 }
 
 // =============================================================================
 
-const PositionV& BresenhamCached::GetLine(const Position &from,
-                                          const Position &to)
+const PositionV& BresenhamCached::GetPoints(const Position &from,
+                                             const Position &to)
 {
   _trueLine.clear();
 
-  const PositionV& offsets = GetLineOffsets(from, to);
+  const PositionV& offsets = GetOffsets(from, to);
 
   Position p;
   for (const Position& offset : offsets)
@@ -71,15 +76,15 @@ const PositionV& BresenhamCached::GetLine(const Position &from,
 
 // =============================================================================
 
-const PositionV& BresenhamCached::GetLine(int32_t sx,
-                                          int32_t sy,
-                                          int32_t ex,
-                                          int32_t ey)
+const PositionV& BresenhamCached::GetPoints(int32_t sx,
+                                             int32_t sy,
+                                             int32_t ex,
+                                             int32_t ey)
 {
   _start.Set(sx, sy);
   _end.Set(ex, ey);
 
-  return GetLine(_start, _end);
+  return GetPoints(_start, _end);
 }
 
 // =============================================================================
@@ -97,7 +102,9 @@ std::string BresenhamCached::GetStats()
      << "Max bucket count   : " << _cache.max_bucket_count() << "\n"
      << "Load factor        : " << _cache.load_factor()      << "\n"
      << "Max load factor    : " << _cache.max_load_factor()  << "\n"
-     << "True line capacity : " << _trueLine.capacity()      << "\n";
+     << "True line capacity : " << _trueLine.capacity()      << "\n"
+     << "Cache hits         : " << _cacheHits                 << "\n"
+     << "Cache misses       : " << _cacheMisses               << "\n";
 
   size_t footprint = 0;
 

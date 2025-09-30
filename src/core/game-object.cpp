@@ -1787,62 +1787,113 @@ std::string GameObject::SaveDataMinimal::ToStringKey() const
 // =============================================================================
 
 #ifdef DEBUG_BUILD
-std::vector<std::string> GameObject::DebugInfo()
+StringV GameObject::Dump(size_t indent)
 {
-  std::vector<std::string> res;
+  const std::string spaces(indent, ' ');
 
-  res.push_back("{");
+  StringV res;
 
-  std::string str = Util::StringFormat("  [0x%X]", this);
-  res.push_back(str);
+  res.push_back(
+    Util::StringFormat("%s'0x%X': {", spaces.data(), this)
+  );
 
-  str = Util::StringFormat("  ObjName: %s", ObjectName.data());
-  res.push_back(str);
+  res.push_back(
+    Util::StringFormat("%s  'ObjName': '%s',", spaces.data(), ObjectName.data())
+  );
 
-  str = Util::StringFormat("  ObjectId: %llu", _objectId);
-  res.push_back(str);
+  res.push_back(
+    Util::StringFormat("%s  '_objectId': %llu,", spaces.data(), _objectId)
+  );
 
   std::string ch = { (char)Image };
-  str = Util::StringFormat("  Image: '%s'", ch.data());
+  res.push_back(
+    Util::StringFormat("%s  'Image': '%s',", spaces.data(), ch.data())
+  );
 
-  res.push_back(str);
+  Position pos = { PosX, PosY };
+  res.push_back(
+    Util::StringFormat("%s  'Position': '%s',", spaces.data(), pos.ToString().data())
+  );
 
-  str = Util::StringFormat("  Position: { %i, %i }", PosX, PosY);
-  res.push_back(str);
+  res.push_back(
+    Util::StringFormat("%s  'FgColor': %06X,", spaces.data(), FgColor)
+  );
 
-  str = Util::StringFormat("  FgColor: %06X", FgColor);
-  res.push_back(str);
+  res.push_back(
+    Util::StringFormat("%s  'BgColor': %06X,", spaces.data(), BgColor)
+  );
 
-  str = Util::StringFormat("  BgColor: %06X", BgColor);
-  res.push_back(str);
-
-  str = Util::StringFormat("  Components: %zu", _components.size());
-  res.push_back(str);
-
-  for (auto& kvp : _components)
+  auto vr = VisibilityRadius.Dump("VisibilityRadius", indent + 4);
+  for (auto& i : vr)
   {
-    str = Util::StringFormat("    %s [0x%X]",
-                             typeid(*kvp.second.get()).name(),
-                             kvp.second.get());
-    res.push_back(str);
+    res.push_back(i);
   }
 
-  str = Util::StringFormat("  Effects: %zu", _activeEffects.size());
-  res.push_back(str);
+  // Components
 
-  for (auto& kvp : _activeEffects)
+  if (_components.empty())
   {
-    str = Util::StringFormat("    %llu (%zu):", kvp.first, kvp.second.size());
-    res.push_back(str);
+    res.push_back(
+      Util::StringFormat("%s  '_components': {},", spaces.data())
+    );
+  }
+  else
+  {
+    res.push_back(
+      Util::StringFormat("%s  '_components': {", spaces.data())
+    );
 
-    for (ItemBonusStruct& i : kvp.second)
+    for (auto& kvp : _components)
     {
-      auto lines = i.ToStrings();
-      res.push_back("      " + lines[0]);
+      auto data = kvp.second->Dump(indent + 4);
+      for (auto& i : data)
+      {
+        res.push_back(i);
+      }
     }
+
+    res.push_back(
+      Util::StringFormat("%s  },", spaces.data())
+    );
   }
 
-  res.push_back("}");
+  // Effects
+
+  res.push_back(
+    Util::StringFormat("%s  '_activeEffects': {},", spaces.data())
+  );
+
+  /*
+  if (_activeEffects.empty())
+  {
+    res.push_back(
+      Util::StringFormat("%s  '_activeEffects': {},", spaces.data())
+    );
+  }
+  else
+  {
+    res.push_back(
+      Util::StringFormat("%s  '_activeEffects': {", spaces.data())
+    );
+
+    for (auto& kvp : _activeEffects)
+    {
+      auto data = kvp.second->Inspect(indent + 2);
+      for (auto& i : data)
+      {
+        res.push_back(i);
+      }
+    }
+
+    res.push_back(
+      Util::StringFormat("%s  },", spaces.data())
+    );
+  }
+  */
+
+  res.push_back(
+    Util::StringFormat("%s}", spaces.data())
+  );
 
   return res;
 }

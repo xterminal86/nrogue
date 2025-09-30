@@ -6,6 +6,10 @@
 #include <cstdint>
 #include <map>
 
+#ifdef DEBUG_BUILD
+#include "constants.h"
+#endif
+
 struct Attribute
 {
   void Reset();
@@ -24,6 +28,10 @@ struct Attribute
   // For "custom" class, percentage of stat raise during level up.
   //
   int RaiseProbability = -1;
+
+#ifdef DEBUG_BUILD
+  StringV Dump(const std::string& name, size_t indent = 0);
+#endif
 
   private:
     //
@@ -53,6 +61,10 @@ struct RangedAttribute
   Attribute& Max();
 
   int Talents = 0;
+
+#ifdef DEBUG_BUILD
+  StringV Dump(const std::string& name, size_t indent = 0);
+#endif
 
   private:
     Attribute _min;
@@ -98,6 +110,10 @@ struct Attributes
   int Rating();
 
   void ResetStats();
+
+#ifdef DEBUG_BUILD
+  StringV Dump(const std::string& name, size_t indent = 0);
+#endif
 
   private:
     std::map<int, Attribute&> _attrsMap =

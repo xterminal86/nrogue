@@ -279,7 +279,7 @@ class GameObject
     uint64_t RemainsOf = 0;
 
 #ifdef DEBUG_BUILD
-    std::vector<std::string> DebugInfo();
+    virtual StringV Dump(size_t indent = 0);
     std::string HexAddressString;
 #endif
 

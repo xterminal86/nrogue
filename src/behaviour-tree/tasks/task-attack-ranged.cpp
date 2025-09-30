@@ -92,7 +92,7 @@ BTResult TaskAttackRanged::ProcessSpellAttack()
     to = Util::GetRandomPointAround(_objectToControl, nullptr, to);
   }
 
-  auto line = Util::BresenhamLineFast(from, to);
+  const PositionV& line = Util::BresenhamLineFastPoints(from, to);
   GameObject* hit = Util::GetFirstObjectOnTheLine(line);
 
   if (hit != nullptr)
@@ -196,7 +196,7 @@ BTResult TaskAttackRanged::ProcessWeaponAttack()
   }
 
   //auto line = Util::BresenhamLine(from, to);
-  const PositionV& line = Util::BresenhamLineFastC(from, to);
+  const PositionV& line = Util::BresenhamLineFastPoints(from, to);
   GameObject* hit = Util::GetFirstObjectOnTheLine(line);
 
   //

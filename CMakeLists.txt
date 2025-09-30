@@ -76,7 +76,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/dungeon-generators)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks)
 
-file(GLOB SOURCES
+file(
+  GLOB SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/*.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/states/*.cpp
@@ -101,20 +102,25 @@ file(GLOB SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/types/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/src/dungeon-generators/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks/*.h)
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/behaviour-tree/tasks/*.h
+)
 
 if (${CMAKE_BUILD_TYPE} MATCHES Release)
-  list(REMOVE_ITEM SOURCES
+  list(
+    REMOVE_ITEM SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/logger.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/logger.h)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/logger.h
+  )
 endif()
 
 if (NOT BUILD_TESTS)
-  list(REMOVE_ITEM SOURCES
+  list(
+    REMOVE_ITEM SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/map-level-test.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/map-level-test.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/map-level-test.cpp
+  )
 endif()
 
 list(SORT SOURCES)

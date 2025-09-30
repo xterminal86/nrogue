@@ -43,6 +43,7 @@ enum class DevConsoleCommand
   , CREATE_ITEM
   , DISPEL_EFFECTS
   , DISPEL_EFFECTS_ACTOR
+  , INSPECT
   , GET_MAP_OBJECT
   , GET_STATIC_OBJECT
   , GET_ACTOR
@@ -211,6 +212,7 @@ class DevConsole : public GameState
     void PrintActors();
     void SpamToLog(const StringV& params);
     void LaunchProjectile(const StringV& params);
+    void Inspect(const StringV& params);
 
 #ifdef DEBUG_BUILD
     void DispelEffects();
@@ -253,6 +255,7 @@ class DevConsole : public GameState
      , { DevConsoleCommand::INFO_HANDLES        , "info_handles"      }
      , { DevConsoleCommand::PRINT_TRIGGERS      , "info_triggers"     }
      , { DevConsoleCommand::PRINT_ACTORS        , "info_actors"       }
+     , { DevConsoleCommand::INSPECT             , "inspect"           }
      , { DevConsoleCommand::GET_STATIC_OBJECT   , "get_staticobj"     }
      , { DevConsoleCommand::GET_MAP_OBJECT      , "get_mapobj"        }
      , { DevConsoleCommand::GET_ACTOR           , "get_actor"         }
@@ -270,7 +273,7 @@ class DevConsole : public GameState
      , { DevConsoleCommand::AWARD_EXP           , "plr_awardexp"      }
      , { DevConsoleCommand::LEVEL_UP            , "plr_levelup"       }
      , { DevConsoleCommand::LEVEL_DOWN          , "plr_leveldown"     }
-     , { DevConsoleCommand::GOD_MODE            , "plr_godmode"       }
+     , { DevConsoleCommand::GOD_MODE            , "god"               }
      , { DevConsoleCommand::IGNORE_PLAYER       , "plr_ignore"        }
      , { DevConsoleCommand::REPORT_PLAYER       , "plr_info"          }
      , { DevConsoleCommand::REMOVE_OBJECT       , "eng_deleteobj"     }
@@ -484,6 +487,15 @@ class DevConsole : public GameState
           "Usage: " +
           _commandNameByType.at(DevConsoleCommand::AWARD_EXP) + " <AMOUNT>",
           "Give <AMOUNT> experience to player"
+        }
+      },
+      {
+        _commandNameByType.at(DevConsoleCommand::INSPECT),
+        {
+          "Usage: " +
+          _commandNameByType.at(DevConsoleCommand::INSPECT) +
+          " <%lu | 0x%X>",
+          "Inspect any object by id or hex address"
         }
       },
       {

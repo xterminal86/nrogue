@@ -27,6 +27,8 @@ struct Position
 
   const std::string& ToString() const;
 
+  static const Position& Zero();
+
   int32_t X = 0;
   int32_t Y = 0;
 };

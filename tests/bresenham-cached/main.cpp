@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 
     Position truePos;
 
-    const PositionV& cachedLine = bc.GetLineOffsets(from, to);
+    const PositionV& cachedLine = bc.GetOffsets(from, to);
 
     /*
     printf("BresenhamCached::GetLine()\n");
@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
          from.ToString().data(),
          to.ToString().data());
 
-  const PositionV& truePos = bc.GetLine(from, to);
+  const PositionV& truePos = bc.GetPoints(from, to);
   for (const Position& p : truePos)
   {
     printf("%s ", p.ToString().data());
