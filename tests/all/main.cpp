@@ -1206,85 +1206,45 @@ void Run()
   ss << GetBanner(" START TESTS ") << "\n\n";
 
   // ---------------------------------------------------------------------------
-
   DisplayProgress();
-
   TestLoS(ss, 4, 4, 2);
-
   ss << GetEndTestLine();
-
   // ---------------------------------------------------------------------------
-
   DisplayProgress();
-
   RoomTests(ss);
-
   ss << GetEndTestLine();
-
   // ---------------------------------------------------------------------------
-
   DisplayProgress();
-
   RNGTests(ss);
-
   ss << GetEndTestLine();
-
   // ---------------------------------------------------------------------------
-
   DisplayProgress();
-
   LevelUpTests(ss);
-
   ss << GetEndTestLine();
-
   // ---------------------------------------------------------------------------
-
   DisplayProgress();
-
   WeightedRandomTest(ss);
-
   ss << GetEndTestLine();
-
   // ---------------------------------------------------------------------------
-
   DisplayProgress();
-
   LootDropTest(ss);
-
   ss << GetEndTestLine();
-
   // ---------------------------------------------------------------------------
-
   DisplayProgress();
-
   LevelBuilderTest(ss);
-
   ss << GetEndTestLine();
-
   // ---------------------------------------------------------------------------
-
   DisplayProgress();
-
   GenNamesTest(ss);
-
   ss << GetEndTestLine();
-
   // ---------------------------------------------------------------------------
-
   DisplayProgress();
-
   StringSplitTests(ss);
-
   ss << GetEndTestLine();
-
   // ---------------------------------------------------------------------------
-
   DisplayProgress();
-
   TownNamesTest(ss);
-
   ss << GetEndTestLine();
-
   // ---------------------------------------------------------------------------
 
   file << ss.str();

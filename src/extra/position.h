@@ -25,7 +25,7 @@ struct Position
   bool operator== (const Position& rhs) const;
   bool operator!= (const Position& rhs) const;
 
-  void Print();
+  const std::string& ToString() const;
 
   int32_t X = 0;
   int32_t Y = 0;

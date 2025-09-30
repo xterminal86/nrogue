@@ -5,18 +5,12 @@
 #include "util.h"
 
 Position::Position()
-{
-  X = 0;
-  Y = 0;
-}
+  : X(0), Y(0) {}
 
 // =============================================================================
 
 Position::Position(int32_t x, int32_t y)
-{
-  X = x;
-  Y = y;
-}
+  : X(x), Y(y) {}
 
 // =============================================================================
 
@@ -71,7 +65,9 @@ bool Position::operator!= (const Position& rhs) const
 
 // =============================================================================
 
-void Position::Print()
+const std::string& Position::ToString() const
 {
-  DebugLog("%s: [%d ; %d]\n", __PRETTY_FUNCTION__, X, Y);
+  static std::string intl;
+  intl = Util::StringFormat("<%d %d>", X, Y);
+  return intl;
 }

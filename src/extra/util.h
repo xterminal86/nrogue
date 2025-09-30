@@ -71,6 +71,8 @@ using CM = std::vector<std::vector<std::pair<uint16_t, uint16_t>>>;
 // Coded String
 using CS = std::vector<uint16_t>;
 
+using PositionV = std::vector<Position>;
+
 class GameObject;
 
 namespace Util
