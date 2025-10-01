@@ -3,7 +3,15 @@
 Component::Component()
 {
 #ifdef DEBUG_BUILD
-  HexAddressString = Util::StringFormat("0x%X", this);
+  HexAddressString = Util::StringFormat("0x%lX", this);
+  AnyObjectByAddr[HexAddressString] = this;
+#endif
+}
+
+Component::~Component()
+{
+#ifdef DEBUG_BUILD
+  AnyObjectByAddr.erase(HexAddressString);
 #endif
 }
 
@@ -29,31 +37,13 @@ StringV Component::Dump(size_t indent)
 
   StringV res;
 
-  res.push_back(
-    Util::StringFormat("%s'0x%X': {", spaces.data(), this)
-  );
+  res.push_back( I_OBJ_START_NAMED(spaces, typeid(*this).name()) );
 
-  res.push_back(
-    Util::StringFormat("%s  'typeid': '%s',",
-                       spaces.data(),
-                       typeid(*this).name())
-  );
+  res.push_back( I_PTR_NAMED(spaces, "addr", this) );
+  res.push_back( I_BOOL(spaces, IsEnabled) );
+  res.push_back( I_PTR(spaces, OwnerGameObject) );
 
-  res.push_back(
-    Util::StringFormat("%s  'OwnerGameObject': 0x%X,",
-                       spaces.data(),
-                       OwnerGameObject)
-  );
-
-  res.push_back(
-    Util::StringFormat("%s  'IsEnabled': '%s',",
-                       spaces.data(),
-                       IsEnabled ? "Y" : "N")
-  );
-
-  res.push_back(
-    Util::StringFormat("%s}", spaces.data())
-  );
+  res.push_back( I_OBJ_END(spaces) );
 
   return res;
 }

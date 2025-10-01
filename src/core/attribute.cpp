@@ -231,29 +231,20 @@ StringV Attribute::Dump(const std::string& name, size_t indent)
 
   StringV res;
 
-  res.push_back(
-    Util::StringFormat("%s'%s': {", spaces.data(), name.data())
+  auto attrDump = DUMP_ATTR();
+
+  auto str = Util::StringFormat(
+    "%s'%s': '%d (%d), %d, %d, [%s]',",
+    spaces.data(),
+    name.data(),
+    Get(),
+    _originalValue,
+    Talents,
+    RaiseProbability,
+    attrDump.data()
   );
 
-  res.push_back(
-   Util::StringFormat("%s  'Talents': %d,", spaces.data(), Talents)
-  );
-
-  res.push_back(
-   Util::StringFormat("%s  'RaiseProbability': %d,",
-                      spaces.data(),
-                      RaiseProbability)
-  );
-
-  res.push_back(
-   Util::StringFormat("%s  '_originalValue': %d",
-                      spaces.data(),
-                      _originalValue)
-  );
-
-  res.push_back(
-    Util::StringFormat("%s}", spaces.data())
-  );
+  res.push_back(str);
 
   return res;
 }
@@ -264,32 +255,48 @@ StringV RangedAttribute::Dump(const std::string& name, size_t indent)
 
   StringV res;
 
-  res.push_back(
-    Util::StringFormat("%s'%s': {", spaces.data(), name.data())
-  );
+  std::string totalStringMin, totalStringMax;
 
-  res.push_back(
-   Util::StringFormat("%s  'Talents': %d,", spaces.data(), Talents)
-  );
-
-  auto mind = _min.Dump("_min", indent + 4);
-  for (auto& i : mind)
+  auto dumpMin = _min.Dump(STRINGIFY(_min), indent + 2);
+  for (auto& i : dumpMin)
   {
-    res.push_back(i);
+    totalStringMin += i;
   }
 
-  auto maxd = _min.Dump("_max", indent + 4);
-  for (auto& i : maxd)
+  auto dumpMax = _max.Dump(STRINGIFY(_max), indent + 2);
+  for (auto& i : dumpMax)
   {
-    res.push_back(i);
+    totalStringMax += i;
   }
 
+  res.push_back( I_OBJ_START_NAMED(spaces, name.data()) );
+
   res.push_back(
-    Util::StringFormat("%s}", spaces.data())
+    Util::StringFormat(
+      "%s  'data': '%d/%d, %d',",
+      spaces.data(),
+      _min.Get(),
+      _max.Get(),
+      Talents
+    )
   );
+
+  res.push_back(totalStringMin);
+  res.push_back(totalStringMax);
+
+  res.push_back( I_OBJ_END(spaces) );
 
   return res;
 }
+
+#define DA(name, attr, indent)          \
+  {                                     \
+    auto str = attr.Dump(name, indent); \
+    for (auto& i : str)                 \
+    {                                   \
+      res.push_back(i);                 \
+    }                                   \
+  }
 
 StringV Attributes::Dump(const std::string& name, size_t indent)
 {
@@ -297,13 +304,31 @@ StringV Attributes::Dump(const std::string& name, size_t indent)
 
   StringV res;
 
-  res.push_back(
-    Util::StringFormat("%s'%s': {", spaces.data(), name.data())
-  );
+  res.push_back( I_OBJ_START_NAMED(spaces, name.data()) );
 
-  res.push_back(
-    Util::StringFormat("%s}", spaces.data())
-  );
+  DA(STRINGIFY(Str), Str, indent + 2)
+  DA(STRINGIFY(Def), Def, indent + 2)
+  DA(STRINGIFY(Mag), Mag, indent + 2)
+  DA(STRINGIFY(Res), Res, indent + 2)
+  DA(STRINGIFY(Skl), Skl, indent + 2)
+  DA(STRINGIFY(Spd), Spd, indent + 2)
+
+  DA(STRINGIFY(HP), HP, indent + 2)
+  DA(STRINGIFY(MP), MP, indent + 2)
+
+  DA(STRINGIFY(HungerRate), HungerRate, indent + 2)
+  DA(STRINGIFY(HungerSpeed), HungerSpeed, indent + 2)
+
+  DA(STRINGIFY(Exp), Exp, indent + 2)
+  DA(STRINGIFY(Lvl), Lvl, indent + 2)
+
+  res.push_back( I_INT(spaces, Hunger) );
+  res.push_back( I_INT(spaces, ActionMeter) );
+  res.push_back( I_INT(spaces, Rating()) );
+
+  res.push_back( I_BOOL(spaces, Indestructible) );
+
+  res.push_back( I_OBJ_END(spaces) );
 
   return res;
 }

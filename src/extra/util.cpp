@@ -135,7 +135,7 @@ namespace Util
     if (checker == nullptr || checked == nullptr)
     {
       DebugLog("[WAR] Util::IsObjectInRange() checker: "
-               "[0x%X] checked: [0x%X]",
+               "[0x%lX] checked: [0x%lX]",
                checker,
                checked);
       return false;
@@ -3254,3 +3254,40 @@ namespace Util
     return res;
   }
 }
+
+// -----------------------------------------------------------------------------
+#ifdef DEBUG_BUILD
+
+#define TYPE_OF(ptr, type) typeid(*((type*)ptr)) == typeid(type)
+
+StringV DumpObj(void *ptr)
+{
+  StringV res = { "{}" };
+
+  if (ptr == nullptr)
+  {
+    return res;
+  }
+
+  //
+  // This works only for polymorphic types, but usually everything has at least
+  // virtual destructor. Downside of this is that you must override Dump()
+  // method for every class, otherwise it will be skipped here.
+  //
+  if ( TYPE_OF(ptr, GameObject) )
+  {
+    res = ((GameObject*)ptr)->Dump();
+  }
+  else if ( TYPE_OF(ptr, Component) )
+  {
+    res = ((Component*)ptr)->Dump();
+  }
+  else if ( TYPE_OF(ptr, Player) )
+  {
+    res = ((Player*)ptr)->Dump();
+  }
+
+  return res;
+}
+#endif
+// -----------------------------------------------------------------------------

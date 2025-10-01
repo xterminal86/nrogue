@@ -1859,3 +1859,59 @@ bool Player::HasSkill(PlayerSkills skillToCheck)
 {
   return (SkillLevelBySkill.count(skillToCheck) == 1);
 }
+
+#ifdef DEBUG_BUILD
+StringV Player::Dump(size_t indent)
+{
+  const std::string spaces(indent, ' ');
+
+  StringV res;
+
+  res.push_back( I_OBJ_START(spaces, this) );
+
+  res.push_back( I_STR(spaces, Name) );
+  res.push_back( I_STR_NAMED(spaces, STRINGIFY(SelectedClass), GetClassName()) );
+
+  std::string ch = { (char)Image };
+  res.push_back( I_STR_NAMED(spaces, STRINGIFY(Image), ch) );
+
+  Position pos = { PosX, PosY };
+  res.push_back( I_STR_NAMED(spaces, STRINGIFY(Position), pos.ToString()) );
+
+  auto vr = VisibilityRadius.Dump(STRINGIFY(VisibilityRadius), indent + 2);
+  for (auto& i : vr)
+  {
+    res.push_back(i);
+  }
+
+  res.push_back( I_INT(spaces, Money) );
+
+  auto str = Attrs.Dump(STRINGIFY(Attrs), indent + 2);
+  for (auto& i : str)
+  {
+    res.push_back(i);
+  }
+
+  res.push_back( I_INT(spaces, HealthRegenTurns) );
+  res.push_back( I_INT(spaces, Type) );
+  res.push_back( I_INT(spaces, _healthRegenTurnsCounter) );
+  res.push_back( I_INT(spaces, _manaRegenTurnsCounter) );
+  res.push_back( I_INT(spaces, _skipTurnsCounter) );
+
+  auto c = GameObject::DumpComponents(indent);
+  for (auto& line : c)
+  {
+    res.push_back(line);
+  }
+
+  auto e = GameObject::DumpEffects(indent);
+  for (auto& line : e)
+  {
+    res.push_back(line);
+  }
+
+  res.push_back( I_OBJ_END(spaces) );
+
+  return res;
+}
+#endif

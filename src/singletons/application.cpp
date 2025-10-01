@@ -149,6 +149,7 @@ void Application::Run()
     {
       Logger::Instance().Print("=== PROFILER END ===");
     }
+
     #endif
   }
 }
@@ -170,7 +171,7 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   if (gameStateIndex != GameStates::EXIT_GAME)
   {
     auto str =
-        Util::StringFormat("Changing state: %s [0x%X] => %s [0x%X]",
+        Util::StringFormat("Changing state: %s [0x%lX] => %s [0x%lX]",
                            typeid(*_currentState).name(),
                            _currentState,
                            typeid(*_gameStates[gameStateIndex].get()).name(),
@@ -180,7 +181,7 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   }
   else
   {
-    auto str = Util::StringFormat("Changing state: %s [0x%X] "
+    auto str = Util::StringFormat("Changing state: %s [0x%lX] "
                                   "=> EXIT_GAME [0x0]",
                                   typeid(*_currentState).name(),
                                   _currentState);

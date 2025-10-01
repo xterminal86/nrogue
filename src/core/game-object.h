@@ -72,7 +72,7 @@ class GameObject
       if (_components.count(typeid(T).hash_code()) == 1)
       {
         DebugLog("[WAR] trying to add existing component %s "
-                 "on game object [0x%X] - returning existing 0x%X",
+                 "on game object [0x%lX] - returning existing 0x%lX",
                  typeid(T).name(),
                  this,
                  _components[typeid(T).hash_code()].get());
@@ -407,12 +407,10 @@ class GameObject
     friend class GameObjectsFactory;
 
 #ifdef DEBUG_BUILD
+    StringV DumpComponents(size_t indent);
+    StringV DumpEffects(size_t indent);
     friend class DevConsole;
 #endif
 };
-
-#ifdef DEBUG_BUILD
-extern std::unordered_map<uint64_t, GameObject*> GameObjectsById;
-#endif
 
 #endif

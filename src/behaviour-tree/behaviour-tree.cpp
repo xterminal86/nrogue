@@ -22,7 +22,7 @@ Node::Node(GameObject* objectToControl)
 
 Node::~Node()
 {
-  //DebugLog("0x%X dtor\n", this);
+  //DebugLog("0x%lX dtor\n", this);
 }
 
 // =============================================================================

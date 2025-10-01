@@ -552,4 +552,89 @@ namespace Util
   }
 }
 
+// -----------------------------------------------------------------------------
+#ifdef DEBUG_BUILD
+//
+// Helper macros for creating introspection info.
+//
+#define I_STR(spaces, value) \
+  Util::StringFormat("%s  '%s': '%s',", spaces.data(), #value, value.data())
+
+#define I_STR_NAMED(spaces, name, value) \
+  Util::StringFormat("%s  '%s': '%s',", spaces.data(), name, value.data())
+
+#define I_CSTR(spaces, value) \
+  Util::StringFormat("%s  '%s': '%s',", spaces.data(), #value, value)
+
+#define I_CSTR_NAMED(spaces, name, value) \
+  Util::StringFormat("%s  '%s': '%s',", spaces.data(), name, value)
+
+#define I_ULL(spaces, value) \
+  Util::StringFormat("%s  '%s': %llu,", spaces.data(), #value, value)
+
+#define I_CLR(spaces, color) \
+  Util::StringFormat("%s  '%s': %06X,", spaces.data(), #color, color)
+
+#define I_INT(spaces, value) \
+  Util::StringFormat("%s  '%s': %d,", spaces.data(), #value, value)
+
+#define I_BOOL(spaces, value) \
+  Util::StringFormat("%s  '%s': %u,", spaces.data(), #value, value)
+
+#define I_PTR(spaces, addr) \
+  Util::StringFormat("%s  '%s': 0x%lX,", spaces.data(), #addr, addr)
+
+#define I_PTR_NAMED(spaces, name, addr) \
+  Util::StringFormat("%s  '%s': 0x%lX,", spaces.data(), name, addr)
+
+#define I_OBJ_START(spaces, thisPtr) \
+  Util::StringFormat("%s'0x%lX': {", spaces.data(), thisPtr)
+
+#define I_OBJ_START_NAMED(spaces, name) \
+  Util::StringFormat("%s'%s': {", spaces.data(), name)
+
+#define I_OBJ_END(spaces) \
+  Util::StringFormat("%s},", spaces.data())
+
+#define I_EMPTY(spaces, name) \
+  Util::StringFormat("%s  '%s': {},", spaces.data(), name)
+
+#define DUMP_ATTR()                                         \
+  [this]()                                                  \
+  {                                                         \
+    bool firstObj = true;                                   \
+                                                            \
+    std::string modsByObjs;                                 \
+    for (auto& kvp : _modifiersByGoId)                      \
+    {                                                       \
+      if (!firstObj)                                        \
+      {                                                     \
+        modsByObjs += ",";                                  \
+      }                                                     \
+                                                            \
+      bool firstMod = true;                                 \
+      auto modStr = Util::StringFormat("%llu(", kvp.first); \
+      for (const int& modifier : kvp.second)                \
+      {                                                     \
+        if (!firstMod)                                      \
+        {                                                   \
+          modStr += ",";                                    \
+        }                                                   \
+                                                            \
+        modStr += Util::StringFormat("%d", modifier);       \
+                                                            \
+        firstMod = false;                                   \
+      }                                                     \
+      modStr += ")";                                        \
+      modsByObjs += modStr;                                 \
+      firstObj = false;                                     \
+    }                                                       \
+                                                            \
+    return modsByObjs;                                      \
+  }()
+
+extern StringV DumpObj(void* ptr);
+#endif
+// -----------------------------------------------------------------------------
+
 #endif

@@ -63,6 +63,10 @@ struct ItemBonusStruct
   uint64_t Id = 0;
 
   std::vector<std::string> ToStrings();
+
+#ifdef DEBUG_BUILD
+  StringV Dump(size_t indent = 0);
+#endif
 };
 
 //

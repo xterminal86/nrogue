@@ -73,12 +73,19 @@ void AIModelBase::ConstructAI()
     Node* task   = nullptr;
     Node* parent = nullptr;
 
-    //std::string addInfo1 = nodeData->Params.size() != 0 ? nodeData->Params.at("p1") : "";
-    //std::string addInfo2 = parentNodeData->Params.size() != 0 ? parentNodeData->Params.at("p1") : "";
+    //std::string addInfo1 = nodeData->Params.size() != 0
+    //                       ? nodeData->Params.at("p1")
+    //                       : "";
+    //std::string addInfo2 = parentNodeData->Params.size() != 0
+    //                       ? parentNodeData->Params.at("p1")
+    //                       : "";
 
     if (scriptNodesChecked.count(nodeData) != 1)
     {
-      //DebugLog("\tinstantiate 0x%X (%s, %s)\n", nodeData, nodeData->NodeName.data(), addInfo1.data());
+      //DebugLog("\tinstantiate 0x%lX (%s, %s)\n",
+      //         nodeData,
+      //         nodeData->NodeName.data(),
+      //         addInfo1.data());
       scriptNodesChecked[nodeData] = true;
       task = CreateNode(nodeData);
       behaviourNodesCreated[nodeData] = task;
@@ -86,7 +93,10 @@ void AIModelBase::ConstructAI()
 
     if (scriptNodesChecked.count(parentNodeData) != 1)
     {
-      //DebugLog("\tinstantiate 0x%X (%s, %s)\n", parentNodeData, parentNodeData->NodeName.data(), addInfo2.data());
+      //DebugLog("\tinstantiate 0x%lX (%s, %s)\n",
+      //         parentNodeData,
+      //         parentNodeData->NodeName.data(),
+      //         addInfo2.data());
       scriptNodesChecked[parentNodeData] = true;
       parent = CreateNode(parentNodeData);
       behaviourNodesCreated[parentNodeData] = parent;
@@ -97,7 +107,13 @@ void AIModelBase::ConstructAI()
 
     parentRef->AddNode(taskRef);
 
-    //DebugLog("\n(0x%X)(%s) %s::AddNode(%s) (0x%X)(%s)\n\n", parentNodeData, addInfo2.data(), parentNodeData->NodeName.data(), nodeData->NodeName.data(), nodeData, addInfo1.data());
+    //DebugLog("\n(0x%lX)(%s) %s::AddNode(%s) (0x%lX)(%s)\n\n",
+    //         parentNodeData,
+    //         addInfo2.data(),
+    //         parentNodeData->NodeName.data(),
+    //         nodeData->NodeName.data(),
+    //         nodeData,
+    //         addInfo1.data());
   }
 
   _root.reset(static_cast<Root*>(parentRef));
@@ -126,7 +142,9 @@ void AIModelBase::Update()
     {
       auto res = _root->Run();
 
-      //DebugLog("%s AIModelBase::Update() _root->Run() = %i", AIComponentRef->OwnerGameObject->ObjectName.data(), (int)res);
+      //DebugLog("%s AIModelBase::Update() _root->Run() = %i",
+      //         AIComponentRef->OwnerGameObject->ObjectName.data(),
+      //         (int)res);
 
       //
       // TODO: should we add [RESET] node to reset behaviour when we
@@ -954,7 +972,7 @@ void AIModelBase::PrintBrains(Node* n, int indent)
   std::string tabs(indent, '.');
 
   std::string nodeName = n->ToString();
-  DebugLog("%s0x%X - %s\n", tabs.data(), n, nodeName.data());
+  DebugLog("%s0x%lX - %s\n", tabs.data(), n, nodeName.data());
 
   ControlNode* cn = dynamic_cast<ControlNode*>(n);
   if (cn)

@@ -17,8 +17,6 @@
 
 #ifdef DEBUG_BUILD
 #include "dev-console.h"
-
-std::unordered_map<uint64_t, GameObject*> GameObjectsById;
 #endif
 
 GameObject::GameObject(MapLevelBase* levelOwner)
@@ -30,7 +28,8 @@ GameObject::GameObject(MapLevelBase* levelOwner)
 
 #ifdef DEBUG_BUILD
   GameObjectsById[_objectId] = this;
-  HexAddressString = Util::StringFormat("0x%X", this);
+  HexAddressString = Util::StringFormat("0x%lX", this);
+  AnyObjectByAddr[HexAddressString] = this;
 #endif
 }
 
@@ -49,7 +48,7 @@ GameObject::GameObject(MapLevelBase *levelOwner,
 
 #ifdef DEBUG_BUILD
   GameObjectsById[_objectId] = this;
-  HexAddressString = Util::StringFormat("0x%X", this);
+  HexAddressString = Util::StringFormat("0x%lX", this);
 #endif
 }
 
@@ -86,6 +85,8 @@ GameObject::~GameObject()
       }
     }
   }
+
+  AnyObjectByAddr.erase(HexAddressString);
 #endif
 }
 
@@ -1793,107 +1794,136 @@ StringV GameObject::Dump(size_t indent)
 
   StringV res;
 
-  res.push_back(
-    Util::StringFormat("%s'0x%X': {", spaces.data(), this)
-  );
+  res.push_back( I_OBJ_START(spaces, this) );
 
-  res.push_back(
-    Util::StringFormat("%s  'ObjName': '%s',", spaces.data(), ObjectName.data())
-  );
-
-  res.push_back(
-    Util::StringFormat("%s  '_objectId': %llu,", spaces.data(), _objectId)
-  );
+  res.push_back( I_STR(spaces, ObjectName) );
+  res.push_back( I_STR(spaces, FogOfWarName) );
+  res.push_back( I_ULL(spaces, _objectId) );
 
   std::string ch = { (char)Image };
-  res.push_back(
-    Util::StringFormat("%s  'Image': '%s',", spaces.data(), ch.data())
-  );
+  res.push_back( I_STR_NAMED(spaces, STRINGIFY(Image), ch) );
 
   Position pos = { PosX, PosY };
-  res.push_back(
-    Util::StringFormat("%s  'Position': '%s',", spaces.data(), pos.ToString().data())
-  );
+  res.push_back( I_STR_NAMED(spaces, STRINGIFY(Position), pos.ToString()) );
 
-  res.push_back(
-    Util::StringFormat("%s  'FgColor': %06X,", spaces.data(), FgColor)
-  );
+  res.push_back( I_CLR(spaces, FgColor) );
+  res.push_back( I_CLR(spaces, BgColor) );
 
-  res.push_back(
-    Util::StringFormat("%s  'BgColor': %06X,", spaces.data(), BgColor)
-  );
-
-  auto vr = VisibilityRadius.Dump("VisibilityRadius", indent + 4);
+  auto vr = VisibilityRadius.Dump(STRINGIFY(VisibilityRadius), indent + 2);
   for (auto& i : vr)
   {
     res.push_back(i);
   }
 
-  // Components
+  res.push_back( I_INT(spaces, Money) );
+  res.push_back( I_INT(spaces, ZoneMarker) );
+
+  res.push_back( I_BOOL(spaces, Special) );
+  res.push_back( I_BOOL(spaces, Blocking) );
+  res.push_back( I_BOOL(spaces, BlocksSight) );
+  res.push_back( I_BOOL(spaces, Revealed) );
+  res.push_back( I_BOOL(spaces, Corporeal) );
+  res.push_back( I_BOOL(spaces, Visible) );
+  res.push_back( I_BOOL(spaces, Occupied) );
+  res.push_back( I_BOOL(spaces, IsDestroyed) );
+  res.push_back( I_BOOL(spaces, IsLiving) );
+
+  res.push_back( I_ULL(spaces, StackObjectId) );
+
+  auto str = Attrs.Dump(STRINGIFY(Attrs), indent + 2);
+  for (auto& i : str)
+  {
+    res.push_back(i);
+  }
+
+  res.push_back( I_INT(spaces, HealthRegenTurns) );
+  res.push_back( I_INT(spaces, Type) );
+  res.push_back( I_ULL(spaces, RemainsOf) );
+  res.push_back( I_PTR(spaces, _previousCell) );
+  res.push_back( I_PTR(spaces, _currentCell) );
+  res.push_back( I_PTR(spaces, _levelOwner) );
+  res.push_back( I_INT(spaces, _healthRegenTurnsCounter) );
+  res.push_back( I_INT(spaces, _manaRegenTurnsCounter) );
+  res.push_back( I_INT(spaces, _skipTurnsCounter) );
+
+  auto c = DumpComponents(indent);
+  for (auto& line : c)
+  {
+    res.push_back(line);
+  }
+
+  auto e = DumpEffects(indent);
+  for (auto& line : e)
+  {
+    res.push_back(line);
+  }
+
+  res.push_back( I_OBJ_END(spaces) );
+
+  return res;
+}
+
+StringV GameObject::DumpComponents(size_t indent)
+{
+  const std::string spaces(indent, ' ');
+  const std::string spaces2(indent + 2, ' ');
+
+  StringV res;
 
   if (_components.empty())
   {
-    res.push_back(
-      Util::StringFormat("%s  '_components': {},", spaces.data())
-    );
+    res.push_back( I_EMPTY(spaces, STRINGIFY(_components)) );
   }
   else
   {
-    res.push_back(
-      Util::StringFormat("%s  '_components': {", spaces.data())
-    );
+    res.push_back( I_OBJ_START_NAMED(spaces2, STRINGIFY(_components)) );
 
     for (auto& kvp : _components)
     {
-      auto data = kvp.second->Dump(indent + 4);
-      for (auto& i : data)
-      {
-        res.push_back(i);
-      }
+      //
+      // Display only addresses for brevity, you can inspect them separately.
+      //
+      Component* c = kvp.second.get();
+      std::string name = (c != nullptr) ? (typeid(*c).name()) : "0x0";
+
+      res.push_back( I_PTR_NAMED(spaces2, name.data(), c) );
     }
 
-    res.push_back(
-      Util::StringFormat("%s  },", spaces.data())
-    );
+    res.push_back( I_OBJ_END(spaces2) );
   }
 
-  // Effects
+  return res;
+}
 
-  res.push_back(
-    Util::StringFormat("%s  '_activeEffects': {},", spaces.data())
-  );
+StringV GameObject::DumpEffects(size_t indent)
+{
+  const std::string spaces(indent, ' ');
+  const std::string spaces2(indent + 2, ' ');
 
-  /*
+  StringV res;
+
   if (_activeEffects.empty())
   {
-    res.push_back(
-      Util::StringFormat("%s  '_activeEffects': {},", spaces.data())
-    );
+    res.push_back( I_EMPTY(spaces, STRINGIFY(_activeEffects)) );
   }
   else
   {
-    res.push_back(
-      Util::StringFormat("%s  '_activeEffects': {", spaces.data())
-    );
+    res.push_back( I_OBJ_START_NAMED(spaces2, STRINGIFY(_activeEffects)) );
 
     for (auto& kvp : _activeEffects)
     {
-      auto data = kvp.second->Inspect(indent + 2);
-      for (auto& i : data)
+      for (auto& e : kvp.second)
       {
-        res.push_back(i);
+        auto lines = e.Dump(indent + 4);
+        for (auto& line : lines)
+        {
+          res.push_back(line);
+        }
       }
     }
 
-    res.push_back(
-      Util::StringFormat("%s  },", spaces.data())
-    );
+    res.push_back( I_OBJ_END(spaces2) );
   }
-  */
-
-  res.push_back(
-    Util::StringFormat("%s}", spaces.data())
-  );
 
   return res;
 }

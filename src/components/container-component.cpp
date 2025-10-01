@@ -64,7 +64,7 @@ bool ContainerComponent::Add(GameObject* object)
       }
     }
 
-    //auto msg = Util::StringFormat("Picked up 0x%X", object);
+    //auto msg = Util::StringFormat("Picked up 0x%lX", object);
     //Logger::Instance().Print(msg);
 
     if (!foundStack)

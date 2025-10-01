@@ -956,7 +956,7 @@ std::string NRS::DumpObjectStructureToString()
 
       for (auto& item : node->_content)
       {
-        sprintf(buf, "0x%X", &item);
+        sprintf(buf, "0x%lX", &item);
         ss << indentation << item << " (" << buf << ")\n";
       }
     }
@@ -968,7 +968,7 @@ std::string NRS::DumpObjectStructureToString()
 
       for (auto& p : node->_children)
       {
-        sprintf(buf, "0x%X", &p.second);
+        sprintf(buf, "0x%lX", &p.second);
         ss << indentation << "'" << p.first << "'"
            << " (" << buf << ")"
            << "\n";
@@ -978,7 +978,7 @@ std::string NRS::DumpObjectStructureToString()
   };
 
   char buf[32];
-  sprintf(buf, "0x%X", this);
+  sprintf(buf, "0x%lX", this);
   ss << "--- start of [NRS] (" << buf << ") ---\n";
 
   DumpIntl(this, ss, 0);

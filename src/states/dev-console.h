@@ -106,7 +106,7 @@ class DevConsole : public GameState
 
     std::string _currentCommand;
 
-    MsgScrollBuffer<std::string> _stdout{23, 4};
+    MsgScrollBuffer<std::string> _stdout{23, 6};
 
     std::vector<std::string> _commandsHistory;
 
@@ -116,7 +116,7 @@ class DevConsole : public GameState
 
     bool _closedByCommand = false;
 
-    const size_t _maxHistory = 50;
+    const size_t _maxHistory = 100;
 
     const std::string ErrUnknownCommand = "%s: command not found...";
     const std::string ErrSyntaxError    = "Syntax error";
@@ -129,6 +129,7 @@ class DevConsole : public GameState
     const std::string ErrCmdNotHandled  = "Command not handled";
     const std::string ErrCantLevelDown  = "Error: current level is 1";
     const std::string ErrEventNotFound  = "!%d: event not found";
+    const std::string ErrNotAHexString  = "Address must be in '0x%lX' format!";
 
     const std::string Ok = "Ok";
     const std::string Prompt = "> ";
@@ -222,6 +223,7 @@ class DevConsole : public GameState
     bool StringIsNumbers(const std::string& str);
     std::pair<int, int> CoordinateParamsToInt(const std::string& px,
                                               const std::string& py);
+    bool ParamIsHex(const std::string& param, std::string& out);
 
     void ReportHandle(ObjectHandleType handleType);
 
@@ -405,7 +407,7 @@ class DevConsole : public GameState
         _commandNameByType.at(DevConsoleCommand::GET_BY_ADDRESS),
         {
           "Usage: " +
-          _commandNameByType.at(DevConsoleCommand::GET_BY_ADDRESS) + " [0x%X]",
+          _commandNameByType.at(DevConsoleCommand::GET_BY_ADDRESS) + " [0x%lX]",
           "Get game object by address. "
           "Print debug info if handle already set."
         }
@@ -494,8 +496,8 @@ class DevConsole : public GameState
         {
           "Usage: " +
           _commandNameByType.at(DevConsoleCommand::INSPECT) +
-          " <%lu | 0x%X>",
-          "Inspect any object by id or hex address"
+          " 0x%lX",
+          "Inspect any object by hex address"
         }
       },
       {

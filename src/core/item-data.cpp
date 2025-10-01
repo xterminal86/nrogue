@@ -161,3 +161,28 @@ std::vector<std::string> ItemBonusStruct::ToStrings()
 
   return res;
 }
+
+#ifdef DEBUG_BUILD
+StringV ItemBonusStruct::Dump(size_t indent)
+{
+  const std::string spaces(indent, ' ');
+
+  StringV res;
+
+  res.push_back( I_OBJ_START(spaces, this) );
+
+  res.push_back( I_INT(spaces, Type) );
+  res.push_back( I_INT(spaces, BonusValue) );
+  res.push_back( I_INT(spaces, Duration) );
+  res.push_back( I_INT(spaces, Period) );
+  res.push_back( I_INT(spaces, EffectCounter) );
+  res.push_back( I_INT(spaces, MoneyCostIncrease) );
+  res.push_back( I_BOOL(spaces, Cumulative) );
+  res.push_back( I_BOOL(spaces, Persistent) );
+  res.push_back( I_ULL(spaces, Id) );
+
+  res.push_back( I_OBJ_END(spaces) );
+
+  return res;
+}
+#endif

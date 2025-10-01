@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "util.h"
+#include "globals.h"
 #endif
 
 class GameObject;
@@ -19,7 +20,7 @@ class Component
   public:
     Component();
 
-    virtual ~Component() = default;
+    virtual ~Component();
 
     void Prepare(GameObject* owner);
 

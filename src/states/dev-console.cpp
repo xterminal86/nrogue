@@ -35,7 +35,7 @@ void DevConsole::Init()
   StdOut("\"Ryder, nigga!\"");
   StdOut("");
   StdOut("Type 'help commands' for a list of available commands");
-  StdOut("Hit 'TAB' for autocompletion, numpad 2, 8 to scroll.");
+  StdOut("Hit 'TAB' for autocompletion, numpad to scroll.");
 }
 
 // =============================================================================
@@ -313,6 +313,7 @@ void DevConsole::HandleInput()
 
     // -------------------------------------------------------------------------
 
+    case NUMPAD_5:
     case NUMPAD_2:
     {
       _stdout.ScrollDown();
@@ -776,36 +777,12 @@ void DevConsole::GetObjectByAddress(const StringV& params)
 
   std::string str = params[0];
 
-  auto res = Util::StringSplit(str, 'x');
-  if (res.size() == 1 || res.size() > 2)
+  std::string hexAddr;
+  if (!ParamIsHex(str, hexAddr))
   {
-    StdOut(ErrWrongParams);
+    StdOut(ErrNotAHexString);
     return;
   }
-
-  std::string addr = res[1];
-  std::transform(addr.begin(),
-                 addr.end(),
-                 addr.begin(),
-                 [](unsigned char c)
-                 {
-                   return std::toupper(c);
-                 });
-
-  for (auto& c : addr)
-  {
-    auto found = std::find(Strings::HexChars.begin(),
-                           Strings::HexChars.end(),
-                           c);
-
-    if (found == Strings::HexChars.end())
-    {
-      StdOut(ErrWrongParams);
-      return;
-    }
-  }
-
-  std::string hexAddr = "0x" + addr;
 
   _objectHandles[ObjectHandleType::ANY] =
       _currentLevel->FindObjectByAddress(hexAddr);
@@ -1078,7 +1055,7 @@ void DevConsole::InfoHandles()
   for (auto& kvp : _handleNameByType)
   {
     std::string spaces(maxLen - kvp.second.length(), ' ');
-    std::string msg = Util::StringFormat("%s%s = 0x%X",
+    std::string msg = Util::StringFormat("%s%s = 0x%lX",
                                          kvp.second.data(),
                                          spaces.data(),
                                          _objectHandles[kvp.first]);
@@ -1831,7 +1808,7 @@ void DevConsole::PrintTriggers()
 
   for (auto& t : _currentLevel->FinishTurnTriggers)
   {
-    auto str = Util::StringFormat("0x%X at %i %i", t.get(), t->PosX, t->PosY);
+    auto str = Util::StringFormat("0x%lX at %i %i", t.get(), t->PosX, t->PosY);
     StdOut(str);
   }
 }
@@ -1846,7 +1823,7 @@ void DevConsole::PrintActors()
 
   for (auto& a : _currentLevel->ActorGameObjects)
   {
-    auto str = Util::StringFormat("0x%X at %i %i",
+    auto str = Util::StringFormat("0x%lX at %i %i",
                                   a.get(), a->PosX, a->PosY);
     StdOut(str);
   }
@@ -1922,8 +1899,26 @@ void DevConsole::LaunchProjectile(const StringV& params)
 
 void DevConsole::Inspect(const StringV& params)
 {
-  // TODO:
-  StdOut("Not implemented yet");
+  if (params.size() != 1)
+  {
+    StdOut(ErrWrongParams);
+    return;
+  }
+
+  std::string n = params[0];
+
+  std::string hexString;
+  if (!ParamIsHex(n, hexString))
+  {
+    StdOut(ErrNotAHexString);
+    return;
+  }
+
+  bool objFound = (AnyObjectByAddr.count(hexString) == 1);
+
+  StringV lines = DumpObj(objFound ? AnyObjectByAddr[hexString] : nullptr);
+
+  PrintDebugInfo(lines);
 }
 
 #ifdef DEBUG_BUILD
@@ -2141,9 +2136,45 @@ std::pair<int, int> DevConsole::CoordinateParamsToInt(const std::string &px,
 
 // =============================================================================
 
+bool DevConsole::ParamIsHex(const std::string& param, std::string& out)
+{
+  auto res = Util::StringSplit(param, 'x');
+  if (res.size() == 1 || res.size() > 2)
+  {
+    return false;
+  }
+
+  std::string addr = res[1];
+  std::transform(addr.begin(),
+                 addr.end(),
+                 addr.begin(),
+                 [](unsigned char c)
+                 {
+                   return std::toupper(c);
+                 });
+
+  for (auto& c : addr)
+  {
+    auto found = std::find(Strings::HexChars.begin(),
+                           Strings::HexChars.end(),
+                           c);
+
+    if (found == Strings::HexChars.end())
+    {
+      return false;
+    }
+  }
+
+  out = "0x" + addr;
+
+  return true;
+}
+
+// =============================================================================
+
 void DevConsole::ReportHandle(ObjectHandleType handleType)
 {
-  std::string msg = Util::StringFormat("%s = 0x%X",
+  std::string msg = Util::StringFormat("%s = 0x%lX",
                                        _handleNameByType.at(handleType).data(),
                                        _objectHandles[handleType]);
   StdOut(msg);
