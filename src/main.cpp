@@ -32,7 +32,7 @@
 // provided you have distro specific ncurses-dev / SDL2-dev
 // packages installed.
 //
-extern "C" int main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
   if (!Game::Init())
   {
