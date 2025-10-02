@@ -10,7 +10,7 @@ save.nrg
 core.*
 *.txt
 !config-template.txt
-!SDL2-QT-config.txt
+!SDL2 QT Creator config.txt
 !CMakeLists.txt
 !tests/README.txt
 *.out
