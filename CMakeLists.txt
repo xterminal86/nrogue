@@ -8,7 +8,7 @@ project (${TARGET_NAME})
 
 if (WIN32 AND NOT MSVC)
   message("Configuration: 'WIN32 AND NOT MSVC'")
-  set (CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static -mwindows")
+  set (CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static -mwindows -lSDL2main -lSDL2")
 endif()
 
 # ==============================================================================
@@ -155,21 +155,12 @@ endif()
 if (USE_SDL)
   include_directories(${SDL2_INCLUDE_DIRS})
 
-  if (WIN32)
-    message("*** Linking for WIN32...")
+  if (WIN32 AND NOT MSVC)    
+    message("*** Linking for MinGW or something...")
     message("*** Mingw32 library:  '${MINGW32_LIBRARY}'")
     message("*** SDL2Main library: '${SDL2MAIN_LIBRARY}'")
     message("*** SDL2 library:     '${SDL2_LIBRARY}'")
-    if (NOT MSVC)
-      message("*** Not MSVC")
-      target_link_libraries(${TARGET_NAME} SDL2::SDL2main SDL2::SDL2)
-    else()
-      target_link_libraries(
-        ${TARGET_NAME} 
-        ${MINGW32_LIBRARY}
-        ${SDL2_LIBRARIES}
-      )
-    endif()
+    target_link_libraries(${TARGET_NAME} ${MINGW32_LIBRARY} ${SDL2MAIN_LIBRARY} ${SDL2_LIBRARY})    
   else()
     message("*** Linking for Linux or whatever...")
     target_link_libraries(${TARGET_NAME} ${SDL2_LIBRARIES})
