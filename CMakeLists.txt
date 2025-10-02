@@ -158,11 +158,13 @@ if (USE_SDL)
 
   if (WIN32)
     message("Linking for WIN32...")
+    message("Mingw32 library ${MINGW32_LIBRARY}")
+    message("SDL2Main library ${SDL2MAIN_LIBRARY}")
+    message("SDL2 library ${SDL2_LIBRARY}")
     target_link_libraries(
       ${TARGET_NAME} 
       ${MINGW32_LIBRARY}
-      ${SDL2MAIN_LIBRARY}
-      ${SDL2_LIBRARY}
+      ${SDL2_LIBRARIES}
     )
   else()
     message("Linking for Linux or whatever...")
