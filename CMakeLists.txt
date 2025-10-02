@@ -8,7 +8,7 @@ project (${TARGET_NAME})
 
 if (WIN32 AND NOT MSVC)
   message("Configuration: 'WIN32 AND NOT MSVC'")
-  set (CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
+  set (CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static -mwindows")
 endif()
 
 # ==============================================================================
@@ -45,13 +45,13 @@ endif()
 
 if (USE_SDL)
   find_package(SDL2 REQUIRED)
-  message("*** SDL2 library found at ${SDL2_INCLUDE_DIRS}")
-  message("*** SDL2 library is       ${SDL2_LIBRARIES}")
+  message("*** SDL2 library found at: '${SDL2_INCLUDE_DIRS}'")
+  message("*** SDL2_LIBRARIES:        '${SDL2_LIBRARIES}'")
   add_definitions(-DUSE_SDL)
 else()
   find_package(Curses REQUIRED)
-  message("*** curses library found at ${CURSES_INCLUDE_DIRS}")
-  message("*** curses library is       ${CURSES_LIBRARIES}")
+  message("*** curses library found at: '${CURSES_INCLUDE_DIRS}'")
+  message("*** CURSES_LIBRARIES:        '${CURSES_LIBRARIES}'")
 endif()
 
 if (BUILD_TESTS)
@@ -153,26 +153,30 @@ else()
 endif()
 
 if (USE_SDL)
-  message("Using SDL library")
   include_directories(${SDL2_INCLUDE_DIRS})
 
   if (WIN32)
-    message("Linking for WIN32...")
-    message("Mingw32 library: '${MINGW32_LIBRARY}'")
-    message("SDL2Main library: '${SDL2MAIN_LIBRARY}'")
-    message("SDL2 library: '${SDL2_LIBRARY}'")
-    target_link_libraries(
-      ${TARGET_NAME} 
-      ${MINGW32_LIBRARY}
-      ${SDL2_LIBRARIES}
-    )
+    message("*** Linking for WIN32...")
+    message("*** Mingw32 library:  '${MINGW32_LIBRARY}'")
+    message("*** SDL2Main library: '${SDL2MAIN_LIBRARY}'")
+    message("*** SDL2 library:     '${SDL2_LIBRARY}'")
+    if (NOT MSVC)
+      message("*** Not MSVC")
+      target_link_libraries(${TARGET_NAME} SDL2::SDL2main SDL2::SDL2)
+    else()
+      target_link_libraries(
+        ${TARGET_NAME} 
+        ${MINGW32_LIBRARY}
+        ${SDL2_LIBRARIES}
+      )
+    endif()
   else()
-    message("Linking for Linux or whatever...")
+    message("*** Linking for Linux or whatever...")
     target_link_libraries(${TARGET_NAME} ${SDL2_LIBRARIES})
   endif()
 
 else()
-  message("Using ncurses library")
+  message("*** Using ncurses library")
   include_directories(${CURSES_INCLUDE_DIRS})
   target_link_libraries(${TARGET_NAME} ${CURSES_LIBRARIES})
 endif()
