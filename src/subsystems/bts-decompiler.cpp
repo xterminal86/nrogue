@@ -3,8 +3,13 @@
 #include "constants.h"
 #include "util.h"
 
-void BTSDecompiler::InitSpecific()
+void BTSDecompiler::Init()
 {
+  if (_initialized)
+  {
+    return;
+  }
+
   std::unordered_map<std::string, uint8_t> opcodesByName;
   std::unordered_map<std::string, uint8_t> taskParamsByName;
 
@@ -30,6 +35,8 @@ void BTSDecompiler::InitSpecific()
 
   _taskByOpcode  = Util::FlipMap(opcodesByName);
   _paramByOpcode = Util::FlipMap(taskParamsByName);
+
+  _initialized = true;
 }
 
 // =============================================================================

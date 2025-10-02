@@ -4,13 +4,12 @@
 #include <fstream>
 #include <string>
 
-#include "singleton.h"
 #include "util.h"
 
-class Logger : public Singleton<Logger>
+class Logger
 {
   public:
-    ~Logger() override;
+    ~Logger();
 
     void Prepare(bool enabled);
     void Print(const std::string& stringToPrint, bool error = false);
@@ -18,17 +17,17 @@ class Logger : public Singleton<Logger>
     template <typename ... Args>
     void Printf(const std::string& format, Args ... args)
     {
-      std::string str = Util::StringFormat(format, args ...);
-      Print(str);
+      // FIXME: Util has not been declared bs
+      //std::string str = Util::StringFormat(format, args ...);
+      //Print(str);
     }
-
-  protected:
-    void InitSpecific() override;
 
   private:
     std::ofstream _logFile;
 
     bool _enabled = true;
+
+    bool _started = false;
 };
 
 #endif

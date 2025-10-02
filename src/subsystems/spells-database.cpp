@@ -1,7 +1,12 @@
 #include "spells-database.h"
 
-void SpellsDatabase::InitSpecific()
+void SpellsDatabase::Init()
 {
+  if (_initialized)
+  {
+    return;
+  }
+
   auto& sn = GlobalConstants::SpellShortNameByType;
 
   RegisterSpell({
@@ -152,6 +157,8 @@ void SpellsDatabase::InitSpecific()
                   sn.at(SpellType::MANA_SHIELD),
                   200
                 });
+
+  _initialized = true;
 }
 
 // =============================================================================

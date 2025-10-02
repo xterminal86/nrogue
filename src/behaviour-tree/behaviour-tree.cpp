@@ -10,7 +10,7 @@
 // +---------------------------------------------------------------------------+
 Node::Node(GameObject* objectToControl)
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 
   if (objectToControl != nullptr)
   {

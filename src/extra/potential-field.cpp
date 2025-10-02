@@ -93,7 +93,7 @@ void PotentialField::Emanate()
 void PotentialField::LookAround(const Position& mapPos,
                                 std::queue<Position>& cellsToVisit)
 {
-  auto& curLvl = Map::Instance().CurrentLevel;
+  auto& curLvl = Game::gMap.CurrentLevel;
 
   Position fieldPos = MapToFieldCoords(mapPos);
 

@@ -22,8 +22,8 @@ BTResult TaskTryPickupItems::Run()
     return BTResult::Failure;
   }
 
-  auto items = Map::Instance().GetGameObjectsToPickup(_objectToControl->PosX,
-                                                      _objectToControl->PosY);
+  auto items = Game::gMap.GetGameObjectsToPickup(_objectToControl->PosX,
+                                                   _objectToControl->PosY);
 
   if (items.empty())
   {
@@ -93,7 +93,7 @@ bool TaskTryPickupItems::PickupItems(const Items& items,
 
 void TaskTryPickupItems::Pickup(const Item& item)
 {
-  auto go = Map::Instance().CurrentLevel->GameObjects[item.first].get();
+  auto go = Game::gMap.CurrentLevel->GameObjects[item.first].get();
   ItemComponent* ic = go->GetComponent<ItemComponent>();
   if (ic->Data.ItemType_ == ItemType::COINS)
   {
@@ -101,10 +101,10 @@ void TaskTryPickupItems::Pickup(const Item& item)
   }
   else
   {
-    go = Map::Instance().CurrentLevel->GameObjects[item.first].release();
+    go = Game::gMap.CurrentLevel->GameObjects[item.first].release();
     _inventoryRef->Add(go);
   }
 
-  auto it = Map::Instance().CurrentLevel->GameObjects.begin();
-  Map::Instance().CurrentLevel->GameObjects.erase(it + item.first);
+  auto it = Game::gMap.CurrentLevel->GameObjects.begin();
+  Game::gMap.CurrentLevel->GameObjects.erase(it + item.first);
 }

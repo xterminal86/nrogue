@@ -14,7 +14,7 @@ TaskPrintMessage::TaskPrintMessage(GameObject *objectToControl,
 
 BTResult TaskPrintMessage::Run()
 {
-  Printer::Instance().AddMessage(_message);
+  Game::gPrnt.AddMessage(_message);
 
   DebugLog("%s", _message.data());
 

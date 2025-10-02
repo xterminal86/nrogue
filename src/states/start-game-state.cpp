@@ -9,13 +9,13 @@
 
 void StartGameState::HandleInput()
 {
-  Printer::Instance().Clear();
-  Printer::Instance().Render();
+  Game::gPrnt.Clear();
+  Game::gPrnt.Render();
 
-  Map::Instance().LoadTown();
+  Game::gMap.LoadTown();
 
-  auto& curLvl    = Map::Instance().CurrentLevel;
-  auto& playerRef = Application::Instance().PlayerInstance;
+  auto& curLvl    = Game::gMap.CurrentLevel;
+  auto& playerRef = Game::gApp.PlayerInstance;
 
   //
   // Some NPCs contain bonus lines
@@ -35,7 +35,7 @@ void StartGameState::HandleInput()
   MapLevelTown* mlt = static_cast<MapLevelTown*>(curLvl);
   mlt->CreateNPCs();
 
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
+  Game::gApp.ChangeState(GameStates::MAIN_STATE);
 }
 
 // =============================================================================

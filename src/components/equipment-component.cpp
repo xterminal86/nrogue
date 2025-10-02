@@ -16,7 +16,7 @@ EquipmentComponent::EquipmentComponent(ContainerComponent* inventoryRef)
 
   _inventory = inventoryRef;
 
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 }
 
 // =============================================================================
@@ -29,10 +29,10 @@ bool EquipmentComponent::Equip(ItemComponent* item, bool suppressLog)
   {
     if (IsThisPlayer() && !suppressLog)
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                             Strings::MessageBoxEpicFailHeaderText,
-                                             { "Can't be equipped!" },
-                                             Colors::MessageBoxRedBorderColor);
+      Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
+                                 Strings::MessageBoxEpicFailHeaderText,
+                                 { "Can't be equipped!" },
+                                 Colors::MessageBoxRedBorderColor);
     }
 
     return res;
@@ -95,10 +95,10 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item,
           auto str =
               Util::StringFormat("You can't unequip %s - it's cursed!",
                                  rings[i]->OwnerGameObject->ObjectName.data());
-          Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                                 Strings::MessageBoxEpicFailHeaderText,
-                                                 { str },
-                                                 Colors::MessageBoxRedBorderColor);
+          Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
+                                     Strings::MessageBoxEpicFailHeaderText,
+                                     { str },
+                                     Colors::MessageBoxRedBorderColor);
         }
 
         return false;
@@ -126,10 +126,10 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item,
   //
   if (!suppressLog && !emptySlotFound && IsThisPlayer())
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           Strings::MessageBoxEpicFailHeaderText,
-                                           { Strings::MsgUnequipFirst },
-                                           Colors::MessageBoxRedBorderColor);
+    Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
+                               Strings::MessageBoxEpicFailHeaderText,
+                               { Strings::MsgUnequipFirst },
+                               Colors::MessageBoxRedBorderColor);
   }
 
   return false;
@@ -152,7 +152,7 @@ void EquipmentComponent::EquipRing(ItemComponent* ring,
                           ring->OwnerGameObject->ObjectName :
                           ring->Data.UnidentifiedName;
 
-    Printer::Instance().AddMessage(
+    Game::gPrnt.AddMessage(
       Util::StringFormat("You put on %s", objName.data())
     );
   }
@@ -175,7 +175,7 @@ void EquipmentComponent::UnequipRing(ItemComponent* ring,
                           ring->OwnerGameObject->ObjectName :
                           ring->Data.UnidentifiedName;
 
-    Printer::Instance().AddMessage(
+    Game::gPrnt.AddMessage(
       Util::StringFormat("You take off %s", objName.data())
     );
   }
@@ -201,10 +201,10 @@ bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item,
   {
     if (IsThisPlayer() && !suppressLog)
     {
-      Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                             Strings::MessageBoxEpicFailHeaderText,
-                                             { Strings::MsgUnequipFirst },
-                                             Colors::MessageBoxRedBorderColor);
+      Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
+                                 Strings::MessageBoxEpicFailHeaderText,
+                                 { Strings::MsgUnequipFirst },
+                                 Colors::MessageBoxRedBorderColor);
     }
 
     res = false;
@@ -220,10 +220,10 @@ bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item,
         auto str =
             Util::StringFormat("You can't unequip %s - it's cursed!",
                                itemEquipped->OwnerGameObject->ObjectName.data());
-        Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                               Strings::MessageBoxEpicFailHeaderText,
-                                               { str },
-                                               Colors::MessageBoxRedBorderColor);
+        Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
+                                   Strings::MessageBoxEpicFailHeaderText,
+                                   { str },
+                                   Colors::MessageBoxRedBorderColor);
       }
 
       res = false;
@@ -266,7 +266,7 @@ void EquipmentComponent::EquipItem(ItemComponent* item, bool suppressLog)
                           item->OwnerGameObject->ObjectName :
                           item->Data.UnidentifiedName;
 
-    Printer::Instance().AddMessage(
+    Game::gPrnt.AddMessage(
       Util::StringFormat("You %s %s", verb.data(), objName.data())
     );
   }
@@ -298,7 +298,7 @@ void EquipmentComponent::UnequipItem(ItemComponent* item, bool suppressLog)
                         ? item->OwnerGameObject->ObjectName
                         : item->Data.UnidentifiedName;
 
-    Printer::Instance().AddMessage(
+    Game::gPrnt.AddMessage(
       Util::StringFormat("You %s %s", verb.data(), objName.data())
     );
   }

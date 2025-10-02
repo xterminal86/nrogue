@@ -55,10 +55,10 @@ namespace LootGenerators
     {
       case ItemType::FOOD:
       {
-        auto food = ItemsFactory::Instance().CreateFood(go->PosX,
+        auto food = Game::gIF.CreateFood(go->PosX,
                                                         go->PosY,
                                                         FoodType::CHEESE);
-        Map::Instance().PlaceGameObject(food);
+        Game::gMap.PlaceGameObject(food);
       }
       break;
 
@@ -93,26 +93,26 @@ namespace LootGenerators
         };
         auto f = Util::WeightedRandom(foodTable);
 
-        auto food = ItemsFactory::Instance().CreateFood(go->PosX,
+        auto food = Game::gIF.CreateFood(go->PosX,
                                                         go->PosY,
                                                         f.first);
-        Map::Instance().PlaceGameObject(food);
+        Game::gMap.PlaceGameObject(food);
       }
       break;
 
       case ItemType::COINS:
       {
-        auto coins = ItemsFactory::Instance().CreateMoney();
+        auto coins = Game::gIF.CreateMoney();
         coins->PosX = go->PosX;
         coins->PosY = go->PosY;
-        Map::Instance().PlaceGameObject(coins);
+        Game::gMap.PlaceGameObject(coins);
       }
       break;
 
       case ItemType::GEM:
       {
-        auto gem = ItemsFactory::Instance().CreateGem(go->PosX, go->PosY);
-        Map::Instance().PlaceGameObject(gem);
+        auto gem = Game::gIF.CreateGem(go->PosX, go->PosY);
+        Game::gMap.PlaceGameObject(gem);
       }
       break;
 

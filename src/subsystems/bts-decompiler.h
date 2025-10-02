@@ -6,15 +6,12 @@
 #include <cstdint>
 #include <string>
 
-#include "singleton.h"
-
-class BTSDecompiler : public Singleton<BTSDecompiler>
+class BTSDecompiler
 {
   public:
     std::string Decompile(const std::vector<uint8_t>& bytecode);
 
-  protected:
-    void InitSpecific() override;
+    void Init();
 
   private:
     std::unordered_map<uint8_t, std::string> _taskByOpcode;
@@ -22,6 +19,8 @@ class BTSDecompiler : public Singleton<BTSDecompiler>
 
     const uint8_t Nop       = 0xFE;
     const uint8_t ParamsEnd = 0xFF;
+
+    bool _initialized = false;
 };
 
 #endif // BTSDECOMPILER_H

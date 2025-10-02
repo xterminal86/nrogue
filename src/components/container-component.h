@@ -6,6 +6,7 @@
 
 #include "component.h"
 #include "game-object.h"
+#include "constants.h"
 
 class ContainerComponent : public Component
 {

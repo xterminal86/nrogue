@@ -7,10 +7,10 @@
 #define ALT_K8         '-'
 #define ALT_K9         '='
 #define ALT_K4         'p'
-#define ALT_K5         '\''
+#define ALT_K5         '['
 #define ALT_K6         ']'
 #define ALT_K1         ';'
-#define ALT_K2         '['
+#define ALT_K2         '\''
 #define ALT_K3         '\\'
 
 #ifdef USE_SDL

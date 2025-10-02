@@ -3,21 +3,20 @@
 
 #include <cstdint>
 
-#include "singleton.h"
-
-class GID : public Singleton<GID>
+class GID
 {
   public:
+    void Init();
+
     const uint64_t& GenerateGlobalId();
     const uint64_t& GetCurrentGlobalId();
-
-  protected:
-    void InitSpecific() override;
 
   private:
     const uint64_t kStartingValue = 0;
 
     uint64_t _globalId = kStartingValue;
+
+    bool _initialized = false;
 };
 
 #endif // GIDGENERATOR_H

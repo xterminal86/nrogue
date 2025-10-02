@@ -210,7 +210,7 @@ void MapLevelCaves::CreateCommonObjects(int x, int y, char image)
 
     case '+':
     {
-      GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false);
+      GameObject* door = Game::gGOF.CreateDoor(x, y, false);
       PlaceStaticObject(door);
     }
     break;
@@ -258,9 +258,9 @@ void MapLevelCaves::CreateCommonObjects(int x, int y, char image)
                       y,
                       ' ',
                       Colors::BlackColor,
-                      (image == '1')
-                    ? Colors::ShadesOfGrey::Four
-                    : Colors::ShadesOfGrey::Twelve,
+                      (image == '1') ?
+                      Colors::ShadesOfGrey::Four :
+                      Colors::ShadesOfGrey::Twelve,
                       Strings::TileNames::TiledFloorText);
       break;
   }
@@ -283,8 +283,8 @@ void MapLevelCaves::CreateSpecialLevel()
   const int startX = 18;
   const int startY = 7;
 
-  GameObjectsFactory::Instance().CreateTrigger(TriggerType::ONE_SHOT,
-                                               TriggerUpdateType::FINISH_TURN,
+  Game::gGOF.CreateTrigger(TriggerType::ONE_SHOT,
+                            TriggerUpdateType::FINISH_TURN,
   [this, startX, startY]()
   {
     return !(_playerRef->PosX == startX
@@ -303,7 +303,7 @@ void MapLevelCaves::CreateSpecialLevel()
     sc->OwnerGameObject->ObjectName = Strings::TileNames::GroundText;
     sc->IsEnabled = false;
 
-    Printer::Instance().AddMessage("Suddenly the stairs slide up!");
+    Game::gPrnt.AddMessage("Suddenly the stairs slide up!");
   });
 
   for (auto& line : _specialLevel)
@@ -320,11 +320,11 @@ void MapLevelCaves::CreateSpecialLevel()
           LevelStart.X = posX;
           LevelStart.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this,
-                                                      LevelStart.X,
-                                                      LevelStart.Y,
-                                                      c,
-                                                      stairsUpTo);
+          Game::gGOF.CreateStairs(this,
+                                  LevelStart.X,
+                                  LevelStart.Y,
+                                  c,
+                                  stairsUpTo);
         }
         break;
 
@@ -333,11 +333,11 @@ void MapLevelCaves::CreateSpecialLevel()
           LevelExit.X = posX;
           LevelExit.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this,
-                                                      LevelExit.X,
-                                                      LevelExit.Y,
-                                                      c,
-                                                      stairsDownTo);
+          Game::gGOF.CreateStairs(this,
+                                  LevelExit.X,
+                                  LevelExit.Y,
+                                  c,
+                                  stairsDownTo);
         }
         break;
 
@@ -392,25 +392,25 @@ void MapLevelCaves::CreateSpecialLevel()
 
 void MapLevelCaves::CreateRivers()
 {
-  int num = RNG::Instance().RandomRange(10, 21);
+  int num = Game::gRng.RandomRange(10, 21);
 
   for (int i = 0; i < num; i++)
   {
     Position start, end;
 
-    bool isVertical = (RNG::Instance().RandomRange(0, 2) == 0);
+    bool isVertical = (Game::gRng.RandomRange(0, 2) == 0);
     if (isVertical)
     {
-      int x1 = RNG::Instance().RandomRange(0, MapSize.X);
-      int x2 = RNG::Instance().RandomRange(0, MapSize.X);
+      int x1 = Game::gRng.RandomRange(0, MapSize.X);
+      int x2 = Game::gRng.RandomRange(0, MapSize.X);
 
       start.Set(0, x1);
       end.Set(MapSize.Y - 1, x2);
     }
     else
     {
-      int y1 = RNG::Instance().RandomRange(0, MapSize.Y);
-      int y2 = RNG::Instance().RandomRange(0, MapSize.Y);
+      int y1 = Game::gRng.RandomRange(0, MapSize.Y);
+      int y2 = Game::gRng.RandomRange(0, MapSize.Y);
 
       start.Set(y1, 0);
       end.Set(y2, MapSize.X - 1);
@@ -455,7 +455,7 @@ void MapLevelCaves::DisplayWelcomeText()
     { HIDE("them during their mining operations?   ") }
   };
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                                        { HIDE("Caves of Circe") },
-                                         msg);
+  Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                            { HIDE("Caves of Circe") },
+                             msg);
 }

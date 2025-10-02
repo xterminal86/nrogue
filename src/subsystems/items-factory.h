@@ -3,7 +3,6 @@
 
 #include <random>
 
-#include "singleton.h"
 #include "constants.h"
 #include "item-data.h"
 
@@ -11,7 +10,7 @@ class GameObject;
 class ItemComponent;
 class Player;
 
-class ItemsFactory : public Singleton<ItemsFactory>
+class ItemsFactory
 {
   public:
     GameObject* CreateDummyItem(const std::string& objName,
@@ -196,8 +195,7 @@ class ItemsFactory : public Singleton<ItemsFactory>
     // ARMORS
     // GEM(S?)
 
-  protected:
-    void InitSpecific() override;
+    void Init();
 
   private:
     GameObject* CreateRandomGlass(ItemQuality quality = ItemQuality::RANDOM);
@@ -389,6 +387,8 @@ class ItemsFactory : public Singleton<ItemsFactory>
       { ItemQuality::FINE,        1.1  },
       { ItemQuality::EXCEPTIONAL, 1.25 },
     };
+
+    bool _initialized = false;
 
     // -------------------------------------------------------------------------
 

@@ -65,7 +65,7 @@ bool ContainerComponent::Add(GameObject* object)
     }
 
     //auto msg = Util::StringFormat("Picked up 0x%lX", object);
-    //Logger::Instance().Print(msg);
+    //Game::gLogger.Print(msg);
 
     if (!foundStack)
     {
@@ -77,8 +77,8 @@ bool ContainerComponent::Add(GameObject* object)
   if (object == nullptr)
   {
     std::string msg = "Trying to add nullptr to inventory!";
-    Printer::Instance().AddMessage(msg);
-    Logger::Instance().Print(msg, true);
+    Game::gPrnt.AddMessage(msg);
+    Game::gLogger.Print(msg, true);
     DebugLog("%s\n", msg.data());
   }
 #endif
@@ -94,23 +94,23 @@ IR ContainerComponent::Interact()
 
   if (!CanBeOpened)
   {
-    std::string failMsg =
+    auto failMsg =
         Util::StringFormat("%s can't be opened!",
                            OwnerGameObject->ObjectName.data());
-    Printer::Instance().AddMessage(failMsg);
+    Game::gPrnt.AddMessage(failMsg);
     return { InteractionResult::FAILURE, GameStates::MAIN_STATE };
   }
 
-  auto s = Application::Instance().GetGameStateRefByName(
+  auto s = Game::gApp.GetGameStateRefByName(
              GameStates::CONTAINER_INTERACT_STATE
            );
 
   ContainerInteractState* cis = static_cast<ContainerInteractState*>(s);
   cis->SetContainerRef(this);
 
-  std::string succMsg = Util::StringFormat("You open %s",
-                                           OwnerGameObject->ObjectName.data());
-  Printer::Instance().AddMessage(succMsg);
+  auto succMsg = Util::StringFormat("You open %s",
+                                    OwnerGameObject->ObjectName.data());
+  Game::gPrnt.AddMessage(succMsg);
 
   return { InteractionResult::SUCCESS, GameStates::CONTAINER_INTERACT_STATE };
 }

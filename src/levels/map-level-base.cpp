@@ -51,7 +51,7 @@ MapLevelBase::MapLevelBase(int sizeX,
 
   LevelName = levelName;
 
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 }
 
 // =============================================================================
@@ -187,8 +187,8 @@ void MapLevelBase::PlaceActor(GameObject* actor)
   {
     #ifdef DEBUG_BUILD
     std::string str = "[WARNING] tried to insert null actor!";
-    Printer::Instance().AddMessage(str);
-    Logger::Instance().Print(str);
+    Game::gPrnt.AddMessage(str);
+    Game::gLogger.Print(str);
     DebugLog("%s\n", str.data());
     #endif
 
@@ -214,8 +214,8 @@ void MapLevelBase::PlaceGameObject(GameObject* goToInsert)
   {
     #ifdef DEBUG_BUILD
     std::string str = "[WARNING] tried to insert null object!";
-    Printer::Instance().AddMessage(str);
-    Logger::Instance().Print(str);
+    Game::gPrnt.AddMessage(str);
+    Game::gLogger.Print(str);
     DebugLog("%s\n", str.data());
     #endif
 
@@ -240,7 +240,7 @@ void MapLevelBase::PlaceGameObject(GameObject* goToInsert)
     int y = what->PosY;
 
     std::string msg = Util::GetDestroyedByMapString(what, MapArray[x][y].get());
-    Printer::Instance().AddMessage(msg);
+    Game::gPrnt.AddMessage(msg);
 
     GameObjects.pop_back();
   }
@@ -258,10 +258,10 @@ void MapLevelBase::PlaceStaticObject(int x, int y,
     return;
   }
 
-  GameObject* go = GameObjectsFactory::Instance().CreateStaticObject(x, y,
-                                                                     objectInfo,
-                                                                     hitPoints,
-                                                                     type);
+  GameObject* go = Game::gGOF.CreateStaticObject(x, y,
+                                                 objectInfo,
+                                                 hitPoints,
+                                                 type);
   PlaceStaticObject(go);
 }
 
@@ -273,8 +273,8 @@ void MapLevelBase::PlaceStaticObject(GameObject* goToInsert)
   {
     #ifdef DEBUG_BUILD
     std::string str = "[WARNING] tried to insert null static object!";
-    Printer::Instance().AddMessage(str);
-    Logger::Instance().Print(str);
+    Game::gPrnt.AddMessage(str);
+    Game::gLogger.Print(str);
     DebugLog("%s\n", str.data());
     #endif
     return;
@@ -295,8 +295,8 @@ void MapLevelBase::PlaceTrigger(GameObject* trigger,
   {
     #ifdef DEBUG_BUILD
     std::string str = "[WARNING] tried to insert null trigger object!";
-    Printer::Instance().AddMessage(str);
-    Logger::Instance().Print(str);
+    Game::gPrnt.AddMessage(str);
+    Game::gLogger.Print(str);
     DebugLog("%s\n", str.data());
     #endif
     return;
@@ -342,8 +342,6 @@ void MapLevelBase::CreateBorders(char img,
                                  uint32_t bgColor,
                                  const std::string& objectName)
 {
-  using GOF = GameObjectsFactory;
-
   GameObjectInfo oi;
 
   oi.Image        = img;
@@ -360,11 +358,11 @@ void MapLevelBase::CreateBorders(char img,
     // Borders are to ignore IsOutOfBounds() check, so pasting contents
     // of PlaceStaticObject() method directly.
     //
-    GameObject* go = GOF::Instance().CreateStaticObject(i.X,
-                                                        i.Y,
-                                                        oi,
-                                                       -1,
-                                                        GameObjectType::BORDER);
+    GameObject* go = Game::gGOF.CreateStaticObject(i.X,
+                                                     i.Y,
+                                                     oi,
+                                                    -1,
+                                                     GameObjectType::BORDER);
     PlaceStaticObject(go);
   }
 }
@@ -379,7 +377,7 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
   {
     itemsCreated++;
 
-    int index = RNG::Instance().RandomRange(0, _emptyCells.size());
+    int index = Game::gRng.RandomRange(0, _emptyCells.size());
 
     int x = _emptyCells[index].X;
     int y = _emptyCells[index].Y;
@@ -393,7 +391,7 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
     // NOTE: Not all objects may have been added
     // to the factory yet, so check against nullptr is needed.
     //
-    auto go = ItemsFactory::Instance().CreateRandomItem(x, y);
+    auto go = Game::gIF.CreateRandomItem(x, y);
     if (go != nullptr)
     {
       ItemComponent* ic = go->GetComponent<ItemComponent>();
@@ -436,7 +434,7 @@ int MapLevelBase::GetEstimatedNumberOfItemsToCreate()
 {
   double count = std::log2(EmptyCells().size());
   int itemsToCreate = static_cast<int>(std::ceil(count));
-  itemsToCreate = RNG::Instance().RandomRange(1, (itemsToCreate / 2) + 1);
+  itemsToCreate = Game::gRng.RandomRange(1, (itemsToCreate / 2) + 1);
 
   return itemsToCreate;
 }
@@ -470,15 +468,15 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
     return;
   }
 
-  int index = RNG::Instance().RandomRange(0, possibleSpots.size());
+  int index = Game::gRng.RandomRange(0, possibleSpots.size());
   Position p = possibleSpots[index];
 
   size_t totalLayouts = GlobalConstants::ShrineLayoutsByType.size();
-  index = RNG::Instance().RandomRange(0, totalLayouts);
+  index = Game::gRng.RandomRange(0, totalLayouts);
   auto it = GlobalConstants::ShrineLayoutsByType.begin();
   std::advance(it, index);
   ShrineType type = it->first;
-  int layoutIndex = RNG::Instance().RandomRange(0, it->second.size());
+  int layoutIndex = Game::gRng.RandomRange(0, it->second.size());
   auto l = it->second[layoutIndex];
   lb.PlaceShrineLayout(p, l);
 
@@ -494,7 +492,7 @@ void MapLevelBase::PlaceRandomShrine(LevelBuilder& lb)
 
 void MapLevelBase::PlaceStairs()
 {
-  int startIndex = RNG::Instance().RandomRange(0, _emptyCells.size());
+  int startIndex = Game::gRng.RandomRange(0, _emptyCells.size());
 
   LevelStart.X = _emptyCells[startIndex].X;
   LevelStart.Y = _emptyCells[startIndex].Y;
@@ -502,24 +500,24 @@ void MapLevelBase::PlaceStairs()
   MapType stairsDownTo = (MapType)(DungeonLevel + 1);
   MapType stairsUpTo   = (MapType)(DungeonLevel - 1);
 
-  GameObjectsFactory::Instance().CreateStairs(this,
-                                              LevelStart.X,
-                                              LevelStart.Y,
-                                              '<',
-                                              stairsUpTo);
+  Game::gGOF.CreateStairs(this,
+                          LevelStart.X,
+                          LevelStart.Y,
+                          '<',
+                          stairsUpTo);
 
   _emptyCells.erase(_emptyCells.begin() + startIndex);
 
-  int endIndex = RNG::Instance().RandomRange(0, _emptyCells.size());
+  int endIndex = Game::gRng.RandomRange(0, _emptyCells.size());
 
   LevelExit.X = _emptyCells[endIndex].X;
   LevelExit.Y = _emptyCells[endIndex].Y;
 
-  GameObjectsFactory::Instance().CreateStairs(this,
-                                              LevelExit.X,
-                                              LevelExit.Y,
-                                              '>',
-                                              stairsDownTo);
+  Game::gGOF.CreateStairs(this,
+                          LevelExit.X,
+                          LevelExit.Y,
+                          '>',
+                          stairsDownTo);
 
   _emptyCells.erase(_emptyCells.begin() + endIndex);
 }
@@ -532,7 +530,7 @@ void MapLevelBase::CreateInitialMonsters()
 
   for (size_t i = 0; i < MaxMonsters; i++)
   {
-    int index = RNG::Instance().RandomRange(0, _emptyCells.size());
+    int index = Game::gRng.RandomRange(0, _emptyCells.size());
 
     int x = _emptyCells[index].X;
     int y = _emptyCells[index].Y;
@@ -542,7 +540,7 @@ void MapLevelBase::CreateInitialMonsters()
     {
       auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
 
-      auto monster = MonstersInc::Instance().CreateMonster(x, y, res.first);
+      auto monster = Game::gMI.CreateMonster(x, y, res.first);
       PlaceActor(monster);
     }
   }
@@ -561,11 +559,11 @@ bool MapLevelBase::IsOutOfBounds(int x, int y)
 
 bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
 {
-  auto& map = Map::Instance().CurrentLevel->MapArray;
+  auto& map = Game::gMap.CurrentLevel->MapArray;
 
   bool blocked   = IsCellBlocking(pos);
   bool occupied  = false;
-  bool danger    = Map::Instance().IsTileDangerous(pos);
+  bool danger    = Game::gMap.IsTileDangerous(pos);
   bool farEnough = false;
   bool unmarked  = (map[pos.X][pos.Y]->ZoneMarker == TransformedRoom::UNMARKED
                  || map[pos.X][pos.Y]->ZoneMarker == TransformedRoom::EMPTY);
@@ -668,7 +666,7 @@ void MapLevelBase::TryToSpawnMonsters()
     return;
   }
 
-  int index = RNG::Instance().RandomRange(0, _emptyCells.size());
+  int index = Game::gRng.RandomRange(0, _emptyCells.size());
 
   int cx = _emptyCells[index].X;
   int cy = _emptyCells[index].Y;
@@ -680,7 +678,7 @@ void MapLevelBase::TryToSpawnMonsters()
    && IsSpotValidForSpawn({ cx, cy }))
   {
     auto res = Util::WeightedRandom(_monstersSpawnRateForThisLevel);
-    auto monster = MonstersInc::Instance().CreateMonster(cx, cy, res.first);
+    auto monster = Game::gMI.CreateMonster(cx, cy, res.first);
     PlaceActor(monster);
   }
 }
@@ -694,9 +692,9 @@ void MapLevelBase::DisplayWelcomeText()
     "You're not supposed to see this text.",
   };
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                                         "MapLevelBase",
-                                         msg);
+  Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                             "MapLevelBase",
+                             msg);
 }
 
 // =============================================================================
@@ -1038,13 +1036,13 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
   char img = '.';
 
   // Create 'flowers'
-  //int tileChoice = RNG::Instance().RandomRange(0, 10);
+  //int tileChoice = Game::gRng.RandomRange(0, 10);
   //if (tileChoice < 2) img = '.';
 
   //uint32_t flowerColor = GlobalConstants::BlackColor;
   uint32_t flowerColor = Colors::GrassDotColor;
 
-  int colorChoice = RNG::Instance().RandomRange(0, maxDiceRoll);
+  int colorChoice = Game::gRng.RandomRange(0, maxDiceRoll);
   if      (colorChoice == 0) flowerColor = Colors::WhiteColor;
   else if (colorChoice == 1) flowerColor = Colors::DandelionYellowColor;
   else if (colorChoice == 2) flowerColor = Colors::RedPoppyColor;
@@ -1177,10 +1175,7 @@ void MapLevelBase::PlaceShrine(const Position& pos, LevelBuilder& lb)
 
   GameObjectInfo t;
   ShrineType type = lb.ShrinesByPosition().at(pos);
-  auto go = GameObjectsFactory::Instance().CreateShrine(pos.X,
-                                                        pos.Y,
-                                                        type,
-                                                        1000);
+  auto go = Game::gGOF.CreateShrine(pos.X, pos.Y, type, 1000);
   PlaceGameObject(go);
 
   std::string description = GlobalConstants::ShrineNameByType.at(type);
@@ -1205,10 +1200,7 @@ void MapLevelBase::PlaceShrine(const Position& pos, ShrineType type)
   }
 
   GameObjectInfo t;
-  auto go = GameObjectsFactory::Instance().CreateShrine(pos.X,
-                                                        pos.Y,
-                                                        type,
-                                                        1000);
+  auto go = Game::gGOF.CreateShrine(pos.X, pos.Y, type, 1000);
   PlaceGameObject(go);
 
   std::string description = GlobalConstants::ShrineNameByType.at(type);
@@ -1294,11 +1286,7 @@ void MapLevelBase::PlaceDoor(int x, int y,
   }
 
   GameObject* door =
-      GameObjectsFactory::Instance().CreateDoor(x,
-                                                y,
-                                                isOpen,
-                                                DoorMaterials::WOOD,
-                                                objName);
+      Game::gGOF.CreateDoor(x, y, isOpen, DoorMaterials::WOOD, objName);
 
   if (openedBy != GlobalConstants::OpenedByAnyone)
   {
@@ -1413,7 +1401,7 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
         GameObjectType t = std::get<GameObjectType>(cell.ObjectHere);
         if (t == GameObjectType::BREAKABLE)
         {
-          static GameObjectsFactory& gof = GameObjectsFactory::Instance();
+          static GameObjectsFactory& gof = Game::gGOF;
           GameObject* box =
               gof.CreateBreakableObjectWithRandomLoot(x,
                                                       y,
@@ -1435,7 +1423,7 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
       {
         if(std::get<ItemType>(cell.ObjectHere) == ItemType::COINS)
         {
-          GameObject* go = ItemsFactory::Instance().CreateMoney();
+          GameObject* go = Game::gIF.CreateMoney();
           go->PosX = x;
           go->PosY = y;
           PlaceGameObject(go);
@@ -1453,7 +1441,7 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
         GameObjectType t = std::get<GameObjectType>(cell.ObjectHere);
         if(t == GameObjectType::CONTAINER)
         {
-          static GameObjectsFactory& gof = GameObjectsFactory::Instance();
+          static GameObjectsFactory& gof = Game::gGOF;
           GameObject* go = gof.CreateChest(x, y, Util::Rolld100(50));
           go->PosX = x;
           go->PosY = y;

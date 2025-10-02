@@ -3,9 +3,10 @@
 
 #include "constants.h"
 #include "attribute.h"
-#include "spells-database.h"
+#include "spell-info.h"
 
 class GameObject;
+class ItemComponent;
 
 struct ItemBonusStruct
 {

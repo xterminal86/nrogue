@@ -1,3 +1,4 @@
+#if 0
 #include "gid-generator.h"
 #include "application.h"
 #include "bts-decompiler.h"
@@ -15,6 +16,51 @@
 #ifdef DEBUG_BUILD
 #include "logger.h"
 #endif
+
+int main(int argc, char* argv[])
+{
+  Game::gGid.Init();
+  Game::gRng.Init();
+  Game::gBB.Init();
+  Game::gTimer.Init();
+
+#ifdef DEBUG_BUILD
+  Game::gLogger.Init();
+  Game::gLogger.Prepare(true);
+
+  auto str = Util::StringFormat("World seed is 0x%lX", Game::gRng.Seed);
+  DebugLog("%s\n\n", str.data());
+  LogPrint(str);
+#endif
+
+  Game::gBts.Init();
+
+  Game::gApp.Init();
+
+  if (!Game::gApp.IsAppReady())
+  {
+    ConsoleLog("There was an error during application initialization - "
+               "no sense in continuing");
+    return 1;
+  }
+
+  Game::gGOF.Init();
+  Game::gIF.Init();
+  Game::gMI.Init();
+
+  Game::gSD.Init();
+  Game::gSP.Init();
+
+  Game::gMap.Init();
+
+  Game::gApp.Run();
+  Game::gApp.Cleanup();
+
+  return 0;
+}
+#endif
+
+#include "globals.h"
 
 //
 // NOTE: When building with SDL2 in Windows,
@@ -48,45 +94,15 @@
 // provided you have distro specific ncurses-dev / SDL2-dev
 // packages installed.
 //
-
 int main(int argc, char* argv[])
 {
-  GID::Instance().Init();
-  RNG::Instance().Init();
-  Blackboard::Instance().Init();
-  Timer::Instance().Init();
-
-#ifdef DEBUG_BUILD
-  Logger::Instance().Init();
-  Logger::Instance().Prepare(true);
-
-  auto str = Util::StringFormat("World seed is 0x%lX", RNG::Instance().Seed);
-  DebugLog("%s\n\n", str.data());
-  LogPrint(str);
-#endif
-
-  BTSDecompiler::Instance().Init();
-
-  Application::Instance().Init();
-
-  if (!Application::Instance().IsAppReady())
+  if (!Game::Init())
   {
-    ConsoleLog("There was an error during application initialization - "
-               "no sense in continuing");
     return 1;
   }
 
-  GameObjectsFactory::Instance().Init();
-  ItemsFactory::Instance().Init();
-  MonstersInc::Instance().Init();
-
-  SpellsDatabase::Instance().Init();
-  SpellsProcessor::Instance().Init();
-
-  Map::Instance().Init();
-
-  Application::Instance().Run();
-  Application::Instance().Cleanup();
+  Game::Run();
+  Game::Shutdown();
 
   return 0;
 }

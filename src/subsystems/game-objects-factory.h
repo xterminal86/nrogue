@@ -1,7 +1,6 @@
 #ifndef GAMEOBJECTSFACTORY_H
 #define GAMEOBJECTSFACTORY_H
 
-#include "singleton.h"
 #include "constants.h"
 
 class GameObjectInfo;
@@ -12,7 +11,7 @@ class Player;
 class MapLevelBase;
 class DoorComponent;
 
-class GameObjectsFactory : public Singleton<GameObjectsFactory>
+class GameObjectsFactory
 {
   public:
     GameObject* CreateShrine(int x, int y, ShrineType type, int timeout);
@@ -75,8 +74,7 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
     ItemComponent* CloneItem(ItemComponent* copyFrom);
     GameObject* CloneObject(GameObject* copyFrom);
 
-  protected:
-    void InitSpecific() override;
+    void Init();
 
   private:
     Player* _playerRef = nullptr;
@@ -96,6 +94,8 @@ class GameObjectsFactory : public Singleton<GameObjectsFactory>
       { DoorMaterials::STONE, "Stone"  },
       { DoorMaterials::IRON,  "Iron"   }
     };
+
+    bool _initialized = false;
 
     // -------------------------------------------------------------------------
 };

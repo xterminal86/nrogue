@@ -6,31 +6,31 @@
 #include "blackboard.h"
 #include "pathfinder.h"
 #include "map.h"
+#include "rng.h"
 
 BTResult TaskFindAndDestroyContainer::Run()
 {
   BTResult res = BTResult::Failure;
 
-  std::string objId =
-      Blackboard::Instance().Get(_objectToControl->ObjectId(),
-                                 Strings::BlackboardKeyObjectId);
+  std::string objId = Game::gBB.Get(_objectToControl->ObjectId(),
+                                    Strings::BlackboardKeyObjectId);
   if (!objId.empty())
   {
     uint64_t objIdInt = std::stoull(objId);
     GameObjectCollectionType t = GameObjectCollectionType::STATIC_OBJECTS;
 
-    GameObject* object = Map::Instance().FindGameObjectById(objIdInt, t);
+    GameObject* object = Game::gMap.FindGameObjectById(objIdInt, t);
     if (object == nullptr)
     {
       //
       // If our saved object no longer exists, erase it from blackboard
       // so that new container could be found on next iteration.
       //
-      Blackboard::Instance().Set(_objectToControl->ObjectId(),
-                                 {
-                                   Strings::BlackboardKeyObjectId,
-                                   std::string()
-                                 });
+      Game::gBB.Set(_objectToControl->ObjectId(),
+                    {
+                      Strings::BlackboardKeyObjectId,
+                      std::string()
+                    });
     }
     else
     {
@@ -42,11 +42,11 @@ BTResult TaskFindAndDestroyContainer::Run()
     GameObject* container = FindContainer();
     if (container != nullptr)
     {
-      Blackboard::Instance().Set(_objectToControl->ObjectId(),
-                                 {
-                                   Strings::BlackboardKeyObjectId,
-                                   std::to_string(container->ObjectId())
-                                 });
+      Game::gBB.Set(_objectToControl->ObjectId(),
+                    {
+                      Strings::BlackboardKeyObjectId,
+                      std::to_string(container->ObjectId())
+                    });
       res = ProcessExistingObject(container);
     }
   }
@@ -75,9 +75,9 @@ GameObject* TaskFindAndDestroyContainer::FindContainer()
     std::vector<int> indices;
     for (size_t i = 0; i < containersFound.size(); i++)
     {
-      if (Map::Instance().IsObjectVisible(objPos,
-                                          containersFound[i]->GetPosition(),
-                                          true))
+      if (Game::gMap.IsObjectVisible(objPos,
+                                      containersFound[i]->GetPosition(),
+                                      true))
       {
         indices.push_back(i);
       }
@@ -85,7 +85,7 @@ GameObject* TaskFindAndDestroyContainer::FindContainer()
 
     if (!indices.empty())
     {
-      int index = RNG::Instance().RandomRange(0, indices.size());
+      int index = Game::gRng.RandomRange(0, indices.size());
       res = containersFound[index];
     }
   }
@@ -117,13 +117,18 @@ TaskFindAndDestroyContainer::ProcessExistingObject(GameObject* container)
 
     Util::TryToDamageEquipment(_objectToControl, weapon, -1);
 
-    container->ReceiveDamage(_objectToControl, dmg, false, false, false, true);
+    container->ReceiveDamage(_objectToControl,
+                              dmg,
+                              false,
+                              false,
+                              false,
+                              true);
   }
   else
   {
     Pathfinder pf;
 
-    auto path = pf.BuildRoad(Map::Instance().CurrentLevel,
+    auto path = pf.BuildRoad(Game::gMap.CurrentLevel,
                              _objectToControl->GetPosition(),
                              container->GetPosition(),
                              std::vector<char>(),

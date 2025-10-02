@@ -10,7 +10,7 @@ BTResult TaskMoveAwayFromPlayer::Run()
   Position objPos    = _objectToControl->GetPosition();
   Position playerPos = _playerRef->GetPosition();
 
-  auto res = Map::Instance().GetWalkableCellsAround(objPos);
+  auto res = Game::gMap.GetWalkableCellsAround(objPos);
 
   // In case when actor moved himself into a corner,
   // corner will be the cell with maximum cost, so this

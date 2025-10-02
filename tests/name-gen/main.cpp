@@ -1,4 +1,6 @@
 #include "util.h"
+
+#include "globals.h"
 #include "rng.h"
 
 int main(int argc, char* argv[])
@@ -11,11 +13,11 @@ int main(int argc, char* argv[])
     return 0;
   }
 
-  RNG::Instance().Init();
+  Game::gRng.Init();
 
-  //RNG::Instance().SetSeed(1698773628612500435);
+  //Game::gRng.SetSeed(1698773628612500435);
 
-  printf("Seed = %llu\n", RNG::Instance().Seed);
+  printf("Seed = %llu\n", Game::gRng.Seed);
 
   bool allowDoubleVowels = (argc > 2);
 

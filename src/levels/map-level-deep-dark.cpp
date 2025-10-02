@@ -128,7 +128,7 @@ void MapLevelDeepDark::CreateSpecialLevel()
 {
   MysteriousForcePresent = true;
 
-  GameObject* note = ItemsFactory::Instance().CreateNote("A4 paper",
+  GameObject* note = Game::gIF.CreateNote("A4 paper",
   {
     "Sorry, but the game is not finished yet.",
     "So this is as far as you can go. :-)"
@@ -156,11 +156,11 @@ void MapLevelDeepDark::CreateSpecialLevel()
           LevelStart.X = posX;
           LevelStart.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this,
-                                                      LevelStart.X,
-                                                      LevelStart.Y,
-                                                      c,
-                                                      stairsUpTo);
+          Game::gGOF.CreateStairs(this,
+                                  LevelStart.X,
+                                  LevelStart.Y,
+                                  c,
+                                  stairsUpTo);
         }
         break;
 
@@ -169,11 +169,11 @@ void MapLevelDeepDark::CreateSpecialLevel()
           LevelExit.X = posX;
           LevelExit.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this,
-                                                      LevelExit.X,
-                                                      LevelExit.Y,
-                                                      c,
-                                                      stairsDownTo);
+          Game::gGOF.CreateStairs(this,
+                                  LevelExit.X,
+                                  LevelExit.Y,
+                                  c,
+                                  stairsDownTo);
         }
         break;
 
@@ -231,10 +231,10 @@ void MapLevelDeepDark::CreateCommonObjects(int x, int y, char image)
     case '+':
     {
       GameObject* door =
-          GameObjectsFactory::Instance().CreateDoor(x,
-                                                    y,
-                                                    false,
-                                                    DoorMaterials::STONE);
+          Game::gGOF.CreateDoor(x,
+                                y,
+                                false,
+                                DoorMaterials::STONE);
       PlaceStaticObject(door);
     }
     break;
@@ -273,9 +273,9 @@ void MapLevelDeepDark::CreateCommonObjects(int x, int y, char image)
                       y,
                       ' ',
                       Colors::BlackColor,
-                      (image == '1')
-                    ? Colors::ShadesOfGrey::Four
-                    : Colors::ShadesOfGrey::Twelve,
+                      (image == '1') ?
+                      Colors::ShadesOfGrey::Four :
+                      Colors::ShadesOfGrey::Twelve,
                       Strings::TileNames::TiledFloorText);
       break;
   }
@@ -297,8 +297,8 @@ void MapLevelDeepDark::DisplayWelcomeText()
     { HIDE("the same fate as befallen the Lost City...") }
   };
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                                        { HIDE("Deep Dark") },
-                                         msg);
+  Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                            { HIDE("Deep Dark") },
+                             msg);
 }
 

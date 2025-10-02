@@ -12,13 +12,21 @@
 #include "shrine-component.h"
 #include "stairs-component.h"
 #include "door-component.h"
+#include "container-component.h"
 
 #include "game-object-info.h"
 #include "timed-destroyer-component.h"
 
-void GameObjectsFactory::InitSpecific()
+void GameObjectsFactory::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  if (_initialized)
+  {
+    return;
+  }
+
+  _playerRef = &Game::gApp.PlayerInstance;
+
+  _initialized = true;
 }
 
 // =============================================================================
@@ -27,7 +35,7 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y,
                                              ShrineType type,
                                              int timeout)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->PosX = x;
   go->PosY = y;
@@ -55,7 +63,7 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y,
 
 GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   from->PosX,
                                   from->PosY,
                                   '%',
@@ -123,7 +131,7 @@ GameObject* GameObjectsFactory::CreateDummyObject(int x,
                                                   const uint32_t& fgColor,
                                                   const uint32_t& bgColor)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->Image = image;
   go->ObjectName = objName;
@@ -139,7 +147,7 @@ GameObject* GameObjectsFactory::CreateDummyObject(int x,
 
 GameObject* GameObjectsFactory::CreateChest(int x, int y, bool isLocked)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->ObjectName  = "Iron Chest";
   go->PosX        = x;
@@ -163,7 +171,7 @@ GameObject* GameObjectsFactory::CreateChest(int x, int y, bool isLocked)
   {
     if (Util::Rolld100(chance))
     {
-      GameObject* go = ItemsFactory::Instance().CreateRandomItem(0, 0);
+      GameObject* go = Game::gIF.CreateRandomItem(0, 0);
       cc->Add(go);
       chance = (int)((double)chance / scale);
     }
@@ -186,7 +194,7 @@ GameObject* GameObjectsFactory::CreateContainer(int x,
                                                 const std::string& name,
                                                 const uint32_t& bgColor)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->ObjectName  = name;
   go->PosX        = x;
@@ -225,7 +233,7 @@ GameObject* GameObjectsFactory::CreateDoor(int x, int y,
     doorNameTotal = doorName;
   }
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->PosX = x;
   go->PosY = y;
@@ -264,7 +272,7 @@ GameObjectsFactory::CreateStaticObject(int x,
                                        int hitPoints,
                                        GameObjectType type)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->PosX         = x;
   go->PosY         = y;
@@ -302,7 +310,7 @@ ItemComponent* GameObjectsFactory::CloneItem(ItemComponent* copyFrom)
 
 GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
 {
-  GameObject* copy = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* copy = new GameObject(Game::gMap.CurrentLevel);
 
   // NOTE: don't forget to copy any newly added fields
 
@@ -353,7 +361,7 @@ GameObjectsFactory::CreateBreakableObjectWithRandomLoot(
     const uint32_t& bgColor
   )
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->PosX = x;
   go->PosY = y;
@@ -368,13 +376,13 @@ GameObjectsFactory::CreateBreakableObjectWithRandomLoot(
   go->Attrs.Indestructible = false;
   go->Attrs.HP.Reset(1);
 
-  int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel;
+  int dungeonLevel = Game::gMap.CurrentLevel->DungeonLevel;
   int maxLevel = (int)MapType::THE_END;
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>(maxLevel + 1);
   cc->CanBeOpened = false;
 
-  int maxItems = RNG::Instance().RandomRange(1, 10);
+  int maxItems = Game::gRng.RandomRange(1, 10);
 
   int nothingChance   = (int)((double)maxLevel * 0.4);
   int somethingChance = dungeonLevel;
@@ -396,7 +404,7 @@ GameObjectsFactory::CreateBreakableObjectWithRandomLoot(
       // NOTE: Not all objects may have been added
       // to the factory yet, so check against nullptr is needed.
       //
-      auto item = ItemsFactory::Instance().CreateRandomItem(0, 0);
+      auto item = Game::gIF.CreateRandomItem(0, 0);
       if (item != nullptr)
       {
         ItemComponent* ic = item->GetComponent<ItemComponent>();
@@ -432,7 +440,7 @@ void GameObjectsFactory::CreateTrigger(TriggerType triggerType,
                                        const std::function<bool ()>& condition,
                                        const std::function<void ()>& handler)
 {
-  GameObject* triggerObject = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* triggerObject = new GameObject(Game::gMap.CurrentLevel);
   triggerObject->AttachTrigger(triggerType, condition, handler);
-  Map::Instance().CurrentLevel->PlaceTrigger(triggerObject, updateType);
+  Game::gMap.CurrentLevel->PlaceTrigger(triggerObject, updateType);
 }

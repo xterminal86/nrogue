@@ -4,11 +4,16 @@
 #include "printer.h"
 #include "timer.h"
 #include "map.h"
+#include "spells-database.h"
+
 #include "bresenham-cached.h"
 
 #ifdef DEBUG_BUILD
 #include "logger.h"
+#include "door-component.h"
 #endif
+
+#include "equipment-component.h"
 
 namespace Util
 {
@@ -185,7 +190,7 @@ namespace Util
       return res;
     }
 
-    auto& mapSize = Map::Instance().CurrentLevel->MapSize;
+    auto& mapSize = Game::gMap.CurrentLevel->MapSize;
 
     int lx = aroundWho->PosX - range;
     int hx = aroundWho->PosX + range;
@@ -231,7 +236,7 @@ namespace Util
       return res;
     }
 
-    auto& mapSize = Map::Instance().CurrentLevel->MapSize;
+    auto& mapSize = Game::gMap.CurrentLevel->MapSize;
 
     int lx = aroundWho->PosX - range;
     int hx = aroundWho->PosX + range;
@@ -870,7 +875,7 @@ namespace Util
       return res;
     }
 
-    auto curLvl = Map::Instance().CurrentLevel;
+    auto curLvl = Game::gMap.CurrentLevel;
 
     if (curLvl == nullptr)
     {
@@ -909,7 +914,7 @@ namespace Util
       return res;
     }
 
-    auto curLvl = Map::Instance().CurrentLevel;
+    auto curLvl = Game::gMap.CurrentLevel;
 
     if (curLvl == nullptr)
     {
@@ -950,7 +955,7 @@ namespace Util
 
   std::string ChooseRandomName()
   {
-    int index = RNG::Instance().Random() % GlobalConstants::RandomNames.size();
+    int index = Game::gRng.Random() % GlobalConstants::RandomNames.size();
     return GlobalConstants::RandomNames[index];
   }
 
@@ -1124,7 +1129,7 @@ namespace Util
 
     for (int i = 0; i < numRolls; i++)
     {
-      int dmg = RNG::Instance().RandomRange(1, diceSides + 1);
+      int dmg = Game::gRng.RandomRange(1, diceSides + 1);
       totalDamage += dmg;
     }
 
@@ -1150,8 +1155,7 @@ namespace Util
 
     auto spellType = wand->Data.SpellHeld.SpellType_;
 
-    static SpellsDatabase& sd = SpellsDatabase::Instance();
-    SpellInfo* sip = sd.GetSpellInfoFromDatabase(spellType);
+    SpellInfo* sip = Game::gSD.GetSpellInfoFromDatabase(spellType);
     if (sip == nullptr)
     {
       DebugLog("[WAR] Util::RecalculateWandStats() "
@@ -1166,7 +1170,7 @@ namespace Util
 
     int capacity = GlobalConstants::WandCapacityByMaterial.at(material);
 
-    int capacityRandomness = RNG::Instance().RandomRange(0, capacity + 1);
+    int capacityRandomness = Game::gRng.RandomRange(0, capacity + 1);
 
     int qualityModifier = (int)wand->Data.ItemQuality_;
 
@@ -1178,7 +1182,7 @@ namespace Util
 
     int wandRange = GlobalConstants::WandRangeByMaterial.at(material);
     int wrh = wandRange / 2;
-    int rangeRandomness = RNG::Instance().RandomRange(-wrh, wrh + 1);
+    int rangeRandomness = Game::gRng.RandomRange(-wrh, wrh + 1);
 
     wandRange += rangeRandomness;
 
@@ -1336,7 +1340,7 @@ namespace Util
 
   int Rolld100()
   {
-    int dice = RNG::Instance().RandomRange(0, 100);
+    int dice = Game::gRng.RandomRange(0, 100);
 
     #ifdef DEBUG_BUILD
     auto str = StringFormat("\t%s: rolled = %i", __PRETTY_FUNCTION__, dice);
@@ -1358,8 +1362,8 @@ namespace Util
 
     if (twoRN)
     {
-      int rn1 = RNG::Instance().RandomRange(0, 100);
-      int rn2 = RNG::Instance().RandomRange(0, 100);
+      int rn1 = Game::gRng.RandomRange(0, 100);
+      int rn2 = Game::gRng.RandomRange(0, 100);
 
       double avg = (double)(rn1 + rn2) / 2.0;
 
@@ -1371,7 +1375,7 @@ namespace Util
     }
     else
     {
-      int result = RNG::Instance().RandomRange(0, 100);
+      int result = Game::gRng.RandomRange(0, 100);
 
       //
       // In case of clamping by MaxHitChance,
@@ -1395,7 +1399,7 @@ namespace Util
                                successChance,
                                spaces2.data(),
                                success ? "passed" : "failed");
-    Logger::Instance().Print(logMsg);
+    Game::gLogger.Print(logMsg);
     #endif
 
     return success;
@@ -1422,7 +1426,7 @@ namespace Util
 
   bool WaitForMs(uint64_t delayMs, bool reset)
   {
-    auto tp = Timer::Instance().TimePassedDur();
+    auto tp = Game::gTimer.TimePassedDur();
     static Ns prevNs = tp;
 
     //
@@ -1540,8 +1544,8 @@ namespace Util
   {
     std::string name;
 
-    int maxLength = RNG::Instance().RandomRange(2, 4);
-    int addEnding = RNG::Instance().RandomRange(0, 2);
+    int maxLength = Game::gRng.RandomRange(2, 4);
+    int addEnding = Game::gRng.RandomRange(0, 2);
 
     std::string syllable;
 
@@ -1549,7 +1553,7 @@ namespace Util
     {
       while (true)
       {
-        int mode = RNG::Instance().RandomRange(0, 2);
+        int mode = Game::gRng.RandomRange(0, 2);
 
         int vowelIndex = 0, consIndex = 0;
         std::string vowel;
@@ -1561,9 +1565,9 @@ namespace Util
           case 0:
           {
             vowelIndex =
-                RNG::Instance().RandomRange(0, Strings::Vowels.length());
+                Game::gRng.RandomRange(0, Strings::Vowels.length());
             consIndex =
-                RNG::Instance().RandomRange(0, Strings::Consonants.length());
+                Game::gRng.RandomRange(0, Strings::Consonants.length());
 
             vowel = { Strings::Vowels[vowelIndex]    };
             cons  = { Strings::Consonants[consIndex] };
@@ -1575,7 +1579,7 @@ namespace Util
           case 1:
           {
             consIndex =
-                RNG::Instance().RandomRange(0, Strings::Consonants.length());
+                Game::gRng.RandomRange(0, Strings::Consonants.length());
             cons = Strings::Consonants[consIndex];
 
             syl = cons;
@@ -1585,7 +1589,7 @@ namespace Util
             for (int i = 0; i < 2; i++)
             {
               vowelIndex =
-                  RNG::Instance().RandomRange(0, Strings::Vowels.length());
+                  Game::gRng.RandomRange(0, Strings::Vowels.length());
 
               char v = Strings::Vowels[vowelIndex];
               vowel  = { v };
@@ -1611,7 +1615,7 @@ namespace Util
 
     if (addEnding == 0 && canAddEnding && !endings.empty())
     {
-      int endingIndex = RNG::Instance().RandomRange(0, endings.size());
+      int endingIndex = Game::gRng.RandomRange(0, endings.size());
       std::string ending = endings[endingIndex];
 
       if (!allowDoubleVowels)
@@ -1768,7 +1772,7 @@ namespace Util
 
     if (obj == nullptr ||
        (obj->HasEffect(ItemBonusType::INVISIBILITY)
-     && !Application::Instance().PlayerInstance.HasEffect(
+     && !Game::gApp.PlayerInstance.HasEffect(
           ItemBonusType::TELEPATHY
           )))
     {
@@ -1866,18 +1870,18 @@ namespace Util
       int mx = line[i].X;
       int my = line[i].Y;
 
-      Application::Instance().ForceDrawCurrentState();
+      Game::gApp.ForceDrawCurrentState();
 
-      int drawingPosX = mx + Map::Instance().CurrentLevel->MapOffsetX;
-      int drawingPosY = my + Map::Instance().CurrentLevel->MapOffsetY;
+      int drawingPosX = mx + Game::gMap.CurrentLevel->MapOffsetX;
+      int drawingPosY = my + Game::gMap.CurrentLevel->MapOffsetY;
 
-      Printer::Instance().PrintFB(drawingPosX,
+      Game::gPrnt.PrintFB(drawingPosX,
                                   drawingPosY,
                                   image,
                                   fgColor,
                                   bgColor);
 
-      Printer::Instance().Render();
+      Game::gPrnt.Render();
     }
   }
 
@@ -1900,8 +1904,8 @@ namespace Util
                  const Position& attackDir,
                  int tiles)
   {
-    auto& mapRef = Map::Instance().CurrentLevel->MapArray;
-    auto curLvl = Map::Instance().CurrentLevel;
+    auto& mapRef = Game::gMap.CurrentLevel->MapArray;
+    auto curLvl = Game::gMap.CurrentLevel;
 
     Position newPos = receiver->GetPosition();
 
@@ -1932,14 +1936,14 @@ namespace Util
 
       receiver->MoveTo(newPos, true);
 
-      Application::Instance().ForceDrawCurrentState();
+      Game::gApp.ForceDrawCurrentState();
 
       //
       // Ground units should perish on dangerous tiles.
       //
       if (receiver->IsOnDangerousTile())
       {
-        Application::Instance().DisplayAttack(
+        Game::gApp.DisplayAttack(
               receiver,
               GlobalConstants::DisplayAttackDelayMs,
               std::string()
@@ -1983,14 +1987,14 @@ namespace Util
     GameObject* actor = nullptr;
     if (!Util::IsPlayer(target))
     {
-      actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+      actor = Game::gMap.GetActorAtPosition(p.X, p.Y);
     }
 
     if (actor != nullptr)
     {
-      auto pos = Map::Instance().GetRandomEmptyCell();
-      MapType mt = Map::Instance().CurrentLevel->MapType_;
-      Map::Instance().TeleportToExistingLevel(mt, pos, actor);
+      auto pos = Game::gMap.GetRandomEmptyCell();
+      MapType mt = Game::gMap.CurrentLevel->MapType_;
+      Game::gMap.TeleportToExistingLevel(mt, pos, actor);
 
       msg = Util::StringFormat("%s suddenly disappears!",
                                actor->ObjectName.data());
@@ -2032,7 +2036,7 @@ namespace Util
         projectile = '*';
 
         SpellType spell = weapon->Data.SpellHeld.SpellType_;
-        SpellInfo* si = SpellsDatabase::Instance().GetSpellInfoFromDatabase(spell);
+        SpellInfo* si = Game::gSD.GetSpellInfoFromDatabase(spell);
         if (si->SpellProjectileColor != Colors::None)
         {
           projColor = si->SpellProjectileColor;
@@ -2056,9 +2060,9 @@ namespace Util
   {
     std::vector<GameObject*> res;
 
-    auto player = &Application::Instance().PlayerInstance;
+    auto player = &Game::gApp.PlayerInstance;
 
-    Position mapSize = Map::Instance().CurrentLevel->MapSize;
+    Position mapSize = Game::gMap.CurrentLevel->MapSize;
 
     //
     // Do not include object on starting point.
@@ -2081,14 +2085,14 @@ namespace Util
           res.push_back(player);
         }
 
-        auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+        auto actor = Game::gMap.GetActorAtPosition(p.X, p.Y);
         if (actor != nullptr)
         {
           res.push_back(actor);
         }
         else
         {
-          auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
+          auto so = Game::gMap.GetStaticGameObjectAtPosition(p.X, p.Y);
           if (so != nullptr)
           {
             res.push_back(so);
@@ -2106,9 +2110,9 @@ namespace Util
   {
     GameObject* res = nullptr;
 
-    auto player = &Application::Instance().PlayerInstance;
+    auto player = &Game::gApp.PlayerInstance;
 
-    Position mapSize = Map::Instance().CurrentLevel->MapSize;
+    Position mapSize = Game::gMap.CurrentLevel->MapSize;
 
     for (size_t i = 1; i < line.size(); i++)
     {
@@ -2123,7 +2127,7 @@ namespace Util
           break;
         }
 
-        auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+        auto actor = Game::gMap.GetActorAtPosition(p.X, p.Y);
         if (actor != nullptr)
         {
           res = actor;
@@ -2131,7 +2135,7 @@ namespace Util
         }
         else
         {
-          auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
+          auto so = Game::gMap.GetStaticGameObjectAtPosition(p.X, p.Y);
           if (so != nullptr)
           {
             res = so;
@@ -2488,7 +2492,7 @@ namespace Util
                             (attackChanceScale * skl),
                             (distanceChanceDrop * d));
 
-    Logger::Instance().Print(str);
+    Game::gLogger.Print(str);
 
     DebugLog("%s\n%i + %i - %i = %i\n", __PRETTY_FUNCTION__,
                                         baseChance,
@@ -2497,7 +2501,7 @@ namespace Util
                                         chance);
 
     str = StringFormat("Total chance: %i", chance);
-    Logger::Instance().Print(str);
+    Game::gLogger.Print(str);
 
     DebugLog("%s", str.data());
     #endif
@@ -2794,7 +2798,7 @@ namespace Util
     Position pos = { -1, -1 };
 
     auto rect = GetEightPointsAround(aroundThis,
-                                     Map::Instance().CurrentLevel->MapSize);
+                                     Game::gMap.CurrentLevel->MapSize);
 
     bool outOfRange = false;
 
@@ -2833,7 +2837,7 @@ namespace Util
     //
     if (!rect.empty())
     {
-      int index = RNG::Instance().RandomRange(0, rect.size());
+      int index = Game::gRng.RandomRange(0, rect.size());
       pos = rect[index];
     }
 
@@ -2947,8 +2951,8 @@ namespace Util
         }
       }
 
-      int drawingPosX = mx + Map::Instance().CurrentLevel->MapOffsetX;
-      int drawingPosY = my + Map::Instance().CurrentLevel->MapOffsetY;
+      int drawingPosX = mx + Game::gMap.CurrentLevel->MapOffsetX;
+      int drawingPosY = my + Game::gMap.CurrentLevel->MapOffsetY;
 
       lineRes.push_back({ drawingPosX, drawingPosY });
 
@@ -2971,16 +2975,16 @@ namespace Util
   {
     for (auto& p : line)
     {
-      Printer::Instance().PrintFB(p.X,
+      Game::gPrnt.PrintFB(p.X,
                                   p.Y,
                                   '*',
                                   Colors::YellowColor,
                                   Colors::RedColor);
     }
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
     Sleep(100);
-    Application::Instance().ForceDrawMainState();
+    Game::gApp.ForceDrawMainState();
   }
 
   // ===========================================================================
@@ -3024,7 +3028,7 @@ namespace Util
       auto line = BresenhamLine(from, p);
       for (auto& point : line)
       {
-        if (!IsInsideMap(point, Map::Instance().CurrentLevel->MapSize))
+        if (!IsInsideMap(point, Game::gMap.CurrentLevel->MapSize))
         {
           continue;
         }
@@ -3043,7 +3047,7 @@ namespace Util
 
         int d = LinearDistance(from, point);
 
-        MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+        MapLevelBase* curLvl = Game::gMap.CurrentLevel;
 
         GameObject* cell = curLvl->MapArray[point.X][point.Y].get();
         GameObject* obj  = curLvl->StaticMapObjects[point.X][point.Y].get();
@@ -3112,14 +3116,14 @@ namespace Util
 
   bool IsPlayer(GameObject* obj)
   {
-    return (obj == &Application::Instance().PlayerInstance);
+    return (obj == &Game::gApp.PlayerInstance);
   }
 
   // ===========================================================================
 
   bool CanBeSpawned(ItemComponent* ic)
   {
-    int lvl = (int)Map::Instance().CurrentLevel->MapType_;
+    int lvl = (int)Game::gMap.CurrentLevel->MapType_;
     if (ic != nullptr)
     {
       return (lvl >= (int)ic->Data.GeneratedAfter);
@@ -3272,7 +3276,7 @@ StringV DumpObj(void *ptr)
   //
   // This works only for polymorphic types, but usually everything has at least
   // virtual destructor. Downside of this is that you must override Dump()
-  // method for every class, otherwise it will be skipped here.
+  // method for every class you want, otherwise it will be skipped here.
   //
   if ( TYPE_OF(ptr, GameObject) )
   {
@@ -3281,6 +3285,10 @@ StringV DumpObj(void *ptr)
   else if ( TYPE_OF(ptr, Component) )
   {
     res = ((Component*)ptr)->Dump();
+  }
+  else if ( TYPE_OF(ptr, DoorComponent) )
+  {
+    res = ((DoorComponent*)ptr)->Dump();
   }
   else if ( TYPE_OF(ptr, Player) )
   {

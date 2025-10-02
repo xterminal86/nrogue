@@ -323,7 +323,7 @@ Actor2 : {
 
   printf("Plain text...\n");
 
-  std::string fname = Util::StringFormat("%llu.tmp", RNG::Instance().Random());
+  std::string fname = Util::StringFormat("%llu.tmp", Game::gRng.Random());
 
   FS::path p = fname;
 
@@ -346,7 +346,7 @@ Actor2 : {
 
   printf("Using encryption...\n");
 
-  fname = Util::StringFormat("%llu.tmp", RNG::Instance().Random());
+  fname = Util::StringFormat("%llu.tmp", Game::gRng.Random());
 
   p = fname;
 
@@ -939,13 +939,13 @@ void SerializeObjects()
     Test t;
     t.Id = i + 1;
     t.ObjectName = Util::GenerateName();
-    t.SomeValue = RNG::Instance().RandomRange(1, 255);
+    t.SomeValue = Game::gRng.RandomRange(1, 255);
 
-    int size = RNG::Instance().RandomRange(0, 5);
+    int size = Game::gRng.RandomRange(0, 5);
 
     for (int j = 0; j < size; j++)
     {
-      int val = RNG::Instance().RandomRange(-255, 256);
+      int val = Game::gRng.RandomRange(-255, 256);
       t.SomeData.push_back(val);
     }
 
@@ -1024,7 +1024,7 @@ void StressTest()
   namespace FT = std::chrono;
   using Clock  = std::chrono::system_clock;
 
-  uint64_t fileId1 = RNG::Instance().Random();
+  uint64_t fileId1 = Game::gRng.Random();
   uint64_t fileId2 = fileId1 + 1;
 
   std::string fname1 = Util::StringFormat("%llu.tmp", fileId1);
@@ -1244,10 +1244,10 @@ void StressTest()
 
 int main(int argc, char* argv[])
 {
-  RNG::Instance().Init();
-  //RNG::Instance().SetSeed(1700139497490078115);
+  Game::gRng.Init();
+  //Game::gRng.SetSeed(1700139497490078115);
 
-  printf("Seed = %llu\n\n", RNG::Instance().Seed);
+  printf("Seed = %llu\n\n", Game::gRng.Seed);
 
   ParseTest();
   TestSimple();

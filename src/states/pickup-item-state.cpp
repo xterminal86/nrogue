@@ -4,9 +4,11 @@
 #include "printer.h"
 #include "map.h"
 
+#include "container-component.h"
+
 void PickupItemState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 
   _headerText = " PICKUP ITEMS ";
 }
@@ -32,7 +34,7 @@ void PickupItemState::ProcessInput()
   switch (_keyPressed)
   {
     case VK_CANCEL:
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
       break;
 
     default:
@@ -52,9 +54,8 @@ void PickupItemState::ProcessInput()
             // if the pile was big enough and item was removed
             // from around the middle on first interaction.
             //
-            _itemsList =
-                Map::Instance().GetGameObjectsToPickup(_playerRef->PosX,
-                                                       _playerRef->PosY);
+            _itemsList = Game::gMap.GetGameObjectsToPickup(_playerRef->PosX,
+                                                           _playerRef->PosY);
 
             RebuildDisplayList();
           }
@@ -76,12 +77,12 @@ bool PickupItemState::PickupItem(const Item& item)
                                       ic->Data.Amount,
                                       ic->OwnerGameObject->ObjectName.data());
 
-    Printer::Instance().AddMessage(message);
+    Game::gPrnt.AddMessage(message);
 
     _playerRef->Money += ic->Data.Amount;
 
-    auto it = Map::Instance().CurrentLevel->GameObjects.begin();
-    Map::Instance().CurrentLevel->GameObjects.erase(it + item.first);
+    auto it = Game::gMap.CurrentLevel->GameObjects.begin();
+    Game::gMap.CurrentLevel->GameObjects.erase(it + item.first);
 
     return true;
   }
@@ -89,17 +90,17 @@ bool PickupItemState::PickupItem(const Item& item)
   {
     if (_playerRef->Inventory->IsFull())
     {
-      Application::Instance().ShowMessageBox(
-            MessageBoxType::ANY_KEY,
-            Strings::MessageBoxEpicFailHeaderText,
-            { Strings::MsgInventoryFull },
-            Colors::MessageBoxRedBorderColor
+      Game::gApp.ShowMessageBox(
+        MessageBoxType::ANY_KEY,
+        Strings::MessageBoxEpicFailHeaderText,
+        { Strings::MsgInventoryFull },
+        Colors::MessageBoxRedBorderColor
       );
 
       return false;
     }
 
-    auto go = Map::Instance().CurrentLevel->GameObjects[item.first].release();
+    auto go = Game::gMap.CurrentLevel->GameObjects[item.first].release();
 
     _playerRef->Inventory->Add(go);
 
@@ -119,10 +120,10 @@ bool PickupItemState::PickupItem(const Item& item)
       message = Util::StringFormat(Strings::FmtPickedUpS, objName.data());
     }
 
-    Printer::Instance().AddMessage(message);
+    Game::gPrnt.AddMessage(message);
 
-    auto it = Map::Instance().CurrentLevel->GameObjects.begin();
-    Map::Instance().CurrentLevel->GameObjects.erase(it + item.first);
+    auto it = Game::gMap.CurrentLevel->GameObjects.begin();
+    Game::gMap.CurrentLevel->GameObjects.erase(it + item.first);
 
     return true;
   }
@@ -136,24 +137,24 @@ void PickupItemState::DrawSpecific()
 {
   if (_displayLines.empty())
   {
-    Printer::Instance().PrintFB(_twHalf,
-                                _thHalf,
-                                "No items",
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(_twHalf,
+                        _thHalf,
+                        "No items",
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
   }
   else
   {
     int lineIndex = 0;
     for (auto& line : _displayLines)
     {
-      Printer::Instance().PrintFB(1,
-                                  2 + lineIndex,
-                                  line,
-                                  Printer::kAlignLeft,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(1,
+                          2 + lineIndex,
+                          line,
+                          Printer::kAlignLeft,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
       lineIndex++;
     }
   }

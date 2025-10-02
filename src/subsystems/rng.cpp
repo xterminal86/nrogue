@@ -5,8 +5,13 @@
 
 #include <sstream>
 
-void RNG::InitSpecific()
+void RNG::Init()
 {
+  if (_initialized)
+  {
+    return;
+  }
+
   auto seed = std::chrono::system_clock::now().time_since_epoch().count();
 
   Random.seed(seed);
@@ -14,6 +19,8 @@ void RNG::InitSpecific()
   Seed = seed;
 
   GenerateSeedString("<seed was randomized>");
+
+  _initialized = true;
 }
 
 // =============================================================================

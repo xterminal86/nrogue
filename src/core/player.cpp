@@ -2,6 +2,8 @@
 
 #include "map.h"
 #include "printer.h"
+#include "container-component.h"
+#include "equipment-component.h"
 #include "door-component.h"
 #include "game-objects-factory.h"
 #include "items-factory.h"
@@ -16,7 +18,7 @@
 
 void Player::Init()
 {
-  _objectId = GID::Instance().GenerateGlobalId();
+  _objectId = Game::gGid.GenerateGlobalId();
 
 #ifdef DEBUG_BUILD
   GameObjectsById[_objectId] = this;
@@ -48,8 +50,8 @@ void Player::Init()
   SetDefaultEquipment();
   SetDefaultSkills();
 
-  _previousCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
-  _currentCell  = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
+  _previousCell = Game::gMap.CurrentLevel->MapArray[PosX][PosY].get();
+  _currentCell  = Game::gMap.CurrentLevel->MapArray[PosX][PosY].get();
 
   _currentCell->Occupied = true;
 
@@ -65,7 +67,7 @@ void Player::Init()
 
 void Player::Draw()
 {
-  auto& mapRef = Map::Instance().CurrentLevel;
+  auto& mapRef = Game::gMap.CurrentLevel;
 
   //
   // If game object has black bg color,
@@ -103,7 +105,7 @@ bool Player::TryToMeleeAttack(int dx, int dy)
     return false;
   }
 
-  auto go = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
+  auto go = Game::gMap.GetActorAtPosition(PosX + dx, PosY + dy);
   if (go != nullptr)
   {
     Component* c = go->GetComponent<AIComponent>();
@@ -125,7 +127,7 @@ bool Player::TryToMeleeAttack(int dx, int dy)
 
 bool Player::Move(int dx, int dy)
 {
-  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+  MapLevelBase* curLvl = Game::gMap.CurrentLevel;
 
   auto cell         = curLvl->MapArray[PosX + dx][PosY + dy].get();
   auto staticObject = curLvl->StaticMapObjects[PosX + dx][PosY + dy].get();
@@ -144,7 +146,7 @@ bool Player::Move(int dx, int dy)
     //
     if (cell->Occupied)
     {
-      auto actor = Map::Instance().GetActorAtPosition(PosX + dx, PosY + dy);
+      auto actor = Game::gMap.GetActorAtPosition(PosX + dx, PosY + dy);
       if (actor != nullptr)
       {
         //
@@ -218,7 +220,7 @@ bool Player::PassByNPC(GameObject* actor)
       std::string name = (npc->Data.IsAquainted)
                         ? npc->Data.Name
                         : "The " + actor->ObjectName;
-      Printer::Instance().AddMessage(name + " won't move over");
+      Game::gPrnt.AddMessage(name + " won't move over");
       ok = false;
     }
     else
@@ -238,7 +240,7 @@ bool Player::PassByNPC(GameObject* actor)
 //
 void Player::CheckVisibility()
 {
-  Timer::Instance().StartProfiling("  Player::CheckVisibility()");
+  Game::gTimer.StartProfiling("  Player::CheckVisibility()");
 
   int tw = Printer::TerminalWidth;
   int th = Printer::TerminalHeight;
@@ -246,8 +248,8 @@ void Player::CheckVisibility()
   //
   // Update map around player.
   //
-  auto& map = Map::Instance().CurrentLevel->MapArray;
-  auto& staticObjects = Map::Instance().CurrentLevel->StaticMapObjects;
+  auto& map = Game::gMap.CurrentLevel->MapArray;
+  auto& staticObjects = Game::gMap.CurrentLevel->StaticMapObjects;
 
   //
   // FIXME: some objects can modify visibility radius
@@ -260,7 +262,7 @@ void Player::CheckVisibility()
                                            PosY,
                                            tw / 2,
                                            th / 2,
-                                           Map::Instance().CurrentLevel->MapSize);
+                                           Game::gMap.CurrentLevel->MapSize);
 
 #ifdef DEBUG_BUILD
   for (auto& cell : mapCells)
@@ -329,17 +331,17 @@ void Player::CheckVisibility()
     }
   }
 
-  Timer::Instance().FinishProfiling("  Player::CheckVisibility()");
+  Game::gTimer.FinishProfiling("  Player::CheckVisibility()");
 }
 
 // =============================================================================
 
 void Player::DiscoverCell(int x, int y)
 {
-  auto& map = Map::Instance().CurrentLevel->MapArray;
-  auto& staticObjects = Map::Instance().CurrentLevel->StaticMapObjects;
+  auto& map = Game::gMap.CurrentLevel->MapArray;
+  auto& staticObjects = Game::gMap.CurrentLevel->StaticMapObjects;
 
-  auto curLvl = Map::Instance().CurrentLevel;
+  auto curLvl = Game::gMap.CurrentLevel;
 
   if (x == curLvl->LevelExit.X
    && y == curLvl->LevelExit.Y
@@ -463,7 +465,7 @@ void Player::SetArcanistAttrs()
 void Player::SetCustomClassAttrs()
 {
   GameState* stateRef =
-      Application::Instance().GetGameStateRefByName(
+      Game::gApp.GetGameStateRefByName(
         GameStates::CUSTOM_CLASS_STATE
       );
 
@@ -494,7 +496,7 @@ void Player::SetDefaultEquipment()
   GameObject* weapon = nullptr;
   GameObject* armor = nullptr;
 
-  static ItemsFactory& factory = ItemsFactory::Instance();
+  static ItemsFactory& factory = Game::gIF;
 
   switch (GetClass())
   {
@@ -570,19 +572,19 @@ void Player::SetDefaultEquipment()
 
     case PlayerClass::CUSTOM:
     {
-      weapon = ItemsFactory::Instance().CreateRandomWeapon();
+      weapon = Game::gIF.CreateRandomWeapon();
       Inventory->Add(weapon);
 
-      armor = ItemsFactory::Instance().CreateRandomArmor();
+      armor = Game::gIF.CreateRandomArmor();
       Inventory->Add(armor);
 
-      auto acc = ItemsFactory::Instance().CreateRandomAccessory(0, 0);
+      auto acc = Game::gIF.CreateRandomAccessory(0, 0);
       Inventory->Add(acc);
 
-      auto potion = ItemsFactory::Instance().CreateRandomPotion();
+      auto potion = Game::gIF.CreateRandomPotion();
       Inventory->Add(potion);
 
-      auto gem = ItemsFactory::Instance().CreateGem(0, 0);
+      auto gem = Game::gIF.CreateGem(0, 0);
       Inventory->Add(gem);
     }
     break;
@@ -660,7 +662,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   {
     // Create arrow object on the cell where it landed
     ItemComponent* arrow =
-        GameObjectsFactory::Instance().CloneItem(
+        Game::gGOF.CloneItem(
           Equipment->EquipmentByCategory[EquipmentCategory::SHIELD][0]
         );
 
@@ -668,7 +670,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
     arrow->OwnerGameObject->PosY = what->PosY;
     arrow->Data.Amount = 1;
     arrow->Data.IsEquipped = false;
-    Map::Instance().PlaceGameObject(arrow->OwnerGameObject);
+    Game::gMap.PlaceGameObject(arrow->OwnerGameObject);
   }
 
   arrows->Data.Amount--;
@@ -681,7 +683,7 @@ void Player::RangedAttack(GameObject* what, ItemComponent* with)
   std::string logMsg = Util::TryToDamageEquipment(this, weapon, -1);
   if (!logMsg.empty())
   {
-    Printer::Instance().AddMessage(logMsg);
+    Game::gPrnt.AddMessage(logMsg);
   }
 }
 
@@ -715,7 +717,7 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
   switch (with->Data.SpellHeld.SpellType_)
   {
     case SpellType::NONE:
-      Printer::Instance().AddMessage(Strings::NoActionText);
+      Game::gPrnt.AddMessage(Strings::NoActionText);
       break;
 
     case SpellType::STRIKE:
@@ -729,19 +731,19 @@ void Player::MagicAttack(GameObject* what, ItemComponent* with)
       break;
 
     case SpellType::FIREBALL:
-      Map::Instance().ProcessAoEDamage(what, with, centralDamage, true);
+      Game::gMap.ProcessAoEDamage(what, with, centralDamage, true);
       break;
 
     case SpellType::TELEPORT:
     {
-      if (!Map::Instance().CurrentLevel->MysteriousForcePresent)
+      if (!Game::gMap.CurrentLevel->MysteriousForcePresent)
       {
         std::string msg = Util::ProcessTeleport(what);
-        Printer::Instance().AddMessage(msg);
+        Game::gPrnt.AddMessage(msg);
       }
       else
       {
-        Printer::Instance().AddMessage(Strings::NoActionText);
+        Game::gPrnt.AddMessage(Strings::NoActionText);
       }
     }
     break;
@@ -762,7 +764,7 @@ void Player::ProcessMagicAttack(GameObject* target,
 {
   Position p = target->GetPosition();
 
-  auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+  auto actor = Game::gMap.GetActorAtPosition(p.X, p.Y);
   if (actor != nullptr)
   {
     bool damageDone = Util::TryToDamageObject(actor,
@@ -797,7 +799,7 @@ void Player::ProcessMagicAttack(GameObject* target,
     //
     // Check items first.
     //
-    auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
+    auto mapObjs = Game::gMap.GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
     {
       Util::TryToDamageObject(obj, this, damage, againstRes);
@@ -808,7 +810,7 @@ void Player::ProcessMagicAttack(GameObject* target,
     //
     if (mapObjs.empty())
     {
-      auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
+      auto so = Game::gMap.GetStaticGameObjectAtPosition(p.X, p.Y);
       if (so != nullptr)
       {
         Util::TryToDamageObject(so, this, damage, againstRes);
@@ -832,23 +834,23 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
                                    what->Attrs.Skl.Get(),
                                    what->Attrs.Lvl.Get(),
                                    hitChance);
-  Logger::Instance().Print(logMsg);
+  Game::gLogger.Print(logMsg);
   #endif
 
   bool hitLanded = alwaysHit ? true : Util::Rolld100(hitChance);
   if (!hitLanded)
   {
-    Application::Instance().DisplayAttack(what,
-                                          GlobalConstants::DisplayAttackDelayMs,
-                                          "You missed",
-                                          Colors::WhiteColor);
+    Game::gApp.DisplayAttack(what,
+                            GlobalConstants::DisplayAttackDelayMs,
+                            "You missed",
+                            Colors::WhiteColor);
   }
   else
   {
-    Application::Instance().DisplayAttack(what,
-                                          GlobalConstants::DisplayAttackDelayMs,
-                                          std::string(),
-                                          Colors::RedColor);
+    Game::gApp.DisplayAttack(what,
+                              GlobalConstants::DisplayAttackDelayMs,
+                              std::string(),
+                              Colors::RedColor);
 
     ItemComponent* weapon =
         Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
@@ -961,7 +963,7 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
         std::string logMsg = Util::TryToDamageEquipment(this, weapon, -1);
         if (!logMsg.empty())
         {
-          Printer::Instance().AddMessage(logMsg);
+          Game::gPrnt.AddMessage(logMsg);
         }
       }
     }
@@ -979,7 +981,7 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
 
     auto msg = Util::StringFormat("You tear down the %s",
                                   defender->ObjectName.data());
-    Printer::Instance().AddMessage(msg);
+    Game::gPrnt.AddMessage(msg);
   }
   else
   {
@@ -1012,7 +1014,7 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
 
 bool Player::IsGameObjectBorder(GameObject* go)
 {
-  auto& lvl = Map::Instance().CurrentLevel;
+  auto& lvl = Game::gMap.CurrentLevel;
 
   return (go->PosX == 0
        || go->PosY == 0
@@ -1064,7 +1066,7 @@ bool Player::ReceiveDamage(GameObject* from,
   {
     for (auto& m : logMsgs)
     {
-      Printer::Instance().AddMessage(m);
+      Game::gPrnt.AddMessage(m);
     }
   }
 
@@ -1075,7 +1077,7 @@ bool Player::ReceiveDamage(GameObject* from,
                            Util::GetGameObjectDisplayCharacter(from).data(),
                            dmgReturned);
 
-    Printer::Instance().AddMessage(thornsLogMsg);
+    Game::gPrnt.AddMessage(thornsLogMsg);
 
     from->ReceiveDamage(this, dmgReturned, true, true, true, false);
   }
@@ -1101,7 +1103,7 @@ void Player::AwardExperience(int amount)
     msg = Util::StringFormat("%i EXP", amount);
   }
 
-  Printer::Instance().AddMessage(msg);
+  Game::gPrnt.AddMessage(msg);
 
   Attrs.Exp.AddMin(amnt);
 
@@ -1165,11 +1167,11 @@ void Player::LevelUp(int baseHpOverride)
   PrintLevelUpResultsToLog(true);
 
   auto res = GetPrettyLevelUpText();
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                                         "Level Up!",
-                                         res,
-                                         0x888800,
-                                         0x000044);
+  Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                             "Level Up!",
+                             res,
+                             0x888800,
+                             0x000044);
 }
 
 // =============================================================================
@@ -1181,11 +1183,11 @@ void Player::LevelDown()
   PrintLevelUpResultsToLog(false);
 
   auto res = GetPrettyLevelUpText();
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                                         "Level DOWN!",
-                                         res,
-                                         Colors::RedColor,
-                                         0x000044);
+  Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                             "Level DOWN!",
+                             res,
+                             Colors::RedColor,
+                             0x000044);
 }
 
 // =============================================================================
@@ -1262,12 +1264,12 @@ void Player::PrintLevelUpResultsToLog(bool reallyUp)
 
   for (auto& msg : messages)
   {
-    Printer::Instance().AddMessage(msg);
+    Game::gPrnt.AddMessage(msg);
   }
 
   if (!reallyUp)
   {
-    Printer::Instance().AddMessage("You have LOST a level!");
+    Game::gPrnt.AddMessage("You have LOST a level!");
   }
 }
 
@@ -1459,7 +1461,7 @@ void Player::FinishTurn()
   // So that triggers condition check happens
   // regardless of player's SPD.
   //
-  Map::Instance().UpdateTriggers(TriggerUpdateType::FINISH_TURN);
+  Game::gMap.UpdateTriggers(TriggerUpdateType::FINISH_TURN);
 
   //
   // If player killed an enemy but can still make another turn,
@@ -1472,9 +1474,9 @@ void Player::FinishTurn()
   //
   // Probably bad design anyway but fuck it.
   //
-  Map::Instance().RemoveDestroyed();
+  Game::gMap.RemoveDestroyed();
 
-  Application::Instance().PlayerTurnsPassed++;
+  Game::gApp.PlayerTurnsPassed++;
 }
 
 // =============================================================================
@@ -1488,7 +1490,7 @@ void Player::ProcessEffectsPlayer()
   if (HasEffect(ItemBonusType::PARALYZE))
   {
     //Util::Sleep(100);
-    Printer::Instance().AddMessage("You can't move!");
+    Game::gPrnt.AddMessage("You can't move!");
     shouldRedraw = true;
   }
 
@@ -1508,7 +1510,7 @@ void Player::ProcessEffectsPlayer()
                                   ic->Data.IdentifiedName :
                                   ic->Data.UnidentifiedName;
             auto str = Util::StringFormat("%s burns up!", objName.data());
-            Printer::Instance().AddMessage(str);
+            Game::gPrnt.AddMessage(str);
             Inventory->Contents.erase(Inventory->Contents.begin() + i);
             break;
           }
@@ -1519,7 +1521,7 @@ void Player::ProcessEffectsPlayer()
 
   if (shouldRedraw)
   {
-    Application::Instance().ForceDrawMainState();
+    Game::gApp.ForceDrawMainState();
   }
 }
 
@@ -1530,7 +1532,7 @@ void Player::ProcessStarvation()
   //
   // No starving in town.
   //
-  if (Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
+  if (Game::gMap.CurrentLevel->MapType_ == MapType::TOWN)
   {
     return;
   }
@@ -1564,7 +1566,7 @@ void Player::ProcessHunger()
   //
   // No starving in town.
   //
-  if (Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
+  if (Game::gMap.CurrentLevel->MapType_ == MapType::TOWN)
   {
     return;
   }
@@ -1591,7 +1593,7 @@ void Player::ProcessHunger()
 
     if (_starvingTimeout > GlobalConstants::StarvationDamageTimeout - 1)
     {
-      Printer::Instance().AddMessage("You are starving!");
+      Game::gPrnt.AddMessage("You are starving!");
       Attrs.HP.AddMin(-1);
     }
 
@@ -1656,23 +1658,23 @@ void Player::SetSoldierDefaultItems()
 {
   Money = 250;
 
-  auto go = ItemsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
+  auto go = Game::gIF.CreateHealingPotion(ItemPrefix::UNCURSED);
   ItemComponent* ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 3;
 
   Inventory->Add(go);
 
-  go = ItemsFactory::Instance().CreateFood(0,
-                                           0,
-                                           FoodType::IRON_RATIONS,
-                                           ItemPrefix::UNCURSED);
+  go = Game::gIF.CreateFood(0,
+                             0,
+                             FoodType::IRON_RATIONS,
+                             ItemPrefix::UNCURSED);
   ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 1;
   ic->Data.IsIdentified = true;
 
   Inventory->Add(go);
 
-  go = ItemsFactory::Instance().CreateRepairKit(0, 0, 30, ItemPrefix::BLESSED);
+  go = Game::gIF.CreateRepairKit(0, 0, 30, ItemPrefix::BLESSED);
 
   Inventory->Add(go);
 }
@@ -1683,10 +1685,10 @@ void Player::SetThiefDefaultItems()
 {
   Money = 500;
 
-  auto go = ItemsFactory::Instance().CreateHealingPotion(ItemPrefix::UNCURSED);
+  auto go = Game::gIF.CreateHealingPotion(ItemPrefix::UNCURSED);
   Inventory->Add(go);
 
-  go = ItemsFactory::Instance().CreateManaPotion(ItemPrefix::UNCURSED);
+  go = Game::gIF.CreateManaPotion(ItemPrefix::UNCURSED);
   Inventory->Add(go);
 }
 
@@ -1696,19 +1698,19 @@ void Player::SetArcanistDefaultItems()
 {
   Money = 0;
 
-  auto go = ItemsFactory::Instance().CreateManaPotion(ItemPrefix::BLESSED);
+  auto go = Game::gIF.CreateManaPotion(ItemPrefix::BLESSED);
   ItemComponent* ic = go->GetComponent<ItemComponent>();
   ic->Data.Amount = 5;
 
   Inventory->Add(go);
 
-  go = ItemsFactory::Instance().CreateReturner(0, 0, 3, ItemPrefix::UNCURSED);
+  go = Game::gIF.CreateReturner(0, 0, 3, ItemPrefix::UNCURSED);
   Inventory->Add(go);
 
-  go = ItemsFactory::Instance().CreateScroll(0,
-                                             0,
-                                             SpellType::MANA_SHIELD,
-                                             ItemPrefix::BLESSED);
+  go = Game::gIF.CreateScroll(0,
+                               0,
+                               SpellType::MANA_SHIELD,
+                               ItemPrefix::BLESSED);
   Inventory->Add(go);
 }
 
@@ -1747,13 +1749,13 @@ void Player::SwitchPlaces(AIComponent* other)
   other->OwnerGameObject->Move(dxNpc, dyNpc);
   other->OwnerGameObject->FinishTurn();
 
-  Map::Instance().CurrentLevel->AdjustCamera();
+  Game::gMap.CurrentLevel->AdjustCamera();
 
   AINPC* npc = static_cast<AINPC*>(other->CurrentModel);
   std::string name = (npc->Data.IsAquainted)
                      ? npc->Data.Name
                      : "the " + other->OwnerGameObject->ObjectName;
-  Printer::Instance().AddMessage("You pass by " + name);
+  Game::gPrnt.AddMessage("You pass by " + name);
 }
 
 // =============================================================================
@@ -1787,7 +1789,7 @@ void Player::AddExtraItems()
         "21 / II / 988"
       };
 
-      go = ItemsFactory::Instance().CreateNote("Wanted Poster", text);
+      go = Game::gIF.CreateNote("Wanted Poster", text);
       Inventory->Add(go);
     }
     break;
@@ -1808,7 +1810,7 @@ void Player::AddExtraItems()
         "21 / II / 988"
       };
 
-      go = ItemsFactory::Instance().CreateNote("Leave Warrant", text);
+      go = Game::gIF.CreateNote("Leave Warrant", text);
       Inventory->Add(go);
     }
     break;
@@ -1820,7 +1822,7 @@ void Player::AddExtraItems()
         Name,
         "",
         "The Order instructs you to visit",
-        Map::Instance().CurrentLevel->LevelName,
+        Game::gMap.CurrentLevel->LevelName,
         "Investigate the place as thorough as possible",
         "for we believe there is a disturbance",
         "lurking there somewhere.",
@@ -1832,7 +1834,7 @@ void Player::AddExtraItems()
         "+ Bishop DANIEL"
       };
 
-      go = ItemsFactory::Instance().CreateNote("Orders", text);
+      go = Game::gIF.CreateNote("Orders", text);
       Inventory->Add(go);
     }
     break;

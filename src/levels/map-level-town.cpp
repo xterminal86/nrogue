@@ -276,7 +276,7 @@ void MapLevelTown::CreateLevel()
   LevelExit.X = 91;
   LevelExit.Y = 44;
 
-  GameObjectsFactory::Instance().CreateStairs(this,
+  Game::gGOF.CreateStairs(this,
                                               LevelExit.X,
                                               LevelExit.Y,
                                               '>',
@@ -425,7 +425,7 @@ void MapLevelTown::CreateBlacksmith(int x,
 
   if (randomizeOrientation)
   {
-    int index = RNG::Instance().Random() % _rotations.size();
+    int index = Game::gRng.Random() % _rotations.size();
     newLayout = Util::RotateRoomLayout(layout, _rotations[index]);
   }
 
@@ -517,7 +517,7 @@ void MapLevelTown::CreateRoom(int x,
 
   if (randomizeOrientation)
   {
-    int index = RNG::Instance().Random() % _rotations.size();
+    int index = Game::gRng.Random() % _rotations.size();
     newLayout = Util::RotateRoomLayout(layout, _rotations[index]);
   }
 
@@ -744,7 +744,7 @@ void MapLevelTown::CreateChurch(int x, int y)
           // we must make it a global game object so it could be updated
           // every turn no matter where the player is.
           //
-          auto go = GameObjectsFactory::Instance().CreateShrine(posX,
+          auto go = Game::gGOF.CreateShrine(posX,
                                                                 posY,
                                                                 shrineType,
                                                                 100);
@@ -780,7 +780,7 @@ void MapLevelTown::CreatePlayerHouse()
   Position cp(6, 6);
   PlaceStaticObject(6, 6, t);
 
-  auto stash = GameObjectsFactory::Instance().CreateContainer(
+  auto stash = Game::gGOF.CreateContainer(
                  cp.X,
                  cp.Y,
                  'C',
@@ -845,11 +845,11 @@ void MapLevelTown::CreateNPCs()
       }
     }
 
-    int index = RNG::Instance().RandomRange(0, emptyCells.size());
+    int index = Game::gRng.RandomRange(0, emptyCells.size());
 
-    auto go = MonstersInc::Instance().CreateNPC(emptyCells[index].X,
-                                                emptyCells[index].Y,
-                                                npc);
+    auto go = Game::gMI.CreateNPC(emptyCells[index].X,
+                                  emptyCells[index].Y,
+                                  npc);
     PlaceActor(go);
 
     visited.push_back(Position(emptyCells[index].X, emptyCells[index].Y));
@@ -857,33 +857,21 @@ void MapLevelTown::CreateNPCs()
 
   GameObject* go = nullptr;
 
-  go = MonstersInc::Instance().CreateNPC(73, 24, NPCType::TIGRA);
+  go = Game::gMI.CreateNPC(73, 24, NPCType::TIGRA);
   PlaceActor(go);
 
   // Traders
 
-  go = MonstersInc::Instance().CreateNPC(83,
-                                         24,
-                                         NPCType::MARTIN,
-                                         true,
-                                         ServiceType::BLESS);
+  go = Game::gMI.CreateNPC(83, 24, NPCType::MARTIN, true, ServiceType::BLESS);
   PlaceActor(go);
 
-  go = MonstersInc::Instance().CreateNPC(9, 22, NPCType::CASEY, true);
+  go = Game::gMI.CreateNPC(9, 22, NPCType::CASEY, true);
   PlaceActor(go);
 
-  go = MonstersInc::Instance().CreateNPC(9,
-                                         43,
-                                         NPCType::MAYA,
-                                         true,
-                                         ServiceType::IDENTIFY);
+  go = Game::gMI.CreateNPC(9, 43, NPCType::MAYA, true, ServiceType::IDENTIFY);
   PlaceActor(go);
 
-  go = MonstersInc::Instance().CreateNPC(81,
-                                         7,
-                                         NPCType::GRISWOLD,
-                                         true,
-                                         ServiceType::REPAIR);
+  go = Game::gMI.CreateNPC(81, 7, NPCType::GRISWOLD, true, ServiceType::REPAIR);
   PlaceActor(go);
 }
 
@@ -1065,7 +1053,7 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
 
 void MapLevelTown::CreateTownGates()
 {
-  static ItemsFactory& factory = ItemsFactory::Instance();
+  static ItemsFactory& factory = Game::gIF;
 
   GameObject* gate1 = factory.CreateDummyItem(Strings::TileNames::GatesText,
                                               '+',

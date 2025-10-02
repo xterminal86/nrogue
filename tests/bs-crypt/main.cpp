@@ -34,7 +34,7 @@ void RunAndMeasure(const std::string& textToPrint, const F& fn)
 
 int main(int argc, char* argv[])
 {
-  RNG::Instance().Init();
+  Game::gRng.Init();
 
   const std::string original = "This is a simple string test";
 
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
     //
     // Turns out my Util::Rolld100 is quite slow for some reason...
     //
-    bigString[i] = char(RNG::Instance().Random() % 256);
+    bigString[i] = char(Game::gRng.Random() % 256);
   }
 
   printf("BEFORE\n");

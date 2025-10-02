@@ -1,6 +1,8 @@
 #include "task-move-smart.h"
 
 #include "map.h"
+#include "rng.h"
+
 #include "door-component.h"
 
 BTResult TaskMoveSmart::Run()
@@ -9,14 +11,14 @@ BTResult TaskMoveSmart::Run()
 
   auto cells =
       Util::GetEightPointsAround(_objectToControl->GetPosition(),
-                                 Map::Instance().CurrentLevel->MapSize);
+                                 Game::gMap.CurrentLevel->MapSize);
 
   std::vector<Position> cellsToMove;
   for (auto& c : cells)
   {
-    auto& so = Map::Instance().CurrentLevel->StaticMapObjects[c.X][c.Y];
+    auto& so = Game::gMap.CurrentLevel->StaticMapObjects[c.X][c.Y];
 
-    MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+    MapLevelBase* curLvl = Game::gMap.CurrentLevel;
 
     //
     // TODO: certain monsters can go to zones otherwise blocked.
@@ -38,12 +40,12 @@ BTResult TaskMoveSmart::Run()
 
   if (!cellsToMove.empty())
   {
-    int index = RNG::Instance().RandomRange(0, cellsToMove.size());
+    int index = Game::gRng.RandomRange(0, cellsToMove.size());
     auto& p = cellsToMove[index];
 
     if (!_objectToControl->MoveTo(p.X, p.Y))
     {
-      auto& so = Map::Instance().CurrentLevel->StaticMapObjects[p.X][p.Y];
+      auto& so = Game::gMap.CurrentLevel->StaticMapObjects[p.X][p.Y];
       if (so != nullptr)
       {
         auto dc = so->GetComponent<DoorComponent>();

@@ -6,7 +6,6 @@
 #include <cstdint>
 #include <unordered_map>
 
-#include "singleton.h"
 #include "constants.h"
 
 //
@@ -24,7 +23,7 @@ using Ms  = FT::milliseconds;
 using Ns  = FT::nanoseconds;
 using Sec = FT::seconds;
 
-class Timer : public Singleton<Timer>
+class Timer
 {
   public:
     void StartProfiling(const std::string& timestampName);
@@ -39,9 +38,6 @@ class Timer : public Singleton<Timer>
     void MeasureEnd();
 
     const StringV& GetProfilingReport();
-
-  protected:
-    void InitSpecific() override;
 
   private:
     //

@@ -11,7 +11,7 @@ BTResult TaskChasePlayer::Run()
 
   Pathfinder pf;
 
-  auto path = pf.BuildRoad(Map::Instance().CurrentLevel,
+  auto path = pf.BuildRoad(Game::gMap.CurrentLevel,
                            _objectToControl->GetPosition(),
                            _playerRef->GetPosition(),
                            std::vector<char>(),

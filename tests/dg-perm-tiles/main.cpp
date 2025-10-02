@@ -1,4 +1,6 @@
 #include "level-builder.h"
+
+#include "globals.h"
 #include "rng.h"
 
 int main(int argc, char* argv[])
@@ -13,7 +15,7 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  RNG::Instance().Init();
+  Game::gRng.Init();
 
   Position mapSize;
   int tilesetIndex;

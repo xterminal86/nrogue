@@ -3,11 +3,13 @@
 #include "application.h"
 #include "npc-interact-state.h"
 #include "trader-component.h"
+#include "equipment-component.h"
+#include "container-component.h"
 #include "ai-npc.h"
 
 void ServiceState::Prepare()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
   _headerText = _serviceNameByType.at(_shopOwner->NpcRef->Data.ProvidesService);
 }
 
@@ -20,10 +22,10 @@ void ServiceState::ProcessInput()
     case VK_CANCEL:
     {
       GameStates gs = GameStates::NPC_INTERACT_STATE;
-      auto res = Application::Instance().GetGameStateRefByName(gs);
+      auto res = Game::gApp.GetGameStateRefByName(gs);
       NPCInteractState* nis = static_cast<NPCInteractState*>(res);
       nis->SetNPCRef(_shopOwner->NpcRef);
-      Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);
+      Game::gApp.ChangeState(GameStates::NPC_INTERACT_STATE);
     }
     break;
 
@@ -65,11 +67,11 @@ void ServiceState::ProcessRepair(int key)
   ServiceInfo& si = _serviceInfoByChar[key];
   if (_playerRef->Money < si.ServiceCost)
   {
-    Application::Instance().ShowMessageBox(
-          MessageBoxType::ANY_KEY,
-          Strings::MessageBoxEpicFailHeaderText,
-          { Strings::MsgNoMoney },
-          Colors::MessageBoxRedBorderColor
+    Game::gApp.ShowMessageBox(
+      MessageBoxType::ANY_KEY,
+      Strings::MessageBoxEpicFailHeaderText,
+      { Strings::MsgNoMoney },
+      Colors::MessageBoxRedBorderColor
     );
   }
   else
@@ -87,11 +89,11 @@ void ServiceState::ProcessIdentify(int key)
   ServiceInfo& si = _serviceInfoByChar[key];
   if (_playerRef->Money < si.ServiceCost)
   {
-    Application::Instance().ShowMessageBox(
-          MessageBoxType::ANY_KEY,
-          Strings::MessageBoxEpicFailHeaderText,
-          { Strings::MsgNotEnoughMoney },
-          Colors::MessageBoxRedBorderColor
+    Game::gApp.ShowMessageBox(
+      MessageBoxType::ANY_KEY,
+      Strings::MessageBoxEpicFailHeaderText,
+      { Strings::MsgNotEnoughMoney },
+      Colors::MessageBoxRedBorderColor
     );
   }
   else
@@ -109,10 +111,10 @@ void ServiceState::ProcessBlessing(int key)
   ServiceInfo& si = _serviceInfoByChar[key];
   if (_playerRef->Money < si.ServiceCost)
   {
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           "Damn Nation!",
-                                           { "No donation - no salvation!" },
-                                           Colors::MessageBoxRedBorderColor);
+    Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
+                               "Damn Nation!",
+                               { "No donation - no salvation!" },
+                               Colors::MessageBoxRedBorderColor);
   }
   else
   {
@@ -212,19 +214,19 @@ void ServiceState::DrawSpecific()
   std::string youHaveStr = "You have: ";
   auto playerMoney = Util::StringFormat("$ %i", _playerRef->Money);
 
-  Printer::Instance().PrintFB(1,
-                              _th - 1,
-                              youHaveStr,
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(1,
+                      _th - 1,
+                      youHaveStr,
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 
-  Printer::Instance().PrintFB(1 + youHaveStr.length(),
-                              _th - 1,
-                              playerMoney,
-                              Printer::kAlignLeft,
-                              Colors::CoinsColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(1 + youHaveStr.length(),
+                      _th - 1,
+                      playerMoney,
+                      Printer::kAlignLeft,
+                      Colors::CoinsColor,
+                      Colors::BlackColor);
 }
 
 // =============================================================================
@@ -233,13 +235,13 @@ void ServiceState::DisplayItems()
 {
   if (_serviceInfoByChar.empty())
   {
-    Printer::Instance().PrintFB(
-          _twHalf,
-          _thHalf,
-          _displayOnEmptyItems.at(_shopOwner->NpcRef->Data.ProvidesService),
-          Printer::kAlignCenter,
-          Colors::WhiteColor,
-          Colors::BlackColor
+    Game::gPrnt.PrintFB(
+      _twHalf,
+      _thHalf,
+      _displayOnEmptyItems.at(_shopOwner->NpcRef->Data.ProvidesService),
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
     );
   }
   else
@@ -251,30 +253,30 @@ void ServiceState::DisplayItems()
 
       std::string cost = Util::StringFormat("$%i", ri.ServiceCost);
 
-      Printer::Instance().PrintFB(1,
-                                  2 + itemIndex,
-                                  ri.NameToDisplay,
-                                  Printer::kAlignLeft,
-                                  ri.Color,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(1,
+                          2 + itemIndex,
+                          ri.NameToDisplay,
+                          Printer::kAlignLeft,
+                          ri.Color,
+                          Colors::BlackColor);
 
       //
       // Replace letter and dash with white color
       // in case item is blessed or cursed.
       //
-      Printer::Instance().PrintFB(1,
-                                  2 + itemIndex,
-                                  ri.Letter + " - ",
-                                  Printer::kAlignLeft,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(1,
+                          2 + itemIndex,
+                          ri.Letter + " - ",
+                          Printer::kAlignLeft,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
 
-      Printer::Instance().PrintFB(1 + _maxStrLen + 1,
-                                  2 + itemIndex,
-                                  cost,
-                                  Printer::kAlignLeft,
-                                  Colors::CoinsColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(1 + _maxStrLen + 1,
+                          2 + itemIndex,
+                          cost,
+                          Printer::kAlignLeft,
+                          Colors::CoinsColor,
+                          Colors::BlackColor);
 
       itemIndex++;
     }
@@ -285,7 +287,7 @@ void ServiceState::DisplayItems()
 
 void ServiceState::Setup(TraderComponent* shopOwner)
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 
   _shopOwner = shopOwner;
 

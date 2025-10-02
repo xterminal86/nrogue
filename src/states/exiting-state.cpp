@@ -6,7 +6,7 @@
 
 void ExitingState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 }
 
 // =============================================================================
@@ -20,13 +20,13 @@ void ExitingState::HandleInput()
     case VK_CANCEL:
     case 'n':
     case 'N':
-      Printer::Instance().ShowLastMessage = false;
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gPrnt.ShowLastMessage = false;
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
       break;
 
     case 'y':
-      Application::Instance().WriteObituary(false);
-      Application::Instance().ChangeState(GameStates::EXIT_GAME);
+      Game::gApp.WriteObituary(false);
+      Game::gApp.ChangeState(GameStates::EXIT_GAME);
       break;
 
     default:
@@ -40,21 +40,21 @@ void ExitingState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
     _playerRef->CheckVisibility();
 
-    Map::Instance().Draw();
+    Game::gMap.Draw();
 
     _playerRef->Draw();
 
-    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
-                                Printer::TerminalHeight - 1,
-                                "Exit game? (y/n)",
-                                Printer::kAlignRight,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
+                        Printer::TerminalHeight - 1,
+                        "Exit game? (y/n)",
+                        Printer::kAlignRight,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }

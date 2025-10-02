@@ -20,13 +20,13 @@ void MessageBoxState::HandleInput()
       {
         if (_keyPressed == VK_ENTER || _keyPressed == 'q')
         {
-          Application::Instance().CloseMessageBox();
+          Game::gApp.CloseMessageBox();
         }
       }
       break;
 
       default:
-        Application::Instance().CloseMessageBox();
+        Game::gApp.CloseMessageBox();
         break;
     }
   }
@@ -44,28 +44,28 @@ void MessageBoxState::Update(bool forceUpdate)
       headerBgColor = 0x660000;
     }
 
-    Printer::Instance().DrawWindow(_leftCorner,
-                                   _windowSize,
-                                   _header,
-                                   Colors::WhiteColor,
-                                   headerBgColor,
-                                   _borderColor,
-                                   Colors::BlackColor,
-                                   _bgColor);
+    Game::gPrnt.DrawWindow(_leftCorner,
+                            _windowSize,
+                            _header,
+                            Colors::WhiteColor,
+                            headerBgColor,
+                            _borderColor,
+                            Colors::BlackColor,
+                            _bgColor);
 
     int offset = 0;
     for (auto& s : _message)
     {
-      Printer::Instance().PrintFB(_tw / 2,
-                                  _th / 2 - _message.size() / 2 + offset,
-                                  s,
-                                  Printer::kAlignCenter,
-                                  Colors::WhiteColor,
-                                  _bgColor);
+      Game::gPrnt.PrintFB(_tw / 2,
+                           _th / 2 - _message.size() / 2 + offset,
+                           s,
+                           Printer::kAlignCenter,
+                           Colors::WhiteColor,
+                           _bgColor);
       offset++;
     }
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }
 

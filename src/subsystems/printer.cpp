@@ -12,8 +12,13 @@
 size_t Printer::TerminalWidth = 0;
 size_t Printer::TerminalHeight = 0;
 
-void Printer::InitSpecific()
+void Printer::Init()
 {
+  if (_ok)
+  {
+    return;
+  }
+
 #ifdef USE_SDL
   _ok = InitForSDL();
 #else
@@ -26,7 +31,7 @@ void Printer::InitSpecific()
 #ifdef USE_SDL
 bool Printer::InitForSDL()
 {
-  auto& gameConfig = Application::Instance().GameConfig;
+  auto& gameConfig = Game::gApp.GameConfig;
 
   std::string tilesetFile = gameConfig.TilesetFilename;
 
@@ -38,8 +43,7 @@ bool Printer::InitForSDL()
   {
     SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
 
-    _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer,
-                                            surf);
+    _tileset = SDL_CreateTextureFromSurface(Game::gApp.Renderer, surf);
     if (_tileset == nullptr)
     {
       ConsoleLog("SDL_CreateTextureFromSurface() fail: %s\n", SDL_GetError());
@@ -54,18 +58,18 @@ bool Printer::InitForSDL()
   else
   {
     auto str = Util::StringFormat("***** Could not load tileset: %s! *****\n"
-                                  "Falling back to embedded.\n", SDL_GetError());
+                                  "Falling back to embedded.\n",
+                                  SDL_GetError());
     ConsoleLog("%s\n", str.data());
     LogPrint(str, true);
 
     _tileWidth = 8;
     _tileHeight = 16;
 
-    SDL_Rect rect = Application::Instance().GetWindowSize(_tileWidth,
-                                                          _tileHeight);
+    SDL_Rect rect = Game::gApp.GetWindowSize(_tileWidth, _tileHeight);
 
-    SDL_SetWindowPosition(Application::Instance().Window, rect.x, rect.y);
-    SDL_SetWindowSize(Application::Instance().Window, rect.w, rect.h);
+    SDL_SetWindowPosition(Game::gApp.Window, rect.x, rect.y);
+    SDL_SetWindowSize(Game::gApp.Window, rect.w, rect.h);
 
     auto res = Util::Base64_Decode(Base64Strings::Tileset8x16Base64);
     auto bytes = Util::ConvertStringToBytes(res);
@@ -84,8 +88,7 @@ bool Printer::InitForSDL()
     }
 
     SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
-    _tileset = SDL_CreateTextureFromSurface(Application::Instance().Renderer,
-                                            surf);
+    _tileset = SDL_CreateTextureFromSurface(Game::gApp.Renderer, surf);
     if (_tileset == nullptr)
     {
       ConsoleLog("SDL_CreateTextureFromSurface() fail: %s\n", SDL_GetError());
@@ -109,7 +112,7 @@ bool Printer::InitForSDL()
   _tilesetWidth = w;
   _tilesetHeight = h;
 
-  _frameBuffer = SDL_CreateTexture(Application::Instance().Renderer,
+  _frameBuffer = SDL_CreateTexture(Game::gApp.Renderer,
                                    SDL_PIXELFORMAT_RGBA32,
                                    SDL_TEXTUREACCESS_TARGET,
                                    gameConfig.WindowWidth,
@@ -284,9 +287,9 @@ void Printer::DrawRect(int x1, int y1,
                        int x2, int y2,
                        uint32_t color)
 {
-  if (SDL_GetRenderTarget(Application::Instance().Renderer) == nullptr)
+  if (SDL_GetRenderTarget(Game::gApp.Renderer) == nullptr)
   {
-    SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
+    SDL_SetRenderTarget(Game::gApp.Renderer, _frameBuffer);
   }
 
   TileInfo& ti = _tiles[219];
@@ -307,7 +310,7 @@ void Printer::DrawRect(int x1, int y1,
                          _convertedHtml.G,
                          _convertedHtml.B);
 
-  SDL_RenderCopy(Application::Instance().Renderer,
+  SDL_RenderCopy(Game::gApp.Renderer,
                  _tileset,
                  &_drawSrc,
                  &_drawDst);
@@ -329,12 +332,12 @@ void Printer::DrawTile(int x, int y, int tileIndex)
   _drawDst.w = _tileWidthScaled;
   _drawDst.h = _tileHeightScaled;
 
-  if (SDL_GetRenderTarget(Application::Instance().Renderer) == nullptr)
+  if (SDL_GetRenderTarget(Game::gApp.Renderer) == nullptr)
   {
-    SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
+    SDL_SetRenderTarget(Game::gApp.Renderer, _frameBuffer);
   }
 
-  SDL_RenderCopy(Application::Instance().Renderer,
+  SDL_RenderCopy(Game::gApp.Renderer,
                  _tileset,
                  &_drawSrc,
                  &_drawDst);
@@ -367,12 +370,12 @@ void Printer::DrawTile(int x, int y, int tileIndex, size_t scale)
   _drawDst.w = tileScaleW;
   _drawDst.h = tileScaleH;
 
-  if (SDL_GetRenderTarget(Application::Instance().Renderer) == nullptr)
+  if (SDL_GetRenderTarget(Game::gApp.Renderer) == nullptr)
   {
-    SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
+    SDL_SetRenderTarget(Game::gApp.Renderer, _frameBuffer);
   }
 
-  SDL_RenderCopy(Application::Instance().Renderer,
+  SDL_RenderCopy(Game::gApp.Renderer,
                  _tileset,
                  &_drawSrc,
                  &_drawDst);
@@ -1012,8 +1015,8 @@ void Printer::Clear()
     }
   }
 #else
-  SDL_SetRenderTarget(Application::Instance().Renderer, _frameBuffer);
-  SDL_RenderClear(Application::Instance().Renderer);
+  SDL_SetRenderTarget(Game::gApp.Renderer, _frameBuffer);
+  SDL_RenderClear(Game::gApp.Renderer);
 #endif
 }
 
@@ -1034,13 +1037,10 @@ void Printer::Render()
 
   refresh();
 #else
-  SDL_SetRenderTarget(Application::Instance().Renderer, nullptr);
-  SDL_RenderClear(Application::Instance().Renderer);
-  SDL_RenderCopy(Application::Instance().Renderer,
-                 _frameBuffer,
-                 nullptr,
-                 &_renderDst);
-  SDL_RenderPresent(Application::Instance().Renderer);
+  SDL_SetRenderTarget(Game::gApp.Renderer, nullptr);
+  SDL_RenderClear(Game::gApp.Renderer);
+  SDL_RenderCopy(Game::gApp.Renderer, _frameBuffer, nullptr, &_renderDst);
+  SDL_RenderPresent(Game::gApp.Renderer);
 #endif
 }
 
@@ -1056,24 +1056,24 @@ std::vector<Position> Printer::DrawExplosion(const Position& pos, int aRange)
     auto res = Util::GetAreaDamagePointsFrom(pos, range);
     for (auto& p : res)
     {
-      int drawX = p.X + Map::Instance().CurrentLevel->MapOffsetX;
-      int drawY = p.Y + Map::Instance().CurrentLevel->MapOffsetY;
+      int drawX = p.X + Game::gMap.CurrentLevel->MapOffsetX;
+      int drawY = p.Y + Game::gMap.CurrentLevel->MapOffsetY;
 
-      if (Map::Instance().CurrentLevel->MapArray[p.X][p.Y]->Visible)
+      if (Game::gMap.CurrentLevel->MapArray[p.X][p.Y]->Visible)
       {
-        Printer::Instance().PrintFB(drawX,
-                                    drawY,
-                                    'x',
-                                    Colors::RedColor,
-                                    Colors::BlackColor);
+        Game::gPrnt.PrintFB(drawX,
+                            drawY,
+                            'x',
+                            Colors::RedColor,
+                            Colors::BlackColor);
       }
     }
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
 
     Util::Sleep(20);
 
-    Application::Instance().ForceDrawMainState();
+    Game::gApp.ForceDrawMainState();
   }
 
   return cellsAffected;

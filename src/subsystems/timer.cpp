@@ -2,10 +2,6 @@
 
 #include "util.h"
 
-void Timer::InitSpecific()
-{
-}
-
 // =============================================================================
 
 void Timer::StartProfiling(const std::string& timestampName)

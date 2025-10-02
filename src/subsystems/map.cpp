@@ -23,8 +23,13 @@
 #include "map-level-test.h"
 #endif
 
-void Map::InitSpecific()
+void Map::Init()
 {
+  if (_initialized)
+  {
+    return;
+  }
+
   _mapVisitFirstTime[MapType::MINES_1]     = false;
   _mapVisitFirstTime[MapType::CAVES_1]     = false;
   _mapVisitFirstTime[MapType::LOST_CITY]   = false;
@@ -36,7 +41,7 @@ void Map::InitSpecific()
   //
   // Shortcut variable.
   //
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 
   //
   // In order to prevent Map::UpdateGameObjects()
@@ -45,6 +50,8 @@ void Map::InitSpecific()
   _playerRef->Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
   _townLoaded = false;
+
+  _initialized = true;
 }
 
 // =============================================================================
@@ -67,17 +74,17 @@ void Map::Cleanup()
 
 void Map::Draw()
 {
-  Timer::Instance().StartProfiling("  DrawMapTilesAroundPlayer()");
+  Game::gTimer.StartProfiling("  DrawMapTilesAroundPlayer()");
   DrawMapTilesAroundPlayer();
-  Timer::Instance().FinishProfiling("  DrawMapTilesAroundPlayer()");
+  Game::gTimer.FinishProfiling("  DrawMapTilesAroundPlayer()");
 
-  Timer::Instance().StartProfiling("  DrawGameObjects()");
+  Game::gTimer.StartProfiling("  DrawGameObjects()");
   DrawGameObjects();
-  Timer::Instance().FinishProfiling("  DrawGameObjects()");
+  Game::gTimer.FinishProfiling("  DrawGameObjects()");
 
-  Timer::Instance().StartProfiling("  DrawActors()");
+  Game::gTimer.StartProfiling("  DrawActors()");
   DrawActors();
-  Timer::Instance().FinishProfiling("  DrawActors()");
+  Game::gTimer.FinishProfiling("  DrawActors()");
 }
 
 // =============================================================================
@@ -97,9 +104,21 @@ void Map::LoadTown()
 // =============================================================================
 
 #ifdef BUILD_TESTS
-void Map::LoadTestLevel()
+void Map::LoadLevel(MapType levelToLoad)
 {
-  ChangeOrInstantiateLevel(MapType::TEST_LEVEL);
+  ChangeOrInstantiateLevel(levelToLoad);
+
+  Game::gApp.PlayerInstance.SetLevelOwner(Game::gMap.CurrentLevel);
+  Game::gApp.PlayerInstance.Init();
+  Game::gApp.PlayerInstance.MoveTo(1, 1);
+  Game::gApp.PlayerInstance.AddExtraItems();
+  Game::gApp.PlayerInstance.VisibilityRadius.Set(
+        Game::gMap.CurrentLevel->VisibilityRadius
+  );
+
+  Game::gMap.CurrentLevel->AdjustCamera();
+
+  Game::gApp.ChangeState(GameStates::MAIN_STATE);
 }
 #endif
 
@@ -114,23 +133,23 @@ void Map::Update()
 
   if (!_playerRef->HasNonZeroHP())
   {
-    Application::Instance().ChangeState(GameStates::GAMEOVER_STATE);
+    Game::gApp.ChangeState(GameStates::GAMEOVER_STATE);
     return;
   }
 
   CurrentLevel->TryToSpawnMonsters();
 
-  Timer::Instance().StartProfiling("  UpdateGameObjects()");
+  Game::gTimer.StartProfiling("  UpdateGameObjects()");
   UpdateGameObjects();
-  Timer::Instance().FinishProfiling("  UpdateGameObjects()");
+  Game::gTimer.FinishProfiling("  UpdateGameObjects()");
 
-  Timer::Instance().StartProfiling("  UpdateActors()");
+  Game::gTimer.StartProfiling("  UpdateActors()");
   UpdateActors();
-  Timer::Instance().FinishProfiling("  UpdateActors()");
+  Game::gTimer.FinishProfiling("  UpdateActors()");
 
-  Timer::Instance().StartProfiling("  UpdateTriggers(GLOBAL)");
+  Game::gTimer.StartProfiling("  UpdateTriggers(GLOBAL)");
   UpdateTriggers(TriggerUpdateType::GLOBAL);
-  Timer::Instance().FinishProfiling("  UpdateTriggers(GLOBAL)");
+  Game::gTimer.FinishProfiling("  UpdateTriggers(GLOBAL)");
 
   //
   // If enemy is killed via thorns damage,
@@ -139,9 +158,9 @@ void Map::Update()
   // or we will end up with object that is not alive,
   // but can still be attacked on player turn, killed and gained EXP for it.
   //
-  Timer::Instance().StartProfiling("  RemoveDestroyed()");
+  Game::gTimer.StartProfiling("  RemoveDestroyed()");
   RemoveDestroyed();
-  Timer::Instance().FinishProfiling("  RemoveDestroyed()");
+  Game::gTimer.FinishProfiling("  RemoveDestroyed()");
 }
 
 // =============================================================================
@@ -193,7 +212,7 @@ void Map::UpdateActors()
       // Check against specific level is needed to avoid update lag
       // in levels where player cannot attack anyway.
       //
-      if (Application::Instance().GameConfig.FastMonsterMovement == false
+      if (Game::gApp.GameConfig.FastMonsterMovement == false
        && CurrentLevel->Peaceful == false)
       {
         Position plPos = _playerRef->GetPosition();
@@ -220,7 +239,7 @@ void Map::UpdateActors()
           //
           if (IsObjectVisible(plPos, objPos))
           {
-            Application::Instance().ForceDrawMainState();
+            Game::gApp.ForceDrawMainState();
           }
         }
       }
@@ -492,8 +511,8 @@ void Map::RemoveTriggers()
 
 void Map::RemoveStaticObjects()
 {
-  int playerX = Application::Instance().PlayerInstance.PosX;
-  int playerY = Application::Instance().PlayerInstance.PosY;
+  int playerX = Game::gApp.PlayerInstance.PosX;
+  int playerY = Game::gApp.PlayerInstance.PosY;
 
   int tw = Printer::TerminalWidth;
   int th = Printer::TerminalHeight;
@@ -522,7 +541,7 @@ void Map::RemoveStaticObjects()
 
 void Map::ChangeLevel(MapType levelToChange, bool goingDown)
 {
-  auto& player = Application::Instance().PlayerInstance;
+  auto& player = Game::gApp.PlayerInstance;
 
   //
   // Unblock cell on stairs before going.
@@ -552,7 +571,7 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
   if (objectToTeleport == nullptr)
   {
     forPlayer = true;
-    whoToTeleport = &Application::Instance().PlayerInstance;
+    whoToTeleport = &Game::gApp.PlayerInstance;
   }
   else
   {
@@ -592,7 +611,7 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
     if (forPlayer)
     {
       auto str = Util::StringFormat("You teleported into %s!", tpTo.data());
-      Printer::Instance().AddMessage(str);
+      Game::gPrnt.AddMessage(str);
     }
 
     whoToTeleport->Attrs.HP.SetMin(0);
@@ -608,7 +627,7 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
       //
       auto str = Util::StringFormat("You bump into %s!",
                                     actor->ObjectName.data());
-      Printer::Instance().AddMessage(str);
+      Game::gPrnt.AddMessage(str);
     }
 
     Position tp = teleportTo;
@@ -740,8 +759,8 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
   if (_mapVisitFirstTime.count(levelName) == 1
   && !CurrentLevel->WelcomeTextDisplayed)
   {
-    Printer::Instance().Clear();
-    Printer::Instance().Render();
+    Game::gPrnt.Clear();
+    Game::gPrnt.Render();
 
     CurrentLevel->WelcomeTextDisplayed = true;
     CurrentLevel->DisplayWelcomeText();
@@ -754,14 +773,14 @@ void Map::ChangeOrInstantiateLevel(MapType levelName)
   // previous message to remain on the screen so that it
   // won't confuse the player.
   //
-  Printer::Instance().ShowLastMessage = false;
+  Game::gPrnt.ShowLastMessage = false;
 }
 
 // =============================================================================
 
 Position Map::GetRandomEmptyCell()
 {
-  int index = RNG::Instance().RandomRange(0, CurrentLevel->EmptyCells().size());
+  int index = Game::gRng.RandomRange(0, CurrentLevel->EmptyCells().size());
   return CurrentLevel->EmptyCells()[index];
 }
 
@@ -895,21 +914,21 @@ void Map::ShowLoadingText(const std::string& textOverride)
   _windowSize = { hx - lx + 6, 7 };
 #endif
 
-  Printer::Instance().DrawWindow({ lx - 3, th - 3 },
-                                 _windowSize,
-                                 std::string(),
-                                 Colors::WhiteColor,
-                                 Colors::MessageBoxHeaderBgColor,
-                                 Colors::ShadesOfGrey::Four);
+  Game::gPrnt.DrawWindow({ lx - 3, th - 3 },
+                          _windowSize,
+                          std::string(),
+                          Colors::WhiteColor,
+                          Colors::MessageBoxHeaderBgColor,
+                          Colors::ShadesOfGrey::Four);
 
-  Printer::Instance().PrintFB(tw,
-                              th,
-                              text,
-                              Printer::kAlignCenter,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(tw,
+                      th,
+                      text,
+                      Printer::kAlignCenter,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 
-  Printer::Instance().Render();
+  Game::gPrnt.Render();
 }
 
 // =============================================================================
@@ -936,7 +955,7 @@ void Map::PrintMapArrayRevealedStatus()
   }
   #endif
 
-  Printer::Instance().AddMessage("Current map layout revealed status logged");
+  Game::gPrnt.AddMessage("Current map layout revealed status logged");
 }
 
 // =============================================================================
@@ -1014,7 +1033,7 @@ void Map::PrintMapLayout()
   f.close();
 
   auto dbg = Util::StringFormat("Layout saved to %s", fname.data());
-  Printer::Instance().AddMessage(dbg);
+  Game::gPrnt.AddMessage(dbg);
 }
 #endif
 
@@ -1023,7 +1042,7 @@ void Map::PrintMapLayout()
 void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centralDamage, bool againstRes)
 {
   auto pointsAffected =
-      Printer::Instance().DrawExplosion(target->GetPosition(), 3);
+      Game::gPrnt.DrawExplosion(target->GetPosition(), 3);
 
   //Util::PrintVector("points affected", pointsAffected);
 
@@ -1246,21 +1265,21 @@ void Map::DrawFowTile(int x, int y)
   //
   if (CurrentLevel->FowLayer[x][y].Image == ' ')
   {
-    Printer::Instance().PrintFB(x + CurrentLevel->MapOffsetX,
-                                y + CurrentLevel->MapOffsetY,
-                                CurrentLevel->FowLayer[x][y].Image,
-                                Colors::BlackColor,
-                                Colors::FogOfWarColor);
+    Game::gPrnt.PrintFB(x + CurrentLevel->MapOffsetX,
+                        y + CurrentLevel->MapOffsetY,
+                        CurrentLevel->FowLayer[x][y].Image,
+                        Colors::BlackColor,
+                        Colors::FogOfWarColor);
   }
   else
   {
-    Printer::Instance().PrintFB(x + CurrentLevel->MapOffsetX,
-                                y + CurrentLevel->MapOffsetY,
-                                (CurrentLevel->FowLayer[x][y].Image == -1)
-                                ? ' '
-                                : CurrentLevel->FowLayer[x][y].Image,
-                                Colors::FogOfWarColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(x + CurrentLevel->MapOffsetX,
+                        y + CurrentLevel->MapOffsetY,
+                        (CurrentLevel->FowLayer[x][y].Image == -1)
+                        ? ' '
+                        : CurrentLevel->FowLayer[x][y].Image,
+                        Colors::FogOfWarColor,
+                        Colors::BlackColor);
   }
 }
 

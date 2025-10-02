@@ -47,7 +47,7 @@ namespace ItemUseHandlers
       {
         amount = statMax * (scale / 2.0);
 
-        int var = RNG::Instance().RandomRange(0, 3);
+        int var = Game::gRng.RandomRange(0, 3);
         if (var == 0)
         {
           message = (statCur == statMax)
@@ -79,7 +79,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Printer::Instance().AddMessage(message);
+      Game::gPrnt.AddMessage(message);
     }
 
     user->Attrs.HP.AddMin(amount);
@@ -132,7 +132,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Printer::Instance().AddMessage(message);
+      Game::gPrnt.AddMessage(message);
     }
 
     return UseResult::SUCCESS;
@@ -191,7 +191,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Printer::Instance().AddMessage(message);
+      Game::gPrnt.AddMessage(message);
     }
 
     return UseResult::SUCCESS;
@@ -241,7 +241,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Printer::Instance().AddMessage(message);
+      Game::gPrnt.AddMessage(message);
     }
 
     return UseResult::SUCCESS;
@@ -300,7 +300,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Printer::Instance().AddMessage(message);
+      Game::gPrnt.AddMessage(message);
     }
 
     return UseResult::SUCCESS;
@@ -381,7 +381,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Printer::Instance().AddMessage(message);
+      Game::gPrnt.AddMessage(message);
     }
 
     return UseResult::SUCCESS;
@@ -425,7 +425,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Printer::Instance().AddMessage(message);
+      Game::gPrnt.AddMessage(message);
     }
 
     return UseResult::SUCCESS;
@@ -498,7 +498,7 @@ namespace ItemUseHandlers
 
     if (Util::IsPlayer(user))
     {
-      Printer::Instance().AddMessage(message);
+      Game::gPrnt.AddMessage(message);
     }
 
     return UseResult::SUCCESS;
@@ -517,13 +517,13 @@ namespace ItemUseHandlers
     }
 
     if (item->Data.Amount == 0
-     || Map::Instance().CurrentLevel->MysteriousForcePresent)
+     || Game::gMap.CurrentLevel->MysteriousForcePresent)
     {
-      Application::Instance().ShowMessageBox(
-            MessageBoxType::ANY_KEY,
-            Strings::MessageBoxInformationHeaderText,
-            { "You invoke the returner, but nothing happens." },
-            Colors::ShadesOfGrey::Six
+      Game::gApp.ShowMessageBox(
+        MessageBoxType::ANY_KEY,
+        Strings::MessageBoxInformationHeaderText,
+        { "You invoke the returner, but nothing happens." },
+        Colors::ShadesOfGrey::Six
       );
 
       return UseResult::FAILURE;
@@ -539,15 +539,15 @@ namespace ItemUseHandlers
     //
     // TODO: monsters usage?
     //
-    Player* playerRef = &Application::Instance().PlayerInstance;
+    Player* playerRef = &Game::gApp.PlayerInstance;
 
     if (!playerRef->HasSkill(PlayerSkills::REPAIR))
     {
-      Application::Instance().ShowMessageBox(
-            MessageBoxType::ANY_KEY,
-            Strings::MessageBoxEpicFailHeaderText,
-            { "You don't possess the necessary skill!" },
-            Colors::MessageBoxRedBorderColor
+      Game::gApp.ShowMessageBox(
+        MessageBoxType::ANY_KEY,
+        Strings::MessageBoxEpicFailHeaderText,
+        { "You don't possess the necessary skill!" },
+        Colors::MessageBoxRedBorderColor
       );
 
       return UseResult::FAILURE;
@@ -560,7 +560,7 @@ namespace ItemUseHandlers
 
   UseResult ScrollUseHandler(ItemComponent* item, GameObject* user)
   {
-    SpellsProcessor::Instance().ProcessScroll(item, user);
+    Game::gSP.ProcessScroll(item, user);
     return UseResult::SUCCESS;
   }
 
@@ -631,7 +631,7 @@ namespace ItemUseHandlers
     {
       for (auto& msg : eatMessages)
       {
-        Printer::Instance().AddMessage(msg);
+        Game::gPrnt.AddMessage(msg);
       }
     }
 

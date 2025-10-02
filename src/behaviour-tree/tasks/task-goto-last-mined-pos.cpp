@@ -7,9 +7,8 @@ BTResult TaskGotoLastMinedPos::Run()
 {
   //DebugLog("[TaskGotoLastMinedPos]\n");
 
-  auto minedPos =
-      Blackboard::Instance().Get(_objectToControl->ObjectId(),
-                                 Strings::BlackboardKeyLastMinedPos);
+  auto minedPos = Game::gBB.Get(_objectToControl->ObjectId(),
+                                Strings::BlackboardKeyLastMinedPos);
 
   if (minedPos.empty())
   {
@@ -24,11 +23,11 @@ BTResult TaskGotoLastMinedPos::Run()
   if (_objectToControl->PosX == mX
    && _objectToControl->PosY == mY)
   {
-    Blackboard::Instance().Set(_objectToControl->ObjectId(),
-                               {
-                                 Strings::BlackboardKeyLastMinedPos,
-                                 std::string()
-                               });
+    Game::gBB.Set(_objectToControl->ObjectId(),
+                  {
+                    Strings::BlackboardKeyLastMinedPos,
+                    std::string()
+                  });
 
     return BTResult::Failure;
   }
@@ -36,11 +35,11 @@ BTResult TaskGotoLastMinedPos::Run()
   _objectToControl->MoveTo({ mX, mY });
   _objectToControl->FinishTurn();
 
-  Blackboard::Instance().Set(_objectToControl->ObjectId(),
-                             {
-                               Strings::BlackboardKeyLastMinedPos,
-                               std::string()
-                             });
+  Game::gBB.Set(_objectToControl->ObjectId(),
+                {
+                  Strings::BlackboardKeyLastMinedPos,
+                  std::string()
+                });
 
   return BTResult::Success;
 }

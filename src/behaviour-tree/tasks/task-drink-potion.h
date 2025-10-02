@@ -4,6 +4,7 @@
 #include "ai-model-base.h"
 
 class ContainerComponent;
+class ItemComponent;
 
 class TaskDrinkPotion : public Node
 {

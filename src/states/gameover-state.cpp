@@ -6,7 +6,7 @@
 
 void GameOverState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 }
 
 // =============================================================================
@@ -15,9 +15,9 @@ void GameOverState::Prepare()
 {
   _playerRef->SetDestroyed();
 
-  Printer::Instance().AddMessage("You are dead. Not big surprise.");
+  Game::gPrnt.AddMessage("You are dead. Not big surprise.");
 
-  Application::Instance().WriteObituary();
+  Game::gApp.WriteObituary();
 }
 
 // =============================================================================
@@ -31,7 +31,7 @@ void GameOverState::HandleInput()
     case VK_CANCEL:
     case 'n':
     case 'N':
-      Application::Instance().ChangeState(GameStates::EXIT_GAME);
+      Game::gApp.ChangeState(GameStates::EXIT_GAME);
       break;
 
     default:
@@ -45,27 +45,27 @@ void GameOverState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
-    Map::Instance().Draw();
+    Game::gMap.Draw();
 
     _playerRef->Draw();
 
     DrawHPMP();
 
-    if (Printer::Instance().ShowLastMessage)
+    if (Game::gPrnt.ShowLastMessage)
     {
       DisplayGameLog();
     }
 
-    Printer::Instance().PrintFB(_twHalf,
-                                0,
-                                "Press 'q' to exit",
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(_twHalf,
+                        0,
+                        "Press 'q' to exit",
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }
 
@@ -77,7 +77,7 @@ void GameOverState::DisplayGameLog()
   int y = Printer::TerminalHeight - 1;
 
   int count = 0;
-  auto msgs = Printer::Instance().GetLastMessages();
+  auto msgs = Game::gPrnt.GetLastMessages();
   for (GameLogMessageData* m : msgs)
   {
     if (m == nullptr)
@@ -85,12 +85,12 @@ void GameOverState::DisplayGameLog()
       break;
     }
 
-    Printer::Instance().PrintFB(x,
-                                y - count,
-                                m->Message,
-                                Printer::kAlignRight,
-                                m->FgColor,
-                                m->BgColor);
+    Game::gPrnt.PrintFB(x,
+                        y - count,
+                        m->Message,
+                        Printer::kAlignRight,
+                        m->FgColor,
+                        m->BgColor);
     count++;
   }
 }
@@ -107,22 +107,22 @@ void GameOverState::DrawHPMP()
   UpdateBar(0, _th - 2, _playerRef->Attrs.HP);
 
   auto str = Util::StringFormat("%i/%i", curHp, maxHp);
-  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
-                              _th - 2,
-                              str,
-                              Printer::kAlignCenter,
-                              Colors::WhiteColor,
-                              0x880000);
+  Game::gPrnt.PrintFB(GlobalConstants::HPMPBarLength / 2,
+                      _th - 2,
+                      str,
+                      Printer::kAlignCenter,
+                      Colors::WhiteColor,
+                      0x880000);
 
   UpdateBar(0, _th - 1, _playerRef->Attrs.MP);
 
   str = Util::StringFormat("%i/%i", curMp, maxMp);
-  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
-                              _th - 1,
-                              str,
-                              Printer::kAlignCenter,
-                              Colors::WhiteColor,
-                              0x000088);
+  Game::gPrnt.PrintFB(GlobalConstants::HPMPBarLength / 2,
+                      _th - 1,
+                      str,
+                      Printer::kAlignCenter,
+                      Colors::WhiteColor,
+                      0x000088);
 }
 
 // =============================================================================
@@ -140,10 +140,10 @@ void GameOverState::UpdateBar(int x, int y, RangedAttribute& attr)
 
   _bar += "]";
 
-  Printer::Instance().PrintFB(x,
-                              y,
-                              _bar,
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(x,
+                      y,
+                      _bar,
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 }

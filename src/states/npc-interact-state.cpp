@@ -21,12 +21,12 @@ void NPCInteractState::Prepare()
   _currentLine        = 0;
   _textBlockCharIndex = 0;
 
-  Printer::Instance().Clear();
+  Game::gPrnt.Clear();
 
   PrintHeader();
   PrintFooter();
 
-  Printer::Instance().Render();
+  Game::gPrnt.Render();
 }
 
 // =============================================================================
@@ -69,10 +69,10 @@ void NPCInteractState::HandleInput()
       if (tc != nullptr)
       {
         GameStates gs = GameStates::SHOPPING_STATE;
-        auto state = Application::Instance().GetGameStateRefByName(gs);
+        auto state = Game::gApp.GetGameStateRefByName(gs);
         ShoppingState* ss = static_cast<ShoppingState*>(state);
         ss->PassShopOwner(tc);
-        Application::Instance().ChangeState(GameStates::SHOPPING_STATE);
+        Game::gApp.ChangeState(GameStates::SHOPPING_STATE);
       }
       else
       {
@@ -116,12 +116,12 @@ void NPCInteractState::HandleInput()
         TraderComponent* tc = ogo->GetComponent<TraderComponent>();
 
         GameStates gs = GameStates::SERVICE_STATE;
-        auto s = Application::Instance().GetGameStateRefByName(gs);
+        auto s = Game::gApp.GetGameStateRefByName(gs);
 
         ServiceState* ss = static_cast<ServiceState*>(s);
         ss->Setup(tc);
 
-        Application::Instance().ChangeState(GameStates::SERVICE_STATE);
+        Game::gApp.ChangeState(GameStates::SERVICE_STATE);
       }
     }
     break;
@@ -144,8 +144,8 @@ void NPCInteractState::HandleInput()
         msg = Util::StringFormat("You finished speaking with %s", name.data());
       }
 
-      Printer::Instance().AddMessage(msg);
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gPrnt.AddMessage(msg);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
     }
     break;
 
@@ -185,30 +185,30 @@ void NPCInteractState::AnimateText()
 
   auto line = _blockToPrint[_currentLine];
 
-  Printer::Instance().PrintFB(_charPos + 1,
-                              _currentLine + 2,
-                              ' ',
-                              Colors::BlackColor,
-                              Colors::WhiteColor);
+  Game::gPrnt.PrintFB(_charPos + 1,
+                      _currentLine + 2,
+                      ' ',
+                      Colors::BlackColor,
+                      Colors::WhiteColor);
 
-  Printer::Instance().PrintFB(_charPos,
-                              _currentLine + 2,
-                              line[_textBlockCharIndex],
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(_charPos,
+                      _currentLine + 2,
+                      line[_textBlockCharIndex],
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 
-  Printer::Instance().Render();
+  Game::gPrnt.Render();
 
   _charPos++;
   _textBlockCharIndex++;
 
   if (_textBlockCharIndex >= line.length())
   {
-    Printer::Instance().PrintFB(_charPos,
-                                _currentLine + 2,
-                                ' ',
-                                Colors::BlackColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(_charPos,
+                        _currentLine + 2,
+                        ' ',
+                        Colors::BlackColor,
+                        Colors::BlackColor);
     _charPos = _textStartPosX;
     _textBlockCharIndex = 0;
     _currentLine++;
@@ -225,25 +225,25 @@ void NPCInteractState::AnimateText()
 
 void NPCInteractState::DisplayStillText()
 {
-  Printer::Instance().Clear();
+  Game::gPrnt.Clear();
 
   PrintHeader();
 
   int yPos = 2;
   for (auto& l : _blockToPrint)
   {
-    Printer::Instance().PrintFB(_textStartPosX,
-                                yPos,
-                                l,
-                                Printer::kAlignLeft,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(_textStartPosX,
+                        yPos,
+                        l,
+                        Printer::kAlignLeft,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
     yPos++;
   }
 
   PrintFooter();
 
-  Printer::Instance().Render();
+  Game::gPrnt.Render();
 }
 
 // =============================================================================
@@ -283,77 +283,77 @@ void NPCInteractState::PrintFooter()
 
   if (_textPrinting)
   {
-    Printer::Instance().PrintFB(tw / 2,
-                                th - 1,
-                                "Listening...",
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(tw / 2,
+                        th - 1,
+                        "Listening...",
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
     return;
   }
 
   if (_npcRef->Data.ProvidesService != ServiceType::NONE)
   {
-    Printer::Instance().PrintFB(1,
-                                th - 1, StrName,
-                                Printer::kAlignLeft,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(1,
+                        th - 1, StrName,
+                        Printer::kAlignLeft,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().PrintFB(tw / 2 - tw / 4,
-                                th - 1, StrJob,
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(tw / 2 - tw / 4,
+                        th - 1, StrJob,
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().PrintFB(tw / 2,
-                                th - 1,
-                                StrServices,
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(tw / 2,
+                        th - 1,
+                        StrServices,
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().PrintFB(tw / 2 + tw / 4,
-                                th - 1,
-                                StrGossip,
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(tw / 2 + tw / 4,
+                        th - 1,
+                        StrGossip,
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().PrintFB(tw - 1,
-                                th - 1,
-                                StrBye,
-                                Printer::kAlignRight,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(tw - 1,
+                        th - 1,
+                        StrBye,
+                        Printer::kAlignRight,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
   }
   else
   {
-    Printer::Instance().PrintFB(1,
-                                th - 1, StrName,
-                                Printer::kAlignLeft,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(1,
+                        th - 1, StrName,
+                        Printer::kAlignLeft,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().PrintFB(tw / 2 - tw / 8,
-                                th - 1,
-                                StrJob,
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(tw / 2 - tw / 8,
+                        th - 1,
+                        StrJob,
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().PrintFB(tw / 2 + tw / 8,
-                                th - 1,
-                                StrGossip,
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(tw / 2 + tw / 8,
+                        th - 1,
+                        StrGossip,
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().PrintFB(tw - 1,
-                                th - 1,
-                                StrBye,
-                                Printer::kAlignRight,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(tw - 1,
+                        th - 1,
+                        StrBye,
+                        Printer::kAlignRight,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
   }
 }

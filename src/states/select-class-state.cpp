@@ -32,16 +32,16 @@ void SelectClassState::HandleInput()
     case VK_ENTER:
       if (_menuIndex == 3)
       {
-        Application::Instance().ChangeState(GameStates::CUSTOM_CLASS_STATE);
+        Game::gApp.ChangeState(GameStates::CUSTOM_CLASS_STATE);
       }
       else
       {
-        Application::Instance().ChangeState(GameStates::ENTER_NAME_STATE);
+        Game::gApp.ChangeState(GameStates::ENTER_NAME_STATE);
       }
       break;
 
     case VK_CANCEL:
-      Application::Instance().ChangeState(GameStates::MENU_STATE);
+      Game::gApp.ChangeState(GameStates::MENU_STATE);
       break;
 
     default:
@@ -50,7 +50,7 @@ void SelectClassState::HandleInput()
 
   _menuIndex = Util::Clamp(_menuIndex, 0, _menuItems.size() - 1);
 
-  Application::Instance().PlayerInstance.SelectedClass = _menuIndex;
+  Game::gApp.PlayerInstance.SelectedClass = _menuIndex;
 }
 
 // =============================================================================
@@ -59,14 +59,14 @@ void SelectClassState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
-    Printer::Instance().PrintFB(_twHalf,
-                                _thHalf - 4,
-                                "Who are you?",
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(_twHalf,
+                        _thHalf - 4,
+                        "Who are you?",
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
     int offset = 0;
     int index = 0;
@@ -76,24 +76,24 @@ void SelectClassState::Update(bool forceUpdate)
                         ? Colors::ShadesOfGrey::Four
                         : Colors::BlackColor;
 
-      Printer::Instance().PrintFB(_twHalf,
-                                  _thHalf + offset,
-                                  i,
-                                  Printer::kAlignCenter,
-                                  Colors::WhiteColor,
-                                  bgColor);
+      Game::gPrnt.PrintFB(_twHalf,
+                          _thHalf + offset,
+                          i,
+                          Printer::kAlignCenter,
+                          Colors::WhiteColor,
+                          bgColor);
 
       index++;
       offset++;
     }
 
-    Printer::Instance().PrintFB(_twHalf,
-                                _th - 1,
-                                "WARNING: not fully implemented yet!",
-                                Printer::kAlignCenter,
-                                Colors::YellowColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(_twHalf,
+                        _th - 1,
+                        "WARNING: not fully implemented yet!",
+                        Printer::kAlignCenter,
+                        Colors::YellowColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }

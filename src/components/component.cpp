@@ -4,14 +4,14 @@ Component::Component()
 {
 #ifdef DEBUG_BUILD
   HexAddressString = Util::StringFormat("0x%lX", this);
-  AnyObjectByAddr[HexAddressString] = this;
+  AnyObjectByAddr[this] = this;
 #endif
 }
 
 Component::~Component()
 {
 #ifdef DEBUG_BUILD
-  AnyObjectByAddr.erase(HexAddressString);
+  AnyObjectByAddr.erase(this);
 #endif
 }
 

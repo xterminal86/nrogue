@@ -102,13 +102,18 @@ void MapLevelAbyss::CreateCommonObjects(int x, int y, char image)
 
     case '+':
     {
-      GameObject* door = GameObjectsFactory::Instance().CreateDoor(x, y, false);
+      GameObject* door = Game::gGOF.CreateDoor(x, y, false);
       PlaceStaticObject(door);
     }
     break;
 
     case '.':
-      PlaceGroundTile(x, y, ' ', Colors::BlackColor, 0x440000, Strings::TileNames::AbyssalFloorText);
+      PlaceGroundTile(x,
+                      y,
+                      ' ',
+                      Colors::BlackColor,
+                      0x440000,
+                      Strings::TileNames::AbyssalFloorText);
       break;
 
     case 'g':
@@ -124,7 +129,12 @@ void MapLevelAbyss::CreateCommonObjects(int x, int y, char image)
       break;
 
     case ' ':
-      PlaceGroundTile(x, y, '.', Colors::BlackColor, Colors::ShadesOfGrey::Ten, Strings::TileNames::StoneText);
+      PlaceGroundTile(x,
+                      y,
+                      '.',
+                      Colors::BlackColor,
+                      Colors::ShadesOfGrey::Ten,
+                      Strings::TileNames::StoneText);
       break;
 
     case 'l':
@@ -147,7 +157,7 @@ void MapLevelAbyss::DisplayWelcomeText()
     { HIDE("despair and oblivion.                 ") }
   };
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+  Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
                                         { HIDE("Stygian Abyss") },
                                          msg);
 }

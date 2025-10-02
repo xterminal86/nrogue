@@ -7,10 +7,13 @@
 #include <algorithm>
 #include <climits>
 #include <iomanip>
+#include <random>
 
-#include "rng.h"
+#include "globals.h"
 #include "position.h"
 #include "item-data.h"
+
+#include "rng.h"
 
 //
 // We surround statements with one-shot 'do ... while' loop
@@ -49,7 +52,7 @@
 #define STRINGIFY(ARG) #ARG
 
 #ifdef DEBUG_BUILD
-    #define LogPrint(str, ...) Logger::Instance().Print(str, ##__VA_ARGS__)
+    #define LogPrint(str, ...) Game::gLogger.Print(str, ##__VA_ARGS__)
   #else
     #define LogPrint(str, ...)
 #endif
@@ -396,7 +399,7 @@ namespace Util
       sum += i.second;
     }
 
-    int target = RNG::Instance().RandomRange(1, sum + 1);
+    int target = Game::gRng.RandomRange(1, sum + 1);
 
     for (auto& i : weightsByType)
     {
@@ -501,8 +504,19 @@ namespace Util
     //
     // https://softwareengineering.stackexchange.com/questions/350501/is-there-any-benefit-to-to-define-constant-local-variables-as-static-c
     //
+    // But it looks like this is related to fundamental types like int or char.
+    // Don't know about complex types, but I'd assume it doesn't hold.
+    // At least not as simple as that.
+    //
+    // Actually, by making buffer string static we would make things even worse
+    // in our case, because at some places in code we *have* to have a copy of
+    // resulting string, so if we make buffer string static, we will copy this
+    // big-ass buffer everywhere at those places.
+    //
     std::string s;
 
+    //
+    // The following is a bit confusing, but here goes:
     //
     // snprintf() returns number of bytes WITHOUT \0
     //
@@ -512,12 +526,33 @@ namespace Util
       return s;
     }
 
+    //
+    // Expand dong if needed.
+    //
     s.resize(size);
-    char *buf = (char *)s.data();
 
     //
-    // 1 extra byte for \0 since when actually writing to 'buf' \0 is included.
-    // std::string always contains \0 implicitly (so to speak).
+    // Get a nice pointer to underlying buffer for brevity.
+    // And C-style cast it so we can write to it.
+    //
+    char *buf = (char*)s.data();
+
+    //
+    // 1 extra byte for '\0' since snprintf writes at most 'size' bytes
+    // INCLUDING '\0'. So if we specify e.g. 3, it means 3 characters with '\0'.
+    //
+    // E.g. after:
+    //
+    // snprintf(buf, 3, "abc");
+    //
+    // buf will contain 'a', 'b' and '\0'
+    //
+    // std::string always contains \0 implicitly (so to speak), so std::string
+    // of size 'size' will always "contain" '\0' at the end, making its "real"
+    // size effectively ('size' + 1). This is not technically correct from the
+    // std::string's interface point of view, because std::string::size()
+    // returns real number of characters contained, without '\0', but you get
+    // the idea.
     //
     snprintf(buf, size + 1, format.data(), args ...);
 

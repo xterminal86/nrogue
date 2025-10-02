@@ -10,13 +10,13 @@
 
 #include "constants.h"
 #include "game-object.h"
-#include "container-component.h"
-#include "equipment-component.h"
 #include "item-component.h"
 #include "position.h"
 #include "potential-field.h"
 
 class AIComponent;
+class ContainerComponent;
+class EquipmentComponent;
 
 class Player : public GameObject
 {

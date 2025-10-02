@@ -96,7 +96,7 @@ void Tunneler::Backtracking(const Position& mapSize,
       //auto str = Util::StringFormat("\tFinished building, "
       //                              "adding node point %i %i dir %i %i",
       //                              x, y, dir.X, dir.Y);
-      //Logger::Instance().Print(str);
+      //Game::gLogger.Print(str);
 
       nodePoints.push({ { x, y }, dir });
     }
@@ -298,7 +298,7 @@ Position* Tunneler::TryToGetPerpendicularDir(const Position& pos,
 
   //auto str = Util::StringFormat("Trying to get perpendicular dir to %i %i",
   //                              lastDir.X, lastDir.Y);
-  //Logger::Instance().Print(str);
+  //Game::gLogger.Print(str);
 
   for (size_t i = 0; i < directions.size(); i++)
   {
@@ -307,12 +307,12 @@ Position* Tunneler::TryToGetPerpendicularDir(const Position& pos,
       selectedPair = choicesByDir[i];
 
       /*
-      Logger::Instance().Print("\tFound pairs:");
+      Game::gLogger.Print("\tFound pairs:");
 
       for (auto& i : selectedPair)
       {
         auto str = Util::StringFormat("\t%i %i", i.X, i.Y);
-        Logger::Instance().Print(str);
+        Game::gLogger.Print(str);
       }
       */
 
@@ -328,10 +328,10 @@ Position* Tunneler::TryToGetPerpendicularDir(const Position& pos,
     int y = pos.Y + selectedPair[index].Y;
 
     //auto str = Util::StringFormat("\t Checking %i %i...", x, y);
-    //Logger::Instance().Print(str);
+    //Game::gLogger.Print(str);
 
     //str = Util::StringFormat("\t Index %i", index);
-    //Logger::Instance().Print(str);
+    //Game::gLogger.Print(str);
 
     if (IsInsideMap({ x, y })
      && IsDeadEnd({ x, y })
@@ -340,7 +340,7 @@ Position* Tunneler::TryToGetPerpendicularDir(const Position& pos,
       //auto str = Util::StringFormat("\t Selected dir %i %i",
       //                              selectedPair[index].X,
       //                              selectedPair[index].Y);
-      //Logger::Instance().Print(str);
+      //Game::gLogger.Print(str);
 
       _perpendicularDir = selectedPair[index];
       res = &_perpendicularDir;

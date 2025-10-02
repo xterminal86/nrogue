@@ -1,4 +1,6 @@
 #include "level-builder.h"
+
+#include "globals.h"
 #include "rng.h"
 
 int main(int argc, char* argv[])
@@ -12,11 +14,11 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  RNG::Instance().Init();
+  Game::gRng.Init();
 
-  //RNG::Instance().SetSeed(1694631412025388189);
+  //Game::gRng.SetSeed(1694631412025388189);
 
-  printf("seed is %llu\n", RNG::Instance().Seed);
+  printf("seed is %llu\n", Game::gRng.Seed);
 
   Position mapSize;
   Position roomSizes;

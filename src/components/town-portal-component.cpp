@@ -11,7 +11,7 @@ TownPortalComponent::TownPortalComponent()
 
 void TownPortalComponent::Update()
 {
-  auto& playerRef = Application::Instance().PlayerInstance;
+  auto& playerRef = Game::gApp.PlayerInstance;
   if (playerRef.PosX == OwnerGameObject->PosX
    && playerRef.PosY == OwnerGameObject->PosY)
   {
@@ -32,10 +32,10 @@ void TownPortalComponent::SavePosition(MapType mapToReturn,
 
 void TownPortalComponent::TeleportBack()
 {
-  Printer::Instance().AddMessage("The blue portal disappears behind you!");
+  Game::gPrnt.AddMessage("The blue portal disappears behind you!");
 
   OwnerGameObject->IsDestroyed = true;
 
-  Map::Instance().TeleportToExistingLevel(_posToReturn.first,
-                                          _posToReturn.second);
+  Game::gMap.TeleportToExistingLevel(_posToReturn.first,
+                                      _posToReturn.second);
 }

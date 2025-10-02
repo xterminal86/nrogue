@@ -1,7 +1,6 @@
 #include "ai-model-base.h"
 #include "ai-component.h"
-#include "application.h"
-#include "map.h"
+#include "equipment-component.h"
 #include "util.h"
 
 #include "task-idle.h"
@@ -22,12 +21,14 @@
 #include "task-mine-tunnel.h"
 #include "task-mine-block.h"
 
-#include "blackboard.h"
+#include "application.h"
 #include "bts-decompiler.h"
+#include "map.h"
+#include "blackboard.h"
 
 AIModelBase::AIModelBase()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
   _bonusTypeByDisplayName =
       Util::FlipMap(GlobalConstants::BonusDisplayNameByType);
 }
@@ -46,7 +47,7 @@ void AIModelBase::ConstructAI()
 
   if (!_scriptCompiled.empty())
   {
-    _scriptAsText   = BTSDecompiler::Instance().Decompile(_scriptCompiled);
+    _scriptAsText   = Game::gBts.Decompile(_scriptCompiled);
     _scriptCompiled = std::vector<uint8_t>();
   }
 
@@ -635,22 +636,22 @@ std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF()
 {
   auto fn = [this]()
   {
-    auto& playerRef = Application::Instance().PlayerInstance;
+    auto& playerRef = Game::gApp.PlayerInstance;
 
     auto ogo = AIComponentRef->OwnerGameObject;
     Position plPos  = playerRef.GetPosition();
     Position objPos = ogo->GetPosition();
 
-    bool res = Map::Instance().IsObjectVisible(objPos, plPos);
+    bool res = Game::gMap.IsObjectVisible(objPos, plPos);
     if (res)
     {
-      std::string plPosStr = Util::StringFormat("%i,%i", plPos.X, plPos.Y);
+      auto plPosStr = Util::StringFormat("%i,%i", plPos.X, plPos.Y);
 
-      Blackboard::Instance().Set(AIComponentRef->OwnerGameObject->ObjectId(),
-                                 {
-                                   Strings::BlackboardKeyPlayerPos,
-                                   plPosStr
-                                 });
+      Game::gBB.Set(AIComponentRef->OwnerGameObject->ObjectId(),
+                    {
+                      Strings::BlackboardKeyPlayerPos,
+                      plPosStr
+                    });
     }
 
     //
@@ -687,7 +688,7 @@ AIModelBase::GetPlayerInRangeCF(const ScriptNode* data)
 
   auto fn = [this, range]()
   {
-    auto& playerRef = Application::Instance().PlayerInstance;
+    auto& playerRef = Game::gApp.PlayerInstance;
     auto& objRef    = AIComponentRef->OwnerGameObject;
 
     #ifdef DEBUG_BUILD

@@ -7,12 +7,11 @@
 #include <list>
 #include <map>
 
-#include "singleton.h"
 #include "gamestate.h"
 #include "player.h"
 #include "serializer.h"
 
-class Application : public Singleton<Application>
+class Application
 {
   public:
     void Run();
@@ -102,8 +101,7 @@ class Application : public Singleton<Application>
 
     uint64_t PlayerTurnsPassed = 0;
 
-  protected:
-    void InitSpecific() override;
+    void Init(bool skipMenu = false);
 
   private:
     bool _appReady = false;
@@ -183,6 +181,8 @@ class Application : public Singleton<Application>
       { "SKL", PlayerInstance.Attrs.Skl },
       { "SPD", PlayerInstance.Attrs.Spd }
     };
+
+    bool _initialized = false;
 
     friend class TargetState;
 };

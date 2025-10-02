@@ -170,7 +170,7 @@ void AINPC::SetDataClaire()
     }
   };
 
-  auto& playerRef = Application::Instance().PlayerInstance;
+  auto& playerRef = Game::gApp.PlayerInstance;
 
   if (playerRef.GetClass() == PlayerClass::SOLDIER)
   {
@@ -226,7 +226,7 @@ void AINPC::SetDataCloud()
     }
   };
 
-  auto& playerRef = Application::Instance().PlayerInstance;
+  auto& playerRef = Game::gApp.PlayerInstance;
 
   if (playerRef.GetClass() == PlayerClass::SOLDIER)
   {
@@ -552,7 +552,7 @@ void AINPC::SetDataMartin()
     }
   };
 
-  auto& playerRef = Application::Instance().PlayerInstance;
+  auto& playerRef = Game::gApp.PlayerInstance;
   if (playerRef.GetClass() == PlayerClass::ARCANIST)
   {
     TextLines bonusStr =
@@ -680,7 +680,7 @@ void AINPC::SetDataMaya()
 
 void AINPC::SetDataDefault()
 {
-  int gender = RNG::Instance().RandomRange(0, 2);
+  int gender = Game::gRng.RandomRange(0, 2);
 
   Data.Name = "Default Actor";
   Data.CanSpeak = false;

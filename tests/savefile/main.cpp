@@ -1,3 +1,4 @@
+#if 0
 #include "serializer.h"
 
 #include "gid-generator.h"
@@ -23,29 +24,29 @@ void SaveGameTest()
 {
   // ---------------------------------------------------------------------------
 
-  GID::Instance().Init();
-  RNG::Instance().Init();
+  Game::gGid.Init();
+  Game::gRng.Init();
 
-  Blackboard::Instance().Init();
-  Timer::Instance().Init();
+  Game::gBB.Init();
+  Game::gTimer.Init();
 
 #ifdef DEBUG_BUILD
-  Logger::Instance().Init();
-  Logger::Instance().Prepare(false);
+  Game::gLogger.Init();
+  Game::gLogger.Prepare(false);
 #endif
 
-  BTSDecompiler::Instance().Init();
+  Game::gBts.Init();
 
-  Application::Instance().Init();
+  Game::gApp.Init();
 
-  GameObjectsFactory::Instance().Init();
-  ItemsFactory::Instance().Init();
-  MonstersInc::Instance().Init();
+  Game::gGOF.Init();
+  Game::gIF.Init();
+  Game::gMI.Init();
 
-  SpellsDatabase::Instance().Init();
-  SpellsProcessor::Instance().Init();
+  Game::gSD.Init();
+  Game::gSP.Init();
 
-  Map::Instance().Init();
+  Game::gMap.Init();
 
   // ---------------------------------------------------------------------------
 
@@ -67,10 +68,10 @@ void SaveGameTest()
   // arises (and when we get there).
   //
 
-  Map::Instance().LoadTestLevel();
+  Game::gMap.LoadLevel();
 
-  auto& curLvl    = Map::Instance().CurrentLevel;
-  auto& playerRef = Application::Instance().PlayerInstance;
+  auto& curLvl    = Game::gMap.CurrentLevel;
+  auto& playerRef = Game::gApp.PlayerInstance;
 
   playerRef.SetLevelOwner(curLvl);
   playerRef.Init();
@@ -80,12 +81,12 @@ void SaveGameTest()
 
   curLvl->AdjustCamera();
 
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
+  Game::gApp.ChangeState(GameStates::MAIN_STATE);
 
   // ---------------------------------------------------------------------------
 
-  Application::Instance().Run();
-  Application::Instance().Cleanup();
+  Game::gApp.Run();
+  Game::gApp.Cleanup();
 }
 
 // =============================================================================
@@ -94,7 +95,7 @@ int main(int argc, char* argv[])
 {
   LoadGame = (argc > 1);
 
-  RNG::Instance().Init();
+  Game::gRng.Init();
 
   if (!LoadGame)
   {
@@ -117,3 +118,12 @@ int main(int argc, char* argv[])
 
   return 0;
 }
+#endif
+
+// TODO: replace old implementation with singletons.
+int main(int argc, char* argv[])
+{
+  return 0;
+}
+
+

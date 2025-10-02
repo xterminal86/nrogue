@@ -6,12 +6,12 @@
 
 void IntroState::Prepare()
 {
-  Printer::Instance().Clear();
+  Game::gPrnt.Clear();
 
   _textPositionCursor = 0;
   _textPositionX = _twHalf;
 
-  int textIndex = Application::Instance().PlayerInstance.SelectedClass;
+  int textIndex = Game::gApp.PlayerInstance.SelectedClass;
   _textPositionY = _thHalf - _introStrings[textIndex].size() / 2;
 
   Util::WaitForMs(0, true);
@@ -26,7 +26,7 @@ void IntroState::HandleInput()
   switch (_keyPressed)
   {
     case VK_ENTER:
-      Application::Instance().ChangeState(GameStates::START_GAME_STATE);
+      Game::gApp.ChangeState(GameStates::START_GAME_STATE);
       break;
 
     default:
@@ -38,33 +38,33 @@ void IntroState::HandleInput()
 
 void IntroState::Update(bool forceUpdate)
 {
-  int pci = Application::Instance().PlayerInstance.SelectedClass;
-  PlayerClass pc = Application::Instance().PlayerInstance.GetClass();
+  int pci = Game::gApp.PlayerInstance.SelectedClass;
+  PlayerClass pc = Game::gApp.PlayerInstance.GetClass();
 
 #ifdef USE_SDL
-  Printer::Instance().PrintFB(
-        _twHalf,
-        (Printer::TerminalHeight - _introStrings[pci].size()) / 4,
-        _scenarioNameByClass.at(pc),
-        2,
-        Printer::kAlignCenter,
-        Colors::WhiteColor,
-        Colors::BlackColor
+  Game::gPrnt.PrintFB(
+    _twHalf,
+    (Printer::TerminalHeight - _introStrings[pci].size()) / 4,
+    _scenarioNameByClass.at(pc),
+    2,
+    Printer::kAlignCenter,
+    Colors::WhiteColor,
+    Colors::BlackColor
   );
 #else
-  Printer::Instance().PrintFB(
-        _twHalf,
-        (Printer::TerminalHeight - _introStrings[pci].size()) / 4,
-        _scenarioNameByClass.at(pc),
-        Printer::kAlignCenter,
-        Colors::WhiteColor,
-        Colors::BlackColor
+  Game::gPrnt.PrintFB(
+    _twHalf,
+    (Printer::TerminalHeight - _introStrings[pci].size()) / 4,
+    _scenarioNameByClass.at(pc),
+    Printer::kAlignCenter,
+    Colors::WhiteColor,
+    Colors::BlackColor
   );
 #endif
 
   if (Util::WaitForMs(10))
   {
-    int textIndex = Application::Instance().PlayerInstance.SelectedClass;
+    int textIndex = Game::gApp.PlayerInstance.SelectedClass;
     if (_stringIndex != _introStrings[textIndex].size())
     {
       const std::string& s = _introStrings[textIndex][_stringIndex];
@@ -72,28 +72,28 @@ void IntroState::Update(bool forceUpdate)
 
       if ((int)_textPositionCursor != len)
       {
-        Printer::Instance().PrintFB(_textPositionX - len / 2,
-                                    _textPositionY,
-                                    s[_textPositionCursor],
-                                    Colors::WhiteColor,
-                                    Colors::BlackColor);
+        Game::gPrnt.PrintFB(_textPositionX - len / 2,
+                            _textPositionY,
+                            s[_textPositionCursor],
+                            Colors::WhiteColor,
+                            Colors::BlackColor);
 
-        Printer::Instance().PrintFB(_textPositionX - len / 2 + 1,
-                                    _textPositionY,
-                                    ' ',
-                                    Colors::BlackColor,
-                                    Colors::WhiteColor);
+        Game::gPrnt.PrintFB(_textPositionX - len / 2 + 1,
+                            _textPositionY,
+                            ' ',
+                            Colors::BlackColor,
+                            Colors::WhiteColor);
 
         _textPositionX++;
         _textPositionCursor++;
       }
       else
       {
-        Printer::Instance().PrintFB(_textPositionX - len / 2,
-                                    _textPositionY,
-                                    ' ',
-                                    Colors::BlackColor,
-                                    Colors::BlackColor);
+        Game::gPrnt.PrintFB(_textPositionX - len / 2,
+                            _textPositionY,
+                            ' ',
+                            Colors::BlackColor,
+                            Colors::BlackColor);
 
         _textPositionCursor = 0;
 
@@ -105,14 +105,14 @@ void IntroState::Update(bool forceUpdate)
     }
     else
     {
-      Printer::Instance().PrintFB(_twHalf,
-                                  Printer::TerminalHeight - 1,
-                                  "Press 'Enter' to continue",
-                                  Printer::kAlignCenter,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(_twHalf,
+                          Printer::TerminalHeight - 1,
+                          "Press 'Enter' to continue",
+                          Printer::kAlignCenter,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
     }
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }

@@ -5,7 +5,7 @@
 
 void AttackState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 }
 
 // =============================================================================
@@ -15,7 +15,7 @@ void AttackState::Prepare()
   _cursorPosition.X = _playerRef->PosX;
   _cursorPosition.Y = _playerRef->PosY;
 
-  Printer::Instance().AddMessage("Attack in which direction?");
+  Game::gPrnt.AddMessage("Attack in which direction?");
 }
 
 // =============================================================================
@@ -97,8 +97,8 @@ void AttackState::HandleInput()
       break;
 
     case VK_CANCEL:
-      Printer::Instance().AddMessage(Strings::MsgCancelled);
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gPrnt.AddMessage(Strings::MsgCancelled);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
       break;
 
     default:
@@ -112,8 +112,8 @@ void AttackState::HandleInput()
     //
     // Check actors first.
     //
-    auto res = Map::Instance().GetActorAtPosition(_cursorPosition.X,
-                                                  _cursorPosition.Y);
+    auto res = Game::gMap.GetActorAtPosition(_cursorPosition.X,
+                                               _cursorPosition.Y);
     if (res != nullptr)
     {
       _playerRef->MeleeAttack(res);
@@ -124,8 +124,8 @@ void AttackState::HandleInput()
       // Check static game objects.
       //
       auto so =
-          Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X,
-                                                        _cursorPosition.Y);
+          Game::gMap.GetStaticGameObjectAtPosition(_cursorPosition.X,
+                                                     _cursorPosition.Y);
       if (so != nullptr)
       {
         //
@@ -135,9 +135,9 @@ void AttackState::HandleInput()
       }
       else
       {
-        auto& ma = Map::Instance().CurrentLevel->MapArray;
+        auto& ma = Game::gMap.CurrentLevel->MapArray;
         auto* cell = ma[_cursorPosition.X][_cursorPosition.Y].get();
-        Application::Instance().DisplayAttack(
+        Game::gApp.DisplayAttack(
               cell,
               GlobalConstants::DisplayAttackDelayMs,
               "*whoosh*",
@@ -148,7 +148,7 @@ void AttackState::HandleInput()
 
     _playerRef->FinishTurn();
 
-    Application::Instance().ChangeState(GameStates::MAIN_STATE);
+    Game::gApp.ChangeState(GameStates::MAIN_STATE);
   }
 }
 
@@ -158,26 +158,26 @@ void AttackState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
     _playerRef->CheckVisibility();
 
-    Map::Instance().Draw();
+    Game::gMap.Draw();
 
     _playerRef->Draw();
 
-    GameLogMessageData* msg = Printer::Instance().GetLastMessage();
+    GameLogMessageData* msg = Game::gPrnt.GetLastMessage();
 
     if (msg != nullptr)
     {
-      Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
-                                  Printer::TerminalHeight - 1,
-                                  (*msg).Message,
-                                  Printer::kAlignRight,
-                                  (*msg).FgColor,
-                                  (*msg).BgColor);
+      Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
+                          Printer::TerminalHeight - 1,
+                          (*msg).Message,
+                          Printer::kAlignRight,
+                          (*msg).FgColor,
+                          (*msg).BgColor);
     }
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }

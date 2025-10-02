@@ -1,19 +1,23 @@
 #include "game-object.h"
 
 #include "application.h"
-#include "printer.h"
-#include "game-objects-factory.h"
-#include "items-factory.h"
-#include "item-component.h"
-#include "map-level-base.h"
-#include "map.h"
-#include "game-object-info.h"
-#include "ai-component.h"
-#include "trigger-component.h"
-#include "serializer.h"
 #include "blackboard.h"
 #include "gid-generator.h"
+#include "items-factory.h"
+#include "printer.h"
+#include "map.h"
+#include "rng.h"
+#include "game-objects-factory.h"
+
+#include "map-level-base.h"
+#include "game-object-info.h"
+#include "serializer.h"
+
+#include "ai-component.h"
 #include "door-component.h"
+#include "container-component.h"
+#include "trigger-component.h"
+#include "item-component.h"
 
 #ifdef DEBUG_BUILD
 #include "dev-console.h"
@@ -24,12 +28,18 @@ GameObject::GameObject(MapLevelBase* levelOwner)
   _levelOwner = levelOwner;
   VisibilityRadius.Set(0);
 
-  _objectId = GID::Instance().GenerateGlobalId();
+  _objectId = Game::gGid.GenerateGlobalId();
 
 #ifdef DEBUG_BUILD
   GameObjectsById[_objectId] = this;
   HexAddressString = Util::StringFormat("0x%lX", this);
-  AnyObjectByAddr[HexAddressString] = this;
+
+  //
+  // If we don't use any bullshit like multiple or virtual inheritance,
+  // address of the derived class will be the same as its base class.
+  // So we can assign it nicely here.
+  //
+  AnyObjectByAddr[this] = this;
 #endif
 }
 
@@ -42,12 +52,13 @@ GameObject::GameObject(MapLevelBase *levelOwner,
                        const uint32_t& htmlColor,
                        const uint32_t& bgColor)
 {
-  _objectId = GID::Instance().GenerateGlobalId();
+  _objectId = Game::gGid.GenerateGlobalId();
 
   Init(levelOwner, x, y, avatar, htmlColor, bgColor);
 
 #ifdef DEBUG_BUILD
   GameObjectsById[_objectId] = this;
+  AnyObjectByAddr[this] = this;
   HexAddressString = Util::StringFormat("0x%lX", this);
 #endif
 }
@@ -62,7 +73,7 @@ GameObject::~GameObject()
   AIComponent* ai = GetComponent<AIComponent>();
   if (ai != nullptr)
   {
-    Blackboard::Instance().Remove(_objectId);
+    Game::gBB.Remove(_objectId);
   }
 
   if (Util::IsFunctionValid(OnDestroy))
@@ -72,7 +83,7 @@ GameObject::~GameObject()
 
 #ifdef DEBUG_BUILD
   GameState* s =
-      Application::Instance().GetGameStateRefByName(GameStates::DEV_CONSOLE);
+      Game::gApp.GetGameStateRefByName(GameStates::DEV_CONSOLE);
   if (s != nullptr)
   {
     DevConsole* dc = static_cast<DevConsole*>(s);
@@ -86,7 +97,7 @@ GameObject::~GameObject()
     }
   }
 
-  AnyObjectByAddr.erase(HexAddressString);
+  AnyObjectByAddr.erase(this);
 #endif
 }
 
@@ -188,7 +199,7 @@ bool GameObject::CanMoveTo(const Position& pos)
 {
   bool res = true;
 
-  auto curLvl = Map::Instance().CurrentLevel;
+  auto curLvl = Game::gMap.CurrentLevel;
 
   bool isBlocked  = curLvl->IsCellBlocking(pos);
   bool isOccupied = curLvl->MapArray[pos.X][pos.Y]->Occupied;
@@ -266,13 +277,13 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
     bgColor = Colors::BlackColor;
   }
 
-  Printer::Instance().PrintFB(PosX + _levelOwner->MapOffsetX,
-                              PosY + _levelOwner->MapOffsetY,
-                              (imageOverride != -1)
-                              ? imageOverride
-                              : Image,
-                              fgColor,
-                              bgColor);
+  Game::gPrnt.PrintFB(PosX + _levelOwner->MapOffsetX,
+                       PosY + _levelOwner->MapOffsetY,
+                       (imageOverride != -1)
+                       ? imageOverride
+                       : Image,
+                       fgColor,
+                       bgColor);
 }
 
 // =============================================================================
@@ -565,14 +576,14 @@ bool GameObject::ReceiveDamage(GameObject* from,
   }
 
   bool tileVisible =
-      Map::Instance().CurrentLevel->MapArray[PosX][PosY]->Visible;
+      Game::gMap.CurrentLevel->MapArray[PosX][PosY]->Visible;
 
   if (!suppressLog && tileVisible)
   {
     while (!logMessages.empty())
     {
       auto msg = logMessages.front();
-      Printer::Instance().AddMessage(msg);
+      Game::gPrnt.AddMessage(msg);
       logMessages.pop();
     }
   }
@@ -618,7 +629,7 @@ void GameObject::WaitForTurn()
   //
   // In towns SPD is ignored.
   //
-  if (Map::Instance().CurrentLevel->Peaceful)
+  if (Game::gMap.CurrentLevel->Peaceful)
   {
     Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
   }
@@ -760,7 +771,7 @@ void GameObject::FinishTurn()
   // and skip trigger position related activation,
   // so we have to check triggers every turn.
   //
-  Map::Instance().UpdateTriggers(TriggerUpdateType::FINISH_TURN);
+  Game::gMap.UpdateTriggers(TriggerUpdateType::FINISH_TURN);
 
   CheckPerish();
 }
@@ -794,7 +805,7 @@ void GameObject::DropItemsHeld()
     {
       GameObject* obj = i.release();
       ItemComponent* ic = obj->GetComponent<ItemComponent>();
-      ic->OwnerGameObject->SetLevelOwner(Map::Instance().CurrentLevel);
+      ic->OwnerGameObject->SetLevelOwner(Game::gMap.CurrentLevel);
       ic->Transfer();
       ic->OwnerGameObject->PosX = PosX;
       ic->OwnerGameObject->PosY = PosY;
@@ -807,10 +818,10 @@ void GameObject::DropItemsHeld()
   //
   if (Money > 0)
   {
-    auto money = ItemsFactory::Instance().CreateMoney(Money);
+    auto money = Game::gIF.CreateMoney(Money);
     money->PosX = PosX;
     money->PosY = PosY;
-    Map::Instance().CurrentLevel->PlaceGameObject(money);
+    Game::gMap.CurrentLevel->PlaceGameObject(money);
   }
 }
 
@@ -863,13 +874,13 @@ void GameObject::ProcessNaturalRegenMP()
 
 void GameObject::MoveGameObject(int dx, int dy)
 {
-  _previousCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
+  _previousCell = Game::gMap.CurrentLevel->MapArray[PosX][PosY].get();
   _previousCell->Occupied = false;
 
   PosX += dx;
   PosY += dy;
 
-  _currentCell = Map::Instance().CurrentLevel->MapArray[PosX][PosY].get();
+  _currentCell = Game::gMap.CurrentLevel->MapArray[PosX][PosY].get();
   _currentCell->Occupied = true;
 }
 
@@ -946,7 +957,7 @@ void GameObject::AddEffect(const ItemBonusStruct& effectToAdd)
                        "<effect name not found>",
                        effectToAdd.Duration,
                        effectToAdd.Period);
-  Logger::Instance().Print(str);
+  Game::gLogger.Print(str);
   DebugLog(str.data());
   #endif
   */
@@ -1011,7 +1022,7 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
     {
       if (Util::IsPlayer(this))
       {
-        Printer::Instance().AddMessage("You catch fire!");
+        Game::gPrnt.AddMessage("You catch fire!");
       }
 
       ItemBonusStruct eff;
@@ -1031,7 +1042,7 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
       {
         if (Util::IsPlayer(this))
         {
-          Printer::Instance().AddMessage("The poison disperses!");
+          Game::gPrnt.AddMessage("The poison disperses!");
         }
 
         DispelEffectsAllOf(ItemBonusType::POISONED);
@@ -1045,7 +1056,7 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
       {
         if (Util::IsPlayer(this))
         {
-          Printer::Instance().AddMessage("You can move again!");
+          Game::gPrnt.AddMessage("You can move again!");
         }
 
         DispelEffectsAllOf(ItemBonusType::PARALYZE);
@@ -1068,7 +1079,7 @@ void GameObject::ApplyEffect(const ItemBonusStruct& e)
 
       if (Util::IsPlayer(this))
       {
-        Printer::Instance().AddMessage("You feel weak!");
+        Game::gPrnt.AddMessage("You feel weak!");
       }
     }
     break;
@@ -1378,7 +1389,7 @@ void GameObject::MarkAndCreateRemains()
   //
   // Loot is not created on dangerous tiles.
   //
-  bool tileDangerous = Map::Instance().IsTileDangerous({ PosX, PosY });
+  bool tileDangerous = Game::gMap.IsTileDangerous({ PosX, PosY });
 
   //
   // Incorporeal monsters don't leave remains.
@@ -1390,7 +1401,7 @@ void GameObject::MarkAndCreateRemains()
     //
     if (Type != GameObjectType::REMAINS)
     {
-      auto go = GameObjectsFactory::Instance().CreateRemains(this);
+      auto go = Game::gGOF.CreateRemains(this);
       _levelOwner->PlaceGameObject(go);
     }
 
@@ -1571,7 +1582,7 @@ void GameObject::LevelUpNatural(int gainedLevel, int baseHpOverride)
   int minRndHp = (Attrs.HP.Talents + 1);
   int maxRndHp = 2 * minRndHp;
 
-  int hpToAdd = RNG::Instance().RandomRange(minRndHp, maxRndHp + 1);
+  int hpToAdd = Game::gRng.RandomRange(minRndHp, maxRndHp + 1);
 
   if (baseHpOverride != -1)
   {
@@ -1585,7 +1596,7 @@ void GameObject::LevelUpNatural(int gainedLevel, int baseHpOverride)
   int minRndMp = Attrs.Mag.OriginalValue();
   int maxRndMp = Attrs.Mag.OriginalValue() + Attrs.MP.Talents;
 
-  int mpToAdd = RNG::Instance().RandomRange(minRndMp, maxRndMp + 1);
+  int mpToAdd = Game::gRng.RandomRange(minRndMp, maxRndMp + 1);
   Attrs.MP.AddMax(mpToAdd);
 
   _levelUpHistory[gainedLevel][PlayerStats::MP] = mpToAdd;

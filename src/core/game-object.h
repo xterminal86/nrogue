@@ -12,15 +12,18 @@
 #endif
 
 #include "component.h"
+#include "container-component.h"
+
 #include "constants.h"
 #include "enumerations.h"
 #include "attribute.h"
 #include "item-data.h"
+#include "position.h"
 #include "util.h"
 
+class Component;
 class GameObjectInfo;
 class MapLevelBase;
-class Position;
 class Node;
 class NRS;
 

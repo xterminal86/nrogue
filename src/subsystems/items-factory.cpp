@@ -4,6 +4,7 @@
 #include "map.h"
 #include "game-objects-factory.h"
 #include "printer.h"
+#include "spells-database.h"
 
 #ifdef DEBUG_BUILD
 #include "logger.h"
@@ -14,14 +15,21 @@
 
 using namespace std::placeholders;
 
-void ItemsFactory::InitSpecific()
+void ItemsFactory::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  if (_initialized)
+  {
+    return;
+  }
 
-  _rng.seed(RNG::Instance().Seed);
+  _playerRef = &Game::gApp.PlayerInstance;
+
+  _rng.seed(Game::gRng.Seed);
 
   InitPotionColors();
   InitScrolls();
+
+  _initialized = true;
 }
 
 // =============================================================================
@@ -102,7 +110,7 @@ void ItemsFactory::InitScrolls()
     //               GlobalConstants::SpellNameByType.at(si.SpellType_).data(),
     //               si.ScrollName.data()
     //);
-    //Logger::Instance().Print(str);
+    //Game::gLogger.Print(str);
 
     // DebugLog("%s = %s\n",
     //          GlobalConstants::SpellNameByType.at(si.SpellType_).data(),
@@ -128,7 +136,7 @@ void ItemsFactory::SetPotionImage(GameObject* go)
 
 GameObject* ItemsFactory::CreateMoney(int amount)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->ObjectName = Strings::MoneyName;
   go->Image = '$';
@@ -139,10 +147,10 @@ GameObject* ItemsFactory::CreateMoney(int amount)
 
   ic->Data.IdentifiedDescription = { "You can buy things with these." };
 
-  int scale = Map::Instance().CurrentLevel->DungeonLevel;
+  int scale = Game::gMap.CurrentLevel->DungeonLevel;
 
   int money = (amount == 0)
-              ? RNG::Instance().RandomRange(1, 11) * scale
+              ? Game::gRng.RandomRange(1, 11) * scale
               : amount;
 
   ic->Data.Cost           = money;
@@ -225,7 +233,7 @@ GameObject* ItemsFactory::CreatePotion(PotionType type,
 
 GameObject* ItemsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   PotionType pt = PotionType::HEALING_POTION;
 
@@ -277,7 +285,7 @@ GameObject* ItemsFactory::CreateHealingPotion(ItemPrefix prefixOverride)
 GameObject*
 ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   PotionType pt = PotionType::NP_POTION;
 
@@ -329,7 +337,7 @@ ItemsFactory::CreateNeutralizePoisonPotion(ItemPrefix prefixOverride)
 
 GameObject* ItemsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   PotionType pt = PotionType::MANA_POTION;
 
@@ -380,7 +388,7 @@ GameObject* ItemsFactory::CreateManaPotion(ItemPrefix prefixOverride)
 
 GameObject* ItemsFactory::CreateJuicePotion(ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   PotionType pt = PotionType::JUICE_POTION;
 
@@ -431,7 +439,7 @@ GameObject* ItemsFactory::CreateJuicePotion(ItemPrefix prefixOverride)
 
 GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   PotionType pt = PotionType::EXP_POTION;
 
@@ -488,7 +496,7 @@ GameObject* ItemsFactory::CreateExpPotion(ItemPrefix prefixOverride)
 GameObject* ItemsFactory::CreateStatPotion(const std::string& statName,
                                            ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   auto m = Util::FlipMap(GlobalConstants::StatNameByPotionType);
 
@@ -543,7 +551,7 @@ GameObject* ItemsFactory::CreateStatPotion(const std::string& statName,
 
 GameObject* ItemsFactory::CreateCWPotion(ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   PotionType pt = PotionType::CW_POTION;
 
@@ -600,7 +608,7 @@ GameObject* ItemsFactory::CreateCWPotion(ItemPrefix prefixOverride)
 
 GameObject* ItemsFactory::CreateRAPotion(ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   PotionType pt = PotionType::RA_POTION;
 
@@ -733,7 +741,7 @@ GameObject* ItemsFactory::CreateFood(int x,
 
   addsHunger = hungerToAdd;
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->FgColor = Colors::WhiteColor;
   go->BgColor = Colors::None;
@@ -788,7 +796,7 @@ GameObject* ItemsFactory::CreateFood(int x,
 GameObject* ItemsFactory::CreateNote(const std::string& objName,
                                      const std::vector<std::string>& text)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->FgColor = Colors::BlackColor;
   go->BgColor = Colors::WhiteColor;
@@ -819,7 +827,7 @@ ItemsFactory::CreateDummyItem(const std::string& objName,
                               const uint32_t& bgColor,
                               const std::vector<std::string>& descText)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->FgColor = fgColor;
   go->BgColor = bgColor;
@@ -846,7 +854,7 @@ GameObject* ItemsFactory::CreateScroll(int x,
                                        SpellType type,
                                        ItemPrefix prefixOverride)
 {
-  SpellInfo* si = SpellsDatabase::Instance().GetSpellInfoFromDatabase(type);
+  SpellInfo* si = Game::gSD.GetSpellInfoFromDatabase(type);
 
   if (std::find(GlobalConstants::ScrollValidSpellTypes.begin(),
                 GlobalConstants::ScrollValidSpellTypes.end(),
@@ -855,7 +863,7 @@ GameObject* ItemsFactory::CreateScroll(int x,
     auto msg = Util::StringFormat("[WARNING] Trying to create a scroll "
                                   "with invalid spell (%s)!\n",
                                   si->SpellName.data());
-    Printer::Instance().AddMessage(msg);
+    Game::gPrnt.AddMessage(msg);
 
     #ifdef DEBUG_BUILD
     LogPrint(msg, true);
@@ -865,7 +873,7 @@ GameObject* ItemsFactory::CreateScroll(int x,
     return nullptr;
   }
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->PosX = x;
   go->PosY = y;
@@ -919,7 +927,7 @@ GameObject* ItemsFactory::CreateScroll(int x,
 GameObject* ItemsFactory::CreateRandomScroll(ItemPrefix prefix)
 {
   size_t totalSize = GlobalConstants::ScrollValidSpellTypes.size();
-  int index = RNG::Instance().RandomRange(0, totalSize);
+  int index = Game::gRng.RandomRange(0, totalSize);
   SpellType type = GlobalConstants::ScrollValidSpellTypes.at(index);
   return CreateScroll(0, 0, type, prefix);
 }
@@ -934,9 +942,9 @@ ItemsFactory::CreateMeleeWeapon(int x,
                                 ItemQuality quality,
                                 const std::vector<ItemBonusStruct>& bonuses)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
-  int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel * 0.5;
+  int dungeonLevel = Game::gMap.CurrentLevel->DungeonLevel * 0.5;
   if (dungeonLevel == 0)
   {
     dungeonLevel = 1;
@@ -1082,8 +1090,8 @@ ItemsFactory::CreateMeleeWeapon(int x,
       diceRolls = 1;
       diceSides = 6;
 
-      int rndDur = RNG::Instance().RandomRange(20, 31);
-      int spread = RNG::Instance().RandomRange(1, 5);
+      int rndDur = Game::gRng.RandomRange(20, 31);
+      int spread = Game::gRng.RandomRange(1, 5);
 
       baseDurability = rndDur + spread * (int)ic->Data.ItemQuality_;
 
@@ -1100,7 +1108,7 @@ ItemsFactory::CreateMeleeWeapon(int x,
 
   avgDamage = CalculateAverageDamage(diceRolls, diceSides);
 
-  int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1) +
+  int randomDurAdd = Game::gRng.RandomRange(0, baseDurability * 0.1) +
                      dungeonLevel;
 
   int durability = baseDurability + randomDurAdd;
@@ -1132,7 +1140,7 @@ GameObject* ItemsFactory::ChooseRandomMeleeWeapon(ItemPrefix prefixOverride,
                                                   ItemQuality qualityOverride)
 {
   size_t totalSize = GlobalConstants::WeaponNameByType.size();
-  int index = RNG::Instance().RandomRange(0, totalSize);
+  int index = Game::gRng.RandomRange(0, totalSize);
   auto it = GlobalConstants::WeaponNameByType.begin();
   std::advance(it, index);
   return CreateMeleeWeapon(0, 0, it->first, prefixOverride, qualityOverride);
@@ -1144,7 +1152,7 @@ GameObject* ItemsFactory::ChooseRandomRangedWeapon(ItemPrefix prefixOverride,
                                                    ItemQuality qualityOverride)
 {
   size_t totalSize = GlobalConstants::RangedWeaponNameByType.size();
-  int index = RNG::Instance().RandomRange(0, totalSize);
+  int index = Game::gRng.RandomRange(0, totalSize);
   auto it = GlobalConstants::RangedWeaponNameByType.begin();
   std::advance(it, index);
   return CreateRangedWeapon(0, 0, it->first, prefixOverride, qualityOverride);
@@ -1202,7 +1210,7 @@ GameObject* ItemsFactory::CreateRandomWeapon(ItemPrefix prefixOverride,
 {
   GameObject* go = nullptr;
 
-  int isMelee = RNG::Instance().RandomRange(0, 2);
+  int isMelee = Game::gRng.RandomRange(0, 2);
   if (isMelee == 0)
   {
     go = ChooseRandomMeleeWeapon(prefixOverride, qualityOverride);
@@ -1244,7 +1252,7 @@ GameObject* ItemsFactory::CreateGem(int x, int y,
 
     size_t totalSize = GlobalConstants::GemNameByType.size();
 
-    int index = RNG::Instance().RandomRange(rndStartingIndex, totalSize);
+    int index = Game::gRng.RandomRange(rndStartingIndex, totalSize);
 
     GemType t = (GemType)index;
     if (t == GemType::WORTHLESS_GLASS)
@@ -1284,7 +1292,7 @@ GameObject* ItemsFactory::CreateWand(int x,
                                      ItemQuality quality)
 {
   SpellInfo si =
-      *SpellsDatabase::Instance().GetSpellInfoFromDatabase(spellType);
+      *Game::gSD.GetSpellInfoFromDatabase(spellType);
 
   if (GlobalConstants::WandSpellCapacityCostByType.count(spellType) == 0)
   {
@@ -1297,7 +1305,7 @@ GameObject* ItemsFactory::CreateWand(int x,
     return nullptr;
   }
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   auto wandColorPair = Colors::WandColorsByMaterial.at(material);
   std::string wandMaterialName =
@@ -1372,7 +1380,7 @@ GameObject* ItemsFactory::CreateReturner(int x,
                                          int charges,
                                          ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->PosX = x;
   go->PosY = y;
@@ -1381,7 +1389,7 @@ GameObject* ItemsFactory::CreateReturner(int x,
 
   size_t totalSize = Colors::GemColorNameByType.size();
 
-  int colorIndex = RNG::Instance().RandomRange(1, totalSize);
+  int colorIndex = Game::gRng.RandomRange(1, totalSize);
 
   GemType t = (GemType)colorIndex;
 
@@ -1396,7 +1404,7 @@ GameObject* ItemsFactory::CreateReturner(int x,
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   int chargesNum = (charges == -1)
-                  ? RNG::Instance().RandomRange(1, 6)
+                  ? Game::gRng.RandomRange(1, 6)
                   : charges;
 
   ic->Data.ItemType_ = ItemType::RETURNER;
@@ -1442,7 +1450,7 @@ GameObject* ItemsFactory::CreateRepairKit(int x,
                                           int charges,
                                           ItemPrefix prefixOverride)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->PosX = x;
   go->PosY = y;
@@ -1455,7 +1463,7 @@ GameObject* ItemsFactory::CreateRepairKit(int x,
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
   int chargesNum = (charges == -1)
-                   ? RNG::Instance().RandomRange(1, 51)
+                   ? Game::gRng.RandomRange(1, 51)
                    : charges;
 
   ic->Data.ItemType_ = ItemType::REPAIR_KIT;
@@ -1503,9 +1511,9 @@ GameObject* ItemsFactory::CreateArmor(int x,
                                       ItemPrefix prefixOverride,
                                       ItemQuality quality)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
-  int dungeonLevel = Map::Instance().CurrentLevel->DungeonLevel * 0.5;
+  int dungeonLevel = Game::gMap.CurrentLevel->DungeonLevel * 0.5;
   if (dungeonLevel == 0)
   {
     dungeonLevel = 1;
@@ -1642,7 +1650,7 @@ GameObject* ItemsFactory::CreateArmor(int x,
 
   //ic->Data.IdentifiedDescription = ic->Data.UnidentifiedDescription;
 
-  int randomDurAdd = RNG::Instance().RandomRange(0, baseDurability * 0.1) +
+  int randomDurAdd = Game::gRng.RandomRange(0, baseDurability * 0.1) +
                      dungeonLevel;
 
   int durability = baseDurability + randomDurAdd;
@@ -1673,7 +1681,7 @@ GameObject* ItemsFactory::CreateRandomArmor(ArmorType type,
   else
   {
     size_t totalSize = GlobalConstants::ArmorNameByType.size();
-    int index = RNG::Instance().RandomRange(0, totalSize);
+    int index = Game::gRng.RandomRange(0, totalSize);
     auto it = GlobalConstants::ArmorNameByType.begin();
     std::advance(it, index);
     go = CreateArmor(0, 0, it->first, prefixOverride, qualityOverride);
@@ -1693,7 +1701,7 @@ GameObject* ItemsFactory::CreateArrows(int x,
                                        ItemPrefix prefixOverride,
                                        int amount)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->PosX = x;
   go->PosY = y;
@@ -1706,8 +1714,8 @@ GameObject* ItemsFactory::CreateArrows(int x,
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
-  int dl = Map::Instance().CurrentLevel->DungeonLevel;
-  int randomAmount = RNG::Instance().RandomRange(1 + dl, 10 + dl);
+  int dl = Game::gMap.CurrentLevel->DungeonLevel;
+  int randomAmount = Game::gRng.RandomRange(1 + dl, 10 + dl);
 
   if (randomAmount <= 0)
   {
@@ -1763,7 +1771,7 @@ ItemsFactory::CreateRangedWeapon(int x,
                                  ItemQuality quality,
                                  const std::vector<ItemBonusStruct>& bonuses)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->PosX = x;
   go->PosY = y;
@@ -1967,10 +1975,10 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
                                                 ItemPrefix prefixOverride,
                                                 bool atLeastOneBonus)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   EquipmentCategory category = EquipmentCategory::RING;
-  int chance = RNG::Instance().RandomRange(0, 4);
+  int chance = Game::gRng.RandomRange(0, 4);
   if (chance == 0)
   {
     category = EquipmentCategory::NECK;
@@ -2035,7 +2043,7 @@ ItemsFactory::CreateAccessory(int x, int y,
                               ItemPrefix prefix,
                               ItemQuality quality)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   if (category == EquipmentCategory::RING)
   {
@@ -2133,7 +2141,7 @@ ItemsFactory::CreateRandomItem(int x,
   // TODO: power of randomly created item
   // should scale with dungeon level.
   //
-  int index = RNG::Instance().RandomRange(0, possibleItems.size());
+  int index = Game::gRng.RandomRange(0, possibleItems.size());
 
   ItemType res = possibleItems[index];
 
@@ -2196,7 +2204,7 @@ ItemsFactory::CreateRandomItem(int x,
 
     case ItemType::ARROWS:
     {
-      int isArrows = RNG::Instance().RandomRange(0, 2);
+      int isArrows = Game::gRng.RandomRange(0, 2);
       ArrowType type = (isArrows == 0) ? ArrowType::ARROWS : ArrowType::BOLTS;
       go = CreateArrows(0, 0, type);
     }
@@ -2232,7 +2240,7 @@ ItemsFactory::CreateRandomItem(int x,
 
 GameObject* ItemsFactory::CreateNeedleShortSword()
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->ObjectName = "Short Sword";
   go->Image = '(';
@@ -2261,10 +2269,10 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
   AddRandomValueBonusToItem(ic, ItemBonusType::IGNORE_DEFENCE);
   AddRandomValueBonusToItem(ic, ItemBonusType::IGNORE_ARMOR);
 
-  AddBonusToItem(ic, { ItemBonusType::SKL, RNG::Instance().RandomRange(0, 3) });
-  AddBonusToItem(ic, { ItemBonusType::SPD, RNG::Instance().RandomRange(2, 5) });
+  AddBonusToItem(ic, { ItemBonusType::SKL, Game::gRng.RandomRange(0, 3) });
+  AddBonusToItem(ic, { ItemBonusType::SPD, Game::gRng.RandomRange(2, 5) });
 
-  ic->Data.Durability.Reset(RNG::Instance().RandomRange(30, 40));
+  ic->Data.Durability.Reset(Game::gRng.RandomRange(30, 40));
 
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = HIDE("The Needle");
@@ -2291,7 +2299,7 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
 
 GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->ObjectName = "Pickaxe";
   go->Image = '(';
@@ -2348,7 +2356,7 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
 
 GameObject* ItemsFactory::CreateOneRing()
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->ObjectName = "Ring";
   go->Image = '=';
@@ -2364,7 +2372,7 @@ GameObject* ItemsFactory::CreateOneRing()
   ic->Data.Prefix = ItemPrefix::CURSED;
   ic->Data.IsIdentified = false;
 
-  int rndStr = RNG::Instance().RandomRange(1, 5);
+  int rndStr = Game::gRng.RandomRange(1, 5);
 
   AddBonusToItem(ic, { ItemBonusType::INVISIBILITY, 1 });
   AddBonusToItem(ic, { ItemBonusType::TELEPATHY,    1 });
@@ -2395,13 +2403,13 @@ GameObject* ItemsFactory::CreateOneRing()
 
 GameObject* ItemsFactory::CreateRandomGlass(ItemQuality quality)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->Image = '*';
 
   size_t totalSize = Colors::GemColorNameByType.size();
 
-  int colorIndex = RNG::Instance().RandomRange(1, totalSize);
+  int colorIndex = Game::gRng.RandomRange(1, totalSize);
 
   GemType t = (GemType)colorIndex;
 
@@ -2449,7 +2457,7 @@ GameObject* ItemsFactory::CreateRandomGlass(ItemQuality quality)
 
 GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel);
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
   go->Image = '*';
 
@@ -2495,7 +2503,7 @@ GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
                     _costMultByQuality.at(q);
 
   double upperBound = baseCost / 2.0;
-  int range = RNG::Instance().RandomRange(0, (int)upperBound);
+  int range = Game::gRng.RandomRange(0, (int)upperBound);
 
   switch (q)
   {
@@ -2621,10 +2629,10 @@ void ItemsFactory::TryToAddBonusesToItem(ItemComponent* itemRef,
 
   AdjustBonusWeightsMapForItem(itemRef, bonusWeightByType);
 
-  int curDungeonLvl = Map::Instance().CurrentLevel->DungeonLevel;
+  int curDungeonLvl = Game::gMap.CurrentLevel->DungeonLevel;
 
   // Increase chance of traders having magic items in town
-  if (Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
+  if (Game::gMap.CurrentLevel->MapType_ == MapType::TOWN)
   {
     curDungeonLvl = (int)MapType::THE_END / 2;
   }
@@ -2714,7 +2722,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef,
     {
       int min = 1 + _multByQ.at(q);
       int max = 10 + _multByQ.at(q) * 2;
-      value = RNG::Instance().RandomRange(min, max);
+      value = Game::gRng.RandomRange(min, max);
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
     break;
@@ -2724,7 +2732,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef,
     {
       int min = 1;
       int max = _multByQ.at(q);
-      value = RNG::Instance().RandomRange(min, max + 1);
+      value = Game::gRng.RandomRange(min, max + 1);
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
     break;
@@ -2733,7 +2741,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef,
     {
       int min = _multByQ.at(q);
       int max = _multByQ.at(q) * 2;
-      value = RNG::Instance().RandomRange(min, max + 1);
+      value = Game::gRng.RandomRange(min, max + 1);
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
     break;
@@ -2742,7 +2750,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef,
     {
       int min = _multByQ.at(q);
       int max = _multByQ.at(q) * 3;
-      value = RNG::Instance().RandomRange(min, max + 1);
+      value = Game::gRng.RandomRange(min, max + 1);
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
     break;
@@ -2751,7 +2759,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef,
     {
       int min = 20 + 5 * (_multByQ.at(q) - 1);
       int max = 21 + 20 * _multByQ.at(q);
-      int percentage = RNG::Instance().RandomRange(min, max);
+      int percentage = Game::gRng.RandomRange(min, max);
       value = percentage;
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
@@ -2761,7 +2769,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef,
     {
       int min = 20 + 5 * (_multByQ.at(q) - 1);
       int max = 21 + 15 * _multByQ.at(q);
-      int percentage = RNG::Instance().RandomRange(min, max);
+      int percentage = Game::gRng.RandomRange(min, max);
       value = percentage;
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
@@ -2780,7 +2788,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef,
       //
       int minVal = min - 2 * _multByQ.at(q);
       int maxVal = max - 4 * _multByQ.at(q);
-      bs.Period = RNG::Instance().RandomRange(minVal, maxVal + 1);
+      bs.Period = Game::gRng.RandomRange(minVal, maxVal + 1);
       bs.MoneyCostIncrease = (int)(((double)max / (double)bs.Period) *
                                    (double)moneyIncrease);
     }
@@ -2788,7 +2796,7 @@ void ItemsFactory::AddRandomValueBonusToItem(ItemComponent* itemRef,
 
     case ItemBonusType::KNOCKBACK:
     {
-      value = RNG::Instance().RandomRange(1, 4);
+      value = Game::gRng.RandomRange(1, 4);
       bs.MoneyCostIncrease = value * moneyIncrease;
     }
     break;
@@ -3090,13 +3098,13 @@ void ItemsFactory::SetMagicItemName(
       //
       std::vector<ItemBonusType> bonusesRolledCopy = bonusesRolled;
 
-      int suffixInd1 = RNG::Instance().RandomRange(0, 3);
+      int suffixInd1 = Game::gRng.RandomRange(0, 3);
       auto prefix1 =
           GlobalConstants::ItemBonusPrefixes.at(bonusesRolledCopy[suffixInd1]);
       rarePrefixes.push_back(prefix1);
       bonusesRolledCopy.erase(bonusesRolledCopy.begin() + suffixInd1);
 
-      int suffixInd2 = RNG::Instance().RandomRange(0, 2);
+      int suffixInd2 = Game::gRng.RandomRange(0, 2);
       auto prefix2 =
           GlobalConstants::ItemBonusPrefixes.at(bonusesRolledCopy[suffixInd2]);
       rarePrefixes.push_back(prefix2);

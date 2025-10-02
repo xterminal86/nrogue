@@ -4,6 +4,8 @@
 #include "game-object.h"
 #include "printer.h"
 
+#include "equipment-component.h"
+
 #ifdef DEBUG_BUILD
 #include "logger.h"
 #endif
@@ -13,7 +15,7 @@ TaskAttack::TaskAttack(GameObject* objectToControl,
   : Node(objectToControl)
 {
   _alwaysHitOverride = alwaysHitOverride;
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 }
 
 // =============================================================================
@@ -67,8 +69,8 @@ BTResult TaskAttack::Run()
 
           if (shouldPrintMessage)
           {
-            Printer::Instance().AddMessage(_objectToControl->ObjectName +
-                                           " is healed!");
+            Game::gPrnt.AddMessage(_objectToControl->ObjectName +
+                                   " is healed!");
           }
         }
       }
@@ -130,7 +132,7 @@ BTResult TaskAttack::Run()
       auto attRes = AttackUnarmed({ 2, 4 });
       if (attRes.first)
       {
-        Printer::Instance().AddMessage("Your lifeforce is being drained!");
+        Game::gPrnt.AddMessage("Your lifeforce is being drained!");
         _playerRef->AwardExperience(-attRes.second);
       }
     }
@@ -185,10 +187,10 @@ bool TaskAttack::AttackWithWeapon()
                                      weapon,
                                      false);
 
-    Application::Instance().DisplayAttack(_playerRef,
-                                          GlobalConstants::DisplayAttackDelayMs,
-                                          std::string(),
-                                          Colors::RedColor);
+    Game::gApp.DisplayAttack(_playerRef,
+                              GlobalConstants::DisplayAttackDelayMs,
+                              std::string(),
+                              Colors::RedColor);
 
     // TODO: process weapon damage bonuses (life leech, knockback etc.)
 
@@ -218,11 +220,11 @@ bool TaskAttack::AttackWithWeapon()
     auto msg = Util::StringFormat(Strings::FmtSMissed,
                                   Util::GetGameObjectDisplayCharacter(
                                     _objectToControl
-                                  ).data());
-    Application::Instance().DisplayAttack(_playerRef,
-                                          GlobalConstants::DisplayAttackDelayMs,
-                                          msg,
-                                          Colors::WhiteColor);
+                                 ).data());
+    Game::gApp.DisplayAttack(_playerRef,
+                              GlobalConstants::DisplayAttackDelayMs,
+                              msg,
+                              Colors::WhiteColor);
 
     result = false;
   }
@@ -247,10 +249,10 @@ AttackResult TaskAttack::AttackUnarmed(const DamageRoll& damageRoll)
 
   if (_alwaysHitOverride || Util::Rolld100(hitChance))
   {
-    Application::Instance().DisplayAttack(_playerRef,
-                                          GlobalConstants::DisplayAttackDelayMs,
-                                          std::string(),
-                                          Colors::RedColor);
+    Game::gApp.DisplayAttack(_playerRef,
+                              GlobalConstants::DisplayAttackDelayMs,
+                              std::string(),
+                              Colors::RedColor);
 
     dmg = Util::CalculateDamageValue(_objectToControl,
                                      _playerRef,
@@ -270,11 +272,11 @@ AttackResult TaskAttack::AttackUnarmed(const DamageRoll& damageRoll)
     auto msg = Util::StringFormat(Strings::FmtSMissed,
                                   Util::GetGameObjectDisplayCharacter(
                                     _objectToControl
-                                  ).data());
-    Application::Instance().DisplayAttack(_playerRef,
-                                          GlobalConstants::DisplayAttackDelayMs,
-                                          msg,
-                                          Colors::WhiteColor);
+                                 ).data());
+    Game::gApp.DisplayAttack(_playerRef,
+                              GlobalConstants::DisplayAttackDelayMs,
+                              msg,
+                              Colors::WhiteColor);
     res.first = false;
     res.second = 0;
   }
@@ -305,6 +307,6 @@ void TaskAttack::LogAttackData(int hitChance)
                                    _playerRef->Attrs.Skl.Get(),
                                    _playerRef->Attrs.Lvl.Get(),
                                    hitChance);
-  Logger::Instance().Print(logMsg);
+  Game::gLogger.Print(logMsg);
 }
 #endif

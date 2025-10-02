@@ -9,9 +9,11 @@
 #include "pickup-item-state.h"
 #include "timer.h"
 
+#include "equipment-component.h"
+
 void MainState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 }
 
 // =============================================================================
@@ -30,7 +32,7 @@ void MainState::HandleInput()
   //
   if (!_playerRef->HasNonZeroHP())
   {
-    Application::Instance().ChangeState(GameStates::GAMEOVER_STATE);
+    Game::gApp.ChangeState(GameStates::GAMEOVER_STATE);
     return;
   }
 
@@ -81,23 +83,23 @@ void MainState::HandleInput()
     // -------------------------------------------------------------------------
     case ALT_K5:
     case NUMPAD_5:
-      Printer::Instance().AddMessage(Strings::MsgWait);
+      Game::gPrnt.AddMessage(Strings::MsgWait);
       _playerRef->FinishTurn();
       break;
     // -------------------------------------------------------------------------
     case 'a':
     {
-      if (Map::Instance().CurrentLevel->Peaceful)
+      if (Game::gMap.CurrentLevel->Peaceful)
       {
         PrintNoAttackInTown();
       }
       else if (_playerRef->IsSwimming())
       {
-        Printer::Instance().AddMessage(Strings::MsgNotInWater);
+        Game::gPrnt.AddMessage(Strings::MsgNotInWater);
       }
       else
       {
-        Application::Instance().ChangeState(GameStates::ATTACK_STATE);
+        Game::gApp.ChangeState(GameStates::ATTACK_STATE);
       }
     }
     break;
@@ -107,24 +109,24 @@ void MainState::HandleInput()
       auto str = Util::StringFormat("You have %i %s",
                                     _playerRef->Money,
                                     Strings::MoneyName.data());
-      Printer::Instance().AddMessage(str);
+      Game::gPrnt.AddMessage(str);
     }
     break;
     // -------------------------------------------------------------------------
     case 'e':
-      Application::Instance().ChangeState(GameStates::INVENTORY_STATE);
+      Game::gApp.ChangeState(GameStates::INVENTORY_STATE);
       break;
     // -------------------------------------------------------------------------
     case 'm':
-      Application::Instance().ChangeState(GameStates::SHOW_MESSAGES_STATE);
+      Game::gApp.ChangeState(GameStates::SHOW_MESSAGES_STATE);
       break;
     // -------------------------------------------------------------------------
     case 'l':
-      Application::Instance().ChangeState(GameStates::LOOK_INPUT_STATE);
+      Game::gApp.ChangeState(GameStates::LOOK_INPUT_STATE);
       break;
     // -------------------------------------------------------------------------
     case 'i':
-      Application::Instance().ChangeState(GameStates::INTERACT_INPUT_STATE);
+      Game::gApp.ChangeState(GameStates::INTERACT_INPUT_STATE);
       break;
     // -------------------------------------------------------------------------
     case 'I':
@@ -136,17 +138,17 @@ void MainState::HandleInput()
       break;
     // -------------------------------------------------------------------------
     case '@':
-      Application::Instance().ChangeState(GameStates::INFO_STATE);
+      Game::gApp.ChangeState(GameStates::INFO_STATE);
       break;
     // -------------------------------------------------------------------------
     case 'H':
     case 'h':
     case '?':
-      Application::Instance().ChangeState(GameStates::HELP_STATE);
+      Game::gApp.ChangeState(GameStates::HELP_STATE);
       break;
     // -------------------------------------------------------------------------
     case 'Q':
-      Application::Instance().ChangeState(GameStates::EXITING_STATE);
+      Game::gApp.ChangeState(GameStates::EXITING_STATE);
       break;
     // -------------------------------------------------------------------------
     case 'f':
@@ -174,35 +176,35 @@ void MainState::HandleInput()
     break;
     // -------------------------------------------------------------------------
     case 'S':
-      Application::Instance().ChangeState(GameStates::SAVE_GAME_STATE);
+      Game::gApp.ChangeState(GameStates::SAVE_GAME_STATE);
       break;
     // -------------------------------------------------------------------------
 #ifdef DEBUG_BUILD
     case '`':
-      Application::Instance().ChangeState(GameStates::DEV_CONSOLE);
+      Game::gApp.ChangeState(GameStates::DEV_CONSOLE);
       break;
 
     case 'T':
     {
-      int exitX = Map::Instance().CurrentLevel->LevelExit.X;
-      int exitY = Map::Instance().CurrentLevel->LevelExit.Y;
+      int exitX = Game::gMap.CurrentLevel->LevelExit.X;
+      int exitY = Game::gMap.CurrentLevel->LevelExit.Y;
 
       if (exitX < 0 || exitY < 0)
       {
-        Printer::Instance().AddMessage("No exit defined on this level!");
+        Game::gPrnt.AddMessage("No exit defined on this level!");
       }
       else
       {
         if (_playerRef->MoveTo(exitX, exitY))
         {
-          Map::Instance().CurrentLevel->AdjustCamera();
+          Game::gMap.CurrentLevel->AdjustCamera();
           Update(true);
           _playerRef->FinishTurn();
         }
         else
         {
           auto str = Util::StringFormat("[%i;%i] is occupied!", exitX, exitY);
-          Printer::Instance().AddMessage(str);
+          Game::gPrnt.AddMessage(str);
           DebugLog("%s\n", str.data());
         }
       }
@@ -225,11 +227,11 @@ void MainState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
     _playerRef->CheckVisibility();
 
-    Map::Instance().Draw();
+    Game::gMap.Draw();
 
     _playerRef->Draw();
 
@@ -238,29 +240,29 @@ void MainState::Update(bool forceUpdate)
     DisplayStatusIcons();
     DrawHPMP();
 
-    if (Printer::Instance().ShowLastMessage)
+    if (Game::gPrnt.ShowLastMessage)
     {
       DisplayGameLog();
     }
     else
     {
-      Printer::Instance().ResetMessagesToDisplay();
+      Game::gPrnt.ResetMessagesToDisplay();
     }
 
-    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
-                                0,
-                                Map::Instance().CurrentLevel->LevelName,
-                                Printer::kAlignRight,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
+                        0,
+                        Game::gMap.CurrentLevel->LevelName,
+                        Printer::kAlignRight,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
     #ifdef DEBUG_BUILD
-    Timer::Instance().StartProfiling("  PrintDebugInfo()");
+    Game::gTimer.StartProfiling("  PrintDebugInfo()");
     PrintDebugInfo();
-    Timer::Instance().FinishProfiling("  PrintDebugInfo()");
+    Game::gTimer.FinishProfiling("  PrintDebugInfo()");
     #endif
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }
 
@@ -279,12 +281,12 @@ void MainState::ProcessMovement(const Position& dirOffsets)
     // allow potential messages to show in FinishTurn()
     // (e.g. starvation damage message) after player moved.
     //
-    Printer::Instance().ShowLastMessage = false;
+    Game::gPrnt.ShowLastMessage = false;
 
     CheckItemsOnGround();
 
-    Map::Instance().CurrentLevel->MapOffsetX -= dirOffsets.X;
-    Map::Instance().CurrentLevel->MapOffsetY -= dirOffsets.Y;
+    Game::gMap.CurrentLevel->MapOffsetX -= dirOffsets.X;
+    Game::gMap.CurrentLevel->MapOffsetY -= dirOffsets.Y;
 
     _playerRef->FinishTurn();
 
@@ -300,7 +302,7 @@ void MainState::ProcessMovement(const Position& dirOffsets)
     auto& px = _playerRef->PosX;
     auto& py = _playerRef->PosY;
 
-    GameObject* tile = Map::Instance().CurrentLevel->MapArray[px][py].get();
+    GameObject* tile = Game::gMap.CurrentLevel->MapArray[px][py].get();
 
     bool stairsHere = (tile->Image == '>' || tile->Image == '<');
     if (stairsHere)
@@ -308,22 +310,22 @@ void MainState::ProcessMovement(const Position& dirOffsets)
       StairsComponent* sc = tile->GetComponent<StairsComponent>();
       if (sc->IsEnabled)
       {
-        Printer::Instance().AddMessage((tile->Image == '>')
-                                       ? Strings::MsgStairsDown
-                                       : Strings::MsgStairsUp);
+        Game::gPrnt.AddMessage((tile->Image == '>') ?
+                                 Strings::MsgStairsDown :
+                                 Strings::MsgStairsUp);
       }
     }
   }
   else
   {
-    bool actorInFront = (Map::Instance().GetActorAtPosition(
+    bool actorInFront = (Game::gMap.GetActorAtPosition(
                            _playerRef->PosX + dirOffsets.X,
                            _playerRef->PosY + dirOffsets.Y
                         ) != nullptr);
 
     if (_playerRef->IsSwimming() && actorInFront)
     {
-      Printer::Instance().AddMessage("You can't attack while swimming!");
+      Game::gPrnt.AddMessage("You can't attack while swimming!");
     }
   }
 }
@@ -332,11 +334,11 @@ void MainState::ProcessMovement(const Position& dirOffsets)
 
 void MainState::CheckItemsOnGround()
 {
-  auto items = Map::Instance().GetGameObjectsToPickup(_playerRef->PosX,
-                                                      _playerRef->PosY);
+  auto items = Game::gMap.GetGameObjectsToPickup(_playerRef->PosX,
+                                                   _playerRef->PosY);
   if (items.size() > 1)
   {
-    Printer::Instance().AddMessage(Strings::MsgItemsLyingHere);
+    Game::gPrnt.AddMessage(Strings::MsgItemsLyingHere);
   }
 }
 
@@ -349,7 +351,7 @@ void MainState::DisplayGameLog()
 
   // FIXME: always prints > 1 messages if available.
   int count = 0;
-  auto msgs = Printer::Instance().GetLastMessages();
+  auto msgs = Game::gPrnt.GetLastMessages();
   for (GameLogMessageData* m : msgs)
   {
     if (m == nullptr)
@@ -357,12 +359,12 @@ void MainState::DisplayGameLog()
       break;
     }
 
-    Printer::Instance().PrintFB(x,
-                                y - count,
-                                m->Message,
-                                Printer::kAlignRight,
-                                m->FgColor,
-                                m->BgColor);
+    Game::gPrnt.PrintFB(x,
+                        y - count,
+                        m->Message,
+                        Printer::kAlignRight,
+                        m->FgColor,
+                        m->BgColor);
     count++;
   }
 }
@@ -371,8 +373,8 @@ void MainState::DisplayGameLog()
 
 void MainState::TryToPickupItems()
 {
-  auto items = Map::Instance().GetGameObjectsToPickup(_playerRef->PosX,
-                                                      _playerRef->PosY);
+  auto items = Game::gMap.GetGameObjectsToPickup(_playerRef->PosX,
+                                                   _playerRef->PosY);
   if (!items.empty())
   {
     if (items.size() == 1)
@@ -382,15 +384,15 @@ void MainState::TryToPickupItems()
     else
     {
       GameStates s = GameStates::PICKUP_ITEM_STATE;
-      auto gs = Application::Instance().GetGameStateRefByName(s);
+      auto gs = Game::gApp.GetGameStateRefByName(s);
       PickupItemState* pis = static_cast<PickupItemState*>(gs);
       pis->Setup(items);
-      Application::Instance().ChangeState(GameStates::PICKUP_ITEM_STATE);
+      Game::gApp.ChangeState(GameStates::PICKUP_ITEM_STATE);
     }
   }
   else
   {
-    Printer::Instance().AddMessage(Strings::MsgNothingHere);
+    Game::gPrnt.AddMessage(Strings::MsgNothingHere);
   }
 }
 
@@ -405,11 +407,11 @@ void MainState::PickupSingleItem(std::pair<int, GameObject *>& item)
 
   if (_playerRef->Inventory->IsFull())
   {
-    Application::Instance().ShowMessageBox(
-          MessageBoxType::ANY_KEY,
-          Strings::MessageBoxEpicFailHeaderText,
-          { Strings::MsgInventoryFull },
-          Colors::MessageBoxRedBorderColor
+    Game::gApp.ShowMessageBox(
+      MessageBoxType::ANY_KEY,
+      Strings::MessageBoxEpicFailHeaderText,
+      { Strings::MsgInventoryFull },
+      Colors::MessageBoxRedBorderColor
     );
 
     return;
@@ -432,35 +434,35 @@ void MainState::DrawHPMP()
   UpdateBar(1, th - 2, _playerRef->Attrs.HP);
 
   auto str = Util::StringFormat("%i/%i", curHp, maxHp);
-  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
-                              th - 2,
-                              str,
-                              Printer::kAlignCenter,
-                              Colors::WhiteColor,
-                              0x880000);
+  Game::gPrnt.PrintFB(GlobalConstants::HPMPBarLength / 2,
+                      th - 2,
+                      str,
+                      Printer::kAlignCenter,
+                      Colors::WhiteColor,
+                      0x880000);
 
   UpdateBar(1, th - 1, _playerRef->Attrs.MP);
 
   str = Util::StringFormat("%i/%i", curMp, maxMp);
-  Printer::Instance().PrintFB(GlobalConstants::HPMPBarLength / 2,
-                              th - 1,
-                              str,
-                              Printer::kAlignCenter,
-                              Colors::WhiteColor,
-                              0x000088);
+  Game::gPrnt.PrintFB(GlobalConstants::HPMPBarLength / 2,
+                      th - 1,
+                      str,
+                      Printer::kAlignCenter,
+                      Colors::WhiteColor,
+                      0x000088);
 
 #ifdef USE_SDL
   int expCur = _playerRef->Attrs.Exp.Min().Get();
   int expMax = _playerRef->Attrs.Exp.Max().Get();
 
-  auto tws = Printer::Instance().GetTileWHScaled();
+  auto tws = Game::gPrnt.GetTileWHScaled();
 
   int xPos1 = tws.first * 2;
   int xPos2 = GlobalConstants::HPMPBarLength * tws.first;
   xPos2 = xPos1 + (int)(((double)expCur / (double)expMax) * (double)xPos2);
   int yPos = (th - 1) * tws.second;
 
-  Printer::Instance().DrawRect(xPos1, yPos - 1, xPos2, yPos + 1, 0xFFFF00);
+  Game::gPrnt.DrawRect(xPos1, yPos - 1, xPos2, yPos + 1, 0xFFFF00);
 #endif
 }
 
@@ -479,19 +481,19 @@ void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
 
   bar += "]";
 
-  Printer::Instance().PrintFB(x,
-                              y,
-                              bar,
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(x,
+                      y,
+                      bar,
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 }
 
 // =============================================================================
 
 std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
 {
-  auto& ma = Map::Instance().CurrentLevel->MapArray;
+  auto& ma = Game::gMap.CurrentLevel->MapArray;
   GameObject* stairsTile = ma[_playerRef->PosX][_playerRef->PosY].get();
 
   //
@@ -499,9 +501,9 @@ std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
   //
   if (stairsTile->Image != stairsSymbol)
   {
-    Printer::Instance().AddMessage((stairsSymbol == '>')
-                                  ? Strings::MsgNoStairsDown
-                                  : Strings::MsgNoStairsUp);
+    Game::gPrnt.AddMessage((stairsSymbol == '>') ?
+                             Strings::MsgNoStairsDown :
+                             Strings::MsgNoStairsUp);
     _stairsTileInfo.first = nullptr;
   }
   else
@@ -509,9 +511,9 @@ std::pair<GameObject*, bool> MainState::CheckStairs(int stairsSymbol)
     StairsComponent* sc = stairsTile->GetComponent<StairsComponent>();
     if (!sc->IsEnabled)
     {
-      Printer::Instance().AddMessage((stairsSymbol == '>')
-                                    ? Strings::MsgNoStairsDown
-                                    : Strings::MsgNoStairsUp);
+      Game::gPrnt.AddMessage((stairsSymbol == '>') ?
+                               Strings::MsgNoStairsDown :
+                               Strings::MsgNoStairsUp);
       _stairsTileInfo.first = nullptr;
     }
     else
@@ -535,7 +537,7 @@ void MainState::ClimbStairs(const std::pair<GameObject*, bool>& stairsTileInfo)
 
   if (stairs->IsEnabled)
   {
-    Map::Instance().ChangeLevel(stairs->LeadsTo, shouldGoDown);
+    Game::gMap.ChangeLevel(stairs->LeadsTo, shouldGoDown);
   }
 }
 
@@ -544,7 +546,7 @@ void MainState::ClimbStairs(const std::pair<GameObject*, bool>& stairsTileInfo)
 #ifdef DEBUG_BUILD
 void MainState::PrintDebugInfo()
 {
-  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+  MapLevelBase* curLvl = Game::gMap.CurrentLevel;
 
   _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i Pos: [%i;%i] Hngr: %i",
                                   _playerRef->Attrs.ActionMeter,
@@ -554,83 +556,83 @@ void MainState::PrintDebugInfo()
                                   _playerRef->PosY,
                                   _playerRef->Attrs.Hunger);
 
-  Printer::Instance().PrintFB(1,
-                              0,
-                              _debugInfo,
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(1,
+                      0,
+                      _debugInfo,
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 
   _debugInfo = Util::StringFormat("GO = %lu Actors = %lu",
                                   curLvl->GameObjects.size(),
                                   curLvl->ActorGameObjects.size());
 
-  Printer::Instance().PrintFB(1,
-                              1,
-                              _debugInfo,
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(1,
+                      1,
+                      _debugInfo,
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 
   _debugInfo = Util::StringFormat("Key: %i", _keyPressed);
 
-  Printer::Instance().PrintFB(1,
-                              2,
-                              _debugInfo,
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(1,
+                      2,
+                      _debugInfo,
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 
   _debugInfo = Util::StringFormat("Start: [%i;%i]",
                                   curLvl->LevelStart.X,
                                   curLvl->LevelStart.Y);
 
-  Printer::Instance().PrintFB(1,
-                              3,
-                              _debugInfo,
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(1,
+                      3,
+                      _debugInfo,
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 
   _debugInfo = Util::StringFormat("Exit: [%i;%i]",
                                   curLvl->LevelExit.X,
                                   curLvl->LevelExit.Y);
 
-  Printer::Instance().PrintFB(1,
-                              4,
-                              _debugInfo,
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(1,
+                      4,
+                      _debugInfo,
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 
   _debugInfo = Util::StringFormat("Colors: %i",
-                                  Printer::Instance().ColorsUsed());
+                                  Game::gPrnt.ColorsUsed());
 
-  Printer::Instance().PrintFB(1,
-                              5,
-                              _debugInfo,
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(1,
+                      5,
+                      _debugInfo,
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 
   _debugInfo =
       Util::StringFormat("PT: %llu MU: %llu",
-                         Application::Instance().PlayerTurnsPassed,
-                         Application::Instance().MapUpdateCyclesPassed);
+                         Game::gApp.PlayerTurnsPassed,
+                         Game::gApp.MapUpdateCyclesPassed);
 
-  Printer::Instance().PrintFB(1,
-                              6,
-                              _debugInfo,
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(1,
+                      6,
+                      _debugInfo,
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 
-  Printer::Instance().PrintFB(1,
-                              7,
-                              "Actors watched:",
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(1,
+                      7,
+                      "Actors watched:",
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 
   int yOffset = 0;
   bool found = false;
@@ -645,12 +647,12 @@ void MainState::PrintDebugInfo()
                                         id,
                                         a->Attrs.ActionMeter);
 
-        Printer::Instance().PrintFB(1,
-                                    8 + yOffset,
-                                    _debugInfo,
-                                    Printer::kAlignLeft,
-                                    Colors::WhiteColor,
-                                    Colors::BlackColor);
+        Game::gPrnt.PrintFB(1,
+                            8 + yOffset,
+                            _debugInfo,
+                            Printer::kAlignLeft,
+                            Colors::WhiteColor,
+                            Colors::BlackColor);
         yOffset++;
         found = true;
       }
@@ -659,12 +661,12 @@ void MainState::PrintDebugInfo()
 
   if (!found)
   {
-    Printer::Instance().PrintFB(1,
-                                8,
-                                "NONE",
-                                Printer::kAlignLeft,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(1,
+                        8,
+                        "NONE",
+                        Printer::kAlignLeft,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
   }
 }
 #endif
@@ -673,7 +675,7 @@ void MainState::PrintDebugInfo()
 
 void MainState::ProcessRangedWeapon()
 {
-  if (Map::Instance().CurrentLevel->Peaceful)
+  if (Game::gMap.CurrentLevel->Peaceful)
   {
     // NOTE: comment out all lines for debug if needed
     PrintNoAttackInTown();
@@ -682,7 +684,7 @@ void MainState::ProcessRangedWeapon()
 
   if (_playerRef->IsSwimming())
   {
-    Printer::Instance().AddMessage(Strings::MsgNotInWater);
+    Game::gPrnt.AddMessage(Strings::MsgNotInWater);
     return;
   }
 
@@ -703,12 +705,12 @@ void MainState::ProcessRangedWeapon()
     }
     else
     {
-      Printer::Instance().AddMessage(Strings::MsgNotRangedWeapon);
+      Game::gPrnt.AddMessage(Strings::MsgNotRangedWeapon);
     }
   }
   else
   {
-    Printer::Instance().AddMessage(Strings::MsgEquipWeapon);
+    Game::gPrnt.AddMessage(Strings::MsgEquipWeapon);
   }
 }
 
@@ -733,36 +735,36 @@ void MainState::ProcessWeapon(ItemComponent* weapon)
 
     if (arrows->Data.ItemType_ != ItemType::ARROWS)
     {
-      Printer::Instance().AddMessage(Strings::MsgWhatToShoot);
+      Game::gPrnt.AddMessage(Strings::MsgWhatToShoot);
     }
     else
     {
       if ( (isBow && arrows->Data.AmmoType == ArrowType::BOLTS)
         || (isXBow && arrows->Data.AmmoType == ArrowType::ARROWS) )
       {
-        Printer::Instance().AddMessage(Strings::MsgWrongAmmo);
+        Game::gPrnt.AddMessage(Strings::MsgWrongAmmo);
         return;
       }
 
       if (arrows->Data.Amount == 0)
       {
-        Printer::Instance().AddMessage(Strings::MsgNoAmmo);
+        Game::gPrnt.AddMessage(Strings::MsgNoAmmo);
       }
       else
       {
-        auto s = Application::Instance().GetGameStateRefByName(
+        auto s = Game::gApp.GetGameStateRefByName(
                    GameStates::TARGET_STATE
         );
 
         TargetState* ts = static_cast<TargetState*>(s);
         ts->Setup(weapon);
-        Application::Instance().ChangeState(GameStates::TARGET_STATE);
+        Game::gApp.ChangeState(GameStates::TARGET_STATE);
       }
     }
   }
   else
   {
-    Printer::Instance().AddMessage(Strings::MsgWhatToShoot);
+    Game::gPrnt.AddMessage(Strings::MsgWhatToShoot);
   }
 }
 
@@ -781,7 +783,7 @@ void MainState::ProcessWand(ItemComponent* wand)
   //
   if (wand->Data.Amount == 0)
   {
-    Printer::Instance().AddMessage(Strings::MsgNoCharges);
+    Game::gPrnt.AddMessage(Strings::MsgNoCharges);
   }
   else
   {
@@ -792,7 +794,7 @@ void MainState::ProcessWand(ItemComponent* wand)
       // (e.g. wand of heal others etc.)
       //
       case SpellType::LIGHT:
-        SpellsProcessor::Instance().ProcessWand(wand);
+        Game::gSP.ProcessWand(wand);
         break;
 
       case SpellType::STRIKE:
@@ -804,13 +806,13 @@ void MainState::ProcessWand(ItemComponent* wand)
       case SpellType::MAGIC_MISSILE:
       case SpellType::NONE:
       {
-        auto s = Application::Instance().GetGameStateRefByName(
-                   GameStates::TARGET_STATE
+        auto s = Game::gApp.GetGameStateRefByName(
+          GameStates::TARGET_STATE
         );
 
         TargetState* ts = static_cast<TargetState*>(s);
         ts->Setup(wand);
-        Application::Instance().ChangeState(GameStates::TARGET_STATE);
+        Game::gApp.ChangeState(GameStates::TARGET_STATE);
       }
       break;
 
@@ -830,11 +832,11 @@ bool MainState::ProcessMoneyPickup(std::pair<int, GameObject*>& pair)
     auto message = Util::StringFormat(Strings::FmtPickedUpIS,
                                       ic->Data.Amount,
                                       ic->OwnerGameObject->ObjectName.data());
-    Printer::Instance().AddMessage(message);
+    Game::gPrnt.AddMessage(message);
 
     _playerRef->Money += ic->Data.Amount;
-    auto it = Map::Instance().CurrentLevel->GameObjects.begin();
-    Map::Instance().CurrentLevel->GameObjects.erase(it + pair.first);
+    auto it = Game::gMap.CurrentLevel->GameObjects.begin();
+    Game::gMap.CurrentLevel->GameObjects.erase(it + pair.first);
     return true;
   }
 
@@ -847,7 +849,7 @@ void MainState::ProcessItemPickup(std::pair<int, GameObject*>& pair)
 {
   ItemComponent* ic = pair.second->GetComponent<ItemComponent>();
 
-  auto go = Map::Instance().CurrentLevel->GameObjects[pair.first].release();
+  auto go = Game::gMap.CurrentLevel->GameObjects[pair.first].release();
 
   _playerRef->Inventory->Add(go);
 
@@ -867,10 +869,10 @@ void MainState::ProcessItemPickup(std::pair<int, GameObject*>& pair)
     message = Util::StringFormat(Strings::FmtPickedUpS, objName.data());
   }
 
-  Printer::Instance().AddMessage(message);
+  Game::gPrnt.AddMessage(message);
 
-  auto it = Map::Instance().CurrentLevel->GameObjects.begin();
-  Map::Instance().CurrentLevel->GameObjects.erase(it + pair.first);
+  auto it = Game::gMap.CurrentLevel->GameObjects.begin();
+  Game::gMap.CurrentLevel->GameObjects.erase(it + pair.first);
 }
 
 // =============================================================================
@@ -879,13 +881,13 @@ void MainState::DisplayStartHint()
 {
   int th = Printer::TerminalHeight;
 
-  Printer::Instance().PrintFB(1,
-                              th - 4,
-                              '<',
-                              Colors::WhiteColor,
-                              Colors::DoorHighlightColor);
+  Game::gPrnt.PrintFB(1,
+                      th - 4,
+                      '<',
+                      Colors::WhiteColor,
+                      Colors::DoorHighlightColor);
 
-  auto curLvl = Map::Instance().CurrentLevel;
+  auto curLvl = Game::gMap.CurrentLevel;
   int dx = curLvl->LevelStart.X - _playerRef->PosX;
   int dy = curLvl->LevelStart.Y - _playerRef->PosY;
 
@@ -909,12 +911,12 @@ void MainState::DisplayStartHint()
     dir += "W";
   }
 
-  Printer::Instance().PrintFB(2,
-                              th - 4,
-                              dir,
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(2,
+                      th - 4,
+                      dir,
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 }
 
 // =============================================================================
@@ -923,15 +925,15 @@ void MainState::DisplayExitHint()
 {
   int th = Printer::TerminalHeight;
 
-  Printer::Instance().PrintFB(1,
-                              th - 3,
-                              '>',
-                              Colors::WhiteColor,
-                              Colors::DoorHighlightColor);
+  Game::gPrnt.PrintFB(1,
+                      th - 3,
+                      '>',
+                      Colors::WhiteColor,
+                      Colors::DoorHighlightColor);
 
   std::string dir;
 
-  auto curLvl = Map::Instance().CurrentLevel;
+  auto curLvl = Game::gMap.CurrentLevel;
   if (curLvl->ExitFound)
   {
     int dx = curLvl->LevelExit.X - _playerRef->PosX;
@@ -956,12 +958,12 @@ void MainState::DisplayExitHint()
     }
   }
 
-  Printer::Instance().PrintFB(2,
-                              th - 3,
-                              curLvl->ExitFound ? dir : "??",
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(2,
+                      th - 3,
+                      curLvl->ExitFound ? dir : "??",
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 }
 
 // =============================================================================
@@ -983,11 +985,11 @@ void MainState::DisplayHungerStatus(const int& startPos)
 {
   if (_playerRef->IsStarving)
   {
-    Printer::Instance().PrintFB(startPos,
-                                _th - 3,
-                                '%',
-                                Colors::WhiteColor,
-                                Colors::RedColor);
+    Game::gPrnt.PrintFB(startPos,
+                        _th - 3,
+                        '%',
+                        Colors::WhiteColor,
+                        Colors::RedColor);
   }
   else
   {
@@ -995,11 +997,11 @@ void MainState::DisplayHungerStatus(const int& startPos)
     int part = hungerMax - hungerMax * 0.25;
     if (_playerRef->Attrs.Hunger >= part)
     {
-      Printer::Instance().PrintFB(startPos,
-                                  _th - 3,
-                                  '%',
-                                  Colors::WhiteColor,
-                                  0x999900);
+      Game::gPrnt.PrintFB(startPos,
+                          _th - 3,
+                          '%',
+                          Colors::WhiteColor,
+                          0x999900);
     }
   }
 }
@@ -1020,11 +1022,11 @@ void MainState::DisplayWeaponCondition(const int& startPos)
 
     if (weapon->Data.Durability.Min().Get() <= warning)
     {
-      Printer::Instance().PrintFB(startPos + 2,
-                                  _th - 3,
-                                  ')',
-                                  Colors::YellowColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(startPos + 2,
+                          _th - 3,
+                          ')',
+                          Colors::YellowColor,
+                          Colors::BlackColor);
     }
   }
 }
@@ -1043,11 +1045,11 @@ void MainState::DisplayArmorCondition(const int& startPos)
 
     if (armor->Data.Durability.Min().Get() <= warning)
     {
-      Printer::Instance().PrintFB(startPos + 4,
-                                  _th - 3,
-                                  '[',
-                                  Colors::YellowColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(startPos + 4,
+                          _th - 3,
+                          '[',
+                          Colors::YellowColor,
+                          Colors::BlackColor);
     }
   }
 }
@@ -1064,11 +1066,11 @@ void MainState::DisplayAmmoCondition(const int& startPos)
     int amount = arrows->Data.Amount;
     if (amount <= 3)
     {
-      Printer::Instance().PrintFB(startPos + 6,
-                                  _th - 3,
-                                  '^',
-                                  Colors::YellowColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(startPos + 6,
+                          _th - 3,
+                          '^',
+                          Colors::YellowColor,
+                          Colors::BlackColor);
     }
   }
 }
@@ -1109,12 +1111,12 @@ void MainState::DisplayActiveEffects(const int& startPos)
                      Colors::ShadesOfGrey::Four :
                      Colors::WhiteColor;
 
-    Printer::Instance().PrintFB(offsetX,
-                                _th - 4,
-                                kvp.first,
-                                Printer::kAlignLeft,
-                                color,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(offsetX,
+                        _th - 4,
+                        kvp.first,
+                        Printer::kAlignLeft,
+                        color,
+                        Colors::BlackColor);
 
     offsetX += 4;
   }
@@ -1124,8 +1126,8 @@ void MainState::DisplayActiveEffects(const int& startPos)
 
 void MainState::PrintNoAttackInTown()
 {
-  int index = RNG::Instance().RandomRange(0, 2);
-  Printer::Instance().AddMessage(Strings::MsgNotInTown[index]);
+  int index = Game::gRng.RandomRange(0, 2);
+  Game::gPrnt.AddMessage(Strings::MsgNotInTown[index]);
 }
 
 // =============================================================================
@@ -1140,14 +1142,14 @@ void MainState::GetActorsAround()
   int hy = _playerRef->PosY + 1;
 
   if (lx >= 0 && ly >= 0
-   && hx < Map::Instance().CurrentLevel->MapSize.X - 1
-   && hy < Map::Instance().CurrentLevel->MapSize.Y - 1)
+   && hx < Game::gMap.CurrentLevel->MapSize.X - 1
+   && hy < Game::gMap.CurrentLevel->MapSize.Y - 1)
   {
     for (int x = lx; x <= hx; x++)
     {
       for (int y = ly; y <= hy; y++)
       {
-        for (auto& a : Map::Instance().CurrentLevel->ActorGameObjects)
+        for (auto& a : Game::gMap.CurrentLevel->ActorGameObjects)
         {
           if (a->PosX == x && a->PosY == y)
           {
@@ -1165,7 +1167,7 @@ void MainState::DisplayScenarioInformation()
 {
   std::vector<std::string> messages;
 
-  auto seedString = RNG::Instance().GetSeedString();
+  auto seedString = Game::gRng.GetSeedString();
 
   std::stringstream ss;
 
@@ -1177,6 +1179,6 @@ void MainState::DisplayScenarioInformation()
   ss << "Seed value: " << seedString.second;
   messages.push_back(ss.str());
 
-  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                         "Scenario Information", messages);
+  Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
+                            "Scenario Information", messages);
 }

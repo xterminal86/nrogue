@@ -14,7 +14,7 @@
 
 void LookInputState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 
   _monsterStatsInfo.reserve(32);
 }
@@ -81,44 +81,44 @@ void LookInputState::HandleInput()
       break;
 
     case VK_CANCEL:
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
       break;
 
 #ifdef DEBUG_BUILD
     case 'd':
     {
       GameObject* go =
-          Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X,
-                                                        _cursorPosition.Y);
+          Game::gMap.GetStaticGameObjectAtPosition(_cursorPosition.X,
+                                                     _cursorPosition.Y);
       if (go != nullptr)
       {
         go->IsDestroyed = true;
-        Printer::Instance().AddMessage("Removed: " + go->ObjectName);
-        Map::Instance().RemoveDestroyed();
-        Printer::Instance().DrawExplosion(_cursorPosition, 3);
+        Game::gPrnt.AddMessage("Removed: " + go->ObjectName);
+        Game::gMap.RemoveDestroyed();
+        Game::gPrnt.DrawExplosion(_cursorPosition, 3);
       }
       else
       {
-        Printer::Instance().AddMessage(Strings::MsgNothingHere);
+        Game::gPrnt.AddMessage(Strings::MsgNothingHere);
       }
     }
     break;
 
     case 'D':
     {
-      auto gos = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X,
-                                                          _cursorPosition.Y);
+      auto gos = Game::gMap.GetGameObjectsAtPosition(_cursorPosition.X,
+                                                       _cursorPosition.Y);
       if (!gos.empty())
       {
         GameObject* top = gos[gos.size() - 1];
         top->IsDestroyed = true;
-        Printer::Instance().AddMessage("Removed: " + top->ObjectName);
-        Map::Instance().RemoveDestroyed();
-        Printer::Instance().DrawExplosion(_cursorPosition, 3);
+        Game::gPrnt.AddMessage("Removed: " + top->ObjectName);
+        Game::gMap.RemoveDestroyed();
+        Game::gPrnt.DrawExplosion(_cursorPosition, 3);
       }
       else
       {
-        Printer::Instance().AddMessage(Strings::MsgNothingHere);
+        Game::gPrnt.AddMessage(Strings::MsgNothingHere);
       }
     }
     break;
@@ -134,22 +134,22 @@ void LookInputState::HandleInput()
           _playerRef->DistanceField.GetCell(_cursorPosition.X,
                                             _cursorPosition.Y);
 
-      _distanceField = (c == nullptr)
-                       ? "0x0"
-                       : Util::StringFormat("%i %i [%i]",
-                                            c->MapPos.X,
-                                            c->MapPos.Y,
-                                            c->Cost);
+      _distanceField = (c == nullptr) ?
+                       "0x0" :
+                       Util::StringFormat("%i %i [%i]",
+                                          c->MapPos.X,
+                                          c->MapPos.Y,
+                                          c->Cost);
     }
     break;
 
     case 'M':
     {
       GameObject* mm =
-          MonstersInc::Instance().CreateMonster(_cursorPosition.X,
-                                                _cursorPosition.Y,
-                                                GameObjectType::MAD_MINER);
-      Map::Instance().PlaceActor(mm);
+          Game::gMI.CreateMonster(_cursorPosition.X,
+                                   _cursorPosition.Y,
+                                   GameObjectType::MAD_MINER);
+      Game::gMap.PlaceActor(mm);
     }
     break;
 #endif
@@ -165,9 +165,9 @@ void LookInputState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
-    Map::Instance().Draw();
+    Game::gMap.Draw();
 
     _playerRef->Draw();
 
@@ -175,10 +175,10 @@ void LookInputState::Update(bool forceUpdate)
 
     std::string lookStatus;
 
-    int mapSizeX = Map::Instance().CurrentLevel->MapSize.X;
-    int mapSizeY = Map::Instance().CurrentLevel->MapSize.Y;
+    int mapSizeX = Game::gMap.CurrentLevel->MapSize.X;
+    int mapSizeY = Game::gMap.CurrentLevel->MapSize.Y;
 
-    auto curLvl = Map::Instance().CurrentLevel;
+    auto curLvl = Game::gMap.CurrentLevel;
 
     if (Util::CheckLimits(_cursorPosition, { mapSizeX, mapSizeY }))
     {
@@ -307,35 +307,35 @@ void LookInputState::Update(bool forceUpdate)
       lookStatus = Strings::TripleQuestionMarks;
     }
 
-    Printer::Instance().PrintFB(_twHalf, 0,
-                                "Press 'q' to exit look mode",
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(_twHalf, 0,
+                        "Press 'q' to exit look mode",
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
     std::string coords = Util::StringFormat("[%i;%i]",
                                             _cursorPosition.X,
                                             _cursorPosition.Y);
 
-    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
-                                Printer::TerminalHeight - 2,
-                                coords,
-                                Printer::kAlignRight,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
+                        Printer::TerminalHeight - 2,
+                        coords,
+                        Printer::kAlignRight,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
-                                Printer::TerminalHeight - 1,
-                                lookStatus,
-                                Printer::kAlignRight,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
+                        Printer::TerminalHeight - 1,
+                        lookStatus,
+                        Printer::kAlignRight,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
     #ifdef DEBUG_BUILD
     PrintDebugInfo();
     #endif
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }
 
@@ -366,21 +366,21 @@ void LookInputState::MoveCursor(int dx, int dy)
 
 void LookInputState::DrawCursor()
 {
-  Printer::Instance().PrintFB(_cursorPosition.X +
-                              Map::Instance().CurrentLevel->MapOffsetX + 1,
-                              _cursorPosition.Y +
-                              Map::Instance().CurrentLevel->MapOffsetY,
-                              ']',
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(_cursorPosition.X +
+                      Game::gMap.CurrentLevel->MapOffsetX + 1,
+                      _cursorPosition.Y +
+                      Game::gMap.CurrentLevel->MapOffsetY,
+                      ']',
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 
-  Printer::Instance().PrintFB(_cursorPosition.X +
-                              Map::Instance().CurrentLevel->MapOffsetX - 1,
-                              _cursorPosition.Y +
-                              Map::Instance().CurrentLevel->MapOffsetY,
-                              '[',
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(_cursorPosition.X +
+                      Game::gMap.CurrentLevel->MapOffsetX - 1,
+                      _cursorPosition.Y +
+                      Game::gMap.CurrentLevel->MapOffsetY,
+                      '[',
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 }
 
 // =============================================================================
@@ -395,8 +395,8 @@ bool LookInputState::CheckPlayer()
 
 GameObject* LookInputState::CheckActor()
 {
-  auto actor = Map::Instance().GetActorAtPosition(_cursorPosition.X,
-                                                  _cursorPosition.Y);
+  auto actor = Game::gMap.GetActorAtPosition(_cursorPosition.X,
+                                               _cursorPosition.Y);
   return actor;
 }
 
@@ -404,8 +404,8 @@ GameObject* LookInputState::CheckActor()
 
 const std::vector<GameObject*> LookInputState::CheckGameObjects()
 {
-  return Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X,
-                                                  _cursorPosition.Y);
+  return Game::gMap.GetGameObjectsAtPosition(_cursorPosition.X,
+                                               _cursorPosition.Y);
 }
 
 // =============================================================================
@@ -487,9 +487,9 @@ void LookInputState::DisplayMonsterStats()
     _monsterStatsInfo.push_back(Util::StringFormat("Action Meter: %i",
                                                    actor->Attrs.ActionMeter));
 
-    Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                           name,
-                                           _monsterStatsInfo);
+    Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
+                               name,
+                               _monsterStatsInfo);
   }
 }
 
@@ -502,20 +502,20 @@ void LookInputState::PrintDebugInfo()
 
   for (auto& line : _debugInfo)
   {
-    Printer::Instance().PrintFB(0,
-                                yStart,
-                                line,
-                                Printer::kAlignLeft,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(0,
+                        yStart,
+                        line,
+                        Printer::kAlignLeft,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
     yStart++;
   }
 
-  Printer::Instance().PrintFB(0,
-                              yStart + 1,
-                              _distanceField,
-                              Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(0,
+                      yStart + 1,
+                      _distanceField,
+                      Printer::kAlignLeft,
+                      Colors::WhiteColor,
+                      Colors::BlackColor);
 }
 #endif

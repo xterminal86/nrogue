@@ -5,7 +5,7 @@
 
 int main(int argc, char* argv[])
 {
-  MsgScrollBuffer b;
+  MsgScrollBuffer<std::string> b;
 
   for (size_t i = 0; i < 10; i++)
   {

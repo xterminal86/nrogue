@@ -67,7 +67,7 @@ configure_file(version-config.h.in
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/components)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/levels)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/states)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/singletons)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/subsystems)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/extra)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/core)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/ai)
@@ -81,7 +81,7 @@ file(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/*.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/states/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/subsystems/*.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/*.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/*.cpp
@@ -95,7 +95,7 @@ file(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/components/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/src/levels/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/src/states/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/subsystems/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ai/*.h
@@ -110,8 +110,8 @@ if (${CMAKE_BUILD_TYPE} MATCHES Release)
     REMOVE_ITEM SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/logger.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/singletons/logger.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/subsystems/logger.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/subsystems/logger.h
   )
 endif()
 

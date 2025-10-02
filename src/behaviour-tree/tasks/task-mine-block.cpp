@@ -2,8 +2,11 @@
 
 #include "game-object.h"
 #include "position.h"
-#include "map.h"
 #include "behaviour-tree.h"
+
+#include "map.h"
+#include "rng.h"
+
 #include "equipment-component.h"
 #include "item-component.h"
 
@@ -47,9 +50,9 @@ BTResult TaskMineBlock::Run()
   for (auto& p : toCheck)
   {
     bool insideMap = Util::IsInsideMap(p,
-                                       Map::Instance().CurrentLevel->MapSize);
+                                       Game::gMap.CurrentLevel->MapSize);
 
-    auto& so = Map::Instance().CurrentLevel->StaticMapObjects[p.X][p.Y];
+    auto& so = Game::gMap.CurrentLevel->StaticMapObjects[p.X][p.Y];
 
     if (insideMap && so != nullptr && so->Type == GameObjectType::PICKAXEABLE)
     {
@@ -62,7 +65,7 @@ BTResult TaskMineBlock::Run()
     return BTResult::Failure;
   }
 
-  int ind = RNG::Instance().RandomRange(0, candidates.size());
+  int ind = Game::gRng.RandomRange(0, candidates.size());
 
   Position found = candidates[ind];
 
@@ -71,7 +74,7 @@ BTResult TaskMineBlock::Run()
     Util::TryToDamageEquipment(_objectToControl, EquipmentCategory::WEAPON, -1);
   }
 
-  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+  MapLevelBase* curLvl = Game::gMap.CurrentLevel;
 
   curLvl->StaticMapObjects[found.X][found.Y]->Attrs.HP.SetMin(0);
   curLvl->StaticMapObjects[found.X][found.Y]->IsDestroyed = true;

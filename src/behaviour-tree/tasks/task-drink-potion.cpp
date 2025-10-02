@@ -5,6 +5,7 @@
 #include "map.h"
 #include "printer.h"
 #include "player.h"
+#include "rng.h"
 
 TaskDrinkPotion::TaskDrinkPotion(GameObject* objectToControl,
                                  ScriptParamNames ref)
@@ -91,7 +92,7 @@ void TaskDrinkPotion::UsePotion(int inventoryIndex)
 
 void TaskDrinkPotion::PrintLogIfNeeded(ItemComponent* ic)
 {
-  auto curLvl = Map::Instance().CurrentLevel;
+  auto curLvl = Game::gMap.CurrentLevel;
   auto curTile =
       curLvl->MapArray[_objectToControl->PosX][_objectToControl->PosY].get();
 
@@ -101,7 +102,7 @@ void TaskDrinkPotion::PrintLogIfNeeded(ItemComponent* ic)
                                   _objectToControl->ObjectName.data(),
                                   ic->Data.UnidentifiedName.data());
 
-    Printer::Instance().AddMessage(msg);
+    Game::gPrnt.AddMessage(msg);
   }
 }
 
@@ -170,7 +171,7 @@ int TaskDrinkPotion::FindPotionAny()
 
   if (!itemIndices.empty())
   {
-    itemIndex = RNG::Instance().RandomRange(0, itemIndices.size());
+    itemIndex = Game::gRng.RandomRange(0, itemIndices.size());
   }
 
   return itemIndex;

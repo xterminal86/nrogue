@@ -16,19 +16,19 @@ void SelectItemStateBase::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
     DrawHeader(_headerText);
 
     DrawSpecific();
 
-    Printer::Instance().PrintFB(_twHalf,
-                                _th - 1,
-                                "'q' - exit",
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(_twHalf,
+                        _th - 1,
+                        "'q' - exit",
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }

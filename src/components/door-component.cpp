@@ -5,6 +5,8 @@
 #include "util.h"
 #include "application.h"
 
+#include "container-component.h"
+
 DoorComponent::DoorComponent()
 {
 }
@@ -38,7 +40,7 @@ IR DoorComponent::Interact()
   {
     bool success = false;
 
-    auto playerPref = &Application::Instance().PlayerInstance;
+    auto playerPref = &Game::gApp.PlayerInstance;
     for (size_t i = 0; i < playerPref->Inventory->Contents.size(); i++)
     {
       auto& itemRef = playerPref->Inventory->Contents[i];
@@ -64,7 +66,7 @@ IR DoorComponent::Interact()
     {
       auto str = Util::StringFormat("%s - locked!",
                                     OwnerGameObject->ObjectName.data());
-      Printer::Instance().AddMessage(str);
+      Game::gPrnt.AddMessage(str);
 
       return { InteractionResult::FAILURE, GameStates::MAIN_STATE };
     }
@@ -108,5 +110,27 @@ void DoorComponent::PrintInteractionMessage()
   auto str = Util::StringFormat("You %s: %s",
                                 (IsOpen ? "opened" : "closed"),
                                 OwnerGameObject->ObjectName.data());
-  Printer::Instance().AddMessage(str);
+  Game::gPrnt.AddMessage(str);
 }
+
+#ifdef DEBUG_BUILD
+StringV DoorComponent::Dump(size_t indent)
+{
+  const std::string spaces(indent, ' ');
+
+  StringV res;
+
+  res.push_back( I_OBJ_START_NAMED(spaces, typeid(*this).name()) );
+
+  res.push_back( I_PTR_NAMED(spaces, "addr", this) );
+  res.push_back( I_BOOL(spaces, IsOpen) );
+  res.push_back( I_ULL(spaces, OpenedBy) );
+  res.push_back( I_CLR(spaces, FgColorOverride) );
+  res.push_back( I_CLR(spaces, BgColorOverride) );
+  res.push_back( I_INT(spaces, Material) );
+
+  res.push_back( I_OBJ_END(spaces) );
+
+  return res;
+}
+#endif

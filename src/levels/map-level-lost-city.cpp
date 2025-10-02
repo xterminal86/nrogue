@@ -215,10 +215,10 @@ void MapLevelLostCity::CreateShrines(LevelBuilder& lb)
           "?Shrine?");
     PlaceStaticObject(kvp.first.X, kvp.first.Y, t);
 
-    auto go = GameObjectsFactory::Instance().CreateShrine(kvp.first.X,
-                                                          kvp.first.Y,
-                                                          shrineType,
-                                                          1000);
+    auto go = Game::gGOF.CreateShrine(kvp.first.X,
+                                      kvp.first.Y,
+                                      shrineType,
+                                      1000);
     PlaceGameObject(go);
   }
 }
@@ -243,7 +243,7 @@ void MapLevelLostCity::DisplayWelcomeText()
     { HIDE("but here you are, standing in its halls.       ") }
   };
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                                        { HIDE("Lost City") },
-                                         msg);
+  Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                            { HIDE("Lost City") },
+                             msg);
 }

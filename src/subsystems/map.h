@@ -6,7 +6,6 @@
 #include <chrono>
 #include <memory>
 
-#include "singleton.h"
 #include "constants.h"
 #include "position.h"
 #include "map-level-base.h"
@@ -23,7 +22,7 @@ enum class GameObjectCollectionType
 
 class GameObject;
 
-class Map : public Singleton<Map>
+class Map
 {
   public:
     void Cleanup();
@@ -33,7 +32,7 @@ class Map : public Singleton<Map>
     void LoadTown();
 
     #ifdef BUILD_TESTS
-    void LoadTestLevel();
+    void LoadLevel(MapType levelToLoad);
     #endif
 
     void PlaceActor(GameObject* actor);
@@ -129,8 +128,7 @@ class Map : public Singleton<Map>
       return nullptr;
     }
 
-  protected:
-    void InitSpecific() override;
+    void Init();
 
   private:
     bool _townLoaded = false;
@@ -163,6 +161,8 @@ class Map : public Singleton<Map>
     {
       _levels[type] = std::make_unique<T>(sizeX, sizeY, type, dungeonLevel);
     }
+
+    bool _initialized = false;
 
     friend class Application;
 };

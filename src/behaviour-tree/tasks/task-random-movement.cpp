@@ -18,12 +18,12 @@ BTResult TaskRandomMovement::Smart()
 {
   auto cells =
       Util::GetEightPointsAround(_objectToControl->GetPosition(),
-                                 Map::Instance().CurrentLevel->MapSize);
+                                 Game::gMap.CurrentLevel->MapSize);
 
   std::vector<Position> cellsToMove;
   for (auto& c : cells)
   {
-    MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+    MapLevelBase* curLvl = Game::gMap.CurrentLevel;
 
     bool isOk       = !curLvl->MapArray[c.X][c.Y]->Special;
     bool isOccupied = curLvl->MapArray[c.X][c.Y]->Occupied;
@@ -36,7 +36,7 @@ BTResult TaskRandomMovement::Smart()
 
   if (!cellsToMove.empty())
   {
-    int index = RNG::Instance().RandomRange(0, cellsToMove.size());
+    int index = Game::gRng.RandomRange(0, cellsToMove.size());
     _objectToControl->MoveTo(cellsToMove[index].X, cellsToMove[index].Y);
     _objectToControl->FinishTurn();
     return BTResult::Success;
@@ -52,11 +52,11 @@ BTResult TaskRandomMovement::Smart()
 //
 BTResult TaskRandomMovement::Dumb()
 {
-  int dx = RNG::Instance().Random() % 2;
-  int dy = RNG::Instance().Random() % 2;
+  int dx = Game::gRng.Random() % 2;
+  int dy = Game::gRng.Random() % 2;
 
-  int signX = (RNG::Instance().Random() % 2) == 0 ? -1 : 1;
-  int signY = (RNG::Instance().Random() % 2) == 0 ? -1 : 1;
+  int signX = (Game::gRng.Random() % 2) == 0 ? -1 : 1;
+  int signY = (Game::gRng.Random() % 2) == 0 ? -1 : 1;
 
   dx *= signX;
   dy *= signY;
@@ -67,7 +67,7 @@ BTResult TaskRandomMovement::Dumb()
     _objectToControl->PosY + dy
   };
 
-  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+  MapLevelBase* curLvl = Game::gMap.CurrentLevel;
 
   bool isOk = !curLvl->MapArray[newPos.X][newPos.Y]->Special;
 

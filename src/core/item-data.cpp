@@ -1,5 +1,6 @@
 #include "item-data.h"
 
+#include "spells-database.h"
 #include "util.h"
 
 bool ItemData::IsWeaponOrArmor()
@@ -50,9 +51,8 @@ int ItemData::GetCost()
   if (ItemType_ == ItemType::WAND)
   {
     int capacity = WandCapacity.Get();
-    int spellCost =
-        SpellsDatabase::Instance()
-        .GetSpellInfoFromDatabase(SpellHeld.SpellType_)->SpellBaseCost;
+    SpellInfo* si = Game::gSD.GetSpellInfoFromDatabase(SpellHeld.SpellType_);
+    int spellCost = si->SpellBaseCost;
     price = capacity + spellCost * Amount;
   }
   else

@@ -11,7 +11,6 @@
 #include "SDL2/SDL.h"
 #endif
 
-#include "singleton.h"
 #include "colorpair.h"
 #include "position.h"
 #include "constants.h"
@@ -47,7 +46,7 @@ struct GameLogMessageData
 };
 
 /// Singleton for ncurses text printing
-class Printer : public Singleton<Printer>
+class Printer
 {
   public:
     static size_t TerminalWidth;
@@ -179,8 +178,7 @@ class Printer : public Singleton<Printer>
 
     bool IsReady();
 
-  protected:
-    void InitSpecific() override;
+    void Init();
 
   private:
     #ifndef USE_SDL

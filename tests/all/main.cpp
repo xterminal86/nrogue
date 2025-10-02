@@ -287,42 +287,42 @@ void RNGTests(std::stringstream& ss)
 
   for (int i = 0; i < numberOfRolls; i++)
   {
-    ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(-10, 10));
+    ss << Util::StringFormat("%i ", Game::gRng.RandomRange(-10, 10));
   }
 
   ss << "\n\nRandom.Range(0, 100):\n";
 
   for (int i = 0; i < numberOfRolls; i++)
   {
-    ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(0, 100));
+    ss << Util::StringFormat("%i ", Game::gRng.RandomRange(0, 100));
   }
 
   ss << "\n\nRandom.Range(-20, -10):\n";
 
   for (int i = 0; i < numberOfRolls; i++)
   {
-    ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(-20, -10));
+    ss << Util::StringFormat("%i ", Game::gRng.RandomRange(-20, -10));
   }
 
   ss << "\n\nRandom.Range(100, 10):\n";
 
   for (int i = 0; i < numberOfRolls; i++)
   {
-    ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(100, 10));
+    ss << Util::StringFormat("%i ", Game::gRng.RandomRange(100, 10));
   }
 
   ss << "\n\nRandom.Range(-10, -100):\n";
 
   for (int i = 0; i < numberOfRolls; i++)
   {
-    ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(-10, -100));
+    ss << Util::StringFormat("%i ", Game::gRng.RandomRange(-10, -100));
   }
 
   ss << "\n\nRandom.Range(10, -10):\n";
 
   for (int i = 0; i < numberOfRolls; i++)
   {
-    ss << Util::StringFormat("%i ", RNG::Instance().RandomRange(10, -10));
+    ss << Util::StringFormat("%i ", Game::gRng.RandomRange(10, -10));
   }
 
   const int d100 = 100;

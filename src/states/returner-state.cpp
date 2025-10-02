@@ -3,6 +3,7 @@
 #include "application.h"
 #include "map.h"
 #include "printer.h"
+#include "rng.h"
 
 void ReturnerState::Init()
 {
@@ -12,7 +13,7 @@ void ReturnerState::Init()
 
 void ReturnerState::Prepare()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 }
 
 // =============================================================================
@@ -34,23 +35,23 @@ void ReturnerState::HandleInput()
 
       if (level == MapType::NOWHERE)
       {
-        Printer::Instance().AddMessage("The stone is not attuned!");
+        Game::gPrnt.AddMessage("The stone is not attuned!");
       }
       else
       {
-        Printer::Instance().AddMessage("You invoke the returner");
-        Map::Instance().TeleportToExistingLevel(level, pos);
+        Game::gPrnt.AddMessage("You invoke the returner");
+        Game::gMap.TeleportToExistingLevel(level, pos);
         _itemRef->Data.Amount--;
       }
 
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
     }
     break;
 
     case 'a':
     {
       _itemRef->Data.ReturnerPosition.first =
-          Map::Instance().CurrentLevel->MapType_;
+          Game::gMap.CurrentLevel->MapType_;
 
       if (_itemRef->Data.Prefix == ItemPrefix::CURSED)
       {
@@ -64,18 +65,18 @@ void ReturnerState::HandleInput()
         _itemRef->Data.ReturnerPosition.second.second = _playerRef->PosY;
       }
 
-      Printer::Instance().AddMessage(
+      Game::gPrnt.AddMessage(
             "The stone has been attuned to this position"
       );
 
       _playerRef->FinishTurn();
 
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
     }
     break;
 
     case VK_CANCEL:
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
       break;
 
     default:
@@ -89,29 +90,29 @@ void ReturnerState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
     _playerRef->CheckVisibility();
 
-    Map::Instance().Draw();
+    Game::gMap.Draw();
 
     _playerRef->Draw();
 
-    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
-                                Printer::TerminalHeight - 1,
-                                "What do you want to do with returner?",
-                                Printer::kAlignRight,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
+                        Printer::TerminalHeight - 1,
+                        "What do you want to do with returner?",
+                        Printer::kAlignRight,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
-                                Printer::TerminalHeight - 2,
-                                "(a) - attune, (u) - use, (q) - nothing",
-                                Printer::kAlignRight,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
+                        Printer::TerminalHeight - 2,
+                        "(a) - attune, (u) - use, (q) - nothing",
+                        Printer::kAlignRight,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }
 
@@ -137,7 +138,7 @@ Position ReturnerState::GetRandomPositionAroundPlayer()
 
   std::vector<Position> positions;
 
-  Position mapSize = Map::Instance().CurrentLevel->MapSize;
+  Position mapSize = Game::gMap.CurrentLevel->MapSize;
 
   for (int x = lx; x <= hx; x++)
   {
@@ -151,7 +152,7 @@ Position ReturnerState::GetRandomPositionAroundPlayer()
     }
   }
 
-  int index = RNG::Instance().RandomRange(0, positions.size());
+  int index = Game::gRng.RandomRange(0, positions.size());
   res = positions[index];
 
   return res;

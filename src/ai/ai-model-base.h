@@ -5,9 +5,11 @@
 #include <memory>
 #include <cstddef>
 #include <ctime>
+#include <cstdint>
 
 #include "behaviour-tree.h"
 #include "bts-parser.h"
+#include "enumerations.h"
 
 class AIComponent;
 class Player;

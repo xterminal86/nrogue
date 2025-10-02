@@ -53,7 +53,7 @@ BTResult TaskMineTunnel::Run()
   // and number of walls around the wall to tunnel into
   // should be at least 2.
   //
-  int countActor = Map::Instance().CountWallsOrthogonal(x, y);
+  int countActor = Game::gMap.CountWallsOrthogonal(x, y);
   if (countActor < 3)
   {
     return BTResult::Failure;
@@ -70,7 +70,7 @@ BTResult TaskMineTunnel::Run()
   Position found = { -1, -1 };
   for (auto& p : toCheck)
   {
-    if (Map::Instance().CurrentLevel->StaticMapObjects[p.X][p.Y] == nullptr)
+    if (Game::gMap.CurrentLevel->StaticMapObjects[p.X][p.Y] == nullptr)
     {
       found = p;
       break;
@@ -90,9 +90,9 @@ BTResult TaskMineTunnel::Run()
   else if (found.Y > y) found.Y -= 2;
   else if (found.Y < y) found.Y += 2;
 
-  auto& so = Map::Instance().CurrentLevel->StaticMapObjects[found.X][found.Y];
+  auto& so = Game::gMap.CurrentLevel->StaticMapObjects[found.X][found.Y];
 
-  if (!Util::IsInsideMap(found, Map::Instance().CurrentLevel->MapSize)
+  if (!Util::IsInsideMap(found, Game::gMap.CurrentLevel->MapSize)
    || so == nullptr)
   {
     return BTResult::Failure;
@@ -108,7 +108,7 @@ BTResult TaskMineTunnel::Run()
     Util::TryToDamageEquipment(_objectToControl, EquipmentCategory::WEAPON, -1);
   }
 
-  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+  MapLevelBase* curLvl = Game::gMap.CurrentLevel;
 
   curLvl->StaticMapObjects[found.X][found.Y]->Attrs.HP.SetMin(0);
   curLvl->StaticMapObjects[found.X][found.Y]->IsDestroyed = true;
@@ -117,11 +117,11 @@ BTResult TaskMineTunnel::Run()
 
   auto minedPos = Util::StringFormat("%i,%i", found.X, found.Y);
 
-  Blackboard::Instance().Set(_objectToControl->ObjectId(),
-                             {
-                               Strings::BlackboardKeyLastMinedPos,
-                               minedPos
-                             });
+  Game::gBB.Set(_objectToControl->ObjectId(),
+                {
+                  Strings::BlackboardKeyLastMinedPos,
+                  minedPos
+                });
 
   return BTResult::Success;
 }

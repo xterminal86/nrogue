@@ -10,7 +10,7 @@
 
 void InteractInputState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 }
 
 // =============================================================================
@@ -20,7 +20,7 @@ void InteractInputState::Prepare()
   _cursorPosition.X = _playerRef->PosX;
   _cursorPosition.Y = _playerRef->PosY;
 
-  Printer::Instance().AddMessage(Strings::MsgInteractDir);
+  Game::gPrnt.AddMessage(Strings::MsgInteractDir);
 }
 
 // =============================================================================
@@ -74,8 +74,8 @@ void InteractInputState::HandleInput()
       break;
 
     case VK_CANCEL:
-      Printer::Instance().AddMessage(Strings::MsgCancelled);
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gPrnt.AddMessage(Strings::MsgCancelled);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
       break;
 
     default:
@@ -102,16 +102,16 @@ bool InteractInputState::SetDir(const Position& dir)
 
 void InteractInputState::ProcessInteraction()
 {
-  auto actor = Map::Instance().GetActorAtPosition(_cursorPosition.X,
-                                                  _cursorPosition.Y);
+  auto actor = Game::gMap.GetActorAtPosition(_cursorPosition.X,
+                                               _cursorPosition.Y);
   if (actor != nullptr)
   {
     TryToInteractWithActor(actor);
   }
   else
   {
-    auto res = Map::Instance().GetGameObjectsAtPosition(_cursorPosition.X,
-                                                        _cursorPosition.Y);
+    auto res = Game::gMap.GetGameObjectsAtPosition(_cursorPosition.X,
+                                                     _cursorPosition.Y);
     if (res.size() != 0)
     {
       TryToInteractWithObject(res.back());
@@ -119,8 +119,8 @@ void InteractInputState::ProcessInteraction()
     else
     {
       auto staticObject =
-          Map::Instance().GetStaticGameObjectAtPosition(_cursorPosition.X,
-                                                        _cursorPosition.Y);
+          Game::gMap.GetStaticGameObjectAtPosition(_cursorPosition.X,
+                                                     _cursorPosition.Y);
 
       if (staticObject != nullptr)
       {
@@ -128,8 +128,8 @@ void InteractInputState::ProcessInteraction()
       }
       else
       {
-        Printer::Instance().AddMessage(Strings::MsgNothingHere);
-        Application::Instance().ChangeState(GameStates::MAIN_STATE);
+        Game::gPrnt.AddMessage(Strings::MsgNothingHere);
+        Game::gApp.ChangeState(GameStates::MAIN_STATE);
       }
     }
   }
@@ -142,7 +142,7 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
   IR ir = go->Interact();
   if (ir.first == InteractionResult::UNDEFINED)
   {
-    Printer::Instance().AddMessage("Can't interact with: " + go->ObjectName);
+    Game::gPrnt.AddMessage("Can't interact with: " + go->ObjectName);
   }
 
   if (ir.first == InteractionResult::SUCCESS)
@@ -154,7 +154,7 @@ void InteractInputState::TryToInteractWithObject(GameObject* go)
                          GameStates::MAIN_STATE :
                          ir.second;
 
-  Application::Instance().ChangeState(changeTo);
+  Game::gApp.ChangeState(changeTo);
 }
 
 // =============================================================================
@@ -165,13 +165,13 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
   if (aic->CurrentModel->IsAgressive)
   {
     auto str = Util::StringFormat("%s is attacking!", actor->ObjectName.data());
-    Printer::Instance().AddMessage(str);
-    Application::Instance().ChangeState(GameStates::MAIN_STATE);
+    Game::gPrnt.AddMessage(str);
+    Game::gApp.ChangeState(GameStates::MAIN_STATE);
   }
   else
   {
     GameStates s = GameStates::NPC_INTERACT_STATE;
-    auto state = Application::Instance().GetGameStateRefByName(s);
+    auto state = Game::gApp.GetGameStateRefByName(s);
     NPCInteractState* nis = static_cast<NPCInteractState*>(state);
     AINPC* npcAi = aic->GetModel<AINPC>();
     if (npcAi != nullptr)
@@ -179,14 +179,14 @@ void InteractInputState::TryToInteractWithActor(GameObject* actor)
       if (npcAi->Data.CanSpeak)
       {
         nis->SetNPCRef(npcAi);
-        Application::Instance().ChangeState(GameStates::NPC_INTERACT_STATE);
+        Game::gApp.ChangeState(GameStates::NPC_INTERACT_STATE);
       }
       else
       {
         auto str = Util::StringFormat("%s is not responding",
                                       actor->ObjectName.data());
-        Printer::Instance().AddMessage(str);
-        Application::Instance().ChangeState(GameStates::MAIN_STATE);
+        Game::gPrnt.AddMessage(str);
+        Game::gApp.ChangeState(GameStates::MAIN_STATE);
       }
     }
   }
@@ -198,25 +198,25 @@ void InteractInputState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
     _playerRef->CheckVisibility();
 
-    Map::Instance().Draw();
+    Game::gMap.Draw();
 
     _playerRef->Draw();
 
-    GameLogMessageData* lastMessage = Printer::Instance().GetLastMessage();
+    GameLogMessageData* lastMessage = Game::gPrnt.GetLastMessage();
     if (lastMessage != nullptr)
     {
-      Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
-                                  Printer::TerminalHeight - 1,
-                                  lastMessage->Message,
-                                  Printer::kAlignRight,
-                                  lastMessage->FgColor,
-                                  lastMessage->BgColor);
+      Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
+                          Printer::TerminalHeight - 1,
+                          lastMessage->Message,
+                          Printer::kAlignRight,
+                          lastMessage->FgColor,
+                          lastMessage->BgColor);
     }
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }

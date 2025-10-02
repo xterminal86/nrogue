@@ -30,6 +30,10 @@ class DoorComponent : public Component
     uint32_t BgColorOverride = Colors::BlackColor;
 
     DoorMaterials Material = DoorMaterials::WOOD;
+
+#ifdef DEBUG_BUILD
+    StringV Dump(size_t indent = 0) override;
+#endif
 };
 
 #endif // DOORCOMPONENT_H

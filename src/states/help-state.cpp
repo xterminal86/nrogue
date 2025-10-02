@@ -37,7 +37,7 @@ void HelpState::HandleInput()
     case 'h':
     case 'H':
     case VK_CANCEL:
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
       break;
 
     default:
@@ -51,31 +51,31 @@ void HelpState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
     DrawHeader(" HELP ");
 
     int offsetY = 1;
     for (size_t i = 0; i < _helpText.size(); i++)
     {
-      Printer::Instance().PrintFB(1,
-                                  offsetY,
-                                  _helpText[i],
-                                  Printer::kAlignLeft,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(1,
+                          offsetY,
+                          _helpText[i],
+                          Printer::kAlignLeft,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
       offsetY++;
     }
 
     #ifdef USE_SDL
-    Printer::Instance().PrintFB(Printer::TerminalWidth - 1,
-                                1,
-                                _specialText,
-                                Printer::kAlignRight,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
+                        1,
+                        _specialText,
+                        Printer::kAlignRight,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
     #endif
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }

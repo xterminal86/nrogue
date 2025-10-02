@@ -104,10 +104,7 @@ void MapLevelNether::CreateCommonObjects(int x, int y, char image)
     case '+':
     {
       GameObject* door =
-          GameObjectsFactory::Instance().CreateDoor(x,
-                                                    y,
-                                                    false,
-                                                    DoorMaterials::STONE);
+          Game::gGOF.CreateDoor(x, y, false, DoorMaterials::STONE);
       PlaceStaticObject(door);
     }
     break;
@@ -155,9 +152,9 @@ void MapLevelNether::CreateCommonObjects(int x, int y, char image)
                       y,
                       ' ',
                       Colors::BlackColor,
-                      (image == '1')
-                    ? Colors::ShadesOfGrey::Four
-                    : Colors::ShadesOfGrey::Twelve,
+                      (image == '1') ?
+                      Colors::ShadesOfGrey::Four :
+                      Colors::ShadesOfGrey::Twelve,
                       Strings::TileNames::TiledFloorText);
       break;
   }
@@ -179,7 +176,7 @@ void MapLevelNether::DisplayWelcomeText()
     { HIDE("What is this place?                      ") }
   };
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                                        { HIDE("Nether") },
-                                         msg);
+  Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                             { HIDE("Nether") },
+                              msg);
 }

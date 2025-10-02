@@ -141,7 +141,7 @@ void MapLevelMines::CreateLevel()
         { 40, 60 }
       };
 
-      int ind = RNG::Instance().RandomRange(0, splitRatios.size());
+      int ind = Game::gRng.RandomRange(0, splitRatios.size());
 
       lb.BSPRoomsMethod(MapSize, splitRatios[ind], 7);
     }
@@ -199,7 +199,7 @@ void MapLevelMines::CreateSpecialLevel()
 {
   MysteriousForcePresent = true;
 
-  GameObject* key = ItemsFactory::Instance().CreateDummyItem(
+  GameObject* key = Game::gIF.CreateDummyItem(
     "Iron Key",
     '1',
     Colors::IronColor,
@@ -231,11 +231,11 @@ void MapLevelMines::CreateSpecialLevel()
           LevelStart.X = posX;
           LevelStart.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this,
-                                                      LevelStart.X,
-                                                      LevelStart.Y,
-                                                      c,
-                                                      stairsUpTo);
+          Game::gGOF.CreateStairs(this,
+                                  LevelStart.X,
+                                  LevelStart.Y,
+                                  c,
+                                  stairsUpTo);
         }
         break;
 
@@ -244,11 +244,11 @@ void MapLevelMines::CreateSpecialLevel()
           LevelExit.X = posX;
           LevelExit.Y = posY;
 
-          GameObjectsFactory::Instance().CreateStairs(this,
-                                                      LevelExit.X,
-                                                      LevelExit.Y,
-                                                      c,
-                                                      stairsDownTo);
+          Game::gGOF.CreateStairs(this,
+                                  LevelExit.X,
+                                  LevelExit.Y,
+                                  c,
+                                  stairsDownTo);
         }
         break;
 
@@ -266,10 +266,10 @@ void MapLevelMines::CreateSpecialLevel()
         case '+':
         {
           GameObject* door =
-              GameObjectsFactory::Instance().CreateDoor(posX,
-                                                        posY,
-                                                        false,
-                                                        DoorMaterials::STONE);
+              Game::gGOF.CreateDoor(posX,
+                                    posY,
+                                    false,
+                                    DoorMaterials::STONE);
 
           DoorComponent* dc = door->GetComponent<DoorComponent>();
 
@@ -282,14 +282,14 @@ void MapLevelMines::CreateSpecialLevel()
         case 'D':
         {
           GameObject* door =
-              GameObjectsFactory::Instance().CreateDoor(posX,
-                                                        posY,
-                                                        false,
-                                                        DoorMaterials::IRON,
-                                                        "Iron Door",
-                                                        -1,
-                                                        Colors::BlackColor,
-                                                        Colors::IronColor);
+              Game::gGOF.CreateDoor(posX,
+                                    posY,
+                                    false,
+                                    DoorMaterials::IRON,
+                                    "Iron Door",
+                                    -1,
+                                    Colors::BlackColor,
+                                    Colors::IronColor);
 
           DoorComponent* dc = door->GetComponent<DoorComponent>();
           dc->OpenedBy = key->GetComponent<ItemComponent>()->Data.ItemTypeHash;
@@ -308,16 +308,16 @@ void MapLevelMines::CreateSpecialLevel()
                           Strings::TileNames::GroundText);
 
           GameObject* boss =
-              MonstersInc::Instance().CreateMonster(posX,
-                                                    posY,
-                                                    GameObjectType::HEROBRINE);
+              Game::gMI.CreateMonster(posX,
+                                      posY,
+                                      GameObjectType::HEROBRINE);
 
           ContainerComponent* cc = boss->GetComponent<ContainerComponent>();
           cc->Add(key);
 
           PlaceActor(boss);
 
-          GameObjectsFactory::Instance().CreateTrigger(
+          Game::gGOF.CreateTrigger(
                 TriggerType::ONE_SHOT,
                 TriggerUpdateType::FINISH_TURN,
           [this]()
@@ -351,10 +351,9 @@ void MapLevelMines::CreateSpecialLevel()
               }
             }
 
-            Printer::Instance().AddMessage("The tunnel collapses!");
+            Game::gPrnt.AddMessage("The tunnel collapses!");
 
-            GameObject* door = Map::Instance().GetStaticGameObjectAtPosition(2,
-                                                                             4);
+            GameObject* door = Game::gMap.GetStaticGameObjectAtPosition(2, 4);
             if (door != nullptr)
             {
               DoorComponent* dc = door->GetComponent<DoorComponent>();
@@ -373,12 +372,12 @@ void MapLevelMines::CreateSpecialLevel()
               { HIDE("AH... FRESH MEAT!")           }
             };
 
-            int index = RNG::Instance().RandomRange(0, phrases.size());
+            int index = Game::gRng.RandomRange(0, phrases.size());
             std::string phrase = phrases[index];
 
-            Printer::Instance().AddMessage(phrase,
-                                           Colors::WhiteColor,
-                                           0xAA0000);
+            Game::gPrnt.AddMessage(phrase,
+                                   Colors::WhiteColor,
+                                   0xAA0000);
           });
         }
         break;
@@ -460,9 +459,9 @@ void MapLevelMines::DisplayWelcomeText()
     { HIDE("suggesting human presence in the past.") }
   };
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                                        { HIDE("Abandoned Mines") },
-                                         msg);
+  Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                            { HIDE("Abandoned Mines") },
+                             msg);
 }
 
 // =============================================================================
@@ -473,15 +472,12 @@ void MapLevelMines::CreateSpecialMonsters()
   {
     if (Util::Rolld100(50))
     {
-      int index = RNG::Instance().RandomRange(0, _emptyCells.size());
+      int index = Game::gRng.RandomRange(0, _emptyCells.size());
       int x = _emptyCells[index].X;
       int y = _emptyCells[index].Y;
       if (!MapArray[x][y]->Occupied)
       {
-        GameObject* m =
-            MonstersInc::Instance().CreateMonster(x,
-                                                  y,
-                                                  GameObjectType::SHELOB);
+        GameObject* m = Game::gMI.CreateMonster(x, y, GameObjectType::SHELOB);
         PlaceActor(m);
       }
     }
@@ -508,10 +504,10 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
     case '+':
     {
       GameObject* door =
-          GameObjectsFactory::Instance().CreateDoor(x,
-                                                    y,
-                                                    false,
-                                                    DoorMaterials::WOOD);
+          Game::gGOF.CreateDoor(x,
+                                y,
+                                false,
+                                DoorMaterials::WOOD);
 
       //
       // NOTE: may cause softlock if there is a locked door in flooded room
@@ -569,9 +565,9 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
                       y,
                       ' ',
                       Colors::BlackColor,
-                      (image == '1')
-                    ? Colors::ShadesOfGrey::Two
-                    : Colors::ShadesOfGrey::Fourteen,
+                      (image == '1') ?
+                      Colors::ShadesOfGrey::Two :
+                      Colors::ShadesOfGrey::Fourteen,
                       Strings::TileNames::TiledFloorText);
       break;
   }

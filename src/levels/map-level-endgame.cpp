@@ -46,9 +46,9 @@ void MapLevelEndgame::DisplayWelcomeText()
     { HIDE("You don't know where you are anymore...") }
   };
 
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                                         Strings::TripleQuestionMarks,
-                                         msg);
+  Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                             Strings::TripleQuestionMarks,
+                             msg);
 }
 
 // =============================================================================

@@ -8,9 +8,11 @@
 #include "util.h"
 #include "map.h"
 
+#include "equipment-component.h"
+
 void InventoryState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 }
 
 // =============================================================================
@@ -65,11 +67,11 @@ void InventoryState::HandleInput()
 
       if (ic->Data.IsEquipped)
       {
-        Application::Instance().ShowMessageBox(
-              MessageBoxType::ANY_KEY,
-              Strings::MessageBoxEpicFailHeaderText,
-              { Strings::MsgUnequipFirst },
-              Colors::MessageBoxRedBorderColor
+        Game::gApp.ShowMessageBox(
+          MessageBoxType::ANY_KEY,
+          Strings::MessageBoxEpicFailHeaderText,
+          { Strings::MsgUnequipFirst },
+          Colors::MessageBoxRedBorderColor
         );
 
         return;
@@ -77,11 +79,11 @@ void InventoryState::HandleInput()
 
       if (ic->Data.IsImportant)
       {
-        Application::Instance().ShowMessageBox(
-              MessageBoxType::ANY_KEY,
-              Strings::MessageBoxInformationHeaderText,
-              { Strings::MsgLooksImportant },
-              Colors::MessageBoxBlueBorderColor
+        Game::gApp.ShowMessageBox(
+          MessageBoxType::ANY_KEY,
+          Strings::MessageBoxInformationHeaderText,
+          { Strings::MsgLooksImportant },
+          Colors::MessageBoxBlueBorderColor
         );
 
         return;
@@ -115,33 +117,33 @@ void InventoryState::HandleInput()
             DestroyInventoryItem();
           }
 
-          Application::Instance().ChangeState(GameStates::MAIN_STATE);
+          Game::gApp.ChangeState(GameStates::MAIN_STATE);
         }
         else if (ic->Data.IsChargeable)
         {
           if (ic->Data.ItemType_ == ItemType::RETURNER)
           {
-            auto s = Application::Instance().GetGameStateRefByName(
-                       GameStates::RETURNER_STATE
+            auto s = Game::gApp.GetGameStateRefByName(
+              GameStates::RETURNER_STATE
             );
             ReturnerState* rs = static_cast<ReturnerState*>(s);
             rs->SetItemComponentRef(ic);
-            Application::Instance().ChangeState(GameStates::RETURNER_STATE);
+            Game::gApp.ChangeState(GameStates::RETURNER_STATE);
           }
           else if (ic->Data.ItemType_ == ItemType::REPAIR_KIT)
           {
-            auto s = Application::Instance().GetGameStateRefByName(
-                       GameStates::REPAIR_STATE
+            auto s = Game::gApp.GetGameStateRefByName(
+              GameStates::REPAIR_STATE
             );
             RepairState* rs = static_cast<RepairState*>(s);
             rs->SetRepairKitRef(ic, _selectedIndex);
-            Application::Instance().ChangeState(GameStates::REPAIR_STATE);
+            Game::gApp.ChangeState(GameStates::REPAIR_STATE);
           }
         }
         else
         {
           DestroyInventoryItem();
-          Application::Instance().ChangeState(GameStates::MAIN_STATE);
+          Game::gApp.ChangeState(GameStates::MAIN_STATE);
         }
 
         //
@@ -159,16 +161,16 @@ void InventoryState::HandleInput()
         //
         if (!_playerRef->HasNonZeroHP())
         {
-          Application::Instance().ChangeState(GameStates::GAMEOVER_STATE);
+          Game::gApp.ChangeState(GameStates::GAMEOVER_STATE);
         }
       }
       else if (r == UseResult::UNUSABLE)
       {
-        Application::Instance().ShowMessageBox(
-              MessageBoxType::ANY_KEY,
-              Strings::MessageBoxEpicFailHeaderText,
-              { Strings::MsgCantBeUsed },
-              Colors::MessageBoxRedBorderColor
+        Game::gApp.ShowMessageBox(
+          MessageBoxType::ANY_KEY,
+          Strings::MessageBoxEpicFailHeaderText,
+          { Strings::MsgCantBeUsed },
+          Colors::MessageBoxRedBorderColor
         );
       }
     }
@@ -181,7 +183,7 @@ void InventoryState::HandleInput()
       if (_playerRef->Equipment->Equip(ic))
       {
         _playerRef->FinishTurn();
-        Application::Instance().ChangeState(GameStates::MAIN_STATE);
+        Game::gApp.ChangeState(GameStates::MAIN_STATE);
       }
     }
     break;
@@ -201,38 +203,38 @@ void InventoryState::HandleInput()
       ItemComponent* ic = go->GetComponent<ItemComponent>();
       if (ic->Data.IsEquipped)
       {
-        Application::Instance().ShowMessageBox(
-              MessageBoxType::ANY_KEY,
-              Strings::MessageBoxEpicFailHeaderText,
-              { Strings::MsgUnequipFirst },
-              Colors::MessageBoxRedBorderColor
+        Game::gApp.ShowMessageBox(
+          MessageBoxType::ANY_KEY,
+          Strings::MessageBoxEpicFailHeaderText,
+          { Strings::MsgUnequipFirst },
+          Colors::MessageBoxRedBorderColor
         );
         return;
       }
 
       if (ic->Data.IsImportant)
       {
-        Application::Instance().ShowMessageBox(
-              MessageBoxType::ANY_KEY,
-              Strings::MessageBoxInformationHeaderText,
-              { Strings::MsgLooksImportant },
-              Colors::MessageBoxBlueBorderColor
+        Game::gApp.ShowMessageBox(
+          MessageBoxType::ANY_KEY,
+          Strings::MessageBoxInformationHeaderText,
+          { Strings::MsgLooksImportant },
+          Colors::MessageBoxBlueBorderColor
         );
         return;
       }
 
-      auto s = Application::Instance().GetGameStateRefByName(
-                 GameStates::TARGET_STATE
+      auto s = Game::gApp.GetGameStateRefByName(
+        GameStates::TARGET_STATE
       );
 
       TargetState* ts = static_cast<TargetState*>(s);
       ts->SetupForThrowing(ic, _selectedIndex);
-      Application::Instance().ChangeState(GameStates::TARGET_STATE);
+      Game::gApp.ChangeState(GameStates::TARGET_STATE);
     }
     break;
 
     case VK_CANCEL:
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
       break;
 
     default:
@@ -249,7 +251,7 @@ void InventoryState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
     DrawHeader(" INVENTORY ");
 
@@ -283,22 +285,22 @@ void InventoryState::Update(bool forceUpdate)
           stackAmount.append(" (E)");
         }
 
-        Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 2,
-                                    2 + yPos,
-                                    stackAmount,
-                                    Printer::kAlignLeft,
-                                    Colors::WhiteColor,
-                                    Colors::BlackColor);
+        Game::gPrnt.PrintFB(GlobalConstants::InventoryMaxNameLength + 2,
+                             2 + yPos,
+                             stackAmount,
+                             Printer::kAlignLeft,
+                             Colors::WhiteColor,
+                             Colors::BlackColor);
       }
       else if (ic->Data.IsEquipped)
       {
         auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
-        Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 2,
-                                    2 + yPos,
-                                    equipStatus,
-                                    Printer::kAlignLeft,
-                                    Colors::WhiteColor,
-                                    Colors::BlackColor);
+        Game::gPrnt.PrintFB(GlobalConstants::InventoryMaxNameLength + 2,
+                            2 + yPos,
+                            equipStatus,
+                            Printer::kAlignLeft,
+                            Colors::WhiteColor,
+                            Colors::BlackColor);
       }
 
       uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
@@ -315,12 +317,12 @@ void InventoryState::Update(bool forceUpdate)
       std::string stub(GlobalConstants::InventoryMaxNameLength,
                        Strings::InventoryEmptySlotChar);
 
-      Printer::Instance().PrintFB(1,
-                                  2 + yPos,
-                                  stub,
-                                  Printer::kAlignLeft,
-                                  Colors::ShadesOfGrey::Six,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(1,
+                          2 + yPos,
+                          stub,
+                          Printer::kAlignLeft,
+                          Colors::ShadesOfGrey::Six,
+                          Colors::BlackColor);
       yPos++;
     }
 
@@ -328,7 +330,7 @@ void InventoryState::Update(bool forceUpdate)
 
     PrintFooter();
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }
 
@@ -378,12 +380,12 @@ void InventoryState::DrawEquipmentField(int x,
 {
   std::string stub(kEquipmentMaxNameLength, Strings::InventoryEmptySlotChar);
 
-  Printer::Instance().PrintFB(x,
-                              y,
-                              fieldName,
-                              Printer::kAlignCenter,
-                              Colors::ShadesOfGrey::Ten,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(x,
+                      y,
+                      fieldName,
+                      Printer::kAlignCenter,
+                      Colors::ShadesOfGrey::Ten,
+                      Colors::BlackColor);
 
   uint32_t itemColor = Colors::WhiteColor;
 
@@ -396,14 +398,14 @@ void InventoryState::DrawEquipmentField(int x,
     itemColor = Util::GetItemInventoryColor(eq->Data);
   }
 
-  Printer::Instance().PrintFB(x,
-                              y + 1,
-                              stub,
-                              Printer::kAlignCenter,
-                              (eq != nullptr)
-                            ? itemColor
-                            : Colors::ShadesOfGrey::Six,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(x,
+                      y + 1,
+                      stub,
+                      Printer::kAlignCenter,
+                      (eq != nullptr) ?
+                      itemColor :
+                      Colors::ShadesOfGrey::Six,
+                      Colors::BlackColor);
 }
 
 // =============================================================================
@@ -428,12 +430,12 @@ void InventoryState::PrintFooter()
 
     additive = (counter > 0) ? 3 : 1;
 
-    Printer::Instance().PrintFB(counter * part + additive,
-                                th - 1,
-                                tmp,
-                                Printer::kAlignLeft,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(counter * part + additive,
+                        th - 1,
+                        tmp,
+                        Printer::kAlignLeft,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
     counter++;
   }
 
@@ -455,12 +457,12 @@ void InventoryState::PrintFooter()
 
     additive = 1;
 
-    Printer::Instance().PrintFB(tw / 2 + 1 + counter * part - additive,
-                                th - 1,
-                                tmp,
-                                Printer::kAlignLeft,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(tw / 2 + 1 + counter * part - additive,
+                        th - 1,
+                        tmp,
+                        Printer::kAlignLeft,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
     counter++;
   }
 }
@@ -487,7 +489,7 @@ void InventoryState::DropItem(ItemComponent* ic)
   // _levelOwner->MapOffsetX and Y, which might be different
   // or out of bounds on current level.
   //
-  ic->OwnerGameObject->SetLevelOwner(Map::Instance().CurrentLevel);
+  ic->OwnerGameObject->SetLevelOwner(Game::gMap.CurrentLevel);
 
   std::string objName = ic->Data.IsIdentified
                       ? go->ObjectName
@@ -505,7 +507,7 @@ void InventoryState::DropItem(ItemComponent* ic)
     message = Util::StringFormat(Strings::FmtDroppedS, objName.data());
   }
 
-  Printer::Instance().AddMessage(message);
+  Game::gPrnt.AddMessage(message);
 
   //
   // Transferred game object could be destroyed in the process (e.g. dropped on
@@ -522,21 +524,21 @@ void InventoryState::DrawSelectionBar(int yOffset,
 {
   if (yOffset == _selectedIndex)
   {
-    Printer::Instance().PrintFB(1,
-                                2 + yOffset,
-                                text,
-                                Printer::kAlignLeft,
-                                textColor,
-                                Colors::ShadesOfGrey::Four);
+    Game::gPrnt.PrintFB(1,
+                        2 + yOffset,
+                        text,
+                        Printer::kAlignLeft,
+                        textColor,
+                        Colors::ShadesOfGrey::Four);
   }
   else
   {
-    Printer::Instance().PrintFB(1,
-                                2 + yOffset,
-                                text,
-                                Printer::kAlignLeft,
-                                textColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(1,
+                        2 + yOffset,
+                        text,
+                        Printer::kAlignLeft,
+                        textColor,
+                        Colors::BlackColor);
   }
 }
 

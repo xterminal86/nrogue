@@ -1,5 +1,11 @@
 #include "application.h"
+
 #include "gid-generator.h"
+#include "map.h"
+#include "printer.h"
+#include "timer.h"
+
+#include "container-component.h"
 
 // -----------------------------------------------------------------------------
 
@@ -32,10 +38,8 @@
 
 // -----------------------------------------------------------------------------
 
-#include "map.h"
+#include "globals.h"
 #include "map-level-base.h"
-#include "printer.h"
-#include "timer.h"
 #include "util.h"
 
 #ifdef DEBUG_BUILD
@@ -45,8 +49,13 @@
 
 #include <fstream>
 
-void Application::InitSpecific()
+void Application::Init(bool skipMenu)
 {
+  if (_initialized)
+  {
+    return;
+  }
+
   if (!InitGraphics())
   {
     return;
@@ -56,19 +65,24 @@ void Application::InitSpecific()
 
   _currentState = _gameStates[GameStates::MENU_STATE].get();
 
-  //
-  // In SDL build GetKeyDown() will return -1 on application start, resulting in
-  // white screen due to no key being pressed yet, so no drawing of current
-  // state happens, which is not what we want.
-  //
-  _currentState->Update(true);
+  if (!skipMenu)
+  {
+    //
+    // In SDL build GetKeyDown() will return -1 on application start, resulting in
+    // white screen due to no key being pressed yet, so no drawing of current
+    // state happens, which is not what we want.
+    //
+    _currentState->Update(true);
+  }
 
   PlayerInstance.Attrs.Indestructible = false;
 
-  Printer::Instance().AddMessage("You begin your quest");
-  Printer::Instance().AddMessage("Press 'h' for help");
+  Game::gPrnt.AddMessage("You begin your quest");
+  Game::gPrnt.AddMessage("Press 'h' for help");
 
   _appReady = true;
+
+  _initialized = true;
 }
 
 // =============================================================================
@@ -77,7 +91,7 @@ void Application::Run()
 {
   while (_currentState != nullptr)
   {
-    Timer::Instance().MeasureStart();
+    Game::gTimer.MeasureStart();
 
     //
     // If player is not alive, it is assumed,
@@ -123,31 +137,31 @@ void Application::Run()
       }
       else
       {
-        Map::Instance().Update();
+        Game::gMap.Update();
         PlayerInstance.WaitForTurn();
 
         MapUpdateCyclesPassed++;
       }
     }
 
-    Timer::Instance().MeasureEnd();
+    Game::gTimer.MeasureEnd();
 
     #ifdef DEBUG_BUILD
-    auto report = Timer::Instance().GetProfilingReport();
+    auto report = Game::gTimer.GetProfilingReport();
 
     if (!report.empty())
     {
-      Logger::Instance().Print("=== PROFILER START ===");
+      Game::gLogger.Print("=== PROFILER START ===");
     }
 
     for (auto& line : report)
     {
-      Logger::Instance().Print(line);
+      Game::gLogger.Print(line);
     }
 
     if (!report.empty())
     {
-      Logger::Instance().Print("=== PROFILER END ===");
+      Game::gLogger.Print("=== PROFILER END ===");
     }
 
     #endif
@@ -276,13 +290,13 @@ void Application::DisplayAttack(GameObject* defender,
   {
     if (messageToPrint.length() != 0)
     {
-      Printer::Instance().AddMessage(messageToPrint);
+      Game::gPrnt.AddMessage(messageToPrint);
     }
   }
   else
   {
-    int posX = defender->PosX + Map::Instance().CurrentLevel->MapOffsetX;
-    int posY = defender->PosY + Map::Instance().CurrentLevel->MapOffsetY;
+    int posX = defender->PosX + Game::gMap.CurrentLevel->MapOffsetX;
+    int posY = defender->PosY + Game::gMap.CurrentLevel->MapOffsetY;
 
     DrawAttackCursor(posX, posY, defender, cursorColor);
 
@@ -290,7 +304,7 @@ void Application::DisplayAttack(GameObject* defender,
 
     if (messageToPrint.length() != 0)
     {
-      Printer::Instance().AddMessage(messageToPrint);
+      Game::gPrnt.AddMessage(messageToPrint);
     }
 
     DrawAttackCursor(posX, posY, defender);
@@ -310,24 +324,24 @@ void Application::DrawAttackCursor(int x, int y,
     if (defender->FgColor != Colors::None
      && defender->BgColor != Colors::None)
     {
-      Printer::Instance().PrintFB(x,
+      Game::gPrnt.PrintFB(x,
                                   y,
                                   defender->Image,
                                   defender->FgColor,
                                   defender->BgColor);
 
-      Printer::Instance().Render();
+      Game::gPrnt.Render();
     }
   }
   else
   {
-    Printer::Instance().PrintFB(x,
+    Game::gPrnt.PrintFB(x,
                                 y,
                                 ' ',
                                 Colors::BlackColor,
                                 cursorColor);
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }
 
@@ -339,7 +353,7 @@ void Application::WriteObituary(bool wasKilled)
 
   std::stringstream ss;
 
-  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+  MapLevelBase* curLvl = Game::gMap.CurrentLevel;
 
   std::string playerEndCause = wasKilled
                             ? "has perished at "
@@ -358,8 +372,8 @@ void Application::WriteObituary(bool wasKilled)
 
   ss << "********** OBITUARY **********\n\n";
 
-  ss << "World seed was: 0x" << RNG::Instance().GetSeedAsHex()
-     << " (" << RNG::Instance().GetSeedString().first << ")"
+  ss << "World seed was: 0x" << Game::gRng.GetSeedAsHex()
+     << " (" << Game::gRng.GetSeedString().first << ")"
      << "\n\n";
 
   auto nameAndTitle = Util::StringFormat("%s the %s",
@@ -420,7 +434,7 @@ void Application::SaveGame()
   //
   // FIXME: one level for now
   //
-  Map::Instance().CurrentLevel->Serialize(save);
+  Game::gMap.CurrentLevel->Serialize(save);
 
   SavePlayer(save);
 
@@ -443,12 +457,12 @@ void Application::SaveBaseStuff(NRS& save)
 
   NRS& root = save[SK::Root];
 
-  root[SK::Gid].SetUInt(GID::Instance().GetCurrentGlobalId());
+  root[SK::Gid].SetUInt(Game::gGid.GetCurrentGlobalId());
   {
     NRS& node = root[SK::Seed];
 
-    node[SK::Name].SetString(RNG::Instance().GetSeedString().first);
-    node[SK::Value].SetUInt(RNG::Instance().Seed);
+    node[SK::Name].SetString(Game::gRng.GetSeedString().first);
+    node[SK::Value].SetUInt(Game::gRng.Seed);
   }
 }
 
@@ -514,7 +528,7 @@ size_t Application::WritePossessions(std::stringstream& ss)
 
 void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
 {
-  MapLevelBase* curLvl = Map::Instance().CurrentLevel;
+  MapLevelBase* curLvl = Game::gMap.CurrentLevel;
 
   int px = PlayerInstance.PosX;
   int py = PlayerInstance.PosY;
@@ -563,7 +577,7 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
           //
           // Check items first.
           //
-          auto gos = Map::Instance().GetGameObjectsAtPosition(x, y);
+          auto gos = Game::gMap.GetGameObjectsAtPosition(x, y);
           if (!gos.empty())
           {
             ch = gos.back()->Image;
@@ -580,7 +594,7 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
           //
           if (gos.empty())
           {
-            auto so = Map::Instance().GetStaticGameObjectAtPosition(x, y);
+            auto so = Game::gMap.GetStaticGameObjectAtPosition(x, y);
             if (so != nullptr)
             {
               ch = (so->Image == ' ') ? '#' : so->Image;
@@ -590,7 +604,7 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
           //
           // If actor is standing on this cell, draw him instead.
           //
-          auto actor = Map::Instance().GetActorAtPosition(x, y);
+          auto actor = Game::gMap.GetActorAtPosition(x, y);
           if (actor != nullptr)
           {
             bool imageNonPrintable = (actor->Image < 33);
@@ -744,8 +758,9 @@ bool Application::InitGraphics()
 bool Application::InitCurses()
 {
   initscr();
-  nodelay(stdscr, true);     // non-blocking getch()
-  keypad(stdscr, true);      // enable numpad
+  nodelay(stdscr, true);    // non-blocking getch()
+  keypad(stdscr, true);     // enable numpad
+  use_extended_names(true); // enable modifier keys
   noecho();
   curs_set(false);
 
@@ -753,9 +768,9 @@ bool Application::InitCurses()
 
   LoadConfig();
 
-  Printer::Instance().Init();
+  Game::gPrnt.Init();
 
-  return true;
+  return Game::gPrnt.IsReady();
 }
 #endif
 
@@ -863,20 +878,20 @@ bool Application::InitSDL()
 
   SetIcon();
 
-  Printer::Instance().Init();
+  Game::gPrnt.Init();
 
-  if (!Printer::Instance().IsReady())
+  if (!Game::gPrnt.IsReady())
   {
     ConsoleLog("Printer failed to initialize!");
     return false;
   }
 
-  Printer::Instance().SetRenderDst({
-                                     0,
-                                     0,
-                                     _defaultWindowSize.first,
-                                     _defaultWindowSize.second
-                                   });
+  Game::gPrnt.SetRenderDst({
+                              0,
+                              0,
+                              _defaultWindowSize.first,
+                              _defaultWindowSize.second
+                            });
 
   Printer::TerminalWidth  = GlobalConstants::TerminalWidth;
   Printer::TerminalHeight = GlobalConstants::TerminalHeight;
@@ -1026,7 +1041,7 @@ void Application::Cleanup()
   // Otherwise it might be so that Application is no longer
   // available when we check object handle in ~GameObject().
   //
-  Map::Instance().Cleanup();
+  Game::gMap.Cleanup();
 
   _gameStates.clear();
 

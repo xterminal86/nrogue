@@ -1,12 +1,11 @@
 #ifndef MONSTERSINC_H
 #define MONSTERSINC_H
 
-#include "singleton.h"
 #include "enumerations.h"
 
 class GameObject;
 
-class MonstersInc : public Singleton<MonstersInc>
+class MonstersInc
 {
   public:
     GameObject* CreateMonster(int x, int y, GameObjectType monsterType);
@@ -30,9 +29,6 @@ class MonstersInc : public Singleton<MonstersInc>
     GameObject* CreateSkeleton(int x, int y);
     GameObject* CreateWraith(int x, int y);
     GameObject* CreateStalker(int x, int y);
-
-  protected:
-    void InitSpecific() override;
 
   private:
     int GetDifficulty();

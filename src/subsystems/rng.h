@@ -5,13 +5,13 @@
 #include <random>
 #include <functional>
 
-#include "singleton.h"
-
 using SeedString = std::pair<std::string, std::string>;
 
-class RNG : public Singleton<RNG>
+class RNG
 {
   public:
+    void Init();
+
     void SetSeed(size_t seed);
     void SetSeed(const std::string& string);
 
@@ -25,15 +25,14 @@ class RNG : public Singleton<RNG>
 
     size_t Seed = 0;
 
-  protected:
-    void InitSpecific() override;
-
   private:
     std::hash<std::string> _hasher;
 
     void GenerateSeedString(const std::string& str = std::string());
 
     SeedString _seedString;
+
+    bool _initialized = false;
 };
 
 #endif // RNG_H

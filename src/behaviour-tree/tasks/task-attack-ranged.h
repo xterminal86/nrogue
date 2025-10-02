@@ -1,7 +1,10 @@
 #ifndef TASKATTACKRANGED_H
 #define TASKATTACKRANGED_H
 
+#include <cstdint>
+
 #include "behaviour-tree.h"
+#include "constants.h"
 
 enum class RangedAttackType
 {
@@ -9,6 +12,8 @@ enum class RangedAttackType
   WEAPON,
   MAGIC
 };
+
+class ItemComponent;
 
 ///
 /// Ranged attack task returns success if player was hit.

@@ -3,10 +3,11 @@
 #include "application.h"
 #include "map.h"
 #include "printer.h"
+#include "container-component.h"
 
 void RepairState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 
   _headerText = " REPAIR ITEMS ";
 
@@ -38,7 +39,7 @@ void RepairState::ProcessInput()
   switch (_keyPressed)
   {
     case VK_CANCEL:
-      Application::Instance().ChangeState(GameStates::INVENTORY_STATE);
+      Game::gApp.ChangeState(GameStates::INVENTORY_STATE);
       break;
 
     default:
@@ -49,11 +50,11 @@ void RepairState::ProcessInput()
         ItemComponent* ic = _itemRefByChar[index];
         if (ic->Data.Durability.Min().Get() == ic->Data.Durability.Max().Get())
         {
-          Application::Instance().ShowMessageBox(
-                MessageBoxType::ANY_KEY,
-                Strings::MessageBoxInformationHeaderText,
-                { Strings::MsgItemUndamaged },
-                Colors::ShadesOfGrey::Six
+          Game::gApp.ShowMessageBox(
+            MessageBoxType::ANY_KEY,
+            Strings::MessageBoxInformationHeaderText,
+            { Strings::MsgItemUndamaged },
+            Colors::ShadesOfGrey::Six
           );
         }
         else
@@ -94,12 +95,12 @@ void RepairState::DrawSpecific()
       str = Util::StringFormat(R"('%c' - %s (??/??))", c, name.data());
     }
 
-    Printer::Instance().PrintFB(1,
-                                2 + i,
-                                str,
-                                Printer::kAlignLeft,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(1,
+                        2 + i,
+                        str,
+                        Printer::kAlignLeft,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
   }
 }
 
@@ -120,7 +121,7 @@ void RepairState::RepairItem(ItemComponent* itemToRepair)
 
   int repaired = 0;
 
-  while (currentDur < maxDur && _repairKit->Data.Amount > 0)
+  while ( (currentDur < maxDur) && (_repairKit->Data.Amount > 0) )
   {
     if (_repairKit->Data.Prefix == ItemPrefix::BLESSED)
     {
@@ -156,11 +157,11 @@ void RepairState::RepairItem(ItemComponent* itemToRepair)
   }
 
   auto str = Util::StringFormat("You've repaired %i durability", repaired);
-  Printer::Instance().AddMessage(str);
+  Game::gPrnt.AddMessage(str);
 
   _playerRef->FinishTurn();
 
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
+  Game::gApp.ChangeState(GameStates::MAIN_STATE);
 }
 
 // =============================================================================
@@ -171,6 +172,6 @@ void RepairState::Cleanup()
   {
     auto it = _playerRef->Inventory->Contents.begin();
     _playerRef->Inventory->Contents.erase(it + _inventoryIndex);
-    Printer::Instance().AddMessage("Repair kit has been used up!");
+    Game::gPrnt.AddMessage("Repair kit has been used up!");
   }
 }

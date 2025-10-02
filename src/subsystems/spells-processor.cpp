@@ -7,16 +7,23 @@
 #include "town-portal-component.h"
 #include "game-objects-factory.h"
 
-void SpellsProcessor::InitSpecific()
+void SpellsProcessor::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  if (_initialized)
+  {
+    return;
+  }
+
+  _playerRef = &Game::gApp.PlayerInstance;
+
+  _initialized = true;
 }
 
 // =============================================================================
 
 void SpellsProcessor::ProcessWand(ItemComponent* wand)
 {
-  Printer::Instance().AddMessage("You invoke the wand...");
+  Game::gPrnt.AddMessage("You invoke the wand...");
 
   wand->Data.Amount--;
 
@@ -27,7 +34,7 @@ void SpellsProcessor::ProcessWand(ItemComponent* wand)
       break;
 
     default:
-      Printer::Instance().AddMessage(_kNoActionText);
+      Game::gPrnt.AddMessage(_kNoActionText);
       break;
   }
 }
@@ -36,7 +43,7 @@ void SpellsProcessor::ProcessWand(ItemComponent* wand)
 
 void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
 {
-  int radius = Map::Instance().CurrentLevel->VisibilityRadius;
+  int radius = Game::gMap.CurrentLevel->VisibilityRadius;
 
   int playerPow = _playerRef->Attrs.Mag.Get();
 
@@ -68,7 +75,7 @@ void SpellsProcessor::ProcessWandOfLight(ItemComponent* wand)
     wand->Data.IsIdentified = true;
   }
 
-  Printer::Instance().AddMessage(message);
+  Game::gPrnt.AddMessage(message);
 
   ItemBonusStruct b;
 
@@ -159,14 +166,14 @@ void SpellsProcessor::PrintUsageResult(ItemComponent* scroll, GameObject* user)
     auto str = Util::StringFormat("You read the scroll %s...",
                                   scrollName.data());
 
-    Printer::Instance().AddMessage(str);
+    Game::gPrnt.AddMessage(str);
 
     for (auto& msg : _scrollUseMessages)
     {
-      Printer::Instance().AddMessage(msg);
+      Game::gPrnt.AddMessage(msg);
     }
 
-    Printer::Instance().AddMessage("The scroll crumbles to dust");
+    Game::gPrnt.AddMessage("The scroll crumbles to dust");
   }
 }
 
@@ -203,7 +210,7 @@ void SpellsProcessor::ProcessScrollOfRepair(ItemComponent* scroll,
 
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
-    int index = RNG::Instance().RandomRange(0, itemsToRepair.size());
+    int index = Game::gRng.RandomRange(0, itemsToRepair.size());
     ItemComponent* item = itemsToRepair[index];
 
     auto str = Util::StringFormat("Your %s disintegrates!",
@@ -273,7 +280,7 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll,
           "You forget the details about inventory item!"
     );
 
-    int index = RNG::Instance().RandomRange(0, itemsKnown.size());
+    int index = Game::gRng.RandomRange(0, itemsKnown.size());
     auto item = itemsKnown[index];
     item->Data.IsIdentified = false;
     item->Data.IsPrefixDiscovered = false;
@@ -370,7 +377,7 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll,
 
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
-    power = RNG::Instance().RandomRange(1, user->Attrs.HP.Min().Get() / 2);
+    power = Game::gRng.RandomRange(1, user->Attrs.HP.Min().Get() / 2);
     power = -power;
     _scrollUseMessages.push_back("You writhe in pain!");
   }
@@ -401,7 +408,7 @@ void SpellsProcessor::ProcessScrollOfHealing(ItemComponent* scroll,
 void SpellsProcessor::ProcessScrollOfLight(ItemComponent* scroll,
                                            GameObject* user)
 {
-  int radius = Map::Instance().CurrentLevel->VisibilityRadius;
+  int radius = Game::gMap.CurrentLevel->VisibilityRadius;
 
   int playerPow = user->Attrs.Mag.Get();
   if (playerPow < 0)
@@ -456,7 +463,7 @@ void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll, GameObject* user)
 
   // NOTE: blessed scroll reveals traps as well (level explored percentage?)
 
-  auto& mapRef = Map::Instance().CurrentLevel;
+  auto& mapRef = Game::gMap.CurrentLevel;
 
   if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
@@ -468,7 +475,7 @@ void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll, GameObject* user)
       }
     }
 
-    Map::Instance().CurrentLevel->ExitFound = false;
+    Game::gMap.CurrentLevel->ExitFound = false;
 
     _scrollUseMessages.push_back("You suddenly forget where you are!");
   }
@@ -482,7 +489,7 @@ void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll, GameObject* user)
       }
     }
 
-    Map::Instance().CurrentLevel->ExitFound = true;
+    Game::gMap.CurrentLevel->ExitFound = true;
 
     _scrollUseMessages.push_back("A map coalesces in your mind!");
 
@@ -586,14 +593,14 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll,
     return;
   }
 
-  if (Map::Instance().CurrentLevel->MysteriousForcePresent
-   || Map::Instance().CurrentLevel->MapType_ == MapType::TOWN)
+  if (Game::gMap.CurrentLevel->MysteriousForcePresent
+   || Game::gMap.CurrentLevel->MapType_ == MapType::TOWN)
   {
     _scrollUseMessages.push_back(_kNoActionText);
     return;
   }
 
-  auto p = Map::Instance().GetLevelRefByType(MapType::TOWN);
+  auto p = Game::gMap.GetLevelRefByType(MapType::TOWN);
   MapLevelTown* lvl = static_cast<MapLevelTown*>(p);
 
   int ind = -1;
@@ -626,7 +633,7 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll,
       { tpPos.X,     tpPos.Y + 1 },
     };
 
-    int index = RNG::Instance().RandomRange(0, posToAppear.size());
+    int index = Game::gRng.RandomRange(0, posToAppear.size());
     Position res = posToAppear[index];
 
     GameObject* portal = new GameObject(lvl,
@@ -640,26 +647,26 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll,
     portal->ObjectName = "Town Portal";
 
     TownPortalComponent* tpc = portal->AddComponent<TownPortalComponent>();
-    tpc->SavePosition(Map::Instance().CurrentLevel->MapType_,
+    tpc->SavePosition(Game::gMap.CurrentLevel->MapType_,
                       _playerRef->GetPosition());
 
     lvl->PlaceGameObject(portal);
 
     _scrollUseMessages.push_back("You're back in town all of a sudden!");
-    Map::Instance().TeleportToExistingLevel(MapType::TOWN, res);
+    Game::gMap.TeleportToExistingLevel(MapType::TOWN, res);
   }
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {
     _scrollUseMessages.push_back("You're back in town all of a sudden!");
-    Map::Instance().TeleportToExistingLevel(MapType::TOWN,
+    Game::gMap.TeleportToExistingLevel(MapType::TOWN,
                                             lvl->TownPortalPos());
   }
   else if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
-    auto& mapRef = Map::Instance().CurrentLevel;
-    int index = RNG::Instance().RandomRange(0, mapRef->EmptyCells().size());
+    auto& mapRef = Game::gMap.CurrentLevel;
+    int index = Game::gRng.RandomRange(0, mapRef->EmptyCells().size());
     auto pos = mapRef->EmptyCells()[index];
-    Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos);
+    Game::gMap.TeleportToExistingLevel(mapRef->MapType_, pos);
 
     _scrollUseMessages.push_back("You are suddenly transported elsewhere!");
   }
@@ -670,7 +677,7 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll,
 void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll,
                                               GameObject* user)
 {
-  if (Map::Instance().CurrentLevel->MysteriousForcePresent)
+  if (Game::gMap.CurrentLevel->MysteriousForcePresent)
   {
     if (Util::IsPlayer(user))
     {
@@ -682,7 +689,7 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll,
 
   _scrollUseMessages.push_back("You are suddenly transported elsewhere!");
 
-  auto& mapRef = Map::Instance().CurrentLevel;
+  auto& mapRef = Game::gMap.CurrentLevel;
 
   // TODO: blessed scroll of teleport - what positive effect for player?
 
@@ -699,16 +706,16 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll,
   if (scroll->Data.Prefix == ItemPrefix::UNCURSED
    || scroll->Data.Prefix == ItemPrefix::BLESSED)
   {
-    int index = RNG::Instance().RandomRange(0, mapRef->EmptyCells().size());
+    int index = Game::gRng.RandomRange(0, mapRef->EmptyCells().size());
     auto pos = mapRef->EmptyCells()[index];
-    Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos, user);
+    Game::gMap.TeleportToExistingLevel(mapRef->MapType_, pos, user);
   }
   else if (scroll->Data.Prefix == ItemPrefix::CURSED)
   {
-    int rx = RNG::Instance().RandomRange(1, mapRef->MapSize.X);
-    int ry = RNG::Instance().RandomRange(1, mapRef->MapSize.Y);
+    int rx = Game::gRng.RandomRange(1, mapRef->MapSize.X);
+    int ry = Game::gRng.RandomRange(1, mapRef->MapSize.Y);
     Position pos = { rx, ry };
-    Map::Instance().TeleportToExistingLevel(mapRef->MapType_, pos, user);
+    Game::gMap.TeleportToExistingLevel(mapRef->MapType_, pos, user);
   }
 }
 
@@ -775,7 +782,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll,
 
     if (!nonCursedItems.empty())
     {
-      int index = RNG::Instance().RandomRange(0, nonCursedItems.size());
+      int index = Game::gRng.RandomRange(0, nonCursedItems.size());
       ItemComponent* item = nonCursedItems[index];
       item->Data.IsPrefixDiscovered = true;
       Util::UpdateItemPrefix(item, ItemPrefix::CURSED);
@@ -810,7 +817,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll,
 
     if (!cursedItems.empty())
     {
-      int index = RNG::Instance().RandomRange(0, cursedItems.size());
+      int index = Game::gRng.RandomRange(0, cursedItems.size());
       ItemComponent* item = cursedItems[index];
       item->Data.IsPrefixDiscovered = true;
       Util::UpdateItemPrefix(item, ItemPrefix::UNCURSED);

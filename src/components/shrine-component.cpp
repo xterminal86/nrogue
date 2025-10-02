@@ -1,11 +1,15 @@
 #include "shrine-component.h"
 
+#include "container-component.h"
+
 #include "game-object.h"
 #include "util.h"
+#include "game-objects-factory.h"
+
 #include "application.h"
 #include "printer.h"
-#include "game-objects-factory.h"
 #include "map.h"
+#include "rng.h"
 
 ShrineComponent::ShrineComponent(ShrineType shrineType,
                                  int timeout,
@@ -49,12 +53,12 @@ IR ShrineComponent::Interact()
 {
   if (_timeout == -1 || _counter < _timeout)
   {
-    Printer::Instance().AddMessage("Shrine is inactive");
+    Game::gPrnt.AddMessage("Shrine is inactive");
     return { InteractionResult::FAILURE, GameStates::MAIN_STATE };
   }
   else
   {
-    int dungLvl = Map::Instance().CurrentLevel->DungeonLevel;
+    int dungLvl = Game::gMap.CurrentLevel->DungeonLevel;
 
     _power    = dungLvl;
     _duration = GlobalConstants::EffectDefaultDuration * _power;
@@ -72,7 +76,7 @@ IR ShrineComponent::Interact()
       message = Util::StringFormat("You pray to %s...", saint.data());
     }
 
-    Printer::Instance().AddMessage(message);
+    Game::gPrnt.AddMessage(message);
 
     ProcessEffect();
 
@@ -96,7 +100,7 @@ void ShrineComponent::Activate()
 
 void ShrineComponent::ProcessEffect()
 {
-  auto& playerRef = Application::Instance().PlayerInstance;
+  auto& playerRef = Game::gApp.PlayerInstance;
 
   std::string msg = "...but nothing happens";
 
@@ -217,7 +221,7 @@ void ShrineComponent::ProcessEffect()
 
       if (!itemsToCurse.empty())
       {
-        int index = RNG::Instance().RandomRange(0, itemsToCurse.size());
+        int index = Game::gRng.RandomRange(0, itemsToCurse.size());
         Util::UpdateItemPrefix(itemsToCurse[index], ItemPrefix::CURSED);
         msg = "You sense the malevolent energy";
         auto& idName = itemsToCurse[index]->Data.IdentifiedName;
@@ -265,7 +269,7 @@ void ShrineComponent::ProcessEffect()
         { 5, playerRef.Attrs.Spd }
       };
 
-      int index = RNG::Instance().RandomRange(0, playerStatsRef.size());
+      int index = Game::gRng.RandomRange(0, playerStatsRef.size());
       auto it = playerStatsRef.begin();
       std::advance(it, index);
       it->second.Add(1);
@@ -317,19 +321,17 @@ void ShrineComponent::ProcessEffect()
     break;
   }
 
-  Printer::Instance().AddMessage(msg);
+  Game::gPrnt.AddMessage(msg);
 }
 
 // =============================================================================
 
 void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
 {
-  auto& playerRef = Application::Instance().PlayerInstance;
+  auto& playerRef = Game::gApp.PlayerInstance;
 
-  int effectIndex = RNG::Instance().RandomRange(
-                      0,
-                      GlobalConstants::BonusDisplayNameByType.size()
-                    );
+  size_t bdns = GlobalConstants::BonusDisplayNameByType.size();
+  int effectIndex = Game::gRng.RandomRange(0, bdns);
 
   auto it = GlobalConstants::BonusDisplayNameByType.begin();
   std::advance(it, effectIndex);
@@ -381,7 +383,7 @@ void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
   }
   else
   {
-    Printer::Instance().AddMessage(Strings::NoActionText);
+    Game::gPrnt.AddMessage(Strings::NoActionText);
   }
 }
 
@@ -394,9 +396,9 @@ void ShrineComponent::ApplyRandomEffect(std::string& logMessageToWrite)
 //
 void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
 {
-  auto& playerRef = Application::Instance().PlayerInstance;
+  auto& playerRef = Game::gApp.PlayerInstance;
 
-  int effectIndex = RNG::Instance().RandomRange(0, _positiveEffects.size());
+  int effectIndex = Game::gRng.RandomRange(0, _positiveEffects.size());
   ItemBonusType t = _positiveEffects[effectIndex];
 
   ItemBonusStruct b;
@@ -435,7 +437,7 @@ void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
   }
   else
   {
-    Printer::Instance().AddMessage(Strings::NoActionText);
+    Game::gPrnt.AddMessage(Strings::NoActionText);
   }
 }
 
@@ -443,9 +445,9 @@ void ShrineComponent::ApplyRandomPositiveEffect(std::string& logMessageToWrite)
 
 void ShrineComponent::ApplyRandomNegativeEffect(std::string& logMessageToWrite)
 {
-  auto& playerRef = Application::Instance().PlayerInstance;
+  auto& playerRef = Game::gApp.PlayerInstance;
 
-  int effectIndex = RNG::Instance().RandomRange(0, _negativeEffects.size());
+  int effectIndex = Game::gRng.RandomRange(0, _negativeEffects.size());
   ItemBonusType t = _negativeEffects[effectIndex];
 
   ItemBonusStruct b;
@@ -479,9 +481,9 @@ void ShrineComponent::ApplyRandomNegativeEffect(std::string& logMessageToWrite)
 
 void ShrineComponent::ApplyTemporaryStatRaise(std::string& logMessageToWrite)
 {
-  auto& playerRef = Application::Instance().PlayerInstance;
+  auto& playerRef = Game::gApp.PlayerInstance;
 
-  int index = RNG::Instance().RandomRange(0, _attrs.size());
+  int index = Game::gRng.RandomRange(0, _attrs.size());
 
   ItemBonusStruct bs;
 

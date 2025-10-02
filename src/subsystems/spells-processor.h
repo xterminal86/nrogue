@@ -1,7 +1,6 @@
 #ifndef SPELLSPROCESSOR_H
 #define SPELLSPROCESSOR_H
 
-#include "singleton.h"
 #include "constants.h"
 
 #include <string>
@@ -10,14 +9,13 @@ class Player;
 class ItemComponent;
 class GameObject;
 
-class SpellsProcessor : public Singleton<SpellsProcessor>
+class SpellsProcessor
 {
   public:
     void ProcessWand(ItemComponent* wand);
     void ProcessScroll(ItemComponent* scroll, GameObject* user);
 
-  protected:
-    void InitSpecific() override;
+    void Init();
 
   private:
     void ProcessWandOfLight(ItemComponent* wand);
@@ -44,6 +42,8 @@ class SpellsProcessor : public Singleton<SpellsProcessor>
     const std::string _kNoActionText = "...but nothing happens.";
 
     std::vector<std::string> _scrollUseMessages;
+
+    bool _initialized = false;
 };
 
 #endif // SPELLSPROCESSOR_H

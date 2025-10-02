@@ -35,7 +35,7 @@ void MapLevelTest::CreateStuff()
   /*
   for (int i = 0; i < 20; i++)
   {
-    GameObject* go = ItemsFactory::Instance().CreateRandomMeleeWeapon();
+    GameObject* go = Game::gIF.CreateRandomMeleeWeapon();
     go->PosX = 1 + i;
     go->PosY = 1;
     PlaceGameObject(go);
@@ -50,16 +50,16 @@ void MapLevelTest::CreateStuff()
   bs.Type = ItemBonusType::KNOCKBACK;
   bs.FromItem = true;
 
-  GameObject* go = ItemsFactory::Instance().CreateRangedWeapon(1, 1, RangedWeaponType::XBOW, ItemPrefix::UNCURSED, ItemQuality::NORMAL, { bs });
+  GameObject* go = Game::gIF.CreateRangedWeapon(1, 1, RangedWeaponType::XBOW, ItemPrefix::UNCURSED, ItemQuality::NORMAL, { bs });
   ItemComponent* ic = go->GetComponent<ItemComponent>();
   ic->Data.Damage.SetMin(1);
   ic->Data.Damage.SetMax(1);
   PlaceGameObject(go);
 
-  GameObject* bolts = ItemsFactory::Instance().CreateArrows(1, 1, ArrowType::BOLTS, ItemPrefix::UNCURSED, 10);
+  GameObject* bolts = Game::gIF.CreateArrows(1, 1, ArrowType::BOLTS, ItemPrefix::UNCURSED, 10);
   PlaceGameObject(bolts);
 
-  GameObject* dag = ItemsFactory::Instance().CreateWeapon(1, 1, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL, { bs });
+  GameObject* dag = Game::gIF.CreateWeapon(1, 1, WeaponType::DAGGER, ItemPrefix::UNCURSED, ItemQuality::NORMAL, { bs });
   PlaceGameObject(dag);
   */
 
@@ -70,7 +70,7 @@ void MapLevelTest::CreateStuff()
   b.Type = ItemBonusType::LEVITATION;
   b.FromItem = true;
 
-  GameObject* go = ItemsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { b }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+  GameObject* go = Game::gIF.CreateAccessory(1, 1, EquipmentCategory::RING, { b }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
   PlaceGameObject(go);
   */
 
@@ -79,7 +79,7 @@ void MapLevelTest::CreateStuff()
   /*
   for (size_t x = 1; x < 16; x++)
   {
-    auto wand = ItemsFactory::Instance().CreateRandomWand();
+    auto wand = Game::gIF.CreateRandomWand();
     ItemComponent* ic = wand->GetComponent<ItemComponent>();
     ic->Data.IsIdentified = true;
     wand->PosX = x;
@@ -106,7 +106,7 @@ void MapLevelTest::CreateStuff()
   {
     int min = 20 + 5 * (multByQ[q] - 1);
     int max = 21 + 20 * multByQ[q];
-    int percentage = RNG::Instance().RandomRange(min, max);
+    int percentage = Game::gRng.RandomRange(min, max);
 
     ItemBonusStruct bs;
     bs.Type = ItemBonusType::THORNS;
@@ -114,7 +114,7 @@ void MapLevelTest::CreateStuff()
     bs.Duration = -1;
     bs.BonusValue = percentage;
 
-    auto ring = GameObjectsFactory::Instance().CreateAccessory(1 + i, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, q);
+    auto ring = Game::gGOF.CreateAccessory(1 + i, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, q);
     PlaceGameObject(ring);
   }
   */
@@ -125,8 +125,8 @@ void MapLevelTest::CreateStuff()
   bs.BonusValue = 1;
   bs.Period = 5;
 
-  auto ring1 = GameObjectsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
-  auto ring2 = GameObjectsFactory::Instance().CreateAccessory(1, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+  auto ring1 = Game::gGOF.CreateAccessory(1, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
+  auto ring2 = Game::gGOF.CreateAccessory(1, 1, EquipmentCategory::RING, { bs }, ItemPrefix::UNCURSED, ItemQuality::NORMAL);
   PlaceGameObject(ring1);
   PlaceGameObject(ring2);
   */

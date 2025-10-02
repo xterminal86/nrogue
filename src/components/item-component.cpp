@@ -4,6 +4,9 @@
 #include "map.h"
 #include "game-objects-factory.h"
 
+#include "container-component.h"
+#include "equipment-component.h"
+
 ItemComponent::ItemComponent()
 {
 }
@@ -34,10 +37,10 @@ void ItemComponent::Transfer(ContainerComponent* destination)
 
   if (destination == nullptr)
   {
-    OwnerGameObject->PosX = Application::Instance().PlayerInstance.PosX;
-    OwnerGameObject->PosY = Application::Instance().PlayerInstance.PosY;
+    OwnerGameObject->PosX = Game::gApp.PlayerInstance.PosX;
+    OwnerGameObject->PosY = Game::gApp.PlayerInstance.PosY;
 
-    Map::Instance().PlaceGameObject(OwnerGameObject);
+    Game::gMap.PlaceGameObject(OwnerGameObject);
   }
   else
   {
@@ -127,9 +130,7 @@ ItemComponent::GetInspectionInfo(bool overrideDescriptions)
 void ItemComponent::Inspect(bool overrideDescriptions)
 {
   auto lore = GetInspectionInfo(overrideDescriptions);
-  Application::Instance().ShowMessageBox(MessageBoxType::ANY_KEY,
-                                         lore.first,
-                                         lore.second);
+  Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY, lore.first, lore.second);
 }
 
 // =============================================================================
@@ -213,12 +214,14 @@ std::vector<std::string> ItemComponent::GetWeaponInspectionInfo()
   std::vector<std::string> res =
   {
     {
-      Util::StringFormat("DMG: %id%i", Data.Damage.Min().Get(),
-                                       Data.Damage.Max().Get())
+      Util::StringFormat("DMG: %id%i",
+                          Data.Damage.Min().Get(),
+                          Data.Damage.Max().Get())
     },
     {
-      Util::StringFormat("%i / %i", Data.Durability.Min().Get(),
-                                    Data.Durability.Max().Get())
+      Util::StringFormat("%i / %i",
+                          Data.Durability.Min().Get(),
+                          Data.Durability.Max().Get())
     }
   };
 
@@ -234,8 +237,9 @@ std::vector<std::string> ItemComponent::GetArmorInspectionInfo()
   std::vector<std::string> res =
   {
     {
-      Util::StringFormat("%i / %i", Data.Durability.Min().Get(),
-                                    Data.Durability.Max().Get())
+      Util::StringFormat("%i / %i",
+                          Data.Durability.Min().Get(),
+                          Data.Durability.Max().Get())
     }
   };
 
@@ -276,7 +280,7 @@ std::vector<std::string> ItemComponent::GetReturnerInspectionInfo()
     }
     else
     {
-      auto levelName = Map::Instance().GetLevelRefByType(mt)->LevelName;
+      auto levelName = Game::gMap.GetLevelRefByType(mt)->LevelName;
       text = Util::StringFormat("Set to %s at [%i;%i]",
                                 levelName.data(),
                                 pos.X,
@@ -630,7 +634,7 @@ void ItemComponent::AppendStatBonuses(const std::unordered_map<ItemBonusType, in
     }
 
     std::string name = GlobalConstants::BonusNameByType.at(kvp.first);
-    auto modStr = Util::StringFormat("%i", kvp.second);
+    std::string modStr = Util::StringFormat("%i", kvp.second);
     if (kvp.second > 0)
     {
       modStr.insert(modStr.begin(), '+');

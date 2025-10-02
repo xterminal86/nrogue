@@ -4,13 +4,14 @@
 #include "printer.h"
 #include "map.h"
 #include "ai-component.h"
+#include "container-component.h"
 #include "door-component.h"
 #include "spells-database.h"
 #include "game-objects-factory.h"
 
 void TargetState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 }
 
 // =============================================================================
@@ -87,11 +88,11 @@ void TargetState::FindTargets()
 
       double d = Util::LinearDistance(px, py, x, y);
 
-      if (Util::IsInsideMap({ x, y }, Map::Instance().CurrentLevel->MapSize)
-       && Map::Instance().CurrentLevel->MapArray[x][y]->Visible
+      if (Util::IsInsideMap({ x, y }, Game::gMap.CurrentLevel->MapSize)
+       && Game::gMap.CurrentLevel->MapArray[x][y]->Visible
        && (int)d <= r && (int)d < _twHalf)
       {
-        auto actor = Map::Instance().GetActorAtPosition(x, y);
+        auto actor = Game::gMap.GetActorAtPosition(x, y);
         if (actor != nullptr)
         {
           _targets.push_back(actor);
@@ -179,8 +180,8 @@ void TargetState::HandleInput()
       break;
 
     case VK_CANCEL:
-      Printer::Instance().AddMessage(Strings::MsgCancelled);
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gPrnt.AddMessage(Strings::MsgCancelled);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
       break;
 
     default:
@@ -256,7 +257,7 @@ void TargetState::FireWeapon(bool throwingFromInventory)
   std::string str = throwingFromInventory ? "You throw " : "You fire ";
   str += weaponName;
 
-  Printer::Instance().AddMessage(str);
+  Game::gPrnt.AddMessage(str);
 
   GameObject* stoppedAt = nullptr;
 
@@ -337,7 +338,7 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
   if (stoppedAt == nullptr)
   {
     auto cell =
-        Map::Instance().CurrentLevel->MapArray[endPoint.X][endPoint.Y].get();
+        Game::gMap.CurrentLevel->MapArray[endPoint.X][endPoint.Y].get();
 
     stoppedAt = cell;
   }
@@ -349,13 +350,13 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
 
 GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
 {
-  auto actor = Map::Instance().GetActorAtPosition(at.X, at.Y);
+  auto actor = Game::gMap.GetActorAtPosition(at.X, at.Y);
   if (actor != nullptr)
   {
     return actor;
   }
 
-  auto cell = Map::Instance().CurrentLevel->StaticMapObjects[at.X][at.Y].get();
+  auto cell = Game::gMap.CurrentLevel->StaticMapObjects[at.X][at.Y].get();
   if (cell != nullptr)
   {
     //
@@ -372,7 +373,7 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
       if (cell->Blocking)
       {
         auto prevCell =
-            Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
+            Game::gMap.CurrentLevel->MapArray[prev.X][prev.Y].get();
 
         return prevCell;
       }
@@ -394,7 +395,7 @@ GameObject* TargetState::CheckHit(const Position& at, const Position& prev)
           if (_weaponRef->Data.SpellHeld.SpellType_ == SpellType::FIREBALL)
           {
             auto prevCell =
-                Map::Instance().CurrentLevel->MapArray[prev.X][prev.Y].get();
+                Game::gMap.CurrentLevel->MapArray[prev.X][prev.Y].get();
 
             return prevCell;
           }
@@ -439,7 +440,7 @@ void TargetState::CheckCursorPositionBounds()
   for (auto& offset : line)
   {
     p.Set(plrPos.X + offset.X, plrPos.Y + offset.Y);
-    if (!Util::IsInsideMap(p, Map::Instance().CurrentLevel->MapSize, false))
+    if (!Util::IsInsideMap(p, Game::gMap.CurrentLevel->MapSize, false))
     {
       isOutsideMap = true;
       break;
@@ -494,7 +495,7 @@ void TargetState::DirtyHack()
   //
   if (!_playerRef->HasNonZeroHP())
   {
-    Application::Instance().ChangeState(GameStates::GAMEOVER_STATE);
+    Game::gApp.ChangeState(GameStates::GAMEOVER_STATE);
   }
   else
   {
@@ -512,14 +513,14 @@ void TargetState::DirtyHack()
     // Looks safe (haha) since we don't have
     // any Cleanup() or Prepare() to do in this case.
     //
-    if (Application::Instance().CurrentStateIs(GameStates::MESSAGE_BOX_STATE))
+    if (Game::gApp.CurrentStateIs(GameStates::MESSAGE_BOX_STATE))
     {
-      Application::Instance()._previousState =
-          Application::Instance().GetGameStateRefByName(GameStates::MAIN_STATE);
+      Game::gApp._previousState =
+          Game::gApp.GetGameStateRefByName(GameStates::MAIN_STATE);
     }
     else
     {
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
     }
   }
 }
@@ -531,7 +532,7 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
   //
   // _weaponRef is an item to be thrown.
   //
-  auto& mapRef = Map::Instance().CurrentLevel->MapArray;
+  auto& mapRef = Game::gMap.CurrentLevel->MapArray;
 
   int x = hitPoint->PosX;
   int y = hitPoint->PosY;
@@ -559,14 +560,14 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
     if (tileOk)
     {
       ItemComponent* copy =
-          GameObjectsFactory::Instance().CloneItem(_weaponRef);
+          Game::gGOF.CloneItem(_weaponRef);
 
       copy->Data.Amount = 1;
 
       copy->OwnerGameObject->PosX = x;
       copy->OwnerGameObject->PosY = y;
 
-      Map::Instance().CurrentLevel->PlaceGameObject(copy->OwnerGameObject);
+      Game::gMap.CurrentLevel->PlaceGameObject(copy->OwnerGameObject);
     }
     else
     {
@@ -589,12 +590,12 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
       //
       // See comments in InventoryState::DropItem()
       //
-      item->SetLevelOwner(Map::Instance().CurrentLevel);
+      item->SetLevelOwner(Game::gMap.CurrentLevel);
 
       item->PosX = x;
       item->PosY = y;
 
-      Map::Instance().CurrentLevel->PlaceGameObject(item);
+      Game::gMap.CurrentLevel->PlaceGameObject(item);
     }
     else
     {
@@ -664,7 +665,7 @@ void TargetState::PrintThrowResult(GameObject* tileRef)
                                   verb.data(),
                                   tileName.data());
 
-    Printer::Instance().AddMessage(str);
+    Game::gPrnt.AddMessage(str);
   }
 }
 
@@ -702,10 +703,10 @@ void TargetState::DrawHint()
   //
   Position startPoint = _playerRef->GetPosition();
 
-  int mox = Map::Instance().CurrentLevel->MapOffsetX;
-  int moy = Map::Instance().CurrentLevel->MapOffsetY;
+  int mox = Game::gMap.CurrentLevel->MapOffsetX;
+  int moy = Game::gMap.CurrentLevel->MapOffsetY;
 
-  Position mapSize = Map::Instance().CurrentLevel->MapSize;
+  Position mapSize = Game::gMap.CurrentLevel->MapSize;
 
   _cellsToHighlight.clear();
 
@@ -723,13 +724,13 @@ void TargetState::DrawHint()
 
     if (Util::IsInsideMap(p, mapSize))
     {
-      auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+      auto actor = Game::gMap.GetActorAtPosition(p.X, p.Y);
 
       bool actorPresent = (actor != nullptr);
 
       int d = Util::LinearDistance(startPoint, p);
 
-      bool isCellBlocking = Map::Instance().CurrentLevel->IsCellBlocking(p);
+      bool isCellBlocking = Game::gMap.CurrentLevel->IsCellBlocking(p);
       bool isThrowing = (_throwingItemInventoryIndex != -1);
       bool isThrowingOk = ((!isThrowing && d > _weaponRef->Data.Range)
                          || (isThrowing && d > _maxThrowingRange));
@@ -747,7 +748,7 @@ void TargetState::DrawHint()
 
   for (auto& p : _cellsToHighlight)
   {
-    Printer::Instance().PrintFB(p.X + mox,
+    Game::gPrnt.PrintFB(p.X + mox,
                                 p.Y + moy,
                                 '.',
                                 Colors::RedColor,
@@ -759,20 +760,20 @@ void TargetState::DrawHint()
 
 void TargetState::DrawCursor()
 {
-  int mox = Map::Instance().CurrentLevel->MapOffsetX;
-  int moy = Map::Instance().CurrentLevel->MapOffsetY;
+  int mox = Game::gMap.CurrentLevel->MapOffsetX;
+  int moy = Game::gMap.CurrentLevel->MapOffsetY;
 
-  Printer::Instance().PrintFB(_cursorPosition.X + mox + 1,
-                              _cursorPosition.Y + moy,
-                              ']',
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(_cursorPosition.X + mox + 1,
+                       _cursorPosition.Y + moy,
+                       ']',
+                       Colors::WhiteColor,
+                       Colors::BlackColor);
 
-  Printer::Instance().PrintFB(_cursorPosition.X + mox - 1,
-                              _cursorPosition.Y + moy,
-                              '[',
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+  Game::gPrnt.PrintFB(_cursorPosition.X + mox - 1,
+                       _cursorPosition.Y + moy,
+                       '[',
+                       Colors::WhiteColor,
+                       Colors::BlackColor);
 }
 
 // =============================================================================
@@ -781,9 +782,9 @@ void TargetState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
-    Map::Instance().Draw();
+    Game::gMap.Draw();
 
     _playerRef->Draw();
 
@@ -795,20 +796,20 @@ void TargetState::Update(bool forceUpdate)
 
     int tw = Printer::TerminalWidth;
 
-    Printer::Instance().PrintFB(tw / 2, 0,
-                                "Select target then press 'f' "
-                                "or 'Enter' to fire",
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(tw / 2, 0,
+                        "Select target then press 'f' "
+                        "or 'Enter' to fire",
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().PrintFB(tw / 2, 1,
-                                "(TAB to cycle through visible ones)",
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(tw / 2, 1,
+                        "(TAB to cycle through visible ones)",
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }
 

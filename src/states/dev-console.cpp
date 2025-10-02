@@ -23,7 +23,7 @@ void DevConsole::Init()
 
   _commandTypeByName = Util::FlipMap(_commandNameByType);
 
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 
   _objectHandles[ObjectHandleType::STATIC] = nullptr;
   _objectHandles[ObjectHandleType::ACTOR]  = nullptr;
@@ -43,7 +43,7 @@ void DevConsole::Init()
 void DevConsole::Prepare()
 {
   _closedByCommand      = false;
-  _currentLevel         = Map::Instance().CurrentLevel;
+  _currentLevel         = Game::gMap.CurrentLevel;
   _currentCommand       = Prompt;
   _commandsHistoryIndex = _commandsHistory.size();
   _cursorPosition       = 0;
@@ -67,7 +67,7 @@ void DevConsole::HandleInput()
     // -------------------------------------------------------------------------
 
     case '`':
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
       break;
 
     // -------------------------------------------------------------------------
@@ -76,8 +76,6 @@ void DevConsole::HandleInput()
     {
       if (!_commandsHistory.empty())
       {
-        _stdout.ResetScroll();
-
         if (_commandsHistoryIndex > 0)
         {
           _commandsHistoryIndex--;
@@ -99,7 +97,6 @@ void DevConsole::HandleInput()
     {
       if (!_commandsHistory.empty())
       {
-        _stdout.ResetScroll();
         if (_commandsHistoryIndex < (int)_commandsHistory.size() - 1)
         {
           _commandsHistoryIndex++;
@@ -125,7 +122,6 @@ void DevConsole::HandleInput()
     {
       if (_cursorPosition > 0)
       {
-        _stdout.ResetScroll();
         _cursorPosition--;
       }
     }
@@ -137,7 +133,6 @@ void DevConsole::HandleInput()
     {
       if (_cursorPosition < (int)_currentCommand.substr(2).length())
       {
-        _stdout.ResetScroll();
         _cursorPosition++;
       }
     }
@@ -147,7 +142,6 @@ void DevConsole::HandleInput()
 
     case VK_HOME:
     {
-      _stdout.ResetScroll();
       _cursorPosition = 0;
     }
     break;
@@ -156,7 +150,6 @@ void DevConsole::HandleInput()
 
     case VK_END:
     {
-      _stdout.ResetScroll();
       _cursorPosition = (int)_currentCommand.substr(2).length();
     }
     break;
@@ -305,7 +298,11 @@ void DevConsole::HandleInput()
 
     // -------------------------------------------------------------------------
 
+#ifdef USE_SDL
     case NUMPAD_8:
+#else
+    case KEY_PPAGE:
+#endif
     {
       _stdout.ScrollUp();
     }
@@ -313,8 +310,12 @@ void DevConsole::HandleInput()
 
     // -------------------------------------------------------------------------
 
+#ifdef USE_SDL
     case NUMPAD_5:
     case NUMPAD_2:
+#else
+    case KEY_NPAGE:
+#endif
     {
       _stdout.ScrollDown();
     }
@@ -324,6 +325,8 @@ void DevConsole::HandleInput()
 
     case VK_ENTER:
     {
+      _stdout.ResetScroll();
+
       StdOut(_currentCommand);
 
       std::string noPrompt = _currentCommand.substr(2);
@@ -367,7 +370,6 @@ void DevConsole::HandleInput()
       {
         if (_cursorPosition > 0)
         {
-          _stdout.ResetScroll();
           size_t pos = 2 + _cursorPosition - 1;
           _currentCommand.erase(_currentCommand.begin() + pos);
           _cursorPosition--;
@@ -384,7 +386,6 @@ void DevConsole::HandleInput()
       {
         if ((int)_currentCommand.substr(2).length() > _cursorPosition)
         {
-          _stdout.ResetScroll();
           _currentCommand.erase(_currentCommand.begin() + 2 + _cursorPosition);
         }
       }
@@ -397,7 +398,6 @@ void DevConsole::HandleInput()
     {
       if (_keyPressed >= 32 && _keyPressed <= 126)
       {
-        _stdout.ResetScroll();
         _currentCommand.insert(_currentCommand.begin() + 2 + _cursorPosition,
                                (char)_keyPressed);
         _cursorPosition++;
@@ -413,7 +413,7 @@ void DevConsole::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
     DrawHeader(" DEVELOPER'S CONSOLE ");
 
@@ -427,30 +427,30 @@ void DevConsole::Update(bool forceUpdate)
         break;
       }
 
-      Printer::Instance().PrintFB(1,
-                                  1 + lineCount,
-                                  *msg,
-                                  Printer::kAlignLeft,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(1,
+                          1 + lineCount,
+                          *msg,
+                          Printer::kAlignLeft,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
 
       lineCount++;
     }
 
-    Printer::Instance().PrintFB(1,
-                                1 + lineCount,
-                                _currentCommand,
-                                Printer::kAlignLeft,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(1,
+                        1 + lineCount,
+                        _currentCommand,
+                        Printer::kAlignLeft,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().PrintFB(3 + _cursorPosition,
-                                1 + lineCount,
-                                ' ',
-                                Colors::BlackColor,
-                                Colors::WhiteColor);
+    Game::gPrnt.PrintFB(3 + _cursorPosition,
+                        1 + lineCount,
+                        ' ',
+                        Colors::BlackColor,
+                        Colors::WhiteColor);
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }
 
@@ -540,7 +540,7 @@ void DevConsole::ProcessCommand(const std::string& command,
     case DevConsoleCommand::CLOSE4:
     {
       _closedByCommand = true;
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
     }
     break;
 
@@ -632,7 +632,7 @@ void DevConsole::ProcessCommand(const std::string& command,
     break;
 
     case DevConsoleCommand::PRINT_MAP:
-      Map::Instance().PrintMapLayout();
+      Game::gMap.PrintMapLayout();
       StdOut(Ok);
       break;
 
@@ -974,7 +974,7 @@ void DevConsole::PrintColors()
 {
   std::string msg;
 
-  auto& cache = Printer::Instance().GetValidColorsCache();
+  auto& cache = Game::gPrnt.GetValidColorsCache();
   for (auto& kvp : cache)
   {
 #ifdef USE_SDL
@@ -1085,11 +1085,9 @@ void DevConsole::CreateDummyActor(const StringV& params)
   int x = r.first;
   int y = r.second;
 
-  GameObject* actor = MonstersInc::Instance().CreateNPC(x,
-                                                        y,
-                                                        NPCType::UNDEFINED);
+  GameObject* actor = Game::gMI.CreateNPC(x, y, NPCType::UNDEFINED);
 
-  Map::Instance().CurrentLevel->PlaceActor(actor);
+  Game::gMap.CurrentLevel->PlaceActor(actor);
 
   StdOut(Ok);
 }
@@ -1133,7 +1131,7 @@ void DevConsole::CreateMonster(const StringV& params)
     return;
   }
 
-  auto go = MonstersInc::Instance().CreateMonster(x, y, objType);
+  auto go = Game::gMI.CreateMonster(x, y, objType);
   _currentLevel->PlaceActor(go);
 
   StdOut(Ok);
@@ -1151,10 +1149,10 @@ void DevConsole::CreateAllGems()
     {
       int yOffset = (i == 0) ? 0 : 1;
 
-      auto go = ItemsFactory::Instance().CreateGem(1 + count, 9 + yOffset,
-                                                   kvp.first,
-                                                   100,
-                                                   ItemQuality::RANDOM);
+      auto go = Game::gIF.CreateGem(1 + count, 9 + yOffset,
+                                     kvp.first,
+                                     100,
+                                     ItemQuality::RANDOM);
       ItemComponent* ic = go->GetComponent<ItemComponent>();
       ic->Data.IsIdentified = (i == 0) ? true : false;
       _currentLevel->PlaceGameObject(go);
@@ -1173,7 +1171,7 @@ void DevConsole::CreateAllPotions()
   auto map = GlobalConstants::PotionNameByType;
   for (auto& kvp : map)
   {
-    auto go = ItemsFactory::Instance().CreatePotion(kvp.first);
+    auto go = Game::gIF.CreatePotion(kvp.first);
     go->PosX = 1 + count;
     go->PosY = 1;
     ItemComponent* ic = go->GetComponent<ItemComponent>();
@@ -1204,10 +1202,10 @@ void DevConsole::CreateAllScrolls()
 
     for (auto& item : GlobalConstants::ScrollValidSpellTypes)
     {
-      auto scroll = ItemsFactory::Instance().CreateScroll(1 + xOffset,
-                                                          10 + i,
-                                                          item,
-                                                          p);
+      auto scroll = Game::gIF.CreateScroll(1 + xOffset,
+                                            10 + i,
+                                            item,
+                                            p);
 
       ItemComponent* ic = scroll->GetComponent<ItemComponent>();
       ic->Data.IsIdentified = true;
@@ -1241,7 +1239,7 @@ void DevConsole::CreateItem(const StringV& params)
   int x = r.first;
   int y = r.second;
 
-  GameObject* go = ItemsFactory::Instance().CreateRandomItem(x, y);
+  GameObject* go = Game::gIF.CreateRandomItem(x, y);
   if (go == nullptr)
   {
     StdOut("Generated object type is not implemented yet!");
@@ -1280,12 +1278,12 @@ void DevConsole::CreateDummyObject(const StringV& params)
   }
 
   GameObject* go =
-      GameObjectsFactory::Instance().CreateDummyObject(r.first,
-                                                       r.second,
-                                                       "Dummy",
-                                                       image,
-                                                       Colors::WhiteColor,
-                                                       Colors::BlackColor);
+      Game::gGOF.CreateDummyObject(r.first,
+                                    r.second,
+                                    "Dummy",
+                                    image,
+                                    Colors::WhiteColor,
+                                    Colors::BlackColor);
 
   _currentLevel->PlaceGameObject(go);
 
@@ -1311,9 +1309,9 @@ void DevConsole::CreateChest(const StringV& params)
     return;
   }
 
-  GameObject* go = GameObjectsFactory::Instance().CreateChest(r.first,
-                                                              r.second,
-                                                              false);
+  GameObject* go = Game::gGOF.CreateChest(r.first,
+                                           r.second,
+                                           false);
 
   _currentLevel->PlaceStaticObject(go);
 
@@ -1353,10 +1351,10 @@ void DevConsole::CreateShrine(const StringV& params)
     return;
   }
 
-  GameObject* go = GameObjectsFactory::Instance().CreateShrine(r.first,
-                                                               r.second,
-                                                               (ShrineType)type,
-                                                               100);
+  GameObject* go = Game::gGOF.CreateShrine(r.first,
+                                            r.second,
+                                            (ShrineType)type,
+                                            100);
 
   _currentLevel->PlaceStaticObject(go);
 
@@ -1382,7 +1380,7 @@ void DevConsole::CreateBreakable(const StringV& params)
     return;
   }
 
-  static GameObjectsFactory& gof = GameObjectsFactory::Instance();
+  static GameObjectsFactory& gof = Game::gGOF;
 
   GameObject* go = gof.CreateBreakableObjectWithRandomLoot(r.first,
                                                            r.second,
@@ -1431,12 +1429,12 @@ void DevConsole::GetObject(const StringV& params,
   {
     case ObjectHandleType::STATIC:
       _objectHandles[handleType] =
-          Map::Instance().GetStaticGameObjectAtPosition(x, y);
+          Game::gMap.GetStaticGameObjectAtPosition(x, y);
       break;
 
     case ObjectHandleType::ITEM:
     {
-      auto res = Map::Instance().GetGameObjectsAtPosition(x, y);
+      auto res = Game::gMap.GetGameObjectsAtPosition(x, y);
       if (!res.empty())
       {
         _objectHandles[handleType] = res.back();
@@ -1445,28 +1443,28 @@ void DevConsole::GetObject(const StringV& params,
     break;
 
     case ObjectHandleType::ACTOR:
-      _objectHandles[handleType] = Map::Instance().GetActorAtPosition(x, y);
+      _objectHandles[handleType] = Game::gMap.GetActorAtPosition(x, y);
       break;
 
     case ObjectHandleType::MAP:
-      _objectHandles[handleType] = Map::Instance().GetMapObjectAtPosition(x, y);
+      _objectHandles[handleType] = Game::gMap.GetMapObjectAtPosition(x, y);
       break;
 
     case ObjectHandleType::ANY:
     {
       GameObject* res = nullptr;
 
-      res = Map::Instance().GetActorAtPosition(x, y);
+      res = Game::gMap.GetActorAtPosition(x, y);
 
       if (res == nullptr)
       {
-        auto vector = Map::Instance().GetGameObjectsAtPosition(x, y);
+        auto vector = Game::gMap.GetGameObjectsAtPosition(x, y);
         if (vector.empty())
         {
-          res = Map::Instance().GetStaticGameObjectAtPosition(x, y);
+          res = Game::gMap.GetStaticGameObjectAtPosition(x, y);
           if (res == nullptr)
           {
-            res = Map::Instance().GetMapObjectAtPosition(x, y);
+            res = Game::gMap.GetMapObjectAtPosition(x, y);
           }
         }
         else
@@ -1523,7 +1521,7 @@ void DevConsole::MoveObject(const StringV& params,
   {
     case ObjectHandleType::STATIC:
     {
-      GameObject* go = Map::Instance().GetStaticGameObjectAtPosition(x, y);
+      GameObject* go = Game::gMap.GetStaticGameObjectAtPosition(x, y);
       if (go != nullptr)
       {
         StdOut(ErrCannotMove);
@@ -1617,15 +1615,15 @@ void DevConsole::RemoveObject(const StringV& params)
   int x = r.first;
   int y = r.second;
 
-  GameObject* go = Map::Instance().GetActorAtPosition(x, y);
+  GameObject* go = Game::gMap.GetActorAtPosition(x, y);
   if (go == nullptr)
   {
     std::vector<GameObject*> res =
-        Map::Instance().GetGameObjectsAtPosition(x, y);
+        Game::gMap.GetGameObjectsAtPosition(x, y);
 
     if (res.empty())
     {
-      go = Map::Instance().GetStaticGameObjectAtPosition(x, y);
+      go = Game::gMap.GetStaticGameObjectAtPosition(x, y);
       if (go == nullptr)
       {
         StdOut(ErrNoObjectsFound);
@@ -1643,7 +1641,7 @@ void DevConsole::RemoveObject(const StringV& params)
     go->IsDestroyed = true;
   }
 
-  Map::Instance().RemoveDestroyed();
+  Game::gMap.RemoveDestroyed();
 
   StdOut(Ok);
 }
@@ -1685,7 +1683,7 @@ void DevConsole::DamageActor(const StringV& params)
                                                          isDirect,
                                                          false);
 
-  Map::Instance().RemoveDestroyed();
+  Game::gMap.RemoveDestroyed();
 
   StdOut(Ok);
 }
@@ -1764,7 +1762,7 @@ void DevConsole::ToggleFogOfWar()
   _playerRef->ToggleFogOfWar = !_playerRef->ToggleFogOfWar;
 
   auto state =
-      Application::Instance().GetGameStateRefByName(GameStates::MAIN_STATE);
+      Game::gApp.GetGameStateRefByName(GameStates::MAIN_STATE);
 
   state->Update(true);
 
@@ -1850,7 +1848,7 @@ void DevConsole::SpamToLog(const StringV& params)
 
   for (int i = 0; i < count; i++)
   {
-    Printer::Instance().AddMessage(
+    Game::gPrnt.AddMessage(
       Util::StringFormat("Message %02d", (i + 1))
     );
   }
@@ -1890,7 +1888,7 @@ void DevConsole::LaunchProjectile(const StringV& params)
   Position from(x1, y1);
   Position to(x2, y2);
 
-  Application::Instance().ChangeState(GameStates::MAIN_STATE);
+  Game::gApp.ChangeState(GameStates::MAIN_STATE);
 
   Util::LaunchProjectile(from, to, '*', Colors::YellowColor);
 }
@@ -1914,9 +1912,13 @@ void DevConsole::Inspect(const StringV& params)
     return;
   }
 
-  bool objFound = (AnyObjectByAddr.count(hexString) == 1);
+  uintptr_t addr = std::stoull(hexString, nullptr, 16);
 
-  StringV lines = DumpObj(objFound ? AnyObjectByAddr[hexString] : nullptr);
+  void* casted = reinterpret_cast<void*>(addr);
+
+  bool objFound = (AnyObjectByAddr.count(casted) == 1);
+
+  StringV lines = DumpObj(objFound ? AnyObjectByAddr[casted] : nullptr);
 
   PrintDebugInfo(lines);
 }
@@ -2039,7 +2041,7 @@ void DevConsole::RepeatCommand(const std::string& shellCmd)
                          shellCmd.end(),
                          [](char c)
                          {
-                           return (c < '0' || c > '9');
+                           return ( (c < '0') || (c > '9') );
                          });
 
   if (it != shellCmd.end())

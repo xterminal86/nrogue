@@ -6,7 +6,7 @@
 
 void ContainerInteractState::Init()
 {
-  _playerRef = &Application::Instance().PlayerInstance;
+  _playerRef = &Game::gApp.PlayerInstance;
 }
 
 // =============================================================================
@@ -74,7 +74,7 @@ void ContainerInteractState::HandleInput()
       break;
 
     case VK_CANCEL:
-      Application::Instance().ChangeState(GameStates::MAIN_STATE);
+      Game::gApp.ChangeState(GameStates::MAIN_STATE);
       break;
 
     default:
@@ -90,52 +90,52 @@ void ContainerInteractState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    Printer::Instance().Clear();
+    Game::gPrnt.Clear();
 
     for (int y = 0; y < _th; y++)
     {
       #ifdef USE_SDL
-      Printer::Instance().PrintFB(_twHalf,
-                                  y,
-                                  (int)NameCP437::VBAR_2,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(_twHalf,
+                          y,
+                          (int)NameCP437::VBAR_2,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
       #else
-      Printer::Instance().PrintFB(_twHalf,
-                                  y,
-                                  '|',
-                                  Colors::BlackColor,
-                                  Colors::WhiteColor);
+      Game::gPrnt.PrintFB(_twHalf,
+                          y,
+                          '|',
+                          Colors::BlackColor,
+                          Colors::WhiteColor);
       #endif
     }
 
     auto containerName = _containerToInteractWith->OwnerGameObject->ObjectName;
 
-    Printer::Instance().PrintFB(_twQuarter,
-                                0,
-                                "Player",
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(_twQuarter,
+                        0,
+                        "Player",
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().PrintFB(_tw - _twQuarter - 1,
-                                0,
-                                containerName,
-                                Printer::kAlignCenter,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(_tw - _twQuarter - 1,
+                        0,
+                        containerName,
+                        Printer::kAlignCenter,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
-    Printer::Instance().PrintFB(1,
-                                _th - 1,
-                                "'Enter' - exchange",
-                                Printer::kAlignLeft,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(1,
+                        _th - 1,
+                        "'Enter' - exchange",
+                        Printer::kAlignLeft,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
 
     DisplayPlayerInventory();
     DisplayContainerInventory();
 
-    Printer::Instance().Render();
+    Game::gPrnt.Render();
   }
 }
 
@@ -162,43 +162,43 @@ void ContainerInteractState::DisplayPlayerInventory()
     if (ic->Data.IsStackable)
     {
       auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
-      Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1,
-                                  yPos + index,
-                                  stackAmount,
-                                  Printer::kAlignLeft,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(GlobalConstants::InventoryMaxNameLength + 1,
+                          yPos + index,
+                          stackAmount,
+                          Printer::kAlignLeft,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
     }
     else if (ic->Data.IsEquipped)
     {
       auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
-      Printer::Instance().PrintFB(GlobalConstants::InventoryMaxNameLength + 1,
-                                  yPos + index,
-                                  equipStatus,
-                                  Printer::kAlignLeft,
-                                  Colors::WhiteColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(GlobalConstants::InventoryMaxNameLength + 1,
+                          yPos + index,
+                          equipStatus,
+                          Printer::kAlignLeft,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
     }
 
     uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (_playerSide && index == _inventoryItemIndex)
     {
-      Printer::Instance().PrintFB(1,
-                                  yPos + index,
-                                  nameInInventory,
-                                  Printer::kAlignLeft,
-                                  textColor,
-                                  Colors::ShadesOfGrey::Four);
+      Game::gPrnt.PrintFB(1,
+                          yPos + index,
+                          nameInInventory,
+                          Printer::kAlignLeft,
+                          textColor,
+                          Colors::ShadesOfGrey::Four);
     }
     else
     {
-      Printer::Instance().PrintFB(1,
-                                  yPos + index,
-                                  nameInInventory,
-                                  Printer::kAlignLeft,
-                                  textColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(1,
+                          yPos + index,
+                          nameInInventory,
+                          Printer::kAlignLeft,
+                          textColor,
+                          Colors::BlackColor);
     }
 
     index++;
@@ -211,12 +211,12 @@ void ContainerInteractState::DisplayPlayerInventory()
     std::string stub(GlobalConstants::InventoryMaxNameLength,
                      Strings::InventoryEmptySlotChar);
 
-    Printer::Instance().PrintFB(1,
-                                yPos + index,
-                                stub,
-                                Printer::kAlignLeft,
-                                Colors::ShadesOfGrey::Six,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(1,
+                        yPos + index,
+                        stub,
+                        Printer::kAlignLeft,
+                        Colors::ShadesOfGrey::Six,
+                        Colors::BlackColor);
     yPos++;
   }
 }
@@ -253,25 +253,25 @@ void ContainerInteractState::DisplayContainerInventory()
     if (ic->Data.IsStackable)
     {
       auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
-      Printer::Instance().PrintFB(
-            xPos - GlobalConstants::InventoryMaxNameLength - 1,
-            yPos + index,
-            stackAmount,
-            Printer::kAlignRight,
-            Colors::WhiteColor,
-            Colors::BlackColor
+      Game::gPrnt.PrintFB(
+        xPos - GlobalConstants::InventoryMaxNameLength - 1,
+        yPos + index,
+        stackAmount,
+        Printer::kAlignRight,
+        Colors::WhiteColor,
+        Colors::BlackColor
       );
     }
     else if (ic->Data.IsEquipped)
     {
       auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
-      Printer::Instance().PrintFB(
-            xPos - GlobalConstants::InventoryMaxNameLength - 1,
-            yPos + index,
-            equipStatus,
-            Printer::kAlignRight,
-            Colors::WhiteColor,
-            Colors::BlackColor
+      Game::gPrnt.PrintFB(
+        xPos - GlobalConstants::InventoryMaxNameLength - 1,
+        yPos + index,
+        equipStatus,
+        Printer::kAlignRight,
+        Colors::WhiteColor,
+        Colors::BlackColor
       );
     }
 
@@ -279,21 +279,21 @@ void ContainerInteractState::DisplayContainerInventory()
 
     if (!_playerSide && index == _inventoryItemIndex)
     {
-      Printer::Instance().PrintFB(xPos,
-                                  yPos + index,
-                                  nameInInventory,
-                                  Printer::kAlignRight,
-                                  textColor,
-                                  Colors::ShadesOfGrey::Four);
+      Game::gPrnt.PrintFB(xPos,
+                          yPos + index,
+                          nameInInventory,
+                          Printer::kAlignRight,
+                          textColor,
+                          Colors::ShadesOfGrey::Four);
     }
     else
     {
-      Printer::Instance().PrintFB(xPos,
-                                  yPos + index,
-                                  nameInInventory,
-                                  Printer::kAlignRight,
-                                  textColor,
-                                  Colors::BlackColor);
+      Game::gPrnt.PrintFB(xPos,
+                          yPos + index,
+                          nameInInventory,
+                          Printer::kAlignRight,
+                          textColor,
+                          Colors::BlackColor);
     }
 
     index++;
@@ -305,12 +305,12 @@ void ContainerInteractState::DisplayContainerInventory()
   {
     std::string stub(GlobalConstants::InventoryMaxNameLength,
                      Strings::InventoryEmptySlotChar);
-    Printer::Instance().PrintFB(xPos,
-                                yPos + index,
-                                stub,
-                                Printer::kAlignRight,
-                                Colors::ShadesOfGrey::Six,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(xPos,
+                        yPos + index,
+                        stub,
+                        Printer::kAlignRight,
+                        Colors::ShadesOfGrey::Six,
+                        Colors::BlackColor);
     yPos++;
   }
 }
@@ -350,11 +350,11 @@ void ContainerInteractState::TryToTransferItem()
 
   if (dst->IsFull())
   {
-    Application::Instance().ShowMessageBox(
-          MessageBoxType::ANY_KEY,
-          Strings::MessageBoxEpicFailHeaderText,
-          { Strings::MsgNoRoomInInventory },
-          Colors::MessageBoxRedBorderColor
+    Game::gApp.ShowMessageBox(
+      MessageBoxType::ANY_KEY,
+      Strings::MessageBoxEpicFailHeaderText,
+      { Strings::MsgNoRoomInInventory },
+      Colors::MessageBoxRedBorderColor
     );
     return;
   }
@@ -364,11 +364,11 @@ void ContainerInteractState::TryToTransferItem()
 
   if (ic->Data.IsEquipped)
   {
-    Application::Instance().ShowMessageBox(
-          MessageBoxType::ANY_KEY,
-          Strings::MessageBoxEpicFailHeaderText,
-          { Strings::MsgUnequipFirst },
-          Colors::MessageBoxRedBorderColor
+    Game::gApp.ShowMessageBox(
+      MessageBoxType::ANY_KEY,
+      Strings::MessageBoxEpicFailHeaderText,
+      { Strings::MsgUnequipFirst },
+      Colors::MessageBoxRedBorderColor
     );
 
     return;

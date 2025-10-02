@@ -24,10 +24,6 @@
 #include "ai-monster-kobold.h"
 #include "ai-monster-wraith.h"
 
-void MonstersInc::InitSpecific()
-{
-}
-
 // =============================================================================
 
 //
@@ -122,7 +118,7 @@ GameObject* MonstersInc::CreateNPC(int x,
   img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
   #endif
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   img,
@@ -152,7 +148,7 @@ GameObject* MonstersInc::CreateNPC(int x,
 
 GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   'r',
@@ -209,7 +205,7 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
 
 GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   'b',
@@ -264,7 +260,7 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
 
 GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   'b',
@@ -319,7 +315,7 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
 
 GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   's',
@@ -367,7 +363,7 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
 
 GameObject* MonstersInc::CreateTroll(int x, int y, bool randomize)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   'T',
@@ -429,7 +425,7 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
   #endif
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   img,
@@ -444,9 +440,9 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
-  GameObject* pickaxe = ItemsFactory::Instance().CreateBlockBreakerPickaxe();
+  GameObject* pickaxe = Game::gIF.CreateBlockBreakerPickaxe();
   GameObject* armor =
-      ItemsFactory::Instance().CreateRandomArmor(ArmorType::PADDING);
+      Game::gIF.CreateRandomArmor(ArmorType::PADDING);
 
   //
   // First, add objects to inventory so that we aquire the naked pointer.
@@ -466,7 +462,7 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   //
   // Everything else in inventory will be dropped on kill.
   //
-  GameObject* gem = ItemsFactory::Instance().CreateGem(0,
+  GameObject* gem = Game::gIF.CreateGem(0,
                                                        0,
                                                        GemType::RANDOM,
                                                        100);
@@ -484,7 +480,7 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
 
   for (int i = 0; i <= 5; i++)
   {
-    int hpToAdd = RNG::Instance().RandomRange(4, 6);
+    int hpToAdd = Game::gRng.RandomRange(4, 6);
     go->LevelUp(hpToAdd);
   }
 
@@ -517,7 +513,7 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
   img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
   #endif
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   img,
@@ -533,10 +529,10 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
   GameObject* pick =
-      ItemsFactory::Instance().CreateRandomMeleeWeapon(WeaponType::PICKAXE);
+      Game::gIF.CreateRandomMeleeWeapon(WeaponType::PICKAXE);
 
   GameObject* armor =
-      ItemsFactory::Instance().CreateRandomArmor(ArmorType::PADDING);
+      Game::gIF.CreateRandomArmor(ArmorType::PADDING);
 
   cc->Add(pick);
   cc->Add(armor);
@@ -580,7 +576,7 @@ GameObject* MonstersInc::CreateKobold(int x, int y)
 {
   char img = 'k';
 
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   img,
@@ -600,7 +596,7 @@ GameObject* MonstersInc::CreateKobold(int x, int y)
                     WeaponType::SHORT_SWORD;
 
   GameObject* sword =
-      ItemsFactory::Instance().CreateRandomMeleeWeapon(weaponType);
+      Game::gIF.CreateRandomMeleeWeapon(weaponType);
 
   if (Util::Rolld100(30))
   {
@@ -608,7 +604,7 @@ GameObject* MonstersInc::CreateKobold(int x, int y)
                       ? ItemPrefix::BLESSED
                       : ItemPrefix::UNCURSED;
 
-    GameObject* potion = ItemsFactory::Instance().CreateHealingPotion(prefix);
+    GameObject* potion = Game::gIF.CreateHealingPotion(prefix);
     cc->Add(potion);
   }
 
@@ -650,7 +646,7 @@ GameObject* MonstersInc::CreateKobold(int x, int y)
 
 GameObject* MonstersInc::CreateShelob(int x, int y)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   's',
@@ -693,7 +689,7 @@ GameObject* MonstersInc::CreateShelob(int x, int y)
 
 GameObject* MonstersInc::CreateZombie(int x, int y)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   'Z',
@@ -733,7 +729,7 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
     {
       GameObject* remains = nullptr;
       auto pos = go->GetPosition();
-      auto objs = Map::Instance().GetGameObjectsAtPosition(pos.X, pos.Y);
+      auto objs = Game::gMap.GetGameObjectsAtPosition(pos.X, pos.Y);
       for (auto& i : objs)
       {
         if (i->RemainsOf == go->ObjectId())
@@ -751,7 +747,7 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
         remains->AddComponent<TimedDestroyerComponent>(timeout,
         [this, pos, attrs]()
         {
-          Player& playerRef = Application::Instance().PlayerInstance;
+          Player& playerRef = Game::gApp.PlayerInstance;
           if (playerRef.PosX != pos.X && playerRef.PosY != pos.Y)
           {
             GameObject* reanimated = CreateZombie(pos.X, pos.Y);
@@ -761,7 +757,7 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
                   reanimated->Attrs.HP.Max().OriginalValue()
             );
 
-            Map::Instance().PlaceActor(reanimated);
+            Game::gMap.PlaceActor(reanimated);
           }
         });
       }
@@ -783,7 +779,7 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
 
 GameObject* MonstersInc::CreateSkeleton(int x, int y)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   'S',
@@ -836,10 +832,10 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
                                       : ItemPrefix::CURSED;
   ArmorType at   = Util::WeightedRandom(possibleArmor).first;
 
-  GameObject* weapon = ItemsFactory::Instance().CreateRandomMeleeWeapon(wt,
+  GameObject* weapon = Game::gIF.CreateRandomMeleeWeapon(wt,
                                                                         ip,
                                                                         iq);
-  GameObject* armor  = ItemsFactory::Instance().CreateRandomArmor(at, ip, iq);
+  GameObject* armor  = Game::gIF.CreateRandomArmor(at, ip, iq);
 
   cc->Add(weapon);
   cc->Add(armor);
@@ -865,7 +861,7 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
 
 GameObject* MonstersInc::CreateWraith(int x, int y)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   'W',
@@ -922,7 +918,7 @@ GameObject* MonstersInc::CreateWraith(int x, int y)
 
 GameObject* MonstersInc::CreateStalker(int x, int y)
 {
-  GameObject* go = new GameObject(Map::Instance().CurrentLevel,
+  GameObject* go = new GameObject(Game::gMap.CurrentLevel,
                                   x,
                                   y,
                                   'G',
@@ -949,10 +945,10 @@ GameObject* MonstersInc::CreateStalker(int x, int y)
   EquipmentComponent* ec = go->AddComponent<EquipmentComponent>(cc);
 
   GameObject* weapon =
-      ItemsFactory::Instance().CreateRandomMeleeWeapon(WeaponType::DAGGER,
+      Game::gIF.CreateRandomMeleeWeapon(WeaponType::DAGGER,
                                                        ItemPrefix::CURSED);
 
-  GameObject* ring = ItemsFactory::Instance().CreateOneRing();
+  GameObject* ring = Game::gIF.CreateOneRing();
 
   cc->Add(weapon);
   cc->Add(ring);
@@ -980,9 +976,9 @@ GameObject* MonstersInc::CreateStalker(int x, int y)
 
 int MonstersInc::GetDifficulty()
 {
-  int dl = Map::Instance().CurrentLevel->DungeonLevel;
+  int dl = Game::gMap.CurrentLevel->DungeonLevel;
   int difficulty = dl;
-  int diffOffset = RNG::Instance().RandomRange(0, 3);
+  int diffOffset = Game::gRng.RandomRange(0, 3);
 
   difficulty += diffOffset;
 

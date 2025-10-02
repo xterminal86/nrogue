@@ -8,7 +8,7 @@
 
 DGBase::DGBase()
 {
-  _rng.seed(RNG::Instance().Seed);
+  _rng.seed(Game::gRng.Seed);
 }
 
 // =============================================================================

@@ -1,9 +1,5 @@
 #include "blackboard.h"
 
-void Blackboard::InitSpecific()
-{
-}
-
 // =============================================================================
 
 void Blackboard::Set(uint64_t goId, const SSPair& data)

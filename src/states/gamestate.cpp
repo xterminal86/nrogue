@@ -14,7 +14,7 @@ GameState::GameState() :
   _thQuarter(_th / 4)
 {
 #ifdef USE_SDL
-  auto& dws = Application::Instance().GetDefaultWindowSize();
+  auto& dws = Game::gApp.GetDefaultWindowSize();
   _renderDst = { 0, 0, dws.first, dws.second };
 #endif
 }
@@ -41,7 +41,7 @@ int GameState::GetKeyDown()
       // on a window frame
       //
       case SDL_QUIT:
-        Application::Instance().ChangeState(GameStates::EXIT_GAME);
+        Game::gApp.ChangeState(GameStates::EXIT_GAME);
         break;
 
       case SDL_KEYDOWN:
@@ -59,9 +59,9 @@ int GameState::GetKeyDown()
         if (sc == SDL_SCANCODE_F9)
         {
           GameStates s = GameStates::MESSAGE_BOX_STATE;
-          if (Application::Instance().CurrentStateIs(s))
+          if (Game::gApp.CurrentStateIs(s))
           {
-            Application::Instance().CloseMessageBox();
+            Game::gApp.CloseMessageBox();
           }
 
           TakeScreenshot();
@@ -85,7 +85,7 @@ int GameState::GetKeyDown()
 
           case SDL_WINDOWEVENT_RESTORED:
           case SDL_WINDOWEVENT_EXPOSED:
-            Application::Instance().ForceDrawCurrentState();
+            Game::gApp.ForceDrawCurrentState();
             break;
         }
       }
@@ -126,9 +126,9 @@ void GameState::AdjustWindowSize(const SDL_Event& evt)
   int ww = evt.window.data1;
   int wh = evt.window.data2;
 
-  Application::Instance().GetResizedWindowSize() = { ww, wh };
+  Game::gApp.GetResizedWindowSize() = { ww, wh };
 
-  auto& tws = Printer::Instance().GetTileWHScaled();
+  auto& tws = Game::gPrnt.GetTileWHScaled();
 
   bool wOk = (std::abs(ww - _renderDst.w) > tws.first);
   bool hOk = (std::abs(wh - _renderDst.h) > tws.second);
@@ -141,8 +141,8 @@ void GameState::AdjustWindowSize(const SDL_Event& evt)
     _renderDst.w = ww;
     _renderDst.h = wh;
 
-    Printer::Instance().SetRenderDst(_renderDst);
-    Application::Instance().ForceDrawCurrentState();
+    Game::gPrnt.SetRenderDst(_renderDst);
+    Game::gApp.ForceDrawCurrentState();
   }
 }
 
@@ -169,11 +169,11 @@ bool GameState::ShouldShiftMap(int& key)
 
 void GameState::TakeScreenshot()
 {
-  auto r = Application::Instance().Renderer;
+  auto r = Game::gApp.Renderer;
   SDL_Surface* sshot = SDL_CreateRGBSurface(
     0,
-    Application::Instance().GetResizedWindowSize().first,
-    Application::Instance().GetResizedWindowSize().second,
+    Game::gApp.GetResizedWindowSize().first,
+    Game::gApp.GetResizedWindowSize().second,
     32,
     0x00FF0000,
     0x0000FF00,
@@ -190,10 +190,10 @@ void GameState::TakeScreenshot()
   std::string fname = Util::StringFormat("s_%s.bmp", time.data());
   SDL_SaveBMP(sshot, fname.data());
   SDL_FreeSurface(sshot);
-  Application::Instance().ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                                         "Screenshot Taken",
-                                         { fname },
-                                         Colors::MessageBoxBlueBorderColor);
+  Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+                             "Screenshot Taken",
+                             { fname },
+                             Colors::MessageBoxBlueBorderColor);
   DebugLog("Wrote %s", fname.data());
 }
 #endif
@@ -207,24 +207,24 @@ void GameState::DrawHeader(const std::string& header)
   for (int x = 0; x < tw; x++)
   {
     #ifdef USE_SDL
-    Printer::Instance().PrintFB(x,
-                                0,
-                                (int)NameCP437::HBAR_2,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(x,
+                        0,
+                        (int)NameCP437::HBAR_2,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
     #else
-    Printer::Instance().PrintFB(x,
-                                0,
-                                ACS_HLINE,
-                                Colors::WhiteColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintFB(x,
+                        0,
+                        ACS_HLINE,
+                        Colors::WhiteColor,
+                        Colors::BlackColor);
     #endif
   }
 
-  Printer::Instance().PrintFB(tw / 2,
-                              0,
-                              header,
-                              Printer::kAlignCenter,
-                              Colors::WhiteColor,
-                              Colors::MessageBoxHeaderBgColor);
+  Game::gPrnt.PrintFB(tw / 2,
+                      0,
+                      header,
+                      Printer::kAlignCenter,
+                      Colors::WhiteColor,
+                      Colors::MessageBoxHeaderBgColor);
 }

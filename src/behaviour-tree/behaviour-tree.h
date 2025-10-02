@@ -7,8 +7,6 @@
 #include <functional>
 #include <string>
 
-#include "util.h"
-
 class GameObject;
 class Player;
 

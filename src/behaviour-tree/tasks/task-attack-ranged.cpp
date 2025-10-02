@@ -5,6 +5,9 @@
 #include "map.h"
 #include "player.h"
 #include "printer.h"
+#include "spells-database.h"
+
+#include "equipment-component.h"
 
 #ifdef DEBUG_BUILD
 #include "logger.h"
@@ -101,10 +104,10 @@ BTResult TaskAttackRanged::ProcessSpellAttack()
   }
   else
   {
-    hit = Map::Instance().CurrentLevel->MapArray[to.X][to.Y].get();
+    hit = Game::gMap.CurrentLevel->MapArray[to.X][to.Y].get();
   }
 
-  SpellInfo* si = SpellsDatabase::Instance().GetSpellInfoFromDatabase(_spellType);
+  SpellInfo* si = Game::gSD.GetSpellInfoFromDatabase(_spellType);
   if (si == nullptr)
   {
     DebugLog("[WAR] TaskAttackRanged::ProcessSpellAttack() "
@@ -211,7 +214,7 @@ BTResult TaskAttackRanged::ProcessWeaponAttack()
     //
     // Otherwise to the cursor position (i.e. player position)
     //
-    hit = Map::Instance().CurrentLevel->MapArray[to.X][to.Y].get();
+    hit = Game::gMap.CurrentLevel->MapArray[to.X][to.Y].get();
   }
 
   if (weapon->Data.ItemType_ == ItemType::RANGED_WEAPON)
@@ -276,12 +279,12 @@ void TaskAttackRanged::ProcessBows(ItemComponent* weapon,
     //
     // Create arrow object on the cell where it landed
     //
-    ItemComponent* arrow = GameObjectsFactory::Instance().CloneItem(arrows);
+    ItemComponent* arrow = Game::gGOF.CloneItem(arrows);
     arrow->OwnerGameObject->PosX = what->PosX;
     arrow->OwnerGameObject->PosY = what->PosY;
     arrow->Data.Amount = 1;
     arrow->Data.IsEquipped = false;
-    Map::Instance().PlaceGameObject(arrow->OwnerGameObject);
+    Game::gMap.PlaceGameObject(arrow->OwnerGameObject);
   }
 
   arrows->Data.Amount--;
@@ -357,7 +360,7 @@ void TaskAttackRanged::ProcessWandDamage(GameObject* target,
 
   if (actor == nullptr)
   {
-    actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+    actor = Game::gMap.GetActorAtPosition(p.X, p.Y);
   }
 
   if (actor != nullptr)
@@ -387,7 +390,7 @@ void TaskAttackRanged::ProcessWandDamage(GameObject* target,
     //
     // Check items first.
     //
-    auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
+    auto mapObjs = Game::gMap.GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
     {
       Util::TryToDamageObject(obj,
@@ -401,7 +404,7 @@ void TaskAttackRanged::ProcessWandDamage(GameObject* target,
     //
     if (mapObjs.empty())
     {
-      auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
+      auto so = Game::gMap.GetStaticGameObjectAtPosition(p.X, p.Y);
       if (so != nullptr)
       {
         Util::TryToDamageObject(so,
@@ -420,7 +423,7 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
                                         int centralDamage,
                                         bool againstRes)
 {
-  auto pointsAffected = Printer::Instance().DrawExplosion(target->GetPosition(),
+  auto pointsAffected = Game::gPrnt.DrawExplosion(target->GetPosition(),
                                                           3);
 
   GameObject* from = (weapon != nullptr) ?
@@ -445,16 +448,16 @@ void TaskAttackRanged::ProcessAoEDamage(GameObject* target,
       Util::TryToDamageObject(_playerRef, from, dmgHere, againstRes);
     }
 
-    auto actor = Map::Instance().GetActorAtPosition(p.X, p.Y);
+    auto actor = Game::gMap.GetActorAtPosition(p.X, p.Y);
     Util::TryToDamageObject(actor, from, dmgHere, againstRes);
 
-    auto mapObjs = Map::Instance().GetGameObjectsAtPosition(p.X, p.Y);
+    auto mapObjs = Game::gMap.GetGameObjectsAtPosition(p.X, p.Y);
     for (auto& obj : mapObjs)
     {
       Util::TryToDamageObject(obj, from, dmgHere, againstRes);
     }
 
-    auto so = Map::Instance().GetStaticGameObjectAtPosition(p.X, p.Y);
+    auto so = Game::gMap.GetStaticGameObjectAtPosition(p.X, p.Y);
     if (so != nullptr)
     {
       Util::TryToDamageObject(so, from, dmgHere, againstRes);

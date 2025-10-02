@@ -1,4 +1,6 @@
 #include "level-builder.h"
+
+#include "globals.h"
 #include "rng.h"
 
 void PostProcessForPrinting(LevelBuilder& lb)
@@ -53,22 +55,22 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  RNG::Instance().Init();
-  //RNG::Instance().SetSeed(1692708011872159643);
-  //RNG::Instance().SetSeed(1692710624278623825);
-  //RNG::Instance().SetSeed(1692729112495450837);
-  //RNG::Instance().SetSeed(1692729726453276167);
-  //RNG::Instance().SetSeed(1692903483318007350);
-  //RNG::Instance().SetSeed(1692903870204678915);
-  //RNG::Instance().SetSeed(1692904310499041332);
-  //RNG::Instance().SetSeed(1692970517326539720);
-  //RNG::Instance().SetSeed(1692973124684611547);
-  //RNG::Instance().SetSeed(1692974725102378573);
-  //RNG::Instance().SetSeed(1692976718046812796);
-  //RNG::Instance().SetSeed(1692977200693175939);
-  //RNG::Instance().SetSeed(1692978491065214259);
+  Game::gRng.Init();
+  //Game::gRng.SetSeed(1692708011872159643);
+  //Game::gRng.SetSeed(1692710624278623825);
+  //Game::gRng.SetSeed(1692729112495450837);
+  //Game::gRng.SetSeed(1692729726453276167);
+  //Game::gRng.SetSeed(1692903483318007350);
+  //Game::gRng.SetSeed(1692903870204678915);
+  //Game::gRng.SetSeed(1692904310499041332);
+  //Game::gRng.SetSeed(1692970517326539720);
+  //Game::gRng.SetSeed(1692973124684611547);
+  //Game::gRng.SetSeed(1692974725102378573);
+  //Game::gRng.SetSeed(1692976718046812796);
+  //Game::gRng.SetSeed(1692977200693175939);
+  //Game::gRng.SetSeed(1692978491065214259);
 
-  printf("seed is %llu\n", RNG::Instance().Seed);
+  printf("seed is %llu\n", Game::gRng.Seed);
 
   Position mapSize;
   Position splitRatio;
