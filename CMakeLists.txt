@@ -7,17 +7,20 @@ set (CMAKE_CXX_STANDARD_REQUIRED On)
 project (${TARGET_NAME})
 
 if (WIN32 AND NOT MSVC)
+  message("Configuration: 'WIN32 AND NOT MSVC'")
   set (CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
 endif()
 
 # ==============================================================================
 
 if (MSVC)
+  message("Setting compile options for MSVC...")
   add_compile_options(/W1)
   add_definitions(-DMSVC_COMPILER)
   add_definitions(-D__PRETTY_FUNCTION__=__FUNCSIG__)
   # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
 else()
+  message("Setting compile options for gcc...")
   add_compile_options(-Wall
     # -Wextra checks for unused parameters,
     # so maybe enable in nearly completed stage of the project to cleanup stuff.
@@ -106,6 +109,7 @@ file(
 )
 
 if (${CMAKE_BUILD_TYPE} MATCHES Release)
+  message("Release build")
   list(
     REMOVE_ITEM SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/states/dev-console.cpp
@@ -149,17 +153,24 @@ else()
 endif()
 
 if (USE_SDL)
+  message("Using SDL library")
   include_directories(${SDL2_INCLUDE_DIRS})
 
   if (WIN32)
-    target_link_libraries(${TARGET_NAME} ${MINGW32_LIBRARY}
-                                         ${SDL2MAIN_LIBRARY}
-                                         ${SDL2_LIBRARY})
+    message("Linking for WIN32...")
+    target_link_libraries(
+      ${TARGET_NAME} 
+      ${MINGW32_LIBRARY}
+      ${SDL2MAIN_LIBRARY}
+      ${SDL2_LIBRARY}
+    )
   else()
+    message("Linking for Linux or whatever...")
     target_link_libraries(${TARGET_NAME} ${SDL2_LIBRARIES})
   endif()
 
 else()
+  message("Using ncurses library")
   include_directories(${CURSES_INCLUDE_DIRS})
   target_link_libraries(${TARGET_NAME} ${CURSES_LIBRARIES})
 endif()
