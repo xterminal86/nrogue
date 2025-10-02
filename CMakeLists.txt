@@ -8,7 +8,7 @@ project (${TARGET_NAME})
 
 if (WIN32 AND NOT MSVC)
   message("Configuration: 'WIN32 AND NOT MSVC'")
-  set (CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
+  set (CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static -lSDL2main -lSDL2")
 endif()
 
 # ==============================================================================
