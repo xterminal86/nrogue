@@ -14,6 +14,21 @@ extern std::unordered_map<uint64_t, GameObject*> GameObjectsById;
 #endif
 // =============================================================================
 
+//
+// Github's MSYS2 pipeline failes with "undefined reference to SDL_main"
+// unless we include this first. My guess is that it's because of recent
+// restructuring (commit 68a7532): before that every main.cpp basically
+// included SDL.h along the chain of includes that were needed for singletons,
+// but after I removed them, main.cpp includes just this file which has no
+// "major" includes. So during linking phase linker can't resolve SDL_main
+// bullshit for some reason.
+// On Linux and Windows with MinGW everything works fine though.
+// Another day - same shit.
+//
+#ifdef USE_SDL
+#include "SDL2/SDL.h"
+#endif
+
 #include "enumerations.h"
 
 class Timer;

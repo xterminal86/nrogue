@@ -1,5 +1,7 @@
 #include "bresenham-cached.h"
 
+#include <sstream>
+
 BresenhamCached::BresenhamCached(size_t rangeX, size_t rangeY)
 {
   int32_t ax = rangeX;
