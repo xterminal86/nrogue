@@ -13,8 +13,6 @@ class MessageLogState : public GameState
     void Update(bool forceUpdate = false) override;
 
   private:
-    void DrawScrollBars();
-
     const std::string _windowHeader = " GAME LOG ";
 };
 

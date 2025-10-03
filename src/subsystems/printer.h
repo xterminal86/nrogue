@@ -56,6 +56,10 @@ class Printer
     static const int kAlignCenter = 1;
     static const int kAlignRight = 2;
 
+    static const int kShortLogMaxMessages = 5;
+
+    const int& GetLastMessagesCount();
+
     std::vector<Position> DrawExplosion(const Position& pos, int range);
 
     /// Clears framebuffer (ncurses) or renderer (SDL)
@@ -179,6 +183,70 @@ class Printer
     bool IsReady();
 
     void Init();
+
+    template <typename MsgScrollBufferClass>
+    void DrawScrollBars(const MsgScrollBufferClass& buffer)
+    {
+      auto DrawArrow = [this](int x, int y, int arrowChar)
+      {
+        #ifdef USE_SDL
+        PrintFB(x, y, arrowChar, Colors::WhiteColor, Colors::BlackColor);
+        #else
+        PrintFB(x, y, arrowChar, Colors::WhiteColor, Colors::BlackColor);
+        #endif
+      };
+
+      MessageBufferScrollState s = buffer.GetScrollState();
+      switch (s)
+      {
+        case MessageBufferScrollState::NONE:
+          break;
+
+        default:
+        {
+          for (int y = 2; y < (int)TerminalHeight - 1; y++)
+          {
+            PrintFB(TerminalWidth - 1,
+                    y,
+                    ' ',
+                    Colors::BlackColor,
+                    Colors::ShadesOfGrey::Eight);
+          }
+
+          #ifdef USE_SDL
+          int arrowDown = (s == MessageBufferScrollState::BOTTOM)
+                          ? 'x'
+                          : (int)NameCP437::DARROW_2;
+          int arrowUp   = (s == MessageBufferScrollState::TOP)
+                          ? 'x'
+                          : (int)NameCP437::UARROW_2;
+          #else
+          int arrowDown = (s == MessageBufferScrollState::BOTTOM)
+                          ? 'x'
+                          : ACS_DARROW;
+          int arrowUp   = (s == MessageBufferScrollState::TOP)
+                          ? 'x'
+                          : ACS_UARROW;
+          #endif
+          DrawArrow(TerminalWidth - 1, TerminalHeight - 1, arrowDown);
+          DrawArrow(TerminalWidth - 1, 1, arrowUp);
+        }
+        break;
+      }
+
+      //
+      // Draw scroll progress.
+      //
+      if (s != MessageBufferScrollState::NONE)
+      {
+        double progress = buffer.GetScrollProgress();
+        Game::gPrnt.PrintFB(TerminalWidth - 1,
+                            TerminalHeight - 2 - (int)(21.0 * progress),
+                            '=',
+                            Colors::WhiteColor,
+                            Colors::BlackColor);
+      }
+    }
 
   private:
     #ifndef USE_SDL

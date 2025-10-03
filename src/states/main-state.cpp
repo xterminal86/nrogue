@@ -347,9 +347,8 @@ void MainState::CheckItemsOnGround()
 void MainState::DisplayGameLog()
 {
   int x = Printer::TerminalWidth - 1;
-  int y = Printer::TerminalHeight - 1;
+  int y = Printer::TerminalHeight;
 
-  // FIXME: always prints > 1 messages if available.
   int count = 0;
   auto msgs = Game::gPrnt.GetLastMessages();
   for (GameLogMessageData* m : msgs)
@@ -360,7 +359,7 @@ void MainState::DisplayGameLog()
     }
 
     Game::gPrnt.PrintFB(x,
-                        y - count,
+                        y - Game::gPrnt.GetLastMessagesCount() + count,
                         m->Message,
                         Printer::kAlignRight,
                         m->FgColor,

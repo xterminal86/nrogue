@@ -636,11 +636,11 @@ std::function<BTResult()> AIModelBase::GetIsPlayerVisibleCF()
 {
   auto fn = [this]()
   {
-    auto& playerRef = Game::gApp.PlayerInstance;
+    Player& playerRef = Game::gApp.PlayerInstance;
 
     auto ogo = AIComponentRef->OwnerGameObject;
-    Position plPos  = playerRef.GetPosition();
-    Position objPos = ogo->GetPosition();
+    const Position& plPos  = playerRef.GetPosition();
+    const Position& objPos = ogo->GetPosition();
 
     bool res = Game::gMap.IsObjectVisible(objPos, plPos);
     if (res)

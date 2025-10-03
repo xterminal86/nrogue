@@ -106,7 +106,7 @@ class DevConsole : public GameState
 
     std::string _currentCommand;
 
-    MsgScrollBuffer<std::string> _stdout{23, 6};
+    MsgScrollBuffer<std::string> _stdout{23, 10};
 
     std::vector<std::string> _commandsHistory;
 

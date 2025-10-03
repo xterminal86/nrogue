@@ -277,7 +277,7 @@ class MsgScrollBuffer
 
     // =========================================================================
 
-    MessageBufferScrollState GetScrollState()
+    MessageBufferScrollState GetScrollState() const
     {
       if (_msgsCount <= _screenSize)
       {
@@ -300,7 +300,7 @@ class MsgScrollBuffer
 
     // =========================================================================
 
-    double GetScrollProgress()
+    double GetScrollProgress() const
     {
       if (_msgsCount > _screenSize)
       {

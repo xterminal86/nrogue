@@ -416,6 +416,7 @@ void DevConsole::Update(bool forceUpdate)
     Game::gPrnt.Clear();
 
     DrawHeader(" DEVELOPER'S CONSOLE ");
+    Game::gPrnt.DrawScrollBars(_stdout);
 
     auto msgs = _stdout.GetMessages();
 
@@ -1780,9 +1781,9 @@ void DevConsole::ToggleGodMode()
 {
   _playerRef->GodMode = !_playerRef->GodMode;
 
-  auto str = Util::StringFormat("God mode: %s",
-                                _playerRef->GodMode ? "ON" : "OFF");
-  StdOut(str);
+  StdOut(
+    Util::StringFormat("God mode: %s", _playerRef->GodMode ? "ON" : "OFF")
+  );
 }
 
 // =============================================================================
@@ -1791,9 +1792,9 @@ void DevConsole::TogglePlayerIgnore()
 {
   _playerRef->IgnoreMe = !_playerRef->IgnoreMe;
 
-  auto str = Util::StringFormat("Player ignore: %s",
-                                _playerRef->IgnoreMe ? "ON" : "OFF");
-  StdOut(str);
+  StdOut(
+    Util::StringFormat("Player ignore: %s", _playerRef->IgnoreMe ? "ON" : "OFF")
+  );
 }
 
 // =============================================================================

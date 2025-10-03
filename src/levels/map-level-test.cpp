@@ -136,10 +136,6 @@ void MapLevelTest::CreateStuff()
 
 void MapLevelTest::CreateLevel()
 {
-  #ifdef DEBUG_BUILD
-  _playerRef->IgnoreMe = true;
-  #endif
-
   VisibilityRadius = 16;
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 

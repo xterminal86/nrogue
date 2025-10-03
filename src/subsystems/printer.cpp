@@ -1148,7 +1148,9 @@ void Printer::AddMessage(const GameLogMessageData& data)
 
   _repeatingMessage = data.Message;
 
-  _lastMessagesToDisplay = Util::Clamp(_lastMessagesToDisplay, 0, 5);
+  _lastMessagesToDisplay = Util::Clamp(_lastMessagesToDisplay,
+                                       0,
+                                       kShortLogMaxMessages);
 
   ShowLastMessage = true;
 }
@@ -1206,4 +1208,11 @@ int Printer::ColorsUsed()
 bool Printer::IsReady()
 {
   return _ok;
+}
+
+// =============================================================================
+
+const int& Printer::GetLastMessagesCount()
+{
+  return _lastMessagesToDisplay;
 }
