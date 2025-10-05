@@ -9,8 +9,6 @@
 class DoorComponent : public Component
 {
   public:
-    DoorComponent();
-
     void Update() override;
 
     IR Interact();

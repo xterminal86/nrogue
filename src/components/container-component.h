@@ -28,6 +28,10 @@ class ContainerComponent : public Component
 
     bool CanBeOpened = true;
 
+#ifdef DEBUG_BUILD
+    StringV Dump(size_t indent = 0) override;
+#endif
+
   private:
     size_t _maxCapacity = 0;
 };

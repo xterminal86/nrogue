@@ -404,7 +404,7 @@ GameObjectsFactory::CreateBreakableObjectWithRandomLoot(
       // NOTE: Not all objects may have been added
       // to the factory yet, so check against nullptr is needed.
       //
-      auto item = Game::gIF.CreateRandomItem(0, 0);
+      GameObject* item = Game::gIF.CreateRandomItem(0, 0);
       if (item != nullptr)
       {
         ItemComponent* ic = item->GetComponent<ItemComponent>();

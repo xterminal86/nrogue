@@ -3,7 +3,7 @@
 Component::Component()
 {
 #ifdef DEBUG_BUILD
-  HexAddressString = Util::StringFormat("0x%lX", this);
+  HexAddressString = Util::StringFormat("0x%" PRIXLEAST64, this);
   AnyObjectByAddr[this] = this;
 #endif
 }

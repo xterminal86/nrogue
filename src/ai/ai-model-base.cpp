@@ -83,7 +83,7 @@ void AIModelBase::ConstructAI()
 
     if (scriptNodesChecked.count(nodeData) != 1)
     {
-      //DebugLog("\tinstantiate 0x%lX (%s, %s)\n",
+      //DebugLog("\tinstantiate 0x%" PRIXLEAST64 " (%s, %s)\n",
       //         nodeData,
       //         nodeData->NodeName.data(),
       //         addInfo1.data());
@@ -94,7 +94,7 @@ void AIModelBase::ConstructAI()
 
     if (scriptNodesChecked.count(parentNodeData) != 1)
     {
-      //DebugLog("\tinstantiate 0x%lX (%s, %s)\n",
+      //DebugLog("\tinstantiate 0x%" PRIXLEAST64 " (%s, %s)\n",
       //         parentNodeData,
       //         parentNodeData->NodeName.data(),
       //         addInfo2.data());
@@ -108,7 +108,7 @@ void AIModelBase::ConstructAI()
 
     parentRef->AddNode(taskRef);
 
-    //DebugLog("\n(0x%lX)(%s) %s::AddNode(%s) (0x%lX)(%s)\n\n",
+    //DebugLog("\n(0x%" PRIXLEAST64 ")(%s) %s::AddNode(%s) (0x%" PRIXLEAST64 ")(%s)\n\n",
     //         parentNodeData,
     //         addInfo2.data(),
     //         parentNodeData->NodeName.data(),
@@ -973,7 +973,7 @@ void AIModelBase::PrintBrains(Node* n, int indent)
   std::string tabs(indent, '.');
 
   std::string nodeName = n->ToString();
-  DebugLog("%s0x%lX - %s\n", tabs.data(), n, nodeName.data());
+  DebugLog("%s0x%" PRIXLEAST64 " - %s\n", tabs.data(), n, nodeName.data());
 
   ControlNode* cn = dynamic_cast<ControlNode*>(n);
   if (cn)

@@ -9,8 +9,6 @@ class ContainerComponent;
 class ItemComponent : public Component
 {
   public:
-    ItemComponent();
-
     void Update() override;
 
     UseResult Use(GameObject* user);

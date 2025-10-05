@@ -6,10 +6,6 @@
 #include "util.h"
 #include "ai-npc.h"
 
-TraderComponent::TraderComponent()
-{
-}
-
 // =============================================================================
 
 void TraderComponent::Init(TraderRole traderType,

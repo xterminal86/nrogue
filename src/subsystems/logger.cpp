@@ -21,7 +21,8 @@ void Logger::Prepare(bool enabled)
     Print("Log started");
 
 #ifdef DEBUG_BUILD
-    auto str = Util::StringFormat("World seed is 0x%lX", Game::gRng.Seed);
+    auto str = Util::StringFormat("World seed is 0x%" PRIXLEAST64,
+                                   Game::gRng.Seed);
     DebugLog("%s\n\n", str.data());
     Print(str);
 #endif

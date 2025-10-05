@@ -30,6 +30,14 @@ std::unordered_map<uint64_t, GameObject*> GameObjectsById;
 
 namespace
 {
+  //
+  // According to information:
+  //
+  // "Global variables in a single translation unit (source file) are
+  // initialized in the order in which they are defined. "
+  //
+  // So there should be no problem.
+  //
   GID        GidInst;
   RNG        RngInst;
   Blackboard BlackboardInst;
@@ -52,14 +60,6 @@ namespace
 
 namespace Game
 {
-  //
-  // According to information:
-  //
-  // "Global variables in a single translation unit (source file) are
-  // initialized in the order in which they are defined. "
-  //
-  // So there should be no problem.
-  //
   GID               &gGid = GidInst;
   RNG               &gRng = RngInst;
   Blackboard         &gBB = BlackboardInst;
@@ -142,7 +142,14 @@ namespace Game
 
   void Run()
   {
-    gApp.Run();
+    if (gApp.IsAppReady())
+    {
+      gApp.Run();
+    }
+    else
+    {
+      ConsoleLog("Game was not initialized - call gApp.Init() first!");
+    }
   }
 
   void Shutdown()

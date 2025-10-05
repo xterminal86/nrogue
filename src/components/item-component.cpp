@@ -7,10 +7,6 @@
 #include "container-component.h"
 #include "equipment-component.h"
 
-ItemComponent::ItemComponent()
-{
-}
-
 // =============================================================================
 
 void ItemComponent::PrepareAdditional()

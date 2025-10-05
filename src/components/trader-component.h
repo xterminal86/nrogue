@@ -11,8 +11,6 @@ class AINPC;
 class TraderComponent : public Component
 {
   public:
-    TraderComponent();
-
     void Update() override;
 
     void Init(TraderRole traderType, int stockRefreshTurns, int maxItems);

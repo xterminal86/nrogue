@@ -2223,7 +2223,7 @@ ItemsFactory::CreateRandomItem(int x,
       break;
 
     default:
-      DebugLog("CreateRandomItem(): item type %i is not handled!", res);
+      DebugLog("CreateRandomItem(): item type %d is not handled!", res);
       break;
   }
 

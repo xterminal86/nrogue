@@ -64,7 +64,7 @@ bool ContainerComponent::Add(GameObject* object)
       }
     }
 
-    //auto msg = Util::StringFormat("Picked up 0x%lX", object);
+    //auto msg = Util::StringFormat("Picked up 0x%" PRIXLEAST64, object);
     //Game::gLogger.Print(msg);
 
     if (!foundStack)
@@ -135,3 +135,38 @@ const size_t& ContainerComponent::MaxCapacity()
 {
   return _maxCapacity;
 }
+
+#ifdef DEBUG_BUILD
+StringV ContainerComponent::Dump(size_t indent)
+{
+  const std::string spaces(indent, ' ');
+  const std::string spaces2(indent + 2, ' ');
+
+  StringV res;
+
+  res.push_back( I_OBJ_START_NAMED(spaces, typeid(*this).name()) );
+
+  res.push_back( I_BOOL(spaces, CanBeOpened) );
+  res.push_back( I_ULL(spaces, _maxCapacity) );
+
+  if (Contents.empty())
+  {
+    res.push_back( I_EMPTY(spaces, STRINGIFY(Contents)) );
+  }
+  else
+  {
+    res.push_back( I_OBJ_START_NAMED(spaces2, STRINGIFY(Contents)) );
+
+    for (auto& i : Contents)
+    {
+      res.push_back( I_PTR(spaces2, i.get()) );
+    }
+
+    res.push_back( I_OBJ_END(spaces2) );
+  }
+
+  res.push_back( I_OBJ_END(spaces) );
+
+  return res;
+}
+#endif

@@ -185,7 +185,8 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   if (gameStateIndex != GameStates::EXIT_GAME)
   {
     auto str =
-        Util::StringFormat("Changing state: %s [0x%lX] => %s [0x%lX]",
+        Util::StringFormat("Changing state: %s [0x%" PRIXLEAST64 "] => "
+                           "%s [0x%" PRIXLEAST64 "]",
                            typeid(*_currentState).name(),
                            _currentState,
                            typeid(*_gameStates[gameStateIndex].get()).name(),
@@ -195,7 +196,7 @@ void Application::ChangeState(const GameStates& gameStateIndex)
   }
   else
   {
-    auto str = Util::StringFormat("Changing state: %s [0x%lX] "
+    auto str = Util::StringFormat("Changing state: %s [0x%" PRIXLEAST64 "] "
                                   "=> EXIT_GAME [0x0]",
                                   typeid(*_currentState).name(),
                                   _currentState);

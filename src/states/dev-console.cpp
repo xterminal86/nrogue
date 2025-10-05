@@ -1056,7 +1056,7 @@ void DevConsole::InfoHandles()
   for (auto& kvp : _handleNameByType)
   {
     std::string spaces(maxLen - kvp.second.length(), ' ');
-    std::string msg = Util::StringFormat("%s%s = 0x%lX",
+    std::string msg = Util::StringFormat("%s%s = 0x%" PRIXLEAST64,
                                          kvp.second.data(),
                                          spaces.data(),
                                          _objectHandles[kvp.first]);
@@ -1090,7 +1090,7 @@ void DevConsole::CreateDummyActor(const StringV& params)
 
   Game::gMap.CurrentLevel->PlaceActor(actor);
 
-  StdOut(Ok);
+  StdOut(actor->HexAddressString);
 }
 
 // =============================================================================
@@ -1135,7 +1135,7 @@ void DevConsole::CreateMonster(const StringV& params)
   auto go = Game::gMI.CreateMonster(x, y, objType);
   _currentLevel->PlaceActor(go);
 
-  StdOut(Ok);
+  StdOut(go->HexAddressString);
 }
 
 // =============================================================================
@@ -1249,7 +1249,7 @@ void DevConsole::CreateItem(const StringV& params)
 
   _currentLevel->PlaceGameObject(go);
 
-  StdOut(Ok);
+  StdOut(go->HexAddressString);
 }
 
 // =============================================================================
@@ -1288,7 +1288,7 @@ void DevConsole::CreateDummyObject(const StringV& params)
 
   _currentLevel->PlaceGameObject(go);
 
-  StdOut(Ok);
+  StdOut(go->HexAddressString);
 }
 
 // =============================================================================
@@ -1316,7 +1316,7 @@ void DevConsole::CreateChest(const StringV& params)
 
   _currentLevel->PlaceStaticObject(go);
 
-  StdOut(Ok);
+  StdOut(go->HexAddressString);
 }
 
 // =============================================================================
@@ -1359,7 +1359,7 @@ void DevConsole::CreateShrine(const StringV& params)
 
   _currentLevel->PlaceStaticObject(go);
 
-  StdOut(Ok);
+  StdOut(go->HexAddressString);
 }
 
 // =============================================================================
@@ -1383,15 +1383,16 @@ void DevConsole::CreateBreakable(const StringV& params)
 
   static GameObjectsFactory& gof = Game::gGOF;
 
-  GameObject* go = gof.CreateBreakableObjectWithRandomLoot(r.first,
-                                                           r.second,
-                                                           'B',
-                                                           "Breakable",
-                                                           Colors::WoodColor,
-                                                           Colors::BlackColor);
+  GameObject* go =
+      gof.CreateBreakableObjectWithRandomLoot(r.first,
+                                              r.second,
+                                              'B',
+                                              "Breakable",
+                                              Colors::WoodColor,
+                                              Colors::BlackColor);
   _currentLevel->PlaceStaticObject(go);
 
-  StdOut(Ok);
+  StdOut(go->HexAddressString);
 }
 
 // =============================================================================
@@ -1807,7 +1808,10 @@ void DevConsole::PrintTriggers()
 
   for (auto& t : _currentLevel->FinishTurnTriggers)
   {
-    auto str = Util::StringFormat("0x%lX at %i %i", t.get(), t->PosX, t->PosY);
+    auto str = Util::StringFormat("0x%" PRIXLEAST64 " at %i %i",
+                                   t.get(),
+                                   t->PosX,
+                                   t->PosY);
     StdOut(str);
   }
 }
@@ -1822,7 +1826,7 @@ void DevConsole::PrintActors()
 
   for (auto& a : _currentLevel->ActorGameObjects)
   {
-    auto str = Util::StringFormat("0x%lX at %i %i",
+    auto str = Util::StringFormat("0x%" PRIXLEAST64 " at %i %i",
                                   a.get(), a->PosX, a->PosY);
     StdOut(str);
   }
@@ -2177,7 +2181,7 @@ bool DevConsole::ParamIsHex(const std::string& param, std::string& out)
 
 void DevConsole::ReportHandle(ObjectHandleType handleType)
 {
-  std::string msg = Util::StringFormat("%s = 0x%lX",
+  std::string msg = Util::StringFormat("%s = 0x%" PRIXLEAST64,
                                        _handleNameByType.at(handleType).data(),
                                        _objectHandles[handleType]);
   StdOut(msg);

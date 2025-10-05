@@ -2,10 +2,6 @@
 
 #include "game-object.h"
 
-AIComponent::AIComponent()
-{
-}
-
 // =============================================================================
 
 void AIComponent::Update()

@@ -129,7 +129,7 @@ class DevConsole : public GameState
     const std::string ErrCmdNotHandled  = "Command not handled";
     const std::string ErrCantLevelDown  = "Error: current level is 1";
     const std::string ErrEventNotFound  = "!%d: event not found";
-    const std::string ErrNotAHexString  = "Address must be in '0x%lX' format!";
+    const std::string ErrNotAHexString  = "Address must be in '0x%llX' format!";
 
     const std::string Ok = "Ok";
     const std::string Prompt = "> ";
@@ -407,7 +407,8 @@ class DevConsole : public GameState
         _commandNameByType.at(DevConsoleCommand::GET_BY_ADDRESS),
         {
           "Usage: " +
-          _commandNameByType.at(DevConsoleCommand::GET_BY_ADDRESS) + " [0x%lX]",
+          _commandNameByType.at(DevConsoleCommand::GET_BY_ADDRESS) +
+          " [0x%llX]",
           "Get game object by address. "
           "Print debug info if handle already set."
         }
@@ -496,7 +497,7 @@ class DevConsole : public GameState
         {
           "Usage: " +
           _commandNameByType.at(DevConsoleCommand::INSPECT) +
-          " 0x%lX",
+          " 0x%llX",
           "Inspect any object by hex address"
         }
       },

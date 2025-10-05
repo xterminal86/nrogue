@@ -32,7 +32,7 @@ GameObject::GameObject(MapLevelBase* levelOwner)
 
 #ifdef DEBUG_BUILD
   GameObjectsById[_objectId] = this;
-  HexAddressString = Util::StringFormat("0x%lX", this);
+  HexAddressString = Util::StringFormat("0x%" PRIXLEAST64, this);
 
   //
   // If we don't use any bullshit like multiple or virtual inheritance,
@@ -59,7 +59,7 @@ GameObject::GameObject(MapLevelBase *levelOwner,
 #ifdef DEBUG_BUILD
   GameObjectsById[_objectId] = this;
   AnyObjectByAddr[this] = this;
-  HexAddressString = Util::StringFormat("0x%lX", this);
+  HexAddressString = Util::StringFormat("0x%" PRIXLEAST64, this);
 #endif
 }
 
@@ -773,6 +773,11 @@ void GameObject::FinishTurn()
   //
   Game::gMap.UpdateTriggers(TriggerUpdateType::FINISH_TURN);
 
+  //
+  // NOTE: do not call Game::gMap.RemoveDestroyed() to reduce iterations over
+  // collections on actors. We will do this only on player turns.
+  //
+
   CheckPerish();
 }
 
@@ -1392,9 +1397,17 @@ void GameObject::MarkAndCreateRemains()
   bool tileDangerous = Game::gMap.IsTileDangerous({ PosX, PosY });
 
   //
-  // Incorporeal monsters don't leave remains.
+  // If object is already marked as destroyed, don't do anything.
+  // This can happen in situation when fast monster can break a container
+  // twice because he has actions left after his FinishTurn().
+  // Since actual cleanup of destroyed objects only happens on player's
+  // FinishTurn(), there can basically be a "double free" situation.
+  // First time object gets destroyed its items dropped, but during second
+  // attempt items are no longer present in a container (they became nullptr
+  // since they were transferred to the floor).
+  // Incorporeal monsters also don't leave remains (duh).
   //
-  if (!tileDangerous && Corporeal)
+  if (!IsDestroyed && !tileDangerous && Corporeal)
   {
     //
     // Destroying remains should not spawn another remains.
@@ -1403,9 +1416,8 @@ void GameObject::MarkAndCreateRemains()
     {
       auto go = Game::gGOF.CreateRemains(this);
       _levelOwner->PlaceGameObject(go);
+      DropItemsHeld();
     }
-
-    DropItemsHeld();
   }
 
   IsDestroyed = true;

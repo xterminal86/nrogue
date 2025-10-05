@@ -130,12 +130,14 @@ void Trie::Add(const std::string& word)
   /*
   Trie& head = *this;
 
-  printf("this = 0x%llX, head._root = 0x%llX\n", this, &head._root);
+  printf("this = 0x%" PRIXLEAST64 ", head._root = 0x%" PRIXLEAST64 "\n",
+         this, &head._root);
 
   for (char c : word)
   {
     head = head._root[c];
-    printf("head: 0x%llX root: 0x%llX\n", &head, &_root[c]);
+    printf("head: 0x%" PRIXLEAST64 " root: 0x%" PRIXLEAST64 "\n",
+           &head, &_root[c]);
   }
 
   head._root['\0'] = Trie();

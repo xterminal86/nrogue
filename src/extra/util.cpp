@@ -13,6 +13,7 @@
 #include "door-component.h"
 #endif
 
+#include "container-component.h"
 #include "equipment-component.h"
 
 namespace Util
@@ -140,7 +141,7 @@ namespace Util
     if (checker == nullptr || checked == nullptr)
     {
       DebugLog("[WAR] Util::IsObjectInRange() checker: "
-               "[0x%lX] checked: [0x%lX]",
+               "[0x%" PRIXLEAST64 "] checked: [0x%" PRIXLEAST64 "]",
                checker,
                checked);
       return false;
@@ -3285,6 +3286,10 @@ StringV DumpObj(void *ptr)
   else if ( TYPE_OF(ptr, Component) )
   {
     res = ((Component*)ptr)->Dump();
+  }
+  else if ( TYPE_OF(ptr, ContainerComponent) )
+  {
+    res = ((ContainerComponent*)ptr)->Dump();
   }
   else if ( TYPE_OF(ptr, DoorComponent) )
   {

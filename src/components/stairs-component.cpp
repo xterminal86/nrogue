@@ -1,9 +1,5 @@
 #include "stairs-component.h"
 
-StairsComponent::StairsComponent()
-{
-}
-
 // =============================================================================
 
 void StairsComponent::Update()

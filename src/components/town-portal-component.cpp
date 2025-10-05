@@ -3,10 +3,6 @@
 #include "application.h"
 #include "printer.h"
 
-TownPortalComponent::TownPortalComponent()
-{
-}
-
 // =============================================================================
 
 void TownPortalComponent::Update()

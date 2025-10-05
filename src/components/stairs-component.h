@@ -7,8 +7,6 @@
 class StairsComponent : public Component
 {
   public:
-    StairsComponent();
-
     void Update() override;
 
     MapType LeadsTo = MapType::NOWHERE;

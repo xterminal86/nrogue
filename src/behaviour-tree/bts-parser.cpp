@@ -232,7 +232,7 @@ void BTSParser::FormTree(bool printDebug)
       std::string addInfo = (i.Params.size() != 0
                            ? i.Params["p1"].data()
                            : std::string());
-      DebugLog("%s 0x%lX %s (%s)\n",
+      DebugLog("%s 0x%" PRIXLEAST64 " %s (%s)\n",
                tabs.data(),
                &i,
                i.NodeName.data(),
@@ -275,7 +275,8 @@ void BTSParser::FormTree(bool printDebug)
                                 : std::string());
 
           std::string tabs(indent, '.');
-          DebugLog("%s 0x%lX %s (%s) <- 0x%lX %s (%s)\n",
+          DebugLog("%s 0x%" PRIXLEAST64 " %s (%s) <- "
+                   "0x%" PRIXLEAST64 " %s (%s)\n",
                    tabs.data(),
                   &_parsedData[i],
                    _parsedData[i].NodeName.data(),
@@ -326,7 +327,7 @@ void ScriptNode::Print()
 {
   std::string tabs(Indent, ' ');
 
-  DebugLog("%s0x%lX\n", tabs.data(), this);
+  DebugLog("%s0x%" PRIXLEAST64 "\n", tabs.data(), this);
   DebugLog("%sNodeName: %s\n", tabs.data(), NodeName.data());
   DebugLog("%sIndent  : %i\n", tabs.data(), Indent);
   DebugLog("%sParams:\n", tabs.data());

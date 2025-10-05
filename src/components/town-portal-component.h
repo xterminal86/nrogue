@@ -8,8 +8,6 @@
 class TownPortalComponent : public Component
 {
   public:
-    TownPortalComponent();
-
     void Update() override;
 
     void SavePosition(MapType mapToReturn, const Position& posToReturn);

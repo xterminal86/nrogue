@@ -14,8 +14,6 @@
 class AIComponent : public Component
 {
   public:
-    AIComponent();
-
     template <typename T>
     T* AddModel()
     {

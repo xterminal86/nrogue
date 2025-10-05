@@ -8,6 +8,7 @@
 #include <climits>
 #include <iomanip>
 #include <random>
+#include <cinttypes>
 
 #include "globals.h"
 #include "position.h"
@@ -617,13 +618,13 @@ namespace Util
   Util::StringFormat("%s  '%s': %u,", spaces.data(), #value, value)
 
 #define I_PTR(spaces, addr) \
-  Util::StringFormat("%s  '%s': 0x%lX,", spaces.data(), #addr, addr)
+  Util::StringFormat("%s  '%s': 0x%" PRIXLEAST64 ",", spaces.data(), #addr, addr)
 
 #define I_PTR_NAMED(spaces, name, addr) \
-  Util::StringFormat("%s  '%s': 0x%lX,", spaces.data(), name, addr)
+  Util::StringFormat("%s  '%s': 0x%" PRIXLEAST64 ",", spaces.data(), name, addr)
 
 #define I_OBJ_START(spaces, thisPtr) \
-  Util::StringFormat("%s'0x%lX': {", spaces.data(), thisPtr)
+  Util::StringFormat("%s'0x%" PRIXLEAST64 "': {", spaces.data(), thisPtr)
 
 #define I_OBJ_START_NAMED(spaces, name) \
   Util::StringFormat("%s'%s': {", spaces.data(), name)

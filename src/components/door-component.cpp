@@ -7,10 +7,6 @@
 
 #include "container-component.h"
 
-DoorComponent::DoorComponent()
-{
-}
-
 // =============================================================================
 
 void DoorComponent::Update()
