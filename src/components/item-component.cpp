@@ -140,6 +140,7 @@ void ItemComponent::Break(GameObject* itemOwner)
   if (itemOwner == nullptr)
   {
     OwnerGameObject->IsDestroyed = true;
+    OwnerGameObject->Destroy();
     return;
   }
 
@@ -153,6 +154,7 @@ void ItemComponent::Break(GameObject* itemOwner)
   if (cc == nullptr)
   {
     OwnerGameObject->IsDestroyed = true;
+    OwnerGameObject->Destroy();
   }
   else
   {

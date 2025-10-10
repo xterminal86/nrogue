@@ -1,4 +1,4 @@
-#include "game-object.h"
+﻿#include "game-object.h"
 
 #include "application.h"
 #include "blackboard.h"
@@ -25,7 +25,7 @@
 
 GameObject::GameObject(MapLevelBase* levelOwner)
 {
-  _levelOwner = levelOwner;
+  LevelOwner = levelOwner;
   VisibilityRadius.Set(0);
 
   _objectId = Game::gGid.GenerateGlobalId();
@@ -118,16 +118,16 @@ void GameObject::Init(MapLevelBase* levelOwner,
 
   Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
-  _levelOwner = levelOwner;
+  LevelOwner = levelOwner;
 
   //
   // _currentCell->Occupied is not set to true by default,
   // see game-object.h comments for Occupied field.
   //
-  if (_levelOwner != nullptr)
+  if (LevelOwner != nullptr)
   {
-    _currentCell  = _levelOwner->MapArray[PosX][PosY].get();
-    _previousCell = _levelOwner->MapArray[PosX][PosY].get();
+    _currentCell  = LevelOwner->MapArray[PosX][PosY].get();
+    _previousCell = LevelOwner->MapArray[PosX][PosY].get();
   }
 }
 
@@ -165,9 +165,9 @@ bool GameObject::MoveTo(int x, int y, bool force)
     // Unblocking of stairs in such case is done directly in ChangeLevel(),
     // so we just skip this case here.
     //
-    if (PosX < _levelOwner->MapSize.X && PosY < _levelOwner->MapSize.Y)
+    if (PosX < LevelOwner->MapSize.X && PosY < LevelOwner->MapSize.Y)
     {
-      _previousCell = _levelOwner->MapArray[PosX][PosY].get();
+      _previousCell = LevelOwner->MapArray[PosX][PosY].get();
       _previousCell->Occupied = false;
     }
 
@@ -176,7 +176,7 @@ bool GameObject::MoveTo(int x, int y, bool force)
 
     //DebugLog("MoveTo(%i, %i)\n", x, y);
 
-    _currentCell = _levelOwner->MapArray[PosX][PosY].get();
+    _currentCell = LevelOwner->MapArray[PosX][PosY].get();
     _currentCell->Occupied = true;
 
     return true;
@@ -277,8 +277,8 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
     bgColor = Colors::BlackColor;
   }
 
-  Game::gPrnt.PrintFB(PosX + _levelOwner->MapOffsetX,
-                       PosY + _levelOwner->MapOffsetY,
+  Game::gPrnt.PrintFB(PosX + LevelOwner->MapOffsetX,
+                       PosY + LevelOwner->MapOffsetY,
                        (imageOverride != -1)
                        ? imageOverride
                        : Image,
@@ -693,7 +693,7 @@ bool GameObject::IsOnDangerousTile()
 {
   bool res = false;
 
-  _currentCell = _levelOwner->MapArray[PosX][PosY].get();
+  _currentCell = LevelOwner->MapArray[PosX][PosY].get();
 
   switch (_currentCell->Type)
   {
@@ -810,7 +810,7 @@ void GameObject::DropItemsHeld()
     {
       GameObject* obj = i.release();
       ItemComponent* ic = obj->GetComponent<ItemComponent>();
-      ic->OwnerGameObject->SetLevelOwner(Game::gMap.CurrentLevel);
+      ic->OwnerGameObject->LevelOwner = Game::gMap.CurrentLevel;
       ic->Transfer();
       ic->OwnerGameObject->PosX = PosX;
       ic->OwnerGameObject->PosY = PosY;
@@ -1415,12 +1415,13 @@ void GameObject::MarkAndCreateRemains()
     if (Type != GameObjectType::REMAINS)
     {
       auto go = Game::gGOF.CreateRemains(this);
-      _levelOwner->PlaceGameObject(go);
+      LevelOwner->PlaceGameObject(go);
       DropItemsHeld();
     }
   }
 
   IsDestroyed = true;
+  Destroy();
 }
 
 // =============================================================================
@@ -1433,13 +1434,6 @@ IR GameObject::Interact()
   }
 
   return { InteractionResult::UNDEFINED, GameStates::UNDEIFNED };
-}
-
-// =============================================================================
-
-void GameObject::SetLevelOwner(MapLevelBase *levelOwner)
-{
-  _levelOwner = levelOwner;
 }
 
 // =============================================================================
@@ -1712,7 +1706,7 @@ void GameObject::Serialize(NRS& section)
       n[SK::Name].SetString(p->Name);
       n[SK::Pos].SetInt(PosX, 0);
       n[SK::Pos].SetInt(PosY, 1);
-      n[SK::Owner].SetInt((int)_levelOwner->MapType_);
+      n[SK::Owner].SetInt((int)LevelOwner->MapType_);
     }
     break;
 
@@ -1792,6 +1786,8 @@ const GameObject::SaveDataMinimal& GameObject::GetSaveDataMinimal()
   return _sdm;
 }
 
+// =============================================================================
+
 std::string GameObject::SaveDataMinimal::ToStringKey() const
 {
   std::stringstream ss;
@@ -1806,6 +1802,13 @@ std::string GameObject::SaveDataMinimal::ToStringKey() const
      << Mask;
 
   return ss.str();
+}
+
+// =============================================================================
+
+void GameObject::Destroy()
+{
+  Game::gMap.AddToDestroyQueue(this);
 }
 
 // =============================================================================
@@ -1864,7 +1867,7 @@ StringV GameObject::Dump(size_t indent)
   res.push_back( I_ULL(spaces, RemainsOf) );
   res.push_back( I_PTR(spaces, _previousCell) );
   res.push_back( I_PTR(spaces, _currentCell) );
-  res.push_back( I_PTR(spaces, _levelOwner) );
+  res.push_back( I_PTR(spaces, LevelOwner) );
   res.push_back( I_INT(spaces, _healthRegenTurnsCounter) );
   res.push_back( I_INT(spaces, _manaRegenTurnsCounter) );
   res.push_back( I_INT(spaces, _skipTurnsCounter) );

@@ -17,7 +17,7 @@ BTResult TaskFindAndDestroyContainer::Run()
   if (!objId.empty())
   {
     uint64_t objIdInt = std::stoull(objId);
-    GameObjectCollectionType t = GameObjectCollectionType::STATIC_OBJECTS;
+    CollectionType t = CollectionType::STATIC_OBJECTS;
 
     GameObject* object = Game::gMap.FindGameObjectById(objIdInt, t);
     if (object == nullptr)

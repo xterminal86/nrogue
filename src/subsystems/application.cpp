@@ -163,7 +163,6 @@ void Application::Run()
     {
       Game::gLogger.Print("=== PROFILER END ===");
     }
-
     #endif
   }
 }

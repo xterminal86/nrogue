@@ -93,6 +93,7 @@ void LookInputState::HandleInput()
       if (go != nullptr)
       {
         go->IsDestroyed = true;
+        go->Destroy();
         Game::gPrnt.AddMessage("Removed: " + go->ObjectName);
         Game::gMap.RemoveDestroyed();
         Game::gPrnt.DrawExplosion(_cursorPosition, 3);
@@ -112,6 +113,7 @@ void LookInputState::HandleInput()
       {
         GameObject* top = gos[gos.size() - 1];
         top->IsDestroyed = true;
+        top->Destroy();
         Game::gPrnt.AddMessage("Removed: " + top->ObjectName);
         Game::gMap.RemoveDestroyed();
         Game::gPrnt.DrawExplosion(_cursorPosition, 3);
@@ -333,6 +335,7 @@ void LookInputState::Update(bool forceUpdate)
 
     #ifdef DEBUG_BUILD
     PrintDebugInfo();
+    DrawHint();
     #endif
 
     Game::gPrnt.Render();
@@ -517,5 +520,39 @@ void LookInputState::PrintDebugInfo()
                       Printer::kAlignLeft,
                       Colors::WhiteColor,
                       Colors::BlackColor);
+}
+
+void LookInputState::DrawHint()
+{
+  Position startPoint = _playerRef->GetPosition();
+
+  int mox = Game::gMap.CurrentLevel->MapOffsetX;
+  int moy = Game::gMap.CurrentLevel->MapOffsetY;
+
+  _cellsToHighlight.clear();
+
+  const PositionV& line = Util::BresenhamLineFast(startPoint, _cursorPosition);
+
+  Position p;
+  for (auto& i : line)
+  {
+    p.Set(startPoint.X + i.X, startPoint.Y + i.Y);
+
+    if (p == startPoint)
+    {
+      continue;
+    }
+
+    _cellsToHighlight.insert(p);
+  }
+
+  for (auto& p : _cellsToHighlight)
+  {
+    Game::gPrnt.PrintFB(p.X + mox,
+                        p.Y + moy,
+                        '+',
+                        Colors::YellowColor,
+                        Colors::BlackColor);
+  }
 }
 #endif

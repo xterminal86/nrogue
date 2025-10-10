@@ -24,7 +24,7 @@ const StringV& Timer::GetProfilingReport()
     const std::string& ts  = kvp.first;
     const ProfilerData& pd = kvp.second;
 
-    _report[ind] = Util::StringFormat("%s: %.2f", ts.data(), pd.DeltaTime);
+    _report[ind] = Util::StringFormat("%s: %.2f (ms)", ts.data(), pd.DeltaTime);
     ind++;
   }
   #endif

@@ -234,13 +234,9 @@ bool Player::PassByNPC(GameObject* actor)
 
 // =============================================================================
 
-//
-// FIXME: profiler says it takes too long. Remove creation of std::vectors every
-//        call and replace with precomputed.
-//
 void Player::CheckVisibility()
 {
-  Game::gTimer.StartProfiling("  Player::CheckVisibility()");
+  //Game::gTimer.StartProfiling("  Player::CheckVisibility()");
 
   int tw = Printer::TerminalWidth;
   int th = Printer::TerminalHeight;
@@ -252,66 +248,69 @@ void Player::CheckVisibility()
   auto& staticObjects = Game::gMap.CurrentLevel->StaticMapObjects;
 
   //
-  // FIXME: some objects can modify visibility radius
+  // TODO: some objects can modify visibility radius
   //
   int radius = (map[PosX][PosY]->ObjectName == Strings::TileNames::TreeText)
               ? VisibilityRadius.Get() / 4
               : VisibilityRadius.Get();
 
-  auto mapCells = Util::GetRectAroundPoint(PosX,
-                                           PosY,
-                                           tw / 2,
-                                           th / 2,
-                                           Game::gMap.CurrentLevel->MapSize);
+  //
+  // Use MapArray as positions cache.
+  //
+  int twHalf = tw / 2;
+  int thHalf = th / 2;
 
-#ifdef DEBUG_BUILD
-  for (auto& cell : mapCells)
-  {
-    map[cell.X][cell.Y]->Visible = ToggleFogOfWar;
+  int lx = PosX - twHalf;
+  int ly = PosY - thHalf;
+  int hx = PosX + twHalf;
+  int hy = PosY + thHalf;
 
-    if (staticObjects[cell.X][cell.Y] != nullptr)
-    {
-      staticObjects[cell.X][cell.Y]->Visible = ToggleFogOfWar;
-    }
-  }
-#else
-  for (auto& cell : mapCells)
-  {
-    map[cell.X][cell.Y]->Visible = false;
+  const Position& mapSize = Game::gMap.CurrentLevel->MapSize;
 
-    if (staticObjects[cell.X][cell.Y] != nullptr)
-    {
-      staticObjects[cell.X][cell.Y]->Visible = false;
-    }
-  }
-#endif
+  lx = Util::Clamp(lx, 0, mapSize.X - 1);
+  ly = Util::Clamp(ly, 0, mapSize.Y - 1);
+  hx = Util::Clamp(hx, 0, mapSize.X - 1);
+  hy = Util::Clamp(hy, 0, mapSize.Y - 1);
 
   //
-  // Update visibility around player.
+  // Mark all tiles as not visible.
   //
-  for (auto& cell : mapCells)
+  for (int x = lx; x <= hx; x++)
   {
-    double d = Util::LinearDistance(PosX, PosY, cell.X, cell.Y);
-
-    if (d > (double)radius)
+    for (int y = ly; y <= hy; y++)
     {
-      continue;
+      const Position& p = map[x][y]->GetPosition();
+
+      map[p.X][p.Y]->Visible = false;
+
+      if (staticObjects[p.X][p.Y] != nullptr)
+      {
+        #ifdef DEBUG_BUILD
+        staticObjects[p.X][p.Y]->Visible = ToggleFogOfWar;
+        #else
+        staticObjects[p.X][p.Y]->Visible = false;
+        #endif
+      }
     }
+  }
 
-    //
-    // Bresenham driven Field of Vision
-    //
-    // From what I understand it's considered most shitty implementation of one,
-    // but it'll do for now.
-    //
-
-    //auto line = Util::BresenhamLine(PosX, PosY, cell.X, cell.Y);
-    const PositionV& line = Util::BresenhamLineFast(PosX, PosY, cell.X, cell.Y);
+  // FIXME: for some reason this doesn't work: cells that should be visible are
+  // marked as non-visible. Rewrite to shadowcaster I guess.
+  auto losTiles = Util::GetPerimeterCCW(lx, ly, tw - 1, th - 1);
+  for (const Position& p : losTiles)
+  {
+    const PositionV& line = Util::BresenhamLineFast(PosX, PosY, p.X, p.Y);
 
     Position point;
     for (auto& offset : line)
     {
       point.Set(PosX + offset.X, PosY + offset.Y);
+
+      int d = Util::LinearDistance(GetPosition(), point);
+      if (d >= radius)
+      {
+        break;
+      }
 
       if (point.X == PosX && point.Y == PosY)
       {
@@ -331,7 +330,7 @@ void Player::CheckVisibility()
     }
   }
 
-  Game::gTimer.FinishProfiling("  Player::CheckVisibility()");
+  //Game::gTimer.FinishProfiling("  Player::CheckVisibility()");
 }
 
 // =============================================================================
@@ -978,6 +977,7 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
   {
     defender->Attrs.HP.SetMin(0);
     defender->IsDestroyed = true;
+    defender->Destroy();
 
     auto msg = Util::StringFormat("You tear down the %s",
                                   defender->ObjectName.data());

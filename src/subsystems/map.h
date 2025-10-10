@@ -10,16 +10,6 @@
 #include "position.h"
 #include "map-level-base.h"
 
-enum class GameObjectCollectionType
-{
-  STATIC_OBJECTS = 0,
-  GAME_OBJECTS,
-  ACTORS,
-  MAP_ARRAY,
-  TRIGGERS,
-  ALL
-};
-
 class GameObject;
 
 class Map
@@ -38,9 +28,7 @@ class Map
     void PlaceActor(GameObject* actor);
     void PlaceGameObject(GameObject* goToInsert);
 
-    void RemoveDestroyed(
-        GameObjectCollectionType c = GameObjectCollectionType::ALL
-    );
+    void RemoveDestroyed();
 
     void Update();
     void UpdateTriggers(TriggerUpdateType updateType);
@@ -70,7 +58,7 @@ class Map
     GameObject* GetStaticGameObjectAtPosition(int x, int y);
 
     GameObject* FindGameObjectById(const uint64_t& objId,
-                                   GameObjectCollectionType collectionType);
+                                   CollectionType collectionType);
 
     GameObject* GetMapObjectAtPosition(int x, int y);
 
@@ -130,8 +118,12 @@ class Map
 
     void Init();
 
+    void AddToDestroyQueue(GameObject* obj);
+
   private:
     bool _townLoaded = false;
+
+    std::stack<GameObject*> _objectsToDestroy;
 
     std::unordered_map<MapType, std::unique_ptr<MapLevelBase>> _levels;
     std::unordered_map<MapType, bool> _mapVisitFirstTime;

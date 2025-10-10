@@ -257,9 +257,9 @@ void MainState::Update(bool forceUpdate)
                         Colors::BlackColor);
 
     #ifdef DEBUG_BUILD
-    Game::gTimer.StartProfiling("  PrintDebugInfo()");
+    //Game::gTimer.StartProfiling("  PrintDebugInfo()");
     PrintDebugInfo();
-    Game::gTimer.FinishProfiling("  PrintDebugInfo()");
+    //Game::gTimer.FinishProfiling("  PrintDebugInfo()");
     #endif
 
     Game::gPrnt.Render();

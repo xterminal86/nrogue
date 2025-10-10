@@ -74,17 +74,17 @@ void Map::Cleanup()
 
 void Map::Draw()
 {
-  Game::gTimer.StartProfiling("  DrawMapTilesAroundPlayer()");
+  //Game::gTimer.StartProfiling("  DrawMapTilesAroundPlayer()");
   DrawMapTilesAroundPlayer();
-  Game::gTimer.FinishProfiling("  DrawMapTilesAroundPlayer()");
+  //Game::gTimer.FinishProfiling("  DrawMapTilesAroundPlayer()");
 
-  Game::gTimer.StartProfiling("  DrawGameObjects()");
+  //Game::gTimer.StartProfiling("  DrawGameObjects()");
   DrawGameObjects();
-  Game::gTimer.FinishProfiling("  DrawGameObjects()");
+  //Game::gTimer.FinishProfiling("  DrawGameObjects()");
 
-  Game::gTimer.StartProfiling("  DrawActors()");
+  //Game::gTimer.StartProfiling("  DrawActors()");
   DrawActors();
-  Game::gTimer.FinishProfiling("  DrawActors()");
+  //Game::gTimer.FinishProfiling("  DrawActors()");
 }
 
 // =============================================================================
@@ -108,12 +108,12 @@ void Map::LoadLevel(MapType levelToLoad)
 {
   ChangeOrInstantiateLevel(levelToLoad);
 
-  Game::gApp.PlayerInstance.SetLevelOwner(Game::gMap.CurrentLevel);
+  Game::gApp.PlayerInstance.LevelOwner = Game::gMap.CurrentLevel;
   Game::gApp.PlayerInstance.Init();
   Game::gApp.PlayerInstance.MoveTo(1, 1);
   Game::gApp.PlayerInstance.AddExtraItems();
   Game::gApp.PlayerInstance.VisibilityRadius.Set(
-        Game::gMap.CurrentLevel->VisibilityRadius
+    Game::gMap.CurrentLevel->VisibilityRadius
   );
 
   Game::gMap.CurrentLevel->AdjustCamera();
@@ -139,17 +139,17 @@ void Map::Update()
 
   CurrentLevel->TryToSpawnMonsters();
 
-  Game::gTimer.StartProfiling("  UpdateGameObjects()");
+  //Game::gTimer.StartProfiling("  UpdateGameObjects()");
   UpdateGameObjects();
-  Game::gTimer.FinishProfiling("  UpdateGameObjects()");
+  //Game::gTimer.FinishProfiling("  UpdateGameObjects()");
 
-  Game::gTimer.StartProfiling("  UpdateActors()");
+  //Game::gTimer.StartProfiling("  UpdateActors()");
   UpdateActors();
-  Game::gTimer.FinishProfiling("  UpdateActors()");
+  //Game::gTimer.FinishProfiling("  UpdateActors()");
 
-  Game::gTimer.StartProfiling("  UpdateTriggers(GLOBAL)");
+  //Game::gTimer.StartProfiling("  UpdateTriggers(GLOBAL)");
   UpdateTriggers(TriggerUpdateType::GLOBAL);
-  Game::gTimer.FinishProfiling("  UpdateTriggers(GLOBAL)");
+  //Game::gTimer.FinishProfiling("  UpdateTriggers(GLOBAL)");
 
   //
   // If enemy is killed via thorns damage,
@@ -158,9 +158,9 @@ void Map::Update()
   // or we will end up with object that is not alive,
   // but can still be attacked on player turn, killed and gained EXP for it.
   //
-  Game::gTimer.StartProfiling("  RemoveDestroyed()");
+  //Game::gTimer.StartProfiling("  RemoveDestroyed()");
   RemoveDestroyed();
-  Game::gTimer.FinishProfiling("  RemoveDestroyed()");
+  //Game::gTimer.FinishProfiling("  RemoveDestroyed()");
 }
 
 // =============================================================================
@@ -281,6 +281,7 @@ void Map::UpdateTriggers(TriggerUpdateType updateType)
 
 void Map::PlaceActor(GameObject* goToInsert)
 {
+  goToInsert->Layer = GameObjectLayer::ACTORS;
   CurrentLevel->PlaceActor(goToInsert);
 }
 
@@ -288,6 +289,7 @@ void Map::PlaceActor(GameObject* goToInsert)
 
 void Map::PlaceGameObject(GameObject* goToInsert)
 {
+  goToInsert->Layer = GameObjectLayer::GAME_OBJECTS;
   CurrentLevel->PlaceGameObject(goToInsert);
 }
 
@@ -394,29 +396,29 @@ GameObject* Map::GetStaticGameObjectAtPosition(int x, int y)
 // =============================================================================
 
 GameObject* Map::FindGameObjectById(const uint64_t& objId,
-                                    GameObjectCollectionType collectionType)
+                                    CollectionType collectionType)
 {
   GameObject* res = nullptr;
 
   switch (collectionType)
   {
-    case GameObjectCollectionType::MAP_ARRAY:
+    case CollectionType::MAP_ARRAY:
       res = FindInVV(CurrentLevel->MapArray, objId);
       break;
 
-    case GameObjectCollectionType::STATIC_OBJECTS:
+    case CollectionType::STATIC_OBJECTS:
       res = FindInVV(CurrentLevel->StaticMapObjects, objId);
       break;
 
-    case GameObjectCollectionType::GAME_OBJECTS:
+    case CollectionType::GAME_OBJECTS:
       res = FindInV(CurrentLevel->GameObjects, objId);
       break;
 
-    case GameObjectCollectionType::ACTORS:
+    case CollectionType::ACTORS:
       res = FindInV(CurrentLevel->ActorGameObjects, objId);
       break;
 
-    case GameObjectCollectionType::ALL:
+    case CollectionType::ALL:
     {
       res = FindInV(CurrentLevel->ActorGameObjects, objId);
       if (res == nullptr)
@@ -452,33 +454,113 @@ MapLevelBase* Map::GetLevelRefByType(MapType type)
 
 // =============================================================================
 
-void Map::RemoveDestroyed(GameObjectCollectionType c)
+void Map::RemoveDestroyed()
 {
+  auto DeleteFromCollection = [](std::vector<std::unique_ptr<GameObject>>& v,
+                                 uint64_t goId)
+  {
+    for (size_t i = 0; i < v.size(); i++)
+    {
+      if (v[i]->ObjectId() == goId)
+      {
+        v.erase(v.begin() + i);
+        break;
+      }
+    }
+  };
+
+  //
+  // Most of the time deletion doesn't happen, and if it does it's usually one
+  // or two objects, so no need to constantly check collections.
+  //
+  while (!_objectsToDestroy.empty())
+  {
+    GameObject* go = _objectsToDestroy.top();
+
+    MapLevelBase* level = go->LevelOwner;
+
+    switch (go->Layer)
+    {
+      //
+      // MapArray isn't supposed to be destroyed.
+      //
+      case GameObjectLayer::MAP_ARRAY:
+      {
+        DebugLog("MapArray is fundamental! Ignoring destruction.");
+      }
+      break;
+
+      // -----------------------------------------------------------------------
+
+      case GameObjectLayer::STATIC_OBJECTS:
+      {
+        const Position& pos = go->GetPosition();
+        level->StaticMapObjects[pos.X][pos.Y].reset(nullptr);
+      }
+      break;
+
+      // -----------------------------------------------------------------------
+
+      case GameObjectLayer::GAME_OBJECTS:
+      {
+        DeleteFromCollection(level->GameObjects, go->ObjectId());
+      }
+      break;
+
+      // -----------------------------------------------------------------------
+
+      case GameObjectLayer::ACTORS:
+      {
+        DeleteFromCollection(level->ActorGameObjects, go->ObjectId());
+      }
+      break;
+
+      // -----------------------------------------------------------------------
+
+      case GameObjectLayer::TRIGGERS:
+      {
+        DeleteFromCollection(level->GlobalTriggers, go->ObjectId());
+        DeleteFromCollection(level->FinishTurnTriggers, go->ObjectId());
+      }
+      break;
+
+      default:
+      {
+        DebugLog("Unexpected layer %d", (int)go->Layer);
+      }
+      break;
+    }
+
+    _objectsToDestroy.pop();
+  }
+
+  /*
   switch (c)
   {
-    case GameObjectCollectionType::STATIC_OBJECTS:
+    case CollectionType::STATIC_OBJECTS:
       RemoveStaticObjects();
       break;
 
-    case GameObjectCollectionType::GAME_OBJECTS:
+    case CollectionType::GAME_OBJECTS:
       EraseFromCollection(CurrentLevel->GameObjects);
       break;
 
-    case GameObjectCollectionType::ACTORS:
+    case CollectionType::ACTORS:
       EraseFromCollection(CurrentLevel->ActorGameObjects);
       break;
 
-    case GameObjectCollectionType::TRIGGERS:
+    case CollectionType::TRIGGERS:
       RemoveTriggers();
       break;
 
-    case GameObjectCollectionType::ALL:
+    case CollectionType::ALL:
       RemoveStaticObjects();
       EraseFromCollection(CurrentLevel->GameObjects);
       EraseFromCollection(CurrentLevel->ActorGameObjects);
       RemoveTriggers();
       break;
   }
+  */
 }
 
 // =============================================================================
@@ -511,6 +593,10 @@ void Map::RemoveTriggers()
 
 void Map::RemoveStaticObjects()
 {
+  //
+  // This erased objects marked for destroy only in player's range, which is not
+  // correct.
+  //
   int playerX = Game::gApp.PlayerInstance.PosX;
   int playerY = Game::gApp.PlayerInstance.PosY;
 
@@ -552,7 +638,7 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
 
   auto pos = goingDown ? CurrentLevel->LevelStart : CurrentLevel->LevelExit;
 
-  player.SetLevelOwner(CurrentLevel);
+  player.LevelOwner = CurrentLevel;
   player.MoveTo(pos);
   player.VisibilityRadius.Set(CurrentLevel->VisibilityRadius);
 
@@ -648,7 +734,7 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
     actor->MoveTo(tp);
   }
 
-  whoToTeleport->SetLevelOwner(CurrentLevel);
+  whoToTeleport->LevelOwner = CurrentLevel;
   whoToTeleport->MoveTo(teleportTo, forceMove);
 
   if (forPlayer)
@@ -1464,4 +1550,17 @@ void Map::EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list)
                      });
 
   list.erase(newBegin, list.end());
+}
+
+// =============================================================================
+
+void Map::AddToDestroyQueue(GameObject* obj)
+{
+  if (obj == nullptr)
+  {
+    DebugLog("Trying to add to destroy queue nullptr object!");
+    return;
+  }
+
+  _objectsToDestroy.push(obj);
 }

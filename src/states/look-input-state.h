@@ -26,6 +26,9 @@ class LookInputState : public GameState
 
     #ifdef DEBUG_BUILD
     void PrintDebugInfo();
+    void DrawHint();
+
+    std::unordered_set<Position> _cellsToHighlight;
     #endif
 
     Player* _playerRef = nullptr;

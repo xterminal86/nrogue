@@ -116,6 +116,8 @@ void MapLevelBase::PrepareMap()
                            '?',
                            Colors::WhiteColor,
                            Colors::MagentaColor);
+
+      MapArray[x][y]->Layer = GameObjectLayer::MAP_ARRAY;
     }
   }
 }
@@ -195,6 +197,8 @@ void MapLevelBase::PlaceActor(GameObject* actor)
     return;
   }
 
+  actor->Layer = GameObjectLayer::ACTORS;
+
   ActorGameObjects.push_back(std::unique_ptr<GameObject>(actor));
 
   //
@@ -221,6 +225,8 @@ void MapLevelBase::PlaceGameObject(GameObject* goToInsert)
 
     return;
   }
+
+  goToInsert->Layer = GameObjectLayer::GAME_OBJECTS;
 
   GameObjects.push_back(std::unique_ptr<GameObject>(goToInsert));
 
@@ -262,6 +268,7 @@ void MapLevelBase::PlaceStaticObject(int x, int y,
                                                  objectInfo,
                                                  hitPoints,
                                                  type);
+  go->Layer = GameObjectLayer::STATIC_OBJECTS;
   PlaceStaticObject(go);
 }
 
@@ -283,15 +290,17 @@ void MapLevelBase::PlaceStaticObject(GameObject* goToInsert)
   int x = goToInsert->PosX;
   int y = goToInsert->PosY;
 
+  goToInsert->Layer = GameObjectLayer::STATIC_OBJECTS;
+
   StaticMapObjects[x][y].reset(goToInsert);
 }
 
 // =============================================================================
 
-void MapLevelBase::PlaceTrigger(GameObject* trigger,
+void MapLevelBase::PlaceTrigger(GameObject* triggerObject,
                                 TriggerUpdateType updateType)
 {
-  if (trigger == nullptr)
+  if (triggerObject == nullptr)
   {
     #ifdef DEBUG_BUILD
     std::string str = "[WARNING] tried to insert null trigger object!";
@@ -302,14 +311,16 @@ void MapLevelBase::PlaceTrigger(GameObject* trigger,
     return;
   }
 
+  triggerObject->Layer = GameObjectLayer::TRIGGERS;
+
   switch (updateType)
   {
     case TriggerUpdateType::FINISH_TURN:
-      FinishTurnTriggers.push_back(std::unique_ptr<GameObject>(trigger));
+      FinishTurnTriggers.push_back(std::unique_ptr<GameObject>(triggerObject));
       break;
 
     case TriggerUpdateType::GLOBAL:
-      GlobalTriggers.push_back(std::unique_ptr<GameObject>(trigger));
+      GlobalTriggers.push_back(std::unique_ptr<GameObject>(triggerObject));
       break;
   }
 }

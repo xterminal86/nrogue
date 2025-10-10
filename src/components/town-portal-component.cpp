@@ -31,6 +31,7 @@ void TownPortalComponent::TeleportBack()
   Game::gPrnt.AddMessage("The blue portal disappears behind you!");
 
   OwnerGameObject->IsDestroyed = true;
+  OwnerGameObject->Destroy();
 
   Game::gMap.TeleportToExistingLevel(_posToReturn.first,
                                       _posToReturn.second);

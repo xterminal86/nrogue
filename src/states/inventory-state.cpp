@@ -489,7 +489,7 @@ void InventoryState::DropItem(ItemComponent* ic)
   // _levelOwner->MapOffsetX and Y, which might be different
   // or out of bounds on current level.
   //
-  ic->OwnerGameObject->SetLevelOwner(Game::gMap.CurrentLevel);
+  ic->OwnerGameObject->LevelOwner = Game::gMap.CurrentLevel;
 
   std::string objName = ic->Data.IsIdentified
                       ? go->ObjectName
@@ -568,6 +568,7 @@ void InventoryState::SortInventory()
         {
           currentItem->Data.Amount += nextItem->Data.Amount;
           go2->IsDestroyed = true;
+          go2->Destroy();
           shouldCleanup = true;
         }
       }

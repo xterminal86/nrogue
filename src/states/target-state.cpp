@@ -590,7 +590,7 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
       //
       // See comments in InventoryState::DropItem()
       //
-      item->SetLevelOwner(Game::gMap.CurrentLevel);
+      item->LevelOwner = Game::gMap.CurrentLevel;
 
       item->PosX = x;
       item->PosY = y;

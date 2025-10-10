@@ -1,6 +1,8 @@
 #include "globals.h"
 #include "enumerations.h"
 
+#include "util.h"
+
 int main(int argc, char* argv[])
 {
   if (!Game::Init(MapType::TEST_LEVEL))

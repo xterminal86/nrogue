@@ -637,144 +637,34 @@ namespace Util
 
   // ===========================================================================
 
-  std::vector<Position> GetEightPointsAround(const Position& pos,
-                                             const Position& mapSize)
+  const PositionV& GetEightPointsAround(const Position& pos,
+                                        const Position& mapSize)
   {
-    std::vector<Position> result;
+    static PositionV result(8);
+    static Position p;
 
-    int lx = pos.X - 1;
-    int ly = pos.Y - 1;
-    int hx = pos.X + 1;
-    int hy = pos.Y + 1;
+    result.clear();
 
-    for (int x = lx; x <= hx; x++)
+    int32_t lx = pos.X - 1;
+    int32_t ly = pos.Y - 1;
+    int32_t hx = pos.X + 1;
+    int32_t hy = pos.Y + 1;
+
+    for (int32_t x = lx; x <= hx; x++)
     {
-      for (int y = ly; y <= hy; y++)
+      for (int32_t y = ly; y <= hy; y++)
       {
         if (x == pos.X && y == pos.Y)
         {
           continue;
         }
 
-        Position p(x, y);
+        p.Set(x, y);
 
         if (IsInsideMap(p, mapSize))
         {
           result.push_back(p);
         }
-      }
-    }
-
-    return result;
-  }
-
-  // ===========================================================================
-
-  std::vector<Position> GetScreenRect(int x1, int y1, int x2, int y2)
-  {
-    std::vector<Position> result;
-
-    int tw = Printer::TerminalWidth;
-    int th = Printer::TerminalHeight;
-
-    int lx = x1;
-    int ly = y1;
-    int hx = x2;
-    int hy = y2;
-
-    lx = Clamp(lx, 0, tw - 1);
-    ly = Clamp(ly, 0, th - 1);
-    hx = Clamp(hx, 0, tw - 1);
-    hy = Clamp(hy, 0, th - 1);
-
-    for (int x = lx; x <= hx; x++)
-    {
-      for (int y = ly; y <= hy; y++)
-      {
-        Position p(x, y);
-        result.push_back(p);
-      }
-    }
-
-    return result;
-  }
-
-  // ===========================================================================
-
-  std::vector<Position> GetScreenRectPerimeter(int x1, int y1,
-                                               int x2, int y2,
-                                               bool includeCorners)
-  {
-    std::vector<Position> res;
-
-    int tw = Printer::TerminalWidth;
-    int th = Printer::TerminalHeight;
-
-    int lx = x1;
-    int ly = y1;
-    int hx = x2;
-    int hy = y2;
-
-    lx = Clamp(lx, 0, tw - 1);
-    ly = Clamp(ly, 0, th - 1);
-    hx = Clamp(hx, 0, tw - 1);
-    hy = Clamp(hy, 0, th - 1);
-
-    for (int x = lx; x <= hx; x++)
-    {
-      for (int y = ly; y <= hy; y++)
-      {
-        bool condCorners = (x == x1 && y == y1)
-                        || (x == x1 && y == y2)
-                        || (x == x2 && y == y1)
-                        || (x == x2 && y == y2);
-
-        if (!includeCorners && condCorners)
-        {
-          continue;
-        }
-
-        bool cond = (x == x1 || x == x2 || y == y1 || y == y2);
-        if (cond)
-        {
-          res.push_back(Position(x, y));
-        }
-      }
-    }
-
-    return res;
-  }
-
-  // ===========================================================================
-
-  //
-  // Clamps values against terminal size,
-  // useful for drawing GUI related stuff and everything.
-  //
-  std::vector<Position> GetScreenRectAroundPoint(int pointX, int pointY,
-                                                 int rangeX, int rangeY)
-  {
-    std::vector<Position> result;
-
-    int tw = Printer::TerminalWidth;
-    int th = Printer::TerminalHeight;
-
-    int lx = pointX - rangeX;
-    int ly = pointY - rangeY;
-    int hx = pointX + rangeX;
-    int hy = pointY + rangeY;
-
-    lx = Clamp(lx, 0, tw - 1);
-    ly = Clamp(ly, 0, th - 1);
-    hx = Clamp(hx, 0, tw - 1);
-    hy = Clamp(hy, 0, th - 1);
-
-    for (int x = lx; x <= hx; x++)
-    {
-      for (int y = ly; y <= hy; y++)
-      {
-        Position p(x, y);
-        result.push_back(p);
       }
     }
 
@@ -818,13 +708,44 @@ namespace Util
 
   // ===========================================================================
 
-  std::vector<Position> GetPerimeter(int x, int y,
-                                     int w, int h,
-                                     bool includeCorners)
+  std::set<Position> GetPerimeter(int x, int y,
+                                  int w, int h,
+                                  bool includeCorners)
   {
-    std::vector<Position> res;
-    res.reserve(w * h);
+    std::set<Position> res;
 
+    int x1 = x;
+    int x2 = x + w;
+    int y1 = y;
+    int y2 = y + h;
+
+    bool cond = false;
+
+    for (int x = x1; x <= x2; x++)
+    {
+      cond = (x == x1 || x == x2);
+      if (!includeCorners && cond)
+      {
+        continue;
+      }
+
+      res.insert({ x, y1 });
+      res.insert({ x, y2 });
+    }
+
+    for (int y = y1; y <= y2; y++)
+    {
+      cond = (y == y1 || y == y2);
+      if (!includeCorners && cond)
+      {
+        continue;
+      }
+
+      res.insert({ x1, y });
+      res.insert({ x2, y });
+    }
+
+    /*
     int x1 = x;
     int x2 = x + w;
     int y1 = y;
@@ -851,17 +772,104 @@ namespace Util
         }
       }
     }
+    */
 
     return res;
   }
 
   // ===========================================================================
 
-  std::vector<Position> GetPerimeterAroundPoint(int x, int y,
-                                                int w, int h,
-                                                bool includeCorners)
+  PositionV GetPerimeterCCW(int x, int y, int w, int h, bool includeCorners)
   {
-    return GetPerimeter(x - w, y - h, w * 2, h * 2, includeCorners);
+    static std::unordered_set<Position> dups;
+    dups.clear();
+
+    PositionV res;
+    res.reserve(2 * (w + h + 2));
+
+    int x1 = x;
+    int x2 = x + w;
+    int y1 = y;
+    int y2 = y + h;
+
+    bool cond = false;
+
+    Position p;
+
+    // Left to right
+    for (int x = x1; x <= x2; x++)
+    {
+      cond = (x == x1 || x == x2);
+
+      if (!includeCorners && cond)
+      {
+        continue;
+      }
+
+      p.Set(x, y1);
+
+      if (!dups.count(p))
+      {
+        res.push_back(p);
+        dups.insert(p);
+      }
+    }
+
+    // Right to bottom
+    for (int y = y1; y <= y2; y++)
+    {
+      cond = (y == y1 || y == y2);
+      if (!includeCorners && cond)
+      {
+        continue;
+      }
+
+      p.Set(x2, y);
+
+      if (!dups.count(p))
+      {
+        res.push_back(p);
+        dups.insert(p);
+      }
+    }
+
+    // Right to left
+    for (int x = x2; x >= x1; x--)
+    {
+      cond = (x == x2 || x == x1);
+      if (!includeCorners && cond)
+      {
+        continue;
+      }
+
+      p.Set(x, y2);
+
+      if (!dups.count(p))
+      {
+        res.push_back(p);
+        dups.insert(p);
+      }
+    }
+
+    // Bottom to up
+    for (int y = y2; y >= y1; y--)
+    {
+      cond = (y == y2 || y == y1);
+      if (!includeCorners && cond)
+      {
+        continue;
+      }
+
+      p.Set(x1, y);
+
+      if (!dups.count(p))
+      {
+        res.push_back(p);
+        dups.insert(p);
+      }
+    }
+
+    return res;
   }
 
   // ===========================================================================
@@ -2798,8 +2806,8 @@ namespace Util
   {
     Position pos = { -1, -1 };
 
-    auto rect = GetEightPointsAround(aroundThis,
-                                     Game::gMap.CurrentLevel->MapSize);
+    PositionV rect = GetEightPointsAround(aroundThis,
+                                          Game::gMap.CurrentLevel->MapSize);
 
     bool outOfRange = false;
 

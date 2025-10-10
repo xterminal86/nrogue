@@ -29,6 +29,7 @@ void TriggerComponent::Update()
             _data.Handler();
             _once = true;
             OwnerGameObject->IsDestroyed = true;
+            OwnerGameObject->Destroy();
           }
         }
         else

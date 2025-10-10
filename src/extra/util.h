@@ -160,22 +160,8 @@ namespace Util
   extern double LinearDistance(int x1, int y1, int x2, int y2);
   extern double LinearDistance(const Position& s, const Position& e);
 
-  extern std::vector<Position> GetEightPointsAround(const Position& pos,
-                                                    const Position& mapSize);
-
-  extern std::vector<Position> GetScreenRect(int x1, int y1, int x2, int y2);
-
-  extern std::vector<Position>
-  GetScreenRectPerimeter(int x1,
-                         int y1,
-                         int x2,
-                         int y2,
-                         bool includeCorners = true);
-
-  extern std::vector<Position> GetScreenRectAroundPoint(int pointX,
-                                                        int pointY,
-                                                        int rangeX,
-                                                        int rangeY);
+  extern const PositionV& GetEightPointsAround(const Position& pos,
+                                               const Position& mapSize);
 
   extern std::vector<Position> GetRectAroundPoint(int pointX,
                                                   int pointY,
@@ -183,18 +169,17 @@ namespace Util
                                                   int rangeY,
                                                   const Position& mapSize);
 
-  extern std::vector<Position> GetPerimeter(int x,
-                                            int y,
-                                            int w,
-                                            int h,
-                                            bool includeCorners = true);
+  extern std::set<Position> GetPerimeter(int x,
+                                         int y,
+                                         int w,
+                                         int h,
+                                         bool includeCorners = true);
 
-  extern std::vector<Position>
-  GetPerimeterAroundPoint(int x,
-                          int y,
-                          int w,
-                          int h,
-                          bool includeCorners = true);
+  extern PositionV GetPerimeterCCW(int x,
+                                   int y,
+                                   int w,
+                                   int h,
+                                   bool includeCorners = true);
 
   extern std::vector<GameObject*> GetActorsInRange(GameObject* from, int range);
   extern std::vector<GameObject*> GetContainersInRange(GameObject* from,

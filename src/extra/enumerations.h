@@ -1,6 +1,26 @@
 #ifndef ENUMERATIONS_H
 #define ENUMERATIONS_H
 
+enum class GameObjectLayer
+{
+    UNDEFINED = -1
+  , STATIC_OBJECTS = 0
+  , GAME_OBJECTS
+  , ACTORS
+  , MAP_ARRAY
+  , TRIGGERS
+};
+
+enum class CollectionType
+{
+    STATIC_OBJECTS = 0
+  , GAME_OBJECTS
+  , ACTORS
+  , MAP_ARRAY
+  , TRIGGERS
+  , ALL
+};
+
 //
 // Used in FeatureRooms generator.
 //

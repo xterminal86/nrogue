@@ -23,7 +23,7 @@ class MapLevelBase
                            const GameObjectInfo& objectInfo,
                            int hitPoints = -1,
                            GameObjectType type = GameObjectType::HARMLESS);
-    void PlaceTrigger(GameObject* trigger, TriggerUpdateType updateType);
+    void PlaceTrigger(GameObject* triggerObject, TriggerUpdateType updateType);
     void TryToSpawnMonsters();
 
     virtual void PrepareMap();
@@ -244,6 +244,8 @@ class MapLevelBase
                    bool isOpen = false,
                    size_t openedBy = GlobalConstants::OpenedByAnyone,
                    const std::string& objName = std::string());
+
+    friend class Map;
 
 #ifdef DEBUG_BUILD
     template <typename Collection>

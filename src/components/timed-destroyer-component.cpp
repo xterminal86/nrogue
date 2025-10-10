@@ -26,5 +26,6 @@ void TimedDestroyerComponent::Update()
     }
 
     OwnerGameObject->IsDestroyed = true;
+    OwnerGameObject->Destroy();
   }
 }

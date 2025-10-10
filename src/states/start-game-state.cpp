@@ -24,7 +24,7 @@ void StartGameState::HandleInput()
   // depends on player hunger rate which is determined by selected class)
   // so we need to initialize player first.
   //
-  playerRef.SetLevelOwner(curLvl);
+  playerRef.LevelOwner = curLvl;
   playerRef.Init();
   playerRef.MoveTo({ 5, 8 });
   playerRef.AddExtraItems();

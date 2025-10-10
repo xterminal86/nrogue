@@ -105,8 +105,8 @@ std::string BresenhamCached::GetStats()
      << "Load factor        : " << _cache.load_factor()      << "\n"
      << "Max load factor    : " << _cache.max_load_factor()  << "\n"
      << "True line capacity : " << _trueLine.capacity()      << "\n"
-     << "Cache hits         : " << _cacheHits                 << "\n"
-     << "Cache misses       : " << _cacheMisses               << "\n";
+     << "Cache hits         : " << _cacheHits                << "\n"
+     << "Cache misses       : " << _cacheMisses              << "\n";
 
   size_t footprint = 0;
 

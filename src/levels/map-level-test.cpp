@@ -159,6 +159,16 @@ void MapLevelTest::CreateLevel()
               Strings::TileNames::RocksText);
   }
 
+  for (int x = 5; x <= 10; x++)
+  {
+    PlaceWall(x,
+              5,
+              '#',
+              Colors::WhiteColor,
+              Colors::ShadesOfGrey::Six,
+              Strings::TileNames::RocksText);
+  }
+
   CreateStuff();
 }
 

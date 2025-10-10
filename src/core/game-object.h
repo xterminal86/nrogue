@@ -39,8 +39,6 @@ class GameObject
                const uint32_t& htmlColor,
                const uint32_t& bgColor = Colors::BlackColor);
 
-    void SetLevelOwner(MapLevelBase* levelOwner);
-
     IR Interact();
 
     void Init(MapLevelBase* levelOwner,
@@ -275,6 +273,8 @@ class GameObject
 
     GameObjectType Type = GameObjectType::HARMLESS;
 
+    GameObjectLayer Layer = GameObjectLayer::UNDEFINED;
+
     //
     // For handling of reanimation of monsters, we need to
     // check what object created current remains game object
@@ -305,6 +305,15 @@ class GameObject
 
     const SaveDataMinimal& GetSaveDataMinimal();
 
+    void Destroy();
+
+    //
+    // Level this object belongs to.
+    // Needed for correct drawing on the screen.
+    // (see comments in InventoryState::DropItem() for details)
+    //
+    MapLevelBase* LevelOwner = nullptr;
+
   protected:
     std::unordered_map<size_t, std::unique_ptr<Component>> _components;
     std::unordered_map<uint64_t, std::vector<ItemBonusStruct>> _activeEffects;
@@ -315,13 +324,6 @@ class GameObject
     SaveDataMinimal _sdm;
 
     Position _position;
-
-    //
-    // Level this object belongs to.
-    // Needed for correct drawing on the screen.
-    // (see comments in InventoryState::DropItem() for details)
-    //
-    MapLevelBase* _levelOwner = nullptr;
 
     int _healthRegenTurnsCounter = 0;
     int _manaRegenTurnsCounter   = 0;

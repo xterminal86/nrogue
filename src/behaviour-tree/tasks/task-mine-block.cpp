@@ -79,6 +79,8 @@ BTResult TaskMineBlock::Run()
   curLvl->StaticMapObjects[found.X][found.Y]->Attrs.HP.SetMin(0);
   curLvl->StaticMapObjects[found.X][found.Y]->IsDestroyed = true;
 
+  curLvl->StaticMapObjects[found.X][found.Y]->Destroy();
+
   _objectToControl->FinishTurn();
 
   return BTResult::Success;
