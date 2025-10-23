@@ -1640,7 +1640,7 @@ void DevConsole::RemoveObject(const StringV& params)
 
   if (go != nullptr)
   {
-    go->IsDestroyed = true;
+    go->Destroy();
   }
 
   Game::gMap.RemoveDestroyed();

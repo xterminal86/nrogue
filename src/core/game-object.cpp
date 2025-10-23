@@ -1420,7 +1420,6 @@ void GameObject::MarkAndCreateRemains()
     }
   }
 
-  IsDestroyed = true;
   Destroy();
 }
 
@@ -1808,6 +1807,8 @@ std::string GameObject::SaveDataMinimal::ToStringKey() const
 
 void GameObject::Destroy()
 {
+  Attrs.HP.SetMin(0);
+  IsDestroyed = true;
   Game::gMap.AddToDestroyQueue(this);
 }
 

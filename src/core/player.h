@@ -130,6 +130,9 @@ class Player : public GameObject
 
     std::vector<std::string> GetPrettyLevelUpText();
 
+    void BresenhamLoS(int lx, int ly, int hx, int hy);
+    void ShadowcasterLoS();
+
     //
     // std::map automatically sorts by key, so in case of string key,
     // it's lexicographical sorting.

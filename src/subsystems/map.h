@@ -139,8 +139,6 @@ class Map
     void UpdateActors();
 
     void RemoveTriggers();
-    void RemoveStaticObjects();
-    void EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list);
 
     std::pair<uint32_t, uint32_t> GetActorColors(GameObject* actor);
 

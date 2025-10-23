@@ -165,8 +165,8 @@ class GameObject
     //
 
     //
-    // NOTE: set manually for NPCs during creation via GameObject::Move(),
-    // because some game objects can be stepped on (e.g. bench, money etc)
+    // NOTE: set manually for actors during creation and via GameObject::Move(),
+    // to differentiate between cell's Blocking flag and being blocked by actor.
     //
     bool Occupied = false;
 

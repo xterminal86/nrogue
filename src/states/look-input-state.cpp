@@ -92,7 +92,6 @@ void LookInputState::HandleInput()
                                                      _cursorPosition.Y);
       if (go != nullptr)
       {
-        go->IsDestroyed = true;
         go->Destroy();
         Game::gPrnt.AddMessage("Removed: " + go->ObjectName);
         Game::gMap.RemoveDestroyed();
@@ -112,7 +111,6 @@ void LookInputState::HandleInput()
       if (!gos.empty())
       {
         GameObject* top = gos[gos.size() - 1];
-        top->IsDestroyed = true;
         top->Destroy();
         Game::gPrnt.AddMessage("Removed: " + top->ObjectName);
         Game::gMap.RemoveDestroyed();

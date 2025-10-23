@@ -470,8 +470,8 @@ void Map::RemoveDestroyed()
   };
 
   //
-  // Most of the time deletion doesn't happen, and if it does it's usually one
-  // or two objects, so no need to constantly check collections.
+  // Most of the time objects don't get deleted, and if they do it's usually not
+  // in large numbers.
   //
   while (!_objectsToDestroy.empty())
   {
@@ -494,6 +494,7 @@ void Map::RemoveDestroyed()
 
       case GameObjectLayer::STATIC_OBJECTS:
       {
+        // Static objects don't set Occupied flag, so don't reset it.
         const Position& pos = go->GetPosition();
         level->StaticMapObjects[pos.X][pos.Y].reset(nullptr);
       }
@@ -511,6 +512,8 @@ void Map::RemoveDestroyed()
 
       case GameObjectLayer::ACTORS:
       {
+        const Position& pos = go->GetPosition();
+        level->MapArray[pos.X][pos.Y]->Occupied = false;
         DeleteFromCollection(level->ActorGameObjects, go->ObjectId());
       }
       break;
@@ -519,8 +522,8 @@ void Map::RemoveDestroyed()
 
       case GameObjectLayer::TRIGGERS:
       {
-        DeleteFromCollection(level->GlobalTriggers, go->ObjectId());
         DeleteFromCollection(level->FinishTurnTriggers, go->ObjectId());
+        DeleteFromCollection(level->GlobalTriggers, go->ObjectId());
       }
       break;
 
@@ -532,94 +535,6 @@ void Map::RemoveDestroyed()
     }
 
     _objectsToDestroy.pop();
-  }
-
-  /*
-  switch (c)
-  {
-    case CollectionType::STATIC_OBJECTS:
-      RemoveStaticObjects();
-      break;
-
-    case CollectionType::GAME_OBJECTS:
-      EraseFromCollection(CurrentLevel->GameObjects);
-      break;
-
-    case CollectionType::ACTORS:
-      EraseFromCollection(CurrentLevel->ActorGameObjects);
-      break;
-
-    case CollectionType::TRIGGERS:
-      RemoveTriggers();
-      break;
-
-    case CollectionType::ALL:
-      RemoveStaticObjects();
-      EraseFromCollection(CurrentLevel->GameObjects);
-      EraseFromCollection(CurrentLevel->ActorGameObjects);
-      RemoveTriggers();
-      break;
-  }
-  */
-}
-
-// =============================================================================
-
-void Map::RemoveTriggers()
-{
-  auto RemoveFromCollecton =
-  [this](std::vector<std::unique_ptr<GameObject>>& collection)
-  {
-    auto newBegin = std::remove_if(collection.begin(),
-                                   collection.end(),
-    [this](const std::unique_ptr<GameObject>& go)
-    {
-      if (go != nullptr && go->IsDestroyed)
-      {
-        return true;
-      }
-
-      return false;
-    });
-
-    collection.erase(newBegin, collection.end());
-  };
-
-  RemoveFromCollecton(CurrentLevel->FinishTurnTriggers);
-  RemoveFromCollecton(CurrentLevel->GlobalTriggers);
-}
-
-// =============================================================================
-
-void Map::RemoveStaticObjects()
-{
-  //
-  // This erased objects marked for destroy only in player's range, which is not
-  // correct.
-  //
-  int playerX = Game::gApp.PlayerInstance.PosX;
-  int playerY = Game::gApp.PlayerInstance.PosY;
-
-  int tw = Printer::TerminalWidth;
-  int th = Printer::TerminalHeight;
-
-  auto mapCells = Util::GetRectAroundPoint(playerX,
-                                           playerY,
-                                           tw / 2,
-                                           th / 2,
-                                           CurrentLevel->MapSize);
-  for (auto& cell : mapCells)
-  {
-    //
-    // Static objects are considered to be occupying the cell by the fact
-    // of their presence, i.e. if there is no static object present,
-    // cell isn't occupied.
-    //
-    if (CurrentLevel->StaticMapObjects[cell.X][cell.Y] != nullptr
-     && CurrentLevel->StaticMapObjects[cell.X][cell.Y]->IsDestroyed)
-    {
-      CurrentLevel->StaticMapObjects[cell.X][cell.Y].reset(nullptr);
-    }
   }
 }
 
@@ -1493,63 +1408,6 @@ std::pair<uint32_t, uint32_t> Map::GetActorColors(GameObject* actor)
   }
 
   return { fgColor, bgColor };
-}
-
-// =============================================================================
-
-void Map::EraseFromCollection(std::vector<std::unique_ptr<GameObject>>& list)
-{
-  //
-  // It's dangerous to iterate over collection from start to end using plain for
-  // loop to remove elements that satisfy certain condition, because it is
-  // possible to skip some of them if such elements happen to be adjacent.
-  // E.g.:
-  //
-  // i: 0  1  2  3
-  //  { 1, 2, 2, 4 }
-  //
-  // If we were to erase every element that equals 2 using for loop,
-  // we'll get these iterations:
-  //
-  // i = 0 -> 1
-  // i = 1 -> 2 -> erase() -> now elements are shifted and are now like this:
-  //
-  // i: 0  1  2
-  //   {1, 2, 4 }
-  //
-  // Next index is 2 which equals to element 4, thus we missed another 2.
-  //
-  // The recommended way is to use so-called "erase-remove" idiom by utilizing
-  // STL algorithms.
-  // Or use ye olde C-style way by iterating over collection backwards.
-  //
-  auto newBegin =
-      std::remove_if(list.begin(),
-                     list.end(),
-                     [this](const std::unique_ptr<GameObject>& go)
-                     {
-                       if (go != nullptr && go->IsDestroyed)
-                       {
-                         int x = go->PosX;
-                         int y = go->PosY;
-
-                         //
-                         // GameObjects vector may contain just items or
-                         // blocking objects with logic like shrines.
-                         // So to handle both cases, we just set Occupied flag
-                         // to false, since if it was a simple item it wasn't
-                         // blocking in the first place, but if it was something
-                         // blocking, the cell should become unblocked now.
-                         //
-                         CurrentLevel->MapArray[x][y]->Occupied = false;
-
-                         return true;
-                       }
-
-                       return false;
-                     });
-
-  list.erase(newBegin, list.end());
 }
 
 // =============================================================================

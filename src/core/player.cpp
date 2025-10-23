@@ -248,13 +248,6 @@ void Player::CheckVisibility()
   auto& staticObjects = Game::gMap.CurrentLevel->StaticMapObjects;
 
   //
-  // TODO: some objects can modify visibility radius
-  //
-  int radius = (map[PosX][PosY]->ObjectName == Strings::TileNames::TreeText)
-              ? VisibilityRadius.Get() / 4
-              : VisibilityRadius.Get();
-
-  //
   // Use MapArray as positions cache.
   //
   int twHalf = tw / 2;
@@ -294,6 +287,29 @@ void Player::CheckVisibility()
     }
   }
 
+  BresenhamLoS(lx, ly, hx, hy);
+  //ShadowcasterLoS();
+
+  //Game::gTimer.FinishProfiling("  Player::CheckVisibility()");
+}
+
+// =============================================================================
+
+void Player::BresenhamLoS(int lx, int ly, int hx, int hy)
+{
+  auto& map = Game::gMap.CurrentLevel->MapArray;
+  auto& staticObjects = Game::gMap.CurrentLevel->StaticMapObjects;
+
+  //
+  // TODO: some objects can modify visibility radius
+  //
+  int radius = (map[PosX][PosY]->ObjectName == Strings::TileNames::TreeText)
+              ? VisibilityRadius.Get() / 4
+              : VisibilityRadius.Get();
+
+  int tw = Printer::TerminalWidth;
+  int th = Printer::TerminalHeight;
+
   // FIXME: for some reason this doesn't work: cells that should be visible are
   // marked as non-visible. Rewrite to shadowcaster I guess.
   auto losTiles = Util::GetPerimeterCCW(lx, ly, tw - 1, th - 1);
@@ -329,8 +345,13 @@ void Player::CheckVisibility()
       }
     }
   }
+}
 
-  //Game::gTimer.FinishProfiling("  Player::CheckVisibility()");
+// =============================================================================
+
+void Player::ShadowcasterLoS()
+{
+  // TODO
 }
 
 // =============================================================================
@@ -975,8 +996,6 @@ void Player::ProcessMeleeAttack(ItemComponent* weapon,
 
   if (shouldTearDownWall)
   {
-    defender->Attrs.HP.SetMin(0);
-    defender->IsDestroyed = true;
     defender->Destroy();
 
     auto msg = Util::StringFormat("You tear down the %s",

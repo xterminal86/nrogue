@@ -915,7 +915,7 @@ void DGBase::TransformRooms(const TransformedRoomsWeights& weights)
 {
   if (_emptyRooms.empty())
   {
-    DebugLog("no empty rooms - nothing to transform!");
+    DebugLog("no empty rooms, nothing to transform");
     return;
   }
 

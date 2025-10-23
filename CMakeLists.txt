@@ -156,7 +156,12 @@ if (USE_SDL)
   include_directories(${SDL2_INCLUDE_DIRS})
 
   if (WIN32)
-    target_link_libraries(${TARGET_NAME} ${MINGW32_LIBRARY} ${SDL2_LIBRARIES})
+    target_link_libraries(
+      ${TARGET_NAME}
+      ${MINGW32_LIBRARY}
+      ${SDL2MAIN_LIBRARY}
+      ${SDL2_LIBRARY}
+    )
   else()
     target_link_libraries(${TARGET_NAME} ${SDL2_LIBRARIES})
   endif()

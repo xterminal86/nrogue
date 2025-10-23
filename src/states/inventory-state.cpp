@@ -567,7 +567,6 @@ void InventoryState::SortInventory()
          && currentItem->Data.ItemTypeHash == nextItem->Data.ItemTypeHash)
         {
           currentItem->Data.Amount += nextItem->Data.Amount;
-          go2->IsDestroyed = true;
           go2->Destroy();
           shouldCleanup = true;
         }
