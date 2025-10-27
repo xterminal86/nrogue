@@ -695,3 +695,75 @@ std::unordered_map<ItemBonusType, int> ItemComponent::CountAllStatBonuses()
 
   return allStatModifiers;
 }
+
+#ifdef DEBUG_BUILD
+StringV ItemComponent::Dump(size_t indent)
+{
+  const std::string spaces(indent, ' ');
+
+  StringV res;
+
+  res.push_back( I_OBJ_START_NAMED(spaces, typeid(*this).name()) );
+
+  StringV base = Component::Dump(indent + 2);
+  for (auto& l : base)
+  {
+    res.push_back(l);
+  }
+
+  res.push_back( I_PTR_NAMED(spaces, "addr", this) );
+  res.push_back( I_INT(spaces, Data.ItemType_) );
+  res.push_back( I_INT(spaces, Data.Prefix) );
+  res.push_back( I_INT(spaces, Data.Rarity) );
+  res.push_back( I_INT(spaces, Data.ItemQuality_) );
+  res.push_back( I_INT(spaces, Data.EqCategory) );
+
+  auto lines = Data.WandCapacity.Dump("WandCapacity", indent + 2);
+  for (auto& l : lines)
+  {
+    res.push_back(l);
+  }
+
+  lines = Data.Durability.Dump("Durability", indent + 2);
+  for (auto& l : lines)
+  {
+    res.push_back(l);
+  }
+
+  lines = Data.Damage.Dump("Damage", indent + 2);
+  for (auto& l : lines)
+  {
+    res.push_back(l);
+  }
+
+  lines = Data.SpellHeld.Dump("SpellHeld", indent + 2);
+  for (auto& l : lines)
+  {
+    res.push_back(l);
+  }
+
+  res.push_back( I_INT(spaces, Data.WandMaterial) );
+  res.push_back( I_INT(spaces, Data.RangedWeaponType_) );
+  res.push_back( I_INT(spaces, Data.AmmoType) );
+  res.push_back( I_INT(spaces, Data.WeaponType_) );
+  res.push_back( I_INT(spaces, Data.PotionType_) );
+  res.push_back( I_INT(spaces, Data.GeneratedAfter) );
+
+  res.push_back( I_BOOL(spaces, Data.IsEquipped) );
+  res.push_back( I_BOOL(spaces, Data.IsStackable) );
+  res.push_back( I_BOOL(spaces, Data.IsIdentified) );
+  res.push_back( I_BOOL(spaces, Data.IsPrefixDiscovered) );
+  res.push_back( I_BOOL(spaces, Data.IsChargeable) );
+  res.push_back( I_BOOL(spaces, Data.IsBurnable) );
+  res.push_back( I_BOOL(spaces, Data.IsImportant) );
+
+  res.push_back( I_INT(spaces, Data.Amount) );
+  res.push_back( I_INT(spaces, Data.Range) );
+  res.push_back( I_INT(spaces, Data.Cost) );
+  res.push_back( I_INT_NAMED(spaces, "Cost (real)", Data.GetCost()) );
+
+  res.push_back( I_OBJ_END(spaces) );
+
+  return res;
+}
+#endif

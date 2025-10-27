@@ -175,11 +175,11 @@ namespace Util
                                          int h,
                                          bool includeCorners = true);
 
-  extern PositionV GetPerimeterCCW(int x,
-                                   int y,
-                                   int w,
-                                   int h,
-                                   bool includeCorners = true);
+  extern PositionV GetPerimeterCW(int x,
+                                  int y,
+                                  int w,
+                                  int h,
+                                  bool includeCorners = true);
 
   extern std::vector<GameObject*> GetActorsInRange(GameObject* from, int range);
   extern std::vector<GameObject*> GetContainersInRange(GameObject* from,
@@ -599,8 +599,11 @@ namespace Util
 #define I_INT(spaces, value) \
   Util::StringFormat("%s  '%s': %d,", spaces.data(), #value, value)
 
+#define I_INT_NAMED(spaces, name, value) \
+  Util::StringFormat("%s  '%s': %d,", spaces.data(), name, value)
+
 #define I_BOOL(spaces, value) \
-  Util::StringFormat("%s  '%s': %u,", spaces.data(), #value, value)
+  Util::StringFormat("%s  '%s': '%s',", spaces.data(), #value, (value == 0) ? "N" : "Y")
 
 #define I_PTR(spaces, addr) \
   Util::StringFormat("%s  '%s': 0x%" PRIXLEAST64 ",", spaces.data(), #addr, addr)

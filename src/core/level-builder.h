@@ -81,10 +81,7 @@ class LevelBuilder
 
     CharV2 MapRaw;
 
-    //
-    // Cannot replace with unordered_map bc of key hash.
-    //
-    std::map<Position, ShrineType>& ShrinesByPosition();
+    std::unordered_map<Position, ShrineType>& ShrinesByPosition();
 
   private:
     std::unique_ptr<DGBase> _generator;

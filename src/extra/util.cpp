@@ -779,7 +779,7 @@ namespace Util
 
   // ===========================================================================
 
-  PositionV GetPerimeterCCW(int x, int y, int w, int h, bool includeCorners)
+  PositionV GetPerimeterCW(int x, int y, int w, int h, bool includeCorners)
   {
     static std::unordered_set<Position> dups;
     dups.clear();
@@ -3284,7 +3284,7 @@ StringV DumpObj(void *ptr)
 
   //
   // This works only for polymorphic types, but usually everything has at least
-  // virtual destructor. Downside of this is that you must override Dump()
+  // virtual destructor. The downside of this is that you must override Dump()
   // method for every class you want, otherwise it will be skipped here.
   //
   if ( TYPE_OF(ptr, GameObject) )
@@ -3306,6 +3306,14 @@ StringV DumpObj(void *ptr)
   else if ( TYPE_OF(ptr, Player) )
   {
     res = ((Player*)ptr)->Dump();
+  }
+  else if ( TYPE_OF(ptr, ItemComponent) )
+  {
+    res = ((ItemComponent*)ptr)->Dump();
+  }
+  else if ( TYPE_OF(ptr, EquipmentComponent) )
+  {
+    res = ((EquipmentComponent*)ptr)->Dump();
   }
 
   return res;

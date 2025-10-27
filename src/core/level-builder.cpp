@@ -234,7 +234,7 @@ void LevelBuilder::LogPrintMapRaw()
 
 // =============================================================================
 
-std::map<Position, ShrineType>& LevelBuilder::ShrinesByPosition()
+std::unordered_map<Position, ShrineType>& LevelBuilder::ShrinesByPosition()
 {
   return _generator->ShrinesByPosition;
 }

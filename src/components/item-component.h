@@ -21,6 +21,10 @@ class ItemComponent : public Component
 
     ItemData Data;
 
+#ifdef DEBUG_BUILD
+    StringV Dump(size_t indent = 0) override;
+#endif
+
   protected:
     void PrepareAdditional() override;
 

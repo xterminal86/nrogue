@@ -316,3 +316,54 @@ bool EquipmentComponent::IsThisPlayer()
 void EquipmentComponent::Update()
 {
 }
+
+#ifdef DEBUG_BUILD
+StringV EquipmentComponent::Dump(size_t indent)
+{
+  const std::string spaces(indent, ' ');
+
+  StringV res;
+
+  res.push_back( I_OBJ_START_NAMED(spaces, typeid(*this).name()) );
+
+  StringV base = Component::Dump(indent + 2);
+  for (auto& l : base)
+  {
+    res.push_back(l);
+  }
+
+  const std::unordered_map<EquipmentCategory, std::string> reverseMap =
+  {
+    { EquipmentCategory::NOT_EQUIPPABLE, "NOT_EQUIPPABLE" }
+  , { EquipmentCategory::HEAD          , "HEAD"           }
+  , { EquipmentCategory::NECK          , "NECK"           }
+  , { EquipmentCategory::TORSO         , "TORSO"          }
+  , { EquipmentCategory::BOOTS         , "BOOTS"          }
+  , { EquipmentCategory::WEAPON        , "WEAPON"         }
+  , { EquipmentCategory::SHIELD        , "SHIELD"         }
+  , { EquipmentCategory::RING          , "RING"           }
+  };
+
+  for (auto& kvp : EquipmentByCategory)
+  {
+    EquipmentCategory cat = kvp.first;
+    std::string list = "[ ";
+
+    for (ItemComponent* c : kvp.second)
+    {
+      list += Util::StringFormat("0x%" PRIXLEAST64 ", ", c);
+    }
+
+    list.pop_back();
+    list.pop_back();
+
+    list += " ]";
+
+    res.push_back( I_STR_NAMED(spaces, reverseMap.at(cat).data(), list) );
+  }
+
+  res.push_back( I_OBJ_END(spaces) );
+
+  return res;
+}
+#endif

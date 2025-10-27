@@ -130,7 +130,7 @@ class Player : public GameObject
 
     std::vector<std::string> GetPrettyLevelUpText();
 
-    void BresenhamLoS(int lx, int ly, int hx, int hy);
+    void BresenhamLoS(int lx, int ly);
     void ShadowcasterLoS();
 
     //

@@ -11,6 +11,10 @@ struct SpellInfo
   int SpellBaseCost = 0;
   std::pair<int, int> SpellBaseDamage = { 0, 0 };
   uint32_t SpellProjectileColor = Colors::MagentaColor;
+
+#ifdef DEBUG_BUILD
+  StringV Dump(const std::string& name, size_t indent);
+#endif
 };
 
 #endif // SPELLINFO_H

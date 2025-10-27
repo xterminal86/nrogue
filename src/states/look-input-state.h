@@ -44,10 +44,12 @@ class LookInputState : public GameState
       "",
       "'f' - player's potential field value here",
       "'d' - destroy static object here",
-      "'D' - destroy updatable game object here"
+      "'D' - destroy updatable game object here",
+      "'h' - toggle view line hint"
     };
 
     std::string _distanceField;
+    bool _drawHint = false;
     #endif
 
 };

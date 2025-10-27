@@ -118,6 +118,12 @@ StringV DoorComponent::Dump(size_t indent)
 
   res.push_back( I_OBJ_START_NAMED(spaces, typeid(*this).name()) );
 
+  StringV base = Component::Dump(indent + 2);
+  for (auto& l : base)
+  {
+    res.push_back(l);
+  }
+
   res.push_back( I_PTR_NAMED(spaces, "addr", this) );
   res.push_back( I_BOOL(spaces, IsOpen) );
   res.push_back( I_ULL(spaces, OpenedBy) );

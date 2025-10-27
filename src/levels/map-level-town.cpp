@@ -277,10 +277,10 @@ void MapLevelTown::CreateLevel()
   LevelExit.Y = 44;
 
   Game::gGOF.CreateStairs(this,
-                                              LevelExit.X,
-                                              LevelExit.Y,
-                                              '>',
-                                              MapType::MINES_1);
+                          LevelExit.X,
+                          LevelExit.Y,
+                          '>',
+                          MapType::MINES_1);
 }
 
 // =============================================================================

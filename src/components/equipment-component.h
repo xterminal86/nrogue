@@ -29,6 +29,10 @@ class EquipmentComponent : public Component
     std::unordered_map<EquipmentCategory, std::vector<ItemComponent*>>
     EquipmentByCategory;
 
+#ifdef DEBUG_BUILD
+    StringV Dump(size_t indent = 0) override;
+#endif
+
   private:
     bool ProcessItemEquiption(ItemComponent* item, bool suppressLog);
     bool ProcessRingEquiption(ItemComponent* item, bool suppressLog);

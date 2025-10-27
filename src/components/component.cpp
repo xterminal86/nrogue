@@ -37,7 +37,7 @@ StringV Component::Dump(size_t indent)
 
   StringV res;
 
-  res.push_back( I_OBJ_START_NAMED(spaces, typeid(*this).name()) );
+  res.push_back( I_OBJ_START_NAMED(spaces, "Component") );
 
   res.push_back( I_PTR_NAMED(spaces, "addr", this) );
   res.push_back( I_BOOL(spaces, IsEnabled) );

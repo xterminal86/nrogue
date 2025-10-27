@@ -274,7 +274,7 @@ void Printer::DrawWindow(const Position& leftCorner,
                              _convertedHtml.R,
                              _convertedHtml.G,
                              _convertedHtml.B);
-      DrawTile(headerPosX, headerPosY, c);
+      DrawTile(headerPosX, headerPosY, (c < 0) ? (c + 256) : c);
 
       headerPosX += _tileWidthScaled;
     }
@@ -406,7 +406,7 @@ void Printer::PrintFB(const int& x, const int& y,
                          _convertedHtml.R,
                          _convertedHtml.G,
                          _convertedHtml.B);
-  DrawTile(posX, posY, image);
+  DrawTile(posX, posY, (image < 0) ? (image + 256) : image);
 }
 
 // =============================================================================
@@ -454,7 +454,8 @@ void Printer::PrintFB(const int& x, const int& y,
                            _convertedHtml.R,
                            _convertedHtml.G,
                            _convertedHtml.B);
-    DrawTile(px, py, c);
+
+    DrawTile(px, py, (c < 0) ? (c + 256) : c);
 
     px += _tileWidthScaled;
   }
@@ -515,7 +516,8 @@ void Printer::PrintFB(const int& x,
                            _convertedHtml.R,
                            _convertedHtml.G,
                            _convertedHtml.B);
-    DrawTile(px, py, c, scale);
+
+    DrawTile(px, py, (c < 0) ? (c + 256) : c, scale);
 
     px += tileScaleW;
   }

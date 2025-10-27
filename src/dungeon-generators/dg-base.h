@@ -107,11 +107,7 @@ class DGBase
     // during generation, we save all shrines into this map and
     // use it at level instantiation stage.
     //
-    // NOTE: cannot replace with unordered_map
-    // because there is not hash function for Position.
-    // Compiler gives weird error during compilation of player.cpp though.
-    //
-    std::map<Position, ShrineType> ShrinesByPosition;
+    std::unordered_map<Position, ShrineType> ShrinesByPosition;
 
     CharV2& GetMapRaw();
     std::string GetMapRawString();

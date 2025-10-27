@@ -85,6 +85,12 @@ void LookInputState::HandleInput()
       break;
 
 #ifdef DEBUG_BUILD
+    case 'h':
+    {
+      _drawHint = !_drawHint;
+    }
+    break;
+
     case 'd':
     {
       GameObject* go =
@@ -333,7 +339,11 @@ void LookInputState::Update(bool forceUpdate)
 
     #ifdef DEBUG_BUILD
     PrintDebugInfo();
-    DrawHint();
+
+    if (_drawHint)
+    {
+      DrawHint();
+    }
     #endif
 
     Game::gPrnt.Render();
