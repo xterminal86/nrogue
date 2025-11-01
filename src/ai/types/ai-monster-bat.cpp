@@ -10,7 +10,9 @@ AIMonsterBat::AIMonsterBat()
 void AIMonsterBat::PrepareScript()
 {
   //
-  // Bat AI is replaced with basic attack pattern.
+  // Bat AI is replaced with basic attack pattern (because hit-and-run algorithm
+  // implementation has problems, see comments in
+  // AIModelBase::GetPlayerNextTurnCF()).
   //
   _scriptAsText =
 R"(

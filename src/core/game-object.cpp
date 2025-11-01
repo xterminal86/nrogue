@@ -1809,7 +1809,7 @@ void GameObject::Destroy()
 {
   Attrs.HP.SetMin(0);
   IsDestroyed = true;
-  Game::gMap.AddToDestroyQueue(this);
+  Game::gMap.AddGameObjectToDestroyQueue(this);
 }
 
 // =============================================================================

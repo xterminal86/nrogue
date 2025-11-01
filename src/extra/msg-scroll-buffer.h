@@ -277,6 +277,30 @@ class MsgScrollBuffer
 
     // =========================================================================
 
+    void SetScrollState(MessageBufferScrollState setTo)
+    {
+      if (_msgsCount <= _screenSize)
+      {
+        return;
+      }
+
+      switch (setTo)
+      {
+        case MessageBufferScrollState::TOP:
+          _scrollIndex = (_msgsCount - _screenSize);
+          break;
+
+        case MessageBufferScrollState::BOTTOM:
+          _scrollIndex = 0;
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    // =========================================================================
+
     MessageBufferScrollState GetScrollState() const
     {
       if (_msgsCount <= _screenSize)

@@ -15,9 +15,10 @@ void GameOverState::Prepare()
 {
   _playerRef->SetDestroyed();
 
-  Game::gPrnt.AddMessage("You are dead. Not big surprise.");
+  Game::gPrnt.AddMessage("You are dead. Not big soup rice.");
+  Game::gPrnt.AddMessage("See obituary? (y/q)");
 
-  Game::gApp.WriteObituary();
+  Game::gApp.WriteObituary(true);
 }
 
 // =============================================================================
@@ -28,6 +29,11 @@ void GameOverState::HandleInput()
 
   switch (_keyPressed)
   {
+    case 'y':
+    case 'Y':
+      Game::gApp.ChangeState(GameStates::OBITUARY_REPORT_STATE);
+      break;
+
     case VK_CANCEL:
     case 'n':
     case 'N':
@@ -58,40 +64,7 @@ void GameOverState::Update(bool forceUpdate)
       DisplayGameLog();
     }
 
-    Game::gPrnt.PrintFB(_twHalf,
-                        0,
-                        "Press 'q' to exit",
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
-
     Game::gPrnt.Render();
-  }
-}
-
-// =============================================================================
-
-void GameOverState::DisplayGameLog()
-{
-  int x = Printer::TerminalWidth - 1;
-  int y = Printer::TerminalHeight - 1;
-
-  int count = 0;
-  auto msgs = Game::gPrnt.GetLastMessages();
-  for (GameLogMessageData* m : msgs)
-  {
-    if (m == nullptr)
-    {
-      break;
-    }
-
-    Game::gPrnt.PrintFB(x,
-                        y - count,
-                        m->Message,
-                        Printer::kAlignRight,
-                        m->FgColor,
-                        m->BgColor);
-    count++;
   }
 }
 

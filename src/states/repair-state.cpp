@@ -84,7 +84,7 @@ void RepairState::DrawSpecific()
 
     if (ic->Data.IsIdentified)
     {
-      str = Util::StringFormat("'%c' - %s (%i/%i)",
+      str = Util::StringFormat("'%c' - %s (%d/%d)",
                                c,
                                name.data(),
                                ic->Data.Durability.Min().Get(),
@@ -156,7 +156,7 @@ void RepairState::RepairItem(ItemComponent* itemToRepair)
     _repairKit->Data.Amount = 0;
   }
 
-  auto str = Util::StringFormat("You've repaired %i durability", repaired);
+  auto str = Util::StringFormat("You've repaired %d durability", repaired);
   Game::gPrnt.AddMessage(str);
 
   _playerRef->FinishTurn();

@@ -61,6 +61,8 @@ class GameState
 
     void DrawHeader(const std::string& header);
 
+    void DisplayGameLog();
+
     const int _tw;
     const int _th;
     const int _twHalf;

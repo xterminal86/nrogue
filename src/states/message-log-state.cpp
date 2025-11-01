@@ -75,17 +75,17 @@ void MessageLogState::Update(bool forceUpdate)
       }
 
       Game::gPrnt.PrintFB(1,
-                           offsetY,
-                           m->Message,
-                           Printer::kAlignLeft,
-                           Colors::ShadesOfGrey::Six,
-                           Colors::BlackColor);
+                          offsetY,
+                          m->Message,
+                          Printer::kAlignLeft,
+                          Colors::ShadesOfGrey::Six,
+                          Colors::BlackColor);
       lm = m;
       offsetY++;
     }
 
     //
-    // Mark last added message in the log for clarity.
+    // Color last added message in the log white for clarity.
     //
     MessageBufferScrollState ss = msb.GetScrollState();
 
@@ -95,11 +95,11 @@ void MessageLogState::Update(bool forceUpdate)
       if (lm != nullptr)
       {
         Game::gPrnt.PrintFB(1,
-                             offsetY - 1,
-                             lm->Message,
-                             Printer::kAlignLeft,
-                             Colors::WhiteColor,
-                             Colors::BlackColor);
+                            offsetY - 1,
+                            lm->Message,
+                            Printer::kAlignLeft,
+                            Colors::WhiteColor,
+                            Colors::BlackColor);
       }
     }
 

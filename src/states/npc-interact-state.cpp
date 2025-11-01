@@ -131,16 +131,15 @@ void NPCInteractState::HandleInput()
       std::string msg;
       if (_npcRef->Data.IsAquainted)
       {
-        auto name = _npcRef->Data.Name;
-        auto title = _npcRef->Data.Job;
-
         msg = Util::StringFormat("You finished speaking with %s the %s",
-                                 name.data(),
-                                 title.data());
+                                 _npcRef->Data.Name.data(),
+                                 _npcRef->Data.Job.data());
       }
       else
       {
-        auto name = _npcRef->AIComponentRef->OwnerGameObject->ObjectName;
+        const std::string& name =
+            _npcRef->AIComponentRef->OwnerGameObject->ObjectName;
+
         msg = Util::StringFormat("You finished speaking with %s", name.data());
       }
 

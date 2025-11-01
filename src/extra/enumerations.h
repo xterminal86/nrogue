@@ -130,6 +130,7 @@ enum class GameStates
   , MESSAGE_BOX_STATE
   , DEV_CONSOLE
   , GAMEOVER_STATE
+  , OBITUARY_REPORT_STATE
 };
 
 enum class MessageBoxType

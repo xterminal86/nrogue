@@ -88,8 +88,8 @@ GameObject* MonstersInc::CreateMonster(int x, int y, GameObjectType monsterType)
       break;
 
     default:
-      DebugLog("CreateMonster(): monster type %i is not implemented!",
-               monsterType);
+      DebugLog("CreateMonster(): monster type %d is not implemented!",
+               (int)monsterType);
       break;
   }
 
@@ -463,9 +463,9 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   // Everything else in inventory will be dropped on kill.
   //
   GameObject* gem = Game::gIF.CreateGem(0,
-                                                       0,
-                                                       GemType::RANDOM,
-                                                       100);
+                                        0,
+                                        GemType::RANDOM,
+                                        100);
   cc->Add(gem);
 
   //
@@ -832,9 +832,7 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
                                       : ItemPrefix::CURSED;
   ArmorType at   = Util::WeightedRandom(possibleArmor).first;
 
-  GameObject* weapon = Game::gIF.CreateRandomMeleeWeapon(wt,
-                                                                        ip,
-                                                                        iq);
+  GameObject* weapon = Game::gIF.CreateRandomMeleeWeapon(wt, ip,iq);
   GameObject* armor  = Game::gIF.CreateRandomArmor(at, ip, iq);
 
   cc->Add(weapon);

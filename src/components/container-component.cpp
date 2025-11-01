@@ -108,7 +108,7 @@ IR ContainerComponent::Interact()
   ContainerInteractState* cis = static_cast<ContainerInteractState*>(s);
   cis->SetContainerRef(this);
 
-  auto succMsg = Util::StringFormat("You open %s",
+  auto succMsg = Util::StringFormat("You opened %s",
                                     OwnerGameObject->ObjectName.data());
   Game::gPrnt.AddMessage(succMsg);
 

@@ -53,6 +53,7 @@ enum class DevConsoleCommand
   , GET_ANY_OBJECT
   , GOD_MODE
   , IGNORE_PLAYER
+  , KILL_PLAYER
   , PRINT_TRIGGERS
   , PRINT_ACTORS
   , GIVE_MONEY
@@ -209,6 +210,7 @@ class DevConsole : public GameState
     void ToggleFogOfWar();
     void ToggleGodMode();
     void TogglePlayerIgnore();
+    void KillPlayer();
     void PrintTriggers();
     void PrintActors();
     void SpamToLog(const StringV& params);
@@ -277,6 +279,7 @@ class DevConsole : public GameState
      , { DevConsoleCommand::LEVEL_DOWN          , "plr_leveldown"     }
      , { DevConsoleCommand::GOD_MODE            , "god"               }
      , { DevConsoleCommand::IGNORE_PLAYER       , "plr_ignore"        }
+     , { DevConsoleCommand::KILL_PLAYER         , "plr_kill"          }
      , { DevConsoleCommand::REPORT_PLAYER       , "plr_info"          }
      , { DevConsoleCommand::REMOVE_OBJECT       , "eng_deleteobj"     }
      , { DevConsoleCommand::PRINT_COLORS        , "eng_printclrs"     }
@@ -389,6 +392,12 @@ class DevConsole : public GameState
         _commandNameByType.at(DevConsoleCommand::IGNORE_PLAYER),
         {
           "Make monsters ignore player"
+        }
+      },
+      {
+        _commandNameByType.at(DevConsoleCommand::KILL_PLAYER),
+        {
+          "Simulate game over situation"
         }
       },
       {

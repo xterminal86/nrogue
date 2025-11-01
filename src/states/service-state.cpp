@@ -112,9 +112,9 @@ void ServiceState::ProcessBlessing(int key)
   if (_playerRef->Money < si.ServiceCost)
   {
     Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
-                               "Damn Nation!",
-                               { "No donation - no salvation!" },
-                               Colors::MessageBoxRedBorderColor);
+                              "Damn Nation!",
+                              { "No donation - no salvation!" },
+                              Colors::MessageBoxRedBorderColor);
   }
   else
   {
@@ -212,7 +212,7 @@ void ServiceState::DrawSpecific()
   DisplayItems();
 
   std::string youHaveStr = "You have: ";
-  auto playerMoney = Util::StringFormat("$ %i", _playerRef->Money);
+  auto playerMoney = Util::StringFormat("$ %d", _playerRef->Money);
 
   Game::gPrnt.PrintFB(1,
                       _th - 1,
@@ -251,7 +251,7 @@ void ServiceState::DisplayItems()
     {
       ServiceInfo& ri = kvp.second;
 
-      std::string cost = Util::StringFormat("$%i", ri.ServiceCost);
+      std::string cost = Util::StringFormat("$%d", ri.ServiceCost);
 
       Game::gPrnt.PrintFB(1,
                           2 + itemIndex,
@@ -478,7 +478,7 @@ void ServiceState::FillItemsForRepair()
 
     if (ic->Data.IsIdentified)
     {
-      dur = Util::StringFormat("(%i/%i)",
+      dur = Util::StringFormat("(%d/%d)",
                                ic->Data.Durability.Min().Get(),
                                ic->Data.Durability.Max().Get());
     }

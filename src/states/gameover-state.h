@@ -15,7 +15,6 @@ class GameOverState : public GameState
     void Prepare() override;
 
   private:
-    void DisplayGameLog();
     void DrawHPMP();
     void UpdateBar(int x, int y, RangedAttribute& attr);
 

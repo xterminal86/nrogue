@@ -471,7 +471,7 @@ void Map::RemoveDestroyed()
 
   //
   // Most of the time objects don't get deleted, and if they do it's usually not
-  // in large numbers.
+  // in large numbers. So most of the time all of this will be skipped.
   //
   while (!_objectsToDestroy.empty())
   {
@@ -494,7 +494,9 @@ void Map::RemoveDestroyed()
 
       case GameObjectLayer::STATIC_OBJECTS:
       {
-        // Static objects don't set Occupied flag, so don't reset it.
+        //
+        // Static objects don't set Occupied flag, so we don't touch it either.
+        //
         const Position& pos = go->GetPosition();
         level->StaticMapObjects[pos.X][pos.Y].reset(nullptr);
       }
@@ -562,10 +564,12 @@ void Map::ChangeLevel(MapType levelToChange, bool goingDown)
 
 // =============================================================================
 
-void Map::TeleportToExistingLevel(MapType levelToChange,
-                                  const Position& teleportTo,
-                                  GameObject* objectToTeleport)
+std::string Map::TeleportToExistingLevel(MapType levelToChange,
+                                         const Position& teleportTo,
+                                         GameObject* objectToTeleport)
 {
+  std::string teleportResultString;
+
   bool forPlayer = Util::IsPlayer(objectToTeleport);
 
   GameObject* whoToTeleport = nullptr;
@@ -611,8 +615,8 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
 
     if (forPlayer)
     {
-      auto str = Util::StringFormat("You teleported into %s!", tpTo.data());
-      Game::gPrnt.AddMessage(str);
+      teleportResultString = Util::StringFormat("You teleported into %s!",
+                                                tpTo.data());
     }
 
     whoToTeleport->Attrs.HP.SetMin(0);
@@ -626,9 +630,8 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
       // he can be moved at least to his 'previous' position
       // (thus, any empty cell around him).
       //
-      auto str = Util::StringFormat("You bump into %s!",
-                                    actor->ObjectName.data());
-      Game::gPrnt.AddMessage(str);
+      teleportResultString = Util::StringFormat("You bump into %s!",
+                                                actor->ObjectName.data());
     }
 
     Position tp = teleportTo;
@@ -658,6 +661,8 @@ void Map::TeleportToExistingLevel(MapType levelToChange,
   }
 
   CurrentLevel->AdjustCamera();
+
+  return teleportResultString;
 }
 
 // =============================================================================
@@ -942,7 +947,7 @@ void Map::PrintMapArrayRevealedStatus()
     std::string row;
     for (int y = 0; y < CurrentLevel->MapSize.Y; y++)
     {
-      auto str = Util::StringFormat("%i",
+      auto str = Util::StringFormat("%d",
                                     CurrentLevel->MapArray[x][y]->Revealed);
       row += str;
     }
@@ -1061,8 +1066,9 @@ void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centra
 
     int dmgHere = centralDamage / d;
 
-    // AoE damages everything
-
+    //
+    // AoE damages everything.
+    //
     auto actor = GetActorAtPosition(p.X, p.Y);
     Util::TryToDamageObject(actor, from, dmgHere, againstRes);
 
@@ -1078,7 +1084,9 @@ void Map::ProcessAoEDamage(GameObject* target, ItemComponent* weapon, int centra
       Util::TryToDamageObject(so, from, dmgHere, againstRes);
     }
 
-    // Check self damage
+    //
+    // Check self damage.
+    //
     if (_playerRef->PosX == p.X && _playerRef->PosY == p.Y)
     {
       Util::TryToDamageObject(_playerRef, _playerRef, dmgHere, againstRes);
@@ -1375,8 +1383,7 @@ std::pair<uint32_t, uint32_t> Map::GetActorColors(GameObject* actor)
   int y = actor->PosY;
 
   //
-  // If game object has black bg color,
-  // replace it with current floor color.
+  // If game object has black bg color, replace it with current floor color.
   //
   uint32_t bgColor = actor->BgColor;
   uint32_t fgColor = actor->FgColor;
@@ -1412,7 +1419,7 @@ std::pair<uint32_t, uint32_t> Map::GetActorColors(GameObject* actor)
 
 // =============================================================================
 
-void Map::AddToDestroyQueue(GameObject* obj)
+void Map::AddGameObjectToDestroyQueue(GameObject* obj)
 {
   if (obj == nullptr)
   {

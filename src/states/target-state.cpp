@@ -19,8 +19,8 @@ void TargetState::Init()
 void TargetState::Prepare()
 {
   _maxThrowingRange = (_playerRef->Attrs.Str.Get() <= 0)
-                     ?  4
-                     : _playerRef->Attrs.Str.Get() + 4;
+                      ?  4
+                      : _playerRef->Attrs.Str.Get() + 4;
 
   _drawHint = true;
 

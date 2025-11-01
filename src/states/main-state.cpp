@@ -106,7 +106,7 @@ void MainState::HandleInput()
     // -------------------------------------------------------------------------
     case '$':
     {
-      auto str = Util::StringFormat("You have %i %s",
+      auto str = Util::StringFormat("You have %d %s",
                                     _playerRef->Money,
                                     Strings::MoneyName.data());
       Game::gPrnt.AddMessage(str);
@@ -203,7 +203,7 @@ void MainState::HandleInput()
         }
         else
         {
-          auto str = Util::StringFormat("[%i;%i] is occupied!", exitX, exitY);
+          auto str = Util::StringFormat("[%d;%d] is occupied!", exitX, exitY);
           Game::gPrnt.AddMessage(str);
           DebugLog("%s\n", str.data());
         }
@@ -339,32 +339,6 @@ void MainState::CheckItemsOnGround()
   if (items.size() > 1)
   {
     Game::gPrnt.AddMessage(Strings::MsgItemsLyingHere);
-  }
-}
-
-// =============================================================================
-
-void MainState::DisplayGameLog()
-{
-  int x = Printer::TerminalWidth - 1;
-  int y = Printer::TerminalHeight;
-
-  int count = 0;
-  auto msgs = Game::gPrnt.GetLastMessages();
-  for (GameLogMessageData* m : msgs)
-  {
-    if (m == nullptr)
-    {
-      break;
-    }
-
-    Game::gPrnt.PrintFB(x,
-                        y - Game::gPrnt.GetLastMessagesCount() + count,
-                        m->Message,
-                        Printer::kAlignRight,
-                        m->FgColor,
-                        m->BgColor);
-    count++;
   }
 }
 
@@ -547,7 +521,7 @@ void MainState::PrintDebugInfo()
 {
   MapLevelBase* curLvl = Game::gMap.CurrentLevel;
 
-  _debugInfo = Util::StringFormat("Act: %i Ofst: %i %i Pos: [%i;%i] Hngr: %i",
+  _debugInfo = Util::StringFormat("Act: %d Ofst: %d %d Pos: [%d;%d] Hngr: %d",
                                   _playerRef->Attrs.ActionMeter,
                                   curLvl->MapOffsetX,
                                   curLvl->MapOffsetY,
@@ -573,7 +547,7 @@ void MainState::PrintDebugInfo()
                       Colors::WhiteColor,
                       Colors::BlackColor);
 
-  _debugInfo = Util::StringFormat("Key: %i", _keyPressed);
+  _debugInfo = Util::StringFormat("Key: %d", _keyPressed);
 
   Game::gPrnt.PrintFB(1,
                       2,
@@ -582,7 +556,7 @@ void MainState::PrintDebugInfo()
                       Colors::WhiteColor,
                       Colors::BlackColor);
 
-  _debugInfo = Util::StringFormat("Start: [%i;%i]",
+  _debugInfo = Util::StringFormat("Start: [%d;%d]",
                                   curLvl->LevelStart.X,
                                   curLvl->LevelStart.Y);
 
@@ -593,7 +567,7 @@ void MainState::PrintDebugInfo()
                       Colors::WhiteColor,
                       Colors::BlackColor);
 
-  _debugInfo = Util::StringFormat("Exit: [%i;%i]",
+  _debugInfo = Util::StringFormat("Exit: [%d;%d]",
                                   curLvl->LevelExit.X,
                                   curLvl->LevelExit.Y);
 
@@ -604,7 +578,7 @@ void MainState::PrintDebugInfo()
                       Colors::WhiteColor,
                       Colors::BlackColor);
 
-  _debugInfo = Util::StringFormat("Colors: %i",
+  _debugInfo = Util::StringFormat("Colors: %d",
                                   Game::gPrnt.ColorsUsed());
 
   Game::gPrnt.PrintFB(1,
@@ -615,7 +589,7 @@ void MainState::PrintDebugInfo()
                       Colors::BlackColor);
 
   _debugInfo =
-      Util::StringFormat("PT: %llu MU: %llu",
+      Util::StringFormat("PT: %" PRIuLEAST64 " MU: %" PRIuLEAST64,
                          Game::gApp.PlayerTurnsPassed,
                          Game::gApp.MapUpdateCyclesPassed);
 
@@ -641,7 +615,7 @@ void MainState::PrintDebugInfo()
     {
       if (a->ObjectId() == id)
       {
-        _debugInfo = Util::StringFormat("%s_%llu (%i)",
+        _debugInfo = Util::StringFormat("%s_%" PRIuLEAST64 " (%i)",
                                         a->ObjectName.data(),
                                         id,
                                         a->Attrs.ActionMeter);
@@ -1179,5 +1153,6 @@ void MainState::DisplayScenarioInformation()
   messages.push_back(ss.str());
 
   Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
-                            "Scenario Information", messages);
+                            "Scenario Information",
+                            messages);
 }

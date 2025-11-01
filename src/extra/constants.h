@@ -246,6 +246,8 @@ namespace Strings
   extern const std::string MsgItemUndamaged;
   extern const std::string MsgCantBeUsed;
   extern const std::string MsgNoMoney;
+  extern const std::string MsgTeleportBackInTown;
+  extern const std::string MsgTeleportElsewhere;
   // ---------------------------------------------------------------------------
   extern const std::string FmtPickedUpIS;
   extern const std::string FmtPickedUpS;

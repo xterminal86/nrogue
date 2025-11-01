@@ -191,9 +191,9 @@ void GameState::TakeScreenshot()
   SDL_SaveBMP(sshot, fname.data());
   SDL_FreeSurface(sshot);
   Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                             "Screenshot Taken",
-                             { fname },
-                             Colors::MessageBoxBlueBorderColor);
+                            "Screenshot Taken",
+                            { fname },
+                            Colors::MessageBoxBlueBorderColor);
   DebugLog("Wrote %s", fname.data());
 }
 #endif
@@ -227,4 +227,30 @@ void GameState::DrawHeader(const std::string& header)
                       Printer::kAlignCenter,
                       Colors::WhiteColor,
                       Colors::MessageBoxHeaderBgColor);
+}
+
+// =============================================================================
+
+void GameState::DisplayGameLog()
+{
+  int x = Printer::TerminalWidth - 1;
+  int y = Printer::TerminalHeight;
+
+  int count = 0;
+  auto msgs = Game::gPrnt.GetLastMessages();
+  for (GameLogMessageData* m : msgs)
+  {
+    if (m == nullptr)
+    {
+      break;
+    }
+
+    Game::gPrnt.PrintFB(x,
+                        y - Game::gPrnt.GetLastMessagesCount() + count,
+                        m->Message,
+                        Printer::kAlignRight,
+                        m->FgColor,
+                        m->BgColor);
+    count++;
+  }
 }

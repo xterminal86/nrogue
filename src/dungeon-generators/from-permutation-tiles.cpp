@@ -29,7 +29,9 @@
 /// 9 (i.e. 3x3), 25 (5x5), 49 (7x7) etc.
 ///
 /// Having line length more than 9 takes too long to create a tileset
-/// and has no visible visual difference. But mostly time.
+/// and has no visible visual difference.
+///
+/// But mostly it takes, like, exponentially more time.
 ///
 void FromPermutationTiles::Generate(const Position& mapSize,
                          int tileSetIndex,

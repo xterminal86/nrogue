@@ -23,7 +23,7 @@ extern std::unordered_map<uint64_t, GameObject*> GameObjectsById;
 // "major" includes. So during linking phase linker can't resolve SDL_main
 // bullshit for some reason.
 // On Linux and Windows with MinGW everything works fine though.
-// Another day - same shit.
+// The usual: another day - same shit.
 //
 #ifdef USE_SDL
 #include "SDL2/SDL.h"

@@ -116,10 +116,10 @@ void ShoppingState::Update(bool forceUpdate)
     {
       #ifdef USE_SDL
       Game::gPrnt.PrintFB(_tw / 2,
-                           y,
-                           (int)NameCP437::VBAR_2,
-                           Colors::WhiteColor,
-                           Colors::BlackColor);
+                          y,
+                          (int)NameCP437::VBAR_2,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
       #else
       Game::gPrnt.PrintFB(_tw / 2,
                           y,
@@ -133,7 +133,7 @@ void ShoppingState::Update(bool forceUpdate)
     DisplayShopInventory();
 
     std::string youHaveStr = "You have: ";
-    auto playerMoney = Util::StringFormat("$ %i", _playerRef->Money);
+    auto playerMoney = Util::StringFormat("$ %d", _playerRef->Money);
 
     Game::gPrnt.PrintFB(1,
                         _th - 1,
@@ -210,7 +210,7 @@ void ShoppingState::DisplayPlayerInventory()
 
     int cost = GetCost(ic, true);
 
-    costString = Util::StringFormat(" $ %i", cost);
+    costString = Util::StringFormat(" $ %d", cost);
 
     Game::gPrnt.PrintFB(extraInfoStringPosX + itemStringTotalLen + 1,
                         yPos + index,
@@ -224,20 +224,20 @@ void ShoppingState::DisplayPlayerInventory()
     if (_playerSide && index == _inventoryItemIndex)
     {
       Game::gPrnt.PrintFB(1,
-                           yPos + index,
-                           nameInInventory,
-                           Printer::kAlignLeft,
-                           textColor,
-                           Colors::ShadesOfGrey::Four);
+                          yPos + index,
+                          nameInInventory,
+                          Printer::kAlignLeft,
+                          textColor,
+                          Colors::ShadesOfGrey::Four);
     }
     else
     {
       Game::gPrnt.PrintFB(1,
-                           yPos + index,
-                           nameInInventory,
-                           Printer::kAlignLeft,
-                           textColor,
-                           Colors::BlackColor);
+                          yPos + index,
+                          nameInInventory,
+                          Printer::kAlignLeft,
+                          textColor,
+                          Colors::BlackColor);
     }
 
     index++;
@@ -251,11 +251,11 @@ void ShoppingState::DisplayPlayerInventory()
                      Strings::InventoryEmptySlotChar);
 
     Game::gPrnt.PrintFB(1,
-                         yPos + index,
-                         stub,
-                         Printer::kAlignLeft,
-                         Colors::ShadesOfGrey::Six,
-                         Colors::BlackColor);
+                        yPos + index,
+                        stub,
+                        Printer::kAlignLeft,
+                        Colors::ShadesOfGrey::Six,
+                        Colors::BlackColor);
     yPos++;
   }
 }
@@ -308,7 +308,7 @@ void ShoppingState::DisplayShopInventory()
 
     int cost = GetCost(ic, false);
 
-    std::string costString = Util::StringFormat("%i $ ", cost);
+    std::string costString = Util::StringFormat("%d $ ", cost);
 
     int bonusStringPosX = xPos - GlobalConstants::InventoryMaxNameLength - 1;
 
@@ -414,7 +414,7 @@ std::string ShoppingState::GetItemExtraInfo(ItemComponent* item)
   if (item->Data.IsIdentified
   && (stackCond || item->Data.IsChargeable))
   {
-    extraInfo = Util::StringFormat("(%i)", item->Data.Amount);
+    extraInfo = Util::StringFormat("(%d)", item->Data.Amount);
   }
   else if (item->Data.IsEquipped)
   {

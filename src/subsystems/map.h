@@ -34,9 +34,9 @@ class Map
     void UpdateTriggers(TriggerUpdateType updateType);
 
     void ChangeLevel(MapType levelToChange, bool goingDown);
-    void TeleportToExistingLevel(MapType levelToChange,
-                                 const Position& teleportTo,
-                                 GameObject* objectToTeleport = nullptr);
+    std::string TeleportToExistingLevel(MapType levelToChange,
+                                        const Position& teleportTo,
+                                        GameObject* objectToTeleport = nullptr);
     void PrintMapArrayRevealedStatus();
 
     #ifdef DEBUG_BUILD
@@ -118,7 +118,7 @@ class Map
 
     void Init();
 
-    void AddToDestroyQueue(GameObject* obj);
+    void AddGameObjectToDestroyQueue(GameObject* obj);
 
   private:
     bool _townLoaded = false;

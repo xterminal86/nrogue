@@ -24,8 +24,8 @@ void SelectClassState::HandleInput()
     //
     #ifdef USE_SDL
     case KEY_UP:
-    //
     #endif
+    //
       _menuIndex--;
       break;
 

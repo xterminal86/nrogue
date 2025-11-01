@@ -32,7 +32,6 @@ class MainState : public GameState
     void DisplayArmorCondition(const int& startPos);
     void DisplayAmmoCondition(const int& startPos);
     void DisplayActiveEffects(const int& startPos);
-    void DisplayGameLog();
     void DisplayScenarioInformation();
     void CheckItemsOnGround();
     void TryToPickupItems();

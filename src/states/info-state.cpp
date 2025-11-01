@@ -148,10 +148,10 @@ void InfoState::PrintExp(int x, int y)
                       Colors::WhiteColor,
                       Colors::BlackColor);
 
-  std::string minVal = Util::StringFormat("%i",
+  std::string minVal = Util::StringFormat("%d",
                                           _playerRef->Attrs.Exp.Min().Get());
 
-  std::string maxVal = Util::StringFormat("%i",
+  std::string maxVal = Util::StringFormat("%d",
                                           _playerRef->Attrs.Exp.Max().Get());
 
   int xPos = x + placeholder.length() - digits - minVal.length() - 3;
@@ -197,7 +197,7 @@ void InfoState::PrintAttribute(int x,
                       Colors::ShadesOfGrey::Five,
                       Colors::BlackColor);
 
-  std::string text = Util::StringFormat("%i", attr.Get());
+  std::string text = Util::StringFormat("%d", attr.Get());
 
   Game::gPrnt.PrintFB(x + attrPlaceholder.length() - text.length(),
                       y,
@@ -256,8 +256,8 @@ void InfoState::PrintRangedAttribute(int x,
   //                                      attr.Max().Get());
   //Game::gPrnt.PrintFB(x, y, text, Printer::kAlignLeft, color);
 
-  std::string minVal = Util::StringFormat("%i", attr.Min().Get());
-  std::string maxVal = Util::StringFormat("%i", attr.Max().Get());
+  std::string minVal = Util::StringFormat("%d", attr.Min().Get());
+  std::string maxVal = Util::StringFormat("%d", attr.Max().Get());
 
   int xPos = x + placeholder.length() - 6 - minVal.length();
   Game::gPrnt.PrintFB(xPos,
@@ -368,16 +368,16 @@ std::pair<uint32_t, std::string> InfoState::GetModifierString(int value)
   if (value < 0)
   {
     color = Colors::RedColor;
-    str = Util::StringFormat("(%i)", value);
+    str = Util::StringFormat("(%d)", value);
   }
   else if (value > 0)
   {
     color = Colors::GreenColor;
-    str = Util::StringFormat("(+%i)", value);
+    str = Util::StringFormat("(+%d)", value);
   }
   else if (value == 0)
   {
-    str = Util::StringFormat("(+%i)", value);
+    str = Util::StringFormat("(+%d)", value);
   }
 
   res.first = color;

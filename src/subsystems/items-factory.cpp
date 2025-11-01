@@ -217,13 +217,13 @@ GameObject* ItemsFactory::CreatePotion(PotionType type,
         break;
 
       default:
-        DebugLog("CreatePotion(): potion type %i is not handled!", type);
+        DebugLog("CreatePotion(): potion type %d is not handled!", type);
         break;
     }
   }
   else
   {
-    DebugLog("Potion type %i not found!", (int)type);
+    DebugLog("Potion type %d not found!", (int)type);
   }
 
   return go;

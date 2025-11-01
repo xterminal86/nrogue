@@ -35,6 +35,7 @@
 #include "service-state.h"
 #include "target-state.h"
 #include "gameover-state.h"
+#include "obituary-report-state.h"
 
 // -----------------------------------------------------------------------------
 
@@ -325,10 +326,10 @@ void Application::DrawAttackCursor(int x, int y,
      && defender->BgColor != Colors::None)
     {
       Game::gPrnt.PrintFB(x,
-                                  y,
-                                  defender->Image,
-                                  defender->FgColor,
-                                  defender->BgColor);
+                          y,
+                          defender->Image,
+                          defender->FgColor,
+                          defender->BgColor);
 
       Game::gPrnt.Render();
     }
@@ -336,10 +337,10 @@ void Application::DrawAttackCursor(int x, int y,
   else
   {
     Game::gPrnt.PrintFB(x,
-                                y,
-                                ' ',
-                                Colors::BlackColor,
-                                cursorColor);
+                        y,
+                        ' ',
+                        Colors::BlackColor,
+                        cursorColor);
 
     Game::gPrnt.Render();
   }
@@ -353,67 +354,61 @@ void Application::WriteObituary(bool wasKilled)
 
   std::stringstream ss;
 
-  MapLevelBase* curLvl = Game::gMap.CurrentLevel;
+  StringV data = CollectObituary(wasKilled, true);
 
-  std::string playerEndCause = wasKilled
-                            ? "has perished at "
-                            : "has quit at ";
-
-  //
-  // Write part of the map with player.
-  //
-  SaveMapAroundPlayer(ss, wasKilled);
-
-  ss << '\n';
-
-  //
-  // Form obituary.
-  //
-
-  ss << "********** OBITUARY **********\n\n";
-
-  ss << "World seed was: 0x" << Game::gRng.GetSeedAsHex()
-     << " (" << Game::gRng.GetSeedString().first << ")"
-     << "\n\n";
-
-  auto nameAndTitle = Util::StringFormat("%s the %s",
-                                          PlayerInstance.Name.data(),
-                                          PlayerInstance.GetClassName().data());
-
-  ss << nameAndTitle << " of level " << PlayerInstance.Attrs.Lvl.Get() << '\n';
-  ss << playerEndCause << curLvl->LevelName << "\n\n";
-
-  ss << "He survived " << PlayerTurnsPassed << " turns\n\n";
-
-  ss << "HP " << PlayerInstance.Attrs.HP.Min().Get()
-     << " / " << PlayerInstance.Attrs.HP.Max().Get() << '\n';
-
-  ss << "MP " << PlayerInstance.Attrs.MP.Min().Get()
-     << " / " << PlayerInstance.Attrs.MP.Max().Get() << '\n';
-
-  ss << '\n';
-
-  SavePrettyAlignedStatInfo(ss);
-
-  ss << '\n';
-  ss << "********** POSSESSIONS **********\n\n";
-
-  size_t stringResizeWidth = WritePossessions(ss);
-
-  ss << '\n';
-  ss << "**********    KILLS    **********\n\n";
-
-  for (auto& kvp : PlayerInstance.TotalKills)
+  for (auto& line : data)
   {
-    std::string name = kvp.first;
-    name.resize(stringResizeWidth, ' ');
-
-    ss << name << " " << kvp.second << '\n';
+    ss << line;
   }
 
   postMortem << ss.str();
 
   postMortem.close();
+}
+
+// =============================================================================
+
+StringV Application::CollectObituary(bool wasKilled, bool asciiMode)
+{
+  StringV res;
+
+  CollectMapAroundPlayer(res, wasKilled, asciiMode);
+  CollectGeneralInfo(res, wasKilled, asciiMode);
+  CollectPrettyAlignedStatInfo(res, asciiMode);
+
+  size_t stringResizeWidth = CollectPossessions(res, asciiMode);
+
+  CollectKills(res, stringResizeWidth, asciiMode);
+
+  return res;
+}
+
+// =============================================================================
+
+void Application::CollectKills(StringV& writeTo,
+                               size_t stringResizeWidth,
+                               bool asciiMode)
+{
+  WriteObituaryLine(writeTo, "", asciiMode);
+  WriteObituaryLine(writeTo, "**********    KILLS    **********", asciiMode);
+  WriteObituaryLine(writeTo, "", asciiMode);
+  WriteObituaryLine(writeTo, "", asciiMode);
+
+  for (auto& kvp : PlayerInstance.TotalKills)
+  {
+    std::string name = kvp.first;
+    int totalKills   = kvp.second;
+
+    name.resize(stringResizeWidth, ' ');
+
+    WriteObituaryLine(
+      writeTo,
+      Util::StringFormat("%s %d", name.data(), totalKills),
+      asciiMode
+    );
+
+    WriteObituaryLine(writeTo, "", asciiMode);
+  }
 }
 
 // =============================================================================
@@ -486,8 +481,26 @@ void Application::LoadGame()
 
 // =============================================================================
 
-size_t Application::WritePossessions(std::stringstream& ss)
+void Application::WriteObituaryLine(StringV& writeTo,
+                                    const std::string& line,
+                                    bool asciiMode)
 {
+  writeTo.push_back(line);
+
+  if (asciiMode)
+  {
+    writeTo.push_back("\n");
+  }
+}
+
+// =============================================================================
+
+size_t Application::CollectPossessions(StringV&writeTo, bool asciiMode)
+{
+  WriteObituaryLine(writeTo, "", asciiMode);
+  WriteObituaryLine(writeTo, "********** POSSESSIONS **********", asciiMode);
+  WriteObituaryLine(writeTo, "", asciiMode);
+
   size_t stringResizeWidth = 0;
   for (auto& i : PlayerInstance.Inventory->Contents)
   {
@@ -506,6 +519,8 @@ size_t Application::WritePossessions(std::stringstream& ss)
     std::string name = ic->Data.IdentifiedName;
     name.resize(stringResizeWidth, ' ');
 
+    std::stringstream ss;
+
     ss << name;
 
     if (ic->Data.IsStackable || ic->Data.IsChargeable)
@@ -518,7 +533,7 @@ size_t Application::WritePossessions(std::stringstream& ss)
       ss << " (E)";
     }
 
-    ss << '\n';
+    WriteObituaryLine(writeTo, ss.str(), asciiMode);
   }
 
   return stringResizeWidth;
@@ -526,7 +541,9 @@ size_t Application::WritePossessions(std::stringstream& ss)
 
 // =============================================================================
 
-void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
+void Application::CollectMapAroundPlayer(StringV& writeTo,
+                                         bool wasKilled,
+                                         bool asciiMode)
 {
   MapLevelBase* curLvl = Game::gMap.CurrentLevel;
 
@@ -582,7 +599,7 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
           {
             ch = gos.back()->Image;
 
-            if (ch == ' ')
+            if (asciiMode && ch == ' ')
             {
               ch = 'o';
             }
@@ -608,13 +625,13 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
           if (actor != nullptr)
           {
             bool imageNonPrintable = (actor->Image < 33);
-            ch = (imageNonPrintable ? '@' : actor->Image);
+            ch = (asciiMode && imageNonPrintable) ? '@' : actor->Image;
           }
 
           //
           // If character is not printable, replace it with 'x' character.
           //
-          if (ch < 32)
+          if (asciiMode && ch < 32)
           {
             ch = 'x';
           }
@@ -640,18 +657,86 @@ void Application::SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled)
 
   for (size_t x = 0; x < map.size(); x++)
   {
+    std::stringstream ss;
+
     for (size_t y = 0; y < map[x].size(); y++)
     {
-      ss << map[x][y];
+      ss << Util::StringFormat("%c", map[x][y]);
     }
 
-    ss << '\n';
+    WriteObituaryLine(writeTo, ss.str(), asciiMode);
   }
 }
 
 // =============================================================================
 
-void Application::SavePrettyAlignedStatInfo(std::stringstream& ss)
+void Application::CollectGeneralInfo(StringV& writeTo,
+                                     bool wasKilled,
+                                     bool asciiMode)
+{
+  MapLevelBase* curLvl = Game::gMap.CurrentLevel;
+
+  std::string playerEndCause = wasKilled
+                               ? "has perished at"
+                               : "has quit at";
+
+  WriteObituaryLine(writeTo, "", asciiMode);
+  WriteObituaryLine(writeTo, "********** OBITUARY **********", asciiMode);
+  WriteObituaryLine(writeTo, "", asciiMode);
+
+  WriteObituaryLine(
+    writeTo,
+    Util::StringFormat("World seed was: 0x%s (%s)",
+                       Game::gRng.GetSeedAsHex().data(),
+                       Game::gRng.GetSeedString().first.data()),
+    asciiMode
+  );
+  WriteObituaryLine(writeTo, "", asciiMode);
+
+  std::string nameAndTitle =
+      Util::StringFormat("%s the %s",
+                         PlayerInstance.Name.data(),
+                         PlayerInstance.GetClassName().data());
+
+  WriteObituaryLine(
+    writeTo,
+    Util::StringFormat("%s of level %d %s %s",
+                       nameAndTitle.data(),
+                       PlayerInstance.Attrs.Lvl.Get(),
+                       playerEndCause.data(),
+                       curLvl->LevelName.data()),
+    asciiMode
+  );
+  WriteObituaryLine(writeTo, "", asciiMode);
+
+  WriteObituaryLine(
+    writeTo,
+    Util::StringFormat("He survived %d turns", PlayerTurnsPassed),
+    asciiMode
+  );
+  WriteObituaryLine(writeTo, "", asciiMode);
+
+  WriteObituaryLine(
+    writeTo,
+    Util::StringFormat("HP %d / %d",
+                       PlayerInstance.Attrs.HP.Min().Get(),
+                       PlayerInstance.Attrs.HP.Max().Get()),
+    asciiMode
+  );
+
+  WriteObituaryLine(
+    writeTo,
+    Util::StringFormat("MP %d / %d",
+                       PlayerInstance.Attrs.MP.Min().Get(),
+                       PlayerInstance.Attrs.MP.Max().Get()),
+    asciiMode
+  );
+  WriteObituaryLine(writeTo, "", asciiMode);
+}
+
+// =============================================================================
+
+void Application::CollectPrettyAlignedStatInfo(StringV& writeTo, bool asciiMode)
 {
   std::vector<std::string> statInfoStrings;
   std::vector<StatInfo> statInfos;
@@ -705,13 +790,17 @@ void Application::SavePrettyAlignedStatInfo(std::stringstream& ss)
 
   for (auto& i : statInfoStrings)
   {
+    std::stringstream ss;
+
     ss << i;
 
     std::string res = std::to_string(statInfos[statInfoIndex].ResultingValue);
     size_t origLen = res.length();
     res.insert(0, longestResultingStatLen - origLen, ' ');
 
-    ss << "= " << res << '\n';
+    ss << "= " << res;
+
+    WriteObituaryLine(writeTo, ss.str(), asciiMode);
 
     statInfoIndex++;
   }
@@ -886,12 +975,14 @@ bool Application::InitSDL()
     return false;
   }
 
-  Game::gPrnt.SetRenderDst({
-                              0,
-                              0,
-                              _defaultWindowSize.first,
-                              _defaultWindowSize.second
-                            });
+  Game::gPrnt.SetRenderDst(
+    {
+      0,
+      0,
+      _defaultWindowSize.first,
+      _defaultWindowSize.second
+    }
+  );
 
   Printer::TerminalWidth  = GlobalConstants::TerminalWidth;
   Printer::TerminalHeight = GlobalConstants::TerminalHeight;
@@ -1104,6 +1195,7 @@ void Application::InitGameStates(bool restart)
   RegisterState<ServiceState>          (GameStates::SERVICE_STATE);
   RegisterState<TargetState>           (GameStates::TARGET_STATE);
   RegisterState<GameOverState>         (GameStates::GAMEOVER_STATE);
+  RegisterState<ObituaryReportState>   (GameStates::OBITUARY_REPORT_STATE);
 
   #ifdef DEBUG_BUILD
   RegisterState<DevConsole>(GameStates::DEV_CONSOLE);

@@ -35,12 +35,18 @@ void ReturnerState::HandleInput()
 
       if (level == MapType::NOWHERE)
       {
-        Game::gPrnt.AddMessage("The stone is not attuned!");
+        Game::gPrnt.AddMessage("The stone is not attuned");
       }
       else
       {
-        Game::gPrnt.AddMessage("You invoke the returner");
-        Game::gMap.TeleportToExistingLevel(level, pos);
+        Game::gPrnt.AddMessage("You invoke the returner...");
+
+        auto str = Game::gMap.TeleportToExistingLevel(level, pos);
+        if (!str.empty())
+        {
+          Game::gPrnt.AddMessage(str);
+        }
+
         _itemRef->Data.Amount--;
       }
 
@@ -66,7 +72,7 @@ void ReturnerState::HandleInput()
       }
 
       Game::gPrnt.AddMessage(
-            "The stone has been attuned to this position"
+        "The stone has been attuned to this position"
       );
 
       _playerRef->FinishTurn();

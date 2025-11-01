@@ -144,7 +144,7 @@ void SpellsProcessor::ProcessScroll(ItemComponent* scroll, GameObject* user)
       break;
 
     default:
-      DebugLog("[WAR] SpellsProcessor::ProcessScroll() spell %i not handled!",
+      DebugLog("[WAR] SpellsProcessor::ProcessScroll() spell %d not handled!",
                (int)scroll->Data.SpellHeld.SpellType_);
       _scrollUseMessages.push_back(_kNoActionText);
       break;
@@ -163,10 +163,9 @@ void SpellsProcessor::PrintUsageResult(ItemComponent* scroll, GameObject* user)
                              scroll->Data.IdentifiedName :
                              scroll->Data.UnidentifiedName;
 
-    auto str = Util::StringFormat("You read the scroll %s...",
-                                  scrollName.data());
-
-    Game::gPrnt.AddMessage(str);
+    Game::gPrnt.AddMessage(
+      Util::StringFormat("You read the scroll %s...", scrollName.data())
+    );
 
     for (auto& msg : _scrollUseMessages)
     {
@@ -276,14 +275,15 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll,
       return;
     }
 
-    _scrollUseMessages.push_back(
-          "You forget the details about inventory item!"
-    );
-
     int index = Game::gRng.RandomRange(0, itemsKnown.size());
     auto item = itemsKnown[index];
     item->Data.IsIdentified = false;
     item->Data.IsPrefixDiscovered = false;
+
+    _scrollUseMessages.push_back(
+      Util::StringFormat("You forget the details about %s!",
+                         item->OwnerGameObject->ObjectName.data())
+    );
   }
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {
@@ -293,7 +293,10 @@ void SpellsProcessor::ProcessScrollOfIdentify(ItemComponent* scroll,
       return;
     }
 
-    _scrollUseMessages.push_back("Inventory item has been identified!");
+    _scrollUseMessages.push_back(
+      Util::StringFormat("%s has been identified!",
+                         itemsToId[0]->OwnerGameObject->ObjectName.data())
+    );
 
     itemsToId[0]->Data.IsPrefixDiscovered = true;
     itemsToId[0]->Data.IsIdentified = true;
@@ -501,10 +504,11 @@ void SpellsProcessor::ProcessScrollOfMM(ItemComponent* scroll, GameObject* user)
 
       for (auto& actor : mapRef->ActorGameObjects)
       {
-        std::string str = Util::StringFormat("You sense: %s (danger %i)",
-                                             actor->ObjectName.data(),
-                                             actor->Attrs.Rating());
-        monstersOnLevel.push_back(str);
+        monstersOnLevel.push_back(
+          Util::StringFormat("You sense: %s (danger %d)",
+                             actor->ObjectName.data(),
+                             actor->Attrs.Rating())
+        );
       }
 
       for (auto& str : monstersOnLevel)
@@ -534,7 +538,7 @@ void SpellsProcessor::ProcessScrollOfHiddenDetection(ItemComponent* scroll,
 
   if (!isValidType)
   {
-    DebugLog("[WAR] ProcessScrollOfDetectMonsters() type is wrong: %i!",
+    DebugLog("[WAR] ProcessScrollOfDetectMonsters() type is wrong: %d!",
              (int)type);
     type = ItemBonusType::TELEPATHY;
   }
@@ -652,12 +656,12 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll,
 
     lvl->PlaceGameObject(portal);
 
-    _scrollUseMessages.push_back("You're back in town all of a sudden!");
+    _scrollUseMessages.push_back(Strings::MsgTeleportBackInTown);
     Game::gMap.TeleportToExistingLevel(MapType::TOWN, res);
   }
   else if (scroll->Data.Prefix == ItemPrefix::UNCURSED)
   {
-    _scrollUseMessages.push_back("You're back in town all of a sudden!");
+    _scrollUseMessages.push_back(Strings::MsgTeleportBackInTown);
     Game::gMap.TeleportToExistingLevel(MapType::TOWN,
                                             lvl->TownPortalPos());
   }
@@ -666,9 +670,14 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll,
     auto& mapRef = Game::gMap.CurrentLevel;
     int index = Game::gRng.RandomRange(0, mapRef->EmptyCells().size());
     auto pos = mapRef->EmptyCells()[index];
-    Game::gMap.TeleportToExistingLevel(mapRef->MapType_, pos);
+    auto str = Game::gMap.TeleportToExistingLevel(mapRef->MapType_, pos);
 
-    _scrollUseMessages.push_back("You are suddenly transported elsewhere!");
+    _scrollUseMessages.push_back(Strings::MsgTeleportElsewhere);
+
+    if (!str.empty())
+    {
+      _scrollUseMessages.push_back(str);
+    }
   }
 }
 
@@ -687,22 +696,12 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll,
     return;
   }
 
-  _scrollUseMessages.push_back("You are suddenly transported elsewhere!");
+  _scrollUseMessages.push_back(Strings::MsgTeleportElsewhere);
 
   auto& mapRef = Game::gMap.CurrentLevel;
 
   // TODO: blessed scroll of teleport - what positive effect for player?
 
-  //
-  // FIXME: TeleportToExistingLevel() prints directly to the screen, which
-  //        messes up order of messages. For example, if you teleported into
-  //        wall, you'll get message about it first (from
-  //        TeleportToExistingLevel()) and then all the messages from
-  //        _scrollUseMessages afterwards which are printed at the end of
-  //        SpellsProcessor::ProcessScroll(). But they sould be printed first.
-  //        Think on rewriting in-game message log output system so that message
-  //        creation and output is not all over the place.
-  //
   if (scroll->Data.Prefix == ItemPrefix::UNCURSED
    || scroll->Data.Prefix == ItemPrefix::BLESSED)
   {
@@ -715,7 +714,11 @@ void SpellsProcessor::ProcessScrollOfTeleport(ItemComponent* scroll,
     int rx = Game::gRng.RandomRange(1, mapRef->MapSize.X);
     int ry = Game::gRng.RandomRange(1, mapRef->MapSize.Y);
     Position pos = { rx, ry };
-    Game::gMap.TeleportToExistingLevel(mapRef->MapType_, pos, user);
+    auto str = Game::gMap.TeleportToExistingLevel(mapRef->MapType_, pos, user);
+    if (!str.empty())
+    {
+      _scrollUseMessages.push_back(str);
+    }
   }
 }
 
@@ -854,7 +857,7 @@ void SpellsProcessor::ProcessScrollOfRemoveCurse(ItemComponent* scroll,
     if (success)
     {
       _scrollUseMessages.push_back(
-            "The malevolent energy disperses completely!"
+        "The malevolent energy disperses completely!"
       );
     }
     else

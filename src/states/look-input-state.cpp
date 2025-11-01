@@ -430,10 +430,10 @@ void LookInputState::DisplayMonsterStats()
     int mod = attr.GetModifiers();
 
     std::string txt = (mod <= 0)
-                      ? Util::StringFormat("(%i)", mod)
-                      : Util::StringFormat("(+%i)", mod);
+                      ? Util::StringFormat("(%d)", mod)
+                      : Util::StringFormat("(+%d)", mod);
 
-    std::string total = Util::StringFormat("%s: %i %s",
+    std::string total = Util::StringFormat("%s: %d %s",
                                            attrName.data(),
                                            val,
                                            txt.data());
@@ -456,11 +456,11 @@ void LookInputState::DisplayMonsterStats()
                                           actor->ObjectId());
 
     _monsterStatsInfo.push_back(
-          Util::StringFormat("LVL: %i", actor->Attrs.Lvl.Get())
+      Util::StringFormat("LVL: %d", actor->Attrs.Lvl.Get())
     );
 
     _monsterStatsInfo.push_back(
-          Util::StringFormat("EXP: %i", actor->Attrs.Exp.Min().Get())
+      Util::StringFormat("EXP: %d", actor->Attrs.Exp.Min().Get())
     );
 
     _monsterStatsInfo.push_back(std::string());
@@ -473,34 +473,34 @@ void LookInputState::DisplayMonsterStats()
     _monsterStatsInfo.push_back(std::string());
 
     _monsterStatsInfo.push_back(
-          Util::StringFormat("Rating: %i", actor->Attrs.Rating())
+      Util::StringFormat("Rating: %d", actor->Attrs.Rating())
     );
 
     _monsterStatsInfo.push_back(
-          Util::StringFormat("(CR: %i)", actor->Attrs.ChallengeRating)
+      Util::StringFormat("(CR: %d)", actor->Attrs.ChallengeRating)
     );
 
     _monsterStatsInfo.push_back(std::string());
 
     _monsterStatsInfo.push_back(
-          Util::StringFormat("HP: %i/%i",
-                             actor->Attrs.HP.Min().Get(),
-                             actor->Attrs.HP.Max().Get())
+      Util::StringFormat("HP: %d/%d",
+                         actor->Attrs.HP.Min().Get(),
+                         actor->Attrs.HP.Max().Get())
     );
 
     _monsterStatsInfo.push_back(
-          Util::StringFormat("MP: %i/%i",
-                             actor->Attrs.MP.Min().Get(),
-                             actor->Attrs.MP.Max().Get())
+      Util::StringFormat("MP: %d/%d",
+                         actor->Attrs.MP.Min().Get(),
+                         actor->Attrs.MP.Max().Get())
     );
 
     _monsterStatsInfo.push_back(std::string());
-    _monsterStatsInfo.push_back(Util::StringFormat("Action Meter: %i",
+    _monsterStatsInfo.push_back(Util::StringFormat("Action Meter: %d",
                                                    actor->Attrs.ActionMeter));
 
     Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
-                               name,
-                               _monsterStatsInfo);
+                              name,
+                              _monsterStatsInfo);
   }
 }
 

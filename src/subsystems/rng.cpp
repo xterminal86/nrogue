@@ -74,7 +74,7 @@ int RNG::RandomRange(int min, int max)
   int d = std::abs(trueMax - trueMin);
   if (d == 0)
   {
-    DebugLog("[WAR] RNG::RandomRange() min == max: min %i, max %i", min, max);
+    DebugLog("[WAR] RNG::RandomRange() min == max: min %d, max %d", min, max);
     d = 1;
   }
 

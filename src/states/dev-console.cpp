@@ -312,7 +312,6 @@ void DevConsole::HandleInput()
 
 #ifdef USE_SDL
     case NUMPAD_5:
-    case NUMPAD_2:
 #else
     case KEY_NPAGE:
 #endif
@@ -320,6 +319,14 @@ void DevConsole::HandleInput()
       _stdout.ScrollDown();
     }
     break;
+
+#ifdef USE_SDL
+    case NUMPAD_2:
+    {
+      _stdout.ResetScroll();
+    }
+    break;
+#endif
 
     // -------------------------------------------------------------------------
 
@@ -718,6 +725,10 @@ void DevConsole::ProcessCommand(const std::string& command,
 
     case DevConsoleCommand::IGNORE_PLAYER:
       TogglePlayerIgnore();
+      break;
+
+    case DevConsoleCommand::KILL_PLAYER:
+      KillPlayer();
       break;
 
     case DevConsoleCommand::PRINT_TRIGGERS:
@@ -1796,6 +1807,14 @@ void DevConsole::TogglePlayerIgnore()
   StdOut(
     Util::StringFormat("Player ignore: %s", _playerRef->IgnoreMe ? "ON" : "OFF")
   );
+}
+
+// =============================================================================
+
+void DevConsole::KillPlayer()
+{
+  _playerRef->Attrs.HP.SetMin(0);
+  Game::gApp.ChangeState(GameStates::GAMEOVER_STATE);
 }
 
 // =============================================================================

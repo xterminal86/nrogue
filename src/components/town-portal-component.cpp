@@ -32,6 +32,7 @@ void TownPortalComponent::TeleportBack()
 
   OwnerGameObject->Destroy();
 
-  Game::gMap.TeleportToExistingLevel(_posToReturn.first,
-                                      _posToReturn.second);
+  std::string tpRes = Game::gMap.TeleportToExistingLevel(_posToReturn.first,
+                                                         _posToReturn.second);
+  Game::gPrnt.AddMessage(tpRes);
 }

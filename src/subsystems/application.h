@@ -31,6 +31,8 @@ class Application
                        const std::string& messageToPrint,
                        const uint32_t& cursorColor = Colors::None);
 
+    StringV CollectObituary(bool wasKilled, bool asciiMode);
+
     void WriteObituary(bool wasKilled = true);
 
     void LoadGame();
@@ -123,10 +125,17 @@ class Application
                           GameObject* defender,
                           const uint32_t& cursorColor = Colors::None);
 
-    void SavePrettyAlignedStatInfo(std::stringstream& ss);
-    void SaveMapAroundPlayer(std::stringstream& ss, bool wasKilled);
+    void CollectPrettyAlignedStatInfo(StringV& writeTo, bool asciiMode);
+    void CollectMapAroundPlayer(StringV& writeTo,
+                                bool wasKilled,
+                                bool asciiMode);
+    void CollectGeneralInfo(StringV& writeTo, bool wasKilled, bool asciiMode);
 
-    size_t WritePossessions(std::stringstream& ss);
+    size_t CollectPossessions(StringV& writeTo, bool asciiMode);
+
+    void CollectKills(StringV& writeTo,
+                      size_t stringResizeWidth,
+                      bool asciiMode);
 
 #ifdef USE_SDL
     std::pair<int, int> _defaultWindowSize;
@@ -136,6 +145,10 @@ class Application
 #else
     bool InitCurses();
 #endif
+
+    void WriteObituaryLine(StringV& writeTo,
+                           const std::string& line,
+                           bool asciiMode);
 
     template <typename StateClass>
     inline void RegisterState(GameStates stateName)
