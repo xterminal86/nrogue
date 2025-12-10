@@ -1772,7 +1772,7 @@ void DevConsole::GiveMoney(const StringV& params)
 
 void DevConsole::ToggleFogOfWar()
 {
-  _playerRef->ToggleFogOfWar = !_playerRef->ToggleFogOfWar;
+  _playerRef->CellVisibilityOverride = !_playerRef->CellVisibilityOverride;
 
   auto state =
       Game::gApp.GetGameStateRefByName(GameStates::MAIN_STATE);
@@ -1780,7 +1780,7 @@ void DevConsole::ToggleFogOfWar()
   state->Update(true);
 
   auto str = Util::StringFormat("For of war %s",
-                                _playerRef->ToggleFogOfWar
+                                _playerRef->CellVisibilityOverride
                                 ? "off"
                                 : "on");
 

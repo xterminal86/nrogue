@@ -145,16 +145,12 @@ namespace Game
     if (gApp.IsAppReady())
     {
       gApp.Run();
+      gApp.Cleanup();
     }
     else
     {
       ConsoleLog("Game was not initialized - call gApp.Init() first!");
     }
-  }
-
-  void Shutdown()
-  {
-    gApp.Cleanup();
   }
 }
 

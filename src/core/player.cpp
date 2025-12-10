@@ -265,6 +265,12 @@ void Player::CheckVisibility()
   hx = Util::Clamp(hx, 0, mapSize.X - 1);
   hy = Util::Clamp(hy, 0, mapSize.Y - 1);
 
+  bool cellVisibility = false;
+
+#ifdef DEBUG_BUILD
+  cellVisibility = CellVisibilityOverride;
+#endif
+
   //
   // Mark all tiles as not visible.
   //
@@ -274,21 +280,17 @@ void Player::CheckVisibility()
     {
       const Position& p = map[x][y]->GetPosition();
 
-      map[p.X][p.Y]->Visible = false;
+      map[p.X][p.Y]->Visible = cellVisibility;
 
       if (staticObjects[p.X][p.Y] != nullptr)
       {
-        #ifdef DEBUG_BUILD
-        staticObjects[p.X][p.Y]->Visible = ToggleFogOfWar;
-        #else
-        staticObjects[p.X][p.Y]->Visible = false;
-        #endif
+        staticObjects[p.X][p.Y]->Visible = cellVisibility;
       }
     }
   }
 
-  BresenhamLoS(lx, ly);
-  //ShadowcasterLoS();
+  //BresenhamLoS(lx, ly);
+  ShadowcasterLoS();
 
   //Game::gTimer.FinishProfiling("  Player::CheckVisibility()");
 }

@@ -290,6 +290,10 @@ class MsgScrollBuffer
           _scrollIndex = (_msgsCount - _screenSize);
           break;
 
+        case MessageBufferScrollState::MIDDLE:
+          _scrollIndex = (_msgsCount - _screenSize) / 2;
+          break;
+
         case MessageBufferScrollState::BOTTOM:
           _scrollIndex = 0;
           break;

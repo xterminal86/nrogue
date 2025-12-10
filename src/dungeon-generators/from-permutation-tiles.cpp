@@ -21,7 +21,7 @@
 /// decent looking dungeon and which has all empty cells
 /// reachable to the player.
 ///
-/// Line length is hardcoded to 9, since it's the lowest
+/// Line length is hardcoded to 9, since it's the largest
 /// possible number to create a tileset that can produce
 /// decent looking dungeon in terms of performance / size.
 /// Since we can only go in terms of square areas

@@ -7,9 +7,8 @@
 #include "position.h"
 
 //
-// Microsoft Visual Studio compiler fails to build
-// with this particular forward declaration
-// on github actions pipeline.
+// Microsoft Visual Studio compiler fails to build with this particular forward
+// declaration in github actions pipeline.
 //
 #ifdef MSVC_COMPILER
 #include "position.h"

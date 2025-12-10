@@ -40,7 +40,6 @@ int main(int argc, char* argv[])
   }
 
   Game::Run();
-  Game::Shutdown();
 
   return 0;
 }

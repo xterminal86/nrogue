@@ -80,9 +80,9 @@ class Player : public GameObject
     PotentialField DistanceField;
 
 #ifdef DEBUG_BUILD
-    bool ToggleFogOfWar = false;
-    bool GodMode        = false;
-    bool IgnoreMe       = false;
+    bool CellVisibilityOverride = false;
+    bool GodMode                = false;
+    bool IgnoreMe               = false;
     StringV Dump(size_t indent = 0) override;
 #endif
 

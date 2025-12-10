@@ -74,7 +74,6 @@ namespace Game
 
   extern bool Init(MapType levelToLoad = MapType::NOWHERE);
   extern void Run();
-  extern void Shutdown();
 }
 
 #endif // GLOBALS_H

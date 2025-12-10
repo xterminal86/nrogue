@@ -166,7 +166,7 @@ namespace Strings
 {
   const std::string HexChars    = "0123456789ABCDEF";
   const std::string Base64Chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
   const std::string AlphabetUppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const std::string AlphabetLowercase = "abcdefghijklmnopqrstuvwxyz";
