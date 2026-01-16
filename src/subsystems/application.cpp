@@ -406,8 +406,6 @@ void Application::CollectKills(StringV& writeTo,
       Util::StringFormat("%s %d", name.data(), totalKills),
       asciiMode
     );
-
-    WriteObituaryLine(writeTo, "", asciiMode);
   }
 }
 
