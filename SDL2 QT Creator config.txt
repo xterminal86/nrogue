@@ -1,4 +1,4 @@
-If SDL2 is not found during CMake config on Windows in QT Creator, 
+If SDL2 is not found during CMake config on Windows in QT Creator,
 manually add these in Projects mode:
 
 SDL2_DIR:PATH=SDL2
@@ -7,8 +7,8 @@ SDL2_INCLUDE_DIR:PATH=SDL2/x86_64-w64-mingw32/include
 SDL2_LIBRARY:FILEPATH=SDL2/x86_64-w64-mingw32/lib/libSDL2.dll.a
 
 If Key-Value window is empty because of configuration error and thus you can't
-perform the step above, manually add following lines AS IS into "Initial Cmake 
-parameters" text box (you might have to edit SDL2 dir value if you happen to 
+perform the step above, manually add following lines AS IS into "Initial Cmake
+parameters" text box (you might have to edit SDL2 dir value if you happen to
 have different location than mine):
 
 -DUSE_SDL=ON
@@ -17,11 +17,11 @@ have different location than mine):
 -DSDL2_INCLUDE_DIR:PATH=H:/Sources/C++/windows/nrogue.git/SDL2/x86_64-w64-mingw32/include
 -DSDL2_LIBRARY:FILEPATH=H:/Sources/C++/windows/nrogue.git/SDL2/x86_64-w64-mingw32/lib/libSDL2.dll.a
 
-Note that you have to us absolute paths (at least that was the issue in my case).
+Note that you have to use absolute paths (at least that was the issue in my case).
 
 All of this bullshit probably depends on how old your QT Creator is, so maybe
-you don't have to anything at all. In my case, after I decided to completely 
-wipe build folder and reconfigure anew, I had to copypaste SDL2 settings from 
+you don't have to anything at all. In my case, after I decided to completely
+wipe build folder and reconfigure anew, I had to copypaste SDL2 settings from
 above and after that changing parameters from Key-Value window stopped working
 and I had to use that text box window to change parameters if I needed to.
 

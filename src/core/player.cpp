@@ -289,15 +289,18 @@ void Player::CheckVisibility()
     }
   }
 
-  //BresenhamLoS(lx, ly);
-  ShadowcasterLoS();
+  // Slow and dumb.
+  //BresenhamFoV(lx, ly);
+
+  // Faster.
+  ShadowcasterFoV();
 
   //Game::gTimer.FinishProfiling("  Player::CheckVisibility()");
 }
 
 // =============================================================================
 
-void Player::BresenhamLoS(int lx, int ly)
+void Player::BresenhamFoV(int lx, int ly)
 {
   auto& map = Game::gMap.CurrentLevel->MapArray;
   auto& staticObjects = Game::gMap.CurrentLevel->StaticMapObjects;
@@ -312,7 +315,7 @@ void Player::BresenhamLoS(int lx, int ly)
   int tw = Printer::TerminalWidth;
   int th = Printer::TerminalHeight;
 
-  // FIXME: for some reason this doesn't work: cells that should be visible are
+  // NOTE: for some reason this doesn't work: cells that should be visible are
   // marked as non-visible. Rewrite to shadowcaster I guess.
   auto losTiles = Util::GetPerimeterCW(lx, ly, tw - 1, th - 1);
   for (const Position& p : losTiles)
@@ -351,9 +354,10 @@ void Player::BresenhamLoS(int lx, int ly)
 
 // =============================================================================
 
-void Player::ShadowcasterLoS()
+void Player::ShadowcasterFoV()
 {
-  // TODO
+  _shadowcaster.Init(PosX, PosY);
+  _shadowcaster.RefreshVisibility();
 }
 
 // =============================================================================

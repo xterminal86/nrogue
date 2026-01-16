@@ -2,31 +2,61 @@
 #define SHADOWCASTER_H
 
 //
-// Ported implementation from here:
-//
-// https://www.albertford.com/shadowcasting/
+// Ported from:
+// https://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/
 //
 
 #include <vector>
+#include <stack>
+#include <cstdint>
+#include <cmath>
 
 #include "position.h"
+#include "util.h"
 
-using PositionV = std::vector<Position>;
+using PairI = std::pair<int, int>;
+
+struct Shadow
+{
+  double Start = 0.0;
+  double End   = 0.0;
+
+  bool Contains(const Shadow& other);
+};
+
+class ShadowLine
+{
+  public:
+    bool IsInShadow(const Shadow& projection);
+    void Add(const Shadow& shadow);
+    bool IsInFullShadow();
+
+  private:
+    std::vector<Shadow> _shadows;
+};
 
 class Shadowcaster
 {
   public:
     Shadowcaster();
-    Shadowcaster(const Position& origin);
+    Shadowcaster(const Position& playerPos);
 
-    const std::string& ToString();
+    void Init(const int posX, const int posY);
+    void Init(const Position& playerPos);
+
+    void RefreshVisibility();
 
   private:
-    std::string _stringRepr;
+    void RefreshOctant(uint8_t octant);
 
-    std::vector<PositionV> _quadrants;
+    const PairI& TransformOctant(int row, int col, uint8_t octant);
+    const Shadow& ProjectTile(const int row, const int col);
 
-    Position _origin;
+    Position _playerPos;
+
+    Shadow _shadow;
+
+    PairI _transformedCoords;
 };
 
 #endif // SHADOWCASTER_H

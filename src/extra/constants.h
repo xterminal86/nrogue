@@ -122,6 +122,7 @@ using SetS    = std::set<std::string>;
 using StringV = std::vector<std::string>;
 using CharV2  = std::vector<std::vector<char>>;
 using IR      = std::pair<InteractionResult, GameStates>;
+using IntV2   = std::vector<std::vector<int>>;
 
 namespace Colors
 {

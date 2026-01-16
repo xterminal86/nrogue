@@ -136,7 +136,7 @@ void MapLevelTest::CreateStuff()
 
 void MapLevelTest::CreateLevel()
 {
-  VisibilityRadius = 16;
+  VisibilityRadius = 8;
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
   CreateGround('.',

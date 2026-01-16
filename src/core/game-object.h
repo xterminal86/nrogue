@@ -148,8 +148,8 @@ class GameObject
     //
     bool Special = false;
 
-    bool Blocking    = false;
-    bool BlocksSight = false;
+    bool Blocking    = false; // Blocks movement
+    bool BlocksSight = false; // Blocks line of sight.
     bool Revealed    = false;
     bool Corporeal   = true;
 

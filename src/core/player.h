@@ -13,6 +13,7 @@
 #include "item-component.h"
 #include "position.h"
 #include "potential-field.h"
+#include "shadowcaster.h"
 
 class AIComponent;
 class ContainerComponent;
@@ -130,8 +131,8 @@ class Player : public GameObject
 
     std::vector<std::string> GetPrettyLevelUpText();
 
-    void BresenhamLoS(int lx, int ly);
-    void ShadowcasterLoS();
+    void BresenhamFoV(int lx, int ly);
+    void ShadowcasterFoV();
 
     //
     // std::map automatically sorts by key, so in case of string key,
@@ -170,9 +171,12 @@ class Player : public GameObject
 
     const uint8_t kDistanceFieldRadius = 40;
 
+    Shadowcaster _shadowcaster;
+
     friend class SpellsProcessor;
     friend class ServiceState;
     friend class InfoState;
+    friend class Shadowcaster;
 };
 
 #endif // PLAYER_H
