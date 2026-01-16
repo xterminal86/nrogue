@@ -148,10 +148,11 @@ class GameObject
     //
     bool Special = false;
 
-    bool Blocking    = false; // Blocks movement
+    bool Blocking    = false; // Blocks movement.
     bool BlocksSight = false; // Blocks line of sight.
-    bool Revealed    = false;
-    bool Corporeal   = true;
+    bool Revealed    = false; // Tile was discovered, so it's drawn under fog of
+                              // war with last known information.
+    bool Corporeal   = true;  // Actually for actors, blame shitty design.
 
     //
     // Determines if objects on the map tile should be drawn.
