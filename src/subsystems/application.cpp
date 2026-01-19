@@ -972,6 +972,9 @@ bool Application::InitSDL()
     return false;
   }
 
+  _defaultWindowSize.first  = GameConfig.WindowWidth;
+  _defaultWindowSize.second = GameConfig.WindowHeight;
+
   Game::gPrnt.SetRenderDst(
     {
       0,
@@ -1104,13 +1107,13 @@ void Application::LoadConfig()
           std::stod(_loadedConfig[kConfigKeyScale].GetString());
 
       GameConfig.FastCombat =
-          (_loadedConfig[kConfigKeyFastCombat].GetString() != "N");
+          (_loadedConfig[kConfigKeyFastCombat].GetString() == "Y");
 
       GameConfig.FastMonsterMovement =
-          (_loadedConfig[kConfigKeyFastMonsterMovement].GetString() != "N");
+          (_loadedConfig[kConfigKeyFastMonsterMovement].GetString() == "Y");
 
       GameConfig.UseGraphics =
-          (_loadedConfig[kConfigUseGraphics].GetString() != "N");
+          (_loadedConfig[kConfigUseGraphics].GetString() == "Y");
     }
     break;
   }

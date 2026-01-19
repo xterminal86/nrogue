@@ -141,8 +141,6 @@ bool Printer::InitForSDL()
   SDL_Rect rect = Game::gApp.GetWindowSize(_tileWidth, _tileHeight);
 
   SDL_SetWindowPosition(Game::gApp.Window, rect.x, rect.y);
-
-  // FIXME: resizes too much in width for 10x10 tileset.
   SDL_SetWindowSize(Game::gApp.Window, rect.w, rect.h);
 
   _frameBuffer = SDL_CreateTexture(Game::gApp.Renderer,

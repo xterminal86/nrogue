@@ -23,6 +23,22 @@ void MessageLogState::HandleInput()
 
   switch (_keyPressed)
   {
+    case NUMPAD_7:
+    {
+      Game::gPrnt.GetMsgBufferObj().SetScrollState(
+        MessageBufferScrollState::TOP
+      );
+    }
+    break;
+
+    case NUMPAD_1:
+    {
+      Game::gPrnt.GetMsgBufferObj().SetScrollState(
+        MessageBufferScrollState::BOTTOM
+      );
+    }
+    break;
+
     case ALT_K2:
     case NUMPAD_2:
     case NUMPAD_5:

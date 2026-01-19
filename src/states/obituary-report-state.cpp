@@ -54,7 +54,29 @@ void ObituaryReportState::HandleInput()
 #ifdef USE_SDL
     case NUMPAD_2:
     {
-      _obituary.ResetScroll();
+      _obituary.ScrollDown();
+    }
+    break;
+#endif
+
+    // -------------------------------------------------------------------------
+
+#ifdef USE_SDL
+    case NUMPAD_7:
+    {
+      Game::gPrnt.GetMsgBufferObj().SetScrollState(
+        MessageBufferScrollState::TOP
+      );
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
+    case NUMPAD_1:
+    {
+      Game::gPrnt.GetMsgBufferObj().SetScrollState(
+        MessageBufferScrollState::BOTTOM
+      );
     }
     break;
 #endif
