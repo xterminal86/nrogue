@@ -987,6 +987,8 @@ bool Application::InitSDL()
   Printer::TerminalWidth  = GlobalConstants::TerminalWidth;
   Printer::TerminalHeight = GlobalConstants::TerminalHeight;
 
+  Game::gPrnt.InitMsgBufferObj();
+
   return true;
 }
 

@@ -164,6 +164,8 @@ class Printer
                     const uint32_t& fgColor,
                     const uint32_t& bgColor);
 
+    void InitMsgBufferObj();
+
     GameLogMessageData* GetLastMessage();
 
     void ResetMessagesToDisplay();
@@ -240,11 +242,31 @@ class Printer
       if (s != MessageBufferScrollState::NONE)
       {
         double progress = buffer.GetScrollProgress();
-        Game::gPrnt.PrintFB(TerminalWidth - 1,
-                            TerminalHeight - 2 - (int)(21.0 * progress),
-                            '=',
-                            Colors::WhiteColor,
-                            Colors::BlackColor);
+
+        //
+        //   <-- 0
+        // ^
+        // |                    --
+        // |                      |
+        // |                      |
+        // |                      | markerMoveArea
+        // |                      |
+        // | <-- aboveDownArrow --
+        // V
+        //   <-- TerminalHeight
+        //
+        // progress goes from 0.0 (bottom) to 1.0 (top).
+        //
+
+        int aboveDownArrow = TerminalHeight - 2;
+        int markerMoveArea = TerminalHeight - 4;
+        Game::gPrnt.PrintFB(
+          TerminalWidth - 1,
+          aboveDownArrow - (int)((double)markerMoveArea * progress),
+          '=',
+          Colors::WhiteColor,
+          Colors::BlackColor
+        );
       }
     }
 
@@ -274,7 +296,8 @@ class Printer
 
     bool _ok = false;
 
-    MsgScrollBuffer<GameLogMessageData> _inGameMessages{24, 5};
+    using MsgBuffer = MsgScrollBuffer<GameLogMessageData>;
+    std::unique_ptr<MsgBuffer> _inGameMessages;
 
     int _lastMessagesToDisplay = 0;
 

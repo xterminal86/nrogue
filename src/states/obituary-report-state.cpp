@@ -3,6 +3,13 @@
 #include "printer.h"
 #include "application.h"
 
+ObituaryReportState::ObituaryReportState()
+{
+  _obituary = std::make_unique<MsgBuffer>(Printer::TerminalHeight - 1, 5);
+}
+
+// =============================================================================
+
 void ObituaryReportState::Prepare()
 {
   StringV data = Game::gApp.CollectObituary(true, false);
@@ -13,10 +20,10 @@ void ObituaryReportState::Prepare()
       continue;
     }
 
-    _obituary.AddMessage(line);
+    _obituary->AddMessage(line);
   }
 
-  _obituary.SetScrollState(MessageBufferScrollState::TOP);
+  _obituary->SetScrollState(MessageBufferScrollState::TOP);
 }
 
 // =============================================================================
@@ -33,7 +40,7 @@ void ObituaryReportState::HandleInput()
     case KEY_PPAGE:
 #endif
     {
-      _obituary.ScrollUp();
+      _obituary->ScrollUp();
     }
     break;
 
@@ -45,7 +52,7 @@ void ObituaryReportState::HandleInput()
     case KEY_NPAGE:
 #endif
     {
-      _obituary.ScrollDown();
+      _obituary->ScrollDown();
     }
     break;
 
@@ -54,7 +61,7 @@ void ObituaryReportState::HandleInput()
 #ifdef USE_SDL
     case NUMPAD_2:
     {
-      _obituary.ScrollDown();
+      _obituary->ScrollDown();
     }
     break;
 #endif
@@ -64,9 +71,7 @@ void ObituaryReportState::HandleInput()
 #ifdef USE_SDL
     case NUMPAD_7:
     {
-      Game::gPrnt.GetMsgBufferObj().SetScrollState(
-        MessageBufferScrollState::TOP
-      );
+      _obituary->SetScrollState(MessageBufferScrollState::TOP);
     }
     break;
 
@@ -74,9 +79,7 @@ void ObituaryReportState::HandleInput()
 
     case NUMPAD_1:
     {
-      Game::gPrnt.GetMsgBufferObj().SetScrollState(
-        MessageBufferScrollState::BOTTOM
-      );
+      _obituary->SetScrollState(MessageBufferScrollState::BOTTOM);
     }
     break;
 #endif
@@ -104,9 +107,9 @@ void ObituaryReportState::Update(bool forceUpdate)
     Game::gPrnt.Clear();
 
     DrawHeader(" OBITUARY ");
-    Game::gPrnt.DrawScrollBars(_obituary);
+    Game::gPrnt.DrawScrollBars(*_obituary.get());
 
-    auto msgs = _obituary.GetMessages();
+    auto msgs = _obituary->GetMessages();
 
     int lineCount = 0;
     for (const std::string* msg : msgs)

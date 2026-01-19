@@ -1148,10 +1148,10 @@ void Printer::AddMessage(const GameLogMessageData& data)
   //
   // There are messages in log and current message is the same as the last one.
   //
-  if (!_inGameMessages.IsEmpty() && (_repeatingMessage == data.Message))
+  if (!_inGameMessages->IsEmpty() && (_repeatingMessage == data.Message))
   {
     _messageRepeatCounter++;
-    GameLogMessageData* lastMsg = _inGameMessages.LastMessage();
+    GameLogMessageData* lastMsg = _inGameMessages->LastMessage();
     if (lastMsg != nullptr)
     {
       *lastMsg =
@@ -1170,7 +1170,7 @@ void Printer::AddMessage(const GameLogMessageData& data)
   else
   {
     _messageRepeatCounter = 1;
-    _inGameMessages.AddMessage(
+    _inGameMessages->AddMessage(
     {
       data.Message,
       data.FgColor,
@@ -1190,16 +1190,28 @@ void Printer::AddMessage(const GameLogMessageData& data)
 
 // =============================================================================
 
+void Printer::InitMsgBufferObj()
+{
+  if (TerminalHeight == 0)
+  {
+    ConsoleLog("[WAR] Printer::InitMsgBufferObj() - TerminalHeight is 0!");
+  }
+
+  _inGameMessages = std::make_unique<MsgBuffer>(TerminalHeight - 1, 5);
+}
+
+// =============================================================================
+
 const std::vector<GameLogMessageData*>& Printer::GetLastMessages()
 {
-  return _inGameMessages.GetLastMessages(_lastMessagesToDisplay);
+  return _inGameMessages->GetLastMessages(_lastMessagesToDisplay);
 }
 
 // =============================================================================
 
 GameLogMessageData* Printer::GetLastMessage()
 {
-  return _inGameMessages.GetLastMessage();
+  return _inGameMessages->GetLastMessage();
 }
 
 // =============================================================================
@@ -1215,14 +1227,14 @@ void Printer::ResetMessagesToDisplay()
 
 const std::vector<GameLogMessageData*>& Printer::Messages()
 {
-  return _inGameMessages.GetMessages();
+  return _inGameMessages->GetMessages();
 }
 
 // =============================================================================
 
 MsgScrollBuffer<GameLogMessageData>& Printer::GetMsgBufferObj()
 {
-  return _inGameMessages;
+  return *_inGameMessages.get();
 }
 
 // =============================================================================

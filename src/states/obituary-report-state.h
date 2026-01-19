@@ -8,12 +8,15 @@
 class ObituaryReportState : public GameState
 {
   public:
+    ObituaryReportState();
+
     void Prepare() override;
     void HandleInput() override;
     void Update(bool forceUpdate = false) override;
 
   private:
-    MsgScrollBuffer<std::string> _obituary{24, 5};
+    using MsgBuffer = MsgScrollBuffer<std::string>;
+    std::unique_ptr<MsgBuffer> _obituary;
 };
 
 #endif // OBITUARYREPORTSTATE_H
