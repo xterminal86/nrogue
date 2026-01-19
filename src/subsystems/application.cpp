@@ -906,8 +906,7 @@ bool Application::InitSDL()
 
   LoadConfig();
 
-  SDL_Rect rect = GetWindowSize(GameConfig.TileWidth,
-                                GameConfig.TileHeight);
+  SDL_Rect rect = GetWindowSize(8, 16);
 
   _defaultWindowSize = { rect.w, rect.h };
 
@@ -1018,9 +1017,9 @@ SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
   // ---------------------------------------------------------------------------
   //
   // This is just a plain hack to fit
-  // graphics tileset to screen at certain resolution
+  // graphics tileset to screen at certain resolution.
   //
-  if (scaledW == 32)
+  if (!GameConfig.TilesetFilename.empty() && scaledW == 32)
   {
     GlobalConstants::TerminalWidth = 60;
   }
@@ -1105,10 +1104,13 @@ void Application::LoadConfig()
           std::stod(_loadedConfig[kConfigKeyScale].GetString());
 
       GameConfig.FastCombat =
-          (_loadedConfig[kConfigKeyFastCombat].GetString() != "0");
+          (_loadedConfig[kConfigKeyFastCombat].GetString() != "N");
 
       GameConfig.FastMonsterMovement =
-          (_loadedConfig[kConfigKeyFastMonsterMovement].GetString() != "0");
+          (_loadedConfig[kConfigKeyFastMonsterMovement].GetString() != "N");
+
+      GameConfig.UseGraphics =
+          (_loadedConfig[kConfigUseGraphics].GetString() != "N");
     }
     break;
   }

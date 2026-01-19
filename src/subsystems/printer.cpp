@@ -42,7 +42,6 @@ bool Printer::InitForSDL()
   if (surf)
   {
     SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
-
     _tileset = SDL_CreateTextureFromSurface(Game::gApp.Renderer, surf);
     if (_tileset == nullptr)
     {
@@ -57,13 +56,15 @@ bool Printer::InitForSDL()
   }
   else
   {
+    gameConfig.TilesetFilename.clear();
+
     auto str = Util::StringFormat("***** Could not load tileset: %s! *****\n"
                                   "Falling back to embedded.\n",
                                   SDL_GetError());
     ConsoleLog("%s\n", str.data());
     LogPrint(str, true);
 
-    _tileWidth = 8;
+    _tileWidth  = 8;
     _tileHeight = 16;
 
     SDL_Rect rect = Game::gApp.GetWindowSize(_tileWidth, _tileHeight);
@@ -109,8 +110,40 @@ bool Printer::InitForSDL()
   int w = 0, h = 0;
   SDL_QueryTexture(_tileset, nullptr, nullptr, &w, &h);
 
+  bool dimensionsOk = ( _tileWidth * 16 == w );
+
+  if (gameConfig.UseGraphics)
+  {
+    //
+    // We will assume that graphic tiles start after row 16 in tileset.
+    //
+    int tail = ( h - (_tileHeight * 16) );
+    dimensionsOk &= ( (_tileHeight * 16) == (h - tail) );
+  }
+  else
+  {
+    dimensionsOk &= ( _tileHeight * 16 == h );
+  }
+
+  if (!dimensionsOk)
+  {
+    ConsoleLog("Invalid tileset image size %dx%d for requested tileset "
+               "character unit %dx%d ! Tileset should be 16x16 character units. "
+               "If you use graphics tileset, make sure graphic tiles start after "
+               "row 16.",
+               w, h, _tileWidth, _tileHeight);
+    return false;
+  }
+
   _tilesetWidth = w;
   _tilesetHeight = h;
+
+  SDL_Rect rect = Game::gApp.GetWindowSize(_tileWidth, _tileHeight);
+
+  SDL_SetWindowPosition(Game::gApp.Window, rect.x, rect.y);
+
+  // FIXME: resizes too much in width for 10x10 tileset.
+  SDL_SetWindowSize(Game::gApp.Window, rect.w, rect.h);
 
   _frameBuffer = SDL_CreateTexture(Game::gApp.Renderer,
                                    SDL_PIXELFORMAT_RGBA32,

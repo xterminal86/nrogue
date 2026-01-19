@@ -36,6 +36,9 @@ void Shadowcaster::Init(const int posX, const int posY)
 
 const Shadow& Shadowcaster::ProjectTile(const int row, const int col)
 {
+  // NOTE: cache is not needed since it will work slower (checked via in-game
+  // profiler).
+
   // TODO: figure this out
   double topLeft     = (double)col / (double)(row + 2);
   double bottomRight = (double)(col + 1) / (double)(row + 1);

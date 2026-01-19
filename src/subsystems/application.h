@@ -65,6 +65,11 @@ class Application
       //
       bool FastMonsterMovement = false;
 
+      //
+      // Use graphic tiles.
+      //
+      bool UseGraphics = false;
+
       std::string TilesetFilename;
     };
 
@@ -177,6 +182,7 @@ class Application
     const std::string kConfigKeyScale               = "scale";
     const std::string kConfigKeyFastCombat          = "fast_combat";
     const std::string kConfigKeyFastMonsterMovement = "fast_monster_movement";
+    const std::string kConfigUseGraphics            = "use_graphics";
 
     // =========================================================================
 

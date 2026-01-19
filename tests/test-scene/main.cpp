@@ -21,6 +21,19 @@ void ConsoleTest()
     "##########",
   };
 
+  //StringV map =
+  //{
+  //  "#########",
+  //  "#.......#",
+  //  "#.......#",
+  //  "#.......#",
+  //  "#...x...#",
+  //  "#.......#",
+  //  "#.......#",
+  //  "#.......#",
+  //  "#########",
+  //};
+
   const std::string decor(80, '=');
 
   using PairI = std::pair<int, int>;
@@ -198,6 +211,8 @@ exitFor:
     double topLeft     = (double)col / (double)(row + 2);
     double bottomRight = (double)(col + 1) / (double)(row + 1);
 
+    printf("  (%d,%d) -> <%.4f,%.4f>\n", row, col, topLeft, bottomRight);
+
     return Shadow { topLeft, bottomRight };
   };
 
@@ -243,6 +258,8 @@ exitFor:
         {
           Shadow projection = ProjectTile(row, col);
 
+          printf("  projection: %.4f ; %.4f\n", projection.Start, projection.End);
+
           bool visible = !line.IsInShadow(projection);
           map[x][y] = visible ? map[x][y] : ' ';
 
@@ -260,6 +277,7 @@ exitFor:
   {
     for (uint8_t octant = 0; octant < 8; octant++)
     {
+      printf("Octant: %u\n", octant);
       RefreshOctant(playerPos, octant);
     }
   };
@@ -280,14 +298,16 @@ exitFor:
 
 int main(int argc, char* argv[])
 {
+  /*
   if (!Game::Init(MapType::TEST_LEVEL))
   {
     return 1;
   }
 
   Game::Run();
+  */
 
-  //ConsoleTest();
+  ConsoleTest();
 
   return 0;
 }
