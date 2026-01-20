@@ -19,7 +19,11 @@ def main():
     print("No images found!");
     exit(1);
 
-  cppEnum = "enum class GraphicTiles\n{\n";
+  cppEnum = (
+    "enum class GraphicTiles\n"
+    "{\n"
+    "  NONE = -1,\n"
+  );
 
   first = True;
   for item in images:
