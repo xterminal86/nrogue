@@ -433,7 +433,7 @@ void Application::SaveGame()
 
   if (!save.Save(Strings::SaveFileName))
   {
-    ConsoleLog("Couldn't save at %s !", Strings::SaveFileName.data());
+    ConsoleLog("[ERR] couldn't save at %s !", Strings::SaveFileName.data());
   }
   else
   {
@@ -877,13 +877,7 @@ void Application::SetIcon()
   SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);
   if (!surf)
   {
-    #ifdef DEBUG_BUILD
-    auto str = Util::StringFormat("***** Could not load from memory: "
-                                  "%s *****\n",
-                                  SDL_GetError());
-    LogPrint(str);
-    ConsoleLog("%s\n", str.data());
-    #endif
+    ConsoleLog("[ERR] could not load from memory: '%s'", SDL_GetError());
     return;
   }
 
@@ -898,7 +892,7 @@ bool Application::InitSDL()
 {
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
   {
-    ConsoleLog("SDL_Init Error: %s\n", SDL_GetError());
+    ConsoleLog("[ERR] SDL_Init Error: '%s'", SDL_GetError());
     return false;
   }
 
@@ -906,7 +900,13 @@ bool Application::InitSDL()
 
   LoadConfig();
 
-  SDL_Rect rect = GetWindowSize(8, 16);
+  if (!ValidateConfig())
+  {
+    ConsoleLog("[ERR] config validation failed!");
+    return false;
+  }
+
+  SDL_Rect rect = GetWindowSize(GameConfig.TileWidth, GameConfig.TileHeight);
 
   _defaultWindowSize = { rect.w, rect.h };
 
@@ -919,7 +919,7 @@ bool Application::InitSDL()
 
   if (Window == nullptr)
   {
-    ConsoleLog("SDL_CreateWindow fail: %s", SDL_GetError());
+    ConsoleLog("[ERR] SDL_CreateWindow fail: '%s'", SDL_GetError());
     return false;
   }
 
@@ -946,7 +946,7 @@ bool Application::InitSDL()
                                 SDL_RENDERER_TARGETTEXTURE);
   if (Renderer == nullptr)
   {
-    ConsoleLog("SDL_CreateRenderer() fail: %s", SDL_GetError());
+    ConsoleLog("[WAR] SDL_CreateRenderer() fail: '%s'", SDL_GetError());
     ConsoleLog("Trying software mode...");
 
     Renderer = SDL_CreateRenderer(Window,
@@ -955,7 +955,7 @@ bool Application::InitSDL()
                                   SDL_RENDERER_TARGETTEXTURE);
     if (Renderer == nullptr)
     {
-      ConsoleLog("SDL_CreateRenderer() fail: %s", SDL_GetError());
+      ConsoleLog("[ERR] SDL_CreateRenderer() fail: '%s'", SDL_GetError());
       return false;
     }
   }
@@ -968,7 +968,7 @@ bool Application::InitSDL()
 
   if (!Game::gPrnt.IsReady())
   {
-    ConsoleLog("Printer failed to initialize!");
+    ConsoleLog("[ERR] failed to initialize Printer subsystem!");
     return false;
   }
 
@@ -1065,6 +1065,51 @@ SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
 
 // =============================================================================
 
+bool Application::ValidateConfig()
+{
+  SDL_Surface* surf = SDL_LoadBMP(GameConfig.TilesetFilename.data());
+  if (surf == nullptr)
+  {
+    ConsoleLog("[WAR] failed to load tileset ('%s'), falling back to embedded.",
+               SDL_GetError());
+    GameConfig.TilesetFilename.clear();
+    GameConfig.ScaleFactor = 1;
+    GameConfig.TileWidth   = 8;
+    GameConfig.TileHeight  = 16;
+  }
+  else
+  {
+    if (GameConfig.TileWidth * 16 != surf->w)
+    {
+      ConsoleLog("[ERR] tileset width should accommodate 16 columns of "
+                 "characters!");
+      return false;
+    }
+
+    if (!GameConfig.UseGraphics)
+    {
+      if (GameConfig.TileHeight * 16 != surf->h)
+      {
+        ConsoleLog("[ERR] tileset height should accommodate 16 rows of "
+                   "characters!");
+        return false;
+      }
+    }
+    else
+    {
+      //
+      // Unfortunately for graphics tileset we can't check programmatically that
+      // height of a tileset and tile height specified in config actually
+      // match because graphics tileset is theoretically unbounded in height.
+      //
+    }
+  }
+
+  return true;
+}
+
+// =============================================================================
+
 void Application::LoadConfig()
 {
   GameConfig.TileWidth  = 8;
@@ -1074,12 +1119,12 @@ void Application::LoadConfig()
   switch (res)
   {
     case NRS::LoadResult::INVALID_FORMAT:
-      ConsoleLog("Config format is invalid - check syntax! "
+      ConsoleLog("[WAR] config format is invalid - check syntax! "
                  "Will assume default values for now.");
       break;
 
     case NRS::LoadResult::ERROR:
-      ConsoleLog("Couldn't load config - check if file exists! "
+      ConsoleLog("[WAR] couldn't load config - check if file exists! "
                  "Will assume default values for now.");
       break;
 

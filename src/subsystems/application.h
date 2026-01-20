@@ -122,6 +122,8 @@ class Application
 
     void LoadConfig();
 
+    bool ValidateConfig();
+
     bool InitGraphics();
 
     void InitGameStates(bool restart = false);

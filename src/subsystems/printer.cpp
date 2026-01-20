@@ -38,32 +38,28 @@ bool Printer::InitForSDL()
   _tileWidth = 0;
   _tileHeight = 0;
 
-  SDL_Surface* surf = SDL_LoadBMP(tilesetFile.data());
-  if (surf)
+  if (!tilesetFile.empty())
   {
-    SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
-    _tileset = SDL_CreateTextureFromSurface(Game::gApp.Renderer, surf);
-    if (_tileset == nullptr)
+    SDL_Surface* surf = SDL_LoadBMP(tilesetFile.data());
+    if (surf)
     {
-      ConsoleLog("SDL_CreateTextureFromSurface() fail: %s\n", SDL_GetError());
-      return false;
+      SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
+      _tileset = SDL_CreateTextureFromSurface(Game::gApp.Renderer, surf);
+      if (_tileset == nullptr)
+      {
+        ConsoleLog("[ERR] SDL_CreateTextureFromSurface() fail: '%s'\n",
+                   SDL_GetError());
+        return false;
+      }
+
+      SDL_FreeSurface(surf);
+
+      _tileWidth  = gameConfig.TileWidth;
+      _tileHeight = gameConfig.TileHeight;
     }
-
-    SDL_FreeSurface(surf);
-
-    _tileWidth  = gameConfig.TileWidth;
-    _tileHeight = gameConfig.TileHeight;
   }
   else
   {
-    gameConfig.TilesetFilename.clear();
-
-    auto str = Util::StringFormat("***** Could not load tileset: %s! *****\n"
-                                  "Falling back to embedded.\n",
-                                  SDL_GetError());
-    ConsoleLog("%s\n", str.data());
-    LogPrint(str, true);
-
     _tileWidth  = 8;
     _tileHeight = 16;
 
@@ -75,16 +71,11 @@ bool Printer::InitForSDL()
     auto res = Util::Base64_Decode(Base64Strings::Tileset8x16Base64);
     auto bytes = Util::ConvertStringToBytes(res);
     SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
-    surf = SDL_LoadBMP_RW(data, 1);
+    SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);
     if (!surf)
     {
-      #ifdef DEBUG_BUILD
-      auto str = Util::StringFormat("***** Could not load from memory: "
-                                    "%s *****\n",
-                                    SDL_GetError());
-      ConsoleLog("%s\n", str.data());
-      LogPrint(str, true);
-      #endif
+      ConsoleLog("[ERR] could not load tileset from memory: '%s'",
+                 SDL_GetError());
       return false;
     }
 
@@ -92,7 +83,8 @@ bool Printer::InitForSDL()
     _tileset = SDL_CreateTextureFromSurface(Game::gApp.Renderer, surf);
     if (_tileset == nullptr)
     {
-      ConsoleLog("SDL_CreateTextureFromSurface() fail: %s\n", SDL_GetError());
+      ConsoleLog("[ERR] SDL_CreateTextureFromSurface() fail: '%s'\n",
+                 SDL_GetError());
       return false;
     }
 
@@ -110,31 +102,6 @@ bool Printer::InitForSDL()
   int w = 0, h = 0;
   SDL_QueryTexture(_tileset, nullptr, nullptr, &w, &h);
 
-  bool dimensionsOk = ( _tileWidth * 16 == w );
-
-  if (gameConfig.UseGraphics)
-  {
-    //
-    // We will assume that graphic tiles start after row 16 in tileset.
-    //
-    int tail = ( h - (_tileHeight * 16) );
-    dimensionsOk &= ( (_tileHeight * 16) == (h - tail) );
-  }
-  else
-  {
-    dimensionsOk &= ( _tileHeight * 16 == h );
-  }
-
-  if (!dimensionsOk)
-  {
-    ConsoleLog("Invalid tileset image size %dx%d for requested tileset "
-               "character unit %dx%d ! Tileset should be 16x16 character units. "
-               "If you use graphics tileset, make sure graphic tiles start after "
-               "row 16.",
-               w, h, _tileWidth, _tileHeight);
-    return false;
-  }
-
   _tilesetWidth = w;
   _tilesetHeight = h;
 
@@ -151,7 +118,7 @@ bool Printer::InitForSDL()
 
   if (_frameBuffer == nullptr)
   {
-    ConsoleLog("SDL_CreateTexture() fail: %s\n", SDL_GetError());
+    ConsoleLog("[ERR] SDL_CreateTexture() fail: '%s'\n", SDL_GetError());
     return false;
   }
 

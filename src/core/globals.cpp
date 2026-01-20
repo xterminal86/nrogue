@@ -119,7 +119,7 @@ namespace Game
 
     if (!gApp.IsAppReady())
     {
-      ConsoleLog("There was an error during application initialization - "
+      ConsoleLog("[ERR] there was an error during application initialization - "
                  "no sense in continuing");
       return false;
     }
@@ -149,7 +149,7 @@ namespace Game
     }
     else
     {
-      ConsoleLog("Game was not initialized - call gApp.Init() first!");
+      ConsoleLog("[ERR] Game was not initialized - call gApp.Init() first!");
     }
   }
 }

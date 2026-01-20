@@ -32,13 +32,13 @@ tileset               : "resources/std-8x16-ck.bmp",
 tile_w                : 8,
 tile_h                : 16,
 scale                 : 2,
-fast_combat           : 0,
-fast_monster_movement : 0,
+fast_combat           : N,
+fast_monster_movement : N,
 ```
 
 Two last lines are optional, they're off by default.
 `fast_combat` disables visual attack display and `fast_monster_movement` doesn't force redraw after each visible monster's turn.
-Both of these options reduce gameplay lag, although with `fast_monster_movement != 0` it may sometimes look as if
+Both of these options reduce gameplay lag, although with `fast_monster_movement != N` it may sometimes look as if
 enemy just spawned before player if said monster had much larger SPD than player, which allowed it to perform several
 turns that were not force redrawn.
 
