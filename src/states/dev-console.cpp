@@ -9,6 +9,11 @@
 #include "util.h"
 #include "game-object-info.h"
 
+DevConsole::DevConsole()
+{
+  _stdout = std::make_unique<MsgBuffer>(Printer::TerminalHeight - 2, 5);
+}
+
 void DevConsole::Init()
 {
   for (auto& kvp : _commandNameByType)
@@ -158,7 +163,7 @@ void DevConsole::HandleInput()
 
     case VK_TAB:
     {
-      _stdout.ResetScroll();
+      _stdout->ResetScroll();
 
       std::string noPrompt = _currentCommand.substr(2);
       std::string lastCmd;
@@ -304,7 +309,7 @@ void DevConsole::HandleInput()
     case KEY_PPAGE:
 #endif
     {
-      _stdout.ScrollUp();
+      _stdout->ScrollUp();
     }
     break;
 
@@ -316,14 +321,20 @@ void DevConsole::HandleInput()
     case KEY_NPAGE:
 #endif
     {
-      _stdout.ScrollDown();
+      _stdout->ScrollDown();
     }
     break;
 
 #ifdef USE_SDL
-    case NUMPAD_2:
+    case NUMPAD_1:
     {
-      _stdout.ResetScroll();
+      _stdout->SetScrollState(MessageBufferScrollState::BOTTOM);
+    }
+    break;
+
+    case NUMPAD_7:
+    {
+      _stdout->SetScrollState(MessageBufferScrollState::TOP);
     }
     break;
 #endif
@@ -332,7 +343,7 @@ void DevConsole::HandleInput()
 
     case VK_ENTER:
     {
-      _stdout.ResetScroll();
+      _stdout->ResetScroll();
 
       StdOut(_currentCommand);
 
@@ -423,9 +434,9 @@ void DevConsole::Update(bool forceUpdate)
     Game::gPrnt.Clear();
 
     DrawHeader(" DEVELOPER'S CONSOLE ");
-    Game::gPrnt.DrawScrollBars(_stdout);
+    Game::gPrnt.DrawScrollBars(*_stdout.get());
 
-    auto msgs = _stdout.GetMessages();
+    auto msgs = _stdout->GetMessages();
 
     int lineCount = 0;
     for (const std::string* msg : msgs)
@@ -534,7 +545,7 @@ void DevConsole::ProcessCommand(const std::string& command,
     // ------------------ shell builtins ---------------------------------------
 
     case DevConsoleCommand::CLEAR:
-      _stdout.Clear();
+      _stdout->Clear();
       break;
 
     case DevConsoleCommand::HELP:
@@ -2112,7 +2123,7 @@ void DevConsole::PrintAdditionalHelp(DevConsoleCommand command)
 
 void DevConsole::StdOut(const std::string& str)
 {
-  _stdout.AddMessage(str);
+  _stdout->AddMessage(str);
 }
 
 // =============================================================================

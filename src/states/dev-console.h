@@ -93,6 +93,8 @@ class GameObject;
 class DevConsole : public GameState
 {
   public:
+    DevConsole();
+
     void Init() override;
     void Prepare() override;
     void Cleanup() override;
@@ -107,7 +109,8 @@ class DevConsole : public GameState
 
     std::string _currentCommand;
 
-    MsgScrollBuffer<std::string> _stdout{23, 10};
+    using MsgBuffer = MsgScrollBuffer<std::string>;
+    std::unique_ptr<MsgBuffer> _stdout;
 
     std::vector<std::string> _commandsHistory;
 
