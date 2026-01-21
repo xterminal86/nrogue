@@ -34,12 +34,83 @@ void Shadowcaster::Init(const int posX, const int posY)
 
 // =============================================================================
 
+//
+// Contrary to what's described in the article, octants here actually go like
+// this:
+//
+// +---------+---------+
+// |\        |        /|
+// | \       |       / |
+// |  \   7  |  6   /  |
+// |   \     |     /   |
+// |    \    |    /    |
+// |     \   |   /     |
+// | 8    \  |  /   5  |
+// |       \ | /       |
+// |        \|/        |
+// +---------+---------+
+// |        /|\        |
+// |       / | \       |
+// | 1    /  |  \   4  |
+// |     /   |   \     |
+// |    /    |    \    |
+// |   /     |     \   |
+// |  /   2  |  3   \  |
+// | /       |       \ |
+// |/        |        \|
+// +---------+---------+
+//
+// This doesn't change anything fundamentally, but just to note.
+//
+// OK, so the general idea is this: we scan octants and save "distance" (called
+// "shadow" here) between bottom right and upper left corners of a scanned tile.
+// I deliberately used "distance" in quotes, because actually it's slopes of
+// lines that go through upper left and bottom right corner of a given tile,
+// starting from scan point. This is what's called "projection" in the article.
+// And so the idea is to gather all those "distances", merge them and thus get
+// shadow line that will determine if certain tiles are supposed to be
+// invisibile.
+//
+// Let's work in octant 5 for this example (it will work automatically in
+// others because of symmetry). Let's zoom in and see what this means
+// (unfortunately ASCII graphics is not good for drawing such things, so it's
+// not to scale and looks like shit, obviously):
+//
+//          +-+
+//          |5|
+//        +-+-+
+//      / |2|4|
+//    /   +-+-+
+//  /   / |1|3|
+//     /--+-+-+----
+//
+// For example, lines that go from scan origin and through upper left and
+// bottom right points of tile 1 will have slopes 0.5 and 0 respectively.
+// So projections will be:
+//
+//      BR       UL
+//
+// 1 - (0,       0.5)
+// 2 - (0.3333,  1.0)
+// 3 - (0,    0.3333)
+// 4 - (0.25, 0.6667)
+// 5 - (0.5,     1.0)
+//
+// I tried to visualize it in Desmos, but it doesn't quite work as one would
+// think. For some reason graph's grid doesn't quite match what's described in
+// algorithm. It kinda works if you zoom in to 0.5 resolution and assume tile 1
+// is at (2.5, 0.5), 2 - at (2.5, 1.5) and so on.
+//
+// Or maybe I'm stupid or something.
+//
+// Anyway, you can check graph.png in tests/shadowcaster.
+//
+// Also, I still don't get why it's +2 and (+1, +1) in method below.
+//
 const Shadow& Shadowcaster::ProjectTile(const int row, const int col)
 {
   // NOTE: cache is not needed since it will work slower (checked via in-game
   // profiler).
-
-  // TODO: figure this out
   double topLeft     = (double)col / (double)(row + 2);
   double bottomRight = (double)(col + 1) / (double)(row + 1);
 

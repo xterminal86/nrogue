@@ -1061,7 +1061,6 @@ SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
 
   return res;
 }
-#endif
 
 // =============================================================================
 
@@ -1107,6 +1106,7 @@ bool Application::ValidateConfig()
 
   return true;
 }
+#endif
 
 // =============================================================================
 
