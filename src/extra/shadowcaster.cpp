@@ -67,9 +67,16 @@ void Shadowcaster::Init(const int posX, const int posY)
 // I deliberately used "distance" in quotes, because actually it's slopes of
 // lines that go through upper left and bottom right corner of a given tile,
 // starting from scan point. This is what's called "projection" in the article.
-// And so the idea is to gather all those "distances", merge them and thus get
-// shadow line that will determine if certain tiles are supposed to be
-// invisibile.
+// And the idea is to scan the octant and gather all projections (and merge them
+// if needed) into shadow line(s), and then determine if given tile falls into
+// this shadow line, thus making it invisible. So the algorithm looks like this:
+//
+// 1. Start with no shadow line.
+// 2. For each tile check its projection against shadow line. If it falls inside
+//    it, it's not visible.
+// 3. Otherwise mark it as visible and, if it's an opaque tile, add its
+//    projection to shadow line (merge if needed).
+// 4. Rinse and repeat until out of bounds.
 //
 // Let's work in octant 5 for this example (it will work automatically in
 // others because of symmetry). Let's zoom in and see what this means
@@ -109,8 +116,10 @@ void Shadowcaster::Init(const int posX, const int posY)
 //
 const Shadow& Shadowcaster::ProjectTile(const int row, const int col)
 {
-  // NOTE: cache is not needed since it will work slower (checked via in-game
-  // profiler).
+  //
+  // NOTE: cache is not needed since it will work even slower (checked via
+  // in-game profiler).
+  //
   double topLeft     = (double)col / (double)(row + 2);
   double bottomRight = (double)(col + 1) / (double)(row + 1);
 
@@ -122,6 +131,10 @@ const Shadow& Shadowcaster::ProjectTile(const int row, const int col)
 
 // =============================================================================
 
+//
+// Some symmetry shuffle, because (2, 3) in one octant is (-2, 3) in another and
+// so on.
+//
 const PairI& Shadowcaster::TransformOctant(int row, int col, uint8_t octant)
 {
   switch (octant)
@@ -222,7 +235,9 @@ void Shadowcaster::RefreshOctant(uint8_t octant)
       break;
     }
 
-    // Stop once we go out of bounds.
+    //
+    // Stop once we go out of bounds rowwise.
+    //
     if (!Util::IsInsideMap(p, Game::gMap.CurrentLevel->MapSize, false))
     {
       break;
@@ -243,7 +258,9 @@ void Shadowcaster::RefreshOctant(uint8_t octant)
         break;
       }
 
-      // Stop once we go out of bounds.
+      //
+      // Stop once we go out of bounds columnwise.
+      //
       if (!Util::IsInsideMap(p, Game::gMap.CurrentLevel->MapSize, false))
       {
         break;
