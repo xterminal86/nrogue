@@ -164,6 +164,8 @@ namespace Colors
 
 namespace Strings
 {
+  const std::string Empty;
+
   const std::string HexChars    = "0123456789ABCDEF";
   const std::string Base64Chars =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";

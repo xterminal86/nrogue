@@ -189,6 +189,8 @@ class GameObject
 
     int Image = '?';
 
+    GraphicTiles GraphicTile = GraphicTiles::NONE;
+
     uint32_t FgColor = Colors::WhiteColor;
     uint32_t BgColor = Colors::MagentaColor;
 

@@ -351,11 +351,13 @@ void MapLevelBase::RecordEmptyCells()
 void MapLevelBase::CreateBorders(char img,
                                  uint32_t fgColor,
                                  uint32_t bgColor,
-                                 const std::string& objectName)
+                                 const std::string& objectName,
+                                 const GraphicTiles graphicTile)
 {
   GameObjectInfo oi;
 
   oi.Image        = img;
+  oi.GraphicTile  = graphicTile;
   oi.FgColor      = fgColor;
   oi.BgColor      = bgColor;
   oi.IsBlocking   = true;
@@ -957,8 +959,9 @@ void MapLevelBase::UpdateFowLayer(GameObject* obj)
     return;
   }
 
-  FowLayer[obj->PosX][obj->PosY].Image   = obj->Image;
-  FowLayer[obj->PosX][obj->PosY].FowName = Util::GetFowName(obj);
+  FowLayer[obj->PosX][obj->PosY].Image       = obj->Image;
+  FowLayer[obj->PosX][obj->PosY].FowName     = Util::GetFowName(obj);
+  FowLayer[obj->PosX][obj->PosY].GraphicTile = obj->GraphicTile;
 }
 
 // =============================================================================
@@ -1026,7 +1029,7 @@ void MapLevelBase::PlaceGroundTile(int x, int y,
   }
 
   GameObjectInfo t;
-  t.Set(false, false, image, fgColor, bgColor, objName);
+  t.Set(false, false, image, fgColor, bgColor, objName, Strings::Empty);
   MapArray[x][y]->MakeTile(t);
 }
 
@@ -1072,7 +1075,13 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
   }
 
   GameObjectInfo t;
-  t.Set(false, false, img, flowerColor, Colors::GrassColor, tileName);
+  t.Set(false,
+        false,
+        img,
+        flowerColor,
+        Colors::GrassColor,
+        tileName,
+        Strings::Empty);
 
   MapArray[x][y]->MakeTile(t);
 }
@@ -1092,7 +1101,8 @@ void MapLevelBase::PlaceShallowWaterTile(int x, int y)
         '~',
         Colors::WhiteColor,
         Colors::ShallowWaterColor,
-        Strings::TileNames::ShallowWaterText);
+        Strings::TileNames::ShallowWaterText,
+        Strings::Empty);
   MapArray[x][y]->MakeTile(t, GameObjectType::SHALLOW_WATER);
 }
 
@@ -1121,7 +1131,9 @@ void MapLevelBase::PlaceDeepWaterTile(int x, int y)
         img,
         Colors::WhiteColor,
         Colors::DeepWaterColor,
-        Strings::TileNames::DeepWaterText);
+        Strings::TileNames::DeepWaterText,
+        Strings::Empty);
+
   MapArray[x][y]->MakeTile(t, GameObjectType::DEEP_WATER);
 }
 
@@ -1140,7 +1152,9 @@ void MapLevelBase::PlaceLavaTile(int x, int y)
         '~',
         Colors::LavaWavesColor,
         Colors::LavaColor,
-        Strings::TileNames::LavaText);
+        Strings::TileNames::LavaText,
+        Strings::Empty);
+
   MapArray[x][y]->MakeTile(t, GameObjectType::LAVA);
 }
 
@@ -1171,7 +1185,9 @@ void MapLevelBase::PlaceChasmTile(int x, int y)
         img,
         fgColor,
         bgColor,
-        Strings::TileNames::ChasmText);
+        Strings::TileNames::ChasmText,
+        Strings::Empty);
+
   MapArray[x][y]->MakeTile(t, GameObjectType::CHASM);
 }
 
@@ -1247,7 +1263,9 @@ void MapLevelBase::PlaceTree(int x, int y)
         img,
         Colors::GreenColor,
         Colors::BlackColor,
-        Strings::TileNames::TreeText);
+        Strings::TileNames::TreeText,
+        Strings::Empty);
+
   PlaceStaticObject(x, y, t);
 }
 
@@ -1266,7 +1284,7 @@ void MapLevelBase::PlaceWall(int x, int y,
   }
 
   GameObjectInfo t;
-  t.Set(true, true, image, fgColor, bgColor, objName);
+  t.Set(true, true, image, fgColor, bgColor, objName, Strings::Empty);
 
   //
   // HP is hardcoded to 1 to set Attrs.Indestructible flag to false,
@@ -1346,10 +1364,18 @@ void MapLevelBase::ConstructFromBuilder(LevelBuilder& lb)
 void MapLevelBase::CreateGround(char img,
                                 uint32_t fgColor,
                                 uint32_t bgColor,
-                                const std::string& tileName)
+                                const std::string& tileName,
+                                const GraphicTiles graphicTile)
 {
   GameObjectInfo t;
-  t.Set(false, false, img, fgColor, bgColor, tileName);
+  t.Set(false,
+        false,
+        img,
+        fgColor,
+        bgColor,
+        tileName,
+        Strings::Empty,
+        graphicTile);
 
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
 }

@@ -6,11 +6,13 @@ void GameObjectInfo::Set(bool isBlocking,
                          const uint32_t& fgColor,
                          const uint32_t& bgColor,
                          const std::string &objectName,
-                         const std::string &fowName)
+                         const std::string &fowName,
+                         const GraphicTiles graphicTile)
 {
   IsBlocking   = isBlocking;
   BlocksSight  = blocksSight;
   Image        = image;
+  GraphicTile  = graphicTile;
   FgColor      = fgColor;
   BgColor      = bgColor;
   ObjectName   = objectName;

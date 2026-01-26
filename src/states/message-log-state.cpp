@@ -54,6 +54,18 @@ void MessageLogState::HandleInput()
     }
     break;
 
+    case NUMPAD_4:
+    {
+      Game::gPrnt.GetMsgBufferObj().PageUp();
+    }
+    break;
+
+    case NUMPAD_6:
+    {
+      Game::gPrnt.GetMsgBufferObj().PageDown();
+    }
+    break;
+
     case 'm':
     case 'M':
     case VK_CANCEL:

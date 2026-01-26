@@ -142,12 +142,14 @@ void MapLevelTest::CreateLevel()
   CreateGround('.',
                Colors::ShadesOfGrey::Four,
                Colors::BlackColor,
-               Strings::TileNames::GroundText);
+               Strings::TileNames::GroundText,
+               GraphicTiles::GRAVEL);
 
   CreateBorders('#',
                 Colors::WhiteColor,
                 Colors::ShadesOfGrey::Six,
-                Strings::TileNames::RocksText);
+                Strings::TileNames::RocksText,
+                GraphicTiles::BRICK_WALL);
 
   for (int i = 0; i < 3; i++)
   {

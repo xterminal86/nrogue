@@ -109,7 +109,8 @@ void MapLevelLostCity::CreateCommonObjects(int x, int y, char image)
             img,
             Colors::DirtColor,
             Colors::BlackColor,
-            objName);
+            objName,
+            Strings::Empty);
       PlaceStaticObject(x, y, t);
     }
     break;
@@ -169,7 +170,8 @@ void MapLevelLostCity::CreateCommonObjects(int x, int y, char image)
             'T',
             Colors::WhiteColor,
             Colors::DeepWaterColor,
-            Strings::TileNames::FountainText);
+            Strings::TileNames::FountainText,
+            Strings::Empty);
       PlaceStaticObject(x, y, t);
       break;
 

@@ -88,6 +88,37 @@ class MsgScrollBuffer
 
     // =========================================================================
 
+    void PageUp()
+    {
+      if (_msgsCount > _screenSize)
+      {
+        _scrollIndex += _screenSize;
+
+        size_t limit = _msgsCount - _screenSize;
+        if ((size_t)_scrollIndex > limit)
+        {
+          _scrollIndex = limit;
+        }
+      }
+    }
+
+    // =========================================================================
+
+    void PageDown()
+    {
+      if (_msgsCount > _screenSize)
+      {
+        _scrollIndex -= _screenSize;
+
+        if (_scrollIndex < 0)
+        {
+          _scrollIndex = 0;
+        }
+      }
+    }
+
+    // =========================================================================
+
     void ResetScroll()
     {
       _scrollIndex = 0;

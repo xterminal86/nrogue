@@ -255,51 +255,51 @@ class DevConsole : public GameState
      , { DevConsoleCommand::CLOSE4              , "close"             }
      , { DevConsoleCommand::HISTORY             , "history"           }
      , { DevConsoleCommand::REPEAT_COMMAND      , "!"                 }
-     , { DevConsoleCommand::TRANSFORM_TILE      , "map_trnstile"      }
-     , { DevConsoleCommand::PLACE_WALL          , "map_placewall"     }
-     , { DevConsoleCommand::SHOW_MAP            , "map_show"          }
-     , { DevConsoleCommand::PRINT_MAP           , "map_print2file"    }
-     , { DevConsoleCommand::INFO_HANDLES        , "info_handles"      }
-     , { DevConsoleCommand::PRINT_TRIGGERS      , "info_triggers"     }
-     , { DevConsoleCommand::PRINT_ACTORS        , "info_actors"       }
+     , { DevConsoleCommand::TRANSFORM_TILE      , "transform-tile"    }
+     , { DevConsoleCommand::PLACE_WALL          , "place-wall"        }
+     , { DevConsoleCommand::SHOW_MAP            , "show-map"          }
+     , { DevConsoleCommand::PRINT_MAP           , "print2file"        }
+     , { DevConsoleCommand::INFO_HANDLES        , "info-handles"      }
+     , { DevConsoleCommand::PRINT_TRIGGERS      , "info-triggers"     }
+     , { DevConsoleCommand::PRINT_ACTORS        , "info-actors"       }
      , { DevConsoleCommand::INSPECT             , "inspect"           }
-     , { DevConsoleCommand::GET_STATIC_OBJECT   , "get_staticobj"     }
-     , { DevConsoleCommand::GET_MAP_OBJECT      , "get_mapobj"        }
-     , { DevConsoleCommand::GET_ACTOR           , "get_actor"         }
-     , { DevConsoleCommand::GET_ITEM            , "get_item"          }
-     , { DevConsoleCommand::GET_ANY_OBJECT      , "get_anyobj"        }
-     , { DevConsoleCommand::DISPEL_EFFECTS_ACTOR, "actor_dispel"      }
-     , { DevConsoleCommand::POISON_ACTOR        , "actor_poison"      }
-     , { DevConsoleCommand::DAMAGE_ACTOR        , "actor_damage"      }
-     , { DevConsoleCommand::MOVE_STATIC_OBJECT  , "mov_staticobj"     }
-     , { DevConsoleCommand::MOVE_ACTOR          , "mov_actor"         }
-     , { DevConsoleCommand::MOVE_ITEM           , "mov_item"          }
-     , { DevConsoleCommand::MOVE_PLAYER         , "mov_player"        }
-     , { DevConsoleCommand::DISPEL_EFFECTS      , "plr_dispel"        }
-     , { DevConsoleCommand::GIVE_MONEY          , "plr_givemoney"     }
-     , { DevConsoleCommand::AWARD_EXP           , "plr_awardexp"      }
-     , { DevConsoleCommand::LEVEL_UP            , "plr_levelup"       }
-     , { DevConsoleCommand::LEVEL_DOWN          , "plr_leveldown"     }
+     , { DevConsoleCommand::GET_STATIC_OBJECT   , "get-staticobj"     }
+     , { DevConsoleCommand::GET_MAP_OBJECT      , "get-mapobj"        }
+     , { DevConsoleCommand::GET_ACTOR           , "get-actor"         }
+     , { DevConsoleCommand::GET_ITEM            , "get-item"          }
+     , { DevConsoleCommand::GET_ANY_OBJECT      , "get-anyobj"        }
+     , { DevConsoleCommand::DISPEL_EFFECTS_ACTOR, "actor-dispel"      }
+     , { DevConsoleCommand::POISON_ACTOR        , "actor-poison"      }
+     , { DevConsoleCommand::DAMAGE_ACTOR        , "actor-damage"      }
+     , { DevConsoleCommand::MOVE_STATIC_OBJECT  , "mov-staticobj"     }
+     , { DevConsoleCommand::MOVE_ACTOR          , "mov-actor"         }
+     , { DevConsoleCommand::MOVE_ITEM           , "mov-item"          }
+     , { DevConsoleCommand::MOVE_PLAYER         , "mov-player"        }
+     , { DevConsoleCommand::DISPEL_EFFECTS      , "plr-dispel"        }
+     , { DevConsoleCommand::GIVE_MONEY          , "plr-givemoney"     }
+     , { DevConsoleCommand::AWARD_EXP           , "plr-awardexp"      }
+     , { DevConsoleCommand::LEVEL_UP            , "plr-levelup"       }
+     , { DevConsoleCommand::LEVEL_DOWN          , "plr-leveldown"     }
      , { DevConsoleCommand::GOD_MODE            , "god"               }
-     , { DevConsoleCommand::IGNORE_PLAYER       , "plr_ignore"        }
-     , { DevConsoleCommand::KILL_PLAYER         , "plr_kill"          }
-     , { DevConsoleCommand::REPORT_PLAYER       , "plr_info"          }
-     , { DevConsoleCommand::REMOVE_OBJECT       , "eng_deleteobj"     }
-     , { DevConsoleCommand::PRINT_COLORS        , "eng_printclrs"     }
-     , { DevConsoleCommand::GET_BY_ADDRESS      , "eng_getbyaddr"     }
-     , { DevConsoleCommand::GET_BY_ID           , "eng_getbyid"       }
-     , { DevConsoleCommand::CREATE_MONSTER      , "create_monster"    }
-     , { DevConsoleCommand::CREATE_DUMMY_ACTOR  , "create_dummyactor" }
-     , { DevConsoleCommand::CREATE_ALL_GEMS     , "create_allgems"    }
-     , { DevConsoleCommand::CREATE_ALL_POTIONS  , "create_allpotions" }
-     , { DevConsoleCommand::CREATE_ALL_SCROLLS  , "create_allscrolls" }
-     , { DevConsoleCommand::CREATE_ITEM         , "create_item"       }
-     , { DevConsoleCommand::CREATE_SHRINE       , "create_shrine"     }
-     , { DevConsoleCommand::CREATE_DUMMY_OBJECT , "create_dummyobj"   }
-     , { DevConsoleCommand::CREATE_CHEST        , "create_chest"      }
-     , { DevConsoleCommand::CREATE_BREAKABLE    , "create_breakable"  }
-     , { DevConsoleCommand::SPAM_TO_LOG         , "spam_log"          }
-     , { DevConsoleCommand::LAUNCH_PROJECTILE   , "launch_projectile" }
+     , { DevConsoleCommand::IGNORE_PLAYER       , "ignore-player"     }
+     , { DevConsoleCommand::KILL_PLAYER         , "plr-kill"          }
+     , { DevConsoleCommand::REPORT_PLAYER       , "plr-info"          }
+     , { DevConsoleCommand::REMOVE_OBJECT       , "delete-object"     }
+     , { DevConsoleCommand::PRINT_COLORS        , "print-colors"      }
+     , { DevConsoleCommand::GET_BY_ADDRESS      , "get-obj-by-addr"   }
+     , { DevConsoleCommand::GET_BY_ID           , "get-obj-by-id"     }
+     , { DevConsoleCommand::CREATE_MONSTER      , "create-monster"    }
+     , { DevConsoleCommand::CREATE_DUMMY_ACTOR  , "create-dummyactor" }
+     , { DevConsoleCommand::CREATE_ALL_GEMS     , "create-allgems"    }
+     , { DevConsoleCommand::CREATE_ALL_POTIONS  , "create-allpotions" }
+     , { DevConsoleCommand::CREATE_ALL_SCROLLS  , "create-allscrolls" }
+     , { DevConsoleCommand::CREATE_ITEM         , "create-item"       }
+     , { DevConsoleCommand::CREATE_SHRINE       , "create-shrine"     }
+     , { DevConsoleCommand::CREATE_DUMMY_OBJECT , "create-dummyobj"   }
+     , { DevConsoleCommand::CREATE_CHEST        , "create-chest"      }
+     , { DevConsoleCommand::CREATE_BREAKABLE    , "create-breakable"  }
+     , { DevConsoleCommand::SPAM_TO_LOG         , "spam-log"          }
+     , { DevConsoleCommand::LAUNCH_PROJECTILE   , "launch-projectile" }
     };
 
     std::map<std::string, DevConsoleCommand> _commandTypeByName;

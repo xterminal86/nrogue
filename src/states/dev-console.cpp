@@ -332,6 +332,18 @@ void DevConsole::HandleInput()
     }
     break;
 
+    case NUMPAD_6:
+    {
+      _stdout->PageDown();
+    }
+    break;
+
+    case NUMPAD_4:
+    {
+      _stdout->PageUp();
+    }
+    break;
+
     case NUMPAD_7:
     {
       _stdout->SetScrollState(MessageBufferScrollState::TOP);

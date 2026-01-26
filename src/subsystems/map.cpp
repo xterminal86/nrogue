@@ -1268,28 +1268,48 @@ void Map::DrawMapTilesAroundPlayer()
 
 void Map::DrawFowTile(int x, int y)
 {
-  //
-  // "Block" tiles with no symbols like water, floor, walls etc. are colored
-  // using background color with foreground set to black.
-  //
-  if (CurrentLevel->FowLayer[x][y].Image == ' ')
+  auto DrawFowTileIntl = [this](int x, int y)
   {
-    Game::gPrnt.PrintFB(x + CurrentLevel->MapOffsetX,
-                        y + CurrentLevel->MapOffsetY,
-                        CurrentLevel->FowLayer[x][y].Image,
-                        Colors::BlackColor,
-                        Colors::FogOfWarColor);
+    //
+    // "Block" tiles with no symbols like water, floor, walls etc. are colored
+    // using background color with foreground set to black.
+    //
+    if (CurrentLevel->FowLayer[x][y].Image == ' ')
+    {
+      Game::gPrnt.PrintFB(x + CurrentLevel->MapOffsetX,
+                          y + CurrentLevel->MapOffsetY,
+                          CurrentLevel->FowLayer[x][y].Image,
+                          Colors::BlackColor,
+                          Colors::FogOfWarColor);
+    }
+    else
+    {
+      Game::gPrnt.PrintFB(x + CurrentLevel->MapOffsetX,
+                          y + CurrentLevel->MapOffsetY,
+                          (CurrentLevel->FowLayer[x][y].Image == -1)
+                          ? ' '
+                          : CurrentLevel->FowLayer[x][y].Image,
+                          Colors::FogOfWarColor,
+                          Colors::BlackColor);
+    }
+  };
+
+#ifdef USE_SDL
+  if (Game::gApp.GameConfig.UseGraphics
+   && CurrentLevel->FowLayer[x][y].GraphicTile != GraphicTiles::NONE)
+  {
+    Game::gPrnt.DrawGraphicsTile(x + CurrentLevel->MapOffsetX,
+                                 y + CurrentLevel->MapOffsetY,
+                                 CurrentLevel->FowLayer[x][y].GraphicTile,
+                                 Colors::ShadesOfGrey::Eight);
   }
   else
   {
-    Game::gPrnt.PrintFB(x + CurrentLevel->MapOffsetX,
-                        y + CurrentLevel->MapOffsetY,
-                        (CurrentLevel->FowLayer[x][y].Image == -1)
-                        ? ' '
-                        : CurrentLevel->FowLayer[x][y].Image,
-                        Colors::FogOfWarColor,
-                        Colors::BlackColor);
+    DrawFowTileIntl(x, y);
   }
+#else
+  DrawFowTileIntl(x, y);
+#endif
 }
 
 // =============================================================================

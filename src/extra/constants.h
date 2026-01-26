@@ -196,6 +196,8 @@ namespace Colors
 
 namespace Strings
 {
+  extern const std::string Empty;
+  // ---------------------------------------------------------------------------
   extern const std::string HexChars;
   extern const std::string Base64Chars;
   // ---------------------------------------------------------------------------

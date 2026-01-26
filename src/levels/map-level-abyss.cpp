@@ -95,7 +95,13 @@ void MapLevelAbyss::CreateCommonObjects(int x, int y, char image)
     case '#':
     {
       objName = Strings::TileNames::AbyssalRocksText;
-      t.Set(true, true, ' ', Colors::BlackColor, Colors::RedPoppyColor, objName);
+      t.Set(true,
+            true,
+            ' ',
+            Colors::BlackColor,
+            Colors::RedPoppyColor,
+            objName,
+            Strings::Empty);
       PlaceStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
     }
     break;

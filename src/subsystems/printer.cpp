@@ -265,7 +265,7 @@ void Printer::DrawWindow(const Position& leftCorner,
                              _convertedHtml.R,
                              _convertedHtml.G,
                              _convertedHtml.B);
-      DrawTile(headerPosX, headerPosY, 219);
+      DrawTile(headerPosX, headerPosY, (int)NameCP437::BLOCK);
 
       ConvertHtmlToRGB(headerFgColor);
       SDL_SetTextureColorMod(_tileset,
@@ -290,7 +290,7 @@ void Printer::DrawRect(int x1, int y1,
     SDL_SetRenderTarget(Game::gApp.Renderer, _frameBuffer);
   }
 
-  TileInfo& ti = _tiles[219];
+  TileInfo& ti = _tiles[(int)NameCP437::BLOCK];
 
   _drawSrc.x = ti.X;
   _drawSrc.y = ti.Y;
@@ -316,8 +316,38 @@ void Printer::DrawRect(int x1, int y1,
 
 // =============================================================================
 
+void Printer::DrawGraphicsTile(int x, int y, GraphicTiles tile, uint32_t color)
+{
+  int index = (int)tile;
+
+  if (index < 0 || index >= (int)_tiles.size())
+  {
+    ConsoleLog("[ERR] invalid tile index %d", index);
+    return;
+  }
+
+  int posX = x * _tileWidthScaled;
+  int posY = y * _tileHeightScaled;
+
+  ConvertHtmlToRGB(color);
+  SDL_SetTextureColorMod(_tileset,
+                         _convertedHtml.R,
+                         _convertedHtml.G,
+                         _convertedHtml.B);
+
+  DrawTile(posX, posY, index);
+}
+
+// =============================================================================
+
 void Printer::DrawTile(int x, int y, int tileIndex)
 {
+  if (tileIndex < 0 || tileIndex >= (int)_tiles.size())
+  {
+    ConsoleLog("[ERR] invalid tile index %d", tileIndex);
+    return;
+  }
+
   TileInfo& tile = _tiles[tileIndex];
 
   _drawSrc.x = tile.X;
@@ -345,6 +375,12 @@ void Printer::DrawTile(int x, int y, int tileIndex)
 
 void Printer::DrawTile(int x, int y, int tileIndex, size_t scale)
 {
+  if (tileIndex < 0 || tileIndex >= (int)_tiles.size())
+  {
+    ConsoleLog("[ERR] invalid tile index %d", tileIndex);
+    return;
+  }
+
   size_t tileScaleW = (scale <= 1)
                       ? _tileWidthScaled
                       : _tileWidthScaled * ((scale - 1) * 3);
@@ -396,7 +432,7 @@ void Printer::PrintFB(const int& x, const int& y,
                            _convertedHtml.R,
                            _convertedHtml.G,
                            _convertedHtml.B);
-    DrawTile(posX, posY, 219);
+    DrawTile(posX, posY, (int)NameCP437::BLOCK);
   }
 
   ConvertHtmlToRGB(htmlColorFg);
@@ -444,7 +480,7 @@ void Printer::PrintFB(const int& x, const int& y,
                              _convertedHtml.R,
                              _convertedHtml.G,
                              _convertedHtml.B);
-      DrawTile(px, py, 219);
+      DrawTile(px, py, (int)NameCP437::BLOCK);
     }
 
     ConvertHtmlToRGB(htmlColorFg);
@@ -506,7 +542,7 @@ void Printer::PrintFB(const int& x,
                              _convertedHtml.R,
                              _convertedHtml.G,
                              _convertedHtml.B);
-      DrawTile(px, py, 219, scale);
+      DrawTile(px, py, (int)NameCP437::BLOCK, scale);
     }
 
     ConvertHtmlToRGB(htmlColorFg);

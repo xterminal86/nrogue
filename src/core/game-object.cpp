@@ -277,6 +277,25 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
     bgColor = Colors::BlackColor;
   }
 
+#ifdef USE_SDL
+  if (Game::gApp.GameConfig.UseGraphics && GraphicTile != GraphicTiles::NONE)
+  {
+    Game::gPrnt.DrawGraphicsTile(PosX + LevelOwner->MapOffsetX,
+                                 PosY + LevelOwner->MapOffsetY,
+                                 GraphicTile,
+                                 Colors::WhiteColor);
+  }
+  else
+  {
+    Game::gPrnt.PrintFB(PosX + LevelOwner->MapOffsetX,
+                         PosY + LevelOwner->MapOffsetY,
+                         (imageOverride != -1)
+                         ? imageOverride
+                         : Image,
+                         fgColor,
+                         bgColor);
+  }
+#else
   Game::gPrnt.PrintFB(PosX + LevelOwner->MapOffsetX,
                        PosY + LevelOwner->MapOffsetY,
                        (imageOverride != -1)
@@ -284,6 +303,7 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
                        : Image,
                        fgColor,
                        bgColor);
+#endif
 }
 
 // =============================================================================
@@ -449,6 +469,7 @@ void GameObject::MakeTile(const GameObjectInfo& t,
   Blocking     = t.IsBlocking;
   BlocksSight  = t.BlocksSight;
   Image        = t.Image;
+  GraphicTile  = t.GraphicTile;
   FgColor      = t.FgColor;
   BgColor      = t.BgColor;
   ObjectName   = t.ObjectName;

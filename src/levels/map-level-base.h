@@ -102,6 +102,7 @@ class MapLevelBase
     {
       int Image = -1;
       std::string FowName;
+      GraphicTiles GraphicTile = GraphicTiles::NONE;
     };
 
     //
@@ -180,12 +181,14 @@ class MapLevelBase
     void CreateGround(char img,
                       uint32_t fgColor,
                       uint32_t bgColor,
-                      const std::string& tileName);
+                      const std::string& tileName,
+                      const GraphicTiles graphicTile = GraphicTiles::NONE);
 
     void CreateBorders(char img,
                        uint32_t fgColor,
                        uint32_t bgColor,
-                       const std::string& objectName);
+                       const std::string& objectName,
+                       const GraphicTiles graphicTile = GraphicTiles::NONE);
 
     virtual void CreateLevel();
     virtual void CreateSpecialLevel();

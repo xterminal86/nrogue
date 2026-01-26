@@ -138,6 +138,8 @@ class Printer
                   int x2, int y2,
                   uint32_t color);
 
+    void DrawGraphicsTile(int x, int y, GraphicTiles tile, uint32_t color);
+
     const std::unordered_map<uint32_t, TileColor>& GetValidColorsCache();
 
     void SetRenderDst(const SDL_Rect& dst);

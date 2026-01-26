@@ -215,7 +215,8 @@ void MapLevelTown::CreateLevel()
         '.',
         Colors::ShadesOfGrey::Four,
         Colors::BlackColor,
-        Strings::TileNames::GroundText);
+        Strings::TileNames::GroundText,
+        Strings::Empty);
 
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
 
@@ -450,7 +451,8 @@ void MapLevelTown::CreateBlacksmith(int x,
                 c,
                 Colors::IronColor,
                 Colors::BlackColor,
-                Strings::TileNames::WorkbenchText);
+                Strings::TileNames::WorkbenchText,
+                Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
 
@@ -460,7 +462,8 @@ void MapLevelTown::CreateBlacksmith(int x,
                 c,
                 Colors::WhiteColor,
                 Colors::BlackColor,
-                Strings::TileNames::BedText);
+                Strings::TileNames::BedText,
+                Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
 
@@ -485,7 +488,8 @@ void MapLevelTown::CreateBlacksmith(int x,
                 c,
                 Colors::WhiteColor,
                 Colors::BlackColor,
-                Strings::TileNames::ForgeText);
+                Strings::TileNames::ForgeText,
+                Strings::Empty);
           PlaceStaticObject(posX, posY, t);
         }
         break;
@@ -548,7 +552,8 @@ void MapLevelTown::CreateRoom(int x,
                 'T',
                 Colors::WhiteColor,
                 Colors::DeepWaterColor,
-                Strings::TileNames::FountainText);
+                Strings::TileNames::FountainText,
+                Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
 
@@ -562,7 +567,8 @@ void MapLevelTown::CreateRoom(int x,
                 c,
                 Colors::WhiteColor,
                 Colors::BlackColor,
-                Strings::TileNames::BedText);
+                Strings::TileNames::BedText,
+                Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
 
@@ -599,7 +605,8 @@ void MapLevelTown::CreateRoom(int x,
                 '#',
                 Colors::MarbleColor,
                 Colors::GrassColor,
-                Strings::TileNames::MarbleFenceText);
+                Strings::TileNames::MarbleFenceText,
+                Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
 
@@ -614,7 +621,8 @@ void MapLevelTown::CreateRoom(int x,
                 c,
                 Colors::WhiteColor,
                 Colors::BlackColor,
-                Strings::TileNames::WindowText);
+                Strings::TileNames::WindowText,
+                Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
 
@@ -671,7 +679,8 @@ void MapLevelTown::CreateChurch(int x, int y)
                 c,
                 Colors::WhiteColor,
                 Colors::BlackColor,
-                Strings::TileNames::StainedGlassText);
+                Strings::TileNames::StainedGlassText,
+                Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
 
@@ -775,18 +784,17 @@ void MapLevelTown::CreatePlayerHouse()
         'C',
         Colors::WhiteColor,
         Colors::ChestColor,
-        Strings::TileNames::StashText);
+        Strings::TileNames::StashText,
+        Strings::Empty);
 
   Position cp(6, 6);
   PlaceStaticObject(6, 6, t);
 
-  auto stash = Game::gGOF.CreateContainer(
-                 cp.X,
-                 cp.Y,
-                 'C',
-                 Strings::TileNames::StashText,
-                 Colors::ChestColor
-  );
+  auto stash = Game::gGOF.CreateContainer(cp.X,
+                                          cp.Y,
+                                          'C',
+                                          Strings::TileNames::StashText,
+                                          Colors::ChestColor);
 
   PlaceGameObject(stash);
 }
@@ -942,7 +950,8 @@ void MapLevelTown::PlaceGarden(int x, int y)
                 '#',
                 Colors::MarbleColor,
                 Colors::GrassColor,
-                Strings::TileNames::MarbleFenceText);
+                Strings::TileNames::MarbleFenceText,
+                Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
 
@@ -968,7 +977,8 @@ void MapLevelTown::PlaceGarden(int x, int y)
                 'T',
                 Colors::WhiteColor,
                 Colors::DeepWaterColor,
-                Strings::TileNames::FountainText);
+                Strings::TileNames::FountainText,
+                Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
       }
@@ -1021,7 +1031,8 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
                 ' ',
                 Colors::BlackColor,
                 Colors::ShadesOfGrey::Ten,
-                Strings::TileNames::StoneTilesText);
+                Strings::TileNames::StoneTilesText,
+                Strings::Empty);
           MapArray[posX][posY]->MakeTile(t);
           MapArray[posX][posY]->Special = true;
         }
@@ -1034,7 +1045,8 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
                 ' ',
                 Colors::BlackColor,
                 Colors::ShadesOfGrey::Ten,
-                Strings::TileNames::StoneTilesText);
+                Strings::TileNames::StoneTilesText,
+                Strings::Empty);
           MapArray[posX][posY]->MakeTile(t);
           MapArray[posX][posY]->Special = true;
         }

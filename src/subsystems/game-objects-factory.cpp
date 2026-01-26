@@ -277,6 +277,7 @@ GameObjectsFactory::CreateStaticObject(int x,
   go->PosX         = x;
   go->PosY         = y;
   go->Image        = objectInfo.Image;
+  go->GraphicTile  = objectInfo.GraphicTile;
   go->ObjectName   = objectInfo.ObjectName;
   go->FogOfWarName = objectInfo.FogOfWarName;
   go->FgColor      = objectInfo.FgColor;

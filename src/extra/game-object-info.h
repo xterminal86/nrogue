@@ -17,11 +17,14 @@ struct GameObjectInfo
            const uint32_t& fgColor,
            const uint32_t& bgColor,
            const std::string& objectName,
-           const std::string& fowName = std::string());
+           const std::string& fowName,
+           const GraphicTiles graphicTile = GraphicTiles::NONE);
 
   bool IsBlocking  = false;
   bool BlocksSight = false;
   int Image        = '?';
+
+  GraphicTiles GraphicTile = GraphicTiles::NONE;
 
   uint32_t FgColor = Colors::WhiteColor;
   uint32_t BgColor = Colors::MagentaColor;

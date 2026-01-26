@@ -22,7 +22,7 @@ def main():
   cppEnum = (
     "enum class GraphicTiles\n"
     "{\n"
-    "  NONE = -1,\n"
+    "    NONE = -1\n"
   );
 
   first = True;
@@ -33,10 +33,10 @@ def main():
     enumName = fname.upper().replace("-", "_");
 
     if first:
-      cppEnum += f"  { enumName } = 256,\n";
+      cppEnum += f"  , { enumName } = 256\n";
       first = False;
     else:
-      cppEnum += f"  { enumName },\n";
+      cppEnum += f"  , { enumName }\n";
 
   cppEnum += "};\n";
 

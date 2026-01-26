@@ -434,7 +434,8 @@ void MapLevelCaves::CreateRivers()
               '~',
               Colors::WhiteColor,
               Colors::ShallowWaterColor,
-              objName);
+              objName,
+              Strings::Empty);
         MapArray[p.X][p.Y]->MakeTile(t, GameObjectType::SHALLOW_WATER);
       }
     }
