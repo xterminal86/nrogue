@@ -137,7 +137,7 @@ class NRS
 
     const std::string kEmptyString;
 
-    const std::string _unwantedCharacters = " \t\n\r\f\v";
+    const std::string _whitespaces = " \t\n\r\f\v";
 
     enum class ParsingState
     {
@@ -166,6 +166,8 @@ class NRS
     ParsingState _parsingState = ParsingState::UNDEFINED;
 
     const std::set<char> _transitionChars = { ':', '{', '}', ',', '"', '/' };
+
+    const char _commentMarker = '#';
 };
 
 #endif // SERIALIZER_H

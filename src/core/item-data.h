@@ -101,6 +101,9 @@ struct ItemData
     MapType::NOWHERE, { -1, -1 }
   };
 
+  //
+  // Level name after which this item can be randomly generated.
+  //
   MapType GeneratedAfter = MapType::TOWN;
 
   bool CanBeUsed();

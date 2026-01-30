@@ -224,7 +224,8 @@ class MapLevelBase
                          int image,
                          const uint32_t& fgColor,
                          const uint32_t& bgColor,
-                         const std::string& objName);
+                         const std::string& objName,
+                         GraphicTiles graphicTile = GraphicTiles::NONE);
 
     void PlaceGrassTile(int x, int y, int maxDiceRoll = 10);
     void PlaceShallowWaterTile(int x, int y);
@@ -246,7 +247,8 @@ class MapLevelBase
     void PlaceDoor(int x, int y,
                    bool isOpen = false,
                    size_t openedBy = GlobalConstants::OpenedByAnyone,
-                   const std::string& objName = std::string());
+                   const std::string& objName = std::string(),
+                   DoorMaterials doorMaterial = DoorMaterials::WOOD);
 
     friend class Map;
 

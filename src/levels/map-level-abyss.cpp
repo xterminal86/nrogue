@@ -25,8 +25,7 @@ MapLevelAbyss::MapLevelAbyss(int sizeX,
   };
 
   //
-  // Note that x and y are swapped to correspond to
-  // "world" dimensions.
+  // Note that x and y are swapped to correspond to "world" dimensions.
   //
   int sx = _specialLevel[0].length();
   int sy = _specialLevel.size();

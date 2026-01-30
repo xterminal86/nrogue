@@ -401,12 +401,17 @@ void MapLevelBase::CreateItemsForLevel(int maxItems)
     }
 
     //
-    // NOTE: Not all objects may have been added
-    // to the factory yet, so check against nullptr is needed.
+    // NOTE: Not all objects may have been added to the factory yet, so check
+    // against nullptr is needed.
     //
     auto go = Game::gIF.CreateRandomItem(x, y);
     if (go != nullptr)
     {
+      //
+      // Just to make everything simple, we'll blast fools first and ask
+      // questions second: if item is not supposed to be created (yet), we just
+      // delete it.
+      //
       ItemComponent* ic = go->GetComponent<ItemComponent>();
       if (Util::CanBeSpawned(ic))
       {
@@ -590,12 +595,11 @@ bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
   int spawnPointMinDistance = _playerRef->VisibilityRadius.Get() * 2 + 1;
 
   //
-  // If map size is greater than spawnPointMinDistance
-  // in block direction of 80x25 terminal, potential spawn points
-  // distance should be greater than this value.
+  // If map size is greater than spawnPointMinDistance in block direction of
+  // 80x25 terminal, potential spawn points distance should be greater than this
+  // value.
   //
-  // Otherwise take minimum of MapSize values,
-  // halve it and compare with that.
+  // Otherwise take minimum of MapSize values, halve it and compare with that.
   //
   int mapMinSize = std::min(MapSize.X, MapSize.Y);
   if (mapMinSize < spawnPointMinDistance)
@@ -603,9 +607,8 @@ bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
     spawnPointMinDistance = mapMinSize / 2;
 
     //
-    // Add certain remainder to each dimension increase after 2x2
-    // to get maximum available block distance for the square map
-    // of that dimension.
+    // Add certain remainder to each dimension increase after 2x2 to get maximum
+    // available block distance for the square map of that dimension.
     //
     // E.g.:
     //
@@ -627,9 +630,10 @@ bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
     // ....|7
     // ....E8
     //
-    // 3x3 have maximum block distance of 3 + (3 - 2) = 4
+    // 3x3 has maximum block distance of 3 + (3 - 2) = 4
     // 4x4 -> 4 + (4 - 2) = 6
     // 5x5 -> 5 + (5 - 2) = 8
+    //
     // and so on
     //
     spawnPointMinDistance += (spawnPointMinDistance - 2);
@@ -661,8 +665,8 @@ void MapLevelBase::TryToSpawnMonsters()
   if (_respawnCounter < MonstersRespawnTurns)
   {
     //
-    // To average out monsters' respawning speed,
-    // adjust respawn counter with regards to player's SPD.
+    // To average out monsters' respawning speed, adjust respawn counter with
+    // regards to player's SPD.
     //
     _respawnCounter += (_playerRef->Attrs.Spd.Get() <= 0)
                        ? 1
@@ -1021,7 +1025,8 @@ void MapLevelBase::PlaceGroundTile(int x, int y,
                                    int image,
                                    const uint32_t& fgColor,
                                    const uint32_t& bgColor,
-                                   const std::string& objName)
+                                   const std::string& objName,
+                                   GraphicTiles graphicTile)
 {
   if (IsOutOfBounds(x, y))
   {
@@ -1029,16 +1034,23 @@ void MapLevelBase::PlaceGroundTile(int x, int y,
   }
 
   GameObjectInfo t;
-  t.Set(false, false, image, fgColor, bgColor, objName, Strings::Empty);
+  t.Set(false,
+        false,
+        image,
+        fgColor,
+        bgColor,
+        objName,
+        Strings::Empty,
+        graphicTile);
+
   MapArray[x][y]->MakeTile(t);
 }
 
 // =============================================================================
 
 //
-// Places grass tile at [x; y], maxDiceRoll serves as a
-// "frequency" modifier - the more its value, the less is the chance
-// for flowers to appear.
+// Places grass tile at [x; y], maxDiceRoll serves as a "frequency" modifier:
+// the more its value, the less is the chance for flowers to appear.
 //
 void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
 {
@@ -1049,7 +1061,13 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
 
   char img = '.';
 
+  //
   // Create 'flowers'
+  //
+  // TODO: in graphics mode create grass tile and flower as non-blocking static
+  // object on top of it.
+  //
+
   //int tileChoice = Game::gRng.RandomRange(0, 10);
   //if (tileChoice < 2) img = '.';
 
@@ -1102,7 +1120,9 @@ void MapLevelBase::PlaceShallowWaterTile(int x, int y)
         Colors::WhiteColor,
         Colors::ShallowWaterColor,
         Strings::TileNames::ShallowWaterText,
-        Strings::Empty);
+        Strings::Empty,
+        GraphicTiles::WATER_SHALLOW);
+
   MapArray[x][y]->MakeTile(t, GameObjectType::SHALLOW_WATER);
 }
 
@@ -1116,8 +1136,7 @@ void MapLevelBase::PlaceDeepWaterTile(int x, int y)
   }
 
   //
-  // int type is to avoid truncation
-  // in case of CP437 image which is 247
+  // int type is to avoid truncation in case of CP437 image which is 247
   //
   int img = '~';
 
@@ -1132,7 +1151,8 @@ void MapLevelBase::PlaceDeepWaterTile(int x, int y)
         Colors::WhiteColor,
         Colors::DeepWaterColor,
         Strings::TileNames::DeepWaterText,
-        Strings::Empty);
+        Strings::Empty,
+        GraphicTiles::WATER_DEEP);
 
   MapArray[x][y]->MakeTile(t, GameObjectType::DEEP_WATER);
 }
@@ -1200,21 +1220,8 @@ void MapLevelBase::PlaceShrine(const Position& pos, LevelBuilder& lb)
     return;
   }
 
-  GameObjectInfo t;
   ShrineType type = lb.ShrinesByPosition().at(pos);
-  auto go = Game::gGOF.CreateShrine(pos.X, pos.Y, type, 1000);
-  PlaceGameObject(go);
-
-  std::string description = GlobalConstants::ShrineNameByType.at(type);
-  t.Set(true,
-        false,
-        '/',
-        Colors::ShadesOfGrey::Four,
-        Colors::BlackColor,
-        description,
-        "?Shrine?");
-
-  PlaceStaticObject(pos.X, pos.Y, t);
+  PlaceShrine(pos, type);
 }
 
 // =============================================================================
@@ -1226,6 +1233,10 @@ void MapLevelBase::PlaceShrine(const Position& pos, ShrineType type)
     return;
   }
 
+  //
+  // Shrine is placed as GameObject so that it is updated every turn.
+  // To draw it under FoW we create static "dummy" object on top of it.
+  //
   GameObjectInfo t;
   auto go = Game::gGOF.CreateShrine(pos.X, pos.Y, type, 1000);
   PlaceGameObject(go);
@@ -1307,7 +1318,8 @@ void MapLevelBase::PlaceWall(int x, int y,
 void MapLevelBase::PlaceDoor(int x, int y,
                              bool isOpen,
                              size_t openedBy,
-                             const std::string& objName)
+                             const std::string& objName,
+                             DoorMaterials doorMaterial)
 {
   if (IsOutOfBounds(x, y))
   {
@@ -1315,7 +1327,7 @@ void MapLevelBase::PlaceDoor(int x, int y,
   }
 
   GameObject* door =
-      Game::gGOF.CreateDoor(x, y, isOpen, DoorMaterials::WOOD, objName);
+      Game::gGOF.CreateDoor(x, y, isOpen, doorMaterial, objName);
 
   if (openedBy != GlobalConstants::OpenedByAnyone)
   {
@@ -1346,8 +1358,8 @@ void MapLevelBase::ConstructFromBuilder(LevelBuilder& lb)
       auto map = lb.GeneratedMap();
 
       //
-      // This ensures that all common objects will share the same
-      // visual style that is defined for the current map.
+      // This ensures that all common objects will share the same visual style
+      // that is defined for the current map.
       //
       CreateCommonObjects(x, y, lb.MapRaw[x][y]);
 

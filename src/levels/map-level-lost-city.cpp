@@ -203,25 +203,7 @@ void MapLevelLostCity::CreateShrines(LevelBuilder& lb)
   auto allShrines = lb.ShrinesByPosition();
   for (auto& kvp : allShrines)
   {
-    ShrineType shrineType = kvp.second;
-    std::string description = GlobalConstants::ShrineNameByType.at(shrineType);
-    auto shrineColor = Colors::ShrineColorsByType.at(shrineType);
-
-    GameObjectInfo t;
-    t.Set(true,
-          false,
-          '/',
-          shrineColor.first,
-          shrineColor.second,
-          description,
-          "?Shrine?");
-    PlaceStaticObject(kvp.first.X, kvp.first.Y, t);
-
-    auto go = Game::gGOF.CreateShrine(kvp.first.X,
-                                      kvp.first.Y,
-                                      shrineType,
-                                      1000);
-    PlaceGameObject(go);
+    PlaceShrine(kvp.first,  kvp.second);
   }
 }
 

@@ -102,12 +102,13 @@ void MapLevelNether::CreateCommonObjects(int x, int y, char image)
       break;
 
     case '+':
-    {
-      GameObject* door =
-          Game::gGOF.CreateDoor(x, y, false, DoorMaterials::STONE);
-      PlaceStaticObject(door);
-    }
-    break;
+      PlaceDoor(x,
+                y,
+                false,
+                GlobalConstants::OpenedByAnyone,
+                std::string(),
+                DoorMaterials::STONE);
+      break;
 
     case '.':
       PlaceGroundTile(x,

@@ -5,35 +5,14 @@
 
 #include "util.h"
 
-// =============================================================================
-
-std::string MakeOneliner(const std::string& stringObject)
-{
-  const std::string _unwantedCharacters = " \t\n\r\f\v";
-
-  std::stringstream ss;
-
-  bool inQuotes = false;
-
-  for (auto& c : stringObject)
-  {
-    bool unwantedFound = std::find(_unwantedCharacters.begin(),
-                                   _unwantedCharacters.end(),
-                                   c) != _unwantedCharacters.end();
-
-    if (c == '\"')
-    {
-      inQuotes = !inQuotes;
-    }
-
-    if (inQuotes || !unwantedFound)
-    {
-      ss << c;
-    }
-  }
-
-  return ss.str();
-}
+#define CHECK_STATUS(ok)                                      \
+  do                                                          \
+  {                                                           \
+    if (!ok)                                                  \
+    {                                                         \
+      throw std::runtime_error("Test failed - fucking off."); \
+    }                                                         \
+  } while (false)                                             \
 
 // =============================================================================
 
@@ -83,7 +62,7 @@ void ParseTest()
 {
   PRINT_BANNER();
 
-  const std::string decor(80, '-');
+  const std::string decor(80, '=');
 
   auto Do = [&decor](const std::string& so)
   {
@@ -99,9 +78,7 @@ void ParseTest()
     printf("To:\n");
     printf("%s\n", decor.data());
     printf("%s\n", dso.ToPrettyString().data());
-    printf("%s\n", decor.data());
     printf("%s\n", dso.DumpObjectStructureToString().data());
-    printf("%s\n", decor.data());
     printf("\n");
   };
 
@@ -186,11 +163,18 @@ list : item1/item2/"it,e/m3",
   printf("%s\n", decor.data());
 
   std::string dsos = dso.ToStringObject();
+
   printf("%s\n", decor.data());
   printf("%s\n", dsos.data());
   printf("%s\n", decor.data());
 
-  printf("%s\n", (sos == dsos) ? "OK" : "FAIL!");
+  bool ok = (dsos == sos);
+
+  printf("\n");
+  printf("%s\n", ok ? "OK" : "FAIL!");
+  printf("\n");
+
+  CHECK_STATUS(ok);
 
   printf("%s\n", dso.DumpObjectStructureToString().data());
   printf("%s\n", obj.DumpObjectStructureToString().data());
@@ -204,7 +188,7 @@ void TestComplex()
 {
   PRINT_BANNER();
 
-  const std::string decor(80, '-');
+  const std::string decor(80, '=');
 
   const std::string pseudoJson = R"(
 Actor1 : {
@@ -278,7 +262,13 @@ Actor2 : {
   printf("%s\n", dsos.data());
   printf("%s\n", decor.data());
 
-  printf("%s\n", (sos == dsos) ? "OK" : "FAIL!");
+  bool ok = (sos == dsos);
+
+  printf("\n");
+  printf("%s\n", ok ? "OK" : "FAIL!");
+  printf("\n");
+
+  CHECK_STATUS(ok);
 
   printf("%s\n", dso.DumpObjectStructureToString().data());
   printf("%s\n", obj.DumpObjectStructureToString().data());
@@ -338,7 +328,19 @@ Actor2 : {
   std::string ol1 = dso.ToStringObject();
   std::string ol2 = obj.ToStringObject();
 
-  printf("%s\n", (ol1 == ol2) ? "OK" : "FAIL!");
+  bool ok = (ol1 == ol2);
+
+  printf("%s\n", ok ? "OK" : "FAIL!");
+
+  try
+  {
+    CHECK_STATUS(ok);
+  }
+  catch (std::exception& ex)
+  {
+    FS::remove(p);
+    throw;
+  }
 
   printf("\n");
 
@@ -358,7 +360,20 @@ Actor2 : {
   ol1 = dso.ToStringObject();
   ol2 = obj.ToStringObject();
 
-  printf("%s\n", (ol1 == ol2) ? "OK" : "FAIL!");
+  ok = (ol1 == ol2);
+
+  printf("%s\n", ok ? "OK" : "FAIL!");
+
+  try
+  {
+    CHECK_STATUS(ok);
+  }
+  catch (std::exception& ex)
+  {
+    FS::remove(p);
+    throw;
+  }
+
   printf("\n");
 
   FS::remove(p);
@@ -397,7 +412,7 @@ Actor2 : {
 },
 )";
 
-  const std::string decor(80, '-');
+  const std::string decor(80, '=');
 
   NRS dso;
   dso.FromStringObject(pseudoJson);
@@ -456,7 +471,11 @@ Actor2 : {
   printf("%s\n", ds.data());
   printf("%s\n", decor.data());
 
-  printf("%s\n", (sos == ds) ? "OK" : "FAIL!");
+  bool ok = (sos == ds);
+
+  printf("%s\n", ok ? "OK" : "FAIL!");
+
+  CHECK_STATUS(ok);
 
   printf("\n");
 }
@@ -618,6 +637,59 @@ list : ""/"mid"/lol,
     {
 R"(
 empty : {},
+)",
+    true
+    },
+    {
+R"(
+# This is a comment.
+  # This is a comment too.
+root : {
+  one : "value",
+  two : "this # should work",
+  # Another comment
+  three : 42,
+  four : #,
+},
+  # Some shit at the end.
+)",
+    true
+    },
+    {
+R"(
+# This is a config with comments.
+# tileset               : "resources/graphic-tiles.bmp",
+tileset               : "resources/std-8x16-ck-indexed.bmp",
+# tile_w                : 32,
+# tile_h                : 32,
+tile_w                : 8,
+tile_h                : 16,
+# scale                 : 0.5,
+scale                 : 1.0,
+fast_combat           : N,
+fast_monster_movement : N,
+#use_graphics          : Y,
+use_graphics          : N,
+)",
+    true
+    },
+    {
+R"(
+# tileset               : "resources/graphic-tiles.bmp",
+# tile_w                : 32,
+# tile_h                : 32,
+# scale                 : 0.5,
+# fast_combat           : N,
+# fast_monster_movement : N,
+# use_graphics          : Y,
+
+tileset               : "resources/std-8x16-ck-indexed.bmp",
+tile_w                : 8,
+tile_h                : 16,
+scale                 : 1.0,
+fast_combat           : N,
+fast_monster_movement : N,
+use_graphics          : N,
 )",
     true
     },
@@ -783,51 +855,39 @@ root : {
     },
 };
 
-  const std::string decor(80, '-');
-
-  std::vector<int> failedTests;
+  const std::string decor(80, '=');
 
   int testNum = 0;
 
-  for (auto& [str, good] : testCases)
+  for (auto& [str, expected] : testCases)
   {
     NRS obj;
-    std::string oneliner = MakeOneliner(str);
-    printf("%s\n", decor.data());
-    printf("%s\n", oneliner.data());
-    printf("is good? : %s\n", good ? "yes" : "no");
+    printf("%s\n", str.data());
+    printf("is good? : %s\n", expected ? "yes" : "no");
     bool ok = obj.CheckSyntax(str);
 
     if (ok)
     {
       obj.FromStringObject(str);
-      printf("%s\n", obj.DumpObjectStructureToString().data());
+      printf("%s", obj.DumpObjectStructureToString().data());
     }
 
-    if (ok != good)
-    {
-      failedTests.push_back(testNum);
-    }
-
-    printf("%s\n", (ok == good) ? "PASSED" : "FAILED!");
+    printf("\n");
+    printf("(%s == %s) ? %s\n",
+           (ok ? "T" : "F"),
+           (expected ? "T" : "F"),
+           (ok == expected) ? "YES" : "NO");
     printf("%s\n", decor.data());
+
+    if (ok != expected)
+    {
+      CHECK_STATUS(false);
+    }
 
     testNum++;
   }
 
-  if (!failedTests.empty())
-  {
-    printf("Some tests failed:\n");
-
-    for (auto& i : failedTests)
-    {
-      printf("no. %d\n", i);
-    }
-  }
-  else
-  {
-    printf("All tests passed!\n\n");
-  }
+  printf("All tests passed!\n\n");
 }
 
 // =============================================================================
@@ -836,7 +896,7 @@ void SerializeObjects()
 {
   PRINT_BANNER();
 
-  const std::string line(80, '-');
+  const std::string line(80, '=');
 
   // ---------------------------------------------------------------------------
 
@@ -1017,8 +1077,8 @@ void StressTest()
 {
   PRINT_BANNER();
 
-  const std::string decor(80, '-');
-  const std::string decor2(80, '=');
+  const std::string decor(80, '>');
+  const std::string decor2(80, '<');
 
   namespace FS = std::filesystem;
   namespace FT = std::chrono;
@@ -1249,15 +1309,18 @@ int main(int argc, char* argv[])
 
   printf("Seed = %llu\n\n", Game::gRng.Seed);
 
+  CheckSyntax();
   ParseTest();
   TestSimple();
   TestComplex();
   WithFile();
   Encrypt();
   NewConfig();
-  CheckSyntax();
   SerializeObjects();
   StressTest();
+
+  printf("\n");
+  printf("All done!\n");
 
   return 0;
 }

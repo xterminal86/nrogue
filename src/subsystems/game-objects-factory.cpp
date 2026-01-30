@@ -44,6 +44,7 @@ GameObject* GameObjectsFactory::CreateShrine(int x, int y,
   go->FgColor = Colors::ShrineColorsByType.at(type).first;
   go->BgColor = Colors::ShrineColorsByType.at(type).second;
 
+  go->Blocking = true;
   go->Type = GameObjectType::SHRINE;
 
   bool oneTimeUse = (type != ShrineType::POTENTIAL);
@@ -109,13 +110,15 @@ void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate,
                                       int image,
                                       MapType leadsTo)
 {
-  auto tile = levelWhereCreate->MapArray[x][y].get();
+  GameObject* tile = levelWhereCreate->MapArray[x][y].get();
 
-  auto c = tile->AddComponent<StairsComponent>();
-  StairsComponent* stairs = static_cast<StairsComponent*>(c);
+  StairsComponent* stairs = tile->AddComponent<StairsComponent>();
   stairs->LeadsTo = leadsTo;
 
   tile->ObjectName = (image == '>') ? "Stairs Down" : "Stairs Up";
+  tile->GraphicTile = (image == '>') ?
+                        GraphicTiles::STAIRS_DOWN :
+                        GraphicTiles::STAIRS_UP;
   tile->FgColor = Colors::WhiteColor;
   tile->BgColor = Colors::DoorHighlightColor;
   tile->Image = image;

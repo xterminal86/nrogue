@@ -543,7 +543,7 @@ enum class ShrineType
   , RUINED       // random effect + low chance to receive negative effect
   , DISTURBING   // random effect + high chance to receive negative effect
   , ABYSSAL      // random stat raise + negative effect
-  , FORGOTTEN    // random effect
+  , FORGOTTEN    // random effect (TODO: choose which shrine type to restore on interaction)
   , POTENTIAL    // temporary raises stats
   , HIDDEN       // random effect
   , HOLY         // removes curse

@@ -129,7 +129,7 @@ bool Player::Move(int dx, int dy)
 {
   MapLevelBase* curLvl = Game::gMap.CurrentLevel;
 
-  auto cell         = curLvl->MapArray[PosX + dx][PosY + dy].get();
+  auto mapArrayCell = curLvl->MapArray[PosX + dx][PosY + dy].get();
   auto staticObject = curLvl->StaticMapObjects[PosX + dx][PosY + dy].get();
 
   bool moveOk = false;
@@ -137,14 +137,22 @@ bool Player::Move(int dx, int dy)
 
   bool isFlying = HasEffect(ItemBonusType::LEVITATION);
 
-  if (!cell->Blocking || isFlying)
+  //
+  // Since we will automatically open doors if possible on movement, we can't
+  // check against curLvl->IsCellBlocking() since this will check block status
+  // of anything on a given tile and we will thus just skip this big condition
+  // check and won't do anything. Instead we will check everything separately:
+  // check against map array's tile first and then see if there's anything on it
+  // that can block our movement. Or, if it's a door, see if we can open it.
+  //
+  if (!mapArrayCell->Blocking || isFlying)
   {
     //
     // Occupied is set only by actors, so if actor is present on this cell,
     // it can be walked into so there's no need to check for static object
     // there.
     //
-    if (cell->Occupied)
+    if (mapArrayCell->Occupied)
     {
       auto actor = Game::gMap.GetActorAtPosition(PosX + dx, PosY + dy);
       if (actor != nullptr)
@@ -158,8 +166,15 @@ bool Player::Move(int dx, int dy)
         passByNPC = PassByNPC(actor);
       }
     }
+    //
+    // Some static object is present on this cell,
+    //
     else if (staticObject != nullptr)
     {
+      //
+      // If it blocks movement, check if it's a door, so that we may try to open
+      // it automatically.
+      //
       if (staticObject->Blocking)
       {
         auto dc = staticObject->GetComponent<DoorComponent>();

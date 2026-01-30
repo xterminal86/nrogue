@@ -368,7 +368,8 @@ void MapLevelTown::BuildAndDrawRoad(const Position& start,
                   '.',
                   Colors::ShadesOfGrey::Ten,
                   Colors::ShadesOfGrey::Eight,
-                  Strings::TileNames::FlagstoneText);
+                  Strings::TileNames::FlagstoneText,
+                  GraphicTiles::COBBLESTONE);
 
   DrawRoad(path);
 }
@@ -388,7 +389,8 @@ void MapLevelTown::DrawRoad(const std::stack<Position>& path)
                     '.',
                     Colors::ShadesOfGrey::Ten,
                     Colors::ShadesOfGrey::Eight,
-                    Strings::TileNames::FlagstoneText);
+                    Strings::TileNames::FlagstoneText,
+                    GraphicTiles::COBBLESTONE);
 
     pathCopy.pop();
   }
@@ -729,37 +731,8 @@ void MapLevelTown::CreateChurch(int x, int y)
           break;
 
         case '/':
-        {
-          //
-          // Globally updated game objects are not shown under
-          // fog of war by default,
-          // so sometimes we must "adjust" tiles if we want
-          // certain objects to be shown, like in this case.
-          //
-          ShrineType shrineType = ShrineType::KNOWLEDGE;
-          std::string description =
-              GlobalConstants::ShrineNameByType.at(shrineType);
-          t.Set(true,
-                false,
-                '/',
-                Colors::ShadesOfGrey::Four,
-                Colors::BlackColor, description,
-                "?Shrine?");
-          PlaceStaticObject(posX, posY, t);
-
-          //
-          // Tiles are updated only around player.
-          // Shrine has some logic (buff and timeout count), thus
-          // we must make it a global game object so it could be updated
-          // every turn no matter where the player is.
-          //
-          auto go = Game::gGOF.CreateShrine(posX,
-                                                                posY,
-                                                                shrineType,
-                                                                100);
-          PlaceGameObject(go);
-        }
-        break;
+          PlaceShrine({ posX, posY }, ShrineType::KNOWLEDGE);
+          break;
       }
 
       posX++;

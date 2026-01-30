@@ -231,20 +231,81 @@ std::string NRS::MakeOneliner(const std::string& stringObject)
 {
   std::stringstream ss;
 
+  bool whitespaceFound = false;
+
+  //
+  // Remove comments.
+  //
+  bool firstCharFound = false;
+  bool commentFound   = false;
+
+  for (char c : stringObject)
+  {
+    bool isComment = (c == _commentMarker);
+
+    whitespaceFound = std::find(_whitespaces.begin(),
+                                _whitespaces.end(),
+                                c) != _whitespaces.end();
+
+    if (!whitespaceFound)
+    {
+      if (!firstCharFound)
+      {
+        firstCharFound = true;
+
+        if (isComment)
+        {
+          commentFound = true;
+        }
+      }
+    }
+
+    if (!commentFound)
+    {
+      ss << c;
+    }
+
+    //
+    // End of the line, pal.
+    //
+    if (c == '\n')
+    {
+      firstCharFound = false;
+      commentFound   = false;
+    }
+  }
+
+  /*
+  static const std::string in(80, '<');
+  static const std::string out(80, '>');
+  static const std::string ruler(80, '-');
+
+  printf("%s \n", in.data());
+  printf("%s\n", stringObject.data());
+  printf("%s \n", out.data());
+  printf("%s\n", ss.str().data());
+  printf("%s\n", ruler.data());
+  printf("\n");
+  */
+
+  std::string noComments = ss.str();
+
+  ss.str(std::string());
+
   bool inQuotes = false;
 
-  for (auto& c : stringObject)
+  for (char c : noComments)
   {
-    bool unwantedFound = std::find(_unwantedCharacters.begin(),
-                                   _unwantedCharacters.end(),
-                                   c) != _unwantedCharacters.end();
+    whitespaceFound = std::find(_whitespaces.begin(),
+                                _whitespaces.end(),
+                                c) != _whitespaces.end();
 
     if (c == '\"')
     {
       inQuotes = !inQuotes;
     }
 
-    if (inQuotes || !unwantedFound)
+    if (inQuotes || !whitespaceFound)
     {
       ss << c;
     }

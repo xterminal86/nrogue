@@ -120,7 +120,8 @@ void MapLevelMines::CreateLevel()
   CreateGround('.',
                Colors::ShadesOfGrey::Four,
                Colors::BlackColor,
-               Strings::TileNames::DirtText);
+               Strings::TileNames::DirtText,
+               GraphicTiles::DIRT);
 
   LevelBuilder lb;
 
@@ -166,7 +167,8 @@ void MapLevelMines::CreateLevel()
   CreateBorders(' ',
                 Colors::BlackColor,
                 Colors::ShadesOfGrey::Six,
-                Strings::TileNames::RocksText);
+                Strings::TileNames::RocksText,
+                GraphicTiles::MINE_WALL);
 
   if (MapType_ != MapType::MINES_5)
   {
@@ -264,20 +266,13 @@ void MapLevelMines::CreateSpecialLevel()
         break;
 
         case '+':
-        {
-          GameObject* door =
-              Game::gGOF.CreateDoor(posX,
-                                    posY,
-                                    false,
-                                    DoorMaterials::STONE);
-
-          DoorComponent* dc = door->GetComponent<DoorComponent>();
-
-          dc->OpenedBy = GlobalConstants::OpenedByAnyone;
-
-          PlaceStaticObject(door);
-        }
-        break;
+          PlaceDoor(posX,
+                    posY,
+                    false,
+                    GlobalConstants::OpenedByAnyone,
+                    std::string(),
+                    DoorMaterials::STONE);
+          break;
 
         case 'D':
         {
@@ -502,29 +497,8 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
       break;
 
     case '+':
-    {
-      GameObject* door =
-          Game::gGOF.CreateDoor(x,
-                                y,
-                                false,
-                                DoorMaterials::WOOD);
-
-      //
-      // NOTE: may cause softlock if there is a locked door in flooded room
-      // since we cannot attack while swimming.
-      //
-
-      /*
-      if (Util::Rolld100(10))
-      {
-        DoorComponent* dc = door->GetComponent<DoorComponent>();
-        dc->OpenedBy = GlobalConstants::OpenedByNobody;
-      }
-      */
-
-      PlaceStaticObject(door);
-    }
-    break;
+      PlaceDoor(x, y);
+      break;
 
     case '.':
       PlaceGroundTile(x,
