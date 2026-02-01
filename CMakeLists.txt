@@ -15,7 +15,7 @@ endif()
 
 if (MSVC)
   message("Setting compile options for MSVC...")
-  add_compile_options(/W1 /wd4927 /std:c++latest)
+  add_compile_options(/W1 /wd4927)
   add_definitions(-DMSVC_COMPILER)
   add_definitions(-D__PRETTY_FUNCTION__=__FUNCSIG__)
   # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
@@ -145,13 +145,18 @@ endif()
 # ==============================================================================
 
 if (WIN32)
-  add_executable(${TARGET_NAME} WIN32
+  add_executable(
+    ${TARGET_NAME} 
+    WIN32
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-    ${OBJLIB_LINK_NAME})
+    ${OBJLIB_LINK_NAME}
+  )
 else()
-  add_executable(${TARGET_NAME}
+  add_executable(
+    ${TARGET_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-    ${OBJLIB_LINK_NAME})
+    ${OBJLIB_LINK_NAME}
+  )
 endif()
 
 if (USE_SDL)

@@ -234,7 +234,7 @@ void DevConsole::HandleInput()
         std::string commonPrefix;
 
         bool commonPrefixFound = true;
-        if (not hintsV.empty())
+        if (!hintsV.empty())
         {
           for (size_t i = 0; i < shortestStringLength; i++)
           {
@@ -248,7 +248,7 @@ void DevConsole::HandleInput()
               }
             }
 
-            if (not commonPrefixFound)
+            if (!commonPrefixFound)
             {
               break;
             }
@@ -261,7 +261,7 @@ void DevConsole::HandleInput()
         // Prefix found, attach it to current command with all that was
         // inputted.
         //
-        if (not commonPrefix.empty())
+        if (!commonPrefix.empty())
         {
           if (spl.size() > 1)
           {
