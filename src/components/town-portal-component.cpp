@@ -34,5 +34,8 @@ void TownPortalComponent::TeleportBack()
 
   std::string tpRes = Game::gMap.TeleportToExistingLevel(_posToReturn.first,
                                                          _posToReturn.second);
-  Game::gPrnt.AddMessage(tpRes);
+  if (!tpRes.empty())
+  {
+    Game::gPrnt.AddMessage(tpRes);
+  }
 }

@@ -15,7 +15,7 @@ endif()
 
 if (MSVC)
   message("Setting compile options for MSVC...")
-  add_compile_options(/W1 /wd4927)
+  add_compile_options(/W1 /wd4927 /std:c++latest)
   add_definitions(-DMSVC_COMPILER)
   add_definitions(-D__PRETTY_FUNCTION__=__FUNCSIG__)
   # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
@@ -36,6 +36,8 @@ endif()
 
 option(USE_SDL "Build with SDL2" false)
 option(BUILD_TESTS "Allow various test executables appear in targets list" false)
+
+message("CMAKE_BUILD_TYPE = '${CMAKE_BUILD_TYPE}'")
 
 if (${CMAKE_BUILD_TYPE} MATCHES Release)
   add_definitions(-DRELEASE_BUILD)
