@@ -748,7 +748,8 @@ enum class NameCP437
 enum class GraphicTiles
 {
     NONE = -1
-  , AMULET1 = 256
+  , FIRST = 0
+  , AMULET1 = 0
   , BARREL
   , BED_MC
   , BED
@@ -819,6 +820,8 @@ enum class GraphicTiles
   , WS_DOOR_OPEN
   , WW_DOOR_CLOSED
   , WW_DOOR_OPEN
+  , Z_UNKNOWN
+  , LAST
 };
 
 #endif // ENUMERATIONS_H

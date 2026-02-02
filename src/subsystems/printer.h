@@ -70,6 +70,21 @@ class Printer
     /// Call this after all PrintFB calls
     void Render();
 
+    void PrintChar(const int x,
+                   const int y,
+                   int charIndex,
+                   const uint32_t& htmlColorFg,
+                   const uint32_t& htmlColorBg);
+
+    void PrintText(const int x,
+                   const int y,
+                   const std::string& text,
+                   int align,
+                   const uint32_t& htmlColorFg,
+                   const uint32_t& htmlColorBg);
+
+    void DrawGraphicsTile(int x, int y, GraphicTiles tile, uint32_t color);
+
 #ifndef USE_SDL
     /// Print text at (x, y) directly to the screen,
     /// with (0, 0) at upper left corner and y increases down
@@ -107,6 +122,7 @@ class Printer
 
     const std::unordered_map<size_t, ColorPair>& GetValidColorsCache();
 #else
+    /*
     void PrintFB(const int& x, const int& y,
                  int image,
                  const uint32_t& htmlColorFg,
@@ -124,6 +140,7 @@ class Printer
                  int align,
                  const uint32_t& htmlColorFg,
                  const uint32_t& htmlColorBg);
+    */
 
     void DrawWindow(const Position& leftCorner,
                     const Position& size,
@@ -138,16 +155,11 @@ class Printer
                   int x2, int y2,
                   uint32_t color);
 
-    void DrawGraphicsTile(int x, int y, GraphicTiles tile, uint32_t color);
-
     const std::unordered_map<uint32_t, TileColor>& GetValidColorsCache();
 
     void SetRenderDst(const SDL_Rect& dst);
 
     double GetTileAspectRatio();
-
-    const std::pair<int, int>& GetTileWH();
-    const std::pair<int, int>& GetTileWHScaled();
 #endif
 
     /// Add message to the game log
@@ -194,7 +206,12 @@ class Printer
       auto DrawArrow = [this](int x, int y, int arrowChar)
       {
         #ifdef USE_SDL
-        PrintFB(x, y, arrowChar, Colors::WhiteColor, Colors::BlackColor);
+        //PrintFB(x, y, arrowChar, Colors::WhiteColor, Colors::BlackColor);
+        PrintChar(x,
+                  y,
+                  arrowChar,
+                  Colors::WhiteColor,
+                  Colors::BlackColor);
         #else
         PrintFB(x, y, arrowChar, Colors::WhiteColor, Colors::BlackColor);
         #endif
@@ -210,11 +227,11 @@ class Printer
         {
           for (int y = 2; y < (int)TerminalHeight - 1; y++)
           {
-            PrintFB(TerminalWidth - 1,
-                    y,
-                    ' ',
-                    Colors::BlackColor,
-                    Colors::ShadesOfGrey::Eight);
+            PrintChar(TerminalWidth - 1,
+                      y,
+                      ' ',
+                      Colors::BlackColor,
+                      Colors::ShadesOfGrey::Eight);
           }
 
           #ifdef USE_SDL
@@ -262,13 +279,11 @@ class Printer
 
         int aboveDownArrow = TerminalHeight - 2;
         int markerMoveArea = TerminalHeight - 4;
-        Game::gPrnt.PrintFB(
-          TerminalWidth - 1,
-          aboveDownArrow - (int)((double)markerMoveArea * progress),
-          '=',
-          Colors::WhiteColor,
-          Colors::BlackColor
-        );
+        PrintChar(TerminalWidth - 1,
+                  aboveDownArrow - (int)((double)markerMoveArea * progress),
+                  '=',
+                  Colors::WhiteColor,
+                  Colors::BlackColor);
       }
     }
 
@@ -310,26 +325,28 @@ class Printer
     bool InitForCurses();
     #else
     SDL_Texture* _tileset = nullptr;
+    SDL_Texture* _textTileset = nullptr;
     SDL_Texture* _frameBuffer = nullptr;
 
     int _tilesetWidth  = 0;
     int _tilesetHeight = 0;
 
-    std::vector<TileInfo> _tiles;
-    std::unordered_map<char, int> _tileIndexByChar;
+    int _textTilesetWidth  = 0;
+    int _textTilesetHeight = 0;
+
+    std::vector<TileInfo> _textTiles;
+    std::vector<TileInfo> _graphicTiles;
 
     std::unordered_map<uint32_t, TileColor> _validColorsCache;
 
-    int _tileWidth  = 0;
-    int _tileHeight = 0;
+    int _textTileWidth  = 8;
+    int _textTileHeight = 16;
 
-    int _tileWidthScaled  = 0;
-    int _tileHeightScaled = 0;
+    int _tileSize = 0;
+
+    int _tileSizeScaled = 0;
 
     double _tileAspectRatio = 0.0;
-
-    std::pair<int, int> _tileWH;
-    std::pair<int, int> _tileWHScaled;
 
     SDL_Rect _drawSrc;
     SDL_Rect _drawDst;
@@ -338,8 +355,9 @@ class Printer
 
     bool InitForSDL();
 
-    void DrawTile(int x, int y, int tileIndex);
-    void DrawTile(int x, int y, int tileIndex, size_t scale);
+    bool LoadTextTileset();
+    bool LoadGraphicsTileset();
+    bool LoadSubstituteGraphicTileset();
 
     //
     // Here lies data after last ConvertHtmlToRGB() call.

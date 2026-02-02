@@ -44,8 +44,7 @@ class Application
     {
       double ScaleFactor = 1.0;
 
-      int TileWidth  = 0;
-      int TileHeight = 0;
+      int TileSize = 0;
 
       int WindowWidth  = 0;
       int WindowHeight = 0;
@@ -179,8 +178,7 @@ class Application
     void PrepareChars();
 
     const std::string kConfigKeyTileset             = "tileset";
-    const std::string kConfigKeyTileW               = "tile_w";
-    const std::string kConfigKeyTileH               = "tile_h";
+    const std::string kConfigKeyTileSize            = "tile_size";
     const std::string kConfigKeyScale               = "scale";
     const std::string kConfigKeyFastCombat          = "fast_combat";
     const std::string kConfigKeyFastMonsterMovement = "fast_monster_movement";

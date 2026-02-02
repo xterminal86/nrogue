@@ -1,36 +1,40 @@
 #!/usr/bin/python3
 
-import sys;
+import argparse;
 import base64;
 
 ################################################################################
 
 def main():
-  if len(sys.argv) != 2:
-    print(f"Usage: { sys.argv[0] } <FILE>");
-    return;
+  parser = argparse.ArgumentParser();
 
-  fname = sys.argv[1];
+  parser.add_argument("FILE", type=str);
 
-  varName = fname.split(".");
+  args = parser.parse_args();
+
+  fname = args.FILE;
+
+  spl = fname.split("/");
+
+  varName = spl[-1].split(".");
 
   if len(varName) > 1:
     varName = f"{ varName[0] }-{ varName[1] }";
   else:
     varName = varName[0];
-  
+
   data = None;
-  
+
   try:
     with open(fname, "rb") as f:
       data = f.read();
   except Exception as e:
     print(f"{ e }");
-    return;  
+    return;
 
   output = f"const std::string { varName } = \n";
   output += "\"";
-    
+
   b64 = base64.encodebytes(data);
   s = b64.decode();
   lineCounter = 0;

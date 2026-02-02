@@ -23,6 +23,7 @@ def main():
     "enum class GraphicTiles\n"
     "{\n"
     "    NONE = -1\n"
+    "  , FIRST = 0\n"
   );
 
   first = True;
@@ -33,14 +34,14 @@ def main():
     enumName = fname.upper().replace("-", "_");
 
     if first:
-      cppEnum += f"  , { enumName } = 256\n";
+      cppEnum += f"  , { enumName } = 0\n";
       first = False;
     else:
       cppEnum += f"  , { enumName }\n";
 
-  cppEnum += "};\n";
+  cppEnum += "  , LAST\n";
 
-  asciiTiles = Image.open("../resources/tileset-32x32.bmp");
+  cppEnum += "};\n";
 
   emptyCell = Image.new("RGB", (32, 32), color="magenta");
 
@@ -48,8 +49,8 @@ def main():
 
   print(f"Found { totalImages } files");
 
-  atlasWidth  = asciiTiles.width;
-  atlasHeight = asciiTiles.height + (
+  atlasWidth  = 32 * 16;
+  atlasHeight = (
     32 if (totalImages <= 15) else ( 32 * ( (totalImages // 16) + 1 ) )
   );
 
@@ -57,14 +58,10 @@ def main():
 
   graphics = Image.new("RGB", (atlasWidth, atlasHeight), color='magenta');
 
-  print("Pasting ASCII tiles...");
-
-  graphics.paste(asciiTiles, (0, 0));
-
   print("Pasting graphics...");
 
   imgPosX = 0;
-  imgPosY = asciiTiles.height;
+  imgPosY = 0;
 
   counter = 1;
 

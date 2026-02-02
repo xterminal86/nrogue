@@ -857,6 +857,8 @@ bool Application::InitCurses()
 
   Game::gPrnt.Init();
 
+  Game::gPrnt.InitMsgBufferObj();
+
   return Game::gPrnt.IsReady();
 }
 #endif
@@ -1112,8 +1114,7 @@ bool Application::ValidateConfig()
 
 void Application::LoadConfig()
 {
-  GameConfig.TileWidth  = 8;
-  GameConfig.TileHeight = 16;
+  GameConfig.TileSize = 16;
 
   NRS::LoadResult res = _loadedConfig.Load("config.txt");
   switch (res)
@@ -1144,11 +1145,8 @@ void Application::LoadConfig()
             _loadedConfig[kConfigKeyTileset].GetString();
       }
 
-      GameConfig.TileWidth =
-          std::stoi(_loadedConfig[kConfigKeyTileW].GetString());
-
-      GameConfig.TileHeight =
-          std::stoi(_loadedConfig[kConfigKeyTileH].GetString());
+      GameConfig.TileSize =
+          std::stoi(_loadedConfig[kConfigKeyTileSize].GetString());
 
       GameConfig.ScaleFactor =
           std::stod(_loadedConfig[kConfigKeyScale].GetString());

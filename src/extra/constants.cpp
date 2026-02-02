@@ -354,6 +354,7 @@ namespace GlobalConstants
   // To avoid C-style casting from enum
   //
   std::unordered_map<NameCP437, int> CP437IndexByType;
+  std::unordered_map<GraphicTiles, int> GraphicTileByType;
 #endif
 
   int TerminalWidth  = 80;

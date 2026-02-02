@@ -342,6 +342,7 @@ namespace GlobalConstants
 
 #ifdef USE_SDL
   extern std::unordered_map<NameCP437, int> CP437IndexByType;
+  extern std::unordered_map<GraphicTiles, int> GraphicTileByType;
 #endif
 
   extern int TerminalWidth;

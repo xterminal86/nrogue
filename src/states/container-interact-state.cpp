@@ -95,11 +95,16 @@ void ContainerInteractState::Update(bool forceUpdate)
     for (int y = 0; y < _th; y++)
     {
       #ifdef USE_SDL
-      Game::gPrnt.PrintFB(_twHalf,
-                          y,
-                          (int)NameCP437::VBAR_2,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      //Game::gPrnt.PrintFB(_twHalf,
+      //                    y,
+      //                    (int)NameCP437::VBAR_2,
+      //                    Colors::WhiteColor,
+      //                    Colors::BlackColor);
+      Game::gPrnt.PrintChar(_twHalf,
+                            y,
+                            (int)NameCP437::VBAR_2,
+                            Colors::WhiteColor,
+                            Colors::BlackColor);
       #else
       Game::gPrnt.PrintFB(_twHalf,
                           y,
