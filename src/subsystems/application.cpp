@@ -929,11 +929,6 @@ void Application::LoadConfig()
     {
       DebugLog("Config loaded:\n%s\n", _loadedConfig.ToPrettyString().data());
 
-      //
-      // If tileset file can't be opened,
-      // fallback to default '8x16' scaled window size.
-      // Scale can still be read.
-      //
       std::ifstream tileset(_loadedConfig[kConfigKeyTileset].GetString());
       if (tileset.is_open())
       {
@@ -941,11 +936,27 @@ void Application::LoadConfig()
             _loadedConfig[kConfigKeyTileset].GetString();
       }
 
-      GameConfig.TileSize =
-          std::stoi(_loadedConfig[kConfigKeyTileSize].GetString());
-
-      GameConfig.ScaleFactor =
-          std::stod(_loadedConfig[kConfigKeyScale].GetString());
+      const std::string& ts = _loadedConfig[kConfigKeyTileSize].GetString();
+      if (!ts.empty())
+      {
+        GameConfig.TileSize = std::stoi(ts);
+      }
+      else
+      {
+        ConsoleLog("[WAR] tile size is empty, assuming default");
+        GameConfig.TileSize = 16;
+      }
+      
+      const std::string& sf = _loadedConfig[kConfigKeyScale].GetString();
+      if (!sf.empty())
+      {
+        GameConfig.ScaleFactor = std::stod(sf);
+      }
+      else
+      {
+        ConsoleLog("[WAR] scale factor is empty, assuming default");
+        GameConfig.ScaleFactor = 1.0;
+      }
 
       GameConfig.FastCombat =
           (_loadedConfig[kConfigKeyFastCombat].GetString() == "Y");
