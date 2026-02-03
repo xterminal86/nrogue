@@ -211,6 +211,13 @@ void MenuState::Update(bool forceUpdate)
   {
     Game::gPrnt.Clear();
 
+    Game::gPrnt.DrawSubstituteGraphicsTile(0, 0, 'b', Colors::WhiteColor, 2.0);
+
+    Game::gPrnt.Render();
+
+    /*
+    Game::gPrnt.Clear();
+
     DrawPicture();
 
     Game::gPrnt.DrawWindow({ 0, 0 },
@@ -317,5 +324,6 @@ void MenuState::Update(bool forceUpdate)
     );
 
     Game::gPrnt.Render();
+    */
   }
 }

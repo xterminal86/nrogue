@@ -887,6 +887,13 @@ bool Application::InitSDL()
 
   LoadConfig();
 
+  //
+  // If custom graphic tileset is empty or config option is turned off, use
+  // default one.
+  //
+  GameConfig.UseGraphics =
+      (GameConfig.UseGraphics && !GameConfig.TilesetFilename.empty());
+
   Game::gPrnt.Init();
 
   if (!Game::gPrnt.IsReady())

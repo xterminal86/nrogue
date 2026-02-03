@@ -128,6 +128,11 @@ class Printer
 #else
 // -----------------------------------------------------------------------------
     void DrawGraphicsTile(int x, int y, GraphicTiles tile, uint32_t color);
+    void DrawSubstituteGraphicsTile(int x,
+                                    int y,
+                                    int image,
+                                    uint32_t color,
+                                    double scaleFactor);
 
     void DrawWindow(const Position& leftCorner,
                     const Position& size,
@@ -320,8 +325,15 @@ class Printer
     bool InitForCurses();
     #else
 
+    // User defined.
     SDL_Texture* _graphicTileset = nullptr;
+
+    // 16x16 CP437 chart
+    SDL_Texture* _sgGraphicTileset = nullptr;
+
+    // 8x16 CP437 chart
     SDL_Texture* _textTileset = nullptr;
+
     SDL_Texture* _frameBuffer = nullptr;
 
     int _graphicTilesetWidth  = 0;
@@ -330,8 +342,9 @@ class Printer
     int _textTilesetWidth  = 0;
     int _textTilesetHeight = 0;
 
-    std::vector<TileInfo> _textTiles;
-    std::vector<TileInfo> _graphicTiles;
+    std::vector<TileInfo> _textTilesInfo;
+    std::vector<TileInfo> _graphicTilesInfo;
+    std::vector<TileInfo> _sgTilesInfo;
 
     std::unordered_map<uint32_t, TileColor> _validColorsCache;
 
@@ -345,8 +358,13 @@ class Printer
     int _textCharsCountH = 0;
     int _textCharsCountV = 0;
 
-    int _graphicTileSize = 0;
+    int _graphicTileSize = _sgGraphicTileSize;
 
+    const int _sgGraphicTileSize = 16;
+
+    double _substituteGraphicsScaleFactor = 1.0;
+
+    // FIXME:
     int _graphicTileSizeScaled = 16;
 
     SDL_Rect _drawSrc;

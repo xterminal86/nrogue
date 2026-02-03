@@ -66,47 +66,6 @@ bool Printer::LoadTextTileset()
 
 // =============================================================================
 
-bool Printer::LoadSubstituteGraphicTileset()
-{
-  auto gameConfig = Game::gApp.GameConfig;
-
-  auto res = Util::Base64_Decode(Base64Strings::GraphicsTileset16x16Base64);
-  auto bytes = Util::ConvertStringToBytes(res);
-  SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
-  SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);
-  if (!surf)
-  {
-    ConsoleLog("[ERR] could not load tileset from memory: '%s'",
-               SDL_GetError());
-    return false;
-  }
-
-  SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
-  _graphicTileset = SDL_CreateTextureFromSurface(Renderer, surf);
-  if (_graphicTileset == nullptr)
-  {
-    ConsoleLog("[ERR] SDL_CreateTextureFromSurface() fail: '%s'\n",
-               SDL_GetError());
-    return false;
-  }
-
-  SDL_FreeSurface(surf);
-
-  int w = 0, h = 0;
-  SDL_QueryTexture(_graphicTileset, nullptr, nullptr, &w, &h);
-
-  _graphicTilesetWidth  = w;
-  _graphicTilesetHeight = h;
-
-  _graphicTileSize = 16;
-  _graphicTileSizeScaled =
-      (int)((double)_graphicTileSize * gameConfig.ScaleFactor);
-
-  return true;
-}
-
-// =============================================================================
-
 bool Printer::LoadGraphicsTileset()
 {
   auto gameConfig = Game::gApp.GameConfig;
@@ -142,6 +101,46 @@ bool Printer::LoadGraphicsTileset()
     _graphicTileSize = gameConfig.TileSize;
     _graphicTileSizeScaled =
         (int)((double)_graphicTileSize * gameConfig.ScaleFactor);
+  }
+
+  return true;
+}
+
+// =============================================================================
+
+bool Printer::LoadSubstituteGraphicTileset()
+{
+  auto gameConfig = Game::gApp.GameConfig;
+
+  auto res = Util::Base64_Decode(Base64Strings::GraphicsTileset16x16Base64);
+  auto bytes = Util::ConvertStringToBytes(res);
+  SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
+  SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);
+  if (!surf)
+  {
+    ConsoleLog("[ERR] could not load tileset from memory: '%s'",
+               SDL_GetError());
+    return false;
+  }
+
+  SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
+  _sgGraphicTileset = SDL_CreateTextureFromSurface(Renderer, surf);
+  if (_sgGraphicTileset == nullptr)
+  {
+    ConsoleLog("[ERR] SDL_CreateTextureFromSurface() fail: '%s'\n",
+               SDL_GetError());
+    return false;
+  }
+
+  SDL_FreeSurface(surf);
+
+  if (gameConfig.UseGraphics)
+  {
+    int w = 0, h = 0;
+    SDL_QueryTexture(_sgGraphicTileset, nullptr, nullptr, &w, &h);
+
+    _substituteGraphicsScaleFactor =
+        _graphicTileSize / (double)_sgGraphicTileSize;
   }
 
   return true;
@@ -315,24 +314,24 @@ bool Printer::InitForSDL()
     return false;
   }
 
-  bool useSubstituteTileset = true;
   if (gameConfig.UseGraphics)
   {
-    useSubstituteTileset = false;
-
     if (!LoadGraphicsTileset())
-    {
-      useSubstituteTileset = true;
-    }
-  }
-
-  if (useSubstituteTileset)
-  {
-    if (!LoadSubstituteGraphicTileset())
     {
       return false;
     }
   }
+  else
+  {
+    gameConfig.TileSize = _sgGraphicTileSize;
+    _graphicTileSize    = _sgGraphicTileSize;
+  }
+
+  if (!LoadSubstituteGraphicTileset())
+  {
+    return false;
+  }
+
 
   rect = GetWindowSize(_graphicTileSize);
 
@@ -369,23 +368,43 @@ bool Printer::InitForSDL()
     }
   );
 
+  //
+  // Text
+  //
   for (int y = 0; y < _textTilesetHeight; y += _textTileHeight)
   {
     for (int x = 0; x < _textTilesetWidth; x += _textTileWidth)
     {
       TileInfo ti = { x, y };
 
-      _textTiles.push_back(ti);
+      _textTilesInfo.push_back(ti);
     }
   }
 
+  //
+  // Graphics
+  //
   for (int y = 0; y < _graphicTilesetHeight; y += Game::gApp.GameConfig.TileSize)
   {
     for (int x = 0; x < _graphicTilesetWidth; x += Game::gApp.GameConfig.TileSize)
     {
       TileInfo ti = { x, y };
 
-      _graphicTiles.push_back(ti);
+      _graphicTilesInfo.push_back(ti);
+    }
+  }
+
+  //
+  // Substitute graphics
+  //
+  int atlasSide = (_sgGraphicTileSize * 16);
+  for (int y = 0; y < atlasSide; y += _sgGraphicTileSize)
+  {
+    for (int x = 0; x < atlasSide; x += _sgGraphicTileSize)
+    {
+      TileInfo ti = { x, y };
+
+      _sgTilesInfo.push_back(ti);
     }
   }
 
@@ -557,7 +576,7 @@ void Printer::DrawRect(int x1, int y1,
     SDL_SetRenderTarget(Renderer, _frameBuffer);
   }
 
-  TileInfo& ti = _textTiles[(int)NameCP437::BLOCK];
+  TileInfo& ti = _textTilesInfo[(int)NameCP437::BLOCK];
 
   _drawSrc.x = ti.X;
   _drawSrc.y = ti.Y;
@@ -582,13 +601,13 @@ void Printer::DrawRect(int x1, int y1,
 
 void Printer::DrawFromTextTileset(int x, int y, int tileIndex)
 {
-  if (tileIndex < 0 || tileIndex >= (int)_textTiles.size())
+  if (tileIndex < 0 || tileIndex >= (int)_textTilesInfo.size())
   {
     ConsoleLog("[ERR] invalid tile index %d", tileIndex);
     return;
   }
 
-  TileInfo& tile = _textTiles[tileIndex];
+  TileInfo& tile = _textTilesInfo[tileIndex];
 
   _drawSrc.x = tile.X;
   _drawSrc.y = tile.Y;
@@ -612,13 +631,13 @@ void Printer::DrawFromTextTileset(int x, int y, int tileIndex)
 
 void Printer::DrawFromGraphicsTileset(int x, int y, int tileIndex)
 {
-  if (tileIndex < 0 || tileIndex >= (int)_graphicTiles.size())
+  if (tileIndex < 0 || tileIndex >= (int)_graphicTilesInfo.size())
   {
     ConsoleLog("[ERR] invalid tile index %d", tileIndex);
     return;
   }
 
-  TileInfo& ti = _graphicTiles[tileIndex];
+  TileInfo& ti = _graphicTilesInfo[tileIndex];
 
   _drawSrc.x = ti.X;
   _drawSrc.y = ti.Y;
@@ -649,6 +668,46 @@ void Printer::DrawGraphicsTile(int x, int y, GraphicTiles tile, uint32_t color)
                          _convertedHtml.B);
 
   DrawFromGraphicsTileset(x, y, (int)tile);
+}
+
+// =============================================================================
+
+void Printer::DrawSubstituteGraphicsTile(int x,
+                                         int y,
+                                         int image,
+                                         uint32_t color,
+                                         double scaleFactor)
+{
+  ConvertHtmlToRGB(color);
+  SDL_SetTextureColorMod(_sgGraphicTileset,
+                         _convertedHtml.R,
+                         _convertedHtml.G,
+                         _convertedHtml.B);
+
+  if (image < 0 || image >= (int)_sgTilesInfo.size())
+  {
+    ConsoleLog("[ERR] invalid tile index %d", image);
+    return;
+  }
+
+  TileInfo& ti = _sgTilesInfo[image];
+
+  _drawSrc.x = ti.X;
+  _drawSrc.y = ti.Y;
+  _drawSrc.w = _sgGraphicTileSize;
+  _drawSrc.h = _sgGraphicTileSize;
+
+  _drawDst.x = x;
+  _drawDst.y = y;
+  _drawDst.w = (int)((double)_sgGraphicTileSize * scaleFactor);
+  _drawDst.h = (int)((double)_sgGraphicTileSize * scaleFactor);
+
+  if (SDL_GetRenderTarget(Renderer) == nullptr)
+  {
+    SDL_SetRenderTarget(Renderer, _frameBuffer);
+  }
+
+  SDL_RenderCopy(Renderer, _sgGraphicTileset, &_drawSrc, &_drawDst);
 }
 
 // =============================================================================
