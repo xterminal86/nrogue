@@ -325,22 +325,26 @@ void Application::DrawAttackCursor(int x, int y,
     if (defender->FgColor != Colors::None
      && defender->BgColor != Colors::None)
     {
-      Game::gPrnt.PrintFB(x,
-                          y,
-                          defender->Image,
-                          defender->FgColor,
-                          defender->BgColor);
+      Game::gPrnt.PrintChar(
+        x,
+        y,
+        defender->Image,
+        defender->FgColor,
+        defender->BgColor
+      );
 
       Game::gPrnt.Render();
     }
   }
   else
   {
-    Game::gPrnt.PrintFB(x,
-                        y,
-                        ' ',
-                        Colors::BlackColor,
-                        cursorColor);
+    Game::gPrnt.PrintChar(
+      x,
+      y,
+      ' ',
+      Colors::BlackColor,
+      cursorColor
+    );
 
     Game::gPrnt.Render();
   }
@@ -869,25 +873,6 @@ bool Application::InitCurses()
 
 #include <SDL2/SDL.h>
 
-#include "base64-strings.h"
-
-void Application::SetIcon()
-{
-  auto res = Util::Base64_Decode(Base64Strings::IconBase64);
-  auto bytes = Util::ConvertStringToBytes(res);
-  SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
-  SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);
-  if (!surf)
-  {
-    ConsoleLog("[ERR] could not load from memory: '%s'", SDL_GetError());
-    return;
-  }
-
-  SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
-  SDL_SetWindowIcon(Window, surf);
-  SDL_FreeSurface(surf);
-}
-
 // =============================================================================
 
 bool Application::InitSDL()
@@ -902,70 +887,6 @@ bool Application::InitSDL()
 
   LoadConfig();
 
-  if (!ValidateConfig())
-  {
-    ConsoleLog("[ERR] config validation failed!");
-    return false;
-  }
-
-  SDL_Rect rect = GetWindowSize(GameConfig.TileWidth, GameConfig.TileHeight);
-
-  _defaultWindowSize = { rect.w, rect.h };
-
-  _resizedWindowSize = _defaultWindowSize;
-
-  Window = SDL_CreateWindow("nrogue",
-                            rect.x, rect.y,
-                            rect.w, rect.h,
-                            SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-
-  if (Window == nullptr)
-  {
-    ConsoleLog("[ERR] SDL_CreateWindow fail: '%s'", SDL_GetError());
-    return false;
-  }
-
-  //
-  // NOTE: it looks like "direct3d" is Direct3D 9 (which is kinda slow
-  // and reports some weird error / warning in stdout after maximizing
-  // the window).
-  // "direct3d11" works OK, but produces another weird behaviour:
-  // when monster attacks player, attack animation displays every other time
-  // while player's attack animation works fine.
-  // "direct3d12" seems to have no such issues, but WTF is this?!
-  // What the hell is one supposed to choose?!
-  //
-
-#if defined(MSVC_COMPILER) || defined(__WIN64__) || defined(__WIN32__)
-  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d12");
-#else
-  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
-#endif
-
-  Renderer = SDL_CreateRenderer(Window,
-                                -1,
-                                SDL_RENDERER_ACCELERATED |
-                                SDL_RENDERER_TARGETTEXTURE);
-  if (Renderer == nullptr)
-  {
-    ConsoleLog("[WAR] SDL_CreateRenderer() fail: '%s'", SDL_GetError());
-    ConsoleLog("Trying software mode...");
-
-    Renderer = SDL_CreateRenderer(Window,
-                                  -1,
-                                  SDL_RENDERER_SOFTWARE |
-                                  SDL_RENDERER_TARGETTEXTURE);
-    if (Renderer == nullptr)
-    {
-      ConsoleLog("[ERR] SDL_CreateRenderer() fail: '%s'", SDL_GetError());
-      return false;
-    }
-  }
-
-  SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
-
-  SetIcon();
-
   Game::gPrnt.Init();
 
   if (!Game::gPrnt.IsReady())
@@ -974,137 +895,7 @@ bool Application::InitSDL()
     return false;
   }
 
-  _defaultWindowSize.first  = GameConfig.WindowWidth;
-  _defaultWindowSize.second = GameConfig.WindowHeight;
-
-  Game::gPrnt.SetRenderDst(
-    {
-      0,
-      0,
-      _defaultWindowSize.first,
-      _defaultWindowSize.second
-    }
-  );
-
-  Printer::TerminalWidth  = GlobalConstants::TerminalWidth;
-  Printer::TerminalHeight = GlobalConstants::TerminalHeight;
-
   Game::gPrnt.InitMsgBufferObj();
-
-  return true;
-}
-
-// =============================================================================
-
-const std::pair<int, int>& Application::GetDefaultWindowSize()
-{
-  return _defaultWindowSize;
-}
-
-// =============================================================================
-
-std::pair<int, int>& Application::GetResizedWindowSize()
-{
-  return _resizedWindowSize;
-}
-
-// =============================================================================
-
-//
-// Returns SDL_Rect with initial window position in x, y
-// and window size in w, h
-//
-SDL_Rect Application::GetWindowSize(int tileWidth, int tileHeight)
-{
-  SDL_Rect res;
-
-  int scaledW = (int)((double)tileWidth * GameConfig.ScaleFactor);
-  int scaledH = (int)((double)tileHeight * GameConfig.ScaleFactor);
-
-  // ---------------------------------------------------------------------------
-  //
-  // This is just a plain hack to fit
-  // graphics tileset to screen at certain resolution.
-  //
-  if (!GameConfig.TilesetFilename.empty() && scaledW == 32)
-  {
-    GlobalConstants::TerminalWidth = 60;
-  }
-
-  if (tileWidth == tileHeight)
-  {
-    GlobalConstants::TerminalHeight = GlobalConstants::TerminalWidth / 2;
-  }
-
-  // ---------------------------------------------------------------------------
-
-  int ww = GlobalConstants::TerminalWidth  * scaledW;
-  int wh = GlobalConstants::TerminalHeight * scaledH;
-
-  GameConfig.WindowWidth  = ww;
-  GameConfig.WindowHeight = wh;
-
-  res.w = ww;
-  res.h = wh;
-
-  SDL_DisplayMode dm;
-  SDL_GetCurrentDisplayMode(0, &dm);
-
-  //
-  // Subtract current display size from created window size
-  // to determine starting window position,
-  // which should be relatively centered.
-  //
-  int wx = dm.w / 2 - ww / 2;
-  int wy = dm.h / 2 - wh / 2;
-
-  res.x = wx;
-  res.y = wy;
-
-  return res;
-}
-
-// =============================================================================
-
-bool Application::ValidateConfig()
-{
-  SDL_Surface* surf = SDL_LoadBMP(GameConfig.TilesetFilename.data());
-  if (surf == nullptr)
-  {
-    ConsoleLog("[WAR] failed to load tileset ('%s'), falling back to embedded.",
-               SDL_GetError());
-    GameConfig.TilesetFilename.clear();
-    GameConfig.ScaleFactor = 1;
-    GameConfig.TileWidth   = 8;
-    GameConfig.TileHeight  = 16;
-  }
-  else
-  {
-    if (GameConfig.TileWidth * 16 != surf->w)
-    {
-      ConsoleLog("[ERR] tileset width should accommodate 16 columns of "
-                 "characters!");
-      return false;
-    }
-
-    if (!GameConfig.UseGraphics)
-    {
-      if (GameConfig.TileHeight * 16 != surf->h)
-      {
-        ConsoleLog("[ERR] tileset height should accommodate 16 rows of "
-                   "characters!");
-        return false;
-      }
-    }
-    else
-    {
-      //
-      // Unfortunately for graphics tileset we can't check programmatically that
-      // height of a tileset and tile height specified in config actually
-      // match because graphics tileset is theoretically unbounded in height.
-      //
-    }
-  }
 
   return true;
 }
@@ -1114,8 +905,6 @@ bool Application::ValidateConfig()
 
 void Application::LoadConfig()
 {
-  GameConfig.TileSize = 16;
-
   NRS::LoadResult res = _loadedConfig.Load("config.txt");
   switch (res)
   {

@@ -2990,11 +2990,13 @@ namespace Util
   {
     for (auto& p : line)
     {
-      Game::gPrnt.PrintFB(p.X,
-                                  p.Y,
-                                  '*',
-                                  Colors::YellowColor,
-                                  Colors::RedColor);
+      Game::gPrnt.PrintChar(
+        p.X,
+        p.Y,
+        '*',
+        Colors::YellowColor,
+        Colors::RedColor
+      );
     }
 
     Game::gPrnt.Render();

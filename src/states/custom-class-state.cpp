@@ -145,12 +145,12 @@ void CustomClassState::Update(bool forceUpdate)
     Game::gPrnt.Clear();
 
     std::string pointsStr = Util::StringFormat("POINTS: %i", _points);
-    Game::gPrnt.PrintFB(_twHalf,
-                        _startY,
-                        pointsStr,
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(_twHalf,
+                          _startY,
+                          pointsStr,
+                          Printer::kAlignCenter,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
 
     if (_cursorRows >= 6)
     {
@@ -169,19 +169,19 @@ void CustomClassState::Update(bool forceUpdate)
     int count = 0;
     for (auto& kvp : _statStringByType)
     {
-      Game::gPrnt.PrintFB(_twHalf - 7,
-                          _startY + 2 + count,
-                          kvp.second.first.data(),
-                          Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(_twHalf - 7,
+                            _startY + 2 + count,
+                            kvp.second.first.data(),
+                            Printer::kAlignLeft,
+                            Colors::WhiteColor,
+                            Colors::BlackColor);
 
-      Game::gPrnt.PrintFB(_twHalf + 2,
-                          _startY + 2 + count,
-                          kvp.second.second.data(),
-                          Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(_twHalf + 2,
+                            _startY + 2 + count,
+                            kvp.second.second.data(),
+                            Printer::kAlignLeft,
+                            Colors::WhiteColor,
+                            Colors::BlackColor);
       count++;
 
       //
@@ -195,61 +195,61 @@ void CustomClassState::Update(bool forceUpdate)
 
     if (_displayWarning)
     {
-      Game::gPrnt.PrintFB(_twHalf,
-                          Printer::TerminalHeight - 8,
-                          "[WARNING] unused points remaining",
-                          Printer::kAlignCenter,
-                          Colors::YellowColor,
+      Game::gPrnt.PrintText(_twHalf,
+                            Printer::TerminalHeight - 8,
+                            "[WARNING] unused points remaining",
+                            Printer::kAlignCenter,
+                            Colors::YellowColor,
+                            Colors::BlackColor);
+
+      Game::gPrnt.PrintText(_twHalf,
+                            Printer::TerminalHeight - 7,
+                            "Press 'Enter' if that's OK",
+                            Printer::kAlignCenter,
+                            Colors::WhiteColor,
+                            Colors::BlackColor);
+    }
+
+    Game::gPrnt.PrintChar(_twHalf - 9 + 10 * _cursorCols,
+                          _startY + 2 + _cursorY,
+                          _cursorImage,
+                          Colors::WhiteColor,
                           Colors::BlackColor);
 
-      Game::gPrnt.PrintFB(_twHalf,
-                          Printer::TerminalHeight - 7,
-                          "Press 'Enter' if that's OK",
+    Game::gPrnt.PrintText(_twHalf,
+                          Printer::TerminalHeight - 3,
+                          "Arrow keys to navigate",
                           Printer::kAlignCenter,
                           Colors::WhiteColor,
                           Colors::BlackColor);
-    }
 
-    Game::gPrnt.PrintFB(_twHalf - 9 + 10 * _cursorCols,
-                        _startY + 2 + _cursorY,
-                        _cursorImage,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(_twHalf,
+                          Printer::TerminalHeight - 2,
+                          "'.' or ',' to modify",
+                          Printer::kAlignCenter,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
 
-    Game::gPrnt.PrintFB(_twHalf,
-                        Printer::TerminalHeight - 3,
-                        "Arrow keys to navigate",
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(_twHalf,
+                          Printer::TerminalHeight - 1,
+                          "Hold [SHIFT] for 5% step",
+                          Printer::kAlignCenter,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
 
-    Game::gPrnt.PrintFB(_twHalf,
-                        Printer::TerminalHeight - 2,
-                        "'.' or ',' to modify",
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(1,
+                          Printer::TerminalHeight - 1,
+                          "'q' - go back",
+                          Printer::kAlignLeft,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
 
-    Game::gPrnt.PrintFB(_twHalf,
-                        Printer::TerminalHeight - 1,
-                        "Hold [SHIFT] for 5% step",
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
-
-    Game::gPrnt.PrintFB(1,
-                        Printer::TerminalHeight - 1,
-                        "'q' - go back",
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
-
-    Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
-                        Printer::TerminalHeight - 1,
-                        "'Enter' - accept",
-                        Printer::kAlignRight,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(Printer::TerminalWidth - 1,
+                          Printer::TerminalHeight - 1,
+                          "'Enter' - accept",
+                          Printer::kAlignRight,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
 
     Game::gPrnt.Render();
   }

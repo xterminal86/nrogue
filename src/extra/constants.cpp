@@ -357,8 +357,8 @@ namespace GlobalConstants
   std::unordered_map<GraphicTiles, int> GraphicTileByType;
 #endif
 
-  int TerminalWidth  = 80;
-  int TerminalHeight = 25;
+  int TerminalStdWidth  = 80;
+  int TerminalStdHeight = 25;
 
   const size_t OpenedByAnyone = 0;
   const size_t OpenedByNobody = 1;
@@ -380,10 +380,11 @@ namespace GlobalConstants
   const int MaxSeedStringLength         = 65;
 
   //
-  // Default terminal window is 80x25,
-  // so to overcompensate assume 40x40
+  // Shadowcaster uses linear distance, so maximum distance for terminal size
+  // of 80x25 will be
+  // math.sqrt( pow(40, 2) + pow(12.5, 2) ) = 41.907636535600524
   //
-  const int MaxVisibilityRadius = 160;
+  const int MaxVisibilityRadius = 42;
 
   //
   // Character at level 20 will have his 3 star stat around 20.

@@ -119,12 +119,15 @@ void ObituaryReportState::Update(bool forceUpdate)
         break;
       }
 
-      Game::gPrnt.PrintFB(1,
-                          1 + lineCount,
-                          *msg,
-                          Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        1,
+        1 + lineCount,
+        *msg,
+        Printer::kAlignLeft,
+        Colors::WhiteColor,
+        Colors::BlackColor
+      );
+
       lineCount++;
     }
 

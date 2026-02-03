@@ -102,12 +102,15 @@ void MessageLogState::Update(bool forceUpdate)
         break;
       }
 
-      Game::gPrnt.PrintFB(1,
-                          offsetY,
-                          m->Message,
-                          Printer::kAlignLeft,
-                          Colors::ShadesOfGrey::Six,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        1,
+        offsetY,
+        m->Message,
+        Printer::kAlignLeft,
+        Colors::ShadesOfGrey::Six,
+        Colors::BlackColor
+      );
+
       lm = m;
       offsetY++;
     }
@@ -122,12 +125,14 @@ void MessageLogState::Update(bool forceUpdate)
     {
       if (lm != nullptr)
       {
-        Game::gPrnt.PrintFB(1,
-                            offsetY - 1,
-                            lm->Message,
-                            Printer::kAlignLeft,
-                            Colors::WhiteColor,
-                            Colors::BlackColor);
+        Game::gPrnt.PrintText(
+          1,
+          offsetY - 1,
+          lm->Message,
+          Printer::kAlignLeft,
+          Colors::WhiteColor,
+          Colors::BlackColor
+        );
       }
     }
 

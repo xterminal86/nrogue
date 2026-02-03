@@ -95,11 +95,6 @@ void ContainerInteractState::Update(bool forceUpdate)
     for (int y = 0; y < _th; y++)
     {
       #ifdef USE_SDL
-      //Game::gPrnt.PrintFB(_twHalf,
-      //                    y,
-      //                    (int)NameCP437::VBAR_2,
-      //                    Colors::WhiteColor,
-      //                    Colors::BlackColor);
       Game::gPrnt.PrintChar(_twHalf,
                             y,
                             (int)NameCP437::VBAR_2,
@@ -116,26 +111,26 @@ void ContainerInteractState::Update(bool forceUpdate)
 
     auto containerName = _containerToInteractWith->OwnerGameObject->ObjectName;
 
-    Game::gPrnt.PrintFB(_twQuarter,
-                        0,
-                        "Player",
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(_twQuarter,
+                          0,
+                          "Player",
+                          Printer::kAlignCenter,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
 
-    Game::gPrnt.PrintFB(_tw - _twQuarter - 1,
-                        0,
-                        containerName,
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(_tw - _twQuarter - 1,
+                          0,
+                          containerName,
+                          Printer::kAlignCenter,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
 
-    Game::gPrnt.PrintFB(1,
-                        _th - 1,
-                        "'Enter' - exchange",
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(1,
+                          _th - 1,
+                          "'Enter' - exchange",
+                          Printer::kAlignLeft,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
 
     DisplayPlayerInventory();
     DisplayContainerInventory();
@@ -166,44 +161,44 @@ void ContainerInteractState::DisplayPlayerInventory()
 
     if (ic->Data.IsStackable)
     {
-      auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
-      Game::gPrnt.PrintFB(GlobalConstants::InventoryMaxNameLength + 1,
-                          yPos + index,
-                          stackAmount,
-                          Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      std::string stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
+      Game::gPrnt.PrintText(GlobalConstants::InventoryMaxNameLength + 1,
+                            yPos + index,
+                            stackAmount,
+                            Printer::kAlignLeft,
+                            Colors::WhiteColor,
+                            Colors::BlackColor);
     }
     else if (ic->Data.IsEquipped)
     {
-      auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
-      Game::gPrnt.PrintFB(GlobalConstants::InventoryMaxNameLength + 1,
-                          yPos + index,
-                          equipStatus,
-                          Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      std::string equipStatus = Util::StringFormat("E", ic->Data.Amount);
+      Game::gPrnt.PrintText(GlobalConstants::InventoryMaxNameLength + 1,
+                            yPos + index,
+                            equipStatus,
+                            Printer::kAlignLeft,
+                            Colors::WhiteColor,
+                            Colors::BlackColor);
     }
 
     uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
 
     if (_playerSide && index == _inventoryItemIndex)
     {
-      Game::gPrnt.PrintFB(1,
-                          yPos + index,
-                          nameInInventory,
-                          Printer::kAlignLeft,
-                          textColor,
-                          Colors::ShadesOfGrey::Four);
+      Game::gPrnt.PrintText(1,
+                            yPos + index,
+                            nameInInventory,
+                            Printer::kAlignLeft,
+                            textColor,
+                            Colors::ShadesOfGrey::Four);
     }
     else
     {
-      Game::gPrnt.PrintFB(1,
-                          yPos + index,
-                          nameInInventory,
-                          Printer::kAlignLeft,
-                          textColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(1,
+                            yPos + index,
+                            nameInInventory,
+                            Printer::kAlignLeft,
+                            textColor,
+                            Colors::BlackColor);
     }
 
     index++;
@@ -216,12 +211,12 @@ void ContainerInteractState::DisplayPlayerInventory()
     std::string stub(GlobalConstants::InventoryMaxNameLength,
                      Strings::InventoryEmptySlotChar);
 
-    Game::gPrnt.PrintFB(1,
-                        yPos + index,
-                        stub,
-                        Printer::kAlignLeft,
-                        Colors::ShadesOfGrey::Six,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(1,
+                          yPos + index,
+                          stub,
+                          Printer::kAlignLeft,
+                          Colors::ShadesOfGrey::Six,
+                          Colors::BlackColor);
     yPos++;
   }
 }
@@ -257,8 +252,8 @@ void ContainerInteractState::DisplayContainerInventory()
 
     if (ic->Data.IsStackable)
     {
-      auto stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
-      Game::gPrnt.PrintFB(
+      std::string stackAmount = Util::StringFormat("(%i)", ic->Data.Amount);
+      Game::gPrnt.PrintText(
         xPos - GlobalConstants::InventoryMaxNameLength - 1,
         yPos + index,
         stackAmount,
@@ -269,8 +264,8 @@ void ContainerInteractState::DisplayContainerInventory()
     }
     else if (ic->Data.IsEquipped)
     {
-      auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
-      Game::gPrnt.PrintFB(
+      std::string equipStatus = Util::StringFormat("E", ic->Data.Amount);
+      Game::gPrnt.PrintText(
         xPos - GlobalConstants::InventoryMaxNameLength - 1,
         yPos + index,
         equipStatus,
@@ -284,21 +279,25 @@ void ContainerInteractState::DisplayContainerInventory()
 
     if (!_playerSide && index == _inventoryItemIndex)
     {
-      Game::gPrnt.PrintFB(xPos,
-                          yPos + index,
-                          nameInInventory,
-                          Printer::kAlignRight,
-                          textColor,
-                          Colors::ShadesOfGrey::Four);
+      Game::gPrnt.PrintText(
+        xPos,
+        yPos + index,
+        nameInInventory,
+        Printer::kAlignRight,
+        textColor,
+        Colors::ShadesOfGrey::Four
+      );
     }
     else
     {
-      Game::gPrnt.PrintFB(xPos,
-                          yPos + index,
-                          nameInInventory,
-                          Printer::kAlignRight,
-                          textColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        xPos,
+        yPos + index,
+        nameInInventory,
+        Printer::kAlignRight,
+        textColor,
+        Colors::BlackColor
+      );
     }
 
     index++;
@@ -310,12 +309,14 @@ void ContainerInteractState::DisplayContainerInventory()
   {
     std::string stub(GlobalConstants::InventoryMaxNameLength,
                      Strings::InventoryEmptySlotChar);
-    Game::gPrnt.PrintFB(xPos,
-                        yPos + index,
-                        stub,
-                        Printer::kAlignRight,
-                        Colors::ShadesOfGrey::Six,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      xPos,
+      yPos + index,
+      stub,
+      Printer::kAlignRight,
+      Colors::ShadesOfGrey::Six,
+      Colors::BlackColor
+    );
     yPos++;
   }
 }

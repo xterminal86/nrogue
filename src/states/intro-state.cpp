@@ -42,11 +42,10 @@ void IntroState::Update(bool forceUpdate)
   PlayerClass pc = Game::gApp.PlayerInstance.GetClass();
 
 #ifdef USE_SDL
-  Game::gPrnt.PrintFB(
+  Game::gPrnt.PrintText(
     _twHalf,
     (Printer::TerminalHeight - _introStrings[pci].size()) / 4,
     _scenarioNameByClass.at(pc),
-    2,
     Printer::kAlignCenter,
     Colors::WhiteColor,
     Colors::BlackColor
@@ -72,28 +71,34 @@ void IntroState::Update(bool forceUpdate)
 
       if ((int)_textPositionCursor != len)
       {
-        Game::gPrnt.PrintFB(_textPositionX - len / 2,
-                            _textPositionY,
-                            s[_textPositionCursor],
-                            Colors::WhiteColor,
-                            Colors::BlackColor);
+        Game::gPrnt.PrintChar(
+          _textPositionX - len / 2,
+          _textPositionY,
+          s[_textPositionCursor],
+          Colors::WhiteColor,
+          Colors::BlackColor
+        );
 
-        Game::gPrnt.PrintFB(_textPositionX - len / 2 + 1,
-                            _textPositionY,
-                            ' ',
-                            Colors::BlackColor,
-                            Colors::WhiteColor);
+        Game::gPrnt.PrintChar(
+          _textPositionX - len / 2 + 1,
+          _textPositionY,
+          ' ',
+          Colors::BlackColor,
+          Colors::WhiteColor
+        );
 
         _textPositionX++;
         _textPositionCursor++;
       }
       else
       {
-        Game::gPrnt.PrintFB(_textPositionX - len / 2,
-                            _textPositionY,
-                            ' ',
-                            Colors::BlackColor,
-                            Colors::BlackColor);
+        Game::gPrnt.PrintChar(
+          _textPositionX - len / 2,
+          _textPositionY,
+          ' ',
+          Colors::BlackColor,
+          Colors::BlackColor
+        );
 
         _textPositionCursor = 0;
 
@@ -105,12 +110,14 @@ void IntroState::Update(bool forceUpdate)
     }
     else
     {
-      Game::gPrnt.PrintFB(_twHalf,
-                          Printer::TerminalHeight - 1,
-                          "Press 'Enter' to continue",
-                          Printer::kAlignCenter,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        _twHalf,
+        Printer::TerminalHeight - 1,
+        "Press 'Enter' to continue",
+        Printer::kAlignCenter,
+        Colors::WhiteColor,
+        Colors::BlackColor
+      );
     }
 
     Game::gPrnt.Render();

@@ -123,6 +123,7 @@ using StringV = std::vector<std::string>;
 using CharV2  = std::vector<std::vector<char>>;
 using IR      = std::pair<InteractionResult, GameStates>;
 using IntV2   = std::vector<std::vector<int>>;
+using PairI   = std::pair<int, int>;
 
 namespace Colors
 {
@@ -345,8 +346,8 @@ namespace GlobalConstants
   extern std::unordered_map<GraphicTiles, int> GraphicTileByType;
 #endif
 
-  extern int TerminalWidth;
-  extern int TerminalHeight;
+  extern int TerminalStdWidth;
+  extern int TerminalStdHeight;
 
   extern const size_t OpenedByAnyone;
   extern const size_t OpenedByNobody;

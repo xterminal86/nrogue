@@ -104,19 +104,23 @@ void ReturnerState::Update(bool forceUpdate)
 
     _playerRef->Draw();
 
-    Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
-                        Printer::TerminalHeight - 1,
-                        "What do you want to do with returner?",
-                        Printer::kAlignRight,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      Printer::TerminalWidth - 1,
+      Printer::TerminalHeight - 1,
+      "What do you want to do with returner?",
+      Printer::kAlignRight,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
-    Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
-                        Printer::TerminalHeight - 2,
-                        "(a) - attune, (u) - use, (q) - nothing",
-                        Printer::kAlignRight,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      Printer::TerminalWidth - 1,
+      Printer::TerminalHeight - 2,
+      "(a) - attune, (u) - use, (q) - nothing",
+      Printer::kAlignRight,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
     Game::gPrnt.Render();
   }

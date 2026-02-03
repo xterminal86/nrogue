@@ -28,6 +28,8 @@ void Printer::Init()
 
 // =============================================================================
 
+////////////////////////////////////////////////////////////////////////////////
+
 #ifdef USE_SDL
 bool Printer::LoadTextTileset()
 {
@@ -43,7 +45,7 @@ bool Printer::LoadTextTileset()
   }
 
   SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
-  _textTileset = SDL_CreateTextureFromSurface(Game::gApp.Renderer, surf);
+  _textTileset = SDL_CreateTextureFromSurface(Renderer, surf);
   if (_textTileset == nullptr)
   {
     ConsoleLog("[ERR] SDL_CreateTextureFromSurface() fail: '%s'\n",
@@ -80,7 +82,7 @@ bool Printer::LoadSubstituteGraphicTileset()
   }
 
   SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
-  _tileset = SDL_CreateTextureFromSurface(Game::gApp.Renderer, surf);
+  _tileset = SDL_CreateTextureFromSurface(Renderer, surf);
   if (_tileset == nullptr)
   {
     ConsoleLog("[ERR] SDL_CreateTextureFromSurface() fail: '%s'\n",
@@ -93,11 +95,12 @@ bool Printer::LoadSubstituteGraphicTileset()
   int w = 0, h = 0;
   SDL_QueryTexture(_tileset, nullptr, nullptr, &w, &h);
 
-  _tilesetWidth  = w;
-  _tilesetHeight = h;
+  _graphicTilesetWidth  = w;
+  _graphicTilesetHeight = h;
 
-  _tileSize = 16;
-  _tileSizeScaled = (int)((double)_tileSize * gameConfig.ScaleFactor);
+  _graphicTileSize = 16;
+  _graphicTileSizeScaled =
+      (int)((double)_graphicTileSize * gameConfig.ScaleFactor);
 
   return true;
 }
@@ -112,7 +115,7 @@ bool Printer::LoadGraphicsTileset()
   if (surf)
   {
     SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
-    _tileset = SDL_CreateTextureFromSurface(Game::gApp.Renderer, surf);
+    _tileset = SDL_CreateTextureFromSurface(Renderer, surf);
     if (_tileset == nullptr)
     {
       ConsoleLog("[ERR] SDL_CreateTextureFromSurface() fail: '%s'\n",
@@ -123,7 +126,7 @@ bool Printer::LoadGraphicsTileset()
     SDL_FreeSurface(surf);
 
     int w = 0, h = 0;
-    SDL_QueryTexture(_tileset, nullptr, nullptr, &wm &h);
+    SDL_QueryTexture(_tileset, nullptr, nullptr, &w, &h);
 
     if ((w % gameConfig.TileSize) != 0 &&
         (h % gameConfig.TileSize) != 0)
@@ -133,11 +136,12 @@ bool Printer::LoadGraphicsTileset()
       return false;
     }
 
-    _tilesetWidth  = w;
-    _tilesetHeight = h;
+    _graphicTilesetWidth  = w;
+    _graphicTilesetHeight = h;
 
-    _tileSize = gameConfig.TileSize;
-    _tileSizeScaled = (int)((double)_tileSize * gameConfig.ScaleFactor);
+    _graphicTileSize = gameConfig.TileSize;
+    _graphicTileSizeScaled =
+        (int)((double)_graphicTileSize * gameConfig.ScaleFactor);
   }
 
   return true;
@@ -145,8 +149,165 @@ bool Printer::LoadGraphicsTileset()
 
 // =============================================================================
 
+bool Printer::SetWindowIcon()
+{
+  auto res = Util::Base64_Decode(Base64Strings::IconBase64);
+  auto bytes = Util::ConvertStringToBytes(res);
+  SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
+  if (data == nullptr)
+  {
+    ConsoleLog("[ERR] failed to read from memory! '%s'", SDL_GetError());
+    return false;
+  }
+
+  SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);
+  if (!surf)
+  {
+    ConsoleLog("[ERR] could not load image from memory: '%s'", SDL_GetError());
+    return false;
+  }
+
+  SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
+  SDL_SetWindowIcon(Window, surf);
+  SDL_FreeSurface(surf);
+
+  return true;
+}
+
+// =============================================================================
+
+const PairI& Printer::GetDefaultWindowSize()
+{
+  return _defaultWindowSize;
+}
+
+// =============================================================================
+
+PairI& Printer::GetResizedWindowSize()
+{
+  return _resizedWindowSize;
+}
+
+// =============================================================================
+
+const PairI& Printer::GetTileWHScaled()
+{
+  return _tileWHScaled;
+}
+
+// =============================================================================
+
+//
+// Returns SDL_Rect with initial window position in x, y
+// and window size in w, h
+//
+SDL_Rect Printer::GetWindowSize(int tileSize)
+{
+  SDL_Rect res;
+
+  int ww = 0, wh = 0;
+
+  if (Game::gApp.GameConfig.UseGraphics)
+  {
+    ww = Game::gApp.GameConfig.TileSize * 40;
+    wh = Game::gApp.GameConfig.TileSize * 20;
+  }
+  else
+  {
+    ww =  8 * 80;
+    wh = 16 * 25;
+  }
+
+  Game::gApp.GameConfig.WindowWidth  = ww;
+  Game::gApp.GameConfig.WindowHeight = wh;
+
+  res.w = ww;
+  res.h = wh;
+
+  SDL_DisplayMode dm;
+  SDL_GetCurrentDisplayMode(0, &dm);
+
+  //
+  // Subtract current display size from created window size
+  // to determine starting window position,
+  // which should be relatively centered.
+  //
+  int wx = dm.w / 2 - ww / 2;
+  int wy = dm.h / 2 - wh / 2;
+
+  res.x = wx;
+  res.y = wy;
+
+  return res;
+}
+
+// =============================================================================
+
 bool Printer::InitForSDL()
 {
+  Printer::TerminalWidth  = GlobalConstants::TerminalStdWidth;
+  Printer::TerminalHeight = GlobalConstants::TerminalStdHeight;
+
+  SDL_Rect rect = GetWindowSize(Game::gApp.GameConfig.TileSize);
+
+  _defaultWindowSize = { rect.w, rect.h };
+
+  _resizedWindowSize = _defaultWindowSize;
+
+  Window = SDL_CreateWindow("nrogue",
+                            rect.x, rect.y,
+                            rect.w, rect.h,
+                            SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+  if (Window == nullptr)
+  {
+    ConsoleLog("[ERR] SDL_CreateWindow fail: '%s'", SDL_GetError());
+    return false;
+  }
+
+  //
+  // NOTE: it looks like "direct3d" is Direct3D 9 (which is kinda slow
+  // and reports some weird error / warning in stdout after maximizing
+  // the window).
+  // "direct3d11" works OK, but produces another weird behaviour:
+  // when monster attacks player, attack animation displays every other time
+  // while player's attack animation works fine.
+  // "direct3d12" seems to have no such issues, but WTF is this?!
+  // What the hell is one supposed to choose?!
+  //
+
+#if defined(MSVC_COMPILER) || defined(__WIN64__) || defined(__WIN32__)
+  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d12");
+#else
+  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+#endif
+
+  Renderer = SDL_CreateRenderer(Window,
+                                -1,
+                                SDL_RENDERER_ACCELERATED |
+                                SDL_RENDERER_TARGETTEXTURE);
+  if (Renderer == nullptr)
+  {
+    ConsoleLog("[WAR] SDL_CreateRenderer() fail: '%s'", SDL_GetError());
+    ConsoleLog("Trying software mode...");
+
+    Renderer = SDL_CreateRenderer(Window,
+                                  -1,
+                                  SDL_RENDERER_SOFTWARE |
+                                  SDL_RENDERER_TARGETTEXTURE);
+    if (Renderer == nullptr)
+    {
+      ConsoleLog("[ERR] SDL_CreateRenderer() fail: '%s'", SDL_GetError());
+      return false;
+    }
+  }
+
+  SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
+
+  if (!SetWindowIcon())
+  {
+    return false;
+  }
+
   auto& gameConfig = Game::gApp.GameConfig;
 
   if (!LoadTextTileset())
@@ -173,12 +334,16 @@ bool Printer::InitForSDL()
     }
   }
 
-  SDL_Rect rect = Game::gApp.GetWindowSize(_tileSize, _tileSize);
+  rect = GetWindowSize(_graphicTileSize);
 
-  SDL_SetWindowPosition(Game::gApp.Window, rect.x, rect.y);
-  SDL_SetWindowSize(Game::gApp.Window, rect.w, rect.h);
+  SDL_SetWindowPosition(Window, rect.x, rect.y);
+  SDL_SetWindowSize(Window, rect.w, rect.h);
 
-  _frameBuffer = SDL_CreateTexture(Game::gApp.Renderer,
+  ConsoleLog("[INFO] Window size: %dx%d",
+             gameConfig.WindowWidth,
+             gameConfig.WindowHeight);
+
+  _frameBuffer = SDL_CreateTexture(Renderer,
                                    SDL_PIXELFORMAT_RGBA32,
                                    SDL_TEXTUREACCESS_TARGET,
                                    gameConfig.WindowWidth,
@@ -190,116 +355,19 @@ bool Printer::InitForSDL()
     return false;
   }
 
-  /*
-  auto& gameConfig = Game::gApp.GameConfig;
+  _tileWHScaled = { gameConfig.TileSize, gameConfig.TileSize };
 
-  std::string tilesetFile = gameConfig.TilesetFilename;
+  _defaultWindowSize.first  = gameConfig.WindowWidth;
+  _defaultWindowSize.second = gameConfig.WindowHeight;
 
-  _tileWidth = 0;
-  _tileHeight = 0;
-
-  if (!tilesetFile.empty())
-  {
-    SDL_Surface* surf = SDL_LoadBMP(tilesetFile.data());
-    if (surf)
+  Game::gPrnt.SetRenderDst(
     {
-      SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
-      _tileset = SDL_CreateTextureFromSurface(Game::gApp.Renderer, surf);
-      if (_tileset == nullptr)
-      {
-        ConsoleLog("[ERR] SDL_CreateTextureFromSurface() fail: '%s'\n",
-                   SDL_GetError());
-        return false;
-      }
-
-      SDL_FreeSurface(surf);
-
-      _tileWidth  = gameConfig.TileWidth;
-      _tileHeight = gameConfig.TileHeight;
+      0,
+      0,
+      _defaultWindowSize.first,
+      _defaultWindowSize.second
     }
-  }
-  else
-  {
-    _tileWidth  = 8;
-    _tileHeight = 16;
-
-    SDL_Rect rect = Game::gApp.GetWindowSize(_tileWidth, _tileHeight);
-
-    SDL_SetWindowPosition(Game::gApp.Window, rect.x, rect.y);
-    SDL_SetWindowSize(Game::gApp.Window, rect.w, rect.h);
-
-    auto res = Util::Base64_Decode(Base64Strings::Tileset8x16Base64);
-    auto bytes = Util::ConvertStringToBytes(res);
-    SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
-    SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);
-    if (!surf)
-    {
-      ConsoleLog("[ERR] could not load tileset from memory: '%s'",
-                 SDL_GetError());
-      return false;
-    }
-
-    SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
-    _tileset = SDL_CreateTextureFromSurface(Game::gApp.Renderer, surf);
-    if (_tileset == nullptr)
-    {
-      ConsoleLog("[ERR] SDL_CreateTextureFromSurface() fail: '%s'\n",
-                 SDL_GetError());
-      return false;
-    }
-
-    SDL_FreeSurface(surf);
-  }
-
-  _tileWidthScaled = _tileWidth * gameConfig.ScaleFactor;
-  _tileHeightScaled = _tileHeight * gameConfig.ScaleFactor;
-
-  _tileAspectRatio = (double)_tileWidth / (double)_tileHeight;
-
-  _tileWH       = { _tileWidth,       _tileHeight       };
-  _tileWHScaled = { _tileWidthScaled, _tileHeightScaled };
-
-  int w = 0, h = 0;
-  SDL_QueryTexture(_tileset, nullptr, nullptr, &w, &h);
-
-  _tilesetWidth = w;
-  _tilesetHeight = h;
-
-  SDL_Rect rect = Game::gApp.GetWindowSize(_tileWidth, _tileHeight);
-
-  SDL_SetWindowPosition(Game::gApp.Window, rect.x, rect.y);
-  SDL_SetWindowSize(Game::gApp.Window, rect.w, rect.h);
-
-  _frameBuffer = SDL_CreateTexture(Game::gApp.Renderer,
-                                   SDL_PIXELFORMAT_RGBA32,
-                                   SDL_TEXTUREACCESS_TARGET,
-                                   gameConfig.WindowWidth,
-                                   gameConfig.WindowHeight);
-
-  if (_frameBuffer == nullptr)
-  {
-    ConsoleLog("[ERR] SDL_CreateTexture() fail: '%s'\n", SDL_GetError());
-    return false;
-  }
-
-  char asciiIndex = 0;
-  int tileIndex = 0;
-  for (int y = 0; y < h; y += _tileHeight)
-  {
-    for (int x = 0; x < w; x += _tileWidth)
-    {
-      TileInfo ti;
-      ti.X = x;
-      ti.Y = y;
-      _tiles.push_back(ti);
-
-      _tileIndexByChar[asciiIndex] = tileIndex;
-
-      asciiIndex++;
-      tileIndex++;
-    }
-  }
-  */
+  );
 
   for (int y = 0; y < _textTilesetHeight; y += _textTileHeight)
   {
@@ -311,9 +379,9 @@ bool Printer::InitForSDL()
     }
   }
 
-  for (int y = 0; y < _tilesetHeight; y+= Game::gApp.GameConfig.TileSize)
+  for (int y = 0; y < _graphicTilesetHeight; y += Game::gApp.GameConfig.TileSize)
   {
-    for (int x = 0; x < _tilesetWidth; x += Game::gApp.GameConfig.TileSize)
+    for (int x = 0; x < _graphicTilesetWidth; x += Game::gApp.GameConfig.TileSize)
     {
       TileInfo ti = { x, y };
 
@@ -335,6 +403,16 @@ bool Printer::InitForSDL()
     GraphicTiles key = static_cast<GraphicTiles>(i);
     GlobalConstants::GraphicTileByType[key] = i;
   }
+
+  _textCharsCountH = gameConfig.WindowWidth / 8;
+  _textCharsCountV = gameConfig.WindowHeight / 16;
+
+  ConsoleLog("[INFO] character cell count: %dx%d",
+             _textCharsCountH,
+             _textCharsCountV);
+
+  Printer::TerminalWidth  = _textCharsCountH;
+  Printer::TerminalHeight = _textCharsCountV;
 
   return true;
 }
@@ -384,32 +462,32 @@ void Printer::DrawWindow(const Position& leftCorner,
     {
       for (int j = y + 1; j < y + size.Y; j++)
       {
-        PrintFB(i, j, ' ', Colors::WhiteColor, bgColor);
+        PrintChar(i, j, ' ', Colors::WhiteColor, bgColor);
       }
     }
   }
 
   // Corners
 
-  PrintFB(x,          y,          ulCorner, borderColor, borderBgColor);
-  PrintFB(x + size.X, y,          urCorner, borderColor, borderBgColor);
-  PrintFB(x,          y + size.Y, dlCorner, borderColor, borderBgColor);
-  PrintFB(x + size.X, y + size.Y, drCorner, borderColor, borderBgColor);
+  PrintChar(x,          y,          ulCorner, borderColor, borderBgColor);
+  PrintChar(x + size.X, y,          urCorner, borderColor, borderBgColor);
+  PrintChar(x,          y + size.Y, dlCorner, borderColor, borderBgColor);
+  PrintChar(x + size.X, y + size.Y, drCorner, borderColor, borderBgColor);
 
   // Horizontal bars
 
   for (int i = x + 1; i < x + size.X; i++)
   {
-    PrintFB(i, y,          hBarU, borderColor, borderBgColor);
-    PrintFB(i, y + size.Y, hBarD, borderColor, borderBgColor);
+    PrintChar(i, y,          hBarU, borderColor, borderBgColor);
+    PrintChar(i, y + size.Y, hBarD, borderColor, borderBgColor);
   }
 
   // Vertical bars
 
   for (int i = y + 1; i < y + size.Y; i++)
   {
-    PrintFB(x,          i, vBarL, borderColor, borderBgColor);
-    PrintFB(x + size.X, i, vBarR, borderColor, borderBgColor);
+    PrintChar(x,          i, vBarL, borderColor, borderBgColor);
+    PrintChar(x + size.X, i, vBarR, borderColor, borderBgColor);
   }
 
   if (header.length() != 0)
@@ -418,9 +496,9 @@ void Printer::DrawWindow(const Position& leftCorner,
     lHeader.insert(0, " ");
     lHeader.append(" ");
 
-    int stringPixelWidth = (lHeader.length() * _tileWidthScaled);
-    int headerPosX = x * _tileWidthScaled;
-    int headerPosY = y * _tileHeightScaled;
+    int stringPixelWidth = (lHeader.length() * _graphicTileSizeScaled);
+    int headerPosX = x * _graphicTileSizeScaled;
+    int headerPosY = y * _graphicTileSizeScaled;
 
     // size.X actually gives + 1 (see corners section of PrintFBs above),
     // so if size.X = 4 it means span from x to x + 4 end point.
@@ -433,16 +511,16 @@ void Printer::DrawWindow(const Position& leftCorner,
 
     if (size.X % 2 != 0)
     {
-      int toAdd = ((size.X + 1) / 2) * _tileWidthScaled;
+      int toAdd = ((size.X + 1) / 2) * _graphicTileSizeScaled;
       headerPosX += toAdd;
       headerPosX -= stringPixelWidth / 2;
     }
     else
     {
-      int toAdd = (size.X / 2) * _tileWidthScaled;
+      int toAdd = (size.X / 2) * _graphicTileSizeScaled;
       headerPosX += toAdd;
       headerPosX -= stringPixelWidth / 2;
-      headerPosX += _tileWidthScaled / 2;
+      headerPosX += _graphicTileSizeScaled / 2;
     }
 
     for (auto& c : lHeader)
@@ -452,16 +530,18 @@ void Printer::DrawWindow(const Position& leftCorner,
                              _convertedHtml.R,
                              _convertedHtml.G,
                              _convertedHtml.B);
-      DrawTile(headerPosX, headerPosY, (int)NameCP437::BLOCK);
+
+      DrawFromTextTileset(headerPosX, headerPosY, (int)NameCP437::BLOCK);
 
       ConvertHtmlToRGB(headerFgColor);
       SDL_SetTextureColorMod(_tileset,
                              _convertedHtml.R,
                              _convertedHtml.G,
                              _convertedHtml.B);
-      DrawTile(headerPosX, headerPosY, (c < 0) ? (c + 256) : c);
 
-      headerPosX += _tileWidthScaled;
+      DrawFromTextTileset(headerPosX, headerPosY, (c < 0) ? (c + 256) : c);
+
+      headerPosX += _graphicTileSizeScaled;
     }
   }
 }
@@ -472,17 +552,17 @@ void Printer::DrawRect(int x1, int y1,
                        int x2, int y2,
                        uint32_t color)
 {
-  if (SDL_GetRenderTarget(Game::gApp.Renderer) == nullptr)
+  if (SDL_GetRenderTarget(Renderer) == nullptr)
   {
-    SDL_SetRenderTarget(Game::gApp.Renderer, _frameBuffer);
+    SDL_SetRenderTarget(Renderer, _frameBuffer);
   }
 
   TileInfo& ti = _textTiles[(int)NameCP437::BLOCK];
 
   _drawSrc.x = ti.X;
   _drawSrc.y = ti.Y;
-  _drawSrc.w = _tileWidth;
-  _drawSrc.h = _tileHeight;
+  _drawSrc.w = _graphicTileSize;
+  _drawSrc.h = _graphicTileSize;
 
   _drawDst.x = x1;
   _drawDst.y = y1;
@@ -495,199 +575,81 @@ void Printer::DrawRect(int x1, int y1,
                          _convertedHtml.G,
                          _convertedHtml.B);
 
-  SDL_RenderCopy(Game::gApp.Renderer, _tileset, &_drawSrc, &_drawDst);
+  SDL_RenderCopy(Renderer, _tileset, &_drawSrc, &_drawDst);
+}
+
+// =============================================================================
+
+void Printer::DrawFromTextTileset(int x, int y, int tileIndex)
+{
+  if (tileIndex < 0 || tileIndex >= (int)_textTiles.size())
+  {
+    ConsoleLog("[ERR] invalid tile index %d", tileIndex);
+    return;
+  }
+
+  TileInfo& tile = _textTiles[tileIndex];
+
+  _drawSrc.x = tile.X;
+  _drawSrc.y = tile.Y;
+  _drawSrc.w = _textTileWidth;
+  _drawSrc.h = _textTileHeight;
+
+  _drawDst.x = x;
+  _drawDst.y = y;
+  _drawDst.w = _textTileWidth;
+  _drawDst.h = _textTileHeight;
+
+  if (SDL_GetRenderTarget(Renderer) == nullptr)
+  {
+    SDL_SetRenderTarget(Renderer, _frameBuffer);
+  }
+
+  SDL_RenderCopy(Renderer, _textTileset, &_drawSrc, &_drawDst);
+}
+
+// =============================================================================
+
+void Printer::DrawFromGraphicsTileset(int x, int y, int tileIndex)
+{
+  if (tileIndex < 0 || tileIndex >= (int)_graphicTiles.size())
+  {
+    ConsoleLog("[ERR] invalid tile index %d", tileIndex);
+    return;
+  }
+
+  TileInfo& ti = _graphicTiles[tileIndex];
+
+  _drawSrc.x = ti.X;
+  _drawSrc.y = ti.Y;
+  _drawSrc.w = _graphicTileSize;
+  _drawSrc.h = _graphicTileSize;
+
+  _drawDst.x = x;
+  _drawDst.y = y;
+  _drawDst.w = _graphicTileSize;
+  _drawDst.h = _graphicTileSize;
+
+  if (SDL_GetRenderTarget(Renderer) == nullptr)
+  {
+    SDL_SetRenderTarget(Renderer, _frameBuffer);
+  }
+
+  SDL_RenderCopy(Renderer, _tileset, &_drawSrc, &_drawDst);
 }
 
 // =============================================================================
 
 void Printer::DrawGraphicsTile(int x, int y, GraphicTiles tile, uint32_t color)
 {
-  int index = (int)tile;
-
-  if (index < 0 || index >= (int)_textTiles.size())
-  {
-    ConsoleLog("[ERR] invalid tile index %d", index);
-    return;
-  }
-
-  int posX = x * _tileSizeScaled;
-  int posY = y * _tileSizeScaled;
-
   ConvertHtmlToRGB(color);
   SDL_SetTextureColorMod(_tileset,
                          _convertedHtml.R,
                          _convertedHtml.G,
                          _convertedHtml.B);
 
-  if (index < 0 || index >= (int)_graphicTiles.size())
-  {
-    ConsoleLog("[ERR] invalid tile index %d", index);
-    return;
-  }
-
-  TileInfo& tile = _graphicTiles[index];
-
-  _drawSrc.x = tile.X;
-  _drawSrc.y = tile.Y;
-  _drawSrc.w = _tileSize;
-  _drawSrc.h = _tileSize;
-
-  _drawDst.x = x;
-  _drawDst.y = y;
-  _drawDst.w = _tileSizeScaled;
-  _drawDst.h = _tileSizeScaled;
-
-  if (SDL_GetRenderTarget(Game::gApp.Renderer) == nullptr)
-  {
-    SDL_SetRenderTarget(Game::gApp.Renderer, _frameBuffer);
-  }
-
-  SDL_RenderCopy(Game::gApp.Renderer, _tileset, &_drawSrc, &_drawDst);
+  DrawFromGraphicsTileset(x, y, (int)tile);
 }
-
-// =============================================================================
-
-/*
-void Printer::PrintFB(const int& x, const int& y,
-                      int image,
-                      const uint32_t& htmlColorFg,
-                      const uint32_t& htmlColorBg)
-{
-  int posX = x * _tileSizeScaled;
-  int posY = y * _tileSizeScaled;
-
-  if (htmlColorBg != Colors::None)
-  {
-    ConvertHtmlToRGB(htmlColorBg);
-    SDL_SetTextureColorMod(_tileset,
-                           _convertedHtml.R,
-                           _convertedHtml.G,
-                           _convertedHtml.B);
-    DrawTile(posX, posY, (int)NameCP437::BLOCK);
-  }
-
-  ConvertHtmlToRGB(htmlColorFg);
-  SDL_SetTextureColorMod(_tileset,
-                         _convertedHtml.R,
-                         _convertedHtml.G,
-                         _convertedHtml.B);
-  DrawTile(posX, posY, (image < 0) ? (image + 256) : image);
-}
-
-// =============================================================================
-
-void Printer::PrintFB(const int& x, const int& y,
-                      const std::string& text,
-                      int align,
-                      const uint32_t& htmlColorFg,
-                      const uint32_t& htmlColorBg)
-{
-  int px = x * _tileSizeScaled;
-  int py = y * _tileSizeScaled;
-
-  switch (align)
-  {
-    case kAlignCenter:
-    {
-      int pixelWidth = text.length() * _tileWidthScaled;
-      px -= pixelWidth / 2;
-    }
-    break;
-
-    case kAlignRight:
-    {
-      int pixelWidth = text.length() * _tileWidthScaled;
-      px -= pixelWidth;
-    }
-    break;
-  }
-
-  for (auto& c : text)
-  {
-    if (htmlColorBg != Colors::None)
-    {
-      ConvertHtmlToRGB(htmlColorBg);
-      SDL_SetTextureColorMod(_tileset,
-                             _convertedHtml.R,
-                             _convertedHtml.G,
-                             _convertedHtml.B);
-      DrawTile(px, py, (int)NameCP437::BLOCK);
-    }
-
-    ConvertHtmlToRGB(htmlColorFg);
-    SDL_SetTextureColorMod(_tileset,
-                           _convertedHtml.R,
-                           _convertedHtml.G,
-                           _convertedHtml.B);
-
-    DrawTile(px, py, (c < 0) ? (c + 256) : c);
-
-    px += _tileWidthScaled;
-  }
-}
-
-// =============================================================================
-
-void Printer::PrintFB(const int& x,
-                      const int& y,
-                      const std::string& text,
-                      size_t scale,
-                      int align,
-                      const uint32_t& htmlColorFg,
-                      const uint32_t& htmlColorBg)
-{
-  size_t tileScaleW = (scale <= 1)
-                      ? _tileWidthScaled
-                      : _tileWidthScaled * ((scale - 1) * 3);
-
-  //size_t tileScaleH = (scale <= 1)
-  //                  ? _tileHeightScaled
-  //                  : _tileHeightScaled * ((scale - 1) * 3);
-
-  int px = x * _tileWidthScaled;
-  int py = y * _tileHeightScaled;
-
-  switch (align)
-  {
-    case kAlignCenter:
-    {
-      int pixelWidth = text.length() * tileScaleW;
-      px -= pixelWidth / 2;
-    }
-    break;
-
-    case kAlignRight:
-    {
-      int pixelWidth = text.length() * tileScaleW;
-      px -= pixelWidth;
-    }
-    break;
-  }
-
-  for (auto& c : text)
-  {
-    if (htmlColorBg != Colors::None)
-    {
-      ConvertHtmlToRGB(htmlColorBg);
-      SDL_SetTextureColorMod(_tileset,
-                             _convertedHtml.R,
-                             _convertedHtml.G,
-                             _convertedHtml.B);
-      DrawTile(px, py, (int)NameCP437::BLOCK, scale);
-    }
-
-    ConvertHtmlToRGB(htmlColorFg);
-    SDL_SetTextureColorMod(_tileset,
-                           _convertedHtml.R,
-                           _convertedHtml.G,
-                           _convertedHtml.B);
-
-    DrawTile(px, py, (c < 0) ? (c + 256) : c, scale);
-
-    px += tileScaleW;
-  }
-}
-*/
 
 // =============================================================================
 
@@ -719,14 +681,9 @@ void Printer::SetRenderDst(const SDL_Rect& dst)
 {
   _renderDst = dst;
 }
-
-// =============================================================================
-
-double Printer::GetTileAspectRatio()
-{
-  return _tileAspectRatio;
-}
 #endif
+
+////////////////////////////////////////////////////////////////////////////////
 
 #ifndef USE_SDL
 bool Printer::InitForCurses()
@@ -1168,52 +1125,22 @@ void Printer::Clear()
     }
   }
 #else
-  SDL_SetRenderTarget(Game::gApp.Renderer, _frameBuffer);
-  SDL_RenderClear(Game::gApp.Renderer);
+  SDL_SetRenderTarget(Renderer, _frameBuffer);
+  SDL_RenderClear(Renderer);
 #endif
 }
 
 // =============================================================================
 
-#ifdef USE_SDL
 void Printer::PrintChar(const int x,
                         const int y,
                         int charIndex,
                         const uint32_t& htmlColorFg,
                         const uint32_t& htmlColorBg)
 {
+#ifdef USE_SDL
   int px = x * _textTileWidth;
   int py = y * _textTileHeight;
-
-  // ---------------------------------------------------------------------------
-  auto DrawTile = [this](int x, int y, int tileIndex)
-  {
-    if (tileIndex < 0 || tileIndex >= (int)_textTiles.size())
-    {
-      ConsoleLog("[ERR] invalid tile index %d", tileIndex);
-      return;
-    }
-
-    TileInfo& tile = _textTiles[tileIndex];
-
-    _drawSrc.x = tile.X;
-    _drawSrc.y = tile.Y;
-    _drawSrc.w = _textTilesetWidth;
-    _drawSrc.h = _textTileHeight;
-
-    _drawDst.x = x;
-    _drawDst.y = y;
-    _drawDst.w = _textTilesetWidth;
-    _drawDst.h = _textTileHeight;
-
-    if (SDL_GetRenderTarget(Game::gApp.Renderer) == nullptr)
-    {
-      SDL_SetRenderTarget(Game::gApp.Renderer, _frameBuffer);
-    }
-
-    SDL_RenderCopy(Game::gApp.Renderer, _textTileset, &_drawSrc, &_drawDst);
-  };
-  // ---------------------------------------------------------------------------
 
   if (htmlColorBg != Colors::None)
   {
@@ -1223,7 +1150,7 @@ void Printer::PrintChar(const int x,
                            _convertedHtml.G,
                            _convertedHtml.B);
 
-    DrawTile(px, py, (int)NameCP437::BLOCK);
+    DrawFromTextTileset(px, py, (int)NameCP437::BLOCK);
   }
 
   ConvertHtmlToRGB(htmlColorFg);
@@ -1232,7 +1159,10 @@ void Printer::PrintChar(const int x,
                          _convertedHtml.G,
                          _convertedHtml.B);
 
-  DrawTile(px, py, charIndex);
+  DrawFromTextTileset(px, py, charIndex);
+#else
+  PrintFB(x, y, charIndex, htmlColorFg, htmlColorBg);
+#endif
 }
 
 // =============================================================================
@@ -1244,41 +1174,15 @@ void Printer::PrintText(const int x,
                         const uint32_t& htmlColorFg,
                         const uint32_t& htmlColorBg)
 {
-  // ---------------------------------------------------------------------------
-  auto DrawTile = [this](int x, int y, int tileIndex)
-  {
-    if (tileIndex < 0 || tileIndex >= (int)_textTiles.size())
-    {
-      ConsoleLog("[ERR] invalid tile index %d", tileIndex);
-      return;
-    }
-
-    TileInfo& tile = _textTiles[tileIndex];
-
-    _drawSrc.x = tile.X;
-    _drawSrc.y = tile.Y;
-    _drawSrc.w = _textTilesetWidth;
-    _drawSrc.h = _textTileHeight;
-
-    _drawDst.x = x;
-    _drawDst.y = y;
-    _drawDst.w = _textTilesetWidth;
-    _drawDst.h = _textTileHeight;
-
-    if (SDL_GetRenderTarget(Game::gApp.Renderer) == nullptr)
-    {
-      SDL_SetRenderTarget(Game::gApp.Renderer, _frameBuffer);
-    }
-
-    SDL_RenderCopy(Game::gApp.Renderer, _textTileset, &_drawSrc, &_drawDst);
-  };
-  // ---------------------------------------------------------------------------
-
-  int px = x * _textTileWidth;
-  int py = y * _textTileHeight;
+#ifdef USE_SDL
+  int px = x;
+  int py = y;
 
   switch (align)
   {
+    case kAlignLeft:
+      break;
+
     case kAlignCenter:
     {
       int pixelWidth = text.length() * _textTileWidth;
@@ -1292,6 +1196,10 @@ void Printer::PrintText(const int x,
       px -= pixelWidth;
     }
     break;
+
+    default:
+      ConsoleLog("[WAR] unexpected alignment value %d", align);
+      break;
   }
 
   for (auto& c : text)
@@ -1304,7 +1212,7 @@ void Printer::PrintText(const int x,
                              _convertedHtml.G,
                              _convertedHtml.B);
 
-      DrawTile(px, py, (int)NameCP437::BLOCK);
+      DrawFromTextTileset(px, py, (int)NameCP437::BLOCK);
     }
 
     ConvertHtmlToRGB(htmlColorFg);
@@ -1313,7 +1221,7 @@ void Printer::PrintText(const int x,
                            _convertedHtml.G,
                            _convertedHtml.B);
 
-    DrawTile(px, py, (c < 0) ? (c + 256) : c);
+    DrawFromTextTileset(px, py, (c < 0) ? (c + 256) : c);
 
     px += _textTileWidth;
   }
@@ -1339,10 +1247,10 @@ void Printer::Render()
 
   refresh();
 #else
-  SDL_SetRenderTarget(Game::gApp.Renderer, nullptr);
-  SDL_RenderClear(Game::gApp.Renderer);
-  SDL_RenderCopy(Game::gApp.Renderer, _frameBuffer, nullptr, &_renderDst);
-  SDL_RenderPresent(Game::gApp.Renderer);
+  SDL_SetRenderTarget(Renderer, nullptr);
+  SDL_RenderClear(Renderer);
+  SDL_RenderCopy(Renderer, _frameBuffer, nullptr, &_renderDst);
+  SDL_RenderPresent(Renderer);
 #endif
 }
 
@@ -1363,11 +1271,13 @@ std::vector<Position> Printer::DrawExplosion(const Position& pos, int aRange)
 
       if (Game::gMap.CurrentLevel->MapArray[p.X][p.Y]->Visible)
       {
-        Game::gPrnt.PrintFB(drawX,
-                            drawY,
-                            'x',
-                            Colors::RedColor,
-                            Colors::BlackColor);
+        Game::gPrnt.PrintChar(
+          drawX,
+          drawY,
+          'x',
+          Colors::RedColor,
+          Colors::BlackColor
+        );
       }
     }
 

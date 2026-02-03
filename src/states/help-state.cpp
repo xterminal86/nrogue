@@ -58,22 +58,26 @@ void HelpState::Update(bool forceUpdate)
     int offsetY = 1;
     for (size_t i = 0; i < _helpText.size(); i++)
     {
-      Game::gPrnt.PrintFB(1,
-                          offsetY,
-                          _helpText[i],
-                          Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        1,
+        offsetY,
+        _helpText[i],
+        Printer::kAlignLeft,
+        Colors::WhiteColor,
+        Colors::BlackColor
+      );
       offsetY++;
     }
 
     #ifdef USE_SDL
-    Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
-                        1,
-                        _specialText,
-                        Printer::kAlignRight,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      Printer::TerminalWidth - 1,
+      1,
+      _specialText,
+      Printer::kAlignRight,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
     #endif
 
     Game::gPrnt.Render();

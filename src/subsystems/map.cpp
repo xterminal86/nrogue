@@ -927,12 +927,14 @@ void Map::ShowLoadingText(const std::string& textOverride)
                           Colors::MessageBoxHeaderBgColor,
                           Colors::ShadesOfGrey::Four);
 
-  Game::gPrnt.PrintFB(tw,
-                      th,
-                      text,
-                      Printer::kAlignCenter,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    tw,
+    th,
+    text,
+    Printer::kAlignCenter,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
   Game::gPrnt.Render();
 }
@@ -1276,21 +1278,25 @@ void Map::DrawFowTile(int x, int y)
     //
     if (CurrentLevel->FowLayer[x][y].Image == ' ')
     {
-      Game::gPrnt.PrintFB(x + CurrentLevel->MapOffsetX,
-                          y + CurrentLevel->MapOffsetY,
-                          CurrentLevel->FowLayer[x][y].Image,
-                          Colors::BlackColor,
-                          Colors::FogOfWarColor);
+      Game::gPrnt.PrintChar(
+        x + CurrentLevel->MapOffsetX,
+        y + CurrentLevel->MapOffsetY,
+        CurrentLevel->FowLayer[x][y].Image,
+        Colors::BlackColor,
+        Colors::FogOfWarColor
+      );
     }
     else
     {
-      Game::gPrnt.PrintFB(x + CurrentLevel->MapOffsetX,
-                          y + CurrentLevel->MapOffsetY,
-                          (CurrentLevel->FowLayer[x][y].Image == -1)
-                          ? ' '
-                          : CurrentLevel->FowLayer[x][y].Image,
-                          Colors::FogOfWarColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintChar(
+        x + CurrentLevel->MapOffsetX,
+        y + CurrentLevel->MapOffsetY,
+        (CurrentLevel->FowLayer[x][y].Image == -1)
+        ? ' '
+        : CurrentLevel->FowLayer[x][y].Image,
+        Colors::FogOfWarColor,
+        Colors::BlackColor
+      );
     }
   };
 

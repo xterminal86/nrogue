@@ -458,28 +458,34 @@ void DevConsole::Update(bool forceUpdate)
         break;
       }
 
-      Game::gPrnt.PrintFB(1,
-                          1 + lineCount,
-                          *msg,
-                          Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        1,
+        1 + lineCount,
+        *msg,
+        Printer::kAlignLeft,
+        Colors::WhiteColor,
+        Colors::BlackColor
+      );
 
       lineCount++;
     }
 
-    Game::gPrnt.PrintFB(1,
-                        1 + lineCount,
-                        _currentCommand,
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      1,
+      1 + lineCount,
+      _currentCommand,
+      Printer::kAlignLeft,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
-    Game::gPrnt.PrintFB(3 + _cursorPosition,
-                        1 + lineCount,
-                        ' ',
-                        Colors::BlackColor,
-                        Colors::WhiteColor);
+    Game::gPrnt.PrintChar(
+      3 + _cursorPosition,
+      1 + lineCount,
+      ' ',
+      Colors::BlackColor,
+      Colors::WhiteColor
+    );
 
     Game::gPrnt.Render();
   }

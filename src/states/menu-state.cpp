@@ -113,32 +113,38 @@ void MenuState::DrawPicture()
           img = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
           #endif
 
-          Game::gPrnt.PrintFB(sx + x,
-                               sy + y,
-                               img,
-                               Colors::CyanColor,
-                               Colors::ShadesOfGrey::Eight);
+          Game::gPrnt.PrintChar(
+            sx + x,
+            sy + y,
+            img,
+            Colors::CyanColor,
+            Colors::ShadesOfGrey::Eight
+          );
         }
         break;
 
         case '#':
         {
-          Game::gPrnt.PrintFB(sx + x,
-                              sy + y,
-                              c,
-                              Colors::ShadesOfGrey::Four,
-                              Colors::ShadesOfGrey::Two);
+          Game::gPrnt.PrintChar(
+            sx + x,
+            sy + y,
+            c,
+            Colors::ShadesOfGrey::Four,
+            Colors::ShadesOfGrey::Two
+          );
         }
         break;
 
         case '.':
         {
           uint32_t& fgColor = _grassColorByPosition.at({ sx + x, sy + y });
-          Game::gPrnt.PrintFB(sx + x,
-                              sy + y,
-                              c,
-                              fgColor,
-                              Colors::GrassColor);
+          Game::gPrnt.PrintChar(
+            sx + x,
+            sy + y,
+            c,
+            fgColor,
+            Colors::GrassColor
+          );
         }
         break;
 
@@ -150,31 +156,37 @@ void MenuState::DrawPicture()
           img = GlobalConstants::CP437IndexByType[NameCP437::CLUB];
           #endif
 
-          Game::gPrnt.PrintFB(sx + x,
-                              sy + y,
-                              img,
-                              Colors::GreenColor,
-                              Colors::BlackColor);
+          Game::gPrnt.PrintChar(
+            sx + x,
+            sy + y,
+            img,
+            Colors::GreenColor,
+            Colors::BlackColor
+          );
         }
         break;
 
         case '+':
         {
-          Game::gPrnt.PrintFB(sx + x,
-                              sy + y,
-                              c,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+          Game::gPrnt.PrintChar(
+            sx + x,
+            sy + y,
+            c,
+            Colors::WhiteColor,
+            Colors::BlackColor
+          );
         }
         break;
 
         case 'p':
         {
-          Game::gPrnt.PrintFB(sx + x,
-                              sy + y,
-                              '.',
-                              Colors::ShadesOfGrey::Ten,
-                              Colors::ShadesOfGrey::Eight);
+          Game::gPrnt.PrintChar(
+            sx + x,
+            sy + y,
+            '.',
+            Colors::ShadesOfGrey::Ten,
+            Colors::ShadesOfGrey::Eight
+          );
         }
         break;
       }
@@ -191,6 +203,30 @@ void MenuState::DrawPicture()
 
 void MenuState::Update(bool forceUpdate)
 {
+  if (_keyPressed != -1 || forceUpdate)
+  {
+    Game::gPrnt.Clear();
+
+    Game::gPrnt.PrintText(
+      0,
+      0,
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      Printer::kAlignLeft,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
+
+    Game::gPrnt.DrawGraphicsTile(
+      32,
+      32,
+      GraphicTiles::STONE_TILES,
+      Colors::WhiteColor
+    );
+
+    Game::gPrnt.Render();
+  }
+
+  /*
   if (_keyPressed != -1 || forceUpdate)
   {
     Game::gPrnt.Clear();
@@ -215,19 +251,23 @@ void MenuState::Update(bool forceUpdate)
       {
         if (c == '#')
         {
-          Game::gPrnt.PrintFB(_titleX - xAlign + xOffset,
-                              _titleY + yOffset,
-                              ' ',
-                              Colors::BlackColor,
-                              Colors::WhiteColor);
+          Game::gPrnt.PrintChar(
+            _titleX - xAlign + xOffset,
+            _titleY + yOffset,
+            ' ',
+            Colors::BlackColor,
+            Colors::WhiteColor
+          );
         }
         else if (c == 's')
         {
-          Game::gPrnt.PrintFB(_titleX - xAlign + xOffset,
-                              _titleY + yOffset,
-                              ' ',
-                              Colors::BlackColor,
-                              Colors::ShadesOfGrey::Three);
+          Game::gPrnt.PrintChar(
+            _titleX - xAlign + xOffset,
+            _titleY + yOffset,
+            ' ',
+            Colors::BlackColor,
+            Colors::ShadesOfGrey::Three
+          );
         }
 
         xOffset++;
@@ -236,54 +276,67 @@ void MenuState::Update(bool forceUpdate)
       yOffset++;
     }
 
-    Game::gPrnt.PrintFB(_twHalf,
-                        _thHalf + _picture.size(),
-                        _welcome,
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      _twHalf,
+      _thHalf + _picture.size(),
+      _welcome,
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
     if (_saveFileFound)
     {
-      Game::gPrnt.PrintFB(_twHalf,
-                          _thHalf + _picture.size() + 1,
-                          _savefilePresent,
-                          Printer::kAlignCenter,
-                          0x44FF44,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        _twHalf,
+        _thHalf + _picture.size() + 1,
+        _savefilePresent,
+        Printer::kAlignCenter,
+        0x44FF44,
+        Colors::BlackColor
+      );
     }
 
     for (size_t i = 0; i < _signature.size(); i++)
     {
-      Game::gPrnt.PrintFB(_tw - 2,
-                          _th - 1 - (_signature.size() - i),
-                          _signature[i],
-                          Printer::kAlignRight,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        _tw - 2,
+        _th - 1 - (_signature.size() - i),
+        _signature[i],
+        Printer::kAlignRight,
+        Colors::WhiteColor,
+        Colors::BlackColor
+      );
     }
 
-    Game::gPrnt.PrintFB(2,
-                        _th -3,
-                        _buildVersionText,
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      2,
+      _th -3,
+      _buildVersionText,
+      Printer::kAlignLeft,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
-    Game::gPrnt.PrintFB(_twHalf,
-                        _th - 2,
-                        _builtWith,
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      _twHalf,
+      _th - 2,
+      _builtWith,
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
-    Game::gPrnt.PrintFB(2,
-                        _th - 2,
-                        _terminalSize,
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      2,
+      _th - 2,
+      _terminalSize,
+      Printer::kAlignLeft,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
     Game::gPrnt.Render();
   }
+  */
 }

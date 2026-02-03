@@ -95,12 +95,14 @@ void RepairState::DrawSpecific()
       str = Util::StringFormat(R"('%c' - %s (??/??))", c, name.data());
     }
 
-    Game::gPrnt.PrintFB(1,
-                        2 + i,
-                        str,
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      1,
+      2 + i,
+      str,
+      Printer::kAlignLeft,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
   }
 }
 

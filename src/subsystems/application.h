@@ -44,7 +44,7 @@ class Application
     {
       double ScaleFactor = 1.0;
 
-      int TileSize = 0;
+      int TileSize = 16;
 
       int WindowWidth  = 0;
       int WindowHeight = 0;
@@ -90,16 +90,6 @@ class Application
 
     bool IsAppReady();
 
-#ifdef USE_SDL
-    SDL_Renderer* Renderer = nullptr;
-    SDL_Window* Window     = nullptr;
-
-    SDL_Rect GetWindowSize(int tileWidth, int tileHeight);
-
-    const std::pair<int, int>& GetDefaultWindowSize();
-    std::pair<int, int>& GetResizedWindowSize();
-#endif
-
     //
     // Can be used to time global triggers.
     //
@@ -120,8 +110,6 @@ class Application
     NRS _loadedConfig;
 
     void LoadConfig();
-
-    bool ValidateConfig();
 
     bool InitGraphics();
 
@@ -144,10 +132,7 @@ class Application
                       bool asciiMode);
 
 #ifdef USE_SDL
-    std::pair<int, int> _defaultWindowSize;
-    std::pair<int, int> _resizedWindowSize;
     bool InitSDL();
-    void SetIcon();
 #else
     bool InitCurses();
 #endif

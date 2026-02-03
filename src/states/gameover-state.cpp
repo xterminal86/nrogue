@@ -79,29 +79,35 @@ void GameOverState::DrawHPMP()
 
   UpdateBar(0, _th - 2, _playerRef->Attrs.HP);
 
-  auto str = Util::StringFormat("%i/%i", curHp, maxHp);
-  Game::gPrnt.PrintFB(GlobalConstants::HPMPBarLength / 2,
-                      _th - 2,
-                      str,
-                      Printer::kAlignCenter,
-                      Colors::WhiteColor,
-                      0x880000);
+  std::string str = Util::StringFormat("%i/%i", curHp, maxHp);
+  Game::gPrnt.PrintText(
+    GlobalConstants::HPMPBarLength / 2,
+    _th - 2,
+    str,
+    Printer::kAlignCenter,
+    Colors::WhiteColor,
+    0x880000
+  );
 
   UpdateBar(0, _th - 1, _playerRef->Attrs.MP);
 
   str = Util::StringFormat("%i/%i", curMp, maxMp);
-  Game::gPrnt.PrintFB(GlobalConstants::HPMPBarLength / 2,
-                      _th - 1,
-                      str,
-                      Printer::kAlignCenter,
-                      Colors::WhiteColor,
-                      0x000088);
+  Game::gPrnt.PrintText(
+    GlobalConstants::HPMPBarLength / 2,
+    _th - 1,
+    str,
+    Printer::kAlignCenter,
+    Colors::WhiteColor,
+    0x000088
+  );
 }
 
 // =============================================================================
 
 void GameOverState::UpdateBar(int x, int y, RangedAttribute& attr)
 {
+  // TODO: draw something pretty for SDL version
+
   double ratio = ((double)attr.Min().Get() / (double)attr.Max().Get());
   int len = ratio * GlobalConstants::HPMPBarLength;
 
@@ -113,10 +119,12 @@ void GameOverState::UpdateBar(int x, int y, RangedAttribute& attr)
 
   _bar += "]";
 
-  Game::gPrnt.PrintFB(x,
-                      y,
-                      _bar,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x,
+    y,
+    _bar,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 }

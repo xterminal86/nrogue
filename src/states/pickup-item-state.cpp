@@ -137,24 +137,29 @@ void PickupItemState::DrawSpecific()
 {
   if (_displayLines.empty())
   {
-    Game::gPrnt.PrintFB(_twHalf,
-                        _thHalf,
-                        "No items",
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      _twHalf,
+      _thHalf,
+      "No items",
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
   }
   else
   {
     int lineIndex = 0;
     for (auto& line : _displayLines)
     {
-      Game::gPrnt.PrintFB(1,
-                          2 + lineIndex,
-                          line,
-                          Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        1,
+        2 + lineIndex,
+        line,
+        Printer::kAlignLeft,
+        Colors::WhiteColor,
+        Colors::BlackColor
+      );
+
       lineIndex++;
     }
   }

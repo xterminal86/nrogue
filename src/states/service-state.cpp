@@ -214,19 +214,23 @@ void ServiceState::DrawSpecific()
   std::string youHaveStr = "You have: ";
   auto playerMoney = Util::StringFormat("$ %d", _playerRef->Money);
 
-  Game::gPrnt.PrintFB(1,
-                      _th - 1,
-                      youHaveStr,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    1,
+    _th - 1,
+    youHaveStr,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
-  Game::gPrnt.PrintFB(1 + youHaveStr.length(),
-                      _th - 1,
-                      playerMoney,
-                      Printer::kAlignLeft,
-                      Colors::CoinsColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    1 + youHaveStr.length(),
+    _th - 1,
+    playerMoney,
+    Printer::kAlignLeft,
+    Colors::CoinsColor,
+    Colors::BlackColor
+  );
 }
 
 // =============================================================================
@@ -235,7 +239,7 @@ void ServiceState::DisplayItems()
 {
   if (_serviceInfoByChar.empty())
   {
-    Game::gPrnt.PrintFB(
+    Game::gPrnt.PrintText(
       _twHalf,
       _thHalf,
       _displayOnEmptyItems.at(_shopOwner->NpcRef->Data.ProvidesService),
@@ -253,30 +257,36 @@ void ServiceState::DisplayItems()
 
       std::string cost = Util::StringFormat("$%d", ri.ServiceCost);
 
-      Game::gPrnt.PrintFB(1,
-                          2 + itemIndex,
-                          ri.NameToDisplay,
-                          Printer::kAlignLeft,
-                          ri.Color,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        1,
+        2 + itemIndex,
+        ri.NameToDisplay,
+        Printer::kAlignLeft,
+        ri.Color,
+        Colors::BlackColor
+      );
 
       //
       // Replace letter and dash with white color
       // in case item is blessed or cursed.
       //
-      Game::gPrnt.PrintFB(1,
-                          2 + itemIndex,
-                          ri.Letter + " - ",
-                          Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        1,
+        2 + itemIndex,
+        ri.Letter + " - ",
+        Printer::kAlignLeft,
+        Colors::WhiteColor,
+        Colors::BlackColor
+      );
 
-      Game::gPrnt.PrintFB(1 + _maxStrLen + 1,
-                          2 + itemIndex,
-                          cost,
-                          Printer::kAlignLeft,
-                          Colors::CoinsColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        1 + _maxStrLen + 1,
+        2 + itemIndex,
+        cost,
+        Printer::kAlignLeft,
+        Colors::CoinsColor,
+        Colors::BlackColor
+      );
 
       itemIndex++;
     }

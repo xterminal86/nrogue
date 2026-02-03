@@ -45,7 +45,9 @@ struct GameLogMessageData
   uint32_t BgColor = Colors::BlackColor;
 };
 
-/// Singleton for ncurses text printing
+///
+/// \brief Everything you need to draw stuff on the screen.
+///
 class Printer
 {
   public:
@@ -82,10 +84,8 @@ class Printer
                    int align,
                    const uint32_t& htmlColorFg,
                    const uint32_t& htmlColorBg);
-
-    void DrawGraphicsTile(int x, int y, GraphicTiles tile, uint32_t color);
-
 #ifndef USE_SDL
+// -----------------------------------------------------------------------------
     /// Print text at (x, y) directly to the screen,
     /// with (0, 0) at upper left corner and y increases down
     void Print(const int& x, const int& y,
@@ -121,26 +121,10 @@ class Printer
                     const uint32_t& bgColor = Colors::BlackColor);
 
     const std::unordered_map<size_t, ColorPair>& GetValidColorsCache();
+// -----------------------------------------------------------------------------
 #else
-    /*
-    void PrintFB(const int& x, const int& y,
-                 int image,
-                 const uint32_t& htmlColorFg,
-                 const uint32_t& htmlColorBg);
-
-    void PrintFB(const int& x, const int& y,
-                 const std::string& text,
-                 int align,
-                 const uint32_t& htmlColorFg,
-                 const uint32_t& htmlColorBg);
-
-    void PrintFB(const int& x, const int& y,
-                 const std::string& text,
-                 size_t scale,
-                 int align,
-                 const uint32_t& htmlColorFg,
-                 const uint32_t& htmlColorBg);
-    */
+// -----------------------------------------------------------------------------
+    void DrawGraphicsTile(int x, int y, GraphicTiles tile, uint32_t color);
 
     void DrawWindow(const Position& leftCorner,
                     const Position& size,
@@ -159,7 +143,15 @@ class Printer
 
     void SetRenderDst(const SDL_Rect& dst);
 
-    double GetTileAspectRatio();
+    SDL_Renderer* Renderer = nullptr;
+    SDL_Window* Window     = nullptr;
+
+    SDL_Rect GetWindowSize(int tileSize);
+
+    const PairI& GetDefaultWindowSize();
+    PairI& GetResizedWindowSize();
+    const PairI& GetTileWHScaled();
+// -----------------------------------------------------------------------------
 #endif
 
     /// Add message to the game log
@@ -324,12 +316,13 @@ class Printer
     #ifndef USE_SDL
     bool InitForCurses();
     #else
+
     SDL_Texture* _tileset = nullptr;
     SDL_Texture* _textTileset = nullptr;
     SDL_Texture* _frameBuffer = nullptr;
 
-    int _tilesetWidth  = 0;
-    int _tilesetHeight = 0;
+    int _graphicTilesetWidth  = 0;
+    int _graphicTilesetHeight = 0;
 
     int _textTilesetWidth  = 0;
     int _textTilesetHeight = 0;
@@ -339,14 +332,19 @@ class Printer
 
     std::unordered_map<uint32_t, TileColor> _validColorsCache;
 
-    int _textTileWidth  = 8;
-    int _textTileHeight = 16;
+    PairI _defaultWindowSize;
+    PairI _resizedWindowSize;
+    PairI _tileWHScaled;
 
-    int _tileSize = 0;
+    const int _textTileWidth  = 8;
+    const int _textTileHeight = 16;
 
-    int _tileSizeScaled = 0;
+    int _textCharsCountH = 0;
+    int _textCharsCountV = 0;
 
-    double _tileAspectRatio = 0.0;
+    int _graphicTileSize = 0;
+
+    int _graphicTileSizeScaled = 16;
 
     SDL_Rect _drawSrc;
     SDL_Rect _drawDst;
@@ -354,10 +352,14 @@ class Printer
     SDL_Rect _renderDst;
 
     bool InitForSDL();
+    bool SetWindowIcon();
 
     bool LoadTextTileset();
     bool LoadGraphicsTileset();
     bool LoadSubstituteGraphicTileset();
+
+    void DrawFromTextTileset(int x, int y, int tileIndex);
+    void DrawFromGraphicsTileset(int x, int y, int tileIndex);
 
     //
     // Here lies data after last ConvertHtmlToRGB() call.
