@@ -9,8 +9,8 @@
 #include "logger.h"
 #endif
 
-size_t Printer::TerminalWidth = 0;
-size_t Printer::TerminalHeight = 0;
+size_t Printer::TerminalWidth  = 80;
+size_t Printer::TerminalHeight = 24;
 
 void Printer::Init()
 {
@@ -82,8 +82,8 @@ bool Printer::LoadSubstituteGraphicTileset()
   }
 
   SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
-  _tileset = SDL_CreateTextureFromSurface(Renderer, surf);
-  if (_tileset == nullptr)
+  _graphicTileset = SDL_CreateTextureFromSurface(Renderer, surf);
+  if (_graphicTileset == nullptr)
   {
     ConsoleLog("[ERR] SDL_CreateTextureFromSurface() fail: '%s'\n",
                SDL_GetError());
@@ -93,7 +93,7 @@ bool Printer::LoadSubstituteGraphicTileset()
   SDL_FreeSurface(surf);
 
   int w = 0, h = 0;
-  SDL_QueryTexture(_tileset, nullptr, nullptr, &w, &h);
+  SDL_QueryTexture(_graphicTileset, nullptr, nullptr, &w, &h);
 
   _graphicTilesetWidth  = w;
   _graphicTilesetHeight = h;
@@ -115,8 +115,8 @@ bool Printer::LoadGraphicsTileset()
   if (surf)
   {
     SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0xFF, 0, 0xFF));
-    _tileset = SDL_CreateTextureFromSurface(Renderer, surf);
-    if (_tileset == nullptr)
+    _graphicTileset = SDL_CreateTextureFromSurface(Renderer, surf);
+    if (_graphicTileset == nullptr)
     {
       ConsoleLog("[ERR] SDL_CreateTextureFromSurface() fail: '%s'\n",
                  SDL_GetError());
@@ -126,7 +126,7 @@ bool Printer::LoadGraphicsTileset()
     SDL_FreeSurface(surf);
 
     int w = 0, h = 0;
-    SDL_QueryTexture(_tileset, nullptr, nullptr, &w, &h);
+    SDL_QueryTexture(_graphicTileset, nullptr, nullptr, &w, &h);
 
     if ((w % gameConfig.TileSize) != 0 &&
         (h % gameConfig.TileSize) != 0)
@@ -214,8 +214,8 @@ SDL_Rect Printer::GetWindowSize(int tileSize)
   }
   else
   {
-    ww =  8 * 80;
-    wh = 16 * 25;
+    ww =  8 * GlobalConstants::TerminalStdWidth;
+    wh = 16 * GlobalConstants::TerminalStdHeight;
   }
 
   Game::gApp.GameConfig.WindowWidth  = ww;
@@ -526,7 +526,7 @@ void Printer::DrawWindow(const Position& leftCorner,
     for (auto& c : lHeader)
     {
       ConvertHtmlToRGB(headerBgColor);
-      SDL_SetTextureColorMod(_tileset,
+      SDL_SetTextureColorMod(_graphicTileset,
                              _convertedHtml.R,
                              _convertedHtml.G,
                              _convertedHtml.B);
@@ -534,7 +534,7 @@ void Printer::DrawWindow(const Position& leftCorner,
       DrawFromTextTileset(headerPosX, headerPosY, (int)NameCP437::BLOCK);
 
       ConvertHtmlToRGB(headerFgColor);
-      SDL_SetTextureColorMod(_tileset,
+      SDL_SetTextureColorMod(_graphicTileset,
                              _convertedHtml.R,
                              _convertedHtml.G,
                              _convertedHtml.B);
@@ -570,12 +570,12 @@ void Printer::DrawRect(int x1, int y1,
   _drawDst.h = std::abs(y2 - y1);
 
   ConvertHtmlToRGB(color);
-  SDL_SetTextureColorMod(_tileset,
+  SDL_SetTextureColorMod(_graphicTileset,
                          _convertedHtml.R,
                          _convertedHtml.G,
                          _convertedHtml.B);
 
-  SDL_RenderCopy(Renderer, _tileset, &_drawSrc, &_drawDst);
+  SDL_RenderCopy(Renderer, _graphicTileset, &_drawSrc, &_drawDst);
 }
 
 // =============================================================================
@@ -635,7 +635,7 @@ void Printer::DrawFromGraphicsTileset(int x, int y, int tileIndex)
     SDL_SetRenderTarget(Renderer, _frameBuffer);
   }
 
-  SDL_RenderCopy(Renderer, _tileset, &_drawSrc, &_drawDst);
+  SDL_RenderCopy(Renderer, _graphicTileset, &_drawSrc, &_drawDst);
 }
 
 // =============================================================================
@@ -643,7 +643,7 @@ void Printer::DrawFromGraphicsTileset(int x, int y, int tileIndex)
 void Printer::DrawGraphicsTile(int x, int y, GraphicTiles tile, uint32_t color)
 {
   ConvertHtmlToRGB(color);
-  SDL_SetTextureColorMod(_tileset,
+  SDL_SetTextureColorMod(_graphicTileset,
                          _convertedHtml.R,
                          _convertedHtml.G,
                          _convertedHtml.B);
@@ -1175,8 +1175,8 @@ void Printer::PrintText(const int x,
                         const uint32_t& htmlColorBg)
 {
 #ifdef USE_SDL
-  int px = x;
-  int py = y;
+  int px = x * _textTileWidth;
+  int py = y * _textTileHeight;
 
   switch (align)
   {

@@ -10,6 +10,8 @@ MapLevelTest::MapLevelTest(int sizeX,
                            int dungeonLevel)
   : MapLevelBase(sizeX, sizeY, type, dungeonLevel)
 {
+  LevelStart.X = 1;
+  LevelStart.Y = 1;
 }
 
 // =============================================================================

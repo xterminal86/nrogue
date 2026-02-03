@@ -358,7 +358,7 @@ namespace GlobalConstants
 #endif
 
   int TerminalStdWidth  = 80;
-  int TerminalStdHeight = 25;
+  int TerminalStdHeight = 24;
 
   const size_t OpenedByAnyone = 0;
   const size_t OpenedByNobody = 1;
@@ -381,8 +381,8 @@ namespace GlobalConstants
 
   //
   // Shadowcaster uses linear distance, so maximum distance for terminal size
-  // of 80x25 will be
-  // math.sqrt( pow(40, 2) + pow(12.5, 2) ) = 41.907636535600524
+  // of 80x24 will be
+  // math.sqrt( pow(40, 2) + pow(12, 2) ) = 41.7612260356422
   //
   const int MaxVisibilityRadius = 42;
 

@@ -116,6 +116,7 @@
 #include <cstdint>
 
 #include "enumerations.h"
+#include "graphic-tiles.h"
 
 using UOSetS  = std::unordered_set<std::string>;
 using SetS    = std::set<std::string>;

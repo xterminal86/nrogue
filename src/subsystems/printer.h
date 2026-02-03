@@ -51,6 +51,9 @@ struct GameLogMessageData
 class Printer
 {
   public:
+    //
+    // Screen width and height in character cells.
+    //
     static size_t TerminalWidth;
     static size_t TerminalHeight;
 
@@ -317,7 +320,7 @@ class Printer
     bool InitForCurses();
     #else
 
-    SDL_Texture* _tileset = nullptr;
+    SDL_Texture* _graphicTileset = nullptr;
     SDL_Texture* _textTileset = nullptr;
     SDL_Texture* _frameBuffer = nullptr;
 

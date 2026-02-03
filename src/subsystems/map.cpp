@@ -110,7 +110,8 @@ void Map::LoadLevel(MapType levelToLoad)
 
   Game::gApp.PlayerInstance.LevelOwner = Game::gMap.CurrentLevel;
   Game::gApp.PlayerInstance.Init();
-  Game::gApp.PlayerInstance.MoveTo(1, 1);
+  Game::gApp.PlayerInstance.MoveTo(Game::gMap.CurrentLevel->LevelStart.X,
+                                   Game::gMap.CurrentLevel->LevelStart.Y);
   Game::gApp.PlayerInstance.AddExtraItems();
   Game::gApp.PlayerInstance.VisibilityRadius.Set(
     Game::gMap.CurrentLevel->VisibilityRadius

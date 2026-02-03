@@ -95,7 +95,7 @@ void LookInputState::HandleInput()
     {
       GameObject* go =
           Game::gMap.GetStaticGameObjectAtPosition(_cursorPosition.X,
-                                                     _cursorPosition.Y);
+                                                   _cursorPosition.Y);
       if (go != nullptr)
       {
         go->Destroy();

@@ -55,12 +55,12 @@ class MenuState : public GameState
   };
 
   #ifdef USE_SDL
-  const std::string _builtWith = "powered by SDL2";
+  std::string _builtWith = "powered by SDL %d.%d.%d";
   #else
     #if defined(__unix__) || defined(__linux__)
-    const std::string _builtWith = "powered by ncurses";
+    std::string _builtWith = "powered by ncurses";
     #else
-    const std::string _builtWith = "powered by pdcurses";
+    std::string _builtWith = "powered by pdcurses";
     #endif
   #endif
 

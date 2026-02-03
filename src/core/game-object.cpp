@@ -277,30 +277,31 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
     bgColor = Colors::BlackColor;
   }
 
+  int x = PosX + LevelOwner->MapOffsetX;
+  int y = PosY + LevelOwner->MapOffsetY;
+
 #ifdef USE_SDL
   if (Game::gApp.GameConfig.UseGraphics && GraphicTile != GraphicTiles::NONE)
   {
-    Game::gPrnt.DrawGraphicsTile(PosX + LevelOwner->MapOffsetX,
-                                 PosY + LevelOwner->MapOffsetY,
-                                 GraphicTile,
-                                 Colors::WhiteColor);
+    // FIXME: for graphics we need to convert character cell positions into
+    // pixel coordinates depending on tileset (since smaller one will give more
+    // character cells). Right now for 32x32 tileset we get too large values.
+
+    ConsoleLog("%d + %d, %d + %d",
+               PosX, LevelOwner->MapOffsetX,
+               PosY, LevelOwner->MapOffsetY);
+
+    Game::gPrnt.DrawGraphicsTile(x, y, GraphicTile, Colors::WhiteColor);
   }
   else
   {
-    Game::gPrnt.PrintChar(PosX + LevelOwner->MapOffsetX,
-                          PosY + LevelOwner->MapOffsetY,
+    Game::gPrnt.PrintChar(x,
+                          y,
                           (imageOverride != -1)
                           ? imageOverride
                           : Image,
                           fgColor,
                           bgColor);
-    //Game::gPrnt.PrintFB(PosX + LevelOwner->MapOffsetX,
-    //                     PosY + LevelOwner->MapOffsetY,
-    //                     (imageOverride != -1)
-    //                     ? imageOverride
-    //                     : Image,
-    //                     fgColor,
-    //                     bgColor);
   }
 #else
   Game::gPrnt.PrintFB(PosX + LevelOwner->MapOffsetX,

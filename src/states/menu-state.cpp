@@ -16,6 +16,10 @@ void MenuState::Init()
 
 #ifdef USE_SDL
   _borderSize = { _tw - 1, _th - 1 };
+  _builtWith = Util::StringFormat(_builtWith.data(),
+                                  SDL_MAJOR_VERSION,
+                                  SDL_MINOR_VERSION,
+                                  SDL_PATCHLEVEL);
 #else
   _borderSize = { _tw, _th };
 #endif
@@ -207,30 +211,6 @@ void MenuState::Update(bool forceUpdate)
   {
     Game::gPrnt.Clear();
 
-    Game::gPrnt.PrintText(
-      0,
-      0,
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-      Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
-    );
-
-    Game::gPrnt.DrawGraphicsTile(
-      32,
-      32,
-      GraphicTiles::STONE_TILES,
-      Colors::WhiteColor
-    );
-
-    Game::gPrnt.Render();
-  }
-
-  /*
-  if (_keyPressed != -1 || forceUpdate)
-  {
-    Game::gPrnt.Clear();
-
     DrawPicture();
 
     Game::gPrnt.DrawWindow({ 0, 0 },
@@ -338,5 +318,4 @@ void MenuState::Update(bool forceUpdate)
 
     Game::gPrnt.Render();
   }
-  */
 }

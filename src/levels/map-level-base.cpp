@@ -126,11 +126,11 @@ void MapLevelBase::PrepareMap()
 
 void MapLevelBase::AdjustCamera()
 {
-  int tw = Printer::TerminalWidth;
-  int th = Printer::TerminalHeight;
+  static int twHalf = Printer::TerminalWidth / 2;
+  static int thHalf = Printer::TerminalHeight / 2;
 
-  MapOffsetX = tw / 2 - _playerRef->PosX;
-  MapOffsetY = th / 2 - _playerRef->PosY;
+  MapOffsetX = twHalf - _playerRef->PosX;
+  MapOffsetY = thHalf - _playerRef->PosY;
 }
 
 // =============================================================================
@@ -596,7 +596,7 @@ bool MapLevelBase::IsSpotValidForSpawn(const Position& pos)
 
   //
   // If map size is greater than spawnPointMinDistance in block direction of
-  // 80x25 terminal, potential spawn points distance should be greater than this
+  // 80x24 terminal, potential spawn points distance should be greater than this
   // value.
   //
   // Otherwise take minimum of MapSize values, halve it and compare with that.
