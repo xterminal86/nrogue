@@ -295,22 +295,22 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
   }
   else
   {
-    Game::gPrnt.PrintChar(x,
-                          y,
-                          (imageOverride != -1)
-                          ? imageOverride
-                          : Image,
-                          fgColor,
-                          bgColor);
+    Game::gPrnt.DrawSubstituteGraphicsTile(x,
+                                           y,
+                                           (imageOverride != -1)
+                                           ? imageOverride
+                                           : Image,
+                                           fgColor,
+                                           1.0);
   }
 #else
-  Game::gPrnt.PrintFB(PosX + LevelOwner->MapOffsetX,
-                       PosY + LevelOwner->MapOffsetY,
-                       (imageOverride != -1)
-                       ? imageOverride
-                       : Image,
-                       fgColor,
-                       bgColor);
+  Game::gPrnt.PrintFB(x,
+                      y,
+                      (imageOverride != -1)
+                      ? imageOverride
+                      : Image,
+                      fgColor,
+                      bgColor);
 #endif
 }
 

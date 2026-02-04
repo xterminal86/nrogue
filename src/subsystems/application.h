@@ -167,7 +167,39 @@ class Application
     const std::string kConfigKeyScale               = "scale";
     const std::string kConfigKeyFastCombat          = "fast_combat";
     const std::string kConfigKeyFastMonsterMovement = "fast_monster_movement";
-    const std::string kConfigUseGraphics            = "use_graphics";
+
+    template <typename T>
+    bool ParseValue(const std::string& key, T& out)
+    {
+      const std::string& res = _loadedConfig[key].GetString();
+      if (!res.empty())
+      {
+        for (char c : res)
+        {
+          bool ok = (std::isdigit(c) || c == '.');
+          if (!ok)
+          {
+            ConsoleLog("[ERR] %s is not a number!", key.data());
+            return false;
+          }
+        }
+
+        if (std::is_floating_point<T>::value)
+        {
+          out = std::stod(res);
+        }
+        else
+        {
+          out = std::stoi(res, nullptr, 0);
+        }
+      }
+      else
+      {
+        ConsoleLog("[WAR] failed to read value '%s'", key.data());
+      }
+
+      return true;
+    }
 
     // =========================================================================
 

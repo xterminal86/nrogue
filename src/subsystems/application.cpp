@@ -936,25 +936,17 @@ void Application::LoadConfig()
             _loadedConfig[kConfigKeyTileset].GetString();
       }
 
-      const std::string& ts = _loadedConfig[kConfigKeyTileSize].GetString();
-      if (!ts.empty())
+      GameConfig.UseGraphics = !GameConfig.TilesetFilename.empty();
+
+      if (!ParseValue<int>(kConfigKeyTileSize, GameConfig.TileSize))
       {
-        GameConfig.TileSize = std::stoi(ts);
-      }
-      else
-      {
-        ConsoleLog("[WAR] tile size is empty, assuming default");
+        ConsoleLog("[WAR] failed to parse value as integer, assuming default");
         GameConfig.TileSize = 16;
       }
-      
-      const std::string& sf = _loadedConfig[kConfigKeyScale].GetString();
-      if (!sf.empty())
+
+      if (!ParseValue<double>(kConfigKeyScale, GameConfig.ScaleFactor))
       {
-        GameConfig.ScaleFactor = std::stod(sf);
-      }
-      else
-      {
-        ConsoleLog("[WAR] scale factor is empty, assuming default");
+        ConsoleLog("[WAR] failed to parse value as double, assuming default");
         GameConfig.ScaleFactor = 1.0;
       }
 
@@ -963,9 +955,6 @@ void Application::LoadConfig()
 
       GameConfig.FastMonsterMovement =
           (_loadedConfig[kConfigKeyFastMonsterMovement].GetString() == "Y");
-
-      GameConfig.UseGraphics =
-          (_loadedConfig[kConfigUseGraphics].GetString() == "Y");
     }
     break;
   }
