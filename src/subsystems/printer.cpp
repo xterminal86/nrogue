@@ -134,14 +134,12 @@ bool Printer::LoadSubstituteGraphicTileset()
 
   SDL_FreeSurface(surf);
 
-  if (gameConfig.UseGraphics)
-  {
-    int w = 0, h = 0;
-    SDL_QueryTexture(_sgGraphicTileset, nullptr, nullptr, &w, &h);
+  int w = 0, h = 0;
+  SDL_QueryTexture(_sgGraphicTileset, nullptr, nullptr, &w, &h);
 
-    _substituteGraphicsScaleFactor =
-        _graphicTileSize / (double)_sgGraphicTileSize;
-  }
+  // FIXME: for substitute graphics we need to scale its glyphs appropriately.
+
+  //_substituteGraphicsScaleFactor = _graphicTileSize / (double)_sgGraphicTileSize;
 
   return true;
 }
@@ -331,7 +329,6 @@ bool Printer::InitForSDL()
   {
     return false;
   }
-
 
   rect = GetWindowSize(_graphicTileSize);
 

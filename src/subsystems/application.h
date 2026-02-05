@@ -38,8 +38,6 @@ class Application
     void LoadGame();
     void SaveGame();
 
-    Player PlayerInstance;
-
     struct Config
     {
       double ScaleFactor = 1.0;
@@ -105,8 +103,18 @@ class Application
     GameState* _currentState = nullptr;
     GameState* _previousState = nullptr;
 
+    //
+    // Order of class members destruction is opposite of declaration, so because
+    // we need to do some shit in ~GameObject() (basically PlayerInstance here)
+    // by accessing _gameStates we should create PlayerInstance after
+    // _gameStates.
+    //
     std::unordered_map<GameStates, std::unique_ptr<GameState>> _gameStates;
 
+  public:
+    Player PlayerInstance;
+
+  private:
     NRS _loadedConfig;
 
     void LoadConfig();
