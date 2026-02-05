@@ -133,7 +133,7 @@ void GameState::AdjustWindowSize(const SDL_Event& evt)
 
   Game::gPrnt.GetResizedWindowSize() = { ww, wh };
 
-  auto& tws = Game::gPrnt.GetTileWHScaled();
+  auto& tws = Game::gPrnt.GetTileWH();
 
   bool wOk = (std::abs(ww - _renderDst.w) > tws.first);
   bool hOk = (std::abs(wh - _renderDst.h) > tws.second);

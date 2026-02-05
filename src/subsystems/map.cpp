@@ -1271,6 +1271,8 @@ void Map::DrawMapTilesAroundPlayer()
 
 void Map::DrawFowTile(int x, int y)
 {
+  // FIXME: use substitute graphic tile if UseGraphics is false.
+
   auto DrawFowTileIntl = [this](int x, int y)
   {
     //

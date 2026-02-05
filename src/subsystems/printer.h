@@ -131,8 +131,7 @@ class Printer
     void DrawSubstituteGraphicsTile(int x,
                                     int y,
                                     int image,
-                                    uint32_t color,
-                                    double scaleFactor);
+                                    uint32_t color);
 
     void DrawWindow(const Position& leftCorner,
                     const Position& size,
@@ -158,7 +157,7 @@ class Printer
 
     const PairI& GetDefaultWindowSize();
     PairI& GetResizedWindowSize();
-    const PairI& GetTileWHScaled();
+    const PairI& GetTileWH();
 // -----------------------------------------------------------------------------
 #endif
 
@@ -350,7 +349,7 @@ class Printer
 
     PairI _defaultWindowSize;
     PairI _resizedWindowSize;
-    PairI _tileWHScaled;
+    PairI _tileWH;
 
     const int _textTileWidth  = 8;
     const int _textTileHeight = 16;
@@ -358,14 +357,14 @@ class Printer
     int _textCharsCountH = 0;
     int _textCharsCountV = 0;
 
-    int _graphicTileSize = _sgGraphicTileSize;
+    int _tilesCountH = 0;
+    int _tilesCountV = 0;
 
     const int _sgGraphicTileSize = 16;
 
-    double _substituteGraphicsScaleFactor = 1.0;
+    int _graphicTileSize = _sgGraphicTileSize;
 
-    // FIXME:
-    int _graphicTileSizeScaled = 16;
+    double _sgScaleFactor = 1.0;
 
     SDL_Rect _drawSrc;
     SDL_Rect _drawDst;

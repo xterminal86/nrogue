@@ -209,13 +209,14 @@ void MenuState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
+    /*
     Game::gPrnt.Clear();
 
     Game::gPrnt.DrawSubstituteGraphicsTile(0, 0, 'b', Colors::WhiteColor, 2.0);
 
     Game::gPrnt.Render();
+    */
 
-    /*
     Game::gPrnt.Clear();
 
     DrawPicture();
@@ -324,6 +325,5 @@ void MenuState::Update(bool forceUpdate)
     );
 
     Game::gPrnt.Render();
-    */
   }
 }

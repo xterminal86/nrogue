@@ -40,12 +40,20 @@ class Application
 
     struct Config
     {
-      double ScaleFactor = 1.0;
+      //
+      // File with custom graphics tileset.
+      //
+      std::string TilesetFilename;
 
+      //
+      // Dimensions of tile from custom tileset.
+      //
       int TileSize = 16;
 
-      int WindowWidth  = 0;
-      int WindowHeight = 0;
+      //
+      // For scaling of in-game text.
+      //
+      double TextScaleFactor = 1.0;
 
       //
       // Disables attack display animation thus reducing gameplay lag.
@@ -62,12 +70,26 @@ class Application
       //
       bool FastMonsterMovement = false;
 
+      // -----------------------------------------------------------------------
+      // Internal variables
+      // -----------------------------------------------------------------------
       //
-      // Use graphic tiles.
+      // Sets to true if custom tileset was loaded.
       //
       bool UseGraphics = false;
 
-      std::string TilesetFilename;
+      //
+      // Dimensions of the application window to be created.
+      //
+      int WindowWidth  = 0;
+      int WindowHeight = 0;
+
+      //
+      // If custom tileset has different size than substitute tiles, calculate
+      // proper substitute tile size for drawing once and put it here for other
+      // classes to access if needed.
+      //
+      int SgTileSizeScaled = 16;
     };
 
     Config GameConfig;
@@ -172,7 +194,7 @@ class Application
 
     const std::string kConfigKeyTileset             = "tileset";
     const std::string kConfigKeyTileSize            = "tile_size";
-    const std::string kConfigKeyScale               = "scale";
+    const std::string kConfigKeyTextScale           = "text_scale";
     const std::string kConfigKeyFastCombat          = "fast_combat";
     const std::string kConfigKeyFastMonsterMovement = "fast_monster_movement";
 

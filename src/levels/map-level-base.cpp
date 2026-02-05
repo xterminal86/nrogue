@@ -126,8 +126,13 @@ void MapLevelBase::PrepareMap()
 
 void MapLevelBase::AdjustCamera()
 {
+#ifdef USE_SDL
+  static int twHalf = 20;
+  static int thHalf = 10;
+#else
   static int twHalf = Printer::TerminalWidth / 2;
   static int thHalf = Printer::TerminalHeight / 2;
+#endif
 
   MapOffsetX = twHalf - _playerRef->PosX;
   MapOffsetY = thHalf - _playerRef->PosY;

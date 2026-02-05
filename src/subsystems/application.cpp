@@ -937,10 +937,10 @@ void Application::LoadConfig()
         GameConfig.TileSize = 16;
       }
 
-      if (!ParseValue<double>(kConfigKeyScale, GameConfig.ScaleFactor))
+      if (!ParseValue<double>(kConfigKeyTextScale, GameConfig.TextScaleFactor))
       {
         ConsoleLog("[WAR] failed to parse value as double, assuming default");
-        GameConfig.ScaleFactor = 1.0;
+        GameConfig.TextScaleFactor = 1.0;
       }
 
       GameConfig.FastCombat =
