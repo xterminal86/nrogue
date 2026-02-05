@@ -46,6 +46,20 @@ uint64_t Position::GetHashCode() const
 
 bool Position::operator< (const Position& rhs) const
 {
+  //
+  // FIXME: this expression actually does not conform to strict weak ordering,
+  // which should be enforced for usage in std::set (in particular),
+  // meaning if a < b is true then b < a must be false. But consider this:
+  //
+  // a (0 ; 39), b (1, 0)
+  //
+  // a < b ? (a.0 < b.1 || a.39 < b.0) - true
+  //          ^^^^^^^^^
+  // b < a ? (b.1 < a.0 || b.0 < a.39) - also true
+  //                       ^^^^^^^^^^
+  // It doesn't seem to affect anything, but MSVC debugger will crash on assert
+  // on program start.
+  //
   return (X < rhs.X || Y < rhs.Y);
 }
 
