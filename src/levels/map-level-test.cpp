@@ -151,7 +151,7 @@ void MapLevelTest::CreateLevel()
                 Colors::WhiteColor,
                 Colors::ShadesOfGrey::Six,
                 Strings::TileNames::RocksText,
-                GraphicTiles::BRICK_WALL);
+                GraphicTiles::STONES);
 
   for (int i = 0; i < 3; i++)
   {
@@ -160,7 +160,9 @@ void MapLevelTest::CreateLevel()
               '#',
               Colors::WhiteColor,
               Colors::ShadesOfGrey::Six,
-              Strings::TileNames::RocksText);
+              Strings::TileNames::RocksText,
+              false,
+              GraphicTiles::STONES);
   }
 
   for (int x = 5; x <= 10; x++)
@@ -170,7 +172,9 @@ void MapLevelTest::CreateLevel()
               '#',
               Colors::WhiteColor,
               Colors::ShadesOfGrey::Six,
-              Strings::TileNames::RocksText);
+              Strings::TileNames::RocksText,
+              false,
+              GraphicTiles::STONES);
   }
 
   CreateStuff();

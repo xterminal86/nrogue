@@ -284,10 +284,14 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
   //
   // If no custom tileset loaded or GameObject has no graphic tile set.
   //
-  bool useSubstituteTile =
-      !(Game::gApp.GameConfig.UseGraphics && GraphicTile != GraphicTiles::NONE);
+  bool useGraphicsTile =
+      (Game::gApp.AppData.UseGraphics && GraphicTile != GraphicTiles::NONE);
 
-  if (useSubstituteTile)
+  if (useGraphicsTile)
+  {
+    Game::gPrnt.DrawGraphicsTile(x, y, GraphicTile);
+  }
+  else
   {
     Game::gPrnt.DrawSubstituteGraphicsTile(x,
                                            y,
@@ -295,10 +299,6 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
                                            ? imageOverride
                                            : Image,
                                            fgColor);
-  }
-  else
-  {
-    Game::gPrnt.DrawGraphicsTile(x, y, GraphicTile, Colors::WhiteColor);
   }
 #else
   Game::gPrnt.PrintFB(x,

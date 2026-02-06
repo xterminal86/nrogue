@@ -432,6 +432,8 @@ void MainState::DrawHPMP()
     0x000088
   );
 
+  // FIXME: draw exp bar
+
   /*
 #ifdef USE_SDL
   int expCur = _playerRef->Attrs.Exp.Min().Get();

@@ -205,7 +205,8 @@ void MapLevelCaves::CreateCommonObjects(int x, int y, char image)
                 ' ',
                 Colors::BlackColor,
                 Colors::CaveWallColor,
-                Strings::TileNames::CaveWallText);
+                Strings::TileNames::CaveWallText,
+                false);
       break;
 
     case '+':

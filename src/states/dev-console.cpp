@@ -325,6 +325,36 @@ void DevConsole::HandleInput()
     }
     break;
 
+#ifndef USE_SDL
+    // Shift + Home
+    case KEY_SHOME:
+    {
+      _stdout->SetScrollState(MessageBufferScrollState::TOP);
+    }
+    break;
+
+    // Shift + End
+    case KEY_SEND:
+    {
+      _stdout->SetScrollState(MessageBufferScrollState::BOTTOM);
+    }
+    break;
+
+    // Shift + left arrow
+    case KEY_SLEFT:
+    {
+      _stdout->PageUp();
+    }
+    break;
+
+    // Shift + right arrow
+    case KEY_SRIGHT:
+    {
+      _stdout->PageDown();
+    }
+    break;
+#endif
+
 #ifdef USE_SDL
     case NUMPAD_1:
     {

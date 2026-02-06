@@ -6,6 +6,7 @@
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/xterminal86/nrogue/total)
 
 # NROGUE
+
 *ncurses roguelike challenge*
 
 ![](resources/github-front/title.png)
@@ -18,29 +19,7 @@ So I decided to make a roguelike.
 It probably should've been named **ncrogue** or something, but whatever...
 
 You can build either version, SDL2 or ncurses, check comments in main.cpp.
-
-When running an SDL2 executable, you can use custom font image and scale it by creating
-file called "config.txt" and placing it alongside with the game's binary.
-Transparent color key is magenta `(R:255, G:0, B:255)`.
-Scale can be a floating point number (e.g. 1.5), but it's not recommended,
-since non-integer scaling will result in distortions.
-You can resize the window though.
-The format is as follows (key-value pair separator `,` must always be present):
-
-```
-tileset               : "resources/std-8x16-ck.bmp",
-tile_w                : 8,
-tile_h                : 16,
-scale                 : 2,
-fast_combat           : N,
-fast_monster_movement : N,
-```
-
-Two last lines are optional, they're off by default.
-`fast_combat` disables visual attack display and `fast_monster_movement` doesn't force redraw after each visible monster's turn.
-Both of these options reduce gameplay lag, although with `fast_monster_movement != N` it may sometimes look as if
-enemy just spawned before player if said monster had much larger SPD than player, which allowed it to perform several
-turns that were not force redrawn.
+Game has config file where certain parameters can be tweaked (check `config-template.txt`).
 
 <TABLE>
   <TR>

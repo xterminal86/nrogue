@@ -364,17 +364,22 @@ void LookInputState::MoveCursor(int dx, int dy)
   int nx = _cursorPosition.X + dx;
   int ny = _cursorPosition.Y + dy;
 
-  int hw = _twHalf;
-  int hh = _thHalf;
+#ifdef USE_SDL
+  static int hw = Printer::GraphicsWindowWidth  / 2;
+  static int hh = Printer::GraphicsWindowHeight / 2;
+#else
+  static int hw = _twHalf;
+  static int hh = _thHalf;
+#endif
 
   //
   // To compensate for cursor image.
   //
-  nx = Util::Clamp(nx, _playerRef->PosX - hw + 1,
-                       _playerRef->PosX + hw - 2);
+  nx = Util::Clamp(nx, _playerRef->PosX - hw,
+                       _playerRef->PosX + hw - 1);
 
   ny = Util::Clamp(ny, _playerRef->PosY - hh,
-                       _playerRef->PosY + hh);
+                       _playerRef->PosY + hh - 1);
 
   _cursorPosition.X = nx;
   _cursorPosition.Y = ny;
@@ -384,25 +389,47 @@ void LookInputState::MoveCursor(int dx, int dy)
 
 void LookInputState::DrawCursor()
 {
+#ifdef USE_SDL
+  Game::gPrnt.DrawSubstituteGraphicsTile(
+    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
+    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
+    '-'
+  );
+
+  Game::gPrnt.DrawSubstituteGraphicsTile(
+    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX - 1,
+    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
+    '-'
+  );
+
+  Game::gPrnt.DrawSubstituteGraphicsTile(
+    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX,
+    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY + 1,
+    '|'
+  );
+
+  Game::gPrnt.DrawSubstituteGraphicsTile(
+    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX,
+    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY - 1,
+    '|'
+  );
+#else
   Game::gPrnt.PrintChar(
-    _cursorPosition.X +
-    Game::gMap.CurrentLevel->MapOffsetX + 1,
-    _cursorPosition.Y +
-    Game::gMap.CurrentLevel->MapOffsetY,
-    ']',
+    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
+    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
+    '<',
     Colors::WhiteColor,
     Colors::BlackColor
   );
 
   Game::gPrnt.PrintChar(
-    _cursorPosition.X +
-    Game::gMap.CurrentLevel->MapOffsetX - 1,
-    _cursorPosition.Y +
-    Game::gMap.CurrentLevel->MapOffsetY,
-    '[',
+    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX - 1,
+    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
+    '>',
     Colors::WhiteColor,
     Colors::BlackColor
   );
+#endif
 }
 
 // =============================================================================

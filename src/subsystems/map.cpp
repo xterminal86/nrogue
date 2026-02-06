@@ -1271,41 +1271,12 @@ void Map::DrawMapTilesAroundPlayer()
 
 void Map::DrawFowTile(int x, int y)
 {
-  // FIXME: use substitute graphic tile if UseGraphics is false.
-
-  auto DrawFowTileIntl = [this](int x, int y)
-  {
-    //
-    // "Block" tiles with no symbols like water, floor, walls etc. are colored
-    // using background color with foreground set to black.
-    //
-    if (CurrentLevel->FowLayer[x][y].Image == ' ')
-    {
-      Game::gPrnt.PrintChar(
-        x + CurrentLevel->MapOffsetX,
-        y + CurrentLevel->MapOffsetY,
-        CurrentLevel->FowLayer[x][y].Image,
-        Colors::BlackColor,
-        Colors::FogOfWarColor
-      );
-    }
-    else
-    {
-      Game::gPrnt.PrintChar(
-        x + CurrentLevel->MapOffsetX,
-        y + CurrentLevel->MapOffsetY,
-        (CurrentLevel->FowLayer[x][y].Image == -1)
-        ? ' '
-        : CurrentLevel->FowLayer[x][y].Image,
-        Colors::FogOfWarColor,
-        Colors::BlackColor
-      );
-    }
-  };
-
 #ifdef USE_SDL
-  if (Game::gApp.GameConfig.UseGraphics
-   && CurrentLevel->FowLayer[x][y].GraphicTile != GraphicTiles::NONE)
+  bool useGraphicsTile =
+      (Game::gApp.AppData.UseGraphics &&
+       CurrentLevel->FowLayer[x][y].GraphicTile != GraphicTiles::NONE);
+
+  if (useGraphicsTile)
   {
     Game::gPrnt.DrawGraphicsTile(x + CurrentLevel->MapOffsetX,
                                  y + CurrentLevel->MapOffsetY,
@@ -1314,10 +1285,42 @@ void Map::DrawFowTile(int x, int y)
   }
   else
   {
-    DrawFowTileIntl(x, y);
+    Game::gPrnt.DrawSubstituteGraphicsTile(
+      x + CurrentLevel->MapOffsetX,
+      y + CurrentLevel->MapOffsetY,
+      (CurrentLevel->FowLayer[x][y].Image == -1) ?
+      ' ' :
+      CurrentLevel->FowLayer[x][y].Image,
+      Colors::ShadesOfGrey::Eight
+    );
   }
 #else
-  DrawFowTileIntl(x, y);
+  //
+  // "Block" tiles with no symbols like water, floor, walls etc. are colored
+  // using background color with foreground set to black.
+  //
+  if (CurrentLevel->FowLayer[x][y].Image == ' ')
+  {
+    Game::gPrnt.PrintChar(
+      x + CurrentLevel->MapOffsetX,
+      y + CurrentLevel->MapOffsetY,
+      CurrentLevel->FowLayer[x][y].Image,
+      Colors::BlackColor,
+      Colors::FogOfWarColor
+    );
+  }
+  else
+  {
+    Game::gPrnt.PrintChar(
+      x + CurrentLevel->MapOffsetX,
+      y + CurrentLevel->MapOffsetY,
+      (CurrentLevel->FowLayer[x][y].Image == -1)
+      ? ' '
+      : CurrentLevel->FowLayer[x][y].Image,
+      Colors::FogOfWarColor,
+      Colors::BlackColor
+    );
+  }
 #endif
 }
 

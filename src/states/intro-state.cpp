@@ -38,19 +38,25 @@ void IntroState::HandleInput()
 
 void IntroState::Update(bool forceUpdate)
 {
-  int pci = Game::gApp.PlayerInstance.SelectedClass;
   PlayerClass pc = Game::gApp.PlayerInstance.GetClass();
 
 #ifdef USE_SDL
-  Game::gPrnt.PrintText(
-    _twHalf,
-    (Printer::TerminalHeight - _introStrings[pci].size()) / 4,
+  Application::ApplicationData& ad = Game::gApp.AppData;
+
+  Game::gPrnt.PrintTextExt(
+    ad.WindowWidth / 2,
+    2 * ad.GlyphHeightScaled,
     _scenarioNameByClass.at(pc),
     Printer::kAlignCenter,
     Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::BlackColor,
+    4.0,
+    8,
+    8
   );
 #else
+  int pci = Game::gApp.PlayerInstance.SelectedClass;
+
   Game::gPrnt.PrintFB(
     _twHalf,
     (Printer::TerminalHeight - _introStrings[pci].size()) / 4,

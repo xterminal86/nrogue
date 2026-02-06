@@ -57,9 +57,18 @@ class Printer
     static size_t TerminalWidth;
     static size_t TerminalHeight;
 
-    static const int kAlignLeft = 0;
+    //
+    // Window dimensions for graphics mode.
+    //
+    static int GraphicsWindowWidth;
+    static int GraphicsWindowHeight;
+
+    //
+    // Text alignment modes.
+    //
+    static const int kAlignLeft   = 0;
     static const int kAlignCenter = 1;
-    static const int kAlignRight = 2;
+    static const int kAlignRight  = 2;
 
     static const int kShortLogMaxMessages = 5;
 
@@ -67,20 +76,43 @@ class Printer
 
     std::vector<Position> DrawExplosion(const Position& pos, int range);
 
-    /// Clears framebuffer (ncurses) or renderer (SDL)
-    /// Use this before all PrintFB calls
+    ///
+    /// \brief Clears framebuffer (ncurses) or renderer (SDL).
+    ///
+    /// Use this before all PrintFB calls.
+    ///
     void Clear();
 
-    /// Prints framebuffer contents to the screen
-    /// Call this after all PrintFB calls
+    ///
+    /// \brief Prints framebuffer contents to the screen.
+    ///
+    /// Call this after all PrintFB calls.
+    ///
     void Render();
 
+    ///
+    /// \brief Prints character from text tileset.
+    /// \param Horizontal position in character units.
+    /// \param Vertical position in character units.
+    /// \param Tile index to draw from NameCP437.
+    /// \param Foreground color in 0xRRGGBB format.
+    /// \param Background color in 0xRRGGBB format.
+    ///
     void PrintChar(const int x,
                    const int y,
                    int charIndex,
                    const uint32_t& htmlColorFg,
                    const uint32_t& htmlColorBg);
 
+    ///
+    /// \brief Prints string using text tileset.
+    /// \param Horizontal starting position in character units.
+    /// \param Vertical starting position in character units.
+    /// \param Text string to print.
+    /// \param Text horizontal alignment.
+    /// \param Foreground color in 0xRRGGBB format.
+    /// \param htmlColorBgBackground color in 0xRRGGBB format.
+    ///
     void PrintText(const int x,
                    const int y,
                    const std::string& text,
@@ -127,11 +159,62 @@ class Printer
 // -----------------------------------------------------------------------------
 #else
 // -----------------------------------------------------------------------------
-    void DrawGraphicsTile(int x, int y, GraphicTiles tile, uint32_t color);
+    ///
+    /// \brief Print text using pixel coordinates.
+    /// \param x position of upper left corner of the first character tile.
+    /// \param y position of upper left corner of the first character tile.
+    /// \param Foreground text color.
+    /// \param Background fill text color (Colors::None to leave it transparent).
+    /// \param Scale factor.
+    /// \param Add text shadow to the background.
+    ///
+    void PrintTextExt(int x,
+                      int y,
+                      const std::string& text,
+                      int align,
+                      uint32_t fgColor,
+                      uint32_t bgColor,
+                      double scaleFactor,
+                      int shadowOffsetX = 0,
+                      int shadowOffsetY = 0);
+
+    ///
+    /// \brief Draw tile from graphics tileset.
+    /// \param x position on the screen in tile cell units (e.g. 0 - 40).
+    /// \param y position on the screen in tile cell units (e.g. 0 - 24).
+    /// \param Tile to draw.
+    /// \param Color tint (0xFFFFFF to draw tile as is).
+    ///
+    void DrawGraphicsTile(int x,
+                          int y,
+                          GraphicTiles tile,
+                          uint32_t colorTint = Colors::WhiteColor);
+
+    ///
+    /// \brief Draw tile from graphics tileset using pixel coordinates.
+    /// \param x position in pixels.
+    /// \param y position in pixels.
+    /// \param Tile to draw.
+    /// \param Color tint (0xFFFFFF to draw tile as is).
+    /// \param Scale factor.
+    ///
+    void DrawGraphicsTileExt(int x,
+                             int y,
+                             GraphicTiles tile,
+                             uint32_t colorTint = Colors::WhiteColor,
+                             double scaleFactor = 1.0);
+
+    ///
+    /// \brief Draw tile from substitute graphics tileset.
+    /// \param x position on the screen in tile cell units (e.g. 0 - 40).
+    /// \param y position on the screen in tile cell units (e.g. 0 - 24).
+    /// \param Tile index to draw from NameCP437.
+    /// \param Color tint (0xFFFFFF to draw tile as is).
+    ///
     void DrawSubstituteGraphicsTile(int x,
                                     int y,
                                     int image,
-                                    uint32_t color);
+                                    uint32_t colorTint = Colors::WhiteColor);
 
     void DrawWindow(const Position& leftCorner,
                     const Position& size,
@@ -156,7 +239,7 @@ class Printer
     SDL_Rect GetWindowSize(int tileSize);
 
     const PairI& GetDefaultWindowSize();
-    PairI& GetResizedWindowSize();
+    PairI& ResizedWindowSize();
     const PairI& GetTileWH();
 // -----------------------------------------------------------------------------
 #endif
@@ -286,6 +369,11 @@ class Printer
       }
     }
 
+    static const int TextTileWidth  = 8;
+    static const int TextTileHeight = 16;
+
+    static const int SgTileSize = 16;
+
   private:
     #ifndef USE_SDL
     bool ContainsColorMap(size_t hashToCheck);
@@ -351,20 +439,22 @@ class Printer
     PairI _resizedWindowSize;
     PairI _tileWH;
 
-    const int _textTileWidth  = 8;
-    const int _textTileHeight = 16;
-
     int _textCharsCountH = 0;
     int _textCharsCountV = 0;
 
     int _tilesCountH = 0;
     int _tilesCountV = 0;
 
-    const int _sgGraphicTileSize = 16;
-
-    int _graphicTileSize = _sgGraphicTileSize;
+    int _graphicTileSize = SgTileSize;
 
     double _sgScaleFactor = 1.0;
+
+    //
+    // Scaling of text tiles for different window size depending on custom
+    // graphics tileset size.
+    //
+    int _textTileWidthScaled  = TextTileWidth;
+    int _textTileHeightScaled = TextTileHeight;
 
     SDL_Rect _drawSrc;
     SDL_Rect _drawDst;
@@ -379,7 +469,6 @@ class Printer
     bool LoadSubstituteGraphicTileset();
 
     void DrawFromTextTileset(int x, int y, int tileIndex);
-    void DrawFromGraphicsTileset(int x, int y, int tileIndex);
 
     //
     // Here lies data after last ConvertHtmlToRGB() call.

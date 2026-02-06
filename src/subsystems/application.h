@@ -51,11 +51,6 @@ class Application
       int TileSize = 16;
 
       //
-      // For scaling of in-game text.
-      //
-      double TextScaleFactor = 1.0;
-
-      //
       // Disables attack display animation thus reducing gameplay lag.
       //
       bool FastCombat = false;
@@ -69,10 +64,10 @@ class Application
       // in case of very fast attacking.
       //
       bool FastMonsterMovement = false;
+    } GameConfig;
 
-      // -----------------------------------------------------------------------
-      // Internal variables
-      // -----------------------------------------------------------------------
+    struct ApplicationData
+    {
       //
       // Sets to true if custom tileset was loaded.
       //
@@ -90,9 +85,12 @@ class Application
       // classes to access if needed.
       //
       int SgTileSizeScaled = 16;
-    };
 
-    Config GameConfig;
+      int GlyphWidthScaled  = 8;
+      int GlyphHeightScaled = 16;
+
+    } AppData;
+
 
     //
     // Force redraw current state.
@@ -194,7 +192,6 @@ class Application
 
     const std::string kConfigKeyTileset             = "tileset";
     const std::string kConfigKeyTileSize            = "tile_size";
-    const std::string kConfigKeyTextScale           = "text_scale";
     const std::string kConfigKeyFastCombat          = "fast_combat";
     const std::string kConfigKeyFastMonsterMovement = "fast_monster_movement";
 

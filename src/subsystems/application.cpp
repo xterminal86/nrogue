@@ -929,18 +929,12 @@ void Application::LoadConfig()
             _loadedConfig[kConfigKeyTileset].GetString();
       }
 
-      GameConfig.UseGraphics = !GameConfig.TilesetFilename.empty();
+      AppData.UseGraphics = !GameConfig.TilesetFilename.empty();
 
       if (!ParseValue<int>(kConfigKeyTileSize, GameConfig.TileSize))
       {
         ConsoleLog("[WAR] failed to parse value as integer, assuming default");
         GameConfig.TileSize = 16;
-      }
-
-      if (!ParseValue<double>(kConfigKeyTextScale, GameConfig.TextScaleFactor))
-      {
-        ConsoleLog("[WAR] failed to parse value as double, assuming default");
-        GameConfig.TextScaleFactor = 1.0;
       }
 
       GameConfig.FastCombat =

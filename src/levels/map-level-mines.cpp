@@ -261,7 +261,8 @@ void MapLevelMines::CreateSpecialLevel()
                     ' ',
                     Colors::BlackColor,
                     Colors::ShadesOfGrey::Six,
-                    Strings::TileNames::MineWallText);
+                    Strings::TileNames::MineWallText,
+                    false);
         }
         break;
 
@@ -342,7 +343,8 @@ void MapLevelMines::CreateSpecialLevel()
                           ' ',
                           Colors::BlackColor,
                           Colors::ShadesOfGrey::Six,
-                          Strings::TileNames::MineWallText);
+                          Strings::TileNames::MineWallText,
+                          false);
               }
             }
 
@@ -488,13 +490,18 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
   switch (image)
   {
     case '#':
+    {
+      auto r = Util::WeightedRandom(_mineWallsProbability);
       PlaceWall(x,
                 y,
                 ' ',
                 Colors::BlackColor,
                 Colors::ShadesOfGrey::Six,
-                Strings::TileNames::MineWallText);
-      break;
+                Strings::TileNames::MineWallText,
+                false,
+                r.first);
+    }
+    break;
 
     case '+':
       PlaceDoor(x, y);
@@ -506,7 +513,8 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
                       image,
                       Colors::ShadesOfGrey::Four,
                       Colors::BlackColor,
-                      Strings::TileNames::DirtText);
+                      Strings::TileNames::DirtText,
+                      GraphicTiles::DIRT);
       break;
 
     case 'g':
@@ -523,7 +531,8 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
                       '.',
                       Colors::BlackColor,
                       Colors::ShadesOfGrey::Ten,
-                      Strings::TileNames::StoneText);
+                      Strings::TileNames::StoneText,
+                      GraphicTiles::STONE_TILES);
       break;
 
     case 'l':

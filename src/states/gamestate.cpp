@@ -123,32 +123,16 @@ int GameState::GetKeyDown()
 #ifdef USE_SDL
 void GameState::AdjustWindowSize(const SDL_Event& evt)
 {
-  //
-  // FIXME: if we fuck around with window size first, then maximize - after
-  // minimizing back again everything looks fucked up.
-  //
-
   int ww = evt.window.data1;
   int wh = evt.window.data2;
 
-  Game::gPrnt.GetResizedWindowSize() = { ww, wh };
+  Game::gPrnt.ResizedWindowSize() = { ww, wh };
 
-  auto& tws = Game::gPrnt.GetTileWH();
+  _renderDst.w = ww;
+  _renderDst.h = wh;
 
-  bool wOk = (std::abs(ww - _renderDst.w) > tws.first);
-  bool hOk = (std::abs(wh - _renderDst.h) > tws.second);
-
-  if (wOk && hOk)
-  {
-    ww -= (ww % tws.first);
-    wh -= (wh % tws.second);
-
-    _renderDst.w = ww;
-    _renderDst.h = wh;
-
-    Game::gPrnt.SetRenderDst(_renderDst);
-    Game::gApp.ForceDrawCurrentState();
-  }
+  Game::gPrnt.SetRenderDst(_renderDst);
+  Game::gApp.ForceDrawCurrentState();
 }
 
 // =============================================================================
@@ -177,8 +161,8 @@ void GameState::TakeScreenshot()
   auto r = Game::gPrnt.Renderer;
   SDL_Surface* sshot = SDL_CreateRGBSurface(
     0,
-    Game::gPrnt.GetResizedWindowSize().first,
-    Game::gPrnt.GetResizedWindowSize().second,
+    Game::gPrnt.ResizedWindowSize().first,
+    Game::gPrnt.ResizedWindowSize().second,
     32,
     0x00FF0000,
     0x0000FF00,
@@ -195,6 +179,7 @@ void GameState::TakeScreenshot()
   std::string fname = Util::StringFormat("s_%s.bmp", time.data());
   SDL_SaveBMP(sshot, fname.data());
   SDL_FreeSurface(sshot);
+
   Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
                             "Screenshot Taken",
                             { fname },

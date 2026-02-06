@@ -209,14 +209,6 @@ void MenuState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    /*
-    Game::gPrnt.Clear();
-
-    Game::gPrnt.DrawSubstituteGraphicsTile(0, 0, 'b', Colors::WhiteColor);
-
-    Game::gPrnt.Render();
-    */
-
     Game::gPrnt.Clear();
 
     DrawPicture();
@@ -230,6 +222,19 @@ void MenuState::Update(bool forceUpdate)
                             Colors::BlackColor,
                             Colors::None);
 
+#ifdef USE_SDL
+    Application::ApplicationData& ad = Game::gApp.AppData;
+
+    Game::gPrnt.PrintTextExt(ad.WindowWidth / 2,
+                             ad.GlyphHeightScaled,
+                             "NROGUE",
+                             Printer::kAlignCenter,
+                             Colors::WhiteColor,
+                             Colors::None,
+                             10.0,
+                             12,
+                             12);
+#else
     int yOffset = 0;
     for (auto& s : _title)
     {
@@ -263,6 +268,7 @@ void MenuState::Update(bool forceUpdate)
 
       yOffset++;
     }
+#endif
 
     Game::gPrnt.PrintText(
       _twHalf,
