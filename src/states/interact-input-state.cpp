@@ -209,12 +209,14 @@ void InteractInputState::Update(bool forceUpdate)
     GameLogMessageData* lastMessage = Game::gPrnt.GetLastMessage();
     if (lastMessage != nullptr)
     {
-      Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
-                          Printer::TerminalHeight - 1,
-                          lastMessage->Message,
-                          Printer::kAlignRight,
-                          lastMessage->FgColor,
-                          lastMessage->BgColor);
+      Game::gPrnt.PrintText(
+        Printer::TerminalWidth - 1,
+        Printer::TerminalHeight - 1,
+        lastMessage->Message,
+        Printer::kAlignRight,
+        lastMessage->FgColor,
+        lastMessage->BgColor
+      );
     }
 
     Game::gPrnt.Render();

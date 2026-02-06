@@ -38,17 +38,17 @@ class Application
     void LoadGame();
     void SaveGame();
 
-    Player PlayerInstance;
-
     struct Config
     {
-      double ScaleFactor = 1.0;
+      //
+      // File with custom graphics tileset.
+      //
+      std::string TilesetFilename;
 
-      int TileWidth  = 0;
-      int TileHeight = 0;
-
-      int WindowWidth  = 0;
-      int WindowHeight = 0;
+      //
+      // Dimensions of tile from custom tileset.
+      //
+      int TileSize = 16;
 
       //
       // Disables attack display animation thus reducing gameplay lag.
@@ -64,16 +64,33 @@ class Application
       // in case of very fast attacking.
       //
       bool FastMonsterMovement = false;
+    } GameConfig;
 
+    struct ApplicationData
+    {
       //
-      // Use graphic tiles.
+      // Sets to true if custom tileset was loaded.
       //
       bool UseGraphics = false;
 
-      std::string TilesetFilename;
-    };
+      //
+      // Dimensions of the application window to be created.
+      //
+      int WindowWidth  = 0;
+      int WindowHeight = 0;
 
-    Config GameConfig;
+      //
+      // If custom tileset has different size than substitute tiles, calculate
+      // proper substitute tile size for drawing once and put it here for other
+      // classes to access if needed.
+      //
+      int SgTileSizeScaled = 16;
+
+      int GlyphWidthScaled  = 8;
+      int GlyphHeightScaled = 16;
+
+    } AppData;
+
 
     //
     // Force redraw current state.
@@ -91,16 +108,6 @@ class Application
 
     bool IsAppReady();
 
-#ifdef USE_SDL
-    SDL_Renderer* Renderer = nullptr;
-    SDL_Window* Window     = nullptr;
-
-    SDL_Rect GetWindowSize(int tileWidth, int tileHeight);
-
-    const std::pair<int, int>& GetDefaultWindowSize();
-    std::pair<int, int>& GetResizedWindowSize();
-#endif
-
     //
     // Can be used to time global triggers.
     //
@@ -116,13 +123,21 @@ class Application
     GameState* _currentState = nullptr;
     GameState* _previousState = nullptr;
 
+    //
+    // Order of class members destruction is opposite of declaration, so because
+    // we need to do some shit in ~GameObject() (basically PlayerInstance here)
+    // by accessing _gameStates we should create PlayerInstance after
+    // _gameStates.
+    //
     std::unordered_map<GameStates, std::unique_ptr<GameState>> _gameStates;
 
+  public:
+    Player PlayerInstance;
+
+  private:
     NRS _loadedConfig;
 
     void LoadConfig();
-
-    bool ValidateConfig();
 
     bool InitGraphics();
 
@@ -145,10 +160,7 @@ class Application
                       bool asciiMode);
 
 #ifdef USE_SDL
-    std::pair<int, int> _defaultWindowSize;
-    std::pair<int, int> _resizedWindowSize;
     bool InitSDL();
-    void SetIcon();
 #else
     bool InitCurses();
 #endif
@@ -179,12 +191,42 @@ class Application
     void PrepareChars();
 
     const std::string kConfigKeyTileset             = "tileset";
-    const std::string kConfigKeyTileW               = "tile_w";
-    const std::string kConfigKeyTileH               = "tile_h";
-    const std::string kConfigKeyScale               = "scale";
+    const std::string kConfigKeyTileSize            = "tile_size";
     const std::string kConfigKeyFastCombat          = "fast_combat";
     const std::string kConfigKeyFastMonsterMovement = "fast_monster_movement";
-    const std::string kConfigUseGraphics            = "use_graphics";
+
+    template <typename T>
+    bool ParseValue(const std::string& key, T& out)
+    {
+      const std::string& res = _loadedConfig[key].GetString();
+      if (!res.empty())
+      {
+        for (char c : res)
+        {
+          bool ok = (std::isdigit(c) || c == '.');
+          if (!ok)
+          {
+            ConsoleLog("[ERR] %s is not a number!", key.data());
+            return false;
+          }
+        }
+
+        if (std::is_floating_point<T>::value)
+        {
+          out = std::stod(res);
+        }
+        else
+        {
+          out = std::stoi(res, nullptr, 0);
+        }
+      }
+      else
+      {
+        ConsoleLog("[WAR] failed to read value '%s'", key.data());
+      }
+
+      return true;
+    }
 
     // =========================================================================
 

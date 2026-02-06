@@ -35,12 +35,14 @@ void InfoState::Update(bool forceUpdate)
     std::string title = Util::StringFormat("%s the %s",
                                            _playerRef->Name.data(),
                                            _playerRef->GetClassName().data());
-    Game::gPrnt.PrintFB(1,
-                        0,
-                        title,
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      1,
+      0,
+      title,
+      Printer::kAlignLeft,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
     int charToPrint = 0;
 
@@ -52,17 +54,21 @@ void InfoState::Update(bool forceUpdate)
 
     for (int i = 0; i < kMaxNameUnderscoreLength; i++)
     {
-      Game::gPrnt.PrintFB(i,
-                          1,
-                          charToPrint,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintChar(
+        i,
+        1,
+        charToPrint,
+        Colors::WhiteColor,
+        Colors::BlackColor
+      );
 
-      Game::gPrnt.PrintFB(i,
-                          yPos + 12,
-                          charToPrint,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintChar(
+        i,
+        yPos + 12,
+        charToPrint,
+        Colors::WhiteColor,
+        Colors::BlackColor
+      );
     }
 
     #ifdef USE_SDL
@@ -73,11 +79,13 @@ void InfoState::Update(bool forceUpdate)
 
     for (int y = 0; y < _th; y++)
     {
-      Game::gPrnt.PrintFB(kMaxNameUnderscoreLength,
-                          y,
-                          charToPrint,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintChar(
+        kMaxNameUnderscoreLength,
+        y,
+        charToPrint,
+        Colors::WhiteColor,
+        Colors::BlackColor
+      );
     }
 
     PrintAttribute(1, yPos, "LVL", _playerRef->Attrs.Lvl);
@@ -104,23 +112,27 @@ void InfoState::Update(bool forceUpdate)
 
     // Skills
 
-    Game::gPrnt.PrintFB(kMaxNameUnderscoreLength / 2,
-                        yPos + 13,
-                        "SKILLS",
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      kMaxNameUnderscoreLength / 2,
+      yPos + 13,
+      "SKILLS",
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
     int yPrintOffset = 14;
     for (auto& kvp : _playerRef->SkillLevelBySkill)
     {
       std::string skillName = GlobalConstants::SkillNameByType.at(kvp.first);
-      Game::gPrnt.PrintFB(1,
-                          yPos + yPrintOffset,
-                          skillName,
-                          Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        1,
+        yPos + yPrintOffset,
+        skillName,
+        Printer::kAlignLeft,
+        Colors::WhiteColor,
+        Colors::BlackColor
+      );
       yPrintOffset++;
     }
 
@@ -141,12 +153,14 @@ void InfoState::PrintExp(int x, int y)
                                                dots.data(),
                                                dots.data());
 
-  Game::gPrnt.PrintFB(x,
-                      y,
-                      placeholder,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x,
+    y,
+    placeholder,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
   std::string minVal = Util::StringFormat("%d",
                                           _playerRef->Attrs.Exp.Min().Get());
@@ -155,19 +169,23 @@ void InfoState::PrintExp(int x, int y)
                                           _playerRef->Attrs.Exp.Max().Get());
 
   int xPos = x + placeholder.length() - digits - minVal.length() - 3;
-  Game::gPrnt.PrintFB(xPos,
-                      y,
-                      minVal,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    xPos,
+    y,
+    minVal,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
-  Game::gPrnt.PrintFB(x + placeholder.length() - digits,
-                      y,
-                      maxVal,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x + placeholder.length() - digits,
+    y,
+    maxVal,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 }
 
 // =============================================================================
@@ -190,21 +208,25 @@ void InfoState::PrintAttribute(int x,
   }
 
   std::string attrPlaceholder = Util::StringFormat("%s:   ", attrName.data());
-  Game::gPrnt.PrintFB(x,
-                      y,
-                      attrPlaceholder,
-                      Printer::kAlignLeft,
-                      Colors::ShadesOfGrey::Five,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x,
+    y,
+    attrPlaceholder,
+    Printer::kAlignLeft,
+    Colors::ShadesOfGrey::Five,
+    Colors::BlackColor
+  );
 
   std::string text = Util::StringFormat("%d", attr.Get());
 
-  Game::gPrnt.PrintFB(x + attrPlaceholder.length() - text.length(),
-                      y,
-                      text,
-                      Printer::kAlignLeft,
-                      color,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x + attrPlaceholder.length() - text.length(),
+    y,
+    text,
+    Printer::kAlignLeft,
+    color,
+    Colors::BlackColor
+  );
 
   //text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
   //Game::gPrnt.PrintFB(x, y, text, Printer::kAlignLeft, color);
@@ -212,13 +234,15 @@ void InfoState::PrintAttribute(int x,
   //
   // Replace stat name back with white color (kinda hack)
   //
-  auto str = Util::StringFormat("%s:", attrName.data());
-  Game::gPrnt.PrintFB(x,
-                      y,
-                      str,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  std::string str = Util::StringFormat("%s:", attrName.data());
+  Game::gPrnt.PrintText(
+    x,
+    y,
+    str,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 }
 
 // =============================================================================
@@ -243,12 +267,14 @@ void InfoState::PrintRangedAttribute(int x,
   std::string placeholder =
       Util::StringFormat("%s:     /    ", attrName.data());
 
-  Game::gPrnt.PrintFB(x,
-                      y,
-                      placeholder,
-                      Printer::kAlignLeft,
-                      Colors::ShadesOfGrey::Five,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x,
+    y,
+    placeholder,
+    Printer::kAlignLeft,
+    Colors::ShadesOfGrey::Five,
+    Colors::BlackColor
+  );
 
   //std::string text = Util::StringFormat("%s: %i / %i",
   //                                      attrName.data(),
@@ -260,36 +286,44 @@ void InfoState::PrintRangedAttribute(int x,
   std::string maxVal = Util::StringFormat("%d", attr.Max().Get());
 
   int xPos = x + placeholder.length() - 6 - minVal.length();
-  Game::gPrnt.PrintFB(xPos,
-                      y,
-                      minVal,
-                      Printer::kAlignLeft,
-                      color,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    xPos,
+    y,
+    minVal,
+    Printer::kAlignLeft,
+    color,
+    Colors::BlackColor
+  );
 
-  Game::gPrnt.PrintFB(x + placeholder.length() - 3,
-                      y,
-                      maxVal,
-                      Printer::kAlignLeft,
-                      color,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x + placeholder.length() - 3,
+    y,
+    maxVal,
+    Printer::kAlignLeft,
+    color,
+    Colors::BlackColor
+  );
 
-  Game::gPrnt.PrintFB(x + placeholder.length() - 5,
-                      y,
-                      '/',
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintChar(
+    x + placeholder.length() - 5,
+    y,
+    '/',
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
   //
   // Replace stat name back with white color (kinda hack)
   //
-  auto str = Util::StringFormat("%s:", attrName.data());
-  Game::gPrnt.PrintFB(x,
-                      y,
-                      str,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  std::string str = Util::StringFormat("%s:", attrName.data());
+  Game::gPrnt.PrintText(
+    x,
+    y,
+    str,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 }
 
 // =============================================================================
@@ -308,52 +342,64 @@ void InfoState::PrintModifiers(int x, int y)
   std::pair<uint32_t, std::string> res;
 
   res = GetModifierString(strMod);
-  Game::gPrnt.PrintFB(x,
-                      y,
-                      res.second,
-                      Printer::kAlignLeft,
-                      res.first,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x,
+    y,
+    res.second,
+    Printer::kAlignLeft,
+    res.first,
+    Colors::BlackColor
+  );
 
   res = GetModifierString(defMod);
-  Game::gPrnt.PrintFB(x,
-                      y + 1,
-                      res.second,
-                      Printer::kAlignLeft,
-                      res.first,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x,
+    y + 1,
+    res.second,
+    Printer::kAlignLeft,
+    res.first,
+    Colors::BlackColor
+  );
 
   res = GetModifierString(magMod);
-  Game::gPrnt.PrintFB(x,
-                      y + 2,
-                      res.second,
-                      Printer::kAlignLeft,
-                      res.first,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x,
+    y + 2,
+    res.second,
+    Printer::kAlignLeft,
+    res.first,
+    Colors::BlackColor
+  );
 
   res = GetModifierString(resMod);
-  Game::gPrnt.PrintFB(x,
-                      y + 3,
-                      res.second,
-                      Printer::kAlignLeft,
-                      res.first,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x,
+    y + 3,
+    res.second,
+    Printer::kAlignLeft,
+    res.first,
+    Colors::BlackColor
+  );
 
   res = GetModifierString(sklMod);
-  Game::gPrnt.PrintFB(x,
-                      y + 4,
-                      res.second,
-                      Printer::kAlignLeft,
-                      res.first,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x,
+    y + 4,
+    res.second,
+    Printer::kAlignLeft,
+    res.first,
+    Colors::BlackColor
+  );
 
   res = GetModifierString(spdMod);
-  Game::gPrnt.PrintFB(x,
-                      y + 5,
-                      res.second,
-                      Printer::kAlignLeft,
-                      res.first,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x,
+    y + 5,
+    res.second,
+    Printer::kAlignLeft,
+    res.first,
+    Colors::BlackColor
+  );
 }
 
 // =============================================================================

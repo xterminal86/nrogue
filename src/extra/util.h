@@ -521,7 +521,7 @@ namespace Util
     // Get a nice pointer to underlying buffer for brevity.
     // And C-style cast it so we can write to it.
     //
-    char *buf = (char*)s.data();
+    char* buf = (char*)s.data();
 
     //
     // 1 extra byte for '\0' since snprintf writes at most 'size' bytes

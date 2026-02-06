@@ -183,7 +183,8 @@ void MapLevelDeepDark::CreateSpecialLevel()
                     ' ',
                     Colors::BlackColor,
                     Colors::ShadesOfGrey::Six,
-                    Strings::TileNames::StoneWallText);
+                    Strings::TileNames::StoneWallText,
+                    false);
           break;
 
         case '.':
@@ -216,7 +217,8 @@ void MapLevelDeepDark::CreateCommonObjects(int x, int y, char image)
                 ' ',
                 Colors::BlackColor,
                 Colors::ShadesOfGrey::Six,
-                Strings::TileNames::StoneWallText);
+                Strings::TileNames::StoneWallText,
+                false);
       break;
 
     case '.':

@@ -184,17 +184,21 @@ void NPCInteractState::AnimateText()
 
   auto line = _blockToPrint[_currentLine];
 
-  Game::gPrnt.PrintFB(_charPos + 1,
-                      _currentLine + 2,
-                      ' ',
-                      Colors::BlackColor,
-                      Colors::WhiteColor);
+  Game::gPrnt.PrintChar(
+    _charPos + 1,
+    _currentLine + 2,
+    ' ',
+    Colors::BlackColor,
+    Colors::WhiteColor
+  );
 
-  Game::gPrnt.PrintFB(_charPos,
-                      _currentLine + 2,
-                      line[_textBlockCharIndex],
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintChar(
+    _charPos,
+    _currentLine + 2,
+    line[_textBlockCharIndex],
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
   Game::gPrnt.Render();
 
@@ -203,11 +207,14 @@ void NPCInteractState::AnimateText()
 
   if (_textBlockCharIndex >= line.length())
   {
-    Game::gPrnt.PrintFB(_charPos,
-                        _currentLine + 2,
-                        ' ',
-                        Colors::BlackColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintChar(
+      _charPos,
+      _currentLine + 2,
+      ' ',
+      Colors::BlackColor,
+      Colors::BlackColor
+    );
+
     _charPos = _textStartPosX;
     _textBlockCharIndex = 0;
     _currentLine++;
@@ -229,14 +236,17 @@ void NPCInteractState::DisplayStillText()
   PrintHeader();
 
   int yPos = 2;
-  for (auto& l : _blockToPrint)
+  for (auto& line : _blockToPrint)
   {
-    Game::gPrnt.PrintFB(_textStartPosX,
-                        yPos,
-                        l,
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      _textStartPosX,
+      yPos,
+      line,
+      Printer::kAlignLeft,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
+
     yPos++;
   }
 
@@ -282,77 +292,97 @@ void NPCInteractState::PrintFooter()
 
   if (_textPrinting)
   {
-    Game::gPrnt.PrintFB(tw / 2,
-                        th - 1,
-                        "Listening...",
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      tw / 2,
+      th - 1,
+      "Listening...",
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
     return;
   }
 
   if (_npcRef->Data.ProvidesService != ServiceType::NONE)
   {
-    Game::gPrnt.PrintFB(1,
-                        th - 1, StrName,
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      1,
+      th - 1, StrName,
+      Printer::kAlignLeft,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
-    Game::gPrnt.PrintFB(tw / 2 - tw / 4,
-                        th - 1, StrJob,
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      tw / 2 - tw / 4,
+      th - 1, StrJob,
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
-    Game::gPrnt.PrintFB(tw / 2,
-                        th - 1,
-                        StrServices,
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      tw / 2,
+      th - 1,
+      StrServices,
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
-    Game::gPrnt.PrintFB(tw / 2 + tw / 4,
-                        th - 1,
-                        StrGossip,
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      tw / 2 + tw / 4,
+      th - 1,
+      StrGossip,
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
-    Game::gPrnt.PrintFB(tw - 1,
-                        th - 1,
-                        StrBye,
-                        Printer::kAlignRight,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      tw - 1,
+      th - 1,
+      StrBye,
+      Printer::kAlignRight,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
   }
   else
   {
-    Game::gPrnt.PrintFB(1,
-                        th - 1, StrName,
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      1,
+      th - 1, StrName,
+      Printer::kAlignLeft,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
-    Game::gPrnt.PrintFB(tw / 2 - tw / 8,
-                        th - 1,
-                        StrJob,
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      tw / 2 - tw / 8,
+      th - 1,
+      StrJob,
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
-    Game::gPrnt.PrintFB(tw / 2 + tw / 8,
-                        th - 1,
-                        StrGossip,
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      tw / 2 + tw / 8,
+      th - 1,
+      StrGossip,
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
-    Game::gPrnt.PrintFB(tw - 1,
-                        th - 1,
-                        StrBye,
-                        Printer::kAlignRight,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      tw - 1,
+      th - 1,
+      StrBye,
+      Printer::kAlignRight,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
   }
 }

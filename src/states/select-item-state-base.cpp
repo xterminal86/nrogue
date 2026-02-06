@@ -22,12 +22,14 @@ void SelectItemStateBase::Update(bool forceUpdate)
 
     DrawSpecific();
 
-    Game::gPrnt.PrintFB(_twHalf,
-                        _th - 1,
-                        "'q' - exit",
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      _twHalf,
+      _th - 1,
+      "'q' - exit",
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
     Game::gPrnt.Render();
   }

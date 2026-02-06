@@ -205,7 +205,8 @@ void MapLevelCaves::CreateCommonObjects(int x, int y, char image)
                 ' ',
                 Colors::BlackColor,
                 Colors::CaveWallColor,
-                Strings::TileNames::CaveWallText);
+                Strings::TileNames::CaveWallText,
+                false);
       break;
 
     case '+':
@@ -284,7 +285,7 @@ void MapLevelCaves::CreateSpecialLevel()
   const int startY = 7;
 
   Game::gGOF.CreateTrigger(TriggerType::ONE_SHOT,
-                            TriggerUpdateType::FINISH_TURN,
+                           TriggerUpdateType::FINISH_TURN,
   [this, startX, startY]()
   {
     return !(_playerRef->PosX == startX

@@ -277,32 +277,37 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
     bgColor = Colors::BlackColor;
   }
 
+  int x = PosX + LevelOwner->MapOffsetX;
+  int y = PosY + LevelOwner->MapOffsetY;
+
 #ifdef USE_SDL
-  if (Game::gApp.GameConfig.UseGraphics && GraphicTile != GraphicTiles::NONE)
+  //
+  // If no custom tileset loaded or GameObject has no graphic tile set.
+  //
+  bool useGraphicsTile =
+      (Game::gApp.AppData.UseGraphics && GraphicTile != GraphicTiles::NONE);
+
+  if (useGraphicsTile)
   {
-    Game::gPrnt.DrawGraphicsTile(PosX + LevelOwner->MapOffsetX,
-                                 PosY + LevelOwner->MapOffsetY,
-                                 GraphicTile,
-                                 Colors::WhiteColor);
+    Game::gPrnt.DrawGraphicsTile(x, y, GraphicTile);
   }
   else
   {
-    Game::gPrnt.PrintFB(PosX + LevelOwner->MapOffsetX,
-                         PosY + LevelOwner->MapOffsetY,
-                         (imageOverride != -1)
-                         ? imageOverride
-                         : Image,
-                         fgColor,
-                         bgColor);
+    Game::gPrnt.DrawSubstituteGraphicsTile(x,
+                                           y,
+                                           (imageOverride != -1)
+                                           ? imageOverride
+                                           : Image,
+                                           fgColor);
   }
 #else
-  Game::gPrnt.PrintFB(PosX + LevelOwner->MapOffsetX,
-                       PosY + LevelOwner->MapOffsetY,
-                       (imageOverride != -1)
-                       ? imageOverride
-                       : Image,
-                       fgColor,
-                       bgColor);
+  Game::gPrnt.PrintFB(x,
+                      y,
+                      (imageOverride != -1)
+                      ? imageOverride
+                      : Image,
+                      fgColor,
+                      bgColor);
 #endif
 }
 

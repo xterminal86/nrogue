@@ -285,22 +285,26 @@ void InventoryState::Update(bool forceUpdate)
           stackAmount.append(" (E)");
         }
 
-        Game::gPrnt.PrintFB(GlobalConstants::InventoryMaxNameLength + 2,
-                             2 + yPos,
-                             stackAmount,
-                             Printer::kAlignLeft,
-                             Colors::WhiteColor,
-                             Colors::BlackColor);
+        Game::gPrnt.PrintText(
+          GlobalConstants::InventoryMaxNameLength + 2,
+          2 + yPos,
+          stackAmount,
+          Printer::kAlignLeft,
+          Colors::WhiteColor,
+          Colors::BlackColor
+        );
       }
       else if (ic->Data.IsEquipped)
       {
         auto equipStatus = Util::StringFormat("E", ic->Data.Amount);
-        Game::gPrnt.PrintFB(GlobalConstants::InventoryMaxNameLength + 2,
-                            2 + yPos,
-                            equipStatus,
-                            Printer::kAlignLeft,
-                            Colors::WhiteColor,
-                            Colors::BlackColor);
+        Game::gPrnt.PrintText(
+          GlobalConstants::InventoryMaxNameLength + 2,
+          2 + yPos,
+          equipStatus,
+          Printer::kAlignLeft,
+          Colors::WhiteColor,
+          Colors::BlackColor
+        );
       }
 
       uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
@@ -317,12 +321,14 @@ void InventoryState::Update(bool forceUpdate)
       std::string stub(GlobalConstants::InventoryMaxNameLength,
                        Strings::InventoryEmptySlotChar);
 
-      Game::gPrnt.PrintFB(1,
-                          2 + yPos,
-                          stub,
-                          Printer::kAlignLeft,
-                          Colors::ShadesOfGrey::Six,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(
+        1,
+        2 + yPos,
+        stub,
+        Printer::kAlignLeft,
+        Colors::ShadesOfGrey::Six,
+        Colors::BlackColor
+      );
       yPos++;
     }
 
@@ -380,12 +386,14 @@ void InventoryState::DrawEquipmentField(int x,
 {
   std::string stub(kEquipmentMaxNameLength, Strings::InventoryEmptySlotChar);
 
-  Game::gPrnt.PrintFB(x,
-                      y,
-                      fieldName,
-                      Printer::kAlignCenter,
-                      Colors::ShadesOfGrey::Ten,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x,
+    y,
+    fieldName,
+    Printer::kAlignCenter,
+    Colors::ShadesOfGrey::Ten,
+    Colors::BlackColor
+  );
 
   uint32_t itemColor = Colors::WhiteColor;
 
@@ -398,14 +406,16 @@ void InventoryState::DrawEquipmentField(int x,
     itemColor = Util::GetItemInventoryColor(eq->Data);
   }
 
-  Game::gPrnt.PrintFB(x,
-                      y + 1,
-                      stub,
-                      Printer::kAlignCenter,
-                      (eq != nullptr) ?
-                      itemColor :
-                      Colors::ShadesOfGrey::Six,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x,
+    y + 1,
+    stub,
+    Printer::kAlignCenter,
+    (eq != nullptr) ?
+    itemColor :
+    Colors::ShadesOfGrey::Six,
+    Colors::BlackColor
+  );
 }
 
 // =============================================================================
@@ -430,12 +440,15 @@ void InventoryState::PrintFooter()
 
     additive = (counter > 0) ? 3 : 1;
 
-    Game::gPrnt.PrintFB(counter * part + additive,
-                        th - 1,
-                        tmp,
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      counter * part + additive,
+      th - 1,
+      tmp,
+      Printer::kAlignLeft,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
+
     counter++;
   }
 
@@ -457,12 +470,15 @@ void InventoryState::PrintFooter()
 
     additive = 1;
 
-    Game::gPrnt.PrintFB(tw / 2 + 1 + counter * part - additive,
-                        th - 1,
-                        tmp,
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      tw / 2 + 1 + counter * part - additive,
+      th - 1,
+      tmp,
+      Printer::kAlignLeft,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
+
     counter++;
   }
 }
@@ -524,21 +540,25 @@ void InventoryState::DrawSelectionBar(int yOffset,
 {
   if (yOffset == _selectedIndex)
   {
-    Game::gPrnt.PrintFB(1,
-                        2 + yOffset,
-                        text,
-                        Printer::kAlignLeft,
-                        textColor,
-                        Colors::ShadesOfGrey::Four);
+    Game::gPrnt.PrintText(
+      1,
+      2 + yOffset,
+      text,
+      Printer::kAlignLeft,
+      textColor,
+      Colors::ShadesOfGrey::Four
+    );
   }
   else
   {
-    Game::gPrnt.PrintFB(1,
-                        2 + yOffset,
-                        text,
-                        Printer::kAlignLeft,
-                        textColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      1,
+      2 + yOffset,
+      text,
+      Printer::kAlignLeft,
+      textColor,
+      Colors::BlackColor
+    );
   }
 }
 

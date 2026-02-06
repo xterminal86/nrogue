@@ -559,8 +559,7 @@ void TargetState::ProcessHitInventoryThrownItem(GameObject* hitPoint)
 
     if (tileOk)
     {
-      ItemComponent* copy =
-          Game::gGOF.CloneItem(_weaponRef);
+      ItemComponent* copy = Game::gGOF.CloneItem(_weaponRef);
 
       copy->Data.Amount = 1;
 
@@ -748,11 +747,13 @@ void TargetState::DrawHint()
 
   for (auto& p : _cellsToHighlight)
   {
-    Game::gPrnt.PrintFB(p.X + mox,
-                                p.Y + moy,
-                                '.',
-                                Colors::RedColor,
-                                Colors::BlackColor);
+    Game::gPrnt.PrintChar(
+      p.X + mox,
+      p.Y + moy,
+      '.',
+      Colors::RedColor,
+      Colors::BlackColor
+    );
   }
 }
 
@@ -763,17 +764,21 @@ void TargetState::DrawCursor()
   int mox = Game::gMap.CurrentLevel->MapOffsetX;
   int moy = Game::gMap.CurrentLevel->MapOffsetY;
 
-  Game::gPrnt.PrintFB(_cursorPosition.X + mox + 1,
-                       _cursorPosition.Y + moy,
-                       ']',
-                       Colors::WhiteColor,
-                       Colors::BlackColor);
+  Game::gPrnt.PrintChar(
+    _cursorPosition.X + mox + 1,
+    _cursorPosition.Y + moy,
+    ']',
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
-  Game::gPrnt.PrintFB(_cursorPosition.X + mox - 1,
-                       _cursorPosition.Y + moy,
-                       '[',
-                       Colors::WhiteColor,
-                       Colors::BlackColor);
+  Game::gPrnt.PrintChar(
+    _cursorPosition.X + mox - 1,
+    _cursorPosition.Y + moy,
+    '[',
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 }
 
 // =============================================================================
@@ -796,18 +801,22 @@ void TargetState::Update(bool forceUpdate)
 
     int tw = Printer::TerminalWidth;
 
-    Game::gPrnt.PrintFB(tw / 2, 0,
-                        "Select target then press 'f' "
-                        "or 'Enter' to fire",
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      tw / 2, 0,
+      "Select target then press 'f' "
+      "or 'Enter' to fire",
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
-    Game::gPrnt.PrintFB(tw / 2, 1,
-                        "(TAB to cycle through visible ones)",
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      tw / 2, 1,
+      "(TAB to cycle through visible ones)",
+      Printer::kAlignCenter,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
     Game::gPrnt.Render();
   }

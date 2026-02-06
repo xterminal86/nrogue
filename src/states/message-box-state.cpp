@@ -56,12 +56,15 @@ void MessageBoxState::Update(bool forceUpdate)
     int offset = 0;
     for (auto& s : _message)
     {
-      Game::gPrnt.PrintFB(_tw / 2,
-                           _th / 2 - _message.size() / 2 + offset,
-                           s,
-                           Printer::kAlignCenter,
-                           Colors::WhiteColor,
-                           _bgColor);
+      Game::gPrnt.PrintText(
+        _tw / 2,
+        _th / 2 - _message.size() / 2 + offset,
+        s,
+        Printer::kAlignCenter,
+        Colors::WhiteColor,
+        _bgColor
+      );
+
       offset++;
     }
 

@@ -1884,11 +1884,11 @@ namespace Util
       int drawingPosX = mx + Game::gMap.CurrentLevel->MapOffsetX;
       int drawingPosY = my + Game::gMap.CurrentLevel->MapOffsetY;
 
-      Game::gPrnt.PrintFB(drawingPosX,
-                                  drawingPosY,
-                                  image,
-                                  fgColor,
-                                  bgColor);
+      Game::gPrnt.PrintChar(drawingPosX,
+                            drawingPosY,
+                            image,
+                            fgColor,
+                            bgColor);
 
       Game::gPrnt.Render();
     }
@@ -2984,11 +2984,13 @@ namespace Util
   {
     for (auto& p : line)
     {
-      Game::gPrnt.PrintFB(p.X,
-                                  p.Y,
-                                  '*',
-                                  Colors::YellowColor,
-                                  Colors::RedColor);
+      Game::gPrnt.PrintChar(
+        p.X,
+        p.Y,
+        '*',
+        Colors::YellowColor,
+        Colors::RedColor
+      );
     }
 
     Game::gPrnt.Render();

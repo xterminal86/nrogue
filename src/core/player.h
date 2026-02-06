@@ -22,8 +22,6 @@ class EquipmentComponent;
 class Player : public GameObject
 {
   public:
-    Player() = default;
-
     void Init();
 
     bool Move(int dx, int dy);

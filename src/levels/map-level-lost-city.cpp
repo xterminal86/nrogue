@@ -88,7 +88,8 @@ void MapLevelLostCity::CreateCommonObjects(int x, int y, char image)
                 ' ',
                 Colors::BlackColor,
                 Colors::ShadesOfGrey::Six,
-                Strings::TileNames::RocksText);
+                Strings::TileNames::RocksText,
+                false);
       break;
 
     case '+':

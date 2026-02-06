@@ -110,7 +110,8 @@ void Map::LoadLevel(MapType levelToLoad)
 
   Game::gApp.PlayerInstance.LevelOwner = Game::gMap.CurrentLevel;
   Game::gApp.PlayerInstance.Init();
-  Game::gApp.PlayerInstance.MoveTo(1, 1);
+  Game::gApp.PlayerInstance.MoveTo(Game::gMap.CurrentLevel->LevelStart.X,
+                                   Game::gMap.CurrentLevel->LevelStart.Y);
   Game::gApp.PlayerInstance.AddExtraItems();
   Game::gApp.PlayerInstance.VisibilityRadius.Set(
     Game::gMap.CurrentLevel->VisibilityRadius
@@ -927,12 +928,14 @@ void Map::ShowLoadingText(const std::string& textOverride)
                           Colors::MessageBoxHeaderBgColor,
                           Colors::ShadesOfGrey::Four);
 
-  Game::gPrnt.PrintFB(tw,
-                      th,
-                      text,
-                      Printer::kAlignCenter,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    tw,
+    th,
+    text,
+    Printer::kAlignCenter,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
   Game::gPrnt.Render();
 }
@@ -1268,35 +1271,12 @@ void Map::DrawMapTilesAroundPlayer()
 
 void Map::DrawFowTile(int x, int y)
 {
-  auto DrawFowTileIntl = [this](int x, int y)
-  {
-    //
-    // "Block" tiles with no symbols like water, floor, walls etc. are colored
-    // using background color with foreground set to black.
-    //
-    if (CurrentLevel->FowLayer[x][y].Image == ' ')
-    {
-      Game::gPrnt.PrintFB(x + CurrentLevel->MapOffsetX,
-                          y + CurrentLevel->MapOffsetY,
-                          CurrentLevel->FowLayer[x][y].Image,
-                          Colors::BlackColor,
-                          Colors::FogOfWarColor);
-    }
-    else
-    {
-      Game::gPrnt.PrintFB(x + CurrentLevel->MapOffsetX,
-                          y + CurrentLevel->MapOffsetY,
-                          (CurrentLevel->FowLayer[x][y].Image == -1)
-                          ? ' '
-                          : CurrentLevel->FowLayer[x][y].Image,
-                          Colors::FogOfWarColor,
-                          Colors::BlackColor);
-    }
-  };
-
 #ifdef USE_SDL
-  if (Game::gApp.GameConfig.UseGraphics
-   && CurrentLevel->FowLayer[x][y].GraphicTile != GraphicTiles::NONE)
+  bool useGraphicsTile =
+      (Game::gApp.AppData.UseGraphics &&
+       CurrentLevel->FowLayer[x][y].GraphicTile != GraphicTiles::NONE);
+
+  if (useGraphicsTile)
   {
     Game::gPrnt.DrawGraphicsTile(x + CurrentLevel->MapOffsetX,
                                  y + CurrentLevel->MapOffsetY,
@@ -1305,10 +1285,42 @@ void Map::DrawFowTile(int x, int y)
   }
   else
   {
-    DrawFowTileIntl(x, y);
+    Game::gPrnt.DrawSubstituteGraphicsTile(
+      x + CurrentLevel->MapOffsetX,
+      y + CurrentLevel->MapOffsetY,
+      (CurrentLevel->FowLayer[x][y].Image == -1) ?
+      ' ' :
+      CurrentLevel->FowLayer[x][y].Image,
+      Colors::ShadesOfGrey::Eight
+    );
   }
 #else
-  DrawFowTileIntl(x, y);
+  //
+  // "Block" tiles with no symbols like water, floor, walls etc. are colored
+  // using background color with foreground set to black.
+  //
+  if (CurrentLevel->FowLayer[x][y].Image == ' ')
+  {
+    Game::gPrnt.PrintChar(
+      x + CurrentLevel->MapOffsetX,
+      y + CurrentLevel->MapOffsetY,
+      CurrentLevel->FowLayer[x][y].Image,
+      Colors::BlackColor,
+      Colors::FogOfWarColor
+    );
+  }
+  else
+  {
+    Game::gPrnt.PrintChar(
+      x + CurrentLevel->MapOffsetX,
+      y + CurrentLevel->MapOffsetY,
+      (CurrentLevel->FowLayer[x][y].Image == -1)
+      ? ' '
+      : CurrentLevel->FowLayer[x][y].Image,
+      Colors::FogOfWarColor,
+      Colors::BlackColor
+    );
+  }
 #endif
 }
 

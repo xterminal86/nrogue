@@ -190,11 +190,11 @@ void EnterNameState::Update(bool forceUpdate)
     //
     for (int i = 0; i < GlobalConstants::MaxSeedStringLength - 2; i++)
     {
-      Game::gPrnt.PrintFB(_x - _maxSeedHalf + 2 + i,
-                          _cursorPos + 6,
-                          '.',
-                          Colors::ShadesOfGrey::Four,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintChar(_x - _maxSeedHalf + 2 + i,
+                            _cursorPos + 6,
+                            '.',
+                            Colors::ShadesOfGrey::Four,
+                            Colors::BlackColor);
     }
 
     //
@@ -202,82 +202,82 @@ void EnterNameState::Update(bool forceUpdate)
     //
     for (size_t i = 0; i < sizeof(Game::gRng.Seed) * 2; i++)
     {
-      Game::gPrnt.PrintFB(_x - _maxSeedHalf + 4 + i,
-                          _cursorPos + 8,
-                          '.',
-                          Colors::ShadesOfGrey::Four,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintChar(_x - _maxSeedHalf + 4 + i,
+                            _cursorPos + 8,
+                            '.',
+                            Colors::ShadesOfGrey::Four,
+                            Colors::BlackColor);
     }
 
-    Game::gPrnt.PrintFB(_x - _maxNameHalf + 2,
-                        _cursorPos,
-                        _nameEntered,
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
-
-    Game::gPrnt.PrintFB(_x - _maxSeedHalf + 2,
-                        _cursorPos + 8,
-                        "0x",
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
-
-    if (_inputType == InputType::NAME)
-    {
-      Game::gPrnt.PrintFB(_x - _maxNameHalf + 2 + _nameEntered.length(),
+    Game::gPrnt.PrintText(_x - _maxNameHalf + 2,
                           _cursorPos,
-                          ' ',
-                          Colors::BlackColor,
-                          Colors::WhiteColor);
-    }
-    else if (_inputType == InputType::SEED_STRING)
-    {
-      Game::gPrnt.PrintFB(_x - _maxSeedHalf + 2 + _seedEntered.length(),
-                          _cursorPos + 6,
-                          ' ',
-                          Colors::BlackColor,
-                          Colors::WhiteColor);
-
-      Game::gPrnt.PrintFB(_x - _maxSeedHalf + 2,
-                          _cursorPos + 6,
-                          _seedEntered,
+                          _nameEntered,
                           Printer::kAlignLeft,
                           Colors::WhiteColor,
                           Colors::BlackColor);
 
-      if (!_seedEntered.empty())
-      {
-        Game::gPrnt.PrintFB(_x - _maxSeedHalf + 4,
-                            _cursorPos + 8,
-                            _seedAsHex,
+    Game::gPrnt.PrintText(_x - _maxSeedHalf + 2,
+                          _cursorPos + 8,
+                          "0x",
+                          Printer::kAlignLeft,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
+
+    if (_inputType == InputType::NAME)
+    {
+      Game::gPrnt.PrintChar(_x - _maxNameHalf + 2 + _nameEntered.length(),
+                            _cursorPos,
+                            ' ',
+                            Colors::BlackColor,
+                            Colors::WhiteColor);
+    }
+    else if (_inputType == InputType::SEED_STRING)
+    {
+      Game::gPrnt.PrintChar(_x - _maxSeedHalf + 2 + _seedEntered.length(),
+                            _cursorPos + 6,
+                            ' ',
+                            Colors::BlackColor,
+                            Colors::WhiteColor);
+
+      Game::gPrnt.PrintText(_x - _maxSeedHalf + 2,
+                            _cursorPos + 6,
+                            _seedEntered,
                             Printer::kAlignLeft,
                             Colors::WhiteColor,
                             Colors::BlackColor);
+
+      if (!_seedEntered.empty())
+      {
+        Game::gPrnt.PrintText(_x - _maxSeedHalf + 4,
+                              _cursorPos + 8,
+                              _seedAsHex,
+                              Printer::kAlignLeft,
+                              Colors::WhiteColor,
+                              Colors::BlackColor);
       }
     }
     else if (_inputType == InputType::SEED_HEX)
     {
-      Game::gPrnt.PrintFB(_x - _maxSeedHalf + 4 + _seedEntered.length(),
-                          _cursorPos + 8,
-                          ' ',
-                          Colors::BlackColor,
-                          Colors::WhiteColor);
+      Game::gPrnt.PrintChar(_x - _maxSeedHalf + 4 + _seedEntered.length(),
+                            _cursorPos + 8,
+                            ' ',
+                            Colors::BlackColor,
+                            Colors::WhiteColor);
 
-      Game::gPrnt.PrintFB(_x - _maxSeedHalf + 4,
-                          _cursorPos + 8,
-                          _seedEntered,
-                          Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintText(_x - _maxSeedHalf + 4,
+                            _cursorPos + 8,
+                            _seedEntered,
+                            Printer::kAlignLeft,
+                            Colors::WhiteColor,
+                            Colors::BlackColor);
     }
 
-    Game::gPrnt.PrintFB(_twHalf,
-                        Printer::TerminalHeight - 1,
-                        "'Tab' - change fields",
-                        Printer::kAlignCenter,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(_twHalf,
+                          Printer::TerminalHeight - 1,
+                          "'Tab' - change fields",
+                          Printer::kAlignCenter,
+                          Colors::WhiteColor,
+                          Colors::BlackColor);
 
     Game::gPrnt.Render();
   }

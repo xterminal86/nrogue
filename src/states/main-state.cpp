@@ -249,12 +249,14 @@ void MainState::Update(bool forceUpdate)
       Game::gPrnt.ResetMessagesToDisplay();
     }
 
-    Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
-                        0,
-                        Game::gMap.CurrentLevel->LevelName,
-                        Printer::kAlignRight,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      Printer::TerminalWidth - 1,
+      0,
+      Game::gMap.CurrentLevel->LevelName,
+      Printer::kAlignRight,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
     #ifdef DEBUG_BUILD
     //Game::gTimer.StartProfiling("  PrintDebugInfo()");
@@ -318,10 +320,12 @@ void MainState::ProcessMovement(const Position& dirOffsets)
   }
   else
   {
-    bool actorInFront = (Game::gMap.GetActorAtPosition(
-                           _playerRef->PosX + dirOffsets.X,
-                           _playerRef->PosY + dirOffsets.Y
-                        ) != nullptr);
+    GameObject* actor = Game::gMap.GetActorAtPosition(
+                          _playerRef->PosX + dirOffsets.X,
+                          _playerRef->PosY + dirOffsets.Y
+                        );
+
+    bool actorInFront = (actor != nullptr);
 
     if (_playerRef->IsSwimming() && actorInFront)
     {
@@ -407,23 +411,30 @@ void MainState::DrawHPMP()
   UpdateBar(1, th - 2, _playerRef->Attrs.HP);
 
   auto str = Util::StringFormat("%i/%i", curHp, maxHp);
-  Game::gPrnt.PrintFB(GlobalConstants::HPMPBarLength / 2,
-                      th - 2,
-                      str,
-                      Printer::kAlignCenter,
-                      Colors::WhiteColor,
-                      0x880000);
+  Game::gPrnt.PrintText(
+    GlobalConstants::HPMPBarLength / 2,
+    th - 2,
+    str,
+    Printer::kAlignCenter,
+    Colors::WhiteColor,
+    0x880000
+  );
 
   UpdateBar(1, th - 1, _playerRef->Attrs.MP);
 
   str = Util::StringFormat("%i/%i", curMp, maxMp);
-  Game::gPrnt.PrintFB(GlobalConstants::HPMPBarLength / 2,
-                      th - 1,
-                      str,
-                      Printer::kAlignCenter,
-                      Colors::WhiteColor,
-                      0x000088);
+  Game::gPrnt.PrintText(
+    GlobalConstants::HPMPBarLength / 2,
+    th - 1,
+    str,
+    Printer::kAlignCenter,
+    Colors::WhiteColor,
+    0x000088
+  );
 
+  // FIXME: draw exp bar
+
+  /*
 #ifdef USE_SDL
   int expCur = _playerRef->Attrs.Exp.Min().Get();
   int expMax = _playerRef->Attrs.Exp.Max().Get();
@@ -437,6 +448,8 @@ void MainState::DrawHPMP()
 
   Game::gPrnt.DrawRect(xPos1, yPos - 1, xPos2, yPos + 1, 0xFFFF00);
 #endif
+  */
+
 }
 
 // =============================================================================
@@ -454,12 +467,14 @@ void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
 
   bar += "]";
 
-  Game::gPrnt.PrintFB(x,
-                      y,
-                      bar,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    x,
+    y,
+    bar,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 }
 
 // =============================================================================
@@ -529,83 +544,99 @@ void MainState::PrintDebugInfo()
                                   _playerRef->PosY,
                                   _playerRef->Attrs.Hunger);
 
-  Game::gPrnt.PrintFB(1,
-                      0,
-                      _debugInfo,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    1,
+    0,
+    _debugInfo,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
   _debugInfo = Util::StringFormat("GO = %lu Actors = %lu",
                                   curLvl->GameObjects.size(),
                                   curLvl->ActorGameObjects.size());
 
-  Game::gPrnt.PrintFB(1,
-                      1,
-                      _debugInfo,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    1,
+    1,
+    _debugInfo,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
   _debugInfo = Util::StringFormat("Key: %d", _keyPressed);
 
-  Game::gPrnt.PrintFB(1,
-                      2,
-                      _debugInfo,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    1,
+    2,
+    _debugInfo,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
   _debugInfo = Util::StringFormat("Start: [%d;%d]",
                                   curLvl->LevelStart.X,
                                   curLvl->LevelStart.Y);
 
-  Game::gPrnt.PrintFB(1,
-                      3,
-                      _debugInfo,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    1,
+    3,
+    _debugInfo,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
   _debugInfo = Util::StringFormat("Exit: [%d;%d]",
                                   curLvl->LevelExit.X,
                                   curLvl->LevelExit.Y);
 
-  Game::gPrnt.PrintFB(1,
-                      4,
-                      _debugInfo,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    1,
+    4,
+    _debugInfo,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
   _debugInfo = Util::StringFormat("Colors: %d",
                                   Game::gPrnt.ColorsUsed());
 
-  Game::gPrnt.PrintFB(1,
-                      5,
-                      _debugInfo,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    1,
+    5,
+    _debugInfo,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
   _debugInfo =
       Util::StringFormat("PT: %" PRIuLEAST64 " MU: %" PRIuLEAST64,
                          Game::gApp.PlayerTurnsPassed,
                          Game::gApp.MapUpdateCyclesPassed);
 
-  Game::gPrnt.PrintFB(1,
-                      6,
-                      _debugInfo,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    1,
+    6,
+    _debugInfo,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
-  Game::gPrnt.PrintFB(1,
-                      7,
-                      "Actors watched:",
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    1,
+    7,
+    "Actors watched:",
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 
   int yOffset = 0;
   bool found = false;
@@ -620,12 +651,15 @@ void MainState::PrintDebugInfo()
                                         id,
                                         a->Attrs.ActionMeter);
 
-        Game::gPrnt.PrintFB(1,
-                            8 + yOffset,
-                            _debugInfo,
-                            Printer::kAlignLeft,
-                            Colors::WhiteColor,
-                            Colors::BlackColor);
+        Game::gPrnt.PrintText(
+          1,
+          8 + yOffset,
+          _debugInfo,
+          Printer::kAlignLeft,
+          Colors::WhiteColor,
+          Colors::BlackColor
+        );
+
         yOffset++;
         found = true;
       }
@@ -634,12 +668,14 @@ void MainState::PrintDebugInfo()
 
   if (!found)
   {
-    Game::gPrnt.PrintFB(1,
-                        8,
-                        "NONE",
-                        Printer::kAlignLeft,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      1,
+      8,
+      "NONE",
+      Printer::kAlignLeft,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
   }
 }
 #endif
@@ -854,11 +890,13 @@ void MainState::DisplayStartHint()
 {
   int th = Printer::TerminalHeight;
 
-  Game::gPrnt.PrintFB(1,
-                      th - 4,
-                      '<',
-                      Colors::WhiteColor,
-                      Colors::DoorHighlightColor);
+  Game::gPrnt.PrintChar(
+    1,
+    th - 4,
+    '<',
+    Colors::WhiteColor,
+    Colors::DoorHighlightColor
+  );
 
   auto curLvl = Game::gMap.CurrentLevel;
   int dx = curLvl->LevelStart.X - _playerRef->PosX;
@@ -884,12 +922,14 @@ void MainState::DisplayStartHint()
     dir += "W";
   }
 
-  Game::gPrnt.PrintFB(2,
-                      th - 4,
-                      dir,
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    2,
+    th - 4,
+    dir,
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 }
 
 // =============================================================================
@@ -898,11 +938,13 @@ void MainState::DisplayExitHint()
 {
   int th = Printer::TerminalHeight;
 
-  Game::gPrnt.PrintFB(1,
-                      th - 3,
-                      '>',
-                      Colors::WhiteColor,
-                      Colors::DoorHighlightColor);
+  Game::gPrnt.PrintChar(
+    1,
+    th - 3,
+    '>',
+    Colors::WhiteColor,
+    Colors::DoorHighlightColor
+  );
 
   std::string dir;
 
@@ -931,12 +973,14 @@ void MainState::DisplayExitHint()
     }
   }
 
-  Game::gPrnt.PrintFB(2,
-                      th - 3,
-                      curLvl->ExitFound ? dir : "??",
-                      Printer::kAlignLeft,
-                      Colors::WhiteColor,
-                      Colors::BlackColor);
+  Game::gPrnt.PrintText(
+    2,
+    th - 3,
+    curLvl->ExitFound ? dir : "??",
+    Printer::kAlignLeft,
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
 }
 
 // =============================================================================
@@ -958,11 +1002,13 @@ void MainState::DisplayHungerStatus(const int& startPos)
 {
   if (_playerRef->IsStarving)
   {
-    Game::gPrnt.PrintFB(startPos,
-                        _th - 3,
-                        '%',
-                        Colors::WhiteColor,
-                        Colors::RedColor);
+    Game::gPrnt.PrintChar(
+      startPos,
+      _th - 3,
+      '%',
+      Colors::WhiteColor,
+      Colors::RedColor
+    );
   }
   else
   {
@@ -970,11 +1016,13 @@ void MainState::DisplayHungerStatus(const int& startPos)
     int part = hungerMax - hungerMax * 0.25;
     if (_playerRef->Attrs.Hunger >= part)
     {
-      Game::gPrnt.PrintFB(startPos,
-                          _th - 3,
-                          '%',
-                          Colors::WhiteColor,
-                          0x999900);
+      Game::gPrnt.PrintChar(
+        startPos,
+        _th - 3,
+        '%',
+        Colors::WhiteColor,
+        0x999900
+      );
     }
   }
 }
@@ -995,11 +1043,13 @@ void MainState::DisplayWeaponCondition(const int& startPos)
 
     if (weapon->Data.Durability.Min().Get() <= warning)
     {
-      Game::gPrnt.PrintFB(startPos + 2,
-                          _th - 3,
-                          ')',
-                          Colors::YellowColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintChar(
+        startPos + 2,
+        _th - 3,
+        ')',
+        Colors::YellowColor,
+        Colors::BlackColor
+      );
     }
   }
 }
@@ -1018,11 +1068,13 @@ void MainState::DisplayArmorCondition(const int& startPos)
 
     if (armor->Data.Durability.Min().Get() <= warning)
     {
-      Game::gPrnt.PrintFB(startPos + 4,
-                          _th - 3,
-                          '[',
-                          Colors::YellowColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintChar(
+        startPos + 4,
+        _th - 3,
+        '[',
+        Colors::YellowColor,
+        Colors::BlackColor
+      );
     }
   }
 }
@@ -1039,11 +1091,13 @@ void MainState::DisplayAmmoCondition(const int& startPos)
     int amount = arrows->Data.Amount;
     if (amount <= 3)
     {
-      Game::gPrnt.PrintFB(startPos + 6,
-                          _th - 3,
-                          '^',
-                          Colors::YellowColor,
-                          Colors::BlackColor);
+      Game::gPrnt.PrintChar(
+        startPos + 6,
+        _th - 3,
+        '^',
+        Colors::YellowColor,
+        Colors::BlackColor
+      );
     }
   }
 }
@@ -1084,12 +1138,14 @@ void MainState::DisplayActiveEffects(const int& startPos)
                      Colors::ShadesOfGrey::Four :
                      Colors::WhiteColor;
 
-    Game::gPrnt.PrintFB(offsetX,
-                        _th - 4,
-                        kvp.first,
-                        Printer::kAlignLeft,
-                        color,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      offsetX,
+      _th - 4,
+      kvp.first,
+      Printer::kAlignLeft,
+      color,
+      Colors::BlackColor
+    );
 
     offsetX += 4;
   }

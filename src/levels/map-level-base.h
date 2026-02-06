@@ -239,7 +239,8 @@ class MapLevelBase
                    const uint32_t& fgColor,
                    const uint32_t& bgColor,
                    const std::string& objName,
-                   bool cannotBePickaxed = false);
+                   bool cannotBePickaxed,
+                   GraphicTiles graphicTile = GraphicTiles::NONE);
 
     void PlaceShrine(const Position& pos, LevelBuilder& lb);
     void PlaceShrine(const Position& pos, ShrineType type);

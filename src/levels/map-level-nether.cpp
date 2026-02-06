@@ -98,7 +98,8 @@ void MapLevelNether::CreateCommonObjects(int x, int y, char image)
                 ' ',
                 Colors::BlackColor,
                 Colors::RedPoppyColor,
-                Strings::TileNames::HellrockText);
+                Strings::TileNames::HellrockText,
+                false);
       break;
 
     case '+':

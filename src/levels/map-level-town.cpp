@@ -444,7 +444,9 @@ void MapLevelTown::CreateBlacksmith(int x,
                     c,
                     Colors::ShadesOfGrey::Eight,
                     Colors::BlackColor,
-                    Strings::TileNames::StoneWallText);
+                    Strings::TileNames::StoneWallText,
+                    false,
+                    GraphicTiles::STONES_OLD);
           break;
 
         case 'T':
@@ -541,7 +543,9 @@ void MapLevelTown::CreateRoom(int x,
                     c,
                     Colors::ShadesOfGrey::Eight,
                     Colors::BlackColor,
-                    Strings::TileNames::StoneWallText);
+                    Strings::TileNames::StoneWallText,
+                    false,
+                    GraphicTiles::STONES);
           break;
 
         case 'g':
@@ -580,7 +584,8 @@ void MapLevelTown::CreateRoom(int x,
                           '-',
                           0x490E11,
                           Colors::RoomFloorColor,
-                          Strings::TileNames::WoodenFloorText);
+                          Strings::TileNames::WoodenFloorText,
+                          GraphicTiles::WOODEN_PLANKS_DESAT);
           break;
 
         //
@@ -598,7 +603,8 @@ void MapLevelTown::CreateRoom(int x,
                           c,
                           Colors::BlackColor,
                           Colors::ShadesOfGrey::Four,
-                          Strings::TileNames::StoneTilesText);
+                          Strings::TileNames::StoneTilesText,
+                          GraphicTiles::STONE_TILES);
           break;
 
         case 'm':
@@ -624,7 +630,8 @@ void MapLevelTown::CreateRoom(int x,
                 Colors::WhiteColor,
                 Colors::BlackColor,
                 Strings::TileNames::WindowText,
-                Strings::Empty);
+                Strings::Empty,
+                GraphicTiles::WINDOW);
           PlaceStaticObject(posX, posY, t);
           break;
 
@@ -662,7 +669,11 @@ void MapLevelTown::CreateChurch(int x, int y)
                     c,
                     Colors::ShadesOfGrey::Eight,
                     Colors::BlackColor,
-                    Strings::TileNames::StoneWallText);
+                    Strings::TileNames::StoneWallText,
+                    false,
+                    Util::Rolld100(25) ?
+                      GraphicTiles::STONES :
+                      GraphicTiles::STONES_OLD);
           break;
 
         case 'P':
@@ -671,7 +682,8 @@ void MapLevelTown::CreateChurch(int x, int y)
                     '#',
                     Colors::ShadesOfGrey::Eight,
                     Colors::BlackColor,
-                    Strings::TileNames::StonePillarText);
+                    Strings::TileNames::StonePillarText,
+                    false);
           break;
 
         case '|':
@@ -693,7 +705,8 @@ void MapLevelTown::CreateChurch(int x, int y)
                           c,
                           Colors::BlackColor,
                           Colors::ShadesOfGrey::Four,
-                          Strings::TileNames::StoneTilesText);
+                          Strings::TileNames::StoneTilesText,
+                          GraphicTiles::STONE_TILES);
           break;
 
         case '+':
@@ -877,7 +890,9 @@ void MapLevelTown::PlaceMineEntrance(int x, int y)
                     ' ',
                     Colors::BlackColor,
                     Colors::BrickColor,
-                    Strings::TileNames::BrickWallText);
+                    Strings::TileNames::BrickWallText,
+                    false,
+                    GraphicTiles::BRICK_WALL2);
           break;
 
         case '.':
@@ -985,7 +1000,8 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
                     '#',
                     Colors::MarbleColor,
                     Colors::GrassColor,
-                    Strings::TileNames::MarbleColumnText);
+                    Strings::TileNames::MarbleColumnText,
+                    false);
           break;
 
         case '~':

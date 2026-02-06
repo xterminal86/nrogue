@@ -8,6 +8,7 @@
 namespace Base64Strings
 {
   extern const std::string Tileset8x16Base64;
+  extern const std::string GraphicsTileset16x16Base64;
   extern const std::string IconBase64;
 }
 #endif

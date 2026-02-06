@@ -170,12 +170,14 @@ void AttackState::Update(bool forceUpdate)
 
     if (msg != nullptr)
     {
-      Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
-                          Printer::TerminalHeight - 1,
-                          (*msg).Message,
-                          Printer::kAlignRight,
-                          (*msg).FgColor,
-                          (*msg).BgColor);
+      Game::gPrnt.PrintText(
+        Printer::TerminalWidth - 1,
+        Printer::TerminalHeight - 1,
+        (*msg).Message,
+        Printer::kAlignRight,
+        (*msg).FgColor,
+        (*msg).BgColor
+      );
     }
 
     Game::gPrnt.Render();

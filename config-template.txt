@@ -1,7 +1,32 @@
-tileset : "resources/std-8x16-ck.bmp",
-tile_w : 8,
-tile_h : 16,
-scale : 1.0,
+# ------------------------------------------------------------------------------
+# Rename / copy this file as 'config.txt'
+# ------------------------------------------------------------------------------
+#
+# SDL build only.
+# You can use custom graphics tileset. If this line is absent or tileset is not
+# loaded substitute 16x16 tileset will be used.
+#
+tileset : "resources/graphic-tiles.bmp",
+
+#
+# Tile dimensions for graphic tileset (must be square).
+#
+tile_size : 32,
+
+#
+# ------------------------------------------------------------------------------
+# Both of these options reduce gameplay lag, although with
+# 'fast_monster_movement' on it may sometimes look as if enemy just spawned
+# before player if said monster had much larger SPD than player, which allowed
+# it to perform several turns that were not force redrawn.
+# ------------------------------------------------------------------------------
+#
+# Toggles visual attack display.
+#
 fast_combat : N,
+
+#
+# Doesn't force redraw after each visible monster's turn.
+#
 fast_monster_movement : N,
-use_graphics : N,
+

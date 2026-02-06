@@ -14,7 +14,7 @@ GameState::GameState() :
   _thQuarter(_th / 4)
 {
 #ifdef USE_SDL
-  auto& dws = Game::gApp.GetDefaultWindowSize();
+  auto& dws = Game::gPrnt.GetDefaultWindowSize();
   _renderDst = { 0, 0, dws.first, dws.second };
 #endif
 }
@@ -126,24 +126,13 @@ void GameState::AdjustWindowSize(const SDL_Event& evt)
   int ww = evt.window.data1;
   int wh = evt.window.data2;
 
-  Game::gApp.GetResizedWindowSize() = { ww, wh };
+  Game::gPrnt.ResizedWindowSize() = { ww, wh };
 
-  auto& tws = Game::gPrnt.GetTileWHScaled();
+  _renderDst.w = ww;
+  _renderDst.h = wh;
 
-  bool wOk = (std::abs(ww - _renderDst.w) > tws.first);
-  bool hOk = (std::abs(wh - _renderDst.h) > tws.second);
-
-  if (wOk && hOk)
-  {
-    ww -= (ww % tws.first);
-    wh -= (wh % tws.second);
-
-    _renderDst.w = ww;
-    _renderDst.h = wh;
-
-    Game::gPrnt.SetRenderDst(_renderDst);
-    Game::gApp.ForceDrawCurrentState();
-  }
+  Game::gPrnt.SetRenderDst(_renderDst);
+  Game::gApp.ForceDrawCurrentState();
 }
 
 // =============================================================================
@@ -169,11 +158,11 @@ bool GameState::ShouldShiftMap(int& key)
 
 void GameState::TakeScreenshot()
 {
-  auto r = Game::gApp.Renderer;
+  auto r = Game::gPrnt.Renderer;
   SDL_Surface* sshot = SDL_CreateRGBSurface(
     0,
-    Game::gApp.GetResizedWindowSize().first,
-    Game::gApp.GetResizedWindowSize().second,
+    Game::gPrnt.ResizedWindowSize().first,
+    Game::gPrnt.ResizedWindowSize().second,
     32,
     0x00FF0000,
     0x0000FF00,
@@ -190,6 +179,7 @@ void GameState::TakeScreenshot()
   std::string fname = Util::StringFormat("s_%s.bmp", time.data());
   SDL_SaveBMP(sshot, fname.data());
   SDL_FreeSurface(sshot);
+
   Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
                             "Screenshot Taken",
                             { fname },
@@ -207,11 +197,13 @@ void GameState::DrawHeader(const std::string& header)
   for (int x = 0; x < tw; x++)
   {
     #ifdef USE_SDL
-    Game::gPrnt.PrintFB(x,
-                        0,
-                        (int)NameCP437::HBAR_2,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintChar(
+      x,
+      0,
+      (int)NameCP437::HBAR_2,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
     #else
     Game::gPrnt.PrintFB(x,
                         0,
@@ -221,12 +213,14 @@ void GameState::DrawHeader(const std::string& header)
     #endif
   }
 
-  Game::gPrnt.PrintFB(tw / 2,
-                      0,
-                      header,
-                      Printer::kAlignCenter,
-                      Colors::WhiteColor,
-                      Colors::MessageBoxHeaderBgColor);
+  Game::gPrnt.PrintText(
+    tw / 2,
+    0,
+    header,
+    Printer::kAlignCenter,
+    Colors::WhiteColor,
+    Colors::MessageBoxHeaderBgColor
+  );
 }
 
 // =============================================================================
@@ -245,12 +239,15 @@ void GameState::DisplayGameLog()
       break;
     }
 
-    Game::gPrnt.PrintFB(x,
-                        y - Game::gPrnt.GetLastMessagesCount() + count,
-                        m->Message,
-                        Printer::kAlignRight,
-                        m->FgColor,
-                        m->BgColor);
+    Game::gPrnt.PrintText(
+      x,
+      y - Game::gPrnt.GetLastMessagesCount() + count,
+      m->Message,
+      Printer::kAlignRight,
+      m->FgColor,
+      m->BgColor
+    );
+
     count++;
   }
 }

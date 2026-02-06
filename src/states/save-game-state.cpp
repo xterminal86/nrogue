@@ -48,12 +48,14 @@ void SaveGameState::Update(bool forceUpdate)
 
     _playerRef->Draw();
 
-    Game::gPrnt.PrintFB(Printer::TerminalWidth - 1,
-                        Printer::TerminalHeight - 1,
-                        "Save and quit? (y/q)",
-                        Printer::kAlignRight,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+    Game::gPrnt.PrintText(
+      Printer::TerminalWidth - 1,
+      Printer::TerminalHeight - 1,
+      "Save and quit? (y/q)",
+      Printer::kAlignRight,
+      Colors::WhiteColor,
+      Colors::BlackColor
+    );
 
     Game::gPrnt.Render();
   }
