@@ -268,7 +268,8 @@ void MapLevelTown::CreateLevel()
   CreateBorders('#',
                 Colors::ShadesOfGrey::Four,
                 Colors::ShadesOfGrey::Two,
-                Strings::TileNames::WallsText);
+                Strings::TileNames::WallsText,
+                GraphicTiles::STONE_BRICK);
 
   CreateTownGates();
 
@@ -446,7 +447,7 @@ void MapLevelTown::CreateBlacksmith(int x,
                     Colors::BlackColor,
                     Strings::TileNames::StoneWallText,
                     false,
-                    GraphicTiles::STONES_OLD);
+                    GraphicTiles::STONE_BRICK_NOISY);
           break;
 
         case 'T':
@@ -461,15 +462,26 @@ void MapLevelTown::CreateBlacksmith(int x,
           break;
 
         case 'B':
+        {
+          PlaceGroundTile(posX,
+                          posY,
+                          ' ',
+                          Colors::BlackColor,
+                          Colors::RoomFloorColor,
+                          Strings::TileNames::DirtText,
+                          GraphicTiles::DIRT);
+
           t.Set(true,
                 false,
                 c,
                 Colors::WhiteColor,
                 Colors::BlackColor,
                 Strings::TileNames::BedText,
-                Strings::Empty);
+                Strings::Empty,
+                GraphicTiles::BED_MC);
           PlaceStaticObject(posX, posY, t);
-          break;
+        }
+        break;
 
         case '.':
           PlaceGroundTile(posX,
@@ -477,7 +489,8 @@ void MapLevelTown::CreateBlacksmith(int x,
                           ' ',
                           Colors::BlackColor,
                           Colors::RoomFloorColor,
-                          Strings::TileNames::WoodenFloorText);
+                          Strings::TileNames::DirtText,
+                          GraphicTiles::DIRT);
           break;
 
         case '\\':
@@ -487,6 +500,14 @@ void MapLevelTown::CreateBlacksmith(int x,
         case '-':
         case ' ':
         {
+          PlaceGroundTile(posX,
+                          posY,
+                          ' ',
+                          Colors::BlackColor,
+                          Colors::RoomFloorColor,
+                          Strings::TileNames::DirtText,
+                          GraphicTiles::DIRT);
+
           t.Set(true,
                 true,
                 c,
@@ -509,6 +530,33 @@ void MapLevelTown::CreateBlacksmith(int x,
     posX = x;
     posY++;
   }
+
+#ifdef USE_SDL
+  //
+  // Fix blacksmith's bedroom flooring.
+  //
+  for (int x = 84; x <= 85; x++)
+  {
+    for (int y = 4; y <= 8; y++)
+    {
+      PlaceGroundTile(x,
+                      y,
+                      ' ',
+                      Colors::BlackColor,
+                      Colors::RoomFloorColor,
+                      Strings::TileNames::DirtText,
+                      GraphicTiles::WOODEN_PLANKS_DESAT);
+    }
+  }
+
+  PlaceGroundTile(83,
+                  8,
+                  ' ',
+                  Colors::BlackColor,
+                  Colors::RoomFloorColor,
+                  Strings::TileNames::DirtText,
+                  GraphicTiles::WOODEN_PLANKS_DESAT);
+#endif
 }
 
 // =============================================================================
@@ -529,6 +577,14 @@ void MapLevelTown::CreateRoom(int x,
     newLayout = Util::RotateRoomLayout(layout, _rotations[index]);
   }
 
+  const std::unordered_map<GraphicTiles, int> houseWallsMap =
+  {
+    { GraphicTiles::FACHWERK2, 100 },
+    { GraphicTiles::FACHWERK1,  20 },
+    { GraphicTiles::FACHWERK3,  20 },
+    { GraphicTiles::FACHWERK4,  20 },
+  };
+
   for (auto& row : newLayout)
   {
     for (auto& c : row)
@@ -538,15 +594,18 @@ void MapLevelTown::CreateRoom(int x,
       switch (c)
       {
         case '#':
+        {
+          auto r = Util::WeightedRandom(houseWallsMap);
           PlaceWall(posX,
                     posY,
                     c,
-                    Colors::ShadesOfGrey::Eight,
+                    Colors::WoodColor,
                     Colors::BlackColor,
-                    Strings::TileNames::StoneWallText,
+                    Strings::TileNames::FachwerkText,
                     false,
-                    GraphicTiles::STONES);
-          break;
+                    r.first);
+        }
+        break;
 
         case 'g':
           PlaceGrassTile(posX, posY);
@@ -594,8 +653,8 @@ void MapLevelTown::CreateRoom(int x,
         // background is made from tile 219, which is a white block.
         // So basically for ' ' tile foreground color is ignored.
         //
-        // To allow fog of war to cover floor made of
-        // background colored ' ', set FgColor to black.
+        // To allow fog of war to cover floor made of background colored ' ',
+        // set FgColor to black.
         //
         case ' ':
           PlaceGroundTile(posX,
@@ -613,7 +672,7 @@ void MapLevelTown::CreateRoom(int x,
                 '#',
                 Colors::MarbleColor,
                 Colors::GrassColor,
-                Strings::TileNames::MarbleFenceText,
+                Strings::TileNames::WoodenFenceText,
                 Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
@@ -671,20 +730,29 @@ void MapLevelTown::CreateChurch(int x, int y)
                     Colors::BlackColor,
                     Strings::TileNames::StoneWallText,
                     false,
-                    Util::Rolld100(25) ?
-                      GraphicTiles::STONES :
-                      GraphicTiles::STONES_OLD);
+                    GraphicTiles::STONE_BRICK_WHITE);
           break;
 
         case 'P':
+        {
+          PlaceGroundTile(posX,
+                          posY,
+                          c,
+                          Colors::BlackColor,
+                          Colors::ShadesOfGrey::Four,
+                          Strings::TileNames::StoneTilesText,
+                          GraphicTiles::TILE_BIG_WHITE);
+
           PlaceWall(posX,
                     posY,
                     '#',
                     Colors::ShadesOfGrey::Eight,
                     Colors::BlackColor,
                     Strings::TileNames::StonePillarText,
-                    false);
-          break;
+                    false,
+                    GraphicTiles::STONE_COLUMN);
+        }
+        break;
 
         case '|':
         case '-':
@@ -706,7 +774,7 @@ void MapLevelTown::CreateChurch(int x, int y)
                           Colors::BlackColor,
                           Colors::ShadesOfGrey::Four,
                           Strings::TileNames::StoneTilesText,
-                          GraphicTiles::STONE_TILES);
+                          GraphicTiles::TILE_BIG_WHITE);
           break;
 
         case '+':
@@ -771,7 +839,9 @@ void MapLevelTown::CreatePlayerHouse()
         Colors::WhiteColor,
         Colors::ChestColor,
         Strings::TileNames::StashText,
-        Strings::Empty);
+        Strings::Empty,
+        GraphicTiles::STASH_MC
+  );
 
   Position cp(6, 6);
   PlaceStaticObject(6, 6, t);
@@ -901,7 +971,8 @@ void MapLevelTown::PlaceMineEntrance(int x, int y)
                           ' ',
                           Colors::BlackColor,
                           Colors::RoomFloorColor,
-                          Strings::TileNames::WoodenFloorText);
+                          Strings::TileNames::WoodenFloorText,
+                          GraphicTiles::WOODEN_PLANKS_DESAT);
           break;
 
         case '+':
@@ -933,15 +1004,20 @@ void MapLevelTown::PlaceGarden(int x, int y)
       switch (c)
       {
         case '#':
+        {
+          PlaceGrassTile(posX, posY, -1);
+
           t.Set(true,
                 false,
                 '#',
-                Colors::MarbleColor,
+                Colors::WoodColor,
                 Colors::GrassColor,
-                Strings::TileNames::MarbleFenceText,
-                Strings::Empty);
+                Strings::TileNames::WoodenFenceText,
+                Strings::Empty,
+                GraphicTiles::FENCE_WOODEN);
           PlaceStaticObject(posX, posY, t);
-          break;
+        }
+        break;
 
         case '.':
           PlaceGrassTile(posX, posY, FlowersFrequency);
@@ -1001,7 +1077,8 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
                     Colors::MarbleColor,
                     Colors::GrassColor,
                     Strings::TileNames::MarbleColumnText,
-                    false);
+                    false,
+                    GraphicTiles::MARBLE_COLUMN);
           break;
 
         case '~':
@@ -1021,7 +1098,8 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
                 Colors::BlackColor,
                 Colors::ShadesOfGrey::Ten,
                 Strings::TileNames::StoneTilesText,
-                Strings::Empty);
+                Strings::Empty,
+                GraphicTiles::STONE_TILES);
           MapArray[posX][posY]->MakeTile(t);
           MapArray[posX][posY]->Special = true;
         }
@@ -1035,7 +1113,8 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
                 Colors::BlackColor,
                 Colors::ShadesOfGrey::Ten,
                 Strings::TileNames::StoneTilesText,
-                Strings::Empty);
+                Strings::Empty,
+                GraphicTiles::STONE_TILES);
           MapArray[posX][posY]->MakeTile(t);
           MapArray[posX][posY]->Special = true;
         }
@@ -1061,12 +1140,14 @@ void MapLevelTown::CreateTownGates()
                                               Colors::WhiteColor,
                                               Colors::BlackColor,
                                               std::vector<std::string>());
+  gate1->GraphicTile = GraphicTiles::IRON_GATE2_CLOSED;
 
   GameObject* gate2 = factory.CreateDummyItem(Strings::TileNames::GatesText,
                                               '+',
                                               Colors::WhiteColor,
                                               Colors::BlackColor,
                                               std::vector<std::string>());
+  gate2->GraphicTile = GraphicTiles::IRON_GATE2_CLOSED;
 
   //
   // Have to explicitly specify trailing return type
@@ -1100,6 +1181,22 @@ void MapLevelTown::CreateTownGates()
   gate1->InteractionCallback = fn;
   gate2->InteractionCallback = fn;
 
+  PlaceGroundTile(gate1->PosX,
+                  gate1->PosY,
+                  '.',
+                  Colors::ShadesOfGrey::Ten,
+                  Colors::ShadesOfGrey::Eight,
+                  Strings::TileNames::FlagstoneText,
+                  GraphicTiles::COBBLESTONE);
+
+  PlaceGroundTile(gate2->PosX,
+                  gate2->PosY,
+                  '.',
+                  Colors::ShadesOfGrey::Ten,
+                  Colors::ShadesOfGrey::Eight,
+                  Strings::TileNames::FlagstoneText,
+                  GraphicTiles::COBBLESTONE);
+    
   PlaceStaticObject(gate1);
   PlaceStaticObject(gate2);
 }

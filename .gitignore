@@ -1,5 +1,6 @@
 build*/
 obj/
+venv/
 dumb-compile/build/
 dumb-compile/CMakeFiles/
 .vs/

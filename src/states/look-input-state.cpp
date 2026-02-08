@@ -390,6 +390,12 @@ void LookInputState::MoveCursor(int dx, int dy)
 void LookInputState::DrawCursor()
 {
 #ifdef USE_SDL
+  Game::gPrnt.DrawGraphicsTile(
+    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX,
+    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
+    GraphicTiles::GUI_LOOK_CURSOR
+  );
+  /*
   Game::gPrnt.DrawSubstituteGraphicsTile(
     _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
     _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
@@ -413,6 +419,7 @@ void LookInputState::DrawCursor()
     _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY - 1,
     '|'
   );
+  */
 #else
   Game::gPrnt.PrintChar(
     _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,

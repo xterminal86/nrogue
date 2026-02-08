@@ -289,7 +289,7 @@ namespace Strings
     extern const std::string RocksText;
     extern const std::string AbyssalRocksText;
     extern const std::string AbyssalFloorText;
-    extern const std::string MarbleFenceText;
+    extern const std::string WoodenFenceText;
     extern const std::string MarbleColumnText;
     extern const std::string DeepWaterText;
     extern const std::string ShallowWaterText;
@@ -307,6 +307,7 @@ namespace Strings
     extern const std::string HellrockText;
     extern const std::string HellstoneText;
     extern const std::string TiledFloorText;
+    extern const std::string FachwerkText;
   }
   // ---------------------------------------------------------------------------
   namespace SerializationKeys

@@ -261,7 +261,7 @@ namespace Strings
     const std::string RocksText        = "Rocks";
     const std::string AbyssalRocksText = "Abyssal Rocks";
     const std::string AbyssalFloorText = "Abyssal Floor";
-    const std::string MarbleFenceText  = "Marble Fence";
+    const std::string WoodenFenceText  = "Wooden Fence";
     const std::string MarbleColumnText = "Marble Column";
     const std::string DeepWaterText    = "Deep Water";
     const std::string ShallowWaterText = "Shallow Water";
@@ -279,6 +279,7 @@ namespace Strings
     const std::string HellrockText     = "Hellrock";
     const std::string HellstoneText    = "Hellstone";
     const std::string TiledFloorText   = "Tiled Floor";
+    const std::string FachwerkText     = "Fachwerk";
   }
   // ---------------------------------------------------------------------------
   namespace SerializationKeys

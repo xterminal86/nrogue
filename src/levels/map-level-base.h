@@ -208,7 +208,7 @@ class MapLevelBase
     void CreateSpecialObjects(int x, int y, const MapCell& cell);
 
     bool IsSpotValidForSpawn(const Position& pos);
-    bool IsOutOfBounds(int x, int y);
+    bool IsOutOfBounds(int x, int y, bool leaveBorders = true);
 
     void FillArea(int ax, int ay,
                   int aw, int ah,

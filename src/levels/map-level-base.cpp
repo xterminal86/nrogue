@@ -377,10 +377,10 @@ void MapLevelBase::CreateBorders(char img,
     // of PlaceStaticObject() method directly.
     //
     GameObject* go = Game::gGOF.CreateStaticObject(i.X,
-                                                     i.Y,
-                                                     oi,
-                                                    -1,
-                                                     GameObjectType::BORDER);
+                                                   i.Y,
+                                                   oi,
+                                                   -1,
+                                                   GameObjectType::BORDER);
     PlaceStaticObject(go);
   }
 }
@@ -573,9 +573,9 @@ void MapLevelBase::CreateInitialMonsters()
 
 // =============================================================================
 
-bool MapLevelBase::IsOutOfBounds(int x, int y)
+bool MapLevelBase::IsOutOfBounds(int x, int y, bool leaveBorders)
 {
-  return !Util::IsInsideMap({ x, y }, MapSize);
+  return !Util::IsInsideMap({ x, y }, MapSize, leaveBorders);
 }
 
 // =============================================================================
@@ -1033,7 +1033,7 @@ void MapLevelBase::PlaceGroundTile(int x, int y,
                                    const std::string& objName,
                                    GraphicTiles graphicTile)
 {
-  if (IsOutOfBounds(x, y))
+  if (IsOutOfBounds(x, y, false))
   {
     return;
   }
@@ -1059,7 +1059,7 @@ void MapLevelBase::PlaceGroundTile(int x, int y,
 //
 void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
 {
-  if (IsOutOfBounds(x, y))
+  if (IsOutOfBounds(x, y, false))
   {
     return;
   }
@@ -1078,23 +1078,40 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
 
   //uint32_t flowerColor = GlobalConstants::BlackColor;
   uint32_t flowerColor = Colors::GrassDotColor;
-
-  int colorChoice = Game::gRng.RandomRange(0, maxDiceRoll);
-  if      (colorChoice == 0) flowerColor = Colors::WhiteColor;
-  else if (colorChoice == 1) flowerColor = Colors::DandelionYellowColor;
-  else if (colorChoice == 2) flowerColor = Colors::RedPoppyColor;
-
-  std::map<int, std::string> flowersNameByChoice =
-  {
-    { 0, "Chamomile" },
-    { 1, "Dandelion" },
-    { 2, "Poppy"     }
-  };
-
   std::string tileName = Strings::TileNames::GrassText;
-  if (flowersNameByChoice.count(colorChoice) == 1)
+  GraphicTiles flowerTile = GraphicTiles::NONE;
+
+  //
+  // Skip flower generation if frequency is -1, for example.
+  //
+  if (maxDiceRoll >= 0)
   {
-    tileName = flowersNameByChoice[colorChoice];
+    int colorChoice = Game::gRng.RandomRange(0, maxDiceRoll);
+    if      (colorChoice == 0) flowerColor = Colors::WhiteColor;
+    else if (colorChoice == 1) flowerColor = Colors::DandelionYellowColor;
+    else if (colorChoice == 2) flowerColor = Colors::RedPoppyColor;
+
+    std::map<int, std::string> flowersNameByChoice =
+    {
+      { 0, "Chamomile" },
+      { 1, "Dandelion" },
+      { 2, "Poppy"     }
+    };
+
+    switch (colorChoice)
+    {
+      case 0: flowerTile = GraphicTiles::CHAMOMILE; break;
+      case 1: flowerTile = GraphicTiles::DANDELION; break;
+      case 2: flowerTile = GraphicTiles::POPPY;     break;
+
+      default:
+        break;
+    }
+
+    if (flowersNameByChoice.count(colorChoice) == 1)
+    {
+      tileName = flowersNameByChoice[colorChoice];
+    }
   }
 
   GameObjectInfo t;
@@ -1104,16 +1121,28 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
         flowerColor,
         Colors::GrassColor,
         tileName,
-        Strings::Empty);
+        Strings::Empty,
+        GraphicTiles::GRASS2);
 
   MapArray[x][y]->MakeTile(t);
+
+  // FIXME: flowers drawn over stones, water etc.
+#ifdef USE_SDL
+  if (flowerTile != GraphicTiles::NONE)
+  {
+    GameObjectInfo goi;
+    goi.ObjectName = tileName;
+    goi.GraphicTile = flowerTile;
+    PlaceStaticObject(x, y, goi);
+  }
+#endif
 }
 
 // =============================================================================
 
 void MapLevelBase::PlaceShallowWaterTile(int x, int y)
 {
-  if (IsOutOfBounds(x, y))
+  if (IsOutOfBounds(x, y, false))
   {
     return;
   }
@@ -1126,7 +1155,7 @@ void MapLevelBase::PlaceShallowWaterTile(int x, int y)
         Colors::ShallowWaterColor,
         Strings::TileNames::ShallowWaterText,
         Strings::Empty,
-        GraphicTiles::WATER_SHALLOW);
+        GraphicTiles::WATER_SHALLOW_HC);
 
   MapArray[x][y]->MakeTile(t, GameObjectType::SHALLOW_WATER);
 }
@@ -1135,7 +1164,7 @@ void MapLevelBase::PlaceShallowWaterTile(int x, int y)
 
 void MapLevelBase::PlaceDeepWaterTile(int x, int y)
 {
-  if (IsOutOfBounds(x, y))
+  if (IsOutOfBounds(x, y, false))
   {
     return;
   }
@@ -1157,7 +1186,7 @@ void MapLevelBase::PlaceDeepWaterTile(int x, int y)
         Colors::DeepWaterColor,
         Strings::TileNames::DeepWaterText,
         Strings::Empty,
-        GraphicTiles::WATER_DEEP);
+        GraphicTiles::WATER_DEEP_HC);
 
   MapArray[x][y]->MakeTile(t, GameObjectType::DEEP_WATER);
 }
@@ -1166,7 +1195,7 @@ void MapLevelBase::PlaceDeepWaterTile(int x, int y)
 
 void MapLevelBase::PlaceLavaTile(int x, int y)
 {
-  if (IsOutOfBounds(x, y))
+  if (IsOutOfBounds(x, y, false))
   {
     return;
   }
@@ -1178,7 +1207,8 @@ void MapLevelBase::PlaceLavaTile(int x, int y)
         Colors::LavaWavesColor,
         Colors::LavaColor,
         Strings::TileNames::LavaText,
-        Strings::Empty);
+        Strings::Empty,
+        GraphicTiles::LAVA);
 
   MapArray[x][y]->MakeTile(t, GameObjectType::LAVA);
 }
@@ -1187,7 +1217,7 @@ void MapLevelBase::PlaceLavaTile(int x, int y)
 
 void MapLevelBase::PlaceChasmTile(int x, int y)
 {
-  if (IsOutOfBounds(x, y))
+  if (IsOutOfBounds(x, y, false))
   {
     return;
   }
@@ -1262,7 +1292,7 @@ void MapLevelBase::PlaceShrine(const Position& pos, ShrineType type)
 
 void MapLevelBase::PlaceTree(int x, int y)
 {
-  if (IsOutOfBounds(x, y))
+  if (IsOutOfBounds(x, y, false))
   {
     return;
   }

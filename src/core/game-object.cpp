@@ -292,7 +292,7 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
     Game::gPrnt.DrawGraphicsTile(x, y, GraphicTile);
   }
   else
-  {
+  {    
     Game::gPrnt.DrawSubstituteGraphicsTile(x,
                                            y,
                                            (imageOverride != -1)
