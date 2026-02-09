@@ -119,8 +119,8 @@ void GameObjectsFactory::CreateStairs(MapLevelBase* levelWhereCreate,
   tile->GraphicTile = (image == '>') ?
                         GraphicTiles::STAIRS_DOWN :
                         GraphicTiles::STAIRS_UP;
-  tile->FgColor = Colors::WhiteColor;
-  tile->BgColor = Colors::DoorHighlightColor;
+  tile->FgColor = Colors::White;
+  tile->BgColor = Colors::DoorHighlight;
   tile->Image = image;
   tile->Type = GameObjectType::STAIRS;
 }
@@ -156,8 +156,8 @@ GameObject* GameObjectsFactory::CreateChest(int x, int y, bool isLocked)
   go->PosX        = x;
   go->PosY        = y;
   go->Image       = 'C';
-  go->FgColor     = Colors::BlackColor;
-  go->BgColor     = Colors::IronColor;
+  go->FgColor     = Colors::Black;
+  go->BgColor     = Colors::Iron;
   go->Blocking    = true;
   go->BlocksSight = true;
   go->Type        = GameObjectType::CONTAINER;
@@ -203,7 +203,7 @@ GameObject* GameObjectsFactory::CreateContainer(int x,
   go->PosX        = x;
   go->PosY        = y;
   go->Image       = image;
-  go->FgColor     = Colors::WhiteColor;
+  go->FgColor     = Colors::White;
   go->BgColor     = bgColor;
   go->Blocking    = true;
   go->BlocksSight = true;

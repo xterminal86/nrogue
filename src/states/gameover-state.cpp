@@ -85,7 +85,7 @@ void GameOverState::DrawHPMP()
     _th - 2,
     str,
     Printer::kAlignCenter,
-    Colors::WhiteColor,
+    Colors::White,
     0x880000
   );
 
@@ -97,7 +97,7 @@ void GameOverState::DrawHPMP()
     _th - 1,
     str,
     Printer::kAlignCenter,
-    Colors::WhiteColor,
+    Colors::White,
     0x000088
   );
 }
@@ -124,7 +124,7 @@ void GameOverState::UpdateBar(int x, int y, RangedAttribute& attr)
     y,
     _bar,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 }

@@ -1500,7 +1500,7 @@ namespace Util
 
   uint32_t GetItemInventoryColor(const ItemData& data)
   {
-    uint32_t textColor = Colors::WhiteColor;
+    uint32_t textColor = Colors::White;
 
     bool isBlessed = (data.Prefix == ItemPrefix::BLESSED);
     bool isCursed  = (data.Prefix == ItemPrefix::CURSED);
@@ -1515,12 +1515,12 @@ namespace Util
     //
     const std::vector<std::pair<bool, uint32_t>> itemFirstColorToChoose =
     {
-      { isMixed,   Colors::ItemMixedColor  },
-      { isMagic,   Colors::ItemMagicColor  },
-      { isRare,    Colors::ItemRareColor   },
-      { isUnique,  Colors::ItemUniqueColor },
-      { isBlessed, Colors::ItemMagicColor  },
-      { isCursed,  Colors::ItemCursedColor },
+      { isMixed,   Colors::ItemMixed  },
+      { isMagic,   Colors::ItemMagic  },
+      { isRare,    Colors::ItemRare   },
+      { isUnique,  Colors::ItemUnique },
+      { isBlessed, Colors::ItemMagic  },
+      { isCursed,  Colors::ItemCursed },
     };
 
     for (auto& pair : itemFirstColorToChoose)
@@ -1539,7 +1539,7 @@ namespace Util
     {
       bool isCursed = (data.IsPrefixDiscovered &&
                        data.Prefix == ItemPrefix::CURSED);
-      textColor = isCursed ? Colors::ItemCursedColor : Colors::WhiteColor;
+      textColor = isCursed ? Colors::ItemCursed : Colors::White;
     }
 
     return textColor;
@@ -2022,7 +2022,7 @@ namespace Util
 
     char projectile = ' ';
 
-    uint32_t projColor = Colors::WhiteColor;
+    uint32_t projColor = Colors::White;
 
     if (weapon == nullptr)
     {
@@ -2988,8 +2988,8 @@ namespace Util
         p.X,
         p.Y,
         '*',
-        Colors::YellowColor,
-        Colors::RedColor
+        Colors::Yellow,
+        Colors::Red
       );
     }
 

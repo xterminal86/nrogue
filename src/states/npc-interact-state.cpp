@@ -188,16 +188,16 @@ void NPCInteractState::AnimateText()
     _charPos + 1,
     _currentLine + 2,
     ' ',
-    Colors::BlackColor,
-    Colors::WhiteColor
+    Colors::Black,
+    Colors::White
   );
 
   Game::gPrnt.PrintChar(
     _charPos,
     _currentLine + 2,
     line[_textBlockCharIndex],
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   Game::gPrnt.Render();
@@ -211,8 +211,8 @@ void NPCInteractState::AnimateText()
       _charPos,
       _currentLine + 2,
       ' ',
-      Colors::BlackColor,
-      Colors::BlackColor
+      Colors::Black,
+      Colors::Black
     );
 
     _charPos = _textStartPosX;
@@ -243,8 +243,8 @@ void NPCInteractState::DisplayStillText()
       yPos,
       line,
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     yPos++;
@@ -297,8 +297,8 @@ void NPCInteractState::PrintFooter()
       th - 1,
       "Listening...",
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
     return;
   }
@@ -309,16 +309,16 @@ void NPCInteractState::PrintFooter()
       1,
       th - 1, StrName,
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
       tw / 2 - tw / 4,
       th - 1, StrJob,
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
@@ -326,8 +326,8 @@ void NPCInteractState::PrintFooter()
       th - 1,
       StrServices,
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
@@ -335,8 +335,8 @@ void NPCInteractState::PrintFooter()
       th - 1,
       StrGossip,
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
@@ -344,8 +344,8 @@ void NPCInteractState::PrintFooter()
       th - 1,
       StrBye,
       Printer::kAlignRight,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
   }
   else
@@ -354,8 +354,8 @@ void NPCInteractState::PrintFooter()
       1,
       th - 1, StrName,
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
@@ -363,8 +363,8 @@ void NPCInteractState::PrintFooter()
       th - 1,
       StrJob,
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
@@ -372,8 +372,8 @@ void NPCInteractState::PrintFooter()
       th - 1,
       StrGossip,
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
@@ -381,8 +381,8 @@ void NPCInteractState::PrintFooter()
       th - 1,
       StrBye,
       Printer::kAlignRight,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
   }
 }

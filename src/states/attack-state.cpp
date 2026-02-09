@@ -141,7 +141,7 @@ void AttackState::HandleInput()
               cell,
               GlobalConstants::DisplayAttackDelayMs,
               "*whoosh*",
-              Colors::WhiteColor
+              Colors::White
         );
       }
     }

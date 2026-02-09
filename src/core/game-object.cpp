@@ -274,7 +274,7 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
   //
   if (bgColor == Colors::None)
   {
-    bgColor = Colors::BlackColor;
+    bgColor = Colors::Black;
   }
 
   int x = PosX + LevelOwner->MapOffsetX;
@@ -292,7 +292,12 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
     Game::gPrnt.DrawGraphicsTile(x, y, GraphicTile);
   }
   else
-  {    
+  {
+    Game::gPrnt.DrawSubstituteGraphicsTile(x,
+                                           y,
+                                           (int)NameCP437::BLOCK,
+                                           bgColor);
+
     Game::gPrnt.DrawSubstituteGraphicsTile(x,
                                            y,
                                            (imageOverride != -1)

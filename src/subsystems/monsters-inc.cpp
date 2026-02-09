@@ -122,7 +122,7 @@ GameObject* MonstersInc::CreateNPC(int x,
                                   x,
                                   y,
                                   img,
-                                  Colors::WhiteColor);
+                                  Colors::White);
 
   go->IsLiving = true;
   go->Type = GameObjectType::NPC;
@@ -134,8 +134,8 @@ GameObject* MonstersInc::CreateNPC(int x,
   ainpc->Init(npcType, standing, serviceType);
 
   uint32_t goColor = (ainpc->Data.IsMale)
-                    ? Colors::WhiteColor
-                    : Colors::MagentaColor;
+                    ? Colors::White
+                    : Colors::Magenta;
 
   go->FgColor = goColor;
 
@@ -152,7 +152,7 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
                                   x,
                                   y,
                                   'r',
-                                  Colors::MonsterColor);
+                                  Colors::Monster);
 
   go->ObjectName           = "Feral Rat";
   go->Attrs.Indestructible = false;
@@ -209,7 +209,7 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
                                   x,
                                   y,
                                   'b',
-                                  Colors::MonsterColor);
+                                  Colors::Monster);
 
   go->ObjectName           = "Flying Bat";
   go->Attrs.Indestructible = false;
@@ -264,7 +264,7 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
                                   x,
                                   y,
                                   'b',
-                                  Colors::MonsterColor);
+                                  Colors::Monster);
 
   go->ObjectName           = "Red Bat";
   go->Attrs.Indestructible = false;
@@ -319,7 +319,7 @@ GameObject* MonstersInc::CreateSpider(int x, int y, bool randomize)
                                   x,
                                   y,
                                   's',
-                                  Colors::MonsterColor);
+                                  Colors::Monster);
 
   go->ObjectName           = "Cave Spider";
   go->Attrs.Indestructible = false;
@@ -367,7 +367,7 @@ GameObject* MonstersInc::CreateTroll(int x, int y, bool randomize)
                                   x,
                                   y,
                                   'T',
-                                  Colors::MonsterColor);
+                                  Colors::Monster);
 
   go->ObjectName           = "Troll";
   go->Attrs.Indestructible = false;
@@ -429,7 +429,7 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
                                   x,
                                   y,
                                   img,
-                                  Colors::MonsterColor);
+                                  Colors::Monster);
 
   go->ObjectName           = "Herobrine";
   go->Attrs.Indestructible = false;
@@ -517,7 +517,7 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
                                   x,
                                   y,
                                   img,
-                                  Colors::MonsterColor);
+                                  Colors::Monster);
 
   go->ObjectName           = "Mad Miner";
   go->Attrs.Indestructible = false;
@@ -580,7 +580,7 @@ GameObject* MonstersInc::CreateKobold(int x, int y)
                                   x,
                                   y,
                                   img,
-                                  Colors::MonsterColor);
+                                  Colors::Monster);
 
   go->ObjectName           = "Kobold";
   go->Attrs.Indestructible = false;
@@ -650,7 +650,7 @@ GameObject* MonstersInc::CreateShelob(int x, int y)
                                   x,
                                   y,
                                   's',
-                                  Colors::MonsterUniqueColor);
+                                  Colors::MonsterUnique);
 
   go->ObjectName           = "Shelob";
   go->Attrs.Indestructible = false;
@@ -693,7 +693,7 @@ GameObject* MonstersInc::CreateZombie(int x, int y)
                                   x,
                                   y,
                                   'Z',
-                                  Colors::MonsterColor);
+                                  Colors::Monster);
 
   go->ObjectName           = "Zombie";
   go->Attrs.Indestructible = false;
@@ -783,7 +783,7 @@ GameObject* MonstersInc::CreateSkeleton(int x, int y)
                                   x,
                                   y,
                                   'S',
-                                  Colors::MonsterColor);
+                                  Colors::Monster);
 
   go->ObjectName           = "Skeleton";
   go->Attrs.Indestructible = false;
@@ -920,7 +920,7 @@ GameObject* MonstersInc::CreateStalker(int x, int y)
                                   x,
                                   y,
                                   'G',
-                                  Colors::MonsterColor);
+                                  Colors::Monster);
 
   go->ObjectName           = "Gollum";
   go->Attrs.Indestructible = false;

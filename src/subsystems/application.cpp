@@ -342,7 +342,7 @@ void Application::DrawAttackCursor(int x, int y,
       x,
       y,
       ' ',
-      Colors::BlackColor,
+      Colors::Black,
       cursorColor
     );
 

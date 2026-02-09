@@ -318,8 +318,8 @@ void LookInputState::Update(bool forceUpdate)
       0,
       "Press 'q' to exit look mode",
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     std::string coords = Util::StringFormat("[%i;%i]",
@@ -331,8 +331,8 @@ void LookInputState::Update(bool forceUpdate)
       Printer::TerminalHeight - 2,
       coords,
       Printer::kAlignRight,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
@@ -340,8 +340,8 @@ void LookInputState::Update(bool forceUpdate)
       Printer::TerminalHeight - 1,
       lookStatus,
       Printer::kAlignRight,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     #ifdef DEBUG_BUILD
@@ -390,36 +390,40 @@ void LookInputState::MoveCursor(int dx, int dy)
 void LookInputState::DrawCursor()
 {
 #ifdef USE_SDL
-  Game::gPrnt.DrawGraphicsTile(
-    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX,
-    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
-    GraphicTiles::GUI_LOOK_CURSOR
-  );
-  /*
-  Game::gPrnt.DrawSubstituteGraphicsTile(
-    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
-    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
-    '-'
-  );
+  if (Game::gApp.AppData.UseGraphics)
+  {
+    Game::gPrnt.DrawGraphicsTile(
+      _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX,
+      _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
+      GraphicTiles::GUI_LOOK_CURSOR
+    );
+  }
+  else
+  {
+    Game::gPrnt.DrawSubstituteGraphicsTile(
+      _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX - 1,
+      _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY - 1,
+      (int)NameCP437::ULCORNER_1
+    );
 
-  Game::gPrnt.DrawSubstituteGraphicsTile(
-    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX - 1,
-    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
-    '-'
-  );
+    Game::gPrnt.DrawSubstituteGraphicsTile(
+      _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
+      _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY - 1,
+      (int)NameCP437::URCORNER_1
+    );
 
-  Game::gPrnt.DrawSubstituteGraphicsTile(
-    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX,
-    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY + 1,
-    '|'
-  );
+    Game::gPrnt.DrawSubstituteGraphicsTile(
+      _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX - 1,
+      _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY + 1,
+      (int)NameCP437::DLCORNER_1
+    );
 
-  Game::gPrnt.DrawSubstituteGraphicsTile(
-    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX,
-    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY - 1,
-    '|'
-  );
-  */
+    Game::gPrnt.DrawSubstituteGraphicsTile(
+      _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
+      _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY + 1,
+      (int)NameCP437::DRCORNER_1
+    );
+  }
 #else
   Game::gPrnt.PrintChar(
     _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
@@ -563,8 +567,8 @@ void LookInputState::PrintDebugInfo()
       yStart,
       line,
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     yStart++;
@@ -575,8 +579,8 @@ void LookInputState::PrintDebugInfo()
     yStart + 1,
     _distanceField,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 }
 
@@ -610,8 +614,8 @@ void LookInputState::DrawHint()
       p.X + mox,
       p.Y + moy,
       '+',
-      Colors::YellowColor,
-      Colors::BlackColor
+      Colors::Yellow,
+      Colors::Black
     );
   }
 }

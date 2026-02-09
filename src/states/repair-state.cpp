@@ -100,8 +100,8 @@ void RepairState::DrawSpecific()
       2 + i,
       str,
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
   }
 }

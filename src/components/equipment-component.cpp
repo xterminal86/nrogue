@@ -32,7 +32,7 @@ bool EquipmentComponent::Equip(ItemComponent* item, bool suppressLog)
       Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
                                  Strings::MessageBoxEpicFailHeaderText,
                                  { "Can't be equipped!" },
-                                 Colors::MessageBoxRedBorderColor);
+                                 Colors::MessageBoxRedBorder);
     }
 
     return res;
@@ -98,7 +98,7 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item,
           Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
                                      Strings::MessageBoxEpicFailHeaderText,
                                      { str },
-                                     Colors::MessageBoxRedBorderColor);
+                                     Colors::MessageBoxRedBorder);
         }
 
         return false;
@@ -129,7 +129,7 @@ bool EquipmentComponent::ProcessRingEquiption(ItemComponent* item,
     Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
                                Strings::MessageBoxEpicFailHeaderText,
                                { Strings::MsgUnequipFirst },
-                               Colors::MessageBoxRedBorderColor);
+                               Colors::MessageBoxRedBorder);
   }
 
   return false;
@@ -204,7 +204,7 @@ bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item,
       Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
                                  Strings::MessageBoxEpicFailHeaderText,
                                  { Strings::MsgUnequipFirst },
-                                 Colors::MessageBoxRedBorderColor);
+                                 Colors::MessageBoxRedBorder);
     }
 
     res = false;
@@ -223,7 +223,7 @@ bool EquipmentComponent::ProcessItemEquiption(ItemComponent* item,
         Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
                                    Strings::MessageBoxEpicFailHeaderText,
                                    { str },
-                                   Colors::MessageBoxRedBorderColor);
+                                   Colors::MessageBoxRedBorder);
       }
 
       res = false;

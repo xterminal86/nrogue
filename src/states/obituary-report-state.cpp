@@ -124,8 +124,8 @@ void ObituaryReportState::Update(bool forceUpdate)
         1 + lineCount,
         *msg,
         Printer::kAlignLeft,
-        Colors::WhiteColor,
-        Colors::BlackColor
+        Colors::White,
+        Colors::Black
       );
 
       lineCount++;

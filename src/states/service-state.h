@@ -37,7 +37,7 @@ class ServiceState : public SelectItemStateBase
     {
       std::string Letter;
       std::string NameToDisplay;
-      uint32_t Color = Colors::WhiteColor;
+      uint32_t Color = Colors::White;
       ItemComponent* ItemComponentRef = nullptr;
       int ServiceCost = 0;
     };

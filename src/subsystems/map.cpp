@@ -924,8 +924,8 @@ void Map::ShowLoadingText(const std::string& textOverride)
   Game::gPrnt.DrawWindow({ lx - 3, th - 3 },
                           _windowSize,
                           std::string(),
-                          Colors::WhiteColor,
-                          Colors::MessageBoxHeaderBgColor,
+                          Colors::White,
+                          Colors::MessageBoxHeaderBg,
                           Colors::ShadesOfGrey::Four);
 
   Game::gPrnt.PrintText(
@@ -933,8 +933,8 @@ void Map::ShowLoadingText(const std::string& textOverride)
     th,
     text,
     Printer::kAlignCenter,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   Game::gPrnt.Render();
@@ -1420,7 +1420,7 @@ std::pair<uint32_t, uint32_t> Map::GetActorColors(GameObject* actor)
   uint32_t bgColor = actor->BgColor;
   uint32_t fgColor = actor->FgColor;
 
-  bool cond = (actor->BgColor == Colors::BlackColor);
+  bool cond = (actor->BgColor == Colors::Black);
   bool isOnStaticObject = (CurrentLevel->StaticMapObjects[x][y] != nullptr);
 
   if (cond)
@@ -1434,14 +1434,14 @@ std::pair<uint32_t, uint32_t> Map::GetActorColors(GameObject* actor)
     {
       auto& objBgColor = CurrentLevel->StaticMapObjects[x][y]->BgColor;
       bgColor = (objBgColor == actor->FgColor
-                 ? Colors::BlackColor
+                 ? Colors::Black
                  : objBgColor);
     }
     else
     {
       auto& tileBgColor = CurrentLevel->MapArray[x][y]->BgColor;
       bgColor = (tileBgColor == actor->FgColor
-                 ? Colors::BlackColor
+                 ? Colors::Black
                  : tileBgColor);
     }
   }

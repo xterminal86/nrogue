@@ -24,8 +24,8 @@ class DoorComponent : public Component
     // Set to GlobalConstants::OpenedByAnyone to leave unlocked
     size_t OpenedBy = GlobalConstants::OpenedByAnyone;
 
-    uint32_t FgColorOverride = Colors::BlackColor;
-    uint32_t BgColorOverride = Colors::BlackColor;
+    uint32_t FgColorOverride = Colors::Black;
+    uint32_t BgColorOverride = Colors::Black;
 
     DoorMaterials Material = DoorMaterials::WOOD;
 

@@ -67,7 +67,7 @@ void MenuState::PrepareGrassTiles()
   int x = 0;
   int y = 0;
 
-  uint32_t flowerColor = Colors::GrassDotColor;
+  uint32_t flowerColor = Colors::GrassDot;
 
   for (auto& line : _picture)
   {
@@ -75,12 +75,12 @@ void MenuState::PrepareGrassTiles()
     {
       if (c == '.')
       {
-        flowerColor = Colors::GrassDotColor;
+        flowerColor = Colors::GrassDot;
 
         int colorChoice = Game::gRng.RandomRange(0, 35);
-        if      (colorChoice == 0) flowerColor = Colors::WhiteColor;
-        else if (colorChoice == 1) flowerColor = Colors::DandelionYellowColor;
-        else if (colorChoice == 2) flowerColor = Colors::RedPoppyColor;
+        if      (colorChoice == 0) flowerColor = Colors::White;
+        else if (colorChoice == 1) flowerColor = Colors::DandelionYellow;
+        else if (colorChoice == 2) flowerColor = Colors::RedPoppy;
 
         std::pair<int, int> key = { sx + x, sy + y };
         _grassColorByPosition.emplace(key, flowerColor);
@@ -121,7 +121,7 @@ void MenuState::DrawPicture()
             sx + x,
             sy + y,
             img,
-            Colors::CyanColor,
+            Colors::Cyan,
             Colors::ShadesOfGrey::Eight
           );
         }
@@ -147,7 +147,7 @@ void MenuState::DrawPicture()
             sy + y,
             c,
             fgColor,
-            Colors::GrassColor
+            Colors::Grass
           );
         }
         break;
@@ -164,8 +164,8 @@ void MenuState::DrawPicture()
             sx + x,
             sy + y,
             img,
-            Colors::GreenColor,
-            Colors::BlackColor
+            Colors::Green,
+            Colors::Black
           );
         }
         break;
@@ -176,8 +176,8 @@ void MenuState::DrawPicture()
             sx + x,
             sy + y,
             c,
-            Colors::WhiteColor,
-            Colors::BlackColor
+            Colors::White,
+            Colors::Black
           );
         }
         break;
@@ -216,10 +216,10 @@ void MenuState::Update(bool forceUpdate)
     Game::gPrnt.DrawWindow({ 0, 0 },
                             _borderSize,
                             "",
-                            Colors::BlackColor,
-                            Colors::BlackColor,
-                            Colors::WhiteColor,
-                            Colors::BlackColor,
+                            Colors::Black,
+                            Colors::Black,
+                            Colors::White,
+                            Colors::Black,
                             Colors::None);
 
 #ifdef USE_SDL
@@ -229,7 +229,7 @@ void MenuState::Update(bool forceUpdate)
                              ad.GlyphHeightScaled,
                              "NROGUE",
                              Printer::kAlignCenter,
-                             Colors::WhiteColor,
+                             Colors::White,
                              Colors::None,
                              10.0,
                              12,
@@ -275,8 +275,8 @@ void MenuState::Update(bool forceUpdate)
       _thHalf + _picture.size(),
       _welcome,
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     if (_saveFileFound)
@@ -287,7 +287,7 @@ void MenuState::Update(bool forceUpdate)
         _savefilePresent,
         Printer::kAlignCenter,
         0x44FF44,
-        Colors::BlackColor
+        Colors::Black
       );
     }
 
@@ -298,8 +298,8 @@ void MenuState::Update(bool forceUpdate)
         _th - 1 - (_signature.size() - i),
         _signature[i],
         Printer::kAlignRight,
-        Colors::WhiteColor,
-        Colors::BlackColor
+        Colors::White,
+        Colors::Black
       );
     }
 
@@ -308,8 +308,8 @@ void MenuState::Update(bool forceUpdate)
       _th -3,
       _buildVersionText,
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
@@ -317,8 +317,8 @@ void MenuState::Update(bool forceUpdate)
       _th - 2,
       _builtWith,
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
@@ -326,8 +326,8 @@ void MenuState::Update(bool forceUpdate)
       _th - 2,
       _terminalSize,
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.Render();

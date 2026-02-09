@@ -214,8 +214,8 @@ void MapLevelTown::CreateLevel()
         false,
         '.',
         Colors::ShadesOfGrey::Four,
-        Colors::BlackColor,
-        Strings::TileNames::GroundText,
+        Colors::Black,
+        Strings::TileNames::Ground,
         Strings::Empty);
 
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
@@ -268,7 +268,7 @@ void MapLevelTown::CreateLevel()
   CreateBorders('#',
                 Colors::ShadesOfGrey::Four,
                 Colors::ShadesOfGrey::Two,
-                Strings::TileNames::WallsText,
+                Strings::TileNames::Walls,
                 GraphicTiles::STONE_BRICK);
 
   CreateTownGates();
@@ -369,7 +369,7 @@ void MapLevelTown::BuildAndDrawRoad(const Position& start,
                   '.',
                   Colors::ShadesOfGrey::Ten,
                   Colors::ShadesOfGrey::Eight,
-                  Strings::TileNames::FlagstoneText,
+                  Strings::TileNames::Flagstone,
                   GraphicTiles::COBBLESTONE);
 
   DrawRoad(path);
@@ -390,7 +390,7 @@ void MapLevelTown::DrawRoad(const std::stack<Position>& path)
                     '.',
                     Colors::ShadesOfGrey::Ten,
                     Colors::ShadesOfGrey::Eight,
-                    Strings::TileNames::FlagstoneText,
+                    Strings::TileNames::Flagstone,
                     GraphicTiles::COBBLESTONE);
 
     pathCopy.pop();
@@ -444,8 +444,8 @@ void MapLevelTown::CreateBlacksmith(int x,
                     posY,
                     c,
                     Colors::ShadesOfGrey::Eight,
-                    Colors::BlackColor,
-                    Strings::TileNames::StoneWallText,
+                    Colors::Black,
+                    Strings::TileNames::StoneWall,
                     false,
                     GraphicTiles::STONE_BRICK_NOISY);
           break;
@@ -454,9 +454,9 @@ void MapLevelTown::CreateBlacksmith(int x,
           t.Set(true,
                 false,
                 c,
-                Colors::IronColor,
-                Colors::BlackColor,
-                Strings::TileNames::WorkbenchText,
+                Colors::Iron,
+                Colors::Black,
+                Strings::TileNames::Workbench,
                 Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
@@ -466,17 +466,17 @@ void MapLevelTown::CreateBlacksmith(int x,
           PlaceGroundTile(posX,
                           posY,
                           ' ',
-                          Colors::BlackColor,
-                          Colors::RoomFloorColor,
-                          Strings::TileNames::DirtText,
+                          Colors::Black,
+                          Colors::RoomFloor,
+                          Strings::TileNames::Dirt,
                           GraphicTiles::DIRT);
 
           t.Set(true,
                 false,
                 c,
-                Colors::WhiteColor,
-                Colors::BlackColor,
-                Strings::TileNames::BedText,
+                Colors::White,
+                Colors::Black,
+                Strings::TileNames::Bed,
                 Strings::Empty,
                 GraphicTiles::BED_MC);
           PlaceStaticObject(posX, posY, t);
@@ -487,9 +487,9 @@ void MapLevelTown::CreateBlacksmith(int x,
           PlaceGroundTile(posX,
                           posY,
                           ' ',
-                          Colors::BlackColor,
-                          Colors::RoomFloorColor,
-                          Strings::TileNames::DirtText,
+                          Colors::Black,
+                          Colors::RoomFloor,
+                          Strings::TileNames::Dirt,
                           GraphicTiles::DIRT);
           break;
 
@@ -503,17 +503,17 @@ void MapLevelTown::CreateBlacksmith(int x,
           PlaceGroundTile(posX,
                           posY,
                           ' ',
-                          Colors::BlackColor,
-                          Colors::RoomFloorColor,
-                          Strings::TileNames::DirtText,
+                          Colors::Black,
+                          Colors::RoomFloor,
+                          Strings::TileNames::Dirt,
                           GraphicTiles::DIRT);
 
           t.Set(true,
                 true,
                 c,
-                Colors::WhiteColor,
-                Colors::BlackColor,
-                Strings::TileNames::ForgeText,
+                Colors::White,
+                Colors::Black,
+                Strings::TileNames::Forge,
                 Strings::Empty);
           PlaceStaticObject(posX, posY, t);
         }
@@ -542,9 +542,9 @@ void MapLevelTown::CreateBlacksmith(int x,
       PlaceGroundTile(x,
                       y,
                       ' ',
-                      Colors::BlackColor,
-                      Colors::RoomFloorColor,
-                      Strings::TileNames::DirtText,
+                      Colors::Black,
+                      Colors::RoomFloor,
+                      Strings::TileNames::Dirt,
                       GraphicTiles::WOODEN_PLANKS_DESAT);
     }
   }
@@ -552,9 +552,9 @@ void MapLevelTown::CreateBlacksmith(int x,
   PlaceGroundTile(83,
                   8,
                   ' ',
-                  Colors::BlackColor,
-                  Colors::RoomFloorColor,
-                  Strings::TileNames::DirtText,
+                  Colors::Black,
+                  Colors::RoomFloor,
+                  Strings::TileNames::Dirt,
                   GraphicTiles::WOODEN_PLANKS_DESAT);
 #endif
 }
@@ -599,9 +599,9 @@ void MapLevelTown::CreateRoom(int x,
           PlaceWall(posX,
                     posY,
                     c,
-                    Colors::WoodColor,
-                    Colors::BlackColor,
-                    Strings::TileNames::FachwerkText,
+                    Colors::Wood,
+                    Colors::Black,
+                    Strings::TileNames::Fachwerk,
                     false,
                     r.first);
         }
@@ -615,9 +615,9 @@ void MapLevelTown::CreateRoom(int x,
           t.Set(true,
                 false,
                 'T',
-                Colors::WhiteColor,
-                Colors::DeepWaterColor,
-                Strings::TileNames::FountainText,
+                Colors::White,
+                Colors::DeepWater,
+                Strings::TileNames::Fountain,
                 Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
@@ -627,23 +627,34 @@ void MapLevelTown::CreateRoom(int x,
           break;
 
         case 'B':
+        {
+          PlaceGroundTile(posX,
+                          posY,
+                          '-',
+                          Colors::WoodPlankSeam,
+                          Colors::RoomFloor,
+                          Strings::TileNames::WoodenFloor,
+                          GraphicTiles::WOODEN_PLANKS_DESAT);
+
           t.Set(true,
                 false,
                 c,
-                Colors::WhiteColor,
-                Colors::BlackColor,
-                Strings::TileNames::BedText,
-                Strings::Empty);
+                Colors::White,
+                Colors::Black,
+                Strings::TileNames::Bed,
+                Strings::Empty,
+                GraphicTiles::BED_MC);
           PlaceStaticObject(posX, posY, t);
-          break;
+        }
+        break;
 
         case '.':
           PlaceGroundTile(posX,
                           posY,
                           '-',
-                          0x490E11,
-                          Colors::RoomFloorColor,
-                          Strings::TileNames::WoodenFloorText,
+                          Colors::WoodPlankSeam,
+                          Colors::RoomFloor,
+                          Strings::TileNames::WoodenFloor,
                           GraphicTiles::WOODEN_PLANKS_DESAT);
           break;
 
@@ -660,9 +671,9 @@ void MapLevelTown::CreateRoom(int x,
           PlaceGroundTile(posX,
                           posY,
                           c,
-                          Colors::BlackColor,
+                          Colors::Black,
                           Colors::ShadesOfGrey::Four,
-                          Strings::TileNames::StoneTilesText,
+                          Strings::TileNames::StoneTiles,
                           GraphicTiles::STONE_TILES);
           break;
 
@@ -670,9 +681,9 @@ void MapLevelTown::CreateRoom(int x,
           t.Set(true,
                 false,
                 '#',
-                Colors::MarbleColor,
-                Colors::GrassColor,
-                Strings::TileNames::WoodenFenceText,
+                Colors::Marble,
+                Colors::Grass,
+                Strings::TileNames::WoodenFence,
                 Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
@@ -686,9 +697,9 @@ void MapLevelTown::CreateRoom(int x,
           t.Set(true,
                 false,
                 c,
-                Colors::WhiteColor,
-                Colors::BlackColor,
-                Strings::TileNames::WindowText,
+                Colors::White,
+                Colors::Black,
+                Strings::TileNames::Window,
                 Strings::Empty,
                 GraphicTiles::WINDOW);
           PlaceStaticObject(posX, posY, t);
@@ -727,8 +738,8 @@ void MapLevelTown::CreateChurch(int x, int y)
                     posY,
                     c,
                     Colors::ShadesOfGrey::Eight,
-                    Colors::BlackColor,
-                    Strings::TileNames::StoneWallText,
+                    Colors::Black,
+                    Strings::TileNames::StoneWall,
                     false,
                     GraphicTiles::STONE_BRICK_WHITE);
           break;
@@ -738,17 +749,17 @@ void MapLevelTown::CreateChurch(int x, int y)
           PlaceGroundTile(posX,
                           posY,
                           c,
-                          Colors::BlackColor,
+                          Colors::Black,
                           Colors::ShadesOfGrey::Four,
-                          Strings::TileNames::StoneTilesText,
+                          Strings::TileNames::StoneTiles,
                           GraphicTiles::TILE_BIG_WHITE);
 
           PlaceWall(posX,
                     posY,
                     '#',
                     Colors::ShadesOfGrey::Eight,
-                    Colors::BlackColor,
-                    Strings::TileNames::StonePillarText,
+                    Colors::Black,
+                    Strings::TileNames::StonePillar,
                     false,
                     GraphicTiles::STONE_COLUMN);
         }
@@ -759,9 +770,9 @@ void MapLevelTown::CreateChurch(int x, int y)
           t.Set(true,
                 true,
                 c,
-                Colors::WhiteColor,
-                Colors::BlackColor,
-                Strings::TileNames::StainedGlassText,
+                Colors::White,
+                Colors::Black,
+                Strings::TileNames::StainedGlass,
                 Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
@@ -771,9 +782,9 @@ void MapLevelTown::CreateChurch(int x, int y)
           PlaceGroundTile(posX,
                           posY,
                           c,
-                          Colors::BlackColor,
+                          Colors::Black,
                           Colors::ShadesOfGrey::Four,
-                          Strings::TileNames::StoneTilesText,
+                          Strings::TileNames::StoneTiles,
                           GraphicTiles::TILE_BIG_WHITE);
           break;
 
@@ -796,7 +807,7 @@ void MapLevelTown::CreateChurch(int x, int y)
                     posY,
                     false,
                     openedBy,
-                    Strings::TileNames::RoyalGatesText);
+                    Strings::TileNames::RoyalGates);
         }
         break;
 
@@ -804,10 +815,10 @@ void MapLevelTown::CreateChurch(int x, int y)
           t.Set(false,
                 false,
                 c,
-                Colors::WoodColor,
-                Colors::BlackColor,
-                Strings::TileNames::WoodenBenchText,
-                "?" + Strings::TileNames::WoodenBenchText + "?");
+                Colors::Wood,
+                Colors::Black,
+                Strings::TileNames::WoodenBench,
+                "?" + Strings::TileNames::WoodenBench + "?");
           PlaceStaticObject(posX, posY, t);
           break;
 
@@ -832,25 +843,26 @@ void MapLevelTown::CreatePlayerHouse()
                                     RoomLayoutRotation::CCW_180);
   CreateRoom(3, 3, rot);
 
-  GameObjectInfo t;
-  t.Set(true,
-        false,
-        'C',
-        Colors::WhiteColor,
-        Colors::ChestColor,
-        Strings::TileNames::StashText,
-        Strings::Empty,
-        GraphicTiles::STASH_MC
-  );
+  //
+  // Add blocker dummy object.
+  //
+  GameObject* go = Game::gGOF.CreateDummyObject(6,
+                                                6,
+                                                "Blocker",
+                                                ' ',
+                                                Colors::None,
+                                                Colors::None);
+  go->Blocking = true;
 
-  Position cp(6, 6);
-  PlaceStaticObject(6, 6, t);
+  PlaceStaticObject(go);
 
-  auto stash = Game::gGOF.CreateContainer(cp.X,
-                                          cp.Y,
-                                          'C',
-                                          Strings::TileNames::StashText,
-                                          Colors::ChestColor);
+  GameObject* stash = Game::gGOF.CreateContainer(6,
+                                                 6,
+                                                 'C',
+                                                 Strings::TileNames::Stash,
+                                                 Colors::Chest);
+
+  stash->GraphicTile = GraphicTiles::STASH_MC;
 
   PlaceGameObject(stash);
 }
@@ -958,9 +970,9 @@ void MapLevelTown::PlaceMineEntrance(int x, int y)
           PlaceWall(posX,
                     posY,
                     ' ',
-                    Colors::BlackColor,
-                    Colors::BrickColor,
-                    Strings::TileNames::BrickWallText,
+                    Colors::Black,
+                    Colors::Brick,
+                    Strings::TileNames::BrickWall,
                     false,
                     GraphicTiles::BRICK_WALL2);
           break;
@@ -969,10 +981,10 @@ void MapLevelTown::PlaceMineEntrance(int x, int y)
           PlaceGroundTile(posX,
                           posY,
                           ' ',
-                          Colors::BlackColor,
-                          Colors::RoomFloorColor,
-                          Strings::TileNames::WoodenFloorText,
-                          GraphicTiles::WOODEN_PLANKS_DESAT);
+                          Colors::Black,
+                          Colors::RoomFloor,
+                          Strings::TileNames::Dirt,
+                          GraphicTiles::DIRT);
           break;
 
         case '+':
@@ -1010,9 +1022,9 @@ void MapLevelTown::PlaceGarden(int x, int y)
           t.Set(true,
                 false,
                 '#',
-                Colors::WoodColor,
-                Colors::GrassColor,
-                Strings::TileNames::WoodenFenceText,
+                Colors::Wood,
+                Colors::Grass,
+                Strings::TileNames::WoodenFence,
                 Strings::Empty,
                 GraphicTiles::FENCE_WOODEN);
           PlaceStaticObject(posX, posY, t);
@@ -1039,9 +1051,9 @@ void MapLevelTown::PlaceGarden(int x, int y)
           t.Set(true,
                 false,
                 'T',
-                Colors::WhiteColor,
-                Colors::DeepWaterColor,
-                Strings::TileNames::FountainText,
+                Colors::White,
+                Colors::DeepWater,
+                Strings::TileNames::Fountain,
                 Strings::Empty);
           PlaceStaticObject(posX, posY, t);
           break;
@@ -1074,9 +1086,9 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
           PlaceWall(posX,
                     posY,
                     '#',
-                    Colors::MarbleColor,
-                    Colors::GrassColor,
-                    Strings::TileNames::MarbleColumnText,
+                    Colors::Marble,
+                    Colors::Grass,
+                    Strings::TileNames::MarbleColumn,
                     false,
                     GraphicTiles::MARBLE_COLUMN);
           break;
@@ -1095,9 +1107,9 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
           t.Set(false,
                 false,
                 ' ',
-                Colors::BlackColor,
+                Colors::Black,
                 Colors::ShadesOfGrey::Ten,
-                Strings::TileNames::StoneTilesText,
+                Strings::TileNames::StoneTiles,
                 Strings::Empty,
                 GraphicTiles::STONE_TILES);
           MapArray[posX][posY]->MakeTile(t);
@@ -1110,9 +1122,9 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
           t.Set(false,
                 false,
                 ' ',
-                Colors::BlackColor,
+                Colors::Black,
                 Colors::ShadesOfGrey::Ten,
-                Strings::TileNames::StoneTilesText,
+                Strings::TileNames::StoneTiles,
                 Strings::Empty,
                 GraphicTiles::STONE_TILES);
           MapArray[posX][posY]->MakeTile(t);
@@ -1135,17 +1147,17 @@ void MapLevelTown::CreateTownGates()
 {
   static ItemsFactory& factory = Game::gIF;
 
-  GameObject* gate1 = factory.CreateDummyItem(Strings::TileNames::GatesText,
+  GameObject* gate1 = factory.CreateDummyItem(Strings::TileNames::Gates,
                                               '+',
-                                              Colors::WhiteColor,
-                                              Colors::BlackColor,
+                                              Colors::White,
+                                              Colors::Black,
                                               std::vector<std::string>());
   gate1->GraphicTile = GraphicTiles::IRON_GATE2_CLOSED;
 
-  GameObject* gate2 = factory.CreateDummyItem(Strings::TileNames::GatesText,
+  GameObject* gate2 = factory.CreateDummyItem(Strings::TileNames::Gates,
                                               '+',
-                                              Colors::WhiteColor,
-                                              Colors::BlackColor,
+                                              Colors::White,
+                                              Colors::Black,
                                               std::vector<std::string>());
   gate2->GraphicTile = GraphicTiles::IRON_GATE2_CLOSED;
 
@@ -1186,7 +1198,7 @@ void MapLevelTown::CreateTownGates()
                   '.',
                   Colors::ShadesOfGrey::Ten,
                   Colors::ShadesOfGrey::Eight,
-                  Strings::TileNames::FlagstoneText,
+                  Strings::TileNames::Flagstone,
                   GraphicTiles::COBBLESTONE);
 
   PlaceGroundTile(gate2->PosX,
@@ -1194,9 +1206,9 @@ void MapLevelTown::CreateTownGates()
                   '.',
                   Colors::ShadesOfGrey::Ten,
                   Colors::ShadesOfGrey::Eight,
-                  Strings::TileNames::FlagstoneText,
+                  Strings::TileNames::Flagstone,
                   GraphicTiles::COBBLESTONE);
-    
+
   PlaceStaticObject(gate1);
   PlaceStaticObject(gate2);
 }

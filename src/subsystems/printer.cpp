@@ -514,7 +514,7 @@ void Printer::DrawWindow(const Position& leftCorner,
     {
       for (int j = y + 1; j < y + size.Y; j++)
       {
-        PrintChar(i, j, ' ', Colors::BlackColor, bgColor);
+        PrintChar(i, j, ' ', Colors::Black, bgColor);
       }
     }
   }
@@ -1511,8 +1511,8 @@ std::vector<Position> Printer::DrawExplosion(const Position& pos, int aRange)
           drawX,
           drawY,
           'x',
-          Colors::RedColor,
-          Colors::BlackColor
+          Colors::Red,
+          Colors::Black
         );
       }
     }
@@ -1534,8 +1534,8 @@ void Printer::AddMessage(const std::string& message)
   AddMessage(GameLogMessageData
              {
                message,
-               Colors::WhiteColor,
-               Colors::BlackColor
+               Colors::White,
+               Colors::Black
              });
 }
 
@@ -1544,7 +1544,7 @@ void Printer::AddMessage(const std::string& message)
 void Printer::AddMessage(const std::string& message,
                          const uint32_t& fgColor)
 {
-  AddMessage(GameLogMessageData{ message, fgColor, Colors::BlackColor });
+  AddMessage(GameLogMessageData{ message, fgColor, Colors::Black });
 }
 
 // =============================================================================

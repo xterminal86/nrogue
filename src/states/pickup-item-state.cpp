@@ -94,7 +94,7 @@ bool PickupItemState::PickupItem(const Item& item)
         MessageBoxType::ANY_KEY,
         Strings::MessageBoxEpicFailHeaderText,
         { Strings::MsgInventoryFull },
-        Colors::MessageBoxRedBorderColor
+        Colors::MessageBoxRedBorder
       );
 
       return false;
@@ -142,8 +142,8 @@ void PickupItemState::DrawSpecific()
       _thHalf,
       "No items",
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
   }
   else
@@ -156,8 +156,8 @@ void PickupItemState::DrawSpecific()
         2 + lineIndex,
         line,
         Printer::kAlignLeft,
-        Colors::WhiteColor,
-        Colors::BlackColor
+        Colors::White,
+        Colors::Black
       );
 
       lineIndex++;

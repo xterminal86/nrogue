@@ -59,8 +59,8 @@ void MapLevelDeepDark::CreateLevel()
 
   CreateGround('.',
                Colors::ShadesOfGrey::Four,
-               Colors::BlackColor,
-               Strings::TileNames::GroundText);
+               Colors::Black,
+               Strings::TileNames::Ground);
 
   // NOTE: find out what was planned to do with these
 
@@ -107,9 +107,9 @@ void MapLevelDeepDark::CreateLevel()
   }
 
   CreateBorders(' ',
-                Colors::BlackColor,
+                Colors::Black,
                 Colors::ShadesOfGrey::Six,
-                Strings::TileNames::StoneWallText);
+                Strings::TileNames::StoneWall);
 
   if (MapType_ != MapType::DEEP_DARK_5)
   {
@@ -181,9 +181,9 @@ void MapLevelDeepDark::CreateSpecialLevel()
           PlaceWall(posX,
                     posY,
                     ' ',
-                    Colors::BlackColor,
+                    Colors::Black,
                     Colors::ShadesOfGrey::Six,
-                    Strings::TileNames::StoneWallText,
+                    Strings::TileNames::StoneWall,
                     false);
           break;
 
@@ -192,8 +192,8 @@ void MapLevelDeepDark::CreateSpecialLevel()
                           posY,
                           c,
                           Colors::ShadesOfGrey::Four,
-                          Colors::BlackColor,
-                          Strings::TileNames::GroundText);
+                          Colors::Black,
+                          Strings::TileNames::Ground);
           break;
       }
 
@@ -215,9 +215,9 @@ void MapLevelDeepDark::CreateCommonObjects(int x, int y, char image)
       PlaceWall(x,
                 y,
                 ' ',
-                Colors::BlackColor,
+                Colors::Black,
                 Colors::ShadesOfGrey::Six,
-                Strings::TileNames::StoneWallText,
+                Strings::TileNames::StoneWall,
                 false);
       break;
 
@@ -226,8 +226,8 @@ void MapLevelDeepDark::CreateCommonObjects(int x, int y, char image)
                       y,
                       image,
                       Colors::ShadesOfGrey::Four,
-                      Colors::BlackColor,
-                      Strings::TileNames::GroundText);
+                      Colors::Black,
+                      Strings::TileNames::Ground);
       break;
 
     case '+':
@@ -257,9 +257,9 @@ void MapLevelDeepDark::CreateCommonObjects(int x, int y, char image)
       PlaceGroundTile(x,
                       y,
                       '.',
-                      Colors::BlackColor,
+                      Colors::Black,
                       Colors::ShadesOfGrey::Ten,
-                      Strings::TileNames::StoneText);
+                      Strings::TileNames::Stone);
       break;
 
     case 'l':
@@ -274,11 +274,11 @@ void MapLevelDeepDark::CreateCommonObjects(int x, int y, char image)
       PlaceGroundTile(x,
                       y,
                       ' ',
-                      Colors::BlackColor,
+                      Colors::Black,
                       (image == '1') ?
                       Colors::ShadesOfGrey::Four :
                       Colors::ShadesOfGrey::Twelve,
-                      Strings::TileNames::TiledFloorText);
+                      Strings::TileNames::TiledFloor);
       break;
   }
 }

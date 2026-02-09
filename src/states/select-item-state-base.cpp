@@ -27,8 +27,8 @@ void SelectItemStateBase::Update(bool forceUpdate)
       _th - 1,
       "'q' - exit",
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.Render();

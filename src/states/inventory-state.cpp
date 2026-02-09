@@ -71,7 +71,7 @@ void InventoryState::HandleInput()
           MessageBoxType::ANY_KEY,
           Strings::MessageBoxEpicFailHeaderText,
           { Strings::MsgUnequipFirst },
-          Colors::MessageBoxRedBorderColor
+          Colors::MessageBoxRedBorder
         );
 
         return;
@@ -83,7 +83,7 @@ void InventoryState::HandleInput()
           MessageBoxType::ANY_KEY,
           Strings::MessageBoxInformationHeaderText,
           { Strings::MsgLooksImportant },
-          Colors::MessageBoxBlueBorderColor
+          Colors::MessageBoxBlueBorder
         );
 
         return;
@@ -170,7 +170,7 @@ void InventoryState::HandleInput()
           MessageBoxType::ANY_KEY,
           Strings::MessageBoxEpicFailHeaderText,
           { Strings::MsgCantBeUsed },
-          Colors::MessageBoxRedBorderColor
+          Colors::MessageBoxRedBorder
         );
       }
     }
@@ -207,7 +207,7 @@ void InventoryState::HandleInput()
           MessageBoxType::ANY_KEY,
           Strings::MessageBoxEpicFailHeaderText,
           { Strings::MsgUnequipFirst },
-          Colors::MessageBoxRedBorderColor
+          Colors::MessageBoxRedBorder
         );
         return;
       }
@@ -218,7 +218,7 @@ void InventoryState::HandleInput()
           MessageBoxType::ANY_KEY,
           Strings::MessageBoxInformationHeaderText,
           { Strings::MsgLooksImportant },
-          Colors::MessageBoxBlueBorderColor
+          Colors::MessageBoxBlueBorder
         );
         return;
       }
@@ -290,8 +290,8 @@ void InventoryState::Update(bool forceUpdate)
           2 + yPos,
           stackAmount,
           Printer::kAlignLeft,
-          Colors::WhiteColor,
-          Colors::BlackColor
+          Colors::White,
+          Colors::Black
         );
       }
       else if (ic->Data.IsEquipped)
@@ -302,8 +302,8 @@ void InventoryState::Update(bool forceUpdate)
           2 + yPos,
           equipStatus,
           Printer::kAlignLeft,
-          Colors::WhiteColor,
-          Colors::BlackColor
+          Colors::White,
+          Colors::Black
         );
       }
 
@@ -327,7 +327,7 @@ void InventoryState::Update(bool forceUpdate)
         stub,
         Printer::kAlignLeft,
         Colors::ShadesOfGrey::Six,
-        Colors::BlackColor
+        Colors::Black
       );
       yPos++;
     }
@@ -392,10 +392,10 @@ void InventoryState::DrawEquipmentField(int x,
     fieldName,
     Printer::kAlignCenter,
     Colors::ShadesOfGrey::Ten,
-    Colors::BlackColor
+    Colors::Black
   );
 
-  uint32_t itemColor = Colors::WhiteColor;
+  uint32_t itemColor = Colors::White;
 
   if (eq != nullptr)
   {
@@ -414,7 +414,7 @@ void InventoryState::DrawEquipmentField(int x,
     (eq != nullptr) ?
     itemColor :
     Colors::ShadesOfGrey::Six,
-    Colors::BlackColor
+    Colors::Black
   );
 }
 
@@ -445,8 +445,8 @@ void InventoryState::PrintFooter()
       th - 1,
       tmp,
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     counter++;
@@ -475,8 +475,8 @@ void InventoryState::PrintFooter()
       th - 1,
       tmp,
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     counter++;
@@ -557,7 +557,7 @@ void InventoryState::DrawSelectionBar(int yOffset,
       text,
       Printer::kAlignLeft,
       textColor,
-      Colors::BlackColor
+      Colors::Black
     );
   }
 }

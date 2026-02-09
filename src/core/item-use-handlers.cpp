@@ -547,7 +547,7 @@ namespace ItemUseHandlers
         MessageBoxType::ANY_KEY,
         Strings::MessageBoxEpicFailHeaderText,
         { "You don't possess the necessary skill!" },
-        Colors::MessageBoxRedBorderColor
+        Colors::MessageBoxRedBorder
       );
 
       return UseResult::FAILURE;

@@ -30,7 +30,7 @@ void SpellsDatabase::Init()
                   sn.at(SpellType::STRIKE),
                   25,
                   { 1, 4 },
-                  Colors::WhiteColor
+                  Colors::White
                 });
 
   RegisterSpell({
@@ -48,7 +48,7 @@ void SpellsDatabase::Init()
                   sn.at(SpellType::FIREBALL),
                   100,
                   { 3, 10 },
-                  Colors::YellowColor
+                  Colors::Yellow
                 });
 
   RegisterSpell({
@@ -57,7 +57,7 @@ void SpellsDatabase::Init()
                   sn.at(SpellType::LASER),
                   150,
                   { 10, 5 },
-                  Colors::WhiteColor
+                  Colors::White
                 });
 
   RegisterSpell({
@@ -66,7 +66,7 @@ void SpellsDatabase::Init()
                   sn.at(SpellType::LIGHTNING),
                   100,
                   { 3, 6 },
-                  Colors::WhiteColor
+                  Colors::White
                 });
 
   RegisterSpell({
@@ -98,7 +98,7 @@ void SpellsDatabase::Init()
                   sn.at(SpellType::TELEPORT),
                   100,
                   { 0, 0 },
-                  Colors::WhiteColor
+                  Colors::White
                 });
 
   RegisterSpell({

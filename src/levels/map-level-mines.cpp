@@ -119,8 +119,8 @@ void MapLevelMines::CreateLevel()
 
   CreateGround('.',
                Colors::ShadesOfGrey::Four,
-               Colors::BlackColor,
-               Strings::TileNames::DirtText,
+               Colors::Black,
+               Strings::TileNames::Dirt,
                GraphicTiles::DIRT);
 
   LevelBuilder lb;
@@ -165,9 +165,9 @@ void MapLevelMines::CreateLevel()
   }
 
   CreateBorders(' ',
-                Colors::BlackColor,
+                Colors::Black,
                 Colors::ShadesOfGrey::Six,
-                Strings::TileNames::RocksText,
+                Strings::TileNames::Rocks,
                 GraphicTiles::MINE_WALL);
 
   if (MapType_ != MapType::MINES_5)
@@ -204,8 +204,8 @@ void MapLevelMines::CreateSpecialLevel()
   GameObject* key = Game::gIF.CreateDummyItem(
     "Iron Key",
     '1',
-    Colors::IronColor,
-    Colors::BlackColor,
+    Colors::Iron,
+    Colors::Black,
     {
       "A simple iron key.",
       "Now you just need to find a lock."
@@ -259,9 +259,9 @@ void MapLevelMines::CreateSpecialLevel()
           PlaceWall(posX,
                     posY,
                     ' ',
-                    Colors::BlackColor,
+                    Colors::Black,
                     Colors::ShadesOfGrey::Six,
-                    Strings::TileNames::MineWallText,
+                    Strings::TileNames::MineWall,
                     false);
         }
         break;
@@ -284,8 +284,8 @@ void MapLevelMines::CreateSpecialLevel()
                                     DoorMaterials::IRON,
                                     "Iron Door",
                                     -1,
-                                    Colors::BlackColor,
-                                    Colors::IronColor);
+                                    Colors::Black,
+                                    Colors::Iron);
 
           DoorComponent* dc = door->GetComponent<DoorComponent>();
           dc->OpenedBy = key->GetComponent<ItemComponent>()->Data.ItemTypeHash;
@@ -300,8 +300,8 @@ void MapLevelMines::CreateSpecialLevel()
                           posY,
                           '.',
                           Colors::ShadesOfGrey::Four,
-                          Colors::BlackColor,
-                          Strings::TileNames::GroundText);
+                          Colors::Black,
+                          Strings::TileNames::Ground);
 
           GameObject* boss =
               Game::gMI.CreateMonster(posX,
@@ -341,9 +341,9 @@ void MapLevelMines::CreateSpecialLevel()
                 PlaceWall(x,
                           y,
                           ' ',
-                          Colors::BlackColor,
+                          Colors::Black,
                           Colors::ShadesOfGrey::Six,
-                          Strings::TileNames::MineWallText,
+                          Strings::TileNames::MineWall,
                           false);
               }
             }
@@ -373,7 +373,7 @@ void MapLevelMines::CreateSpecialLevel()
             std::string phrase = phrases[index];
 
             Game::gPrnt.AddMessage(phrase,
-                                   Colors::WhiteColor,
+                                   Colors::White,
                                    0xAA0000);
           });
         }
@@ -383,17 +383,17 @@ void MapLevelMines::CreateSpecialLevel()
           PlaceGroundTile(posX,
                           posY,
                           '.',
-                          Colors::RedColor,
-                          Colors::BlackColor,
-                          Strings::TileNames::BloodText);
+                          Colors::Red,
+                          Colors::Black,
+                          Strings::TileNames::Blood);
           break;
 
         case '%':
           PlaceGroundTile(posX,
                           posY,
                           c,
-                          Colors::WhiteColor,
-                          Colors::RedColor,
+                          Colors::White,
+                          Colors::Red,
                           "Someone's remains...");
           break;
 
@@ -410,8 +410,8 @@ void MapLevelMines::CreateSpecialLevel()
                           posY,
                           c,
                           Colors::ShadesOfGrey::Four,
-                          Colors::BlackColor,
-                          Strings::TileNames::GroundText);
+                          Colors::Black,
+                          Strings::TileNames::Ground);
           break;
       }
 
@@ -495,9 +495,9 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
       PlaceWall(x,
                 y,
                 ' ',
-                Colors::BlackColor,
+                Colors::Black,
                 Colors::ShadesOfGrey::Six,
-                Strings::TileNames::MineWallText,
+                Strings::TileNames::MineWall,
                 false,
                 r.first);
     }
@@ -512,8 +512,8 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
                       y,
                       image,
                       Colors::ShadesOfGrey::Four,
-                      Colors::BlackColor,
-                      Strings::TileNames::DirtText,
+                      Colors::Black,
+                      Strings::TileNames::Dirt,
                       GraphicTiles::DIRT);
       break;
 
@@ -529,9 +529,9 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
       PlaceGroundTile(x,
                       y,
                       '.',
-                      Colors::BlackColor,
+                      Colors::Black,
                       Colors::ShadesOfGrey::Ten,
-                      Strings::TileNames::StoneText,
+                      Strings::TileNames::Stone,
                       GraphicTiles::STONE_TILES);
       break;
 
@@ -547,11 +547,11 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
       PlaceGroundTile(x,
                       y,
                       ' ',
-                      Colors::BlackColor,
+                      Colors::Black,
                       (image == '1') ?
                       Colors::ShadesOfGrey::Two :
                       Colors::ShadesOfGrey::Fourteen,
-                      Strings::TileNames::TiledFloorText);
+                      Strings::TileNames::TiledFloor);
       break;
   }
 }

@@ -493,8 +493,8 @@ void DevConsole::Update(bool forceUpdate)
         1 + lineCount,
         *msg,
         Printer::kAlignLeft,
-        Colors::WhiteColor,
-        Colors::BlackColor
+        Colors::White,
+        Colors::Black
       );
 
       lineCount++;
@@ -505,16 +505,16 @@ void DevConsole::Update(bool forceUpdate)
       1 + lineCount,
       _currentCommand,
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintChar(
       3 + _cursorPosition,
       1 + lineCount,
       ' ',
-      Colors::BlackColor,
-      Colors::WhiteColor
+      Colors::Black,
+      Colors::White
     );
 
     Game::gPrnt.Render();
@@ -975,8 +975,8 @@ void DevConsole::TransformTile(const StringV& params)
       _currentLevel->PlaceGroundTile(x,
                                      y,
                                      '.',
-                                     Colors::BlackColor,
-                                     Colors::DirtColor,
+                                     Colors::Black,
+                                     Colors::Dirt,
                                      "Ground");
       break;
 
@@ -1027,8 +1027,8 @@ void DevConsole::PlaceWall(const StringV& params)
                                     x,
                                     y,
                                     '#',
-                                    Colors::WhiteColor,
-                                    Colors::MagentaColor);
+                                    Colors::White,
+                                    Colors::Magenta);
 
   wall->ObjectName = "Dev Wall";
   wall->Blocking = true;
@@ -1353,8 +1353,8 @@ void DevConsole::CreateDummyObject(const StringV& params)
                                     r.second,
                                     "Dummy",
                                     image,
-                                    Colors::WhiteColor,
-                                    Colors::BlackColor);
+                                    Colors::White,
+                                    Colors::Black);
 
   _currentLevel->PlaceGameObject(go);
 
@@ -1458,8 +1458,8 @@ void DevConsole::CreateBreakable(const StringV& params)
                                               r.second,
                                               'B',
                                               "Breakable",
-                                              Colors::WoodColor,
-                                              Colors::BlackColor);
+                                              Colors::Wood,
+                                              Colors::Black);
   _currentLevel->PlaceStaticObject(go);
 
   StdOut(go->HexAddressString);
@@ -1973,7 +1973,7 @@ void DevConsole::LaunchProjectile(const StringV& params)
 
   Game::gApp.ChangeState(GameStates::MAIN_STATE);
 
-  Util::LaunchProjectile(from, to, '*', Colors::YellowColor);
+  Util::LaunchProjectile(from, to, '*', Colors::Yellow);
 }
 
 // =============================================================================

@@ -52,8 +52,8 @@ void MapLevelNether::CreateLevel()
 
   CreateGround('.',
                0x440000,
-               Colors::BlackColor,
-               Strings::TileNames::HellstoneText);
+               Colors::Black,
+               Strings::TileNames::Hellstone);
 
   LevelBuilder lb;
   switch (MapType_)
@@ -68,9 +68,9 @@ void MapLevelNether::CreateLevel()
   }
 
   CreateBorders(' ',
-                Colors::BlackColor,
-                Colors::CaveWallColor,
-                Strings::TileNames::CaveWallText);
+                Colors::Black,
+                Colors::CaveWall,
+                Strings::TileNames::CaveWall);
 
   if (MapType_ != MapType::NETHER_5)
   {
@@ -96,9 +96,9 @@ void MapLevelNether::CreateCommonObjects(int x, int y, char image)
       PlaceWall(x,
                 y,
                 ' ',
-                Colors::BlackColor,
-                Colors::RedPoppyColor,
-                Strings::TileNames::HellrockText,
+                Colors::Black,
+                Colors::RedPoppy,
+                Strings::TileNames::Hellrock,
                 false);
       break;
 
@@ -116,8 +116,8 @@ void MapLevelNether::CreateCommonObjects(int x, int y, char image)
                       y,
                       image,
                       0x440000,
-                      Colors::BlackColor,
-                      Strings::TileNames::HellstoneText);
+                      Colors::Black,
+                      Strings::TileNames::Hellstone);
       break;
 
     case 'g':
@@ -136,9 +136,9 @@ void MapLevelNether::CreateCommonObjects(int x, int y, char image)
       PlaceGroundTile(x,
                       y,
                       '.',
-                      Colors::BlackColor,
+                      Colors::Black,
                       Colors::ShadesOfGrey::Ten,
-                      Strings::TileNames::StoneText);
+                      Strings::TileNames::Stone);
       break;
 
     case 'l':
@@ -153,11 +153,11 @@ void MapLevelNether::CreateCommonObjects(int x, int y, char image)
       PlaceGroundTile(x,
                       y,
                       ' ',
-                      Colors::BlackColor,
+                      Colors::Black,
                       (image == '1') ?
                       Colors::ShadesOfGrey::Four :
                       Colors::ShadesOfGrey::Twelve,
-                      Strings::TileNames::TiledFloorText);
+                      Strings::TileNames::TiledFloor);
       break;
   }
 }

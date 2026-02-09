@@ -37,7 +37,7 @@ class GameObject
                int x, int y,
                int avatar,
                const uint32_t& htmlColor,
-               const uint32_t& bgColor = Colors::BlackColor);
+               const uint32_t& bgColor = Colors::Black);
 
     IR Interact();
 
@@ -45,7 +45,7 @@ class GameObject
               int x, int y,
               int avatar,
               const uint32_t& fgColor,
-              const uint32_t& bgColor = Colors::BlackColor);
+              const uint32_t& bgColor = Colors::Black);
 
     ///
     /// Adds \p dx and \p dy to corresponding game object's coordinates.
@@ -191,8 +191,8 @@ class GameObject
 
     GraphicTiles GraphicTile = GraphicTiles::NONE;
 
-    uint32_t FgColor = Colors::WhiteColor;
-    uint32_t BgColor = Colors::MagentaColor;
+    uint32_t FgColor = Colors::White;
+    uint32_t BgColor = Colors::Magenta;
 
     std::string ObjectName;
     std::string FogOfWarName;

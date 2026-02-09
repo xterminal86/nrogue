@@ -7,8 +7,8 @@ namespace TriggerHandlers
   void Report()
   {
     Game::gPrnt.AddMessage("I'M TRIGGERED",
-                           Colors::BlackColor,
-                           Colors::YellowColor);
+                           Colors::Black,
+                           Colors::Yellow);
     Game::gPrnt.DrawExplosion({ 10, 10 }, 3);
   }
 }

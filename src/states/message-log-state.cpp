@@ -108,7 +108,7 @@ void MessageLogState::Update(bool forceUpdate)
         m->Message,
         Printer::kAlignLeft,
         Colors::ShadesOfGrey::Six,
-        Colors::BlackColor
+        Colors::Black
       );
 
       lm = m;
@@ -130,8 +130,8 @@ void MessageLogState::Update(bool forceUpdate)
           offsetY - 1,
           lm->Message,
           Printer::kAlignLeft,
-          Colors::WhiteColor,
-          Colors::BlackColor
+          Colors::White,
+          Colors::Black
         );
       }
     }

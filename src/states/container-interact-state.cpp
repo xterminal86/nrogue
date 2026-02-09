@@ -98,8 +98,8 @@ void ContainerInteractState::Update(bool forceUpdate)
       Game::gPrnt.PrintChar(_twHalf,
                             y,
                             (int)NameCP437::VBAR_2,
-                            Colors::WhiteColor,
-                            Colors::BlackColor);
+                            Colors::White,
+                            Colors::Black);
       #else
       Game::gPrnt.PrintFB(_twHalf,
                           y,
@@ -115,22 +115,22 @@ void ContainerInteractState::Update(bool forceUpdate)
                           0,
                           "Player",
                           Printer::kAlignCenter,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+                          Colors::White,
+                          Colors::Black);
 
     Game::gPrnt.PrintText(_tw - _twQuarter - 1,
                           0,
                           containerName,
                           Printer::kAlignCenter,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+                          Colors::White,
+                          Colors::Black);
 
     Game::gPrnt.PrintText(1,
                           _th - 1,
                           "'Enter' - exchange",
                           Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+                          Colors::White,
+                          Colors::Black);
 
     DisplayPlayerInventory();
     DisplayContainerInventory();
@@ -166,8 +166,8 @@ void ContainerInteractState::DisplayPlayerInventory()
                             yPos + index,
                             stackAmount,
                             Printer::kAlignLeft,
-                            Colors::WhiteColor,
-                            Colors::BlackColor);
+                            Colors::White,
+                            Colors::Black);
     }
     else if (ic->Data.IsEquipped)
     {
@@ -176,8 +176,8 @@ void ContainerInteractState::DisplayPlayerInventory()
                             yPos + index,
                             equipStatus,
                             Printer::kAlignLeft,
-                            Colors::WhiteColor,
-                            Colors::BlackColor);
+                            Colors::White,
+                            Colors::Black);
     }
 
     uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
@@ -198,7 +198,7 @@ void ContainerInteractState::DisplayPlayerInventory()
                             nameInInventory,
                             Printer::kAlignLeft,
                             textColor,
-                            Colors::BlackColor);
+                            Colors::Black);
     }
 
     index++;
@@ -216,7 +216,7 @@ void ContainerInteractState::DisplayPlayerInventory()
                           stub,
                           Printer::kAlignLeft,
                           Colors::ShadesOfGrey::Six,
-                          Colors::BlackColor);
+                          Colors::Black);
     yPos++;
   }
 }
@@ -258,8 +258,8 @@ void ContainerInteractState::DisplayContainerInventory()
         yPos + index,
         stackAmount,
         Printer::kAlignRight,
-        Colors::WhiteColor,
-        Colors::BlackColor
+        Colors::White,
+        Colors::Black
       );
     }
     else if (ic->Data.IsEquipped)
@@ -270,8 +270,8 @@ void ContainerInteractState::DisplayContainerInventory()
         yPos + index,
         equipStatus,
         Printer::kAlignRight,
-        Colors::WhiteColor,
-        Colors::BlackColor
+        Colors::White,
+        Colors::Black
       );
     }
 
@@ -296,7 +296,7 @@ void ContainerInteractState::DisplayContainerInventory()
         nameInInventory,
         Printer::kAlignRight,
         textColor,
-        Colors::BlackColor
+        Colors::Black
       );
     }
 
@@ -315,7 +315,7 @@ void ContainerInteractState::DisplayContainerInventory()
       stub,
       Printer::kAlignRight,
       Colors::ShadesOfGrey::Six,
-      Colors::BlackColor
+      Colors::Black
     );
     yPos++;
   }
@@ -360,7 +360,7 @@ void ContainerInteractState::TryToTransferItem()
       MessageBoxType::ANY_KEY,
       Strings::MessageBoxEpicFailHeaderText,
       { Strings::MsgNoRoomInInventory },
-      Colors::MessageBoxRedBorderColor
+      Colors::MessageBoxRedBorder
     );
     return;
   }
@@ -374,7 +374,7 @@ void ContainerInteractState::TryToTransferItem()
       MessageBoxType::ANY_KEY,
       Strings::MessageBoxEpicFailHeaderText,
       { Strings::MsgUnequipFirst },
-      Colors::MessageBoxRedBorderColor
+      Colors::MessageBoxRedBorder
     );
 
     return;

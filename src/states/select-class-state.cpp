@@ -66,8 +66,8 @@ void SelectClassState::Update(bool forceUpdate)
       _thHalf - 4,
       "Who are you?",
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     int offset = 0;
@@ -76,14 +76,14 @@ void SelectClassState::Update(bool forceUpdate)
     {
       uint32_t bgColor = (index == _menuIndex)
                         ? Colors::ShadesOfGrey::Four
-                        : Colors::BlackColor;
+                        : Colors::Black;
 
       Game::gPrnt.PrintText(
         _twHalf,
         _thHalf + offset,
         i,
         Printer::kAlignCenter,
-        Colors::WhiteColor,
+        Colors::White,
         bgColor
       );
 
@@ -96,8 +96,8 @@ void SelectClassState::Update(bool forceUpdate)
       _th - 1,
       "WARNING: not fully implemented yet!",
       Printer::kAlignCenter,
-      Colors::YellowColor,
-      Colors::BlackColor
+      Colors::Yellow,
+      Colors::Black
     );
 
     Game::gPrnt.Render();

@@ -40,8 +40,8 @@ void InfoState::Update(bool forceUpdate)
       0,
       title,
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     int charToPrint = 0;
@@ -58,16 +58,16 @@ void InfoState::Update(bool forceUpdate)
         i,
         1,
         charToPrint,
-        Colors::WhiteColor,
-        Colors::BlackColor
+        Colors::White,
+        Colors::Black
       );
 
       Game::gPrnt.PrintChar(
         i,
         yPos + 12,
         charToPrint,
-        Colors::WhiteColor,
-        Colors::BlackColor
+        Colors::White,
+        Colors::Black
       );
     }
 
@@ -83,8 +83,8 @@ void InfoState::Update(bool forceUpdate)
         kMaxNameUnderscoreLength,
         y,
         charToPrint,
-        Colors::WhiteColor,
-        Colors::BlackColor
+        Colors::White,
+        Colors::Black
       );
     }
 
@@ -117,8 +117,8 @@ void InfoState::Update(bool forceUpdate)
       yPos + 13,
       "SKILLS",
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     int yPrintOffset = 14;
@@ -130,8 +130,8 @@ void InfoState::Update(bool forceUpdate)
         yPos + yPrintOffset,
         skillName,
         Printer::kAlignLeft,
-        Colors::WhiteColor,
-        Colors::BlackColor
+        Colors::White,
+        Colors::Black
       );
       yPrintOffset++;
     }
@@ -158,8 +158,8 @@ void InfoState::PrintExp(int x, int y)
     y,
     placeholder,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   std::string minVal = Util::StringFormat("%d",
@@ -174,8 +174,8 @@ void InfoState::PrintExp(int x, int y)
     y,
     minVal,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   Game::gPrnt.PrintText(
@@ -183,8 +183,8 @@ void InfoState::PrintExp(int x, int y)
     y,
     maxVal,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 }
 
@@ -195,16 +195,16 @@ void InfoState::PrintAttribute(int x,
                                const std::string& attrName,
                                Attribute& attr)
 {
-  uint32_t color = Colors::WhiteColor;
+  uint32_t color = Colors::White;
 
   int modifiers = attr.GetModifiers();
   if (modifiers > 0)
   {
-    color = Colors::GreenColor;
+    color = Colors::Green;
   }
   else if (modifiers < 0)
   {
-    color = Colors::RedColor;
+    color = Colors::Red;
   }
 
   std::string attrPlaceholder = Util::StringFormat("%s:   ", attrName.data());
@@ -214,7 +214,7 @@ void InfoState::PrintAttribute(int x,
     attrPlaceholder,
     Printer::kAlignLeft,
     Colors::ShadesOfGrey::Five,
-    Colors::BlackColor
+    Colors::Black
   );
 
   std::string text = Util::StringFormat("%d", attr.Get());
@@ -225,7 +225,7 @@ void InfoState::PrintAttribute(int x,
     text,
     Printer::kAlignLeft,
     color,
-    Colors::BlackColor
+    Colors::Black
   );
 
   //text = Util::StringFormat("%s: %i", attrName.data(), attr.Get());
@@ -240,8 +240,8 @@ void InfoState::PrintAttribute(int x,
     y,
     str,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 }
 
@@ -252,16 +252,16 @@ void InfoState::PrintRangedAttribute(int x,
                                      const std::string& attrName,
                                      RangedAttribute& attr)
 {
-  uint32_t color = Colors::WhiteColor;
+  uint32_t color = Colors::White;
 
   int modifiers = attr.Max().GetModifiers();
   if (modifiers > 0)
   {
-    color = Colors::GreenColor;
+    color = Colors::Green;
   }
   else if (modifiers < 0)
   {
-    color = Colors::RedColor;
+    color = Colors::Red;
   }
 
   std::string placeholder =
@@ -273,7 +273,7 @@ void InfoState::PrintRangedAttribute(int x,
     placeholder,
     Printer::kAlignLeft,
     Colors::ShadesOfGrey::Five,
-    Colors::BlackColor
+    Colors::Black
   );
 
   //std::string text = Util::StringFormat("%s: %i / %i",
@@ -292,7 +292,7 @@ void InfoState::PrintRangedAttribute(int x,
     minVal,
     Printer::kAlignLeft,
     color,
-    Colors::BlackColor
+    Colors::Black
   );
 
   Game::gPrnt.PrintText(
@@ -301,15 +301,15 @@ void InfoState::PrintRangedAttribute(int x,
     maxVal,
     Printer::kAlignLeft,
     color,
-    Colors::BlackColor
+    Colors::Black
   );
 
   Game::gPrnt.PrintChar(
     x + placeholder.length() - 5,
     y,
     '/',
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   //
@@ -321,8 +321,8 @@ void InfoState::PrintRangedAttribute(int x,
     y,
     str,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 }
 
@@ -348,7 +348,7 @@ void InfoState::PrintModifiers(int x, int y)
     res.second,
     Printer::kAlignLeft,
     res.first,
-    Colors::BlackColor
+    Colors::Black
   );
 
   res = GetModifierString(defMod);
@@ -358,7 +358,7 @@ void InfoState::PrintModifiers(int x, int y)
     res.second,
     Printer::kAlignLeft,
     res.first,
-    Colors::BlackColor
+    Colors::Black
   );
 
   res = GetModifierString(magMod);
@@ -368,7 +368,7 @@ void InfoState::PrintModifiers(int x, int y)
     res.second,
     Printer::kAlignLeft,
     res.first,
-    Colors::BlackColor
+    Colors::Black
   );
 
   res = GetModifierString(resMod);
@@ -378,7 +378,7 @@ void InfoState::PrintModifiers(int x, int y)
     res.second,
     Printer::kAlignLeft,
     res.first,
-    Colors::BlackColor
+    Colors::Black
   );
 
   res = GetModifierString(sklMod);
@@ -388,7 +388,7 @@ void InfoState::PrintModifiers(int x, int y)
     res.second,
     Printer::kAlignLeft,
     res.first,
-    Colors::BlackColor
+    Colors::Black
   );
 
   res = GetModifierString(spdMod);
@@ -398,7 +398,7 @@ void InfoState::PrintModifiers(int x, int y)
     res.second,
     Printer::kAlignLeft,
     res.first,
-    Colors::BlackColor
+    Colors::Black
   );
 }
 
@@ -408,17 +408,17 @@ std::pair<uint32_t, std::string> InfoState::GetModifierString(int value)
 {
   std::pair<uint32_t, std::string> res;
 
-  uint32_t color = Colors::WhiteColor;
+  uint32_t color = Colors::White;
   std::string str;
 
   if (value < 0)
   {
-    color = Colors::RedColor;
+    color = Colors::Red;
     str = Util::StringFormat("(%d)", value);
   }
   else if (value > 0)
   {
-    color = Colors::GreenColor;
+    color = Colors::Green;
     str = Util::StringFormat("(+%d)", value);
   }
   else if (value == 0)

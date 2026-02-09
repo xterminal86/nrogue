@@ -71,7 +71,7 @@ void ServiceState::ProcessRepair(int key)
       MessageBoxType::ANY_KEY,
       Strings::MessageBoxEpicFailHeaderText,
       { Strings::MsgNoMoney },
-      Colors::MessageBoxRedBorderColor
+      Colors::MessageBoxRedBorder
     );
   }
   else
@@ -93,7 +93,7 @@ void ServiceState::ProcessIdentify(int key)
       MessageBoxType::ANY_KEY,
       Strings::MessageBoxEpicFailHeaderText,
       { Strings::MsgNotEnoughMoney },
-      Colors::MessageBoxRedBorderColor
+      Colors::MessageBoxRedBorder
     );
   }
   else
@@ -114,7 +114,7 @@ void ServiceState::ProcessBlessing(int key)
     Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
                               "Damn Nation!",
                               { "No donation - no salvation!" },
-                              Colors::MessageBoxRedBorderColor);
+                              Colors::MessageBoxRedBorder);
   }
   else
   {
@@ -219,8 +219,8 @@ void ServiceState::DrawSpecific()
     _th - 1,
     youHaveStr,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   Game::gPrnt.PrintText(
@@ -228,8 +228,8 @@ void ServiceState::DrawSpecific()
     _th - 1,
     playerMoney,
     Printer::kAlignLeft,
-    Colors::CoinsColor,
-    Colors::BlackColor
+    Colors::Coins,
+    Colors::Black
   );
 }
 
@@ -244,8 +244,8 @@ void ServiceState::DisplayItems()
       _thHalf,
       _displayOnEmptyItems.at(_shopOwner->NpcRef->Data.ProvidesService),
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
   }
   else
@@ -263,7 +263,7 @@ void ServiceState::DisplayItems()
         ri.NameToDisplay,
         Printer::kAlignLeft,
         ri.Color,
-        Colors::BlackColor
+        Colors::Black
       );
 
       //
@@ -275,8 +275,8 @@ void ServiceState::DisplayItems()
         2 + itemIndex,
         ri.Letter + " - ",
         Printer::kAlignLeft,
-        Colors::WhiteColor,
-        Colors::BlackColor
+        Colors::White,
+        Colors::Black
       );
 
       Game::gPrnt.PrintText(
@@ -284,8 +284,8 @@ void ServiceState::DisplayItems()
         2 + itemIndex,
         cost,
         Printer::kAlignLeft,
-        Colors::CoinsColor,
-        Colors::BlackColor
+        Colors::Coins,
+        Colors::Black
       );
 
       itemIndex++;
@@ -455,7 +455,7 @@ void ServiceState::FillItemsForIdentify()
       _maxStrLen = str.length();
     }
 
-    _serviceInfoByChar[c] = { charStr, str, Colors::WhiteColor, ic, 100 };
+    _serviceInfoByChar[c] = { charStr, str, Colors::White, ic, 100 };
 
     itemIndex++;
   }
@@ -524,7 +524,7 @@ void ServiceState::FillItemsForRepair()
       toRepair *= 0.8;
     }
 
-    _serviceInfoByChar[c] = { charStr, str, Colors::WhiteColor, ic, toRepair };
+    _serviceInfoByChar[c] = { charStr, str, Colors::White, ic, toRepair };
 
     itemIndex++;
   }

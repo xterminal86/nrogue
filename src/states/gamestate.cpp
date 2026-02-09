@@ -126,6 +126,8 @@ void GameState::AdjustWindowSize(const SDL_Event& evt)
   int ww = evt.window.data1;
   int wh = evt.window.data2;
 
+  ConsoleLog("%dx%d %.6f", ww, wh, (double)ww / (double)wh);
+
   Game::gPrnt.ResizedWindowSize() = { ww, wh };
 
   _renderDst.w = ww;
@@ -183,7 +185,7 @@ void GameState::TakeScreenshot()
   Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
                             "Screenshot Taken",
                             { fname },
-                            Colors::MessageBoxBlueBorderColor);
+                            Colors::MessageBoxBlueBorder);
   DebugLog("Wrote %s", fname.data());
 }
 #endif
@@ -201,8 +203,8 @@ void GameState::DrawHeader(const std::string& header)
       x,
       0,
       (int)NameCP437::HBAR_2,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
     #else
     Game::gPrnt.PrintFB(x,
@@ -218,8 +220,8 @@ void GameState::DrawHeader(const std::string& header)
     0,
     header,
     Printer::kAlignCenter,
-    Colors::WhiteColor,
-    Colors::MessageBoxHeaderBgColor
+    Colors::White,
+    Colors::MessageBoxHeaderBg
   );
 }
 

@@ -166,10 +166,10 @@ void EnterNameState::Update(bool forceUpdate)
       _windowSize,
       kEnterNameString,
       (_inputType == InputType::NAME)
-      ? Colors::WhiteColor
-      : Colors::BlackColor,
+      ? Colors::White
+      : Colors::Black,
       (_inputType == InputType::NAME)
-      ? Colors::MessageBoxHeaderBgColor
+      ? Colors::MessageBoxHeaderBg
       : Colors::ShadesOfGrey::Six
     );
 
@@ -178,10 +178,10 @@ void EnterNameState::Update(bool forceUpdate)
       { GlobalConstants::MaxSeedStringLength + 2, 6 },
       kEnterSeedString,
       (_inputType != InputType::NAME)
-      ? Colors::WhiteColor
-      : Colors::BlackColor,
+      ? Colors::White
+      : Colors::Black,
       (_inputType != InputType::NAME)
-      ? Colors::MessageBoxHeaderBgColor
+      ? Colors::MessageBoxHeaderBg
       : Colors::ShadesOfGrey::Six
     );
 
@@ -194,7 +194,7 @@ void EnterNameState::Update(bool forceUpdate)
                             _cursorPos + 6,
                             '.',
                             Colors::ShadesOfGrey::Four,
-                            Colors::BlackColor);
+                            Colors::Black);
     }
 
     //
@@ -206,45 +206,45 @@ void EnterNameState::Update(bool forceUpdate)
                             _cursorPos + 8,
                             '.',
                             Colors::ShadesOfGrey::Four,
-                            Colors::BlackColor);
+                            Colors::Black);
     }
 
     Game::gPrnt.PrintText(_x - _maxNameHalf + 2,
                           _cursorPos,
                           _nameEntered,
                           Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+                          Colors::White,
+                          Colors::Black);
 
     Game::gPrnt.PrintText(_x - _maxSeedHalf + 2,
                           _cursorPos + 8,
                           "0x",
                           Printer::kAlignLeft,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+                          Colors::White,
+                          Colors::Black);
 
     if (_inputType == InputType::NAME)
     {
       Game::gPrnt.PrintChar(_x - _maxNameHalf + 2 + _nameEntered.length(),
                             _cursorPos,
                             ' ',
-                            Colors::BlackColor,
-                            Colors::WhiteColor);
+                            Colors::Black,
+                            Colors::White);
     }
     else if (_inputType == InputType::SEED_STRING)
     {
       Game::gPrnt.PrintChar(_x - _maxSeedHalf + 2 + _seedEntered.length(),
                             _cursorPos + 6,
                             ' ',
-                            Colors::BlackColor,
-                            Colors::WhiteColor);
+                            Colors::Black,
+                            Colors::White);
 
       Game::gPrnt.PrintText(_x - _maxSeedHalf + 2,
                             _cursorPos + 6,
                             _seedEntered,
                             Printer::kAlignLeft,
-                            Colors::WhiteColor,
-                            Colors::BlackColor);
+                            Colors::White,
+                            Colors::Black);
 
       if (!_seedEntered.empty())
       {
@@ -252,8 +252,8 @@ void EnterNameState::Update(bool forceUpdate)
                               _cursorPos + 8,
                               _seedAsHex,
                               Printer::kAlignLeft,
-                              Colors::WhiteColor,
-                              Colors::BlackColor);
+                              Colors::White,
+                              Colors::Black);
       }
     }
     else if (_inputType == InputType::SEED_HEX)
@@ -261,23 +261,23 @@ void EnterNameState::Update(bool forceUpdate)
       Game::gPrnt.PrintChar(_x - _maxSeedHalf + 4 + _seedEntered.length(),
                             _cursorPos + 8,
                             ' ',
-                            Colors::BlackColor,
-                            Colors::WhiteColor);
+                            Colors::Black,
+                            Colors::White);
 
       Game::gPrnt.PrintText(_x - _maxSeedHalf + 4,
                             _cursorPos + 8,
                             _seedEntered,
                             Printer::kAlignLeft,
-                            Colors::WhiteColor,
-                            Colors::BlackColor);
+                            Colors::White,
+                            Colors::Black);
     }
 
     Game::gPrnt.PrintText(_twHalf,
                           Printer::TerminalHeight - 1,
                           "'Tab' - change fields",
                           Printer::kAlignCenter,
-                          Colors::WhiteColor,
-                          Colors::BlackColor);
+                          Colors::White,
+                          Colors::Black);
 
     Game::gPrnt.Render();
   }

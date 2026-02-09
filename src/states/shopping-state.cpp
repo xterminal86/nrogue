@@ -119,8 +119,8 @@ void ShoppingState::Update(bool forceUpdate)
         _tw / 2,
         y,
         (int)NameCP437::VBAR_2,
-        Colors::WhiteColor,
-        Colors::BlackColor
+        Colors::White,
+        Colors::Black
       );
       #else
       Game::gPrnt.PrintFB(_tw / 2,
@@ -142,8 +142,8 @@ void ShoppingState::Update(bool forceUpdate)
       _th - 1,
       youHaveStr,
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
@@ -151,8 +151,8 @@ void ShoppingState::Update(bool forceUpdate)
       _th - 1,
       playerMoney,
       Printer::kAlignLeft,
-      Colors::CoinsColor,
-      Colors::BlackColor
+      Colors::Coins,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
@@ -160,8 +160,8 @@ void ShoppingState::Update(bool forceUpdate)
       _th - 1,
       " 'i' - inspect ",
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
@@ -169,8 +169,8 @@ void ShoppingState::Update(bool forceUpdate)
       _th - 1,
       "'q' - exit ",
       Printer::kAlignRight,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.Render();
@@ -216,8 +216,8 @@ void ShoppingState::DisplayPlayerInventory()
       yPos + index,
       extraInfo,
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     int cost = GetCost(ic, true);
@@ -229,8 +229,8 @@ void ShoppingState::DisplayPlayerInventory()
       yPos + index,
       costString,
       Printer::kAlignLeft,
-      Colors::CoinsColor,
-      Colors::BlackColor
+      Colors::Coins,
+      Colors::Black
     );
 
     uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
@@ -254,7 +254,7 @@ void ShoppingState::DisplayPlayerInventory()
         nameInInventory,
         Printer::kAlignLeft,
         textColor,
-        Colors::BlackColor
+        Colors::Black
       );
     }
 
@@ -274,7 +274,7 @@ void ShoppingState::DisplayPlayerInventory()
       stub,
       Printer::kAlignLeft,
       Colors::ShadesOfGrey::Six,
-      Colors::BlackColor
+      Colors::Black
     );
 
     yPos++;
@@ -325,8 +325,8 @@ void ShoppingState::DisplayShopInventory()
       yPos + index,
       extraInfo,
       Printer::kAlignRight,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     int cost = GetCost(ic, false);
@@ -340,8 +340,8 @@ void ShoppingState::DisplayShopInventory()
       yPos + index,
       costString,
       Printer::kAlignRight,
-      Colors::CoinsColor,
-      Colors::BlackColor
+      Colors::Coins,
+      Colors::Black
     );
 
     uint32_t textColor = Util::GetItemInventoryColor(ic->Data);
@@ -365,7 +365,7 @@ void ShoppingState::DisplayShopInventory()
         nameInInventory,
         Printer::kAlignRight,
         textColor,
-        Colors::BlackColor
+        Colors::Black
       );
     }
 
@@ -385,7 +385,7 @@ void ShoppingState::DisplayShopInventory()
       stub,
       Printer::kAlignRight,
       Colors::ShadesOfGrey::Six,
-      Colors::BlackColor
+      Colors::Black
     );
 
     yPos++;
@@ -477,7 +477,7 @@ void ShoppingState::BuyOrSellItem()
         MessageBoxType::ANY_KEY,
         Strings::MessageBoxEpicFailHeaderText,
         { Strings::MsgUnequipFirst },
-        Colors::MessageBoxRedBorderColor
+        Colors::MessageBoxRedBorder
       );
       return;
     }
@@ -488,7 +488,7 @@ void ShoppingState::BuyOrSellItem()
         MessageBoxType::ANY_KEY,
         Strings::MessageBoxInformationHeaderText,
         { Strings::MsgLooksImportant },
-        Colors::MessageBoxBlueBorderColor
+        Colors::MessageBoxBlueBorder
       );
       return;
     }
@@ -557,7 +557,7 @@ bool ShoppingState::CanBeBought(ItemComponent *ic)
       MessageBoxType::ANY_KEY,
       Strings::MessageBoxEpicFailHeaderText,
       { Strings::MsgNotEnoughMoney },
-      Colors::MessageBoxRedBorderColor
+      Colors::MessageBoxRedBorder
     );
     return false;
   }
@@ -567,7 +567,7 @@ bool ShoppingState::CanBeBought(ItemComponent *ic)
       MessageBoxType::ANY_KEY,
       Strings::MessageBoxEpicFailHeaderText,
       { Strings::MsgNoRoomInInventory },
-      Colors::MessageBoxRedBorderColor
+      Colors::MessageBoxRedBorder
     );
     return false;
   }

@@ -143,14 +143,14 @@ void MapLevelTest::CreateLevel()
 
   CreateGround('.',
                Colors::ShadesOfGrey::Four,
-               Colors::BlackColor,
-               Strings::TileNames::GroundText,
+               Colors::Black,
+               Strings::TileNames::Ground,
                GraphicTiles::GRAVEL);
 
   CreateBorders('#',
-                Colors::WhiteColor,
+                Colors::White,
                 Colors::ShadesOfGrey::Six,
-                Strings::TileNames::RocksText,
+                Strings::TileNames::Rocks,
                 GraphicTiles::STONES);
 
   for (int i = 0; i < 3; i++)
@@ -158,9 +158,9 @@ void MapLevelTest::CreateLevel()
     PlaceWall(3,
               3 + i,
               '#',
-              Colors::WhiteColor,
+              Colors::White,
               Colors::ShadesOfGrey::Six,
-              Strings::TileNames::RocksText,
+              Strings::TileNames::Rocks,
               false,
               GraphicTiles::STONES);
   }
@@ -170,9 +170,9 @@ void MapLevelTest::CreateLevel()
     PlaceWall(x,
               5,
               '#',
-              Colors::WhiteColor,
+              Colors::White,
               Colors::ShadesOfGrey::Six,
-              Strings::TileNames::RocksText,
+              Strings::TileNames::Rocks,
               false,
               GraphicTiles::STONES);
   }

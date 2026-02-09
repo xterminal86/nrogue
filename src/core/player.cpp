@@ -34,8 +34,8 @@ void Player::Init()
   Image = GlobalConstants::CP437IndexByType[NameCP437::FACE_2];
   #endif
 
-  FgColor = Colors::PlayerColor;
-  BgColor = Colors::BlackColor;
+  FgColor = Colors::Player;
+  BgColor = Colors::Black;
 
   Attrs.ActionMeter = GlobalConstants::TurnReadyValue;
 
@@ -75,7 +75,7 @@ void Player::Draw()
   //
   uint32_t bgColor = BgColor;
 
-  bool cond = (BgColor == Colors::BlackColor);
+  bool cond = (BgColor == Colors::Black);
   bool isOnStaticObject = (mapRef->StaticMapObjects[PosX][PosY] != nullptr);
 
   if (cond)
@@ -323,7 +323,7 @@ void Player::BresenhamFoV(int lx, int ly)
   //
   // TODO: some objects can modify visibility radius
   //
-  int radius = (map[PosX][PosY]->ObjectName == Strings::TileNames::TreeText)
+  int radius = (map[PosX][PosY]->ObjectName == Strings::TileNames::Tree)
               ? VisibilityRadius.Get() / 4
               : VisibilityRadius.Get();
 
@@ -884,14 +884,14 @@ void Player::MeleeAttack(GameObject* what, bool alwaysHit)
     Game::gApp.DisplayAttack(what,
                             GlobalConstants::DisplayAttackDelayMs,
                             "You missed",
-                            Colors::WhiteColor);
+                            Colors::White);
   }
   else
   {
     Game::gApp.DisplayAttack(what,
                               GlobalConstants::DisplayAttackDelayMs,
                               std::string(),
-                              Colors::RedColor);
+                              Colors::Red);
 
     ItemComponent* weapon =
         Equipment->EquipmentByCategory[EquipmentCategory::WEAPON][0];
@@ -1226,7 +1226,7 @@ void Player::LevelDown()
   Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
                              "Level DOWN!",
                              res,
-                             Colors::RedColor,
+                             Colors::Red,
                              0x000044);
 }
 
@@ -1362,8 +1362,8 @@ void Player::WaitForTurn()
 void Player::SetDestroyed()
 {
   Image = '%';
-  FgColor = Colors::PlayerColor;
-  BgColor = Colors::RedColor;
+  FgColor = Colors::Player;
+  BgColor = Colors::Red;
   IsDestroyed = true;
 }
 

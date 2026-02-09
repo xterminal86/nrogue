@@ -41,8 +41,8 @@ struct GameLogMessageData
 {
   std::string Message;
 
-  uint32_t FgColor = Colors::WhiteColor;
-  uint32_t BgColor = Colors::BlackColor;
+  uint32_t FgColor = Colors::White;
+  uint32_t BgColor = Colors::Black;
 };
 
 ///
@@ -188,7 +188,7 @@ class Printer
     void DrawGraphicsTile(int x,
                           int y,
                           GraphicTiles tile,
-                          uint32_t colorTint = Colors::WhiteColor);
+                          uint32_t colorTint = Colors::White);
 
     ///
     /// \brief Draw tile from graphics tileset using pixel coordinates.
@@ -201,7 +201,7 @@ class Printer
     void DrawGraphicsTileExt(int x,
                              int y,
                              GraphicTiles tile,
-                             uint32_t colorTint = Colors::WhiteColor,
+                             uint32_t colorTint = Colors::White,
                              double scaleFactor = 1.0);
 
     ///
@@ -214,16 +214,16 @@ class Printer
     void DrawSubstituteGraphicsTile(int x,
                                     int y,
                                     int image,
-                                    uint32_t colorTint = Colors::WhiteColor);
+                                    uint32_t colorTint = Colors::White);
 
     void DrawWindow(const Position& leftCorner,
                     const Position& size,
                     const std::string& header = std::string{},
-                    const uint32_t& headerFgColor = Colors::WhiteColor,
-                    const uint32_t& headerBgColor = Colors::BlackColor,
-                    const uint32_t& borderColor = Colors::WhiteColor,
-                    const uint32_t& borderBgColor = Colors::BlackColor,
-                    const uint32_t& bgColor = Colors::BlackColor);
+                    const uint32_t& headerFgColor = Colors::White,
+                    const uint32_t& headerBgColor = Colors::Black,
+                    const uint32_t& borderColor = Colors::White,
+                    const uint32_t& borderBgColor = Colors::Black,
+                    const uint32_t& bgColor = Colors::Black);
 
     void DrawRect(int x1, int y1,
                   int x2, int y2,
@@ -292,8 +292,8 @@ class Printer
         PrintChar(x,
                   y,
                   arrowChar,
-                  Colors::WhiteColor,
-                  Colors::BlackColor);
+                  Colors::White,
+                  Colors::Black);
         #else
         PrintFB(x, y, arrowChar, Colors::WhiteColor, Colors::BlackColor);
         #endif
@@ -312,7 +312,7 @@ class Printer
             PrintChar(TerminalWidth - 1,
                       y,
                       ' ',
-                      Colors::BlackColor,
+                      Colors::Black,
                       Colors::ShadesOfGrey::Eight);
           }
 
@@ -364,8 +364,8 @@ class Printer
         PrintChar(TerminalWidth - 1,
                   aboveDownArrow - (int)((double)markerMoveArea * progress),
                   '=',
-                  Colors::WhiteColor,
-                  Colors::BlackColor);
+                  Colors::White,
+                  Colors::Black);
       }
     }
 

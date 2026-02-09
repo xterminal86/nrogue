@@ -61,8 +61,8 @@ class TaskAttackRanged : public Node
     char _projectile = '?';
     RangedAttackType _attackType = RangedAttackType::UNDEFINED;
     SpellType _spellType = SpellType::NONE;
-    uint32_t _fgColor = Colors::BlackColor;
-    uint32_t _bgColor = Colors::WhiteColor;
+    uint32_t _fgColor = Colors::Black;
+    uint32_t _bgColor = Colors::White;
 
     const std::unordered_map<std::string, RangedAttackType> _attackTypeByName =
     {

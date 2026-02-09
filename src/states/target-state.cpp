@@ -751,8 +751,8 @@ void TargetState::DrawHint()
       p.X + mox,
       p.Y + moy,
       '.',
-      Colors::RedColor,
-      Colors::BlackColor
+      Colors::Red,
+      Colors::Black
     );
   }
 }
@@ -768,16 +768,16 @@ void TargetState::DrawCursor()
     _cursorPosition.X + mox + 1,
     _cursorPosition.Y + moy,
     ']',
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   Game::gPrnt.PrintChar(
     _cursorPosition.X + mox - 1,
     _cursorPosition.Y + moy,
     '[',
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 }
 
@@ -806,16 +806,16 @@ void TargetState::Update(bool forceUpdate)
       "Select target then press 'f' "
       "or 'Enter' to fire",
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
       tw / 2, 1,
       "(TAB to cycle through visible ones)",
       Printer::kAlignCenter,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.Render();

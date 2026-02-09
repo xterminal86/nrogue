@@ -34,8 +34,8 @@ void MapLevelLostCity::CreateLevel()
 
   CreateGround('.',
                Colors::ShadesOfGrey::Four,
-               Colors::BlackColor,
-               Strings::TileNames::GroundText);
+               Colors::Black,
+               Strings::TileNames::Ground);
 
   LevelBuilder lb;
 
@@ -59,9 +59,9 @@ void MapLevelLostCity::CreateLevel()
   ConstructFromBuilder(lb);
 
   CreateBorders(' ',
-                Colors::BlackColor,
+                Colors::Black,
                 Colors::ShadesOfGrey::Six,
-                Strings::TileNames::RocksText);
+                Strings::TileNames::Rocks);
 
   RecordEmptyCells();
   PlaceStairs();
@@ -86,9 +86,9 @@ void MapLevelLostCity::CreateCommonObjects(int x, int y, char image)
       PlaceWall(x,
                 y,
                 ' ',
-                Colors::BlackColor,
+                Colors::Black,
                 Colors::ShadesOfGrey::Six,
-                Strings::TileNames::RocksText,
+                Strings::TileNames::Rocks,
                 false);
       break;
 
@@ -104,12 +104,12 @@ void MapLevelLostCity::CreateCommonObjects(int x, int y, char image)
       img = GlobalConstants::CP437IndexByType[NameCP437::CLUB];
       #endif
 
-      objName = Strings::TileNames::WitheredTreeText;
+      objName = Strings::TileNames::WitheredTree;
       t.Set(true,
             true,
             img,
-            Colors::DirtColor,
-            Colors::BlackColor,
+            Colors::Dirt,
+            Colors::Black,
             objName,
             Strings::Empty);
       PlaceStaticObject(x, y, t);
@@ -125,17 +125,17 @@ void MapLevelLostCity::CreateCommonObjects(int x, int y, char image)
                       y,
                       image,
                       Colors::ShadesOfGrey::Four,
-                      Colors::BlackColor,
-                      Strings::TileNames::GroundText);
+                      Colors::Black,
+                      Strings::TileNames::Ground);
       break;
 
     case ' ':
       PlaceGroundTile(x,
                       y,
                       image,
-                      Colors::BlackColor,
+                      Colors::Black,
                       Colors::ShadesOfGrey::Ten,
-                      Strings::TileNames::FlagstoneText);
+                      Strings::TileNames::Flagstone);
       break;
 
     //
@@ -160,18 +160,18 @@ void MapLevelLostCity::CreateCommonObjects(int x, int y, char image)
       PlaceGroundTile(x,
                       y,
                       '.',
-                      Colors::DirtDotColor,
-                      Colors::DirtColor,
-                      Strings::TileNames::DirtText);
+                      Colors::DirtDot,
+                      Colors::Dirt,
+                      Strings::TileNames::Dirt);
       break;
 
     case 'F':
       t.Set(true,
             false,
             'T',
-            Colors::WhiteColor,
-            Colors::DeepWaterColor,
-            Strings::TileNames::FountainText,
+            Colors::White,
+            Colors::DeepWater,
+            Strings::TileNames::Fountain,
             Strings::Empty);
       PlaceStaticObject(x, y, t);
       break;
@@ -188,11 +188,11 @@ void MapLevelLostCity::CreateCommonObjects(int x, int y, char image)
       PlaceGroundTile(x,
                       y,
                       ' ',
-                      Colors::BlackColor,
+                      Colors::Black,
                       (image == '1')
                     ? Colors::ShadesOfGrey::Four
                     : Colors::ShadesOfGrey::Twelve,
-                      Strings::TileNames::TiledFloorText);
+                      Strings::TileNames::TiledFloor);
       break;
   }
 }

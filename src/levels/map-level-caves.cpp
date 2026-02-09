@@ -113,8 +113,8 @@ void MapLevelCaves::CreateLevel()
 
   CreateGround('.',
                Colors::ShadesOfGrey::Four,
-               Colors::BlackColor,
-               Strings::TileNames::StoneFloorText);
+               Colors::Black,
+               Strings::TileNames::StoneFloor);
 
   int tunnelLengthMax = 5; //MapSize.X / 10;
   int tunnelLengthMin = 1; //tunnelLengthMax / 2;
@@ -167,16 +167,16 @@ void MapLevelCaves::CreateLevel()
   if (MapType_ != MapType::CAVES_5)
   {
     CreateBorders(' ',
-                  Colors::BlackColor,
-                  Colors::CaveWallColor,
-                  Strings::TileNames::CaveWallText);
+                  Colors::Black,
+                  Colors::CaveWall,
+                  Strings::TileNames::CaveWall);
   }
   else
   {
     CreateBorders('#',
-                  Colors::ObsidianColorHigh,
-                  Colors::ObsidianColorLow,
-                  Strings::TileNames::ObsidianWallText);
+                  Colors::ObsidianHigh,
+                  Colors::ObsidianLow,
+                  Strings::TileNames::ObsidianWall);
   }
 
   if (MapType_ != MapType::CAVES_5)
@@ -203,9 +203,9 @@ void MapLevelCaves::CreateCommonObjects(int x, int y, char image)
       PlaceWall(x,
                 y,
                 ' ',
-                Colors::BlackColor,
-                Colors::CaveWallColor,
-                Strings::TileNames::CaveWallText,
+                Colors::Black,
+                Colors::CaveWall,
+                Strings::TileNames::CaveWall,
                 false);
       break;
 
@@ -221,8 +221,8 @@ void MapLevelCaves::CreateCommonObjects(int x, int y, char image)
                       y,
                       image,
                       Colors::ShadesOfGrey::Four,
-                      Colors::BlackColor,
-                      Strings::TileNames::StoneFloorText);
+                      Colors::Black,
+                      Strings::TileNames::StoneFloor);
       break;
 
     case 'g':
@@ -241,9 +241,9 @@ void MapLevelCaves::CreateCommonObjects(int x, int y, char image)
       PlaceGroundTile(x,
                       y,
                       '.',
-                      Colors::BlackColor,
+                      Colors::Black,
                       Colors::ShadesOfGrey::Ten,
-                      Strings::TileNames::StoneText);
+                      Strings::TileNames::Stone);
       break;
 
     case 'l':
@@ -258,11 +258,11 @@ void MapLevelCaves::CreateCommonObjects(int x, int y, char image)
       PlaceGroundTile(x,
                       y,
                       ' ',
-                      Colors::BlackColor,
+                      Colors::Black,
                       (image == '1') ?
                       Colors::ShadesOfGrey::Four :
                       Colors::ShadesOfGrey::Twelve,
-                      Strings::TileNames::TiledFloorText);
+                      Strings::TileNames::TiledFloor);
       break;
   }
 }
@@ -300,8 +300,8 @@ void MapLevelCaves::CreateSpecialLevel()
         MapArray[startX][startY]->GetComponent<StairsComponent>();
     sc->OwnerGameObject->Image = '.';
     sc->OwnerGameObject->FgColor = Colors::ShadesOfGrey::Four;
-    sc->OwnerGameObject->BgColor = Colors::BlackColor;
-    sc->OwnerGameObject->ObjectName = Strings::TileNames::GroundText;
+    sc->OwnerGameObject->BgColor = Colors::Black;
+    sc->OwnerGameObject->ObjectName = Strings::TileNames::Ground;
     sc->IsEnabled = false;
 
     Game::gPrnt.AddMessage("Suddenly the stairs slide up!");
@@ -350,9 +350,9 @@ void MapLevelCaves::CreateSpecialLevel()
           PlaceWall(posX,
                     posY,
                     '#',
-                    Colors::ObsidianColorHigh,
-                    Colors::ObsidianColorLow,
-                    Strings::TileNames::ObsidianWallText,
+                    Colors::ObsidianHigh,
+                    Colors::ObsidianLow,
+                    Strings::TileNames::ObsidianWall,
                     true);
 
           // TODO: add trigger to destroy on boss death and restore stairs up.
@@ -364,9 +364,9 @@ void MapLevelCaves::CreateSpecialLevel()
           PlaceWall(posX,
                     posY,
                     c,
-                    Colors::ObsidianColorHigh,
-                    Colors::ObsidianColorLow,
-                    Strings::TileNames::ObsidianWallText,
+                    Colors::ObsidianHigh,
+                    Colors::ObsidianLow,
+                    Strings::TileNames::ObsidianWall,
                     true);
         }
         break;
@@ -376,8 +376,8 @@ void MapLevelCaves::CreateSpecialLevel()
                           posY,
                           c,
                           Colors::ShadesOfGrey::Four,
-                          Colors::BlackColor,
-                          Strings::TileNames::GroundText);
+                          Colors::Black,
+                          Strings::TileNames::Ground);
           break;
       }
 
@@ -429,12 +429,12 @@ void MapLevelCaves::CreateRivers()
       if (MapArray[p.X][p.Y]->Image == '.')
       {
         GameObjectInfo t;
-        std::string objName = Strings::TileNames::ShallowWaterText;
+        std::string objName = Strings::TileNames::ShallowWater;
         t.Set(false,
               false,
               '~',
-              Colors::WhiteColor,
-              Colors::ShallowWaterColor,
+              Colors::White,
+              Colors::ShallowWater,
               objName,
               Strings::Empty);
         MapArray[p.X][p.Y]->MakeTile(t, GameObjectType::SHALLOW_WATER);

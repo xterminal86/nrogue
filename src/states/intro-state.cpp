@@ -48,8 +48,8 @@ void IntroState::Update(bool forceUpdate)
     2 * ad.GlyphHeightScaled,
     _scenarioNameByClass.at(pc),
     Printer::kAlignCenter,
-    Colors::WhiteColor,
-    Colors::BlackColor,
+    Colors::White,
+    Colors::Black,
     4.0,
     8,
     8
@@ -81,16 +81,16 @@ void IntroState::Update(bool forceUpdate)
           _textPositionX - len / 2,
           _textPositionY,
           s[_textPositionCursor],
-          Colors::WhiteColor,
-          Colors::BlackColor
+          Colors::White,
+          Colors::Black
         );
 
         Game::gPrnt.PrintChar(
           _textPositionX - len / 2 + 1,
           _textPositionY,
           ' ',
-          Colors::BlackColor,
-          Colors::WhiteColor
+          Colors::Black,
+          Colors::White
         );
 
         _textPositionX++;
@@ -102,8 +102,8 @@ void IntroState::Update(bool forceUpdate)
           _textPositionX - len / 2,
           _textPositionY,
           ' ',
-          Colors::BlackColor,
-          Colors::BlackColor
+          Colors::Black,
+          Colors::Black
         );
 
         _textPositionCursor = 0;
@@ -121,8 +121,8 @@ void IntroState::Update(bool forceUpdate)
         Printer::TerminalHeight - 1,
         "Press 'Enter' to continue",
         Printer::kAlignCenter,
-        Colors::WhiteColor,
-        Colors::BlackColor
+        Colors::White,
+        Colors::Black
       );
     }
 

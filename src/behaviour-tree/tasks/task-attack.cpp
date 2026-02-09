@@ -190,7 +190,7 @@ bool TaskAttack::AttackWithWeapon()
     Game::gApp.DisplayAttack(_playerRef,
                               GlobalConstants::DisplayAttackDelayMs,
                               std::string(),
-                              Colors::RedColor);
+                              Colors::Red);
 
     // TODO: process weapon damage bonuses (life leech, knockback etc.)
 
@@ -224,7 +224,7 @@ bool TaskAttack::AttackWithWeapon()
     Game::gApp.DisplayAttack(_playerRef,
                               GlobalConstants::DisplayAttackDelayMs,
                               msg,
-                              Colors::WhiteColor);
+                              Colors::White);
 
     result = false;
   }
@@ -252,7 +252,7 @@ AttackResult TaskAttack::AttackUnarmed(const DamageRoll& damageRoll)
     Game::gApp.DisplayAttack(_playerRef,
                               GlobalConstants::DisplayAttackDelayMs,
                               std::string(),
-                              Colors::RedColor);
+                              Colors::Red);
 
     dmg = Util::CalculateDamageValue(_objectToControl,
                                      _playerRef,
@@ -276,7 +276,7 @@ AttackResult TaskAttack::AttackUnarmed(const DamageRoll& damageRoll)
     Game::gApp.DisplayAttack(_playerRef,
                               GlobalConstants::DisplayAttackDelayMs,
                               msg,
-                              Colors::WhiteColor);
+                              Colors::White);
     res.first = false;
     res.second = 0;
   }

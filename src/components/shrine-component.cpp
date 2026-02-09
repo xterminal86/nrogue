@@ -64,7 +64,7 @@ IR ShrineComponent::Interact()
     _duration = GlobalConstants::EffectDefaultDuration * _power;
 
     _counter = 0;
-    OwnerGameObject->FgColor = Colors::BlackColor;
+    OwnerGameObject->FgColor = Colors::Black;
 
     std::string shrineName = GlobalConstants::ShrineNameByType.at(_type);
     std::string message = Util::StringFormat("You touch the %s...",

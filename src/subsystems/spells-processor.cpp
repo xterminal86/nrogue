@@ -644,8 +644,8 @@ void SpellsProcessor::ProcessScrollOfTownPortal(ItemComponent* scroll,
                                         tpPos.X,
                                         tpPos.Y,
                                         '0',
-                                        Colors::WhiteColor,
-                                        Colors::BlueColor);
+                                        Colors::White,
+                                        Colors::Blue);
 
     portal->BlocksSight = true;
     portal->ObjectName = "Town Portal";

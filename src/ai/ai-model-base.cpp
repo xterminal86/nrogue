@@ -221,8 +221,8 @@ Node* AIModelBase::CreateTask(const ScriptNode* data)
                                   damageType,
                                   spellType,
                                   '*',
-                                  Colors::RedColor,
-                                  Colors::BlackColor);
+                                  Colors::Red,
+                                  Colors::Black);
     }
     break;
 

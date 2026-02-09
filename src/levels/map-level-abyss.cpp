@@ -52,9 +52,9 @@ void MapLevelAbyss::CreateLevel()
   MonstersRespawnTurns = GlobalConstants::MonstersRespawnTimeout;
 
   CreateGround(' ',
-               Colors::BlackColor,
+               Colors::Black,
                0x440000,
-               Strings::TileNames::AbyssalFloorText);
+               Strings::TileNames::AbyssalFloor);
 
   LevelBuilder lb;
   switch (MapType_)
@@ -69,9 +69,9 @@ void MapLevelAbyss::CreateLevel()
   }
 
   CreateBorders(' ',
-                Colors::BlackColor,
+                Colors::Black,
                 Colors::ShadesOfGrey::Six,
-                Strings::TileNames::AbyssalRocksText);
+                Strings::TileNames::AbyssalRocks);
 
   if (MapType_ != MapType::ABYSS_5)
   {
@@ -93,12 +93,12 @@ void MapLevelAbyss::CreateCommonObjects(int x, int y, char image)
   {
     case '#':
     {
-      objName = Strings::TileNames::AbyssalRocksText;
+      objName = Strings::TileNames::AbyssalRocks;
       t.Set(true,
             true,
             ' ',
-            Colors::BlackColor,
-            Colors::RedPoppyColor,
+            Colors::Black,
+            Colors::RedPoppy,
             objName,
             Strings::Empty);
       PlaceStaticObject(x, y, t, -1, GameObjectType::PICKAXEABLE);
@@ -116,9 +116,9 @@ void MapLevelAbyss::CreateCommonObjects(int x, int y, char image)
       PlaceGroundTile(x,
                       y,
                       ' ',
-                      Colors::BlackColor,
+                      Colors::Black,
                       0x440000,
-                      Strings::TileNames::AbyssalFloorText);
+                      Strings::TileNames::AbyssalFloor);
       break;
 
     case 'g':
@@ -137,9 +137,9 @@ void MapLevelAbyss::CreateCommonObjects(int x, int y, char image)
       PlaceGroundTile(x,
                       y,
                       '.',
-                      Colors::BlackColor,
+                      Colors::Black,
                       Colors::ShadesOfGrey::Ten,
-                      Strings::TileNames::StoneText);
+                      Strings::TileNames::Stone);
       break;
 
     case 'l':

@@ -38,8 +38,8 @@ void MessageBoxState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
   {
-    uint32_t headerBgColor = Colors::MessageBoxHeaderBgColor;
-    if (_borderColor == Colors::MessageBoxRedBorderColor)
+    uint32_t headerBgColor = Colors::MessageBoxHeaderBg;
+    if (_borderColor == Colors::MessageBoxRedBorder)
     {
       headerBgColor = 0x660000;
     }
@@ -47,10 +47,10 @@ void MessageBoxState::Update(bool forceUpdate)
     Game::gPrnt.DrawWindow(_leftCorner,
                             _windowSize,
                             _header,
-                            Colors::WhiteColor,
+                            Colors::White,
                             headerBgColor,
                             _borderColor,
-                            Colors::BlackColor,
+                            Colors::Black,
                             _bgColor);
 
     int offset = 0;
@@ -61,7 +61,7 @@ void MessageBoxState::Update(bool forceUpdate)
         _th / 2 - _message.size() / 2 + offset,
         s,
         Printer::kAlignCenter,
-        Colors::WhiteColor,
+        Colors::White,
         _bgColor
       );
 

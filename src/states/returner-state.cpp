@@ -109,8 +109,8 @@ void ReturnerState::Update(bool forceUpdate)
       Printer::TerminalHeight - 1,
       "What do you want to do with returner?",
       Printer::kAlignRight,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.PrintText(
@@ -118,8 +118,8 @@ void ReturnerState::Update(bool forceUpdate)
       Printer::TerminalHeight - 2,
       "(a) - attune, (u) - use, (q) - nothing",
       Printer::kAlignRight,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     Game::gPrnt.Render();

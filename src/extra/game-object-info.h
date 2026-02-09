@@ -26,8 +26,8 @@ struct GameObjectInfo
 
   GraphicTiles GraphicTile = GraphicTiles::NONE;
 
-  uint32_t FgColor = Colors::WhiteColor;
-  uint32_t BgColor = Colors::MagentaColor;
+  uint32_t FgColor = Colors::White;
+  uint32_t BgColor = Colors::Magenta;
 
   std::string ObjectName;
   std::string FogOfWarName;

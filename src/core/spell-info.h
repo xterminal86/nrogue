@@ -10,7 +10,7 @@ struct SpellInfo
   std::string SpellShortName;
   int SpellBaseCost = 0;
   std::pair<int, int> SpellBaseDamage = { 0, 0 };
-  uint32_t SpellProjectileColor = Colors::MagentaColor;
+  uint32_t SpellProjectileColor = Colors::Magenta;
 
 #ifdef DEBUG_BUILD
   StringV Dump(const std::string& name, size_t indent);

@@ -254,8 +254,8 @@ void MainState::Update(bool forceUpdate)
       0,
       Game::gMap.CurrentLevel->LevelName,
       Printer::kAlignRight,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
 
     #ifdef DEBUG_BUILD
@@ -388,7 +388,7 @@ void MainState::PickupSingleItem(std::pair<int, GameObject *>& item)
       MessageBoxType::ANY_KEY,
       Strings::MessageBoxEpicFailHeaderText,
       { Strings::MsgInventoryFull },
-      Colors::MessageBoxRedBorderColor
+      Colors::MessageBoxRedBorder
     );
 
     return;
@@ -416,7 +416,7 @@ void MainState::DrawHPMP()
     th - 2,
     str,
     Printer::kAlignCenter,
-    Colors::WhiteColor,
+    Colors::White,
     0x880000
   );
 
@@ -428,7 +428,7 @@ void MainState::DrawHPMP()
     th - 1,
     str,
     Printer::kAlignCenter,
-    Colors::WhiteColor,
+    Colors::White,
     0x000088
   );
 
@@ -472,8 +472,8 @@ void MainState::UpdateBar(int x, int y, RangedAttribute& attr)
     y,
     bar,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 }
 
@@ -549,8 +549,8 @@ void MainState::PrintDebugInfo()
     0,
     _debugInfo,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   _debugInfo = Util::StringFormat("GO = %lu Actors = %lu",
@@ -562,8 +562,8 @@ void MainState::PrintDebugInfo()
     1,
     _debugInfo,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   _debugInfo = Util::StringFormat("Key: %d", _keyPressed);
@@ -573,8 +573,8 @@ void MainState::PrintDebugInfo()
     2,
     _debugInfo,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   _debugInfo = Util::StringFormat("Start: [%d;%d]",
@@ -586,8 +586,8 @@ void MainState::PrintDebugInfo()
     3,
     _debugInfo,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   _debugInfo = Util::StringFormat("Exit: [%d;%d]",
@@ -599,8 +599,8 @@ void MainState::PrintDebugInfo()
     4,
     _debugInfo,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   _debugInfo = Util::StringFormat("Colors: %d",
@@ -611,8 +611,8 @@ void MainState::PrintDebugInfo()
     5,
     _debugInfo,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   _debugInfo =
@@ -625,8 +625,8 @@ void MainState::PrintDebugInfo()
     6,
     _debugInfo,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   Game::gPrnt.PrintText(
@@ -634,8 +634,8 @@ void MainState::PrintDebugInfo()
     7,
     "Actors watched:",
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   int yOffset = 0;
@@ -656,8 +656,8 @@ void MainState::PrintDebugInfo()
           8 + yOffset,
           _debugInfo,
           Printer::kAlignLeft,
-          Colors::WhiteColor,
-          Colors::BlackColor
+          Colors::White,
+          Colors::Black
         );
 
         yOffset++;
@@ -673,8 +673,8 @@ void MainState::PrintDebugInfo()
       8,
       "NONE",
       Printer::kAlignLeft,
-      Colors::WhiteColor,
-      Colors::BlackColor
+      Colors::White,
+      Colors::Black
     );
   }
 }
@@ -894,8 +894,8 @@ void MainState::DisplayStartHint()
     1,
     th - 4,
     '<',
-    Colors::WhiteColor,
-    Colors::DoorHighlightColor
+    Colors::White,
+    Colors::DoorHighlight
   );
 
   auto curLvl = Game::gMap.CurrentLevel;
@@ -927,8 +927,8 @@ void MainState::DisplayStartHint()
     th - 4,
     dir,
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 }
 
@@ -942,8 +942,8 @@ void MainState::DisplayExitHint()
     1,
     th - 3,
     '>',
-    Colors::WhiteColor,
-    Colors::DoorHighlightColor
+    Colors::White,
+    Colors::DoorHighlight
   );
 
   std::string dir;
@@ -978,8 +978,8 @@ void MainState::DisplayExitHint()
     th - 3,
     curLvl->ExitFound ? dir : "??",
     Printer::kAlignLeft,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 }
 
@@ -1006,8 +1006,8 @@ void MainState::DisplayHungerStatus(const int& startPos)
       startPos,
       _th - 3,
       '%',
-      Colors::WhiteColor,
-      Colors::RedColor
+      Colors::White,
+      Colors::Red
     );
   }
   else
@@ -1020,7 +1020,7 @@ void MainState::DisplayHungerStatus(const int& startPos)
         startPos,
         _th - 3,
         '%',
-        Colors::WhiteColor,
+        Colors::White,
         0x999900
       );
     }
@@ -1047,8 +1047,8 @@ void MainState::DisplayWeaponCondition(const int& startPos)
         startPos + 2,
         _th - 3,
         ')',
-        Colors::YellowColor,
-        Colors::BlackColor
+        Colors::Yellow,
+        Colors::Black
       );
     }
   }
@@ -1072,8 +1072,8 @@ void MainState::DisplayArmorCondition(const int& startPos)
         startPos + 4,
         _th - 3,
         '[',
-        Colors::YellowColor,
-        Colors::BlackColor
+        Colors::Yellow,
+        Colors::Black
       );
     }
   }
@@ -1095,8 +1095,8 @@ void MainState::DisplayAmmoCondition(const int& startPos)
         startPos + 6,
         _th - 3,
         '^',
-        Colors::YellowColor,
-        Colors::BlackColor
+        Colors::Yellow,
+        Colors::Black
       );
     }
   }
@@ -1136,7 +1136,7 @@ void MainState::DisplayActiveEffects(const int& startPos)
 
     uint32_t color = isFading ?
                      Colors::ShadesOfGrey::Four :
-                     Colors::WhiteColor;
+                     Colors::White;
 
     Game::gPrnt.PrintText(
       offsetX,
@@ -1144,7 +1144,7 @@ void MainState::DisplayActiveEffects(const int& startPos)
       kvp.first,
       Printer::kAlignLeft,
       color,
-      Colors::BlackColor
+      Colors::Black
     );
 
     offsetX += 4;

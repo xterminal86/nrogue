@@ -114,8 +114,8 @@ void MapLevelBase::PrepareMap()
                            x,
                            y,
                            '?',
-                           Colors::WhiteColor,
-                           Colors::MagentaColor);
+                           Colors::White,
+                           Colors::Magenta);
 
       MapArray[x][y]->Layer = GameObjectLayer::MAP_ARRAY;
     }
@@ -1069,17 +1069,10 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
   //
   // Create 'flowers'
   //
-  // TODO: in graphics mode create grass tile and flower as non-blocking static
-  // object on top of it.
-  //
 
-  //int tileChoice = Game::gRng.RandomRange(0, 10);
-  //if (tileChoice < 2) img = '.';
-
-  //uint32_t flowerColor = GlobalConstants::BlackColor;
-  uint32_t flowerColor = Colors::GrassDotColor;
-  std::string tileName = Strings::TileNames::GrassText;
-  GraphicTiles flowerTile = GraphicTiles::NONE;
+  uint32_t flowerColor = Colors::GrassDot;
+  std::string tileName = Strings::TileNames::Grass;
+  GraphicTiles flowerTile = GraphicTiles::GRASS2;
 
   //
   // Skip flower generation if frequency is -1, for example.
@@ -1087,9 +1080,9 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
   if (maxDiceRoll >= 0)
   {
     int colorChoice = Game::gRng.RandomRange(0, maxDiceRoll);
-    if      (colorChoice == 0) flowerColor = Colors::WhiteColor;
-    else if (colorChoice == 1) flowerColor = Colors::DandelionYellowColor;
-    else if (colorChoice == 2) flowerColor = Colors::RedPoppyColor;
+    if      (colorChoice == 0) flowerColor = Colors::White;
+    else if (colorChoice == 1) flowerColor = Colors::DandelionYellow;
+    else if (colorChoice == 2) flowerColor = Colors::RedPoppy;
 
     std::map<int, std::string> flowersNameByChoice =
     {
@@ -1100,10 +1093,9 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
 
     switch (colorChoice)
     {
-      case 0: flowerTile = GraphicTiles::CHAMOMILE; break;
-      case 1: flowerTile = GraphicTiles::DANDELION; break;
-      case 2: flowerTile = GraphicTiles::POPPY;     break;
-
+      case 0:  flowerTile = GraphicTiles::CHAMOMILE_GRASS; break;
+      case 1:  flowerTile = GraphicTiles::DANDELION_GRASS; break;
+      case 2:  flowerTile = GraphicTiles::POPPY_GRASS;     break;
       default:
         break;
     }
@@ -1119,23 +1111,12 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
         false,
         img,
         flowerColor,
-        Colors::GrassColor,
+        Colors::Grass,
         tileName,
         Strings::Empty,
-        GraphicTiles::GRASS2);
+        flowerTile);
 
   MapArray[x][y]->MakeTile(t);
-
-  // FIXME: flowers drawn over stones, water etc.
-#ifdef USE_SDL
-  if (flowerTile != GraphicTiles::NONE)
-  {
-    GameObjectInfo goi;
-    goi.ObjectName = tileName;
-    goi.GraphicTile = flowerTile;
-    PlaceStaticObject(x, y, goi);
-  }
-#endif
 }
 
 // =============================================================================
@@ -1151,9 +1132,9 @@ void MapLevelBase::PlaceShallowWaterTile(int x, int y)
   t.Set(false,
         false,
         '~',
-        Colors::WhiteColor,
-        Colors::ShallowWaterColor,
-        Strings::TileNames::ShallowWaterText,
+        Colors::White,
+        Colors::ShallowWater,
+        Strings::TileNames::ShallowWater,
         Strings::Empty,
         GraphicTiles::WATER_SHALLOW_HC);
 
@@ -1182,9 +1163,9 @@ void MapLevelBase::PlaceDeepWaterTile(int x, int y)
   t.Set(false,
         false,
         img,
-        Colors::WhiteColor,
-        Colors::DeepWaterColor,
-        Strings::TileNames::DeepWaterText,
+        Colors::White,
+        Colors::DeepWater,
+        Strings::TileNames::DeepWater,
         Strings::Empty,
         GraphicTiles::WATER_DEEP_HC);
 
@@ -1204,9 +1185,9 @@ void MapLevelBase::PlaceLavaTile(int x, int y)
   t.Set(false,
         false,
         '~',
-        Colors::LavaWavesColor,
-        Colors::LavaColor,
-        Strings::TileNames::LavaText,
+        Colors::LavaWaves,
+        Colors::Lava,
+        Strings::TileNames::Lava,
         Strings::Empty,
         GraphicTiles::LAVA);
 
@@ -1228,7 +1209,7 @@ void MapLevelBase::PlaceChasmTile(int x, int y)
   img = GlobalConstants::CP437IndexByType[NameCP437::SHADING_3];
 
   uint32_t fgColor = Colors::ShadesOfGrey::Three;
-  uint32_t bgColor = Colors::BlackColor;
+  uint32_t bgColor = Colors::Black;
 #else
   uint32_t fgColor = Colors::BlackColor;
   uint32_t bgColor = Colors::BlackColor;
@@ -1240,7 +1221,7 @@ void MapLevelBase::PlaceChasmTile(int x, int y)
         img,
         fgColor,
         bgColor,
-        Strings::TileNames::ChasmText,
+        Strings::TileNames::Chasm,
         Strings::Empty);
 
   MapArray[x][y]->MakeTile(t, GameObjectType::CHASM);
@@ -1281,7 +1262,7 @@ void MapLevelBase::PlaceShrine(const Position& pos, ShrineType type)
         false,
         '/',
         Colors::ShadesOfGrey::Four,
-        Colors::BlackColor,
+        Colors::Black,
         description,
         "?Shrine?");
 
@@ -1307,9 +1288,9 @@ void MapLevelBase::PlaceTree(int x, int y)
   t.Set(true,
         true,
         img,
-        Colors::GreenColor,
-        Colors::BlackColor,
-        Strings::TileNames::TreeText,
+        Colors::Green,
+        Colors::Black,
+        Strings::TileNames::Tree,
         Strings::Empty);
 
   PlaceStaticObject(x, y, t);
@@ -1499,8 +1480,8 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
                                                       y,
                                                       'B',
                                                       "Wooden Box",
-                                                      Colors::WoodColor,
-                                                      Colors::BlackColor);
+                                                      Colors::Wood,
+                                                      Colors::Black);
           PlaceStaticObject(box);
         }
       }
