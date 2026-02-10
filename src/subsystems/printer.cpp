@@ -26,8 +26,15 @@ size_t Printer::TerminalHeight = GlobalConstants::TerminalStdHeight;
 // (check _sgScaleFactor and assignments for _textTileWidthScaled and
 // _textTileHeightScaled).
 //
-int Printer::GraphicsWindowWidth  = GlobalConstants::TerminalStdWidth / 2;
-int Printer::GraphicsWindowHeight = GlobalConstants::TerminalStdHeight;
+const int Printer::GraphicsWindowWidth  =
+    GlobalConstants::TerminalStdWidth / 2;
+
+const int Printer::GraphicsWindowHeight =
+    GlobalConstants::TerminalStdHeight;
+
+const double Printer::GraphicsWindowAspectRatio =
+    (double)Printer::GraphicsWindowWidth /
+    (double)Printer::GraphicsWindowHeight;
 
 void Printer::Init()
 {

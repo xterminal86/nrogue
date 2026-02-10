@@ -126,10 +126,30 @@ void GameState::AdjustWindowSize(const SDL_Event& evt)
   int ww = evt.window.data1;
   int wh = evt.window.data2;
 
-  ConsoleLog("%dx%d %.6f", ww, wh, (double)ww / (double)wh);
+  int wx = 0;
+  int wy = 0;
+
+  if (Game::gApp.GameConfig.PreserveAspectRatio)
+  {
+    double newHeight = (double)wh / Game::gPrnt.GraphicsWindowAspectRatio;
+    double newWidth  = newHeight * Game::gPrnt.GraphicsWindowAspectRatio;
+
+    int adjustedWidth  = (int)(newWidth * Game::gPrnt.GraphicsWindowAspectRatio);
+    int adjustedHeight = (int)(newHeight * Game::gPrnt.GraphicsWindowAspectRatio);
+
+    int dw = ww - adjustedWidth;
+    int dh = wh - adjustedHeight;
+
+    wx = dw / 2;
+    wy = dh / 2;
+    ww = adjustedWidth;
+    wh = adjustedHeight;
+  }
 
   Game::gPrnt.ResizedWindowSize() = { ww, wh };
 
+  _renderDst.x = wx;
+  _renderDst.y = wy;
   _renderDst.w = ww;
   _renderDst.h = wh;
 

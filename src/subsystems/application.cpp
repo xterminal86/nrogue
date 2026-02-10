@@ -420,7 +420,7 @@ void Application::SaveGame()
   using C  = std::chrono::system_clock;
   using TP = std::chrono::time_point<C>;
 
-  NRS save;
+  NRS save{"game saver"};
 
   DebugLog("saving game...");
 
@@ -942,6 +942,9 @@ void Application::LoadConfig()
 
       GameConfig.FastMonsterMovement =
           (_loadedConfig[kConfigKeyFastMonsterMovement].GetString() == "Y");
+
+      GameConfig.PreserveAspectRatio =
+          (_loadedConfig[kConfigKeyPreserveAspect].GetString() == "Y");
     }
     break;
   }

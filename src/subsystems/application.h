@@ -64,6 +64,13 @@ class Application
       // in case of very fast attacking.
       //
       bool FastMonsterMovement = false;
+
+      //
+      // Preserves correct aspect ratio on window size changes
+      // (SDL build only).
+      //
+      bool PreserveAspectRatio = true;
+
     } GameConfig;
 
     struct ApplicationData
@@ -135,7 +142,7 @@ class Application
     Player PlayerInstance;
 
   private:
-    NRS _loadedConfig;
+    NRS _loadedConfig{"config loader"};
 
     void LoadConfig();
 
@@ -194,6 +201,7 @@ class Application
     const std::string kConfigKeyTileSize            = "tile_size";
     const std::string kConfigKeyFastCombat          = "fast_combat";
     const std::string kConfigKeyFastMonsterMovement = "fast_monster_movement";
+    const std::string kConfigKeyPreserveAspect      = "preserve_aspect";
 
     template <typename T>
     bool ParseValue(const std::string& key, T& out)

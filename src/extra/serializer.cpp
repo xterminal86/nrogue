@@ -2,6 +2,10 @@
 
 #include "util.h"
 
+NRS::NRS(const std::string& tag) : _tag(tag) {}
+
+// =============================================================================
+
 void NRS::SetString(const std::string& s, size_t index)
 {
   if (_content.size() <= index)
@@ -91,8 +95,18 @@ NRS& NRS::operator[](const std::string& nodeName)
 {
   if (_childIndexByName.count(nodeName) == 0)
   {
+    DebugLog("[WAR] NRS('%s'): key '%s' not found, creating...",
+             _tag.data(),
+             nodeName.data());
+
+    //
+    // New member will have index of current children count.
+    //
     _childIndexByName[nodeName] = _children.size();
 
+    //
+    // Now to actually insert new member.
+    //
     _children.push_back({ nodeName, NRS() });
   }
 

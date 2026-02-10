@@ -60,8 +60,10 @@ class Printer
     //
     // Window dimensions for graphics mode.
     //
-    static int GraphicsWindowWidth;
-    static int GraphicsWindowHeight;
+    static const int GraphicsWindowWidth;
+    static const int GraphicsWindowHeight;
+
+    static const double GraphicsWindowAspectRatio;
 
     //
     // Text alignment modes.

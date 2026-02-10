@@ -14,6 +14,12 @@ tileset : "resources/graphic-tiles.bmp",
 tile_size : 32,
 
 #
+# SDL build only.
+# Preserves correct aspect ratio on window size changes.
+#
+preserve_aspect : Y,
+
+#
 # ------------------------------------------------------------------------------
 # Both of these options reduce gameplay lag, although with
 # 'fast_monster_movement' on it may sometimes look as if enemy just spawned
