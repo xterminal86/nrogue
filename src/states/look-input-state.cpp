@@ -37,42 +37,42 @@ void LookInputState::HandleInput()
   {
     case ALT_K7:
     case NUMPAD_7:
-      MoveCursor(-1, -1);
+      MoveCursor(_cursorPosition, -1, -1);
       break;
 
     case ALT_K8:
     case NUMPAD_8:
-      MoveCursor(0, -1);
+      MoveCursor(_cursorPosition, 0, -1);
       break;
 
     case ALT_K9:
     case NUMPAD_9:
-      MoveCursor(1, -1);
+      MoveCursor(_cursorPosition, 1, -1);
       break;
 
     case ALT_K4:
     case NUMPAD_4:
-      MoveCursor(-1, 0);
+      MoveCursor(_cursorPosition, -1, 0);
       break;
 
     case ALT_K6:
     case NUMPAD_6:
-      MoveCursor(1, 0);
+      MoveCursor(_cursorPosition, 1, 0);
       break;
 
     case ALT_K1:
     case NUMPAD_1:
-      MoveCursor(-1, 1);
+      MoveCursor(_cursorPosition, -1, 1);
       break;
 
     case ALT_K2:
     case NUMPAD_2:
-      MoveCursor(0, 1);
+      MoveCursor(_cursorPosition, 0, 1);
       break;
 
     case ALT_K3:
     case NUMPAD_3:
-      MoveCursor(1, 1);
+      MoveCursor(_cursorPosition, 1, 1);
       break;
 
     case VK_ENTER:
@@ -177,7 +177,7 @@ void LookInputState::Update(bool forceUpdate)
 
     _playerRef->Draw();
 
-    DrawCursor();
+    DrawCursor(_cursorPosition);
 
     std::string lookStatus;
 
@@ -355,92 +355,6 @@ void LookInputState::Update(bool forceUpdate)
 
     Game::gPrnt.Render();
   }
-}
-
-// =============================================================================
-
-void LookInputState::MoveCursor(int dx, int dy)
-{
-  int nx = _cursorPosition.X + dx;
-  int ny = _cursorPosition.Y + dy;
-
-#ifdef USE_SDL
-  static int hw = Printer::GraphicsWindowWidth  / 2;
-  static int hh = Printer::GraphicsWindowHeight / 2;
-#else
-  static int hw = _twHalf;
-  static int hh = _thHalf;
-#endif
-
-  //
-  // To compensate for cursor image.
-  //
-  nx = Util::Clamp(nx, _playerRef->PosX - hw,
-                       _playerRef->PosX + hw - 1);
-
-  ny = Util::Clamp(ny, _playerRef->PosY - hh,
-                       _playerRef->PosY + hh - 1);
-
-  _cursorPosition.X = nx;
-  _cursorPosition.Y = ny;
-}
-
-// =============================================================================
-
-void LookInputState::DrawCursor()
-{
-#ifdef USE_SDL
-  if (Game::gApp.AppData.UseGraphics)
-  {
-    Game::gPrnt.DrawGraphicsTile(
-      _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX,
-      _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
-      GraphicTiles::GUI_LOOK_CURSOR
-    );
-  }
-  else
-  {
-    Game::gPrnt.DrawSubstituteGraphicsTile(
-      _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX - 1,
-      _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY - 1,
-      (int)NameCP437::ULCORNER_1
-    );
-
-    Game::gPrnt.DrawSubstituteGraphicsTile(
-      _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
-      _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY - 1,
-      (int)NameCP437::URCORNER_1
-    );
-
-    Game::gPrnt.DrawSubstituteGraphicsTile(
-      _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX - 1,
-      _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY + 1,
-      (int)NameCP437::DLCORNER_1
-    );
-
-    Game::gPrnt.DrawSubstituteGraphicsTile(
-      _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
-      _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY + 1,
-      (int)NameCP437::DRCORNER_1
-    );
-  }
-#else
-  Game::gPrnt.PrintChar(
-    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
-    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
-    '<',
-    Colors::WhiteColor,
-    Colors::BlackColor
-  );
-
-  Game::gPrnt.PrintChar(
-    _cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX - 1,
-    _cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
-    '>',
-    Colors::WhiteColor,
-    Colors::BlackColor
-  );
-#endif
 }
 
 // =============================================================================

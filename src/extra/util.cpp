@@ -1884,13 +1884,22 @@ namespace Util
       int drawingPosX = mx + Game::gMap.CurrentLevel->MapOffsetX;
       int drawingPosY = my + Game::gMap.CurrentLevel->MapOffsetY;
 
+#ifdef USE_SDL
+      // TODO: fancy projectiles?
+      Game::gPrnt.DrawSubstituteGraphicsTile(drawingPosX,
+                                             drawingPosY,
+                                             image,
+                                             fgColor);
+#else
       Game::gPrnt.PrintChar(drawingPosX,
                             drawingPosY,
                             image,
                             fgColor,
                             bgColor);
-
+#endif
       Game::gPrnt.Render();
+
+      Util::Sleep(25);
     }
   }
 

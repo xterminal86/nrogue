@@ -320,11 +320,20 @@ void Application::DrawAttackCursor(int x, int y,
                                    GameObject* defender,
                                    const uint32_t& cursorColor)
 {
+  //
+  // TODO: try to make attack animation fancy (maybe?) in SDL build
+  //
   if (cursorColor == Colors::None)
   {
     if (defender->FgColor != Colors::None
      && defender->BgColor != Colors::None)
     {
+#ifdef USE_SDL
+      Game::gPrnt.DrawSubstituteGraphicsTile(x,
+                                             y,
+                                             defender->Image,
+                                             defender->FgColor);
+#else
       Game::gPrnt.PrintChar(
         x,
         y,
@@ -332,12 +341,18 @@ void Application::DrawAttackCursor(int x, int y,
         defender->FgColor,
         defender->BgColor
       );
-
+#endif
       Game::gPrnt.Render();
     }
   }
   else
   {
+#ifdef USE_SDL
+    Game::gPrnt.DrawSubstituteGraphicsTile(x,
+                                           y,
+                                           (int)NameCP437::BLOCK,
+                                           cursorColor);
+#else
     Game::gPrnt.PrintChar(
       x,
       y,
@@ -345,7 +360,7 @@ void Application::DrawAttackCursor(int x, int y,
       Colors::Black,
       cursorColor
     );
-
+#endif
     Game::gPrnt.Render();
   }
 }

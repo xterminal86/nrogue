@@ -14,6 +14,7 @@
 #include <chrono>
 
 #include "constants.h"
+#include "position.h"
 
 using Ns = std::chrono::nanoseconds;
 
@@ -60,6 +61,9 @@ class GameState
     int _keyPressed = -1;
 
     void DrawHeader(const std::string& header);
+
+    void MoveCursor(Position& cursorPosition, int dx, int dy);
+    void DrawCursor(const Position& cursorPosition);
 
     void DisplayGameLog();
 

@@ -34,8 +34,6 @@ class TargetState : public GameState
     void CheckCursorPositionBounds();
 
     void DrawHint();
-    void DrawCursor();
-    void MoveCursor(int dx, int dy);
     void FireWeapon(bool throwingFromInventory = false);
     void FindTargets();
     void CycleTargets();

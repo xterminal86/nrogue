@@ -510,7 +510,7 @@ class DevConsole : public GameState
           "Usage: " +
           _commandNameByType.at(DevConsoleCommand::INSPECT) +
           " 0x%llX",
-          "Inspect any object by hex address"
+          "Inspect anything by hex address"
         }
       },
       {

@@ -29,6 +29,10 @@ void TargetState::Prepare()
 
   FindTargets();
 
+  //
+  // FIXME: do not set first target automatically, start cycling after player
+  // hits tab for the first time.
+  //
   if (!_targets.empty())
   {
     _lastTargetIndex = 0;
@@ -132,42 +136,42 @@ void TargetState::HandleInput()
   {
     case ALT_K7:
     case NUMPAD_7:
-      MoveCursor(-1, -1);
+      MoveCursor(_cursorPosition, -1, -1);
       break;
 
     case ALT_K8:
     case NUMPAD_8:
-      MoveCursor(0, -1);
+      MoveCursor(_cursorPosition, 0, -1);
       break;
 
     case ALT_K9:
     case NUMPAD_9:
-      MoveCursor(1, -1);
+      MoveCursor(_cursorPosition, 1, -1);
       break;
 
     case ALT_K4:
     case NUMPAD_4:
-      MoveCursor(-1, 0);
+      MoveCursor(_cursorPosition, -1, 0);
       break;
 
     case ALT_K6:
     case NUMPAD_6:
-      MoveCursor(1, 0);
+      MoveCursor(_cursorPosition, 1, 0);
       break;
 
     case ALT_K1:
     case NUMPAD_1:
-      MoveCursor(-1, 1);
+      MoveCursor(_cursorPosition, -1, 1);
       break;
 
     case ALT_K2:
     case NUMPAD_2:
-      MoveCursor(0, 1);
+      MoveCursor(_cursorPosition, 0, 1);
       break;
 
     case ALT_K3:
     case NUMPAD_3:
-      MoveCursor(1, 1);
+      MoveCursor(_cursorPosition, 1, 1);
       break;
 
     case VK_TAB:
@@ -670,26 +674,6 @@ void TargetState::PrintThrowResult(GameObject* tileRef)
 
 // =============================================================================
 
-void TargetState::MoveCursor(int dx, int dy)
-{
-  int nx = _cursorPosition.X + dx;
-  int ny = _cursorPosition.Y + dy;
-
-  int hw = _twHalf;
-  int hh = _thHalf;
-
-  nx = Util::Clamp(nx, _playerRef->PosX - hw + 1,
-                       _playerRef->PosX + hw - 2);
-
-  ny = Util::Clamp(ny, _playerRef->PosY - hh + 1,
-                       _playerRef->PosY + hh - 2);
-
-  _cursorPosition.X = nx;
-  _cursorPosition.Y = ny;
-}
-
-// =============================================================================
-
 void TargetState::DrawHint()
 {
   //
@@ -747,6 +731,12 @@ void TargetState::DrawHint()
 
   for (auto& p : _cellsToHighlight)
   {
+#ifdef USE_SDL
+    Game::gPrnt.DrawSubstituteGraphicsTile(p.X + mox,
+                                           p.Y + moy,
+                                           '.',
+                                           Colors::Red);
+#else
     Game::gPrnt.PrintChar(
       p.X + mox,
       p.Y + moy,
@@ -754,31 +744,8 @@ void TargetState::DrawHint()
       Colors::Red,
       Colors::Black
     );
+#endif
   }
-}
-
-// =============================================================================
-
-void TargetState::DrawCursor()
-{
-  int mox = Game::gMap.CurrentLevel->MapOffsetX;
-  int moy = Game::gMap.CurrentLevel->MapOffsetY;
-
-  Game::gPrnt.PrintChar(
-    _cursorPosition.X + mox + 1,
-    _cursorPosition.Y + moy,
-    ']',
-    Colors::White,
-    Colors::Black
-  );
-
-  Game::gPrnt.PrintChar(
-    _cursorPosition.X + mox - 1,
-    _cursorPosition.Y + moy,
-    '[',
-    Colors::White,
-    Colors::Black
-  );
 }
 
 // =============================================================================
@@ -796,7 +763,7 @@ void TargetState::Update(bool forceUpdate)
     if (_drawHint)
     {
       DrawHint();
-      DrawCursor();
+      DrawCursor(_cursorPosition);
     }
 
     int tw = Printer::TerminalWidth;

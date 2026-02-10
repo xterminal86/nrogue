@@ -1,5 +1,6 @@
 #include "gamestate.h"
 
+#include "map.h"
 #include "application.h"
 #include "printer.h"
 #include "timer.h"
@@ -192,11 +193,21 @@ void GameState::TakeScreenshot()
     0xFF000000
   );
 
-  SDL_RenderReadPixels(r,
-                       nullptr,
-                       SDL_PIXELFORMAT_ARGB8888,
-                       sshot->pixels,
-                       sshot->pitch);
+  //
+  // Setting second parameter to nullptr leads to double free error on taking
+  // a screenshot after screen size change.
+  //
+  int rc = SDL_RenderReadPixels(r,
+                                &_renderDst,
+                                SDL_PIXELFORMAT_ARGB8888,
+                                sshot->pixels,
+                                sshot->pitch);
+  if (rc != 0)
+  {
+    ConsoleLog("[ERR] failed to take screenshot: '%s'", SDL_GetError());
+    return;
+  }
+
   std::string time = Util::GetCurrentDateTimeString(true);
   std::string fname = Util::StringFormat("s_%s.bmp", time.data());
   SDL_SaveBMP(sshot, fname.data());
@@ -243,6 +254,91 @@ void GameState::DrawHeader(const std::string& header)
     Colors::White,
     Colors::MessageBoxHeaderBg
   );
+}
+
+// =============================================================================
+
+void GameState::MoveCursor(Position& cursorPosition, int dx, int dy)
+{
+  auto& playerRef = Game::gApp.PlayerInstance;
+
+  int nx = cursorPosition.X + dx;
+  int ny = cursorPosition.Y + dy;
+
+#ifdef USE_SDL
+  static int hw = Printer::GraphicsWindowWidth  / 2;
+  static int hh = Printer::GraphicsWindowHeight / 2;
+#else
+  static int hw = _twHalf;
+  static int hh = _thHalf;
+#endif
+
+  //
+  // To compensate for cursor image.
+  //
+  nx = Util::Clamp(nx, playerRef.PosX - hw, playerRef.PosX + hw - 1);
+  ny = Util::Clamp(ny, playerRef.PosY - hh, playerRef.PosY + hh - 1);
+
+  cursorPosition.X = nx;
+  cursorPosition.Y = ny;
+}
+
+// =============================================================================
+
+void GameState::DrawCursor(const Position& cursorPosition)
+{
+#ifdef USE_SDL
+  if (Game::gApp.AppData.UseGraphics)
+  {
+    Game::gPrnt.DrawGraphicsTile(
+      cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX,
+      cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
+      GraphicTiles::GUI_LOOK_CURSOR
+    );
+  }
+  else
+  {
+    Game::gPrnt.DrawSubstituteGraphicsTile(
+      cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX - 1,
+      cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY - 1,
+      (int)NameCP437::ULCORNER_1
+    );
+
+    Game::gPrnt.DrawSubstituteGraphicsTile(
+      cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
+      cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY - 1,
+      (int)NameCP437::URCORNER_1
+    );
+
+    Game::gPrnt.DrawSubstituteGraphicsTile(
+      cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX - 1,
+      cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY + 1,
+      (int)NameCP437::DLCORNER_1
+    );
+
+    Game::gPrnt.DrawSubstituteGraphicsTile(
+      cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
+      cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY + 1,
+      (int)NameCP437::DRCORNER_1
+    );
+  }
+#else
+  Game::gPrnt.PrintChar(
+    cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
+    cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
+    '<',
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
+
+  Game::gPrnt.PrintChar(
+    cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX - 1,
+    cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
+    '>',
+    Colors::WhiteColor,
+    Colors::BlackColor
+  );
+#endif
 }
 
 // =============================================================================
