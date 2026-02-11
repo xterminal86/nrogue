@@ -1211,8 +1211,8 @@ void MapLevelBase::PlaceChasmTile(int x, int y)
   uint32_t fgColor = Colors::ShadesOfGrey::Three;
   uint32_t bgColor = Colors::Black;
 #else
-  uint32_t fgColor = Colors::BlackColor;
-  uint32_t bgColor = Colors::BlackColor;
+  uint32_t fgColor = Colors::Black;
+  uint32_t bgColor = Colors::Black;
 #endif
 
   GameObjectInfo t;

@@ -104,8 +104,8 @@ void ContainerInteractState::Update(bool forceUpdate)
       Game::gPrnt.PrintFB(_twHalf,
                           y,
                           '|',
-                          Colors::BlackColor,
-                          Colors::WhiteColor);
+                          Colors::Black,
+                          Colors::White);
       #endif
     }
 

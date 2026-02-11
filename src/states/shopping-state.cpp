@@ -126,8 +126,8 @@ void ShoppingState::Update(bool forceUpdate)
       Game::gPrnt.PrintFB(_tw / 2,
                           y,
                           '|',
-                          Colors::BlackColor,
-                          Colors::WhiteColor);
+                          Colors::Black,
+                          Colors::White);
       #endif
     }
 

@@ -62,8 +62,8 @@ void IntroState::Update(bool forceUpdate)
     (Printer::TerminalHeight - _introStrings[pci].size()) / 4,
     _scenarioNameByClass.at(pc),
     Printer::kAlignCenter,
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 #endif
 

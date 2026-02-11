@@ -1286,7 +1286,7 @@ void Printer::DrawWindow(const Position& leftCorner,
     {
       for (int j = y; j <= yTo; j++)
       {
-        PrintFB(i, j, ' ', Colors::WhiteColor, bgColor);
+        PrintFB(i, j, ' ', Colors::White, bgColor);
       }
     }
   }
@@ -1363,7 +1363,7 @@ void Printer::Clear()
   {
     for (size_t y = 0; y < TerminalHeight; y++)
     {
-      PrintFB(x, y, ' ', Colors::BlackColor, Colors::BlackColor);
+      PrintFB(x, y, ' ', Colors::Black, Colors::Black);
     }
   }
 #else

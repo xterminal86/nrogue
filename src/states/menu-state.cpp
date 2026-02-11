@@ -248,8 +248,8 @@ void MenuState::Update(bool forceUpdate)
             _titleX - xAlign + xOffset,
             _titleY + yOffset,
             ' ',
-            Colors::BlackColor,
-            Colors::WhiteColor
+            Colors::Black,
+            Colors::White
           );
         }
         else if (c == 's')
@@ -258,7 +258,7 @@ void MenuState::Update(bool forceUpdate)
             _titleX - xAlign + xOffset,
             _titleY + yOffset,
             ' ',
-            Colors::BlackColor,
+            Colors::Black,
             Colors::ShadesOfGrey::Three
           );
         }

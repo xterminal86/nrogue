@@ -151,11 +151,11 @@ class Printer
     void DrawWindow(const Position& leftCorner,
                     const Position& size,
                     const std::string& header = std::string{},
-                    const uint32_t& headerFgColor = Colors::WhiteColor,
-                    const uint32_t& headerBgColor = Colors::BlackColor,
-                    const uint32_t& borderColor = Colors::WhiteColor,
-                    const uint32_t& borderBgColor = Colors::BlackColor,
-                    const uint32_t& bgColor = Colors::BlackColor);
+                    const uint32_t& headerFgColor = Colors::White,
+                    const uint32_t& headerBgColor = Colors::Black,
+                    const uint32_t& borderColor = Colors::White,
+                    const uint32_t& borderBgColor = Colors::Black,
+                    const uint32_t& bgColor = Colors::Black);
 
     const std::unordered_map<size_t, ColorPair>& GetValidColorsCache();
 // -----------------------------------------------------------------------------
@@ -297,7 +297,7 @@ class Printer
                   Colors::White,
                   Colors::Black);
         #else
-        PrintFB(x, y, arrowChar, Colors::WhiteColor, Colors::BlackColor);
+        PrintFB(x, y, arrowChar, Colors::White, Colors::Black);
         #endif
       };
 

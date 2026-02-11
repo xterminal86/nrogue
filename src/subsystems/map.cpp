@@ -1305,8 +1305,8 @@ void Map::DrawFowTile(int x, int y)
       x + CurrentLevel->MapOffsetX,
       y + CurrentLevel->MapOffsetY,
       CurrentLevel->FowLayer[x][y].Image,
-      Colors::BlackColor,
-      Colors::FogOfWarColor
+      Colors::Black,
+      Colors::FogOfWar
     );
   }
   else
@@ -1317,8 +1317,8 @@ void Map::DrawFowTile(int x, int y)
       (CurrentLevel->FowLayer[x][y].Image == -1)
       ? ' '
       : CurrentLevel->FowLayer[x][y].Image,
-      Colors::FogOfWarColor,
-      Colors::BlackColor
+      Colors::FogOfWar,
+      Colors::Black
     );
   }
 #endif

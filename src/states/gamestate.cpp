@@ -241,8 +241,8 @@ void GameState::DrawHeader(const std::string& header)
     Game::gPrnt.PrintFB(x,
                         0,
                         ACS_HLINE,
-                        Colors::WhiteColor,
-                        Colors::BlackColor);
+                        Colors::White,
+                        Colors::Black);
     #endif
   }
 
@@ -327,16 +327,16 @@ void GameState::DrawCursor(const Position& cursorPosition)
     cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX + 1,
     cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
     '<',
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 
   Game::gPrnt.PrintChar(
     cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX - 1,
     cursorPosition.Y + Game::gMap.CurrentLevel->MapOffsetY,
     '>',
-    Colors::WhiteColor,
-    Colors::BlackColor
+    Colors::White,
+    Colors::Black
   );
 #endif
 }
