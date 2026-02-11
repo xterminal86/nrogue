@@ -156,10 +156,10 @@ void TraderComponent::CreateCookItems()
     auto prefixPair = Util::WeightedRandom(_cookPrefixWeights);
 
     GameObject* go = Game::gIF.CreateFood(0,
-                                                         0,
-                                                         itemPair.first,
-                                                         prefixPair.first,
-                                                         true);
+                                          0,
+                                          itemPair.first,
+                                          prefixPair.first,
+                                          true);
 
     Items.push_back(std::unique_ptr<GameObject>(go));
   }

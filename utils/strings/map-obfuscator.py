@@ -55,21 +55,32 @@ def CreateData():
 ################################################################################
 
 def ToCppVector(oMap):
-  decor = "*"*80;
-  print("\n{0}\n".format(decor));
+  #decor = "*"*80;
+  #print("\n{0}\n".format(decor));
+
+  print();
 
   res = f"std::vector<std::vector<std::pair<uint{ Size }_t, uint{ Size }_t>>> map = \n";
   res += "{\n";
 
   for block in oMap:
-    res += "  {\n";
+    res += "  {";
+    first = True;
     for pair in block:
       ocn = pair[0];
       occ = pair[1];
-      res += "    { ";
-      res += f"{ ocn }, { occ }";
-      res += " },\n";
-    res += "  },\n";
+      if not first:
+        res += ",";
+      res += "{";
+      res += f"{ocn},{occ}";
+      res += "}";
+
+      if first:
+        first = False;
+
+    res += "},\n";
+  res = res[:-2];
+  res += "\n";
   res += "};\n";
   print(res);
 
@@ -109,7 +120,10 @@ def ObfuscateMap(map):
         acc = acc + 1;
     block.append([curChar, acc]);
     blocks.append(block);
+
+  #print("<"*80);
   #print(blocks);
+  #print("="*80);
 
   oBlocks = [];
   for line in blocks:
@@ -122,7 +136,10 @@ def ObfuscateMap(map):
       pair = [ ocn, occ ];
       block.append(pair);
     oBlocks.append(block);
+
   #print(oBlocks);
+  #print(">"*80);
+
   ToCppVector(oBlocks);
   DeobfuscateMap(oBlocks);
 
