@@ -1272,15 +1272,31 @@ void Map::DrawMapTilesAroundPlayer()
 void Map::DrawFowTile(int x, int y)
 {
 #ifdef USE_SDL
-  bool useGraphicsTile =
-      (Game::gApp.AppData.UseGraphics &&
-       CurrentLevel->FowLayer[x][y].GraphicTile != GraphicTiles::NONE);
+  GraphicTiles floorTile = CurrentLevel->MapArray[x][y]->GraphicTile;
+  GraphicTiles fowTile   = CurrentLevel->FowLayer[x][y].GraphicTile;
+
+  bool useGraphicsTile = (Game::gApp.AppData.UseGraphics
+                       && fowTile != GraphicTiles::NONE);
 
   if (useGraphicsTile)
   {
+    //
+    // Draw ground tile first if it's different from fow layer tile.
+    //
+    if (floorTile != GraphicTiles::NONE && floorTile != fowTile)
+    {
+      Game::gPrnt.DrawGraphicsTile(x + CurrentLevel->MapOffsetX,
+                                   y + CurrentLevel->MapOffsetY,
+                                   floorTile,
+                                   Colors::ShadesOfGrey::Eight);
+    }
+
+    //
+    // Then object on FoW layer.
+    //
     Game::gPrnt.DrawGraphicsTile(x + CurrentLevel->MapOffsetX,
                                  y + CurrentLevel->MapOffsetY,
-                                 CurrentLevel->FowLayer[x][y].GraphicTile,
+                                 fowTile,
                                  Colors::ShadesOfGrey::Eight);
   }
   else

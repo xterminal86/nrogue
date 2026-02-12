@@ -362,7 +362,8 @@ GameObjectsFactory::CreateBreakableObjectWithRandomLoot(
     char image,
     const std::string& objName,
     const uint32_t& fgColor,
-    const uint32_t& bgColor
+    const uint32_t& bgColor,
+    GraphicTiles graphic
   )
 {
   GameObject* go = new GameObject(Game::gMap.CurrentLevel);
@@ -373,6 +374,7 @@ GameObjectsFactory::CreateBreakableObjectWithRandomLoot(
   go->FgColor     = fgColor;
   go->BgColor     = bgColor;
   go->Image       = image;
+  go->GraphicTile = graphic;
   go->ObjectName  = objName;
   go->Blocking    = true;
   go->BlocksSight = true;

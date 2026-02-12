@@ -1475,13 +1475,16 @@ void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
         if (t == GameObjectType::BREAKABLE)
         {
           static GameObjectsFactory& gof = Game::gGOF;
-          GameObject* box =
-              gof.CreateBreakableObjectWithRandomLoot(x,
-                                                      y,
-                                                      'B',
-                                                      "Wooden Box",
-                                                      Colors::Wood,
-                                                      Colors::Black);
+          GameObject* box = gof.CreateBreakableObjectWithRandomLoot(
+            x,
+            y,
+            'B',
+            "Wooden Box",
+            Colors::Wood,
+            Colors::Black,
+            GraphicTiles::WOODEN_CRATE2
+          );
+
           PlaceStaticObject(box);
         }
       }

@@ -752,7 +752,7 @@ void MapLevelTown::CreateChurch(int x, int y)
                           Colors::Black,
                           Colors::ShadesOfGrey::Four,
                           Strings::TileNames::StoneTiles,
-                          GraphicTiles::TILE_BIG_WHITE);
+                          GraphicTiles::TILES_DIAMOND_WHITE_BROWN);
 
           PlaceWall(posX,
                     posY,
@@ -785,7 +785,7 @@ void MapLevelTown::CreateChurch(int x, int y)
                           Colors::Black,
                           Colors::ShadesOfGrey::Four,
                           Strings::TileNames::StoneTiles,
-                          GraphicTiles::TILE_BIG_WHITE);
+                          GraphicTiles::TILES_DIAMOND_WHITE_BROWN);
           break;
 
         case '+':
@@ -833,6 +833,13 @@ void MapLevelTown::CreateChurch(int x, int y)
     posX = x;
     posY++;
   }
+
+  //
+  // Some post-processing for graphics.
+  //
+#ifdef USE_SDL
+
+#endif
 }
 
 // =============================================================================

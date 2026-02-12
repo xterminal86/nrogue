@@ -32,12 +32,15 @@ class GameObjectsFactory
                                 const std::string& name,
                                 const uint32_t& bgColor);
 
-    GameObject* CreateBreakableObjectWithRandomLoot(int x,
-                                                    int y,
-                                                    char image,
-                                                    const std::string& objName,
-                                                    const uint32_t& fgColor,
-                                                    const uint32_t& bgColor);
+    GameObject* CreateBreakableObjectWithRandomLoot(
+        int x,
+        int y,
+        char image,
+        const std::string& objName,
+        const uint32_t& fgColor,
+        const uint32_t& bgColor,
+        GraphicTiles graphic = GraphicTiles::NONE
+    );
 
     //
     // Create invisible trigger object.

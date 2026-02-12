@@ -1310,7 +1310,7 @@ void DGBase::PlaceStorage(const Rect& area)
     {
       _map[x][y].ZoneMarker = TransformedRoom::STORAGE;
 
-      if (Util::Rolld100(20))
+      if (Util::Rolld100(15))
       {
         _map[x][y].ObjectHere = GameObjectType::BREAKABLE;
       }
