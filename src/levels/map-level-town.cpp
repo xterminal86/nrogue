@@ -773,7 +773,8 @@ void MapLevelTown::CreateChurch(int x, int y)
                 Colors::White,
                 Colors::Black,
                 Strings::TileNames::StainedGlass,
-                Strings::Empty);
+                Strings::Empty,
+                GraphicTiles::STONE_BRICK_WINDOW);
           PlaceStaticObject(posX, posY, t);
           break;
 
