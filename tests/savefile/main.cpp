@@ -120,9 +120,10 @@ int main(int argc, char* argv[])
 }
 #endif
 
-// TODO: replace old implementation with singletons.
 int main(int argc, char* argv[])
 {
+  // TODO: old implementation used singletons.
+
   return 0;
 }
 

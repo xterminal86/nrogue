@@ -191,8 +191,10 @@ namespace Util
   /// \param x2 End position, x coordinate.
   /// \param y2 End position, y coordinate.
   /// \param includeCorners If false corner points are excluded from result.
-  /// \return Set of points along perimeter edge. WARNING: order is not
-  /// guaranteed, do not use if you need to traverse the edge in specific order.
+  /// \return Set of points along perimeter edge.
+  ///
+  /// \note Order is not guaranteed, do not use if you need to traverse the edge
+  /// in specific order.
   ///
   extern std::unordered_set<Position> GetPerimeter(int x1,
                                                    int y1,

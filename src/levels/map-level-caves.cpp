@@ -294,7 +294,7 @@ void MapLevelCaves::CreateSpecialLevel()
   [this, startX, startY]()
   {
     //
-    // TODO: restore back after boss death.
+    // TODO: restore stairs back after boss death.
     //
     StairsComponent* sc =
         MapArray[startX][startY]->GetComponent<StairsComponent>();

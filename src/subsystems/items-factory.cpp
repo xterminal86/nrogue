@@ -2138,8 +2138,7 @@ ItemsFactory::CreateRandomItem(int x,
   }
 
   //
-  // TODO: power of randomly created item
-  // should scale with dungeon level.
+  // TODO: power of randomly created item should scale with dungeon level.
   //
   int index = Game::gRng.RandomRange(0, possibleItems.size());
 

@@ -420,8 +420,6 @@ void MapLevelTown::CreateBlacksmith(int x,
                                     const std::vector<std::string>& layout,
                                     bool randomizeOrientation)
 {
-  GameObjectInfo t;
-
   int posX = x;
   int posY = y;
 
@@ -437,6 +435,8 @@ void MapLevelTown::CreateBlacksmith(int x,
   {
     for (auto& c : row)
     {
+      GameObjectInfo t;
+
       switch (c)
       {
         case '#':
@@ -725,12 +725,12 @@ void MapLevelTown::CreateChurch(int x, int y)
   int posX = x;
   int posY = y;
 
-  GameObjectInfo t;
-
   for (auto& row : _layoutsForLevel[7])
   {
     for (auto& c : row)
     {
+      GameObjectInfo t;
+
       switch (c)
       {
         case '#':
@@ -815,6 +815,7 @@ void MapLevelTown::CreateChurch(int x, int y)
         break;
 
         case 'h':
+        {
           t.Set(false,
                 false,
                 c,
@@ -823,7 +824,8 @@ void MapLevelTown::CreateChurch(int x, int y)
                 Strings::TileNames::WoodenBench,
                 "?" + Strings::TileNames::WoodenBench + "?");
           PlaceStaticObject(posX, posY, t);
-          break;
+        }
+        break;
 
         case '/':
           PlaceShrine({ posX, posY }, ShrineType::KNOWLEDGE);
@@ -968,12 +970,12 @@ void MapLevelTown::PlaceMineEntrance(int x, int y)
   int posX = x;
   int posY = y;
 
-  GameObjectInfo t;
-
   for (auto& row : _layoutsForLevel[10])
   {
     for (auto& c : row)
     {
+      GameObjectInfo t;
+
       switch (c)
       {
         case '#':
@@ -1017,12 +1019,12 @@ void MapLevelTown::PlaceGarden(int x, int y)
   int posX = x;
   int posY = y;
 
-  GameObjectInfo t;
-
   for (auto& row : _layoutsForLevel[8])
   {
     for (auto& c : row)
     {
+      GameObjectInfo t;
+
       switch (c)
       {
         case '#':
@@ -1084,12 +1086,12 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
   int posX = x;
   int posY = y;
 
-  GameObjectInfo t;
-
   for (auto& row : _layoutsForLevel[9])
   {
     for (auto& c : row)
     {
+      GameObjectInfo t;
+
       switch (c)
       {
         case '#':

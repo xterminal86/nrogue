@@ -27,16 +27,16 @@ void TargetState::Prepare()
   _cursorPosition.X = _playerRef->PosX;
   _cursorPosition.Y = _playerRef->PosY;
 
+  _lastTargetIndex = 0;
+
   FindTargets();
 
   //
-  // FIXME: do not set first target automatically, start cycling after player
-  // hits tab for the first time.
+  // Auto set cursor on first visible target.
   //
+  /*
   if (!_targets.empty())
   {
-    _lastTargetIndex = 0;
-
     for (size_t i = 0; i < _targets.size(); i++)
     {
       if (_targets[i]->PosX == _lastCursorPosition.X
@@ -56,6 +56,7 @@ void TargetState::Prepare()
       _cursorPosition.Set(x, y);
     }
   }
+  */
 }
 
 // =============================================================================
@@ -113,11 +114,7 @@ void TargetState::CycleTargets()
   if (!_targets.empty())
   {
     _lastTargetIndex++;
-
-    if (_lastTargetIndex >= _targets.size())
-    {
-      _lastTargetIndex = 0;
-    }
+    _lastTargetIndex %= _targets.size();
 
     int x = _targets[_lastTargetIndex]->PosX;
     int y = _targets[_lastTargetIndex]->PosY;
