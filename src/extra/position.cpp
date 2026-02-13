@@ -90,7 +90,7 @@ bool Position::operator!= (const Position& rhs) const
 
 // =============================================================================
 
-const std::string& Position::ToString() const
+std::string Position::ToString() const
 {
   static std::string intl;
   intl = Util::StringFormat("<%d %d>", X, Y);

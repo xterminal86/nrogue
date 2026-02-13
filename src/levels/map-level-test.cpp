@@ -153,28 +153,55 @@ void MapLevelTest::CreateLevel()
                 Strings::TileNames::Rocks,
                 GraphicTiles::STONES);
 
-  for (int i = 0; i < 3; i++)
+  auto perimeter = Util::GetPerimeter(1, 1, MapSize.X - 2, MapSize.Y - 2);
+  for (const Position& p : perimeter)
   {
-    PlaceWall(3,
-              3 + i,
-              '#',
-              Colors::White,
-              Colors::ShadesOfGrey::Six,
-              Strings::TileNames::Rocks,
-              false,
-              GraphicTiles::STONES);
+    bool cornerUL = (p.X == 1 && p.Y == 1);
+    bool cornerUR = (p.X == (MapSize.X - 2) && p.Y == 1);
+    bool cornerDR = (p.X == (MapSize.X - 2) && p.Y == (MapSize.Y - 2));
+    bool cornerDL = (p.X == 1 && p.Y == (MapSize.Y - 2));
+    bool upperStripH = (p.X > 1 && p.X < MapSize.X - 2) && (p.Y == 1);
+    bool lowerStripH = (p.X > 1 && p.X < MapSize.X - 2) && (p.Y == (MapSize.Y - 2));
+    bool leftStripV  = (p.X == 1) && (p.Y > 1 && p.Y < MapSize.Y - 2);
+    bool rightStripV  = (p.X == (MapSize.X - 2)) && (p.Y > 1 && p.Y < MapSize.Y - 2);
+
+    if (cornerUL)
+    {
+      MapArray[p.X][p.Y]->Graphic.Tile = GraphicTiles::TILE_DIAMOND_BROWN_CORNER;
+    }
+    else if (cornerUR)
+    {
+      MapArray[p.X][p.Y]->Graphic.Tile = GraphicTiles::TILE_DIAMOND_BROWN_CORNER;
+      MapArray[p.X][p.Y]->Graphic.FlipMask = GlobalConstants::FlipMaskH;
+    }
+    else if (cornerDR)
+    {
+      MapArray[p.X][p.Y]->Graphic.Tile = GraphicTiles::TILE_DIAMOND_BROWN_CORNER;
+      MapArray[p.X][p.Y]->Graphic.FlipMask =
+          (GlobalConstants::FlipMaskH | GlobalConstants::FlipMaskV);
+    }
+    else if (cornerDL)
+    {
+      MapArray[p.X][p.Y]->Graphic.Tile = GraphicTiles::TILE_DIAMOND_BROWN_CORNER;
+      MapArray[p.X][p.Y]->Graphic.FlipMask = GlobalConstants::FlipMaskV;
+    }
+    else if (upperStripH || lowerStripH)
+    {
+      MapArray[p.X][p.Y]->Graphic.Tile = GraphicTiles::TILE_DIAMOND_BROWN_H;
+    }
+    else if (leftStripV || rightStripV)
+    {
+      MapArray[p.X][p.Y]->Graphic.Tile = GraphicTiles::TILE_DIAMOND_BROWN_H;
+      MapArray[p.X][p.Y]->Graphic.RotationDegrees = 90;
+    }
   }
 
-  for (int x = 5; x <= 10; x++)
+  for (int x = 2; x <= MapSize.X - 3; x++)
   {
-    PlaceWall(x,
-              5,
-              '#',
-              Colors::White,
-              Colors::ShadesOfGrey::Six,
-              Strings::TileNames::Rocks,
-              false,
-              GraphicTiles::STONES);
+    for (int y = 2; y <= MapSize.Y - 3; y++)
+    {
+      MapArray[x][y]->Graphic.Tile = GraphicTiles::TILES_GREEN_WHITE_DIAG;
+    }
   }
 
   CreateStuff();

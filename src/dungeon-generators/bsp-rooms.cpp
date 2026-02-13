@@ -7,8 +7,8 @@
 /// and place randomly sized rooms inside them.
 ///
 void BSPRooms::Generate(const Position& mapSize,
-                     const Position& splitRatio,
-                     int minRoomSize)
+                        const Position& splitRatio,
+                        int minRoomSize)
 {
   _mapSize = mapSize;
 

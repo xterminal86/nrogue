@@ -6,6 +6,8 @@
 
 const std::string Spaces30(30, ' ');
 
+const bool PrintTestResultsToScreen = true;
+
 // =============================================================================
 
 std::string GetBanner(const std::string& title)
@@ -31,7 +33,8 @@ std::string GetBanner(const std::string& title)
     titleLine[startPos + i] = title[i];
   }
 
-  ss << decor      << "\n"
+  ss << "\n"
+     << decor      << "\n"
      << fillerLine << "\n"
      << titleLine  << "\n"
      << fillerLine << "\n"
@@ -64,6 +67,252 @@ void DisplayProgress()
   static int progress = 0;
   ConsoleLog("\t\tRunning test no. %i\n", progress);
   progress++;
+}
+
+// =============================================================================
+
+void TestUtils(std::stringstream& ss)
+{
+  ConsoleLog("%s", __func__);
+
+  ss << GetBanner(" Test Utils ") << "\n";
+
+  {
+    ss << "Util::GetPerimeter(includeCorners=True)...\n";
+
+    bool good = true;
+
+    //  +---->+
+    //  |#####|
+    //  |#   #|
+    //  |#   #|
+    //  |#   #|
+    //  |#####|
+    //  +<----+
+    std::unordered_set<Position> verification =
+    {
+      { 0, 0 },{ 1, 0 },{ 2, 0 },{ 3, 0 },{ 4, 0 },
+      { 4, 1 },{ 4, 2 },{ 4, 3 },{ 4, 4 },
+      { 3, 4 },{ 2, 4 },{ 1, 4 },{ 0, 4 },
+      { 0, 3 },{ 0, 2 },{ 0, 1 }
+    };
+
+    auto perimeter = Util::GetPerimeter(0, 0, 4, 4);
+
+    for (const Position& p : verification)
+    {
+      if (perimeter.count(p) == 0)
+      {
+        ss << Util::StringFormat("%s not found!\n", p.ToString().data());
+        good = false;
+      }
+    }
+
+    if (!good)
+    {
+      ss << "*** FAILED! ***\n";
+    }
+    else
+    {
+      ss << "OK!\n";
+    }
+  }
+  // ---------------------------------------------------------------------------
+  {
+    ss << "Util::GetPerimeter(includeCorners=False)...\n";
+
+    bool good = true;
+
+    //  +---->+
+    //  | ### |
+    //  |#   #|
+    //  |#   #|
+    //  |#   #|
+    //  | ### |
+    //  +<----+
+    std::unordered_set<Position> verification =
+    {
+      { 1, 0 },{ 2, 0 },{ 3, 0 },
+      { 4, 1 },{ 4, 2 },{ 4, 3 },
+      { 3, 4 },{ 2, 4 },{ 1, 4 },
+      { 0, 3 },{ 0, 2 },{ 0, 1 }
+    };
+
+    auto perimeter = Util::GetPerimeter(0, 0, 4, 4, false);
+
+    for (const Position& p : verification)
+    {
+      if (perimeter.count(p) == 0)
+      {
+        ss << Util::StringFormat("%s not found!\n", p.ToString().data());
+        good = false;
+      }
+    }
+
+    if (!good)
+    {
+      ss << "*** FAILED! ***\n";
+    }
+    else
+    {
+      ss << "OK!\n";
+    }
+  }
+  // ---------------------------------------------------------------------------
+  {
+    ss << "Util::GetRectAroundPoint()...\n";
+
+    Position bounds = { 10, 10 };
+
+    bool allGood = true;
+
+    const std::vector<Position> verification =
+    {
+      { 0, 0 },{ 0, 1 },{ 0, 2 },{ 0, 3 },{ 0, 4 },{ 0, 5 },
+      { 1, 0 },{ 1, 1 },{ 1, 2 },{ 1, 3 },{ 1, 4 },{ 1, 5 },
+      { 2, 0 },{ 2, 1 },{ 2, 2 },{ 2, 3 },{ 2, 4 },{ 2, 5 },
+      { 3, 0 },{ 3, 1 },{ 3, 2 },{ 3, 3 },{ 3, 4 },{ 3, 5 },
+      { 4, 0 },{ 4, 1 },{ 4, 2 },{ 4, 3 },{ 4, 4 },{ 4, 5 },
+      { 5, 0 },{ 5, 1 },{ 5, 2 },{ 5, 3 },{ 5, 4 },{ 5, 5 }
+    };
+
+    auto r = Util::GetRectAroundPoint(2, 2, 3, 3, bounds);
+
+    if (r.size() != verification.size())
+    {
+      ss << Util::StringFormat("result size %lu != verification size %lu!\n",
+                               r.size(),
+                               verification.size());
+      allGood = false;
+    }
+    else
+    {
+      for (size_t i = 0; i < r.size(); i++)
+      {
+        if (r[i] != verification[i])
+        {
+          auto s = Util::StringFormat("%s != %s\n",
+                                      r[i].ToString().data(),
+                                      verification[i].ToString().data());
+          ss << s;
+          allGood = false;
+          break;
+        }
+      }
+    }
+
+    if (allGood)
+    {
+      ss << "OK!\n";
+    }
+    else
+    {
+      ss << "*** FAILED! ***\n";
+    }
+  }
+  // ---------------------------------------------------------------------------
+  {
+    {
+      ss << "Util::Encrypt()...\n";
+
+      const std::string verification = "This is a test, lol!";
+
+      std::string encrypted = Util::Encrypt(verification);
+      encrypted = Util::Encrypt(encrypted);
+
+      if (encrypted != verification)
+      {
+        ss << Util::StringFormat("'%s' != '%s'\n",
+                                 encrypted.data(),
+                                 verification.data());
+        ss << "*** FAILED! ***\n";
+      }
+      else
+      {
+        ss << "OK!\n";
+      }
+    }
+    {
+      ss << "Util::Encrypt() with base64 encoding...\n";
+
+      const std::string verification = R"(
+ I used to be a renegade, I used to fuck around
+ But I couldn't take the punishment and had to settle down
+ Now I'm playing it real straight, and yes, I fuck my bees
+ You might think I'm crazy, but I don't even care
+ Because I can tell what's going on
+
+ [Chorus]
+ It's hip to fuck bees
+ It's hip to fuck bees
+
+ [Verse 2]
+ I like my bees in fuck suits, I fuck 'em on TV
+ I'm fucking bees most every day and fucking what I fucked
+ They tell me that it's good fuck, but I fuck bees
+ I know that it's crazy
+ I know that it's nowhere
+ But there is no denying that
+
+ [Chorus]
+ It's hip to fuck bees
+ It's hip to fuck bees
+ It's hip to fuck bees
+ So hip to fuck bees
+
+ [Bridge]
+ (Fuck bees, fuck bees)
+ (Fuck bees, fuck bees)
+ (Fuck bees, fuck bees)
+ (Fuck bees, fuck bees)
+ (Fuck bees, fuck bees)
+ (Fuck bees)
+
+ [Verse 3]
+ It's not too hard to fuck bees, you fuck it every day
+ And those that were the farthest out have fucked bees
+ You see bees on the freeway, it don't look like a lot of fuck
+ But don't you try to fuck it, a bee whose time has come
+ Don't tell me that I'm crazy
+ Don't tell me I'm nowhere
+ Take it from me
+
+ [Chorus]
+ It's hip to fuck bees
+ It's hip to fuck bees
+ It's hip to fuck bees
+ So hip to fuck bees
+ Tell 'em, boys
+
+ [Outro: Huey Lewis, Vinny]
+ Bees, bees, and everywhere
+ Bees, bees, so hip to fuck bees
+ Bees, bees, and everywhere
+ Bees, bees
+ Bees, bees, and everywhere
+ Bees, bees, so hip to fuck bees
+)";
+
+      std::string encrypted = Util::Encrypt(verification);
+      std::string b64 = Util::Base64_Encode((const uint8_t*)encrypted.data(),
+                                            encrypted.length());
+      b64 = Util::Base64_Decode(b64);
+
+      encrypted = Util::Encrypt(encrypted);
+
+      if (encrypted != verification)
+      {
+        ss << Util::StringFormat("'%s' != '%s'\n",
+                                 encrypted.data(),
+                                 verification.data());
+        ss << "*** FAILED! ***\n";
+      }
+      else
+      {
+        ss << "OK!\n";
+      }
+    }
+  }
 }
 
 // =============================================================================
@@ -747,7 +996,7 @@ void RecursiveBacktracker(LevelBuilder& lb, const Position& mapSize, std::string
 
   ss << str;
 
-  std::vector<RemovalParams> removalParams =
+  std::vector<DGBase::RemovalParams> removalParams =
   {
     // ===============
     // ===============
@@ -1171,7 +1420,7 @@ void TownNamesTest(std::stringstream& ss)
     { 28, 6 },
     {  3, 6 },
     { 23, 5 },
-    { 18, 9 },
+    { 18, 10 },
     { 19, 2 }
   };
 
@@ -1203,8 +1452,18 @@ void Run()
 
   file.open("tests.txt");
 
+  if (!file.is_open())
+  {
+    ConsoleLog("[ERR] couldn't open file!");
+    return;
+  }
+
   ss << GetBanner(" START TESTS ") << "\n\n";
 
+  // ---------------------------------------------------------------------------
+  DisplayProgress();
+  TestUtils(ss);
+  ss << GetEndTestLine();
   // ---------------------------------------------------------------------------
   DisplayProgress();
   TestLoS(ss, 4, 4, 2);
@@ -1250,6 +1509,11 @@ void Run()
   file << ss.str();
 
   file.close();
+
+  if (PrintTestResultsToScreen)
+  {
+    ConsoleLog("%s", ss.str().data());
+  }
 
   ConsoleLog("Test results have been written into 'tests.txt'\n\n");
 }

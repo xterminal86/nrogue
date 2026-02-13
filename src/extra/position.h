@@ -25,7 +25,7 @@ struct Position
   bool operator== (const Position& rhs) const;
   bool operator!= (const Position& rhs) const;
 
-  const std::string& ToString() const;
+  std::string ToString() const;
 
   static const Position& Zero();
 

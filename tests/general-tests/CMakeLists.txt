@@ -1,4 +1,4 @@
-set (TARGET_NAME nrogue-tests)
+set (TARGET_NAME general-tests)
 project (${TARGET_NAME})
 
 # ==============================================================================

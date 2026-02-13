@@ -107,11 +107,16 @@ namespace Util
                      const std::vector<std::unique_ptr<GameObject>>& where,
                      int range);
 
-  extern bool IsBase64(unsigned char c);
-  extern std::string Base64_Encode(unsigned char const* bytes_to_encode,
-                                   unsigned int in_len);
+  extern bool IsBase64(uint8_t c);
+  extern std::string Base64_Encode(const uint8_t* bytes_to_encode,
+                                   size_t in_len);
   extern std::string Base64_Decode(const std::string& encoded_string);
 
+  ///
+  /// \brief Encrypt / decrypt a string using symmetric key.
+  /// \param str String to encrypt / decrypt.
+  /// \return Encrypted / decrypted string.
+  ///
   extern std::string Encrypt(const std::string& str);
 
   extern std::vector<unsigned char>
@@ -131,22 +136,22 @@ namespace Util
   // the line.
   //
   extern const PositionV& BresenhamLineFast(int32_t sx,
-                                              int32_t sy,
-                                              int32_t ex,
-                                              int32_t ey,
-                                              bool truePositions = false);
+                                            int32_t sy,
+                                            int32_t ex,
+                                            int32_t ey,
+                                            bool truePositions = false);
   extern const PositionV& BresenhamLineFast(const Position& start,
-                                              const Position& end,
-                                              bool truePositions = false);
+                                            const Position& end,
+                                            bool truePositions = false);
   //
   // Returns actual Bresenham line points using cache (slower).
   //
   extern const PositionV& BresenhamLineFastPoints(int32_t sx,
-                                                     int32_t sy,
-                                                     int32_t ex,
-                                                     int32_t ey);
+                                                  int32_t sy,
+                                                  int32_t ex,
+                                                  int32_t ey);
   extern const PositionV& BresenhamLineFastPoints(const Position& start,
-                                                     const Position& end);
+                                                  const Position& end);
 
   extern bool IsInsideMap(const Position& pos,
                           const Position& mapSize,
@@ -163,23 +168,54 @@ namespace Util
   extern const PositionV& GetEightPointsAround(const Position& pos,
                                                const Position& mapSize);
 
+  ///
+  /// \brief Returns points inside a rectangle with rangeX by rangeY dimensions
+  /// centered around specified point.
+  /// \param pointX Specified point, x coordinate.
+  /// \param pointY Specified point, y coordinate.
+  /// \param rangeX Resulting width in x of +/- rangeX from specified point.
+  /// \param rangeY Resulting height in y of +/- rangeY from specified point.
+  /// \param mapSize Area bounds rectangle's size will be clamped against.
+  /// \return Vector of points that form a rectangle, row-major order.
+  ///
   extern std::vector<Position> GetRectAroundPoint(int pointX,
                                                   int pointY,
                                                   int rangeX,
                                                   int rangeY,
                                                   const Position& mapSize);
 
-  extern std::set<Position> GetPerimeter(int x,
+  ///
+  /// \brief Gets points along perimeter edges specified by start and end point.
+  /// \param x1 Start position, x coordinate.
+  /// \param y1 Start position, y coordinate.
+  /// \param x2 End position, x coordinate.
+  /// \param y2 End position, y coordinate.
+  /// \param includeCorners If false corner points are excluded from result.
+  /// \return Set of points along perimeter edge. WARNING: order is not
+  /// guaranteed, do not use if you need to traverse the edge in specific order.
+  ///
+  extern std::unordered_set<Position> GetPerimeter(int x1,
+                                                   int y1,
+                                                   int x2,
+                                                   int y2,
+                                                   bool includeCorners = true);
+
+  ///
+  /// \brief GetPerimeterClockwise
+  /// \param x Start position, x coordinate.
+  /// \param y Start position, y coordinate.
+  /// \param w Horizontal offset from start position.
+  /// \param h Vertical offset from start position.
+  /// \param includeCorners If false corner points are excluded from result.
+  /// \return
+  ///
+  /// \deprecated Used in old LoS algorithm.
+  ///
+  extern PositionV GetPerimeterClockwise(int x,
                                          int y,
                                          int w,
                                          int h,
                                          bool includeCorners = true);
-
-  extern PositionV GetPerimeterCW(int x,
-                                  int y,
-                                  int w,
-                                  int h,
-                                  bool includeCorners = true);
 
   extern std::vector<GameObject*> GetActorsInRange(GameObject* from, int range);
   extern std::vector<GameObject*> GetContainersInRange(GameObject* from,

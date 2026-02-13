@@ -85,7 +85,7 @@ void LevelBuilder::TunnelerMethod(const Position& mapSize,
 void LevelBuilder::RecursiveBacktrackerMethod(
     const Position& mapSize,
     const Position& startingPoint,
-    const RemovalParams& endWallsRemovalParams
+    const DGBase::RemovalParams& endWallsRemovalParams
     )
 {
   _generator.reset(new RecursiveBacktracker());
@@ -275,9 +275,9 @@ std::string LevelBuilder::GetMapRawString()
 
 // =============================================================================
 
-MapCell* LevelBuilder::GetMapCell(int x, int y)
+DGBase::MapCell* LevelBuilder::GetMapCell(int x, int y)
 {
-  MapCell* res = nullptr;
+  DGBase::MapCell* res = nullptr;
 
   if (_generator)
   {
@@ -314,7 +314,7 @@ void LevelBuilder::TransformRooms(const TransformedRoomsWeights& weights)
 
 // =============================================================================
 
-const std::vector<std::vector<MapCell>>& LevelBuilder::GeneratedMap()
+const std::vector<std::vector<DGBase::MapCell>>& LevelBuilder::GeneratedMap()
 {
   return _generator ? _generator->GeneratedMap() : _emptyGeneratedMapStub;
 }

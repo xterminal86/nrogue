@@ -7,43 +7,6 @@
 
 class MapLevelBase;
 
-struct PathNode
-{
-  PathNode() = default;
-  PathNode(const Position& coord);
-  PathNode(const Position& coord, const Position& parentNodePos);
-
-  //
-  // Map coordinate of this node.
-  //
-  Position Coordinate;
-
-  //
-  // Can't use PathNode* here, beacuse it's not C# and .NET
-  // and we can't just assign "reference to previous node"
-  // and assume it will stay there no matter the containers.
-  //
-  Position ParentNodePosition = { -1, -1 };
-
-  //
-  // Total cost.
-  //
-  int CostF = 0;
-
-  //
-  // Cost of traversal here from the starting point
-  // with regard to already traversed path.
-  //
-  int CostG = 0;
-
-  //
-  // Heuristic cost.
-  //
-  int CostH = 0;
-};
-
-// =============================================================================
-
 class Pathfinder
 {
   public:
@@ -61,7 +24,6 @@ class Pathfinder
                                    bool ignoreActors = true,
                                    bool eightDirs = false,
                                    size_t maxPathLength = 0);
-
   private:
     Position _mapSize;
 
@@ -70,6 +32,41 @@ class Pathfinder
 
     int _hvCost = 10;
     int _diagonalCost = 20;
+
+    struct PathNode
+    {
+      PathNode() = default;
+      PathNode(const Position& coord);
+      PathNode(const Position& coord, const Position& parentNodePos);
+
+      //
+      // Map coordinate of this node.
+      //
+      Position Coordinate;
+
+      //
+      // Can't use PathNode* here, beacuse it's not C# and .NET
+      // and we can't just assign "reference to previous node"
+      // and assume it will stay there no matter the containers.
+      //
+      Position ParentNodePosition = { -1, -1 };
+
+      //
+      // Total cost.
+      //
+      int CostF = 0;
+
+      //
+      // Cost of traversal here from the starting point
+      // with regard to already traversed path.
+      //
+      int CostG = 0;
+
+      //
+      // Heuristic cost.
+      //
+      int CostH = 0;
+    };
 
     int FindCheapestElement(const std::vector<PathNode>& list);
     int TraverseCost(const Position& p1, const Position& p2);

@@ -487,9 +487,6 @@ void Printer::DrawWindow(const Position& leftCorner,
                          const uint32_t& borderBgColor,
                          const uint32_t& bgColor)
 {
-  auto res = Util::GetPerimeter(leftCorner.X, leftCorner.Y,
-                                size.X, size.Y, true);
-
   int x = leftCorner.X;
   int y = leftCorner.Y;
 
@@ -694,13 +691,9 @@ void Printer::DrawGraphicsTile(int x,
 
 // =============================================================================
 
-void Printer::DrawGraphicsTileExt(int x,
-                                  int y,
-                                  GraphicTiles tile,
-                                  uint32_t colorTint,
-                                  double scaleFactor)
+void Printer::DrawGraphicsTileExt(int x, int y, const GraphicTileInfo& gti)
 {
-  int tileIndex = (int)tile;
+  int tileIndex = (int)gti.Tile;
 
   if (tileIndex < 0 || tileIndex >= (int)_graphicTilesInfo.size())
   {
@@ -708,7 +701,7 @@ void Printer::DrawGraphicsTileExt(int x,
     return;
   }
 
-  ConvertHtmlToRGB(colorTint);
+  ConvertHtmlToRGB(gti.ColorTint);
   SDL_SetTextureColorMod(_graphicTileset,
                          _convertedHtml.R,
                          _convertedHtml.G,
@@ -721,17 +714,23 @@ void Printer::DrawGraphicsTileExt(int x,
   _drawSrc.w = _graphicTileSize;
   _drawSrc.h = _graphicTileSize;
 
-  _drawDst.x = x;
-  _drawDst.y = y;
-  _drawDst.w = (int)((double)_graphicTileSize * scaleFactor);
-  _drawDst.h = (int)((double)_graphicTileSize * scaleFactor);
+  _drawDst.x = x * _graphicTileSize;
+  _drawDst.y = y * _graphicTileSize;
+  _drawDst.w = (int)((double)_graphicTileSize * gti.ScaleFactor);
+  _drawDst.h = (int)((double)_graphicTileSize * gti.ScaleFactor);
 
   if (SDL_GetRenderTarget(Renderer) == nullptr)
   {
     SDL_SetRenderTarget(Renderer, _frameBuffer);
   }
 
-  SDL_RenderCopy(Renderer, _graphicTileset, &_drawSrc, &_drawDst);
+  SDL_RenderCopyEx(Renderer,
+                   _graphicTileset,
+                   &_drawSrc,
+                   &_drawDst,
+                   gti.RotationDegrees,
+                   nullptr,
+                   (SDL_RendererFlip)gti.FlipMask);
 }
 
 // =============================================================================

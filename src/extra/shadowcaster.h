@@ -16,25 +16,6 @@
 
 using PairI = std::pair<int, int>;
 
-struct Shadow
-{
-  double Start = 0.0;
-  double End   = 0.0;
-
-  bool Contains(const Shadow& other);
-};
-
-class ShadowLine
-{
-  public:
-    bool IsInShadow(const Shadow& projection);
-    void Add(const Shadow& shadow);
-    bool IsInFullShadow();
-
-  private:
-    std::vector<Shadow> _shadows;
-};
-
 class Shadowcaster
 {
   public:
@@ -47,6 +28,25 @@ class Shadowcaster
     void RefreshVisibility();
 
   private:
+    struct Shadow
+    {
+      double Start = 0.0;
+      double End   = 0.0;
+
+      bool Contains(const Shadow& other);
+    };
+
+    class ShadowLine
+    {
+      public:
+        bool IsInShadow(const Shadow& projection);
+        void Add(const Shadow& shadow);
+        bool IsInFullShadow();
+
+      private:
+        std::vector<Shadow> _shadows;
+    };
+
     void RefreshOctant(uint8_t octant);
 
     const PairI& TransformOctant(int row, int col, uint8_t octant);

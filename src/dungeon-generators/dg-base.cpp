@@ -114,7 +114,7 @@ std::string DGBase::GetMapRawString()
 
 // =============================================================================
 
-const std::vector<std::vector<MapCell>>& DGBase::GeneratedMap()
+const std::vector<std::vector<DGBase::MapCell>>& DGBase::GeneratedMap()
 {
   return _map;
 }
@@ -130,9 +130,9 @@ void DGBase::ForCustomDebugStuff()
 
 // =============================================================================
 
-std::vector<std::vector<MapCell>> DGBase::CreateFilledMap(int w,
-                                                          int h,
-                                                          char image)
+std::vector<std::vector<DGBase::MapCell>> DGBase::CreateFilledMap(int w,
+                                                                  int h,
+                                                                  char image)
 {
   std::vector<std::vector<MapCell>> map;
 
@@ -162,9 +162,8 @@ std::vector<std::vector<MapCell>> DGBase::CreateFilledMap(int w,
 
 // =============================================================================
 
-std::vector<std::vector<MapCell>> DGBase::CreateRandomlyFilledMap(int w,
-                                                                  int h,
-                                                                  int chance)
+std::vector<std::vector<DGBase::MapCell>>
+DGBase::CreateRandomlyFilledMap(int w, int h, int chance)
 {
   std::vector<std::vector<MapCell>> map;
 
@@ -632,7 +631,7 @@ double DGBase::GetEmptyPercent()
 
 // =============================================================================
 
-MapCell* DGBase::GetCell(int x, int y)
+DGBase::MapCell* DGBase::GetCell(int x, int y)
 {
   MapCell* res = nullptr;
 

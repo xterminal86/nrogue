@@ -357,6 +357,9 @@ namespace GlobalConstants
 
   extern const size_t InventoryMaxNameLength;
 
+  extern const uint8_t FlipMaskH;
+  extern const uint8_t FlipMaskV;
+
   extern const int HPMPBarLength;
   extern const int AttributeMinimumRaiseChance;
   extern const int AttributeIncreasedRaiseStep;

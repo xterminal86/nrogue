@@ -321,7 +321,7 @@ void Player::BresenhamFoV(int lx, int ly)
   auto& staticObjects = Game::gMap.CurrentLevel->StaticMapObjects;
 
   //
-  // TODO: some objects can modify visibility radius
+  // NOTE: some objects can modify visibility radius
   //
   int radius = (map[PosX][PosY]->ObjectName == Strings::TileNames::Tree)
               ? VisibilityRadius.Get() / 4
@@ -332,7 +332,7 @@ void Player::BresenhamFoV(int lx, int ly)
 
   // NOTE: for some reason this doesn't work: cells that should be visible are
   // marked as non-visible. Rewrite to shadowcaster I guess.
-  auto losTiles = Util::GetPerimeterCW(lx, ly, tw - 1, th - 1);
+  auto losTiles = Util::GetPerimeterClockwise(lx, ly, tw - 1, th - 1);
   for (const Position& p : losTiles)
   {
     const PositionV& line = Util::BresenhamLineFast(PosX, PosY, p.X, p.Y);

@@ -2,7 +2,7 @@
 
 #include "map-level-base.h"
 
-PathNode::PathNode(const Position &coord)
+Pathfinder::PathNode::PathNode(const Position &coord)
 {
   Coordinate.X = coord.X;
   Coordinate.Y = coord.Y;
@@ -10,7 +10,8 @@ PathNode::PathNode(const Position &coord)
 
 // =============================================================================
 
-PathNode::PathNode(const Position &coord, const Position &parentNodePos)
+Pathfinder::PathNode::PathNode(const Position &coord,
+                               const Position &parentNodePos)
 {
   Coordinate.X = coord.X;
   Coordinate.Y = coord.Y;
@@ -366,8 +367,10 @@ bool Pathfinder::IsInsideMap(const Position& c)
 
 // =============================================================================
 
-PathNode Pathfinder::FindNodeWithPosition(const std::vector<PathNode>& list,
-                                          const Position& p)
+Pathfinder::PathNode Pathfinder::FindNodeWithPosition(
+  const std::vector<PathNode>& list,
+  const Position& p
+)
 {
   PathNode res;
 

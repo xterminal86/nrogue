@@ -33,58 +33,58 @@ using Tiles   = std::vector<Tile>;
 using Tileset = std::vector<Tiles>;
 using PairII  = std::pair<int, int>;
 
-struct MapCell
-{
-  //
-  // Used in connecting isolated regions during maze creation.
-  //
-  int AreaMarker = -1;
-
-  //
-  // For marking cell to be part of a region during rooms transformation.
-  //
-  TransformedRoom ZoneMarker = TransformedRoom::UNMARKED;
-
-  //
-  // Tile visual.
-  //
-  char Image = '#';
-
-  //
-  // Something to create on this tile.
-  //
-  std::variant<GameObjectType, ItemType, ShrineType> ObjectHere;
-
-  //
-  // Some pompous name for the zone, like "Murder Hollace" or something.
-  // Unused for now.
-  //
-  std::string ZoneName;
-
-  //
-  // Doesn't seem to be used now, but may come in handy at some point
-  // if for some reason we need to find out cell's map coordinates
-  // when the only thing we have is cell object (pointer or reference).
-  // So let's have it.
-  //
-  Position Coordinates;
-
-  //
-  // Used in generation algorithms.
-  //
-  bool Visited = false;
-};
-
-struct RemovalParams
-{
-  int EmptyCellsAroundMin = 3;
-  int EmptyCellsAroundMax = 8;
-  int Passes = 0;
-};
-
 class DGBase
 {
   public:
+    struct MapCell
+    {
+      //
+      // Used in connecting isolated regions during maze creation.
+      //
+      int AreaMarker = -1;
+
+      //
+      // For marking cell to be part of a region during rooms transformation.
+      //
+      TransformedRoom ZoneMarker = TransformedRoom::UNMARKED;
+
+      //
+      // Tile visual.
+      //
+      char Image = '#';
+
+      //
+      // Something to create on this tile.
+      //
+      std::variant<GameObjectType, ItemType, ShrineType> ObjectHere;
+
+      //
+      // Some pompous name for the zone, like "Murder Hollace" or something.
+      // Unused for now.
+      //
+      std::string ZoneName;
+
+      //
+      // Doesn't seem to be used now, but may come in handy at some point
+      // if for some reason we need to find out cell's map coordinates
+      // when the only thing we have is cell object (pointer or reference).
+      // So let's have it.
+      //
+      Position Coordinates;
+
+      //
+      // Used in generation algorithms.
+      //
+      bool Visited = false;
+    };
+
+    struct RemovalParams
+    {
+      int EmptyCellsAroundMin = 3;
+      int EmptyCellsAroundMax = 8;
+      int Passes = 0;
+    };
+
     DGBase();
     virtual ~DGBase() = default;
 

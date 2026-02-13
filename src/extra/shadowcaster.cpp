@@ -114,7 +114,8 @@ void Shadowcaster::Init(const int posX, const int posY)
 //
 // Also, I still don't get why it's +2 and (+1, +1) in method below.
 //
-const Shadow& Shadowcaster::ProjectTile(const int row, const int col)
+const Shadowcaster::Shadow& Shadowcaster::ProjectTile(const int row,
+                                                      const int col)
 {
   //
   // NOTE: cache is not needed since it will work even slower (checked via
@@ -312,14 +313,14 @@ void Shadowcaster::RefreshVisibility()
 //
 // =============================================================================
 
-bool Shadow::Contains(const Shadow& other)
+bool Shadowcaster::Shadow::Contains(const Shadow& other)
 {
   return (Start <= other.Start && End >= other.End);
 }
 
 // =============================================================================
 
-bool ShadowLine::IsInShadow(const Shadow& projection)
+bool Shadowcaster::ShadowLine::IsInShadow(const Shadow& projection)
 {
   for (Shadow& s : _shadows)
   {
@@ -334,7 +335,7 @@ bool ShadowLine::IsInShadow(const Shadow& projection)
 
 // =============================================================================
 
-void ShadowLine::Add(const Shadow& shadow)
+void Shadowcaster::ShadowLine::Add(const Shadow& shadow)
 {
   // Figure out where to slot the new shadow in the list.
   size_t index = 0;
@@ -394,7 +395,7 @@ void ShadowLine::Add(const Shadow& shadow)
 
 // =============================================================================
 
-bool ShadowLine::IsInFullShadow()
+bool Shadowcaster::ShadowLine::IsInFullShadow()
 {
   return (!_shadows.empty() && _shadows[0].Start == 0 && _shadows[0].End == 1);
 }

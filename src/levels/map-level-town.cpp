@@ -477,8 +477,8 @@ void MapLevelTown::CreateBlacksmith(int x,
                 Colors::White,
                 Colors::Black,
                 Strings::TileNames::Bed,
-                Strings::Empty,
-                GraphicTiles::BED_MC);
+                Strings::Empty);
+          t.SetGraphics(GraphicTiles::BED_MC);
           PlaceStaticObject(posX, posY, t);
         }
         break;
@@ -642,8 +642,8 @@ void MapLevelTown::CreateRoom(int x,
                 Colors::White,
                 Colors::Black,
                 Strings::TileNames::Bed,
-                Strings::Empty,
-                GraphicTiles::BED_MC);
+                Strings::Empty);
+          t.SetGraphics(GraphicTiles::BED_MC);
           PlaceStaticObject(posX, posY, t);
         }
         break;
@@ -700,8 +700,8 @@ void MapLevelTown::CreateRoom(int x,
                 Colors::White,
                 Colors::Black,
                 Strings::TileNames::Window,
-                Strings::Empty,
-                GraphicTiles::WINDOW);
+                Strings::Empty);
+          t.SetGraphics(GraphicTiles::WINDOW);
           PlaceStaticObject(posX, posY, t);
           break;
 
@@ -767,16 +767,18 @@ void MapLevelTown::CreateChurch(int x, int y)
 
         case '|':
         case '-':
+        {
           t.Set(true,
                 true,
                 c,
                 Colors::White,
                 Colors::Black,
                 Strings::TileNames::StainedGlass,
-                Strings::Empty,
-                GraphicTiles::STONE_BRICK_WINDOW);
+                Strings::Empty);
+          t.SetGraphics(GraphicTiles::STONE_BRICK_WINDOW);
           PlaceStaticObject(posX, posY, t);
-          break;
+        }
+        break;
 
         // Check out important comments in CreateRoom()
         case ' ':
@@ -870,7 +872,7 @@ void MapLevelTown::CreatePlayerHouse()
                                                  Strings::TileNames::Stash,
                                                  Colors::Chest);
 
-  stash->GraphicTile = GraphicTiles::STASH_MC;
+  stash->Graphic.Tile = GraphicTiles::STASH_MC;
 
   PlaceGameObject(stash);
 }
@@ -1033,8 +1035,8 @@ void MapLevelTown::PlaceGarden(int x, int y)
                 Colors::Wood,
                 Colors::Grass,
                 Strings::TileNames::WoodenFence,
-                Strings::Empty,
-                GraphicTiles::FENCE_WOODEN);
+                Strings::Empty);
+          t.SetGraphics(GraphicTiles::FENCE_WOODEN);
           PlaceStaticObject(posX, posY, t);
         }
         break;
@@ -1118,8 +1120,8 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
                 Colors::Black,
                 Colors::ShadesOfGrey::Ten,
                 Strings::TileNames::StoneTiles,
-                Strings::Empty,
-                GraphicTiles::STONE_TILES);
+                Strings::Empty);
+          t.SetGraphics(GraphicTiles::STONE_TILES);
           MapArray[posX][posY]->MakeTile(t);
           MapArray[posX][posY]->Special = true;
         }
@@ -1133,8 +1135,8 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
                 Colors::Black,
                 Colors::ShadesOfGrey::Ten,
                 Strings::TileNames::StoneTiles,
-                Strings::Empty,
-                GraphicTiles::STONE_TILES);
+                Strings::Empty);
+          t.SetGraphics(GraphicTiles::STONE_TILES);
           MapArray[posX][posY]->MakeTile(t);
           MapArray[posX][posY]->Special = true;
         }
@@ -1160,14 +1162,14 @@ void MapLevelTown::CreateTownGates()
                                               Colors::White,
                                               Colors::Black,
                                               std::vector<std::string>());
-  gate1->GraphicTile = GraphicTiles::IRON_GATE2_CLOSED;
+  gate1->Graphic.Tile = GraphicTiles::IRON_GATE2_CLOSED;
 
   GameObject* gate2 = factory.CreateDummyItem(Strings::TileNames::Gates,
                                               '+',
                                               Colors::White,
                                               Colors::Black,
                                               std::vector<std::string>());
-  gate2->GraphicTile = GraphicTiles::IRON_GATE2_CLOSED;
+  gate2->Graphic.Tile = GraphicTiles::IRON_GATE2_CLOSED;
 
   //
   // Have to explicitly specify trailing return type

@@ -11,39 +11,10 @@
 #include "SDL2/SDL.h"
 #endif
 
-#include "colorpair.h"
 #include "position.h"
 #include "constants.h"
 #include "msg-scroll-buffer.h"
-
-#ifdef USE_SDL
-struct TileColor
-{
-  uint32_t R = 0;
-  uint32_t G = 0;
-  uint32_t B = 0;
-};
-
-struct TileInfo
-{
-  int X = 0;
-  int Y = 0;
-};
-#else
-struct FBPixel
-{
-  size_t ColorPairHash;
-  int Character;
-};
-#endif
-
-struct GameLogMessageData
-{
-  std::string Message;
-
-  uint32_t FgColor = Colors::White;
-  uint32_t BgColor = Colors::Black;
-};
+#include "structs.h"
 
 ///
 /// \brief Everything you need to draw stuff on the screen.
@@ -196,15 +167,10 @@ class Printer
     /// \brief Draw tile from graphics tileset using pixel coordinates.
     /// \param x position in pixels.
     /// \param y position in pixels.
-    /// \param Tile to draw.
-    /// \param Color tint (0xFFFFFF to draw tile as is).
-    /// \param Scale factor.
+    /// \param gti Information on how to draw a tile as a GraphicTileInfo struct
+    /// variable.
     ///
-    void DrawGraphicsTileExt(int x,
-                             int y,
-                             GraphicTiles tile,
-                             uint32_t colorTint = Colors::White,
-                             double scaleFactor = 1.0);
+    void DrawGraphicsTileExt(int x, int y, const GraphicTileInfo& gti);
 
     ///
     /// \brief Draw tile from substitute graphics tileset.

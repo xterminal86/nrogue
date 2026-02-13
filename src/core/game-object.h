@@ -19,6 +19,7 @@
 #include "attribute.h"
 #include "item-data.h"
 #include "position.h"
+#include "structs.h"
 #include "util.h"
 
 class Component;
@@ -189,7 +190,7 @@ class GameObject
 
     int Image = '?';
 
-    GraphicTiles GraphicTile = GraphicTiles::NONE;
+    GraphicTileInfo Graphic;
 
     uint32_t FgColor = Colors::White;
     uint32_t BgColor = Colors::Magenta;

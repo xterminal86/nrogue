@@ -285,11 +285,11 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
   // If no custom tileset loaded or GameObject has no graphic tile set.
   //
   bool useGraphicsTile =
-      (Game::gApp.AppData.UseGraphics && GraphicTile != GraphicTiles::NONE);
+      (Game::gApp.AppData.UseGraphics && Graphic.Tile != GraphicTiles::NONE);
 
   if (useGraphicsTile)
   {
-    Game::gPrnt.DrawGraphicsTile(x, y, GraphicTile);
+    Game::gPrnt.DrawGraphicsTileExt(x, y, Graphic);
   }
   else
   {
@@ -479,7 +479,7 @@ void GameObject::MakeTile(const GameObjectInfo& t,
   Blocking     = t.IsBlocking;
   BlocksSight  = t.BlocksSight;
   Image        = t.Image;
-  GraphicTile  = t.GraphicTile;
+  Graphic      = t.Graphic;
   FgColor      = t.FgColor;
   BgColor      = t.BgColor;
   ObjectName   = t.ObjectName;

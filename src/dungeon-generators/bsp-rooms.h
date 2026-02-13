@@ -7,15 +7,6 @@
 
 #include "rect.h"
 
-struct BSPNode
-{
-  Position CornerStart;
-  Position CornerEnd;
-
-  std::unique_ptr<BSPNode> Left;
-  std::unique_ptr<BSPNode> Right;
-};
-
 class BSPRooms : public DGBase
 {
   public:
@@ -24,6 +15,15 @@ class BSPRooms : public DGBase
                   int minRoomSize);
 
   private:
+    struct BSPNode
+    {
+      Position CornerStart;
+      Position CornerEnd;
+
+      std::unique_ptr<BSPNode> Left;
+      std::unique_ptr<BSPNode> Right;
+    };
+
     Position _splitRatio;
 
     int _minRoomArea = 0;

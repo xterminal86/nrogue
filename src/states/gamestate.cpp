@@ -57,7 +57,7 @@ int GameState::GetKeyDown()
           res = _specialKeysByScancode[sc];
         }
 
-        if (sc == SDL_SCANCODE_F9)
+        if (sc == SDL_SCANCODE_F12)
         {
           GameStates s = GameStates::MESSAGE_BOX_STATE;
           if (Game::gApp.CurrentStateIs(s))

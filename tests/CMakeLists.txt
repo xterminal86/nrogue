@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED On)
 
-add_subdirectory(all)
+add_subdirectory(general-tests)
 add_subdirectory(dg-tunneler)
 add_subdirectory(dg-tunneler-bt)
 add_subdirectory(dg-recbt)

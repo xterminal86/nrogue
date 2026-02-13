@@ -14,9 +14,9 @@ class LevelBuilder
                        bool postProcess = false);
 
     void RecursiveBacktrackerMethod(
-        const Position& mapSize,
-        const Position& startingPoint = { -1, -1 },
-        const RemovalParams& endWallsRemovalParams = RemovalParams()
+      const Position& mapSize,
+      const Position& startingPoint = { -1, -1 },
+      const DGBase::RemovalParams& endWallsRemovalParams = DGBase::RemovalParams()
     );
 
     void TunnelerMethod(const Position& mapSize,
@@ -70,14 +70,14 @@ class LevelBuilder
     CharV2& GetMapRaw();
     std::string GetMapRawString();
 
-    MapCell* GetMapCell(int x, int y);
+    DGBase::MapCell* GetMapCell(int x, int y);
 
     const std::vector<Rect>& GetEmptyRooms();
     void TransformRooms(const TransformedRoomsWeights& weights);
 
     void PrintCustomDebugStuff();
 
-    const std::vector<std::vector<MapCell>>& GeneratedMap();
+    const std::vector<std::vector<DGBase::MapCell>>& GeneratedMap();
 
     CharV2 MapRaw;
 
@@ -86,11 +86,11 @@ class LevelBuilder
   private:
     std::unique_ptr<DGBase> _generator;
 
-    MapCell _cellInfo;
+    DGBase::MapCell _cellInfo;
 
     std::vector<Rect> _emptyRoomsStub;
 
-    std::vector<std::vector<MapCell>> _emptyGeneratedMapStub;
+    std::vector<std::vector<DGBase::MapCell>> _emptyGeneratedMapStub;
 };
 
 #endif // LEVELBUILDER_H

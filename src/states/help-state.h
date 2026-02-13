@@ -42,7 +42,7 @@ class HelpState : public GameState
     };
 
     #ifdef USE_SDL
-    const std::string _specialText = "'F9' - Take screenshot";
+    const std::string _specialText = "'F12' - Take screenshot";
     #endif
 };
 

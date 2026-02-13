@@ -1238,6 +1238,44 @@ void Map::DrawMapTilesAroundPlayer()
   int tw = Printer::TerminalWidth;
   int th = Printer::TerminalHeight;
 
+  int twHalf = tw / 2;
+  int thHalf = th / 2;
+
+  int lx = _playerRef->PosX - twHalf;
+  int ly = _playerRef->PosY - thHalf;
+  int hx = _playerRef->PosX + twHalf;
+  int hy = _playerRef->PosY + thHalf;
+
+  lx = Util::Clamp(lx, 0, CurrentLevel->MapSize.X - 1);
+  ly = Util::Clamp(ly, 0, CurrentLevel->MapSize.Y - 1);
+  hx = Util::Clamp(hx, 0, CurrentLevel->MapSize.X - 1);
+  hy = Util::Clamp(hy, 0, CurrentLevel->MapSize.Y - 1);
+
+  for (int x = lx; x <= hx; x++)
+  {
+    for (int y = ly; y <= hy; y++)
+    {
+      if (CurrentLevel->MapArray[x][y]->Visible)
+      {
+        CurrentLevel->MapArray[x][y]->Draw();
+
+        //
+        // Draw static object on top if present.
+        //
+        if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
+        {
+          CurrentLevel->StaticMapObjects[x][y]->Draw();
+        }
+      }
+      else
+      {
+        DrawFowTile(x, y);
+      }
+    }
+  }
+
+  /*
+  // FIXME: O(2N) complexity, replace with direct traversal along MapArray.
   auto mapCells = Util::GetRectAroundPoint(_playerRef->PosX,
                                            _playerRef->PosY,
                                            tw / 2,
@@ -1265,6 +1303,7 @@ void Map::DrawMapTilesAroundPlayer()
       DrawFowTile(x, y);
     }
   }
+  */
 }
 
 // =============================================================================
@@ -1272,8 +1311,10 @@ void Map::DrawMapTilesAroundPlayer()
 void Map::DrawFowTile(int x, int y)
 {
 #ifdef USE_SDL
-  GraphicTiles floorTile = CurrentLevel->MapArray[x][y]->GraphicTile;
+  GraphicTiles floorTile = CurrentLevel->MapArray[x][y]->Graphic.Tile;
   GraphicTiles fowTile   = CurrentLevel->FowLayer[x][y].GraphicTile;
+
+  uint32_t fowColor = Colors::ShadesOfGrey::Six;
 
   bool useGraphicsTile = (Game::gApp.AppData.UseGraphics
                        && fowTile != GraphicTiles::NONE);
@@ -1288,7 +1329,7 @@ void Map::DrawFowTile(int x, int y)
       Game::gPrnt.DrawGraphicsTile(x + CurrentLevel->MapOffsetX,
                                    y + CurrentLevel->MapOffsetY,
                                    floorTile,
-                                   Colors::ShadesOfGrey::Eight);
+                                   fowColor);
     }
 
     //
@@ -1297,7 +1338,7 @@ void Map::DrawFowTile(int x, int y)
     Game::gPrnt.DrawGraphicsTile(x + CurrentLevel->MapOffsetX,
                                  y + CurrentLevel->MapOffsetY,
                                  fowTile,
-                                 Colors::ShadesOfGrey::Eight);
+                                 fowColor);
   }
   else
   {
@@ -1307,7 +1348,7 @@ void Map::DrawFowTile(int x, int y)
       (CurrentLevel->FowLayer[x][y].Image == -1) ?
       ' ' :
       CurrentLevel->FowLayer[x][y].Image,
-      Colors::ShadesOfGrey::Eight
+      fowColor
     );
   }
 #else

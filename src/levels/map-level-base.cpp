@@ -361,15 +361,16 @@ void MapLevelBase::CreateBorders(char img,
 {
   GameObjectInfo oi;
 
+  oi.Graphic.Tile = graphicTile;
+
   oi.Image        = img;
-  oi.GraphicTile  = graphicTile;
   oi.FgColor      = fgColor;
   oi.BgColor      = bgColor;
   oi.IsBlocking   = true;
   oi.BlocksSight  = true;
   oi.ObjectName   = objectName;
 
-  auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1, true);
+  auto bounds = Util::GetPerimeter(0, 0, MapSize.X - 1, MapSize.Y - 1);
   for (auto& i : bounds)
   {
     //
@@ -970,7 +971,7 @@ void MapLevelBase::UpdateFowLayer(GameObject* obj)
 
   FowLayer[obj->PosX][obj->PosY].Image       = obj->Image;
   FowLayer[obj->PosX][obj->PosY].FowName     = Util::GetFowName(obj);
-  FowLayer[obj->PosX][obj->PosY].GraphicTile = obj->GraphicTile;
+  FowLayer[obj->PosX][obj->PosY].GraphicTile = obj->Graphic.Tile;
 }
 
 // =============================================================================
@@ -1039,14 +1040,8 @@ void MapLevelBase::PlaceGroundTile(int x, int y,
   }
 
   GameObjectInfo t;
-  t.Set(false,
-        false,
-        image,
-        fgColor,
-        bgColor,
-        objName,
-        Strings::Empty,
-        graphicTile);
+  t.Set(false, false, image, fgColor, bgColor, objName, Strings::Empty);
+  t.SetGraphics(graphicTile);
 
   MapArray[x][y]->MakeTile(t);
 }
@@ -1107,14 +1102,8 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
   }
 
   GameObjectInfo t;
-  t.Set(false,
-        false,
-        img,
-        flowerColor,
-        Colors::Grass,
-        tileName,
-        Strings::Empty,
-        flowerTile);
+  t.Set(false, false, img, flowerColor, Colors::Grass, tileName, Strings::Empty);
+  t.SetGraphics(flowerTile);
 
   MapArray[x][y]->MakeTile(t);
 }
@@ -1135,8 +1124,8 @@ void MapLevelBase::PlaceShallowWaterTile(int x, int y)
         Colors::White,
         Colors::ShallowWater,
         Strings::TileNames::ShallowWater,
-        Strings::Empty,
-        GraphicTiles::WATER_SHALLOW_HC);
+        Strings::Empty);
+  t.SetGraphics(GraphicTiles::WATER_SHALLOW_HC);
 
   MapArray[x][y]->MakeTile(t, GameObjectType::SHALLOW_WATER);
 }
@@ -1166,8 +1155,8 @@ void MapLevelBase::PlaceDeepWaterTile(int x, int y)
         Colors::White,
         Colors::DeepWater,
         Strings::TileNames::DeepWater,
-        Strings::Empty,
-        GraphicTiles::WATER_DEEP_HC);
+        Strings::Empty);
+  t.SetGraphics(GraphicTiles::WATER_DEEP_HC);
 
   MapArray[x][y]->MakeTile(t, GameObjectType::DEEP_WATER);
 }
@@ -1188,8 +1177,8 @@ void MapLevelBase::PlaceLavaTile(int x, int y)
         Colors::LavaWaves,
         Colors::Lava,
         Strings::TileNames::Lava,
-        Strings::Empty,
-        GraphicTiles::LAVA);
+        Strings::Empty);
+  t.SetGraphics(GraphicTiles::LAVA);
 
   MapArray[x][y]->MakeTile(t, GameObjectType::LAVA);
 }
@@ -1318,8 +1307,8 @@ void MapLevelBase::PlaceWall(int x, int y,
         fgColor,
         bgColor,
         objName,
-        Strings::Empty,
-        graphicTile);
+        Strings::Empty);
+  t.SetGraphics(graphicTile);
 
   //
   // HP is hardcoded to 1 to set Attrs.Indestructible flag to false,
@@ -1410,8 +1399,8 @@ void MapLevelBase::CreateGround(char img,
         fgColor,
         bgColor,
         tileName,
-        Strings::Empty,
-        graphicTile);
+        Strings::Empty);
+  t.SetGraphics(graphicTile);
 
   FillArea(0, 0, MapSize.X - 1, MapSize.Y - 1, t);
 }
@@ -1447,7 +1436,9 @@ void MapLevelBase::CreateSpecialMonsters()
 
 // =============================================================================
 
-void MapLevelBase::CreateSpecialObjects(int x, int y, const MapCell& cell)
+void MapLevelBase::CreateSpecialObjects(int x,
+                                        int y,
+                                        const DGBase::MapCell& cell)
 {
   MapArray[x][y]->ZoneMarker = cell.ZoneMarker;
 

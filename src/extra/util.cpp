@@ -276,7 +276,7 @@ namespace Util
   //
   // https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c
   //
-  bool IsBase64(unsigned char c)
+  bool IsBase64(uint8_t c)
   {
     auto res = std::find(Strings::Base64Chars.begin(),
                          Strings::Base64Chars.end(),
@@ -287,8 +287,8 @@ namespace Util
 
   // ===========================================================================
 
-  std::string Base64_Encode(unsigned char const* bytes_to_encode,
-                            unsigned int in_len)
+  std::string Base64_Encode(const uint8_t* bytes_to_encode,
+                            size_t in_len)
   {
     std::string ret;
     int i = 0;
@@ -708,22 +708,15 @@ namespace Util
 
   // ===========================================================================
 
-  std::set<Position> GetPerimeter(int x, int y,
-                                  int w, int h,
-                                  bool includeCorners)
+  std::unordered_set<Position> GetPerimeter(int x1, int y1,
+                                            int x2, int y2,
+                                            bool includeCorners)
   {
-    std::set<Position> res;
-
-    int x1 = x;
-    int x2 = x + w;
-    int y1 = y;
-    int y2 = y + h;
-
-    bool cond = false;
+    std::unordered_set<Position> res;
 
     for (int x = x1; x <= x2; x++)
     {
-      cond = (x == x1 || x == x2);
+      bool cond = (x == x1 || x == x2);
       if (!includeCorners && cond)
       {
         continue;
@@ -735,7 +728,7 @@ namespace Util
 
     for (int y = y1; y <= y2; y++)
     {
-      cond = (y == y1 || y == y2);
+      bool cond = (y == y1 || y == y2);
       if (!includeCorners && cond)
       {
         continue;
@@ -745,41 +738,16 @@ namespace Util
       res.insert({ x2, y });
     }
 
-    /*
-    int x1 = x;
-    int x2 = x + w;
-    int y1 = y;
-    int y2 = y + h;
-
-    for (int i = x1; i <= x2; i++)
-    {
-      for (int j = y1; j <= y2; j++)
-      {
-        bool condCorners = (i == x1 && j == y1)
-                        || (i == x1 && j == y2)
-                        || (i == x2 && j == y1)
-                        || (i == x2 && j == y2);
-
-        if (!includeCorners && condCorners)
-        {
-          continue;
-        }
-
-        bool cond = (i == x1 || i == x2 || j == y1 || j == y2);
-        if (cond)
-        {
-          res.push_back(Position(i, j));
-        }
-      }
-    }
-    */
-
     return res;
   }
 
   // ===========================================================================
 
-  PositionV GetPerimeterCW(int x, int y, int w, int h, bool includeCorners)
+  PositionV GetPerimeterClockwise(int x,
+                                  int y,
+                                  int w,
+                                  int h,
+                                  bool includeCorners)
   {
     static std::unordered_set<Position> dups;
     dups.clear();
@@ -1750,7 +1718,7 @@ namespace Util
       { 28, 6 },
       {  3, 6 },
       { 23, 5 },
-      { 18, 9 },
+      { 18, 10 },
       { 19, 2 }
     };
 

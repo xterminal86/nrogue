@@ -365,7 +365,10 @@ namespace GlobalConstants
   const size_t OpenedByAnyone = 0;
   const size_t OpenedByNobody = 1;
 
-  const size_t InventoryMaxNameLength   = 20;
+  const size_t InventoryMaxNameLength = 20;
+
+  const uint8_t FlipMaskH = 0x1;
+  const uint8_t FlipMaskV = 0x2;
 
   const int HPMPBarLength               = 20;
   const int AttributeMinimumRaiseChance = 5;
