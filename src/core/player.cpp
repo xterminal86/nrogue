@@ -422,16 +422,25 @@ void Player::SetAttributes()
   switch (GetClass())
   {
     case PlayerClass::SOLDIER:
+    {
+      Graphic.Tile = GraphicTiles::CHAR_MERCHANT_HEAD;
       SetSoldierAttrs();
-      break;
+    }
+    break;
 
     case PlayerClass::THIEF:
+    {
+      Graphic.Tile = GraphicTiles::CHAR_ROGUE_HEAD;
       SetThiefAttrs();
-      break;
+    }
+    break;
 
     case PlayerClass::ARCANIST:
+    {
+      Graphic.Tile = GraphicTiles::CHAR_ANGEL_HEAD;
       SetArcanistAttrs();
-      break;
+    }
+    break;
 
     case PlayerClass::CUSTOM:
       SetCustomClassAttrs();

@@ -802,6 +802,7 @@ GameObject* ItemsFactory::CreateNote(const std::string& objName,
   go->BgColor = Colors::White;
   go->Image = '?';
   go->ObjectName = objName;
+  go->Graphic.Tile = GraphicTiles::SCROLL;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -881,6 +882,7 @@ GameObject* ItemsFactory::CreateScroll(int x,
   go->BgColor = Colors::White;
   go->Image = '?';
   go->ObjectName = "\"" + si->SpellName + "\"";
+  go->Graphic.Tile = GraphicTiles::SCROLL;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -1087,6 +1089,8 @@ ItemsFactory::CreateMeleeWeapon(int x,
 
     case WeaponType::PICKAXE:
     {
+      go->Graphic.Tile = GraphicTiles::PICKAXE;
+
       diceRolls = 1;
       diceSides = 6;
 
@@ -2304,6 +2308,7 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
   go->Image = '(';
   go->FgColor = Colors::ItemUnique;
   go->BgColor = Colors::None;
+  go->Graphic.Tile = GraphicTiles::PICKAXE_UNIQUE;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -2361,6 +2366,7 @@ GameObject* ItemsFactory::CreateOneRing()
   go->Image = '=';
   go->FgColor = Colors::ItemUnique;
   go->BgColor = Colors::None;
+  go->Graphic.Tile = GraphicTiles::RING_UNIQUE;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 

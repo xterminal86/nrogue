@@ -151,9 +151,8 @@ void ServiceState::ProcessBlessing(int key)
 void ServiceState::BlessItem(const ServiceInfo& si)
 {
   //
-  // Blessed / cursed item effects (like potions)
-  // are handled in item use handler,
-  // so no need to do anything special here.
+  // Blessed / cursed item effects (like potions) are handled in item use 
+  // handler, so no need to do anything special here.
   //
   if (!si.ItemComponentRef->Data.Bonuses.empty())
   {
@@ -336,7 +335,8 @@ void ServiceState::FillItemsForBlessing()
                         && ic->Data.Prefix == ItemPrefix::BLESSED);
     bool isUnique       = (ic->Data.Rarity == ItemRarity::UNIQUE);
     bool cantBeBlessed  = (ic->Data.ItemType_ == ItemType::GEM
-                        || ic->Data.ItemType_ == ItemType::RETURNER);
+                        || ic->Data.ItemType_ == ItemType::RETURNER
+                        || ic->Data.ItemType_ == ItemType::DUMMY);
 
     if (cantBeBlessed || alreadyBlessed || isUnique)
     {
@@ -345,8 +345,7 @@ void ServiceState::FillItemsForBlessing()
 
     int validBonuses = GetValidBonusesCount(ic);
 
-    bool noValidBonuses = (validBonuses == 0);
-    bool isDummy        = (ic->Data.ItemType_ == ItemType::DUMMY);
+    bool noValidBonuses = (validBonuses == 0);    
     bool isUncursed     = (ic->Data.Prefix == ItemPrefix::UNCURSED);
 
     bool isEquippable =
@@ -361,7 +360,7 @@ void ServiceState::FillItemsForBlessing()
     // contains invalid bonuses (like uncursed ring of reflection),
     // ignore it. Also ignore dummy items like notes.
     //
-    if (alreadyKnown && (isDummy || canBeEquippedButInvalid))
+    if (alreadyKnown && canBeEquippedButInvalid)
     {
       continue;
     }

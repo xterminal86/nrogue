@@ -65,11 +65,11 @@ class Printer
 
     ///
     /// \brief Prints character from text tileset.
-    /// \param Horizontal position in character units.
-    /// \param Vertical position in character units.
-    /// \param Tile index to draw from NameCP437.
-    /// \param Foreground color in 0xRRGGBB format.
-    /// \param Background color in 0xRRGGBB format.
+    /// \param x Horizontal position in character units.
+    /// \param y Vertical position in character units.
+    /// \param charIndex Tile index to draw from NameCP437.
+    /// \param htmlColorFg Foreground color in 0xRRGGBB format.
+    /// \param htmlColorBg Background color in 0xRRGGBB format.
     ///
     void PrintChar(const int x,
                    const int y,
@@ -79,12 +79,12 @@ class Printer
 
     ///
     /// \brief Prints string using text tileset.
-    /// \param Horizontal starting position in character units.
-    /// \param Vertical starting position in character units.
-    /// \param Text string to print.
-    /// \param Text horizontal alignment.
-    /// \param Foreground color in 0xRRGGBB format.
-    /// \param htmlColorBgBackground color in 0xRRGGBB format.
+    /// \param x Horizontal starting position in character units.
+    /// \param y Vertical starting position in character units.
+    /// \param text Text string to print.
+    /// \param align Text horizontal alignment.
+    /// \param htmlColorFg Foreground color in 0xRRGGBB format.
+    /// \param htmlColorBg Background color in 0xRRGGBB format.
     ///
     void PrintText(const int x,
                    const int y,
@@ -133,13 +133,17 @@ class Printer
 #else
 // -----------------------------------------------------------------------------
     ///
-    /// \brief Print text using pixel coordinates.
-    /// \param x position of upper left corner of the first character tile.
-    /// \param y position of upper left corner of the first character tile.
-    /// \param Foreground text color.
-    /// \param Background fill text color (Colors::None to leave it transparent).
-    /// \param Scale factor.
-    /// \param Add text shadow to the background.
+    /// \brief Print text using pixel coordinates with additional tweaks.
+    /// \param x Position of upper left corner of the first character tile.
+    /// \param y Position of upper left corner of the first character tile.
+    /// \param text Text to print.
+    /// \param align Text alignment.
+    /// \param fgColor Foreground text color.
+    /// \param bgColor Background fill text color (Colors::None to leave it 
+    /// transparent).
+    /// \param scaleFactor Scale factor.
+    /// \param shadowOffsetX Horizontal text shadow offset factor in pixels.
+    /// \param shadowOffsetY Vertical text shadow offset factor in pixels.
     ///
     void PrintTextExt(int x,
                       int y,
@@ -153,10 +157,10 @@ class Printer
 
     ///
     /// \brief Draw tile from graphics tileset.
-    /// \param x position on the screen in tile cell units (e.g. 0 - 40).
-    /// \param y position on the screen in tile cell units (e.g. 0 - 24).
-    /// \param Tile to draw.
-    /// \param Color tint (0xFFFFFF to draw tile as is).
+    /// \param x Position on the screen in tile cell units (e.g. 0 - 40).
+    /// \param y Position on the screen in tile cell units (e.g. 0 - 24).
+    /// \param tile Tile to draw.
+    /// \param colorTint Color tint (0xFFFFFF to draw tile as is).
     ///
     void DrawGraphicsTile(int x,
                           int y,
@@ -174,10 +178,10 @@ class Printer
 
     ///
     /// \brief Draw tile from substitute graphics tileset.
-    /// \param x position on the screen in tile cell units (e.g. 0 - 40).
-    /// \param y position on the screen in tile cell units (e.g. 0 - 24).
-    /// \param Tile index to draw from NameCP437.
-    /// \param Color tint (0xFFFFFF to draw tile as is).
+    /// \param x Position on the screen in tile cell units (e.g. 0 - 40).
+    /// \param y Position on the screen in tile cell units (e.g. 0 - 24).
+    /// \param image Tile index to draw from NameCP437.
+    /// \param colorTint Color tint (0xFFFFFF to draw tile as is).
     ///
     void DrawSubstituteGraphicsTile(int x,
                                     int y,

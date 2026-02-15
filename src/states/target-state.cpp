@@ -273,7 +273,9 @@ void TargetState::FireWeapon(bool throwingFromInventory)
   }
   else
   {
-    stoppedAt = LaunchProjectile(res.first, res.second);
+    stoppedAt = LaunchProjectile(res.first, 
+                                 res.second, 
+                                 _weaponRef->OwnerGameObject->Graphic.Tile);
     ProcessHit(stoppedAt);
   }
 
@@ -284,7 +286,9 @@ void TargetState::FireWeapon(bool throwingFromInventory)
 
 // =============================================================================
 
-GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
+GameObject* TargetState::LaunchProjectile(char image, 
+                                          const uint32_t& color,
+                                          GraphicTiles tile)
 {
   GameObject* stoppedAt = nullptr;
 
@@ -331,7 +335,7 @@ GameObject* TargetState::LaunchProjectile(char image, const uint32_t& color)
     }
   }
 
-  Util::LaunchProjectile(startPoint, endPoint, image, color);
+  Util::LaunchProjectile(startPoint, endPoint, image, color, Colors::Black, tile);
 
   //
   // Projectile reached end point without hitting anyone.

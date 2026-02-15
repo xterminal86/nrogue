@@ -14,6 +14,7 @@ core.*
 !SDL2 QT Creator config.txt
 !CMakeLists.txt
 !tests/README.txt
+!/CREDITS.txt
 *.out
 *.exe
 /*.bmp

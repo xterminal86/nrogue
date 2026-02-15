@@ -545,7 +545,7 @@ void MapLevelTown::CreateBlacksmith(int x,
                       Colors::Black,
                       Colors::RoomFloor,
                       Strings::TileNames::Dirt,
-                      GraphicTiles::WOODEN_PLANKS_DESAT);
+                      GraphicTiles::WOODEN_PLANKS);
     }
   }
 
@@ -555,7 +555,7 @@ void MapLevelTown::CreateBlacksmith(int x,
                   Colors::Black,
                   Colors::RoomFloor,
                   Strings::TileNames::Dirt,
-                  GraphicTiles::WOODEN_PLANKS_DESAT);
+                  GraphicTiles::WOODEN_PLANKS);
 #endif
 }
 
@@ -634,7 +634,7 @@ void MapLevelTown::CreateRoom(int x,
                           Colors::WoodPlankSeam,
                           Colors::RoomFloor,
                           Strings::TileNames::WoodenFloor,
-                          GraphicTiles::WOODEN_PLANKS_DESAT);
+                          GraphicTiles::WOODEN_PLANKS);
 
           t.Set(true,
                 false,
@@ -655,7 +655,7 @@ void MapLevelTown::CreateRoom(int x,
                           Colors::WoodPlankSeam,
                           Colors::RoomFloor,
                           Strings::TileNames::WoodenFloor,
-                          GraphicTiles::WOODEN_PLANKS_DESAT);
+                          GraphicTiles::WOODEN_PLANKS);
           break;
 
         //
@@ -1095,6 +1095,14 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
       switch (c)
       {
         case '#':
+        {
+          PlaceGroundTile(posX, 
+                          posY, 
+                          ' ', 
+                          Colors::White, 
+                          Colors::White, 
+                          "",
+                          GraphicTiles::TILE_BIG_WHITE); 
           PlaceWall(posX,
                     posY,
                     '#',
@@ -1103,7 +1111,8 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
                     Strings::TileNames::MarbleColumn,
                     false,
                     GraphicTiles::MARBLE_COLUMN);
-          break;
+        }
+        break;
 
         case '~':
           PlaceDeepWaterTile(posX, posY);
@@ -1174,16 +1183,15 @@ void MapLevelTown::CreateTownGates()
   gate2->Graphic.Tile = GraphicTiles::IRON_GATE2_CLOSED;
 
   //
-  // Have to explicitly specify trailing return type
-  // to use braced initialized list.
-  // I don't understand why, so fuck it.
+  // Have to explicitly specify trailing return type to use braced initialized 
+  // list. I don't understand why, so fuck it.
   //
   // Quote from StackOverflow:
   //
-  // "Lambda return type deduction uses the auto rules,
-  // which normally would have deduced std::initializer_list just fine.
-  // However, the language designers banned deduction from
-  // a braced initializer list in a return statement ([dcl.spec.auto]/7)"
+  // "Lambda return type deduction uses the auto rules, which normally would 
+  // have deduced std::initializer_list just fine. However, the language 
+  // designers banned deduction from a braced initializer list in a return 
+  // statement ([dcl.spec.auto]/7)"
   //
   std::function<IR()> fn = []() -> IR
   {

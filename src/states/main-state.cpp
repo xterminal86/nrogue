@@ -410,9 +410,12 @@ void MainState::DrawHPMP()
 
   UpdateBar(1, th - 2, _playerRef->Attrs.HP);
 
+  //
+  // +2 because we don't account for bar edge markers ('[' and ']')
+  //
   auto str = Util::StringFormat("%i/%i", curHp, maxHp);
   Game::gPrnt.PrintText(
-    GlobalConstants::HPMPBarLength / 2,
+    GlobalConstants::HPMPBarLength / 2 + 2,
     th - 2,
     str,
     Printer::kAlignCenter,
@@ -424,7 +427,7 @@ void MainState::DrawHPMP()
 
   str = Util::StringFormat("%i/%i", curMp, maxMp);
   Game::gPrnt.PrintText(
-    GlobalConstants::HPMPBarLength / 2,
+    GlobalConstants::HPMPBarLength / 2 + 2,
     th - 1,
     str,
     Printer::kAlignCenter,

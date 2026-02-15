@@ -252,12 +252,14 @@ namespace Util
                                const Position& to,
                                char image,
                                const uint32_t& fgColor,
-                               const uint32_t& bgColor = Colors::Black);
+                               const uint32_t& bgColor = Colors::Black,
+                               GraphicTiles tile = GraphicTiles::NONE);
 
   extern void LaunchProjectile(const std::vector<Position>& line,
                                char image,
                                const uint32_t& fgColor,
-                               const uint32_t& bgColor = Colors::Black);
+                               const uint32_t& bgColor = Colors::Black,
+                               GraphicTiles tile = GraphicTiles::NONE);
 
   extern void KnockBack(GameObject* sender,
                         GameObject* receiver,

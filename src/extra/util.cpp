@@ -1837,7 +1837,8 @@ namespace Util
   void LaunchProjectile(const std::vector<Position>& line,
                         char image,
                         const uint32_t& fgColor,
-                        const uint32_t& bgColor)
+                        const uint32_t& bgColor,
+                        GraphicTiles tile)
   {
     //
     // Start from 1 to exclude starting position.
@@ -1853,11 +1854,20 @@ namespace Util
       int drawingPosY = my + Game::gMap.CurrentLevel->MapOffsetY;
 
 #ifdef USE_SDL
-      // TODO: fancy projectiles?
-      Game::gPrnt.DrawSubstituteGraphicsTile(drawingPosX,
-                                             drawingPosY,
-                                             image,
-                                             fgColor);
+      if (tile != GraphicTiles::NONE)
+      {
+        Game::gPrnt.DrawGraphicsTile(drawingPosX,
+                                     drawingPosY,
+                                     tile,
+                                     Colors::White);
+      }
+      else
+      {
+        Game::gPrnt.DrawSubstituteGraphicsTile(drawingPosX,
+                                               drawingPosY,
+                                               image,
+                                               fgColor);
+      }
 #else
       Game::gPrnt.PrintChar(drawingPosX,
                             drawingPosY,
@@ -1877,10 +1887,11 @@ namespace Util
                         const Position& to,
                         char image,
                         const uint32_t& fgColor,
-                        const uint32_t& bgColor)
+                        const uint32_t& bgColor,
+                        GraphicTiles tile)
   {
     const PositionV& line = BresenhamLineFastPoints(from, to);
-    LaunchProjectile(line, image, fgColor, bgColor);
+    LaunchProjectile(line, image, fgColor, bgColor, tile);
   }
 
   // ===========================================================================
@@ -3130,7 +3141,7 @@ namespace Util
       return 0;
     }
 
-    std::hash<std::string> hasher;
+    static std::hash<std::string> hasher;
     std::string str = StringFormat("%d%s",
                                    (int)item->Data.Prefix,
                                    item->OwnerGameObject->ObjectName.data());
