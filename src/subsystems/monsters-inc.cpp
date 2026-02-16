@@ -144,45 +144,45 @@ GameObject* MonstersInc::CreateNPC(int x,
   switch (npcType)
   {
     case NPCType::CLAIRE:
-      go->Graphic.Tile = GraphicTiles::CHAR_LIGHTNING_HEAD; 
+      go->Graphic.Tile = GraphicTiles::CHAR_LIGHTNING;
       break;
 
-    case NPCType::CLOUD:     
-      go->Graphic.Tile = GraphicTiles::CHAR_CLOUD_HEAD;     
+    case NPCType::CLOUD:
+      go->Graphic.Tile = GraphicTiles::CHAR_CLOUD;
       break;
 
-    case NPCType::PHOENIX:   
-      go->Graphic.Tile = GraphicTiles::CHAR_PHOENIX_HEAD;   
+    case NPCType::PHOENIX:
+      go->Graphic.Tile = GraphicTiles::CHAR_PHOENIX;
       break;
 
-    case NPCType::MILES:     
-      go->Graphic.Tile = GraphicTiles::CHAR_MILES_HEAD;     
+    case NPCType::MILES:
+      go->Graphic.Tile = GraphicTiles::CHAR_MILES;
       break;
 
-    case NPCType::IARSPIDER: 
-      go->Graphic.Tile = GraphicTiles::CHAR_IARSPIDER_HEAD; 
+    case NPCType::IARSPIDER:
+      go->Graphic.Tile = GraphicTiles::CHAR_IARSPIDER;
       break;
 
-    case NPCType::TIGRA:     
-      go->Graphic.Tile = GraphicTiles::CHAR_TIGRA_HEAD;     
+    case NPCType::TIGRA:
+      go->Graphic.Tile = GraphicTiles::CHAR_TIGRA;
       break;
 
-    case NPCType::STEVE:     
-      go->Graphic.Tile = GraphicTiles::CHAR_STEVE_HEAD;     
+    case NPCType::STEVE:
+      go->Graphic.Tile = GraphicTiles::CHAR_STEVE;
       break;
 
-    case NPCType::GIMLEY:    
-      go->Graphic.Tile = GraphicTiles::CHAR_DWARF_HEAD;     
+    case NPCType::GIMLEY:
+      go->Graphic.Tile = GraphicTiles::CHAR_DWARF;
       break;
 
-    case NPCType::MARTIN:    
-      go->Graphic.Tile = GraphicTiles::CHAR_PRIEST_HEAD;    
+    case NPCType::MARTIN:
+      go->Graphic.Tile = GraphicTiles::CHAR_PRIEST;
       break;
 
     // TODO:
     //case NPCType::CASEY:
     //case NPCType::MAYA:
-    //case NPCType::GRISWOLD:        
+    //case NPCType::GRISWOLD:
 
     default:
       break;
@@ -481,7 +481,7 @@ GameObject* MonstersInc::CreateHerobrine(int x, int y)
   go->ObjectName           = "Herobrine";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns     = 30;
-  go->Graphic.Tile         = GraphicTiles::CHAR_HEROBRINE_HEAD;
+  go->Graphic.Tile         = GraphicTiles::CHAR_HEROBRINE;
 
   go->MoveTo(x, y);
 
@@ -569,8 +569,8 @@ GameObject* MonstersInc::CreateMadMiner(int x, int y)
 
   go->ObjectName           = "Mad Miner";
   go->Attrs.Indestructible = false;
-  go->HealthRegenTurns     = 30;  
-  go->Graphic.Tile         = GraphicTiles::CHAR_MAD_MINER_HEAD;
+  go->HealthRegenTurns     = 30;
+  go->Graphic.Tile         = GraphicTiles::CHAR_MAD_MINER;
 
   go->MoveTo(x, y);
 

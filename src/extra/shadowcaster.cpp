@@ -221,6 +221,12 @@ void Shadowcaster::RefreshOctant(uint8_t octant)
 
   Position p;
 
+  //
+  // We can always see the cell we're standing at. This gets rid of FoW colored
+  // background for player character sprite.
+  //
+  Game::gApp.PlayerInstance.DiscoverCell(_playerPos.X, _playerPos.Y);
+
   for (int row = 1; ; row++)
   {
     PairI transformed = TransformOctant(row, 0, octant);

@@ -423,21 +423,21 @@ void Player::SetAttributes()
   {
     case PlayerClass::SOLDIER:
     {
-      Graphic.Tile = GraphicTiles::CHAR_MERCHANT_HEAD;
+      Graphic.Tile = GraphicTiles::CHAR_MERCHANT;
       SetSoldierAttrs();
     }
     break;
 
     case PlayerClass::THIEF:
     {
-      Graphic.Tile = GraphicTiles::CHAR_ROGUE_HEAD;
+      Graphic.Tile = GraphicTiles::CHAR_ROGUE;
       SetThiefAttrs();
     }
     break;
 
     case PlayerClass::ARCANIST:
     {
-      Graphic.Tile = GraphicTiles::CHAR_ANGEL_HEAD;
+      Graphic.Tile = GraphicTiles::CHAR_ANGEL;
       SetArcanistAttrs();
     }
     break;

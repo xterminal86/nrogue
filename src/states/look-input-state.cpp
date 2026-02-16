@@ -386,6 +386,9 @@ const std::vector<GameObject*> LookInputState::CheckGameObjects()
 
 void LookInputState::DisplayMonsterStats()
 {
+  // TODO: redesign this window for SDL build (with upscaled sprite as a
+  // monster's picture).
+
   auto GetPrettyPrint =
   [this](Attribute& attr, const std::string& attrName)
   {

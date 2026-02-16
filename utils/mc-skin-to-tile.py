@@ -4,7 +4,7 @@ import argparse;
 
 from pathlib import Path;
 
-from PIL import Image;
+from PIL import Image, ImageOps;
 
 def main():
   parser = argparse.ArgumentParser();
@@ -15,9 +15,12 @@ def main():
     help="Minecraft character skin as png"
   );
 
+  parser.add_argument("--head-acc", action="store_true");
+
   args = parser.parse_args();
 
-  fname = args.SKINFILE;
+  fname   = args.SKINFILE;
+  headAcc = args.head_acc;
 
   fnameResult = Path(fname).stem;
 
@@ -37,7 +40,13 @@ def main():
   legLeft  = img.crop((4, 20, 8, 32));
   legRight = legLeft.transpose(Image.Transpose.FLIP_LEFT_RIGHT);
 
+  headAccessory = img.crop((40, 8, 48, 16));
+
   resultImage.paste(head, (12, 0));
+
+  if headAcc:
+    resultImage.paste(headAccessory, (12, 0), mask=headAccessory);
+
   resultImage.paste(torso, (12, 8));
   resultImage.paste(armLeft, (8, 8));
   resultImage.paste(armRight, (20, 8));
@@ -45,10 +54,6 @@ def main():
   resultImage.paste(legRight, (16, 20));
 
   resultImage.save(f"{ fnameResult }.png");
-
-  headFull = head.resize((32, 32), Image.Resampling.NEAREST);
-  resultImageFace.paste(headFull);
-  resultImageFace.save(f"{ fnameResult }-head.png");
 
   img.close();
 
