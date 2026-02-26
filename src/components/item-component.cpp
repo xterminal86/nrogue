@@ -172,21 +172,36 @@ void ItemComponent::Break(GameObject* itemOwner)
     }
     else
     {
+      //
+      // Read comment a little below.
+      //
+      EquipmentCategory cat = EquipmentCategory::NOT_EQUIPPABLE;
+
       for (size_t i = 0; i < cc->Contents.size(); i++)
       {
-        auto c = cc->Contents[i]->GetComponent<ItemComponent>();
-        ItemComponent* ic = static_cast<ItemComponent*>(c);
+        ItemComponent* ic = cc->Contents[i]->GetComponent<ItemComponent>();
 
         if (ic->Data.ItemTypeHash == Data.ItemTypeHash
          && ic->Data.IsEquipped)
         {
+          cat = Data.EqCategory;
           itemOwner->UnapplyBonuses(ic);
+
+          //
+          // Technically by doing this we destroy the very object in whose
+          // method we're currently in (ic, where we're currently are, comes
+          // from cc which in turn comes from owner, that is actor).
+          // Kinda shitcode, I guess, but anyway. What happens is we can't use
+          // Data.EqCategory here because this (no pun intended) object is no
+          // longer accessible after the following call. That's why we should
+          // save value of Data.EqCategory before destruction (see above).
+          //
           cc->Contents.erase(cc->Contents.begin() + i);
           break;
         }
       }
 
-      ec->EquipmentByCategory[Data.EqCategory][0] = nullptr;
+      ec->EquipmentByCategory[cat][0] = nullptr;
     }
   }
 }
