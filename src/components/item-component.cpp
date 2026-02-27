@@ -188,13 +188,15 @@ void ItemComponent::Break(GameObject* itemOwner)
           itemOwner->UnapplyBonuses(ic);
 
           //
-          // Technically by doing this we destroy the very object in whose
+          // Technically by doing this we're destroying the very object in whose
           // method we're currently in (ic, where we're currently are, comes
-          // from cc which in turn comes from owner, that is actor).
+          // from cc which in turn comes from owner, that is an actor).
           // Kinda shitcode, I guess, but anyway. What happens is we can't use
-          // Data.EqCategory here because this (no pun intended) object is no
-          // longer accessible after the following call. That's why we should
-          // save value of Data.EqCategory before destruction (see above).
+          // 'Data.EqCategory' directly to clear reference in
+          // EquipmentByCategory because this (pun intended) object is no longer
+          // accessible after the following call. That's why we should save
+          // value of 'Data.EqCategory' before destruction (see above).
+          // This was accidentally caught in MSVS debug build, so there you go.
           //
           cc->Contents.erase(cc->Contents.begin() + i);
           break;

@@ -9,7 +9,7 @@ void PostProcessForPrinting(LevelBuilder& lb)
 
   for (auto& line : gm)
   {
-    for (MapCell& cell : line)
+    for (DGBase::MapCell& cell : line)
     {
       switch (cell.ZoneMarker)
       {

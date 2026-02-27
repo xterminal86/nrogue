@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 
   Position mapSize;
   Position start;
-  RemovalParams removalParams;
+  DGBase::RemovalParams removalParams;
 
   std::vector<int*> params =
   {
