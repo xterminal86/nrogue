@@ -4,6 +4,7 @@ venv/
 dumb-compile/build/
 dumb-compile/CMakeFiles/
 .vs/
+.idea/
 CMakeLists.txt.user*
 CMakeSettings.json
 nrogue
