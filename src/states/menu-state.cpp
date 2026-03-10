@@ -16,7 +16,7 @@ void MenuState::Init()
 
 #ifdef USE_SDL
   _borderSize = { _tw - 1, _th - 1 };
-  _builtWith = Util::StringFormat(_builtWith.data(),
+  _builtWith = Util::StringFormat(_builtWith,
                                   SDL_MAJOR_VERSION,
                                   SDL_MINOR_VERSION,
                                   SDL_PATCHLEVEL);

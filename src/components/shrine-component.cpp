@@ -14,18 +14,10 @@
 ShrineComponent::ShrineComponent(ShrineType shrineType,
                                  int timeout,
                                  bool oneTimeUse)
-{
-  _timeout = timeout;
-
-  //
-  // So that shrine can activate on Update()
-  //
-  _counter = timeout;
-
-  _oneTimeUse = oneTimeUse;
-
-  _type = shrineType;
-}
+  : _timeout(timeout),
+    _counter(timeout), // So that shrine can activate on Update()
+    _oneTimeUse(oneTimeUse),
+    _type(shrineType) {}
 
 // =============================================================================
 

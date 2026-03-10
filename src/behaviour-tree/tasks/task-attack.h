@@ -22,8 +22,6 @@ class TaskAttack : public Node
 
     bool PlayerHasArmor();
 
-    Player* _playerRef = nullptr;
-
     #if DEBUG_BUILD
     void LogAttackData(int hitChance);
     #endif

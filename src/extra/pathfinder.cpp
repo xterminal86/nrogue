@@ -3,21 +3,13 @@
 #include "map-level-base.h"
 
 Pathfinder::PathNode::PathNode(const Position &coord)
-{
-  Coordinate.X = coord.X;
-  Coordinate.Y = coord.Y;
-}
+  : Coordinate(coord) {}
 
 // =============================================================================
 
 Pathfinder::PathNode::PathNode(const Position &coord,
                                const Position &parentNodePos)
-{
-  Coordinate.X = coord.X;
-  Coordinate.Y = coord.Y;
-
-  ParentNodePosition = parentNodePos;
-}
+  : Coordinate(coord), ParentNodePosition(parentNodePos) {}
 
 // =============================================================================
 

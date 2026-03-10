@@ -9,9 +9,8 @@
 
 TaskDrinkPotion::TaskDrinkPotion(GameObject* objectToControl,
                                  ScriptParamNames ref)
-  : Node(objectToControl)
+  : Node(objectToControl), _potionPref(ref)
 {
-  _potionPref = ref;
   _inventoryRef = _objectToControl->GetComponent<ContainerComponent>();
 }
 

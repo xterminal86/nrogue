@@ -5,6 +5,7 @@
 #include "printer.h"
 
 EquipmentComponent::EquipmentComponent(ContainerComponent* inventoryRef)
+  : _inventory(inventoryRef), _playerRef(&Game::gApp.PlayerInstance)
 {
   EquipmentByCategory[EquipmentCategory::HEAD]   = { nullptr };
   EquipmentByCategory[EquipmentCategory::NECK]   = { nullptr };
@@ -13,10 +14,6 @@ EquipmentComponent::EquipmentComponent(ContainerComponent* inventoryRef)
   EquipmentByCategory[EquipmentCategory::WEAPON] = { nullptr };
   EquipmentByCategory[EquipmentCategory::SHIELD] = { nullptr };
   EquipmentByCategory[EquipmentCategory::RING]   = { nullptr, nullptr };
-
-  _inventory = inventoryRef;
-
-  _playerRef = &Game::gApp.PlayerInstance;
 }
 
 // =============================================================================

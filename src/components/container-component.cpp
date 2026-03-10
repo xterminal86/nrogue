@@ -10,9 +10,8 @@
 #endif
 
 ContainerComponent::ContainerComponent(size_t maxCapacity)
+  : _maxCapacity(maxCapacity)
 {
-  _maxCapacity = maxCapacity;
-
   Contents.reserve(_maxCapacity);
 }
 

@@ -1121,8 +1121,7 @@ ItemsFactory::CreateMeleeWeapon(int x,
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = go->ObjectName;
 
-  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(),
-                                avgDamage);
+  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg, avgDamage);
   ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
 
   // *** !!!
@@ -2280,8 +2279,7 @@ GameObject* ItemsFactory::CreateNeedleShortSword()
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = HIDE("The Needle");
 
-  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(),
-                                avgDamage);
+  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg, avgDamage);
   ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
 
   ic->Data.IdentifiedDescription =
@@ -2339,8 +2337,7 @@ GameObject* ItemsFactory::CreateBlockBreakerPickaxe()
   ic->Data.UnidentifiedName = "?" + go->ObjectName + "?";
   ic->Data.IdentifiedName = HIDE("Block Breaker");
 
-  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg.data(),
-                                avgDamage);
+  auto str = Util::StringFormat(Strings::ItemDefaultDescWeaponDmg, avgDamage);
   ic->Data.UnidentifiedDescription = { str, Strings::ItemDefaultDescWeaponEnd };
 
   ic->Data.IdentifiedDescription =

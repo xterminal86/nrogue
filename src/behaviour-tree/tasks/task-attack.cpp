@@ -12,11 +12,8 @@
 
 TaskAttack::TaskAttack(GameObject* objectToControl,
                        bool alwaysHitOverride)
-  : Node(objectToControl)
-{
-  _alwaysHitOverride = alwaysHitOverride;
-  _playerRef = &Game::gApp.PlayerInstance;
-}
+  : Node(objectToControl),
+    _alwaysHitOverride(alwaysHitOverride) {}
 
 // =============================================================================
 

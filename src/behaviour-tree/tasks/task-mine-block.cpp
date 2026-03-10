@@ -11,10 +11,9 @@
 #include "item-component.h"
 
 TaskMineBlock::TaskMineBlock(GameObject* objectToControl, bool ignorePickaxe)
-  : Node(objectToControl)
+  : Node(objectToControl), _ignorePickaxe(ignorePickaxe)
 {
   _equipment = _objectToControl->GetComponent<EquipmentComponent>();
-  _ignorePickaxe = ignorePickaxe;
 }
 
 // =============================================================================

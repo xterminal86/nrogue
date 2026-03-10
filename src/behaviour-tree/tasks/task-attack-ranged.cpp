@@ -33,12 +33,11 @@ TaskAttackRanged::TaskAttackRanged(GameObject* objectToControl,
                                    char projectile,
                                    const uint32_t& fgColor,
                                    const uint32_t& bgColor)
-  : Node(objectToControl)
+  : Node(objectToControl),
+    _projectile(projectile),
+    _fgColor(fgColor),
+    _bgColor(bgColor)
 {
-  _projectile = projectile;
-  _fgColor    = fgColor;
-  _bgColor    = bgColor;
-
   if (_attackTypeByName.count(attackType) == 1)
   {
     _attackType = _attackTypeByName.at(attackType);

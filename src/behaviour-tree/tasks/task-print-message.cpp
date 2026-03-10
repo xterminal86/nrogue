@@ -5,10 +5,7 @@
 
 TaskPrintMessage::TaskPrintMessage(GameObject *objectToControl,
                                    const std::string& debugMessage)
-  : Node(objectToControl)
-{
-  _message = debugMessage;
-}
+  : Node(objectToControl), _message(debugMessage) {}
 
 // =============================================================================
 

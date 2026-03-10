@@ -659,10 +659,7 @@ void Application::CollectMapAroundPlayer(StringV& writeTo,
         //
         if (isPlayer)
         {
-          if (x == px && y == py)
-          {
-            ch = wasKilled ? '%' : '@';
-          }
+          ch = wasKilled ? '%' : '@';
         }
 
         row.push_back(ch);

@@ -8,10 +8,9 @@
 // |                                NODE                                       |
 // |                                                                           |
 // +---------------------------------------------------------------------------+
-Node::Node(GameObject* objectToControl)
+Node::Node(GameObject* objectToControl) :
+  _playerRef(&Game::gApp.PlayerInstance)
 {
-  _playerRef = &Game::gApp.PlayerInstance;
-
   if (objectToControl != nullptr)
   {
     _objectToControl = objectToControl;
@@ -119,10 +118,7 @@ void Root::Set(Node* node)
 // +---------------------------------------------------------------------------+
 Condition::Condition(GameObject* objToControl,
                      const std::function<BTResult()>& fn)
-  : ControlNode(objToControl)
-{
-  _fn = fn;
-}
+  : ControlNode(objToControl), _fn(fn) {}
 
 // =============================================================================
 

@@ -4,10 +4,7 @@
 
 TaskApplyEffect::TaskApplyEffect(GameObject* objectToControl,
                                  const ItemBonusStruct& effectToApply)
-  : Node(objectToControl)
-{
-  _effectToApply = effectToApply;
-}
+  : Node(objectToControl), _effectToApply(effectToApply) {}
 
 BTResult TaskApplyEffect::Run()
 {

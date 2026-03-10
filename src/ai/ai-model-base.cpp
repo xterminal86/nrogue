@@ -26,9 +26,8 @@
 #include "map.h"
 #include "blackboard.h"
 
-AIModelBase::AIModelBase()
+AIModelBase::AIModelBase() : _playerRef(&Game::gApp.PlayerInstance)
 {
-  _playerRef = &Game::gApp.PlayerInstance;
   _bonusTypeByDisplayName =
       Util::FlipMap(GlobalConstants::BonusDisplayNameByType);
 }
