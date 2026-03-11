@@ -139,7 +139,7 @@ class Printer
     /// \param text Text to print.
     /// \param align Text alignment.
     /// \param fgColor Foreground text color.
-    /// \param bgColor Background fill text color (Colors::None to leave it 
+    /// \param bgColor Background fill text color (Colors::None to leave it
     /// transparent).
     /// \param scaleFactor Scale factor.
     /// \param shadowOffsetX Horizontal text shadow offset factor in pixels.
@@ -169,8 +169,8 @@ class Printer
 
     ///
     /// \brief Draw tile from graphics tileset using pixel coordinates.
-    /// \param x position in pixels.
-    /// \param y position in pixels.
+    /// \param x position in in tile cell units (e.g. 0 - 40).
+    /// \param y position in in tile cell units (e.g. 0 - 24).
     /// \param gti Information on how to draw a tile as a GraphicTileInfo struct
     /// variable.
     ///

@@ -795,7 +795,7 @@ void MapLevelTown::CreateChurch(int x, int y)
                     Colors::Black,
                     Strings::TileNames::StonePillar,
                     false,
-                    GraphicTiles::STONE_COLUMN);
+                    GraphicTiles::COLUMN_STONE);
         }
         break;
 
@@ -923,7 +923,7 @@ void MapLevelTown::CreatePlayerHouse()
                                                  'C',
                                                  Strings::TileNames::Stash,
                                                  Colors::Chest,
-                                                 GraphicTiles::CHEST_GOLD);
+                                                 GraphicTiles::STASH_MC);
 
   PlaceGameObject(stash);
 }
@@ -1035,7 +1035,7 @@ void MapLevelTown::PlaceMineEntrance(int x, int y)
                     Colors::Brick,
                     Strings::TileNames::BrickWall,
                     false,
-                    GraphicTiles::BRICK_WALL2);
+                    GraphicTiles::WALL_BRICK2);
           break;
 
         case '.':
@@ -1175,7 +1175,7 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
                     Colors::Grass,
                     Strings::TileNames::MarbleColumn,
                     false,
-                    GraphicTiles::MARBLE_COLUMN);
+                    GraphicTiles::COLUMN_MARBLE);
         }
         break;
 

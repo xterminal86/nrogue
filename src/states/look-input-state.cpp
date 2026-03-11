@@ -387,8 +387,20 @@ const std::vector<GameObject*> LookInputState::CheckGameObjects()
 void LookInputState::DisplayMonsterStats()
 {
   // TODO: redesign this window for SDL build (with upscaled sprite as a
-  // monster's picture).
-
+  // monster's picture). Something like that:
+  //
+  // +-Monster---------------+
+  // |      LVL: 00  STR: 00 |
+  // |  o            DEF: 00 |
+  // | -|-  HP: 00   MAG: 00 |
+  // | / \  MP: 00   RES: 00 |
+  // |               SKL: 00 |
+  // |      CR: 00   SPD: 00 |
+  // +-----------------------+
+  //
+  // TODO: Make some stats unknown until you defeat certain number of monsters?
+  //       Ties it to some skill?
+  //
   auto GetPrettyPrint =
   [this](Attribute& attr, const std::string& attrName)
   {

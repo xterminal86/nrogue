@@ -168,7 +168,7 @@ void MapLevelMines::CreateLevel()
                 Colors::Black,
                 Colors::ShadesOfGrey::Six,
                 Strings::TileNames::Rocks,
-                GraphicTiles::MINE_WALL);
+                GraphicTiles::WALL_MINE);
 
   if (MapType_ != MapType::MINES_5)
   {

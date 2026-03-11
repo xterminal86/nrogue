@@ -1482,7 +1482,7 @@ void MapLevelBase::CreateSpecialObjects(int x,
             "Wooden Box",
             Colors::Wood,
             Colors::Black,
-            GraphicTiles::WOODEN_CRATE2
+            GraphicTiles::CRATE_WOODEN2
           );
 
           PlaceStaticObject(box);

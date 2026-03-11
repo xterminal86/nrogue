@@ -25,8 +25,8 @@ class MapLevelMines : public MapLevelBase
     {
         { GraphicTiles::GRAVEL,     50 }
       , { GraphicTiles::GRAVEL2,    50 }
-      , { GraphicTiles::MINE_WALL,  25 }
-      , { GraphicTiles::MINE_WALL2, 25 }
+      , { GraphicTiles::WALL_MINE,  25 }
+      , { GraphicTiles::WALL_MINE2, 25 }
     };
 };
 
