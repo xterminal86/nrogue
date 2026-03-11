@@ -426,6 +426,12 @@ namespace GlobalConstants
 
   extern const std::unordered_map<GameObjectType, bool> CanSwimMap;
 
+  //
+  // Doors graphic tiles for 3 states: opened, closed, locked.
+  //
+  extern const std::unordered_map<DoorGraphicType, std::array<GraphicTiles, 3>>
+  DoorGraphicsByType;
+
   extern const std::vector<SpellType> ScrollValidSpellTypes;
 
   extern const std::vector<std::string> ScrollUnidentifiedNames;

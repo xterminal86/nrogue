@@ -29,6 +29,8 @@ class DoorComponent : public Component
 
     DoorMaterials Material = DoorMaterials::WOOD;
 
+    DoorGraphicType DoorType_ = DoorGraphicType::UNDEFINED;
+
 #ifdef DEBUG_BUILD
     StringV Dump(size_t indent = 0) override;
 #endif

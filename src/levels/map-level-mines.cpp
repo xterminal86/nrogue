@@ -290,6 +290,11 @@ void MapLevelMines::CreateSpecialLevel()
           DoorComponent* dc = door->GetComponent<DoorComponent>();
           dc->OpenedBy = key->GetComponent<ItemComponent>()->Data.ItemTypeHash;
 
+          dc->DoorType_ = DoorGraphicType::IRON;
+
+          auto& dgbt = GlobalConstants::DoorGraphicsByType;
+          door->Graphic.Tile = dgbt.at(dc->DoorType_)[2];
+
           PlaceStaticObject(door);
         }
         break;
@@ -504,7 +509,13 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
     break;
 
     case '+':
-      PlaceDoor(x, y);
+      PlaceDoor(x,
+                y,
+                false,
+                GlobalConstants::OpenedByAnyone,
+                std::string(),
+                DoorMaterials::WOOD,
+                DoorGraphicType::WOOD);
       break;
 
     case '.':

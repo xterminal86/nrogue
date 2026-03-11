@@ -516,11 +516,24 @@ enum class WandMaterials
   , GOLDEN_7
 };
 
+// TODO: stone doors in Lost City and Nether should have different graphical
+// design despite being of the same material of sorts (in Lost City it's like in
+// dwarvish city etc.)
 enum class DoorMaterials
 {
     WOOD = 0
   , STONE
   , IRON
+};
+
+//
+// For displaying proper graphic tile for door states.
+//
+enum class DoorGraphicType
+{
+  UNDEFINED = 0,
+  WOOD,
+  IRON
 };
 
 enum class ArrowType

@@ -520,8 +520,24 @@ void MapLevelTown::CreateBlacksmith(int x,
         break;
 
         case '+':
-          PlaceDoor(posX, posY);
-          break;
+        {
+          PlaceGroundTile(posX,
+                          posY,
+                          ' ',
+                          Colors::Black,
+                          Colors::RoomFloor,
+                          Strings::TileNames::Dirt,
+                          GraphicTiles::DIRT);
+
+          PlaceDoor(posX,
+                    posY,
+                    false,
+                    GlobalConstants::OpenedByAnyone,
+                    std::string(),
+                    DoorMaterials::WOOD,
+                    DoorGraphicType::WOOD);
+        }
+        break;
       }
 
       posX++;
@@ -545,7 +561,7 @@ void MapLevelTown::CreateBlacksmith(int x,
                       Colors::Black,
                       Colors::RoomFloor,
                       Strings::TileNames::Dirt,
-                      GraphicTiles::WOODEN_PLANKS);
+                      GraphicTiles::WOODEN_PLANKS_DESAT);
     }
   }
 
@@ -555,7 +571,7 @@ void MapLevelTown::CreateBlacksmith(int x,
                   Colors::Black,
                   Colors::RoomFloor,
                   Strings::TileNames::Dirt,
-                  GraphicTiles::WOODEN_PLANKS);
+                  GraphicTiles::WOODEN_PLANKS_DESAT);
 #endif
 }
 
@@ -634,7 +650,7 @@ void MapLevelTown::CreateRoom(int x,
                           Colors::WoodPlankSeam,
                           Colors::RoomFloor,
                           Strings::TileNames::WoodenFloor,
-                          GraphicTiles::WOODEN_PLANKS);
+                          GraphicTiles::WOODEN_PLANKS_DESAT);
 
           t.Set(true,
                 false,
@@ -655,7 +671,7 @@ void MapLevelTown::CreateRoom(int x,
                           Colors::WoodPlankSeam,
                           Colors::RoomFloor,
                           Strings::TileNames::WoodenFloor,
-                          GraphicTiles::WOODEN_PLANKS);
+                          GraphicTiles::WOODEN_PLANKS_DESAT);
           break;
 
         //
@@ -706,8 +722,26 @@ void MapLevelTown::CreateRoom(int x,
           break;
 
         case '+':
-          PlaceDoor(posX, posY);
-          break;
+        {
+          // FIXME: doesn't look good if next tile from the door is not wooden
+          // planks.
+          PlaceGroundTile(posX,
+                          posY,
+                          '-',
+                          Colors::WoodPlankSeam,
+                          Colors::RoomFloor,
+                          Strings::TileNames::WoodenFloor,
+                          GraphicTiles::WOODEN_PLANKS_DESAT);
+
+          PlaceDoor(posX,
+                    posY,
+                    false,
+                    GlobalConstants::OpenedByAnyone,
+                    std::string(),
+                    DoorMaterials::WOOD,
+                    DoorGraphicType::WOOD);
+        }
+        break;
       }
 
       posX++;
@@ -792,8 +826,24 @@ void MapLevelTown::CreateChurch(int x, int y)
           break;
 
         case '+':
-          PlaceDoor(posX, posY);
-          break;
+        {
+          PlaceGroundTile(posX,
+                          posY,
+                          '-',
+                          Colors::WoodPlankSeam,
+                          Colors::RoomFloor,
+                          Strings::TileNames::WoodenFloor,
+                          GraphicTiles::TILES_DIAMOND_WHITE_BROWN);
+
+          PlaceDoor(posX,
+                    posY,
+                    false,
+                    GlobalConstants::OpenedByAnyone,
+                    std::string(),
+                    DoorMaterials::WOOD,
+                    DoorGraphicType::WOOD);
+        }
+        break;
 
         case 'A':
         {
@@ -872,9 +922,8 @@ void MapLevelTown::CreatePlayerHouse()
                                                  6,
                                                  'C',
                                                  Strings::TileNames::Stash,
-                                                 Colors::Chest);
-
-  stash->Graphic.Tile = GraphicTiles::STASH_MC;
+                                                 Colors::Chest,
+                                                 GraphicTiles::CHEST_GOLD);
 
   PlaceGameObject(stash);
 }
@@ -1000,8 +1049,24 @@ void MapLevelTown::PlaceMineEntrance(int x, int y)
           break;
 
         case '+':
-          PlaceDoor(posX, posY);
-          break;
+        {
+          PlaceGroundTile(posX,
+                          posY,
+                          ' ',
+                          Colors::Black,
+                          Colors::RoomFloor,
+                          Strings::TileNames::Dirt,
+                          GraphicTiles::DIRT);
+
+          PlaceDoor(posX,
+                    posY,
+                    false,
+                    GlobalConstants::OpenedByAnyone,
+                    std::string(),
+                    DoorMaterials::WOOD,
+                    DoorGraphicType::WOOD);
+        }
+        break;
       }
 
       posX++;
@@ -1096,13 +1161,13 @@ void MapLevelTown::PlacePortalSquare(int x, int y)
       {
         case '#':
         {
-          PlaceGroundTile(posX, 
-                          posY, 
-                          ' ', 
-                          Colors::White, 
-                          Colors::White, 
+          PlaceGroundTile(posX,
+                          posY,
+                          ' ',
+                          Colors::White,
+                          Colors::White,
                           "",
-                          GraphicTiles::TILE_BIG_WHITE); 
+                          GraphicTiles::TILE_BIG_WHITE);
           PlaceWall(posX,
                     posY,
                     '#',
@@ -1173,24 +1238,24 @@ void MapLevelTown::CreateTownGates()
                                               Colors::White,
                                               Colors::Black,
                                               std::vector<std::string>());
-  gate1->Graphic.Tile = GraphicTiles::IRON_GATE2_CLOSED;
+  gate1->Graphic.Tile = GraphicTiles::GATE_IRON2_CLOSED;
 
   GameObject* gate2 = factory.CreateDummyItem(Strings::TileNames::Gates,
                                               '+',
                                               Colors::White,
                                               Colors::Black,
                                               std::vector<std::string>());
-  gate2->Graphic.Tile = GraphicTiles::IRON_GATE2_CLOSED;
+  gate2->Graphic.Tile = GraphicTiles::GATE_IRON2_CLOSED;
 
   //
-  // Have to explicitly specify trailing return type to use braced initialized 
+  // Have to explicitly specify trailing return type to use braced initialized
   // list. I don't understand why, so fuck it.
   //
   // Quote from StackOverflow:
   //
-  // "Lambda return type deduction uses the auto rules, which normally would 
-  // have deduced std::initializer_list just fine. However, the language 
-  // designers banned deduction from a braced initializer list in a return 
+  // "Lambda return type deduction uses the auto rules, which normally would
+  // have deduced std::initializer_list just fine. However, the language
+  // designers banned deduction from a braced initializer list in a return
   // statement ([dcl.spec.auto]/7)"
   //
   std::function<IR()> fn = []() -> IR

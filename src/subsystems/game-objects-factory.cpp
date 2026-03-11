@@ -152,15 +152,16 @@ GameObject* GameObjectsFactory::CreateChest(int x, int y, bool isLocked)
 {
   GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
-  go->ObjectName  = "Iron Chest";
-  go->PosX        = x;
-  go->PosY        = y;
-  go->Image       = 'C';
-  go->FgColor     = Colors::Black;
-  go->BgColor     = Colors::Iron;
-  go->Blocking    = true;
-  go->BlocksSight = true;
-  go->Type        = GameObjectType::CONTAINER;
+  go->ObjectName   = "Iron Chest";
+  go->PosX         = x;
+  go->PosY         = y;
+  go->Image        = 'C';
+  go->Graphic.Tile = GraphicTiles::CHEST_IRON;
+  go->FgColor      = Colors::Black;
+  go->BgColor      = Colors::Iron;
+  go->Blocking     = true;
+  go->BlocksSight  = true;
+  go->Type         = GameObjectType::CONTAINER;
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
 
@@ -195,19 +196,21 @@ GameObject* GameObjectsFactory::CreateContainer(int x,
                                                 int y,
                                                 int image,
                                                 const std::string& name,
-                                                const uint32_t& bgColor)
+                                                const uint32_t& bgColor,
+                                                GraphicTiles graphicTile)
 {
   GameObject* go = new GameObject(Game::gMap.CurrentLevel);
 
-  go->ObjectName  = name;
-  go->PosX        = x;
-  go->PosY        = y;
-  go->Image       = image;
-  go->FgColor     = Colors::White;
-  go->BgColor     = bgColor;
-  go->Blocking    = true;
-  go->BlocksSight = true;
-  go->Type        = GameObjectType::CONTAINER;
+  go->ObjectName   = name;
+  go->PosX         = x;
+  go->PosY         = y;
+  go->Image        = image;
+  go->FgColor      = Colors::White;
+  go->BgColor      = bgColor;
+  go->Blocking     = true;
+  go->BlocksSight  = true;
+  go->Type         = GameObjectType::CONTAINER;
+  go->Graphic.Tile = graphicTile;
 
   ContainerComponent* cc = go->AddComponent<ContainerComponent>();
 

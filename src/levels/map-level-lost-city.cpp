@@ -93,7 +93,13 @@ void MapLevelLostCity::CreateCommonObjects(int x, int y, char image)
       break;
 
     case '+':
-      PlaceDoor(x, y);
+      PlaceDoor(x,
+                y,
+                false,
+                GlobalConstants::OpenedByAnyone,
+                std::string(),
+                DoorMaterials::WOOD,
+                DoorGraphicType::WOOD);
       break;
 
     case 't':

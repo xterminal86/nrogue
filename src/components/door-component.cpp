@@ -97,6 +97,19 @@ void DoorComponent::UpdateDoorState()
                                 (BgColorOverride == Colors::None ?
                                   Colors::DoorHighlight :
                                   BgColorOverride);
+
+  if (DoorType_ != DoorGraphicType::UNDEFINED)
+  {
+    auto& dgbt = GlobalConstants::DoorGraphicsByType;
+    bool notLocked = (OpenedBy == GlobalConstants::OpenedByAnyone);
+    OwnerGameObject->Graphic.Tile = IsOpen ?
+                                    dgbt.at(DoorType_)[0] :
+                                    (
+                                      notLocked ?
+                                      dgbt.at(DoorType_)[1] :
+                                      dgbt.at(DoorType_)[2]
+                                    );
+  }
 }
 
 // =============================================================================

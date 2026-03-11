@@ -1332,7 +1332,8 @@ void MapLevelBase::PlaceDoor(int x, int y,
                              bool isOpen,
                              size_t openedBy,
                              const std::string& objName,
-                             DoorMaterials doorMaterial)
+                             DoorMaterials doorMaterial,
+                             DoorGraphicType doorType)
 {
   if (IsOutOfBounds(x, y))
   {
@@ -1342,10 +1343,18 @@ void MapLevelBase::PlaceDoor(int x, int y,
   GameObject* door =
       Game::gGOF.CreateDoor(x, y, isOpen, doorMaterial, objName);
 
-  if (openedBy != GlobalConstants::OpenedByAnyone)
+  DoorComponent* dc = door->GetComponent<DoorComponent>();
+
+  dc->DoorType_ = doorType;
+  dc->OpenedBy  = openedBy;
+
+  bool openedByAnyone = (openedBy == GlobalConstants::OpenedByAnyone);
+
+  if (dc->DoorType_ != DoorGraphicType::UNDEFINED)
   {
-    DoorComponent* dc = door->GetComponent<DoorComponent>();
-    dc->OpenedBy = openedBy;
+    door->Graphic.Tile = openedByAnyone ?
+                         GlobalConstants::DoorGraphicsByType.at(doorType)[1] :
+                         GlobalConstants::DoorGraphicsByType.at(doorType)[2];
   }
 
   PlaceStaticObject(door);

@@ -351,6 +351,27 @@ namespace GlobalConstants
     { GameObjectType::CENTAUR,         true },
   };
 
+  const std::unordered_map<DoorGraphicType, std::array<GraphicTiles, 3>>
+  DoorGraphicsByType =
+  {
+    {
+      DoorGraphicType::WOOD,
+      {
+        GraphicTiles::DOOR_WW_OPEN,
+        GraphicTiles::DOOR_WW_CLOSED,
+        GraphicTiles::NONE
+      }
+    },
+    {
+      DoorGraphicType::IRON,
+      {
+        GraphicTiles::DOOR_IRON_OPEN,
+        GraphicTiles::DOOR_IRON_CLOSED,
+        GraphicTiles::DOOR_IRON_LOCKED
+      }
+    }
+  };
+
 #ifdef USE_SDL
   //
   // To avoid C-style casting from enum

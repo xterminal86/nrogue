@@ -249,7 +249,8 @@ class MapLevelBase
                    bool isOpen = false,
                    size_t openedBy = GlobalConstants::OpenedByAnyone,
                    const std::string& objName = std::string(),
-                   DoorMaterials doorMaterial = DoorMaterials::WOOD);
+                   DoorMaterials doorMaterial = DoorMaterials::WOOD,
+                   DoorGraphicType doorType = DoorGraphicType::UNDEFINED);
 
     friend class Map;
 

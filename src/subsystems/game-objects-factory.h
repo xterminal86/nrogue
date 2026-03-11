@@ -24,13 +24,14 @@ class GameObjectsFactory
                                   const uint32_t& fgColor,
                                   const uint32_t& bgColor);
 
-    GameObject* CreateChest(int x, int y, bool isLocked = true);
+    GameObject* CreateChest(int x, int y, bool isLocked);
 
     GameObject* CreateContainer(int x,
                                 int y,
                                 int image,
                                 const std::string& name,
-                                const uint32_t& bgColor);
+                                const uint32_t& bgColor,
+                                GraphicTiles graphicTile = GraphicTiles::NONE);
 
     GameObject* CreateBreakableObjectWithRandomLoot(
         int x,
