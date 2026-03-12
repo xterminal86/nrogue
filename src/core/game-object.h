@@ -31,7 +31,7 @@ class NRS;
 class GameObject
 {
   public:
-    GameObject(MapLevelBase* levelOwner = nullptr);
+    explicit GameObject(MapLevelBase* levelOwner = nullptr);
     virtual ~GameObject();
 
     GameObject(MapLevelBase* levelOwner,

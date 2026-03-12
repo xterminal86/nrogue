@@ -34,9 +34,9 @@
 /// But mostly it takes, like, exponentially more time.
 ///
 void FromPermutationTiles::Generate(const Position& mapSize,
-                         int tileSetIndex,
-                         bool postProcess,
-                         bool removeBias)
+                                    int tileSetIndex,
+                                    bool postProcess,
+                                    bool removeBias)
 {
   _mapSize = mapSize;
 

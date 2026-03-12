@@ -49,7 +49,7 @@
 class NRS
 {
   public:
-    NRS(const std::string& tag = std::string());
+    explicit NRS(const std::string& tag = std::string());
 
     void SetString(const std::string& s, size_t index = 0);
     const std::string& GetString(size_t index = 0) const;

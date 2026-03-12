@@ -326,13 +326,23 @@ void Application::DrawAttackCursor(int x, int y,
   if (cursorColor == Colors::None)
   {
     if (defender->FgColor != Colors::None
-     && defender->BgColor != Colors::None)
+      && defender->BgColor != Colors::None)
     {
 #ifdef USE_SDL
-      Game::gPrnt.DrawSubstituteGraphicsTile(x,
-                                             y,
-                                             defender->Image,
-                                             defender->FgColor);
+      bool useGraphicsTile =
+        (Game::gApp.AppData.UseGraphics
+      && defender->Graphic.Tile != GraphicTiles::NONE);
+      if (useGraphicsTile)
+      {
+        Game::gPrnt.DrawGraphicsTileExt(x, y, defender->Graphic);
+      }
+      else
+      {
+        Game::gPrnt.DrawSubstituteGraphicsTile(x,
+                                               y,
+                                               defender->Image,
+                                               defender->FgColor);
+      }
 #else
       Game::gPrnt.PrintChar(
         x,

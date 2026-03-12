@@ -4,9 +4,7 @@
 #include "application.h"
 
 ObituaryReportState::ObituaryReportState()
-{
-  _obituary = std::make_unique<MsgBuffer>(Printer::TerminalHeight - 1, 5);
-}
+  : _obituary(std::make_unique<MsgBuffer>(Printer::TerminalHeight - 1, 5)) {}
 
 // =============================================================================
 

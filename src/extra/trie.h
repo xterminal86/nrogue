@@ -17,7 +17,7 @@ class Trie
 {
   public:
     Trie();
-    Trie(const std::unordered_set<std::string>& words);
+    explicit Trie(const std::unordered_set<std::string>& words);
 
     void Add(const std::string& word);
 

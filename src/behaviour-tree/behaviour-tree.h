@@ -26,7 +26,7 @@ enum class BTResult
 class Node
 {
   public:
-    Node(GameObject* objectToControl);
+    explicit Node(GameObject* objectToControl);
     virtual ~Node();
 
     virtual void AddNode(Node* node);

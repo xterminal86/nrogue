@@ -6,7 +6,7 @@
 # You can use custom graphics tileset. If this line is absent or tileset is not
 # loaded substitute 16x16 tileset will be used.
 #
-tileset : "resources/graphic-tiles.bmp",
+tileset : "graphic-tiles.bmp",
 
 #
 # Tile dimensions for graphic tileset (must be square).
@@ -35,4 +35,3 @@ fast_combat : N,
 # Doesn't force redraw after each visible monster's turn.
 #
 fast_monster_movement : N,
-

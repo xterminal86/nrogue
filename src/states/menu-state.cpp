@@ -278,7 +278,8 @@ void MenuState::Update(bool forceUpdate)
       Colors::White,
       Colors::Black
     );
-
+    
+    /*
     if (_saveFileFound)
     {
       Game::gPrnt.PrintText(
@@ -290,7 +291,8 @@ void MenuState::Update(bool forceUpdate)
         Colors::Black
       );
     }
-
+    */
+    
     for (size_t i = 0; i < _signature.size(); i++)
     {
       Game::gPrnt.PrintText(

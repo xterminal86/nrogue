@@ -13,7 +13,7 @@ class ContainerComponent;
 class TaskTryPickupItems : public Node
 {
   public:
-    TaskTryPickupItems(GameObject* objectToControl);
+    explicit TaskTryPickupItems(GameObject* objectToControl);
 
     BTResult Run() override;
 

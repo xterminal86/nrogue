@@ -19,7 +19,7 @@ class Player;
 class EquipmentComponent : public Component
 {
   public:
-    EquipmentComponent(ContainerComponent* inventoryRef);
+    explicit EquipmentComponent(ContainerComponent* inventoryRef);
 
     void Update() override;
 

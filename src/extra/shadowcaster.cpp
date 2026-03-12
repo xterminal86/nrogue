@@ -11,10 +11,7 @@ Shadowcaster::Shadowcaster() {}
 // =============================================================================
 
 Shadowcaster::Shadowcaster(const Position& playerPos)
-{
-  _playerPos.X = playerPos.X;
-  _playerPos.Y = playerPos.Y;
-}
+  : _playerPos(playerPos) {}
 
 // =============================================================================
 

@@ -24,8 +24,8 @@
 #endif
 
 GameObject::GameObject(MapLevelBase* levelOwner)
+  : LevelOwner(levelOwner)
 {
-  LevelOwner = levelOwner;
   VisibilityRadius.Set(0);
 
   _objectId = Game::gGid.GenerateGlobalId();
