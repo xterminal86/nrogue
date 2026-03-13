@@ -24,6 +24,8 @@ class Application
                         const uint32_t& borderColor = Colors::ShadesOfGrey::Six,
                         const uint32_t& bgColor = Colors::ShadesOfGrey::Two);
 
+    void ShowMessageBox(GameObject* actor);
+
     void CloseMessageBox();
 
     void DisplayAttack(GameObject* defender,

@@ -263,11 +263,26 @@ void Application::ShowMessageBox(MessageBoxType type,
 {
   _previousState = _currentState;
 
-  auto ptr = _gameStates[GameStates::MESSAGE_BOX_STATE].get();
-  MessageBoxState* mbs = static_cast<MessageBoxState*>(ptr);
+  MessageBoxState* mbs =
+      (MessageBoxState*)_gameStates[GameStates::MESSAGE_BOX_STATE].get();
   mbs->SetMessage(type, header, message, borderColor, bgColor);
 
-  _currentState = ptr;
+  _currentState = mbs;
+
+  _currentState->Update(true);
+}
+
+// =============================================================================
+
+void Application::ShowMessageBox(GameObject *actor)
+{
+  _previousState = _currentState;
+
+  MessageBoxState* mbs =
+      (MessageBoxState*)_gameStates[GameStates::MESSAGE_BOX_STATE].get();
+  mbs->SetActorStats(actor);
+
+  _currentState = mbs;
 
   _currentState->Update(true);
 }

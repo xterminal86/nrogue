@@ -137,7 +137,6 @@ enum class MessageBoxType
 {
     ANY_KEY = 0
   , WAIT_FOR_INPUT
-  , IGNORE_INPUT
 };
 
 enum class MapType

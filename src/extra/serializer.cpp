@@ -95,7 +95,7 @@ NRS& NRS::operator[](const std::string& nodeName)
 {
   if (_childIndexByName.count(nodeName) == 0)
   {
-    DebugLog("[WAR] NRS('%s'): key '%s' not found, creating...",
+    DebugLog("NRS('%s'): key '%s' not found, creating...",
              _tag.data(),
              nodeName.data());
 

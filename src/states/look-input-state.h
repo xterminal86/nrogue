@@ -16,7 +16,7 @@ class LookInputState : public GameState
     void Prepare() override;
 
   private:
-    void DisplayMonsterStats();
+    void DisplayActorStats();
 
     bool CheckPlayer();
     GameObject* CheckActor();
@@ -33,7 +33,7 @@ class LookInputState : public GameState
 
     Position _cursorPosition;
 
-    std::vector<std::string> _monsterStatsInfo;
+    std::vector<std::string> _actorStatsInfo;
 
     #ifdef DEBUG_BUILD
     const StringV _debugInfo =

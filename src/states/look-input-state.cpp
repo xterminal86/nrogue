@@ -16,7 +16,7 @@ void LookInputState::Init()
 {
   _playerRef = &Game::gApp.PlayerInstance;
 
-  _monsterStatsInfo.reserve(32);
+  _actorStatsInfo.reserve(32);
 }
 
 // =============================================================================
@@ -76,8 +76,7 @@ void LookInputState::HandleInput()
       break;
 
     case VK_ENTER:
-      // FIXME: remove afterwards, implement as skill or whatever
-      DisplayMonsterStats();
+      DisplayActorStats();
       break;
 
     case VK_CANCEL:
@@ -370,7 +369,7 @@ bool LookInputState::CheckPlayer()
 GameObject* LookInputState::CheckActor()
 {
   auto actor = Game::gMap.GetActorAtPosition(_cursorPosition.X,
-                                               _cursorPosition.Y);
+                                             _cursorPosition.Y);
   return actor;
 }
 
@@ -379,28 +378,25 @@ GameObject* LookInputState::CheckActor()
 const std::vector<GameObject*> LookInputState::CheckGameObjects()
 {
   return Game::gMap.GetGameObjectsAtPosition(_cursorPosition.X,
-                                               _cursorPosition.Y);
+                                             _cursorPosition.Y);
 }
 
 // =============================================================================
 
-void LookInputState::DisplayMonsterStats()
+void LookInputState::DisplayActorStats()
 {
-  // TODO: redesign this window for SDL build (with upscaled sprite as a
-  // monster's picture). Something like that:
-  //
-  // +-Monster---------------+
-  // |      LVL: 00  STR: 00 |
-  // |  o            DEF: 00 |
-  // | -|-  HP: 00   MAG: 00 |
-  // | / \  MP: 00   RES: 00 |
-  // |               SKL: 00 |
-  // |      CR: 00   SPD: 00 |
-  // +-----------------------+
-  //
-  // TODO: Make some stats unknown until you defeat certain number of monsters?
-  //       Ties it to some skill?
-  //
+  GameObject* actor = CheckActor();
+  if (actor == nullptr && CheckPlayer())
+  {
+    actor = _playerRef;
+  }
+
+  if (actor != nullptr)
+  {
+    Game::gApp.ShowMessageBox(actor);
+  }
+
+  /*
   auto GetPrettyPrint =
   [this](Attribute& attr, const std::string& attrName)
   {
@@ -419,7 +415,7 @@ void LookInputState::DisplayMonsterStats()
     return total;
   };
 
-  auto actor = CheckActor();
+  GameObject* actor = CheckActor();
   if (actor == nullptr && CheckPlayer())
   {
     actor = _playerRef;
@@ -427,59 +423,60 @@ void LookInputState::DisplayMonsterStats()
 
   if (actor != nullptr)
   {
-    _monsterStatsInfo.clear();
+    _actorStatsInfo.clear();
 
     std::string name = Util::StringFormat("%s_%llu",
                                           actor->ObjectName.data(),
                                           actor->ObjectId());
 
-    _monsterStatsInfo.push_back(
+    _actorStatsInfo.push_back(
       Util::StringFormat("LVL: %d", actor->Attrs.Lvl.Get())
     );
 
-    _monsterStatsInfo.push_back(
+    _actorStatsInfo.push_back(
       Util::StringFormat("EXP: %d", actor->Attrs.Exp.Min().Get())
     );
 
-    _monsterStatsInfo.push_back(std::string());
-    _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Str, "STR"));
-    _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Def, "DEF"));
-    _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Mag, "MAG"));
-    _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Res, "RES"));
-    _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Skl, "SKL"));
-    _monsterStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Spd, "SPD"));
-    _monsterStatsInfo.push_back(std::string());
+    _actorStatsInfo.push_back(std::string());
+    _actorStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Str, "STR"));
+    _actorStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Def, "DEF"));
+    _actorStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Mag, "MAG"));
+    _actorStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Res, "RES"));
+    _actorStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Skl, "SKL"));
+    _actorStatsInfo.push_back(GetPrettyPrint(actor->Attrs.Spd, "SPD"));
+    _actorStatsInfo.push_back(std::string());
 
-    _monsterStatsInfo.push_back(
+    _actorStatsInfo.push_back(
       Util::StringFormat("Rating: %d", actor->Attrs.Rating())
     );
 
-    _monsterStatsInfo.push_back(
+    _actorStatsInfo.push_back(
       Util::StringFormat("(CR: %d)", actor->Attrs.ChallengeRating)
     );
 
-    _monsterStatsInfo.push_back(std::string());
+    _actorStatsInfo.push_back(std::string());
 
-    _monsterStatsInfo.push_back(
+    _actorStatsInfo.push_back(
       Util::StringFormat("HP: %d/%d",
                          actor->Attrs.HP.Min().Get(),
                          actor->Attrs.HP.Max().Get())
     );
 
-    _monsterStatsInfo.push_back(
+    _actorStatsInfo.push_back(
       Util::StringFormat("MP: %d/%d",
                          actor->Attrs.MP.Min().Get(),
                          actor->Attrs.MP.Max().Get())
     );
 
-    _monsterStatsInfo.push_back(std::string());
-    _monsterStatsInfo.push_back(Util::StringFormat("Action Meter: %d",
+    _actorStatsInfo.push_back(std::string());
+    _actorStatsInfo.push_back(Util::StringFormat("Action Meter: %d",
                                                    actor->Attrs.ActionMeter));
 
     Game::gApp.ShowMessageBox(MessageBoxType::ANY_KEY,
                               name,
-                              _monsterStatsInfo);
+                              _actorStatsInfo);
   }
+  */
 }
 
 // =============================================================================
