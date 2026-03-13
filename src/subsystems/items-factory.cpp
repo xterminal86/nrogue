@@ -2419,6 +2419,8 @@ GameObject* ItemsFactory::CreateRandomGlass(ItemQuality quality)
   go->BgColor = Colors::GemColorByType.at(t).second;
 
   std::string colorDesc = Colors::GemColorNameByType.at(t);
+
+  go->Graphic.Tile = GlobalConstants::GemTileByColor.at(colorDesc);
   go->ObjectName = Util::StringFormat("%s Glass", colorDesc.data());
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
@@ -2469,6 +2471,8 @@ GameObject* ItemsFactory::CreateGemHelper(GemType t, ItemQuality quality)
   go->ObjectName = GlobalConstants::GemNameByType.at(t);
 
   std::string colorDesc = Colors::GemColorNameByType.at(t);
+
+  go->Graphic.Tile = GlobalConstants::GemTileByColor.at(colorDesc);
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 

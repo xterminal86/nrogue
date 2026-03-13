@@ -251,7 +251,7 @@ void MessageBoxState::SetMessage(MessageBoxType type,
 
 void MessageBoxState::SetActorStats(GameObject* actor)
 {
-  _type = MessageBoxType::ANY_KEY;
+  _type         = MessageBoxType::ANY_KEY;
   _windowToShow = WindowToShow::ACTOR_STATS;
-  _actorRef = actor;
+  _actorRef     = actor;
 }
