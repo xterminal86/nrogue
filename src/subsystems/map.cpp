@@ -1311,34 +1311,37 @@ void Map::DrawMapTilesAroundPlayer()
 void Map::DrawFowTile(int x, int y)
 {
 #ifdef USE_SDL
-  GraphicTiles floorTile = CurrentLevel->MapArray[x][y]->Graphic.Tile;
-  GraphicTiles fowTile   = CurrentLevel->FowLayer[x][y].GraphicTile;
+  static GraphicTileInfo floorTile, fowTile;
 
+  floorTile = CurrentLevel->MapArray[x][y]->Graphic;
+  fowTile   = CurrentLevel->FowLayer[x][y].Graphic;
+  
   uint32_t fowColor = Colors::ShadesOfGrey::Six;
 
+  floorTile.ColorTint = fowColor;
+  fowTile.ColorTint   = fowColor;
+
   bool useGraphicsTile = (Game::gApp.AppData.UseGraphics
-                       && fowTile != GraphicTiles::NONE);
+                       && fowTile.Tile != GraphicTiles::NONE);
 
   if (useGraphicsTile)
   {
     //
     // Draw ground tile first if it's different from fow layer tile.
     //
-    if (floorTile != GraphicTiles::NONE && floorTile != fowTile)
+    if (floorTile.Tile != GraphicTiles::NONE && floorTile.Tile != fowTile.Tile)
     {
-      Game::gPrnt.DrawGraphicsTile(x + CurrentLevel->MapOffsetX,
-                                   y + CurrentLevel->MapOffsetY,
-                                   floorTile,
-                                   fowColor);
+      Game::gPrnt.DrawGraphicsTileExt(x + CurrentLevel->MapOffsetX,
+                                      y + CurrentLevel->MapOffsetY,
+                                      floorTile);
     }
 
     //
     // Then object on FoW layer.
     //
-    Game::gPrnt.DrawGraphicsTile(x + CurrentLevel->MapOffsetX,
-                                 y + CurrentLevel->MapOffsetY,
-                                 fowTile,
-                                 fowColor);
+    Game::gPrnt.DrawGraphicsTileExt(x + CurrentLevel->MapOffsetX,
+                                    y + CurrentLevel->MapOffsetY,
+                                    fowTile);
   }
   else
   {

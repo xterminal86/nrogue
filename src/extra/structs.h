@@ -48,7 +48,7 @@ struct GraphicTileInfo
   uint16_t RotationDegrees = 0;
   // Bitmask of SDL_RenderFlip values. uint8_t here so that it can compile in
   // both build variants.
-  uint8_t FlipMask = 0x0;
+  uint8_t FlipMask = 0x0;  
 };
 
 // =============================================================================

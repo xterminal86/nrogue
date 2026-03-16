@@ -969,9 +969,11 @@ void MapLevelBase::UpdateFowLayer(GameObject* obj)
     return;
   }
 
-  FowLayer[obj->PosX][obj->PosY].Image       = obj->Image;
-  FowLayer[obj->PosX][obj->PosY].FowName     = Util::GetFowName(obj);
-  FowLayer[obj->PosX][obj->PosY].GraphicTile = obj->Graphic.Tile;
+  auto& fowTile = FowLayer[obj->PosX][obj->PosY];
+
+  fowTile.Image   = obj->Image;
+  fowTile.FowName = Util::GetFowName(obj);
+  fowTile.Graphic = obj->Graphic;
 }
 
 // =============================================================================

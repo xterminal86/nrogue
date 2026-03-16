@@ -153,6 +153,17 @@ void MapLevelTest::CreateLevel()
                 Strings::TileNames::Rocks,
                 GraphicTiles::STONES);
 
+  auto Paint = [this](int x, 
+                      int y, 
+                      GraphicTiles tile, 
+                      uint8_t flipMask = GlobalConstants::FlipMaskNone, 
+                      uint16_t rotation = 0)
+  {
+    MapArray[x][y]->Graphic.Tile            = tile;
+    MapArray[x][y]->Graphic.FlipMask        = flipMask;
+    MapArray[x][y]->Graphic.RotationDegrees = rotation;
+  };
+
   auto perimeter = Util::GetPerimeter(1, 1, MapSize.X - 2, MapSize.Y - 2);
   for (const Position& p : perimeter)
   {
@@ -166,33 +177,41 @@ void MapLevelTest::CreateLevel()
     bool rightStripV  = (p.X == (MapSize.X - 2)) && (p.Y > 1 && p.Y < MapSize.Y - 2);
 
     if (cornerUL)
-    {
-      MapArray[p.X][p.Y]->Graphic.Tile = GraphicTiles::TILE_DIAMOND_BROWN_CORNER;
+    {      
+      Paint(p.X, p.Y, GraphicTiles::TILE_DIAMOND_BROWN_CORNER);
     }
     else if (cornerUR)
     {
-      MapArray[p.X][p.Y]->Graphic.Tile = GraphicTiles::TILE_DIAMOND_BROWN_CORNER;
-      MapArray[p.X][p.Y]->Graphic.FlipMask = GlobalConstants::FlipMaskH;
+      Paint(p.X, 
+            p.Y, 
+            GraphicTiles::TILE_DIAMOND_BROWN_CORNER, 
+            GlobalConstants::FlipMaskH);
     }
     else if (cornerDR)
     {
-      MapArray[p.X][p.Y]->Graphic.Tile = GraphicTiles::TILE_DIAMOND_BROWN_CORNER;
-      MapArray[p.X][p.Y]->Graphic.FlipMask =
-          (GlobalConstants::FlipMaskH | GlobalConstants::FlipMaskV);
+      Paint(p.X, 
+            p.Y, 
+            GraphicTiles::TILE_DIAMOND_BROWN_CORNER, 
+            (GlobalConstants::FlipMaskH | GlobalConstants::FlipMaskV));
     }
     else if (cornerDL)
     {
-      MapArray[p.X][p.Y]->Graphic.Tile = GraphicTiles::TILE_DIAMOND_BROWN_CORNER;
-      MapArray[p.X][p.Y]->Graphic.FlipMask = GlobalConstants::FlipMaskV;
+      Paint(p.X, 
+            p.Y, 
+            GraphicTiles::TILE_DIAMOND_BROWN_CORNER, 
+            GlobalConstants::FlipMaskV);
     }
     else if (upperStripH || lowerStripH)
     {
-      MapArray[p.X][p.Y]->Graphic.Tile = GraphicTiles::TILE_DIAMOND_BROWN_H;
+      Paint(p.X, p.Y, GraphicTiles::TILE_DIAMOND_BROWN_H);
     }
     else if (leftStripV || rightStripV)
     {
-      MapArray[p.X][p.Y]->Graphic.Tile = GraphicTiles::TILE_DIAMOND_BROWN_H;
-      MapArray[p.X][p.Y]->Graphic.RotationDegrees = 90;
+      Paint(p.X, 
+            p.Y, 
+            GraphicTiles::TILE_DIAMOND_BROWN_H, 
+            GlobalConstants::FlipMaskNone, 
+            90);
     }
   }
 
@@ -200,9 +219,42 @@ void MapLevelTest::CreateLevel()
   {
     for (int y = 2; y <= MapSize.Y - 3; y++)
     {
-      MapArray[x][y]->Graphic.Tile = GraphicTiles::TILES_GREEN_WHITE_DIAG;
+      Paint(x, y, GraphicTiles::TILES_GREEN_WHITE_DIAG);
     }
   }
+
+  Paint(2, 
+        2, 
+        GraphicTiles::TILE_STAR_BIG_CORNER, 
+        GlobalConstants::FlipMaskV);
+
+  Paint(3,
+        2,
+        GraphicTiles::TILE_STAR_BIG_MIDDLE,
+        GlobalConstants::FlipMaskV);
+  
+  Paint(4,
+        2,
+        GraphicTiles::TILE_STAR_BIG_CORNER,
+        (GlobalConstants::FlipMaskH | GlobalConstants::FlipMaskV));
+
+  Paint(2,
+        3,
+        GraphicTiles::TILE_STAR_BIG_MIDDLE,
+        GlobalConstants::FlipMaskNone,
+        90);
+
+  Paint(3, 3, GraphicTiles::TILE_STAR_BIG_CENTER);
+
+  Paint(4,
+        3,
+        GraphicTiles::TILE_STAR_BIG_MIDDLE,
+        GlobalConstants::FlipMaskNone,
+        270);
+
+  Paint(2, 4, GraphicTiles::TILE_STAR_BIG_CORNER);
+  Paint(3, 4, GraphicTiles::TILE_STAR_BIG_MIDDLE);  
+  Paint(4, 4, GraphicTiles::TILE_STAR_BIG_CORNER, GlobalConstants::FlipMaskH);
 
   CreateStuff();
 }

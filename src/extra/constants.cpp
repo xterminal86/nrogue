@@ -422,8 +422,9 @@ namespace GlobalConstants
 
   const size_t InventoryMaxNameLength = 20;
 
-  const uint8_t FlipMaskH = 0x1;
-  const uint8_t FlipMaskV = 0x2;
+  const uint8_t FlipMaskNone = 0x0;
+  const uint8_t FlipMaskH    = 0x1;
+  const uint8_t FlipMaskV    = 0x2;
 
   const int HPMPBarLength               = 20;
   const int AttributeMinimumRaiseChance = 5;

@@ -102,7 +102,7 @@ class MapLevelBase
     {
       int Image = -1;
       std::string FowName;
-      GraphicTiles GraphicTile = GraphicTiles::NONE;
+      GraphicTileInfo Graphic;
     };
 
     //

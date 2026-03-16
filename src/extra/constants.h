@@ -358,6 +358,7 @@ namespace GlobalConstants
 
   extern const size_t InventoryMaxNameLength;
 
+  extern const uint8_t FlipMaskNone;
   extern const uint8_t FlipMaskH;
   extern const uint8_t FlipMaskV;
 
