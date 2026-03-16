@@ -36,7 +36,7 @@ class MenuState : public GameState
   std::vector<std::string> _signature =
   {
     "by xterminal86",
-    "(c) 2018-2023"
+    "(c) 2018-2026"
   };
 
   const std::string _welcome         = "Press 'Enter' to start, 'q' to exit";
