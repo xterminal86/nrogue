@@ -3,7 +3,11 @@ project (${TARGET_NAME})
 
 # ==============================================================================
 
-add_executable(${TARGET_NAME} main.cpp ${OBJLIB_LINK_NAME})
+if (WIN32)
+  add_executable(${TARGET_NAME} WIN32 main.cpp ${OBJLIB_LINK_NAME})
+else()
+  add_executable(${TARGET_NAME} main.cpp ${OBJLIB_LINK_NAME})
+endif()
 
 # ==============================================================================
 
@@ -11,10 +15,13 @@ if (USE_SDL)
   find_package(SDL2 REQUIRED)
   include_directories(${SDL2_INCLUDE_DIRS})
 
-  if (WIN32)
-    target_link_libraries(${TARGET_NAME} ${MINGW32_LIBRARY}
-                                         ${SDL2MAIN_LIBRARY}
-                                         ${SDL2_LIBRARY})
+  if (WIN32)    
+    target_link_libraries(
+      ${TARGET_NAME} 
+      ${MINGW32_LIBRARY}
+      ${SDL2MAIN_LIBRARY}
+      ${SDL2_LIBRARY}
+    )
   else()
     target_link_libraries(${TARGET_NAME} ${SDL2_LIBRARIES})
   endif()

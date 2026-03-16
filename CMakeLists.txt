@@ -132,6 +132,8 @@ endif()
 if (WIN32)
   add_executable(
     ${TARGET_NAME}
+    # This gets rid of 'undefined reference to __cdecl main()' or something if 
+    # building in MS Visual Studio.
     WIN32
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
     ${OBJLIB_LINK_NAME}
@@ -149,8 +151,11 @@ if (USE_SDL)
 
   if (WIN32)
     target_link_libraries(
-      ${TARGET_NAME}
-      ${MINGW32_LIBRARY}
+      ${TARGET_NAME}     
+
+      # This will be an empty string if you're building with MS compiler. 
+      ${MINGW32_LIBRARY} 
+
       ${SDL2MAIN_LIBRARY}
       ${SDL2_LIBRARY}
     )
